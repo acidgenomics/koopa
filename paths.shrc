@@ -8,6 +8,6 @@ fi
 
 # Linuxbrew ----
 PATH="$HOME/.linuxbrew/bin:$PATH"
-PATH="$HOME/.linuxbrew/sbin:$PATH
+PATH="$HOME/.linuxbrew/sbin:$PATH"
 MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
 INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
