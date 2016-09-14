@@ -1,3 +1,5 @@
+export HOMEBREW_BUILD_FROM_SOURCE=1
+
 git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
 
 brew tap homebrew/science
