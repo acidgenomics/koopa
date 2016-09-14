@@ -1,9 +1,8 @@
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
 # The default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
 umask 077
 
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 source "${BASH_SOURCE%/*}/aliases.shrc"
-source "${BASH_SOURCE%/*}/modules.shrc"
 source "${BASH_SOURCE%/*}/paths.shrc"
