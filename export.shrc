@@ -8,9 +8,9 @@ unset LD_LIBRARY_PATH
 
 # Manual ====
 if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+    export PATH="$HOME/bin:$PATH"
 fi
 
 if [ -d "$HOME/lib" ] ; then
-    LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+    export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
 fi
