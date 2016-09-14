@@ -1,0 +1,16 @@
+# Linuxbrew ====
+export HOMEBREW_BUILD_FROM_SOURCE=1
+export PATH="$HOME/.linuxbrew/bin:$PATH"
+export PATH="$HOME/.linuxbrew/sbin:$PATH"
+export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+unset LD_LIBRARY_PATH
+
+# Manual ====
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/lib" ] ; then
+    LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+fi
