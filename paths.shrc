@@ -1,0 +1,12 @@
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/lib" ] ; then
+    LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+fi
+
+# Linuxbrew ----
+PATH="$HOME/.linuxbrew/bin:$PATH"
+MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
