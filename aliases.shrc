@@ -1,0 +1,14 @@
+# General ====
+alias e="exit"
+alias ll='ls -l'
+alias la='ls -a'
+alias l='ls -cf'
+
+# Model Organisms ====
+alias ce="cd ~/data/caenorhabditis_elegans"
+alias hs="cd ~/data/homo_sapiens"
+alias mm="cd ~/data/mus_musculus"
+
+# Shell Scripts ====
+alias i="sh ~/seqcloudbash/bsub_interactive_1.sh"
+alias i2="sh ~/seqcloudbash/bsub_interactive_2.sh"
