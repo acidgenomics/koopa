@@ -1,3 +1,5 @@
+# Seqcloud Bash Utilities
+
 ```{bash}
 git clone https://github.com/seqcloud/bash.git seqcloudbash
 ```
