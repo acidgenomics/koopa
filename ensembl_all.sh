@@ -1,3 +1,3 @@
-source "${BASH_SOURCE%/*}/ensembl_elegans.sh"
-source "${BASH_SOURCE%/*}/ensembl_musculus.sh"
-source "${BASH_SOURCE%/*}/ensembl_sapiens.sh"
+bash "${BASH_SOURCE%/*}/ensembl_elegans.sh"
+bash "${BASH_SOURCE%/*}/ensembl_musculus.sh"
+bash "${BASH_SOURCE%/*}/ensembl_sapiens.sh"
