@@ -3,7 +3,7 @@ FASTA="dna.fa"
 GTF="gtf"
 
 if [ -d STAR ]; then
-  rm -rf STAR
+    rm -rf STAR
 fi
 mkdir STAR
 cd STAR

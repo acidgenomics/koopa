@@ -1,7 +1,6 @@
 git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
 
 brew tap homebrew/science
-brew tap seqcloud/seqcloud
 
 brew install fastqc
 brew install git
