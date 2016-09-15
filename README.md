@@ -1,3 +1,11 @@
-# seqcloudbash
+```{bash}
+git clone https://github.com/seqcloud/bash.git seqcloudbash
+```
 
-Bash shell scripts for high performance computing clusters
+Add to your `.bashrc` file:
+
+```{bash}
+if [ -f ~/seqcloudbash/bashrc.shrc ]; then
+    source ~/seqcloudbash/bashrc.shrc
+fi
+```
