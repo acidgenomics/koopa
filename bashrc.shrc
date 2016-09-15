@@ -4,5 +4,5 @@
 # for ssh logins, install and configure the libpam-umask package.
 umask 077
 
-bash "${BASH_SOURCE%/*}/alias.shrc"
-bash "${BASH_SOURCE%/*}/export.shrc"
+source "${BASH_SOURCE%/*}/alias.shrc"
+source "${BASH_SOURCE%/*}/export.shrc"
