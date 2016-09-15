@@ -1,0 +1,26 @@
+unset LD_LIBRARY_PATH
+
+# Miniconda ====
+if [ -d "$HOME/miniconda2" ]; then
+    export PATH="$HOME/miniconda2/bin:$PATH"
+fi
+if [ -d "$HOME/miniconda3" ]; then
+    export PATH="$HOME/miniconda3/bin:$PATH"
+fi
+
+# Linuxbrew ====
+if [ -d "$HOME/.linuxbrew" ]; then
+    export HOMEBREW_BUILD_FROM_SOURCE=1
+    export PATH="$HOME/.linuxbrew/bin:$PATH"
+    export PATH="$HOME/.linuxbrew/sbin:$PATH"
+    export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
+    export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
+fi
+
+# Manual Installs ====
+if [ -d "$HOME/bin" ] ; then
+    export PATH="$HOME/bin:$PATH"
+fi
+if [ -d "$HOME/lib" ] ; then
+    export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
+fi
