@@ -1,39 +1,39 @@
-RELEASE="84"
+RELEASE="85"
 CDNA="$GENOME.cdna.all.fa"
 DNA="$GENOME.dna.$FA_TYPE.fa"
 GTF="$GENOME.$RELEASE.gtf"
 
 cd ~/data
 if [ ! -d $MODEL ]; then
-  mkdir $MODEL
+    mkdir $MODEL
 fi
 cd $MODEL
 if [ -d genome ]; then
-  rm -rf genome
+    rm -rf genome
 fi
 mkdir genome
 cd genome
 
 # Download FASTA and GTF files
 if [ ! -f $CDNA.gz ]; then
-  wget ftp://ftp.ensembl.org/pub/release-$RELEASE/fasta/$MODEL/cdna/$CDNA.gz
+    wget ftp://ftp.ensembl.org/pub/release-$RELEASE/fasta/$MODEL/cdna/$CDNA.gz
 fi
 if [ ! -f $DNA.gz ]; then
-  wget ftp://ftp.ensembl.org/pub/release-$RELEASE/fasta/$MODEL/dna/$DNA.gz
+    wget ftp://ftp.ensembl.org/pub/release-$RELEASE/fasta/$MODEL/dna/$DNA.gz
 fi
 if [ ! -f $GTF.gz ]; then
-  wget ftp://ftp.ensembl.org/pub/release-$RELEASE/gtf/$MODEL/$GTF.gz
+    wget ftp://ftp.ensembl.org/pub/release-$RELEASE/gtf/$MODEL/$GTF.gz
 fi
 
 # Decompress the files if necessary
 if [ ! -f $CDNA ]; then
-  gunzip -cf $CDNA.gz >$CDNA
+    gunzip -cf $CDNA.gz >$CDNA
 fi
 if [ ! -f $DNA ]; then
-  gunzip -cf $DNA.gz >$DNA
+    gunzip -cf $DNA.gz >$DNA
 fi
 if [ ! -f $GTF ]; then
-  gunzip -cf $GTF.gz >$GTF
+    gunzip -cf $GTF.gz >$GTF
 fi
 
 ln -fs $CDNA cdna.fa
