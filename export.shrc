@@ -1,5 +1,8 @@
 unset LD_LIBRARY_PATH
 
+# R ====
+export R_LIBS="$HOME/R/lib"
+
 # Miniconda ====
 if [ -d "$HOME/miniconda2" ]; then
     export PATH="$HOME/miniconda2/bin:$PATH"
