@@ -1,7 +1,7 @@
 # seqcloudhpc
 
 ```{bash}
-git clone https://github.com/seqcloud/seqcloudhpc.git
+git clone https://github.com/steinbaugh/seqcloudhpc.git seqcloudhpc
 ```
 
 Add to your `.bashrc` file:
