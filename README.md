@@ -1,13 +1,13 @@
-# seqcloudhpc
+# seqcloud
 
 ```{bash}
-git clone https://github.com/steinbaugh/seqcloudhpc.git seqcloudhpc
+git clone https://github.com/steinbaugh/seqcloud.git seqcloud
 ```
 
 Add to your `.bashrc` file:
 
 ```{bash}
-if [ -f ~/seqcloudhpc/bashrc.shrc ]; then
-    source ~/seqcloudhpc/bashrc.shrc
+if [ -f ~/seqcloud/bashrc.shrc ]; then
+    source ~/seqcloud/bashrc.shrc
 fi
 ```
