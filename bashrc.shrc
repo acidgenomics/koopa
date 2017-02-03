@@ -2,7 +2,10 @@
 
 # The default umask is set in /etc/profile; for setting the umask
 # for ssh logins, install and configure the libpam-umask package.
-# umask 077
+# umask +rwx
+# umask u=rwx,g=r,o=
+# umask u+w,go-w
+umask 007  # no world access
 
 source "${BASH_SOURCE%/*}/alias.shrc"
 source "${BASH_SOURCE%/*}/export.shrc"
