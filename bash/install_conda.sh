@@ -6,6 +6,3 @@ conda update conda
 
 conda config --add channels r
 conda config --add channels bioconda
-
-conda install salmon
-conda update salmon
