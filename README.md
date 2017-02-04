@@ -9,7 +9,7 @@ git clone https://github.com/steinbaugh/seqcloud.git seqcloud
 Add to your `.bashrc` file:
 
 ```{bash}
-if [ -f ~/seqcloud/bashrc.shrc ]; then
-    source ~/seqcloud/bashrc.shrc
+if [ -f ~/seqcloud/seqcloud.shrc ]; then
+    source ~/seqcloud/seqcloud.shrc
 fi
 ```
