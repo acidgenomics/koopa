@@ -1,9 +1,19 @@
-# unset LD_LIBRARY_PATH
+# Aliases ====
+## General
+alias e="exit"
+alias ll='ls -l'
+alias la='ls -a'
+alias l='ls -cf'
 
-# R ====
-export R_LIBS="$HOME/R/lib"
 
-# Miniconda ====
+## Script Shortcuts
+alias i="bash ~/seqcloud/bash/bsub_interactive_1.sh"
+alias i2="bash ~/seqcloud/bash/bsub_interactive_2.sh"
+
+
+
+# Exports ====
+## Miniconda
 if [ -d "$HOME/miniconda2" ]; then
     export PATH="$HOME/miniconda2/bin:$PATH"
 fi
@@ -11,7 +21,8 @@ if [ -d "$HOME/miniconda3" ]; then
     export PATH="$HOME/miniconda3/bin:$PATH"
 fi
 
-# Linuxbrew ====
+
+## Linuxbrew
 if [ -d "$HOME/.linuxbrew" ]; then
     export HOMEBREW_BUILD_FROM_SOURCE=1
     export PATH="$HOME/.linuxbrew/bin:$PATH"
@@ -20,7 +31,8 @@ if [ -d "$HOME/.linuxbrew" ]; then
     export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
 fi
 
-# Manual Installs ====
+
+## Manual Installs
 if [ -d "$HOME/bin" ] ; then
     export PATH="$HOME/bin:$PATH"
 fi

@@ -1,2 +1,0 @@
-source "${BASH_SOURCE%/*}/alias.shrc"
-source "${BASH_SOURCE%/*}/export.shrc"
