@@ -2,7 +2,7 @@
 
 [![Project Status: WIP - Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
 
-Connect to your high-performance computing (HPC) cluster and run these shell commands:
+Connect to your high-performance computing (HPC) cluster and clone the git repository:
 
 ```{bash}
 git clone https://github.com/steinbaugh/seqcloud.git seqcloud
