@@ -1,3 +1,9 @@
+function seqcloud {
+    bash ${BASH_SOURCE%/*}/bash/"$1".sh
+}
+
+
+
 # Aliases ====
 ## General
 alias e="exit"
