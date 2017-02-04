@@ -4,5 +4,5 @@ rm Miniconda3-latest-Linux-x86_64.sh
 
 conda update conda
 
-conda config --add channels r
 conda config --add channels bioconda
+conda config --add channels r
