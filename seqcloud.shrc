@@ -14,7 +14,7 @@ alias l='ls -cf'
 
 ## Script Shortcuts
 alias i="seqcloud bsub_interactive"
-alias i2="seqcloud bsub_interactive_multicore.sh"
+alias i2="seqcloud bsub_interactive_multicore"
 
 
 
