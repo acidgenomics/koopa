@@ -1,9 +1,25 @@
-# unset LD_LIBRARY_PATH
+function seqcloud {
+    bash ${BASH_SOURCE%/*}/bash/"$1".sh
+}
 
-# R ====
-export R_LIBS="$HOME/R/lib"
 
-# Miniconda ====
+
+# Aliases ====
+## General
+alias e="exit"
+alias ll='ls -l'
+alias la='ls -a'
+alias l='ls -cf'
+
+
+## Script Shortcuts
+alias i="seqcloud bsub_interactive"
+alias i2="seqcloud bsub_interactive_multicore"
+
+
+
+# Exports ====
+## Miniconda
 if [ -d "$HOME/miniconda2" ]; then
     export PATH="$HOME/miniconda2/bin:$PATH"
 fi
@@ -11,7 +27,8 @@ if [ -d "$HOME/miniconda3" ]; then
     export PATH="$HOME/miniconda3/bin:$PATH"
 fi
 
-# Linuxbrew ====
+
+## Linuxbrew
 if [ -d "$HOME/.linuxbrew" ]; then
     export HOMEBREW_BUILD_FROM_SOURCE=1
     export PATH="$HOME/.linuxbrew/bin:$PATH"
@@ -20,7 +37,8 @@ if [ -d "$HOME/.linuxbrew" ]; then
     export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
 fi
 
-# Manual Installs ====
+
+## Manual Installs
 if [ -d "$HOME/bin" ] ; then
     export PATH="$HOME/bin:$PATH"
 fi
