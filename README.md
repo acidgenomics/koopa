@@ -5,7 +5,7 @@
 Connect to your high-performance computing (HPC) cluster and clone our git repository:
 
 ```{bash}
-git clone https://github.com/steinbaugh/seqcloud.git seqcloud
+git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 ```
 
 Append this line to your `.bashrc` file:
