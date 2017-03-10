@@ -8,8 +8,24 @@ Connect to your high-performance computing (HPC) cluster and clone our git repos
 git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 ```
 
-Append this line to your `.bash_profile`:
+
+## [HMS Orchestra](https://wiki.med.harvard.edu/Orchestra/WebHome) setup
+
+### `.bash_profile` file
+
+This will automatically boot an interactive session upon login.
+
+```{bash}
+bsub -Is -q interactive bash
+```
+
+### `.bashrc` file
+
+The interactive session with now load `seqcloud` and change the default user permissions for better security.
 
 ```{bash}
 . ~/seqcloud/seqcloud.sh
+
+# Restrict world access
+umask 0007
 ```
