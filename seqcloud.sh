@@ -7,7 +7,7 @@
 install_dir=${BASH_SOURCE%/*}
 
 # Load login scripts
-for file in $(find "$install_dir"/bash/login -type f -name "*.sh" ! -name "._*" | sort)
+for file in $(find "$install_dir"/bash/login -type f -name "*.sh" ! -name ".*" | sort)
 do
     . "$file"
 done
