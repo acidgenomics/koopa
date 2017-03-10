@@ -11,5 +11,5 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 Append this line to your `.bash_profile`:
 
 ```{bash}
-source ~/seqcloud/seqcloud.shrc
+. ~/seqcloud/seqcloud.sh
 ```

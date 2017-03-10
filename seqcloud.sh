@@ -4,8 +4,10 @@
 # This software is provided under an MIT License
 # https://github.com/steinbaugh/seqcloud
 
+install_dir=${BASH_SOURCE%/*}
+
 # Load login scripts
-for file in $(find ${BASH_SOURCE%/*}/bash/profile -type f -name "*.sh" ! -name "._*" | sort)
+for file in $(find "$install_dir"/bash/login -type f -name "*.sh" ! -name "._*" | sort)
 do
     . "$file"
 done
@@ -14,5 +16,5 @@ done
 function seqcloud {
     local script="$1"
     shift 1
-    . ${BASH_SOURCE%/*}/bash/"$script".sh "$*"
+    . "$install_dir"/bash/"$script".sh "$*"
 }
