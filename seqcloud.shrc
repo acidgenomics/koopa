@@ -1,47 +1,18 @@
+#!/usr/bin/env bash
+# seqcloud bash script loader
+# (c) 2017 Michael J. Steinbaugh
+# This software is provided under an MIT License
+# https://github.com/steinbaugh/seqcloud
+
+# Load login scripts
+for file in $(find ${BASH_SOURCE%/*}/bash/profile -type f -name "*.sh" ! -name "._*" | sort)
+do
+    . "$file"
+done
+
+# Pass positional parameters to scripts in the `bash` subdirectory
 function seqcloud {
-    bash ${BASH_SOURCE%/*}/bash/"$1".sh
+    local script="$1"
+    shift 1
+    . ${BASH_SOURCE%/*}/bash/"$script".sh "$*"
 }
-
-
-
-# Aliases ====
-## General
-alias e="exit"
-alias ll='ls -l'
-alias la='ls -a'
-alias l='ls -cf'
-
-
-## Script Shortcuts
-alias i="seqcloud bsub_interactive"
-alias i2="seqcloud bsub_interactive_multicore"
-
-
-
-# Exports ====
-## Miniconda
-if [ -d "$HOME/miniconda2" ]; then
-    export PATH="$HOME/miniconda2/bin:$PATH"
-fi
-if [ -d "$HOME/miniconda3" ]; then
-    export PATH="$HOME/miniconda3/bin:$PATH"
-fi
-
-
-## Linuxbrew
-if [ -d "$HOME/.linuxbrew" ]; then
-    export HOMEBREW_BUILD_FROM_SOURCE=1
-    export PATH="$HOME/.linuxbrew/bin:$PATH"
-    export PATH="$HOME/.linuxbrew/sbin:$PATH"
-    export MANPATH="$HOME/.linuxbrew/share/man:$MANPATH"
-    export INFOPATH="$HOME/.linuxbrew/share/info:$INFOPATH"
-fi
-
-
-## Manual Installs
-if [ -d "$HOME/bin" ] ; then
-    export PATH="$HOME/bin:$PATH"
-fi
-if [ -d "$HOME/lib" ] ; then
-    export LD_LIBRARY_PATH="$HOME/lib:$LD_LIBRARY_PATH"
-fi

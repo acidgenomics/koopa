@@ -1,7 +1,5 @@
 git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
-
 brew tap homebrew/science
-
 brew install fastqc
 brew install git
 brew install kallisto

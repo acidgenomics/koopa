@@ -1,21 +1,34 @@
-if [ ! -d sam ]; then
-    mkdir sam
+# This assumes the following data structure:
+# - fastq
+# - genome (STAR genome dir, preferable to symlink)
+# - sam
+queue="mcore"
+cores="12"
+genomeDir="star"
+if [ "$#" -gt "0" ]
+then
+    queue="$1"
+    cores="$2"
+    genomeDir="$3"
 fi
-cd fastq
-for file in `ls *.fastq.gz`; do
-    base=`basename $file .fastq.gz`
+for fastq in $(ls fastq/*.fastq.gz)
+do
+    base=$(basename "$fastq" .fastq.gz)
     # Skip second paired file in loop for simplicity
-    if [[ ! $base == *"_2" ]]; then
-        if [[ $base == *"_1" ]]; then
-            base=`basename $base _1`
+    if [[ ! "$base" == *"_2" ]]
+    then
+        if [[ "$base" == *"_1" ]]
+        then
+            base=$(basename "$base" _1)
             echo "$base (paired)"
-            file="${base}_1.fastq.gz ${base}_2.fastq.gz"
+            fastq="fastq/${base}_1.fastq.gz fastq/${base}_2.fastq.gz"
         else
             echo "$base (single)"
         fi
-        if [ ! -d ../sam/$base ]; then
-            mkdir ../sam/$base
-            bsub -q priority -W 1:00 -n 12 STAR --genomeDir=../../../genome/STAR --outFileNamePrefix=../sam/$base/ --readFilesCommand=zcat --readFilesIn=$file --runThreadN=12 --outFilterType=BySJout --outFilterMultimapNmax=20 --alignSJoverhangMin=8 --alignSJDBoverhangMin=1 --outFilterMismatchNmax=999 --alignIntronMin=20 --alignIntronMax=1000000 --alignMatesGapMax=1000000
+        if [ ! -d sam/"$base" ]
+        then
+            mkdir -p sam/"$base"
+            bsub -q "$queue" -W 1:00 -n "$cores" STAR --genomeDir="$genomeDir"/ --outFileNamePrefix=sam/"$base"/ --readFilesCommand=zcat --readFilesIn="$fastq" --runThreadN="$cores" --outFilterType=BySJout --outFilterMultimapNmax=20 --alignSJoverhangMin=8 --alignSJDBoverhangMin=1 --outFilterMismatchNmax=999 --alignIntronMin=20 --alignIntronMax=1000000 --alignMatesGapMax=1000000
         fi
     fi
 done

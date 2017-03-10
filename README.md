@@ -8,7 +8,7 @@ Connect to your high-performance computing (HPC) cluster and clone our git repos
 git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 ```
 
-Append this line to your `.bashrc` file:
+Append this line to your `.bash_profile`:
 
 ```{bash}
 source ~/seqcloud/seqcloud.shrc
