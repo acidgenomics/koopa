@@ -4,6 +4,8 @@
 # - sam
 queue="mcore"
 cores="12"
+# Also adjust the memory settings here for Orchesta recommendation
+# Could default to 2 core, 16 GB RAM
 genomeDir="star"
 if [ "$#" -gt "0" ]
 then
