@@ -6,8 +6,8 @@
 
 install_dir=${BASH_SOURCE%/*}
 
-# Load login scripts
-for file in $(find "$install_dir"/login -type f -name "*.sh" ! -name ".*" | sort)
+# Load profile settings
+for file in $(find "$install_dir"/profile -type f -name "*.sh" ! -name ".*" | sort)
 do
     . "$file"
 done
@@ -16,5 +16,5 @@ done
 function seqcloud {
     local script="$1"
     shift 1
-    . "$install_dir"/scripts/"$script".sh "$*"
+    . "$install_dir"/bash/"$script".sh "$*"
 }
