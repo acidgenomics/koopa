@@ -16,5 +16,5 @@ done
 function seqcloud {
     local script="$1"
     shift 1
-    . "$seqcloud_dir"/bash/"$script".sh "$*"
+    . "$seqcloud_dir"/bash/"$script".sh $*
 }
