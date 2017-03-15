@@ -1,9 +1,8 @@
 organism="$1"
 type="$2"
 
-# Drosophila melanogaster transcriptome FASTA
-# Ensembl annotations are out of date (2014)
-# Use the resources from FlyBase instead
+# D. melanogaster Ensembl annotations are out of date (2014).
+# Use the FlyBase annotations instead.
 if [[ $organism == "dmelanogaster" ]]; then
     if [[ $type == "genome" ]]; then
         request="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-aligned-r6.14.fasta.gz"
