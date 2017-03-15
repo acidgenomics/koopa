@@ -21,13 +21,14 @@ bsub -Is -q interactive bash
 
 ### `.bashrc` file
 
-The interactive session with now load `seqcloud`.
-
-We also advise changing the default user permissions for enhanced security.
+This will automatically load `seqcloud` in the interactive session.
 
 ```{bash}
 . ~/seqcloud/seqcloud.sh
+```
 
-# Restrict world access
+We also advise restricting world read access by default for enhanced security.
+
+```{bash}
 umask 0007
 ```
