@@ -5,10 +5,10 @@ details:
     genome_build: BDGP6
     algorithm:
       cellular_barcode_correction: 1
-      cellular_barcodes: [metadata/cellular_barcodes.txt, metadata/cellular_barcodes_reverse_complement.txt]
+      cellular_barcodes: [cellular_barcodes.txt, cellular_barcodes_reverse_complement.txt]
       minimum_barcode_depth: 10000
       positional_umi: False
-      sample_barcodes: metadata/sample_barcodes_reverse_complement.txt
+      sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
-      transcriptome_fasta: metadata/transcriptome.fasta
+      transcriptome_fasta: transcriptome.fasta
       umi_type: harvard-indrop-v3
