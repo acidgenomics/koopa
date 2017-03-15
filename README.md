@@ -27,7 +27,7 @@ This will automatically load `seqcloud` in the interactive session.
 . ~/seqcloud/seqcloud.sh
 ```
 
-We also advise restricting world read access by default for enhanced security.
+We also advise restricting world access by default for enhanced security.
 
 ```{bash}
 umask 0007
