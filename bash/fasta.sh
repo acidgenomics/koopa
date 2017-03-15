@@ -38,7 +38,7 @@ elif [[ $organism == "dmelanogaster" ]]; then
     elif [[ $type == "cdna" ]]; then
         request="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-transcript-r6.14.fasta.gz"
     fi
-elif [[ organism == "nfurzeri" ]]; then
+elif [[ $organism == "nfurzeri" ]]; then
     echo "Nothobranchius furzeri (turquoise killifish)"
     echo "NFINgb GRZ Assembly"
     if [[ $type == "dna" ]]; then
