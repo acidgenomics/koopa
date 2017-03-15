@@ -11,9 +11,6 @@ if [[ $organism == "dmelanogaster" ]]; then
     fi
 fi
 file=$(basename "$request")
-mkdir -p metadata/
-cd metadata
 wget "$request"
 gunzip "$file"
-cd ..
-ls -l metadata/*.fasta
+ls -l *.fasta*
