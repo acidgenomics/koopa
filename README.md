@@ -30,5 +30,5 @@ This will automatically load `seqcloud` in the interactive session.
 We also advise restricting world access by default for enhanced security.
 
 ```{bash}
-umask 0007
+umask 007
 ```
