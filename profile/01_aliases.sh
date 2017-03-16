@@ -1,5 +1,0 @@
-alias e="exit"
-alias i="seqcloud interactive"
-alias l="ls -cf"
-alias la="ls -a"
-alias ll="ls -l"
