@@ -1,5 +1,4 @@
-if [[ $orchestra == true ]]
-then
+if [[ $orchestra = true ]]; then
     # Unload everything
     module load null
 
