@@ -1,6 +1,5 @@
 # Enable color support
-if [ -x /usr/bin/dircolors ]
-then
+if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias dir="dir --color=auto"
     alias egrep="egrep --color=auto"
@@ -9,13 +8,6 @@ then
     alias ls="ls --color=auto"
     alias vdir="vdir --color=auto"
 fi
-
-# Append to the history file, don't overwrite it
-shopt -s histappend
-
-# Check the window size after each command and, if necessary, update the values
-# of LINES and COLUMNS
-shopt -s checkwinsize
 
 # Make `less` more friendly for non-text input files, see `lesspipe(1)`
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
