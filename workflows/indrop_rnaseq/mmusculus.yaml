@@ -1,4 +1,4 @@
-# Template for D. melanogaster scRNA-seq using Illumina prepared samples
+# Template for M. musculus scRNA-seq using Illumina prepared samples
 ---
 details:
   - analysis: scRNA-seq
