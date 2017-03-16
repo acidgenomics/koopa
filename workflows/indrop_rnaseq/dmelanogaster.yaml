@@ -10,5 +10,5 @@ details:
       positional_umi: False
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
-      transcriptome_fasta: transcriptome.fasta
+      transcriptome_fasta: dmel-all-transcript-r6.14.fasta.gz
       umi_type: harvard-indrop-v3
