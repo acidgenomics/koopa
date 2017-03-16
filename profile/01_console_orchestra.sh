@@ -1,4 +1,4 @@
-if [[ $HOSTNAME =~ ".orchestra" ]] && [ $(uname -s) = "Linux" ] && [ -d /n/data1/ ]; then
+if [[ $HOSTNAME =~ ".orchestra" ]] && [[ $(uname -s) = "Linux" ]] && [[ -d /n/data1/ ]]; then
     orchestra=true
     
     # If not running interactively, don't do anything
