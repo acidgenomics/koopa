@@ -10,13 +10,9 @@ if [ $(uname -s) = "Linux" ] && [ -d /groups/bcbio/ ] && [ -d /n/data1/ ] && [ -
         debian_chroot=$(cat /etc/debian_chroot)
     fi
     # Check for color support
-    case "$TERM" in
-        xterm-color) color_prompt=yes;;
-    esac
-    if [ "$color_prompt" = yes ]; then
+    if [ $TERM = "xterm-256color" ]; then
         PS1="${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ "
     else
         PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w\$ "
     fi
-    unset color_prompt
 fi
