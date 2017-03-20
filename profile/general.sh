@@ -14,6 +14,6 @@ alias ll="ls -lh"
 #     --progress              show progress during transfer
 # -r, --recursive             recurse into directories
 # -t, --times                 preserve modification times
-rsync_flags="--archive --human-readable --progress --recursive --times"
+rsync_flags="--archive --delete --human-readable --progress --recursive --times"
 
 today=$(date +%Y-%m-%d)
