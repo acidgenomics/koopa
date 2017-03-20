@@ -1,0 +1,21 @@
+# Overview
+
+- **PI:** 
+- **Experiment:** 
+- **Workflow:** `illumina_rnaseq`
+
+
+
+```{r bcbio}
+project <- bcbioProject("illumina_rnaseq")
+metadata <- bcbioMetadata(project,
+                          group = "treatment")
+summary <- bcbioSummary(project, metadata)
+```
+
+```{r metadata_table}
+factor <- c("treatment")
+save(factor, file = "data/factor.rda")
+metadata[, c("description", factor)] %>%
+    printTable(caption = "Sample metadata")
+```
