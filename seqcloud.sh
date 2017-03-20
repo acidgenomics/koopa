@@ -4,10 +4,10 @@
 # This software is provided under an MIT License
 # https://github.com/steinbaugh/seqcloud
 
-seqcloud_dir=${BASH_SOURCE%/*}
+seqcloudDir=${BASH_SOURCE%/*}
 
 # Load profile settings
-for file in $(find "$seqcloud_dir"/profile -type f -name "*.sh" ! -name ".*" | sort)
+for file in $(find "$seqcloudDir"/profile -type f -name "*.sh" ! -name ".*" | sort)
 do
     . "$file"
 done
@@ -16,5 +16,5 @@ done
 function seqcloud {
     local script="$1"
     shift 1
-    . "$seqcloud_dir"/bash/"$script".sh $*
+    . "$seqcloudDir"/bash/"$script".sh $*
 }
