@@ -2,14 +2,12 @@
 genomeDir="star"
 genomeFastaFiles="genome.fasta"
 sjdbGTFfile="genome.gtf"
-if [ "$#" -gt "0" ]
-then
+if [[ "$#" -gt "0" ]]; then
     genomeDir="$1"
     genomeFastaFiles="$1"
     sjdbGTFfile="$2"
 fi
-if [ -d "$genomeDir" ]
-then
+if [[ -d "$genomeDir" ]]; then
     rm -rf "$genomeDir"
 fi
 mkdir -p "$genomeDir"
