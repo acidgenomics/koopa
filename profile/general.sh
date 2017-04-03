@@ -4,6 +4,8 @@ alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -lh"
 
+# export PROMPT_DIRTRIM=2
+
 # rsync
 # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
 # -z, --compress              compress file data during the transfer
