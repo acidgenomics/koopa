@@ -2,6 +2,7 @@ bookdown::html_document2:
     code_folding: hide
     df_print: kable
     highlight: pygments
+    number_sections: false
     toc: true
 BiocStyle::pdf_document:
     toc: true
