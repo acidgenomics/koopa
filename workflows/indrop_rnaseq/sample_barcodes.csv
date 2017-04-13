@@ -1,4 +1,4 @@
-identifier,sequence,reverse_complement
+index,sequence,reverse_complement
 idx1,CTCTCTAT,ATAGAGAG
 idx2,TATCCTCT,AGAGGATA
 idx3,GTAAGGAG,CTCCTTAC
