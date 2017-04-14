@@ -6,6 +6,12 @@
 
 seqcloudDir=${BASH_SOURCE%/*}
 
+# Check for supported operating system
+if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
+    echo "$(uname -s) operating system not supported"
+    exit 1
+fi
+
 # Load profile settings
 for file in $(find "$seqcloudDir"/profile -type f -name "*.sh" ! -name ".*" | sort); do
     . "$file"

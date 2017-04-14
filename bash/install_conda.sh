@@ -8,7 +8,7 @@ if [[ $(uname -s) = "Linux" ]]; then
 elif [[ $(uname -s) = "Darwin" ]]; then
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 else
-    echo "operating system not supported"
+    echo "$(uname -s) operating system not supported"
     exit 1
 fi
 
