@@ -2,13 +2,12 @@
 # seqcloud bash script loader
 # (c) 2017 Michael J. Steinbaugh
 # This software is provided under an MIT License
-# https://github.com/steinbaugh/seqcloud
+# http://seq.cloud
 
 seqcloudDir=${BASH_SOURCE%/*}
 
 # Load profile settings
-for file in $(find "$seqcloudDir"/profile -type f -name "*.sh" ! -name ".*" | sort)
-do
+for file in $(find "$seqcloudDir"/profile -type f -name "*.sh" ! -name ".*" | sort); do
     . "$file"
 done
 
