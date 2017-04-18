@@ -1,6 +1,6 @@
 # Create a user folder on the Orchestra scratch disk
 # Requires an eCommons user identifier
-userDir=/n/scratch2/$(whoami)
-mkdir -p "$userDir"
-chmod 700 "$userDir"
-ln -s "$userDir" ~/scratch
+user_dir=/n/scratch2/$(whoami)
+mkdir -p "$user_dir"
+chmod 700 "$user_dir"
+ln -s "$user_dir" ~/scratch

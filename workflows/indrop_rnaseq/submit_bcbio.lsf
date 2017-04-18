@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #BSUB -q priority
-#BSUB -J bcbio_project
+#BSUB -J indrop_rnaseq
 #BSUB -N
 #BSUB -n 1
 #BSUB -W 100:0

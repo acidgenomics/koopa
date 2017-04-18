@@ -52,3 +52,6 @@ fi
 wget "$request"
 fasta=$(basename "$request")
 ls -l "$fasta"
+
+unset request
+unset type
