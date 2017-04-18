@@ -50,5 +50,5 @@ elif [[ $organism == "nfurzeri" ]]; then
 fi
 
 wget "$request"
-file=$(basename "$request")
-ls -l "$file"
+fasta=$(basename "$request")
+ls -l "$fasta"
