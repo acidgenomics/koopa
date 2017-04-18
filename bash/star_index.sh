@@ -1,14 +1,15 @@
 # Ideally, use symlinks with these defaults or you can rename
-genomeDir="star"
-genomeFastaFiles="genome.fasta"
-sjdbGTFfile="genome.gtf"
 if [[ "$#" -gt "0" ]]; then
-    genomeDir="$1"
-    genomeFastaFiles="$1"
-    sjdbGTFfile="$2"
+    genome_dir="$1"
+    fasta="$1"
+    gtf="$2"
+else
+    genome_dir="star"
+    fasta="genome.fasta"
+    gtf="genome.gtf"
 fi
-if [[ -d "$genomeDir" ]]; then
-    rm -rf "$genomeDir"
+if [[ -d "$genome_dir" ]]; then
+    rm -rf "$genome_dir"
 fi
-mkdir -p "$genomeDir"
-STAR --runMode=genomeGenerate --genomeDir="$genomeDir" --genomeFastaFiles="$fasta" --sjdbGTFfile="$gtf"
+mkdir -p "$genome_dir"
+STAR --runMode=genomeGenerate --genome_dir="$genome_dir" --genomeFastaFiles="$fasta" --sjdbGTFfile="$gtf"
