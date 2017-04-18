@@ -51,5 +51,5 @@ fi
 
 wget "$request"
 file=$(basename "$request")
-# gunzip "$file"
-ls -l "$file"*
+gunzip "$file"
+ls -l "$file"
