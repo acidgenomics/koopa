@@ -14,6 +14,9 @@ if [[ $orchestra = true ]]; then
     module load dev/openssl/1.0.1
     module load dev/python/3.4.2
     module load dev/ruby/2.2.4
+    
+    # image
+    module load image/imageMagick/6.9.1
 
     # seq
     module load seq/bcl2fastq/2.17.1.14
