@@ -4,7 +4,9 @@
 # This software is provided under an MIT License
 # http://seq.cloud
 
-seqcloud_dir=${BASH_SOURCE%/*}
+# http://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
+# seqcloud_dir=${BASH_SOURCE%/*}
+seqcloud_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Check for supported operating system
 if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
