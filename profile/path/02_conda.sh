@@ -1,9 +1,10 @@
 # https://conda.io/miniconda.html
 if [[ -d "$HOME/miniconda2" ]]; then
-    export PATH="$HOME/miniconda2/bin:$PATH"
-    export PKG_CONFIG_PATH=~/miniconda2/lib/pkgconfig:$PKG_CONFIG_PATH
+    echo "miniconda2 is deprecated. seqcloud supports miniconda3."
 fi
 if [[ -d "$HOME/miniconda3" ]]; then
-    export PATH="$HOME/miniconda3/bin:$PATH"
-    export PKG_CONFIG_PATH=~/miniconda3/lib/pkgconfig:$PKG_CONFIG_PATH
+    conda_dir="$HOME/miniconda3"
+    export LD_LIBRARY_PATH="$conda_dir/lib:$LD_LIBRARY_PATH"
+    export PATH="$conda_dir/bin:$PATH"
+    export PKG_CONFIG_PATH="$conda_dir/lib/pkgconfig:$PKG_CONFIG_PATH"
 fi
