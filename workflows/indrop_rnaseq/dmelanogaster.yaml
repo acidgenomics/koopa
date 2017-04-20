@@ -1,0 +1,14 @@
+# Template for D. melanogaster scRNA-seq using Illumina prepared samples
+---
+details:
+  - analysis: scRNA-seq
+    genome_build: BDGP6
+    algorithm:
+      cellular_barcode_correction: 1
+      cellular_barcodes: [cellular_barcodes.txt, cellular_barcodes_reverse_complement.txt]
+      minimum_barcode_depth: 10000
+      positional_umi: False
+      sample_barcodes: sample_barcodes_reverse_complement.txt
+      singlecell_quantifier: rapmap
+      transcriptome_fasta: dmel-all-transcript-r6.14.fasta
+      umi_type: harvard-indrop-v3
