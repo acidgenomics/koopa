@@ -20,7 +20,7 @@ if [[ $orchestra = true ]]; then
 
     # seq
     module load seq/bcl2fastq/2.17.1.14
-    module load seq/sratoolkit/2.8.1
+    module load seq/sratoolkit/2.8.1-3
 
     # stats
     module load stats/R/3.3.1
