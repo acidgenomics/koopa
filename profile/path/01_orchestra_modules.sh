@@ -27,6 +27,7 @@ if [[ $orchestra = true ]]; then
     module load stats/R/3.3.1
     
     # utils
+    module load utils/hdf5/1.8.16
     module load utils/pandoc/1.17.0.3
     module load utils/xz/5.2.2
 fi
