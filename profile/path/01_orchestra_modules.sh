@@ -28,4 +28,5 @@ if [[ $orchestra = true ]]; then
     
     # utils
     module load utils/pandoc/1.17.0.3
+    module load utils/xz/5.2.2
 fi
