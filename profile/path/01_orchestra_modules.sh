@@ -5,8 +5,8 @@ if [[ $orchestra = true ]]; then
     # dev
     module load dev/boost-1.57.0
     module load dev/compiler/cmake-3.3.1
+    module load dev/compiler/gcc-4.8.5
     module load dev/compiler/llvm-3.8.0
-    module load dev/gcc-4.8.5  # 5.2.0
     module load dev/java/jdk1.8
     module load dev/lapack
     module load dev/leiningen/stable-feb032016
