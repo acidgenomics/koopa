@@ -1,4 +1,7 @@
-if [[ $orchestra = true ]]; then
+# Ensure that user is on Orchestra and not using conda
+if [[ -n $orchestra ]] && [[ -z $conda_dir ]]; then
+    echo "    [x] orchestra modules"
+    
     # Unload everything
     module load null
 
