@@ -14,3 +14,6 @@ fi
 
 bash Miniconda3-*.sh
 rm Miniconda3-*.sh
+
+echo "conda install succeeded. shell must be reloaded."
+exit 1
