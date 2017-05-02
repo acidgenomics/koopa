@@ -14,19 +14,11 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
     exit 1
 fi
 
-echo ""
-echo "  ==== seqcloud ========================================================  "
-echo ""
-
 # Load profile settings
 for file in $(find "$seqcloud_dir"/profile -type f -name "*.sh" ! -name ".*" | sort); do
     . "$file"
 done
 unset file
-
-echo ""
-echo "  ======================================================================  "
-echo ""
 
 # Pass positional parameters to scripts in the `bash` subdirectory
 function seqcloud {
