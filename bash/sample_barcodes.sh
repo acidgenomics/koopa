@@ -1,5 +1,5 @@
 mkdir -p logs
-gzip -cd data-raw/fastq/*_R3.fastq.* | \
+gzip -cd data-raw/fastq/*_R3.* | \
 head -1000000 | \
 awk 'NR == 2 || NR % 4 == 2' | \
 grep -v N | \
