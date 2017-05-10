@@ -10,4 +10,4 @@ grep -v N | \
 sort | \
 uniq -c | \
 sort -nr | \
-head -n 24 > logs/i5_index_counts.log
+head -n 24 > logs/indrop_i5_index_counts.log
