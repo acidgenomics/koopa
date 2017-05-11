@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # seqcloud bash script loader
 # (c) 2017 Michael J. Steinbaugh
 # This software is provided under an MIT License
