@@ -1,0 +1,10 @@
+# Template for H. sapiens fast RNA-seq using Illumina prepared samples
+---
+details:
+  genome_build: hg38
+  - analysis: fastrna-seq
+    algorithm:
+      # ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+      transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
+upload:
+  dir: ../final
