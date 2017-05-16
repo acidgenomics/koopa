@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#BSUB -q priority
+#BSUB -J illumina_rnaseq
+#BSUB -N
+#BSUB -n 1
+#BSUB -W 100:0
+#BSUB -R "rusage[mem=10000]"
+#BSUB -e project.err
+#BSUB -o project.out
+
+bcbio_nextgen.py ../config/illumina_rnaseq.yaml -n 72 -t ipython -s lsf -q parallel -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 380
+
+# Use 6x cores per sample
