@@ -1,0 +1,15 @@
+# Template for M. musculus fast RNA-seq using Illumina prepared samples
+# 2017-05-16
+#
+# ```bash
+# cd $template/work
+# seqcloud fasta mmusculus cdna
+# ```
+---
+details:
+  genome_build: mm10
+  - analysis: fastrna-seq
+    algorithm:
+      transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
+upload:
+  dir: ../final
