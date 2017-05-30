@@ -1,5 +1,6 @@
 # Template for M. musculus scRNA-seq using Illumina prepared samples
 # Dependency files must be saved into the work directory
+# 2017-05-30
 ---
 details:
   - analysis: scRNA-seq
