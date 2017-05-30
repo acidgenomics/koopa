@@ -4,11 +4,10 @@ details:
   - analysis: scRNA-seq
     genome_build: mm10
     algorithm:
-      # minimum_barcode_depth: 10000
-      # transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
       cellular_barcode_correction: 1
       cellular_barcodes: [cellular_barcodes.txt, cellular_barcodes_reverse_complement.txt]
-      minimum_barcode_depth: auto
+      minimum_barcode_depth: 10000
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
+      transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
       umi_type: harvard-indrop-v3
