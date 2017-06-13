@@ -1,0 +1,2 @@
+# Interactive session with 64 GB of RAM
+bsub -Is -R "rusage[mem=65536]" -q interactive bash
