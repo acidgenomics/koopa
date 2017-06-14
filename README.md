@@ -33,5 +33,7 @@ i
 This will automatically load `seqcloud` in the interactive session.
 
 ```{bash}
+# Interactive bash non-login shell settings
+# (c) 2017 seqcloud (http://seq.cloud/)
 . ~/seqcloud/seqcloud.sh
 ```
