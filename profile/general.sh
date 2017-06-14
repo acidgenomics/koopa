@@ -1,5 +1,6 @@
 alias e="exit"
 alias i="seqcloud interactive"
+alias i2="seqcloud interactive_64gb"
 alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -lh"
