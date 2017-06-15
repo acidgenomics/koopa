@@ -11,7 +11,7 @@
 # - `module avail`
 # - `module avail stats/R`
 
-if [[ -n $orchestra ]]; then
+if [[ -n $ORCHESTRA ]]; then
     # dev
     module load dev/boost-1.57.0
     module load dev/compiler/cmake-3.3.1

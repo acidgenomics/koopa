@@ -3,7 +3,7 @@ if [[ -d "$HOME/miniconda2" ]]; then
     echo "seqcloud only supports miniconda3"
 fi
 if [[ -d "$HOME/miniconda3" ]]; then
-    conda_dir="$HOME/miniconda3"
+    export CONDA_DIR="$HOME/miniconda3"
     export PATH="$conda_dir/bin:$PATH"
     export LD_RUN_PATH="$conda_dir/lib:$LD_RUN_PATH"
     export PKG_CONFIG_PATH="$conda_dir/lib/pkgconfig:$PKG_CONFIG_PATH"

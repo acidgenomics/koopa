@@ -1,23 +1,32 @@
 # PATH ====
 echo "PATH exports"
-# conda
-if [[ ! -z $conda_dir ]]; then
-    check="x"
-else
-    check=" "
-fi
-echo "    [$check] conda"
 
 # orchestra
-if [[ -n $orchestra ]] && [[ -z $conda_dir ]]; then
+if [[ -n $ORCHESTRA ]]; then
     check="x"
 else
     check=" "
 fi
 echo "    [$check] orchestra modules"
 
+# conda
+if [[ ! -z $CONDA_DIR ]]; then
+    check="x"
+else
+    check=" "
+fi
+echo "    [$check] conda"
+
+# aspera connect
+if [[ ! -z $ASPERA_DIR ]]; then
+    check="x"
+else
+    check=" "
+fi
+echo "    [$check] aspera connect"
+
 # bcbio-nextgen
-if [[ ! -z $bcbio_dir ]]; then
+if [[ ! -z $BCBIO_DIR ]]; then
     check="x"
 else
     check=" "
