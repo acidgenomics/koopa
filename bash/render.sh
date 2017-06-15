@@ -1,2 +1,2 @@
 file_name="$1"
-bsub -q priority -W 12:00 Rscript -e 'rmarkdown::render("$file_name.Rmd")'
+bsub -W 12:00 -q priority -J "$file_name" -n 1 -R rusage[mem=65536] Rscript -e 'rmarkdown::render("$file_name.Rmd")'
