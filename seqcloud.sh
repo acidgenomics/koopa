@@ -7,7 +7,7 @@
 
 # http://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 # seqcloud_dir=${BASH_SOURCE%/*}
-seqcloud_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Check for supported operating system
 if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
@@ -16,7 +16,7 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
 fi
 
 # Load profile settings
-for file in $(find "$seqcloud_dir"/profile -type f -name "*.sh" ! -name ".*" | sort); do
+for file in $(find "$SEQCLOUD_DIR"/profile -type f -name "*.sh" ! -name ".*" | sort); do
     . "$file"
 done
 unset file
@@ -25,5 +25,5 @@ unset file
 function seqcloud {
     local script="$1"
     shift 1
-    . "$seqcloud_dir"/bash/"$script".sh $*
+    . "$SEQCLOUD_DIR"/bash/"$script".sh $*
 }
