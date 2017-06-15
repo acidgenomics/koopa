@@ -1,0 +1,3 @@
+CC=gcc -std=gnu99
+CXX=g++
+PKG_CXXFLAGS=-std=c++11
