@@ -1,9 +1,16 @@
 alias e="exit"
+
+# Interactive queues
 alias i="seqcloud interactive"
 alias i2="seqcloud interactive_64gb"
+
+# ls
 alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -lh"
+
+# Disable R prompt to save workspace
+alias R="R --no-save"
 
 # export PROMPT_DIRTRIM=2
 
