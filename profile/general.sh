@@ -1,10 +1,21 @@
 alias e="exit"
+
+# Interactive queues
 alias i="seqcloud interactive"
+alias i2="seqcloud interactive_64gb"
+
+# ls
 alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -lh"
 
+# Disable R prompt to save workspace
+alias R="R --no-save"
+
 # export PROMPT_DIRTRIM=2
+
+# R environmental variables
+export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 
 # rsync
 # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
@@ -16,6 +27,6 @@ alias ll="ls -lh"
 #     --progress              show progress during transfer
 # -r, --recursive             recurse into directories
 # -t, --times                 preserve modification times
-rsync_flags="--archive --delete --human-readable --progress --recursive --times"
+export RSYNC_FLAGS="--archive --delete --human-readable --progress --recursive --times"
 
-today=$(date +%Y-%m-%d)
+export TODAY=$(date +%Y-%m-%d)

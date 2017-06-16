@@ -1,0 +1,16 @@
+# Template for H. sapiens fast RNA-seq using Illumina prepared samples
+# Run with current Ensembl transcriptome FASTA
+# 2017-05-16
+#
+# ```bash
+# cd $template/work
+# seqcloud hsapiens fasta cdna
+# ```
+---
+details:
+  - analysis: fastrna-seq
+    genome_build: hg38
+    algorithm:
+      transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
+upload:
+  dir: ../final

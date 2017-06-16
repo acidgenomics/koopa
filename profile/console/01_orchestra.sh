@@ -1,5 +1,5 @@
 if [[ $HOSTNAME =~ ".orchestra" ]] && [[ $(uname -s) = "Linux" ]] && [[ -d /n/data1/ ]]; then
-    orchestra=true
+    export ORCHESTRA=true
     
     # If not running interactively, don't do anything
     [ -z "$PS1" ] && return

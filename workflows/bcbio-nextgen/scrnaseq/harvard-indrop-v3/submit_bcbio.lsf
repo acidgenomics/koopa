@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#BSUB -q priority
+#BSUB -J indrop
+#BSUB -N
+#BSUB -n 1
+#BSUB -W 100:0
+#BSUB -R "rusage[mem=10000]"
+#BSUB -e project.err
+#BSUB -o project.out
+
+bcbio_nextgen.py ../config/TEMPLATE.yaml -n 64 -t ipython -s lsf -q parallel -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 380

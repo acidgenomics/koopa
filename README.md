@@ -17,7 +17,12 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 This will automatically boot an interactive session upon login.
 
 ```{bash}
-bsub -Is -q interactive bash
+# HMS Orchestra bash login shell settings
+# (c) 2017 seqcloud (http://seq.cloud/)
+# Interactive settings must be saved in `~/.bashrc` instead of here.
+alias i="bsub -Is -q interactive bash"
+alias e="exit"
+i
 ```
 
 ### `.bashrc` file
@@ -25,5 +30,7 @@ bsub -Is -q interactive bash
 This will automatically load `seqcloud` in the interactive session.
 
 ```{bash}
+# Interactive bash non-login shell settings
+# (c) 2017 seqcloud (http://seq.cloud/)
 . ~/seqcloud/seqcloud.sh
 ```
