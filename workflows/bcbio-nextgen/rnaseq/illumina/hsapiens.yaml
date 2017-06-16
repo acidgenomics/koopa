@@ -2,12 +2,13 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: GRCh37
+    # GRCh37, GRCh38, hg38
+    genome_build: hg19
     algorithm:
+      adapters: [truseq, polya]
       aligner: star
       quality_format: standard
-      trim_reads: read_through
-      adapters: [truseq, polya]
       strandedness: unstranded
+      trim_reads: read_through
 upload:
   dir: ../final

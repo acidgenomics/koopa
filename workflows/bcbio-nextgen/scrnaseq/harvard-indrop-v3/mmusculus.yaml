@@ -1,14 +1,16 @@
-# Template for D. melanogaster scRNA-seq using Illumina prepared samples
+# Template for M. musculus scRNA-seq using Illumina prepared samples
+# Dependency files must be saved into the work directory
+# 2017-05-30
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: BDGP6
+    genome_build: mm10
     algorithm:
       cellular_barcode_correction: 1
       cellular_barcodes: [cellular_barcodes.txt, cellular_barcodes_reverse_complement.txt]
       minimum_barcode_depth: 10000
-      positional_umi: False
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
-      transcriptome_fasta: dmel-all-transcript-r6.14.fasta
+      # ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
+      transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
       umi_type: harvard-indrop-v3

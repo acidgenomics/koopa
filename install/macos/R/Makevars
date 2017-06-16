@@ -1,0 +1,3 @@
+CC=clang
+CXX=clang++
+FLIBS=-L`gfortran -print-file-name=libgfortran.dylib | xargs dirname`

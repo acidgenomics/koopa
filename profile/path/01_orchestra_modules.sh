@@ -1,10 +1,17 @@
-# Ensure that user is on Orchestra and not using conda
-if [[ -n $orchestra ]] && [[ -z $conda_dir ]]; then
-    echo "    [x] orchestra modules"
-    
-    # Unload everything
-    module load null
+# Orchestra modules
+# 2017-06-14
+#
+# Check loaded modules:
+# `module list`
+#
+# Unload everything:
+# `module load null`
+#
+# Check available modules:
+# - `module avail`
+# - `module avail stats/R`
 
+if [[ -n $ORCHESTRA ]]; then
     # dev
     module load dev/boost-1.57.0
     module load dev/compiler/cmake-3.3.1
