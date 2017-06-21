@@ -1,6 +1,3 @@
-# PATH ====
-echo "PATH exports"
-
 # orchestra
 if [[ -n $ORCHESTRA ]]; then
     echo "HMS Orchestra modules ================================================="
