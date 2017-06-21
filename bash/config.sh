@@ -3,32 +3,26 @@ echo "PATH exports"
 
 # orchestra
 if [[ -n $ORCHESTRA ]]; then
-    check="x"
-else
-    check=" "
+    echo "    [x] orchestra modules"
+    module list
 fi
-echo "    [$check] orchestra modules"
 
 # conda
 if [[ ! -z $CONDA_DIR ]]; then
-    check="x"
-else
-    check=" "
+    echo "    [x] conda"
+    conda --version
 fi
-echo "    [$check] conda"
+
 
 # aspera connect
 if [[ ! -z $ASPERA_DIR ]]; then
-    check="x"
-else
-    check=" "
+    echo "    [x] aspera connect"
+    ascp --version
 fi
-echo "    [$check] aspera connect"
+
 
 # bcbio-nextgen
 if [[ ! -z $BCBIO_DIR ]]; then
-    check="x"
-else
-    check=" "
+    echo "    [x] bcbio-nextgen"
+    echo $BCBIO_DIR
 fi
-echo "    [$check] bcbio-nextgen"
