@@ -30,6 +30,7 @@ if [[ -n $ORCHESTRA ]]; then
 
     # seq
     module load seq/bcl2fastq/2.17.1.14
+    module load seq/cellranger/1.3.1
     module load seq/samtools/1.3
     module load seq/sratoolkit/2.8.1-3
 
