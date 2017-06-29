@@ -1,9 +1,9 @@
 # http://www.biogrids.org
-if [[ -n $ORCHESTRA ]]; then
+if [[ $HPC == "HMS RC Orchestra" ]]; then
     if [[ -f /programs/biogrids.shrc ]]; then
         source /programs/biogrids.shrc
     fi
 else
-    echo "Not running on Orchestra"
+    echo "Orchestra HPC required"
     exit 1
 fi

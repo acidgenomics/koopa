@@ -1,22 +1,20 @@
-# orchestra
-if [[ -n $ORCHESTRA ]]; then
-    echo "HMS Orchestra modules ================================================="
+# HMS RC
+if [[ $HPC =~ "HMS RC" ]]; then
+    echo "Modules ==============================================================="
     module list
 fi
 
-# conda
+# Conda
 if [[ ! -z $CONDA_DIR ]]; then
-    echo "conda ================================================================="
+    echo "Conda ================================================================="
     conda --version
 fi
 
-
-# aspera connect
+# Aspera Connect
 if [[ ! -z $ASPERA_DIR ]]; then
     echo "Aspera Connect ========================================================"
     ascp --version
 fi
-
 
 # bcbio-nextgen
 if [[ ! -z $BCBIO_DIR ]]; then

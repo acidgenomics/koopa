@@ -3,7 +3,7 @@
 # seqcloud bash script loader
 # (c) 2017 Michael J. Steinbaugh
 # This software is provided under an MIT License
-# http://seq.cloud
+# http://seq.cloud/
 
 # http://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
 # seqcloud_dir=${BASH_SOURCE%/*}

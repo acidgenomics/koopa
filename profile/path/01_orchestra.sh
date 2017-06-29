@@ -1,5 +1,5 @@
 # Orchestra modules
-# 2017-06-14
+# 2017-06-29
 #
 # Check loaded modules:
 # `module list`
@@ -11,7 +11,7 @@
 # - `module avail`
 # - `module avail stats/R`
 
-if [[ -n $ORCHESTRA ]]; then
+if [[ $HPC == "HMS RC Orchestra" ]]; then
     # dev
     module load dev/boost-1.57.0
     module load dev/compiler/cmake-3.3.1
