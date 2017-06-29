@@ -1,3 +1,5 @@
+command -v STAR >/dev/null 2>&1 || { echo >&2 "STAR missing"; exit 1; }
+
 # Ideally, use symlinks with these defaults or you can rename
 if [[ "$#" -gt "0" ]]; then
     genome_dir="$1"
@@ -8,8 +10,13 @@ else
     fasta="genome.fasta"
     gtf="genome.gtf"
 fi
+
 if [[ -d "$genome_dir" ]]; then
     rm -rf "$genome_dir"
 fi
 mkdir -p "$genome_dir"
-STAR --runMode=genomeGenerate --genome_dir="$genome_dir" --genomeFastaFiles="$fasta" --sjdbGTFfile="$gtf"
+
+STAR --runMode=genomeGenerate \
+     --genome_dir="$genome_dir" \
+     --genomeFastaFiles="$fasta" \
+     --sjdbGTFfile="$gtf"

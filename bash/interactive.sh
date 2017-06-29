@@ -1,19 +1,25 @@
 # Launch an interactive session
-if [[ -n $ORCHESTRA ]]; then
-    if [[ "$#" -gt "0" ]]; then
-        # Interactive session with user-defined cores and RAM.
-        # Hard-coded timeout after 24 hours.
-        cores="$1"
-        ram_gb="$2"
-        # 1 GB = 1024 Mb
-        ram_mb="$(($ram_gb * 1024))"
-        echo "Starting interactive session with $cores and $ram_gb GB RAM..."
-        bsub -Is -W 24:00 -q interactive -n "$cores" -R rusage[mem="$ram_mb"] bash
-    else
-        # Default interactive session
-        bsub -Is -q interactive bash
-    fi
+if [[ "$#" -gt "0" ]]; then
+    # Hard timeout after 12 hours
+    timeout="12:00"
+    
+    # User-defined cores and RAM
+    cores="$1"
+    ram_gb="$2"
+    ram_mb="$(($ram_gb * 1024))"
 else
-    echo "Not running on Orchestra"
+    echo "Syntax: interactive CORES RAM_GB"
+fi
+
+# Pass commands to HPC scheduler
+echo "Starting interactive session with $cores and $ram_gb GB RAM..."
+if [[ ! -z $SLURM_CONF ]]; then
+    # Slurm
+    srun -p interactive --pty --mem "$ram_mb" -t "$timeout" /bin/bash
+elif [[ ! -z $LSF_ENVDIR ]]; then
+    # LSF    
+    bsub -Is -W "$timeout" -q interactive -n "$cores" -R rusage[mem="$ram_mb"] bash
+else
+    echo "HPC required"
     exit 1
 fi
