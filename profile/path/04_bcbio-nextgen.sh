@@ -8,16 +8,25 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
     bcbio_path="/opt/bcbio/centos/bin"
 fi
 
-# Update paths
-if [[ -d $bcbio_dir ]]; then
-    # Check that directory exists
+# Check for bcbio groups directory
+if [[ ! -z $bcbio_dir ]]; then
     if [[ ! -d $bcbio_dir ]]; then
-        echo "bcbio_dir missing"
+        echo "$bcbio_dir missing"
         exit 1
     fi
     export BCBIO_DIR="$bcbio_dir"
-    export PATH="$BCBIO_DIR:$PATH"
+fi
+
+# Update PATH
+if [[ ! -z $bcbio_path ]]; then
+    if [[ ! -d $bcbio_path ]]; then
+        echo "$bcbio_path missing"
+        exit 1
+    fi
+    export PATH="$bcbio_path:$PATH"
     unset PYTHONHOME
     unset PYTHONPATH
-    unset bcbio_dir
 fi
+
+unset bcbio_dir
+unset bcbio_path
