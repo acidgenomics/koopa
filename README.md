@@ -12,7 +12,7 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 
 ## [HMS RC](https://rc.hms.harvard.edu) setup
 
-### `.bash_profile`
+### `.bash_profile` file
 
 This will automatically boot an interactive session upon login.
 
@@ -28,7 +28,7 @@ fi
 i
 ```
 
-### `.bashrc`
+### `.bashrc` file
 
 This will automatically load `seqcloud` in the interactive session.
 
