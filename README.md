@@ -10,19 +10,25 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 ```
 
 
-## [HMS Orchestra](https://wiki.med.harvard.edu/Orchestra/WebHome) setup
+## [HMS RC](https://rc.hms.harvard.edu) setup
 
-### `.bash_profile` file
+### `.bash_profile`
 
 This will automatically boot an interactive session upon login.
 
 ```{bash}
-alias i="bsub -Is -q interactive bash"
 alias e="exit"
+if [[ ! -z $SLURM_CONF ]]; then
+    # O2
+    alias i="srun -p interactive --pty --mem 8000 -t 12:00 /bin/bash"
+elif [[ ! -z $LSF_ENVDIR ]]; then
+    # Orchestra
+    alias i="bsub -Is -W 12:00 -q interactive bash"
+fi
 i
 ```
 
-### `.bashrc` file
+### `.bashrc`
 
 This will automatically load `seqcloud` in the interactive session.
 
