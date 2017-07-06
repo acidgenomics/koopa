@@ -12,7 +12,7 @@ else
 fi
 
 # Pass commands to HPC scheduler
-echo "Starting interactive session with $cores and $ram_gb GB RAM..."
+echo "Starting interactive session with $cores cores and $ram_gb GB RAM..."
 if [[ ! -z $SLURM_CONF ]]; then
     # Slurm
     srun -p interactive --pty --mem "$ram_mb" -t "$timeout" /bin/bash
