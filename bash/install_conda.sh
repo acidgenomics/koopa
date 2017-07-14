@@ -1,11 +1,11 @@
 # https://bioconda.github.io/
 # Python 3 version
 
-# Linux
 if [[ $(uname -s) = "Linux" ]]; then
+    # Linux
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-# macOS
 elif [[ $(uname -s) = "Darwin" ]]; then
+    # macOS
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 else
     echo "$(uname -s) operating system not supported"
@@ -15,5 +15,5 @@ fi
 bash Miniconda3-*.sh
 rm Miniconda3-*.sh
 
-echo "conda install succeeded. shell must be reloaded."
+echo "conda install succeeded. Shell must be reloaded."
 exit 1
