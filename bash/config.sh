@@ -1,34 +1,23 @@
-# PATH ====
-echo "PATH exports"
-
-# orchestra
-if [[ -n $ORCHESTRA ]]; then
-    check="x"
-else
-    check=" "
+# HMS RC
+if [[ $HPC =~ "HMS RC" ]]; then
+    echo "Modules ==============================================================="
+    module list
 fi
-echo "    [$check] orchestra modules"
 
-# conda
+# Conda
 if [[ ! -z $CONDA_DIR ]]; then
-    check="x"
-else
-    check=" "
+    echo "Conda ================================================================="
+    conda --version
 fi
-echo "    [$check] conda"
 
-# aspera connect
+# Aspera Connect
 if [[ ! -z $ASPERA_DIR ]]; then
-    check="x"
-else
-    check=" "
+    echo "Aspera Connect ========================================================"
+    ascp --version
 fi
-echo "    [$check] aspera connect"
 
 # bcbio-nextgen
 if [[ ! -z $BCBIO_DIR ]]; then
-    check="x"
-else
-    check=" "
+    echo "bcbio-nextgen ========================================================="
+    echo $BCBIO_DIR
 fi
-echo "    [$check] bcbio-nextgen"
