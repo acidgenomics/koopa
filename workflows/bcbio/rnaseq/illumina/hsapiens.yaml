@@ -2,7 +2,7 @@
 ---
 details:
   - analysis: RNA-seq
-    # GRCh37, GRCh38, hg38
+    # Continue to use hg19 with STAR
     genome_build: hg19
     algorithm:
       adapters: [truseq, polya]
