@@ -34,9 +34,9 @@ elif [[ $organism == "dmelanogaster" ]]; then
     echo "Drosophila melanogaster"
     echo "FlyBase r6.15"
     if [[ $type == "dna" ]]; then
-        request="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-aligned-r6.15.fasta.gz"
+        request="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-aligned-r6.16.fasta.gz"
     elif [[ $type == "cdna" ]]; then
-        request="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-transcript-r6.15.fasta.gz"
+        request="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-transcript-r6.16.fasta.gz"
     fi
 elif [[ $organism == "nfurzeri" ]]; then
     echo "Nothobranchius furzeri (turquoise killifish)"
