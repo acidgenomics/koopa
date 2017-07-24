@@ -9,4 +9,4 @@
 #BSUB -e project.err
 #BSUB -o project.out
 
-bcbio_nextgen.py ../config/TEMPLATE.yaml -n 64 -t ipython -s lsf -q parallel -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 380
+bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 64 -t ipython -s lsf -q parallel -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 380
