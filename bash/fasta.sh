@@ -56,5 +56,6 @@ wget "$request"
 fasta=$(basename "$request")
 gunzip "$fasta"
 
-unset request
+unset organism
 unset type
+unset request
