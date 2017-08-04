@@ -23,8 +23,9 @@ elif [[ $organism == "dmelanogaster" ]]; then
 fi
 
 wget "$request"
-fasta=$(basename "$request")
-gunzip "$fasta"
+gtf=$(basename "$request")
+gunzip "$gtf"
 
+unset organism
+unset ensembl
 unset request
-unset type
