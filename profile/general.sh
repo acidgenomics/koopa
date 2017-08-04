@@ -30,3 +30,7 @@ export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 export RSYNC_FLAGS="--archive --delete --human-readable --progress --recursive --times"
 
 export TODAY=$(date +%Y-%m-%d)
+
+# Annotation database paths
+export ENSEMBL_RELEASE_PATH="ftp://ftp.ensembl.org/pub/release-89"
+export FLYBASE_RELEASE_PATH="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/dmel_r6.16_FB2017_03"
