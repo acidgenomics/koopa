@@ -23,7 +23,6 @@ if [[ $HPC == "HMS RC O2" ]]; then
         ImageMagick/6.9.1.10 \
         openblas/0.2.19 \
         python/3.6.0 \
-        R/3.4.1 \
         sratoolkit/2.8.1
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
     module load \
