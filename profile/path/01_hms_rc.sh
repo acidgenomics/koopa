@@ -13,6 +13,7 @@
 if [[ $HPC == "HMS RC O2" ]]; then
     # priority
     module load gcc/6.2.0
+    module load harfbuzz/1.3.4
     # alphabetical
     module load bcl2fastq/2.18.0.12
     module load boost/1.62.0
@@ -28,6 +29,7 @@ if [[ $HPC == "HMS RC O2" ]]; then
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
     # priority
     module load dev/compiler/gcc-4.8.5
+    module load utils/harfbuzz/1.2.3
     # alphabetical
     module load dev/boost-1.57.0
     module load dev/compiler/cmake-3.3.1
