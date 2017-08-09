@@ -23,7 +23,7 @@ if [[ ! -z $SLURM_CONF ]]; then
     alias i="srun -p interactive --pty --mem 8000 --time 1:00:00 /bin/bash"
 elif [[ ! -z $LSF_ENVDIR ]]; then
     # Orchestra
-    alias i="bsub -Is -W 1:00:00 -q interactive bash"
+    alias i="bsub -Is -W 1:00 -q interactive bash"
 fi
 i
 ```
