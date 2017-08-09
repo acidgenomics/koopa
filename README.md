@@ -20,7 +20,7 @@ This will automatically boot an interactive session upon login.
 alias e="exit"
 if [[ ! -z $SLURM_CONF ]]; then
     # O2
-    alias i="srun -p interactive --pty --mem 8000 -t 12:00 /bin/bash"
+    alias i="srun -p interactive --pty --mem 8000 -t 20 /bin/bash"
 elif [[ ! -z $LSF_ENVDIR ]]; then
     # Orchestra
     alias i="bsub -Is -W 12:00 -q interactive bash"
