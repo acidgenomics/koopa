@@ -11,7 +11,6 @@ fi
 
 
 
-# [fix]
 # Setting LD_LIBRARY_PATH isn't recommended.
 # https://conda.io/docs/building/shared-libraries.html#shared-libraries-in-linux-and-os-x
 # https://conda.io/docs/building/environment-vars.html
