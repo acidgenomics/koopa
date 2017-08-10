@@ -8,6 +8,5 @@ details:
       aligner: star
       quality_format: standard
       strandedness: unstranded
-      trim_reads: read_through
 upload:
   dir: ../final
