@@ -7,8 +7,7 @@ details:
     genome_build: BDGP6
     algorithm:
       cellular_barcode_correction: 1
-      cellular_barcodes: [cellular_barcodes.txt, cellular_barcodes_reverse_complement.txt]
-      minimum_barcode_depth: 10000
+      minimum_barcode_depth: 100
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
       # ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-transcript-r6.16.fasta.gz
