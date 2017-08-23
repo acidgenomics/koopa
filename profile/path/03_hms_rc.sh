@@ -24,7 +24,7 @@ if [[ $HPC == "HMS RC O2" ]]; then
     # module load hdf5/1.10.1
     # module load ImageMagick/6.9.1.10
     # module load openblas/0.2.19
-    module load python/3.6.0
+    # module load python/3.6.0
     # module load R/3.4.1
     module load sratoolkit/2.8.1
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
@@ -36,8 +36,8 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
     # module load dev/compiler/cmake-3.3.1
     # module load dev/lapack
     # module load dev/leiningen/stable-feb032016
-    module load dev/openblas/0.2.14
-    module load dev/python/3.4.2
+    # module load dev/openblas/0.2.14
+    # module load dev/python/3.4.2
     # module load dev/ruby/2.2.4
     # module load image/imageMagick/6.9.1
     module load seq/bcl2fastq/2.17.1.14
