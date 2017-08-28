@@ -15,6 +15,7 @@ if [[ "$#" -gt "0" ]]; then
     file_name="$3"
 else
     echo "Syntax: render <cores> <ram_gb> <file_name>"
+    exit 1
 fi
 
 echo "Rendering ${file_name} with ${ram_gb} GB RAM"
