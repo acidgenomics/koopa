@@ -20,7 +20,7 @@ fi
 
 echo "Rendering ${file_name} with ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
-    sbatch -t 1-00:00 \
+    srun -t 1-00:00 \
         -p priority \
         -J "$file_name" \
         -n "$cores" \
