@@ -18,7 +18,7 @@ else
     exit 1
 fi
 
-echo "Rendering ${file_name} with ${ram_gb} GB RAM"
+echo "Rendering ${file_name} with ${cores} core(s), ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
     srun -t 1-00:00 \
         -p priority \
