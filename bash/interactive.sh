@@ -1,8 +1,5 @@
 # Launch an interactive session that lasts for 12 hours
 
-# HMS RC O2: $SLURM_CONF is set
-# HMS RC Orchestra: $LSF_ENVDIR is set
-
 # Exit on HPC detection failure
 if [[ -z $HPC ]]; then
     echo "HPC required"
@@ -12,10 +9,12 @@ fi
 if [[ "$#" -gt "0" ]]; then
     cores="$1"
     ram_gb="$2"
-    ram_mb="$(($ram_gb * 1024))"
 else
-    echo "Syntax: interactive <cores> <ram_gb>"
+    cores="1"
+    ram_gb="8"
 fi
+
+ram_mb="$(($ram_gb * 1024))"
 
 echo "Launching interactive session with ${cores} cores and ${ram_gb} GB RAM"
 
