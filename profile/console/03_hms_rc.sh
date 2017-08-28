@@ -1,16 +1,13 @@
-if [[ $CDC_JOINED_DC =~ ".med.harvard.edu" ]] && \
-   [[ $CDC_JOINED_DOMAIN == "med.harvard.edu" ]] && \
-   [[ $CDC_LOCALHOST =~ ".med.harvard.edu" ]] && \
-   [[ $HOSTNAME =~ ".orchestra" ]] && \
-   [[ $LSB_QUEUE == "interactive" ]] && \
-   [[ $USER_PRINCIPAL_NAME =~ "@MED.HARVARD.EDU" ]] && \
+if [[ $HOSTNAME =~ ".orchestra" ]] && \
+   [[ ! -z $LSF_ENVDIR ]] && \
    [[ $(uname -s) = "Linux" ]] && \
    [[ -d /n/data1/ ]]
 then
     export HPC="HMS RC Orchestra"
 elif [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
-     [[ $SLURM_JOB_PARTITION == "interactive" ]] && \
-     [[ $SLURM_SUBMIT_HOST =~ ".o2.rc.hms.harvard.edu" ]]
+     [[ ! -z $SLURM_CONF ]] && \
+     [[ $(uname -s) = "Linux" ]] && \
+     [[ -d /n/data1/ ]]
 then
     export HPC="HMS RC O2"
 fi
