@@ -1,4 +1,5 @@
-if [[ $HOSTNAME =~ ".orchestra" ]] && \
+if [[ $CDC_JOINED_DOMAIN = "med.harvard.edu" ]] && \
+   [[ $CDC_LOCALHOST =~ ".med.harvard.edu" ]] && \
    [[ ! -z $LSF_ENVDIR ]] && \
    [[ $(uname -s) = "Linux" ]] && \
    [[ -d /n/data1/ ]]
