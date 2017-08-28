@@ -41,7 +41,7 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
     # module load dev/ruby/2.2.4
     # module load image/imageMagick/6.9.1
     module load seq/bcl2fastq/2.17.1.14
-    module load seq/cellranger/2.0.0
+    # module load seq/cellranger/2.0.0
     # module load seq/sratoolkit/2.8.1-3
     # module load utils/cairo/1.14.2
     # module load utils/fontconfig/2.11.1
