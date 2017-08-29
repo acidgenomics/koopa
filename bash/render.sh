@@ -2,6 +2,9 @@
 # which is common in online examples, will not escape the bash variables
 # properly.
 
+# srun guide
+# https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic#UsingSlurmBasic-Thesruncommand
+
 # Exit on HPC detection failure
 if [[ -z $HPC ]]; then
     echo "HPC required"
@@ -26,7 +29,7 @@ if [[ $HPC == "HMS RC O2" ]]; then
         -n "$cores" \
         --mem-per-cpu="${ram_gb}G" \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file_name')"
+            -e "rmarkdown::render('$file_name')" &
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
     bsub -W 24:00 \
         -q priority \
