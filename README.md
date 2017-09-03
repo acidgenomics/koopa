@@ -22,7 +22,7 @@ This will automatically load `seqcloud` in an interactive session.
 
 ### `.bash_profile` file
 
-If you'd also like to load seqcloud on the login node, we recommend symlinking your `.bashrc` file to `bash_profile`:
+If you'd also like to load seqcloud on a login node, we recommend symlinking your `.bashrc` file to `bash_profile`:
 
 ```{bash}
 ln -s ~/.bashrc ~/.bash_profile
