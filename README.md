@@ -12,15 +12,17 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 
 ## Bash shell setup
 
-### `.bashrc` file
-
-This will automatically load `seqcloud` in an interactive session.
-
 ```{bash}
+nano ~/.bashrc
+```
+
+Add this line to your `.bashrc` file:
+
+```
 . ~/seqcloud/seqcloud.sh
 ```
 
-### `.bash_profile` file
+This will automatically load `seqcloud` in an interactive session.
 
 If you'd also like to load seqcloud on a login node, we recommend symlinking your `.bashrc` file to `bash_profile`:
 
