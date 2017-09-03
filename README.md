@@ -10,28 +10,22 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 ```
 
 
-## [HMS RC](https://rc.hms.harvard.edu) setup
-
-### `.bash_profile` file
-
-This will automatically boot an interactive session upon login.
+## Bash shell setup
 
 ```{bash}
-alias e="exit"
-if [[ ! -z $SLURM_CONF ]]; then
-    # O2
-    alias i="srun -p interactive --pty --mem 8000 --time 1:00:00 /bin/bash"
-elif [[ ! -z $LSF_ENVDIR ]]; then
-    # Orchestra
-    alias i="bsub -Is -W 1:00 -q interactive bash"
-fi
-i
+nano ~/.bashrc
 ```
 
-### `.bashrc` file
+Add this line to your `.bashrc` file:
 
-This will automatically load `seqcloud` in the interactive session.
+```
+. ~/seqcloud/seqcloud.sh
+```
+
+This will automatically load `seqcloud` in an interactive session.
+
+To also load seqcloud on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:
 
 ```{bash}
-. ~/seqcloud/seqcloud.sh
+ln -s ~/.bashrc ~/.bash_profile
 ```
