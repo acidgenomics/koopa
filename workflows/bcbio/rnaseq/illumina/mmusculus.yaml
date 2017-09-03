@@ -4,10 +4,7 @@ details:
   - analysis: RNA-seq
     genome_build: mm10
     algorithm:
-      adapters: [truseq, polya]
       aligner: star
-      quality_format: standard
       strandedness: unstranded
-      trim_reads: read_through
 upload:
   dir: ../final

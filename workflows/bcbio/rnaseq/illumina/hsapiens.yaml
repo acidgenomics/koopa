@@ -5,10 +5,7 @@ details:
     # Continue to use hg19 with STAR
     genome_build: hg19
     algorithm:
-      adapters: [truseq, polya]
       aligner: star
-      quality_format: standard
       strandedness: unstranded
-      trim_reads: read_through
 upload:
   dir: ../final
