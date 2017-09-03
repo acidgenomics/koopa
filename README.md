@@ -10,7 +10,7 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 ```
 
 
-## [HMS RC](https://rc.hms.harvard.edu) setup
+## Bash shell setup
 
 ### `.bashrc` file
 
