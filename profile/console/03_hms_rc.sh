@@ -4,7 +4,8 @@ if [[ $CDC_JOINED_DOMAIN = "med.harvard.edu" ]] && \
    [[ $(uname -s) = "Linux" ]] && \
    [[ -d /n/data1/ ]]
 then
-    print "seqcloud no longer supports the HMS RC Orchestra cluster"
+    print "seqcloud support for HMS Orchestra is being phased out."
+    print "Please migrate your account to O2!"
     export HPC="HMS RC Orchestra"
 elif [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
      [[ ! -z $SLURM_CONF ]] && \
