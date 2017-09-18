@@ -1,4 +1,0 @@
-# Try switching CC to `-std=c99` on compilation error
-CC=gcc -std=gnu99
-CXX=g++
-PKG_CXXFLAGS=-std=c++11
