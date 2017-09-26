@@ -1,3 +1,5 @@
+# https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
+
 organism="$1"
 type="$2"
 ensembl="$ENSEMBL_RELEASE_PATH/fasta"
@@ -54,7 +56,8 @@ fi
 
 wget "$request"
 fasta=$(basename "$request")
-gunzip "$fasta"
+# Extract but keep original compressed file
+gunzip -c "$fasta" > "${fasta%.*}"
 
 unset organism
 unset type
