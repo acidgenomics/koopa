@@ -24,7 +24,8 @@ fi
 
 wget "$request"
 gtf=$(basename "$request")
-gunzip "$gtf"
+# Extract but keep original compressed file
+gunzip -c "$gtf" > "${gtf%.*}"
 
 unset organism
 unset ensembl
