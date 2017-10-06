@@ -18,8 +18,8 @@ elif [[ $organism == "dmelanogaster" ]]; then
     # D. melanogaster Ensembl annotations are out of date.
     # Use the FlyBase annotations instead.
     echo "Drosophila melanogaster"
-    echo "FlyBase r${FLYBASE_RELEASE}"
-    request="$FLYBASE_RELEASE_PATH/gtf/dmel-all-r${FLYBASE_RELEASE}.gtf.gz"
+    echo "FlyBase $FLYBASE_RELEASE r${FLYBASE_RELEASE_VERSION}"
+    request="$FLYBASE_RELEASE_PATH/gtf/dmel-all-r${FLYBASE_RELEASE_VERSION}.gtf.gz"
 fi
 
 wget "$request"
