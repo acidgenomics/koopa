@@ -35,12 +35,12 @@ elif [[ $organism == "dmelanogaster" ]]; then
     # D. melanogaster Ensembl annotations are out of date (2014).
     # Use the FlyBase annotations instead.
     echo "Drosophila melanogaster"
-    echo "FlyBase r6.16"
+    echo "FlyBase $FLYBASE_RELEASE r${FLYBASE_RELEASE_VERSION}"
     flybase="$FLYBASE_RELEASE_PATH/fasta"
     if [[ $type == "dna" ]]; then
-        request="$flybase/dmel-all-aligned-r6.16.fasta.gz"
+        request="$flybase/dmel-all-aligned-r${FLYBASE_RELEASE_VERSION}.fasta.gz"
     elif [[ $type == "cdna" ]]; then
-        request="$flybase/dmel-all-transcript-r6.16.fasta.gz"
+        request="$flybase/dmel-all-transcript-r${FLYBASE_RELEASE_VERSION}.fasta.gz"
     fi
 elif [[ $organism == "nfurzeri" ]]; then
     echo "Nothobranchius furzeri (turquoise killifish)"
