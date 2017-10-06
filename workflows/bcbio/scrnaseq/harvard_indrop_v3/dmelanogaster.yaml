@@ -1,6 +1,6 @@
 # Template for D. melanogaster scRNA-seq using Illumina prepared samples
 # Dependency files must be saved into the work directory
-# 2017-05-30
+# 2017-10-06
 ---
 details:
   - analysis: scRNA-seq
