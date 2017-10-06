@@ -34,5 +34,5 @@ export TODAY=$(date +%Y-%m-%d)
 # Annotation database paths
 export ENSEMBL_RELEASE="90"
 export ENSEMBL_RELEASE_PATH="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
-export FLYBASE_RELEASE="6.16"
-export FLYBASE_RELEASE_PATH="ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/dmel_r${FLYBASE_RELEASE}_FB2017_03"
+export FLYBASE_RELEASE="6.17"
+export FLYBASE_RELEASE_PATH="ftp://ftp.flybase.net/releases/FB2017_03/dmel_r${FLYBASE_RELEASE}"
