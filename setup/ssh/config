@@ -3,8 +3,7 @@ Host *
     IdentityFile ~/.ssh/id_rsa
     ServerAliveInterval 10
     UseKeychain yes
-Host o2
-    Hostname login.rc.hms.harvard.edu
+Host login.rc.hms.harvard.edu
     User USERNAME
     Compression yes
     ForwardAgent yes
