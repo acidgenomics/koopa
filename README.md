@@ -12,10 +12,6 @@ git clone https://github.com/steinbaugh/seqcloud.git ~/seqcloud
 
 ## Bash shell setup
 
-```{bash}
-nano ~/.bashrc
-```
-
 Add this line to your `.bashrc` file:
 
 ```
