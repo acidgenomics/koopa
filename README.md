@@ -22,10 +22,14 @@ Add this line to your `.bashrc` file:
 . ~/seqcloud/seqcloud.sh
 ```
 
-This will automatically load `seqcloud` in an interactive session.
-
 To also load seqcloud on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:
 
 ```{bash}
 ln -s ~/.bashrc ~/.bash_profile
+```
+
+To launch and interactive session, simply run:
+
+```{bash}
+seqcloud interactive <cores> <ram_gb>
 ```
