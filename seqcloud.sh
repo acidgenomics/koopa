@@ -3,10 +3,8 @@
 # seqcloud bash script loader
 # (c) 2017 Michael J. Steinbaugh
 # This software is provided under an MIT License
-# http://seq.cloud
+# http://seq.cloud/
 
-# http://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
-# seqcloud_dir=${BASH_SOURCE%/*}
 export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Check for supported operating system
@@ -16,10 +14,22 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
 fi
 
 # Load profile settings
-for file in $(find "$SEQCLOUD_DIR"/profile -type f -name "*.sh" ! -name ".*" | sort); do
-    . "$file"
-done
+. "$SEQCLOUD_DIR"/profile/general.sh
+if [[ "$SEQCLOUD_CONSOLE" != false ]]; then
+    for file in $(find "$SEQCLOUD_DIR"/profile/console \
+        -type f -name "*.sh" ! -name ".*" | sort); do
+        . "$file"
+    done
+    unset file
+fi
+if [[ "$SEQCLOUD_PATH" != false ]]; then
+    for file in $(find "$SEQCLOUD_DIR"/profile/path \
+        -type f -name "*.sh" ! -name ".*" | sort); do
+        . "$file"
+    done
+    unset file
 unset file
+fi
 
 # Pass positional parameters to scripts in the `bash` subdirectory
 function seqcloud {
