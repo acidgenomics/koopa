@@ -23,6 +23,8 @@ fi
 # https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic#UsingSlurmBasic-Partitions(akaQueuesinLSF)
 # queue="medium"
 
+# Use R CMD BATCH instead of Rscript?
+
 echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
     srun -t 4-00:00 \
