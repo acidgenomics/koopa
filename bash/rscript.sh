@@ -46,5 +46,6 @@ fi
 
 unset cores
 unset file_name
+unset queue
 unset ram_gb
 unset ram_mb
