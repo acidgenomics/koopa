@@ -9,10 +9,11 @@ if [[ -z $HPC ]]; then
 fi
 
 if [[ "$#" -gt "0" ]]; then
-    cores="$1"
-    ram_gb="$2"
+    queue="$1"
+    cores="$2"
+    ram_gb="$3"
     ram_mb="$(($ram_gb * 1024))"
-    file_name="$3"
+    file_name="$4"
 else
     echo "Syntax: rscript <queue> <cores> <ram_gb> <file_name>"
     exit 1
@@ -20,7 +21,9 @@ fi
 
 # Set the queue (a.k.a. partition for SLURM)
 # https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic#UsingSlurmBasic-Partitions(akaQueuesinLSF)
-queue="medium"
+# queue="medium"
+
+# Use R CMD BATCH instead of Rscript?
 
 echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
@@ -43,5 +46,6 @@ fi
 
 unset cores
 unset file_name
+unset queue
 unset ram_gb
 unset ram_mb
