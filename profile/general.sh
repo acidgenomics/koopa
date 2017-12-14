@@ -27,7 +27,7 @@ export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 #     --progress              show progress during transfer
 # -r, --recursive             recurse into directories
 # -t, --times                 preserve modification times
-export RSYNC_FLAGS="--archive --delete --human-readable --progress --recursive --times"
+export RSYNC_FLAGS="--archive --delete-before --human-readable --progress --recursive --times"
 
 export TODAY=$(date +%Y-%m-%d)
 
