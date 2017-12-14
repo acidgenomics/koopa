@@ -30,7 +30,7 @@ if [[ $HPC == "HMS RC O2" ]]; then
         -n "$cores" \
         --mem-per-cpu="${ram_gb}G" \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')" &
+            -e "source('$file_name')" > "${file_name}.log"
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
     bsub -W 96:00 \
         -q "$queue" \
@@ -38,7 +38,7 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
         -n "$cores" \
         -R rusage[mem="$ram_mb"] \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')"
+            -e "source('$file_name')" > "${file_name}.log"
 fi
 
 unset cores
