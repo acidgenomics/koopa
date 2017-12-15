@@ -12,7 +12,7 @@ if [[ -z $HPC ]]; then
 fi
 
 if [[ "$#" -gt "0" ]]; then
-    queue="$1
+    queue="$1"
     cores="$2"
     ram_gb="$3"
     ram_mb="$(($ram_gb * 1024))"
