@@ -44,8 +44,4 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
             -e "source('$file_name')" &
 fi
 
-unset cores
-unset file_name
-unset queue
-unset ram_gb
-unset ram_mb
+unset -v cores file_name queue ram_gb ram_mb
