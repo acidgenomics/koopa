@@ -21,9 +21,9 @@ fi
 
 # Set the queue (a.k.a. partition for SLURM)
 # https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic#UsingSlurmBasic-Partitions(akaQueuesinLSF)
-# queue="medium"
+# medium queue is recommended by default at HMS
 
-# Use R CMD BATCH instead of Rscript?
+# `R CMD BATCH` can be used in place of `Rscript`
 
 echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
@@ -33,7 +33,7 @@ if [[ $HPC == "HMS RC O2" ]]; then
         -n "$cores" \
         --mem-per-cpu="${ram_gb}G" \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')" > "${file_name}.log"
+            -e "source('$file_name')" &
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
     bsub -W 96:00 \
         -q "$queue" \
@@ -41,7 +41,7 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
         -n "$cores" \
         -R rusage[mem="$ram_mb"] \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')" > "${file_name}.log"
+            -e "source('$file_name')" &
 fi
 
 unset cores
