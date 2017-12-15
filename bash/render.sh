@@ -12,19 +12,20 @@ if [[ -z $HPC ]]; then
 fi
 
 if [[ "$#" -gt "0" ]]; then
-    cores="$1"
-    ram_gb="$2"
+    queue="$1
+    cores="$2"
+    ram_gb="$3"
     ram_mb="$(($ram_gb * 1024))"
-    file_name="$3"
+    file_name="$4"
 else
-    echo "Syntax: render <cores> <ram_gb> <file_name>"
+    echo "Syntax: render <queue> <cores> <ram_gb> <file_name>"
     exit 1
 fi
 
 echo "Rendering ${file_name} with ${cores} core(s), ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
     srun -t 1-00:00 \
-        -p priority \
+        -p "$queue" \
         -J "$file_name" \
         -n "$cores" \
         --mem-per-cpu="${ram_gb}G" \
@@ -32,7 +33,7 @@ if [[ $HPC == "HMS RC O2" ]]; then
             -e "rmarkdown::render('$file_name')" &
 elif [[ $HPC == "HMS RC Orchestra" ]]; then
     bsub -W 24:00 \
-        -q priority \
+        -q "$queue" \
         -J "$file_name" \
         -n "$cores" \
         -R rusage[mem="$ram_mb"] \
