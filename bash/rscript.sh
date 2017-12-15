@@ -24,6 +24,7 @@ fi
 # medium queue is recommended by default at HMS
 
 # `R CMD BATCH` can be used in place of `Rscript`
+# https://sph.umich.edu/biostat/computing/cluster/examples/r.html
 
 echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
 if [[ $HPC == "HMS RC O2" ]]; then
