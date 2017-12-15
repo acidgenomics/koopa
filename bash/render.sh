@@ -37,7 +37,7 @@ elif [[ $HPC == "HMS RC Orchestra" ]]; then
         -n "$cores" \
         -R rusage[mem="$ram_mb"] \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file_name')"
+            -e "rmarkdown::render('$file_name')" &
 fi
 
 unset cores
