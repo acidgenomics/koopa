@@ -20,15 +20,14 @@ if [[ "$SEQCLOUD_CONSOLE" != false ]]; then
         -type f -name "*.sh" ! -name ".*" | sort); do
         . "$file"
     done
-    unset file
+    unset -v file
 fi
 if [[ "$SEQCLOUD_PATH" != false ]]; then
     for file in $(find "$SEQCLOUD_DIR"/profile/path \
         -type f -name "*.sh" ! -name ".*" | sort); do
         . "$file"
     done
-    unset file
-unset file
+    unset -v file
 fi
 
 # Pass positional parameters to scripts in the `bash` subdirectory
