@@ -9,10 +9,10 @@ if [[ -d "$HOME/miniconda3" ]]; then
     export PKG_CONFIG_PATH="$CONDA_DIR/lib/pkgconfig:$PKG_CONFIG_PATH"
 fi
 
-
-
 # Setting LD_LIBRARY_PATH isn't recommended.
 # https://conda.io/docs/building/shared-libraries.html#shared-libraries-in-linux-and-os-x
 # https://conda.io/docs/building/environment-vars.html
 # Setting this fixes some R compilation issues but messes with Orchestra modules.
 # Look for another solution. Does LD_RUN_PATH fix the issue?
+
+# FIXME These paths will contain duplicate values in an interactive session
