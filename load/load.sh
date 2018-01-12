@@ -1,12 +1,4 @@
-export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# Check for supported operating system
-if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
-    echo "$(uname -s) operating system not supported"
-    exit 1
-fi
-
-# Load profile settings
+# Profile settings
 . "$SEQCLOUD_DIR"/profile/general.sh
 if [[ "$SEQCLOUD_CONSOLE" != false ]]; then
     for file in $(find "$SEQCLOUD_DIR"/profile/console \
