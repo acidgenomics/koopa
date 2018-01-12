@@ -1,5 +1,8 @@
-if [[ -n "$PS1" ]]; then
+# Interactive message on HPC cluster
+
+if [[ -n "$PS1" && -n "$HPC" ]]; then
     echo "==== seqcloud ============================================================="
+    seqcloud config
     echo "==========================================================================="
 fi
 
