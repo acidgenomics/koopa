@@ -17,6 +17,7 @@ fi
 ram_mb="$(($ram_gb * 1024))"
 
 echo "Launching interactive session with ${cores} core(s), ${ram_gb} GB RAM"
+export INTERACTIVE=true
 
 if [[ $HPC == "HMS RC O2" ]]; then
     command -v srun >/dev/null 2>&1 || { echo >&2 "srun missing"; exit 1; }
@@ -35,5 +36,3 @@ else
     echo "HPC required"
     exit 1
 fi
-
-export INTERACTIVE=true
