@@ -38,4 +38,4 @@ function seqcloud {
 }
 
 # Show login message for interactive session
-. login/interactive_message.sh
+. "$SEQCLOUD_DIR"/login/interactive_message.sh
