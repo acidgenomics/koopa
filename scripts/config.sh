@@ -13,6 +13,7 @@ if [[ ! -z $CONDA_DIR ]]; then
 fi
 
 # Date
+echo "Last updated"
 wd="$PWD"
 cd "$SEQCLOUD_DIR"
 git log -1 --format=%cd
