@@ -13,4 +13,8 @@ if [[ ! -z $CONDA_DIR ]]; then
 fi
 
 # Date
-git log -1 --format=%cd "$SEQCLOUD_DIR"
+wd="$PWD"
+cd "$SEQCLOUD_DIR"
+git log -1 --format=%cd
+cd "$wd"
+unset -v wd
