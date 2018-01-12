@@ -35,3 +35,5 @@ else
     echo "HPC required"
     exit 1
 fi
+
+export INTERACTIVE=true
