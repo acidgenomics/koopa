@@ -27,6 +27,4 @@ gtf=$(basename "$request")
 # Extract but keep original compressed file
 gunzip -c "$gtf" > "${gtf%.*}"
 
-unset organism
-unset ensembl
-unset request
+unset -v ensembl organism request
