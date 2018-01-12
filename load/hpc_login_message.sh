@@ -1,4 +1,5 @@
 if [[ -n "$PS1" && -n "$HPC" ]]; then
+    echo ""
     echo "==== seqcloud ============================================================="
     # bcbio
     if [[ ! -z $BCBIO_DIR ]]; then
@@ -22,6 +23,7 @@ if [[ -n "$PS1" && -n "$HPC" ]]; then
     cd "$wd"
     unset -v wd
     echo "==========================================================================="
+    echo ""
 fi
 
 # Alternate methods:
