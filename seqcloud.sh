@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# seqcloud bash script loader
-# (c) 2017 Michael J. Steinbaugh
+# seqcloud bash shell boatloader
+# (c) 2018 Michael J. Steinbaugh
 # This software is provided under an MIT License
-# http://seq.cloud/
+# http://seq.cloud
 
 export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -34,5 +34,8 @@ fi
 function seqcloud {
     local script="$1"
     shift 1
-    . "$SEQCLOUD_DIR"/bash/"$script".sh $*
+    . "$SEQCLOUD_DIR"/scripts/"$script".sh $*
 }
+
+# Show login message for interactive session
+. login/interactive_message.sh
