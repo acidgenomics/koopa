@@ -28,5 +28,4 @@ if [[ ! -z $bcbio_path ]]; then
     unset PYTHONPATH
 fi
 
-unset bcbio_dir
-unset bcbio_path
+unset -v bcbio_dir bcbio_path

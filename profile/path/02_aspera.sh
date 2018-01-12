@@ -3,4 +3,4 @@ if [[ -d $aspera_dir ]]; then
     export ASPERA_DIR="$aspera_dir"
     export PATH="$ASPERA_DIR:$PATH"
 fi
-unset aspera_dir
+unset -v aspera_dir

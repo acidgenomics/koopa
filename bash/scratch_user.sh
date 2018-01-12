@@ -9,4 +9,4 @@ else
     echo "Orchestra HPC required"
     exit 1
 fi
-unset user_dir
+unset -v user_dir
