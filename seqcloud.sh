@@ -13,6 +13,10 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
     exit 1
 fi
 
+. "$SEQCLOUD_DIR"/load/profile.sh
+. "$SEQCLOUD_DIR"/load/scripts.sh
+
 if [[ -z "$INTERACTIVE" ]]; then
-    . "$SEQCLOUD_DIR"/load/load.sh
+    . "$SEQCLOUD_DIR"/load/path.sh
+    . "$SEQCLOUD_DIR"/load/hpc_login_message.sh
 fi
