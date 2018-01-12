@@ -32,8 +32,8 @@ export RSYNC_FLAGS="--archive --delete-before --human-readable --progress --recu
 export TODAY=$(date +%Y-%m-%d)
 
 # Annotation database paths
-export ENSEMBL_RELEASE="90"
+export ENSEMBL_RELEASE="91"
 export ENSEMBL_RELEASE_PATH="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
-export FLYBASE_RELEASE="FB2017_04"
-export FLYBASE_RELEASE_VERSION="6.17"
+export FLYBASE_RELEASE="FB2017_06"
+export FLYBASE_RELEASE_VERSION="6.19"
 export FLYBASE_RELEASE_PATH="ftp://ftp.flybase.net/releases/$FLYBASE_RELEASE/dmel_r${FLYBASE_RELEASE_VERSION}"
