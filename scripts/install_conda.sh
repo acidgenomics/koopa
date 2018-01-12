@@ -12,7 +12,7 @@ else
     exit 1
 fi
 
-. Miniconda3-latest-*-x86_64.sh
+bash Miniconda3-latest-*-x86_64.sh
 
 echo "conda install succeeded. Shell must be reloaded."
 exit 1
