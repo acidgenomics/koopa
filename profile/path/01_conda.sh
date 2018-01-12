@@ -12,7 +12,7 @@ if [[ -d "$HOME/miniconda3" ]]; then
     # https://conda.io/docs/building/shared-libraries.html#shared-libraries-in-linux-and-os-x
     # https://conda.io/docs/building/environment-vars.html
     
-    # Fix attempt for O2
-    export LIBRARY_PATH="$LD_RUN_PATH:$LIBRARY_PATH"
-    export LD_LIBRARY_PATH="$LD_RUN_PATH:$LD_LIBRARY_PATH"
+    # Fix attempt for O2 (2018-01-12 -- doesn't work)
+    # export LIBRARY_PATH="$LD_RUN_PATH:$LIBRARY_PATH"
+    # export LD_LIBRARY_PATH="$LD_RUN_PATH:$LD_LIBRARY_PATH"
 fi
