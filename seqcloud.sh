@@ -37,5 +37,5 @@ function seqcloud {
     . "$SEQCLOUD_DIR"/scripts/"$script".sh $*
 }
 
-# Show login message for interactive session
-. "$SEQCLOUD_DIR"/login/interactive_message.sh
+# Login message for interactive session
+. "$SEQCLOUD_DIR"/login/hpc_interactive_message.sh
