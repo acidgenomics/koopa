@@ -1,8 +1,26 @@
-# Interactive message on HPC cluster
-
 if [[ -n "$PS1" && -n "$HPC" ]]; then
     echo "==== seqcloud ============================================================="
-    seqcloud config
+    # bcbio
+    if [[ ! -z $BCBIO_DIR ]]; then
+        echo "# bcbio"
+        echo $BCBIO_DIR
+        echo ""
+    fi
+
+    # Conda
+    if [[ ! -z $CONDA_DIR ]]; then
+        echo "# conda"
+        echo $CONDA_DIR
+        echo ""
+    fi
+
+    # Date
+    echo "Last updated"
+    wd="$PWD"
+    cd "$SEQCLOUD_DIR"
+    git log -1 --format=%cd
+    cd "$wd"
+    unset -v wd
     echo "==========================================================================="
 fi
 
