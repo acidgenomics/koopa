@@ -6,4 +6,7 @@ done
 unset -v file
 
 # Export PATH environment variable
-. "$SEQCLOUD_DIR"/profile/path.sh
+# Don't re-export for interactive queue process
+if [[ -z "$INTERACTIVE_QUEUE" ]]; then
+    . "$SEQCLOUD_DIR"/profile/path.sh
+fi
