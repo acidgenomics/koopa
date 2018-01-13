@@ -1,4 +1,4 @@
-if [[ -n "$PS1" && -n "$HPC" ]]; then
+if [[ -n "$PS1" && -n "$HPC" && -z "$INTERACTIVE_QUEUE" ]]; then
     echo ""
     echo "==== seqcloud ============================================================="
     # bcbio
@@ -33,7 +33,7 @@ fi
 # *)	echo This shell is not interactive ;;
 # esac
 #
-# if [ -z "$PS1" ]; then
+# if [[ -z "$PS1" ]]; then
 #         echo This shell is not interactive
 # else
 #         echo This shell is interactive
