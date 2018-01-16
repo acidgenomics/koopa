@@ -12,7 +12,8 @@ then
     echo "Please migrate your account to O2!"
     export HPC="HMS RC Orchestra"
     export BCBIO_DIR="/opt/bcbio/centos/bin"
-elif [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
+elif [[ $HMS_CLUSTER = "o2" ]] && \
+     [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
      [[ ! -z $SLURM_CONF ]] && \
      [[ $(uname -s) = "Linux" ]] && \
      [[ -d /n/data1/ ]]
