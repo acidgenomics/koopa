@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# seqcloud bash shell boatloader
+# seqcloud bootloader
 # (c) 2018 Michael J. Steinbaugh
 # This software is provided under an MIT License
 # http://seq.cloud
@@ -13,10 +13,9 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
     exit 1
 fi
 
-. "$SEQCLOUD_DIR"/load/profile.sh
-. "$SEQCLOUD_DIR"/load/scripts.sh
-
-if [[ -z "$INTERACTIVE" ]]; then
-    . "$SEQCLOUD_DIR"/load/path.sh
-    . "$SEQCLOUD_DIR"/load/hpc_login_message.sh
-fi
+# Login scripts
+for file in $(find "$SEQCLOUD_DIR"/login \
+    -type f -name "*.sh" ! -name ".*" | sort); do
+    . "$file"
+done
+unset -v file
