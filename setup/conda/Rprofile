@@ -1,7 +1,16 @@
 options(
     author = "",
     email = "",
-    repos = c(CRAN = "https://cran.rstudio.com"),
-    unzip = "/usr/bin/unzip"  # fix for `devtools::install_github()`
+    max.print = 500L,
+    menu.graphics = FALSE,
+    repos = c(CRAN = "https://cran.rstudio.com")
 )
-set.seed(1454944673)
+
+# Reproducibility ==============================================================
+set.seed(1454944673L)
+# To check seed:
+# .Random.seed[1L:10L]
+
+# Startup messages =============================================================
+message(basename(Sys.getenv("R_LIBS_USER")))
+message(getwd())
