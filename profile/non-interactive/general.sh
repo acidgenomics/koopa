@@ -1,8 +1,8 @@
+# Aliases ======================================================================
 alias e="exit"
 
-# Interactive queues
+# Interactive queue
 alias i="seqcloud interactive"
-alias i2="seqcloud interactive_64gb"
 
 # ls
 alias la="ls -a"
@@ -12,8 +12,7 @@ alias ll="ls -lh"
 # Disable R prompt to save workspace
 alias R="R --no-save"
 
-# export PROMPT_DIRTRIM=2
-
+# Exports ======================================================================
 # R environmental variables
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 
@@ -32,8 +31,8 @@ export RSYNC_FLAGS="--archive --delete-before --human-readable --progress --recu
 export TODAY=$(date +%Y-%m-%d)
 
 # Annotation database paths
-export ENSEMBL_RELEASE="90"
+export ENSEMBL_RELEASE="91"
 export ENSEMBL_RELEASE_PATH="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
-export FLYBASE_RELEASE="FB2017_04"
-export FLYBASE_RELEASE_VERSION="6.17"
+export FLYBASE_RELEASE="FB2017_06"
+export FLYBASE_RELEASE_VERSION="6.19"
 export FLYBASE_RELEASE_PATH="ftp://ftp.flybase.net/releases/$FLYBASE_RELEASE/dmel_r${FLYBASE_RELEASE_VERSION}"
