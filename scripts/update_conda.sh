@@ -6,5 +6,4 @@ conda config --add channels defaults
 conda config --add channels conda-forge
 conda config --add channels bioconda
 
-conda update conda
-conda update --all
+conda update --all --name root --channel defaults
