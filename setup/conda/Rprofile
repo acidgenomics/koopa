@@ -1,0 +1,7 @@
+options(
+    author = "",
+    email = "",
+    repos = c(CRAN = "https://cran.rstudio.com"),
+    unzip = "/usr/bin/unzip"  # fix for `devtools::install_github()`
+)
+set.seed(1454944673)
