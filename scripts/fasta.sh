@@ -59,6 +59,4 @@ fasta=$(basename "$request")
 # Extract but keep original compressed file
 gunzip -c "$fasta" > "${fasta%.*}"
 
-unset organism
-unset type
-unset request
+unset -v organism request type
