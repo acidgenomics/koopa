@@ -13,4 +13,4 @@
 #SBATCH --error=hostname_%j.err     # File to which STDERR will be written, including job ID
 #SBATCH --mail-type=ALL             # Type of email notification (BEGIN, END, FAIL, ALL)
 
-bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 64 -t ipython -s slurm -q medium -r t=2-00:00
+bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 64 -t ipython -s slurm -q medium -r t=2-00:00 --timeout 1000
