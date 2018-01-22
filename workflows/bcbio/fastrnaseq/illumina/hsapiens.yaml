@@ -1,9 +1,0 @@
-# Template for H. sapiens fast RNA-seq using Illumina prepared samples
-# 2018-01-22
----
-details:
-  - analysis: fastrna-seq
-    genome_build: GRCh38
-    algorithm: {}
-upload:
-  dir: ../final
