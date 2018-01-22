@@ -4,12 +4,14 @@
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: mm10
+    genome_build: GRCm38
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
-      # ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/cdna
+      # ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
       transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
+      # ftp://ftp.ensembl.org/pub/current_gtf/mus_musculus/Mus_musculus.GRCm38.91.chr_patch_hapl_scaff.gtf.gz
+      transcriptome_gtf: Mus_musculus.GRCm38.91.chr_patch_hapl_scaff.gtf
       umi_type: harvard-indrop-v3
