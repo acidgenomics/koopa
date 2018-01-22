@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#BSUB -q priority
+#BSUB -q medium
 #BSUB -J indrop
 #BSUB -N
 #BSUB -n 1
@@ -9,4 +9,7 @@
 #BSUB -e project.err
 #BSUB -o project.out
 
-bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 64 -t ipython -s lsf -q mcore '-rW=90:00' -r mincores=2 -r minconcores=2 --retries 3 --timeout 380
+# Use 6x cores per sample
+# 12 x 6 = 72
+
+bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 72 -t ipython -s lsf -q medium '-rW=90:00' -r mincores=2 -r minconcores=2 --retries 3 --timeout 1000
