@@ -9,6 +9,6 @@
 #BSUB -e project.err
 #BSUB -o project.out
 
-bcbio_nextgen.py ../config/illumina_rnaseq.yaml -n 72 -t ipython -s lsf -q parallel -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 380
+bcbio_nextgen.py ../config/illumina_rnaseq.yaml -n 72 -t ipython -s lsf -q parallel -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 1000
 
 # Use 6x cores per sample
