@@ -2,7 +2,7 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: mm10
+    genome_build: GRCm38
     algorithm:
       aligner: star
       strandedness: unstranded
