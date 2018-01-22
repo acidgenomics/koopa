@@ -3,7 +3,7 @@
 ---
 details:
   - analysis: fastrna-seq
-    genome_build: hg38
+    genome_build: GRCh38
     algorithm: {}
 upload:
   dir: ../final
