@@ -14,3 +14,5 @@
 #SBATCH --mail-type=ALL             # Type of email notification (BEGIN, END, FAIL, ALL)
 
 bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 64 -t ipython -s slurm -q medium -r t=2-00:00 --timeout 1000
+
+# Use 6x the number of cores per sample
