@@ -2,8 +2,7 @@
 ---
 details:
   - analysis: RNA-seq
-    # Continue to use hg19 with STAR
-    genome_build: hg19
+    genome_build: GRCh38
     algorithm:
       aligner: star
       strandedness: unstranded
