@@ -1,5 +1,5 @@
 # Template for H. sapiens fast RNA-seq using Illumina prepared samples
-# 2017-05-16
+# 2018-01-22
 ---
 details:
   - analysis: fastrna-seq
