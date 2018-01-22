@@ -1,8 +1,8 @@
 # Template for M. musculus fast RNA-seq using Illumina prepared samples
-# 2017-05-16
+# 2018-01-22
 ---
 details:
-  genome_build: mm10
+  genome_build: GRCm38
   - analysis: fastrna-seq
     algorithm: {}
 upload:
