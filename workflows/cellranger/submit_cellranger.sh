@@ -5,8 +5,8 @@
 #SBATCH -t 2-00:00            # Runtime in D-HH:MM format
 #SBATCH -p medium             # Partition (queue)
 #SBATCH -J cellranger         # Job name
-#SBATCH -o hostname_%j.out    # File to which STDOUT will be written, including job ID
-#SBATCH -e hostname_%j.err    # File to which STDERR will be written, including job ID
+#SBATCH -o project_%j.out    # File to which STDOUT will be written, including job ID
+#SBATCH -e project_%j.err    # File to which STDERR will be written, including job ID
 #SBATCH --mem-per-cpu=8G      # Memory needed per core
 #SBATCH --mail-type=ALL       # Type of email notification (BEGIN, END, FAIL, ALL)
 
