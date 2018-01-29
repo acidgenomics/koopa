@@ -6,12 +6,12 @@ if [[ -n "$PS1" && -n "$HPC" && -z "$INTERACTIVE_QUEUE" ]]; then
         echo "# bcbio"
         echo $BCBIO_DIR
     fi
-
     # Conda
     if [[ ! -z $CONDA_DIR ]]; then
         echo "# conda"
         echo $CONDA_DIR
     fi
+    echo "==========================================================================="
 fi
 
 # Alternate methods:
