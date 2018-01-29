@@ -14,16 +14,6 @@ if [[ -n "$PS1" && -n "$HPC" && -z "$INTERACTIVE_QUEUE" ]]; then
         echo $CONDA_DIR
         echo ""
     fi
-
-    # Date
-    echo "Last updated"
-    wd="$PWD"
-    cd "$SEQCLOUD_DIR"
-    git log -1 --format=%cd
-    cd "$wd"
-    unset -v wd
-    echo "==========================================================================="
-    echo ""
 fi
 
 # Alternate methods:
