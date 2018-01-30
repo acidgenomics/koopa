@@ -1,6 +1,15 @@
 # Template for D. melanogaster scRNA-seq using Illumina prepared samples
 # Dependency files must be saved into the work directory
 # 2017-10-06
+#
+# FASTA: ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/
+# Concatenate these FASTA files:
+# - dmel-all-miRNA-r6.19.fasta.gz
+# - dmel-all-miscRNA-r6.19.fasta.gz
+# - dmel-all-ncRNA-r6.19.fasta.gz
+# - dmel-all-pseudogene-r6.19.fasta.gz
+# - dmel-all-tRNA-r6.19.fasta.gz
+# GTF: ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/gtf/dmel-all-r6.19.gtf.gz
 ---
 details:
   - analysis: scRNA-seq
@@ -10,12 +19,6 @@ details:
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
-      # ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta
-      # Concatenate these FASTA files:
-      # dmel-all-miRNA-r*.fasta.gz
-      # dmel-all-miscRNA-r*.fasta.gz
-      # dmel-all-ncRNA-r*.fasta.gz
-      # dmel-all-pseudogene-r*.fasta.gz
-      # dmel-all-tRNA-r*.fasta.gz
-      transcriptome_fasta: dmel-all-concatenated-r6.17.fasta
+      transcriptome_fasta: dmel-all-concatenated-r6.19.fasta
+      transcriptome_gtf: dmel-all-r6.19.gtf
       umi_type: harvard-indrop-v3
