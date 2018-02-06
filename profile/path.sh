@@ -15,5 +15,9 @@ fi
 
 # conda
 if [[ -n "$CONDA_DIR" ]]; then
-    export PATH="$CONDA_DIR/bin:$PATH"
+    # Recommended method until v4.3
+    # export PATH="$CONDA_DIR/bin:$PATH"
+    
+    # New recommended method for v4.4
+    . "$CONDA_DIR/etc/profile.d/conda.sh"
 fi
