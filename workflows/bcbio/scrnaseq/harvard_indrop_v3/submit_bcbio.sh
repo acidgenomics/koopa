@@ -16,4 +16,4 @@
 # Use 6x the number of cores per sample
 # 12 x 6 = 72
 
-bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 72 -t ipython -s slurm -q medium -r t=2-00:00 --timeout 1000
+bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 72 -t ipython -s slurm -q medium -r t=2-00:00 --retries 3 --timeout 1000
