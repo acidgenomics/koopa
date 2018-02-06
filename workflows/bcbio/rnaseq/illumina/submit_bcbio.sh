@@ -16,4 +16,4 @@
 # Use 6x cores per sample
 # 12 x 6 = 72
 
-bcbio_nextgen.py ../config/illumina_rnaseq.yaml -n 72 -t ipython -s slurm -q medium -r t=0-12:00 --timeout 1000
+bcbio_nextgen.py ../config/illumina_rnaseq.yaml -n 72 -t ipython -s slurm -q medium -r t=0-12:00 --retries 3 --timeout 1000
