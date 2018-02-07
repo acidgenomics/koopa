@@ -14,13 +14,8 @@ if [[ -n "$ASPERA_DIR" ]]; then
 fi
 
 # conda
-if [[ -n "$CONDA_DIR" ]]; then
-    version=$($CONDA_DIR/bin/conda --version)
-    if echo "$version" | grep -q "conda 4.4"; then
-        . "$CONDA_DIR/etc/profile.d/conda.sh"
-    elif echo "$version" | grep -q "conda 4.3"; then
+if [[ -n "$CONDA_VERSION" ]]; then
+    if echo "$CONDA_VERSION" | grep -q "conda 4.3"; then
         export PATH="$CONDA_DIR/bin:$PATH"
-    else
-        echo "$version is not supported"
     fi
 fi
