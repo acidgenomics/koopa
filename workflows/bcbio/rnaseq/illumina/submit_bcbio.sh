@@ -9,8 +9,8 @@
 #SBATCH --ntasks=1                  # Number of cores per node (keep at 1)
 #SBATCH --cpus-per-task=1           # CPUs per task
 #SBATCH --mem-per-cpu=8G            # Memory needed per CPU
-#SBATCH --output=project_%j.out     # File to which STDOUT will be written, including job ID
-#SBATCH --error=project_%j.err      # File to which STDERR will be written, including job ID
+#SBATCH --output=jobid_%j.out       # File to which STDOUT will be written, including job ID
+#SBATCH --error=jobid_%j.err        # File to which STDERR will be written, including job ID
 #SBATCH --mail-type=ALL             # Type of email notification (BEGIN, END, FAIL, ALL)
 
 # Use 6x cores per sample
