@@ -1,5 +1,5 @@
 # bcbio
-if [[ -n "$BCBIO_DIR" ]]; then
+if [[ -d "$BCBIO_DIR" ]]; then
     if [[ ! -f "$BCBIO_DIR/bcbio_nextgen.py" ]]; then
         echo "bcbio_nextgen.py missing"
         exit 1
@@ -9,7 +9,7 @@ if [[ -n "$BCBIO_DIR" ]]; then
 fi
 
 # Aspera Connect
-if [[ -n "$ASPERA_DIR" ]]; then
+if [[ -d "$ASPERA_DIR" ]]; then
     export PATH="$ASPERA_DIR:$PATH"
 fi
 
