@@ -2,12 +2,12 @@ if [[ -n "$PS1" && -n "$HPC" && -z "$INTERACTIVE_QUEUE" ]]; then
     echo ""
     echo "==== seqcloud ============================================================="
     # bcbio
-    if [[ ! -z $BCBIO_DIR ]]; then
+    if [[ -d $BCBIO_DIR ]]; then
         echo "# bcbio"
         echo $BCBIO_DIR
     fi
     # Conda
-    if [[ ! -z $CONDA_DIR ]]; then
+    if [[ -d $CONDA_DIR ]]; then
         echo "# conda"
         echo $CONDA_DIR
     fi
