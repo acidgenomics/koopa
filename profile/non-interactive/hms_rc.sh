@@ -11,7 +11,9 @@ then
     echo "seqcloud support for HMS Orchestra is being phased out."
     echo "Please migrate your account to O2!"
     export HPC="HMS RC Orchestra"
-    export BCBIO_DIR="/opt/bcbio/centos/bin"
+    if [[ -z "$BCBIO_DIR" ]]; then
+        export BCBIO_DIR="/opt/bcbio/centos/bin"
+    fi
 elif [[ $HMS_CLUSTER = "o2" ]] && \
      [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
      [[ ! -z $SLURM_CONF ]] && \
@@ -20,7 +22,9 @@ elif [[ $HMS_CLUSTER = "o2" ]] && \
 then
     # O2
     export HPC="HMS RC O2"
-    export BCBIO_DIR="/n/app/bcbio/tools/bin"
+    if [[ -z "$BCBIO_DIR" ]]; then
+        export BCBIO_DIR="/n/app/bcbio/tools/bin"
+    fi
 fi
 
 # Modules ======================================================================
