@@ -11,6 +11,14 @@ set.seed(1454944673L)
 # To check seed:
 # .Random.seed[1L:10L]
 
-# Startup messages =============================================================
-message(basename(Sys.getenv("R_LIBS_USER")))
-message(getwd())
+# Interactive ==================================================================
+if (interactive()) {
+    message(paste(
+        "User Library:",
+        normalizePath(Sys.getenv("R_LIBS_USER")),
+        "",
+        "Working Directory:",
+        getwd(),
+        sep = "\n"
+    ))
+}
