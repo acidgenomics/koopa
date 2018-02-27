@@ -1,4 +1,4 @@
-command -v STAR >/dev/null 2>&1 || { echo >&2 "STAR missing"; exit 1; }
+command -v STAR >/dev/null 2>&1 || { echo >&2 "STAR missing"; return 1; }
 
 # Ideally, use symlinks with these defaults or you can rename
 if [[ "$#" -gt "0" ]]; then

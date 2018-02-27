@@ -5,7 +5,7 @@
 # Exit on HPC detection failure
 if [[ -z $HPC ]]; then
     echo "HPC required"
-    exit 1
+    return 1
 fi
 
 if [[ "$#" -gt "0" ]]; then
@@ -16,7 +16,7 @@ if [[ "$#" -gt "0" ]]; then
     file_name="$4"
 else
     echo "Syntax: rscript <queue> <cores> <ram_gb> <file_name>"
-    exit 1
+    return 1
 fi
 
 # Set the queue (a.k.a. partition for SLURM)

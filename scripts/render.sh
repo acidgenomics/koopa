@@ -8,7 +8,7 @@
 # Exit on HPC detection failure
 if [[ -z $HPC ]]; then
     echo "HPC required"
-    exit 1
+    return 1
 fi
 
 if [[ "$#" -gt "0" ]]; then
@@ -19,7 +19,7 @@ if [[ "$#" -gt "0" ]]; then
     file_name="$4"
 else
     echo "Syntax: render <queue> <cores> <ram_gb> <file_name>"
-    exit 1
+    return 1
 fi
 
 echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"

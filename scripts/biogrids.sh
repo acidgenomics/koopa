@@ -5,5 +5,5 @@ if [[ $HPC == "HMS RC Orchestra" ]]; then
     fi
 else
     echo "Orchestra HPC required"
-    exit 1
+    return 1
 fi

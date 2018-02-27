@@ -2,5 +2,5 @@ wd=$(pwd)
 cd "$SEQCLOUD_DIR"
 git pull
 cd "$wd"
-echo "must log back in for changes to take effect"
-exit 0
+echo "Login shell must be reloaded for changes to take effect"
+return 0
