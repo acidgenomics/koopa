@@ -20,8 +20,8 @@ fi
 
 # Optional argument defaults
 cores=1
-mem=1
-queue="priority"
+mem=8
+queue="medium"
 if [[ "$SCHEDULER" == "slurm" ]]; then
     time="1-00:00"
 elif [[ "$SCHEDULER" == "lsf" ]]; then

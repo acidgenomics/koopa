@@ -2,47 +2,80 @@
 # which is common in online examples, will not escape the bash variables
 # properly.
 
-# Exit on HPC detection failure
-if [[ -z $HPC ]]; then
-    echo "HPC required"
-    return 1
-fi
-
-if [[ "$#" -gt "0" ]]; then
-    queue="$1"
-    cores="$2"
-    ram_gb="$3"
-    ram_mb="$(($ram_gb * 1024))"
-    file_name="$4"
-else
-    echo "Syntax: rscript <queue> <cores> <ram_gb> <file_name>"
-    return 1
-fi
-
-# Set the queue (a.k.a. partition for SLURM)
-# https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic#UsingSlurmBasic-Partitions(akaQueuesinLSF)
-# medium queue is recommended by default at HMS
-
 # `R CMD BATCH` can be used in place of `Rscript`
 # https://sph.umich.edu/biostat/computing/cluster/examples/r.html
 
-echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
-if [[ $SCHEDULER == "slurm" ]]; then
-    srun -t 4-00:00 \
-        -p "$queue" \
-        -J "$file_name" \
-        -c "$cores" \
-        --mem-per-cpu="${ram_gb}G" \
-        Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')"
-elif [[ $SCHEDULER == "lsf" ]]; then
-    bsub -W 96:00 \
-        -q "$queue" \
-        -J "$file_name" \
-        -n "$cores" \
-        -R rusage[mem="$ram_mb"] \
-        Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')"
+usage() {
+    echo "rscript: [-{f}ile file.R -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 2-00:00]" 1>&2
+}
+
+# Early return usage on empty call
+if [[ $# -eq 0 ]]; then
+    usage
+    return 1
 fi
 
-unset -v cores file_name queue ram_gb ram_mb
+# Early return on HPC detection failure
+if [[ -z $SCHEDULER ]]; then
+    echo "HPC scheduler required"
+    return 1
+fi
+
+# Optional argument defaults
+cores=1
+mem=8
+queue="medium"
+if [[ "$SCHEDULER" == "slurm" ]]; then
+    time="4-00:00"
+elif [[ "$SCHEDULER" == "lsf" ]]; then
+    time="96:00"
+fi
+
+# Extract options and their arguments into variables
+while getopts ":c:f:m:q:t:" opt; do
+    case ${opt} in
+        c) cores="${OPTARG}";;
+        f) file="${OPTARG}";;
+        m) mem="${OPTARG}";;
+        q) queue="${OPTARG}";;
+        t) time="${OPTARG}";;
+        \?) echo "Invalid option: ${OPTARG}" 1>&2;;
+        :) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+    esac
+done
+shift $((OPTIND -1))
+
+# Required arguments
+if [[ -z $file ]]; then
+    echo "file is required"
+    usage
+    return 1
+fi
+
+# Inform the user about the job
+echo "Submitting $SCHEDULER job"
+echo "- file: ${file}"
+echo "- queue: ${queue}"
+echo "- cores: ${cores}"
+echo "- memory per core: ${mem} GB"
+echo "- time: ${time}"
+
+if [[ $SCHEDULER == "slurm" ]]; then
+    srun -t "$time" \
+        -p "$queue" \
+        -J "$file" \
+        -c "$cores" \
+        --mem-per-cpu="${mem}G" \
+        Rscript --default-packages="$R_DEFAULT_PACKAGES" -e "source('$file')"
+elif [[ $SCHEDULER == "lsf" ]]; then
+    mem_mb="$(($mem * 1024))"
+    bsub -W "$time" \
+        -q "$queue" \
+        -J "$file" \
+        -n "$cores" \
+        -R rusage[mem="$mem_mb"] \
+        Rscript --default-packages="$R_DEFAULT_PACKAGES" -e "source('$file')"
+        unset -v mem_mb
+fi
+
+unset -v cores file mem queue time
