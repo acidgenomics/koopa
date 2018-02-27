@@ -22,23 +22,23 @@ else
     exit 1
 fi
 
-echo "Rendering ${file_name} with ${cores} core(s), ${ram_gb} GB RAM"
-if [[ $HPC == "HMS RC O2" ]]; then
+echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
+if [[ $SCHEDULER == "slurm" ]]; then
     srun -t 1-00:00 \
         -p "$queue" \
         -J "$file_name" \
-        -n "$cores" \
+        -c "$cores" \
         --mem-per-cpu="${ram_gb}G" \
-        Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file_name')" &
-elif [[ $HPC == "HMS RC Orchestra" ]]; then
+        --wrap Rscript --default-packages="$R_DEFAULT_PACKAGES" \
+            -e "rmarkdown::render('$file_name')"
+elif [[ $SCHEDULER == "lsf" ]]; then
     bsub -W 24:00 \
         -q "$queue" \
         -J "$file_name" \
         -n "$cores" \
         -R rusage[mem="$ram_mb"] \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file_name')" &
+            -e "rmarkdown::render('$file_name')"
 fi
 
 unset -v cores file_name queue ram_gb ram_mb

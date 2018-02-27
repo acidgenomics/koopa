@@ -27,22 +27,22 @@ fi
 # https://sph.umich.edu/biostat/computing/cluster/examples/r.html
 
 echo "Submitting ${file_name} to ${queue} queue with ${cores} core(s), ${ram_gb} GB RAM"
-if [[ $HPC == "HMS RC O2" ]]; then
+if [[ $SCHEDULER == "slurm" ]]; then
     srun -t 4-00:00 \
         -p "$queue" \
         -J "$file_name" \
-        -n "$cores" \
+        -c "$cores" \
         --mem-per-cpu="${ram_gb}G" \
-        Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')" &
-elif [[ $HPC == "HMS RC Orchestra" ]]; then
+        --wrap Rscript --default-packages="$R_DEFAULT_PACKAGES" \
+            -e "source('$file_name')"
+elif [[ $SCHEDULER == "lsf" ]]; then
     bsub -W 96:00 \
         -q "$queue" \
         -J "$file_name" \
         -n "$cores" \
         -R rusage[mem="$ram_mb"] \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "source('$file_name')" &
+            -e "source('$file_name')"
 fi
 
 unset -v cores file_name queue ram_gb ram_mb
