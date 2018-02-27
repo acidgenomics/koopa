@@ -2,39 +2,63 @@
 # which is common in online examples, will not escape the bash variables
 # properly.
 
-# Exit on HPC detection failure
+usage() {
+    echo "render: [-{f}ile file.Rmd -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 1-00:00]" 1>&2
+}
+
+# Early return usage on empty call
+if [[ $# -eq 0 ]]; then
+    usage
+    return 1
+fi
+
+# Early return on HPC detection failure
 if [[ -z $SCHEDULER ]]; then
     echo "HPC scheduler required"
     return 1
 fi
 
-usage() {
-    echo "render: [<queue> <cores> <mem> <time> <file>]" 1>&2
-    return 1
-}
+# Optional argument defaults
+cores=1
+mem=1
+queue="priority"
+if [[ "$SCHEDULER" == "slurm" ]]; then
+    time="1-00:00"
+elif [[ "$SCHEDULER" == "lsf" ]]; then
+    time="24:00"
+fi
 
-local OPTIND arg cores file mem queue time
-while getopts "cores:file:mem:queue:time:" arg; do
-    case ${arg} in
-        queue) queue="${OPTARG}";;
-        cores) cores="${OPTARG}";;
-        mem) mem="${OPTARG}";;
-        time) time="${OPTARG}";;
-        file) file="${OPTARG}";;
-        *) usage  # illegal option
+# Extract options and their arguments into variables
+while getopts ":c:f:m:q:t:" opt; do
+    case ${opt} in
+        c) cores="${OPTARG}";;
+        f) file="${OPTARG}";;
+        m) mem="${OPTARG}";;
+        q) queue="${OPTARG}";;
+        t) time="${OPTARG}";;
+        \?) echo "Invalid option: ${OPTARG}" 1>&2;;
+        :) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
     esac
 done
-shift $((OPTIND-1))
+shift $((OPTIND -1))
 
+# Required arguments
+if [[ -z $file ]]; then
+    echo "file is required"
+    usage
+    return 1
+fi
 
-
-echo "Submitting ${file} to ${queue} queue with ${cores} core(s), ${mem} GB RAM, ${time} time"
-return 0
-
-
+# Inform the user about the job
+echo "Submitting $SCHEDULER job"
+echo "- file: ${file}"
+echo "- queue: ${queue}"
+echo "- cores: ${cores}"
+echo "- memory per core: ${mem} GB"
+echo "- time: ${time}"
 
 if [[ $SCHEDULER == "slurm" ]]; then
-    srun -t 1-00:00 \
+    srun -t "$time" \
         -p "$queue" \
         -J "$file" \
         -c "$cores" \
@@ -43,7 +67,7 @@ if [[ $SCHEDULER == "slurm" ]]; then
             -e "rmarkdown::render('$file')"
 elif [[ $SCHEDULER == "lsf" ]]; then
     mem_mb="$(($mem * 1024))"
-    bsub -W 24:00 \
+    bsub -W "$time" \
         -q "$queue" \
         -J "$file" \
         -n "$cores" \
