@@ -1,4 +1,4 @@
-command -v git >/dev/null 2>&1 || { echo >&2 "git missing"; exit 1; }
+command -v git >/dev/null 2>&1 || { echo >&2 "git missing"; return 1; }
 
 git clone https://github.com/Linuxbrew/brew.git ~/.linuxbrew
 
