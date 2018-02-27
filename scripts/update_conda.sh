@@ -1,4 +1,4 @@
-command -v conda >/dev/null 2>&1 || { echo >&2 "conda missing"; exit 1; }
+command -v conda >/dev/null 2>&1 || { echo >&2 "conda missing"; return 1; }
 
 # https://bioconda.github.io/#set-up-channels
 # (conda config --add channels r)

@@ -4,7 +4,7 @@
 # - sam
 
 # Check for STAR
-command -v STAR >/dev/null 2>&1 || { echo >&2 "STAR missing"; exit 1; }
+command -v STAR >/dev/null 2>&1 || { echo >&2 "STAR missing"; return 1; }
 
 # Check for LSF
 if [[ -z $LSF_ENVDIR ]]; then

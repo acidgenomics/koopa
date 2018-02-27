@@ -9,10 +9,10 @@ elif [[ $(uname -s) = "Darwin" ]]; then
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 else
     echo "$(uname -s) operating system not supported"
-    exit 1
+    return 1
 fi
 
 bash Miniconda3-latest-*-x86_64.sh
 
 echo "conda install succeeded. Shell must be reloaded."
-exit 1
+return 1

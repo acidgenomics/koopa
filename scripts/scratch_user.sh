@@ -7,6 +7,6 @@ if [[ $HPC == "HMS RC O2" ]]; then
     ln -s "$user_dir" ~/scratch
 else
     echo "HMS RC O2 cluster required"
-    exit 1
+    return 1
 fi
 unset -v user_dir
