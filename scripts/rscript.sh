@@ -33,7 +33,7 @@ if [[ $SCHEDULER == "slurm" ]]; then
         -J "$file_name" \
         -c "$cores" \
         --mem-per-cpu="${ram_gb}G" \
-        --wrap Rscript --default-packages="$R_DEFAULT_PACKAGES" \
+        Rscript --default-packages="$R_DEFAULT_PACKAGES" \
             -e "source('$file_name')"
 elif [[ $SCHEDULER == "lsf" ]]; then
     bsub -W 96:00 \
