@@ -16,7 +16,7 @@ git clone https://github.com/seqcloud/seqcloud.git ~/seqcloud
 
 Add these lines to your `.bashrc` file:
 
-```
+```bash
 # seqcloud
 if [[ -f ~/seqcloud/seqcloud.sh ]]; then
     . ~/seqcloud/seqcloud.sh
