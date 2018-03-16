@@ -10,19 +10,22 @@ High-performance computing shell bootloader for bioinformatics.
 
 Connect to your high-performance computing (HPC) cluster and clone our git repository.
 
-```{bash}
+```bash
 git clone https://github.com/seqcloud/seqcloud.git ~/seqcloud
 ```
 
-Add this line to your `.bashrc` file:
+Add these lines to your `.bashrc` file:
 
-```
-. ~/seqcloud/seqcloud.sh
+```bash
+# seqcloud
+if [[ -f ~/seqcloud/seqcloud.sh ]]; then
+    . ~/seqcloud/seqcloud.sh
+fi
 ```
 
 To also load seqcloud on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:
 
-```{bash}
+```bash
 ln -s ~/.bashrc ~/.bash_profile
 ```
 
@@ -31,6 +34,6 @@ ln -s ~/.bashrc ~/.bash_profile
 
 To launch an interactive queue, simply run:
 
-```{bash}
+```bash
 seqcloud interactive <cores> <ram_gb>
 ```
