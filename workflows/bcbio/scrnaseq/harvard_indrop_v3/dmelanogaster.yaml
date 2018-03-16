@@ -1,7 +1,11 @@
-# Template for D. melanogaster scRNA-seq using Illumina prepared samples
-# Dependency files must be saved into the work directory
-# 2017-10-06
+# Template for scRNA-seq using Illumina prepared samples
 #
+# Drosophila melanogaster
+# 2018-03-16
+#
+# FlyBase
+# Genome build: BDGP6
+# Release version: 6.19
 # FASTA: ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/
 # Concatenate these FASTA files:
 # - dmel-all-miRNA-r6.19.fasta.gz
@@ -10,10 +14,12 @@
 # - dmel-all-pseudogene-r6.19.fasta.gz
 # - dmel-all-tRNA-r6.19.fasta.gz
 # GTF: ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/gtf/dmel-all-r6.19.gtf.gz
+#
+# NOTE: genome_build is specific to bcbio install
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: BDGP6
+    genome_build: BDGP6_6.19
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
