@@ -1,10 +1,8 @@
-if [[ ! -z $SLURM_CONF ]]; then
-    # Slurm
-    squeue -u $USER
-elif [[ ! -z $LSF_ENVDIR ]]; then
-    # LSF    
-    bjobs -u $USER
+if [[ $SCHEDULER == "slurm" ]]; then
+    squeue -u "$USER"
+elif [[ $SCHEDULER == "lsf" ]]; then
+    bjobs -u "$USER"
 else
-    echo "HPC required"
-    exit 1
+    echo "HPC scheduler required"
+    return 1
 fi
