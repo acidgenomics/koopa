@@ -1,15 +1,21 @@
-# Template for C. elegans RNA-seq using Illumina prepared samples
+# Template for RNA-seq using Illumina prepared samples
+#
+# Caenorhabditis elegans
 # 2018-03-16
 #
-# Ensembl 90
+# Genome build: WBcel235
+# Release version: 90
 # FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/caenorhabditis_elegans/cdna/Caenorhabditis_elegans.WBcel235.cdna.all.fa.gz
 # GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/caenorhabditis_elegans/Caenorhabditis_elegans.WBcel235.90.gtf.gz
+#
+# NOTE: genome_build is specific to bcbio install
 ---
 details:
   - analysis: RNA-seq
-    genome_build: WBcel235
+    genome_build: WBcel235_90
     algorithm:
       aligner: star
+      expression_caller: salmon
       strandedness: unstranded
       transcriptome_fasta: Caenorhabditis_elegans.WBcel235.cdna.all.fa
       transcriptome_gtf: Caenorhabditis_elegans.WBcel235.90.gtf
