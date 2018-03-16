@@ -28,3 +28,5 @@ details:
       transcriptome_fasta: dmel-all-concatenated-r6.19.fasta
       transcriptome_gtf: dmel-all-r6.19.gtf
       umi_type: harvard-indrop-v3
+upload:
+  dir: ../final

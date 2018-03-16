@@ -1,25 +1,25 @@
 # Template for scRNA-seq using Illumina prepared samples
 #
-# Mus musculus
+# Homo sapiens
 # 2018-03-16
 #
-# Genome build: GRCm38
+# Genome build: GRCh38
 # Release version: 90
-# FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
-# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/mus_musculus/Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf.gz
+# FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/homo_sapiens/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf.gz
 #
 # NOTE: genome_build is specific to bcbio install
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: GRCm38_90
+    genome_build: GRCh38_90
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
       singlecell_quantifier: rapmap
-      transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
-      transcriptome_gtf: Mus_musculus.GRCm38.90.chr_patch_hapl_scaff.gtf
+      transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
+      transcriptome_gtf: Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf
       umi_type: harvard-indrop-v3
 upload:
   dir: ../final
