@@ -1,6 +1,7 @@
 # Template for C. elegans RNA-seq using Illumina prepared samples
 # 2018-03-16
 #
+# Ensembl 90
 # FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/caenorhabditis_elegans/cdna/Caenorhabditis_elegans.WBcel235.cdna.all.fa.gz
 # GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/caenorhabditis_elegans/Caenorhabditis_elegans.WBcel235.90.gtf.gz
 ---
