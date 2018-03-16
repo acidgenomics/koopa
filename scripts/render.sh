@@ -2,43 +2,80 @@
 # which is common in online examples, will not escape the bash variables
 # properly.
 
-# srun guide
-# https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic#UsingSlurmBasic-Thesruncommand
+usage() {
+    echo "render: [-{f}ile file.Rmd -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 1-00:00]" 1>&2
+}
 
-# Exit on HPC detection failure
-if [[ -z $HPC ]]; then
-    echo "HPC required"
-    exit 1
+# Early return usage on empty call
+if [[ $# -eq 0 ]]; then
+    usage
+    return 1
 fi
 
-if [[ "$#" -gt "0" ]]; then
-    queue="$1"
-    cores="$2"
-    ram_gb="$3"
-    ram_mb="$(($ram_gb * 1024))"
-    file_name="$4"
-else
-    echo "Syntax: render <queue> <cores> <ram_gb> <file_name>"
-    exit 1
+# Early return on HPC detection failure
+if [[ -z $SCHEDULER ]]; then
+    echo "HPC scheduler required"
+    return 1
 fi
 
-echo "Rendering ${file_name} with ${cores} core(s), ${ram_gb} GB RAM"
-if [[ $HPC == "HMS RC O2" ]]; then
-    srun -t 1-00:00 \
+# Optional argument defaults
+cores=1
+mem=8
+queue="medium"
+if [[ "$SCHEDULER" == "slurm" ]]; then
+    time="1-00:00"
+elif [[ "$SCHEDULER" == "lsf" ]]; then
+    time="24:00"
+fi
+
+# Extract options and their arguments into variables
+while getopts ":c:f:m:q:t:" opt; do
+    case ${opt} in
+        c) cores="${OPTARG}";;
+        f) file="${OPTARG}";;
+        m) mem="${OPTARG}";;
+        q) queue="${OPTARG}";;
+        t) time="${OPTARG}";;
+        \?) echo "Invalid option: ${OPTARG}" 1>&2;;
+        :) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+    esac
+done
+shift $((OPTIND -1))
+
+# Required arguments
+if [[ -z $file ]]; then
+    echo "file is required"
+    usage
+    return 1
+fi
+
+# Inform the user about the job
+echo "Submitting $SCHEDULER job"
+echo "- file: ${file}"
+echo "- queue: ${queue}"
+echo "- cores: ${cores}"
+echo "- memory per core: ${mem} GB"
+echo "- time: ${time}"
+
+if [[ $SCHEDULER == "slurm" ]]; then
+    srun -t "$time" \
         -p "$queue" \
-        -J "$file_name" \
-        -n "$cores" \
-        --mem-per-cpu="${ram_gb}G" \
+        -J "$file" \
+        -c "$cores" \
+        --mem-per-cpu="${mem}G" \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file_name')" &
-elif [[ $HPC == "HMS RC Orchestra" ]]; then
-    bsub -W 24:00 \
+            -e "rmarkdown::render('$file')"
+elif [[ $SCHEDULER == "lsf" ]]; then
+    mem_mb="$(($mem * 1024))"
+    bsub -W "$time" \
         -q "$queue" \
-        -J "$file_name" \
+        -J "$file" \
         -n "$cores" \
-        -R rusage[mem="$ram_mb"] \
+        -R rusage[mem="$mem_mb"] \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file_name')" &
+            -e "rmarkdown::render('$file')"
+        unset -v mem_mb
 fi
 
-unset -v cores file_name queue ram_gb ram_mb
+unset -f usage
+unset -v cores file mem queue time
