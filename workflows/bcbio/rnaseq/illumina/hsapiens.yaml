@@ -1,16 +1,17 @@
 # Template for H. sapiens RNA-seq using Illumina prepared samples
-# 2018-01-22
+# 2018-03-16
 #
-# FASTA: ftp://ftp.ensembl.org/pub/current_fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
-# GTF: ftp://ftp.ensembl.org/pub/current_gtf/homo_sapiens/Homo_sapiens.GRCh38.91.chr_patch_hapl_scaff.gtf.gz
+# Ensembl 90
+# FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/homo_sapiens/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf.gz
 ---
 details:
   - analysis: RNA-seq
-    genome_build: hg38
+    genome_build: hg38  # GRCh38
     algorithm:
       aligner: star
       strandedness: unstranded
       transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
-      transcriptome_gtf: Homo_sapiens.GRCh38.91.chr_patch_hapl_scaff.gtf
+      transcriptome_gtf: Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf.gz
 upload:
   dir: ../final
