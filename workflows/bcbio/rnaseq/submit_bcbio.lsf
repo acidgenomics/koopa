@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# IBM Platform LSF
+# https://goo.gl/RzdS2s
+
+#BSUB -J rnaseq                        # Job name
+#BSUB -q medium                        # Queue name
+#BSUB -N                               # Email when the report finishes
+#BSUB -n 1                             # CPU cores requested per task (change for threaded jobs)
+#BSUB -W 72:00                         # Runtime in HH:MM format
+#BSUB -R "rusage[mem=10000]"           # Memory needed per CPU
+#BSUB -e project.err                   # File to which STDERR will be written
+#BSUB -o project.out                   # File to which STDOUT will be written
+
+# Use 6x cores per sample
+# 12 x 6 = 72
+n=72
+
+bcbio_nextgen.py ../config/bcbio.yaml -n "$n" -t ipython -s lsf -q medium -r mincores=2 -r minconcores=2 '-rW=72:00' --retries 3 --timeout 1000

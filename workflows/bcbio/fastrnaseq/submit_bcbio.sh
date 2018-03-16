@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# SLURM
 # https://slurm.schedmd.com/sbatch.html
 
 #SBATCH --job-name=illumina            # Job name
@@ -17,4 +18,4 @@
 # 12 x 6 = 72
 n=72
 
-bcbio_nextgen.py ../config/illumina_rnaseq.yaml -n "$n" -t ipython -s slurm -q medium -r t=1-00:00 --retries 3 --timeout 1000
+bcbio_nextgen.py ../config/bcbio.yaml -n "$n" -t ipython -s slurm -q medium -r t=1-00:00 --retries 3 --timeout 1000

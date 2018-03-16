@@ -11,7 +11,7 @@ if [[ "$#" -gt "0" ]]; then
     ram_gb="$2"
 else
     cores="1"
-    ram_gb="16"
+    ram_gb="1"
 fi
 
 ram_mb="$(($ram_gb * 1024))"
