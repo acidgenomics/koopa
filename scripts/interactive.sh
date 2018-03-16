@@ -3,7 +3,7 @@
 # Exit on HPC detection failure
 if [[ -z $HPC ]]; then
     echo "HPC required"
-    exit 1
+    return 1
 fi
 
 if [[ "$#" -gt "0" ]]; then
@@ -11,7 +11,7 @@ if [[ "$#" -gt "0" ]]; then
     ram_gb="$2"
 else
     cores="1"
-    ram_gb="16"
+    ram_gb="1"
 fi
 
 ram_mb="$(($ram_gb * 1024))"
@@ -19,20 +19,22 @@ ram_mb="$(($ram_gb * 1024))"
 echo "Launching interactive session with ${cores} core(s), ${ram_gb} GB RAM"
 export INTERACTIVE_QUEUE=true
 
-if [[ $HPC == "HMS RC O2" ]]; then
-    command -v srun >/dev/null 2>&1 || { echo >&2 "srun missing"; exit 1; }
-    # `--x11` flag before `/bin/bash` requires `~/.ssh/config` set on local machine
-    srun -p interactive --pty -n "$cores" --mem "${ram_gb}"G --time 0-12:00 --x11 /bin/bash
-elif [[ $HPC == "HMS RC Orchestra" ]]; then
-    command -v bsub >/dev/null 2>&1 || { echo >&2 "bsub missing"; exit 1; }
-    bsub -Is -W 12:00 -q interactive -n "$cores" -R rusage[mem="$ram_mb"] bash
-elif [[ $HPC == "Harvard FAS Odyssey" ]]; then
-    # https://www.rc.fas.harvard.edu/resources/running-jobs/#Interactive_jobs_and_srun
-    # https://www.rc.fas.harvard.edu/resources/faq/category/slurm-2/
-    command -v srun >/dev/null 2>&1 || { echo >&2 "srun missing"; exit 1; }
-    # `--x11` flag before `/bin/bash` requires `~/.ssh/config` set on local machine
-    srun -p test --pty -n "$cores" --mem "${ram_gb}"G --time 0-8:00 --x11=first /bin/bash
+if [[ $SCHEDULER == "slurm" ]]; then
+    command -v srun >/dev/null 2>&1 || { echo >&2 "srun missing"; return 1; }
+    if [[ $HPC == "Harvard FAS Odyssey" ]]; then
+        partition="test"
+    else
+        partition="interactive"
+    fi
+    # `--x11` flag before `/bin/bash` requires `~/.ssh/config` on local machine
+    srun -p "$partition" --pty -c "$cores" --mem "${ram_gb}"G --time 0-8:00 --x11=first /bin/bash
+    unset -v partition
+elif [[ $SCHEDULER == "lsf" ]]; then
+    command -v bsub >/dev/null 2>&1 || { echo >&2 "bsub missing"; return 1; }
+    bsub -Is -W 8:00 -q interactive -n "$cores" -R rusage[mem="$ram_mb"] bash
 else
-    echo "HPC required"
-    exit 1
+    echo "HPC scheduler required"
+    return 1
 fi
+
+unset -v cores ram_gb
