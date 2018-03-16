@@ -1,30 +1,60 @@
+#!/bin/bash
+
 # Build bcbio genome
-#
 # Caenorhabditis elegans
 # 2018-03-16
-#
-# -c cores
-# -f FASTA file
-# -g GTF file
-# -n organism name
-# -b build name
-c=8
-f=Caenorhabditis_elegans.WBcel235.dna.toplevel.fa
-g=Caenorhabditis_elegans.WBcel235.90.gtf
-n=Celegans
-b=WBcel235_90
 
-srun -p interactive --pty -c $c --mem 8G --time 0-8:00 /bin/bash
-cd /n/shared_db/bcbio/biodata
-mkdir ${b}
-cd ${b}
+# SLURM
+# https://slurm.schedmd.com/sbatch.html
+
+#SBATCH --job-name=genome              # Job name
+#SBATCH --partition=medium             # Partition name
+#SBATCH --time=1-00:00                 # Runtime in D-HH:MM format
+#SBATCH --nodes=1                      # Number of nodes (keep at 1)
+#SBATCH --ntasks=1                     # Number of tasks per node (keep at 1)
+#SBATCH --cpus-per-task=8              # CPU cores requested per task (change for threaded jobs)
+#SBATCH --mem-per-cpu=8G               # Memory needed per CPU
+#SBATCH --error=jobid_%j.err           # File to which STDERR will be written, including job ID
+#SBATCH --output=jobid_%j.out          # File to which STDOUT will be written, including job ID
+#SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL)
+
+# User-defined =================================================================
+biodata="/n/shared_db/bcbio/biodata"
+ens_name="Caenorhabditis_elegans"
+ens_build="WBcel235"
+ens_release=90
+name="Celegans"
+
+# Ensembl ======================================================================
+ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
+
+# bcbio ========================================================================
+# -c --cores
+# -f --fasta
+# -g --gtf
+# -n --name (organism name)
+# -b --build (genome build)
+cores=8
+fasta="${ens_name}.${ens_build}.dna.toplevel.fa"
+gtf="${ens_name}.${ens_build}.${ens_release}.gtf"
+build="${ens_build}_${ens_release}"
+
+cd "$biodata"
+mkdir -p "$build"
+cd "$build"
 
 # FASTA
-wget ftp://ftp.ensembl.org/pub/release-90/fasta/caenorhabditis_elegans/dna/${f}.gz
-gunzip -c ${f}.gz > ${f}
+if [[ ! -f "$fasta" ]]; then
+    wget "ftp://ftp.ensembl.org/pub/release-${ens_release}/fasta/${ens_dir}/dna/${fasta}.gz"
+    gunzip -c "${fasta}.gz" > "$fasta"
+fi
 
 # GTF
-wget ftp://ftp.ensembl.org/pub/release-90/gtf/caenorhabditis_elegans/${g}.gz
-gunzip -c ${g}.gz > ${g}
+if [[ ! -f "$gtf" ]]; then
+    wget "ftp://ftp.ensembl.org/pub/release-${ens_release}/gtf/${ens_dir}/${gtf}.gz"
+    gunzip -c "${gtf}.gz" > "$gtf"
+fi
 
-bcbio_setup_genome.py -c $c -f $f -g $g -i bowtie2 star seq -n $n -b $b
+# Execute bcbio script from home directory
+# cloudbiolinux will be installed
+bcbio_setup_genome.py -c "$cores" -f "$fasta" -g "$gtf" -i bowtie2 star seq bwa -n "$name" -b "$build"
