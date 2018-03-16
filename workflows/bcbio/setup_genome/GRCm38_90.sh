@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Build bcbio genome
-# Caenorhabditis elegans
+# Mus musculus
 # 2018-03-16
 
 # SLURM
@@ -20,10 +20,11 @@
 
 # User-defined =================================================================
 biodata="/n/shared_db/bcbio/biodata"
-ens_name="Caenorhabditis_elegans"
-ens_build="WBcel235"
+ens_name="Mus_musculus"
+ens_build="GRCm38"
 ens_release=90
-name="Celegans"
+name="Mmusculus"
+# Note the use of `chr_patch_hapl_scaff` in GTF below
 
 # Ensembl ======================================================================
 ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
@@ -36,7 +37,7 @@ ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
 # -b --build (genome build)
 cores=8
 fasta="${ens_name}.${ens_build}.dna.toplevel.fa"
-gtf="${ens_name}.${ens_build}.${ens_release}.gtf"
+gtf="${ens_name}.${ens_build}.${ens_release}.chr_patch_hapl_scaff.gtf"
 build="${ens_build}_${ens_release}"
 
 cd "$biodata"

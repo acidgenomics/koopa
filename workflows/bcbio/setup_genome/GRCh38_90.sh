@@ -56,6 +56,4 @@ if [[ ! -f "$gtf" ]]; then
     gunzip -c "${gtf}.gz" > "$gtf"
 fi
 
-# Execute bcbio script from home directory
-# cloudbiolinux will be installed
 bcbio_setup_genome.py -c "$cores" -f "$fasta" -g "$gtf" -i bowtie2 star seq bwa -n "$name" -b "$build"
