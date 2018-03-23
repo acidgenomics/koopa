@@ -25,6 +25,7 @@ fi
 cores=1
 mem=8
 queue="medium"
+# time
 if [[ "$SCHEDULER" == "slurm" ]]; then
     time="4-00:00"
 elif [[ "$SCHEDULER" == "lsf" ]]; then
