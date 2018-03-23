@@ -34,13 +34,13 @@ fi
 # Extract options and their arguments into variables
 while getopts ":c:f:m:q:t:" opt; do
     case ${opt} in
-        c) cores="${OPTARG}";;
-        f) file="${OPTARG}";;
-        m) mem="${OPTARG}";;
-        q) queue="${OPTARG}";;
-        t) time="${OPTARG}";;
-        \?) echo "Invalid option: ${OPTARG}" 1>&2;;
-        :) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+        c ) cores="${OPTARG}";;
+        f ) file="${OPTARG}";;
+        m ) mem="${OPTARG}";;
+        q ) queue="${OPTARG}";;
+        t ) time="${OPTARG}";;
+        \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
+        : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
     esac
 done
 shift $((OPTIND -1))
