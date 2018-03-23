@@ -26,7 +26,7 @@ while getopts ":c:m:t:h" opt; do
         c  ) cores=$OPTARG;;
         m  ) mem=$OPTARG;;
         t  ) time=$OPTARG;;
-        h  ) usage; return 0;;
+        h  ) usage; exit;;
         \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
         :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
         *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
