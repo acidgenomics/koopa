@@ -13,7 +13,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 # Early return on HPC detection failure
-if [[ -z $SCHEDULER ]]; then
+if [[ -z "$SCHEDULER" ]]; then
     echo "HPC scheduler required"
     return 1
 fi
@@ -30,21 +30,21 @@ elif [[ "$SCHEDULER" == "lsf" ]]; then
 fi
 
 # Extract options and their arguments into variables
-while getopts ":c:f:m:q:t:" opt; do
-    case ${opt} in
-        c ) cores="${OPTARG}";;
-        f ) file="${OPTARG}";;
-        m ) mem="${OPTARG}";;
-        q ) queue="${OPTARG}";;
-        t ) time="${OPTARG}";;
+while getopts ":c:f:m:q:t:h" opt; do
+    case $opt in
+        c  ) cores=$OPTARG;;
+        f  ) file=$OPTARG;;
+        m  ) mem=$OPTARG;;
+        q  ) queue=$OPTARG;;
+        t  ) time=$OPTARG;;
         \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
-        : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+        :  ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
     esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 
 # Required arguments
-if [[ -z $file ]]; then
+if [[ -z "$file" ]]; then
     echo "file is required"
     usage
     return 1
