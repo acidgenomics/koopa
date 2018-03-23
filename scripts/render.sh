@@ -3,7 +3,7 @@
 # properly.
 
 usage() {
-    echo "render: [-{f}ile file.Rmd -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 1-00:00]" 1>&2
+    echo "render -{f}ile file.Rmd -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 1-00:00" 1>&2
 }
 
 # Early return usage on empty call
@@ -37,8 +37,10 @@ while getopts ":c:f:m:q:t:h" opt; do
         m  ) mem=$OPTARG;;
         q  ) queue=$OPTARG;;
         t  ) time=$OPTARG;;
-        \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
-        :  ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+        h  ) usage; exit;;
+        \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+        :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
+        *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
     esac
 done
 shift $((OPTIND - 1))
