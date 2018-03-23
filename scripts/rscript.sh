@@ -33,18 +33,20 @@ elif [[ "$SCHEDULER" == "lsf" ]]; then
 fi
 
 # Extract options and their arguments into variables
-while getopts ":c:f:m:q:t:" opt; do
-    case ${opt} in
-        c ) cores="${OPTARG}";;
-        f ) file="${OPTARG}";;
-        m ) mem="${OPTARG}";;
-        q ) queue="${OPTARG}";;
-        t ) time="${OPTARG}";;
-        \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
-        : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+while getopts ":c:f:m:q:t:h" opt; do
+    case $opt in
+        c  ) cores=$OPTARG;;
+        f  ) file=$OPTARG;;
+        m  ) mem=$OPTARG;;
+        q  ) queue=$OPTARG;;
+        t  ) time=$OPTARG;;
+        h  ) usage; exit;;
+        \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+        :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
+        *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
     esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 
 # Required arguments
 if [[ -z "$file" ]]; then
