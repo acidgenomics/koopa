@@ -10,13 +10,31 @@ if [[ -z $SCHEDULER ]]; then
     return 1
 fi
 
-# All arguments are optional
-cores=1
-mem=1
-if [[ "$SCHEDULER" == "slurm" ]]; then
-    time="0-06:00"
-elif [[ "$SCHEDULER" == "lsf" ]]; then
-    time="6:00"
+# Allow positional arguments
+if [[ "$#" -gt "0" ]]; then
+    cores=$1
+    mem=$2
+    time=$3
+fi
+
+# cores
+if [[ -z $cores ]]; then
+    cores=1
+fi
+
+# mem
+if [[ -z $mem ]]; then
+    mem=1
+fi
+
+# time
+if [[ -z $time ]]; then
+    if [[ "$SCHEDULER" == "slurm" ]]; then
+        time="0-06:00"
+    elif [[ "$SCHEDULER" == "lsf" ]]; then
+        time="6:00"
+    fi
+
 fi
 
 # Extract options and their arguments into variables
