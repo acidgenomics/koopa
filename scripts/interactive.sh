@@ -4,6 +4,12 @@ usage () {
     echo "interactive: [-{c}ores 1 -{m}em 8 -{t}ime 0-06:00]" 1>&2
 }
 
+# Early return usage on empty call
+if [[ $# -eq 0 ]]; then
+    usage
+    return 1
+fi
+
 # Early return on HPC detection failure
 if [[ -z $SCHEDULER ]]; then
     echo "HPC scheduler required"
