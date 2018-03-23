@@ -4,16 +4,20 @@ usage () {
     echo "interactive -{c}ores 1 -{m}em 8 -{t}ime 0-06:00" 1>&2
 }
 
-# Early return usage on empty call
-if [[ $# -eq 0 ]]; then
-    usage
-    return 1
-fi
-
 # Early return on HPC detection failure
 if [[ -z $SCHEDULER ]]; then
     echo "HPC scheduler required"
     return 1
+fi
+
+# All arguments are optional
+cores=1
+mem=1
+# time
+if [[ "$SCHEDULER" == "slurm" ]]; then
+    time="0-06:00"
+elif [[ "$SCHEDULER" == "lsf" ]]; then
+    time="6:00"
 fi
 
 # Extract options and their arguments into variables
@@ -22,6 +26,7 @@ while getopts ":c:m:t:" opt; do
         c ) cores="${OPTARG}";;
         m ) mem="${OPTARG}";;
         t ) time="${OPTARG}";;
+        h ) usage; exit;;
         \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
         : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
     esac
