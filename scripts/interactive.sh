@@ -19,11 +19,11 @@ fi
 # Extract options and their arguments into variables
 while getopts ":c:m:t:" opt; do
     case ${opt} in
-        c) cores="${OPTARG}";;
-        m) mem="${OPTARG}";;
-        t) time="${OPTARG}";;
-        \?) echo "Invalid option: ${OPTARG}" 1>&2;;
-        :) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+        c ) cores="${OPTARG}";;
+        m ) mem="${OPTARG}";;
+        t ) time="${OPTARG}";;
+        \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
+        : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
     esac
 done
 shift $((OPTIND -1))
