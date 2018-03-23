@@ -16,7 +16,7 @@ if [[ $# -eq 0 ]]; then
 fi
 
 # Early return on HPC detection failure
-if [[ -z $SCHEDULER ]]; then
+if [[ -z "$SCHEDULER" ]]; then
     echo "HPC scheduler required"
     return 1
 fi
