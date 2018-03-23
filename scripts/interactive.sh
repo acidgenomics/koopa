@@ -10,16 +10,6 @@ if [[ -z $SCHEDULER ]]; then
     return 1
 fi
 
-# All arguments are optional
-cores=1
-mem=1
-# time
-if [[ "$SCHEDULER" == "slurm" ]]; then
-    time="0-06:00"
-elif [[ "$SCHEDULER" == "lsf" ]]; then
-    time="6:00"
-fi
-
 # Extract options and their arguments into variables
 while getopts ":c:m:t:" opt; do
     case ${opt} in
