@@ -66,7 +66,7 @@ if [[ $SCHEDULER == "slurm" ]]; then
     # x11 requires `~/.ssh/config` on local machine
     srun -p "$partition" --pty \
         -c "$cores" \
-        --mem "${ram_gb}"G \
+        --mem "${mem}"G \
         --time "$time" \
         --x11=first \
         /bin/bash
