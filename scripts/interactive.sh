@@ -32,7 +32,7 @@ while getopts ":c:m:t:h" opt; do
         *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
     esac
 done
-shift $((OPTIND - 1))
+# shift $((OPTIND - 1))
 
 # Inform the user about the job
 echo "Launching interactive session"
