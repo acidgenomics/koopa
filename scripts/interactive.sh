@@ -21,14 +21,15 @@ elif [[ "$SCHEDULER" == "lsf" ]]; then
 fi
 
 # Extract options and their arguments into variables
-while getopts ":c:m:t:" opt; do
+while getopts ":c:m:t:h" opt; do
     case $opt in
-        c ) cores="${OPTARG}";;
-        m ) mem="${OPTARG}";;
-        t ) time="${OPTARG}";;
-        h ) usage; exit;;
-        \? ) echo "Invalid option: ${OPTARG}" 1>&2;;
-        : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
+        c  ) cores=$OPTARG;;
+        m  ) mem=$OPTARG;;
+        t  ) time=$OPTARG;;
+        h  ) usage; exit;;
+        \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+        :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
+        *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
     esac
 done
 shift $((OPTIND - 1))
