@@ -26,7 +26,7 @@ while getopts ":c:m:t:" opt; do
         : ) echo "Invalid option: $OPTARG requires an argument" 1>&2;;
     esac
 done
-shift $((OPTIND -1))
+shift $((OPTIND - 1))
 
 # Inform the user about the job
 echo "Launching interactive session"
