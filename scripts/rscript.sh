@@ -46,7 +46,7 @@ done
 shift $((OPTIND -1))
 
 # Required arguments
-if [[ -z $file ]]; then
+if [[ -z "$file" ]]; then
     echo "file is required"
     usage
     return 1
