@@ -18,7 +18,7 @@ fi
 
 # Extract options and their arguments into variables
 while getopts ":c:m:t:" opt; do
-    case ${opt} in
+    case $opt in
         c ) cores="${OPTARG}";;
         m ) mem="${OPTARG}";;
         t ) time="${OPTARG}";;
