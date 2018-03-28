@@ -24,7 +24,7 @@ details:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
-      singlecell_quantifier: rapmap
+      # singlecell_quantifier: rapmap
       transcriptome_fasta: dmel-all-concatenated-r6.19.fasta
       transcriptome_gtf: dmel-all-r6.19.gtf
       umi_type: harvard-indrop-v3
