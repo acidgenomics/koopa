@@ -5,6 +5,9 @@
 # http://seq.cloud
 # This software is provided under an MIT License
 
+# Abort on error
+set -e
+
 export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Check for supported operating system
