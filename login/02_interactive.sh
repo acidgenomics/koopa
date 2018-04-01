@@ -1,11 +1,8 @@
 # Load interactive profile scripts
 if [[ -n "$PS1" ]]; then
-    for file in $(find "$SEQCLOUD_DIR"/profile/interactive \
-        -type f -name "*.sh" ! -name ".*" | sort); do
+    where="${SEQCLOUD_DIR}/profile/interactive"
+    for file in $(find "$where" -type f -name "*.sh" | sort); do
         . "$file"
     done
-    unset -v file
+    unset -v file where
 fi
-
-# Alternate early return
-# [[ -z "$PS1" ]] && return

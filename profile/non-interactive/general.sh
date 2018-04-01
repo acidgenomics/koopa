@@ -30,10 +30,10 @@ export RSYNC_FLAGS="--archive --delete-before --human-readable --progress --recu
 
 export TODAY=$(date +%Y-%m-%d)
 
-# Annotation database paths
 # Ensembl: Match latest release available in AnnotationHub
 export ENSEMBL_RELEASE="90"
 export ENSEMBL_RELEASE_PATH="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
+
 # FlyBase
 export FLYBASE_RELEASE="FB2017_06"
 export FLYBASE_RELEASE_VERSION="6.19"

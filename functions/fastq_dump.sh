@@ -1,6 +1,10 @@
 # This requires fastq-dump from sra-tools
 # https://github.com/ncbi/sra-tools
-command -v fastq-dump >/dev/null 2>&1 || { echo >&2 "fastq-dump missing"; return 1; }
+
+command -v fastq-dump >/dev/null 2>&1 || {
+    echo >&2 "fastq-dump missing"
+    return 1
+}
 
 # Check for LSF
 if [[ -z $LSF_ENVDIR ]]; then
