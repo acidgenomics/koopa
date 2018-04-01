@@ -17,4 +17,4 @@
 # 12 x 6 = 72
 n=72
 
-bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n "$n" -t ipython -s slurm -q medium -r t=2-00:00 --retries 3 --timeout 1000
+bcbio_nextgen.py ../config/bcbio.yaml -n "$n" -t ipython -s slurm -q medium -r t=2-00:00 --retries 3 --timeout 1000

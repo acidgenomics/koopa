@@ -17,7 +17,7 @@ details:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
-      singlecell_quantifier: rapmap
+      # singlecell_quantifier: rapmap
       transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
       transcriptome_gtf: Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf
       umi_type: harvard-indrop-v3
