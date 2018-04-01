@@ -30,10 +30,19 @@ ln -s ~/.bashrc ~/.bash_profile
 ```
 
 
-## Interactive queue
+## Interactive session
 
-To launch an interactive queue, simply run:
+To launch an interactive session, simply run:
 
 ```bash
-seqcloud interactive -c <cores> -m <mem_gb>
+seqcloud interactive -c <cores> -m <memory> -t <time>
 ```
+
+For example, here's how to start an interactive session for 6 hours using 2 cores and 8 GB of RAM per core, on an HPC using the [slurm] scheduler:
+
+```bash
+seqcloud interactive -c 2 -m 8 -t 0-06:00
+```
+
+
+[slurm]: https://slurm.schedmd.com
