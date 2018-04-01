@@ -35,5 +35,5 @@ ln -s ~/.bashrc ~/.bash_profile
 To launch an interactive queue, simply run:
 
 ```bash
-seqcloud interactive <cores> <ram_gb>
+seqcloud interactive -c <cores> -m <mem_gb>
 ```
