@@ -14,7 +14,9 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
 fi
 
 # Login scripts
-for file in $(find "${SEQCLOUD_DIR}/login" -type f -name *.sh | sort); do
+where="${SEQCLOUD_DIR}/login"
+for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort)
+do
     . "$file"
 done
-unset -v file
+unset -v file where
