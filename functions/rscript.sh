@@ -12,7 +12,7 @@ usage() {
 # Early return usage on empty call
 if [[ $# -eq 0 ]]; then
     usage
-    return 1
+    return
 fi
 
 # Early return on HPC detection failure
