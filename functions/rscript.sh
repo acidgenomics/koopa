@@ -6,7 +6,7 @@
 # https://sph.umich.edu/biostat/computing/cluster/examples/r.html
 
 usage() {
-    echo "rscript -{f}ile file.R -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 2-00:00" 1>&2
+    echo "rscript -{f}ile file.R [-{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 2-00:00]" 1>&2
 }
 
 # Early return usage on empty call

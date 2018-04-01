@@ -3,7 +3,7 @@
 # properly.
 
 usage() {
-    echo "render -{f}ile file.Rmd -{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 1-00:00" 1>&2
+    echo "render -{f}ile file.Rmd [-{q}ueue medium -{c}ores 1 -{m}em 8 -{t}ime 1-00:00]" 1>&2
 }
 
 # Early return usage on empty call
