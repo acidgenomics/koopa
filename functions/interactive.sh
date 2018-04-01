@@ -2,7 +2,6 @@
 
 usage () {
     echo "interactive -{c}ores 1 -{m}em 8 -{t}ime 0-06:00" 1>&2
-    return 0
 }
 
 # Early return on HPC detection failure
@@ -27,10 +26,10 @@ while getopts ":c:m:t:h" opt; do
         c  ) cores=$OPTARG;;
         m  ) mem=$OPTARG;;
         t  ) time=$OPTARG;;
-        h  ) usage; return 0;;
-        \? ) echo "Unknown option: -$OPTARG" >&2; return 1;;
-        :  ) echo "Missing option argument for -$OPTARG" >&2; return 1;;
-        *  ) echo "Unimplemented option: -$OPTARG" >&2; return 1;;
+        h  ) usage; exit;;
+        \? ) echo "Unknown option: -$OPTARG" >&2; exit 1;;
+        :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1;;
+        *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1;;
     esac
 done
 shift $((OPTIND - 1))
