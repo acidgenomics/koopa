@@ -1,5 +1,5 @@
 # Export PATH environment variable
-# Don't re-export for interactive queue process
+# Don't re-export inside interactive session
 if [[ -z "$INTERACTIVE_QUEUE" ]]; then
-    . "$SEQCLOUD_DIR"/profile/path.sh
+    . "${SEQCLOUD_DIR}/profile/path.sh"
 fi
