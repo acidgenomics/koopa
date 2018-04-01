@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# seqcloud bootloader
+# seqcloud HPC bootloader
 # (c) 2018 Michael J. Steinbaugh
-# This software is provided under an MIT License
 # http://seq.cloud
+# This software is provided under an MIT License
 
 export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -14,8 +14,7 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
 fi
 
 # Login scripts
-for file in $(find "$SEQCLOUD_DIR"/login \
-    -type f -name "*.sh" ! -name ".*" | sort); do
+for file in $(find "${SEQCLOUD_DIR}/login" -type f -name *.sh | sort); do
     . "$file"
 done
 unset -v file
