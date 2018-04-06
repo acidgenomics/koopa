@@ -6,7 +6,7 @@
 # Genome build: GRCh38
 # Release version: 90
 # FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
-# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/homo_sapiens/Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf.gz
+# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/homo_sapiens/Homo_sapiens.GRCh38.90.gtf.gz
 #
 # NOTE: genome_build is specific to bcbio install
 ---
@@ -19,7 +19,7 @@ details:
       sample_barcodes: sample_barcodes_reverse_complement.txt
       # singlecell_quantifier: rapmap
       transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
-      transcriptome_gtf: Homo_sapiens.GRCh38.90.chr_patch_hapl_scaff.gtf
+      transcriptome_gtf: Homo_sapiens.GRCh38.90.gtf.gz
       umi_type: harvard-indrop-v3
 upload:
   dir: ../final
