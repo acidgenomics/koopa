@@ -1,4 +1,5 @@
 # Launch interactive session
+# TODO add an X11 flag option
 
 usage () {
     echo "interactive [-{c}ores 1 -{m}em 8 -{t}ime 0-06:00]" 1>&2
