@@ -1,4 +1,4 @@
-# This requires fastq-dump from sra-tools
+# FASTQ dump from SRA file requires sra-tools
 # https://github.com/ncbi/sra-tools
 
 command -v fastq-dump >/dev/null 2>&1 || {
@@ -6,18 +6,12 @@ command -v fastq-dump >/dev/null 2>&1 || {
     return 1
 }
 
-# Check for LSF
-if [[ -z $LSF_ENVDIR ]]; then
-    echo "LSF required"
-    return 1
-fi
-
 mkdir -p fastq
 cd fastq
 while read name; do
     if [[ ! -e $name.fastq.gz ]] && [[ ! -e $name_1.fastq.gz ]]; then
         echo "$name"
-        bsub -q priority -W 6:00 fastq-dump --gzip --split-3 --accession "$name"
+        fastq-dump --gzip --split-3 --accession "$name"
         # Remove SRA cache file upon completion
         rm ~/ncbi/public/sra/"$name".sra
     fi
