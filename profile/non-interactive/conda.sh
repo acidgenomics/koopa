@@ -11,7 +11,7 @@ fi
 if [[ -d "$CONDA_DIR" ]]; then
     export CONDA_VERSION=$($CONDA_DIR/bin/conda --version)
     # Ensure load script is sourced for v4.4+
-    if echo "$CONDA_VERSION" | grep -q "conda 4.4"; then
+    if echo "$CONDA_VERSION" | grep -q "conda 4.[4-9]"; then
         . "${CONDA_DIR}/etc/profile.d/conda.sh"
     fi
 fi
