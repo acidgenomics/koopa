@@ -1,9 +1,9 @@
 # HMS RC: Harvard Medical School Research Computing
 
 # HPC environment variable
-if [[ $HMS_CLUSTER = "o2" ]] && \
+if [[ $HMS_CLUSTER == "o2" ]] && \
     [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
-    [[ $(uname -s) = "Linux" ]] && \
+    [[ $(uname -s) == "Linux" ]] && \
     [[ -d /n/data1/ ]]
 then
     # O2
