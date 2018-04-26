@@ -30,7 +30,8 @@ export RSYNC_FLAGS="--archive --delete-before --human-readable --progress --recu
 
 export TODAY=$(date +%Y-%m-%d)
 
-# Ensembl: Match latest release available in AnnotationHub (Bioconductor 3.7)
+# Ensembl
+# Match latest release available in AnnotationHub (Bioconductor 3.7)
 export ENSEMBL_RELEASE="92"
 export ENSEMBL_RELEASE_PATH="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
