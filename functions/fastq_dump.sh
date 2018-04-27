@@ -12,8 +12,6 @@ while read name; do
     if [[ ! -e $name.fastq.gz ]] && [[ ! -e $name_1.fastq.gz ]]; then
         echo "$name"
         fastq-dump --gzip --split-3 --accession "$name"
-        # Remove SRA cache file upon completion
-        # rm ~/ncbi/public/sra/"$name".sra
     fi
 done < ../SRR_Acc_List.txt
 cd ..
