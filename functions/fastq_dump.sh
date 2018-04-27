@@ -6,12 +6,9 @@ command -v fastq-dump >/dev/null 2>&1 || {
     return 1
 }
 
-mkdir -p fastq
-cd fastq
 while read name; do
     if [[ ! -e $name.fastq.gz ]] && [[ ! -e $name_1.fastq.gz ]]; then
         echo "$name"
         fastq-dump --gzip --split-3 --accession "$name"
     fi
-done < ../SRR_Acc_List.txt
-cd ..
+done < SRR_Acc_List.txt
