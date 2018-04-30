@@ -4,14 +4,8 @@
 # 2018-04-30
 #
 # FlyBase
-# FASTA: ftp://ftp.flybase.net/releases/${FLYBASE_RELEASE}/dmel_${FLYBASE_RELEASE_VERSION}/fasta/
-# Concatenate these FASTA files:
-# - dmel-all-miRNA-${FLYBASE_RELEASE_VERSION}.fasta.gz
-# - dmel-all-miscRNA-${FLYBASE_RELEASE_VERSION}.fasta.gz
-# - dmel-all-ncRNA-${FLYBASE_RELEASE_VERSION}.fasta.gz
-# - dmel-all-pseudogene-${FLYBASE_RELEASE_VERSION}.fasta.gz
-# - dmel-all-tRNA-${FLYBASE_RELEASE_VERSION}.fasta.gz
-# GTF: ftp://ftp.flybase.net/releases/${FLYBASE_RELEASE}/dmel_${FLYBASE_RELEASE_VERSION}/gtf/dmel-all-${FLYBASE_RELEASE_VERSION}.gtf.gz
+# FASTA: seqcloud fasta dmelanogaster cdna
+# GTF: seqcloud gtf dmelanogaster
 #
 # NOTE: genome_build is specific to bcbio install
 ---
