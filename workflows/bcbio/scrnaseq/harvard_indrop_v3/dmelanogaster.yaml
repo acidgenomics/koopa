@@ -17,8 +17,8 @@ details:
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
       # singlecell_quantifier: rapmap
-      transcriptome_fasta: dmel-all-concatenated-${FLYBASE_RELEASE_VERSION}.fasta
-      transcriptome_gtf: dmel-all-${FLYBASE_RELEASE_VERSION}.gtf
+      transcriptome_fasta: dmel-transcriptome-r6.21.fasta
+      transcriptome_gtf: dmel-all-r6.21.gtf
       umi_type: harvard-indrop-v3
 upload:
   dir: ../final
