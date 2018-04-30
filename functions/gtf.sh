@@ -24,7 +24,7 @@ elif [[ $organism == "dmelanogaster" ]]; then
 fi
 
 wget "$remote"
-local=$(basename "$remote")
-gunzip -c "$local" > "${local%.*}"
+file=$(basename "$remote")
+gunzip -c "$file" > "${file%.*}"
 
-unset -v ensembl local organism remote
+unset -v ensembl file organism remote
