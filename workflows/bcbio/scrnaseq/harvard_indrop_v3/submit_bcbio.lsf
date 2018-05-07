@@ -9,8 +9,4 @@
 #BSUB -e project.err                   # File to which STDERR will be written
 #BSUB -o project.out                   # File to which STDOUT will be written
 
-# Use 6x cores per sample
-# 12 x 6 = 72
-n=72
-
-bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n "$n" -t ipython -s lsf -q medium '-rW=90:00' -r mincores=2 -r minconcores=2 --retries 3 --timeout 1000
+bcbio_nextgen.py ../config/indrop_rnaseq.yaml -n 32 -t ipython -s lsf -q medium '-rW=90:00' -r mincores=2 -r minconcores=2 --retries 3 --timeout 1000
