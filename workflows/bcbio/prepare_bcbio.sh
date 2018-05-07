@@ -1,4 +1,4 @@
-bcbio_nextgen.py -w template bcbio.yaml bcbio.csv data-raw/fastq/*.fastq.gz
+bcbio_nextgen.py -w template bcbio.yaml bcbio.csv *.fastq.gz
 
 cd bcbio/work
 cp ../../submit_bcbio.sh .
