@@ -3,7 +3,7 @@
 # IBM Platform LSF
 # https://goo.gl/RzdS2s
 
-#BSUB -J rnaseq                        # Job name
+#BSUB -J fastrnaseq                    # Job name
 #BSUB -q medium                        # Queue name
 #BSUB -N                               # Email when the report finishes
 #BSUB -n 1                             # CPU cores requested per task (change for threaded jobs)
