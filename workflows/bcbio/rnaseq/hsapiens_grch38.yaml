@@ -1,11 +1,10 @@
 # Template for RNA-seq using Illumina prepared samples
 #
 # Homo sapiens
-# 2018-03-16
+# 2018-05-07
 #
 # Ensembl
-# Genome build: GRCh38
-# Release version: 90
+# Genome build: GRCh38 (hg38)
 ---
 details:
   - analysis: RNA-seq
