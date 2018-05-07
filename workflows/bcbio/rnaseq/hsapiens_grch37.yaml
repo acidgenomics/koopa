@@ -10,7 +10,7 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: GRCh37_87
+    genome_build: hg19
     algorithm:
       aligner: star
       expression_caller: salmon
