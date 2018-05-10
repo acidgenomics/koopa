@@ -12,7 +12,7 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: GRCh38_92
+    genome_build: GRCh38_90
     algorithm:
       aligner: hisat2
       expression_caller: salmon

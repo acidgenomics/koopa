@@ -1,7 +1,7 @@
 # Template for RNA-seq using Illumina prepared samples
 #
 # Mus musculus
-# Ensembl GRCm38 92
+# Ensembl GRCm38 90
 # 2018-05-10
 #
 # NOTE: genome_build is specific to bcbio install
@@ -12,7 +12,7 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: GRCm38_92
+    genome_build: GRCm38_90
     algorithm:
       aligner: star
       expression_caller: salmon
