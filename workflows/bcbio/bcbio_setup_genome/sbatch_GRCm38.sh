@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Build bcbio genome
+# bcbio_setup_genome.py
 # Mus musculus
-# 2018-03-16
+# 2018-05-10
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
