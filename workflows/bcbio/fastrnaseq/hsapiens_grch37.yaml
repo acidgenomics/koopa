@@ -1,0 +1,15 @@
+# Template for RNA-seq using Illumina prepared samples
+#
+# Homo sapiens
+# 2018-05-10
+#
+# Ensembl Legacy
+# https://grch37.ensembl.org
+# Original release version: 75
+# Latest release version: 87
+---
+details:
+  - analysis: fastrna-seq
+    genome_build: hg19
+upload:
+  dir: ../final
