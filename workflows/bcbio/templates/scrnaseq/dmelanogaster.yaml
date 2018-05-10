@@ -1,17 +1,21 @@
-# Template for scRNA-seq using Illumina prepared samples
+# Template for single-cell RNA-seq using Illumina prepared samples
 #
 # Drosophila melanogaster
-# 2018-04-30
+# FlyBase r6.21
+# 2018-05-10
 #
-# FlyBase
 # FASTA: seqcloud fasta dmelanogaster cdna
 # GTF: seqcloud gtf dmelanogaster
 #
 # NOTE: genome_build is specific to bcbio install
+# Run `bcbio_setup_genome.py` for list of genome builds
+#
+# More template examples:
+# https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: BDGP6_FlyBase
+    genome_build: BDGP6_r6.21
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000

@@ -32,7 +32,7 @@ export TODAY=$(date +%Y-%m-%d)
 
 # Ensembl
 # Match latest release available in AnnotationHub (Bioconductor 3.7)
-export ENSEMBL_RELEASE="92"
+export ENSEMBL_RELEASE="90"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
 # FlyBase
