@@ -1,14 +1,17 @@
-# Template for scRNA-seq using Illumina prepared samples
+# Template for single-cell RNA-seq using Illumina prepared samples
 #
 # Mus musculus
-# 2018-04-06
+# Ensembl GRCm38 90
+# 2018-05-10
 #
-# Genome build: GRCm38
-# Release version: 90
-# FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz
-# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/mus_musculus/Mus_musculus.GRCm38.90.gtf.gz
+# FASTA: seqcloud fasta mmusculus cdna
+# GTF: seqcloud gtf mmusculus
 #
 # NOTE: genome_build is specific to bcbio install
+# Run `bcbio_setup_genome.py` for list of genome builds
+#
+# More template examples:
+# https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
 ---
 details:
   - analysis: scRNA-seq
