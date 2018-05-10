@@ -1,0 +1,21 @@
+# Template for RNA-seq using Illumina prepared samples
+#
+# Homo sapiens
+# Ensembl GRCh37 (UCSC hg19)
+# https://grch37.ensembl.org
+# 2018-05-10
+#
+# NOTE: genome_build is specific to bcbio install
+# Run `bcbio_setup_genome.py` for list of genome builds
+#
+# More template examples:
+# https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
+---
+details:
+  - analysis: RNA-seq
+    genome_build: hg19  # GRCh37
+    algorithm:
+      aligner: star
+      expression_caller: salmon
+upload:
+  dir: ../final

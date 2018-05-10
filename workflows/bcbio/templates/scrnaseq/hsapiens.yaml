@@ -1,14 +1,14 @@
-# Template for scRNA-seq using Illumina prepared samples
+# Template for single-cell RNA-seq using Illumina prepared samples
 #
 # Homo sapiens
-# 2018-04-06
-#
-# Genome build: GRCh38
-# Release version: 90
-# FASTA: ftp://ftp.ensembl.org/pub/release-90/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
-# GTF: ftp://ftp.ensembl.org/pub/release-90/gtf/homo_sapiens/Homo_sapiens.GRCh38.90.gtf.gz
+# Ensembl GRCh38 90
+# 2018-05-10
 #
 # NOTE: genome_build is specific to bcbio install
+# Run `bcbio_setup_genome.py` for list of genome builds
+#
+# More template examples:
+# https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
 ---
 details:
   - analysis: scRNA-seq
