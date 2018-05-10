@@ -1,0 +1,20 @@
+# Template for RNA-seq using Illumina prepared samples
+#
+# Caenorhabditis elegans
+# Ensembl WBcel235 92
+# 2018-05-10
+#
+# NOTE: genome_build is specific to bcbio install
+# Run `bcbio_setup_genome.py` for list of genome builds
+#
+# More template examples:
+# https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
+---
+details:
+  - analysis: RNA-seq
+    genome_build: WBcel235_92
+    algorithm:
+      aligner: star
+      expression_caller: salmon
+upload:
+  dir: ../final
