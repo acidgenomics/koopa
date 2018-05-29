@@ -69,8 +69,7 @@ if [[ $SCHEDULER == "slurm" ]]; then
         -c "$cores" \
         --mem-per-cpu="${mem}G" \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file')" \
-        &
+            -e "rmarkdown::render('$file')" &
 elif [[ $SCHEDULER == "lsf" ]]; then
     mem_mb="$(($mem * 1024))"
     bsub -W "$time" \
