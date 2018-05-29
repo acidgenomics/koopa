@@ -71,8 +71,7 @@ if [[ $SCHEDULER == "slurm" ]]; then
         -J "$file" \
         -c "$cores" \
         --mem-per-cpu="${mem}G" \
-        Rscript --default-packages="$R_DEFAULT_PACKAGES" -e "source('$file')" \
-        &
+        Rscript --default-packages="$R_DEFAULT_PACKAGES" -e "source('$file')" &
 elif [[ $SCHEDULER == "lsf" ]]; then
     mem_mb="$(($mem * 1024))"
     bsub -W "$time" \
