@@ -1,8 +1,8 @@
 # https://conda.io/miniconda.html
 
 if [[ -z "$CONDA_DIR" ]]; then
-    if [[ -d "${HOME}/miniconda2" ]]; then
-        export CONDA_DIR="$HOME/miniconda2"
+    if [[ -d "${HOME}/anaconda3" ]]; then
+        export CONDA_DIR="$HOME/anaconda3"
     elif [[ -d "${HOME}/miniconda3" ]]; then
         export CONDA_DIR="${HOME}/miniconda3"
     fi
