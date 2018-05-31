@@ -1,3 +1,4 @@
+# https://www.anaconda.com
 # https://conda.io/miniconda.html
 
 if [[ -z "$CONDA_DIR" ]]; then
