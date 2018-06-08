@@ -13,7 +13,7 @@ fi
 
 # All arguments are optional
 cores=1
-mem=4
+mem=8
 # time
 if [[ "$SCHEDULER" == "slurm" ]]; then
     time="0-06:00"
