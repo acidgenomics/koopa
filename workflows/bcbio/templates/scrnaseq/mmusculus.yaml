@@ -14,7 +14,7 @@
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: mm10
+    genome_build: mm10  # GRCm38
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
