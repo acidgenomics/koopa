@@ -1,17 +1,20 @@
-# https://conda.io/miniconda.html
+# Conda
 
+# Locate the installation
 if [[ -z "$CONDA_DIR" ]]; then
-    if [[ -d "${HOME}/miniconda2" ]]; then
-        export CONDA_DIR="$HOME/miniconda2"
+    if [[ -d "${HOME}/anaconda3" ]]; then
+        # Anaconda
+        # https://www.anaconda.com
+        export CONDA_DIR="$HOME/anaconda3"
     elif [[ -d "${HOME}/miniconda3" ]]; then
+        # Miniconda
+        # https://conda.io/miniconda.html
         export CONDA_DIR="${HOME}/miniconda3"
     fi
 fi
 
+# Activate
 if [[ -d "$CONDA_DIR" ]]; then
-    export CONDA_VERSION=$($CONDA_DIR/bin/conda --version)
-    # Ensure load script is sourced for v4.4+
-    if echo "$CONDA_VERSION" | grep -q "conda 4.[4-9]"; then
-        . "${CONDA_DIR}/etc/profile.d/conda.sh"
-    fi
+    # . "${CONDA_DIR}/etc/profile.d/conda.sh"
+    source "${CONDA_DIR}/bin/activate"
 fi

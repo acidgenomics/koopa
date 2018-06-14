@@ -24,15 +24,13 @@ export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 # -h, --human-readable        output numbers in a human-readable format
 #     --iconv=CONVERT_SPEC    request charset conversion of filenames
 #     --progress              show progress during transfer
-# -r, --recursive             recurse into directories
-# -t, --times                 preserve modification times
-export RSYNC_FLAGS="--archive --delete-before --human-readable --progress --recursive --times"
+export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --progress"
 
 export TODAY=$(date +%Y-%m-%d)
 
 # Ensembl
 # Match latest release available in AnnotationHub (Bioconductor 3.7)
-export ENSEMBL_RELEASE="90"
+export ENSEMBL_RELEASE="92"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
 # FlyBase

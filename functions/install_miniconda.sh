@@ -1,5 +1,4 @@
-# https://bioconda.github.io/
-# Python 3 version
+# https://conda.io/miniconda.html
 
 if [[ $(uname -s) = "Linux" ]]; then
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -10,7 +9,7 @@ else
     return 1
 fi
 
-bash Miniconda3-latest-*-x86_64.sh
+bash Miniconda3-*-x86_64.sh
 
 echo "conda install succeeded. Shell must be reloaded."
 return 1
