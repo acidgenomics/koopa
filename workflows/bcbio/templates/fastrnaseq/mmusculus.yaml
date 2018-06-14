@@ -18,6 +18,6 @@ details:
     genome_build: GRCm38
     algorithm:
       transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
-      transcriptome_gtf: Mus_musculus.GRCm38.92.gtf.gz
+      transcriptome_gtf: Mus_musculus.GRCm38.92.gtf
 upload:
   dir: ../final
