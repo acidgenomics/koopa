@@ -15,7 +15,7 @@
 ---
 details:
   - analysis: fastrna-seq
-    genome_build: hg38
+    genome_build: hg38  # GRCh38
     algorithm:
       transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
       transcriptome_gtf: Homo_sapiens.GRCh38.92.gtf
