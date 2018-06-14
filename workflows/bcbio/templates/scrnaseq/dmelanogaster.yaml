@@ -15,7 +15,7 @@
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: BDGP6_r6.21
+    genome_build: BDGP6
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
