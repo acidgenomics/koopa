@@ -1,15 +1,14 @@
 organism="$1"
-
 ensembl="${ENSEMBL_RELEASE_URL}/gtf"
 
 if [[ $organism == "hsapiens" ]]; then
     echo "Homo sapiens"
     echo "Ensembl GRCh38"
-    remote="${ensembl}/homo_sapiens/Homo_sapiens.GRCh38.${ENSEMBL_RELEASE}.chr_patch_hapl_scaff.gtf.gz"
+    remote="${ensembl}/homo_sapiens/Homo_sapiens.GRCh38.${ENSEMBL_RELEASE}.gtf.gz"
 elif [[ $organism == "mmusculus" ]]; then
     echo "Mus musculus"
     echo "Ensembl GRCm38"
-    remote="${ensembl}/mus_musculus/Mus_musculus.GRCm38.${ENSEMBL_RELEASE}.chr_patch_hapl_scaff.gtf.gz"
+    remote="${ensembl}/mus_musculus/Mus_musculus.GRCm38.${ENSEMBL_RELEASE}.gtf.gz"
 elif [[ $organism == "celegans" ]]; then
     # TODO Use WormBase instead of Ensembl?
     echo "Caenorhabditis elegans"
