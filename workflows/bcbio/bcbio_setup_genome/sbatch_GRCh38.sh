@@ -2,7 +2,7 @@
 
 # bcbio_setup_genome.py
 # Homo sapiens
-# 2018-05-10
+# 2018-06-14
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
@@ -22,9 +22,8 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Homo_sapiens"
 ens_build="GRCh38"
-ens_release=90
+ens_release=92
 name="Hsapiens"
-# Note the use of `chr_patch_hapl_scaff` in GTF below
 
 # Ensembl ======================================================================
 ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
@@ -37,7 +36,7 @@ ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
 # -b --build (genome build)
 cores=8
 fasta="${ens_name}.${ens_build}.dna.toplevel.fa"
-gtf="${ens_name}.${ens_build}.${ens_release}.chr_patch_hapl_scaff.gtf"
+gtf="${ens_name}.${ens_build}.${ens_release}.gtf"
 build="${ens_build}_${ens_release}"
 
 cd "$biodata"

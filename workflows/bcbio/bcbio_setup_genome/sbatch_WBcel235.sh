@@ -22,7 +22,7 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Caenorhabditis_elegans"
 ens_build="WBcel235"
-ens_release=90
+ens_release=92
 name="Celegans"
 
 # Ensembl ======================================================================
