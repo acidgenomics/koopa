@@ -1,7 +1,6 @@
 # Template for single-cell RNA-seq using Illumina prepared samples
 #
 # Homo sapiens
-# Ensembl GRCh38
 # 2018-06-14
 #
 # FASTA: seqcloud fasta hsapiens cdna
@@ -15,7 +14,7 @@
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: GRCh38
+    genome_build: hg38
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
