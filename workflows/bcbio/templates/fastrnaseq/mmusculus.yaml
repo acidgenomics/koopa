@@ -1,8 +1,7 @@
 # Template for fast RNA-seq using Illumina prepared samples
 #
 # Mus musculus
-# Ensembl GRCm38 90
-# 2018-05-10
+# 2018-06-14
 # 
 # FASTA: seqcloud fasta mmusculus cdna
 # GTF: seqcloud gtf mmusculus
@@ -15,9 +14,9 @@
 ---
 details:
   - analysis: fastrna-seq
-    genome_build: GRCm38_90
+    genome_build: mm10  # GRCm38
     algorithm:
       transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
-      transcriptome_gtf: Mus_musculus.GRCm38.90.gtf.gz
+      transcriptome_gtf: Mus_musculus.GRCm38.92.gtf
 upload:
   dir: ../final

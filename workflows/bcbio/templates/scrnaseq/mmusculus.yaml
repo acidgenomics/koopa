@@ -1,8 +1,7 @@
 # Template for single-cell RNA-seq using Illumina prepared samples
 #
 # Mus musculus
-# Ensembl GRCm38 90
-# 2018-05-10
+# 2018-06-14
 #
 # FASTA: seqcloud fasta mmusculus cdna
 # GTF: seqcloud gtf mmusculus
@@ -15,14 +14,14 @@
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: GRCm38_90
+    genome_build: mm10  # GRCm38
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
       sample_barcodes: sample_barcodes_reverse_complement.txt
       # singlecell_quantifier: rapmap
       transcriptome_fasta: Mus_musculus.GRCm38.cdna.all.fa
-      transcriptome_gtf: Mus_musculus.GRCm38.90.gtf.gz
+      transcriptome_gtf: Mus_musculus.GRCm38.92.gtf
       umi_type: harvard-indrop-v3
 upload:
   dir: ../final

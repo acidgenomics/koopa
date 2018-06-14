@@ -61,13 +61,15 @@ echo "- memory per core: ${mem} GB"
 echo "- time: ${time}"
 
 if [[ $SCHEDULER == "slurm" ]]; then
+    # Note the inclusion of ampersand here
+    # https://slurm.schedmd.com/srun.html
     srun -t "$time" \
         -p "$queue" \
         -J "$file" \
         -c "$cores" \
         --mem-per-cpu="${mem}G" \
         Rscript --default-packages="$R_DEFAULT_PACKAGES" \
-            -e "rmarkdown::render('$file')"
+            -e "rmarkdown::render('$file')" &
 elif [[ $SCHEDULER == "lsf" ]]; then
     mem_mb="$(($mem * 1024))"
     bsub -W "$time" \
