@@ -22,9 +22,8 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Mus_musculus"
 ens_build="GRCm38"
-ens_release=90
+ens_release=92
 name="Mmusculus"
-# Note the use of `chr_patch_hapl_scaff` in GTF below
 
 # Ensembl ======================================================================
 ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
@@ -37,7 +36,7 @@ ens_dir=$(echo "$ens_name" | tr '[:upper:]' '[:lower:]')
 # -b --build (genome build)
 cores=8
 fasta="${ens_name}.${ens_build}.dna.toplevel.fa"
-gtf="${ens_name}.${ens_build}.${ens_release}.chr_patch_hapl_scaff.gtf"
+gtf="${ens_name}.${ens_build}.${ens_release}.gtf"
 build="${ens_build}_${ens_release}"
 
 cd "$biodata"

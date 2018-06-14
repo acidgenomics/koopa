@@ -1,8 +1,8 @@
 # Template for RNA-seq using Illumina prepared samples
 #
 # Homo sapiens
-# Ensembl GRCh38 (UCSC hg38)
-# 2018-05-10
+# Ensembl GRCh38
+# 2018-06-14
 #
 # NOTE: genome_build is specific to bcbio install
 # Run `bcbio_setup_genome.py` for list of genome builds
@@ -12,7 +12,7 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: GRCh38_90
+    genome_build: GRCh38_92
     algorithm:
       aligner: hisat2
       expression_caller: salmon
