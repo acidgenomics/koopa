@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# SLURM
 # https://slurm.schedmd.com/sbatch.html
 
 #SBATCH --job-name=scrnaseq            # Job name
