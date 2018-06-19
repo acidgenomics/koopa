@@ -34,11 +34,5 @@ cellranger count \
     --fastqs=$fastqs  \
     --transcriptome=$transcriptome \
     --localcores=$localcores \
-    --localmem=$localmem
-cellranger count \
-    --id=sample2 \
-    --sample=sample2 \
-    --fastqs=$fastqs  \
-    --transcriptome=$transcriptome \
-    --localcores=$localcores \
-    --localmem=$localmem
+    --localmem=$localmem \
+    --nosecondary
