@@ -1,5 +1,5 @@
 # Cell Ranger
-# 2018-06-18
+# 2018-06-19
 
 module load bcl2fastq/2.20.0.422
 module load cellranger/2.1.1
