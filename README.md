@@ -18,7 +18,7 @@ Add these lines to your `.bashrc` file:
 
 ```bash
 # seqcloud
-if [[ -f ~/seqcloud/seqcloud.sh ]]; then
+if [[ -n "$PS1" ]] && [[ -f ~/seqcloud/seqcloud.sh ]]; then
     . ~/seqcloud/seqcloud.sh
 fi
 ```
