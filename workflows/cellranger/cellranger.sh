@@ -11,15 +11,12 @@ localmem=128
 
 # mkfastq ======================================================================
 # https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
-# Point to the Illumina BCL run directory
-# Use a CSV file to specify the samples (see 10X website for examples)
-# cellranger mkfastq --help
-# If you want to remove the Undetermined FASTQs from the output to save space, you can run mkfastq with the --delete-undetermined
 cellranger mkfastq \
     --run=XXXXXXXXX \
     --csv=mkfastq.csv \
     --localcores=$localcores \
-    --localmem=$localmem
+    --localmem=$localmem \
+    --delete-undetermined
 
 
 
