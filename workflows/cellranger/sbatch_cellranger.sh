@@ -5,7 +5,7 @@
 
 #SBATCH --job-name=cellranger          # Job name
 #SBATCH --partition=medium             # Partition name
-#SBATCH --time=3-00:00                 # Runtime in D-HH:MM format
+#SBATCH --time=2-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1, except when using MPI queue)
 #SBATCH --ntasks=1                     # Number of cores per node (keep at 1)
 #SBATCH --cpus-per-task=32             # CPU cores requested per task (change for threaded jobs)
