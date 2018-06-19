@@ -5,7 +5,7 @@ module load bcl2fastq/2.20.0.422
 module load cellranger/2.1.1
 
 localcores=$SLURM_CPUS_PER_TASK
-localmem=32
+localmem=256
 
 
 
