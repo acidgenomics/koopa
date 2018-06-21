@@ -1,8 +1,7 @@
 # Template for RNA-seq using Illumina prepared samples
 #
-# Mus musculus
-# Ensembl GRCm38
-# 2018-06-14
+# Homo sapiens
+# YYYY-MM-DD
 #
 # NOTE: genome_build is specific to bcbio install
 # Run `bcbio_setup_genome.py` for list of genome builds
@@ -12,9 +11,10 @@
 ---
 details:
   - analysis: RNA-seq
-    genome_build: GRCm38_92
+    genome_build: GRCh38_92
     algorithm:
-      aligner: star
+      # Use `star` by default for non-human genomes
+      aligner: hisat2
       expression_caller: salmon
 upload:
   dir: ../final
