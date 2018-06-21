@@ -2,7 +2,7 @@
 #
 # Homo sapiens
 # Ensembl GRCh38
-# 2018-06-14
+# 2018-06-21
 #
 # NOTE: genome_build is specific to bcbio install
 # Run `bcbio_setup_genome.py` for list of genome builds
