@@ -1,7 +1,7 @@
 # Template for single-cell RNA-seq using Illumina prepared samples
 #
 # Homo sapiens
-# 2018-06-14
+# YYYY-MM-DD
 #
 # FASTA: seqcloud fasta hsapiens cdna
 # GTF: seqcloud gtf hsapiens
@@ -9,19 +9,25 @@
 # NOTE: genome_build is specific to bcbio install
 # Run `bcbio_setup_genome.py` for list of genome builds
 #
+# Sample barcodes:
+# Use the reverse complement (revcomp) with bcbio
+# https://github.com/seqcloud/seqcloud/blob/develop/workflows/bcbio/data/umis
+#
 # More template examples:
 # https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: hg38  # GRCh38
+    genome_build: GRCh38_92
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
+      # Specify sample barcodes for multiplexed FASTQs (e.g. inDrops)
       sample_barcodes: sample_barcodes_reverse_complement.txt
-      # singlecell_quantifier: rapmap
-      transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
-      transcriptome_gtf: Homo_sapiens.GRCh38.92.gtf
+      # Specifying the quantifier can cause current bcbio release to error
+      singlecell_quantifier: rapmap
+      # transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
+      # transcriptome_gtf: Homo_sapiens.GRCh38.92.gtf
       umi_type: harvard-indrop-v3
 upload:
   dir: ../final
