@@ -9,7 +9,7 @@
 
 #SBATCH --job-name=genome              # Job name
 #SBATCH --partition=medium             # Partition name
-#SBATCH --time=1-00:00                 # Runtime in D-HH:MM format
+#SBATCH --time=3-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1)
 #SBATCH --ntasks=1                     # Number of tasks per node (keep at 1)
 #SBATCH --cpus-per-task=8              # CPU cores requested per task (change for threaded jobs)
