@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # bcbio_setup_genome.py
+# Harvard Medical School O2 Cluster
 # Homo sapiens
 # 2018-06-26
 
