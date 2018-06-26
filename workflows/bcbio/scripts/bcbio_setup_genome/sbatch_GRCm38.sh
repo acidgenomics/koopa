@@ -1,13 +1,14 @@
 #!/bin/bash
 
-# bcbio_setup_genome.py
+# bcbio_setup_genome.py\
+# Harvard Medical School O2 Cluster
 # Mus musculus
-# 2018-05-10
+# 2018-06-26
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
-#SBATCH --job-name=genome              # Job name
+#SBATCH --job-name=GRCm38              # Job name
 #SBATCH --partition=medium             # Partition name
 #SBATCH --time=3-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1)
