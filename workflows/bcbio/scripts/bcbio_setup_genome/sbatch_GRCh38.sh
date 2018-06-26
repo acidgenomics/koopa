@@ -2,14 +2,14 @@
 
 # bcbio_setup_genome.py
 # Homo sapiens
-# 2018-06-14
+# 2018-06-26
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
 #SBATCH --job-name=genome              # Job name
 #SBATCH --partition=medium             # Partition name
-#SBATCH --time=5-00:00                 # Runtime in D-HH:MM format
+#SBATCH --time=4-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1)
 #SBATCH --ntasks=1                     # Number of tasks per node (keep at 1)
 #SBATCH --cpus-per-task=8              # CPU cores requested per task (change for threaded jobs)
