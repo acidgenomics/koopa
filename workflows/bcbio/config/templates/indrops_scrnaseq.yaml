@@ -18,7 +18,7 @@
 ---
 details:
   - analysis: scRNA-seq
-    genome_build: GRCh38_92
+    genome_build: hg38
     algorithm:
       cellular_barcode_correction: 1
       minimum_barcode_depth: 1000
@@ -27,7 +27,7 @@ details:
       # Specifying the quantifier can cause current bcbio release to error
       singlecell_quantifier: rapmap
       # transcriptome_fasta: Homo_sapiens.GRCh38.cdna.all.fa
-      # transcriptome_gtf: Homo_sapiens.GRCh38.92.gtf
+      # transcriptome_gtf: Homo_sapiens.GRCh38.90.gtf
       umi_type: harvard-indrop-v3
 upload:
   dir: ../final

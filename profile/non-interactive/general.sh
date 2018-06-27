@@ -29,8 +29,8 @@ export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --pr
 export TODAY=$(date +%Y-%m-%d)
 
 # Ensembl
-# Match latest release available in AnnotationHub (Bioconductor 3.7)
-export ENSEMBL_RELEASE="92"
+# Match latest release available in when using Bioconductor with conda r-base
+export ENSEMBL_RELEASE="90"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
 # FlyBase

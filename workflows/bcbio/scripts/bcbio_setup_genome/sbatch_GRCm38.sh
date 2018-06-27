@@ -3,7 +3,7 @@
 # bcbio_setup_genome.py\
 # Harvard Medical School O2 Cluster
 # Mus musculus
-# 2018-06-26
+# 2018-06-27
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
@@ -23,7 +23,7 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Mus_musculus"
 ens_build="GRCm38"
-ens_release=92
+ens_release=90
 name="Mmusculus"
 
 # Ensembl ======================================================================
