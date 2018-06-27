@@ -3,7 +3,7 @@
 # bcbio_setup_genome.py
 # Harvard Medical School O2 Cluster
 # Homo sapiens
-# 2018-06-26
+# 2018-06-27
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
@@ -23,7 +23,7 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Homo_sapiens"
 ens_build="GRCh38"
-ens_release=92
+ens_release=90
 name="Hsapiens"
 
 # Ensembl ======================================================================
