@@ -3,7 +3,7 @@
 # bcbio_setup_genome.py
 # Harvard Medical School O2 Cluster
 # Homo sapiens
-# 2018-06-27
+# 2018-07-05
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
