@@ -50,10 +50,11 @@ if [[ $SCHEDULER == "slurm" ]]; then
         partition="interactive"
     fi
     # x11 requires `~/.ssh/config` on local machine
-    srun -p "$partition" --pty \
-        -c "$cores" \
-        --mem "${mem}"G \
-        --time "$time" \
+    srun --pty \
+        --partition="$partition" \
+        --cpus-per-task="$cores" \
+        --mem="${mem}"G \
+        --time="$time" \
         --x11=first \
         /bin/bash
     unset -v partition
