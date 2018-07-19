@@ -7,7 +7,7 @@ alias i="seqcloud interactive"
 # ls
 alias la="ls -a"
 alias lF="ls -F"
-alias ll="ls -lh"
+alias ll="ls -AFGlh"
 
 # Disable R prompt to save workspace
 alias R="R --no-save"
