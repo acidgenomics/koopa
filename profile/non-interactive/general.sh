@@ -1,17 +1,3 @@
-# Aliases ======================================================================
-alias e="exit"
-
-# Interactive queue
-alias i="seqcloud interactive"
-
-# ls
-alias la="ls -a"
-alias lF="ls -F"
-alias ll="ls -AFGlh"
-
-# Disable R prompt to save workspace
-alias R="R --no-save"
-
 # Exports ======================================================================
 # R environmental variables
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
