@@ -4,7 +4,7 @@
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License
 
-export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export KOOPA_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Check for supported operating system
 if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
@@ -13,7 +13,7 @@ if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
 fi
 
 # Login scripts
-where="${SEQCLOUD_DIR}/login"
+where="${KOOPA_DIR}/login"
 for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort)
 do
     . "$file"
