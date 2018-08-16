@@ -19,7 +19,7 @@ Add these lines to your `.bashrc` file:
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-if [[ -f ~/koopa/koopa.sh ]]; then
+if [[ -n "$PS1" ]] && [[ -f ~/koopa/koopa.sh ]]; then
     . ~/koopa/koopa.sh
 fi
 ```
