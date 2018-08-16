@@ -1,19 +1,23 @@
 #!/bin/bash
 
 # bcbio_setup_genome.py
+# Harvard Medical School O2 Cluster
 # Homo sapiens
-# 2018-06-14
+# 2018-07-07
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
-#SBATCH --job-name=genome              # Job name
+# Use highmem partition instead if there are memory issues with hisat2.
+# medium partition has a memory limit of 250 GB.
+
+#SBATCH --job-name=GRCh38              # Job name
 #SBATCH --partition=medium             # Partition name
 #SBATCH --time=4-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1)
 #SBATCH --ntasks=1                     # Number of tasks per node (keep at 1)
 #SBATCH --cpus-per-task=8              # CPU cores requested per task (change for threaded jobs)
-#SBATCH --mem-per-cpu=16G              # Memory needed per CPU
+#SBATCH --mem=250G                     # Memory needed per node
 #SBATCH --error=jobid_%j.err           # File to which STDERR will be written, including job ID
 #SBATCH --output=jobid_%j.out          # File to which STDOUT will be written, including job ID
 #SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL)
@@ -22,7 +26,7 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Homo_sapiens"
 ens_build="GRCh38"
-ens_release=92
+ens_release=90
 name="Hsapiens"
 
 # Ensembl ======================================================================
@@ -55,4 +59,4 @@ if [[ ! -f "$gtf" ]]; then
     gunzip -c "${gtf}.gz" > "$gtf"
 fi
 
-bcbio_setup_genome.py -c "$cores" -f "$fasta" -g "$gtf" -i bowtie2 star seq bwa -n "$name" -b "$build"
+bcbio_setup_genome.py -c "$cores" -f "$fasta" -g "$gtf" -i bowtie2 bwa hisat2 seq star -n "$name" -b "$build"

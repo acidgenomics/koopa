@@ -1,15 +1,16 @@
 #!/bin/bash
 
 # bcbio_setup_genome.py
+# Harvard Medical School O2 Cluster
 # Caenorhabditis elegans
-# 2018-05-10
+# 2018-06-27
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
-#SBATCH --job-name=genome              # Job name
+#SBATCH --job-name=WBcel235            # Job name
 #SBATCH --partition=medium             # Partition name
-#SBATCH --time=1-00:00                 # Runtime in D-HH:MM format
+#SBATCH --time=3-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1)
 #SBATCH --ntasks=1                     # Number of tasks per node (keep at 1)
 #SBATCH --cpus-per-task=8              # CPU cores requested per task (change for threaded jobs)
@@ -22,7 +23,7 @@
 biodata="/n/shared_db/bcbio/biodata"
 ens_name="Caenorhabditis_elegans"
 ens_build="WBcel235"
-ens_release=92
+ens_release=90
 name="Celegans"
 
 # Ensembl ======================================================================
@@ -55,4 +56,4 @@ if [[ ! -f "$gtf" ]]; then
     gunzip -c "${gtf}.gz" > "$gtf"
 fi
 
-bcbio_setup_genome.py -c "$cores" -f "$fasta" -g "$gtf" -i bowtie2 star seq bwa -n "$name" -b "$build"
+bcbio_setup_genome.py -c "$cores" -f "$fasta" -g "$gtf" -i bowtie2 bwa seq star -n "$name" -b "$build"
