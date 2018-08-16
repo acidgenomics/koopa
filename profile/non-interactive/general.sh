@@ -1,3 +1,8 @@
+# Global definitions ===========================================================
+if [[ -f "/etc/bashrc" ]]; then
+    . "/etc/bashrc"
+fi
+
 # Exports ======================================================================
 # R environmental variables
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
