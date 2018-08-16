@@ -1,4 +1,6 @@
-if [[ -n "$PS1" && -n "$HPC" && -z "$INTERACTIVE_QUEUE" ]]; then
+# Check for prompt string, SSH connection, and not on interactive node.
+# Only show this message on the login node for HPC.
+if [[ -n "$PS1" && -n "$SSH_CLIENT" && -z "$INTERACTIVE_QUEUE" ]]; then
     echo ""
     echo "==== koopa shell =========================================================="
     echo "https://github.com/steinbaugh/koopa"

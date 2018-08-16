@@ -1,6 +1,6 @@
 # Conda
 
-# Locate the installation
+# If unset, attempt to locate the installation automatically
 if [[ -z "$CONDA_DIR" ]]; then
     if [[ -d "${HOME}/anaconda3" ]]; then
         # Anaconda
