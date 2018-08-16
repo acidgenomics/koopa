@@ -4,3 +4,13 @@ if [[ -n "$CONDA_VERSION" ]]; then
         export PATH="${CONDA_DIR}/bin:${PATH}"
     fi
 fi
+
+# User specific environment and startup programs
+# ~/.local/bin
+if [[ -d "${HOME}/.local/bin" ]]; then
+    export PATH="${PATH}:${HOME}/.local/bin"
+fi
+# ~/bin
+if [[ -d "${HOME}/.local/bin" ]]; then
+    export PATH="${PATH}:${HOME}/bin"
+fi
