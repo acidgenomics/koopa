@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# seqcloud HPC bootloader
-# (c) 2018 Michael J. Steinbaugh
-# http://seq.cloud
+# koopa shell bootloader
+# (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License
 
 export SEQCLOUD_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

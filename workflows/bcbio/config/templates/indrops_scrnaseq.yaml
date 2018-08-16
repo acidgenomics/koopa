@@ -3,15 +3,15 @@
 # Homo sapiens
 # YYYY-MM-DD
 #
-# FASTA: seqcloud fasta hsapiens cdna
-# GTF: seqcloud gtf hsapiens
+# FASTA: koopa fasta hsapiens cdna
+# GTF: koopa gtf hsapiens
 #
 # NOTE: genome_build is specific to bcbio install
 # Run `bcbio_setup_genome.py` for list of genome builds
 #
 # Sample barcodes:
 # Use the reverse complement (revcomp) with bcbio
-# https://github.com/seqcloud/seqcloud/blob/develop/workflows/bcbio/data/umis
+# https://github.com/steinbaugh/koopa/blob/develop/workflows/bcbio/data/umis
 #
 # More template examples:
 # https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates

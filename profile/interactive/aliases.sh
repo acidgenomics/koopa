@@ -2,7 +2,7 @@
 alias e="exit"
 
 # Interactive queue
-alias i="seqcloud interactive"
+alias i="koopa interactive"
 
 # Listing files
 alias la="ls -a"
