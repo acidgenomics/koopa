@@ -2,5 +2,5 @@
 function koopa {
     local script="$1"
     shift 1
-    . "${SEQCLOUD_DIR}/functions/${script}.sh" $*
+    . "${KOOPA_DIR}/functions/${script}.sh" $*
 }
