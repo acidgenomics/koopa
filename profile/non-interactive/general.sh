@@ -1,17 +1,3 @@
-# Aliases ======================================================================
-alias e="exit"
-
-# Interactive queue
-alias i="seqcloud interactive"
-
-# ls
-alias la="ls -a"
-alias lF="ls -F"
-alias ll="ls -lh"
-
-# Disable R prompt to save workspace
-alias R="R --no-save"
-
 # Exports ======================================================================
 # R environmental variables
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
@@ -29,8 +15,8 @@ export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --pr
 export TODAY=$(date +%Y-%m-%d)
 
 # Ensembl
-# Match latest release available in AnnotationHub (Bioconductor 3.7)
-export ENSEMBL_RELEASE="92"
+# Match latest release available in when using Bioconductor with conda r-base
+export ENSEMBL_RELEASE="90"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
 # FlyBase
