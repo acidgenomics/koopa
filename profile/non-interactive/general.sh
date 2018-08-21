@@ -19,12 +19,19 @@ export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --pr
 
 export TODAY=$(date +%Y-%m-%d)
 
+# Genome versions ==============================================================
 # Ensembl
-# Match latest release available in when using Bioconductor with conda r-base
-export ENSEMBL_RELEASE="90"
+# Match latest release supported in Bioconductor ensembldb
+export ENSEMBL_RELEASE="92"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
+# Gencode
+export GENCODE_RELEASE="28"
+
 # FlyBase
-export FLYBASE_RELEASE_DATE="FB2018_02"
-export FLYBASE_RELEASE_VERSION="r6.21"
+export FLYBASE_RELEASE_DATE="FB2018_03"
+export FLYBASE_RELEASE_VERSION="r6.22"
 export FLYBASE_RELEASE_URL="ftp://ftp.flybase.net/releases/${FLYBASE_RELEASE_DATE}/dmel_${FLYBASE_RELEASE_VERSION}"
+
+# WormBase
+export WORMBASE_RELEASE_VERSION="WS265"
