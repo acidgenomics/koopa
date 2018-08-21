@@ -21,20 +21,19 @@ source="GENCODE"
 release=$GENCODE_RELEASE
 cores=8
 
-# Prepare build directory ======================================================
+# Prepare directories ==========================================================
+cd "$biodata_dir"
+
 # bcbio genomes structure
 # e.g. "homo_sapiens/grch37_gencode_28"
-
 # Transform species name to lowercase
 # e.g. "homo_sapiens"
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
-
 # e.g. "grch37_gencode_28"
 build_dir="${build}_${source}_${release}"
 build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
 
 # GENCODE FTP files ============================================================
-cd "$biodata_dir"
 ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}/${build}_mapping"
 
 # FASTA ------------------------------------------------------------------------
