@@ -1,6 +1,8 @@
 # Ensembl GRCh38 genome build
 # Last updated 2018-08-21
 
+wd="$PWD"
+
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
@@ -9,16 +11,16 @@ source="Ensembl"
 release=$ENSEMBL_RELEASE
 cores=8
 
-# Prepare build directory ======================================================
+# Prepare directories ==========================================================
 cd "$biodata_dir"
-# e.g. grch38_ensembl_92
-build_dir="${build}_${source}_${release}"
-build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
-mkdir -p "$build_dir"
-cd "$build_dir"
 
+# bcbio genomes structure
+# e.g. "homo_sapiens/grch38_ensembl_92"
 # Transform species name to lowercase
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
+# e.g. "grch38_ensembl_92"
+build_dir="${build}_${source}_${release}"
+build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
 
 # Ensembl FTP files ============================================================
 ftp_dir="ftp://ftp.ensembl.org/pub/release-${release}"
@@ -46,5 +48,7 @@ bcbio_setup_genome.py \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
-    --indexes seq star \
-    --name="$species_dir"
+    --name="$species_dir" \
+    -i seq star
+
+cd "$wd"
