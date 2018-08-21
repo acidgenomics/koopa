@@ -11,8 +11,10 @@
 # GENCODE release 28
 # Ensembl release 92
 
+wd="$PWD"
+
 # User-defined parameters ======================================================
-genomes_dir="${HOME}/genomes"
+biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
 build="GRCh37"
 source="GENCODE"
@@ -20,17 +22,19 @@ release=$GENCODE_RELEASE
 cores=8
 
 # Prepare build directory ======================================================
-cd "$genomes_dir"
-# e.g. grch37_gencode_28
-build_dir="${build}_${source}_${release}"
-build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
-mkdir -p "$build_dir"
-cd "$build_dir"
+# bcbio genomes structure
+# e.g. "homo_sapiens/grch37_gencode_28"
 
 # Transform species name to lowercase
+# e.g. "homo_sapiens"
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
+# e.g. "grch37_gencode_28"
+build_dir="${build}_${source}_${release}"
+build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
+
 # GENCODE FTP files ============================================================
+cd "$biodata_dir"
 ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}/${build}_mapping"
 
 # FASTA ------------------------------------------------------------------------
@@ -57,5 +61,8 @@ bcbio_setup_genome.py \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
-    --indexes bowtie2 minimap2 seq star \
-    --name="$species_dir"
+    --name="$species_dir" \
+    -i seq star
+
+cd "$wd"
+
