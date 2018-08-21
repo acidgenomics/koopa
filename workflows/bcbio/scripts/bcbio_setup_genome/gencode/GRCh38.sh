@@ -1,8 +1,8 @@
-# GENCODE GRCh37 mapped genome build
+# GENCODE GRCh38 genome build
 # Last updated 2018-08-21
 
-# https://www.gencodegenes.org/releases/grch37_mapped_releases.html
-# https://grch37.ensembl.org
+# https://www.gencodegenes.org/releases/current.html
+# https://www.gencodegenes.org/faq.html
 
 wd="$PWD"
 
@@ -22,7 +22,7 @@ cd "$biodata_dir"
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
 # Prepare bcbio genome build directory name.
-# e.g. "grch37_gencode_28"
+# e.g. "grch38_gencode_28"
 build_dir="${build}_${source}_${release}"
 build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
 
@@ -31,7 +31,7 @@ ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${relea
 
 # FASTA ------------------------------------------------------------------------
 # Genome sequence, primary assembly
-# GRCh37.primary_assembly.genome.fa.gz
+# GRCh38.primary_assembly.genome.fa.gz
 fasta="${build}.primary_assembly.genome.fa"
 if [[ ! -f "$fasta" ]]; then
     wget "${ftp_dir}/${fasta}.gz"
@@ -40,8 +40,8 @@ fi
 
 # GTF --------------------------------------------------------------------------
 # Comprehensive gene annotation
-# gencode.v28lift37.annotation.gtf.gz
-gtf="gencode.v${release}lift37.annotation.gtf"
+# gencode.v28.annotation.gtf.gz
+gtf="gencode.v${release}.annotation.gtf"
 if [[ ! -f "$gtf" ]]; then
     wget "${ftp_dir}/${gtf}.gz"
     gunzip -c "${gtf}.gz" > "$gtf"
@@ -49,7 +49,7 @@ fi
 
 # bcbio ========================================================================
 # Directory structure will be lower case.
-# e.g. "bcbio/genomes/homo_sapiens/grch37_gencode_28"
+# e.g. "bcbio/genomes/homo_sapiens/grch38_gencode_28"
 bcbio_setup_genome.py \
     --build="$build_dir" \
     --cores="$cores" \

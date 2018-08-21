@@ -14,10 +14,11 @@ cores=8
 # Prepare directories ==========================================================
 cd "$biodata_dir"
 
-# bcbio genomes structure
-# e.g. "homo_sapiens/grch38_ensembl_92"
-# Transform species name to lowercase
+# Transform species name to lowercase.
+# e.g. "homo_sapiens"
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
+
+# Prepare bcbio genome build directory name.
 # e.g. "grch38_ensembl_92"
 build_dir="${build}_${source}_${release}"
 build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
@@ -43,6 +44,8 @@ if [[ ! -f "$gtf" ]]; then
 fi
 
 # bcbio ========================================================================
+# Directory structure will be lower case.
+# e.g. "bcbio/genomes/homo_sapiens/grch38_ensembl_92"
 bcbio_setup_genome.py \
     --build="$build_dir" \
     --cores="$cores" \
