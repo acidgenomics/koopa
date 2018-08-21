@@ -1,8 +1,6 @@
 # GENCODE GRCh37 mapped genome build
 # Last updated 2018-08-21
-
 # https://www.gencodegenes.org/releases/grch37_mapped_releases.html
-# https://grch37.ensembl.org
 
 wd="$PWD"
 
@@ -11,8 +9,8 @@ biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
 build="GRCh37"
 source="GENCODE"
-release=$GENCODE_RELEASE
-cores=8
+release="$GENCODE_RELEASE"
+cores="8"
 
 # Prepare directories ==========================================================
 cd "$biodata_dir"

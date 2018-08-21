@@ -1,15 +1,15 @@
-# Ensembl GRCh38 genome build
+# Ensembl GRCh37 genome build
 # Last updated 2018-08-21
-# https://ensembl.org
+# https://grch37.ensembl.org
 
 wd="$PWD"
 
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
-build="GRCh38"
+build="GRCh37"
 source="Ensembl"
-release="$ENSEMBL_RELEASE"
+release="87"
 cores="8"
 
 # Prepare directories ==========================================================
@@ -20,16 +20,16 @@ cd "$biodata_dir"
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
 # Prepare bcbio genome build directory name.
-# e.g. "grch38_ensembl_92"
+# e.g. "grch37_ensembl_87"
 build_dir="${build}_${source}_${release}"
 build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
 
 # Ensembl FTP files ============================================================
-ftp_dir="ftp://ftp.ensembl.org/pub/release-${release}"
+ftp_dir="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
 
 # FASTA ------------------------------------------------------------------------
 # Primary assembly, unmasked
-# Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+# Homo_sapiens.GRCh37.dna.primary_assembly.fa.gz
 fasta="${species}.${build}.dna.primary_assembly.fa"
 if [[ ! -f "$fasta" ]]; then
     wget "${ftp_dir}/fasta/${species_dir}/dna/${fasta}.gz"
@@ -37,7 +37,7 @@ if [[ ! -f "$fasta" ]]; then
 fi
 
 # GTF --------------------------------------------------------------------------
-# Homo_sapiens.GRCh38.92.gtf.gz
+# Homo_sapiens.GRCh37.87.gtf.gz
 gtf="${species}.${build}.${release}.gtf"
 if [[ ! -f "$gtf" ]]; then
     wget "${ftp_dir}/gtf/${species_dir}/${gtf}.gz"
@@ -46,7 +46,7 @@ fi
 
 # bcbio ========================================================================
 # Directory structure will be lower case.
-# e.g. "bcbio/genomes/homo_sapiens/grch38_ensembl_92"
+# e.g. "bcbio/genomes/homo_sapiens/grch37_ensembl_87"
 bcbio_setup_genome.py \
     --build="$build_dir" \
     --cores="$cores" \
