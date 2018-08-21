@@ -1,6 +1,5 @@
 # GENCODE GRCh38 genome build
 # Last updated 2018-08-21
-
 # https://www.gencodegenes.org/releases/current.html
 # https://www.gencodegenes.org/faq.html
 
@@ -11,8 +10,8 @@ biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
 build="GRCh37"
 source="GENCODE"
-release=$GENCODE_RELEASE
-cores=8
+release="$GENCODE_RELEASE"
+cores="8"
 
 # Prepare directories ==========================================================
 cd "$biodata_dir"
