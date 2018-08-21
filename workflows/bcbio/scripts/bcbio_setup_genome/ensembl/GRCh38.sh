@@ -21,12 +21,14 @@ cd "$build_dir"
 species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
 # Ensembl FTP files ============================================================
+ftp_dir="ftp://ftp.ensembl.org/pub/release-${release}"
+
 # FASTA ------------------------------------------------------------------------
 # Primary assembly, unmasked
 # Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 fasta="${species}.${build}.dna.primary_assembly.fa"
 if [[ ! -f "$fasta" ]]; then
-    wget "ftp://ftp.ensembl.org/pub/release-${release}/fasta/${species_dir}/dna/${fasta}.gz"
+    wget "${ftp_dir}/fasta/${species_dir}/dna/${fasta}.gz"
     gunzip -c "${fasta}.gz" > "$fasta"
 fi
 
@@ -34,20 +36,15 @@ fi
 # Homo_sapiens.GRCh38.92.gtf.gz
 gtf="${species}.${build}.${release}.gtf"
 if [[ ! -f "$gtf" ]]; then
-    wget "ftp://ftp.ensembl.org/pub/release-${release}/gtf/${species_dir}/${gtf}.gz"
+    wget "${ftp_dir}/gtf/${species_dir}/${gtf}.gz"
     gunzip -c "${gtf}.gz" > "$gtf"
 fi
 
 # bcbio ========================================================================
-# -b --build
-# -c --cores
-# -f --fasta
-# -g --gtf
-# -n --name (species)
 bcbio_setup_genome.py \
-    --build "$build_dir" \
-    --cores "$cores" \
-    --fasta "$fasta" \
-    --gtf "$gtf" \
+    --build="$build_dir" \
+    --cores="$cores" \
+    --fasta="$fasta" \
+    --gtf="$gtf" \
     --indexes seq star \
-    --name "$species" \
+    --name="$species" \
