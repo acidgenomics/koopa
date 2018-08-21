@@ -47,4 +47,4 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --indexes seq star \
-    --name="$species" \
+    --name="$species_dir"

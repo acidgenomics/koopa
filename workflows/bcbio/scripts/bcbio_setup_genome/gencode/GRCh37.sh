@@ -12,7 +12,7 @@
 # Ensembl release 92
 
 # User-defined parameters ======================================================
-biodata_dir="${HOME}/biodata"
+genomes_dir="${HOME}/genomes"
 species="Homo_sapiens"
 build="GRCh37"
 source="GENCODE"
@@ -20,7 +20,7 @@ release=$GENCODE_RELEASE
 cores=8
 
 # Prepare build directory ======================================================
-cd "$biodata_dir"
+cd "$genomes_dir"
 # e.g. grch37_gencode_28
 build_dir="${build}_${source}_${release}"
 build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
@@ -53,9 +53,9 @@ fi
 
 # bcbio ========================================================================
 bcbio_setup_genome.py \
-    -b "$build" \
-    -c "$cores" \
-    -f "$fasta" \
-    -g "$gtf" \
-    -i bowtie2 minimap2 seq star \
-    -n "$name" \
+    --build="$build_dir" \
+    --cores="$cores" \
+    --fasta="$fasta" \
+    --gtf="$gtf" \
+    --indexes bowtie2 minimap2 seq star \
+    --name="$species_dir"
