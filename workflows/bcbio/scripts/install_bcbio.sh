@@ -1,1 +1,1 @@
-python bcbio_nextgen_install.py ~/bcbio_personal --isolate --nodata
+python bcbio_nextgen_install.py ~/bcbio --isolate --nodata
