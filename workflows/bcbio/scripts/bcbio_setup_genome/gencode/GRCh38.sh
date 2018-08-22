@@ -7,7 +7,7 @@
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
-build="GRCh37"
+build="GRCh38"
 source="GENCODE"
 release="$GENCODE_RELEASE"
 cores="8"
