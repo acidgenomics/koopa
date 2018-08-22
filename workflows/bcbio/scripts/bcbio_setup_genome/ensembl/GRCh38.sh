@@ -1,5 +1,5 @@
 # Ensembl GRCh38 genome build
-# Last updated 2018-08-21
+# Last updated 2018-08-22
 # https://ensembl.org
 
 wd="$PWD"
@@ -7,52 +7,38 @@ wd="$PWD"
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
+bcbio_species_dir="Hsapiens"
 build="GRCh38"
 source="Ensembl"
 release="$ENSEMBL_RELEASE"
 cores="8"
 
-# Prepare directories ==========================================================
-cd "$biodata_dir"
-
-# Transform species name to lowercase.
-# e.g. "homo_sapiens"
-species_dir=$(echo "$species" | tr '[:upper:]' '[:lower:]')
-
-# Prepare bcbio genome build directory name.
-# e.g. "grch38_ensembl_92"
-build_dir="${build}_${source}_${release}"
-build_dir=$(echo "$build_dir" | tr '[:upper:]' '[:lower:]')
-
 # Ensembl FTP files ============================================================
+cd "$biodata_dir"
 ftp_dir="ftp://ftp.ensembl.org/pub/release-${release}"
+species_lower=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
 # FASTA ------------------------------------------------------------------------
 # Primary assembly, unmasked
 # Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 fasta="${species}.${build}.dna.primary_assembly.fa"
-if [[ ! -f "$fasta" ]]; then
-    wget "${ftp_dir}/fasta/${species_dir}/dna/${fasta}.gz"
-    gunzip -c "${fasta}.gz" > "$fasta"
-fi
+wget "${ftp_dir}/fasta/${species_lower}/dna/${fasta}.gz"
+gunzip -c "${fasta}.gz" > "$fasta"
 
 # GTF --------------------------------------------------------------------------
 # Homo_sapiens.GRCh38.92.gtf.gz
 gtf="${species}.${build}.${release}.gtf"
-if [[ ! -f "$gtf" ]]; then
-    wget "${ftp_dir}/gtf/${species_dir}/${gtf}.gz"
-    gunzip -c "${gtf}.gz" > "$gtf"
-fi
+wget "${ftp_dir}/gtf/${species_lower}/${gtf}.gz"
+gunzip -c "${gtf}.gz" > "$gtf"
 
 # bcbio ========================================================================
-# Directory structure will be lower case.
-# e.g. "bcbio/genomes/homo_sapiens/grch38_ensembl_92"
+bcbio_build_dir="${build}_${source}_${release}"
 bcbio_setup_genome.py \
-    --build="$build_dir" \
+    --build="$bcbio_build_dir" \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
-    --name="$species_dir" \
+    --name="$bcbio_species_dir" \
     -i seq star
 
 cd "$wd"
