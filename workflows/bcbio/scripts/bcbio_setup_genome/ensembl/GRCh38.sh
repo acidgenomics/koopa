@@ -2,8 +2,6 @@
 # Last updated 2018-08-22
 # https://ensembl.org
 
-wd="$PWD"
-
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
@@ -39,5 +37,3 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir"
-
-cd "$wd"

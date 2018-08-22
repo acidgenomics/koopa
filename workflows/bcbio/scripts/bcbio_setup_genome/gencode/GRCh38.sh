@@ -3,8 +3,6 @@
 # https://www.gencodegenes.org/releases/current.html
 # https://www.gencodegenes.org/faq.html
 
-wd="$PWD"
-
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
@@ -40,5 +38,3 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir"
-
-cd "$wd"
