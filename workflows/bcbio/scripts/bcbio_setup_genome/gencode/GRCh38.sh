@@ -14,7 +14,7 @@ cores="8"
 
 # GENCODE FTP files ============================================================
 cd "$biodata_dir"
-ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}/${build}_mapping"
+ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}"
 
 # FASTA ------------------------------------------------------------------------
 # Genome sequence, primary assembly
