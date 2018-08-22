@@ -39,7 +39,6 @@ bcbio_setup_genome.py \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
-    --name="$bcbio_species_dir" \
-    -i seq star
+    --name="$bcbio_species_dir"
 
 cd "$wd"
