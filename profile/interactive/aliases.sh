@@ -14,14 +14,16 @@ alias ll="ls -AFGlh"
 alias ga="git add --all"
 # Commit
 alias gc="git commit -m"
-# Discard
-gd="git checkout --"
+# Diff
+alias gd="git diff"
 # Pull
 alias gpull="git pull"
 # Push
 alias gpush="git push"
 # Status
 alias gs="git status"
+# Trash (discard)
+alias gtrash="git checkout --"
 
 # Applications =================================================================
 # Run emacs without window system
