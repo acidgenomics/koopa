@@ -7,14 +7,14 @@
 biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
-build="GRCh37"
+build="GRCh38"
 source="GENCODE"
 release="$GENCODE_RELEASE"
 cores="8"
 
 # GENCODE FTP files ============================================================
 cd "$biodata_dir"
-ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}/${build}_mapping"
+ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}"
 
 # FASTA ------------------------------------------------------------------------
 # Genome sequence, primary assembly
