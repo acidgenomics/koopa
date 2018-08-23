@@ -12,6 +12,8 @@ alias ll="ls -AFGlh"
 # git ==========================================================================
 alias ga="git add --all"
 alias gc="git commit -m"
+alias gpull="git pull"
+alias gpush="git push"
 alias gs="git status"
 
 # Applications =================================================================
