@@ -10,10 +10,17 @@ alias lF="ls -F"
 alias ll="ls -AFGlh"
 
 # git ==========================================================================
+# Add
 alias ga="git add --all"
+# Commit
 alias gc="git commit -m"
+# Discard
+gd="git checkout --"
+# Pull
 alias gpull="git pull"
+# Push
 alias gpush="git push"
+# Status
 alias gs="git status"
 
 # Applications =================================================================
