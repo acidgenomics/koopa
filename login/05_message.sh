@@ -5,7 +5,7 @@ separator_bar="🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢🐢�
 if [[ -n "$PS1" && -n "$SSH_CLIENT" && -z "$INTERACTIVE_QUEUE" ]]; then
     echo ""
     echo "$separator_bar"
-    echo "koopa shell"
+    echo "koopa shell v${KOOPA_VERSION} (${KOOPA_DATE})"
     echo "https://github.com/steinbaugh/koopa"
     if [[ -d "$ASPERA_DIR" ]]; then
         echo "# Aspera Connect"
