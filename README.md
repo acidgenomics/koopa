@@ -3,18 +3,19 @@
 [![Build Status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
-High-performance computing shell bootloader for bioinformatics.
-
+Shell bootloader for bioinformatics.
 
 ## Installation
 
-Connect to your high-performance computing (HPC) cluster and clone our git repository.
+Linux and macOS are currently supported. Koopa also integrates with schedulers in a high-performance computing (HPC) environment, including [slurm][] and [LSF][], if they are available.
+
+First, clone our git repository:
 
 ```bash
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
 ```
 
-Add these lines to your `.bashrc` file:
+Then add these lines to your `.bashrc` file:
 
 ```bash
 # koopa shell
@@ -30,7 +31,6 @@ To also load koopa on a login node, we recommend symlinking your `.bashrc` file 
 ln -s ~/.bashrc ~/.bash_profile
 ```
 
-
 ## Interactive session
 
 To launch an interactive session, simply run:
@@ -45,5 +45,5 @@ For example, here's how to start an interactive session for 6 hours using 2 core
 koopa interactive -c 2 -m 8 -t 0-06:00
 ```
 
-
 [slurm]: https://slurm.schedmd.com
+[LSF]: https://www.ibm.com/support/knowledgecenter/en/SSETD4/product_welcome_platform_lsf.html
