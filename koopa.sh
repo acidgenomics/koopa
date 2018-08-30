@@ -2,7 +2,10 @@
 
 # koopa shell bootloader
 # (c) 2018 Michael Steinbaugh
-# This software is provided under an MIT License
+# This software is provided under an MIT License.
+
+export KOOPA_VERSION="0.1.1"
+export KOOPA_DATE="2018-08-24"
 
 export KOOPA_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
