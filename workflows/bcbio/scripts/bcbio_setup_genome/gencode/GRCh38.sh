@@ -37,4 +37,5 @@ bcbio_setup_genome.py \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
-    --name="$bcbio_species_dir"
+    --name="$bcbio_species_dir" \
+    --indexes="seq star bowtie2 hisat2 minimap2"
