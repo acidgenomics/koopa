@@ -36,4 +36,8 @@ bcbio_setup_genome.py \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
+    --indexes="seq" \
+    --indexes="star" \
+    --indexes="hisat2" \
+    --indexes="minimap2" \
     --name="$bcbio_species_dir"
