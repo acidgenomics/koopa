@@ -1,15 +1,15 @@
 # GENCODE GRCh37 mapped genome build
-# Last updated 2018-08-22
+# Last updated 2018-09-04
 # https://www.gencodegenes.org/releases/grch37_mapped_releases.html
 
 # User-defined parameters ======================================================
-biodata_dir="${HOME}/biodata"
+biodata_dir="$BIODATA_DIR"
 species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh37"
 source="GENCODE"
 release="$GENCODE_RELEASE"
-cores="8"
+cores="$CORES"
 
 # GENCODE FTP files ============================================================
 cd "$biodata_dir"
@@ -41,3 +41,10 @@ bcbio_setup_genome.py \
     --indexes="hisat2" \
     --indexes="minimap2" \
     --name="$bcbio_species_dir"
+
+# Clean up =====================================================================
+mkdir -p "$bcbio_build_dir"
+mv "$fasta" "$bcbio_build_dir"
+mv "$fasta.gz" "$bcbio_build_dir"
+mv "$gtf" "$bcbio_build_dir"
+mv "$gtf.gz" "$bcbio_build_dir"

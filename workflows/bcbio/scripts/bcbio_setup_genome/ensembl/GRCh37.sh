@@ -1,15 +1,15 @@
 # Ensembl GRCh37 genome build
-# Last updated 2018-08-22
+# Last updated 2018-09-04
 # https://grch37.ensembl.org
 
 # User-defined parameters ======================================================
-biodata_dir="${HOME}/biodata"
+biodata_dir="$BIODATA_DIR"
 species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh37"
 source="Ensembl"
 release="87"
-cores="8"
+cores="$CORES"
 
 # Ensembl FTP files ============================================================
 cd "$biodata_dir"
@@ -36,4 +36,15 @@ bcbio_setup_genome.py \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
+    --indexes="seq" \
+    --indexes="star" \
+    --indexes="hisat2" \
+    --indexes="minimap2" \
     --name="$bcbio_species_dir"
+
+# Clean up =====================================================================
+mkdir -p "$bcbio_build_dir"
+mv "$fasta" "$bcbio_build_dir"
+mv "$fasta.gz" "$bcbio_build_dir"
+mv "$gtf" "$bcbio_build_dir"
+mv "$gtf.gz" "$bcbio_build_dir"
