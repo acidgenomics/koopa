@@ -39,3 +39,10 @@ bcbio_setup_genome.py \
     --gtf="$gtf" \
     --indexes="seq star hisat2 minimap2" \
     --name="$bcbio_species_dir"
+
+# Clean up =====================================================================
+mkdir -p "$bcbio_build_dir"
+mv "$fasta" "$bcbio_build_dir"
+mv "$fasta.gz" "$bcbio_build_dir"
+mv "$gtf" "$bcbio_build_dir"
+mv "$gtf.gz" "$bcbio_build_dir"
