@@ -4,7 +4,7 @@
 # https://www.gencodegenes.org/faq.html
 
 # User-defined parameters ======================================================
-biodata_dir="${HOME}/biodata"
+biodata_dir="$BIODATA_DIR"
 species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh38"
