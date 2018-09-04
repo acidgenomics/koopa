@@ -10,7 +10,7 @@ bcbio_species_dir="Hsapiens"
 build="GRCh38"
 source="GENCODE"
 release="$GENCODE_RELEASE"
-cores="8"
+cores="$CORES"
 
 # GENCODE FTP files ============================================================
 cd "$biodata_dir"
