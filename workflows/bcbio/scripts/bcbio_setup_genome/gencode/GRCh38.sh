@@ -1,5 +1,5 @@
 # GENCODE GRCh38 genome build
-# Last updated 2018-08-22
+# Last updated 2018-09-04
 # https://www.gencodegenes.org/releases/current.html
 # https://www.gencodegenes.org/faq.html
 
