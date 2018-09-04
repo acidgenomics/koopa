@@ -32,6 +32,7 @@ gunzip -c "${gtf}.gz" > "$gtf"
 
 # bcbio ========================================================================
 bcbio_build_dir="${build}_${source}_${release}"
+bcbio_setup_genome.py --help
 bcbio_setup_genome.py \
     --build="$bcbio_build_dir" \
     --cores="$cores" \
