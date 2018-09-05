@@ -1,4 +1,4 @@
-separator_bar="=================================================="
+separator_bar="========================================================================"
 
 # Check for prompt string, SSH connection, and not on interactive node.
 # Only show this message on the login node for HPC.
