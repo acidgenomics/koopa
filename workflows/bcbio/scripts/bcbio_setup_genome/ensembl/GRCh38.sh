@@ -31,16 +31,14 @@ gunzip -c "${gtf}.gz" > "$gtf"
 
 # bcbio ========================================================================
 bcbio_build_dir="${build}_${source}_${release}"
+# bcbio_setup_genome.py --help
 bcbio_setup_genome.py \
     --build="$bcbio_build_dir" \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
-    --indexes="seq" \
-    --indexes="star" \
-    --indexes="hisat2" \
-    --indexes="minimap2" \
-    --name="$bcbio_species_dir"
+    --name="$bcbio_species_dir" \
+    --indexes star hisat2 minimap2
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
