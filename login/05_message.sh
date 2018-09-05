@@ -9,15 +9,18 @@ if [[ -n "$PS1" && -n "$SSH_CLIENT" && -z "$INTERACTIVE_QUEUE" ]]; then
     echo "https://github.com/steinbaugh/koopa"
     if [[ -d "$ASPERA_DIR" ]]; then
         echo "# Aspera Connect"
-        echo "$ASPERA_DIR"
+        readlink -f "$ASPERA_DIR"
+        readlink -f $(which asperaconnect)
     fi
     if [[ -d "$BCBIO_DIR" ]]; then
         echo "# bcbio"
-        echo "$BCBIO_DIR"
+        readlink -f "$BCBIO_DIR"
+        readlink -f $(which bcbio_nextgen.py)
     fi
     if [[ -d "$CONDA_DIR" ]]; then
         echo "# conda"
-        echo "$CONDA_DIR"
+        readlink -f "$CONDA_DIR"
+        readlink -f $(which conda)
     fi
     echo "$separator_bar"
     echo ""
