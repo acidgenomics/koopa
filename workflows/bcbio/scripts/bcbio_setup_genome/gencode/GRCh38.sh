@@ -31,6 +31,7 @@ wget "${ftp_dir}/${gtf}.gz"
 gunzip -c "${gtf}.gz" > "$gtf"
 
 # bcbio ========================================================================
+# Note that hisat2 requires a lot of memory to index.
 bcbio_build_dir="${build}_${source}_${release}"
 bcbio_setup_genome.py --help
 bcbio_setup_genome.py \
@@ -39,7 +40,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes star hisat2 minimap2
+    --indexes star minimap2
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
