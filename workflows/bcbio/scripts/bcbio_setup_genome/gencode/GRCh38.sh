@@ -31,9 +31,9 @@ wget "${ftp_dir}/${gtf}.gz"
 gunzip -c "${gtf}.gz" > "$gtf"
 
 # bcbio ========================================================================
-# Note that hisat2 requires a lot of memory to index.
 bcbio_build_dir="${build}_${source}_${release}"
-bcbio_setup_genome.py --help
+# bcbio_setup_genome.py --help
+# Note that hisat2 requires a lot of memory to index.
 bcbio_setup_genome.py \
     --build="$bcbio_build_dir" \
     --cores="$cores" \
