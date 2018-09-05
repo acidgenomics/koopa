@@ -1,5 +1,5 @@
 # GENCODE GRCh38 genome build
-# Last updated 2018-09-04
+# Last updated 2018-09-05
 # https://www.gencodegenes.org/releases/current.html
 # https://www.gencodegenes.org/faq.html
 
@@ -33,13 +33,14 @@ gunzip -c "${gtf}.gz" > "$gtf"
 # bcbio ========================================================================
 bcbio_build_dir="${build}_${source}_${release}"
 # bcbio_setup_genome.py --help
+# Note that hisat2 requires a lot of memory to index.
 bcbio_setup_genome.py \
     --build="$bcbio_build_dir" \
     --cores="$cores" \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes star hisat2 minimap2
+    --indexes star minimap2
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
