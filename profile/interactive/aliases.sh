@@ -14,4 +14,9 @@ alias ll="ls -AFGlh"
 alias emacs="emacs --no-window-system"
 
 # Disable R prompt to save workspace
-alias R="R --no-save"
+# --no-environ
+# --no-init
+# --no-restore
+# --no-save
+# --vanilla
+alias R="R --vanilla"
