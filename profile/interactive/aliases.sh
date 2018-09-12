@@ -19,4 +19,4 @@ alias emacs="emacs --no-window-system"
 # --no-restore
 # --no-save
 # --vanilla
-alias R="R --vanilla"
+alias R="R --no-restore --no-save"
