@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# koopa shell bootloader
+# (c) 2018 Michael Steinbaugh
+# This software is provided under an MIT License.
+
+export KOOPA_VERSION="0.1.3"
+export KOOPA_DATE="2018-09-20"
+export KOOPA_DIR="$( dirname "${BASH_SOURCE[0]}" )"
+export KOOPA_BASEDIR="$( dirname "$KOOPA_DIR" )"
+
+# Check for supported operating system
+if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
+    echo "$(uname -s) operating system not supported"
+    return 1
+fi
+
+# Don't reload inside HPC interactive queue.
+if [[ -n "$INTERACTIVE_QUEUE" ]]; then
+    return 0
+fi
+
+# Load non-interactive shell scripts.
+where="${KOOPA_BASEDIR}/login/non-interactive"
+for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort); do
+    source "$file"
+done
+unset -v file where
+
+# Load interactive shell scripts.
+if [[ "$-" =~ "i" ]]; then
+    where="${KOOPA_BASEDIR}/login/interactive"
+    for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort); do
+        source "$file"
+    done
+    unset -v file where
+fi
