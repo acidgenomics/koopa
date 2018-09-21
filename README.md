@@ -19,9 +19,8 @@ Add these lines to your `.bashrc` file:
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-if [[ -n "$PS1" ]] && [[ -f ~/koopa/koopa.sh ]]; then
-    source ~/koopa/koopa.sh
-fi
+export PATH="${HOME}/koopa/bin:${PATH}"
+source koopa
 ```
 
 To also load koopa on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:
