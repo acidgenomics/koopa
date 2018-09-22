@@ -1,4 +1,4 @@
-# Install Tex (basictex)
+# Install TeX (BasicTeX)
 # https://www.ctan.org
 # This will also attempt to install recommended packages.
 
@@ -12,7 +12,7 @@ command -v tlmgr >/dev/null 2>&1 || {
             echo >&2 "brew missing"
             return 1
         }
-        brew cask install basictex 
+        brew cask install basictex
     fi
 }
 
