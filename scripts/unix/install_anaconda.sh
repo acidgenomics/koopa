@@ -2,7 +2,6 @@
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     script="Anaconda3-5.2.0-Linux-x86_64.sh"
-    wget https://repo.anaconda.com/archive/
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     script="Anaconda3-5.2.0-MacOSX-x86_64.sh"
 else
@@ -11,7 +10,7 @@ else
 fi
 
 echo "Downloading Anaconda installer..."
-wget "https://repo.anaconda.com/archive/${script}"
+curl -O "https://repo.anaconda.com/archive/${script}"
 
 cat << EOF
 koopa is able to load conda automatically.
