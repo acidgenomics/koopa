@@ -5,13 +5,21 @@
 # This software is provided under an MIT License.
 
 export KOOPA_VERSION="0.1.3"
-export KOOPA_DATE="2018-09-20"
-export KOOPA_DIR="$( dirname "${BASH_SOURCE[0]}" )"
-export KOOPA_BASEDIR="$( dirname "$KOOPA_DIR" )"
+export KOOPA_DATE="2018-09-22"
 
-# Check for supported operating system
-if [[ $(uname -s) != "Linux" ]] && [[ $(uname -s) != "Darwin" ]]; then
-    echo "$(uname -s) operating system not supported"
+# e.g. ~/koopa/bin
+KOOPA_DIR="$( dirname "${BASH_SOURCE[0]}" )"
+# e.g. ~/koopa
+KOOPA_BASEDIR="$( dirname "$KOOPA_DIR" )"
+
+# Check for supported operating system.
+# Alternatively can use `$(uname -s)`
+if [[ "$OXTYPE" == "linux-gnu" ]]; then
+    OSNAME="Linux"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    OSNAME="macOS"
+else
+    echo "${OSTYPE} operating system not supported"
     return 1
 fi
 
@@ -35,3 +43,5 @@ if [[ "$-" =~ "i" ]]; then
     done
     unset -v file where
 fi
+
+unset -v KOOPA_DIR KOOPA_BASEDIR OSNAME
