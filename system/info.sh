@@ -20,8 +20,9 @@ array+=("System: $KOOPA_SYSTEM")
 
 if [[ -n "$HPC_SCHEDULER" ]]; then
     array+=("HPC scheduler: ${HPC_SCHEDULER}")
-    array+=("  - Default partition: ${HPC_PARTITION_DEFAULT}")
-    array+=("  - Interactive partition: ${HPC_PARTITION_INTERACTIVE}")
+    array+=("  Partitions:")
+    array+=("  - Default: ${HPC_PARTITION_DEFAULT}")
+    array+=("  - Interactive: ${HPC_PARTITION_INTERACTIVE}")
 fi
 
 aspera="$( command -v asperaconnect 2>/dev/null )"
