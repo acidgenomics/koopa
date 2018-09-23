@@ -23,9 +23,9 @@ Add these lines to your `.bashrc` file:
 source ~/koopa/bin/koopa activate
 ```
 
-## Interactive session
+## HPC interactive session
 
-To launch an interactive session, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
+To launch an interactive session on a high-performance computing (HPC) cluster, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
 
 ```bash
 interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
