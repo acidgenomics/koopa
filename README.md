@@ -40,7 +40,7 @@ interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
 For example, here's how to start an interactive session on an HPC supporting the [slurm][] scheduler, which will run for 6 hours using 2 cores and 16 GB of RAM total (i.e. 8 GB per core):
 
 ```bash
-koopa interactive --cores=2 --mem=16 --time=0-06:00
+interactive --cores=2 --mem=16 --time=0-06:00
 ```
 
 For more information on configuration, consult `interactive --help`.
