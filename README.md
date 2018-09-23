@@ -19,8 +19,7 @@ Add these lines to your `.bashrc` file:
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-export PATH="${HOME}/koopa/bin:${PATH}"
-source koopa
+source ~/koopa/bin/koopa activate
 ```
 
 To also load koopa on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:

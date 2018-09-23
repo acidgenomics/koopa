@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Install git.
+# 2018-09-22
+
+echo "This script requires sudo to install"
+sudo -v
+
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get install git git-lfs
+git lfs install
