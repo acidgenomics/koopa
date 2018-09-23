@@ -9,11 +9,18 @@ if [[ -n "$HPC_INTERACTIVE_JOB" ]]; then
     exit 0
 fi
 
-export KOOPA_VERSION="0.2.0"
-export KOOPA_DATE="2018-09-22"
-export KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"
-export KOOPA_BASEDIR="$( dirname "$KOOPA_BINDIR" )"
-export KOOPA_SYSDIR="${KOOPA_BASEDIR}/system"
+# Python is required.
+if [[ -z "$( command -v python 2>/dev/null )" ]]; then
+    echo "Python is required"
+    exit 1
+fi
+
+KOOPA_VERSION="0.2.0"
+KOOPA_DATE="2018-09-23"
+KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"
+KOOPA_BASEDIR="$( dirname "$KOOPA_BINDIR" )"
+KOOPA_SYSDIR="${KOOPA_BASEDIR}/system"
+KOOPA_SYSTEM="$( python -mplatform )"
 
 CMD="$1"
 
