@@ -1,8 +1,8 @@
 # Quicker exit.
 alias e="exit"
 
-# Interactive queue.
-alias i="koopa interactive"
+# Submit interactive queue.
+alias i="submit_interactive"
 
 # Listing files.
 alias la="ls -a"
