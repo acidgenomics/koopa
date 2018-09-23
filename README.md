@@ -15,13 +15,15 @@ First, clone the repository:
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
 ```
 
-Add these lines to your `~/.bash_profile` file:
+Second, add these lines to `~/.bash_profile`:
 
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
 source ~/koopa/bin/koopa activate
 ```
+
+Koopa should now activate at login. To obtain information on the current working enviroment, simply run `koopa info`.
 
 ## High-performance computing (HPC) environment
 
