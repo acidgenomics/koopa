@@ -4,6 +4,11 @@
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
+# Don't reload for HPC interactive job.
+if [[ -n "$HPC_INTERACTIVE_JOB" ]]; then
+    exit 0
+fi
+
 export KOOPA_VERSION="0.2.0"
 export KOOPA_DATE="2018-09-22"
 export KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"

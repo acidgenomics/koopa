@@ -10,18 +10,13 @@
 # http://www.bahmanm.com/blogs/command-line-options-how-to-parse-in-bash-using-getopt
 
 # All arguments are optional for this script.
-cores=1
-mem=8
-# time
-if [[ "$HPC_SCHEDULER" == "slurm" ]]; then
-    time="0-06:00"
-elif [[ "$HPC_SCHEDULER" == "lsf" ]]; then
-    time="6:00"
-fi
-partition="interactive"
+cores="$HPC_CORES"
+mem="$HPC_MEMORY_GB"
+partition="$HPC_PARTITION_INTERACTIVE"
+time="$HPC_TIME"
 
 help () {
-    echo "interactive [--{c}ores=${cores} --{m}em=${mem} --{t}ime=${time} --{p}artition=${partition}]" 1>&2
+    echo "interactive [--{c}ores=${cores} --{m}em=${mem} --{p}artition=${partition} --{t}ime=${time}]" 1>&2
 }
 
 # Read the options.
@@ -63,28 +58,28 @@ done
 # Inform the user about the job.
 echo "Launching interactive session"
 echo "- cores: ${cores}"
-echo "- memory per core: ${mem} GB"
+echo "- memory: ${mem} GB"
 echo "- partition (queue): ${partition}"
 echo "- time: ${time}"
 
-export KOOPA_INTERACTIVE_JOB=1
+export HPC_INTERACTIVE_JOB=1
 
 if [[ $HPC_SCHEDULER == "slurm" ]]; then
     # X11 requires `~/.ssh/config` on local machine.
     srun --pty \
-        --partition="$partition" \
         --cpus-per-task="$cores" \
         --mem="${mem}"G \
+        --partition="$partition" \
         --time="$time" \
         --x11=first \
         /bin/bash
 elif [[ $HPC_SCHEDULER == "lsf" ]]; then
     mem_mb="$(( $mem * 1024 ))"
     bsub -Is \
-        -q "$partition" \
         -n "$cores" \
-        -W "$time" \
+        -q "$partition" \
         -R rhelp[mem="$mem_mb"] \
+        -W "$time" \
         bash
     unset -v mem_mb
 fi
