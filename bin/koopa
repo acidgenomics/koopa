@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# koopa shell bootloader
+# (c) 2018 Michael Steinbaugh
+# This software is provided under an MIT License.
+
+# Don't reload for HPC interactive job.
+if [[ -n "$HPC_INTERACTIVE_JOB" ]]; then
+    exit 0
+fi
+
+# Python is required.
+if [[ -z "$( command -v python 2>/dev/null )" ]]; then
+    echo "Python is required"
+    exit 1
+fi
+
+KOOPA_VERSION="0.2.0"
+KOOPA_DATE="2018-09-23"
+KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"
+KOOPA_BASEDIR="$( dirname "$KOOPA_BINDIR" )"
+KOOPA_SYSDIR="${KOOPA_BASEDIR}/system"
+KOOPA_SYSTEM="$( python -mplatform )"
+
+CMD="$1"
+
+if [[ "$CMD" == "activate" ]]; then
+    source "${KOOPA_SYSDIR}/activate.sh"
+elif [[ "$CMD" == "info" ]]; then
+    source "${KOOPA_SYSDIR}/info.sh"
+elif [[ "$CMD" == "list" ]]; then
+    source "${KOOPA_SYSDIR}/list.sh"
+else
+    echo "koopa args: activate, info, list"
+    exit 1
+fi
+
+unset -v CMD

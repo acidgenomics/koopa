@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ $HPC_SCHEDULER == "slurm" ]]; then
+    scancel -u "$USER"
+elif [[ $HPC_SCHEDULER == "lsf" ]]; then
+    bkill 0
+fi
