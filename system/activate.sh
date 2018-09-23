@@ -26,6 +26,6 @@ if [[ "$-" =~ "i" ]]; then
         source "$file"
     done
     unset -v file where
+    # Show the info box when activating on an interactive login shell.
+    koopa info
 fi
-
-koopa info
