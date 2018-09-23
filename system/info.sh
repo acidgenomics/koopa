@@ -20,8 +20,8 @@ array+=("System: $KOOPA_SYSTEM")
 
 if [[ -n "$HPC_SCHEDULER" ]]; then
     array+=("HPC scheduler: ${HPC_SCHEDULER}")
-    array+=("Default partition: ${HPC_PARTITION_DEFAULT}")
-    array+=("Interactive partition: ${HPC_PARTITION_INTERACTIVE}")
+    array+=("  - Default partition: ${HPC_PARTITION_DEFAULT}")
+    array+=("  - Interactive partition: ${HPC_PARTITION_INTERACTIVE}")
 fi
 
 aspera="$( command -v asperaconnect 2>/dev/null )"
@@ -42,35 +42,17 @@ if [[ -f "${conda}" ]]; then
 fi
 unset -v conda
 
-r="$( command -v R 2>/dev/null )"
-if [[ -f "$r" ]]; then
-    array+=("R: ${r}")
-fi
-unset -v r
-
-python="$( command -v python 2>/dev/null )"
-if [[ -f "${python}" ]]; then
-    array+=("Python: ${python}")
-fi
-unset -v python
-
-perl="$( command -v perl 2>/dev/null )"
-if [[ -f "$perl" ]]; then
-    array+=("Perl: ${perl}")
-fi
-unset -v perl
-
-ruby="$( command -v ruby 2>/dev/null )"
-if [[ -f "$ruby" ]]; then
-    array+=("Ruby: ${ruby}")
-fi
-unset -v ruby
-
 git="$( command -v git 2>/dev/null )"
 if [[ -f "$git" ]]; then
     array+=("Git: ${git}")
 fi
 unset -v git
+
+gpg="$( command -v gpg 2>/dev/null )"
+if [[ -f "$gpg" ]]; then
+    array+=("GPG: ${gpg}")
+fi
+unset -v gpg
 
 openssl="$( command -v openssl 2>/dev/null )"
 if [[ -f "$openssl" ]]; then
@@ -78,11 +60,29 @@ if [[ -f "$openssl" ]]; then
 fi
 unset -v openssl
 
-gpg="$( command -v gpg 2>/dev/null )"
-if [[ -f "$gpg" ]]; then
-    array+=("GPG: ${gpg}")
+perl="$( command -v perl 2>/dev/null )"
+if [[ -f "$perl" ]]; then
+    array+=("Perl: ${perl}")
 fi
-unset -v gpg
+unset -v perl
+
+python="$( command -v python 2>/dev/null )"
+if [[ -f "${python}" ]]; then
+    array+=("Python: ${python}")
+fi
+unset -v python
+
+r="$( command -v R 2>/dev/null )"
+if [[ -f "$r" ]]; then
+    array+=("R: ${r}")
+fi
+unset -v r
+
+ruby="$( command -v ruby 2>/dev/null )"
+if [[ -f "$ruby" ]]; then
+    array+=("Ruby: ${ruby}")
+fi
+unset -v ruby
 
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
