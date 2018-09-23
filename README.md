@@ -37,7 +37,7 @@ To launch an interactive session, simply run the `interactive` script. All argum
 interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
 ```
 
-For example, here's how to start an interactive session on an HPC supporting the [slurm][] scheduler, which will run for 6 hours using 2 cores and 16 GB of RAM total (i.e. 8 GB per core):
+For example, here's how to start an interactive session on an HPC using the [slurm][] scheduler, which will run for 6 hours using 2 cores and 16 GB of RAM total (i.e. 8 GB per core).
 
 ```bash
 interactive --cores=2 --mem=16 --time=0-06:00
