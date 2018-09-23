@@ -8,6 +8,9 @@
 # Padded strings in bash:
 # https://stackoverflow.com/questions/4409399
 
+# Check if program exists:
+# https://stackoverflow.com/questions/592620
+
 # Don't redisplay for HPC interactive session.
 if [[ -n "$KOOPA_INTERACTIVE_JOB" ]]; then
     exit 0
@@ -20,71 +23,72 @@ array+=("https://github.com/steinbaugh/koopa")
 # Alternatively, can use `$( uname -mnrs )`.
 array+=("System: $KOOPA_SYSTEM")
 
-aspera="$(which asperaconnect)"
+aspera="$( command -v asperaconnect 2>/dev/null )"
 if [[ -f "$aspera" ]]; then
     array+=("Aspera: ${aspera}")
 fi
 unset -v aspera
 
-bcbio="$(which bcbio_nextgen.py)"
+bcbio="$( command -v bcbio_nextgen.py 2>/dev/null )"
 if [[ -f "$bcbio" ]]; then
     array+=("bcbio: ${bcbio}")
 fi
 unset -v bcbio
 
-conda="$(which conda)"
+conda="$( command -v conda 2>/dev/null )"
 if [[ -f "${conda}" ]]; then
     array+=("Conda: ${conda}")
 fi
 unset -v conda
 
-r="$(which R)"
+r="$( command -v R 2>/dev/null )"
 if [[ -f "$r" ]]; then
     array+=("R: ${r}")
 fi
 unset -v r
 
-python="$(which python)"
+python="$( command -v python 2>/dev/null )"
 if [[ -f "${python}" ]]; then
     array+=("Python: ${python}")
 fi
 unset -v python
 
-perl="$(which perl)"
+perl="$( command -v perl 2>/dev/null )"
 if [[ -f "$perl" ]]; then
     array+=("Perl: ${perl}")
 fi
 unset -v perl
 
-ruby="$(which ruby)"
+ruby="$( command -v ruby 2>/dev/null )"
 if [[ -f "$ruby" ]]; then
     array+=("Ruby: ${ruby}")
 fi
 unset -v ruby
 
-git="$(which git)"
+git="$( command -v git 2>/dev/null )"
 if [[ -f "$git" ]]; then
     array+=("Git: ${git}")
 fi
 unset -v git
 
-openssl="$(which openssl)"
+openssl="$( command -v openssl 2>/dev/null )"
 if [[ -f "$openssl" ]]; then
     array+=("OpenSSL: ${openssl}")
 fi
 unset -v openssl
 
-gpg="$(which gpg)"
+gpg="$( command -v gpg 2>/dev/null )"
 if [[ -f "$gpg" ]]; then
     array+=("GPG: ${gpg}")
 fi
 unset -v gpg
 
 # Using unicode box drawings here.
-barpad="$(printf "━%.0s" {1..70})"
+# Note that we're truncating lines inside the box to 68 characters.
+barpad="$( printf "━%.0s" {1..70} )"
 printf "\n  %s%s%s  \n"  "┏" "$barpad" "┓"
 for i in "${array[@]}"; do
-    printf "  ┃ %-68s ┃  \n"  "$i"
+    printf "  ┃ %-68s ┃  \n"  "${i::68}"
 done
 printf "  %s%s%s  \n\n"  "┗" "$barpad" "┛"
 
