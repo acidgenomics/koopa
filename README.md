@@ -5,7 +5,6 @@
 
 High-performance computing shell bootloader for bioinformatics.
 
-
 ## Installation
 
 Connect to your high-performance computing (HPC) cluster and clone our git repository.
@@ -22,13 +21,6 @@ Add these lines to your `.bashrc` file:
 source ~/koopa/bin/koopa activate
 ```
 
-To also load koopa on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:
-
-```bash
-ln -s ~/.bashrc ~/.bash_profile
-```
-
-
 ## Interactive session
 
 To launch an interactive session, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
@@ -44,6 +36,5 @@ interactive --cores=2 --mem=16 --time=0-06:00
 ```
 
 For more information on configuration, consult `interactive --help`.
-
 
 [slurm]: https://slurm.schedmd.com
