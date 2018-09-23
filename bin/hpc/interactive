@@ -59,7 +59,7 @@ done
 echo "Launching interactive session"
 echo "  - cores: ${cores}"
 echo "  - memory: ${mem} GB"
-echo "  - partition (queue): ${partition}"
+echo "  - partition: ${partition}"
 echo "  - time: ${time}"
 
 export HPC_INTERACTIVE_JOB=1
