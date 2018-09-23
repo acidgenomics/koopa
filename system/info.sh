@@ -23,6 +23,10 @@ array+=("https://github.com/steinbaugh/koopa")
 # Alternatively, can use `$( uname -mnrs )`.
 array+=("System: $KOOPA_SYSTEM")
 
+if [[ -n "$HPC_SCHEDULER" ]]; then
+    array+=("Scheduler: ${HPC_SCHEDULER}")
+fi
+
 aspera="$( command -v asperaconnect 2>/dev/null )"
 if [[ -f "$aspera" ]]; then
     array+=("Aspera: ${aspera}")
