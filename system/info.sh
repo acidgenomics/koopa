@@ -11,11 +11,6 @@
 # Check if program exists:
 # https://stackoverflow.com/questions/592620
 
-# Don't redisplay for HPC interactive session.
-if [[ -n "$KOOPA_INTERACTIVE_JOB" ]]; then
-    exit 0
-fi
-
 array=()
 array+=("koopa v${KOOPA_VERSION} (${KOOPA_DATE})")
 array+=("https://github.com/steinbaugh/koopa")
@@ -24,7 +19,9 @@ array+=("https://github.com/steinbaugh/koopa")
 array+=("System: $KOOPA_SYSTEM")
 
 if [[ -n "$HPC_SCHEDULER" ]]; then
-    array+=("HPC Scheduler: ${HPC_SCHEDULER}")
+    array+=("HPC scheduler: ${HPC_SCHEDULER}")
+    array+=("Default partition: ${HPC_PARTITION_DEFAULT}")
+    array+=("Interactive partition: ${HPC_PARTITION_INTERACTIVE}")
 fi
 
 aspera="$( command -v asperaconnect 2>/dev/null )"
