@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# Submit an interactive session.
+# 2018-09-23
+
+# Note: Harvard Odyssey uses "test" instead of "interactive".
+# TODO Add an X11 flag option.
+
+# Using more modern "getopt" instead of "getopts", which supports long options.
+# http://www.bahmanm.com/blogs/command-line-options-how-to-parse-in-bash-using-getopt
+
+# All arguments are optional for this script.
+cores=1
+mem=8
+# time
+if [[ "$HPC_SCHEDULER" == "slurm" ]]; then
+    time="0-06:00"
+elif [[ "$HPC_SCHEDULER" == "lsf" ]]; then
+    time="6:00"
+fi
+partition="interactive"
+
+help () {
+    echo "interactive [--{c}ores=${cores} --{m}em=${mem} --{t}ime=${time} --{p}artition=${partition}]" 1>&2
+}
+
+# Read the options.
+# Why do we need to set the name of the script with `-n` here?
+TEMP=$( getopt -o c::hm::p::t:: --long cores::,help,mem::,partition::,time:: -n "interactive" -- "$@" )
+eval set -- "$TEMP"
+
+# Extract options and their arguments into variables.
+while true; do
+    case "$1" in
+        -c|--cores)
+            case "$2" in
+                "") cores="$cores"; shift 2;;
+                *) cores="$2"; shift 2;;
+            esac;;
+        -h|--help) help; exit 1;;
+        -m|--mem)
+            case "$2" in
+                "") mem="$mem"; shift 2;;
+                *) mem="$2"; shift 2;;
+            esac;;
+        -p|--partition)
+            case "$2" in
+                "") partition="$partition"; shift 2;;
+                *) partition="$2"; shift 2;;
+            esac;;
+        -t|--time)
+            case "$2" in
+                "") time="$time"; shift 2;;
+                *) time="$2"; shift 2;;
+            esac;;
+        --) shift; break;;
+        \?) echo "Unknown option: $1" >&2; exit 1;;
+         :) echo "Missing argument for $1" >&2; exit 1;;
+         *) echo "Unimplemented option: $1" >&2; exit 1;;
+    esac
+done
+
+# Inform the user about the job.
+echo "Launching interactive session"
+echo "- cores: ${cores}"
+echo "- memory per core: ${mem} GB"
+echo "- partition (queue): ${partition}"
+echo "- time: ${time}"
+
+export KOOPA_INTERACTIVE_JOB=1
+
+if [[ $HPC_SCHEDULER == "slurm" ]]; then
+    # X11 requires `~/.ssh/config` on local machine.
+    srun --pty \
+        --partition="$partition" \
+        --cpus-per-task="$cores" \
+        --mem="${mem}"G \
+        --time="$time" \
+        --x11=first \
+        /bin/bash
+elif [[ $HPC_SCHEDULER == "lsf" ]]; then
+    mem_mb="$(( $mem * 1024 ))"
+    bsub -Is \
+        -q "$partition" \
+        -n "$cores" \
+        -W "$time" \
+        -R rhelp[mem="$mem_mb"] \
+        bash
+    unset -v mem_mb
+fi
+
+unset -v cores mem partition time
