@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+# Launch an interactive session.
+# 2018-09-22
+
+# Note: Harvard Odyssey uses "test" instead of "interactive".
+# TODO Add an X11 flag option.
+
+usage () {
+    echo "interactive [-{c}ores 1 -{m}em 8 -{q}ueue interactive -{t}ime 0-06:00]" 1>&2
+}
+
+# All arguments are optional.
+cores=1
+mem=8
+queue="interactive"
+# time
+if [[ "$HPC_SCHEDULER" == "slurm" ]]; then
+    time="0-06:00"
+elif [[ "$HPC_SCHEDULER" == "lsf" ]]; then
+    time="6:00"
+fi
+
+# Extract options and their arguments into variables.
+while getopts ":c:m:t:h" opt; do
+    case $opt in
+        c  ) cores=$OPTARG ;;
+        m  ) mem=$OPTARG ;;
+        p  ) queue=$OPTARG ;;
+        t  ) time=$OPTARG ;;
+        h  ) usage; exit ;;
+        \? ) echo "Unknown option: -$OPTARG" >&2; exit 1 ;;
+        :  ) echo "Missing option argument for -$OPTARG" >&2; exit 1 ;;
+        *  ) echo "Unimplemented option: -$OPTARG" >&2; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# Inform the user about the job.
+echo "Launching interactive session"
+echo "- cores: ${cores}"
+echo "- memory per core: ${mem} GB"
+echo "- queue (partition): ${queue}"
+echo "- time: ${time}"
+
+export KOOPA_INTERACTIVE_JOB=1
+
+if [[ $HPC_SCHEDULER == "slurm" ]]; then
+    # X11 requires `~/.ssh/config` on local machine.
+    srun --pty \
+        --partition="$queue" \
+        --cpus-per-task="$cores" \
+        --mem="${mem}"G \
+        --time="$time" \
+        --x11=first \
+        /bin/bash
+elif [[ $HPC_SCHEDULER == "lsf" ]]; then
+    mem_mb="$(($mem * 1024))"
+    bsub -Is -W "$time" \
+        -q "$queue" \
+        -n "$cores" \
+        -R rusage[mem="$mem_mb"] \
+        bash
+    unset -v mem_mb
+fi
+
+unset -v cores mem queue time

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Set up python virtual environment.
+# 2018-09-22
+
+which python
+which virtualenv
+
+virtualenv python --system-site-packages

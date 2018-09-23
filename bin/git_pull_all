@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Pull all local git repositories.
+# 2018-09-22
+
+wd=$(pwd)
+git_dir="${HOME}/git"
+
+# Using `-L` flag here in case git dir is a symlink.
+for repo in $(find -L "$git_dir" -type d -name ".git"); do
+    repo=$(dirname "$repo")
+    cd "$repo"
+    pwd
+    git pull --all
+    git status
+done
+
+cd $wd
