@@ -7,17 +7,10 @@
 # Alternatively can use `$(uname -s)`
 # solaris, bsd are not supported.
 case "$OSTYPE" in
-    darwin* ) KOOPA_OSNAME="macOS" ;; 
-     linux* ) KOOPA_OSNAME="Linux" ;;
-          * ) echo "Unsupported system: ${OSTYPE}"; exit 1 ;;
+    darwin* ) os="macOS";; 
+     linux* ) os="Linux";;
+          * ) echo "Unsupported system: ${OSTYPE}"; exit 1;;
 esac
-
-# Python is required.
-if [[ -z "$( which python )" ]]; then
-    echo "Failed to detect python"
-    exit 1
-fi
-export KOOPA_SYSTEM="$( python -mplatform )"
 
 # Load non-interactive shell scripts.
 where="${KOOPA_SYSDIR}/activate/non-interactive"
