@@ -3,9 +3,9 @@
 
 # Slurm and LSF are supported.
 if [[ ! -z "$SLURM_CONF" ]] || [[ ! -z "$SQUEUE_USER" ]]; then
-    HPC_SCHEDULER="slurm"
+    export HPC_SCHEDULER="Slurm"
 elif [[ ! -z "$LSF_ENVDIR" ]]; then
-    HPC_SCHEDULER="lsf"
+    export HPC_SCHEDULER="LSF"
 else
     return 0
 fi
@@ -31,12 +31,12 @@ if [[ -z "$HPC_X11_FORWARDING" ]]; then
     export HPC_X11_FORWARDING=1
 fi
 
-if [[ "$HPC_SCHEDULER" == "slurm" ]]; then
+if [[ "$HPC_SCHEDULER" == "Slurm" ]]; then
     alias j="squeue -u $USER"
     if [[ -z "$HPC_TIME" ]]; then
         export HPC_TIME="0-06:00"
     fi
-elif [[ "$HPC_SCHEDULER" == "lsf" ]]; then
+elif [[ "$HPC_SCHEDULER" == "LSF" ]]; then
     alias j="bjobs"
     if [[ -z "$HPC_TIME" ]]; then
         export HPC_TIME="6:00"
