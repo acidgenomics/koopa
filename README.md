@@ -3,11 +3,13 @@
 [![Build Status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
-High-performance computing shell bootloader for bioinformatics.
+Shell bootloader for bioinformatics.
 
 ## Installation
 
-Connect to your high-performance computing (HPC) cluster and clone our git repository.
+Bash shell running on either Linux or macOS is currently supported.
+
+First, clone the repository:
 
 ```bash
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
