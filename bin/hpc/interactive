@@ -64,7 +64,7 @@ echo "- time: ${time}"
 
 export HPC_INTERACTIVE_JOB=1
 
-if [[ $HPC_SCHEDULER == "slurm" ]]; then
+if [[ $HPC_SCHEDULER == "Slurm" ]]; then
     # X11 requires `~/.ssh/config` on local machine.
     srun --pty \
         --cpus-per-task="$cores" \
@@ -73,7 +73,7 @@ if [[ $HPC_SCHEDULER == "slurm" ]]; then
         --time="$time" \
         --x11=first \
         /bin/bash
-elif [[ $HPC_SCHEDULER == "lsf" ]]; then
+elif [[ $HPC_SCHEDULER == "LSF" ]]; then
     mem_mb="$(( $mem * 1024 ))"
     bsub -Is \
         -n "$cores" \
