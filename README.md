@@ -27,7 +27,7 @@ source ~/koopa/bin/koopa activate
 
 Koopa currently supports [Slurm][] and [IBM Platform LSF][LSF] workload managers.
 
-Since workload managers can spawn non-interactive login shells for new jobs, we recommend additionally symlinking `.bash_profile` to `.bashrc`. For non-interactive login shells, koopa doesn't attempt to print any messages, so the shell remains clean.
+Since workload managers can spawn non-interactive login shells for new jobs, we recommend additionally symlinking `.bashrc` to `.bash_profile`. For non-interactive login shells, koopa doesn't attempt to print any messages, so the shell remains clean.
 
 To launch an interactive session on an HPC cluster, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
 
