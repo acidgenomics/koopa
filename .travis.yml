@@ -1,5 +1,7 @@
 language: bash
 before_script:
-    - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
+  - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 script:
-    - bash bin/koopa
+  - bash bin/koopa activate
+  - bash bin/koopa info
+  - bash bin/koopa list
