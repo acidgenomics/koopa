@@ -2,7 +2,7 @@
 alias e="exit"
 
 # Submit interactive queue.
-alias i="submit_interactive"
+alias i="interactive"
 
 # Listing files.
 alias la="ls -a"
