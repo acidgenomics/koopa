@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 # Upgrade koopa installation.
-# 2018-09-22
+# 2018-09-23
+
+KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"
+KOOPA_BASEDIR="$( dirname "$KOOPA_BINDIR" )"
 
 wd=$(pwd)
 cd "$KOOPA_BASEDIR"
