@@ -15,7 +15,7 @@ First, clone the repository:
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
 ```
 
-Add these lines to your `.bashrc` file:
+Add these lines to your `.bash_profile` file:
 
 ```bash
 # koopa shell
