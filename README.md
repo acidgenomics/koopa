@@ -7,43 +7,45 @@ Shell bootloader for bioinformatics.
 
 ## Installation
 
-Linux and macOS are currently supported. Koopa also integrates with schedulers in a high-performance computing (HPC) environment, including [slurm][] and [LSF][], if they are available.
+Bash shell running on either Linux or macOS is currently supported.
 
-First, clone our git repository:
+First, clone the repository:
 
 ```bash
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
 ```
 
-Then add these lines to your `.bashrc` file:
+Second, add these lines to `~/.bash_profile`:
 
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-if [[ -n "$PS1" ]] && [[ -f ~/koopa/koopa.sh ]]; then
-    . ~/koopa/koopa.sh
-fi
+source ~/koopa/bin/koopa activate
 ```
 
-To also load koopa on a login node, we recommend symlinking your `.bashrc` file to `.bash_profile`:
+Koopa should now activate at login. To obtain information on the current working enviroment, simply run `koopa info`.
+
+## High-performance computing (HPC) environment
+
+Koopa currently supports [Slurm][] and [IBM Platform LSF][LSF] workload managers.
+
+Since workload managers can spawn non-interactive login shells for new jobs, we recommend additionally symlinking `~/.bashrc` to `~/.bash_profile`. For non-interactive login shells, koopa doesn't attempt to print any messages, so the shell remains clean.
+
+### Interactive jobs
+
+To launch an interactive job on an HPC cluster, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
 
 ```bash
-ln -s ~/.bashrc ~/.bash_profile
+interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
 ```
 
-## Interactive session
-
-To launch an interactive session, simply run:
+For example, here's how to start an interactive job on an HPC running [Slurm][], which will run for 6 hours using 2 cores and 16 GB of RAM total (i.e. 8 GB per core).
 
 ```bash
-koopa interactive -c <cores> -m <memory> -t <time>
+interactive --cores=2 --mem=16 --time=0-06:00
 ```
 
-For example, here's how to start an interactive session for 6 hours using 2 cores and 8 GB of RAM per core, on an HPC using the [slurm] scheduler:
+For more information on supported arguments, consult `interactive --help`.
 
-```bash
-koopa interactive -c 2 -m 8 -t 0-06:00
-```
-
-[slurm]: https://slurm.schedmd.com
 [LSF]: https://www.ibm.com/support/knowledgecenter/en/SSETD4/product_welcome_platform_lsf.html
+[Slurm]: https://slurm.schedmd.com

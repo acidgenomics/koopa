@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+brew cleanup -s
+brew cask cleanup
+brew prune
