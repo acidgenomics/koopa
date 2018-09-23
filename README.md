@@ -31,17 +31,19 @@ ln -s ~/.bashrc ~/.bash_profile
 
 ## Interactive session
 
-To launch an interactive session, simply run:
+To launch an interactive session, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
 
 ```bash
-koopa interactive -c <cores> -m <memory> -t <time>
+interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
 ```
 
-For example, here's how to start an interactive session for 6 hours using 2 cores and 8 GB of RAM per core, on an HPC using the [slurm] scheduler:
+For example, here's how to start an interactive session on an HPC supporting the [slurm][] scheduler, which will run for 6 hours using 2 cores and 16 GB of RAM total (i.e. 8 GB per core):
 
 ```bash
-koopa interactive -c 2 -m 8 -t 0-06:00
+koopa interactive --cores=2 --mem=16 --time=0-06:00
 ```
+
+For more information on configuration, consult `interactive --help`.
 
 
 [slurm]: https://slurm.schedmd.com
