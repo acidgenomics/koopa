@@ -24,7 +24,7 @@ array+=("https://github.com/steinbaugh/koopa")
 array+=("System: $KOOPA_SYSTEM")
 
 if [[ -n "$HPC_SCHEDULER" ]]; then
-    array+=("Scheduler: ${HPC_SCHEDULER}")
+    array+=("HPC Scheduler: ${HPC_SCHEDULER}")
 fi
 
 aspera="$( command -v asperaconnect 2>/dev/null )"
