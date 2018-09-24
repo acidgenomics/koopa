@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
 
-# FASTQ dump from Sequence Read Archive (SRA).
+# FASTQ dump from Sequence Read Archive (SRA) accession list.
 # 2018-09-22
+
+# TODO Need to allow the user to pass arguments to fastq-dump here.
+# Consider using --`split-3` instead of `--split-files` by default.
 
 # This script requires sra-tools.
 # https://github.com/ncbi/sra-tools
-command -v fastq-dump >/dev/null 2>&1 || {
-    echo >&2 "fastq-dump missing"
-    exit 1
-}
+command -v fastq-dump >/dev/null 2>&1 || { echo >&2 "fastq-dump missing"; exit 1; }
 
 filelist="SRR_Acc_List.txt"
-
 if [[ ! -f "$filelist" ]]; then
     echo "${filelist} does not exist"
     exit 1
@@ -24,7 +23,7 @@ fi
 while read id; do
     if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]; then
         echo "SRA Accession: ${id}"
-        fastq-dump --gzip --split-3 "${id}"
+        fastq-dump --gzip --split-files "${id}"
     fi
 done < "$filelist"
 unset -v filelist
