@@ -77,7 +77,7 @@ if [[ $HPC_SCHEDULER == "Slurm" ]]; then
         --mem="${mem}"G \
         --partition="$partition" \
         --time="$time" \
-        "$x11_flag" \
+        # "$x11_flag" \
         /bin/bash
 elif [[ $HPC_SCHEDULER == "LSF" ]]; then
     mem_mb="$(( $mem * 1024 ))"
