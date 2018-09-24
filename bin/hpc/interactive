@@ -66,12 +66,17 @@ export HPC_INTERACTIVE_JOB=1
 
 if [[ $HPC_SCHEDULER == "Slurm" ]]; then
     # X11 requires `~/.ssh/config` on local machine.
+    if [[ -n "$HPC_X11_FORWARDING" ]]; then
+        x11_flag="--x11=first"
+    else
+        x11_flag=""
+    fi
     srun --pty \
         --cpus-per-task="$cores" \
         --mem="${mem}"G \
         --partition="$partition" \
         --time="$time" \
-        --x11=first \
+        "$x11_flag" \
         /bin/bash
 elif [[ $HPC_SCHEDULER == "LSF" ]]; then
     mem_mb="$(( $mem * 1024 ))"
