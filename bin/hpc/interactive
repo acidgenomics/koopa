@@ -69,6 +69,7 @@ if [[ $HPC_SCHEDULER == "Slurm" ]]; then
     if [[ -n "$HPC_X11_FORWARDING" ]]; then
         x11_flag="--x11=first"
     else
+        echo "HELLO THERE SKIPPING X11"
         x11_flag=""
     fi
     srun --pty \
