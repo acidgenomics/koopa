@@ -72,12 +72,12 @@ if [[ $HPC_SCHEDULER == "Slurm" ]]; then
         echo "HELLO THERE SKIPPING X11"
         x11_flag=""
     fi
+    # "$x11_flag" \
     srun --pty \
         --cpus-per-task="$cores" \
         --mem="${mem}"G \
         --partition="$partition" \
         --time="$time" \
-        # "$x11_flag" \
         /bin/bash
 elif [[ $HPC_SCHEDULER == "LSF" ]]; then
     mem_mb="$(( $mem * 1024 ))"
