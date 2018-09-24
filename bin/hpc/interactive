@@ -70,10 +70,15 @@ if [[ $HPC_SCHEDULER == "Slurm" ]]; then
         x11_flag="--x11=first"
     else
         echo "HELLO THERE SKIPPING X11"
-        x11_flag=""
     fi
-    # "$x11_flag" \
-    srun --partition="$partition" --pty --cpus-per-task="$cores" --mem="${mem}"G --time="$time" /bin/bash
+    # "$x11_flag"
+    
+    echo "$cores"
+    echo "$mem"
+    echo "$partition"
+    echo "$time"
+    
+    srun --cpus-per-task="$cores" --mem="${mem}G" --partition="$partition" --pty --time="$time" /bin/bash
 elif [[ $HPC_SCHEDULER == "LSF" ]]; then
     mem_mb="$(( $mem * 1024 ))"
     bsub -Is -n "$cores" -q "$partition" -R rhelp[mem="$mem_mb"] -W "$time" bash
