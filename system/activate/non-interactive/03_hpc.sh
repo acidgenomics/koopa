@@ -57,7 +57,10 @@ if [[ -z "$HPC_MEMORY_GB" ]]; then
 fi
 
 if [[ -z "$HPC_X11_FORWARDING" ]]; then
-    export HPC_X11_FORWARDING=1
+    # X11 will set `$DISPLAY` by default.
+    if [[ -n "$DISPLAY" ]]; then
+        export HPC_X11_FORWARDING=1
+    fi
 fi
 
 if [[ "$HPC_SCHEDULER" == "Slurm" ]]; then
