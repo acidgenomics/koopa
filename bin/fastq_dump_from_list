@@ -6,6 +6,9 @@
 # TODO Need to allow the user to pass arguments to fastq-dump here.
 # Consider using --`split-3` instead of `--split-files` by default.
 
+# 10X Genomics Cell Ranger data
+# https://kb.10xgenomics.com/hc/en-us/articles/115003802691
+
 # This script requires sra-tools.
 # https://github.com/ncbi/sra-tools
 command -v fastq-dump >/dev/null 2>&1 || { echo >&2 "fastq-dump missing"; exit 1; }
