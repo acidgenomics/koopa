@@ -73,20 +73,10 @@ if [[ $HPC_SCHEDULER == "Slurm" ]]; then
         x11_flag=""
     fi
     # "$x11_flag" \
-    srun --pty \
-        --cpus-per-task="$cores" \
-        --mem="${mem}"G \
-        --partition="$partition" \
-        --time="$time" \
-        /bin/bash
+    srun --partition "$partition" --pty --cpus-per-task "$cores" --mem "${mem}"G --time "$time" /bin/bash
 elif [[ $HPC_SCHEDULER == "LSF" ]]; then
     mem_mb="$(( $mem * 1024 ))"
-    bsub -Is \
-        -n "$cores" \
-        -q "$partition" \
-        -R rhelp[mem="$mem_mb"] \
-        -W "$time" \
-        bash
+    bsub -Is -n "$cores" -q "$partition" -R rhelp[mem="$mem_mb"] -W "$time" bash
     unset -v mem_mb
 fi
 
