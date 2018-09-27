@@ -14,7 +14,7 @@ details:
   - analysis: RNA-seq
     genome_build: hg38
     algorithm:
-      # Consider using `hisat2` for GRCh38/hg38
+      # Consider using `hisat2` instead GRCh38/hg38.
       aligner: star
       expression_caller: salmon
 upload:
