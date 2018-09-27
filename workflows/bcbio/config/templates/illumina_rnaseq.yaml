@@ -1,10 +1,11 @@
 # Template for RNA-seq using Illumina prepared samples
+# Michael Steinbaugh
 #
 # Homo sapiens
 # YYYY-MM-DD
 #
-# NOTE: genome_build is specific to bcbio install
-# Run `bcbio_setup_genome.py` for list of genome builds
+# NOTE: genome_build is specific to bcbio install.
+# Run `bcbio_setup_genome.py` for list of genome builds.
 #
 # More template examples:
 # https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
