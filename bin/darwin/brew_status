@@ -12,9 +12,9 @@ brew doctor
 echo "versions ===="
 brew list --versions
 
+echo "missing ===="
+brew missing
+
 echo "outdated ===="
 brew outdated
 brew cask outdated
-
-echo "missing ===="
-brew missing
