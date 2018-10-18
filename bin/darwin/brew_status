@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+echo "doctor ===="
+brew doctor
+
+echo ""
+
 echo "leaves ===="
 brew leaves
 
@@ -7,11 +12,6 @@ echo ""
 
 echo "dependency tree ===="
 brew deps --installed --tree
-
-echo ""
-
-echo "doctor ===="
-brew doctor
 
 echo ""
 
