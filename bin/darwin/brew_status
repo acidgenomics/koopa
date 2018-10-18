@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 
-echo "Homebrew leaves"
+echo "leaves ===="
 brew leaves
 
-echo "Homebrew versions"
-brew list --versions
-
-echo "Homebrew dependencies"
+echo "dependency tree ===="
 brew deps --installed --tree
 
+echo "Homebrew doctor ===="
+brew doctor
+
+echo "versions ===="
+brew list --versions
+
+echo "outdated ===="
 brew outdated
 brew cask outdated
-brew missing
 
-echo "Homebrew doctor"
-brew doctor
+echo "missing ===="
+brew missing
