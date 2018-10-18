@@ -1,19 +1,31 @@
 #!/usr/bin/env bash
 
+echo ""
+
 echo "leaves ===="
 brew leaves
+
+echo ""
 
 echo "dependency tree ===="
 brew deps --installed --tree
 
+echo ""
+
 echo "doctor ===="
 brew doctor
+
+echo ""
 
 echo "versions ===="
 brew list --versions
 
+echo ""
+
 echo "missing ===="
 brew missing
+
+echo ""
 
 echo "outdated ===="
 brew outdated
