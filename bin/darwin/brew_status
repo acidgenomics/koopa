@@ -6,7 +6,7 @@ brew leaves
 echo "dependency tree ===="
 brew deps --installed --tree
 
-echo "Homebrew doctor ===="
+echo "doctor ===="
 brew doctor
 
 echo "versions ===="
