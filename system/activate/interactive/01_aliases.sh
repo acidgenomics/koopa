@@ -18,7 +18,7 @@ alias emacs="emacs --no-window-system"
 # --no-restore
 # --no-save
 # --vanilla
-alias R="R --no-restore --no-save"
+# alias R="R --no-restore --no-save"
 
 # Fake realpath support, if necessary.
 if [[ -z $( command -v realpath 2>/dev/null ) ]]; then
