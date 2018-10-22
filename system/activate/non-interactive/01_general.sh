@@ -22,17 +22,16 @@ export TODAY=$(date +%Y-%m-%d)
 
 # Genome versions ==============================================================
 # Ensembl
-# Match latest release supported in Bioconductor ensembldb
-export ENSEMBL_RELEASE="92"
+export ENSEMBL_RELEASE="94"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
 # Gencode
-export GENCODE_RELEASE="28"
+export GENCODE_RELEASE="29"
 
 # FlyBase
-export FLYBASE_RELEASE_DATE="FB2018_03"
-export FLYBASE_RELEASE_VERSION="r6.22"
+export FLYBASE_RELEASE_DATE="FB2018_05"
+export FLYBASE_RELEASE_VERSION="r6.24"
 export FLYBASE_RELEASE_URL="ftp://ftp.flybase.net/releases/${FLYBASE_RELEASE_DATE}/dmel_${FLYBASE_RELEASE_VERSION}"
 
 # WormBase
-export WORMBASE_RELEASE_VERSION="WS265"
+export WORMBASE_RELEASE_VERSION="WS266"
