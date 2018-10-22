@@ -13,7 +13,7 @@ case "$OSTYPE" in
 esac
 
 # Load non-interactive shell scripts.
-where="${KOOPA_SYSDIR}/activate/non-interactive"
+where="${KOOPA_SYS_DIR}/activate/non-interactive"
 for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort); do
     source "$file"
 done
@@ -21,7 +21,7 @@ unset -v file where
 
 # Load interactive shell scripts.
 if [[ "$-" =~ "i" ]]; then
-    where="${KOOPA_SYSDIR}/activate/interactive"
+    where="${KOOPA_SYS_DIR}/activate/interactive"
     for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort); do
         source "$file"
     done
