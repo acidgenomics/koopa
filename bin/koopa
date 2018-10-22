@@ -15,21 +15,23 @@ if [[ -z "$( command -v python 2>/dev/null )" ]]; then
     exit 1
 fi
 
-KOOPA_VERSION="0.2.0"
-KOOPA_DATE="2018-09-23"
-KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"
-KOOPA_BASEDIR="$( dirname "$KOOPA_BINDIR" )"
-KOOPA_SYSDIR="${KOOPA_BASEDIR}/system"
+KOOPA_VERSION="0.2.1"
+KOOPA_DATE="2018-10-22"
+
+KOOPA_EXE="${BASH_SOURCE[0]}"
+KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
+KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
+KOOPA_SYS_DIR="${KOOPA_BASE_DIR}/system"
 KOOPA_SYSTEM="$( python -mplatform )"
 
 CMD="$1"
 
 if [[ "$CMD" == "activate" ]]; then
-    source "${KOOPA_SYSDIR}/activate.sh"
+    source "${KOOPA_SYS_DIR}/activate.sh"
 elif [[ "$CMD" == "info" ]]; then
-    source "${KOOPA_SYSDIR}/info.sh"
+    source "${KOOPA_SYS_DIR}/info.sh"
 elif [[ "$CMD" == "list" ]]; then
-    source "${KOOPA_SYSDIR}/list.sh"
+    source "${KOOPA_SYS_DIR}/list.sh"
 else
     echo "koopa args: activate, info, list"
     exit 1
