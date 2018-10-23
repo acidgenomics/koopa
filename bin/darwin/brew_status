@@ -5,6 +5,11 @@ brew doctor
 
 echo ""
 
+echo "linkage ===="
+brew linkage
+
+echo ""
+
 echo "leaves ===="
 brew leaves
 
@@ -28,3 +33,8 @@ echo ""
 echo "outdated ===="
 brew outdated
 brew cask outdated
+
+echo ""
+
+echo "info ===="
+brew info
