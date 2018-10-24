@@ -17,19 +17,18 @@ if   [[ $HMS_CLUSTER == "o2" ]] && \
 then
     export HPC_NAME="Harvard HMS O2"
     # https://wiki.rc.hms.harvard.edu/display/O2/Using+Slurm+Basic
+    
     # Automatically export bcbio into PATH, if necessary.
-    if [[ ! -f "$BCBIO_EXE" ]]; then
-        # export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
-    fi
+    # export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
 elif [[ $HOSTNAME =~ ".rc.fas.harvard.edu" ]] && \
      [[ -d /n/regal/ ]]
 then
     export HPC_NAME="Harvard FAS Odyssey"
     # https://www.rc.fas.harvard.edu/resources/running-jobs/
+    
     # Automatically export bcbio into PATH, if necessary.
-    if [[ ! -f "$BCBIO_EXE" ]]; then
-        # export BCBIO_EXE="/n/regal/hsph_bioinfo/bcbio_nextgen/bin/bcbio_nextgen.py"
-    fi
+    # export BCBIO_EXE="/n/regal/hsph_bioinfo/bcbio_nextgen/bin/bcbio_nextgen.py"
+    
     # Change the default partitions, if necessary.
     if [[ -z "$HPC_PARTITION_DEFAULT" ]]; then
         export HPC_PARTITION_DEFAULT="shared"
