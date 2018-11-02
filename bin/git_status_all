@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Get the status of all local git repositories.
+# 2018-11-02
+
+wd=$(pwd)
+git_dir="${HOME}/git"
+
+# Using `-L` flag here in case git dir is a symlink.
+for repo in $(find -L "$git_dir" -type d -name ".git"); do
+    repo=$(dirname "$repo")
+    cd "$repo"
+    pwd
+    git status
+done
+
+cd $wd
