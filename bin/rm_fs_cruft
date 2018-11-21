@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Remove file system cruft.
 # 2018-09-22
