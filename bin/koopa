@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
 # koopa shell bootloader
 # (c) 2018 Michael Steinbaugh
