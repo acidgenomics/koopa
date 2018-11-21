@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Rename ".fq" to ".fastq"
 # 2018-09-22

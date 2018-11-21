@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Get the status of all local git repositories.
 # 2018-11-02

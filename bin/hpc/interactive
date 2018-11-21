@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Submit an interactive session.
 # 2018-09-23

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Convert SAM file to BAM file.
 # 2018-09-22
