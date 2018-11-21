@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # koopa shell bootloader
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
-# Make bash scripts stricter by default.
-# https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
-# http://redsymbol.net/articles/unofficial-bash-strict-mode/
-# set -Eeuxo pipefail
+# Here's how to properly check if a variable is set in Bash.
+# https://stackoverflow.com/a/13864829
 
 # Don't reload for HPC interactive job.
-if [[ -n "$HPC_INTERACTIVE_JOB" ]]; then
+if [[ -n ${HPC_INTERACTIVE_JOB+x} ]]; then
     exit 0
 fi
 
@@ -21,7 +20,7 @@ if [[ -z "$( command -v python 2>/dev/null )" ]]; then
 fi
 
 KOOPA_VERSION="0.2.1"
-KOOPA_DATE="2018-11-18"
+KOOPA_DATE="2018-11-21"
 
 KOOPA_EXE="${BASH_SOURCE[0]}"
 KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
 # Use latest OpenSSL stable release.
 # https://www.openssl.org/source/

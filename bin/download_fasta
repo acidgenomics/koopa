@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
 # Download FASTA file.
 # 2018-09-22

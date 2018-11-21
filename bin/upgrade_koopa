@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
 # Upgrade koopa installation.
 # 2018-10-22

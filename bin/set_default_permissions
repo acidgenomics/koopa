@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
 # Set default permissions.
 # 2018-09-22

@@ -16,7 +16,7 @@ fi
 export PATH="${KOOPA_BIN_DIR}:${PATH}"
 
 # Export HPC scheduler scripts.
-if [[ -n "$HPC_SCHEDULER" ]]; then
+if [[ -n ${HPC_SCHEDULER+x} ]]; then
     export PATH="${KOOPA_BIN_DIR}/hpc:${PATH}"
 fi
 
@@ -30,28 +30,38 @@ elif [[ "$KOOPA_SYSTEM" =~ "Ubuntu"* ]]; then
 fi
 
 # Aspera Connect ===============================================================
-if [[ -z "$ASPERACONNECT_EXE" ]]; then
+if [[ -z ${ASPERACONNECT_EXE+x} ]]; then
     aspera_exe="${HOME}/.aspera/connect/bin/asperaconnect"
     if [[ -f "$aspera_exe" ]]; then
         export ASPERACONNECT_EXE="$aspera_exe"
         unset -v aspera_exe
+    else
+        ASPERACONNECT_EXE=0
     fi
 fi
-if [[ -f "$ASPERACONNECT_EXE" ]]; then
+if [[ -f "ASPERACONNECT_EXE" ]]; then
     aspera_bin_dir="$( dirname "$ASPERACONNECT_EXE" )"
     export PATH="${aspera_bin_dir}:${PATH}"
     unset -v aspera_bin_dir
 fi
 
 # Conda ========================================================================
-if [[ -f "$CONDA_EXE" ]]; then
+if [[ -n ${CONDA_EXE+x} ]]; then
+    # Check that path is valid.
+    if [[ ! -f "$CONDA_EXE" ]]; then
+        printf "conda does not exist at:\n${CONDA_EXE}\n"
+    fi
     conda_bin_dir="$( dirname "$CONDA_EXE" )"
     source "${conda_bin_dir}/activate"
     unset -v conda_bin_dir
 fi
 
 # bcbio ========================================================================
-if [[ -f "$BCBIO_EXE" ]]; then
+if [[ -n ${BCBIO_EXE+x} ]]; then
+    # Check that path is valid.
+    if [[ ! -f "$BCBIO_EXE" ]]; then
+        printf "bcbio does not exist at:\n${BCBIO_EXE}\n"
+    fi
     bcbio_bin_dir="$( dirname "$BCBIO_EXE" )"
     export PATH="${bcbio_bin_dir}:${PATH}"
     unset -v PYTHONHOME PYTHONPATH
