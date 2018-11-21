@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Get the number of reads per FASTQ file.
 # 2018-09-22

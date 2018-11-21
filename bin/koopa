@@ -4,6 +4,11 @@
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
+# Make bash scripts stricter by default.
+# https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+# set -Eeuxo pipefail
+
 # Don't reload for HPC interactive job.
 if [[ -n "$HPC_INTERACTIVE_JOB" ]]; then
     exit 0
@@ -11,12 +16,12 @@ fi
 
 # Python is required.
 if [[ -z "$( command -v python 2>/dev/null )" ]]; then
-    echo "Python is required"
+    echo "Python is required."
     exit 1
 fi
 
 KOOPA_VERSION="0.2.1"
-KOOPA_DATE="2018-10-22"
+KOOPA_DATE="2018-11-18"
 
 KOOPA_EXE="${BASH_SOURCE[0]}"
 KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
