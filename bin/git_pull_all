@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
 # Pull all local git repositories.
 # 2018-09-22
