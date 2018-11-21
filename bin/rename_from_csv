@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
 # Rename files using a CSV file.
 # 2018-09-22

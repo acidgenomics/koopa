@@ -2,9 +2,9 @@
 # 2018-09-23
 
 # Slurm and LSF are supported.
-if [[ ! -z "$SLURM_CONF" ]] || [[ ! -z "$SQUEUE_USER" ]]; then
+if [[ -n ${SLURM_CONF+x} ]] || [[ -n ${SQUEUE_USER+x} ]]; then
     export HPC_SCHEDULER="Slurm"
-elif [[ ! -z "$LSF_ENVDIR" ]]; then
+elif [[ -n ${LSF_ENVDIR+x} ]]; then
     export HPC_SCHEDULER="LSF"
 else
     return 0

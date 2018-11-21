@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
 # inDrops sample barcode counts from i5 indexes.
 # https://iccb.med.harvard.edu/single-cell-core

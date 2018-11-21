@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
 # Install Miniconda
 # https://conda.io/miniconda.html
