@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Install TeX (BasicTeX)
 # https://www.ctan.org

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 if [[ $HPC_SCHEDULER == "slurm" ]]; then
     scancel -u "$USER"

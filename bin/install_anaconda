@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Install Anaconda
 # https://www.anaconda.com/download
