@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Set up python virtual environment.
 # 2018-09-23

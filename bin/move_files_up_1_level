@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Move files up 1 directory level.
 # 2018-09-22

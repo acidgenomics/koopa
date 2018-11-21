@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuxo pipefail
 
 # Extract FASTQs files inside a TAR file.
 # 2018-09-22
