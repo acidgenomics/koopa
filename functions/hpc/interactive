@@ -51,9 +51,9 @@ function interactive {
                     *) time="$2"; shift 2;;
                 esac;;
             --) shift; break;;
-            \?) echo "Unknown option: $1" >&2; exit 1;;
-             :) echo "Missing argument for $1" >&2; exit 1;;
-             *) echo "Unimplemented option: $1" >&2; exit 1;;
+            \?) echo "Unknown option: $1" >&2; return 1;;
+             :) echo "Missing argument for $1" >&2; return 1;;
+             *) echo "Unimplemented option: $1" >&2; return 1;;
         esac
     done
 
@@ -69,8 +69,8 @@ function interactive {
     if [[ $HPC_SCHEDULER == "Slurm" ]]; then
         # X11 requires `~/.ssh/config` on local machine.
         if [[ -z "$HPC_X11_FORWARDING" ]]; then
-            echo "X11 forwarding is required but not enabled"
-            exit 1
+            echo "X11 forwarding is required."
+            return 1
         fi
         srun --cpus-per-task="$cores" --mem="${mem}G" --partition="$partition" --pty --time="$time" --x11="first" /bin/bash
     elif [[ $HPC_SCHEDULER == "LSF" ]]; then
