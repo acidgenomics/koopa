@@ -1,4 +1,7 @@
+#!/usr/bin/env bash
+
 # Export PATH string.
+# 2018-11-24
 
 # General ======================================================================
 # Export local user binaries.
