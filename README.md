@@ -36,16 +36,16 @@ Since workload managers can spawn non-interactive login shells for new jobs, we 
 To launch an interactive job on an HPC cluster, simply run the `interactive` script. All arguments are optional, but generally we recommend setting the number of cores, memory, and time.
 
 ```bash
-interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
+koopa interactive --cores=[N] --mem=[GB] --time=[D-HH::MM]
 ```
 
 For example, here's how to start an interactive job on an HPC running [Slurm][], which will run for 6 hours using 2 cores and 16 GB of RAM total (i.e. 8 GB per core).
 
 ```bash
-interactive --cores=2 --mem=16 --time=0-06:00
+koopa interactive --cores=2 --mem=16 --time=0-06:00
 ```
 
-For more information on supported arguments, consult `interactive --help`.
+For more information on supported arguments, consult `koopa interactive --help`.
 
 [LSF]: https://www.ibm.com/support/knowledgecenter/en/SSETD4/product_welcome_platform_lsf.html
 [Slurm]: https://slurm.schedmd.com

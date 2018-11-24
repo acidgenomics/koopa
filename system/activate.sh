@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # Activate koopa in the current bash shell.
-# 2018-11-24
 
 # Check for supported operating system.
 # Alternatively can use `$(uname -s)`

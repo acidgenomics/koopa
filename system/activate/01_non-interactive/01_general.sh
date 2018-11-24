@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 # General file sources and exports.
 
 # Sources ======================================================================
