@@ -19,7 +19,7 @@ if [[ -z "$( command -v python 2>/dev/null )" ]]; then
 fi
 
 KOOPA_VERSION="0.2.1"
-KOOPA_DATE="2018-11-21"
+KOOPA_DATE="2018-11-24"
 
 KOOPA_EXE="${BASH_SOURCE[0]}"
 KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
