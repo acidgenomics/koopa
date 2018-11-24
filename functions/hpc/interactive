@@ -10,7 +10,7 @@ set -Eeuo pipefail
 # Using more modern "getopt" instead of "getopts", which supports long options.
 # http://www.bahmanm.com/blogs/command-line-options-how-to-parse-in-bash-using-getopt
 
-function interactive {
+function interactive () {
     # All arguments are optional for this function.
     cores="$HPC_CORES"
     mem="$HPC_MEMORY_GB"
