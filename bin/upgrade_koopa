@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Upgrade koopa installation.
-# 2018-09-23
+# 2018-10-22
 
-KOOPA_BINDIR="$( dirname "${BASH_SOURCE[0]}" )"
-KOOPA_BASEDIR="$( dirname "$KOOPA_BINDIR" )"
+KOOPA_BIN_DIR="$( dirname "${BASH_SOURCE[0]}" )"
+KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
 
 wd=$(pwd)
-cd "$KOOPA_BASEDIR"
+cd "$KOOPA_BASE_DIR"
 git pull
 cd "$wd"
 

@@ -9,9 +9,6 @@ alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -AFGlh"
 
-# Run emacs without window system.
-alias emacs="emacs --no-window-system"
-
 # Disable R prompt to save workspace.
 # --no-environ
 # --no-init

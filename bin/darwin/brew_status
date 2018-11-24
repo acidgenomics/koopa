@@ -1,17 +1,41 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-echo "Homebrew leaves"
+echo "doctor ===="
+brew doctor
+
+echo ""
+
+echo "linkage ===="
+brew linkage
+
+echo ""
+
+echo "leaves ===="
 brew leaves
 
-echo "Homebrew versions"
-brew list --versions
+echo ""
 
-echo "Homebrew dependencies"
+echo "dependency tree ===="
 brew deps --installed --tree
 
-brew outdated
-brew cask outdated
+echo ""
+
+echo "versions ===="
+brew list --versions
+
+echo ""
+
+echo "missing ===="
 brew missing
 
-echo "Homebrew doctor"
-brew doctor
+echo ""
+
+echo "outdated ===="
+brew outdated
+brew cask outdated
+
+echo ""
+
+echo "info ===="
+brew info
