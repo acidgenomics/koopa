@@ -34,7 +34,7 @@ function interactive {
                     "") cores="$cores"; shift 2;;
                     *) cores="$2"; shift 2;;
                 esac;;
-            -h|--help) help; exit 1;;
+            -h|--help) help; return 0;;
             -m|--mem)
                 case "$2" in
                     "") mem="$mem"; shift 2;;
