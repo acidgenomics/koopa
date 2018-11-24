@@ -1,7 +1,4 @@
-#!/usr/bin/env bash
-
 # Export PATH string.
-# 2018-11-24
 
 # General ======================================================================
 # Export local user binaries.
@@ -17,11 +14,6 @@ fi
 # koopa ========================================================================
 # Export general koopa scripts.
 export PATH="${KOOPA_BIN_DIR}:${PATH}"
-
-# Export HPC scheduler scripts.
-if [[ -n ${HPC_SCHEDULER+x} ]]; then
-    export PATH="${KOOPA_BIN_DIR}/hpc:${PATH}"
-fi
 
 # Export additional OS-specific scripts.
 if [[ "$KOOPA_SYSTEM" =~ "Darwin"* ]]; then

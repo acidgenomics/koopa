@@ -33,6 +33,8 @@ if [[ "$CMD" == "activate" ]]; then
     source "${KOOPA_SYS_DIR}/activate.sh"
 elif [[ "$CMD" == "info" ]]; then
     source "${KOOPA_SYS_DIR}/info.sh"
+elif [[ "$CMD" == "interactive" ]]; then
+    source "${KOOPA_SYS_DIR}/interactive.sh"
 elif [[ "$CMD" == "list" ]]; then
     source "${KOOPA_SYS_DIR}/list.sh"
 else
