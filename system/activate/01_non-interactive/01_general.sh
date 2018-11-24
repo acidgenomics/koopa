@@ -1,12 +1,18 @@
 # General file sources and exports.
 
+# Set Builtin ==================================================================
+# NOTE: Don't attempt to enable strict mode in login scripts.
+
+# Use vi mode instead of emacs by default.
+set -o vi
+
 # Sources ======================================================================
 # Global definitions.
-[[ -f /etc/bashrc ]] && . /etc/bashrc
+[[ -r /etc/bashrc ]] && . /etc/bashrc
 
 # Enable bash completion.
 # This will fail if `set -u` is enabled.
-[[ -f /usr/local/etc/bash_completion ]] && . /usr/local/etc/bash_completion
+[[ -r /usr/local/etc/bash_completion ]] && . /usr/local/etc/bash_completion
 
 # Exports ======================================================================
 # Ruby gems
@@ -60,9 +66,3 @@ export FLYBASE_RELEASE_URL="ftp://ftp.flybase.net/releases/${FLYBASE_RELEASE_DAT
 
 # WormBase
 export WORMBASE_RELEASE_VERSION="WS266"
-
-# Set Builtin ==================================================================
-# NOTE: Don't attempt to enable strict mode in login scripts.
-
-# Use vi mode instead of emacs by default.
-set -o vi
