@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
 # Activate koopa in the current bash shell.
-# 2018-09-22
+# 2018-11-24
 
 # Check for supported operating system.
 # Alternatively can use `$(uname -s)`
 # solaris, bsd are not supported.
 case "$OSTYPE" in
-    darwin* ) os="macOS";; 
+    darwin* ) os="macOS";;
      linux* ) os="Linux";;
           * ) echo "Unsupported system: ${OSTYPE}"; exit 1;;
 esac
 
-# Load non-interactive shell scripts.
-where="${KOOPA_SYS_DIR}/activate/non-interactive"
+# 1. Always load non-interactive shell scripts.
+where="${KOOPA_SYS_DIR}/activate/01_non-interactive"
 for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort); do
     source "$file"
 done
 unset -v file where
 
-# Load interactive shell scripts.
+# 2. If necessary, load interactive shell scripts.
 if [[ "$-" =~ "i" ]]; then
-    where="${KOOPA_SYS_DIR}/activate/interactive"
+    where="${KOOPA_SYS_DIR}/activate/02_interactive"
     for file in $(find "$where" -type f -name "*.sh" ! -name ".*" | sort); do
         source "$file"
     done
