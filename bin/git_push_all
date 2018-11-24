@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Pull all local git repositories.
-# 2018-09-22
+# Push all local repositories.
+# 2018-11-02
 
 wd=$(pwd)
 git_dir="${HOME}/git"
@@ -12,8 +12,7 @@ for repo in $(find -L "$git_dir" -type d -name ".git"); do
     repo=$(dirname "$repo")
     cd "$repo"
     pwd
-    git pull --all
-    git status
+    git push
 done
 
 cd $wd

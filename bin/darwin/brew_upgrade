@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Consider requiring admin account.
 # if [[ "$(whoami)" != "admin" ]]; then
@@ -8,8 +9,11 @@
 
 # Homebrew
 brew update
+
 echo "Upgrading Homebrew..."
-brew upgrade
+brew upgrade --force-bottle
+# brew list | xargs brew reinstall --force-bottle --cleanup
+
 echo "Upgrading Homebrew Casks..."
 brew cask outdated | xargs brew cask reinstall
 

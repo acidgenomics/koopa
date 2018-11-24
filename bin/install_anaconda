@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Install Anaconda
 # https://www.anaconda.com/download
@@ -19,7 +20,7 @@ curl -O "https://repo.anaconda.com/archive/${script}"
 cat << EOF
 koopa is able to load conda automatically.
 Don't allow conda to modify bashrc.
-Instead, export "CONDA_DIR" in bashrc to point to the conda "bin" directory.
+Instead, export "CONDA_EXE" in bashrc to point to the conda binary.
 This must be included prior to sourcing koopa.
 EOF
 
@@ -27,6 +28,6 @@ bash "$script"
 
 cat << EOF
 conda installed successfully.
-Export "CONDA_DIR" in bashrc and reload the shell.
+Export "CONDA_EXE" in bashrc and reload the shell.
 Use "which conda" to check the path.
 EOF
