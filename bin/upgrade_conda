@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Upgrade conda installation.
 # https://bioconda.github.io/#set-up-channels
@@ -13,5 +14,5 @@ conda config --add channels defaults
 conda config --add channels bioconda
 conda config --add channels conda-forge
 
-conda update -n base --channel=defaults conda
-conda update -n base --channel=defaults --all
+conda update --yes --name=base --channel=defaults conda
+conda update --yes --name=base --channel=defaults --all

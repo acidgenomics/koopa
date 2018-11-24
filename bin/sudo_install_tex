@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
 # Install TeX (BasicTeX)
 # https://www.ctan.org
@@ -26,36 +27,3 @@ command -v tlmgr >/dev/null 2>&1 || {
     echo >&2 "tlmgr missing"
     exit 1
 }
-
-# Now run the updater and install recommended packages.
-sudo tlmgr update --self
-packages=(collection-fontsrecommended  # priority
-          collection-latexrecommended  # priority
-          bera  # beramono
-          caption
-          changepage
-          csvsimple
-          enumitem
-          etoolbox
-          fancyhdr
-          footmisc
-          framed
-          geometry
-          hyperref
-          inconsolata
-          marginfix
-          mathtools
-          natbib
-          nowidow
-          parnotes
-          parskip
-          placeins
-          preprint  # authblk
-          sectsty
-          soul
-          titlesec
-          titling
-          xstring)
-for package in ${packages[@]}; do
-    sudo tlmgr install "$package"
-done

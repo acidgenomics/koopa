@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # koopa info box.
-# 2018-09-23
 
 # Can disable local message with `-n "$SSH_CLIENT"`.
 
