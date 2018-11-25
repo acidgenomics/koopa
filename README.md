@@ -7,12 +7,11 @@ Shell bootloader for bioinformatics.
 
 ## Requirements
 
+- Linux or macOS. Windows isn't supported.
 - [Bash][] 4 (`bash --version`)
 - [Python][] 3 (`python --version`)
 
 ## Installation
-
-Bash shell running on either Linux or macOS is currently supported.
 
 First, clone the repository:
 
