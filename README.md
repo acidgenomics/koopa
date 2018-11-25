@@ -27,7 +27,9 @@ Second, add these lines to `~/.bash_profile`:
 source ~/koopa/bin/koopa activate
 ```
 
-Koopa should now activate at login. To obtain information on the current working enviroment, run `koopa info`.
+Koopa should now activate at login.
+
+To obtain information about the working environment, run `koopa info`.
 
 Since workload managers (e.g. [Slurm][], [LSF][]) can spawn non-interactive login shells for new jobs, we recommend additionally symlinking `~/.bashrc` to `~/.bash_profile`. For non-interactive login shells, koopa doesn't attempt to print any messages, so the shell remains clean.
 
