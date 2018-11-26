@@ -1,13 +1,13 @@
 # Quicker exit.
 alias e="exit"
 
-# Submit interactive queue.
-alias i="interactive"
-
 # Listing files.
 alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -AFGlh"
+
+# Emacs. Use terminal mode by default instead of window system.
+alias emacs="emacs --no-window-system"
 
 # Disable R prompt to save workspace.
 # --no-environ
