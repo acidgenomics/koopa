@@ -1,7 +1,9 @@
 # General file sources and exports.
 
 # Set Builtin ==================================================================
-# NOTE: Don't attempt to enable strict mode in login scripts.
+# NOTE: Don't attempt to enable strict mode here for login scripts. Otherwise,
+# you can get locked out of a remote SSH server if an unbound variable is
+# detected.
 
 # Use vi mode instead of emacs by default.
 set -o vi
@@ -15,11 +17,13 @@ set -o vi
 [[ -r /usr/local/etc/bash_completion ]] && . /usr/local/etc/bash_completion
 
 # Exports ======================================================================
-# Ruby gems
+# Text editor. Alternatively can use "emacs" here (e.g. for spacemacs).
+export EDITOR="vim"
+
+# Ruby gems.
 export GEM_HOME="${HOME}/.gem"
 
-# GnuPGP
-# Enable passphrase prompting in terminal.
+# GnuPGP. Enable passphrase prompting in terminal.
 export GPG_TTY=$(tty)
 
 # Add the date/time to `history` command output.
@@ -31,10 +35,10 @@ export HISTTIMEFORMAT="%Y%m%d %T  "
 # https://github.com/Homebrew/brew/pull/4542/files
 export HOMEBREW_FORCE_BOTTLE="1"
 
-# R environmental variables
+# R environmental variables.
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 
-# rsync
+# rsync.
 # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
 # -z, --compress              compress file data during the transfer
 # -L, --copy-links            transform symlink into referent file/dir
@@ -52,17 +56,17 @@ export RSYNC_FLAGS_APFS="${RSYNC_FLAGS} --iconv=utf-8,utf-8-mac"
 export TODAY=$(date +%Y-%m-%d)
 
 # Genome versions ==============================================================
-# Ensembl
+# Ensembl.
 export ENSEMBL_RELEASE="94"
 export ENSEMBL_RELEASE_URL="ftp://ftp.ensembl.org/pub/release-${ENSEMBL_RELEASE}"
 
-# Gencode
+# Gencode.
 export GENCODE_RELEASE="29"
 
-# FlyBase
+# FlyBase.
 export FLYBASE_RELEASE_DATE="FB2018_05"
 export FLYBASE_RELEASE_VERSION="r6.24"
 export FLYBASE_RELEASE_URL="ftp://ftp.flybase.net/releases/${FLYBASE_RELEASE_DATE}/dmel_${FLYBASE_RELEASE_VERSION}"
 
-# WormBase
+# WormBase.
 export WORMBASE_RELEASE_VERSION="WS266"
