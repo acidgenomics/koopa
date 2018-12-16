@@ -7,36 +7,30 @@
 # Here's how to properly check if a variable is set in Bash.
 # https://stackoverflow.com/a/13864829
 
-# Don't reload for HPC interactive job.
-if [[ -n ${HPC_INTERACTIVE_JOB+x} ]]; then
-    exit 0
-fi
-
-# Python is required.
-if [[ -z "$( command -v python 2>/dev/null )" ]]; then
-    echo "Python is required."
-    exit 1
-fi
-
-KOOPA_VERSION="0.2.1"
-KOOPA_DATE="2018-11-24"
-
-KOOPA_EXE="${BASH_SOURCE[0]}"
-KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
-KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
-KOOPA_SYS_DIR="${KOOPA_BASE_DIR}/system"
-KOOPA_SYSTEM="$( python -mplatform )"
-
 CMD="$1"
 
+export KOOPA_VERSION="0.2.2"
+export KOOPA_DATE="2018-12-15"
+
+export KOOPA_EXE="${BASH_SOURCE[0]}"
+export KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
+export KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
+export KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
+export KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
+
+# Source our functions that don't get exported to PATH.
+# Do this first because the downstream code depends on these.
+for file in "${KOOPA_FUNCTIONS_DIR}/"*
+do
+    source "$file"
+done
+
 if [[ "$CMD" == "activate" ]]; then
-    source "${KOOPA_SYS_DIR}/activate.sh"
+    source "${KOOPA_SYSTEM_DIR}/activate.sh"
 elif [[ "$CMD" == "info" ]]; then
-    source "${KOOPA_SYS_DIR}/info.sh"
-elif [[ "$CMD" == "interactive" ]]; then
-    source "${KOOPA_SYS_DIR}/interactive.sh"
+    source "${KOOPA_SYSTEM_DIR}/info.sh"
 elif [[ "$CMD" == "list" ]]; then
-    source "${KOOPA_SYS_DIR}/list.sh"
+    source "${KOOPA_SYSTEM_DIR}/list.sh"
 else
     echo "koopa args: activate, info, list"
     exit 1
