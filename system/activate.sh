@@ -10,7 +10,7 @@
 
 # Don't re-activate for a subshell (i.e. an HPC interactive job).
 if [[ -n ${KOOPA_PLATFORM+x} ]]; then
-    exit 0
+    return 0
 fi
 
 
@@ -26,7 +26,7 @@ echo "$-" | grep -q "i" && export INTERACTIVE_BASH=1
 case "$OSTYPE" in
     darwin* ) os="MACOS";;
      linux* ) os="LINUX";;
-          * ) echo "Unsupported system: ${OSTYPE}"; exit 1;;
+          * ) echo "Unsupported system: ${OSTYPE}"; return 1;;
 esac
 
 
@@ -70,7 +70,7 @@ if [[ -z $BASH_VERSION ]]
 then
     echo 'Failed to detect bash version ($BASH_VERSION).'
     echo "Check your configuration."
-    exit 1
+    return 1
 elif [[ $BASH_VERSION < 4 ]]
 then
     echo "bash version: $BASH_VERSION"
@@ -92,7 +92,7 @@ then
     echo "   chsh -s /usr/local/bin/bash $USER"
     echo "5. Reload the shell and check bash version."
     echo '   echo $BASH_VERSION'
-    exit 1
+    return 1
 fi
 
 
@@ -102,7 +102,7 @@ fi
 if ! quiet_which python
 then
     echo "koopa requires python to be installed."
-    exit 1
+    return 1
 fi
 
 
