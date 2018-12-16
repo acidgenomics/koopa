@@ -4,8 +4,35 @@
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
-# Here's how to properly check if a variable is set in Bash.
-# https://stackoverflow.com/a/13864829
+if [[ -z $BASH_VERSION ]]
+then
+    echo "koopa is only compatible with bash."
+    echo 'Failed to detect bash version ($BASH_VERSION).'
+    echo "Check your configuration."
+    return 1
+elif [[ $BASH_VERSION < 4 ]]
+then
+    echo "bash version: $BASH_VERSION"
+    echo ""
+    echo "koopa requires bash >= v4 to be installed."
+    echo ""
+    echo "Running macOS?"
+    echo "Apple refuses to include a modern version due to the license."
+    echo ""
+    echo "Here's how to upgrade it using Homebrew:"
+    echo "1. Install Homebrew."
+    echo "   https://brew.sh/"
+    echo "2. Install bash."
+    echo "   brew install bash"
+    echo "3. Update list of acceptable shells."
+    echo "   Requires sudo."
+    echo "   Add /usr/local/bin/bash to /etc/shells."
+    echo "4. Update default shell."
+    echo "   chsh -s /usr/local/bin/bash $USER"
+    echo "5. Reload the shell and check bash version."
+    echo '   echo $BASH_VERSION'
+    return 1
+fi
 
 CMD="$1"
 
