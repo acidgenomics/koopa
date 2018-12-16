@@ -2,8 +2,17 @@ Coding in bash is a giant headache.
 Here are some useful tips.
 
 
-# PATH expansion matching.
-# https://stackoverflow.com/questions/1396066
+Here's how to properly check if a variable is set in Bash.
+https://stackoverflow.com/a/13864829
+
+
+Launch a clean shell over SSH.
+If you've hosed a remote bash_profile.
+ssh -t <user>@<url> /bin/sh
+
+
+PATH expansion matching.
+https://stackoverflow.com/questions/1396066
 
 
 Escape a single quote in a single-quoted string.

@@ -31,6 +31,11 @@ esac
 
 
 
+# Load secrets.
+[ -f "${HOME}/.secrets" ] && source "${HOME}/.secrets"
+
+
+
 # Fix systems missing $USER.
 [ -z "$USER" ] && export USER="$(whoami)"
 
@@ -60,39 +65,6 @@ if [[ $HOSTNAME =~ ".rc.fas.harvard.edu" ]] && \
    [[ -d /n/regal/ ]]
 then
     export HARVARD_ODYSSEY=1
-fi
-
-
-
-# Check dependencies before proceeding.
-# bash >= 4.
-if [[ -z $BASH_VERSION ]]
-then
-    echo 'Failed to detect bash version ($BASH_VERSION).'
-    echo "Check your configuration."
-    return 1
-elif [[ $BASH_VERSION < 4 ]]
-then
-    echo "bash version: $BASH_VERSION"
-    echo ""
-    echo "koopa requires bash >= v4 to be installed."
-    echo ""
-    echo "Running macOS?"
-    echo "Apple refuses to include a modern version due to the license."
-    echo ""
-    echo "Here's how to upgrade it using Homebrew:"
-    echo "1. Install Homebrew."
-    echo "   https://brew.sh/"
-    echo "2. Install bash."
-    echo "   brew install bash"
-    echo "3. Update list of acceptable shells."
-    echo "   Requires sudo."
-    echo "   Add /usr/local/bin/bash to /etc/shells."
-    echo "4. Update default shell."
-    echo "   chsh -s /usr/local/bin/bash $USER"
-    echo "5. Reload the shell and check bash version."
-    echo '   echo $BASH_VERSION'
-    return 1
 fi
 
 
