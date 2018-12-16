@@ -8,6 +8,13 @@
 
 
 
+# Don't re-activate for HPC interactive job.
+if [[ -n ${HPC_INTERACTIVE_JOB+x} ]]; then
+    exit 0
+fi
+
+
+
 # Check if this is a login and/or interactive shell.
 [ "$0" = "-bash" ] && export LOGIN_BASH=1
 echo "$-" | grep -q "i" && export INTERACTIVE_BASH=1
@@ -54,15 +61,6 @@ if [[ $HOSTNAME =~ ".rc.fas.harvard.edu" ]] && \
 then
     export HARVARD_ODYSSEY=1
 fi
-
-
-
-# Source our functions that don't get exported to PATH.
-# Do this first because the downstream code depends on these.
-for file in "${KOOPA_FUNCTIONS_DIR}/"*
-do
-    source "$file"
-done
 
 
 
@@ -138,7 +136,8 @@ add_to_path_start "$KOOPA_BIN_DIR"
 
 # Export additional OS-specific binaries.
 # FIXME SIMPLIFY TO MACOS=1
-if [[ "$KOOPA_PLATFORM" =~ "Darwin"* ]]; then
+if [[ "$KOOPA_PLATFORM" =~ "Darwin"* ]]
+then
     # macOS
     add_to_path_start "${KOOPA_BIN_DIR}/macos"
 fi
@@ -146,16 +145,19 @@ fi
 
 
 # Include Aspera Connect binaries in PATH, if defined.
-if [[ -z ${ASPERACONNECT_EXE+x} ]]; then
+if [[ -z ${ASPERACONNECT_EXE+x} ]]
+then
     aspera_exe="${HOME}/.aspera/connect/bin/asperaconnect"
-    if [[ -f "$aspera_exe" ]]; then
+    if [[ -f "$aspera_exe" ]]
+    then
         export ASPERACONNECT_EXE="$aspera_exe"
         unset -v aspera_exe
     else
         ASPERACONNECT_EXE=0
     fi
 fi
-if [[ -f "ASPERACONNECT_EXE" ]]; then
+if [[ -f "ASPERACONNECT_EXE" ]]
+then
     aspera_bin_dir="$( dirname "$ASPERACONNECT_EXE" )"
     export PATH="${aspera_bin_dir}:${PATH}"
     unset -v aspera_bin_dir
@@ -255,9 +257,11 @@ fi
 
 
 # Count CPUs for Make jobs.
-if [ $MACOS ]; then
+if [[ -n "$MACOS" ]]
+then
     export CPUCOUNT="$(sysctl -n hw.ncpu)"
-elif [ $LINUX ]; then
+elif [[ -n "$LINUX" ]]
+then
     export CPUCOUNT="$(getconf _NPROCESSORS_ONLN)"
 else
     export CPUCOUNT=1
