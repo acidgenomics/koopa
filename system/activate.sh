@@ -8,8 +8,8 @@
 
 
 
-# Don't re-activate for HPC interactive job.
-if [[ -n ${HPC_INTERACTIVE_JOB+x} ]]; then
+# Don't re-activate for a subshell (i.e. an HPC interactive job).
+if [[ -n ${KOOPA_PLATFORM+x} ]]; then
     exit 0
 fi
 
