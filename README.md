@@ -8,8 +8,8 @@ Shell bootloader for bioinformatics.
 ## Requirements
 
 - Linux or macOS. Windows isn't supported.
-- [Bash][] 4 (`bash --version`)
-- [Python][] 3 (`python --version`)
+- [Bash][] >= v4.
+- [Python][]. Either v2.7 or v3 should work.
 
 [Zsh][] support may be added in a future update. I'm looking into it.
 
