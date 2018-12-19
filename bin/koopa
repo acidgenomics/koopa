@@ -36,7 +36,7 @@ fi
 
 CMD="$1"
 
-export KOOPA_VERSION="0.2.2"
+export KOOPA_VERSION="0.2.3"
 export KOOPA_DATE="2018-12-19"
 
 export KOOPA_EXE="${BASH_SOURCE[0]}"
