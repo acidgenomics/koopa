@@ -96,10 +96,23 @@ Host *
 
 Automatic [PGP][] key support will be added in a future update.
 
+## Tools
+
+Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`/bin/`](https://github.com/steinbaugh/koopa/tree/master/bin) directory of the repo. Currently, this includes:
+
+- [Git][] version control for managing multiple repos cloned into `~/git`.
+- FASTQ management.
+- FASTA and GTF file downloads.
+- Conda installation (anaconda and miniconda).
+- TeX installation.
+
+A complete list of these exported scripts can be obtained with `koopa list`.
+
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
 [conda]: https://conda.io/
+[Git]: https://git-scm.com/
 [PGP]: https://www.openpgp.org/
 [Python]: https://www.python.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
