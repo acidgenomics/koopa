@@ -1,84 +1,75 @@
 #!/usr/bin/env bash
+# Show koopa installation information in a box.
 
-# koopa info box.
-
-# Can disable local message with `-n "$SSH_CLIENT"`.
-
-# Padded strings in bash:
-# https://stackoverflow.com/questions/4409399
-
-# Check if program exists:
-# https://stackoverflow.com/questions/592620
+# Require that koopa is activate and exported to PATH.
+if [[ -z ${KOOPA_PLATFORM+x} ]]
+then
+    echo 'koopa is not correctly activated and exported in $PATH.'
+    return 1
+fi
 
 array=()
 array+=("koopa v${KOOPA_VERSION} (${KOOPA_DATE})")
 array+=("https://github.com/steinbaugh/koopa")
 
 # Alternatively, can use `$( uname -mnrs )`.
-array+=("System: $KOOPA_SYSTEM")
+array+=("System: $KOOPA_PLATFORM")
 
-if [[ -n "$HPC_SCHEDULER" ]]; then
-    array+=("HPC scheduler: ${HPC_SCHEDULER}")
-    array+=("  Partitions:")
-    array+=("  - Default: ${HPC_PARTITION_DEFAULT}")
-    array+=("  - Interactive: ${HPC_PARTITION_INTERACTIVE}")
-fi
-
-aspera="$( command -v asperaconnect 2>/dev/null )"
+aspera="$( quiet_command asperaconnect )"
 if [[ -f "$aspera" ]]; then
     array+=("Aspera: ${aspera}")
 fi
 unset -v aspera
 
-bcbio="$( command -v bcbio_nextgen.py 2>/dev/null )"
+bcbio="$( quiet_command bcbio_nextgen.py )"
 if [[ -f "$bcbio" ]]; then
     array+=("bcbio: ${bcbio}")
 fi
 unset -v bcbio
 
-conda="$( command -v conda 2>/dev/null )"
+conda="$( quiet_command conda )"
 if [[ -f "${conda}" ]]; then
     array+=("Conda: ${conda}")
 fi
 unset -v conda
 
-git="$( command -v git 2>/dev/null )"
+git="$( quiet_command git )"
 if [[ -f "$git" ]]; then
     array+=("Git: ${git}")
 fi
 unset -v git
 
-gpg="$( command -v gpg 2>/dev/null )"
+gpg="$( quiet_command gpg )"
 if [[ -f "$gpg" ]]; then
     array+=("GPG: ${gpg}")
 fi
 unset -v gpg
 
-openssl="$( command -v openssl 2>/dev/null )"
+openssl="$( quiet_command openssl )"
 if [[ -f "$openssl" ]]; then
     array+=("OpenSSL: ${openssl}")
 fi
 unset -v openssl
 
-perl="$( command -v perl 2>/dev/null )"
+perl="$( quiet_command perl )"
 if [[ -f "$perl" ]]; then
     array+=("Perl: ${perl}")
 fi
 unset -v perl
 
-python="$( command -v python 2>/dev/null )"
+python="$( quiet_command python )"
 if [[ -f "${python}" ]]; then
     array+=("Python: ${python}")
 fi
 unset -v python
 
-r="$( command -v R 2>/dev/null )"
+r="$( quiet_command R )"
 if [[ -f "$r" ]]; then
     array+=("R: ${r}")
 fi
 unset -v r
 
-ruby="$( command -v ruby 2>/dev/null )"
+ruby="$( quiet_command ruby )"
 if [[ -f "$ruby" ]]; then
     array+=("Ruby: ${ruby}")
 fi
