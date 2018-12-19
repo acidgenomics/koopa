@@ -39,7 +39,7 @@ To obtain information about the working environment, run `koopa info`.
 
 ## Configuration
 
-Koopa provides automatic configuration and `$PATH` handling for a number of popular bioinformatics tools.
+Koopa provides automatic configuration and `$PATH` handling for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
 
 ### Aspera Connect
 
