@@ -37,7 +37,7 @@ To obtain information about the working environment, run `koopa info`.
 [Python]: https://www.python.org/
 [Zsh]: https://www.zsh.org/
 
-## Optional configuration
+## Configuration
 
 Koopa provides automatic configuration and `$PATH` export for a number of popular bioinformatics tools.
 
