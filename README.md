@@ -83,7 +83,7 @@ export CONDA_DEFAULT_ENV="tensorflow"
 
 ### SSH key
 
-On Linux, koopa will launch `ssh-agent` and attempt to import the default SSH key at `~/.ssh/id_rsa` if the key file exists. If you have a different default SSH key, it can be defined manually using the `SSH_KEY` variable.
+On Linux, koopa will launch `ssh-agent` and attempt to import the default SSH key at `~/.ssh/id_rsa`, if the key file exists. A different default key can be defined manually using the `SSH_KEY` variable.
 
 ```
 export SSH_KEY="${HOME}/.ssh/id_rsa"
@@ -92,6 +92,10 @@ export SSH_KEY="${HOME}/.ssh/id_rsa"
 On macOS, instead we recommend adding these lines to `~/.ssh/config` to use the system keychain:
 
 ```
+Host *
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/id_rsa
+    UseKeychain yes
 ```
 
 ### PGP key
