@@ -33,18 +33,13 @@ Koopa should now activate at login.
 
 To obtain information about the working environment, run `koopa info`.
 
-[Bash]: https://www.gnu.org/software/bash/
-[Python]: https://www.python.org/
-[Zsh]: https://www.zsh.org/
-
 ## Configuration
 
-Koopa provides automatic configuration and `PATH` variable handling for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
+Koopa provides automatic configuration and `PATH` variable support for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
 
 ### Aspera Connect
 
-Fully automatic when installed at `~/.aspera/`.
-Otherwise, can define manually using the `ASPERA_EXE` variable.
+[Aspera Connect][] is a secure file transfer application commonly used by numerous organizations, including the NIH and Broad Institute. Koopa will automatically detect Aspera when it is installed at the default path of `~/.aspera/`. Otherwise, the installation path can be defined manually using the `ASPERA_EXE` variable.
 
 ```bash
 export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
@@ -52,8 +47,7 @@ export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
 
 ### bcbio
 
-Fully automatic for the Harvard O2 and Odyssey high-performance computing clusters.
-Otherwise, can define manually using the `BCBIO_EXE` variable.
+[bcbio][] is a [Python][] toolkit that provides modern NGS analysis pipelines for RNA-seq, single-cell RNA-seq, ChIP-seq, and variant calling. Koopa provides automatic configuration support for the Harvard O2 and Odyssey high-performance computing clusters. Otherwise, the installation path can be defined manually using the `BCBIO_EXE` variable.
 
 ```
 export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
@@ -61,14 +55,14 @@ export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
 
 ### conda
 
-Fully automatic when conda is installed at any of these locations (note priority):
+[Conda][] is an open source package management system that provides pre-built binaries using versioned recipes for Linux and macOS. Koopa provides automatic detection and activation support when conda is installed at any of these locations (note priority):
 
 - `~/anaconda3/`
 - `~/miniconda3/`
 - `/usr/local/bin/anaconda3/`
 - `/usr/local/bin/miniconda3/`
 
-Oherwise, can define manually using the `CONDA_EXE` variable.
+Oherwise, the installation path can be defined manually using the `CONDA_EXE` variable.
 
 ```bash
 export CONDA_EXE="${HOME}/anaconda3/bin/conda"
@@ -83,7 +77,7 @@ export CONDA_DEFAULT_ENV="tensorflow"
 
 ### SSH key
 
-On Linux, koopa will launch `ssh-agent` and attempt to import the default SSH key at `~/.ssh/id_rsa`, if the key file exists. A different default key can be defined manually using the `SSH_KEY` variable.
+On Linux, koopa will launch `ssh-agent` and attempt to import the default [SSH][] key at `~/.ssh/id_rsa`, if the key file exists. A different default key can be defined manually using the `SSH_KEY` variable.
 
 ```
 export SSH_KEY="${HOME}/.ssh/id_rsa"
@@ -100,4 +94,13 @@ Host *
 
 ### PGP key
 
-Automatic PGP key support will be added in a future update.
+Automatic [PGP][] key support will be added in a future update.
+
+[Aspera Connect]: https://downloads.asperasoft.com/connect2/
+[Bash]: https://www.gnu.org/software/bash/
+[bcbio]: https://bcbio-nextgen.readthedocs.io/
+[conda]: https://conda.io/
+[PGP]: https://www.openpgp.org/
+[Python]: https://www.python.org/
+[SSH]: https://en.wikipedia.org/wiki/Secure_Shell
+[Zsh]: https://www.zsh.org/
