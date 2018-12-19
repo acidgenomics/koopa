@@ -49,7 +49,7 @@ export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
 
 [bcbio][] is a [Python][] toolkit that provides modern NGS analysis pipelines for RNA-seq, single-cell RNA-seq, ChIP-seq, and variant calling. Koopa provides automatic configuration support for the Harvard O2 and Odyssey high-performance computing clusters. Otherwise, the installation path can be defined manually using the `BCBIO_EXE` variable.
 
-```
+```bash
 export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
 ```
 
@@ -79,7 +79,7 @@ export CONDA_DEFAULT_ENV="tensorflow"
 
 On Linux, koopa will launch `ssh-agent` and attempt to import the default [SSH][] key at `~/.ssh/id_rsa`, if the key file exists. A different default key can be defined manually using the `SSH_KEY` variable.
 
-```
+```bash
 export SSH_KEY="${HOME}/.ssh/id_rsa"
 ```
 
