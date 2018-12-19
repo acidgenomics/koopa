@@ -13,6 +13,10 @@ Shell bootloader for bioinformatics.
 
 [Zsh][] support may be added in a future update. I'm looking into it.
 
+## Note on dotfiles
+
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration defined in `~/.bash_profile`. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
+
 ## Installation
 
 First, clone the repository:
@@ -112,6 +116,7 @@ A complete list of these exported scripts can be obtained with `koopa list`.
 [Bash]: https://www.gnu.org/software/bash/
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
 [conda]: https://conda.io/
+[dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
 [Git]: https://git-scm.com/
 [PGP]: https://www.openpgp.org/
 [Python]: https://www.python.org/
