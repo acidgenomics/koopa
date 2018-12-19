@@ -39,12 +39,12 @@ To obtain information about the working environment, run `koopa info`.
 
 ## Configuration
 
-Koopa provides automatic configuration and `$PATH` handling for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
+Koopa provides automatic configuration and `PATH` variable handling for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
 
 ### Aspera Connect
 
 Fully automatic when installed at `~/.aspera/`.
-Otherwise, can define manually using the `$ASPERA_EXE` variable.
+Otherwise, can define manually using the `ASPERA_EXE` variable.
 
 ```bash
 export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
@@ -53,7 +53,7 @@ export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
 ### bcbio
 
 Fully automatic for the Harvard O2 and Odyssey high-performance computing clusters.
-Otherwise, can define manually using the `$BCBIO_EXE` variable.
+Otherwise, can define manually using the `BCBIO_EXE` variable.
 
 ```
 export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
@@ -68,15 +68,32 @@ Fully automatic when conda is installed at any of these locations (note priority
 - `/usr/local/bin/anaconda3/`
 - `/usr/local/bin/miniconda3/`
 
-Oherwise, can define manually using the `$CONDA_EXE` variable.
+Oherwise, can define manually using the `CONDA_EXE` variable.
 
 ```bash
 export CONDA_EXE="${HOME}/anaconda3/bin/conda"
 ```
 
 Koopa also supports automatic loading of a default environment other than `base`.
-Simply set the `$CONDA_DEFAULT_ENV` variable to your desired environment name.
+Simply set the `CONDA_DEFAULT_ENV` variable to your desired environment name.
 
 ```bash
 export CONDA_DEFAULT_ENV="tensorflow"
 ```
+
+### SSH key
+
+On Linux, koopa will launch `ssh-agent` and attempt to import the default SSH key at `~/.ssh/id_rsa` if the key file exists. If you have a different default SSH key, it can be defined manually using the `SSH_KEY` variable.
+
+```
+export SSH_KEY="${HOME}/.ssh/id_rsa"
+```
+
+On macOS, instead we recommend adding these lines to `~/.ssh/config` to use the system keychain:
+
+```
+```
+
+### PGP key
+
+Automatic PGP key support will be added in a future update.
