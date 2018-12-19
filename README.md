@@ -11,6 +11,8 @@ Shell bootloader for bioinformatics.
 - [Bash][] 4 (`bash --version`)
 - [Python][] 3 (`python --version`)
 
+[Zsh][] support may be added in a future update. I'm looking into it.
+
 ## Installation
 
 First, clone the repository:
@@ -37,3 +39,4 @@ Since workload managers (e.g. [Slurm][], [LSF][]) can spawn non-interactive logi
 [LSF]: https://www.ibm.com/support/knowledgecenter/en/SSETD4/product_welcome_platform_lsf.html
 [Python]: https://www.python.org/
 [Slurm]: https://slurm.schedmd.com/
+[Zsh]: https://www.zsh.org/
