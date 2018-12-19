@@ -36,3 +36,47 @@ To obtain information about the working environment, run `koopa info`.
 [Bash]: https://www.gnu.org/software/bash/
 [Python]: https://www.python.org/
 [Zsh]: https://www.zsh.org/
+
+## Optional configuration
+
+Koopa provides automatic configuration and `$PATH` export for a number of popular bioinformatics tools.
+
+### Aspera Connect
+
+Fully automatic when installed at `~/.aspera/`.
+Otherwise, can define manually using the `$ASPERA_EXE` variable.
+
+```bash
+export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
+```
+
+### bcbio
+
+Fully automatic for the Harvard O2 and Odyssey high-performance computing clusters.
+Otherwise, can define manually using the `$BCBIO_EXE` variable.
+
+```
+export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
+```
+
+### conda
+
+Fully automatic when conda is installed at any of these locations (note priority):
+
+- `~/anaconda3/`
+- `~/miniconda3/`
+- `/usr/local/bin/anaconda3/`
+- `/usr/local/bin/miniconda3/`
+
+Oherwise, can define manually using the `$CONDA_EXE` variable.
+
+```bash
+export CONDA_EXE="${HOME}/anaconda3/bin/conda"
+```
+
+Koopa also supports automatic loading of a default environment other than `base`.
+Simply set the `$CONDA_DEFAULT_ENV` variable to your desired environment name.
+
+```bash
+export CONDA_DEFAULT_ENV="tensorflow"
+```
