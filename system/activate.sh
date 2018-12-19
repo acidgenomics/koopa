@@ -9,9 +9,9 @@
 
 
 # Don't re-activate for a subshell (i.e. an HPC interactive job).
-if [[ -n ${KOOPA_PLATFORM+x} ]]; then
-    return 0
-fi
+# if [[ -n ${HPC_INTERACTIVE_QUEUE+x} ]]; then
+#     return 0
+# fi
 
 
 
@@ -43,16 +43,22 @@ esac
 
 # Define useful OS variables.
 # These are adapted from Mike McQuaid's dotfiles config.
+
 # Apple macOS
 [[ "$(uname -s)" == "Darwin" ]] && export MACOS=1 && export UNIX=1
+
 # Linux
-[[ "$(uname -s)" = "Linux" ]] && export LINUX=1 && export UNIX=1
+[[ "$(uname -s)" == "Linux" ]] && export LINUX=1 && export UNIX=1
+
 # Microsoft Windows
 uname -s | grep -q "_NT-" && export WINDOWS=1
+
 # Ubuntu on Windows
 grep -q "Microsoft" /proc/version 2>/dev/null && export UBUNTU_ON_WINDOWS=1
+
 # Microsoft Azure VM
 [[ $HOSTNAME =~ "azlabapp" ]] && export AZURE=1
+
 # Harvard O2 cluster
 if [[ $HMS_CLUSTER == "o2" ]] && \
    [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
@@ -60,6 +66,7 @@ if [[ $HMS_CLUSTER == "o2" ]] && \
 then
     export HARVARD_O2=1
 fi
+
 # Harvard Odyssey cluster
 if [[ $HOSTNAME =~ ".rc.fas.harvard.edu" ]] && \
    [[ -d /n/regal/ ]]
@@ -196,9 +203,20 @@ then
     # Check that path is valid.
     if [[ -f "$CONDA_EXE" ]]
     then
+        # Activate the default environment automatically, if requested.
+        # Note that this will get redefined as "base" when conda is activated,
+        # so define as an internal variable here.
+        if [[ -n ${CONDA_DEFAULT_ENV+x} ]]
+        then
+            conda_default_env="$CONDA_DEFAULT_ENV"
+        fi
         conda_bin_dir="$( dirname "$CONDA_EXE" )"
         source "${conda_bin_dir}/activate"
-        unset -v conda_bin_dir
+        if [[ -n ${conda_default_env+x} ]]
+        then
+            conda activate "$conda_default_env"
+        fi
+        unset -v conda_bin_dir conda_default_env
     else
         printf "conda does not exist at:\n${CONDA_EXE}\n"
         # Don't exit here as this can cause SSH lockout.
