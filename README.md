@@ -11,7 +11,16 @@ Shell bootloader for bioinformatics.
 - [Bash][] >= v4.
 - [Python][]. Both v2.7 and v3 are supported.
 
-[Zsh][] support may be added in a future update. I'm looking into it.
+## Supported shells
+
+- [Bash][]
+- [Zsh][]
+
+### Potential future support
+
+- [Dash][]
+- [Fish][]
+- [Ksh][]
 
 ## Note on dotfiles
 
@@ -113,12 +122,15 @@ Upon activation, koopa makes some additional scripts available in `PATH`, which 
 A complete list of these exported scripts can be obtained with `koopa list`.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
-[Bash]: https://www.gnu.org/software/bash/
+[Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
 [conda]: https://conda.io/
+[Dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist shell"
 [dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
+[Fish]: https://fishshell.com/
 [Git]: https://git-scm.com/
+[Ksh]: http://www.kornshell.com/  "KornShell"
 [PGP]: https://www.openpgp.org/
 [Python]: https://www.python.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
-[Zsh]: https://www.zsh.org/
+[Zsh]: https://www.zsh.org/  "Z shell"
