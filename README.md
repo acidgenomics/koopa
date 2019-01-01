@@ -8,10 +8,10 @@ Shell bootloader for bioinformatics.
 ## Requirements
 
 - Linux or macOS. Windows isn't supported.
-- [Bash][] >= v4.
+- [Bash][] >= v4. Always required, even when using a different interactive shell.
 - [Python][]. Both v2.7 and v3 are supported.
 
-## Supported shells
+## Supported interactive shells
 
 - [Bash][]
 - [Zsh][]
@@ -39,7 +39,7 @@ Second, add these lines to `~/.bash_profile`:
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-source ~/koopa/bin/koopa activate
+. ~/koopa/bin/koopa activate
 ```
 
 Koopa should now activate at login.
