@@ -15,16 +15,13 @@ Shell bootloader for bioinformatics.
 
 Currently, these popular [POSIX][]-compliant shells are supported.
 
-- [Bash][]
-- [Zsh][]
+- [bash][]
+- [zsh][]
+- [ksh][]. Doesn't currently support [conda][].
 
 ### Todo list
 
-- [Fish][]
-- [Dash][]
-- [Ksh][]
-
-Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's a really great interactive shell.
+- [fish][]: Note that [fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's a really great interactive shell.
 
 ## Note on dotfiles
 
@@ -40,8 +37,8 @@ git clone https://github.com/steinbaugh/koopa.git ~/koopa
 
 Second, add these lines to your shell configuration file.
 
-- [Bash][]: `~/.bash_profile`.
-- [Zsh][]: `~/.zshrc`.
+- [bash][]: `~/.bash_profile`.
+- [zsh][]: `~/.zshrc`.
 
 ```bash
 # koopa shell
@@ -131,12 +128,11 @@ A complete list of these exported scripts can be obtained with `koopa list`.
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
-[conda]: https://conda.io/
-[Dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist shell"
+[Conda]: https://conda.io/
 [dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
 [Fish]: https://fishshell.com/
 [Git]: https://git-scm.com/
-[Ksh]: http://www.kornshell.com/  "KornShell"
+[ksh]: http://www.kornshell.com/  "KornShell"
 [PGP]: https://www.openpgp.org/
 [POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
