@@ -28,7 +28,7 @@ Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it
 
 ## Note on dotfiles
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration defined in `~/.bash_profile`. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
 
 ## Installation
 
@@ -38,7 +38,10 @@ First, clone the repository:
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
 ```
 
-Second, add these lines to `~/.bash_profile`:
+Second, add these lines to your shell configuration file.
+
+- Bash: `~/.bash_profile`.
+- Zsh: `~/.zprofile`.
 
 ```bash
 # koopa shell
