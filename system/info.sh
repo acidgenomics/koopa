@@ -20,7 +20,8 @@ array+=("https://github.com/steinbaugh/koopa")
 # Alternatively, can use `$( uname -mnrs )`.
 array+=("System: $KOOPA_PLATFORM")
 
-array+=("Shell: $SHELL")
+array+=("Install path: $KOOPA_BASE_DIR")
+array+=("Default shell: $SHELL")
 
 aspera="$( quiet_command asperaconnect )"
 if [[ -f "$aspera" ]]; then
