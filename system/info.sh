@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
+
 # Show koopa installation information in a box.
 
+quiet_command() {
+    command -v "$1" 2>/dev/null
+}
+
 # Require that koopa is activate and exported to PATH.
-if [[ -z ${KOOPA_PLATFORM+x} ]]
+if [ -z ${KOOPA_PLATFORM+x} ]
 then
-    echo 'koopa is not correctly activated and exported in $PATH.'
-    return 1
+    echo "koopa is not correctly activated."
+    exit 1
 fi
 
 array=()
@@ -14,6 +19,8 @@ array+=("https://github.com/steinbaugh/koopa")
 
 # Alternatively, can use `$( uname -mnrs )`.
 array+=("System: $KOOPA_PLATFORM")
+
+array+=("Shell: $SHELL")
 
 aspera="$( quiet_command asperaconnect )"
 if [[ -f "$aspera" ]]; then

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # List available scripts.
 
 # Note that printf isn't POSIX and doesn't work on macOS.
