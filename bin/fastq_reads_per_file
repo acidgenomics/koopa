@@ -2,9 +2,6 @@
 set -Eeuo pipefail
 
 # Get the number of reads per FASTQ file.
-# 2018-09-22
 
 # Divide by 4.
-zcat *_R1.fastq.gz | \
-    wc -l | \
-    awk '{print $1/4}'
+zcat ./*_R1.fastq.gz | wc -l | awk '{print $1/4}'
