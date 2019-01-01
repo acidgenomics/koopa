@@ -17,7 +17,7 @@ Currently, these popular [POSIX][]-compliant shells are supported.
 
 - [bash][].
 - [zsh][].
-- [ksh][]. *Note that [conda][] doesn't support ksh.*
+- [ksh][]. Note that [conda][] doesn't support ksh.
 
 ### Todo list
 
