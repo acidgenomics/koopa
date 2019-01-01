@@ -11,16 +11,20 @@ Shell bootloader for bioinformatics.
 - [Bash][] >= v4. Always required, even when using a different interactive shell.
 - [Python][]. Both v2.7 and v3 are supported.
 
-## Supported interactive shells
+## Supported shells
+
+Currently, these popular [POSIX][]-compliant shells are supported.
 
 - [Bash][]
 - [Zsh][]
 
 ### Todo list
 
-- [Dash][]
 - [Fish][]
+- [Dash][]
 - [Ksh][]
+
+Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's a really great interactive shell.
 
 ## Note on dotfiles
 
@@ -131,6 +135,7 @@ A complete list of these exported scripts can be obtained with `koopa list`.
 [Git]: https://git-scm.com/
 [Ksh]: http://www.kornshell.com/  "KornShell"
 [PGP]: https://www.openpgp.org/
+[POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
 [Zsh]: https://www.zsh.org/  "Z shell"
