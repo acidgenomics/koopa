@@ -2,7 +2,6 @@
 set -Eeuo pipefail
 
 # Move files up 1 directory level.
-# 2018-09-22
 
 find . -type f -mindepth 2 -exec mv {} . \;
 find . -mindepth 2
