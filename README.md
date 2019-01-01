@@ -28,7 +28,7 @@ Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it
 
 ## Note on dotfiles
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
 
 ## Installation
 
