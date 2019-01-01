@@ -3,10 +3,9 @@ set -Eeuo pipefail
 
 # Upgrade conda installation.
 # https://bioconda.github.io/#set-up-channels
-# 2018-09-22
 
 command -v conda >/dev/null 2>&1 || {
-    echo >&2 "conda missing"
+    echo >&2 "conda missing."
     exit 1
 }
 

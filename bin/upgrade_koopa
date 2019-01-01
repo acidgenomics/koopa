@@ -2,10 +2,6 @@
 set -Eeuo pipefail
 
 # Upgrade koopa installation.
-# 2018-10-22
-
-KOOPA_BIN_DIR="$( dirname "${BASH_SOURCE[0]}" )"
-KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
 
 wd=$(pwd)
 cd "$KOOPA_BASE_DIR"

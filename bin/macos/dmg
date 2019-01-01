@@ -5,7 +5,7 @@ dir="$1"
 
 # Check that directory exists
 if [[ ! -d "$dir" ]]; then
-    echo "${dir} directory does not exist"
+    echo "${dir} directory does not exist."
     exit 1
 fi
 

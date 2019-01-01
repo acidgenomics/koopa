@@ -3,11 +3,12 @@ set -Eeuo pipefail
 
 # Install Miniconda
 # https://conda.io/miniconda.html
-# 2018-09-22
 
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+if [[ "$OSTYPE" == "linux-gnu" ]]
+then
     script="Miniconda3-latest-Linux-x86_64.sh"
-elif [[ "$OSTYPE" == "darwin"* ]]; then
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
     script="Miniconda3-latest-MacOSX-x86_64.sh"
 else
     echo "${OSTYPE} operating system not supported"

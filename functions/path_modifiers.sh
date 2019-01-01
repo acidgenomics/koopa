@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # PATH modifiers
 # https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
 

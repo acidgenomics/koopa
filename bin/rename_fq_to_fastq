@@ -2,8 +2,7 @@
 set -Eeuo pipefail
 
 # Rename ".fq" to ".fastq"
-# 2018-09-22
 
-for file in *.fq; do
-    mv "$file" ${file/%.fq/.fastq}
+for file in ./*.fq; do
+    mv "$file" "${file/%.fq/.fastq}"
 done

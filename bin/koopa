@@ -4,14 +4,17 @@
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
-if [[ -z $BASH_VERSION ]]
+if [[ -z "$BASH_VERSION" ]]
 then
     echo "koopa is only compatible with bash."
-    echo 'Failed to detect bash version ($BASH_VERSION).'
+    echo "Failed to detect bash on your machine."
     echo "Check your configuration."
     return 1
-elif [[ $BASH_VERSION < 4 ]]
+elif [[ ${BASH_VERSION::1} -lt 4 ]]
 then
+    # SC2071: < is for string comparisons. Use -lt instead.
+    # https://stackoverflow.com/questions/16989598
+    # https://stackoverflow.com/questions/4023830
     echo "bash version: $BASH_VERSION"
     echo ""
     echo "koopa requires bash >= v4 to be installed."
@@ -30,18 +33,19 @@ then
     echo "4. Update default shell."
     echo "   chsh -s /usr/local/bin/bash $USER"
     echo "5. Reload the shell and check bash version."
-    echo '   echo $BASH_VERSION'
+    echo '   bash --version'
     return 1
 fi
 
 CMD="$1"
 
-export KOOPA_VERSION="0.2.3"
-export KOOPA_DATE="2018-12-19"
-
+export KOOPA_VERSION="0.2.4"
+export KOOPA_DATE="2018-12-31"
 export KOOPA_EXE="${BASH_SOURCE[0]}"
-export KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
-export KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
+KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
+export KOOPA_BIN_DIR
+KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
+export KOOPA_BASE_DIR
 export KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
 export KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 
@@ -49,14 +53,18 @@ export KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 # Do this first because the downstream code depends on these.
 for file in "${KOOPA_FUNCTIONS_DIR}/"*
 do
+    # shellcheck source=/dev/null
     source "$file"
 done
 
 if [[ "$CMD" == "activate" ]]; then
+    # shellcheck source=/dev/null
     source "${KOOPA_SYSTEM_DIR}/activate.sh"
 elif [[ "$CMD" == "info" ]]; then
+    # shellcheck source=/dev/null
     source "${KOOPA_SYSTEM_DIR}/info.sh"
 elif [[ "$CMD" == "list" ]]; then
+    # shellcheck source=/dev/null
     source "${KOOPA_SYSTEM_DIR}/list.sh"
 else
     echo "koopa args: activate, info, list"

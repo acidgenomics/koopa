@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
+
 # Activate koopa in the current shell.
 
 
 
-# NOTE: Don't attempt to enable strict mode (i.e. set -euo pipefail) here.
+# NOTE: Don't attempt to enable strict mode here.
 # Otherwise, you can get locked out of a remote SSH server.
+# set -Eeuo pipefail
 
 
 
@@ -15,60 +17,46 @@
 
 
 
+# Check for supported operating system.
+# Alternatively, can match against $OSTYPE.
+case "$(uname -s)" in
+    Darwin ) export MACOS=1 && export UNIX=1;;
+     Linux ) export LINUX=1 && export UNIX=1;;
+         * ) echo "Unsupported operating system."; return 1;;
+esac
+
+
+
 # Check if this is a login and/or interactive shell.
 [ "$0" = "-bash" ] && export LOGIN_BASH=1
 echo "$-" | grep -q "i" && export INTERACTIVE_BASH=1
 
 
 
-# Check for supported operating system.
-# Alternatively can use `$(uname -s)`
-case "$OSTYPE" in
-    darwin* ) os="MACOS";;
-     linux* ) os="LINUX";;
-          * ) echo "Unsupported system: ${OSTYPE}"; return 1;;
-esac
-
-
-
 # Load secrets.
+# shellcheck source=/dev/null
 [ -f "${HOME}/.secrets" ] && source "${HOME}/.secrets"
 
 
 
 # Fix systems missing $USER.
-[ -z "$USER" ] && export USER="$(whoami)"
+[ -z "$USER" ] && USER="$(whoami)" && export USER
 
 
 
-# Define useful OS variables.
-# These are adapted from Mike McQuaid's dotfiles config.
-
-# Apple macOS
-[[ "$(uname -s)" == "Darwin" ]] && export MACOS=1 && export UNIX=1
-
-# Linux
-[[ "$(uname -s)" == "Linux" ]] && export LINUX=1 && export UNIX=1
-
-# Microsoft Windows
-uname -s | grep -q "_NT-" && export WINDOWS=1
-
-# Ubuntu on Windows
-grep -q "Microsoft" /proc/version 2>/dev/null && export UBUNTU_ON_WINDOWS=1
-
-# Microsoft Azure VM
-[[ $HOSTNAME =~ "azlabapp" ]] && export AZURE=1
+# Microsoft Azure VM.
+[[ ${HOSTNAME+x} =~ "azlabapp" ]] && export AZURE=1
 
 # Harvard O2 cluster
-if [[ $HMS_CLUSTER == "o2" ]] && \
-   [[ $HOSTNAME =~ ".o2.rc.hms.harvard.edu" ]] && \
+if [[ ${HMS_CLUSTER+x} == "o2" ]] && \
+   [[ ${HOSTNAME+x} =~ .o2.rc.hms.harvard.edu ]] && \
    [[ -d /n/data1/ ]]
 then
     export HARVARD_O2=1
 fi
 
 # Harvard Odyssey cluster
-if [[ $HOSTNAME =~ ".rc.fas.harvard.edu" ]] && \
+if [[ ${HOSTNAME+x} =~ .rc.fas.harvard.edu ]] && \
    [[ -d /n/regal/ ]]
 then
     export HARVARD_ODYSSEY=1
@@ -80,14 +68,15 @@ fi
 # Consider requiring >= 3 in a future update.
 if ! quiet_which python
 then
-    echo "koopa requires python to be installed."
+    echo "koopa requires python."
     return 1
 fi
 
 
 
 # Now that we know Python is installed, we can return the platform string.
-export KOOPA_PLATFORM="$( python -mplatform )"
+KOOPA_PLATFORM="$( python -mplatform )"
+export KOOPA_PLATFORM
 
 
 
@@ -114,10 +103,8 @@ add_to_path_start "$KOOPA_BIN_DIR"
 
 
 # Export additional OS-specific binaries.
-# FIXME SIMPLIFY TO MACOS=1
-if [[ "$KOOPA_PLATFORM" =~ "Darwin"* ]]
+if [[ -n ${MACOS+x} ]]
 then
-    # macOS
     add_to_path_start "${KOOPA_BIN_DIR}/macos"
 fi
 
@@ -148,10 +135,10 @@ fi
 # Attempt to locate bcbio installation automatically on supported platforms.
 if [[ -z ${BCBIO_EXE+x} ]]
 then
-    if [[ -n "$HARVARD_O2" ]]
+    if [[ -n ${HARVARD_O2+x} ]]
     then
         export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
-    elif [[ -n "$HARVARD_ODYSSEY" ]]
+    elif [[ -n ${HARVARD_ODYSSEY+x} ]]
     then
         export BCBIO_EXE="/n/regal/hsph_bioinfo/bcbio_nextgen/bin/bcbio_nextgen.py"
     fi
@@ -166,7 +153,7 @@ then
         unset -v PYTHONHOME PYTHONPATH
         unset -v bcbio_bin_dir
     else
-        printf "bcbio does not exist at:\n${BCBIO_EXE}\n"
+        printf "bcbio does not exist at:\n%s\n" "$BCBIO_EXE"
         # Don't exit here as this can cause SSH lockout.
     fi
 fi
@@ -208,18 +195,19 @@ then
         # so define as an internal variable here.
         if [[ -n ${CONDA_DEFAULT_ENV+x} ]]
         then
-            conda_default_env="$CONDA_DEFAULT_ENV"
+            conda_env="$CONDA_DEFAULT_ENV"
         fi
         conda_bin_dir="$( dirname "$CONDA_EXE" )"
+        # shellcheck source=/dev/null
         source "${conda_bin_dir}/activate"
-        if [[ -n ${conda_default_env+x} ]]
+        if [[ -n ${conda_env+x} ]]
         then
-            conda activate "$conda_default_env"
+            conda activate "$conda_env"
         fi
-        unset -v conda_bin_dir conda_default_env
+        unset -v conda_bin_dir conda_env
     else
-        printf "conda does not exist at:\n${CONDA_EXE}\n"
-        # Don't exit here as this can cause SSH lockout.
+        printf "conda does not exist at:\n%s\n" "$CONDA_EXE"
+        # Don't exit here, as this can cause SSH lockout.
     fi
 fi
 
@@ -229,7 +217,7 @@ fi
 # NOTE: SCP will fail unless this is interactive only.
 # ssh-agent will prompt for password if there's one set.
 # To change SSH key passphrase: ssh-keygen -p
-if [[ -n "$INTERACTIVE_BASH" ]] && [[ -n "$LINUX" ]]
+if [[ -n ${INTERACTIVE_BASH+x} ]] && [[ -n ${LINUX+x} ]]
 then
     # If the user hasn't requested a specific SSH key, look for the default.
     if [[ -z ${SSH_KEY+x} ]]
@@ -247,20 +235,22 @@ fi
 
 
 # Count CPUs for Make jobs.
-if [[ -n "$MACOS" ]]
+if [[ -n ${MACOS+x} ]]
 then
-    export CPUCOUNT="$(sysctl -n hw.ncpu)"
-elif [[ -n "$LINUX" ]]
+    CPUCOUNT="$(sysctl -n hw.ncpu)"
+elif [[ -n ${LINUX+x} ]]
 then
-    export CPUCOUNT="$(getconf _NPROCESSORS_ONLN)"
+    CPUCOUNT="$(getconf _NPROCESSORS_ONLN)"
 else
-    export CPUCOUNT=1
+    CPUCOUNT=1
 fi
+export CPUCOUNT
 
 
 
 # Current date (e.g. 2018-01-01).
-export TODAY=$(date +%Y-%m-%d)
+TODAY=$(date +%Y-%m-%d)
+export TODAY
 
 # R environmental variables.
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"

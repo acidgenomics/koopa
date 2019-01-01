@@ -2,7 +2,6 @@
 set -Eeuo pipefail
 
 # Remove file system cruft.
-# 2018-09-22
 
 find . -name ".DS_Store" -type f -print -delete
 find . -name "Thumbs.db*" -type f -print -delete
