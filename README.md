@@ -40,8 +40,8 @@ git clone https://github.com/steinbaugh/koopa.git ~/koopa
 
 Second, add these lines to your shell configuration file.
 
-- Bash: `~/.bash_profile`.
-- Zsh: `~/.zprofile`.
+- [Bash][]: `~/.bash_profile`.
+- [Zsh][]: `~/.zprofile`.
 
 ```bash
 # koopa shell
