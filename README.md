@@ -15,13 +15,13 @@ Shell bootloader for bioinformatics.
 
 Currently, these popular [POSIX][]-compliant shells are supported.
 
-- [bash][]
-- [zsh][]
+- [bash][].
+- [zsh][].
 - [ksh][]. *Note that [conda][] doesn't support ksh.*
 
 ### Todo list
 
-- [fish][]: Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
+- [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
 
 ## Note on dotfiles
 
