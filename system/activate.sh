@@ -2,16 +2,11 @@
 
 # Activate koopa in the current shell.
 
-
-
-# How to check if a variable exists across shell types
+# How to check if a variable exists across shell types.
 # https://unix.stackexchange.com/questions/212183
-
 
 # Early return if already activated.
 [[ -v $KOOPA_PLATFORM ]] && exit 0
-
-
 
 # Check for supported operating system.
 # Alternatively, can match against $OSTYPE.
@@ -22,12 +17,8 @@ case "$(uname -s)" in
          * ) echo "Unsupported operating system."; return 1;;
 esac
 
-
-
-KOOPA_VERSION="0.2.4"
-KOOPA_DATE="2018-12-31"
-
-
+KOOPA_VERSION="0.2.3"
+KOOPA_DATE="2019-01-01"
 
 # Always check for bash, even if it's not the current shell.
 # https://stackoverflow.com/questions/16989598
@@ -62,8 +53,6 @@ then
 fi
 # unset -v bash_version
 
-
-
 if [[ "$shell" == "bash" ]] || [[ "$shell" == "zsh" ]]
 then
     export KOOPA_VERSION
@@ -75,18 +64,13 @@ then
     export KOOPA_SYSTEM_DIR
 fi
 
-
-
 quiet_which() {
     command -v "$1" >/dev/null 2>&1
 }
 
-
-
 # PATH modifiers
 # https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
 
-# FIXME These won't work for fish...
 remove_from_path() {
     [ -d "$1" ] || return
     # Doesn't work for first item in the PATH.
@@ -110,8 +94,6 @@ force_add_to_path_start() {
     export PATH="$1:$PATH"
 }
 
-
-
 # python (any version).
 # Consider requiring >= 3 in a future update.
 if ! quiet_which python
@@ -120,13 +102,9 @@ then
     return 1
 fi
 
-
-
 # Now that we know Python is installed, we can return the platform string.
 KOOPA_PLATFORM="$( python -mplatform )"
 export KOOPA_PLATFORM
-
-
 
 # Don't re-activate for a subshell (i.e. an HPC interactive job).
 # if [ -n ${HPC_INTERACTIVE_QUEUE+x} ]
@@ -134,31 +112,21 @@ export KOOPA_PLATFORM
 #     return 0
 # fi
 
-
-
 # Check if this is a login and/or interactive shell.
 [[ "$0" == "-bash" ]] && export LOGIN_BASH=1
 echo "$-" | grep -q "i" && export INTERACTIVE_BASH=1
-
-
 
 # Load secrets.
 # shellcheck source=/dev/null
 [[ -f "${HOME}/.secrets" ]] && source "${HOME}/.secrets"
 
-
-
 # Fix systems missing $USER.
 [[ -z "$USER" ]] && USER="$(whoami)" && export USER
 
-
-
 # Microsoft Azure VM.
-# FIXME
 [[ $HOSTNAME =~ "azlabapp" ]] && export AZURE=1
 
 # Harvard O2 cluster
-# FIXME Need to use POSIX/fish compatible version here...
 if [[ $HMS_CLUSTER == "o2" ]] && \
    [[ $HOSTNAME =~ .o2.rc.hms.harvard.edu ]] && \
    [[ -d /n/data1/ ]]
@@ -167,18 +135,14 @@ then
 fi
 
 # Harvard Odyssey cluster
-# FIXME Need to use POSIX/fish compatible version here...
 if [[ $HOSTNAME =~ .rc.fas.harvard.edu ]] && \
    [[ -d /n/regal/ ]]
 then
     export HARVARD_ODYSSEY=1
 fi
 
-
-
 # Export local user binaries, if directories exist.
 dir="${HOME}/.local/bin"
-# FIXME Need to use POSIX compatible version...
 if [[ -d "$dir" ]] && [[ ":$PATH:" != *":${dir}:"* ]]
 then
     add_to_path_start "$dir"
@@ -191,21 +155,15 @@ then
 fi
 unset -v dir
 
-
-
 # Export platform-agnostic binaries.
 # These essentially are functions that we're exporting to PATH.
 add_to_path_start "$KOOPA_BIN_DIR"
-
-
 
 # Export additional OS-specific binaries.
 if [[ -n $MACOS ]]
 then
     add_to_path_start "${KOOPA_BIN_DIR}/macos"
 fi
-
-
 
 # Include Aspera Connect binaries in PATH, if defined.
 if [[ -z $ASPERACONNECT_EXE ]]
@@ -225,8 +183,6 @@ then
     export PATH="${aspera_bin_dir}:${PATH}"
     unset -v aspera_bin_dir
 fi
-
-
 
 # Include bcbio toolkit binaries in PATH, if defined.
 # Attempt to locate bcbio installation automatically on supported platforms.
@@ -254,8 +210,6 @@ then
         # Don't exit here as this can cause SSH lockout.
     fi
 fi
-
-
 
 # Activate Conda.
 # Note that it's no longer recommended to export conda in PATH.
@@ -308,8 +262,6 @@ then
     fi
 fi
 
-
-
 # Load an SSH key automatically, using SSH_KEY global variable.
 # NOTE: SCP will fail unless this is interactive only.
 # ssh-agent will prompt for password if there's one set.
@@ -329,8 +281,6 @@ then
     fi
 fi
 
-
-
 # Count CPUs for Make jobs.
 if [[ -n $MACOS ]]
 then
@@ -342,8 +292,6 @@ else
     CPUCOUNT=1
 fi
 export CPUCOUNT
-
-
 
 # Current date (e.g. 2018-01-01).
 TODAY=$(date +%Y-%m-%d)
