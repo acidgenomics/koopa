@@ -16,7 +16,7 @@ Shell bootloader for bioinformatics.
 - [Bash][]
 - [Zsh][]
 
-### Potential future support
+### Todo list
 
 - [Dash][]
 - [Fish][]
