@@ -4,22 +4,17 @@
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
-cmd="$1"
-
-
-
 shell=$(basename $SHELL)
 
 if [ "$shell" = "bash" ]
 then
+    # chsh -s /usr/local/bin/bash
     KOOPA_EXE="${BASH_SOURCE[0]}"
 elif [ "$shell" = "zsh" ]
 then
+    # chsh -s /usr/local/bin/zsh
+    # https://unix.stackexchange.com/questions/76505
     KOOPA_EXE="$0:A"
-elif [ "$shell" = "fish" ]
-then
-    echo "$shell not supported yet"
-    return 1
 else
     echo "koopa is compatible with bash or zsh shell."
     echo "Check your configuration."
@@ -27,14 +22,12 @@ else
     return 1
 fi
 
-
+cmd="$1"
 
 KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
 KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
 KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
 KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
-
-
 
 if [ "$cmd" = "activate" ]
 then
@@ -52,7 +45,5 @@ else
     echo "koopa args: activate, info, list"
     exit 1
 fi
-
-
 
 unset -v cmd shell
