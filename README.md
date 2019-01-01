@@ -13,7 +13,7 @@ Shell bootloader for bioinformatics.
 
 ## Supported shells
 
-Currently, these popular [POSIX][]-compliant shells are supported.
+Currently, these [POSIX][]-compliant shells are supported:
 
 - [bash][].
 - [zsh][].
@@ -39,6 +39,7 @@ Second, add these lines to your shell configuration file.
 
 - [bash][]: `~/.bash_profile`.
 - [zsh][]: `~/.zshrc`.
+- [ksh][]: `~/.profile`.
 
 ```bash
 # koopa shell
