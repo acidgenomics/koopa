@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
+
 # Show koopa installation information in a box.
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z ${KOOPA_PLATFORM+x} ]]
 then
-    echo 'koopa is not correctly activated and exported in $PATH.'
+    echo "koopa is not correctly activated."
     return 1
 fi
 
