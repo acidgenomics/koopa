@@ -1,33 +1,72 @@
-#!/usr/bin/env sh
+#!/bin/sh
+# shellcheck disable=SC2236
+
+# SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
+# mode using `[` instead of `[[`.
 
 # koopa shell bootloader
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
+# Currently only supporting POSIX-compliant shells: bash, zsh.
 
-shell=$(basename $SHELL)
+cmd="$1"
 
-if [ "$shell" = "bash" ]
+KOOPA_VERSION="0.2.3"
+KOOPA_DATE="2019-01-01"
+
+
+
+# Detect the current shell, which is not necessarily the default shell ($SHELL).
+if [ ! -z "$BASH_VERSION" ]
 then
-    # chsh -s /usr/local/bin/bash
-    KOOPA_EXE="${BASH_SOURCE[0]}"
-elif [ "$shell" = "zsh" ]
+    shell="bash"
+elif [ ! -z "$KSH_VERSION" ]
 then
-    # chsh -s /usr/local/bin/zsh
-    # https://unix.stackexchange.com/questions/76505
-    KOOPA_EXE="$0:A"
+    shell="ksh"
+elif [ ! -z "$ZSH_VERSION" ]
+then
+    shell="zsh"
 else
-    echo "koopa is compatible with bash or zsh shell."
+    echo "koopa currently supports bash, ksh, or zsh shell."
     echo "Check your configuration."
-    echo "Unsupported shell: $SHELL"
     return 1
 fi
 
-cmd="$1"
+
+
+# Locate the koopa installation based on the source operation.
+if [ "$shell" = "bash" ]
+then
+    # SC2039: In POSIX sh, array references are undefined.
+    # shellcheck disable=SC2039
+    KOOPA_EXE="$BASH_SOURCE"
+elif [ "$shell" = "ksh" ]
+then
+    KOOPA_EXE="${.sh.file}"
+elif [ "$shell" = "zsh" ]
+then
+    KOOPA_EXE="$0"
+fi
+
+
+
+# https://unix.stackexchange.com/questions/4650
+# fish: status -f
+# dash: doesn't seem to be possible.
+# https://stackoverflow.com/questions/32981333
 
 KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
 KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
 KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
 KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
+
+export KOOPA_VERSION
+export KOOPA_DATE
+export KOOPA_EXE
+export KOOPA_BIN_DIR
+export KOOPA_BASE_DIR
+export KOOPA_FUNCTIONS_DIR
+export KOOPA_SYSTEM_DIR
 
 if [ "$cmd" = "activate" ]
 then
@@ -40,7 +79,7 @@ then
 elif [ "$cmd" = "list" ]
 then
     # shellcheck source=/dev/null
-    bash "${KOOPA_SYSTEM_DIR}/list.sh"
+    . "${KOOPA_SYSTEM_DIR}/list.sh"
 else
     echo "koopa args: activate, info, list"
     exit 1
