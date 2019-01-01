@@ -2,8 +2,7 @@
 set -Eeuo pipefail
 
 # Set up python virtual environment.
-# 2018-09-23
 
-which python
-which virtualenv
+command -v python
+commnad -v virtualenv
 virtualenv python --system-site-packages

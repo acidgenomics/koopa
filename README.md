@@ -8,14 +8,27 @@ Shell bootloader for bioinformatics.
 ## Requirements
 
 - Linux or macOS. Windows isn't supported.
-- [Bash][] >= v4.
+- [Bash][] >= v4. Always required, even when using a different interactive shell.
 - [Python][]. Both v2.7 and v3 are supported.
 
-[Zsh][] support may be added in a future update. I'm looking into it.
+## Supported shells
+
+Currently, these popular [POSIX][]-compliant shells are supported.
+
+- [Bash][]
+- [Zsh][]
+
+### Todo list
+
+- [Fish][]
+- [Dash][]
+- [Ksh][]
+
+Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's a really great interactive shell.
 
 ## Note on dotfiles
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration defined in `~/.bash_profile`. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
 
 ## Installation
 
@@ -25,12 +38,15 @@ First, clone the repository:
 git clone https://github.com/steinbaugh/koopa.git ~/koopa
 ```
 
-Second, add these lines to `~/.bash_profile`:
+Second, add these lines to your shell configuration file.
+
+- [Bash][]: `~/.bash_profile`.
+- [Zsh][]: `~/.zshrc`.
 
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-source ~/koopa/bin/koopa activate
+. ~/koopa/bin/koopa activate
 ```
 
 Koopa should now activate at login.
@@ -113,12 +129,16 @@ Upon activation, koopa makes some additional scripts available in `PATH`, which 
 A complete list of these exported scripts can be obtained with `koopa list`.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
-[Bash]: https://www.gnu.org/software/bash/
+[Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
 [conda]: https://conda.io/
+[Dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist shell"
 [dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
+[Fish]: https://fishshell.com/
 [Git]: https://git-scm.com/
+[Ksh]: http://www.kornshell.com/  "KornShell"
 [PGP]: https://www.openpgp.org/
+[POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
-[Zsh]: https://www.zsh.org/
+[Zsh]: https://www.zsh.org/  "Z shell"

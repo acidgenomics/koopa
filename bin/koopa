@@ -1,66 +1,49 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # koopa shell bootloader
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
-if [[ -z $BASH_VERSION ]]
+shell=$(basename $SHELL)
+
+if [ "$shell" = "bash" ]
 then
-    echo "koopa is only compatible with bash."
-    echo 'Failed to detect bash version ($BASH_VERSION).'
+    # chsh -s /usr/local/bin/bash
+    KOOPA_EXE="${BASH_SOURCE[0]}"
+elif [ "$shell" = "zsh" ]
+then
+    # chsh -s /usr/local/bin/zsh
+    # https://unix.stackexchange.com/questions/76505
+    KOOPA_EXE="$0:A"
+else
+    echo "koopa is compatible with bash or zsh shell."
     echo "Check your configuration."
-    return 1
-elif [[ $BASH_VERSION < 4 ]]
-then
-    echo "bash version: $BASH_VERSION"
-    echo ""
-    echo "koopa requires bash >= v4 to be installed."
-    echo ""
-    echo "Running macOS?"
-    echo "Apple refuses to include a modern version due to the license."
-    echo ""
-    echo "Here's how to upgrade it using Homebrew:"
-    echo "1. Install Homebrew."
-    echo "   https://brew.sh/"
-    echo "2. Install bash."
-    echo "   brew install bash"
-    echo "3. Update list of acceptable shells."
-    echo "   Requires sudo."
-    echo "   Add /usr/local/bin/bash to /etc/shells."
-    echo "4. Update default shell."
-    echo "   chsh -s /usr/local/bin/bash $USER"
-    echo "5. Reload the shell and check bash version."
-    echo '   echo $BASH_VERSION'
+    echo "Unsupported shell: $SHELL"
     return 1
 fi
 
-CMD="$1"
+cmd="$1"
 
-export KOOPA_VERSION="0.2.2"
-export KOOPA_DATE="2018-12-19"
+KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
+KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
+KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
+KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 
-export KOOPA_EXE="${BASH_SOURCE[0]}"
-export KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
-export KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
-export KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
-export KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
-
-# Source our functions that don't get exported to PATH.
-# Do this first because the downstream code depends on these.
-for file in "${KOOPA_FUNCTIONS_DIR}/"*
-do
-    source "$file"
-done
-
-if [[ "$CMD" == "activate" ]]; then
-    source "${KOOPA_SYSTEM_DIR}/activate.sh"
-elif [[ "$CMD" == "info" ]]; then
-    source "${KOOPA_SYSTEM_DIR}/info.sh"
-elif [[ "$CMD" == "list" ]]; then
-    source "${KOOPA_SYSTEM_DIR}/list.sh"
+if [ "$cmd" = "activate" ]
+then
+    # shellcheck source=/dev/null
+    . "${KOOPA_SYSTEM_DIR}/activate.sh"
+elif [ "$cmd" = "info" ]
+then
+    # shellcheck source=/dev/null
+    bash "${KOOPA_SYSTEM_DIR}/info.sh"
+elif [ "$cmd" = "list" ]
+then
+    # shellcheck source=/dev/null
+    bash "${KOOPA_SYSTEM_DIR}/list.sh"
 else
     echo "koopa args: activate, info, list"
     exit 1
 fi
 
-unset -v CMD
+unset -v cmd shell
