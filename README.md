@@ -13,13 +13,11 @@ Shell bootloader for bioinformatics.
 
 ## Supported shells
 
-Currently, these [POSIX][]-compliant shells are supported:
+Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
-- [bash][].
-- [zsh][].
-- [ksh][]. Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
+Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
 
-### Todo list
+### Wishlist
 
 - [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
 
@@ -45,17 +43,17 @@ To obtain information about the working environment, run `koopa info`.
 
 ## Troubleshooting
 
-### dotfiles example
-
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
-
 ### Shell configuration file
 
-Not sure where to add this? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
+Not sure where to add the `activate` step? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
 
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
 - [ksh][]: `.kshrc`, `.profile`.
+
+### dotfiles example
+
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
 
 ## Additional configuration
 
