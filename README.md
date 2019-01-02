@@ -41,19 +41,23 @@ Second, add these lines to your shell configuration file.
 
 Koopa should now activate at login.
 
+To obtain information about the working environment, run `koopa info`.
+
+## Troubleshooting
+
+### dotfiles example
+
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
+
+### Shell configuration file
+
 Not sure where to add this? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
 
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
 - [ksh][]: `.kshrc`, `.profile`.
 
-To obtain information about the working environment, run `koopa info`.
-
-## Note on dotfiles
-
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
-
-## Configuration
+## Additional configuration
 
 Koopa provides automatic configuration and `PATH` variable support for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
 
