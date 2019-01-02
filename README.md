@@ -23,10 +23,6 @@ Currently, these [POSIX][]-compliant shells are supported:
 
 - [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
 
-## Note on dotfiles
-
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
-
 ## Installation
 
 First, clone the repository:
@@ -52,6 +48,10 @@ Not sure where to add this? Here are some general recommendations, in order of p
 - [ksh][]: `.kshrc`, `.profile`.
 
 To obtain information about the working environment, run `koopa info`.
+
+## Note on dotfiles
+
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
 
 ## Configuration
 
