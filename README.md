@@ -43,13 +43,13 @@ Second, add these lines to your shell configuration file.
 . ~/koopa/bin/koopa activate
 ```
 
+Koopa should now activate at login.
+
 Not sure where to add this? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
 
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
 - [ksh][]: `.kshrc`, `.profile`.
-
-Koopa should now activate at login.
 
 To obtain information about the working environment, run `koopa info`.
 
