@@ -228,53 +228,58 @@ fi
 # Note that it's no longer recommended to export conda in PATH.
 # Attempt to locate automatically when not manually defined.
 #
-# Priority:
-# 1. User anaconda3
-# 2. User miniconda3
-# 3. Shared anaconda3
-# 4. Shared miniconda3
-if [ "$shell" = "bash" ] || [ "$shell" = "zsh" ]
+# Note that conda will only be activated when a non-base default environment
+# is declared.
+if [ ! -z "$CONDA_DEFAULT_ENV" ]
 then
-    if [ -z "$CONDA_EXE" ]
+    if [ "$shell" = "bash" ] || [ "$shell" = "zsh" ]
     then
-        if [ -f "${HOME}/anaconda3/bin/conda" ]
+        if [ -z "$CONDA_EXE" ]
         then
-            export CONDA_EXE="${HOME}/anaconda3/bin/conda"
-        elif [ -f "${HOME}/miniconda3/bin/conda" ]
-        then
-            export CONDA_EXE="${HOME}/miniconda3/bin/conda"
-        elif [ -f "/usr/local/bin/anaconda3/bin/conda" ]
-        then
-            export CONDA_EXE="/usr/local/bin/anaconda3/bin/conda"
-        elif [ -f "/usr/local/bin/miniconda3/bin/conda" ]
-        then
-            export CONDA_EXE="/usr/local/bin/miniconda3/bin/conda"
-        fi
-    fi
-    if [ ! -z "$CONDA_EXE" ]
-    then
-        # Check that path is valid.
-        if [ -f "$CONDA_EXE" ]
-        then        
-            # Activate the default environment automatically, if requested.
-            # Note that this will get redefined as "base" when conda is
-            # activated, so define as an internal variable here.
-            if [ ! -z "$CONDA_DEFAULT_ENV" ]
+            # Attempt to detect conda path automatically, if not set.
+            # Priority:
+            # 1. User anaconda3
+            # 2. User miniconda3
+            # 3. Shared anaconda3
+            # 4. Shared miniconda3
+            if [ -f "${HOME}/anaconda3/bin/conda" ]
             then
+                export CONDA_EXE="${HOME}/anaconda3/bin/conda"
+            elif [ -f "${HOME}/miniconda3/bin/conda" ]
+            then
+                export CONDA_EXE="${HOME}/miniconda3/bin/conda"
+            elif [ -f "/usr/local/bin/anaconda3/bin/conda" ]
+            then
+                export CONDA_EXE="/usr/local/bin/anaconda3/bin/conda"
+            elif [ -f "/usr/local/bin/miniconda3/bin/conda" ]
+            then
+                export CONDA_EXE="/usr/local/bin/miniconda3/bin/conda"
+            fi
+        fi
+        if [ ! -z "$CONDA_EXE" ]
+        then
+            # Check that path is valid.
+            if [ -f "$CONDA_EXE" ]
+            then
+                # Activate the default environment automatically, if requested.
+                # Note that this will get redefined as "base" when conda is
+                # activated, so define as an internal variable here.
                 conda_env="$CONDA_DEFAULT_ENV"
+                conda_bin_dir="$( dirname "$CONDA_EXE" )"
+                # shellcheck source=/dev/null
+                . "${conda_bin_dir}/activate"
+                if [ ! -z "$conda_env" ]
+                then
+                    conda activate "$conda_env"
+                fi
+                unset -v conda_bin_dir conda_env
+            else
+                printf "conda does not exist at:\n%s\n" "$CONDA_EXE"
+                # Don't exit here, as this can cause SSH lockout.
             fi
-            conda_bin_dir="$( dirname "$CONDA_EXE" )"
-            # shellcheck source=/dev/null
-            . "${conda_bin_dir}/activate"
-            if [ ! -z "$conda_env" ]
-            then
-                conda activate "$conda_env"
-            fi
-            unset -v conda_bin_dir conda_env
-        else
-            printf "conda does not exist at:\n%s\n" "$CONDA_EXE"
-            # Don't exit here, as this can cause SSH lockout.
         fi
+    else
+        printf "conda is not supported in %s shell." "$shell"
     fi
 fi
 
