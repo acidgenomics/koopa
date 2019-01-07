@@ -11,6 +11,10 @@ Shell bootloader for bioinformatics.
 - [Bash][] >= v4. Always required, even when using a different interactive shell.
 - [Python][]. Both v2.7 and v3 are supported.
 
+### Optional
+
+- [Conda][] >= 4.5. Some distributions include 4.3, which is no longer supported.
+
 ## Supported shells
 
 Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
