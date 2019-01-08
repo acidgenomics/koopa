@@ -81,7 +81,16 @@ export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
 
 ### conda
 
-[Conda][] is an open source package management system that provides pre-built binaries using versioned recipes for Linux and macOS. Koopa provides automatic detection and activation support when conda is installed at any of these locations (note priority):
+[Conda][] is an open source package management system that provides pre-built binaries using versioned recipes for Linux and macOS.
+
+Koopa supports automatic loading of a default environment.
+Simply set the `CONDA_DEFAULT_ENV` variable to your desired environment name.
+
+```bash
+export CONDA_DEFAULT_ENV="base"
+```
+
+Koopa provides automatic detection and activation support when conda is installed at any of these locations (note priority):
 
 - `~/anaconda3/`
 - `~/miniconda3/`
@@ -92,13 +101,6 @@ Oherwise, the installation path can be defined manually using the `CONDA_EXE` va
 
 ```bash
 export CONDA_EXE="${HOME}/anaconda3/bin/conda"
-```
-
-Koopa also supports automatic loading of a default environment other than `base`.
-Simply set the `CONDA_DEFAULT_ENV` variable to your desired environment name.
-
-```bash
-export CONDA_DEFAULT_ENV="tensorflow"
 ```
 
 ### SSH key
