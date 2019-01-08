@@ -20,11 +20,9 @@ Currently, these popular [POSIX][]-compliant shells are supported.
 
 ### Todo list
 
-- [Fish][]
-- [Dash][]
 - [Ksh][]
-
-Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's a really great interactive shell.
+- [Tcsh][]
+- [Fish][]. Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's otherwise a really great interactive shell.
 
 ## Note on dotfiles
 
@@ -141,4 +139,5 @@ A complete list of these exported scripts can be obtained with `koopa list`.
 [POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
+[tcsh]: https://en.wikipedia.org/wiki/Tcsh
 [Zsh]: https://www.zsh.org/  "Z shell"
