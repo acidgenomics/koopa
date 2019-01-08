@@ -24,6 +24,7 @@ Note that [conda][] doesn't currently work with ksh (see [issue](https://github.
 ### Wishlist
 
 - [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
+- [tcsh][].
 
 ## Installation
 
@@ -148,4 +149,5 @@ A complete list of these exported scripts can be obtained with `koopa list`.
 [POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
+[tcsh]: https://en.wikipedia.org/wiki/Tcsh
 [Zsh]: https://www.zsh.org/  "Z shell"
