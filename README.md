@@ -1,7 +1,7 @@
 # koopa 🐢
 
-[![Build Status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Travis CI build status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
+[![Repo status: active](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
 Shell bootloader for bioinformatics.
 
@@ -13,7 +13,7 @@ Shell bootloader for bioinformatics.
 
 ### Optional
 
-- [Conda][] >= 4.5. Some distributions include 4.3, which is no longer supported.
+- [Conda][] >= 4.5.
 
 ## Supported shells
 
@@ -31,7 +31,7 @@ Note that [conda][] doesn't currently work with ksh (see [issue](https://github.
 First, clone the repository:
 
 ```bash
-git clone https://github.com/steinbaugh/koopa.git ~/koopa
+git clone https://github.com/steinbaugh/koopa.git ~/.koopa
 ```
 
 Second, add these lines to your shell configuration file.
@@ -39,7 +39,7 @@ Second, add these lines to your shell configuration file.
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-. ~/koopa/bin/koopa activate
+. ~/.koopa/bin/koopa activate
 ```
 
 Koopa should now activate at login.
