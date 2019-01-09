@@ -14,7 +14,7 @@
 
 
 # Early return if already activated.
-[ ! -z "$KOOPA_PLATFORM" ] && exit 0
+[ ! -z "$KOOPA_PLATFORM" ] && return
 
 
 
