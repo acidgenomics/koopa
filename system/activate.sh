@@ -320,6 +320,7 @@ fi
 export CPUCOUNT
 
 # Current date (e.g. 2018-01-01).
+# Alternatively, can use `%F`.
 TODAY=$(date +%Y-%m-%d)
 export TODAY
 
