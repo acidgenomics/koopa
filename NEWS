@@ -1,0 +1,31 @@
+## koopa 0.2.5 (2019-01-07)
+
+- Updated installation instructions to recommend cloning to `~/.koopa`.
+- Conda now will only activate when `CONDA_DEFAULT_ENV` is set in environment.
+  This improves handling in situations for user accounts where we don't want
+  to activate conda in a shared environemnt (e.g. bioinfo account on Azure).
+
+
+## koopa 0.1.1 (2018-09-05)
+
+- Now exporting `KOOPA_VERSION` and `KOOPA_DATE` global variables.
+- Updated installation instructions.
+- Removed `/setup/` config files.
+- Added support for automatic SSH key import, using `$SSH_KEY` variable.
+- Removed "g*" aliases for GitHub commands (e.g. ga, gc, gd). Too confusing.
+- Simplified the separator bar for koopa message, avoiding unicode.
+- Renamed `bcl2fastq_indrop` script to `bcl2fastq_indrops`.
+- Added some utility scripts from macOS bash repo:
+      - delete_fs_cruft
+      - git_pull_all
+      - gzip_dir
+      - install_tex
+      - move_files_up_1_level
+      - rename_from_csv
+      - reset_permissions
+
+
+## koopa 0.1.0 (2018-08-24)
+
+- Initial stable release.
+- Repo was previously named "seqcloud".

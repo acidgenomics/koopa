@@ -1,7 +1,7 @@
 # koopa 🐢
 
-[![Build Status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
-[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Travis CI build status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
+[![Repo status: active](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
 Shell bootloader for bioinformatics.
 
@@ -11,47 +11,56 @@ Shell bootloader for bioinformatics.
 - [Bash][] >= v4. Always required, even when using a different interactive shell.
 - [Python][]. Both v2.7 and v3 are supported.
 
+### Optional
+
+- [Conda][] >= 4.5.
+
 ## Supported shells
 
-Currently, these popular [POSIX][]-compliant shells are supported.
+Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
-- [Bash][]
-- [Zsh][]
+Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
 
-### Todo list
+### Wishlist
 
-- [Ksh][]
-- [Tcsh][]
-- [Fish][]. Note that [Fish][] isn't [POSIX][]-compliant, so it's tricker to support, but it's otherwise a really great interactive shell.
-
-## Note on dotfiles
-
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
+- [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
+- [tcsh][].
 
 ## Installation
 
 First, clone the repository:
 
 ```bash
-git clone https://github.com/steinbaugh/koopa.git ~/koopa
+git clone https://github.com/steinbaugh/koopa.git ~/.koopa
 ```
 
 Second, add these lines to your shell configuration file.
 
-- [Bash][]: `~/.bash_profile`.
-- [Zsh][]: `~/.zshrc`.
-
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-. ~/koopa/bin/koopa activate
+. ~/.koopa/bin/koopa activate
 ```
 
 Koopa should now activate at login.
 
 To obtain information about the working environment, run `koopa info`.
 
-## Configuration
+## Troubleshooting
+
+### Shell configuration file
+
+Not sure where to add the `activate` step? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
+
+- [bash][]: `.bash_profile`, `.bashrc`.
+- [zsh][]: `.zshrc`, `.zprofile`.
+- [ksh][]: `.kshrc`, `.profile`.
+
+### dotfiles example
+
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
+
+## Additional configuration
 
 Koopa provides automatic configuration and `PATH` variable support for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before running `koopa activate`.
 
@@ -73,7 +82,16 @@ export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
 
 ### conda
 
-[Conda][] is an open source package management system that provides pre-built binaries using versioned recipes for Linux and macOS. Koopa provides automatic detection and activation support when conda is installed at any of these locations (note priority):
+[Conda][] is an open source package management system that provides pre-built binaries using versioned recipes for Linux and macOS.
+
+Koopa supports automatic loading of a default environment.
+Simply set the `CONDA_DEFAULT_ENV` variable to your desired environment name.
+
+```bash
+export CONDA_DEFAULT_ENV="base"
+```
+
+Koopa provides automatic detection and activation support when conda is installed at any of these locations (note priority):
 
 - `~/anaconda3/`
 - `~/miniconda3/`
@@ -84,13 +102,6 @@ Oherwise, the installation path can be defined manually using the `CONDA_EXE` va
 
 ```bash
 export CONDA_EXE="${HOME}/anaconda3/bin/conda"
-```
-
-Koopa also supports automatic loading of a default environment other than `base`.
-Simply set the `CONDA_DEFAULT_ENV` variable to your desired environment name.
-
-```bash
-export CONDA_DEFAULT_ENV="tensorflow"
 ```
 
 ### SSH key
@@ -129,12 +140,11 @@ A complete list of these exported scripts can be obtained with `koopa list`.
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
-[conda]: https://conda.io/
-[Dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist shell"
+[Conda]: https://conda.io/
 [dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
 [Fish]: https://fishshell.com/
 [Git]: https://git-scm.com/
-[Ksh]: http://www.kornshell.com/  "KornShell"
+[ksh]: http://www.kornshell.com/  "KornShell"
 [PGP]: https://www.openpgp.org/
 [POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
