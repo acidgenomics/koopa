@@ -232,6 +232,9 @@ fi
 # is declared.
 if [ ! -z "$CONDA_DEFAULT_ENV" ]
 then
+    # "$shell" variable inherits from koopa call.
+    # SC2154: shell is referenced but not assigned.
+    # shellcheck disable=SC2154
     if [ "$shell" = "bash" ] || [ "$shell" = "zsh" ]
     then
         if [ -z "$CONDA_EXE" ]
@@ -317,6 +320,7 @@ fi
 export CPUCOUNT
 
 # Current date (e.g. 2018-01-01).
+# Alternatively, can use `%F`.
 TODAY=$(date +%Y-%m-%d)
 export TODAY
 
