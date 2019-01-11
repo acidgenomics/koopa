@@ -4,12 +4,12 @@
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode using `[` instead of `[[`.
 
+
+
 # koopa shell bootloader
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 # Currently only supporting POSIX-compliant shells: bash, zsh.
-
-cmd="$1"
 
 KOOPA_VERSION="0.2.4"
 KOOPA_DATE="2019-01-09"
@@ -39,9 +39,11 @@ if [ "$shell" = "bash" ]
 then
     # SC2039: In POSIX sh, array references are undefined.
     # shellcheck disable=SC2039
-    KOOPA_EXE="$BASH_SOURCE"
+    KOOPA_EXE="${BASH_SOURCE[0]}"
 elif [ "$shell" = "ksh" ]
 then
+    # SC2154: .sh.file is referenced but not assigned.
+    # shellcheck disable=SC2154
     KOOPA_EXE="${.sh.file}"
 elif [ "$shell" = "zsh" ]
 then
@@ -50,9 +52,9 @@ fi
 
 
 
-# https://unix.stackexchange.com/questions/4650
-# fish: status -f
+# fish: `status -f`
 # dash: doesn't seem to be possible.
+# https://unix.stackexchange.com/questions/4650
 # https://stackoverflow.com/questions/32981333
 
 KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
@@ -67,6 +69,14 @@ export KOOPA_BIN_DIR
 export KOOPA_BASE_DIR
 export KOOPA_FUNCTIONS_DIR
 export KOOPA_SYSTEM_DIR
+
+
+
+# Note that we're allowing positional argument using `$1` but this isn't
+# supported in all POSIX-compliant shells.
+# SC2240 The dot command does not support arguments in sh/dash.
+# Set them as variables.
+[ -z "$cmd" ] && cmd="$1"
 
 if [ "$cmd" = "activate" ]
 then
