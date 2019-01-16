@@ -20,10 +20,15 @@ details:
   - analysis: RNA-seq
     genome_build: hg38
     algorithm:
+      tools_on: [bcbiornaseq]
       # Use HISAT2 instead of STAR for GRCh38/hg38.
       # STAR is recommended over HISAT2 for GRCh37/hg19.
       aligner: hisat2
       expression_caller: salmon
+      # This will automatically save a bcbioRNASeq S4 object for R.
+      bcbiornaseq:
+        organism: homo sapiens
+        interesting_groups: [treatment, genotype]
 
 # Where to upload (save) the final output.
 upload:
