@@ -1,17 +1,33 @@
-# Template for fast RNA-seq using Illumina prepared samples
+# Template for fast RNA-seq using Illumina prepared samples.
+# Michael Steinbaugh
 #
 # Homo sapiens
 # YYYY-MM-DD
 #
-# NOTE: genome_build is specific to bcbio install
-# Run `bcbio_setup_genome.py` for list of genome builds
+# Assuming a local run on a 16 core VM.
+# bcbio_nextgen_py ../config/bcbio.yaml -t local -n 16
+#
+# Genome build is specific to the bcbio install.
+# Run `bcbio_setup_genome.py` for list of genome builds.
 #
 # More template examples:
 # https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
+#
+# Configuration documentation:
+# https://bcbio-nextgen.readthedocs.io/en/latest/contents/configuration.html
 ---
 details:
   - analysis: fastrna-seq
     genome_build: hg38
     algorithm: {}
+
+# Where to upload (save) the final output.
 upload:
   dir: ../final
+
+# Recommended run-specific resources.
+resources:
+  default:
+    cores: 16
+  tmp:
+    dir: ~/scratch
