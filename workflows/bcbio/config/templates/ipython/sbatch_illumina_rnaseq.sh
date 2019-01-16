@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Schedule bcbio IPython run on HMS O2 cluster
+# Michael Steinbaugh
+
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
@@ -14,4 +17,8 @@
 #SBATCH --output=jobid_%j.out          # File to which STDOUT will be written, including job ID
 #SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL)
 
-bcbio_nextgen.py ../config/bcbio.yaml -n 32 -t ipython -s slurm -q medium -r t=1-00:00 --retries 3 --timeout 1000
+bcbio_nextgen.py ../config/bcbio.yaml \
+    -t ipython \
+    -n 32 \
+    -s slurm -q medium \
+    -r t=1-00:00 --retries 3 --timeout 1000
