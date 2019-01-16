@@ -13,8 +13,9 @@
 
 
 
+# FIXME This doesn't work inside subshells (e.g. HMS O2)
 # Early return if already activated.
-[ ! -z "$KOOPA_PLATFORM" ] && return
+# [ ! -z "$KOOPA_PLATFORM" ] && return
 
 
 
