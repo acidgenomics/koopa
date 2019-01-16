@@ -25,7 +25,7 @@ details:
       # STAR is recommended over HISAT2 for GRCh37/hg19.
       aligner: hisat2
       expression_caller: salmon
-      # This will automatically save a bcbioRNASeq S4 object for R.
+      # Automatically save a bcbioRNASeq S4 object for R.
       bcbiornaseq:
         organism: homo sapiens
         interesting_groups: [treatment, genotype]
