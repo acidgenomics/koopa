@@ -19,6 +19,9 @@
 #
 # More template examples:
 # https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
+#
+# Configuration documentation:
+# https://bcbio-nextgen.readthedocs.io/en/latest/contents/configuration.html
 ---
 details:
   - analysis: scRNA-seq
