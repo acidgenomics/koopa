@@ -4,7 +4,10 @@
 # Homo sapiens
 # YYYY-MM-DD
 #
-# NOTE: genome_build is specific to bcbio install.
+# Assuming a local run on a 16 core VM.
+# bcbio_nextgen_py ../config/bcbio.yaml -t local -n 16
+#
+# Genome build is specific to the bcbio install.
 # Run `bcbio_setup_genome.py` for list of genome builds.
 #
 # More template examples:
@@ -14,8 +17,18 @@ details:
   - analysis: RNA-seq
     genome_build: hg38
     algorithm:
-      # Consider using `hisat2` instead GRCh38/hg38.
-      aligner: star
+      # Use HISAT2 instead of STAR for GRCh38/hg38.
+      # STAR is recommended over HISAT2 for GRCh37/hg19.
+      aligner: hisat2
       expression_caller: salmon
+
+# Where to upload (save) the final output.
 upload:
   dir: ../final
+
+# Recommended run-specific resources.
+resources:
+  default:
+    cores: 16
+  tmp:
+    dir: ~/scratch
