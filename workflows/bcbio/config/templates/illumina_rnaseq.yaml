@@ -60,14 +60,13 @@ details:
       # Uncomment if you want to want to provide a FASTA file of spike-ins to quantify.
       # spikein_fasta: spikeins.fa
       
-      # Don't need to set this by default.
       # `quality_format` tells bcbio what quality format is used in the FASTQ files.
       # This is set to "standard" by default.
-      # If your samples were sequenced any time past 2009 or so, can leave uncommented. 
+      # If your samples were sequenced any time past 2009 or so, can leave unset. 
       # quality_format: standard
       
       # Note that adapter trimming is no longer recommended, and is disabled by default.
-      trim_reads: False
+      # trim_reads: False
       
       # Uncomment these if adapter trimming needs to be performed.
       # trim_reads: read_through
