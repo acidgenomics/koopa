@@ -17,5 +17,3 @@ branches:
 script:
   - bash -c 'shopt -s globstar; shellcheck {bin,bin/macos,system}/*.sh'
   - bash bin/koopa.sh activate
-  - bash bin/koopa.sh info
-  - bash bin/koopa.sh list
