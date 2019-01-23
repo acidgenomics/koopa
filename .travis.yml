@@ -17,7 +17,7 @@ branches:
 script:
   - bash -c 'shopt -s globstar; shellcheck bin/*.sh'
   - bash -c 'shopt -s globstar; shellcheck system/*.sh'
-  - bash bin/koopa activate
-  - bash bin/koopa info
-  - bash bin/koopa list
+  - bash bin/koopa.sh activate
+  - bash bin/koopa.sh info
+  - bash bin/koopa.sh list
 
