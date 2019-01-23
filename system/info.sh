@@ -10,6 +10,7 @@ quiet_command() {
 if [[ -z "${KOOPA_PLATFORM+x}" ]]
 then
     echo "koopa is not correctly activated."
+    # Note that return should only be used for a sourced script.
     exit 1
 fi
 
