@@ -7,7 +7,7 @@ quiet_command() {
 }
 
 # Require that koopa is activate and exported to PATH.
-if [ -z ${KOOPA_PLATFORM+x} ]
+if [ -z "${KOOPA_PLATFORM+x}" ]
 then
     echo "koopa is not correctly activated."
     exit 1
