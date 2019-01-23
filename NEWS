@@ -1,3 +1,10 @@
+## koopa 0.2.6 (2019-01-23)
+
+- Added back ".sh" extension for all exported scripts.
+- Updated Travis CI configuration to use shellcheck.
+- Reorganized and improved workflow scripts.
+
+
 ## koopa 0.2.5 (2019-01-07)
 
 - Updated installation instructions to recommend cloning to `~/.koopa`.
