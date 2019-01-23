@@ -1,6 +1,9 @@
-# Cell Ranger
-# 2018-06-19
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
+# Run Cell Ranger on HMS O2 cluster.
+
+# Note that these modules are specific to O2.
 module load bcl2fastq/2.20.0.422
 module load cellranger/2.1.1
 

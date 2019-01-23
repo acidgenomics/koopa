@@ -1,10 +1,19 @@
-language: bash
+# Note that Travis CI has now integrated ShellCheck by default.
+# https://github.com/koalaman/shellcheck#travis-ci
+# https://github.com/koalaman/shellcheck/wiki/TravisCI
+
+language: shell
+
 branches:
   only:
   - master
-before_script:
-  - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
+
+# Install shunit2 to for shell unit tests.
+# https://github.com/kward/shunit2
+# https://travis-ci.org/soulseekah/test-shunit2-travis
+# before_script:
+#   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
+
 script:
-  - bash bin/koopa activate
-  - bash bin/koopa info
-  - bash bin/koopa list
+  - bash -c 'shopt -s globstar; shellcheck {bin,bin/macos,system}/*.sh'
+  - bash bin/koopa.sh activate

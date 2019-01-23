@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 # inDrops sample barcode counts from i5 indexes.
 # https://iccb.med.harvard.edu/single-cell-core
+# Thanks @roryk for this script.
 
 gzip -cd ./*_R3.fastq.gz | \
     head -1000000 | \
