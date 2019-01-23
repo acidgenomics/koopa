@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Schedule bcbio IPython run on HMS O2 cluster
+# Schedule bcbio IPython run on HMS O2 cluster.
 # Michael Steinbaugh
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
-#SBATCH --job-name=rnaseq              # Job name
+#SBATCH --job-name=fastrnaseq          # Job name
 #SBATCH --partition=medium             # Partition name
 #SBATCH --time=1-00:00                 # Runtime in D-HH:MM format
 #SBATCH --nodes=1                      # Number of nodes (keep at 1)
