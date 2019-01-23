@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 # GENCODE GRCh37 mapped genome build
 # Last updated 2018-09-05
 # https://www.gencodegenes.org/releases/grch37_mapped_releases.html
