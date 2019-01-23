@@ -11,8 +11,8 @@
 # This software is provided under an MIT License.
 # Currently only supporting POSIX-compliant shells: bash, zsh.
 
-KOOPA_VERSION="0.2.5"
-KOOPA_DATE="2019-01-16"
+KOOPA_VERSION="0.2.6"
+KOOPA_DATE="2019-01-23"
 
 
 

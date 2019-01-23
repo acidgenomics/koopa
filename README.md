@@ -39,7 +39,7 @@ Second, add these lines to your shell configuration file.
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-. ~/.koopa/bin/koopa activate
+. ~/.koopa/bin/koopa.sh activate
 ```
 
 Koopa should now activate at login.
@@ -135,7 +135,7 @@ Upon activation, koopa makes some additional scripts available in `PATH`, which 
 - Conda installation (anaconda and miniconda).
 - TeX installation.
 
-A complete list of these exported scripts can be obtained with `koopa list`.
+A complete list of these exported scripts can be obtained with `koopa.sh list`.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
