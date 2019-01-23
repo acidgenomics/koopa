@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 # Ensembl GRCh37 genome build
 # Last updated 2018-09-05
 # https://grch37.ensembl.org

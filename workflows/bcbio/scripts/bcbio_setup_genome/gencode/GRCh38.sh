@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 # GENCODE GRCh38 genome build
 # Last updated 2018-09-05
 # https://www.gencodegenes.org/releases/current.html

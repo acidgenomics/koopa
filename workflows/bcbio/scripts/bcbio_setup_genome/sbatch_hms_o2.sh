@@ -2,7 +2,6 @@
 
 # bcbio_setup_genome.py
 # Harvard Medical School O2 Cluster
-# Last modified 2018-08-21
 
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
@@ -21,4 +20,4 @@
 #SBATCH --output=jobid_%j.out          # File to which STDOUT will be written, including job ID
 #SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL)
 
-. genome.sh
+. "${GENOME}.sh"

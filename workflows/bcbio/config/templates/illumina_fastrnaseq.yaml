@@ -4,6 +4,8 @@
 # Homo sapiens
 # YYYY-MM-DD
 #
+# Note that this template doesn't perform alignment or quality control.
+#
 # Assuming a local run on a 16 core VM.
 # bcbio_nextgen_py ../config/bcbio.yaml -t local -n 16
 #
