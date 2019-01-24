@@ -17,3 +17,8 @@ branches:
 script:
   - bash -c 'shopt -s globstar; shellcheck {bin,bin/macos,system}/*.sh'
   - bash bin/koopa.sh activate
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
