@@ -6,7 +6,7 @@ language: shell
 
 branches:
   only:
-  - master
+    - master
 
 # Install shunit2 to for shell unit tests.
 # https://github.com/kward/shunit2
@@ -17,3 +17,10 @@ branches:
 script:
   - bash -c 'shopt -s globstar; shellcheck {bin,bin/macos,system}/*.sh'
   - bash bin/koopa.sh activate
+
+notifications:
+  email:
+    recipients:
+      - mike@steinbaugh.com
+    on_success: change
+    on_failure: change
