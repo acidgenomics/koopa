@@ -1,5 +1,13 @@
 #!/bin/ssh
 
+export KOOPA_VERSION="0.2.7"
+export KOOPA_DATE="2019-01-30"
+
+# Platform information.
+# Note that this requires Python.
+KOOPA_PLATFORM="$( python -mplatform )"
+export KOOPA_PLATFORM
+
 # Check if this is an interactive shell.
 echo "$-" | grep -q "i" && export INTERACTIVE=1
 
@@ -14,7 +22,3 @@ export TODAY
 # R environmental variables.
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
 
-# Platform information.
-# Note that this requires Python.
-KOOPA_PLATFORM="$( python -mplatform )"
-export KOOPA_PLATFORM
