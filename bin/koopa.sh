@@ -2,7 +2,7 @@
 # shellcheck disable=SC2236
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
-# mode using `[` instead of `[[`.
+# mode when using `[` instead of `[[`.
 
 
 
@@ -11,12 +11,10 @@
 # This software is provided under an MIT License.
 # Currently only supporting POSIX-compliant shells: bash, zsh.
 
-KOOPA_VERSION="0.2.6"
-KOOPA_DATE="2019-01-23"
 
 
-
-# Detect the current shell, which is not necessarily the default shell ($SHELL).
+# Detect the current shell.
+# This is not necessarily the default shell (`$SHELL`).
 if [ ! -z "$BASH_VERSION" ]
 then
     shell="bash"
@@ -49,25 +47,26 @@ elif [ "$shell" = "zsh" ]
 then
     KOOPA_EXE="$0"
 fi
+export KOOPA_EXE
 
-
-
+# Future shell support:
 # fish: `status -f`
 # dash: doesn't seem to be possible.
 # https://unix.stackexchange.com/questions/4650
 # https://stackoverflow.com/questions/32981333
 
-KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
-KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
-KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
-KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 
-export KOOPA_VERSION
-export KOOPA_DATE
-export KOOPA_EXE
+
+KOOPA_BIN_DIR="$( dirname "$KOOPA_EXE" )"
 export KOOPA_BIN_DIR
+
+KOOPA_BASE_DIR="$( dirname "$KOOPA_BIN_DIR" )"
 export KOOPA_BASE_DIR
+
+KOOPA_FUNCTIONS_DIR="${KOOPA_BASE_DIR}/functions"
 export KOOPA_FUNCTIONS_DIR
+
+KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 export KOOPA_SYSTEM_DIR
 
 
