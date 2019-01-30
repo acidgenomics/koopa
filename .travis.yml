@@ -6,7 +6,7 @@ language: shell
 
 branches:
   only:
-  - master
+    - master
 
 # Install shunit2 to for shell unit tests.
 # https://github.com/kward/shunit2
@@ -20,5 +20,7 @@ script:
 
 notifications:
   email:
+    recipients:
+      - mike@steinbaugh.com
     on_success: change
     on_failure: change
