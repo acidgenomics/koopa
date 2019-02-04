@@ -20,4 +20,5 @@
 #SBATCH --output=jobid_%j.out          # File to which STDOUT will be written, including job ID
 #SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL)
 
+# shellcheck source=/dev/null
 . "${GENOME}.sh"

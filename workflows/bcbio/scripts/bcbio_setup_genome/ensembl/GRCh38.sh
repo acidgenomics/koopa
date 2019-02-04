@@ -6,13 +6,13 @@ set -Eeuo pipefail
 # https://ensembl.org
 
 # User-defined parameters ======================================================
-biodata_dir="$BIODATA_DIR"
+biodata_dir="${HOME}/biodata"
 species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh38"
 source="Ensembl"
 release="$ENSEMBL_RELEASE"
-cores="$CORES"
+cores="$CPUCOUNT"
 
 # Ensembl FTP files ============================================================
 cd "$biodata_dir"

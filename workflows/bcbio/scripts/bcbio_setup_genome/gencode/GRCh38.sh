@@ -7,13 +7,13 @@ set -Eeuo pipefail
 # https://www.gencodegenes.org/faq.html
 
 # User-defined parameters ======================================================
-biodata_dir="$BIODATA_DIR"
-species="Homo_sapiens"
+biodata_dir="${HOME}/biodata"
+# species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh38"
 source="GENCODE"
 release="$GENCODE_RELEASE"
-cores="$CORES"
+cores="$CPUCOUNT"
 
 # GENCODE FTP files ============================================================
 cd "$biodata_dir"
