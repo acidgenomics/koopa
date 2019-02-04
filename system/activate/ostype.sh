@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 
 # Check for supported operating system.
 # Alternatively, can match against $OSTYPE.
