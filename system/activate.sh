@@ -27,8 +27,11 @@ add_to_path_end() {
 
 
 
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/ostype.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/bash_version.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/python_version.sh"
 
 
@@ -45,13 +48,21 @@ fi
 
 
 
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/exports.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/hostname.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/genomes.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/cpucount.sh"
 
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/user_bin.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/bcbio.sh"
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/conda.sh"
 
+# shellcheck source=/dev/null
 . "${KOOPA_SYSTEM_DIR}/activate/ssh_key.sh"

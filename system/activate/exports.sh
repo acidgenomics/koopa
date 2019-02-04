@@ -1,7 +1,7 @@
-#!/bin/ssh
+#!/bin/sh
 
 export KOOPA_VERSION="0.2.7"
-export KOOPA_DATE="2019-01-30"
+export KOOPA_DATE="2019-02-04"
 
 # Platform information.
 # Note that this requires Python.
