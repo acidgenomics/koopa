@@ -14,6 +14,7 @@ do
     cd "$repo"
     pwd
     git status
-done <   <(find -L "$git_dir" -type d -name ".git" -print0)
+done <   <(find -L "$git_dir" -maxdepth 2 -type d -name ".git" -print0)
 
 cd "$wd"
+unset -v git_dir wd
