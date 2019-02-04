@@ -6,7 +6,8 @@ set -Eeuo pipefail
 
 # Configure the bcbio run.
 # A directory named "bcbio" will be created.
-bcbio_nextgen.py -w template bcbio.yaml bcbio.csv *.fastq.gz
+# SC2035: Use ./*glob* or -- *glob* so names with dashes won't become options.
+bcbio_nextgen.py -w template bcbio.yaml bcbio.csv ./*.fastq.gz
 
 # Traverse into the work directory.
 cd bcbio/work
@@ -18,7 +19,7 @@ ln -s ../../sbatch_bcbio.sh .
 sbatch sbatch_bcbio.sh
 
 # This will check the run status.
-squeue -u $USER
+squeue -u "$USER"
 sshare -U
 
 # sprio -j JOBID
