@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 
 # Load secrets.
 

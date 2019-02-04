@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 
 # Export local user binaries, if directories exist.
 

@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 # shellcheck disable=SC2236
 
 # Count CPUs for Make jobs.
