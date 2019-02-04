@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 # shellcheck disable=SC2236
 
 # Load an SSH key automatically, using SSH_KEY global variable.

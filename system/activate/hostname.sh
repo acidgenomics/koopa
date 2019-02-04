@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 
 # Detect specific instances by the hostname.
 

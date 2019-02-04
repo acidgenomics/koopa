@@ -6,13 +6,13 @@ set -Eeuo pipefail
 # https://www.gencodegenes.org/releases/grch37_mapped_releases.html
 
 # User-defined parameters ======================================================
-biodata_dir="$BIODATA_DIR"
-species="Homo_sapiens"
+biodata_dir="${HOME}/biodata"
+# species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh37"
 source="GENCODE"
 release="$GENCODE_RELEASE"
-cores="$CORES"
+cores="$CPU_COUNT"
 
 # GENCODE FTP files ============================================================
 cd "$biodata_dir"

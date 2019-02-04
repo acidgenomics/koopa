@@ -1,4 +1,4 @@
-#!/bin/ssh
+#!/bin/sh
 # shellcheck disable=SC2236
 
 # Always check for bash, even if it's not the current shell.
