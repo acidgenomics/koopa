@@ -34,12 +34,13 @@ First, clone the repository:
 git clone https://github.com/steinbaugh/koopa.git ~/.koopa
 ```
 
-Second, add these lines to your shell configuration file.
+Second, add these lines to your POSIX-compliant shell configuration file.
 
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-. ~/.koopa/bin/koopa.sh activate
+export KOOPA_EXE="${HOME}/.koopa/bin/koopa.sh"
+cmd="activate" . "${KOOPA_EXE}"
 ```
 
 Koopa should now activate at login.
