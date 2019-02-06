@@ -13,7 +13,7 @@ bcbio_nextgen.py -w template bcbio.yaml bcbio.csv ./*.fastq.gz
 cd bcbio/work
 
 # Symlink our sbatch script.
-ln -s ../../sbatch_bcbio.sh .
+ln -s ../../sbatch-bcbio.sh .
 
 # Now ready to start the run using slurm.
 sbatch sbatch_bcbio.sh
