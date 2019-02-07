@@ -16,18 +16,19 @@ sudo -v
 # Install vim build dependencies, if necessary.
 if [ -x "$(command -v yum)" ]
 then
-    sudo yum -y install yum-utils
-    sudo yum-builddep -y vim
+    sudo yum install yum-utils
+    sudo yum-builddep -y emacs
 fi
 
 PREFIX="/usr/local"
-VERSION="8.1.0847"
+VERSION="26.1"
 
-wget "https://github.com/vim/vim/archive/v${VERSION}.tar.gz"
-tar -xzvf "v${VERSION}.tar.gz"
-cd "vim-${VERSION}"
+wget "http://ftp.gnu.org/gnu/emacs/emacs-${VERSION}.tar.xz"
+tar -xJvf "emacs-${VERSION}.tar.xz"
+cd "emacs-${VERSION}"
 
 ./configure --prefix="$PREFIX"
+
 make
-make test
+# make check
 sudo make install
