@@ -1,10 +1,8 @@
 #!/bin/sh
 
-export KOOPA_VERSION="0.2.7"
-export KOOPA_DATE="2019-02-04"
+export KOOPA_VERSION="0.2.8"
+export KOOPA_DATE="2019-02-07"
 
-# Platform information.
-# Note that this requires Python.
 KOOPA_PLATFORM="$( python -mplatform )"
 export KOOPA_PLATFORM
 
