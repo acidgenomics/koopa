@@ -5,11 +5,11 @@
 
 if [ ! -z "$MACOS" ]
 then
-    CPUCOUNT="$(sysctl -n hw.ncpu)"
+    CPU_COUNT="$(sysctl -n hw.ncpu)"
 elif [ ! -z "$LINUX" ]
 then
-    CPUCOUNT="$(getconf _NPROCESSORS_ONLN)"
+    CPU_COUNT="$(getconf _NPROCESSORS_ONLN)"
 else
-    CPUCOUNT=1
+    CPU_COUNT=1
 fi
-export CPUCOUNT
+export CPU_COUNT
