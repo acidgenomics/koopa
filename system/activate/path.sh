@@ -17,7 +17,10 @@ add_to_path_end "/bin"
 
 add_to_path_start "$KOOPA_BIN_DIR"
 
-if [ ! -z "$MACOS" ]
+if [ ! -z "$AZURE" ]
+then
+    add_to_path_start "${KOOPA_BIN_DIR}/azure"
+elif [ ! -z "$MACOS" ]
 then
     add_to_path_start "${KOOPA_BIN_DIR}/darwin"
 fi
