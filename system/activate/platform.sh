@@ -22,8 +22,8 @@ esac
 
 
 case "$HOSTNAME" in
-                 azlabapp) export AZURE=1;;
-    o2.rc.hms.harvard.edu) export HARVARD_O2=1;;
-       rc.fas.harvard.edu) export HARVARD_ODYSSEY=1;;
-                        *) ;;
+                  azlabapp*) export AZURE=1;;
+    *.o2.rc.hms.harvard.edu) export HARVARD_O2=1;;
+       *.rc.fas.harvard.edu) export HARVARD_ODYSSEY=1;;
+                          *) ;;
 esac
