@@ -120,7 +120,7 @@ Automatic [PGP][] key support will be added in a future update.
 
 ## Tools
 
-Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`/bin/`](https://github.com/steinbaugh/koopa/tree/master/bin) directory of the repo. Currently, this includes:
+Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Currently, this includes:
 
 - [Git][] version control for managing multiple repos cloned into `~/git`.
 - FASTQ management.
