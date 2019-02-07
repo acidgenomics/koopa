@@ -86,13 +86,7 @@ fi
 #     --one-file-system
 #     --acls --xattrs
 #     --iconv=utf-8,utf-8-mac
-[ -z "$RSYNC_FLAGS" ] && \
-    export RSYNC_FLAGS="\
-        --archive \
-        --copy-links \
-        --delete-before \
-        --human-readable \
-        --progress"
+[ -z "$RSYNC_FLAGS" ] && export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --progress"
 
 
 
