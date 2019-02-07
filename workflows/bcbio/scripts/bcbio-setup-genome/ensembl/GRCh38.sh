@@ -12,7 +12,7 @@ bcbio_species_dir="Hsapiens"
 build="GRCh38"
 source="Ensembl"
 release="$ENSEMBL_RELEASE"
-cores="$CPUCOUNT"
+cores="$CPU_COUNT"
 
 # Ensembl FTP files ============================================================
 cd "$biodata_dir"
