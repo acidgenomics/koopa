@@ -3,13 +3,16 @@ set -Eeuo pipefail
 
 # Install Anaconda
 # https://www.anaconda.com/download
+# https://docs.anaconda.com/anaconda/install/
+
+VERSION="5.3.0"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]
 then
-    script="Anaconda3-5.2.0-Linux-x86_64.sh"
+    script="Anaconda3-${VERSION}-Linux-x86_64.sh"
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
-    script="Anaconda3-5.2.0-MacOSX-x86_64.sh"
+    script="Anaconda3-${VERSION}-MacOSX-x86_64.sh"
 else
     echo "${OSTYPE} operating system not supported"
     exit 1
