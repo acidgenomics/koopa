@@ -10,6 +10,7 @@
 . "${KOOPA_SYSTEM_DIR}/activate/python-version.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/path.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/exports.sh"
+. "${KOOPA_SYSTEM_DIR}/activate/aliases.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/genomes.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/cpu-count.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/user-bin.sh"
@@ -19,8 +20,8 @@
 
 if [ ! -z "$MACOS" ]
 then
-    . "${KOOPA_SYSTEM_DIR}/activate/darwin/aliases.sh"
     . "${KOOPA_SYSTEM_DIR}/activate/darwin/exports.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/darwin/aliases.sh"
     . "${KOOPA_SYSTEM_DIR}/activate/darwin/grc-colors.sh"
     . "${KOOPA_SYSTEM_DIR}/activate/darwin/rbenv.sh"
     # homebrew.sh
