@@ -30,5 +30,8 @@ cd "emacs-${VERSION}"
 ./configure --prefix="$PREFIX"
 
 make
+
+# This step doesn't work on tarball.
 # make check
+
 sudo make install
