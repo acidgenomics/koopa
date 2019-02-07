@@ -51,7 +51,7 @@ Not sure where to add the `activate` step? Here are some general recommendations
 
 ### dotfiles example
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
 
 ## Additional configuration
 
