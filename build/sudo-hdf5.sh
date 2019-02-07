@@ -6,8 +6,8 @@ set -Eeuo pipefail
 # https://www.hdfgroup.org/downloads/hdf5/
 # https://support.hdfgroup.org/ftp/HDF5/releases
 
+sudo -v
 PREFIX="/usr/local"
-
 HDF5_MAJOR="1.10"
 HDF5_VERSION="${HDF5_MAJOR}.4"
 
