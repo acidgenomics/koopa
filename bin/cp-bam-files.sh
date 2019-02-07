@@ -5,26 +5,26 @@ set -Eeuo pipefail
 
 # Source directory.
 source_dir="$1"
-source_dir="$( realpath $source_dir )"
+source_dir="$( realpath "$source_dir" )"
 if [[ ! -d "$source_dir" ]]
 then
-    printf "\nDoes not exist:\n$source_dir\n\n"
+    printf "\nDoes not exist:\n%s\n\n" "$source_dir"
     exit 1
 fi
 
 # Destination directory.
 dest_dir="$2"
-dest_dir="$( realpath $dest_dir )"
+dest_dir="$( realpath "$dest_dir" )"
 if [[ ! -d "$dest_dir" ]]
 then
-    printf "\nDoes not exist:\n$dest_dir\n\n"
+    printf "\nDoes not exist:\n%s\n\n" "$dest_dir"
     exit 1
 fi
 
 printf "\n"
-printf "Source:\n$source_dir\n"
+printf "Source:\n%s\n" "$source_dir"
 printf "\n"
-printf "Destination:\n$dest_dir\n"
+printf "Destination:\n%s\n" "$dest_dir"
 printf "\n"
 
 # Note that we're allowing symlinks in the search path.
