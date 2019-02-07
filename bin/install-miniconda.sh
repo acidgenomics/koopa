@@ -28,6 +28,7 @@ EOF
 bash "$script"
 
 cat << EOF
+
 conda installed successfully.
 Export "CONDA_EXE" in bashrc and reload the shell.
 Use "which conda" to check the path.
