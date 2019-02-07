@@ -7,24 +7,16 @@ Shell bootloader for bioinformatics.
 
 ## Requirements
 
-- Linux or macOS. Windows isn't supported.
-- [Bash][] >= v4. Always required, even when using a different interactive shell.
-- [Python][]. Both v2.7 and v3 are supported.
-
-### Optional
-
-- [Conda][] >= 4.5.
-
-## Supported shells
-
 Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
-Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
+- [Bash][] >= v4. Always required, even when using a different interactive shell.
+- [Python][]. Both v2.7 and v3 are supported.
+- Linux or macOS. Windows isn't supported.
 
-### Wishlist
+Optional:
 
-- [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
-- [tcsh][].
+- [Conda][] >= 4.5.
+  Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
 
 ## Installation
 
@@ -39,9 +31,8 @@ Second, add these lines to your POSIX-compliant shell configuration file.
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-export KOOPA_EXE="${HOME}/.koopa/bin/koopa.sh"
 # shellcheck source=/dev/null
-cmd="activate" . "${KOOPA_EXE}"
+cmd="activate" . "${HOME}/.koopa/bin/koopa.sh"
 ```
 
 Koopa should now activate at login.
@@ -60,7 +51,7 @@ Not sure where to add the `activate` step? Here are some general recommendations
 
 ### dotfiles example
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
 
 ## Additional configuration
 
