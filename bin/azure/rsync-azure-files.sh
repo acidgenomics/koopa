@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 # rsync to Azure Samba (SMB) file shares.
 
 # Useful rsync flags:
