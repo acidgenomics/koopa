@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
+#!/bin/sh
 
 # HDF5
 # Website requires registration.
