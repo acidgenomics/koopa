@@ -7,24 +7,16 @@ Shell bootloader for bioinformatics.
 
 ## Requirements
 
+Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
+
 - Linux or macOS. Windows isn't supported.
 - [Bash][] >= v4. Always required, even when using a different interactive shell.
 - [Python][]. Both v2.7 and v3 are supported.
 
-### Optional
+Optional:
 
 - [Conda][] >= 4.5.
-
-## Supported shells
-
-Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
-
-Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
-
-### Wishlist
-
-- [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
-- [tcsh][].
+  Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
 
 ## Installation
 
