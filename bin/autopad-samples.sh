@@ -30,7 +30,7 @@ do
         oldname="${BASH_REMATCH[0]}"
         num=${BASH_REMATCH[1]}
         # Now pad the number prefix.
-        num=$(printf "%.${padwidth}d" $num)
+        num=$(printf "%.${padwidth}d" "$num")
         stem=${BASH_REMATCH[2]}
         # Combine with prefix to create desired file name.
         newname="${prefix}_${num}${stem}"
