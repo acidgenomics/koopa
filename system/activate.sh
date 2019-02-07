@@ -10,7 +10,6 @@
 . "${KOOPA_SYSTEM_DIR}/activate/python-version.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/path.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/exports.sh"
-. "${KOOPA_SYSTEM_DIR}/activate/hostname.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/genomes.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/cpu-count.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/user-bin.sh"
