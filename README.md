@@ -40,6 +40,7 @@ Second, add these lines to your POSIX-compliant shell configuration file.
 # koopa shell
 # https://github.com/steinbaugh/koopa
 export KOOPA_EXE="${HOME}/.koopa/bin/koopa.sh"
+# shellcheck source=/dev/null
 cmd="activate" . "${KOOPA_EXE}"
 ```
 
