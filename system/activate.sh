@@ -13,7 +13,6 @@
 . "${KOOPA_SYSTEM_DIR}/activate/aliases.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/genomes.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/cpu-count.sh"
-. "${KOOPA_SYSTEM_DIR}/activate/user-bin.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/bcbio.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/conda.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/ssh-key.sh"
