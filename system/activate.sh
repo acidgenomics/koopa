@@ -4,8 +4,8 @@
 
 # Activate koopa in the current shell.
 
+. "${KOOPA_SYSTEM_DIR}/activate/platform.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/functions.sh"
-. "${KOOPA_SYSTEM_DIR}/activate/uname.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/bash-version.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/python-version.sh"
 . "${KOOPA_SYSTEM_DIR}/activate/path.sh"
