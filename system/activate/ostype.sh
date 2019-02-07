@@ -1,14 +1,14 @@
 #!/bin/sh
 
-# Operating system variables defined in uname.
+# Detect operating system environment using uname.
 
-# Operating system name.
 OSNAME=$(uname -s)
 export OSNAME
 
-# Host name.
 HOSTNAME=$(uname -n)
 export HOSTNAME
+
+
 
 case "$(uname -s)" in
     Darwin) export MACOS=1 && export UNIX=1;;
@@ -16,8 +16,11 @@ case "$(uname -s)" in
          *) echo "Unsupported operating system."; return 1;;
 esac
 
-# Microsoft Azure.
-if quiet_expr "$HOSTNAME" "azlabapp"
-then
-    export AZURE=1
-fi
+
+
+case "$(uname -n)" in
+                 azlabapp) export AZURE=1;;
+    o2.rc.hms.harvard.edu) export HARVARD_O2=1;;
+       rc.fas.harvard.edu) export HARVARD_ODYSSEY=1;;
+                        *) ;;
+esac
