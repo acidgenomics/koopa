@@ -1,35 +1,36 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Ensembl GRCh37 genome build
+# GENCODE GRCh38 genome build
 # Last updated 2018-09-05
-# https://grch37.ensembl.org
+# https://www.gencodegenes.org/releases/current.html
+# https://www.gencodegenes.org/faq.html
 
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
-species="Homo_sapiens"
+# species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
-build="GRCh37"
-source="Ensembl"
-release="87"
-cores="$CPUCOUNT"
+build="GRCh38"
+source="GENCODE"
+release="$GENCODE_RELEASE"
+cores="$CPU_COUNT"
 
-# Ensembl FTP files ============================================================
+# GENCODE FTP files ============================================================
 cd "$biodata_dir"
-ftp_dir="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
-species_lower=$(echo "$species" | tr '[:upper:]' '[:lower:]')
+ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}"
 
 # FASTA ------------------------------------------------------------------------
-# Primary assembly, unmasked
-# Homo_sapiens.GRCh37.dna.primary_assembly.fa.gz
-fasta="${species}.${build}.dna.primary_assembly.fa"
-wget "${ftp_dir}/fasta/${species_lower}/dna/${fasta}.gz"
+# Genome sequence, primary assembly
+# GRCh38.primary_assembly.genome.fa.gz
+fasta="${build}.primary_assembly.genome.fa"
+wget "${ftp_dir}/${fasta}.gz"
 gunzip -c "${fasta}.gz" > "$fasta"
 
 # GTF --------------------------------------------------------------------------
-# Homo_sapiens.GRCh37.87.gtf.gz
-gtf="${species}.${build}.${release}.gtf"
-wget "${ftp_dir}/gtf/${species_lower}/${gtf}.gz"
+# Comprehensive gene annotation
+# gencode.v28.annotation.gtf.gz
+gtf="gencode.v${release}.annotation.gtf"
+wget "${ftp_dir}/${gtf}.gz"
 gunzip -c "${gtf}.gz" > "$gtf"
 
 # bcbio ========================================================================
