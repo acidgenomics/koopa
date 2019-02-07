@@ -3,9 +3,6 @@
 export KOOPA_VERSION="0.2.8"
 export KOOPA_DATE="2019-02-07"
 
-KOOPA_PLATFORM="$( python -mplatform )"
-export KOOPA_PLATFORM
-
 
 
 # Check if this is an interactive shell.
