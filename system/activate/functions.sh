@@ -6,6 +6,20 @@
 # Modified from Mike McQuaid's dotfiles.
 # https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
 
+# pathmunge is defined in Red Hat /etc/profile.
+pathmunge () {
+    case ":${PATH}:" in
+        *:"$1":*) ;;
+        *)
+            if [ "$2" = "after" ]
+            then
+                PATH="$PATH:$1"
+            else
+                PATH="$1:$PATH"
+            fi
+    esac
+}
+
 # FIXME Look into an improved POSIX method here.
 # However, this works for bash and ksh.
 # Note that this won't work on the first item in PATH.
