@@ -23,4 +23,10 @@ then
 elif [ ! -z "$MACOS" ]
 then
     add_to_path_start "${KOOPA_BIN_DIR}/darwin"
+elif [ ! -z "HARVARD_O2" ]
+    add_to_path_start "${KOOPA_BIN_DIR}/harvard-o2"
+then
+elif [ ! -z "HARVARD_ODYSSEY" ]
+    add_to_path_start "${KOOPA_BIN_DIR}/harvard-odyssey"
+then
 fi
