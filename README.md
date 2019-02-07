@@ -33,7 +33,7 @@ Second, add these lines to your POSIX-compliant shell configuration file.
 # https://github.com/steinbaugh/koopa
 export KOOPA_EXE="${HOME}/.koopa/bin/koopa.sh"
 # shellcheck source=/dev/null
-cmd="activate" . "${KOOPA_EXE}"
+cmd="activate" . "$KOOPA_EXE"
 ```
 
 Koopa should now activate at login.
