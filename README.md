@@ -9,8 +9,8 @@ Shell bootloader for bioinformatics.
 
 Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
-- [Bash][] >= v4. Always required, even when using a different interactive shell.
-- [Python][]. Both v2.7 and v3 are supported.
+- [Bash][] >= 4. Always required, even when using a different interactive shell.
+- [Python][]. Both 2.7 and 3 are supported.
 - Linux or macOS. Windows isn't supported.
 
 Optional:
@@ -120,7 +120,7 @@ Automatic [PGP][] key support will be added in a future update.
 
 ## Tools
 
-Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`/bin/`](https://github.com/steinbaugh/koopa/tree/master/bin) directory of the repo. Currently, this includes:
+Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Currently, this includes:
 
 - [Git][] version control for managing multiple repos cloned into `~/git`.
 - FASTQ management.
