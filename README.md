@@ -88,8 +88,8 @@ Koopa provides automatic detection and activation support when conda is installe
 
 - `~/anaconda3/`
 - `~/miniconda3/`
-- `/usr/local/bin/anaconda3/`
-- `/usr/local/bin/miniconda3/`
+- `/usr/local/anaconda3/`
+- `/usr/local/miniconda3/`
 
 Oherwise, the installation path can be defined manually using the `CONDA_EXE` variable.
 

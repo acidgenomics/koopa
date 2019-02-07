@@ -4,10 +4,16 @@
 # https://hisham.hm/htop/releases/
 # https://github.com/hishamhm/htop
 
-# Make sure conda isn't active, otherwise can conflict with ncurses.
-# libncursesw.so.6
+# Error on conda detection.
+# Can conflict with ncurses: libncursesw.so.6
+if [ -x "$(command -v conda)" ]
+then
+    echo "Error: conda is active." >&2
+    exit 1
+fi
 
 sudo -v
+
 VERSION="2.2.0"
 PREFIX="/usr/local"
 
