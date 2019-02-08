@@ -7,24 +7,16 @@ Shell bootloader for bioinformatics.
 
 ## Requirements
 
-- Linux or macOS. Windows isn't supported.
-- [Bash][] >= v4. Always required, even when using a different interactive shell.
-- [Python][]. Both v2.7 and v3 are supported.
-
-### Optional
-
-- [Conda][] >= 4.5.
-
-## Supported shells
-
 Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
-Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
+- [Bash][] >= 4. Always required, even when using a different interactive shell.
+- [Python][]. Both 2.7 and 3 are supported.
+- Linux or macOS. Windows isn't supported.
 
-### Wishlist
+Optional:
 
-- [fish][]. Not [POSIX][]-compliant, which makes it tricky to support, but it's a really great interactive shell.
-- [tcsh][].
+- [Conda][] >= 4.5.
+  Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
 
 ## Installation
 
@@ -39,8 +31,8 @@ Second, add these lines to your POSIX-compliant shell configuration file.
 ```bash
 # koopa shell
 # https://github.com/steinbaugh/koopa
-export KOOPA_EXE="${HOME}/.koopa/bin/koopa.sh"
-cmd="activate" . "${KOOPA_EXE}"
+# shellcheck source=/dev/null
+cmd="activate" . "${HOME}/.koopa/bin/koopa.sh"
 ```
 
 Koopa should now activate at login.
@@ -59,7 +51,7 @@ Not sure where to add the `activate` step? Here are some general recommendations
 
 ### dotfiles example
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa (refer to `shprofile`).
+Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
 
 ## Additional configuration
 
@@ -96,8 +88,8 @@ Koopa provides automatic detection and activation support when conda is installe
 
 - `~/anaconda3/`
 - `~/miniconda3/`
-- `/usr/local/bin/anaconda3/`
-- `/usr/local/bin/miniconda3/`
+- `/usr/local/anaconda3/`
+- `/usr/local/miniconda3/`
 
 Oherwise, the installation path can be defined manually using the `CONDA_EXE` variable.
 
@@ -128,7 +120,7 @@ Automatic [PGP][] key support will be added in a future update.
 
 ## Tools
 
-Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`/bin/`](https://github.com/steinbaugh/koopa/tree/master/bin) directory of the repo. Currently, this includes:
+Upon activation, koopa makes some additional scripts available in `PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Currently, this includes:
 
 - [Git][] version control for managing multiple repos cloned into `~/git`.
 - FASTQ management.
