@@ -15,7 +15,7 @@ branches:
 #   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 
 script:
-  - bash -c 'shopt -s globstar; shellcheck {bin,bin/macos,system}/*.sh'
+  - bash -c 'shopt -s globstar; shellcheck {bin,bin/darwin,bin/harvard-o2,bin/harvard-odyssey,system,system/activate,system/activate/darwin}/*.sh'
   - bash bin/koopa.sh activate
 
 notifications:

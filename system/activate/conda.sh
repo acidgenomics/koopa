@@ -18,9 +18,9 @@
 # 2. User miniconda3
 #    ~/miniconda3
 # 3. Shared anaconda3
-#    /usr/local/bin/anaconda3
+#    /usr/local/anaconda3
 # 4. Shared miniconda3
-#    /usr/local/bin/miniconda3
+#    /usr/local/miniconda3
 #
 # Note that an environment will only be activated when CONDA_DEFAULT_ENV
 # is defined in the shell variables prior to this step.
@@ -40,12 +40,12 @@ then
         elif [ -f "${HOME}/miniconda3/bin/conda" ]
         then
             export CONDA_EXE="${HOME}/miniconda3/bin/conda"
-        elif [ -f "/usr/local/bin/anaconda3/bin/conda" ]
+        elif [ -f "/usr/local/anaconda3/bin/conda" ]
         then
-            export CONDA_EXE="/usr/local/bin/anaconda3/bin/conda"
-        elif [ -f "/usr/local/bin/miniconda3/bin/conda" ]
+            export CONDA_EXE="/usr/local/anaconda3/bin/conda"
+        elif [ -f "/usr/local/miniconda3/bin/conda" ]
         then
-            export CONDA_EXE="/usr/local/bin/miniconda3/bin/conda"
+            export CONDA_EXE="/usr/local/miniconda3/bin/conda"
         fi
     fi
     if [ ! -z "$CONDA_EXE" ]
