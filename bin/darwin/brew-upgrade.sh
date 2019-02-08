@@ -18,7 +18,8 @@ echo "Upgrading Homebrew Casks..."
 brew cask outdated | xargs brew cask reinstall
 
 # Mac App Store
-if [[ -n "$(command -v mas)" ]]; then
+if [[ -x "$(command -v mas)" ]]
+then
     echo "Upgrading Mac App Store Apps..."
     mas upgrade
 fi
