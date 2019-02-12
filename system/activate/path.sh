@@ -6,8 +6,10 @@
 # `sbin` = superuser binaries.
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 
-add_to_path_end "${HOME}/local"
-add_to_path_end "${HOME}/.local"
+# Inspect `/etc/profile` if system PATH is misconfigured.
+
+add_to_path_end "${HOME}/local/bin"
+add_to_path_end "${HOME}/.local/bin"
 add_to_path_end "/usr/local/sbin"
 add_to_path_end "/usr/local/bin"
 add_to_path_end "/usr/sbin"

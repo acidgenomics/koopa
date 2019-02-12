@@ -8,6 +8,9 @@ set -Eeuo pipefail
 date="2018-11-20"
 version="1.1.1a"
 
+# FIXME Currently this is configured for macOS.
+# Need to revise to build on Linux as well.
+
 echo "Installing openssl ${version} (${date})."
 echo "sudo is required for this script"
 sudo -v
