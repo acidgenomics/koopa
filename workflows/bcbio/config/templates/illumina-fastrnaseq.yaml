@@ -6,8 +6,8 @@
 #
 # Note that this template doesn't perform alignment or quality control.
 #
-# Assuming a local run on a 16 core VM.
-# bcbio_nextgen_py ../config/bcbio.yaml -t local -n 16
+# Assuming a local run on a 16 core VM. Use n - 2 cores.
+# bcbio_nextgen_py ../config/bcbio.yaml -t local -n 14
 #
 # Genome build is specific to the bcbio install.
 # Run `bcbio_setup_genome.py` for list of genome builds.
@@ -30,6 +30,6 @@ upload:
 # Recommended run-specific resources.
 resources:
   default:
-    cores: 16
+    cores: 14
   tmp:
     dir: ~/scratch
