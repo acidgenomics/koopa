@@ -4,8 +4,8 @@
 # Homo sapiens
 # YYYY-MM-DD
 #
-# Assuming a local run on a 16 core VM. Use n - 2 cores.
-# bcbio_nextgen_py ../config/bcbio.yaml -t local -n 14
+# Assuming a local run on multi-core VM. Use n - 2 cores.
+# bcbio_nextgen_py ../config/bcbio.yaml -t local -n $((CPU_COUNT-2))
 #
 # Genome build is specific to the bcbio install.
 # Run `bcbio_setup_genome.py` for list of genome builds.
@@ -88,7 +88,5 @@ upload:
 
 # Recommended run-specific resources.
 resources:
-  default:
-    cores: 14
   tmp:
     dir: ~/scratch
