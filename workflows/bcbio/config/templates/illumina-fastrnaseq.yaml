@@ -20,6 +20,3 @@ details:
     algorithm: {}
 upload:
   dir: ../final
-resources:
-  tmp:
-    dir: ~/scratch
