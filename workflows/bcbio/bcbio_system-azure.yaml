@@ -3,8 +3,6 @@ resources:
     memory: 3G
     cores: 16
     jvm_opts: ["-Xms750m", "-Xmx3500m"]
-  tmp:
-    dir: ~/scratch
   gatk:
     jvm_opts: ["-Xms500m", "-Xmx3500m"]
   snpeff:
@@ -21,3 +19,6 @@ resources:
     memory: 8g
   seqcluster:
     memory: 8g
+  tmp:
+    dir: ~/scratch
+galaxy_config: universe_wsgi.ini
