@@ -85,8 +85,3 @@ details:
 # Where to upload (save) the final output.
 upload:
   dir: ../final
-
-# Recommended run-specific resources.
-resources:
-  tmp:
-    dir: ~/scratch
