@@ -40,7 +40,9 @@ details:
       #
       # Unsure about the library preparation?
       # Run the pipeline on a single sample and check the BAM.
-      # TruSeq Stranded mRNA is commonly used. For that kit, use "firstrand" (fr-firststrand).
+      #
+      # TruSeq Stranded mRNA is commonly used.
+      # For that kit, use "firstrand" (fr-firststrand).
       #
       # See also:
       # - https://ccb.jhu.edu/software/hisat2/manual.shtml
