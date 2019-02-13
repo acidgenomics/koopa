@@ -28,6 +28,7 @@ details:
       # Recommend using salmon/kallisto over HISAT2/STAR for counts.
       # Refer to the bcbioRNASeq R package documentation for more information.
       # Salmon is currently run by default.
+      # Note that this setting will run both salmon and kallisto.
       expression_caller: [salmon, kallisto]
       
       # Stranded library configuration.
@@ -73,10 +74,10 @@ details:
       # adapters: [truseq, polya]
       
       # Automatically save a bcbioRNASeq S4 object for R.
-      tools_on: [bcbiornaseq]
-      bcbiornaseq:
-        organism: homo sapiens
-        interesting_groups: [treatment, genotype]
+      # tools_on: [bcbiornaseq]
+      # bcbiornaseq:
+      #   organism: homo sapiens
+      #   interesting_groups: [treatment, genotype]
 
 # Where to upload (save) the final output.
 upload:
