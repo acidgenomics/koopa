@@ -24,13 +24,13 @@ details:
       # Can use STAR instead of HISAT2 for GRCh37/hg19.
       # Note that bcbio only supports a single aligner per run.
       aligner: hisat2
-      
+
       # Recommend using salmon/kallisto over HISAT2/STAR for counts.
       # Refer to the bcbioRNASeq R package documentation for more information.
       # Salmon is currently run by default.
       # Note that this setting will run both salmon and kallisto.
       expression_caller: [salmon, kallisto]
-      
+
       # Stranded library configuration.
       # Supported: "unstranded", "firststrand", "secondstrand".
       # Unstranded is the current default.
@@ -52,28 +52,28 @@ details:
       # - https://support.illumina.com/sequencing/sequencing_kits/truseq-stranded-mrna-workflow.html
       # - http://seqanswers.com/forums/showthread.php?t=29542
       # strandedness: firststrand
-      
+
       # Uncomment if you want to provide a custom transcriptome FASTA file.
       # transcriptome_fasta: transcriptome.fa
-      
+
       # Uncomment if you want to provide a custom transcriptome GTF file.
       # transcriptome_gtf: transcriptome.gtf
-      
+
       # Uncomment if you want to want to provide a FASTA file of spike-ins to quantify.
       # spikein_fasta: spikeins.fa
-      
+
       # `quality_format` tells bcbio what quality format is used in the FASTQ files.
       # This is set to "standard" by default.
       # If your samples were sequenced any time past 2009 or so, can leave unset. 
       # quality_format: standard
-      
+
       # Note that adapter trimming is no longer recommended, and is disabled by default.
       # trim_reads: False
-      
+
       # Uncomment these if adapter trimming needs to be performed.
       # trim_reads: read_through
       # adapters: [truseq, polya]
-      
+
       # Automatically save a bcbioRNASeq S4 object for R.
       # tools_on: [bcbiornaseq]
       # bcbiornaseq:
