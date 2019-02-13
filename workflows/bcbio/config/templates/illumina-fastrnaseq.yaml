@@ -6,11 +6,7 @@
 #
 # Note that this template doesn't perform alignment or quality control.
 #
-# Assuming a local run on multi-core VM. Use n - 2 cores.
-# bcbio_nextgen_py ../config/bcbio.yaml -t local -n $((CPU_COUNT-2))
-#
-# Genome build is specific to the bcbio install.
-# Run `bcbio_setup_genome.py` for list of genome builds.
+# Run `bcbio_setup_genome.py` to list available genome builds.
 #
 # More template examples:
 # https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
