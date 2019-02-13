@@ -28,6 +28,12 @@ export TODAY
 
 
 
+# Ensure terminal color mode is defined.
+# Normally, this should be set by the terminal client.
+[ -z "$TERM" ] && export TERM="screen-256color"
+
+
+
 # Trim the maximum number of directories in prompt (PS1).
 # For bash, requires >= v4.
 [ -z "$PROMPT_DIRTRIM" ] && export PROMPT_DIRTRIM=3
