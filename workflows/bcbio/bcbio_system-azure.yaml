@@ -14,7 +14,7 @@ resources:
   dexseq:
     memory: 10g
   hisat2:
-    memory: 100g
+    memory: 50g
   macs2:
     memory: 8g
   seqcluster:
