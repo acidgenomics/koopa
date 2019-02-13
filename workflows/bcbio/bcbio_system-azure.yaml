@@ -20,5 +20,5 @@ resources:
   seqcluster:
     memory: 8g
   tmp:
-    dir: ~/scratch
+    dir: /mnt/resource
 galaxy_config: universe_wsgi.ini
