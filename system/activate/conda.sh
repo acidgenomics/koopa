@@ -1,6 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC2236
 
+
+
 # Activate Conda
 #
 # Conda doesn't currently support ksh, and fish support is buggy.
@@ -26,7 +28,9 @@
 # is defined in the shell variables prior to this step.
 #
 # Use CONDA_EXE to manually set the path, for non-standard installs.
-#
+
+
+
 # "$shell" variable inherits from koopa call.
 # SC2154: shell is referenced but not assigned.
 # shellcheck disable=SC2154
