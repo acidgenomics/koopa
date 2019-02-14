@@ -23,8 +23,8 @@ if [ -x "$BCBIO_EXE" ]
 then
     export BCBIO_EXE
     unset -v PYTHONHOME PYTHONPATH
-    
     bcbio_bin_dir="$( dirname "$BCBIO_EXE" )"
-    export PATH="${bcbio_bin_dir}:${PATH}"
+    # Exporting at the end of PATH so we don't mask R.
+    export PATH="${PATH}:${bcbio_bin_dir}"
     unset -v bcbio_bin_dir
 fi
