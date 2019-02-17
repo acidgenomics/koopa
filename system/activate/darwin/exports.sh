@@ -7,4 +7,4 @@ export GREP_OPTIONS="--color=auto"
 # export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
 # Set rsync flags for APFS.
-export RSYNC_FLAGS="${RSYNC_FLAGS} --iconv=utf-8,utf-8-mac"
+export RSYNC_FLAGS_APFS="${RSYNC_FLAGS} --iconv=utf-8,utf-8-mac"
