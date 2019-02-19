@@ -6,12 +6,14 @@ then
     sudo yum-builddep -y tmux
 fi
 
-TMUX_VERSION="2.8"
-wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${TMUX_VERSION}.tar.gz"
-tar -xzvf "tmux-${version}.tar.gz"
-cd "tmux-${version}"
+PREFIX="/usr/local"
+VERSION="2.8"
 
-./configure --prefix="/usr/local"
+wget "https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz"
+tar -xzvf "tmux-${VERSION}.tar.gz"
+cd "tmux-${VERSION}"
+
+./configure --prefix="$PREFIX"
 
 make
 sudo make install
