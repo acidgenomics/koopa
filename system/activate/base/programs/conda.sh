@@ -34,7 +34,7 @@
 # "$shell" variable inherits from koopa call.
 # SC2154: shell is referenced but not assigned.
 # shellcheck disable=SC2154
-if [ "$shell" = "bash" ] || [ "$shell" = "zsh" ]
+if [ "$KOOPA_SHELL" = "bash" ] || [ "$KOOPA_SHELL" = "zsh" ]
 then
     if [ -z "$CONDA_EXE" ]
     then
