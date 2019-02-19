@@ -17,33 +17,34 @@
 # This is not necessarily the default shell (`$SHELL`).
 if [ ! -z "$BASH_VERSION" ]
 then
-    shell="bash"
+    KOOPA_SHELL="bash"
 elif [ ! -z "$KSH_VERSION" ]
 then
-    shell="ksh"
+    KOOPA_SHELL="ksh"
 elif [ ! -z "$ZSH_VERSION" ]
 then
-    shell="zsh"
+    KOOPA_SHELL="zsh"
 else
     echo "koopa currently supports bash, ksh, or zsh shell."
     echo "Check your configuration."
     return 1
 fi
+export KOOPA_SHELL
 
 
 
 # Locate the koopa installation based on the source operation.
-if [ "$shell" = "bash" ]
+if [ "$KOOPA_SHELL" = "bash" ]
 then
     # SC2039: In POSIX sh, array references are undefined.
     # shellcheck disable=SC2039
     KOOPA_EXE="${BASH_SOURCE[0]}"
-elif [ "$shell" = "ksh" ]
+elif [ "$KOOPA_SHELL" = "ksh" ]
 then
     # SC2154: .sh.file is referenced but not assigned.
     # shellcheck disable=SC2154
     KOOPA_EXE="${.sh.file}"
-elif [ "$shell" = "zsh" ]
+elif [ "$KOOPA_SHELL" = "zsh" ]
 then
     KOOPA_EXE="$0"
 fi
@@ -76,7 +77,6 @@ export KOOPA_SYSTEM_DIR
 # SC2240 The dot command does not support arguments in sh/dash.
 # Set them as variables.
 [ -z "$cmd" ] && cmd="$1"
-
 if [ "$cmd" = "activate" ]
 then
     # shellcheck source=/dev/null
@@ -93,5 +93,4 @@ else
     echo "koopa args: activate, info, list"
     exit 1
 fi
-
-unset -v cmd shell
+unset -v cmd
