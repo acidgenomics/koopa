@@ -3,7 +3,7 @@
 # Improve terminal colors.
 export CLICOLOR=1
 export GREP_OPTIONS="--color=auto"
-# `man ls`: see LSCOLORS section for color designators.
+# Refer to `man ls` for `LSCOLORS` section on color designators.
 # export LSCOLORS="Gxfxcxdxbxegedabagacad"
 
 # Set rsync flags for APFS.

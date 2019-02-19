@@ -1,7 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC2236
 
-# Always check for bash, even if it's not the current shell.
+# Check that bash version is supported.
+# Always requiring bash, even if it's not the current shell.
 #
 # See also:
 # - https://stackoverflow.com/questions/16989598
@@ -41,7 +42,7 @@ then
     echo "   chsh -s /usr/local/bin/bash $USER"
     echo "5. Reload the shell and check bash version."
     echo "   bash --version"
-    return 1
+    exit 1
 fi
 unset -v bash_version
 
