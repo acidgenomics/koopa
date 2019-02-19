@@ -1,48 +1,31 @@
-# Installation
+sudo -v
 
-## conda method
+if quiet_which yum
+then
+    sudo yum -y install yum-utils
+    sudo yum-builddep -y tmux
+fi
 
-Install using [conda][] package manager. Recommended if you don't have sudo access.
+PREFIX="/usr/local"
+VERSION="2.8"
 
-```bash
-conda install tmux
-```
+wget "https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz"
+tar -xzvf "tmux-${VERSION}.tar.gz"
+cd "tmux-${VERSION}"
 
-## yum method
+./configure --prefix="$PREFIX"
 
-Install using [yum] package manager. Recommended when working on a VM with sudo access.
-
-```bash
-sudo yum install tmux
-```
-
-Now that [tmux][] is installed, here's how to check the version.
-
-```bash
-tmux -V
-```
-
-## Build and install from source
-
-On some Linux distros, tmux can be pretty out of date. Here's how to build from source on a system that supports [yum][].
-
-```bash
-sudo yum install yum-utils
-sudo yum-builddep tmux
-```
-
-```
-version="2.8"
-wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
-tar -xzvf "tmux-${version}.tar.gz"
-cd "tmux-${version}"
-```
-
-```bash
-./configure --prefix="/usr/local"
 make
 sudo make install
-```
+
+
+
+
+
+
+
+
+
 
 Alternatively, here's how to install without `sudo`.
 
