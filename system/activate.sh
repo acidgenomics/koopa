@@ -7,49 +7,40 @@
 
 
 # Set internal variable to check if koopa is already active.
-[ ! -z "$KOOPA_PLATFORM" ] && ACTIVATED=1
-
-# Set directory variables.
-dir="${KOOPA_SYSTEM_DIR}/activate"
-preflight="${dir}/preflight"
-base="${dir}/base"
-darwin="${dir}/darwin"
-bash="${dir}/bash"
-zsh="${dir}/zsh"
-unset -v dir
+[ ! -z "$KOOPA_PLATFORM" ] && KOOPA_ACTIVATED=1
 
 
 
 # Run pre-flight checks to ensure platform is supported.
-if [ -z "$ACTIVATED" ]
+if [ -z "$KOOPA_ACTIVATED" ]
 then
-    . "${preflight}/01-bash-version.sh"
-    . "${preflight}/02-python-version.sh"
-    . "${preflight}/03-platform.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/preflight/01-bash-version.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/preflight/02-python-version.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/preflight/03-platform.sh"
 fi
 
 
 
 # Always load these non-persistent settings.
-. "${base}/secrets.sh"
-. "${base}/functions.sh"
-. "${base}/aliases.sh"
-. "${base}/set.sh"
-. "${base}/ssh-key.sh"
+. "${KOOPA_SYSTEM_DIR}/activate/base/secrets.sh"
+. "${KOOPA_SYSTEM_DIR}/activate/base/functions.sh"
+. "${KOOPA_SYSTEM_DIR}/activate/base/aliases.sh"
+. "${KOOPA_SYSTEM_DIR}/activate/base/set.sh"
+. "${KOOPA_SYSTEM_DIR}/activate/base/ssh-key.sh"
 
 
 
 # Skip these persistent settings in subshells (e.g. tmux).
-if [ -z "$ACTIVATED" ]
+if [ -z "$KOOPA_ACTIVATED" ]
 then
-    . "${base}/exports/general.sh"
-    . "${base}/exports/cpu-count.sh"
-    . "${base}/exports/genomes.sh"
-    . "${base}/exports/path.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/exports/general.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/exports/cpu-count.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/exports/genomes.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/exports/path.sh"
     
-    . "${base}/programs/aspera.sh"
-    . "${base}/programs/bcbio.sh"
-    . "${base}/programs/conda.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/programs/aspera.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/programs/bcbio.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/base/programs/conda.sh"
 fi
 
 
@@ -57,16 +48,20 @@ fi
 # Shell-specific configuration.
 if [ "$KOOPA_SHELL" = "bash" ]
 then
-    . "${bash}/source.sh"
-    . "${bash}/shopt.sh"
-    . "${bash}/bind.sh"
-    . "${bash}/ps1.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/bash/init.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/bash/shopt.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/bash/bind.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/bash/ps1.sh"
+elif [ "$KOOPA_SHELL" = "ksh" ]
+then
+    . "${KOOPA_SYSTEM_DIR}/activate/ksh/init.sh"
 elif [ "$KOOPA_SHELL" = "zsh" ]
 then
-    . "${zsh}/oh-my-zsh.zsh"
-    . "${zsh}/pure-prompt.zsh"
-    . "${zsh}/setopt.zsh"
-    . "${zsh}/bindkey.zsh"
+    . "${KOOPA_SYSTEM_DIR}/activate/zsh/init.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/zsh/oh-my-zsh.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/zsh/pure-prompt.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/zsh/setopt.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/zsh/bindkey.sh"
 fi
 
 
@@ -74,18 +69,17 @@ fi
 # Platform-specific configuration.
 if [ ! -z "$MACOS" ]
 then
-    if [ -z "$activated"]
+    if [ -z "$KOOPA_ACTIVATED"]
     then
-        . "${darwin}/exports.sh"
-        . "${darwin}/homebrew.sh"
+        . "${KOOPA_SYSTEM_DIR}/activate/darwin/exports.sh"
+        . "${KOOPA_SYSTEM_DIR}/activate/darwin/homebrew.sh"
     fi
-    . "${darwin}/aliases.sh"
-    . "${darwin}/grc-colors.sh"
-    . "${darwin}/perlbrew.sh"
-    . "${darwin}/rbenv.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/darwin/aliases.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/darwin/grc-colors.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/darwin/perlbrew.sh"
+    . "${KOOPA_SYSTEM_DIR}/activate/darwin/rbenv.sh"
 fi
 
 
 
-unset -v base bash darwin preflight zsh
-unset -v ACTIVATED
+unset -v KOOPA_ACTIVATED
