@@ -1,7 +1,9 @@
 resources:
   default:
-    memory: 3G
-    cores: 16
+    # Bump up the default from 3G.
+    memory: 6G
+    # Use n-2 cores.
+    cores: 30
     jvm_opts: ["-Xms750m", "-Xmx3500m"]
   gatk:
     jvm_opts: ["-Xms500m", "-Xmx3500m"]
