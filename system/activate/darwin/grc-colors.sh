@@ -2,6 +2,7 @@
 
 # Enable more colors with grc.
 
+file="$HOMEBREW_PREFIX/etc/grc.bashrc"
 # shellcheck disable=SC1090
-[ -f "$HOMEBREW_PREFIX/etc/grc.bashrc" ] && \
-    . "$HOMEBREW_PREFIX/etc/grc.bashrc"
+[ -f "$file" ] && "$file"
+unset -v file
