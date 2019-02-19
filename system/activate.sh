@@ -31,10 +31,11 @@ fi
 
 
 # Always load these non-persistent settings.
-. "${base}/nonpersistent/secrets.sh"
-. "${base}/nonpersistent/functions.sh"
-. "${base}/nonpersistent/aliases.sh"
-. "${base}/nonpersistent/ssh-key.sh"
+. "${base}/secrets.sh"
+. "${base}/functions.sh"
+. "${base}/aliases.sh"
+. "${base}/set.sh"
+. "${base}/ssh-key.sh"
 
 
 
@@ -56,7 +57,7 @@ fi
 # Shell-specific configuration.
 if [ "$KOOPA_SHELL" = "bash" ]
 then
-    . "${bash}/etc.sh"
+    . "${bash}/source.sh"
     . "${bash}/shopt.sh"
     . "${bash}/bind.sh"
     . "${bash}/ps1.sh"
