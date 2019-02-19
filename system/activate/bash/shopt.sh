@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# Set up text editor.
-# Using vi mode instead of emacs by default.
-set -o vi
-
 # Correct minor directory changing spelling mistakes.
 shopt -s cdspell
 
