@@ -1,0 +1,46 @@
+# Installation
+
+On [macOS][], I recommend using [Homebrew][]. On Linux, I recommend building and installing from source.
+
+## Build and install from source
+
+Here's how to build [Vim][] on a Linux machine that supports [yum][]. First, we need to install all of the dependencies that were used to build vim.
+
+```bash
+sudo yum -y install yum-utils
+sudo yum-builddep -y vim
+```
+
+Clone the vim source code.
+
+```bash
+version="8.1.0847"
+wget "https://github.com/vim/vim/archive/v${version}.tar.gz"
+tar -xzvf "v${version}.tar.gz"
+cd "vim-${version}"
+```
+
+```bash
+./configure --prefix="/usr/local"
+make
+sudo make install
+```
+
+Alternatively, here's how to install without `sudo`.
+
+```bash
+./configure --prefix="${HOME}/.local"
+make
+make install
+```
+
+Check the version.
+
+```bash
+vim --version
+```
+
+See also:
+
+- https://possiblelossofprecision.net/?p=949
+- https://github.com/Valloric/YouCompleteMe/wiki/Building-Vim-from-source

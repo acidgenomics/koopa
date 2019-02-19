@@ -2,6 +2,8 @@
 
 
 
+# FIXME Improve detection and skip method here.
+
 # Path modifiers.
 # Modified from Mike McQuaid's dotfiles.
 # https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh

@@ -1,7 +1,13 @@
 #!/bin/sh
 
-export KOOPA_VERSION="0.2.8"
-export KOOPA_DATE="2019-02-07"
+export KOOPA_VERSION="0.2.9"
+export KOOPA_DATE="2019-02-19"
+
+
+
+# Check if this is a login shell.
+[ "$0" = "-bash" ] && export LOGIN_BASH=1
+[ "$0" = "-zsh" ] && export LOGIN_ZSH=1
 
 
 
@@ -10,23 +16,12 @@ echo "$-" | grep -q "i" && export INTERACTIVE=1
 
 
 
-# Fix systems missing $USER.
+# Ensure $USER is always exported.
 [ -z "$USER" ] && USER="$(whoami)" && export USER
 
-
-
-# Current date (e.g. 2018-01-01).
-# Alternatively, can use `%F`.
-TODAY=$(date +%Y-%m-%d)
-export TODAY
-
-
-
-# Save more history.
-[ -z "$HISTSIZE" ] && export HISTSIZE=100000
-[ -z "$SAVEHIST" ] && export SAVEHIST=100000
-
-
+# Ensure $HOST is exported for ZSH compatibility.
+# $HOSTNAME is exported in `check-platform`.
+[ -z "$HOST" ] && export HOST="$HOSTNAME"
 
 # Ensure terminal color mode is defined.
 # Normally, this should be set by the terminal client.
@@ -34,9 +29,26 @@ export TODAY
 
 
 
+# Force export of current date (e.g. 2018-01-01).
+# Alternatively, can use `%F`.
+TODAY=$(date +%Y-%m-%d)
+export TODAY
+
+
+
+# History
+[ -z "$HISTFILE" ] && export HISTFILE="$HOME/.${KOOPA_SHELL}_history"
+[ -z "$HISTSIZE" ] && export HISTSIZE=100000
+[ -z "$SAVEHIST" ] && export SAVEHIST=100000
+[ -z "$HISTCONTROL" ] && export HISTCONTROL="ignoredups"
+[ -z "$HISTIGNORE" ] && export HISTIGNORE="&:ls:[bf]g:exit"
+[ -z "$PROMPT_COMMAND" ] && export PROMPT_COMMAND="history -a"
+
+
+
 # Trim the maximum number of directories in prompt (PS1).
 # For bash, requires >= v4.
-[ -z "$PROMPT_DIRTRIM" ] && export PROMPT_DIRTRIM=3
+[ -z "$PROMPT_DIRTRIM" ] && export PROMPT_DIRTRIM=4
 
 # Add the date/time to `history` command output.
 # Note that on macOS bash will fail if `set -e` is set and this isn't exported.
