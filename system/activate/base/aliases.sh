@@ -9,6 +9,19 @@
 # alias rsync="rsync --partial --progress --human-readable --compress"
 # alias zmv="noglob zmv -vW"
 
+# Enable colors using dircolors.
+# Note that this is commonly installed on Linux but not macOS.
+if quiet_which dircolors
+then
+    eval "$(dircolors -b)"
+    alias dir="dir --color=auto"
+    alias egrep="egrep --color=auto"
+    alias fgrep="fgrep --color=auto"
+    alias grep="grep --color=auto"
+    alias ls="ls --color=auto"
+    alias vdir="vdir --color=auto"
+fi
+
 # Quick exit.
 alias e="exit"
 
@@ -49,17 +62,6 @@ alias emacs="emacs --no-window-system"
 # --no-save
 # --vanilla
 alias R="R --no-restore --no-save"
-
-# Run dircolors, if it exists.
-quiet_which dircolors && eval "$(dircolors -b)"
-
-# Enable colors (for dircolors).
-# alias dir="dir --color=auto"
-# alias egrep="egrep --color=auto"
-# alias fgrep="fgrep --color=auto"
-# alias grep="grep --color=auto"
-# alias ls="ls --color=auto"
-# alias vdir="vdir --color=auto"
 
 # Fake realpath support, if necessary.
 if ! quiet_which realpath
