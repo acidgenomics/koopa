@@ -8,6 +8,8 @@
 
 # Inspect `/etc/profile` if system PATH is misconfigured.
 
+# FIXME Need to check if already in PATH, instead of forcing re-export.
+
 add_to_path_end "${HOME}/local/bin"
 add_to_path_end "${HOME}/.local/bin"
 add_to_path_end "/usr/local/sbin"
