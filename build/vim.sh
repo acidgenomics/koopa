@@ -25,7 +25,7 @@ VERSION="8.1.0847"
 
 wget "https://github.com/vim/vim/archive/v${VERSION}.tar.gz"
 tar -xzvf "v${VERSION}.tar.gz"
-cd "vim-${VERSION}"
+cd "vim-${VERSION}" || return 1
 
 ./configure --prefix="$PREFIX"
 

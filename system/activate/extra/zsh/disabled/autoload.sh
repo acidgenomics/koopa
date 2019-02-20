@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 # Info on `autoload -U`
 # https://unix.stackexchange.com/questions/214296

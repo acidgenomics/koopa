@@ -20,7 +20,7 @@ HDF5_VERSION="${HDF5_MAJOR}.4"
 
 wget "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${HDF5_MAJOR}/hdf5-${HDF5_VERSION}/src/hdf5-${HDF5_VERSION}.tar.gz"
 tar -xzvf "hdf5-${HDF5_VERSION}.tar.gz"
-cd "hdf5-${HDF5_VERSION}"
+cd "hdf5-${HDF5_VERSION}" || return 1
 
 ./configure --prefix="$PREFIX" --enable-fortran --enable-cxx
 
@@ -28,6 +28,4 @@ make
 make check
 sudo make install
 
-# Confirm the installation worked.
-which h5dump
 h5dump --version

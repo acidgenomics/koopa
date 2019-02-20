@@ -1,4 +1,5 @@
-#!/usr/bin/env zsh
+#!/bin/sh
+# shellcheck disable=SC1090,SC2034,SC2039
 
 # oh-my-zsh configuration
 # https://github.com/robbyrussell/oh-my-zsh
@@ -8,8 +9,9 @@
 
 # Path to your oh-my-zsh installation.
 ZSH="${HOME}/.oh-my-zsh"
-# This will early return and skip config if oh-my-zsh isn't installed.
-[[ ! -d "$ZSH" ]] && return 1
+
+# Early return and skip config if oh-my-zsh isn't installed.
+[ ! -d "$ZSH" ] && return 1
 export ZSH
 
 # Ignore warning about insecure directories identified by compfix.
@@ -78,7 +80,7 @@ plugins=(
   # zsh-syntax-highlighting
 )
 
-source "${ZSH}/oh-my-zsh.sh"
+. "${ZSH}/oh-my-zsh.sh"
 
 
 

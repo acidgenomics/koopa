@@ -19,7 +19,7 @@ PREFIX="/usr/local"
 
 wget "https://hisham.hm/htop/releases/${VERSION}/htop-${VERSION}.tar.gz"
 tar -xzvf "htop-${VERSION}.tar.gz"
-cd "htop-${VERSION}"
+cd "htop-${VERSION}" || return 1
 
 ./configure --prefix="$PREFIX"
 

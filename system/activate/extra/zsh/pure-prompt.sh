@@ -1,4 +1,5 @@
-#!/usr/bin/env zsh
+#!/bin/sh
+# shellcheck disable=SC2039,SC2206
 
 # Pure prompt
 #
@@ -16,6 +17,9 @@
 
 koopa_fpath="${KOOPA_BASE_DIR}/zsh/fpath"
 fpath=( $koopa_fpath $fpath )
+
 autoload -U promptinit; promptinit
+
 prompt pure
+
 unset -v koopa_fpath

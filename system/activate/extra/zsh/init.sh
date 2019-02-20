@@ -1,5 +1,5 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 # Source global definitions.
 # shellcheck source=/dev/null
-[[ -f /etc/zshrc ]] && source /etc/zshrc
+[ -f /etc/zshrc ] && . /etc/zshrc

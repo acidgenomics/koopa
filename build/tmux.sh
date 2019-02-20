@@ -25,12 +25,11 @@ VERSION="2.8"
 
 wget "https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz"
 tar -xzvf "tmux-${VERSION}.tar.gz"
-cd "tmux-${VERSION}"
+cd "tmux-${VERSION}" || return 1
 
 ./configure --prefix="$PREFIX"
 
 make
 sudo make install
 
-which tmux
 tmux -V
