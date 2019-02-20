@@ -19,6 +19,11 @@
 if [ ! -z "$BASH_VERSION" ]
 then
     KOOPA_SHELL="bash"
+elif [ "$0" = "sh" ] && [ "$SHELL" = "/bin/bash" ]
+then
+    # Supporting `/bin/sh` to `/bin/bash`.
+    # Note that this is needed for Travis CI sh check.
+    KOOPA_SHELL="bash"
 elif [ ! -z "$KSH_VERSION" ]
 then
     KOOPA_SHELL="ksh"
