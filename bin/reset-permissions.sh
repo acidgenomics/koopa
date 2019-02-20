@@ -8,7 +8,7 @@ user="$(id -u)"
 group="$(id -g)"
 
 # SC2035: Use ./*glob* or -- *glob* so names with dashes won't become options.
-chown -R "$user":"$group" -- *
+chown -R "${user}:${group}" -- *
 
 find . -type d -print0 | \
     xargs -0 -I {} chmod u=rwx,g=rwx,o=rx {}

@@ -97,7 +97,7 @@ then
     if [ ! -z "$MACOS" ]
     then
         DARWIN_DIR="${EXTRA_DIR}/darwin"
-        if [ -z "$KOOPA_ACTIVATED"]
+        if [ -z "$KOOPA_ACTIVATED" ]
         then
             . "${DARWIN_DIR}/exports.sh"
             . "${DARWIN_DIR}/homebrew.sh"
