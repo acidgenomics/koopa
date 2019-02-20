@@ -10,7 +10,7 @@
 # This software is provided under an MIT License.
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-export KOOPA_VERSION="0.2.9"
+export KOOPA_VERSION="0.3.0"
 export KOOPA_DATE="2019-02-20"
 
 
@@ -29,7 +29,7 @@ then
 else
     echo "koopa currently supports bash, ksh, or zsh shell."
     echo "Check your configuration."
-    echo "Note that `/bin/sh` is not recommended."
+    echo "Note that /bin/sh is not recommended."
     echo ""
     echo "$SHELL"
     echo "$0"

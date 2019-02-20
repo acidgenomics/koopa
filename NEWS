@@ -1,7 +1,16 @@
+## koopa 0.3.0 (2019-02-20)
+
+
+
+## koopa 0.2.8 (2019-02-12)
+
+
+
 ## koopa 0.2.7 (2019-02-04)
 
 - Improved shellchecks on workflows.
 - Split out some activation steps into separate scripts.
+
 
 
 ## koopa 0.2.6 (2019-01-23)
@@ -11,12 +20,14 @@
 - Reorganized and improved workflow scripts.
 
 
+
 ## koopa 0.2.5 (2019-01-07)
 
 - Updated installation instructions to recommend cloning to `~/.koopa`.
 - Conda now will only activate when `CONDA_DEFAULT_ENV` is set in environment.
   This improves handling in situations for user accounts where we don't want
   to activate conda in a shared environemnt (e.g. bioinfo account on Azure).
+
 
 
 ## koopa 0.1.1 (2018-09-05)
@@ -36,6 +47,7 @@
       - move_files_up_1_level
       - rename_from_csv
       - reset_permissions
+
 
 
 ## koopa 0.1.0 (2018-08-24)

@@ -26,14 +26,9 @@ branches:
     - master
 
 script:
-  # Extra mode enabled.
-  - bash -c 'cmd=activate extra=1 . bin/koopa.sh'
-  - ksh  -c 'cmd=activate extra=1 . bin/koopa.sh'
-  - zsh  -c 'cmd=activate extra=1 . bin/koopa.sh'
-  - sh   -c 'cmd=activate extra=1 . bin/koopa.sh'
-  # Simple mode using positional command.
-  - bash -c 'source bin/koopa.sh activate'
-  - zsh  -c 'source bin/koopa.sh activate'
+  - bash -c 'extra=1 . activate.sh'
+  - ksh  -c 'extra=1 . activate.sh'
+  - zsh  -c 'extra=1 . activate.sh'
   # ShellCheck.
   - find . -name "*.sh" -exec shellcheck {} \;
 
