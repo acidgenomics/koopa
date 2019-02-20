@@ -1,24 +1,99 @@
 #!/bin/sh
-# shellcheck disable=SC1090
-# shellcheck disable=SC2236
+# shellcheck disable=SC1090,SC2236
+# SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
+# mode when using `[` instead of `[[`.
 
 
 
-# Activate koopa in the current shell.
+# koopa shell bootloader
+# (c) 2018 Michael Steinbaugh
+# This software is provided under an MIT License.
+# Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-ACTIVATE_DIR="${KOOPA_SYSTEM_DIR}/activate"
+export KOOPA_VERSION="0.2.9"
+export KOOPA_DATE="2019-02-20"
+
+
+
+# Detect the current shell.
+# This is not necessarily the default shell (`$SHELL`).
+if [ ! -z "$BASH_VERSION" ]
+then
+    KOOPA_SHELL="bash"
+elif [ ! -z "$KSH_VERSION" ]
+then
+    KOOPA_SHELL="ksh"
+elif [ ! -z "$ZSH_VERSION" ]
+then
+    KOOPA_SHELL="zsh"
+else
+    echo "koopa currently supports bash, ksh, or zsh shell."
+    echo "Check your configuration."
+    echo "Note that `/bin/sh` is not recommended."
+    echo ""
+    echo "$SHELL"
+    echo "$0"
+    echo "$-"
+    echo ""
+    env | sort
+    return 1
+fi
+export KOOPA_SHELL
+
+
+
+# Locate the koopa installation based on the source operation.
+if [ "$KOOPA_SHELL" = "bash" ]
+then
+    # SC2039: In POSIX sh, array references are undefined.
+    # shellcheck disable=SC2039
+    KOOPA_SOURCE="${BASH_SOURCE[0]}"
+elif [ "$KOOPA_SHELL" = "ksh" ]
+then
+    # SC2154: .sh.file is referenced but not assigned.
+    # shellcheck disable=SC2154
+    KOOPA_SOURCE="${.sh.file}"
+elif [ "$KOOPA_SHELL" = "zsh" ]
+then
+    KOOPA_SOURCE="$0"
+fi
+
+KOOPA_BASE_DIR="$( dirname "$KOOPA_SOURCE" )"
+export KOOPA_BASE_DIR
+
+KOOPA_BIN_DIR="${KOOPA_BASE_DIR}/bin"
+export KOOPA_BIN_DIR
+
+KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
+
+
+
+# Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
+# SC2154: extra is reference but not assigned.
+# shellcheck disable=SC2154
+[ ! -z "$extra" ] && \
+    KOOPA_EXTRA=1 && \
+    export KOOPA_EXTRA && \
+    unset -v extra
+
+
 
 # Set internal variable to check if koopa is already active.
 [ ! -z "$KOOPA_PLATFORM" ] && KOOPA_ACTIVATED=1
 
-# Run pre-flight checks to ensure platform is supported.
+
+
+# ======================================
+# Pre-flight checks
+# ======================================
+
 if [ -z "$KOOPA_ACTIVATED" ]
 then
-    PREFLIGHT_DIR="${ACTIVATE_DIR}/preflight"
-    . "${PREFLIGHT_DIR}/bash-version.sh"
-    . "${PREFLIGHT_DIR}/python-version.sh"
-    . "${PREFLIGHT_DIR}/platform.sh"
-    unset -v PREFLIGHT_DIR
+    PRE_DIR="${KOOPA_SYSTEM_DIR}/pre"
+    . "${PRE_DIR}/bash-version.sh"
+    . "${PRE_DIR}/python-version.sh"
+    . "${PRE_DIR}/platform.sh"
+    unset -v PRE_DIR
 fi
 
 
@@ -27,7 +102,7 @@ fi
 # Base shell configuration
 # ======================================
 
-BASE_DIR="${ACTIVATE_DIR}/base"
+BASE_DIR="${KOOPA_SYSTEM_DIR}/base"
 
 # Always load these non-persistent settings.
 . "${BASE_DIR}/secrets.sh"
@@ -63,7 +138,7 @@ unset -v BASE_DIR
 
 if [ ! -z "$KOOPA_EXTRA" ]
 then
-    EXTRA_DIR="${ACTIVATE_DIR}/extra"
+    EXTRA_DIR="${KOOPA_SYSTEM_DIR}/extra"
 
     # Set default file permissions.
     . "${EXTRA_DIR}/umask.sh"
@@ -117,4 +192,8 @@ fi
 
 
 
-unset -v ACTIVATE_DIR KOOPA_ACTIVATED
+# =====================================
+# Post-flight checks (cleanup)
+# =====================================
+
+. "${KOOPA_SYSTEM_DIR}/post/unset.sh"
