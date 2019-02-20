@@ -28,6 +28,12 @@ then
 else
     echo "koopa currently supports bash, ksh, or zsh shell."
     echo "Check your configuration."
+    echo ""
+    echo "$SHELL"
+    echo "$0"
+    echo "$-"
+    echo ""
+    env | sort
     return 1
 fi
 export KOOPA_SHELL
