@@ -25,7 +25,7 @@ VERSION="26.1"
 
 wget "http://ftp.gnu.org/gnu/emacs/emacs-${VERSION}.tar.xz"
 tar -xJvf "emacs-${VERSION}.tar.xz"
-cd "emacs-${VERSION}"
+cd "emacs-${VERSION}" || return 1
 
 ./configure --prefix="$PREFIX"
 

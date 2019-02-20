@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC1090
 # shellcheck disable=SC2236
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX

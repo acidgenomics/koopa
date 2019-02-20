@@ -19,3 +19,6 @@ case "$HOSTNAME" in
 esac
 
 KOOPA_PLATFORM="$(python -mplatform)" && export KOOPA_PLATFORM
+
+export KOOPA_VERSION="0.2.9"
+export KOOPA_DATE="2019-02-20"
