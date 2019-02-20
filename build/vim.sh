@@ -21,7 +21,7 @@ then
 fi
 
 PREFIX="/usr/local"
-VERSION="8.1.0847"
+VERSION="8.1.0956"
 
 wget "https://github.com/vim/vim/archive/v${VERSION}.tar.gz"
 tar -xzvf "v${VERSION}.tar.gz"
@@ -32,3 +32,5 @@ cd "vim-${VERSION}" || return 1
 make
 make test
 sudo make install
+
+vim --version
