@@ -72,11 +72,18 @@ export KOOPA_SYSTEM_DIR
 
 
 
+# Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
+[ ! -z "$extra" ] && KOOPA_EXTRA=1 && export KOOPA_EXTRA
+unset -v extra
+
+
+
 # Note that we're allowing positional argument using `$1` but this isn't
 # supported in all POSIX-compliant shells.
 # SC2240 The dot command does not support arguments in sh/dash.
-# Set them as variables.
+# Set them as variables in `.shrc` instead.
 [ -z "$cmd" ] && cmd="$1"
+
 if [ "$cmd" = "activate" ]
 then
     # shellcheck source=/dev/null
@@ -93,4 +100,5 @@ else
     echo "koopa args: activate, info, list"
     exit 1
 fi
+
 unset -v cmd
