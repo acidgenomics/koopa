@@ -31,3 +31,6 @@ cd "tmux-${VERSION}"
 
 make
 sudo make install
+
+which tmux
+tmux -V
