@@ -1,33 +1,14 @@
 # Template for single-cell RNA-seq using Illumina prepared samples.
-# Michael Steinbaugh
-#
-# Homo sapiens
-# YYYY-MM-DD
-#
-# Assuming a local run on a 16 core VM.
-# bcbio_nextgen_py ../config/bcbio.yaml -t local -n 16
-#
-# Current FASTA: koopa fasta hsapiens cdna
-# Current GTF: koopa gtf hsapiens
-#
-# Genome build is specific to the bcbio install.
-# Run `bcbio_setup_genome.py` for list of genome builds.
 #
 # Sample barcodes:
 # Use the reverse complement (revcomp) with bcbio.
 # https://github.com/steinbaugh/koopa/blob/develop/workflows/bcbio/data/umis
-#
-# More template examples:
-# https://github.com/bcbio/bcbio-nextgen/tree/master/config/templates
-#
-# Configuration documentation:
-# https://bcbio-nextgen.readthedocs.io/en/latest/contents/configuration.html
 ---
 details:
   - analysis: scRNA-seq
     genome_build: hg38
     algorithm:
-      # Note that bcbio uses "indrop" instead of "indrops" spelling.
+      # Note that bcbio uses "indrop" instead of "indrops".
       umi_type: harvard-indrop-v3
       
       # Specify sample barcodes for multiplexed FASTQs.
@@ -56,11 +37,3 @@ details:
 # Where to upload (save) the final output.
 upload:
   dir: ../final
-
-# Recommended run-specific resources.
-# Disable when using IPython/slurm (e.g. HMS O2 cluster).
-resources:
-  default:
-    cores: 16
-  tmp:
-    dir: ~/scratch

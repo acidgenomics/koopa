@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Pull all local git repositories.
+# Pull all git repositories.
 
 wd=$(pwd)
 git_dir="${HOME}/git"
