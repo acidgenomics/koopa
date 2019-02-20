@@ -1,8 +1,6 @@
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
 
-sudo -v
-
 # Error on conda detection.
 if [ -x "$(command -v conda)" ]
 then
@@ -10,7 +8,8 @@ then
     exit 1
 fi
 
-if quiet_which yum
+# Install tmux build dependencies, if necessary.
+if [ -x "$(command -v yum)" ]
 then
     sudo yum -y install yum-utils
     sudo yum-builddep -y tmux
