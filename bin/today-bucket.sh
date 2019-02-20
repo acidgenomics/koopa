@@ -15,7 +15,6 @@ today_dir="${HOME}/today"
 # SC2143: Use ! grep -q instead of comparing output with [ -z .. ]
 if ! readlink "$today_dir" | grep -q "$today"
 then
-    echo "$today"
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${parent_dir}/${bucket_today}"
     # Note the use of `-n` flag here.
