@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Vim
-# https://github.com/vim/vim
+# Tmux terminal multiplexer
+# https://github.com/tmux/tmux
 
 # Error on conda detection.
 if [ -x "$(command -v conda)" ]
@@ -13,22 +13,24 @@ fi
 
 sudo -v
 
-# Install vim build dependencies, if necessary.
+# Install tmux build dependencies, if necessary.
 if [ -x "$(command -v yum)" ]
 then
     sudo yum -y install yum-utils
-    sudo yum-builddep -y vim
+    sudo yum-builddep -y tmux
 fi
 
 PREFIX="/usr/local"
-VERSION="8.1.0847"
+VERSION="2.8"
 
-wget "https://github.com/vim/vim/archive/v${VERSION}.tar.gz"
-tar -xzvf "v${VERSION}.tar.gz"
-cd "vim-${VERSION}"
+wget "https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz"
+tar -xzvf "tmux-${VERSION}.tar.gz"
+cd "tmux-${VERSION}"
 
 ./configure --prefix="$PREFIX"
 
 make
-make test
 sudo make install
+
+which tmux
+tmux -V
