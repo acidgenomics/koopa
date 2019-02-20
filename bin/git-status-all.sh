@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Get the status of all local git repositories.
+# Get the status of all git repositories.
 
 wd=$(pwd)
 git_dir="${HOME}/git"

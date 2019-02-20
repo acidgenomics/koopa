@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Vim
-# https://github.com/vim/vim
+# Emacs text editor
+# https://www.gnu.org/software/emacs/index.html#Releases
 
 # Error on conda detection.
 if [ -x "$(command -v conda)" ]
@@ -25,13 +25,13 @@ VERSION="26.1"
 
 wget "http://ftp.gnu.org/gnu/emacs/emacs-${VERSION}.tar.xz"
 tar -xJvf "emacs-${VERSION}.tar.xz"
-cd "emacs-${VERSION}"
+cd "emacs-${VERSION}" || return 1
 
 ./configure --prefix="$PREFIX"
 
 make
-
 # This step doesn't work on tarball.
 # make check
-
 sudo make install
+
+emacs --version

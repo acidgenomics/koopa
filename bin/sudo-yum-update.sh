@@ -12,7 +12,7 @@ command -v yum >/dev/null 2>&1 || { echo >&2 "yum missing."; exit 1; }
 # fi
 
 sudo -v
-log_dir="${HOME}/logs/yum"
+log_dir="${HOME}/logs/${HOSTNAME}/yum"
 mkdir -p "$log_dir"
 log_file="${log_dir}/yum-update-$(date +%F).log"
 sudo yum update -y 2>&1 | tee "$log_file"
