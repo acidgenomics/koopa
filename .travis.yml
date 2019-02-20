@@ -12,14 +12,26 @@
 #   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 
 language: shell
+os: linux
+
+# Linux image only has bash (and sh) installed by default.
+addons:
+  apt:
+    packages:
+      - ksh
+      - zsh
 
 branches:
   only:
     - master
 
 script:
-  - sh -c 'cmd=activate extra=1 . bin/koopa.sh'
+  - bash -c 'cmd=activate extra=1 . bin/koopa.sh'
   - bash -c 'source bin/koopa.sh activate'
+  - ksh  -c 'cmd=activate extra=1 . bin/koopa.sh'
+  - zsh  -c 'cmd=activate extra=1 . bin/koopa.sh'
+  - zsh  -c 'source bin/koopa.sh activate'
+  - sh   -c 'cmd=activate extra=1 . bin/koopa.sh'
   - find . -name "*.sh" -exec shellcheck {} \;
 
 notifications:
