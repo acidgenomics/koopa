@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Push all local repositories.
+# Push all repositories.
 
 wd=$(pwd)
 git_dir="${HOME}/git"

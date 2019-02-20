@@ -71,10 +71,12 @@ KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 # Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
 # SC2154: extra is reference but not assigned.
 # shellcheck disable=SC2154
-[ ! -z "$extra" ] && \
-    KOOPA_EXTRA=1 && \
-    export KOOPA_EXTRA && \
+if [ ! -z "$extra" ]
+then
+    KOOPA_EXTRA=1
+    export KOOPA_EXTRA
     unset -v extra
+fi
 
 
 
@@ -122,6 +124,7 @@ then
     unset -v EXPORTS_DIR
 
     PROGRAMS_DIR="${BASE_DIR}/programs"
+    . "${PROGRAMS_DIR}/perlbrew.sh"
     . "${PROGRAMS_DIR}/aspera.sh"
     . "${PROGRAMS_DIR}/bcbio.sh"
     . "${PROGRAMS_DIR}/conda.sh"
@@ -159,7 +162,7 @@ then
         unset -v KSH_DIR
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        ZSH_DIR="$EXTRA_DIR/zsh"
+        ZSH_DIR="${EXTRA_DIR}/zsh"
         . "${ZSH_DIR}/init.sh"
         . "${ZSH_DIR}/oh-my-zsh.sh"
         . "${ZSH_DIR}/pure-prompt.sh"
@@ -179,7 +182,6 @@ then
         fi
         . "${DARWIN_DIR}/aliases.sh"
         . "${DARWIN_DIR}/grc-colors.sh"
-        . "${DARWIN_DIR}/perlbrew.sh"
         . "${DARWIN_DIR}/rbenv.sh"
         unset -v DARWIN_DIR
     fi
