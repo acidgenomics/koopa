@@ -18,8 +18,8 @@ branches:
     - master
 
 script:
-  - sh cmd="activate" extra=1 . "${HOME}/.koopa/bin/koopa.sh"
-  - bash bin/koopa.sh activate
+  - sh -c 'cmd="activate" extra=1 . "${HOME}/.koopa/bin/koopa.sh"'
+  - bash -c 'source bin/koopa.sh activate'
   - find . -name "*.sh" -exec shellcheck {} \;
 
 notifications:
