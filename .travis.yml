@@ -1,22 +1,35 @@
 # Note that Travis CI has now integrated ShellCheck by default.
-# https://github.com/koalaman/shellcheck#travis-ci
-# https://github.com/koalaman/shellcheck/wiki/TravisCI
+# See also:
+# - https://github.com/koalaman/shellcheck#travis-ci
+# - https://github.com/koalaman/shellcheck/wiki/TravisCI
+
+# Install shunit2 to for shell unit tests.
+# See also:
+# - https://github.com/kward/shunit2
+# - https://travis-ci.org/soulseekah/test-shunit2-travis
+#
+# before_script:
+#   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 
 language: shell
+os: linux
+
+# Linux image only has bash (and sh) installed by default.
+addons:
+  apt:
+    packages:
+      - ksh
+      - zsh
 
 branches:
   only:
     - master
 
-# Install shunit2 to for shell unit tests.
-# https://github.com/kward/shunit2
-# https://travis-ci.org/soulseekah/test-shunit2-travis
-# before_script:
-#   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
-
 script:
-  - bash -c 'shopt -s globstar; shellcheck {bin,bin/darwin,bin/harvard-o2,bin/harvard-odyssey,system,system/activate,system/activate/darwin}/*.sh'
-  - bash bin/koopa.sh activate
+  - bash -c 'extra=1 . ./activate.sh'
+  - ksh  -c 'extra=1 . ./activate.sh'
+  - zsh  -c 'extra=1 . ./activate.sh'
+  - find . -name "*.sh" -exec shellcheck {} \;
 
 notifications:
   email:

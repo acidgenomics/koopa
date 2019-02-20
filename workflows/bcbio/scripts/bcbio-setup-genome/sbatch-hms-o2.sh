@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
 
 # bcbio_setup_genome.py
 # Harvard Medical School O2 Cluster
@@ -20,5 +21,4 @@
 #SBATCH --output=jobid_%j.out          # File to which STDOUT will be written, including job ID
 #SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL)
 
-# shellcheck source=/dev/null
 . "${GENOME}.sh"
