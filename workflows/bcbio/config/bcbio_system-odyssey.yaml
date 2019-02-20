@@ -1,5 +1,5 @@
----
 # /n/regal/hsph_bioinfo/bcbio_nextgen/galaxy/bcbio_system.yaml
+---
 resources:
   default:
     memory: 3G
