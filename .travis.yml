@@ -15,7 +15,7 @@ branches:
 #   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 
 script:
-  - cmd="activate" extra=1 . "${HOME}/.koopa/bin/koopa.sh"
+  - sh cmd="activate" extra=1 . "${HOME}/.koopa/bin/koopa.sh"
   - bash bin/koopa.sh activate
   - find . -name "*.sh" -exec shellcheck {} \;
 
