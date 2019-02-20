@@ -73,6 +73,8 @@ export KOOPA_SYSTEM_DIR
 
 
 # Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
+# SC2154: extra is reference but not assigned.
+# shellcheck disable=SC2154
 [ ! -z "$extra" ] && KOOPA_EXTRA=1 && export KOOPA_EXTRA
 unset -v extra
 
@@ -86,15 +88,13 @@ unset -v extra
 
 if [ "$cmd" = "activate" ]
 then
-    # shellcheck source=/dev/null
     . "${KOOPA_SYSTEM_DIR}/activate.sh"
 elif [ "$cmd" = "info" ]
 then
-    # shellcheck source=/dev/null
+    # Note that we need to run as bash script.
     bash "${KOOPA_SYSTEM_DIR}/info.sh"
 elif [ "$cmd" = "list" ]
 then
-    # shellcheck source=/dev/null
     . "${KOOPA_SYSTEM_DIR}/list.sh"
 else
     echo "koopa args: activate, info, list"
