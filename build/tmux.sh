@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
 
@@ -7,6 +10,8 @@ then
     echo "Error: conda is active." >&2
     exit 1
 fi
+
+sudo -v
 
 # Install tmux build dependencies, if necessary.
 if [ -x "$(command -v yum)" ]
