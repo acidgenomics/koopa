@@ -28,6 +28,7 @@ tar -xzvf "v${VERSION}.tar.gz"
 cd "vim-${VERSION}"
 
 ./configure --prefix="$PREFIX"
+
 make
 make test
 sudo make install
