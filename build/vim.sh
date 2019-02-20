@@ -32,3 +32,5 @@ cd "vim-${VERSION}" || return 1
 make
 make test
 sudo make install
+
+vim --version
