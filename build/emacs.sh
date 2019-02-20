@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Vim
-# https://github.com/vim/vim
+# Emacs text editor
+# https://www.gnu.org/software/emacs/index.html#Releases
 
 # Error on conda detection.
 if [ -x "$(command -v conda)" ]
