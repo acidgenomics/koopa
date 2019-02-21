@@ -4,8 +4,11 @@ details:
   - analysis: RNA-seq
     genome_build: hg38
     algorithm:
-      # Use HISAT2 instead of STAR for GRCh38/hg38.
-      # Can use STAR instead of HISAT2 for GRCh37/hg19.
+      # Recommending HISAT2 instead of STAR for GRCh38/hg38.
+      # STAR still has issues with ALT contigs.
+      # https://github.com/alexdobin/STAR/issues/39
+      #
+      # Recommending STAR instead of HISAT2 for GRCh37/hg19.
       # Note that bcbio only supports a single aligner per run.
       aligner: hisat2
 
