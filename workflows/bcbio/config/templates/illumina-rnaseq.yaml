@@ -22,11 +22,14 @@ details:
       # This setting depends on your library preparation method.
       # Note that if you're using salmon for counts, this is automatic.
       #
-      # Unsure about the library preparation?
-      # Run the pipeline on a single sample and check the BAM.
-      #
       # TruSeq Stranded mRNA is commonly used.
       # For that kit, use "firstrand" (fr-firststrand).
+      # https://www.illumina.com/documents/products/technotes/RNASeqAnalysisTopHat.pdf
+      #
+      # For HISAT2, fr-firststrand corresponds to `--rna-strandedness RF`.
+      #
+      # Unsure about the library preparation?
+      # Run the pipeline on a single sample and check the BAM.
       #
       # See also:
       # - https://ccb.jhu.edu/software/hisat2/manual.shtml
