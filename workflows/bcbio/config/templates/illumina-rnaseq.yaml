@@ -40,7 +40,7 @@ details:
       # - https://support.illumina.com/sequencing/sequencing_kits/truseq-stranded-mrna-workflow.html
       # - http://seqanswers.com/forums/showthread.php?t=29542
       # - https://www.illumina.com/documents/products/technotes/RNASeqAnalysisTopHat.pdf
-      # strandedness: firststrand
+      strandedness: firststrand
 
       # Uncomment if you want to provide a custom transcriptome FASTA file.
       # transcriptome_fasta: transcriptome.fa
@@ -57,7 +57,7 @@ details:
       # quality_format: standard
 
       # Note that adapter trimming is no longer recommended, and is disabled by default.
-      # trim_reads: False
+      trim_reads: False
 
       # Uncomment these if adapter trimming needs to be performed.
       # trim_reads: read_through
