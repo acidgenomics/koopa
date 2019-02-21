@@ -16,17 +16,13 @@ details:
       expression_caller: [salmon, kallisto]
 
       # Stranded library configuration.
+      # This setting depends on your library preparation method.
       # Supported: "unstranded", "firststrand", "secondstrand".
       # Unstranded is the current default.
       #
-      # This setting depends on your library preparation method.
-      # Note that if you're using salmon for counts, this is automatic.
-      #
       # TruSeq Stranded mRNA is commonly used.
       # For that kit, use "firstrand" (fr-firststrand).
-      # https://www.illumina.com/documents/products/technotes/RNASeqAnalysisTopHat.pdf
-      #
-      # For HISAT2, fr-firststrand corresponds to `--rna-strandedness RF`.
+      # Note that for HISAT2, fr-firststrand corresponds to `--rna-strandedness RF`.
       #
       # Unsure about the library preparation?
       # Run the pipeline on a single sample and check the BAM.
@@ -40,6 +36,7 @@ details:
       # - https://www.biostars.org/p/297399/
       # - https://support.illumina.com/sequencing/sequencing_kits/truseq-stranded-mrna-workflow.html
       # - http://seqanswers.com/forums/showthread.php?t=29542
+      # - https://www.illumina.com/documents/products/technotes/RNASeqAnalysisTopHat.pdf
       # strandedness: firststrand
 
       # Uncomment if you want to provide a custom transcriptome FASTA file.
