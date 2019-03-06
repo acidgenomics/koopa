@@ -29,7 +29,8 @@ alias e="exit"
 alias cp="cp -irv"
 alias mkdir="mkdir -vp"
 alias mv="mv -iv"
-alias rm="rm -iv"
+# Note that `-I` flag only prompts once, which is awesome.
+alias rm="rm -Iv"
 alias scp="scp -r"
 
 # Listing files.
