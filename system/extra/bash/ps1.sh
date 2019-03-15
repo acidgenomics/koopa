@@ -26,7 +26,11 @@ prompt="\$"
 # prompt="❯"
 # Only show the user/host for SSH.
 user="\u@\h"
-wd="\w"
+# Alternatively, can use `\w`, which will show "~".
+# https://askubuntu.com/questions/388913
+# https://help.ubuntu.com/community/CustomizingBashPrompt
+# wd="\w"
+wd="\$PWD"
 
 # Enable colorful prompt.
 # Match either "xterm-256color" or "screen-256color" here.
