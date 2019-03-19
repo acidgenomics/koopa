@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # Ensembl GRCh37 genome build
-# Last updated 2018-09-05
+# Last updated 2019-03-19
 # https://grch37.ensembl.org
 
 # User-defined parameters ======================================================
