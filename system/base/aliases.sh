@@ -29,6 +29,8 @@ alias e="exit"
 alias cp="cp -irv"
 alias mkdir="mkdir -vp"
 alias mv="mv -iv"
+# Note that `-I` flag only prompts once, which is awesome.
+# However this is available on Red Hat but not macOS, so use `-i` instead.
 alias rm="rm -iv"
 alias scp="scp -r"
 

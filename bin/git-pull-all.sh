@@ -13,6 +13,7 @@ do
     repo=$(dirname "$repo")
     cd "$repo"
     pwd
+    git fetch --all
     git pull --all
     git status
 done <   <(find -L "$git_dir" -maxdepth 2 -type d -name ".git" -print0)

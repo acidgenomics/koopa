@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Emacs text editor
-# https://www.gnu.org/software/emacs/index.html#Releases
+# See also:
+# - https://www.gnu.org/software/emacs/index.html#Releases
+# - https://github.com/emacs-mirror/emacs
 
 # Error on conda detection.
 if [ -x "$(command -v conda)" ]
@@ -13,10 +15,10 @@ fi
 
 sudo -v
 
-# Install vim build dependencies, if necessary.
+# Install build dependencies, if necessary.
 if [ -x "$(command -v yum)" ]
 then
-    sudo yum install yum-utils
+    sudo yum -y install yum-utils
     sudo yum-builddep -y emacs
 fi
 
