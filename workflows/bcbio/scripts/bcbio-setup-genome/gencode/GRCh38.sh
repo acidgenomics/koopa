@@ -12,7 +12,7 @@ biodata_dir="${HOME}/biodata"
 bcbio_species_dir="Hsapiens"
 build="GRCh38"
 source="GENCODE"
-release="$GENCODE_RELEASE"
+release="$GENCODE_HUMAN_RELEASE"
 cores="$CPU_COUNT"
 
 # GENCODE FTP files ============================================================
