@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # GENCODE GRCh37 mapped genome build
-# Last updated 2018-09-05
+# Last updated 2019-03-19
 # https://www.gencodegenes.org/releases/grch37_mapped_releases.html
 
 # User-defined parameters ======================================================
@@ -20,14 +20,12 @@ ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${relea
 
 # FASTA ------------------------------------------------------------------------
 # Genome sequence, primary assembly
-# GRCh37.primary_assembly.genome.fa.gz
 fasta="${build}.primary_assembly.genome.fa"
 wget "${ftp_dir}/${fasta}.gz"
 gunzip -c "${fasta}.gz" > "$fasta"
 
 # GTF --------------------------------------------------------------------------
 # Comprehensive gene annotation
-# gencode.v28lift37.annotation.gtf.gz
 gtf="gencode.v${release}lift37.annotation.gtf"
 wget "${ftp_dir}/${gtf}.gz"
 gunzip -c "${gtf}.gz" > "$gtf"
@@ -42,7 +40,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes star minimap2
+    --indexes bowtie2 hisat2 minimap2 star
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
