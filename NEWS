@@ -1,8 +1,44 @@
+## koopa 0.3.1 (2019-03-19)
+
+- Updated to Ensembl release to 95.
+- Updated GENCODE to release human 29 / mouse M20.
+- Updated FlyBase to 2019_01.
+- `git-pull-all.sh`: Added `git fetch` call.
+- Improved build configuration scripts: emacs, git, gsl, openssl, tmux.
+- Added bcbio system configuration files (bcbio_system.yaml).
+- Improved default run template for bcbio RNA-seq.
+
+
+
 ## koopa 0.3.0 (2019-02-20)
+
+This release overhauls the previous activation method. Refer to the README
+for details on how to reconfigure your shell profile.
+
+- Changed activation method to use `activate.sh` script at top of repo.
+- Improved support for ksh and zsh shells. Added Travis CI checks.
+- Added native support for zsh pure prompt, including async script. These files
+  are saved in `zsh/fpath/`.
+- Reorganized bcbio configuration scripts and templates.
+- Completely overhauled system activation method. Additional shell
+  configuration, including prompt string customization is now disabled by
+  default. Refer to the installation instructions for details on how to enable
+  this new optional `extra` mode.
+- Reorganized installer scripts exported in `bin/` including conda scripts,
+  `reset-permissions.sh`, `sudo-yum-update.sh`, etc.
 
 
 
 ## koopa 0.2.8 (2019-02-12)
+
+- Migrated darwin (macOS)-specific scripts from bash repo to koopa.
+- Migrated Harvard O2 and Harvard Odyssey HPC scripts here from bash repo.
+- Added `rsync-azure-files.sh` script for working with Azure Shares (Samba).
+- Added `autopad-samples.sh` script.
+- Added `bash-strict-mode.sh` script.
+- Added `md5sum.sh` script.
+- Reorganized other scripts accessible via `bin/`.
+- Reorganized activation and system scripts, in preparation for 0.3 release.
 
 
 
