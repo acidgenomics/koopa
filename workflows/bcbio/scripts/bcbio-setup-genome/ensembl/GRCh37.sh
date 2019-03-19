@@ -11,6 +11,7 @@ species="Homo_sapiens"
 bcbio_species_dir="Hsapiens"
 build="GRCh37"
 source="Ensembl"
+# Note that we're pinning to an older release here.
 release="87"
 cores="$CPU_COUNT"
 
@@ -21,13 +22,11 @@ species_lower=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
 # FASTA ------------------------------------------------------------------------
 # Primary assembly, unmasked
-# Homo_sapiens.GRCh37.dna.primary_assembly.fa.gz
 fasta="${species}.${build}.dna.primary_assembly.fa"
 wget "${ftp_dir}/fasta/${species_lower}/dna/${fasta}.gz"
 gunzip -c "${fasta}.gz" > "$fasta"
 
 # GTF --------------------------------------------------------------------------
-# Homo_sapiens.GRCh37.87.gtf.gz
 gtf="${species}.${build}.${release}.gtf"
 wget "${ftp_dir}/gtf/${species_lower}/${gtf}.gz"
 gunzip -c "${gtf}.gz" > "$gtf"
@@ -42,7 +41,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes star minimap2
+    --indexes bowtie2 hisat2 minimap2 star
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"

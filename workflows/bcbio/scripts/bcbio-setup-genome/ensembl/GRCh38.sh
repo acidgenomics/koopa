@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 # Ensembl GRCh38 genome build
-# Last updated 2018-09-05
-# https://ensembl.org
+# Last updated 2019-03-19
+# https://ensembl.org/
 
 # User-defined parameters ======================================================
 biodata_dir="${HOME}/biodata"
@@ -21,13 +21,11 @@ species_lower=$(echo "$species" | tr '[:upper:]' '[:lower:]')
 
 # FASTA ------------------------------------------------------------------------
 # Primary assembly, unmasked
-# Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
 fasta="${species}.${build}.dna.primary_assembly.fa"
 wget "${ftp_dir}/fasta/${species_lower}/dna/${fasta}.gz"
 gunzip -c "${fasta}.gz" > "$fasta"
 
 # GTF --------------------------------------------------------------------------
-# Homo_sapiens.GRCh38.92.gtf.gz
 gtf="${species}.${build}.${release}.gtf"
 wget "${ftp_dir}/gtf/${species_lower}/${gtf}.gz"
 gunzip -c "${gtf}.gz" > "$gtf"
@@ -42,7 +40,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes star minimap2
+    --indexes bowtie2 hisat2 minimap2 star
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"

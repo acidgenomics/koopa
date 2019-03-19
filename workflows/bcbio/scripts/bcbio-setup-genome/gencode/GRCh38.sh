@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # GENCODE GRCh38 genome build
-# Last updated 2018-09-05
+# Last updated 2019-03-19
 # https://www.gencodegenes.org/releases/current.html
 # https://www.gencodegenes.org/faq.html
 
@@ -43,7 +43,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes star minimap2
+    --indexes bowtie2 hisat2 minimap2 star
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
