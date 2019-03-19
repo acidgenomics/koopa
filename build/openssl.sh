@@ -5,14 +5,14 @@ set -Eeuo pipefail
 # https://www.openssl.org/source/
 # Note that conda currently installs previous v1.0.2 LTS.
 
-date="2018-11-20"
-version="1.1.1a"
+date="2019-02-26"
+version="1.1.1b"
 
 # FIXME Currently this is configured for macOS.
 # Need to revise to build on Linux as well.
 
 echo "Installing openssl ${version} (${date})."
-echo "sudo is required for this script"
+echo "sudo is required for this script."
 sudo -v
 
 curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
