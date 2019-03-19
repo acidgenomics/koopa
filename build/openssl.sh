@@ -12,7 +12,7 @@ version="1.1.1b"
 # Need to revise to build on Linux as well.
 
 echo "Installing openssl ${version} (${date})."
-echo "sudo is required for this script"
+echo "sudo is required for this script."
 sudo -v
 
 curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
