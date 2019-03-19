@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
 # Install gsl
 # This is required for some single-cell RNA-seq R packages.
 

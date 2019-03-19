@@ -25,5 +25,5 @@ cabal install ShellCheck
 
 
 
-which shellcheck
+command -v shellcheck
 shellcheck --version
