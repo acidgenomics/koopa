@@ -179,6 +179,7 @@ then
         then
             . "${DARWIN_DIR}/exports.sh"
             . "${DARWIN_DIR}/homebrew.sh"
+            . "${DARWIN_DIR}/homebrew-python.sh"
         fi
         . "${DARWIN_DIR}/aliases.sh"
         . "${DARWIN_DIR}/grc-colors.sh"
