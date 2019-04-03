@@ -1,6 +1,6 @@
 # koopa 🐢
 
-[![Travis CI build status](https://travis-ci.org/steinbaugh/koopa.svg?branch=master)](https://travis-ci.org/steinbaugh/koopa)
+[![Travis CI build status](https://travis-ci.com/acidgenomics/koopa.svg?branch=master)](https://travis-ci.com/acidgenomics/koopa)
 [![Repo status: active](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
 
 Shell bootloader for bioinformatics.
@@ -23,14 +23,14 @@ Optional:
 First, clone the repository:
 
 ```bash
-git clone https://github.com/steinbaugh/koopa.git ~/.koopa
+git clone https://github.com/acidgenomics/koopa.git ~/.koopa
 ```
 
 Second, add these lines to your POSIX-compliant shell configuration file.
 
 ```bash
 # koopa shell
-# https://github.com/steinbaugh/koopa
+# https://github.com/acidgenomics/koopa
 # shellcheck source=/dev/null
 . "${HOME}/.koopa/activate.sh"
 ```

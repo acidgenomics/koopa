@@ -1,5 +1,5 @@
 # Template for fast RNA-seq using Illumina prepared samples.
-# Note that this template doesn't perform alignment or quality control.
+# This will only run salmon and not perform any alignment or quality control.
 ---
 details:
   - analysis: fastrna-seq
