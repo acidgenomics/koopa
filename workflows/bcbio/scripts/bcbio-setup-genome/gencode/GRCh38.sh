@@ -44,7 +44,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes bowtie2 hisat2 minimap2 star
+    --indexes hisat2
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
