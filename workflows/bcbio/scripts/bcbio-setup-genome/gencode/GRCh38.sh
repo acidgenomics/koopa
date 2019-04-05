@@ -16,6 +16,7 @@ release="$GENCODE_HUMAN_RELEASE"
 cores="$CPU_COUNT"
 
 # GENCODE FTP files ============================================================
+mkdir -p "$biodata_dir"
 cd "$biodata_dir"
 ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}"
 
