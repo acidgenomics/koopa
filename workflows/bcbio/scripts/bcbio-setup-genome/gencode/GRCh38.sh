@@ -16,6 +16,7 @@ release="$GENCODE_HUMAN_RELEASE"
 cores="$CPU_COUNT"
 
 # GENCODE FTP files ============================================================
+mkdir -p "$biodata_dir"
 cd "$biodata_dir"
 ftp_dir="ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_${release}"
 
@@ -43,7 +44,7 @@ bcbio_setup_genome.py \
     --fasta="$fasta" \
     --gtf="$gtf" \
     --name="$bcbio_species_dir" \
-    --indexes bowtie2 hisat2 minimap2 star
+    --indexes hisat2
 
 # Clean up =====================================================================
 mkdir -p "$bcbio_build_dir"
