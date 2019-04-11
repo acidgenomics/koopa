@@ -9,6 +9,13 @@ build_dir="${HOME}/build/emacs"
 prefix="/usr/local"
 version="26.1"
 
+# Check for RedHat.
+if [[ ! -f "/etc/redhat-release" ]]
+then
+    echo "Error: RedHat Linux is required." >&2
+    exit 1
+fi
+
 # Error on conda detection.
 if [[ -x "$(command -v conda)" ]]
 then
@@ -16,7 +23,7 @@ then
     exit 1
 fi
 
-# Build emacs dependencies with yum.
+# Require yum to build dependencies.
 if [[ ! -x "$(command -v yum)" ]]
 then
     echo "Error: yum is required to build dependencies." >&2
@@ -33,7 +40,7 @@ sudo yum-builddep -y emacs
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
     mkdir -p "$build_dir"
-    cd "$build_dir"
+    cd "$build_dir" || return 1
     wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
     tar -xJvf "emacs-${version}.tar.xz"
     cd "emacs-${version}" || return 1
@@ -41,6 +48,9 @@ sudo yum-builddep -y emacs
     make
     sudo make install
 )
+
+# Ensure ldconfig is current.
+sudo ldconfig
 
 echo "emacs installed successfully."
 command -v emacs

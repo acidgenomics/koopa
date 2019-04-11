@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
+
+build_dir="${HOME}/build/tmux"
+prefix="/usr/local"
+version="2.8"
+
+# Check for RedHat.
+if [[ ! -f "/etc/redhat-release" ]]
+then
+    echo "Error: RedHat Linux is required." >&2
+    exit 1
+fi
 
 # Error on conda detection.
 if [ -x "$(command -v conda)" ]
@@ -11,25 +22,38 @@ then
     exit 1
 fi
 
-sudo -v
-
-# Install tmux build dependencies, if necessary.
-if [ -x "$(command -v yum)" ]
+# Require yum to build dependencies.
+if [[ ! -x "$(command -v yum)" ]]
 then
-    sudo yum -y install yum-utils
-    sudo yum-builddep -y tmux
+    echo "Error: yum is required to build dependencies." >&2
+    exit 1
 fi
 
-PREFIX="/usr/local"
-VERSION="2.8"
+echo "Installing tmux ${version}."
+echo "sudo is required for this script."
+sudo -v
 
-wget "https://github.com/tmux/tmux/releases/download/${VERSION}/tmux-${VERSION}.tar.gz"
-tar -xzvf "tmux-${VERSION}.tar.gz"
-cd "tmux-${VERSION}" || return 1
+# Build dependencies.
+sudo yum -y install yum-utils
+sudo yum-builddep -y tmux
 
-./configure --prefix="$PREFIX"
+# SC2103: Use a ( subshell ) to avoid having to cd back.
+(
+    mkdir -p "$build_dir"
+    cd "$build_dir" || return 1
+    wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
+    tar -xzvf "tmux-${version}.tar.gz"
+    cd "tmux-${version}" || return 1
+    ./configure --prefix="$prefix"
+    make
+    sudo make install
+)
 
-make
-sudo make install
+# Ensure ldconfig is current.
+sudo ldconfig
 
+echo "tmux installed successfully."
+command -v tmux
 tmux -V
+
+unset -v build_dir prefix version

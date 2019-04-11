@@ -1,20 +1,48 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-# Install gsl
-# This is required for some single-cell RNA-seq R packages.
+# GNU Scientific Library (GSL)
+# https://www.gnu.org/software/gsl/
+# Required for some single-cell RNA-seq R packages.
 
-PREFIX="/usr/local"
-VERSION="2.5"
+build_dir="${HOME}/build/gsl"
+prefix="/usr/local"
+version="2.5"
 
-wget "http://mirror.keystealth.org/gnu/gsl/gsl-${VERSION}.tar.gz"
-tar xzvf "gsl-${VERSION}.tar.gz"
-cd "gsl-${VERSION}"
+# Check for RedHat.
+if [[ ! -f "/etc/redhat-release" ]]
+then
+    echo "Error: RedHat Linux is required." >&2
+    exit 1
+fi
 
-./configure --prefix="$PREFIX"
+# Error on conda detection.
+if [[ -x "$(command -v conda)" ]]
+then
+    echo "Error: conda is active." >&2
+    exit 1
+fi
 
-make
-make check
-sudo make install
+echo "Installing GSL ${version}."
+echo "sudo is required for this script."
+sudo -v
 
-# Inspect /usr/local/gsl
+# SC2103: Use a ( subshell ) to avoid having to cd back.
+(
+    mkdir -p "$build_dir"
+    cd "$build_dir" || return 1
+    wget "http://mirror.keystealth.org/gnu/gsl/gsl-${version}.tar.gz"
+    tar xzvf "gsl-${version}.tar.gz"
+    cd "gsl-${version}" || return 1
+    ./configure --prefix="$prefix"
+    make
+    make check
+    sudo make install
+)
+
+# Ensure ldconfig is current.
+sudo ldconfig
+
+echo "gsl installed successfully."
+
+unset -v build_dir prefix version
