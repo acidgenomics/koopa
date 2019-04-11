@@ -26,7 +26,7 @@ sudo -v
     wget "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz"
     tar xfv "Python-${version}.tar.xz"
     cd "Python-${version}"
-    ./configure --prefix="$prefix" --enable-optimizations
+    ./configure --prefix="$prefix" --enable-optimizations --enable-shared
     make
     sudo make install
 )
