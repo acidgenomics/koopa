@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Python
 # https://www.python.org/
@@ -30,6 +30,10 @@ sudo -v
     make
     sudo make install
 )
+
+# Ensure ldconfig is current.
+# Otherwise you can run into libpython detection errors.
+sudo ldconfig
 
 echo "python installed correctly."
 command -v python3
