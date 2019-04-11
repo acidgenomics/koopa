@@ -21,6 +21,7 @@ sudo -v
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    mkdir -p "$build_dir"
     cd "$build_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
     tar -xvzf "openssl-${version}.tar.gz"
@@ -31,8 +32,6 @@ sudo -v
     sudo make install
 )
 
-unset -v build_dir date version
-
 cat << EOF
 openssl installed successfully.
 Reload the shell and check version.
@@ -40,3 +39,5 @@ Reload the shell and check version.
 command -v openssl
 openssl version
 EOF
+
+unset -v build_dir date version
