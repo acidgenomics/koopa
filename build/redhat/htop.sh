@@ -18,7 +18,7 @@ fi
 
 # Error on conda detection.
 # Can conflict with ncurses: libncursesw.so.6
-if [ -x "$(command -v conda)" ]
+if [[ -x "$(command -v conda)" ]] && [[ -n "$CONDA_PREFIX" ]]
 then
     echo "Error: conda is active." >&2
     exit 1
