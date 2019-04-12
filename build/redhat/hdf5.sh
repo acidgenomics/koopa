@@ -19,7 +19,7 @@ then
 fi
 
 # Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "$CONDA_PREFIX" ]]
+if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
 then
     echo "Error: conda is active." >&2
     exit 1
