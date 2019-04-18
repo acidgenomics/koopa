@@ -3,6 +3,8 @@
 - Improved build scripts, and hardened some intended for RedHat Linux.
 - Updated genome build information.
 - Improved bcbio scripts and custom genome builds.
+- New exported scripts: `ip-address.sh`, `vim-sort.sh`.
+- Added script to build Python from source for RedHat.
 
 
 
