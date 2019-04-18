@@ -1,25 +1,30 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
-# Install latest OpenSSL stable release.
+# OpenSSL
 # https://www.openssl.org/source/
-# Note that conda currently installs previous v1.0.2 LTS.
 
+build_dir="${HOME}/build/openssl"
 date="2019-02-26"
 version="1.1.1b"
 
-# FIXME Currently this is configured for macOS.
-# Need to revise to build on Linux as well.
+# Check for macOS.
+if [[ "$OSTYPE" != "darwin" ]]
+then
+    echo "Error: macOS is required." >&2
+    exit 1
+fi
 
 echo "Installing openssl ${version} (${date})."
 echo "sudo is required for this script."
 sudo -v
 
-curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
-tar -xvzf "openssl-${version}.tar.gz"
-
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    mkdir -p "$build_dir"
+    cd "$build_dir" || exit 1
+    curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
+    tar -xvzf "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
     ./Configure darwin64-x86_64-cc
     make
@@ -27,11 +32,12 @@ tar -xvzf "openssl-${version}.tar.gz"
     sudo make install
 )
 
-unset -v date version
-
 cat << EOF
 openssl installed successfully.
 Reload the shell and check version.
-which openssl
+
+command -v openssl
 openssl version
 EOF
+
+unset -v build_dir date version
