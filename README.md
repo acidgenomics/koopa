@@ -70,7 +70,7 @@ export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
 [bcbio][] is a [Python][] toolkit that provides modern NGS analysis pipelines for RNA-seq, single-cell RNA-seq, ChIP-seq, and variant calling. Koopa provides automatic configuration support for the Harvard O2 and Odyssey high-performance computing clusters. Otherwise, the installation path can be defined manually using the `$BCBIO_EXE` variable.
 
 ```bash
-export BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
+export BCBIO_EXE="/usr/local/bin/bcbio_nextgen.py"
 ```
 
 ### conda
