@@ -1,15 +1,25 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-# Install shellcheck from source
+# ShellCheck
 # https://github.com/koalaman/shellcheck#compiling-from-source
 
+# Check for RedHat.
+if [[ ! -f "/etc/redhat-release" ]]
+then
+    echo "Error: RedHat Linux is required." >&2
+    exit 1
+fi
 
+# Require yum to build dependencies.
+if [[ ! -x "$(command -v yum)" ]]
+then
+    echo "Error: yum is required to build dependencies." >&2
+    exit 1
+fi
 
 echo "Installing older version of ShellCheck for all users."
 sudo yum install -y ShellCheck
-
-
 
 echo "Installing newest version of ShellCheck for ${USER}."
 # Note that this will install into `$HOME` instead of `/usr/local`.
@@ -23,7 +33,6 @@ cabal update
 # This will install to `~/.cabal/bin/shellcheck`.
 cabal install ShellCheck
 
-
-
+echo "shellcheck installed successfully."
 command -v shellcheck
 shellcheck --version
