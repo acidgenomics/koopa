@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 sudo rm -r ~/Desktop
 ln -s ~/Dropbox/Desktop ~/.

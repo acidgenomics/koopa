@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 sudo open -a "$1"

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Create a dated file bucket.
 # Add a `~/today` symlink for quick access.

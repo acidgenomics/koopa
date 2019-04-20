@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Consider requiring admin account.
 # if [[ "$(whoami)" != "admin" ]]; then

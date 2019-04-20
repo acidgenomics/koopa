@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Upgrade conda installation.
 # https://bioconda.github.io/#set-up-channels
