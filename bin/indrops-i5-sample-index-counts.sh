@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # inDrops sample barcode counts from i5 indexes.
 # https://iccb.med.harvard.edu/single-cell-core

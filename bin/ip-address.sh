@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 hostname -I | awk '{print $1}'

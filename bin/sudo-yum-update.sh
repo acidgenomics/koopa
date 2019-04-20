@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # This script requires yum.
 command -v yum >/dev/null 2>&1 || { echo >&2 "yum missing."; exit 1; }

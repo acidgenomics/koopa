@@ -13,7 +13,7 @@
 # disable strict mode easily.
 
 # For scripts, this one-liner can be placed under the shebang line:
-# set -Eeuo pipefail
+# set -Eeuxo pipefail
 
 # Exit immediately when a command fails.
 # NOTE: This will break RStudio terminal.
