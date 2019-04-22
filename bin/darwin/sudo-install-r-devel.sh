@@ -9,7 +9,7 @@ echo "sudo is required for this script."
 sudo -v
 
 # version="devel"
-r_version="3.6-branch"i
+r_version="3.6-branch"
 macos_version="el-capitain"
 
 tarball="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
