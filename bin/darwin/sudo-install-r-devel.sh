@@ -10,10 +10,10 @@ sudo -v
 
 # version="devel"
 r_version="3.6-branch"
-macos_version="el-capitain"
-
+macos_version="el-capitan"
 tarball="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
 
+# https://mac.r-project.org/el-capitan/R-3.6-branch/R-3.6-branch-el-capitan-sa-x86_64.tar.gz
 rm -f "$tarball"
 wget "https://mac.r-project.org/${macos_version}/R-${r_version}/${tarball}"
 
