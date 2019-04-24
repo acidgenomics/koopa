@@ -16,7 +16,7 @@ fi
 
 array=()
 array+=("koopa v${KOOPA_VERSION} (${KOOPA_DATE})")
-array+=("https://github.com/steinbaugh/koopa")
+array+=("https://github.com/acidgenomics/koopa")
 
 # Alternatively, can use `$( uname -mnrs )`.
 array+=("System: $KOOPA_PLATFORM")
