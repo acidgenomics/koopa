@@ -9,9 +9,11 @@ Shell bootloader for bioinformatics.
 
 Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
+Dependencies:
+
+- Linux or macOS. Windows isn't supported.
 - [Bash][] >= 4. Always required, even when using a different interactive shell.
 - [Python][]. Both 2.7 and 3 are supported.
-- Linux or macOS. Windows isn't supported.
 
 Optional:
 
