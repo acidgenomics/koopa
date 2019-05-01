@@ -6,10 +6,10 @@ set -Eeuxo pipefail
 pattern="$1"
 replacement="$2"
 
-if [[ -n "$MACOS" ]]
+if [[ -n "${MACOS:-}" ]]
 then
     find . -type f -exec sed -i "s/${pattern}/${replacement}/g" {} \;
-elif [[ -n "$LINUX" ]]
+elif [[ -n "${LINUX:-}" ]]
 then
     # Note the extra quotes in sed command here.
     find . -type f -exec sed -i "" "s/${pattern}/${replacement}/g" {} \;
