@@ -127,6 +127,7 @@ then
     . "${PROGRAMS_DIR}/aspera.sh"
     . "${PROGRAMS_DIR}/bcbio.sh"
     . "${PROGRAMS_DIR}/conda.sh"
+    . "${PROGRAMS_DIR}/virtualenv.sh"
     unset -v PROGRAMS_DIR
 fi
 
