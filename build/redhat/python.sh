@@ -19,6 +19,14 @@ echo "Installing python ${version}."
 echo "sudo is required for this script."
 sudo -v
 
+# Ensure VM has all Python build dependencies installed.
+sudo yum -y install yum-utils
+sudo yum-builddep -y python
+
+# Ensure pip is installed and up to date.
+wget https://bootstrap.pypa.io/get-pip.py
+python get-pip.py
+
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
     mkdir -p "$build_dir"
