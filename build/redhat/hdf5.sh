@@ -9,7 +9,7 @@ set -Eeuxo pipefail
 build_dir="${HOME}/build/hdf5"
 prefix="/usr/local"
 hdf5_major="1.10"
-hdf5_version="${hdf5_major}.4"
+hdf5_version="${hdf5_major}.5"
 
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]
