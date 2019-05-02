@@ -7,7 +7,7 @@ set -Eeuxo pipefail
 
 build_dir="${HOME}/build/emacs"
 prefix="/usr/local"
-version="26.1"
+version="26.2"
 
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]

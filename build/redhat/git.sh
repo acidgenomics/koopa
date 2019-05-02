@@ -10,7 +10,7 @@ set -Eeuxo pipefail
 
 build_dir="${HOME}/build/git"
 prefix="/usr/local"
-version="2.20.1"
+version="2.21.0"
 
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]
