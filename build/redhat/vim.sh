@@ -6,7 +6,7 @@ set -Eeuxo pipefail
 
 build_dir="${HOME}/build/vim"
 prefix="/usr/local"
-version="8.1.0956"
+version="8.1.1244"
 
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]

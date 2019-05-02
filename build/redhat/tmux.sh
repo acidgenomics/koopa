@@ -6,7 +6,7 @@ set -Eeuxo pipefail
 
 build_dir="${HOME}/build/tmux"
 prefix="/usr/local"
-version="2.8"
+version="2.9a"
 
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]
