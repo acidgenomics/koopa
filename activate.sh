@@ -10,13 +10,16 @@
 # This software is provided under an MIT License.
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-export KOOPA_VERSION="0.3.2"
-export KOOPA_DATE="2019-04-18"
+export KOOPA_VERSION="0.3.3a"
+export KOOPA_DATE="2019-05-02"
 
 
 
-# Detect the current shell.
+# Detect the current shell                                                  {{{1
+# ==============================================================================
+
 # This is not necessarily the default shell (`$SHELL`).
+
 if [ ! -z "$BASH_VERSION" ]
 then
     KOOPA_SHELL="bash"
@@ -42,7 +45,9 @@ export KOOPA_SHELL
 
 
 
-# Locate the koopa installation based on the source operation.
+# Locate the koopa installation                                             {{{1
+# ==============================================================================
+
 if [ "$KOOPA_SHELL" = "bash" ]
 then
     # SC2039: In POSIX sh, array references are undefined.
@@ -68,6 +73,9 @@ KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 
 
 
+# Pre-flight checks                                                         {{{1
+# ==============================================================================
+
 # Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
 # SC2154: extra is reference but not assigned.
 # shellcheck disable=SC2154
@@ -78,16 +86,8 @@ then
     unset -v extra
 fi
 
-
-
 # Set internal variable to check if koopa is already active.
 [ ! -z "$KOOPA_PLATFORM" ] && KOOPA_ACTIVATED=1
-
-
-
-# ======================================
-# Pre-flight checks
-# ======================================
 
 if [ -z "$KOOPA_ACTIVATED" ]
 then
@@ -100,9 +100,8 @@ fi
 
 
 
-# ======================================
-# Base shell configuration
-# ======================================
+# Base shell configuration                                                  {{{1
+# ==============================================================================
 
 BASE_DIR="${KOOPA_SYSTEM_DIR}/base"
 
@@ -128,6 +127,7 @@ then
     . "${PROGRAMS_DIR}/aspera.sh"
     . "${PROGRAMS_DIR}/bcbio.sh"
     . "${PROGRAMS_DIR}/conda.sh"
+    . "${PROGRAMS_DIR}/virtualenv.sh"
     unset -v PROGRAMS_DIR
 fi
 
@@ -135,9 +135,8 @@ unset -v BASE_DIR
 
 
 
-# ======================================
-# Extra shell configuration
-# ======================================
+# Extra shell configuration                                                 {{{1
+# ==============================================================================
 
 if [ ! -z "$KOOPA_EXTRA" ]
 then
@@ -195,8 +194,11 @@ fi
 
 
 
-# =====================================
-# Post-flight checks (cleanup)
-# =====================================
+# Post-flight checks and clean-up                                           {{{1
+# ==============================================================================
 
 . "${KOOPA_SYSTEM_DIR}/post/unset.sh"
+
+
+
+# vim: fdm=marker
