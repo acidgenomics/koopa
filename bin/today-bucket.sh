@@ -8,6 +8,13 @@ set -Eeuo pipefail
 # https://stackoverflow.com/questions/19860345
 
 parent_dir="${HOME}/bucket"
+
+# Early return if there's no bucket directory on the system.
+if [[ ! -d "$parent_dir" ]]
+then
+    return
+fi
+
 today=$(date +%Y-%m-%d)
 today_dir="${HOME}/today"
 
