@@ -12,7 +12,7 @@ parent_dir="${HOME}/bucket"
 # Early return if there's no bucket directory on the system.
 if [[ ! -d "$parent_dir" ]]
 then
-    return
+    exit
 fi
 
 today=$(date +%Y-%m-%d)
