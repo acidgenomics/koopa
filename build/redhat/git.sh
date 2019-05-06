@@ -54,7 +54,10 @@ sudo yum-builddep -y git
 sudo yum install docbook2X
 
 # This step is required to fix a binary name difference.
-sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+if [[ ! -f /usr/bin/docbook2x-texi ]]
+then
+    sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+fi
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (

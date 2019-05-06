@@ -25,7 +25,7 @@ then
     exit 1
 fi
 
-echo "Installing HDF5 ${version}."
+echo "Installing HDF5 ${hdf5_version}."
 echo "sudo is required for this script."
 sudo -v
 
