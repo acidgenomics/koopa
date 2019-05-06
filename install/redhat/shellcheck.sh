@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-# ShellCheck
-# v0.6.0 needs dependencies installed from source.
+# ShellCheck EPEL v0.3.5
 #
 # See also:
 # - Install ShellCheck from source
@@ -24,20 +23,11 @@ then
     exit 1
 fi
 
-echo "Installing older version of ShellCheck for all users."
+echo "Installing EPEL release."
+sudo yum -y install epel-release
+
+echo "Installing old EPEL of ShellCheck."
 sudo yum install -y ShellCheck
-
-# echo "Installing newest version of ShellCheck for ${USER}."
-# Note that this will install into `$HOME` instead of `/usr/local`.
-
-# ShellCheck is built and packaged using Cabal.
-# sudo yum install -y cabal-install
-
-# Ensure cabal is installed and up to date.
-# cabal update
-
-# This will install to `~/.cabal/bin/shellcheck`.
-# cabal install ShellCheck
 
 echo "shellcheck installed successfully."
 command -v shellcheck
