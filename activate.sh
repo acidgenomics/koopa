@@ -187,7 +187,7 @@ then
     fi
 
     # Set up the today bucket.
-    bash today-bucket.sh
+    bash touch-today-bucket
 
     unset -v EXTRA_DIR
 fi
