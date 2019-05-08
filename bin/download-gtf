@@ -1,22 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """Download genome annotations in GTF format.
 """
 
 import argparse
 import os
+import sys
 
 # Get the organism specified by the user.
 parser = argparse.ArgumentParser()
-parser.add_argument("organism",
-                    help="Short latin organism name (e.g. hsapiens)")
+parser.add_argument("organism", help = "Short latin organism name (e.g. hsapiens)")
 args = parser.parse_args()
+organism = args.organism
 
 # Get the Ensembl release information from shell global variables.
 ensembl_release = os.environ["ENSEMBL_RELEASE"]
 ensembl_release_url = os.environ["ENSEMBL_RELEASE_URL"]
 base_url = ensembl_release_url + "/gtf"
-
-organism = args.organism
 
 if organism == "hsapiens":
     print("Homo sapiens (Ensembl GRCh38)")
@@ -46,14 +45,14 @@ Currently supported (case sensitive):
   - mmusculus
 """.format(organism = organism)
     print(s)
-    quit()
+    sys.exit(1)
 
 file = os.path.basename(url)
 
 # Error if the file exists.
 if os.path.isfile(file):
-    print(file + "has already been downloaded.")
-    quit()
+    print(file + " has already been downloaded.")
+    sys.exit(0)
 
 print("Downloading " + file + ".")
 os.system("curl -O " + url)
