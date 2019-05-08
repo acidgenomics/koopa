@@ -4,6 +4,7 @@
   transitioning any bash scripts to python easier, without breaking names.
 - Reworked `shellcheck-recursive` to check for shell shebang, rather than
   relying on the file extension.
+- Rewrote `download-fasta` and `download-gtf` in Python instead of Bash.
 
 
 
