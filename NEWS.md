@@ -1,3 +1,12 @@
+## koopa 0.3.3 (2019-05-08)
+
+- Renamed all exported scripts to no longer use file extensions. This makes
+  transitioning any bash scripts to python easier, without breaking names.
+- Reworked `shellcheck-recursive` to check for shell shebang, rather than
+  relying on the file extension.
+
+
+
 ## koopa 0.3.2 (2019-04-18)
 
 - Improved build scripts, and hardened some intended for RedHat Linux.
