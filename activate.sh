@@ -10,8 +10,8 @@
 # This software is provided under an MIT License.
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-export KOOPA_VERSION="0.3.3a"
-export KOOPA_DATE="2019-05-02"
+export KOOPA_VERSION="0.3.3"
+export KOOPA_DATE="2019-05-08"
 
 
 
