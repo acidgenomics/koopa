@@ -29,7 +29,7 @@ script:
   - bash -c 'extra=1 . ./activate.sh'
   - ksh  -c 'extra=1 . ./activate.sh'
   - zsh  -c 'extra=1 . ./activate.sh'
-  - find . -name "*.sh" -exec shellcheck {} \;
+  - bash -c './bin/shellcheck-recursive'
 
 notifications:
   email:
