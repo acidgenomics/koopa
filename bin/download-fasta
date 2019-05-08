@@ -1,0 +1,112 @@
+#!/usr/bin/env python
+"""Download genome annotations in FASTA format.
+"""
+
+import argparse
+import os
+import sys
+
+# Get the organism specified by the user.
+parser = argparse.ArgumentParser()
+parser.add_argument("organism", help = "Short latin organism name (e.g. hsapiens)")
+parser.add_argument("type", help = "dna: genome; cdna: transcriptome")
+args = parser.parse_args()
+organism = args.organism
+type = args.type
+
+# Inform and exit on legacy "transcriptome" usage.
+if type == "transcriptome":
+    print("Use `cdna` instead of `transcriptome`.")
+    sys.exit(1)
+
+# Get the Ensembl release information from shell global variables.
+ensembl_release = os.environ["ENSEMBL_RELEASE"]
+ensembl_release_url = os.environ["ENSEMBL_RELEASE_URL"]
+base_url = ensembl_release_url + "/fasta"
+
+# Get the file path of either genome or transcriptome FASTA.
+if organism == "hsapiens":
+    print("Homo sapiens (Ensembl GRCh38)")
+    if type == "dna":
+        url = base_url + "/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"
+    elif type == "cdna":
+        url = base_url + "/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz"
+elif organism == "mmusculus":
+    print("Mus musculus (Ensembl GRCm38)")
+    if type == "dna":
+        url = base_url + "/mus_musculus/dna/Mus_musculus.GRCm38.dna.primary_assembly.fa.gz"
+    elif type == "cdna":
+        url = base_url + "/mus_musculus/cdna/Mus_musculus.GRCm38.cdna.all.fa.gz"
+elif organism == "celegans":
+    print("Caenorhabditis elegans (Ensembl WBcel235)")
+    if type == "dna":
+        # Using Ensembl FASTA.
+        url = base_url + "/caenorhabditis_elegans/dna/Caenorhabditis_elegans.WBcel235.dna.toplevel.fa.gz"
+        # For reference, here's the WormBase FASTA URL.
+        # url = "ftp://ftp.wormbase.org/pub/wormbase/species/c_elegans/sequence/genomic/c_elegans.canonical_bioproject.current.genomic.fa.gz"
+    elif type == "cdna":
+        # Using Ensembl FASTA.
+        url = base_url + "/caenorhabditis_elegans/cdna/Caenorhabditis_elegans.WBcel235.cdna.all.fa.gz"
+        # For reference, here's the WormBase FASTA URL.
+        # url = "ftp://ftp.wormbase.org/pub/wormbase/species/c_elegans/sequence/transcripts/c_elegans.canonical_bioproject.current.mRNA_transcripts.fa.gz"
+elif organism == "dmelanogaster":
+    # D. melanogaster Ensembl annotations are out of date.
+    # Using the FlyBase annotations instead.
+    flybase_release_date = os.environ["FLYBASE_RELEASE_DATE"]
+    flybase_release_version = os.environ["FLYBASE_RELEASE_VERSION"]
+    flybase_release_url = os.environ["FLYBASE_RELEASE_URL"]
+    print("Drosophila melanogaster (FlyBase " + flybase_release_date + " " + flybase_release_version + ")")
+    base_url = flybase_release_url + "/fasta"
+    version = flybase_release_version
+    if type == "dna":
+        url = base_url + "/dmel-all-aligned-${version}.fasta.gz"
+    elif type == "cdna":
+        print("Downloading FlyBase FASTA files.")
+        os.system("curl -O " + base_url + "/dmel-all-transcript-" + version + ".fasta.gz")
+        os.system("curl -O " + base_url + "/dmel-all-miRNA-"      + version + ".fasta.gz")
+        os.system("curl -O " + base_url + "/dmel-all-miscRNA-"    + version + ".fasta.gz")
+        os.system("curl -O " + base_url + "/dmel-all-ncRNA-"      + version + ".fasta.gz")
+        os.system("curl -O " + base_url + "/dmel-all-pseudogene-" + version + ".fasta.gz")
+        os.system("curl -O " + base_url + "/dmel-all-tRNA-"       + version + ".fasta.gz")
+        # Concatenate into single FASTA.
+        file = "dmel-transcriptome-" + version + ".fasta.gz"
+        print("Concatenating FlyBase FASTA files.")
+        os.system("cat dmel-all-*-" + version + ".fasta.gz > " + file)
+        sys.exit(0)
+elif organism == "nfurzeri":
+    print("Nothobranchius furzeri (turquoise killifish)")
+    print("NFINgb GRZ Assembly")
+    base_url = "http://nfingb.leibniz-fli.de/data/raw/notho4"
+    if "$type" == "dna":
+        url = base_url + "/Nfu_20150522.softmasked_genome.fa.gz"
+        # url = "http://africanturquoisekillifishbrowser.org/NotFur1_genome_draft.fa.tar.gz"
+    elif type == "cdna":
+        url = base_url + "/Nfu_20150522.genes_20150922.transcripts.fa.gz"
+else:
+    s = """
+'{organism}' is not a supported organism.
+
+Currently supported (case sensitive):
+  - celegans
+  - dmelanogaster
+  - hsapiens
+  - mmusculus
+  - nfurzeri
+""".format(organism = organism)
+    print(s)
+    sys.exit(1)
+
+file = os.path.basename(url)
+
+# Error if the file exists.
+if os.path.isfile(file):
+    print(file + " has already been downloaded.")
+    sys.exit(0)
+
+print("Downloading " + file + ".")
+os.system("curl -O " + url)
+
+# Decompress, but also keep the original compressed file.
+print("Decompressing " + file + ".")
+unzip_file = os.path.splitext(file)[0]
+os.system("gunzip -c " + file + " > " + unzip_file)
