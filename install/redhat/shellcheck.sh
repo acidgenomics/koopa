@@ -30,9 +30,8 @@ sudo yum install -y ShellCheck
 
 version="v0.6.0"
 echo "Copying newer ${version} binary version to /usr/local/bin."
-wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-"${version}".linux.x86_64.tar.xz" | \
-    tar -xJv
-sudo cp shellcheck-"${version}"/shellcheck /usr/local/bin/
+wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-${version}.linux.x86_64.tar.xz" | tar -xJv
+sudo cp "shellcheck-${version}/shellcheck" /usr/local/bin/
 
 echo "shellcheck installed successfully."
 command -v shellcheck

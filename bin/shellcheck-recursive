@@ -7,4 +7,14 @@ set -Eeuxo pipefail
 # https://github.com/koalaman/shellcheck
 command -v shellcheck >/dev/null 2>&1 || { echo >&2 "shellcheck missing."; exit 1; }
 
-find . -name "*.sh" -exec shellcheck {} \;
+path="${1:-}"
+if [[ -z "$path" ]]
+then
+    path="."
+fi
+
+# find . -name "*.sh" -exec shellcheck {} \;
+
+# This step recursively grep matches files with regular expressions.
+# Here we're checking for the shebang, rather than relying on file extension.
+grep -Elr '#!/usr/bin/env (ba)?sh' "$path" | xargs -I {} shellcheck {}

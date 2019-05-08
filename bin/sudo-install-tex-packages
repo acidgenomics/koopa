@@ -37,7 +37,7 @@ packages=(collection-fontsrecommended  # priority
           titling
           xstring)
 
-for package in ${packages[@]}
+for package in "${packages[@]}"
 do
     sudo tlmgr install "$package"
 done
