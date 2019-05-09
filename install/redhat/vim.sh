@@ -4,9 +4,9 @@ set -Eeuxo pipefail
 # Vim
 # https://github.com/vim/vim
 
-build_dir="${HOME}/build/vim"
+build_dir="/tmp/vim"
 prefix="/usr/local"
-version="8.1.1244"
+version="8.1.1310"
 
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]

@@ -5,7 +5,7 @@ set -Eeuxo pipefail
 # - https://www.gnu.org/software/emacs/index.html#Releases
 # - https://github.com/emacs-mirror/emacs
 
-build_dir="${HOME}/build/emacs"
+build_dir="/tmp/emacs"
 prefix="/usr/local"
 version="26.2"
 

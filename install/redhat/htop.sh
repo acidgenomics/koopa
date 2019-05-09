@@ -5,7 +5,7 @@ set -Eeuxo pipefail
 # https://hisham.hm/htop/releases/
 # https://github.com/hishamhm/htop
 
-build_dir="${HOME}/build/htop"
+build_dir="/tmp/htop"
 version="2.2.0"
 prefix="/usr/local"
 
