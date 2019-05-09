@@ -39,7 +39,7 @@ Second, add these lines to your POSIX-compliant shell configuration file.
 
 Koopa should now activate at login.
 
-To obtain information about the working environment, run `koopa-info.sh`.
+To obtain information about the working environment, run `koopa-info`.
 
 ## Troubleshooting
 
@@ -57,7 +57,7 @@ Koopa is intended to help simplify the bioinformatics side of a user's shell con
 
 ## Additional configuration
 
-Koopa provides automatic configuration and `$PATH` variable support for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before sourcing `activate.sh`.
+Koopa provides automatic configuration and `$PATH` variable support for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before sourcing `activate`.
 
 ### Aspera Connect
 
