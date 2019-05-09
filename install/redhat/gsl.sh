@@ -5,7 +5,7 @@ set -Eeuxo pipefail
 # https://www.gnu.org/software/gsl/
 # Required for some single-cell RNA-seq R packages.
 
-build_dir="${HOME}/build/gsl"
+build_dir="/tmp/gsl"
 prefix="/usr/local"
 version="2.5"
 

@@ -2,6 +2,7 @@
 set -Eeuxo pipefail
 
 # Pass (password store)
-# https://www.passwordstore.org/
+# - https://www.passwordstore.org/
+# - https://git.zx2c4.com/password-store
 
-sudo yum install pass
+sudo yum install -y pass

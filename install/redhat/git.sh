@@ -8,7 +8,7 @@ set -Eeuxo pipefail
 # - https://github.com/git/git/blob/master/INSTALL
 # - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
 
-build_dir="${HOME}/build/git"
+build_dir="/tmp/git"
 prefix="/usr/local"
 version="2.21.0"
 
