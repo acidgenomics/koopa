@@ -10,7 +10,7 @@ then
     exit 1
 fi
 
-url_stem="https://github.com/sindresorhus/pure/blob/master"
+url_stem="https://raw.githubusercontent.com/sindresorhus/pure/master"
 
 pure_file="${koopa_fpath}/prompt_pure_setup"
 rm "$pure_file"
