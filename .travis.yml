@@ -26,9 +26,9 @@ branches:
     - master
 
 script:
-  - bash -c 'extra=1 . ./activate.sh'
-  - ksh  -c 'extra=1 . ./activate.sh'
-  - zsh  -c 'extra=1 . ./activate.sh'
+  - bash -c 'extra=1 . ./activate'
+  - ksh  -c 'extra=1 . ./activate'
+  - zsh  -c 'extra=1 . ./activate'
   - bash -c './bin/shellcheck-recursive'
 
 notifications:
