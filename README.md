@@ -34,7 +34,7 @@ Second, add these lines to your POSIX-compliant shell configuration file.
 # koopa shell
 # https://github.com/acidgenomics/koopa
 # shellcheck source=/dev/null
-. "${HOME}/.koopa/activate.sh"
+. "${HOME}/.koopa/activate"
 ```
 
 Koopa should now activate at login.
