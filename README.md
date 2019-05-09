@@ -13,12 +13,13 @@ Dependencies:
 
 - Linux or macOS. Windows isn't supported.
 - [Bash][] >= 4. Always required, even when using a different interactive shell.
-- [Python][]. Both 2.7 and 3 are supported.
+- [Python][] >= 3.
 
 Optional:
 
 - [Conda][] >= 4.5.
   Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
+- [R][] >= 3.5.
 
 ## Installation
 
@@ -135,6 +136,7 @@ Upon activation, koopa makes some additional scripts available in `$PATH`, which
 [PGP]: https://www.openpgp.org/
 [POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
 [Python]: https://www.python.org/
+[R]: https://www.r-project.org/
 [SSH]: https://en.wikipedia.org/wiki/Secure_Shell
 [tcsh]: https://en.wikipedia.org/wiki/Tcsh
 [Zsh]: https://www.zsh.org/  "Z shell"
