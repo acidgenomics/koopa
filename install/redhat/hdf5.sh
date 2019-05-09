@@ -6,7 +6,7 @@ set -Eeuxo pipefail
 # https://www.hdfgroup.org/downloads/hdf5/
 # https://support.hdfgroup.org/ftp/HDF5/releases
 
-build_dir="${HOME}/build/hdf5"
+build_dir="/tmp/hdf5"
 prefix="/usr/local"
 hdf5_major="1.10"
 hdf5_version="${hdf5_major}.5"

@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
 
-build_dir="${HOME}/build/tmux"
+build_dir="/tmp/build/tmux"
 prefix="/usr/local"
 version="2.9a"
 

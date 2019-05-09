@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # OpenSSL
 # https://www.openssl.org/source/
 
-build_dir="${HOME}/build/openssl"
+build_dir="/tmp/openssl"
 date="2019-02-26"
 version="1.1.1b"
 
