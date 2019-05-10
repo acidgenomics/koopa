@@ -2,13 +2,22 @@
 
 # Check for supported dependency versions.
 
+# How to compare numbers (i.e. versions) containing a decimal point:
+#
+# - posix:
+#   > if [ $(echo "12.14 > 12.13" | bc) -gt 0 ]; then echo "greater"; fi
+# - bash:
+#   > if (( $(bc <<< "12.14 > 12.13") > 0 )); then echo "greater"; fi
+# - ksh:
+#   > if (( 12.14 > 12.13 )); then echo "greater"; fi
+
 
 
 # Python                                                                    {{{1
 # ==============================================================================
 
 # Requiring >= 3.
-# Python 2.7 is phased out in 2020.
+# Python 2 will be phased out by 2020.
 # The user can use either conda or virtualenv.
 
 version="$(python --version 2>&1 | head -n 1 | cut -d " " -f 2)"
