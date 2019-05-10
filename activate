@@ -186,7 +186,7 @@ then
     fi
 
     # Check program versions.
-    . "${EXTRA_DIR}/check-versions.sh"
+    Rscript --vanilla "${EXTRA_DIR}/check-versions.R"
 
     # Set up the today bucket.
     bash touch-today-bucket
