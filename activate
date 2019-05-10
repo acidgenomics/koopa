@@ -11,7 +11,7 @@
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
 export KOOPA_VERSION="0.3.4a"
-export KOOPA_DATE="2019-05-09"
+export KOOPA_DATE="2019-05-10"
 
 
 
