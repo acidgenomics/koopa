@@ -138,6 +138,10 @@ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
 )
 
 # GnuPG ========================================================================
+
+# Update dynamic linker configuration.
+sudo ldconfig -v
+
 (
     package="gnupg"
     version="2.2.9"
@@ -149,7 +153,6 @@ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo ldconfig
     make check
     sudo make install
 )
@@ -166,7 +169,6 @@ sudo ldconfig -v
 gpgconf --kill gpg-agent
 
 echo "GnuPG installed successfully."
-
-# command -v gpg
+command -v gpg
 gpg --version
 
