@@ -92,8 +92,8 @@ fi
 if [ -z "$KOOPA_ACTIVATED" ]
 then
     PRE_DIR="${KOOPA_SYSTEM_DIR}/pre"
-    . "${PRE_DIR}/check-versions.sh"
-    . "${PRE_DIR}/platform.sh"
+    . "${PRE_DIR}/check-dependencies.sh"
+    . "${PRE_DIR}/platform-info.sh"
     unset -v PRE_DIR
 fi
 
@@ -185,6 +185,9 @@ then
         unset -v DARWIN_DIR
     fi
 
+    # Check program versions.
+    . "${EXTRA_DIR}/check-versions.sh"
+
     # Set up the today bucket.
     bash touch-today-bucket
 
@@ -196,7 +199,6 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-. "${KOOPA_SYSTEM_DIR}/post/check-versions.sh"
 . "${KOOPA_SYSTEM_DIR}/post/unset.sh"
 
 
