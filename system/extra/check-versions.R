@@ -1,6 +1,6 @@
 # Check installed program versions.
 
-# options(error = quote(quit(status = 1L)))
+options(error = quote(quit(status = 1L)))
 
 formals(system)[["intern"]] <- TRUE
 
