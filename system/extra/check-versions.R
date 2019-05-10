@@ -36,7 +36,7 @@ check(name, version, required_version)
 # GnuPG ========================================================================
 name <- "GnuPG"
 version <- system("gpg --version | head -n 1 | cut -d ' ' -f 3")
-required_version <- "2.2.9"
+required_version <- "2.2.8"
 check(name, version, required_version)
 
 
