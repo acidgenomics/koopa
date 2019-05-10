@@ -2,6 +2,7 @@
 
 options(error = quote(quit(status = 1L)))
 
+# Consider switching to `system2()` in a future update.
 formals(system)[["intern"]] <- TRUE
 
 check <- function(name, version, required_version) {
@@ -19,7 +20,7 @@ check <- function(name, version, required_version) {
 
 # Emacs ========================================================================
 name <- "Emacs"
-version <- system("emacs --version | head -n 1 | cut -d ' ' -f 3")
+version <- system2("emacs --version | head -n 1 | cut -d ' ' -f 3")
 required_version <- "26.2"
 check(name, version, required_version)
 
