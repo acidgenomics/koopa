@@ -1,8 +1,14 @@
 #!/bin/sh
 # shellcheck disable=SC2236
 
-# Check that bash version is supported.
-# Always requiring bash, even if it's not the current shell.
+# Check for supported dependency versions.
+
+
+
+# Bash                                                                      {{{1
+# ==============================================================================
+
+# Bash is always required, even if it's not the current shell.
 #
 # See also:
 # - https://stackoverflow.com/questions/16989598
@@ -10,7 +16,7 @@
 #
 # Alternatively, can use `$BASH_VERSINFO` to get the major version.
 
-bash_version=$( \
+version=$( \
     bash --version | \
     head -n1 | \
     cut -d " " -f 4 | \
@@ -18,11 +24,11 @@ bash_version=$( \
     cut -d "(" -f 1 \
 )
 
-bash_major_version="$(printf '%s' "$bash_version" | cut -c 1)"
+major_version="$(printf '%s' "$version" | cut -c 1)"
 
-if [ "$bash_major_version" -lt 4 ]
+if [ "$major_version" -lt 4 ]
 then
-    echo "Bash version: $bash_version"
+    echo "Bash version: ${version}"
     echo "Koopa requires Bash >= v4 to be installed."
     echo ""
     echo "Running macOS?"
@@ -37,11 +43,28 @@ then
     echo "   Requires sudo."
     echo "   Add /usr/local/bin/bash to /etc/shells."
     echo "4. Update default shell."
-    echo "   chsh -s /usr/local/bin/bash $USER"
+    echo "   chsh -s /usr/local/bin/bash ${USER}"
     echo "5. Reload the shell and check Bash version."
     echo "   bash --version"
     return 1
 fi
 
-unset -v bash_version
+unset -v major_version version
 
+
+
+# Python                                                                    {{{1
+# ==============================================================================
+
+# Note that we're checking for supported Python version in the post-flight
+# checks instead, allowing the user to use either conda or virtualenv.
+
+command -v python >/dev/null 2>&1 || {
+    echo >&2 "koopa requires Python."
+    return 1
+}
+
+
+
+# turn on folds
+# vim: fdm=marker
