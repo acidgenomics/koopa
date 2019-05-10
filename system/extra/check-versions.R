@@ -19,7 +19,7 @@ check <- function(
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
-        inform(name, "missing")
+        inform(paste(name, "missing"))
         return(invisible())
     }
 
