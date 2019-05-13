@@ -9,6 +9,9 @@ set -Eeuxo pipefail
 # - Install GHC and cabal-install from source
 #   https://www.haskell.org/downloads/linux/
 
+build_dir="/tmp/shellcheck"
+version="0.6.0"
+
 # Check for RedHat.
 if [[ ! -f "/etc/redhat-release" ]]
 then
@@ -28,10 +31,14 @@ echo "Installing old EPEL version of ShellCheck to /usr/bin."
 sudo yum -y install epel-release
 sudo yum install -y ShellCheck
 
-version="v0.6.0"
 echo "Copying newer ${version} binary version to /usr/local/bin."
-wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-${version}.linux.x86_64.tar.xz" | tar -xJv
-sudo cp "shellcheck-${version}/shellcheck" /usr/local/bin/
+(
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    cd "$build_dir"
+    wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz" | tar -xJv
+    sudo cp "shellcheck-v${version}/shellcheck" /usr/local/bin/
+)
 
 echo "shellcheck installed successfully."
 command -v shellcheck
