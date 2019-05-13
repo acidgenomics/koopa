@@ -13,7 +13,7 @@ options(
     # warning = quote(quit(status = 1L))
 )
 
-message("Checking installed program versions with R.")
+message("Checking recommended koopa dependencies.")
 
 check <- function(
     name,
