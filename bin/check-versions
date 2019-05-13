@@ -1,5 +1,9 @@
 #!/usr/bin/env -S Rscript --vanilla
 
+# Setting the `-S` flag above requires coreutils >= 8.30.
+# This is out of date on RHEL 7, of course.
+# Use `info coreutils` to get the version.
+
 # Note that setting `--vanilla` flag will skip `~/.Renviron` file.
 # Set `--verbose` flag if necessary when debugging.
 
