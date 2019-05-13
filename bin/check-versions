@@ -28,7 +28,7 @@ check <- function(
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
-        warning(paste(name, "missing"))
+        warning(paste("FAIL", name, "missing"))
         return(invisible())
     }
 
@@ -48,8 +48,11 @@ check <- function(
     version <- package_version(version)
 
     if (version < min_version) {
-        warning(paste(name, version, "<", min_version))
+        warning(paste("FAIL", name, version, "<", min_version))
+        return(invisible())
     }
+
+    message(paste("OK", name, version, ">=", min_version))
 }
 
 pipe <- function(...) {
