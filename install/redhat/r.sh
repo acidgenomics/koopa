@@ -112,7 +112,7 @@ sudo yum install -y \
         --with-readline \
         --with-tcltk
     make
-    make test
+    make check
     sudo make install
 )
 
