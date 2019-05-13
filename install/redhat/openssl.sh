@@ -37,6 +37,9 @@ sudo yum-builddep -y openssl
     sudo make install
 )
 
+echo "Updating ldconfig."
+sudo ldconfig
+
 cat << EOF
 openssl installed successfully.
 Reload the shell and check version.
