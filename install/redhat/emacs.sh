@@ -34,7 +34,7 @@ echo "Installing emacs ${version}."
 echo "sudo is required for this script."
 sudo -v
 
-sudo yum -y install yum-utils
+sudo yum install -y yum-utils
 sudo yum-builddep -y emacs
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
