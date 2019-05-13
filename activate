@@ -185,9 +185,6 @@ then
         unset -v DARWIN_DIR
     fi
 
-    # Check program versions.
-    Rscript --vanilla "${EXTRA_DIR}/check-versions.R"
-
     # Set up the today bucket.
     bash touch-today-bucket
 
