@@ -41,7 +41,7 @@ sudo yum-builddep -y bash
     mkdir -p "$build_dir"
     cd "$build_dir"
     wget http://ftpmirror.gnu.org/bash/bash-${version}.tar.gz
-    tar -xzvf "bash-${version}"
+    tar -xzvf "bash-${version}.tar.gz"
     cd "bash-${version}"
     ./configure --build="x86_64-redhat-linux-gnu" --prefix="$prefix"
     make
