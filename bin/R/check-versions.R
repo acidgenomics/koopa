@@ -5,8 +5,10 @@ options(
     # warning = quote(quit(status = 1L))
 )
 formals(warning)[["call."]] <- FALSE
+platform <- Sys.getenv("R_PLATFORM")
 
 message("Checking recommended koopa dependencies.")
+
 
 check <- function(
     name,
@@ -185,9 +187,14 @@ check(
 )
 
 # Note that we're checking the TeX Live release year here.
+min_version <- switch(
+    EXPR = platform,
+    "x86_64-redhat-linux-gnu" = "2013",
+    "2019"
+)
 check(
     name = "tex",
-    min_version = "2019",
+    min_version = min_version,
     version_cmd = pipe(
         "tex --version",
         "head -n 1",
