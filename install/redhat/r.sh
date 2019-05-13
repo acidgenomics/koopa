@@ -131,3 +131,17 @@ R --version
 #        TRUE        TRUE        TRUE        TRUE        TRUE        TRUE
 #         NLS     profmem       cairo         ICU long.double     libcurl
 #        TRUE        TRUE        TRUE        TRUE        TRUE        TRUE
+
+cat << EOF
+RStudio server configuration must be updated to use this version of R.
+
+(1) Stop the server:
+sudo rstudio-server stop
+
+(2) Edit /etc/rstudio/rserver.conf to contain this line:
+rsession-which-r=/usr/local/bin/R
+
+(3) Restart the server:
+sudo rstudio-server restart
+
+EOF
