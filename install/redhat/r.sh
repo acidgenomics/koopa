@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-# Install R from source.
+# R
 #
 # See also:
 # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
