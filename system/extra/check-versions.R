@@ -106,6 +106,17 @@ check(
     )
 )
 
+# Note that 1.1.1b isn't a valid version in R, so don't check for the letter.
+check(
+    name = "openssl",
+    min_version = "1.1.1",
+    version_cmd = pipe(
+        "openssl version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    )
+)
+
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
 # This is perl 5, version 16, subversion 3 (v5.16.3)
