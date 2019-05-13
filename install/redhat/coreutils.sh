@@ -52,5 +52,16 @@ sudo yum-builddep -y coreutils
     sudo make install
 )
 
-echo "coreutils installed successfully."
-echo "Check version with 'info coreutils'"
+cat << EOF
+coreutils installed successfully.
+Check version with 'info coreutils'.
+
+Patching `/usr/bin/env` is currently necessary on RHEL 7.
+Run this command to use newer 'env' from coreutils:
+
+    sudo mv /usr/bin/env /usr/bin/env.bak; \
+    sudo ln -s /usr/local/bin/env /usr/bin/env
+
+EOF
+
+
