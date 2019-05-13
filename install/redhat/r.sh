@@ -99,7 +99,7 @@ sudo yum install -y \
     tar -xzvf "R-${version}.tar.gz"
     cd "R-${version}"
     ./configure \
-        --build=x86_64-redhat-linux-gnu \
+        --build="x86_64-redhat-linux-gnu" \
         --prefix="$prefix" \
         --enable-BLAS-shlib \
         --enable-R-profiling \
