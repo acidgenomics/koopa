@@ -12,6 +12,7 @@ options(
     error = quote(quit(status = 1L))
     # warning = quote(quit(status = 1L))
 )
+formals(warning)[["call."]] <- FALSE
 
 message("Checking recommended koopa dependencies.")
 
@@ -24,7 +25,6 @@ check <- function(
         is.character(name),
         is.character(min_version)
     )
-    formals(warning)[["call."]] <- FALSE
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
@@ -52,7 +52,7 @@ check <- function(
         return(invisible())
     }
 
-    message(paste("OK", name, version, ">=", min_version))
+    message(paste("  OK", name, version, ">=", min_version))
 }
 
 pipe <- function(...) {
@@ -61,7 +61,13 @@ pipe <- function(...) {
 
 # First check our R installation.
 # Currently we're pinning to RHEL 7 as a minimum.
-stopifnot(packageVersion("base") >= "3.5.1")
+r_version <- packageVersion("base")
+r_min_version <- "3.6"
+if (r_version >= r_min_version) {
+    message(paste("  OK", "R", r_version, ">=", r_min_version))
+} else {
+    warning(paste("FAIL", "R", r_version, "<", r_min_version))
+}
 
 # Pin to RHEL 7, even though bash 5 is now recommended.
 check(
@@ -174,7 +180,7 @@ check(
 # This is hard to compile, so keep the dependency relaxed.
 check(
     name = "shellcheck",
-    min_version = "0.3.5",
+    min_version = "0.6",
     version_cmd = pipe(
         "shellcheck --version",
         "sed -n '2p'",
