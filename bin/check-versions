@@ -1,9 +1,19 @@
+#!/usr/bin/Rscript --vanilla
+
+# Note that setting `--vanilla` flag will skip `~/.Renviron` file.
+# Set `--verbose` flag if necessary when debugging.
+
+# Note that this doesn't let us set `--vanilla`:
+# #!/usr/bin/env Rscript
+
 # Check installed program versions.
 
-# options(
-#     error = quote(quit(status = 1L)),
-#     warning = quote(quit(status = 1L))
-# )
+options(
+    error = quote(quit(status = 1L))
+    # warning = quote(quit(status = 1L))
+)
+
+message("Checking installed program versions with R.")
 
 check <- function(
     name,
@@ -14,12 +24,11 @@ check <- function(
         is.character(name),
         is.character(min_version)
     )
-    inform <- warning
-    formals(inform)[["call."]] <- FALSE
+    formals(warning)[["call."]] <- FALSE
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
-        inform(paste(name, "missing"))
+        warning(paste(name, "missing"))
         return(invisible())
     }
 
@@ -39,13 +48,17 @@ check <- function(
     version <- package_version(version)
 
     if (version < min_version) {
-        inform(paste(name, version, "<", min_version))
+        warning(paste(name, version, "<", min_version))
     }
 }
 
 pipe <- function(...) {
     paste(..., sep = " | ")
 }
+
+# First check our R installation.
+# Currently we're pinning to RHEL 7 as a minimum.
+stopifnot(packageVersion("base") >= "3.5.1")
 
 check(
     name = "emacs",
