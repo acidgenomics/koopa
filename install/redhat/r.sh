@@ -122,3 +122,12 @@ sudo ldconfig
 echo "R installed successfully."
 command -v R
 R --version
+
+# Current output in PuTTY:
+# > capabilities()
+#        jpeg         png        tiff       tcltk         X11        aqua
+#        TRUE        TRUE        TRUE        TRUE       FALSE       FALSE
+#    http/ftp     sockets      libxml        fifo      cledit       iconv
+#        TRUE        TRUE        TRUE        TRUE        TRUE        TRUE
+#         NLS     profmem       cairo         ICU long.double     libcurl
+#        TRUE        TRUE        TRUE        TRUE        TRUE        TRUE
