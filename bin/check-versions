@@ -63,6 +63,18 @@ pipe <- function(...) {
 # Currently we're pinning to RHEL 7 as a minimum.
 stopifnot(packageVersion("base") >= "3.5.1")
 
+# Pin to RHEL 7, even though bash 5 is now recommended.
+check(
+    name = "bash",
+    min_version = "4.2",
+    version_cmd = pipe(
+        "bash --version",
+        "head -n 1",
+        "cut -d ' ' -f 4",
+        "cut -d '(' -f 1"
+    )
+)
+
 check(
     name = "emacs",
     min_version = "26.2",
