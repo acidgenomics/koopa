@@ -1,4 +1,4 @@
-#!/usr/bin/Rscript --vanilla
+#!/usr/bin/env -S Rscript --vanilla
 
 # Note that setting `--vanilla` flag will skip `~/.Renviron` file.
 # Set `--verbose` flag if necessary when debugging.
@@ -32,7 +32,9 @@ check <- function(
         return(invisible())
     }
 
-    min_version <- package_version(min_version)
+    if (grepl("\\.", min_version)) {
+        min_version <- package_version(min_version)
+    }
 
     # Run the shell system command to extract the program version.
     # Consider switching to `system2()` here in a future update.
@@ -45,7 +47,9 @@ check <- function(
     # Strip leading and trailing characters (e.g. "v/a") if necessary.
     version <- sub("^[a-z]+", "", version)
     version <- sub("[a-z]+$", "", version)
-    version <- package_version(version)
+    if (grepl("\\.", version)) {
+        version <- package_version(version)
+    }
 
     if (version < min_version) {
         warning(paste("FAIL", name, version, "<", min_version))
@@ -185,6 +189,19 @@ check(
         "shellcheck --version",
         "sed -n '2p'",
         "cut -d ' ' -f 2"
+    )
+)
+
+# Note that we're checking the TeX Live release year here.
+check(
+    name = "tex",
+    min_version = "2019",
+    version_cmd = pipe(
+        "tex --version",
+        "head -n 1",
+        "cut -d '(' -f 2",
+        "cut -d ')' -f 1",
+        "cut -d ' ' -f 3"
     )
 )
 
