@@ -9,6 +9,6 @@ echo "Installing pass."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-. "$script_dir/_init.sh"
+. "${script_dir}/_init.sh"
 
 sudo yum install -y pass
