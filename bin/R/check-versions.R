@@ -22,7 +22,7 @@ check <- function(
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
-        warning(paste("FAIL", name, "missing"))
+        message(paste("FAIL", name, "missing"))
         return(invisible())
     }
 
@@ -49,7 +49,7 @@ check <- function(
     }
 
     if (version < min_version) {
-        warning(paste("FAIL", name, version, "<", min_version))
+        message(paste("FAIL", name, version, "<", min_version))
         return(invisible())
     }
 
