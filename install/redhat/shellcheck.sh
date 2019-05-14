@@ -9,7 +9,7 @@ set -Eeuxo pipefail
 # - Install GHC and cabal-install from source
 #   https://www.haskell.org/downloads/linux/
 
-build_dir="/tmp/shellcheck"
+build_dir="/tmp/build/shellcheck"
 version="0.6.0"
 
 # Check for RedHat.
@@ -38,6 +38,7 @@ echo "Copying newer ${version} binary version to /usr/local/bin."
     cd "$build_dir"
     wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz" | tar -xJv
     sudo cp "shellcheck-v${version}/shellcheck" /usr/local/bin/
+    rm -rf "$build_dir"
 )
 
 echo "shellcheck installed successfully."
