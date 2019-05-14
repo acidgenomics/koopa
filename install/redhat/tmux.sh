@@ -39,6 +39,7 @@ sudo yum-builddep -y tmux
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
@@ -47,6 +48,7 @@ sudo yum-builddep -y tmux
     ./configure --prefix="$prefix"
     make
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -55,5 +57,3 @@ sudo ldconfig
 echo "tmux installed successfully."
 command -v tmux
 tmux -V
-
-unset -v build_dir prefix version

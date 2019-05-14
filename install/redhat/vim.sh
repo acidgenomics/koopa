@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # Vim
 # https://github.com/vim/vim
 
-build_dir="/tmp/vim"
+build_dir="/tmp/build/vim"
 prefix="/usr/local"
 version="8.1.1310"
 
@@ -39,6 +39,7 @@ sudo yum-builddep -y vim
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://github.com/vim/vim/archive/v${version}.tar.gz"
@@ -49,6 +50,7 @@ sudo yum-builddep -y vim
     # Skip the unit tests on RedHat. It will install successfully.
     # make test
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -56,5 +58,3 @@ sudo ldconfig
 
 command -v vim
 vim --version
-
-unset -v build_dir prefix version

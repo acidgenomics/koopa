@@ -11,7 +11,7 @@ set -Eeuxo pipefail
 # - https://github.com/rstudio/rmarkdown/issues/359
 # - http://pj.freefaculty.org/blog/?p=315
 
-build_dir="/tmp/r"
+build_dir="/tmp/build/r"
 prefix="/usr/local"
 
 major_version="3"
@@ -115,6 +115,7 @@ sudo yum install -y \
     make
     make check
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Need to update LD config.

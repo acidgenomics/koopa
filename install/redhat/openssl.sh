@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # OpenSSL
 # https://www.openssl.org/source/
 
-build_dir="/tmp/openssl"
+build_dir="/tmp/build/openssl"
 date="2019-02-26"
 version="1.1.1b"
 prefix="/usr/local"
@@ -21,11 +21,12 @@ echo "sudo is required for this script."
 sudo -v
 
 # Install dependencies.
-sudo yum -y install yum-utils
+sudo yum install -y yum-utils
 sudo yum-builddep -y openssl
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
@@ -35,6 +36,7 @@ sudo yum-builddep -y openssl
     make
     make test
     sudo make install
+    rm -rf "$build_dir"
 )
 
 echo "Updating ldconfig."

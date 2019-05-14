@@ -8,7 +8,7 @@ set -Eeuxo pipefail
 # - http://zsh.sourceforge.net/Arc/source.html
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
 
-build_dir="/tmp/zsh"
+build_dir="/tmp/build/zsh"
 prefix="/usr/local"
 version="5.7.1"
 

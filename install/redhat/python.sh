@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # Python
 # https://www.python.org/
 
-build_dir="/tmp/python"
+build_dir="/tmp/build/python"
 prefix="/usr/local"
 version="3.7.3"
 
