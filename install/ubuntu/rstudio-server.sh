@@ -14,9 +14,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 . "${script_dir}/_init.sh"
 
 # R is already configured by Bioconductor.
-sudo apt-get -y install r-base
-
-# rstudio-server stop
+# sudo apt-get -y install r-base
 
 # Ubuntu 18+ instructions.
 sudo apt-get -y install gdebi-core
