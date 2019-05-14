@@ -10,7 +10,7 @@ set -Eeuxo pipefail
 # - https://github.com/gpg/gnupg/blob/master/INSTALL
 # - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
 
-build_dir="/tmp/gnupg"
+build_dir="/tmp/build/gnupg"
 prefix="/usr/local"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
@@ -156,6 +156,9 @@ sudo ldconfig -v
     make check
     sudo make install
 )
+
+# Clean up the temp files.
+rm -rf "$build_dir"
 
 # Add local lib path to gpg configuration.
 sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'

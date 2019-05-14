@@ -5,7 +5,7 @@ set -Eeuxo pipefail
 # - https://www.gnu.org/software/emacs/index.html#Releases
 # - https://github.com/emacs-mirror/emacs
 
-build_dir="/tmp/emacs"
+build_dir="/tmp/build/emacs"
 prefix="/usr/local"
 version="26.2"
 
@@ -39,6 +39,7 @@ sudo yum-builddep -y emacs
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
@@ -47,6 +48,7 @@ sudo yum-builddep -y emacs
     ./configure --prefix="$prefix"
     make
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -55,5 +57,3 @@ sudo ldconfig
 echo "emacs installed successfully."
 command -v emacs
 emacs --version
-
-unset -v build_dir prefix version
