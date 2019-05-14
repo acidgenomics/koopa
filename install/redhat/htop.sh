@@ -5,7 +5,7 @@ set -Eeuxo pipefail
 # https://hisham.hm/htop/releases/
 # https://github.com/hishamhm/htop
 
-build_dir="/tmp/htop"
+build_dir="/tmp/build/htop"
 version="2.2.0"
 prefix="/usr/local"
 
@@ -30,6 +30,7 @@ sudo -v
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://hisham.hm/htop/releases/${version}/htop-${version}.tar.gz"
@@ -39,6 +40,7 @@ sudo -v
     make
     make check
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -47,5 +49,3 @@ sudo ldconfig
 echo "htop installed successfully."
 command -v htop
 htop --version
-
-unset -v build_dir prefix version

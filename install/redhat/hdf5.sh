@@ -6,7 +6,7 @@ set -Eeuxo pipefail
 # https://www.hdfgroup.org/downloads/hdf5/
 # https://support.hdfgroup.org/ftp/HDF5/releases
 
-build_dir="/tmp/hdf5"
+build_dir="/tmp/build/hdf5"
 prefix="/usr/local"
 hdf5_major="1.10"
 hdf5_version="${hdf5_major}.5"
@@ -31,6 +31,7 @@ sudo -v
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${hdf5_major}/hdf5-${hdf5_version}/src/hdf5-${hdf5_version}.tar.gz"
@@ -40,6 +41,7 @@ sudo -v
     make
     make check
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -48,5 +50,3 @@ sudo ldconfig
 echo "hdf5 installed successfully."
 command -v h5dump
 h5dump --version
-
-unset -v build_dir hdf5_major hdf5_version prefix

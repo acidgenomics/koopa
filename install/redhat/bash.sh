@@ -61,6 +61,5 @@ echo "Reloading the shell."
 exec bash
 
 echo "bash installed successfully."
-
 command -v bash
 bash --version

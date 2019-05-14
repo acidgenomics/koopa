@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # GNU core utilities
 # https://ftp.gnu.org/gnu/coreutils/
 
-build_dir="/tmp/coreutils"
+build_dir="/tmp/build/coreutils"
 prefix="/usr/local"
 version="8.31"
 
@@ -39,6 +39,7 @@ sudo yum-builddep -y coreutils
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://ftp.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
@@ -50,6 +51,7 @@ sudo yum-builddep -y coreutils
     make
     make check
     sudo make install
+    rm -rf "$build_dir"
 )
 
 cat << EOF
@@ -63,5 +65,3 @@ Run this command to use newer 'env' from coreutils:
     sudo ln -s /usr/local/bin/env /usr/bin/env
 
 EOF
-
-

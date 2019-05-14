@@ -2,13 +2,15 @@
 set -Eeuxo pipefail
 
 # Git SCM
+# https://git-scm.com/
+#
 # See also:
 # - https://github.com/git/git
 # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 # - https://github.com/git/git/blob/master/INSTALL
 # - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
 
-build_dir="/tmp/git"
+build_dir="/tmp/build/git"
 prefix="/usr/local"
 version="2.21.0"
 
@@ -61,6 +63,7 @@ fi
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://github.com/git/git/archive/v${version}.tar.gz"
@@ -71,6 +74,7 @@ fi
     ./configure --prefix="$prefix"
     make all doc info
     sudo make install install-doc install-html install-info
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -79,5 +83,3 @@ sudo ldconfig
 echo "git installed successfully."
 command -v git
 git --version
-
-unset -v build_dir prefix version

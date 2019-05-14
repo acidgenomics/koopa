@@ -5,7 +5,7 @@ set -Eeuxo pipefail
 # https://www.gnu.org/software/gsl/
 # Required for some single-cell RNA-seq R packages.
 
-build_dir="/tmp/gsl"
+build_dir="/tmp/build/gsl"
 prefix="/usr/local"
 version="2.5"
 
@@ -29,6 +29,7 @@ sudo -v
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "http://mirror.keystealth.org/gnu/gsl/gsl-${version}.tar.gz"
@@ -38,11 +39,12 @@ sudo -v
     make
     make check
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
 sudo ldconfig
 
 echo "gsl installed successfully."
-
-unset -v build_dir prefix version
+command -v gsl-config
+gsl-config --version
