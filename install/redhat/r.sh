@@ -2,6 +2,7 @@
 set -Eeuxo pipefail
 
 # R
+# https://www.r-project.org/
 #
 # See also:
 # - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
