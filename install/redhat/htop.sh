@@ -9,24 +9,11 @@ build_dir="/tmp/build/htop"
 version="2.2.0"
 prefix="/usr/local"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Error on conda detection.
-# Can conflict with ncurses: libncursesw.so.6
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
 echo "Installing htop ${version}."
-echo "sudo is required for this script."
-sudo -v
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "$script_dir/_init.sh"
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (

@@ -8,28 +8,26 @@ build_dir="/tmp/build/python"
 prefix="/usr/local"
 version="3.7.3"
 
-# Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
 echo "Installing python ${version}."
-echo "sudo is required for this script."
-sudo -v
 
-# Ensure VM has all Python build dependencies installed.
-sudo yum -y install yum-utils
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "${script_dir}/_init.sh"
+
+# Install build dependencies.
 sudo yum-builddep -y python
 
-# Ensure pip is installed and up to date.
-wget https://bootstrap.pypa.io/get-pip.py
-python get-pip.py
+mkdir "$build_dir"
 
-# SC2103: Use a ( subshell ) to avoid having to cd back.
+# Ensure pip is installed and up to date.
 (
-    mkdir -p "$build_dir"
+    cd "$build_dir"
+    wget https://bootstrap.pypa.io/get-pip.py
+    sudo python get-pip.py
+)
+
+# Build and install from source.
+(
     cd "$build_dir"
     wget "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz"
     tar xfv "Python-${version}.tar.xz"
@@ -39,6 +37,8 @@ python get-pip.py
     sudo make install
 )
 
+rm -rf "$build_dir"
+
 # Ensure ldconfig is current.
 # Otherwise you can run into libpython detection errors.
 sudo ldconfig
@@ -46,5 +46,3 @@ sudo ldconfig
 echo "python installed correctly."
 command -v python3
 python3 --version
-
-unset -v build_dir prefix version
