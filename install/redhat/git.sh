@@ -14,33 +14,13 @@ build_dir="/tmp/build/git"
 prefix="/usr/local"
 version="2.21.0"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
-# Require yum to build dependencies.
-if [[ ! -x "$(command -v yum)" ]]
-then
-    echo "Error: yum is required to build dependencies." >&2
-    exit 1
-fi
-
 echo "Installing git ${version}."
-echo "sudo is required for this script."
-sudo -v
 
-# Install dependencies.
-sudo yum -y install yum-utils
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "$script_dir/_init.sh"
+
+# Install build dependencies.
 sudo yum-builddep -y git
 
 # This is required for git to make doc cleanly.

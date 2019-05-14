@@ -12,24 +12,13 @@ set -Eeuxo pipefail
 build_dir="/tmp/build/shellcheck"
 version="0.6.0"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Require yum to build dependencies.
-if [[ ! -x "$(command -v yum)" ]]
-then
-    echo "Error: yum is required to build dependencies." >&2
-    exit 1
-fi
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "$script_dir/_init.sh"
 
 # Note that EPEL version is super old and many current checks don't work.
 echo "Installing old EPEL version of ShellCheck to /usr/bin."
-sudo yum -y install epel-release
-sudo yum install -y ShellCheck
+sudo yum install -y epel-release ShellCheck
 
 echo "Copying newer ${version} binary version to /usr/local/bin."
 (
