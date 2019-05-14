@@ -5,7 +5,7 @@ echo "sudo access is required for installation."
 sudo -v
 
 # Check for RedHat.
-if ! grep -q "ID=rhel" /etc/os-release
+if ! grep -q 'ID="rhel"' /etc/os-release
 then
     echo "Error: RedHat Enterprise Linux (RHEL) is required." >&2
     exit 1
