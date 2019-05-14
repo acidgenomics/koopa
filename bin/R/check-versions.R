@@ -264,7 +264,7 @@ check(
 min_version <- switch(
     EXPR = os,
     redhat = "2013",
-    ubuntu = "2017"
+    ubuntu = "2017",
     "2019"
 )
 check(
