@@ -13,12 +13,19 @@ echo "Installing RStudio Server ${version}."
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 . "${script_dir}/_init.sh"
 
+# R is already configured by Bioconductor.
+sudo apt-get -y install r-base
+
+# rstudio-server stop
+
+# Ubuntu 18+ instructions.
+sudo apt-get -y install gdebi-core
 (
     rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir"
-    wget "https://download2.rstudio.org/server/centos6/x86_64/rstudio-server-rhel-${version}-x86_64.rpm"
-    sudo yum install -y "rstudio-server-rhel-${version}-x86_64.rpm"
+    wget "https://download2.rstudio.org/server/bionic/amd64/rstudio-server-${version}-amd64.deb"
+    sudo gdebi --non-interactive "rstudio-server-${version}-amd64.deb"
     rm -rf "$build_dir"
 )
 
