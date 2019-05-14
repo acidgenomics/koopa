@@ -277,6 +277,15 @@ check(
 
 
 
+# RStudio Server ===============================================================
+check(
+    name = "rstudio-server",
+    min_version = "1.2.1335",
+    version_cmd = "rstudio-server version"
+)
+
+
+
 # ShellCheck ===================================================================
 # RHEL 7 still uses super old 0.3.5 release.
 # This is hard to compile, so keep the dependency relaxed.
