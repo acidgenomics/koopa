@@ -5,10 +5,30 @@ options(
     # warning = quote(quit(status = 1L))
 )
 formals(warning)[["call."]] <- FALSE
-platform <- Sys.getenv("R_PLATFORM")
+
+# Set the platform using the string defined by koopa.
+# Consider adding this to the global environment variables as `KOOPA_OS`.
+#
+# Need to add support for:
+# - Arch
+# - CentOS
+# - Debian
+# - Fedora
+
+platform <- Sys.getenv("KOOPA_PLATFORM")
+stopifnot(nzchar(platform))
+platform <- tolower(platform)
+if (grepl("darwin", platform)) {
+    os <- "darwin"
+} else if (grepl("redhat", platform)) {
+    os <- "redhat"
+} else if (grepl("ubuntu", platform)) {
+    os <- "ubuntu"
+} else {
+    os <- "linux"
+}
 
 message("Checking recommended koopa dependencies.")
-
 
 check <- function(
     name,
@@ -62,8 +82,9 @@ pipe <- function(...) {
     paste(..., sep = " | ")
 }
 
-# First check our R installation.
-# Currently we're pinning to RHEL 7 as a minimum.
+
+
+# R ============================================================================
 r_version <- packageVersion("base")
 r_min_version <- "3.6"
 if (r_version >= r_min_version) {
@@ -72,10 +93,18 @@ if (r_version >= r_min_version) {
     warning(paste("FAIL", "R", r_version, "<", r_min_version))
 }
 
-# Pin to RHEL 7, even though bash 5 is now recommended.
+
+
+# Bash =========================================================================
+min_version <- switch(
+    EXPR = os,
+    redhat = "4.2",
+    ubuntu = "4.4",
+    "5.0"
+)
 check(
     name = "bash",
-    min_version = "4.2",
+    min_version = min_version,
     version_cmd = pipe(
         "bash --version",
         "head -n 1",
@@ -84,6 +113,9 @@ check(
     )
 )
 
+
+
+# Emacs ========================================================================
 check(
     name = "emacs",
     min_version = "26.2",
@@ -94,6 +126,9 @@ check(
     )
 )
 
+
+
+# Git ==========================================================================
 check(
     name = "git",
     min_version = "2.21",
@@ -104,6 +139,9 @@ check(
     )
 )
 
+
+
+# GnuPG ========================================================================
 check(
     name = "gpg",
     min_version = "2.2.8",
@@ -123,6 +161,9 @@ check(
     )
 )
 
+
+
+# GSL ==========================================================================
 check(
     name = "h5dump",
     min_version = "1.10",
@@ -133,9 +174,13 @@ check(
     )
 )
 
+
+
+# htop =========================================================================
+# Ubuntu 18 is still bundling 2.1.
 check(
     name = "htop",
-    min_version = "2.2.0",
+    min_version = "2.1",
     version_cmd = pipe(
         "htop --version",
         "head -n 1",
@@ -143,10 +188,14 @@ check(
     )
 )
 
+
+
+# OpenSSL ======================================================================
+# Ubuntu 18 still bundles 1.1.0
 # Note that 1.1.1b isn't a valid version in R, so don't check for the letter.
 check(
     name = "openssl",
-    min_version = "1.1.1",
+    min_version = "1.1",
     version_cmd = pipe(
         "openssl version",
         "head -n 1",
@@ -154,6 +203,9 @@ check(
     )
 )
 
+
+
+# Perl =========================================================================
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
 # This is perl 5, version 16, subversion 3 (v5.16.3)
@@ -167,11 +219,20 @@ check(
     )
 )
 
+
+
+# Python =======================================================================
 # Now requiring >= 3.7. Python 2 will be phased out by 2020.
 # The user can use either conda or virtualenv.
+min_version <- switch(
+    EXPR = os,
+    redhat = "2.7.5",
+    ubuntu = "2.7.15",
+    "3.7"
+)
 check(
     name = "python",
-    min_version = "3.7",
+    min_version = min_version,
     version_cmd = pipe(
         "python --version 2>&1",
         "head -n 1",
@@ -179,6 +240,9 @@ check(
     )
 )
 
+
+
+# ShellCheck ===================================================================
 # RHEL 7 still uses super old 0.3.5 release.
 # This is hard to compile, so keep the dependency relaxed.
 check(
@@ -191,12 +255,16 @@ check(
     )
 )
 
+
+
+# TeX Live =====================================================================
 # Note that we're checking the TeX Live release year here.
 # Here's what it looks like on Debian/Ubuntu:
 # TeX 3.14159265 (TeX Live 2017/Debian)
 min_version <- switch(
-    EXPR = platform,
-    "x86_64-redhat-linux-gnu" = "2013",
+    EXPR = os,
+    redhat = "2013",
+    ubuntu = "2017"
     "2019"
 )
 check(
@@ -212,6 +280,9 @@ check(
     )
 )
 
+
+
+# Tmux =========================================================================
 check(
     name = "tmux",
     min_version = "2.9",
@@ -222,6 +293,9 @@ check(
     )
 )
 
+
+
+# Vim ==========================================================================
 check(
     name = "vim",
     min_version = "8.1",
