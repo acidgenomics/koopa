@@ -14,9 +14,8 @@ formals(warning)[["call."]] <- FALSE
 # - CentOS
 # - Debian
 # - Fedora
-
 platform <- Sys.getenv("KOOPA_PLATFORM")
-stopifnot(nzchar(platform))
+stopifnot(isTRUE(nzchar(platform)))
 platform <- tolower(platform)
 if (grepl("darwin", platform)) {
     os <- "darwin"
@@ -26,6 +25,14 @@ if (grepl("darwin", platform)) {
     os <- "ubuntu"
 } else {
     os <- "linux"
+}
+
+# Are we running on Linux?
+# We're using this for some server-specific checks (e.g. rstudio-server).
+if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
+    linux <- TRUE
+} else {
+    linux <- FALSE
 }
 
 message("Checking recommended koopa dependencies.")
@@ -278,11 +285,13 @@ check(
 
 
 # RStudio Server ===============================================================
-check(
-    name = "rstudio-server",
-    min_version = "1.2.1335",
-    version_cmd = "rstudio-server version"
-)
+if (isTRUE(linux)) {
+    check(
+        name = "rstudio-server",
+        min_version = "1.2.1335",
+        version_cmd = "rstudio-server version"
+    )
+}
 
 
 
