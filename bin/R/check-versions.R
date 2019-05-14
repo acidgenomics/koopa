@@ -64,7 +64,7 @@ check <- function(
         intern = TRUE
     )
     stopifnot(is.character(version))
-    version_original <- version
+    orig_version <- version
     
     # Sanitize complicated verions:
     # - 2.7.15rc1 to 2.7.15
@@ -79,12 +79,14 @@ check <- function(
         version <- package_version(version)
     }
 
-    if (version < min_version) {
-        message(paste("FAIL", name, version, "<", min_version))
-        return(invisible())
+    if (version >= min_version) {
+        status <- "  OK"
+    } else {
+	status <- "FAIL"
     }
+    message(paste(status, name, orig_version, ">=", min_version))
 
-    message(paste("  OK", name, version, ">=", min_version))
+    invisible()
 }
 
 pipe <- function(...) {
@@ -97,10 +99,11 @@ pipe <- function(...) {
 r_version <- packageVersion("base")
 r_min_version <- "3.6"
 if (r_version >= r_min_version) {
-    message(paste("  OK", "R", r_version, ">=", r_min_version))
+    status <- "  OK"
 } else {
-    warning(paste("FAIL", "R", r_version, "<", r_min_version))
+    status <- "FAIL"
 }
+message(paste(status, "R", r_version, ">=", r_min_version))
 
 
 
