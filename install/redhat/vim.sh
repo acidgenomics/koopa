@@ -6,7 +6,7 @@ set -Eeuxo pipefail
 
 build_dir="/tmp/build/vim"
 prefix="/usr/local"
-version="8.1.1310"
+version="8.1.1331"
 
 echo "Installing vim ${version}."
 
