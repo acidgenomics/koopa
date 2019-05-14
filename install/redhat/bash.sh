@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # Bash
 # https://www.gnu.org/software/bash/
 
-build_dir="/tmp/bash"
+build_dir="/tmp/build/bash"
 prefix="/usr/local"
 version="5.0"
 
@@ -57,9 +57,10 @@ sudo yum-builddep -y bash
 echo "Updating default shell."
 chsh -s /usr/local/bin/bash
 
-cat << EOF
-bash installed successfully.
-Reload the shell and check version.
+echo "Reloading the shell."
+exec bash
+
+echo "bash installed successfully."
+
 command -v bash
 bash --version
-EOF
