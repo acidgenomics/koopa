@@ -231,6 +231,7 @@ check(
 # Note that 1.1.1b isn't a valid version in R, so don't check for the letter.
 min_version <- switch(
     EXPR = os,
+    redhat = "1.0.2",
     ubuntu = "1.1.0",
     "1.1.1"
 )
