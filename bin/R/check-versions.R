@@ -116,6 +116,7 @@ check(
 
 
 # Emacs ========================================================================
+# Setting a hard dependency here, to allow for spacemacs.
 check(
     name = "emacs",
     min_version = "26.2",
@@ -129,9 +130,14 @@ check(
 
 
 # Git ==========================================================================
+min_version <- switch(
+    EXPR = os,
+    ubuntu = "2.17.1",
+    "2.21"
+)
 check(
     name = "git",
-    min_version = "2.21",
+    min_version = min_version,
     version_cmd = pipe(
         "git --version",
         "head -n 1",
@@ -142,9 +148,14 @@ check(
 
 
 # GnuPG ========================================================================
+min_version <- switch(
+    EXPR = os,
+    ubuntu = "2.2.4",
+    "2.2.8"
+)
 check(
     name = "gpg",
-    min_version = "2.2.8",
+    min_version = min_version,
     version_cmd = pipe(
         "gpg --version",
         "head -n 1",
@@ -152,9 +163,17 @@ check(
     )
 )
 
+
+
+# GSL ==========================================================================
+min_version <- switch(
+    EXPR = os,
+    ubuntu = "2.4",
+    "2.5"
+)
 check(
     name = "gsl-config",
-    min_version = "2.5",
+    min_version = min_version,
     version_cmd = pipe(
         "gsl-config --version",
         "head -n 1"
@@ -163,7 +182,7 @@ check(
 
 
 
-# GSL ==========================================================================
+# HDF5 =========================================================================
 check(
     name = "h5dump",
     min_version = "1.10",
@@ -178,9 +197,14 @@ check(
 
 # htop =========================================================================
 # Ubuntu 18 is still bundling 2.1.
+min_version <- switch(
+    EXPR = os,
+    ubuntu = "2.1",
+    "2.2"
+)
 check(
     name = "htop",
-    min_version = "2.1",
+    min_version = min_version,
     version_cmd = pipe(
         "htop --version",
         "head -n 1",
@@ -193,9 +217,14 @@ check(
 # OpenSSL ======================================================================
 # Ubuntu 18 still bundles 1.1.0
 # Note that 1.1.1b isn't a valid version in R, so don't check for the letter.
+min_version <- switch(
+    EXPR = os,
+    ubuntu = "1.1.0",
+    "1.1.1"
+)
 check(
     name = "openssl",
-    min_version = "1.1",
+    min_version = min_version,
     version_cmd = pipe(
         "openssl version",
         "head -n 1",
@@ -209,9 +238,15 @@ check(
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
 # This is perl 5, version 16, subversion 3 (v5.16.3)
+min_version <- switch(
+    EXPR = os,
+    redhat = "5.16",
+    ubuntu = "5.26",
+    "5.28"
+)
 check(
     name = "perl",
-    min_version = "5.16.3",
+    min_version = min_version,
     version_cmd = pipe(
         "perl --version",
         "sed -n '2p'",
