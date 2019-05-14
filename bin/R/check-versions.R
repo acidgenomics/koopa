@@ -38,8 +38,10 @@ check <- function(
     )
     stopifnot(is.character(version))
     
-    # Sanitize complicated verions (e.g. 2.7.15rc1 to 2.7.15).
-    version <- sub("\\.([0-9]+)[a-z]+[0-9]+?$", ".\\1", version)
+    # Sanitize complicated verions:
+    # - 2.7.15rc1 to 2.7.15
+    # - 1.10.0-patch1 to 1.10.0
+    version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
     # Strip leading and trailing characters (e.g. "v/a") if necessary.
     version <- sub("^[a-z]+", "", version)
     version <- sub("[a-z]+$", "", version)
