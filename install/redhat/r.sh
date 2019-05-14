@@ -18,32 +18,13 @@ major_version="3"
 minor_version="6.0"
 version="${major_version}.${minor_version}"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
-# Require yum to build dependencies.
-if [[ ! -x "$(command -v yum)" ]]
-then
-    echo "Error: yum is required to build dependencies." >&2
-    exit 1
-fi
-
 echo "Installing R ${version}."
-echo "sudo is required for this script."
-sudo -v
 
-sudo yum install -y yum-utils
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "${script_dir}/_init.sh"
+
+# Install build dependencies.
 sudo yum-builddep -y R
 
 # Install TeX dependencies.

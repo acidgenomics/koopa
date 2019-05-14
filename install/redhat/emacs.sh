@@ -2,39 +2,22 @@
 set -Eeuxo pipefail
 
 # Emacs text editor
-# - https://www.gnu.org/software/emacs/index.html#Releases
+# https://www.gnu.org/software/emacs/
+#
+# See also:
 # - https://github.com/emacs-mirror/emacs
 
 build_dir="/tmp/build/emacs"
 prefix="/usr/local"
 version="26.2"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
-# Require yum to build dependencies.
-if [[ ! -x "$(command -v yum)" ]]
-then
-    echo "Error: yum is required to build dependencies." >&2
-    exit 1
-fi
-
 echo "Installing emacs ${version}."
-echo "sudo is required for this script."
-sudo -v
 
-sudo yum install -y yum-utils
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "$script_dir/_init.sh"
+
+# Install build dependencies.
 sudo yum-builddep -y emacs
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.

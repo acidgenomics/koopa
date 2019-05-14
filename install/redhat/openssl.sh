@@ -5,23 +5,16 @@ set -Eeuxo pipefail
 # https://www.openssl.org/source/
 
 build_dir="/tmp/build/openssl"
-date="2019-02-26"
-version="1.1.1b"
 prefix="/usr/local"
+version="1.1.1b"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
+echo "Installing openssl ${version}."
 
-echo "Installing openssl ${version} (${date})."
-echo "sudo is required for this script."
-sudo -v
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "$script_dir/_init.sh"
 
-# Install dependencies.
-sudo yum install -y yum-utils
+# Install build dependencies.
 sudo yum-builddep -y openssl
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
@@ -39,13 +32,12 @@ sudo yum-builddep -y openssl
     rm -rf "$build_dir"
 )
 
-echo "Updating ldconfig."
+# Ensure ldconfig is current.
 sudo ldconfig
 
-cat << EOF
-openssl installed successfully.
-Reload the shell and check version.
+echo "Reloading current shell."
+exec bash
 
+echo "openssl installed successfully."
 command -v openssl
 openssl version
-EOF

@@ -2,7 +2,7 @@
 set -Eeuxo pipefail
 
 # GnuPG
-# 2019-05-09
+# https://www.gnupg.org/
 #
 # See also:
 # - https://www.gnupg.org/download/
@@ -14,34 +14,12 @@ build_dir="/tmp/build/gnupg"
 prefix="/usr/local"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
-# Require yum to build dependencies.
-if [[ ! -x "$(command -v yum)" ]]
-then
-    echo "Error: yum is required to build dependencies." >&2
-    exit 1
-fi
-
 echo "Installing GnuPG."
-echo "sudo is required for this script."
-sudo -v
 
-mkdir -p "$build_dir"
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+. "$script_dir/_init.sh"
 
-sudo yum install -y yum-utils
 sudo yum-builddep -y gnupg2
 
 # Download GnuPG release signing keys.
@@ -52,7 +30,8 @@ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
                 2071B08A33BD3F06 \
                 8A861B1C7EFD60D9
 
-# Dependencies =================================================================
+mkdir -p "$build_dir"
+
 (
     package="libgpg-error"
     version="1.31"
@@ -136,8 +115,6 @@ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
     make
     sudo make install
 )
-
-# GnuPG ========================================================================
 
 # Update dynamic linker configuration.
 sudo ldconfig -v
