@@ -18,8 +18,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
-# Install build dependencies.
-sudo yum-builddep -y emacs
+# Bioconductor AMI is missing these dependencies.
+# apt-cache search libgif
+# apt-cache search gnutls
+# apt-cache search 'libgnutls.*-dev'
+sudo apt-get -y install gnutls-bin libgnutls28-dev
+sudo apt-get -y install libgif-dev
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (

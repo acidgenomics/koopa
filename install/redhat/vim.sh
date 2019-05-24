@@ -4,41 +4,23 @@ set -Eeuxo pipefail
 # Vim
 # https://github.com/vim/vim
 
-build_dir="${HOME}/build/vim"
+build_dir="/tmp/build/vim"
 prefix="/usr/local"
-version="8.1.1244"
-
-# Check for RedHat.
-if [[ ! -f "/etc/redhat-release" ]]
-then
-    echo "Error: RedHat Linux is required." >&2
-    exit 1
-fi
-
-# Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
-
-# Require yum to build dependencies.
-if [[ ! -x "$(command -v yum)" ]]
-then
-    echo "Error: yum is required to build dependencies." >&2
-    exit 1
-fi
+version="8.1.1331"
 
 echo "Installing vim ${version}."
-echo "sudo is required for this script."
-sudo -v
 
-# Build dependencies.
-sudo yum -y install yum-utils
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/_init.sh"
+
+# Install build dependencies.
 sudo yum-builddep -y vim
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
+    rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir" || return 1
     wget "https://github.com/vim/vim/archive/v${version}.tar.gz"
@@ -49,6 +31,7 @@ sudo yum-builddep -y vim
     # Skip the unit tests on RedHat. It will install successfully.
     # make test
     sudo make install
+    rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
@@ -56,5 +39,3 @@ sudo ldconfig
 
 command -v vim
 vim --version
-
-unset -v build_dir prefix version

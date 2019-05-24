@@ -1,3 +1,14 @@
+## koopa 0.3.4 (2019-05-24)
+
+- Improved version dependency checks.
+- Added new `check-versions` program, for additional version checks.
+- Improved build scripts in `install/` to use `/tmp/` for temp files.
+- New build scripts: bash, coreutils, gnupg, openssl, pass, r, rstudio-server,
+  and zsh.
+- Now using a shared `_init.sh` script for simpler build dependency checks.
+
+
+
 ## koopa 0.3.3 (2019-05-08)
 
 - Renamed all exported scripts to no longer use file extensions. This makes

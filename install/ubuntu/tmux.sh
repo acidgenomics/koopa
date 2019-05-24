@@ -15,8 +15,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
-# Install build dependencies.
-sudo yum-builddep -y tmux
+# apt-cache search libevent
+sudo apt-get -y install libevent-dev
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
