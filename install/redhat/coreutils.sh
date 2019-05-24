@@ -12,6 +12,7 @@ echo "Installing git ${version}."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
 # Install build dependencies.
@@ -41,7 +42,7 @@ cat << EOF
 coreutils installed successfully.
 Check version with 'info coreutils'.
 
-Patching `/usr/bin/env` is currently necessary on RHEL 7.
+Patching '/usr/bin/env' is currently necessary on RHEL 7.
 Run this command to use newer 'env' from coreutils:
 
     sudo mv /usr/bin/env /usr/bin/env.bak; \
