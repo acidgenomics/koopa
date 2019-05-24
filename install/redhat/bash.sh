@@ -12,6 +12,7 @@ echo "Installing bash ${version}."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
 # Install build dependencies
@@ -39,9 +40,11 @@ sudo yum-builddep -y bash
 echo "Updating default shell."
 chsh -s /usr/local/bin/bash
 
-echo "Reloading the shell."
-exec bash
+cat << EOF
+bash installed successfully.
+Reload the current shell using 'exec bash'.
 
-echo "bash installed successfully."
 command -v bash
 bash --version
+
+EOF

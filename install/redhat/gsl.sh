@@ -13,6 +13,7 @@ echo "Installing GSL ${version}."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.

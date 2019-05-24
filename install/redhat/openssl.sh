@@ -12,6 +12,7 @@ echo "Installing openssl ${version}."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
 # Install build dependencies.
@@ -35,9 +36,11 @@ sudo yum-builddep -y openssl
 # Ensure ldconfig is current.
 sudo ldconfig
 
-echo "Reloading current shell."
-exec bash
+cat << EOF
+openssl installed successfully.
+Reload the current shell using 'exec bash'.
 
-echo "openssl installed successfully."
 command -v openssl
 openssl version
+
+EOF
