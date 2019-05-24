@@ -16,6 +16,7 @@ echo "Installing zsh ${version}."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
 # Install build dependencies.

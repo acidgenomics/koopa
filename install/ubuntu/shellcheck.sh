@@ -14,6 +14,7 @@ version="0.6.0"
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
 echo "Installing older ShellCheck version available via apt-get."
