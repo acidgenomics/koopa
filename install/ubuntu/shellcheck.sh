@@ -17,9 +17,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
 . "${script_dir}/_init.sh"
 
-# Note that EPEL version is super old and many current checks don't work.
-echo "Installing old EPEL version of ShellCheck to /usr/bin."
-sudo yum install -y epel-release ShellCheck
+echo "Installing older ShellCheck version available via apt-get."
+# apt-cache search shellcheck
+sudo apt-get -y install shellcheck
 
 echo "Copying newer ${version} binary version to /usr/local/bin."
 (
