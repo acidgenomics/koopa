@@ -24,7 +24,9 @@ then
     export BCBIO_EXE
     unset -v PYTHONHOME PYTHONPATH
     bcbio_bin_dir="$( dirname "$BCBIO_EXE" )"
-    # Exporting at the end of PATH so we don't mask R.
-    export PATH="${PATH}:${bcbio_bin_dir}"
+    # Exporting at the end of PATH so we don't mask gcc or R.
+    # This is particularly important to avoid unexpected compilation issues
+    # due to compilers in conda masking the system versions.
+    add_to_path_end "$bcbio_bin_dir"
     unset -v bcbio_bin_dir
 fi
