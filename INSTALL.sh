@@ -17,6 +17,7 @@ git submodule update
 . "${script_dir}/INSTALL/dotfiles.sh"
 
 # Install spacemacs.
+. "${script_dir}/bin/install-spacemacs"
 
 # Run the updater script.
 . "${script_dir}/UPDATE.sh"
