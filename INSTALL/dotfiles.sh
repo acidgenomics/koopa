@@ -10,6 +10,7 @@ dotfile() {
     rm -rf .dotfiles
     ln -s koopa/dotfiles .dotfiles
 
+    # Files
     dotfile bashrc
     dotfile bash_profile
     dotfile condarc
@@ -19,6 +20,9 @@ dotfile() {
     dotfile spacemacs
     dotfile tmux.conf
     dotfile vimrc
+
+    # Directories
+    dotfile vim
 
     case "$KOOPA_HOST_NAME" in
                 azure) dotfile Renviron-azure;;
