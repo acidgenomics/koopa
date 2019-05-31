@@ -6,7 +6,7 @@ set -Eeuxo pipefail
 
 build_dir="/tmp/build/openssl"
 prefix="/usr/local"
-version="1.1.1b"
+version="1.1.1c"
 
 echo "Installing openssl ${version}."
 
