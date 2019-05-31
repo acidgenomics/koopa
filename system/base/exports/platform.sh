@@ -69,9 +69,10 @@ unset -v os
 
 [ -z "$HOSTNAME" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
 case "$HOSTNAME" in
-                  azlabapp*) export AZURE=1;;
-    *.o2.rc.hms.harvard.edu) export HARVARD_O2=1;;
-       *.rc.fas.harvard.edu) export HARVARD_ODYSSEY=1;;
+             *.ec2.internal) export KOOPA_HOST_NAME="aws";;
+                  azlabapp*) export KOOPA_HOST_NAME="azure";;
+    *.o2.rc.hms.harvard.edu) export KOOPA_HOST_NAME="harvard-o2";;
+       *.rc.fas.harvard.edu) export KOOPA_HOST_NAME="harvard-odyssey";;
                           *) ;;
 esac
 
