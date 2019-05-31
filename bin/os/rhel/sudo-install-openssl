@@ -43,4 +43,7 @@ Reload the current shell using 'exec bash'.
 command -v openssl
 openssl version
 
+Check ciphers with:
+openssl ciphers -v
+
 EOF
