@@ -34,7 +34,7 @@ sudo yum-builddep -y git
 #
 # Note the capital "X" here. This differs depending on the Linux distro.
 # We're assuming Red Hat here.
-sudo yum install docbook2X
+sudo yum install -y docbook2X
 
 # This step is required to fix a binary name difference.
 if [[ ! -f /usr/bin/docbook2x-texi ]]
