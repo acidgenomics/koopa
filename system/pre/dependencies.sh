@@ -60,7 +60,7 @@ unset -v major_version version
 # checks instead, allowing the user to use either conda or virtualenv.
 
 command -v python >/dev/null 2>&1 || {
-    echo >&2 "koopa requires Python."
+    echo >&2 "koopa requires Python to be installed."
     return 1
 }
 
