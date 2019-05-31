@@ -3,6 +3,7 @@ set -Eeuxo pipefail
 
 # OpenSSL
 # https://www.openssl.org/source/
+# https://wiki.openssl.org/index.php/Compilation_and_Installation
 
 build_dir="/tmp/build/openssl"
 prefix="/usr/local"
@@ -26,7 +27,7 @@ sudo yum-builddep -y openssl
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
     tar -xvzf "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
-    ./config --prefix="$prefix"
+    ./config --prefix="$prefix" shared
     make
     make test
     sudo make install
