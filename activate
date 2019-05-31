@@ -86,7 +86,9 @@ then
     unset -v extra
 fi
 
-# Set internal variable to check if koopa is already active.
+# Set variable to check if koopa is already active.
+# This step is particularly useful when working on a cluster that spawns new
+# sessions from the current shell.
 [ ! -z "$KOOPA_OS_PLATFORM" ] && KOOPA_ACTIVATED=1
 
 if [ -z "$KOOPA_ACTIVATED" ]
