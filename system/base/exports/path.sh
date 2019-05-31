@@ -23,14 +23,14 @@ add_to_path_start "$KOOPA_BIN_DIR"
 
 if [ ! -z "$AZURE" ]
 then
-    add_to_path_start "${KOOPA_BIN_DIR}/azure"
+    add_to_path_start "${KOOPA_BIN_DIR}/osname/azure"
 elif [ ! -z "$MACOS" ]
 then
-    add_to_path_start "${KOOPA_BIN_DIR}/darwin"
+    add_to_path_start "${KOOPA_BIN_DIR}/osname/darwin"
 elif [ ! -z "$HARVARD_O2" ]
 then
-    add_to_path_start "${KOOPA_BIN_DIR}/harvard-o2"
+    add_to_path_start "${KOOPA_BIN_DIR}/hostname/harvard-o2"
 elif [ ! -z "$HARVARD_ODYSSEY" ]
 then
-    add_to_path_start "${KOOPA_BIN_DIR}/harvard-odyssey"
+    add_to_path_start "${KOOPA_BIN_DIR}/hostname/harvard-odyssey"
 fi
