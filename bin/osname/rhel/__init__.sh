@@ -28,3 +28,9 @@ fi
 
 # Ensure yum-utils is installed, so we can build dependencies.
 sudo yum -y install yum-utils
+
+# Install gcc, if necessary.
+if [[ ! -x "$(command -v gcc)" ]]
+then
+    sudo yum install -y gcc
+fi
