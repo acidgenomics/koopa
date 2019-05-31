@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-Rscript --vanilla "${KOOPA_BIN_DIR}/R/check-versions.R"
+Rscript --vanilla "${KOOPA_BASE_DIR}/R/check-versions.R"
