@@ -4,9 +4,8 @@ set -Eeuxo pipefail
 # OpenSSL
 # https://www.openssl.org/source/
 
-build_dir="/tmp/openssl"
-date="2019-02-26"
-version="1.1.1b"
+build_dir="/tmp/build/openssl"
+version="1.1.1c"
 
 # Check for macOS.
 if [[ "$OSTYPE" != "darwin" ]]
@@ -15,7 +14,7 @@ then
     exit 1
 fi
 
-echo "Installing openssl ${version} (${date})."
+echo "Installing openssl ${version}."
 echo "sudo is required for this script."
 sudo -v
 
