@@ -10,6 +10,9 @@
 # > cat /etc/os-release
 # > cat /proc/version
 
+# For macOS, use this approach instead for OS variables:
+# https://apple.stackexchange.com/questions/255546
+
 # Get OS name from `/etc/os-release`:
 # - `-F=`: Tell awk to use = as separator.
 # - `$1=="ID"`: Filter on ID.
@@ -25,17 +28,35 @@
 # Operating system                                                          {{{1
 # ==============================================================================
 
-KOOPA_OS_NAME="$( \
-    awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
-    tr -cd '[:alnum:]' \
-)"
-export KOOPA_OS_NAME
+os="$(uname -s)"
+# rev="$(uname -r)"
+# mach="$(uname -m)"
 
-KOOPA_OS_VERSION="$( \
-    awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release | \
-    tr -cd '[:digit:].' \
-)"
+if [ "$os" = "Darwin" ]
+then
+    OIFS="$IFS"
+    IFS=$'\n'
+    set $(sw_vers) > /dev/null
+    KOOPA_OS_NAME="$(echo $1 | tr "\n" ' ' | sed 's/ProductName:[ ]*//')"
+    KOOPA_OS_VERSION="$(echo $2 | tr "\n" ' ' | sed 's/ProductVersion:[ ]*//')"
+    IFS="$OIFS"
+else
+    os_file="/etc/os-release"
+    KOOPA_OS_NAME="$( \
+        awk -F= '$1=="ID" { print $2 ;}' "$os_file" | \
+        tr -cd '[:alnum:]' \
+    )"
+    KOOPA_OS_VERSION="$( \
+        awk -F= '$1=="VERSION_ID" { print $2 ;}' "$os_file" | \
+        tr -cd '[:digit:].' \
+    )"
+    unset -v os_file
+fi
+
+export KOOPA_OS_NAME
 export KOOPA_OS_VERSION
+
+unset -v os
 
 
 
