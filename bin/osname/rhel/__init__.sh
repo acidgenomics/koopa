@@ -2,7 +2,9 @@
 set -Eeuxo pipefail
 
 echo "sudo access is required for installation."
-sudo -v
+
+# This doesn't work on AWS with ec2-user, so disable.
+# sudo -v
 
 # Check for RedHat.
 if [[ $(grep -qv 'ID="rhel"' /etc/os-release) ]] &&
