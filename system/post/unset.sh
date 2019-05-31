@@ -14,6 +14,7 @@ unset -v \
 unset -f \
     add_to_path_end \
     add_to_path_start \
+    force_add_to_path_end \
     force_add_to_path_start \
     pathmunge \
     quiet_expr \
