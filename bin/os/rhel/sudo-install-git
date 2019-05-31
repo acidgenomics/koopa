@@ -34,6 +34,8 @@ sudo yum-builddep -y git
 #
 # Note the capital "X" here. This differs depending on the Linux distro.
 # We're assuming Red Hat here.
+#
+# EPEL7 must be enabled for this to install (e.g. on Amazon Linux 2).
 sudo yum install -y docbook2X
 
 # This step is required to fix a binary name difference.
