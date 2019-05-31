@@ -1,6 +1,6 @@
 dotfile() {
     file="$1"
-    rm -f "$file"
+    rm -f ".${file}"
     ln -s ".dotfiles/${file}" ".${file}"
 }
 
