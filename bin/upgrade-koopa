@@ -3,10 +3,10 @@ set -Eeuxo pipefail
 
 # Upgrade koopa installation.
 
-wd=$(pwd)
-cd "$KOOPA_BASE_DIR"
-git pull
-cd "$wd"
+(
+    cd "$KOOPA_BASE_DIR"
+    ./UPDATE.sh
+)
 
 cat << EOF
 koopa updated successfully.
