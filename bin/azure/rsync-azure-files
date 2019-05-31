@@ -39,4 +39,5 @@ rsync \
     --exclude=".git" \
     --exclude=".gitignore" \
     --exclude=".Rproj.user" \
+    --exclude="work" \
     "$@"
