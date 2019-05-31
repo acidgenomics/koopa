@@ -21,12 +21,19 @@ add_to_path_end "/bin"
 
 add_to_path_start "$KOOPA_BIN_DIR"
 
+# OS-specific programs.
+os_bin_dir="${KOOPA_BIN_DIR}/osname/${KOOPA_OS_NAME}"
+if [ -d "$os_bin_dir" ]
+then
+    add_to_path_start "$os_bin_dir"
+fi
+unset -v os_bin_dir
+
+# Host-specific programs.
+# FIXME Switch to setting KOOPA_HOST_NAME similar to OS approach.
 if [ ! -z "$AZURE" ]
 then
     add_to_path_start "${KOOPA_BIN_DIR}/osname/azure"
-elif [ ! -z "$MACOS" ]
-then
-    add_to_path_start "${KOOPA_BIN_DIR}/osname/darwin"
 elif [ ! -z "$HARVARD_O2" ]
 then
     add_to_path_start "${KOOPA_BIN_DIR}/hostname/harvard-o2"
