@@ -10,6 +10,8 @@ set -Eeuxo pipefail
 # - https://github.com/git/git/blob/master/INSTALL
 # - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
 
+# FIXME This is currently failing if OpenSSL 1.1.1 is installed to /usr/local.
+
 build_dir="/tmp/build/git"
 prefix="/usr/local"
 version="2.21.0"
