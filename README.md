@@ -123,7 +123,7 @@ Automatic [PGP][] key support will be added in a future update.
 
 ## Tools
 
-Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa-list.sh` for a complete list.
+Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa-list` for a complete list.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
