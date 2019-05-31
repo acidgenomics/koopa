@@ -14,7 +14,7 @@ formals(warning)[["call."]] <- FALSE
 # - CentOS
 # - Debian
 # - Fedora
-platform <- Sys.getenv("KOOPA_PLATFORM")
+platform <- Sys.getenv("KOOPA_OS_PLATFORM")
 stopifnot(isTRUE(nzchar(platform)))
 platform <- tolower(platform)
 if (grepl("darwin", platform)) {
