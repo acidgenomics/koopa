@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Pass (password store)
+# - https://www.passwordstore.org/
+# - https://git.zx2c4.com/password-store
+
+echo "Installing pass."
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
+sudo yum install -y pass
