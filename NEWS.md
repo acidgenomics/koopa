@@ -5,7 +5,7 @@
 - Improved build scripts in `install/` to use `/tmp/` for temp files.
 - New build scripts: bash, coreutils, gnupg, openssl, pass, r, rstudio-server,
   and zsh.
-- Now using a shared `_init.sh` script for simpler build dependency checks.
+- Now using a shared `__init__.sh` script for simpler build dependency checks.
 
 
 
