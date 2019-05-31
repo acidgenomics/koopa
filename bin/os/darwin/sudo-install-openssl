@@ -7,12 +7,10 @@ set -Eeuxo pipefail
 build_dir="/tmp/build/openssl"
 version="1.1.1c"
 
-# Check for macOS.
-if [[ "$OSTYPE" != "darwin" ]]
-then
-    echo "Error: macOS is required." >&2
-    exit 1
-fi
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
 
 echo "Installing openssl ${version}."
 echo "sudo is required for this script."
