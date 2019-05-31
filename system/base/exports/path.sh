@@ -30,14 +30,9 @@ fi
 unset -v os_bin_dir
 
 # Host-specific programs.
-# FIXME Switch to setting KOOPA_HOST_NAME similar to OS approach.
-if [ ! -z "$AZURE" ]
+host_bin_dir="${KOOPA_BIN_DIR}/host/${KOOPA_HOST_NAME}"
+if [ -d "$host_bin_dir" ]
 then
-    add_to_path_start "${KOOPA_BIN_DIR}/host/azure"
-elif [ ! -z "$HARVARD_O2" ]
-then
-    add_to_path_start "${KOOPA_BIN_DIR}/host/harvard-o2"
-elif [ ! -z "$HARVARD_ODYSSEY" ]
-then
-    add_to_path_start "${KOOPA_BIN_DIR}/host/harvard-odyssey"
+    add_to_path_start "$host_bin_dir"
 fi
+unset -v host_bin_dir
