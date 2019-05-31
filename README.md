@@ -26,7 +26,7 @@ Optional:
 First, clone the repository:
 
 ```bash
-git clone https://github.com/acidgenomics/koopa.git ~/.koopa
+git clone git@github.com:mjsteinbaugh/dotfiles.git ~/.koopa
 ```
 
 Second, add these lines to your POSIX-compliant shell configuration file.
