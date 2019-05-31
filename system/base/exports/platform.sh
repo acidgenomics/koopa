@@ -2,16 +2,14 @@
 
 # Platform variables
 
-# https://unix.stackexchange.com/questions/23833
-# https://unix.stackexchange.com/questions/432816
-# https://stackoverflow.com/questions/20007288
+# See also:
+# - https://unix.stackexchange.com/questions/23833
+# - https://unix.stackexchange.com/questions/432816
+# - https://stackoverflow.com/questions/20007288
 
-# Useful files to parse:
+# Useful files to parse on Linux:
 # > cat /etc/os-release
 # > cat /proc/version
-
-# For macOS, use this approach instead for OS variables:
-# https://apple.stackexchange.com/questions/255546
 
 # Get OS name from `/etc/os-release`:
 # - `-F=`: Tell awk to use = as separator.
@@ -22,6 +20,15 @@
 # > sed 's/"//g'
 # > tr -d \"
 # > tr -cd '[:alnum:]'
+
+# For macOS, use this approach instead for OS variables:
+# - https://gist.github.com/scriptingosx/670991d7ec2661605f4e3a40da0e37aa
+# - https://apple.stackexchange.com/questions/255546
+# 
+# Currently, use of sw_vers is recommended.
+#
+# Alternatively, can parse this file directly instead:
+# /System/Library/CoreServices/SystemVersion.plist
 
 
 
@@ -34,12 +41,9 @@ os="$(uname -s)"
 
 if [ "$os" = "Darwin" ]
 then
-    OIFS="$IFS"
-    IFS=$'\n'
-    set $(sw_vers) > /dev/null
-    KOOPA_OS_NAME="$(echo $1 | tr "\n" ' ' | sed 's/ProductName:[ ]*//')"
-    KOOPA_OS_VERSION="$(echo $2 | tr "\n" ' ' | sed 's/ProductVersion:[ ]*//')"
-    IFS="$OIFS"
+    # KOOPA_OS_NAME="$(sw_vers -productName)"
+    KOOPA_OS_NAME="darwin"
+    KOOPA_OS_VERSION="$(sw_vers -productVersion)"
 else
     os_file="/etc/os-release"
     KOOPA_OS_NAME="$( \
