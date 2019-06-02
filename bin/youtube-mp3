@@ -3,5 +3,8 @@ set -Eeuxo pipefail
 
 # Extract MP3 audio from YouTube or SoundCloud.
 
+command -v youtube-dl >/dev/null 2>&1 || { echo >&2 "youtube-dl missing."; exit 1; }
+
 url="$1"
+
 youtube-dl --extract-audio --audio-format mp3 "$url"
