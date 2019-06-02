@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # Download a thumbnail image from YouTube.
 
 url="$1"
-id=$(echo "$url" | grep -Eo 'v=[A-Za-z0-9_]+' | cut -d '=' -f 2)
+id=$(echo "$url" | grep -Eo 'v=[A-Za-z0-9_-]+' | cut -d '=' -f 2)
 
 # File options:
 # - hqdefault (smaller)
