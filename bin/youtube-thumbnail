@@ -3,7 +3,8 @@ set -Eeuxo pipefail
 
 # Download a thumbnail image from YouTube.
 
-id="WFIFjkzIF_Y"
+url="$1"
+id=$(echo "$url" | grep -Eo 'v=[A-Za-z0-9_]+' | cut -d '=' -f 2)
 
 # wget -O "${id}-hqdefault.jpg" "https://i.ytimg.com/vi/${id}/hqdefault.jpg"
 wget -O "${id}-maxresdefault.jpg" "https://i.ytimg.com/vi/${id}/maxresdefault.jpg"
