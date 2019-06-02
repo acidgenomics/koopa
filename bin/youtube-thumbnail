@@ -6,5 +6,9 @@ set -Eeuxo pipefail
 url="$1"
 id=$(echo "$url" | grep -Eo 'v=[A-Za-z0-9_]+' | cut -d '=' -f 2)
 
-# Alternatively, can use hqdefault.jpg
-wget -O "$id" "https://i.ytimg.com/vi/${id}/maxresdefault.jpg"
+# File options:
+# - hqdefault (smaller)
+# - maxresdefault (larger)
+# Note all videos will return the max res thumbnail, so stick with hq instead.
+
+wget -O "$id.jpg" "https://i.ytimg.com/vi/${id}/hqdefault.jpg"
