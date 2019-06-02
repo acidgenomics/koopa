@@ -6,5 +6,5 @@ set -Eeuxo pipefail
 url="$1"
 id=$(echo "$url" | grep -Eo 'v=[A-Za-z0-9_]+' | cut -d '=' -f 2)
 
-# wget -O "${id}-hqdefault.jpg" "https://i.ytimg.com/vi/${id}/hqdefault.jpg"
-wget -O "${id}-maxresdefault.jpg" "https://i.ytimg.com/vi/${id}/maxresdefault.jpg"
+# Alternatively, can use hqdefault.jpg
+wget -O "$id" "https://i.ytimg.com/vi/${id}/maxresdefault.jpg"
