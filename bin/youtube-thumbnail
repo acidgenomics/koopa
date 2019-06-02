@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Download a thumbnail image from YouTube.
+
+id="WFIFjkzIF_Y"
+
+# wget -O "${id}-hqdefault.jpg" "https://i.ytimg.com/vi/${id}/hqdefault.jpg"
+wget -O "${id}-maxresdefault.jpg" "https://i.ytimg.com/vi/${id}/maxresdefault.jpg"
