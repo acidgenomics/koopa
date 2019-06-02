@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Extract MP3 audio from YouTube or SoundCloud.
+
+url="$1"
+youtube-dl --extract-audio --audio-format mp3 "$url"
