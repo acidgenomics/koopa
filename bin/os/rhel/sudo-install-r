@@ -97,7 +97,7 @@ sudo yum install -y \
         --with-tcltk
     make
     make check
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 
