@@ -11,8 +11,9 @@ set -Eeuxo pipefail
 # - https://github.com/rstudio/rmarkdown/issues/359
 # - http://pj.freefaculty.org/blog/?p=315
 
-build_dir="/tmp/build/r"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/r"
+build_name="$KOOPA_OS_BUILD_STRING"
 
 major_version="3"
 minor_version="6.0"
@@ -82,7 +83,7 @@ sudo yum install -y \
     tar -xzvf "R-${version}.tar.gz"
     cd "R-${version}"
     ./configure \
-        --build="x86_64-redhat-linux-gnu" \
+        --build="$build_name" \
         --prefix="$prefix" \
         --enable-BLAS-shlib \
         --enable-R-profiling \
