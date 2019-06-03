@@ -5,8 +5,9 @@ set -Eeuxo pipefail
 # https://www.gnu.org/software/gsl/
 # Required for some single-cell RNA-seq R packages.
 
-build_dir="/tmp/build/gsl"
-prefix="/usr/local"
+build_dir="${KOOPA_TMP}/build/gsl"
+prefix="$KOOPA_PREFIX"
+
 version="2.5"
 
 echo "Installing GSL ${version}."
@@ -27,7 +28,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     ./configure --prefix="$prefix"
     make
     make check
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 
