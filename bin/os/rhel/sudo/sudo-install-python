@@ -44,7 +44,7 @@ mkdir "$build_dir"
     sudo make install
 )
 
-rm -rf "$build_dir"
+sudo rm -rf "$build_dir"
 
 # Ensure ldconfig is current.
 # Otherwise you can run into libpython detection errors.
