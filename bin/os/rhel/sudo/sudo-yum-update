@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-# This script requires yum.
-command -v yum >/dev/null 2>&1 || { echo >&2 "yum missing."; exit 1; }
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
 
-# Alternatively, here's how to require root user.
-# if (( EUID != 0 ))
-# then
-#     echo "This script must be run as root."
-#     exit 1
-# fi
-
-sudo -v
 log_dir="${HOME}/logs/${HOSTNAME}/yum"
 mkdir -p "$log_dir"
 log_file="${log_dir}/yum-update-$(date +%F).log"
