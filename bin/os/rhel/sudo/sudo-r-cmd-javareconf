@@ -3,7 +3,7 @@ set -Eeuxo pipefail
 
 echo "Updating R Java configuration."
 
-R CMD javareconf -h
+# R CMD javareconf -h
 
 # Environment variables that can be used to influence the detection:
 #   JAVA           path to a Java interpreter executable
