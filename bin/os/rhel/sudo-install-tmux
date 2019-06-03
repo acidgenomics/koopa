@@ -4,8 +4,10 @@ set -Eeuxo pipefail
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
 
-build_dir="/tmp/build/tmux"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/tmux"
+
 version="2.9a"
 
 echo "Installing tmux ${version}."
@@ -26,9 +28,11 @@ sudo yum-builddep -y tmux
     wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
     tar -xzvf "tmux-${version}.tar.gz"
     cd "tmux-${version}" || return 1
-    ./configure --prefix="$prefix"
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
     make
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 

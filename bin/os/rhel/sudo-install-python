@@ -4,8 +4,10 @@ set -Eeuxo pipefail
 # Python
 # https://www.python.org/
 
-build_dir="/tmp/build/python"
 prefix="/usr/local"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="/tmp/build/python"
+
 version="3.7.3"
 
 echo "Installing python ${version}."
@@ -33,9 +35,13 @@ mkdir "$build_dir"
     wget "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz"
     tar xfv "Python-${version}.tar.xz"
     cd "Python-${version}"
-    ./configure --prefix="$prefix" --enable-optimizations --enable-shared
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix" \
+        --enable-optimizations \
+        --enable-shared
     make
-    sudo make install
+    make install
 )
 
 rm -rf "$build_dir"

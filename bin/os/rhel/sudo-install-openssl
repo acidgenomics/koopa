@@ -5,8 +5,9 @@ set -Eeuxo pipefail
 # https://www.openssl.org/source/
 # https://wiki.openssl.org/index.php/Compilation_and_Installation
 
-build_dir="/tmp/build/openssl"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/openssl"
+
 version="1.1.1c"
 
 echo "Installing openssl ${version}."
@@ -30,7 +31,7 @@ sudo yum-builddep -y openssl
     ./config --prefix="$prefix" shared
     make
     make test
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 

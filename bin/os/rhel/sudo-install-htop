@@ -5,9 +5,10 @@ set -Eeuxo pipefail
 # https://hisham.hm/htop/releases/
 # https://github.com/hishamhm/htop
 
-build_dir="/tmp/build/htop"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/htop"
+
 version="2.2.0"
-prefix="/usr/local"
 
 echo "Installing htop ${version}."
 
@@ -27,7 +28,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     ./configure --prefix="$prefix"
     make
     make check
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 
