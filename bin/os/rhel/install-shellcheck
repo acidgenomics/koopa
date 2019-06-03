@@ -9,8 +9,9 @@ set -Eeuxo pipefail
 # - Install GHC and cabal-install from source
 #   https://www.haskell.org/downloads/linux/
 
-prefix="/usr/local"
-build_dir="/tmp/build/shellcheck"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/shellcheck"
+
 version="0.6.0"
 
 # Run preflight initialization checks.
@@ -24,7 +25,7 @@ echo "Copying ${version} binary version to ${prefix}."
     mkdir -p "$build_dir"
     cd "$build_dir"
     wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz" | tar -xJv
-    sudo cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
+    cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
     rm -rf "$build_dir"
 )
 
