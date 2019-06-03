@@ -16,6 +16,10 @@ echo "Updating R Java configuration."
 #   JAVAH          path to a Java header/stub generator
 #   JAR            path to a Java archive tool
 
+# Fix permissions.
+sudo chgrp -R wheel /usr/local/lib64/R
+sudo chmod -R g+w /usr/local/lib64/R
+
 java_dir="/usr/lib/jvm/java"
 java_flags=" \
     JAVA=${java_dir}/bin/java \
