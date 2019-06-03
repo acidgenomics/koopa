@@ -1,27 +1,50 @@
 #!/bin/sh
 
-# Path modifiers.
-# Modified from Mike McQuaid's dotfiles.
-# https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
+# Functions
 
 
 
-# pathmunge is defined in RHEL `/etc/profile`.
-# Copied here for cross platform support.
-pathmunge () {
-    case ":${PATH}:" in
-        *:"$1":*) ;;
-        *)
-            if [ "$2" = "after" ]
-            then
-                PATH="$PATH:$1"
-            else
-                PATH="$1:$PATH"
-            fi
-    esac
+# Quiet variants                                                            {{{1
+# ==============================================================================
+
+# Regular expression matching that is POSIX compliant.
+# https://stackoverflow.com/questions/21115121
+# Avoid using `[[ =~ ]]` in sh config files.
+# expr is faster than using case.
+
+quiet_expr() {
+    expr "$1" : "$2" 1>/dev/null
+}
+
+# Don't use `&>` here, it isn't POSIX.
+# https://unix.stackexchange.com/a/80632
+
+quiet_which() {
+    # command -v "$1" >/dev/null
+    command -v "$1" >/dev/null 2>&1
 }
 
 
+
+# Sudo permission                                                           {{{1
+# ==============================================================================
+#
+# Currently performing a simple check by verifying wheel group.
+#
+# Alternatively, can use `sudo -nv 2>/dev/null`.
+# However, this approach doesn't work well unless sudo is passwordless, which
+# isn't common on all Linux distros.
+has_sudo() {
+    groups | grep -Eq "\bwheel\b"
+}
+
+
+
+# Path modifiers                                                            {{{1
+# ==============================================================================
+
+# Modified from Mike McQuaid's dotfiles.
+# https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
 
 # Look into an improved POSIX method here. This works for bash and ksh.
 # Note that this won't work on the first item in PATH.
@@ -60,19 +83,21 @@ force_add_to_path_end() {
   export PATH="${PATH}:${1}"
 }
 
-
-
-# Regular expression matching that is POSIX compliant.
-# https://stackoverflow.com/questions/21115121
-# Avoid using `[[ =~ ]]` in sh config files.
-# expr is faster than using case.
-quiet_expr() {
-    expr "$1" : "$2" 1>/dev/null
+# pathmunge is defined in RHEL `/etc/profile`.
+# Copied here for cross platform support.
+pathmunge() {
+    case ":${PATH}:" in
+        *:"$1":*) ;;
+        *)
+            if [ "$2" = "after" ]
+            then
+                PATH="$PATH:$1"
+            else
+                PATH="$1:$PATH"
+            fi
+    esac
 }
 
-# Don't use `&>` here, it isn't POSIX.
-# https://unix.stackexchange.com/a/80632
-quiet_which() {
-    # command -v "$1" >/dev/null
-    command -v "$1" >/dev/null 2>&1
-}
+
+
+# vim: fdm=marker
