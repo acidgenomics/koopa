@@ -4,8 +4,10 @@ set -Eeuxo pipefail
 # Bash
 # https://www.gnu.org/software/bash/
 
-build_dir="/tmp/build/bash"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/bash"
+
 version="5.0"
 
 echo "Installing bash ${version}."
@@ -26,10 +28,12 @@ sudo yum-builddep -y bash
     wget http://ftpmirror.gnu.org/bash/bash-${version}.tar.gz
     tar -xzvf "bash-${version}.tar.gz"
     cd "bash-${version}"
-    ./configure --build="x86_64-redhat-linux-gnu" --prefix="$prefix"
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
     make
     make test
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 
