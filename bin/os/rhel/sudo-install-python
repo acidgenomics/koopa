@@ -41,7 +41,7 @@ mkdir "$build_dir"
         --enable-optimizations \
         --enable-shared
     make
-    make install
+    sudo make install
 )
 
 rm -rf "$build_dir"
