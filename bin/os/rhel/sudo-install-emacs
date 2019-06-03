@@ -35,7 +35,7 @@ sudo yum-builddep -y emacs
         --build="$build_name" \
         --prefix="$prefix"
     make
-    make install
+    sudo make install
     rm -rf "$build_dir"
 )
 

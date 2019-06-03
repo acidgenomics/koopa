@@ -38,7 +38,7 @@ sudo yum-builddep -y zsh
     make
     make check
     # make test
-    make install
+    sudo make install
     rm -rf "$build_dir"
 )
 
