@@ -24,7 +24,7 @@ java_flags=" \
     JAR=${java_dir}/bin/jar \
 "
 sudo R CMD javareconf $java_flags
-# R CMD javareconf $java_flags
+R CMD javareconf $java_flags
 
 yum list installed | grep -E '^java-'
 
