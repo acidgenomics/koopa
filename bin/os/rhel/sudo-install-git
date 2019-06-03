@@ -90,7 +90,7 @@ fi
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
     make all doc info
-    make install install-doc install-html install-info
+    sudo make install install-doc install-html install-info
     rm -rf "$build_dir"
 )
 

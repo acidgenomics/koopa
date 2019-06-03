@@ -35,7 +35,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
         --enable-fortran
     make
     make check
-    make install
+    sudo make install
     rm -rf "$build_dir"
 )
 

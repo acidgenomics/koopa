@@ -45,7 +45,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    make install
+    sudo make install
 )
 
 (
@@ -59,7 +59,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    make install
+    sudo make install
 )
 
 (
@@ -73,7 +73,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    make install
+    sudo make install
 )
 
 (
@@ -87,7 +87,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    make install
+    sudo make install
 )
 
 (
@@ -101,7 +101,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    make install
+    sudo make install
 )
 
 (
@@ -115,7 +115,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make
-    make install
+    sudo make install
 )
 
 # Update dynamic linker configuration.
@@ -133,7 +133,7 @@ sudo ldconfig -v
     ./configure --prefix="$prefix"
     make
     make check
-    make install
+    sudo make install
 )
 
 # Clean up the temp files.

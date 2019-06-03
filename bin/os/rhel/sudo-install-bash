@@ -33,7 +33,7 @@ sudo yum-builddep -y bash
         --prefix="$prefix"
     make
     make test
-    make install
+    sudo make install
     rm -rf "$build_dir"
 )
 

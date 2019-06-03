@@ -34,7 +34,7 @@ sudo yum-builddep -y vim
     make
     # Skip the unit tests on RedHat. It will install successfully.
     # make test
-    make install
+    sudo make install
     rm -rf "$build_dir"
 )
 
