@@ -35,15 +35,25 @@
 # Operating system                                                          {{{1
 # ==============================================================================
 
+# KOOPA_OS_BUILD_STRING.
+# Use this for configure --build flag.
+#    AWS: x86_64-amzn-linux-gnu
+# RedHat: x86_64-redhat-linux-gnu
+# Darwin: x86_64-darwin15.6.0
+
+# bash (and zsh) set useful OSTYPE variable.
+[ -z "$OSTYPE" ] && OSTYPE=$(bash -c "echo $OSTYPE") && export OSTYPE
+
+mach="$(uname -m)"
 os="$(uname -s)"
-# rev="$(uname -r)"
-# mach="$(uname -m)"
+rev="$(uname -r)"
 
 if [ "$os" = "Darwin" ]
 then
     # KOOPA_OS_NAME="$(sw_vers -productName)"
     KOOPA_OS_NAME="darwin"
     KOOPA_OS_VERSION="$(sw_vers -productVersion)"
+    KOOPA_OS_BUILD_STRING="${mach}-${OSTYPE}"
 else
     os_file="/etc/os-release"
     KOOPA_OS_NAME="$( \
@@ -55,12 +65,15 @@ else
         tr -cd '[:digit:].' \
     )"
     unset -v os_file
+    # This will distinguish between RedHat, Amazon, etc.
+    KOOPA_OS_BUILD_STRING="${mach}-${KOOPA_OS_NAME}-${OSTYPE}"
 fi
 
+export KOOPA_OS_BUILD_STRING
 export KOOPA_OS_NAME
 export KOOPA_OS_VERSION
 
-unset -v os
+unset -v mach os rev
 
 
 
