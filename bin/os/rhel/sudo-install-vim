@@ -8,7 +8,7 @@ prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
 build_dir="${KOOPA_TMP}/build/vim"
 
-version="8.1.1331"
+version="8.1.1456"
 
 echo "Installing vim ${version}."
 
