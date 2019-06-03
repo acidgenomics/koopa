@@ -8,8 +8,10 @@ set -Eeuxo pipefail
 # - http://zsh.sourceforge.net/Arc/source.html
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
 
-build_dir="/tmp/build/zsh"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/zsh"
+
 version="5.7.1"
 
 echo "Installing zsh ${version}."
@@ -30,11 +32,13 @@ sudo yum-builddep -y zsh
     wget https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download
     tar -xJvf "download"
     cd "zsh-${version}"
-    ./configure --build="x86_64-redhat-linux-gnu" --prefix="$prefix"
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
     make
     make check
     # make test
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 
