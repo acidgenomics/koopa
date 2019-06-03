@@ -10,6 +10,14 @@ set -Eeuxo pipefail
 # - https://github.com/git/git/blob/master/INSTALL
 # - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
 
+prefix="/usr/local"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/git"
+
+version="2.21.0"
+
+echo "Installing git ${version}."
+
 
 
 # OpenSSL note
@@ -37,12 +45,6 @@ set -Eeuxo pipefail
 # make: *** [git-imap-send] Error 1
 
 
-
-build_dir="/tmp/build/git"
-prefix="/usr/local"
-version="2.21.0"
-
-echo "Installing git ${version}."
 
 # Run preflight initialization checks.
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
@@ -83,9 +85,12 @@ fi
     # The compilation settings here are from the Git SCM book website.
     # Refer also to INSTALL file for details.
     make configure
-    ./configure --prefix="$prefix" --with-openssl="/bin/openssl"
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix" \
+        --with-openssl="/bin/openssl"
     make all doc info
-    sudo make install install-doc install-html install-info
+    make install install-doc install-html install-info
     rm -rf "$build_dir"
 )
 

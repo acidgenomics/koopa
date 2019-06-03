@@ -10,8 +10,9 @@ set -Eeuxo pipefail
 # - https://github.com/gpg/gnupg/blob/master/INSTALL
 # - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
 
-build_dir="/tmp/build/gnupg"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/gnupg"
+
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
 echo "Installing GnuPG."
@@ -44,7 +45,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    make install
 )
 
 (
@@ -58,7 +59,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    make install
 )
 
 (
@@ -72,7 +73,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    make install
 )
 
 (
@@ -86,7 +87,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    make install
 )
 
 (
@@ -100,7 +101,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    make install
 )
 
 (
@@ -114,7 +115,7 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make
-    sudo make install
+    make install
 )
 
 # Update dynamic linker configuration.
@@ -132,7 +133,7 @@ sudo ldconfig -v
     ./configure --prefix="$prefix"
     make
     make check
-    sudo make install
+    make install
 )
 
 # Clean up the temp files.
