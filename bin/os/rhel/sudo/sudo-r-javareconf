@@ -27,3 +27,5 @@ sudo R CMD javareconf $java_flags
 # R CMD javareconf $java_flags
 
 yum list installed | grep -E '^java-'
+
+echo "Reinstall the rJava package."
