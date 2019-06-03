@@ -8,7 +8,10 @@
 
 # Inspect `/etc/profile` if system PATH is misconfigured.
 
-# FIXME Need to check if already in PATH, instead of forcing re-export.
+
+
+# Standard path                                                             {{{1
+# ==============================================================================
 
 add_to_path_end "${HOME}/local/bin"
 add_to_path_end "${HOME}/.local/bin"
@@ -18,21 +21,33 @@ add_to_path_end "/usr/sbin"
 add_to_path_end "/usr/bin"
 add_to_path_end "/sbin"
 add_to_path_end "/bin"
-
 add_to_path_start "$KOOPA_BIN_DIR"
 
-# OS-specific programs.
+
+
+# OS-specific                                                               {{{1
+# ==============================================================================
+
 os_bin_dir="${KOOPA_BIN_DIR}/os/${KOOPA_OS_NAME}"
 if [ -d "$os_bin_dir" ]
 then
     add_to_path_start "$os_bin_dir"
+    has_sudo && add_to_path_start "${os_bin_dir}/sudo"
 fi
 unset -v os_bin_dir
 
-# Host-specific programs.
+
+
+# Host-specific                                                             {{{1
+# ==============================================================================
+
 host_bin_dir="${KOOPA_BIN_DIR}/host/${KOOPA_HOST_NAME}"
 if [ -d "$host_bin_dir" ]
 then
     add_to_path_start "$host_bin_dir"
 fi
 unset -v host_bin_dir
+
+
+
+# vim: fdm=marker
