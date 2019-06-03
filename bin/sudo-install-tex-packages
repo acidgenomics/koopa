@@ -5,7 +5,9 @@ set -Eeuxo pipefail
 
 echo "Installing TeX packages recommended for RStudio."
 echo "sudo is required for this script."
-sudo -v
+
+# This step currently fails for ec2-user on Amazon Linux 2, so disable.
+# sudo -v
 
 sudo tlmgr update --self
 

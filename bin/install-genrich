@@ -14,5 +14,5 @@ wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
 tar -xzvf "v${version}.tar.gz"
 cd "Genrich-${version}"
 make
-sudo cp Genrich "${prefix}/bin"
+cp Genrich "${prefix}/bin"
 rm -rf "$build_dir"
