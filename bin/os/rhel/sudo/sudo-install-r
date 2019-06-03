@@ -26,17 +26,29 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
 . "${script_dir}/__init__.sh"
 
+
+
 # Install R and build dependencies.
 sudo yum install -y R
 sudo yum-builddep -y R
 
+
+
 # Java
 echo "Upgrading Java."
 # yum currently installs java-1.8.0-openjdk-headless.x86_64.
+# This breaks with R CMD javareconf.
 sudo yum install -y java-latest-openjdk-devel
+
+command -v java
+java -version
+
 command -v javac
 javac -version
+
 yum list installed | grep -E '^java-'
+
+
 
 # Install TeX dependencies.
 # Missing recommendations:
@@ -81,6 +93,8 @@ sudo yum install -y \
 #
 # There doesn't appear to be an easy way to fix this on RHEL.
 
+
+
 # Now we're ready to compile R.
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
@@ -113,134 +127,15 @@ sudo yum install -y \
 # Need to update LD config.
 sudo ldconfig
 
+# Update R Java configuration.
+sudo-r-cmd-javareconf
+
 echo "R installed successfully."
 command -v R
 R --version
-
-echo "Updating Java configuration."
-sudo R CMD javareconf
-
-# Azure:
-# Java interpreter : /bin/java
-# Java version     : 1.8.0_212
-# Java home path   : /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.212.b04-0.el7_6.x86_64/jre
-# Java compiler    : /bin/javac
-# Java headers gen.:
-# Java archive tool: /bin/jar
-# 
-# trying to compile and link a JNI program
-# detected JNI cpp flags    :
-# detected JNI linker flags : -L$(JAVA_HOME)/lib/amd64/server -ljvm
-# gcc -m64 -std=gnu99 -I"/usr/include/R" -DNDEBUG   -I/usr/local/include   -fpic  -O2 -g -pi    pe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-    size=4 -grecord-gcc-switches   -m64 -mtune=generic  -c conftest.c -o conftest.o
-# conftest.c:1:17: fatal error: jni.h: No such file or directory
-#  #include <jni.h>
-#                  ^
-# compilation terminated.
-# make: *** [conftest.o] Error 1
-# Unable to compile a JNI program
-#
-#
-# JAVA_HOME        : /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.212.b04-0.el7_6.x86_64/jre
-# Java library path:
-# JNI cpp flags    :
-# JNI linker flags :
-# Updating Java configuration in /usr/lib64/R
-# Done.
-
-# AWS:
-# Java interpreter : /bin/java
-# Java version     : 1.8.0_201
-# Java home path   : /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-0.amzn2.x86_64/jre
-# Java compiler    : /bin/javac
-# Java headers gen.:
-# Java archive tool: /bin/jar
-#
-# trying to compile and link a JNI program
-# detected JNI cpp flags    :
-# detected JNI linker flags : -L$(JAVA_HOME)/lib/amd64/server -ljvm
-# gcc -m64 -std=gnu99 -I"/usr/include/R" -DNDEBUG   -I/usr/local/include   -fpic  -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches   -m64 -mtune=generic  -c conftest.c -o conftest.o
-# conftest.c:1:10: fatal error: jni.h: No such file or directory
-#  #include <jni.h>
-#           ^~~~~~~
-# compilation terminated.
-# make: *** [conftest.o] Error 1
-# Unable to compile a JNI program
-#
-#
-# JAVA_HOME        : /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-0.amzn2.x86_64/jre
-# Java library path:
-# JNI cpp flags    :
-# JNI linker flags :
-# Updating Java configuration in /usr/lib64/R
-# Done.
-
-R CMD javareconf
-
-# Azure:
-# Java interpreter : /usr/local/java/jre1.8.0_201/bin/java
-# Java version     : 1.8.0_201
-# Java home path   : /usr/local/java/jre1.8.0_201
-# Java compiler    : /usr/bin/javac
-# Java headers gen.:
-# Java archive tool: /usr/bin/jar
-#
-# trying to compile and link a JNI program
-# detected JNI cpp flags    :
-# detected JNI linker flags : -L$(JAVA_HOME)/lib/amd64/server -ljvm
-# gcc -std=gnu99 -I"/usr/local/lib64/R/include" -DNDEBUG   -I/usr/local/include  -fpic  -g -       O2  -c conftest.c -o conftest.o
-# conftest.c:1:17: fatal error: jni.h: No such file or directory
-#  #include <jni.h>
-#                 ^
-# compilation terminated.
-# make: *** [conftest.o] Error 1
-# Unable to compile a JNI program
-# 
-#
-# JAVA_HOME        : /usr/local/java/jre1.8.0_201
-# Java library path:
-# JNI cpp flags    :
-# JNI linker flags :
-# Updating Java configuration in /usr/local/lib64/R
-# Done.
-
-# AWS:
-# Java interpreter : /usr/bin/java
-# Java version     : 1.8.0_201
-# Java home path   : /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-0.amzn2.x86_64/jre
-# Java compiler    : /usr/bin/javac
-# Java headers gen.:
-# Java archive tool: /usr/bin/jar
-#
-# trying to compile and link a JNI program
-# detected JNI cpp flags    :
-# detected JNI linker flags : -L$(JAVA_HOME)/lib/amd64/server -ljvm
-# Error in dyn.load(file, DLLpath = DLLpath, ...) :
-#   unable to load shared object '/usr/local/lib64/R/library/tools/libs/tools.so':
-#   /usr/local/lib64/R/library/tools/libs/tools.so: undefined symbol: R_NewPreciousMSet
-# Calls: ::: ... getNamespace -> loadNamespace -> library.dynam -> dyn.load
-# Execution halted
-# Unable to compile a JNI program
-#
-#
-# JAVA_HOME        : /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.201.b09-0.amzn2.x86_64/jre
-# Java library path:
-# JNI cpp flags    :
-# JNI linker flags :
-# Updating Java configuration in /usr/local/lib64/R
-# /usr/local/lib64/R/bin/javareconf: line 399: /usr/local/lib64/R/etc/Makeconf.new: Permissi                 on denied
-# *** cannot create /usr/local/lib64/R/etc/Makeconf.new
-# *** Please run as root if required.
+Rscript -e 'capabilities()'
 
 
-
-# Current output in PuTTY:
-# > capabilities()
-#        jpeg         png        tiff       tcltk         X11        aqua
-#        TRUE        TRUE        TRUE        TRUE       FALSE       FALSE
-#    http/ftp     sockets      libxml        fifo      cledit       iconv
-#        TRUE        TRUE        TRUE        TRUE        TRUE        TRUE
-#         NLS     profmem       cairo         ICU long.double     libcurl
-#        TRUE        TRUE        TRUE        TRUE        TRUE        TRUE
 
 cat << EOF
 RStudio server configuration must be updated to use this version of R.
