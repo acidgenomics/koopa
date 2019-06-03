@@ -4,8 +4,10 @@ set -Eeuxo pipefail
 # GNU core utilities
 # https://ftp.gnu.org/gnu/coreutils/
 
-build_dir="/tmp/build/coreutils"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/coreutils"
+
 version="8.31"
 
 echo "Installing git ${version}."
@@ -27,7 +29,7 @@ sudo yum-builddep -y coreutils
     tar -xJvf "coreutils-${version}.tar.xz"
     cd "coreutils-${version}" || return 1
     ./configure \
-        --build="x86_64-redhat-linux-gnu" \
+        --build="$build_name" \
         --prefix="$prefix"
     make
     make check
