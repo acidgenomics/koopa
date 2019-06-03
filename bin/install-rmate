@@ -18,7 +18,7 @@ version="1.0.2"
     tar -xzvf "v${version}.tar.gz"
     cd "rmate-${version}"
     chmod a+x rmate
-    sudo cp rmate "${prefix}/bin"
+    cp rmate "${prefix}/bin"
 )
 
 command -v rmate
