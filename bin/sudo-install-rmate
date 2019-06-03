@@ -5,5 +5,21 @@ set -Eeuxo pipefail
 
 # https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
 
-sudo wget -O /usr/local/bin/rmate https://raw.github.com/aurora/rmate/master/rmate
-sudo chmod a+x /usr/local/bin/rmate
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/rmate"
+
+version="1.0.2"
+
+(
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    cd "$build_dir"
+    wget "https://github.com/aurora/rmate/archive/v${version}.tar.gz"
+    tar -xzvf "v${version}.tar.gz"
+    cd "rmate-${version}"
+    chmod a+x rmate
+    sudo cp rmate "${prefix}/bin"
+)
+
+command -v rmate
+rmate --version
