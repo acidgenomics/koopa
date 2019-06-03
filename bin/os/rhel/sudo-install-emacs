@@ -7,8 +7,10 @@ set -Eeuxo pipefail
 # See also:
 # - https://github.com/emacs-mirror/emacs
 
-build_dir="/tmp/build/emacs"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/emacs"
+
 version="26.2"
 
 echo "Installing emacs ${version}."
@@ -29,9 +31,11 @@ sudo yum-builddep -y emacs
     wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
     tar -xJvf "emacs-${version}.tar.xz"
     cd "emacs-${version}" || return 1
-    ./configure --prefix="$prefix"
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
     make
-    sudo make install
+    make install
     rm -rf "$build_dir"
 )
 
