@@ -20,6 +20,7 @@ dotfile() {
     dotfile spacemacs
     dotfile tmux.conf
     dotfile vimrc
+    dotfile zshrc
 
     # Directories
     dotfile vim
