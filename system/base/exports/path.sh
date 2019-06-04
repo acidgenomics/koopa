@@ -26,6 +26,12 @@ has_sudo && add_to_path_start "${KOOPA_BIN_DIR}/sudo"
 
 
 
+# Shell-specific                                                            {{{1
+# ==============================================================================
+[ "$KOOPA_SHELL" = "zsh" ] && add_to_path_start "${KOOPA_BIN_DIR}/shell/zsh"
+
+
+
 # OS-specific                                                               {{{1
 # ==============================================================================
 
