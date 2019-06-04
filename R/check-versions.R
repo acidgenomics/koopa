@@ -377,3 +377,16 @@ check(
         "cut -d ' ' -f 5"
     )
 )
+
+
+
+# Z shell ======================================================================
+check(
+    name = "zsh",
+    min_version = "5.7.1",
+    version_cmd = pipe(
+        "zsh --version",
+        "head -1",
+        "cut -d ' ' -f 2"
+    )
+)
