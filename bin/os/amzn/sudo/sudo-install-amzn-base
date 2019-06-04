@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Base programs recommended for all VMs
+
+# Here's a yum cheatsheet, for reference:
+# https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
+sudo-install-rhel-base
+
+# Install utils such as chsh.
+sudo yum install -y util-linux-user
+
