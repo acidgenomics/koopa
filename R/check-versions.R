@@ -232,6 +232,24 @@ check(
 
 
 
+# Pandoc =======================================================================
+check(
+    name = "pandoc",
+    min_version = switch(
+        EXPR = os,
+        amzn = "1.12",
+        rhel = "1.12",
+        "2.0"
+    ),
+    version_cmd = pipe(
+        "pandoc --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    )
+)
+
+
+
 # Perl =========================================================================
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
