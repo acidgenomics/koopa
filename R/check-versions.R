@@ -323,6 +323,7 @@ check(
 # TeX 3.14159265 (TeX Live 2017/Debian)
 min_version <- switch(
     EXPR = os,
+    amzn = "2013",
     rhel = "2013",
     ubuntu = "2017",
     "2019"
