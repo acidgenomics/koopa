@@ -3,7 +3,7 @@ set -Eeuxo pipefail
 
 # Upgrade koopa installation.
 
-"${KOOPA_BASE_DIR}/system/install/update.sh"
+"${KOOPA_BASE_DIR}/system/upgrade.sh"
 
 cat << EOF
 koopa updated successfully.
