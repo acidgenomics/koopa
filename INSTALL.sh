@@ -3,6 +3,10 @@ set -Eeuxo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
+
+
+# Initialize submodules                                                     {{{1
+# ==============================================================================
 (
     # shellcheck source=/dev/null
     cd "$script_dir"
@@ -10,7 +14,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     git submodule update
 )
 
-# Initialize dotfiles repo and submodules.
 (
     # shellcheck source=/dev/null
     cd "${script_dir}/dotfiles"
@@ -18,14 +21,77 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
     git submodule update
 )
 
-# Create dotfiles symlinks.
-# shellcheck source=/dev/null
-. "${script_dir}/INSTALL/dotfiles.sh"
 
-# Install spacemacs.
+
+# Install programs                                                          {{{1
+# ==============================================================================
+
 # shellcheck source=/dev/null
 . "${script_dir}/bin/install-spacemacs"
 
-# Run the updater script.
+
+
+# Dot file symlinks                                                         {{{1
+# ==============================================================================
+
+dotfile() {
+    dot_dir="${HOME}/.dotfiles"
+    [[ ! -L "$dot_dir" || ! -d "$dot_dir" ]] && \
+        echo "${dot_dir} not configured correctly." && \
+        exit 1
+    
+    source_file="$1"
+    dest_file="${2:-}"
+    if [[ -z "$dest_file" ]]
+    then
+        dest_file="$source_file"
+    fi
+    
+    source_file="${dot_dir}/${source_file}"
+    [[ ! -f "$source_file" && ! -d "$source_file" ]] \
+        && echo "${source_file} missing." && \
+        exit 1
+
+    dest_file="${HOME}/.${dest_file}"
+    
+    rm -f "$dest_file"
+    ln -s "$source_file" "$dest_file"
+}
+
+(
+    cd ~
+
+    rm -rf .dotfiles
+    ln -s koopa/dotfiles .dotfiles
+
+    dotfile bashrc
+    dotfile bash_profile
+    dotfile condarc
+    dotfile gitconfig
+    dotfile gitignore_global
+    dotfile Rprofile
+    dotfile spacemacs
+    dotfile tmux.conf
+    dotfile vim
+    dotfile vimrc
+    dotfile zshrc
+
+    case "$KOOPA_HOST_NAME" in
+                 darwin) dotfile Renviron-darwin Renviron;;
+             harvard-o2) dotfile Renviron-harvard-o2 Renviron;;
+        harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron;;
+                      *) dotfile Renviron;;
+    esac
+)
+
+
+
+# Update                                                                    {{{1
+# ==============================================================================
+
 # shellcheck source=/dev/null
 . "${script_dir}/UPDATE.sh"
+
+
+
+# vim: fdm=marker
