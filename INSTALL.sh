@@ -8,7 +8,8 @@ git submodule update
 
 # Initialize dotfiles repo and submodules.
 (
-    cd dotfiles
+    # shellcheck source=/dev/null
+    cd "${script_dir}/dotfiles"
     git submodule init
     git submodule update
 )
