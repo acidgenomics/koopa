@@ -1,7 +1,24 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
 dotfile() {
-    file="$1"
-    rm -f ".${file}"
-    ln -s ".dotfiles/${file}" ".${file}"
+    dot_dir="${HOME}/.dotfiles"
+    # Use `-f` here because we're symlinking.
+    [ ! -f "$dot_dir" ] && echo "${dot_dir} missing." && exit 1
+    
+    source_file="$1"
+    source_file="${dot_dir}/${source_file}"
+    [ ! -f "$source_file" && echo "${source_file} missing." && exit 1
+
+    dest_file="${2:-}"
+    if [[ -z "$dest_file" ]]
+    then
+        dest_file="$source_file"
+    fi
+    dest_file="${HOME}/.${dest_file}"
+    
+    rm -f "$dest_file"
+    ln -s "$source_file" "$dest_file"
 }
 
 (
