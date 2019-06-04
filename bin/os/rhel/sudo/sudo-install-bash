@@ -37,18 +37,17 @@ sudo yum-builddep -y bash
     rm -rf "$build_dir"
 )
 
-# Consider adding a check in /etc/shells.
-# grep "${prefix}/bin/bash" /etc/shells
-# And then if there's no match, append the file automatically.
-
-echo "Updating default shell."
-chsh -s /usr/local/bin/bash
-
-cat << EOF
-bash installed successfully.
-Reload the current shell using 'exec bash'.
-
+echo "bash installed successfully."
 command -v bash
 bash --version
 
-EOF
+if [[ ! "$(grep -q "${prefix}/bin/bash" "/etc/shells")" ]]
+then
+    echo "Updating /etc/shells."
+    sudo bash -c "echo ${prefix}/bin/bash >> /etc/shells"
+fi
+
+echo "Updating default shell."
+sudo chsh -s "${prefix}/bin/bash" "$USER"
+
+

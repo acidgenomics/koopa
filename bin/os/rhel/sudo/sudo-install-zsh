@@ -25,6 +25,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 sudo yum install -y zsh
 sudo yum-builddep -y zsh
 
+# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
     rm -rf "$build_dir"
     mkdir -p "$build_dir"
@@ -42,16 +43,16 @@ sudo yum-builddep -y zsh
     rm -rf "$build_dir"
 )
 
-# Consider adding a check in /etc/shells.
-# grep "${prefix}/bin/zsh" /etc/shells
-# And then if there's no match, append the file automatically.
-
-echo "Updating default shell."
-chsh -s /usr/local/bin/zsh
-
-cat << EOF
-zsh installed successfully.
-Reload the shell and check version.
+echo "zsh installed successfully."
 command -v zsh
 zsh --version
-EOF
+
+if [[ ! "$(grep -q "${prefix}/bin/zsh" "/etc/shells")" ]]
+then
+    echo "Updating /etc/shells."
+    sudo bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
+fi
+
+echo "Updating default shell."
+sudo chsh -s "${prefix}/bin/zsh" "$USER"
+
