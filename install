@@ -11,14 +11,16 @@ install_dir="${script_dir}/system/install"
     # shellcheck source=/dev/null
     cd "$script_dir"
     git submodule init
-    git submodule update
+    git submodule update --init --recursive
+    git submodule sync --recursive
 )
 
 (
     # shellcheck source=/dev/null
     cd "${script_dir}/dotfiles"
     git submodule init
-    git submodule update
+    git submodule update --init --recursive
+    git submodule sync --recursive
 )
 
 
