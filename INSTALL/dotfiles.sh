@@ -43,11 +43,11 @@ dotfile() {
     dotfile vim
 
     case "$KOOPA_HOST_NAME" in
-                azure) dotfile Renviron-azure;;
-                darwin) dotfile Renviron-darwin;;
-            harvard-o2) dotfile Renviron-harvard-o2;;
-        harvard-odyssey) dotfile Renviron-harvard-odyssey;;
-                    *) ;;
+                  azure) dotfile Renviron-azure Renviron;;
+                 darwin) dotfile Renviron-darwin Renviron;;
+             harvard-o2) dotfile Renviron-harvard-o2 Renviron;;
+        harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron;;
+                      *) ;;
     esac
 )
 
