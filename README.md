@@ -25,17 +25,17 @@ Optional:
 
 First, clone the repository:
 
-```bash
-git clone https://github.com/acidgenomics/koopa.git ~/.koopa
+```sh
+git clone https://github.com/acidgenomics/koopa.git ~/koopa
 ```
 
 Second, add these lines to your POSIX-compliant shell configuration file.
 
-```bash
+```sh
 # koopa shell
 # https://github.com/acidgenomics/koopa
 # shellcheck source=/dev/null
-. "${HOME}/.koopa/activate"
+. "${HOME}/koopa/activate"
 ```
 
 Koopa should now activate at login.
