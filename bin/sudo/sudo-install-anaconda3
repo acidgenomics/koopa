@@ -5,34 +5,43 @@ set -Eeuxo pipefail
 # https://www.anaconda.com/download
 # https://docs.anaconda.com/anaconda/install/
 
-VERSION="5.3.0"
+prefix="${KOOPA_PREFIX}/anaconda3"
+build_dir="${KOOPA_TMP}/build/anaconda3"
 
-if [[ "$OSTYPE" == "linux-gnu" ]]
-then
-    script="Anaconda3-${VERSION}-Linux-x86_64.sh"
-elif [[ "$OSTYPE" == "darwin"* ]]
-then
-    script="Anaconda3-${VERSION}-MacOSX-x86_64.sh"
-else
-    echo "${OSTYPE} operating system not supported"
-    exit 1
-fi
+version="2019.03"
 
-echo "Downloading Anaconda installer..."
-curl -O "https://repo.anaconda.com/archive/${script}"
+# https://repo.anaconda.com/archive/
+# https://repo.anaconda.com/archive/${script}
 
-cat << EOF
-koopa is able to load conda automatically.
-Don't allow conda to modify bashrc.
-Instead, export "CONDA_EXE" in bashrc to point to the conda binary.
-This must be included prior to sourcing koopa.
-EOF
+case "$OSTYPE" in
+    linux-gnu) script="Anaconda3-${version}-Linux-x86_64.sh";;
+      darwin*) script="Anaconda3-${version}-MacOSX-x86_64.sh";;
+            *) echo "${OSTYPE} is not supported."; exit 1;;
+esac
 
-bash "$script"
+# Ensure previous installation is removed.
+sudo rm -rf "$prefix"
+sudo mkdir -p "$prefix"
+sudo chown "${USER}:${USER}" "$prefix"
+
+(
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    cd "$build_dir"
+    echo "Downloading Anaconda installer."
+    curl -O "https://repo.anaconda.com/archive/${script}"
+    # Note that this script should not be run as root.
+    bash "$script" -b -f -p "$prefix"
+    rm -rf "$build_dir"
+)
+
+# Set installed files to root.
+sudo chown -R "root:wheel" "$prefix"
 
 cat << EOF
 
 conda installed successfully.
-Export "CONDA_EXE" in bashrc and reload the shell.
-Use "which conda" to check the path.
+Export "CONDA_EXE" in bashrc above koopa activation step and reload the shell.
+Use "command -v conda" to check the path.
+
 EOF
