@@ -1,4 +1,5 @@
 # Check installed program versions.
+# Note that Ubuntu specific versions are pinned to 18 LTS.
 
 options(
     error = quote(quit(status = 1L))
@@ -83,28 +84,15 @@ pipe <- function(...) {
 
 
 
-# R ============================================================================
-r_version <- packageVersion("base")
-r_min_version <- "3.6"
-if (r_version >= r_min_version) {
-    status <- "  OK"
-} else {
-    status <- "FAIL"
-}
-message(paste(status, "R", r_version, ">=", r_min_version))
-
-
-
 # Bash =========================================================================
-min_version <- switch(
-    EXPR = os,
-    rhel = "4.2",
-    ubuntu = "4.4",
-    "5.0"
-)
 check(
     name = "bash",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        rhel = "4.2",
+        ubuntu = "4.4",
+        "5.0"
+    ),
     version_cmd = pipe(
         "bash --version",
         "head -n 1",
@@ -116,14 +104,13 @@ check(
 
 
 # Conda ========================================================================
-min_version <- switch(
-    EXPR = os,
-    amzn = "4.6.11",
-    "4.6.14"
-)
 check(
     name = "conda",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        amzn = "4.6.11",
+        "4.6.14"
+    ),
     version_cmd = pipe(
         "conda --version",
         "head -n 1",
@@ -148,14 +135,13 @@ check(
 
 
 # Git ==========================================================================
-min_version <- switch(
-    EXPR = os,
-    ubuntu = "2.17.1",
-    "2.21"
-)
 check(
     name = "git",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.17.1",
+        "2.21"
+    ),
     version_cmd = pipe(
         "git --version",
         "head -n 1",
@@ -166,14 +152,13 @@ check(
 
 
 # GnuPG ========================================================================
-min_version <- switch(
-    EXPR = os,
-    ubuntu = "2.2.4",
-    "2.2.9"
-)
 check(
     name = "gpg",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.2.4",
+        "2.2.9"
+    ),
     version_cmd = pipe(
         "gpg --version",
         "head -n 1",
@@ -184,14 +169,13 @@ check(
 
 
 # GSL ==========================================================================
-min_version <- switch(
-    EXPR = os,
-    ubuntu = "2.4",
-    "2.5"
-)
 check(
     name = "gsl-config",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.4",
+        "2.5"
+    ),
     version_cmd = pipe(
         "gsl-config --version",
         "head -n 1"
@@ -214,15 +198,13 @@ check(
 
 
 # htop =========================================================================
-# Ubuntu 18 is still bundling 2.1.
-min_version <- switch(
-    EXPR = os,
-    ubuntu = "2.1",
-    "2.2"
-)
 check(
     name = "htop",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.1",
+        "2.2"
+    ),
     version_cmd = pipe(
         "htop --version",
         "head -n 1",
@@ -233,17 +215,14 @@ check(
 
 
 # OpenSSL ======================================================================
-# Ubuntu 18 still bundles 1.1.0
-# Note that 1.1.1b isn't a valid version in R, so don't check for the letter.
-min_version <- switch(
-    EXPR = os,
-    rhel = "1.0.2",
-    ubuntu = "1.1.0",
-    "1.1.1"
-)
 check(
     name = "openssl",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        rhel = "1.0.2",
+        ubuntu = "1.1.0",
+        "1.1.1"
+    ),
     version_cmd = pipe(
         "openssl version",
         "head -n 1",
@@ -257,16 +236,15 @@ check(
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
 # This is perl 5, version 16, subversion 3 (v5.16.3)
-min_version <- switch(
-    EXPR = os,
-    amzn = "5.16",
-    rhel = "5.16",
-    ubuntu = "5.26",
-    "5.28"
-)
 check(
     name = "perl",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        amzn = "5.16",
+        rhel = "5.16",
+        ubuntu = "5.26",
+        "5.28"
+    ),
     version_cmd = pipe(
         "perl --version",
         "sed -n '2p'",
@@ -279,19 +257,33 @@ check(
 # Python =======================================================================
 # Now requiring >= 3.7. Python 2 will be phased out by 2020.
 # The user can use either conda or virtualenv.
-min_version <- switch(
-    EXPR = os,
-    rhel = "2.7.5",
-    ubuntu = "2.7.15",
-    "3.7"
-)
 check(
     name = "python",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        rhel = "2.7.5",
+        ubuntu = "2.7.15",
+        "3.7"
+    ),
     version_cmd = pipe(
         "python --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
+    )
+)
+
+
+
+# R ============================================================================
+# Alternatively, can check using `packageVersion("base")`.
+# Using shell version string instead here for consistency.
+check(
+    name = "R",
+    min_version = "3.6",
+    version_cmd = pipe(
+        "R --version",
+        "head -n 1",
+        "cut -d ' ' -f 3"
     )
 )
 
@@ -309,8 +301,6 @@ if (isTRUE(linux)) {
 
 
 # ShellCheck ===================================================================
-# RHEL 7 still uses super old 0.3.5 release.
-# This is hard to compile, so keep the dependency relaxed.
 check(
     name = "shellcheck",
     min_version = "0.6",
@@ -327,16 +317,15 @@ check(
 # Note that we're checking the TeX Live release year here.
 # Here's what it looks like on Debian/Ubuntu:
 # TeX 3.14159265 (TeX Live 2017/Debian)
-min_version <- switch(
-    EXPR = os,
-    amzn = "2013",
-    rhel = "2013",
-    ubuntu = "2017",
-    "2019"
-)
 check(
     name = "tex",
-    min_version = min_version,
+    min_version = switch(
+        EXPR = os,
+        amzn = "2013",
+        rhel = "2013",
+        ubuntu = "2017",
+        "2019"
+    ),
     version_cmd = pipe(
         "tex --version",
         "head -n 1",
