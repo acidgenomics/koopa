@@ -47,7 +47,7 @@ echo "zsh installed successfully."
 command -v zsh
 zsh --version
 
-if [[ ! "$(grep -q "${prefix}/bin/zsh" "/etc/shells")" ]]
+if grep -qv "${prefix}/bin/zsh" /etc/shells
 then
     echo "Updating /etc/shells."
     sudo bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
