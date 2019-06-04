@@ -35,7 +35,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # ==============================================================================
 
 dotfile() {
-    dot_dir="${HOME}/.dotfiles"
+    # Don't use the full path here, it makes the symlinks more flexible.
+    dot_dir=".dotfiles"
     [[ ! -L "$dot_dir" || ! -d "$dot_dir" ]] && \
         echo "${dot_dir} not configured correctly." && \
         exit 1
@@ -68,6 +69,12 @@ dotfile() {
         azure) dotfile shrc-azure shrc
             *) dotfile shrc
     esac
+    
+    rm -f .bashrc .bash_profile .kshrc .zshrc
+    ln -s .shrc .bashrc
+    ln -s .shrc .kshrc
+    ln -s .shrc .zshrc
+    ln -s .bashrc .bash_profile
 
     dotfile condarc
     dotfile gitconfig
@@ -85,10 +92,6 @@ dotfile() {
                       *) dotfile Renviron;;
     esac
 
-    rm -f .bashrc .bash_profile .zshrc
-    ln -s .shrc .bashrc
-    ln -s .shrc .zshrc
-    ln -s .bashrc .bash_profile
 )
 
 
