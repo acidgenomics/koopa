@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Doom Emacs
+
+# Back up existing emacs configuration, if necessary.
+(
+    cd ~
+    if [ -d ".emacs.d" ]
+    then
+        echo "Backing up '.emacs.d/' directory."
+        mv .emacs.d .emacs.d.bak
+    fi
+)
+
+git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom quickstart
