@@ -11,12 +11,13 @@ unset -v \
     KOOPA_SOURCE \
     KOOPA_SYSTEM_DIR
 
+# Leave pathmunge set.
 unset -f \
     add_to_path_end \
     add_to_path_start \
     force_add_to_path_end \
     force_add_to_path_start \
-    pathmunge \
+    has_sudo \
     quiet_expr \
     quiet_which \
     remove_from_path
