@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Install RStudio Server.
+# https://www.rstudio.com/products/rstudio/download-server/
+
+build_dir="${KOOPA_TMP}/build/shiny-server"
+
+version="1.5.9.923"
+
+echo "Installing Shiny Server ${version}."
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
+(
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    cd "$build_dir"
+    sudo su - \
+        -c "R -e \"install.packages('shiny', repos='https://cran.rstudio.com/')\""
+    wget https://download3.rstudio.org/centos6.3/x86_64/shiny-server-${version}-x86_64.rpm
+    sudo yum install --nogpgcheck shiny-server-${version}-x86_64.rpm
+    rm -rf "$build_dir"
+)
+
+echo "shiny-server installed successfully."
+command -v shiny-server
+shiny-server --version
