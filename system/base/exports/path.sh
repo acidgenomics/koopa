@@ -22,6 +22,7 @@ add_to_path_end "/usr/bin"
 add_to_path_end "/sbin"
 add_to_path_end "/bin"
 add_to_path_start "$KOOPA_BIN_DIR"
+has_sudo && add_to_path_start "${KOOPA_BIN_DIR}/sudo"
 
 
 
