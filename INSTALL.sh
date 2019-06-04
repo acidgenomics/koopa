@@ -14,10 +14,13 @@ git submodule update
 )
 
 # Create dotfiles symlinks.
+# shellcheck source=/dev/null
 . "${script_dir}/INSTALL/dotfiles.sh"
 
 # Install spacemacs.
+# shellcheck source=/dev/null
 . "${script_dir}/bin/install-spacemacs"
 
 # Run the updater script.
+# shellcheck source=/dev/null
 . "${script_dir}/UPDATE.sh"
