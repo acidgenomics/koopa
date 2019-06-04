@@ -116,9 +116,14 @@ check(
 
 
 # Conda ========================================================================
+min_version <- switch(
+    EXPR = os,
+    amzn = "4.6.11",
+    "4.6.14"
+)
 check(
     name = "conda",
-    min_version = "4.6.14",
+    min_version = min_version,
     version_cmd = pipe(
         "conda --version",
         "head -n 1",
