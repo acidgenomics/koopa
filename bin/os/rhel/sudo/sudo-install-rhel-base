@@ -11,58 +11,22 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
 . "${script_dir}/__init__.sh"
 
-# Update system
 sudo yum update -y
-
-# EPEL
-sudo yum install -y epel-release
-
-# ncurses
-# This is required to run htop and some other programs.
-sudo yum install -y ncurses
-
-# tmux
-sudo yum install -y tmux
-
-# convmv
-# Deal with annoying UTF-8 NFD to NFC issues that can happen with macOS files.
-sudo yum install -y convmv
-
-# tree
-# Useful for quickly seeing recursive directory structure.
-sudo yum install -y tree
-
-# devtools dependencies
-# R depends: `devtools` > `git2r`
-sudo yum install -y libssh2-devel libgit2-devel
-
-# pandoc
-# Required for `rmarkdown` to knit properly.
-sudo yum install -y pandoc pandoc-citeproc
-
-# udunits2
-# Required for `clusterProfiler` and some other R packages.
-sudo yum install -y udunits2-devel
-
-# GSL library
-# Required for zero-weight inflation calculations (ZINB).
-# R depends: `zinbwave` > `copula`
-sudo yum install -y gsl-devel
-
-# HDF5 library
-# This is starting to be required by more single-cell packages.
-# R depends: `Seurat` > `hdf5r`
-sudo yum install -y hdf5-devel
-
-# sshpass
-# Needed to copy files over sftp from Egnyte server.
-sudo yum install -y sshpass
-
-# mariadb
-# Needed for RMaridaDB. Install this instead of mysql.
-sudo yum install -y mariadb-devel
-
-# qpdf
-# Needed for full R CMD CHECK checks.
-sudo yum install -y qpdf
+sudo yum install -y \
+    epel-release \
+    convmv \
+    git \
+    gsl-devel \
+    hdf5-devel \
+    libssh2-devel \
+    libgit2-devel \
+    mariadb-devel \
+    ncurses \
+    pandoc \
+    pandoc-citeproc \
+    qpdf \
+    sshpass \
+    tmux \
+    tree \
+    udunits2-devel
 
