@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Install Haskell stack
+# https://www.haskellstack.org/
+
+curl -sSL https://get.haskellstack.org/ | sh

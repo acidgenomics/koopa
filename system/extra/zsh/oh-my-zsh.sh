@@ -14,6 +14,8 @@ ZSH="${HOME}/.oh-my-zsh"
 [ ! -d "$ZSH" ] && return 1
 export ZSH
 
+export ZSH_CUSTOM="${ZSH}/custom"
+
 # Ignore warning about insecure directories identified by compfix.
 ZSH_DISABLE_COMPFIX="true"
 

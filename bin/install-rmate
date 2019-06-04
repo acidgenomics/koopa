@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Install rmate for use with Remote VSCode extension
+
+# https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
+
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/rmate"
+
+version="1.0.2"
+
+(
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    cd "$build_dir"
+    wget "https://github.com/aurora/rmate/archive/v${version}.tar.gz"
+    tar -xzvf "v${version}.tar.gz"
+    cd "rmate-${version}"
+    chmod a+x rmate
+    cp rmate "${prefix}/bin"
+)
+
+command -v rmate
+rmate --version
