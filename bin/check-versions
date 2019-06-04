@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-Rscript --vanilla "${KOOPA_BIN_DIR}/R/check-versions.R"
+command -v Rscript >/dev/null 2>&1 || { echo >&2 "R is not installed."; exit 1; }
+
+Rscript --vanilla "${KOOPA_BASE_DIR}/R/check-versions.R"

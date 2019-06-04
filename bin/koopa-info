@@ -7,7 +7,7 @@ quiet_command() {
 }
 
 # Require that koopa is activate and exported to PATH.
-if [[ -z "${KOOPA_PLATFORM+x}" ]]
+if [[ -z "${KOOPA_OS_PLATFORM+x}" ]]
 then
     echo "koopa is not correctly activated."
     # Note that return should only be used for a sourced script.
@@ -18,11 +18,19 @@ array=()
 array+=("koopa v${KOOPA_VERSION} (${KOOPA_DATE})")
 array+=("https://github.com/acidgenomics/koopa")
 
-# Alternatively, can use `$( uname -mnrs )`.
-array+=("System: $KOOPA_PLATFORM")
+array+=("")
 
+array+=("## System information")
+array+=("OS: ${KOOPA_OS_NAME} ${KOOPA_OS_VERSION}")
+# Alternatively, can use `$( uname -mnrs )`.
+# array+=("OS platform: ${KOOPA_OS_PLATFORM}")
+array+=("Current shell: ${KOOPA_SHELL}")
+array+=("Default shell: ${SHELL}")
 array+=("Install path: $KOOPA_BASE_DIR")
-array+=("Default shell: $SHELL")
+
+array+=("")
+
+array+=("## Program paths")
 
 aspera="$( quiet_command asperaconnect )"
 if [[ -f "$aspera" ]]
@@ -93,6 +101,9 @@ then
     array+=("Ruby: ${ruby}")
 fi
 unset -v ruby
+
+array+=("")
+array+=("Run 'check-versions' to check programs.")
 
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
