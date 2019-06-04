@@ -27,7 +27,11 @@ java_flags=" \
     JAVAC=${java_dir}/bin/javac \
     JAR=${java_dir}/bin/jar \
 "
+
+# shellcheck disable=SC2086
 sudo R CMD javareconf $java_flags
+
+# shellcheck disable=SC2086
 R CMD javareconf $java_flags
 
 yum list installed | grep -E '^java-'

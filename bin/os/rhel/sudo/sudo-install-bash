@@ -41,7 +41,7 @@ echo "bash installed successfully."
 command -v bash
 bash --version
 
-if [[ ! "$(grep -q "${prefix}/bin/bash" "/etc/shells")" ]]
+if grep -qv "${prefix}/bin/bash" /etc/shells
 then
     echo "Updating /etc/shells."
     sudo bash -c "echo ${prefix}/bin/bash >> /etc/shells"
