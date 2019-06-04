@@ -307,6 +307,24 @@ check(
 
 
 
+# rename =======================================================================
+# Use Perl File::Rename, not util-linux.
+stopifnot(grepl(
+    pattern = "File::Rename",
+    x = head(system(command = "rename --version", intern = TRUE), n = 1L)
+))
+check(
+    name = "rename",
+    min_version = "1.10",
+    version_cmd = pipe(
+        "rename --version",
+        "head -n 1",
+        "cut -d ' ' -f 5"
+    )
+)
+
+
+
 # RStudio Server ===============================================================
 if (isTRUE(linux)) {
     check(
