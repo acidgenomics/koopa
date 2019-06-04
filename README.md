@@ -23,13 +23,19 @@ Optional:
 
 ## Installation
 
-First, clone the repository:
+Clone the repository:
 
 ```sh
 git clone https://github.com/acidgenomics/koopa.git ~/koopa
 ```
 
-Second, add these lines to your POSIX-compliant shell configuration file.
+Run the installer script:
+
+```
+~/koopa/INSTALL.sh
+```
+
+Add these lines to your POSIX-compliant shell configuration file.
 
 ```sh
 # koopa shell
