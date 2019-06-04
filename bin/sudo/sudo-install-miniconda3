@@ -26,8 +26,6 @@ esac
 
 # Ensure previous installation is removed.
 sudo rm -rf "$prefix"
-sudo mkdir -p "$prefix"
-sudo chown "${USER}:${USER}" "$prefix"
 
 (
     rm -rf "$build_dir"
@@ -36,7 +34,7 @@ sudo chown "${USER}:${USER}" "$prefix"
     echo "Downloading Miniconda installer."
     curl -O "https://repo.continuum.io/miniconda/${script}"
     # Note that this script should not be run as root.
-    bash "$script" -b -f -p "$prefix"
+    bash "$script" -b -p "$prefix"
     rm -rf "$build_dir"
 )
 
