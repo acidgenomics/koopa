@@ -6,26 +6,14 @@ options(
 )
 formals(warning)[["call."]] <- FALSE
 
-# Set the platform using the string defined by koopa.
-# Consider adding this to the global environment variables as `KOOPA_OS`.
-#
+# Operating system name.
 # Need to add support for:
 # - Arch
 # - CentOS
 # - Debian
 # - Fedora
-platform <- Sys.getenv("KOOPA_OS_PLATFORM")
-stopifnot(isTRUE(nzchar(platform)))
-platform <- tolower(platform)
-if (grepl("darwin", platform)) {
-    os <- "darwin"
-} else if (grepl("redhat", platform)) {
-    os <- "redhat"
-} else if (grepl("ubuntu", platform)) {
-    os <- "ubuntu"
-} else {
-    os <- "linux"
-}
+os <- Sys.getenv("KOOPA_OS_NAME")
+stopifnot(isTRUE(nzchar(os)))
 
 # Are we running on Linux?
 # We're using this for some server-specific checks (e.g. rstudio-server).
@@ -110,7 +98,7 @@ message(paste(status, "R", r_version, ">=", r_min_version))
 # Bash =========================================================================
 min_version <- switch(
     EXPR = os,
-    redhat = "4.2",
+    rhel = "4.2",
     ubuntu = "4.4",
     "5.0"
 )
@@ -244,7 +232,7 @@ check(
 # Note that 1.1.1b isn't a valid version in R, so don't check for the letter.
 min_version <- switch(
     EXPR = os,
-    redhat = "1.0.2",
+    rhel = "1.0.2",
     ubuntu = "1.1.0",
     "1.1.1"
 )
@@ -266,7 +254,7 @@ check(
 # This is perl 5, version 16, subversion 3 (v5.16.3)
 min_version <- switch(
     EXPR = os,
-    redhat = "5.16",
+    rhel = "5.16",
     ubuntu = "5.26",
     "5.28"
 )
@@ -287,7 +275,7 @@ check(
 # The user can use either conda or virtualenv.
 min_version <- switch(
     EXPR = os,
-    redhat = "2.7.5",
+    rhel = "2.7.5",
     ubuntu = "2.7.15",
     "3.7"
 )
@@ -335,7 +323,7 @@ check(
 # TeX 3.14159265 (TeX Live 2017/Debian)
 min_version <- switch(
     EXPR = os,
-    redhat = "2013",
+    rhel = "2013",
     ubuntu = "2017",
     "2019"
 )
