@@ -3,7 +3,11 @@ set -Eeuxo pipefail
 
 # Upgrade koopa installation.
 
-"${KOOPA_BASE_DIR}/system/upgrade.sh"
+(
+    cd "$KOOPA_BASE_DIR"
+    git pull
+    git submodule sync --recursive
+)
 
 cat << EOF
 koopa updated successfully.
