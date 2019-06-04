@@ -4,7 +4,7 @@ set -Eeuxo pipefail
 # dotfiles
 (
     git submodule add \
-        git@github.com:mjsteinbaugh/dotfiles.git \
+        https://github.com/mjsteinbaugh/dotfiles.git \
         dotfiles
     cd dotfiles || exit 1
     ./INSTALL.sh
