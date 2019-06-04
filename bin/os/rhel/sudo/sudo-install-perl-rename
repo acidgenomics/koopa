@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Install Perl rename, which is superior to util-linux rename.
+
+sudo yum install -y perl-App-cpanminus
+sudo cpanm File::Rename
+
+# Alternate method:
+# perl -MCPAN -e 'install File::Rename'
+
+command -v rename
+rename --version
+
