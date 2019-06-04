@@ -3,19 +3,20 @@ set -Eeuxo pipefail
 
 echo "sudo access is required for installation."
 
-# This doesn't work on AWS with ec2-user, so disable.
+# This check doesn't work for passwordless sudo (e.g. ec2-user), so disable.
 # sudo -v
 
 # Check for RedHat.
-if [[ $(grep -qv 'ID="rhel"' /etc/os-release) ]] &&
-   [[ $(grep -qv 'ID_LIKE="centos rhel fedora"' /etc/os-release) ]]
+if grep -qv 'ID="rhel"' /etc/os-release &&
+   grep -qv 'ID_LIKE="centos rhel fedora"' /etc/os-release
 then
     echo "Error: RedHat Enterprise Linux (RHEL) is required." >&2
     exit 1
 fi
 
 # Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
+if [[ -x "$(command -v conda)" ]] &&
+   [[ -n "${CONDA_PREFIX:-}" ]]
 then
     echo "Error: conda is active." >&2
     exit 1
@@ -40,5 +41,5 @@ fi
 # Ensure ldconfig is configured to use /usr/local.
 if [[ ! -f /etc/ld.so.conf.d ]]
 then
-    sudo cp ${KOOPA_BASE_DIR}/etc/ld.so.conf.d/local*.conf /etc/ld.so.conf.d
+    sudo cp "${KOOPA_BASE_DIR}/etc/ld.so.conf.d/local"*".conf" /etc/ld.so.conf.d
 fi
