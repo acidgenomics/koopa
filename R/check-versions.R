@@ -349,6 +349,21 @@ check(
 
 
 
+# Shiny Server =================================================================
+if (isTRUE(linux)) {
+    check(
+        name = "shiny-server",
+        min_version = "1.5.9.923",
+        version_cmd = pipe(
+            "shiny-server --version",
+            "head -n 1",
+            "cut -d ' ' -f 3"
+        )
+    )
+}
+
+
+
 # TeX Live =====================================================================
 # Note that we're checking the TeX Live release year here.
 # Here's what it looks like on Debian/Ubuntu:
