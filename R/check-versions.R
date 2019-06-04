@@ -89,7 +89,6 @@ check(
     name = "bash",
     min_version = switch(
         EXPR = os,
-        rhel = "4.2",
         ubuntu = "4.4",
         "5.0"
     ),
