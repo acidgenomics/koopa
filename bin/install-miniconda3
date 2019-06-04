@@ -12,6 +12,7 @@ case "$OSTYPE" in
     linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
       darwin*) script="Miniconda3-latest-MacOSX-x86_64.sh";;
             *) echo "${OSTYPE} is not supported."; exit 1;;
+esac
 
 echo "Downloading Miniconda installer..."
 curl -O "https://repo.continuum.io/miniconda/${script}"
