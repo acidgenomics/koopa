@@ -3,23 +3,9 @@ set -Eeuxo pipefail
 
 # Install Miniconda
 # https://conda.io/miniconda.html
-
-prefix="${KOOPA_PREFIX}/miniconda3"
-
-# FIXME SWITCH TO CASE.
-
-case "$OSTYPE" in
-    linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
-      darwin*) script="Miniconda3-latest-MacOSX-x86_64.sh";;
-            *) echo "${OSTYPE} is not supported."; exit 1;;
-esac
-
-echo "Downloading Miniconda installer..."
-curl -O "https://repo.continuum.io/miniconda/${script}"
-
-# Install script flags
-# > bash Miniconda3-latest-Linux-x86_64.sh -h
 #
+# Useful script flags:
+# > bash Miniconda3-latest-Linux-x86_64.sh -h
 # -b           run install in batch mode (without manual intervention),
 #              it is expected the license terms are agreed upon
 # -f           no error if install prefix already exists
@@ -29,7 +15,23 @@ curl -O "https://repo.continuum.io/miniconda/${script}"
 # -u           update an existing installation
 # -t           run package tests after installation (may install conda-build)
 
-bash -c "${script} -b -p ${prefix}"
+prefix="${KOOPA_PREFIX}/miniconda3"
+build_dir="${KOOPA_TMP}/miniconda3"
+
+case "$OSTYPE" in
+    linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
+      darwin*) script="Miniconda3-latest-MacOSX-x86_64.sh";;
+            *) echo "${OSTYPE} is not supported."; exit 1;;
+esac
+
+(
+    rm -rf "$build_dir"
+    cd "$build_dir"
+    echo "Downloading Miniconda installer."
+    curl -O "https://repo.continuum.io/miniconda/${script}"
+    bash "$script" -b -p "$prefix"
+    rm -rf "$build_dir"
+)
 
 cat << EOF
 
