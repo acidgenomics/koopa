@@ -3,8 +3,12 @@ set -Eeuxo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-git submodule init
-git submodule update
+(
+    # shellcheck source=/dev/null
+    cd "$script_dir"
+    git submodule init
+    git submodule update
+)
 
 # Initialize dotfiles repo and submodules.
 (
