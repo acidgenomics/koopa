@@ -24,15 +24,24 @@ case "$OSTYPE" in
             *) echo "${OSTYPE} is not supported."; exit 1;;
 esac
 
+# Ensure previous installation is removed.
+sudo rm -rf "$prefix"
+sudo mkdir -p "$prefix"
+sudo chown "${USER}:${USER}" "$prefix"
+
 (
     rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir"
     echo "Downloading Miniconda installer."
     curl -O "https://repo.continuum.io/miniconda/${script}"
-    bash "$script" -b -p "$prefix"
+    # Note that this script should not be run as root.
+    bash "$script" -b -f -p "$prefix"
     rm -rf "$build_dir"
 )
+
+# Set installed files to root.
+sudo chown -R "root:wheel" "$prefix"
 
 cat << EOF
 
