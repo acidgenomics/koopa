@@ -164,7 +164,7 @@ check(
 min_version <- switch(
     EXPR = os,
     ubuntu = "2.2.4",
-    "2.2.8"
+    "2.2.9"
 )
 check(
     name = "gpg",
@@ -254,6 +254,7 @@ check(
 # This is perl 5, version 16, subversion 3 (v5.16.3)
 min_version <- switch(
     EXPR = os,
+    amzn = "5.16",
     rhel = "5.16",
     ubuntu = "5.26",
     "5.28"
