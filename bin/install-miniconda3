@@ -16,7 +16,7 @@ set -Eeuxo pipefail
 # -t           run package tests after installation (may install conda-build)
 
 prefix="${KOOPA_PREFIX}/miniconda3"
-build_dir="${KOOPA_TMP}/miniconda3"
+build_dir="${KOOPA_TMP}/build/miniconda3"
 
 case "$OSTYPE" in
     linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
@@ -26,6 +26,7 @@ esac
 
 (
     rm -rf "$build_dir"
+    mkdir -p "$build_dir"
     cd "$build_dir"
     echo "Downloading Miniconda installer."
     curl -O "https://repo.continuum.io/miniconda/${script}"
