@@ -23,14 +23,6 @@ install_dir="${script_dir}/install"
 
 
 
-# Install programs                                                          {{{1
-# ==============================================================================
-
-# shellcheck source=/dev/null
-. "${script_dir}/bin/install-spacemacs"
-
-
-
 # Dot file symlinks                                                         {{{1
 # ==============================================================================
 

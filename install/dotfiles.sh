@@ -44,6 +44,7 @@ dotfile() {
     ln -s .bashrc .bash_profile
 
     dotfile condarc
+    dotfile doom.d
     dotfile gitconfig
     dotfile gitignore_global
     dotfile Rprofile
