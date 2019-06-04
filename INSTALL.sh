@@ -63,9 +63,12 @@ dotfile() {
 
     rm -rf .dotfiles
     ln -s koopa/dotfiles .dotfiles
+    
+    case "$KOOPA_HOST_NAME" in
+        azure) dotfile shrc-azure shrc
+            *) dotfile shrc
+    esac
 
-    dotfile bashrc
-    dotfile bash_profile
     dotfile condarc
     dotfile gitconfig
     dotfile gitignore_global
@@ -74,7 +77,6 @@ dotfile() {
     dotfile tmux.conf
     dotfile vim
     dotfile vimrc
-    dotfile zshrc
 
     case "$KOOPA_HOST_NAME" in
                  darwin) dotfile Renviron-darwin Renviron;;
@@ -82,6 +84,11 @@ dotfile() {
         harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron;;
                       *) dotfile Renviron;;
     esac
+
+    rm -f .bashrc .bash_profile .zshrc
+    ln -s .shrc .bashrc
+    ln -s .shrc .zshrc
+    ln -s .bashrc .bash_profile
 )
 
 
