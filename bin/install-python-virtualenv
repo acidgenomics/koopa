@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Set up python virtual environment.
 
@@ -16,8 +16,8 @@ fi
 
 env_base_dir="${HOME}/.virtualenvs"
 
-env_name="$1"
-if [[ -z "${env_name:-}" ]]
+env_name="${1:-}"
+if [[ -z "$env_name" ]]
 then
     env_name="default"
 fi
