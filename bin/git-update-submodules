@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# Update submodules.
+
+git submodule update --remote --merge
+git commit -m "Update submodules."
+git push
