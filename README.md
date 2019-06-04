@@ -46,7 +46,7 @@ To obtain information about the working environment, run `koopa-info`.
 
 ### Shell configuration file
 
-Not sure where to source `activate.sh` in your configuration? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
+Not sure where to source `activate` in your configuration? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
 
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
@@ -123,7 +123,7 @@ Automatic [PGP][] key support will be added in a future update.
 
 ## Tools
 
-Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa-list.sh` for a complete list.
+Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa-list` for a complete list.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
