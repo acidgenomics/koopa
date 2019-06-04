@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+# OpenSSL
+# https://www.openssl.org/source/
+
+build_dir="/tmp/build/openssl"
+version="1.1.1c"
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
+echo "Installing openssl ${version}."
+echo "sudo is required for this script."
+sudo -v
+
+# SC2103: Use a ( subshell ) to avoid having to cd back.
+(
+    mkdir -p "$build_dir"
+    cd "$build_dir" || exit 1
+    curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
+    tar -xvzf "openssl-${version}.tar.gz"
+    cd "openssl-${version}" || exit 1
+    ./Configure darwin64-x86_64-cc
+    make
+    make test
+    sudo make install
+)
+
+cat << EOF
+openssl installed successfully.
+Reload the shell and check version.
+
+command -v openssl
+openssl version
+EOF

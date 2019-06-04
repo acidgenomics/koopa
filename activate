@@ -10,8 +10,8 @@
 # This software is provided under an MIT License.
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-export KOOPA_VERSION="0.3.4"
-export KOOPA_DATE="2019-05-24"
+export KOOPA_VERSION="0.3.5"
+export KOOPA_DATE="2019-06-04"
 
 
 
@@ -32,7 +32,7 @@ then
 else
     echo "koopa currently supports bash, ksh, or zsh shell."
     echo "Check your configuration."
-    echo "Note that /bin/sh is not recommended."
+    echo "Note that '/bin/sh' is not recommended."
     echo ""
     echo "$SHELL"
     echo "$0"
@@ -86,14 +86,16 @@ then
     unset -v extra
 fi
 
-# Set internal variable to check if koopa is already active.
-[ ! -z "$KOOPA_PLATFORM" ] && KOOPA_ACTIVATED=1
+# Set variable to check if koopa is already active.
+# This step is particularly useful when working on a cluster that spawns new
+# sessions from the current shell.
+[ ! -z "$KOOPA_OS_PLATFORM" ] && KOOPA_ACTIVATED=1
 
 if [ -z "$KOOPA_ACTIVATED" ]
 then
     PRE_DIR="${KOOPA_SYSTEM_DIR}/pre"
-    . "${PRE_DIR}/check-dependencies.sh"
-    . "${PRE_DIR}/platform-info.sh"
+    . "${PRE_DIR}/platform.sh"
+    . "${PRE_DIR}/dependencies.sh"
     unset -v PRE_DIR
 fi
 
@@ -116,6 +118,7 @@ if [ -z "$KOOPA_ACTIVATED" ]
 then
     EXPORTS_DIR="${BASE_DIR}/exports"
     . "${EXPORTS_DIR}/general.sh"
+    . "${EXPORTS_DIR}/platform.sh"
     . "${EXPORTS_DIR}/cpu-count.sh"
     . "${EXPORTS_DIR}/genomes.sh"
     . "${EXPORTS_DIR}/path.sh"
