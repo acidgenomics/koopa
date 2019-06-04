@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-install_dir="${script_dir}/install"
+install_dir="${script_dir}/system/install"
 
 
 # Initialize submodules                                                     {{{1

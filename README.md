@@ -32,7 +32,7 @@ git clone https://github.com/acidgenomics/koopa.git ~/koopa
 Run the installer script:
 
 ```
-~/koopa/INSTALL.sh
+~/koopa/install
 ```
 
 Add these lines to your POSIX-compliant shell configuration file.
