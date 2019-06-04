@@ -3,6 +3,11 @@ set -Eeuo pipefail
 
 # Install Perl rename, which is superior to util-linux rename.
 
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
 sudo yum install -y perl-App-cpanminus
 sudo cpanm File::Rename
 
