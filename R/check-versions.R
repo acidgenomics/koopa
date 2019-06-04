@@ -65,7 +65,7 @@ check <- function(
     )
     stopifnot(is.character(version))
     orig_version <- version
-    
+
     # Sanitize complicated verions:
     # - 2.7.15rc1 to 2.7.15
     # - 1.10.0-patch1 to 1.10.0
@@ -122,6 +122,19 @@ check(
         "head -n 1",
         "cut -d ' ' -f 4",
         "cut -d '(' -f 1"
+    )
+)
+
+
+
+# Conda ========================================================================
+check(
+    name = "conda",
+    min_version = "4.6.14",
+    version_cmd = pipe(
+        "conda --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
     )
 )
 
