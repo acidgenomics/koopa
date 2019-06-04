@@ -17,7 +17,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
 . "${script_dir}/__init__.sh"
 
-# Install build dependencies.
+# Install Python and build dependencies.
+sudo yum install -y python python-pip
 sudo yum-builddep -y python
 
 mkdir "$build_dir"
@@ -27,6 +28,8 @@ mkdir "$build_dir"
     cd "$build_dir"
     wget https://bootstrap.pypa.io/get-pip.py
     sudo python get-pip.py
+    sudo pip install -U pip
+    sudo pip install -U virtualenv
 )
 
 # Build and install from source.
