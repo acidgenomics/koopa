@@ -66,8 +66,8 @@ dotfile() {
     ln -s koopa/dotfiles .dotfiles
     
     case "$KOOPA_HOST_NAME" in
-        azure) dotfile shrc-azure shrc
-            *) dotfile shrc
+        azure) dotfile shrc-azure shrc ;;
+            *) dotfile shrc ;;
     esac
     
     rm -f .bashrc .bash_profile .kshrc .zshrc
@@ -86,10 +86,10 @@ dotfile() {
     dotfile vimrc
 
     case "$KOOPA_HOST_NAME" in
-                 darwin) dotfile Renviron-darwin Renviron;;
-             harvard-o2) dotfile Renviron-harvard-o2 Renviron;;
-        harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron;;
-                      *) dotfile Renviron;;
+                 darwin) dotfile Renviron-darwin Renviron ;;
+             harvard-o2) dotfile Renviron-harvard-o2 Renviron ;;
+        harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron ;;
+                      *) dotfile Renviron ;;
     esac
 
 )
