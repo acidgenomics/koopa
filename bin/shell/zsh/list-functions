@@ -1,5 +1,0 @@
-#!/usr/bin/env zsh
-
-# List functions
-
-print -l ${(ok)functions}
