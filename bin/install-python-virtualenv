@@ -7,7 +7,7 @@ set -Eeuxo pipefail
 command -v python
 command -v virtualenv
 
-env_dir="${HOME}/virtualenvs"
-env_name="python"
+env_dir="${HOME}/.virtualenvs"
+env_name="default"
 
 virtualenv "${env_dir}/${env_name}" --system-site-packages
