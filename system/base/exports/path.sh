@@ -43,6 +43,17 @@ then
 fi
 unset -v os_bin_dir
 
+# Include RHEL dir for systems that extend (e.g. CentOS, Amazon Linux 2).
+# Consider adding similar support here for Debian/Ubuntu.
+
+if [ "$KOOPA_OS_NAME" = "amzn" ]
+then
+    os_bin_dir="${KOOPA_BIN_DIR}/os/rhel"
+    add_to_path_start "$os_bin_dir"
+    has_sudo && add_to_path_start "${os_bin_dir}/sudo"
+    unset -v os_bin_dir
+fi
+
 
 
 # Host-specific                                                             {{{1
