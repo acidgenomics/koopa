@@ -3,6 +3,11 @@ set -Eeuxo pipefail
 
 # Set up python virtual environment.
 
+# Check that Python and virtualenv are installed.
 command -v python
-commnad -v virtualenv
-virtualenv python --system-site-packages
+command -v virtualenv
+
+env_dir="${HOME}/virtualenvs"
+env_name="python"
+
+virtualenv "${env_dir}/${env_name}" --system-site-packages
