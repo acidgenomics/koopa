@@ -7,8 +7,9 @@ set -Eeuo pipefail
 # See also:
 # - https://github.com/emacs-mirror/emacs
 
-build_dir="/tmp/build/emacs"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/emacs"
+
 version="26.2"
 
 echo "Installing emacs ${version}."
