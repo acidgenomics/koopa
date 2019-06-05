@@ -20,7 +20,7 @@
 # Only attempt to autoload for bash or zsh.
 [ "$KOOPA_SHELL" != "bash" ] && \
     [ "$KOOPA_SHELL" != "zsh" ] && \
-    return
+    return 0
 
 
 
@@ -35,7 +35,7 @@
 #    /usr/local/anaconda3
 # 4. Shared miniconda3
 #    /usr/local/miniconda3
-if [ -z "$CONDA_EXE" ]
+if [ -z "${CONDA_EXE:-}" ]
 then
     if [ -f "${HOME}/anaconda3/bin/conda" ]
     then
@@ -55,7 +55,7 @@ fi
 
 
 # Early return if we don't detect an installation.
-[ -z "$CONDA_EXE" ] && return
+[ -z "${CONDA_EXE:-}" ] && return 0
 
 
 
@@ -72,7 +72,7 @@ fi
 # Activate the default environment automatically, if requested.
 # Note that this will get redefined as "base" when conda is
 # activated, so define as an internal variable here.
-conda_env="$CONDA_DEFAULT_ENV"
+conda_env="${CONDA_DEFAULT_ENV:-}"
 
 # Now we're ready to activate.
 conda_bin_dir="$( dirname "$CONDA_EXE" )"
