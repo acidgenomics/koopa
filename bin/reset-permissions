@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Reset file permissions to match umask.
 # Currently recommending umask 0002.
