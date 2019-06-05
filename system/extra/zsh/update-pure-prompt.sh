@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env zsh
 
 # Update pure prompt scripts
 # https://github.com/sindresorhus/pure
 
 koopa_fpath="${KOOPA_BASE_DIR}/system/extra/zsh/fpath"
-if [ ! -d "$koopa_fpath" ]
+if [[ ! -d "$koopa_fpath" ]]
 then
     echo "fpath directory is missing."
     exit 1

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env zsh
 # shellcheck disable=SC1090,SC2034,SC2039
 
 # oh-my-zsh configuration
@@ -11,7 +11,7 @@
 ZSH="${HOME}/.oh-my-zsh"
 
 # Early return and skip config if oh-my-zsh isn't installed.
-[ ! -d "$ZSH" ] && return 1
+[[ ! -d "$ZSH" ]] && return 1
 export ZSH
 
 export ZSH_CUSTOM="${ZSH}/custom"
@@ -82,7 +82,7 @@ plugins=(
   # zsh-syntax-highlighting
 )
 
-. "${ZSH}/oh-my-zsh.sh"
+source "${ZSH}/oh-my-zsh.sh"
 
 
 
@@ -120,4 +120,4 @@ plugins=(
 # https://stackoverflow.com/questions/47310537
 # https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
 # This works well in combo with Dracula theme.
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=240'
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
