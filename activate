@@ -167,7 +167,7 @@ then
     fi
 
     # Platform-specific configuration.
-    if [ ! -z "$MACOS" ]
+    if [ "$KOOPA_OS_NAME" = "darwin" ]
     then
         DARWIN_DIR="${EXTRA_DIR}/darwin"
         if [ -z "$KOOPA_ACTIVATED" ]

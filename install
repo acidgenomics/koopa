@@ -45,5 +45,11 @@ install_dir="${script_dir}/system/install"
 . "${install_dir}/dotfiles.sh"
 
 
+# Post-flight checks                                                        {{{1
+# ==============================================================================
+
+check-versions
+
+
 
 # vim: fdm=marker
