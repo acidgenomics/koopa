@@ -32,15 +32,15 @@ has_sudo && add_to_path_start "${KOOPA_BIN_DIR}/sudo"
 
 
 
-# OS-like (extends)                                                         {{{1
+# OS-specific                                                               {{{1
 # ==============================================================================
+
+os="${KOOPA_OS_NAME}"
 
 # Currently this applies to Fedora/RHEL/CentOS and Amazon Linux 2.
 # In the future, add support here for Debian/Ubuntu.
-
 # Putting this in PATH before the OS-specific scripts.
-
-if [ "$KOOPA_OS_NAME" = "amzn" ]
+if [ "$os" = "amzn" ]
 then
     os_bin_dir="${KOOPA_BIN_DIR}/os/rhel"
     add_to_path_start "$os_bin_dir"
@@ -48,18 +48,15 @@ then
     unset -v os_bin_dir
 fi
 
-
-
-# OS-specific                                                               {{{1
-# ==============================================================================
-
-os_bin_dir="${KOOPA_BIN_DIR}/os/${KOOPA_OS_NAME}"
+os_bin_dir="${KOOPA_BIN_DIR}/os/${os}"
 if [ -d "$os_bin_dir" ]
 then
     add_to_path_start "$os_bin_dir"
     has_sudo && add_to_path_start "${os_bin_dir}/sudo"
 fi
 unset -v os_bin_dir
+
+unset -v os
 
 
 
@@ -77,7 +74,6 @@ then
     unset -v host_bin_dir
 fi
 unset -v host
-
 
 
 
