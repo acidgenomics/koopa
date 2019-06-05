@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env ksh
 
 # Source global definitions.
 # shellcheck source=/dev/null
