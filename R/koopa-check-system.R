@@ -111,11 +111,12 @@ check_version <- function(
     }
 
     if (isTRUE(ok)) {
-        status <- paste("  OK", name, full_sys_version, eval, version)
+        status <- "  OK"
     } else {
-        status <- paste("FAIL", name, full_sys_version, eval, version)
+        status <- "FAIL"
     }
-    message(status)
+    message(paste(status, name, full_sys_version, eval, version))
+    message(paste0("     ", Sys.which(name)))
 
     invisible()
 }
