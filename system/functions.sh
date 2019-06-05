@@ -16,7 +16,7 @@ quiet_expr() {
     expr "$1" : "$2" 1>/dev/null
 }
 
-# Don't use `&>` here, it isn't POSIX.
+# Consider not using `&>` here, it isn't POSIX.
 # https://unix.stackexchange.com/a/80632
 
 quiet_which() {
@@ -49,7 +49,7 @@ has_sudo() {
 # Look into an improved POSIX method here. This works for bash and ksh.
 # Note that this won't work on the first item in PATH.
 remove_from_path() {
-    [ -d "$1" ] || return
+    [ -d "$1" ] || return 0
     # SC2039: In POSIX sh, string replacement is undefined.
     # shellcheck disable=SC2039
     export PATH="${PATH//:$1/}"
@@ -57,18 +57,18 @@ remove_from_path() {
 
 add_to_path_start() {
     # Early return if not a directory.
-    [ -d "$1" ] || return
+    [ -d "$1" ] || return 0
     # Early return if directory is already in PATH.
-    echo "$PATH" | grep -qv "$1" || return
+    echo "$PATH" | grep -qv "$1" || return 0
     remove_from_path "$1"
     export PATH="${1}:${PATH}"
 }
 
 add_to_path_end() {
     # Early return if not a directory.
-    [ -d "$1" ] || return
+    [ -d "$1" ] || return 0
     # Early return if directory is already in PATH.
-    echo "$PATH" | grep -qv "$1" || return
+    echo "$PATH" | grep -qv "$1" || return 0
     remove_from_path "$1"
     export PATH="${PATH}:${1}"
 }

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+echo "Symlinking dot files."
+
 dotfile() {
-    # Don't use the full path here, it makes the symlinks more flexible.
-    dot_dir=".dotfiles"
-    [[ ! -L "$dot_dir" || ! -d "$dot_dir" ]] && \
-        echo "${dot_dir} not configured correctly." && \
-        exit 1
+    dot_dir="${KOOPA_BASE_DIR}/dotfiles"
+    [[ ! -d "$dot_dir" ]] && \
+        echo "${dot_dir} missing." && \
+        return 1
     
     source_file="$1"
     dest_file="${2:-}"
@@ -18,7 +19,7 @@ dotfile() {
     source_file="${dot_dir}/${source_file}"
     [[ ! -f "$source_file" && ! -d "$source_file" ]] \
         && echo "${source_file} missing." && \
-        exit 1
+        return 1
 
     dest_file="${HOME}/.${dest_file}"
     
@@ -28,9 +29,9 @@ dotfile() {
 
 (
     cd ~
-
+    
+    # Remove legacy symlinks.
     rm -rf .dotfiles
-    ln -s koopa/dotfiles .dotfiles
     
     case "$KOOPA_HOST_NAME" in
         azure) dotfile shrc-azure shrc ;;

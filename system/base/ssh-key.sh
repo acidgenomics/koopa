@@ -5,10 +5,10 @@
 # NOTE: SCP will fail unless this is interactive only.
 # ssh-agent will prompt for password if there's one set.
 # To change SSH key passphrase: ssh-keygen -p
-if [ ! -z "$INTERACTIVE" ] && [ ! -z "$LINUX" ]
+if [ ! -z "${INTERACTIVE:-}" ] && [ ! -z "${LINUX:-}" ]
 then
     # If the user hasn't requested a specific SSH key, look for the default.
-    if [ -z "$SSH_KEY" ]
+    if [ -z "${SSH_KEY:-}" ]
     then
         export SSH_KEY="${HOME}/.ssh/id_rsa"
     fi
