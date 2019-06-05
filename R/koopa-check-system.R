@@ -32,16 +32,19 @@ pipe <- function(...) {
 
 installed <- function(name) {
     stopifnot(is.character(name) && length(name) >= 1L)
-    invisible(lapply(
+    invisible(vapply(
         X = name,
         FUN = function(name) {
-            if (!isTRUE(nzchar(Sys.which(name)))) {
-                status <- "FAIL"
+            ok <- nzchar(Sys.which(name))
+            if (!isTRUE(ok)) {
+                message(paste("FAIL", name))
             } else {
-                status <- "  OK"
+                message(paste("  OK", name))
+                message(paste0("    ", Sys.which(name)))
             }
-            message(paste(status, name))
-        }
+            invisible(ok)
+        },
+        FUN.VALUE = logical(1L)
     ))
 }
 
@@ -64,7 +67,7 @@ check_version <- function(
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
         message(paste("FAIL", name, "missing"))
-        return(invisible())
+        return(invisible(FALSE))
     }
 
     # Grep string check mode.
@@ -73,7 +76,7 @@ check_version <- function(
         ok <- any(grepl(pattern = grep_string, x = x))
         if (!isTRUE(ok)) {
             message(paste("FAIL", grep_string, "not detected"))
-            return(invisible())
+            return(invisible(FALSE))
         }
     }
 
@@ -118,7 +121,7 @@ check_version <- function(
     message(paste(status, name, full_sys_version, eval, version))
     message(paste0("     ", Sys.which(name)))
 
-    invisible()
+    invisible(ok)
 }
 
 
@@ -402,18 +405,6 @@ check_version(
 
 # Linux-specific programs
 if (isTRUE(linux)) {
-    # bcbio
-    check_version(
-        name = "bcbio_nextgen.py",
-        version = "1.1.3",
-        version_cmd = "bcbio_nextgen.py --version",
-        eval = switch(
-            EXPR = host,
-            azure = "==",
-            ">="
-        )
-    )
-
     # RStudio Server
     check_version(
         name = "rstudio-server",
@@ -432,6 +423,21 @@ if (isTRUE(linux)) {
             "cut -d ' ' -f 3"
         ),
         eval = "=="
+    )
+    
+    # bcbio_vm.py
+    installed("bcbio_vm.py")
+
+    # bcbio
+    check_version(
+        name = "bcbio_nextgen.py",
+        version = "1.1.3",
+        version_cmd = "bcbio_nextgen.py --version",
+        eval = switch(
+            EXPR = host,
+            azure = "==",
+            ">="
+        )
     )
 }
 
