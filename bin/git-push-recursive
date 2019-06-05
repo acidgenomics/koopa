@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuxo pipefail
 
-# Push all repositories.
+# Push all repositories recursively.
 
 wd=$(pwd)
 git_dir="${HOME}/git"
