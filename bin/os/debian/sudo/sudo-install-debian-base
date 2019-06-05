@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Base programs recommended for all VMs.
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
+sudo apt-get update
+
+# Following the recommendations in docker-bioconductor recipes.
+# https://github.com/acidgenomics/docker-bioconductor
+sudo apt-get install -y \
+    autoconf \
+    automake \
+    cargo \
+    gtk-doc-tools \
+    libbz2-dev \
+    libcairo2-dev \
+    libcurl4-openssl-dev \
+    libfreetype6-dev \
+    libgdal-dev \
+    libglu1-mesa-dev \
+    libharfbuzz-dev \
+    liblzma-dev \
+    libmagick++-dev \
+    libmariadb-client-lgpl-dev \
+    libpng-dev \
+    libssh2-1-dev \
+    libssl-dev \
+    libtool \
+    libudunits2-dev \
+    libxml2-dev \
+    libx11-dev \
+    libz-dev \
+    pkg-config \
+    texlive \
+    xorg
+
+# Extra programs that are useful on an interactive VM.
+sudo apt-get install -y \
+    emacs \
+    git \
+    gnupg2 \
+    htop \
+    libhdf5-dev \
+    pandoc \
+    pandoc-citeproc \
+    perl \
+    python \
+    r-base \
+    r-base-dev \
+    tmux \
+    vim \
+    zsh

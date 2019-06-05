@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Install Miniconda
 # https://conda.io/miniconda.html
@@ -41,10 +41,8 @@ sudo rm -rf "$prefix"
 # Set installed files to root.
 sudo chown -R "root:wheel" "$prefix"
 
-cat << EOF
+echo "conda installed successfully."
+conda_exe="${prefix}/bin/conda"
+echo "$conda_exe"
+sh -c "$conda_exe --version"
 
-conda installed successfully.
-Export "CONDA_EXE" in bashrc above koopa activation step and reload the shell.
-Use "command -v conda" to check the path.
-
-EOF
