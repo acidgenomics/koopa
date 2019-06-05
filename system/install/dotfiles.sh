@@ -54,12 +54,17 @@ dotfile() {
     dotfile vim
     dotfile vimrc
 
-    case "${KOOPA_HOST_NAME:-}" in
-                 darwin) dotfile Renviron-darwin Renviron ;;
-             harvard-o2) dotfile Renviron-harvard-o2 Renviron ;;
-        harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron ;;
-                      *) dotfile Renviron ;;
-    esac
-
+    if [[ "$KOOPA_OS_NAME" == "darwin" ]]
+    then
+        dotfile Renviron-darwin Renviron
+    elif [[ "$KOOPA_HOST_NAME" == "harvard-o2" ]]
+    then
+        dotfile Renviron-harvard-o2 Renviron 
+    elif [[ "$KOOPA_HOST_NAME" == "harvard-odyssey" ]]
+    then
+        dotfile Renviron-harvard-odyssey Renviron
+    else
+        dotfile Renviron
+    fi
 )
 
