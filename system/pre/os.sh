@@ -13,4 +13,3 @@ case "$osname" in
 esac
 unset -v osname
 
-KOOPA_OS_PLATFORM="$(python -mplatform)" && export KOOPA_OS_PLATFORM
