@@ -2,7 +2,8 @@
 set -Eeuo pipefail
 
 echo "sudo access is required for installation."
-sudo -v
+# This doesn't work for passwordless sudo on AWS EC2, so disable.
+# sudo -v
 
 # Check for RedHat.
 if ! grep -q "ID=ubuntu" /etc/os-release
@@ -27,3 +28,7 @@ fi
 
 # Ensure apt-get is up to date.
 sudo apt-get -y update
+
+# Ensure /usr/local has correct permissions.
+sudo chown -R "root:sudo" /usr/local
+sudo chmod g+w /usr/local
