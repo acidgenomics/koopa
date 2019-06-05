@@ -421,14 +421,6 @@ if (isTRUE(linux)) {
     )
 }
 
-# virtualenv
-check_version(
-    name = "virtualenv",
-    version = "16.4.3",
-    version_cmd = "virtualenv --version",
-    eval = "=="
-)
-
 
 
 # Core programs ================================================================
