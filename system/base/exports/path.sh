@@ -37,30 +37,28 @@ has_sudo && add_to_path_start "${KOOPA_BIN_DIR}/sudo"
 
 os="${KOOPA_OS_NAME}"
 
+# - amzn
+#   ID_LIKE="centos rhel fedora"
+# - rhel
+#   ID_LIKE="fedora"
+# - ubuntu
+#   ID_LIKE=debian
+
 if [ ! -z "${LINUX:-}" ]
 then
     id_like="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f 2)"
 
-    # - amzn
-    #   ID_LIKE="centos rhel fedora"
-    # - rhel
-    #   ID_LIKE="fedora"
-    # - ubuntu
-    #   ID_LIKE=debian
-
-    # Fedora-like (e.g. RHEL, CentOS, Amazon Linux)
-    if "$(echo "$id_like" | grep -q fedora)"
+    if echo "$id_like" | grep -q "debian"
     then
-        os_bin_dir="${KOOPA_BIN_DIR}/os/fedora"
+        # Debian-like (e.g. Ubuntu)
+        os_bin_dir="${KOOPA_BIN_DIR}/os/debian"
         add_to_path_start "$os_bin_dir"
         has_sudo && add_to_path_start "${os_bin_dir}/sudo"
         unset -v os_bin_dir
-    fi
-
-    # Debian-like (e.g. Ubuntu)
-    if "$(echo "$id_like" | grep -q debian)"
+    elif echo "$id_like" | grep -q "fedora"
     then
-        os_bin_dir="${KOOPA_BIN_DIR}/os/debian"
+        # Fedora-like (e.g. RHEL, CentOS, Amazon Linux)
+        os_bin_dir="${KOOPA_BIN_DIR}/os/fedora"
         add_to_path_start "$os_bin_dir"
         has_sudo && add_to_path_start "${os_bin_dir}/sudo"
         unset -v os_bin_dir
