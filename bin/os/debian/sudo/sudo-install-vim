@@ -4,8 +4,9 @@ set -Eeuo pipefail
 # Vim
 # https://github.com/vim/vim
 
-build_dir="/tmp/build/vim"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/vim"
+
 version="8.1.1331"
 
 echo "Installing vim ${version}."
