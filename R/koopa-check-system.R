@@ -109,7 +109,7 @@ check_version <- function(
     }
 
     if (isTRUE(ok)) {
-        status <- paste("  ", "OK", name, full_sys_version, eval, version)
+        status <- paste("  OK", name, full_sys_version, eval, version)
     } else {
         status <- paste("FAIL", name, full_sys_version, eval, version)
     }
