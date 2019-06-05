@@ -4,8 +4,9 @@ set -Eeuo pipefail
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
 
-build_dir="/tmp/build/tmux"
-prefix="/usr/local"
+prefix="$KOOPA_PREFIX"
+build_dir="${KOOPA_TMP}/build/tmux"
+
 version="2.9a"
 
 echo "Installing tmux ${version}."
