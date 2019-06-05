@@ -13,12 +13,12 @@
 
 
 # Check for installation, otherwise early return.
-[ -z "$PERLBREW_ROOT" ] && PERLBREW_ROOT="${HOME}/perl5/perlbrew"
-[ ! -d "$PERLBREW_ROOT" ] && return
+[ -z "${PERLBREW_ROOT:-}" ] && PERLBREW_ROOT="${HOME}/perl5/perlbrew"
+[ ! -d "$PERLBREW_ROOT" ] && return 0
 export PERLBREW_ROOT
 
 # [ -z "$PERLBREW_HOME" ] && PERLBREW_HOME="${HOME}/.perlbrew"
-# [ ! -d "$PERLBREW_HOME" ] && return
+# [ ! -d "$PERLBREW_HOME" ] && return 0
 # export PERLBREW_HOME
 
 

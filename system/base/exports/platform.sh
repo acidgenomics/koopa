@@ -42,7 +42,7 @@
 # Darwin: x86_64-darwin15.6.0
 
 # bash (and zsh) set useful OSTYPE variable.
-[ -z "$OSTYPE" ] && OSTYPE=$(bash -c "echo $OSTYPE") && export OSTYPE
+[ -z "${OSTYPE:-}" ] && OSTYPE=$(bash -c "echo $OSTYPE") && export OSTYPE
 
 mach="$(uname -m)"
 os="$(uname -s)"
@@ -80,7 +80,7 @@ unset -v mach os rev
 # Hostname                                                                  {{{1
 # ==============================================================================
 
-[ -z "$HOSTNAME" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
+[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
 case "$HOSTNAME" in
              *.ec2.internal) export KOOPA_HOST_NAME="aws";;
                   azlabapp*) export KOOPA_HOST_NAME="azure";;

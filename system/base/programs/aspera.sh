@@ -3,7 +3,7 @@
 
 # Include Aspera Connect binaries in PATH, if defined.
 
-if [ -z "$ASPERACONNECT_EXE" ]
+if [ -z "${ASPERACONNECT_EXE:-}" ]
 then
     aspera_exe="${HOME}/.aspera/connect/bin/asperaconnect"
     if [ -f "$aspera_exe" ]
@@ -14,7 +14,7 @@ then
         ASPERACONNECT_EXE=0
     fi
 fi
-if [ -f "ASPERACONNECT_EXE" ]
+if [ -f "$ASPERACONNECT_EXE" ]
 then
     aspera_bin_dir="$( dirname "$ASPERACONNECT_EXE" )"
     export PATH="${aspera_bin_dir}:${PATH}"
