@@ -2,8 +2,8 @@
 # Note that Ubuntu specific versions are pinned to 18 LTS.
 
 options(
-    error = quote(quit(status = 1L))
-    # warning = quote(quit(status = 1L))
+    error = quote(quit(status = 1L)),
+    warning = quote(quit(status = 1L))
 )
 formals(warning)[["call."]] <- FALSE
 
@@ -24,7 +24,20 @@ if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
     linux <- FALSE
 }
 
-message("Checking recommended koopa dependencies.")
+installed <- function(name) {
+    stopifnot(is.character(name) && length(name) >= 1L)
+    invisible(lapply(
+        X = name,
+        FUN = function(name) {
+            if (!isTRUE(nzchar(Sys.which(name)))) {
+                status <- "FAIL"
+            } else {
+                status <- "  OK"
+            }
+            message(paste(status, name))
+        }
+    ))
+}
 
 check_version <- function(
     name,
@@ -33,9 +46,10 @@ check_version <- function(
     grep_string = NULL
 ) {
     stopifnot(
-        is.character(name),
-        is.character(min_version),
-        is.character(grep_string) || is.null(grep_string)
+        is.character(name) && length(name) == 1L,
+        is.character(min_version) && length(min_version) == 1L,
+        (is.character(grep_string) && length(grep_string) == 1L) ||
+            is.null(grep_string)
     )
 
     # Check to see if program is installed.
@@ -96,7 +110,10 @@ pipe <- function(...) {
 
 
 
-# Bash =========================================================================
+# Required =====================================================================
+message("\nChecking required programs.")
+
+# Bash
 check_version(
     name = "bash",
     min_version = switch(
@@ -112,156 +129,49 @@ check_version(
     )
 )
 
-
-
-# Conda ========================================================================
+# Z shell
 check_version(
-    name = "conda",
-    min_version = switch(
-        EXPR = os,
-        amzn = "4.6.11",
-        "4.6.14"
-    ),
+    name = "zsh",
+    min_version = "5.7.1",
     version_cmd = pipe(
-        "conda --version",
-        "head -n 1",
+        "zsh --version",
+        "head -1",
         "cut -d ' ' -f 2"
     )
 )
 
-
-
-# Emacs ========================================================================
-# Setting a hard dependency here, to allow for spacemacs.
+# R
+# Alternatively, can check using `packageVersion("base")`.
+# Using shell version string instead here for consistency.
 check_version(
-    name = "emacs",
-    min_version = "26.2",
+    name = "R",
+    min_version = "3.6",
     version_cmd = pipe(
-        "emacs --version",
+        "R --version",
         "head -n 1",
         "cut -d ' ' -f 3"
     )
 )
 
-
-
-# Git ==========================================================================
+# Python
+# Now requiring >= 3.7. Python 2 will be phased out by 2020.
+# The user can use either conda or virtualenv.
 check_version(
-    name = "git",
+    name = "python",
     min_version = switch(
         EXPR = os,
-        ubuntu = "2.17.1",
-        "2.21"
+        rhel = "2.7.5",
+        ubuntu = "2.7.15",
+        "3.7"
     ),
     version_cmd = pipe(
-        "git --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    )
-)
-
-
-
-# GnuPG ========================================================================
-check_version(
-    name = "gpg",
-    min_version = switch(
-        EXPR = os,
-        ubuntu = "2.2.4",
-        "2.2.9"
-    ),
-    version_cmd = pipe(
-        "gpg --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    )
-)
-
-
-
-# GSL ==========================================================================
-check_version(
-    name = "gsl-config",
-    min_version = switch(
-        EXPR = os,
-        ubuntu = "2.4",
-        "2.5"
-    ),
-    version_cmd = pipe(
-        "gsl-config --version",
-        "head -n 1"
-    )
-)
-
-
-
-# HDF5 =========================================================================
-check_version(
-    name = "h5dump",
-    min_version = "1.10",
-    version_cmd = pipe(
-        "h5dump --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    )
-)
-
-
-
-# htop =========================================================================
-check_version(
-    name = "htop",
-    min_version = switch(
-        EXPR = os,
-        ubuntu = "2.1",
-        "2.2"
-    ),
-    version_cmd = pipe(
-        "htop --version",
+        "python --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
     )
 )
 
-
-
-# OpenSSL ======================================================================
-check_version(
-    name = "openssl",
-    min_version = switch(
-        EXPR = os,
-        rhel = "1.0.2",
-        ubuntu = "1.1.0",
-        "1.1.1"
-    ),
-    version_cmd = pipe(
-        "openssl version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    )
-)
-
-
-
-# Pandoc =======================================================================
-check_version(
-    name = "pandoc",
-    min_version = switch(
-        EXPR = os,
-        amzn = "1.12",
-        rhel = "1.12",
-        "2.0"
-    ),
-    version_cmd = pipe(
-        "pandoc --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    )
-)
-
-
-
-# Perl =========================================================================
+# Perl
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
 # This is perl 5, version 16, subversion 3 (v5.16.3)
@@ -281,98 +191,143 @@ check_version(
     )
 )
 
-
-
-# Python =======================================================================
-# Now requiring >= 3.7. Python 2 will be phased out by 2020.
-# The user can use either conda or virtualenv.
+# Emacs
+# Setting a hard dependency here, to allow for spacemacs.
 check_version(
-    name = "python",
-    min_version = switch(
-        EXPR = os,
-        rhel = "2.7.5",
-        ubuntu = "2.7.15",
-        "3.7"
-    ),
+    name = "emacs",
+    min_version = "26.2",
     version_cmd = pipe(
-        "python --version 2>&1",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    )
-)
-
-
-
-# R ============================================================================
-# Alternatively, can check using `packageVersion("base")`.
-# Using shell version string instead here for consistency.
-check_version(
-    name = "R",
-    min_version = "3.6",
-    version_cmd = pipe(
-        "R --version",
+        "emacs --version",
         "head -n 1",
         "cut -d ' ' -f 3"
     )
 )
 
-
-
-# rename =======================================================================
-# Use Perl File::Rename, not util-linux.
+# Vim
 check_version(
-    name = "rename",
-    min_version = "1.10",
+    name = "vim",
+    min_version = "8.1",
     version_cmd = pipe(
-        "rename --version",
-        "head -n 1",
+        "vim --version",
+        "head -1",
         "cut -d ' ' -f 5"
-    ),
-    grep_string = "File::Rename"
+    )
 )
 
-
-
-# RStudio Server ===============================================================
-if (isTRUE(linux)) {
-    check_version(
-        name = "rstudio-server",
-        min_version = "1.2.1335",
-        version_cmd = "rstudio-server version"
-    )
-}
-
-
-
-# ShellCheck ===================================================================
+# Tmux
 check_version(
-    name = "shellcheck",
-    min_version = "0.6",
+    name = "tmux",
+    min_version = "2.9",
     version_cmd = pipe(
-        "shellcheck --version",
-        "sed -n '2p'",
+        "tmux -V",
+        "head -n 1",
         "cut -d ' ' -f 2"
     )
 )
 
-
-
-# Shiny Server =================================================================
-if (isTRUE(linux)) {
-    check_version(
-        name = "shiny-server",
-        min_version = "1.5.9.923",
-        version_cmd = pipe(
-            "shiny-server --version",
-            "head -n 1",
-            "cut -d ' ' -f 3"
-        )
+# Git
+check_version(
+    name = "git",
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.17.1",
+        "2.21"
+    ),
+    version_cmd = pipe(
+        "git --version",
+        "head -n 1",
+        "cut -d ' ' -f 3"
     )
-}
+)
 
+# GnuPG
+check_version(
+    name = "gpg",
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.2.4",
+        "2.2.8"
+    ),
+    version_cmd = pipe(
+        "gpg --version",
+        "head -n 1",
+        "cut -d ' ' -f 3"
+    )
+)
 
+# GSL
+check_version(
+    name = "gsl-config",
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.4",
+        "2.5"
+    ),
+    version_cmd = pipe(
+        "gsl-config --version",
+        "head -n 1"
+    )
+)
 
-# TeX Live =====================================================================
+# HDF5
+check_version(
+    name = "h5dump",
+    min_version = "1.10",
+    version_cmd = pipe(
+        "h5dump --version",
+        "head -n 1",
+        "cut -d ' ' -f 3"
+    )
+)
+
+# htop
+check_version(
+    name = "htop",
+    min_version = switch(
+        EXPR = os,
+        ubuntu = "2.1",
+        "2.2"
+    ),
+    version_cmd = pipe(
+        "htop --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    )
+)
+
+# OpenSSL
+check_version(
+    name = "openssl",
+    min_version = switch(
+        EXPR = os,
+        rhel = "1.0.2",
+        ubuntu = "1.1.0",
+        "1.1.1"
+    ),
+    version_cmd = pipe(
+        "openssl version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    )
+)
+
+# Pandoc
+check_version(
+    name = "pandoc",
+    min_version = switch(
+        EXPR = os,
+        amzn = "1.12",
+        rhel = "1.12",
+        "2.0"
+    ),
+    version_cmd = pipe(
+        "pandoc --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    )
+)
+
+# TeX Live
 # Note that we're checking the TeX Live release year here.
 # Here's what it looks like on Debian/Ubuntu:
 # TeX 3.14159265 (TeX Live 2017/Debian)
@@ -395,41 +350,90 @@ check_version(
     )
 )
 
-
-
-# Tmux =========================================================================
+# ShellCheck
 check_version(
-    name = "tmux",
-    min_version = "2.9",
+    name = "shellcheck",
+    min_version = "0.6",
     version_cmd = pipe(
-        "tmux -V",
+        "shellcheck --version",
+        "sed -n '2p'",
+        "cut -d ' ' -f 2"
+    )
+)
+
+# rename
+# Use Perl File::Rename, not util-linux.
+if (isTRUE(linux)) {
+    check_version(
+        name = "rename",
+        min_version = "1.10",
+        version_cmd = pipe(
+            "rename --version",
+            "head -n 1",
+            "cut -d ' ' -f 5"
+        ),
+        grep_string = "File::Rename"
+    )
+} else {
+    # Homebrew rename doesn't return version on macOS.
+    installed("rename")
+}
+
+
+
+# Optional =====================================================================
+message("\nChecking optional programs.")
+
+# Conda
+check_version(
+    name = "conda",
+    min_version = switch(
+        EXPR = os,
+        amzn = "4.6.11",
+        "4.6.14"
+    ),
+    version_cmd = pipe(
+        "conda --version",
         "head -n 1",
         "cut -d ' ' -f 2"
     )
 )
 
-
-
-# Vim ==========================================================================
-check_version(
-    name = "vim",
-    min_version = "8.1",
-    version_cmd = pipe(
-        "vim --version",
-        "head -1",
-        "cut -d ' ' -f 5"
+# RStudio Server
+if (isTRUE(linux)) {
+    check_version(
+        name = "rstudio-server",
+        min_version = "1.2.1335",
+        version_cmd = "rstudio-server version"
     )
-)
+}
 
-
-
-# Z shell ======================================================================
-check_version(
-    name = "zsh",
-    min_version = "5.7.1",
-    version_cmd = pipe(
-        "zsh --version",
-        "head -1",
-        "cut -d ' ' -f 2"
+# Shiny Server
+if (isTRUE(linux)) {
+    check_version(
+        name = "shiny-server",
+        min_version = "1.5.9.923",
+        version_cmd = pipe(
+            "shiny-server --version",
+            "head -n 1",
+            "cut -d ' ' -f 3"
+        )
     )
-)
+}
+
+
+
+# Core programs ================================================================
+message("\nChecking required core programs.")
+installed(c(
+    "cat",
+    "chsh",
+    "curl",
+    "echo",
+    "env",
+    "grep",
+    "sed",
+    "top",
+    "wget",
+    "which"
+))
