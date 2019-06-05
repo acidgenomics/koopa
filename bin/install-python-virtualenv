@@ -5,7 +5,7 @@ set -Eeuo pipefail
 
 # Check that Python and virtualenv are installed.
 command -v python
-command -v virtualenv
+# command -v virtualenv
 
 # Ensure virtualenv is deactivated.
 if [[ -x "$(command -v deactivate)" ]]

@@ -388,16 +388,13 @@ check_version(
 # Conda
 check_version(
     name = "conda",
-    version = switch(
-        EXPR = os,
-        amzn = "4.6.11",
-        "4.6.14"
-    ),
+    version = "4.6.14",
     version_cmd = c(
         "conda --version",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # RStudio Server
