@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Check for macOS.
 if [[ "$KOOPA_OS_NAME" != "darwin" ]] ||

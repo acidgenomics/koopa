@@ -26,20 +26,32 @@ if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
 
 message("Checking recommended koopa dependencies.")
 
-check <- function(
+check_version <- function(
     name,
     min_version,
-    version_cmd
+    version_cmd,
+    grep_string = NULL
 ) {
     stopifnot(
         is.character(name),
-        is.character(min_version)
+        is.character(min_version),
+        is.character(grep_string) || is.null(grep_string)
     )
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
         message(paste("FAIL", name, "missing"))
         return(invisible())
+    }
+    
+    # Grep string check mode.
+    if (is.character(grep_string)) {
+        x <- system(command = version_cmd[[1L]], intern = TRUE)
+        ok <- any(grepl(pattern = grep_string, x = x))
+        if (!isTRUE(ok)) {
+            message(paste("FAIL", grep_string, "not detected"))
+            return(invisible())
+        }
     }
 
     if (grepl("\\.", min_version)) {
@@ -85,7 +97,7 @@ pipe <- function(...) {
 
 
 # Bash =========================================================================
-check(
+check_version(
     name = "bash",
     min_version = switch(
         EXPR = os,
@@ -103,7 +115,7 @@ check(
 
 
 # Conda ========================================================================
-check(
+check_version(
     name = "conda",
     min_version = switch(
         EXPR = os,
@@ -121,7 +133,7 @@ check(
 
 # Emacs ========================================================================
 # Setting a hard dependency here, to allow for spacemacs.
-check(
+check_version(
     name = "emacs",
     min_version = "26.2",
     version_cmd = pipe(
@@ -134,7 +146,7 @@ check(
 
 
 # Git ==========================================================================
-check(
+check_version(
     name = "git",
     min_version = switch(
         EXPR = os,
@@ -151,7 +163,7 @@ check(
 
 
 # GnuPG ========================================================================
-check(
+check_version(
     name = "gpg",
     min_version = switch(
         EXPR = os,
@@ -168,7 +180,7 @@ check(
 
 
 # GSL ==========================================================================
-check(
+check_version(
     name = "gsl-config",
     min_version = switch(
         EXPR = os,
@@ -184,7 +196,7 @@ check(
 
 
 # HDF5 =========================================================================
-check(
+check_version(
     name = "h5dump",
     min_version = "1.10",
     version_cmd = pipe(
@@ -197,7 +209,7 @@ check(
 
 
 # htop =========================================================================
-check(
+check_version(
     name = "htop",
     min_version = switch(
         EXPR = os,
@@ -214,7 +226,7 @@ check(
 
 
 # OpenSSL ======================================================================
-check(
+check_version(
     name = "openssl",
     min_version = switch(
         EXPR = os,
@@ -232,7 +244,7 @@ check(
 
 
 # Pandoc =======================================================================
-check(
+check_version(
     name = "pandoc",
     min_version = switch(
         EXPR = os,
@@ -253,7 +265,7 @@ check(
 # Requiring the current RHEL 7 version.
 # The cut match is a little tricky here:
 # This is perl 5, version 16, subversion 3 (v5.16.3)
-check(
+check_version(
     name = "perl",
     min_version = switch(
         EXPR = os,
@@ -274,7 +286,7 @@ check(
 # Python =======================================================================
 # Now requiring >= 3.7. Python 2 will be phased out by 2020.
 # The user can use either conda or virtualenv.
-check(
+check_version(
     name = "python",
     min_version = switch(
         EXPR = os,
@@ -294,7 +306,7 @@ check(
 # R ============================================================================
 # Alternatively, can check using `packageVersion("base")`.
 # Using shell version string instead here for consistency.
-check(
+check_version(
     name = "R",
     min_version = "3.6",
     version_cmd = pipe(
@@ -308,25 +320,22 @@ check(
 
 # rename =======================================================================
 # Use Perl File::Rename, not util-linux.
-stopifnot(grepl(
-    pattern = "File::Rename",
-    x = head(system(command = "rename --version", intern = TRUE), n = 1L)
-))
-check(
+check_version(
     name = "rename",
     min_version = "1.10",
     version_cmd = pipe(
         "rename --version",
         "head -n 1",
         "cut -d ' ' -f 5"
-    )
+    ),
+    grep_string = "File::Rename"
 )
 
 
 
 # RStudio Server ===============================================================
 if (isTRUE(linux)) {
-    check(
+    check_version(
         name = "rstudio-server",
         min_version = "1.2.1335",
         version_cmd = "rstudio-server version"
@@ -336,7 +345,7 @@ if (isTRUE(linux)) {
 
 
 # ShellCheck ===================================================================
-check(
+check_version(
     name = "shellcheck",
     min_version = "0.6",
     version_cmd = pipe(
@@ -350,7 +359,7 @@ check(
 
 # Shiny Server =================================================================
 if (isTRUE(linux)) {
-    check(
+    check_version(
         name = "shiny-server",
         min_version = "1.5.9.923",
         version_cmd = pipe(
@@ -367,7 +376,7 @@ if (isTRUE(linux)) {
 # Note that we're checking the TeX Live release year here.
 # Here's what it looks like on Debian/Ubuntu:
 # TeX 3.14159265 (TeX Live 2017/Debian)
-check(
+check_version(
     name = "tex",
     min_version = switch(
         EXPR = os,
@@ -389,7 +398,7 @@ check(
 
 
 # Tmux =========================================================================
-check(
+check_version(
     name = "tmux",
     min_version = "2.9",
     version_cmd = pipe(
@@ -402,7 +411,7 @@ check(
 
 
 # Vim ==========================================================================
-check(
+check_version(
     name = "vim",
     min_version = "8.1",
     version_cmd = pipe(
@@ -415,7 +424,7 @@ check(
 
 
 # Z shell ======================================================================
-check(
+check_version(
     name = "zsh",
     min_version = "5.7.1",
     version_cmd = pipe(

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # GNU Scientific Library (GSL)
 # https://www.gnu.org/software/gsl/

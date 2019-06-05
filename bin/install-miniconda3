@@ -15,7 +15,7 @@ set -Eeuo pipefail
 # -u           update an existing installation
 # -t           run package tests after installation (may install conda-build)
 
-prefix="${KOOPA_PREFIX}/miniconda3"
+prefix="${HOME}/miniconda3"
 build_dir="${KOOPA_TMP}/build/miniconda3"
 
 case "$OSTYPE" in
@@ -24,8 +24,13 @@ case "$OSTYPE" in
             *) echo "${OSTYPE} is not supported."; exit 1;;
 esac
 
-# Ensure previous installation is removed.
-sudo rm -rf "$prefix"
+# Check for previous installation.
+if [[ -d "$prefix" ]]
+then
+    echo "Error: conda already installed."
+    echo "$prefix"
+    exit 1
+fi
 
 (
     rm -rf "$build_dir"
@@ -37,9 +42,6 @@ sudo rm -rf "$prefix"
     bash "$script" -b -p "$prefix"
     rm -rf "$build_dir"
 )
-
-# Set installed files to root.
-sudo chown -R "root:wheel" "$prefix"
 
 echo "Reloading the current shell."
 exec "$KOOPA_SHELL"
