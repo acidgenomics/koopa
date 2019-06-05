@@ -43,3 +43,7 @@ if [[ ! -f /etc/ld.so.conf.d ]]
 then
     sudo cp "${KOOPA_BASE_DIR}/etc/ld.so.conf.d/local"*".conf" /etc/ld.so.conf.d
 fi
+
+# Ensure /usr/local has correct permissions.
+sudo chown -R "root:wheel" /usr/local
+sudo chmod g+w /usr/local
