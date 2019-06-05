@@ -30,7 +30,7 @@ wd="\w"
 
 # Enable colorful prompt.
 # Match either "xterm-256color" or "screen-256color" here.
-if [[ "$TERM" =~ -256color ]]
+if [[ "${TERM:-}" =~ -256color ]]
 then
     # Foreground colors (text)
     # https://misc.flogisoft.com/bash/tip_colors_and_formatting
@@ -53,7 +53,7 @@ then
     # 97 white
 
     # Dynamically change the user color based on connection type.
-    if [[ -n "$SSH_CONNECTION" ]]
+    if [[ -n "${SSH_CONNECTION:-}" ]]
     then
         user_color="33"
     else
