@@ -1,2 +1,19 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Base programs recommended for all VMs.
+
+# Run preflight initialization checks.
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# shellcheck source=/dev/null
+. "${script_dir}/__init__.sh"
+
 sudo apt-get install -y \
-    python
+    emacs \
+    git \
+    gnupg2 \
+    python \
+    r-base \
+    r-base-dev \
+    vim \
+    zsh
