@@ -16,6 +16,8 @@ formals(warning)[["call."]] <- FALSE
 os <- Sys.getenv("KOOPA_OS_NAME")
 stopifnot(isTRUE(nzchar(os)))
 
+host <- Sys.getenv("KOOPA_HOST_NAME")
+
 # Are we running on Linux?
 # We're using this for some server-specific checks (e.g. rstudio-server).
 if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
@@ -109,11 +111,12 @@ check_version <- function(
     }
 
     if (isTRUE(ok)) {
-        status <- paste("  OK", name, full_sys_version, eval, version)
+        status <- "  OK"
     } else {
-        status <- paste("FAIL", name, full_sys_version, eval, version)
+        status <- "FAIL"
     }
-    message(status)
+    message(paste(status, name, full_sys_version, eval, version))
+    message(paste0("     ", Sys.which(name)))
 
     invisible()
 }
@@ -404,7 +407,11 @@ if (isTRUE(linux)) {
         name = "bcbio_nextgen.py",
         version = "1.1.3",
         version_cmd = "bcbio_nextgen.py --version",
-        eval = "=="
+        eval = switch(
+            EXPR = host,
+            azure = "==",
+            ">="
+        )
     )
 
     # RStudio Server
