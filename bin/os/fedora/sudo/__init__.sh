@@ -6,11 +6,12 @@ echo "sudo access is required for installation."
 # This check doesn't work for passwordless sudo (e.g. ec2-user), so disable.
 # sudo -v
 
-# Check for RedHat.
-if ! grep -q 'ID="rhel"' /etc/os-release &&
-   ! grep -q 'ID_LIKE="centos rhel fedora"' /etc/os-release
+# Check for Fedora.
+
+if ! cat /etc/os-release | grep "ID="      | grep -q "fedora" &&
+   ! cat /etc/os-release | grep "ID_LIKE=" | grep -q "fedora"
 then
-    echo "Error: RedHat Enterprise Linux (RHEL) is required." >&2
+    echo "Error: Fedora is required." >&2
     exit 1
 fi
 
