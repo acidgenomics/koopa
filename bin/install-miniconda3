@@ -43,8 +43,12 @@ fi
     rm -rf "$build_dir"
 )
 
-echo "Reloading the current shell."
-exec "$KOOPA_SHELL"
-
 echo "conda installed successfully."
-conda --version
+conda_exe="${prefix}/bin/conda"
+echo "$conda_exe"
+sh -c "$conda_exe --version"
+
+echo "Reloading the current shell."
+# SC2093: Remove "exec " if script should continue after this command.
+# shellcheck disable=SC2059
+exec "$KOOPA_SHELL"
