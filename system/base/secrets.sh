@@ -3,4 +3,7 @@
 # Load secrets.
 
 # shellcheck source=/dev/null
-[ -f "${HOME}/.secrets" ] && . "${HOME}/.secrets"
+if [ -f "${HOME}/.secrets" ]
+then
+    . "${HOME}/.secrets"
+fi
