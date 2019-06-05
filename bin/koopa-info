@@ -103,7 +103,7 @@ fi
 unset -v ruby
 
 array+=("")
-array+=("Run 'check-versions' to check programs.")
+array+=("Run 'koopa-check-system' to check programs.")
 
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
