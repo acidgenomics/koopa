@@ -66,12 +66,18 @@ unset -v os_bin_dir
 # Host-specific                                                             {{{1
 # ==============================================================================
 
-host_bin_dir="${KOOPA_BIN_DIR}/host/${KOOPA_HOST_NAME}"
-if [ -d "$host_bin_dir" ]
+host="${KOOPA_HOST_NAME:-}"
+if [ ! -z "$host" ]
 then
-    add_to_path_start "$host_bin_dir"
+    host_bin_dir="${KOOPA_BIN_DIR}/host/${host}"
+    if [ -d "$host_bin_dir" ]
+    then
+        add_to_path_start "$host_bin_dir"
+    fi
+    unset -v host_bin_dir
 fi
-unset -v host_bin_dir
+unset -v host
+
 
 
 
