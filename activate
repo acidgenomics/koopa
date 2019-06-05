@@ -152,7 +152,7 @@ then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
         BASH_DIR="${EXTRA_DIR}/bash"
-        . "${BASH_DIR}/init.sh"
+        # . "${BASH_DIR}/init.sh"
         . "${BASH_DIR}/shopt.sh"
         . "${BASH_DIR}/bind.sh"
         . "${BASH_DIR}/ps1.sh"
