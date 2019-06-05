@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # FASTQ dump from Sequence Read Archive (SRA) accession list.
 

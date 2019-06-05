@@ -10,8 +10,8 @@
 # This software is provided under an MIT License.
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-export KOOPA_VERSION="0.3.5"
-export KOOPA_DATE="2019-06-04"
+export KOOPA_VERSION="0.3.6"
+export KOOPA_DATE="2019-06-05"
 
 
 
@@ -20,13 +20,13 @@ export KOOPA_DATE="2019-06-04"
 
 # This is not necessarily the default shell (`$SHELL`).
 
-if [ ! -z "$BASH_VERSION" ]
+if [ ! -z "${BASH_VERSION:-}" ]
 then
     KOOPA_SHELL="bash"
-elif [ ! -z "$KSH_VERSION" ]
+elif [ ! -z "${KSH_VERSION:-}" ]
 then
     KOOPA_SHELL="ksh"
-elif [ ! -z "$ZSH_VERSION" ]
+elif [ ! -z "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
 else
@@ -34,7 +34,7 @@ else
     echo "Check your configuration."
     echo "Note that '/bin/sh' is not recommended."
     echo ""
-    echo "$SHELL"
+    echo "${SHELL:-}"
     echo "$0"
     echo "$-"
     echo ""
@@ -79,7 +79,7 @@ KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 # Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
 # SC2154: extra is reference but not assigned.
 # shellcheck disable=SC2154
-if [ ! -z "$extra" ]
+if [ ! -z "${extra:-}" ]
 then
     KOOPA_EXTRA=1
     export KOOPA_EXTRA
@@ -89,14 +89,15 @@ fi
 # Set variable to check if koopa is already active.
 # This step is particularly useful when working on a cluster that spawns new
 # sessions from the current shell.
-[ ! -z "$KOOPA_OS_PLATFORM" ] && KOOPA_ACTIVATED=1
+[ ! -z "${KOOPA_OS_PLATFORM:-}" ] && KOOPA_ACTIVATED=1
 
-if [ -z "$KOOPA_ACTIVATED" ]
+if [ -z "${KOOPA_ACTIVATED:-}" ]
 then
     PRE_DIR="${KOOPA_SYSTEM_DIR}/pre"
-    . "${PRE_DIR}/platform.sh"
-    . "${PRE_DIR}/dependencies.sh"
+    . "${PRE_DIR}/os.sh"
+    . "${PRE_DIR}/programs.sh"
     unset -v PRE_DIR
+    KOOPA_OS_PLATFORM="$(python -mplatform)" && export KOOPA_OS_PLATFORM
 fi
 
 
@@ -104,17 +105,18 @@ fi
 # Base shell configuration                                                  {{{1
 # ==============================================================================
 
-BASE_DIR="${KOOPA_SYSTEM_DIR}/base"
-
 # Always load these non-persistent settings.
+BASE_DIR="${KOOPA_SYSTEM_DIR}/base"
+. "${KOOPA_SYSTEM_DIR}/functions.sh"
 . "${BASE_DIR}/secrets.sh"
-. "${BASE_DIR}/functions.sh"
 . "${BASE_DIR}/aliases.sh"
 . "${BASE_DIR}/set.sh"
 . "${BASE_DIR}/ssh-key.sh"
 
+
+
 # Skip these persistent settings in subshells (e.g. tmux).
-if [ -z "$KOOPA_ACTIVATED" ]
+if [ -z "${KOOPA_ACTIVATED:-}" ]
 then
     EXPORTS_DIR="${BASE_DIR}/exports"
     . "${EXPORTS_DIR}/general.sh"
@@ -140,7 +142,7 @@ unset -v BASE_DIR
 # Extra shell configuration                                                 {{{1
 # ==============================================================================
 
-if [ ! -z "$KOOPA_EXTRA" ]
+if [ ! -z "${KOOPA_EXTRA:-}" ]
 then
     EXTRA_DIR="${KOOPA_SYSTEM_DIR}/extra"
 
@@ -151,20 +153,13 @@ then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
         BASH_DIR="${EXTRA_DIR}/bash"
-        . "${BASH_DIR}/init.sh"
         . "${BASH_DIR}/shopt.sh"
         . "${BASH_DIR}/bind.sh"
         . "${BASH_DIR}/ps1.sh"
         unset -v BASH_DIR
-    elif [ "$KOOPA_SHELL" = "ksh" ]
-    then
-        KSH_DIR="${EXTRA_DIR}/ksh"
-        . "${KSH_DIR}/init.sh"
-        unset -v KSH_DIR
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         ZSH_DIR="${EXTRA_DIR}/zsh"
-        . "${ZSH_DIR}/init.sh"
         . "${ZSH_DIR}/oh-my-zsh.sh"
         . "${ZSH_DIR}/pure-prompt.sh"
         . "${ZSH_DIR}/setopt.sh"
@@ -173,7 +168,7 @@ then
     fi
 
     # Platform-specific configuration.
-    if [ ! -z "$MACOS" ]
+    if [ ! -z "${MACOS:-}" ]
     then
         DARWIN_DIR="${EXTRA_DIR}/darwin"
         if [ -z "$KOOPA_ACTIVATED" ]

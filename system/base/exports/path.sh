@@ -35,7 +35,37 @@ has_sudo && add_to_path_start "${KOOPA_BIN_DIR}/sudo"
 # OS-specific                                                               {{{1
 # ==============================================================================
 
-os_bin_dir="${KOOPA_BIN_DIR}/os/${KOOPA_OS_NAME}"
+os="${KOOPA_OS_NAME}"
+
+# - amzn
+#   ID_LIKE="centos rhel fedora"
+# - rhel
+#   ID_LIKE="fedora"
+# - ubuntu
+#   ID_LIKE=debian
+
+if [ ! -z "${LINUX:-}" ]
+then
+    id_like="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f 2)"
+
+    if echo "$id_like" | grep -q "debian"
+    then
+        # Debian-like (e.g. Ubuntu)
+        os_bin_dir="${KOOPA_BIN_DIR}/os/debian"
+        add_to_path_start "$os_bin_dir"
+        has_sudo && add_to_path_start "${os_bin_dir}/sudo"
+        unset -v os_bin_dir
+    elif echo "$id_like" | grep -q "fedora"
+    then
+        # Fedora-like (e.g. RHEL, CentOS, Amazon Linux)
+        os_bin_dir="${KOOPA_BIN_DIR}/os/fedora"
+        add_to_path_start "$os_bin_dir"
+        has_sudo && add_to_path_start "${os_bin_dir}/sudo"
+        unset -v os_bin_dir
+    fi
+fi
+
+os_bin_dir="${KOOPA_BIN_DIR}/os/${os}"
 if [ -d "$os_bin_dir" ]
 then
     add_to_path_start "$os_bin_dir"
@@ -43,17 +73,24 @@ then
 fi
 unset -v os_bin_dir
 
+unset -v os
+
 
 
 # Host-specific                                                             {{{1
 # ==============================================================================
 
-host_bin_dir="${KOOPA_BIN_DIR}/host/${KOOPA_HOST_NAME}"
-if [ -d "$host_bin_dir" ]
+host="${KOOPA_HOST_NAME:-}"
+if [ ! -z "$host" ]
 then
-    add_to_path_start "$host_bin_dir"
+    host_bin_dir="${KOOPA_BIN_DIR}/host/${host}"
+    if [ -d "$host_bin_dir" ]
+    then
+        add_to_path_start "$host_bin_dir"
+    fi
+    unset -v host_bin_dir
 fi
-unset -v host_bin_dir
+unset -v host
 
 
 

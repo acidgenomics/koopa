@@ -22,7 +22,7 @@ then
 fi
 
 # Early return if we don't detect an installation.
-[ -z "$PYTHON_EXE" ] && return
+[ -z "${PYTHON_EXE:-}" ] && return 0
 
 # Don't allow Python to change the prompt string.
 export VIRTUAL_ENV_DISABLE_PROMPT=1

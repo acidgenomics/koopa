@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Back up existing emacs configuration, if necessary.
 (
@@ -15,3 +15,9 @@ set -Eeuxo pipefail
 echo "Cloning spacemacs repo."
 git clone git@github.com:syl20bnr/spacemacs.git ~/.emacs.d
 
+# Fix org-projectile warning
+# Error (use-package): org-projectile :config: Symbol's function definition is
+# void: org-projectile-per-project
+rm -f ~/.emacs.d/elpa/org-projectile-*/org-projectile.elc
+
+emacs

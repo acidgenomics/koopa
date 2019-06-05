@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Generate FASTQ files from Illumina BCL data.
 # inDrops single-cell RNA-seq files.

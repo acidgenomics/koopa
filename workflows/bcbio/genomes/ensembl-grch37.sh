@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Ensembl GRCh37 genome build
 # Last updated 2019-04-12

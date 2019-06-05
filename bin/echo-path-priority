@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Print PATH variable as lines.
+
+# See also:
+# https://askubuntu.com/questions/600018
+
+# Alternate approaches:
+# > sed 's/:/\n/g' <<< "$PATH"
+# > tr ':' '\n' <<< "$PATH"
+
+# This uses bash parameter expansion.
+echo "${PATH//:/$'\n'}"

@@ -4,22 +4,19 @@
 # Include bcbio toolkit binaries in PATH, if defined.
 # Attempt to locate bcbio installation automatically on supported platforms.
 
-if [ -z "$BCBIO_EXE" ]
+if [ -z "${BCBIO_EXE:-}" ]
 then
-    if [ ! -z "$AZURE" ]
-    then
-        BCBIO_EXE="/data00/bcbio/tools/bin/bcbio_nextgen.py"
-    elif [ ! -z "$HARVARD_O2" ]
+    if [ ! -z "${HARVARD_O2:-}" ]
     then
         BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
-    elif [ ! -z "$HARVARD_ODYSSEY" ]
+    elif [ ! -z "${HARVARD_ODYSSEY:-}" ]
     then
         BCBIO_EXE="/n/regal/hsph_bioinfo/bcbio_nextgen/bin/bcbio_nextgen.py"
     fi
 fi
 
 # Export in PATH if the binary is accessible.
-if [ -x "$BCBIO_EXE" ]
+if [ -x "${BCBIO_EXE:-}" ]
 then
     export BCBIO_EXE
     unset -v PYTHONHOME PYTHONPATH
