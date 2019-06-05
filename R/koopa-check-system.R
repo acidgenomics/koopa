@@ -109,7 +109,7 @@ check_version <- function(
     }
 
     if (isTRUE(ok)) {
-        status <- paste("  ", "OK", name, full_sys_version, eval, version)
+        status <- paste("  OK", name, full_sys_version, eval, version)
     } else {
         status <- paste("FAIL", name, full_sys_version, eval, version)
     }
@@ -134,19 +134,7 @@ check_version(
         "cut -d ' ' -f 4",
         "cut -d '(' -f 1"
     ),
-    eval = "=="
-)
-
-# Z shell
-check_version(
-    name = "zsh",
-    version = "5.7.1",
-    version_cmd = c(
-        "zsh --version",
-        "head -1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
+    eval = ">="
 )
 
 # R
@@ -384,6 +372,18 @@ if (isTRUE(linux)) {
 
 # Optional =====================================================================
 message("\nChecking optional programs.")
+
+# Z shell
+check_version(
+    name = "zsh",
+    version = "5.7.1",
+    version_cmd = c(
+        "zsh --version",
+        "head -1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "=="
+)
 
 # Conda
 check_version(
