@@ -3,6 +3,9 @@ set -Eeuo pipefail
 
 echo "Symlinking dot files."
 
+os="${KOOPA_OS_NAME:-}"
+host="${KOOPA_HOST_NAME:-}"
+
 dotfile() {
     dot_dir="${KOOPA_BASE_DIR}/dotfiles"
     [[ ! -d "$dot_dir" ]] && \
@@ -33,7 +36,7 @@ dotfile() {
     # Remove legacy symlinks.
     rm -rf .dotfiles
     
-    case "${KOOPA_HOST_NAME:-}" in
+    case "$host" in
         azure) dotfile shrc-azure shrc ;;
             *) dotfile shrc ;;
     esac
@@ -54,13 +57,13 @@ dotfile() {
     dotfile vim
     dotfile vimrc
 
-    if [[ "$KOOPA_OS_NAME" == "darwin" ]]
+    if [[ "$os" == "darwin" ]]
     then
         dotfile Renviron-darwin Renviron
-    elif [[ "$KOOPA_HOST_NAME" == "harvard-o2" ]]
+    elif [[ "$host" == "harvard-o2" ]]
     then
         dotfile Renviron-harvard-o2 Renviron 
-    elif [[ "$KOOPA_HOST_NAME" == "harvard-odyssey" ]]
+    elif [[ "$host" == "harvard-odyssey" ]]
     then
         dotfile Renviron-harvard-odyssey Renviron
     else
@@ -68,3 +71,4 @@ dotfile() {
     fi
 )
 
+unset -v host os
