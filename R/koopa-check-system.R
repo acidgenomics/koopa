@@ -24,6 +24,10 @@ if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
     linux <- FALSE
 }
 
+pipe <- function(...) {
+    paste(..., collapse = " | ")
+}
+
 installed <- function(name) {
     stopifnot(is.character(name) && length(name) >= 1L)
     invisible(lapply(
@@ -41,23 +45,26 @@ installed <- function(name) {
 
 check_version <- function(
     name,
-    min_version,
+    version,
     version_cmd,
-    grep_string = NULL
+    grep_string = NULL,
+    eval = c(">=", "==")
 ) {
     stopifnot(
         is.character(name) && length(name) == 1L,
-        is.character(min_version) && length(min_version) == 1L,
+        is.character(version) && length(version) == 1L,
+        is.character(version_cmd),
         (is.character(grep_string) && length(grep_string) == 1L) ||
             is.null(grep_string)
     )
+    eval <- match.arg(eval)
 
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
         message(paste("FAIL", name, "missing"))
         return(invisible())
     }
-    
+
     # Grep string check mode.
     if (is.character(grep_string)) {
         x <- system(command = version_cmd[[1L]], intern = TRUE)
@@ -68,45 +75,49 @@ check_version <- function(
         }
     }
 
-    if (grepl("\\.", min_version)) {
-        min_version <- package_version(min_version)
+    if (grepl("\\.", version)) {
+        version <- package_version(version)
     }
 
     # Run the shell system command to extract the program version.
     # Consider switching to `system2()` here in a future update.
-    version <- system(
-        command = version_cmd,
-        intern = TRUE
+    sys_version <- system(command = pipe(version_cmd), intern = TRUE)
+    stopifnot(
+        is.character(sys_version),
+        length(sys_version) == 1L,
+        nzchar(sys_version)
     )
-    stopifnot(is.character(version))
-    orig_version <- version
+    full_sys_version <- sys_version
 
     # Sanitize complicated verions:
     # - 2.7.15rc1 to 2.7.15
     # - 1.10.0-patch1 to 1.10.0
     # - 1.0.2k-fips to 1.0.2
-    version <- sub("-[a-z]+$", "", version)
-    version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
-    version <- sub("^[a-z]+", "", version)
-    version <- sub("[a-z]+$", "", version)
+    sys_version <- sub("-[a-z]+$", "", sys_version)
+    sys_version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", sys_version)
+    sys_version <- sub("^[a-z]+", "", sys_version)
+    sys_version <- sub("[a-z]+$", "", sys_version)
 
-    if (grepl("\\.", version)) {
-        version <- package_version(version)
+    if (grepl("\\.", sys_version)) {
+        sys_version <- package_version(sys_version)
     }
 
-    if (version >= min_version) {
-        status <- "  OK"
+    if (eval == ">=") {
+        ok <- sys_version >= version
+    } else if (eval == "==") {
+        ok <- sys_version == version
+    }
+
+    if (isTRUE(ok)) {
+        status <- paste("  ", "OK", name, full_sys_version, eval, version)
     } else {
-	status <- "FAIL"
+        status <- paste("FAIL", name, full_sys_version, eval, version)
     }
-    message(paste(status, name, orig_version, ">=", min_version))
+    message(status)
 
     invisible()
 }
 
-pipe <- function(...) {
-    paste(..., sep = " | ")
-}
 
 
 
@@ -116,28 +127,26 @@ message("\nChecking required programs.")
 # Bash
 check_version(
     name = "bash",
-    min_version = switch(
-        EXPR = os,
-        ubuntu = "4.4",
-        "5.0"
-    ),
-    version_cmd = pipe(
+    version = "5.0.0",
+    version_cmd = c(
         "bash --version",
         "head -n 1",
         "cut -d ' ' -f 4",
         "cut -d '(' -f 1"
-    )
+    ),
+    eval = "=="
 )
 
 # Z shell
 check_version(
     name = "zsh",
-    min_version = "5.7.1",
-    version_cmd = pipe(
+    version = "5.7.1",
+    version_cmd = c(
         "zsh --version",
         "head -1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # R
@@ -145,12 +154,13 @@ check_version(
 # Using shell version string instead here for consistency.
 check_version(
     name = "R",
-    min_version = "3.6",
-    version_cmd = pipe(
+    version = "3.6.0",
+    version_cmd = c(
         "R --version",
         "head -n 1",
         "cut -d ' ' -f 3"
-    )
+    ),
+    eval = "=="
 )
 
 # Python
@@ -158,17 +168,13 @@ check_version(
 # The user can use either conda or virtualenv.
 check_version(
     name = "python",
-    min_version = switch(
-        EXPR = os,
-        rhel = "2.7.5",
-        ubuntu = "2.7.15",
-        "3.7"
-    ),
-    version_cmd = pipe(
+    version = "3.7.3",
+    version_cmd = c(
         "python --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # Perl
@@ -177,14 +183,14 @@ check_version(
 # This is perl 5, version 16, subversion 3 (v5.16.3)
 check_version(
     name = "perl",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         amzn = "5.16",
         rhel = "5.16",
         ubuntu = "5.26",
         "5.28"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "perl --version",
         "sed -n '2p'",
         "cut -d '(' -f 2 | cut -d ')' -f 1"
@@ -195,8 +201,8 @@ check_version(
 # Setting a hard dependency here, to allow for spacemacs.
 check_version(
     name = "emacs",
-    min_version = "26.2",
-    version_cmd = pipe(
+    version = "26.2",
+    version_cmd = c(
         "emacs --version",
         "head -n 1",
         "cut -d ' ' -f 3"
@@ -206,8 +212,8 @@ check_version(
 # Vim
 check_version(
     name = "vim",
-    min_version = "8.1",
-    version_cmd = pipe(
+    version = "8.1",
+    version_cmd = c(
         "vim --version",
         "head -1",
         "cut -d ' ' -f 5"
@@ -217,8 +223,8 @@ check_version(
 # Tmux
 check_version(
     name = "tmux",
-    min_version = "2.9",
-    version_cmd = pipe(
+    version = "2.9",
+    version_cmd = c(
         "tmux -V",
         "head -n 1",
         "cut -d ' ' -f 2"
@@ -228,12 +234,12 @@ check_version(
 # Git
 check_version(
     name = "git",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         ubuntu = "2.17.1",
         "2.21"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "git --version",
         "head -n 1",
         "cut -d ' ' -f 3"
@@ -243,12 +249,12 @@ check_version(
 # GnuPG
 check_version(
     name = "gpg",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         ubuntu = "2.2.4",
         "2.2.8"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "gpg --version",
         "head -n 1",
         "cut -d ' ' -f 3"
@@ -258,12 +264,12 @@ check_version(
 # GSL
 check_version(
     name = "gsl-config",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         ubuntu = "2.4",
         "2.5"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "gsl-config --version",
         "head -n 1"
     )
@@ -272,8 +278,8 @@ check_version(
 # HDF5
 check_version(
     name = "h5dump",
-    min_version = "1.10",
-    version_cmd = pipe(
+    version = "1.10",
+    version_cmd = c(
         "h5dump --version",
         "head -n 1",
         "cut -d ' ' -f 3"
@@ -283,12 +289,12 @@ check_version(
 # htop
 check_version(
     name = "htop",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         ubuntu = "2.1",
         "2.2"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "htop --version",
         "head -n 1",
         "cut -d ' ' -f 2"
@@ -298,13 +304,8 @@ check_version(
 # OpenSSL
 check_version(
     name = "openssl",
-    min_version = switch(
-        EXPR = os,
-        rhel = "1.0.2",
-        ubuntu = "1.1.0",
-        "1.1.1"
-    ),
-    version_cmd = pipe(
+    version = "1.1.1",
+    version_cmd = c(
         "openssl version",
         "head -n 1",
         "cut -d ' ' -f 2"
@@ -314,13 +315,13 @@ check_version(
 # Pandoc
 check_version(
     name = "pandoc",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         amzn = "1.12",
         rhel = "1.12",
         "2.0"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "pandoc --version",
         "head -n 1",
         "cut -d ' ' -f 2"
@@ -333,14 +334,14 @@ check_version(
 # TeX 3.14159265 (TeX Live 2017/Debian)
 check_version(
     name = "tex",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         amzn = "2013",
         rhel = "2013",
         ubuntu = "2017",
         "2019"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "tex --version",
         "head -n 1",
         "cut -d '(' -f 2",
@@ -353,8 +354,8 @@ check_version(
 # ShellCheck
 check_version(
     name = "shellcheck",
-    min_version = "0.6",
-    version_cmd = pipe(
+    version = "0.6",
+    version_cmd = c(
         "shellcheck --version",
         "sed -n '2p'",
         "cut -d ' ' -f 2"
@@ -366,8 +367,8 @@ check_version(
 if (isTRUE(linux)) {
     check_version(
         name = "rename",
-        min_version = "1.10",
-        version_cmd = pipe(
+        version = "1.10",
+        version_cmd = c(
             "rename --version",
             "head -n 1",
             "cut -d ' ' -f 5"
@@ -387,12 +388,12 @@ message("\nChecking optional programs.")
 # Conda
 check_version(
     name = "conda",
-    min_version = switch(
+    version = switch(
         EXPR = os,
         amzn = "4.6.11",
         "4.6.14"
     ),
-    version_cmd = pipe(
+    version_cmd = c(
         "conda --version",
         "head -n 1",
         "cut -d ' ' -f 2"
@@ -403,8 +404,9 @@ check_version(
 if (isTRUE(linux)) {
     check_version(
         name = "rstudio-server",
-        min_version = "1.2.1335",
-        version_cmd = "rstudio-server version"
+        version = "1.2.1335",
+        version_cmd = "rstudio-server version",
+        eval = "=="
     )
 }
 
@@ -412,12 +414,13 @@ if (isTRUE(linux)) {
 if (isTRUE(linux)) {
     check_version(
         name = "shiny-server",
-        min_version = "1.5.9.923",
-        version_cmd = pipe(
+        version = "1.5.9.923",
+        version_cmd = c(
             "shiny-server --version",
             "head -n 1",
             "cut -d ' ' -f 3"
-        )
+        ),
+        eval = "=="
     )
 }
 
