@@ -397,18 +397,25 @@ check_version(
     eval = "=="
 )
 
-# RStudio Server
+# Linux-specific programs
 if (isTRUE(linux)) {
+    # bcbio
+    check_version(
+        name = "bcbio_nextgen.py",
+        version = "1.1.3",
+        version_cmd = "bcbio_nextgen.py --version",
+        eval = "=="
+    )
+
+    # RStudio Server
     check_version(
         name = "rstudio-server",
         version = "1.2.1335",
         version_cmd = "rstudio-server version",
         eval = "=="
     )
-}
 
-# Shiny Server
-if (isTRUE(linux)) {
+    # Shiny Server
     check_version(
         name = "shiny-server",
         version = "1.5.9.923",
