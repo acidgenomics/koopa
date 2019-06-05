@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -Eeuxo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+install_dir="${script_dir}/system/install"
+
+
+
+# Activate koopa                                                            {{{1
+# ==============================================================================
+
+# Ensure koopa is activated, otherwise we'll hit unbound variable errors.
+
+# shellcheck source=/dev/null
+. "${script_dir}/activate"
+
+
+
+# Initialize submodules                                                     {{{1
+# ==============================================================================
+(
+    echo "Initializing submodules."
+    # shellcheck source=/dev/null
+    cd "$script_dir"
+    git submodule init
+    git submodule update --init --recursive
+    git submodule sync --recursive
+)
+
+(
+    echo "Initializing dotfiles submodules."
+    # shellcheck source=/dev/null
+    cd "${script_dir}/dotfiles"
+    git submodule init
+    git submodule update --init --recursive
+    git submodule sync --recursive
+)
+
+
+
+# Dot file symlinks                                                         {{{1
+# ==============================================================================
+
+# shellcheck source=/dev/null
+. "${install_dir}/dotfiles.sh"
+
+
+# Post-flight checks                                                        {{{1
+# ==============================================================================
+
+koopa-check-system
+koopa-info
+
+
+
+# vim: fdm=marker
