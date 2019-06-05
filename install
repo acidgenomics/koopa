@@ -5,10 +5,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 install_dir="${script_dir}/system/install"
 
 
+
 # Activate koopa                                                            {{{1
 # ==============================================================================
 
 # Ensure koopa is activated, otherwise we'll hit unbound variable errors.
+
+# shellcheck source=/dev/null
 . "${script_dir}/activate"
 
 
@@ -38,6 +41,7 @@ install_dir="${script_dir}/system/install"
 # Dot file symlinks                                                         {{{1
 # ==============================================================================
 
+# shellcheck source=/dev/null
 . "${install_dir}/dotfiles.sh"
 
 
