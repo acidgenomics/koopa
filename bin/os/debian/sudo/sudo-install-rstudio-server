@@ -4,7 +4,8 @@ set -Eeuo pipefail
 # Install RStudio Server.
 # https://www.rstudio.com/products/rstudio/download-server/
 
-build_dir="/tmp/build/rstudio-server"
+build_dir="${KOOPA_TMP}/build/rstudio-server"
+
 version="1.2.1335"
 
 echo "Installing RStudio Server ${version}."
