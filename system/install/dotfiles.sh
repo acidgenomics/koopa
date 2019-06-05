@@ -33,7 +33,7 @@ dotfile() {
     # Remove legacy symlinks.
     rm -rf .dotfiles
     
-    case "$KOOPA_HOST_NAME" in
+    case "${KOOPA_HOST_NAME:-}" in
         azure) dotfile shrc-azure shrc ;;
             *) dotfile shrc ;;
     esac
@@ -54,7 +54,7 @@ dotfile() {
     dotfile vim
     dotfile vimrc
 
-    case "$KOOPA_HOST_NAME" in
+    case "${KOOPA_HOST_NAME:-}" in
                  darwin) dotfile Renviron-darwin Renviron ;;
              harvard-o2) dotfile Renviron-harvard-o2 Renviron ;;
         harvard-odyssey) dotfile Renviron-harvard-odyssey Renviron ;;
