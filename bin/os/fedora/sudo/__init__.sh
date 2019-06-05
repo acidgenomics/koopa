@@ -8,8 +8,8 @@ echo "sudo access is required for installation."
 
 # Check for Fedora.
 
-if ! cat /etc/os-release | grep "ID="      | grep -q "fedora" &&
-   ! cat /etc/os-release | grep "ID_LIKE=" | grep -q "fedora"
+if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
+   ! grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 then
     echo "Error: Fedora is required." >&2
     exit 1
