@@ -28,14 +28,18 @@ quiet_which() {
 
 # Sudo permission                                                           {{{1
 # ==============================================================================
-#
+
 # Currently performing a simple check by verifying wheel group.
 #
 # Alternatively, can use `sudo -nv 2>/dev/null`.
 # However, this approach doesn't work well unless sudo is passwordless, which
 # isn't common on all Linux distros.
+#
+# - wheel: darwin, fedora
+# - sudo: debian
+
 has_sudo() {
-    groups | grep -Eq "\bwheel\b"
+    groups | grep -Eq "\b(sudo|wheel)\b"
 }
 
 
