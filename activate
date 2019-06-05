@@ -156,15 +156,9 @@ then
         . "${BASH_DIR}/bind.sh"
         . "${BASH_DIR}/ps1.sh"
         unset -v BASH_DIR
-    elif [ "$KOOPA_SHELL" = "ksh" ]
-    then
-        KSH_DIR="${EXTRA_DIR}/ksh"
-        . "${KSH_DIR}/init.sh"
-        unset -v KSH_DIR
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         ZSH_DIR="${EXTRA_DIR}/zsh"
-        . "${ZSH_DIR}/init.sh"
         . "${ZSH_DIR}/oh-my-zsh.sh"
         . "${ZSH_DIR}/pure-prompt.sh"
         . "${ZSH_DIR}/setopt.sh"
