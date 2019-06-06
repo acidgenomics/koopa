@@ -66,5 +66,15 @@ command -v python >/dev/null 2>&1 || {
 
 
 
+# R                                                                         {{{1
+# ==============================================================================
+
+command -v Rscript >/dev/null 2>&1 || { 
+    echo >&2 "R is not installed."
+    return 1
+}
+
+
+
 # turn on folds
 # vim: fdm=marker
