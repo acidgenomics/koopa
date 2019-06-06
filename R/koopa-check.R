@@ -51,11 +51,10 @@ installed <- function(name, required = TRUE) {
         FUN = function(name) {
             ok <- nzchar(Sys.which(name))
             if (!isTRUE(ok)) {
-                status <- fail
+                message(paste0("  ", fail, " | ", name, " missing"))
             } else {
-                status <- "  OK"
+                message(paste0("    OK | ", name))
             }
-            message(paste0("  ", status, " | ", name))
             invisible(ok)
         },
         FUN.VALUE = logical(1L)
