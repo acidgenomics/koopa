@@ -7,6 +7,8 @@ options(
 )
 formals(warning)[["call."]] <- FALSE
 
+message("koopa system check")
+
 # Operating system name.
 # Need to add support for:
 # - Arch
@@ -18,30 +20,42 @@ stopifnot(isTRUE(nzchar(os)))
 
 host <- Sys.getenv("KOOPA_HOST_NAME")
 
-# Are we running on Linux?
-# We're using this for some server-specific checks (e.g. rstudio-server).
 if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
     linux <- TRUE
 } else {
     linux <- FALSE
 }
 
+if (isTRUE(nzchar(Sys.getenv("MACOS")))) {
+    macos <- TRUE
+} else {
+    macos <- FALSE
+}
+
 pipe <- function(...) {
     paste(..., collapse = " | ")
 }
 
-installed <- function(name) {
-    stopifnot(is.character(name) && length(name) >= 1L)
+installed <- function(name, required = TRUE) {
+    stopifnot(
+        is.character(name) && length(name) >= 1L,
+        is.logical(required) && length(required) == 1L
+    )
+    if (isTRUE(required)) {
+        fail <- "FAIL"
+    } else {
+        fail <- "NOTE"
+    }
     invisible(vapply(
         X = name,
         FUN = function(name) {
             ok <- nzchar(Sys.which(name))
             if (!isTRUE(ok)) {
-                message(paste("FAIL", name))
+                status <- fail
             } else {
-                message(paste("  OK", name))
-                message(paste0("    ", Sys.which(name)))
+                status <- "  OK"
             }
+            message(paste0("  ", status, " | ", name))
             invisible(ok)
         },
         FUN.VALUE = logical(1L)
@@ -53,20 +67,28 @@ check_version <- function(
     version,
     version_cmd,
     grep_string = NULL,
-    eval = c(">=", "==")
+    eval = c(">=", "=="),
+    required = TRUE
 ) {
     stopifnot(
         is.character(name) && length(name) == 1L,
         is.character(version) && length(version) == 1L,
         is.character(version_cmd),
         (is.character(grep_string) && length(grep_string) == 1L) ||
-            is.null(grep_string)
+            is.null(grep_string),
+        is.logical(required) && length(required) == 1L
     )
     eval <- match.arg(eval)
 
+    if (isTRUE(required)) {
+        fail <- "FAIL"
+    } else {
+        fail <- "NOTE"
+    }
+
     # Check to see if program is installed.
     if (identical(unname(Sys.which(name)), "")) {
-        message(paste("FAIL", name, "missing"))
+        message(paste0("  ", fail, " | ", name, " missing"))
         return(invisible(FALSE))
     }
 
@@ -75,7 +97,7 @@ check_version <- function(
         x <- system(command = version_cmd[[1L]], intern = TRUE)
         ok <- any(grepl(pattern = grep_string, x = x))
         if (!isTRUE(ok)) {
-            message(paste("FAIL", grep_string, "not detected"))
+            message(paste0("  ", fail, " | ", grep_string, " not detected"))
             return(invisible(FALSE))
         }
     }
@@ -116,11 +138,13 @@ check_version <- function(
     if (isTRUE(ok)) {
         status <- "  OK"
     } else {
-        status <- "FAIL"
+        status <- fail
     }
-    message(paste(status, name, full_sys_version, eval, version))
-    message(paste0("     ", Sys.which(name)))
-
+    message(paste0(
+        "  ", status, " | ", name, " ",
+        "(", full_sys_version, " ", eval, " ", version, ")\n",
+        "       |   ", Sys.which(name)
+    ))
     invisible(ok)
 }
 
@@ -142,6 +166,33 @@ check_version(
     ),
     eval = ">="
 )
+
+# clang
+if (isTRUE(macos)) {
+    check_version(
+        name = "clang",
+        version = "10.0.1",
+        version_cmd = c(
+            "clang --version",
+            "head -n 1",
+            "cut -d ' ' -f 4"
+        ),
+        eval = "=="
+    )
+}
+
+# GCC
+if (isTRUE(linux)) {
+    check_version(
+        name = "gcc",
+        version = "4.8.5",
+        version_cmd = c(
+            "gcc --version",
+            "head -n 1",
+            "cut -d ' ' -f 3"
+        )
+    )
+}
 
 # R
 # Alternatively, can check using `packageVersion("base")`.
@@ -177,18 +228,13 @@ check_version(
 # This is perl 5, version 16, subversion 3 (v5.16.3)
 check_version(
     name = "perl",
-    version = switch(
-        EXPR = os,
-        amzn = "5.16",
-        rhel = "5.16",
-        ubuntu = "5.26",
-        "5.28"
-    ),
+    version = "5.28.2",
     version_cmd = c(
         "perl --version",
         "sed -n '2p'",
         "cut -d '(' -f 2 | cut -d ')' -f 1"
-    )
+    ),
+    eval = "=="
 )
 
 # Emacs
@@ -376,73 +422,6 @@ if (isTRUE(linux)) {
 
 
 
-# Optional =====================================================================
-message("\nChecking optional programs.")
-
-# Z shell
-check_version(
-    name = "zsh",
-    version = "5.7.1",
-    version_cmd = c(
-        "zsh --version",
-        "head -1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
-)
-
-# Conda
-check_version(
-    name = "conda",
-    version = "4.6.14",
-    version_cmd = c(
-        "conda --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
-)
-
-# Linux-specific programs
-if (isTRUE(linux)) {
-    # RStudio Server
-    check_version(
-        name = "rstudio-server",
-        version = "1.2.1335",
-        version_cmd = "rstudio-server version",
-        eval = "=="
-    )
-
-    # Shiny Server
-    check_version(
-        name = "shiny-server",
-        version = "1.5.9.923",
-        version_cmd = c(
-            "shiny-server --version",
-            "head -n 1",
-            "cut -d ' ' -f 3"
-        ),
-        eval = "=="
-    )
-    
-    # bcbio_vm.py
-    installed("bcbio_vm.py")
-
-    # bcbio
-    check_version(
-        name = "bcbio_nextgen.py",
-        version = "1.1.3",
-        version_cmd = "bcbio_nextgen.py --version",
-        eval = switch(
-            EXPR = host,
-            azure = "==",
-            ">="
-        )
-    )
-}
-
-
-
 # Core programs ================================================================
 message("\nChecking required core programs.")
 installed(c(
@@ -457,3 +436,75 @@ installed(c(
     "wget",
     "which"
 ))
+
+
+
+# Optional =====================================================================
+message("\nChecking optional programs.")
+
+# Z shell
+check_version(
+    name = "zsh",
+    version = "5.7.1",
+    version_cmd = c(
+        "zsh --version",
+        "head -1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+# Conda
+check_version(
+    name = "conda",
+    version = "4.6.14",
+    version_cmd = c(
+        "conda --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+# Linux-specific programs
+if (isTRUE(linux)) {
+    # RStudio Server
+    check_version(
+        name = "rstudio-server",
+        version = "1.2.1335",
+        version_cmd = "rstudio-server version",
+        eval = "==",
+        required = FALSE
+    )
+
+    # Shiny Server
+    check_version(
+        name = "shiny-server",
+        version = "1.5.9.923",
+        version_cmd = c(
+            "shiny-server --version",
+            "head -n 1",
+            "cut -d ' ' -f 3"
+        ),
+        eval = "==",
+        required = FALSE
+    )
+    
+    # bcbio_vm.py
+    installed("bcbio_vm.py", required = FALSE)
+
+    # bcbio
+    check_version(
+        name = "bcbio_nextgen.py",
+        version = "1.1.3",
+        version_cmd = "bcbio_nextgen.py --version",
+        eval = switch(
+            EXPR = host,
+            azure = "==",
+            ">="
+        ),
+        required = FALSE
+    )
+}
