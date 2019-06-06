@@ -12,14 +12,14 @@ Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [k
 Dependencies:
 
 - Linux or macOS. Windows isn't supported.
-- [Bash][] >= 4. Always required, even when using a different interactive shell.
-- [Python][] >= 3.
+- [Bash][] >= 5. Always required, even when using a different shell.
+- [Python][] >= 3.7.
+- [R][] >= 3.6.
 
 Optional:
 
 - [Conda][] >= 4.5.
   Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
-- [R][] >= 3.5.
 
 ## Installation
 
