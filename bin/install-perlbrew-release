@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Perlbrew
+# https://perlbrew.pl/
+
+version="5.28.0"
+
+perlbrew install "perl-${version}"
+perlbrew switch "perl-${version}"
+
