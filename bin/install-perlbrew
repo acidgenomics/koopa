@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Perlbrew
+# https://perlbrew.pl/
+
+# Check for previous installation.
+if [[ -n "${PERLBREW_ROOT:-}" ]] ||
+   [[ -d ~/perl5/perlbrew ]]
+then
+    echo "perlbrew is already installed."
+    exit 1
+fi
+
+curl -L https://install.perlbrew.pl | bash
