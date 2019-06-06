@@ -48,7 +48,7 @@ install_dir="${script_dir}/system/install"
 # Post-flight checks                                                        {{{1
 # ==============================================================================
 
-koopa-check-system
+koopa-check
 koopa-info
 
 
