@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Perlbrew
 # https://perlbrew.pl/
 
-version="5.28.0"
+version="5.28.2"
 
 perlbrew install "perl-${version}"
 perlbrew switch "perl-${version}"

@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # Get the status of all git repositories.
 
-wd=$(pwd)
+wd="$(pwd)"
 git_dir="${HOME}/git"
 
 # SC2044: For loops over find output are fragile.
