@@ -84,8 +84,6 @@ conda_bin_dir="$( dirname "$CONDA_EXE" )"
 if [ ! -z "$conda_env" ]
 then
     conda activate "$conda_env"
-else
-    conda deactivate
 fi
 
 unset -v conda_bin_dir conda_env
