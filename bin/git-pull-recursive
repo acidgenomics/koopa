@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # Pull all git repositories recursively.
 
-wd=$(pwd)
+wd="$(pwd)"
 git_dir="${HOME}/git"
 
 # SC2044: For loops over find output are fragile.
