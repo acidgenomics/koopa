@@ -7,7 +7,6 @@ echo "sudo access is required for installation."
 # sudo -v
 
 # Check for Fedora.
-
 if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
    ! grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 then
@@ -16,12 +15,12 @@ then
 fi
 
 # Error on conda detection.
-if [[ -x "$(command -v conda)" ]] &&
-   [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
+# if [[ -x "$(command -v conda)" ]] &&
+#    [[ -n "${CONDA_PREFIX:-}" ]]
+# then
+#     echo "Error: conda is active." >&2
+#     exit 1
+# fi
 
 # Require yum to build dependencies.
 if [[ ! -x "$(command -v yum)" ]]
