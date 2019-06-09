@@ -13,11 +13,11 @@ then
 fi
 
 # Error on conda detection.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    echo "Error: conda is active." >&2
-    exit 1
-fi
+# if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
+# then
+#     echo "Error: conda is active." >&2
+#     exit 1
+# fi
 
 # Require apt-get to build dependencies.
 if [[ ! -x "$(command -v apt-get)" ]]
