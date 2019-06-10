@@ -1,0 +1,46 @@
+---
+# Top level configuration file that specifies which groups of programs
+# should be installed. New sections that are added to individual config
+# files should go here. Comment out any groups you don't want to have
+# installed.
+packages:
+  - minimal
+  - desktop
+  - programming
+  - distributed
+  - documentation
+  - libraries
+  - amazon
+  - python
+  - r
+  - ruby
+  - perl
+  - java
+  - java_extras
+  - erlang
+  - haskell
+  - databases
+  - math
+  - viz
+  - web
+  - bio_general
+  - bio_search
+  - bio_alignment
+  - bio_nextgen
+  - bio_sequencing
+  - bio_annotation
+  - bio_microarray
+  - bio_visualization
+  - bio_utils
+  - phylogeny
+# Do not install by default to avoid errors with local installs
+# Injected by setting is_ec2_image in fabricrc.txt
+#  - galaxy
+#  - galaxy_tools
+#  - cloudman
+libraries:
+  #- haskell-libs
+  - perl-libs
+  - python-libs
+  - r-libs
+  - ruby-libs

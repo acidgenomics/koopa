@@ -1,0 +1,60 @@
+---
+# Configuration file defining ruby libraries to install
+# using gem install (avoiding the distribution package manager)
+#
+# Gems are installed for Ruby1.9
+gems:
+  - addressable
+  - cake
+  - cheat
+  - fastercsv
+  - hpricot
+  - htmlentities
+  - json
+  - kwalify
+  - libxml-ruby
+  - uuidtools
+  - xml-simple
+  # science
+  - bio
+  - bio-bwa
+  - bio-gff3
+  - biomart
+  #- bio-biolinux # error: uninitialized constant Syck::Syck
+  # databases
+  - couchdb-ruby
+  - data_objects
+  - dm-adjust
+  - dm-aggregates
+  - dm-ar-finders
+  - dm-cli
+  - dm-constraints
+  - dm-core
+  - dm-is-list
+  - dm-is-nested_set
+  - dm-is-remixable
+  - dm-is-searchable
+  - dm-is-state_machine
+  - dm-is-tree
+  - dm-is-versioned
+  - dm-migrations
+  - dm-observer
+  - dm-tags
+  - dm-timestamps
+  - dm-validations
+  - do_sqlite3
+  - datamapper
+  - dm-rest-adapter
+  - dm-serializer
+  - dm-types
+  # Require up to date ruby. Fail on Centos default
+  - vagrant
+  - mysql
+  - do_mysql
+  # sqlite3-ruby is renamed with sqlite3
+  - sqlite3
+  # Problems building on 1.9.1
+  #- dm-ferret-adapter
+  #- dm-sweatshop
+  #- bio-blastxmlparser
+  #- ruby-ensembl-api
