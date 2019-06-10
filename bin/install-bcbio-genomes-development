@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Install bcbio-nextgen genomes for development installation.
+
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+mkdir -p "$log_dir"
+
+bcbio_nextgen.py upgrade \
+    --upgrade="skip" \
+    --cores="$((CPU_COUNT-4))" \
+    --genomes="BDGP6" \
+    --genomes="hg38" \
+    --genomes="mm10" \
+    2>&1 | tee "${log_dir}/bcbio-genomes-$(date "+%Y%m%d_%H%M%S").log"
+
