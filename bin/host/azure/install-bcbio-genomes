@@ -12,7 +12,6 @@ bcbio_nextgen.py upgrade \
     --cores="$((CPU_COUNT-4))" \
     --genomes="BDGP6" \
     --genomes="canFam3" \
-    --genomes="hg19" \
     --genomes="hg38" \
     --genomes="mm10" \
     --genomes="rn6" \
