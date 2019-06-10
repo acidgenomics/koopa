@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 echo "sudo access is required for installation."
 
-# This check doesn't work for passwordless sudo (e.g. ec2-user), so disable.
+# This check doesn't work for passwordless sudo on all VMs.
 # sudo -v
 
 # Check for Fedora.
@@ -14,19 +14,25 @@ then
     exit 1
 fi
 
-# Error on conda detection.
-# if [[ -x "$(command -v conda)" ]] &&
-#    [[ -n "${CONDA_PREFIX:-}" ]]
-# then
-#     echo "Error: conda is active." >&2
-#     exit 1
-# fi
-
 # Require yum to build dependencies.
 if [[ ! -x "$(command -v yum)" ]]
 then
     echo "Error: yum is required to build dependencies." >&2
     exit 1
+fi
+
+# Ensure Python virtual environment is deactivated.
+if [[ -x "$(command -v deactivate)" ]]
+then
+    echo "Deactivating Python virtual environment."
+    deactivate
+fi
+
+# Ensure conda is deactivated.
+if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
+then
+    echo "Deactivating conda."
+    conda deactivate
 fi
 
 # Ensure yum-utils is installed, so we can build dependencies.
