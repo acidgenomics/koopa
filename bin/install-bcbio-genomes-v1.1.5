@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Install bcbio-nextgen genomes for v1.1.5.
+
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+mkdir -p "$log_dir"
+
+# Drosophila BDGP6 only supported in v1.1.5 and above.
+
+bcbio_nextgen.py upgrade \
+    --upgrade="skip" \
+    --cores="$((CPU_COUNT-4))" \
+    --genomes="BDGP6" \
+    --genomes="canFam3" \
+    --genomes="hg19" \
+    --genomes="hg38" \
+    --genomes="mm10" \
+    --genomes="rn6" \
+    2>&1 | tee "${log_dir}/bcbio-genomes-$(date "+%Y%m%d_%H%M%S").log"
+

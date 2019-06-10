@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Install bcbio-nextgen
+# Install bcbio-nextgen.
 
 # Use "stable" (recommended) or "development".
 # For specific versions (e.g. v1.1.3), use bcbio-vm instead.
-if [[ -z "${prefix:-} ]]
+if [[ -z "${version:-}" ]]
 then
     version="stable"
 fi
 
-if [[ -n "${prefix:-} ]]
+if [[ -z "${prefix:-}" ]]
 then
-    prefix="/usr/local/bcbio"
+    install_dir="/usr/local/share/bcbio"
+    tools_dir="/usr/local"
+then
     bcbio_dir="${prefix}/${version}"
     install_dir="${bcbio_dir}/install"
     tools_dir="${bcbio_dir}/tools"
 else
-    install_dir="/usr/local/share/bcbio"
-    tools_dir="/usr/local"
 fi
 
 # Error if bcbio is already installed.
