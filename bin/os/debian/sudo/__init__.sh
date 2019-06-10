@@ -20,18 +20,18 @@ then
     exit 1
 fi
 
-# Ensure Python virtual environment is deactivated.
-if [[ -x "$(command -v deactivate)" ]]
-then
-    echo "Deactivating Python virtual environment."
-    deactivate
-fi
-
 # Ensure conda is deactivated.
 if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
 then
     echo "Deactivating conda."
     conda deactivate
+fi
+
+# Ensure Python virtual environment is deactivated.
+if [[ -x "$(command -v deactivate)" ]]
+then
+    echo "Deactivating Python virtual environment."
+    deactivate
 fi
 
 # Ensure apt-get is up to date.
