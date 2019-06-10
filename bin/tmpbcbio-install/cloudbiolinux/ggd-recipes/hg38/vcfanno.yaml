@@ -1,0 +1,33 @@
+# Annotation files for vcfanno variant annotation
+# Feeds into vcf2db GEMINI database creation and other annotation tasks
+---
+attributes:
+  name: vcfanno
+  version: 20190119
+recipe:
+  full:
+    recipe_type: bash
+    recipe_cmds:
+      - |
+        githash=15a4541d9f078305db289529cfdb7904fe97836b
+        mkdir -p config/vcfanno
+        cd config/vcfanno
+        bcbio_baseurl=https://github.com/chapmanb/bcbio-nextgen/raw/$githash/config/vcfanno/
+        wget --no-check-certificate -O gemini.conf -c $bcbio_baseurl/hg38-gemini.conf
+        wget --no-check-certificate -O gemini.lua -c $bcbio_baseurl/hg38-gemini.lua
+        wget --no-check-certificate -O dbnsfp.conf -c $bcbio_baseurl/hg38-dbnsfp.conf
+        wget --no-check-certificate -O dbscsnv.conf -c $bcbio_baseurl/hg38-dbscsnv.conf
+        wget --no-check-certificate -O gnomad_genome.conf -c $bcbio_baseurl/hg38-gnomad_genome.conf
+        wget --no-check-certificate -O rnaedit.conf -c $bcbio_baseurl/rnaedit.conf
+        wget --no-check-certificate -O rnaedit.lua -c $bcbio_baseurl/rnaedit.lua
+        wget --no-check-certificate -O somatic.conf -c $bcbio_baseurl/somatic.conf
+
+    recipe_outfiles:
+      - config/vcfanno/gemini.lua
+      - config/vcfanno/gemini.conf
+      - config/vcfanno/dbnsfp.conf
+      - config/vcfanno/dbscsnv.conf
+      - config/vcfanno/gnomad_genome.conf
+      - config/vcfanno/rnaedit.lua
+      - config/vcfanno/rnaedit.conf
+      - config/vcfanno/somatic.conf

@@ -3,10 +3,16 @@ set -Eeuo pipefail
 
 # Install bcbio-nextgen genomes for v1.1.3.
 
+if ! bcbio_nextgen.py --version | grep -q "1.1.3"
+then
+    echo "Failed to detect bcbio v1.1.3"
+    exit 1
+fi
+
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 mkdir -p "$log_dir"
 
-# Drosophila BDGP6 only supported in v1.1.5 and above.
+# Drosophila BDGP6 genome only supported in v1.1.5 and above.
 
 bcbio_nextgen.py upgrade \
     --upgrade="skip" \

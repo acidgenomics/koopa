@@ -1,0 +1,81 @@
+# GA4GH problematic region files: https://drive.google.com/folderview?id=0B7Ao1qqJJDHQUjVIN3liUUZNWjg&usp=sharing#list
+# Cached mappability regions
+# wget --no-check-certificate -O - http://hgdownload.cse.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz | gunzip -c | sed "s/^chrM/MT/g" | sed "s/^chr//g" | bgzip -c > $encode/wgEncodeDacMapabilityConsensusExcludable.bed.gz
+# tabix -p bed -f $encode/wgEncodeDacMapabilityConsensusExcludable.bed.gz
+# GC regions for Hartwig tools: https://resources.hartwigmedicalfoundation.nl/
+---
+attributes:
+  name: GA4GH_problem_regions
+  version: 20181016
+recipe:
+  full:
+    recipe_type: bash
+    recipe_cmds:
+      - |
+        baseurl=http://bcbio_nextgen.s3.amazonaws.com/GA4GH_problem_regions.zip
+        mkdir -p coverage/problem_regions/GA4GH
+        cd coverage/problem_regions/GA4GH
+        wget --no-check-certificate -c -O GA4GH_problem_regions.zip $baseurl
+        unzip -o GA4GH_problem_regions.zip
+        for file in *.bed
+        do
+          sed 's/^chr//g'  $file > $file.tmp
+          mv $file.tmp $file
+          bgzip $file
+          tabix -p bed $file.gz
+        done
+        cd ../../..
+        encode=coverage/problem_regions/ENCODE
+        mkdir -p $encode
+        cd $encode
+        wget --no-check-certificate http://s3.amazonaws.com/biodata/coverage/problem_regions/ENCODE/GRCh37/wgEncodeDacMapabilityConsensusExcludable.bed.gz
+        wget --no-check-certificate http://s3.amazonaws.com/biodata/coverage/problem_regions/ENCODE/GRCh37/wgEncodeDacMapabilityConsensusExcludable.bed.gz.tbi
+        cd ../../..
+        repeats=coverage/problem_regions/repeats
+        mkdir -p $repeats
+        wget --no-check-certificate -O - https://raw.githubusercontent.com/chapmanb/delly/master/human.hg19.excl.tsv | grep -v ^chr > $repeats/sv_repeat_telomere_centromere.bed
+        wget --no-check-certificate -O - https://github.com/lh3/varcmp/raw/master/scripts/LCR-hs37d5.bed.gz | gunzip -c  | bgzip -c > $repeats/LCR.bed.gz
+        tabix -p bed -f $repeats/LCR.bed.gz
+        wget --no-check-certificate -O $repeats/polyx.bed.gz http://s3.amazonaws.com/biodata/coverage/problem_regions/polyx/polyX-GRCh37.bed.gz
+        wget --no-check-certificate -O $repeats/polyx.bed.gz.tbi http://s3.amazonaws.com/biodata/coverage/problem_regions/polyx/polyX-GRCh37.bed.gz.tbi
+        gc=coverage/gc
+        mkdir -p $gc
+        wget --no-check-certificate -O - 'https://nc.hartwigmedicalfoundation.nl/index.php/s/a8lgLsUrZI5gndd/download?path=%2FHMF-Pipeline-Resources&files=GC_profile.hg19.1000bp.cnp.gz' | gunzip -c > $gc/GC_profile.1000bp.cnp
+    recipe_outfiles:
+      - coverage/problem_regions/GA4GH/README.md
+      - coverage/problem_regions/GA4GH/bad_promoter.bed.gz
+      - coverage/problem_regions/GA4GH/bad_promoter.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc15.bed.gz
+      - coverage/problem_regions/GA4GH/gc15.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc15to20.bed.gz
+      - coverage/problem_regions/GA4GH/gc15to20.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc20to25.bed.gz
+      - coverage/problem_regions/GA4GH/gc20to25.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc25to30.bed.gz
+      - coverage/problem_regions/GA4GH/gc25to30.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc65to70.bed.gz
+      - coverage/problem_regions/GA4GH/gc65to70.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc70to75.bed.gz
+      - coverage/problem_regions/GA4GH/gc70to75.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc75to80.bed.gz
+      - coverage/problem_regions/GA4GH/gc75to80.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc80to85.bed.gz
+      - coverage/problem_regions/GA4GH/gc80to85.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/gc85.bed.gz
+      - coverage/problem_regions/GA4GH/gc85.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/heng_um75-hs37d5.bed.gz
+      - coverage/problem_regions/GA4GH/heng_um75-hs37d5.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/low_complexity_51to200bp.bed.gz
+      - coverage/problem_regions/GA4GH/low_complexity_51to200bp.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/low_complexity_gt200bp.bed.gz
+      - coverage/problem_regions/GA4GH/low_complexity_gt200bp.bed.gz.tbi
+      - coverage/problem_regions/GA4GH/self_chain.bed.gz
+      - coverage/problem_regions/GA4GH/self_chain.bed.gz.tbi
+      - coverage/problem_regions/ENCODE/wgEncodeDacMapabilityConsensusExcludable.bed.gz
+      - coverage/problem_regions/ENCODE/wgEncodeDacMapabilityConsensusExcludable.bed.gz.tbi
+      - coverage/problem_regions/repeats/sv_repeat_telomere_centromere.bed
+      - coverage/problem_regions/repeats/LCR.bed.gz
+      - coverage/problem_regions/repeats/LCR.bed.gz.tbi
+      - coverage/problem_regions/repeats/polyx.bed.gz
+      - coverage/problem_regions/repeats/polyx.bed.gz.tbi
+      - coverage/gc/GC_profile.1000bp.cnp
