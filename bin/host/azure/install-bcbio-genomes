@@ -7,6 +7,9 @@ version="$(bcbio_nextgen.py --version)"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 mkdir -p "$log_dir"
 
+# Clean up tmp files.
+rm -rf bcbiotx tmpbcbio-install
+
 bcbio_nextgen.py upgrade \
     --upgrade="skip" \
     --cores="$((CPU_COUNT-4))" \
@@ -17,3 +20,4 @@ bcbio_nextgen.py upgrade \
     --genomes="rn6" \
     2>&1 | tee "${log_dir}/upgrade-genomes-$(date "+%Y%m%d_%H%M%S").log"
 
+rm -rf bcbiotx tmpbcbio-install
