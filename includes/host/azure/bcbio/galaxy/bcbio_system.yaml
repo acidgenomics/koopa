@@ -1,0 +1,23 @@
+---
+resources:
+  default:
+    memory: 3G
+    cores: 16
+    jvm_opts: ["-Xms750m", "-Xmx3500m"]
+  gatk:
+    jvm_opts: ["-Xms500m", "-Xmx3500m"]
+  snpeff:
+    jvm_opts: ["-Xms750m", "-Xmx3g"]
+  qualimap:
+    memory: 4g
+  express:
+    memory: 8g
+  dexseq:
+    memory: 10g
+  macs2:
+    memory: 8g
+  seqcluster:
+    memory: 8g
+  tmp:
+    dir: /mnt/resource
+galaxy_config: universe_wsgi.ini
