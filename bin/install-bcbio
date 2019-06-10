@@ -6,15 +6,12 @@ set -Eeuo pipefail
 # Use "stable" (recommended) or "development".
 # For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
 
+# Azure install:
+# prefix="/data00/bcbio/v1.1.5" install-bcbio
+
 if [[ -z "${version:-}" ]]
 then
     version="stable"
-    tag="v1.1.5"  # 2019-06-10
-fi
-
-if [[ "$version" == "development" ]]
-then
-    tag="development"
 fi
 
 if [[ -z "${prefix:-}" ]]
@@ -22,9 +19,8 @@ then
     install_dir="/usr/local/share/bcbio"
     tools_dir="/usr/local"
 else
-    bcbio_dir="${prefix}/${tag}"
-    install_dir="${bcbio_dir}/install"
-    tools_dir="${bcbio_dir}/tools"
+    install_dir="${prefix}/install"
+    tools_dir="${prefix}/tools"
 fi
 
 # Error if bcbio is already installed.
@@ -49,8 +45,8 @@ then
 fi
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${tag}"
-log_file="${log_dir}/bcbio-install-${tag}-${timestamp}.log"
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
+log_file="${log_dir}/bcbio-install-${version}-${timestamp}.log"
 mkdir -p "$log_dir"
 
 echo "Downloading bcbio installer script."
