@@ -1,0 +1,27 @@
+# BioNode configuration file for Fabric specifying filesystem information
+#
+# For example, to configure a minimal install with vagrant (for VirtualBox),
+# assuming you have a configured ./Vagrantfile
+#
+#  fab -H vagrant -f $source/fabfile.py -c $source/contrib/flavor/minimal/fabricrc.txt install_biolinux:packagelist=$source/contrib/flavor/minimal/main.yaml
+#
+#  Updated by Pjotr Prins <pjotr.debian@thebird.nl>
+#
+
+edition_version = 0.93
+distribution = __auto__
+dist_name = __auto__
+nixpkgs = False
+
+# Update to the target's nearest repository:
+debian_repository=http://ftp.nl.debian.org/debian/
+
+# Global installation directory for packages and standard programs
+system_install = /usr/local
+local_install = /usr/local/share
+shell_config = ~/.bashrc
+shell = /bin/bash -i -c
+use_sudo = True
+is_ec2_image = false
+
+# data_files = /mnt/biodata

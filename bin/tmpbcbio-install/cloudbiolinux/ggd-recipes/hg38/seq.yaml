@@ -1,0 +1,36 @@
+# Full hg38/GRCh38 reference genome distributed by 1000 genomes
+# Derived from NCBI set with HLA and decoy alternative alleles
+# http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/
+---
+attributes:
+  name: seq
+  version: 1000g-20150219_1
+recipe:
+  full:
+    recipe_type: bash
+    recipe_cmds:
+      - |
+        url=http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome
+        base=GRCh38_full_analysis_set_plus_decoy_hla
+        new=hg38
+        mkdir -p seq
+        for suffix in .dict .fa.fai
+        do
+          [[ -f seq/$new$suffix ]] || wget -c -O seq/$new$suffix $url/$base$suffix
+        done
+        # gzipped references for use with ensembl-vep HGVS
+        urlgz=https://s3.amazonaws.com/biodata/hg38_bundle
+        for suffix in .fa.gz .fa.gz.fai .fa.gz.gzi
+        do
+          [[ -f seq/$new$suffix ]] || wget --no-check-certificate -c -O seq/$new$suffix $urlgz/$new$suffix
+        done
+        gunzip -c seq/hg38.fa.gz > seq/hg38.fa
+        touch seq/hg38.fa.fai
+        touch seq/hg38.dict
+    recipe_outfiles:
+      - seq/hg38.fa
+      - seq/hg38.fa.fai
+      - seq/hg38.fa.gz
+      - seq/hg38.fa.gz.fai
+      - seq/hg38.fa.gz.gzi
+      - seq/hg38.dict

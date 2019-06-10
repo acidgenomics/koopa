@@ -1,0 +1,25 @@
+# HapMap v3.3 SNP calls
+#
+# From the Broad hg38 bundle:
+# ftp://gsapubftp-anonymous:none@ftp.broadinstitute.org/bundle/
+# https://www.broadinstitute.org/gatk/guide/article.php?id=1213
+---
+attributes:
+  name: hapmap_snps
+  version: 20160105
+recipe:
+  full:
+    recipe_type: bash
+    recipe_cmds:
+      - |
+        url=ftp://gsapubftp-anonymous:none@ftp.broadinstitute.org/bundle/hg38/
+        new=hapmap_3.3
+        base=$new.hg38
+        mkdir -p variation
+        for suffix in .vcf.gz .vcf.gz.tbi
+        do
+          [[ -f variation/$new$suffix ]] || wget --no-check-certificate -c -O variation/$new$suffix $url/$base$suffix
+        done
+    recipe_outfiles:
+      - variation/hapmap_3.3.vcf.gz
+      - variation/hapmap_3.3.vcf.gz.tbi
