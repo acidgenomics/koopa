@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Reset fork to upstream
+# https://stackoverflow.com/questions/42332769
+
+git checkout master
+
+# This will delete all your local changes to master.
+git reset --hard upstream/master
+
+# Take care, this will delete all your changes on your forked master.
+git push origin master --force
