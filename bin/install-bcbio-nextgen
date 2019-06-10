@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Install bcbio-nextgen
+
+# Use "stable" (recommended) or "development".
+# For specific versions (e.g. v1.1.3), use bcbio-vm instead.
+if [[ -z "${prefix:-} ]]
+then
+    version="stable"
+fi
+
+if [[ -n "${prefix:-} ]]
+then
+    prefix="/usr/local/bcbio"
+    bcbio_dir="${prefix}/${version}"
+    install_dir="${bcbio_dir}/install"
+    tools_dir="${bcbio_dir}/tools"
+else
+    install_dir="/usr/local/share/bcbio"
+    tools_dir="/usr/local"
+fi
+
+# Error if bcbio is already installed.
+if [[ -d "$install_dir" ]]
+then
+    echo "Error: bcbio installation already exists."
+    exit 1
+fi
+
+# Ensure Python virtual environment is deactivated.
+if [[ -x "$(command -v deactivate)" ]]
+then
+    echo "Deactivating Python virtual environment."
+    deactivate
+fi
+
+# Ensure conda is deactivated.
+if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
+then
+    echo "Deactivating conda."
+    conda deactivate
+fi
+
+timestamp="$(date "+%Y%m%d-%H%M%S")"
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
+log_file="${log_dir}/bcbio-install-${version}-${timestamp}.log"
+mkdir -p "$log_dir"
+
+echo "Downloading bcbio installer script."
+rm -f bcbio_nextgen_install.py
+wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+
+python bcbio_nextgen_install.py \
+    "$install_dir" \
+    --tooldir="$tools_dir" \
+    --upgrade="$version" \
+    --datatarget="rnaseq" \
+    --nodata \
+    --isolate \
+    2>&1 | tee "$log_file"
+
