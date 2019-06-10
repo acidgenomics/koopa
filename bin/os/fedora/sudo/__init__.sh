@@ -45,9 +45,10 @@ then
 fi
 
 # Ensure ldconfig is configured to use /usr/local.
-if [[ ! -f /etc/ld.so.conf.d ]]
+if [[ -d /etc/ld.so.conf.d ]]
 then
-    sudo cp "${KOOPA_BASE_DIR}/etc/ld.so.conf.d/local"*".conf" /etc/ld.so.conf.d
+    sudo cp "${KOOPA_BASE_DIR}/includes/etc/ld.so.conf.d/local"*".conf" \
+        /etc/ld.so.conf.d
 fi
 
 # Ensure /usr/local has correct permissions.
