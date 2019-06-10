@@ -3,6 +3,12 @@ set -Eeuo pipefail
 
 # Install bcbio-nextgen genomes for development installation.
 
+if ! bcbio_nextgen.py --version | grep -q "1.1.6a"
+then
+    echo "Failed to detect bcbio v1.1.6a development install."
+    exit 1
+fi
+
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 mkdir -p "$log_dir"
 
