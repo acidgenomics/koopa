@@ -1,0 +1,16 @@
+aligners:
+- bowtie2
+- hisat2
+- rtg
+- star
+datatarget:
+- rnaseq
+genomes:
+- BDGP6
+- canFam3
+- hg38
+- mm10
+- rn6
+isolate: true
+tooldir: /data00/bcbio/v1.1.5/tools
+toolplus: []
