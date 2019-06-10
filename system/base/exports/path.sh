@@ -87,6 +87,7 @@ then
     if [ -d "$host_bin_dir" ]
     then
         add_to_path_start "$host_bin_dir"
+        has_sudo && add_to_path_start "${host_bin_dir}/sudo"
     fi
     unset -v host_bin_dir
 fi
