@@ -5,7 +5,10 @@ set -Eeuo pipefail
 
 # This script requires shellcheck.
 # https://github.com/koalaman/shellcheck
-command -v shellcheck >/dev/null 2>&1 || { echo >&2 "shellcheck missing."; exit 1; }
+command -v shellcheck >/dev/null 2>&1 || {
+    echo >&2 "shellcheck missing."
+    exit 1
+}
 
 path="${1:-}"
 if [[ -z "$path" ]]
