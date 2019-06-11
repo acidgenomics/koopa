@@ -35,10 +35,10 @@ java_flags=" \
 "
 
 # shellcheck disable=SC2086
-sudo R CMD --vanilla javareconf $java_flags
+sudo R --vanilla CMD javareconf $java_flags
 
 # shellcheck disable=SC2086
-R CMD javareconf $java_flags
+# R CMD javareconf $java_flags
 
 yum list installed | grep -E '^java-'
 
