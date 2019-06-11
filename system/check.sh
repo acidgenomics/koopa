@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-Rscript --vanilla "${KOOPA_DIR}/includes/R/koopa-check.R"
+Rscript --vanilla "${KOOPA_DIR}/system/check.R"
