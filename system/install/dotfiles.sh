@@ -7,7 +7,7 @@ os="${KOOPA_OS_NAME:-}"
 host="${KOOPA_HOST_NAME:-}"
 
 dotfile() {
-    dot_dir="${KOOPA_BASE_DIR}/dotfiles"
+    dot_dir="${KOOPA_DIR}/dotfiles"
     [[ ! -d "$dot_dir" ]] && \
         echo "${dot_dir} missing." && \
         return 1

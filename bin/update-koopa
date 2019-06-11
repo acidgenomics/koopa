@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Upgrade koopa installation.
 
 (
-    cd "$KOOPA_BASE_DIR"
+    cd "$KOOPA_DIR"
     git pull
     git submodule sync --recursive
 )

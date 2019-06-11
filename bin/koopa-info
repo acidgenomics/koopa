@@ -26,7 +26,7 @@ array+=("OS: ${KOOPA_OS_NAME} ${KOOPA_OS_VERSION}")
 # array+=("OS platform: ${KOOPA_OS_PLATFORM}")
 array+=("Current shell: ${KOOPA_SHELL}")
 array+=("Default shell: ${SHELL}")
-array+=("Install path: $KOOPA_BASE_DIR")
+array+=("Install path: $KOOPA_DIR")
 
 array+=("")
 
