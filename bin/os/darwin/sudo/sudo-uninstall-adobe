@@ -3,6 +3,10 @@ set -Eeuo pipefail
 
 # Uninstall Adobe software.
 
+# Run preflight initialization checks.
+# shellcheck source=/dev/null
+"${KOOPA_DIR}/includes/os/darwin/sudo.sh"
+
 rm -rf ~/Documents/Adobe
 
 sudo rm -rf /Library/Application\ Support/Adobe*

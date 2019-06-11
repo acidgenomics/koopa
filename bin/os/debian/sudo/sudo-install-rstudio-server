@@ -11,9 +11,8 @@ version="1.2.1335"
 echo "Installing RStudio Server ${version}."
 
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/os/debian/sudo.sh"
 
 # R is already configured by Bioconductor.
 # sudo apt-get -y install r-base

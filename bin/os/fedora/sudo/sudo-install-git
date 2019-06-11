@@ -18,38 +18,9 @@ version="2.21.0"
 
 echo "Installing git ${version}."
 
-
-
-# OpenSSL note
-#
-# This currently fails if OpenSSL v1.1.1+ is installed to `/usr/local`.
-# Instead, compile Git to use the system OpenSSL in `/bin/`.
-#
-# You'll see this error message otherwise:
-#
-#     CC imap-send.o
-#     LINK git-imap-send
-# imap-send.o: In function `sk_GENERAL_NAME_num':
-# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_num'
-# imap-send.o: In function `sk_GENERAL_NAME_value':
-# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_value'
-# imap-send.o: In function `sk_GENERAL_NAME_pop_free':
-# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_pop_free'
-# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_pop_free'
-# imap-send.o: In function `ssl_socket_connect':
-# /tmp/build/git/git-2.21.0/imap-send.c:287: undefined reference to `OPENSSL_init_ssl'
-# /tmp/build/git/git-2.21.0/imap-send.c:288: undefined reference to `OPENSSL_init_ssl'
-# /tmp/build/git/git-2.21.0/imap-send.c:290: undefined reference to `TLS_method'
-# /tmp/build/git/git-2.21.0/imap-send.c:303: undefined reference to `SSL_CTX_set_options'
-# collect2: error: ld returned 1 exit status
-# make: *** [git-imap-send] Error 1
-
-
-
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
 
 # Install build dependencies.
 sudo yum-builddep -y git
@@ -100,3 +71,29 @@ sudo ldconfig
 echo "git installed successfully."
 command -v git
 git --version
+
+
+
+# OpenSSL note
+#
+# This currently fails if OpenSSL v1.1.1+ is installed to `/usr/local`.
+# Instead, compile Git to use the system OpenSSL in `/bin/`.
+#
+# You'll see this error message otherwise:
+#
+#     CC imap-send.o
+#     LINK git-imap-send
+# imap-send.o: In function `sk_GENERAL_NAME_num':
+# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_num'
+# imap-send.o: In function `sk_GENERAL_NAME_value':
+# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_value'
+# imap-send.o: In function `sk_GENERAL_NAME_pop_free':
+# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_pop_free'
+# /usr/local/include/openssl/x509v3.h:166: undefined reference to `OPENSSL_sk_pop_free'
+# imap-send.o: In function `ssl_socket_connect':
+# /tmp/build/git/git-2.21.0/imap-send.c:287: undefined reference to `OPENSSL_init_ssl'
+# /tmp/build/git/git-2.21.0/imap-send.c:288: undefined reference to `OPENSSL_init_ssl'
+# /tmp/build/git/git-2.21.0/imap-send.c:290: undefined reference to `TLS_method'
+# /tmp/build/git/git-2.21.0/imap-send.c:303: undefined reference to `SSL_CTX_set_options'
+# collect2: error: ld returned 1 exit status
+# make: *** [git-imap-send] Error 1

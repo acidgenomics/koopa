@@ -3,10 +3,14 @@ set -Eeuo pipefail
 
 # Symlink docker installation to data00, to save space.
 
-sudo service docker stop
-
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
+
+# Run preflight initialization checks.
+# shellcheck source=/dev/null
+"${KOOPA_DIR}/includes/host/azure/sudo.sh"
+
+sudo service docker stop
 
 if [[ -d "$dest_dir" ]]
 then

@@ -4,6 +4,10 @@ set -Eeuo pipefail
 # Install R-devel for macOS
 # https://mac.r-project.org/
 
+# Run preflight initialization checks.
+# shellcheck source=/dev/null
+"${KOOPA_DIR}/includes/os/darwin/sudo.sh"
+
 echo "Installing r-devel"
 echo "sudo is required for this script."
 sudo -v
