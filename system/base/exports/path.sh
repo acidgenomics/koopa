@@ -21,14 +21,15 @@ add_to_path_end "/usr/sbin"
 add_to_path_end "/usr/bin"
 add_to_path_end "/sbin"
 add_to_path_end "/bin"
-add_to_path_start "$KOOPA_BIN_DIR"
-has_sudo && add_to_path_start "${KOOPA_BIN_DIR}/sudo"
+add_to_path_start "${KOOPA_DIR}/bin"
+has_sudo && add_to_path_start "${KOOPA_DIR}/bin/sudo"
 
 
 
 # Shell-specific                                                            {{{1
 # ==============================================================================
-[ "$KOOPA_SHELL" = "zsh" ] && add_to_path_start "${KOOPA_BIN_DIR}/shell/zsh"
+[ "$KOOPA_SHELL" = "zsh" ] && \
+    add_to_path_start "${KOOPA_DIR}/bin/shell/zsh"
 
 
 
@@ -51,21 +52,21 @@ then
     if echo "$id_like" | grep -q "debian"
     then
         # Debian-like (e.g. Ubuntu)
-        os_bin_dir="${KOOPA_BIN_DIR}/os/debian"
+        os_bin_dir="${KOOPA_DIR}/bin/os/debian"
         add_to_path_start "$os_bin_dir"
         has_sudo && add_to_path_start "${os_bin_dir}/sudo"
         unset -v os_bin_dir
     elif echo "$id_like" | grep -q "fedora"
     then
         # Fedora-like (e.g. RHEL, CentOS, Amazon Linux)
-        os_bin_dir="${KOOPA_BIN_DIR}/os/fedora"
+        os_bin_dir="${KOOPA_DIR}/bin/os/fedora"
         add_to_path_start "$os_bin_dir"
         has_sudo && add_to_path_start "${os_bin_dir}/sudo"
         unset -v os_bin_dir
     fi
 fi
 
-os_bin_dir="${KOOPA_BIN_DIR}/os/${os}"
+os_bin_dir="${KOOPA_DIR}/bin/os/${os}"
 if [ -d "$os_bin_dir" ]
 then
     add_to_path_start "$os_bin_dir"
@@ -83,7 +84,7 @@ unset -v os
 host="${KOOPA_HOST_NAME:-}"
 if [ ! -z "$host" ]
 then
-    host_bin_dir="${KOOPA_BIN_DIR}/host/${host}"
+    host_bin_dir="${KOOPA_DIR}/bin/host/${host}"
     if [ -d "$host_bin_dir" ]
     then
         add_to_path_start "$host_bin_dir"
