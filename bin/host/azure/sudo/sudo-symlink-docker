@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Symlink docker installation to data00, to save space.
+
+sudo service docker stop
+
+source_dir="/var/lib/docker"
+dest_dir="/data00/docker"
+
+if [[ -d "$dest_dir" ]]
+then
+    echo "Error: Docker exists at ${dest_dir}."
+    exit 1
+fi
+
+if [[ ! -d "$source_dir" ]]
+then
+    echo "Error: ${source_dir} missing."
+    echo "Check that Docker is installed."
+    exit 1
+fi
+
+sudo mv "${source_dir}/" "${dest_dir}/"
+sudo ln -s "$dest_dir" "$source_dir"
+
+sudo service docker start
