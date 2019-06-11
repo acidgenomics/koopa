@@ -11,7 +11,7 @@ version="0.3.7a"
 date="2019-06-11"
 
 # Require that koopa is activate and exported to PATH.
-if [[ -z "${KOOPA_OS_PLATFORM+x}" ]]
+if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
 then
     echo "koopa is not correctly activated."
     # Note that return should only be used for a sourced script.
