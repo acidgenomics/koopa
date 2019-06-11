@@ -15,7 +15,7 @@
 # Note that npm method requires write access into /usr/local (elevated).
 # Let's configure manually instead, which also works on remote servers.
 
-koopa_fpath="${KOOPA_BASE_DIR}/system/extra/zsh/fpath"
+koopa_fpath="${KOOPA_DIR}/system/extra/zsh/fpath"
 if [[ ! -d "$koopa_fpath" ]]
 then
     echo "fpath directory is missing."
