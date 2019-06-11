@@ -46,7 +46,7 @@ Add these lines to your POSIX-compliant shell configuration file.
 
 Koopa should now activate at login.
 
-To obtain information about the working environment, run `koopa-info`.
+To obtain information about the working environment, run `koopa info`.
 
 ## Troubleshooting
 
@@ -129,7 +129,7 @@ Automatic [PGP][] key support will be added in a future update.
 
 ## Tools
 
-Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa-list` for a complete list.
+Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa list` for a complete list.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
