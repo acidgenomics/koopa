@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# koopa shell bootloader
+# (c) 2018 Michael Steinbaugh
+# This software is provided under an MIT License.
+
+cmd="${1:-}"
+version="0.3.6"
+
+# Require that koopa is activate and exported to PATH.
+if [[ -z "${KOOPA_OS_PLATFORM+x}" ]]
+then
+    echo "koopa is not correctly activated."
+    # Note that return should only be used for a sourced script.
+    exit 1
+fi
+
+if [[ "$cmd" == "--help" ]] ||
+   [[ "$cmd" == "-h" ]] ||
+   [[ "$cmd" == "help" ]] ||
+   [[ -z "$cmd" ]]
+then
+    cat "${KOOPA_DIR}/system/help.txt"
+elif [[ "$cmd" == "--version" ]] ||
+   [[ "$cmd" == "-V" ]] ||
+   [[ "$cmd" == "version" ]]
+then
+    echo "$version"
+elif [[ "$cmd" == "check" ]]
+then
+    "${KOOPA_DIR}/system/check.sh"
+elif [[ "$cmd" == "info" ]]
+then
+    "${KOOPA_DIR}/system/info.sh"
+elif [[ "$cmd" == "list" ]]
+then
+    "${KOOPA_DIR}/system/list.sh"
+elif [[ "$cmd" == "update" ]]
+then
+    "${KOOPA_DIR}/system/update.sh"
+elif [[ "$cmd" == "upgrade" ]]
+then
+    echo "Error: Use 'update' instead of 'upgrade'."
+    exit 1
+else
+    echo "Error: Unsupported command."
+    exit 1
+fi

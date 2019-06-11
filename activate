@@ -10,8 +10,22 @@
 # This software is provided under an MIT License.
 # Currently supporting POSIX-compliant shells: bash, ksh, zsh.
 
-export KOOPA_VERSION="0.3.6"
-export KOOPA_DATE="2019-06-05"
+
+
+# Check if already activated                                                {{{1
+# ==============================================================================
+
+# Set variable to check if koopa is already active.
+# This step is particularly useful when working on a cluster that spawns new
+# sessions from the current shell.
+[ ! -z "${KOOPA_OS_PLATFORM:-}" ] && KOOPA_ACTIVATED=1
+
+# Don't reload for HPC interactive job.
+if [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] &&
+   [ ! -z "${KOOPA_ACTIVATED:-}" ]
+then
+    return 0
+fi
 
 
 
@@ -66,14 +80,11 @@ fi
 KOOPA_DIR="$( dirname "$KOOPA_SOURCE" )"
 export KOOPA_DIR
 
-KOOPA_BIN_DIR="${KOOPA_DIR}/bin"
-export KOOPA_BIN_DIR
-
 KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
 
 
 
-# Pre-flight checks                                                         {{{1
+# Extra mode detection                                                      {{{1
 # ==============================================================================
 
 # Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
@@ -82,14 +93,13 @@ KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
 if [ ! -z "${extra:-}" ]
 then
     KOOPA_EXTRA=1
-    export KOOPA_EXTRA
     unset -v extra
 fi
 
-# Set variable to check if koopa is already active.
-# This step is particularly useful when working on a cluster that spawns new
-# sessions from the current shell.
-[ ! -z "${KOOPA_OS_PLATFORM:-}" ] && KOOPA_ACTIVATED=1
+
+
+# Pre-flight checks                                                         {{{1
+# ==============================================================================
 
 if [ -z "${KOOPA_ACTIVATED:-}" ]
 then

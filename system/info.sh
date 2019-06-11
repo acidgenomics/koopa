@@ -6,16 +6,10 @@ quiet_command() {
     command -v "$1" 2>/dev/null
 }
 
-# Require that koopa is activate and exported to PATH.
-if [[ -z "${KOOPA_OS_PLATFORM+x}" ]]
-then
-    echo "koopa is not correctly activated."
-    # Note that return should only be used for a sourced script.
-    exit 1
-fi
+version="$(koopa --version)"
 
 array=()
-array+=("koopa v${KOOPA_VERSION} (${KOOPA_DATE})")
+array+=("koopa v${version}")
 array+=("https://github.com/acidgenomics/koopa")
 
 array+=("")
@@ -103,7 +97,7 @@ fi
 unset -v ruby
 
 array+=("")
-array+=("Run 'koopa-check' to perform system checks.")
+array+=("Run 'koopa check' to perform system checks.")
 
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.

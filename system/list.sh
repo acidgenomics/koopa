@@ -3,7 +3,7 @@
 from os import environ, listdir
 from os.path import isfile, join
 
-bin_dir = environ["KOOPA_BIN_DIR"]
+bin_dir = environ["KOOPA_DIR"] + "/bin"
 
 scripts = [f for f in listdir(bin_dir) if isfile(join(bin_dir, f))]
 scripts = sorted(scripts)
