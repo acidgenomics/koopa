@@ -1,0 +1,12 @@
+
+Flags:
+    
+    -h, --help     Help documentation
+    -V, --version  Version string
+    
+Commands:
+    
+    check          System checks
+    info           System information
+    list           List of programs accessible in $PATH
+    update         Update koopa installation to latest version

@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Update submodules
-
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+# Upgrade koopa installation.
 
 (
-    cd "$script_dir"
-    git fetch --all
+    cd "$KOOPA_DIR"
     git pull
-    git submodule update --init --recursive
-    git submodule foreach -q --recursive git checkout master
-    git submodule foreach -q --recursive git pull
-    git submodule status
-    git status
+    git submodule sync --recursive
 )
 
+cat << EOF
+koopa updated successfully.
+Shell must be reloaded for changes to take effect.
+EOF
+
+exec "$KOOPA_SHELL"
