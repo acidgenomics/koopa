@@ -127,7 +127,7 @@ sudo yum install -y \
 sudo ldconfig
 
 # Update R Java configuration.
-sudo-r-cmd-javareconf
+sudo-r-javareconf
 
 echo "R installed successfully."
 command -v R

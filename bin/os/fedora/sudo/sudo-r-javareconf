@@ -35,7 +35,7 @@ java_flags=" \
 "
 
 # shellcheck disable=SC2086
-sudo R CMD javareconf $java_flags
+sudo R CMD --vanilla javareconf $java_flags
 
 # shellcheck disable=SC2086
 R CMD javareconf $java_flags
