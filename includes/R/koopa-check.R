@@ -497,7 +497,7 @@ if (isTRUE(linux)) {
     # bcbio
     check_version(
         name = "bcbio_nextgen.py",
-        version = "1.1.3",
+        version = "1.1.5",
         version_cmd = "bcbio_nextgen.py --version",
         eval = switch(
             EXPR = host,
