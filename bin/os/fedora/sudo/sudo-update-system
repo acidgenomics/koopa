@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Update system.
+
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
 
 log_dir="${HOME}/logs/${HOSTNAME}/yum"
 mkdir -p "$log_dir"
