@@ -166,6 +166,18 @@ check_version(
     eval = ">="
 )
 
+# Z shell
+check_version(
+    name = "zsh",
+    version = "5.7.1",
+    version_cmd = c(
+        "zsh --version",
+        "head -1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "=="
+)
+
 # clang
 if (isTRUE(macos)) {
     check_version(
@@ -217,21 +229,6 @@ check_version(
         "python --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
-    ),
-    eval = "=="
-)
-
-# Perl
-# Requiring the current RHEL 7 version.
-# The cut match is a little tricky here:
-# This is perl 5, version 16, subversion 3 (v5.16.3)
-check_version(
-    name = "perl",
-    version = "5.28.2",
-    version_cmd = c(
-        "perl --version",
-        "sed -n '2p'",
-        "cut -d '(' -f 2 | cut -d ')' -f 1"
     ),
     eval = "=="
 )
@@ -441,14 +438,17 @@ installed(c(
 # Optional =====================================================================
 message("\nChecking optional programs.")
 
-# Z shell
+# Perl
+# Requiring the current RHEL 7 version.
+# The cut match is a little tricky here:
+# This is perl 5, version 16, subversion 3 (v5.16.3)
 check_version(
-    name = "zsh",
-    version = "5.7.1",
+    name = "perl",
+    version = "5.28.2",
     version_cmd = c(
-        "zsh --version",
-        "head -1",
-        "cut -d ' ' -f 2"
+        "perl --version",
+        "sed -n '2p'",
+        "cut -d '(' -f 2 | cut -d ')' -f 1"
     ),
     eval = "==",
     required = FALSE
