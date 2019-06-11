@@ -490,9 +490,6 @@ if (isTRUE(linux)) {
         eval = "==",
         required = FALSE
     )
-    
-    # bcbio_vm.py
-    installed("bcbio_vm.py", required = FALSE)
 
     # bcbio
     check_version(
@@ -506,4 +503,7 @@ if (isTRUE(linux)) {
         ),
         required = FALSE
     )
+
+    # bcbio_vm.py
+    installed("bcbio_vm.py", required = FALSE)
 }
