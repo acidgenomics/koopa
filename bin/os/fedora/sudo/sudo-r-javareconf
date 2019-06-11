@@ -38,9 +38,9 @@ java_flags=" \
 sudo R --vanilla CMD javareconf $java_flags
 
 # shellcheck disable=SC2086
-# R CMD javareconf $java_flags
+R --vanilla CMD javareconf $java_flags
 
 yum list installed | grep -E '^java-'
 
-echo "Reinstalling the rJava package."
-Rscript -e 'install.packages("rJava")'
+# echo "Reinstalling the rJava package."
+# Rscript -e 'install.packages("rJava")'
