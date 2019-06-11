@@ -29,3 +29,4 @@ sudo mv "${source_dir}/" "${dest_dir}/"
 sudo ln -s "$dest_dir" "$source_dir"
 
 sudo service docker start
+docker images
