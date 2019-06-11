@@ -21,7 +21,7 @@ echo "Installing Shiny Server ${version}."
     sudo su - \
         -c "R -e \"install.packages('shiny', repos='https://cran.rstudio.com/')\""
     wget https://download3.rstudio.org/centos6.3/x86_64/shiny-server-${version}-x86_64.rpm
-    sudo yum install --nogpgcheck shiny-server-${version}-x86_64.rpm
+    sudo yum install -y --nogpgcheck shiny-server-${version}-x86_64.rpm
     rm -rf "$build_dir"
 )
 
