@@ -15,9 +15,8 @@ version="26.2"
 echo "Installing emacs ${version}."
 
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/os/debian/sudo.sh"
 
 # Bioconductor AMI is missing these dependencies.
 # apt-cache search libgif

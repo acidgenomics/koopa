@@ -10,9 +10,8 @@ install_dir="/data00/bcbio-vm"
 bin_dir="${install_dir}/anaconda/bin"
 
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/host/azure/sudo.sh"
 
 
 

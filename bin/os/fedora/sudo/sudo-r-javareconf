@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Update rJava.
+
 echo "Updating R Java configuration."
+
+# Run preflight initialization checks.
+# shellcheck source=/dev/null
+"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
 
 # R CMD javareconf -h
 

@@ -6,10 +6,8 @@ quiet_command() {
     command -v "$1" 2>/dev/null
 }
 
-version="$(koopa --version)"
-
 array=()
-array+=("koopa v${version}")
+array+=("$(koopa --version)")
 array+=("https://github.com/acidgenomics/koopa")
 
 array+=("")

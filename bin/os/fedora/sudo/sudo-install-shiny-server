@@ -11,9 +11,8 @@ version="1.5.9.923"
 echo "Installing Shiny Server ${version}."
 
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
 
 (
     rm -rf "$build_dir"

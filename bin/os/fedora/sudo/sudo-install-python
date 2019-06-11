@@ -13,9 +13,8 @@ version="3.7.3"
 echo "Installing python ${version}."
 
 # Run preflight initialization checks.
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 # shellcheck source=/dev/null
-. "${script_dir}/__init__.sh"
+"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
 
 # Install Python and build dependencies.
 sudo yum install -y python python-pip

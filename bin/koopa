@@ -6,7 +6,9 @@ set -Eeuo pipefail
 # This software is provided under an MIT License.
 
 cmd="${1:-}"
-version="0.3.6"
+
+version="0.3.7a"
+date="2019-06-11"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM+x}" ]]
@@ -26,7 +28,7 @@ elif [[ "$cmd" == "--version" ]] ||
    [[ "$cmd" == "-V" ]] ||
    [[ "$cmd" == "version" ]]
 then
-    echo "$version"
+    echo "koopa ${version} (${date})"
 elif [[ "$cmd" == "check" ]]
 then
     "${KOOPA_DIR}/system/check.sh"
