@@ -62,5 +62,9 @@ python bcbio_nextgen_install.py \
     --isolate \
     2>&1 | tee "$log_file"
 
+# Fix for macs2/numpy issue.
+# https://github.com/bcbio/bcbio-nextgen/issues/2853
+"${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
+
 # Disable group write access to install by default.
 chmod -R g-w "$install_dir" "$tools_dir"
