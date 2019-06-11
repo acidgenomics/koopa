@@ -398,24 +398,6 @@ check_version(
     )
 )
 
-# rename
-# Use Perl File::Rename, not util-linux.
-if (isTRUE(linux)) {
-    check_version(
-        name = "rename",
-        version = "1.10",
-        version_cmd = c(
-            "rename --version",
-            "head -n 1",
-            "cut -d ' ' -f 5"
-        ),
-        grep_string = "File::Rename"
-    )
-} else {
-    # Homebrew rename doesn't return version on macOS.
-    installed("rename")
-}
-
 
 
 # Core programs ================================================================
@@ -506,4 +488,23 @@ if (isTRUE(linux)) {
 
     # bcbio_vm.py
     installed("bcbio_vm.py", required = FALSE)
+
+    # rename
+    # Use Perl File::Rename, not util-linux.
+    if (isTRUE(linux)) {
+        check_version(
+            name = "rename",
+            version = "1.10",
+            version_cmd = c(
+                "rename --version",
+                "head -n 1",
+                "cut -d ' ' -f 5"
+            ),
+            grep_string = "File::Rename",
+            required = FALSE
+        )
+    } else {
+        # Homebrew rename doesn't return version on macOS.
+        installed("rename")
+    }
 }
