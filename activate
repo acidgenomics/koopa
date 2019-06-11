@@ -63,13 +63,13 @@ then
     KOOPA_SOURCE="$0"
 fi
 
-KOOPA_BASE_DIR="$( dirname "$KOOPA_SOURCE" )"
-export KOOPA_BASE_DIR
+KOOPA_DIR="$( dirname "$KOOPA_SOURCE" )"
+export KOOPA_DIR
 
-KOOPA_BIN_DIR="${KOOPA_BASE_DIR}/bin"
+KOOPA_BIN_DIR="${KOOPA_DIR}/bin"
 export KOOPA_BIN_DIR
 
-KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
+KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
 
 
 
