@@ -12,8 +12,11 @@
 
 
 
-# Check if already activated                                                {{{1
+# Initial checks                                                            {{{1
 # ==============================================================================
+
+# Skip activation for root user.
+[ "$(id -u)" -eq 0 ] && return 0
 
 # Set variable to check if koopa is already active.
 # This step is particularly useful when working on a cluster that spawns new
@@ -77,7 +80,7 @@ then
     KOOPA_SOURCE="$0"
 fi
 
-KOOPA_DIR="$( dirname "$KOOPA_SOURCE" )"
+KOOPA_DIR="$(dirname "${KOOPA_SOURCE}")"
 export KOOPA_DIR
 
 KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
