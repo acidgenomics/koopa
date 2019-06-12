@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 # Check installed program versions.
 # Note that Ubuntu specific versions are pinned to 18 LTS.
 
@@ -5,7 +7,6 @@ options(
     error = quote(quit(status = 1L)),
     warning = quote(quit(status = 1L))
 )
-formals(warning)[["call."]] <- FALSE
 
 message("koopa system check")
 
