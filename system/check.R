@@ -1,5 +1,3 @@
-#!/usr/bin/env Rscript
-
 # Check installed program versions.
 # Note that Ubuntu specific versions are pinned to 18 LTS.
 

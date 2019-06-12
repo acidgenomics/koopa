@@ -1,5 +1,3 @@
-#!/usr/bin/env Rscript
-
 # List user-accessible programs exported in PATH.
 
 options(
