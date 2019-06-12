@@ -94,9 +94,6 @@ then
 fi
 unset -v ruby
 
-array+=("")
-array+=("Run 'koopa check' to perform system checks.")
-
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
 barpad="$( printf "━%.0s" {1..70} )"
