@@ -1,3 +1,47 @@
+## koopa 0.3.6 (2019-06-05)
+
+
+
+## koopa 0.3.5 (2019-06-04)
+
+This version introduces a fair number of changes, in preparation for future
+v0.4 release series. They should be breaking changes, so we indicated this as
+a point release instead.
+
+### Major changes
+
+- koopa now clones Mike's dotfiles repo as a submodule, in `dotfiles/`.
+- Moved install scripts from `install/` into nested inside `bin/` instead.
+
+### Minor changes
+
+- Reorganized exported scripts in `bin/` directory.
+- Improved platform checks and related messages.
+- Moved `sudo-*` scripts into nested `sudo/` directory, to allow conditional
+  access in `$PATH` export for sudo users only.
+- Improved `check-versions` script to determine if R is installed. Added
+  additional improvements to the R code for these checks.
+- Azure: `rsync-azure-files`: Now excluding `work/` directories, for bcbio.
+- Initial setup of sudo scripts for RHEL 7.
+- Improved information shown in `koopa-info` script.
+
+### New programs
+
+- `install-doom-emacs`: Setup script for doom-emacs.
+- `install-genrich`: Install Genrich caller for ChIP/ATAC-seq.
+- `install-python-virtualenv`: Updated to support Python 3.
+- `install-rmate`: Useful utility for opening remote scripts in VS Code.
+- `install-spacemacs`: Install script for spacemacs (emacs+vim editor).
+- `youtube-mp3`, `youtube-thumbnail`: New `youtube-dl`-related utility scripts.
+
+### Additional files
+
+- Added support files for fedora `ldconfig` in `etc/ld.so.conf.d/`.
+  This are particularly useful for configuring programs installed at
+  `/usr/local`, and for R to correctly pick up library dependencies.
+
+
+
 ## koopa 0.3.4 (2019-05-24)
 
 - Improved version dependency checks.
