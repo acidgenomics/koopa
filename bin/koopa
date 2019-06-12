@@ -7,8 +7,8 @@ set -Eeuo pipefail
 
 cmd="${1:-}"
 
-version="0.3.7a"
-date="2019-06-11"
+version="0.3.7"
+date="2019-06-12"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
@@ -31,13 +31,13 @@ then
     echo "koopa ${version} (${date})"
 elif [[ "$cmd" == "check" ]]
 then
-    "${KOOPA_DIR}/system/check.sh"
+    Rscript --vanilla "${KOOPA_DIR}/system/check.R"
 elif [[ "$cmd" == "info" ]]
 then
     "${KOOPA_DIR}/system/info.sh"
 elif [[ "$cmd" == "list" ]]
 then
-    "${KOOPA_DIR}/system/list.sh"
+    Rscript --vanilla "${KOOPA_DIR}/system/list.R"
 elif [[ "$cmd" == "update" ]]
 then
     "${KOOPA_DIR}/system/update.sh"

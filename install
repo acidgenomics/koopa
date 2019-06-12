@@ -41,8 +41,13 @@ install_dir="${script_dir}/system/install"
 # Dot file symlinks                                                         {{{1
 # ==============================================================================
 
-# shellcheck source=/dev/null
-. "${install_dir}/dotfiles.sh"
+# Skip this step for root.
+if [ "$(id -u)" -ne 0 ]
+then
+    # shellcheck source=/dev/null
+    . "${install_dir}/dotfiles.sh"
+fi
+
 
 
 # Post-flight checks                                                        {{{1
