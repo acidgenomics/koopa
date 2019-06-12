@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Show koopa installation information in a box.
+# Show koopa installation information (in a box).
+# Modified 2019-06-12.
 
 quiet_command() {
     command -v "$1" 2>/dev/null

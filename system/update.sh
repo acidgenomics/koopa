@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Upgrade koopa installation.
+# Update koopa installation.
+# Modified 2019-06-12.
 
 (
     cd "$KOOPA_DIR"
