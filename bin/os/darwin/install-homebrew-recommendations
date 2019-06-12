@@ -1,0 +1,200 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Recommended Homebrew recipes to install.
+# Modified 2019-06-12.
+
+export HOMEBREW_FORCE_BOTTLE=1
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Use CRAN R cask (R.app) instead of Homebrew R.
+
+# Homebrew now supports a global variable to force bottle installations.
+# Alternatively, can use `--force-bottle`.
+# See also:
+# - https://github.com/Homebrew/brew/pull/4520/files
+# - https://github.com/Homebrew/brew/pull/4542/files
+
+# Note that XQuartz v2.7.11 doesn't work well with wine.
+# Install v2.7.9 directly instead.
+# https://www.xquartz.org/releases/XQuartz-2.7.9.html
+# brew cask install xquartz
+
+
+
+# Casks                                                                     {{{1
+# ==============================================================================
+
+# Priority                                                                  {{{2
+# ------------------------------------------------------------------------------
+
+brew cask install \
+    java \
+    osxfuse \
+    xquartz
+
+# Recommended                                                               {{{2
+# ------------------------------------------------------------------------------
+
+brew cask install \
+    1password \
+    alfred \
+    aspera-connect \
+    authy \
+    basictex \
+    bbedit \
+    bibdesk \
+    coconutbattery \
+    coda \
+    emacs \
+    fiji \
+    firefox \
+    github \
+    google-chrome \
+    google-cloud-sdk \
+    google-drive-file-stream \
+    gpg-suite \
+    hazel \
+    igv \
+    iterm2 \
+    keka \
+    libreoffice \
+    onyx \
+    r \
+    safari-technology-preview \
+    skype \
+    spillo \
+    sublime-text \
+    superduper \
+    torbrowser \
+    tower \
+    transmit \
+    tunnelblick \
+    visual-studio-code \
+    vlc \
+    xld
+
+# Gatekeeper issues                                                         {{{1
+# ------------------------------------------------------------------------------
+
+brew cask install --no-quarantine \
+    calibre \
+    docker \
+    omnidisksweeper \
+    rstudio
+
+# Non-admin issues                                                          {{{1
+# ------------------------------------------------------------------------------
+
+# These casks have permission issues with non-admin accounts.
+
+brew cask install \
+    carbon-copy-cloner \
+    dropbox \
+    little-snitch \
+    slack
+
+
+
+# Brews                                                                     {{{1
+# ==============================================================================
+
+# Priority                                                                  {{{2
+# ------------------------------------------------------------------------------
+
+brew install bash fish ksh tcsh zsh
+brew install flac lame tcl-tk
+
+# Recommended                                                               {{{2
+# ------------------------------------------------------------------------------
+
+brew install \
+    autoconf \
+    awscli \
+    automake \
+    bash-completion \
+    bfg \
+    ccache \
+    circleci \
+    cmake \
+    convmv \
+    coreutils \
+    curl \
+    exa \
+    exiftool \
+    ffmpeg \
+    findutils \
+    flac \
+    gcc \
+    gdal \
+    git \
+    git-lfs \
+    gsl \
+    hdf5 \
+    hub \
+    leiningen \
+    libav \
+    libgit2 \
+    libiconv \
+    libressl \
+    librsvg \
+    libssh2 \
+    libxml2 \
+    libxslt \
+    mariadb-connector-c \
+    mas \
+    md5sha1sum \
+    neovim \
+    node \
+    pandoc \
+    pandoc-citeproc \
+    pandoc-crossref \
+    pkg-config \
+    protobuf \
+    rsync \
+    rbenv \
+    screen \
+    shellcheck \
+    shellharden \
+    sshfs \
+    tesseract \
+    tmux \
+    trash \
+    tree \
+    udunits \
+    vim \
+    wget \
+    youtube-dl \
+    zlib
+
+# External recipes                                                          {{{1
+# ------------------------------------------------------------------------------
+
+brew install vitorgalvao/tiny-scripts/cask-repair
+
+# Pesky                                                                     {{{1
+# ------------------------------------------------------------------------------
+
+# Additional imagemagick flags:
+# - `--with-ghostscript`
+# - `--with-pango`
+# - `--with-webpbrew`
+brew install imagemagick --with-fontconfig --with-librsvg
+
+# LLVM full mainline: `--with-toolchain` (very slow to install).
+brew install llvm
+
+# OpenBLAS is very CPU intensive when built from source.
+brew install openblas --with-openmp
+
+brew install python --with-tcl-tk
+
+brew install sox --with-flac --with-lame
+
+
+
+# vim: fdm=marker
