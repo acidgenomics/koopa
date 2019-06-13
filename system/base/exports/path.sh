@@ -94,6 +94,3 @@ then
 fi
 unset -v host
 
-
-
-# vim: fdm=marker

@@ -97,6 +97,3 @@ esac
 export KOOPA_PREFIX="/usr/local"
 export KOOPA_TMP="/tmp"
 
-
-
-# vim: fdm=marker

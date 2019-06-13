@@ -59,6 +59,3 @@ then
     . "${install_dir}/dotfiles.sh"
 fi
 
-
-
-# vim: fdm=marker
