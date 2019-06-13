@@ -52,5 +52,5 @@ then
 fi
 
 # Ensure /usr/local has correct permissions.
-sudo chown -R "root:wheel" /usr/local
+sudo chown -Rh "root:wheel" /usr/local
 sudo chmod g+w /usr/local
