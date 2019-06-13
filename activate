@@ -79,7 +79,19 @@ then
     KOOPA_SOURCE="${.sh.file}"
 elif [ "$KOOPA_SHELL" = "zsh" ]
 then
-    KOOPA_SOURCE="$0"
+    # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
+    # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
+    # this case instead unexpectedly returns `_src_etc_profile`.
+    # > KOOPA_SOURCE="${0:a}"
+    # > KOOPA_SOURCE="$0"
+    # https://stackoverflow.com/a/23259585/3911732
+    KOOPA_SOURCE="${(%):-%N}"
+fi
+
+if [ ! -f "$KOOPA_SOURCE" ]
+then
+    >&2 echo "Error: Failed to detect absolute path of activation script."
+    return 1
 fi
 
 KOOPA_DIR="$(dirname "${KOOPA_SOURCE}")"
@@ -159,33 +171,31 @@ unset -v BASE_DIR
 
 if [ ! -z "${KOOPA_EXTRA:-}" ]
 then
-    EXTRA_DIR="${KOOPA_SYSTEM_DIR}/extra"
-
     # Set default file permissions.
-    . "${EXTRA_DIR}/umask.sh"
+    . "${KOOPA_SYSTEM_DIR}/umask.sh"
 
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        BASH_DIR="${EXTRA_DIR}/bash"
+        BASH_DIR="${KOOPA_SYSTEM_DIR}/shell/bash"
         . "${BASH_DIR}/shopt.sh"
         . "${BASH_DIR}/bind.sh"
         . "${BASH_DIR}/ps1.sh"
         unset -v BASH_DIR
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        ZSH_DIR="${EXTRA_DIR}/zsh"
-        . "${ZSH_DIR}/oh-my-zsh.sh"
-        . "${ZSH_DIR}/pure-prompt.sh"
+        ZSH_DIR="${KOOPA_SYSTEM_DIR}/shell/zsh"
         . "${ZSH_DIR}/setopt.sh"
         . "${ZSH_DIR}/bindkey.sh"
+        # This requires sourcing in `~/.zshrc` file instead.
+        # . "${ZSH_DIR}/pure-prompt.sh"
         unset -v ZSH_DIR
     fi
 
     # Platform-specific configuration.
     if [ ! -z "${MACOS:-}" ]
     then
-        DARWIN_DIR="${EXTRA_DIR}/darwin"
+        DARWIN_DIR="${KOOPA_SYSTEM_DIR}/os/darwin"
         if [ -z "$KOOPA_ACTIVATED" ]
         then
             . "${DARWIN_DIR}/exports.sh"
@@ -200,8 +210,6 @@ then
 
     # Set up the today bucket.
     bash touch-today-bucket
-
-    unset -v EXTRA_DIR
 fi
 
 
