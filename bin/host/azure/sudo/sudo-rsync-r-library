@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Sync R library across virtual machines.
+
+echo "Syncing R library from VM45."
+
 source="mike@10.100.100.145"
 r_dir="/data00/R"
 
