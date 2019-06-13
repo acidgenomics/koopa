@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Install bcbio-vm
+# Install bcbio-vm.
+# Modified 2019-06-13.
 
 # Versioned release images:
 # https://quay.io/repository/bcbio/bcbio-vc?tab=tags
@@ -11,7 +12,7 @@ bin_dir="${install_dir}/anaconda/bin"
 
 # Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/host/azure/sudo.sh"
+"${KOOPA_DIR}/include/host/azure/sudo.sh"
 
 
 
