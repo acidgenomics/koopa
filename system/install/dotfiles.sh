@@ -6,30 +6,6 @@ echo "Symlinking dot files."
 os="${KOOPA_OS_NAME:-}"
 host="${KOOPA_HOST_NAME:-}"
 
-dotfile() {
-    dot_dir="${KOOPA_DIR}/dotfiles"
-    [[ ! -d "$dot_dir" ]] && \
-        echo "${dot_dir} missing." && \
-        return 1
-    
-    source_file="$1"
-    dest_file="${2:-}"
-    if [[ -z "$dest_file" ]]
-    then
-        dest_file="$source_file"
-    fi
-    
-    source_file="${dot_dir}/${source_file}"
-    [[ ! -f "$source_file" && ! -d "$source_file" ]] \
-        && echo "${source_file} missing." && \
-        return 1
-
-    dest_file="${HOME}/.${dest_file}"
-    
-    rm -f "$dest_file"
-    ln -s "$source_file" "$dest_file"
-}
-
 (
     cd ~
     
@@ -48,7 +24,6 @@ dotfile() {
     ln -s .bashrc .bash_profile
 
     dotfile condarc
-    dotfile doom.d
     dotfile gitconfig
     dotfile gitignore_global
     dotfile Rprofile
