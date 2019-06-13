@@ -6,6 +6,10 @@
 # koopa                                                                     {{{1
 # ==============================================================================
 
+# koopa shell
+# https://github.com/acidgenomics/koopa
+BCBIO_EXE="/data00/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
+# shellcheck source=/dev/null
 . "/usr/local/koopa/activate"
 
 
