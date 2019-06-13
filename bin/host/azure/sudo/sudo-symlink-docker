@@ -6,22 +6,18 @@ set -Eeuo pipefail
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/host/azure/sudo.sh"
-
 sudo service docker stop
 
 if [[ -d "$dest_dir" ]]
 then
-    echo "Error: Docker exists at ${dest_dir}."
+    >&2 echo "Error: Docker exists at ${dest_dir}."
     exit 1
 fi
 
 if [[ ! -d "$source_dir" ]]
 then
-    echo "Error: ${source_dir} missing."
-    echo "Check that Docker is installed."
+    >&2 echo "Error: ${source_dir} missing."
+    >&2 echo "Check that Docker is installed."
     exit 1
 fi
 
