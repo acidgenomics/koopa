@@ -1,1 +1,0 @@
-../../os/fedora/sudo.sh
