@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
+set -Eeuo pipefail
 
 # Add dot file(s).
 # Modified 2019-06-13.
@@ -26,7 +26,7 @@ then
     exit 1
 fi
 
-to_file="${HOME}/.${dest_name}"
+to_file="${HOME}/.${to_name}"
 
 # Error if dot file exists but is not a symlink.
 if [[ -f "$to_file" ]] && [[ ! -L "$to_file" ]]
