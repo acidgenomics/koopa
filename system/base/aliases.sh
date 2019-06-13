@@ -70,3 +70,11 @@ if ! quiet_which realpath
 then
     alias realpath="readlink -f"
 fi
+
+# R shiny server.
+if [ ! -z "${LINUX:-}" ]
+then
+    alias shiny-status="sudo systemctl status shiny-server"
+    alias shiny-start="sudo systemctl start shiny-server"
+    alias shiny-restart="sudo systemctl restart shiny-server"
+fi
