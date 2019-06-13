@@ -5,6 +5,6 @@ set -Eeuo pipefail
 if [[ "$KOOPA_OS_NAME" != "darwin" ]] ||
    [[ -z "${MACOS:-}" ]]
 then
-    echo "Error: macOS is required." >&2
+    >&2 echo "Error: macOS is required."
     exit 1
 fi
