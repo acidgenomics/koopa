@@ -184,12 +184,8 @@ then
         unset -v BASH_DIR
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        ZSH_DIR="${KOOPA_SYSTEM_DIR}/shell/zsh"
-        . "${ZSH_DIR}/setopt.sh"
-        . "${ZSH_DIR}/bindkey.sh"
-        # This requires sourcing in `~/.zshrc` file instead.
-        # . "${ZSH_DIR}/pure-prompt.sh"
-        unset -v ZSH_DIR
+        dotfile shrc
+        dotfile zshrc
     fi
 
     # Platform-specific configuration.
