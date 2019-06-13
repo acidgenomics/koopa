@@ -19,4 +19,4 @@ then
     >&2 echo "Error: Unescaped '/' detected in replacement."
 fi
 
-find . -type f -exec sed -i "s/${pattern}/${replacement}/g" {} \;
+find . -maxdepth 1 -type f -exec sed -i "s/${pattern}/${replacement}/g" {} \;
