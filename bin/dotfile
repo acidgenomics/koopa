@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Add dot file(s).
+# Modified 2019-06-13.
+
+source_file="$1"
+dest_file="${2:-}"
+
+dot_dir="${KOOPA_DIR}/dotfiles"
+if [[ ! -d "$dot_dir" ]]
+then
+    >&2 echo "${dot_dir} missing."
+    exit 1
+fi
+
+if [[ -z "$dest_file" ]]
+then
+    dest_file="$source_file"
+fi
+
+source_file="${dot_dir}/${source_file}"
+[[ ! -f "$source_file" && ! -d "$source_file" ]]
+then
+    >&2 echo "${source_file} missing."
+    exit 1
+fi
+
+dest_file="${HOME}/.${dest_file}"
+
+rm -f "$dest_file"
+ln -s "$source_file" "$dest_file"
