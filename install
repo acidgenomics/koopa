@@ -9,7 +9,6 @@ set -Eeuo pipefail
 
 koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 install_dir="${koopa_dir}/system/install"
-koopa_exe="${koopa_dir}/bin/koopa"
 
 
 
@@ -59,14 +58,6 @@ then
     # shellcheck source=/dev/null
     . "${install_dir}/dotfiles.sh"
 fi
-
-
-
-# Post-flight checks                                                        {{{1
-# ==============================================================================
-
-"$koopa_exe" check
-"$koopa_exe" info
 
 
 
