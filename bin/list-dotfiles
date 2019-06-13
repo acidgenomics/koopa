@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# List dotfiles.
+# Modified 2019-06-13.
+
+find ~ -maxdepth 1 -name ".*" -print0 | \
+    xargs -0 -n1 basename | \
+    sort
+
