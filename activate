@@ -95,7 +95,7 @@ KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
 # Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
 # SC2154: extra is reference but not assigned.
 # shellcheck disable=SC2154
-if [ ! -z "${extra:-}" ]
+if [ "${extra:-1}" -ne 0 ]
 then
     KOOPA_EXTRA=1
     unset -v extra
