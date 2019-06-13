@@ -6,7 +6,7 @@
 # koopa                                                                     {{{1
 # ==============================================================================
 
-extra=1 . "/usr/local/koopa/activate"
+. "/usr/local/koopa/activate"
 
 
 
