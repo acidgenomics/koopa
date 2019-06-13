@@ -7,14 +7,14 @@ pattern="$1"
 replacement="$2"
 
 # Check for unescaped slashes.
-if echo "$pattern" | grep -q '/' &&
-    echo "$pattern" | grep -Fqv '\'
+if echo "$pattern" | grep -q "/" &&
+    echo "$pattern" | grep -Fqv "\\"
 then
     >&2 echo "Error: Unescaped '/' detected in pattern."
 fi
 
-if echo "$replacement" | grep -q '/' &&
-    echo "$replacement" | grep -Fqv '\'
+if echo "$replacement" | grep -q "/" &&
+    echo "$replacement" | grep -Fqv "\\"
 then
     >&2 echo "Error: Unescaped '/' detected in replacement."
 fi
