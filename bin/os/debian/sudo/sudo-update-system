@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/os/debian/sudo.sh"
+"${KOOPA_DIR}/include/os/debian/sudo.sh"
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade

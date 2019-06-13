@@ -16,7 +16,7 @@ echo "Installing emacs ${version}."
 
 # Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/os/debian/sudo.sh"
+"${KOOPA_DIR}/include/os/debian/sudo.sh"
 
 # Bioconductor AMI is missing these dependencies.
 # apt-cache search libgif
