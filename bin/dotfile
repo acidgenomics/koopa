@@ -37,7 +37,7 @@ then
 elif [[ ! -L "$to_file" ]] && [[ -f "$to_file" ]]
 then
     # Error if dot file exists but is not a symlink.
-    >&2 echo "Error: ${to_fiile} already exists, but is not a symlink."
+    >&2 echo "Error: ${to_file} already exists, but is not a symlink."
     exit 1
 fi
 
