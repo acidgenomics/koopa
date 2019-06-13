@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Get version stored internally in versions.txt file.
+# Modified 2019-06-13.
+
+what="$1"
+file="${KOOPA_DIR}/include/versions.txt"
+
+match="$(grep -E "^${what}=" "$file" || echo "")"
+if [ -n "$match" ]
+then
+    echo "$match" | cut -d "\"" -f 2
+else
+    >&2 echo "Error: ${what} not defined in versions file."
+    >&2 echo "Refer to ${file}."
+    exit 1
+fi
+
