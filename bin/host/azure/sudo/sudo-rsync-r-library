@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+source="mike@10.100.100.145"
+r_dir="/data00/R"
+
+# Create R directory, if necessary.
+if [[ ! -d "$r_dir" ]]
+then
+    sudo mkdir -p "$r_dir"
+    sudo chown "mike:biogroup" "$r_dir"
+fi
+
+# Symlink R directory, if necessary.
+if [[ ! -L "$r_dir" ]]
+then
+    rm -rf "$r_dir"
+    ln -s "$r_dir" ~/R
+fi
+
+rsync -av --delete ${source}:~/R/ ~/R/
