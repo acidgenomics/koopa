@@ -12,7 +12,7 @@ then
 fi
 
 # Symlink R directory, if necessary.
-if [[ ! -L "$r_dir" ]]
+if [[ ! -L ~/R ]]
 then
     rm -rf "$r_dir"
     ln -s "$r_dir" ~/R
