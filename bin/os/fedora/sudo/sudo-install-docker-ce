@@ -6,7 +6,7 @@ set -Eeuo pipefail
 
 # Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
+"${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 sudo yum remove -y \
     docker \
