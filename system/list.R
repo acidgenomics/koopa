@@ -20,12 +20,13 @@ printPrograms <- function(path) {
     files <- list.files(
         path = path,
         all.files = FALSE,
-        full.names = FALSE
+        full.names = TRUE
     )
+    files <- files[!file.info(files)$isdir]
     cat(
         "",
         paste0(path, ":"),
-        paste0("    ", files),
+        paste0("    ", basename(files)),
         sep = "\n"
     )
 }
