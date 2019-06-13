@@ -74,7 +74,3 @@ command -v Rscript >/dev/null 2>&1 || {
     return 1
 }
 
-
-
-# turn on folds
-# vim: fdm=marker

@@ -23,6 +23,3 @@ export D3="/mnt/azbioinfoseq03"
 export D4="/mnt/azbioinfoseq04"
 export D5="/mnt/azbioinfoseq05"
 
-
-
-# vim: fdm=marker

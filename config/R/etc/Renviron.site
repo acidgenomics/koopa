@@ -51,6 +51,3 @@ R_REMOTES_UPGRADE="always"
 # R can sometimes error due to time zone, unless this is set.
 TZ="America/New_York"
 
-
-
-# vim: fdm=marker

@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Internal functions.
+
+
+
+# _koopa_get_version                                                        {{{1
+# ==============================================================================
+
 # Get version stored internally in versions.txt file.
 # Modified 2019-06-13.
 
