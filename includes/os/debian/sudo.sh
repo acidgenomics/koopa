@@ -38,5 +38,5 @@ fi
 sudo apt-get -y update
 
 # Ensure /usr/local has correct permissions.
-sudo chown -R "root:sudo" /usr/local
+sudo chown -Rh "root:sudo" /usr/local
 sudo chmod g+w /usr/local
