@@ -1,32 +1,39 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeuxo pipefail
 
 # Add dot file(s).
 # Modified 2019-06-13.
 
-source_file="$1"
-dest_file="${2:-}"
+from_name="$1"
+to_name="${2:-}"
 
 dot_dir="${KOOPA_DIR}/dotfiles"
 if [[ ! -d "$dot_dir" ]]
 then
-    >&2 echo "${dot_dir} missing."
+    >&2 echo "Error: ${dot_dir} missing."
     exit 1
 fi
 
-if [[ -z "$dest_file" ]]
+if [[ -z "$to_name" ]]
 then
-    dest_file="$source_file"
+    to_name="$from_name"
 fi
 
-source_file="${dot_dir}/${source_file}"
-[[ ! -f "$source_file" && ! -d "$source_file" ]]
+from_file="${dot_dir}/${from_name}"
+if [[ ! -f "$from_file" ]] && [[ ! -d "$from_file" ]]
 then
-    >&2 echo "${source_file} missing."
+    >&2 echo "Error: ${from_file} missing."
     exit 1
 fi
 
-dest_file="${HOME}/.${dest_file}"
+to_file="${HOME}/.${dest_name}"
 
-rm -f "$dest_file"
-ln -s "$source_file" "$dest_file"
+# Error if dot file exists but is not a symlink.
+if [[ -f "$to_file" ]] && [[ ! -L "$to_file" ]]
+then
+    >&2 echo "Error: ${to_file} already exists, and is not a symlink."
+    exit 1
+fi
+
+rm -f "$to_file"
+ln -s "$from_file" "$to_file"
