@@ -19,7 +19,7 @@ echo "Installing GnuPG."
 
 # Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/os/fedora/sudo.sh"
+"${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 sudo yum-builddep -y gnupg2
 
