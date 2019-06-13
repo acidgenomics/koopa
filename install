@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Install koopa.
+# Modified 2019-06-13.
+
+# Set `dev=1` to enable some additional developer configuration tweaks.
+# Namely, this currently changes submodule remotes from HTTPS to git.
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 install_dir="${script_dir}/system/install"
 
@@ -34,6 +40,11 @@ install_dir="${script_dir}/system/install"
     git submodule init
     git submodule update --init --recursive
     git submodule sync --recursive
+    # Change remote from HTTPS to git for easier commits.
+    if [[ -n "${dev:-}" ]]
+    then
+        git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
+    fi
 )
 
 
