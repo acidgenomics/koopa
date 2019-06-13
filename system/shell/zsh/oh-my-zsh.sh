@@ -13,8 +13,8 @@ ZSH="${HOME}/.oh-my-zsh"
 # Early return and skip config if oh-my-zsh isn't installed.
 if [[ ! -d "$ZSH" ]]
 then
-    >&2 echo "Error: ${ZSH} missing."
-    return 1
+    echo "Installing oh-my-zsh."
+    install-oh-my-zsh
 fi
 
 export ZSH
@@ -80,11 +80,23 @@ HIST_STAMPS="yyyy-mm-dd"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+
+plugins_dir="${ZSH_CUSTOM}/plugins"
+
+if [[ ! -d "${plugins_dir}/zsh-autosuggestions" ]]
+then
+    echo "Installing zsh-autosuggestions."
+    git clone https://github.com/zsh-users/zsh-autosuggestions \
+        "${plugins_dir}/zsh-autosuggestions"
+fi
+
 plugins=(
   git
   zsh-autosuggestions
   # zsh-syntax-highlighting
 )
+
+unset -v plugins_dir
 
 source "${ZSH}/oh-my-zsh.sh"
 
