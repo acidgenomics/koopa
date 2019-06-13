@@ -12,10 +12,10 @@ then
 fi
 
 # Symlink R directory, if necessary.
-if [[ ! -L ~/R ]]
+if [[ ! -L "${HOME}/R" ]]
 then
-    rm -rf "$r_dir"
-    ln -s "$r_dir" ~/R
+    rm -rf "${HOME}/R"
+    ln -s "$r_dir" "${HOME}/R"
 fi
 
-rsync -av --delete ${source}:~/R/ ~/R/
+rsync -av --delete "${source}:${HOME}/R/" "${HOME}/R/"
