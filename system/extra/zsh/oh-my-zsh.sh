@@ -18,28 +18,6 @@ then
 fi
 
 export ZSH
-
-
-
-# FPATH fix for sourcing via `/etc/profile` instead of `~/.zshrc`.
-# e.g. `/usr/local` or `/usr`.
-version="$(zsh --version | head -n 1 | cut -d ' ' -f 2)"
-prefix="$(dirname $(dirname $(command -v zsh)))"
-prefix="${prefix}/share/zsh"
-fpath_site_functions="${prefix}/site-functions"
-fpath_functions="${prefix}/${version}/functions"
-unset -v prefix version
-echo "$FPATH"
-export FPATH="${fpath}:${fpath_site_functions}:${fpath_functions}"
-
-echo "$FPATH"
-
-
-# VM45:
-# FPATH: /home/mike/koopa/system/extra/zsh/fpath:/usr/local/share/zsh/site-functions:/usr/local/share/zsh/5.7.1/functions
-
-
-
 export ZSH_CUSTOM="${ZSH}/custom"
 
 # Ignore warning about insecure directories identified by compfix.
@@ -148,6 +126,3 @@ source "${ZSH}/oh-my-zsh.sh"
 # This works well in combo with Dracula theme.
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
 
-
-
-# FPATH="${fpath_functions}:${fpath}"
