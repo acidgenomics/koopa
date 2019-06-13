@@ -17,26 +17,26 @@ fi
 # Require yum to build dependencies.
 if [[ ! -x "$(command -v yum)" ]]
 then
-    echo "Error: yum is required to build dependencies." >&2
+    >&2 echo "Error: yum is required to build dependencies."
     exit 1
 fi
 
 # Ensure conda is deactivated.
 if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
 then
-    echo "Error: conda is active."
+    >&2 echo "Error: conda is active."
     exit 1
 fi
 
 # Ensure Python virtual environment is deactivated.
 if [[ -x "$(command -v deactivate)" ]]
 then
-    echo "Error: Python virtualenv is active."
+    >&2 echo "Error: Python virtualenv is active."
     exit 1
 fi
 
 # Ensure yum-utils is installed, so we can build dependencies.
-sudo yum -y install yum-utils
+# > sudo yum -y install yum-utils
 
 # Install gcc, if necessary.
 if [[ ! -x "$(command -v gcc)" ]]
