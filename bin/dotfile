@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Add dot file(s).
+# Add dot file.
 # Modified 2019-06-13.
+
+# Consider adding a `--force` flag to force dot file overwrites.
 
 from_name="$1"
 to_name="${2:-}"
@@ -28,10 +30,14 @@ fi
 
 to_file="${HOME}/.${to_name}"
 
-# Error if dot file exists but is not a symlink.
-if [[ -f "$to_file" ]] && [[ ! -L "$to_file" ]]
+if [[ ! -L "$to_file" ]] && [[ -f "$to_file" ]]
 then
-    >&2 echo "Error: ${to_file} already exists, and is not a symlink."
+    # Early return if dot file already exists.
+    exit 0
+elif [[ ! -L "$to_file" ]] && [[ -f "$to_file" ]]
+then
+    # Error if dot file exists but is not a symlink.
+    >&2 echo "Error: ${to_fiile} already exists, but is not a symlink."
     exit 1
 fi
 
