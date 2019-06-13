@@ -102,6 +102,3 @@ pathmunge() {
     esac
 }
 
-
-
-# vim: fdm=marker

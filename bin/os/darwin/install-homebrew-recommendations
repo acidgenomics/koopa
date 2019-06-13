@@ -195,6 +195,3 @@ brew install python --with-tcl-tk
 
 brew install sox --with-flac --with-lame
 
-
-
-# vim: fdm=marker

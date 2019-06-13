@@ -215,6 +215,3 @@ fi
 
 . "${KOOPA_SYSTEM_DIR}/post/unset.sh"
 
-
-
-# vim: fdm=marker
