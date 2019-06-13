@@ -13,7 +13,7 @@ echo "Installing vim ${version}."
 
 # Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/includes/os/debian/sudo.sh"
+"${KOOPA_DIR}/include/os/debian/sudo.sh"
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
