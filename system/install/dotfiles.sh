@@ -66,8 +66,6 @@ dotfile() {
     elif [[ "$host" == "harvard-odyssey" ]]
     then
         dotfile Renviron-harvard-odyssey Renviron
-    else
-        dotfile Renviron
     fi
 )
 
