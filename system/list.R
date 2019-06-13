@@ -23,6 +23,9 @@ printPrograms <- function(path) {
         full.names = TRUE
     )
     files <- files[!file.info(files)$isdir]
+    if (length(files) == 0L) {
+        return()
+    }
     cat(
         "",
         paste0(path, ":"),
