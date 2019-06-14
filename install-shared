@@ -13,9 +13,6 @@ koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 . "${koopa_dir}/install"
 
-echo "Symlinking installation at '~/.koopa'."
-ln -fs "${koopa_dir}" ~/.koopa
-
 
 
 # Shared profile configuration                                              {{{1
