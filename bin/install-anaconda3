@@ -7,26 +7,23 @@ set -Eeuo pipefail
 
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-prefix="${HOME}/anaconda3"
+[[ -z "${prefix:-}" ]] && prefix="${HOME}/anaconda3"
 build_dir="${KOOPA_TMP}/build/anaconda3"
 
 version="$(koopa_version anaconda3)"
 
-# https://repo.anaconda.com/archive/
-# https://repo.anaconda.com/archive/${script}
+# Check for previous installation.
+if [[ -d "$prefix" ]]
+then
+    >&2 printf "Error: conda already installed.\n%s\n" "$prefix"
+    exit 1
+fi
 
 case "$OSTYPE" in
     linux-gnu) script="Anaconda3-${version}-Linux-x86_64.sh";;
       darwin*) script="Anaconda3-${version}-MacOSX-x86_64.sh";;
             *) echo "${OSTYPE} is not supported."; exit 1;;
 esac
-
-# Check for previous installation.
-if [[ -d "$prefix" ]]
-then
-    >&2 sprintf "Error: conda already installed.\n%s\n" "$prefix"
-    exit 1
-fi
 
 (
     rm -rf "$build_dir"

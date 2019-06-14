@@ -15,21 +15,21 @@ set -Eeuo pipefail
 # -u           update an existing installation
 # -t           run package tests after installation (may install conda-build)
 
-prefix="${HOME}/miniconda3"
+[[ -z "${prefix:-}" ]] && prefix="${HOME}/miniconda3"
 build_dir="${KOOPA_TMP}/build/miniconda3"
+
+# Check for previous installation.
+if [[ -d "$prefix" ]]
+then
+    >&2 printf "Error: conda already installed.\n%s\n" "$prefix"
+    exit 1
+fi
 
 case "$OSTYPE" in
     linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
       darwin*) script="Miniconda3-latest-MacOSX-x86_64.sh";;
             *) echo "${OSTYPE} is not supported."; exit 1;;
 esac
-
-# Check for previous installation.
-if [[ -d "$prefix" ]]
-then
-    >&2 sprintf "Error: conda already installed.\n%s\n" "$prefix"
-    exit 1
-fi
 
 (
     rm -rf "$build_dir"
