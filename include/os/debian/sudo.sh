@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "sudo access is required for installation."
+# Source bash functions.
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-# This check doesn't work for passwordless sudo on all VMs.
-# sudo -v
+if ! has_sudo
+then
+    echo "Non-interactive (passwordless) sudo is required for this script."
+exit 1
 
 # Check for RedHat.
 if ! grep -q "ID=ubuntu" /etc/os-release
