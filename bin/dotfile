@@ -54,6 +54,7 @@ eval set -- "$PARAMS"
 if [[ -n "${help:-}" || -z "$*" ]]
 then
     echo "Usage: dotfile [-f|--force] repo_relative_path (symlink_name)"
+    echo "Note that forced overwrites apply to symlinks only."
     exit 0
 fi
 
@@ -78,16 +79,19 @@ fi
 
 symlink_name="${2:-}"
 [[ -z "$symlink_name" ]] && symlink_name="$(basename "$source_path")"
-
 symlink_path="${HOME}/.${symlink_name}"
-if [[ -L "$symlink_path" && -f "$symlink_path" && -z "${force:-}" ]]
+
+# We're allowing force overwrite of symlinks only.
+if [[ -L "$symlink_path" ]] && \
+    [[ -f "$symlink_path" || -d "$symlink_path" ]] && \
+    [[ -z "${force:-}" ]]
 then
-    # Early return if dot file already exists.
-    exit 0
-elif [[ ! -L "$symlink_path" && -f "$symlink_path" ]]
+    >&2 printf "Error: Existing symlink.\n%s\n" "$symlink_path"
+    exit 1
+elif [[ ! -L "$symlink_path" ]] && \
+    [[ -f "$symlink_path" || -d "$symlink_path" ]]
 then
-    # Error if dot file exists but is not a symlink.
-    >&2 printf "Error: '%s' exists, and is not a symlink." "$symlink_path"
+    >&2 printf "Error: Existing file.\n%s\n" "$symlink_path"
     exit 1
 fi
 
