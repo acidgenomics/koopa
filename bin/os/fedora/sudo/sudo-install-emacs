@@ -7,20 +7,19 @@ set -Eeuo pipefail
 # See also:
 # - https://github.com/emacs-mirror/emacs
 
+# shellcheck source=/dev/null
+"${KOOPA_DIR}/include/os/fedora/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
 build_dir="${KOOPA_TMP}/build/emacs"
 
-version="26.2"
+version="$(koopa_version emacs)"
 
 echo "Installing emacs ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
-
 # Install build dependencies.
-sudo yum-builddep -y emacs
+sudo -n yum-builddep -y emacs
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
@@ -34,12 +33,12 @@ sudo yum-builddep -y emacs
         --build="$build_name" \
         --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
     rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
-sudo ldconfig
+sudo -n ldconfig
 
 echo "emacs installed successfully."
 command -v emacs

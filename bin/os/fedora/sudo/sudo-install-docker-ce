@@ -4,11 +4,10 @@ set -Eeuo pipefail
 # Docker
 # https://docs.docker.com/install/linux/docker-ce/centos/
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
 "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-sudo yum remove -y \
+sudo -n yum remove -y \
     docker \
     docker-client \
     docker-client-latest \
@@ -18,25 +17,24 @@ sudo yum remove -y \
     docker-logrotate \
     docker-engine
 
-sudo yum install -y \
+sudo -n yum install -y \
     yum-utils \
     device-mapper-persistent-data \
     lvm2
 
-sudo yum-config-manager \
+sudo -n yum-config-manager \
     --add-repo \
     https://download.docker.com/linux/centos/docker-ce.repo
 
-sudo yum install -y \
+sudo -n yum install -y \
     docker-ce \
     docker-ce-cli \
     containerd.io
 
-sudo groupadd docker
-sudo service docker restart
-sudo gpasswd -a "$USER" docker
+sudo -n groupadd docker
+sudo -n service docker restart
+sudo -n gpasswd -a "$USER" docker
 newgrp docker
 
 command -v docker
 docker --version
-
