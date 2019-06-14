@@ -11,8 +11,8 @@ r_dir="/data00/R"
 # Create R directory, if necessary.
 if [[ ! -d "$r_dir" ]]
 then
-    sudo mkdir -p "$r_dir"
-    sudo chown "mike:biogroup" "$r_dir"
+    sudo -n mkdir -p "$r_dir"
+    sudo -n chown "mike:biogroup" "$r_dir"
 fi
 
 # Symlink R directory, if necessary.

@@ -7,23 +7,23 @@ set -Eeuo pipefail
 # See also:
 # - https://github.com/emacs-mirror/emacs
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/debian/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_dir="${KOOPA_TMP}/build/emacs"
 
-version="26.2"
+version="$(koopa_version emacs)"
 
 echo "Installing emacs ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/debian/sudo.sh"
+# Bioconductor AMI is missing these dependencies:
+# > apt-cache search libgif
+# > apt-cache search gnutls
+# > apt-cache search 'libgnutls.*-dev'
 
-# Bioconductor AMI is missing these dependencies.
-# apt-cache search libgif
-# apt-cache search gnutls
-# apt-cache search 'libgnutls.*-dev'
-sudo apt-get -y install gnutls-bin libgnutls28-dev
-sudo apt-get -y install libgif-dev
+sudo -n apt-get -y install gnutls-bin libgnutls28-dev
+sudo -n apt-get -y install libgif-dev
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
@@ -35,12 +35,12 @@ sudo apt-get -y install libgif-dev
     cd "emacs-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
     rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
-sudo ldconfig
+sudo -n ldconfig
 
 echo "emacs installed successfully."
 command -v emacs

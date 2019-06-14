@@ -5,10 +5,12 @@ set -Eeuo pipefail
 # https://www.anaconda.com/download
 # https://docs.anaconda.com/anaconda/install/
 
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
 prefix="${HOME}/anaconda3"
 build_dir="${KOOPA_TMP}/build/anaconda3"
 
-version="2019.03"
+version="$(koopa_version anaconda3)"
 
 # https://repo.anaconda.com/archive/
 # https://repo.anaconda.com/archive/${script}
@@ -22,8 +24,7 @@ esac
 # Check for previous installation.
 if [[ -d "$prefix" ]]
 then
-    echo "Error: conda already installed."
-    echo "$prefix"
+    >&2 sprintf "Error: conda already installed.\n%s\n" "$prefix"
     exit 1
 fi
 

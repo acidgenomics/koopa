@@ -5,10 +5,12 @@ set -Eeuo pipefail
 # https://www.anaconda.com/download
 # https://docs.anaconda.com/anaconda/install/
 
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
 prefix="${KOOPA_PREFIX}/anaconda3"
 build_dir="${KOOPA_TMP}/build/anaconda3"
 
-version="2019.03"
+version="$(koopa_version anaconda3)"
 
 # https://repo.anaconda.com/archive/
 # https://repo.anaconda.com/archive/${script}
@@ -20,7 +22,7 @@ case "$OSTYPE" in
 esac
 
 # Ensure previous installation is removed.
-sudo rm -rf "$prefix"
+sudo -n rm -rf "$prefix"
 
 (
     rm -rf "$build_dir"
@@ -34,7 +36,7 @@ sudo rm -rf "$prefix"
 )
 
 # Set installed files to root.
-sudo chown -R "root:wheel" "$prefix"
+sudo -n chown -R "root:wheel" "$prefix"
 
 echo "conda installed successfully."
 conda_exe="${prefix}/bin/conda"
