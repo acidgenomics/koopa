@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Install koopa shared for all users.
+# Modified 2019-06-14.
+
+koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+
+
+
+# Install koopa                                                             {{{1
+# ==============================================================================
+
+. "${koopa_dir}/install"
+
+echo "Symlinking installation at '~/.koopa'."
+ln -fs "${koopa_dir}" ~/.koopa
+
+
+
+# Shared profile configuration                                              {{{1
+# ==============================================================================
+
+echo "Adding 'koopa.sh' to '/etc/profile.d/'."
+sudo -n ln -fs \
+    "${koopa_dir}/config/etc/profile.d/koopa.sh" \
+    /etc/profile.d/koopa.sh
+
