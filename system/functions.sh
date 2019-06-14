@@ -1,11 +1,16 @@
 #!/bin/sh
 
-# Functions
+# POSIX-compliant functions.
+# Modified 2019-06-14.
 
 
 
 # Quiet variants                                                            {{{1
 # ==============================================================================
+
+quiet_cd() {
+    cd "$@" >/dev/null || return 1
+}
 
 # Regular expression matching that is POSIX compliant.
 # https://stackoverflow.com/questions/21115121
@@ -100,5 +105,26 @@ pathmunge() {
                 PATH="$1:$PATH"
             fi
     esac
+}
+
+
+
+# Miscellaneous                                                             {{{1
+# ==============================================================================
+
+# Get version stored internally in versions.txt file.
+# Modified 2019-06-14.
+koopa_version() {
+    what="$1"
+    file="${KOOPA_DIR}/include/versions.txt"
+    match="$(grep -E "^${what}=" "$file" || echo "")"
+    if [ -n "$match" ]
+    then
+        echo "$match" | cut -d "\"" -f 2
+    else
+        >&2 echo "Error: ${what} not defined in versions file."
+        >&2 echo "Refer to ${file}."
+        return 1
+    fi
 }
 

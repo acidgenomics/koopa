@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "sudo access is required for installation."
+# Source bash functions.
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-# This check doesn't work for passwordless sudo on all VMs.
-# sudo -v
+if ! has_sudo
+then
+    echo "Non-interactive (passwordless) sudo is required for this script."
+exit 1
 
 # Check for Fedora.
 if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
@@ -36,21 +39,21 @@ then
 fi
 
 # Ensure yum-utils is installed, so we can build dependencies.
-# > sudo yum -y install yum-utils
+# > sudo -n yum -y install yum-utils
 
 # Install gcc, if necessary.
 if [[ ! -x "$(command -v gcc)" ]]
 then
-    sudo yum install -y gcc
+    sudo -n yum install -y gcc
 fi
 
 # Ensure ldconfig is configured to use /usr/local.
 if [[ -d /etc/ld.so.conf.d ]]
 then
-    sudo cp "${KOOPA_DIR}/config/os/fedora/etc/ld.so.conf.d/"*".conf" \
+    sudo -n cp "${KOOPA_DIR}/config/os/fedora/etc/ld.so.conf.d/"*".conf" \
         /etc/ld.so.conf.d
 fi
 
 # Ensure /usr/local has correct permissions.
-sudo chown -Rh "root:wheel" /usr/local
-sudo chmod g+w /usr/local
+sudo -n chown -Rh "root:wheel" /usr/local
+sudo -n chmod g+w /usr/local

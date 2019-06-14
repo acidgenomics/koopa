@@ -60,6 +60,18 @@ installed <- function(name, required = TRUE) {
     ))
 }
 
+# Sanitize complicated verions:
+# - 2.7.15rc1 to 2.7.15
+# - 1.10.0-patch1 to 1.10.0
+# - 1.0.2k-fips to 1.0.2
+sanitize_version <- function(version) {
+    version <- sub("-[a-z]+$", "", version)
+    version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
+    version <- sub("^[a-z]+", "", version)
+    version <- sub("[a-z]+$", "", version)
+    version
+}
+
 check_version <- function(
     name,
     version,
@@ -101,6 +113,7 @@ check_version <- function(
     }
 
     if (grepl("\\.", version)) {
+        version <- sanitize_version(version)
         version <- package_version(version)
     }
 
@@ -114,16 +127,8 @@ check_version <- function(
     )
     full_sys_version <- sys_version
 
-    # Sanitize complicated verions:
-    # - 2.7.15rc1 to 2.7.15
-    # - 1.10.0-patch1 to 1.10.0
-    # - 1.0.2k-fips to 1.0.2
-    sys_version <- sub("-[a-z]+$", "", sys_version)
-    sys_version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", sys_version)
-    sys_version <- sub("^[a-z]+", "", sys_version)
-    sys_version <- sub("[a-z]+$", "", sys_version)
-
     if (grepl("\\.", sys_version)) {
+        sys_version <- sanitize_version(sys_version)
         sys_version <- package_version(sys_version)
     }
 
@@ -146,6 +151,24 @@ check_version <- function(
     invisible(ok)
 }
 
+versions_file <- file.path(
+    Sys.getenv("KOOPA_DIR"),
+    "include",
+    "versions.txt"
+)
+versions <- readLines(versions_file)
+
+koopa_version <- function(x) {
+    keep <- grepl(pattern = paste0("^", x, "="), x = versions)
+    stopifnot(sum(keep, na.rm = TRUE) == 1L)
+    string <- versions[keep]
+    sub(
+        pattern = "^(.+)=\"(.+)\"$",
+        replacement = "\\2",
+        x = string
+    )
+}
+
 
 
 
@@ -155,7 +178,7 @@ message("\nChecking required programs.")
 # Bash
 check_version(
     name = "bash",
-    version = "5.0.0",
+    version = koopa_version("bash"),
     version_cmd = c(
         "bash --version",
         "head -n 1",
@@ -168,7 +191,7 @@ check_version(
 # Z shell
 check_version(
     name = "zsh",
-    version = "5.7.1",
+    version = koopa_version("zsh"),
     version_cmd = c(
         "zsh --version",
         "head -1",
@@ -181,7 +204,7 @@ check_version(
 if (isTRUE(macos)) {
     check_version(
         name = "clang",
-        version = "10.0.1",
+        version = koopa_version("clang"),
         version_cmd = c(
             "clang --version",
             "head -n 1",
@@ -195,7 +218,7 @@ if (isTRUE(macos)) {
 if (isTRUE(linux)) {
     check_version(
         name = "gcc",
-        version = "4.8.5",
+        version = koopa_version("gcc"),
         version_cmd = c(
             "gcc --version",
             "head -n 1",
@@ -209,7 +232,7 @@ if (isTRUE(linux)) {
 # Using shell version string instead here for consistency.
 check_version(
     name = "R",
-    version = "3.6.0",
+    version = koopa_version("R"),
     version_cmd = c(
         "R --version",
         "head -n 1",
@@ -223,7 +246,7 @@ check_version(
 # The user can use either conda or virtualenv.
 check_version(
     name = "python",
-    version = "3.7.3",
+    version = koopa_version("python"),
     version_cmd = c(
         "python --version 2>&1",
         "head -n 1",
@@ -232,11 +255,23 @@ check_version(
     eval = "=="
 )
 
+# Docker
+check_version(
+    name = "docker",
+    version = koopa_version("docker"),
+    version_cmd = c(
+        "docker --version",
+        "head -n 1",
+        "cut -d ' ' -f 3"
+    ),
+    eval = "=="
+)
+
 # Emacs
 # Setting a hard dependency here, to allow for spacemacs.
 check_version(
     name = "emacs",
-    version = "26.2",
+    version = koopa_version("emacs"),
     version_cmd = c(
         "emacs --version",
         "head -n 1",
@@ -247,7 +282,13 @@ check_version(
 # Vim
 check_version(
     name = "vim",
-    version = "8.1",
+    # Check without patches.
+    # e.g. 8.1 instead of 8.1.1523.
+    version = sub(
+        pattern = "\\.[[:digit:]]+$",
+        replacement = "",
+        koopa_version("vim")
+    ),
     version_cmd = c(
         "vim --version",
         "head -1",
@@ -258,7 +299,7 @@ check_version(
 # Tmux
 check_version(
     name = "tmux",
-    version = "2.9",
+    version = koopa_version("tmux"),
     version_cmd = c(
         "tmux -V",
         "head -n 1",
@@ -272,7 +313,7 @@ check_version(
     version = switch(
         EXPR = os,
         ubuntu = "2.17.1",
-        "2.21"
+        koopa_version("git")
     ),
     version_cmd = c(
         "git --version",
@@ -287,7 +328,7 @@ check_version(
     version = switch(
         EXPR = os,
         ubuntu = "2.2.4",
-        "2.2.8"
+        koopa_version("gpg")
     ),
     version_cmd = c(
         "gpg --version",
@@ -302,7 +343,7 @@ check_version(
     version = switch(
         EXPR = os,
         ubuntu = "2.4",
-        "2.5"
+        koopa_version("gsl")
     ),
     version_cmd = c(
         "gsl-config --version",
@@ -313,7 +354,7 @@ check_version(
 # HDF5
 check_version(
     name = "h5dump",
-    version = "1.10",
+    version = koopa_version("hdf5"),
     version_cmd = c(
         "h5dump --version",
         "head -n 1",
@@ -327,7 +368,7 @@ check_version(
     version = switch(
         EXPR = os,
         ubuntu = "2.1",
-        "2.2"
+        koopa_version("htop")
     ),
     version_cmd = c(
         "htop --version",
@@ -339,7 +380,7 @@ check_version(
 # OpenSSL
 check_version(
     name = "openssl",
-    version = "1.1.1",
+    version = koopa_version("openssl"),
     version_cmd = c(
         "openssl version",
         "head -n 1",
@@ -350,12 +391,7 @@ check_version(
 # Pandoc
 check_version(
     name = "pandoc",
-    version = switch(
-        EXPR = os,
-        amzn = "1.12",
-        rhel = "1.12",
-        "2.0"
-    ),
+    version = koopa_version("pandoc"),
     version_cmd = c(
         "pandoc --version",
         "head -n 1",
@@ -371,10 +407,10 @@ check_version(
     name = "tex",
     version = switch(
         EXPR = os,
-        amzn = "2013",
-        rhel = "2013",
+        # amzn = "2013",
+        # rhel = "2013",
         ubuntu = "2017",
-        "2019"
+        koopa_version("tex")
     ),
     version_cmd = c(
         "tex --version",
@@ -389,7 +425,7 @@ check_version(
 # ShellCheck
 check_version(
     name = "shellcheck",
-    version = "0.6",
+    version = koopa_version("shellcheck"),
     version_cmd = c(
         "shellcheck --version",
         "sed -n '2p'",
@@ -422,7 +458,7 @@ message("\nChecking optional programs.")
 # Conda
 check_version(
     name = "conda",
-    version = "4.6.14",
+    version = koopa_version("conda"),
     version_cmd = c(
         "conda --version",
         "head -n 1",
@@ -434,10 +470,10 @@ check_version(
 
 # Perl
 # The cut match is a little tricky here:
-# This is perl 5, version 16, subversion 3 (v5.16.3)
+# # This is perl 5, version 16, subversion 3 (v5.16.3)
 check_version(
     name = "perl",
-    version = "5.30.0",
+    version = koopa_version("perl"),
     version_cmd = c(
         "perl --version",
         "sed -n '2p'",
@@ -452,7 +488,7 @@ if (isTRUE(linux)) {
     # RStudio Server
     check_version(
         name = "rstudio-server",
-        version = "1.2.1335",
+        version = koopa_version("rstudio-server"),
         version_cmd = "rstudio-server version",
         eval = "==",
         required = FALSE
@@ -461,7 +497,7 @@ if (isTRUE(linux)) {
     # Shiny Server
     check_version(
         name = "shiny-server",
-        version = "1.5.9.923",
+        version = koopa_version("shiny-server"),
         version_cmd = c(
             "shiny-server --version",
             "head -n 1",
@@ -474,7 +510,7 @@ if (isTRUE(linux)) {
     # bcbio
     check_version(
         name = "bcbio_nextgen.py",
-        version = "1.1.5",
+        version = koopa_version("bcbio_nextgen.py"),
         version_cmd = "bcbio_nextgen.py --version",
         eval = switch(
             EXPR = host,
@@ -492,7 +528,7 @@ if (isTRUE(linux)) {
     if (isTRUE(linux)) {
         check_version(
             name = "rename",
-            version = "1.10",
+            version = koopa_version("rename"),
             version_cmd = c(
                 "rename --version",
                 "head -n 1",
