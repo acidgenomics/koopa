@@ -1,5 +1,18 @@
 ## koopa 0.4.0 (2019-06-13)
 
+This is the first release supported to work when installed at `/usr/local`.
+This enables shared shell configuratino of all users, via configuration in
+`/etc/profile` (or `/etc/profile.d/`) instead of relying on `.bash_profile`.
+
+### Major changes
+
+- koopa now checks for root and doesn't attempt to activate.
+- Improved dotfile initialization, and no files are overwritten by default.
+
+### Minor changes
+
+- `KOOPA_DIR` path is always expanded, and symlinks are now resolved.
+
 
 
 ## koopa 0.3.6 (2019-06-05)
@@ -10,16 +23,16 @@
 - Install koopa using simply `install` instead of `INSTALL.sh`.
 - Improved attempt at dotfiles auto-linking during `install` call.
 - Improved OS-specific PATH exports.
+- Switched to using `KOOPA_PREFIX` and `KOOPA_TMP` variables for build scripts.
 
 ### New programs
 
-- `sudo-install-amzn-base`: Recommended initial installation steps for Amazon
-  Linux 2.
-- `sudo-install-debian-base`: Recommended initial installation steps for Debian
-  (e.g. Ubuntu).
-- `sudo-install-fedora-base`: Recommended initial installation steps for Fedora.
+- `sudo-install-amzn-base`: Recommended initial setup for Amazon Linux 2.
+- `sudo-install-debian-base`: Recommended initial setup for Debian.
+- `sudo-install-fedora-base`: Recommended initial setup for Fedora.
 - `sudo-update-system` scripts for supported operating systems.
-- 
+- `sudo-install-perl-rename`
+- `sudo-install-shiny-server`
 
 ### Minor changes
 
@@ -31,8 +44,10 @@
 - Renamed pre-flight check scripts.
 - Hardened zsh setup scripts, using `[[` instead of `[` consistently.
 - Miscellaneous early return fixes, e.g. for conda and virtualenv detection.
-
-
+- Renamed RHEL scripts to use Fedora instead. Improved check support for distros
+  that extend Fedora, such as RHEL 7 and Amazon Linux 2.
+- Simplified shellcheck installation across distros.
+- Improved conda installation messages.
 
 ## koopa 0.3.5 (2019-06-04)
 
