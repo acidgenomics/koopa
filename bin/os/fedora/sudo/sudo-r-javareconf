@@ -2,12 +2,12 @@
 set -Eeuo pipefail
 
 # Update rJava.
+# Modified 2019-06-14.
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 echo "Updating R Java configuration."
-
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 # R CMD javareconf -h
 
@@ -23,8 +23,8 @@ echo "Updating R Java configuration."
 #   JAR            path to a Java archive tool
 
 # Fix permissions.
-sudo chgrp -R wheel /usr/local/lib64/R
-sudo chmod -R g+w /usr/local/lib64/R
+sudo -n chgrp -R wheel /usr/local/lib64/R
+sudo -n chmod -R g+w /usr/local/lib64/R
 
 java_dir="/usr/lib/jvm/java"
 java_flags=" \
@@ -35,7 +35,7 @@ java_flags=" \
 "
 
 # shellcheck disable=SC2086
-sudo R --vanilla CMD javareconf $java_flags
+sudo -n R --vanilla CMD javareconf $java_flags
 
 # shellcheck disable=SC2086
 R --vanilla CMD javareconf $java_flags

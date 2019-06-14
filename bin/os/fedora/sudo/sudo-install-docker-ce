@@ -5,7 +5,7 @@ set -Eeuo pipefail
 # https://docs.docker.com/install/linux/docker-ce/centos/
 
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 sudo -n yum remove -y \
     docker \

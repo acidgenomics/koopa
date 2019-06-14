@@ -2,13 +2,13 @@
 set -Eeuo pipefail
 
 # Update system.
+# Modified 2019-06-14.
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 log_dir="${HOME}/logs/${HOSTNAME}/yum"
 mkdir -p "$log_dir"
 log_file="${log_dir}/yum-update-$(date +%F).log"
-sudo yum update -y 2>&1 | tee "$log_file"
-unset -v log_dir log_file
+
+sudo -n yum update -y 2>&1 | tee "$log_file"

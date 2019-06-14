@@ -8,7 +8,7 @@ set -Eeuo pipefail
 # - https://github.com/emacs-mirror/emacs
 
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
