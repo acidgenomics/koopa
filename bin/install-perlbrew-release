@@ -4,8 +4,12 @@ set -Eeuo pipefail
 # Perlbrew
 # https://perlbrew.pl/
 
-version="5.28.2"
+source "${KOOPA_DIR}/includes/shell/bash/functions.sh"
+
+version="$(koopa_version perl)"
+
+# > perlbrew available
+# > perlbrew list
 
 perlbrew install "perl-${version}"
 perlbrew switch "perl-${version}"
-

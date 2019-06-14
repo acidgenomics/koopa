@@ -4,11 +4,16 @@ set -Eeuo pipefail
 # Perlbrew
 # https://perlbrew.pl/
 
+# Installation instructions:
+# - https://metacpan.org/pod/App::perlbrew
+# - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
+
+dir="${PERLBREW_ROOT:-${HOME}/perl5/perlbrew}"
+
 # Check for previous installation.
-if [[ -n "${PERLBREW_ROOT:-}" ]] ||
-   [[ -d ~/perl5/perlbrew ]]
+if [[ -d "$dir" ]]
 then
-    echo "perlbrew is already installed."
+    >&2 printf "perlbrew is already installed.\n%s\n" "$dir"
     exit 1
 fi
 
