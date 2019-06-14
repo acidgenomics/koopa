@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Shared perlbrew root for multiple users
+# Modified 2019-06-14.
+
+# See also:
+# - https://perlbrew.pl/
+# - https://gugod.org/2010/12/a-shared-perlbrew-root-for-multiple-users/
+
+prefix="$KOOPA_PREFIX"
+export PERLBREW_ROOT="${prefix}/perlbrew"
+install-perlbrew

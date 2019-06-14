@@ -5,41 +5,12 @@ set -Eeuo pipefail
 # https://www.anaconda.com/download
 # https://docs.anaconda.com/anaconda/install/
 
-source "${KOOPA_DIR}/include/shell/bash/functions.sh"
-
 prefix="${KOOPA_PREFIX}/anaconda3"
-build_dir="${KOOPA_TMP}/build/anaconda3"
-
-version="$(koopa_version anaconda3)"
-
-# https://repo.anaconda.com/archive/
-# https://repo.anaconda.com/archive/${script}
-
-case "$OSTYPE" in
-    linux-gnu) script="Anaconda3-${version}-Linux-x86_64.sh";;
-      darwin*) script="Anaconda3-${version}-MacOSX-x86_64.sh";;
-            *) echo "${OSTYPE} is not supported."; exit 1;;
-esac
 
 # Ensure previous installation is removed.
 sudo -n rm -rf "$prefix"
 
-(
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
-    echo "Downloading Anaconda installer."
-    curl -O "https://repo.anaconda.com/archive/${script}"
-    # Note that this script should not be run as root.
-    bash "$script" -b -p "$prefix"
-    rm -rf "$build_dir"
-)
+prefix="$prefix" install-anaconda3
 
 # Set installed files to root.
-sudo -n chown -R "root:wheel" "$prefix"
-
-echo "conda installed successfully."
-conda_exe="${prefix}/bin/conda"
-echo "$conda_exe"
-sh -c "$conda_exe --version"
-
+sudo -n chown -Rh "root:wheel" "$prefix"
