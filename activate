@@ -152,7 +152,6 @@ then
     . "${EXPORTS_DIR}/general.sh"
     . "${EXPORTS_DIR}/platform.sh"
     . "${EXPORTS_DIR}/cpu-count.sh"
-    . "${EXPORTS_DIR}/genomes.sh"
     . "${EXPORTS_DIR}/path.sh"
     unset -v EXPORTS_DIR
 
