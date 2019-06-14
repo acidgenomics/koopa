@@ -26,8 +26,8 @@ do
             shift
             break
             ;;
-        -*|--*=) # Unsupported flags.
-            echo "Error: Unsupported flag $1" >&2
+        --*|-*) # Unsupported flags.
+            echo "Error: Invalid flag $1" >&2
             exit 1
             ;;
         *) # Preserve positional arguments.
