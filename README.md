@@ -5,23 +5,20 @@
 
 Shell bootloader for bioinformatics.
 
-## Requirements
 
-Currently, these [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 
-Dependencies:
+## Installation
+
+These [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
+
+Requirements:
 
 - Linux or macOS. Windows isn't supported.
-- [Bash][] >= 5. Always required, even when using a different shell.
+- [Bash][] >= 5. Required even when using a different shell.
 - [Python][] >= 3.7.
 - [R][] >= 3.6.
 
-Optional:
-
-- [Conda][] >= 4.5.
-  Note that [conda][] doesn't currently work with ksh (see [issue](https://github.com/conda/conda/issues/7843)).
-
-## Installation
+### Local user installation
 
 Clone the repository:
 
@@ -35,18 +32,34 @@ Run the installer script:
 ~/koopa/install
 ```
 
-Add these lines to your POSIX-compliant shell configuration file.
+Add these lines to your shell configuration file.
 
 ```sh
 # koopa shell
 # https://github.com/acidgenomics/koopa
-# shellcheck source=/dev/null
-. "${HOME}/koopa/activate"
+if [ -z "${KOOPA_SHELL:-}" ]
+then
+    # shellcheck source=/dev/null
+    . ~/koopa/activate
+fi
 ```
 
-Koopa should now activate at login.
+### Shared user installation
+
+```sh
+```
+
+
+
+
+
+Koopa will now activate automatically at login.
 
 To obtain information about the working environment, run `koopa info`.
+
+Check your environment dependencies with `koopa check`.
+
+
 
 ## Troubleshooting
 
@@ -61,6 +74,8 @@ Not sure where to source `activate` in your configuration? Here are some general
 ### dotfiles example
 
 Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
+
+
 
 ## Additional configuration
 
@@ -127,9 +142,13 @@ Host *
 
 Automatic [PGP][] key support will be added in a future update.
 
+
+
 ## Tools
 
 Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa list` for a complete list.
+
+
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
