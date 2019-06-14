@@ -7,5 +7,5 @@ export D3="/mnt/azbioinfoseq03"
 export D4="/mnt/azbioinfoseq04"
 export D5="/mnt/azbioinfoseq05"
 
-# These exports will be detected by koopa.
+# These values will be detected in koopa.sh profile.
 export BCBIO_EXE="/data00/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
