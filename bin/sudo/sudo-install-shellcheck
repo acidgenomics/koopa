@@ -9,6 +9,7 @@ set -Eeuo pipefail
 # - Install GHC and cabal-install from source
 #   https://www.haskell.org/downloads/linux/
 
+# shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 prefix="$KOOPA_PREFIX"
