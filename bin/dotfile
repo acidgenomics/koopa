@@ -78,8 +78,6 @@ to_file="${HOME}/.${to_name}"
 if [[ -L "$to_file" && -f "$to_file" && -z "${force:-}" ]]
 then
     # Early return if dot file already exists.
-    echo "Skipping '${to_name}' dot file; already exists."
-    echo "Use '--force' flag to overwrite."
     exit 0
 elif [[ ! -L "$to_file" && -f "$to_file" ]]
 then
