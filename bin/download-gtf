@@ -13,7 +13,7 @@ args = parser.parse_args()
 organism = args.organism
 
 # Get the Ensembl release information from shell global variables.
-ensembl_release = os.environ["ENSEMBL_RELEASE"]
+ensembl_release = os.environ["ENSEMBL_RELEASE_VERSION"]
 ensembl_release_url = os.environ["ENSEMBL_RELEASE_URL"]
 base_url = ensembl_release_url + "/gtf"
 
