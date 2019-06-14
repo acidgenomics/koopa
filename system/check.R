@@ -483,6 +483,9 @@ check_version(
     required = FALSE
 )
 
+# perlbrew
+installed("perlbrew", required = FALSE)
+
 # Linux-specific programs
 if (isTRUE(linux)) {
     # RStudio Server
