@@ -5,19 +5,18 @@ set -Eeuo pipefail
 # https://www.openssl.org/source/
 # https://wiki.openssl.org/index.php/Compilation_and_Installation
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_dir="${KOOPA_TMP}/build/openssl"
 
-version="1.1.1c"
+version="$(koopa_version openssl)"
 
 echo "Installing openssl ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
-
 # Install build dependencies.
-sudo yum-builddep -y openssl
+sudo -n yum-builddep -y openssl
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
@@ -30,12 +29,12 @@ sudo yum-builddep -y openssl
     ./config --prefix="$prefix" shared
     make
     make test
-    sudo make install
+    sudo -n make install
     rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
-sudo ldconfig
+sudo -n ldconfig
 
 cat << EOF
 openssl installed successfully.

@@ -4,21 +4,20 @@ set -Eeuo pipefail
 # Python
 # https://www.python.org/
 
-prefix="/usr/local"
-build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="/tmp/build/python"
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-version="3.7.3"
+prefix="$KOOPA_PREFIX"
+build_name="$KOOPA_OS_BUILD_STRING"
+build_dir="${KOOPA_TMP}/build/python"
+
+version="$(koopa_version python)"
 
 echo "Installing python ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
-
 # Install Python and build dependencies.
-sudo yum install -y python python-pip
-sudo yum-builddep -y python
+sudo -n yum install -y python python-pip
+sudo -n yum-builddep -y python
 
 mkdir "$build_dir"
 
@@ -26,9 +25,9 @@ mkdir "$build_dir"
 (
     cd "$build_dir"
     wget https://bootstrap.pypa.io/get-pip.py
-    sudo python get-pip.py
-    sudo pip install -U pip
-    sudo pip install -U virtualenv
+    sudo -n python get-pip.py
+    sudo -n pip install -U pip
+    sudo -n pip install -U virtualenv
 )
 
 # Build and install from source.
@@ -43,14 +42,14 @@ mkdir "$build_dir"
         --enable-optimizations \
         --enable-shared
     make
-    sudo make install
+    sudo -n make install
 )
 
-sudo rm -rf "$build_dir"
+sudo -n rm -rf "$build_dir"
 
 # Ensure ldconfig is current.
 # Otherwise you can run into libpython detection errors.
-sudo ldconfig
+sudo -n ldconfig
 
 echo "python installed correctly."
 command -v python3

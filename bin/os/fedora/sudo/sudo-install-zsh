@@ -8,21 +8,20 @@ set -Eeuo pipefail
 # - http://zsh.sourceforge.net/Arc/source.html
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
 build_dir="${KOOPA_TMP}/build/zsh"
 
-version="5.7.1"
+version="$(koopa_version zsh)"
 
 echo "Installing zsh ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
-
 # Install build dependencies.
 sudo yum install -y zsh
-sudo yum-builddep -y zsh
+sudo -n yum-builddep -y zsh
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
@@ -38,7 +37,7 @@ sudo yum-builddep -y zsh
     make
     make check
     # make test
-    sudo make install
+    sudo -n make install
     rm -rf "$build_dir"
 )
 
@@ -49,9 +48,9 @@ zsh --version
 if grep -qv "${prefix}/bin/zsh" /etc/shells
 then
     echo "Updating /etc/shells."
-    sudo bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
+    sudo -n bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
 fi
 
 echo "Updating default shell."
-sudo chsh -s "${prefix}/bin/zsh" "$USER"
+sudo -n chsh -s "${prefix}/bin/zsh" "$USER"
 
