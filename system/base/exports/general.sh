@@ -35,6 +35,14 @@ export TODAY
 # Note that on macOS bash will fail if `set -e` is set and this isn't exported.
 [ -z "${HISTTIMEFORMAT:-}" ] && export HISTTIMEFORMAT="%Y%m%d %T  "
 
+# Force UTF-8 to avoid encoding issues for users with broken locale settings.
+# https://github.com/Homebrew/brew/blob/master/Library/Homebrew/brew.sh
+# > export LC_ALL="C"
+if [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
+then
+    export LC_ALL="en_US.UTF-8"
+fi
+
 # Set up text editor, if unset.
 # Using vim instead of emacs by default.
 if [ -z "${EDITOR:-}" ]
