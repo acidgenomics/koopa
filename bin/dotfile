@@ -2,9 +2,37 @@
 set -Eeuo pipefail
 
 # Add dot file.
-# Modified 2019-06-13.
+# Modified 2019-06-14.
 
-# Consider adding a `--force` flag to force dot file overwrites.
+# Use flags and positional arguments.
+# https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+
+PARAMS=""
+
+while (("$#"))
+do
+    case "$1" in
+        -f|--force)
+            force=1
+            shift 1
+            ;;
+        --) # End argument parsing.
+            shift
+            break
+            ;;
+        -*|--*=) # Unsupported flags.
+            echo "Error: Unsupported flag $1" >&2
+            exit 1
+            ;;
+        *) # Preserve positional arguments.
+            PARAMS="$PARAMS $1"
+            shift
+            ;;
+    esac
+done
+
+# Set positional arguments in their proper place.
+eval set -- "$PARAMS"
 
 from_name="$1"
 to_name="${2:-}"
@@ -22,7 +50,7 @@ then
 fi
 
 from_file="${dot_dir}/${from_name}"
-if [[ ! -f "$from_file" ]] && [[ ! -d "$from_file" ]]
+if [[ ! -f "$from_file" && ! -d "$from_file" ]]
 then
     >&2 echo "Error: ${from_file} missing."
     exit 1
@@ -30,16 +58,19 @@ fi
 
 to_file="${HOME}/.${to_name}"
 
-if [[ ! -L "$to_file" ]] && [[ -f "$to_file" ]]
+if [[ -L "$to_file" && -f "$to_file" && -z "${force:-}" ]]
 then
     # Early return if dot file already exists.
+    echo "Skipping '${to_name}' dot file; already exists."
+    echo "Use '--force' flag to overwrite."
     exit 0
-elif [[ ! -L "$to_file" ]] && [[ -f "$to_file" ]]
+elif [[ ! -L "$to_file" && -f "$to_file" ]]
 then
     # Error if dot file exists but is not a symlink.
-    >&2 echo "Error: ${to_file} already exists, but is not a symlink."
+    >&2 echo "Error: '${to_file}' already exists, but is not a symlink."
     exit 1
 fi
 
+echo "Symlinking '${to_name}' dot file."
 rm -f "$to_file"
 ln -s "$from_file" "$to_file"
