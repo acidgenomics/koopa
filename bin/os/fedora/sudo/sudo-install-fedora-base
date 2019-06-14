@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Base programs recommended for all VMs
+# Base programs recommended for all VMs.
+# Modified 2019-06-14.
 
 # Here's a yum cheatsheet, for reference:
 # https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
 "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-sudo yum update -y
-sudo yum install -y \
+sudo -n yum update -y
+sudo -n yum install -y \
     epel-release \
     convmv \
     git \
