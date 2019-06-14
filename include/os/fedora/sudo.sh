@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 
 # Source bash functions.
+# shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 if ! has_sudo
