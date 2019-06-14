@@ -15,8 +15,6 @@
 # Initial checks                                                            {{{1
 # ==============================================================================
 
-# $ set -o posix
-
 # Skip activation for root user.
 [ "$(id -u)" -eq 0 ] && return 0
 
@@ -67,6 +65,10 @@ export KOOPA_SHELL
 # Locate the koopa installation                                             {{{1
 # ==============================================================================
 
+quiet_cd() {
+  cd "$@" >/dev/null || return
+}
+
 if [ "$KOOPA_SHELL" = "bash" ]
 then
     # SC2039: In POSIX sh, array references are undefined.
@@ -94,7 +96,8 @@ then
     return 1
 fi
 
-KOOPA_DIR="$(dirname "${KOOPA_SOURCE}")"
+# Note that pwd is used here to resolve symlinks.
+KOOPA_DIR="$(quiet_cd "${KOOPA_SOURCE%/*}/" && pwd -P)"
 export KOOPA_DIR
 
 KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
