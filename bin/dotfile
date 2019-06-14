@@ -4,6 +4,8 @@ set -Eeuo pipefail
 # Add dot file.
 # Modified 2019-06-14.
 
+
+
 # Use flags and positional arguments.
 # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 
@@ -14,6 +16,10 @@ do
     case "$1" in
         -f|--force)
             force=1
+            shift 1
+            ;;
+        -h|--help)
+            help=1
             shift 1
             ;;
         --) # End argument parsing.
@@ -33,6 +39,17 @@ done
 
 # Set positional arguments in their proper place.
 eval set -- "$PARAMS"
+
+
+
+# Help mode.
+if [[ -z "${help:-}" || -z "$*" ]]
+then
+    echo "Usage: dotfile [-f|--force] from_name (to_name)"
+    exit 0
+fi
+
+
 
 from_name="$1"
 to_name="${2:-}"
