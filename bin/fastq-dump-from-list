@@ -11,11 +11,14 @@ set -Eeuo pipefail
 
 # This script requires sra-tools.
 # https://github.com/ncbi/sra-tools
-command -v fastq-dump >/dev/null 2>&1 || { echo >&2 "fastq-dump missing."; exit 1; }
+command -v fastq-dump >/dev/null 2>&1 || {
+    >&2 echo "fastq-dump missing."
+    exit 1
+}
 
 filelist="SRR_Acc_List.txt"
 if [[ ! -f "$filelist" ]]; then
-    echo "${filelist} does not exist."
+    >&2 echo "${filelist} does not exist."
     exit 1
 fi
 
