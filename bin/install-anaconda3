@@ -5,6 +5,7 @@ set -Eeuo pipefail
 # https://www.anaconda.com/download
 # https://docs.anaconda.com/anaconda/install/
 
+# shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 [[ -z "${prefix:-}" ]] && prefix="${HOME}/anaconda3"

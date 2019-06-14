@@ -20,7 +20,7 @@ build_name="$KOOPA_OS_BUILD_STRING"
 
 version="$(koopa_version R)"
 major_version="$(echo "$version" | cut -d "." -f 1)"
-minor_version="$(echo "$version" | cut -d "." -f 2-)"
+# > minor_version="$(echo "$version" | cut -d "." -f 2-)"
 
 echo "Installing R ${version}."
 

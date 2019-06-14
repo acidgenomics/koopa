@@ -28,7 +28,7 @@ sudo -n yum-builddep -y zsh
     rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir"
-    wget https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download
+    wget "https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download"
     tar -xJvf "download"
     cd "zsh-${version}"
     ./configure \
