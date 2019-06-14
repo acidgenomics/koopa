@@ -8,9 +8,12 @@ set -Eeuo pipefail
 # - https://metacpan.org/pod/App::perlbrew
 # - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
 
-dir="${PERLBREW_ROOT:-${HOME}/perl5/perlbrew}"
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+version="$(koopa_version perl)"
 
 # Check for previous installation.
+dir="${PERLBREW_ROOT:-${HOME}/perl5/perlbrew}"
 if [[ -d "$dir" ]]
 then
     >&2 printf "perlbrew is already installed.\n%s\n" "$dir"
@@ -18,3 +21,9 @@ then
 fi
 
 curl -L https://install.perlbrew.pl | bash
+
+perlbrew install "perl-${version}"
+perlbrew switch "perl-${version}"
+
+# > perlbrew available
+# > perlbrew list
