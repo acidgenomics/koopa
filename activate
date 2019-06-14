@@ -185,10 +185,6 @@ then
         . "${BASH_DIR}/bind.sh"
         . "${BASH_DIR}/ps1.sh"
         unset -v BASH_DIR
-    elif [ "$KOOPA_SHELL" = "zsh" ]
-    then
-        dotfile shrc
-        dotfile zshrc
     fi
 
     # Platform-specific configuration.
