@@ -28,6 +28,10 @@ do
             help=1
             shift 1
             ;;
+        -q|--quiet)
+            quiet=1
+            shift 1
+            ;;
         --) # End argument parsing.
             shift
             break
@@ -53,8 +57,19 @@ eval set -- "$PARAMS"
 
 if [[ -n "${help:-}" || -z "$*" ]]
 then
-    echo "Usage: dotfile [-f|--force] repo_relative_path (symlink_name)"
-    echo "Note that forced overwrites apply to symlinks only."
+
+cat << EOF
+    Usage: dotfile relative_path (symlink_name)
+
+    relative_path: Relative file path in dotfiles repo.
+    symlink_name: Name of destination symlink (without '.' prefix).
+
+    Flags:
+        -f, --force  Force overwrite. Applies to symlinks only.
+        -h, --help   Help.
+        -q, --quiet  Quiet mode. Don't print messages.
+
+EOF
     exit 0
 fi
 
@@ -86,6 +101,7 @@ if [[ -L "$symlink_path" ]] && \
     [[ -f "$symlink_path" || -d "$symlink_path" ]] && \
     [[ -z "${force:-}" ]]
 then
+    [[ -n "${quiet:-}" ]] && exit 0
     >&2 printf "Error: Existing symlink.\n%s\n" "$symlink_path"
     exit 1
 elif [[ ! -L "$symlink_path" ]] && \
@@ -95,6 +111,9 @@ then
     exit 1
 fi
 
-printf "Symlinking '%s'.\n" "$(basename $symlink_path)"
+if [[ -n "${quiet:-}" ]]
+then
+    printf "Symlinking '%s'.\n" "$(basename $symlink_path)"
+fi
 rm -f "$symlink_path"
 ln -s "$source_path" "$symlink_path"
