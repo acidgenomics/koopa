@@ -5,47 +5,34 @@ set -Eeuo pipefail
 # (c) 2018 Michael Steinbaugh
 # This software is provided under an MIT License.
 
+args="$*"
 cmd="${1:-}"
 
 version="0.4.0a"
-date="2019-06-13"
+date="2019-06-14"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
 then
-    echo "koopa is not correctly activated."
-    # Note that return should only be used for a sourced script.
+    >&2 echo "koopa is not correctly activated."
     exit 1
 fi
 
-if [[ "$cmd" == "--help" ]] ||
-   [[ "$cmd" == "-h" ]] ||
-   [[ "$cmd" == "help" ]] ||
-   [[ -z "$cmd" ]]
-then
-    cat "${KOOPA_DIR}/system/help.txt"
-elif [[ "$cmd" == "--version" ]] ||
-   [[ "$cmd" == "-V" ]] ||
-   [[ "$cmd" == "version" ]]
-then
-    echo "koopa ${version} (${date})"
-elif [[ "$cmd" == "check" ]]
-then
-    Rscript --vanilla "${KOOPA_DIR}/system/check.R"
-elif [[ "$cmd" == "info" ]]
-then
-    "${KOOPA_DIR}/system/info.sh"
-elif [[ "$cmd" == "list" ]]
-then
-    Rscript --vanilla "${KOOPA_DIR}/system/list.R"
-elif [[ "$cmd" == "update" ]]
-then
-    "${KOOPA_DIR}/system/update.sh"
-elif [[ "$cmd" == "upgrade" ]]
-then
-    echo "Error: Use 'update' instead of 'upgrade'."
-    exit 1
-else
-    echo "Error: Unsupported command."
-    exit 1
-fi
+# Display help on empty call.
+[ -z "$args" ] && koopa --help && exit 0
+
+# Supported flags.
+case "$args" in
+       --help|-h) cat "${KOOPA_DIR}/system/help.txt"; exit 0;;
+    --version|-V) echo "koopa ${version} (${date})"; exit 0;;
+esac
+
+# Supported commands.
+case "$cmd" in
+      check) Rscript --vanilla "${KOOPA_DIR}/system/check.R"; exit 0;;
+       info) "${KOOPA_DIR}/system/info.sh"; exit 0;;
+       list) Rscript --vanilla "${KOOPA_DIR}/system/list.R"; exit 0;;
+     update) "${KOOPA_DIR}/system/update.sh"; exit 0;;
+    upgrade) >&2 echo "Error: Use 'update' instead of 'upgrade'."; exit 1;;
+          *) >&2 echo "Error: Unsupported command."; exit 1;;
+esac
