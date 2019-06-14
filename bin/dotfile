@@ -43,7 +43,7 @@ eval set -- "$PARAMS"
 
 
 # Help mode.
-if [[ -z "${help:-}" || -z "$*" ]]
+if [[ -n "${help:-}" || -z "$*" ]]
 then
     echo "Usage: dotfile [-f|--force] from_name (to_name)"
     exit 0
