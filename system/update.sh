@@ -15,4 +15,3 @@ koopa updated successfully.
 Shell must be reloaded for changes to take effect.
 EOF
 
-exec "$KOOPA_SHELL"
