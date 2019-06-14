@@ -4,9 +4,15 @@ set -Eeuo pipefail
 # Add dot file.
 # Modified 2019-06-14.
 
+# Note that relative file path in dotfiles repo can be used as input.
+# The destination file should be specified without a leading period.
 
 
-# Use flags and positional arguments.
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+# Using flags and positional arguments.
 # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 
 PARAMS=""
@@ -42,50 +48,49 @@ eval set -- "$PARAMS"
 
 
 
-# Help mode.
+# Help                                                                      {{{1
+# ==============================================================================
+
 if [[ -n "${help:-}" || -z "$*" ]]
 then
-    echo "Usage: dotfile [-f|--force] from_name (to_name)"
+    echo "Usage: dotfile [-f|--force] repo_relative_path (symlink_name)"
     exit 0
 fi
 
 
 
-from_name="$1"
-to_name="${2:-}"
+# Script                                                                    {{{1
+# ==============================================================================
 
 dot_dir="${KOOPA_DIR}/dotfiles"
 if [[ ! -d "$dot_dir" ]]
 then
-    >&2 echo "Error: ${dot_dir} missing."
+    >&2 printf "Error: %s missing.\n" "$dot_dir"
     exit 1
 fi
 
-if [[ -z "$to_name" ]]
+source_path="${dot_dir}/${1}"
+if [[ ! -f "$source_path" && ! -d "$source_path" ]]
 then
-    to_name="$from_name"
-fi
-
-from_file="${dot_dir}/${from_name}"
-if [[ ! -f "$from_file" && ! -d "$from_file" ]]
-then
-    >&2 echo "Error: ${from_file} missing."
+    >&2 printf "Error: %s missing.\n" "$source_path"
     exit 1
 fi
 
-to_file="${HOME}/.${to_name}"
+symlink_name="${2:-}"
+[[ -z "$symlink_name" ]] && symlink_name="$(basename "$source_path")"
 
-if [[ -L "$to_file" && -f "$to_file" && -z "${force:-}" ]]
+symlink_path="${HOME}/.${symlink_name}"
+if [[ -L "$symlink_path" && -f "$symlink_path" && -z "${force:-}" ]]
 then
     # Early return if dot file already exists.
     exit 0
-elif [[ ! -L "$to_file" && -f "$to_file" ]]
+elif [[ ! -L "$symlink_path" && -f "$symlink_path" ]]
 then
     # Error if dot file exists but is not a symlink.
-    >&2 echo "Error: '${to_file}' already exists, but is not a symlink."
+    >&2 printf "Error: '%s' exists, and is not a symlink." "$symlink_path"
     exit 1
 fi
 
-echo "Symlinking '${to_name}'."
-rm -f "$to_file"
-ln -s "$from_file" "$to_file"
+printf "Symlinking '%s'.\n" "$(basename $symlink_path)"
+rm -f "$symlink_path"
+ln -s "$source_path" "$symlink_path"
