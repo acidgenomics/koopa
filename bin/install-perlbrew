@@ -8,6 +8,7 @@ set -Eeuo pipefail
 # - https://metacpan.org/pod/App::perlbrew
 # - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
 
+# shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 version="$(koopa_version perl)"

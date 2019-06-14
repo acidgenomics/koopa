@@ -23,7 +23,7 @@ sudo -n yum-builddep -y bash
     rm -rf "$build_dir"
     mkdir -p "$build_dir"
     cd "$build_dir"
-    wget http://ftpmirror.gnu.org/bash/bash-${version}.tar.gz
+    wget "http://ftpmirror.gnu.org/bash/bash-${version}.tar.gz"
     tar -xzvf "bash-${version}.tar.gz"
     cd "bash-${version}"
     ./configure \
