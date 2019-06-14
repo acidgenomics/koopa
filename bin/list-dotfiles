@@ -4,7 +4,21 @@ set -Eeuo pipefail
 # List dotfiles.
 # Modified 2019-06-13.
 
-find ~ -maxdepth 1 -name ".*" -print0 | \
-    xargs -0 -n1 basename | \
-    sort
+find_dotfiles() {
+    local type="$1"
+    local header="$2"
+    printf "\n%s:\n" "$header"
+    find ~ \
+        -maxdepth 1 \
+        -name ".*" \
+        -type "$type" \
+        -print0 | \
+        xargs -0 -n1 basename | \
+        sort |
+        awk '{print "  ",$0}'
+}
+
+find_dotfiles l Symlinks
+find_dotfiles f Files
+find_dotfiles d Directories
 
