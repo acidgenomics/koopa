@@ -11,33 +11,28 @@ set -Eeuo pipefail
 # - https://github.com/rstudio/rmarkdown/issues/359
 # - http://pj.freefaculty.org/blog/?p=315
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_dir="${KOOPA_TMP}/build/r"
 build_name="$KOOPA_OS_BUILD_STRING"
 
-major_version="3"
-minor_version="6.0"
-version="${major_version}.${minor_version}"
+version="$(koopa_version R)"
+major_version="$(echo "$version" | cut -d "." -f 1)"
+minor_version="$(echo "$version" | cut -d "." -f 2-)"
 
 echo "Installing R ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
-
-
-
 # Install R and build dependencies.
-sudo yum install -y R
-sudo yum-builddep -y R
-
-
+sudo -n yum install -y R
+sudo -n yum-builddep -y R
 
 # Java
 echo "Upgrading Java."
 # yum currently installs java-1.8.0-openjdk-headless.x86_64.
 # This breaks with R CMD javareconf.
-sudo yum install -y java-latest-openjdk-devel
+sudo -n yum install -y java-latest-openjdk-devel
 
 command -v java
 java -version
@@ -46,8 +41,6 @@ command -v javac
 javac -version
 
 yum list installed | grep -E '^java-'
-
-
 
 # Install TeX dependencies.
 # Missing recommendations:
@@ -59,7 +52,7 @@ yum list installed | grep -E '^java-'
 # - texlive-nowidow
 # - texlive-parnotes
 
-sudo yum install -y \
+sudo -n yum install -y \
     texlive \
     texlive-bera \
     texlive-collection-fontsrecommended \
@@ -92,8 +85,6 @@ sudo yum install -y \
 #
 # There doesn't appear to be an easy way to fix this on RHEL.
 
-
-
 # Now we're ready to compile R.
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
@@ -119,12 +110,12 @@ sudo yum install -y \
         --with-tcltk
     make
     make check
-    sudo make install
+    sudo -n make install
     rm -rf "$build_dir"
 )
 
 # Need to update LD config.
-sudo ldconfig
+sudo -n ldconfig
 
 # Update R Java configuration.
 sudo-r-javareconf
@@ -133,8 +124,6 @@ echo "R installed successfully."
 command -v R
 R --version
 Rscript -e 'capabilities()'
-
-
 
 cat << EOF
 RStudio server configuration must be updated to use this version of R.

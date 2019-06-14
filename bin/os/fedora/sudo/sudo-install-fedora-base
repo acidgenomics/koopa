@@ -8,7 +8,7 @@ set -Eeuo pipefail
 # https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf
 
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 sudo -n yum update -y
 sudo -n yum install -y \

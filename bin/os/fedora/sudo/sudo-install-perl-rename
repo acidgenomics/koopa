@@ -3,16 +3,14 @@ set -Eeuo pipefail
 
 # Install Perl rename, which is superior to util-linux rename.
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-sudo yum install -y perl-App-cpanminus
-sudo cpanm File::Rename
+sudo -n yum install -y perl-App-cpanminus
+sudo -n cpanm File::Rename
 
 # Alternate method:
 # perl -MCPAN -e 'install File::Rename'
 
 command -v rename
 rename --version
-

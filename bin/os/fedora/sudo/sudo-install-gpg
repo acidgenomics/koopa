@@ -10,6 +10,9 @@ set -Eeuo pipefail
 # - https://github.com/gpg/gnupg/blob/master/INSTALL
 # - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_dir="${KOOPA_TMP}/build/gnupg"
 
@@ -17,11 +20,7 @@ gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
 echo "Installing GnuPG."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/fedora/sudo.sh"
-
-sudo yum-builddep -y gnupg2
+sudo -n yum-builddep -y gnupg2
 
 # Download GnuPG release signing keys.
 gpg --list-keys
@@ -35,7 +34,7 @@ mkdir -p "$build_dir"
 
 (
     package="libgpg-error"
-    version="1.31"
+    version="$(koopa_version "$package")"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -44,12 +43,12 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
 )
 
 (
     package="libgcrypt"
-    version="1.8.4"
+    version="$(koopa_version "$package")"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -58,12 +57,12 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
 )
 
 (
     package="libassuan"
-    version="2.5.3"
+    version="$(koopa_version "$package")"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -72,12 +71,12 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
 )
 
 (
     package="libksba"
-    version="1.3.5"
+    version="$(koopa_version "$package")"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -86,12 +85,12 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
 )
 
 (
     package="npth"
-    version="1.6"
+    version="$(koopa_version "$package")"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -100,12 +99,12 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
 )
 
 (
     package="pinentry"
-    version="1.1.0"
+    version="$(koopa_version "$package")"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -114,15 +113,15 @@ mkdir -p "$build_dir"
     cd "${package}-${version}" || return 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make
-    sudo make install
+    sudo -n make install
 )
 
 # Update dynamic linker configuration.
-sudo ldconfig -v
+sudo -n ldconfig -v
 
 (
     package="gnupg"
-    version="2.2.9"
+    version="$(koopa_version gpg)"
     cd "$build_dir" || return 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
@@ -132,17 +131,17 @@ sudo ldconfig -v
     ./configure --prefix="$prefix"
     make
     make check
-    sudo make install
+    sudo -n make install
 )
 
 # Clean up the temp files.
 rm -rf "$build_dir"
 
 # Add local lib path to gpg configuration.
-sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
+sudo -n sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
 
 # Update dynamic linker configuration.
-sudo ldconfig -v
+sudo -n ldconfig -v
 
 # Without the line below, gpg2 might fail to create / import secret keys.
 # rm -rf ~/.gnugp
@@ -152,4 +151,3 @@ gpgconf --kill gpg-agent
 echo "GnuPG installed successfully."
 command -v gpg
 gpg --version
-
