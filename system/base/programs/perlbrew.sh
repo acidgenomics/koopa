@@ -2,39 +2,32 @@
 
 # Perlbrew
 # https://perlbrew.pl
+# Modified 2019-06-14.
 
-# Installation instructions
-# https://metacpan.org/pod/App::perlbrew
-# https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
-
-# To install, run:
-# curl -L https://install.perlbrew.pl | bash
-
-
-
-# Check for installation, otherwise early return.
-[ -z "${PERLBREW_ROOT:-}" ] && PERLBREW_ROOT="${HOME}/perl5/perlbrew"
-[ ! -d "$PERLBREW_ROOT" ] && return 0
-export PERLBREW_ROOT
-
-# [ -z "$PERLBREW_HOME" ] && PERLBREW_HOME="${HOME}/.perlbrew"
-# [ ! -d "$PERLBREW_HOME" ] && return 0
-# export PERLBREW_HOME
-
-
-
-# Check for bash or zsh, otherwise return with warning.
+# Check for bash or zsh.
 if [ "$KOOPA_SHELL" != "bash" ] && [ "$KOOPA_SHELL" != "zsh" ]
 then
-    printf "Perlbrew is only compatible with bash or zsh.\n"
-    return 1
+    return 0
 fi
 
-
+# Check for installation, otherwise early return.
+if [ ! -z "${PERLBREW_ROOT:-}" ]
+then
+    prefix="$PERLBREW_ROOT"
+elif [ -d "${HOME}/perl5/perlbrew" ]
+then
+    prefix="${HOME}/perl5/perlbrew"
+elif [ -d "/usr/local/perlbrew" ]
+then
+    prefix="/usr/local/perlbrew"
+else
+    return 0
+fi
 
 # Now ready to source bashrc activation script.
-# Note that this also works with zsh.
-file="${PERLBREW_ROOT}/etc/bashrc"
+# Note that this is also compatible with zsh.
+file="${prefix}/etc/bashrc"
 # shellcheck disable=SC1090
 [ -f "$file" ] && . "$file"
-unset -v file
+
+unset -v file prefix
