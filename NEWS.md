@@ -4,6 +4,34 @@
 
 ## koopa 0.3.6 (2019-06-05)
 
+### Major changes
+
+- Improved update script.
+- Install koopa using simply `install` instead of `INSTALL.sh`.
+- Improved attempt at dotfiles auto-linking during `install` call.
+- Improved OS-specific PATH exports.
+
+### New programs
+
+- `sudo-install-amzn-base`: Recommended initial installation steps for Amazon
+  Linux 2.
+- `sudo-install-debian-base`: Recommended initial installation steps for Debian
+  (e.g. Ubuntu).
+- `sudo-install-fedora-base`: Recommended initial installation steps for Fedora.
+- `sudo-update-system` scripts for supported operating systems.
+- 
+
+### Minor changes
+
+- Removed attempt at automatic bcbio install detection for Azure. Consider
+  linking current release as recommended in bcbio install instructions.
+- Hardened some additional unbound variables detected in the activation scripts.
+- Reworked bash and zsh activation steps. Namely, removed `init.sh` file.
+- Disabled `set +x` for some scripts, which was used for testing.
+- Renamed pre-flight check scripts.
+- Hardened zsh setup scripts, using `[[` instead of `[` consistently.
+- Miscellaneous early return fixes, e.g. for conda and virtualenv detection.
+
 
 
 ## koopa 0.3.5 (2019-06-04)
