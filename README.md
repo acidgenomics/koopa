@@ -46,8 +46,21 @@ fi
 
 ### Shared user installation
 
+Note that this requires sudo permissions.
+
+Clone the repository:
+
 ```sh
+git clone https://github.com/acidgenomics/koopa.git /usr/local/koopa
 ```
+
+If this step fails, you may need to apply a permission fix:
+
+```sh
+sudo chown "root:wheel" /usr/local
+sudo chmod g+w /usr/local
+```
+
 
 
 
