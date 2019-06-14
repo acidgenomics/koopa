@@ -7,7 +7,7 @@ set -Eeuo pipefail
 prefix="$KOOPA_PREFIX"
 build_dir="${KOOPA_TMP}/build/vim"
 
-version="8.1.1331"
+version="$(koopa_version vim)"
 
 echo "Installing vim ${version}."
 
