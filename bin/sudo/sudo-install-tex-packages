@@ -2,44 +2,43 @@
 set -Eeuo pipefail
 
 # Install TeX packages using tlmgr.
+# Modified 2019-06-14.
 
 echo "Installing TeX packages recommended for RStudio."
-echo "sudo is required for this script."
 
-# This step currently fails for ec2-user on Amazon Linux 2, so disable.
-# sudo -v
+sudo -n tlmgr update --self
 
-sudo tlmgr update --self
-
-packages=(collection-fontsrecommended  # priority
-          collection-latexrecommended  # priority
-          bera  # beramono
-          caption
-          changepage
-          csvsimple
-          enumitem
-          etoolbox
-          fancyhdr
-          footmisc
-          framed
-          geometry
-          hyperref
-          inconsolata
-          marginfix
-          mathtools
-          natbib
-          nowidow
-          parnotes
-          parskip
-          placeins
-          preprint  # authblk
-          sectsty
-          soul
-          titlesec
-          titling
-          xstring)
+packages=( \
+    collection-fontsrecommended  # priority
+    collection-latexrecommended  # priority
+    bera  # beramono
+    caption
+    changepage
+    csvsimple
+    enumitem
+    etoolbox
+    fancyhdr
+    footmisc
+    framed
+    geometry
+    hyperref
+    inconsolata
+    marginfix
+    mathtools
+    natbib
+    nowidow
+    parnotes
+    parskip
+    placeins
+    preprint  # authblk
+    sectsty
+    soul
+    titlesec
+    titling
+    xstring \
+)
 
 for package in "${packages[@]}"
 do
-    sudo tlmgr install "$package"
+    sudo -n tlmgr install "$package"
 done

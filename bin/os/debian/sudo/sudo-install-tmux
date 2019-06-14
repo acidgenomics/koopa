@@ -4,19 +4,18 @@ set -Eeuo pipefail
 # Tmux terminal multiplexer
 # https://github.com/tmux/tmux
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/debian/sudo.sh"
+
 prefix="$KOOPA_PREFIX"
 build_dir="${KOOPA_TMP}/build/tmux"
 
-version="2.9a"
+version="$(koopa_version tmux)"
 
 echo "Installing tmux ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/debian/sudo.sh"
-
 # apt-cache search libevent
-sudo apt-get -y install libevent-dev
+sudo -n apt-get -y install libevent-dev
 
 # SC2103: Use a ( subshell ) to avoid having to cd back.
 (
@@ -28,12 +27,12 @@ sudo apt-get -y install libevent-dev
     cd "tmux-${version}" || return 1
     ./configure --prefix="$prefix"
     make
-    sudo make install
+    sudo -n make install
     rm -rf "$build_dir"
 )
 
 # Ensure ldconfig is current.
-sudo ldconfig
+sudo -n ldconfig
 
 echo "tmux installed successfully."
 command -v tmux

@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+set -Eeuo pipefail
 
 # Install oh-my-zsh
 

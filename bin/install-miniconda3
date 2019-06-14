@@ -27,8 +27,7 @@ esac
 # Check for previous installation.
 if [[ -d "$prefix" ]]
 then
-    echo "Error: conda already installed."
-    echo "$prefix"
+    >&2 sprintf "Error: conda already installed.\n%s\n" "$prefix"
     exit 1
 fi
 
