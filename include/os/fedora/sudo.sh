@@ -7,7 +7,8 @@ source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 if ! has_sudo
 then
     echo "Non-interactive (passwordless) sudo is required for this script."
-exit 1
+    exit 1
+fi
 
 # Check for Fedora.
 if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
