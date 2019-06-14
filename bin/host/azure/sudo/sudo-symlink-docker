@@ -6,7 +6,7 @@ set -Eeuo pipefail
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
 
-sudo service docker stop
+sudo -n service docker stop
 
 if [[ -d "$dest_dir" ]]
 then
@@ -21,8 +21,8 @@ then
     exit 1
 fi
 
-sudo mv "${source_dir}/" "${dest_dir}/"
-sudo ln -s "$dest_dir" "$source_dir"
+sudo -n mv "${source_dir}/" "${dest_dir}/"
+sudo -n ln -s "$dest_dir" "$source_dir"
 
-sudo service docker start
+sudo -n service docker start
 docker images
