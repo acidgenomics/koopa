@@ -23,13 +23,13 @@ Requirements:
 Clone the repository:
 
 ```sh
-git clone https://github.com/acidgenomics/koopa.git ~/koopa
+git clone https://github.com/acidgenomics/koopa.git ~/.koopa
 ```
 
 Run the installer script:
 
 ```
-~/koopa/install
+~/.koopa/install
 ```
 
 Add these lines to your shell configuration file.
@@ -40,7 +40,7 @@ Add these lines to your shell configuration file.
 if [ -z "${KOOPA_SHELL:-}" ]
 then
     # shellcheck source=/dev/null
-    . ~/koopa/activate
+    . ~/.koopa/activate
 fi
 ```
 

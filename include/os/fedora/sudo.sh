@@ -52,7 +52,7 @@ fi
 # Ensure ldconfig is configured to use /usr/local.
 if [[ -d /etc/ld.so.conf.d ]]
 then
-    sudo -n cp "${KOOPA_DIR}/config/os/fedora/etc/ld.so.conf.d/"*".conf" \
+    sudo -n cp "${KOOPA_DIR}/config/etc/ld.so.conf.d/"*".conf" \
         /etc/ld.so.conf.d
 fi
 
