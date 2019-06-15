@@ -111,7 +111,7 @@ then
     exit 1
 fi
 
-if [[ -n "${quiet:-}" ]]
+if [[ -z "${quiet:-}" ]]
 then
     printf "Symlinking '%s'.\n" "$(basename $symlink_path)"
 fi
