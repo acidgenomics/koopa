@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Internal functions.
 # Modified 2019-06-14.
