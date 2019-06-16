@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Add dot file.
-# Modified 2019-06-14.
+# Modified 2019-06-16.
 
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.
@@ -37,7 +37,7 @@ do
             break
             ;;
         --*|-*) # Unsupported flags.
-            echo "Error: Invalid flag $1" >&2
+            >&2 printf "Error: Invalid flag %s\n" "$1"
             exit 1
             ;;
         *) # Preserve positional arguments.
@@ -57,7 +57,6 @@ eval set -- "$PARAMS"
 
 if [[ -n "${help:-}" || -z "$*" ]]
 then
-
 cat << EOF
     Usage: dotfile relative_path (symlink_name)
 
