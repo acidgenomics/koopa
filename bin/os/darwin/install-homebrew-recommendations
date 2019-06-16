@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Recommended Homebrew recipes to install.
 # Modified 2019-06-12.

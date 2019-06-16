@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Docker
 # https://docs.docker.com/install/linux/docker-ce/centos/

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Enable EPEL repository on RHEL7 and Amazon Linux 2.
 # https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/

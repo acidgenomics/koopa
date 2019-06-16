@@ -1,38 +1,55 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
-# koopa shell bootloader
-# (c) 2018 Michael Steinbaugh
+# koopa shell bootloader.
+# (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
-args="$*"
-cmd="${1:-}"
+cmd="$*"
 
 version="0.4.0a"
-date="2019-06-14"
+date="2019-06-16"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
 then
-    >&2 echo "koopa is not correctly activated."
+    >&2 printf "koopa is not correctly activated.\n"
     exit 1
 fi
 
 # Display help on empty call.
-[ -z "$args" ] && koopa --help && exit 0
+[ -z "${cmd}" ] && koopa --help && exit 0
 
-# Supported flags.
-case "$args" in
-       --help|-h) cat "${KOOPA_DIR}/system/help.txt"; exit 0;;
-    --version|-V) echo "koopa ${version} (${date})"; exit 0;;
-esac
-
-# Supported commands.
 case "$cmd" in
-      check) Rscript --vanilla "${KOOPA_DIR}/system/check.R"; exit 0;;
-       info) "${KOOPA_DIR}/system/info.sh"; exit 0;;
-       list) Rscript --vanilla "${KOOPA_DIR}/system/list.R"; exit 0;;
-     update) "${KOOPA_DIR}/system/update.sh"; exit 0;;
-    upgrade) >&2 echo "Error: Use 'update' instead of 'upgrade'."; exit 1;;
-          *) >&2 echo "Error: Unsupported command."; exit 1;;
+    --help|-h)
+        cat "${KOOPA_DIR}/system/help.txt"
+        exit 0
+        ;;
+    --version|-V)
+        printf "koopa %s (%s)\n" "$version" "$date"
+        exit 0
+        ;;
+    check)
+        Rscript --vanilla "${KOOPA_DIR}/system/check.R"
+        exit 0
+        ;;
+    info)
+        "${KOOPA_DIR}/system/info.sh"
+        exit 0
+        ;;
+    list)
+        Rscript --vanilla "${KOOPA_DIR}/system/list.R"
+        exit 0
+        ;;
+    update)
+        "${KOOPA_DIR}/system/update.sh"; exit 0;;
+    upgrade)
+        >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
+        exit 1
+        ;;
+    *)
+        >&2 printf "Error: Unsupported command.\n"
+        >&2 printf "Run 'koopa --help' for details.\n"
+        exit 1
+        ;;
 esac

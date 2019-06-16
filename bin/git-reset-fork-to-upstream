@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Reset fork to upstream
 # https://stackoverflow.com/questions/42332769

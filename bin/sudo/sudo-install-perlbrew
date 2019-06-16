@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Shared perlbrew root for multiple users
 # Modified 2019-06-14.
