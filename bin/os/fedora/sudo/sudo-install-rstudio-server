@@ -7,7 +7,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-build_dir="${KOOPA_TMP}/build/rstudio-server"
+build_dir="${KOOPA_TMP_DIR}/build/rstudio-server"
 
 version="$(rstudio-server)"
 

@@ -1,7 +1,7 @@
 # Genrich
 # https://github.com/jsh58/Genrich
 
-build_dir="${KOOPA_TMP}/build/genrich"
+build_dir="${KOOPA_TMP_DIR}/build/genrich"
 prefix="$KOOPA_PREFIX"
 
 version="0.5"

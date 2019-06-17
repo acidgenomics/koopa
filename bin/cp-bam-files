@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 
 # Source directory.
 source_dir="$1"
-source_dir="$( realpath "$source_dir" )"
+source_dir="$(realpath "$source_dir")"
 if [[ ! -d "$source_dir" ]]
 then
     printf "\nDoes not exist:\n%s\n\n" "$source_dir"
@@ -14,7 +14,7 @@ fi
 
 # Destination directory.
 dest_dir="$2"
-dest_dir="$( realpath "$dest_dir" )"
+dest_dir="$(realpath "$dest_dir")"
 if [[ ! -d "$dest_dir" ]]
 then
     printf "\nDoes not exist:\n%s\n\n" "$dest_dir"

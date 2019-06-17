@@ -17,5 +17,7 @@ version="$(koopa_version perl)"
 perl_name="perl-${version}"
 
 perlbrew install "$perl_name"
-perlbrew use "$perl_name"
-perlbrew switch "$perl_name"
+perlbrew list
+
+# > perlbrew use "$perl_name"
+# > perlbrew switch "$perl_name"
