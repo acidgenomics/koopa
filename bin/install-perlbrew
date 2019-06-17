@@ -13,15 +13,28 @@ source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 version="$(koopa_version perl)"
 
+PERLBREW_ROOT="${PERLBREW_ROOT:-${HOME}/perl5/perlbrew}"
+
 # Check for previous installation.
-dir="${PERLBREW_ROOT:-${HOME}/perl5/perlbrew}"
-if [[ -d "$dir" ]]
+if [[ -d "$PERLBREW_ROOT" ]]
 then
     >&2 printf "perlbrew is already installed.\n%s\n" "$dir"
     exit 1
 fi
 
+export PERLBREW_ROOT
+
 curl -L https://install.perlbrew.pl | bash
+
+perlbrew_exe="${PERLBREW_ROOT}/bin/perlbrew"
+
+"$perlbrew_exe" --version
+
+echo "Activating Perlbrew."
+# Note that the Perlbrew activation script contains unbound variables.
+set +u
+. "${KOOPA_DIR}/system/activate/programs/perlbrew.sh"
+set -u
 
 perlbrew install "perl-${version}"
 perlbrew switch "perl-${version}"
