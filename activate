@@ -246,12 +246,12 @@ unset -v exports_dir
 export KOOPA_CONFIG_DIR="${XDG_CONFIG_HOME}/koopa"
 mkdir -p "$KOOPA_CONFIG_DIR"
 
-if [ ! -L "${KOOPA_CONFIG_DIR}/activate" ]
+if [ ! -f "${KOOPA_CONFIG_DIR}/activate" ]
 then
     ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
 fi
 
-if [ ! -L "${KOOPA_CONFIG_DIR}/dotfiles" ]
+if [ ! -d "${KOOPA_CONFIG_DIR}/dotfiles" ]
 then
     ln -fs "${KOOPA_DIR}/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
 fi
