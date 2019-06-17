@@ -19,7 +19,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 prefix="${prefix:-${KOOPA_PREFIX}/miniconda3}"
-build_dir="${KOOPA_TMP}/build/miniconda3"
+build_dir="${KOOPA_TMP_DIR}/build/miniconda3"
 
 case "$OSTYPE" in
     linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;

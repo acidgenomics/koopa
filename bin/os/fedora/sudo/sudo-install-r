@@ -15,7 +15,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/r"
+build_dir="${KOOPA_TMP_DIR}/build/r"
 build_name="$KOOPA_OS_BUILD_STRING"
 
 version="$(koopa_version R)"

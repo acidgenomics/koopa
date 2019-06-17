@@ -9,7 +9,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/htop"
+build_dir="${KOOPA_TMP_DIR}/build/htop"
 
 version="$(koopa_version htop)"
 

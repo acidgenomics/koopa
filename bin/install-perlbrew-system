@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Perlbrew system Perl
+# https://stackoverflow.com/questions/25188575
+
+if [[ -x "/usr/local/bin/perl" ]]
+then
+    bin_dir="/usr/local/bin"
+elif [[ -x "/usr/bin/perl" ]]
+then
+    bin_dir="/usr/bin"
+else
+    >&2 echo "Error: Failed to detect system Perl."
+    exit 1
+fi
+
+(
+    cd "${PERLBREW_ROOT}/perls"
+    rm -rf system
+    mkdir system
+    ln -s "$bin_dir" "system/bin"
+)
+
+perlbrew list

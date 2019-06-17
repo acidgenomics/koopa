@@ -14,7 +14,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/gnupg"
+build_dir="${KOOPA_TMP_DIR}/build/gnupg"
 
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
