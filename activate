@@ -1,14 +1,29 @@
 #!/bin/sh
 # shellcheck disable=SC1090,SC2236
+
+# Activate koopa.
+# Modified 2019-06-16.
+
+# Currently supporting POSIX-compliant shells:
+# - bash
+# - ksh
+# - zsh
+
+# TODO:
+# - fish: This requires loading a separate activation script.
+# - tcsh
+
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
 
 
 
-# koopa shell bootloader
-# (c) 2018 Michael Steinbaugh
-# This software is provided under an MIT License.
-# Currently supporting POSIX-compliant shells: bash, ksh, zsh.
+# Functions                                                                 {{{1
+# ==============================================================================
+
+quiet_cd() {
+  cd "$@" >/dev/null || return 1
+}
 
 
 
@@ -21,14 +36,10 @@
 # Set variable to check if koopa is already active.
 # This step is particularly useful when working on a cluster that spawns new
 # sessions from the current shell.
-[ ! -z "${KOOPA_OS_PLATFORM:-}" ] && KOOPA_ACTIVATED=1
+[ ! -z "${KOOPA_SHELL:-}" ] && active=1 || active=0
 
 # Don't reload for HPC interactive job.
-if [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] &&
-   [ ! -z "${KOOPA_ACTIVATED:-}" ]
-then
-    return 0
-fi
+[ "$active" -eq 1 ] && [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
 
 
 
@@ -47,15 +58,18 @@ elif [ ! -z "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
 else
-    echo "koopa currently supports bash, ksh, or zsh shell."
-    echo "Check your configuration."
-    echo "Note that '/bin/sh' is not recommended."
-    echo ""
-    echo "${SHELL:-}"
-    echo "$0"
-    echo "$-"
-    echo ""
-    env | sort
+    >&2 cat << EOF
+koopa failed to detect supported shell.
+
+Currently supported: bash, ksh, zsh.
+Check your configuration.
+Note that '/bin/sh' usage is not recommended.
+
+Environment:
+0=${0}
+-=${-}
+$(env | sort)
+EOF
     return 1
 fi
 export KOOPA_SHELL
@@ -64,10 +78,6 @@ export KOOPA_SHELL
 
 # Locate the koopa installation                                             {{{1
 # ==============================================================================
-
-quiet_cd() {
-  cd "$@" >/dev/null || return
-}
 
 if [ "$KOOPA_SHELL" = "bash" ]
 then
@@ -92,99 +102,161 @@ fi
 
 if [ ! -f "$KOOPA_SOURCE" ]
 then
-    >&2 echo "Error: Failed to detect absolute path of activation script."
+    >&2 printf "Error: Failed to detect absolute path of activation script.\n"
     return 1
 fi
 
-# Note that pwd is used here to resolve symlinks.
+# Note that `pwd` is used here to resolve symlinks.
 KOOPA_DIR="$(quiet_cd "${KOOPA_SOURCE%/*}/" && pwd -P)"
 export KOOPA_DIR
 
-KOOPA_SYSTEM_DIR="${KOOPA_DIR}/system"
+# Load shared functions.
+. "${KOOPA_DIR}/include/functions.sh"
+
+# Get location of activation scripts.
+activate_dir="${KOOPA_DIR}/system/activate"
 
 
 
-# Extra mode detection                                                      {{{1
+# Flags                                                                     {{{1
 # ==============================================================================
 
-# Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
-# SC2154: extra is reference but not assigned.
-# shellcheck disable=SC2154
-if [ "${extra:-1}" -ne 0 ]
+for i in "$@"
+do
+    case "$i" in
+        -h|--help)
+            help=1
+            ;;
+        --minimal)
+            minimal=1
+            export KOOPA_MINIMAL=1
+            ;;
+        --no-aspera)
+            aspera=0
+            ;;
+        --no-bcbio)
+            bcbio=0
+            ;;
+        --no-conda)
+            conda=0
+            ;;
+        --no-homebrew)
+            homebrew=0
+            ;;
+        --no-perlbrew)
+            perlbrew=0
+            ;;
+        --no-prompt)
+            prompt=0
+            ;;
+        --no-rbenv)
+            rbenv=0
+            ;;
+        --no-ssh-key)
+            ssh_key=0
+            ;;
+        --no-virtualenv)
+            virtualenv=0
+            ;;
+        --*|-*) # Unsupported flags.
+            >&2 printf "Error: Invalid flag %s\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+
+
+# Help mode                                                                 {{{1
+# ==============================================================================
+
+if [ "${help:-0}" -eq 1 ]
 then
-    KOOPA_EXTRA=1
-    unset -v extra
+    cat << EOF
+Activate koopa.
+
+Flags:
+
+    -h, --help         Help mode.
+
+    --minimal          Minimal mode. Simply export koopa programs into PATH.
+
+    --no-prompt        Skip prompt string customization.
+                       This disables PS1 export for bash, and skips activation
+                       of pure prompt for zsh.
+    
+    --no-aspera        Skip configuration of Aspera Connect.
+    --no-bcbio         Skip configuration of bcbio-nextgen.
+    --no-conda         Skip configuration of conda.
+    --no-perlbrew      Skip configuration of Perl via perlbrew.
+    --no-rbenv         Skip configuration of Ruby via rbenv.
+    --no-virtualenv    Skip configuration of Python virtual environment.
+    
+    [ Linux only ]
+
+    --no-ssh-key       Skip loading of id_rsa default SSH key.
+
+    [ macOS only ]
+
+    --no-homebrew      Skip configuration of Homebrew.
+EOF
+    exit 0
 fi
 
 
 
-# Pre-flight checks                                                         {{{1
+# Basic shell configuration                                                 {{{1
 # ==============================================================================
 
-if [ -z "${KOOPA_ACTIVATED:-}" ]
-then
-    PRE_DIR="${KOOPA_SYSTEM_DIR}/pre"
-    . "${PRE_DIR}/os.sh"
-    . "${PRE_DIR}/programs.sh"
-    unset -v PRE_DIR
-    KOOPA_OS_PLATFORM="$(python -mplatform)" && export KOOPA_OS_PLATFORM
-fi
+. "${activate_dir}/preflight.sh"
 
-
-
-# Base shell configuration                                                  {{{1
-# ==============================================================================
-
-# Always load these non-persistent settings.
-BASE_DIR="${KOOPA_SYSTEM_DIR}/base"
-. "${KOOPA_SYSTEM_DIR}/functions.sh"
-. "${BASE_DIR}/secrets.sh"
-. "${BASE_DIR}/aliases.sh"
-. "${BASE_DIR}/set.sh"
-. "${BASE_DIR}/ssh-key.sh"
-
-
-
-# Skip these persistent settings in subshells (e.g. tmux).
-if [ -z "${KOOPA_ACTIVATED:-}" ]
-then
-    EXPORTS_DIR="${BASE_DIR}/exports"
-    . "${EXPORTS_DIR}/general.sh"
-    . "${EXPORTS_DIR}/platform.sh"
-    . "${EXPORTS_DIR}/cpu-count.sh"
-    . "${EXPORTS_DIR}/genomes.sh"
-    . "${EXPORTS_DIR}/path.sh"
-    unset -v EXPORTS_DIR
-
-    PROGRAMS_DIR="${BASE_DIR}/programs"
-    . "${PROGRAMS_DIR}/perlbrew.sh"
-    . "${PROGRAMS_DIR}/aspera.sh"
-    . "${PROGRAMS_DIR}/bcbio.sh"
-    . "${PROGRAMS_DIR}/conda.sh"
-    . "${PROGRAMS_DIR}/virtualenv.sh"
-    unset -v PROGRAMS_DIR
-fi
-
-unset -v BASE_DIR
+exports_dir="${activate_dir}/exports"
+. "${exports_dir}/general.sh"
+. "${exports_dir}/platform.sh"
+. "${exports_dir}/cpu-count.sh"
+. "${exports_dir}/genomes.sh"
+. "${exports_dir}/path.sh"
+unset -v exports_dir
 
 
 
 # Extra shell configuration                                                 {{{1
 # ==============================================================================
 
-if [ ! -z "${KOOPA_EXTRA:-}" ]
+if [ "${minimal:-0}" -eq 0 ]
 then
-    # Set default file permissions.
-    . "${KOOPA_SYSTEM_DIR}/umask.sh"
+    . "${activate_dir}/set.sh"
+    . "${activate_dir}/umask.sh"
+    . "${activate_dir}/aliases.sh"
+    . "${activate_dir}/secrets.sh"
+    
+    [ "${ssh_key:-1}" -eq 1 ] && \
+        . "${activate_dir}/ssh-key.sh"
+    
+    programs_dir="${activate_dir}/programs"
+    [ "${perlbrew:-1}" -eq 1 ] && \
+        . "${programs_dir}/perlbrew.sh"
+    [ "${rbenv:-1}" -eq 1 ] && \
+        . "${programs_dir}/rbenv.sh"
+    [ "${aspera:-1}" -eq 1 ] && \
+        . "${programs_dir}/aspera.sh"
+    [ "${bcbio:-1}" -eq 1 ] && \
+        . "${programs_dir}/bcbio.sh"
+    [ "${conda:-1}" -eq 1 ] && \
+        . "${programs_dir}/conda.sh"
+    [ "${virtualenv:-1}" -eq 1 ] && \
+        . "${programs_dir}/virtualenv.sh"
+    unset -v programs_dir
 
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        BASH_DIR="${KOOPA_SYSTEM_DIR}/shell/bash"
-        . "${BASH_DIR}/shopt.sh"
-        . "${BASH_DIR}/bind.sh"
-        . "${BASH_DIR}/ps1.sh"
-        unset -v BASH_DIR
+        bash_dir="${activate_dir}/shell/bash"
+        . "${bash_dir}/shopt.sh"
+        . "${bash_dir}/bind.sh"
+        [ "${prompt:-1}" -eq 1 ] && \
+            . "${bash_dir}/ps1.sh"
+        unset -v bash_dir
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         # zhsrc is required for Z shell to configure correctly.
@@ -195,17 +267,13 @@ then
     # Platform-specific configuration.
     if [ ! -z "${MACOS:-}" ]
     then
-        DARWIN_DIR="${KOOPA_SYSTEM_DIR}/os/darwin"
-        if [ -z "${KOOPA_ACTIVATED:-}" ]
-        then
-            . "${DARWIN_DIR}/exports.sh"
-            . "${DARWIN_DIR}/homebrew.sh"
-            . "${DARWIN_DIR}/homebrew-python.sh"
-        fi
-        . "${DARWIN_DIR}/aliases.sh"
-        . "${DARWIN_DIR}/grc-colors.sh"
-        . "${DARWIN_DIR}/rbenv.sh"
-        unset -v DARWIN_DIR
+        darwin_dir="${activate_dir}/os/darwin"
+        . "${darwin_dir}/aliases.sh"
+        . "${darwin_dir}/grc-colors.sh"
+        . "${darwin_dir}/exports.sh"
+        [ "${homebrew:-1}" -eq 1 ] && \
+            . "${darwin_dir}/programs/homebrew.sh"
+        unset -v darwin_dir
     fi
 
     # Set up the today bucket.
@@ -217,5 +285,17 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-. "${KOOPA_SYSTEM_DIR}/post/unset.sh"
-
+unset -v \
+    activate_dir \
+    active \
+    aspera \
+    bcbio \
+    conda \
+    help \
+    homebrew \
+    minimal \
+    perlbrew \
+    prompt \
+    rbenv \
+    ssh_key \
+    virtualenv
