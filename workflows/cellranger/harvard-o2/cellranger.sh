@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Run Cell Ranger on HMS O2 cluster.
 

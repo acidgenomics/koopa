@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # GENCODE GRCh37 mapped genome build
 # Last updated 2019-04-12
