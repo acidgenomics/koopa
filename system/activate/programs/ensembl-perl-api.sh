@@ -3,14 +3,7 @@
 # Ensembl Perl API
 # Modified 2019-06-17.
 
-# See also:
-# - https://useast.ensembl.org/info/docs/api/api_installation.html
-# - https://useast.ensembl.org/info/docs/api/api_git.html
-# - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
-
-# git clone -b release-1-6-924 --depth 1 https://github.com/bioperl/bioperl-live.git
-
-ensembl_dir="${HOME}/.ensembl"
+ensembl_dir="${KOOPA_PREFIX}/ensembl"
 
 # Early return if Ensembl git directory is missing.
 [ ! -d "$ensembl_dir" ] && return 0
