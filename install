@@ -11,6 +11,76 @@ koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 
 
+# Flags                                                                     {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        -h|--help)
+            help=1
+            shift 1
+            ;;
+        --mike)
+            mike=1
+            shift 1
+            ;;
+        --no-dotfiles)
+            dotfiles=0
+            shift 1
+            ;;
+        --shared)
+            shared=1
+            shift 1
+            ;;
+        --) # End argument parsing.
+            shift
+            break
+            ;;
+        --*|-*) # Unsupported flags.
+            >&2 printf "Error: Invalid flag %s\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+
+
+# Help mode                                                                 {{{1
+# ==============================================================================
+
+if [[ -n "${help:-}" ]]
+then
+    cat << EOF
+Install koopa.
+
+This script performs the following steps:
+
+    1. Initialize top-level submodules (e.g. dotfiles).
+    2. Recurse into dotfiles repo and initialize additional submodules.
+    3. Configure profile for current user (default; e.g. '~/.bashrc'), or
+       shared profile (use '--shared' flag) via '/etc/profile.d/'.
+
+Flags:
+
+    -h, --help
+        Help mode.
+        
+    --mike
+        Install Mike-specific dotfiles (e.g. gitconfig).
+
+    Linux only:
+    
+    --no-dotfiles
+        Skip automatic generation of dotfile symlinks.
+    --shared
+        Configure shared installation using '/etc/profile.d'.
+EOF
+    exit
+fi
+
+
+
 # Activate koopa                                                            {{{1
 # ==============================================================================
 
@@ -24,7 +94,7 @@ koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # Initialize submodules                                                     {{{1
 # ==============================================================================
 (
-    echo "Initializing submodules."
+    printf "\nInitializing submodules.\n"
     # shellcheck source=/dev/null
     cd "$koopa_dir"
     git submodule init
@@ -33,7 +103,7 @@ koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 )
 
 (
-    echo "Initializing dotfiles submodules."
+    printf "\nInitializing dotfiles submodules.\n"
     # shellcheck source=/dev/null
     cd "${koopa_dir}/dotfiles"
     git submodule init
@@ -48,12 +118,31 @@ koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 
 
-# Dot file symlinks                                                         {{{1
+# Shared user configuration                                                 {{{1
 # ==============================================================================
 
-# Skip this step for root, or shared installation.
-if [ "$(id -u)" -ne 0 ] && [ -z "${shared:-}" ]
+# Check for '/usr/local' and enable shared mode automatically.
+
+if [[ -n "${shared:-}" ]]
 then
-    # shellcheck source=/dev/null
-    . "${koopa_dir}/dotfiles/INSTALL.sh"
+    if [[ -z "$LINUX" ]]
+    then
+        >&2 echo "Error: Shared configuration is only supported on Linux."
+        exit 1
+    fi
+    echo "Adding 'koopa.sh' to '/etc/profile.d/'."
+    sudo mkdir -p /etc/profile.d
+    sudo ln -fs \
+        "${koopa_dir}/config/etc/profile.d/koopa.sh" \
+       /etc/profile.d/koopa.sh
+fi
+
+
+
+# Current user dot files                                                    {{{1
+# ==============================================================================
+
+if [[ -z "${shared:-}" ]] && [[ "${dotfiles:-1}" -eq 1 ]]
+then
+    . "${KOOPA_DIR}/system/install/dotfiles.sh"
 fi

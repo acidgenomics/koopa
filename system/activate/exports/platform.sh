@@ -97,4 +97,6 @@ esac
 # ==============================================================================
 
 KOOPA_PREFIX="$(get_prefix)" && export KOOPA_PREFIX
-export KOOPA_TMP="/tmp"
+
+export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
+mkdir -p "$KOOPA_TMP_DIR"
