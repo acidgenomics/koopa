@@ -179,26 +179,35 @@ Flags:
 
     -h, --help         Help mode.
 
-    --minimal          Minimal mode. Simply export koopa programs into PATH.
+    --minimal, minimal=1
+        Minimal mode. Simply export koopa programs into PATH.
 
-    --no-prompt        Skip prompt string customization.
-                       This disables PS1 export for bash, and skips activation
-                       of pure prompt for zsh.
+    --no-prompt, prompt=0
+        Skip prompt string customization. This disables PS1 export for bash,
+        and skips activation of pure prompt for zsh.
     
-    --no-aspera        Skip configuration of Aspera Connect.
-    --no-bcbio         Skip configuration of bcbio-nextgen.
-    --no-conda         Skip configuration of conda.
-    --no-perlbrew      Skip configuration of Perl via perlbrew.
-    --no-rbenv         Skip configuration of Ruby via rbenv.
-    --no-virtualenv    Skip configuration of Python virtual environment.
+    --no-aspera, aspera=0
+        Skip configuration of Aspera Connect.
+    --no-bcbio, bcbio=0
+        Skip configuration of bcbio-nextgen.
+    --no-conda, conda=0
+        Skip configuration of conda.
+    --no-perlbrew, perlbrew=0
+        Skip configuration of Perl via perlbrew.
+    --no-rbenv, rbenv=0
+        Skip configuration of Ruby via rbenv.
+    --no-virtualenv, virtualenv=0
+        Skip configuration of Python virtual environment.
     
-    [ Linux only ]
+    Linux only:
 
-    --no-ssh-key       Skip loading of id_rsa default SSH key.
+    --no-ssh-key, ssh_key=0
+        Skip loading of id_rsa default SSH key.
 
-    [ macOS only ]
+    macOS only:
 
-    --no-homebrew      Skip configuration of Homebrew.
+    --no-homebrew, homebrew=0
+        Skip configuration of Homebrew.
 EOF
     exit 0
 fi
