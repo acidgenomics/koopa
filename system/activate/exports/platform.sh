@@ -96,6 +96,5 @@ esac
 # Build variables                                                           {{{1
 # ==============================================================================
 
-export KOOPA_PREFIX="/usr/local"
+KOOPA_PREFIX="$(get_prefix)" && export KOOPA_PREFIX
 export KOOPA_TMP="/tmp"
-
