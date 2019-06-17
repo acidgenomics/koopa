@@ -12,7 +12,10 @@ hdf5="1.10"
 htop="2.2"
 openssl="1.1.1c"
 pandoc="2.7.3"
-perl="5.31.0"
+
+# Latest version compatible with Ensembl Perl API.
+perl="5.26.3"
+
 python="3.7.3"
 R="3.6.0"
 rename="1.10"
