@@ -4,7 +4,7 @@ set -Eeu -o pipefail
 # Uninstall koopa.
 # Modified 2019-06-17.
 
-"${KOOPA_DIR}/include/uninstall-dotfiles.sh"
+. "${KOOPA_DIR}/system/uninstall/dotfiles.sh"
 
 rm -f /etc/profile.d/koopa.sh
 rm -rf "$KOOPA_CONFIG_DIR"

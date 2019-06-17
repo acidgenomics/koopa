@@ -65,12 +65,6 @@ alias emacs="emacs --no-window-system"
 # --vanilla
 alias R="R --no-restore --no-save"
 
-# Fake realpath support, if necessary.
-if ! quiet_which realpath
-then
-    alias realpath="readlink -f"
-fi
-
 # R shiny server.
 if [ ! -z "${LINUX:-}" ]
 then
