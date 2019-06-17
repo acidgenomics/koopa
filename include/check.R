@@ -178,14 +178,18 @@ message("\nChecking required programs.")
 # Bash
 check_version(
     name = "bash",
-    version = koopa_version("bash"),
+    version = switch(
+        EXPR = os,
+        darwin = "5.0.7",
+        koopa_version("bash")
+    ),
     version_cmd = c(
         "bash --version",
         "head -n 1",
         "cut -d ' ' -f 4",
         "cut -d '(' -f 1"
     ),
-    eval = ">="
+    eval = "=="
 )
 
 # Z shell
@@ -258,7 +262,11 @@ check_version(
 # Docker
 check_version(
     name = "docker",
-    version = koopa_version("docker"),
+    version = switch(
+        EXPR = os,
+        darwin = "18.09.2",
+        koopa_version("docker")
+    ),
     version_cmd = c(
         "docker --version",
         "head -n 1",
@@ -328,6 +336,7 @@ check_version(
     name = "gpg",
     version = switch(
         EXPR = os,
+        darwin = "2.2.10",
         ubuntu = "2.2.4",
         koopa_version("gpg")
     ),
