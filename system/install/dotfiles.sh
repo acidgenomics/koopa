@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Install dot files.
 # Modified 2019-06-17.
 
 # Never attempt to configure dotfiles for root.
-[[ "$(id -u)" -eq 0 ]] && return 0
+[ "$(id -u)" -eq 0 ] && return 0
 
 printf "\nConfiguring dotfiles.\n"
 
@@ -26,26 +26,14 @@ dotfile -f vimrc
 dotfile -f zshrc
 
 # R
-if [[ "$os" == "darwin" ]]
+if [ "$os" = "darwin" ]
 then
     dotfile -f os/darwin/R
     dotfile -f os/darwin/Renviron
-elif [[ "$host" == "harvard-o2" ]]
+elif [ "$host" = "harvard-o2" ]
 then
     dotfile -f host/harvard-o2/Renviron
-elif [[ "$host" == "harvard-odyssey" ]]
+elif [ "$host" == "harvard-odyssey" ]
 then
     dotfile -f host/harvard-odyssey/Renviron
-fi
-
-# Mike only files.
-if [[ "${mike:-}" -eq 1 ]]
-then
-    dotfile -f forward
-    if [[ "$os" == "darwin" ]]
-    then
-    dotfile -f os/darwin/gitconfig
-    else
-        dotfile -f gitconfig
-    fi
 fi
