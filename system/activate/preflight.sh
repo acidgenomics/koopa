@@ -1,7 +1,24 @@
 #!/bin/sh
 # shellcheck disable=SC2236
 
-# Check for supported dependency versions.
+# Pre-flight checks.
+# Modified 2019-06-16.
+
+
+
+# Operating system                                                          {{{1
+# ==============================================================================
+
+# Bash sets the shell variable OSTYPE (e.g. linux-gnu).
+# However, this doesn't work consistently with zsh, so use uname instead.
+
+osname="$(uname -s)"
+case "$osname" in
+    Darwin) export MACOS=1 && export UNIX=1;;
+     Linux) export LINUX=1 && export UNIX=1;;
+         *) echo "Unsupported operating system."; exit 1;;
+esac
+unset -v osname
 
 
 
@@ -73,4 +90,3 @@ command -v Rscript >/dev/null 2>&1 || {
     echo >&2 "R is not installed."
     return 1
 }
-
