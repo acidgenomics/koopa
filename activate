@@ -140,6 +140,9 @@ do
         --no-conda)
             conda=0
             ;;
+        --no-ensembl-perl-api)
+            ensembl_perl_api=0
+            ;;
         --no-homebrew)
             homebrew=0
             ;;
@@ -192,6 +195,8 @@ Flags:
         Skip configuration of bcbio-nextgen.
     --no-conda, conda=0
         Skip configuration of conda.
+    --no-ensembl-perl-api, ensembl_perl_api=0
+        Skip configuration of Ensembl Perl API.
     --no-perlbrew, perlbrew=0
         Skip configuration of Perl via perlbrew.
     --no-rbenv, rbenv=0
@@ -249,6 +254,8 @@ then
         . "${programs_dir}/rbenv.sh"
     [ "${aspera:-1}" -eq 1 ] && \
         . "${programs_dir}/aspera.sh"
+    [ "${ensembl_perl_api:-1}" -eq 1 ] && \
+        . "${programs_dir}/ensembl-perl-api.sh"
     [ "${bcbio:-1}" -eq 1 ] && \
         . "${programs_dir}/bcbio.sh"
     [ "${conda:-1}" -eq 1 ] && \
