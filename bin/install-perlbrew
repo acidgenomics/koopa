@@ -3,6 +3,7 @@ set -Eeu -o pipefail
 
 # Perlbrew
 # https://perlbrew.pl/
+# Modified 2019-06-17.
 
 # Installation instructions:
 # - https://metacpan.org/pod/App::perlbrew
@@ -11,33 +12,18 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-version="$(koopa_version perl)"
+prefix="${prefix:-$KOOPA_PREFIX}/perlbrew"
+prefix_mkdir "$prefix"
 
-PERLBREW_ROOT="${PERLBREW_ROOT:-${HOME}/perl5/perlbrew}"
+# Ensure existing preferences are removed.
+rm -rf "${HOME}/.perlbrew"
 
-# Check for previous installation.
-if [[ -d "$PERLBREW_ROOT" ]]
-then
-    >&2 printf "perlbrew is already installed.\n%s\n" "$dir"
-    exit 1
-fi
-
-export PERLBREW_ROOT
-
+export PERLBREW_ROOT="$prefix"
 curl -L https://install.perlbrew.pl | bash
 
+prefix_chgrp "$prefix"
+
+echo "Perlbrew installed successfully."
+
 perlbrew_exe="${PERLBREW_ROOT}/bin/perlbrew"
-
 "$perlbrew_exe" --version
-
-echo "Activating Perlbrew."
-# Note that the Perlbrew activation script contains unbound variables.
-set +u
-. "${KOOPA_DIR}/system/activate/programs/perlbrew.sh"
-set -u
-
-perlbrew install "perl-${version}"
-perlbrew switch "perl-${version}"
-
-# > perlbrew available
-# > perlbrew list
