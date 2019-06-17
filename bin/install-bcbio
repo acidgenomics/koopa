@@ -2,6 +2,7 @@
 set -Eeu -o pipefail
 
 # Install bcbio-nextgen.
+# Modified 2019-06-17.
 
 # Use "stable" (recommended) or "development".
 # For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
@@ -9,62 +10,55 @@ set -Eeu -o pipefail
 # Azure install:
 # prefix="/data00/bcbio/v1.1.5" install-bcbio
 
-if [[ -z "${version:-}" ]]
-then
-    version="stable"
-fi
+prefix="${prefix:-{KOOPA_PREFIX}/bcbio}"
+build_dir="${KOOPA_TMP}/build/bcbio"
 
-if [[ -z "${prefix:-}" ]]
-then
-    install_dir="/usr/local/share/bcbio"
-    tools_dir="/usr/local"
-else
-    install_dir="${prefix}/install"
-    tools_dir="${prefix}/tools"
-fi
+install_dir="${prefix}/install"
+tools_dir="${prefix}/tools"
 
-# Error if bcbio is already installed.
-if [[ -d "$install_dir" ]]
-then
-    echo "Error: bcbio installation already exists."
-    exit 1
-fi
+version="${version:-stable}"
 
 # Ensure conda is deactivated.
 if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
 then
-    echo "Error: conda is active."
+    >&2 echo "Error: conda is active."
     exit 1
 fi
 
 # Ensure Python virtual environment is deactivated.
 if [[ -x "$(command -v deactivate)" ]]
 then
-    echo "Error: Python virtualenv is active."
+    >&2 echo "Error: Python virtualenv is active."
     exit 1
 fi
+
+prefix_mkdir "$prefix"
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 log_file="${log_dir}/bcbio-install-${version}-${timestamp}.log"
 mkdir -p "$log_dir"
 
-echo "Downloading bcbio installer script."
-rm -f bcbio_nextgen_install.py
-wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+(
+    rm -rf "$build_dir"
+    mkdir -p "$build_dir"
+    cd "$build_dir"
+    wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
+    python bcbio_nextgen_install.py \
+        "$install_dir" \
+        --tooldir="$tools_dir" \
+        --upgrade="$version" \
+        --datatarget="rnaseq" \
+        --nodata \
+        --isolate \
+        2>&1 | tee "$log_file"
+)
 
-python bcbio_nextgen_install.py \
-    "$install_dir" \
-    --tooldir="$tools_dir" \
-    --upgrade="$version" \
-    --datatarget="rnaseq" \
-    --nodata \
-    --isolate \
-    2>&1 | tee "$log_file"
-
-# Fix for macs2/numpy issue.
-# https://github.com/bcbio/bcbio-nextgen/issues/2853
-"${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
+prefix_chgrp "$prefix"
 
 # Disable group write access to install by default.
 chmod -R g-w "$install_dir" "$tools_dir"
+
+# Fix for current macs2/numpy issue.
+# https://github.com/bcbio/bcbio-nextgen/issues/2853
+"${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
