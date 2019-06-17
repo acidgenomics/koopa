@@ -9,7 +9,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 prefix="${prefix:-${KOOPA_PREFIX}/anaconda3}"
-build_dir="${KOOPA_TMP}/build/anaconda3"
+build_dir="${KOOPA_TMP_DIR}/build/anaconda3"
 
 version="$(koopa_version anaconda3)"
 

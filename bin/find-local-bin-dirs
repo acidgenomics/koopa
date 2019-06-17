@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Find local bin directories.
+# Modified 2019-06-17.
+
+find /usr/local \
+    -name "bin" \
+    -mindepth 2 \
+    -maxdepth 3 \
+    ! -path "*/Caskroom/*" \
+    ! -path "*/Cellar/*" \
+    ! -path "*/Homebrew/*" \
+    ! -path "*/lib/*" | \
+    sort

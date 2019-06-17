@@ -9,7 +9,7 @@ source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP}/build/python"
+build_dir="${KOOPA_TMP_DIR}/build/python"
 
 version="$(koopa_version python)"
 

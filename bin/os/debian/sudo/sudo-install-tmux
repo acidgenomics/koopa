@@ -8,7 +8,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/tmux"
+build_dir="${KOOPA_TMP_DIR}/build/tmux"
 
 version="$(koopa_version tmux)"
 

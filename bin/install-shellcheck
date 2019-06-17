@@ -13,7 +13,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 prefix="${prefix:-$KOOPA_PREFIX}"
-build_dir="${KOOPA_TMP}/build/shellcheck"
+build_dir="${KOOPA_TMP_DIR}/build/shellcheck"
 
 version="$(koopa_version shellcheck)"
 

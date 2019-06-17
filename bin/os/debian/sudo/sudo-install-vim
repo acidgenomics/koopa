@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 # https://github.com/vim/vim
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/vim"
+build_dir="${KOOPA_TMP_DIR}/build/vim"
 
 version="$(koopa_version vim)"
 

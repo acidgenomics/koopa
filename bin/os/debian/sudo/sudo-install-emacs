@@ -11,7 +11,7 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/emacs"
+build_dir="${KOOPA_TMP_DIR}/build/emacs"
 
 version="$(koopa_version emacs)"
 

@@ -11,7 +11,7 @@ set -Eeu -o pipefail
 # prefix="/data00/bcbio/v1.1.5" install-bcbio
 
 prefix="${prefix:-${KOOPA_PREFIX}/bcbio}"
-build_dir="${KOOPA_TMP}/build/bcbio"
+build_dir="${KOOPA_TMP_DIR}/build/bcbio"
 
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"

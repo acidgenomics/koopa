@@ -12,7 +12,7 @@ source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP}/build/emacs"
+build_dir="${KOOPA_TMP_DIR}/build/emacs"
 
 version="$(koopa_version emacs)"
 

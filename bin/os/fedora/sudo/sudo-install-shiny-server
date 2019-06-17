@@ -7,7 +7,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-build_dir="${KOOPA_TMP}/build/shiny-server"
+build_dir="${KOOPA_TMP_DIR}/build/shiny-server"
 
 version="$(koopa_version shiny-server)"
 

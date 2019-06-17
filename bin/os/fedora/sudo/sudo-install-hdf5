@@ -11,7 +11,7 @@ source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP}/build/hdf5"
+build_dir="${KOOPA_TMP_DIR}/build/hdf5"
 
 version="$(koopa_version hdf5)"
 major_version="$(echo "$version" | cut -d '.' -f 1-2)"

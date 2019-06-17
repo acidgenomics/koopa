@@ -6,7 +6,7 @@ set -Eeu -o pipefail
 # https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP}/build/rmate"
+build_dir="${KOOPA_TMP_DIR}/build/rmate"
 
 version="1.0.2"
 
