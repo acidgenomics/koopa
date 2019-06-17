@@ -105,7 +105,7 @@ fi
 (
     printf "\nInitializing dotfiles submodules.\n"
     # shellcheck source=/dev/null
-    cd "${koopa_dir}/dotfiles"
+    cd "${koopa_dir}/config/dotfiles"
     git submodule init
     git submodule update --init --recursive
     git submodule sync --recursive
