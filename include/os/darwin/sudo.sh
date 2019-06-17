@@ -7,7 +7,7 @@ source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 if ! has_sudo
 then
-    echo "Non-interactive (passwordless) sudo is required for this script."
+    >&2 echo "Error: sudo is required for this script."
     exit 1
 fi
 
@@ -18,3 +18,6 @@ then
     >&2 echo "Error: macOS is required."
     exit 1
 fi
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
