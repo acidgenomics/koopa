@@ -5,5 +5,5 @@ set -Eeu -o pipefail
 # Modified 2019-06-14.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/functions.sh"
+source "${KOOPA_DIR}/include/functions.sh"
 
