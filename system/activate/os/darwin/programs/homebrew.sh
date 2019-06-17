@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Homebrew
+# Modified 2019-06-17.
 
 if quiet_which brew
 then
@@ -12,3 +13,11 @@ then
     # Disable tracking with Google Analytics.
     export HOMEBREW_NO_ANALYTICS=1
 fi
+
+
+
+# Python
+# https://docs.brew.sh/Homebrew-and-Python
+# > brew info python
+# > python -V
+add_to_path_start /usr/local/opt/python/libexec/bin
