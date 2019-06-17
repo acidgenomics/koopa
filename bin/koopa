@@ -8,7 +8,7 @@ set -Eeu -o pipefail
 cmd="$*"
 
 version="0.4.0a"
-date="2019-06-16"
+date="2019-06-17"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
@@ -20,9 +20,11 @@ fi
 # Display help on empty call.
 [ -z "${cmd}" ] && koopa --help && exit 0
 
+cmd_dir="${KOOPA_DIR}/include"
+
 case "$cmd" in
     --help|-h)
-        cat "${KOOPA_DIR}/system/help.txt"
+        cat "${cmd_dir}/help.txt"
         exit 0
         ;;
     --version|-V)
@@ -30,19 +32,19 @@ case "$cmd" in
         exit 0
         ;;
     check)
-        Rscript --vanilla "${KOOPA_DIR}/system/check.R"
+        Rscript --vanilla "${cmd_dir}/check.R"
         exit 0
         ;;
     info)
-        "${KOOPA_DIR}/system/info.sh"
+        "${cmd_dir}/info.sh"
         exit 0
         ;;
     list)
-        Rscript --vanilla "${KOOPA_DIR}/system/list.R"
+        Rscript --vanilla "${cmd_dir}/list.R"
         exit 0
         ;;
     update)
-        "${KOOPA_DIR}/system/update.sh"; exit 0;;
+        "${cmd_dir}/update.sh"; exit 0;;
     upgrade)
         >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
         exit 1
