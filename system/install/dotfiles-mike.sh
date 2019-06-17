@@ -21,3 +21,4 @@ fi
 
 dotfile --private Rsecrets
 dotfile --private secrets
+dotfile --private travis
