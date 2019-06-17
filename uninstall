@@ -5,6 +5,7 @@ set -Eeu -o pipefail
 # Modified 2019-06-17.
 
 . "${KOOPA_DIR}/system/uninstall/dotfiles.sh"
+. "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 
 rm -f /etc/profile.d/koopa.sh
 rm -rf "$KOOPA_CONFIG_DIR"

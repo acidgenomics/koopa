@@ -190,6 +190,24 @@ pathmunge() {
 
 
 
+# File modifiers                                                            {{{1
+# ==============================================================================
+
+rm_dotfile() {
+    path="${HOME}/.${1}"
+    name="$(basename "$path")"
+    if [[ -L "$path" ]]
+    then
+        printf "Removing '%s'.\n" "$name"
+        rm -f "$path"
+    elif [[ -f "$path" ]] || [[ -d "$path" ]]
+    then
+        printf "Not symlink: %s\n" "$name"
+    fi
+}
+
+
+
 # Miscellaneous                                                             {{{1
 # ==============================================================================
 

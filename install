@@ -142,7 +142,11 @@ fi
 # Current user dot files                                                    {{{1
 # ==============================================================================
 
+# Never attempt to configure dotfiles for root.
+[[ "$(id -u)" -eq 0 ]] && dotfiles=0
+
 if [[ -z "${shared:-}" ]] && [[ "${dotfiles:-1}" -eq 1 ]]
 then
     . "${KOOPA_DIR}/system/install/dotfiles.sh"
+    . "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 fi

@@ -3,7 +3,7 @@
 # Install dot files.
 # Modified 2019-06-17.
 
-# Always skip dot file generation for root user.
+# Never attempt to configure dotfiles for root.
 [[ "$(id -u)" -eq 0 ]] && return 0
 
 printf "\nConfiguring dotfiles.\n"
@@ -12,11 +12,9 @@ os="${KOOPA_OS_NAME:-}"
 host="${KOOPA_HOST_NAME:-}"
 
 dotfile -f Rprofile
-dotfile -f atom
 dotfile -f bash_profile
 dotfile -f bashrc
 dotfile -f condarc
-dotfile -f doom.d
 dotfile -f gitignore
 dotfile -f kshrc
 dotfile -f screenrc
