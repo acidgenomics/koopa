@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # Install koopa.
-# Modified 2019-06-13.
+# Modified 2019-06-17.
 
 # Set `dev=1` to enable some additional developer configuration tweaks.
 # Namely, this currently changes submodule remotes from HTTPS to git.
@@ -47,8 +47,6 @@ koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 )
 
 
-
-# FIXME Move this to activation script instead.
 
 # Dot file symlinks                                                         {{{1
 # ==============================================================================
