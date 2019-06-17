@@ -20,16 +20,18 @@ Requirements:
 
 ### Local user installation
 
-Clone the repository:
+Clone the repository.
 
 ```sh
-git clone https://github.com/acidgenomics/koopa.git ~/.koopa
+prefix="${HOME}/.local/share"
+mkdir -p "${prefix}/koopa"
+git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
 ```
 
-Run the installer script:
+Run the installer script.
 
 ```
-~/.koopa/install
+"${prefix}/koopa/install"
 ```
 
 Add these lines to your shell configuration file.
@@ -40,7 +42,7 @@ Add these lines to your shell configuration file.
 if [ -z "${KOOPA_SHELL:-}" ]
 then
     # shellcheck source=/dev/null
-    . ~/.koopa/activate
+    . "${HOME}/.local/share/koopa/activate"
 fi
 ```
 
@@ -48,29 +50,34 @@ fi
 
 Note that this requires sudo permissions.
 
-Clone the repository:
+Clone the repository.
 
 ```sh
-git clone https://github.com/acidgenomics/koopa.git /usr/local/koopa
+prefix="/usr/local"
+git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
 ```
 
-If this step fails, you may need to apply a permission fix:
+Run the installer script.
 
 ```sh
-sudo chown "root:wheel" /usr/local
-sudo chmod g+w /usr/local
+"${prefix}/koopa/install" --shared
 ```
 
+If this step fails, you may need to apply a permission fix first.
 
+```sh
+sudo chown "root:wheel" "$prefix"
+sudo chmod g+w "$prefix"
+```
 
+This will add a configuration file at `/etc/profile.d/koopa.sh`.
 
+### Check installation
 
-
-Koopa will now activate automatically at login.
-
-To obtain information about the working environment, run `koopa info`.
-
-Check your environment dependencies with `koopa check`.
+Restart the shell. Koopa should now activate automatically at login. You can
+verify this with `command -v koopa`. Next, check your environment dependencies
+with `koopa check`. To obtain information about the working environment, run
+`koopa info`.
 
 
 
@@ -78,7 +85,9 @@ Check your environment dependencies with `koopa check`.
 
 ### Shell configuration file
 
-Not sure where to source `activate` in your configuration? Here are some general recommendations, in order of priority for each shell. These can differ depending on the operating system, so refer to your shell documentation for details.
+Not sure where to source `activate` in your configuration? Here are some general
+recommendations, in order of priority for each shell. These can differ depending
+on the operating system, so refer to your shell documentation for details.
 
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
@@ -86,17 +95,25 @@ Not sure where to source `activate` in your configuration? Here are some general
 
 ### dotfiles example
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell configuration. Take a look at Mike's [dotfiles][] repo for an example configuration that sources koopa.
+Koopa is intended to help simplify the bioinformatics side of a user's shell
+configuration. Take a look at Mike's [dotfiles][] repo for an example
+configuration that sources koopa.
 
 
 
 ## Additional configuration
 
-Koopa provides automatic configuration and `$PATH` variable support for a number of popular bioinformatics tools. When configuring manually, ensure that variables are defined before sourcing `activate`.
+Koopa provides automatic configuration and `$PATH` variable support for a number
+of popular bioinformatics tools. When configuring manually, ensure that
+variables are defined before sourcing the activation script.
 
 ### Aspera Connect
 
-[Aspera Connect][] is a secure file transfer application commonly used by numerous organizations, including the NIH and Broad Institute. Koopa will automatically detect Aspera when it is installed at the default path of `~/.aspera/`. Otherwise, the installation path can be defined manually using the `$ASPERA_EXE` variable.
+[Aspera Connect][] is a secure file transfer application commonly used by
+numerous organizations, including the NIH and Broad Institute. Koopa will
+automatically detect Aspera when it is installed at the default path of
+`~/.aspera/`. Otherwise, the installation path can be defined manually using
+the `$ASPERA_EXE` variable.
 
 ```bash
 export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
@@ -104,7 +121,11 @@ export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
 
 ### bcbio
 
-[bcbio][] is a [Python][] toolkit that provides modern NGS analysis pipelines for RNA-seq, single-cell RNA-seq, ChIP-seq, and variant calling. Koopa provides automatic configuration support for the Harvard O2 and Odyssey high-performance computing clusters. Otherwise, the installation path can be defined manually using the `$BCBIO_EXE` variable.
+[bcbio][] is a [Python][] toolkit that provides modern NGS analysis pipelines
+for RNA-seq, single-cell RNA-seq, ChIP-seq, and variant calling. Koopa provides
+automatic configuration support for the Harvard O2 and Odyssey high-performance
+computing clusters. Otherwise, the installation path can be defined manually
+using the `$BCBIO_EXE` variable.
 
 ```bash
 export BCBIO_EXE="/usr/local/bin/bcbio_nextgen.py"
@@ -112,7 +133,8 @@ export BCBIO_EXE="/usr/local/bin/bcbio_nextgen.py"
 
 ### conda
 
-[Conda][] is an open source package management system that provides pre-built binaries using versioned recipes for Linux and macOS.
+[Conda][] is an open source package management system that provides pre-built
+binaries using versioned recipes for Linux and macOS.
 
 Koopa supports automatic loading of a default environment.
 Simply set the `$CONDA_DEFAULT_ENV` variable to your desired environment name.
@@ -121,10 +143,13 @@ Simply set the `$CONDA_DEFAULT_ENV` variable to your desired environment name.
 export CONDA_DEFAULT_ENV="scikit-learn"
 ```
 
-Koopa provides automatic detection and activation support when conda is installed at any of these locations (note priority):
+Koopa provides automatic detection and activation support when conda is
+installed at any of these locations (note priority):
 
 - `~/anaconda3/`
 - `~/miniconda3/`
+- `~/.local/share/anaconda3/`
+- `~/.local/share/miniconda3/`
 - `/usr/local/anaconda3/`
 - `/usr/local/miniconda3/`
 
