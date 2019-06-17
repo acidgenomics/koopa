@@ -148,5 +148,12 @@ fi
 if [[ -z "${shared:-}" ]] && [[ "${dotfiles:-1}" -eq 1 ]]
 then
     . "${KOOPA_DIR}/system/install/dotfiles.sh"
+    
+    # Configure Mike-only dotfiles.
+    if [[ "${mike:-}" -eq 1 ]]
+    then
+        . "${KOOPA_DIR}/system/install/dotfiles-mike.sh"
+    fi
+
     . "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 fi

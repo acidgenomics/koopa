@@ -30,6 +30,10 @@ do
             help=1
             shift 1
             ;;
+        -p|--private)
+            private=1
+            shift 1
+            ;;
         -q|--quiet)
             quiet=1
             shift 1
@@ -60,15 +64,22 @@ eval set -- "$PARAMS"
 if [[ -n "${help:-}" || -z "$*" ]]
 then
 cat << EOF
-    Usage: dotfile relative_path (symlink_name)
+Usage: dotfile relative_path (symlink_name)
+
+Arguments:
 
     relative_path: Relative file path in dotfiles repo.
     symlink_name: Name of destination symlink (without '.' prefix).
 
-    Flags:
-        -f, --force  Force overwrite. Applies to symlinks only.
-        -h, --help   Help.
-        -q, --quiet  Quiet mode. Don't print messages.
+Flags:
+    -f, --force 
+        Force overwrite. Applies to symlinks only.
+    -h, --help
+        Help mode.
+    -p, --private
+        Private dot file. Currently only works for Mike's configuration.
+    -q, --quiet
+        Quiet mode. Don't print messages.
 
 EOF
     exit 0
@@ -80,6 +91,13 @@ fi
 # ==============================================================================
 
 dot_dir="${KOOPA_CONFIG_DIR}/dotfiles"
+
+# Private file (experimental).
+if [[ "${private:-0}" -eq 1 ]]
+then
+    dot_dir="${dot_dir}-private"
+fi
+
 if [[ ! -d "$dot_dir" ]]
 then
     >&2 printf "Error: %s missing.\n" "$dot_dir"
