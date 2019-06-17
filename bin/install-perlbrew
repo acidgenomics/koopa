@@ -12,13 +12,15 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-prefix="${prefix:-$KOOPA_PREFIX}/perlbrew"
+prefix="${prefix:-${KOOPA_PREFIX}/perlbrew}"
 prefix_mkdir "$prefix"
 
-# Ensure existing preferences are removed.
-rm -rf "${HOME}/.perlbrew"
-
 export PERLBREW_ROOT="$prefix"
+
+# Ensure existing preferences are removed.
+export PERLBREW_HOME="${PERLBREW_HOME}:-${HOME}/.perlbrew"
+rm -rf "$PERLBREW_HOME"
+
 curl -L https://install.perlbrew.pl | bash
 
 prefix_chgrp "$prefix"
