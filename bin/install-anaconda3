@@ -8,23 +8,18 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-[[ -z "${prefix:-}" ]] && prefix="${HOME}/anaconda3"
+prefix="${prefix:-${KOOPA_PREFIX}/anaconda3}"
 build_dir="${KOOPA_TMP}/build/anaconda3"
 
 version="$(koopa_version anaconda3)"
-
-# Check for previous installation.
-if [[ -d "$prefix" ]]
-then
-    >&2 printf "Error: conda already installed.\n%s\n" "$prefix"
-    exit 1
-fi
 
 case "$OSTYPE" in
     linux-gnu) script="Anaconda3-${version}-Linux-x86_64.sh";;
       darwin*) script="Anaconda3-${version}-MacOSX-x86_64.sh";;
             *) echo "${OSTYPE} is not supported."; exit 1;;
 esac
+
+prefix_mkdir "$prefix"
 
 (
     rm -rf "$build_dir"
@@ -33,12 +28,13 @@ esac
     echo "Downloading Anaconda installer."
     curl -O "https://repo.anaconda.com/archive/${script}"
     # Note that this script should not be run as root.
-    bash "$script" -b -p "$prefix"
+    bash "$script" -bf -p "$prefix"
     rm -rf "$build_dir"
 )
+
+prefix_chgrp "$prefix"
 
 echo "conda installed successfully."
 conda_exe="${prefix}/bin/conda"
 echo "$conda_exe"
 sh -c "$conda_exe --version"
-

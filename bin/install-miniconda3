@@ -15,21 +15,19 @@ set -Eeu -o pipefail
 # -u           update an existing installation
 # -t           run package tests after installation (may install conda-build)
 
-[[ -z "${prefix:-}" ]] && prefix="${HOME}/miniconda3"
-build_dir="${KOOPA_TMP}/build/miniconda3"
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-# Check for previous installation.
-if [[ -d "$prefix" ]]
-then
-    >&2 printf "Error: conda already installed.\n%s\n" "$prefix"
-    exit 1
-fi
+prefix="${prefix:-${KOOPA_PREFIX}/miniconda3}"
+build_dir="${KOOPA_TMP}/build/miniconda3"
 
 case "$OSTYPE" in
     linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
       darwin*) script="Miniconda3-latest-MacOSX-x86_64.sh";;
             *) echo "${OSTYPE} is not supported."; exit 1;;
 esac
+
+prefix_mkdir "$prefix"
 
 (
     rm -rf "$build_dir"
@@ -38,12 +36,13 @@ esac
     echo "Downloading Miniconda installer."
     curl -O "https://repo.continuum.io/miniconda/${script}"
     # Note that this script should not be run as root.
-    bash "$script" -b -p "$prefix"
+    bash "$script" -bf -p "$prefix"
     rm -rf "$build_dir"
 )
+
+prefix_chgrp "$prefix"
 
 echo "conda installed successfully."
 conda_exe="${prefix}/bin/conda"
 echo "$conda_exe"
 sh -c "$conda_exe --version"
-
