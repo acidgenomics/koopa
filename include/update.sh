@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # Update koopa installation.
 # Modified 2019-06-17.
 
+rm -rf "${KOOPA_DIR}/dotfiles"
+
 (
     cd "$KOOPA_DIR" || exit 1
     git pull
