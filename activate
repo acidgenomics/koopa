@@ -18,15 +18,6 @@
 
 
 
-# Functions                                                                 {{{1
-# ==============================================================================
-
-quiet_cd() {
-  cd "$@" >/dev/null || return 1
-}
-
-
-
 # Initial checks                                                            {{{1
 # ==============================================================================
 
@@ -76,11 +67,26 @@ export KOOPA_SHELL
 
 
 
+# Set global options                                                        {{{1
+# ==============================================================================
+
+set +e
+set +u
+set -o pipefail
+
+# Enable this for debugging.
+# > set -x
+
+
+
 # Locate the koopa installation                                             {{{1
 # ==============================================================================
 
 if [ "$KOOPA_SHELL" = "bash" ]
 then
+    # Enable for debugging.
+    set -o posix
+    
     # SC2039: In POSIX sh, array references are undefined.
     # shellcheck disable=SC2039
     KOOPA_SOURCE="${BASH_SOURCE[0]}"
@@ -91,6 +97,9 @@ then
     KOOPA_SOURCE="${.sh.file}"
 elif [ "$KOOPA_SHELL" = "zsh" ]
 then
+    # Enable for debugging.
+    setopt posixbuiltin
+    
     # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
     # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
     # this case instead unexpectedly returns `_src_etc_profile`.
@@ -106,9 +115,16 @@ then
     return 1
 fi
 
-# Note that `pwd` is used here to resolve symlinks.
-KOOPA_DIR="$(quiet_cd "${KOOPA_SOURCE%/*}/" && pwd -P)"
+# Fake realpath support, if necessary.
+if ! command -v realpath >/dev/null 2>&1
+then
+    alias realpath="readlink -f"
+fi
+
+script_path="$(realpath "$KOOPA_SOURCE")"
+KOOPA_DIR="$(dirname "$script_path")"
 export KOOPA_DIR
+unset -v script_path
 
 # Load shared functions.
 . "${KOOPA_DIR}/include/functions.sh"
@@ -225,12 +241,26 @@ fi
 . "${activate_dir}/preflight.sh"
 
 exports_dir="${activate_dir}/exports"
+. "${exports_dir}/xdg-base-directory.sh"
 . "${exports_dir}/general.sh"
 . "${exports_dir}/platform.sh"
 . "${exports_dir}/cpu-count.sh"
 . "${exports_dir}/genomes.sh"
 . "${exports_dir}/path.sh"
 unset -v exports_dir
+
+export KOOPA_CONFIG_DIR="${XDG_CONFIG_HOME}/koopa"
+mkdir -p "$KOOPA_CONFIG_DIR"
+
+if [ ! -L "${KOOPA_CONFIG_DIR}/activate" ]
+then
+    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
+fi
+
+if [ ! -L "${KOOPA_CONFIG_DIR}/dotfiles" ]
+then
+    ln -fs "${KOOPA_DIR}/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
+fi
 
 
 
