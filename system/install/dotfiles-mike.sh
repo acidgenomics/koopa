@@ -12,7 +12,7 @@ unset -v private_dir
 
 dotfile --force forward
 
-if [ "$os" = "darwin" ]
+if [ "$KOOPA_OS_NAME" = "darwin" ]
 then
     dotfile --force os/darwin/gitconfig
 else
