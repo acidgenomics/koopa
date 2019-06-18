@@ -93,7 +93,7 @@ on the operating system, so refer to your shell documentation for details.
 - [zsh][]: `.zshrc`, `.zprofile`.
 - [ksh][]: `.kshrc`, `.profile`.
 
-## Tools
+## Exported tools
 
 Upon activation, koopa makes scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa list` for a complete list.
 
