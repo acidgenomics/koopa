@@ -15,7 +15,7 @@ prefix="$KOOPA_PREFIX"
 tmp_dir="${KOOPA_TMP_DIR}/emacs"
 version="$(koopa variable emacs)"
 
-echo "Installing emacs ${version}."
+printf "Installing emacs %s.\n" "$version"
 
 # Bioconductor AMI is missing these dependencies:
 # > apt-cache search libgif
@@ -38,9 +38,7 @@ sudo apt-get -y install libgif-dev
     rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
 sudo ldconfig
 
-echo "emacs installed successfully."
 command -v emacs
 emacs --version

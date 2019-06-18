@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Update rJava.
+# Update rJava configuration.
 # Modified 2019-06-14.
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-echo "Updating R Java configuration."
+printf "Updating R Java configuration.\n"
 
-# R CMD javareconf -h
+# > R CMD javareconf -h
 
 # Environment variables that can be used to influence the detection:
 #   JAVA           path to a Java interpreter executable
@@ -23,8 +23,8 @@ echo "Updating R Java configuration."
 #   JAR            path to a Java archive tool
 
 # Fix permissions.
-sudo -n chgrp -R wheel /usr/local/lib64/R
-sudo -n chmod -R g+w /usr/local/lib64/R
+sudo chgrp -R wheel /usr/local/lib64/R
+sudo chmod -R g+w /usr/local/lib64/R
 
 java_dir="/usr/lib/jvm/java"
 java_flags=" \
@@ -35,12 +35,11 @@ java_flags=" \
 "
 
 # shellcheck disable=SC2086
-sudo -n R --vanilla CMD javareconf $java_flags
+sudo R --vanilla CMD javareconf $java_flags
 
 # shellcheck disable=SC2086
 R --vanilla CMD javareconf $java_flags
 
 yum list installed | grep -E '^java-'
 
-# echo "Reinstalling the rJava package."
-# Rscript -e 'install.packages("rJava")'
+# > Rscript -e 'install.packages("rJava")'

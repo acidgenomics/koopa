@@ -2,9 +2,8 @@
 set -Eeu -o pipefail
 
 # Autopad sample file names that begin with a number.
-#
-# Renaming with a "sample" prefix by default, to avoid issues in R.
-#
+# Modified 2019-06-18.
+
 # See also:
 # - How to use `BASH_REMATCH`.
 #   https://unix.stackexchange.com/questions/349686
@@ -16,8 +15,10 @@ set -Eeu -o pipefail
 #   https://github.com/Michael-Metz/zeropad
 # - Perl `rename` isn't portable.
 #   This ships by default with some Linux distros, but not Red Hat.
-#   https://techblog.jeppson.org/2016/08/add-prefix-filenames-bash/  
+#   https://techblog.jeppson.org/2016/08/add-prefix-filenames-bash/
 #   rename 's/\d+/sprintf("%03d", $&)/e' *.fastq.gz
+
+# Renaming with a "sample" prefix by default, to avoid issues in R.
 
 files=("$@")
 padwidth=2
@@ -36,6 +37,6 @@ do
         newname="${prefix}_${num}${stem}"
         mv -nv "$oldname" "$newname"
     else
-        echo "Skipping ${file}"
+        printf "Skipping %s.\n" "$file"
     fi
 done

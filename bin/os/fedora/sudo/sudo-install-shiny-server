@@ -1,29 +1,30 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Install RStudio Server.
-# https://www.rstudio.com/products/rstudio/download-server/
+# Install Shiny Server.
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.rstudio.com/products/rstudio/download-server/
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-build_dir="${KOOPA_TMP_DIR}/build/shiny-server"
+tmp_dir="${KOOPA_TMP_DIR}/shiny-server"
+version="$(koopa variable shiny-server)"
 
-version="$(koopa_version shiny-server)"
-
-echo "Installing Shiny Server ${version}."
+printf "Installing Shiny Server %s.\n" "$version"
 
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
-    sudo -n su - \
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir"
+    sudo su - \
         -c "R -e \"install.packages('shiny', repos='https://cran.rstudio.com/')\""
     wget "https://download3.rstudio.org/centos6.3/x86_64/shiny-server-${version}-x86_64.rpm"
-    sudo -n yum install -y --nogpgcheck "shiny-server-${version}-x86_64.rpm"
-    rm -rf "$build_dir"
+    sudo yum install -y --nogpgcheck "shiny-server-${version}-x86_64.rpm"
+    rm -rf "$tmp_dir"
 )
 
-echo "shiny-server installed successfully."
 command -v shiny-server
 shiny-server --version

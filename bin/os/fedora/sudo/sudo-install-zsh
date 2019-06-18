@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Z shell
-#
+# Install Z shell.
+# Modified 2019-06-18.
+
 # See also:
 # - http://www.zsh.org/
 # - http://zsh.sourceforge.net/Arc/source.html
@@ -13,44 +14,37 @@ source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP_DIR}/build/zsh"
+tmp_dir="${KOOPA_TMP_DIR}/zsh"
+version="$(koopa variable zsh)"
 
-version="$(koopa_version zsh)"
-
-echo "Installing zsh ${version}."
+printf "Installing zsh %s.\n" "$version"
 
 # Install build dependencies.
 sudo yum install -y zsh
-sudo -n yum-builddep -y zsh
+sudo yum-builddep -y zsh
 
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download"
     tar -xJvf "download"
-    cd "zsh-${version}"
+    cd "zsh-${version}" || exit 1
     ./configure \
         --build="$build_name" \
         --prefix="$prefix"
     make
     make check
     # make test
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-echo "zsh installed successfully."
-command -v zsh
-zsh --version
-
-if grep -qv "${prefix}/bin/zsh" /etc/shells
+if ! grep -q "${prefix}/bin/zsh" /etc/shells
 then
-    echo "Updating /etc/shells."
-    sudo -n bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
+    printf "Updating '/etc/shells.'\n"
+    sudo bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
 fi
 
-echo "Updating default shell."
-sudo -n chsh -s "${prefix}/bin/zsh" "$USER"
-
+command -v zsh
+zsh --version

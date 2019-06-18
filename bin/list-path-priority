@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Print PATH variable as lines.
+# List PATH priority.
+# Modified 2019-06-18.
 
 # See also:
-# https://askubuntu.com/questions/600018
+# - https://askubuntu.com/questions/600018
 
 # Alternate approaches:
 # > sed 's/:/\n/g' <<< "$PATH"
