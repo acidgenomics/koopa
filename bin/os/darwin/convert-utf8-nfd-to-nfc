@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# Convert UTF-8 NFD to NFC
+# Modified 2019-06-18.
+
 convmv -r -f utf8 -t utf8 --nfc --notest .

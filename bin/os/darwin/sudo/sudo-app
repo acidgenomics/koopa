@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/darwin/sudo.sh"
-
-sudo open -a "$1"

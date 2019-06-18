@@ -2,10 +2,10 @@
 set -Eeu -o pipefail
 
 # Symlink Desktop and Documents on Dropbox.
+# Modified 2019-06-18.
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/darwin/sudo.sh"
+source "${KOOPA_DIR}/include/os/darwin/sudo.sh"
 
 sudo rm -r ~/Desktop
 ln -s ~/Dropbox/Desktop ~/.
