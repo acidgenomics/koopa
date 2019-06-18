@@ -93,6 +93,10 @@ fi
 
 # Initialize submodules                                                     {{{1
 # ==============================================================================
+
+# Remove legacy dotfiles directory.
+rm -rf "${KOOPA_DIR}/dotfiles"
+
 (
     printf "\nInitializing submodules.\n"
     # shellcheck source=/dev/null
@@ -146,6 +150,8 @@ fi
 
 if [[ "${dotfiles:-1}" -eq 1 ]]
 then
+    printf "\nConfiguring dotfiles.\n"
+
     # Always create these dotfiles, even on a shared installation.
     . "${KOOPA_DIR}/system/install/dotfiles-shared.sh"
 
