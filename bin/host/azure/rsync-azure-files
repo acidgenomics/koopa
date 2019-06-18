@@ -2,6 +2,7 @@
 set -Eeu -o pipefail
 
 # rsync to Azure Samba (SMB) file shares.
+# Modified 2019-06-18.
 
 # Useful rsync flags:
 # -n, --dry-run               perform a trial run with no changes made
