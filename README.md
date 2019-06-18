@@ -20,7 +20,7 @@ Requirements:
 
 ### Local user installation
 
-Clone the repository.
+Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
 
 ```sh
 prefix="${HOME}/.local/share"
