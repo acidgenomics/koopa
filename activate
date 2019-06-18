@@ -29,8 +29,14 @@
 # sessions from the current shell.
 [ ! -z "${KOOPA_SHELL:-}" ] && active=1 || active=0
 
-# Don't reload for HPC interactive job.
-[ "$active" -eq 1 ] && [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
+# Early return if koopa is already active.
+# We may need to tweak this approach to work properly with bash subshells.
+[ "$active" -eq 1 ] && \
+    [ -z "${TMUX:-}" ] && \
+    return 0
+[ "$active" -eq 1 ] && \
+    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && \
+    return 0
 
 
 
