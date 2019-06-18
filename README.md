@@ -57,17 +57,17 @@ prefix="/usr/local"
 git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
 ```
 
-Run the installer script.
-
-```sh
-"${prefix}/koopa/install" --shared
-```
-
 If this step fails, you may need to apply a permission fix first.
 
 ```sh
 sudo chown "root:wheel" "$prefix"
 sudo chmod g+w "$prefix"
+```
+
+Run the installer script.
+
+```sh
+"${prefix}/koopa/install" --shared
 ```
 
 This will add a configuration file at `/etc/profile.d/koopa.sh`.
