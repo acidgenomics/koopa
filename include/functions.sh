@@ -1,7 +1,20 @@
 #!/bin/sh
 
 # POSIX-compliant functions.
-# Modified 2019-06-14.
+# Modified 2019-06-18.
+
+
+
+# Assertive check functions                                                 {{{1
+# ==============================================================================
+
+assert_is_installed() {
+    program="$1"
+    command -v "$program" >/dev/null 2>&1 || {
+        >&2 printf "Error: %s is not installed.\n" "$program"
+        return 1
+    }
+}
 
 
 
@@ -36,20 +49,19 @@ quiet_which() {
 
 # Currently performing a simple check by verifying wheel group.
 #
-# Alternatively, can use `sudo -nv 2>/dev/null`.
-# However, this approach doesn't work well unless sudo is passwordless, which
-# isn't common on all Linux distros.
-#
 # - admin: darwin
 # - sudo: debian
 # - wheel: fedora
 #
-# Modified 2019-06-17.
+# Modified 2019-06-18.
 has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
 
+
+# Build prefix handlers                                                     {{{1
+# ==============================================================================
 
 # Return the installation prefix to use.
 # Modified 2019-06-17.
@@ -62,15 +74,13 @@ get_prefix() {
     fi
 }
 
-
-
 # Create the prefix directory.
 # Modified 2019-06-17.
 prefix_mkdir() {
     path="$1"
-    
+
     check_prefix "$path"
-    
+
     if has_sudo
     then
         sudo mkdir -p "$path"
@@ -78,18 +88,16 @@ prefix_mkdir() {
     else
         mkdir -p "$path"
     fi
-    
+
     # Set the permissions.
     prefix_chgrp "$path"
 }
-
-
 
 # Fix the group permissions on the prefix directory.
 # Modified 2019-06-17.
 prefix_chgrp() {
     path="$1"
-    
+
     # Local installation.
     if ! has_sudo
     then
@@ -97,7 +105,7 @@ prefix_chgrp() {
         chgrp -R "$group" "$path"
         return 0
     fi
-    
+
     # Shared installation (requires sudo).
     if groups | grep -Eq "\b(admin)\b"
     then
@@ -113,8 +121,6 @@ prefix_chgrp() {
     fi
     sudo chgrp -R "$group" "$path"
 }
-
-
 
 # Check if directory already exists at prefix.
 # Modified 2019-06-17.
@@ -136,56 +142,34 @@ check_prefix() {
 # Modified from Mike McQuaid's dotfiles.
 # https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
 
-# Look into an improved POSIX method here. This works for bash and ksh.
-# Note that this won't work on the first item in PATH.
-remove_from_path() {
-    [ -d "$1" ] || return 0
-    # SC2039: In POSIX sh, string replacement is undefined.
-    # shellcheck disable=SC2039
-    export PATH="${PATH//:$1/}"
-}
-
 add_to_path_start() {
-    # Early return if not a directory.
-    [ -d "$1" ] || return 0
-    # Early return if directory is already in PATH.
-    echo "$PATH" | grep -qv "$1" || return 0
-    remove_from_path "$1"
+    [ ! -d "$1" ] && remove_from_path "$1" && return 0
+    echo "$PATH" | grep -q "$1" && return 0
     export PATH="${1}:${PATH}"
 }
 
 add_to_path_end() {
-    # Early return if not a directory.
-    [ -d "$1" ] || return 0
-    # Early return if directory is already in PATH.
-    echo "$PATH" | grep -qv "$1" || return 0
-    remove_from_path "$1"
+    [ ! -d "$1" ] && remove_from_path "$1" && return 0
+    echo "$PATH" | grep -q "$1" && return 0
     export PATH="${PATH}:${1}"
 }
 
 force_add_to_path_start() {
-  remove_from_path "$1"
-  export PATH="${1}:${PATH}"
+    remove_from_path "$1"
+    export PATH="${1}:${PATH}"
 }
 
 force_add_to_path_end() {
-  remove_from_path "$1"
-  export PATH="${PATH}:${1}"
+    remove_from_path "$1"
+    export PATH="${PATH}:${1}"
 }
 
-# pathmunge is defined in RHEL `/etc/profile`.
-# Copied here for cross platform support.
-pathmunge() {
-    case ":${PATH}:" in
-        *:"$1":*) ;;
-        *)
-            if [ "$2" = "after" ]
-            then
-                PATH="$PATH:$1"
-            else
-                PATH="$1:$PATH"
-            fi
-    esac
+# Look into an improved POSIX method here. This works for bash and ksh.
+# Note that this won't work on the first item in PATH.
+remove_from_path() {
+    # SC2039: In POSIX sh, string replacement is undefined.
+    # shellcheck disable=SC2039
+    export PATH="${PATH//:$1/}"
 }
 
 
@@ -202,28 +186,26 @@ rm_dotfile() {
         rm -f "$path"
     elif [[ -f "$path" ]] || [[ -d "$path" ]]
     then
-        printf "Not symlink: %s\n" "$name"
+        printf "Warning: Not symlink: %s\n" "$name"
     fi
 }
 
 
 
-# Miscellaneous                                                             {{{1
+# Version parsers                                                           {{{1
 # ==============================================================================
 
 # Get version stored internally in versions.txt file.
-# Modified 2019-06-14.
-koopa_version() {
+# Modified 2019-06-18.
+koopa_variable() {
     what="$1"
-    file="${KOOPA_DIR}/include/versions.txt"
+    file="${KOOPA_DIR}/include/variables.txt"
     match="$(grep -E "^${what}=" "$file" || echo "")"
     if [ -n "$match" ]
     then
         echo "$match" | cut -d "\"" -f 2
     else
-        >&2 echo "Error: ${what} not defined in versions file."
-        >&2 echo "Refer to ${file}."
+        >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
         return 1
     fi
 }
-

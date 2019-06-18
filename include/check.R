@@ -1,19 +1,13 @@
 # Check installed program versions.
-# Note that Ubuntu specific versions are pinned to 18 LTS.
+# Modified 2019-06-18.
+
+# Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
 options(
     error = quote(quit(status = 1L)),
     warning = quote(quit(status = 1L))
 )
 
-message("koopa system check")
-
-# Operating system name.
-# Need to add support for:
-# - Arch
-# - CentOS
-# - Debian
-# - Fedora
 os <- Sys.getenv("KOOPA_OS_NAME")
 stopifnot(isTRUE(nzchar(os)))
 
@@ -29,6 +23,20 @@ if (isTRUE(nzchar(Sys.getenv("MACOS")))) {
     macos <- TRUE
 } else {
     macos <- FALSE
+}
+
+variables_file <- file.path(Sys.getenv("KOOPA_DIR"), "include", "variables.txt")
+variables <- readLines(variables_file)
+
+koopa_version <- function(x) {
+    keep <- grepl(pattern = paste0("^", x, "="), x = variables)
+    stopifnot(sum(keep, na.rm = TRUE) == 1L)
+    string <- variables[keep]
+    sub(
+        pattern = "^(.+)=\"(.+)\"$",
+        replacement = "\\2",
+        x = string
+    )
 }
 
 pipe <- function(...) {
@@ -58,18 +66,6 @@ installed <- function(name, required = TRUE) {
         },
         FUN.VALUE = logical(1L)
     ))
-}
-
-# Sanitize complicated verions:
-# - 2.7.15rc1 to 2.7.15
-# - 1.10.0-patch1 to 1.10.0
-# - 1.0.2k-fips to 1.0.2
-sanitize_version <- function(version) {
-    version <- sub("-[a-z]+$", "", version)
-    version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
-    version <- sub("^[a-z]+", "", version)
-    version <- sub("[a-z]+$", "", version)
-    version
 }
 
 check_version <- function(
@@ -151,24 +147,17 @@ check_version <- function(
     invisible(ok)
 }
 
-versions_file <- file.path(
-    Sys.getenv("KOOPA_DIR"),
-    "include",
-    "versions.txt"
-)
-versions <- readLines(versions_file)
-
-koopa_version <- function(x) {
-    keep <- grepl(pattern = paste0("^", x, "="), x = versions)
-    stopifnot(sum(keep, na.rm = TRUE) == 1L)
-    string <- versions[keep]
-    sub(
-        pattern = "^(.+)=\"(.+)\"$",
-        replacement = "\\2",
-        x = string
-    )
+# Sanitize complicated verions:
+# - 2.7.15rc1 to 2.7.15
+# - 1.10.0-patch1 to 1.10.0
+# - 1.0.2k-fips to 1.0.2
+sanitize_version <- function(version) {
+    version <- sub("-[a-z]+$", "", version)
+    version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
+    version <- sub("^[a-z]+", "", version)
+    version <- sub("[a-z]+$", "", version)
+    version
 }
-
 
 
 
@@ -442,23 +431,6 @@ check_version(
         "cut -d ' ' -f 2"
     )
 )
-
-
-
-# Core programs ================================================================
-message("\nChecking required core programs.")
-installed(c(
-    "cat",
-    "chsh",
-    "curl",
-    "echo",
-    "env",
-    "grep",
-    "sed",
-    "top",
-    "wget",
-    "which"
-))
 
 
 

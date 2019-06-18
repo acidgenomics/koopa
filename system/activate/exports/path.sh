@@ -1,26 +1,31 @@
 #!/bin/sh
 # shellcheck disable=SC2236
 
-# Improve PATH consistency.
-# Note that here we're making sure local binaries are included.
-# `sbin` = superuser binaries.
-# https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+# Define standard PATH.
+# Modified 2019-06-18.
 
-# Inspect `/etc/profile` if system PATH is misconfigured.
+# See also:
+# - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+
+# Note that here we're making sure local binaries are included.
+# Inspect `/etc/profile` if system PATH appears misconfigured.
 
 
 
 # Standard path                                                             {{{1
 # ==============================================================================
 
-add_to_path_end "${HOME}/local/bin"
-add_to_path_end "${HOME}/.local/bin"
-add_to_path_end "/usr/local/sbin"
 add_to_path_end "/usr/local/bin"
-add_to_path_end "/usr/sbin"
 add_to_path_end "/usr/bin"
-add_to_path_end "/sbin"
 add_to_path_end "/bin"
+add_to_path_end "${HOME}/bin"
+
+has_sudo && add_to_path_end "/usr/local/sbin"
+has_sudo && add_to_path_end "/usr/sbin"
+
+add_to_path_start "${HOME}/local/bin"
+add_to_path_start "${HOME}/.local/bin"
+
 add_to_path_start "${KOOPA_DIR}/bin"
 has_sudo && add_to_path_start "${KOOPA_DIR}/bin/sudo"
 
@@ -93,4 +98,3 @@ then
     unset -v host_bin_dir
 fi
 unset -v host
-
