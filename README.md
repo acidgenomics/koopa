@@ -23,7 +23,7 @@ Requirements:
 Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
 
 ```sh
-prefix="${HOME}/.local/share"
+prefix="${XDG_DATA_HOME:-${HOME}/.local/share}"
 mkdir -p "${prefix}/koopa"
 git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
 ```
