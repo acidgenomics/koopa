@@ -5,8 +5,6 @@
 
 Shell bootloader for bioinformatics.
 
-
-
 ## Installation
 
 These [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
@@ -83,8 +81,6 @@ verify this with `command -v koopa`. Next, check your environment dependencies
 with `koopa check`. To obtain information about the working environment, run
 `koopa info`.
 
-
-
 ## Troubleshooting
 
 ### Shell configuration file
@@ -97,15 +93,11 @@ on the operating system, so refer to your shell documentation for details.
 - [zsh][]: `.zshrc`, `.zprofile`.
 - [ksh][]: `.kshrc`, `.profile`.
 
-### dotfiles example
+## Tools
 
-Koopa is intended to help simplify the bioinformatics side of a user's shell
-configuration. Take a look at Mike's [dotfiles][] repo for an example
-configuration that sources koopa.
+Upon activation, koopa makes scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa list` for a complete list.
 
-
-
-## Additional configuration
+## Automatic program configuration
 
 Koopa provides automatic configuration and `$PATH` variable support for a number
 of popular bioinformatics tools. When configuring manually, ensure that
@@ -183,14 +175,6 @@ Host *
 ### PGP key
 
 Automatic [PGP][] key support will be added in a future update.
-
-
-
-## Tools
-
-Upon activation, koopa makes some additional scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa list` for a complete list.
-
-
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
