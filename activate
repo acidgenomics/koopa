@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-16.
+# Modified 2019-06-18.
 
 # Currently supporting POSIX-compliant shells:
 # - bash
@@ -204,7 +204,7 @@ Flags:
     --no-prompt, prompt=0
         Skip prompt string customization. This disables PS1 export for bash,
         and skips activation of pure prompt for zsh.
-    
+
     --no-aspera, aspera=0
         Skip configuration of Aspera Connect.
     --no-bcbio, bcbio=0
@@ -219,7 +219,7 @@ Flags:
         Skip configuration of Ruby via rbenv.
     --no-virtualenv, virtualenv=0
         Skip configuration of Python virtual environment.
-    
+
     Linux only:
 
     --no-ssh-key, ssh_key=0
@@ -245,7 +245,6 @@ exports_dir="${activate_dir}/exports"
 . "${exports_dir}/general.sh"
 . "${exports_dir}/platform.sh"
 . "${exports_dir}/cpu-count.sh"
-. "${exports_dir}/genomes.sh"
 . "${exports_dir}/path.sh"
 unset -v exports_dir
 
@@ -273,10 +272,10 @@ then
     . "${activate_dir}/umask.sh"
     . "${activate_dir}/aliases.sh"
     . "${activate_dir}/secrets.sh"
-    
+
     [ "${ssh_key:-1}" -eq 1 ] && \
         . "${activate_dir}/ssh-key.sh"
-    
+
     programs_dir="${activate_dir}/programs"
     [ "${perlbrew:-1}" -eq 1 ] && \
         . "${programs_dir}/perlbrew.sh"
