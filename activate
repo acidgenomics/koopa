@@ -40,13 +40,30 @@
 
 
 
+# Set global options for debugging                                          {{{1
+# ==============================================================================
+
+if [ ! -z "${debug:-}" ]
+then
+    set -o errexit
+    set -o nounset
+    set -o pipefail
+    set -o xtrace
+fi
+
+
+
 # Detect the current shell                                                  {{{1
 # ==============================================================================
 
-# This is not necessarily the default shell (`$SHELL`).
+# Note that this isn't necessarily the default shell (`$SHELL`).
 
 if [ ! -z "${BASH_VERSION:-}" ]
 then
+    if [ ! -z "${debug:-}" ]
+    then
+        set -o errtrace
+    fi
     KOOPA_SHELL="bash"
 elif [ ! -z "${KSH_VERSION:-}" ]
 then
@@ -55,33 +72,13 @@ elif [ ! -z "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
 else
-    >&2 cat << EOF
-koopa failed to detect supported shell.
-
-Currently supported: bash, ksh, zsh.
-Check your configuration.
-Note that '/bin/sh' usage is not recommended.
-
-Environment:
-0=${0}
--=${-}
-$(env | sort)
-EOF
+    >&2 printf "Error: Failed to detect supported shell.\n"
+    >&2 printf "  SHELL: %s\n" "$SHELL"
+    >&2 printf "      0: %s\n" "$0"
+    >&2 printf "      -: %s\n" "$-"
     return 1
 fi
 export KOOPA_SHELL
-
-
-
-# Set global options                                                        {{{1
-# ==============================================================================
-
-set +e
-set +u
-set -o pipefail
-
-# Enable this for debugging.
-# > set -x
 
 
 
