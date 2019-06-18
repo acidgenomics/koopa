@@ -24,15 +24,15 @@ Clone the repository. Installation following the [XDG base directory specificati
 
 ```sh
 # ~/.local/share/koopa
-prefix="${XDG_DATA_HOME:-${HOME}/.local/share}"
-mkdir -p "${prefix}/koopa"
-git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
+koopa_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
+mkdir -p "$koopa_dir"
+git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
 ```
 
 Run the installer script.
 
 ```
-"${prefix}/koopa/install"
+"${koopa_dir}/install"
 ```
 
 Add these lines to your shell configuration file.
@@ -54,25 +54,23 @@ Note that this requires sudo permissions.
 Clone the repository.
 
 ```sh
-prefix="/usr/local"
-git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
-```
+koopa_dir="/usr/local/koopa"
+sudo mkdir -p "$koopa_dir"
 
-If this step fails, you may need to apply a permission fix first. Note that this works on Linux but not macOS.
-
-```sh
 # - debian: sudo
 # - fedora: wheel
 # - darwin (macOS): admin
 group="wheel"
-sudo chgrp "$group" "$prefix"
-sudo chmod g+w "$prefix"
+sudo chgrp "$group" "$koopa_dir"
+sudo chmod g+w "$koopa_dir"
+
+git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
 ```
 
 Run the installer script.
 
 ```sh
-"${prefix}/koopa/install" --shared
+"${koopa_dir}/install" --shared
 ```
 
 This will add a configuration file at `/etc/profile.d/koopa.sh`.
