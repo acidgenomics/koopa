@@ -61,6 +61,7 @@ sudo mkdir -p "$koopa_dir"
 # - fedora: wheel
 # - darwin (macOS): admin
 group="wheel"
+
 sudo chgrp "$group" "$koopa_dir"
 sudo chmod g+w "$koopa_dir"
 
