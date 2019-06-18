@@ -121,15 +121,14 @@ fi
 # Shared user configuration                                                 {{{1
 # ==============================================================================
 
-# Check for '/usr/local' and enable shared mode automatically.
-
-if [[ -n "${shared:-}" ]]
+# Checking for '/usr/local' installation automatically.
+if echo "$KOOPA_DIR" | grep -qE "^/usr/local/"
 then
-    if [[ -z "$LINUX" ]]
-    then
-        >&2 echo "Error: Shared configuration is only supported on Linux."
-        exit 1
-    fi
+    shared=1
+fi
+
+if [[ -n "${shared:-}" ]] && [[ -n "${LINUX:-}" ]]
+then
     echo "Adding 'koopa.sh' to '/etc/profile.d/'."
     sudo mkdir -p /etc/profile.d
     sudo ln -fs \
