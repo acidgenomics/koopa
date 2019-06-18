@@ -132,27 +132,18 @@ export BCBIO_EXE="/usr/local/bin/bcbio_nextgen.py"
 [Conda][] is an open source package management system that provides pre-built
 binaries using versioned recipes for Linux and macOS.
 
-Koopa supports automatic loading of a default environment.
-Simply set the `$CONDA_DEFAULT_ENV` variable to your desired environment name.
-
-```bash
-export CONDA_DEFAULT_ENV="scikit-learn"
-```
-
 Koopa provides automatic detection and activation support when conda is
 installed at any of these locations (note priority):
 
 - `~/anaconda3/`
 - `~/miniconda3/`
-- `~/.local/share/anaconda3/`
-- `~/.local/share/miniconda3/`
 - `/usr/local/anaconda3/`
 - `/usr/local/miniconda3/`
 
 Oherwise, the installation path can be defined manually using the `$CONDA_EXE` variable.
 
 ```bash
-export CONDA_EXE="${HOME}/anaconda3/bin/conda"
+export CONDA_EXE="${HOME}/miniconda3/bin/conda"
 ```
 
 ### SSH key
@@ -171,10 +162,6 @@ Host *
     IdentityFile ~/.ssh/id_rsa
     UseKeychain yes
 ```
-
-### PGP key
-
-Automatic [PGP][] key support will be added in a future update.
 
 [Aspera Connect]: https://downloads.asperasoft.com/connect2/
 [Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
