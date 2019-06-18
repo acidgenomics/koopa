@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Create DMG image.
+# Modified 2019-06-18.
+
+dir="$1"
+
+# Check that directory exists.
+if [[ ! -d "$dir" ]]
+then
+    >&2 printf "%s directory does not exist.\n" "$dir"
+    exit 1
+fi
+
+# Create disk image from directory.
+# -ov = overwrite
+hdiutil create -volname "$dir" -srcfolder "$dir" -ov "${dir}.dmg"
