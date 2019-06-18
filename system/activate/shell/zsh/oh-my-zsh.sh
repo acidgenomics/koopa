@@ -8,27 +8,22 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-ZSH="${HOME}/.oh-my-zsh"
+export ZSH="${HOME}/.oh-my-zsh"
+export ZSH_CUSTOM="${ZSH}/custom"
 
-# Early return and skip config if oh-my-zsh isn't installed.
+# Install oh-my-zsh automatically, if necessary.
 if [[ ! -d "$ZSH" ]]
 then
-    echo "Installing oh-my-zsh."
+    printf "Installing oh-my-zsh at %s.\n" "$ZSH"
     install-oh-my-zsh
 fi
-
-export ZSH
-export ZSH_CUSTOM="${ZSH}/custom"
 
 # Ignore warning about insecure directories identified by compfix.
 ZSH_DISABLE_COMPFIX="true"
 
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
+# Set name of the theme to load.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# ZSH_THEME="robbyrussell"
-# Disable this when using pure prompt.
+# Set to empty string when using pure prompt.
 ZSH_THEME=""
 
 # Uncomment the following line to use case-sensitive completion.
@@ -85,7 +80,7 @@ plugins_dir="${ZSH_CUSTOM}/plugins"
 
 if [[ ! -d "${plugins_dir}/zsh-autosuggestions" ]]
 then
-    echo "Installing zsh-autosuggestions."
+    printf "Installing zsh-autosuggestions.\n"
     git clone https://github.com/zsh-users/zsh-autosuggestions \
         "${plugins_dir}/zsh-autosuggestions"
 fi

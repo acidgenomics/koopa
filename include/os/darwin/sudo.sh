@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Source bash functions.
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 if ! has_sudo
 then
-    >&2 echo "Error: sudo is required for this script."
+    >&2 printf "Error: sudo is required for this script.\n"
     exit 1
 fi
 
@@ -15,9 +14,6 @@ fi
 if [[ "$KOOPA_OS_NAME" != "darwin" ]] ||
    [[ -z "${MACOS:-}" ]]
 then
-    >&2 echo "Error: macOS is required."
+    >&2 printf "Error: macOS is required.\n"
     exit 1
 fi
-
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/include/shell/bash/functions.sh"
