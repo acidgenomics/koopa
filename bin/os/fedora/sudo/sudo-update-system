@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Update system.
-# Modified 2019-06-14.
+# Update Fedora.
+# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
@@ -11,4 +11,4 @@ log_dir="${HOME}/logs/${HOSTNAME}/yum"
 mkdir -p "$log_dir"
 log_file="${log_dir}/yum-update-$(date +%F).log"
 
-sudo -n yum update -y 2>&1 | tee "$log_file"
+sudo yum update -y 2>&1 | tee "$log_file"

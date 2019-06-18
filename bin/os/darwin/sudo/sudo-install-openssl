@@ -30,9 +30,9 @@ printf "Installing openssl %s.\n" "$version"
 )
 
 cat << EOF
-openssl installed successfully.
-Reload the shell and check version.
+Reload the current shell.
 
-command -v openssl
-openssl version
+> command -v openssl
+> openssl version
+> openssl ciphers -v
 EOF

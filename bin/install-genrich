@@ -1,18 +1,24 @@
-# Genrich
-# https://github.com/jsh58/Genrich
+#!/usr/bin/env bash
+set -Eeu -o pipefail
 
-build_dir="${KOOPA_TMP_DIR}/build/genrich"
+# Install Genrich.
+# Modified 2019-06-18.
+
+# See also:
+# - https://github.com/jsh58/Genrich
+
 prefix="$KOOPA_PREFIX"
+tmp_dir="${KOOPA_TMP_DIR}/genrich"
+version="$(koopa variable genrich)"
 
-version="0.5"
-
-rm -rf "$build_dir"
-mkdir -p "$build_dir"
-cd "$build_dir"
-
-wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
-tar -xzvf "v${version}.tar.gz"
-cd "Genrich-${version}"
-make
-cp Genrich "${prefix}/bin"
-rm -rf "$build_dir"
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
+    tar -xzvf "v${version}.tar.gz"
+    cd "Genrich-${version}" || exit 1
+    make
+    cp Genrich "${prefix}/bin"
+    rm -rf "$tmp_dir"
+)

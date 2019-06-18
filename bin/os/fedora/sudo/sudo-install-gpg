@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# GnuPG
-# https://www.gnupg.org/
-#
+# Install GnuPG.
+# Modified 2019-06-18.
+
 # See also:
+# - https://www.gnupg.org/
 # - https://www.gnupg.org/download/
 # - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
 # - https://github.com/gpg/gnupg/blob/master/INSTALL
@@ -14,13 +15,12 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP_DIR}/build/gnupg"
-
+tmp_dir="${KOOPA_TMP_DIR}/gnupg"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
-echo "Installing GnuPG."
+printf "Installing GnuPG.\n"
 
-sudo -n yum-builddep -y gnupg2
+sudo yum-builddep -y gnupg2
 
 # Download GnuPG release signing keys.
 gpg --list-keys
@@ -30,124 +30,122 @@ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
                 2071B08A33BD3F06 \
                 8A861B1C7EFD60D9
 
-mkdir -p "$build_dir"
+rm -rf "$tmp_dir"
+mkdir -p "$tmp_dir"
 
 (
     package="libgpg-error"
-    version="$(koopa_version "$package")"
-    cd "$build_dir" || return 1
+    version="$(koopa variable "$package")"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
-    sudo -n make install
+    sudo make install
 )
 
 (
     package="libgcrypt"
-    version="$(koopa_version "$package")"
-    cd "$build_dir" || return 1
+    version="$(koopa variable "$package")"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
-    sudo -n make install
+    sudo make install
 )
 
 (
     package="libassuan"
-    version="$(koopa_version "$package")"
-    cd "$build_dir" || return 1
+    version="$(koopa variable "$package")"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
-    sudo -n make install
+    sudo make install
 )
 
 (
     package="libksba"
-    version="$(koopa_version "$package")"
-    cd "$build_dir" || return 1
+    version="$(koopa variable "$package")"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
-    sudo -n make install
+    sudo make install
 )
 
 (
     package="npth"
-    version="$(koopa_version "$package")"
-    cd "$build_dir" || return 1
+    version="$(koopa variable "$package")"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
-    sudo -n make install
+    sudo make install
 )
 
 (
     package="pinentry"
-    version="$(koopa_version "$package")"
-    cd "$build_dir" || return 1
+    version="$(koopa variable "$package")"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make
-    sudo -n make install
+    sudo make install
 )
 
 # Update dynamic linker configuration.
-sudo -n ldconfig -v
+sudo ldconfig -v
 
 (
     package="gnupg"
-    version="$(koopa_version gpg)"
-    cd "$build_dir" || return 1
+    version="$(koopa variable gpg)"
+    cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
     gpg --verify "${package}-${version}.tar.bz2.sig"
     tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || return 1
+    cd "${package}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
     make check
-    sudo -n make install
+    sudo make install
 )
 
-# Clean up the temp files.
-rm -rf "$build_dir"
+rm -rf "$tmp_dir"
 
 # Add local lib path to gpg configuration.
-sudo -n sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
+sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
 
-# Update dynamic linker configuration.
-sudo -n ldconfig -v
+sudo ldconfig
 
 # Without the line below, gpg2 might fail to create / import secret keys.
 # rm -rf ~/.gnugp
 
 gpgconf --kill gpg-agent
 
-echo "GnuPG installed successfully."
 command -v gpg
 gpg --version

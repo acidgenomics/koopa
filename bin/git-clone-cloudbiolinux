@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Clone CloudBioLinux.
+# Modified 2019-06-18.
+
+# Ensure we're starting with a clean copy.
+rm -rf cloudbiolinux
+
+# Using our forked repo, to control for unexpected upstream changes.
+git clone https://github.com/acidgenomics/cloudbiolinux.git

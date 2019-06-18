@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Doom Emacs
+# Install Doom Emacs.
+# Modified 2019-06-18.
 
-# Back up existing emacs configuration, if necessary.
-(
-    cd ~
-    if [ -d ".emacs.d" ]
-    then
-        echo "Backing up '.emacs.d/' directory."
-        mv .emacs.d .emacs.d.bak
-    fi
-)
+if [[ -d ".emacs.d" ]]
+then
+    >&2 printf "Error: '.emacs.d/' directory exists.\n"
+    exit 1
+fi
 
 git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom quickstart

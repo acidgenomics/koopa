@@ -9,32 +9,35 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 prefix="${prefix:-${KOOPA_PREFIX}/anaconda3}"
-build_dir="${KOOPA_TMP_DIR}/build/anaconda3"
-
-version="$(koopa_version anaconda3)"
+tmp_dir="${KOOPA_TMP_DIR}/anaconda3"
+version="$(koopa variable anaconda3)"
 
 case "$OSTYPE" in
-    linux-gnu) script="Anaconda3-${version}-Linux-x86_64.sh";;
-      darwin*) script="Anaconda3-${version}-MacOSX-x86_64.sh";;
-            *) echo "${OSTYPE} is not supported."; exit 1;;
+    linux-gnu)
+        script="Anaconda3-${version}-Linux-x86_64.sh"
+        ;;
+    darwin*)
+        script="Anaconda3-${version}-MacOSX-x86_64.sh"
+        ;;
+    *)
+        >&2 printf "Error: %s is not supported." "$OSTYPE"
+        exit 1
+        ;;
 esac
 
 prefix_mkdir "$prefix"
 
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
-    echo "Downloading Anaconda installer."
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir"
     curl -O "https://repo.anaconda.com/archive/${script}"
-    # Note that this script should not be run as root.
     bash "$script" -bf -p "$prefix"
-    rm -rf "$build_dir"
+    rm -rf "$tmp_dir"
 )
 
 prefix_chgrp "$prefix"
 
-echo "conda installed successfully."
 conda_exe="${prefix}/bin/conda"
-echo "$conda_exe"
-sh -c "$conda_exe --version"
+command -v "$conda_exe"
+"$conda_exe --version"

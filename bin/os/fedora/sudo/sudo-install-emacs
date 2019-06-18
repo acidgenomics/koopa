@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Emacs text editor
-# https://www.gnu.org/software/emacs/
-#
+# Install Emacs text editor.
+# Modified 2019-06-18.
+
 # See also:
+# - https://www.gnu.org/software/emacs/
 # - https://github.com/emacs-mirror/emacs
 
 # shellcheck source=/dev/null
@@ -12,34 +13,30 @@ source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP_DIR}/build/emacs"
+tmp_dir="${KOOPA_TMP_DIR}/emacs"
+version="$(koopa variable emacs)"
 
-version="$(koopa_version emacs)"
-
-echo "Installing emacs ${version}."
+printf "Installing emacs %s.\n" "$version"
 
 # Install build dependencies.
-sudo -n yum-builddep -y emacs
+sudo yum-builddep -y emacs
 
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || return 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
     tar -xJvf "emacs-${version}.tar.xz"
-    cd "emacs-${version}" || return 1
+    cd "emacs-${version}" || exit 1
     ./configure \
         --build="$build_name" \
         --prefix="$prefix"
     make
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
-sudo -n ldconfig
+sudo ldconfig
 
-echo "emacs installed successfully."
 command -v emacs
 emacs --version

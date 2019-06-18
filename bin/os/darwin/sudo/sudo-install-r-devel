@@ -14,7 +14,7 @@ r_version="3.6-branch"
 macos_version="el-capitan"
 tmp_dir="${KOOPA_TMP}/r-devel"
 
-echo "Installing r-devel ${r_version} for ${macos_version}."
+printf "Installing r-devel %s for %s.\n" "$r_version" "$macos_version"
 
 (
     rm -rf "$tmp_dir"
@@ -33,7 +33,7 @@ echo "Installing r-devel ${r_version} for ${macos_version}."
 
     if [[ -d "/Library/Frameworks/R.framework" ]]
     then
-        echo "Backing up existing R.framework."
+        printf "Backing up existing 'R.framework'.\n"
         sudo mv \
             "/Library/Frameworks/R.framework" \
             "/Library/Frameworks/R.framework.bak"

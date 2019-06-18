@@ -14,7 +14,7 @@ prefix="$KOOPA_PREFIX"
 tmp_dir="${KOOPA_TMP_DIR}/tmux"
 version="$(koopa variable tmux)"
 
-echo "Installing tmux ${version}."
+printf "Installing tmux %s.\n" "$version"
 
 # apt-cache search libevent
 sudo apt-get -y install libevent-dev
@@ -32,9 +32,7 @@ sudo apt-get -y install libevent-dev
     rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
 sudo ldconfig
 
-echo "tmux installed successfully."
 command -v tmux
 tmux -V

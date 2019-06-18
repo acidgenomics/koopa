@@ -1,38 +1,37 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# htop
-# https://hisham.hm/htop/releases/
-# https://github.com/hishamhm/htop
+# Install htop.
+# Modified 2019-06-18.
+
+# See also:
+# - https://hisham.hm/htop/releases/
+# - https://github.com/hishamhm/htop
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP_DIR}/build/htop"
+tmp_dir="${KOOPA_TMP_DIR}/htop"
+version="$(koopa variable htop)"
 
-version="$(koopa_version htop)"
+printf "Installing htop %s.\n" "$version"
 
-echo "Installing htop ${version}."
-
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || return 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "https://hisham.hm/htop/releases/${version}/htop-${version}.tar.gz"
     tar -xzvf "htop-${version}.tar.gz"
-    cd "htop-${version}" || return 1
+    cd "htop-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
     make check
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
-sudo -n ldconfig
+sudo ldconfig
 
-echo "htop installed successfully."
 command -v htop
 htop --version

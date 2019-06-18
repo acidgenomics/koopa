@@ -2,27 +2,28 @@
 set -Eeu -o pipefail
 
 # Install RStudio Server.
-# https://www.rstudio.com/products/rstudio/download-server/
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.rstudio.com/products/rstudio/download-server/
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-build_dir="${KOOPA_TMP_DIR}/build/rstudio-server"
-
+tmp_dir="${KOOPA_TMP_DIR}/rstudio-server"
 version="$(rstudio-server)"
 
-echo "Installing RStudio Server ${version}."
+printf "Installing RStudio Server %s.\n" "$version"
 
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir"
     wget "https://download2.rstudio.org/server/centos6/x86_64/rstudio-server-rhel-${version}-x86_64.rpm"
-    sudo -n yum install -y "rstudio-server-rhel-${version}-x86_64.rpm"
-    rm -rf "$build_dir"
+    sudo yum install -y "rstudio-server-rhel-${version}-x86_64.rpm"
+    rm -rf "$tmp_dir"
 )
 
-echo "rstudio-server installed successfully."
 command -v rstudio-server
 rstudio-server version
 rstudio-server status

@@ -2,21 +2,17 @@
 set -Eeu -o pipefail
 
 # Recursively run shellcheck on all scripts in a directory.
+# Modified 2019-06-18.
 
-# This script requires shellcheck.
-# https://github.com/koalaman/shellcheck
-command -v shellcheck >/dev/null 2>&1 || {
-    echo >&2 "shellcheck missing."
-    exit 1
-}
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-path="${1:-}"
-if [[ -z "$path" ]]
-then
-    path="."
-fi
+assert_is_installed shellcheck
 
-# find . -name "*.sh" -exec shellcheck {} \;
+path="${1:-$PWD}"
+
+# Legacy method:
+# > find "$path" -name "*.sh" -exec shellcheck {} \;
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.

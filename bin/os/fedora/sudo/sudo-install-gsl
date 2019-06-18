@@ -1,38 +1,36 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# GNU Scientific Library (GSL)
-# https://www.gnu.org/software/gsl/
-# Required for some single-cell RNA-seq R packages.
+# Install GNU Scientific Library (GSL).
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.gnu.org/software/gsl/
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP_DIR}/build/gsl"
+tmp_dir="${KOOPA_TMP_DIR}/gsl"
+version="$(koopa variable gsl)"
 
-version="$(koopa_verison gsl)"
+printf "Installing GSL %s.\n" "$version"
 
-echo "Installing GSL ${version}."
-
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || return 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "http://mirror.keystealth.org/gnu/gsl/gsl-${version}.tar.gz"
     tar xzvf "gsl-${version}.tar.gz"
-    cd "gsl-${version}" || return 1
+    cd "gsl-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
     make check
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
-sudo -n ldconfig
+sudo ldconfig
 
-echo "gsl installed successfully."
 command -v gsl-config
 gsl-config --version

@@ -1,42 +1,41 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# GNU core utilities
-# https://ftp.gnu.org/gnu/coreutils/
+# Install GNU core utilities.
+# Modified 2019-06-18.
+
+# See also:
+# - https://ftp.gnu.org/gnu/coreutils/
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP_DIR}/build/coreutils"
+tmp_dir="${KOOPA_TMP_DIR}/coreutils"
+version="$(koopa variable coreutils)"
 
-version="$(koopa_version coreutils)"
-
-echo "Installing git ${version}."
+printf "Installing coreutils %s.\n" "$version"
 
 # Install build dependencies.
-sudo -n yum-builddep -y coreutils
+sudo yum-builddep -y coreutils
 
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || return 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "https://ftp.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
     tar -xJvf "coreutils-${version}.tar.xz"
-    cd "coreutils-${version}" || return 1
+    cd "coreutils-${version}" || exit 1
     ./configure \
         --build="$build_name" \
         --prefix="$prefix"
     make
     make check
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
-sudo -n ldconfig
+sudo ldconfig
 
-echo "coreutils installed successfully."
-echo "Check version with 'info coreutils'."
+printf "Check version with 'info coreutils'.\n"

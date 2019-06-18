@@ -1,49 +1,44 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# OpenSSL
-# https://www.openssl.org/source/
-# https://wiki.openssl.org/index.php/Compilation_and_Installation
+# Install OpenSSL.
+
+# See also:
+# - https://www.openssl.org/source/
+# - https://wiki.openssl.org/index.php/Compilation_and_Installation
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP_DIR}/build/openssl"
+tmp_dir="${KOOPA_TMP_DIR}/openssl"
+version="$(koopa variable openssl)"
 
-version="$(koopa_version openssl)"
-
-echo "Installing openssl ${version}."
+printf "Installing openssl %s.\n" "$version"
 
 # Install build dependencies.
-sudo -n yum-builddep -y openssl
+sudo yum-builddep -y openssl
 
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || exit 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
     tar -xvzf "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
     ./config --prefix="$prefix" shared
     make
     make test
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
-sudo -n ldconfig
+sudo ldconfig
 
 cat << EOF
-openssl installed successfully.
-Reload the current shell using 'exec bash'.
+Reload the current shell.
 
-command -v openssl
-openssl version
-
-Check ciphers with:
-openssl ciphers -v
-
+> command -v openssl
+> openssl version
+> openssl ciphers -v
 EOF

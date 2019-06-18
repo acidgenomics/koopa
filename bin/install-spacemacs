@@ -1,23 +1,18 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Back up existing emacs configuration, if necessary.
-(
-    cd ~
-    if [ -d ".emacs.d" ]
-    then
-        echo "Backing up '.emacs.d/' directory."
-        mv .emacs.d .emacs.d.bak
-    fi
-)
+# Install spacemacs.
+# Modified 2019-06-18.
 
-# Now we're ready to install spacemacs.
-echo "Cloning spacemacs repo."
+if [[ -d ".emacs.d" ]]
+then
+    >&2 printf "Error: '.emacs.d/' directory exists.\n"
+    exit 1
+fi
+
 git clone git@github.com:syl20bnr/spacemacs.git ~/.emacs.d
 
-# Fix org-projectile warning
-# Error (use-package): org-projectile :config: Symbol's function definition is
-# void: org-projectile-per-project
-rm -f ~/.emacs.d/elpa/org-projectile-*/org-projectile.elc
-
 emacs
+
+# Fix for org-projectile warning.
+# > rm -f ~/.emacs.d/elpa/org-projectile-*/org-projectile.elc

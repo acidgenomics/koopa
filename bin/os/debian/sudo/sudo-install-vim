@@ -14,7 +14,7 @@ prefix="$KOOPA_PREFIX"
 tmp_dir="${KOOPA_TMP_DIR}/vim"
 version="$(koopa variable vim)"
 
-echo "Installing vim ${version}."
+printf "Installing vim %s\n." "$version"
 
 (
     rm -rf "$tmp_dir"
@@ -30,7 +30,6 @@ echo "Installing vim ${version}."
     rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
 sudo ldconfig
 
 command -v vim

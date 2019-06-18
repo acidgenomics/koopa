@@ -2,8 +2,12 @@
 set -Eeu -o pipefail
 
 # Extract MP3 audio from YouTube or SoundCloud.
+# Modified 2019-06-18.
 
-command -v youtube-dl >/dev/null 2>&1 || { echo >&2 "youtube-dl missing."; exit 1; }
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+assert_is_installed youtube-dl
 
 url="$1"
 

@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+"""Download FlyBase genome annotations in FASTA format.
+"""
+
+import argparse
+import os
+import sys
+
+# Get the organism specified by the user.
+parser = argparse.ArgumentParser()
+parser.add_argument("type", help = "dna: genome; cdna: transcriptome")
+args = parser.parse_args()
+type = args.type
+
+flybase_release_date = os.environ["FLYBASE_RELEASE_DATE"]
+flybase_release_version = os.environ["FLYBASE_RELEASE_VERSION"]
+flybase_release_url = os.environ["FLYBASE_RELEASE_URL"]
+
+print("Drosophila melanogaster (FlyBase " + flybase_release_date + " " + flybase_release_version + ")")
+
+base_url = flybase_release_url + "/fasta"
+version = flybase_release_version
+
+if type == "dna":
+    url = base_url + "/dmel-all-aligned-${version}.fasta.gz"
+elif type == "cdna":
+    print("Downloading FlyBase FASTA files.")
+    os.system("curl -O " + base_url + "/dmel-all-transcript-" + version + ".fasta.gz")
+    os.system("curl -O " + base_url + "/dmel-all-miRNA-"      + version + ".fasta.gz")
+    os.system("curl -O " + base_url + "/dmel-all-miscRNA-"    + version + ".fasta.gz")
+    os.system("curl -O " + base_url + "/dmel-all-ncRNA-"      + version + ".fasta.gz")
+    os.system("curl -O " + base_url + "/dmel-all-pseudogene-" + version + ".fasta.gz")
+    os.system("curl -O " + base_url + "/dmel-all-tRNA-"       + version + ".fasta.gz")
+    # Concatenate into single FASTA.
+    file = "dmel-transcriptome-" + version + ".fasta.gz"
+    print("Concatenating FlyBase FASTA files.")
+    os.system("cat dmel-all-*-" + version + ".fasta.gz > " + file)
+    sys.exit(0)

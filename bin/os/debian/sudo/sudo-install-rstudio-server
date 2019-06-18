@@ -13,7 +13,7 @@ source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 tmp_dir="${KOOPA_TMP_DIR}/rstudio-server"
 version="$(koopa variable rstudio-server)"
 
-echo "Installing RStudio Server ${version}."
+printf "Installing RStudio Server %s.\n" "$version"
 
 # Note that R is already configured on Bioconductor image.
 sudo apt-get -y install r-base
@@ -30,7 +30,6 @@ sudo apt-get -y install gdebi-core
     rm -rf "$tmp_dir"
 )
 
-echo "rstudio-server installed successfully."
 command -v rstudio-server
 rstudio-server version
 rstudio-server status

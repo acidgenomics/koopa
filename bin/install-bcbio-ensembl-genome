@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Ensembl genome build for bcbio.
+# Modified 2019-04-12.
+
+# See also:
+# - https://useast.ensembl.org/
+# - https://grch37.ensembl.org/
+
+
+
+# Argument parsing                                                          {{{1
+# ==============================================================================
+
+# FIXME Make these required arguments.
+organism="Homo sapiens"
+build="GRCh37"
+
+# Note that HISAT2 requires a lot of memory to index (>= 200 GB). This is
+# intended to be run on a high performance cluster, but is often impractical
+# on a virtual machine instance (e.g. AWS, Azure).
+indexes="bowtie2 seq star"
+
+
+
+# Internal variables                                                        {{{1
+# ==============================================================================
+
+# Check for valid organism input.
+if ! echo "$organism" | grep -Eq "^$"
+then
+    >&2 printf "Invalid organism: %s.\n" "$organism"
+    >&2 printf "Requiring full Latin, case sensitive: e.g. 'Homo sapiens'.\n"
+    exit 1
+fi
+
+organism="$(echo "$organism" | sed "s/ /_/g")"
+
+cores="$((CPU_COUNT-2))"
+[ "$cores" -lt 1 ] && cores=1
+
+
+
+
+# Prepare directories                                                       {{{1
+# ==============================================================================
+
+source="Ensembl"
+
+bcbio_genome_name="${build}-${source}-${release}"
+tmp_dir="${KOOPA_TMP}/${bcbio_genome_name}"
+mkdir -p "$tmp_dir" || exit 1
+
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+mkdir -p "$log_dir" || exit 1
+timestamp="$(date "+%Y%m%d-%H%M%S")""
+log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
+
+
+
+# Download files from Ensembl                                               {{{1
+# ==============================================================================
+
+# FIXME Switch to using Ensembl FASTA, Ensembl GTF script.
+# FIXME Consider making this a separate script instead...
+
+organism_lower=$(echo "$organism" | tr '[:upper:]' '[:lower:]')
+
+if [[ "$build" == "GRCh37" ]]
+then
+    ftp_dir="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
+    release="87"
+else
+    # FIXME
+fi
+
+fasta="${organism}.${build}.dna.primary_assembly.fa"
+gtf="${organism}.${build}.${release}.gtf"
+
+(
+    cd "$tmp_dir"
+    rm -f "$fasta" "${fasta}.gz"
+    wget "${ftp_dir}/fasta/${organism_lower}/dna/${fasta}.gz"
+    gunzip -c "${fasta}.gz" > "$fasta"
+    fasta="$(realpath "$fasta")"
+
+    rm -f "$gtf" "${gtf}.gz"
+    wget "${ftp_dir}/gtf/${organism_lower}/${gtf}.gz"
+    gunzip -c "${gtf}.gz" > "$gtf"
+    gtf="$(realpath "$gtf")"
+)
+
+
+
+# bcbio                                                                     {{{1
+# ==============================================================================
+
+# e.g. Hsapiens
+bcbio_species_dir="$(echo "$organism" | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
+
+(
+    cd "$tmp_dir"
+    git-clone-cloudbiolinux
+    bcbio_setup_genome.py \
+        --name "$bcbio_species_dir" \
+        --build "$bcbio_genome_name" \
+        --cores "$cores" \
+        --fasta "$fasta" \
+        --gtf "$gtf" \
+        --indexes $indexes \
+        2>&1 | tee "$log_file"
+)
+
+rm -rf "$tmp_dir"
+
