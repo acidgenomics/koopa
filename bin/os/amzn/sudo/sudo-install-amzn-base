@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Base programs recommended for all VMs
+# Install base programs recommended for Amazon Linux 2.
+# Modified 2019-06-18.
 
-# Here's a yum cheatsheet, for reference:
-# https://access.redhat.com/sites/default/files/attachments/rh_yum_cheatsheet_1214_jcs_print-1.pdf
-
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/amzn/sudo.sh"
+source "${KOOPA_DIR}/include/os/amzn/sudo.sh"
 
 sudo-install-rhel-base
 
 # Install utils such as chsh.
 sudo yum install -y util-linux-user
-
