@@ -57,7 +57,7 @@ prefix="/usr/local"
 git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
 ```
 
-If this step fails, you may need to apply a permission fix first.
+If this step fails, you may need to apply a permission fix first. Note that this works on Linux but not macOS.
 
 ```sh
 sudo chown "root:wheel" "$prefix"
