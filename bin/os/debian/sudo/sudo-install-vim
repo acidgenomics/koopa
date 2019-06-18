@@ -1,33 +1,33 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Vim
-# https://github.com/vim/vim
+# Install Vim.
+# Modified 2019-06-18.
+
+# See also:
+# - https://github.com/vim/vim
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
-build_dir="${KOOPA_TMP_DIR}/build/vim"
-
-version="$(koopa_version vim)"
+tmp_dir="${KOOPA_TMP_DIR}/vim"
+version="$(koopa variable vim)"
 
 echo "Installing vim ${version}."
 
-# Run preflight initialization checks.
-# shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/debian/sudo.sh"
-
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || return 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "https://github.com/vim/vim/archive/v${version}.tar.gz"
     tar -xzvf "v${version}.tar.gz"
-    cd "vim-${version}" || return 1
+    cd "vim-${version}" || exit 1
     ./configure --prefix="$prefix"
     make
     # make test
     sudo make install
-    rm -rf "$build_dir"
+    rm -rf "$tmp_dir"
 )
 
 # Ensure ldconfig is current.

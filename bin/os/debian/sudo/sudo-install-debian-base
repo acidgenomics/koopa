@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Base programs recommended for all VMs.
-# Modified 2019-06-14.
+# Install base programs recommended for Debian.
+# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
-sudo -n apt-get update
+sudo apt-get update
 
 # Following the recommendations in docker-bioconductor recipes.
 # https://github.com/acidgenomics/docker-bioconductor
-sudo -n apt-get install -y \
+sudo apt-get install -y \
     autoconf \
     automake \
     cargo \
@@ -39,7 +39,7 @@ sudo -n apt-get install -y \
     xorg
 
 # Extra programs that are useful on an interactive VM.
-sudo -n apt-get install -y \
+sudo apt-get install -y \
     emacs \
     git \
     gnupg2 \
