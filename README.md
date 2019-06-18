@@ -60,7 +60,11 @@ git clone https://github.com/acidgenomics/koopa.git "${prefix}/koopa"
 If this step fails, you may need to apply a permission fix first. Note that this works on Linux but not macOS.
 
 ```sh
-sudo chown "root:wheel" "$prefix"
+# - debian: sudo
+# - fedora: wheel
+# - darwin (macOS): admin
+group="wheel"
+sudo chgrp "$group" "$prefix"
 sudo chmod g+w "$prefix"
 ```
 
