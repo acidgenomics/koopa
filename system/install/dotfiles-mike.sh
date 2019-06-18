@@ -10,15 +10,15 @@ then
 fi
 unset -v private_dir
 
-dotfile -f forward
+dotfile --force forward
 
 if [ "$os" = "darwin" ]
 then
-    dotfile -f os/darwin/gitconfig
+    dotfile --force os/darwin/gitconfig
 else
-    dotfile -f gitconfig
+    dotfile --force gitconfig
 fi
 
-dotfile --private Rsecrets
-dotfile --private secrets
-dotfile --private travis
+dotfile --private --force Rsecrets
+dotfile --private --force secrets
+dotfile --private --force travis

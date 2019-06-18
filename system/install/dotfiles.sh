@@ -11,29 +11,29 @@ printf "\nConfiguring dotfiles.\n"
 os="${KOOPA_OS_NAME:-}"
 host="${KOOPA_HOST_NAME:-}"
 
-dotfile -f Rprofile
-dotfile -f bash_profile
-dotfile -f bashrc
-dotfile -f condarc
-dotfile -f gitignore
-dotfile -f kshrc
-dotfile -f screenrc
-dotfile -f shrc
-dotfile -f spacemacs
-dotfile -f tmux.conf
-dotfile -f vim
-dotfile -f vimrc
-dotfile -f zshrc
+dotfile --force Rprofile
+dotfile --force bash_profile
+dotfile --force bashrc
+dotfile --force condarc
+dotfile --force gitignore
+dotfile --force kshrc
+dotfile --force screenrc
+dotfile --force shrc
+dotfile --force spacemacs
+dotfile --force tmux.conf
+dotfile --force vim
+dotfile --force vimrc
+dotfile --force zshrc
 
 # R
 if [ "$os" = "darwin" ]
 then
-    dotfile -f os/darwin/R
-    dotfile -f os/darwin/Renviron
+    dotfile --force os/darwin/R
+    dotfile --force os/darwin/Renviron
 elif [ "$host" = "harvard-o2" ]
 then
-    dotfile -f host/harvard-o2/Renviron
+    dotfile --force host/harvard-o2/Renviron
 elif [ "$host" == "harvard-odyssey" ]
 then
-    dotfile -f host/harvard-odyssey/Renviron
+    dotfile --force host/harvard-odyssey/Renviron
 fi
