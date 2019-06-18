@@ -74,7 +74,7 @@ Run the installer script.
 "${koopa_dir}/install" --shared
 ```
 
-This will add a configuration file at `/etc/profile.d/koopa.sh`.
+This will add a shared profile configuration file at `/etc/profile.d/koopa.sh`.
 
 ### Check installation
 
