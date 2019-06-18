@@ -5,10 +5,8 @@ set -Eeu -o pipefail
 # (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
-cmd="$*"
-
 version="0.4.0a"
-date="2019-06-17"
+date="2019-06-18"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
@@ -18,13 +16,16 @@ then
 fi
 
 # Display help on empty call.
-[ -z "${cmd}" ] && koopa --help && exit 0
+[ -z "${1:-}" ] && koopa --help && exit 0
 
-cmd_dir="${KOOPA_DIR}/include"
+include_dir="${KOOPA_DIR}/include"
 
-case "$cmd" in
+# Source internal functions.
+. "${include_dir}/functions.sh"
+
+case "$1" in
     --help|-h)
-        cat "${cmd_dir}/help.txt"
+        cat "${include_dir}/help.txt"
         exit 0
         ;;
     --version|-V)
@@ -32,22 +33,28 @@ case "$cmd" in
         exit 0
         ;;
     check)
-        Rscript --vanilla "${cmd_dir}/check.R"
+        Rscript --vanilla "${include_dir}/check.R"
         exit 0
         ;;
     info)
-        "${cmd_dir}/info.sh"
+        "${include_dir}/info.sh"
         exit 0
         ;;
     list)
-        Rscript --vanilla "${cmd_dir}/list.R"
+        Rscript --vanilla "${include_dir}/list.R"
         exit 0
         ;;
     update)
-        "${cmd_dir}/update.sh"; exit 0;;
+        "${include_dir}/update.sh"
+        exit 0
+        ;;
     upgrade)
         >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
         exit 1
+        ;;
+    variable)
+        koopa_variable "$2"
+        exit 0
         ;;
     *)
         >&2 printf "Error: Unsupported command.\n"

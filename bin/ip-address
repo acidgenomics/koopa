@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# IP address.
+# Modified 2019-06-18.
+
 if [[ "${MACOS:-}" -eq 1 ]]
 then
-    echo "en0: $(ipconfig getifaddr en0)"
-    echo "en1: $(ipconfig getifaddr en1)"
-    echo "en2: $(ipconfig getifaddr en2)"
+    printf "en0: %s\n" "$(ipconfig getifaddr en0)"
+    printf "en1: %s\n" "$(ipconfig getifaddr en1)"
+    printf "en2: %s\n" "$(ipconfig getifaddr en2)"
 else
     hostname -I | awk '{print $1}'
 fi

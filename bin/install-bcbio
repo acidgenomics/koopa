@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install bcbio-nextgen.
-# Modified 2019-06-17.
+# Modified 2019-06-18.
 
 # Use "stable" (recommended) or "development".
 # For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
@@ -11,38 +11,37 @@ set -Eeu -o pipefail
 # prefix="/data00/bcbio/v1.1.5" install-bcbio
 
 prefix="${prefix:-${KOOPA_PREFIX}/bcbio}"
-build_dir="${KOOPA_TMP_DIR}/build/bcbio"
+tmp_dir="${KOOPA_TMP_DIR}/bcbio"
+version="${version:-stable}"
 
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 
-version="${version:-stable}"
-
 # Ensure conda is deactivated.
 if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
 then
-    >&2 echo "Error: conda is active."
+    >&2 printf "Error: conda is active.\n"
     exit 1
 fi
 
 # Ensure Python virtual environment is deactivated.
 if [[ -x "$(command -v deactivate)" ]]
 then
-    >&2 echo "Error: Python virtualenv is active."
+    >&2 printf "Error: Python virtualenv is active.\n"
     exit 1
 fi
-
-prefix_mkdir "$prefix"
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 log_file="${log_dir}/bcbio-install-${version}-${timestamp}.log"
 mkdir -p "$log_dir"
 
+prefix_mkdir "$prefix"
+
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir"
     wget https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/bcbio_nextgen_install.py
     python bcbio_nextgen_install.py \
         "$install_dir" \

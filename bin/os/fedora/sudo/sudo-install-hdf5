@@ -1,31 +1,34 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# HDF5
-# Website requires registration.
-# https://www.hdfgroup.org/downloads/hdf5/
-# https://support.hdfgroup.org/ftp/HDF5/releases
+# Install HDF5.
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.hdfgroup.org/downloads/hdf5/
+# - https://support.hdfgroup.org/ftp/HDF5/releases
+
+# Note that website requires registration.
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
 build_name="$KOOPA_OS_BUILD_STRING"
-build_dir="${KOOPA_TMP_DIR}/build/hdf5"
+tmp_dir="${KOOPA_TMP_DIR}/hdf5"
 
-version="$(koopa_version hdf5)"
+version="$(koopa variable hdf5)"
 major_version="$(echo "$version" | cut -d '.' -f 1-2)"
 
-echo "Installing HDF5 ${version}."
+printf "Installing HDF5 %s.\n" "$version"
 
-# SC2103: Use a ( subshell ) to avoid having to cd back.
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir" || return 1
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     wget "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/hdf5-${version}/src/hdf5-${version}.tar.gz"
     tar -xzvf "hdf5-${version}.tar.gz"
-    cd "hdf5-${version}" || return 1
+    cd "hdf5-${version}" || exit 1
     ./configure \
         --build="$build_name" \
         --prefix="$prefix" \
@@ -33,13 +36,11 @@ echo "Installing HDF5 ${version}."
         --enable-fortran
     make
     make check
-    sudo -n make install
-    rm -rf "$build_dir"
+    sudo make install
+    rm -rf "$tmp_dir"
 )
 
-# Ensure ldconfig is current.
-sudo -n ldconfig
+sudo ldconfig
 
-echo "hdf5 installed successfully."
 command -v h5dump
 h5dump --version

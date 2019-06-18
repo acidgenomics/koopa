@@ -2,10 +2,12 @@
 set -Eeu -o pipefail
 
 # Recursively download a directory using wget.
+# Modified 2019-06-18.
 
-# This script requires wget.
-# https://www.gnu.org/software/wget/
-command -v wget >/dev/null 2>&1 || { echo >&2 "wget missing."; exit 1; }
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+assert_is_installed wget
 
 url="$1"
 user="$2"
@@ -17,8 +19,12 @@ user="$2"
 password="$3"
 password="${password@Q}"
 
+timestamp="$(date "+%Y%m%d-%H%M%S")"
+log_file="wget-${timestamp}.log"
+
+# Potentially useful flags:
 # --background
-# --tries=20
+# --tries=10
 
 wget \
     --user="$user" \
@@ -27,7 +33,5 @@ wget \
     --no-parent \
     --continue \
     --debug \
-    --output-file="wget_$(date +%F).log" \
+    --output-file="$log_file" \
     "$url"/*
-
-unset -v password url user

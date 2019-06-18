@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Enable EPEL repository on RHEL7 and Amazon Linux 2.
-# https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
+# Enable EPEL repository.
+# Modified 2019-06-18.
+
+# See also:
+# - https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-sudo -n yum install -y \
+sudo yum install -y \
     https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo -n yum-config-manager --enable epel
-sudo -n yum repolist
+sudo yum-config-manager --enable epel
+
+# > sudo yum repolist

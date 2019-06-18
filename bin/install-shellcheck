@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# ShellCheck
-#
+# Install ShellCheck.
+# Modified 2019-06-18.
+
 # See also:
 # - Install ShellCheck from source
 #   https://github.com/koalaman/shellcheck#compiling-from-source
@@ -13,20 +14,19 @@ set -Eeu -o pipefail
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 prefix="${prefix:-$KOOPA_PREFIX}"
-build_dir="${KOOPA_TMP_DIR}/build/shellcheck"
+tmp_dir="${KOOPA_TMP_DIR}/shellcheck"
+version="$(koopa variable shellcheck)"
 
-version="$(koopa_version shellcheck)"
+printf "Copying %s binary version to %s.\n" "$version" "$prefix"
 
-echo "Copying ${version} binary version to ${prefix}."
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir"
     wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz" | tar -xJv
     cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
-    rm -rf "$build_dir"
+    rm -rf "$tmp_dir"
 )
 
-echo "shellcheck installed successfully."
 command -v shellcheck
 shellcheck --version
