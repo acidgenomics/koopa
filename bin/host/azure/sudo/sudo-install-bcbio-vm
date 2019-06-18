@@ -4,8 +4,8 @@ set -Eeu -o pipefail
 # Install bcbio-vm.
 # Modified 2019-06-14.
 
-# Versioned release images:
-# https://quay.io/repository/bcbio/bcbio-vc?tab=tags
+# See also:
+# - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/host/azure/sudo.sh"
@@ -19,9 +19,9 @@ bin_dir="${install_dir}/anaconda/bin"
 # ==============================================================================
 
 echo "Configuring Docker."
-sudo -n groupadd docker
-sudo -n service docker restart
-sudo -n gpasswd -a "$USER" docker
+sudo groupadd docker
+sudo service docker restart
+sudo gpasswd -a "$USER" docker
 newgrp docker
 
 
@@ -38,20 +38,20 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p "${install_dir}/anaconda"
 
 rm -f Miniconda3-latest-Linux-x86_64.sh
 
-sudo -n rm -f /usr/local/bin/bcbio_vm.py
-sudo -n ln -s "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
+sudo rm -f /usr/local/bin/bcbio_vm.py
+sudo ln -s "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
 
-sudo -n rm -f /usr/local/bin/bcbiovm_conda
-sudo -n ln -s "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
+sudo rm -f /usr/local/bin/bcbiovm_conda
+sudo ln -s "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
 
-sudo -n chgrp docker /usr/local/bin/bcbio_vm.py
-sudo -n chmod g+s /usr/local/bin/bcbio_vm.py
+sudo chgrp docker /usr/local/bin/bcbio_vm.py
+sudo chmod g+s /usr/local/bin/bcbio_vm.py
 
 # v1.1.3
-data_dir="${install_dir}/v1.1.3"
-image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
-bcbio_vm.py --datadir="$data_dir" saveconfig
-bcbio_vm.py install --tools --image "$image"
+# > data_dir="${install_dir}/v1.1.3"
+# > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
+# > bcbio_vm.py --datadir="$data_dir" saveconfig
+# > bcbio_vm.py install --tools --image "$image"
 
 # latest
 data_dir="${install_dir}/latest"

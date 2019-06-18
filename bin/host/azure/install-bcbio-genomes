@@ -2,22 +2,30 @@
 set -Eeu -o pipefail
 
 # Install bcbio-nextgen genomes.
+# Modified 2019-06-18.
 
+tmp_dir="$(KOOPA_TMP_DIR/bcbio)"
 version="$(bcbio_nextgen.py --version)"
+
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 mkdir -p "$log_dir"
+log_file="${log_dir}/upgrade-genomes-$(date "+%Y%m%d_%H%M%S").log"
 
-# Clean up tmp files.
-rm -rf bcbiotx tmpbcbio-install
+cores="$((CPU_COUNT-2))"
+[[ "$cores" -lt 1 ]] && cores=1
 
-bcbio_nextgen.py upgrade \
-    --upgrade="skip" \
-    --cores="$((CPU_COUNT-4))" \
-    --genomes="BDGP6" \
-    --genomes="canFam3" \
-    --genomes="hg38" \
-    --genomes="mm10" \
-    --genomes="rn6" \
-    2>&1 | tee "${log_dir}/upgrade-genomes-$(date "+%Y%m%d_%H%M%S").log"
-
-rm -rf bcbiotx tmpbcbio-install
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    bcbio_nextgen.py upgrade \
+        --upgrade "skip" \
+        --cores "$cores" \
+        --genomes "BDGP6" \
+        --genomes "canFam3" \
+        --genomes "hg38" \
+        --genomes "mm10" \
+        --genomes "rn6" \
+        2>&1 | tee "$log_file"
+    rm -rf "$tmp_dir"
+)

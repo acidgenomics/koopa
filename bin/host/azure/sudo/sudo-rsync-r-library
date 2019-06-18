@@ -2,8 +2,9 @@
 set -Eeu -o pipefail
 
 # Sync R library across virtual machines.
+# Modified 2019-06-18.
 
-echo "Syncing R library from VM45."
+printf "Syncing R library from VM45.\n"
 
 source="mike@10.100.100.145"
 r_dir="/data00/R"
@@ -11,8 +12,8 @@ r_dir="/data00/R"
 # Create R directory, if necessary.
 if [[ ! -d "$r_dir" ]]
 then
-    sudo -n mkdir -p "$r_dir"
-    sudo -n chown "mike:biogroup" "$r_dir"
+    sudo mkdir -p "$r_dir"
+    sudo chown "mike:biogroup" "$r_dir"
 fi
 
 # Symlink R directory, if necessary.
