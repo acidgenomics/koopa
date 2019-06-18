@@ -1,29 +1,24 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Upgrade Homebrew packages
-
-# Consider requiring admin account.
-# if [[ "$(whoami)" != "admin" ]]; then
-#     echo "This script must be run as admin"
-#     exit 1
-# fi
+# Upgrade Homebrew.
+# Modified 2019-06-18.
 
 brew analytics off
 
-echo "Updating Homebrew..."
+printf "\nUpdating Homebrew.\n"
 brew update
 
-echo "Upgrading Homebrew packages..."
+printf "\nUpgrading Homebrew packages.\n"
 brew upgrade --force-bottle
 # brew list | xargs brew reinstall --force-bottle --cleanup
 
-echo "Upgrading Homebrew Casks..."
+printf "\nUpgrading Homebrew Casks.\n"
 brew cask outdated | xargs brew cask reinstall
 
 # Mac App Store
 if [[ -x "$(command -v mas)" ]]
 then
-    echo "Upgrading Mac App Store Apps..."
+    printf "\nUpgrading Mac App Store Apps.\n"
     mas upgrade
 fi

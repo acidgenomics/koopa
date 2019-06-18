@@ -2,10 +2,11 @@
 set -Eeu -o pipefail
 
 # Disable quarantine on installed applications.
+# Modified 2019-06-18.
+
 # This is useful for installed Homebrew casks.
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/darwin/sudo.sh"
+source "${KOOPA_DIR}/include/os/darwin/sudo.sh"
 
 sudo xattr -r -d com.apple.quarantine /Applications/*.app

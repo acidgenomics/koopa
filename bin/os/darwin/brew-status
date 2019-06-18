@@ -1,41 +1,30 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-echo "doctor ===="
+# Homebrew status.
+# Modified 2019-06-18.
+
+printf "\ndoctor:\n"
 brew doctor
 
-echo ""
-
-echo "linkage ===="
+printf "\nlinkage:"
 brew linkage
 
-echo ""
-
-echo "leaves ===="
+printf "\nleaves:\n"
 brew leaves
 
-echo ""
-
-echo "dependency tree ===="
+"\ndependency tree:\n"
 brew deps --installed --tree
 
-echo ""
-
-echo "versions ===="
+printf "\nversions:\n"
 brew list --versions
 
-echo ""
-
-echo "missing ===="
+printf "\nmissing:\n"
 brew missing
 
-echo ""
-
-echo "outdated ===="
+printf "\noutdated:\n"
 brew outdated
 brew cask outdated
 
-echo ""
-
-echo "info ===="
+printf "\ninfo:\n"
 brew info

@@ -2,10 +2,10 @@
 set -Eeu -o pipefail
 
 # Uninstall Adobe software.
+# Modified 2019-06-18.
 
-# Run preflight initialization checks.
 # shellcheck source=/dev/null
-"${KOOPA_DIR}/include/os/darwin/sudo.sh"
+source "${KOOPA_DIR}/include/os/darwin/sudo.sh"
 
 rm -rf ~/Documents/Adobe
 

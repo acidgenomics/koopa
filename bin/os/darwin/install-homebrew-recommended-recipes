@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Recommended Homebrew recipes to install.
-# Modified 2019-06-12.
+# Install recommended Homebrew recipes.
+# Modified 2019-06-18.
 
 export HOMEBREW_FORCE_BOTTLE=1
 
@@ -78,7 +78,7 @@ brew cask install \
     vlc \
     xld
 
-# Gatekeeper issues                                                         {{{1
+# Gatekeeper issues                                                         {{{2
 # ------------------------------------------------------------------------------
 
 brew cask install --no-quarantine \
@@ -87,7 +87,7 @@ brew cask install --no-quarantine \
     omnidisksweeper \
     rstudio
 
-# Non-admin issues                                                          {{{1
+# Non-admin issues                                                          {{{2
 # ------------------------------------------------------------------------------
 
 # These casks have permission issues with non-admin accounts.
@@ -171,12 +171,12 @@ brew install \
     youtube-dl \
     zlib
 
-# External recipes                                                          {{{1
+# External recipes                                                          {{{2
 # ------------------------------------------------------------------------------
 
 brew install vitorgalvao/tiny-scripts/cask-repair
 
-# Pesky                                                                     {{{1
+# Pesky recipes                                                             {{{2
 # ------------------------------------------------------------------------------
 
 # Additional imagemagick flags:

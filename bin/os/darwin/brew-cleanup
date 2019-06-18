@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# Homebrew cleanup.
+# Modified 2019-06-18.
+
 brew cleanup -s
 brew cask cleanup
 brew prune

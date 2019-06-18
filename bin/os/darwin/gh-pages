@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# Render GitHub pages.
+# Modified 2019-06-18.
+
 bundle update
 bundle exec jekyll serve

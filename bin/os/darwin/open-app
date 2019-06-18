@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# Open application.
+# Modified 2019-06-18.
+
 open -a "$1".app
