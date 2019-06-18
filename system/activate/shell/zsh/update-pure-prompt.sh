@@ -1,12 +1,15 @@
 #!/usr/bin/env zsh
 
-# Update pure prompt scripts
-# https://github.com/sindresorhus/pure
+# Update pure prompt scripts.
+# Modified 2019-06-18.
+
+# See also:
+# - https://github.com/sindresorhus/pure
 
 koopa_fpath="${KOOPA_DIR}/system/extra/zsh/fpath"
 if [[ ! -d "$koopa_fpath" ]]
 then
-    echo "fpath directory is missing."
+    >&2 printf "fpath directory is missing.\n%s\n" "$koopa_fpath"
     exit 1
 fi
 
@@ -22,4 +25,4 @@ rm "$async_file"
 wget -O "$async_file" "${url_stem}/async.zsh"
 chmod +x "$async_file"
 
-echo "Pure prompt scripts updated successfully."
+printf "Pure prompt scripts updated successfully.\n"

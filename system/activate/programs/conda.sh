@@ -4,7 +4,8 @@
 
 
 # Activate Conda
-#
+# Modified 2019-06-18.
+
 # It's no longer recommended to directly export conda in `$PATH`.
 # Instead source the `activate` script.
 #
@@ -22,8 +23,6 @@
     [ "$KOOPA_SHELL" != "zsh" ] && \
     return 0
 
-
-
 # Attempt to detect the installation path automatically, if necessary.
 # Use `$CONDA_EXE` to manually set the path, for non-standard installs.
 # Priority:
@@ -35,6 +34,7 @@
 #    /usr/local/anaconda3
 # 4. Shared miniconda3
 #    /usr/local/miniconda3
+
 if [ -z "${CONDA_EXE:-}" ]
 then
     if [ -f "${HOME}/anaconda3/bin/conda" ]
@@ -52,38 +52,22 @@ then
     fi
 fi
 
-
-
-# Early return if we don't detect an installation.
-[ -z "${CONDA_EXE:-}" ] && return 0
-
-
-
-# Early return with error if conda installation is set but not accessible.
-if [ ! -x "$CONDA_EXE" ]
+if [ -z "${CONDA_EXE:-}" ]
 then
+    # Early return if we don't detect an installation.
+    return 0
+elif [ ! -x "$CONDA_EXE" ]
+then
+    # Early return with error if conda installation is set but not accessible.
     printf "conda does not exist at:\n%s\n" "$CONDA_EXE"
-    # Don't exit here, as this can cause SSH lockout.
     return 1
 fi
 
-
-
-# Activate the default environment automatically, if requested.
-# Note that this will get redefined as "base" when conda is
-# activated, so define as an internal variable here.
-conda_env="${CONDA_DEFAULT_ENV:-}"
-
 # Now we're ready to activate.
-conda_bin_dir="$( dirname "$CONDA_EXE" )"
+conda_bin_dir="$(dirname "$CONDA_EXE")"
+
+# Note that the activation script must run again inside a tmux session.
 # shellcheck source=/dev/null
 . "${conda_bin_dir}/activate"
-
-# Activate custom environment other than base, if desired.
-# Otherwise, clear base environment out of `$PATH`.
-if [ ! -z "$conda_env" ]
-then
-    conda activate "$conda_env"
-fi
 
 unset -v conda_bin_dir conda_env

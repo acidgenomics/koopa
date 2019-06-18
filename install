@@ -65,12 +65,12 @@ Flags:
 
     -h, --help
         Help mode.
-        
+
     --mike
         Install Mike-specific dotfiles (e.g. gitconfig).
 
     Linux only:
-    
+
     --no-dotfiles
         Skip automatic generation of dotfile symlinks.
     --shared
@@ -133,7 +133,7 @@ fi
 
 if [[ -n "${shared:-}" ]] && [[ -n "${LINUX:-}" ]]
 then
-    echo "Adding 'koopa.sh' to '/etc/profile.d/'."
+    printf "Adding 'koopa.sh' to '/etc/profile.d/'.\n"
     sudo mkdir -p /etc/profile.d
     sudo ln -fs \
         "${koopa_dir}/config/etc/profile.d/koopa.sh" \
@@ -157,7 +157,7 @@ then
 
     [[ -z "${shared:-}" ]] && \
         . "${KOOPA_DIR}/system/install/dotfiles-local.sh"
-        
+
         # Configure Mike-only dotfiles.
     [[ "${mike:-}" -eq 1 ]] && \
         . "${KOOPA_DIR}/system/install/dotfiles-mike.sh"
