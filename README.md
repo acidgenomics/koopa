@@ -57,9 +57,9 @@ Clone the repository.
 koopa_dir="/usr/local/koopa"
 sudo mkdir -p "$koopa_dir"
 
+# - darwin (macOS): admin
 # - debian: sudo
 # - fedora: wheel
-# - darwin (macOS): admin
 group="wheel"
 
 sudo chgrp "$group" "$koopa_dir"
