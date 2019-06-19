@@ -26,8 +26,12 @@ This script performs the following steps:
 optional arguments:
   -h, --help
         Show this help message and exit.
+  --devel
+        Enable developer mode. This changes the repository URLs from HTTPS
+        to SSH, for easier code commits.
   --mike
-        Install Mike-specific dot files (e.g. '.gitconfig').
+        Install Mike-specific configuration.
+        Note that this flag also automatically enables '--devel'.
   --no-dotfiles
         Skip automatic generation of dot file symlinks.
   --shared
@@ -47,6 +51,10 @@ do
         -h|--help)
             usage
             exit 0
+            ;;
+        --devel)
+            devel=1
+            shift 1
             ;;
         --mike)
             mike=1
@@ -71,15 +79,19 @@ do
     esac
 done
 
+[ "${mike:-0}" -eq 1 ] && devel=1
+
 
 
 # Activate koopa                                                            {{{1
 # ==============================================================================
 
-# Ensure koopa is activated, otherwise we'll hit unbound variable errors.
-
 # shellcheck source=/dev/null
 . "${koopa_dir}/activate"
+unset -v koopa_dir
+
+# Ensure functions get resourced if activation step is skipped.
+. "${KOOPA_DIR}/include/functions.sh"
 
 
 
@@ -92,21 +104,26 @@ rm -rf "${KOOPA_DIR}/dotfiles"
 (
     printf "\nInitializing submodules.\n"
     # shellcheck source=/dev/null
-    cd "$koopa_dir"
+    cd "$KOOPA_DIR"
     git submodule init
     git submodule update --init --recursive
     git submodule sync --recursive
+    # Change remote from HTTPS to git for easier commits.
+    if [[ -n "${devel:-}" ]]
+    then
+        git remote set-url origin git@github.com:acidgenomics/koopa.git
+    fi
 )
 
 (
     printf "\nInitializing dotfiles submodules.\n"
     # shellcheck source=/dev/null
-    cd "${koopa_dir}/config/dotfiles"
+    cd "${KOOPA_DIR}/config/dotfiles"
     git submodule init
     git submodule update --init --recursive
     git submodule sync --recursive
     # Change remote from HTTPS to git for easier commits.
-    if [[ -n "${dev:-}" ]]
+    if [[ -n "${devel:-}" ]]
     then
         git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
     fi
