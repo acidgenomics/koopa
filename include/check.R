@@ -60,7 +60,10 @@ installed <- function(name, required = TRUE) {
             if (!isTRUE(ok)) {
                 message(paste0("  ", fail, " | ", name, " missing"))
             } else {
-                message(paste0("    OK | ", name))
+                message(paste0(
+                    "    OK | ", name, "\n",
+                    "       |   ", Sys.which(name)
+                ))
             }
             invisible(ok)
         },
@@ -505,7 +508,7 @@ check_version(
     required = FALSE
 )
 
-# Linux-specific programs
+# OS-specific programs.
 if (isTRUE(linux)) {
     # RStudio Server
     check_version(
@@ -563,4 +566,7 @@ if (isTRUE(linux)) {
         # Homebrew rename doesn't return version on macOS.
         installed("rename")
     }
+} else if (isTRUE(macos)) {
+    # Homebrew
+    installed("brew")
 }
