@@ -100,3 +100,12 @@ KOOPA_PREFIX="$(get_prefix)" && export KOOPA_PREFIX
 
 export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
 mkdir -p "$KOOPA_TMP_DIR"
+
+
+
+# Local configuration                                                       {{{1
+# ==============================================================================
+
+export KOOPA_CONFIG_DIR="${XDG_CONFIG_HOME}/koopa"
+mkdir -p "$KOOPA_CONFIG_DIR"
+update_xdg_config
