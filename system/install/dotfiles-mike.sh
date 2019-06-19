@@ -10,8 +10,6 @@ then
 fi
 unset -v private_dir
 
-dotfile --force forward
-
 if [ "$KOOPA_OS_NAME" = "darwin" ]
 then
     dotfile --force os/darwin/gitconfig
@@ -19,6 +17,8 @@ else
     dotfile --force gitconfig
 fi
 
-dotfile --private --force Rsecrets
-dotfile --private --force secrets
-dotfile --private --force travis
+dotfile --force --private Rsecrets
+dotfile --force --private secrets
+dotfile --force --private travis
+dotfile --force Rprofile
+dotfile --force forward
