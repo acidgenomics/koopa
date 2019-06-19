@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Vim.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - https://github.com/vim/vim
@@ -38,5 +38,6 @@ sudo yum-builddep -y vim
 
 sudo ldconfig
 
-command -v vim
-vim --version
+vim_exe="${prefix}/bin/vim"
+command -v "$vim_exe"
+"$vim_exe" --version
