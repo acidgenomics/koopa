@@ -16,19 +16,19 @@ optional = parser._action_groups.pop()
 required = parser.add_argument_group('required arguments')
 required.add_argument( \
     "--organism", required=True, \
-    help="full latin organism name (e.g. `Homo sapiens`)" \
+    help="latin name (e.g. \"Homo sapiens\")" \
 )
 required.add_argument( \
     "--build", required=True, \
-    help="genome build (e.g. `GRCh38`)" \
+    help="genome build (e.g. \"GRCh38\")" \
 )
 required.add_argument( \
     "--type", required=True, \
-    help="`dna`: genome; `cdna`: transcriptome" \
+    help="\"dna\" (genome) or \"cdna\" (transcriptome)" \
 )
 optional.add_argument( \
     "--release", \
-    help="release version (e.g. `96`); defaults to latest supported release" \
+    help="release version (e.g. \"96\")" \
 )
 parser._action_groups.append(optional)
 args = parser.parse_args()
@@ -73,7 +73,11 @@ if os.path.isfile(file):
     sys.exit(0)
 
 print("Downloading " + file + ".")
-os.system("curl -O " + url)
+try:
+    subprocess.check_call(["wget", url])
+except subprocess.CalledProcessError as e:
+    print("Failed to download " + file + ".")
+    sys.exit(1)
 
 # Decompress, but also keep the original compressed file.
 print("Decompressing " + file + ".")
