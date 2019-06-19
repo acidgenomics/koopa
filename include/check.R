@@ -209,14 +209,12 @@ check_version(
     name = "python",
     version = koopa_version("python"),
     version_cmd = c(
-        "python --version",
+        "python --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
     ),
     eval = "=="
 )
-
-stop()
 
 # coreutils
 # This is used for shebang. Version 8.30 marks support of `-S` flag, which
