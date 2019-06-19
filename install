@@ -32,6 +32,7 @@ optional arguments:
         Skip automatic generation of dot file symlinks.
   --shared
         Configure shared installation using '/etc/profile.d'.
+        Set automatically when installed in '/usr/local' or '/opt'.
 EOF
 }
 
@@ -117,7 +118,7 @@ rm -rf "${KOOPA_DIR}/dotfiles"
 # ==============================================================================
 
 # Checking for '/usr/local' installation automatically.
-if echo "$KOOPA_DIR" | grep -qE "^/usr/local/"
+if echo "$KOOPA_DIR" | grep -qE "^/(opt|usr/local)/"
 then
     shared=1
 fi
