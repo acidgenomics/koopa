@@ -115,7 +115,6 @@ has_sudo() {
 
 # Check if directory already exists at prefix.
 # Modified 2019-06-17.
-# FIXME Consider renaming to `assert_is_dir`.
 check_prefix() {
     path="$1"
     # Error on existing installation.
@@ -165,11 +164,11 @@ prefix_chgrp() {
     group="$(get_prefix_group)"
     if has_sudo
     then
-        chgrp -Rh "$group" "$path"
-        chmod -R g+w "$path"
-    else
         sudo chgrp -Rh "$group" "$path"
         sudo chmod -R g+w "$path"
+    else
+        chgrp -Rh "$group" "$path"
+        chmod -R g+w "$path"
     fi
 }
 
