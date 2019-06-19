@@ -114,8 +114,8 @@ brew install flac lame tcl-tk
 
 brew install \
     autoconf \
-    awscli \
     automake \
+    awscli \
     bash-completion \
     bfg \
     ccache \
@@ -155,8 +155,9 @@ brew install \
     pandoc-crossref \
     pkg-config \
     protobuf \
-    rsync \
     rbenv \
+    rsync \
+    ruby-build \
     screen \
     shellcheck \
     shellharden \
