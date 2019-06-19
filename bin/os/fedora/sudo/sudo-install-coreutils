@@ -38,4 +38,10 @@ sudo yum-builddep -y coreutils
 
 sudo ldconfig
 
-printf "Check version with 'info coreutils'.\n"
+printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
+printf "System version will be renamed to 'env.bak'.\n"
+sudo mv /usr/bin/env /usr/bin/env.bak
+sudo ln -s /usr/local/bin/env /usr/bin/env
+
+command -v env
+env --version
