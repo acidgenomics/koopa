@@ -10,7 +10,8 @@ set -Eeu -o pipefail
 # - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
 
 version="$(koopa variable perl)"
-perl_name="perl-${version}"
 
+perl_name="perl-${version}"
 perlbrew install "$perl_name"
+perlbrew switch "$perl_name"
 perlbrew list
