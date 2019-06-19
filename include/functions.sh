@@ -266,6 +266,41 @@ koopa_variable() {
 # System configuration helpers                                              {{{1
 # ==============================================================================
 
+# Find local bin directories.
+#
+# See also:
+# - https://stackoverflow.com/questions/23356779
+# - https://stackoverflow.com/questions/7442417
+#
+# Modified 2019-06-17.
+find_local_bin_dirs() {
+    local array=()
+    local tmp_file="${KOOPA_TMP_DIR}/find"
+
+    find "$KOOPA_PREFIX" \
+        -mindepth 2 \
+        -maxdepth 3 \
+        -name "bin" \
+        ! -path "*/Caskroom/*" \
+        ! -path "*/Cellar/*" \
+        ! -path "*/Homebrew/*" \
+        ! -path "*/lib/*" \
+        -print0 > "$tmp_file"
+
+    while IFS=  read -r -d $'\0'
+    do
+        array+=("$REPLY")
+    done < "$tmp_file"
+    rm -f "$tmp_file"
+
+    # Sort the array.
+    IFS=$'\n'
+    local sorted=($(sort <<<"${array[*]}"))
+    unset IFS
+
+    printf "%s\n" "${sorted[@]}"
+}
+
 # Update dynamic linker (LD) configuration.
 # Modified 2019-06-19.
 sudo_update_ldconfig() {

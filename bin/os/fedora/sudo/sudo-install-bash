@@ -39,8 +39,9 @@ sudo yum-builddep -y bash
 if ! grep -q "${prefix}/bin/bash" /etc/shells
 then
     printf "Updating '/etc/shells'.\n"
-    sudo bash -c "echo ${prefix}/bin/bash >> /etc/shells"
+    sudo sh -c "echo ${prefix}/bin/bash >> /etc/shells"
 fi
 
-command -v bash
-bash --version
+bash_exe="${prefix}/bin/bash"
+command -v "$bash_exe"
+"$bash_exe" --version
