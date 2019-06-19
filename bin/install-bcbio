@@ -10,7 +10,7 @@ set -Eeu -o pipefail
 # Azure install:
 # prefix="/data00/bcbio/v1.1.5" install-bcbio
 
-prefix="${prefix:-${KOOPA_PREFIX}/bcbio}"
+prefix="${KOOPA_PREFIX}/bcbio"
 tmp_dir="${KOOPA_TMP_DIR}/bcbio"
 version="${version:-stable}"
 

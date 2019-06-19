@@ -11,10 +11,10 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="$KOOPA_PREFIX"
-openssldir="$prefix"
+prefix="${KOOPA_PREFIX}/openssl"
 tmp_dir="${KOOPA_TMP_DIR}/openssl"
 version="$(koopa variable openssl)"
+openssldir="$prefix"
 
 printf "Installing openssl %s.\n" "$version"
 

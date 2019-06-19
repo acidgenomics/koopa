@@ -10,9 +10,9 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="$KOOPA_PREFIX"
-build_name="$KOOPA_OS_BUILD_STRING"
+prefix="${KOOPA_PREFIX}/bash"
 tmp_dir="${KOOPA_TMP_DIR}/bash"
+build_name="$KOOPA_OS_BUILD_STRING"
 version="$(koopa variable bash)"
 
 printf "Installing bash %s.\n" "$version"

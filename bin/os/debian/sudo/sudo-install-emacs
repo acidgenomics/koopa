@@ -11,7 +11,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
-prefix="$KOOPA_PREFIX"
+prefix="${KOOPA_PREFIX}/emacs"
 tmp_dir="${KOOPA_TMP_DIR}/emacs"
 version="$(koopa variable emacs)"
 
