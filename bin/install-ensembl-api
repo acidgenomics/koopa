@@ -12,7 +12,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-prefix="${prefix:-${KOOPA_PREFIX}/ensembl}"
+prefix="${KOOPA_PREFIX}/ensembl"
 
 (
     prefix_mkdir "$prefix"
