@@ -241,7 +241,7 @@ check_version(
     name = "python",
     version = koopa_version("python"),
     version_cmd = c(
-        "python --version 2>&1",
+        "python --version",
         "head -n 1",
         "cut -d ' ' -f 2"
     ),
@@ -466,7 +466,44 @@ check_version(
 )
 
 # perlbrew
-installed("perlbrew", required = FALSE)
+check_version(
+    name = "perlbrew",
+    version = koopa_version("perlbrew"),
+    version_cmd = c(
+        "perlbrew --version",
+        "head -n 1",
+        "cut -d '-' -f 2",
+        "cut -d '/' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+# Ruby
+check_version(
+    name = "ruby",
+    version = koopa_version("ruby"),
+    version_cmd = c(
+        "ruby --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+# rbenv
+check_version(
+    name = "rbenv",
+    version = koopa_version("rbenv"),
+    version_cmd = c(
+        "rbenv --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
 
 # Linux-specific programs
 if (isTRUE(linux)) {
