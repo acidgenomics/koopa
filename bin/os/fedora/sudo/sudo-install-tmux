@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Tmux terminal multiplexer.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - https://github.com/tmux/tmux
@@ -37,5 +37,6 @@ sudo yum-builddep -y tmux
 
 sudo ldconfig
 
-command -v tmux
-tmux -V
+tmux_exe="${prefix}/bin/tmux"
+command -v "$tmux_exe"
+"$tmux_exe" -V
