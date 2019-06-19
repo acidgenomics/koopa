@@ -252,7 +252,7 @@ check_version(
 )
 
 # Python virtualenv
-installed("virtualenv")
+# > installed("virtualenv")
 
 # Docker
 check_version(
