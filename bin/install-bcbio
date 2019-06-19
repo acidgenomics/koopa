@@ -17,19 +17,7 @@ version="${version:-stable}"
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 
-# Ensure conda is deactivated.
-if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
-then
-    >&2 printf "Error: conda is active.\n"
-    exit 1
-fi
-
-# Ensure Python virtual environment is deactivated.
-if [[ -x "$(command -v deactivate)" ]]
-then
-    >&2 printf "Error: Python virtualenv is active.\n"
-    exit 1
-fi
+assert_has_no_environments
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
