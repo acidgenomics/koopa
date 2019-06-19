@@ -29,6 +29,7 @@ fi
 # Now ready to source bashrc activation script.
 # Note that this is also compatible with zsh.
 file="${prefix}/etc/bashrc"
+
 # shellcheck disable=SC1090
 [ -f "$file" ] && . "$file"
 
