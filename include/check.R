@@ -251,6 +251,9 @@ check_version(
     eval = "=="
 )
 
+# Python virtualenv
+installed("virtualenv")
+
 # Docker
 check_version(
     name = "docker",
@@ -435,6 +438,12 @@ check_version(
     )
 )
 
+# OS-specific programs.
+if (isTRUE(macos)) {
+    # Homebrew
+    installed("brew")
+}
+
 
 
 # Optional =====================================================================
@@ -566,7 +575,4 @@ if (isTRUE(linux)) {
         # Homebrew rename doesn't return version on macOS.
         installed("rename")
     }
-} else if (isTRUE(macos)) {
-    # Homebrew
-    installed("brew")
 }
