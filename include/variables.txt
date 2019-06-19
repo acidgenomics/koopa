@@ -71,6 +71,8 @@ ensembl_release_version="96"
 # Note that they use British dates (DD-MM-YY).
 gencode_release_date="2019-04-08"
 gencode_human_release_version="30"
+
+# FIXME Consider renaming to simply 21.
 gencode_mouse_release_version="M21"
 
 # RefSeq
@@ -82,8 +84,8 @@ refseq_release_version="94"
 # Support for this may be removed in the future, due to paywall.
 # ftp://ftp.flybase.net/releases
 # https://flybase.org/cgi-bin/get_static_page.pl?file=release_notes.html
-flybase_release_date="FB2019_03"
-flybase_release_version="r6.28"
+flybase_release_date="2019-03"
+flybase_release_version="6.28"
 
 # WormBase
 # https://wormbase.org/about/release_schedule
