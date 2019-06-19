@@ -94,23 +94,7 @@ quiet_which() {
 
 
 
-# Sudo permission                                                           {{{1
-# ==============================================================================
-
-# Currently performing a simple check by verifying wheel group.
-#
-# - admin: darwin
-# - sudo: debian
-# - wheel: fedora
-#
-# Modified 2019-06-18.
-has_sudo() {
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
-}
-
-
-
-# Build prefix handlers                                                     {{{1
+# File system and build utilities                                           {{{1
 # ==============================================================================
 
 # Check if directory already exists at prefix.
@@ -130,7 +114,12 @@ check_prefix() {
 get_prefix() {
     if has_sudo
     then
-        prefix="/usr/local"
+        if [ "$KOOPA_DIR" = "/opt/koopa/koopa" ]
+        then
+            prefix="/opt/koopa"
+        else
+            prefix="/usr/local"
+        fi
     else
         prefix="${HOME}/.local"
     fi
@@ -155,6 +144,16 @@ get_prefix_group() {
         group="wheel"
     fi
     echo "$group"
+}
+
+# Administrator (sudo) permission.
+# Currently performing a simple check by verifying wheel group.
+# - Darwin (macOS): admin
+# - Debian: sudo
+# - Fedora: wheel
+# Modified 2019-06-19.
+has_sudo() {
+    groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
 # Fix the group permissions on the prefix directory.
@@ -189,9 +188,23 @@ prefix_mkdir() {
     prefix_chgrp "$path"
 }
 
+# Modified 2019-06-19.
+rm_dotfile() {
+    path="${HOME}/.${1}"
+    name="$(basename "$path")"
+    if [ -L "$path" ]
+    then
+        printf "Removing '%s'.\n" "$name"
+        rm -f "$path"
+    elif [ -f "$path" ] || [ -d "$path" ]
+    then
+        printf "Warning: Not symlink: %s\n" "$name"
+    fi
+}
 
 
-# Path modifiers                                                            {{{1
+
+# Path string modifiers                                                     {{{1
 # ==============================================================================
 
 # Modified from Mike McQuaid's dotfiles.
@@ -229,25 +242,6 @@ remove_from_path() {
 
 
 
-# File system modifiers                                                     {{{1
-# ==============================================================================
-
-# Modified 2019-06-19.
-rm_dotfile() {
-    path="${HOME}/.${1}"
-    name="$(basename "$path")"
-    if [ -L "$path" ]
-    then
-        printf "Removing '%s'.\n" "$name"
-        rm -f "$path"
-    elif [ -f "$path" ] || [ -d "$path" ]
-    then
-        printf "Warning: Not symlink: %s\n" "$name"
-    fi
-}
-
-
-
 # Version parsers                                                           {{{1
 # ==============================================================================
 
@@ -271,6 +265,15 @@ koopa_variable() {
 # System configuration helpers                                              {{{1
 # ==============================================================================
 
+# Update XDG local configuration.
+# ~/.config/koopa
+# Modified 2019-06-19.
+update_xdg_config() {
+    [ -d "$KOOPA_CONFIG_DIR" ] || return 1
+    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
+    ln -fs "${KOOPA_DIR}/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
+}
+
 # Update dynamic linker (LD) configuration.
 # Modified 2019-06-19.
 sudo_update_ldconfig() {
@@ -282,8 +285,6 @@ sudo_update_ldconfig() {
         sudo ldconfig
     fi
 }
-
-
 
 # Add shared profile symlink in `/etc/profile.d/`.
 # Modified 2019-06-19.
@@ -297,8 +298,6 @@ sudo_update_profile() {
         "${KOOPA_DIR}/config/etc/profile.d/koopa.sh" \
        /etc/profile.d/koopa.sh
 }
-
-
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
 # Modified 2019-06-19.

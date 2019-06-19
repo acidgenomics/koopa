@@ -5,7 +5,9 @@ set -Eeu -o pipefail
 # Modified 2019-06-19.
 
 # See also:
+# - https://github.com/rbenv/ruby-build
 # - https://github.com/rbenv/ruby-build/wiki
+# - https://github.com/rbenv/ruby-build/issues/377
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
@@ -19,9 +21,6 @@ version="$(koopa variable ruby)"
 # This step currently fails to build on RHEL 7 with OpenSSL 1.1+.
 # Pin to installing with system version (i.e. 1.0.2) instead.
 
-openssldir="/usr"
-
-RUBY_CONFIGURE_OPTS="--with-openssl-dir=${openssldir}" \
-    rbenv install "$version"
+RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr rbenv install "$version"
 
 rbenv list
