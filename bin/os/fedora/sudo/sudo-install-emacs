@@ -11,9 +11,9 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="$KOOPA_PREFIX"
-build_name="$KOOPA_OS_BUILD_STRING"
+prefix="${KOOPA_PREFIX}/emacs"
 tmp_dir="${KOOPA_TMP_DIR}/emacs"
+build_name="$KOOPA_OS_BUILD_STRING"
 version="$(koopa variable emacs)"
 
 printf "Installing emacs %s.\n" "$version"
