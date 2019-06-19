@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install base programs recommended for Azure VM.
+# Modified 2019-06-19.
+
+sudo-install-fedora-base
+sudo-install-azure-cli
