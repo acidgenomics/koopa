@@ -5,7 +5,7 @@
 
 R="3.6.0"
 anaconda3="2019.03"
-bash="5.0.0"
+bash="5.0"
 bcbio_nextgen.py="1.1.5"
 clang="10.0.1"
 conda="4.6.14"
