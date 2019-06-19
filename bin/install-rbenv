@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Ruby environment manager (rbenv).
+# Modified 2019-06-19.
+
+# See also:
+# - https://github.com/rbenv/rbenv
+# - https://blakewilliams.me/posts/system-wide-rbenv-install
+# - https://devhints.io/rbenv
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+prefix="${KOOPA_PREFIX}/rbenv"
+check_prefix "$prefix"
+
+# Install rbenv.
+(
+    prefix_mkdir "$prefix"
+    git clone \
+        https://github.com/sstephenson/rbenv.git \
+        "$prefix"
+)
+
+# Install ruby-build.
+(
+    mkdir -p "${prefix}/plugins"
+    git clone \
+        https://github.com/sstephenson/ruby-build.git \
+        "${prefix}/plugins/ruby-build"
+)
+
+prefix_chgrp "$prefix"
