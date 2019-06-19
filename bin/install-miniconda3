@@ -21,6 +21,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
+assert_has_no_environments
+
 prefix="${KOOPA_PREFIX}/miniconda3"
 tmp_dir="${KOOPA_TMP_DIR}/miniconda3"
 

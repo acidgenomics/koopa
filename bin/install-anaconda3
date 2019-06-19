@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Install Anaconda
-# https://www.anaconda.com/download
-# https://docs.anaconda.com/anaconda/install/
+# Install Anaconda.
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.anaconda.com/download
+# - https://docs.anaconda.com/anaconda/install/
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+assert_has_no_environments
 
 prefix="${prefix:-${KOOPA_PREFIX}/anaconda3}"
 tmp_dir="${KOOPA_TMP_DIR}/anaconda3"
