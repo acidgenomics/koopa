@@ -8,12 +8,63 @@
 # Assertive check functions                                                 {{{1
 # ==============================================================================
 
+assert_has_no_environments() {
+    # Ensure conda is deactivated.
+    if [[ -x "$(command -v conda)" ]] && [[ -n "${CONDA_PREFIX:-}" ]]
+    then
+        >&2 printf "Error: conda is active.\n"
+        exit 1
+    fi
+
+    # Ensure Python virtual environment is deactivated.
+    if [[ -x "$(command -v deactivate)" ]]
+    then
+        >&2 printf "Error: Python virtualenv is active.\n"
+        exit 1
+    fi
+}
+
+assert_has_sudo() {
+    if ! has_sudo
+    then
+        >&2 printf "Error: sudo is required for this script.\n"
+        exit 1
+    fi
+}
+
 assert_is_installed() {
     program="$1"
     command -v "$program" >/dev/null 2>&1 || {
         >&2 printf "Error: %s is not installed.\n" "$program"
         return 1
     }
+}
+
+assert_is_os_darwin() {
+    if [[ "$KOOPA_OS_NAME" != "darwin" ]] ||
+       [[ -z "${MACOS:-}" ]]
+    then
+        >&2 printf "Error: macOS is required.\n"
+        exit 1
+    fi
+}
+
+assert_is_os_debian() {
+    if ! grep "ID="      /etc/os-release | grep -q "debian" &&
+       ! grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+    then
+        >&2 printf "Error: Debian is required.\n"
+        exit 1
+    fi
+}
+
+assert_is_os_fedora() {
+    if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
+       ! grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+    then
+        >&2 printf "Error: Fedora is required.\n"
+        exit 1
+    fi
 }
 
 
@@ -102,7 +153,8 @@ prefix_chgrp() {
     if ! has_sudo
     then
         group="$(whoami)"
-        chgrp -R "$group" "$path"
+        chgrp -Rh "$group" "$path"
+        chmod g+w "$path"
         return 0
     fi
 
@@ -119,7 +171,8 @@ prefix_chgrp() {
         # Standard sudo
         group="wheel"
     fi
-    sudo chgrp -R "$group" "$path"
+    sudo chgrp -Rh "$group" "$path"
+    sudo chmod g+w "$path"
 }
 
 # Check if directory already exists at prefix.
@@ -207,5 +260,20 @@ koopa_variable() {
     else
         >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
         return 1
+    fi
+}
+
+
+
+# System configuration helpers                                              {{{1
+# ==============================================================================
+
+# Modified 2019-06-18.
+sudo_update_ldconfig() {
+    if [[ -d /etc/ld.so.conf.d ]]
+    then
+        sudo cp -n "${KOOPA_DIR}/config/etc/ld.so.conf.d/"*".conf" \
+            /etc/ld.so.conf.d/.
+        sudo ldconfig
     fi
 }
