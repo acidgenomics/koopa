@@ -4,12 +4,33 @@ set -Eeu -o pipefail
 # Find local bin directories.
 # Modified 2019-06-17.
 
-find "$KOOPA_PREFIX" /usr/local \
+# See also:
+# - https://stackoverflow.com/questions/23356779
+# - https://stackoverflow.com/questions/7442417
+
+tmp_file="${KOOPA_TMP_DIR}/find"
+
+array=()
+
+find "$KOOPA_PREFIX" \
     -mindepth 2 \
     -maxdepth 3 \
     -name "bin" \
     ! -path "*/Caskroom/*" \
     ! -path "*/Cellar/*" \
     ! -path "*/Homebrew/*" \
-    ! -path "*/lib/*" | \
-    sort
+    ! -path "*/lib/*" \
+    -print0 > "$tmp_file"
+
+while IFS=  read -r -d $'\0'
+do
+    array+=("$REPLY")
+done < "$tmp_file"
+rm -f "$tmp_file"
+
+# Sort the array.
+IFS=$'\n'
+sorted=($(sort <<<"${array[*]}"))
+unset IFS
+
+printf "%s\n" "${sorted[@]}"
