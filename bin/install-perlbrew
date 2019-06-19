@@ -18,7 +18,7 @@ prefix_mkdir "$prefix"
 export PERLBREW_ROOT="$prefix"
 
 # Ensure existing preferences are removed.
-export PERLBREW_HOME="${PERLBREW_HOME}:-${HOME}/.perlbrew"
+export PERLBREW_HOME="${PERLBREW_HOME:-${HOME}/.perlbrew}"
 rm -rf "$PERLBREW_HOME"
 
 curl -L https://install.perlbrew.pl | bash
