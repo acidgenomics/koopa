@@ -52,7 +52,9 @@ Note that this requires sudo permissions.
 Clone the repository.
 
 ```sh
-koopa_dir="/usr/local/koopa"
+# koopa_dir="/usr/local/koopa"
+koopa_dir="/opt/koopa"
+
 sudo mkdir -p "$koopa_dir"
 
 # - darwin (macOS): admin
