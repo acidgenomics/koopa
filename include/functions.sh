@@ -286,14 +286,14 @@ sudo_update_profile() {
     printf "Updating '%s'.\n" "$file"
     sudo mkdir -p "$(dirname file)"
     sudo rm -f "$file"
-    sudo cat > "$file" <<EOF
-#!/bin/sh
-
-# koopa shell
-# https://github.com/acidgenomics/koopa
-# shellcheck source=/dev/null
-. ${KOOPA_DIR}/activate
-EOF
+#     sudo cat > "$file" <<EOF
+# #!/bin/sh
+# 
+# # koopa shell
+# # https://github.com/acidgenomics/koopa
+# # shellcheck source=/dev/null
+# . ${KOOPA_DIR}/activate
+# EOF
 }
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
