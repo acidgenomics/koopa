@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # Install bcbio-nextgen genomes.
 # Modified 2019-06-18.
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+assert_is_installed bcbio_nextgen.py
+
 tmp_dir="$(KOOPA_TMP_DIR/bcbio)"
 version="$(bcbio_nextgen.py --version)"
 
@@ -24,6 +29,7 @@ cores="$((CPU_COUNT-2))"
         --genomes "BDGP6" \
         --genomes "canFam3" \
         --genomes "hg38" \
+        --genomes "hg19" \
         --genomes "mm10" \
         --genomes "rn6" \
         2>&1 | tee "$log_file"
