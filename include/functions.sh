@@ -265,15 +265,6 @@ koopa_variable() {
 # System configuration helpers                                              {{{1
 # ==============================================================================
 
-# Update XDG local configuration.
-# ~/.config/koopa
-# Modified 2019-06-19.
-update_xdg_config() {
-    [ -d "$KOOPA_CONFIG_DIR" ] || return 1
-    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
-    ln -fs "${KOOPA_DIR}/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
-}
-
 # Update dynamic linker (LD) configuration.
 # Modified 2019-06-19.
 sudo_update_ldconfig() {
@@ -286,17 +277,23 @@ sudo_update_ldconfig() {
     fi
 }
 
-# Add shared profile symlink in `/etc/profile.d/`.
+# Add shared koopa.sh configuration file to `/etc/profile.d/`.
 # Modified 2019-06-19.
 sudo_update_profile() {
     assert_has_sudo
     [ -z "${LINUX:-}" ] && return 0
+    local file="/etc/profile.d/koopa.sh"
+    printf "Updating '%s'.\n" "$file"
+    sudo mkdir -p "$(dirname file)"
+    sudo rm -f "$file"
+    sudo cat > "$file" <<EOF
+#!/bin/sh
 
-    printf "Updating '/etc/profile.d/'.\n"
-    sudo mkdir -p /etc/profile.d
-    sudo ln -fs \
-        "${KOOPA_DIR}/config/etc/profile.d/koopa.sh" \
-       /etc/profile.d/koopa.sh
+# koopa shell
+# https://github.com/acidgenomics/koopa
+# shellcheck source=/dev/null
+. ${KOOPA_DIR}/activate
+EOF
 }
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
@@ -304,7 +301,7 @@ sudo_update_profile() {
 sudo_update_r_config() {
     assert_has_sudo
     [ -z "${LINUX:-}" ] && return 0
- 
+
     printf "Updating '/etc/rstudio/'.\n"
     sudo mkdir -p /etc/rstudio
     sudo ln -fs \
@@ -315,4 +312,13 @@ sudo_update_r_config() {
     sudo ln -fs \
         "${KOOPA_DIR}/config/R/etc/"* \
         "${R_HOME}/etc/".
+}
+
+# Update XDG local configuration.
+# ~/.config/koopa
+# Modified 2019-06-19.
+update_xdg_config() {
+    [ -d "$KOOPA_CONFIG_DIR" ] || return 1
+    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
+    ln -fs "${KOOPA_DIR}/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
 }
