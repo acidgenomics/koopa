@@ -2,12 +2,39 @@
 set -Eeu -o pipefail
 
 # Install koopa.
-# Modified 2019-06-17.
+# Modified 2019-06-19.
 
 # Set `dev=1` to enable some additional developer configuration tweaks.
 # Namely, this currently changes submodule remotes from HTTPS to git.
 
 koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+
+
+
+usage() {
+    cat << EOF
+usage: install [-h]
+
+Install koopa.
+
+This script performs the following steps:
+
+  1. Initialize top-level submodules (e.g. dotfiles).
+  2. Recurse into dotfiles repo and initialize additional submodules.
+  3. Configure profile for current user (default; e.g. '~/.bashrc'), or shared
+     profile (use '--shared' flag) via '/etc/profile.d/'.
+
+optional arguments:
+  -h, --help
+        Show this help message and exit.
+  --mike
+        Install Mike-specific dot files (e.g. '.gitconfig').
+  --no-dotfiles
+        Skip automatic generation of dot file symlinks.
+  --shared
+        Configure shared installation using '/etc/profile.d'.
+EOF
+}
 
 
 
@@ -18,8 +45,8 @@ while (("$#"))
 do
     case "$1" in
         -h|--help)
-            help=1
-            shift 1
+            usage
+            exit 0
             ;;
         --mike)
             mike=1
@@ -43,41 +70,6 @@ do
             ;;
     esac
 done
-
-
-
-# Help mode                                                                 {{{1
-# ==============================================================================
-
-if [[ -n "${help:-}" ]]
-then
-    cat << EOF
-Install koopa.
-
-This script performs the following steps:
-
-    1. Initialize top-level submodules (e.g. dotfiles).
-    2. Recurse into dotfiles repo and initialize additional submodules.
-    3. Configure profile for current user (default; e.g. '~/.bashrc'), or
-       shared profile (use '--shared' flag) via '/etc/profile.d/'.
-
-Flags:
-
-    -h, --help
-        Help mode.
-
-    --mike
-        Install Mike-specific dotfiles (e.g. gitconfig).
-
-    Linux only:
-
-    --no-dotfiles
-        Skip automatic generation of dotfile symlinks.
-    --shared
-        Configure shared installation using '/etc/profile.d'.
-EOF
-    exit
-fi
 
 
 
@@ -131,13 +123,10 @@ then
     shared=1
 fi
 
-if [[ -n "${shared:-}" ]] && [[ -n "${LINUX:-}" ]]
+if [[ -n "${shared:-}" ]]
 then
-    printf "Adding 'koopa.sh' to '/etc/profile.d/'.\n"
-    sudo mkdir -p /etc/profile.d
-    sudo ln -fs \
-        "${koopa_dir}/config/etc/profile.d/koopa.sh" \
-       /etc/profile.d/koopa.sh
+    sudo_update_profile
+    sudo_update_r_config
 fi
 
 
