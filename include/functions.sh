@@ -284,7 +284,10 @@ find_local_bin_dirs() {
         ! -path "*/Caskroom/*" \
         ! -path "*/Cellar/*" \
         ! -path "*/Homebrew/*" \
+        ! -path "*/anaconda3/*" \
+        ! -path "*/bcbio/*" \
         ! -path "*/lib/*" \
+        ! -path "*/miniconda3/*" \
         -print0 > "$tmp_file"
 
     while IFS=  read -r -d $'\0'
