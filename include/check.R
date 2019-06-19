@@ -1,3 +1,6 @@
+#!/usr/bin/env -S Rscript --vanilla
+# shebang requires env from coreutils >= 8.30.
+
 # Check installed program versions.
 # Modified 2019-06-18.
 
@@ -159,6 +162,7 @@ sanitize_version <- function(version) {
     version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
     version <- sub("^[a-z]+", "", version)
     version <- sub("[a-z]+$", "", version)
+    version <- sub("-.+$", "", version)
     version
 }
 
@@ -183,45 +187,6 @@ check_version(
     ),
     eval = "=="
 )
-
-# Z shell
-check_version(
-    name = "zsh",
-    version = koopa_version("zsh"),
-    version_cmd = c(
-        "zsh --version",
-        "head -1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
-)
-
-# clang
-if (isTRUE(macos)) {
-    check_version(
-        name = "clang",
-        version = koopa_version("clang"),
-        version_cmd = c(
-            "clang --version",
-            "head -n 1",
-            "cut -d ' ' -f 4"
-        ),
-        eval = "=="
-    )
-}
-
-# GCC
-if (isTRUE(linux)) {
-    check_version(
-        name = "gcc",
-        version = koopa_version("gcc"),
-        version_cmd = c(
-            "gcc --version",
-            "head -n 1",
-            "cut -d ' ' -f 3"
-        )
-    )
-}
 
 # R
 # Alternatively, can check using `packageVersion("base")`.
@@ -251,36 +216,29 @@ check_version(
     eval = "=="
 )
 
-# Python virtualenv
-# > installed("virtualenv")
-
-# Docker
+# coreutils
+# This is used for shebang. Version 8.30 marks support of `-S` flag, which
+# supports argument flags such as `--vanilla` for Rscript.
 check_version(
-    name = "docker",
-    version = switch(
-        EXPR = os,
-        darwin = "18.09.2",
-        koopa_version("docker")
-    ),
+    name = "/usr/bin/env",
+    version = koopa_version("coreutils"),
     version_cmd = c(
-        "docker --version",
+        "/usr/bin/env --version",
         "head -n 1",
-        "cut -d ' ' -f 3",
-        "cut -d ',' -f 1"
-    ),
-    eval = "=="
+        "cut -d ' ' -f 4"
+    )
 )
 
-# Emacs
-# Setting a hard dependency here, to allow for spacemacs.
+# Conda
 check_version(
-    name = "emacs",
-    version = koopa_version("emacs"),
+    name = "conda",
+    version = koopa_version("conda"),
     version_cmd = c(
-        "emacs --version",
+        "conda --version",
         "head -n 1",
-        "cut -d ' ' -f 3"
-    )
+        "cut -d ' ' -f 2"
+    ),
+    eval = "=="
 )
 
 # Vim
@@ -295,8 +253,20 @@ check_version(
     ),
     version_cmd = c(
         "vim --version",
-        "head -1",
+        "head -n 1",
         "cut -d ' ' -f 5"
+    )
+)
+
+# Emacs
+# Setting a hard dependency here, to allow for spacemacs.
+check_version(
+    name = "emacs",
+    version = koopa_version("emacs"),
+    version_cmd = c(
+        "emacs --version",
+        "head -n 1",
+        "cut -d ' ' -f 3"
     )
 )
 
@@ -427,21 +397,33 @@ check_version(
     )
 )
 
-# ShellCheck
-check_version(
-    name = "shellcheck",
-    version = koopa_version("shellcheck"),
-    version_cmd = c(
-        "shellcheck --version",
-        "sed -n '2p'",
-        "cut -d ' ' -f 2"
-    )
-)
-
 # OS-specific programs.
 if (isTRUE(macos)) {
     # Homebrew
     installed("brew")
+
+    # clang
+    check_version(
+        name = "clang",
+        version = koopa_version("clang"),
+        version_cmd = c(
+            "clang --version",
+            "head -n 1",
+            "cut -d ' ' -f 4"
+        ),
+        eval = "=="
+    )
+} else if (isTRUE(linux)) {
+    # GCC
+    check_version(
+        name = "gcc",
+        version = koopa_version("gcc"),
+        version_cmd = c(
+            "gcc --version",
+            "head -n 1",
+            "cut -d ' ' -f 3"
+        )
+    )
 }
 
 
@@ -449,14 +431,32 @@ if (isTRUE(macos)) {
 # Optional =====================================================================
 message("\nChecking optional programs.")
 
-# Conda
+# Z shell
 check_version(
-    name = "conda",
-    version = koopa_version("conda"),
+    name = "zsh",
+    version = koopa_version("zsh"),
     version_cmd = c(
-        "conda --version",
+        "zsh --version",
         "head -n 1",
         "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+# Docker
+check_version(
+    name = "docker",
+    version = switch(
+        EXPR = os,
+        darwin = "18.09.2",
+        koopa_version("docker")
+    ),
+    version_cmd = c(
+        "docker --version",
+        "head -n 1",
+        "cut -d ' ' -f 3",
+        "cut -d ',' -f 1"
     ),
     eval = "==",
     required = FALSE
@@ -517,6 +517,37 @@ check_version(
     required = FALSE
 )
 
+# rename
+# Use Perl File::Rename, not util-linux.
+if (isTRUE(linux)) {
+    check_version(
+        name = "rename",
+        version = koopa_version("rename"),
+        version_cmd = c(
+            "rename --version",
+            "head -n 1",
+            "cut -d ' ' -f 5"
+        ),
+        grep_string = "File::Rename",
+        required = FALSE
+    )
+} else {
+    # Homebrew rename doesn't return version on macOS.
+    installed("rename")
+}
+
+# ShellCheck
+check_version(
+    name = "shellcheck",
+    version = koopa_version("shellcheck"),
+    version_cmd = c(
+        "shellcheck --version",
+        "sed -n '2p'",
+        "cut -d ' ' -f 2"
+    ),
+    required = FALSE
+)
+
 # OS-specific programs.
 if (isTRUE(linux)) {
     # RStudio Server
@@ -556,23 +587,4 @@ if (isTRUE(linux)) {
 
     # bcbio_vm.py
     installed("bcbio_vm.py", required = FALSE)
-
-    # rename
-    # Use Perl File::Rename, not util-linux.
-    if (isTRUE(linux)) {
-        check_version(
-            name = "rename",
-            version = koopa_version("rename"),
-            version_cmd = c(
-                "rename --version",
-                "head -n 1",
-                "cut -d ' ' -f 5"
-            ),
-            grep_string = "File::Rename",
-            required = FALSE
-        )
-    } else {
-        # Homebrew rename doesn't return version on macOS.
-        installed("rename")
-    }
 }

@@ -1,3 +1,6 @@
+#!/usr/bin/env -S Rscript --vanilla
+# shebang requires env from coreutils >= 8.30.
+
 # List user-accessible programs exported in PATH.
 
 options(

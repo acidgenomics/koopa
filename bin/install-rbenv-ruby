@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install recommended Ruby release via rbenv.
+# Modified 2019-06-19.
+
+# See also:
+# - https://github.com/rbenv/ruby-build/wiki
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+
+assert_is_installed rbenv
+
+# > rbenv install -l
+
+version="$(koopa variable ruby)"
+
+# This step currently fails to build on RHEL 7 with OpenSSL 1.1+.
+# Pin to installing with system version (i.e. 1.0.2) instead.
+
+openssldir="/usr"
+
+RUBY_CONFIGURE_OPTS="--with-openssl-dir=${openssldir}" \
+    rbenv install "$version"
+
+rbenv list
