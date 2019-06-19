@@ -1,13 +1,10 @@
 #!/bin/sh
 
-# Ruby environment (rbenv).
-# Modified 2019-06-18.
+# Ruby environment manager (rbenv).
+# Modified 2019-06-19.
 
 # See also:
 # - https://github.com/rbenv/rbenv
-# - https://github.com/rbenv/rbenv#how-rbenv-hooks-into-your-shell
-# - https://blakewilliams.me/posts/system-wide-rbenv-install
-# - https://devhints.io/rbenv
 
 # Alternate approaches:
 # > add_to_path_start "$(rbenv root)/shims"
