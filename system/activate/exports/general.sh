@@ -82,5 +82,11 @@ fi
 #     --iconv=utf-8,utf-8-mac
 [ -z "${RSYNC_FLAGS:-}" ] && export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --progress"
 
-# R environmental variables.
+
+# R                                                                         {{{1
+# ==============================================================================
+
+R_HOME="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
+export R_HOME
+
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"
