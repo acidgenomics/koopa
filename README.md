@@ -12,7 +12,7 @@ These [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
 Requirements:
 
 - Linux or macOS. Windows isn't supported.
-- [Bash][] >= 5. Required even when using a different shell.
+- [Bash][] >= 4. Required even when using a different shell.
 - [Python][] >= 3.7.
 - [R][] >= 3.6.
 
