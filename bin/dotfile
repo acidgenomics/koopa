@@ -1,10 +1,8 @@
-#!/usr/local/bin/bash
-
-## #!/usr/bin/env bash
+#!/usr/bin/env bash
 set -Eeu -o pipefail
 
 # Add dot file.
-# Modified 2019-06-16.
+# Modified 2019-06-19.
 
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.

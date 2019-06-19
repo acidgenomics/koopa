@@ -114,15 +114,16 @@ check_prefix() {
 get_prefix() {
     if has_sudo
     then
-        if [ "$KOOPA_DIR" = "/opt/koopa/koopa" ]
+        if echo "$KOOPA_DIR" | grep -Eq "^/opt/"
         then
-            prefix="/opt/koopa"
+            prefix="${KOOPA_DIR}/local"
         else
             prefix="/usr/local"
         fi
     else
         prefix="${HOME}/.local"
     fi
+    mkdir -p "$prefix"
     echo "$prefix"
 }
 
@@ -319,6 +320,6 @@ sudo_update_r_config() {
 # Modified 2019-06-19.
 update_xdg_config() {
     [ -d "$KOOPA_CONFIG_DIR" ] || return 1
-    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
-    ln -fs "${KOOPA_DIR}/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
+    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/."
+    ln -fs "${KOOPA_DIR}/config/dotfiles" "${KOOPA_CONFIG_DIR}/."
 }
