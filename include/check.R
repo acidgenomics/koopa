@@ -2,7 +2,7 @@
 # shebang requires env from coreutils >= 8.30.
 
 # Check installed program versions.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -215,6 +215,8 @@ check_version(
     ),
     eval = "=="
 )
+
+stop()
 
 # coreutils
 # This is used for shebang. Version 8.30 marks support of `-S` flag, which
