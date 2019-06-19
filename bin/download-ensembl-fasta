@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""Download Ensembl genome annotations in FASTA format.
+"""
+
+# See also:
+# - https://docs.python.org/2/howto/argparse.html
+# - https://stackoverflow.com/questions/24180527
+
+import argparse
+import os
+import subprocess
+import sys
+
+parser = argparse.ArgumentParser()
+optional = parser._action_groups.pop()
+required = parser.add_argument_group('required arguments')
+required.add_argument( \
+    "--organism", required=True, \
+    help="full latin organism name (e.g. `Homo sapiens`)" \
+)
+required.add_argument( \
+    "--build", required=True, \
+    help="genome build (e.g. `GRCh38`)" \
+)
+required.add_argument( \
+    "--type", required=True, \
+    help="`dna`: genome; `cdna`: transcriptome" \
+)
+optional.add_argument( \
+    "--release", \
+    help="release version (e.g. `96`); defaults to latest supported release" \
+)
+parser._action_groups.append(optional)
+args = parser.parse_args()
+
+organism = args.organism.replace(" ", "_")
+build = args.build
+type = args.type
+
+release = args.release
+if release is None:
+    release = subprocess.check_output( \
+        "koopa variable ensembl_release_version", \
+        shell=True, universal_newlines=True \
+    )
+    release = release.rstrip()
+
+# Inform and exit on legacy "transcriptome" usage.
+if type == "transcriptome":
+    print("Use `cdna` instead of `transcriptome`.")
+    sys.exit(1)
+
+if build == "GRCh37":
+    release = "87"
+    base_url = "ftp://ftp.ensembl.org/pub/grch37"
+else:
+    base_url = "ftp://ftp.ensembl.org/pub"
+base_url = base_url + "/release-" + release + "/fasta"
+
+# Get the file path of either genome or transcriptome FASTA.
+if type == "dna":
+    url = base_url + "/" + organism.lower() + "/dna/" + \
+        organism + "." + build + ".dna.primary_assembly.fa.gz"
+elif type == "cdna":
+    url = base_url + "/" + organism.lower() + "/cdna/" + \
+        organism + "." + build + ".cdna.all.fa.gz"
+
+file = os.path.basename(url)
+
+# Error if the file exists.
+if os.path.isfile(file):
+    print(file + " has already been downloaded.")
+    sys.exit(0)
+
+print("Downloading " + file + ".")
+os.system("curl -O " + url)
+
+# Decompress, but also keep the original compressed file.
+print("Decompressing " + file + ".")
+unzip_file = os.path.splitext(file)[0]
+os.system("gunzip -c " + file + " > " + unzip_file)
