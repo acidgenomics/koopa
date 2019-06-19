@@ -1,8 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC2236
 
-# Define standard PATH.
-# Modified 2019-06-18.
+# Define PATH string.
+# Modified 2019-06-19.
 
 # See also:
 # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
@@ -12,34 +12,41 @@
 
 
 
-# Standard path                                                             {{{1
+# Standard shared paths                                                     {{{1
 # ==============================================================================
 
 add_to_path_end "/usr/local/bin"
 add_to_path_end "/usr/bin"
 add_to_path_end "/bin"
-add_to_path_end "${HOME}/bin"
-
 has_sudo && add_to_path_end "/usr/local/sbin"
 has_sudo && add_to_path_end "/usr/sbin"
 
+
+
+
+# Standard local user paths                                                 {{{1
+# ==============================================================================
+
+add_to_path_start "${HOME}/bin"
 add_to_path_start "${HOME}/local/bin"
 add_to_path_start "${HOME}/.local/bin"
+
+
+
+# Koopa                                                                     {{{1
+# ==============================================================================
 
 add_to_path_start "${KOOPA_DIR}/bin"
 has_sudo && add_to_path_start "${KOOPA_DIR}/bin/sudo"
 
+# Shell-specific                                                            {{{2
+# ------------------------------------------------------------------------------
 
-
-# Shell-specific                                                            {{{1
-# ==============================================================================
 [ "$KOOPA_SHELL" = "zsh" ] && \
     add_to_path_start "${KOOPA_DIR}/bin/shell/zsh"
 
-
-
-# OS-specific                                                               {{{1
-# ==============================================================================
+# OS-specific                                                               {{{2
+# ------------------------------------------------------------------------------
 
 os="${KOOPA_OS_NAME}"
 
@@ -81,10 +88,8 @@ unset -v os_bin_dir
 
 unset -v os
 
-
-
-# Host-specific                                                             {{{1
-# ==============================================================================
+# Host-specific                                                             {{{2
+# ------------------------------------------------------------------------------
 
 host="${KOOPA_HOST_NAME:-}"
 if [ ! -z "$host" ]
@@ -98,3 +103,16 @@ then
     unset -v host_bin_dir
 fi
 unset -v host
+
+# Locally installed programs                                                {{{2
+# ------------------------------------------------------------------------------
+
+add_to_path_start "${KOOPA_PREFIX}/bin"
+
+IFS=$'\n'
+read -r -d '' -a array <<< "$(find_local_bin_dirs)"
+unset IFS
+for bin_dir in "${array[@]}"
+do
+    add_to_path_start "$bin_dir"
+done
