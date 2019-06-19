@@ -15,6 +15,8 @@ tmp_dir="${KOOPA_TMP_DIR}/bash"
 build_name="$KOOPA_OS_BUILD_STRING"
 version="$(koopa variable bash)"
 
+gnu_mirror="http://ftpmirror.gnu.org"
+
 printf "Installing bash %s.\n" "$version"
 
 # Install build dependencies
@@ -24,7 +26,7 @@ sudo yum-builddep -y bash
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "http://ftpmirror.gnu.org/bash/bash-${version}.tar.gz"
+    wget "${gnu_mirror}/bash/bash-${version}.tar.gz"
     tar -xzvf "bash-${version}.tar.gz"
     cd "bash-${version}" || exit 1
     ./configure \
