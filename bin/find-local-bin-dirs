@@ -4,10 +4,10 @@ set -Eeu -o pipefail
 # Find local bin directories.
 # Modified 2019-06-17.
 
-find /usr/local \
-    -name "bin" \
+find "$KOOPA_PREFIX" /usr/local \
     -mindepth 2 \
     -maxdepth 3 \
+    -name "bin" \
     ! -path "*/Caskroom/*" \
     ! -path "*/Cellar/*" \
     ! -path "*/Homebrew/*" \
