@@ -113,6 +113,19 @@ has_sudo() {
 # Build prefix handlers                                                     {{{1
 # ==============================================================================
 
+# Check if directory already exists at prefix.
+# Modified 2019-06-17.
+# FIXME Consider renaming to `assert_is_dir`.
+check_prefix() {
+    path="$1"
+    # Error on existing installation.
+    if [ -d "$path" ]
+    then
+        >&2 printf "Error: Directory already exists.\n%s\n" "$prefix"
+        exit 1
+    fi
+}
+
 # Return the installation prefix to use.
 # Modified 2019-06-19.
 get_prefix() {
@@ -125,13 +138,47 @@ get_prefix() {
     echo "$prefix"
 }
 
+get_prefix_group() {
+    # Standard user.
+    ! has_sudo && return "$(whoami)"
+
+    # Administrator.
+    if groups | grep -Eq "\b(admin)\b"
+    then
+        # Darwin (macOS).
+        group="admin"
+    elif groups | grep -Eq "\b(sudo)\b"
+    then
+        # Debian.
+        group="sudo"
+    else
+        # Fedora.
+        group="wheel"
+    fi
+    echo "$group"
+}
+
+# Fix the group permissions on the prefix directory.
+# Modified 2019-06-19.
+prefix_chgrp() {
+    path="$1"
+    group="$(get_prefix_group)"
+    if has_sudo
+    then
+        chgrp -Rh "$group" "$path"
+        chmod -R g+w "$path"
+    else
+        sudo chgrp -Rh "$group" "$path"
+        sudo chmod -R g+w "$path"
+    fi
+}
+
 # Create the prefix directory.
 # Modified 2019-06-19.
 prefix_mkdir() {
     path="$1"
     check_prefix "$path"
 
-    # Handle necessary sudo commands automatically.
     if has_sudo
     then
         sudo mkdir -p "$path"
@@ -140,51 +187,7 @@ prefix_mkdir() {
         mkdir -p "$path"
     fi
 
-    # Set the permissions.
     prefix_chgrp "$path"
-}
-
-# Fix the group permissions on the prefix directory.
-# Modified 2019-06-17.
-prefix_chgrp() {
-    path="$1"
-
-    # Local installation.
-    if ! has_sudo
-    then
-        group="$(whoami)"
-        chgrp -Rh "$group" "$path"
-        chmod g+w "$path"
-        return 0
-    fi
-
-    # Shared installation (requires sudo).
-    if groups | grep -Eq "\b(admin)\b"
-    then
-        # macOS
-        group="admin"
-    elif groups | grep -Eq "\b(sudo)\b"
-    then
-        # Debian
-        group="sudo"
-    else
-        # Standard sudo
-        group="wheel"
-    fi
-    sudo chgrp -Rh "$group" "$path"
-    sudo chmod g+w "$path"
-}
-
-# Check if directory already exists at prefix.
-# Modified 2019-06-17.
-check_prefix() {
-    path="$1"
-    # Error on existing installation.
-    if [ -d "$path" ]
-    then
-        >&2 printf "Error: Directory already exists.\n%s\n" "$prefix"
-        exit 1
-    fi
 }
 
 
@@ -269,7 +272,8 @@ koopa_variable() {
 # System configuration helpers                                              {{{1
 # ==============================================================================
 
-# Modified 2019-06-18.
+# Update dynamic linker (LD) configuration.
+# Modified 2019-06-19.
 sudo_update_ldconfig() {
     if [ -d /etc/ld.so.conf.d ]
     then
