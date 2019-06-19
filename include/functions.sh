@@ -285,8 +285,8 @@ sudo_update_ldconfig() {
 # Add shared profile symlink in `/etc/profile.d/`.
 # Modified 2019-06-19.
 sudo_update_profile() {
-    [ -z "${LINUX:-}" ] && return 0
     assert_has_sudo
+    [ -z "${LINUX:-}" ] && return 0
 
     printf "Updating '/etc/profile.d/'.\n"
     sudo mkdir -p /etc/profile.d
@@ -300,8 +300,8 @@ sudo_update_profile() {
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
 # Modified 2019-06-19.
 sudo_update_r_config() {
-    [ -z "${LINUX:-}" ] && return 1
     assert_has_sudo
+    [ -z "${LINUX:-}" ] && return 0
  
     printf "Updating '/etc/rstudio/'.\n"
     sudo mkdir -p /etc/rstudio
