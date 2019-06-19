@@ -6,11 +6,13 @@ set -Eeu -o pipefail
 # See also:
 # - https://www.openssl.org/source/
 # - https://wiki.openssl.org/index.php/Compilation_and_Installation
+# - https://wiki.openssl.org/index.php/Binary_Compatibility
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
 prefix="$KOOPA_PREFIX"
+openssldir="$prefix"
 tmp_dir="${KOOPA_TMP_DIR}/openssl"
 version="$(koopa variable openssl)"
 
@@ -26,7 +28,10 @@ sudo yum-builddep -y openssl
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
     tar -xvzf "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
-    ./config --prefix="$prefix" shared
+    ./config \
+        --prefix="$prefix" \
+        --openssldir="$openssldir" \
+        shared
     make
     make test
     sudo make install

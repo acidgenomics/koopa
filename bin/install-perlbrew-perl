@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Perlbrew
-# https://perlbrew.pl/
+# Install recommended Perl release via perlbrew.
 # Modified 2019-06-18.
+
+# See also:
+# https://perlbrew.pl/
 
 # Installation instructions:
 # - https://metacpan.org/pod/App::perlbrew
