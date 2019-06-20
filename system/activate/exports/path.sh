@@ -15,27 +15,30 @@
 # Standard paths                                                            {{{1
 # ==============================================================================
 
-add_to_path_end "/usr/local/bin"
-add_to_path_end "/usr/bin"
-add_to_path_end "/bin"
-has_sudo && add_to_path_end "/usr/local/sbin"
-has_sudo && add_to_path_end "/usr/sbin"
+_koopa_add_to_path_end "/usr/local/bin"
+_koopa_add_to_path_end "/usr/bin"
+_koopa_add_to_path_end "/bin"
 
-add_to_path_start "${HOME}/bin"
-add_to_path_start "${HOME}/local/bin"
-add_to_path_start "${HOME}/.local/bin"
+_koopa_has_sudo && 
+    _koopa_add_to_path_end "/usr/local/sbin"
+_koopa_has_sudo && 
+    _koopa_add_to_path_end "/usr/sbin"
+
+_koopa_add_to_path_start "${HOME}/bin"
+_koopa_add_to_path_start "${HOME}/local/bin"
+_koopa_add_to_path_start "${HOME}/.local/bin"
 
 
 
 # Koopa paths                                                               {{{1
 # ==============================================================================
 
-add_koopa_bins_to_path
+_koopa_add_bins_to_path
 
 # Shell-specific                                                            {{{2
 # ------------------------------------------------------------------------------
 
-add_koopa_bins_to_path "shell/${KOOPA_SHELL}"
+_koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
 
 # OS-specific                                                               {{{2
 # ------------------------------------------------------------------------------
@@ -49,7 +52,7 @@ add_koopa_bins_to_path "shell/${KOOPA_SHELL}"
 
 if [ ! -z "${LINUX:-}" ]
 then
-    add_koopa_bins_to_path "os/linux"
+    _koopa_add_bins_to_path "os/linux"
 
     id_like="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f 2)"
 
@@ -65,24 +68,25 @@ then
 
     if [ ! -z "${id_like:-}" ]
     then
-        add_koopa_bins_to_path "os/${id_like}"
+        _koopa_add_bins_to_path "os/${id_like}"
     fi
 
     unset -v id_like
 fi
 
-add_koopa_bins_to_path "os/${KOOPA_OS_NAME}"
+_koopa_add_bins_to_path "os/${KOOPA_OS_NAME}"
 
 # Host-specific                                                             {{{2
 # ------------------------------------------------------------------------------
 
 if [ ! -z "${KOOPA_HOST_NAME:-}" ]
 then
-    add_koopa_bins_to_path "host/${KOOPA_HOST_NAME}"
+    _koopa_add_bins_to_path "host/${KOOPA_HOST_NAME}"
 fi
 
 # Locally installed programs                                                {{{2
 # ------------------------------------------------------------------------------
 
-add_local_bins_to_path
+# FIXME Not currently working.
+# > _koopa_add_local_bins_to_path
 

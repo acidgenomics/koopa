@@ -14,6 +14,7 @@
 # > alias zmv="noglob zmv -vW"
 
 
+
 # Shortcuts                                                                 {{{1
 # ==============================================================================
 
@@ -27,7 +28,7 @@ alias e="exit"
 
 # Enable colors using dircolors.
 # Note that this is commonly installed on Linux but not macOS.
-if quiet_which dircolors
+if _koopa_quiet_which dircolors
 then
     eval "$(dircolors -b)"
     alias dir="dir --color=auto"
