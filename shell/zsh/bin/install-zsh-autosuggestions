@@ -1,5 +1,10 @@
 #!/usr/bin/env zsh
 set -Eeu -o pipefail
 
-git clone https://github.com/zsh-users/zsh-autosuggestions \
-    ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# Install ZSH autosuggestions.
+# Modified 2019-06-20.
+
+dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+rm -rf "$dir"
+git clone https://github.com/zsh-users/zsh-autosuggestions "$dir"
+unset -v dir
