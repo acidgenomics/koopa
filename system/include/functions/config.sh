@@ -13,6 +13,48 @@ _find_r_home() {
 
 
 
+# Using unicode box drawings here.
+# Note that we're truncating lines inside the box to 68 characters.
+# Modified 2019-06-20.
+_koopa_info_box() {
+    local array
+    local barpad
+
+    array=("$@")
+    barpad="$(printf "━%.0s" {1..70})"
+    
+    printf "\n  %s%s%s  \n"  "┏" "$barpad" "┓"
+    for i in "${array[@]}"
+    do
+        printf "  ┃ %-68s ┃  \n"  "${i::68}"
+    done
+    printf "  %s%s%s  \n\n"  "┗" "$barpad" "┛"
+}
+
+
+
+# Used by `koopa info`.
+# Modified 2019-06-20.
+_koopa_locate() {
+    local command
+    local name
+    local path
+    
+    command="$1"
+    name="${2:-$command}"
+    path="$(_koopa_quiet_which "$command")"
+    
+    if [[ -z "$path" ]]
+    then
+        path="[missing]"
+    else
+        path="$(realpath "$path")"
+    fi
+    printf "%s: %s" "$name" "$path"
+}
+
+
+
 # Get version stored internally in versions.txt file.
 # Modified 2019-06-18.
 _koopa_variable() {
