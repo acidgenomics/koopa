@@ -16,6 +16,7 @@ then
 fi
 
 # Source internal functions.
+# shellcheck source=/dev/null
 . "${KOOPA_DIR}/system/include/functions.sh"
 
 script_dir="${KOOPA_DIR}/system/koopa"

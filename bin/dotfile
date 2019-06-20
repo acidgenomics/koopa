@@ -131,7 +131,7 @@ fi
 
 if [[ -z "${quiet:-}" ]]
 then
-    printf "Symlinking '%s'.\n" "$(basename $symlink_path)"
+    printf "Symlinking '%s'.\n" "$(basename "$symlink_path")"
 fi
 rm -f "$symlink_path"
 ln -s "$source_path" "$symlink_path"
