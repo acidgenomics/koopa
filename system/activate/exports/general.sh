@@ -47,10 +47,10 @@ fi
 # Using vim instead of emacs by default.
 if [ -z "${EDITOR:-}" ]
 then
-    if quiet_which vim
+    if _koopa_quiet_which vim
     then
         export EDITOR="vim"
-    elif quiet_which vi
+    elif _koopa_quiet_which vi
     then
         export EDITOR="vi"
     fi
@@ -80,7 +80,8 @@ fi
 #     --one-file-system
 #     --acls --xattrs
 #     --iconv=utf-8,utf-8-mac
-[ -z "${RSYNC_FLAGS:-}" ] && export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --progress"
+[ -z "${RSYNC_FLAGS:-}" ] && \
+    export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --progress"
 
 
 

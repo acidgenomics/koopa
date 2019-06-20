@@ -12,7 +12,7 @@ alias rstudio="open -a rstudio"
 # Use `exa` instead of `ls`, if installed.
 # It has better color support.
 # See also: https://the.exa.website/
-if quiet_which exa
+if _koopa_quiet_which exa
 then
     alias ls="exa -Fg"
 else
