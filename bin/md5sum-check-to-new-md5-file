@@ -7,4 +7,4 @@ set -Eeu -o pipefail
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="md5sum-${timestamp}.md5"
 
-md5sum "$@" 2>&1 | tee "log_file"
+md5sum "$@" 2>&1 | tee "$log_file"

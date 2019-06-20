@@ -7,7 +7,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/header.sh"
 
-assert_is_installed shellcheck
+_koopa_assert_is_installed shellcheck
 
 path="${1:-$PWD}"
 
