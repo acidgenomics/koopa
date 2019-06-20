@@ -301,5 +301,18 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-. "${activate_dir}/unset.sh"
-
+unset -v activate_dir
+unset -v colors
+unset -v \
+    aspera \
+    bcbio \
+    conda \
+    debug \
+    help \
+    homebrew \
+    minimal \
+    perlbrew \
+    prompt \
+    rbenv \
+    ssh_key \
+    virtualenv

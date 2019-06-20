@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+set -Eeu -o pipefail -x
 
 # Install ShellCheck.
-# Modified 2019-06-18.
+# Modified 2019-06-20.
 
 # See also:
 # - Install ShellCheck from source
@@ -11,22 +11,27 @@ set -Eeu -o pipefail
 #   https://www.haskell.org/downloads/linux/
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/header.sh"
 
-prefix="$KOOPA_BUILD_PREFIX"
-tmp_dir="${KOOPA_TMP_DIR}/shellcheck"
-version="$(koopa variable shellcheck)"
+name="shellcheck"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/${name}"
 
-printf "Copying %s binary version to %s.\n" "$version" "$prefix"
+printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir"
     wget -qO- "https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz" | tar -xJv
+    mkdir -p "${prefix}/bin"
     cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
     rm -rf "$tmp_dir"
 )
 
-command -v shellcheck
-shellcheck --version
+_koopa_link_cellar "$name" "$version"
+
+command -v "$exe_file"
+"$exe_file" --version
