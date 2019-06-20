@@ -83,10 +83,8 @@ fi
 [ -z "${RSYNC_FLAGS:-}" ] && export RSYNC_FLAGS="--archive --copy-links --delete-before --human-readable --progress"
 
 
+
 # R                                                                         {{{1
 # ==============================================================================
-
-R_HOME="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
-export R_HOME
 
 export R_DEFAULT_PACKAGES="stats,graphics,grDevices,utils,datasets,methods,base"

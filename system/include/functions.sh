@@ -194,16 +194,22 @@ build_set_permissions() {
 # Symlink cellar into local build directory.
 # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
 link_cellar() {
-    assert_has_sudo
-    
     local name="$1"
     local version="$2"
     local prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-    
+
     printf "Linking %s in %s.\n" "$prefix" "$KOOPA_BUILD_PREFIX"
-    
+ 
     build_set_permissions "$prefix"
-    sudo cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
+    
+    if has_sudo
+    then
+        sudo cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
+        update_ldconfig
+    else
+        cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
+    fi
+
     build_set_permissions "$KOOPA_BUILD_PREFIX"
 }
 
@@ -360,6 +366,12 @@ find_local_bin_dirs() {
     printf "%s\n" "${sorted[@]}"
 }
 
+# Get R_HOME, rather than exporting as global variable.
+# Modified 2019-06-20.
+find_r_home() {
+    Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
+}
+
 # Update dynamic linker (LD) configuration.
 # Modified 2019-06-19.
 update_ldconfig() {
@@ -407,10 +419,13 @@ update_r_config() {
         "${KOOPA_DIR}/system/config/etc/rstudio/"* \
         /etc/rstudio/.
 
-    printf "Updating '%s'.\n" "$R_HOME"
+    local r_home="$(find_r_home)"
+    printf "Updating '%s'.\n" "$r_home"
     sudo ln -fs \
         "${KOOPA_DIR}/system/config/R/etc/"* \
-        "${R_HOME}/etc/".
+        "${r_home}/etc/".
+
+    r-javareconf
 }
 
 # Update XDG local configuration.

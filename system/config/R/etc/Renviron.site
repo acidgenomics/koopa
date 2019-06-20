@@ -1,5 +1,5 @@
 # Shared R environment configuration.
-# Modified 2019-06-19 by Michael Steinbaugh.
+# Modified 2019-06-20 by Michael Steinbaugh.
 
 # See also:
 # - https://support.rstudio.com/hc/en-us/articles/215733837
@@ -32,7 +32,7 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 # >     /data00/R/x86_64-redhat-linux-gnu-library/3.6 \
 # >     /usr/local/lib64/R/site-library
 
-R_LIBS_SITE="${R_HOME}/site-library"
+R_LIBS_SITE="${R_HOME}/site-library/%v"
 
 
 
