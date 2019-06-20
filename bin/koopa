@@ -56,7 +56,7 @@ case "$1" in
         exit 1
         ;;
     variable)
-        koopa_variable "$2"
+        _koopa_variable "$2"
         exit 0
         ;;
     *)
