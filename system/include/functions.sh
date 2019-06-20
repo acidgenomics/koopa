@@ -358,6 +358,8 @@ sudo_update_r_config() {
 # Modified 2019-06-19.
 update_xdg_config() {
     mkdir -p "$KOOPA_CONFIG_DIR"
-    ln -fs "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/."
-    ln -fs "${KOOPA_DIR}/system/config/dotfiles" "${KOOPA_CONFIG_DIR}/."
+    rm -f "${KOOPA_CONFIG_DIR}/"{activate,home,dotfiles}
+    ln -s "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
+    ln -s "${KOOPA_DIR}/system/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
+    ln -s "${KOOPA_DIR}" "${KOOPA_CONFIG_DIR}/home"
 }
