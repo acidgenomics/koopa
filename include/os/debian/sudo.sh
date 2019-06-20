@@ -8,7 +8,7 @@ assert_has_sudo
 assert_is_os_debian
 assert_is_installed apt-get
 assert_has_no_environments
-prefix_chgrp /usr/local
+build_chgrp /usr/local
 sudo_update_ldconfig
 
 sudo apt-get -y update
