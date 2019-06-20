@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install htop.
+# Modified 2019-06-19.
+
+# See also:
+# - https://hisham.hm/htop/releases/
+# - https://github.com/hishamhm/htop
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+name="htop"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/${name}"
+
+printf "Installing %s %s.\n" "$name" "$version"
+
+rm -rf "$tmp_dir"
+mkdir -p "$tmp_dir"
+
+(
+    cd "$tmp_dir" || exit 1
+    wget "https://hisham.hm/htop/releases/${version}/htop-${version}.tar.gz"
+    tar -xzvf "htop-${version}.tar.gz"
+    cd "htop-${version}" || exit 1
+    ./configure --prefix="$prefix"
+    make
+    make check
+    sudo make install
+)
+
+rm -rf "$tmp_dir"
+sudo ldconfig
+
+command -v "$exe_file"
+"$exe_file" --version

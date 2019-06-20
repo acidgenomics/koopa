@@ -10,7 +10,7 @@ set -Eeu -o pipefail
 # - https://github.com/rbenv/ruby-build/issues/377
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
 assert_is_installed rbenv
 
