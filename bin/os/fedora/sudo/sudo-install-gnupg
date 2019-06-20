@@ -14,7 +14,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/gnupg"
+prefix="${KOOPA_BUILD_PREFIX}/gnupg"
 tmp_dir="${KOOPA_TMP_DIR}/gnupg"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 

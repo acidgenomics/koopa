@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Remove file system cruft.
+# Modified 2019-06-19.
+
+path="${1:-.}"
+
+find "$path" \
+    -type f \
+    \( -name ".DS_Store" -o -name "Thumbs.db*" \) \
+    -delete \
+    -print

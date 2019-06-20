@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Python.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - https://www.python.org/
@@ -10,21 +10,24 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/python"
-tmp_dir="${KOOPA_TMP_DIR}/python"
+name="python"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
 build_name="$KOOPA_OS_BUILD_STRING"
-version="$(koopa variable python)"
+exe_file="${prefix}/bin/${name}3"
 
 printf "Installing python %s.\n" "$version"
 
-# Install Python and build dependencies.
-sudo yum install -y python python-pip
-sudo yum-builddep -y python
+# Install build dependencies.
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
 
 rm -rf "$tmp_dir"
 mkdir "$tmp_dir"
 
 # Ensure pip is installed and up to date.
+# > sudo yum install -y python-pip
 (
     cd "$tmp_dir"
     wget https://bootstrap.pypa.io/get-pip.py
@@ -51,5 +54,5 @@ mkdir "$tmp_dir"
 sudo rm -rf "$tmp_dir"
 sudo ldconfig
 
-command -v python3
-python3 --version
+command -v "$exe_file"
+"$exe_file" --version

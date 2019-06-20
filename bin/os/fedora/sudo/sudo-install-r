@@ -15,11 +15,13 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/R"
-tmp_dir="${KOOPA_TMP_DIR}/R"
+name="R"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
 build_name="$KOOPA_OS_BUILD_STRING"
+exe_file="${prefix}/bin/${name}"
 
-version="$(koopa variable R)"
 major_version="$(echo "$version" | cut -d "." -f 1)"
 # > minor_version="$(echo "$version" | cut -d "." -f 2-)"
 
@@ -34,14 +36,13 @@ printf "Updating Java.\n"
 # This breaks with `R CMD javareconf`.
 
 sudo yum install -y java-latest-openjdk-devel
+sudo yum list installed | grep -E '^java-'
 
 command -v java
 java -version
 
 command -v javac
 javac -version
-
-yum list installed | grep -E '^java-'
 
 
 
@@ -87,20 +88,20 @@ sudo yum install -y \
 
 # Using TeX Live 2013, we'll see this warning:
 #
-# configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF vignettes and
-# package manuals will not be rendered optimally
+#     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
+#     vignettes and package manuals will not be rendered optimally
 #
-# There doesn't appear to be an easy way to fix this on RHEL.
+# There doesn't appear to be an easy way to fix this on RHEL 7.
 
 
 
 # R                                                                         {{{1
 # ==============================================================================
 
-printf "Installing R %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
-sudo yum install -y R
-sudo yum-builddep -y R
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
 
 (
     rm -rf "$tmp_dir"
@@ -132,6 +133,7 @@ sudo_update_ldconfig
 sudo_update_r_config
 sudo-r-javareconf
 
-command -v R
-R --version
-Rscript -e 'capabilities()'
+command -v "$exe_file"
+"$exe_file" --version
+
+"${prefix}/bin/Rscript" -e 'capabilities()'

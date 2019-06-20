@@ -12,12 +12,12 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-prefix="${KOOPA_PREFIX}/rbenv"
-check_prefix "$prefix"
+prefix="${KOOPA_BUILD_PREFIX}/rbenv"
+assert_is_dir "$prefix"
 
 # Install rbenv.
 (
-    prefix_mkdir "$prefix"
+    build_mkdir "$prefix"
     git clone \
         https://github.com/sstephenson/rbenv.git \
         "$prefix"
@@ -31,4 +31,4 @@ check_prefix "$prefix"
         "${prefix}/plugins/ruby-build"
 )
 
-prefix_chgrp "$prefix"
+build_chgrp "$prefix"

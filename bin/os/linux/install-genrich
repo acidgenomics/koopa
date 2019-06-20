@@ -2,14 +2,16 @@
 set -Eeu -o pipefail
 
 # Install Genrich.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - https://github.com/jsh58/Genrich
 
-prefix="$KOOPA_PREFIX"
-tmp_dir="${KOOPA_TMP_DIR}/genrich"
-version="$(koopa variable genrich)"
+name="genrich"
+version="$(koopa variable "$name")"
+prefix="$KOOPA_BUILD_PREFIX"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/${name}"
 
 (
     rm -rf "$tmp_dir"
@@ -22,3 +24,6 @@ version="$(koopa variable genrich)"
     cp Genrich "${prefix}/bin"
     rm -rf "$tmp_dir"
 )
+
+commad -v "$exe_file"
+"$exe_file" --version
