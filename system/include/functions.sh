@@ -34,7 +34,7 @@ assert_has_sudo() {
 
 # Check if directory already exists.
 # Modified 2019-06-19.
-assert_is_dir() {
+assert_is_not_dir() {
     local path="$1"
     # Error on existing installation.
     if [ -d "$path" ]
@@ -126,7 +126,7 @@ build_chgrp() {
 # Modified 2019-06-19.
 build_mkdir() {
     local path="$1"
-    assert_is_dir "$path"
+    assert_is_not_dir "$path"
 
     if has_sudo
     then
@@ -198,7 +198,8 @@ link_cellar() {
     local name="$1"
     local version="$2"
     local prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-    assert_is_dir "$prefix"
+    printf "Linking %s in %s.\n" "$prefix" "$KOOPA_BUILD_PREFIX"
+    build_set_permissions "$prefix"
     sudo cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
     build_set_permissions "$KOOPA_BUILD_PREFIX"
 }
