@@ -96,7 +96,10 @@ esac
 # Build variables                                                           {{{1
 # ==============================================================================
 
-KOOPA_PREFIX="$(get_prefix)" && export KOOPA_PREFIX
+KOOPA_BUILD_PREFIX="$(build_prefix)" && export KOOPA_BUILD_PREFIX
+
+export KOOPA_CELLAR_PREFIX="${KOOPA_DIR}/cellar"
+mkdir -p "$KOOPA_CELLAR_PREFIX"
 
 export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
 mkdir -p "$KOOPA_TMP_DIR"

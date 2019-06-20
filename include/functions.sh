@@ -32,6 +32,18 @@ assert_has_sudo() {
     fi
 }
 
+# Check if directory already exists.
+# Modified 2019-06-19.
+assert_is_dir() {
+    path="$1"
+    # Error on existing installation.
+    if [ -d "$path" ]
+    then
+        >&2 printf "Error: Directory already exists.\n%s\n" "$prefix"
+        exit 1
+    fi
+}
+
 assert_is_installed() {
     program="$1"
     command -v "$program" >/dev/null 2>&1 || {
@@ -97,21 +109,41 @@ quiet_which() {
 # File system and build utilities                                           {{{1
 # ==============================================================================
 
-# Check if directory already exists at prefix.
-# Modified 2019-06-17.
-check_prefix() {
+# Fix the group permissions on the build directory.
+# Modified 2019-06-19.
+build_chgrp() {
     path="$1"
-    # Error on existing installation.
-    if [ -d "$path" ]
+    group="$(build_prefix_group)"
+    if has_sudo
     then
-        >&2 printf "Error: Directory already exists.\n%s\n" "$prefix"
-        exit 1
+        sudo chgrp -Rh "$group" "$path"
+        sudo chmod -R g+w "$path"
+    else
+        chgrp -Rh "$group" "$path"
+        chmod -R g+w "$path"
     fi
+}
+
+# Create the build directory.
+# Modified 2019-06-19.
+build_mkdir() {
+    path="$1"
+    assert_is_dir "$path"
+
+    if has_sudo
+    then
+        sudo mkdir -p "$path"
+        sudo chown "$(whoami)" "$path"
+    else
+        mkdir -p "$path"
+    fi
+
+    build_chgrp "$path"
 }
 
 # Return the installation prefix to use.
 # Modified 2019-06-19.
-get_prefix() {
+build_prefix() {
     if has_sudo
     then
         if echo "$KOOPA_DIR" | grep -Eq "^/opt/"
@@ -127,7 +159,7 @@ get_prefix() {
     echo "$prefix"
 }
 
-get_prefix_group() {
+build_prefix_group() {
     # Standard user.
     ! has_sudo && return "$(whoami)"
 
@@ -147,50 +179,8 @@ get_prefix_group() {
     echo "$group"
 }
 
-# Administrator (sudo) permission.
-# Currently performing a simple check by verifying wheel group.
-# - Darwin (macOS): admin
-# - Debian: sudo
-# - Fedora: wheel
 # Modified 2019-06-19.
-has_sudo() {
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
-}
-
-# Fix the group permissions on the prefix directory.
-# Modified 2019-06-19.
-prefix_chgrp() {
-    path="$1"
-    group="$(get_prefix_group)"
-    if has_sudo
-    then
-        sudo chgrp -Rh "$group" "$path"
-        sudo chmod -R g+w "$path"
-    else
-        chgrp -Rh "$group" "$path"
-        chmod -R g+w "$path"
-    fi
-}
-
-# Create the prefix directory.
-# Modified 2019-06-19.
-prefix_mkdir() {
-    path="$1"
-    check_prefix "$path"
-
-    if has_sudo
-    then
-        sudo mkdir -p "$path"
-        sudo chown "$(whoami)" "$path"
-    else
-        mkdir -p "$path"
-    fi
-
-    prefix_chgrp "$path"
-}
-
-# Modified 2019-06-19.
-rm_dotfile() {
+delete_dotfile() {
     path="${HOME}/.${1}"
     name="$(basename "$path")"
     if [ -L "$path" ]
@@ -201,6 +191,16 @@ rm_dotfile() {
     then
         printf "Warning: Not symlink: %s\n" "$name"
     fi
+}
+
+# Administrator (sudo) permission.
+# Currently performing a simple check by verifying wheel group.
+# - Darwin (macOS): admin
+# - Debian: sudo
+# - Fedora: wheel
+# Modified 2019-06-19.
+has_sudo() {
+    groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
 
@@ -277,7 +277,7 @@ find_local_bin_dirs() {
     local array=()
     local tmp_file="${KOOPA_TMP_DIR}/find"
 
-    find "$KOOPA_PREFIX" \
+    find "$KOOPA_BUILD_PREFIX" \
         -mindepth 2 \
         -maxdepth 3 \
         -name "bin" \

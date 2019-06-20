@@ -59,6 +59,8 @@ os="${KOOPA_OS_NAME}"
 
 if [ ! -z "${LINUX:-}" ]
 then
+    add_to_path_start "${KOOPA_DIR}/bin/os/linux"
+
     id_like="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f 2)"
 
     if echo "$id_like" | grep -q "debian"
@@ -107,10 +109,11 @@ unset -v host
 # Locally installed programs                                                {{{2
 # ------------------------------------------------------------------------------
 
-add_to_path_start "${KOOPA_PREFIX}/bin"
+add_to_path_start "${KOOPA_BUILD_PREFIX}/bin"
 
 IFS=$'\n'
-read -r -d '' -a array <<< "$(find_local_bin_dirs)"
+# Note: read `-a` flag doesn't work on macOS. zsh related?
+read -r -d '' array <<< "$(find_local_bin_dirs)"
 unset IFS
 for bin_dir in "${array[@]}"
 do

@@ -3,7 +3,7 @@
 # Ensembl Perl API
 # Modified 2019-06-17.
 
-ensembl_dir="${KOOPA_PREFIX}/ensembl"
+ensembl_dir="${KOOPA_BUILD_PREFIX}/ensembl"
 
 # Early return if Ensembl git directory is missing.
 [ ! -d "$ensembl_dir" ] && return 0
