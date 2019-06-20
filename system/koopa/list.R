@@ -39,7 +39,7 @@ printPrograms <- function(path) {
 
 # Split PATH string into a character vector.
 path <- strsplit(x = path, split = ":", fixed = TRUE)[[1L]]
-keep <- grepl(file.path("koopa", "bin"), path)
+keep <- grepl("koopa", path)
 path <- path[keep]
 
 invisible(lapply(X = path, FUN = printPrograms))
