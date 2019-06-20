@@ -1,13 +1,29 @@
 #!/bin/sh
 
-# alias be="noglob bundle exec"
-# alias gist="gist --open --copy"
-# alias ls="ls -Fhlo --color"
-# alias make="nice make"
-# alias rake="noglob rake"
-# alias rg="rg --colors 'match:style:nobold' --colors 'path:style:nobold'"
-# alias rsync="rsync --partial --progress --human-readable --compress"
-# alias zmv="noglob zmv -vW"
+# Aliases.
+# Modified 2019-06-20.
+
+# Potentially useful:
+# > alias be="noglob bundle exec"
+# > alias gist="gist --open --copy"
+# > alias ls="ls -Fhlo --color"
+# > alias make="nice make"
+# > alias rake="noglob rake"
+# > alias rg="rg --colors 'match:style:nobold' --colors 'path:style:nobold'"
+# > alias rsync="rsync --partial --progress --human-readable --compress"
+# > alias zmv="noglob zmv -vW"
+
+
+# Shortcuts                                                                 {{{1
+# ==============================================================================
+
+# Quick exit.
+alias e="exit"
+
+
+
+# Colors                                                                    {{{1
+# ==============================================================================
 
 # Enable colors using dircolors.
 # Note that this is commonly installed on Linux but not macOS.
@@ -22,24 +38,47 @@ then
     alias vdir="vdir --color=auto"
 fi
 
-# Quick exit.
-alias e="exit"
 
-# Improve common file system command defaults.
-alias cp="cp -iv"
+
+# File and folder manipulation                                              {{{1
+# ==============================================================================
+
+# Note that I'm improving the interactivity and verbosity here by default.
+
+# Copy files.
+# Allowing recursive by default via `-r` flag.
+alias cp="cp -irv"
+
+# Create directory.
+# Allowing recursive here by default via `-p` flag.
 alias mkdir="mkdir -vp"
+
+# Move files.
 alias mv="mv -iv"
-# Note that `-I` flag only prompts once, which is awesome.
-# However this is available on Red Hat but not macOS, so use `-i` instead.
-alias rm="rm -iv"
+
+# Remove (delete) files.
+#
+# Don't enable recursion here by default via `-r` flag.
+# This helps protect against accidental directory deletion.
+#
+# The `-I` flag only prompts once, which is awesome.
+# However this not on macOS, so use `-i` flag there instead.
+if [ ! -z "$MACOS" ]
+then
+    alias rm="rm -iv"
+else
+    alias rm="rm -Iv"
+fi
+
+
+
+# File system navigation                                                    {{{1
+# ==============================================================================
 
 # Listing files.
 alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -AFGlh"
-
-# Shortcut for listing tmux sessions.
-alias tls="tmux ls"
 
 # Set more sensible defaults for size commands.
 alias df="df -H"
@@ -48,20 +87,26 @@ alias du="du -sh"
 # Improve less defaults.
 alias less="less --ignore-case --raw-control-chars"
 
-# Easier checksum calculation.
-alias sha256="shasum -a 256"
+
+
+# Programs                                                                  {{{1
+# ==============================================================================
 
 # Emacs.
 # Use terminal (console) mode by default instead of window system.
 # alias emacs="emacs -nw"
 alias emacs="emacs --no-window-system"
 
-# Disable R prompt to save workspace.
-# --no-environ
-# --no-init
-# --no-restore
-# --no-save
-# --vanilla
+# Easier checksum calculation.
+alias sha256="shasum -a 256"
+
+# R.
+# Useful flags:
+# - `--no-environ`
+# - `--no-init`
+# - `--no-restore`
+# - `--no-save`
+# - `--vanilla`
 alias R="R --no-restore --no-save"
 
 # R shiny server.
