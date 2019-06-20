@@ -2,6 +2,9 @@
 set -Eeu -o pipefail
 
 # Install oh-my-zsh
+# Modified 2019-06-20.
 
-rm -rf ~/.oh-my-zsh
-git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh
+zsh_dir="${HOME}/.oh-my-zsh"
+rm -rf "$zsh_dir"
+git clone https://github.com/robbyrussell/oh-my-zsh "$zsh_dir"
+unset -v zsh_dir
