@@ -6,7 +6,7 @@ set -Eeu -o pipefail
 # This software is provided under an MIT License.
 
 version="0.4.0a"
-date="2019-06-18"
+date="2019-06-20"
 
 # Require that koopa is activate and exported to PATH.
 if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
@@ -15,17 +15,20 @@ then
     exit 1
 fi
 
-# Display help on empty call.
-[ -z "${1:-}" ] && koopa --help && exit 0
-
-include_dir="${KOOPA_DIR}/system/include"
-
 # Source internal functions.
-. "${include_dir}/functions.sh"
+. "${KOOPA_DIR}/system/include/functions.sh"
+
+script_dir="${KOOPA_DIR}/system/koopa"
+
+usage() {
+    cat "${script_dir}/usage.txt"
+}
+
+[ -z "${1:-}" ] && usage && exit 0
 
 case "$1" in
     --help|-h)
-        cat "${include_dir}/help.txt"
+        usage
         exit 0
         ;;
     --version|-V)
@@ -33,19 +36,19 @@ case "$1" in
         exit 0
         ;;
     check)
-        Rscript --vanilla "${include_dir}/check.R"
+        Rscript --vanilla "${script_dir}/check.R"
         exit 0
         ;;
     info)
-        "${include_dir}/info.sh"
+        "${script_dir}/info.sh"
         exit 0
         ;;
     list)
-        Rscript --vanilla "${include_dir}/list.R"
+        Rscript --vanilla "${script_dir}/list.R"
         exit 0
         ;;
     update)
-        "${include_dir}/update.sh"
+        "${script_dir}/update.sh"
         exit 0
         ;;
     upgrade)
@@ -58,7 +61,6 @@ case "$1" in
         ;;
     *)
         >&2 printf "Error: Unsupported command.\n"
-        >&2 printf "Run 'koopa --help' for details.\n"
         exit 1
         ;;
 esac

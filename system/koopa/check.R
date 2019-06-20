@@ -28,7 +28,12 @@ if (isTRUE(nzchar(Sys.getenv("MACOS")))) {
     macos <- FALSE
 }
 
-variables_file <- file.path(Sys.getenv("KOOPA_DIR"), "include", "variables.txt")
+variables_file <- file.path(
+    Sys.getenv("KOOPA_DIR"),
+    "system",
+    "include",
+    "variables.txt"
+)
 variables <- readLines(variables_file)
 
 koopa_version <- function(x) {
@@ -214,19 +219,6 @@ check_version(
         "cut -d ' ' -f 2"
     ),
     eval = "=="
-)
-
-# coreutils
-# This is used for shebang. Version 8.30 marks support of `-S` flag, which
-# supports argument flags such as `--vanilla` for Rscript.
-check_version(
-    name = "/usr/bin/env",
-    version = koopa_version("coreutils"),
-    version_cmd = c(
-        "/usr/bin/env --version",
-        "head -n 1",
-        "cut -d ' ' -f 4"
-    )
 )
 
 # Conda
@@ -422,6 +414,19 @@ if (isTRUE(macos)) {
             "gcc --version",
             "head -n 1",
             "cut -d ' ' -f 3"
+        )
+    )
+    
+    # coreutils
+    # This is used for shebang. Version 8.30 marks support of `-S` flag, which
+    # supports argument flags such as `--vanilla` for Rscript.
+    check_version(
+        name = "/usr/bin/env",
+        version = koopa_version("coreutils"),
+        version_cmd = c(
+            "/usr/bin/env --version",
+            "head -n 1",
+            "cut -d ' ' -f 4"
         )
     )
 }
