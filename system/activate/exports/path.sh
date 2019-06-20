@@ -37,7 +37,7 @@ add_to_path_start "${HOME}/.local/bin"
 # ==============================================================================
 
 add_to_path_start "${KOOPA_DIR}/bin"
-has_sudo && add_to_path_start "${KOOPA_DIR}/bin/sudo"
+has_sudo && add_to_path_start "${KOOPA_DIR}/sbin"
 
 # Shell-specific                                                            {{{2
 # ------------------------------------------------------------------------------

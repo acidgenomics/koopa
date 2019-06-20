@@ -1,0 +1,350 @@
+# Shared R profile configuration.
+# Modified 2019-06-19 by Michael Steinbaugh.
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Tested on Linux, macOS, and Windows.
+
+# > help(topic = "Rprofile")
+
+# Example profiles, for reference:
+# - Stephen Turner's profile
+#   http://gettinggeneticsdone.blogspot.com/2013/07/customize-rprofile.html
+# - Jim Hester's profile
+#   https://github.com/jimhester/dotfiles/blob/master/R/Rprofile
+# - Efficient R programming
+#   https://csgillespie.github.io/efficientR/set-up.html
+
+# Never set `options(stringsAsFactors = FALSE)`.
+# Code will be non-portable.
+
+# If devtools runs into an unzip error, set this option:
+# - `unzip = "/usr/bin/unzip"`
+
+# Restart R clean inside RStudio project with:
+# Session -> Restart R (Ctrl + Shift + F10).
+# `.rs.restartR()` will reload but not detach packages, which isn't helpful.
+# https://stackoverflow.com/questions/6313079
+# https://support.rstudio.com/hc/en-us/community/posts/200653076
+
+# Useful installation options (but leave disabled by default):
+# - `install.packages.check.source = "no"`
+# - `install.packages.compile.from.source = "binary"`
+# - `repos = BiocManager::repositories()`
+
+
+
+# Pre-flight                                                                {{{1
+# ==============================================================================
+
+# Keeping these commands out of `.First()`, otherwise the user `.Rprofile` won't
+# pick up the return values correctly.
+
+options(rprofile.site = TRUE)
+
+# Create hidden environment to stash values.
+.env <- new.env()
+
+# Set seed for reproducibility.
+assign(x = "seed", value = 1454944673L, envir = .env)
+stopifnot(is.integer(.env[["seed"]]))
+set.seed(.env[["seed"]])
+
+attach(.env)
+
+
+
+# Console and interface                                                     {{{1
+# ==============================================================================
+
+options(
+    browserNLdisabled = TRUE,
+    # Remove "+" line prefix in output, making code easier to copy.
+    continue = " ",
+    max.print = 1000L,
+    menu.graphics = FALSE,
+    prompt = "> ",
+    show.signif.stars = FALSE,
+    width = 80L
+)
+
+# Turn on completion of installed package names.
+if (isTRUE(interactive())) {
+    utils::rc.settings(ipck = TRUE)
+}
+
+
+
+# Debugging                                                                 {{{1
+# ==============================================================================
+
+# Improve the warnings and include backtrace of call stack.
+options(
+    deparse.max.lines = 3L,
+    showErrorCalls = TRUE,
+    showWarnCalls = TRUE,
+    warn = 1L,
+    # 8170 is the maximum warning length.
+    warning.length = 8170L
+)
+
+# Note that edgeR and pheatmap currently fail for these (too verbose).
+# > options(
+# >     warnPartialMatchAttr = TRUE,
+# >     warnPartialMatchDollar = TRUE
+# > )
+
+# Improve stack traces for error messages.
+#
+# Use either:
+# - `rlang::entrace()` (recommended)
+# - `utils::recover()`
+#
+# See also:
+# - https://twitter.com/krlmlr/status/1086995664591044608
+# - https://gist.github.com/krlmlr/33ec72d196b1542b9c4f9497d981de49
+#
+# Verbose error debugging is currently crashing RStudio 1.2 unless
+# `rstudio.errors.suppressed` is defined.
+#
+# Related issues:
+# - https://github.com/rstudio/rstudio/issues/4723
+# - https://github.com/rstudio/rstudio/pull/4726
+
+options(
+    error = quote(rlang::entrace()),
+    rlang_backtrace_on_error = "full",
+    rstudio.errors.suppressed = FALSE
+)
+
+# Quiet down about registered S3 method collisons.
+# https://svn.r-project.org/R/trunk/src/library/base/R/namespace.R
+# https://github.com/wch/r-source/blob/master/src/library/base/R/namespace.R
+Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
+
+
+
+# Package-specific options                                                  {{{1
+# ==============================================================================
+
+# crayon                                                                    {{{2
+# ------------------------------------------------------------------------------
+
+options(
+    crayon.enabled = TRUE,
+    crayon.colors = 256L
+)
+
+# httr                                                                      {{{2
+# ------------------------------------------------------------------------------
+
+# Enable OAuth token generation using httr on a remote R server.
+# This is used by googlesheets, for example.
+options(
+    httr_oob_default = TRUE
+)
+
+# parallel                                                                  {{{2
+# ------------------------------------------------------------------------------
+
+# Improve the default multi-core settings.
+# Minimum of 1 core, maximum of 16 cores.
+# `BiocParallel::MulticoreParam()` should inherit this setting.
+options(
+    mc.cores = min(max(1L, parallel::detectCores() - 2L), 16L)
+)
+
+# readr                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+options(
+    readr.num_columns = 0L,
+    readr.show_progress = FALSE
+)
+
+
+
+# Initialization at start of an R session                                   {{{1
+# ==============================================================================
+
+# > help(topic = "Startup", package = "base")
+
+.First <- function() {
+    # Get the R version without patch (e.g. 3.6).
+    r_ver <- paste(
+        R.version[["major"]],
+        substr(x = R.version[["minor"]], start = 1, stop = 1),
+        sep = "."
+    )
+
+    # Library path                                                          {{{2
+    # --------------------------------------------------------------------------
+
+    # Check that the local library matches the R version.
+    libs <- .libPaths()
+    lib_pattern <- file.path(
+        paste0(Sys.getenv("R_PLATFORM"), "-library"),
+        r_ver
+    )
+    usr_lib <- grepl(pattern = lib_pattern, x = libs)
+
+    if (!any(usr_lib)) {
+        stop(paste0(
+            "Failed to detect ", r_ver, " user library.", "\n",
+            "Looking for: ", lib_pattern, "\n\n",
+            ".libPaths():", "\n",
+            paste(libs, collapse = "\n")
+        ))
+    }
+
+    rm(libs, lib_pattern, usr_lib)
+
+    # Compiler                                                              {{{2
+    # --------------------------------------------------------------------------
+
+    if (Sys.getenv("HMS_CLUSTER") == "o2") {
+        # module load gcc/6.2.0
+        gcc_bin_dir <- "/n/app/gcc/6.2.0/bin"
+        stopifnot(identical(
+            x = Sys.which(c("gcc", "g++", "gfortran")),
+            y = c(
+                "gcc"      = file.path(gcc_bin_dir, "gcc"),
+                "g++"      = file.path(gcc_bin_dir, "g++"),
+                "gfortran" = file.path(gcc_bin_dir, "gfortran")
+            )
+        ))
+        rm(gcc_bin_dir)
+
+        # module load R/3.5.1
+        stopifnot(identical(
+            Sys.which("R"),
+            c(R = "/n/app/R/3.5.1/bin/R")
+        ))
+
+        # module load hdf5/1.10.1
+        stopifnot(identical(
+            Sys.which("h5cc"),
+            c(h5cc = "/n/app/hdf5/1.10.1/bin/h5cc")
+        ))
+    } else if (Sys.info()[["sysname"]] == "Darwin") {
+        # Use recommended CRAN compiler settings.
+        if (r_ver == "3.5") {
+            clang_ver <- "6"
+        } else if (r_ver == "3.6") {
+            clang_ver <- "7"
+        }
+        clang_bin_dir <-
+            file.path("", "usr", "local", paste0("clang", clang_ver), "bin")
+        stopifnot(identical(
+            x = Sys.which(c("clang", "clang++", "gfortran")),
+            y = c(
+                "clang"    = file.path(clang_bin_dir, "clang"),
+                "clang++"  = file.path(clang_bin_dir, "clang++"),
+                "gfortran" = "/usr/local/gfortran/bin/gfortran"
+            )
+        ))
+        rm(clang_bin_dir, clang_ver)
+    } else if (Sys.info()[["sysname"]] == "Linux") {
+        stopifnot(identical(
+            x = Sys.which(c("gcc", "g++", "gfortran")),
+            y = c(
+                "gcc"      = "/usr/bin/gcc",
+                "g++"      = "/usr/bin/g++",
+                "gfortran" = "/usr/bin/gfortran"
+            )
+        ))
+    }
+
+    # Conda                                                                 {{{2
+    # --------------------------------------------------------------------------
+
+    # Check for active conda. Can cause compilation issues. Noet that bcbio unit
+    # tests currently will fail to run because of this setting, which is
+    # intentional. We need to set the `--vanilla` flag in Rscript calls.
+
+    if (Sys.which("conda") != "") {
+        stop(paste(
+            "conda detected.",
+            "Run `conda deactivate` prior to starting R.",
+            sep = "\n"
+        ))
+    }
+
+    # RStudio                                                               {{{2
+    # --------------------------------------------------------------------------
+
+    # Check if session is running inside RStudio.
+    if (isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))) {
+        rstudio <- TRUE
+    } else {
+        rstudio <- FALSE
+    }
+
+    # Fix file permissions. RStudio doesn't pick up the system umask.
+    if (isTRUE(rstudio)) {
+        Sys.umask("0002")
+    }
+
+    if (isTRUE(interactive())) {
+        if (isTRUE(rstudio)) {
+            cat("RStudio detected.\n\n")
+        }
+    }
+
+    rm(rstudio)
+
+    # Repositories                                                          {{{2
+    # --------------------------------------------------------------------------
+
+    # Stop asking about which CRAN repo to use for `install.packages()`.
+    # Consider using a versioned MRAN snapshot for increased reproducibility.
+    repos <- getOption("repos")
+    repos["CRAN"] <- "https://cloud.r-project.org"
+    options(repos = repos)
+    rm(repos)
+
+    # Alternatively, this lets you install Bioconductor packages using
+    # `install.packages()`, but this causes a slight R session load delay.
+    # > options(repos = BiocManager::repositories())
+
+    # Secrets                                                               {{{1
+    # --------------------------------------------------------------------------
+
+    # Load per-user secrets that we don't want to save in a shared Renviron.
+
+    if (file.exists("~/.Rsecrets")) {
+        cat("Loaded '~/.Rsecrets' file.\n\n")
+        source("~/.Rsecrets")
+    }
+
+    # Minimal session info                                                  {{{2
+    # --------------------------------------------------------------------------
+
+    if (isTRUE(interactive())) {
+        cat(
+            "Package Library:",
+            normalizePath(.libPaths()[[1L]]),
+            "",
+            "Working Directory:",
+            normalizePath(getwd()),
+            "",
+            sep = "\n"
+        )
+    }
+
+    rm(r_ver)
+}
+
+
+
+# Initialization at end of an R session                                     {{{1
+# ==============================================================================
+
+.Last <- function() {
+    if (interactive()) {
+        message("Goodbye at ", date(), ".\n")
+    }
+}
