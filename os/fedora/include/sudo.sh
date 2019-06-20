@@ -2,12 +2,13 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/header.sh"
 
 assert_has_sudo
 assert_is_os_fedora
 assert_is_installed yum
 assert_has_no_environments
+
 build_chgrp /usr/local
 update_ldconfig
 

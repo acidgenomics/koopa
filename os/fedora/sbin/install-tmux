@@ -2,13 +2,13 @@
 set -Eeu -o pipefail
 
 # Install Tmux terminal multiplexer.
-# Modified 2019-06-19.
+# Modified 2019-06-20.
 
 # See also:
 # - https://github.com/tmux/tmux
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
 
 name="tmux"
 version="$(koopa variable "$name")"
@@ -38,6 +38,7 @@ sudo yum-builddep -y "$name"
     rm -rf "$tmp_dir"
 )
 
+link_cellar "$name "$version"
 sudo ldconfig
 
 command -v "$exe_file"

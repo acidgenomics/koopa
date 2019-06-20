@@ -2,13 +2,13 @@
 set -Eeu -o pipefail
 
 # Install Vim.
-# Modified 2019-06-19.
+# Modified 2019-06-20.
 
 # See also:
 # - https://github.com/vim/vim
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
 
 name="vim"
 version="$(koopa variable "$name")"
@@ -20,8 +20,8 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies.
-sudo yum install -y vim
-sudo yum-builddep -y vim
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
 
 (
     rm -rf "$tmp_dir"
@@ -39,6 +39,7 @@ sudo yum-builddep -y vim
     rm -rf "$tmp_dir"
 )
 
+link_cellar "$name" "$version"
 sudo ldconfig
 
 command -v "$exe_file"
