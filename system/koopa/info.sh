@@ -14,90 +14,40 @@ array+=("https://github.com/acidgenomics/koopa")
 array+=("")
 
 array+=("## System information")
-array+=("OS: ${KOOPA_OS_NAME} ${KOOPA_OS_VERSION}")
-# Alternatively, can use `$( uname -mnrs )`.
-# array+=("OS platform: ${KOOPA_OS_PLATFORM}")
+array+=("OS: $(python -mplatform)")
 array+=("Current shell: ${KOOPA_SHELL}")
 array+=("Default shell: ${SHELL}")
 array+=("Install path: $KOOPA_DIR")
 
 array+=("")
 
-array+=("## Program paths")
+array+=("## Dependencies")
 
-aspera="$( quiet_command asperaconnect )"
-if [[ -f "$aspera" ]]
-then
-    array+=("Aspera: ${aspera}")
-fi
-unset -v aspera
+locate() {
+    local command="$1"
+    local name="${2:-$command}"
+    local path="$(quiet_command "$command")"
+    if [[ -z "$path" ]]
+    then
+        path="[missing]"
+    else
+        path="$(realpath "$path")"
+    fi
+    printf "%s: %s" "$name" "$path"
+}
 
-bcbio="$( quiet_command bcbio_nextgen.py )"
-if [[ -f "$bcbio" ]]
-then
-    array+=("bcbio: ${bcbio}")
-fi
-unset -v bcbio
+array+=("$(locate bash Bash)")
+array+=("$(locate R)")
+array+=("$(locate python Python)")
 
-conda="$( quiet_command conda )"
-if [[ -f "${conda}" ]]
-then
-    array+=("Conda: ${conda}")
-fi
-unset -v conda
+unset -f locate
 
-git="$( quiet_command git )"
-if [[ -f "$git" ]]
-then
-    array+=("Git: ${git}")
-fi
-unset -v git
-
-gpg="$( quiet_command gpg )"
-if [[ -f "$gpg" ]]
-then
-    array+=("GPG: ${gpg}")
-fi
-unset -v gpg
-
-openssl="$( quiet_command openssl )"
-if [[ -f "$openssl" ]]
-then
-    array+=("OpenSSL: ${openssl}")
-fi
-unset -v openssl
-
-perl="$( quiet_command perl )"
-if [[ -f "$perl" ]]
-then
-    array+=("Perl: ${perl}")
-fi
-unset -v perl
-
-python="$( quiet_command python )"
-if [[ -f "${python}" ]]
-then
-    array+=("Python: ${python}")
-fi
-unset -v python
-
-r="$( quiet_command R )"
-if [[ -f "$r" ]]
-then
-    array+=("R: ${r}")
-fi
-unset -v r
-
-ruby="$( quiet_command ruby )"
-if [[ -f "$ruby" ]]
-then
-    array+=("Ruby: ${ruby}")
-fi
-unset -v ruby
+array+=("")
+array+=("Run 'koopa check' to verify installation.")
 
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
-barpad="$( printf "━%.0s" {1..70} )"
+barpad="$(printf "━%.0s" {1..70})"
 printf "\n  %s%s%s  \n"  "┏" "$barpad" "┓"
 for i in "${array[@]}"
 do
