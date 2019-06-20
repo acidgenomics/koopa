@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Link cellar into local build directory
+# Modified 2019-06-20.
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/shell/bash/include/header.sh"
+
+assert_has_sudo
+
+link_cellar "$@"
