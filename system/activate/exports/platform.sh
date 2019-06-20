@@ -1,6 +1,7 @@
 #!/usr/bin/sh
 
 # Platform variables
+# Modified 2019-06-20.
 
 # See also:
 # - https://unix.stackexchange.com/questions/23833
@@ -41,16 +42,18 @@
 # RedHat: x86_64-redhat-linux-gnu
 # Darwin: x86_64-darwin15.6.0
 
-# bash (and zsh) set useful OSTYPE variable.
-[ -z "${OSTYPE:-}" ] && OSTYPE=$(bash -c "echo $OSTYPE") && export OSTYPE
-
 mach="$(uname -m)"
 os="$(uname -s)"
 rev="$(uname -r)"
 
+# bash (and zsh) set useful OSTYPE variable.
+[ -z "${OSTYPE:-}" ] && 
+    OSTYPE="$(bash -c "echo $OSTYPE")" &&
+    export OSTYPE
+
 if [ "$os" = "Darwin" ]
 then
-    # KOOPA_OS_NAME="$(sw_vers -productName)"
+    # > KOOPA_OS_NAME="$(sw_vers -productName)"
     KOOPA_OS_NAME="darwin"
     KOOPA_OS_VERSION="$(sw_vers -productVersion)"
     KOOPA_OS_BUILD_STRING="${mach}-${OSTYPE}"
@@ -65,9 +68,15 @@ else
         tr -cd '[:digit:].' \
     )"
     unset -v os_file
+    
     # This will distinguish between RedHat, Amazon, etc.
-    KOOPA_OS_BUILD_STRING="${mach}-${KOOPA_OS_NAME}-${OSTYPE}"
+    # Note that we want to use "redhat" instead of "rhel".
+    os_name="$KOOPA_OS_NAME"
+    [ "$os_name" = "rhel" ] && os_name="redhat"
+    export KOOPA_OS_BUILD_STRING="${mach}-${os_name}-${OSTYPE}"
+    unset -v os_name
 fi
+
 
 export KOOPA_OS_BUILD_STRING
 export KOOPA_OS_NAME
