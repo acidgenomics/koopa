@@ -38,8 +38,7 @@ sudo yum-builddep -y "$name"
     rm -rf "$tmp_dir"
 )
 
-link_cellar "$name" "$version"
-sudo ldconfig
+link-cellar "$name" "$version"
 
 if [[ -f "/usr/bin/env" ]]
 then
