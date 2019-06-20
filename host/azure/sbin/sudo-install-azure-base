@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install base programs recommended for Azure VM.
-# Modified 2019-06-19.
+# Modified 2019-06-20.
 
-sudo-install-fedora-base
-sudo-install-azure-cli
+install-fedora-base
+install-azure-cli

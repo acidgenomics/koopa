@@ -9,7 +9,7 @@ assert_is_os_fedora
 assert_is_installed yum
 assert_has_no_environments
 build_chgrp /usr/local
-sudo_update_ldconfig
+update_ldconfig
 
 # Install gcc, if necessary.
 if [[ ! -x "$(command -v gcc)" ]]
