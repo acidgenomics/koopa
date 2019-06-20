@@ -6,7 +6,9 @@
 ensembl_dir="${KOOPA_BUILD_PREFIX}/ensembl"
 
 # Early return if Ensembl git directory is missing.
-[ ! -d "$ensembl_dir" ] && return 0
+[ ! -d "$ensembl_dir" ] &&
+    unset -v ensembl_dir &&
+    return 0
 
 add_to_path_start "${ensembl_dir}/ensembl-git-tools/bin"
 
