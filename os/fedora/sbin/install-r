@@ -19,7 +19,6 @@ name="R"
 version="$(koopa variable "$name")"
 prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/${name}"
-build_name="$KOOPA_OS_BUILD_STRING"
 exe_file="${prefix}/bin/${name}"
 
 major_version="$(echo "$version" | cut -d "." -f 1)"
@@ -103,9 +102,9 @@ printf "Installing %s %s.\n" "$name" "$version"
 sudo yum install -y "$name"
 sudo yum-builddep -y "$name"
 
-unset -v R_HOME
-
 (
+    # R will warn if R_HOME environment variable is set.
+    unset -v R_HOME
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
@@ -113,7 +112,7 @@ unset -v R_HOME
     tar -xzvf "R-${version}.tar.gz"
     cd "R-${version}" || exit 1
     ./configure \
-        --build="$build_name" \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix" \
         --enable-BLAS-shlib \
         --enable-R-profiling \
@@ -132,10 +131,7 @@ unset -v R_HOME
 )
 
 link_cellar "$name" "$version"
-
-update_ldconfig
 update_r_config
-r-javareconf
 
 command -v "$exe_file"
 "$exe_file" --version

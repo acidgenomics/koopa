@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Git SCM.
-# Modified 2019-06-18.
+# Modified 2019-06-20.
 
 # See also:
 # - https://git-scm.com/
@@ -15,17 +15,20 @@ set -Eeu -o pipefail
 # Instead, compile Git to use the system OpenSSL in `/bin/`.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
 
-prefix="${KOOPA_BUILD_PREFIX}"
-tmp_dir="${KOOPA_TMP_DIR}/git"
+name="git"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
 build_name="$KOOPA_OS_BUILD_STRING"
-version="$(koopa variable git)"
+exe_file="${prefix}/bin/${name}"
 
-printf "Installing git %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies.
-sudo yum-builddep -y git
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
 
 # This is required for git to make doc cleanly.
 #
@@ -66,7 +69,8 @@ fi
     rm -rf "$tmp_dir"
 )
 
+link_cellar "$name" "$version"
 sudo ldconfig
 
-command -v git
-git --version
+command -v "$exe_file"
+"$exe_file" --version
