@@ -8,7 +8,7 @@ set -Eeu -o pipefail
 # - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/header.sh"
 
 assert_has_sudo
 assert_is_installed docker
