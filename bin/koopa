@@ -8,10 +8,10 @@ set -Eeu -o pipefail
 version="0.4.0a"
 date="2019-06-20"
 
-# Require that koopa is activate and exported to PATH.
-if [[ -z "${KOOPA_OS_PLATFORM:-}" ]]
+if [[ -z "${KOOPA_SHELL:-}" ]]
 then
     >&2 printf "koopa is not correctly activated.\n"
+    >&2 printf "Source the 'activate' script in your shell configuration.\n"
     exit 1
 fi
 

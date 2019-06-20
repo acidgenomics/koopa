@@ -75,8 +75,6 @@ export KOOPA_OS_VERSION
 
 unset -v mach os rev
 
-KOOPA_OS_PLATFORM="$(python -mplatform)" && export KOOPA_OS_PLATFORM
-
 
 
 # Hostname                                                                  {{{1
