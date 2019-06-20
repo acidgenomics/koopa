@@ -7,6 +7,32 @@ set -Eeu -o pipefail
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.
 
+usage() {
+cat << EOF
+usage: dotfile [-h] relative_path (symlink_name)
+
+required positional arguments:
+  relative_path
+        Relative file path in dotfiles repo.
+
+optional positional arguments:
+  symlink_name
+        Name of destination symlink (without '.' prefix).
+
+optional arguments:
+  -h, --help
+        Show this help message and exit.
+  -f, --force 
+        Force overwrite.
+        Applies to symlinks only.
+  -p, --private
+        Private dot file.
+        Currently only works for Mike's configuration.
+  -q, --quiet
+        Quiet mode. Don't print messages.
+EOF
+}
+
 
 
 # Parse arguments                                                           {{{1
@@ -25,8 +51,8 @@ do
             shift 1
             ;;
         -h|--help)
-            help=1
-            shift 1
+            usage
+            exit 0
             ;;
         -p|--private)
             private=1
@@ -54,34 +80,9 @@ done
 # Set positional arguments in their proper place.
 eval set -- "$PARAMS"
 
+[[ -z "$*" ]] && usage && exit
 
-
-# Help                                                                      {{{1
-# ==============================================================================
-
-if [[ -n "${help:-}" || -z "$*" ]]
-then
-cat << EOF
-Usage: dotfile relative_path (symlink_name)
-
-Arguments:
-
-    relative_path: Relative file path in dotfiles repo.
-    symlink_name: Name of destination symlink (without '.' prefix).
-
-Flags:
-    -f, --force 
-        Force overwrite. Applies to symlinks only.
-    -h, --help
-        Help mode.
-    -p, --private
-        Private dot file. Currently only works for Mike's configuration.
-    -q, --quiet
-        Quiet mode. Don't print messages.
-
-EOF
-    exit 0
-fi
+unset -f usage
 
 
 
