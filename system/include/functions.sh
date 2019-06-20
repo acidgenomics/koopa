@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # POSIX-compliant functions.
-# Modified 2019-06-19.
+# Modified 2019-06-20.
 
 
 
@@ -265,6 +265,32 @@ koopa_variable() {
 
 # System configuration helpers                                              {{{1
 # ==============================================================================
+
+# Add local builds to PATH (e.g. '/usr/local').
+# This will recurse through the local library and find 'bin/' subdirs.
+# Note: read `-a` flag doesn't work on macOS. zsh related?
+# Modified 2019-06-20.
+add_local_bins_to_path() {
+    local prefix="$KOOPA_BUILD_PREFIX"
+    add_to_path_start "${prefix}/bin"
+    IFS=$'\n'
+    read -r -d '' dirs <<< "$(find_local_bin_dirs)"
+    unset IFS
+    for dir in "${dirs[@]}"
+    do
+        add_to_path_start "$dir"
+    done
+}
+
+# Add both 'bin/' and 'sbin/' to PATH.
+# Modified 2019-06-20.
+add_koopa_bins_to_path() {
+    local relpath="${1:-}"
+    local prefix="$KOOPA_DIR"
+    [ ! -z "$relpath" ] && prefix="${prefix}/${relpath}"
+    has_sudo && add_to_path_start "${prefix}/sbin"
+    add_to_path_start "${prefix}/bin"
+}
 
 # Find local bin directories.
 #
