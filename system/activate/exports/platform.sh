@@ -97,9 +97,7 @@ esac
 # ==============================================================================
 
 KOOPA_BUILD_PREFIX="$(build_prefix)" && export KOOPA_BUILD_PREFIX
-
 export KOOPA_CELLAR_PREFIX="${KOOPA_DIR}/cellar"
-mkdir -p "$KOOPA_CELLAR_PREFIX"
 
 export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
 mkdir -p "$KOOPA_TMP_DIR"
@@ -110,5 +108,4 @@ mkdir -p "$KOOPA_TMP_DIR"
 # ==============================================================================
 
 export KOOPA_CONFIG_DIR="${XDG_CONFIG_HOME}/koopa"
-mkdir -p "$KOOPA_CONFIG_DIR"
 update_xdg_config
