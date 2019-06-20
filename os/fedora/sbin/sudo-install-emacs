@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Emacs text editor.
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.gnu.org/software/emacs/
+# - https://github.com/emacs-mirror/emacs
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+prefix="${KOOPA_BUILD_PREFIX}/emacs"
+tmp_dir="${KOOPA_TMP_DIR}/emacs"
+build_name="$KOOPA_OS_BUILD_STRING"
+version="$(koopa variable emacs)"
+
+printf "Installing emacs %s.\n" "$version"
+
+# Install build dependencies.
+sudo yum-builddep -y emacs
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
+    tar -xJvf "emacs-${version}.tar.xz"
+    cd "emacs-${version}" || exit 1
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
+    make
+    sudo make install
+    rm -rf "$tmp_dir"
+)
+
+sudo ldconfig
+
+command -v emacs
+emacs --version

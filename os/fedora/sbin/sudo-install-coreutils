@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install GNU core utilities.
+# Modified 2019-06-18.
+
+# See also:
+# - https://ftp.gnu.org/gnu/coreutils/
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+prefix="${KOOPA_BUILD_PREFIX}/coreutils"
+tmp_dir="${KOOPA_TMP_DIR}/coreutils"
+build_name="$KOOPA_OS_BUILD_STRING"
+version="$(koopa variable coreutils)"
+
+printf "Installing coreutils %s.\n" "$version"
+
+# Install build dependencies.
+sudo yum-builddep -y coreutils
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "https://ftp.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
+    tar -xJvf "coreutils-${version}.tar.xz"
+    cd "coreutils-${version}" || exit 1
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
+    make
+    make check
+    sudo make install
+    rm -rf "$tmp_dir"
+)
+
+sudo ldconfig
+
+printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
+printf "System version will be renamed to 'env.bak'.\n"
+sudo mv /usr/bin/env /usr/bin/env.bak
+sudo ln -s /usr/local/bin/env /usr/bin/env
+
+command -v env
+env --version

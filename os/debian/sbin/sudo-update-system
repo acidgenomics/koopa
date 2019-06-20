@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Update Debian.
+# Modified 2019-06-18.
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/debian/sudo.sh"
+
+sudo apt-get update
+sudo apt-get -y dist-upgrade

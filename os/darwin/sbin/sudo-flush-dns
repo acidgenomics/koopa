@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Flush DNS cache.
+# Modified 2019-06-18.
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/darwin/sudo.sh"
+
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+say flushed

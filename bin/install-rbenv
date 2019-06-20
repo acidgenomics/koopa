@@ -10,7 +10,7 @@ set -Eeu -o pipefail
 # - https://devhints.io/rbenv
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
 prefix="${KOOPA_BUILD_PREFIX}/rbenv"
 assert_is_dir "$prefix"

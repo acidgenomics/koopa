@@ -9,7 +9,7 @@ set -Eeu -o pipefail
 # - https://docs.anaconda.com/anaconda/install/
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/include/shell/bash/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
 assert_has_no_environments
 

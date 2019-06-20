@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Z shell.
+# Modified 2019-06-19.
+
+# See also:
+# - http://www.zsh.org/
+# - http://zsh.sourceforge.net/Arc/source.html
+# - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+name="zsh"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/zsh"
+build_name="$KOOPA_OS_BUILD_STRING"
+exe_file="${prefix}/bin/${name}"
+
+printf "Installing %s %s.\n" "$name" "$version"
+
+# Install build dependencies.
+sudo yum install -y zsh
+sudo yum-builddep -y zsh
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download"
+    tar -xJvf "download"
+    cd "zsh-${version}" || exit 1
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix"
+    make
+    make check
+    # make test
+    sudo make install
+    rm -rf "$tmp_dir"
+)
+
+if ! grep -q "${prefix}/bin/zsh" /etc/shells
+then
+    printf "Updating '/etc/shells.'\n"
+    sudo bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
+fi
+
+command -v "$exe_file"
+"$exe_file" --version
