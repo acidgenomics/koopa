@@ -26,13 +26,12 @@ fi
 alias e="exit"
 
 # Improve common file system command defaults.
-alias cp="cp -irv"
+alias cp="cp -iv"
 alias mkdir="mkdir -vp"
 alias mv="mv -iv"
 # Note that `-I` flag only prompts once, which is awesome.
 # However this is available on Red Hat but not macOS, so use `-i` instead.
 alias rm="rm -iv"
-alias scp="scp -r"
 
 # Listing files.
 alias la="ls -a"
