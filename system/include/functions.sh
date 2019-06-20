@@ -191,8 +191,16 @@ build_set_permissions() {
     build_chgrp "$path"
 }
 
-build_symlinks() {
-    local prefix="$1"
+# Symlink cellar into local build directory.
+# e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
+link_cellar() {
+    assert_has_sudo
+    local name="$1"
+    local version="$2"
+    local prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+    assert_is_dir "$prefix"
+    sudo cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
+    build_set_permissions "$KOOPA_BUILD_PREFIX"
 }
 
 # Modified 2019-06-19.
