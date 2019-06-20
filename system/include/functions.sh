@@ -306,7 +306,7 @@ find_local_bin_dirs() {
 
 # Update dynamic linker (LD) configuration.
 # Modified 2019-06-19.
-sudo_update_ldconfig() {
+update_ldconfig() {
     if [ -d /etc/ld.so.conf.d ]
     then
         sudo ln -fs \
@@ -318,7 +318,7 @@ sudo_update_ldconfig() {
 
 # Add shared koopa.sh configuration file to `/etc/profile.d/`.
 # Modified 2019-06-19.
-sudo_update_profile() {
+update_profile() {
     assert_has_sudo
     [ -z "${LINUX:-}" ] && return 0
     local file="/etc/profile.d/koopa.sh"
@@ -337,7 +337,7 @@ sudo_update_profile() {
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
 # Modified 2019-06-19.
-sudo_update_r_config() {
+update_r_config() {
     assert_has_sudo
     [ -z "${LINUX:-}" ] && return 0
 

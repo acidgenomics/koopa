@@ -129,9 +129,9 @@ sudo yum-builddep -y "$name"
     rm -rf "$tmp_dir"
 )
 
-sudo_update_ldconfig
-sudo_update_r_config
-sudo-r-javareconf
+update_ldconfig
+update_r_config
+r-javareconf
 
 command -v "$exe_file"
 "$exe_file" --version
