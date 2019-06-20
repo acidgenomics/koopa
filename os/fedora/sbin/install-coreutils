@@ -33,7 +33,7 @@ sudo yum-builddep -y "$name"
         --build="$build_name" \
         --prefix="$prefix"
     make
-    make check
+    # > make check
     sudo make install
     rm -rf "$tmp_dir"
 )
