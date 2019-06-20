@@ -3,7 +3,6 @@
 
 # bash: `declare -F`.
 
-unset -f usage
 unset -f \
     add_koopa_bins_to_path \
     add_local_bins_to_path \
@@ -37,10 +36,6 @@ unset -f \
     update_r_config \
     update_xdg_config
 
-# dequote
-# quote
-# quote_readline
-
 
 
 # Variables                                                                 {{{1
@@ -49,10 +44,6 @@ unset -f \
 # bash:
 # - all: `declare -p`
 # - exported: `declare -px`
-
-# colors
-# dir
-# dirs
 
 unset -v activate_dir
 unset -v \
