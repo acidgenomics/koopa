@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # Install koopa.
-# Modified 2019-06-19.
+# Modified 2019-06-20.
 
 # Set `dev=1` to enable some additional developer configuration tweaks.
 # Namely, this currently changes submodule remotes from HTTPS to git.
 
-koopa_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+KOOPA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 
 
@@ -83,18 +83,6 @@ done
 
 
 
-# Activate koopa                                                            {{{1
-# ==============================================================================
-
-# shellcheck source=/dev/null
-. "${koopa_dir}/activate"
-unset -v koopa_dir
-
-# Ensure functions get resourced if activation step is skipped.
-. "${KOOPA_DIR}/include/functions.sh"
-
-
-
 # Initialize submodules                                                     {{{1
 # ==============================================================================
 
@@ -118,7 +106,7 @@ rm -rf "${KOOPA_DIR}/dotfiles"
 (
     printf "\nInitializing dotfiles submodules.\n"
     # shellcheck source=/dev/null
-    cd "${KOOPA_DIR}/config/dotfiles"
+    cd "${KOOPA_DIR}/system/config/dotfiles"
     git submodule init
     git submodule update --init --recursive
     git submodule sync --recursive
@@ -128,6 +116,17 @@ rm -rf "${KOOPA_DIR}/dotfiles"
         git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
     fi
 )
+
+
+
+# Activate koopa                                                            {{{1
+# ==============================================================================
+
+# shellcheck source=/dev/null
+. "${KOOPA_DIR}/activate"
+
+# Ensure functions get resourced if activation step is skipped.
+. "${KOOPA_DIR}/system/include/functions.sh"
 
 
 
@@ -171,4 +170,3 @@ then
     # Remove legacy dotfile cruft.
     . "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 fi
-
