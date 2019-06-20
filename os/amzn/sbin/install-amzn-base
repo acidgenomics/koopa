@@ -2,12 +2,12 @@
 set -Eeu -o pipefail
 
 # Install base programs recommended for Amazon Linux 2.
-# Modified 2019-06-18.
+# Modified 2019-06-20.
 
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/system/include/os/amzn/sudo.sh"
 
-sudo-install-rhel-base
+install-fedora-base
 
 # Install utils such as chsh.
 sudo yum install -y util-linux-user

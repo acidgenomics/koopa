@@ -147,8 +147,8 @@ fi
 
 if [[ -n "${shared:-}" ]]
 then
-    sudo_update_profile
-    sudo_update_r_config
+    update_profile
+    update_r_config
 fi
 
 
