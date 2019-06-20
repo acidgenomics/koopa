@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Python.
+# Modified 2019-06-19.
+
+# See also:
+# - https://www.python.org/
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+name="python"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+build_name="$KOOPA_OS_BUILD_STRING"
+exe_file="${prefix}/bin/${name}3"
+
+printf "Installing python %s.\n" "$version"
+
+# Install build dependencies.
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
+
+rm -rf "$tmp_dir"
+mkdir "$tmp_dir"
+
+# Ensure pip is installed and up to date.
+# > sudo yum install -y python-pip
+(
+    cd "$tmp_dir"
+    wget https://bootstrap.pypa.io/get-pip.py
+    sudo python get-pip.py
+    sudo pip install -U pip
+    sudo pip install -U virtualenv
+)
+
+# Build and install from source.
+(
+    cd "$tmp_dir"
+    wget "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz"
+    tar xfv "Python-${version}.tar.xz"
+    cd "Python-${version}"
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix" \
+        --enable-optimizations \
+        --enable-shared
+    make
+    sudo make install
+)
+
+sudo rm -rf "$tmp_dir"
+sudo ldconfig
+
+command -v "$exe_file"
+"$exe_file" --version

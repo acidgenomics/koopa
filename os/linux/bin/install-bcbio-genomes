@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install bcbio-nextgen genomes.
+# Modified 2019-06-18.
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/shell/bash/include/functions.sh"
+
+assert_is_installed bcbio_nextgen.py
+
+tmp_dir="$(KOOPA_TMP_DIR/bcbio)"
+version="$(bcbio_nextgen.py --version)"
+
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
+mkdir -p "$log_dir"
+log_file="${log_dir}/upgrade-genomes-$(date "+%Y%m%d_%H%M%S").log"
+
+cores="$((CPU_COUNT-2))"
+[[ "$cores" -lt 1 ]] && cores=1
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    bcbio_nextgen.py upgrade \
+        --upgrade "skip" \
+        --cores "$cores" \
+        --genomes "BDGP6" \
+        --genomes "canFam3" \
+        --genomes "hg38" \
+        --genomes "hg19" \
+        --genomes "mm10" \
+        --genomes "rn6" \
+        2>&1 | tee "$log_file"
+    rm -rf "$tmp_dir"
+)

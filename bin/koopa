@@ -18,7 +18,7 @@ fi
 # Display help on empty call.
 [ -z "${1:-}" ] && koopa --help && exit 0
 
-include_dir="${KOOPA_DIR}/include"
+include_dir="${KOOPA_DIR}/system/include"
 
 # Source internal functions.
 . "${include_dir}/functions.sh"

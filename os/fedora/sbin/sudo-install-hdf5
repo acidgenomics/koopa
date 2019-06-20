@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install HDF5.
+# Modified 2019-06-18.
+
+# See also:
+# - https://www.hdfgroup.org/downloads/hdf5/
+# - https://support.hdfgroup.org/ftp/HDF5/releases
+
+# Note that website requires registration.
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+prefix="${KOOPA_BUILD_PREFIX}/hdf5"
+tmp_dir="${KOOPA_TMP_DIR}/hdf5"
+build_name="$KOOPA_OS_BUILD_STRING"
+
+version="$(koopa variable hdf5)"
+major_version="$(echo "$version" | cut -d '.' -f 1-2)"
+
+printf "Installing HDF5 %s.\n" "$version"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/hdf5-${version}/src/hdf5-${version}.tar.gz"
+    tar -xzvf "hdf5-${version}.tar.gz"
+    cd "hdf5-${version}" || exit 1
+    ./configure \
+        --build="$build_name" \
+        --prefix="$prefix" \
+        --enable-cxx \
+        --enable-fortran
+    make
+    make check
+    sudo make install
+    rm -rf "$tmp_dir"
+)
+
+sudo ldconfig
+
+command -v h5dump
+h5dump --version

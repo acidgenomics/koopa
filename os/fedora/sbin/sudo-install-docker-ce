@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Install Docker Community Edition.
+# Modified 2019-06-18.
+
+# See also:
+# - https://docs.docker.com/install/linux/docker-ce/centos/
+
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+
+sudo yum remove -y \
+    docker \
+    docker-client \
+    docker-client-latest \
+    docker-common \
+    docker-latest \
+    docker-latest-logrotate \
+    docker-logrotate \
+    docker-engine
+
+sudo yum install -y \
+    yum-utils \
+    device-mapper-persistent-data \
+    lvm2
+
+sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+
+sudo yum install -y \
+    docker-ce \
+    docker-ce-cli \
+    containerd.io
+
+sudo groupadd docker
+sudo service docker restart
+sudo gpasswd -a "$USER" docker
+newgrp docker
+
+command -v docker
+docker --version
