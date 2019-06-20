@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Z shell.
-# Modified 2019-06-19.
+# Modified 2019-06-20.
 
 # See also:
 # - http://www.zsh.org/
@@ -47,7 +47,7 @@ link_cellar "$name" "$version"
 if ! grep -q "${KOOPA_BUILD_PREFIX}/bin/zsh" /etc/shells
 then
     printf "Updating '/etc/shells.'\n"
-    sudo bash -c "echo ${KOOPA_BUILD_PREFIX}/bin/zsh >> /etc/shells"
+    sudo bash -c "echo "${KOOPA_BUILD_PREFIX}/bin/zsh" >> /etc/shells"
 fi
 
 command -v "$exe_file"
