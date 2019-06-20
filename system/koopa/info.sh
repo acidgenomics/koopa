@@ -9,7 +9,7 @@ quiet_command() {
 
 array=()
 array+=("$(koopa --version)")
-array+=("https://github.com/acidgenomics/koopa")
+array+=("https://koopa.acidgenomics.com/")
 
 array+=("")
 
