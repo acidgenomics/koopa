@@ -83,11 +83,17 @@ done
 
 
 
-# Initialize submodules                                                     {{{1
+# Remove legacy cruft                                                       {{{1
 # ==============================================================================
 
-# Remove legacy dotfiles directory.
+rm -rf "${KOOPA_DIR}/config"
 rm -rf "${KOOPA_DIR}/dotfiles"
+rm -rf "${KOOPA_DIR}/include"
+
+
+
+# Initialize submodules                                                     {{{1
+# ==============================================================================
 
 (
     printf "\nInitializing submodules.\n"
