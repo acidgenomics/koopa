@@ -8,10 +8,9 @@ set -Eeu -o pipefail
 # - https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
 
-sudo yum install -y \
+sudo yum reinstall -y \
     https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 sudo yum-config-manager --enable epel
-
-# > sudo yum repolist
+sudo yum repolist
