@@ -38,11 +38,8 @@ Add these lines to your shell configuration file.
 ```sh
 # koopa shell
 # https://github.com/acidgenomics/koopa
-if [ -z "${KOOPA_SHELL:-}" ]
-then
-    # shellcheck source=/dev/null
-    . "${HOME}/.local/share/koopa/activate"
-fi
+# shellcheck source=/dev/null
+. "${HOME}/.local/share/koopa/activate"
 ```
 
 ### Shared user installation
@@ -52,9 +49,7 @@ Note that this requires sudo permissions.
 Clone the repository.
 
 ```sh
-# koopa_dir="/usr/local/koopa"
-koopa_dir="/opt/koopa"
-
+koopa_dir="/usr/local/koopa"
 sudo mkdir -p "$koopa_dir"
 
 # - darwin (macOS): admin
@@ -71,7 +66,7 @@ git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
 Run the installer script.
 
 ```sh
-"${koopa_dir}/install" --shared
+"${koopa_dir}/install
 ```
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh`.
