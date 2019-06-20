@@ -13,7 +13,7 @@ source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 assert_has_sudo
 assert_is_installed docker
 
-prefix="${KOOPA_PREFIX}/bcbio-vm"
+prefix="${KOOPA_BUILD_PREFIX}/bcbio-vm"
 bin_dir="${prefix}/anaconda/bin"
 tmp_dir="${KOOPA_TMP_DIR}/bcbio-vm"
 

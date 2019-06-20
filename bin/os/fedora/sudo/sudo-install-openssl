@@ -11,15 +11,17 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/openssl"
-tmp_dir="${KOOPA_TMP_DIR}/openssl"
-version="$(koopa variable openssl)"
-openssldir="$prefix"
+name="openssl"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/${name}"
 
-printf "Installing openssl %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies.
-sudo yum-builddep -y openssl
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
 
 (
     rm -rf "$tmp_dir"
@@ -30,7 +32,7 @@ sudo yum-builddep -y openssl
     cd "openssl-${version}" || exit 1
     ./config \
         --prefix="$prefix" \
-        --openssldir="$openssldir" \
+        --openssldir="$prefix" \
         shared
     make
     make test
@@ -40,10 +42,6 @@ sudo yum-builddep -y openssl
 
 sudo ldconfig
 
-cat << EOF
-Reload the current shell.
-
-> command -v openssl
-> openssl version
-> openssl ciphers -v
-EOF
+command -v "$exe_file"
+"$exe_file" version
+"$exe_file" ciphers -y

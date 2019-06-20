@@ -12,10 +12,10 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-prefix="${KOOPA_PREFIX}/ensembl"
+prefix="${KOOPA_BUILD_PREFIX}/ensembl"
 
 (
-    prefix_mkdir "$prefix"
+    build_mkdir "$prefix"
     cd "$prefix"
     
     # Install BioPerl.
@@ -32,7 +32,7 @@ prefix="${KOOPA_PREFIX}/ensembl"
     git clone https://github.com/Ensembl/ensembl-compara.git
     git clone https://github.com/Ensembl/ensembl-io.git
     
-    prefix_chgrp "$prefix"
+    build_chgrp "$prefix"
 )
 
 cat << EOF

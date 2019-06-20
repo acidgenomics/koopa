@@ -10,15 +10,18 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/tmux"
-tmp_dir="${KOOPA_TMP_DIR}/tmux"
+name="tmux"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
 build_name="$KOOPA_OS_BUILD_STRING"
-version="$(koopa variable tmux)"
+exe_file="${prefix}/bin/${name}"
 
-printf "Installing tmux %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies.
-sudo yum-builddep -y tmux
+sudo yum install -y "$name"
+sudo yum-builddep -y "$name"
 
 (
     rm -rf "$tmp_dir"
@@ -37,6 +40,5 @@ sudo yum-builddep -y tmux
 
 sudo ldconfig
 
-tmux_exe="${prefix}/bin/tmux"
-command -v "$tmux_exe"
-"$tmux_exe" -V
+command -v "$exe_file"
+"$exe_file" -V

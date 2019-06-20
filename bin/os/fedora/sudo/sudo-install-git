@@ -17,7 +17,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}"
+prefix="${KOOPA_BUILD_PREFIX}"
 tmp_dir="${KOOPA_TMP_DIR}/git"
 build_name="$KOOPA_OS_BUILD_STRING"
 version="$(koopa variable git)"

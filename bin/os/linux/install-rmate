@@ -4,14 +4,16 @@ set -Eeu -o pipefail
 # Install rmate
 # Modified 2019-06-18.
 
-For use with Remote VSCode extension.
+# For use with Remote VSCode extension.
 
 # See also:
 # - https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
 
-prefix="$KOOPA_PREFIX"
-tmp_dir="${KOOPA_TMP_DIR}/rmate"
-version="$(koopa variable rmate)"
+name="rmate"
+version="$(koopa variable "$name")"
+prefix="$KOOPA_BUILD_PREFIX"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/${name}"
 
 (
     rm -rf "$tmp_dir"
@@ -24,5 +26,5 @@ version="$(koopa variable rmate)"
     cp rmate "${prefix}/bin"
 )
 
-command -v rmate
-rmate --version
+command -v "$exe_file"
+"$exe_file" --version

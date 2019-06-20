@@ -12,8 +12,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
-prefix="${KOOPA_PREFIX}/perlbrew"
-prefix_mkdir "$prefix"
+prefix="${KOOPA_BUILD_PREFIX}/perlbrew"
+build_mkdir "$prefix"
 
 export PERLBREW_ROOT="$prefix"
 
@@ -23,7 +23,7 @@ rm -rf "$PERLBREW_HOME"
 
 curl -L https://install.perlbrew.pl | bash
 
-prefix_chgrp "$prefix"
+build_chgrp "$prefix"
 
 perlbrew_exe="${PERLBREW_ROOT}/bin/perlbrew"
 command -v "$perlbrew_exe"

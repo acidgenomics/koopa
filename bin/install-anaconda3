@@ -13,7 +13,7 @@ source "${KOOPA_DIR}/include/shell/bash/functions.sh"
 
 assert_has_no_environments
 
-prefix="${KOOPA_PREFIX}/anaconda3"
+prefix="${KOOPA_BUILD_PREFIX}/anaconda3"
 tmp_dir="${KOOPA_TMP_DIR}/anaconda3"
 version="$(koopa variable anaconda3)"
 
@@ -30,7 +30,7 @@ case "$OSTYPE" in
         ;;
 esac
 
-prefix_mkdir "$prefix"
+build_mkdir "$prefix"
 
 (
     rm -rf "$tmp_dir"
@@ -41,7 +41,7 @@ prefix_mkdir "$prefix"
     rm -rf "$tmp_dir"
 )
 
-prefix_chgrp "$prefix"
+build_chgrp "$prefix"
 
 conda_exe="${prefix}/bin/conda"
 command -v "$conda_exe"
