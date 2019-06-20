@@ -2,9 +2,12 @@
 set -Eeu -o pipefail
 
 # Uninstall koopa.
-# Modified 2019-06-17.
+# Modified 2019-06-20.
 
+# shellcheck source=/dev/null
 . "${KOOPA_DIR}/system/uninstall/dotfiles.sh"
+
+# shellcheck source=/dev/null
 . "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 
 rm -f /etc/profile.d/koopa.sh
