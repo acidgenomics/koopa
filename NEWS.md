@@ -23,7 +23,7 @@ This enables shared shell configuratino of all users, via configuration in
 - Install koopa using simply `install` instead of `INSTALL.sh`.
 - Improved attempt at dotfiles auto-linking during `install` call.
 - Improved OS-specific PATH exports.
-- Switched to using `KOOPA_PREFIX` and `KOOPA_TMP_DIR` variables for build scripts.
+- Switched to using `KOOPA_BUILD_PREFIX` and `KOOPA_TMP_DIR` variables for build scripts.
 
 ### New programs
 
