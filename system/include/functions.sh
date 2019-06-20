@@ -35,7 +35,7 @@ assert_has_sudo() {
 # Check if directory already exists.
 # Modified 2019-06-19.
 assert_is_dir() {
-    path="$1"
+    local path="$1"
     # Error on existing installation.
     if [ -d "$path" ]
     then
@@ -45,7 +45,7 @@ assert_is_dir() {
 }
 
 assert_is_installed() {
-    program="$1"
+    local program="$1"
     command -v "$program" >/dev/null 2>&1 || {
         >&2 printf "Error: %s is not installed.\n" "$program"
         return 1
@@ -90,17 +90,15 @@ quiet_cd() {
 # Regular expression matching that is POSIX compliant.
 # https://stackoverflow.com/questions/21115121
 # Avoid using `[[ =~ ]]` in sh config files.
-# expr is faster than using case.
-
+# `expr` is faster than using `case`.
 quiet_expr() {
     expr "$1" : "$2" 1>/dev/null
 }
 
 # Consider not using `&>` here, it isn't POSIX.
 # https://unix.stackexchange.com/a/80632
-
+# > command -v "$1" >/dev/null
 quiet_which() {
-    # command -v "$1" >/dev/null
     command -v "$1" >/dev/null 2>&1
 }
 
@@ -112,8 +110,8 @@ quiet_which() {
 # Fix the group permissions on the build directory.
 # Modified 2019-06-19.
 build_chgrp() {
-    path="$1"
-    group="$(build_prefix_group)"
+    local path="$1"
+    local group="$(build_prefix_group)"
     if has_sudo
     then
         sudo chgrp -Rh "$group" "$path"
@@ -127,7 +125,7 @@ build_chgrp() {
 # Create the build directory.
 # Modified 2019-06-19.
 build_mkdir() {
-    path="$1"
+    local path="$1"
     assert_is_dir "$path"
 
     if has_sudo
@@ -179,10 +177,28 @@ build_prefix_group() {
     echo "$group"
 }
 
+# Modified 2019-06-20.
+build_set_permissions() {
+    local path="$1"
+    
+    if has_sudo
+    then
+        sudo chown -Rh "root" "$path"
+    else
+        chown -Rh "$(whoami)" "$path"
+    fi
+
+    build_chgrp "$path"
+}
+
+build_symlinks() {
+    local prefix="$1"
+}
+
 # Modified 2019-06-19.
 delete_dotfile() {
-    path="${HOME}/.${1}"
-    name="$(basename "$path")"
+    local path="${HOME}/.${1}"
+    local name="$(basename "$path")"
     if [ -L "$path" ]
     then
         printf "Removing '%s'.\n" "$name"
@@ -249,9 +265,9 @@ remove_from_path() {
 # Get version stored internally in versions.txt file.
 # Modified 2019-06-18.
 koopa_variable() {
-    what="$1"
-    file="${KOOPA_DIR}/system/include/variables.txt"
-    match="$(grep -E "^${what}=" "$file" || echo "")"
+    local what="$1"
+    local file="${KOOPA_DIR}/system/include/variables.txt"
+    local match="$(grep -E "^${what}=" "$file" || echo "")"
     if [ -n "$match" ]
     then
         echo "$match" | cut -d "\"" -f 2
@@ -342,8 +358,8 @@ update_ldconfig() {
     fi
 }
 
-# Add shared koopa.sh configuration file to `/etc/profile.d/`.
-# Modified 2019-06-19.
+# Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
+# Modified 2019-06-20.
 update_profile() {
     assert_has_sudo
     [ -z "${LINUX:-}" ] && return 0
@@ -351,14 +367,14 @@ update_profile() {
     printf "Updating '%s'.\n" "$file"
     sudo mkdir -p "$(dirname file)"
     sudo rm -f "$file"
-#     sudo cat > "$file" <<EOF
-# #!/bin/sh
-# 
-# # koopa shell
-# # https://github.com/acidgenomics/koopa
-# # shellcheck source=/dev/null
-# . ${KOOPA_DIR}/activate
-# EOF
+    sudo bash -c "cat << EOF > "$file"
+#!/bin/sh
+
+# koopa shell
+# https://github.com/acidgenomics/koopa
+# shellcheck source=/dev/null
+. ${KOOPA_DIR}/activate
+EOF"
 }
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
