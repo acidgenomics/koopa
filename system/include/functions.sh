@@ -195,10 +195,13 @@ build_set_permissions() {
 # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
 link_cellar() {
     assert_has_sudo
+    
     local name="$1"
     local version="$2"
     local prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+    
     printf "Linking %s in %s.\n" "$prefix" "$KOOPA_BUILD_PREFIX"
+    
     build_set_permissions "$prefix"
     sudo cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
     build_set_permissions "$KOOPA_BUILD_PREFIX"
@@ -296,6 +299,8 @@ koopa_variable() {
 # Note: read `-a` flag doesn't work on macOS. zsh related?
 # Modified 2019-06-20.
 add_local_bins_to_path() {
+    local dir
+    local dirs
     local prefix="$KOOPA_BUILD_PREFIX"
     add_to_path_start "${prefix}/bin"
     IFS=$'\n'
@@ -372,10 +377,14 @@ update_ldconfig() {
 update_profile() {
     assert_has_sudo
     [ -z "${LINUX:-}" ] && return 0
+    
     local file="/etc/profile.d/koopa.sh"
+    
     printf "Updating '%s'.\n" "$file"
+    
     sudo mkdir -p "$(dirname file)"
     sudo rm -f "$file"
+
     sudo bash -c "cat << EOF > "$file"
 #!/bin/sh
 

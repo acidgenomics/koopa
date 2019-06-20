@@ -14,14 +14,17 @@
     [ "$KOOPA_SHELL" != "zsh" ] && \
     return
 
-python_env="default"
+env_name="default"
 
 [ -z "${PYTHON_EXE:-}" ] && \
-    [ -f "${HOME}/.virtualenvs/${python_env}/bin/python" ] && \
-    PYTHON_EXE="${HOME}/.virtualenvs/${python_env}/bin/python"
+    [ -f "${HOME}/.virtualenvs/${env_name}/bin/python" ] && \
+    PYTHON_EXE="${HOME}/.virtualenvs/${env_name}/bin/python"
 
 # Early return if we don't detect an installation.
-[ -z "${PYTHON_EXE:-}" ] && return 0
+[ -z "${PYTHON_EXE:-}" ] && 
+    unset -v env_name &&
+    return
+
 export PYTHON_EXE
 
 # Don't allow Python to change the prompt string.
@@ -37,4 +40,4 @@ then
     . "${virtualenv_bin_dir}/activate"
 fi
 
-unset -v python_env virtualenv_bin_dir
+unset -v env_name virtualenv_bin_dir
