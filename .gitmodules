@@ -1,4 +1,6 @@
-# git submodule add --force https://github.com/mjsteinbaugh/dotfiles.git config/dotfiles
-[submodule "config/dotfiles"]
-	path = config/dotfiles
+# git submodule add --force \
+#	https://github.com/mjsteinbaugh/dotfiles.git \
+#	system/config/dotfiles
+[submodule "system/config/dotfiles"]
+	path = system/config/dotfiles
 	url = https://github.com/mjsteinbaugh/dotfiles.git
