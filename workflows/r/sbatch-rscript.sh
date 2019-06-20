@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Run R script on Harvard O2 cluster.
+# Modified 2019-06-20.
+
 # SLURM
 # https://slurm.schedmd.com/sbatch.html
 
