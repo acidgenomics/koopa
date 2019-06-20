@@ -89,13 +89,23 @@ unset -v mach os rev
 # Hostname                                                                  {{{1
 # ==============================================================================
 
-[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
+[ -z "${HOSTNAME:-}" ] &&
+    HOSTNAME="$(uname -n)" && 
+    export HOSTNAME
+
 case "$HOSTNAME" in
-             *.ec2.internal) export KOOPA_HOST_NAME="aws";;
-                  azlabapp*) export KOOPA_HOST_NAME="azure";;
-    *.o2.rc.hms.harvard.edu) export KOOPA_HOST_NAME="harvard-o2";;
-       *.rc.fas.harvard.edu) export KOOPA_HOST_NAME="harvard-odyssey";;
-                          *) ;;
+    *.ec2.internal)
+        export KOOPA_HOST_NAME="aws"
+        ;;
+    azlabapp*)
+        export KOOPA_HOST_NAME="azure"
+        ;;
+    *.o2.rc.hms.harvard.edu)
+        export KOOPA_HOST_NAME="harvard-o2"
+        ;;
+    *.rc.fas.harvard.edu)
+        export KOOPA_HOST_NAME="harvard-odyssey"
+        ;;
 esac
 
 
@@ -103,7 +113,9 @@ esac
 # Build variables                                                           {{{1
 # ==============================================================================
 
-KOOPA_BUILD_PREFIX="$(build_prefix)" && export KOOPA_BUILD_PREFIX
+# FIXME Kill this in favor of calling internally.
+KOOPA_BUILD_PREFIX="$(_koopa_build_prefix)" &&
+    export KOOPA_BUILD_PREFIX
 export KOOPA_CELLAR_PREFIX="${KOOPA_DIR}/cellar"
 
 export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
@@ -115,4 +127,4 @@ mkdir -p "$KOOPA_TMP_DIR"
 # ==============================================================================
 
 export KOOPA_CONFIG_DIR="${XDG_CONFIG_HOME}/koopa"
-update_xdg_config
+_koopa_update_xdg_config

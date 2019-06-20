@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Homebrew
-# Modified 2019-06-17.
+# Modified 2019-06-20.
 
-if quiet_which brew
+if _koopa_quiet_which brew
 then
     HOMEBREW_PREFIX="$(brew --prefix)"
     export HOMEBREW_PREFIX
@@ -20,4 +20,4 @@ fi
 # https://docs.brew.sh/Homebrew-and-Python
 # > brew info python
 # > python -V
-add_to_path_start /usr/local/opt/python/libexec/bin
+_koopa_add_to_path_start /usr/local/opt/python/libexec/bin

@@ -32,17 +32,17 @@ esac
 # Required programs                                                         {{{1
 # ==============================================================================
 
-assert_is_installed R
-assert_is_installed Rscript
-assert_is_installed bash
-assert_is_installed cat
-assert_is_installed chsh
-assert_is_installed curl
-assert_is_installed echo
-assert_is_installed env
-assert_is_installed grep
-assert_is_installed python
-assert_is_installed sed
-assert_is_installed top
-assert_is_installed wget
-assert_is_installed which
+_koopa_assert_is_installed R
+_koopa_assert_is_installed Rscript
+_koopa_assert_is_installed bash
+_koopa_assert_is_installed cat
+_koopa_assert_is_installed chsh
+_koopa_assert_is_installed curl
+_koopa_assert_is_installed echo
+_koopa_assert_is_installed env
+_koopa_assert_is_installed grep
+_koopa_assert_is_installed python
+_koopa_assert_is_installed sed
+_koopa_assert_is_installed top
+_koopa_assert_is_installed wget
+_koopa_assert_is_installed which
