@@ -231,7 +231,7 @@ export KOOPA_DIR
 unset -v script_path
 
 # Load shared functions.
-. "${KOOPA_DIR}/include/functions.sh"
+. "${KOOPA_DIR}/system/include/functions.sh"
 
 # Get location of activation scripts.
 activate_dir="${KOOPA_DIR}/system/activate"
