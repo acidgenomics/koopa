@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Remove named subdirectories.
+# Modified 2019-06-19.
+
+# For example, useful for removing bcbio "work" directories.
+
+path="$1"
+subdir_name="$2"
+
+find "$path" -type d -name "$subdir_name" -print0 | \
+    xargs -0 -I {} rm -rf {}

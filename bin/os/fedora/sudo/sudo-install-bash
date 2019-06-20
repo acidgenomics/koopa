@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Bash.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - https://www.gnu.org/software/bash/
@@ -10,14 +10,15 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/bash"
+name="bash"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/bash"
 build_name="$KOOPA_OS_BUILD_STRING"
-version="$(koopa variable bash)"
-
 gnu_mirror="http://ftpmirror.gnu.org"
+exe_file="${prefix}/bin/${name}"
 
-printf "Installing bash %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies
 sudo yum-builddep -y bash
@@ -44,6 +45,5 @@ then
     sudo sh -c "echo ${prefix}/bin/bash >> /etc/shells"
 fi
 
-bash_exe="${prefix}/bin/bash"
-command -v "$bash_exe"
-"$bash_exe" --version
+command -v "$exe_file"
+"$exe_file" --version

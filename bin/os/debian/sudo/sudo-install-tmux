@@ -10,7 +10,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/tmux"
+prefix="${KOOPA_BUILD_PREFIX}/tmux"
 tmp_dir="${KOOPA_TMP_DIR}/tmux"
 version="$(koopa variable tmux)"
 

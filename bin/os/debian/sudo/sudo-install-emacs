@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Emacs text editor.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - https://www.gnu.org/software/emacs/
@@ -11,11 +11,13 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/debian/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/emacs"
-tmp_dir="${KOOPA_TMP_DIR}/emacs"
-version="$(koopa variable emacs)"
+name="emacs"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/${name}"
 
-printf "Installing emacs %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Bioconductor AMI is missing these dependencies:
 # > apt-cache search libgif
@@ -40,5 +42,5 @@ sudo apt-get -y install libgif-dev
 
 sudo ldconfig
 
-command -v emacs
-emacs --version
+command -v "$exe_file"
+"$exe_file" --version

@@ -2,6 +2,8 @@
 set -Eeu -o pipefail
 
 # Reset file permissions to match umask.
+# Modified 2019-06-19.
+
 # Currently recommending umask 0002.
 
 user="$(id -u)"

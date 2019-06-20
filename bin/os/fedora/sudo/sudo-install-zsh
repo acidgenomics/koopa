@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Z shell.
-# Modified 2019-06-18.
+# Modified 2019-06-19.
 
 # See also:
 # - http://www.zsh.org/
@@ -12,12 +12,14 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_PREFIX}/zsh"
+name="zsh"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/zsh"
 build_name="$KOOPA_OS_BUILD_STRING"
-version="$(koopa variable zsh)"
+exe_file="${prefix}/bin/${name}"
 
-printf "Installing zsh %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies.
 sudo yum install -y zsh
@@ -46,5 +48,5 @@ then
     sudo bash -c "echo ${prefix}/bin/zsh >> /etc/shells"
 fi
 
-command -v zsh
-zsh --version
+command -v "$exe_file"
+"$exe_file" --version
