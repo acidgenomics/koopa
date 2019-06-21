@@ -2,6 +2,11 @@
 set -Eeu -o pipefail
 
 # Install OpenSSL.
+# Modified 2019-06-21.
+
+# Currently installing as cellar-only.
+# This is useful for running RDAVIDWebService but can break other programs
+# when installed into `/usr/local`.
 
 # See also:
 # - https://www.openssl.org/source/
@@ -9,7 +14,7 @@ set -Eeu -o pipefail
 # - https://wiki.openssl.org/index.php/Binary_Compatibility
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "${KOOPA_DIR}/fedora/include/sudo.sh"
 
 name="openssl"
 version="$(koopa variable "$name")"
@@ -31,6 +36,7 @@ sudo yum-builddep -y "$name"
     tar -xvzf "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
     ./config \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix" \
         --openssldir="$prefix" \
         shared
@@ -40,8 +46,6 @@ sudo yum-builddep -y "$name"
     rm -rf "$tmp_dir"
 )
 
-sudo ldconfig
-
-command -v "$exe_file"
 "$exe_file" version
 "$exe_file" ciphers -y
+command -v "$exe_file"
