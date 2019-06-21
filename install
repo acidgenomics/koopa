@@ -92,9 +92,8 @@ done
 # Remove legacy cruft                                                       {{{1
 # ==============================================================================
 
-rm -rf "${KOOPA_DIR}/config"
-rm -rf "${KOOPA_DIR}/dotfiles"
-rm -rf "${KOOPA_DIR}/include"
+rm -rf "${KOOPA_DIR}/bin/"{host,os,sudo}
+rm -rf "${KOOPA_DIR}/"{config,dotfiles,include}
 
 
 
@@ -103,7 +102,33 @@ rm -rf "${KOOPA_DIR}/include"
 
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
-    source "${KOOPA_DIR}/system/install/submodules.sh"
+    (
+        printf "\nInitializing submodules.\n"
+        # shellcheck source=/dev/null
+        cd "$KOOPA_DIR" || exit 1
+        git submodule init
+        git submodule update --init --recursive
+        git submodule sync --recursive
+        # Change remote from HTTPS to git for easier commits.
+        if [[ -n "${devel:-}" ]]
+        then
+            git remote set-url origin git@github.com:acidgenomics/koopa.git
+        fi
+    )
+
+    (
+        printf "\nInitializing dotfiles submodules.\n"
+        # shellcheck source=/dev/null
+        cd "${KOOPA_DIR}/system/config/dotfiles" || exit 1
+        git submodule init
+        git submodule update --init --recursive
+        git submodule sync --recursive
+        # Change remote from HTTPS to git for easier commits.
+        if [[ -n "${devel:-}" ]]
+        then
+            git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
+        fi
+    )
 fi
 
 
@@ -144,16 +169,20 @@ then
     printf "\nConfiguring dotfiles.\n"
 
     # Always create these dotfiles, even on a shared installation.
+    # shellcheck source=/dev/null
     source "${KOOPA_DIR}/system/install/dotfiles-shared.sh"
 
     # Create local config files.
-    [[ -z "${shared:-}" ]] && \
+    # shellcheck source=/dev/null
+    [[ -z "${shared:-}" ]] &&
         source "${KOOPA_DIR}/system/install/dotfiles-local.sh"
 
     # Configure Mike-only dotfiles.
-    [[ "${mike:-}" -eq 1 ]] && \
+    # shellcheck source=/dev/null
+    [[ "${mike:-}" -eq 1 ]] &&
         source "${KOOPA_DIR}/system/install/dotfiles-mike.sh"
 
     # Remove legacy dotfile cruft.
+    # shellcheck source=/dev/null
     source "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 fi
