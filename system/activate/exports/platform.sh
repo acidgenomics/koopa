@@ -120,8 +120,15 @@ export KOOPA_BUILD_PREFIX
 export KOOPA_CELLAR_PREFIX="${KOOPA_DIR}/cellar"
 
 # Create temporary directory.
-# > unique="$(date "+%Y%m%d-%H%M%S")"
-unique="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)"
+# Note that macOS requires `env LC_CTYPE=C`.
+# Otherwise, you'll see this error: `tr: Illegal byte sequence`.
+# https://gist.github.com/earthgecko/3089509
+unique="$( \
+    cat /dev/urandom | \
+    env LC_CTYPE=C tr -dc 'a-zA-Z0-9' | \
+    fold -w 12 | \
+    head -n 1 \
+)"
 KOOPA_TMP_DIR="/tmp/koopa-$(id -u)-${unique}"
 unset -v unique
 export KOOPA_TMP_DIR
