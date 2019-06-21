@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # Install general user dot files.
-# Modified 2019-06-18.
+# Modified 2019-06-21.
 
 dotfile --force condarc
 dotfile --force gitignore

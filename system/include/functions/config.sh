@@ -144,7 +144,7 @@ _koopa_update_r_config() {
 
 # Update XDG local configuration.
 # ~/.config/koopa
-# Modified 2019-06-19.
+# Modified 2019-06-21.
 _koopa_update_xdg_config() {
     mkdir -p "$KOOPA_CONFIG_DIR"
     rm -f "${KOOPA_CONFIG_DIR}/activate"
