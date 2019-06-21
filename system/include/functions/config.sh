@@ -142,6 +142,29 @@ _koopa_update_r_config() {
 
 
 
+# Update shell configuration.
+# Modified 2019-06-21.
+_koopa_update_shells() {
+    _koopa_assert_has_sudo
+    
+    local shell
+    shell="$1"
+    shell="${KOOPA_BUILD_PREFIX}/bin/${shell}"
+    
+    local shell_file
+    shell_file="/etc/shells"
+        
+    if ! grep -q "$shell" "$shell_file"
+    then
+        printf "Updating '%s' to include '%s'.\n" "$shell_file" "$shell"
+        sudo sh -c "echo ${shell} >> ${shell_file}"
+    fi
+    
+    printf "Run 'chsh -s %s %s' to change default shell.\n" "$shell" "$USER"
+}
+
+
+
 # Update XDG local configuration.
 # ~/.config/koopa
 # Modified 2019-06-21.

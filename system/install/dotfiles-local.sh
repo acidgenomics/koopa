@@ -22,7 +22,7 @@ then
 elif [[ "${KOOPA_HOST_NAME:-}" == "harvard-odyssey" ]]
 then
     dotfile --force host/harvard-odyssey/Renviron
-elif [[ ! -z "${LINUX:-}" ]] && [[ -z "${shared:-}" ]]
+elif [[ -n "${LINUX:-}" ]] && [[ -z "${shared:-}" ]]
 then
     dotfile --force os/linux/Renviron
 fi
