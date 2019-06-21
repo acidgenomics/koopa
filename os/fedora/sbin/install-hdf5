@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install HDF5.
-# Modified 2019-06-18.
+# Modified 2019-06-21.
 
 # See also:
 # - https://www.hdfgroup.org/downloads/hdf5/
@@ -13,14 +13,15 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
 
-prefix="${KOOPA_BUILD_PREFIX}/hdf5"
-tmp_dir="${KOOPA_TMP_DIR}/hdf5"
-build_name="$KOOPA_OS_BUILD_STRING"
+name="hdf5"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/h5dump"
 
-version="$(koopa variable hdf5)"
 major_version="$(echo "$version" | cut -d '.' -f 1-2)"
 
-printf "Installing HDF5 %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -rf "$tmp_dir"
@@ -30,7 +31,7 @@ printf "Installing HDF5 %s.\n" "$version"
     tar -xzvf "hdf5-${version}.tar.gz"
     cd "hdf5-${version}" || exit 1
     ./configure \
-        --build="$build_name" \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix" \
         --enable-cxx \
         --enable-fortran
@@ -40,7 +41,7 @@ printf "Installing HDF5 %s.\n" "$version"
     rm -rf "$tmp_dir"
 )
 
-sudo ldconfig
+link-cellar "$name" "$version"
 
-command -v h5dump
-h5dump --version
+command -v "$exe_file"
+"$exe_file" --version

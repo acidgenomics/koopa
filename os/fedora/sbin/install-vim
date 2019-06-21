@@ -14,7 +14,6 @@ name="vim"
 version="$(koopa variable "$name")"
 prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/${name}"
-build_name="$KOOPA_OS_BUILD_STRING"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"
@@ -31,7 +30,7 @@ sudo yum-builddep -y "$name"
     tar -xzvf "v${version}.tar.gz"
     cd "vim-${version}" || exit 1
     ./configure \
-        --build="$build_name" \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix"
     make
     # make test
@@ -39,8 +38,7 @@ sudo yum-builddep -y "$name"
     rm -rf "$tmp_dir"
 )
 
-link_cellar "$name" "$version"
-sudo ldconfig
+link-cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version
