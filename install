@@ -85,7 +85,7 @@ do
     esac
 done
 
-[[ "${mike:-0}" -eq 1 ]] && devel=1
+[[ "${mike:-0}" -eq 1 ]] && devel=1 && dotfiles=1
 
 
 
@@ -94,6 +94,24 @@ done
 
 rm -rf "${KOOPA_DIR}/bin/"{host,os,sudo}
 rm -rf "${KOOPA_DIR}/"{config,dotfiles,include}
+
+
+
+# Shared user configuration                                                 {{{1
+# ==============================================================================
+
+# Checking for '/usr/local' installation automatically.
+if echo "$KOOPA_DIR" | grep -qE "^/(opt|usr/local)/"
+then
+    printf "\nShared installation detected at '%s'.\n" "$KOOPA_DIR"
+    shared=1
+fi
+
+if [[ "${shared:-0}" -eq 1 ]]
+then
+    _koopa_update_profile
+    # > _koopa_update_r_config
+fi
 
 
 
@@ -136,25 +154,9 @@ fi
 # Activate koopa                                                            {{{1
 # ==============================================================================
 
+printf "\nActivating koopa.\n"
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/activate"
-
-
-
-# Shared user configuration                                                 {{{1
-# ==============================================================================
-
-# Checking for '/usr/local' installation automatically.
-if echo "$KOOPA_DIR" | grep -qE "^/(opt|usr/local)/"
-then
-    shared=1
-fi
-
-if [[ "${shared:-0}" -eq 1 ]]
-then
-    _koopa_update_profile
-    # > _koopa_update_r_config
-fi
 
 
 
@@ -164,7 +166,7 @@ fi
 # Never attempt to configure dotfiles for root.
 [[ "$(id -u)" -eq 0 ]] && dotfiles=0
 
-if [[ "${dotfiles:-1}" -eq 1 ]]
+if [[ "${dotfiles:-0}" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
 
