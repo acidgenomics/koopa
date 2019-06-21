@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Git SCM.
-# Modified 2019-06-20.
+# Modified 2019-06-21.
 
 # See also:
 # - https://git-scm.com/
@@ -70,5 +70,5 @@ fi
 
 link-cellar "$name" "$version"
 
-command -v "$exe_file"
 "$exe_file" --version
+command -v "$exe_file"

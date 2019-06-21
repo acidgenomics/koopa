@@ -27,8 +27,9 @@ mkdir -p "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
 # - Should not store large files as it may be mounted as a tmpfs.
 if [ -z "${XDG_RUNTIME_DIR:-}" ]
 then
-    timestamp=""
-    XDG_RUNTIME_DIR="/tmp/xdg-$(id -u)/$(date "+%Y%m%d-%H%M%S")"
+    XDG_RUNTIME_DIR="/run/user/$(id -u)"
+    # Note that `/run` top level doesn't exist on macOS.
+    [ ! -z "${MACOS:-}" ] && XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
     export XDG_RUNTIME_DIR
     mkdir -p "$XDG_RUNTIME_DIR"
     chown "$USER" "$XDG_RUNTIME_DIR"

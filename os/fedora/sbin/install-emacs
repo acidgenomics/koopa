@@ -40,5 +40,5 @@ sudo yum-builddep -y "$name"
 
 link-cellar "$name" "$version"
 
-command -v "$exe_file"
 "$exe_file" --version
+command -v "$exe_file"
