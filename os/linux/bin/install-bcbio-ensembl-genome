@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Ensembl genome build for bcbio.
-# Modified 2019-04-12.
+# Modified 2019-06-21.
 
 # See also:
 # - https://useast.ensembl.org/
@@ -10,17 +10,90 @@ set -Eeu -o pipefail
 
 
 
-# Argument parsing                                                          {{{1
+# Usage                                                                     {{{1
 # ==============================================================================
 
-# FIXME Make these required arguments.
-organism="Homo sapiens"
-build="GRCh37"
+usage() {
+cat << EOF
+usage: install-ensembl-genome [-h] --organism ORGANISM --build BUILD 
+        --release RELEASE [--indexes INDEXES]
 
-# Note that HISAT2 requires a lot of memory to index (>= 200 GB). This is
-# intended to be run on a high performance cluster, but is often impractical
-# on a virtual machine instance (e.g. AWS, Azure).
-indexes="bowtie2 seq star"
+required arguments:
+  --organism
+        Full latin name (e.g. "Homo sapiens").
+        Pass this argument in quoted as a string.
+  --build
+        Genome build (e.g. "GRCh38").
+  --release
+        Release version (e.g. "96").
+
+optional arguments:
+  --indexes
+        Aligners to index.
+        Pass this argument in quoted as a string.
+        Default: --indexes "bowtie2 seq star"
+        Note: HISAT2 is disabled by default because it requires a lot of memory
+        to index (e.g. >= 200 GB). This is intended to be run on a high
+        performance cluster, but is often impractical on a virtual machine.
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        -h|--help)
+            usage
+            exit
+            ;;
+        --build)
+            build="$2"
+            shift 2
+            ;;
+        --indexes)
+            indexes="$2"
+            shift 2
+            ;;
+        --organism)
+            organism="$2"
+            shift 2
+            ;;
+        --release)
+            release="$2"
+            shift 2
+            ;;
+        --) # End argument parsing.
+            shift
+            break
+            ;;
+        --*|-*) # Unsupported flags.
+            >&2 printf "Error: Invalid flag %s\n" "$1"
+            exit 1
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "${organism:-}" ]] ||
+    [[ -z "${build:-}" ]] ||
+    [[ -z "${release:-}" ]]
+then
+    printf "Error: Missing required argument.\n\n"
+    usage
+    exit 1
+fi
+
+[[ -z "${indexes:-}" ]] && indexes="bowtie2 seq star"
+
+unset -f usage
 
 
 
@@ -28,17 +101,18 @@ indexes="bowtie2 seq star"
 # ==============================================================================
 
 # Check for valid organism input.
-if ! echo "$organism" | grep -Eq "^$"
+if ! echo "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
 then
     >&2 printf "Invalid organism: %s.\n" "$organism"
     >&2 printf "Requiring full Latin, case sensitive: e.g. 'Homo sapiens'.\n"
     exit 1
 fi
 
+# Sanitize spaces into underscores.
 organism="$(echo "$organism" | sed "s/ /_/g")"
 
 cores="$((CPU_COUNT-2))"
-[ "$cores" -lt 1 ] && cores=1
+[[ "$cores" -lt 1 ]] && cores=1
 
 
 
@@ -47,61 +121,41 @@ cores="$((CPU_COUNT-2))"
 # ==============================================================================
 
 source="Ensembl"
-
 bcbio_genome_name="${build}-${source}-${release}"
+
 tmp_dir="${KOOPA_TMP}/${bcbio_genome_name}"
-mkdir -p "$tmp_dir" || exit 1
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-mkdir -p "$log_dir" || exit 1
-timestamp="$(date "+%Y%m%d-%H%M%S")""
+timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
-
-
-
-# Download files from Ensembl                                               {{{1
-# ==============================================================================
-
-# FIXME Switch to using Ensembl FASTA, Ensembl GTF script.
-# FIXME Consider making this a separate script instead...
-
-organism_lower=$(echo "$organism" | tr '[:upper:]' '[:lower:]')
-
-if [[ "$build" == "GRCh37" ]]
-then
-    ftp_dir="ftp://ftp.ensembl.org/pub/grch37/release-${release}"
-    release="87"
-else
-    # FIXME
-fi
-
-fasta="${organism}.${build}.dna.primary_assembly.fa"
-gtf="${organism}.${build}.${release}.gtf"
-
-(
-    cd "$tmp_dir"
-    rm -f "$fasta" "${fasta}.gz"
-    wget "${ftp_dir}/fasta/${organism_lower}/dna/${fasta}.gz"
-    gunzip -c "${fasta}.gz" > "$fasta"
-    fasta="$(realpath "$fasta")"
-
-    rm -f "$gtf" "${gtf}.gz"
-    wget "${ftp_dir}/gtf/${organism_lower}/${gtf}.gz"
-    gunzip -c "${gtf}.gz" > "$gtf"
-    gtf="$(realpath "$gtf")"
-)
+mkdir -p "$log_dir"
 
 
 
 # bcbio                                                                     {{{1
 # ==============================================================================
 
-# e.g. Hsapiens
-bcbio_species_dir="$(echo "$organism" | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
+# e.g. "Hsapiens".
+bcbio_species_dir="$(echo "$organism" | \
+    sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
 
 (
-    cd "$tmp_dir"
-    git-clone-cloudbiolinux
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    
+    # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
+    ensembl-fasta --organism "$organism" --build "$build" --type "dna"
+    gtf="${organism}.${build}.dna.primary_assembly.fa"
+    [ ! -f "$fasta" ] && printf "FASTA failure.\n" && exit 1
+    fasta="$(realpath "$fasta")"
+    
+    # e.g. Homo_sapiens.GRCh38.96.gtf
+    ensembl-gtf --organism "$organism" --build "$build" --release "$release"
+    gtf="${organism}.${build}.${release}.gtf"
+    [ ! -f "$gtf" ] && printf "GTF failure.\n" && exit 1
+    gtf="$(realpath "$gtf")"
+    
     bcbio_setup_genome.py \
         --name "$bcbio_species_dir" \
         --build "$bcbio_genome_name" \
@@ -110,7 +164,6 @@ bcbio_species_dir="$(echo "$organism" | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
         --gtf "$gtf" \
         --indexes $indexes \
         2>&1 | tee "$log_file"
+    
+    rm -rf "$tmp_dir"
 )
-
-rm -rf "$tmp_dir"
-
