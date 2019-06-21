@@ -39,5 +39,5 @@ sudo service docker restart
 sudo gpasswd -a "$USER" docker
 newgrp docker
 
-command -v docker
 docker --version
+command -v docker

@@ -113,13 +113,21 @@ esac
 # Build variables                                                           {{{1
 # ==============================================================================
 
-KOOPA_BUILD_PREFIX="$(_koopa_build_prefix)" && export KOOPA_BUILD_PREFIX
+KOOPA_BUILD_PREFIX="$(_koopa_build_prefix)"
+export KOOPA_BUILD_PREFIX
 
 # Avoid setting to `/usr/local/cellar` as this can conflict with Homebrew.
 export KOOPA_CELLAR_PREFIX="${KOOPA_DIR}/cellar"
 
-export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
+# Create temporary directory.
+# > unique="$(date "+%Y%m%d-%H%M%S")"
+unique="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 12 | head -n 1)"
+KOOPA_TMP_DIR="/tmp/koopa-$(id -u)-${unique}"
+unset -v unique
+export KOOPA_TMP_DIR
 mkdir -p "$KOOPA_TMP_DIR"
+chown "$USER" "$KOOPA_TMP_DIR"
+chmod 0775 "$KOOPA_TMP_DIR"
 
 
 

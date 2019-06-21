@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install GNU core utilities.
-# Modified 2019-06-20.
+# Modified 2019-06-21.
 
 # See also:
 # - https://ftp.gnu.org/gnu/coreutils/
@@ -39,13 +39,15 @@ sudo yum-builddep -y "$name"
 
 link-cellar "$name" "$version"
 
-if [[ -f "/usr/bin/env" ]]
+printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
+if [[ ! -L "/usr/bin/env" ]]
 then
-    printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
     printf "System version will be renamed to 'env.bak'.\n"
     sudo mv "/usr/bin/env" "/usr/bin/env.bak"
-    sudo ln -s "${KOOPA_BUILD_PREFIX}/bin/env" "/usr/bin/env"
+else
+    sudo rm -f "/usr/bin/env"
 fi
+sudo ln -s "${KOOPA_BUILD_PREFIX}/bin/env" "/usr/bin/env"
 
-command -v "$exe_file"
 "$exe_file" --version
+command -v "$exe_file"
