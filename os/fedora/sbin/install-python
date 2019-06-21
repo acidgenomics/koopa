@@ -14,10 +14,9 @@ name="python"
 version="$(koopa variable "$name")"
 prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/${name}"
-build_name="$KOOPA_OS_BUILD_STRING"
-exe_file="${prefix}/bin/${name}3"
+exe_file="${prefix}/bin/python3"
 
-printf "Installing python %s.\n" "$version"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Install build dependencies.
 sudo yum install -y "$name"
@@ -43,7 +42,7 @@ mkdir "$tmp_dir"
     tar xfv "Python-${version}.tar.xz"
     cd "Python-${version}"
     ./configure \
-        --build="$build_name" \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix" \
         --enable-optimizations \
         --enable-shared
@@ -52,7 +51,7 @@ mkdir "$tmp_dir"
 )
 
 sudo rm -rf "$tmp_dir"
-sudo ldconfig
+link-cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version

@@ -16,7 +16,6 @@ name="zsh"
 version="$(koopa variable "$name")"
 prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/zsh"
-build_name="$KOOPA_OS_BUILD_STRING"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"
@@ -33,22 +32,17 @@ sudo yum-builddep -y "$name"
     tar -xJvf "download"
     cd "zsh-${version}" || exit 1
     ./configure \
-        --build="$build_name" \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix"
     make
     make check
-    # make test
+    # > make test
     sudo make install
     rm -rf "$tmp_dir"
 )
 
-link_cellar "$name" "$version"
-
-if ! grep -q "${KOOPA_BUILD_PREFIX}/bin/zsh" /etc/shells
-then
-    printf "Updating '/etc/shells.'\n"
-    sudo bash -c "echo "${KOOPA_BUILD_PREFIX}/bin/zsh" >> /etc/shells"
-fi
+link-cellar "$name" "$version"
+_koopa_update_shells "$name"
 
 command -v "$exe_file"
 "$exe_file" --version

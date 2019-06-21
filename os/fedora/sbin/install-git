@@ -21,7 +21,6 @@ name="git"
 version="$(koopa variable "$name")"
 prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
 tmp_dir="${KOOPA_TMP_DIR}/${name}"
-build_name="$KOOPA_OS_BUILD_STRING"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"
@@ -61,7 +60,7 @@ fi
     # Refer also to INSTALL file for details.
     make configure
     ./configure \
-        --build="$build_name" \
+        --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
     make all doc info
@@ -69,8 +68,7 @@ fi
     rm -rf "$tmp_dir"
 )
 
-link_cellar "$name" "$version"
-sudo ldconfig
+link-cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version

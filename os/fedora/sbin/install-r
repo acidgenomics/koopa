@@ -130,8 +130,8 @@ sudo yum-builddep -y "$name"
     rm -rf "$tmp_dir"
 )
 
-link_cellar "$name" "$version"
-update_r_config
+link-cellar "$name" "$version"
+_koopa_update_r_config
 
 command -v "$exe_file"
 "$exe_file" --version

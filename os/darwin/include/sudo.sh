@@ -4,5 +4,5 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
-assert_has_sudo
-assert_is_os_darwin
+_koopa_assert_has_sudo
+_koopa_assert_is_os_darwin
