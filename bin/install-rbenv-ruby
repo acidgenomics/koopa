@@ -12,7 +12,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
-assert_is_installed rbenv
+_koopa_assert_is_installed rbenv
 
 # > rbenv install -l
 
