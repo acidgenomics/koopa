@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install Vim.
-# Modified 2019-06-20.
+# Modified 2019-06-21.
 
 # See also:
 # - https://github.com/vim/vim
@@ -33,12 +33,12 @@ sudo yum-builddep -y "$name"
         --build="$KOOPA_OS_BUILD_STRING" \
         --prefix="$prefix"
     make
-    # make test
+    # > make test
     sudo make install
     rm -rf "$tmp_dir"
 )
 
 link-cellar "$name" "$version"
 
-command -v "$exe_file"
 "$exe_file" --version
+command -v "$exe_file"
