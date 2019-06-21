@@ -1,13 +1,13 @@
 #!/bin/sh
 
 # Configuration functions.
-# Modified 2019-06-20.
+# Modified 2019-06-21.
 
 
 
 # Get R_HOME, rather than exporting as global variable.
 # Modified 2019-06-20.
-_find_r_home() {
+_koopa_find_r_home() {
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
 }
 

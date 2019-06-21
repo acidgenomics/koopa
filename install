@@ -153,7 +153,7 @@ fi
 if [[ "${shared:-0}" -eq 1 ]]
 then
     _koopa_update_profile
-    _koopa_update_r_config
+    # > _koopa_update_r_config
 fi
 
 
