@@ -8,6 +8,14 @@
 
 KOOPA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
+# shellcheck source=/dev/null
+source "${KOOPA_DIR}/system/include/functions.sh"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
     cat << EOF
 usage: install [-h]
@@ -27,14 +35,14 @@ optional arguments:
   --devel
         Enable developer mode. This changes the repository URLs from HTTPS
         to SSH, for easier code commits.
+  --dotfiles
+        Automatically generate dot file symlinks.
   --mike
         Install Mike-specific configuration.
-        Note that this flag also automatically enables '--devel'.
-  --no-dotfiles
-        Skip automatic generation of dot file symlinks.
+        This flag automatically enables '--devel' and '--dotfiles'.
   --shared
         Configure shared installation using '/etc/profile.d'.
-        Set automatically when installed in '/usr/local' or '/opt'.
+        Automatically enabled when installed in '/usr/local' or '/opt'.
 EOF
 }
 
@@ -58,8 +66,8 @@ do
             mike=1
             shift 1
             ;;
-        --no-dotfiles)
-            dotfiles=0
+        --dotfiles)
+            dotfiles=1
             shift 1
             ;;
         --shared)
@@ -77,7 +85,7 @@ do
     esac
 done
 
-[ "${mike:-0}" -eq 1 ] && devel=1
+[[ "${mike:-0}" -eq 1 ]] && devel=1
 
 
 
@@ -93,33 +101,10 @@ rm -rf "${KOOPA_DIR}/include"
 # Initialize submodules                                                     {{{1
 # ==============================================================================
 
-(
-    printf "\nInitializing submodules.\n"
-    # shellcheck source=/dev/null
-    cd "$KOOPA_DIR"
-    git submodule init
-    git submodule update --init --recursive
-    git submodule sync --recursive
-    # Change remote from HTTPS to git for easier commits.
-    if [[ -n "${devel:-}" ]]
-    then
-        git remote set-url origin git@github.com:acidgenomics/koopa.git
-    fi
-)
-
-(
-    printf "\nInitializing dotfiles submodules.\n"
-    # shellcheck source=/dev/null
-    cd "${KOOPA_DIR}/system/config/dotfiles"
-    git submodule init
-    git submodule update --init --recursive
-    git submodule sync --recursive
-    # Change remote from HTTPS to git for easier commits.
-    if [[ -n "${devel:-}" ]]
-    then
-        git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
-    fi
-)
+if [[ "${dotfiles:-0}" -eq 1 ]]
+then
+    source "${KOOPA_DIR}/system/install/submodules.sh"
+fi
 
 
 
@@ -127,10 +112,7 @@ rm -rf "${KOOPA_DIR}/include"
 # ==============================================================================
 
 # shellcheck source=/dev/null
-. "${KOOPA_DIR}/activate"
-
-# Ensure functions get resourced if activation step is skipped.
-. "${KOOPA_DIR}/system/include/functions.sh"
+source "${KOOPA_DIR}/activate"
 
 
 
@@ -143,10 +125,10 @@ then
     shared=1
 fi
 
-if [[ -n "${shared:-}" ]]
+if [[ "${shared:-0}" -eq 1 ]]
 then
-    update_profile
-    update_r_config
+    _koopa_update_profile
+    _koopa_update_r_config
 fi
 
 
@@ -162,15 +144,16 @@ then
     printf "\nConfiguring dotfiles.\n"
 
     # Always create these dotfiles, even on a shared installation.
-    . "${KOOPA_DIR}/system/install/dotfiles-shared.sh"
+    source "${KOOPA_DIR}/system/install/dotfiles-shared.sh"
 
+    # Create local config files.
     [[ -z "${shared:-}" ]] && \
-        . "${KOOPA_DIR}/system/install/dotfiles-local.sh"
+        source "${KOOPA_DIR}/system/install/dotfiles-local.sh"
 
-        # Configure Mike-only dotfiles.
+    # Configure Mike-only dotfiles.
     [[ "${mike:-}" -eq 1 ]] && \
-        . "${KOOPA_DIR}/system/install/dotfiles-mike.sh"
+        source "${KOOPA_DIR}/system/install/dotfiles-mike.sh"
 
     # Remove legacy dotfile cruft.
-    . "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
+    source "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
 fi

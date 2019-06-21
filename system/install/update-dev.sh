@@ -2,12 +2,11 @@
 set -Eeu -o pipefail
 
 # Update submodules.
-# Modified 2019-06-17.
-
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# Modified 2019-06-21.
 
 (
-    cd "$script_dir"
+    # shellcheck source=/dev/null
+    cd "$KOOPA_DIR"
     git fetch --all
     git pull
     git submodule update --init --recursive

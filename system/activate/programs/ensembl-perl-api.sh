@@ -10,7 +10,7 @@ ensembl_dir="${KOOPA_BUILD_PREFIX}/ensembl"
     unset -v ensembl_dir &&
     return 0
 
-add_to_path_start "${ensembl_dir}/ensembl-git-tools/bin"
+_koopa_add_to_path_start "${ensembl_dir}/ensembl-git-tools/bin"
 
 # perlbrew switch perl-5.26
 

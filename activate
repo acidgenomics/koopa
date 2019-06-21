@@ -1,10 +1,16 @@
 #!/bin/sh
 # shellcheck disable=SC1090,SC2236
+
+# Activate koopa.
+# Modified 2019-06-21.
+
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
 
-# Activate koopa.
-# Modified 2019-06-20.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
 
 usage() {
     cat << EOF
@@ -65,7 +71,7 @@ do
             exit 0
             ;;
         --debug)
-            debug=1
+            export KOOPA_DEBUG=1
             ;;
         --minimal)
             minimal=1
@@ -131,7 +137,7 @@ fi
 # Set global options for debugging                                          {{{1
 # ==============================================================================
 
-if [ ! -z "${debug:-}" ]
+if [ ! -z "${KOOPA_DEBUG:-}" ]
 then
     set -o errexit
     set -o nounset
@@ -148,7 +154,7 @@ fi
 
 if [ ! -z "${BASH_VERSION:-}" ]
 then
-    if [ ! -z "${debug:-}" ]
+    if [ ! -z "${KOOPA_DEBUG:-}" ]
     then
         set -o errtrace
     fi
@@ -308,7 +314,6 @@ unset -v \
     aspera \
     bcbio \
     conda \
-    debug \
     help \
     homebrew \
     minimal \
