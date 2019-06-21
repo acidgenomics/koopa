@@ -9,14 +9,14 @@ set -Eeu -o pipefail
 
 usage() {
 cat << EOF
-usage: dotfile [-h] relative_path (symlink_name)
+usage: dotfile [-h] RELATIVE_PATH [SYMLINK_NAME]
 
 required positional arguments:
-  relative_path
+  1: relative_path
         Relative file path in dotfiles repo.
 
 optional positional arguments:
-  symlink_name
+  2: symlink_name
         Name of destination symlink (without '.' prefix).
 
 optional arguments:
@@ -32,6 +32,8 @@ optional arguments:
         Quiet mode. Don't print messages.
 EOF
 }
+
+[[ -z "$*" ]] && usage && exit
 
 
 
@@ -71,7 +73,7 @@ do
             exit 1
             ;;
         *) # Preserve positional arguments.
-            PARAMS="$PARAMS $1"
+            PARAMS="${PARAMS} ${1}"
             shift
             ;;
     esac
@@ -79,8 +81,6 @@ done
 
 # Set positional arguments in their proper place.
 eval set -- "$PARAMS"
-
-[[ -z "$*" ]] && usage && exit
 
 unset -f usage
 

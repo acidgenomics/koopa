@@ -12,7 +12,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
-assert_is_installed fastq-dump
+_koopa_assert_is_installed fastq-dump
 
 filelist="SRR_Acc_List.txt"
 if [[ ! -f "$filelist" ]]

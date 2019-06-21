@@ -7,7 +7,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
-assert_is_installed youtube-dl
+_koopa_assert_is_installed youtube-dl
 
 url="$1"
 

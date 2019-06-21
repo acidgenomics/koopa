@@ -9,13 +9,15 @@ set -Eeu -o pipefail
 # - https://docs.anaconda.com/anaconda/install/
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
+source "${KOOPA_DIR}/shell/bash/include/header.sh"
 
-assert_has_no_environments
+_koopa_assert_has_no_environments
 
-prefix="${KOOPA_BUILD_PREFIX}/anaconda3"
-tmp_dir="${KOOPA_TMP_DIR}/anaconda3"
-version="$(koopa variable anaconda3)"
+name="anaconda3"
+version="$(koopa variable "$name")"
+prefix="${KOOPA_BUILD_PREFIX}/${name}"
+tmp_dir="${KOOPA_TMP_DIR}/${name}"
+exe_file="${prefix}/bin/conda"
 
 case "$OSTYPE" in
     linux-gnu)
@@ -30,7 +32,7 @@ case "$OSTYPE" in
         ;;
 esac
 
-build_mkdir "$prefix"
+_koopa_build_mkdir "$prefix"
 
 (
     rm -rf "$tmp_dir"
@@ -41,8 +43,7 @@ build_mkdir "$prefix"
     rm -rf "$tmp_dir"
 )
 
-build_chgrp "$prefix"
+_koopa_build_chgrp "$prefix"
 
-conda_exe="${prefix}/bin/conda"
-command -v "$conda_exe"
-"$conda_exe --version"
+command -v "$exe_file"
+"$exe_file" --version
