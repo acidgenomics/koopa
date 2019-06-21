@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Add dot file.
-# Modified 2019-06-19.
+# Modified 2019-06-21.
 
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.
@@ -97,12 +97,14 @@ then
     dot_dir="${dot_dir}-private"
 fi
 
+# Error if the dotfiles directory can't be found.
 if [[ ! -d "$dot_dir" ]]
 then
     >&2 printf "Error: %s missing.\n" "$dot_dir"
     exit 1
 fi
 
+# Error if the source file can't be found.
 source_path="${dot_dir}/${1}"
 if [[ ! -f "$source_path" && ! -d "$source_path" ]]
 then
@@ -110,22 +112,30 @@ then
     exit 1
 fi
 
+# Define optional destination name.
 symlink_name="${2:-}"
 [[ -z "$symlink_name" ]] && symlink_name="$(basename "$source_path")"
+
 symlink_path="${HOME}/.${symlink_name}"
 
-# We're allowing force overwrite of symlinks only.
-if [[ -L "$symlink_path" ]] && \
-    [[ -f "$symlink_path" || -d "$symlink_path" ]] && \
+# Inform the user when nuking a broken symlink.
+if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
+then
+    printf "Overwriting broken symlink:\n  %s\n" "$symlink_path"
+    rm -f "$symlink_path"
+fi
+
+# We're allowing force overwrite of existing symlinks only.
+if [[ -L "$symlink_path" ]] &&
+    [[ -f "$symlink_path" || -d "$symlink_path" ]] &&
     [[ -z "${force:-}" ]]
 then
     [[ -n "${quiet:-}" ]] && exit 0
-    >&2 printf "Error: Existing symlink.\n%s\n" "$symlink_path"
+    >&2 printf "Error: Existing symlink:\n  %s\n" "$symlink_path"
     exit 1
-elif [[ ! -L "$symlink_path" ]] && \
-    [[ -f "$symlink_path" || -d "$symlink_path" ]]
+elif [[ ! -L "$symlink_path" ]] && [[ -e "$symlink_path" ]]
 then
-    >&2 printf "Error: Existing file.\n%s\n" "$symlink_path"
+    >&2 printf "Error: Existing file:\n  %s\n" "$symlink_path"
     exit 1
 fi
 
@@ -133,5 +143,6 @@ if [[ -z "${quiet:-}" ]]
 then
     printf "Symlinking '%s'.\n" "$(basename "$symlink_path")"
 fi
+
 rm -f "$symlink_path"
 ln -s "$source_path" "$symlink_path"
