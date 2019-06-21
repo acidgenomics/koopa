@@ -31,7 +31,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -rf "$tmp_dir"
 )
 
-_koopa_link_cellar "$name" "$version"
+link-cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version
