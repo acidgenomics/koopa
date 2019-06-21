@@ -10,8 +10,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/header.sh"
 
-assert_has_sudo
-assert_is_installed docker
+_koopa_assert_has_sudo
+_koopa_assert_is_installed docker
 
 prefix="${KOOPA_BUILD_PREFIX}/bcbio-vm"
 bin_dir="${prefix}/anaconda/bin"
