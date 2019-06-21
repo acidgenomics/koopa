@@ -170,10 +170,25 @@ _koopa_update_shells() {
 # Modified 2019-06-21.
 _koopa_update_xdg_config() {
     mkdir -p "$KOOPA_CONFIG_DIR"
-    rm -f "${KOOPA_CONFIG_DIR}/activate"
-    rm -f "${KOOPA_CONFIG_DIR}/dotfiles"
-    rm -f "${KOOPA_CONFIG_DIR}/home"
-    ln -s "${KOOPA_DIR}/activate" "${KOOPA_CONFIG_DIR}/activate"
-    ln -s "${KOOPA_DIR}/system/config/dotfiles" "${KOOPA_CONFIG_DIR}/dotfiles"
-    ln -s "${KOOPA_DIR}" "${KOOPA_CONFIG_DIR}/home"
+    
+    if [ ! -e "${KOOPA_CONFIG_DIR}/activate" ]
+    then
+        rm -f "${KOOPA_CONFIG_DIR}/activate"
+        ln -s "${KOOPA_DIR}/activate" \
+              "${KOOPA_CONFIG_DIR}/activate"
+    fi
+
+    if [ ! -e "${KOOPA_CONFIG_DIR}/dotfiles" ]
+    then
+        rm -f "${KOOPA_CONFIG_DIR}/dotfiles"
+        ln -s "${KOOPA_DIR}/system/config/dotfiles" \
+              "${KOOPA_CONFIG_DIR}/dotfiles"
+    fi
+
+    if [ ! -e "${KOOPA_CONFIG_DIR}/home" ]
+    then
+        rm -f "${KOOPA_CONFIG_DIR}/home"
+        ln -s "${KOOPA_DIR}" \
+              "${KOOPA_CONFIG_DIR}/home"
+    fi
 }
