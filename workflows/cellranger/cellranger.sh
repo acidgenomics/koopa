@@ -1,19 +1,19 @@
-#!/usr/bin/env bash
-set -Eeu -o pipefail
+#!/bin/sh
 
-# Run Cell Ranger on HMS O2 cluster.
+# Run Cell Ranger.
+# Harvard O2 cluster.
+# Modified 2019-06-21.
 
-# Note that these modules are specific to O2.
+# See also:
+# - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
+# - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+
 module load bcl2fastq/2.20.0.422
 module load cellranger/2.1.1
 
 localcores="$SLURM_CPUS_PER_TASK"
 localmem=128
 
-
-
-# mkfastq ======================================================================
-# https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
 cellranger mkfastq \
     --run="XXXXXXXXX" \
     --csv="mkfastq.csv" \
@@ -21,10 +21,6 @@ cellranger mkfastq \
     --localmem=$localmem \
     --delete-undetermined
 
-
-
-# count ========================================================================
-# https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
 fastqs="XXXXXXXXX"
 transcriptome="${HOME}/refdata-cellranger-mm10-1.2.0"
 
