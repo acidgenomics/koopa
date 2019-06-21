@@ -10,7 +10,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
-assert_is_installed conda
+_koopa_assert_is_installed conda
 
 # Update `.condarc` file.
 # > conda config --add channels defaults
