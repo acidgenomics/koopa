@@ -114,7 +114,9 @@ esac
 # ==============================================================================
 
 KOOPA_BUILD_PREFIX="$(_koopa_build_prefix)" && export KOOPA_BUILD_PREFIX
-export KOOPA_CELLAR_PREFIX="${KOOPA_BUILD_PREFIX}/cellar"
+
+# Avoid setting to `/usr/local/cellar` as this can conflict with Homebrew.
+export KOOPA_CELLAR_PREFIX="${KOOPA_DIR}/cellar"
 
 export KOOPA_TMP_DIR="${XDG_RUNTIME_DIR}/koopa"
 mkdir -p "$KOOPA_TMP_DIR"
