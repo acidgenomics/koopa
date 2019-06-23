@@ -9,6 +9,13 @@
 
 
 
+# Error on root user.
+[ "$(id -u)" -eq 0 ] &&
+    >&2 printf "Don't run this script as root.\n" &&
+    return 1
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
@@ -66,11 +73,6 @@ unset -f usage
 
 # Initial checks                                                            {{{1
 # ==============================================================================
-
-# Error on root user.
-[ "$(id -u)" -eq 0 ] &&
-    >&2 printf "Don't run the activation script as root.\n" &&
-    return 1
 
 # Early return if koopa is already active.
 # We may need to tweak this approach to work properly with bash subshells.
