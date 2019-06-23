@@ -23,7 +23,15 @@ _koopa_quiet_expr() {
 
 # Consider not using `&>` here, it isn't POSIX.
 # https://unix.stackexchange.com/a/80632
+# > command -v "$1" >/dev/null
 # > command -v "$1" 2>/dev/null
 _koopa_quiet_which() {
-    command -v "$1" >/dev/null 2>&1
+    command -v "$1" >/dev/null
+}
+
+
+
+# Modified 2019-06-22.
+_koopa_quiet_which2() {
+    command -v "$1" 2>/dev/null
 }

@@ -8,7 +8,7 @@
 # > set -a
 
 # Use shell globbing instead of `find`, which doesn't support source.
-for file in "${KOOPA_DIR}/system/include/functions/"*".sh"
+for file in "${KOOPA_HOME}/system/include/functions/"*".sh"
 do
     [ -f "$file" ] && . "$file"
 done

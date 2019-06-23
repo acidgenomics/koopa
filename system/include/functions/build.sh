@@ -26,6 +26,39 @@ _koopa_build_chgrp() {
 
 
 
+# Symlink cellar into local build directory.
+# e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
+# Modified 2019-06-22.
+_koopa_build_link_cellar() {
+    local name
+    name="$1"
+    
+    local version
+    version="$2"
+    
+    local cellar_prefix
+    cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
+    
+    local build_prefix
+    build_prefix="$(koopa build-prefix)"
+
+    printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
+ 
+    _koopa_build_set_permissions "$cellar_prefix"
+    
+    if _koopa_has_sudo
+    then
+        sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        _koopa_update_ldconfig
+    else
+        cp -frsv "$cellar_prefix/"* "$build_prefix/".
+    fi
+
+    _koopa_build_set_permissions "$build_prefix"
+}
+
+
+
 # Create the build directory.
 # Modified 2019-06-20.
 _koopa_build_mkdir() {
@@ -43,26 +76,6 @@ _koopa_build_mkdir() {
     fi
 
     _koopa_build_chgrp "$path"
-}
-
-
-
-# Return the installation prefix to use.
-# Modified 2019-06-20.
-_koopa_build_prefix() {
-    if _koopa_has_sudo
-    then
-        if echo "$KOOPA_DIR" | grep -Eq "^/opt/"
-        then
-            prefix="${KOOPA_DIR}/local"
-        else
-            prefix="/usr/local"
-        fi
-    else
-        prefix="${HOME}/.local"
-    fi
-    mkdir -p "$prefix"
-    echo "$prefix"
 }
 
 
@@ -94,7 +107,8 @@ _koopa_build_prefix_group() {
 # Set permissions on program built from source.
 # Modified 2019-06-20.
 _koopa_build_set_permissions() {
-    local path="$1"
+    local path
+    path="$1"
     
     if _koopa_has_sudo
     then
@@ -105,29 +119,3 @@ _koopa_build_set_permissions() {
 
     _koopa_build_chgrp "$path"
 }
-
-
-
-# Symlink cellar into local build directory.
-# e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
-# Modified 2019-06-20.
-_koopa_link_cellar() {
-    local name="$1"
-    local version="$2"
-    local prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-
-    printf "Linking %s in %s.\n" "$prefix" "$KOOPA_BUILD_PREFIX"
- 
-    _koopa_build_set_permissions "$prefix"
-    
-    if _koopa_has_sudo
-    then
-        sudo cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
-        _koopa_update_ldconfig
-    else
-        cp -frsv "$prefix/"* "$KOOPA_BUILD_PREFIX"
-    fi
-
-    _koopa_build_set_permissions "$KOOPA_BUILD_PREFIX"
-}
-

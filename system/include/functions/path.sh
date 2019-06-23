@@ -17,7 +17,7 @@
 # Modified 2019-06-20.
 # FIXME This isn't working correctly.
 _koopa_add_local_bins_to_path() {
-    find "$KOOPA_BUILD_PREFIX" \
+    find "$(koopa build-prefix)" \
         -mindepth 2 \
         -maxdepth 3 \
         -name "bin" \
@@ -43,7 +43,7 @@ _koopa_add_bins_to_path() {
     local prefix
     
     relpath="${1:-}"
-    prefix="$KOOPA_DIR"
+    prefix="$KOOPA_HOME"
 
     [ ! -z "$relpath" ] && prefix="${prefix}/${relpath}"
     
