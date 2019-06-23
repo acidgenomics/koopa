@@ -2,7 +2,7 @@
 # shellcheck disable=SC2236
 
 # Activate Python "default" virtual environment.
-# Modified 2019-06-18.
+# Modified 2019-06-21.
 
 # Note that we're using this instead of conda as our default interactive
 # Python environment, so we can easily use pip.
@@ -10,9 +10,7 @@
 
 
 # Only attempt to autoload for bash or zsh.
-[ "$KOOPA_SHELL" != "bash" ] && \
-    [ "$KOOPA_SHELL" != "zsh" ] && \
-    return
+echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return
 
 env_name="default"
 

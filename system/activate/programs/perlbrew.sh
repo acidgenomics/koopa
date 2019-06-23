@@ -1,16 +1,13 @@
 #!/bin/sh
 
 # Perlbrew
-# https://perlbrew.pl
-# Modified 2019-06-17.
+# Modified 2019-06-21.
 
-# Check for bash or zsh.
-if [ "$KOOPA_SHELL" != "bash" ] && [ "$KOOPA_SHELL" != "zsh" ]
-then
-    return 0
-fi
+# See also:
+# - https://perlbrew.pl
 
-# source /usr/local/perlbrew/etc/bashrc
+# Only attempt to autoload for bash or zsh.
+echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return
 
 # Check for installation, otherwise early return.
 if [ ! -z "${PERLBREW_ROOT:-}" ]

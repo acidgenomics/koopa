@@ -1,17 +1,16 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # Mike-specific dot files.
-# Modified 2019-06-21.
+# Modified 2019-06-23.
 
-private_dir="${KOOPA_CONFIG_DIR}/dotfiles-private"
+private_dir="$(koopa config-dir)/dotfiles-private"
 if [[ ! -d "$private_dir" ]]
 then
     git clone git@github.com:mjsteinbaugh/dotfiles-private.git "$private_dir"
 fi
 unset -v private_dir
 
-if [[ "$KOOPA_OS_NAME" == "darwin" ]]
+if _is_koopa_darwin
 then
     dotfile --force os/darwin/gitconfig
 else

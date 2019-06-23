@@ -50,7 +50,7 @@ _koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
 # - ID="ubuntu"
 #   ID_LIKE=debian
 
-if [ ! -z "${LINUX:-}" ]
+if _koopa_is_linux
 then
     _koopa_add_bins_to_path "os/linux"
 
@@ -74,19 +74,15 @@ then
     unset -v id_like
 fi
 
-_koopa_add_bins_to_path "os/${KOOPA_OS_NAME}"
+_koopa_add_bins_to_path "os/$(koopa os-name)"
 
 # Host-specific                                                             {{{2
 # ------------------------------------------------------------------------------
 
-if [ ! -z "${KOOPA_HOST_NAME:-}" ]
-then
-    _koopa_add_bins_to_path "host/${KOOPA_HOST_NAME}"
-fi
+_koopa_add_bins_to_path "host/$(koopa host-name)"
 
 # Locally installed programs                                                {{{2
 # ------------------------------------------------------------------------------
 
-# FIXME Not currently working.
+# FIXME Rethink this approach.
 # > _koopa_add_local_bins_to_path
-

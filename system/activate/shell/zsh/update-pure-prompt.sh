@@ -6,7 +6,7 @@
 # See also:
 # - https://github.com/sindresorhus/pure
 
-koopa_fpath="${KOOPA_DIR}/system/extra/zsh/fpath"
+koopa_fpath="${KOOPA_HOME}/system/extra/zsh/fpath"
 if [[ ! -d "$koopa_fpath" ]]
 then
     >&2 printf "fpath directory is missing.\n%s\n" "$koopa_fpath"
