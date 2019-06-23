@@ -6,4 +6,4 @@ source "$(koopa header debian)"
 # Install Vim.
 # Modified 2019-06-23.
 
-source "${KOOPA_HOME}/system/include/install/vim.sh"
+source "$(koopa cellar-script vim)"

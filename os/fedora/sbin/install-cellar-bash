@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install Bash.
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    sudo yum install -y bash
+    sudo yum-builddep -y bash
+fi
+
+source "$(koopa cellar-script bash)"

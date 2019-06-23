@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install R.
+# Modified 2019-06-23.
+
+
+
+# Java                                                                      {{{1
+# ==============================================================================
+
+if _koopa_has_sudo
+then
+    printf "Updating Java.\n"
+    sudo yum install -y java-latest-openjdk-devel
+    sudo yum list installed | grep -E '^java-'
+fi
+
+command -v java
+java -version
+
+command -v javac
+javac -version
+
+
+
+# TeX                                                                       {{{1
+# ==============================================================================
+
+# Using TeX Live 2013, we'll see this warning:
+#
+#     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
+#     vignettes and package manuals will not be rendered optimally
+#
+# There doesn't appear to be an easy way to fix this on RHEL 7.
+
+# Missing recommendations:
+# - texlive-csvsimple
+# - texlive-fonts-extra
+# - texlive-inconsolata
+# - texlive-marginfix
+# - texlive-mathtools
+# - texlive-nowidow
+# - texlive-parnotes
+
+if _koopa_has_sudo
+then
+    printf "Updating TeX.\n"
+    sudo yum install -y \
+        texlive \
+        texlive-bera \
+        texlive-collection-fontsrecommended \
+        texlive-collection-latexrecommended \
+        texlive-caption \
+        texlive-changepage \
+        texlive-enumitem \
+        texlive-etoolbox \
+        texlive-fancyhdr \
+        texlive-footmisc \
+        texlive-framed \
+        texlive-geometry \
+        texlive-hyperref \
+        texlive-latex-fonts \
+        texlive-natbib \
+        texlive-parskip \
+        texlive-pdftex \
+        texlive-placeins \
+        texlive-preprint \
+        texlive-sectsty \
+        texlive-soul \
+        texlive-titlesec \
+        texlive-titling \
+        texlive-xstring
+fi
+
+
+
+# R                                                                         {{{1
+# ==============================================================================
+
+if _koopa_has_sudo
+then
+    sudo yum install -y "$name"
+    sudo yum-builddep -y "$name"
+fi
+
+source "$(koopa cellar-script r)"
