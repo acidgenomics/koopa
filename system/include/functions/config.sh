@@ -79,15 +79,15 @@ _koopa_r_javareconf() {
     else
         java_dir="/usr/lib/jvm"
         [ -d "$java_dir" ] || return 1
-        
-        if [ -d "${java_dir}/java" ]
+
+        if [ -d "${java_dir}/java-12-oracle" ]
+        then
+            # Ubuntu 18 installs here.
+            java_dir="${java_dir}/java-12-oracle"
+        elif [ -d "${java_dir}/java" ]
         then
             # RHEL7 installs here.
             java_dir="${java_dir}/java"
-        elif [ -d "${java_dir}/default-java" ]
-        then
-            # Ubuntu 18 installs here.
-            java_dir="${java_dir}/default-java"
         else
             return 1
         fi
@@ -102,7 +102,6 @@ _koopa_r_javareconf() {
     fi
     
     printf "Updating R Java configuration.\n"
-    
     
     r_home="$(_koopa_r_home)"
     _koopa_build_set_permissions "$r_home"
