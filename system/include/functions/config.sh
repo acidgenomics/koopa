@@ -36,6 +36,7 @@ _koopa_r_home() {
 
 
 # Update rJava configuration.
+# The default Java path differs depending on the system.
 #
 # > R CMD javareconf -h
 #
@@ -52,32 +53,56 @@ _koopa_r_home() {
 #
 # Modified 2019-06-23.
 _koopa_r_javareconf() {
-    _koopa_assert_is_installed R
-    _koopa_assert_is_installed java
-    _koopa_assert_has_sudo
+    _koopa_has_sudo || return 1
+    _koopa_is_installed R || return 1
+    _koopa_is_installed java || return 1
     
-    # The default Java path differs depending on the system.
-    if [ -d "/usr/lib/jvm/java" ]
+    local java_dir
+    local java_flags
+    
+    if _koopa_is_darwin
     then
-        # RHEL7 installs here.
-        java_dir="/usr/lib/jvm/java"
-    elif [ -d "/usr/lib/jvm/default-java" ]
-    then
-        # Ubuntu 18 installs here.
-        java_dir="/usr/lib/jvm/default-java"
+        java_dir="/Library/Java/JavaVirtualMachines"
+        [ -d "$java_dir" ] || return 1
+        java_dir="$(ls -1d "${java_dir}/"* | tail -n 1)"
+        [ -d "$java_dir" ] || return 1
+        java_dir="${java_dir}/Contents/Home"
+        [ -d "$java_dir" ] || return 1
+        
+        java_flags=" \
+            JAVA_HOME=${java_dir} \
+            JAVA=/usr/bin/java \
+            JAVAC=/usr/bin/javac \
+            JAVAH=/usr/bin/javah \
+            JAR=/usr/bin/jar \
+        "
     else
-        >&2 printf "Error: Failed to detect JVM path.\n"
-        >&2 printf "Typically this installs to '/usr/lib/jvm'.\n"
-        return 1
+        java_dir="/usr/lib/jvm"
+        [ -d "$java_dir" ] || return 1
+        
+        if [ -d "${java_dir}/java" ]
+        then
+            # RHEL7 installs here.
+            java_dir="${java_dir}/java"
+        elif [ -d "${java_dir}/default-java" ]
+        then
+            # Ubuntu 18 installs here.
+            java_dir="${java_dir}/default-java"
+        else
+            return 1
+        fi
+        
+        java_flags=" \
+            JAVA_HOME=${java_dir} \
+            JAVA=${java_dir}/bin/java \
+            JAVAC=${java_dir}/bin/javac \
+            JAVAH=${java_dir}/bin/javah \
+            JAR=${java_dir}/bin/jar \
+        "
     fi
     
     printf "Updating R Java configuration.\n"
-    java_flags=" \
-        JAVA=${java_dir}/bin/java \
-        JAVA_HOME=${java_dir} \
-        JAVAC=${java_dir}/bin/javac \
-        JAR=${java_dir}/bin/jar \
-    "
+    
     
     r_home="$(_koopa_r_home)"
     _koopa_build_set_permissions "$r_home"
@@ -96,8 +121,11 @@ _koopa_r_javareconf() {
 
 
 # Update dynamic linker (LD) configuration.
-# Modified 2019-06-19.
+# Modified 2019-06-23.
 _koopa_update_ldconfig() {
+    _koopa_is_linux || return 0
+    _koopa_has_sudo || return 0
+    
     if [ -d /etc/ld.so.conf.d ]
     then
         sudo ln -fs \
@@ -110,11 +138,11 @@ _koopa_update_ldconfig() {
 
 
 # Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 _koopa_update_profile() {
-    _koopa_assert_has_sudo
     _koopa_is_linux || return 0
-    
+    _koopa_has_sudo || return 0
+
     local file
     file="/etc/profile.d/koopa.sh"
     
@@ -139,24 +167,25 @@ EOF"
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
 # Modified 2019-06-23.
 _koopa_update_r_config() {
+    _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
-    _koopa_is_linux || return 0
-
-    _koopa_assert_has_sudo
     
     local r_home
     r_home="$(_koopa_r_home)"
-
-    printf "Updating '/etc/rstudio/'.\n"
-    sudo mkdir -p /etc/rstudio
-    sudo ln -fs \
-        "${KOOPA_HOME}/system/config/etc/rstudio/"* \
-        /etc/rstudio/.
 
     printf "Updating '%s'.\n" "$r_home"
     sudo ln -fs \
         "${KOOPA_HOME}/system/config/R/etc/"* \
         "${r_home}/etc/".
+
+    if _koopa_is_linux
+    then
+        printf "Updating '/etc/rstudio/'.\n"
+        sudo mkdir -p /etc/rstudio
+        sudo ln -fs \
+            "${KOOPA_HOME}/system/config/etc/rstudio/"* \
+            /etc/rstudio/.
+    fi
 
     _koopa_r_javareconf
 }
