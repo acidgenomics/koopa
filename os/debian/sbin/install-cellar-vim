@@ -6,7 +6,10 @@ source "$(koopa header debian)"
 # Install Vim.
 # Modified 2019-06-23.
 
-sudo apt-get -y install vim
-sudo apt-get -y build-dep vim
+if _koopa_has_sudo
+then
+    sudo apt-get -y install vim
+    sudo apt-get -y build-dep vim
+fi
 
 source "$(koopa cellar-script vim)"
