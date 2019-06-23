@@ -3,11 +3,17 @@
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
+source "${KOOPA_HOME}/system/include/functions.sh"
 
 # Install koopa.
 # Modified 2019-06-23.
 
+
+
+# Error on root user.
+[ "$(id -u)" -eq 0 ] &&
+    >&2 printf "Don't run this script as root.\n" &&
+    return 1
 
 
 # Usage                                                                     {{{1
@@ -45,7 +51,7 @@ EOF
 
 
 
-# Flags                                                                     {{{1
+# Parse arguments                                                           {{{1
 # ==============================================================================
 
 while (("$#"))
@@ -82,7 +88,11 @@ do
     esac
 done
 
-[[ "${mike:-0}" -eq 1 ]] && devel=1 && dotfiles=1
+if [[ "${mike:-0}" -eq 1 ]]
+then
+    devel=1
+    dotfiles=1
+fi
 
 
 
@@ -107,9 +117,7 @@ fi
 if [[ "${shared:-0}" -eq 1 ]]
 then
     _koopa_update_profile
-
-    # FIXME Consider only updating R config after installing R?
-    # > _koopa_update_r_config
+    _koopa_update_r_config
 fi
 
 
@@ -161,9 +169,6 @@ force=1 . "${KOOPA_HOME}/activate"
 
 # Dot files                                                                 {{{1
 # ==============================================================================
-
-# Never attempt to configure dotfiles for root.
-[[ "$(id -u)" -eq 0 ]] && dotfiles=0
 
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
