@@ -493,6 +493,19 @@ check_version(
     required = FALSE
 )
 
+# Java
+check_version(
+    name = "java",
+    version = koopa_version("java"),
+    version_cmd = c(
+        "java --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
 # Ruby
 check_version(
     name = "ruby",
