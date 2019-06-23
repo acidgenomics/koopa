@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Modified 2019-06-22.
+# Modified 2019-06-23.
 
 
 # Shell type                                                                {{{1
@@ -23,7 +23,7 @@ _koopa_is_interactive && export INTERACTIVE=1
 # consistently exported across platforms.
 
 # HOSTNAME
-[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)" &&  export HOSTNAME
+[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
 
 # OSTYPE
 # Automatically set by bash and zsh.
@@ -111,7 +111,7 @@ fi
 # ==============================================================================
 
 # Get the number of cores (CPUs) available.
-# Modified 2019-06-22.
+# Modified 2019-06-23.
 if _koopa_is_darwin
 then
     CPU_COUNT="$(sysctl -n hw.ncpu)"
@@ -157,6 +157,6 @@ export CPU_COUNT
 #     --acls --xattrs
 #     --iconv=utf-8,utf-8-mac
 
-[ -z "${RSYNC_FLAGS:-}" ] && \
+[ -z "${RSYNC_FLAGS:-}" ] &&
     RSYNC_FLAGS="$(_koopa_rsync_flags)" &&
     export RSYNC_FLAGS
