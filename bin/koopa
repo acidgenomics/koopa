@@ -7,6 +7,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
+
+
 version="0.4.0a"
 date="2019-06-23"
 
@@ -17,7 +19,10 @@ then
     exit 1
 fi
 
-script_dir="${KOOPA_HOME}/system/koopa"
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
 
 usage() {
     cat << EOF
@@ -40,6 +45,8 @@ return string commands:
         Return build prefix string used to install from source.
     cellar-prefix
         Koopa cellar path (e.g. "usr/local/koopa/cellar").
+    cellar-script
+        Run cellar install script.
     config-dir
         Koopa local configuration path (e.g. "~/.config/koopa").
     header
@@ -74,6 +81,11 @@ EOF
 
 [[ -z "${1:-}" ]] && usage && exit
 
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
 case "$1" in
     --help|-h)
         usage
@@ -96,8 +108,18 @@ case "$1" in
         echo "${KOOPA_HOME}/cellar"
         exit
         ;;
+    cellar-script)
+        file="${KOOPA_HOME}/system/include/cellar/${2}.sh"
+        if [ ! -f "$file" ]
+        then
+            >&2 printf "Error: No script found for '%s'.\n" "$2"
+            exit 1
+        fi
+        echo "$file"
+        exit
+        ;;
     check)
-        Rscript --vanilla "${script_dir}/check.R"
+        Rscript --vanilla "${include_dir}/check.R"
         exit
         ;;
     config-dir)
@@ -117,11 +139,11 @@ case "$1" in
         exit
         ;;
     info)
-        "${script_dir}/info.sh"
+        "${include_dir}/info.sh"
         exit
         ;;
     list)
-        Rscript --vanilla "${script_dir}/list.R"
+        Rscript --vanilla "${include_dir}/list.R"
         exit
         ;;
     os-name)
@@ -144,7 +166,7 @@ case "$1" in
         exit
         ;;
     update)
-        "${script_dir}/update.sh"
+        "${include_dir}/update.sh"
         exit
         ;;
     upgrade)
