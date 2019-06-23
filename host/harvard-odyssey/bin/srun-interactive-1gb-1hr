@@ -1,3 +1,15 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-srun -p test --pty --mem 1GB -t 0-01:00 /bin/bash
+# shellcheck source=/dev/null
+source "$(koopa header harvard-odyssey)"
+
+# Launch SLURM interaction session.
+# Modified 2019-06-23.
+
+# 1 core; 1 GB RAM; 1 hour.
+
+srun -p test \
+    --pty \
+    --mem 1GB \
+    -t 0-01:00 \
+    "$SHELL"

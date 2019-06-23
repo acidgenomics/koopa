@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
 
 # rsync to Azure Samba (SMB) file shares.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 # Useful rsync flags:
 # -n, --dry-run               perform a trial run with no changes made

@@ -1,3 +1,15 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-srun -p interactive --pty -c 1 --mem 16G --time 0-06:00 /bin/bash
+# shellcheck source=/dev/null
+source "$(koopa header harvard-o2)"
+
+# Launch SLURM interaction session.
+# Modified 2019-06-23.
+
+# 1 core; 16 GB RAM; 6 hours.
+
+srun -p interactive \
+    --pty -c 1 \
+    --mem 16G \
+    --time 0-06:00 \
+    "$SHELL"
