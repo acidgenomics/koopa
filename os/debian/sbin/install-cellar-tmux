@@ -4,13 +4,15 @@
 source "$(koopa header debian)"
 
 # Install Tmux terminal multiplexer.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # > apt-cache search libevent
 
 if _koopa_has_sudo
 then
     sudo apt-get -y install libevent-dev
+    sudo apt-get -y install tmux
+    sudo apt-get -y build-dep tmux
 fi
 
 source "$(koopa cellar-script tmux)"
