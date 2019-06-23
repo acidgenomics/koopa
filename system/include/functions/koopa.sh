@@ -296,23 +296,13 @@ _koopa_tmp_dir() {
     local dir
     local unique
     
-    if _koopa_is_darwin
-    then
-        unique="$(date "+%Y%m%d-%H%M%S")"
-    elif _koopa_is_linux
-    then
-        unique="$( \
-            cat /dev/urandom | \
-            tr -dc 'a-zA-Z0-9' | \
-            fold -w 12 | \
-            head -n 1 \
-        )"
-    fi
-    
+    unique="$(date "+%Y%m%d-%H%M%S")"
     dir="/tmp/koopa-$(id -u)-${unique}"
+    
     mkdir -p "$dir"
     chown "$USER" "$dir"
     chmod 0775 "$dir"
+    
     echo "$dir"
 }
 
