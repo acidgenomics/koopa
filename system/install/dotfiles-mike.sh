@@ -10,7 +10,7 @@ then
 fi
 unset -v private_dir
 
-if _is_koopa_darwin
+if _koopa_is_darwin
 then
     dotfile --force os/darwin/gitconfig
 else
