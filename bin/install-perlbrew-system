@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install Perlbrew system Perl.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # See also:
 # - https://stackoverflow.com/questions/25188575

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # List dotfiles.
-# Modified 2019-06-13.
+# Modified 2019-06-23.
 
 find_dotfiles() {
     local type="$1"

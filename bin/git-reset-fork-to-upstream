@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-# Reset fork to upstream
-# https://stackoverflow.com/questions/42332769
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Reset fork to upstream.
+# Modified 2019-06-23.
+
+# See also:
+# - https://stackoverflow.com/questions/42332769
 
 git checkout master
 git fetch upstream

@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Move files up 1 directory level.
+# Modified 2019-06-23.
 
 find . -type f -mindepth 2 -exec mv {} . \;
 find . -mindepth 2
