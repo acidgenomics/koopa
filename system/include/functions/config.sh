@@ -5,14 +5,6 @@
 
 
 
-# Get R_HOME, rather than exporting as global variable.
-# Modified 2019-06-20.
-_koopa_find_r_home() {
-    Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
-}
-
-
-
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
 # Modified 2019-06-20.
@@ -33,46 +25,10 @@ _koopa_info_box() {
 
 
 
-# Used by `koopa info`.
-# Modified 2019-06-20.
-_koopa_locate() {
-    local command
-    local name
-    local path
-    
-    command="$1"
-    name="${2:-$command}"
-    path="$(_koopa_quiet_which "$command")"
-    
-    if [[ -z "$path" ]]
-    then
-        path="[missing]"
-    else
-        path="$(realpath "$path")"
-    fi
-    printf "%s: %s" "$name" "$path"
-}
-
-
-
-# Get version stored internally in versions.txt file.
-# Modified 2019-06-18.
-_koopa_variable() {
-    local what
-    local file
-    local match
-
-    what="$1"
-    file="${KOOPA_DIR}/system/include/variables.txt"
-    match="$(grep -E "^${what}=" "$file" || echo "")"
-    
-    if [ -n "$match" ]
-    then
-        echo "$match" | cut -d "\"" -f 2
-    else
-        >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
-        return 1
-    fi
+# Get R_HOME, rather than exporting as global variable.
+# Modified 2019-06-23.
+_koopa_r_home() {
+    Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
 }
 
 
@@ -83,7 +39,7 @@ _koopa_update_ldconfig() {
     if [ -d /etc/ld.so.conf.d ]
     then
         sudo ln -fs \
-            "${KOOPA_DIR}/system/config/etc/ld.so.conf.d/"*".conf" \
+            "${KOOPA_HOME}/system/config/etc/ld.so.conf.d/"*".conf" \
             /etc/ld.so.conf.d/.
         sudo ldconfig
     fi
@@ -95,49 +51,50 @@ _koopa_update_ldconfig() {
 # Modified 2019-06-20.
 _koopa_update_profile() {
     _koopa_assert_has_sudo
-    [ -z "${LINUX:-}" ] && return 0
+    _koopa_is_linux || return 0
     
-    local file="/etc/profile.d/koopa.sh"
+    local file
+    file="/etc/profile.d/koopa.sh"
     
     printf "Updating '%s'.\n" "$file"
-    
     sudo mkdir -p "$(dirname file)"
     sudo rm -f "$file"
-
+    
     sudo bash -c "cat << EOF > $file
 #!/bin/sh
 
 # koopa shell
 # https://github.com/acidgenomics/koopa
 # shellcheck source=/dev/null
-. ${KOOPA_DIR}/activate
+. ${KOOPA_HOME}/activate
 EOF"
 }
 
 
 
-# Add shared R configuration symlinks in `${R_HOME}/etc`.
-# Modified 2019-06-19.
-_koopa_update_r_config() {
-    local r_home
+# FIXME Need to add corresponding remove R config script.
 
+# Add shared R configuration symlinks in `${R_HOME}/etc`.
+# Modified 2019-06-22.
+_koopa_update_r_config() {
+    _koopa_is_linux || return 0
     _koopa_assert_has_sudo
-    [ -z "${LINUX:-}" ] && return 0
+    
+    local r_home
+    r_home="$(_koopa_r_home)"
 
     printf "Updating '/etc/rstudio/'.\n"
     sudo mkdir -p /etc/rstudio
     sudo ln -fs \
-        "${KOOPA_DIR}/system/config/etc/rstudio/"* \
+        "${KOOPA_HOME}/system/config/etc/rstudio/"* \
         /etc/rstudio/.
 
-    r_home="$(_koopa_find_r_home)"
     printf "Updating '%s'.\n" "$r_home"
     sudo ln -fs \
-        "${KOOPA_DIR}/system/config/R/etc/"* \
+        "${KOOPA_HOME}/system/config/R/etc/"* \
         "${r_home}/etc/".
 
-    # FIXME Switch this to a function.
-    r-javareconf
+    _sudo_r_javareconf
 }
 
 
@@ -149,7 +106,7 @@ _koopa_update_shells() {
     
     local shell
     shell="$1"
-    shell="${KOOPA_BUILD_PREFIX}/bin/${shell}"
+    shell="$(koopa build-prefix)/bin/${shell}"
     
     local shell_file
     shell_file="/etc/shells"
@@ -169,26 +126,32 @@ _koopa_update_shells() {
 # ~/.config/koopa
 # Modified 2019-06-21.
 _koopa_update_xdg_config() {
-    mkdir -p "$KOOPA_CONFIG_DIR"
+    local config_dir
+    local home_dir
     
-    if [ ! -e "${KOOPA_CONFIG_DIR}/activate" ]
+    config_dir="$(koopa config-dir)"
+    home_dir="$(koopa home)"
+    
+    mkdir -p "$config_dir"
+    
+    if [ ! -e "${config_dir}/activate" ]
     then
-        rm -f "${KOOPA_CONFIG_DIR}/activate"
-        ln -s "${KOOPA_DIR}/activate" \
-              "${KOOPA_CONFIG_DIR}/activate"
+        rm -f "${config_dir}/activate"
+        ln -s "${home_dir}/activate" \
+              "${config_dir}/activate"
     fi
 
-    if [ ! -e "${KOOPA_CONFIG_DIR}/dotfiles" ]
+    if [ ! -e "${config_dir}/dotfiles" ]
     then
-        rm -f "${KOOPA_CONFIG_DIR}/dotfiles"
-        ln -s "${KOOPA_DIR}/system/config/dotfiles" \
-              "${KOOPA_CONFIG_DIR}/dotfiles"
+        rm -f "${config_dir}/dotfiles"
+        ln -s "${home_dir}/system/config/dotfiles" \
+              "${config_dir}/dotfiles"
     fi
 
-    if [ ! -e "${KOOPA_CONFIG_DIR}/home" ]
+    if [ ! -e "${config_dir}/home" ]
     then
-        rm -f "${KOOPA_CONFIG_DIR}/home"
-        ln -s "${KOOPA_DIR}" \
-              "${KOOPA_CONFIG_DIR}/home"
+        rm -f "${config_dir}/home"
+        ln -s "${home_dir}" \
+              "${config_dir}/home"
     fi
 }

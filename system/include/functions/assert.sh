@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Assertive check functions
-# Modified 2019-06-20.
+# Modified 2019-06-22.
 
 
 
@@ -33,15 +33,10 @@ _koopa_assert_has_sudo() {
 
 
 
-# Check if directory already exists.
-# Modified 2019-06-19.
-_koopa_assert_is_not_dir() {
-    local path
-    path="$1"
-    # Error on existing installation.
-    if [ -d "$path" ]
+_koopa_assert_is_darwin() {
+    if ! _koopa_is_darwin
     then
-        >&2 printf "Error: Directory already exists.\n%s\n" "$path"
+        >&2 printf "Error: macOS is required.\n"
         exit 1
     fi
 }
@@ -58,17 +53,18 @@ _koopa_assert_is_installed() {
 
 
 
-_koopa_assert_is_os_darwin() {
-    if [ ! "$KOOPA_OS_NAME" = "darwin" ] || [ -z "${MACOS:-}" ]
+_koopa_assert_is_linux() {
+    if ! _koopa_is_linux
     then
-        >&2 printf "Error: macOS is required.\n"
+        >&2 printf "Error: Linux is required.\n"
         exit 1
     fi
 }
 
 
 
-_koopa_assert_is_os_debian() {
+_koopa_assert_is_linux_debian() {
+    _koopa_assert_is_linux
     if ! grep "ID="      /etc/os-release | grep -q "debian" &&
        ! grep "ID_LIKE=" /etc/os-release | grep -q "debian"
     then
@@ -79,11 +75,27 @@ _koopa_assert_is_os_debian() {
 
 
 
-_koopa_assert_is_os_fedora() {
+_koopa_assert_is_linux_fedora() {
+    _koopa_assert_is_linux
     if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
        ! grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
     then
         >&2 printf "Error: Fedora is required.\n"
+        exit 1
+    fi
+}
+
+
+
+# Check if directory already exists.
+# Modified 2019-06-19.
+_koopa_assert_is_not_dir() {
+    local path
+    path="$1"
+    # Error on existing installation.
+    if [ -d "$path" ]
+    then
+        >&2 printf "Error: Directory already exists.\n%s\n" "$path"
         exit 1
     fi
 }
@@ -98,4 +110,39 @@ _koopa_assert_is_os_fedora() {
 # Modified 2019-06-19.
 _koopa_has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
+}
+
+
+
+# Modified 2019-06-22.
+_koopa_is_darwin() {
+    [ "$(uname -s)" = "Darwin" ]
+}
+
+
+
+# Modified 2019-06-21.
+_koopa_is_interactive() {
+    echo "$-" | grep -q "i"
+}
+
+
+
+# Modified 2019-06-21.
+_koopa_is_linux() {
+    [ "$(uname -s)" = "Linux" ]
+}
+
+
+
+# Modified 2019-06-21.
+_koopa_is_login_bash() {
+    [ "$0" = "-bash" ]
+}
+
+
+
+# Modified 2019-06-21.
+_koopa_is_login_zsh() {
+    [ "$0" = "-zsh" ]
 }
