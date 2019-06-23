@@ -86,6 +86,8 @@ EOF
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
+include_dir="${KOOPA_HOME}/system/include/koopa"
+
 case "$1" in
     --help|-h)
         usage
