@@ -299,7 +299,8 @@ _koopa_tmp_dir() {
     if _koopa_is_darwin
     then
         unique="$(date "+%Y%m%d-%H%M%S")"
-    else _koopa_is_linux
+    elif _koopa_is_linux
+    then
         unique="$( \
             cat /dev/urandom | \
             tr -dc 'a-zA-Z0-9' | \
