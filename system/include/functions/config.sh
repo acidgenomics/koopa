@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Configuration functions.
-# Modified 2019-06-21.
+# Modified 2019-06-23.
 
 
 
@@ -28,7 +28,56 @@ _koopa_info_box() {
 # Get R_HOME, rather than exporting as global variable.
 # Modified 2019-06-23.
 _koopa_r_home() {
+    _koopa_assert_is_installed R
+    _koopa_assert_is_installed Rscript
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
+}
+
+
+
+# Update rJava configuration.
+#
+# > R CMD javareconf -h
+#
+# Environment variables that can be used to influence the detection:
+#   JAVA           path to a Java interpreter executable
+#                  By default first 'java' command found on the PATH
+#                  is taken (unless JAVA_HOME is also specified).
+#   JAVA_HOME      home of the Java environment. If not specified,
+#                  it will be detected automatically from the Java
+#                  interpreter.
+#   JAVAC          path to a Java compiler
+#   JAVAH          path to a Java header/stub generator
+#   JAR            path to a Java archive tool
+#
+# Modified 2019-06-23.
+_koopa_r_javareconf() {
+    _koopa_is_installed R || return 0
+    _assert_has_sudo
+    
+    r_home="$(_koopa_r_home)"
+    _koopa_build_set_permissions "$r_home"
+    
+    printf "Updating R Java configuration.\n"
+    java_dir="/usr/lib/jvm/java"
+    java_flags=" \
+        JAVA=${java_dir}/bin/java \
+        JAVA_HOME=${java_dir} \
+        JAVAC=${java_dir}/bin/javac \
+        JAR=${java_dir}/bin/jar \
+    "
+
+    (
+        unset -v R_HOME
+        # shellcheck disable=SC2086
+        sudo R --vanilla CMD javareconf $java_flags
+        # shellcheck disable=SC2086
+        R --vanilla CMD javareconf $java_flags
+    )
+
+    yum list installed | grep -E '^java-'
+
+    # > Rscript -e 'install.packages("rJava")'
 }
 
 
@@ -75,9 +124,11 @@ EOF"
 # FIXME Need to add corresponding remove R config script.
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
-# Modified 2019-06-22.
+# Modified 2019-06-23.
 _koopa_update_r_config() {
+    _koopa_is_installed R || return 0
     _koopa_is_linux || return 0
+
     _koopa_assert_has_sudo
     
     local r_home
@@ -94,7 +145,7 @@ _koopa_update_r_config() {
         "${KOOPA_HOME}/system/config/R/etc/"* \
         "${r_home}/etc/".
 
-    _sudo_r_javareconf
+    _koopa_r_javareconf
 }
 
 
