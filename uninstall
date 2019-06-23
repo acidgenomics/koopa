@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Uninstall koopa.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    rm -f /etc/profile.d/koopa.sh
+fi
+
+# FIXME Remove R_HOME config files.
 
 # shellcheck source=/dev/null
-. "${KOOPA_DIR}/system/uninstall/dotfiles.sh"
+. "${KOOPA_HOME}/system/uninstall/dotfiles.sh"
 
 # shellcheck source=/dev/null
-. "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
+. "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 
-rm -f /etc/profile.d/koopa.sh
-rm -rf "$KOOPA_CONFIG_DIR"
-rm -rf "$KOOPA_DIR"
-
+rm -rf "$(koopa config-dir)"
+rm -rf "$KOOPA_HOME"

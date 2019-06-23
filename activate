@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-21.
+# Modified 2019-06-22.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -14,49 +14,37 @@
 
 usage() {
     cat << EOF
-usage: activate [-h] [FLAGS]
+usage: activate [-h] [--debug] [--minimal]
 
 Activate koopa.
 
-supported shells:
-  - bash
-  - ksh
-  - zsh
+supported shells: bash, ksh, zsh
 
 optional arguments:
-  -h, --help
+    -h, --help
         Show this help message and exit.
-  --debug, debug=1
+    --debug, debug=1
         Enable verbose debugging mode.
-  --minimal, minimal=1
+    --minimal, minimal=1
         Minimal mode. Simply export koopa programs into PATH.
-  --no-prompt, prompt=0
-        Skip prompt string customization. This disables PS1 export for bash,
-        and skips activation of pure prompt for zsh.
-  --no-aspera, aspera=0
-        Skip configuration of Aspera Connect.
-  --no-bcbio, bcbio=0
-        Skip configuration of bcbio-nextgen.
-  --no-conda, conda=0
-        Skip configuration of conda.
-  --no-ensembl-perl-api, ensembl_perl_api=0
-        Skip configuration of Ensembl Perl API.
-  --no-perlbrew, perlbrew=0
-        Skip configuration of Perl via perlbrew.
-  --no-rbenv, rbenv=0
-        Skip configuration of Ruby via rbenv.
-  --no-virtualenv, virtualenv=0
-        Skip configuration of Python virtual environment.
-
-  Linux only:
-  --no-ssh-key, ssh_key=0
-        Skip loading of id_rsa default SSH key.
-
-  macOS only:
-  --no-homebrew, homebrew=0
-        Skip configuration of Homebrew.
 EOF
 }
+
+
+
+# Initial checks                                                            {{{1
+# ==============================================================================
+
+# Skip activation for root user.
+[ "$(id -u)" -eq 0 ] && return 0
+
+# Early return if koopa is already active.
+# We may need to tweak this approach to work properly with bash subshells.
+if [ ! -z "${KOOPA_HOME:-}" ]
+then
+    [ -z "${TMUX:-}" ] && return 0
+    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
+fi
 
 
 
@@ -74,38 +62,7 @@ do
             export KOOPA_DEBUG=1
             ;;
         --minimal)
-            minimal=1
             export KOOPA_MINIMAL=1
-            ;;
-        --no-aspera)
-            aspera=0
-            ;;
-        --no-bcbio)
-            bcbio=0
-            ;;
-        --no-conda)
-            conda=0
-            ;;
-        --no-ensembl-perl-api)
-            ensembl_perl_api=0
-            ;;
-        --no-homebrew)
-            homebrew=0
-            ;;
-        --no-perlbrew)
-            perlbrew=0
-            ;;
-        --no-prompt)
-            prompt=0
-            ;;
-        --no-rbenv)
-            rbenv=0
-            ;;
-        --no-ssh-key)
-            ssh_key=0
-            ;;
-        --no-virtualenv)
-            virtualenv=0
             ;;
         --*|-*) # Unsupported flags.
             >&2 printf "Error: Invalid flag %s\n" "$1"
@@ -118,23 +75,7 @@ unset -f usage
 
 
 
-# Initial checks                                                            {{{1
-# ==============================================================================
-
-# Skip activation for root user.
-[ "$(id -u)" -eq 0 ] && return 0
-
-# Early return if koopa is already active.
-# We may need to tweak this approach to work properly with bash subshells.
-if [ ! -z "${KOOPA_SHELL:-}" ]
-then
-    [ -z "${TMUX:-}" ] && return 0
-    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
-fi
-
-
-
-# Set global options for debugging                                          {{{1
+# Debug mode                                                                {{{1
 # ==============================================================================
 
 if [ ! -z "${KOOPA_DEBUG:-}" ]
@@ -143,64 +84,49 @@ then
     set -o nounset
     set -o pipefail
     set -o xtrace
-fi
-
-
-
-# Detect the current shell                                                  {{{1
-# ==============================================================================
-
-# Note that this isn't necessarily the default shell (`$SHELL`).
-
-if [ ! -z "${BASH_VERSION:-}" ]
-then
-    if [ ! -z "${KOOPA_DEBUG:-}" ]
+    if [ ! -z "${BASH_VERSION:-}" ]
     then
         set -o errtrace
     fi
+fi
+
+
+
+# Locate koopa home                                                         {{{1
+# ==============================================================================
+
+if [ ! -z "${BASH_VERSION:-}" ]
+then
     KOOPA_SHELL="bash"
+    # SC2039: In POSIX sh, array references are undefined.
+    # shellcheck disable=SC2039
+    file="${BASH_SOURCE[0]}"
 elif [ ! -z "${KSH_VERSION:-}" ]
 then
     KOOPA_SHELL="ksh"
+    # SC2154: .sh.file is referenced but not assigned.
+    # shellcheck disable=SC2154
+    file="${.sh.file}"
 elif [ ! -z "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
-else
-    >&2 printf "Error: Failed to detect supported shell.\n"
-    >&2 printf "  SHELL: %s\n" "$SHELL"
-    >&2 printf "      0: %s\n" "$0"
-    >&2 printf "      -: %s\n" "$-"
-    return 1
-fi
-export KOOPA_SHELL
-
-
-
-# Locate the koopa installation                                             {{{1
-# ==============================================================================
-
-if [ "$KOOPA_SHELL" = "bash" ]
-then
-    # SC2039: In POSIX sh, array references are undefined.
-    # shellcheck disable=SC2039
-    KOOPA_SOURCE="${BASH_SOURCE[0]}"
-elif [ "$KOOPA_SHELL" = "ksh" ]
-then
-    # SC2154: .sh.file is referenced but not assigned.
-    # shellcheck disable=SC2154
-    KOOPA_SOURCE="${.sh.file}"
-elif [ "$KOOPA_SHELL" = "zsh" ]
-then
     # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
     # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
     # this case instead unexpectedly returns `_src_etc_profile`.
-    # > KOOPA_SOURCE="${0:a}"
-    # > KOOPA_SOURCE="$0"
+    # > file="${0:a}"
+    # > file="$0"
     # https://stackoverflow.com/a/23259585/3911732
-    KOOPA_SOURCE="${(%):-%N}"
+    file="${(%):-%N}"
+else
+        >&2 printf "Error: Failed to detect supported shell.\n"
+        >&2 printf "Supported: bash, ksh, zsh.\n\n"
+        >&2 printf "  SHELL: %s\n" "$SHELL"
+        >&2 printf "      0: %s\n" "$0"
+        >&2 printf "      -: %s\n" "$-"
+        return 1
 fi
 
-if [ ! -f "$KOOPA_SOURCE" ]
+if [ ! -f "${file:-}" ]
 then
     >&2 printf "Error: Failed to detect absolute path of activation script.\n"
     return 1
@@ -212,17 +138,16 @@ then
     alias realpath="readlink -f"
 fi
 
-script_path="$(realpath "$KOOPA_SOURCE")"
-KOOPA_DIR="$(dirname "$script_path")"
-export KOOPA_DIR
-unset -v script_path
+KOOPA_HOME="$(dirname "$(realpath "$file")")"
+export KOOPA_HOME
+unset -v file
 
 # Load shared functions.
 # shellcheck source=/dev/null
-. "${KOOPA_DIR}/system/include/functions.sh"
+. "${KOOPA_HOME}/system/include/functions.sh"
 
 # Get location of activation scripts.
-activate_dir="${KOOPA_DIR}/system/activate"
+activate_dir="${KOOPA_HOME}/system/activate"
 
 
 
@@ -232,11 +157,10 @@ activate_dir="${KOOPA_DIR}/system/activate"
 . "${activate_dir}/preflight.sh"
 
 exports_dir="${activate_dir}/exports"
-. "${exports_dir}/xdg-base-directory.sh"
-. "${exports_dir}/general.sh"
-. "${exports_dir}/platform.sh"
-. "${exports_dir}/cpu-count.sh"
 . "${exports_dir}/path.sh"
+. "${exports_dir}/xdg-base-directory.sh"
+# This script requires `path.sh` to define `koopa` in `$PATH` first.
+. "${exports_dir}/general.sh"
 unset -v exports_dir
 
 
@@ -244,31 +168,22 @@ unset -v exports_dir
 # Extra shell configuration                                                 {{{1
 # ==============================================================================
 
-if [ "${minimal:-0}" -eq 0 ]
+if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
 then
     . "${activate_dir}/set.sh"
     . "${activate_dir}/umask.sh"
     . "${activate_dir}/aliases.sh"
     . "${activate_dir}/secrets.sh"
-
-    [ "${ssh_key:-1}" -eq 1 ] && \
-        . "${activate_dir}/ssh-key.sh"
+    . "${activate_dir}/ssh-key.sh"
 
     programs_dir="${activate_dir}/programs"
-    [ "${perlbrew:-1}" -eq 1 ] && \
-        . "${programs_dir}/perlbrew.sh"
-    [ "${rbenv:-1}" -eq 1 ] && \
-        . "${programs_dir}/rbenv.sh"
-    [ "${aspera:-1}" -eq 1 ] && \
-        . "${programs_dir}/aspera.sh"
-    [ "${ensembl_perl_api:-1}" -eq 1 ] && \
-        . "${programs_dir}/ensembl-perl-api.sh"
-    [ "${bcbio:-1}" -eq 1 ] && \
-        . "${programs_dir}/bcbio.sh"
-    [ "${conda:-1}" -eq 1 ] && \
-        . "${programs_dir}/conda.sh"
-    [ "${virtualenv:-1}" -eq 1 ] && \
-        . "${programs_dir}/virtualenv.sh"
+    . "${programs_dir}/perlbrew.sh"
+    . "${programs_dir}/rbenv.sh"
+    . "${programs_dir}/aspera.sh"
+    . "${programs_dir}/ensembl-perl-api.sh"
+    . "${programs_dir}/bcbio.sh"
+    . "${programs_dir}/conda.sh"
+    . "${programs_dir}/virtualenv.sh"
     unset -v programs_dir
 
     # Shell-specific configuration.
@@ -277,25 +192,23 @@ then
         bash_dir="${activate_dir}/shell/bash"
         . "${bash_dir}/shopt.sh"
         . "${bash_dir}/bind.sh"
-        [ "${prompt:-1}" -eq 1 ] && \
-            . "${bash_dir}/ps1.sh"
+        . "${bash_dir}/ps1.sh"
         unset -v bash_dir
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        # zhsrc is required for Z shell to configure correctly.
+        # `~/.zhsrc` file is required for Z shell to configure correctly.
         dotfile -q shrc
         dotfile -q zshrc
     fi
 
     # Platform-specific configuration.
-    if [ ! -z "${MACOS:-}" ]
+    if _koopa_is_darwin
     then
         darwin_dir="${activate_dir}/os/darwin"
         . "${darwin_dir}/aliases.sh"
         . "${darwin_dir}/grc-colors.sh"
         . "${darwin_dir}/exports.sh"
-        [ "${homebrew:-1}" -eq 1 ] && \
-            . "${darwin_dir}/programs/homebrew.sh"
+        . "${darwin_dir}/programs/homebrew.sh"
         unset -v darwin_dir
     fi
 
@@ -308,17 +221,6 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
+unset -v KOOPA_SHELL
 unset -v activate_dir
 unset -v colors
-unset -v \
-    aspera \
-    bcbio \
-    conda \
-    help \
-    homebrew \
-    minimal \
-    perlbrew \
-    prompt \
-    rbenv \
-    ssh_key \
-    virtualenv
