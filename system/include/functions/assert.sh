@@ -44,11 +44,13 @@ _koopa_assert_is_darwin() {
 
 
 _koopa_assert_is_installed() {
-    local program="$1"
-    command -v "$program" >/dev/null 2>&1 || {
+    local program
+    program="$1"
+    if ! _koopa_is_installed "$program"
+    then
         >&2 printf "Error: %s is not installed.\n" "$program"
         return 1
-    }
+    fi
 }
 
 
@@ -124,6 +126,15 @@ _koopa_is_darwin() {
 # Modified 2019-06-21.
 _koopa_is_interactive() {
     echo "$-" | grep -q "i"
+}
+
+
+
+# Modified 2019-06-23.
+_koopa_is_installed() {
+    local program
+    program="$1"
+    _koopa_quiet_which "$program"
 }
 
 
