@@ -163,6 +163,8 @@ sanitize_version <- function(version) {
     version <- sub("^[a-z]+", "", version)
     version <- sub("[a-z]+$", "", version)
     version <- sub("-.+$", "", version)
+    # e.g. Python 2.7.15+
+    version <- sub("\\+$", "", version)
     version
 }
 
