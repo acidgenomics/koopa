@@ -310,14 +310,9 @@ _koopa_tmp_dir() {
     fi
     
     dir="/tmp/koopa-$(id -u)-${unique}"
-    # FIXME
-    echo "$dir"
-
     mkdir -p "$dir"
-    
     chown "$USER" "$dir"
     chmod 0775 "$dir"
-    
     echo "$dir"
 }
 
