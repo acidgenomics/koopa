@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
 
 # Sync R library across virtual machines.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 printf "Syncing R library from VM45.\n"
 
