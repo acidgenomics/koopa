@@ -1,8 +1,10 @@
 #!/usr/bin/env zsh
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install oh-my-zsh
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 zsh_dir="${HOME}/.oh-my-zsh"
 rm -rf "$zsh_dir"

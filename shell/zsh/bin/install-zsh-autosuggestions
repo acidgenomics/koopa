@@ -1,8 +1,10 @@
 #!/usr/bin/env zsh
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header zsh)"
 
 # Install ZSH autosuggestions.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 rm -rf "$dir"
