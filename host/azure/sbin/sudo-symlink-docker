@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
 
 # Symlink docker installation.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
