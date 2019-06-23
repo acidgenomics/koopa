@@ -124,7 +124,7 @@ _koopa_update_shells() {
 
 # Update XDG local configuration.
 # ~/.config/koopa
-# Modified 2019-06-21.
+# Modified 2019-06-23.
 _koopa_update_xdg_config() {
     local config_dir
     local home_dir
@@ -137,28 +137,24 @@ _koopa_update_xdg_config() {
     if [ ! -e "${config_dir}/activate" ]
     then
         rm -f "${config_dir}/activate"
-        ln -s "${home_dir}/activate" \
-              "${config_dir}/activate"
+        ln -s "${home_dir}/activate" "${config_dir}/activate"
     fi
 
     if [ ! -e "${config_dir}/dotfiles" ]
     then
         rm -f "${config_dir}/dotfiles"
-        ln -s "${home_dir}/system/config/dotfiles" \
-              "${config_dir}/dotfiles"
+        ln -s "${home_dir}/system/config/dotfiles" "${config_dir}/dotfiles"
     fi
 
     if [ ! -e "${config_dir}/home" ]
     then
         rm -f "${config_dir}/home"
-        ln -s "${home_dir}" \
-              "${config_dir}/home"
+        ln -s "${home_dir}" "${config_dir}/home"
     fi
 
     if [ ! -e "${config_dir}/R" ]
     then
         rm -f "${config_dir}/R"
-        ln -s "${home_dir}/system/config/R" \
-              "${config_dir}/R"
+        ln -s "${home_dir}/system/config/R" "${config_dir}/R"
     fi
 }
