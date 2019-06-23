@@ -8,9 +8,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Install koopa.
 # Modified 2019-06-23.
 
-# Set `dev=1` to enable some additional developer configuration tweaks.
-# Namely, this currently changes submodule remotes from HTTPS to git.
-
 
 
 # Usage                                                                     {{{1
@@ -110,6 +107,8 @@ fi
 if [[ "${shared:-0}" -eq 1 ]]
 then
     _koopa_update_profile
+
+    # FIXME Consider only updating R config after installing R?
     # > _koopa_update_r_config
 fi
 
@@ -156,7 +155,7 @@ fi
 
 printf "\nActivating koopa.\n"
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/activate"
+force=1 . "${KOOPA_HOME}/activate"
 
 
 
