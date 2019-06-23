@@ -11,23 +11,17 @@ options(
     warning = quote(quit(status = 1L))
 )
 
-os <- Sys.getenv("KOOPA_OS_NAME")
-stopifnot(isTRUE(nzchar(os)))
+koopa_exe <- file.path(Sys.getenv("KOOPA_HOME"), "bin", "koopa")
+stopifnot(file.exists(koopa_exe))
 
-host <- Sys.getenv("KOOPA_HOST_NAME")
-
-# FIXME Switch away from relying upon environment variable.
-if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
-    linux <- TRUE
+os <- R.Version()[["os"]]
+if (grepl("darwin", os)) {
+    os <- "darwin"
 } else {
-    linux <- FALSE
+    os <- "linux"
 }
 
-if (isTRUE(nzchar(Sys.getenv("MACOS")))) {
-    macos <- TRUE
-} else {
-    macos <- FALSE
-}
+host <- system(command = paste(koopa_exe, "host-name"), intern = TRUE)
 
 variables_file <- file.path(
     Sys.getenv("KOOPA_HOME"),
@@ -391,7 +385,7 @@ check_version(
 )
 
 # OS-specific programs.
-if (isTRUE(macos)) {
+if (os == "darwin") {
     # Homebrew
     installed("brew")
 
@@ -406,7 +400,7 @@ if (isTRUE(macos)) {
         ),
         eval = "=="
     )
-} else if (isTRUE(linux)) {
+} else {
     # GCC
     check_version(
         name = "gcc",
@@ -525,7 +519,7 @@ check_version(
 
 # rename
 # Use Perl File::Rename, not util-linux.
-if (isTRUE(linux)) {
+if (os == "linux") {
     check_version(
         name = "rename",
         version = koopa_version("rename"),
@@ -555,7 +549,7 @@ check_version(
 )
 
 # OS-specific programs.
-if (isTRUE(linux)) {
+if (os == "linux") {
     # RStudio Server
     check_version(
         name = "rstudio-server",
