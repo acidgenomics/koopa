@@ -11,12 +11,12 @@ set -Eeu -o pipefail
 # prefix="/data00/bcbio/v1.1.5" install-bcbio
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/header.sh"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_environments
 
-prefix="${KOOPA_BUILD_PREFIX}/bcbio"
-tmp_dir="${KOOPA_TMP_DIR}/bcbio"
+prefix="$(koopa build-prefix)/bcbio"
+tmp_dir="$(koopa tmp-dir)/bcbio"
 version="${version:-stable}"
 
 install_dir="${prefix}/install"

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install Git SCM.
-# Modified 2019-06-21.
+# Modified 2019-06-23.
 
 # See also:
 # - https://git-scm.com/
@@ -14,13 +16,11 @@ set -Eeu -o pipefail
 # This currently fails if OpenSSL v1.1.1+ is installed to `/usr/local`.
 # Instead, compile Git to use the system OpenSSL in `/bin/`.
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
-
 name="git"
 version="$(koopa variable "$name")"
-prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+build_os_string="$(koopa build-os-string)"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"
@@ -60,7 +60,7 @@ fi
     # Refer also to INSTALL file for details.
     make configure
     ./configure \
-        --build="$KOOPA_OS_BUILD_STRING" \
+        --build="$build_os_string" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
     make all doc info

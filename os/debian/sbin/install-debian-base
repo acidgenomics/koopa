@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Install base programs recommended for Debian.
-# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/debian/sudo.sh"
+source "$(koopa header debian)"
+
+# Install base programs recommended for Debian.
+# Modified 2019-06-23.
 
 sudo apt-get update
 
