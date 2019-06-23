@@ -16,6 +16,7 @@ stopifnot(isTRUE(nzchar(os)))
 
 host <- Sys.getenv("KOOPA_HOST_NAME")
 
+# FIXME Switch away from relying upon environment variable.
 if (isTRUE(nzchar(Sys.getenv("LINUX")))) {
     linux <- TRUE
 } else {
@@ -29,7 +30,7 @@ if (isTRUE(nzchar(Sys.getenv("MACOS")))) {
 }
 
 variables_file <- file.path(
-    Sys.getenv("KOOPA_DIR"),
+    Sys.getenv("KOOPA_HOME"),
     "system",
     "include",
     "variables.txt"

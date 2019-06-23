@@ -14,12 +14,8 @@
 
 case "$(uname -s)" in
     Darwin)
-        export MACOS=1
-        export UNIX=1
         ;;
     Linux)
-        export LINUX=1
-        export UNIX=1
         ;;
     *)
         >&2 printf "Error: Unsupported operating system.\n"
