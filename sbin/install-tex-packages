@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install TeX packages using tlmgr.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 printf "Installing TeX packages recommended for RStudio.\n"
 
