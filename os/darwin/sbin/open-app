@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Open application as administrator.
-# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/darwin/sudo.sh"
+source "$(koopa header darwin)"
+
+# Open application as administrator.
+# Modified 2019-06-23.
 
 sudo open -a "$1"

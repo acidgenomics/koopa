@@ -1,38 +1,13 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
 
 # Install Tmux terminal multiplexer.
 # Modified 2019-06-18.
 
-# See also:
-# - https://github.com/tmux/tmux
+# > apt-cache search libevent
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/debian/sudo.sh"
-
-prefix="${KOOPA_BUILD_PREFIX}/tmux"
-tmp_dir="${KOOPA_TMP_DIR}/tmux"
-version="$(koopa variable tmux)"
-
-printf "Installing tmux %s.\n" "$version"
-
-# apt-cache search libevent
 sudo apt-get -y install libevent-dev
 
-(
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
-    wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
-    tar -xzvf "tmux-${version}.tar.gz"
-    cd "tmux-${version}" || exit 1
-    ./configure --prefix="$prefix"
-    make
-    sudo make install
-    rm -rf "$tmp_dir"
-)
-
-sudo ldconfig
-
-command -v tmux
-tmux -V
+source "${KOOPA_HOME}/system/include/install/tmux.sh"

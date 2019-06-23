@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install R.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 # See also:
 # - https://www.r-project.org/
@@ -12,13 +14,11 @@ set -Eeu -o pipefail
 # - https://github.com/rstudio/rmarkdown/issues/359
 # - http://pj.freefaculty.org/blog/?p=315
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
-
 name="R"
 version="$(koopa variable "$name")"
-prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+build_os_string="$(koopa build-os-string)"
 exe_file="${prefix}/bin/${name}"
 
 major_version="$(echo "$version" | cut -d "." -f 1)"
@@ -112,7 +112,7 @@ sudo yum-builddep -y "$name"
     tar -xzvf "R-${version}.tar.gz"
     cd "R-${version}" || exit 1
     ./configure \
-        --build="$KOOPA_OS_BUILD_STRING" \
+        --build="$build_os_string" \
         --prefix="$prefix" \
         --enable-BLAS-shlib \
         --enable-R-profiling \

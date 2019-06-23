@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Install base programs for Fedora.
-# Modified 2019-06-20.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
+source "$(koopa header fedora)"
+
+# Install base programs for Fedora.
+# Modified 2019-06-23.
 
 enable-epel
-
 sudo yum update -y
 sudo yum install -y \
     epel-release \

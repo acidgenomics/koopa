@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Install base programs recommended for Amazon Linux 2.
-# Modified 2019-06-20.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/amzn/sudo.sh"
+source "$(koopa header amzn)"
+
+# Install base programs recommended for Amazon Linux 2.
+# Modified 2019-06-23.
 
 install-fedora-base
 

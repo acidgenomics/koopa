@@ -3,7 +3,8 @@
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
 
-# Install Vim.
+# Update Debian.
 # Modified 2019-06-23.
 
-source "${KOOPA_HOME}/system/include/install/vim.sh"
+sudo apt-get update
+sudo apt-get -y dist-upgrade

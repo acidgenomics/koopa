@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install Docker Community Edition.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 # See also:
 # - https://docs.docker.com/install/linux/docker-ce/centos/
-
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
 
 sudo yum remove -y \
     docker \
