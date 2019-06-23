@@ -52,20 +52,35 @@ _koopa_r_home() {
 #
 # Modified 2019-06-23.
 _koopa_r_javareconf() {
-    _koopa_is_installed R || return 0
+    _koopa_assert_is_installed R
+    _koopa_assert_is_installed java
     _koopa_assert_has_sudo
     
-    r_home="$(_koopa_r_home)"
-    _koopa_build_set_permissions "$r_home"
+    # The default Java path differs depending on the system.
+    if [ -d "/usr/lib/jvm/java" ]
+    then
+        # RHEL7 installs here.
+        java_dir="/usr/lib/jvm/java"
+    elif [ -d "/usr/lib/jvm/default-java" ]
+    then
+        # Ubuntu 18 installs here.
+        java_dir="/usr/lib/jvm/default-java"
+    else
+        >&2 printf "Error: Failed to detect JVM path.\n"
+        >&2 printf "Typically this installs to '/usr/lib/jvm'.\n"
+        return 1
+    fi
     
     printf "Updating R Java configuration.\n"
-    java_dir="/usr/lib/jvm/java"
     java_flags=" \
         JAVA=${java_dir}/bin/java \
         JAVA_HOME=${java_dir} \
         JAVAC=${java_dir}/bin/javac \
         JAR=${java_dir}/bin/jar \
     "
+    
+    r_home="$(_koopa_r_home)"
+    _koopa_build_set_permissions "$r_home"
 
     (
         unset -v R_HOME
@@ -74,8 +89,6 @@ _koopa_r_javareconf() {
         # shellcheck disable=SC2086
         R --vanilla CMD javareconf $java_flags
     )
-
-    yum list installed | grep -E '^java-'
 
     # > Rscript -e 'install.packages("rJava")'
 }
