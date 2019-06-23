@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Update koopa installation.
-# Modified 2019-06-17.
+# Modified 2019-06-23.
 
-rm -rf "${KOOPA_DIR}/dotfiles"
+rm -rf "${KOOPA_HOME}/dotfiles"
 
 (
-    cd "$KOOPA_DIR" || exit 1
+    cd "$KOOPA_HOME" || exit 1
     git pull
     git submodule sync --recursive
 )

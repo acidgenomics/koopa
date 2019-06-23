@@ -6,7 +6,7 @@ set -Eeu -o pipefail
 
 (
     # shellcheck source=/dev/null
-    cd "$KOOPA_DIR"
+    cd "$KOOPA_HOME"
     git fetch --all
     git pull
     git submodule update --init --recursive

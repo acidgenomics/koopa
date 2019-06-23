@@ -1,9 +1,13 @@
 #!/bin/sh
 
 # Aliases.
-# Modified 2019-06-20.
+# Modified 2019-06-21.
 
-# Potentially useful:
+
+
+# Potentially useful                                                        {{{1
+# ==============================================================================
+
 # > alias be="noglob bundle exec"
 # > alias gist="gist --open --copy"
 # > alias ls="ls -Fhlo --color"
@@ -64,7 +68,7 @@ alias mv="mv -iv"
 #
 # The `-I` flag only prompts once, which is awesome.
 # However this not on macOS, so use `-i` flag there instead.
-if [ ! -z "$MACOS" ]
+if _koopa_is_darwin
 then
     alias rm="rm -iv"
 else
@@ -111,7 +115,7 @@ alias sha256="shasum -a 256"
 alias R="R --no-restore --no-save"
 
 # R shiny server.
-if [ ! -z "${LINUX:-}" ]
+if _koopa_is_linux
 then
     alias shiny-status="sudo systemctl status shiny-server"
     alias shiny-start="sudo systemctl start shiny-server"
