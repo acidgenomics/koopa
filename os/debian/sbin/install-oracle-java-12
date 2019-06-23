@@ -1,0 +1,15 @@
+# Install Oracle Java 12.
+
+sudo add-apt-repository ppa:linuxuprising/java
+sudo apt-get update
+
+# This step prompts like crazy.
+sudo apt-get -y install oracle-java12-installer
+
+sudo apt-get install oracle-java12-set-default
+
+# Uninstall Java 12.
+# > sudo apt-get remove oracle-java12-installer
+
+java --version
+command -v java
