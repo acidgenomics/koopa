@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(koopa header linux)"
 
 # Install bcbio-vm.
 # Modified 2019-06-23.
 
 # See also:
 # - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
+
+# Note that configuration is saved in:
+# ~/.config/bcbio-nextgen/bcbio-docker-config.yaml.
+# This sets the location of `datadir`, for example.
 
 _koopa_assert_has_sudo
 _koopa_assert_is_installed docker
