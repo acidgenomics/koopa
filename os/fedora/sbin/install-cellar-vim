@@ -6,7 +6,10 @@ source "$(koopa header fedora)"
 # Install Vim.
 # Modified 2019-06-23.
 
-sudo yum install -y vim
-sudo yum-builddep -y vim
+if _koopa_has_sudo
+then
+    sudo yum install -y vim
+    sudo yum-builddep -y vim
+fi
 
-source "${KOOPA_HOME}/system/include/install/vim.sh"
+source "$(koopa cellar-script vim)"

@@ -11,7 +11,10 @@ source "$(koopa header debian)"
 # > apt-cache search gnutls
 # > apt-cache search 'libgnutls.*-dev'
 
-sudo apt-get -y install gnutls-bin libgnutls28-dev
-sudo apt-get -y install libgif-dev
+if _koopa_has_sudo
+then
+    sudo apt-get -y install gnutls-bin libgnutls28-dev
+    sudo apt-get -y install libgif-dev
+fi
 
-source "${KOOPA_HOME}/system/include/install/emacs.sh"
+source "$(koopa cellar-script emacs)"

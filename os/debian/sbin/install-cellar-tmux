@@ -8,6 +8,10 @@ source "$(koopa header debian)"
 
 # > apt-cache search libevent
 
-sudo apt-get -y install libevent-dev
+if _koopa_has_sudo
+then
+    sudo apt-get -y install libevent-dev
+fi
 
-source "${KOOPA_HOME}/system/include/install/tmux.sh"
+source "$(koopa cellar-script tmux)"
+
