@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Make shell stricter by default using set built-in.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # See also:
 # - https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
@@ -39,11 +39,11 @@ set -o nounset
 set -o pipefail
 
 # Print each command before executing. This command is great for scripts but too
-# noisy when added to bash_profile, and is not generally recommended here.
+# noisy when added to bash_profile.
 # > set -x
-# > set -o xtrace
+set -o xtrace
 
-if [ "$KOOPA_SHELL" = "bash" ]
+if [ "$(koopa shell)" = "bash" ]
 then
     # Catch ERR traps properly, which won't fire in certain scenarios for `-e` flag.
     # > set -E

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install recommended Perl release via perlbrew.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # See also:
 # https://perlbrew.pl/
@@ -16,4 +18,5 @@ version="$(koopa variable perl)"
 perl_name="perl-${version}"
 perlbrew install "$perl_name"
 perlbrew switch "$perl_name"
+
 perlbrew list

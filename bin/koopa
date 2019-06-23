@@ -1,56 +1,151 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # koopa shell bootloader.
 # (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
 version="0.4.0a"
-date="2019-06-20"
+date="2019-06-23"
 
-if [[ -z "${KOOPA_SHELL:-}" ]]
+if [[ -z "${KOOPA_HOME:-}" ]]
 then
     >&2 printf "koopa is not correctly activated.\n"
     >&2 printf "Source the 'activate' script in your shell configuration.\n"
     exit 1
 fi
 
-# Source internal functions.
-# shellcheck source=/dev/null
-. "${KOOPA_DIR}/system/include/functions.sh"
-
-script_dir="${KOOPA_DIR}/system/koopa"
+script_dir="${KOOPA_HOME}/system/koopa"
 
 usage() {
-    cat "${script_dir}/usage.txt"
+    cat << EOF
+usage: koopa [-h] [-V] COMMAND
+
+system configuration commands:
+    check
+        Run system dependency version checks.
+    info
+        Show system information.
+    list
+        List programs accessible in "\$PATH".
+    update
+        Update koopa installation to latest version.
+
+return string commands:
+    build-os-string
+        Build string to be used with make configure.
+    build-prefix
+        Return build prefix string used to install from source.
+    cellar-prefix
+        Koopa cellar path (e.g. "usr/local/koopa/cellar").
+    config-dir
+        Koopa local configuration path (e.g. "~/.config/koopa").
+    header
+        Source script header.
+    home
+        Koopa installation path (e.g. "/usr/local/koopa").
+    host-name
+        Return useful host name matching either AWS, Azure, Harvard clusters,
+        or fall back to local machine name.
+    os-name
+        Operating system name. Always returns lowercase, with unique names for
+        Linux distros (e.g. "debian").
+    os-version
+        Operating system version.
+    r-home
+        R installation location. Set as "\$R_HOME" internally by R.
+    shell
+        Return the current shell program name (e.g. "bash").
+    tmp-dir
+        Koopa temporary directory path. Used primarily for build scripts.
+    variable
+        Get internal koopa variable.
+        For example, get recommended "vim" version.
+
+optional arguments:
+    -h, --help
+        Show this help message and exit.
+    -V, --version
+        Version information.
+EOF
 }
 
-[ -z "${1:-}" ] && usage && exit 0
+[[ -z "${1:-}" ]] && usage && exit
 
 case "$1" in
     --help|-h)
         usage
-        exit 0
+        exit
         ;;
     --version|-V)
         printf "koopa %s (%s)\n" "$version" "$date"
-        exit 0
+        exit
+        ;;
+    build-os-string)
+        _koopa_build_os_string
+        exit
+        ;;
+    build-prefix)
+        _koopa_build_prefix
+        exit
+        ;;
+    cellar-prefix)
+        # Avoid setting to `/usr/local/cellar`, as this conflicts with Homebrew.
+        echo "${KOOPA_HOME}/cellar"
+        exit
         ;;
     check)
         Rscript --vanilla "${script_dir}/check.R"
-        exit 0
+        exit
+        ;;
+    config-dir)
+        echo "${XDG_CONFIG_HOME}/koopa"
+        exit
+        ;;
+    header)
+        _koopa_header "${2:-}"
+        exit
+        ;;
+    home)
+        cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P
+        exit
+        ;;
+    host-name)
+        _koopa_host_name
+        exit
         ;;
     info)
         "${script_dir}/info.sh"
-        exit 0
+        exit
         ;;
     list)
         Rscript --vanilla "${script_dir}/list.R"
-        exit 0
+        exit
+        ;;
+    os-name)
+        _koopa_os_name
+        exit
+        ;;
+    os-version)
+        _koopa_os_version
+        ;;
+    r-home)
+        _koopa_r_home
+        exit
+        ;;
+    shell)
+        _koopa_shell
+        exit
+        ;;
+    tmp-dir)
+        _koopa_tmp_dir
+        exit
         ;;
     update)
         "${script_dir}/update.sh"
-        exit 0
+        exit
         ;;
     upgrade)
         >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
@@ -58,7 +153,7 @@ case "$1" in
         ;;
     variable)
         _koopa_variable "$2"
-        exit 0
+        exit
         ;;
     *)
         >&2 printf "Error: Unsupported command.\n"

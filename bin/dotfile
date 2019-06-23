@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-# Add dot file.
-# Modified 2019-06-21.
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Symlink dot file.
+# Modified 2019-06-23.
 
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
 
 usage() {
 cat << EOF
@@ -89,7 +96,7 @@ unset -f usage
 # Script                                                                    {{{1
 # ==============================================================================
 
-dot_dir="${KOOPA_CONFIG_DIR}/dotfiles"
+dot_dir="$(koopa config-dir)/dotfiles"
 
 # Private file (experimental).
 if [[ "${private:-0}" -eq 1 ]]

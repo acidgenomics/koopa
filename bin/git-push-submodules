@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Update and commit submodules.
+# Modified 2019-06-23.
 
 git submodule update --remote --merge
 git commit -m "Update submodules."

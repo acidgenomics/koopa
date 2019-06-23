@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Get the number of reads per FASTQ file.
+# Modified 2019-06-23.
 
 # Divide by 4.
 zcat ./*_R1.fastq.gz | wc -l | awk '{print $1/4}'
