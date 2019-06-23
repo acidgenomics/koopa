@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 # Install Vim.
 # Modified 2019-06-23.
 
@@ -26,7 +28,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix"
     make
-    make test
+    # > make test
     make install
     rm -rf "$tmp_dir"
 )
