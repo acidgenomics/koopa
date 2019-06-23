@@ -53,7 +53,7 @@ _koopa_r_home() {
 # Modified 2019-06-23.
 _koopa_r_javareconf() {
     _koopa_is_installed R || return 0
-    _assert_has_sudo
+    _koopa_assert_has_sudo
     
     r_home="$(_koopa_r_home)"
     _koopa_build_set_permissions "$r_home"

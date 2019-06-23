@@ -107,7 +107,7 @@ fi
 # Error if the dotfiles directory can't be found.
 if [[ ! -d "$dot_dir" ]]
 then
-    >&2 printf "Error: %s missing.\n" "$dot_dir"
+    >&2 printf "Error: dotfiles directory missing: '%s'.\n" "$dot_dir"
     exit 1
 fi
 
@@ -115,7 +115,7 @@ fi
 source_path="${dot_dir}/${1}"
 if [[ ! -f "$source_path" && ! -d "$source_path" ]]
 then
-    >&2 printf "Error: %s missing.\n" "$source_path"
+    >&2 printf "Error: source missing: '%s'.\n" "$source_path"
     exit 1
 fi
 
@@ -128,7 +128,7 @@ symlink_path="${HOME}/.${symlink_name}"
 # Inform the user when nuking a broken symlink.
 if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
 then
-    printf "Overwriting broken symlink:\n  %s\n" "$symlink_path"
+    printf "Overwriting broken link: '%s'.\n" "$symlink_path"
     rm -f "$symlink_path"
 fi
 
@@ -138,11 +138,11 @@ if [[ -L "$symlink_path" ]] &&
     [[ -z "${force:-}" ]]
 then
     [[ -n "${quiet:-}" ]] && exit 0
-    >&2 printf "Error: Existing symlink:\n  %s\n" "$symlink_path"
+    >&2 printf "Error: Existing symlink: '%s'.\n" "$symlink_path"
     exit 1
 elif [[ ! -L "$symlink_path" ]] && [[ -e "$symlink_path" ]]
 then
-    >&2 printf "Error: Existing file:\n  %s\n" "$symlink_path"
+    >&2 printf "Error: Existing file: '%s'.\n" "$symlink_path"
     exit 1
 fi
 
