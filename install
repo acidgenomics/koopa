@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+
+# shellcheck source=/dev/null
+source "$("${KOOPA_HOME}/bin/koopa" bash-header)"
+
 # Install koopa.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 # Set `dev=1` to enable some additional developer configuration tweaks.
 # Namely, this currently changes submodule remotes from HTTPS to git.
-
-KOOPA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
-
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/functions.sh"
 
 
 
@@ -92,8 +92,8 @@ done
 # Remove legacy cruft                                                       {{{1
 # ==============================================================================
 
-rm -rf "${KOOPA_DIR}/bin/"{host,os,sudo}
-rm -rf "${KOOPA_DIR}/"{config,dotfiles,include}
+rm -rf "${KOOPA_HOME}/bin/"{host,os,sudo}
+rm -rf "${KOOPA_HOME}/"{config,dotfiles,include}
 
 
 
@@ -101,9 +101,9 @@ rm -rf "${KOOPA_DIR}/"{config,dotfiles,include}
 # ==============================================================================
 
 # Checking for '/usr/local' installation automatically.
-if echo "$KOOPA_DIR" | grep -qE "^/(opt|usr/local)/"
+if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
 then
-    printf "\nShared installation detected at '%s'.\n" "$KOOPA_DIR"
+    printf "\nShared installation detected at '%s'.\n" "$KOOPA_HOME"
     shared=1
 fi
 
@@ -123,7 +123,7 @@ then
     (
         printf "\nInitializing submodules.\n"
         # shellcheck source=/dev/null
-        cd "$KOOPA_DIR" || exit 1
+        cd "$KOOPA_HOME" || exit 1
         git submodule init
         git submodule update --init --recursive
         git submodule sync --recursive
@@ -137,7 +137,7 @@ then
     (
         printf "\nInitializing dotfiles submodules.\n"
         # shellcheck source=/dev/null
-        cd "${KOOPA_DIR}/system/config/dotfiles" || exit 1
+        cd "${KOOPA_HOME}/system/config/dotfiles" || exit 1
         git submodule init
         git submodule update --init --recursive
         git submodule sync --recursive
@@ -156,7 +156,7 @@ fi
 
 printf "\nActivating koopa.\n"
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/activate"
+source "${KOOPA_HOME}/activate"
 
 
 
@@ -172,19 +172,19 @@ then
 
     # Always create these dotfiles, even on a shared installation.
     # shellcheck source=/dev/null
-    source "${KOOPA_DIR}/system/install/dotfiles-shared.sh"
+    source "${KOOPA_HOME}/system/install/dotfiles-shared.sh"
 
     # Create local config files.
     # shellcheck source=/dev/null
     [[ -z "${shared:-}" ]] &&
-        source "${KOOPA_DIR}/system/install/dotfiles-local.sh"
+        source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
 
     # Configure Mike-only dotfiles.
     # shellcheck source=/dev/null
     [[ "${mike:-}" -eq 1 ]] &&
-        source "${KOOPA_DIR}/system/install/dotfiles-mike.sh"
+        source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
 
     # Remove legacy dotfile cruft.
     # shellcheck source=/dev/null
-    source "${KOOPA_DIR}/system/uninstall/dotfiles-legacy.sh"
+    source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 fi
