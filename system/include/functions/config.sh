@@ -154,4 +154,11 @@ _koopa_update_xdg_config() {
         ln -s "${home_dir}" \
               "${config_dir}/home"
     fi
+
+    if [ ! -e "${config_dir}/R" ]
+    then
+        rm -f "${config_dir}/R"
+        ln -s "${home_dir}/system/config/R" \
+              "${config_dir}/R"
+    fi
 }
