@@ -14,7 +14,7 @@
 
 usage() {
     cat << EOF
-usage: activate [-h] [--debug] [--minimal]
+usage: activate [-h] [--debug] [--force] [--minimal]
 
 Activate koopa.
 
@@ -25,6 +25,8 @@ optional arguments:
         Show this help message and exit.
     --debug, debug=1
         Enable verbose debugging mode.
+    --force, force=1
+        Force reactivation, even if koopa is already active.
     --minimal, minimal=1
         Minimal mode. Simply export koopa programs into PATH.
 EOF
@@ -32,23 +34,7 @@ EOF
 
 
 
-# Initial checks                                                            {{{1
-# ==============================================================================
-
-# Skip activation for root user.
-[ "$(id -u)" -eq 0 ] && return 0
-
-# Early return if koopa is already active.
-# We may need to tweak this approach to work properly with bash subshells.
-if [ ! -z "${KOOPA_HOME:-}" ]
-then
-    [ -z "${TMUX:-}" ] && return 0
-    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
-fi
-
-
-
-# Flags                                                                     {{{1
+# Parse arguments                                                           {{{1
 # ==============================================================================
 
 for i in "$@"
@@ -56,10 +42,13 @@ do
     case "$i" in
         -h|--help)
             usage
-            exit 0
+            exit
             ;;
         --debug)
             export KOOPA_DEBUG=1
+            ;;
+        --force)
+            force=1
             ;;
         --minimal)
             export KOOPA_MINIMAL=1
@@ -72,6 +61,24 @@ do
 done
 
 unset -f usage
+
+
+
+# Initial checks                                                            {{{1
+# ==============================================================================
+
+# Error on root user.
+[ "$(id -u)" -eq 0 ] &&
+    >&2 printf "Don't run the activation script as root.\n" &&
+    return 1
+
+# Early return if koopa is already active.
+# We may need to tweak this approach to work properly with bash subshells.
+if [ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ]
+then
+    [ -z "${TMUX:-}" ] && return 0
+    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
+fi
 
 
 

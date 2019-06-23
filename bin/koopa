@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+if [[ -z "${KOOPA_HOME:-}" ]]
+then
+    >&2 printf "koopa is not correctly activated.\n"
+    >&2 printf "Source the 'activate' script in your shell configuration.\n"
+    exit 1
+fi
+
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
@@ -7,17 +14,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
-
-
 version="0.4.0a"
 date="2019-06-23"
-
-if [[ -z "${KOOPA_HOME:-}" ]]
-then
-    >&2 printf "koopa is not correctly activated.\n"
-    >&2 printf "Source the 'activate' script in your shell configuration.\n"
-    exit 1
-fi
 
 
 
@@ -133,8 +131,8 @@ case "$1" in
         exit
         ;;
     home)
-        cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P
-        exit
+        echo "$KOOPA_HOME"
+	exit
         ;;
     host-name)
         _koopa_host_name
