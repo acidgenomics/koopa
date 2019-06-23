@@ -5,12 +5,12 @@ set -Eeu -o pipefail
 # Modified 2019-06-21.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/header.sh"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_assert_is_installed bcbio_nextgen.py
 
 version="$(bcbio_nextgen.py --version)"
-tmp_dir="${KOOPA_TMP_DIR}/bcbio"
+tmp_dir="$(koopa tmp-dir)/bcbio"
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 mkdir -p "$log_dir"

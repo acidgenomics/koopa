@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
 
 # Install R-devel for macOS.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # See also:
 # - https://mac.r-project.org/
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/darwin/sudo.sh"
-
 r_version="3.6-branch"
 macos_version="el-capitan"
-tmp_dir="${KOOPA_TMP}/r-devel"
+tmp_dir="$(koopa tmp-dir)/r-devel"
 
 printf "Installing r-devel %s for %s.\n" "$r_version" "$macos_version"
 

@@ -11,12 +11,12 @@ set -Eeu -o pipefail -x
 #   https://www.haskell.org/downloads/linux/
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/header.sh"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 name="shellcheck"
 version="$(koopa variable "$name")"
-prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"

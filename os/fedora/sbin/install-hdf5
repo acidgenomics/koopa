@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install HDF5.
-# Modified 2019-06-21.
+# Modified 2019-06-23.
 
 # See also:
 # - https://www.hdfgroup.org/downloads/hdf5/
@@ -10,13 +12,11 @@ set -Eeu -o pipefail
 
 # Note that website requires registration.
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
-
 name="hdf5"
 version="$(koopa variable "$name")"
-prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+build_os_string="$(koopa build-os-string)"
 exe_file="${prefix}/bin/h5dump"
 
 major_version="$(echo "$version" | cut -d '.' -f 1-2)"
@@ -31,7 +31,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     tar -xzvf "hdf5-${version}.tar.gz"
     cd "hdf5-${version}" || exit 1
     ./configure \
-        --build="$KOOPA_OS_BUILD_STRING" \
+        --build="$build_os_string" \
         --prefix="$prefix" \
         --enable-cxx \
         --enable-fortran

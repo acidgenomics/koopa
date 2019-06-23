@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Update Fedora.
-# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "$(koopa header fedora)"
+
+# Update Fedora.
+# Modified 2019-06-23.
 
 log_dir="${HOME}/logs/${HOSTNAME}/yum"
 mkdir -p "$log_dir"

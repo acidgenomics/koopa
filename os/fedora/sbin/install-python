@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install Python.
-# Modified 2019-06-19.
+# Modified 2019-06-23.
 
 # See also:
 # - https://www.python.org/
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
-
 name="python"
 version="$(koopa variable "$name")"
-prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+build_os_string="$(koopa build-os-string)"
 exe_file="${prefix}/bin/python3"
 
 printf "Installing %s %s.\n" "$name" "$version"
@@ -42,7 +42,7 @@ mkdir "$tmp_dir"
     tar xfv "Python-${version}.tar.xz"
     cd "Python-${version}"
     ./configure \
-        --build="$KOOPA_OS_BUILD_STRING" \
+        --build="$build_os_string" \
         --prefix="$prefix" \
         --enable-optimizations \
         --enable-shared

@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Enable EPEL repository.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # See also:
 # - https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
-
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
 
 sudo yum reinstall -y \
     https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install Bash.
-# Modified 2019-06-20.
+# Modified 2019-06-23.
 
 # See also:
 # - https://www.gnu.org/software/bash/
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/os/fedora/include/sudo.sh"
-
 name="bash"
 version="$(koopa variable "$name")"
-prefix="${KOOPA_CELLAR_PREFIX}/${name}/${version}"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+build_os_string="$(koopa build-os-string)"
 gnu_mirror="http://ftpmirror.gnu.org"
 exe_file="${prefix}/bin/${name}"
 
@@ -31,10 +31,10 @@ sudo yum-builddep -y "$name"
     tar -xzvf "bash-${version}.tar.gz"
     cd "bash-${version}" || exit 1
     ./configure \
-        --build="$KOOPA_OS_BUILD_STRING" \
+        --build="$build_os_string" \
         --prefix="$prefix"
     make
-    # > make test
+    make test
     sudo make install
     rm -rf "$tmp_dir"
 )

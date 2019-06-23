@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
 
 # Install Homebrew.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # Install Xcode CLT.
 xcode-select --install

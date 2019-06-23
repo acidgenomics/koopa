@@ -123,7 +123,7 @@ cores="$((CPU_COUNT-2))"
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
 
-tmp_dir="${KOOPA_TMP}/${bcbio_genome_name}"
+tmp_dir="$(koopa tmp-dir)/${bcbio_genome_name}"
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 timestamp="$(date "+%Y%m%d-%H%M%S")"

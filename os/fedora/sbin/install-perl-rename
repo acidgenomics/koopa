@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Install Perl rename.
-# Modified 2019-06-18.
-
-# This variant is superior to util-linux rename.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
+source "$(koopa header fedora)"
+
+# Install Perl rename.
+# Modified 2019-06-23.
+
+# This variant is superior to util-linux rename.
 
 sudo yum install -y perl-App-cpanminus
 sudo cpanm File::Rename

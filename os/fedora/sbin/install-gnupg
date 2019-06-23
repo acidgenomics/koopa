@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
 
 # Install GnuPG.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # See also:
 # - https://www.gnupg.org/
@@ -11,15 +13,16 @@ set -Eeu -o pipefail
 # - https://github.com/gpg/gnupg/blob/master/INSTALL
 # - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/fedora/sudo.sh"
-
-prefix="${KOOPA_BUILD_PREFIX}/gnupg"
-tmp_dir="${KOOPA_TMP_DIR}/gnupg"
+name="gnupg"
+version="$(koopa variable gpg)"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
+exe_file="${prefix}/bin/gpg"
 
 printf "Installing GnuPG.\n"
 
+sudo yum install -y gnupg2
 sudo yum-builddep -y gnupg2
 
 # Download GnuPG release signing keys.
@@ -47,6 +50,8 @@ mkdir -p "$tmp_dir"
     sudo make install
 )
 
+link-cellar "$name" "$version"
+
 (
     package="libgcrypt"
     version="$(koopa variable "$package")"
@@ -60,6 +65,8 @@ mkdir -p "$tmp_dir"
     make
     sudo make install
 )
+
+link-cellar "$name" "$version"
 
 (
     package="libassuan"
@@ -75,6 +82,8 @@ mkdir -p "$tmp_dir"
     sudo make install
 )
 
+link-cellar "$name" "$version"
+
 (
     package="libksba"
     version="$(koopa variable "$package")"
@@ -88,6 +97,8 @@ mkdir -p "$tmp_dir"
     make
     sudo make install
 )
+
+link-cellar "$name" "$version"
 
 (
     package="npth"
@@ -103,6 +114,8 @@ mkdir -p "$tmp_dir"
     sudo make install
 )
 
+link-cellar "$name" "$version"
+
 (
     package="pinentry"
     version="$(koopa variable "$package")"
@@ -117,8 +130,7 @@ mkdir -p "$tmp_dir"
     sudo make install
 )
 
-# Update dynamic linker configuration.
-sudo ldconfig -v
+link-cellar "$name" "$version"
 
 (
     package="gnupg"
@@ -135,17 +147,17 @@ sudo ldconfig -v
     sudo make install
 )
 
+link-cellar "$name" "$version"
+
 rm -rf "$tmp_dir"
 
 # Add local lib path to gpg configuration.
 sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
-
-sudo ldconfig
 
 # Without the line below, gpg2 might fail to create / import secret keys.
 # rm -rf ~/.gnugp
 
 gpgconf --kill gpg-agent
 
-command -v gpg
-gpg --version
+command -v "$exe_file"
+"$exe_file" --version

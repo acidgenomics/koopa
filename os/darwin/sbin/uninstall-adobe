@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Uninstall Adobe software.
-# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/system/include/os/darwin/sudo.sh"
+source "$(koopa header darwin)"
+
+# Uninstall Adobe software.
+# Modified 2019-06-23.
 
 rm -rf ~/Documents/Adobe
 

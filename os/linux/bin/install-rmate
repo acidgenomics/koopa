@@ -11,8 +11,8 @@ set -Eeu -o pipefail
 
 name="rmate"
 version="$(koopa variable "$name")"
-prefix="$KOOPA_BUILD_PREFIX"
-tmp_dir="${KOOPA_TMP_DIR}/${name}"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 (
@@ -25,6 +25,8 @@ exe_file="${prefix}/bin/${name}"
     chmod a+x rmate
     cp rmate "${prefix}/bin"
 )
+
+link-cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version
