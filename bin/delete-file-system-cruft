@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Remove file system cruft.
-# Modified 2019-06-19.
+# Modified 2019-06-23.
 
 path="${1:-.}"
 

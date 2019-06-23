@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Reset file permissions to match umask.
-# Modified 2019-06-19.
+# Modified 2019-06-23.
 
-# Currently recommending umask 0002.
+# Currently recommending umask 0002 as default.
 
 user="$(id -u)"
 group="$(id -g)"

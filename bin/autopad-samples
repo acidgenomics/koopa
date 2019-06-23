@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Autopad sample file names that begin with a number.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
+
+# Renaming with a "sample" prefix by default, to avoid issues in R.
 
 # See also:
 # - How to use `BASH_REMATCH`.
@@ -17,8 +21,6 @@ set -Eeu -o pipefail
 #   This ships by default with some Linux distros, but not Red Hat.
 #   https://techblog.jeppson.org/2016/08/add-prefix-filenames-bash/
 #   rename 's/\d+/sprintf("%03d", $&)/e' *.fastq.gz
-
-# Renaming with a "sample" prefix by default, to avoid issues in R.
 
 files=("$@")
 padwidth=2

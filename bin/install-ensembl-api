@@ -1,18 +1,17 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install Ensembl API.
-# Modified 2019-06-17.
+# Modified 2019-06-23.
 
 # See also:
 # - https://useast.ensembl.org/info/docs/api/api_installation.html
 # - https://useast.ensembl.org/info/docs/api/api_git.html
 # - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
-
-prefix="${KOOPA_BUILD_PREFIX}/ensembl"
+prefix="$(koopa build-prefix)/ensembl"
 
 (
     build_mkdir "$prefix"

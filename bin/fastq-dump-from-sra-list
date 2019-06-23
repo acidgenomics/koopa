@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # FASTQ dump from Sequence Read Archive (SRA) accession list.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 # Consider using --`split-3` instead of `--split-files` by default.
 
 # 10X Genomics Cell Ranger data
 # https://kb.10xgenomics.com/hc/en-us/articles/115003802691
-
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
 
 _koopa_assert_is_installed fastq-dump
 

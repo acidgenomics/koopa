@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-# Copy BAM and BAI (index) files to a destination.
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Copy BAM and BAI index sidecar files to a destination.
+# Modified 2019-06-23.
 
 # Source directory.
 source_dir="$1"

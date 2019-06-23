@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # IP address.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
-if [[ "${MACOS:-}" -eq 1 ]]
+if _koopa_is_darwin
 then
     printf "en0: %s\n" "$(ipconfig getifaddr en0)"
     printf "en1: %s\n" "$(ipconfig getifaddr en1)"

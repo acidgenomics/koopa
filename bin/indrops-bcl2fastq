@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
-
-# Generate FASTQ files from inDrops Illumina BCL data.
-# Modified 2019-06-18.
 
 # shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
+source "$(koopa header bash)"
+
+# Generate FASTQ files from inDrops Illumina BCL data.
+# Modified 2019-06-23.
 
 _koopa_assert_is_installed bcl2fastq
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # List PATH priority.
 # Modified 2019-06-18.

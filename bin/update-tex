@@ -1,7 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# Upgrade TeX installation.
-#
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Update TeX.
+# Modified 2019-06-23.
+
 # See also:
 # - https://tex.stackexchange.com/questions/55437
 

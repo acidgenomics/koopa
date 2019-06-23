@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-# Perlbrew
-# https://perlbrew.pl/
-# Modified 2019-06-17.
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
-# Installation instructions:
+# Install Perlbrew.
+# Modified 2019-06-23.
+
+# See also:
+# - https://perlbrew.pl/
 # - https://metacpan.org/pod/App::perlbrew
 # - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
 
-# shellcheck source=/dev/null
-source "${KOOPA_DIR}/shell/bash/include/functions.sh"
-
 name="perlbrew"
-prefix="${KOOPA_BUILD_PREFIX}/${name}"
+prefix="$(koopa build-prefix)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 _koopa_build_mkdir "$prefix"

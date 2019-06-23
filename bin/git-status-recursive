@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Get the status of all git repositories.
+# Modified 2019-06-23.
 
 wd="$(pwd)"
 git_dir="${HOME}/git"

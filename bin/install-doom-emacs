@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install Doom Emacs.
-# Modified 2019-06-18.
+# Modified 2019-06-23.
 
 if [[ -d ".emacs.d" ]]
 then
