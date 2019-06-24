@@ -42,6 +42,8 @@ EOF
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
+# FIXME Consider removing flag arguments, or shift params.
+
 for i in "$@"
 do
     case "$i" in
@@ -53,6 +55,7 @@ do
             export KOOPA_DEBUG=1
             ;;
         --force)
+            # FIXME This flag will pass through to conda and cause error.
             force=1
             ;;
         --minimal)
