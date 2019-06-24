@@ -2,17 +2,15 @@
 # shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-22.
+# Modified 2019-06-24.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
 
 
 
-# Error on root user.
-[ "$(id -u)" -eq 0 ] &&
-    >&2 printf "Don't run this script as root.\n" &&
-    return 1
+# Never activate for root user.
+[ "$(id -u)" -eq 0 ] && return
 
 
 
