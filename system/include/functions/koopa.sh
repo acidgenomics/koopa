@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 
 # Functions required for `koopa` script functionality.
-# Modified 2019-06-22.
+# Modified 2019-06-24.
 
 
 
@@ -111,6 +111,7 @@ os:
     - debian
     - fedora
     - linux
+    - ubuntu
     
 host:
     - azure
@@ -148,6 +149,9 @@ EOF
         linux)
             path="${KOOPA_HOME}/os/linux/include/header.sh"
             ;;
+        ubuntu)
+            path="${KOOPA_HOME}/os/ubuntu/include/header.sh"
+            ;;
             
         # host
         azure)
@@ -158,6 +162,11 @@ EOF
             ;;
         harvard-odyssey)
             path="${KOOPA_HOME}/host/harvard-odyssey/include/header.sh"
+            ;;
+
+        *)
+            >&2 printf "Error: '%s' is not supported.\n" "$1"
+            return 1
             ;;
     esac
     
