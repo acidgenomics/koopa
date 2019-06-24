@@ -157,15 +157,19 @@ check_version <- function(
 # - 2.7.15rc1 to 2.7.15
 # - 1.10.0-patch1 to 1.10.0
 # - 1.0.2k-fips to 1.0.2
-sanitize_version <- function(version) {
-    version <- sub("-[a-z]+$", "", version)
-    version <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", version)
-    version <- sub("^[a-z]+", "", version)
-    version <- sub("[a-z]+$", "", version)
-    version <- sub("-.+$", "", version)
-    # e.g. Python 2.7.15+
-    version <- sub("\\+$", "", version)
-    version
+sanitize_version <- function(x) {
+    # Strip trailing "+" (e.g. "Python 2.7.15+").
+    x <- sub("\\+$", "", x)
+    # Strip quotes (e.g. `java -version` returns '"12.0.1"').
+    x <- gsub("\"", "", x)
+    # Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
+    x <- sub("(-|_).+$", "", x)
+    x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
+    # Strip leading letter.
+    x <- sub("^[a-z]+", "", x)
+    # Strip trailing letter.
+    x <- sub("[a-z]+$", "", x)
+    x
 }
 
 
@@ -498,9 +502,10 @@ check_version(
     name = "java",
     version = koopa_version("java"),
     version_cmd = c(
-        "java --version",
+        "java -version 2>&1",
         "head -n 1",
-        "cut -d ' ' -f 2"
+        "cut -d ' ' -f 3",
+        "sed -e 's/\"//g'"
     ),
     eval = "==",
     required = FALSE
