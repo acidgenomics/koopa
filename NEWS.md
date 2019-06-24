@@ -11,7 +11,7 @@ This enables shared shell configuratino of all users, via configuration in
 
 ### Minor changes
 
-- `KOOPA_DIR` path is always expanded, and symlinks are now resolved.
+- `KOOPA_HOME` path is always expanded, and symlinks are now resolved.
 
 
 
