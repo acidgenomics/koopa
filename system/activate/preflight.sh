@@ -29,7 +29,6 @@ esac
 # ==============================================================================
 
 _koopa_assert_is_installed R
-_koopa_assert_is_installed Rscript
 _koopa_assert_is_installed bash
 _koopa_assert_is_installed cat
 _koopa_assert_is_installed chsh
