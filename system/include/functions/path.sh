@@ -8,6 +8,7 @@
 
 
 
+# FIXME This isn't working correctly.
 # Find local bin directories and add them to PATH.
 #
 # See also:
@@ -15,7 +16,6 @@
 # - https://stackoverflow.com/questions/7442417
 #
 # Modified 2019-06-20.
-# FIXME This isn't working correctly.
 _koopa_add_local_bins_to_path() {
     find "$(koopa build-prefix)" \
         -mindepth 2 \
@@ -53,35 +53,48 @@ _koopa_add_bins_to_path() {
 
 
 
-# Modified 2019-06-20.
+# Modified 2019-06-24.
 _koopa_add_to_path_start() {
-    [ ! -d "$1" ] && _koopa_remove_from_path "$1" && return 0
-    echo "$PATH" | grep -q "$1" && return 0
-    export PATH="${1}:${PATH}"
+    local path
+    path="$1"
+    [ ! -d "$path" ] && _koopa_remove_from_path "$path" && return
+    echo "$PATH" | grep -q "$path" && return
+    path="$(realpath "$path")"
+    export PATH="${path}:${PATH}"
 }
 
 
 
-# Modified 2019-06-20.
+# Modified 2019-06-24.
 _koopa_add_to_path_end() {
-    [ ! -d "$1" ] && _koopa_remove_from_path "$1" && return 0
-    echo "$PATH" | grep -q "$1" && return 0
-    export PATH="${PATH}:${1}"
+    local path
+    path="$1"
+    [ ! -d "$path" ] && _koopa_remove_from_path "$path" && return
+    echo "$PATH" | grep -q "$path" && return
+    path="$(realpath "$path")"
+    export PATH="${PATH}:${path}"
 }
 
 
 
-# Modified 2019-06-20.
+# Modified 2019-06-24.
 _koopa_force_add_to_path_start() {
-    _koopa_remove_from_path "$1"
-    export PATH="${1}:${PATH}"
+    local path
+    path="$1"
+    _koopa_remove_from_path "$path"
+    path="$(realpath "$path")"
+    export PATH="${path}:${PATH}"
 }
 
 
 
+# Modified 2019-06-24.
 _koopa_force_add_to_path_end() {
-    _koopa_remove_from_path "$1"
-    export PATH="${PATH}:${1}"
+    local path
+    path="$1"
+    _koopa_remove_from_path "$path"
+    path="$(realpath "$path")"
+    export PATH="${PATH}:${path}"
 }
 
 
@@ -89,8 +102,10 @@ _koopa_force_add_to_path_end() {
 # Look into an improved POSIX method here. This works for bash and ksh.
 # Note that this won't work on the first item in PATH.
 _koopa_remove_from_path() {
+    local path
+    path="$1"
     # SC2039: In POSIX sh, string replacement is undefined.
     # shellcheck disable=SC2039
-    export PATH="${PATH//:$1/}"
+    export PATH="${PATH//:$path/}"
 }
 
