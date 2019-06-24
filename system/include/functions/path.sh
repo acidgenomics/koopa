@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # PATH string modifiers
-# Modified 2019-06-20.
+# Modified 2019-06-24.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
@@ -55,46 +55,46 @@ _koopa_add_bins_to_path() {
 
 # Modified 2019-06-24.
 _koopa_add_to_path_start() {
-    local path
-    path="$1"
-    [ ! -d "$path" ] && _koopa_remove_from_path "$path" && return
-    echo "$PATH" | grep -q "$path" && return
-    path="$(realpath "$path")"
-    export PATH="${path}:${PATH}"
+    local dir
+    dir="$1"
+    [ ! -d "$dir" ] && _koopa_remove_from_path "$dir" && return
+    echo "$PATH" | grep -q "$dir" && return
+    dir="$(realpath "$dir")"
+    export PATH="${dir}:${PATH}"
 }
 
 
 
 # Modified 2019-06-24.
 _koopa_add_to_path_end() {
-    local path
-    path="$1"
-    [ ! -d "$path" ] && _koopa_remove_from_path "$path" && return
-    echo "$PATH" | grep -q "$path" && return
-    path="$(realpath "$path")"
-    export PATH="${PATH}:${path}"
+    local dir
+    dir="$1"
+    [ ! -d "$dir" ] && _koopa_remove_from_path "$dir" && return
+    echo "$PATH" | grep -q "$dir" && return
+    dir="$(realpath "$dir")"
+    export PATH="${PATH}:${dir}"
 }
 
 
 
 # Modified 2019-06-24.
 _koopa_force_add_to_path_start() {
-    local path
-    path="$1"
-    _koopa_remove_from_path "$path"
-    path="$(realpath "$path")"
-    export PATH="${path}:${PATH}"
+    local dir
+    dir="$1"
+    _koopa_remove_from_path "$dir"
+    dir="$(realpath "$dir")"
+    export PATH="${dir}:${PATH}"
 }
 
 
 
 # Modified 2019-06-24.
 _koopa_force_add_to_path_end() {
-    local path
-    path="$1"
-    _koopa_remove_from_path "$path"
-    path="$(realpath "$path")"
-    export PATH="${PATH}:${path}"
+    local dir
+    dir="$1"
+    _koopa_remove_from_path "$dir"
+    dir="$(realpath "$dir")"
+    export PATH="${PATH}:${dir}"
 }
 
 
@@ -102,10 +102,10 @@ _koopa_force_add_to_path_end() {
 # Look into an improved POSIX method here. This works for bash and ksh.
 # Note that this won't work on the first item in PATH.
 _koopa_remove_from_path() {
-    local path
-    path="$1"
+    local dir
+    dir="$1"
     # SC2039: In POSIX sh, string replacement is undefined.
     # shellcheck disable=SC2039
-    export PATH="${PATH//:$path/}"
+    export PATH="${PATH//:$dir/}"
 }
 
