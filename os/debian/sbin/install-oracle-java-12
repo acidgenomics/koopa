@@ -1,4 +1,10 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
 # Install Oracle Java 12.
+# Modified 2019-06-23.
 
 sudo add-apt-repository ppa:linuxuprising/java
 sudo apt-get update
