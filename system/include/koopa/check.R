@@ -18,7 +18,7 @@ host <- system(command = paste(koopa_exe, "host-name"), intern = TRUE)
 os <- system(command = paste(koopa_exe, "os-name"), intern = TRUE)
 
 r_os_string <- R.Version()[["os"]]
-if (grepl(r_os_string, "darwin")) {
+if (grepl("darwin", r_os_string)) {
     linux <- FALSE
 } else {
     linux <- TRUE
@@ -409,16 +409,28 @@ if (isTRUE(linux)) {
         )
     )
 } else if (os == "darwin") {
-    # Homebrew
+    # Homebrew.
     installed("brew")
 
-    # clang
+    # clang (Apple LLVM version).
     check_version(
         name = "clang",
         version = koopa_version("clang"),
         version_cmd = c(
             "clang --version",
             "head -n 1",
+            "cut -d ' ' -f 4"
+        ),
+        eval = "=="
+    )
+    
+    # GCC (Apple LLVM version).
+    check_version(
+        name = "gcc",
+        version = koopa_version("clang"),
+        version_cmd = c(
+            "gcc --version 2>&1",
+            "sed -n '2p'",
             "cut -d ' ' -f 4"
         ),
         eval = "=="
