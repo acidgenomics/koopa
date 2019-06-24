@@ -84,7 +84,7 @@ _koopa_build_mkdir() {
 # Modified 2019-06-20.
 _koopa_build_prefix_group() {
     # Standard user.
-    ! _koopa_has_sudo && return "$(whoami)"
+    ! _koopa_has_sudo && echo "$(whoami)" && return
 
     # Administrator.
     if groups | grep -Eq "\b(admin)\b"
