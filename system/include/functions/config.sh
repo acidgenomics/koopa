@@ -25,6 +25,41 @@ _koopa_info_box() {
 
 
 
+# Set JAVA_HOME environment variable.
+#
+# See also:
+# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
+# - https://stackoverflow.com/questions/22290554
+
+# Modified 2019-06-24.
+_koopa_java_home() {
+    local JAVA_HOME
+    if _koopa_is_darwin
+    then
+        JAVA_HOME="$(/usr/libexec/java_home)"
+    else
+        local jvm_dir
+        jvm_dir="/usr/lib/jvm"
+        [ -d "$jvm_dir" ] || return
+        if [ -d "${jvm_dir}/java-12-oracle" ]
+        then
+            JAVA_HOME="${jvm_dir}/java-12-oracle"
+        elif [ -d "${jvm_dir}/java-12" ]
+        then
+            JAVA_HOME="${jvm_dir}/java-12"
+        elif [ -d "${jvm_dir}/java" ]
+        then
+            JAVA_HOME="${jvm_dir}/java"
+        else
+            return
+        fi
+    fi
+    [ -d "$JAVA_HOME" ] || return
+    echo "$JAVA_HOME"
+}
+
+
+
 # Get R_HOME, rather than exporting as global variable.
 # Modified 2019-06-23.
 _koopa_r_home() {
@@ -53,58 +88,22 @@ _koopa_r_home() {
 #
 # Modified 2019-06-24.
 _koopa_r_javareconf() {
-    _koopa_has_sudo || return 1
     _koopa_is_installed R || return 1
     _koopa_is_installed java || return 1
-    
-    local java_dir
-    local java_flags
-    
-    if _koopa_is_darwin
-    then
-        java_dir="/Library/Java/JavaVirtualMachines"
-        [ -d "$java_dir" ] || return 1
-        java_dir="$(ls -1d "${java_dir}/"* | tail -n 1)"
-        [ -d "$java_dir" ] || return 1
-        java_dir="${java_dir}/Contents/Home"
-        [ -d "$java_dir" ] || return 1
-        java_flags=" \
-            JAVA_HOME=${java_dir} \
-            JAVA=/usr/bin/java \
-            JAVAC=/usr/bin/javac \
-            JAVAH=/usr/bin/javah \
-            JAR=/usr/bin/jar \
-        "
-    else
-        java_dir="/usr/lib/jvm"
-        [ -d "$java_dir" ] || return 1
-        if [ -d "${java_dir}/java-12-oracle" ]
-        then
-            # Ubuntu 18: openjdk-12-jdk.
-            java_dir="${java_dir}/java-12-oracle"
-        elif [ -d "${java_dir}/jre-12-openjdk" ]
-        then
-            # RHEL7: java-latest-openjdk.
-            java_dir="${java_dir}/jre-12-openjdk"
-        elif [ -d "${java_dir}/java" ]
-        then
-            java_dir="${java_dir}/java"
-        else
-            return 1
-        fi
-        java_flags=" \
-            JAVA_HOME=${java_dir} \
-            JAVA=${java_dir}/bin/java \
-            JAVAC=${java_dir}/bin/javac \
-            JAVAH=${java_dir}/bin/javah \
-            JAR=${java_dir}/bin/jar \
-        "
-    fi
-    
-    [ -d "$java_dir" ] || return 1
+   
+    local java_home
+    java_home="$(_koopa_java_home)"
+    [ ! -z "$java_home" ] && [ -d "$java_home" ] || return 1
     
     printf "Updating R Java configuration.\n"
-
+    
+    java_flags=" \
+        JAVA_HOME=${java_home} \
+        JAVA=${java_home}/bin/java \
+        JAVAC=${java_home}/bin/javac \
+        JAVAH=${java_home}/bin/javah \
+        JAR=${java_home}/bin/jar \
+    "
 
     r_home="$(_koopa_r_home)"
     _koopa_build_set_permissions "$r_home"
@@ -112,7 +111,10 @@ _koopa_r_javareconf() {
     (
         unset -v R_HOME
         # shellcheck disable=SC2086
-        sudo R --vanilla CMD javareconf $java_flags
+        if _koopa_has_sudo
+        then
+            sudo R --vanilla CMD javareconf $java_flags
+        fi
         # shellcheck disable=SC2086
         R --vanilla CMD javareconf $java_flags
     )
