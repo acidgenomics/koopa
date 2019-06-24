@@ -15,6 +15,7 @@ if _koopa_has_sudo
 then
     sudo apt-get -y install gnutls-bin libgnutls28-dev
     sudo apt-get -y install libgif-dev
+    sudo apt-get -y build-dep emacs
 fi
 
 source "$(koopa cellar-script emacs)"
