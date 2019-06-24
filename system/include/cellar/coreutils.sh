@@ -38,6 +38,7 @@ command -v "$exe_file"
 
 if _koopa_has_sudo
 then
+    build_prefix="$(koopa build-prefix)"
     printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
     if [[ ! -L "/usr/bin/env" ]]
     then
@@ -46,5 +47,5 @@ then
     else
         sudo rm -f "/usr/bin/env"
     fi
-    sudo ln -s "$(koopa build-prefix)/bin/env" "/usr/bin/env"
+    sudo ln -s "${build_prefix}/bin/env" "/usr/bin/env"
 fi
