@@ -125,12 +125,12 @@ then
     # https://stackoverflow.com/a/23259585/3911732
     file="${(%):-%N}"
 else
-        >&2 printf "Error: Failed to detect supported shell.\n"
-        >&2 printf "Supported: bash, ksh, zsh.\n\n"
-        >&2 printf "  SHELL: %s\n" "$SHELL"
-        >&2 printf "      0: %s\n" "$0"
-        >&2 printf "      -: %s\n" "$-"
-        return 1
+    >&2 printf "Error: Failed to detect supported shell.\n"
+    >&2 printf "Supported: bash, ksh, zsh.\n\n"
+    >&2 printf "  SHELL: %s\n" "$SHELL"
+    >&2 printf "      0: %s\n" "$0"
+    >&2 printf "      -: %s\n" "$-"
+    return 1
 fi
 
 if [ ! -f "${file:-}" ]

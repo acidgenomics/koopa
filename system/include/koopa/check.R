@@ -43,6 +43,15 @@ koopa_version <- function(x) {
     )
 }
 
+major_koopa_version <- function(x) {
+    x <- koopa_version(x)
+    x <- sanitize_version(x)
+    x <- package_version(x)
+    x <- as.character(x)
+    x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
+    x
+}
+
 pipe <- function(...) {
     paste(..., collapse = " | ")
 }
@@ -311,24 +320,22 @@ check_version(
 )
 
 # HDF5
+# Debian: `dpkg -s libhdf5-dev`
 check_version(
-    name = "h5dump",
-    version = koopa_version("hdf5"),
+    name = "h5cc",
+    version = major_koopa_version("hdf5"),
     version_cmd = c(
-        "h5dump --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    )
+        "h5cc -showconfig",
+        "grep 'HDF5 Version:'",
+        "sed -E 's/^(.+): //'"
+    ),
+    eval = "=="
 )
 
 # htop
 check_version(
     name = "htop",
-    version = switch(
-        EXPR = os,
-        ubuntu = "2.1",
-        koopa_version("htop")
-    ),
+    version = koopa_version("htop"),
     version_cmd = c(
         "htop --version",
         "head -n 1",
@@ -359,7 +366,8 @@ check_version(
         "pandoc --version",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # TeX Live
@@ -370,8 +378,8 @@ check_version(
     name = "tex",
     version = switch(
         EXPR = os,
-        # amzn = "2013",
-        # rhel = "2013",
+        amzn = "2013",
+        rhel = "2013",
         ubuntu = "2017",
         koopa_version("tex")
     ),
@@ -382,7 +390,8 @@ check_version(
         "cut -d ')' -f 1",
         "cut -d ' ' -f 3",
         "cut -d '/' -f 1"
-    )
+    ),
+    eval = "=="
 )
 
 # OS-specific programs.
@@ -390,12 +399,17 @@ if (isTRUE(linux)) {
     # GCC
     check_version(
         name = "gcc",
-        version = koopa_version("gcc"),
+        version = switch(
+            EXPR = os,
+            ubuntu = "7.4.0",
+            koopa_version("gcc")
+        ),
         version_cmd = c(
             "gcc --version",
             "head -n 1",
             "cut -d ' ' -f 3"
-        )
+        ),
+        eval = "=="
     )
     
     # coreutils
@@ -408,7 +422,8 @@ if (isTRUE(linux)) {
             "/usr/bin/env --version",
             "head -n 1",
             "cut -d ' ' -f 4"
-        )
+        ),
+        eval = "=="
     )
 } else if (os == "darwin") {
     # Homebrew.
@@ -585,6 +600,7 @@ check_version(
         "sed -n '2p'",
         "cut -d ' ' -f 2"
     ),
+    eval = "==",
     required = FALSE
 )
 
