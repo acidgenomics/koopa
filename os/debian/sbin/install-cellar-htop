@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install htop.
+# Modified 2019-06-24.
+
+if _koopa_has_sudo
+then
+    sudo apt-get -y install htop
+    sudo apt-get -y build-dep htop
+fi
+
+source "$(koopa cellar-script htop)"
