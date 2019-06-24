@@ -14,14 +14,15 @@ options(
 koopa_exe <- file.path(Sys.getenv("KOOPA_HOME"), "bin", "koopa")
 stopifnot(file.exists(koopa_exe))
 
-os <- R.Version()[["os"]]
-if (grepl("darwin", os)) {
-    os <- "darwin"
-} else {
-    os <- "linux"
-}
-
 host <- system(command = paste(koopa_exe, "host-name"), intern = TRUE)
+os <- system(command = paste(koopa_exe, "os-name"), intern = TRUE)
+
+r_os_string <- R.Version()[["os"]]
+if (grepl(r_os_string, "darwin")) {
+    linux <- FALSE
+} else {
+    linux <- TRUE
+}
 
 variables_file <- file.path(
     Sys.getenv("KOOPA_HOME"),
@@ -336,7 +337,11 @@ check_version(
 # OpenSSL
 check_version(
     name = "openssl",
-    version = koopa_version("openssl"),
+    version = switch(
+        EXPR = os,
+        rhel = "1.0.2",
+        koopa_version("openssl")
+    ),
     version_cmd = c(
         "openssl version",
         "head -n 1",
@@ -379,22 +384,7 @@ check_version(
 )
 
 # OS-specific programs.
-if (os == "darwin") {
-    # Homebrew
-    installed("brew")
-
-    # clang
-    check_version(
-        name = "clang",
-        version = koopa_version("clang"),
-        version_cmd = c(
-            "clang --version",
-            "head -n 1",
-            "cut -d ' ' -f 4"
-        ),
-        eval = "=="
-    )
-} else {
+if (isTRUE(linux)) {
     # GCC
     check_version(
         name = "gcc",
@@ -417,6 +407,21 @@ if (os == "darwin") {
             "head -n 1",
             "cut -d ' ' -f 4"
         )
+    )
+} else if (os == "darwin") {
+    # Homebrew
+    installed("brew")
+
+    # clang
+    check_version(
+        name = "clang",
+        version = koopa_version("clang"),
+        version_cmd = c(
+            "clang --version",
+            "head -n 1",
+            "cut -d ' ' -f 4"
+        ),
+        eval = "=="
     )
 }
 
@@ -540,7 +545,7 @@ check_version(
 
 # rename
 # Use Perl File::Rename, not util-linux.
-if (os == "linux") {
+if (isTRUE(linux)) {
     check_version(
         name = "rename",
         version = koopa_version("rename"),
@@ -552,7 +557,7 @@ if (os == "linux") {
         grep_string = "File::Rename",
         required = FALSE
     )
-} else {
+} else if (os == "darwin") {
     # Homebrew rename doesn't return version on macOS.
     installed("rename")
 }
@@ -570,7 +575,7 @@ check_version(
 )
 
 # OS-specific programs.
-if (os == "linux") {
+if (isTRUE(linux)) {
     # RStudio Server
     check_version(
         name = "rstudio-server",
