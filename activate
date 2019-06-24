@@ -74,11 +74,10 @@ unset -f usage
 
 # Early return if koopa is already active.
 # We may need to tweak this approach to work properly with bash subshells.
-if [ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ]
-then
-    [ -z "${TMUX:-}" ] && return 0
-    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
-fi
+
+[ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && force=1
+[ -z "${TMUX:-}" ] && force=1
+[ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ] && return
 
 
 
