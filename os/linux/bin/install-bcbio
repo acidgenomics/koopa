@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install bcbio-nextgen.
 # Modified 2019-06-21.
@@ -9,9 +11,6 @@ set -Eeu -o pipefail
 
 # Azure install:
 # prefix="/data00/bcbio/v1.1.5" install-bcbio
-
-# shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_environments
 
