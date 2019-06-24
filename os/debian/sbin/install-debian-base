@@ -43,6 +43,7 @@ sudo apt-get install -y \
     git \
     gnupg2 \
     htop \
+    libgsl-dev \
     libhdf5-dev \
     openjdk-12-jdk \
     openjdk-12-jre \
