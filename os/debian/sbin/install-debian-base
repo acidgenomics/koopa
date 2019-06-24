@@ -46,7 +46,6 @@ sudo apt-get install -y \
     libhdf5-dev \
     openjdk-12-jdk \
     openjdk-12-jre \
-    oracle-java12-set-default \
     pandoc \
     pandoc-citeproc \
     perl \

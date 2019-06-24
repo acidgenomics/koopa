@@ -17,5 +17,7 @@ sudo apt-get install oracle-java12-set-default
 # Uninstall Java 12.
 # > sudo apt-get remove oracle-java12-installer
 
+# Delete repository in `etc/apt/sources.list.d`.
+
 java --version
 command -v java
