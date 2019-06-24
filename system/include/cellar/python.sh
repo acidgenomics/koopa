@@ -33,8 +33,7 @@ fi
 
 # Ubuntu 18: This step fails unless `--without-ensurepip` flag is set.
 # https://bugs.python.org/issue31652
-
-# `--enable-shared` flag fails on Ubuntu.
+# Seeing a `sharedinstall` error still.
 
 (
     cd "$tmp_dir"
@@ -45,6 +44,7 @@ fi
         --build="$build_os_string" \
         --prefix="$prefix" \
         --enable-optimizations \
+        --enable-shared \
         --without-ensurepip
     make
     make install
