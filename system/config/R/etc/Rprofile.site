@@ -1,5 +1,5 @@
 # Shared R profile configuration.
-# Modified 2019-06-19 by Michael Steinbaugh.
+# Modified 2019-06-24 by Michael Steinbaugh.
 
 
 
@@ -192,7 +192,7 @@ options(
     usr_lib <- grepl(pattern = lib_pattern, x = libs)
 
     if (!any(usr_lib)) {
-        stop(paste0(
+        warning(paste0(
             "Failed to detect ", r_ver, " user library.", "\n",
             "Looking for: ", lib_pattern, "\n\n",
             ".libPaths():", "\n",
