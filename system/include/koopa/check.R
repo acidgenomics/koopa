@@ -329,8 +329,7 @@ check_version(
         "h5cc -showconfig",
         "grep 'HDF5 Version:'",
         "sed -E 's/^(.+): //'"
-    ),
-    eval = "=="
+    )
 )
 
 # htop
