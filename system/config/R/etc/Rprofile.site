@@ -326,6 +326,9 @@ options(
 
     if (isTRUE(interactive())) {
         cat(
+            "R Home:",
+            normalizePath(R.home()),
+            "",
             "Package Library:",
             normalizePath(.libPaths()[[1L]]),
             "",
