@@ -1,6 +1,0 @@
-# Install OpenJDK 12
-
-sudo apt-get -y install \
-    openjdk-12-jdk \
-    openjdk-12-jre \
-    oracle-java12-set-default
