@@ -222,18 +222,6 @@ check_version(
     eval = "=="
 )
 
-# Conda
-check_version(
-    name = "conda",
-    version = koopa_version("conda"),
-    version_cmd = c(
-        "conda --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
-)
-
 # Vim
 check_version(
     name = "vim",
@@ -443,6 +431,19 @@ check_version(
     version = koopa_version("zsh"),
     version_cmd = c(
         "zsh --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+# Conda
+check_version(
+    name = "conda",
+    version = koopa_version("conda"),
+    version_cmd = c(
+        "conda --version",
         "head -n 1",
         "cut -d ' ' -f 2"
     ),
