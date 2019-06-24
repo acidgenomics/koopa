@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Clone CloudBioLinux.
 # Modified 2019-06-18.
