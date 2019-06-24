@@ -28,8 +28,6 @@ esac
 # Required programs                                                         {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed R
-_koopa_assert_is_installed Rscript
 _koopa_assert_is_installed bash
 _koopa_assert_is_installed cat
 _koopa_assert_is_installed chsh
@@ -37,7 +35,6 @@ _koopa_assert_is_installed curl
 _koopa_assert_is_installed echo
 _koopa_assert_is_installed env
 _koopa_assert_is_installed grep
-_koopa_assert_is_installed python
 _koopa_assert_is_installed sed
 _koopa_assert_is_installed top
 _koopa_assert_is_installed wget

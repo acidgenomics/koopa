@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Install Haskell stack
-# https://www.haskellstack.org/
+# Install Haskell stack.
+# Modified 2019-06-24.
 
-curl -sSL https://get.haskellstack.org/ | sh
+# See also:
+# - https://www.haskell.org/platform/linux.html#linux-source
+# - https://www.haskellstack.org/
+
+curl -sSL https://get.haskellstack.org/ | "$SHELL"

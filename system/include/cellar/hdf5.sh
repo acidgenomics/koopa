@@ -14,7 +14,7 @@ version="$(koopa variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 tmp_dir="$(koopa tmp-dir)/${name}"
 build_os_string="$(koopa build-os-string)"
-exe_file="${prefix}/bin/h5dump"
+exe_file="${prefix}/bin/h5cc"
 
 major_version="$(echo "$version" | cut -d '.' -f 1-2)"
 
@@ -35,7 +35,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --enable-cxx \
         --enable-fortran
     make
-    make check
+    # > make check
     make install
     rm -rf "$tmp_dir"
 )
@@ -43,4 +43,4 @@ printf "Installing %s %s.\n" "$name" "$version"
 link-cellar "$name" "$version"
 
 command -v "$exe_file"
-"$exe_file" --version
+"$exe_file" -showconfig
