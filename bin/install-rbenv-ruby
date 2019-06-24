@@ -24,5 +24,6 @@ version="$(koopa variable ruby)"
 # > RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
 
 rbenv install "$version"
+rbenv global "$version"
 
 rbenv versions
