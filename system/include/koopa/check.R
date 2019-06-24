@@ -43,6 +43,15 @@ koopa_version <- function(x) {
     )
 }
 
+major_koopa_version <- function(x) {
+    x <- koopa_version(x)
+    x <- sanitize_version(x)
+    x <- package_version(x)
+    x <- as.character(x)
+    x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
+    x
+}
+
 pipe <- function(...) {
     paste(..., collapse = " | ")
 }
@@ -314,7 +323,7 @@ check_version(
 # Debian: `dpkg -s libhdf5-dev`
 check_version(
     name = "h5cc",
-    version = koopa_version("hdf5"),
+    version = major_koopa_version("hdf5"),
     version_cmd = c(
         "h5cc -showconfig",
         "grep 'HDF5 Version:'",
