@@ -35,7 +35,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --enable-cxx \
         --enable-fortran
     make
-    make check
+    # > make check
     make install
     rm -rf "$tmp_dir"
 )
