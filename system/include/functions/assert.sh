@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Assertive check functions
-# Modified 2019-06-22.
+# Modified 2019-06-24.
 
 
 
@@ -65,10 +65,9 @@ _koopa_assert_is_linux() {
 
 
 
+# Modified 2019-06-24.
 _koopa_assert_is_linux_debian() {
-    _koopa_assert_is_linux
-    if ! grep "ID="      /etc/os-release | grep -q "debian" &&
-       ! grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+    if ! _koopa_is_linux_debian
     then
         >&2 printf "Error: Debian is required.\n"
         exit 1
@@ -77,10 +76,9 @@ _koopa_assert_is_linux_debian() {
 
 
 
+# Modified 2019-06-24.
 _koopa_assert_is_linux_fedora() {
-    _koopa_assert_is_linux
-    if ! grep "ID="      /etc/os-release | grep -q "fedora" &&
-       ! grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+    if ! _koopa_is_linux_fedora
     then
         >&2 printf "Error: Fedora is required.\n"
         exit 1
@@ -142,6 +140,24 @@ _koopa_is_installed() {
 # Modified 2019-06-21.
 _koopa_is_linux() {
     [ "$(uname -s)" = "Linux" ]
+}
+
+
+
+# Modified 2019-06-24.
+_koopa_is_linux_debian() {
+    [ -f /etc/os-release ] || return 1
+    grep "ID="      /etc/os-release | grep -q "debian" ||
+    grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+}
+
+
+
+# Modified 2019-06-24.
+_koopa_is_linux_fedora() {
+    [ -f /etc/os-release ] || return 1
+    grep "ID="      /etc/os-release | grep -q "fedora" ||
+    grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 }
 
 
