@@ -221,17 +221,18 @@ check_version(
 )
 
 # Python
-# Now requiring >= 3.7. Python 2 will be phased out by 2020.
-# The user can use either conda or virtualenv.
 check_version(
     name = "python3",
-    version = koopa_version("python"),
+    version = switch(
+        EXPR = os,
+        ubuntu = "3.6",
+        koopa_version("python")
+    ),
     version_cmd = c(
         "python3 --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
-    ),
-    eval = "=="
+    )
 )
 
 # Vim
