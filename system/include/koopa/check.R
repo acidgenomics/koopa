@@ -311,6 +311,7 @@ check_version(
 )
 
 # HDF5
+# Debian: `dpkg -s libhdf5-dev`
 check_version(
     name = "h5cc",
     version = koopa_version("hdf5"),
