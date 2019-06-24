@@ -314,9 +314,10 @@ options(
     # --------------------------------------------------------------------------
 
     # Load per-user secrets that we don't want to save in a shared Renviron.
-
     if (file.exists("~/.Rsecrets")) {
-        cat("Loaded '~/.Rsecrets' file.\n\n")
+        if (isTRUE(interactive())) {
+            cat("Loaded '~/.Rsecrets' file.\n\n")
+        }
         source("~/.Rsecrets")
     }
 
