@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Install Ensembl genome build for bcbio.
 # Modified 2019-06-21.
@@ -86,7 +88,7 @@ if [[ -z "${organism:-}" ]] ||
     [[ -z "${build:-}" ]] ||
     [[ -z "${release:-}" ]]
 then
-    printf "Error: Missing required argument.\n\n"
+    >&2 printf "Error: Missing required argument.\n\n"
     usage
     exit 1
 fi
