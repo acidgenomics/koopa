@@ -24,7 +24,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     tar -xJvf "emacs-${version}.tar.xz"
     cd "emacs-${version}" || exit 1
     ./configure \
-        --build="$build_os_string"
+        --build="$build_os_string" \
         --prefix="$prefix"
     make
     make install
