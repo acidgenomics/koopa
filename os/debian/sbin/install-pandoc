@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install Pandoc.
+# Modified 2019-06-24.
+
+# See also:
+# - https://pandoc.org/installing.html
+# - https://github.com/jgm/pandoc/releases
+
+name="pandoc"
+version="$(koopa variable "$name")"
+tmp_dir="$(koopa tmp-dir)/${name}"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir"
+    file="pandoc-${version}-1-amd64.deb"
+    url="https://github.com/jgm/pandoc/releases/download/${version}/${file}"
+    wget "$url"
+    sudo dpkg -i "$file"
+    rm -rf "$file"
+)
+
+"$name" --version
+command -v "$name"
