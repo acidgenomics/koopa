@@ -1,7 +1,17 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-# Install Haskell stack
-# https://www.haskellstack.org/
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
-curl -sSL https://get.haskellstack.org/ | sh
+# Install Haskell stack.
+# Modified 2019-06-24.
+
+# See also:
+# - https://www.haskell.org/platform/linux.html#linux-source
+# - https://www.haskellstack.org/
+
+# Installer will warn if this local directory doesn't exist.
+mkdir -p "${HOME}/.local/bin"
+_koopa_add_to_path_start "${HOME}/.local/bin"
+
+curl -sSL https://get.haskellstack.org/ | "$SHELL"
