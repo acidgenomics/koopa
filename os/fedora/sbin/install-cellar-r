@@ -4,7 +4,7 @@
 source "$(koopa header fedora)"
 
 # Install R.
-# Modified 2019-06-23.
+# Modified 2019-06-24.
 
 
 
@@ -14,7 +14,9 @@ source "$(koopa header fedora)"
 if _koopa_has_sudo
 then
     printf "Updating Java.\n"
-    sudo yum install -y java-latest-openjdk-devel
+    sudo yum -y install \
+        java-latest-openjdk \
+        java-latest-openjdk-devel
     sudo yum list installed | grep -E '^java-'
 fi
 
@@ -82,8 +84,8 @@ fi
 
 if _koopa_has_sudo
 then
-    sudo yum install -y "$name"
-    sudo yum-builddep -y "$name"
+    sudo yum -y install R
+    sudo yum-builddep -y R
 fi
 
 source "$(koopa cellar-script r)"
