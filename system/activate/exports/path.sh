@@ -81,8 +81,17 @@ _koopa_add_bins_to_path "os/$(koopa os-name)"
 
 _koopa_add_bins_to_path "host/$(koopa host-name)"
 
-# Locally installed programs                                                {{{2
-# ------------------------------------------------------------------------------
 
-# FIXME Rethink this approach.
-# > _koopa_add_local_bins_to_path
+
+# Java                                                                      {{{1
+# ==============================================================================
+
+JAVA_HOME="$(_koopa_java_home)"
+if [ ! -z "$JAVA_HOME" ] && [ -d "$JAVA_HOME" ]
+then
+    export JAVA_HOME
+else
+    unset -v JAVA_HOME
+fi
+
+_koopa_add_to_path_start "${JAVA_HOME}/bin"
