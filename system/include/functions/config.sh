@@ -182,14 +182,15 @@ _koopa_update_r_config() {
         "${KOOPA_HOME}/system/config/R/etc/"* \
         "${r_home}/etc/".
 
-    if _koopa_is_linux
-    then
-        printf "Updating '/etc/rstudio/'.\n"
-        sudo mkdir -p /etc/rstudio
-        sudo ln -fs \
-            "${KOOPA_HOME}/system/config/etc/rstudio/"* \
-            /etc/rstudio/.
-    fi
+    # This step appears to break RStudio Server.
+    # > if _koopa_is_linux
+    # > then
+    # >     printf "Updating '/etc/rstudio/'.\n"
+    # >     sudo mkdir -p /etc/rstudio
+    # >     sudo ln -fs \
+    # >         "${KOOPA_HOME}/system/config/etc/rstudio/"* \
+    # >         /etc/rstudio/.
+    # > fi
 
     _koopa_r_javareconf
 }
