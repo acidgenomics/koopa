@@ -15,6 +15,11 @@ version="$(koopa variable "$name")"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+if _koopa_has_sudo
+then
+    sudo rm -rf /etc/rstudio
+fi
+
 file="rstudio-server-rhel-${version}-x86_64.rpm"
 url="https://download2.rstudio.org/server/centos6/x86_64/${file}"
 
@@ -23,7 +28,7 @@ url="https://download2.rstudio.org/server/centos6/x86_64/${file}"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir"
     wget "$url"
-    sudo yum install -y "$file"
+    sudo yum -y reinstall "$file"
     rm -rf "$tmp_dir"
 )
 
