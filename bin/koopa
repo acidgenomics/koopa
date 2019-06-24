@@ -15,7 +15,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # This software is provided under an MIT License.
 
 version="0.4.0a"
-date="2019-06-23"
+date="2019-06-24"
 
 
 
