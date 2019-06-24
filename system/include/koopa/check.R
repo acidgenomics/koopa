@@ -310,12 +310,12 @@ check_version(
 
 # HDF5
 check_version(
-    name = "h5dump",
+    name = "h5cc",
     version = koopa_version("hdf5"),
     version_cmd = c(
-        "h5dump --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
+        "h5cc -showconfig",
+        "grep 'HDF5 Version:'",
+        "sed -E 's/^(.+): //'"
     )
 )
 
