@@ -326,16 +326,14 @@ options(
 
     if (isTRUE(interactive())) {
         cat(
-            "R Home:",
-            normalizePath(R.home()),
-            "",
-            "Package Library:",
-            normalizePath(.libPaths()[[1L]]),
-            "",
-            "Working Directory:",
-            normalizePath(getwd()),
-            "",
-            sep = "\n"
+            "R Home:\n",
+            "  ", normalizePath(R.home()), "\n",
+            "Package Library:\n",
+            "  ", normalizePath(.libPaths()[[1L]]), "\n",
+            "Working Directory:\n",
+            "  ", normalizePath(getwd()), "\n",
+            "\n",
+            sep = ""
         )
     }
 
