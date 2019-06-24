@@ -2,7 +2,7 @@
 # shebang requires env from coreutils >= 8.30.
 
 # Check installed program versions.
-# Modified 2019-06-19.
+# Modified 2019-06-24.
 
 # Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -100,10 +100,12 @@ check_version <- function(
     }
 
     # Check to see if program is installed.
-    if (identical(unname(Sys.which(name)), "")) {
+    which <- unname(Sys.which(name))
+    if (identical(which, "")) {
         message(paste0("  ", fail, " | ", name, " missing"))
         return(invisible(FALSE))
     }
+    which <- normalizePath(which)
 
     # Grep string check mode.
     if (is.character(grep_string)) {
@@ -149,7 +151,7 @@ check_version <- function(
     message(paste0(
         "  ", status, " | ", name, " ",
         "(", full_sys_version, " ", eval, " ", version, ")\n",
-        "       |   ", Sys.which(name)
+        "       |   ", which
     ))
     invisible(ok)
 }
