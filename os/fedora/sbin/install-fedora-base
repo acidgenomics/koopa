@@ -4,11 +4,11 @@
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Modified 2019-06-23.
+# Modified 2019-06-24.
 
 enable-epel
-sudo yum update -y
-sudo yum install -y \
+sudo yum -y update
+sudo yum -y install \
     epel-release \
     convmv \
     git \
@@ -25,3 +25,6 @@ sudo yum install -y \
     tmux \
     tree \
     udunits2-devel
+sudo yum -y install \
+    java-latest-openjdk \
+    java-latest-openjdk-devel

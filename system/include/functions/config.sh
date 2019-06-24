@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Configuration functions.
-# Modified 2019-06-23.
+# Modified 2019-06-24.
 
 
 
@@ -51,7 +51,7 @@ _koopa_r_home() {
 #   JAVAH          path to a Java header/stub generator
 #   JAR            path to a Java archive tool
 #
-# Modified 2019-06-23.
+# Modified 2019-06-24.
 _koopa_r_javareconf() {
     _koopa_has_sudo || return 1
     _koopa_is_installed R || return 1
@@ -68,7 +68,6 @@ _koopa_r_javareconf() {
         [ -d "$java_dir" ] || return 1
         java_dir="${java_dir}/Contents/Home"
         [ -d "$java_dir" ] || return 1
-        
         java_flags=" \
             JAVA_HOME=${java_dir} \
             JAVA=/usr/bin/java \
@@ -79,19 +78,20 @@ _koopa_r_javareconf() {
     else
         java_dir="/usr/lib/jvm"
         [ -d "$java_dir" ] || return 1
-
         if [ -d "${java_dir}/java-12-oracle" ]
         then
-            # Ubuntu 18 installs here.
+            # Ubuntu 18: openjdk-12-jdk.
             java_dir="${java_dir}/java-12-oracle"
+        elif [ -d "${java_dir}/jre-12-openjdk" ]
+        then
+            # RHEL7: java-latest-openjdk.
+            java_dir="${java_dir}/jre-12-openjdk"
         elif [ -d "${java_dir}/java" ]
         then
-            # RHEL7 installs here.
             java_dir="${java_dir}/java"
         else
             return 1
         fi
-        
         java_flags=" \
             JAVA_HOME=${java_dir} \
             JAVA=${java_dir}/bin/java \
@@ -101,8 +101,11 @@ _koopa_r_javareconf() {
         "
     fi
     
-    printf "Updating R Java configuration.\n"
+    [ -d "$java_dir" ] || return 1
     
+    printf "Updating R Java configuration.\n"
+
+
     r_home="$(_koopa_r_home)"
     _koopa_build_set_permissions "$r_home"
 
