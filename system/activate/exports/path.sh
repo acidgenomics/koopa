@@ -86,12 +86,18 @@ _koopa_add_bins_to_path "host/$(koopa host-name)"
 # Java                                                                      {{{1
 # ==============================================================================
 
-JAVA_HOME="$(_koopa_java_home)"
-if [ ! -z "$JAVA_HOME" ] && [ -d "$JAVA_HOME" ]
+if [ -z "${JAVA_HOME:-}" ]
 then
-    export JAVA_HOME
-else
-    unset -v JAVA_HOME
+    JAVA_HOME="$(_koopa_java_home)"
+    if [ ! -z "$JAVA_HOME" ] && [ -d "$JAVA_HOME" ]
+    then
+        export JAVA_HOME
+    else
+        unset -v JAVA_HOME
+    fi
 fi
 
-_koopa_add_to_path_start "${JAVA_HOME}/bin"
+if [ ! -z "${JAVA_HOME:-}" ]
+then
+    _koopa_add_to_path_start "${JAVA_HOME}/bin"
+fi
