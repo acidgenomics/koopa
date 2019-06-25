@@ -4,7 +4,9 @@
 source "$(koopa header debian)"
 
 # Install Oracle Java 12.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
 
 sudo add-apt-repository ppa:linuxuprising/java
 sudo apt-get update

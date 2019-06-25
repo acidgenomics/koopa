@@ -4,9 +4,11 @@
 source "$(koopa header bash)"
 
 # Install TeX packages using tlmgr.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 printf "Installing TeX packages recommended for RStudio.\n"
+
+_koopa_assert_has_sudo
 
 sudo tlmgr update --self
 

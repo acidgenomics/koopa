@@ -4,11 +4,13 @@
 source "$(koopa header bash)"
 
 # Install Ensembl genome build for bcbio.
-# Modified 2019-06-21.
+# Modified 2019-06-25.
 
 # See also:
 # - https://useast.ensembl.org/
 # - https://grch37.ensembl.org/
+
+_koopa_assert_is_installed bcbio_nextgen.py
 
 
 
