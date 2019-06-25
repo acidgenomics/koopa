@@ -4,7 +4,7 @@
 source "$(koopa header azure)"
 
 # rsync to Azure Samba (SMB) file shares.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 # Useful rsync flags:
 # -n, --dry-run               perform a trial run with no changes made
@@ -34,7 +34,7 @@ source "$(koopa header azure)"
 # --super                 receiver attempts super-user activities
 # --fake-super            store/recover privileged attrs using xattrs
 
-flags=" \
+flags=( \
     --recursive \
     --human-readable \
     --progress \
@@ -42,19 +42,19 @@ flags=" \
     --verbose \
     --no-links \
     --size-only \
-    --exclude=".git" \
-    --exclude=".gitignore" \
-    --exclude=".Rproj.user" \
-    --exclude="bam" \
-    --exclude="cram" \
-    --exclude="fastq" \
-    --exclude="sam" \
-    --exclude="work" \
-"
+    --exclude ".git" \
+    --exclude ".gitignore" \
+    --exclude ".Rproj.user" \
+    --exclude "bam" \
+    --exclude "cram" \
+    --exclude "fastq" \
+    --exclude "sam" \
+    --exclude "work" \
+)
 
 if _koopa_has_sudo
 then
-    sudo rsync $flags "$@"
+    sudo rsync "${flags[@]}" "$@"
 else
-    rsync $flags "$@"
+    rsync "${flags[@]}" "$@"
 fi
