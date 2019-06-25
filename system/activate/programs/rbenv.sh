@@ -19,5 +19,7 @@ fi
 
 if _koopa_quiet_which rbenv
 then
+    [ ! -z "${KOOPA_DEBUG:-}" ] && set +u
     eval "$(rbenv init -)"
+    [ ! -z "${KOOPA_DEBUG:-}" ] && set -u
 fi
