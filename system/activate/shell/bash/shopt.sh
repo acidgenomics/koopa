@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Shell options.
+# Modified 2019-06-25.
+
 # Correct minor directory changing spelling mistakes.
 shopt -s cdspell
 
@@ -7,8 +10,9 @@ shopt -s cdspell
 # If necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# Save multiline commands.
+shopt -s cmdhist
+
 # Enable history appending instead of overwriting.
 shopt -s histappend
 
-# Save multiline commands.
-shopt -s cmdhist
