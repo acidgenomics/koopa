@@ -23,11 +23,13 @@ mkdir "$tmp_dir"
 # Ensure pip is installed and up to date.
 if _koopa_has_sudo
 then
-    printf "Updating pip.\n"
     (
-        cd "$tmp_dir"
-        wget https://bootstrap.pypa.io/get-pip.py
-        sudo python get-pip.py
+        printf "Updating pip.\n"
+        cd "$tmp_dir" || exit 1
+        file="get-pip.py"
+        url="https://bootstrap.pypa.io/${file}"
+        wget "$url"
+        sudo python "$file"
         sudo pip install -U pip
         # > sudo pip install -U virtualenv
     )
@@ -38,10 +40,12 @@ fi
 # Seeing a `sharedinstall` error still.
 
 (
-    cd "$tmp_dir"
-    wget "https://www.python.org/ftp/python/${version}/Python-${version}.tar.xz"
+    cd "$tmp_dir" || exit 1
+    file="Python-${version}.tar.xz"
+    url="https://www.python.org/ftp/python/${version}/${file}"
+    wget "$url"
     tar xfv "Python-${version}.tar.xz"
-    cd "Python-${version}"
+    cd "Python-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix" \
