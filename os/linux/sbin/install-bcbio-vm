@@ -4,7 +4,7 @@
 source "$(koopa header linux)"
 
 # Install bcbio-vm.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
@@ -14,6 +14,7 @@ source "$(koopa header linux)"
 # This sets the location of `datadir`, for example.
 
 _koopa_assert_has_sudo
+_koopa_assert_has_no_environments
 _koopa_assert_is_installed docker
 
 prefix="$(koopa build-prefix)/bcbio-vm"

@@ -4,11 +4,13 @@
 source "$(koopa header bash)"
 
 # Install Haskell stack.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.haskell.org/platform/linux.html#linux-source
 # - https://www.haskellstack.org/
+
+_koopa_assert_has_no_environments
 
 # Installer will warn if this local directory doesn't exist.
 mkdir -p "${HOME}/.local/bin"

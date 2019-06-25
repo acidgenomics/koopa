@@ -4,11 +4,13 @@
 source "$(koopa header debian)"
 
 # Install Pandoc.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 # See also:
 # - https://pandoc.org/installing.html
 # - https://github.com/jgm/pandoc/releases
+
+_koopa_assert_has_sudo
 
 name="pandoc"
 version="$(koopa variable "$name")"

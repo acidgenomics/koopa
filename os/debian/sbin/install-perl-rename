@@ -4,7 +4,7 @@
 source "$(koopa header debian)"
 
 # Install Perl rename.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 # This variant is superior to util-linux rename.
 

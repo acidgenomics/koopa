@@ -4,7 +4,9 @@
 source "$(koopa header darwin)"
 
 # Install recommended Homebrew recipes.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
+
+_koopa_assert_is_installed brew
 
 export HOMEBREW_FORCE_BOTTLE=1
 
