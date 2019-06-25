@@ -19,7 +19,7 @@ tmp_dir="$(koopa tmp-dir)/${name}"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 exe_file="${prefix}/bin/gpg"
 
-printf "Installing GnuPG.\n"
+printf "Installing %s %s.\n" "$name" "$version"
 
 # Download GnuPG release signing keys.
 gpg --list-keys
@@ -33,14 +33,14 @@ rm -rf "$tmp_dir"
 mkdir -p "$tmp_dir"
 
 (
-    package="libgpg-error"
-    version="$(koopa variable "$package")"
+    pkg="libgpg-error"
+    ver="$(koopa variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make
     make install
@@ -49,14 +49,14 @@ mkdir -p "$tmp_dir"
 link-cellar "$name" "$version"
 
 (
-    package="libgcrypt"
-    version="$(koopa variable "$package")"
+    pkg="libgcrypt"
+    ver="$(koopa variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make
     make install
@@ -65,14 +65,14 @@ link-cellar "$name" "$version"
 link-cellar "$name" "$version"
 
 (
-    package="libassuan"
-    version="$(koopa variable "$package")"
+    pkg="libassuan"
+    ver="$(koopa variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make
     make install
@@ -81,14 +81,14 @@ link-cellar "$name" "$version"
 link-cellar "$name" "$version"
 
 (
-    package="libksba"
-    version="$(koopa variable "$package")"
+    pkg="libksba"
+    ver="$(koopa variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make
     make install
@@ -97,14 +97,14 @@ link-cellar "$name" "$version"
 link-cellar "$name" "$version"
 
 (
-    package="npth"
-    version="$(koopa variable "$package")"
+    pkg="npth"
+    ver="$(koopa variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make
     make install
@@ -113,14 +113,14 @@ link-cellar "$name" "$version"
 link-cellar "$name" "$version"
 
 (
-    package="pinentry"
-    version="$(koopa variable "$package")"
+    pkg="pinentry"
+    ver="$(koopa variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make
     make install
@@ -129,14 +129,14 @@ link-cellar "$name" "$version"
 link-cellar "$name" "$version"
 
 (
-    package="gnupg"
-    version="$(koopa variable gpg)"
+    pkg="gnupg"
+    ver="$(koopa variable gpg)"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${package}/${package}-${version}.tar.bz2"
-    gpg --verify "${package}-${version}.tar.bz2.sig"
-    tar -xjvf "${package}-${version}.tar.bz2"
-    cd "${package}-${version}" || exit 1
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make
     make check
