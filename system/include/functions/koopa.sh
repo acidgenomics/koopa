@@ -1,7 +1,7 @@
 #!/usr/bin/sh
 
 # Functions required for `koopa` script functionality.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 
 
@@ -72,10 +72,25 @@ _koopa_build_os_string() {
 
 
 
+# Modified 2019-06-25.
+_koopa_is_local() {
+    echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
+}
+
+
+
+# Modified 2019-06-25.
+_koopa_is_shared() {
+    ! _koopa_is_local
+}
+
+
+
 # Return the installation prefix to use.
 # Modified 2019-06-20.
 _koopa_build_prefix() {
-    if _koopa_has_sudo
+    local prefix
+    if _koopa_is_shared && _koopa_has_sudo
     then
         if echo "$KOOPA_HOME" | grep -Eq "^/opt/"
         then
@@ -85,6 +100,22 @@ _koopa_build_prefix() {
         fi
     else
         prefix="${HOME}/.local"
+    fi
+    mkdir -p "$prefix"
+    echo "$prefix"
+}
+
+
+
+# Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
+# Modified 2019-06-25.
+_koopa_cellar_prefix() {
+    local prefix
+    if [ -w "$KOOPA_HOME" ]
+    then
+        prefix="${KOOPA_HOME}/cellar"
+    else
+        prefix="${XDG_DATA_HOME}/koopa/cellar"
     fi
     mkdir -p "$prefix"
     echo "$prefix"
