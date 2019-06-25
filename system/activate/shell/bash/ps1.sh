@@ -32,11 +32,10 @@ then
     [[ -n "$host_type" ]] && mach="${host_type}"
     os_type="$(_koopa_os_type)"
     [[ -n "$os_type" ]] && [[ -n "$mach" ]] && mach="${mach} ${os_type}"
-    [[ -n "$mach" ]] && mach="[${mach}]"
 fi
 
 # Shell name.
-shell="[$(_koopa_shell)]"
+shell="$(_koopa_shell)"
 
 # History.
 history="[c\#; h\!]"
@@ -82,6 +81,18 @@ then
 
     user="\[\033[01;${user_color}m\]${user}\[\033[00m\]"
 
+    if [[ -n "$mach" ]]
+    then
+        mach_color="$user_color"
+        mach="\[\033[${mach_color}m\]${mach}\[\033[00m\]"
+    fi
+
+    shell_color="39"
+    shell="\[\033[${shell_color}m\]${shell}\[\033[00m\]"
+
+    history_color="$shell_color"
+    history="\[\033[${history_color}m\]${history}\[\033[00m\]"
+
     wd_color="34"
     wd="\[\033[01;${wd_color}m\]${wd}\[\033[00m\]"
 
@@ -91,8 +102,8 @@ then
 fi
 
 PS1="\n${user}"
-[[ -n "$mach" ]] && PS1="${PS1} ${mach}"
-PS1="${PS1} ${shell} ${history}\n"
+[[ -n "$mach" ]] && PS1="${PS1} | ${mach}"
+PS1="${PS1} | ${shell} ${history}\n"
 PS1="${PS1}${wd}\n"
 PS1="${PS1}${prompt} "
 export PS1
