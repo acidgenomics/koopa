@@ -154,7 +154,7 @@ os type:
         - debian
             - ubuntu
         - fedora
-            - rhel
+            - [rhel]
                 - amzn
 
 host type:
@@ -240,7 +240,7 @@ _koopa_host_type() {
             name="harvard-odyssey"
             ;;
         *)
-            name="local"
+            name=
             ;;
     esac
     echo "$name"
@@ -294,7 +294,7 @@ _koopa_os_type() {
             tr -cd '[:alnum:]' \
         )"
     else
-        name="unknown"
+        name=
     fi
     echo "$name"
 }

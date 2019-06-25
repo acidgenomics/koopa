@@ -5,6 +5,13 @@
 
 
 
+# Modified 2019-06-25.
+_koopa_is_remote() {
+    [ ! -z "${SSH_CONNECTION:-}" ]
+}
+
+
+
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
 # Modified 2019-06-20.

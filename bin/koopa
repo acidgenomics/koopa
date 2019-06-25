@@ -57,7 +57,7 @@ return string commands:
         Return useful host type matching either:
         - VMs: "aws", "azure".
         - HPCs: "harvard-o2", "harvard-odyssey".
-        Returns "local" for local machines and/or unsupported types.
+        Returns empty for local machines and/or unsupported types.
     os-type
         Operating system name. Always returns lowercase, with unique names for
         Linux distros (e.g. "debian").
