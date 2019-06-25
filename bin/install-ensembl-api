@@ -15,7 +15,7 @@ prefix="$(koopa build-prefix)/ensembl"
 
 (
     build_mkdir "$prefix"
-    cd "$prefix"
+    cd "$prefix" || exit 1
     
     # Install BioPerl.
     git clone -b release-1-6-924 --depth 1 \
