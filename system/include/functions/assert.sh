@@ -98,10 +98,9 @@ _koopa_assert_is_not_dir() {
 # Detect activation of virtual environments.
 # Modified 2019-06-25.
 _koopa_has_no_environments() {
-    # Conda
     [ -x "$(command -v conda)" ] && [ ! -z "${CONDA_PREFIX:-}" ] && return 1
-    # Python virtual environment
     [ -x "$(command -v deactivate)" ] && return 1
+    return 0
 }
 
 
