@@ -12,6 +12,6 @@ _koopa_is_linux || return
 env_list="$(conda env list --json)"
 
 _koopa_add_conda_env_to_path pandoc "$env_list"
-_koopa_add_conda_env_to_path texlive "$env_list"
+_koopa_add_conda_env_to_path texlive-core "$env_list"
 
 unset -v env_list
