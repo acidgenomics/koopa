@@ -23,16 +23,16 @@ usage: install-ensembl-genome [-h] --organism ORGANISM --build BUILD
         --release RELEASE [--indexes INDEXES]
 
 required arguments:
-  --organism
+    --organism
         Full latin name (e.g. "Homo sapiens").
         Pass this argument in quoted as a string.
-  --build
+    --build
         Genome build (e.g. "GRCh38").
-  --release
+    --release
         Release version (e.g. "96").
 
 optional arguments:
-  --indexes
+    --indexes
         Aligners to index.
         Pass this argument in quoted as a string.
         Default: --indexes "bowtie2 seq star"
@@ -97,6 +97,9 @@ fi
 
 [[ -z "${indexes:-}" ]] && indexes="bowtie2 seq star"
 
+# Convert string to array.
+indexes=("$indexes")
+
 unset -f usage
 
 
@@ -113,7 +116,8 @@ then
 fi
 
 # Sanitize spaces into underscores.
-organism="$(echo "$organism" | sed "s/ /_/g")"
+# Use bash built-in rather than sed, when possible.
+organism="${organism// /_}"
 
 cores="$((CPU_COUNT-2))"
 [[ "$cores" -lt 1 ]] && cores=1
@@ -166,7 +170,7 @@ bcbio_species_dir="$(echo "$organism" | \
         --cores "$cores" \
         --fasta "$fasta" \
         --gtf "$gtf" \
-        --indexes $indexes \
+        --indexes "${indexes[@]}" \
         2>&1 | tee "$log_file"
     
     rm -rf "$tmp_dir"
