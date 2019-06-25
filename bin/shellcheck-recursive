@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
-source "$(koopa header bash)"
+# Making source header optional, for Travis CI checks.
+if [[ -n "$KOOPA_SHELL" ]]
+then
+    # shellcheck source=/dev/null
+    source "$(koopa header bash)"
+    _koopa_assert_is_installed shellcheck
+fi
 
 # Recursively run shellcheck on all scripts in a directory.
-# Modified 2019-06-23.
-
-_koopa_assert_is_installed shellcheck
+# Modified 2019-06-25.
 
 path="${1:-$PWD}"
 
