@@ -10,24 +10,24 @@
 echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return
 
 # Check for installation, otherwise early return.
-if [ ! -z "${PERLBREW_ROOT:-}" ]
+if [ -z "${PERLBREW_ROOT:-}" ]
 then
-    prefix="$PERLBREW_ROOT"
-elif [ -d "${HOME}/perl5/perlbrew" ]
-then
-    prefix="${HOME}/perl5/perlbrew"
-elif [ -d "/usr/local/perlbrew" ]
-then
-    prefix="/usr/local/perlbrew"
-else
-    return 0
+    if [ -d "${HOME}/perl5/perlbrew" ]
+    then
+        PERLBREW_ROOT="${HOME}/perl5/perlbrew"
+    elif [ -d "/usr/local/perlbrew" ]
+    then
+        PERLBREW_ROOT="/usr/local/perlbrew"
+    else
+        PERLBREW_ROOT=
+    fi
 fi
 
-# Now ready to source bashrc activation script.
-# Note that this is also compatible with zsh.
-file="${prefix}/etc/bashrc"
-
-# shellcheck disable=SC1090
-[ -f "$file" ] && . "$file"
-
-unset -v file prefix
+# Source the activation script, if accessible.
+if [ -d "$PERLBREW_ROOT" ]
+then
+    # Note that this is also compatible with zsh.
+    . "${PERLBREW_ROOT}/etc/bashrc"
+else
+    unset -v PERLBREW_ROOT
+fi

@@ -2,12 +2,10 @@
 # shellcheck disable=SC2236
 
 # Activate Python "default" virtual environment.
-# Modified 2019-06-21.
+# Modified 2019-06-25.
 
 # Note that we're using this instead of conda as our default interactive
 # Python environment, so we can easily use pip.
-
-
 
 # Only attempt to autoload for bash or zsh.
 echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return
@@ -31,7 +29,7 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 # Now we're ready to activate.
 virtualenv_bin_dir="$(dirname "$PYTHON_EXE")"
 
-# Avoid virtualenv PATH duplicate when spawning inside tmux.
+# Avoid PATH duplication when spawning inside tmux.
 if ! echo "$PATH" | grep -q "$virtualenv_bin_dir"
 then
     # shellcheck source=/dev/null
