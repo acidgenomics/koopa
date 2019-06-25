@@ -6,12 +6,15 @@
 
 _koopa_is_installed conda || return
 
-# Skip on macOS, where we can use Homebrew instead.
-_koopa_is_linux || return
-
 # Early return if local conda environments aren't configured.
 prefix="$(_koopa_conda_prefix)"
-[ -d "$prefix" ] || return
+
+# Early return if conda local environment directory is empty.
+if [ ! -d "$prefix" ] || [ -z "$(ls "$prefix")" ]
+then
+    unset -v prefix
+    return
+fi
 
 env_list="$(_koopa_conda_env_list)"
 
