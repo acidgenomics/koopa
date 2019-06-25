@@ -14,8 +14,8 @@ options(
 koopa_exe <- file.path(Sys.getenv("KOOPA_HOME"), "bin", "koopa")
 stopifnot(file.exists(koopa_exe))
 
-host <- system(command = paste(koopa_exe, "host-name"), intern = TRUE)
-os <- system(command = paste(koopa_exe, "os-name"), intern = TRUE)
+host <- system(command = paste(koopa_exe, "host-type"), intern = TRUE)
+os <- system(command = paste(koopa_exe, "os-type"), intern = TRUE)
 
 r_os_string <- R.Version()[["os"]]
 if (grepl("darwin", r_os_string)) {

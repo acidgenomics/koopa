@@ -61,10 +61,10 @@ _koopa_build_os_string() {
         # This will distinguish between RedHat, Amazon, and other distros
         # instead of just returning "linux". Note that we're substituting
         # "redhat" instead of "rhel" here, when applicable.
-        local os_name
-        os_name="$(koopa os-name)"
-        [ "$os_name" = "rhel" ] && os_name="redhat"
-        string="${mach}-${os_name}-${OSTYPE}"
+        local os_type
+        os_type="$(koopa os-type)"
+        [ "$os_type" = "rhel" ] && os_name="redhat"
+        string="${mach}-${os_type}-${OSTYPE}"
     fi
     
     echo "$string"
@@ -148,15 +148,16 @@ shell:
     - bash
     - zsh
 
-os:
-    - amzn
+os type:
     - darwin
-    - debian
-    - fedora
     - linux
-    - ubuntu
-    
-host:
+        - debian
+            - ubuntu
+        - fedora
+            - rhel
+                - amzn
+
+host type:
     - azure
     - harvard-o2
     - harvard-odyssey
@@ -177,25 +178,25 @@ EOF
             ;;
 
         # os
-        amzn)
-            path="${KOOPA_HOME}/os/amzn/include/header.sh"
-            ;;
         darwin)
             path="${KOOPA_HOME}/os/darwin/include/header.sh"
-            ;;
-        debian)
-            path="${KOOPA_HOME}/os/debian/include/header.sh"
-            ;;
-        fedora)
-            path="${KOOPA_HOME}/os/fedora/include/header.sh"
             ;;
         linux)
             path="${KOOPA_HOME}/os/linux/include/header.sh"
             ;;
-        ubuntu)
-            path="${KOOPA_HOME}/os/ubuntu/include/header.sh"
-            ;;
-            
+            debian)
+                path="${KOOPA_HOME}/os/debian/include/header.sh"
+                ;;
+                ubuntu)
+                    path="${KOOPA_HOME}/os/ubuntu/include/header.sh"
+                    ;;
+            fedora)
+                path="${KOOPA_HOME}/os/fedora/include/header.sh"
+                ;;
+                amzn)
+                    path="${KOOPA_HOME}/os/amzn/include/header.sh"
+                    ;;
+
         # host
         azure)
             path="${KOOPA_HOME}/host/azure/include/header.sh"
@@ -218,18 +219,20 @@ EOF
 
 
 
-# Get a simpler host name that we can use to load up host-specific scripts.
+# Simple host type name string to load up host-specific scripts.
 # Currently intended support AWS, Azure, and Harvard clusters.
-# Modified 2019-06-21.
-_koopa_host_name() {
+# Modified 2019-06-25.
+_koopa_host_type() {
     local name
     case "$HOSTNAME" in
+        # VMs
         *.ec2.internal)
             name="aws"
             ;;
         azlabapp*)
             name="azure"
             ;;
+        # HPCs
         *.o2.rc.hms.harvard.edu)
             name="harvard-o2"
             ;;
@@ -237,7 +240,7 @@ _koopa_host_name() {
             name="harvard-odyssey"
             ;;
         *)
-            name="$HOSTNAME"
+            name="local"
             ;;
     esac
     echo "$name"
@@ -278,16 +281,22 @@ _koopa_macos_version() {
 
 
 
-# Modified 2019-06-22.
-_koopa_os_name() {
+# Modified 2019-06-25.
+_koopa_os_type() {
+    local name
     if _koopa_is_darwin
     then
-        echo "$(uname -s)" | tr '[:upper:]' '[:lower:]'
+        name="$("$(uname -s)" | tr '[:upper:]' '[:lower:]')"
     elif _koopa_is_linux
     then
-        awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
-            tr -cd '[:alnum:]'
+        name="$( \
+            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
+            tr -cd '[:alnum:]' \
+        )"
+    else
+        name="unknown"
     fi
+    echo "$name"
 }
 
 
