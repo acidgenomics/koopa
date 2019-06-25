@@ -17,14 +17,14 @@ host_type="$(koopa host-type)"
 os_type="$(koopa os-type)"
 
 # R
-if [[ "$os_name" == "darwin" ]]
+if [[ "$os_type" == "darwin" ]]
 then
     dotfile --force os/darwin/R
     dotfile --force os/darwin/Renviron
-elif [[ "$host_name" == "harvard-o2" ]]
+elif [[ "$host_type" == "harvard-o2" ]]
 then
     dotfile --force host/harvard-o2/Renviron
-elif [[ "$host_name" == "harvard-odyssey" ]]
+elif [[ "$host_type" == "harvard-odyssey" ]]
 then
     dotfile --force host/harvard-odyssey/Renviron
 elif _koopa_is_linux && [[ -z "${shared:-}" ]]
