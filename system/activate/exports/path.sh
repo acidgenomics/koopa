@@ -40,7 +40,7 @@ _koopa_add_bins_to_path
 
 _koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
 
-# OS-specific                                                               {{{2
+# OS type-specific                                                          {{{2
 # ------------------------------------------------------------------------------
 
 # - ID="amzn"
@@ -74,12 +74,12 @@ then
     unset -v id_like
 fi
 
-_koopa_add_bins_to_path "os/$(koopa os-name)"
+_koopa_add_bins_to_path "os/$(koopa os-type)"
 
-# Host-specific                                                             {{{2
+# Host type-specific                                                        {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_add_bins_to_path "host/$(koopa host-name)"
+_koopa_add_bins_to_path "host/$(koopa host-type)"
 
 
 
