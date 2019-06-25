@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Install Bash.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.gnu.org/software/bash/
+
+_koopa_assert_has_no_environments
 
 name="bash"
 version="$(koopa variable "$name")"

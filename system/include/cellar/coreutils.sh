@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Install GNU core utilities.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://ftp.gnu.org/gnu/coreutils/
+
+_koopa_assert_has_no_environments
 
 name="coreutils"
 version="$(koopa variable "$name")"
