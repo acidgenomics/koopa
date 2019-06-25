@@ -19,7 +19,7 @@ tmp_dir="$(koopa tmp-dir)/${name}"
 (
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
-    cd "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     file="pandoc-${version}-1-amd64.deb"
     url="https://github.com/jgm/pandoc/releases/download/${version}/${file}"
     wget "$url"
