@@ -142,7 +142,7 @@ then
 fi
 
 # Fake realpath support, if necessary.
-if ! command -v realpath >/dev/null 2>&1
+if ! command -v realpath >/dev/null
 then
     alias realpath="readlink -f"
 fi
