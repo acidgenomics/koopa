@@ -9,6 +9,14 @@ _koopa_is_installed conda || return
 # Skip on macOS, where we can use Homebrew instead.
 _koopa_is_linux || return
 
+# Early return if conda prefix directory is empty.
+prefix="$(koopa conda-prefix)"
+if [ -z "$(ls "$prefix")" ]
+then
+    unset -v prefix
+    return
+fi
+
 env_list="$(conda env list --json)"
 
 _koopa_add_conda_env_to_path pandoc "$env_list"
