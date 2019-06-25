@@ -117,7 +117,22 @@ _koopa_cellar_prefix() {
     else
         prefix="${XDG_DATA_HOME}/koopa/cellar"
     fi
-    mkdir -p "$prefix"
+    mkdir -p "$prefix" || return 1
+    echo "$prefix"
+}
+
+
+
+# Modified 2019-06-25.
+_koopa_conda_prefix() {
+    local prefix
+    if [ -w "$KOOPA_HOME" ]
+    then
+        prefix="${KOOPA_HOME}/conda"
+    else
+        prefix="${XDG_DATA_HOME}/koopa/conda"
+    fi
+    mkdir -p "$prefix" || return 1
     echo "$prefix"
 }
 
