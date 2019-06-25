@@ -45,6 +45,8 @@ return string commands:
         Koopa cellar path (e.g. "usr/local/koopa/cellar").
     cellar-script
         Run cellar install script.
+    conda-prefix
+        Conda prefix for automated koopa environment recipes.
     config-dir
         Koopa local configuration path (e.g. "~/.config/koopa").
     header
@@ -119,6 +121,10 @@ case "$1" in
         ;;
     check)
         Rscript --vanilla "${include_dir}/check.R"
+        exit
+        ;;
+    conda-prefix)
+        _koopa_conda_prefix
         exit
         ;;
     config-dir)
