@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(koopa header linux)"
 
 # Install bcbio-nextgen.
 # Modified 2019-06-21.
