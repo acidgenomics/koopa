@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Git SCM.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # The compilation settings here are from the Git SCM book website.
 # Refer also to INSTALL file for details.
@@ -15,6 +15,8 @@
 # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 # - https://github.com/git/git/blob/master/INSTALL
 # - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
+
+_koopa_assert_has_no_environments
 
 name="git"
 version="$(koopa variable "$name")"

@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Install GNU Scientific Library (GSL).
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.gnu.org/software/gsl/
+
+_koopa_assert_has_no_environments
 
 name="gsl"
 version="$(koopa variable "$name")"

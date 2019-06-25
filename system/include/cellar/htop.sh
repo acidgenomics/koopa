@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
 # Install htop.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://hisham.hm/htop/releases/
 # - https://github.com/hishamhm/htop
+
+_koopa_assert_has_no_environments
 
 name="htop"
 version="$(koopa variable "$name")"

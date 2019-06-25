@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
 # Install HDF5.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.hdfgroup.org/downloads/hdf5/
 # - https://support.hdfgroup.org/ftp/HDF5/releases
 
 # Note that website requires registration.
+
+_koopa_assert_has_no_environments
 
 name="hdf5"
 version="$(koopa variable "$name")"

@@ -119,7 +119,7 @@ _koopa_r_javareconf() {
         R --vanilla CMD javareconf $java_flags
     )
 
-    # > Rscript -e 'install.packages("rJava")'
+    Rscript -e 'install.packages("rJava")'
 }
 
 

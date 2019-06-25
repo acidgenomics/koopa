@@ -16,4 +16,3 @@ then
 fi
 
 source "$(koopa cellar-script tmux)"
-
