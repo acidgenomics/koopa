@@ -9,7 +9,6 @@
 _koopa_assert_has_no_environments() {
     if ! _koopa_has_no_environments
     then
-    then
         >&2 printf "Error: active environment detected.\n"
         exit 1
     fi
