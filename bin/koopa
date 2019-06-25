@@ -53,10 +53,12 @@ return string commands:
         Source script header.
     home
         Koopa installation path (e.g. "/usr/local/koopa").
-    host-name
-        Return useful host name matching either AWS, Azure, Harvard clusters,
-        or fall back to local machine name.
-    os-name
+    host-type
+        Return useful host type matching either:
+        - VMs: "aws", "azure".
+        - HPCs: "harvard-o2", "harvard-odyssey".
+        Returns "local" for local machines and/or unsupported types.
+    os-type
         Operating system name. Always returns lowercase, with unique names for
         Linux distros (e.g. "debian").
     os-version
@@ -139,8 +141,8 @@ case "$1" in
         echo "$KOOPA_HOME"
 	exit
         ;;
-    host-name)
-        _koopa_host_name
+    host-type)
+        _koopa_host_type
         exit
         ;;
     info)
@@ -151,8 +153,8 @@ case "$1" in
         Rscript --vanilla "${include_dir}/list.R"
         exit
         ;;
-    os-name)
-        _koopa_os_name
+    os-type)
+        _koopa_os_type
         exit
         ;;
     os-version)
