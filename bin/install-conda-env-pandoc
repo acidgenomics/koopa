@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install conda pandoc.
+# Modified 2019-06-25.
+
+_koopa_assert_is_installed conda
+
+conda create -y \
+    -n pandoc \
+    -c conda-forge \
+    pandoc
