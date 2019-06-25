@@ -9,7 +9,11 @@ _koopa_is_installed conda || return
 # Skip on macOS, where we can use Homebrew instead.
 _koopa_is_linux || return
 
-env_list="$(conda env list --json)"
+# Early return if local conda environments aren't configured.
+prefix="$(_koopa_conda_prefix)"
+[ -d "$prefix" ] || return
+
+env_list="$(_koopa_conda_env_list)"
 
 _koopa_add_conda_env_to_path pandoc "$env_list"
 _koopa_add_conda_env_to_path texlive-core "$env_list"
