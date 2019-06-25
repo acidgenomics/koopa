@@ -101,7 +101,6 @@ _koopa_build_prefix() {
     else
         prefix="${HOME}/.local"
     fi
-    mkdir -p "$prefix"
     echo "$prefix"
 }
 
@@ -117,7 +116,6 @@ _koopa_cellar_prefix() {
     else
         prefix="${XDG_DATA_HOME}/koopa/cellar"
     fi
-    mkdir -p "$prefix" || return 1
     echo "$prefix"
 }
 
@@ -132,7 +130,6 @@ _koopa_conda_prefix() {
     else
         prefix="${XDG_DATA_HOME}/koopa/conda"
     fi
-    mkdir -p "$prefix" || return 1
     echo "$prefix"
 }
 
@@ -324,11 +321,14 @@ _koopa_shell() {
     then
         shell="zsh"
     else
-        >&2 printf "Error: Failed to detect supported shell.\n"
-        >&2 printf "Supported: bash, ksh, zsh.\n\n"
-        >&2 printf "  SHELL: %s\n" "$SHELL"
-        >&2 printf "      0: %s\n" "$0"
-        >&2 printf "      -: %s\n" "$-"
+        >&2 cat << EOF
+Error: Failed to detect supported shell.
+Supported: bash, ksh, zsh.
+
+  SHELL: ${SHELL}
+      0: ${0}
+      -: ${-}
+EOF
         return 1
     fi
     
