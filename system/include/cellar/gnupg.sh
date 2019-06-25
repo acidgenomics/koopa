@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install GnuPG.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.gnupg.org/
@@ -9,6 +9,8 @@
 # - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
 # - https://github.com/gpg/gnupg/blob/master/INSTALL
 # - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
+
+_koopa_assert_has_no_environments
 
 name="gnupg"
 version="$(koopa variable gpg)"
