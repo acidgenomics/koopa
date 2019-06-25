@@ -2,23 +2,21 @@
 # shellcheck disable=SC2236
 
 # Include Aspera Connect binaries in PATH, if defined.
-# Modified 2019-06-20.
+# Modified 2019-06-25.
 
-if [ -z "${ASPERACONNECT_EXE:-}" ]
+if [ -z "${ASPERA_EXE:-}" ]
 then
-    exe_file="${HOME}/.aspera/connect/bin/asperaconnect"
-    if [ -f "$exe_file" ]
-    then
-        export ASPERACONNECT_EXE="$exe_file"
-    else
-        ASPERACONNECT_EXE=
-    fi
-    unset -v exe_file
+    ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
 fi
-if [ -f "${ASPERACONNECT_EXE:-}" ]
+
+# Export in PATH, if accessible.
+if [ -x "$ASPERA_EXE" ]
 then
-    bin_dir="$(dirname "$ASPERACONNECT_EXE")"
-    export PATH="${bin_dir}:${PATH}"
+    export ASPERA_EXE
+    bin_dir="$(dirname "$ASPER_EXE")"
+    _koopa_add_to_path_start "$bin_dir"
     unset -v bin_dir
+else
+    unset -v ASPERA_EXE
 fi
 

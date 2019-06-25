@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Ruby environment manager (rbenv).
-# Modified 2019-06-19.
+# Modified 2019-06-25.
 
 # See also:
 # - https://github.com/rbenv/rbenv

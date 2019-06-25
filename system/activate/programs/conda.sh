@@ -13,8 +13,6 @@
 # Note that an environment will only be activated when `$CONDA_DEFAULT_ENV` is
 # set prior to running this code. Attempts to activate "base" will be ignored.
 
-
-
 # Conda doesn't currently support ksh, and fish support is buggy.
 # Only attempt to autoload for bash or zsh.
 echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return
@@ -50,30 +48,27 @@ then
     elif [ -d "/usr/local/miniconda3" ]
     then
         conda_home="/usr/local/miniconda3"
+    else
+        conda_home=
     fi
 
-    if [ ! -z "${conda_home:-}" ]
+    if [ -d "${conda_home}" ]
     then
         export CONDA_EXE="${conda_home}/bin/conda"
-        unset -v conda_home
+    else
+        CONDA_EXE=
     fi
+    unset -v conda_home
 fi
 
-# Early return if we don't detect an installation.
-[ -z "${CONDA_EXE:-}" ] && return
-
-# Early return with error if conda installation is set but not accessible.
-if [ ! -x "$CONDA_EXE" ]
+# Run activation script, if accessible.
+if [ -x "$CONDA_EXE" ]
 then
-    printf "conda does not exist at:\n%s\n" "$CONDA_EXE"
-    return 1
+    bin_dir="$(dirname "$CONDA_EXE")"
+    # Note that the activation script must run again inside a tmux session.
+    # shellcheck source=/dev/null
+    . "${bin_dir}/activate"
+    unset -v bin_dir
+else
+    unset -v CONDA_EXE
 fi
-
-# Now we're ready to activate.
-conda_bin_dir="$(dirname "$CONDA_EXE")"
-
-# Note that the activation script must run again inside a tmux session.
-# shellcheck source=/dev/null
-. "${conda_bin_dir}/activate"
-
-unset -v conda_bin_dir
