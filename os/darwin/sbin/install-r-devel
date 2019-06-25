@@ -4,10 +4,12 @@
 source "$(koopa header darwin)"
 
 # Install R-devel for macOS.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://mac.r-project.org/
+
+_koopa_assert_has_sudo
 
 r_version="3.6-branch"
 macos_version="el-capitan"

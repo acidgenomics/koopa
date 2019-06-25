@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Install Python.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.python.org/
+
+_koopa_assert_has_no_environments
 
 name="python"
 version="$(koopa variable "$name")"

@@ -4,6 +4,8 @@
 source "$(koopa header darwin)"
 
 # Open application as administrator.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
 
 sudo open -a "$1"

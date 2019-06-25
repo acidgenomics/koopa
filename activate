@@ -42,6 +42,8 @@ EOF
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
+# FIXME Consider removing flag arguments, or shift params.
+
 for i in "$@"
 do
     case "$i" in
@@ -53,6 +55,7 @@ do
             export KOOPA_DEBUG=1
             ;;
         --force)
+            # FIXME This flag will pass through to conda and cause error.
             force=1
             ;;
         --minimal)
@@ -74,11 +77,10 @@ unset -f usage
 
 # Early return if koopa is already active.
 # We may need to tweak this approach to work properly with bash subshells.
-if [ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ]
-then
-    [ -z "${TMUX:-}" ] && return 0
-    [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && return 0
-fi
+
+[ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && force=1
+[ -z "${TMUX:-}" ] && force=1
+[ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ] && return
 
 
 
@@ -166,7 +168,6 @@ activate_dir="${KOOPA_HOME}/system/activate"
 exports_dir="${activate_dir}/exports"
 . "${exports_dir}/path.sh"
 . "${exports_dir}/xdg-base-directory.sh"
-# This script requires `path.sh` to define `koopa` in `$PATH` first.
 . "${exports_dir}/general.sh"
 unset -v exports_dir
 

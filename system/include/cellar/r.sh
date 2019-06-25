@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install R.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://www.r-project.org/
@@ -10,6 +10,8 @@
 # - https://superuser.com/questions/841270/installing-r-on-rhel-7
 # - https://github.com/rstudio/rmarkdown/issues/359
 # - http://pj.freefaculty.org/blog/?p=315
+
+_koopa_assert_has_no_environments
 
 name="R"
 version="$(koopa variable "$name")"

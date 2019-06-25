@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 
 # Install emacs.
-# Updated 2019-06-23.
+# Updated 2019-06-25.
 
 # See also:
 # - https://www.gnu.org/software/emacs/
 # - https://github.com/emacs-mirror/emacs
+
+_koopa_assert_has_no_environments
 
 name="emacs"
 version="$(koopa variable "$name")"

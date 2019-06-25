@@ -4,7 +4,9 @@
 source "$(koopa header darwin)"
 
 # Flush DNS cache.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
 
 sudo dscacheutil -flushcache
 sudo killall -HUP mDNSResponder
