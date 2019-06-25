@@ -14,6 +14,27 @@
 
 
 
+# Set options                                                               {{{1
+# ==============================================================================
+
+[ "${debug:-0}" -eq 1 ] && export KOOPA_DEBUG=1
+[ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
+
+if [ ! -z "${KOOPA_DEBUG:-}" ]
+then
+    printf "Debug mode enabled. Setting strict shell mode.\n"
+    set -o errexit
+    set -o nounset
+    set -o pipefail
+    # > set -o xtrace
+    if [ ! -z "${BASH_VERSION:-}" ]
+    then
+        set -o errtrace
+    fi
+fi
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
@@ -28,11 +49,11 @@ supported shells: bash, ksh, zsh
 optional arguments:
     -h, --help
         Show this help message and exit.
-    --debug, debug=1
-        Enable debugging mode. Used for Travis CI build checks.
-    --force, force=1
+    debug=1
+        Enable verbose debug mode. Used for Travis CI checks.
+    force=1
         Force reactivation, even if koopa is already active.
-    --minimal, minimal=1
+    minimal=1
         Minimal mode. Simply export koopa programs into PATH.
 EOF
 }
@@ -42,8 +63,6 @@ EOF
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
-# FIXME Consider removing flag arguments, or shift params.
-
 for i in "$@"
 do
     case "$i" in
@@ -51,18 +70,9 @@ do
             usage
             exit
             ;;
-        --debug)
-            export KOOPA_DEBUG=1
-            ;;
-        --force)
-            # FIXME This flag will pass through to conda and cause error.
-            force=1
-            ;;
-        --minimal)
-            export KOOPA_MINIMAL=1
-            ;;
-        --*|-*) # Unsupported flags.
-            >&2 printf "Error: Invalid flag %s\n" "$1"
+        *)
+            # Unsupported flags.
+            >&2 printf "Error: Invalid argument '%s'\n" "$1"
             exit 1
             ;;
     esac
@@ -81,23 +91,6 @@ unset -f usage
 [ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && force=1
 [ -z "${TMUX:-}" ] && force=1
 [ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ] && return
-
-
-
-# Debug mode                                                                {{{1
-# ==============================================================================
-
-if [ ! -z "${KOOPA_DEBUG:-}" ]
-then
-    set -o errexit
-    set -o nounset
-    set -o pipefail
-    set -o xtrace
-    if [ ! -z "${BASH_VERSION:-}" ]
-    then
-        set -o errtrace
-    fi
-fi
 
 
 
@@ -233,3 +226,21 @@ fi
 unset -v KOOPA_SHELL
 unset -v activate_dir
 unset -v colors
+
+
+
+# Restore options                                                           {{{1
+# ==============================================================================
+
+if [ ! -z "${KOOPA_DEBUG:-}" ]
+then
+    set +o errexit
+    set +o nounset
+    set +o pipefail
+    # > set +o xtrace
+    if [ ! -z "${BASH_VERSION:-}" ]
+    then
+        set +o errtrace
+    fi
+    printf "Activation was successful.\n"
+fi

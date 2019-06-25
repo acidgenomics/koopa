@@ -19,23 +19,23 @@ cat << EOF
 usage: dotfile [-h] RELATIVE_PATH [SYMLINK_NAME]
 
 required positional arguments:
-  1: relative_path
+    1: relative_path
         Relative file path in dotfiles repo.
 
 optional positional arguments:
-  2: symlink_name
+    2: symlink_name
         Name of destination symlink (without '.' prefix).
 
 optional arguments:
-  -h, --help
+    -h, --help
         Show this help message and exit.
-  -f, --force 
+    -f, --force 
         Force overwrite.
         Applies to symlinks only.
-  -p, --private
+    -p, --private
         Private dot file.
         Currently only works for Mike's configuration.
-  -q, --quiet
+    -q, --quiet
         Quiet mode. Don't print messages.
 EOF
 }
@@ -71,15 +71,18 @@ do
             quiet=1
             shift 1
             ;;
-        --) # End argument parsing.
+        --)
+            # End argument parsing.
             shift
             break
             ;;
-        --*|-*) # Unsupported flags.
+        --*|-*)
+            # Unsupported flags.
             >&2 printf "Error: Invalid flag %s\n" "$1"
             exit 1
             ;;
-        *) # Preserve positional arguments.
+        *)
+            # Preserve positional arguments.
             PARAMS="${PARAMS} ${1}"
             shift
             ;;
