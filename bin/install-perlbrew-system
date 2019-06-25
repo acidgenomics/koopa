@@ -21,7 +21,7 @@ else
 fi
 
 (
-    cd "${PERLBREW_ROOT}/perls"
+    cd "${PERLBREW_ROOT}/perls" || exit 1
     rm -rf system
     mkdir system
     ln -s "$bin_dir" "system/bin"
