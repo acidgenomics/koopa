@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-set -x
-
 # Install Vim.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
 
 # See also:
 # - https://github.com/vim/vim
+
+_koopa_assert_has_no_environments
 
 name="vim"
 version="$(koopa variable "$name")"

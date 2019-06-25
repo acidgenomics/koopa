@@ -5,18 +5,12 @@
 
 
 
+# Modified 2019-06-25.
 _koopa_assert_has_no_environments() {
-    # Ensure conda is deactivated.
-    if [ -x "$(command -v conda)" ] && [ ! -z "${CONDA_PREFIX:-}" ]
+    if ! _koopa_has_no_environments
     then
-        >&2 printf "Error: conda is active.\n"
-        exit 1
-    fi
-
-    # Ensure Python virtual environment is deactivated.
-    if [ -x "$(command -v deactivate)" ]
     then
-        >&2 printf "Error: Python virtualenv is active.\n"
+        >&2 printf "Error: active environment detected.\n"
         exit 1
     fi
 }
@@ -98,6 +92,17 @@ _koopa_assert_is_not_dir() {
         >&2 printf "Error: Directory already exists.\n%s\n" "$path"
         exit 1
     fi
+}
+
+
+
+# Detect activation of virtual environments.
+# Modified 2019-06-25.
+_koopa_has_no_environments() {
+    # Conda
+    [ -x "$(command -v conda)" ] && [ ! -z "${CONDA_PREFIX:-}" ] && return 1
+    # Python virtual environment
+    [ -x "$(command -v deactivate)" ] && return 1
 }
 
 
