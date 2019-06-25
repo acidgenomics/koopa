@@ -20,11 +20,13 @@ printf "Installing %s %s.\n" "$name" "$version"
 (
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
-    cd "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     sudo su - \
         -c "R -e \"install.packages('shiny', repos='https://cran.rstudio.com/')\""
-    wget "https://download3.rstudio.org/centos6.3/x86_64/shiny-server-${version}-x86_64.rpm"
-    sudo yum install -y --nogpgcheck "shiny-server-${version}-x86_64.rpm"
+    file="shiny-server-${version}-x86_64.rpm"
+    url="https://download3.rstudio.org/centos6.3/x86_64/${file}"
+    wget "$url"
+    sudo yum install -y --nogpgcheck "$file"
     rm -rf "$tmp_dir"
 )
 
