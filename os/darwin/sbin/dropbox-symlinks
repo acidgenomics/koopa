@@ -4,7 +4,9 @@
 source "$(koopa header darwin)"
 
 # Symlink Desktop and Documents on Dropbox.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
 
 sudo rm -r ~/Desktop
 ln -s ~/Dropbox/Desktop ~/.

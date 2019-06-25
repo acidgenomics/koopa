@@ -4,11 +4,13 @@
 source "$(koopa header ubuntu)"
 
 # Install R from CRAN.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 # See also:
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # - https://askubuntu.com/questions/197564
+
+_koopa_assert_has_sudo
 
 release="$(lsb_release -s -c)"
 

@@ -4,7 +4,9 @@
 source "$(koopa header azure)"
 
 # Symlink docker installation.
-# Modified 2019-06-23.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
 
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"

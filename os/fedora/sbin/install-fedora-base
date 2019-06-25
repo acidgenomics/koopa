@@ -4,7 +4,9 @@
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
 
 enable-epel
 sudo yum -y update
