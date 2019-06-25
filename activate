@@ -168,7 +168,6 @@ activate_dir="${KOOPA_HOME}/system/activate"
 exports_dir="${activate_dir}/exports"
 . "${exports_dir}/path.sh"
 . "${exports_dir}/xdg-base-directory.sh"
-# This script requires `path.sh` to define `koopa` in `$PATH` first.
 . "${exports_dir}/general.sh"
 unset -v exports_dir
 
