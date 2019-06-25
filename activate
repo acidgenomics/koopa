@@ -2,7 +2,7 @@
 # shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-24.
+# Modified 2019-06-25.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -29,7 +29,7 @@ optional arguments:
     -h, --help
         Show this help message and exit.
     --debug, debug=1
-        Enable verbose debugging mode.
+        Enable debugging mode. Used for Travis CI build checks.
     --force, force=1
         Force reactivation, even if koopa is already active.
     --minimal, minimal=1
