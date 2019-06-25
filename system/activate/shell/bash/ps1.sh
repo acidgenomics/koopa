@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
+# Modified 2019-06-25.
 
 # \#: the command number of this command
 # \!: the history number of this command
@@ -16,17 +17,36 @@
 # Add the conda environment name.
 # Note that we have to source conda first (see shrc.rc above).
 # https://stackoverflow.com/questions/42481726
-# CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
-# export CONDA_PROMPT_MODIFIER
-# conda="$CONDA_PROMPT_MODIFIER"
+# > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
+# > export CONDA_PROMPT_MODIFIER
+# > conda="$CONDA_PROMPT_MODIFIER"
 
-history="[c\#; h\!]"
-prompt="\$"
-# Unicode doesn't work with PuTTY on Windows.
-# prompt="❯"
-# Only show the user/host for SSH.
+# User name and host.
 user="\u@\h"
+
+# Remote machine information.
+mach=
+if _koopa_is_remote
+then
+    host_type="$(_koopa_host_type)"
+    [[ -n "$host_type" ]] && mach="${host_type}"
+    os_type="$(_koopa_os_type)"
+    [[ -n "$os_type" ]] && [[ -n "$mach" ]] && mach="${mach} ${os_type}"
+    [[ -n "$mach" ]] && mach="[${mach}]"
+fi
+
+# Shell name.
+shell="[$(_koopa_shell)]"
+
+# History.
+history="[c\#; h\!]"
+
+# Working directory.
 wd="\w"
+
+# Unicode doesn't work with some monospace fonts on Windows.
+# > prompt="\$"
+prompt="❯"
 
 # Enable colorful prompt.
 # Match either "xterm-256color" or "screen-256color" here.
@@ -52,13 +72,14 @@ then
     # 96 light cyan
     # 97 white
 
-    # Dynamically change the user color based on connection type.
-    if [[ -n "${SSH_CONNECTION:-}" ]]
+    # Change the user color based on connection type.
+    if _koopa_is_remote
     then
         user_color="33"
     else
         user_color="36"
     fi
+
     user="\[\033[01;${user_color}m\]${user}\[\033[00m\]"
 
     wd_color="34"
@@ -69,7 +90,11 @@ then
     prompt="\[\033[01;${prompt_color}m\]${prompt}\[\033[00m\]"
 fi
 
-PS1="\n${user} ${history}\n${wd}\n${prompt} "
+PS1="\n${user}"
+[[ -n "$mach" ]] && PS1="${PS1} ${mach}"
+PS1="${PS1} ${shell} ${history}\n"
+PS1="${PS1}${wd}\n"
+PS1="${PS1}${prompt} "
 export PS1
 
-unset -v history prompt prompt_color user user_color wd wd_color
+unset -v history mach prompt prompt_color user user_color wd wd_color
