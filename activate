@@ -25,6 +25,7 @@ then
     if [ ! -z "${BASH_VERSION:-}" ]
     then
         set -o errtrace
+        set -o posix
         set -o pipefail
     fi
     export KOOPA_TEST=1
@@ -157,6 +158,7 @@ else
     >&2 printf "      -: %s\n" "$-"
     return 1
 fi
+export KOOPA_SHELL
 
 if [ ! -f "${file:-}" ]
 then
@@ -248,24 +250,19 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-unset -v KOOPA_SHELL
 unset -v activate_dir
 unset -v colors
 
-
-
-# Restore options                                                           {{{1
-# ==============================================================================
-
+# Disable test mode.
 if [ ! -z "${KOOPA_TEST:-}" ]
 then
     set +o errexit
     set +o nounset
-    set +o pipefail
-    # > set +o xtrace
     if [ ! -z "${BASH_VERSION:-}" ]
     then
-        set +o errtrace
+        set -o errtrace
+        set -o posix
+        set -o pipefail
     fi
     printf "Activation was successful.\n"
 fi

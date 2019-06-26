@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Configuration functions.
-# Modified 2019-06-24.
+# Modified 2019-06-26.
 
 
 
@@ -16,9 +16,6 @@ _koopa_is_remote() {
 # Note that we're truncating lines inside the box to 68 characters.
 # Modified 2019-06-20.
 _koopa_info_box() {
-    local array
-    local barpad
-
     array=("$@")
     barpad="$(printf "━%.0s" {1..70})"
     
@@ -28,6 +25,8 @@ _koopa_info_box() {
         printf "  ┃ %-68s ┃  \n"  "${i::68}"
     done
     printf "  %s%s%s  \n\n"  "┗" "$barpad" "┛"
+    
+    unset -v array barpad
 }
 
 
@@ -40,12 +39,10 @@ _koopa_info_box() {
 
 # Modified 2019-06-24.
 _koopa_java_home() {
-    local JAVA_HOME
     if _koopa_is_darwin
     then
         JAVA_HOME="$(/usr/libexec/java_home)"
     else
-        local jvm_dir
         jvm_dir="/usr/lib/jvm"
         [ -d "$jvm_dir" ] || return
         if [ -d "${jvm_dir}/java-12-oracle" ]
@@ -63,6 +60,7 @@ _koopa_java_home() {
     fi
     [ -d "$JAVA_HOME" ] || return
     echo "$JAVA_HOME"
+    unset -v jvm_dir
 }
 
 
@@ -98,7 +96,6 @@ _koopa_r_javareconf() {
     _koopa_is_installed R || return 1
     _koopa_is_installed java || return 1
    
-    local java_home
     java_home="$(_koopa_java_home)"
     [ ! -z "$java_home" ] && [ -d "$java_home" ] || return 1
     
@@ -127,6 +124,8 @@ _koopa_r_javareconf() {
     )
 
     Rscript -e 'install.packages("rJava")'
+    
+    unset -v java_home
 }
 
 
@@ -154,10 +153,10 @@ _koopa_update_profile() {
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
 
-    local file
     file="/etc/profile.d/koopa.sh"
     
     printf "Updating '%s'.\n" "$file"
+
     sudo mkdir -p "$(dirname file)"
     sudo rm -f "$file"
     
@@ -169,6 +168,8 @@ _koopa_update_profile() {
 # shellcheck source=/dev/null
 . ${KOOPA_HOME}/activate
 EOF"
+
+    unset -v file
 }
 
 
@@ -181,10 +182,10 @@ _koopa_update_r_config() {
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     
-    local r_home
     r_home="$(_koopa_r_home)"
 
     printf "Updating '%s'.\n" "$r_home"
+    
     sudo ln -fs \
         "${KOOPA_HOME}/system/config/R/etc/"* \
         "${r_home}/etc/".
@@ -200,6 +201,8 @@ _koopa_update_r_config() {
     # > fi
 
     _koopa_r_javareconf
+    
+    unset -v r_home
 }
 
 
@@ -209,11 +212,7 @@ _koopa_update_r_config() {
 _koopa_update_shells() {
     _koopa_assert_has_sudo
     
-    local shell
-    shell="$1"
-    shell="$(koopa build-prefix)/bin/${shell}"
-    
-    local shell_file
+    shell="$(koopa build-prefix)/bin/${1}"
     shell_file="/etc/shells"
         
     if ! grep -q "$shell" "$shell_file"
@@ -223,17 +222,16 @@ _koopa_update_shells() {
     fi
     
     printf "Run 'chsh -s %s %s' to change default shell.\n" "$shell" "$USER"
+    
+    unset -v shell shell_file
 }
 
 
 
-# Update XDG local configuration.
+# Update XDG configuration.
 # ~/.config/koopa
-# Modified 2019-06-23.
+# Modified 2019-06-26.
 _koopa_update_xdg_config() {
-    local config_dir
-    local home_dir
-    
     config_dir="$(koopa config-dir)"
     home_dir="$(koopa home)"
     
@@ -262,4 +260,6 @@ _koopa_update_xdg_config() {
         rm -f "${config_dir}/R"
         ln -s "${home_dir}/system/config/R" "${config_dir}/R"
     fi
+    
+    unset -v config_dir home_dir
 }

@@ -140,6 +140,7 @@ brew install \
     gsl \
     hdf5 \
     hub \
+    ksh \
     leiningen \
     libav \
     libgit2 \

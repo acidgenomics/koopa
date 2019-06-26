@@ -9,19 +9,17 @@
 _koopa_add_conda_env_to_path() {
     _koopa_is_installed conda || return 1
 
-    local env_name
     env_name="$1"
-
-    local env_list
     env_list="${2:-}"
 
-    local prefix
     prefix="$(_koopa_conda_env_prefix "$env_name" "$env_list")"
     [ ! -z "$prefix" ] || return 1
     prefix="${prefix}/bin"
     [ -d "$prefix" ] || return 1
 
     _koopa_add_to_path_start "$prefix"
+    
+    unset -v env_list env_name prefix
 }
 
 
@@ -30,22 +28,17 @@ _koopa_add_conda_env_to_path() {
 _koopa_create_conda_env() {
     _koopa_assert_is_installed conda
 
-    local name
     name="$1"
-
-    local apps
     apps="${2:-$name}"
-    
-    local channel
     channel="${3:-conda-forge}"
-    
-    local prefix
     prefix="$(_koopa_conda_prefix)"
 
     conda create -qy \
         -p "${prefix}/envs/${name}" \
         -c $channel \
         $apps
+        
+    unset -v apps channel name prefix
 }
 
 
@@ -64,13 +57,8 @@ _koopa_conda_env_list() {
 _koopa_conda_env_prefix() {
     _koopa_is_installed conda || return 1
 
-    local env_name
     env_name="$1"
-
-    local env_list
     env_list="${2:-}"
-
-    local prefix
     prefix="$(_koopa_conda_prefix)"
 
     if [ -z "$env_list" ]
@@ -83,7 +71,6 @@ _koopa_conda_env_prefix() {
     env_list="$(echo "$env_list" | grep "$prefix")"
     [ -z "$env_list" ] && return 1
 
-    local path
     path="$( \
         echo "$env_list" | \
         grep "/envs/${env_name}" \
@@ -91,5 +78,7 @@ _koopa_conda_env_prefix() {
     [ -z "$path" ] && return 1
 
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
+    
+    unset -v env_list env_name path prefix
 }
 

@@ -46,11 +46,8 @@
 # - RedHat: x86_64-redhat-linux-gnu
 # - Darwin: x86_64-darwin15.6.0
 #
-# Modified 2019-06-22.
+# Modified 2019-06-26.
 _koopa_build_os_string() {
-    local mach
-    local string
-    
     mach="$(uname -m)"
     
     if _koopa_is_darwin
@@ -61,13 +58,14 @@ _koopa_build_os_string() {
         # This will distinguish between RedHat, Amazon, and other distros
         # instead of just returning "linux". Note that we're substituting
         # "redhat" instead of "rhel" here, when applicable.
-        local os_type
         os_type="$(koopa os-type)"
         [ "$os_type" = "rhel" ] && os_name="redhat"
         string="${mach}-${os_type}-${OSTYPE}"
     fi
     
     echo "$string"
+    
+    unset -v mach os_type string
 }
 
 
@@ -87,9 +85,8 @@ _koopa_is_shared() {
 
 
 # Return the installation prefix to use.
-# Modified 2019-06-20.
+# Modified 2019-06-26.
 _koopa_build_prefix() {
-    local prefix
     if _koopa_is_shared && _koopa_has_sudo
     then
         if echo "$KOOPA_HOME" | grep -Eq "^/opt/"
@@ -102,6 +99,7 @@ _koopa_build_prefix() {
         prefix="${HOME}/.local"
     fi
     echo "$prefix"
+    unset -v prefix
 }
 
 
@@ -109,7 +107,6 @@ _koopa_build_prefix() {
 # Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
 # Modified 2019-06-25.
 _koopa_cellar_prefix() {
-    local prefix
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/cellar"
@@ -117,13 +114,13 @@ _koopa_cellar_prefix() {
         prefix="${XDG_DATA_HOME}/koopa/cellar"
     fi
     echo "$prefix"
+    unset -v prefix
 }
 
 
 
-# Modified 2019-06-25.
+# Modified 2019-06-26.
 _koopa_conda_prefix() {
-    local prefix
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/conda"
@@ -131,6 +128,7 @@ _koopa_conda_prefix() {
         prefix="${XDG_DATA_HOME}/koopa/conda"
     fi
     echo "$prefix"
+    unset -v prefix
 }
 
 
@@ -165,8 +163,6 @@ EOF
 
         return 1
     fi
-    
-    local path
     
     case "$1" in
         # shell
@@ -215,15 +211,15 @@ EOF
     esac
     
     echo "$path"
+    unset -v path
 }
 
 
 
 # Simple host type name string to load up host-specific scripts.
 # Currently intended support AWS, Azure, and Harvard clusters.
-# Modified 2019-06-25.
+# Modified 2019-06-26.
 _koopa_host_type() {
-    local name
     case "$HOSTNAME" in
         # VMs
         *.ec2.internal)
@@ -244,6 +240,7 @@ _koopa_host_type() {
             ;;
     esac
     echo "$name"
+    unset -v name
 }
 
 
@@ -251,10 +248,6 @@ _koopa_host_type() {
 # Used by `koopa info`.
 # Modified 2019-06-22.
 _koopa_locate() {
-    local command
-    local name
-    local path
-    
     command="$1"
     name="${2:-$command}"
     path="$(_koopa_quiet_which2 "$command")"
@@ -266,6 +259,8 @@ _koopa_locate() {
         path="$(realpath "$path")"
     fi
     printf "%s: %s" "$name" "$path"
+    
+    unset -v command name path
 }
 
 
@@ -283,7 +278,6 @@ _koopa_macos_version() {
 
 # Modified 2019-06-25.
 _koopa_os_type() {
-    local name
     if _koopa_is_darwin
     then
         name="$(uname -s | tr '[:upper:]' '[:lower:]')"
@@ -297,6 +291,7 @@ _koopa_os_type() {
         name=
     fi
     echo "$name"
+    unset -v name
 }
 
 
@@ -316,10 +311,8 @@ _koopa_rsync_flags() {
 
 
 # Note that this isn't necessarily the default shell (`$SHELL`).
-# Modified 2019-06-22.
+# Modified 2019-06-26.
 _koopa_shell() {
-    local shell
-    
     if [ ! -z "${BASH_VERSION:-}" ]
     then
         shell="bash"
@@ -342,6 +335,7 @@ EOF
     fi
     
     echo "$shell"
+    unset -v shell
 }
 
 
@@ -355,11 +349,8 @@ EOF
 # See also:
 # - https://gist.github.com/earthgecko/3089509
 #
-# Modified 2019-06-21.
+# Modified 2019-06-26.
 _koopa_tmp_dir() {
-    local dir
-    local unique
-    
     unique="$(date "+%Y%m%d-%H%M%S")"
     dir="/tmp/koopa-$(id -u)-${unique}"
     
@@ -368,17 +359,15 @@ _koopa_tmp_dir() {
     chmod 0775 "$dir"
     
     echo "$dir"
+    
+    unset -v dir unique
 }
 
 
 
 # Get version stored internally in versions.txt file.
-# Modified 2019-06-18.
+# Modified 2019-06-26.
 _koopa_variable() {
-    local what
-    local file
-    local match
-
     what="$1"
     file="${KOOPA_HOME}/system/include/variables.txt"
     match="$(grep -E "^${what}=" "$file" || echo "")"
@@ -390,4 +379,6 @@ _koopa_variable() {
         >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
         return 1
     fi
+    
+    unset -v file match what
 }

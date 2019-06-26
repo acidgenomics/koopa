@@ -6,11 +6,8 @@
 
 
 # Fix the group permissions on the build directory.
-# Modified 2019-06-20.
+# Modified 2019-06-26.
 _koopa_build_chgrp() {
-    local path
-    local group
-
     path="$1"
     group="$(_koopa_build_prefix_group)"
 
@@ -22,24 +19,19 @@ _koopa_build_chgrp() {
         chgrp -Rh "$group" "$path"
         chmod -R g+w "$path"
     fi
+    
+    unset -v group path
 }
 
 
 
-# Symlink cellar into local build directory.
+# Symlink cellar into build directory.
 # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
 # Modified 2019-06-22.
 _koopa_build_link_cellar() {
-    local name
     name="$1"
-    
-    local version
     version="$2"
-    
-    local cellar_prefix
     cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
-    
-    local build_prefix
     build_prefix="$(koopa build-prefix)"
 
     printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
@@ -55,6 +47,8 @@ _koopa_build_link_cellar() {
     fi
 
     _koopa_build_set_permissions "$build_prefix"
+    
+    unset -v build_prefix cellar_prefix name version
 }
 
 
@@ -62,8 +56,6 @@ _koopa_build_link_cellar() {
 # Create the build directory.
 # Modified 2019-06-20.
 _koopa_build_mkdir() {
-    local path
-    
     path="$1"
     _koopa_assert_is_not_dir "$path"
 
@@ -76,6 +68,8 @@ _koopa_build_mkdir() {
     fi
 
     _koopa_build_chgrp "$path"
+    
+    unset -v path
 }
 
 
@@ -107,7 +101,6 @@ _koopa_build_prefix_group() {
 # Set permissions on program built from source.
 # Modified 2019-06-20.
 _koopa_build_set_permissions() {
-    local path
     path="$1"
     
     if _koopa_has_sudo
@@ -118,4 +111,6 @@ _koopa_build_set_permissions() {
     fi
 
     _koopa_build_chgrp "$path"
+    
+    unset -v path
 }

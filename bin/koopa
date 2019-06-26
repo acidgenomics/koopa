@@ -165,7 +165,7 @@ case "$1" in
         exit
         ;;
     shell)
-        _koopa_shell
+        echo "$KOOPA_SHELL"
         exit
         ;;
     tmp-dir)
