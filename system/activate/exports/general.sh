@@ -28,7 +28,10 @@ _koopa_is_interactive && export INTERACTIVE=1
 
 # OSTYPE
 # Automatically set by bash and zsh.
-[ -z "${OSTYPE:-}" ] && OSTYPE="$(bash -c "echo $OSTYPE")" && export OSTYPE
+# Modified 2019-06-26.
+[ -z "${OSTYPE:-}" ] && 
+    OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')" &&
+    export OSTYPE
 
 # TERM
 # Terminal color mode. This should normally be set by the terminal client.
