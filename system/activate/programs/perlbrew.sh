@@ -26,12 +26,9 @@ fi
 # Source the activation script, if accessible.
 if [ -d "$PERLBREW_ROOT" ]
 then
-    # Fix for unbound PERLBREW_HOME warning.
-    [ ! -z "${KOOPA_TEST:-}" ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
     . "${PERLBREW_ROOT}/etc/bashrc"
-    [ ! -z "${KOOPA_TEST:-}" ] && set -u
 else
     unset -v PERLBREW_ROOT
 fi
