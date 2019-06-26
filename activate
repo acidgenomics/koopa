@@ -13,8 +13,8 @@
 # ==============================================================================
 
 # Never activate for root user.
-[ "$(id -u)" -eq 0 ] && return
-[ "$(whoami)" = "bioinfo" ] && return
+[ "$(id -u)" -eq 0 ] && return 0
+echo "$(whoami)" | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
 # Enable test mode.
 if [ "${test:-0}" -eq 1 ]
