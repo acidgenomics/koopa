@@ -37,13 +37,13 @@ _koopa_assert_is_darwin() {
 
 
 _koopa_assert_is_installed() {
-    local program
     program="$1"
     if ! _koopa_is_installed "$program"
     then
         >&2 printf "Error: %s is not installed.\n" "$program"
         return 1
     fi
+    unset -v program
 }
 
 
@@ -83,7 +83,6 @@ _koopa_assert_is_linux_fedora() {
 # Check if directory already exists.
 # Modified 2019-06-19.
 _koopa_assert_is_not_dir() {
-    local path
     path="$1"
     # Error on existing installation.
     if [ -d "$path" ]
@@ -91,6 +90,7 @@ _koopa_assert_is_not_dir() {
         >&2 printf "Error: Directory already exists.\n%s\n" "$path"
         exit 1
     fi
+    unset -v path
 }
 
 
@@ -133,9 +133,9 @@ _koopa_is_interactive() {
 
 # Modified 2019-06-23.
 _koopa_is_installed() {
-    local program
     program="$1"
     _koopa_quiet_which "$program"
+    unset -v program
 }
 
 
