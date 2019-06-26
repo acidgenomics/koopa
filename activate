@@ -173,7 +173,7 @@ KOOPA_HOME="$(dirname "$(realpath "$file")")" && export KOOPA_HOME
 unset -v file
 
 # Load shared functions.
-# shellcheck source=/dev/null
+# shellcheck source=system/include/functions.sh
 . "${KOOPA_HOME}/system/include/functions.sh"
 
 # Get location of activation scripts.

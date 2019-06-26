@@ -18,4 +18,9 @@ path="${1:-$PWD}"
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
-grep -Elr '#!/usr/bin/env (ba)?sh' "$path" | xargs -I {} shellcheck {}
+grep -Elr \
+    --binary-files="without-match" \
+    --exclude "${KOOPA_HOME}/cellar/" \
+    '#!/usr/bin/env (ba)?sh' \
+    "$path" | \
+    xargs -I {} shellcheck -x {}

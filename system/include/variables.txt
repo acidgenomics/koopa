@@ -72,8 +72,6 @@ ensembl_release_version="96"
 # Note that they use British dates (DD-MM-YY).
 gencode_release_date="2019-04-08"
 gencode_human_release_version="30"
-
-# FIXME Consider renaming to simply 21.
 gencode_mouse_release_version="M21"
 
 # RefSeq
