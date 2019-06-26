@@ -15,25 +15,11 @@
 # Never activate for root user.
 [ "$(id -u)" -eq 0 ] && return
 
-# Never activate for non-interactive shells.
-echo "$-" | grep -q "i" && export INTERACTIVE=1 || return
-
-# Force reactivation inside of HPC jobs.
-[ -z "${SLURM_JOB_ID:-}" ] || force=1
-
-# Force reactivation inside of tmux sessions.
-[ -z "${TMUX:-}" ] || force=1
-
-[ "${debug:-0}" -eq 1 ] && export KOOPA_DEBUG=1
-[ "${force:-0}" -eq 1 ] && export KOOPA_FORCE=1
-[ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
-
-# Early return if koopa is already active.
-[ ! -z "${KOOPA_HOME:-}" ] && [ -z "${KOOPA_FORCE:-}" ] && return
-
-if [ ! -z "${KOOPA_DEBUG:-}" ]
+# Enable test mode.
+if [ "${test:-0}" -eq 1 ]
 then
-    printf "Debug mode enabled. Setting strict shell mode.\n"
+    printf "Test mode enabled.\n"
+    printf "Setting strict shell mode.\n"
     set -o errexit
     set -o nounset
     set -o pipefail
@@ -42,7 +28,27 @@ then
     then
         set -o errtrace
     fi
+    export KOOPA_TEST=1
+    force=1
 fi
+
+# Check for interactive shell.
+echo "$-" | grep -q "i" && export INTERACTIVE=1
+
+# Force reactivation inside of interactive HPC job.
+[ ! -z "${SLURM_JOB_ID:-}" ] && [ ! -z "${INTERACTIVE:-}" ] && force=1
+
+# Force reactivation inside of tmux session.
+[ -z "${TMUX:-}" ] || force=1
+
+[ "${force:-0}" -eq 1 ] && export KOOPA_FORCE=1
+[ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
+
+# Early return for non-interactive sessions.
+[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return
+
+# Early return if koopa is already active.
+[ -z "${KOOPA_FORCE:-}" ] && [ ! -z "${KOOPA_HOME:-}" ] && return
 
 
 
@@ -51,7 +57,7 @@ fi
 
 usage() {
     cat << EOF
-usage: activate [-h] [--debug] [--force] [--minimal]
+usage: activate [-h] [--test] [--force] [--minimal]
 
 Activate koopa.
 
@@ -62,8 +68,9 @@ optional arguments:
         Show this help message and exit.
 
 optional variables:
-    debug=1
-        Enable verbose debug mode. Used for Travis CI checks.
+    test=1
+        Enable verbose test mode. Used for Travis CI checks.
+        This will also automatically set `force=1`.
     force=1
         Force reactivation, even if koopa is already active.
     minimal=1
@@ -227,9 +234,9 @@ then
     then
         darwin_dir="${activate_dir}/os/darwin"
         . "${darwin_dir}/aliases.sh"
-        . "${darwin_dir}/grc-colors.sh"
         . "${darwin_dir}/exports.sh"
         . "${darwin_dir}/programs/homebrew.sh"
+        . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
     fi
 
@@ -251,7 +258,7 @@ unset -v colors
 # Restore options                                                           {{{1
 # ==============================================================================
 
-if [ ! -z "${KOOPA_DEBUG:-}" ]
+if [ ! -z "${KOOPA_TEST:-}" ]
 then
     set +o errexit
     set +o nounset

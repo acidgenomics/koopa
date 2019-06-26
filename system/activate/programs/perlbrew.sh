@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Perlbrew
-# Modified 2019-06-21.
+# Modified 2019-06-26.
 
 # See also:
 # - https://perlbrew.pl
@@ -26,9 +26,12 @@ fi
 # Source the activation script, if accessible.
 if [ -d "$PERLBREW_ROOT" ]
 then
+    # Fix for unbound PERLBREW_HOME warning.
+    [ ! -z "${KOOPA_TEST:-}" ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
     . "${PERLBREW_ROOT}/etc/bashrc"
+    [ ! -z "${KOOPA_TEST:-}" ] && set -u
 else
     unset -v PERLBREW_ROOT
 fi
