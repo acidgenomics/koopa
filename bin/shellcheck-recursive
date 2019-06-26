@@ -20,7 +20,7 @@ path="${1:-$PWD}"
 # Here we're checking for the shebang, rather than relying on file extension.
 grep -Elr \
     --binary-files="without-match" \
-    --exclude "${KOOPA_HOME}/cellar/" \
+    --exclude-dir="${KOOPA_HOME}/cellar" \
     '#!/usr/bin/env (ba)?sh' \
     "$path" | \
     xargs -I {} shellcheck -x {}

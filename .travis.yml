@@ -28,10 +28,10 @@ jobs:
             - zsh
       script:
         - bash -c 'set -x; test=1 . ./activate'
+        - ksh  -c 'set -x; test=1 . ./activate'
+        - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './bin/shellcheck-recursive'
         - bash -c './system/linter/fixme-comments.sh'
-        - zsh  -c 'set -x; test=1 . ./activate'
-        - ksh  -c 'set -x; test=1 . ./activate'
     - stage: test
       name: "macos"
       os: osx
