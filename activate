@@ -137,7 +137,11 @@ fi
 # Fake realpath support, if necessary.
 if ! command -v realpath >/dev/null
 then
-    alias realpath="readlink -f"
+    printf "'%s' is not installed. Using '%s' instead.\n" "realpath" "readlink"
+    realpath() {
+        readlink -f "$@"
+    }
+    export -f realpath
 fi
 
 KOOPA_HOME="$(dirname "$(realpath "$file")")"
