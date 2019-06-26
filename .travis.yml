@@ -12,14 +12,6 @@
 #   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
 
 language: shell
-os: linux
-
-# Linux image only has bash (and sh) installed by default.
-addons:
-  apt:
-    packages:
-      - ksh
-      - zsh
 
 branches:
   only:
@@ -28,30 +20,23 @@ branches:
 jobs:
   include:
     - stage: test
-      name: "bash"
+      name: "linux"
+      addons:
+        apt:
+          packages:
+            - ksh
+            - zsh
       script:
         - bash -c 'set -x; test=1 . ./activate'
-    - stage: test
-      name: "ksh"
-      script:
-        - ksh  -c 'set -x; test=1 . ./activate'
-    - stage: test
-      name: "zsh"
-      script:
+        - bash -c './bin/shellcheck-recursive'
+        - bash -c './system/linter/fixme-comments.sh'
         - zsh  -c 'set -x; test=1 . ./activate'
+        - ksh  -c 'set -x; test=1 . ./activate'
     - stage: test
       name: "macos"
       os: osx
       script:
         - bash -c 'set -x; test=1 . ./activate'
-    - stage: test
-      name: "shellcheck"
-      script:
-        - bash -c './bin/shellcheck-recursive'
-    - stage: test
-      name: "linter"
-      script:
-        - bash -c './system/linter/fixme-comments.sh'
 
 notifications:
   email:
