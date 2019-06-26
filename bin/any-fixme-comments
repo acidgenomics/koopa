@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-# Does the directory contain any FIXME comments?
-# Modified 2019-06-26.
-
-path="${1:-$PWD}"
-hits="$(find-fixme-comments "${path}")"
-[[ -n "$hits" ]] && true || false
