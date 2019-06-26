@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Find build cellar symbolic links.
+# Modified 2019-06-26.
+
+prefix="$(koopa build-prefix)"
+name="$1"
+version="$2"
+
+find -L \
+    "$build_prefix" \
+    -path "*/cellar/${name}/${version}/*" \
+    ! -path "${build_prefix}/koopa"
+
