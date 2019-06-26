@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install base programs for Fedora.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
+
+enable-epel
+sudo yum -y update
+sudo yum -y install \
+    epel-release \
+    convmv \
+    git \
+    gsl-devel \
+    hdf5-devel \
+    libssh2-devel \
+    libgit2-devel \
+    mariadb-devel \
+    ncurses \
+    pandoc \
+    pandoc-citeproc \
+    qpdf \
+    sshpass \
+    tmux \
+    tree \
+    udunits2-devel
+sudo yum -y install \
+    java-latest-openjdk \
+    java-latest-openjdk-devel

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Open application.
+# Modified 2019-06-23.
+
+open -a "$1".app

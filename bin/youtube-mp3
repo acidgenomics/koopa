@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
-# Extract MP3 audio from YouTube or SoundCloud.
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
-command -v youtube-dl >/dev/null 2>&1 || { echo >&2 "youtube-dl missing."; exit 1; }
+# Download MP3 audio from YouTube or Soundcloud.
+# Modified 2019-06-23.
+
+_koopa_assert_is_installed youtube-dl
 
 url="$1"
 

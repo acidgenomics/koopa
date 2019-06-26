@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header linux)"
+
+# Install bcbio-vm.
+# Modified 2019-06-25.
+
+# See also:
+# - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
+
+# Note that configuration is saved in:
+# ~/.config/bcbio-nextgen/bcbio-docker-config.yaml.
+# This sets the location of `datadir`, for example.
+
+_koopa_assert_has_sudo
+_koopa_assert_has_no_environments
+_koopa_assert_is_installed docker
+
+prefix="$(koopa build-prefix)/bcbio-vm"
+bin_dir="${prefix}/anaconda/bin"
+tmp_dir="$(koopa tmp-dir)/bcbio-vm"
+
+
+
+# Docker                                                                    {{{1
+# ==============================================================================
+
+sudo groupadd docker
+sudo service docker restart
+sudo gpasswd -a "$(whoami)" docker
+newgrp docker
+
+
+
+# conda                                                                     {{{1
+# ==============================================================================
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p "${prefix}/anaconda"
+    rm -rf "$tmp_dir"
+)
+
+
+
+# bcbio-vm                                                                  {{{1
+# ==============================================================================
+
+"${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen
+"${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen-vm
+
+sudo rm -f /usr/local/bin/bcbio_vm.py
+sudo ln -s "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
+
+sudo rm -f /usr/local/bin/bcbiovm_conda
+sudo ln -s "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
+
+sudo chgrp docker /usr/local/bin/bcbio_vm.py
+sudo chmod g+s /usr/local/bin/bcbio_vm.py
+
+# v1.1.3
+# > data_dir="${prefix}/v1.1.3"
+# > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
+
+# latest
+data_dir="${prefix}/latest"
+image="quay.io/bcbio/bcbio-vc"
+
+bcbio_vm.py --datadir="$data_dir" saveconfig
+bcbio_vm.py install --tools --image "$image"

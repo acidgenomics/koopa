@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install GnuPG.
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    sudo yum install -y gnupg2
+    sudo yum-builddep -y gnupg2
+fi
+
+# Add local lib path to gpg configuration.
+if _koopa_has_sudo
+then
+    sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
+fi
+
+source "$(koopa cellar-script gnupg)"

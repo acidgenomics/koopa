@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Update Debian.
+# Modified 2019-06-23.
+
+_koopa_assert_has_sudo
+
+sudo apt-get update
+sudo apt-get -y dist-upgrade

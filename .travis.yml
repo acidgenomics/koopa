@@ -25,11 +25,24 @@ branches:
   only:
     - master
 
-script:
-  - bash -c 'extra=1 . ./activate'
-  - ksh  -c 'extra=1 . ./activate'
-  - zsh  -c 'extra=1 . ./activate'
-  - bash -c './bin/shellcheck-recursive'
+jobs:
+  include:
+    - stage: test
+      name: "bash"
+      script:
+        - bash -c 'set -x; test=1 . ./activate'
+    - stage: test
+      name: "ksh"
+      script:
+        - ksh  -c 'set -x; test=1 . ./activate'
+    - stage: test
+      name: "zsh"
+      script:
+        - zsh  -c 'set -x; test=1 . ./activate'
+    - stage: test
+      name: "shellcheck"
+      script:
+        - bash -c './bin/shellcheck-recursive'
 
 notifications:
   email:

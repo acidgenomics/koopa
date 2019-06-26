@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Remove file system cruft.
+# Modified 2019-06-23.
+
+path="${1:-.}"
+
+find "$path" \
+    -type f \
+    \( -name ".DS_Store" -o -name "Thumbs.db*" \) \
+    -delete \
+    -print

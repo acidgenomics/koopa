@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Disable quarantine on installed applications.
+# Modified 2019-06-25.
+
+# This is useful for installed Homebrew casks.
+
+_koopa_assert_has_sudo
+
+sudo xattr -r -d com.apple.quarantine /Applications/*.app

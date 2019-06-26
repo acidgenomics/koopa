@@ -1,56 +1,193 @@
 #!/usr/bin/env bash
-set -Eeuxo pipefail
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-install_dir="${script_dir}/system/install"
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/system/include/functions.sh"
+
+# Install koopa.
+# Modified 2019-06-23.
+
+
+
+# Error on root user.
+[ "$(id -u)" -eq 0 ] &&
+    >&2 printf "Don't run this script as root.\n" &&
+    return 1
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+    cat << EOF
+usage: install [-h]
+
+Install koopa.
+
+This script performs the following steps:
+
+  1. Initialize top-level submodules (e.g. dotfiles).
+  2. Recurse into dotfiles repo and initialize additional submodules.
+  3. Configure profile for current user (default; e.g. '~/.bashrc'), or shared
+     profile (use '--shared' flag) via '/etc/profile.d/'.
+
+optional arguments:
+  -h, --help
+        Show this help message and exit.
+  --devel
+        Enable developer mode. This changes the repository URLs from HTTPS
+        to SSH, for easier code commits.
+  --dotfiles
+        Automatically generate dot file symlinks.
+  --mike
+        Install Mike-specific configuration.
+        This flag automatically enables '--devel' and '--dotfiles'.
+  --shared
+        Configure shared installation using '/etc/profile.d'.
+        Automatically enabled when installed in '/usr/local' or '/opt'.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --devel)
+            devel=1
+            shift 1
+            ;;
+        --mike)
+            mike=1
+            shift 1
+            ;;
+        --dotfiles)
+            dotfiles=1
+            shift 1
+            ;;
+        --shared)
+            shared=1
+            shift 1
+            ;;
+        --) # End argument parsing.
+            shift
+            break
+            ;;
+        --*|-*) # Unsupported flags.
+            >&2 printf "Error: Invalid flag %s\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+if [[ "${mike:-0}" -eq 1 ]]
+then
+    devel=1
+    dotfiles=1
+fi
+
+
+
+# Remove legacy cruft                                                       {{{1
+# ==============================================================================
+
+rm -rf "${KOOPA_HOME}/bin/"{host,os,sudo}
+rm -rf "${KOOPA_HOME}/"{config,dotfiles,include}
+
+
+
+# Shared user configuration                                                 {{{1
+# ==============================================================================
+
+# Checking for '/usr/local' installation automatically.
+if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
+then
+    printf "\nShared installation detected at '%s'.\n" "$KOOPA_HOME"
+    shared=1
+fi
+
+if [[ "${shared:-0}" -eq 1 ]]
+then
+    _koopa_update_profile
+fi
+
+
+
+# Initialize submodules                                                     {{{1
+# ==============================================================================
+
+if [[ "${dotfiles:-0}" -eq 1 ]]
+then
+    (
+        printf "\nInitializing submodules.\n"
+        # shellcheck source=/dev/null
+        cd "$KOOPA_HOME" || exit 1
+        git submodule init
+        git submodule update --init --recursive
+        git submodule sync --recursive
+        # Change remote from HTTPS to git for easier commits.
+        if [[ -n "${devel:-}" ]]
+        then
+            git remote set-url origin git@github.com:acidgenomics/koopa.git
+        fi
+    )
+
+    (
+        printf "\nInitializing dotfiles submodules.\n"
+        # shellcheck source=/dev/null
+        cd "${KOOPA_HOME}/system/config/dotfiles" || exit 1
+        git submodule init
+        git submodule update --init --recursive
+        git submodule sync --recursive
+        # Change remote from HTTPS to git for easier commits.
+        if [[ -n "${devel:-}" ]]
+        then
+            git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
+        fi
+    )
+fi
 
 
 
 # Activate koopa                                                            {{{1
 # ==============================================================================
 
-# Ensure koopa is activated, otherwise we'll hit unbound variable errors.
-
+printf "\nActivating koopa.\n"
 # shellcheck source=/dev/null
-. "${script_dir}/activate"
+force=1 . "${KOOPA_HOME}/activate"
 
 
 
-# Initialize submodules                                                     {{{1
+# Dot files                                                                 {{{1
 # ==============================================================================
-(
-    echo "Initializing submodules."
+
+if [[ "${dotfiles:-0}" -eq 1 ]]
+then
+    printf "\nConfiguring dotfiles.\n"
+
+    # Always create these dotfiles, even on a shared installation.
     # shellcheck source=/dev/null
-    cd "$script_dir"
-    git submodule init
-    git submodule update --init --recursive
-    git submodule sync --recursive
-)
+    source "${KOOPA_HOME}/system/install/dotfiles-shared.sh"
 
-(
-    echo "Initializing dotfiles submodules."
+    # Create local config files.
     # shellcheck source=/dev/null
-    cd "${script_dir}/dotfiles"
-    git submodule init
-    git submodule update --init --recursive
-    git submodule sync --recursive
-)
+    [[ -z "${shared:-}" ]] &&
+        source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
 
+    # Configure Mike-only dotfiles.
+    # shellcheck source=/dev/null
+    [[ "${mike:-}" -eq 1 ]] &&
+        source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
 
-
-# Dot file symlinks                                                         {{{1
-# ==============================================================================
-
-# shellcheck source=/dev/null
-. "${install_dir}/dotfiles.sh"
-
-
-# Post-flight checks                                                        {{{1
-# ==============================================================================
-
-koopa-check-system
-koopa-info
-
-
-
-# vim: fdm=marker
+    # Remove legacy dotfile cruft.
+    # shellcheck source=/dev/null
+    source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
+fi

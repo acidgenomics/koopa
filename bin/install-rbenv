@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install Ruby environment manager (rbenv).
+# Modified 2019-06-23.
+
+# See also:
+# - https://github.com/rbenv/rbenv
+# - https://blakewilliams.me/posts/system-wide-rbenv-install
+# - https://devhints.io/rbenv
+
+prefix="$(koopa build-prefix)/rbenv"
+
+_koopa_build_mkdir "$prefix"
+
+# Install rbenv.
+git clone \
+    https://github.com/sstephenson/rbenv.git \
+    "$prefix"
+
+# Install ruby-build.
+mkdir -p "${prefix}/plugins"
+git clone \
+    https://github.com/sstephenson/ruby-build.git \
+    "${prefix}/plugins/ruby-build"
+
+_koopa_build_set_permissions "$prefix"

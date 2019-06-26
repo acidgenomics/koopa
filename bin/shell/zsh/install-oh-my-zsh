@@ -1,6 +1,0 @@
-#!/usr/bin/env zsh
-
-# Install oh-my-zsh
-
-rm -rf ~/.oh-my-zsh
-git clone https://github.com/robbyrussell/oh-my-zsh ~/.oh-my-zsh

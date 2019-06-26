@@ -1,192 +1,251 @@
 #!/bin/sh
 # shellcheck disable=SC1090,SC2236
+
+# Activate koopa.
+# Modified 2019-06-26.
+
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
-
-
-
-# koopa shell bootloader
-# (c) 2018 Michael Steinbaugh
-# This software is provided under an MIT License.
-# Currently supporting POSIX-compliant shells: bash, ksh, zsh.
-
-export KOOPA_VERSION="0.3.6"
-export KOOPA_DATE="2019-06-05"
-
-
-
-# Detect the current shell                                                  {{{1
-# ==============================================================================
-
-# This is not necessarily the default shell (`$SHELL`).
-
-if [ ! -z "${BASH_VERSION:-}" ]
-then
-    KOOPA_SHELL="bash"
-elif [ ! -z "${KSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="ksh"
-elif [ ! -z "${ZSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="zsh"
-else
-    echo "koopa currently supports bash, ksh, or zsh shell."
-    echo "Check your configuration."
-    echo "Note that '/bin/sh' is not recommended."
-    echo ""
-    echo "${SHELL:-}"
-    echo "$0"
-    echo "$-"
-    echo ""
-    env | sort
-    return 1
-fi
-export KOOPA_SHELL
-
-
-
-# Locate the koopa installation                                             {{{1
-# ==============================================================================
-
-if [ "$KOOPA_SHELL" = "bash" ]
-then
-    # SC2039: In POSIX sh, array references are undefined.
-    # shellcheck disable=SC2039
-    KOOPA_SOURCE="${BASH_SOURCE[0]}"
-elif [ "$KOOPA_SHELL" = "ksh" ]
-then
-    # SC2154: .sh.file is referenced but not assigned.
-    # shellcheck disable=SC2154
-    KOOPA_SOURCE="${.sh.file}"
-elif [ "$KOOPA_SHELL" = "zsh" ]
-then
-    KOOPA_SOURCE="$0"
-fi
-
-KOOPA_BASE_DIR="$( dirname "$KOOPA_SOURCE" )"
-export KOOPA_BASE_DIR
-
-KOOPA_BIN_DIR="${KOOPA_BASE_DIR}/bin"
-export KOOPA_BIN_DIR
-
-KOOPA_SYSTEM_DIR="${KOOPA_BASE_DIR}/system"
 
 
 
 # Pre-flight checks                                                         {{{1
 # ==============================================================================
 
-# Export `$KOOPA_EXTRA` when we're loading the extra shell config scripts.
-# SC2154: extra is reference but not assigned.
-# shellcheck disable=SC2154
-if [ ! -z "${extra:-}" ]
+# Never activate for root user.
+[ "$(id -u)" -eq 0 ] && return
+
+# Enable test mode.
+if [ "${test:-0}" -eq 1 ]
 then
-    KOOPA_EXTRA=1
-    export KOOPA_EXTRA
-    unset -v extra
+    printf "Test mode enabled.\n"
+    printf "Setting strict shell mode.\n"
+    set -o errexit
+    set -o nounset
+    if [ ! -z "${BASH_VERSION:-}" ]
+    then
+        set -o errtrace
+        set -o posix
+        set -o pipefail
+    fi
+    export KOOPA_TEST=1
+    force=1
 fi
 
-# Set variable to check if koopa is already active.
-# This step is particularly useful when working on a cluster that spawns new
-# sessions from the current shell.
-[ ! -z "${KOOPA_OS_PLATFORM:-}" ] && KOOPA_ACTIVATED=1
+# Check for interactive shell.
+echo "$-" | grep -q "i" && export INTERACTIVE=1
 
-if [ -z "${KOOPA_ACTIVATED:-}" ]
-then
-    PRE_DIR="${KOOPA_SYSTEM_DIR}/pre"
-    . "${PRE_DIR}/os.sh"
-    . "${PRE_DIR}/programs.sh"
-    unset -v PRE_DIR
-    KOOPA_OS_PLATFORM="$(python -mplatform)" && export KOOPA_OS_PLATFORM
-fi
+# Force reactivation inside of interactive HPC job.
+[ ! -z "${SLURM_JOB_ID:-}" ] && [ ! -z "${INTERACTIVE:-}" ] && force=1
+
+# Force reactivation inside of tmux session.
+[ -z "${TMUX:-}" ] || force=1
+
+[ "${force:-0}" -eq 1 ] && export KOOPA_FORCE=1
+[ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
+
+# Early return for non-interactive sessions.
+[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return
+
+# Early return if koopa is already active.
+[ -z "${KOOPA_FORCE:-}" ] && [ ! -z "${KOOPA_HOME:-}" ] && return
 
 
 
-# Base shell configuration                                                  {{{1
+# Usage                                                                     {{{1
 # ==============================================================================
 
-# Always load these non-persistent settings.
-BASE_DIR="${KOOPA_SYSTEM_DIR}/base"
-. "${KOOPA_SYSTEM_DIR}/functions.sh"
-. "${BASE_DIR}/secrets.sh"
-. "${BASE_DIR}/aliases.sh"
-. "${BASE_DIR}/set.sh"
-. "${BASE_DIR}/ssh-key.sh"
+usage() {
+    cat << EOF
+usage: activate [-h] [--test] [--force] [--minimal]
+
+Activate koopa.
+
+supported shells: bash, ksh, zsh
+
+optional arguments:
+    -h, --help
+        Show this help message and exit.
+
+optional variables:
+    test=1
+        Enable verbose test mode. Used for Travis CI checks.
+        This will also automatically set `force=1`.
+    force=1
+        Force reactivation, even if koopa is already active.
+    minimal=1
+        Minimal mode. Simply export koopa programs into PATH.
+EOF
+}
 
 
 
-# Skip these persistent settings in subshells (e.g. tmux).
-if [ -z "${KOOPA_ACTIVATED:-}" ]
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+for i in "$@"
+do
+    case "$i" in
+        -h|--help)
+            usage
+            exit
+            ;;
+        *)
+            >&2 printf "Error: Invalid argument '%s'\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+unset -f usage
+
+
+
+# Functions                                                                 {{{1
+# ==============================================================================
+
+# Fake realpath support, if necessary.
+# Note that `readlink -f` doesn't work on macOS.
+#
+# See also:
+# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
+#
+# Modified 2019-06-26.
+if ! command -v realpath >/dev/null
 then
-    EXPORTS_DIR="${BASE_DIR}/exports"
-    . "${EXPORTS_DIR}/general.sh"
-    . "${EXPORTS_DIR}/platform.sh"
-    . "${EXPORTS_DIR}/cpu-count.sh"
-    . "${EXPORTS_DIR}/genomes.sh"
-    . "${EXPORTS_DIR}/path.sh"
-    unset -v EXPORTS_DIR
-
-    PROGRAMS_DIR="${BASE_DIR}/programs"
-    . "${PROGRAMS_DIR}/perlbrew.sh"
-    . "${PROGRAMS_DIR}/aspera.sh"
-    . "${PROGRAMS_DIR}/bcbio.sh"
-    . "${PROGRAMS_DIR}/conda.sh"
-    . "${PROGRAMS_DIR}/virtualenv.sh"
-    unset -v PROGRAMS_DIR
+    realpath() {
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
 fi
 
-unset -v BASE_DIR
+
+
+# Locate koopa home                                                         {{{1
+# ==============================================================================
+
+if [ ! -z "${BASH_VERSION:-}" ]
+then
+    KOOPA_SHELL="bash"
+    # SC2039: In POSIX sh, array references are undefined.
+    # shellcheck disable=SC2039
+    file="${BASH_SOURCE[0]}"
+elif [ ! -z "${KSH_VERSION:-}" ]
+then
+    KOOPA_SHELL="ksh"
+    # SC2154: .sh.file is referenced but not assigned.
+    # shellcheck disable=SC2154
+    file="${.sh.file}"
+elif [ ! -z "${ZSH_VERSION:-}" ]
+then
+    KOOPA_SHELL="zsh"
+    # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
+    # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
+    # this case instead unexpectedly returns `_src_etc_profile`.
+    # > file="${0:a}"
+    # > file="$0"
+    # https://stackoverflow.com/a/23259585/3911732
+    file="${(%):-%N}"
+else
+    >&2 printf "Error: Failed to detect supported shell.\n"
+    >&2 printf "Supported: bash, ksh, zsh.\n\n"
+    >&2 printf "  SHELL: %s\n" "$SHELL"
+    >&2 printf "      0: %s\n" "$0"
+    >&2 printf "      -: %s\n" "$-"
+    return 1
+fi
+export KOOPA_SHELL
+
+if [ ! -f "${file:-}" ]
+then
+    >&2 printf "Error: Failed to detect absolute path of activation script.\n"
+    return 1
+fi
+
+# Note that running realpath on the file instead of the directory will properly
+# resolve `~/.config/koopa/activate` in Mike's default `~/.shrc` config file.
+KOOPA_HOME="$(dirname "$(realpath "$file")")" && export KOOPA_HOME
+unset -v file
+
+# Load shared functions.
+# shellcheck source=/dev/null
+. "${KOOPA_HOME}/system/include/functions.sh"
+
+# Get location of activation scripts.
+activate_dir="${KOOPA_HOME}/system/activate"
+
+
+
+# Basic shell configuration                                                 {{{1
+# ==============================================================================
+
+. "${activate_dir}/preflight.sh"
+
+exports_dir="${activate_dir}/exports"
+. "${exports_dir}/path.sh"
+. "${exports_dir}/xdg-base-directory.sh"
+. "${exports_dir}/general.sh"
+unset -v exports_dir
 
 
 
 # Extra shell configuration                                                 {{{1
 # ==============================================================================
 
-if [ ! -z "${KOOPA_EXTRA:-}" ]
+if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
 then
-    EXTRA_DIR="${KOOPA_SYSTEM_DIR}/extra"
+    . "${activate_dir}/set.sh"
+    . "${activate_dir}/umask.sh"
+    . "${activate_dir}/aliases.sh"
+    . "${activate_dir}/secrets.sh"
+    . "${activate_dir}/ssh-key.sh"
 
-    # Set default file permissions.
-    . "${EXTRA_DIR}/umask.sh"
+    programs_dir="${activate_dir}/programs"
+    . "${programs_dir}/conda.sh"
+    . "${programs_dir}/conda-envs.sh"
+    . "${programs_dir}/perlbrew.sh"
+    . "${programs_dir}/rbenv.sh"
+    . "${programs_dir}/aspera.sh"
+    . "${programs_dir}/ensembl-perl-api.sh"
+    . "${programs_dir}/bcbio.sh"
+    . "${programs_dir}/virtualenv.sh"
+    unset -v programs_dir
 
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        BASH_DIR="${EXTRA_DIR}/bash"
-        . "${BASH_DIR}/shopt.sh"
-        . "${BASH_DIR}/bind.sh"
-        . "${BASH_DIR}/ps1.sh"
-        unset -v BASH_DIR
+        bash_dir="${activate_dir}/shell/bash"
+        . "${bash_dir}/shopt.sh"
+        . "${bash_dir}/bind.sh"
+        . "${bash_dir}/ps1.sh"
+        unset -v bash_dir
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        ZSH_DIR="${EXTRA_DIR}/zsh"
-        . "${ZSH_DIR}/oh-my-zsh.sh"
-        . "${ZSH_DIR}/pure-prompt.sh"
-        . "${ZSH_DIR}/setopt.sh"
-        . "${ZSH_DIR}/bindkey.sh"
-        unset -v ZSH_DIR
+        # `~/.zhsrc` file is required for Z shell to configure correctly.
+        if [ ! -f "${HOME}/.zshrc" ]
+        then
+            dotfile -q shrc
+            dotfile -q zshrc
+        fi
     fi
 
     # Platform-specific configuration.
-    if [ ! -z "${MACOS:-}" ]
+    if _koopa_is_darwin
     then
-        DARWIN_DIR="${EXTRA_DIR}/darwin"
-        if [ -z "$KOOPA_ACTIVATED" ]
-        then
-            . "${DARWIN_DIR}/exports.sh"
-            . "${DARWIN_DIR}/homebrew.sh"
-            . "${DARWIN_DIR}/homebrew-python.sh"
-        fi
-        . "${DARWIN_DIR}/aliases.sh"
-        . "${DARWIN_DIR}/grc-colors.sh"
-        . "${DARWIN_DIR}/rbenv.sh"
-        unset -v DARWIN_DIR
+        darwin_dir="${activate_dir}/os/darwin"
+        . "${darwin_dir}/aliases.sh"
+        . "${darwin_dir}/exports.sh"
+        . "${darwin_dir}/programs/homebrew.sh"
+        . "${darwin_dir}/grc-colors.sh"
+        unset -v darwin_dir
     fi
 
     # Set up the today bucket.
     bash touch-today-bucket
-
-    unset -v EXTRA_DIR
 fi
 
 
@@ -194,8 +253,19 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-. "${KOOPA_SYSTEM_DIR}/post/unset.sh"
+unset -v activate_dir
+unset -v colors
 
-
-
-# vim: fdm=marker
+# Disable test mode.
+if [ ! -z "${KOOPA_TEST:-}" ]
+then
+    set +o errexit
+    set +o nounset
+    if [ ! -z "${BASH_VERSION:-}" ]
+    then
+        set -o errtrace
+        set -o posix
+        set -o pipefail
+    fi
+    printf "Activation was successful.\n"
+fi

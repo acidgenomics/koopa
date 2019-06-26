@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Upgrade Homebrew.
+# Modified 2019-06-23.
+
+brew analytics off
+
+printf "\nUpdating Homebrew.\n"
+brew update
+
+printf "\nUpgrading Homebrew packages.\n"
+brew upgrade --force-bottle
+# brew list | xargs brew reinstall --force-bottle --cleanup
+
+printf "\nUpgrading Homebrew Casks.\n"
+brew cask outdated | xargs brew cask reinstall
+
+# Mac App Store
+if [[ -x "$(command -v mas)" ]]
+then
+    printf "\nUpgrading Mac App Store Apps.\n"
+    mas upgrade
+fi

@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Install R-devel for macOS.
+# Modified 2019-06-25.
+
+# See also:
+# - https://mac.r-project.org/
+
+_koopa_assert_has_sudo
+
+r_version="3.6-branch"
+macos_version="el-capitan"
+tmp_dir="$(koopa tmp-dir)/r-devel"
+
+printf "Installing r-devel %s for %s.\n" "$r_version" "$macos_version"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+
+    tarball="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
+    wget "https://mac.r-project.org/${macos_version}/R-${r_version}/${tarball}"
+
+    # Note that this step will overwrite an existing R installation, located at:
+    # /Library/Frameworks/R.framework
+    #
+    # If necessary, rename your previous install first (e.g. R-3.5.2.framework).
+    #
+    # I use symlinks to point `R.framework` to a specific version.
+
+    if [[ -d "/Library/Frameworks/R.framework" ]]
+    then
+        printf "Backing up existing 'R.framework'.\n"
+        sudo mv \
+            "/Library/Frameworks/R.framework" \
+            "/Library/Frameworks/R.framework.bak"
+    fi
+
+    # Now we're ready to install.
+    sudo tar fvxz "$tarball" -C /
+)
+
+# Create versioned symlinks.
+sudo mv \
+    "/Library/Frameworks/R.framework" \
+    "/Library/Frameworks/R-${r_version}.framework"
+sudo ln -s \
+    "/Library/Frameworks/R-${r_version}.framework" \
+    "/Library/Frameworks/R.framework"
+
+printf "R-%s installed correctly.\n" "$r_version"
+printf "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct.\n"

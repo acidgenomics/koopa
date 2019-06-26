@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install Perl rename.
+# Modified 2019-06-25.
+
+# This variant is superior to util-linux rename.
+
+_koopa_assert_has_sudo
+
+if ! _koopa_is_installed cpanm
+then
+    sudo yum -y install perl-App-cpanminus
+fi
+
+sudo cpanm File::Rename
+
+# Alternate method:
+# perl -MCPAN -e 'install File::Rename'
+
+command -v rename
+rename --version
