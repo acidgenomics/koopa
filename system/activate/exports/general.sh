@@ -9,14 +9,11 @@
 # ==============================================================================
 
 # Check if this is a login shell.
-_koopa_is_login_bash && 
-    export LOGIN_BASH=1
-_koopa_is_login_zsh && 
-    export LOGIN_ZSH=1
+_koopa_is_login_bash && export LOGIN_BASH=1
+_koopa_is_login_zsh && export LOGIN_ZSH=1
 
 # Check if this is an interactive shell.
-_koopa_is_interactive && 
-    export INTERACTIVE=1
+_koopa_is_interactive && export INTERACTIVE=1
 
 
 
@@ -27,30 +24,22 @@ _koopa_is_interactive &&
 # consistently exported across platforms.
 
 # HOSTNAME
-[ -z "${HOSTNAME:-}" ] && 
-    HOSTNAME="$(uname -n)" && 
-    export HOSTNAME
+[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
 
 # OSTYPE
 # Automatically set by bash and zsh.
-[ -z "${OSTYPE:-}" ] && 
-    OSTYPE="$(bash -c "echo $OSTYPE")" &&
-    export OSTYPE
+[ -z "${OSTYPE:-}" ] && OSTYPE="$(bash -c "echo $OSTYPE")" && export OSTYPE
 
 # TERM
 # Terminal color mode. This should normally be set by the terminal client.
-[ -z "${TERM:-}" ] && 
-    export TERM="screen-256color"
+[ -z "${TERM:-}" ] && export TERM="screen-256color"
 
 # TODAY
 # Current date. Alternatively, can use `%F` shorthand.
-TODAY="$(date +%Y-%m-%d)" && 
-    export TODAY
+[ -z "${TODAY:-}" ] && TODAY="$(date +%Y-%m-%d)" && export TODAY
 
 # USER
-[ -z "${USER:-}" ] && 
-    USER="$(whoami)" && 
-    export USER
+[ -z "${USER:-}" ] && USER="$(whoami)" && export USER
 
 
 
@@ -59,8 +48,7 @@ TODAY="$(date +%Y-%m-%d)" &&
 
 # Trim the maximum number of directories in prompt (PS1).
 # For bash, requires >= v4.
-[ -z "${PROMPT_DIRTRIM:-}" ] && 
-    export PROMPT_DIRTRIM=4
+[ -z "${PROMPT_DIRTRIM:-}" ] && export PROMPT_DIRTRIM=4
 
 
 
@@ -71,10 +59,8 @@ TODAY="$(date +%Y-%m-%d)" &&
     HISTFILE="$HOME/.$(koopa shell)-history" &&
     export HISTFILE
 
-[ -z "${HISTSIZE:-}" ] && 
-    export HISTSIZE=100000
-[ -z "${SAVEHIST:-}" ] && 
-    export SAVEHIST=100000
+[ -z "${HISTSIZE:-}" ] && export HISTSIZE=100000
+[ -z "${SAVEHIST:-}" ] && export SAVEHIST=100000
 
 [ -z "${HISTCONTROL:-}" ] && 
     export HISTCONTROL="ignoredups"
@@ -98,7 +84,7 @@ TODAY="$(date +%Y-%m-%d)" &&
 # https://github.com/Homebrew/brew/blob/master/Library/Homebrew/brew.sh
 # > export LC_ALL="C"
 
-[ "$(locale charmap 2>/dev/null)" != "UTF-8" ] && 
+[ "$(locale charmap 2>/dev/null)" != "UTF-8" ] &&
     export LC_ALL="en_US.UTF-8"
 
 
@@ -152,15 +138,12 @@ export CPU_COUNT
 
 # Enable passphrase prompting in terminal.
 # Note that this step will error if tty isn't installed.
-[ -z "${GPG_TTY:-}" ] && 
-    GPG_TTY="$(tty)" && 
-    export GPG_TTY
+[ -z "${GPG_TTY:-}" ] && GPG_TTY="$(tty)" && export GPG_TTY
 
 # Ruby                                                                      {{{2
 # ------------------------------------------------------------------------------
 
-[ -d "${HOME}/.gem" ] && 
-    export GEM_HOME="${HOME}/.gem"
+[ -d "${HOME}/.gem" ] && export GEM_HOME="${HOME}/.gem"
 
 # rsync                                                                     {{{2
 # ------------------------------------------------------------------------------

@@ -32,10 +32,8 @@ virtualenv_bin_dir="$(dirname "$PYTHON_EXE")"
 # Avoid PATH duplication when spawning inside tmux.
 if ! echo "$PATH" | grep -q "$virtualenv_bin_dir"
 then
-    [ ! -z "${KOOPA_DEBUG:-}" ] && set +u
     # shellcheck source=/dev/null
     . "${virtualenv_bin_dir}/activate"
-    [ ! -z "${KOOPA_DEBUG:-}" ] && set -u
 fi
 
 unset -v env_name virtualenv_bin_dir

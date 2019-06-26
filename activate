@@ -2,23 +2,34 @@
 # shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-25.
+# Modified 2019-06-26.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
 
 
 
+# Pre-flight checks                                                         {{{1
+# ==============================================================================
+
 # Never activate for root user.
 [ "$(id -u)" -eq 0 ] && return
 
+# Never activate for non-interactive shells.
+echo "$-" | grep -q "i" && export INTERACTIVE=1 || return
 
+# Force reactivation inside of HPC jobs.
+[ -z "${SLURM_JOB_ID:-}" ] || force=1
 
-# Set options                                                               {{{1
-# ==============================================================================
+# Force reactivation inside of tmux sessions.
+[ -z "${TMUX:-}" ] || force=1
 
 [ "${debug:-0}" -eq 1 ] && export KOOPA_DEBUG=1
+[ "${force:-0}" -eq 1 ] && export KOOPA_FORCE=1
 [ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
+
+# Early return if koopa is already active.
+[ ! -z "${KOOPA_HOME:-}" ] && [ -z "${KOOPA_FORCE:-}" ] && return
 
 if [ ! -z "${KOOPA_DEBUG:-}" ]
 then
@@ -49,6 +60,8 @@ supported shells: bash, ksh, zsh
 optional arguments:
     -h, --help
         Show this help message and exit.
+
+optional variables:
     debug=1
         Enable verbose debug mode. Used for Travis CI checks.
     force=1
@@ -71,7 +84,6 @@ do
             exit
             ;;
         *)
-            # Unsupported flags.
             >&2 printf "Error: Invalid argument '%s'\n" "$1"
             exit 1
             ;;
@@ -79,18 +91,6 @@ do
 done
 
 unset -f usage
-
-
-
-# Initial checks                                                            {{{1
-# ==============================================================================
-
-# Early return if koopa is already active.
-# We may need to tweak this approach to work properly with bash subshells.
-
-[ ! -z "${HPC_INTERACTIVE_JOB:-}" ] && force=1
-[ -z "${TMUX:-}" ] && force=1
-[ ! -z "${KOOPA_HOME:-}" ] && [ "${force:-0}" -eq 0 ] && return
 
 
 
