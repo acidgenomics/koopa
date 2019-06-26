@@ -22,11 +22,10 @@ then
     printf "Setting strict shell mode.\n"
     set -o errexit
     set -o nounset
-    set -o pipefail
-    # > set -o xtrace
     if [ ! -z "${BASH_VERSION:-}" ]
     then
         set -o errtrace
+        set -o pipefail
     fi
     export KOOPA_TEST=1
     force=1
