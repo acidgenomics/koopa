@@ -37,8 +37,6 @@ _koopa_info_box() {
 # - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
 # - https://stackoverflow.com/questions/22290554
 #
-# FIXME This script is breaking on Travis CI for bash checks.
-#
 # Modified 2019-06-26.
 _koopa_java_home() {
     if [ -z "${JAVA_HOME:-}" ]
@@ -180,8 +178,6 @@ EOF"
 }
 
 
-
-# FIXME Need to add corresponding remove R config script.
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
 # Modified 2019-06-23.
