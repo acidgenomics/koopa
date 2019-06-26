@@ -1,7 +1,10 @@
 #!/bin/sh
 
 # Load secrets.
-# Modified 2019-06-16.
+# Modified 2019-06-26.
 
 # shellcheck source=/dev/null
-[ -f "${HOME}/.secrets" ] && . "${HOME}/.secrets"
+if [ -f "${HOME}/.secrets" ]
+then
+    . "${HOME}/.secrets"
+fi
