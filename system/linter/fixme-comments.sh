@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # Find FIXME and TODO comments.
 # Modified 2019-06-26.
