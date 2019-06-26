@@ -6,12 +6,30 @@ source "$(koopa header bash)"
 # Find build cellar symbolic links.
 # Modified 2019-06-26.
 
-prefix="$(koopa build-prefix)"
 name="$1"
 version="$2"
 
-find -L \
-    "$prefix" \
-    -path "*/cellar/${name}/${version}/*" \
-    ! -path "${prefix}/koopa"
+build_prefix="$(koopa build-prefix)"
+cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
 
+array=()
+while IFS=  read -r -d $'\0'; do
+    array+=("$REPLY")
+done < <( \
+    find -L \
+    "$build_prefix" \
+    -type f \
+    -path "${cellar_prefix}/*" \
+    ! -path "${build_prefix}/koopa" \
+    -print0
+)
+
+# Sort the array
+IFS=$'\n' array=($(sort <<<"${array[*]}"))
+unset IFS
+
+for file in "${array[@]}"
+do
+    # Replace the cellar prefix with our build prefix.
+    echo "${file//$cellar_prefix/$build_prefix}"
+done
