@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Copy BAM and BAI index sidecar files to a destination.
-# Modified 2019-06-23.
+# Modified 2019-06-24.
 
 # Source directory.
 source_dir="$1"
@@ -34,7 +34,7 @@ printf "\n"
 # -L  follow symbolic links
 
 find -L "$source_dir" \
-    -maxdepth 1 \
+    -maxdepth 2 \
     -name "*.bam" -print0 -o -name "*.bam.bai" \
     -print0 | xargs -0 -I {} \
     cp -irv {} "$dest_dir"
