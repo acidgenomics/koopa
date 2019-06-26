@@ -39,11 +39,8 @@ printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 find -L "$source_dir" \
     -maxdepth 4 \
     -type f \
-    \( \
-        -name "*.bam" -or -name "*.bam.bai" \
-        -and -not -name "*-transcriptome.bam" \
-        -and -not -path "*/work/*" \
-    \) \
-
+    \( -name "*.bam" -or -name "*.bam.bai" \) \
+    ! -name "*-transcriptome.bam" \
+    ! -path "*/work/*" \
     -print0 | xargs -0 -I {} \
     cp -iruv {} "$dest_dir"
