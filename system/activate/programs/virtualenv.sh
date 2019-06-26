@@ -8,7 +8,7 @@
 # Python environment, so we can easily use pip.
 
 # Only attempt to autoload for bash or zsh.
-echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return
+echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return 0
 
 env_name="default"
 
