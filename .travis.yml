@@ -48,6 +48,10 @@ jobs:
       name: "shellcheck"
       script:
         - bash -c './bin/shellcheck-recursive'
+    - stage: test
+      name: "linter"
+      script:
+        - bash -c './system/linter/fixme-comments.sh'
 
 notifications:
   email:
