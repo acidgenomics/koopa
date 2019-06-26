@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# Symlink docker installation.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
+
+source_dir="/var/lib/docker"
+dest_dir="/data00/docker"
+
+sudo service docker stop
+
+if [[ -d "$dest_dir" ]]
+then
+    >&2 printf "Error: Docker exists at %s.\n" "$dest_dir"
+    exit 1
+fi
+
+if [[ ! -d "$source_dir" ]]
+then
+    >&2 printf "Error: %s missing.\n" "$source_dir"
+    >&2 printf "Check that Docker is installed.\n"
+    exit 1
+fi
+
+sudo mv "${source_dir}/" "${dest_dir}/"
+sudo ln -s "$dest_dir" "$source_dir"
+
+sudo service docker start
+docker images

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install Perlbrew system Perl.
+# Modified 2019-06-23.
+
+# See also:
+# - https://stackoverflow.com/questions/25188575
+
+if [[ -x "/usr/local/bin/perl" ]]
+then
+    bin_dir="/usr/local/bin"
+elif [[ -x "/usr/bin/perl" ]]
+then
+    bin_dir="/usr/bin"
+else
+    >&2 printf "Error: Failed to detect system Perl.\n"
+    exit 1
+fi
+
+(
+    cd "${PERLBREW_ROOT}/perls" || exit 1
+    rm -rf system
+    mkdir system
+    ln -s "$bin_dir" "system/bin"
+)
+
+perlbrew list

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Render GitHub pages.
+# Modified 2019-06-23.
+
+bundle update
+bundle exec jekyll serve

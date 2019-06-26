@@ -1,8 +1,7 @@
-#!/usr/bin/env bash
-set -Eeuo pipefail
+#!/bin/sh
 
 # Start bcbio run on HMS O2 cluster using IPython and slurm.
-# Michael Steinbaugh
+# Modified 2019-06-21.
 
 # Configure the bcbio run.
 # A directory named "bcbio" will be created.
@@ -22,6 +21,7 @@ sbatch sbatch_bcbio.sh
 squeue -u "$USER"
 sshare -U
 
-# sprio -j JOBID
-# less *.err
-# tree
+# Check the job status.
+# > sprio -j JOBID
+# > less *.err
+# > tree

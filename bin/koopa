@@ -1,0 +1,191 @@
+#!/usr/bin/env bash
+
+if [[ -z "${KOOPA_HOME:-}" ]]
+then
+    >&2 printf "koopa is not correctly activated.\n"
+    >&2 printf "Source the 'activate' script in your shell configuration.\n"
+    exit 1
+fi
+
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+# koopa shell bootloader.
+# (c) 2018 Michael Steinbaugh.
+# This software is provided under an MIT License.
+
+version="0.4.0a"
+date="2019-06-25"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+    cat << EOF
+usage: koopa [-h] [-V] COMMAND
+
+system configuration commands:
+    check
+        Run system dependency version checks.
+    info
+        Show system information.
+    list
+        List programs accessible in "\$PATH".
+    update
+        Update koopa installation to latest version.
+
+return string commands:
+    build-os-string
+        Build string to be used with make configure.
+    build-prefix
+        Return build prefix string used to install from source.
+    cellar-prefix
+        Koopa cellar path (e.g. "usr/local/koopa/cellar").
+    cellar-script
+        Run cellar install script.
+    conda-prefix
+        Conda prefix for automated koopa environment recipes.
+    config-dir
+        Koopa local configuration path (e.g. "~/.config/koopa").
+    header
+        Source script header.
+    home
+        Koopa installation path (e.g. "/usr/local/koopa").
+    host-type
+        Return useful host type matching either:
+        - VMs: "aws", "azure".
+        - HPCs: "harvard-o2", "harvard-odyssey".
+        Returns empty for local machines and/or unsupported types.
+    os-type
+        Operating system name. Always returns lowercase, with unique names for
+        Linux distros (e.g. "debian").
+    os-version
+        Operating system version.
+    r-home
+        R installation location. Set as "\$R_HOME" internally by R.
+    shell
+        Return the current shell program name (e.g. "bash").
+    tmp-dir
+        Koopa temporary directory path. Used primarily for build scripts.
+    variable
+        Get internal koopa variable.
+        For example, get recommended "vim" version.
+
+optional arguments:
+    -h, --help
+        Show this help message and exit.
+    -V, --version
+        Version information.
+EOF
+}
+
+[[ -z "${1:-}" ]] && usage && exit
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+include_dir="${KOOPA_HOME}/system/include/koopa"
+
+case "$1" in
+    --help|-h)
+        usage
+        exit
+        ;;
+    --version|-V)
+        printf "koopa %s (%s)\n" "$version" "$date"
+        exit
+        ;;
+    build-os-string)
+        _koopa_build_os_string
+        exit
+        ;;
+    build-prefix)
+        _koopa_build_prefix
+        exit
+        ;;
+    cellar-prefix)
+        _koopa_cellar_prefix
+        exit
+        ;;
+    cellar-script)
+        file="${KOOPA_HOME}/system/include/cellar/${2}.sh"
+        if [ ! -f "$file" ]
+        then
+            >&2 printf "Error: No script found for '%s'.\n" "$2"
+            exit 1
+        fi
+        echo "$file"
+        exit
+        ;;
+    check)
+        Rscript --vanilla "${include_dir}/check.R"
+        exit
+        ;;
+    conda-prefix)
+        _koopa_conda_prefix
+        exit
+        ;;
+    config-dir)
+        echo "${XDG_CONFIG_HOME}/koopa"
+        exit
+        ;;
+    header)
+        _koopa_header "${2:-}"
+        exit
+        ;;
+    home)
+        echo "$KOOPA_HOME"
+	exit
+        ;;
+    host-type)
+        _koopa_host_type
+        exit
+        ;;
+    info)
+        "${include_dir}/info.sh"
+        exit
+        ;;
+    list)
+        Rscript --vanilla "${include_dir}/list.R"
+        exit
+        ;;
+    os-type)
+        _koopa_os_type
+        exit
+        ;;
+    os-version)
+        _koopa_os_version
+        ;;
+    r-home)
+        _koopa_r_home
+        exit
+        ;;
+    shell)
+        echo "$KOOPA_SHELL"
+        exit
+        ;;
+    tmp-dir)
+        _koopa_tmp_dir
+        exit
+        ;;
+    update)
+        "${include_dir}/update.sh"
+        exit
+        ;;
+    upgrade)
+        >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
+        exit 1
+        ;;
+    variable)
+        _koopa_variable "$2"
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported command.\n"
+        exit 1
+        ;;
+esac

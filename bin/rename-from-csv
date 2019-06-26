@@ -1,23 +1,28 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Rename files using a CSV file.
+# Modified 2019-06-23.
 
 # Check for CSV file.
 file="$1"
 
 if [[ ! -f "$file" ]]
 then
-    echo "${file} does not exist."
+    >&2 printf "Error: %s does not exist.\n" "$file"
+    exit 1
 fi
 
 if [[ ! "$file" =~ .csv ]]
 then
-    echo "${file} is not a CSV file."
+    >&2 printf "Error: %s is not a CSV file.\n" "$file"
+    exit 1
 fi
 
 while read -r line
-do          
+do
     from=${line%,*}
     to=${line#*,}
     mv "$from" "$to"

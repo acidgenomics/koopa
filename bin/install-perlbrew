@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install Perlbrew.
+# Modified 2019-06-25.
+
+# See also:
+# - https://perlbrew.pl/
+# - https://metacpan.org/pod/App::perlbrew
+# - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
+
+_koopa_assert_has_no_environments
+
+name="perlbrew"
+prefix="$(koopa build-prefix)/${name}"
+exe_file="${prefix}/bin/${name}"
+
+_koopa_build_mkdir "$prefix"
+
+(
+    # Ensure existing preferences are removed.
+    export PERLBREW_HOME="${PERLBREW_HOME:-${HOME}/.perlbrew}"
+    rm -rf "$PERLBREW_HOME"
+    
+    export PERLBREW_ROOT="$prefix"
+    curl -L https://install.perlbrew.pl | bash
+)
+
+_koopa_build_chgrp "$prefix"
+
+command -v "$exe_file"
+"$exe_file" --version

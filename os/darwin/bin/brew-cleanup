@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Homebrew cleanup.
+# Modified 2019-06-23.
+
+brew cleanup -s
+brew cask cleanup
+brew prune

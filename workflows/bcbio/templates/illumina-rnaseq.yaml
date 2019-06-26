@@ -1,4 +1,5 @@
 # Template for RNA-seq using Illumina prepared samples.
+# Modified 2019-06-21.
 ---
 details:
   - analysis: RNA-seq
@@ -68,6 +69,7 @@ details:
       # bcbiornaseq:
       #   organism: homo sapiens
       #   interesting_groups: [treatment, genotype]
+
 # Where to upload (save) the final output.
 upload:
   dir: ../final

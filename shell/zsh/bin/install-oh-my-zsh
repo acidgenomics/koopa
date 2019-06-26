@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install oh-my-zsh
+# Modified 2019-06-23.
+
+zsh_dir="${HOME}/.oh-my-zsh"
+rm -rf "$zsh_dir"
+git clone https://github.com/robbyrussell/oh-my-zsh "$zsh_dir"
+unset -v zsh_dir

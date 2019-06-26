@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Uninstall koopa.
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    rm -f /etc/profile.d/koopa.sh
+fi
+
+# FIXME Remove R_HOME config files.
+
+# shellcheck source=/dev/null
+. "${KOOPA_HOME}/system/uninstall/dotfiles.sh"
+
+# shellcheck source=/dev/null
+. "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
+
+rm -rf "$(koopa config-dir)"
+rm -rf "$KOOPA_HOME"

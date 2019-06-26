@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Update Fedora.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
+
+log_dir="${HOME}/logs/${HOSTNAME}/yum"
+mkdir -p "$log_dir"
+log_file="${log_dir}/yum-update-$(date +%F).log"
+
+sudo yum update -y 2>&1 | tee "$log_file"

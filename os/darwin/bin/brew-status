@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Homebrew status.
+# Modified 2019-06-23.
+
+printf "\ndoctor:\n"
+brew doctor
+
+printf "\nlinkage:"
+brew linkage
+
+printf "\nleaves:\n"
+brew leaves
+
+"\ndependency tree:\n"
+brew deps --installed --tree
+
+printf "\nversions:\n"
+brew list --versions
+
+printf "\nmissing:\n"
+brew missing
+
+printf "\noutdated:\n"
+brew outdated
+brew cask outdated
+
+printf "\ninfo:\n"
+brew info

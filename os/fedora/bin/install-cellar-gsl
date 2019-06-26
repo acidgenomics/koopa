@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install GNU Scientific Library (GSL).
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    sudo yum install -y gsl-devel
+    sudo yum-builddep -y gsl-devel
+fi
+
+source "$(koopa cellar-script gsl)"
