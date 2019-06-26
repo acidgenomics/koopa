@@ -24,8 +24,8 @@ done < <( \
     -print0
 )
 
-# Sort the array
-IFS=$'\n' array=($(sort <<<"${array[*]}"))
+# Sort the array.
+IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
 unset IFS
 
 for file in "${array[@]}"
