@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Build utilities
-# 2019-06-20.
+# Build functions
+# Modified 2019-06-26.
 
 
 
@@ -21,34 +21,6 @@ _koopa_build_chgrp() {
     fi
     
     unset -v group path
-}
-
-
-
-# Symlink cellar into build directory.
-# e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
-# Modified 2019-06-22.
-_koopa_build_link_cellar() {
-    name="$1"
-    version="$2"
-    cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
-    build_prefix="$(koopa build-prefix)"
-
-    printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
- 
-    _koopa_build_set_permissions "$cellar_prefix"
-    
-    if _koopa_has_sudo
-    then
-        sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
-        _koopa_update_ldconfig
-    else
-        cp -frsv "$cellar_prefix/"* "$build_prefix/".
-    fi
-
-    _koopa_build_set_permissions "$build_prefix"
-    
-    unset -v build_prefix cellar_prefix name version
 }
 
 
