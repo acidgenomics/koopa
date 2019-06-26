@@ -94,6 +94,30 @@ unset -f usage
 
 
 
+# Functions                                                                 {{{1
+# ==============================================================================
+
+# Fake realpath support, if necessary.
+# Note that `readlink -f` doesn't work on macOS.
+#
+# See also:
+# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
+#
+# Modified 2019-06-26.
+if ! command -v realpath >/dev/null
+then
+    realpath() {
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
+fi
+
+
+
 # Locate koopa home                                                         {{{1
 # ==============================================================================
 
@@ -134,18 +158,9 @@ then
     return 1
 fi
 
-# Fake realpath support, if necessary.
-if ! command -v realpath >/dev/null
-then
-    printf "'%s' is not installed. Using '%s' instead.\n" "realpath" "readlink"
-    realpath() {
-        readlink -f "$@"
-    }
-    export -f realpath
-fi
-
-KOOPA_HOME="$(dirname "$(realpath "$file")")"
-export KOOPA_HOME
+# Note that running realpath on the file instead of the directory will properly
+# resolve `~/.config/koopa/activate` in Mike's default `~/.shrc` config file.
+KOOPA_HOME="$(dirname "$(realpath "$file")")" && export KOOPA_HOME
 unset -v file
 
 # Load shared functions.
