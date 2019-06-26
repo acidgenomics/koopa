@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install RStudio Server.
+# Modified 2019-06-25.
+
+# See also:
+# - https://www.rstudio.com/products/rstudio/download-server/
+
+_koopa_assert_has_sudo
+
+name="rstudio-server"
+version="$(koopa variable "$name")"
+tmp_dir="$(koopa tmp-dir)/${name}"
+
+printf "Installing %s %s.\n" "$name" "$version"
+
+# Note that R is already configured on Bioconductor image.
+sudo apt-get -y install r-base
+
+# Ubuntu 18+ instructions.
+sudo apt-get -y install gdebi-core
+
+file="rstudio-server-${version}-amd64.deb"
+url="https://download2.rstudio.org/server/bionic/amd64/${file}"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "$url"
+    sudo gdebi --non-interactive "$file"
+    rm -rf "$tmp_dir"
+)
+
+command -v "$name"
+"$name" version
+"$name" status

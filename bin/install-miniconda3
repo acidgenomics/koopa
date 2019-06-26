@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
-# Install Miniconda
-# https://conda.io/miniconda.html
-#
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install Miniconda.
+# Modified 2019-06-23.
+
+# See also:
+# - https://conda.io/miniconda.html
+
 # Useful script flags:
 # > bash Miniconda3-latest-Linux-x86_64.sh -h
 # -b           run install in batch mode (without manual intervention),
@@ -15,36 +20,38 @@ set -Eeuo pipefail
 # -u           update an existing installation
 # -t           run package tests after installation (may install conda-build)
 
-prefix="${HOME}/miniconda3"
-build_dir="${KOOPA_TMP}/build/miniconda3"
+_koopa_assert_has_no_environments
+
+name="miniconda3"
+prefix="$(koopa build-prefix)/${name}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+exe_file="${prefix}/bin/conda"
 
 case "$OSTYPE" in
-    linux-gnu) script="Miniconda3-latest-Linux-x86_64.sh";;
-      darwin*) script="Miniconda3-latest-MacOSX-x86_64.sh";;
-            *) echo "${OSTYPE} is not supported."; exit 1;;
+    linux-gnu)
+        script="Miniconda3-latest-Linux-x86_64.sh"
+        ;;
+    darwin*)
+        script="Miniconda3-latest-MacOSX-x86_64.sh"
+        ;;
+    *)
+        printf "Error: %s is not supported." "$OSTYPE"
+        exit 1
+        ;;
 esac
 
-# Check for previous installation.
-if [[ -d "$prefix" ]]
-then
-    echo "Error: conda already installed."
-    echo "$prefix"
-    exit 1
-fi
+_koopa_build_mkdir "$prefix"
 
 (
-    rm -rf "$build_dir"
-    mkdir -p "$build_dir"
-    cd "$build_dir"
-    echo "Downloading Miniconda installer."
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
     curl -O "https://repo.continuum.io/miniconda/${script}"
-    # Note that this script should not be run as root.
-    bash "$script" -b -p "$prefix"
-    rm -rf "$build_dir"
+    bash "$script" -bf -p "$prefix"
+    rm -rf "$tmp_dir"
 )
 
-echo "conda installed successfully."
-conda_exe="${prefix}/bin/conda"
-echo "$conda_exe"
-sh -c "$conda_exe --version"
+_koopa_build_chgrp "$prefix"
 
+command -v "$exe_file"
+"$exe_file" --version

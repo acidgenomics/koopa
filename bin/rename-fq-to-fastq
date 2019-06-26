@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
-# Rename ".fq" to ".fastq"
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Rename FASTQ ".fq" extension to ".fastq".
+# Modified 2019-06-23.
 
 for file in ./*.fq; do
     mv "$file" "${file/%.fq/.fastq}"

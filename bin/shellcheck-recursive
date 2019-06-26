@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
-# Recursively run shellcheck on all scripts in a directory.
-
-# This script requires shellcheck.
-# https://github.com/koalaman/shellcheck
-command -v shellcheck >/dev/null 2>&1 || { echo >&2 "shellcheck missing."; exit 1; }
-
-path="${1:-}"
-if [[ -z "$path" ]]
+# Making source header optional, for Travis CI checks.
+if [[ -n "$KOOPA_SHELL" ]]
 then
-    path="."
+    # shellcheck source=/dev/null
+    source "$(koopa header bash)"
+    _koopa_assert_is_installed shellcheck
 fi
 
-# find . -name "*.sh" -exec shellcheck {} \;
+# Recursively run shellcheck on all scripts in a directory.
+# Modified 2019-06-25.
+
+path="${1:-$PWD}"
+
+# Legacy method:
+# > find "$path" -name "*.sh" -exec shellcheck {} \;
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.

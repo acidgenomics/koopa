@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Install OpenSSL.
+# Modified 2019-06-23.
+
+source "$(koopa cellar-script openssl)"

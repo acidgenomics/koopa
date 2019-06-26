@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# List PATH priority.
+# Modified 2019-06-24.
+
+# See also:
+# - https://askubuntu.com/questions/600018
+
+# Alternate approaches:
+# > sed 's/:/\n/g' <<< "$PATH"
+# > tr ':' '\n' <<< "$PATH"
+
+# FIXME Consider removing duplicates.
+
+# This uses bash parameter expansion.
+echo "${PATH//:/$'\n'}"

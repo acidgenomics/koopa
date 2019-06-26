@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Move files to the Trash folder instead of deleting.
+# Modified 2019-06-23.
 
 trash_dir="${HOME}/.Trash/"
 mkdir -p "$trash_dir"

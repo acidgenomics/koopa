@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install Python.
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    sudo yum install -y python
+    sudo yum-builddep -y python
+fi
+
+source "$(koopa cellar-script python)"

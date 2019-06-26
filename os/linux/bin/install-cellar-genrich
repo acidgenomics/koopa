@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header linux)"
+
+# Install Genrich.
+# Modified 2019-06-23.
+
+# See also:
+# - https://github.com/jsh58/Genrich
+
+_koopa_assert_has_no_environments
+
+name="genrich"
+version="$(koopa variable "$name")"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+exe_file="${prefix}/bin/${name}"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
+    tar -xzvf "v${version}.tar.gz"
+    cd "Genrich-${version}" || exit 1
+    make
+    cp Genrich "${prefix}/bin"
+    rm -rf "$tmp_dir"
+)
+
+link-cellar "$name" "$version"
+
+command -v "$exe_file"
+"$exe_file" --version

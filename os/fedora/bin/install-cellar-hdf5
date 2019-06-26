@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install HDF5.
+# Modified 2019-06-23.
+
+source "$(koopa cellar-script hdf5)"

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install Emacs text editor.
+# Modified 2019-06-23.
+
+# Bioconductor AMI is missing these dependencies:
+# > apt-cache search libgif
+# > apt-cache search gnutls
+# > apt-cache search 'libgnutls.*-dev'
+
+if _koopa_has_sudo
+then
+    sudo apt-get -y install gnutls-bin libgnutls28-dev
+    sudo apt-get -y install libgif-dev
+    sudo apt-get -y build-dep emacs
+fi
+
+source "$(koopa cellar-script emacs)"

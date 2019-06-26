@@ -1,27 +1,16 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Set up python virtual environment.
+# Modified 2019-06-23.
 
-# Check that Python and virtualenv are installed.
-command -v python
-# command -v virtualenv
-
-# Ensure virtualenv is deactivated.
-if [[ -x "$(command -v deactivate)" ]]
-then
-    echo "Error: virtualenv is active." >&2
-    exit 1
-fi
+_koopa_assert_has_no_environments
+_koopa_assert_is_installed python
 
 env_base_dir="${HOME}/.virtualenvs"
-
-env_name="${1:-}"
-if [[ -z "$env_name" ]]
-then
-    env_name="default"
-fi
-
+env_name="${1:-default}"
 env_dir="${env_base_dir}/${env_name}"
 rm -rf "$env_dir"
 
@@ -30,5 +19,5 @@ rm -rf "$env_dir"
 
 python3 -m venv "$env_dir"
 
-echo "Python ${env_name} virtual environment installed successfully."
-echo "Source the 'activate' binary in your current shell session to activate."
+printf "Python %s environment installed successfully.\n" "$env_name"
+printf "Source the 'activate' binary:\n%s\n" "${env_dir}/bin/activate"

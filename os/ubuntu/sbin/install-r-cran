@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header ubuntu)"
+
+# Install R from CRAN.
+# Modified 2019-06-25.
+
+# See also:
+# - https://cran.r-project.org/bin/linux/ubuntu/README.html
+# - https://askubuntu.com/questions/197564
+
+_koopa_assert_has_sudo
+
+release="$(lsb_release -s -c)"
+
+sudo apt-key adv \
+    --keyserver keyserver.ubuntu.com \
+    --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+
+# Modify `/etc/apt/sources.list` file.
+sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu ${release}-cran35/"
+
+sudo apt-get update
+sudo apt-get -y install r-base r-base-dev

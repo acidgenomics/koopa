@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install GNU core utilities.
+# Modified 2019-06-23.
+
+if _koopa_has_sudo
+then
+    sudo apt-get -y build-dep coreutils
+fi
+
+source "$(koopa cellar-script coreutils)"

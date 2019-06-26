@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# Install base programs recommended for Azure VM.
+# Modified 2019-06-23.
+
+install-fedora-base
+install-azure-cli

@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
-# Generate FASTQ files from Illumina BCL data.
-# inDrops single-cell RNA-seq files.
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
-command -v bcl2fastq >/dev/null 2>&1 || {
-    echo >&2 "bcl2fastq missing."
-    exit 1
-}
+# Generate FASTQ files from inDrops Illumina BCL data.
+# Modified 2019-06-23.
+
+_koopa_assert_is_installed bcl2fastq
 
 bcl2fastq \
     --use-bases-mask y*,y*,y*,y* \

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Install Homebrew.
+# Modified 2019-06-23.
+
+# Install Xcode CLT.
+xcode-select --install
+
+# Install Homebrew.
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+# Uninstall Homebrew (for reference).
+# > /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"

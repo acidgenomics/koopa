@@ -1,0 +1,177 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header linux)"
+
+# Install Ensembl genome build for bcbio.
+# Modified 2019-06-25.
+
+# See also:
+# - https://useast.ensembl.org/
+# - https://grch37.ensembl.org/
+
+_koopa_assert_is_installed bcbio_nextgen.py
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-ensembl-genome [-h] --organism ORGANISM --build BUILD 
+        --release RELEASE [--indexes INDEXES]
+
+required arguments:
+    --organism
+        Full latin name (e.g. "Homo sapiens").
+        Pass this argument in quoted as a string.
+    --build
+        Genome build (e.g. "GRCh38").
+    --release
+        Release version (e.g. "96").
+
+optional arguments:
+    --indexes
+        Aligners to index.
+        Pass this argument in quoted as a string.
+        Default: --indexes "bowtie2 seq star"
+        Note: HISAT2 is disabled by default because it requires a lot of memory
+        to index (e.g. >= 200 GB). This is intended to be run on a high
+        performance cluster, but is often impractical on a virtual machine.
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        -h|--help)
+            usage
+            exit
+            ;;
+        --build)
+            build="$2"
+            shift 2
+            ;;
+        --indexes)
+            indexes="$2"
+            shift 2
+            ;;
+        --organism)
+            organism="$2"
+            shift 2
+            ;;
+        --release)
+            release="$2"
+            shift 2
+            ;;
+        --) # End argument parsing.
+            shift
+            break
+            ;;
+        --*|-*) # Unsupported flags.
+            >&2 printf "Error: Invalid flag %s\n" "$1"
+            exit 1
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+if [[ -z "${organism:-}" ]] ||
+    [[ -z "${build:-}" ]] ||
+    [[ -z "${release:-}" ]]
+then
+    >&2 printf "Error: Missing required argument.\n\n"
+    usage
+    exit 1
+fi
+
+[[ -z "${indexes:-}" ]] && indexes="bowtie2 seq star"
+
+# Convert string to array.
+indexes=("$indexes")
+
+unset -f usage
+
+
+
+# Internal variables                                                        {{{1
+# ==============================================================================
+
+# Check for valid organism input.
+if ! echo "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
+then
+    >&2 printf "Invalid organism: %s.\n" "$organism"
+    >&2 printf "Requiring full Latin, case sensitive: e.g. 'Homo sapiens'.\n"
+    exit 1
+fi
+
+# Sanitize spaces into underscores.
+# Use bash built-in rather than sed, when possible.
+organism="${organism// /_}"
+
+cores="$((CPU_COUNT-2))"
+[[ "$cores" -lt 1 ]] && cores=1
+
+
+
+
+# Prepare directories                                                       {{{1
+# ==============================================================================
+
+source="Ensembl"
+bcbio_genome_name="${build}-${source}-${release}"
+
+tmp_dir="$(koopa tmp-dir)/${bcbio_genome_name}"
+
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+timestamp="$(date "+%Y%m%d-%H%M%S")"
+log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
+mkdir -p "$log_dir"
+
+
+
+# bcbio                                                                     {{{1
+# ==============================================================================
+
+# e.g. "Hsapiens".
+bcbio_species_dir="$(echo "$organism" | \
+    sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    
+    # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
+    ensembl-fasta --organism "$organism" --build "$build" --type "dna"
+    gtf="${organism}.${build}.dna.primary_assembly.fa"
+    [ ! -f "$fasta" ] && printf "FASTA failure.\n" && exit 1
+    fasta="$(realpath "$fasta")"
+    
+    # e.g. Homo_sapiens.GRCh38.96.gtf
+    ensembl-gtf --organism "$organism" --build "$build" --release "$release"
+    gtf="${organism}.${build}.${release}.gtf"
+    [ ! -f "$gtf" ] && printf "GTF failure.\n" && exit 1
+    gtf="$(realpath "$gtf")"
+    
+    bcbio_setup_genome.py \
+        --name "$bcbio_species_dir" \
+        --build "$bcbio_genome_name" \
+        --cores "$cores" \
+        --fasta "$fasta" \
+        --gtf "$gtf" \
+        --indexes "${indexes[@]}" \
+        2>&1 | tee "$log_file"
+    
+    rm -rf "$tmp_dir"
+)

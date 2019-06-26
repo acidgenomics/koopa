@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+# shellcheck source=/dev/null
+source "$(koopa header zsh)"
+
+# Install ZSH autosuggestions.
+# Modified 2019-06-23.
+
+dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+rm -rf "$dir"
+git clone https://github.com/zsh-users/zsh-autosuggestions "$dir"
+unset -v dir

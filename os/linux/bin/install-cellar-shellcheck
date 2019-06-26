@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install ShellCheck.
+# Modified 2019-06-25.
+
+# See also:
+# - Install ShellCheck from source
+#   https://github.com/koalaman/shellcheck#compiling-from-source
+# - Install GHC and cabal-install from source
+#   https://www.haskell.org/downloads/linux/
+
+name="shellcheck"
+version="$(koopa variable "$name")"
+prefix="$(koopa cellar-prefix)/${name}/${version}"
+tmp_dir="$(koopa tmp-dir)/${name}"
+exe_file="${prefix}/bin/${name}"
+
+printf "Installing %s %s.\n" "$name" "$version"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    url="https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz"
+    wget -qO- "$url" | tar -xJv
+    mkdir -p "${prefix}/bin"
+    cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
+    rm -rf "$tmp_dir"
+)
+
+link-cellar "$name" "$version"
+
+command -v "$exe_file"
+"$exe_file" --version

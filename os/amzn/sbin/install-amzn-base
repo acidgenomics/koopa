@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header amzn)"
+
+# Install base programs recommended for Amazon Linux 2.
+# Modified 2019-06-23.
+
+install-fedora-base
+
+# Install utils such as chsh.
+sudo yum install -y util-linux-user

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install Z Shell.
+# Modified 2019-06-24.
+
+if _koopa_has_sudo
+then
+    sudo apt-get -y build-dep zsh
+fi
+
+source "$(koopa cellar-script zsh)"

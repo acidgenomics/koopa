@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Pool lane-split FASTQ files.
+# Modified 2019-06-23.
 
-# Set the file stem. Defaults to "lanepool".
-if [[ "$#" -gt "0" ]]; then
-    filestem="$1"
-else
-    filestem="lanepool"
-fi
+# Set the file stem.
+filestem="${1:-lanepool}"
 
 # Exit if lanesplit replicates (L001-4) don't exist.
-if test -z "$(find . -maxdepth 1 -name '*_L00[1-4]_*.fastq.gz' -print -quit)"; then
-    echo "No lanesplit samples detected."
+if [[ -z "$(find . -maxdepth 1 -name '*_L00[1-4]_*.fastq.gz' -print -quit)" ]]
+then
+    >&2 printf "No lanesplit samples detected.\n"
     exit 1
 fi
 

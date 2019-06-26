@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header linux)"
+
+# Install Haskell stack.
+# Modified 2019-06-25.
+
+# See also:
+# - https://www.haskell.org/platform/linux.html#linux-source
+# - https://www.haskellstack.org/
+
+_koopa_assert_has_no_environments
+
+# Installer will warn if this local directory doesn't exist.
+mkdir -p "${HOME}/.local/bin"
+_koopa_add_to_path_start "${HOME}/.local/bin"
+
+curl -sSL https://get.haskellstack.org/ | "$SHELL"

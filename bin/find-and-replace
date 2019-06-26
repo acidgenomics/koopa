@@ -1,16 +1,23 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 # Global find and replace in files using sed.
+# Modified 2019-06-23.
 
-pattern="$1"
-replacement="$2"
+from="$1"
+to="$2"
 
-if [[ -n "${MACOS:-}" ]]
+# Check for unescaped slashes.
+if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
 then
-    find . -type f -exec sed -i "s/${pattern}/${replacement}/g" {} \;
-elif [[ -n "${LINUX:-}" ]]
+    >&2 printf "Error: Unescaped '/' detected: %s\n" "$from"
+    exit 1
+elif echo "$to" | grep -q "/" && echo "$to" | grep -Fqv "\\"
 then
-    # Note the extra quotes in sed command here.
-    find . -type f -exec sed -i "" "s/${pattern}/${replacement}/g" {} \;
+    >&2 printf "Error: Unescaped '/' detected: %s\n" "$to"
+    exit 1
 fi
+
+find . -maxdepth 1 -type f -exec sed -i "s/${from}/${to}/g" {} \;

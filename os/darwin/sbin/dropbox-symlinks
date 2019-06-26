@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Symlink Desktop and Documents on Dropbox.
+# Modified 2019-06-25.
+
+_koopa_assert_has_sudo
+
+sudo rm -r ~/Desktop
+ln -s ~/Dropbox/Desktop ~/.
+
+sudo rm -r ~/Documents
+ln -s ~/Dropbox/Documents ~/.
+
+sudo killAll Finder

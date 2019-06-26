@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
 
-# Copy BAM and BAI (index) files to a destination.
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Copy BAM and BAI index sidecar files to a destination.
+# Modified 2019-06-23.
 
 # Source directory.
 source_dir="$1"
-source_dir="$( realpath "$source_dir" )"
+source_dir="$(realpath "$source_dir")"
 if [[ ! -d "$source_dir" ]]
 then
     printf "\nDoes not exist:\n%s\n\n" "$source_dir"
@@ -14,7 +17,7 @@ fi
 
 # Destination directory.
 dest_dir="$2"
-dest_dir="$( realpath "$dest_dir" )"
+dest_dir="$(realpath "$dest_dir")"
 if [[ ! -d "$dest_dir" ]]
 then
     printf "\nDoes not exist:\n%s\n\n" "$dest_dir"
