@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Conda functions.
-# Modified 2019-06-25.
+# Modified 2019-06-26.
 
 
 
@@ -80,5 +80,30 @@ _koopa_conda_env_prefix() {
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
     
     unset -v env_list env_name path prefix
+}
+
+
+
+# Modified 2019-06-26.
+_koopa_link_conda_env() {
+    env_name="$1"
+    env_prefix="$(koopa conda-prefix)/envs/${env_name}"
+    build_prefix="$(koopa build-prefix)"
+
+    printf "Linking %s in %s.\n" "$env_prefix" "$build_prefix"
+
+    _koopa_build_set_permissions "$env_prefix"
+
+    find "$env_prefix" \
+        -maxdepth 1 \
+        -mindepth 1 \
+        ! -name "*conda*" \
+        -print0 |
+        xargs -0 -I {} cp -frsv {} "$build_prefix/".
+
+    _koopa_build_set_permissions "$build_prefix"
+    _koopa_has_sudo && _koopa_update_ldconfig
+
+    unset -v build_prefix env_name env_prefix
 }
 

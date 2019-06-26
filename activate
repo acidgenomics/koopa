@@ -13,7 +13,8 @@
 # ==============================================================================
 
 # Never activate for root user.
-[ "$(id -u)" -eq 0 ] && return
+[ "$(id -u)" -eq 0 ] && return 0
+echo "$(whoami)" | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
 # Enable test mode.
 if [ "${test:-0}" -eq 1 ]
@@ -25,8 +26,8 @@ then
     if [ ! -z "${BASH_VERSION:-}" ]
     then
         set -o errtrace
-        set -o posix
         set -o pipefail
+        set -o posix
     fi
     export KOOPA_TEST=1
     force=1
@@ -206,7 +207,7 @@ then
 
     programs_dir="${activate_dir}/programs"
     . "${programs_dir}/conda.sh"
-    . "${programs_dir}/conda-envs.sh"
+    # . "${programs_dir}/conda-envs.sh"
     . "${programs_dir}/perlbrew.sh"
     . "${programs_dir}/rbenv.sh"
     . "${programs_dir}/aspera.sh"
