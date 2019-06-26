@@ -286,7 +286,7 @@ _koopa_os_type() {
     local name
     if _koopa_is_darwin
     then
-        name="$("$(uname -s)" | tr '[:upper:]' '[:lower:]')"
+        name="$(uname -s | tr '[:upper:]' '[:lower:]')"
     elif _koopa_is_linux
     then
         name="$( \
