@@ -7,14 +7,11 @@
 
 path="${1:-$PWD}"
 
-# shellcheck disable=SC2063
 hits="$( \
     grep -Er \
         --binary-files="without-match" \
-        --exclude "*/.git/*" \
-        --exclude "*/dotfiles/doom.d/*" \
-        --exclude "*/vim/pack/*" \
-        --exclude "*-fixme-comments" \
+        --exclude-dir={.git,doom.d,vim} \
+        --exclude="fixme-comments.sh" \
         "\b(FIXME|TODO)\b" \
         "$path" | \
         sort \
