@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
 
-# Making source header optional, for Travis CI checks.
-if [[ -n "$KOOPA_SHELL" ]]
-then
-    # shellcheck source=/dev/null
-    source "$(koopa header bash)"
-    _koopa_assert_is_installed shellcheck
-fi
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+_koopa_assert_is_installed shellcheck
 
 # Recursively run shellcheck on all scripts in a directory.
 # Modified 2019-06-25.
@@ -20,7 +16,7 @@ path="${1:-$PWD}"
 # Here we're checking for the shebang, rather than relying on file extension.
 grep -Elr \
     --binary-files="without-match" \
-    --exclude-dir="${KOOPA_HOME}/cellar" \
+    --exclude-dir={cellar,conda} \
     '#!/usr/bin/env (ba)?sh' \
     "$path" | \
     xargs -I {} shellcheck -x {}
