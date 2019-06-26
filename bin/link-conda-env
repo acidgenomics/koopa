@@ -3,7 +3,7 @@
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Link cellar into local build directory.
+# Link conda environment into local build directory.
 # Modified 2019-06-26.
 
-_koopa_link_cellar "$@"
+_koopa_link_conda_env "$@"
