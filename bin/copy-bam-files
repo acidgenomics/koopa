@@ -32,9 +32,13 @@ printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 # Note that we're ignoring some bcbio output cruft here.
 # Skip transferring any BAM files in the work directory, and don't copy any
 # of the transcriptome BAMs automatically.
+# Ignore:
+# - `work/`
+# - `*-transcriptome.bam`
 
-# work
-# -transcriptome.bam
+# rsync works more reliably for resuming interrupted transfers.
+# > cp -iruv {} "$dest_dir/".
+# > rsync --size-only
 
 find -L "$source_dir" \
     -maxdepth 4 \
@@ -43,4 +47,4 @@ find -L "$source_dir" \
     ! -name "*-transcriptome.bam" \
     ! -path "*/work/*" \
     -print0 | xargs -0 -I {} \
-    cp -iruv {} "$dest_dir"
+    rsync --size-only --progress {} "${dest_dir}/"
