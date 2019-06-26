@@ -11,7 +11,7 @@ name="$1"
 version="$2"
 
 find -L \
-    "$build_prefix" \
+    "$prefix" \
     -path "*/cellar/${name}/${version}/*" \
-    ! -path "${build_prefix}/koopa"
+    ! -path "${prefix}/koopa"
 
