@@ -226,8 +226,11 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         # `~/.zhsrc` file is required for Z shell to configure correctly.
-        dotfile -q shrc
-        dotfile -q zshrc
+        if [ ! -f "${HOME}/.zshrc" ]
+        then
+            dotfile -q shrc
+            dotfile -q zshrc
+        fi
     fi
 
     # Platform-specific configuration.
