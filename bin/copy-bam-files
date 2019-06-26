@@ -37,6 +37,8 @@ printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 # - `*-transcriptome.bam`
 
 # rsync works more reliably for resuming interrupted transfers.
+# Currently using this to transfer to Azure Files, which doesn't support
+# the rsync `-av` flags.
 # > cp -iruv {} "$dest_dir/".
 # > rsync --size-only
 
