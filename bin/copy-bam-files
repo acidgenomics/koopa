@@ -24,17 +24,14 @@ then
     exit 1
 fi
 
-printf "\n"
-printf "Source:\n%s\n" "$source_dir"
-printf "\n"
-printf "Destination:\n%s\n" "$dest_dir"
-printf "\n"
+printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 
 # Note that we're allowing symlinks in the search path.
 # -L  follow symbolic links
 
 find -L "$source_dir" \
-    -maxdepth 2 \
-    -name "*.bam" -print0 -o -name "*.bam.bai" \
+    -maxdepth 4 \
+    -type f \
+    \( -name "*.bam" -o -name "*.bam.bai" \) \
     -print0 | xargs -0 -I {} \
     cp -irv {} "$dest_dir"
