@@ -4,7 +4,7 @@
 # Put useful conda environments in PATH.
 # Modified 2019-06-25.
 
-_koopa_is_installed conda || return
+_koopa_is_installed conda || return 0
 
 # Early return if local conda environments aren't configured.
 prefix="$(_koopa_conda_prefix)"
