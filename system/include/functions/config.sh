@@ -36,29 +36,36 @@ _koopa_info_box() {
 # See also:
 # - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
 # - https://stackoverflow.com/questions/22290554
-
-# Modified 2019-06-24.
+#
+# FIXME This script is breaking on Travis CI for bash checks.
+#
+# Modified 2019-06-26.
 _koopa_java_home() {
-    if _koopa_is_darwin
-    then
-        JAVA_HOME="$(/usr/libexec/java_home)"
-    else
-        jvm_dir="/usr/lib/jvm"
-        [ -d "$jvm_dir" ] || return
-        if [ -d "${jvm_dir}/java-12-oracle" ]
+    if [ -z "${JAVA_HOME:-}" ]
+    then    
+        if _koopa_is_darwin
         then
-            JAVA_HOME="${jvm_dir}/java-12-oracle"
-        elif [ -d "${jvm_dir}/java-12" ]
-        then
-            JAVA_HOME="${jvm_dir}/java-12"
-        elif [ -d "${jvm_dir}/java" ]
-        then
-            JAVA_HOME="${jvm_dir}/java"
+            JAVA_HOME="$(/usr/libexec/java_home)"
         else
-            return
+            jvm_dir="/usr/lib/jvm"
+            if [ ! -d "$jvm_dir" ]
+            then
+                JAVA_HOME=
+            elif [ -d "${jvm_dir}/java-12-oracle" ]
+            then
+                JAVA_HOME="${jvm_dir}/java-12-oracle"
+            elif [ -d "${jvm_dir}/java-12" ]
+            then
+                JAVA_HOME="${jvm_dir}/java-12"
+            elif [ -d "${jvm_dir}/java" ]
+            then
+                JAVA_HOME="${jvm_dir}/java"
+            else
+                JAVA_HOME=
+            fi
         fi
     fi
-    [ -d "$JAVA_HOME" ] || return
+    [ -d "$JAVA_HOME" ] || return 0
     echo "$JAVA_HOME"
     unset -v jvm_dir
 }
