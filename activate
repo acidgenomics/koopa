@@ -14,6 +14,7 @@
 
 # Never activate for root user.
 [ "$(id -u)" -eq 0 ] && return
+[ "$(whoami)" = "bioinfo" ] && return
 
 # Enable test mode.
 if [ "${test:-0}" -eq 1 ]
