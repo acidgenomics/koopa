@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-
-# shellcheck source=/dev/null
-source "$(koopa header bash)"
-_koopa_assert_is_installed shellcheck
+set -Eeu -o pipefail
 
 # Recursively run shellcheck on all scripts in a directory.
-# Modified 2019-06-25.
+# Modified 2019-06-26.
 
 path="${1:-$PWD}"
 
