@@ -206,7 +206,7 @@ then
 
     programs_dir="${activate_dir}/programs"
     . "${programs_dir}/conda.sh"
-    . "${programs_dir}/conda-envs.sh"
+    # . "${programs_dir}/conda-envs.sh"
     . "${programs_dir}/perlbrew.sh"
     . "${programs_dir}/rbenv.sh"
     . "${programs_dir}/aspera.sh"
