@@ -26,8 +26,8 @@ then
     if [ ! -z "${BASH_VERSION:-}" ]
     then
         set -o errtrace
-        set -o posix
         set -o pipefail
+        set -o posix
     fi
     export KOOPA_TEST=1
     force=1
