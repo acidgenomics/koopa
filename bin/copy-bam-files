@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Copy BAM and BAI index sidecar files to a destination.
-# Modified 2019-06-24.
+# Updated 2019-06-26.
 
 # Source directory.
 source_dir="$1"
@@ -27,11 +27,23 @@ fi
 printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 
 # Note that we're allowing symlinks in the search path.
-# -L  follow symbolic links
+# `-L`: Follow symbolic links.
+
+# Note that we're ignoring some bcbio output cruft here.
+# Skip transferring any BAM files in the work directory, and don't copy any
+# of the transcriptome BAMs automatically.
+
+# work
+# -transcriptome.bam
 
 find -L "$source_dir" \
     -maxdepth 4 \
     -type f \
-    \( -name "*.bam" -o -name "*.bam.bai" \) \
+    \( \
+        -name "*.bam" -or -name "*.bam.bai" \
+        -and -not -name "*-transcriptome.bam" \
+        -and -not -path "*/work/*" \
+    \) \
+
     -print0 | xargs -0 -I {} \
-    cp -irv {} "$dest_dir"
+    cp -iruv {} "$dest_dir"
