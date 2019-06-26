@@ -40,6 +40,11 @@ jobs:
       script:
         - zsh  -c 'set -x; test=1 . ./activate'
     - stage: test
+      name: "macos"
+      os: osx
+      script:
+        - bash -c 'set -x; test=1 . ./activate'
+    - stage: test
       name: "shellcheck"
       script:
         - bash -c './bin/shellcheck-recursive'
