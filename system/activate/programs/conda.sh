@@ -65,11 +65,9 @@ fi
 if [ -x "$CONDA_EXE" ]
 then
     bin_dir="$(dirname "$CONDA_EXE")"
-    # Note that the activation script must run again inside a tmux session.
-    [ ! -z "${KOOPA_DEBUG:-}" ] && set +u
+    # Activation script must run again inside a tmux session.
     # shellcheck source=/dev/null
     . "${bin_dir}/activate"
-    [ ! -z "${KOOPA_DEBUG:-}" ] && set -u
     unset -v bin_dir
 else
     unset -v CONDA_EXE
