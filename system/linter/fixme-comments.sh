@@ -10,7 +10,7 @@ path="${1:-$PWD}"
 hits="$( \
     grep -Er \
         --binary-files="without-match" \
-        --exclude-dir={.git,doom.d,vim} \
+        --exclude-dir={.git,cellar,conda,doom.d,vim} \
         --exclude="fixme-comments.sh" \
         "\b(FIXME|TODO)\b" \
         "$path" | \

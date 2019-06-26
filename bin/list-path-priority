@@ -13,7 +13,5 @@ source "$(koopa header bash)"
 # > sed 's/:/\n/g' <<< "$PATH"
 # > tr ':' '\n' <<< "$PATH"
 
-# FIXME Consider removing duplicates.
-
 # This uses bash parameter expansion.
 echo "${PATH//:/$'\n'}"
