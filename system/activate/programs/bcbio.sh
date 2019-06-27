@@ -28,7 +28,7 @@ then
     # Exporting at the end of PATH so we don't mask gcc or R.
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
-    force_add_to_path_end "$bin_dir"
+    _koopa_force_add_to_path_end "$bin_dir"
     unset -v bin_dir
 else
     unset -v BCBIO_EXE
