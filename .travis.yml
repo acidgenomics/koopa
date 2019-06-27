@@ -28,7 +28,6 @@ jobs:
             - zsh
       script:
         - bash -c 'set -x; test=1 . ./activate'
-        - ksh  -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './system/linter/fixme-comments.sh'
         - bash -c './system/linter/shellcheck.sh'

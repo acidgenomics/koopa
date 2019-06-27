@@ -2,10 +2,13 @@
 # shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
+
+# Dropped support for ksh because it doesn't support `local` variables scoped
+# inside of functions.
 
 
 
@@ -62,7 +65,7 @@ usage: activate [-h] [--test] [--force] [--minimal]
 
 Activate koopa.
 
-supported shells: bash, ksh, zsh
+supported shells: bash, zsh
 
 optional arguments:
     -h, --help
@@ -135,12 +138,6 @@ then
     # SC2039: In POSIX sh, array references are undefined.
     # shellcheck disable=SC2039
     file="${BASH_SOURCE[0]}"
-elif [ ! -z "${KSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="ksh"
-    # SC2154: .sh.file is referenced but not assigned.
-    # shellcheck disable=SC2154
-    file="${.sh.file}"
 elif [ ! -z "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
@@ -153,7 +150,7 @@ then
     file="${(%):-%N}"
 else
     >&2 printf "Error: Failed to detect supported shell.\n"
-    >&2 printf "Supported: bash, ksh, zsh.\n\n"
+    >&2 printf "Supported: bash, zsh.\n\n"
     >&2 printf "  SHELL: %s\n" "$SHELL"
     >&2 printf "      0: %s\n" "$0"
     >&2 printf "      -: %s\n" "$-"

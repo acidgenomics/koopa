@@ -13,7 +13,7 @@ fi
 if [ -x "$ASPERA_EXE" ]
 then
     export ASPERA_EXE
-    bin_dir="$(dirname "$ASPER_EXE")"
+    bin_dir="$(dirname "$ASPERA_EXE")"
     _koopa_add_to_path_start "$bin_dir"
     unset -v bin_dir
 else
