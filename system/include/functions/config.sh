@@ -7,7 +7,7 @@
 
 # Modified 2019-06-25.
 _koopa_is_remote() {
-    [ ! -z "${SSH_CONNECTION:-}" ]
+    [ -n "${SSH_CONNECTION:-}" ]
 }
 
 
@@ -112,7 +112,7 @@ _koopa_r_javareconf() {
     _koopa_is_installed java || return 1
    
     java_home="$(_koopa_java_home)"
-    [ ! -z "$java_home" ] && [ -d "$java_home" ] || return 1
+    [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
     
     printf "Updating R Java configuration.\n"
     
