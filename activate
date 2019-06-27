@@ -25,7 +25,7 @@ then
     printf "Setting strict shell mode.\n"
     set -o errexit
     set -o nounset
-    if [ ! -z "${BASH_VERSION:-}" ]
+    if [ -n "${BASH_VERSION:-}" ]
     then
         set -o errtrace
         set -o pipefail
@@ -39,7 +39,7 @@ fi
 echo "$-" | grep -q "i" && export INTERACTIVE=1
 
 # Force reactivation inside of interactive HPC job.
-[ ! -z "${SLURM_JOB_ID:-}" ] && [ ! -z "${INTERACTIVE:-}" ] && force=1
+[ -n "${SLURM_JOB_ID:-}" ] && [ -n "${INTERACTIVE:-}" ] && force=1
 
 # Force reactivation inside of tmux session.
 [ -z "${TMUX:-}" ] || force=1
@@ -51,7 +51,7 @@ echo "$-" | grep -q "i" && export INTERACTIVE=1
 [ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return
 
 # Early return if koopa is already active.
-[ -z "${KOOPA_FORCE:-}" ] && [ ! -z "${KOOPA_HOME:-}" ] && return
+[ -z "${KOOPA_FORCE:-}" ] && [ -n "${KOOPA_HOME:-}" ] && return
 
 
 
@@ -131,13 +131,13 @@ fi
 # Locate koopa home                                                         {{{1
 # ==============================================================================
 
-if [ ! -z "${BASH_VERSION:-}" ]
+if [ -n "${BASH_VERSION:-}" ]
 then
     KOOPA_SHELL="bash"
     # SC2039: In POSIX sh, array references are undefined.
     # shellcheck disable=SC2039
     file="${BASH_SOURCE[0]}"
-elif [ ! -z "${ZSH_VERSION:-}" ]
+elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
     # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
@@ -254,11 +254,11 @@ unset -v activate_dir
 unset -v colors
 
 # Disable test mode.
-if [ ! -z "${KOOPA_TEST:-}" ]
+if [ -n "${KOOPA_TEST:-}" ]
 then
     set +o errexit
     set +o nounset
-    if [ ! -z "${BASH_VERSION:-}" ]
+    if [ -n "${BASH_VERSION:-}" ]
     then
         set -o errtrace
         set -o posix

@@ -18,7 +18,7 @@ _koopa_add_conda_env_to_path() {
     env_list="${2:-}"
 
     prefix="$(_koopa_conda_env_prefix "$env_name" "$env_list")"
-    [ ! -z "$prefix" ] || return 1
+    [ -n "$prefix" ] || return 1
     prefix="${prefix}/bin"
     [ -d "$prefix" ] || return 1
 
