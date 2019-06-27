@@ -7,7 +7,7 @@ Shell bootloader for bioinformatics.
 
 ## Installation
 
-These [POSIX][]-compliant shells are supported: [bash][], [zsh][], [ksh][].
+These [POSIX][]-compliant shells are supported: [bash][], [zsh][].
 
 Requirements:
 

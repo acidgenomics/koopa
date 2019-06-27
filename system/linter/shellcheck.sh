@@ -13,7 +13,7 @@ path="${1:-$PWD}"
 # Here we're checking for the shebang, rather than relying on file extension.
 grep -Elr \
     --binary-files="without-match" \
-    --exclude-dir={cellar,conda} \
-    '#!/usr/bin/env (ba)?sh' \
+    --exclude-dir={.git,cellar,conda} \
+    '^#!/.*\b(ba)?sh\b$' \
     "$path" | \
     xargs -I {} shellcheck -x {}
