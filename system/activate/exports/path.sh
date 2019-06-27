@@ -66,7 +66,7 @@ then
         id_like=
     fi
 
-    if [ ! -z "${id_like:-}" ]
+    if [ -n "${id_like:-}" ]
     then
         _koopa_add_bins_to_path "os/${id_like}"
     fi
