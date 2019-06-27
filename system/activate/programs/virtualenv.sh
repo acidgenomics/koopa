@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Activate Python "default" virtual environment.
 # Modified 2019-06-27.
