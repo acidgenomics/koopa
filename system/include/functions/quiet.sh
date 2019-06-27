@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Quiet variants
 # Modified 2019-06-20.
