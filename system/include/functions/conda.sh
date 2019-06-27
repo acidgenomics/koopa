@@ -1,12 +1,16 @@
 #!/bin/sh
 
 # Conda functions.
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 
 
 
-# Modified 2019-06-25.
+# Modified 2019-06-27.
 _koopa_add_conda_env_to_path() {
+    local env_name
+    local env_list
+    local prefix
+
     _koopa_is_installed conda || return 1
 
     env_name="$1"
@@ -18,14 +22,17 @@ _koopa_add_conda_env_to_path() {
     [ -d "$prefix" ] || return 1
 
     _koopa_add_to_path_start "$prefix"
-    
-    unset -v env_list env_name prefix
 }
 
 
 
-# Modified 2019-06-25.
+# Modified 2019-06-27.
 _koopa_create_conda_env() {
+    local name
+    local apps
+    local channel
+    local prefix
+
     _koopa_assert_is_installed conda
 
     name="$1"
@@ -37,13 +44,11 @@ _koopa_create_conda_env() {
         -p "${prefix}/envs/${name}" \
         -c $channel \
         $apps
-        
-    unset -v apps channel name prefix
 }
 
 
 
-# Modified 2019-06-25.
+# Modified 2019-06-27.
 _koopa_conda_env_list() {
     _koopa_is_installed conda || return 1
     conda env list --json
@@ -53,8 +58,13 @@ _koopa_conda_env_list() {
 
 # Note that we're allowing env_list passthrough as second positional variable,
 # to speed up loading upon activation.
-# Modified 2019-06-25.
+# Modified 2019-06-27.
 _koopa_conda_env_prefix() {
+    local env_name
+    local env_list
+    local prefix
+    local path
+
     _koopa_is_installed conda || return 1
 
     env_name="$1"
@@ -78,14 +88,16 @@ _koopa_conda_env_prefix() {
     [ -z "$path" ] && return 1
 
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
-    
-    unset -v env_list env_name path prefix
 }
 
 
 
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 _koopa_link_conda_env() {
+    local env_name
+    local env_prefix
+    local build_prefix
+
     env_name="$1"
     env_prefix="$(koopa conda-prefix)/envs/${env_name}"
     build_prefix="$(koopa build-prefix)"
@@ -103,7 +115,5 @@ _koopa_link_conda_env() {
 
     _koopa_build_set_permissions "$build_prefix"
     _koopa_has_sudo && _koopa_update_ldconfig
-
-    unset -v build_prefix env_name env_prefix
 }
 

@@ -54,7 +54,7 @@ if _koopa_is_linux
 then
     _koopa_add_bins_to_path "os/linux"
 
-    id_like="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f 2)"
+    id_like="$(grep "ID_LIKE" /etc/os-release | cut -d "=" -f 2)"
 
     if echo "$id_like" | grep -q "debian"
     then

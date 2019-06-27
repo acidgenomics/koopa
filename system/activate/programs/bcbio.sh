@@ -8,15 +8,17 @@
 
 if [ -z "${BCBIO_EXE:-}" ]
 then
-    if [ ! -z "${HARVARD_O2:-}" ]
+    host="$(koopa host-type)"
+    if [ "$host" = "harvard-o2" ]
     then
         BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"
-    elif [ ! -z "${HARVARD_ODYSSEY:-}" ]
+    elif [ "$host" = "harvard-odyssey" ]
     then
         BCBIO_EXE="/n/regal/hsph_bioinfo/bcbio_nextgen/bin/bcbio_nextgen.py"
     else
         BCBIO_EXE=
     fi
+    unset -v host
 fi
 
 # Export in PATH, if accessible.
