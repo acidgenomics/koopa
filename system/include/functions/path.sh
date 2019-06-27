@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # PATH string modifiers
 # Modified 2019-06-27.

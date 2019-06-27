@@ -1,4 +1,5 @@
 #!/usr/bin/sh
+# shellcheck disable=SC2039
 
 # Functions required for `koopa` script functionality.
 # Modified 2019-06-27.
