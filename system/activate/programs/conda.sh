@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Activate Conda
 # Modified 2019-06-27.

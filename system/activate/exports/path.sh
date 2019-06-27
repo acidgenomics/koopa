@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Define PATH string.
 # Modified 2019-06-20.
