@@ -1,4 +1,5 @@
-#!/usr/bin/sh
+#!/bin/sh
+# shellcheck disable=SC2039
 
 # Functions required for `koopa` script functionality.
 # Modified 2019-06-27.
@@ -325,13 +326,13 @@ _koopa_rsync_flags() {
 # Modified 2019-06-27.
 _koopa_shell() {
     local shell
-    if [ ! -z "${BASH_VERSION:-}" ]
+    if [ -n "${BASH_VERSION:-}" ]
     then
         shell="bash"
-    elif [ ! -z "${KSH_VERSION:-}" ]
+    elif [ -n "${KSH_VERSION:-}" ]
     then
         shell="ksh"
-    elif [ ! -z "${ZSH_VERSION:-}" ]
+    elif [ -n "${ZSH_VERSION:-}" ]
     then
         shell="zsh"
     else
