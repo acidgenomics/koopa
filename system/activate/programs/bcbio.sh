@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Include bcbio toolkit binaries in PATH, if defined.
 # Modified 2019-06-25.

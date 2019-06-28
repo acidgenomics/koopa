@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC1090
 
 # Google Cloud SDK
 # Modified 2019-06-17.

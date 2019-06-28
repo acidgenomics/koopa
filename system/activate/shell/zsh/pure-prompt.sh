@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# shellcheck disable=SC2039,SC2206
 
 # Pure prompt.
 # Modified 2019-06-18.

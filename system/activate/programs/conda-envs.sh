@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Put useful conda environments in PATH.
 # Modified 2019-06-25.

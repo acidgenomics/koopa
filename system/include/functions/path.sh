@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # PATH string modifiers
 # Modified 2019-06-27.
@@ -15,7 +16,7 @@ _koopa_add_bins_to_path() {
     local prefix
     relpath="${1:-}"
     prefix="$KOOPA_HOME"
-    [ ! -z "$relpath" ] && prefix="${prefix}/${relpath}"
+    [ -n "$relpath" ] && prefix="${prefix}/${relpath}"
     _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
     _koopa_add_to_path_start "${prefix}/bin"
 }
