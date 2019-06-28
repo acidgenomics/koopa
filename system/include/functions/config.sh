@@ -135,7 +135,7 @@ _koopa_r_javareconf() {
         sudo R --vanilla CMD javareconf "${java_flags[@]}"
     fi
 
-    Rscript -e 'install.packages("rJava")'
+    # > Rscript -e 'install.packages("rJava")'
 }
 
 
