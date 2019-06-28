@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Cellar functions.
 # Modified 2019-06-27.
