@@ -491,7 +491,6 @@ check_version(
         "cut -d ' ' -f 3",
         "cut -d ',' -f 1"
     ),
-    eval = "==",
     required = FALSE
 )
 
@@ -534,7 +533,6 @@ check_version(
         "cut -d ' ' -f 3",
         "sed -e 's/\"//g'"
     ),
-    eval = "==",
     required = FALSE
 )
 
