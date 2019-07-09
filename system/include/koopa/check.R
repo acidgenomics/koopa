@@ -192,18 +192,13 @@ message("\nChecking required programs.")
 # Bash
 check_version(
     name = "bash",
-    version = switch(
-        EXPR = os,
-        darwin = "5.0.7",
-        koopa_version("bash")
-    ),
+    version = koopa_version("bash"),
     version_cmd = c(
         "bash --version",
         "head -n 1",
         "cut -d ' ' -f 4",
         "cut -d '(' -f 1"
-    ),
-    eval = "=="
+    )
 )
 
 # R
@@ -223,11 +218,7 @@ check_version(
 # Python
 check_version(
     name = "python3",
-    version = switch(
-        EXPR = os,
-        ubuntu = "3.6",
-        koopa_version("python")
-    ),
+    version = koopa_version("python"),
     version_cmd = c(
         "python3 --version 2>&1",
         "head -n 1",
@@ -278,11 +269,7 @@ check_version(
 # Git
 check_version(
     name = "git",
-    version = switch(
-        EXPR = os,
-        ubuntu = "2.17.1",
-        koopa_version("git")
-    ),
+    version = koopa_version("git"),
     version_cmd = c(
         "git --version",
         "head -n 1",
@@ -293,12 +280,7 @@ check_version(
 # GnuPG
 check_version(
     name = "gpg",
-    version = switch(
-        EXPR = os,
-        darwin = "2.2.10",
-        ubuntu = "2.2.4",
-        koopa_version("gpg")
-    ),
+    version = koopa_version("gpg"),
     version_cmd = c(
         "gpg --version",
         "head -n 1",
@@ -309,11 +291,7 @@ check_version(
 # GSL
 check_version(
     name = "gsl-config",
-    version = switch(
-        EXPR = os,
-        ubuntu = "2.4",
-        koopa_version("gsl")
-    ),
+    version = koopa_version("gsl"),
     version_cmd = c(
         "gsl-config --version",
         "head -n 1"
@@ -348,7 +326,7 @@ check_version(
     name = "openssl",
     version = switch(
         EXPR = os,
-        rhel = "1.0.2",
+        rhel7 = "1.0.2",
         koopa_version("openssl")
     ),
     version_cmd = c(
