@@ -270,7 +270,7 @@ check_version(
 # Git
 check_version(
     name = "git",
-    version = koopa_version("git"),
+    version = "2.18",
     version_cmd = c(
         "git --version",
         "head -n 1",
@@ -372,8 +372,9 @@ if (isTRUE(linux)) {
         name = "gcc",
         version = switch(
             EXPR = os,
-            ubuntu = "7.4.0",
-            koopa_version("gcc")
+            rhel7 = "4.8.5",
+            rhel8 = "8.2.1",
+            ubuntu = "7.4.0"
         ),
         version_cmd = c(
             "gcc --version",
@@ -388,7 +389,7 @@ if (isTRUE(linux)) {
     # supports argument flags such as `--vanilla` for Rscript.
     check_version(
         name = "/usr/bin/env",
-        version = koopa_version("coreutils"),
+        version = "8.30",
         version_cmd = c(
             "/usr/bin/env --version",
             "head -n 1",
