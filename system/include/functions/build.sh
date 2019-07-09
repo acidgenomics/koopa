@@ -49,12 +49,12 @@ _koopa_build_mkdir() {
 
 
 # Set the admin or regular user group automatically.
-# Modified 2019-06-27.
+# Modified 2019-07-09.
 _koopa_build_prefix_group() {
     local group
 
     # Standard user.
-    ! _koopa_has_sudo && echo "$(whoami)" && return
+    ! _koopa_has_sudo && whoami && return 0
 
     # Administrator.
     if groups | grep -Eq "\b(admin)\b"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Activate koopa.
-# Modified 2019-06-27.
+# Modified 2019-07-09.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -16,7 +16,7 @@
 
 # Never activate for root user.
 [ "$(id -u)" -eq 0 ] && return 0
-echo "$(whoami)" | grep -Eq "\b(admin|bioinfo)\b" && return 0
+whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
 # Enable test mode.
 if [ "${test:-0}" -eq 1 ]
@@ -73,7 +73,7 @@ optional arguments:
 optional variables:
     test=1
         Enable verbose test mode. Used for Travis CI checks.
-        This will also automatically set `force=1`.
+        This will also automatically set 'force=1'.
     force=1
         Force reactivation, even if koopa is already active.
     minimal=1
@@ -180,11 +180,15 @@ activate_dir="${KOOPA_HOME}/system/activate"
 # Basic shell configuration                                                 {{{1
 # ==============================================================================
 
+# shellcheck source=/dev/null
 . "${activate_dir}/preflight.sh"
 
 exports_dir="${activate_dir}/exports"
+# shellcheck source=/dev/null
 . "${exports_dir}/path.sh"
+# shellcheck source=/dev/null
 . "${exports_dir}/xdg-base-directory.sh"
+# shellcheck source=/dev/null
 . "${exports_dir}/general.sh"
 unset -v exports_dir
 
@@ -195,20 +199,33 @@ unset -v exports_dir
 
 if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
 then
+    # shellcheck source=/dev/null
     . "${activate_dir}/set.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/umask.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/aliases.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/secrets.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/ssh-key.sh"
 
     programs_dir="${activate_dir}/programs"
+    # shellcheck source=/dev/null
     . "${programs_dir}/conda.sh"
-    # . "${programs_dir}/conda-envs.sh"
+    # shellcheck source=/dev/null
+    # > . "${programs_dir}/conda-envs.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/perlbrew.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/rbenv.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/aspera.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/ensembl-perl-api.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/bcbio.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/virtualenv.sh"
     unset -v programs_dir
 
@@ -216,8 +233,11 @@ then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
         bash_dir="${activate_dir}/shell/bash"
+        # shellcheck source=/dev/null
         . "${bash_dir}/shopt.sh"
+        # shellcheck source=/dev/null
         . "${bash_dir}/bind.sh"
+        # shellcheck source=/dev/null
         . "${bash_dir}/ps1.sh"
         unset -v bash_dir
     elif [ "$KOOPA_SHELL" = "zsh" ]
@@ -234,9 +254,13 @@ then
     if _koopa_is_darwin
     then
         darwin_dir="${activate_dir}/os/darwin"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/aliases.sh"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/exports.sh"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/programs/homebrew.sh"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
     fi
