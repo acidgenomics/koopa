@@ -28,6 +28,11 @@ printf "Installing %s %s.\n" "$name" "$version"
 (
     # R will warn if R_HOME environment variable is set.
     unset -v R_HOME
+
+    # Fix for reg-tests-1d.R error, due to unset TZ variable.
+    # https://stackoverflow.com/questions/46413691
+    export TZ="$(date +%Z)"
+
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
