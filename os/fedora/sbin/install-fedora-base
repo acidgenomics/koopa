@@ -4,29 +4,44 @@
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Modified 2019-06-28.
+# Modified 2019-07-09.
+
+# Tested against RHEL 7 and 8.
 
 _koopa_assert_has_sudo
 
-# > enable-epel
+os_type="$(koopa os-type)"
+
 sudo yum -y update
 sudo yum -y install \
-    epel-release \
     convmv \
+    coreutils \
     git \
     gsl-devel \
     hdf5-devel \
-    libssh2-devel \
-    libgit2-devel \
+    java-latest-openjdk \
+    java-latest-openjdk-devel \
     mariadb-devel \
     ncurses \
-    pandoc \
-    pandoc-citeproc \
     qpdf \
-    sshpass \
     tmux \
     tree \
-    udunits2-devel
-sudo yum -y install \
-    java-latest-openjdk \
-    java-latest-openjdk-devel
+    util-linux \
+    util-linux-user \
+    wget
+
+if [[ "$os_type" == "rhel7" ]]
+then
+    sudo yum -y install \
+        epel-release \
+        libgit2-devel \
+        libssh2-devel \
+        pandoc \
+        pandoc-citeproc \
+        sshpass \
+        udunits2-devel
+else
+    sudo yum -y install \
+        libgit2 \
+        libssh2
+fi
