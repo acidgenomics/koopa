@@ -48,10 +48,10 @@ echo "$-" | grep -q "i" && export INTERACTIVE=1
 [ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
 
 # Early return for non-interactive sessions.
-[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return
+[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return 0
 
 # Early return if koopa is already active.
-[ -z "${KOOPA_FORCE:-}" ] && [ -n "${KOOPA_HOME:-}" ] && return
+[ -z "${KOOPA_FORCE:-}" ] && [ -n "${KOOPA_HOME:-}" ] && return 0
 
 
 

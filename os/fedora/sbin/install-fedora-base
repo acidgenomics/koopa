@@ -30,6 +30,7 @@ sudo yum -y install \
     java-latest-openjdk \
     java-latest-openjdk-devel \
     libcurl-devel \
+    libevent-devel \
     make \
     mariadb-devel \
     ncurses \
