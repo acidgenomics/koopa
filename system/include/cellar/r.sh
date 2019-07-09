@@ -31,7 +31,7 @@ printf "Installing %s %s.\n" "$name" "$version"
 
     # Fix for reg-tests-1d.R error, due to unset TZ variable.
     # https://stackoverflow.com/questions/46413691
-    export TZ="$(date +%Z)"
+    export TZ="America/New_York"
 
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
