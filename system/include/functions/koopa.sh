@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Functions required for `koopa` script functionality.
-# Modified 2019-06-27.
+# Modified 2019-07-09.
 
 
 
@@ -69,20 +69,6 @@ _koopa_build_os_string() {
     fi
 
     echo "$string"
-}
-
-
-
-# Modified 2019-06-25.
-_koopa_is_local() {
-    echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
-}
-
-
-
-# Modified 2019-06-25.
-_koopa_is_shared() {
-    ! _koopa_is_local
 }
 
 
@@ -255,6 +241,20 @@ _koopa_host_type() {
 
 
 
+# Modified 2019-06-25.
+_koopa_is_local() {
+    echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
+}
+
+
+
+# Modified 2019-06-25.
+_koopa_is_shared() {
+    ! _koopa_is_local
+}
+
+
+
 # Used by `koopa info`.
 # Modified 2019-06-27.
 _koopa_locate() {
@@ -300,6 +300,16 @@ _koopa_os_type() {
             awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
             tr -cd '[:alnum:]' \
         )"
+	# Include the major release version for RHEL.
+	if [ "$name" = "rhel" ]
+	then
+        major_version="$( \
+            awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release | \
+            tr -cd '[0-9.]' | \
+            cut -d '.' -f 1
+        )"
+        name="${name}${major_version}"
+	fi
     else
         name=
     fi
