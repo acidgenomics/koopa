@@ -259,7 +259,7 @@ _koopa_is_shared() {
 
 
 # Used by `koopa info`.
-# Modified 2019-06-27.
+# Modified 2019-07-09.
 _koopa_locate() {
     local command
     local name
@@ -269,7 +269,7 @@ _koopa_locate() {
     name="${2:-$command}"
     path="$(_koopa_quiet_which2 "$command")"
     
-    if [[ -z "$path" ]]
+    if [ -z "$path" ]
     then
         path="[missing]"
     else
