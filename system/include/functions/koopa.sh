@@ -47,7 +47,7 @@
 # - RedHat: x86_64-redhat-linux-gnu
 # - Darwin: x86_64-darwin15.6.0
 #
-# Modified 2019-06-27.
+# Modified 2019-07-09.
 _koopa_build_os_string() {
     local mach
     local os_type
@@ -64,7 +64,10 @@ _koopa_build_os_string() {
         # instead of just returning "linux". Note that we're substituting
         # "redhat" instead of "rhel" here, when applicable.
         os_type="$(koopa os-type)"
-        [ "$os_type" = "rhel" ] && os_name="redhat"
+        if echo "$os_type" | grep -q "rhel"
+        then
+            os_type="redhat"
+        fi
         string="${mach}-${os_type}-${OSTYPE}"
     fi
 

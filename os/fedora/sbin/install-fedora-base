@@ -14,8 +14,13 @@ os_type="$(koopa os-type)"
 
 sudo yum -y update
 sudo yum -y install \
+    bzip2 \
+    bzip2-devel \
     convmv \
     coreutils \
+    gcc \
+    gcc-c++ \
+    gcc-gfortran \
     git \
     gsl-devel \
     hdf5-devel \
@@ -23,12 +28,42 @@ sudo yum -y install \
     java-latest-openjdk-devel \
     mariadb-devel \
     ncurses \
+    pcre-devel \
     qpdf \
+    readline \
+    readline-devel \
+    texlive \
+    texlive-bera \
+    texlive-caption \
+    texlive-changepage \
+    texlive-collection-fontsrecommended \
+    texlive-collection-latexrecommended \
+    texlive-enumitem \
+    texlive-etoolbox \
+    texlive-fancyhdr \
+    texlive-footmisc \
+    texlive-framed \
+    texlive-geometry \
+    texlive-hyperref \
+    texlive-latex-fonts \
+    texlive-natbib \
+    texlive-parskip \
+    texlive-pdftex \
+    texlive-placeins \
+    texlive-preprint \
+    texlive-sectsty \
+    texlive-soul \
+    texlive-titlesec \
+    texlive-titling \
+    texlive-xstring \
     tmux \
     tree \
     util-linux \
     util-linux-user \
-    wget
+    wget \
+    xz \
+    xz-devel \
+    zip
 
 if [[ "$os_type" == "rhel7" ]]
 then
