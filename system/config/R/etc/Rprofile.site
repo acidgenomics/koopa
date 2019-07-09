@@ -1,5 +1,5 @@
 # Shared R profile configuration.
-# Modified 2019-06-25 by Michael Steinbaugh.
+# Modified 2019-07-09 by Michael Steinbaugh.
 
 
 
@@ -182,25 +182,28 @@ options(
 
     # Library path                                                          {{{2
     # --------------------------------------------------------------------------
-
+    
     # Check that the local library matches the R version.
     libs <- .libPaths()
-    lib_pattern <- file.path(
-        paste0(Sys.getenv("R_PLATFORM"), "-library"),
-        r_ver
-    )
-    usr_lib <- grepl(pattern = lib_pattern, x = libs)
-
-    if (!any(usr_lib)) {
+    if (
+        # Site library.
+        !dir.exists(file.path(Sys.getenv("R_HOME"), "site-library", r_ver)) &&
+        # User library.
+        !any(grepl(
+            pattern = file.path(
+                paste0(Sys.getenv("R_PLATFORM"), "-library"),
+                r_ver
+            ),
+            x = libs
+        ))
+    ) {
         warning(paste0(
-            "Failed to detect ", r_ver, " user library.", "\n",
-            "Looking for: ", lib_pattern, "\n\n",
+            "Failed to detect ", r_ver, " site or user library.", "\n",
             ".libPaths():", "\n",
             paste(libs, collapse = "\n")
         ))
     }
-
-    rm(libs, lib_pattern, usr_lib)
+    rm(libs)
 
     # Compiler                                                              {{{2
     # --------------------------------------------------------------------------
