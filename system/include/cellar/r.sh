@@ -46,7 +46,8 @@ printf "Installing %s %s.\n" "$name" "$version"
         --with-jpeglib \
         --with-lapack \
         --with-readline \
-        --with-tcltk
+        --with-tcltk \
+        --with-x=no
     make
     make check
     make install
