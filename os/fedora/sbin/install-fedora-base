@@ -28,6 +28,7 @@ sudo yum -y install \
     gnutls \
     gnutls-devel \
     gsl-devel \
+    hdf5 \
     hdf5-devel \
     java-latest-openjdk \
     java-latest-openjdk-devel \
