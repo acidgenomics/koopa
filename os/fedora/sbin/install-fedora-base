@@ -13,11 +13,14 @@ _koopa_assert_has_sudo
 os_type="$(koopa os-type)"
 
 sudo yum -y update
+sudo yum -y groupinstall "Development Tools"
 sudo yum -y install \
     bzip2 \
     bzip2-devel \
+    cmake \
     convmv \
     coreutils \
+    curl \
     gcc \
     gcc-c++ \
     gcc-gfortran \
@@ -26,6 +29,8 @@ sudo yum -y install \
     hdf5-devel \
     java-latest-openjdk \
     java-latest-openjdk-devel \
+    libcurl-devel \
+    make \
     mariadb-devel \
     ncurses \
     pcre-devel \
