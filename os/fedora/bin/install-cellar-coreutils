@@ -4,11 +4,17 @@
 source "$(koopa header fedora)"
 
 # Install GNU core utilities.
-# Modified 2019-06-23.
+# Modified 2019-07-09.
+
+os_type="$(koopa os-type)"
 
 if _koopa_has_sudo
 then
-    sudo yum-builddep -y coreutils
+    sudo yum install -y coreutils
+    if [[ "$os_type" == "rhel7" ]]
+    then
+        sudo yum-builddep -y coreutils
+    fi
 fi
 
 source "$(koopa cellar-script coreutils)"

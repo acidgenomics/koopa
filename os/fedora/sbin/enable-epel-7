@@ -4,7 +4,7 @@
 source "$(koopa header fedora)"
 
 # Enable EPEL repository.
-# Modified 2019-06-25.
+# Modified 2019-07-09.
 
 # See also:
 # - https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
