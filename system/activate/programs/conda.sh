@@ -66,8 +66,8 @@ then
     # Activation script must run again inside a tmux session.
     # shellcheck source=/dev/null
     . "${bin_dir}/activate"
-    . "${bin_dir}/deactivate"
     unset -v bin_dir
+    conda deactivate
 else
     unset -v CONDA_EXE
 fi
