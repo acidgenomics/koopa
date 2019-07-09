@@ -69,6 +69,7 @@ sudo yum -y install \
     util-linux \
     util-linux-user \
     wget \
+    xmlto \
     xz \
     xz-devel \
     zip
