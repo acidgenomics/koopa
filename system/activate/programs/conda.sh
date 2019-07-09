@@ -67,6 +67,7 @@ then
     # shellcheck source=/dev/null
     . "${bin_dir}/activate"
     unset -v bin_dir
+    conda deactivate
 else
     unset -v CONDA_EXE
 fi

@@ -25,12 +25,15 @@ sudo yum -y install \
     gcc-c++ \
     gcc-gfortran \
     git \
+    gnutls \
+    gnutls-devel \
     gsl-devel \
     hdf5-devel \
     java-latest-openjdk \
     java-latest-openjdk-devel \
     libcurl-devel \
     libevent-devel \
+    libxml2-devel \
     make \
     mariadb-devel \
     ncurses \
@@ -67,6 +70,7 @@ sudo yum -y install \
     util-linux \
     util-linux-user \
     wget \
+    xmlto \
     xz \
     xz-devel \
     zip
