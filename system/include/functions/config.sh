@@ -118,11 +118,11 @@ _koopa_r_javareconf() {
     printf "Updating R Java configuration.\n"
     
     java_flags=(
-        JAVA_HOME="${java_home}" \
-        JAVA="${java_home}/bin/java" \
-        JAVAC="${java_home}/bin/javac" \
-        JAVAH="${java_home}/bin/javah" \
-        JAR="${java_home}/bin/jar" \
+        "JAVA_HOME=${java_home}" \
+        "JAVA=${java_home}/bin/java" \
+        "JAVAC=${java_home}/bin/javac" \
+        "JAVAH=${java_home}/bin/javah" \
+        "JAR=${java_home}/bin/jar" \
     )
 
     r_home="$(_koopa_r_home)"

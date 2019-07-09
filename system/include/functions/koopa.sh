@@ -301,14 +301,14 @@ _koopa_os_type() {
     then
         name="$( \
             awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
-            tr -cd '[:alnum:]' \
+            tr -d '"' \
         )"
 	# Include the major release version for RHEL.
 	if [ "$name" = "rhel" ]
 	then
         major_version="$( \
             awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release | \
-            tr -cd '[0-9.]' | \
+            tr -d '"' | \
             cut -d '.' -f 1
         )"
         name="${name}${major_version}"

@@ -27,7 +27,8 @@ _koopa_add_conda_env_to_path() {
 
 
 
-# Modified 2019-06-27.
+# FIXME Need to rework apps with array approach here.
+# Modified 2019-07-09.
 _koopa_create_conda_env() {
     local name
     local apps
@@ -43,7 +44,7 @@ _koopa_create_conda_env() {
 
     conda create -qy \
         -p "${prefix}/envs/${name}" \
-        -c $channel \
+        -c "$channel" \
         $apps
 }
 
