@@ -2,7 +2,7 @@
 # shebang requires env from coreutils >= 8.30.
 
 # Check installed program versions.
-# Modified 2019-06-24.
+# Modified 2019-07-09.
 
 # Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -223,7 +223,8 @@ check_version(
         "python3 --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # Vim
