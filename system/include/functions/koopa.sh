@@ -220,7 +220,7 @@ EOF
 # Modified 2019-06-27.
 _koopa_host_type() {
     local name
-    case "$HOSTNAME" in
+    case "$(hostname -f)" in
         # VMs
         *.ec2.internal)
             name="aws"
