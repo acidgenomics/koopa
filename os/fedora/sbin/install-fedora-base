@@ -34,6 +34,7 @@ sudo yum -y install \
     java-latest-openjdk-devel \
     libcurl-devel \
     libevent-devel \
+    libsodium-devel \
     libxml2-devel \
     make \
     mariadb-devel \
