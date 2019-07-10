@@ -28,7 +28,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix"
     make
-    make check
+    # > make check
     make install
     rm -rf "$tmp_dir"
 )
