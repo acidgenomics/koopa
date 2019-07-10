@@ -27,25 +27,27 @@ _koopa_add_conda_env_to_path() {
 
 
 
-# FIXME Need to rework apps with array approach here.
-# Modified 2019-07-09.
+# Create an internal conda environment.
+# Modified 2019-07-10.
 _koopa_create_conda_env() {
-    local name
-    local apps
-    local channel
-    local prefix
-
     _koopa_assert_is_installed conda
 
+    local name
     name="$1"
-    apps="${2:-$name}"
+
+    local app
+    app="${2:-$name}"
+
+    local channel
     channel="${3:-conda-forge}"
+
+    local prefix
     prefix="$(_koopa_conda_prefix)"
 
     conda create -qy \
         -p "${prefix}/envs/${name}" \
         -c "$channel" \
-        $apps
+        "$app"
 }
 
 
