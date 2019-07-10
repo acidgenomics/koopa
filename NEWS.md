@@ -1,3 +1,31 @@
+## koopa 0.4.1 (2019-07-10)
+
+### Major changes
+
+- Removed support for ksh. This shell does not support usage of `local`
+  variables inside of functions, which are tremendously useful, and prevent
+  accidental variable overwrites. Therefore, we're restricting support for
+  bash and zsh at the moment.
+- Improved Fedora install scripts to support RHEL 8. Also updated Docker install
+  script to support RHEL 8.
+
+### Minor changes
+
+- Harden scripts to pass shellcheck.
+- Switch back to using `-n` instead of `! -z` consistently for POSIX code.
+  Double checking, this works correctly with latest version of ZSH.
+- Sort arrays using `mapfile`, which is recommended by shellcheck.
+- Improve shebang detection inside recursive shellcheck script.
+- Added fixme/todo comments detection in linter script.
+- Updated recommended program versions.
+- Improved version checks inside `check.R` script.
+
+### New programs
+
+- Added `copy-bam-files` utility, which makes it easier to quickly set up an
+  IGV session, which requires both `*.bam` and `*.bam.bai` files. Previously,
+  this was named `cp-bam-files`.
+
 ## koopa 0.4.0 (2019-06-13)
 
 This is the first release supported to work when installed at `/usr/local`.
@@ -8,12 +36,18 @@ This enables shared shell configuratino of all users, via configuration in
 
 - koopa now checks for root and doesn't attempt to activate.
 - Improved dotfile initialization, and no files are overwritten by default.
+- Reworked `install` script, and added usage accessible via `--help`.
+- Added `uninstall` utility script.
+- Reworked activation scripts to support multi-user config.
+- Reworked shared script header approach.
+- Improved automatic `/etc/` configuration.
 
 ### Minor changes
 
 - `KOOPA_HOME` path is always expanded, and symlinks are now resolved.
-
-
+- Improved Travis CI testing approach.
+- Reorganized workflow scripts.
+- Split out functions into individual scripts.
 
 ## koopa 0.3.6 (2019-06-05)
 
@@ -87,8 +121,6 @@ a point release instead.
   This are particularly useful for configuring programs installed at
   `/usr/local`, and for R to correctly pick up library dependencies.
 
-
-
 ## koopa 0.3.4 (2019-05-24)
 
 - Improved version dependency checks.
@@ -98,8 +130,6 @@ a point release instead.
   and zsh.
 - Now using a shared `__init__.sh` script for simpler build dependency checks.
 
-
-
 ## koopa 0.3.3 (2019-05-08)
 
 - Renamed all exported scripts to no longer use file extensions. This makes
@@ -108,8 +138,6 @@ a point release instead.
   relying on the file extension.
 - Rewrote `download-fasta` and `download-gtf` in Python instead of Bash.
 
-
-
 ## koopa 0.3.2 (2019-04-18)
 
 - Improved build scripts, and hardened some intended for RedHat Linux.
@@ -117,8 +145,6 @@ a point release instead.
 - Improved bcbio scripts and custom genome builds.
 - New exported scripts: `ip-address.sh`, `vim-sort.sh`.
 - Added script to build Python from source for RedHat.
-
-
 
 ## koopa 0.3.1 (2019-03-19)
 
@@ -129,8 +155,6 @@ a point release instead.
 - Improved build configuration scripts: emacs, git, gsl, openssl, tmux.
 - Added bcbio system configuration files (bcbio_system.yaml).
 - Improved default run template for bcbio RNA-seq.
-
-
 
 ## koopa 0.3.0 (2019-02-20)
 
@@ -149,8 +173,6 @@ for details on how to reconfigure your shell profile.
 - Reorganized installer scripts exported in `bin/` including conda scripts,
   `reset-permissions.sh`, `sudo-yum-update.sh`, etc.
 
-
-
 ## koopa 0.2.8 (2019-02-12)
 
 - Migrated darwin (macOS)-specific scripts from bash repo to koopa.
@@ -162,22 +184,16 @@ for details on how to reconfigure your shell profile.
 - Reorganized other scripts accessible via `bin/`.
 - Reorganized activation and system scripts, in preparation for 0.3 release.
 
-
-
 ## koopa 0.2.7 (2019-02-04)
 
 - Improved shellchecks on workflows.
 - Split out some activation steps into separate scripts.
-
-
 
 ## koopa 0.2.6 (2019-01-23)
 
 - Added back ".sh" extension for all exported scripts.
 - Updated Travis CI configuration to use shellcheck.
 - Reorganized and improved workflow scripts.
-
-
 
 ## koopa 0.2.5 (2019-01-07)
 
@@ -186,7 +202,90 @@ for details on how to reconfigure your shell profile.
   This improves handling in situations for user accounts where we don't want
   to activate conda in a shared environemnt (e.g. bioinfo account on Azure).
 
+## koopa 0.2.4 (2019-01-09)
 
+### Major changes
+
+- Reworked activation script to use POSIX instead of bash conventions. Notably,
+  this involves switching to `[` from `[[`.
+- Early return using `return` instead of `exit` when koopa is already active,
+  to prevent accidental lockout on a remote SSH connection.
+
+### Minor changes
+
+- Improved support for ZSH in activation script.
+- Initial commit of `NEWS` file.
+- Now checking on Travis CI only against master branch.
+
+## koopa 0.2.3 (2019-01-01)
+
+### Minor changes
+
+- Improved variable quoting inside `bin/` scripts.
+- Reworked activation steps in main `activate.sh` script.
+- Deleted `reference.txt` file in `system/`.
+- Deleted function scripts inside `functions/`. Rethinking this approach.
+
+### Removed programs
+
+- Deleted `sam_to_bam` utility script.
+
+## koopa 0.2.2 (2018-12-19)
+
+### New programs
+
+- Added `trash` utility, which moves files to `~/.Trash`, similar to macOS.
+
+### Removed programs
+
+- Removed `sudo_install_git` and `sudo_install_r_cran`. Rethinking this
+  approach in a future update.
+- Removed these macOS-specific scripts: `brew_cleanup`, `brew_status`,
+  `brew_upgrade`, `install_homebrew`, and `install_openssl`.
+
+### New functions
+
+- Added `path_modifiers.sh` and `quiet_which.sh` utilty functions.
+
+### Minor changes
+
+- Improved error message for unsupported shells in `koopa`.
+
+## koopa 0.2.1 (2018-11-24)
+
+### New programs
+
+- Added `git_push_all` and `git_status_all`, corresponding to `git_pull_all`.
+
+### Minor changes
+
+- Improved comments regarding HISAT2 for bcbio.
+- Reorganized interactive and non-interactive script handling in `system/`.
+- Hardened shell scripts using `set -Eeuo pipefail`.
+
+## koopa 0.2.0 (2018-09-23)
+
+Now exporting new scripts in `bin/`, accessible in `$PATH`.
+
+### Major changes
+
+- Reworked `koopa.sh` to be exported in `bin/` as simply `koopa`.
+- Reorganized activation scripts. Split out aliases into `01_aliases.sh`.
+  Improved automatic activation scripts for HPC and PATH exports.
+- Improved activation handling in `activate.sh`.
+- Added new `info.sh` info box utility script.
+- Added `list.sh` program list utility.
+
+### Minor changes
+
+- Reorganized activation script for login / non-login and interactive /
+  non-interactive shells.
+
+## koopa 0.1.2 (2018-09-05)
+
+- Improved automatic configuration for bcbio on Harvard HPC clusters.
+- Improved GENCODE workflow scripts.
+- Improved automatic conda configuration.
 
 ## koopa 0.1.1 (2018-09-05)
 
@@ -205,8 +304,6 @@ for details on how to reconfigure your shell profile.
       - move_files_up_1_level
       - rename_from_csv
       - reset_permissions
-
-
 
 ## koopa 0.1.0 (2018-08-24)
 
