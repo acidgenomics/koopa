@@ -18,9 +18,3 @@ then
 fi
 
 source "$(koopa cellar-script gnupg)"
-
-# Add local lib path to gpg configuration.
-if _koopa_has_sudo
-then
-    sudo sh -c 'echo /usr/local/lib > /etc/ld.so.conf.d/gpg2.conf'
-fi
