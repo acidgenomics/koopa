@@ -32,7 +32,7 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 # >     /data00/R/x86_64-redhat-linux-gnu-library/3.6 \
 # >     /usr/local/lib64/R/site-library
 
-R_LIBS_SITE="${R_HOME}/site-library/%v"
+R_LIBS_SITE="${R_HOME}/site-library"
 
 
 
