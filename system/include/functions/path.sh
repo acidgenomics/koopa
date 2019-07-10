@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # PATH string modifiers
-# Modified 2019-06-27.
+# Modified 2019-07-10.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
@@ -67,10 +67,13 @@ _koopa_force_add_to_path_end() {
 
 # Look into an improved POSIX method here. This works for bash and ksh.
 # Note that this won't work on the first item in PATH.
-# Modified 2019-06-27.
+#
+# Alternate approach using sed:
+# > echo "$PATH" | sed "s|:${dir}||g"
+#
+# Modified 2019-07-10.
 _koopa_remove_from_path() {
     local dir
     dir="$1"
-    # FIXME Switch to using sed here instead.
     export PATH="${PATH//:$dir/}"
 }
