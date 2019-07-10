@@ -187,12 +187,11 @@ options(
     libs <- .libPaths()
     if (
         # Site library.
-        !dir.exists(file.path(Sys.getenv("R_HOME"), "site-library", r_ver)) &&
+        !any(grepl(pattern = "site-library", x = libs)) &&
         # User library.
         !any(grepl(
             pattern = file.path(
-                paste0(Sys.getenv("R_PLATFORM"), "-library"),
-                r_ver
+                paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
             ),
             x = libs
         ))
