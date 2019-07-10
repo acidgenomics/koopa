@@ -341,12 +341,17 @@ check_version(
 # Pandoc
 check_version(
     name = "pandoc",
-    version = koopa_version("pandoc"),
+    version = switch(
+        EXPR = os,
+        rhel7 = "1.12.3.1",
+        koopa_version("pandoc")
+    ),
     version_cmd = c(
         "pandoc --version",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # TeX Live
@@ -355,7 +360,11 @@ check_version(
 # TeX 3.14159265 (TeX Live 2017/Debian)
 check_version(
     name = "tex",
-    version = koopa_version("tex"),
+    version = switch(
+        EXPR = os,
+        rhel7 = "2013",
+        koopa_version("tex")
+    ),
     version_cmd = c(
         "tex --version",
         "head -n 1",
@@ -363,7 +372,8 @@ check_version(
         "cut -d ')' -f 1",
         "cut -d ' ' -f 3",
         "cut -d '/' -f 1"
-    )
+    ),
+    eval = "=="
 )
 
 # OS-specific programs.
