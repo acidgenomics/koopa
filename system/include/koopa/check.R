@@ -334,7 +334,8 @@ check_version(
         "openssl version",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # Pandoc
