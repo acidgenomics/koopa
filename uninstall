@@ -4,14 +4,14 @@
 source "$(koopa header bash)"
 
 # Uninstall koopa.
-# Modified 2019-06-23.
+# Modified 2019-07-10.
 
 if _koopa_has_sudo
 then
     rm -f /etc/profile.d/koopa.sh
 fi
 
-# FIXME Remove R_HOME config files.
+# FIXME Need to remove Renviron.site and Rprofile.site files in a future update.
 
 # shellcheck source=/dev/null
 . "${KOOPA_HOME}/system/uninstall/dotfiles.sh"
