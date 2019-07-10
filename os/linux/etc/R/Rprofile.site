@@ -1,6 +1,8 @@
 # Shared R profile configuration.
 # Modified 2019-07-10 by Michael Steinbaugh.
 
+# See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
+
 
 
 # Notes                                                                     {{{1
@@ -37,6 +39,30 @@
 
 
 
+# Examples                                                                  {{{1
+# ==============================================================================
+
+# From Debian empty `Rprofile.site` file:
+
+# Example `.Rprofile` file
+# > options(width=65, digits=5)
+# > options(show.signif.stars=FALSE)
+# > setHook(packageEvent("grDevices", "onLoad"),
+# >         function(...) grDevices::ps.options(horizontal=FALSE))
+# > set.seed(1234)
+# > .First <- function() cat("\n   Welcome to R!\n\n")
+# > .Last <- function()  cat("\n   Goodbye!\n\n")
+
+# Example `Rprofile.site` file.
+# > local({
+# >     # add MASS to the default packages, set a CRAN mirror
+# >     old <- getOption("defaultPackages"); r <- getOption("repos")
+# >     r["CRAN"] <- "http://my.local.cran"
+# >     options(defaultPackages = c(old, "MASS"), repos = r)
+# > })
+
+
+
 # Pre-flight                                                                {{{1
 # ==============================================================================
 
@@ -54,6 +80,18 @@ stopifnot(is.integer(.env[["seed"]]))
 set.seed(.env[["seed"]])
 
 attach(.env)
+
+
+
+# Repositories                                                              {{{1
+# ==============================================================================
+
+## We set the cloud mirror, which is 'network-close' to everybody, as default.
+local({
+    r <- getOption("repos")
+    r["CRAN"] <- "https://cloud.r-project.org"
+    options(repos = r)
+})
 
 
 
