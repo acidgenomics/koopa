@@ -16,6 +16,15 @@ Requirements:
 - [Python][] >= 3.7.
 - [R][] >= 3.6.
 
+Tested on:
+
+- macOS Mojave
+- Ubuntu 18 LTS
+- Debian Buster
+- RHEL 8 / CentOS 8
+- RHEL 7 / CentOS 7
+- Amazon Linux 2
+
 ### Local user installation
 
 Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
