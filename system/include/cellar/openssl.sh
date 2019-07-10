@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install OpenSSL.
-# Modified 2019-06-25.
+# Modified 2019-07-10.
 
 # Currently installing as cellar-only.
 # This is useful for running RDAVIDWebService but can break other programs
