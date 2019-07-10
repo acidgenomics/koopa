@@ -185,15 +185,24 @@ EOF"
 
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
-# Modified 2019-07-09.
+# Modified 2019-07-10.
 _koopa_update_r_config() {
-    local r_home
-    local major_version
-
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     
+    local build_prefix
+    build_prefix="$(_koopa_build_prefix)"
+    
+    local r_home
     r_home="$(_koopa_r_home)"
+
+    # > local version
+    # > version="$( \
+    # >     R --version | \
+    # >     head -n 1 | \
+    # >     cut -d ' ' -f 3 | \
+    # >     grep -Eo "^[0-9]+\.[0-9]+"
+    # > )"
 
     printf "Updating '%s'.\n" "$r_home"
     
@@ -201,14 +210,10 @@ _koopa_update_r_config() {
         "${KOOPA_HOME}/system/config/R/etc/"* \
         "${r_home}/etc/".
 
-    # Create site-library subdirectory, if necessary.
-    major_version="$( \
-        R --version | \
-        head -n 1 | \
-        cut -d ' ' -f 3 | \
-        grep -Eo "^[0-9]+\.[0-9]+"
-    )"
-    mkdir -p "${r_home}/site-library/${major_version}"
+    printf "Creating site library.\n"
+    site_library="${build_prefix}/lib64/R/site-library"
+    sudo mkdir -p "$site_library"
+    _koopa_build_set_permissions "$site_library"
 
     # This step appears to break RStudio Server.
     # > if _koopa_is_linux
