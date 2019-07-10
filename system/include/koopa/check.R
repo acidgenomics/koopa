@@ -2,7 +2,7 @@
 # shebang requires env from coreutils >= 8.30.
 
 # Check installed program versions.
-# Modified 2019-07-09.
+# Modified 2019-07-10.
 
 # Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -394,8 +394,7 @@ if (isTRUE(linux)) {
             "/usr/bin/env --version",
             "head -n 1",
             "cut -d ' ' -f 4"
-        ),
-        eval = "=="
+        )
     )
 } else if (os == "darwin") {
     # Homebrew.
