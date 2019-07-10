@@ -60,5 +60,9 @@ mkdir "$tmp_dir"
 rm -rf "$tmp_dir"
 link-cellar "$name" "$version"
 
+# Symlink python3 to python.
+build_prefix="$(koopa build-prefix)"
+ln -fns "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
+
 command -v "$exe_file"
 "$exe_file" --version
