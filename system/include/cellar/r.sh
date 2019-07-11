@@ -59,8 +59,12 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -rf "$tmp_dir"
 )
 
+# We need to run this first to pick up R_HOME correctly.
+link-cellar "$name" "$version"
+
 _koopa_update_r_config
 
+# Run again to ensure R site config files propagate correctly.
 link-cellar "$name" "$version"
 
 command -v "$exe_file"
