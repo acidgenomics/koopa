@@ -37,7 +37,7 @@ fi
     file="rstudio-server-rhel-${version}-x86_64.rpm"
     url="https://download2.rstudio.org/server/centos6/x86_64/${file}"
     wget "$url"
-    sudo yum -y reinstall "$file"
+    sudo yum -y install "$file"
     rm -rf "$tmp_dir"
 )
 
