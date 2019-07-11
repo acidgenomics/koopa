@@ -22,7 +22,7 @@ fi
 # Check if EPEL is already enabled.
 if sudo yum repolist | grep -q "epel/"
 then
-    printf "EPEL 7 is already enabled."
+    printf "EPEL 7 is already enabled.\n"
     exit 0
 fi
 
