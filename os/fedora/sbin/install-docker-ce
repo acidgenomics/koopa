@@ -37,7 +37,7 @@ sudo yum repolist
 
 sudo yum install -y containerd.io
 
-if [[ "os_type" == "rhel8" ]]
+if [[ "$os_type" == "rhel8" ]]
 then
     # RHEL8 requires `--nobest` flag to ignore containerd.io conflict.
     sudo yum -y install --nobest docker-ce docker-ce-cli
