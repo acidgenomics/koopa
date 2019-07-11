@@ -4,13 +4,18 @@
 source "$(koopa header fedora)"
 
 # Install Docker Community Edition.
-# Modified 2019-07-10.
+# Modified 2019-07-11.
 
 # See also:
+# - https://docs.docker.com/install/linux/docker-ce/fedora/
 # - https://docs.docker.com/install/linux/docker-ce/centos/
 
-_koopa_assert_has_sudo
+# Note that Fedora 28+ is required to use recommended new `dnf` approach.
 
+_koopa_assert_has_sudo
+os_type="$(koopa os-type)"
+
+# Remove legacy versions, if necessary.
 sudo yum -y remove \
     docker \
     docker-client \
@@ -32,15 +37,19 @@ sudo yum repolist
 
 sudo yum install -y containerd.io
 
-# RHEL8 requires `--nobest` flag to ignore containerd.io dependency conflict.
-sudo yum -y install --nobest \
-    docker-ce \
-    docker-ce-cli
+if [[ "os_type" == "rhel8" ]]
+then
+    # RHEL8 requires `--nobest` flag to ignore containerd.io conflict.
+    sudo yum -y install --nobest docker-ce docker-ce-cli
+else
+    sudo yum -y install docker-ce docker-ce-cli
+fi
 
-sudo groupadd docker
-sudo service docker restart
+# Note that the docker group is created automatically.
 sudo gpasswd -a "$USER" docker
-newgrp docker
+
+# Ready to start Docker.
+sudo systemctl start docker
 
 docker --version
 command -v docker
