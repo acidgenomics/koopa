@@ -44,7 +44,8 @@ fi
 command -v "$name"
 "$name" version
 
-sudo "$name" stop
-sudo "$name" verify-installation
-sudo "$name" start
+# > sudo "$name" stop
+# > sudo "$name" verify-installation
+# > sudo "$name" start
+
 sudo "$name" status
