@@ -225,26 +225,26 @@ _koopa_update_r_config() {
     # > )"
 
     printf "Updating '%s'.\n" "$r_home"
-    
-    sudo ln -fns \
-        "${KOOPA_HOME}/system/config/R/etc/"* \
-        "${r_home}/etc/".
+
+    local os_type
+    os_type="$(_koopa_os_type)"
+
+    local r_etc_source
+    r_etc_source="${KOOPA_HOME}/os/${os_type}/etc/R"
+
+    if [ ! -d "$r_etc_source" ]
+    then
+        printf "R etc config files files missing.\n%s\n" "$r_etc_source"
+        return 1
+    fi
+
+    sudo ln -fns "${r_etc_source}/"* "${r_home}/etc/".
 
     printf "Creating site library.\n"
-    site_library="${build_prefix}/lib64/R/site-library"
+    site_library="${r_home}/site-library"
     sudo mkdir -p "$site_library"
-    _koopa_build_set_permissions "$site_library"
 
-    # This step appears to break RStudio Server.
-    # > if _koopa_is_linux
-    # > then
-    # >     printf "Updating '/etc/rstudio/'.\n"
-    # >     sudo mkdir -p /etc/rstudio
-    # >     sudo ln -fs \
-    # >         "${KOOPA_HOME}/system/config/etc/rstudio/"* \
-    # >         /etc/rstudio/.
-    # > fi
-
+    _koopa_build_set_permissions "$r_home"
     _koopa_r_javareconf
 }
 
