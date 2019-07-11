@@ -215,7 +215,7 @@ _koopa_update_r_config() {
         printf "Failed to locate R site config files.\n"
         exit 1
     fi
-    sudo ln -fns "${r_etc_source/"* "${r_home}/etc/".
+    sudo ln -fns "${r_etc_source}/"* "${r_home}/etc/".
 
     printf "Creating site library.\n"
     site_library="${r_home}/site-library"
