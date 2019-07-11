@@ -73,6 +73,7 @@ then
     unset -v id_like
 fi
 
+# Note that this will add Debian or Fedora.
 _koopa_add_bins_to_path "os/$(koopa os-type)"
 
 # Host type-specific                                                        {{{2
