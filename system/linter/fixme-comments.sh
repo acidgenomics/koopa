@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Find FIXME and TODO comments.
-# Modified 2019-06-26.
+# Modified 2019-07-10.
 
 # Returns with `true` or `false` exit codes.
 
@@ -15,13 +15,14 @@ hits="$( \
         --exclude="fixme-comments.sh" \
         "\b(FIXME|TODO)\b" \
         "$path" | \
-        sort \
+        sort || echo "" \
 )"
 
 if [[ -n "$hits" ]]
 then
+    printf "FIXME/TODO comments detected.\n"
     echo "$hits"
-    false
+    exit 1
 else
-    true
+    exit 0
 fi
