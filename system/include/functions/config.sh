@@ -210,9 +210,6 @@ _koopa_update_r_config() {
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     
-    local build_prefix
-    build_prefix="$(_koopa_build_prefix)"
-    
     local r_home
     r_home="$(_koopa_r_home)"
 
