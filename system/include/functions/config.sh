@@ -141,18 +141,35 @@ _koopa_r_javareconf() {
 
 
 # Update dynamic linker (LD) configuration.
-# Modified 2019-06-23.
+# Modified 2019-07-10.
 _koopa_update_ldconfig() {
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
+    [ -d /etc/ld.so.conf.d ] || return 0
+    _koopa_assert_is_installed ldconfig
+
+    local os_type
+    os_type="$(_koopa_os_type)"
+
+    local conf_source
+    conf_source="${KOOPA_HOME}/os/${os_type}/etc/ld.so.conf.d"
     
-    if [ -d /etc/ld.so.conf.d ]
+    if [ ! -d "$conf_source" ]
     then
-        sudo ln -fs \
-            "${KOOPA_HOME}/system/config/etc/ld.so.conf.d/"*".conf" \
-            /etc/ld.so.conf.d/.
-        sudo ldconfig
+        printf "ld.so.conf.d source files missing.\n%s\n" "$conf_source"
+        return 1
     fi
+    
+    # Create symlinks with "koopa-" prefix.
+    # Note that we're using shell globbing here.
+    # https://unix.stackexchange.com/questions/218816
+    for file in "${conf_source}/"*".conf"
+    do
+        echo "$file"
+        # > sudo ln -fns -- "$file" "/etc/ld.so.conf.d/koopa-$file"
+    done
+
+    # > sudo ldconfig
 }
 
 
