@@ -15,11 +15,12 @@ hits="$( \
         --exclude="fixme-comments.sh" \
         "\b(FIXME|TODO)\b" \
         "$path" | \
-        sort \
+        sort || echo "" \
 )"
 
 if [[ -n "$hits" ]]
 then
+    printf "FIXME/TODO comments detected.\n"
     echo "$hits"
     exit 1
 else
