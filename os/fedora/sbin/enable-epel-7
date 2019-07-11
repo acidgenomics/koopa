@@ -4,17 +4,34 @@
 source "$(koopa header fedora)"
 
 # Enable EPEL repository.
-# Modified 2019-07-09.
+# Modified 2019-07-10.
 
 # See also:
 # - https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
 
 _koopa_assert_has_sudo
+os_type="$(koopa os-type)"
+
+# Only allow install on RHEL 7.
+if [[ "$os_type" != "rhel7" ]]
+then
+    printf "RHEL 7 is required.\n"
+    exit 1
+fi
+
+# Check if EPEL is already enabled.
+if sudo yum repolist | grep -q "epel/"
+then
+    printf "EPEL 7 is already enabled.\n"
+    exit 0
+fi
 
 sudo yum install -y \
     https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
 sudo yum-config-manager --enable epel
+
+# Here's how to disable, for reference.
 # > sudo yum-config-manager --disable epel
 
-sudo yum repolist
+sudo yum -y install epel-release
