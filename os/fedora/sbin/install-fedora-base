@@ -4,29 +4,101 @@
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Modified 2019-06-25.
+# Modified 2019-07-10.
+
+# Tested against RHEL 7 and 8.
 
 _koopa_assert_has_sudo
+os_type="$(koopa os-type)"
 
-enable-epel
 sudo yum -y update
+sudo yum -y groupinstall "Development Tools"
+
+# Note that EPEL 8 isn't out yet.
+if [[ "$os_type" == "rhel7" ]]
+then
+    enable-epel-7
+fi
+
 sudo yum -y install \
-    epel-release \
+    bzip2 \
+    bzip2-devel \
+    cmake \
     convmv \
+    coreutils \
+    curl \
+    gcc \
+    gcc-c++ \
+    gcc-gfortran \
     git \
+    gnutls \
+    gnutls-devel \
     gsl-devel \
-    hdf5-devel \
-    libssh2-devel \
-    libgit2-devel \
+    libcurl-devel \
+    libevent-devel \
+    libxml2-devel \
+    make \
     mariadb-devel \
     ncurses \
-    pandoc \
-    pandoc-citeproc \
+    pcre-devel \
     qpdf \
-    sshpass \
+    readline \
+    readline-devel \
+    texlive \
+    texlive-bera \
+    texlive-caption \
+    texlive-changepage \
+    texlive-collection-fontsrecommended \
+    texlive-collection-latexrecommended \
+    texlive-enumitem \
+    texlive-etoolbox \
+    texlive-fancyhdr \
+    texlive-footmisc \
+    texlive-framed \
+    texlive-geometry \
+    texlive-hyperref \
+    texlive-latex-fonts \
+    texlive-natbib \
+    texlive-parskip \
+    texlive-pdftex \
+    texlive-placeins \
+    texlive-preprint \
+    texlive-sectsty \
+    texlive-soul \
+    texlive-titlesec \
+    texlive-titling \
+    texlive-xstring \
     tmux \
     tree \
-    udunits2-devel
+    util-linux \
+    wget \
+    xmlto \
+    xz \
+    xz-devel \
+    yum-utils \
+    zip
+
+# These packages require EPEL for RHEL 7 but work natively on RHEL 8.
 sudo yum -y install \
+    hdf5 \
+    hdf5-devel \
     java-latest-openjdk \
-    java-latest-openjdk-devel
+    java-latest-openjdk-devel \
+    libsodium-devel
+
+if [[ "$os_type" == "rhel7" ]]
+then
+    sudo yum -y install \
+        libgit2-devel \
+        libssh2-devel \
+        pandoc \
+        pandoc-citeproc \
+        sshpass \
+        udunits2-devel
+elif [[ "$os_type" == "rhel8" ]]
+then
+    sudo yum -y install \
+        libgit2 \
+        libssh2 \
+        util-linux-user
+fi

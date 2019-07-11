@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-# shellcheck disable=SC1090,SC2034,SC2039
 
 # oh-my-zsh configuration
 # https://github.com/robbyrussell/oh-my-zsh

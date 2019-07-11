@@ -4,36 +4,38 @@
 source "$(koopa header fedora)"
 
 # Install Docker Community Edition.
-# Modified 2019-06-25.
+# Modified 2019-07-10.
 
 # See also:
 # - https://docs.docker.com/install/linux/docker-ce/centos/
 
 _koopa_assert_has_sudo
 
-sudo yum remove -y \
+sudo yum -y remove \
     docker \
     docker-client \
     docker-client-latest \
     docker-common \
+    docker-engine \
     docker-latest \
     docker-latest-logrotate \
-    docker-logrotate \
-    docker-engine
+    docker-logrotate
 
-sudo yum install -y \
-    yum-utils \
+sudo yum -y install \
     device-mapper-persistent-data \
-    lvm2
+    lvm2 \
+    yum-utils
 
 sudo yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
+    --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum repolist
 
-sudo yum install -y \
+sudo yum install -y containerd.io
+
+# RHEL8 requires `--nobest` flag to ignore containerd.io dependency conflict.
+sudo yum -y install --nobest \
     docker-ce \
-    docker-ce-cli \
-    containerd.io
+    docker-ce-cli
 
 sudo groupadd docker
 sudo service docker restart

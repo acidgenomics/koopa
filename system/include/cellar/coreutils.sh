@@ -28,15 +28,12 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix"
     make
-    make check
+    # > make check
     make install
     rm -rf "$tmp_dir"
 )
 
 link-cellar "$name" "$version"
-
-"$exe_file" --version
-command -v "$exe_file"
 
 if _koopa_has_sudo
 then
@@ -49,5 +46,8 @@ then
     else
         sudo rm -f "/usr/bin/env"
     fi
-    sudo ln -s "${build_prefix}/bin/env" "/usr/bin/env"
+    sudo ln -fns "${build_prefix}/bin/env" "/usr/bin/env"
 fi
+
+"$exe_file" --version
+command -v "$exe_file"

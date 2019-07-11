@@ -58,11 +58,9 @@ _koopa_bash_find_local_bin_dirs() {
     rm -f "$tmp_file"
 
     # Sort the array.
-    IFS=$'\n'
-    # SC2207: Prefer mapfile or read -a to split command output (or quote to
-    # avoid splitting).
+    # SC2207: Prefer mapfile or read -a to split command output.
     # > sorted=($(sort <<<"${array[*]}"))
-    mapfile -t array < <(sort <<<"${array[*]}")
+    IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
     unset IFS
 
     printf "%s\n" "${sorted[@]}"
