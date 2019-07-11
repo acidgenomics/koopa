@@ -1,9 +1,9 @@
 # Koopa internal versions.
-# Modified 2019-06-18.
+# Modified 2019-07-09.
 
 
 
-R="3.6.0"
+R="3.6.1"
 anaconda3="2019.03"
 bash="5.0"
 bcbio_nextgen.py="1.1.5"
@@ -12,7 +12,6 @@ conda="4.6.14"
 coreutils="8.31"
 docker="18.09.6"
 emacs="26.2"
-gcc="4.8.5"
 genrich="0.5"
 git="2.22.0"
 gsl="2.5"
@@ -20,7 +19,6 @@ hdf5="1.10.5"
 htop="2.2.0"
 java="12.0.1"
 openssl="1.1.1c"
-pandoc="2.7.3"
 perlbrew="0.86"
 python="3.7.3"
 rbenv="1.1.2"
@@ -30,10 +28,13 @@ rstudio-server="1.2.1335"
 ruby="2.6.3"
 shellcheck="0.6.0"
 shiny-server="1.5.9.923"
-tex="2017"
 tmux="2.9a"
 vim="8.1.1577"
 zsh="5.7.1"
+
+# Can't update these easily.
+pandoc="2.7.3"
+tex="2017"
 
 
 
@@ -72,8 +73,6 @@ ensembl_release_version="96"
 # Note that they use British dates (DD-MM-YY).
 gencode_release_date="2019-04-08"
 gencode_human_release_version="30"
-
-# FIXME Consider renaming to simply 21.
 gencode_mouse_release_version="M21"
 
 # RefSeq

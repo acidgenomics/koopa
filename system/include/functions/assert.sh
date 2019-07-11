@@ -1,11 +1,11 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Assertive check functions
-# Modified 2019-06-24.
+# Modified 2019-06-27.
 
 
-
-# Modified 2019-06-25.
+# Modified 2019-06-27.
 _koopa_assert_has_no_environments() {
     if ! _koopa_has_no_environments
     then
@@ -16,6 +16,7 @@ _koopa_assert_has_no_environments() {
 
 
 
+# Modified 2019-06-27.
 _koopa_assert_has_sudo() {
     if ! _koopa_has_sudo
     then
@@ -26,6 +27,7 @@ _koopa_assert_has_sudo() {
 
 
 
+# Modified 2019-06-27.
 _koopa_assert_is_darwin() {
     if ! _koopa_is_darwin
     then
@@ -36,18 +38,20 @@ _koopa_assert_is_darwin() {
 
 
 
+# Modified 2019-06-27.
 _koopa_assert_is_installed() {
+    local program
     program="$1"
     if ! _koopa_is_installed "$program"
     then
         >&2 printf "Error: %s is not installed.\n" "$program"
         return 1
     fi
-    unset -v program
 }
 
 
 
+# Modified 2019-06-27.
 _koopa_assert_is_linux() {
     if ! _koopa_is_linux
     then
@@ -81,8 +85,9 @@ _koopa_assert_is_linux_fedora() {
 
 
 # Check if directory already exists.
-# Modified 2019-06-19.
+# Modified 2019-06-27.
 _koopa_assert_is_not_dir() {
+    local path
     path="$1"
     # Error on existing installation.
     if [ -d "$path" ]
@@ -90,7 +95,6 @@ _koopa_assert_is_not_dir() {
         >&2 printf "Error: Directory already exists.\n%s\n" "$path"
         exit 1
     fi
-    unset -v path
 }
 
 
@@ -98,7 +102,7 @@ _koopa_assert_is_not_dir() {
 # Detect activation of virtual environments.
 # Modified 2019-06-25.
 _koopa_has_no_environments() {
-    [ -x "$(command -v conda)" ] && [ ! -z "${CONDA_PREFIX:-}" ] && return 1
+    [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
     [ -x "$(command -v deactivate)" ] && return 1
     return 0
 }
@@ -131,11 +135,11 @@ _koopa_is_interactive() {
 
 
 
-# Modified 2019-06-23.
+# Modified 2019-06-27.
 _koopa_is_installed() {
+    local program
     program="$1"
     _koopa_quiet_which "$program"
-    unset -v program
 }
 
 

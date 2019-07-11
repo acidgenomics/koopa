@@ -28,6 +28,11 @@ printf "Installing %s %s.\n" "$name" "$version"
 (
     # R will warn if R_HOME environment variable is set.
     unset -v R_HOME
+
+    # Fix for reg-tests-1d.R error, due to unset TZ variable.
+    # https://stackoverflow.com/questions/46413691
+    export TZ="America/New_York"
+
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
@@ -46,16 +51,21 @@ printf "Installing %s %s.\n" "$name" "$version"
         --with-jpeglib \
         --with-lapack \
         --with-readline \
-        --with-tcltk
+        --with-tcltk \
+        --with-x=no
     make
     make check
     make install
     rm -rf "$tmp_dir"
 )
 
+# We need to run this first to pick up R_HOME correctly.
 link-cellar "$name" "$version"
 
 _koopa_update_r_config
+
+# Run again to ensure R site config files propagate correctly.
+link-cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version

@@ -1,5 +1,7 @@
 # Shared R profile configuration.
-# Modified 2019-06-25 by Michael Steinbaugh.
+# Modified 2019-07-10 by Michael Steinbaugh.
+
+# See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
 
 
@@ -37,6 +39,30 @@
 
 
 
+# Examples                                                                  {{{1
+# ==============================================================================
+
+# From Debian empty `Rprofile.site` file:
+
+# Example `.Rprofile` file
+# > options(width=65, digits=5)
+# > options(show.signif.stars=FALSE)
+# > setHook(packageEvent("grDevices", "onLoad"),
+# >         function(...) grDevices::ps.options(horizontal=FALSE))
+# > set.seed(1234)
+# > .First <- function() cat("\n   Welcome to R!\n\n")
+# > .Last <- function()  cat("\n   Goodbye!\n\n")
+
+# Example `Rprofile.site` file.
+# > local({
+# >     # add MASS to the default packages, set a CRAN mirror
+# >     old <- getOption("defaultPackages"); r <- getOption("repos")
+# >     r["CRAN"] <- "http://my.local.cran"
+# >     options(defaultPackages = c(old, "MASS"), repos = r)
+# > })
+
+
+
 # Pre-flight                                                                {{{1
 # ==============================================================================
 
@@ -54,6 +80,18 @@ stopifnot(is.integer(.env[["seed"]]))
 set.seed(.env[["seed"]])
 
 attach(.env)
+
+
+
+# Repositories                                                              {{{1
+# ==============================================================================
+
+## We set the cloud mirror, which is 'network-close' to everybody, as default.
+local({
+    r <- getOption("repos")
+    r["CRAN"] <- "https://cloud.r-project.org"
+    options(repos = r)
+})
 
 
 
@@ -182,25 +220,27 @@ options(
 
     # Library path                                                          {{{2
     # --------------------------------------------------------------------------
-
+    
     # Check that the local library matches the R version.
     libs <- .libPaths()
-    lib_pattern <- file.path(
-        paste0(Sys.getenv("R_PLATFORM"), "-library"),
-        r_ver
-    )
-    usr_lib <- grepl(pattern = lib_pattern, x = libs)
-
-    if (!any(usr_lib)) {
+    if (
+        # Site library.
+        !any(grepl(pattern = "site-library", x = libs)) &&
+        # User library.
+        !any(grepl(
+            pattern = file.path(
+                paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
+            ),
+            x = libs
+        ))
+    ) {
         warning(paste0(
-            "Failed to detect ", r_ver, " user library.", "\n",
-            "Looking for: ", lib_pattern, "\n\n",
+            "Failed to detect ", r_ver, " site or user library.", "\n",
             ".libPaths():", "\n",
             paste(libs, collapse = "\n")
         ))
     }
-
-    rm(libs, lib_pattern, usr_lib)
+    rm(libs)
 
     # Compiler                                                              {{{2
     # --------------------------------------------------------------------------
@@ -266,7 +306,7 @@ options(
     # intentional. We need to set the `--vanilla` flag in Rscript calls.
 
     if (Sys.which("conda") != "") {
-        warning(paste(
+        stop(paste(
             "conda detected.",
             "Run `conda deactivate` prior to starting R.",
             sep = "\n"

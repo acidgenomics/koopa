@@ -31,9 +31,13 @@ then
     # Note that `/run` top level doesn't exist on macOS.
     _koopa_is_darwin && XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
     export XDG_RUNTIME_DIR
-    mkdir -p "$XDG_RUNTIME_DIR"
-    chown "$USER" "$XDG_RUNTIME_DIR"
-    chmod 0700 "$XDG_RUNTIME_DIR"
+    # Include this if block, otherwise terminal in RStudio freaks out.
+    if [ ! -d "$XDG_RUNTIME_DIR" ]
+    then
+        mkdir -p "$XDG_RUNTIME_DIR"
+        chown "$USER" "$XDG_RUNTIME_DIR"
+        chmod 0700 "$XDG_RUNTIME_DIR"
+    fi
 fi
 
 

@@ -1,13 +1,17 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Build functions
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 
 
 
 # Fix the group permissions on the build directory.
 # Modified 2019-06-26.
 _koopa_build_chgrp() {
+    local path
+    local group
+
     path="$1"
     group="$(_koopa_build_prefix_group)"
 
@@ -19,8 +23,6 @@ _koopa_build_chgrp() {
         chgrp -Rh "$group" "$path"
         chmod -R g+w "$path"
     fi
-    
-    unset -v group path
 }
 
 
@@ -28,7 +30,9 @@ _koopa_build_chgrp() {
 # Create the build directory.
 # Modified 2019-06-20.
 _koopa_build_mkdir() {
+    local path
     path="$1"
+
     _koopa_assert_is_not_dir "$path"
 
     if _koopa_has_sudo
@@ -40,17 +44,17 @@ _koopa_build_mkdir() {
     fi
 
     _koopa_build_chgrp "$path"
-    
-    unset -v path
 }
 
 
 
 # Set the admin or regular user group automatically.
-# Modified 2019-06-20.
+# Modified 2019-07-09.
 _koopa_build_prefix_group() {
+    local group
+
     # Standard user.
-    ! _koopa_has_sudo && echo "$(whoami)" && return
+    ! _koopa_has_sudo && whoami && return 0
 
     # Administrator.
     if groups | grep -Eq "\b(admin)\b"
@@ -65,14 +69,16 @@ _koopa_build_prefix_group() {
         # Fedora.
         group="wheel"
     fi
+
     echo "$group"
 }
 
 
 
 # Set permissions on program built from source.
-# Modified 2019-06-20.
+# Modified 2019-06-27.
 _koopa_build_set_permissions() {
+    local path
     path="$1"
     
     if _koopa_has_sudo
@@ -83,6 +89,4 @@ _koopa_build_set_permissions() {
     fi
 
     _koopa_build_chgrp "$path"
-    
-    unset -v path
 }
