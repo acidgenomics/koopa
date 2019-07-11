@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Start bcbio run on HMS O2 cluster using IPython and slurm.
-# Modified 2019-06-21.
+# Modified 2019-07-09.
 
 # Configure the bcbio run.
 # A directory named "bcbio" will be created.
@@ -9,13 +9,13 @@
 bcbio_nextgen.py -w template bcbio.yaml bcbio.csv ./*.fastq.gz
 
 # Traverse into the work directory.
-cd bcbio/work
-
-# Symlink our sbatch script.
-ln -s ../../sbatch-bcbio.sh .
-
-# Now ready to start the run using slurm.
-sbatch sbatch_bcbio.sh
+(
+    cd bcbio/work || exit 1
+    # Symlink our sbatch script.
+    ln -s ../../sbatch-bcbio.sh .
+    # Now ready to start the run using slurm.
+    sbatch sbatch_bcbio.sh
+)
 
 # This will check the run status.
 squeue -u "$USER"

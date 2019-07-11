@@ -4,11 +4,14 @@
 source "$(koopa header fedora)"
 
 # Install Vim.
-# Modified 2019-06-23.
+# Modified 2019-07-09.
 
-if _koopa_has_sudo
+os_type="$(koopa os-type)"
+
+if _koopa_has_sudo && [[ "$os_type" == "rhel7" ]]
 then
     sudo yum install -y vim
+    # RHEL8: No matching package to install: 'lua-devel'
     sudo yum-builddep -y vim
 fi
 

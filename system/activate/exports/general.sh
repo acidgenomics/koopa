@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Modified 2019-06-25.
+# Modified 2019-06-27.
 
 
 
@@ -99,7 +99,7 @@ _koopa_is_interactive && export INTERACTIVE=1
 # Using vim instead of emacs by default.
 if [ -z "${EDITOR:-}" ]
 then
-    case _koopa_quiet_which in
+    case "$(_koopa_quiet_which)" in
         vim)
             export EDITOR="vim"
             ;;

@@ -1,8 +1,7 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Activate Conda
-# Modified 2019-06-24.
+# Modified 2019-06-27.
 
 # It's no longer recommended to directly export conda in `$PATH`.
 # Instead source the `activate` script.
@@ -14,8 +13,7 @@
 # set prior to running this code. Attempts to activate "base" will be ignored.
 
 # Conda doesn't currently support ksh, and fish support is buggy.
-# Only attempt to autoload for bash or zsh.
-echo "$(koopa shell)" | grep -Eq "^(bash|zsh)$" || return 0
+koopa shell | grep -Eq "^(bash|zsh)$" || return 0
 
 # Attempt to detect the installation path automatically, if necessary.
 # Use `$CONDA_EXE` to manually set the path, for non-standard installs.
@@ -69,6 +67,7 @@ then
     # shellcheck source=/dev/null
     . "${bin_dir}/activate"
     unset -v bin_dir
+    conda deactivate
 else
     unset -v CONDA_EXE
 fi

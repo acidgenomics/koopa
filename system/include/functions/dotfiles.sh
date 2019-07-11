@@ -1,13 +1,17 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Dot files helpers.
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 
 
 
 # Delete a dot file.
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 _koopa_delete_dotfile() {
+    local path
+    local name
+
     path="${HOME}/.${1}"
     name="$(basename "$path")"
     
@@ -19,6 +23,4 @@ _koopa_delete_dotfile() {
     then
         printf "Warning: Not symlink: %s\n" "$name"
     fi
-    
-    unset -v name path
 }

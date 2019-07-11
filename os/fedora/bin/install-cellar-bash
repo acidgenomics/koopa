@@ -4,12 +4,17 @@
 source "$(koopa header fedora)"
 
 # Install Bash.
-# Modified 2019-06-23.
+# Modified 2019-07-09.
+
+os_type="$(koopa os-type)"
 
 if _koopa_has_sudo
 then
     sudo yum install -y bash
-    sudo yum-builddep -y bash
+    if [[ "$os_type" == "rhel7" ]]
+    then
+        sudo yum-builddep -y bash
+    fi
 fi
 
 source "$(koopa cellar-script bash)"

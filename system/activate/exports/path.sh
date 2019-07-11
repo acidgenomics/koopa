@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Define PATH string.
 # Modified 2019-06-20.
@@ -54,7 +53,7 @@ if _koopa_is_linux
 then
     _koopa_add_bins_to_path "os/linux"
 
-    id_like="$(cat /etc/os-release | grep ID_LIKE | cut -d "=" -f 2)"
+    id_like="$(grep "ID_LIKE" /etc/os-release | cut -d "=" -f 2)"
 
     if echo "$id_like" | grep -q "debian"
     then
@@ -66,7 +65,7 @@ then
         id_like=
     fi
 
-    if [ ! -z "${id_like:-}" ]
+    if [ -n "${id_like:-}" ]
     then
         _koopa_add_bins_to_path "os/${id_like}"
     fi
@@ -74,6 +73,7 @@ then
     unset -v id_like
 fi
 
+# Note that this will add Debian or Fedora.
 _koopa_add_bins_to_path "os/$(koopa os-type)"
 
 # Host type-specific                                                        {{{2

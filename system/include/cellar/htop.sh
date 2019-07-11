@@ -8,6 +8,7 @@
 # - https://github.com/hishamhm/htop
 
 _koopa_assert_has_no_environments
+_koopa_assert_is_installed python
 
 name="htop"
 version="$(koopa variable "$name")"

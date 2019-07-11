@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install OpenSSL.
-# Modified 2019-06-25.
+# Modified 2019-07-10.
 
 # Currently installing as cellar-only.
 # This is useful for running RDAVIDWebService but can break other programs
@@ -18,7 +18,6 @@ name="openssl"
 version="$(koopa variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 tmp_dir="$(koopa tmp-dir)/${name}"
-build_os_string="$(koopa build-os-string)"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"
@@ -38,7 +37,6 @@ printf "Installing %s %s.\n" "$name" "$version"
             --openssldir="$prefix"
     else
         ./config \
-            --build="$build_os_string" \
             --prefix="$prefix" \
             --openssldir="$prefix" \
             shared

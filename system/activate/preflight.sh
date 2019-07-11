@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2236
 
 # Pre-flight checks.
 # Modified 2019-06-18.

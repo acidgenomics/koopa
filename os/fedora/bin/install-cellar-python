@@ -4,12 +4,21 @@
 source "$(koopa header fedora)"
 
 # Install Python.
-# Modified 2019-06-23.
+# Modified 2019-07-09.
+
+os_type="$(koopa os-type)"
 
 if _koopa_has_sudo
 then
-    sudo yum install -y python
-    sudo yum-builddep -y python
+    case "$os_type" in
+        rhel7)
+            sudo yum -y install python
+            sudo yum-builddep -y python
+            ;;
+        rhel8)
+            sudo yum -y install python3
+            ;;
+    esac
 fi
 
 source "$(koopa cellar-script python)"

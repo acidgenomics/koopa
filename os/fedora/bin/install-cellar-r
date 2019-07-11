@@ -4,39 +4,12 @@
 source "$(koopa header fedora)"
 
 # Install R.
-# Modified 2019-06-24.
-
-
-
-# Java                                                                      {{{1
-# ==============================================================================
-
-if _koopa_has_sudo
-then
-    printf "Updating Java.\n"
-    sudo yum -y install \
-        java-latest-openjdk \
-        java-latest-openjdk-devel
-    sudo yum list installed | grep -E '^java-'
-fi
-
-command -v java
-java -version
-
-command -v javac
-javac -version
-
-
-
-# TeX                                                                       {{{1
-# ==============================================================================
+# Modified 2019-07-09.
 
 # Using TeX Live 2013, we'll see this warning:
 #
 #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
 #     vignettes and package manuals will not be rendered optimally
-#
-# There doesn't appear to be an easy way to fix this on RHEL 7.
 
 # Missing recommendations:
 # - texlive-csvsimple
@@ -47,42 +20,16 @@ javac -version
 # - texlive-nowidow
 # - texlive-parnotes
 
-if _koopa_has_sudo
-then
-    printf "Updating TeX.\n"
-    sudo yum install -y \
-        texlive \
-        texlive-bera \
-        texlive-collection-fontsrecommended \
-        texlive-collection-latexrecommended \
-        texlive-caption \
-        texlive-changepage \
-        texlive-enumitem \
-        texlive-etoolbox \
-        texlive-fancyhdr \
-        texlive-footmisc \
-        texlive-framed \
-        texlive-geometry \
-        texlive-hyperref \
-        texlive-latex-fonts \
-        texlive-natbib \
-        texlive-parskip \
-        texlive-pdftex \
-        texlive-placeins \
-        texlive-preprint \
-        texlive-sectsty \
-        texlive-soul \
-        texlive-titlesec \
-        texlive-titling \
-        texlive-xstring
-fi
+# There doesn't appear to be an easy way to fix these issues on RHEL 7 or 8.
 
+os_type="$(koopa os-type)"
 
+_koopa_assert_is_installed java
+_koopa_assert_is_installed javac
+_koopa_assert_is_installed tex
 
-# R                                                                         {{{1
-# ==============================================================================
-
-if _koopa_has_sudo
+# This requires EPEL7.
+if _koopa_has_sudo && [[ "$os_type" == "rhel7" ]]
 then
     sudo yum -y install R
     sudo yum-builddep -y R

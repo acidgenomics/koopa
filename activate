@@ -1,11 +1,13 @@
 #!/bin/sh
-# shellcheck disable=SC1090,SC2236
 
 # Activate koopa.
-# Modified 2019-06-26.
+# Modified 2019-07-11.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
+
+# Dropped support for ksh because it doesn't support `local` variables scoped
+# inside of functions.
 
 
 
@@ -14,7 +16,7 @@
 
 # Never activate for root user.
 [ "$(id -u)" -eq 0 ] && return 0
-echo "$(whoami)" | grep -Eq "\b(admin|bioinfo)\b" && return 0
+whoami | grep -Eq "\b(admin)\b" && return 0
 
 # Enable test mode.
 if [ "${test:-0}" -eq 1 ]
@@ -23,7 +25,7 @@ then
     printf "Setting strict shell mode.\n"
     set -o errexit
     set -o nounset
-    if [ ! -z "${BASH_VERSION:-}" ]
+    if [ -n "${BASH_VERSION:-}" ]
     then
         set -o errtrace
         set -o pipefail
@@ -37,7 +39,7 @@ fi
 echo "$-" | grep -q "i" && export INTERACTIVE=1
 
 # Force reactivation inside of interactive HPC job.
-[ ! -z "${SLURM_JOB_ID:-}" ] && [ ! -z "${INTERACTIVE:-}" ] && force=1
+[ -n "${SLURM_JOB_ID:-}" ] && [ -n "${INTERACTIVE:-}" ] && force=1
 
 # Force reactivation inside of tmux session.
 [ -z "${TMUX:-}" ] || force=1
@@ -46,10 +48,10 @@ echo "$-" | grep -q "i" && export INTERACTIVE=1
 [ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
 
 # Early return for non-interactive sessions.
-[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return
+[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return 0
 
 # Early return if koopa is already active.
-[ -z "${KOOPA_FORCE:-}" ] && [ ! -z "${KOOPA_HOME:-}" ] && return
+[ -z "${KOOPA_FORCE:-}" ] && [ -n "${KOOPA_HOME:-}" ] && return 0
 
 
 
@@ -62,7 +64,7 @@ usage: activate [-h] [--test] [--force] [--minimal]
 
 Activate koopa.
 
-supported shells: bash, ksh, zsh
+supported shells: bash, zsh
 
 optional arguments:
     -h, --help
@@ -71,7 +73,7 @@ optional arguments:
 optional variables:
     test=1
         Enable verbose test mode. Used for Travis CI checks.
-        This will also automatically set `force=1`.
+        This will also automatically set 'force=1'.
     force=1
         Force reactivation, even if koopa is already active.
     minimal=1
@@ -129,19 +131,13 @@ fi
 # Locate koopa home                                                         {{{1
 # ==============================================================================
 
-if [ ! -z "${BASH_VERSION:-}" ]
+if [ -n "${BASH_VERSION:-}" ]
 then
     KOOPA_SHELL="bash"
     # SC2039: In POSIX sh, array references are undefined.
     # shellcheck disable=SC2039
     file="${BASH_SOURCE[0]}"
-elif [ ! -z "${KSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="ksh"
-    # SC2154: .sh.file is referenced but not assigned.
-    # shellcheck disable=SC2154
-    file="${.sh.file}"
-elif [ ! -z "${ZSH_VERSION:-}" ]
+elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
     # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
@@ -153,7 +149,7 @@ then
     file="${(%):-%N}"
 else
     >&2 printf "Error: Failed to detect supported shell.\n"
-    >&2 printf "Supported: bash, ksh, zsh.\n\n"
+    >&2 printf "Supported: bash, zsh.\n\n"
     >&2 printf "  SHELL: %s\n" "$SHELL"
     >&2 printf "      0: %s\n" "$0"
     >&2 printf "      -: %s\n" "$-"
@@ -173,7 +169,7 @@ KOOPA_HOME="$(dirname "$(realpath "$file")")" && export KOOPA_HOME
 unset -v file
 
 # Load shared functions.
-# shellcheck source=/dev/null
+# shellcheck source=system/include/functions.sh
 . "${KOOPA_HOME}/system/include/functions.sh"
 
 # Get location of activation scripts.
@@ -184,11 +180,15 @@ activate_dir="${KOOPA_HOME}/system/activate"
 # Basic shell configuration                                                 {{{1
 # ==============================================================================
 
+# shellcheck source=/dev/null
 . "${activate_dir}/preflight.sh"
 
 exports_dir="${activate_dir}/exports"
+# shellcheck source=/dev/null
 . "${exports_dir}/path.sh"
+# shellcheck source=/dev/null
 . "${exports_dir}/xdg-base-directory.sh"
+# shellcheck source=/dev/null
 . "${exports_dir}/general.sh"
 unset -v exports_dir
 
@@ -199,20 +199,33 @@ unset -v exports_dir
 
 if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
 then
+    # shellcheck source=/dev/null
     . "${activate_dir}/set.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/umask.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/aliases.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/secrets.sh"
+    # shellcheck source=/dev/null
     . "${activate_dir}/ssh-key.sh"
 
     programs_dir="${activate_dir}/programs"
+    # shellcheck source=/dev/null
     . "${programs_dir}/conda.sh"
-    # . "${programs_dir}/conda-envs.sh"
+    # shellcheck source=/dev/null
+    # > . "${programs_dir}/conda-envs.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/perlbrew.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/rbenv.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/aspera.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/ensembl-perl-api.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/bcbio.sh"
+    # shellcheck source=/dev/null
     . "${programs_dir}/virtualenv.sh"
     unset -v programs_dir
 
@@ -220,8 +233,11 @@ then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
         bash_dir="${activate_dir}/shell/bash"
+        # shellcheck source=/dev/null
         . "${bash_dir}/shopt.sh"
+        # shellcheck source=/dev/null
         . "${bash_dir}/bind.sh"
+        # shellcheck source=/dev/null
         . "${bash_dir}/ps1.sh"
         unset -v bash_dir
     elif [ "$KOOPA_SHELL" = "zsh" ]
@@ -238,9 +254,13 @@ then
     if _koopa_is_darwin
     then
         darwin_dir="${activate_dir}/os/darwin"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/aliases.sh"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/exports.sh"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/programs/homebrew.sh"
+        # shellcheck source=/dev/null
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
     fi
@@ -258,11 +278,11 @@ unset -v activate_dir
 unset -v colors
 
 # Disable test mode.
-if [ ! -z "${KOOPA_TEST:-}" ]
+if [ -n "${KOOPA_TEST:-}" ]
 then
     set +o errexit
     set +o nounset
-    if [ ! -z "${BASH_VERSION:-}" ]
+    if [ -n "${BASH_VERSION:-}" ]
     then
         set -o errtrace
         set -o posix

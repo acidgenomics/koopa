@@ -1,14 +1,20 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Cellar functions.
-# Modified 2019-06-26.
+# Modified 2019-06-27.
 
 
 
 # Symlink cellar into build directory.
 # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
-# Modified 2019-06-22.
+# Modified 2019-06-27.
 _koopa_link_cellar() {
+    local name
+    local version
+    local cellar_prefix
+    local build_prefix
+
     name="$1"
     version="$2"
     cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
@@ -20,7 +26,5 @@ _koopa_link_cellar() {
     cp -frsv "$cellar_prefix/"* "$build_prefix/".
     _koopa_build_set_permissions "$build_prefix"
     _koopa_has_sudo && _koopa_update_ldconfig
-    
-    unset -v build_prefix cellar_prefix name version
 }
 

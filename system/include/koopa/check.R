@@ -2,7 +2,7 @@
 # shebang requires env from coreutils >= 8.30.
 
 # Check installed program versions.
-# Modified 2019-06-24.
+# Modified 2019-07-10.
 
 # Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -192,18 +192,13 @@ message("\nChecking required programs.")
 # Bash
 check_version(
     name = "bash",
-    version = switch(
-        EXPR = os,
-        darwin = "5.0.7",
-        koopa_version("bash")
-    ),
+    version = koopa_version("bash"),
     version_cmd = c(
         "bash --version",
         "head -n 1",
         "cut -d ' ' -f 4",
         "cut -d '(' -f 1"
-    ),
-    eval = "=="
+    )
 )
 
 # R
@@ -223,16 +218,13 @@ check_version(
 # Python
 check_version(
     name = "python3",
-    version = switch(
-        EXPR = os,
-        ubuntu = "3.6",
-        koopa_version("python")
-    ),
+    version = koopa_version("python"),
     version_cmd = c(
         "python3 --version 2>&1",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # Vim
@@ -278,11 +270,7 @@ check_version(
 # Git
 check_version(
     name = "git",
-    version = switch(
-        EXPR = os,
-        ubuntu = "2.17.1",
-        koopa_version("git")
-    ),
+    version = "2.18",
     version_cmd = c(
         "git --version",
         "head -n 1",
@@ -293,12 +281,7 @@ check_version(
 # GnuPG
 check_version(
     name = "gpg",
-    version = switch(
-        EXPR = os,
-        darwin = "2.2.10",
-        ubuntu = "2.2.4",
-        koopa_version("gpg")
-    ),
+    version = koopa_version("gpg"),
     version_cmd = c(
         "gpg --version",
         "head -n 1",
@@ -309,11 +292,7 @@ check_version(
 # GSL
 check_version(
     name = "gsl-config",
-    version = switch(
-        EXPR = os,
-        ubuntu = "2.4",
-        koopa_version("gsl")
-    ),
+    version = koopa_version("gsl"),
     version_cmd = c(
         "gsl-config --version",
         "head -n 1"
@@ -348,25 +327,31 @@ check_version(
     name = "openssl",
     version = switch(
         EXPR = os,
-        rhel = "1.0.2",
+        rhel7 = "1.0.2",
         koopa_version("openssl")
     ),
     version_cmd = c(
         "openssl version",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # Pandoc
 check_version(
     name = "pandoc",
-    version = koopa_version("pandoc"),
+    version = switch(
+        EXPR = os,
+        rhel7 = "1.12.3.1",
+        koopa_version("pandoc")
+    ),
     version_cmd = c(
         "pandoc --version",
         "head -n 1",
         "cut -d ' ' -f 2"
-    )
+    ),
+    eval = "=="
 )
 
 # TeX Live
@@ -375,7 +360,11 @@ check_version(
 # TeX 3.14159265 (TeX Live 2017/Debian)
 check_version(
     name = "tex",
-    version = koopa_version("tex"),
+    version = switch(
+        EXPR = os,
+        rhel7 = "2013",
+        koopa_version("tex")
+    ),
     version_cmd = c(
         "tex --version",
         "head -n 1",
@@ -383,7 +372,8 @@ check_version(
         "cut -d ')' -f 1",
         "cut -d ' ' -f 3",
         "cut -d '/' -f 1"
-    )
+    ),
+    eval = "=="
 )
 
 # OS-specific programs.
@@ -393,8 +383,9 @@ if (isTRUE(linux)) {
         name = "gcc",
         version = switch(
             EXPR = os,
-            ubuntu = "7.4.0",
-            koopa_version("gcc")
+            rhel7 = "4.8.5",
+            rhel8 = "8.2.1",
+            ubuntu = "7.4.0"
         ),
         version_cmd = c(
             "gcc --version",
@@ -409,13 +400,12 @@ if (isTRUE(linux)) {
     # supports argument flags such as `--vanilla` for Rscript.
     check_version(
         name = "/usr/bin/env",
-        version = koopa_version("coreutils"),
+        version = "8.30",
         version_cmd = c(
             "/usr/bin/env --version",
             "head -n 1",
             "cut -d ' ' -f 4"
-        ),
-        eval = "=="
+        )
     )
 } else if (os == "darwin") {
     # Homebrew.
@@ -491,7 +481,6 @@ check_version(
         "cut -d ' ' -f 3",
         "cut -d ',' -f 1"
     ),
-    eval = "==",
     required = FALSE
 )
 
@@ -534,7 +523,6 @@ check_version(
         "cut -d ' ' -f 3",
         "sed -e 's/\"//g'"
     ),
-    eval = "==",
     required = FALSE
 )
 
