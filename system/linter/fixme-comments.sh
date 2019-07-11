@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Find FIXME and TODO comments.
-# Modified 2019-06-26.
+# Modified 2019-07-10.
 
 # Returns with `true` or `false` exit codes.
 
@@ -21,7 +21,7 @@ hits="$( \
 if [[ -n "$hits" ]]
 then
     echo "$hits"
-    false
+    exit 1
 else
-    true
+    exit 0
 fi
