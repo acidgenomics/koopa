@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Configuration functions.
-# Modified 2019-06-26.
+# Modified 2019-07-10.
 
 
 
@@ -33,7 +33,7 @@ _koopa_info_box() {
 
 
 
-# Set JAVA_HOME environment variable.
+# Set `JAVA_HOME` environment variable.
 #
 # See also:
 # - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
@@ -192,7 +192,10 @@ _koopa_update_r_config() {
     
     local build_prefix
     build_prefix="$(_koopa_build_prefix)"
-    
+
+    local os_type
+    os_type="$(_koopa_os_type)"
+
     local r_home
     r_home="$(_koopa_r_home)"
 
@@ -205,13 +208,17 @@ _koopa_update_r_config() {
     # > )"
 
     printf "Updating '%s'.\n" "$r_home"
-    
-    sudo ln -fns \
-        "${KOOPA_HOME}/system/config/R/etc/"* \
-        "${r_home}/etc/".
+    local r_etc_source
+    r_etc_source="${KOOPA_HOME}/os/${os_type}/etc/R"
+    if [ ! -d "$r_etc_source" ]
+    then
+        printf "Failed to locate R site config files.\n"
+        exit 1
+    fi
+    sudo ln -fns "${r_etc_source}/"* "${r_home}/etc/".
 
     printf "Creating site library.\n"
-    site_library="${build_prefix}/lib64/R/site-library"
+    site_library="${r_home}/site-library"
     sudo mkdir -p "$site_library"
     _koopa_build_set_permissions "$site_library"
 
