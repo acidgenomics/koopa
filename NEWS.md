@@ -1,3 +1,12 @@
+## koopa 0.4.2 (2019-07-12)
+
+### Minor changes
+
+- Improved automatic XDG configuration in `~/.config/koopa`. Needed to update
+  configuration of R symlink.
+
+
+
 ## koopa 0.4.1 (2019-07-11)
 
 ### Major changes
