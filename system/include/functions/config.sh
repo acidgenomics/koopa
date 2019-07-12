@@ -271,37 +271,39 @@ _koopa_update_shells() {
 
 # Update XDG configuration.
 # ~/.config/koopa
-# Modified 2019-06-27.
+# Modified 2019-07-12.
 _koopa_update_xdg_config() {
     local config_dir
-    local home_dir
-
     config_dir="$(koopa config-dir)"
+
+    local home_dir
     home_dir="$(koopa home)"
-    
+
+    local os_type
+    os_type="$(koopa os-type)"
+
     mkdir -p "$config_dir"
-    
-    if [ ! -e "${config_dir}/activate" ]
-    then
-        rm -f "${config_dir}/activate"
-        ln -s "${home_dir}/activate" "${config_dir}/activate"
-    fi
 
-    if [ ! -e "${config_dir}/dotfiles" ]
-    then
-        rm -f "${config_dir}/dotfiles"
-        ln -s "${home_dir}/system/config/dotfiles" "${config_dir}/dotfiles"
-    fi
+    relink() {
+        local source_file
+        source_file="$1"
+        local dest_file
+        dest_file="$2"
+        if [ ! -e "$dest_file" ]
+        then
+            if [ ! -e "$source_file" ]
+            then
+                >&2 "Error: Source file missing.\n%s\n" "$source_file"
+                return 1
+            fi
+            printf "Updating XDG config in %s.\n" "$config_dir"
+            rm -fv "$dest_file"
+            ln -fnsv "$source_file" "$dest_file"
+        fi
+    }
 
-    if [ ! -e "${config_dir}/home" ]
-    then
-        rm -f "${config_dir}/home"
-        ln -s "${home_dir}" "${config_dir}/home"
-    fi
-
-    if [ ! -e "${config_dir}/R" ]
-    then
-        rm -f "${config_dir}/R"
-        ln -s "${home_dir}/system/config/R" "${config_dir}/R"
-    fi
+    relink "${home_dir}" "${config_dir}/home"
+    relink "${home_dir}/activate" "${config_dir}/activate"
+    relink "${home_dir}/system/config/dotfiles" "${config_dir}/dotfiles"
+    relink "${home_dir}/os/${os_type}/etc/R" "${config_dir}/R"
 }
