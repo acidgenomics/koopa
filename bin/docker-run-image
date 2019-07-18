@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Run Docker image locally.
+# Updated 2019-07-18.
+
+_koopa_assert_is_installed docker
+
+image="$1"
+tag="${2:-latest}"
+image="${image}:${tag}"
+
+wd_name="$(basename "$PWD")"
+
+docker pull "$image"
+docker run -ti \
+    --volume="${PWD}:/${wd_name}" \
+    --workdir="/${wd_name}" \
+    "$image"
