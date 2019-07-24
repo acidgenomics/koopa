@@ -12,8 +12,6 @@ image="$1"
 tag="${2:-latest}"
 image="${image}:${tag}"
 
-wd_name="$(basename "$PWD")"
-
 docker pull "$image"
 docker run -it \
     --volume="${PWD}:/work" \
