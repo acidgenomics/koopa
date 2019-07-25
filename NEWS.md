@@ -3,6 +3,9 @@
 ### New scripts
 
 - `docker-run-image`: Useful utility script for booting a Docker image.
+- `patch-bcbio`: Utility for patching bcbio development installation from
+  GitHub codebase.
+- `upgrade-bcbio`: Utilty for upgrading bcbio on a virtual machine.
 
 ## koopa 0.4.2 (2019-07-12)
 
