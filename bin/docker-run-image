@@ -4,16 +4,15 @@
 source "$(koopa header bash)"
 
 # Run Docker image locally.
-# Updated 2019-07-24.
+# Updated 2019-07-25.
 
 _koopa_assert_is_installed docker
 
 image="$1"
-tag="${2:-latest}"
-image="${image}:${tag}"
 
 docker pull "$image"
-docker run -it \
+docker run \
+    -it \
     --volume="${PWD}:/work" \
     --workdir="/work" \
     "$image" \
