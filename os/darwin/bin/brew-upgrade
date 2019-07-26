@@ -4,7 +4,7 @@
 source "$(koopa header darwin)"
 
 # Upgrade Homebrew.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 brew analytics off
 
