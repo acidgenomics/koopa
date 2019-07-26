@@ -1,12 +1,12 @@
 #!/bin/sh
 
-# Run Cell Ranger.
-# Harvard O2 cluster.
-# Modified 2019-06-21.
+## Run Cell Ranger.
+## Harvard O2 cluster.
+## Updated 2019-06-21.
 
-# See also:
-# - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
-# - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+## See also:
+## - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
+## - https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
 
 module load bcl2fastq/2.20.0.422
 module load cellranger/2.1.1

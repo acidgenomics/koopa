@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# Prepare bcbio samples.
-# Harvard O2 cluster.
-# Modified 2019-06-21.
+## Prepare bcbio samples.
+## Harvard O2 cluster.
+## Updated 2019-06-21.
 
-# SLURM
-# https://slurm.schedmd.com/sbatch.html
+## SLURM
+## https://slurm.schedmd.com/sbatch.html
 
 #SBATCH --job-name=bcbio               # Job name.
 #SBATCH --partition=medium             # Partition (queue).
@@ -18,8 +18,8 @@
 #SBATCH --error=jobid_%j.err           # File to which STDERR will be written, including job ID.
 #SBATCH --mail-type=ALL                # Type of email notification (BEGIN, END, FAIL, ALL).
 
-# This script requires sratoolkit (fastq-dump).
-# Match the number of cores to the number of samples.
+## This script requires sratoolkit (fastq-dump).
+## Match the number of cores to the number of samples.
 
 bcbio_prepare_samples.py \
     --csv "samples.csv" \

@@ -1,11 +1,11 @@
 #!/bin/sh
 
-# Run bcbio single-cell RNA-seq pipeline.
-# Harvard O2 cluster.
-# Modified 2019-06-21.
+## Run bcbio single-cell RNA-seq pipeline.
+## Harvard O2 cluster.
+## Updated 2019-06-21.
 
-# SLURM
-# https://slurm.schedmd.com/sbatch.html
+## SLURM
+## https://slurm.schedmd.com/sbatch.html
 
 #SBATCH --job-name=scrnaseq            # Job name.
 #SBATCH --partition=medium             # Partition name.
