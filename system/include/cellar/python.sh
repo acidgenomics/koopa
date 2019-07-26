@@ -53,7 +53,7 @@ mkdir "$tmp_dir"
         --enable-optimizations \
         --enable-shared \
         --without-ensurepip
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 

@@ -53,7 +53,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --with-readline \
         --with-tcltk \
         --with-x=no
-    make
+    make --jobs="$CPU_COUNT"
     make check
     make install
     rm -rf "$tmp_dir"
