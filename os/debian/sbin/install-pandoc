@@ -4,7 +4,7 @@
 source "$(koopa header debian)"
 
 # Install Pandoc.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://pandoc.org/installing.html

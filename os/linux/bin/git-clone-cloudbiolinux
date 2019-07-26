@@ -4,7 +4,7 @@
 source "$(koopa header linux)"
 
 # Clone CloudBioLinux.
-# Modified 2019-06-18.
+# Updated 2019-06-18.
 
 # Ensure we're starting with a clean copy.
 rm -rf cloudbiolinux

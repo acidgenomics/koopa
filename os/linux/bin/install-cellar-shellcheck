@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Install ShellCheck.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - Install ShellCheck from source

@@ -4,13 +4,11 @@
 source "$(koopa header darwin)"
 
 # Install Homebrew.
-# Modified 2019-06-23.
+# Updated 2019-07-26.
 
 # Install Xcode CLT.
 xcode-select --install
 
 # Install Homebrew.
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-
-# Uninstall Homebrew (for reference).
-# > /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/uninstall)"
+url="https://raw.githubusercontent.com/Homebrew/install/master/install"
+/usr/bin/ruby -e "$(curl -fsSL "$url")"

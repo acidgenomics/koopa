@@ -4,6 +4,6 @@
 source "$(koopa header fedora)"
 
 # Install htop.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 source "$(koopa cellar-script htop)"
