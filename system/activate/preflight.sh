@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# Pre-flight checks.
-# Modified 2019-06-18.
+## Pre-flight checks.
+## Updated 2019-06-18.
 
 
 
-# Operating system                                                          {{{1
-# ==============================================================================
+## Operating system                                                          {{{1
+## ==============================================================================
 
-# Bash sets the shell variable OSTYPE (e.g. linux-gnu).
-# However, this doesn't work consistently with zsh, so use uname instead.
+## Bash sets the shell variable OSTYPE (e.g. linux-gnu).
+## However, this doesn't work consistently with zsh, so use uname instead.
 
 case "$(uname -s)" in
     Darwin)
@@ -24,8 +24,8 @@ esac
 
 
 
-# Required programs                                                         {{{1
-# ==============================================================================
+## Required programs                                                         {{{1
+## ==============================================================================
 
 _koopa_assert_is_installed bash
 _koopa_assert_is_installed cat

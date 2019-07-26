@@ -1,14 +1,14 @@
 #!/bin/sh
 
-# Put useful conda environments in PATH.
-# Modified 2019-06-25.
+## Put useful conda environments in PATH.
+## Updated 2019-06-25.
 
 _koopa_is_installed conda || return 0
 
-# Early return if local conda environments aren't configured.
+## Early return if local conda environments aren't configured.
 prefix="$(_koopa_conda_prefix)"
 
-# Early return if conda local environment directory is empty.
+## Early return if conda local environment directory is empty.
 if [ ! -d "$prefix" ] || [ -z "$(ls "$prefix")" ]
 then
     unset -v prefix

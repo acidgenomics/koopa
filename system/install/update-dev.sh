@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Update submodules.
-# Modified 2019-06-21.
+## Update submodules.
+## Updated 2019-06-21.
 
 (
-    # shellcheck source=/dev/null
+    ## shellcheck source=/dev/null
     cd "$KOOPA_HOME"
     git fetch --all
     git pull

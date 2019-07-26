@@ -1,18 +1,18 @@
 #!/bin/sh
 
-# Define PATH string.
-# Modified 2019-06-20.
+## Define PATH string.
+## Updated 2019-06-20.
 
-# See also:
-# - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+## See also:
+## - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 
-# Note that here we're making sure local binaries are included.
-# Inspect `/etc/profile` if system PATH appears misconfigured.
+## Note that here we're making sure local binaries are included.
+## Inspect `/etc/profile` if system PATH appears misconfigured.
 
 
 
-# Standard paths                                                            {{{1
-# ==============================================================================
+## Standard paths                                                            {{{1
+## ==============================================================================
 
 _koopa_add_to_path_end "/usr/local/bin"
 _koopa_add_to_path_end "/usr/bin"
@@ -29,25 +29,25 @@ _koopa_add_to_path_start "${HOME}/.local/bin"
 
 
 
-# Koopa paths                                                               {{{1
-# ==============================================================================
+## Koopa paths                                                               {{{1
+## ==============================================================================
 
 _koopa_add_bins_to_path
 
-# Shell-specific                                                            {{{2
-# ------------------------------------------------------------------------------
+## Shell-specific                                                            {{{2
+## ------------------------------------------------------------------------------
 
 _koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
 
-# OS type-specific                                                          {{{2
-# ------------------------------------------------------------------------------
+## OS type-specific                                                          {{{2
+## ------------------------------------------------------------------------------
 
-# - ID="amzn"
-#   ID_LIKE="centos rhel fedora"
-# - ID="rhel"
-#   ID_LIKE="fedora"
-# - ID="ubuntu"
-#   ID_LIKE=debian
+## - ID="amzn"
+##   ID_LIKE="centos rhel fedora"
+## - ID="rhel"
+##   ID_LIKE="fedora"
+## - ID="ubuntu"
+##   ID_LIKE=debian
 
 if _koopa_is_linux
 then
@@ -73,18 +73,18 @@ then
     unset -v id_like
 fi
 
-# Note that this will add Debian or Fedora.
+## Note that this will add Debian or Fedora.
 _koopa_add_bins_to_path "os/$(koopa os-type)"
 
-# Host type-specific                                                        {{{2
-# ------------------------------------------------------------------------------
+## Host type-specific                                                        {{{2
+## ------------------------------------------------------------------------------
 
 _koopa_add_bins_to_path "host/$(koopa host-type)"
 
 
 
-# Java                                                                      {{{1
-# ==============================================================================
+## Java                                                                      {{{1
+## ==============================================================================
 
 if [ -z "${JAVA_HOME:-}" ]
 then

@@ -1,10 +1,10 @@
 #!/usr/bin/env zsh
 
-# Update pure prompt scripts.
-# Modified 2019-06-18.
+## Update pure prompt scripts.
+## Updated 2019-06-18.
 
-# See also:
-# - https://github.com/sindresorhus/pure
+## See also:
+## - https://github.com/sindresorhus/pure
 
 koopa_fpath="${KOOPA_HOME}/system/extra/zsh/fpath"
 if [[ ! -d "$koopa_fpath" ]]
