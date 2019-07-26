@@ -28,7 +28,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make test
     make install
     rm -rf "$tmp_dir"

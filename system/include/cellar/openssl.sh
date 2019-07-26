@@ -41,7 +41,7 @@ printf "Installing %s %s.\n" "$name" "$version"
             --openssldir="$prefix" \
             shared
     fi
-    make
+    make --jobs="$CPU_COUNT"
     make test
     make install
     rm -rf "$tmp_dir"
