@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
 
-# Install GDAL.
-# Updated 2019-07-26.
+## Install GDAL.
+## Updated 2019-07-26.
 
-# This requires PROD 6+.
+## This requires PROD 6+.
 
-# See also:
-# - https://gdal.org/
-# - https://github.com/OSGeo/GDAL
-# - https://trac.osgeo.org/gdal/wiki/BuildingOnUnix
-# - https://github.com/OSGeo/gdal/issues/1352
-# - https://gis.stackexchange.com/questions/317109
+## See also:
+## - https://gdal.org/
+## - https://github.com/OSGeo/GDAL
+## - https://trac.osgeo.org/gdal/wiki/BuildingOnUnix
+## - https://github.com/OSGeo/gdal/issues/1352
+## - https://gis.stackexchange.com/questions/317109
+## - https://github.com/johntruckenbrodt/pyroSAR/blob/master/pyroSAR/install/install_deps.sh
 
-# FIXME This still isn't working correctly, due to ldconfig issue.
-# gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_alter_name'
-# gdal-3.0.1/.libs/libgdal.so: undefined reference to `H5P_CLS_DATASET_CREATE_ID_g'
-# gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_create_conversion_eckert_i'
-# gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_create_conversion_miller_cylindrical'
-# gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_trans_generic'
-# [...]
-# collect2: error: ld returned 1 exit status
+## FIXME This still isn't working correctly, due to ldconfig issue.
+## gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_alter_name'
+## gdal-3.0.1/.libs/libgdal.so: undefined reference to `H5P_CLS_DATASET_CREATE_ID_g'
+## gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_create_conversion_eckert_i'
+## gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_create_conversion_miller_cylindrical'
+## gdal-3.0.1/.libs/libgdal.so: undefined reference to `proj_trans_generic'
+## [...]
+## collect2: error: ld returned 1 exit status
 
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed proj
@@ -54,7 +55,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --prefix="$prefix" \
         --with-proj="$build_prefix" \
         --with-python="python3"
-    make
+    make --jobs="$CPU_COUNT"
     make install
     rm -rf "$tmp_dir"
 )
