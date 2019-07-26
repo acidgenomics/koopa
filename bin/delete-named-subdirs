@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Remove named subdirectories.
-# Modified 2019-06-23.
+## Remove named subdirectories.
+## Updated 2019-06-23.
 
-# For example, useful for removing bcbio "work" directories.
+## For example, useful for removing bcbio "work" directories.
 
 path="$1"
 subdir_name="$2"

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Update and commit submodules.
-# Modified 2019-06-25.
+## Update and commit submodules.
+## Updated 2019-06-25.
 
 git submodule update --remote --merge
 git commit -m "Update submodules."

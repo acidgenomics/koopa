@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Ensembl API.
-# Modified 2019-06-23.
+## Install Ensembl API.
+## Updated 2019-06-23.
 
-# See also:
-# - https://useast.ensembl.org/info/docs/api/api_installation.html
-# - https://useast.ensembl.org/info/docs/api/api_git.html
-# - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
+## See also:
+## - https://useast.ensembl.org/info/docs/api/api_installation.html
+## - https://useast.ensembl.org/info/docs/api/api_git.html
+## - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
 
 prefix="$(koopa build-prefix)/ensembl"
 
@@ -17,13 +17,13 @@ prefix="$(koopa build-prefix)/ensembl"
     build_mkdir "$prefix"
     cd "$prefix" || exit 1
     
-    # Install BioPerl.
+    ## Install BioPerl.
     git clone -b release-1-6-924 --depth 1 \
         https://github.com/bioperl/bioperl-live.git
 
     git clone https://github.com/Ensembl/ensembl-git-tools.git
     
-    # > git ensembl --clone api
+    ## > git ensembl --clone api
     
     git clone https://github.com/Ensembl/ensembl.git
     git clone https://github.com/Ensembl/ensembl-variation.git
