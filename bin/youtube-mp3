@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Download MP3 audio from YouTube or Soundcloud.
-# Modified 2019-06-23.
+## Download MP3 audio from YouTube or Soundcloud.
+## Updated 2019-06-23.
 
 _koopa_assert_is_installed youtube-dl
 

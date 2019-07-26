@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Move files to the Trash folder instead of deleting.
-# Modified 2019-06-23.
+## Move files to the Trash folder instead of deleting.
+## Updated 2019-06-23.
 
 trash_dir="${HOME}/.Trash/"
 mkdir -p "$trash_dir"

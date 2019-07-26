@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Update TeX.
-# Modified 2019-06-23.
+## Update TeX.
+## Updated 2019-06-23.
 
-# See also:
-# - https://tex.stackexchange.com/questions/55437
+## See also:
+## - https://tex.stackexchange.com/questions/55437
 
 tlmgr update --self
 tlmgr update --list

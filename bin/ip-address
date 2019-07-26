@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# IP address.
-# Modified 2019-06-23.
+## IP address.
+## Updated 2019-06-23.
 
 if _koopa_is_darwin
 then
