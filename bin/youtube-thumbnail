@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Download a thumbnail image from YouTube.
-# Modified 2019-06-23.
+## Download a thumbnail image from YouTube.
+## Updated 2019-06-23.
 
-# File options:
-# - hqdefault (smaller)
-# - maxresdefault (larger)
+## File options:
+## - hqdefault (smaller)
+## - maxresdefault (larger)
 
-# Note all videos will return the max res thumbnail, so stick with hq instead.
+## Note all videos will return the max res thumbnail, so stick with hq instead.
 
 url="$1"
 id=$(echo "$url" | grep -Eo 'v=[A-Za-z0-9_-]+' | cut -d '=' -f 2)

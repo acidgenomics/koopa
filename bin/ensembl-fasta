@@ -2,9 +2,9 @@
 """Download Ensembl genome annotations in FASTA format.
 """
 
-# See also:
-# - https://docs.python.org/2/howto/argparse.html
-# - https://stackoverflow.com/questions/24180527
+## See also:
+## - https://docs.python.org/2/howto/argparse.html
+## - https://stackoverflow.com/questions/24180527
 
 import argparse
 import os
@@ -45,7 +45,7 @@ if release is None:
     )
     release = release.rstrip()
 
-# Inform and exit on legacy "transcriptome" usage.
+## Inform and exit on legacy "transcriptome" usage.
 if type == "transcriptome":
     print("Use `cdna` instead of `transcriptome`.")
     sys.exit(1)
@@ -57,7 +57,7 @@ else:
     base_url = "ftp://ftp.ensembl.org/pub"
 base_url = base_url + "/release-" + release + "/fasta"
 
-# Get the file path of either genome or transcriptome FASTA.
+## Get the file path of either genome or transcriptome FASTA.
 if type == "dna":
     url = base_url + "/" + organism.lower() + "/dna/" + \
         organism + "." + build + ".dna.primary_assembly.fa.gz"
@@ -67,7 +67,7 @@ elif type == "cdna":
 
 file = os.path.basename(url)
 
-# Error if the file exists.
+## Error if the file exists.
 if os.path.isfile(file):
     print(file + " has already been downloaded.")
     sys.exit(0)
@@ -79,7 +79,7 @@ except subprocess.CalledProcessError as e:
     print("Failed to download " + file + ".")
     sys.exit(1)
 
-# Decompress, but also keep the original compressed file.
+## Decompress, but also keep the original compressed file.
 print("Decompressing " + file + ".")
 unzip_file = os.path.splitext(file)[0]
 os.system("gunzip -c " + file + " > " + unzip_file)

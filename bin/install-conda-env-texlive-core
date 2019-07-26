@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install conda TeX Live.
-# Modified 2019-06-25.
+## Install conda TeX Live.
+## Updated 2019-06-25.
 
 _koopa_create_conda_env texlive-core

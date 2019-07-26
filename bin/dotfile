@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Symlink dot file.
-# Modified 2019-06-23.
+## Symlink dot file.
+## Updated 2019-06-23.
 
-# Note that relative file path in dotfiles repo can be used as input.
-# The destination file should be specified without a leading period.
+## Note that relative file path in dotfiles repo can be used as input.
+## The destination file should be specified without a leading period.
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
+## Usage                                                                    {{{1
+## =============================================================================
 
 usage() {
 cat << EOF
@@ -44,11 +44,11 @@ EOF
 
 
 
-# Parse arguments                                                           {{{1
-# ==============================================================================
+## Parse arguments                                                          {{{1
+## =============================================================================
 
-# Using flags and positional arguments.
-# https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+## Using flags and positional arguments.
+## https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
 
 PARAMS=""
 
@@ -72,49 +72,49 @@ do
             shift 1
             ;;
         --)
-            # End argument parsing.
+            ## End argument parsing.
             shift
             break
             ;;
         --*|-*)
-            # Unsupported flags.
+            ## Unsupported flags.
             >&2 printf "Error: Invalid flag %s\n" "$1"
             exit 1
             ;;
         *)
-            # Preserve positional arguments.
+            ## Preserve positional arguments.
             PARAMS="${PARAMS} ${1}"
             shift
             ;;
     esac
 done
 
-# Set positional arguments in their proper place.
+## Set positional arguments in their proper place.
 eval set -- "$PARAMS"
 
 unset -f usage
 
 
 
-# Script                                                                    {{{1
-# ==============================================================================
+## Script                                                                   {{{1
+## =============================================================================
 
 dot_dir="$(koopa config-dir)/dotfiles"
 
-# Private file (experimental).
+## Private file (experimental).
 if [[ "${private:-0}" -eq 1 ]]
 then
     dot_dir="${dot_dir}-private"
 fi
 
-# Error if the dotfiles directory can't be found.
+## Error if the dotfiles directory can't be found.
 if [[ ! -d "$dot_dir" ]]
 then
     >&2 printf "Error: dotfiles directory missing: '%s'.\n" "$dot_dir"
     exit 1
 fi
 
-# Error if the source file can't be found.
+## Error if the source file can't be found.
 source_path="${dot_dir}/${1}"
 if [[ ! -f "$source_path" && ! -d "$source_path" ]]
 then
@@ -122,20 +122,20 @@ then
     exit 1
 fi
 
-# Define optional destination name.
+## Define optional destination name.
 symlink_name="${2:-}"
 [[ -z "$symlink_name" ]] && symlink_name="$(basename "$source_path")"
 
 symlink_path="${HOME}/.${symlink_name}"
 
-# Inform the user when nuking a broken symlink.
+## Inform the user when nuking a broken symlink.
 if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
 then
     printf "Overwriting broken link: '%s'.\n" "$symlink_path"
     rm -f "$symlink_path"
 fi
 
-# We're allowing force overwrite of existing symlinks only.
+## We're allowing force overwrite of existing symlinks only.
 if [[ -L "$symlink_path" ]] &&
     [[ -f "$symlink_path" || -d "$symlink_path" ]] &&
     [[ -z "${force:-}" ]]

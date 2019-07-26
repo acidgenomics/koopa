@@ -47,10 +47,10 @@ base_url = "ftp://ftp.flybase.net/releases/" + \
 if type == "dna":
     file = "dmel-all-aligned-" + version + ".fasta.gz"
 elif type == "cdna":
-    # Concatenate into single FASTA.
+    ## Concatenate into single FASTA.
     file = "dmel-transcriptome-" + version + ".fasta.gz"
 
-# Error if the file exists.
+## Error if the file exists.
 if os.path.isfile(file):
     print(file + " has already been downloaded.")
     sys.exit(0)
@@ -63,7 +63,7 @@ if type == "dna":
     except subprocess.CalledProcessError as e:
         print("Failed to download " + file + ".")
         sys.exit(1)
-    # Decompress, but also keep the original compressed file.
+    ## Decompress, but also keep the original compressed file.
     print("Decompressing " + file + ".")
     unzip_file = os.path.splitext(file)[0]
     os.system("gunzip -c " + file + " > " + unzip_file)

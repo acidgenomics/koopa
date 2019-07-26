@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Run Docker image locally.
-# Updated 2019-07-25.
+## Run Docker image locally.
+## Updated 2019-07-25.
 
 _koopa_assert_is_installed docker
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Run md5sum and generate an MD5 checksum file.
-# Modified 2019-06-23.
+## Run md5sum and generate an MD5 checksum file.
+## Updated 2019-06-23.
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="md5sum-${timestamp}.md5"

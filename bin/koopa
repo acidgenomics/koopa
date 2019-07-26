@@ -7,20 +7,20 @@ then
     exit 1
 fi
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-# koopa shell bootloader.
-# (c) 2018 Michael Steinbaugh.
-# This software is provided under an MIT License.
+## koopa shell bootloader.
+## (c) 2018 Michael Steinbaugh.
+## This software is provided under an MIT License.
 
 version="0.4.3"
 date="2019-07-25"
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
+## Usage                                                                    {{{1
+## =============================================================================
 
 usage() {
     cat << EOF
@@ -85,8 +85,8 @@ EOF
 
 
 
-# Parse arguments                                                           {{{1
-# ==============================================================================
+## Parse arguments                                                          {{{1
+## =============================================================================
 
 include_dir="${KOOPA_HOME}/system/include/koopa"
 

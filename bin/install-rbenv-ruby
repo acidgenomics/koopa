@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install recommended Ruby release via rbenv.
-# Modified 2019-06-24.
+## Install recommended Ruby release via rbenv.
+## Updated 2019-06-24.
 
-# See also:
-# - https://github.com/rbenv/ruby-build
-# - https://github.com/rbenv/ruby-build/wiki
-# - https://github.com/rbenv/ruby-build/issues/377
+## See also:
+## - https://github.com/rbenv/ruby-build
+## - https://github.com/rbenv/ruby-build/wiki
+## - https://github.com/rbenv/ruby-build/issues/377
 
 _koopa_assert_is_installed rbenv
 _koopa_assert_has_no_environments
 
-# > rbenv install -l
+## > rbenv install -l
 
 version="$(koopa variable ruby)"
 
-# This step currently fails to build on RHEL 7 with OpenSSL 1.1+.
-# Pin to installing with system version (i.e. 1.0.2) instead.
+## This step currently fails to build on RHEL 7 with OpenSSL 1.1+.
+## Pin to installing with system version (i.e. 1.0.2) instead.
 
-# > RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
+## > RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
 
 rbenv install "$version"
 rbenv global "$version"

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Perlbrew system Perl.
-# Modified 2019-06-23.
+## Install Perlbrew system Perl.
+## Updated 2019-06-23.
 
-# See also:
-# - https://stackoverflow.com/questions/25188575
+## See also:
+## - https://stackoverflow.com/questions/25188575
 
 if [[ -x "/usr/local/bin/perl" ]]
 then
