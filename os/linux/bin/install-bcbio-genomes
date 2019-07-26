@@ -4,7 +4,7 @@
 source "$(koopa header linux)"
 
 # Install bcbio-nextgen genomes.
-# Modified 2019-06-21.
+# Updated 2019-06-21.
 
 _koopa_assert_is_installed bcbio_nextgen.py
 

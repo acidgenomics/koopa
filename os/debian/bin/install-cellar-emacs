@@ -4,7 +4,7 @@
 source "$(koopa header debian)"
 
 # Install Emacs text editor.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # Bioconductor AMI is missing these dependencies:
 # > apt-cache search libgif

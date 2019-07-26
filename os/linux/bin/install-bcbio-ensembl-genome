@@ -4,7 +4,7 @@
 source "$(koopa header linux)"
 
 # Install Ensembl genome build for bcbio.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://useast.ensembl.org/
