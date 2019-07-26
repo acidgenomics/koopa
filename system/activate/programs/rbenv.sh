@@ -1,16 +1,16 @@
 #!/bin/sh
 
-# Ruby environment manager (rbenv).
-# Modified 2019-06-25.
+## Ruby environment manager (rbenv).
+## Updated 2019-06-25.
 
-# See also:
-# - https://github.com/rbenv/rbenv
+## See also:
+## - https://github.com/rbenv/rbenv
 
-# Alternate approaches:
-# > _koopa_add_to_path_start "$(rbenv root)/shims"
-# > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
+## Alternate approaches:
+## > _koopa_add_to_path_start "$(rbenv root)/shims"
+## > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
 
-# Configure shared installation, if necessary.
+## Configure shared installation, if necessary.
 if ! _koopa_quiet_which rbenv && [ -d "/usr/local/rbenv" ]
 then
     export RBENV_ROOT="/usr/local/rbenv"

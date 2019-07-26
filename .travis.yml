@@ -1,16 +1,3 @@
-# Note that Travis CI has now integrated ShellCheck by default.
-# See also:
-# - https://github.com/koalaman/shellcheck#travis-ci
-# - https://github.com/koalaman/shellcheck/wiki/TravisCI
-
-# Install shunit2 to for shell unit tests.
-# See also:
-# - https://github.com/kward/shunit2
-# - https://travis-ci.org/soulseekah/test-shunit2-travis
-#
-# before_script:
-#   - curl -L "http://downloads.sourceforge.net/shunit2/shunit2-2.0.3.tgz" | tar zx
-
 language: shell
 
 branches:

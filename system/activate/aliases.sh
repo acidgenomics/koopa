@@ -1,37 +1,37 @@
 #!/bin/sh
 
-# Aliases.
-# Modified 2019-06-21.
+## Aliases.
+## Updated 2019-06-21.
 
 
 
-# Potentially useful                                                        {{{1
-# ==============================================================================
+## Potentially useful                                                        {{{1
+## ==============================================================================
 
-# > alias be="noglob bundle exec"
-# > alias gist="gist --open --copy"
-# > alias ls="ls -Fhlo --color"
-# > alias make="nice make"
-# > alias rake="noglob rake"
-# > alias rg="rg --colors 'match:style:nobold' --colors 'path:style:nobold'"
-# > alias rsync="rsync --partial --progress --human-readable --compress"
-# > alias zmv="noglob zmv -vW"
+## > alias be="noglob bundle exec"
+## > alias gist="gist --open --copy"
+## > alias ls="ls -Fhlo --color"
+## > alias make="nice make"
+## > alias rake="noglob rake"
+## > alias rg="rg --colors 'match:style:nobold' --colors 'path:style:nobold'"
+## > alias rsync="rsync --partial --progress --human-readable --compress"
+## > alias zmv="noglob zmv -vW"
 
 
 
-# Shortcuts                                                                 {{{1
-# ==============================================================================
+## Shortcuts                                                                 {{{1
+## ==============================================================================
 
-# Quick exit.
+## Quick exit.
 alias e="exit"
 
 
 
-# Colors                                                                    {{{1
-# ==============================================================================
+## Colors                                                                    {{{1
+## ==============================================================================
 
-# Enable colors using dircolors.
-# Note that this is commonly installed on Linux but not macOS.
+## Enable colors using dircolors.
+## Note that this is commonly installed on Linux but not macOS.
 if _koopa_quiet_which dircolors
 then
     eval "$(dircolors -b)"
@@ -45,29 +45,27 @@ fi
 
 
 
-# File and folder manipulation                                              {{{1
-# ==============================================================================
+## File and folder manipulation                                              {{{1
+## ==============================================================================
 
-# Note that I'm improving the interactivity and verbosity here by default.
+## Note that I'm improving the interactivity and verbosity here by default.
 
-# Copy files.
-# Allowing recursive by default via `-r` flag.
+## Copy files.
+## Allowing recursive by default via `-r` flag.
 alias cp="cp -irv"
 
-# Create directory.
-# Allowing recursive here by default via `-p` flag.
+## Create directory.
+## Allowing recursive here by default via `-p` flag.
 alias mkdir="mkdir -vp"
 
-# Move files.
+## Move files.
 alias mv="mv -iv"
 
-# Remove (delete) files.
-#
-# Don't enable recursion here by default via `-r` flag.
-# This helps protect against accidental directory deletion.
-#
-# The `-I` flag only prompts once, which is awesome.
-# However this not on macOS, so use `-i` flag there instead.
+## Remove (delete) files.
+## ## Don't enable recursion here by default via `-r` flag.
+## This helps protect against accidental directory deletion.
+## ## The `-I` flag only prompts once, which is awesome.
+## However this not on macOS, so use `-i` flag there instead.
 if _koopa_is_darwin
 then
     alias rm="rm -iv"
@@ -77,44 +75,44 @@ fi
 
 
 
-# File system navigation                                                    {{{1
-# ==============================================================================
+## File system navigation                                                    {{{1
+## ==============================================================================
 
-# Listing files.
+## Listing files.
 alias la="ls -a"
 alias lF="ls -F"
 alias ll="ls -AFGlh"
 
-# Set more sensible defaults for size commands.
+## Set more sensible defaults for size commands.
 alias df="df -H"
 alias du="du -sh"
 
-# Improve less defaults.
+## Improve less defaults.
 alias less="less --ignore-case --raw-control-chars"
 
 
 
-# Programs                                                                  {{{1
-# ==============================================================================
+## Programs                                                                  {{{1
+## ==============================================================================
 
-# Emacs.
-# Use terminal (console) mode by default instead of window system.
-# alias emacs="emacs -nw"
+## Emacs.
+## Use terminal (console) mode by default instead of window system.
+## alias emacs="emacs -nw"
 alias emacs="emacs --no-window-system"
 
-# Easier checksum calculation.
+## Easier checksum calculation.
 alias sha256="shasum -a 256"
 
-# R.
-# Useful flags:
-# - `--no-environ`
-# - `--no-init`
-# - `--no-restore`
-# - `--no-save`
-# - `--vanilla`
+## R.
+## Useful flags:
+## - `--no-environ`
+## - `--no-init`
+## - `--no-restore`
+## - `--no-save`
+## - `--vanilla`
 alias R="R --no-restore --no-save"
 
-# R shiny server.
+## R shiny server.
 if _koopa_is_linux
 then
     alias shiny-status="sudo systemctl status shiny-server"

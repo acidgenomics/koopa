@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Uninstall koopa.
-# Modified 2019-07-11.
+## Uninstall koopa.
+## Updated 2019-07-11.
 
-# Consider an improved approach to removing cellar links in `/usr/local/`.
+## Consider an improved approach to removing cellar links in `/usr/local/`.
 
 if _koopa_has_sudo
 then
     rm -f /etc/profile.d/koopa.sh
 fi
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 . "${KOOPA_HOME}/system/uninstall/dotfiles.sh"
 
-# shellcheck source=/dev/null
+## shellcheck source=/dev/null
 . "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 
 rm -rf "$(koopa config-dir)"
