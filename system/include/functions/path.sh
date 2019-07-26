@@ -1,16 +1,16 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+## shellcheck disable=SC2039
 
-# PATH string modifiers
-# Modified 2019-07-10.
+## PATH string modifiers
+## Updated 2019-07-10.
 
-# See also:
-# - https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
+## See also:
+## - https://github.com/MikeMcQuaid/dotfiles/blob/master/shrc.sh
 
 
 
-# Add both 'bin/' and 'sbin/' to PATH.
-# Modified 2019-06-27.
+## Add both 'bin/' and 'sbin/' to PATH.
+## Updated 2019-06-27.
 _koopa_add_bins_to_path() {
     local relpath
     local prefix
@@ -23,7 +23,7 @@ _koopa_add_bins_to_path() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_add_to_path_start() {
     local dir
     dir="$1"
@@ -34,7 +34,7 @@ _koopa_add_to_path_start() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_add_to_path_end() {
     local dir
     dir="$1"
@@ -45,7 +45,7 @@ _koopa_add_to_path_end() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_force_add_to_path_start() {
     local dir
     dir="$1"
@@ -55,7 +55,7 @@ _koopa_force_add_to_path_start() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_force_add_to_path_end() {
     local dir
     dir="$1"
@@ -65,13 +65,11 @@ _koopa_force_add_to_path_end() {
 
 
 
-# Look into an improved POSIX method here. This works for bash and ksh.
-# Note that this won't work on the first item in PATH.
-#
-# Alternate approach using sed:
-# > echo "$PATH" | sed "s|:${dir}||g"
-#
-# Modified 2019-07-10.
+## Look into an improved POSIX method here. This works for bash and ksh.
+## Note that this won't work on the first item in PATH.
+## ## Alternate approach using sed:
+## > echo "$PATH" | sed "s|:${dir}||g"
+## ## Updated 2019-07-10.
 _koopa_remove_from_path() {
     local dir
     dir="$1"

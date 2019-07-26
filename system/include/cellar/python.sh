@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# Install Python.
-# Modified 2019-06-25.
+## Install Python.
+## Updated 2019-06-25.
 
-# See also:
-# - https://www.python.org/
+## See also:
+## - https://www.python.org/
 
 _koopa_assert_has_no_environments
 
@@ -20,25 +20,25 @@ printf "Installing %s %s.\n" "$name" "$version"
 rm -rf "$tmp_dir"
 mkdir "$tmp_dir"
 
-# Ensure pip is installed and up to date.
-# This step fails on RHEL8 because there's only python3, no python.
-# > if _koopa_has_sudo
-# > then
-# >     (
-# >         printf "Updating pip.\n"
-# >         cd "$tmp_dir" || exit 1
-# >         file="get-pip.py"
-# >         url="https://bootstrap.pypa.io/${file}"
-# >         wget "$url"
-# >         sudo python "$file"
-# >         sudo pip install -U pip
-# >         # > sudo pip install -U virtualenv
-# >     )
-# > fi
+## Ensure pip is installed and up to date.
+## This step fails on RHEL8 because there's only python3, no python.
+## > if _koopa_has_sudo
+## > then
+## >     (
+## >         printf "Updating pip.\n"
+## >         cd "$tmp_dir" || exit 1
+## >         file="get-pip.py"
+## >         url="https://bootstrap.pypa.io/${file}"
+## >         wget "$url"
+## >         sudo python "$file"
+## >         sudo pip install -U pip
+## >         # > sudo pip install -U virtualenv
+## >     )
+## > fi
 
-# Ubuntu 18: This step fails unless `--without-ensurepip` flag is set.
-# https://bugs.python.org/issue31652
-# Seeing a `sharedinstall` error still.
+## Ubuntu 18: This step fails unless `--without-ensurepip` flag is set.
+## https://bugs.python.org/issue31652
+## Seeing a `sharedinstall` error still.
 
 (
     cd "$tmp_dir" || exit 1
@@ -60,7 +60,7 @@ mkdir "$tmp_dir"
 rm -rf "$tmp_dir"
 link-cellar "$name" "$version"
 
-# Symlink python3 to python.
+## Symlink python3 to python.
 build_prefix="$(koopa build-prefix)"
 ln -fns "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 

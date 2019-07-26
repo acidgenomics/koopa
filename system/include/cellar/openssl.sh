@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-# Install OpenSSL.
-# Modified 2019-07-10.
+## Install OpenSSL.
+## Updated 2019-07-10.
 
-# Currently installing as cellar-only.
-# This is useful for running RDAVIDWebService but can break other programs
-# when installed into `/usr/local`.
+## Currently installing as cellar-only.
+## This is useful for running RDAVIDWebService but can break other programs
+## when installed into `/usr/local`.
 
-# See also:
-# - https://www.openssl.org/source/
-# - https://wiki.openssl.org/index.php/Compilation_and_Installation
-# - https://wiki.openssl.org/index.php/Binary_Compatibility
+## See also:
+## - https://www.openssl.org/source/
+## - https://wiki.openssl.org/index.php/Compilation_and_Installation
+## - https://wiki.openssl.org/index.php/Binary_Compatibility
 
 _koopa_assert_has_no_environments
 

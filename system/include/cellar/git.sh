@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# Install Git SCM.
-# Modified 2019-07-09.
+## Install Git SCM.
+## Updated 2019-07-09.
 
-# The compilation settings here are from the Git SCM book website.
-# Refer also to INSTALL file for details.
+## The compilation settings here are from the Git SCM book website.
+## Refer also to INSTALL file for details.
 
-# This currently fails if OpenSSL v1.1.1+ is installed to `/usr/local`.
-# Instead, compile Git to use the system OpenSSL in `/bin/`.
+## This currently fails if OpenSSL v1.1.1+ is installed to `/usr/local`.
+## Instead, compile Git to use the system OpenSSL in `/bin/`.
 
-# See also:
-# - https://git-scm.com/
-# - https://github.com/git/git
-# - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-# - https://github.com/git/git/blob/master/INSTALL
-# - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
+## See also:
+## - https://git-scm.com/
+## - https://github.com/git/git
+## - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+## - https://github.com/git/git/blob/master/INSTALL
+## - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
 
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed docbook2x-texi

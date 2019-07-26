@@ -1,21 +1,21 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+## shellcheck disable=SC2039
 
-# Configuration functions.
-# Modified 2019-06-26.
+## Configuration functions.
+## Updated 2019-06-26.
 
 
 
-# Modified 2019-06-25.
+## Updated 2019-06-25.
 _koopa_is_remote() {
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
 
 
-# Using unicode box drawings here.
-# Note that we're truncating lines inside the box to 68 characters.
-# Modified 2019-06-27.
+## Using unicode box drawings here.
+## Note that we're truncating lines inside the box to 68 characters.
+## Updated 2019-06-27.
 _koopa_info_box() {
     local array
     local barpad
@@ -33,13 +33,11 @@ _koopa_info_box() {
 
 
 
-# Set JAVA_HOME environment variable.
-#
-# See also:
-# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
-# - https://stackoverflow.com/questions/22290554
-#
-# Modified 2019-06-27.
+## Set JAVA_HOME environment variable.
+## ## See also:
+## - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
+## - https://stackoverflow.com/questions/22290554
+## ## Updated 2019-06-27.
 _koopa_java_home() {
     local home
     local jvm_dir
@@ -77,8 +75,8 @@ _koopa_java_home() {
 
 
 
-# Get `R_HOME`, rather than exporting as global variable.
-# Modified 2019-06-27.
+## Get `R_HOME`, rather than exporting as global variable.
+## Updated 2019-06-27.
 _koopa_r_home() {
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
@@ -87,23 +85,20 @@ _koopa_r_home() {
 
 
 
-# Update rJava configuration.
-# The default Java path differs depending on the system.
-#
-# > R CMD javareconf -h
-#
-# Environment variables that can be used to influence the detection:
-#   JAVA           path to a Java interpreter executable
-#                  By default first 'java' command found on the PATH
-#                  is taken (unless JAVA_HOME is also specified).
-#   JAVA_HOME      home of the Java environment. If not specified,
-#                  it will be detected automatically from the Java
-#                  interpreter.
-#   JAVAC          path to a Java compiler
-#   JAVAH          path to a Java header/stub generator
-#   JAR            path to a Java archive tool
-#
-# Modified 2019-06-27.
+## Update rJava configuration.
+## The default Java path differs depending on the system.
+## ## > R CMD javareconf -h
+## ## Environment variables that can be used to influence the detection:
+##   JAVA           path to a Java interpreter executable
+##                  By default first 'java' command found on the PATH
+##                  is taken (unless JAVA_HOME is also specified).
+##   JAVA_HOME      home of the Java environment. If not specified,
+##                  it will be detected automatically from the Java
+##                  interpreter.
+##   JAVAC          path to a Java compiler
+##   JAVAH          path to a Java header/stub generator
+##   JAR            path to a Java archive tool
+## ## Updated 2019-06-27.
 _koopa_r_javareconf() {
     local java_home
     local java_flags
@@ -135,13 +130,13 @@ _koopa_r_javareconf() {
         sudo R --vanilla CMD javareconf "${java_flags[@]}"
     fi
 
-    # > Rscript -e 'install.packages("rJava")'
+    ## > Rscript -e 'install.packages("rJava")'
 }
 
 
 
-# Update dynamic linker (LD) configuration.
-# Modified 2019-07-10.
+## Update dynamic linker (LD) configuration.
+## Updated 2019-07-10.
 _koopa_update_ldconfig() {
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -160,9 +155,9 @@ _koopa_update_ldconfig() {
         return 1
     fi
     
-    # Create symlinks with "koopa-" prefix.
-    # Note that we're using shell globbing here.
-    # https://unix.stackexchange.com/questions/218816
+    ## Create symlinks with "koopa-" prefix.
+    ## Note that we're using shell globbing here.
+    ## https://unix.stackexchange.com/questions/218816
     printf "Updating ldconfig in '/etc/ld.so.conf.d/'.\n"
     local source_file
     local dest_file
@@ -177,8 +172,8 @@ _koopa_update_ldconfig() {
 
 
 
-# Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-# Modified 2019-06-27.
+## Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
+## Updated 2019-06-27.
 _koopa_update_profile() {
     local file
 
@@ -195,17 +190,17 @@ _koopa_update_profile() {
     sudo bash -c "cat << EOF > $file
 #!/bin/sh
 
-# koopa shell
-# https://github.com/acidgenomics/koopa
-# shellcheck source=/dev/null
+## koopa shell
+## https://github.com/acidgenomics/koopa
+## shellcheck source=/dev/null
 . ${KOOPA_HOME}/activate
 EOF"
 }
 
 
 
-# Add shared R configuration symlinks in `${R_HOME}/etc`.
-# Modified 2019-07-10.
+## Add shared R configuration symlinks in `${R_HOME}/etc`.
+## Updated 2019-07-10.
 _koopa_update_r_config() {
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
@@ -213,13 +208,13 @@ _koopa_update_r_config() {
     local r_home
     r_home="$(_koopa_r_home)"
 
-    # > local version
-    # > version="$( \
-    # >     R --version | \
-    # >     head -n 1 | \
-    # >     cut -d ' ' -f 3 | \
-    # >     grep -Eo "^[0-9]+\.[0-9]+"
-    # > )"
+    ## > local version
+    ## > version="$( \
+    ## >     R --version | \
+    ## >     head -n 1 | \
+    ## >     cut -d ' ' -f 3 | \
+    ## >     grep -Eo "^[0-9]+\.[0-9]+"
+    ## > )"
 
     printf "Updating '%s'.\n" "$r_home"
 
@@ -247,8 +242,8 @@ _koopa_update_r_config() {
 
 
 
-# Update shell configuration.
-# Modified 2019-06-27.
+## Update shell configuration.
+## Updated 2019-06-27.
 _koopa_update_shells() {
     local shell
     local shell_file
@@ -269,9 +264,9 @@ _koopa_update_shells() {
 
 
 
-# Update XDG configuration.
-# ~/.config/koopa
-# Modified 2019-07-12.
+## Update XDG configuration.
+## ~/.config/koopa
+## Updated 2019-07-12.
 _koopa_update_xdg_config() {
     local config_dir
     config_dir="$(koopa config-dir)"
