@@ -21,6 +21,13 @@
 PATH="/usr/local/bin:/usr/bin:/bin"
 
 
+## Package configuration                                                    {{{1
+## =============================================================================
+
+## This is necessary for rgdal, sf packages to install clean.
+PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
+
+
 
 ## Package library path                                                     {{{1
 ## =============================================================================
