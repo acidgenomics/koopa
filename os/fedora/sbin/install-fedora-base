@@ -4,7 +4,7 @@
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Modified 2019-07-25.
+# Updated 2019-07-26.
 
 # Tested against RHEL 7 and 8.
 
@@ -32,6 +32,8 @@ sudo yum -y install \
     gcc-gfortran \
     gdal \
     gdal-devel \
+    geos \
+    geos-devel \
     git \
     gnutls \
     gnutls-devel \
@@ -43,6 +45,9 @@ sudo yum -y install \
     mariadb-devel \
     ncurses \
     pcre-devel \
+    postgresql-devel \
+    proj \
+    proj-devel \
     qpdf \
     readline \
     readline-devel \
@@ -72,6 +77,7 @@ sudo yum -y install \
     texlive-xstring \
     tmux \
     tree \
+    unixODBC-devel \
     util-linux \
     wget \
     xmlto \
