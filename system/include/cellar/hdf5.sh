@@ -36,7 +36,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --prefix="$prefix" \
         --enable-cxx \
         --enable-fortran
-    make
+    make --jobs="$CPU_COUNT"
     ## > make check
     make install
     rm -rf "$tmp_dir"

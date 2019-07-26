@@ -42,7 +42,7 @@ mkdir -p "$tmp_dir"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 
@@ -58,7 +58,7 @@ link-cellar "$name" "$version"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 
@@ -74,7 +74,7 @@ link-cellar "$name" "$version"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 
@@ -90,7 +90,7 @@ link-cellar "$name" "$version"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 
@@ -106,7 +106,7 @@ link-cellar "$name" "$version"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 
@@ -122,7 +122,7 @@ link-cellar "$name" "$version"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 
@@ -138,7 +138,7 @@ link-cellar "$name" "$version"
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make check
     make install
 )

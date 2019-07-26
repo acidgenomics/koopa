@@ -29,7 +29,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make check
     make test
     make install

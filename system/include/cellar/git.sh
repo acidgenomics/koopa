@@ -40,7 +40,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
-    make all doc info
+    make --jobs="$CPU_COUNT" all doc info
     make install install-doc install-html install-info
     rm -rf "$tmp_dir"
 )
