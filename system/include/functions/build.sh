@@ -1,13 +1,13 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+## shellcheck disable=SC2039
 
-# Build functions
-# Modified 2019-06-27.
+## Build functions
+## Updated 2019-06-27.
 
 
 
-# Fix the group permissions on the build directory.
-# Modified 2019-06-26.
+## Fix the group permissions on the build directory.
+## Updated 2019-06-26.
 _koopa_build_chgrp() {
     local path
     local group
@@ -27,8 +27,8 @@ _koopa_build_chgrp() {
 
 
 
-# Create the build directory.
-# Modified 2019-06-20.
+## Create the build directory.
+## Updated 2019-06-20.
 _koopa_build_mkdir() {
     local path
     path="$1"
@@ -48,25 +48,25 @@ _koopa_build_mkdir() {
 
 
 
-# Set the admin or regular user group automatically.
-# Modified 2019-07-09.
+## Set the admin or regular user group automatically.
+## Updated 2019-07-09.
 _koopa_build_prefix_group() {
     local group
 
-    # Standard user.
+    ## Standard user.
     ! _koopa_has_sudo && whoami && return 0
 
-    # Administrator.
+    ## Administrator.
     if groups | grep -Eq "\b(admin)\b"
     then
-        # Darwin (macOS).
+        ## Darwin (macOS).
         group="admin"
     elif groups | grep -Eq "\b(sudo)\b"
     then
-        # Debian.
+        ## Debian.
         group="sudo"
     else
-        # Fedora.
+        ## Fedora.
         group="wheel"
     fi
 
@@ -75,8 +75,8 @@ _koopa_build_prefix_group() {
 
 
 
-# Set permissions on program built from source.
-# Modified 2019-06-27.
+## Set permissions on program built from source.
+## Updated 2019-06-27.
 _koopa_build_set_permissions() {
     local path
     path="$1"
