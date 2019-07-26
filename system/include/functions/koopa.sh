@@ -1,53 +1,50 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+## shellcheck disable=SC2039
 
-# Functions required for `koopa` script functionality.
-# Modified 2019-07-09.
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Useful files to parse on Linux:
-# > cat /etc/os-release
-# > cat /proc/version
-
-# Get OS name from `/etc/os-release`:
-# - `-F=`: Tell awk to use = as separator.
-# - `$1=="ID"`: Filter on ID.
-# - `{ print $2 ;}`: Print value.
-
-# Strip quotes:
-# > sed 's/"//g'
-# > tr -d \"
-# > tr -cd '[:alnum:]'
-
-# macOS version: currently, use of `sw_vers` is recommended.
-#
-# Alternatively, can parse this file directly instead:
-# /System/Library/CoreServices/SystemVersion.plist
-
-# See also:
-# - https://unix.stackexchange.com/questions/23833
-# - https://unix.stackexchange.com/questions/432816
-# - https://stackoverflow.com/questions/20007288
-# - https://gist.github.com/scriptingosx/670991d7ec2661605f4e3a40da0e37aa
-# - https://apple.stackexchange.com/questions/255546
+## Functions required for `koopa` script functionality.
+## Updated 2019-07-09.
 
 
 
-# Functions                                                                 {{{1
-# ==============================================================================
+## Notes                                                                     {{{1
+## ==============================================================================
 
-# Build string for `make` configuration.
-# Use this for `configure --build` flag.
-#
-# - AWS:    x86_64-amzn-linux-gnu
-# - RedHat: x86_64-redhat-linux-gnu
-# - Darwin: x86_64-darwin15.6.0
-#
-# Modified 2019-07-09.
+## Useful files to parse on Linux:
+## > cat /etc/os-release
+## > cat /proc/version
+
+## Get OS name from `/etc/os-release`:
+## - `-F=`: Tell awk to use = as separator.
+## - `$1=="ID"`: Filter on ID.
+## - `{ print $2 ;}`: Print value.
+
+## Strip quotes:
+## > sed 's/"//g'
+## > tr -d \"
+## > tr -cd '[:alnum:]'
+
+## macOS version: currently, use of `sw_vers` is recommended.
+## ## Alternatively, can parse this file directly instead:
+## /System/Library/CoreServices/SystemVersion.plist
+
+## See also:
+## - https://unix.stackexchange.com/questions/23833
+## - https://unix.stackexchange.com/questions/432816
+## - https://stackoverflow.com/questions/20007288
+## - https://gist.github.com/scriptingosx/670991d7ec2661605f4e3a40da0e37aa
+## - https://apple.stackexchange.com/questions/255546
+
+
+
+## Functions                                                                 {{{1
+## ==============================================================================
+
+## Build string for `make` configuration.
+## Use this for `configure --build` flag.
+## ## - AWS:    x86_64-amzn-linux-gnu
+## - RedHat: x86_64-redhat-linux-gnu
+## - Darwin: x86_64-darwin15.6.0
+## ## Updated 2019-07-09.
 _koopa_build_os_string() {
     local mach
     local os_type
@@ -60,9 +57,9 @@ _koopa_build_os_string() {
         string="${mach}-${OSTYPE}"
     elif _koopa_is_linux
     then
-        # This will distinguish between RedHat, Amazon, and other distros
-        # instead of just returning "linux". Note that we're substituting
-        # "redhat" instead of "rhel" here, when applicable.
+        ## This will distinguish between RedHat, Amazon, and other distros
+        ## instead of just returning "linux". Note that we're substituting
+        ## "redhat" instead of "rhel" here, when applicable.
         os_type="$(koopa os-type)"
         if echo "$os_type" | grep -q "rhel"
         then
@@ -76,8 +73,8 @@ _koopa_build_os_string() {
 
 
 
-# Return the installation prefix to use.
-# Modified 2019-06-27.
+## Return the installation prefix to use.
+## Updated 2019-06-27.
 _koopa_build_prefix() {
     local prefix
 
@@ -98,8 +95,8 @@ _koopa_build_prefix() {
 
 
 
-# Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
-# Modified 2019-06-27.
+## Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
+## Updated 2019-06-27.
 _koopa_cellar_prefix() {
     local prefix
 
@@ -115,7 +112,7 @@ _koopa_cellar_prefix() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_conda_prefix() {
     local prefix
 
@@ -131,8 +128,8 @@ _koopa_conda_prefix() {
 
 
 
-# Source script header.
-# Modified 2019-06-27.
+## Source script header.
+## Updated 2019-06-27.
 _koopa_header() {
     local path
 
@@ -165,7 +162,7 @@ EOF
     fi
     
     case "$1" in
-        # shell
+        ## shell
         bash)
             path="${KOOPA_HOME}/shell/bash/include/header.sh"
             ;;
@@ -173,7 +170,7 @@ EOF
             path="${KOOPA_HOME}/shell/zsh/include/header.sh"
             ;;
 
-        # os
+        ## os
         darwin)
             path="${KOOPA_HOME}/os/darwin/include/header.sh"
             ;;
@@ -193,7 +190,7 @@ EOF
                     path="${KOOPA_HOME}/os/amzn/include/header.sh"
                     ;;
 
-        # host
+        ## host
         azure)
             path="${KOOPA_HOME}/host/azure/include/header.sh"
             ;;
@@ -215,20 +212,20 @@ EOF
 
 
 
-# Simple host type name string to load up host-specific scripts.
-# Currently intended support AWS, Azure, and Harvard clusters.
-# Modified 2019-06-27.
+## Simple host type name string to load up host-specific scripts.
+## Currently intended support AWS, Azure, and Harvard clusters.
+## Updated 2019-06-27.
 _koopa_host_type() {
     local name
     case "$(hostname -f)" in
-        # VMs
+        ## VMs
         *.ec2.internal)
             name="aws"
             ;;
         azlabapp*)
             name="azure"
             ;;
-        # HPCs
+        ## HPCs
         *.o2.rc.hms.harvard.edu)
             name="harvard-o2"
             ;;
@@ -244,22 +241,22 @@ _koopa_host_type() {
 
 
 
-# Modified 2019-06-25.
+## Updated 2019-06-25.
 _koopa_is_local() {
     echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
 }
 
 
 
-# Modified 2019-06-25.
+## Updated 2019-06-25.
 _koopa_is_shared() {
     ! _koopa_is_local
 }
 
 
 
-# Used by `koopa info`.
-# Modified 2019-07-09.
+## Used by `koopa info`.
+## Updated 2019-07-09.
 _koopa_locate() {
     local command
     local name
@@ -280,7 +277,7 @@ _koopa_locate() {
 
 
 
-# Modified 2019-06-22.
+## Updated 2019-06-22.
 _koopa_macos_version() {
     _koopa_assert_is_darwin
     printf "%s %s (%s)\n" \
@@ -291,7 +288,7 @@ _koopa_macos_version() {
 
 
 
-# Modified 2019-06-25.
+## Updated 2019-06-25.
 _koopa_os_type() {
     local name
     if _koopa_is_darwin
@@ -303,7 +300,7 @@ _koopa_os_type() {
             awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
             tr -d '"' \
         )"
-	# Include the major release version for RHEL.
+	## Include the major release version for RHEL.
 	if [ "$name" = "rhel" ]
 	then
         major_version="$( \
@@ -321,22 +318,22 @@ _koopa_os_type() {
 
 
 
-# Modified 2019-06-22.
+## Updated 2019-06-22.
 _koopa_os_version() {
     uname -r
 }
 
 
 
-# Modified 2019-06-21.
+## Updated 2019-06-21.
 _koopa_rsync_flags() {
     echo "--archive --copy-links --delete-before --human-readable --progress"
 }
 
 
 
-# Note that this isn't necessarily the default shell (`$SHELL`).
-# Modified 2019-06-27.
+## Note that this isn't necessarily the default shell (`$SHELL`).
+## Updated 2019-06-27.
 _koopa_shell() {
     local shell
     if [ -n "${BASH_VERSION:-}" ]
@@ -365,16 +362,13 @@ EOF
 
 
 
-# Create temporary directory.
-#
-# Note: macOS requires `env LC_CTYPE=C`.
-# Otherwise, you'll see this error: `tr: Illegal byte sequence`.
-# This doesn't seem to work reliably, so using timestamp instead.
-#
-# See also:
-# - https://gist.github.com/earthgecko/3089509
-#
-# Modified 2019-06-27.
+## Create temporary directory.
+## ## Note: macOS requires `env LC_CTYPE=C`.
+## Otherwise, you'll see this error: `tr: Illegal byte sequence`.
+## This doesn't seem to work reliably, so using timestamp instead.
+## ## See also:
+## - https://gist.github.com/earthgecko/3089509
+## ## Updated 2019-06-27.
 _koopa_tmp_dir() {
     local unique
     local dir
@@ -391,8 +385,8 @@ _koopa_tmp_dir() {
 
 
 
-# Get version stored internally in versions.txt file.
-# Modified 2019-06-27.
+## Get version stored internally in versions.txt file.
+## Updated 2019-06-27.
 _koopa_variable() {
     local what
     local file

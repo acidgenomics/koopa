@@ -1,11 +1,11 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+## shellcheck disable=SC2039
 
-# Assertive check functions
-# Modified 2019-06-27.
+## Assertive check functions
+## Updated 2019-06-27.
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_assert_has_no_environments() {
     if ! _koopa_has_no_environments
     then
@@ -16,7 +16,7 @@ _koopa_assert_has_no_environments() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_assert_has_sudo() {
     if ! _koopa_has_sudo
     then
@@ -27,7 +27,7 @@ _koopa_assert_has_sudo() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_assert_is_darwin() {
     if ! _koopa_is_darwin
     then
@@ -38,7 +38,7 @@ _koopa_assert_is_darwin() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_assert_is_installed() {
     local program
     program="$1"
@@ -51,7 +51,7 @@ _koopa_assert_is_installed() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_assert_is_linux() {
     if ! _koopa_is_linux
     then
@@ -62,7 +62,7 @@ _koopa_assert_is_linux() {
 
 
 
-# Modified 2019-06-24.
+## Updated 2019-06-24.
 _koopa_assert_is_linux_debian() {
     if ! _koopa_is_linux_debian
     then
@@ -73,7 +73,7 @@ _koopa_assert_is_linux_debian() {
 
 
 
-# Modified 2019-06-24.
+## Updated 2019-06-24.
 _koopa_assert_is_linux_fedora() {
     if ! _koopa_is_linux_fedora
     then
@@ -84,12 +84,12 @@ _koopa_assert_is_linux_fedora() {
 
 
 
-# Check if directory already exists.
-# Modified 2019-06-27.
+## Check if directory already exists.
+## Updated 2019-06-27.
 _koopa_assert_is_not_dir() {
     local path
     path="$1"
-    # Error on existing installation.
+    ## Error on existing installation.
     if [ -d "$path" ]
     then
         >&2 printf "Error: Directory already exists.\n%s\n" "$path"
@@ -99,8 +99,8 @@ _koopa_assert_is_not_dir() {
 
 
 
-# Detect activation of virtual environments.
-# Modified 2019-06-25.
+## Detect activation of virtual environments.
+## Updated 2019-06-25.
 _koopa_has_no_environments() {
     [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
     [ -x "$(command -v deactivate)" ] && return 1
@@ -109,33 +109,33 @@ _koopa_has_no_environments() {
 
 
 
-# Administrator (sudo) permission.
-# Currently performing a simple check by verifying wheel group.
-# - Darwin (macOS): admin
-# - Debian: sudo
-# - Fedora: wheel
-# Modified 2019-06-19.
+## Administrator (sudo) permission.
+## Currently performing a simple check by verifying wheel group.
+## - Darwin (macOS): admin
+## - Debian: sudo
+## - Fedora: wheel
+## Updated 2019-06-19.
 _koopa_has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
 
 
-# Modified 2019-06-22.
+## Updated 2019-06-22.
 _koopa_is_darwin() {
     [ "$(uname -s)" = "Darwin" ]
 }
 
 
 
-# Modified 2019-06-21.
+## Updated 2019-06-21.
 _koopa_is_interactive() {
     echo "$-" | grep -q "i"
 }
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_is_installed() {
     local program
     program="$1"
@@ -144,14 +144,14 @@ _koopa_is_installed() {
 
 
 
-# Modified 2019-06-21.
+## Updated 2019-06-21.
 _koopa_is_linux() {
     [ "$(uname -s)" = "Linux" ]
 }
 
 
 
-# Modified 2019-06-24.
+## Updated 2019-06-24.
 _koopa_is_linux_debian() {
     [ -f /etc/os-release ] || return 1
     grep "ID="      /etc/os-release | grep -q "debian" ||
@@ -160,7 +160,7 @@ _koopa_is_linux_debian() {
 
 
 
-# Modified 2019-06-24.
+## Updated 2019-06-24.
 _koopa_is_linux_fedora() {
     [ -f /etc/os-release ] || return 1
     grep "ID="      /etc/os-release | grep -q "fedora" ||
@@ -169,14 +169,14 @@ _koopa_is_linux_fedora() {
 
 
 
-# Modified 2019-06-21.
+## Updated 2019-06-21.
 _koopa_is_login_bash() {
     [ "$0" = "-bash" ]
 }
 
 
 
-# Modified 2019-06-21.
+## Updated 2019-06-21.
 _koopa_is_login_zsh() {
     [ "$0" = "-zsh" ]
 }

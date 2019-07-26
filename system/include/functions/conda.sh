@@ -1,12 +1,12 @@
 #!/bin/sh
-# shellcheck disable=SC2039
+## shellcheck disable=SC2039
 
-# Conda functions.
-# Modified 2019-06-27.
+## Conda functions.
+## Updated 2019-06-27.
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_add_conda_env_to_path() {
     local env_name
     local env_list
@@ -27,8 +27,8 @@ _koopa_add_conda_env_to_path() {
 
 
 
-# Create an internal conda environment.
-# Modified 2019-07-10.
+## Create an internal conda environment.
+## Updated 2019-07-10.
 _koopa_create_conda_env() {
     _koopa_assert_is_installed conda
 
@@ -52,7 +52,7 @@ _koopa_create_conda_env() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_conda_env_list() {
     _koopa_is_installed conda || return 1
     conda env list --json
@@ -60,9 +60,9 @@ _koopa_conda_env_list() {
 
 
 
-# Note that we're allowing env_list passthrough as second positional variable,
-# to speed up loading upon activation.
-# Modified 2019-06-27.
+## Note that we're allowing env_list passthrough as second positional variable,
+## to speed up loading upon activation.
+## Updated 2019-06-27.
 _koopa_conda_env_prefix() {
     local env_name
     local env_list
@@ -80,8 +80,8 @@ _koopa_conda_env_prefix() {
         env_list="$(_koopa_conda_env_list)"
     fi
 
-    # Restrict to environments that match internal koopa installs.
-    # Early return if no environments are installed.
+    ## Restrict to environments that match internal koopa installs.
+    ## Early return if no environments are installed.
     env_list="$(echo "$env_list" | grep "$prefix")"
     [ -z "$env_list" ] && return 1
 
@@ -96,7 +96,7 @@ _koopa_conda_env_prefix() {
 
 
 
-# Modified 2019-06-27.
+## Updated 2019-06-27.
 _koopa_link_conda_env() {
     local env_name
     local env_prefix
