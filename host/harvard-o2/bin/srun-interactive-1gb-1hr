@@ -4,7 +4,7 @@
 source "$(koopa header harvard-o2)"
 
 # Launch SLURM interaction session.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # 1 core; 1 GB RAM; 1 hour.
 
