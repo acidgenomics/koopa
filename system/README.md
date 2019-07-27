@@ -1,5 +1,7 @@
 # Internal functions
 
+## Version detection
+
 Useful files to parse on Linux:
 - `/etc/os-release`
 - `/proc/version`
@@ -27,3 +29,38 @@ See also:
 - https://stackoverflow.com/questions/20007288
 - https://gist.github.com/scriptingosx/670991d7ec2661605f4e3a40da0e37aa
 - https://apple.stackexchange.com/questions/255546
+
+## Redirecting console output
+
+Redirect the console output to a file:
+
+```sh
+SomeCommand > SomeFile.txt
+```
+
+Or if you want to append data:
+
+```sh
+SomeCommand >> SomeFile.txt
+```
+
+If you want stderr as well use this:
+
+```sh
+SomeCommand &> SomeFile.txt
+```
+
+Or this to append:
+
+```sh
+SomeCommand &>> SomeFile.txt
+```
+
+If you want to have both stderr and output displayed on the console and in a
+file use this:
+
+```sh
+SomeCommand 2>&1 | tee SomeFile.txt
+```
+
+If you want the output only, drop the `2` above.
