@@ -231,26 +231,28 @@ options(
     ## Library path                                                         {{{2
     ## -------------------------------------------------------------------------
 
+    ## This check doesn't work well with conda environments, so skipping.
+
     ## Check that the local library matches the R version.
-    libs <- .libPaths()
-    if (
-        ## Site library.
-        !any(grepl(pattern = "site-library", x = libs)) &&
-        ## User library.
-        !any(grepl(
-            pattern = file.path(
-                paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
-            ),
-            x = libs
-        ))
-    ) {
-        warning(paste0(
-            "Failed to detect ", r_ver, " site or user library.", "\n",
-            ".libPaths():", "\n",
-            paste(libs, collapse = "\n")
-        ))
-    }
-    rm(libs)
+    ## libs <- .libPaths()
+    ## if (
+    ##     ## Site library.
+    ##     !any(grepl(pattern = "site-library", x = libs)) &&
+    ##     ## User library.
+    ##     !any(grepl(
+    ##         pattern = file.path(
+    ##             paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
+    ##         ),
+    ##         x = libs
+    ##     ))
+    ## ) {
+    ##     warning(paste0(
+    ##         "Failed to detect ", r_ver, " site or user library.", "\n",
+    ##         ".libPaths():", "\n",
+    ##         paste(libs, collapse = "\n")
+    ##     ))
+    ## }
+    ## rm(libs)
 
     ## Compiler                                                             {{{2
     ## -------------------------------------------------------------------------
