@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## XDG base directory specification.
-## Updated 2019-06-21.
+## Updated 2019-07-27.
 
 ## See also:
 ## - https://developer.gnome.org/basedir-spec/
@@ -55,4 +55,5 @@ fi
 
 
 
-_koopa_update_xdg_config
+## This will ensure the directory paths exist.
+

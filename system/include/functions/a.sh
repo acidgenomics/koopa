@@ -1,8 +1,63 @@
 #!/bin/sh
 ## shellcheck disable=SC2039
 
-## Assertive check functions
+
+
+## Add both `bin/` and `sbin/` to PATH.
 ## Updated 2019-06-27.
+_koopa_add_bins_to_path() {
+    local relpath
+    local prefix
+    relpath="${1:-}"
+    prefix="$KOOPA_HOME"
+    [ -n "$relpath" ] && prefix="${prefix}/${relpath}"
+    _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
+    _koopa_add_to_path_start "${prefix}/bin"
+}
+
+
+
+## Updated 2019-06-27.
+_koopa_add_conda_env_to_path() {
+    local env_name
+    local env_list
+    local prefix
+
+    _koopa_is_installed conda || return 1
+
+    env_name="$1"
+    env_list="${2:-}"
+
+    prefix="$(_koopa_conda_env_prefix "$env_name" "$env_list")"
+    [ -n "$prefix" ] || return 1
+    prefix="${prefix}/bin"
+    [ -d "$prefix" ] || return 1
+
+    _koopa_add_to_path_start "$prefix"
+}
+
+
+
+## Updated 2019-06-27.
+_koopa_add_to_path_end() {
+    local dir
+    dir="$1"
+    [ ! -d "$dir" ] && _koopa_remove_from_path "$dir" && return 0
+    echo "$PATH" | grep -q "$dir" && return 0
+    export PATH="${PATH}:${dir}"
+}
+
+
+
+## Updated 2019-06-27.
+_koopa_add_to_path_start() {
+    local dir
+    dir="$1"
+    [ ! -d "$dir" ] && _koopa_remove_from_path "$dir" && return 0
+    echo "$PATH" | grep -q "$dir" && return 0
+    export PATH="${dir}:${PATH}"
+}
+
 
 
 ## Updated 2019-06-27.
@@ -24,7 +79,6 @@ _koopa_assert_has_sudo() {
         exit 1
     fi
 }
-
 
 
 ## Updated 2019-06-27.
@@ -95,88 +149,4 @@ _koopa_assert_is_not_dir() {
         >&2 printf "Error: Directory already exists.\n%s\n" "$path"
         exit 1
     fi
-}
-
-
-
-## Detect activation of virtual environments.
-## Updated 2019-06-25.
-_koopa_has_no_environments() {
-    [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
-    [ -x "$(command -v deactivate)" ] && return 1
-    return 0
-}
-
-
-
-## Administrator (sudo) permission.
-## Currently performing a simple check by verifying wheel group.
-## - Darwin (macOS): admin
-## - Debian: sudo
-## - Fedora: wheel
-## Updated 2019-06-19.
-_koopa_has_sudo() {
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
-}
-
-
-
-## Updated 2019-06-22.
-_koopa_is_darwin() {
-    [ "$(uname -s)" = "Darwin" ]
-}
-
-
-
-## Updated 2019-06-21.
-_koopa_is_interactive() {
-    echo "$-" | grep -q "i"
-}
-
-
-
-## Updated 2019-06-27.
-_koopa_is_installed() {
-    local program
-    program="$1"
-    _koopa_quiet_which "$program"
-}
-
-
-
-## Updated 2019-06-21.
-_koopa_is_linux() {
-    [ "$(uname -s)" = "Linux" ]
-}
-
-
-
-## Updated 2019-06-24.
-_koopa_is_linux_debian() {
-    [ -f /etc/os-release ] || return 1
-    grep "ID="      /etc/os-release | grep -q "debian" ||
-    grep "ID_LIKE=" /etc/os-release | grep -q "debian"
-}
-
-
-
-## Updated 2019-06-24.
-_koopa_is_linux_fedora() {
-    [ -f /etc/os-release ] || return 1
-    grep "ID="      /etc/os-release | grep -q "fedora" ||
-    grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
-}
-
-
-
-## Updated 2019-06-21.
-_koopa_is_login_bash() {
-    [ "$0" = "-bash" ]
-}
-
-
-
-## Updated 2019-06-21.
-_koopa_is_login_zsh() {
-    [ "$0" = "-zsh" ]
 }

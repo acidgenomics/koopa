@@ -5,9 +5,11 @@
 
 ## It's no longer recommended to directly export conda in `$PATH`.
 ## Instead source the `activate` script.
-## ## Note that this code will attempt to locate the installation automatically,
+##
+## Note that this code will attempt to locate the installation automatically,
 ## unless `$CONDA_EXE` is set.
-## ## Note that an environment will only be activated when `$CONDA_DEFAULT_ENV` is
+##
+## Note that an environment will only be activated when `$CONDA_DEFAULT_ENV` is
 ## set prior to running this code. Attempts to activate "base" will be ignored.
 
 ## Conda doesn't currently support ksh, and fish support is buggy.

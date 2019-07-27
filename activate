@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## Activate koopa.
-## Updated 2019-07-26.
+## Updated 2019-07-27.
 
 ## SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 ## mode when using `[` instead of `[[`.
@@ -109,9 +109,11 @@ unset -f usage
 
 ## Fake realpath support, if necessary.
 ## Note that `readlink -f` doesn't work on macOS.
-## ## See also:
+##
+## See also:
 ## - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-## ## Modified 2019-06-26.
+##
+## Modified 2019-06-26.
 if ! command -v realpath >/dev/null
 then
     realpath() {
@@ -183,12 +185,13 @@ activate_dir="${KOOPA_HOME}/system/activate"
 
 exports_dir="${activate_dir}/exports"
 ## shellcheck source=/dev/null
-. "${exports_dir}/path.sh"
-## shellcheck source=/dev/null
 . "${exports_dir}/xdg-base-directory.sh"
+## shellcheck source=/dev/null
+. "${exports_dir}/path.sh"
 ## shellcheck source=/dev/null
 . "${exports_dir}/general.sh"
 unset -v exports_dir
+_koopa_update_xdg_config
 
 
 
