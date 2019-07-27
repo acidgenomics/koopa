@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ## Install koopa.
-## Updated 2019-07-26.
+## Updated 2019-07-27.
 
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
@@ -189,3 +189,13 @@ then
     ## shellcheck source=system/uninstall/dotfiles-legacy.sh
     source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 fi
+
+
+
+## Additional scripts                                                       {{{1
+## =============================================================================
+
+## Configure Mike's dotfiles.
+## shellcheck source=system/install/scripts-mike.sh
+[[ "${mike:-}" -eq 1 ]] &&
+    source "${KOOPA_HOME}/system/install/scripts-mike.sh"
