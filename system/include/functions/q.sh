@@ -1,9 +1,6 @@
 #!/bin/sh
 ## shellcheck disable=SC2039
 
-## Quiet variants
-## Updated 2019-06-20.
-
 
 
 _koopa_quiet_cd() {
