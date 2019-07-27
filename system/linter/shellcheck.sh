@@ -6,15 +6,13 @@ set -Eeu -o pipefail
 
 path="${1:-$KOOPA_HOME}"
 
-# Legacy method:
-# > find "$path" -name "*.sh" -exec shellcheck {} \;
-
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
+
 grep -Elr \
     --binary-files="without-match" \
     --exclude="fixme-comments.sh" \
-     --exclude-dir=".git" \
+    --exclude-dir=".git" \
     --exclude-dir="${KOOPA_HOME}/cellar" \
     --exclude-dir="${KOOPA_HOME}/conda" \
     --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/doom.d" \
