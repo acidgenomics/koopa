@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Get version stored internally in versions.txt file.
-## Updated 2019-06-27.
+# Get version stored internally in versions.txt file.
+# Updated 2019-06-27.
 _koopa_variable() {
     local what
     local file

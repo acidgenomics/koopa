@@ -1,9 +1,9 @@
 #!/bin/sh
 
-## Include bcbio toolkit binaries in PATH, if defined.
-## Updated 2019-06-25.
+# Include bcbio toolkit binaries in PATH, if defined.
+# Updated 2019-06-25.
 
-## Attempt to locate bcbio installation automatically on supported platforms.
+# Attempt to locate bcbio installation automatically on supported platforms.
 
 if [ -z "${BCBIO_EXE:-}" ]
 then
@@ -20,15 +20,15 @@ then
     unset -v host
 fi
 
-## Export in PATH, if accessible.
+# Export in PATH, if accessible.
 if [ -x "$BCBIO_EXE" ]
 then
     export BCBIO_EXE
     unset -v PYTHONHOME PYTHONPATH
     bin_dir="$(dirname "$BCBIO_EXE")"
-    ## Exporting at the end of PATH so we don't mask gcc or R.
-    ## This is particularly important to avoid unexpected compilation issues
-    ## due to compilers in conda masking the system versions.
+    # Exporting at the end of PATH so we don't mask gcc or R.
+    # This is particularly important to avoid unexpected compilation issues
+    # due to compilers in conda masking the system versions.
     _koopa_force_add_to_path_end "$bin_dir"
     unset -v bin_dir
 else

@@ -1,11 +1,11 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Symlink cellar into build directory.
-## e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
-## Updated 2019-06-27.
+# Symlink cellar into build directory.
+# e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
+# Updated 2019-06-27.
 _koopa_link_cellar() {
     local name
     local version
@@ -27,8 +27,8 @@ _koopa_link_cellar() {
 
 
 
-## Experimental: may not work well on all systems.
-## Updated 2019-06-27.
+# Experimental: may not work well on all systems.
+# Updated 2019-06-27.
 _koopa_link_conda_env() {
     local env_name
     local env_prefix
@@ -55,8 +55,8 @@ _koopa_link_conda_env() {
 
 
 
-## Used by `koopa info`.
-## Updated 2019-07-09.
+# Used by `koopa info`.
+# Updated 2019-07-09.
 _koopa_locate() {
     local command
     local name

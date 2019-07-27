@@ -1,5 +1,5 @@
-## Koopa internal versions.
-## Updated 2019-07-26.
+# Koopa internal versions.
+# Updated 2019-07-26.
 
 
 
@@ -34,16 +34,16 @@ tmux="2.9a"
 vim="8.1.1577"
 zsh="5.7.1"
 
-## Can't update these easily.
+# Can't update these easily.
 pandoc="2.7.3"
 tex="2017"
 
 
 
-## Bundles                                                                   {{{1
-## ==============================================================================
+# Bundles                                                                   {{{1
+# ==============================================================================
 
-## GnuPG
+# GnuPG
 gpg="2.2.16"
 libassuan="2.5.3"
 libgcrypt="1.8.4"
@@ -54,41 +54,41 @@ pinentry="1.1.0"
 
 
 
-## Legacy pinnings                                                           {{{1
-## ==============================================================================
+# Legacy pinnings                                                           {{{1
+# ==============================================================================
 
-## Latest version compatible with Ensembl Perl API.
+# Latest version compatible with Ensembl Perl API.
 perl="5.26.3"
 
 
 
-## Genomes                                                                   {{{1
-## ==============================================================================
+# Genomes                                                                   {{{1
+# ==============================================================================
 
-## Ensembl
-## https://useast.ensembl.org/
+# Ensembl
+# https://useast.ensembl.org/
 ensembl_release_date="2019-04"
 ensembl_release_version="96"
 
-## GENCODE
-## https://www.gencodegenes.org/
-## Note that they use British dates (DD-MM-YY).
+# GENCODE
+# https://www.gencodegenes.org/
+# Note that they use British dates (DD-MM-YY).
 gencode_release_date="2019-04-08"
 gencode_human_release_version="30"
 gencode_mouse_release_version="M21"
 
-## RefSeq
-## https://www.ncbi.nlm.nih.gov/refseq/
+# RefSeq
+# https://www.ncbi.nlm.nih.gov/refseq/
 refseq_release_date="2019-05-17"
 refseq_release_version="94"
 
-## FlyBase
-## Support for this may be removed in the future, due to paywall.
-## ftp://ftp.flybase.net/releases
-## https://flybase.org/cgi-bin/get_static_page.pl?file=release_notes.html
+# FlyBase
+# Support for this may be removed in the future, due to paywall.
+# ftp://ftp.flybase.net/releases
+# https://flybase.org/cgi-bin/get_static_page.pl?file=release_notes.html
 flybase_release_date="2019-03"
 flybase_release_version="6.28"
 
-## WormBase
-## https://wormbase.org/about/release_schedule
+# WormBase
+# https://wormbase.org/about/release_schedule
 wormbase_release_version="WS270"

@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Add both `bin/` and `sbin/` to PATH.
-## Updated 2019-06-27.
+# Add both `bin/` and `sbin/` to PATH.
+# Updated 2019-06-27.
 _koopa_add_bins_to_path() {
     local relpath
     local prefix
@@ -17,7 +17,7 @@ _koopa_add_bins_to_path() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_add_conda_env_to_path() {
     local env_name
     local env_list
@@ -38,7 +38,7 @@ _koopa_add_conda_env_to_path() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_add_to_path_end() {
     local dir
     dir="$1"
@@ -49,7 +49,7 @@ _koopa_add_to_path_end() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_add_to_path_start() {
     local dir
     dir="$1"
@@ -60,7 +60,7 @@ _koopa_add_to_path_start() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_assert_has_no_environments() {
     if ! _koopa_has_no_environments
     then
@@ -71,7 +71,7 @@ _koopa_assert_has_no_environments() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_assert_has_sudo() {
     if ! _koopa_has_sudo
     then
@@ -81,7 +81,7 @@ _koopa_assert_has_sudo() {
 }
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_assert_is_darwin() {
     if ! _koopa_is_darwin
     then
@@ -92,7 +92,7 @@ _koopa_assert_is_darwin() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_assert_is_installed() {
     local program
     program="$1"
@@ -105,7 +105,7 @@ _koopa_assert_is_installed() {
 
 
 
-## Updated 2019-06-27.
+# Updated 2019-06-27.
 _koopa_assert_is_linux() {
     if ! _koopa_is_linux
     then
@@ -116,7 +116,7 @@ _koopa_assert_is_linux() {
 
 
 
-## Updated 2019-06-24.
+# Updated 2019-06-24.
 _koopa_assert_is_linux_debian() {
     if ! _koopa_is_linux_debian
     then
@@ -127,7 +127,7 @@ _koopa_assert_is_linux_debian() {
 
 
 
-## Updated 2019-06-24.
+# Updated 2019-06-24.
 _koopa_assert_is_linux_fedora() {
     if ! _koopa_is_linux_fedora
     then
@@ -138,12 +138,12 @@ _koopa_assert_is_linux_fedora() {
 
 
 
-## Check if directory already exists.
-## Updated 2019-06-27.
+# Check if directory already exists.
+# Updated 2019-06-27.
 _koopa_assert_is_not_dir() {
     local path
     path="$1"
-    ## Error on existing installation.
+    # Error on existing installation.
     if [ -d "$path" ]
     then
         >&2 printf "Error: Directory already exists.\n%s\n" "$path"

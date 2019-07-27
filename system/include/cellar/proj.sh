@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-## Install PROJ.
-## Updated 2019-07-26.
+# Install PROJ.
+# Updated 2019-07-26.
 
-## See also:
-## - https://proj.org/
-## - https://github.com/OSGeo/PROJ/
+# See also:
+# - https://proj.org/
+# - https://github.com/OSGeo/PROJ/
 
 _koopa_assert_has_no_environments
 

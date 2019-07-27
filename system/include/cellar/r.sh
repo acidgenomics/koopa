@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-## Install R.
-## Updated 2019-06-25.
+# Install R.
+# Updated 2019-06-25.
 
-## See also:
-## - https://www.r-project.org/
-## - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
-## - https://community.rstudio.com/t/compiling-r-from-source-in-opt-r/14666
-## - https://superuser.com/questions/841270/installing-r-on-rhel-7
-## - https://github.com/rstudio/rmarkdown/issues/359
-## - http://pj.freefaculty.org/blog/?p=315
+# See also:
+# - https://www.r-project.org/
+# - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
+# - https://community.rstudio.com/t/compiling-r-from-source-in-opt-r/14666
+# - https://superuser.com/questions/841270/installing-r-on-rhel-7
+# - https://github.com/rstudio/rmarkdown/issues/359
+# - http://pj.freefaculty.org/blog/?p=315
 
 _koopa_assert_has_no_environments
 
@@ -21,16 +21,16 @@ build_os_string="$(koopa build-os-string)"
 exe_file="${prefix}/bin/${name}"
 
 major_version="$(echo "$version" | cut -d "." -f 1)"
-## > minor_version="$(echo "$version" | cut -d "." -f 2-)"
+# > minor_version="$(echo "$version" | cut -d "." -f 2-)"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    ## R will warn if R_HOME environment variable is set.
+    # R will warn if R_HOME environment variable is set.
     unset -v R_HOME
 
-    ## Fix for reg-tests-1d.R error, due to unset TZ variable.
-    ## https://stackoverflow.com/questions/46413691
+    # Fix for reg-tests-1d.R error, due to unset TZ variable.
+    # https://stackoverflow.com/questions/46413691
     export TZ="America/New_York"
 
     rm -rf "$tmp_dir"
@@ -59,12 +59,12 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -rf "$tmp_dir"
 )
 
-## We need to run this first to pick up R_HOME correctly.
+# We need to run this first to pick up R_HOME correctly.
 link-cellar "$name" "$version"
 
 _koopa_update_r_config
 
-## Run again to ensure R site config files propagate correctly.
+# Run again to ensure R site config files propagate correctly.
 link-cellar "$name" "$version"
 
 command -v "$exe_file"

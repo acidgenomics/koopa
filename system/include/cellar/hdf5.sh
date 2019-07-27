@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-## Install HDF5.
-## Updated 2019-06-25.
+# Install HDF5.
+# Updated 2019-06-25.
 
-## See also:
-## - https://www.hdfgroup.org/downloads/hdf5/
-## - https://support.hdfgroup.org/ftp/HDF5/releases
+# See also:
+# - https://www.hdfgroup.org/downloads/hdf5/
+# - https://support.hdfgroup.org/ftp/HDF5/releases
 
-## Note that website requires registration.
+# Note that website requires registration.
 
 _koopa_assert_has_no_environments
 
@@ -37,7 +37,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --enable-cxx \
         --enable-fortran
     make --jobs="$CPU_COUNT"
-    ## > make check
+    # > make check
     make install
     rm -rf "$tmp_dir"
 )

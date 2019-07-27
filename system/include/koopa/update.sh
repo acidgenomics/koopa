@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Update koopa installation.
-## Updated 2019-06-27.
+# Update koopa installation.
+# Updated 2019-06-27.
 
 rm -rf "${KOOPA_HOME}/dotfiles"
 

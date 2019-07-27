@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-## Show koopa installation information (in a box).
-## Updated 2019-06-22.
+# Show koopa installation information (in a box).
+# Updated 2019-06-22.
 
 array=()
 array+=("$(koopa --version)")

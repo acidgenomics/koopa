@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-## Mike-specific scripts.
-## Updated 2019-07-27.
+# Mike-specific scripts.
+# Updated 2019-07-27.
 
 private_dir="$(koopa config-dir)/scripts-private"
 if [[ ! -d "$private_dir" ]]

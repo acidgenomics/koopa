@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## Install Tmux terminal multiplexer.
-## Updated 2019-06-25.
+# Install Tmux terminal multiplexer.
+# Updated 2019-06-25.
 
-## See also:
-## - https://github.com/tmux/tmux
+# See also:
+# - https://github.com/tmux/tmux
 
 _koopa_assert_has_no_environments
 

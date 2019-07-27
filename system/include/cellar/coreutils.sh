@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## Install GNU core utilities.
-## Updated 2019-06-25.
+# Install GNU core utilities.
+# Updated 2019-06-25.
 
-## See also:
-## - https://ftp.gnu.org/gnu/coreutils/
+# See also:
+# - https://ftp.gnu.org/gnu/coreutils/
 
 _koopa_assert_has_no_environments
 
@@ -28,7 +28,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
-    ## > make check
+    # > make check
     make install
     rm -rf "$tmp_dir"
 )
