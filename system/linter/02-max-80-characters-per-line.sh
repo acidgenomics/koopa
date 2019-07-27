@@ -7,15 +7,20 @@ set -Eeu -o pipefail
 # Returns with `true` or `false` exit codes.
 
 path="${1:-$KOOPA_HOME}"
+dotfiles_dir="${KOOPA_HOME}/system/config/dotfiles"
 
 hits="$( \
     grep -Er \
         --binary-files="without-match" \
+        --exclude="*.md" \
         --exclude-dir=".git" \
+        --exclude-dir="${dotfiles_dir}/doom.d" \
+        --exclude-dir="${dotfiles_dir}/dracula" \
+        --exclude-dir="${dotfiles_dir}/os/darwin/terminal" \
+        --exclude-dir="${dotfiles_dir}/vim" \
         --exclude-dir="${KOOPA_HOME}/cellar" \
         --exclude-dir="${KOOPA_HOME}/conda" \
-        --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/doom.d" \
-        --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/vim" \
+        --exclude-dir="${KOOPA_HOME}/system/activate/shell/zsh/fpath" \
         "^[^\n]{81}" \
         "$path" | \
         sort || echo "" \
