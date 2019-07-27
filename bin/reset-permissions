@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Reset file permissions to match umask.
-## Updated 2019-06-23.
+# Reset file permissions to match umask.
+# Updated 2019-06-23.
 
-## Currently recommending umask 0002 as default.
+# Currently recommending umask 0002 as default.
 
 user="$(id -u)"
 group="$(id -g)"
 
-## SC2035: Use ./*glob* or -- *glob* so names with dashes won't become options.
+# SC2035: Use ./*glob* or -- *glob* so names with dashes won't become options.
 chown -R "${user}:${group}" -- *
 
 find . -type d -print0 | \

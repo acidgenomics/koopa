@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## FASTQ dump from Sequence Read Archive (SRA) accession list.
-## Updated 2019-06-23.
+# FASTQ dump from Sequence Read Archive (SRA) accession list.
+# Updated 2019-06-23.
 
-## Consider using --`split-3` instead of `--split-files` by default.
+# Consider using --`split-3` instead of `--split-files` by default.
 
-## 10X Genomics Cell Ranger data
-## https://kb.10xgenomics.com/hc/en-us/articles/115003802691
+# 10X Genomics Cell Ranger data
+# https://kb.10xgenomics.com/hc/en-us/articles/115003802691
 
 _koopa_assert_is_installed fastq-dump
 
@@ -20,11 +20,11 @@ then
     exit 1
 fi
 
-## This loops across an SRA accession list.
-## id: Accession ID.
-## Note that this will skip FASTQ files that have already been extracted.
-## This is useful because fastq-dump can take a long time and get interrupted.
-## SC2162: read without -r will mangle backslashes.
+# This loops across an SRA accession list.
+# id: Accession ID.
+# Note that this will skip FASTQ files that have already been extracted.
+# This is useful because fastq-dump can take a long time and get interrupted.
+# SC2162: read without -r will mangle backslashes.
 while read -r id
 do
     if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Reset fork to upstream.
-## Updated 2019-06-23.
+# Reset fork to upstream.
+# Updated 2019-06-23.
 
-## See also:
-## - https://stackoverflow.com/questions/42332769
+# See also:
+# - https://stackoverflow.com/questions/42332769
 
 git checkout master
 git fetch upstream
 
-## This will delete all your local changes to master.
+# This will delete all your local changes to master.
 git reset --hard upstream/master
 
-## Take care, this will delete all your changes on your forked master.
+# Take care, this will delete all your changes on your forked master.
 git push origin master --force

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Install Doom Emacs.
-## Updated 2019-06-23.
+# Install Doom Emacs.
+# Updated 2019-06-23.
 
 if [[ -d ".emacs.d" ]]
 then
