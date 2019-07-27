@@ -132,7 +132,6 @@ _koopa_update_shells() {
 
 
 
-# FIXME Use internal functions here instead, in case we put before PATH.
 # Update XDG configuration.
 # ~/.config/koopa
 # Updated 2019-07-12.
