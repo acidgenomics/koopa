@@ -16,8 +16,7 @@ jobs:
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './system/linter/fixme-comments.sh'
-        - bash -c './system/linter/shellcheck.sh'
+        - bash -c './system/linter.sh'
     - stage: test
       name: "macos"
       os: osx
