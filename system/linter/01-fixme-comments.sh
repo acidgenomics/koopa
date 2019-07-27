@@ -28,9 +28,10 @@ hits="$( \
 
 if [[ -n "$hits" ]]
 then
-    printf "FIXME/TODO comments detected.\n"
+    printf "FAIL | %s\n" "$(basename "$0")"
     echo "$hits"
     exit 1
 else
+    printf "  OK | %s\n" "$(basename "$0")"
     exit 0
 fi
