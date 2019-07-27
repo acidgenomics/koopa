@@ -20,3 +20,6 @@ grep -Elr \
     '^#!/.*\b(ba)?sh\b$' \
     "$path" | \
     xargs -I {} shellcheck -x {}
+
+printf "  OK | %s\n" "$(basename "$0")"
+exit 0
