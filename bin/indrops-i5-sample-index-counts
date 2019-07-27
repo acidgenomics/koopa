@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## inDrops sample barcode counts from i5 indexes.
-## Updated 2019-06-23.
+# inDrops sample barcode counts from i5 indexes.
+# Updated 2019-06-23.
 
-## See also:
-## - https://iccb.med.harvard.edu/single-cell-core
+# See also:
+# - https://iccb.med.harvard.edu/single-cell-core
 
-## Thanks to @roryk for this script.
+# Thanks to @roryk for this script.
 
 gzip -cd ./*_R3.fastq.gz | \
     head -1000000 | \

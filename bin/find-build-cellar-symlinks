@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Find build cellar symbolic links.
-## Updated 2019-06-26.
+# Find build cellar symbolic links.
+# Updated 2019-06-26.
 
 name="$1"
 version="$2"
@@ -24,12 +24,12 @@ done < <( \
     -print0
 )
 
-## Sort the array.
+# Sort the array.
 IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
 unset IFS
 
 for file in "${array[@]}"
 do
-    ## Replace the cellar prefix with our build prefix.
+    # Replace the cellar prefix with our build prefix.
     echo "${file//$cellar_prefix/$build_prefix}"
 done

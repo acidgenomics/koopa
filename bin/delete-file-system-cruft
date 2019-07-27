@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Remove file system cruft.
-## Updated 2019-06-23.
+# Remove file system cruft.
+# Updated 2019-06-23.
 
 path="${1:-.}"
 
