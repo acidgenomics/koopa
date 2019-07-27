@@ -15,8 +15,8 @@ grep -Elr \
     --exclude-dir=".git" \
     --exclude-dir="${KOOPA_HOME}/cellar" \
     --exclude-dir="${KOOPA_HOME}/conda" \
-    --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/doom.d" \
-    --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/vim" \
+    --exclude-dir="${KOOPA_HOME}/system/activate/shell/zsh/fpath" \
+    --exclude-dir="${KOOPA_HOME}/system/config/dotfiles" \
     '^#!/.*\b(ba)?sh\b$' \
     "$path" | \
     xargs -I {} shellcheck -x {}
