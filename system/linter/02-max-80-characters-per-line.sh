@@ -28,9 +28,10 @@ hits="$( \
 
 if [[ -n "$hits" ]]
 then
-    printf "Lines exceeding 80 characters detected.\n"
+    printf "FAIL | %s\n" "$(basename "$0")"
     echo "$hits"
     exit 1
 else
+    printf "  OK | %s\n" "$(basename "$0")"
     exit 0
 fi
