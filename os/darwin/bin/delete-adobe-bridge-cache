@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+## Delete Adobe Bridge cache files.
+## Updated 2019-07-27.
+
+find . -type f -name ".BridgeCache" -delete
+find . -type f -name ".BridgeCacheT" -delete
