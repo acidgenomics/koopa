@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Install dot files.
-## Updated 2019-06-23.
+# Install dot files.
+# Updated 2019-06-23.
 
 dotfile --force Rprofile
 dotfile --force bash_profile
@@ -16,7 +16,7 @@ dotfile --force zshrc
 host_type="$(koopa host-type)"
 os_type="$(koopa os-type)"
 
-## R
+# R
 if [[ "$os_type" == "darwin" ]]
 then
     dotfile --force os/darwin/R

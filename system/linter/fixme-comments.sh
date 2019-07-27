@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-## Find FIXME and TODO comments.
-## Updated 2019-07-10.
+# Find FIXME and TODO comments.
+# Updated 2019-07-10.
 
-## Returns with `true` or `false` exit codes.
+# Returns with `true` or `false` exit codes.
 
 path="${1:-$PWD}"
 

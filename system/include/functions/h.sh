@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Detect activation of virtual environments.
-## Updated 2019-06-25.
+# Detect activation of virtual environments.
+# Updated 2019-06-25.
 _koopa_has_no_environments() {
     [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
     [ -x "$(command -v deactivate)" ] && return 1
@@ -13,20 +13,20 @@ _koopa_has_no_environments() {
 
 
 
-## Administrator (sudo) permission.
-## Currently performing a simple check by verifying wheel group.
-## - Darwin (macOS): admin
-## - Debian: sudo
-## - Fedora: wheel
-## Updated 2019-06-19.
+# Administrator (sudo) permission.
+# Currently performing a simple check by verifying wheel group.
+# - Darwin (macOS): admin
+# - Debian: sudo
+# - Fedora: wheel
+# Updated 2019-06-19.
 _koopa_has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
 
 
-## Source script header.
-## Updated 2019-06-27.
+# Source script header.
+# Updated 2019-06-27.
 _koopa_header() {
     local path
 
@@ -59,7 +59,7 @@ EOF
     fi
     
     case "$1" in
-        ## shell
+        # shell
         bash)
             path="${KOOPA_HOME}/shell/bash/include/header.sh"
             ;;
@@ -67,7 +67,7 @@ EOF
             path="${KOOPA_HOME}/shell/zsh/include/header.sh"
             ;;
 
-        ## os
+        # os
         darwin)
             path="${KOOPA_HOME}/os/darwin/include/header.sh"
             ;;
@@ -87,7 +87,7 @@ EOF
                     path="${KOOPA_HOME}/os/amzn/include/header.sh"
                     ;;
 
-        ## host
+        # host
         azure)
             path="${KOOPA_HOME}/host/azure/include/header.sh"
             ;;
@@ -109,20 +109,20 @@ EOF
 
 
 
-## Simple host type name string to load up host-specific scripts.
-## Currently intended support AWS, Azure, and Harvard clusters.
-## Updated 2019-06-27.
+# Simple host type name string to load up host-specific scripts.
+# Currently intended support AWS, Azure, and Harvard clusters.
+# Updated 2019-06-27.
 _koopa_host_type() {
     local name
     case "$(hostname -f)" in
-        ## VMs
+        # VMs
         *.ec2.internal)
             name="aws"
             ;;
         azlabapp*)
             name="azure"
             ;;
-        ## HPCs
+        # HPCs
         *.o2.rc.hms.harvard.edu)
             name="harvard-o2"
             ;;

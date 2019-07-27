@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Update dynamic linker (LD) configuration.
-## Updated 2019-07-10.
+# Update dynamic linker (LD) configuration.
+# Updated 2019-07-10.
 _koopa_update_ldconfig() {
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -23,9 +23,9 @@ _koopa_update_ldconfig() {
         return 1
     fi
     
-    ## Create symlinks with "koopa-" prefix.
-    ## Note that we're using shell globbing here.
-    ## https://unix.stackexchange.com/questions/218816
+    # Create symlinks with "koopa-" prefix.
+    # Note that we're using shell globbing here.
+    # https://unix.stackexchange.com/questions/218816
     printf "Updating ldconfig in '/etc/ld.so.conf.d/'.\n"
     local source_file
     local dest_file
@@ -40,8 +40,8 @@ _koopa_update_ldconfig() {
 
 
 
-## Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-## Updated 2019-06-27.
+# Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
+# Updated 2019-06-27.
 _koopa_update_profile() {
     local file
 
@@ -58,17 +58,17 @@ _koopa_update_profile() {
     sudo bash -c "cat << EOF > $file
 #!/bin/sh
 
-## koopa shell
-## https://github.com/acidgenomics/koopa
-## shellcheck source=/dev/null
+# koopa shell
+# https://github.com/acidgenomics/koopa
+# shellcheck source=/dev/null
 . ${KOOPA_HOME}/activate
 EOF"
 }
 
 
 
-## Add shared R configuration symlinks in `${R_HOME}/etc`.
-## Updated 2019-07-10.
+# Add shared R configuration symlinks in `${R_HOME}/etc`.
+# Updated 2019-07-10.
 _koopa_update_r_config() {
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
@@ -76,13 +76,13 @@ _koopa_update_r_config() {
     local r_home
     r_home="$(_koopa_r_home)"
 
-    ## > local version
-    ## > version="$( \
-    ## >     R --version | \
-    ## >     head -n 1 | \
-    ## >     cut -d ' ' -f 3 | \
-    ## >     grep -Eo "^[0-9]+\.[0-9]+"
-    ## > )"
+    # > local version
+    # > version="$( \
+    # >     R --version | \
+    # >     head -n 1 | \
+    # >     cut -d ' ' -f 3 | \
+    # >     grep -Eo "^[0-9]+\.[0-9]+"
+    # > )"
 
     printf "Updating '%s'.\n" "$r_home"
 
@@ -110,8 +110,8 @@ _koopa_update_r_config() {
 
 
 
-## Update shell configuration.
-## Updated 2019-06-27.
+# Update shell configuration.
+# Updated 2019-06-27.
 _koopa_update_shells() {
     local shell
     local shell_file
@@ -132,10 +132,10 @@ _koopa_update_shells() {
 
 
 
-## FIXME Use internal functions here instead, in case we put before PATH.
-## Update XDG configuration.
-## ~/.config/koopa
-## Updated 2019-07-12.
+# FIXME Use internal functions here instead, in case we put before PATH.
+# Update XDG configuration.
+# ~/.config/koopa
+# Updated 2019-07-12.
 _koopa_update_xdg_config() {
     local config_dir
     config_dir="$(koopa config-dir)"

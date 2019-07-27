@@ -1,9 +1,9 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Updated 2019-06-25.
+# Updated 2019-06-25.
 _koopa_os_type() {
     local name
     if _koopa_is_darwin
@@ -15,7 +15,7 @@ _koopa_os_type() {
             awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
             tr -d '"' \
         )"
-	## Include the major release version for RHEL.
+	# Include the major release version for RHEL.
 	if [ "$name" = "rhel" ]
 	then
         major_version="$( \
@@ -33,7 +33,7 @@ _koopa_os_type() {
 
 
 
-## Updated 2019-06-22.
+# Updated 2019-06-22.
 _koopa_os_version() {
     uname -r
 }

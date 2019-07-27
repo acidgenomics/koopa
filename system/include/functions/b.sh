@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Fix the group permissions on the build directory.
-## Updated 2019-06-26.
+# Fix the group permissions on the build directory.
+# Updated 2019-06-26.
 _koopa_build_chgrp() {
     local path
     local group
@@ -24,8 +24,8 @@ _koopa_build_chgrp() {
 
 
 
-## Create the build directory.
-## Updated 2019-06-20.
+# Create the build directory.
+# Updated 2019-06-20.
 _koopa_build_mkdir() {
     local path
     path="$1"
@@ -45,14 +45,12 @@ _koopa_build_mkdir() {
 
 
 
-## Build string for `make` configuration.
-## Use this for `configure --build` flag.
-##
-## - AWS:    x86_64-amzn-linux-gnu
-## - RedHat: x86_64-redhat-linux-gnu
-## - Darwin: x86_64-darwin15.6.0
-##
-## Updated 2019-07-09.
+# Build string for `make` configuration.
+# Use this for `configure --build` flag.
+# # - AWS:    x86_64-amzn-linux-gnu
+# - RedHat: x86_64-redhat-linux-gnu
+# - Darwin: x86_64-darwin15.6.0
+# # Updated 2019-07-09.
 _koopa_build_os_string() {
     local mach
     local os_type
@@ -65,9 +63,9 @@ _koopa_build_os_string() {
         string="${mach}-${OSTYPE}"
     elif _koopa_is_linux
     then
-        ## This will distinguish between RedHat, Amazon, and other distros
-        ## instead of just returning "linux". Note that we're substituting
-        ## "redhat" instead of "rhel" here, when applicable.
+        # This will distinguish between RedHat, Amazon, and other distros
+        # instead of just returning "linux". Note that we're substituting
+        # "redhat" instead of "rhel" here, when applicable.
         os_type="$(koopa os-type)"
         if echo "$os_type" | grep -q "rhel"
         then
@@ -81,8 +79,8 @@ _koopa_build_os_string() {
 
 
 
-## Return the installation prefix to use.
-## Updated 2019-06-27.
+# Return the installation prefix to use.
+# Updated 2019-06-27.
 _koopa_build_prefix() {
     local prefix
 
@@ -103,25 +101,25 @@ _koopa_build_prefix() {
 
 
 
-## Set the admin or regular user group automatically.
-## Updated 2019-07-09.
+# Set the admin or regular user group automatically.
+# Updated 2019-07-09.
 _koopa_build_prefix_group() {
     local group
 
-    ## Standard user.
+    # Standard user.
     ! _koopa_has_sudo && whoami && return 0
 
-    ## Administrator.
+    # Administrator.
     if groups | grep -Eq "\b(admin)\b"
     then
-        ## Darwin (macOS).
+        # Darwin (macOS).
         group="admin"
     elif groups | grep -Eq "\b(sudo)\b"
     then
-        ## Debian.
+        # Debian.
         group="sudo"
     else
-        ## Fedora.
+        # Fedora.
         group="wheel"
     fi
 
@@ -130,8 +128,8 @@ _koopa_build_prefix_group() {
 
 
 
-## Set permissions on program built from source.
-## Updated 2019-06-27.
+# Set permissions on program built from source.
+# Updated 2019-06-27.
 _koopa_build_set_permissions() {
     local path
     path="$1"

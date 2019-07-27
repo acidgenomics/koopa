@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-## Install htop.
-## Updated 2019-06-25.
+# Install htop.
+# Updated 2019-06-25.
 
-## See also:
-## - https://hisham.hm/htop/releases/
-## - https://github.com/hishamhm/htop
+# See also:
+# - https://hisham.hm/htop/releases/
+# - https://github.com/hishamhm/htop
 
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed python

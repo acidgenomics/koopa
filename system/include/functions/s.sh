@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Note that this isn't necessarily the default shell (`$SHELL`).
-## Updated 2019-06-27.
+# Note that this isn't necessarily the default shell (`$SHELL`).
+# Updated 2019-06-27.
 _koopa_shell() {
     local shell
     if [ -n "${BASH_VERSION:-}" ]

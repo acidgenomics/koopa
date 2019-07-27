@@ -1,15 +1,13 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Set JAVA_HOME environment variable.
-##
-## See also:
-## - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
-## - https://stackoverflow.com/questions/22290554
-##
-## Updated 2019-06-27.
+# Set JAVA_HOME environment variable.
+# # See also:
+# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
+# - https://stackoverflow.com/questions/22290554
+# # Updated 2019-06-27.
 _koopa_java_home() {
     local home
     local jvm_dir
