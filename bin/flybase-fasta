@@ -70,12 +70,30 @@ if type == "dna":
 elif type == "cdna":
     print("Downloading FlyBase FASTA files.")
     try:
-        subprocess.check_call(["wget", base_url + "/dmel-all-transcript-" + version + ".fasta.gz"])
-        subprocess.check_call(["wget", base_url + "/dmel-all-miRNA-"      + version + ".fasta.gz"])
-        subprocess.check_call(["wget", base_url + "/dmel-all-miscRNA-"    + version + ".fasta.gz"])
-        subprocess.check_call(["wget", base_url + "/dmel-all-ncRNA-"      + version + ".fasta.gz"])
-        subprocess.check_call(["wget", base_url + "/dmel-all-pseudogene-" + version + ".fasta.gz"])
-        subprocess.check_call(["wget", base_url + "/dmel-all-tRNA-"       + version + ".fasta.gz"])
+        subprocess.check_call([ \
+            "wget", \
+            base_url + "/dmel-all-transcript-" + version + ".fasta.gz" \
+        ])
+        subprocess.check_call([ \
+            "wget", \
+            base_url + "/dmel-all-miRNA-" + version + ".fasta.gz" \
+        ])
+        subprocess.check_call([ \
+            "wget", \
+            base_url + "/dmel-all-miscRNA-" + version + ".fasta.gz" \
+        ])
+        subprocess.check_call([ \
+            "wget", \
+            base_url + "/dmel-all-ncRNA-" + version + ".fasta.gz" \
+        ])
+        subprocess.check_call([ \
+            "wget", \
+            base_url + "/dmel-all-pseudogene-" + version + ".fasta.gz" \
+        ])
+        subprocess.check_call([ \
+            "wget", \
+            base_url + "/dmel-all-tRNA-" + version + ".fasta.gz" \
+        ])
     except subprocess.CalledProcessError as e:
         print(e)
         sys.exit(1)
