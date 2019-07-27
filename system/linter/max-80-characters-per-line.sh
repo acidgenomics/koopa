@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Find FIXME and TODO comments.
+# Find lines containing more than 80 characters.
 # Updated 2019-07-27.
 
 # Returns with `true` or `false` exit codes.
@@ -11,20 +11,19 @@ path="${1:-$KOOPA_HOME}"
 hits="$( \
     grep -Er \
         --binary-files="without-match" \
-        --exclude="fixme-comments.sh" \
         --exclude-dir=".git" \
         --exclude-dir="${KOOPA_HOME}/cellar" \
         --exclude-dir="${KOOPA_HOME}/conda" \
         --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/doom.d" \
         --exclude-dir="${KOOPA_HOME}/system/config/dotfiles/vim" \
-        "\b(FIXME|TODO)\b" \
+        "^[^\n]{81}" \
         "$path" | \
         sort || echo "" \
 )"
 
 if [[ -n "$hits" ]]
 then
-    printf "FIXME/TODO comments detected.\n"
+    printf "Lines exceeding 80 characters detected.\n"
     echo "$hits"
     exit 1
 else
