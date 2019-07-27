@@ -16,7 +16,7 @@ jobs:
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './system/linter.sh'
+        - bash -c './linter'
     - stage: test
       name: "macos"
       os: osx
