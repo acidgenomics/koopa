@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Recursively download a directory using wget.
-## Updated 2019-06-23.
+# Recursively download a directory using wget.
+# Updated 2019-06-23.
 
 _koopa_assert_is_installed wget
 
 url="$1"
 user="$2"
 
-## Note that we need to escape the wildcards in the password.
-## For direct input, can just use single quotes to escape.
-## See also:
-## - https://unix.stackexchange.com/questions/379181
+# Note that we need to escape the wildcards in the password.
+# For direct input, can just use single quotes to escape.
+# See also:
+# - https://unix.stackexchange.com/questions/379181
 password="$3"
 password="${password@Q}"
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="wget-${timestamp}.log"
 
-## Potentially useful flags:
-## --background
-## --tries=10
+# Potentially useful flags:
+# --background
+# --tries=10
 
 wget \
     --user="$user" \

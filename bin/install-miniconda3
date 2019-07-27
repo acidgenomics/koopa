@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Install Miniconda.
-## Updated 2019-06-23.
+# Install Miniconda.
+# Updated 2019-06-23.
 
-## See also:
-## - https://conda.io/miniconda.html
+# See also:
+# - https://conda.io/miniconda.html
 
-## Useful script flags:
-## > bash Miniconda3-latest-Linux-x86_64.sh -h
-## -b           run install in batch mode (without manual intervention),
-##              it is expected the license terms are agreed upon
-## -f           no error if install prefix already exists
-## -h           print this help message and exit
-## -p PREFIX    install prefix, defaults to /home/ec2-user/miniconda3, must not contain spaces.
-## -s           skip running pre/post-link/install scripts
-## -u           update an existing installation
-## -t           run package tests after installation (may install conda-build)
+# Useful script flags:
+# > bash Miniconda3-latest-Linux-x86_64.sh -h
+# -b           run install in batch mode (without manual intervention),
+#              it is expected the license terms are agreed upon
+# -f           no error if install prefix already exists
+# -h           print this help message and exit
+# -p PREFIX    install prefix, defaults to /home/ec2-user/miniconda3, must not contain spaces.
+# -s           skip running pre/post-link/install scripts
+# -u           update an existing installation
+# -t           run package tests after installation (may install conda-build)
 
 _koopa_assert_has_no_environments
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Install spacemacs.
-## Updated 2019-06-25.
+# Install spacemacs.
+# Updated 2019-06-25.
 
 if [[ -d ".emacs.d" ]]
 then
@@ -16,5 +16,5 @@ git clone git@github.com:syl20bnr/spacemacs.git ~/.emacs.d
 
 emacs
 
-## Fix for org-projectile warning.
-## > rm -f ~/.emacs.d/elpa/org-projectile-*/org-projectile.elc
+# Fix for org-projectile warning.
+# > rm -f ~/.emacs.d/elpa/org-projectile-*/org-projectile.elc

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Sort lines using vim.
-## Updated 2019-06-23.
+# Sort lines using vim.
+# Updated 2019-06-23.
 
 _koopa_assert_is_installed vim
 

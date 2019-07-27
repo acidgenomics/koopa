@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Rename FASTQ ".fq" extension to ".fastq".
-## Updated 2019-06-23.
+# Rename FASTQ ".fq" extension to ".fastq".
+# Updated 2019-06-23.
 
 for file in ./*.fq; do
     mv "$file" "${file/%.fq/.fastq}"

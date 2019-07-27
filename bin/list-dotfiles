@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## List dotfiles.
-## Updated 2019-06-23.
+# List dotfiles.
+# Updated 2019-06-23.
 
 find_dotfiles() {
     local type="$1"

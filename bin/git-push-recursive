@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Push all repositories recursively.
-## Updated 2019-06-25.
+# Push all repositories recursively.
+# Updated 2019-06-25.
 
 git_dir="${1:-.}"
 
-## SC2044: For loops over find output are fragile.
-## Using `-L` flag here in case git dir is a symlink.
+# SC2044: For loops over find output are fragile.
+# Using `-L` flag here in case git dir is a symlink.
 while IFS= read -r -d '' repo
 do
     repo="$(dirname "$repo")"

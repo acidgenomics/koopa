@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Install recommended Perl release via perlbrew.
-## Updated 2019-06-24.
+# Install recommended Perl release via perlbrew.
+# Updated 2019-06-24.
 
-## See also:
-## https://perlbrew.pl/
+# See also:
+# https://perlbrew.pl/
 
-## Installation instructions:
-## - https://metacpan.org/pod/App::perlbrew
-## - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
+# Installation instructions:
+# - https://metacpan.org/pod/App::perlbrew
+# - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
 
 _koopa_assert_is_installed perlbrew
 _koopa_assert_has_no_environments

@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-## shellcheck source=/dev/null
+# shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-## Global find and replace in files using sed.
-## Updated 2019-06-23.
+# Global find and replace in files using sed.
+# Updated 2019-06-23.
 
 from="$1"
 to="$2"
 
-## Check for unescaped slashes.
+# Check for unescaped slashes.
 if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
 then
     >&2 printf "Error: Unescaped '/' detected: %s\n" "$from"

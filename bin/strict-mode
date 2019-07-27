@@ -1,67 +1,67 @@
 #!/bin/sh
 
-## Make shell stricter by default using set built-in.
-## Updated 2019-06-23.
+# Make shell stricter by default using set built-in.
+# Updated 2019-06-23.
 
-## See also:
-## - https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
-## - https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
-## - http://redsymbol.net/articles/unofficial-bash-strict-mode/
-## - https://github.com/anordal/shellharden/blob/master/how_to_do_things_safely_in_bash.md#how-to-begin-a-bash-script
-## - https://github.com/manubot/rootstock/pull/233
+# See also:
+# - https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+# - https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+# - http://redsymbol.net/articles/unofficial-bash-strict-mode/
+# - https://github.com/anordal/shellharden/blob/master/how_to_do_things_safely_in_bash.md#how-to-begin-a-bash-script
+# - https://github.com/manubot/rootstock/pull/233
 
-## NOTE: Do not attempt to use this in `~/.shrc` for a remote SSH server, as
-## unbound variables will cause the login to fail and you can get locked out.
-## Only attempt to ever enable this mode on a local machine, where you can
-## disable strict mode easily.
+# NOTE: Do not attempt to use this in `~/.shrc` for a remote SSH server, as
+# unbound variables will cause the login to fail and you can get locked out.
+# Only attempt to ever enable this mode on a local machine, where you can
+# disable strict mode easily.
 
-## For bash scripts, this one-liner can be placed under the shebang line. Take
-## out the `-E` flag for zsh.
-## > set -Eeu -o pipefail
+# For bash scripts, this one-liner can be placed under the shebang line. Take
+# out the `-E` flag for zsh.
+# > set -Eeu -o pipefail
 
 
 
-## Exit immediately when a command fails.
-## > set -e
+# Exit immediately when a command fails.
+# > set -e
 set -o errexit
 
-## Treat unset variables as an error and exit immediately.
-## NOTE: Bash <= 4.3 can have issues with this setting.
-## > set -u
+# Treat unset variables as an error and exit immediately.
+# NOTE: Bash <= 4.3 can have issues with this setting.
+# > set -u
 set -o nounset
 
-## The bash shell normally only looks at the exit code of the last command of a
-## pipeline. This behavior is not ideal as it causes the `-e` option to only be
-## able to act on the exit code of a pipeline's last command. This is where `-o
-## pipefail` comes in. This particular option sets the exit code of a pipeline
-## to that of the rightmost command to exit with a non-zero status, or to zero
-## if all commands of the pipeline exit successfully.
+# The bash shell normally only looks at the exit code of the last command of a
+# pipeline. This behavior is not ideal as it causes the `-e` option to only be
+# able to act on the exit code of a pipeline's last command. This is where `-o
+# pipefail` comes in. This particular option sets the exit code of a pipeline
+# to that of the rightmost command to exit with a non-zero status, or to zero
+# if all commands of the pipeline exit successfully.
 set -o pipefail
 
-## Print each command before executing. This command is great for scripts but
-## too noisy when added to bash_profile.
-## > set -x
+# Print each command before executing. This command is great for scripts but
+# too noisy when added to bash_profile.
+# > set -x
 set -o xtrace
 
 if [ "$(koopa shell)" = "bash" ]
 then
-    ## Catch ERR traps properly. These won't fire in certain scenarios when the
-    ## `-e` flag is set.
-    ## > set -E
+    # Catch ERR traps properly. These won't fire in certain scenarios when the
+    # `-e` flag is set.
+    # > set -E
     set -o errtrace
 fi
 
 
 
-## Globbing
-## http://tldp.org/LDP/abs/html/globbingref.html
-## - failglob: If  set, patterns which fail to match filenames during pathname
-##   expansion result in an expansion error.
-## - globstar: If set, the pattern ** used in a pathname expansion context will
-##   match all files and zero or more directories and subdirectories. If the
-##   pattern is followed by a /, only directories and subdirectories match.
-## - nullglob: If set, bash allows patterns which match no files (see Pathname
-##   Expansion above) to expand to a null string, rather than themselves.
-## > shopt -s failglob
-## > shopt -s globstar
-## > shopt -s nullglob
+# Globbing
+# http://tldp.org/LDP/abs/html/globbingref.html
+# - failglob: If  set, patterns which fail to match filenames during pathname
+#   expansion result in an expansion error.
+# - globstar: If set, the pattern ** used in a pathname expansion context will
+#   match all files and zero or more directories and subdirectories. If the
+#   pattern is followed by a /, only directories and subdirectories match.
+# - nullglob: If set, bash allows patterns which match no files (see Pathname
+#   Expansion above) to expand to a null string, rather than themselves.
+# > shopt -s failglob
+# > shopt -s globstar
+# > shopt -s nullglob
