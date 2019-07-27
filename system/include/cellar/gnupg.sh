@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-## Install GnuPG.
-## Updated 2019-06-25.
+# Install GnuPG.
+# Updated 2019-06-25.
 
-## See also:
-## - https://www.gnupg.org/
-## - https://www.gnupg.org/download/
-## - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
-## - https://github.com/gpg/gnupg/blob/master/INSTALL
-## - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
+# See also:
+# - https://www.gnupg.org/
+# - https://www.gnupg.org/download/
+# - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
+# - https://github.com/gpg/gnupg/blob/master/INSTALL
+# - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
 
 _koopa_assert_has_no_environments
 
@@ -21,7 +21,7 @@ exe_file="${prefix}/bin/gpg"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
-## Download GnuPG release signing keys.
+# Download GnuPG release signing keys.
 gpg --list-keys
 gpg --keyserver hkp://keyserver.ubuntu.com:80 \
     --recv-keys 249B39D24F25E3B6 \
@@ -147,8 +147,8 @@ link-cellar "$name" "$version"
 
 rm -rf "$tmp_dir"
 
-## Without the line below, gpg2 might fail to create / import secret keys.
-## > rm -rf ~/.gnugp
+# Without the line below, gpg2 might fail to create / import secret keys.
+# > rm -rf ~/.gnugp
 
 gpgconf --kill gpg-agent
 

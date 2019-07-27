@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-## Install Z shell.
-## Updated 2019-06-25.
+# Install Z shell.
+# Updated 2019-06-25.
 
-## See also:
-## - http://www.zsh.org/
-## - http://zsh.sourceforge.net/Arc/source.html
-## - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
+# See also:
+# - http://www.zsh.org/
+# - http://zsh.sourceforge.net/Arc/source.html
+# - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
 
 _koopa_assert_has_no_environments
 

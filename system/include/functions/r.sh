@@ -1,10 +1,10 @@
 #!/bin/sh
-## shellcheck disable=SC2039
+# shellcheck disable=SC2039
 
 
 
-## Get `R_HOME`, rather than exporting as global variable.
-## Updated 2019-06-27.
+# Get `R_HOME`, rather than exporting as global variable.
+# Updated 2019-06-27.
 _koopa_r_home() {
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
@@ -13,23 +13,20 @@ _koopa_r_home() {
 
 
 
-## Update rJava configuration.
-## The default Java path differs depending on the system.
-##
-## > R CMD javareconf -h
-##
-## Environment variables that can be used to influence the detection:
-##   JAVA           path to a Java interpreter executable
-##                  By default first 'java' command found on the PATH
-##                  is taken (unless JAVA_HOME is also specified).
-##   JAVA_HOME      home of the Java environment. If not specified,
-##                  it will be detected automatically from the Java
-##                  interpreter.
-##   JAVAC          path to a Java compiler
-##   JAVAH          path to a Java header/stub generator
-##   JAR            path to a Java archive tool
-##
-## Updated 2019-06-27.
+# Update rJava configuration.
+# The default Java path differs depending on the system.
+# # > R CMD javareconf -h
+# # Environment variables that can be used to influence the detection:
+#   JAVA           path to a Java interpreter executable
+#                  By default first 'java' command found on the PATH
+#                  is taken (unless JAVA_HOME is also specified).
+#   JAVA_HOME      home of the Java environment. If not specified,
+#                  it will be detected automatically from the Java
+#                  interpreter.
+#   JAVAC          path to a Java compiler
+#   JAVAH          path to a Java header/stub generator
+#   JAR            path to a Java archive tool
+# # Updated 2019-06-27.
 _koopa_r_javareconf() {
     local java_home
     local java_flags
@@ -61,18 +58,16 @@ _koopa_r_javareconf() {
         sudo R --vanilla CMD javareconf "${java_flags[@]}"
     fi
 
-    ## > Rscript -e 'install.packages("rJava")'
+    # > Rscript -e 'install.packages("rJava")'
 }
 
 
 
-## Look into an improved POSIX method here. This works for bash and ksh.
-## Note that this won't work on the first item in PATH.
-##
-## Alternate approach using sed:
-## > echo "$PATH" | sed "s|:${dir}||g"
-##
-## Updated 2019-07-10.
+# Look into an improved POSIX method here. This works for bash and ksh.
+# Note that this won't work on the first item in PATH.
+# # Alternate approach using sed:
+# > echo "$PATH" | sed "s|:${dir}||g"
+# # Updated 2019-07-10.
 _koopa_remove_from_path() {
     local dir
     dir="$1"
@@ -81,7 +76,7 @@ _koopa_remove_from_path() {
 
 
 
-## Updated 2019-06-21.
+# Updated 2019-06-21.
 _koopa_rsync_flags() {
     echo "--archive --copy-links --delete-before --human-readable --progress"
 }
