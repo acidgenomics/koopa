@@ -8,6 +8,6 @@ source "$(koopa header darwin)"
 
 _koopa_is_installed convmv
 
-## Use `-i` flag for interactive.
+# Use `-i` flag for interactive.
 
 convmv -r -f utf8 -t utf8 --nfc --notest .
