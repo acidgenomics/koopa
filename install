@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
-## Install koopa.
-## Updated 2019-07-27.
+# Install koopa.
+# Updated 2019-07-27.
 
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
-## shellcheck source=system/include/functions.sh
+# shellcheck source=system/include/functions.sh
 source "${KOOPA_HOME}/system/include/functions.sh"
 
 
 
-## Error on root user.
+# Error on root user.
 [[ "$(id -u)" -eq 0 ]] &&
     >&2 printf "Don't run this script as root.\n" &&
     return 1
 
 
-## Usage                                                                    {{{1
-## =============================================================================
+# Usage                                                                     {{{1
+# ==============================================================================
 
 usage() {
     cat << EOF
@@ -51,8 +51,8 @@ EOF
 
 
 
-## Parse arguments                                                          {{{1
-## =============================================================================
+# Parse arguments                                                           {{{1
+# ==============================================================================
 
 while (("$#"))
 do
@@ -96,18 +96,18 @@ fi
 
 
 
-## Remove legacy cruft                                                      {{{1
-## =============================================================================
+# Remove legacy cruft                                                       {{{1
+# ==============================================================================
 
 rm -rf "${KOOPA_HOME}/bin/"{host,os,sudo}
 rm -rf "${KOOPA_HOME}/"{config,dotfiles,include}
 
 
 
-## Shared user configuration                                                {{{1
-## =============================================================================
+# Shared user configuration                                                 {{{1
+# ==============================================================================
 
-## Checking for '/usr/local' installation automatically.
+# Checking for '/usr/local' installation automatically.
 if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
 then
     printf "\nShared installation detected at '%s'.\n" "$KOOPA_HOME"
@@ -121,8 +121,8 @@ fi
 
 
 
-## Initialize submodules                                                    {{{1
-## =============================================================================
+# Initialize submodules                                                     {{{1
+# ==============================================================================
 
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
@@ -132,7 +132,7 @@ then
         git submodule init
         git submodule update --init --recursive
         git submodule sync --recursive
-        ## Change remote from HTTPS to git for easier commits.
+        # Change remote from HTTPS to git for easier commits.
         if [[ -n "${devel:-}" ]]
         then
             git remote set-url origin git@github.com:acidgenomics/koopa.git
@@ -145,7 +145,7 @@ then
         git submodule init
         git submodule update --init --recursive
         git submodule sync --recursive
-        ## Change remote from HTTPS to git for easier commits.
+        # Change remote from HTTPS to git for easier commits.
         if [[ -n "${devel:-}" ]]
         then
             git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
@@ -155,47 +155,47 @@ fi
 
 
 
-## Activate koopa                                                           {{{1
-## =============================================================================
+# Activate koopa                                                            {{{1
+# ==============================================================================
 
 printf "\nActivating koopa.\n"
-## shellcheck source=activate
+# shellcheck source=activate
 force=1 . "${KOOPA_HOME}/activate"
 
 
 
-## Dot files                                                                {{{1
-## =============================================================================
+# Dot files                                                                 {{{1
+# ==============================================================================
 
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
 
-    ## Always create these dotfiles, even on a shared installation.
-    ## shellcheck source=system/install/dotfiles-shared.sh
+    # Always create these dotfiles, even on a shared installation.
+    # shellcheck source=system/install/dotfiles-shared.sh
     source "${KOOPA_HOME}/system/install/dotfiles-shared.sh"
 
-    ## Create local config files.
-    ## shellcheck source=system/install/dotfiles-local.sh
+    # Create local config files.
+    # shellcheck source=system/install/dotfiles-local.sh
     [[ -z "${shared:-}" ]] &&
         source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
 
-    ## Configure Mike's dotfiles.
-    ## shellcheck source=system/install/dotfiles-mike.sh
+    # Configure Mike's dotfiles.
+    # shellcheck source=system/install/dotfiles-mike.sh
     [[ "${mike:-}" -eq 1 ]] &&
         source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
 
-    ## Remove legacy dotfile cruft.
-    ## shellcheck source=system/uninstall/dotfiles-legacy.sh
+    # Remove legacy dotfile cruft.
+    # shellcheck source=system/uninstall/dotfiles-legacy.sh
     source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 fi
 
 
 
-## Additional scripts                                                       {{{1
-## =============================================================================
+# Additional scripts                                                        {{{1
+# ==============================================================================
 
-## Configure Mike's dotfiles.
-## shellcheck source=system/install/scripts-mike.sh
+# Configure Mike's dotfiles.
+# shellcheck source=system/install/scripts-mike.sh
 [[ "${mike:-}" -eq 1 ]] &&
     source "${KOOPA_HOME}/system/install/scripts-mike.sh"
