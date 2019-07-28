@@ -52,7 +52,7 @@ Run the installer script.
 "${koopa_dir}/install
 ```
 
-This will add a shared profile configuration file at `/etc/profile.d/koopa.sh`.
+This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.
 
 ### Local user installation
 
