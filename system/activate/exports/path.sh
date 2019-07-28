@@ -84,6 +84,7 @@ _koopa_add_bins_to_path "host/$(koopa host-type)"
 # Private scripts                                                          {{{3
 # -----------------------------------------------------------------------------
 
+_koopa_add_to_path_start "$(koopa config-dir)/docker/bin"
 _koopa_add_to_path_start "$(koopa config-dir)/scripts-private/bin"
 
 
