@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Shell options.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # Correct minor directory changing spelling mistakes.
 shopt -s cdspell

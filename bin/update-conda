@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Update conda.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # See also:
 # - https://bioconda.github.io/#set-up-channels

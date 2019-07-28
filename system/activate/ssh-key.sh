@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Load an SSH key automatically, using SSH_KEY global variable.
-# Modified 2019-06-21.
+# Updated 2019-06-21.
 
 # NOTE: SCP will fail unless this is interactive only.
 # ssh-agent will prompt for password if there's one set.

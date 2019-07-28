@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Install recommended Ruby release via rbenv.
-# Modified 2019-06-24.
+# Updated 2019-06-24.
 
 # See also:
 # - https://github.com/rbenv/ruby-build

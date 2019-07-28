@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # FASTQ dump from Sequence Read Archive (SRA) accession list.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # Consider using --`split-3` instead of `--split-files` by default.
 

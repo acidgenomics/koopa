@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Run md5sum and generate an MD5 checksum file.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="md5sum-${timestamp}.md5"

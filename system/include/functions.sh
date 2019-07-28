@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Include POSIX functions.
-# Modified 2019-07-09.
+# Updated 2019-07-09.
 
 
 

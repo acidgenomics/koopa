@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Recursively download a directory using wget.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 _koopa_assert_is_installed wget
 

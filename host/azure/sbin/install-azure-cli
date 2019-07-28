@@ -4,7 +4,7 @@
 source "$(koopa header azure)"
 
 # Install Azure CLI.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # See also:
 # - https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum

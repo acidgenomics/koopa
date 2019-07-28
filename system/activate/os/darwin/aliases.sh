@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Modified 2019-06-17.
+# Updated 2019-06-17.
 
 alias autofs="sudo automount -vc"
 alias finder-hide="setfile -a V"

@@ -1,13 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# Build functions
-# Modified 2019-06-27.
-
 
 
 # Fix the group permissions on the build directory.
-# Modified 2019-06-26.
+# Updated 2019-06-26.
 _koopa_build_chgrp() {
     local path
     local group
@@ -28,7 +25,7 @@ _koopa_build_chgrp() {
 
 
 # Create the build directory.
-# Modified 2019-06-20.
+# Updated 2019-06-20.
 _koopa_build_mkdir() {
     local path
     path="$1"
@@ -48,8 +45,64 @@ _koopa_build_mkdir() {
 
 
 
+# Build string for `make` configuration.
+# Use this for `configure --build` flag.
+# # - AWS:    x86_64-amzn-linux-gnu
+# - RedHat: x86_64-redhat-linux-gnu
+# - Darwin: x86_64-darwin15.6.0
+# # Updated 2019-07-09.
+_koopa_build_os_string() {
+    local mach
+    local os_type
+    local string
+
+    mach="$(uname -m)"
+    
+    if _koopa_is_darwin
+    then
+        string="${mach}-${OSTYPE}"
+    elif _koopa_is_linux
+    then
+        # This will distinguish between RedHat, Amazon, and other distros
+        # instead of just returning "linux". Note that we're substituting
+        # "redhat" instead of "rhel" here, when applicable.
+        os_type="$(koopa os-type)"
+        if echo "$os_type" | grep -q "rhel"
+        then
+            os_type="redhat"
+        fi
+        string="${mach}-${os_type}-${OSTYPE}"
+    fi
+
+    echo "$string"
+}
+
+
+
+# Return the installation prefix to use.
+# Updated 2019-06-27.
+_koopa_build_prefix() {
+    local prefix
+
+    if _koopa_is_shared && _koopa_has_sudo
+    then
+        if echo "$KOOPA_HOME" | grep -Eq "^/opt/"
+        then
+            prefix="${KOOPA_HOME}/local"
+        else
+            prefix="/usr/local"
+        fi
+    else
+        prefix="${HOME}/.local"
+    fi
+
+    echo "$prefix"
+}
+
+
+
 # Set the admin or regular user group automatically.
-# Modified 2019-07-09.
+# Updated 2019-07-09.
 _koopa_build_prefix_group() {
     local group
 
@@ -76,7 +129,7 @@ _koopa_build_prefix_group() {
 
 
 # Set permissions on program built from source.
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 _koopa_build_set_permissions() {
     local path
     path="$1"

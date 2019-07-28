@@ -4,7 +4,7 @@
 source "$(koopa header debian)"
 
 # Install GNU core utilities.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 if _koopa_has_sudo
 then

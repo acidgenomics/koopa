@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Bash.
-# Modified 2019-06-25.
+# Updated 2019-06-26.
 
 # See also:
 # - https://www.gnu.org/software/bash/
@@ -28,7 +28,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make test
     make install
     rm -rf "$tmp_dir"

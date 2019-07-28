@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Rename FASTQ ".fq" extension to ".fastq".
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 for file in ./*.fq; do
     mv "$file" "${file/%.fq/.fastq}"

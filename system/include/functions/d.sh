@@ -1,13 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# Dot files helpers.
-# Modified 2019-06-27.
-
 
 
 # Delete a dot file.
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 _koopa_delete_dotfile() {
     local path
     local name

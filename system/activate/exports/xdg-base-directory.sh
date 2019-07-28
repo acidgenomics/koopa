@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # XDG base directory specification.
-# Modified 2019-06-21.
+# Updated 2019-07-27.
 
 # See also:
 # - https://developer.gnome.org/basedir-spec/
@@ -23,7 +23,7 @@ mkdir -p "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
 
 # XDG_RUNTIME_DIR
 # - Can only exist for the duration of the user's login.
-# - Modified every 6 hours or set sticky bit if persistence is desired.
+# - Updated every 6 hours or set sticky bit if persistence is desired.
 # - Should not store large files as it may be mounted as a tmpfs.
 if [ -z "${XDG_RUNTIME_DIR:-}" ]
 then
@@ -55,4 +55,5 @@ fi
 
 
 
-_koopa_update_xdg_config
+# This will ensure the directory paths exist.
+

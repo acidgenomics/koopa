@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # Install koopa.
-# Modified 2019-07-12.
+# Updated 2019-07-27.
 
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
@@ -180,7 +181,7 @@ then
     [[ -z "${shared:-}" ]] &&
         source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
 
-    # Configure Mike-only dotfiles.
+    # Configure Mike's dotfiles.
     # shellcheck source=system/install/dotfiles-mike.sh
     [[ "${mike:-}" -eq 1 ]] &&
         source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
@@ -188,4 +189,18 @@ then
     # Remove legacy dotfile cruft.
     # shellcheck source=system/uninstall/dotfiles-legacy.sh
     source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
+fi
+
+
+
+# Additional scripts                                                        {{{1
+# ==============================================================================
+
+# Clone additional Git repos of interest.
+if [[ "${mike:-}" -eq 1 ]]
+then
+    # shellcheck source=system/install/docker-mike.sh
+    source "${KOOPA_HOME}/system/install/docker-mike.sh"
+    # shellcheck source=system/install/scripts-mike.sh
+    source "${KOOPA_HOME}/system/install/scripts-mike.sh"
 fi

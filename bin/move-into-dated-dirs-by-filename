@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Move files into dated subdirectories by file name.
+# Updated 2019-07-28.
+
+# Useful for organizing photos, scans, and videos.
+
+# Examples:
+# - 20190101_010101_0001.mov
+# - 2019-01-01-01-01-01.pdf
+
+# Ensure we're escaping spaces correctly.
+# See also:
+# - https://unix.stackexchange.com/questions/9496
+
+[[ -z "${1:-}" ]] &&
+    printf "Error: No files were specified.\n" &&
+    exit 1
+
+grep_array=(
+    '([0-9]{4})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '\..+$'
+)
+grep_string="$(printf %s "${grep_array[@]}" $'\n')"
+
+for file in "$@"
+do
+    if [[ "$file" =~ $grep_string ]]
+    then
+        year="${BASH_REMATCH[1]}"
+        month="${BASH_REMATCH[3]}"
+        day="${BASH_REMATCH[5]}"
+        subdir="${year}/${month}/${day}"
+        mkdir -pv "$subdir"
+        mv -iv "$file" "$subdir"
+    else
+        printf "Error: '%s' file does not contain date in name.\n" "$file"
+        printf "grep string: '%s'\n" "$grep_string"
+        exit 1
+    fi
+done

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header fedora)"
+
+# Install GDAL.
+# Updated 2019-07-26.
+
+os_type="$(koopa os-type)"
+
+if _koopa_has_sudo
+then
+    sudo yum -y install gdal gdal-devel
+    if [[ "$os_type" == "rhel7" ]]
+    then
+        sudo yum-builddep -y gdal
+    fi
+fi
+
+source "$(koopa cellar-script gdal)"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Perlbrew
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 
 # See also:
 # - https://perlbrew.pl

@@ -1,9 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# Quiet variants
-# Modified 2019-06-20.
-
 
 
 _koopa_quiet_cd() {
@@ -32,7 +29,7 @@ _koopa_quiet_which() {
 
 
 
-# Modified 2019-06-22.
+# Updated 2019-06-22.
 _koopa_quiet_which2() {
     command -v "$1" 2>/dev/null
 }

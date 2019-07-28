@@ -4,6 +4,6 @@
 source "$(koopa header darwin)"
 
 # Install OpenSSL.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 source "$(koopa cellar-script openssl)"

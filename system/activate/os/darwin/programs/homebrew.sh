@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Homebrew
-# Modified 2019-06-20.
+# Updated 2019-06-20.
 
 if _koopa_quiet_which brew
 then

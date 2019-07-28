@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Install rmate
-# Modified 2019-06-24.
+# Updated 2019-06-24.
 
 # For use with Remote VSCode extension.
 

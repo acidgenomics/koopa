@@ -4,6 +4,6 @@
 source "$(koopa header bash)"
 
 # Link cellar into local build directory.
-# Modified 2019-06-26.
+# Updated 2019-06-26.
 
 _koopa_link_cellar "$@"

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pre-flight checks.
-# Modified 2019-06-18.
+# Updated 2019-06-18.
 
 
 

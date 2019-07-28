@@ -4,6 +4,6 @@
 source "$(koopa header bash)"
 
 # Install conda TeX Live.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 _koopa_create_conda_env texlive-core

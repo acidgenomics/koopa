@@ -4,7 +4,7 @@
 source "$(koopa header linux)"
 
 # Install Genrich.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # See also:
 # - https://github.com/jsh58/Genrich

@@ -4,7 +4,7 @@
 source "$(koopa header azure)"
 
 # Sync R library across virtual machines.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 _koopa_assert_has_sudo
 

@@ -1,14 +1,14 @@
 #!/bin/sh
 
-# Install Ensembl genome for bcbio.
-# Harvard O2 cluster.
-# Modified 2019-06-21.
+## Install Ensembl genome for bcbio.
+## Harvard O2 cluster.
+## Updated 2019-06-21.
 
-# SLURM
-# https://slurm.schedmd.com/sbatch.html
+## SLURM
+## https://slurm.schedmd.com/sbatch.html
 
-# Use `highmem` partition instead if there are memory issues with HISAT2.
-# `medium` partition has a memory limit of 250 GB.
+## Use `highmem` partition instead if there are memory issues with HISAT2.
+## `medium` partition has a memory limit of 250 GB.
 
 #SBATCH --job-name=bcbio_genome        # Job name.
 #SBATCH --partition=medium             # Partition name.

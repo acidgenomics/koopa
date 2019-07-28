@@ -4,6 +4,10 @@
 source "$(koopa header darwin)"
 
 # Convert UTF-8 NFD to NFC.
-# Modified 2019-06-18.
+# Updated 2019-06-18.
+
+_koopa_is_installed convmv
+
+# Use `-i` flag for interactive.
 
 convmv -r -f utf8 -t utf8 --nfc --notest .

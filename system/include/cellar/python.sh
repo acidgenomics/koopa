@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Python.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://www.python.org/
@@ -53,7 +53,7 @@ mkdir "$tmp_dir"
         --enable-optimizations \
         --enable-shared \
         --without-ensurepip
-    make
+    make --jobs="$CPU_COUNT"
     make install
 )
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Mike-specific dot files.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 private_dir="$(koopa config-dir)/dotfiles-private"
 if [[ ! -d "$private_dir" ]]

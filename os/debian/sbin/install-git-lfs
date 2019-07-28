@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header debian)"
+
+# Install Git LFS.
+# Updated 2019-07-27.
+
+_koopa_assert_has_sudo
+
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get -y install git git-lfs
+git lfs install

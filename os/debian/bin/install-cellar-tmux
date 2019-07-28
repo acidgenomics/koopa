@@ -4,7 +4,7 @@
 source "$(koopa header debian)"
 
 # Install Tmux terminal multiplexer.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # > apt-cache search libevent
 

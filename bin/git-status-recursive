@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Get the status of all git repositories.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 git_dir="${1:-.}"
 

@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Install dot files.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 dotfile --force Rprofile
 dotfile --force bash_profile

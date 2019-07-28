@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Include Aspera Connect binaries in PATH, if defined.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 if [ -z "${ASPERA_EXE:-}" ]
 then

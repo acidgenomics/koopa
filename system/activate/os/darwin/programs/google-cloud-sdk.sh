@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Google Cloud SDK
-# Modified 2019-07-09.
+# Updated 2019-07-09.
 
 # Install using Homebrew Cask:
 # > brew cask install google-cloud-sdk

@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Download MP3 audio from YouTube or Soundcloud.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 _koopa_assert_is_installed youtube-dl
 

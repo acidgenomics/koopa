@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define PATH string.
-# Modified 2019-06-20.
+# Updated 2019-07-27.
 
 # See also:
 # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
@@ -80,6 +80,12 @@ _koopa_add_bins_to_path "os/$(koopa os-type)"
 # ------------------------------------------------------------------------------
 
 _koopa_add_bins_to_path "host/$(koopa host-type)"
+
+# Private scripts                                                          {{{3
+# -----------------------------------------------------------------------------
+
+_koopa_add_to_path_start "$(koopa config-dir)/docker/bin"
+_koopa_add_to_path_start "$(koopa config-dir)/scripts-private/bin"
 
 
 

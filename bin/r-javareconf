@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Reconfigure rJava.
-# Modified 2019-06-24.
+# Updated 2019-06-24.
 
 _koopa_assert_has_sudo
 _koopa_r_javareconf

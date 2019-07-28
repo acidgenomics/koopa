@@ -4,7 +4,7 @@
 source "$(koopa header linux)"
 
 # Install Haskell stack.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://www.haskell.org/platform/linux.html#linux-source

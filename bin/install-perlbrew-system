@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Install Perlbrew system Perl.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # See also:
 # - https://stackoverflow.com/questions/25188575

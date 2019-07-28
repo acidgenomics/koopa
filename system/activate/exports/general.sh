@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Modified 2019-06-27.
+# Updated 2019-06-28.
 
 
 
@@ -28,7 +28,7 @@ _koopa_is_interactive && export INTERACTIVE=1
 
 # OSTYPE
 # Automatically set by bash and zsh.
-# Modified 2019-06-26.
+# Updated 2019-06-26.
 [ -z "${OSTYPE:-}" ] && 
     OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')" &&
     export OSTYPE
@@ -46,7 +46,7 @@ _koopa_is_interactive && export INTERACTIVE=1
 
 
 
-# Interface                                                                  {{{1
+# Interface                                                                 {{{1
 # ==============================================================================
 
 # Trim the maximum number of directories in prompt (PS1).
@@ -118,7 +118,7 @@ fi
 # ==============================================================================
 
 # Get the number of cores (CPUs) available.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 if _koopa_is_darwin
 then
     CPU_COUNT="$(sysctl -n hw.ncpu)"
