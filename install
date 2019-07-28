@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # Install koopa.
 # Updated 2019-07-27.
