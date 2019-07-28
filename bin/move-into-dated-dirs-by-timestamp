@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Move files into dated subdirectories by timestamp.
+# Updated 2019-07-28.
+
+[[ -z "${1:-}" ]] &&
+    printf "Error: No files were specified.\n" &&
+    exit 1
+
+for file in "$@"
+do
+    mod_time="$(stat -f "%m" "$file")"
+    dest_dir="$(date -j -f "%s" "$mod_time" +"%Y/%m/%d")"
+    [[ ! -d "$dest_dir" ]] && mkdir -pv "$dest_dir"
+    dest_file="${dest_dir}/$(basename "$file")"
+    mv -v "$file" "$dest_file"
+done
