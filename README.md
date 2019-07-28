@@ -44,11 +44,6 @@ sudo chgrp "$group" "$koopa_dir"
 sudo chmod g+w "$koopa_dir"
 
 git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
-```
-
-Run the installer script.
-
-```sh
 "${koopa_dir}/install
 ```
 
@@ -65,11 +60,6 @@ Clone the repository. Installation following the [XDG base directory specificati
 koopa_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
 mkdir -p "$koopa_dir"
 git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
-```
-
-Run the installer script.
-
-```
 "${koopa_dir}/install"
 ```
 
