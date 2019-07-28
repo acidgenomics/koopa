@@ -25,35 +25,9 @@ Tested on:
 - RHEL 7 / CentOS 7
 - Amazon Linux 2
 
-### Local user installation
-
-Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
-
-```sh
-# ~/.local/share/koopa
-koopa_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
-mkdir -p "$koopa_dir"
-git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
-```
-
-Run the installer script.
-
-```
-"${koopa_dir}/install"
-```
-
-Add these lines to your shell configuration file.
-
-```sh
-# koopa shell
-# https://github.com/acidgenomics/koopa
-# shellcheck source=/dev/null
-. "${HOME}/.local/share/koopa/activate"
-```
-
 ### Shared user installation
 
-Note that this requires sudo permissions.
+**Recommended.** This requires sudo permissions.
 
 Clone the repository.
 
@@ -79,6 +53,34 @@ Run the installer script.
 ```
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh`.
+
+### Local user installation
+
+Use this approach on machines without sudo permissions.
+
+Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
+
+```sh
+# ~/.local/share/koopa
+koopa_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
+mkdir -p "$koopa_dir"
+git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
+```
+
+Run the installer script.
+
+```
+"${koopa_dir}/install"
+```
+
+Add these lines to your shell configuration file.
+
+```sh
+# koopa shell
+# https://github.com/acidgenomics/koopa
+# shellcheck source=/dev/null
+. "${HOME}/.local/share/koopa/activate"
+```
 
 ### Check installation
 
