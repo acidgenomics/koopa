@@ -42,7 +42,7 @@ _koopa_add_conda_env_to_path() {
 _koopa_add_to_path_end() {
     local dir
     dir="$1"
-    [ ! -d "$dir" ] && _koopa_remove_from_path "$dir" && return 0
+    [ ! -d "$dir" ] && return 0
     echo "$PATH" | grep -q "$dir" && return 0
     export PATH="${PATH}:${dir}"
 }
@@ -53,7 +53,7 @@ _koopa_add_to_path_end() {
 _koopa_add_to_path_start() {
     local dir
     dir="$1"
-    [ ! -d "$dir" ] && _koopa_remove_from_path "$dir" && return 0
+    [ ! -d "$dir" ] && return 0
     echo "$PATH" | grep -q "$dir" && return 0
     export PATH="${dir}:${PATH}"
 }
