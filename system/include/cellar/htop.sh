@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install htop.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://hisham.hm/htop/releases/
@@ -29,7 +29,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix"
-    make
+    make --jobs="$CPU_COUNT"
     make check
     make install
     rm -rf "$tmp_dir"

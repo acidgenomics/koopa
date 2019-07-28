@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install R.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://www.r-project.org/
@@ -53,7 +53,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --with-readline \
         --with-tcltk \
         --with-x=no
-    make
+    make --jobs="$CPU_COUNT"
     make check
     make install
     rm -rf "$tmp_dir"

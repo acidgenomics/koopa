@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Set up python virtual environment.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed python

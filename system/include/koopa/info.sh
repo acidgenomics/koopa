@@ -4,7 +4,7 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Show koopa installation information (in a box).
-# Modified 2019-06-22.
+# Updated 2019-06-22.
 
 array=()
 array+=("$(koopa --version)")

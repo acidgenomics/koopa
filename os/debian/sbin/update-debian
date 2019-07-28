@@ -4,7 +4,7 @@
 source "$(koopa header debian)"
 
 # Update Debian.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 _koopa_assert_has_sudo
 

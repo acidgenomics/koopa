@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Remove named subdirectories.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # For example, useful for removing bcbio "work" directories.
 

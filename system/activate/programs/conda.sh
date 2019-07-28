@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Activate Conda
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 
 # It's no longer recommended to directly export conda in `$PATH`.
 # Instead source the `activate` script.

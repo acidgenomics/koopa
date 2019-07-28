@@ -10,6 +10,4 @@ env
 List all function names:
 declare -F
 
-
-
 # ZSH

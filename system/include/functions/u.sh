@@ -1,147 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# Configuration functions.
-# Modified 2019-06-26.
-
-
-
-# Modified 2019-06-25.
-_koopa_is_remote() {
-    [ -n "${SSH_CONNECTION:-}" ]
-}
-
-
-
-# Using unicode box drawings here.
-# Note that we're truncating lines inside the box to 68 characters.
-# Modified 2019-06-27.
-_koopa_info_box() {
-    local array
-    local barpad
-
-    array=("$@")
-    barpad="$(printf "━%.0s" {1..70})"
-    
-    printf "\n  %s%s%s  \n"  "┏" "$barpad" "┓"
-    for i in "${array[@]}"
-    do
-        printf "  ┃ %-68s ┃  \n"  "${i::68}"
-    done
-    printf "  %s%s%s  \n\n"  "┗" "$barpad" "┛"
-}
-
-
-
-# Set JAVA_HOME environment variable.
-#
-# See also:
-# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
-# - https://stackoverflow.com/questions/22290554
-#
-# Modified 2019-06-27.
-_koopa_java_home() {
-    local home
-    local jvm_dir
-
-    if [ -z "${JAVA_HOME:-}" ]
-    then    
-        if _koopa_is_darwin
-        then
-            home="$(/usr/libexec/java_home)"
-        else
-            jvm_dir="/usr/lib/jvm"
-            if [ ! -d "$jvm_dir" ]
-            then
-                home=
-            elif [ -d "${jvm_dir}/java-12-oracle" ]
-            then
-                home="${jvm_dir}/java-12-oracle"
-            elif [ -d "${jvm_dir}/java-12" ]
-            then
-                home="${jvm_dir}/java-12"
-            elif [ -d "${jvm_dir}/java" ]
-            then
-                home="${jvm_dir}/java"
-            else
-                home=
-            fi
-        fi
-    else
-        home="$JAVA_HOME"
-    fi
-
-    [ -d "$home" ] || return 0
-    echo "$home"
-}
-
-
-
-# Get `R_HOME`, rather than exporting as global variable.
-# Modified 2019-06-27.
-_koopa_r_home() {
-    _koopa_assert_is_installed R
-    _koopa_assert_is_installed Rscript
-    Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
-}
-
-
-
-# Update rJava configuration.
-# The default Java path differs depending on the system.
-#
-# > R CMD javareconf -h
-#
-# Environment variables that can be used to influence the detection:
-#   JAVA           path to a Java interpreter executable
-#                  By default first 'java' command found on the PATH
-#                  is taken (unless JAVA_HOME is also specified).
-#   JAVA_HOME      home of the Java environment. If not specified,
-#                  it will be detected automatically from the Java
-#                  interpreter.
-#   JAVAC          path to a Java compiler
-#   JAVAH          path to a Java header/stub generator
-#   JAR            path to a Java archive tool
-#
-# Modified 2019-06-27.
-_koopa_r_javareconf() {
-    local java_home
-    local java_flags
-    local r_home
-
-    _koopa_is_installed R || return 1
-    _koopa_is_installed java || return 1
-   
-    java_home="$(_koopa_java_home)"
-    [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    
-    printf "Updating R Java configuration.\n"
-    
-    java_flags=(
-        "JAVA_HOME=${java_home}" \
-        "JAVA=${java_home}/bin/java" \
-        "JAVAC=${java_home}/bin/javac" \
-        "JAVAH=${java_home}/bin/javah" \
-        "JAR=${java_home}/bin/jar" \
-    )
-
-    r_home="$(_koopa_r_home)"
-    _koopa_build_set_permissions "$r_home"
-    
-    R --vanilla CMD javareconf "${java_flags[@]}"
-
-    if _koopa_has_sudo
-    then
-        sudo R --vanilla CMD javareconf "${java_flags[@]}"
-    fi
-
-    # > Rscript -e 'install.packages("rJava")'
-}
-
 
 
 # Update dynamic linker (LD) configuration.
-# Modified 2019-07-10.
+# Updated 2019-07-10.
 _koopa_update_ldconfig() {
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -178,7 +41,7 @@ _koopa_update_ldconfig() {
 
 
 # Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 _koopa_update_profile() {
     local file
 
@@ -205,7 +68,7 @@ EOF"
 
 
 # Add shared R configuration symlinks in `${R_HOME}/etc`.
-# Modified 2019-07-10.
+# Updated 2019-07-10.
 _koopa_update_r_config() {
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
@@ -248,7 +111,7 @@ _koopa_update_r_config() {
 
 
 # Update shell configuration.
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 _koopa_update_shells() {
     local shell
     local shell_file
@@ -271,7 +134,7 @@ _koopa_update_shells() {
 
 # Update XDG configuration.
 # ~/.config/koopa
-# Modified 2019-07-12.
+# Updated 2019-07-12.
 _koopa_update_xdg_config() {
     local config_dir
     config_dir="$(koopa config-dir)"

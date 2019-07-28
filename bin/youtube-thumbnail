@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Download a thumbnail image from YouTube.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # File options:
 # - hqdefault (smaller)

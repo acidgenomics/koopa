@@ -1,5 +1,5 @@
-# Constellation profile configuration
-# Last modified 2019-06-14 by Michael Steinbaugh
+# Constellation shell profile configuration.
+# Updated 2019-06-27 by Michael Steinbaugh.
 
 export D1="/mnt/azbioinfoseq01"
 export D2="/mnt/azbioinfoseq02"

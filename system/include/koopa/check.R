@@ -1,10 +1,10 @@
 #!/usr/bin/env -S Rscript --vanilla
-# shebang requires env from coreutils >= 8.30.
+## shebang requires env from coreutils >= 8.30.
 
-# Check installed program versions.
-# Modified 2019-07-10.
+## Check installed program versions.
+## Updated 2019-07-10.
 
-# Note: Ubuntu specific versions are currently pinned to 18 LTS.
+## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
 options(
     error = quote(quit(status = 1L)),
@@ -108,7 +108,7 @@ check_version <- function(
         fail <- "NOTE"
     }
 
-    # Check to see if program is installed.
+    ## Check to see if program is installed.
     which <- unname(Sys.which(name))
     if (identical(which, "")) {
         message(paste0("  ", fail, " | ", name, " missing"))
@@ -116,7 +116,7 @@ check_version <- function(
     }
     which <- normalizePath(which)
 
-    # Grep string check mode.
+    ## Grep string check mode.
     if (is.character(grep_string)) {
         x <- system(command = version_cmd[[1L]], intern = TRUE)
         ok <- any(grepl(pattern = grep_string, x = x))
@@ -131,8 +131,8 @@ check_version <- function(
         version <- package_version(version)
     }
 
-    # Run the shell system command to extract the program version.
-    # Consider switching to `system2()` here in a future update.
+    ## Run the shell system command to extract the program version.
+    ## Consider switching to `system2()` here in a future update.
     sys_version <- system(command = pipe(version_cmd), intern = TRUE)
     stopifnot(
         is.character(sys_version),
@@ -165,31 +165,31 @@ check_version <- function(
     invisible(ok)
 }
 
-# Sanitize complicated verions:
-# - 2.7.15rc1 to 2.7.15
-# - 1.10.0-patch1 to 1.10.0
-# - 1.0.2k-fips to 1.0.2
+## Sanitize complicated verions:
+## - 2.7.15rc1 to 2.7.15
+## - 1.10.0-patch1 to 1.10.0
+## - 1.0.2k-fips to 1.0.2
 sanitize_version <- function(x) {
-    # Strip trailing "+" (e.g. "Python 2.7.15+").
+    ## Strip trailing "+" (e.g. "Python 2.7.15+").
     x <- sub("\\+$", "", x)
-    # Strip quotes (e.g. `java -version` returns '"12.0.1"').
+    ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
     x <- gsub("\"", "", x)
-    # Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
+    ## Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
     x <- sub("(-|_).+$", "", x)
     x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
-    # Strip leading letter.
+    ## Strip leading letter.
     x <- sub("^[a-z]+", "", x)
-    # Strip trailing letter.
+    ## Strip trailing letter.
     x <- sub("[a-z]+$", "", x)
     x
 }
 
 
 
-# Required =====================================================================
+## Required ====================================================================
 message("\nChecking required programs.")
 
-# Bash
+## Bash
 check_version(
     name = "bash",
     version = koopa_version("bash"),
@@ -201,9 +201,9 @@ check_version(
     )
 )
 
-# R
-# Alternatively, can check using `packageVersion("base")`.
-# Using shell version string instead here for consistency.
+## R
+## Alternatively, can check using `packageVersion("base")`.
+## Using shell version string instead here for consistency.
 check_version(
     name = "R",
     version = koopa_version("R"),
@@ -215,7 +215,7 @@ check_version(
     eval = "=="
 )
 
-# Python
+## Python
 check_version(
     name = "python3",
     version = koopa_version("python"),
@@ -227,11 +227,11 @@ check_version(
     eval = "=="
 )
 
-# Vim
+## Vim
 check_version(
     name = "vim",
-    # Check without patches.
-    # e.g. 8.1 instead of 8.1.1523.
+    ## Check without patches.
+    ## e.g. 8.1 instead of 8.1.1523.
     version = sub(
         pattern = "\\.[[:digit:]]+$",
         replacement = "",
@@ -244,8 +244,8 @@ check_version(
     )
 )
 
-# Emacs
-# Setting a hard dependency here, to allow for spacemacs.
+## Emacs
+## Setting a hard dependency here, to allow for spacemacs.
 check_version(
     name = "emacs",
     version = koopa_version("emacs"),
@@ -256,7 +256,7 @@ check_version(
     )
 )
 
-# Tmux
+## Tmux
 check_version(
     name = "tmux",
     version = koopa_version("tmux"),
@@ -267,7 +267,7 @@ check_version(
     )
 )
 
-# Git
+## Git
 check_version(
     name = "git",
     version = "2.18",
@@ -278,7 +278,7 @@ check_version(
     )
 )
 
-# GnuPG
+## GnuPG
 check_version(
     name = "gpg",
     version = koopa_version("gpg"),
@@ -289,7 +289,7 @@ check_version(
     )
 )
 
-# GSL
+## GSL
 check_version(
     name = "gsl-config",
     version = koopa_version("gsl"),
@@ -299,8 +299,8 @@ check_version(
     )
 )
 
-# HDF5
-# Debian: `dpkg -s libhdf5-dev`
+## HDF5
+## Debian: `dpkg -s libhdf5-dev`
 check_version(
     name = "h5cc",
     version = major_koopa_version("hdf5"),
@@ -311,7 +311,7 @@ check_version(
     )
 )
 
-# htop
+## htop
 check_version(
     name = "htop",
     version = koopa_version("htop"),
@@ -322,7 +322,7 @@ check_version(
     )
 )
 
-# OpenSSL
+## OpenSSL
 check_version(
     name = "openssl",
     version = switch(
@@ -338,7 +338,7 @@ check_version(
     eval = "=="
 )
 
-# Pandoc
+## Pandoc
 check_version(
     name = "pandoc",
     version = switch(
@@ -354,10 +354,10 @@ check_version(
     eval = "=="
 )
 
-# TeX Live
-# Note that we're checking the TeX Live release year here.
-# Here's what it looks like on Debian/Ubuntu:
-# TeX 3.14159265 (TeX Live 2017/Debian)
+## TeX Live
+## Note that we're checking the TeX Live release year here.
+## Here's what it looks like on Debian/Ubuntu:
+## TeX 3.14159265 (TeX Live 2017/Debian)
 check_version(
     name = "tex",
     version = switch(
@@ -376,9 +376,9 @@ check_version(
     eval = "=="
 )
 
-# OS-specific programs.
+## OS-specific programs.
 if (isTRUE(linux)) {
-    # GCC
+    ## GCC
     check_version(
         name = "gcc",
         version = switch(
@@ -395,9 +395,9 @@ if (isTRUE(linux)) {
         eval = "=="
     )
     
-    # coreutils
-    # This is used for shebang. Version 8.30 marks support of `-S` flag, which
-    # supports argument flags such as `--vanilla` for Rscript.
+    ## coreutils
+    ## This is used for shebang. Version 8.30 marks support of `-S` flag, which
+    ## supports argument flags such as `--vanilla` for Rscript.
     check_version(
         name = "/usr/bin/env",
         version = "8.30",
@@ -408,10 +408,10 @@ if (isTRUE(linux)) {
         )
     )
 } else if (os == "darwin") {
-    # Homebrew.
+    ## Homebrew.
     installed("brew")
 
-    # clang (Apple LLVM version).
+    ## clang (Apple LLVM version).
     check_version(
         name = "clang",
         version = koopa_version("clang"),
@@ -423,7 +423,7 @@ if (isTRUE(linux)) {
         eval = "=="
     )
     
-    # GCC (Apple LLVM version).
+    ## GCC (Apple LLVM version).
     check_version(
         name = "gcc",
         version = koopa_version("clang"),
@@ -438,10 +438,10 @@ if (isTRUE(linux)) {
 
 
 
-# Optional =====================================================================
+## Optional ====================================================================
 message("\nChecking optional programs.")
 
-# Z shell
+## Z shell
 check_version(
     name = "zsh",
     version = koopa_version("zsh"),
@@ -454,7 +454,7 @@ check_version(
     required = FALSE
 )
 
-# Conda
+## Conda
 check_version(
     name = "conda",
     version = koopa_version("conda"),
@@ -467,7 +467,7 @@ check_version(
     required = FALSE
 )
 
-# Docker
+## Docker
 check_version(
     name = "docker",
     version = switch(
@@ -484,9 +484,9 @@ check_version(
     required = FALSE
 )
 
-# Perl
-# The cut match is a little tricky here:
-# # This is perl 5, version 16, subversion 3 (v5.16.3)
+## Perl
+## The cut match is a little tricky here:
+## # This is perl 5, version 16, subversion 3 (v5.16.3)
 check_version(
     name = "perl",
     version = koopa_version("perl"),
@@ -499,7 +499,7 @@ check_version(
     required = FALSE
 )
 
-# perlbrew
+## perlbrew
 check_version(
     name = "perlbrew",
     version = koopa_version("perlbrew"),
@@ -513,7 +513,7 @@ check_version(
     required = FALSE
 )
 
-# Java
+## Java
 check_version(
     name = "java",
     version = koopa_version("java"),
@@ -526,7 +526,7 @@ check_version(
     required = FALSE
 )
 
-# Ruby
+## Ruby
 check_version(
     name = "ruby",
     version = koopa_version("ruby"),
@@ -539,7 +539,7 @@ check_version(
     required = FALSE
 )
 
-# rbenv
+## rbenv
 check_version(
     name = "rbenv",
     version = koopa_version("rbenv"),
@@ -552,8 +552,8 @@ check_version(
     required = FALSE
 )
 
-# rename
-# Use Perl File::Rename, not util-linux.
+## rename
+## Use Perl File::Rename, not util-linux.
 if (isTRUE(linux)) {
     check_version(
         name = "rename",
@@ -567,11 +567,11 @@ if (isTRUE(linux)) {
         required = FALSE
     )
 } else if (os == "darwin") {
-    # Homebrew rename doesn't return version on macOS.
+    ## Homebrew rename doesn't return version on macOS.
     installed("rename")
 }
 
-# ShellCheck
+## ShellCheck
 check_version(
     name = "shellcheck",
     version = koopa_version("shellcheck"),
@@ -584,9 +584,9 @@ check_version(
     required = FALSE
 )
 
-# OS-specific programs.
+## OS-specific programs.
 if (isTRUE(linux)) {
-    # RStudio Server
+    ## RStudio Server
     check_version(
         name = "rstudio-server",
         version = koopa_version("rstudio-server"),
@@ -595,7 +595,7 @@ if (isTRUE(linux)) {
         required = FALSE
     )
 
-    # Shiny Server
+    ## Shiny Server
     check_version(
         name = "shiny-server",
         version = koopa_version("shiny-server"),
@@ -608,7 +608,7 @@ if (isTRUE(linux)) {
         required = FALSE
     )
 
-    # bcbio
+    ## bcbio
     check_version(
         name = "bcbio_nextgen.py",
         version = koopa_version("bcbio_nextgen.py"),
@@ -621,6 +621,6 @@ if (isTRUE(linux)) {
         required = FALSE
     )
 
-    # bcbio_vm.py
+    ## bcbio_vm.py
     installed("bcbio_vm.py", required = FALSE)
 }

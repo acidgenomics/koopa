@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Uninstall koopa.
-# Modified 2019-07-11.
+# Updated 2019-07-27.
 
 # Consider an improved approach to removing cellar links in `/usr/local/`.
 

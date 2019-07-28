@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # \#: the command number of this command
 # \!: the history number of this command

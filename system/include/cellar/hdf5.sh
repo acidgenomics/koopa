@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install HDF5.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 # See also:
 # - https://www.hdfgroup.org/downloads/hdf5/
@@ -36,7 +36,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --prefix="$prefix" \
         --enable-cxx \
         --enable-fortran
-    make
+    make --jobs="$CPU_COUNT"
     # > make check
     make install
     rm -rf "$tmp_dir"

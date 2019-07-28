@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Git SCM.
-# Modified 2019-07-09.
+# Updated 2019-07-09.
 
 # The compilation settings here are from the Git SCM book website.
 # Refer also to INSTALL file for details.
@@ -40,7 +40,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
-    make all doc info
+    make --jobs="$CPU_COUNT" all doc info
     make install install-doc install-html install-info
     rm -rf "$tmp_dir"
 )

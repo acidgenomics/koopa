@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Update submodules.
-# Modified 2019-06-21.
+# Updated 2019-06-21.
 
 (
     # shellcheck source=/dev/null
