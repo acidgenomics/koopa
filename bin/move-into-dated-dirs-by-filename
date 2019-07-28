@@ -20,11 +20,25 @@ source "$(koopa header bash)"
     printf "Error: No files were specified.\n" &&
     exit 1
 
-# Consider adding a step that checks all files match here.
+grep_array=(
+    '([0-9]{4})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '([-_])?'
+    '([0-9]{2})'
+    '\..+$'
+)
+grep_string="$(printf %s "${grep_array[@]}" $'\n')"
 
 for file in "$@"
 do
-    if [[ "$file" =~ ([0-9]{4})([-_])?([0-9]{2})([-_])?([0-9]{2})([-_])([0-9]{2})([-_])?([0-9]{2})([-_])?([0-9]{2}).+$ ]]
+    if [[ "$file" =~ $grep_string ]]
     then
         year="${BASH_REMATCH[1]}"
         month="${BASH_REMATCH[3]}"
@@ -32,5 +46,9 @@ do
         subdir="${year}/${month}/${day}"
         mkdir -pv "$subdir"
         mv -iv "$file" "$subdir"
+    else
+        printf "Error: '%s' file does not contain date in name.\n" "$file"
+        printf "grep string: '%s'\n" "$grep_string"
+        exit 1
     fi
 done
