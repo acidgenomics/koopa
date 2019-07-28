@@ -1,5 +1,5 @@
 # Remove local installation of OpenSSL.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # Last tested with openssl 1.1.1c.
 

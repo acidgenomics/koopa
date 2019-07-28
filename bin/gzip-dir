@@ -4,6 +4,6 @@
 source "$(koopa header bash)"
 
 # Create a gzipped tar file from current working directory.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 find . -mindepth 1 -maxdepth 1 -type d -exec tar -zcvf {}.tar.gz {} \;

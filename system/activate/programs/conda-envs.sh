@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Put useful conda environments in PATH.
-# Modified 2019-06-25.
+# Updated 2019-06-25.
 
 _koopa_is_installed conda || return 0
 

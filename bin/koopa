@@ -14,8 +14,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
-version="0.4.3"
-date="2019-07-25"
+version="0.4.4"
+date="2019-07-28"
 
 
 

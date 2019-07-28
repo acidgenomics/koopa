@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Activate Python "default" virtual environment.
-# Modified 2019-06-27.
+# Updated 2019-06-27.
 
 # Note that we're using this instead of conda as our default interactive
 # Python environment, so we can easily use pip.

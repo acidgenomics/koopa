@@ -4,7 +4,7 @@
 source "$(koopa header fedora)"
 
 # Install GNU Scientific Library (GSL).
-# Modified 2019-07-09.
+# Updated 2019-07-09.
 
 os_type="$(koopa os-type)"
 

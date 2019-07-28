@@ -1,6 +1,6 @@
-# Template for fast RNA-seq using Illumina prepared samples.
-# This will only run salmon and not perform any alignment or quality control.
-# Modified 2019-06-21.
+## Template for fast RNA-seq using Illumina prepared samples.
+## This will only run salmon and not perform any alignment or quality control.
+## Updated 2019-07-26.
 ---
 details:
   - analysis: fastrna-seq

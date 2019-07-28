@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Use ffmpeg to transcode ALAC (Apple Lossless) to FLAC.
+# Updated 2019-07-28.
+
+_koopa_assert_is_installed ffmpeg
+
+for file in *.m4a
+do
+    ffmpeg \
+        -nostdin \
+        -i "$file" \
+        -acodec flac \
+        -c:a flac \
+        -c:v copy \
+        "${file%.*}.flac"
+done

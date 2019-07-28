@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases.
-# Modified 2019-06-21.
+# Updated 2019-06-21.
 
 
 
@@ -62,11 +62,9 @@ alias mkdir="mkdir -vp"
 alias mv="mv -iv"
 
 # Remove (delete) files.
-#
-# Don't enable recursion here by default via `-r` flag.
+# ## Don't enable recursion here by default via `-r` flag.
 # This helps protect against accidental directory deletion.
-#
-# The `-I` flag only prompts once, which is awesome.
+# ## The `-I` flag only prompts once, which is awesome.
 # However this not on macOS, so use `-i` flag there instead.
 if _koopa_is_darwin
 then

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Update pure prompt scripts.
-# Modified 2019-06-18.
+# Updated 2019-06-18.
 
 # See also:
 # - https://github.com/sindresorhus/pure

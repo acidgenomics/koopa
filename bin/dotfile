@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Symlink dot file.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.

@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Autopad sample file names that begin with a number.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 # Renaming with a "sample" prefix by default, to avoid issues in R.
 

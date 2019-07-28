@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Ensembl Perl API
-# Modified 2019-06-17.
+# Updated 2019-06-17.
 
 ensembl_dir="$(koopa build-prefix)/ensembl"
 

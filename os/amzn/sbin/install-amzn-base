@@ -4,7 +4,7 @@
 source "$(koopa header amzn)"
 
 # Install base programs recommended for Amazon Linux 2.
-# Modified 2019-06-23.
+# Updated 2019-06-23.
 
 install-fedora-base
 

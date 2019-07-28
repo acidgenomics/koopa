@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Pure prompt.
-# Modified 2019-06-18.
+# Updated 2019-06-18.
 
 # See also:
 # - https://github.com/sindresorhus/pure
