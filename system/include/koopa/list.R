@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## List user-accessible programs exported in PATH.
-## Updated 2019-07-27.
+## Updated 2019-07-28.
 
 options(
     error = quote(quit(status = 1L)),
@@ -40,7 +40,7 @@ printPrograms <- function(path) {
 
 ## Split PATH string into a character vector.
 path <- strsplit(x = path, split = ":", fixed = TRUE)[[1L]]
-keep <- grepl(koopa_dir, path)
+keep <- grepl("koopa", path)
 path <- path[keep]
 
 invisible(lapply(X = path, FUN = printPrograms))
