@@ -195,7 +195,11 @@ fi
 # Additional scripts                                                        {{{1
 # ==============================================================================
 
-# Configure Mike's dotfiles.
-# shellcheck source=system/install/scripts-mike.sh
-[[ "${mike:-}" -eq 1 ]] &&
+# Clone additional Git repos of interest.
+if [[ "${mike:-}" -eq 1 ]]
+then
+    # shellcheck source=system/install/docker-mike.sh
+    source "${KOOPA_HOME}/system/install/docker-mike.sh"
+    # shellcheck source=system/install/scripts-mike.sh
     source "${KOOPA_HOME}/system/install/scripts-mike.sh"
+fi
