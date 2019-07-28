@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Symlink a dot file from iCloud.
+# Updated 2019-07-28.
+
+file="$1"
+local="${HOME}/.${file}"
+cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
+
+if [[ -f "$cloud" ]] && [[ -f "$local" ]]; then
+    printf "'%s' exists in both places.\n" "$file"
+    printf "Deleting local copy.\n"
+    rm -v "$local"
+    printf "Adding symlink.\n"
+    ln -fsn "$cloud" "$local"
+elif [[ -f "$cloud" ]]; then
+    printf "'%s' is only saved on cloud.\n" "$file"
+    printf "Adding local symlink.\n"
+    ln -fsn "$cloud" "$local"
+elif [[ -f "$local" ]]; then
+    printf "'%s' only exists locally.\n" "$file"
+    printf "Moving to cloud.\n"
+    mv -v "$local" "$cloud"
+    printf "Adding symlink.\n"
+    ln -fsn "$cloud" "$local"
+else
+    printf "Error: '%s' doesn't exist.\n" "$file"
+    exit 1
+fi
