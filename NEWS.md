@@ -1,3 +1,44 @@
+## koopa 0.4.4 (2019-07-28)
+
+### New scripts
+
+- `ffmepeg-alac-to-flac`, `ffmepeg-flac-to-alac`: Lossless audio conversion.
+- `move-into-dated-dirs-by-filename`: Automatically move files containing a
+  date (e.g. `2019-07-28-12-01-59.txt`) into dated subdirectories
+  (e.g. `2019/07/28/`).
+- `move-into-dated-dirs-by-timestamp`: Automatically move files into a dated
+  subdirectory according to its timestamp.
+- `sox-downsample`: Utilty script for easily downsampling high resolution audio.
+
+#### Darwin (macOS)-specific
+
+- `delete-adobe-bridge-cache`: Delete Adobe Bridge cache files.
+- `dotfile-icloud`: Dot file utility for linking from iCloud, instead of our
+  dotfiles git repo.
+- `update-defaults`: Utility for setting recommended defaults. Modifies some
+  finder settings, screen shots path, etc.
+
+#### Debian-specific
+
+- `install-git-lfs`: Utility script for installing Git LFS.
+
+#### Fedora-specific
+
+- Added additional packages to install via yum by default.
+- `install-cellar-gdal`: New recipe required to install rgdal R package.
+- `install-cellar-proj`: New recipe required to install rgdal R package.
+
+### Major changes
+
+- Installation will now clone private scripts and docker recipes. The activation
+  script now knows to look for these and will add `bin/` directories to `PATH`.
+
+### Minor changes
+
+- Reworked linter engine to check for maximum of 80 characters per line.
+- Improved internal update timestamp consistency across files.
+- Improved shared Renviron and Rprofile site configuration files.
+
 ## koopa 0.4.3 (2019-07-25)
 
 ### New scripts
