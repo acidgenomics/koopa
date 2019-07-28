@@ -43,7 +43,7 @@ group="wheel"
 sudo chgrp "$group" "$koopa_dir"
 sudo chmod g+w "$koopa_dir"
 
-git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
+git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
 "${koopa_dir}/install
 ```
 
@@ -59,7 +59,7 @@ Clone the repository. Installation following the [XDG base directory specificati
 # ~/.local/share/koopa
 koopa_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
 mkdir -p "$koopa_dir"
-git clone https://github.com/acidgenomics/koopa.git "$koopa_dir"
+git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
 "${koopa_dir}/install"
 ```
 
