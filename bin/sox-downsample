@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Downsample audio with sox.
+# Updated 2019-07-28.
+
+_koopa_assert_is_installed sox
+
+bits="$1"
+rate="${2}k"
+
+# Useful flags:
+# -b, --bits
+# -G, --guard
+# -L, --endian little
+# -r, --rate
+# -S, --show-progress
+# -v, --volume
+
+# dither only needed when downsampling to 16/44.
+# > sox input.flac -G -b 16 output.flac rate -v -L 44100 dither
+
+for input in *.flac
+do
+    output="sox-${input}"
+    sox "$input" -G -S -b "$bits" "$output" rate -v -L "$rate"
+    # > rm "$input"
+done
