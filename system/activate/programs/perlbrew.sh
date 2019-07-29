@@ -26,14 +26,16 @@ fi
 # Source the activation script, if accessible.
 if [ -d "$PERLBREW_ROOT" ]
 then
-    # Fix for unbound `PERLBREW_HOME` variable in Perlbrew bashrc script.
+    # Fix for unbound variables in activation script.
     if [ -n "${KOOPA_TEST:-}" ]
     then
         set +u
     fi
+
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
     . "${PERLBREW_ROOT}/etc/bashrc"
+
     if [ -n "${KOOPA_TEST:-}" ]
     then
         set -u
