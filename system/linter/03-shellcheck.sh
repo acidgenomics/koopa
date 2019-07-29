@@ -11,7 +11,8 @@ source "${KOOPA_HOME}/system/include/functions.sh"
 # Currently, Travis CI does not have shellcheck installed for macOS.
 if ! _koopa_is_installed shellcheck
 then
-    printf "NOTE | %s\nshellcheck missing\n" "$(basename "$0")"
+    printf "NOTE | %s\n" "$(basename "$0")"
+    printf "     |   shellcheck missing.\n"
     exit 0
 fi
 
