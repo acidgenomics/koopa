@@ -12,12 +12,20 @@
 # User directories                                                          {{{1
 # ==============================================================================
 
-[ -z "${XDG_CACHE_HOME:-}" ] &&
+if [ -z "${XDG_CACHE_HOME:-}" ]
+then
     export XDG_CACHE_HOME="${HOME}/.cache"
-[ -z "${XDG_CONFIG_HOME:-}" ] &&
+fi
+
+if [ -z "${XDG_CONFIG_HOME:-}" ]
+then
     export XDG_CONFIG_HOME="${HOME}/.config"
-[ -z "${XDG_DATA_HOME:-}" ] &&
+fi
+
+if [ -z "${XDG_DATA_HOME:-}" ]
+then
     export XDG_DATA_HOME="${HOME}/.local/share"
+fi
 
 mkdir -p "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
 
@@ -46,14 +54,13 @@ fi
 # System directories                                                        {{{1
 # ==============================================================================
 
-[ -z "${XDG_DATA_DIRS:-}" ] &&
+if [ -z "${XDG_DATA_DIRS:-}" ]
+then
     export XDG_DATA_DIRS="/usr/local/share:/usr/share"
+fi
 
 # This directory currently isn't configured by default for macOS.
-[ -z "${XDG_CONFIG_DIRS:-}" ] &&
+if [ -z "${XDG_CONFIG_DIRS:-}" ]
+then
     export XDG_CONFIG_DIRS="/etc/xdg"
-
-
-
-# This will ensure the directory paths exist.
-
+fi
