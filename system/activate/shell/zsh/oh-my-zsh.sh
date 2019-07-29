@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # oh-my-zsh configuration
-# Updated 2019-07-26.
+# Updated 2019-07-29.
 
 # See also:
 # - https://github.com/robbyrussell/oh-my-zsh
