@@ -2,9 +2,12 @@
 set -Eeu -o pipefail
 
 # Find FIXME and TODO comments.
-# Updated 2019-07-28.
+# Updated 2019-07-29.
 
 # Returns with `true` or `false` exit codes.
+
+# shellcheck source=system/include/functions.sh
+source "${KOOPA_HOME}/system/include/functions.sh"
 
 path="${1:-$KOOPA_HOME}"
 dotfiles_dir="${KOOPA_HOME}/system/config/dotfiles"
@@ -20,8 +23,8 @@ exclude_dirs=(
     ".git"
 )
 
-# Note that full path exclusion doesn't work on Travis CI.
-if [[ -n "${TRAVIS:-}" ]]
+# Full path exclusion seems to only work on macOS.
+if ! _koopa_is_darwin
 then
     for i in "${!exclude_dirs[@]}"
     do
