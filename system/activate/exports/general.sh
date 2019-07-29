@@ -164,6 +164,8 @@ export CPU_COUNT
 #     --acls --xattrs
 #     --iconv=utf-8,utf-8-mac
 
-[ -z "${RSYNC_FLAGS:-}" ] &&
-    RSYNC_FLAGS="$(_koopa_rsync_flags)" &&
+if [ -z "${RSYNC_FLAGS:-}" ]
+then
+    RSYNC_FLAGS="$(_koopa_rsync_flags)"
     export RSYNC_FLAGS
+fi

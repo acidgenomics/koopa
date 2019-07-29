@@ -41,20 +41,19 @@ _koopa_update_ldconfig() {
 
 
 # Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-# Updated 2019-06-27.
+# Updated 2019-06-29.
 _koopa_update_profile() {
     local file
-
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-
     file="/etc/profile.d/koopa.sh"
-    
-    printf "Updating '%s'.\n" "$file"
-
+    if [ -f "$file" ]
+    then
+        printf "Note: '%s' exists.\n" "$file"
+        return 0
+    fi
+    printf "Adding '%s'.\n" "$file"
     sudo mkdir -p "$(dirname file)"
-    sudo rm -f "$file"
-    
     sudo bash -c "cat << EOF > $file
 #!/bin/sh
 

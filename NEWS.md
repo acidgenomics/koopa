@@ -1,3 +1,10 @@
+## koopa 0.4.5 (2019-07-29)
+
+### Minor changes
+
+- Improved detection and handling of unbound variables during installation and
+  activation of koopa.
+
 ## koopa 0.4.4 (2019-07-28)
 
 ### New scripts
