@@ -60,7 +60,7 @@ fi
 shell="$(_koopa_shell) \v"
 
 # History.
-history="[c\#; h\!]"
+history="c\# h\!"
 
 # Working directory.
 wd="\w"
@@ -125,7 +125,7 @@ fi
 
 PS1="\n${user}"
 [[ -n "$mach" ]] && PS1="${PS1} | ${mach}"
-PS1="${PS1} | ${shell} ${history}\n"
+PS1="${PS1} | ${shell} | ${history}\n"
 PS1="${PS1}${wd}\n"
 PS1="${PS1}${prompt} "
 export PS1
