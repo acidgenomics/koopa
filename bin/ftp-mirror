@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Recursively download (mirror) over FTP using wget.
+# Updated 2019-07-30.
+
+# FIXME Switch to flags instead of positional arguments.
+
+host="$1"
+user="$2"
+dir="${3:-}"
+
+if [[ -n "${dir:-}" ]]
+then
+    path="${host}/${dir}"
+else
+    path="${host}"
+fi
+
+wget \
+    --ask-password \
+    --mirror \
+    "ftp://${user}@${path}/"*
