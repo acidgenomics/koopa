@@ -8,6 +8,8 @@ source "$(koopa header bash)"
 
 # FIXME Switch to flags instead of positional arguments.
 
+_koopa_assert_is_installed wget
+
 host="$1"
 user="$2"
 dir="${3:-}"
