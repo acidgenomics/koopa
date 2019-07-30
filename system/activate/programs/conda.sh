@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # Activate Conda
-# Updated 2019-06-27.
+# Updated 2019-06-29.
+
+# Note that conda must be reactivated inside of tmux.
 
 # It's no longer recommended to directly export conda in `$PATH`.
 # Instead source the `activate` script.
@@ -62,12 +64,24 @@ fi
 # Run activation script, if accessible.
 if [ -x "$CONDA_EXE" ]
 then
+    # Fix for unbound variables in activate/deactivate scripts.
+    if [ -n "${KOOPA_TEST:-}" ]
+    then
+        set +u
+    fi
+
     bin_dir="$(dirname "$CONDA_EXE")"
-    # Activation script must run again inside a tmux session.
     # shellcheck source=/dev/null
     . "${bin_dir}/activate"
     unset -v bin_dir
+
+    # Keep conda accessible but close out of base environment.
     conda deactivate
+    
+    if [ -n "${KOOPA_TEST:-}" ]
+    then
+        set -u
+    fi
 else
     unset -v CONDA_EXE
 fi
