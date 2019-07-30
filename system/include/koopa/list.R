@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## List user-accessible programs exported in PATH.
-## Updated 2019-07-28.
+## Updated 2019-07-30.
 
 options(
     error = quote(quit(status = 1L)),
@@ -33,6 +33,7 @@ printPrograms <- function(path) {
     cat(
         "",
         paste0(path, ":"),
+        "",
         paste0("    ", basename(files)),
         sep = "\n"
     )
