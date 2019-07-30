@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Activate koopa.
-# Updated 2019-07-29.
+# Updated 2019-07-30.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -16,7 +16,7 @@
 
 # Never activate for specific admin accounts.
 [ "$(id -u)" -eq 0 ] && return 0
-whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
+whoami | grep -Eq "\b(admin)\b" && return 0
 
 # Enable test mode.
 if [ "${test:-0}" -eq 1 ]
