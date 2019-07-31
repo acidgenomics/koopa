@@ -550,11 +550,7 @@ check_version(
 ## GDAL
 check_version(
     name = "gdalinfo",
-    version = switch(
-        EXPR = os,
-        darwin = "2.4.2",
-        koopa_version("gdal")
-    ),
+    version = koopa_version("gdal"),
     version_cmd = c(
         "gdalinfo --version",
         "head -n 1",
