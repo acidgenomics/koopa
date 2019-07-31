@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install Rcheck scripts for R package locally.
+# Updated 2019-07-31.
+
+config_dir="$(koopa config-dir)"
+rcheck_repo="${config_dir}/Rcheck"
+
+if [[ -d "$rcheck_repo" ]]
+then
+    (
+        cd "$rcheck_repo"
+        git pull
+    )
+else
+    rm -rf "$rcheck_repo"
+    git clone git@github.com:acidgenomics/Rcheck.git "$rcheck_repo"
+else
+fi
+
+# Add symlink in current working directory.
+rm -rf .Rcheck
+ln -fns "$rcheck_repo" .Rcheck
