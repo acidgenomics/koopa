@@ -17,7 +17,6 @@ if [[ -d "$dotfiles_dir" ]]
 then
     printf "Updating dotfiles.\n"
     git pull
-    git submodule sync --recursive
     (
         cd "$dotfiles_dir" || exit 1
         vim_plugins="${dotfiles_dir}/vim/pack/dist/start"
