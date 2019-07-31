@@ -7,12 +7,19 @@ source "$(koopa header bash)"
 # Updated 2019-07-31.
 
 # Clean up dot files.
-rm -rf "${KOOPA_HOME}/dotfiles"
+if [[ -d "${KOOPA_HOME}/dotfiles" ]]
+then
+    rm -rf "${KOOPA_HOME}/dotfiles"
+fi
 
-(
-    cd "${KOOPA_HOME}/system/config/dotfiles/vim/pack/disk/start" || exit 0
-    rm -rf Nvim-R vim-*
-)
+vim_dir="${KOOPA_HOME}/system/config/dotfiles/vim/pack/dist/start"
+if [[ -d "$vim_dir" ]]
+then
+    (
+        cd "$vim_dir"  || exit 0
+        rm -rf Nvim-R vim-*
+    )
+fi
 
 (
     cd "$KOOPA_HOME" || exit 1
