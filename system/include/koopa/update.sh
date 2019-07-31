@@ -12,12 +12,22 @@ then
     rm -rf "${KOOPA_HOME}/dotfiles"
 fi
 
-vim_dir="${KOOPA_HOME}/system/config/dotfiles/vim/pack/dist/start"
-if [[ -d "$vim_dir" ]]
+dotfiles_dir="$(koopa config-dir)/dotfiles"
+if [[ -d "$dotfiles_dir" ]]
 then
+    printf "Updating dotfiles.\n"
+    git pull
+    git submodule sync --recursive
     (
-        cd "$vim_dir"  || exit 0
-        rm -rf Nvim-R vim-*
+        cd "$dotfiles_dir" || exit 1
+        vim_plugins="${dotfiles_dir}/vim/pack/dist/start"
+        if [[ -d "$vim_plugins" ]]
+        then
+            (
+                cd "$vim_plugins" || exit 1
+                rm -rf Nvim-R vim-*
+            )
+        fi
     )
 fi
 
