@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Activate koopa.
 # Updated 2019-07-30.
