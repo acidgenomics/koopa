@@ -1,3 +1,17 @@
+## koopa 0.4.6 (2019-08-01)
+
+### New scripts
+
+- `ftp-mirror`: Script that helps quickly mirror an FTP directory using wget.
+- `install-rcheck`: Utility for quickly checking R packages.
+
+### Minor changes
+
+- Reworked the file paths of some dot files related to vim and zsh config.
+- Improved `docker-run-image` workdir configuration.
+- Improved shell checks, following shellcheck 0.7 release updates.
+- Relaxed checks in Debian and Fedora headers when running as sudo user.
+
 ## koopa 0.4.5 (2019-07-29)
 
 ### Minor changes
