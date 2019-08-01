@@ -18,3 +18,5 @@ fi
 # Add symlink in current working directory.
 rm -rf .Rcheck
 ln -fns "$rcheck_repo" .Rcheck
+
+# Ensure necessary config files are copied.
