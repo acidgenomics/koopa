@@ -5,15 +5,15 @@ source "$(koopa header bash)"
 
 _koopa_assert_is_linux_fedora
 
-if _koopa_has_sudo
-then
-    _koopa_assert_is_installed yum
-    _koopa_build_chgrp /usr/local
-    _koopa_update_ldconfig
-
-    # Install gcc, if necessary.
-    if [[ ! -x "$(command -v gcc)" ]]
-    then
-        sudo yum install -y gcc
-    fi
-fi
+# > if _koopa_has_sudo
+# > then
+# >     _koopa_assert_is_installed yum
+# >     _koopa_build_chgrp /usr/local
+# >     _koopa_update_ldconfig
+# >
+# >     # Install gcc, if necessary.
+# >     if [[ ! -x "$(command -v gcc)" ]]
+# >     then
+# >         sudo yum install -y gcc
+# >     fi
+# > fi
