@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Find lines containing more than 80 characters.
-# Updated 2019-07-28.
+# Updated 2019-08-01.
 
 # Returns with `true` or `false` exit codes.
 
@@ -15,7 +15,7 @@ dotfiles_dir="${KOOPA_HOME}/system/config/dotfiles"
 exclude_dirs=(
     "${KOOPA_HOME}/cellar"
     "${KOOPA_HOME}/conda"
-    "${KOOPA_HOME}/system/activate/shell/zsh/fpath"
+    "${KOOPA_HOME}/shell/zsh/functions"
     "${dotfiles_dir}/doom.d"
     "${dotfiles_dir}/dracula"
     "${dotfiles_dir}/os/darwin/terminal"
