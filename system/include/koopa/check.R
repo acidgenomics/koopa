@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-07-10.
+## Updated 2019-07-29.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -227,25 +227,7 @@ check_version(
     eval = "=="
 )
 
-## Vim
-check_version(
-    name = "vim",
-    ## Check without patches.
-    ## e.g. 8.1 instead of 8.1.1523.
-    version = sub(
-        pattern = "\\.[[:digit:]]+$",
-        replacement = "",
-        koopa_version("vim")
-    ),
-    version_cmd = c(
-        "vim --version",
-        "head -n 1",
-        "cut -d ' ' -f 5"
-    )
-)
-
 ## Emacs
-## Setting a hard dependency here, to allow for spacemacs.
 check_version(
     name = "emacs",
     version = koopa_version("emacs"),
@@ -253,6 +235,18 @@ check_version(
         "emacs --version",
         "head -n 1",
         "cut -d ' ' -f 3"
+    ),
+    eval = "=="
+)
+
+## Vim
+check_version(
+    name = "vim",
+    version = major_koopa_version("vim"),
+    version_cmd = c(
+        "vim --version",
+        "head -n 1",
+        "cut -d ' ' -f 5"
     )
 )
 
@@ -270,7 +264,7 @@ check_version(
 ## Git
 check_version(
     name = "git",
-    version = "2.18",
+    version = koopa_version("git"),
     version_cmd = c(
         "git --version",
         "head -n 1",
@@ -281,7 +275,7 @@ check_version(
 ## GnuPG
 check_version(
     name = "gpg",
-    version = koopa_version("gpg"),
+    version = major_koopa_version("gpg"),
     version_cmd = c(
         "gpg --version",
         "head -n 1",
@@ -363,6 +357,7 @@ check_version(
     version = switch(
         EXPR = os,
         rhel7 = "2013",
+        ubuntu = "2017",
         koopa_version("tex")
     ),
     version_cmd = c(
@@ -550,6 +545,32 @@ check_version(
     ),
     eval = "==",
     required = FALSE
+)
+
+## GDAL
+check_version(
+    name = "gdalinfo",
+    version = koopa_version("gdal"),
+    version_cmd = c(
+        "gdalinfo --version",
+        "head -n 1",
+        "cut -d ' ' -f 2",
+        "tr -d ,"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
+## PROJ
+check_version(
+    name = "proj",
+    version = koopa_version("proj"),
+    version_cmd = c(
+        "proj  2>&1",
+        "head -n 1",
+        "cut -d ' ' -f 2",
+        "tr -d ,"
+    )
 )
 
 ## rename

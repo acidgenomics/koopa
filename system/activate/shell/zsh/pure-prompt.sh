@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Pure prompt.
-# Updated 2019-06-18.
+# Updated 2019-07-29.
 
 # See also:
 # - https://github.com/sindresorhus/pure
@@ -12,13 +12,14 @@
 
 # Quick install using node:
 # > npm install --global pure-prompt
+#
 # Note that npm method requires write access into `/usr/local`.
-# Let's configure manually instead, which also works on remote servers.
+# We're configuring manually instead, which also works on remote servers.
 
-script_file="${(%):-%N}"
-script_dir="$(cd "$(dirname "$script_file")" >/dev/null 2>&1 && pwd)"
+# > script_file="${(%):-%N}"
+# > script_dir="$(cd "$(dirname "$script_file")" >/dev/null 2>&1 && pwd)"
 
-koopa_fpath="${script_dir}/fpath"
+koopa_fpath="${KOOPA_HOME}/shell/zsh/functions"
 if [[ ! -d "$koopa_fpath" ]]
 then
     >&2 printf "Error: fpath directory is missing.\n%s\n" "$koopa_fpath"
@@ -30,4 +31,4 @@ autoload -U promptinit
 promptinit
 prompt pure
 
-unset -v koopa_fpath script_dir script_file
+unset -v koopa_fpath
