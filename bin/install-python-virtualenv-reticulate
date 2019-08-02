@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Install reticulate Python virtual environment.
-# Updated 2019-08-01.
+# Updated 2019-08-02.
 
 _koopa_assert_is_installed python3
 
