@@ -4,7 +4,13 @@
 source "$(koopa header bash)"
 
 # Update koopa installation.
-# Updated 2019-07-31.
+# Updated 2019-08-01.
+
+# Update repo.
+(
+    cd "$KOOPA_HOME" || exit 1
+    git pull
+)
 
 # Clean up dot files.
 if [[ -d "${KOOPA_HOME}/dotfiles" ]]
@@ -18,6 +24,7 @@ then
     printf "Updating dotfiles.\n"
     (
         cd "$dotfiles_dir" || exit 1
+        git pull
         vim_plugins="${dotfiles_dir}/vim/pack/dist/start"
         if [[ -d "$vim_plugins" ]]
         then
@@ -27,12 +34,10 @@ then
             )
         fi
     )
-    git pull
 fi
 
 (
     cd "$KOOPA_HOME" || exit 1
-    git pull
     git submodule sync --recursive
     git status
 )
