@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-07-30.
+# Updated 2019-08-02.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
