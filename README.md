@@ -49,6 +49,14 @@ git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.
 
+If you're going to install any programs using the cellar scripts, also adjust the permissions for `/usr/local/`. Otherwise the link cellar commands will error and you will see symlink errors.
+
+```sh
+sudo chgrp -Rh "$group" /usr/local
+sudo chmod g+w -R /usr/local
+sudo chmod g+s /usr/local
+```
+
 ### Local user installation
 
 Use this approach on machines without sudo permissions.
