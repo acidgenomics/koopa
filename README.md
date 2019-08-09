@@ -44,7 +44,7 @@ sudo chgrp "$group" "$koopa_dir"
 sudo chmod g+w "$koopa_dir"
 
 git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
-"${koopa_dir}/install
+"${koopa_dir}/install"
 ```
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.
