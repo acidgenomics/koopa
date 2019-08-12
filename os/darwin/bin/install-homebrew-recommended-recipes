@@ -4,7 +4,7 @@
 source "$(koopa header darwin)"
 
 # Install recommended Homebrew recipes.
-# Updated 2019-06-25.
+# Updated 2019-08-12.
 
 _koopa_assert_is_installed brew
 
@@ -155,6 +155,7 @@ brew install \
     md5sha1sum \
     neovim \
     node \
+    open-mpi \
     pandoc \
     pandoc-citeproc \
     pandoc-crossref \
