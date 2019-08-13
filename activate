@@ -12,6 +12,9 @@
 
 
 
+# FIXME Attempt to source user config files first.
+
+
 # Pre-flight checks                                                         {{{1
 # ==============================================================================
 
