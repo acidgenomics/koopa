@@ -13,6 +13,7 @@
 
 
 # FIXME Attempt to source user config files first.
+# FIXME Rethink the approach to dotfiles. Make user configurable.
 
 
 # Pre-flight checks                                                         {{{1
