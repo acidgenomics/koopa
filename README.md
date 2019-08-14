@@ -75,7 +75,7 @@ Add these lines to your shell configuration file.
 
 ```sh
 # koopa shell
-# https://github.com/acidgenomics/koopa
+# https://koopa.acidgenomics.com/
 # shellcheck source=/dev/null
 . "${HOME}/.local/share/koopa/activate"
 ```
