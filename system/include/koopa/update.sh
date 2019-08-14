@@ -4,43 +4,24 @@
 source "$(koopa header bash)"
 
 # Update koopa installation.
-# Updated 2019-08-01.
+# Updated 2019-08-14.
 
 # Update repo.
 (
     cd "$KOOPA_HOME" || exit 1
+    git fetch --all
     git pull
 )
 
-# Clean up dot files.
+# Clean up legacy files.
 if [[ -d "${KOOPA_HOME}/dotfiles" ]]
 then
-    rm -rf "${KOOPA_HOME}/dotfiles"
+    rm -frv "${KOOPA_HOME}/dotfiles"
 fi
-
-dotfiles_dir="$(koopa config-dir)/dotfiles"
-if [[ -d "$dotfiles_dir" ]]
+if [[ -d "${KOOPA_HOME}/system/config" ]]
 then
-    printf "Updating dotfiles.\n"
-    (
-        cd "$dotfiles_dir" || exit 1
-        git pull
-        vim_plugins="${dotfiles_dir}/vim/pack/dist/start"
-        if [[ -d "$vim_plugins" ]]
-        then
-            (
-                cd "$vim_plugins" || exit 1
-                rm -rf Nvim-R vim-*
-            )
-        fi
-    )
+    rm -frv "${KOOPA_HOME}/system/config"
 fi
-
-(
-    cd "$KOOPA_HOME" || exit 1
-    git submodule sync --recursive
-    git status
-)
 
 cat << EOF
 koopa updated successfully.
