@@ -39,3 +39,6 @@ then
     #        make symbolic links instead of hard links
     ln -fnsv "${bucket_dir}/${bucket_today}" "$today_dir"
 fi
+
+cd "$today_dir"
+exec "$KOOPA_SHELL"
