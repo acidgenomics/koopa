@@ -12,7 +12,9 @@ source "$(koopa header azure)"
 _koopa_assert_has_sudo
 
 bcbio_dir="/data00/bcbio"
+tmp_dir="/mnt/resource"
 version="${1:-development}"
+
 bin_dir="${bcbio_dir}/${version}/tools/bin"
 git_dir="${bcbio_dir}/git"
 tests_dir="${git_dir}/tests"
@@ -23,21 +25,18 @@ then
     exit 1
 fi
 
-if [[ ! -d "tests_dir" ]]
+if [[ ! -d "$tests_dir" ]]
 then
     &>2 printf "Error: Failed to locate bcbio tests dir.\n%s\n" "$tests_dir"
     exit 1
 fi
 
 # Ensure temp SSD is configured correctly on Azure VM.
-tmp_dir="/mnt/resource"
-
-if [[ -d "$tmp_dir" ]]
+if [[ ! -d "$tmp_dir" ]]
 then
     &>2 printf "Error: Failed to detect tmp SSD.\n%s\n" "$tmp_dir"
     exit 1
 fi
-
 sudo chown "$USER" "$tmp_dir"
 sudo chmod u+rwx "$tmp_dir"
 
@@ -49,8 +48,12 @@ sudo chmod u+rwx "$tmp_dir"
     rm -frv test_automated_output
     ./run_tests.sh star
     rm -frv test_automated_output
+    # Currently failing for v1.1.6a.
+    ./run_tests.sh fastrnaseq
+    rm -frv test_automated_output
     ./run_tests.sh stranded
     rm -frv test_automated_output
+    # Currently failing for v1.1.6a.
     ./run_tests.sh rnaseq
     rm -frv test_automated_output
     ./run_tests.sh chipseq
