@@ -23,7 +23,8 @@ whoami | grep -Eq "\b(admin)\b" && return 0
 
 # Detect force mode.
 # Disabled by default.
-case "${force:-}" in
+[ -z "${force:-}" ] && force=0
+case "$force" in
     1|true)
         force=1
         ;;
@@ -34,7 +35,8 @@ esac
 
 # Detect test mode.
 # Disabled by default.
-case "${test:-}" in
+[ -z "${test:-}" ] && test=0
+case "$test" in
     1|true)
         test=1
         ;;
@@ -75,11 +77,10 @@ echo "$-" | grep -q "i" && interactive=1 || interactive=0
 # Early return if koopa is already active.
 [ "$force" -eq 0 ] && [ -n "${KOOPA_HOME:-}" ] && return 0
 
-unset -v force interactive
-
 # Detect extra mode.
-# Disabled by default.
-case "${extra:-}" in
+# Enabled by default.
+[ -z "${extra:-}" ] && extra=1
+case "$extra" in
     1|true)
         extra=1
         ;;
@@ -101,7 +102,9 @@ case "$programs" in
 esac
 
 # Detect minimal mode.
-case "${minimal:-}" in
+# Disabled by default.
+[ -z "${minimal:-}" ] && minimal=0
+case "$minimal" in
     1|true)
         minimal=1
         ;;
@@ -116,6 +119,8 @@ then
     extra=0
     programs=0
 fi
+
+unset -v force interactive minimal
 
 
 
@@ -135,7 +140,7 @@ optional arguments:
         Show this help message and exit.
 
 optional variables:
-    extra=0 [false]
+    extra=1 [true]
         Enable extra shell and OS-specific configuration.
     minimal=0 [false]
         Minimal mode. Simply export koopa programs into PATH.
@@ -229,7 +234,7 @@ else
 fi
 export KOOPA_SHELL
 
-if [ ! -f "${file:-}" ]
+if [ ! -f "$file" ]
 then
     >&2 printf "Error: Failed to detect absolute path of activation script.\n"
     return 1
@@ -258,14 +263,12 @@ activate_dir="${KOOPA_HOME}/system/activate"
 . "${activate_dir}/user-profile.sh"
 
 exports_dir="${activate_dir}/exports"
-
 # shellcheck source=/dev/null
 . "${exports_dir}/xdg-base-directory.sh"
 # shellcheck source=/dev/null
 . "${exports_dir}/path.sh"
 # shellcheck source=/dev/null
 . "${exports_dir}/general.sh"
-
 unset -v exports_dir
 
 _koopa_update_xdg_config
@@ -274,12 +277,12 @@ _koopa_update_xdg_config
 
 # Program configuration                                                     {{{1
 # ==============================================================================
-    
+
+if [ "$programs" -eq 1 ]
+then
     programs_dir="${activate_dir}/programs"
     # shellcheck source=/dev/null
     . "${programs_dir}/conda.sh"
-    # shellcheck source=/dev/null
-    # > . "${programs_dir}/conda-envs.sh"
     # shellcheck source=/dev/null
     . "${programs_dir}/perlbrew.sh"
     # shellcheck source=/dev/null
@@ -292,29 +295,26 @@ _koopa_update_xdg_config
     . "${programs_dir}/bcbio.sh"
     # shellcheck source=/dev/null
     . "${programs_dir}/virtualenv.sh"
-    unset -v programs_dir
-
+    unset -v programs programs_dir
+fi
 
 
 
 # Extra shell configuration                                                 {{{1
 # ==============================================================================
 
-if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+if [ "$extra" -eq 1 ]
 then
-    extra_dir="${activate_dir}/extra"
-
     # shellcheck source=/dev/null
-    . "${extra_dir}/set.sh"
+    . "${activate_dir}/set.sh"
     # shellcheck source=/dev/null
-    . "${extra_dir}/umask.sh"
+    . "${activate_dir}/umask.sh"
     # shellcheck source=/dev/null
-    . "${extra_dir}/aliases.sh"
+    . "${activate_dir}/aliases.sh"
     # shellcheck source=/dev/null
-    . "${extra_dir}/secrets.sh"
+    . "${activate_dir}/secrets.sh"
     # shellcheck source=/dev/null
-    . "${extra_dir}/ssh-key.sh"
-
+    . "${activate_dir}/ssh-key.sh"
 
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
@@ -354,6 +354,8 @@ then
 
     # Set up the today bucket.
     bash touch-today-bucket
+    
+    unset -v extra
 fi
 
 
@@ -361,15 +363,8 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-unset -v extra minimal programs
-
 unset -v activate_dir
 unset -v colors
-
-# FIXME Ensure these variables are cleared.
-# extra
-# minimal
-# programs
 
 # Disable test mode.
 if [ "$test" -eq 1 ]
