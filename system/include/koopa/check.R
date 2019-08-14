@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-08-09.
+## Updated 2019-08-14.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -640,6 +640,7 @@ if (isTRUE(linux)) {
         name = "bcbio_nextgen.py",
         version = koopa_version("bcbio_nextgen.py"),
         version_cmd = "bcbio_nextgen.py --version",
+        eval = "==",
         required = FALSE
     )
 
