@@ -14,6 +14,7 @@ then
     esac
     if [ -f "$file" ]
     then
+        # shellcheck source=/dev/null
         . "$file"
     fi
     unset -v file
@@ -31,6 +32,7 @@ then
     esac
     if [ -f "$file" ]
     then
+        # shellcheck source=/dev/null
         . "$file"
     fi
     unset -v file

@@ -19,4 +19,5 @@ then
     sudo apt-get -y build-dep emacs
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script emacs)"

@@ -22,4 +22,5 @@ then
     esac
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script python)"

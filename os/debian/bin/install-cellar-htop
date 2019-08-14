@@ -13,4 +13,5 @@ then
     sudo apt-get -y build-dep htop
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script htop)"

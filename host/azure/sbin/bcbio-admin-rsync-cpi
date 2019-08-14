@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header azure)"
 
 # rsync bcbio installation.
-# Modified 2019-07-10.
+# Modified 2019-08-14.
 
 _koopa_assert_has_sudo
 
@@ -17,7 +17,7 @@ group="$(_koopa_build_prefix_group)"
 
 if [[ "$source_ip" == "$host_ip" ]]
 then
-    printf "Attempting to rsync from source machine.\n"
+    >&2 printf "Error: Attempting to rsync from source machine.\n"
     exit 1
 fi
 
