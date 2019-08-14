@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-06-28.
+# Updated 2019-08-14.
 
 
 
@@ -9,8 +9,8 @@
 # ==============================================================================
 
 # Check if this is a login shell.
-_koopa_is_login_bash && export LOGIN_BASH=1
-_koopa_is_login_zsh && export LOGIN_ZSH=1
+_koopa_is_login_bash && export LOGIN=1
+_koopa_is_login_zsh && export LOGIN=1
 
 # Check if this is an interactive shell.
 _koopa_is_interactive && export INTERACTIVE=1

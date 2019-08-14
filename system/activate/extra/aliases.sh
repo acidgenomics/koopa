@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases.
-# Updated 2019-06-21.
+# Updated 2019-08-14.
 
 
 
