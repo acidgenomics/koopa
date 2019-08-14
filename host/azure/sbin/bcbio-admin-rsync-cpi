@@ -22,3 +22,4 @@ fi
 
 printf "Updating '%s' from '%s'.\n" "$bcbio_dir" "$source_ip"
 rsync -av --delete "${source_user}@${source_host}:${bcbio_dir}/" "${bcbio_dir}/"
+sudo chown -Rh root:wheel "$bcbio_dir"
