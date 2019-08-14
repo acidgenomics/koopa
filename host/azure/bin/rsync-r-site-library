@@ -1,5 +1,8 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 set -Eeu o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
 
 # rsync R site package library.
 # Modified 2019-08-14.
