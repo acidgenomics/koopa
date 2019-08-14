@@ -329,14 +329,6 @@ then
         # shellcheck source=/dev/null
         . "${bash_dir}/ps1.sh"
         unset -v bash_dir
-    elif [ "$KOOPA_SHELL" = "zsh" ]
-    then
-        # `~/.zhsrc` file is required for Z shell to configure correctly.
-        if [ ! -f "${HOME}/.zshrc" ]
-        then
-            dotfile -q shrc
-            dotfile -q zshrc
-        fi
     fi
 
     # Platform-specific configuration.
