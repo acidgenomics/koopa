@@ -12,6 +12,10 @@ host="mike@10.100.100.135"
 printf "Updating '%s' from '%s'.\n" "$dir" "$host"
 rsync -av --delete "${host}:${dir}/" "${dir}/"
 
-# Update local symlink.
-rm -f /usr/local/lib64/R/site-library
-ln -s /data00/R/site-library/current /usr/local/lib64/R/site-library
+# Update `site-library` symlinks.
+r_home="$(koopa r-home)"
+lib_link="/data00/R/site-library/current"
+rm -frv "${r_home}/site-library"
+ln -fns "$lib_link" "${r_home}/site-library"
+rm -frv "/usr/local/lib64/R/site-library"
+ln -fns "$lib_link" "/usr/local/lib64/R/site-library"
