@@ -1,27 +1,54 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
 # Run bcbio-nextgen unit tests.
-# Modified 2019-06-26.
+# Modified 2019-08-14.
 
 # Refer to tests/data/automated for YAML recipes.
 
+bcbio_git="/data00/bcbio"
 version="${1:-development}"
-bin_dir="/data00/bcbio/${version}/tools/bin"
-[[ -d "$bin_dir" ]] || exit 1
+bin_dir="${bcbio_dir}/${version}/tools/bin"
 
+git_dir="${bcbio_dir}/git"
+tests_dir="${git_dir}/tests"
+
+if [[ ! -d "$bin_dir" ]]
+then
+    &>2 printf "Error: bcbio install does not exist.\n%s\n" "$bin_dir"
+    exit 1
+fi
+
+if [[ ! -d "tests_dir" ]]
+then
+    &>2 printf "Error: Failed to locate bcbio tests dir.\n%s\n" "$tests_dir"
+    exit 1
+fi
+
+# Ensure temp SSD is configured correctly on Azure VM.
 tmp_dir="/mnt/resource"
+
+if [[ -d "$tmp_dir" ]]
+then
+    &>2 printf "Error: Failed to detect tmp SSD.\n%s\n" "$tmp_dir"
+    exit 1
+fi
+
 sudo chown "$USER" "$tmp_dir"
+sudo chmod u+rwx "$tmp_dir"
 
 (
     export PATH="${bin_dir}:${PATH}"
-    cd /data00/bcbio/git/tests
-    rm -rf test_automated_output
+    cd "$tests_dir" || exit 1
+    rm -frv test_automated_output
     ./run_tests.sh hisat2
     ./run_tests.sh star
     ./run_tests.sh stranded
     ./run_tests.sh rnaseq
     ./run_tests.sh chipseq
     ./run_tests.sh scrnaseq
-    rm -rf test_automated_output
+    rm -frv test_automated_output
 )
