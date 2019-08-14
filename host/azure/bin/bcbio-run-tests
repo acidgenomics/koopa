@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Run bcbio-nextgen unit tests.
+# Modified 2019-06-26.
+
+# Refer to tests/data/automated for YAML recipes.
+
+version="${1:-development}"
+bin_dir="/data00/bcbio/${version}/tools/bin"
+[[ -d "$bin_dir" ]] || exit 1
+
+tmp_dir="/mnt/resource"
+sudo chown "$USER" "$tmp_dir"
+
+(
+    export PATH="${bin_dir}:${PATH}"
+    cd /data00/bcbio/git/tests
+    rm -rf test_automated_output
+    ./run_tests.sh hisat2
+    ./run_tests.sh star
+    ./run_tests.sh stranded
+    ./run_tests.sh rnaseq
+    ./run_tests.sh chipseq
+    ./run_tests.sh scrnaseq
+    rm -rf test_automated_output
+)

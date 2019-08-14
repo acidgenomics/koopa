@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# rsync bcbio installation.
+# Modified 2019-07-10.
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.135"
+bcbio_dir="/data00/bcbio"
+
+if [[ "$source_ip" == "$host_ip" ]]
+then
+    printf "Attempting to rsync from source machine.\n"
+    exit 1
+fi
+
+printf "Updating '%s' from '%s'.\n" "$bcbio_dir" "$source_ip"
+rsync -av --delete "${source_user}@${source_host}:${bcbio_dir}/" "${bcbio_dir}/"

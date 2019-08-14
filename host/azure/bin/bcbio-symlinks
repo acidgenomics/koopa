@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# bcbio symlinks
+# Modified 2019-06-27.
+
+bcbio_dir="/data00/bcbio"
+printf "Updating symlinks.\n"
+
+# Remove existing symlinks in `/usr/local/bin`.
+sudo rm -f /usr/local/bin/bcbio_nextgen.py*
+
+(
+    version="1.1.5"
+    sudo ln -s \
+        "${bcbio_dir}/v${version}/install/anaconda/bin/bcbio_nextgen.py" \
+        "/usr/local/bin/bcbio_nextgen.py-${version}"
+    sudo ln -s \
+        "/usr/local/bin/bcbio_nextgen.py-${version}" \
+        "/usr/local/bin/bcbio_nextgen.py"
+)
+
+(
+    version="development"
+    sudo ln -s \
+        "${bcbio_dir}/${version}/install/anaconda/bin/bcbio_nextgen.py" \
+        "/usr/local/bin/bcbio_nextgen.py-${version}"
+)
