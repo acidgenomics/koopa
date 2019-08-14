@@ -323,8 +323,6 @@ then
         # shellcheck source=/dev/null
         . "${bash_dir}/shopt.sh"
         # shellcheck source=/dev/null
-        . "${bash_dir}/bind.sh"
-        # shellcheck source=/dev/null
         . "${bash_dir}/ps1.sh"
         unset -v bash_dir
     elif [ "$KOOPA_SHELL" = "zsh" ]
