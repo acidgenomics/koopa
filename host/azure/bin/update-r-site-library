@@ -22,7 +22,7 @@ then
 fi
 
 # Update local symlinks.
-sprintf "Updating 'site-library' symlinks.\n"
+printf "Updating 'site-library' symlinks.\n"
 rm -frv "${r_home}/site-library"
 ln -fns "$lib_link" "${r_home}/site-library"
 rm -frv "/usr/local/lib64/R/site-library"
