@@ -4,8 +4,6 @@
 # Activate koopa.
 # Updated 2019-08-14.
 
-# FIXME Rethink the approach to dotfiles. Make user configurable.
-
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
 
@@ -140,10 +138,6 @@ optional arguments:
         Show this help message and exit.
 
 optional variables:
-    dotfiles
-        Git repository path to dotfiles.
-        Supports either SSH (recommended) or HTTPS.
-        Example: git@github.com:mjsteinbaugh/dotfiles.git
     extra=1 [true]
         Enable extra shell and OS-specific configuration.
     minimal=0 [false]
