@@ -15,7 +15,7 @@ pkgs_dir="${bcbio_dir}/${version}/install/anaconda/pkgs"
 
 if [[ ! -d "$pkgs_dir" ]]
 then
-    &>2 printf "Error: Packages directory does not exist.\n%s\n" "$pkgs_dir"
+    >&2 printf "Error: Packages directory does not exist: '%s'.\n" "$pkgs_dir"
     exit 1
 fi
 

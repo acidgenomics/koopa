@@ -21,20 +21,20 @@ tests_dir="${git_dir}/tests"
 
 if [[ ! -d "$bin_dir" ]]
 then
-    &>2 printf "Error: bcbio install does not exist.\n%s\n" "$bin_dir"
+    >&2 printf "Error: bcbio missing: '%s'.\n" "$bin_dir"
     exit 1
 fi
 
 if [[ ! -d "$tests_dir" ]]
 then
-    &>2 printf "Error: Failed to locate bcbio tests dir.\n%s\n" "$tests_dir"
+    >&2 printf "Error: bcbio tests missing: '%s'.\n" "$tests_dir"
     exit 1
 fi
 
 # Ensure temp SSD is configured correctly on Azure VM.
 if [[ ! -d "$tmp_dir" ]]
 then
-    &>2 printf "Error: Failed to detect tmp SSD.\n%s\n" "$tmp_dir"
+    >&2 printf "Error: Failed to detect tmpdir: '%s'.\n" "$tmp_dir"
     exit 1
 fi
 sudo chown "$USER" "$tmp_dir"
