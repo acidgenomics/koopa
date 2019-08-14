@@ -1,3 +1,13 @@
+## koopa 0.5.0 (2019-08-14)
+
+### Major changes
+
+- Koopa now attempts to source user configuration files prior to activation.
+  This enables better passthrough of user-defined configuration variables.
+- Simplified dotfiles configuration handling. Now need to install manually using
+  `--dotfiles` flag or can use `install-dotfiles` script after installation.
+- Fixed shell configuration when `EDITOR="emacs"`.
+
 ## koopa 0.4.6 (2019-08-01)
 
 ### New scripts

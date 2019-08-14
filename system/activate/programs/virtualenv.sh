@@ -1,13 +1,19 @@
 #!/bin/sh
 
 # Activate Python "default" virtual environment.
-# Updated 2019-06-27.
+# Updated 2019-08-02.
 
 # Note that we're using this instead of conda as our default interactive
 # Python environment, so we can easily use pip.
 
+# Here's how to write a function to detect virtual environment name:
+# https://stackoverflow.com/questions/10406926
+
 # Only attempt to autoload for bash or zsh.
 koopa shell | grep -Eq "^(bash|zsh)$" || return 0
+
+# Don't allow Python to change the prompt string.
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 env_name="default"
 
@@ -16,14 +22,13 @@ env_name="default"
     PYTHON_EXE="${HOME}/.virtualenvs/${env_name}/bin/python"
 
 # Early return if we don't detect an installation.
-[ -z "${PYTHON_EXE:-}" ] && 
-    unset -v env_name &&
-    return
+if [ -z "${PYTHON_EXE:-}" ]
+then
+    unset -v env_name
+    return 0
+fi
 
 export PYTHON_EXE
-
-# Don't allow Python to change the prompt string.
-export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 # Now we're ready to activate.
 virtualenv_bin_dir="$(dirname "$PYTHON_EXE")"

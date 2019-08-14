@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# List the number of files of each extension type in current directory.
+# Updated 2019-08-08.
+
+# See also:
+# - Stephen Turner tweet
+#   https://twitter.com/strnr/status/1159503398716227584
+
+find . \
+    -maxdepth 1 \
+    -type f | \
+    sed 's/.*\.//' | \
+    sort | \
+    uniq -c | \
+    sed 's/^ *//g' | \
+    sed 's/ /\t/g'

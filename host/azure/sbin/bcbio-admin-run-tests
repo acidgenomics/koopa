@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# Run bcbio-nextgen unit tests.
+# Modified 2019-08-14.
+
+# Refer to tests/data/automated for YAML recipes.
+
+_koopa_assert_has_sudo
+
+bcbio_dir="/data00/bcbio"
+tmp_dir="/mnt/resource"
+version="${1:-development}"
+
+bin_dir="${bcbio_dir}/${version}/tools/bin"
+git_dir="${bcbio_dir}/git"
+tests_dir="${git_dir}/tests"
+
+if [[ ! -d "$bin_dir" ]]
+then
+    >&2 printf "Error: bcbio missing: '%s'.\n" "$bin_dir"
+    exit 1
+fi
+
+if [[ ! -d "$tests_dir" ]]
+then
+    >&2 printf "Error: bcbio tests missing: '%s'.\n" "$tests_dir"
+    exit 1
+fi
+
+# Ensure temp SSD is configured correctly on Azure VM.
+if [[ ! -d "$tmp_dir" ]]
+then
+    >&2 printf "Error: Failed to detect tmpdir: '%s'.\n" "$tmp_dir"
+    exit 1
+fi
+sudo chown "$USER" "$tmp_dir"
+sudo chmod u+rwx "$tmp_dir"
+
+(
+    export PATH="${bin_dir}:${PATH}"
+    cd "$tests_dir" || exit 1
+    rm -frv test_automated_output
+    ./run_tests.sh hisat2
+    rm -frv test_automated_output
+    ./run_tests.sh star
+    rm -frv test_automated_output
+    # Currently failing for v1.1.6a.
+    ./run_tests.sh fastrnaseq
+    rm -frv test_automated_output
+    ./run_tests.sh stranded
+    rm -frv test_automated_output
+    # Currently failing for v1.1.6a.
+    ./run_tests.sh rnaseq
+    rm -frv test_automated_output
+    ./run_tests.sh chipseq
+    rm -frv test_automated_output
+    ./run_tests.sh scrnaseq
+    rm -frv test_automated_output
+)

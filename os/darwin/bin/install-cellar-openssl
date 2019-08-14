@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
@@ -6,4 +7,5 @@ source "$(koopa header darwin)"
 # Install OpenSSL.
 # Updated 2019-06-23.
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script openssl)"

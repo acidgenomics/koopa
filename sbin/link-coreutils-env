@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Link coreutils env
+# Updated 2019-08-14.
+
+# This may be necessary to re-run after yum update on RHEL7.
+
+_koopa_assert_has_sudo
+
+build_prefix="$(koopa build-prefix)"
+printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
+
+if [[ ! -L "/usr/bin/env" ]]
+then
+    printf "System version will be renamed to 'env.bak'.\n"
+    sudo rm -fv "/usr/bin/env.bak"
+    sudo mv -fv "/usr/bin/env" "/usr/bin/env.bak"
+else
+    sudo rm -fv "/usr/bin/env"
+fi
+
+sudo ln -fnsv "${build_prefix}/bin/env" "/usr/bin/env"

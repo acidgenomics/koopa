@@ -2,18 +2,15 @@
 set -Ee -o pipefail
 
 # Install koopa.
-# Updated 2019-07-29.
+# Updated 2019-08-14.
 
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
-
-# shellcheck source=system/include/functions.sh
-source "${KOOPA_HOME}/system/include/functions.sh"
 
 # Error on root user.
 if [[ "$(id -u)" -eq 0 ]]
 then
-    >&2 printf "Don't run this script as root.\n"
-    return 1
+    >&2 printf "Don't install koopa as root.\n"
+    exit 1
 fi
 
 
@@ -23,31 +20,22 @@ fi
 
 usage() {
     cat << EOF
-usage: install [-h]
+usage: install [-h] [--dotfiles] [--mike] [--shared]
 
 Install koopa.
-
-This script performs the following steps:
-
-  1. Initialize top-level submodules (e.g. dotfiles).
-  2. Recurse into dotfiles repo and initialize additional submodules.
-  3. Configure profile for current user (default; e.g. '~/.bashrc'), or shared
-     profile (use '--shared' flag) via '/etc/profile.d/'.
 
 optional arguments:
   -h, --help
         Show this help message and exit.
-  --devel
-        Enable developer mode. This changes the repository URLs from HTTPS
-        to SSH, for easier code commits.
   --dotfiles
-        Automatically generate dot file symlinks.
+        Clone Mike's dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
+        and automatically symlink recommended default configuration files.
   --mike
         Install Mike-specific configuration.
-        This flag automatically enables '--devel' and '--dotfiles'.
+        This flag automatically enables '--dotfiles'.
   --shared
-        Configure shared installation using '/etc/profile.d'.
-        Automatically enabled when installed in '/usr/local' or '/opt'.
+        Linux only.
+        Enable shared user configuration via '/etc/profile.d/koopa.sh' file.
 EOF
 }
 
@@ -62,10 +50,6 @@ do
         -h|--help)
             usage
             exit 0
-            ;;
-        --devel)
-            devel=1
-            shift 1
             ;;
         --mike)
             mike=1
@@ -92,9 +76,9 @@ do
     esac
 done
 
+# Automatically clone dotfiles in Mike mode.
 if [[ "${mike:-0}" -eq 1 ]]
 then
-    devel=1
     dotfiles=1
 fi
 
@@ -103,59 +87,8 @@ fi
 # Remove legacy cruft                                                       {{{1
 # ==============================================================================
 
-rm -rf "${KOOPA_HOME}/bin/"{host,os,sudo}
-rm -rf "${KOOPA_HOME}/"{config,dotfiles,include}
-
-
-
-# Shared user configuration                                                 {{{1
-# ==============================================================================
-
-# Checking for '/usr/local' installation automatically.
-if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
-then
-    printf "\nShared installation detected at '%s'.\n" "$KOOPA_HOME"
-    shared=1
-fi
-
-if [[ "${shared:-0}" -eq 1 ]]
-then
-    _koopa_update_profile
-fi
-
-
-
-# Initialize submodules                                                     {{{1
-# ==============================================================================
-
-if [[ "${dotfiles:-0}" -eq 1 ]]
-then
-    (
-        printf "\nInitializing submodules.\n"
-        cd "$KOOPA_HOME" || exit 1
-        git submodule init
-        git submodule update --init --recursive
-        git submodule sync --recursive
-        # Change remote from HTTPS to git for easier commits.
-        if [[ -n "${devel:-}" ]]
-        then
-            git remote set-url origin git@github.com:acidgenomics/koopa.git
-        fi
-    )
-
-    (
-        printf "\nInitializing dotfiles submodules.\n"
-        cd "${KOOPA_HOME}/system/config/dotfiles" || exit 1
-        git submodule init
-        git submodule update --init --recursive
-        git submodule sync --recursive
-        # Change remote from HTTPS to git for easier commits.
-        if [[ -n "${devel:-}" ]]
-        then
-            git remote set-url origin git@github.com:mjsteinbaugh/dotfiles.git
-        fi
-    )
-fi
+rm -fr "${KOOPA_HOME}/"{config,dotfiles,include}
+rm -fr "${KOOPA_HOME}/bin/"{host,os,sudo}
 
 
 
@@ -164,7 +97,24 @@ fi
 
 printf "\nActivating koopa.\n"
 # shellcheck source=activate
-force=1 . "${KOOPA_HOME}/activate"
+force=1 source "${KOOPA_HOME}/activate"
+
+
+
+# Shared user configuration                                                 {{{1
+# ==============================================================================
+
+# Checking for '/usr/local' installation automatically.
+# > if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
+# > then
+# >     printf "\nShared installation detected at '%s'.\n" "$KOOPA_HOME"
+# >     shared=1
+# > fi
+
+if [[ "${shared:-0}" -eq 1 ]]
+then
+    _koopa_update_profile
+fi
 
 
 
@@ -174,6 +124,11 @@ force=1 . "${KOOPA_HOME}/activate"
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
+    install-dotfiles
+    
+    # Remove legacy dotfile cruft.
+    # shellcheck source=system/uninstall/dotfiles-legacy.sh
+    source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 
     # Always create these dotfiles, even on a shared installation.
     # shellcheck source=system/install/dotfiles-shared.sh
@@ -181,17 +136,17 @@ then
 
     # Create local config files.
     # shellcheck source=system/install/dotfiles-local.sh
-    [[ -z "${shared:-}" ]] &&
+    if [[ "${shared:-0}" -eq 1 ]]
+    then
         source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
+    fi
 
     # Configure Mike's dotfiles.
     # shellcheck source=system/install/dotfiles-mike.sh
-    [[ "${mike:-}" -eq 1 ]] &&
+    if [[ "${mike:-0}" -eq 1 ]]
+    then
         source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
-
-    # Remove legacy dotfile cruft.
-    # shellcheck source=system/uninstall/dotfiles-legacy.sh
-    source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
+    fi
 fi
 
 
