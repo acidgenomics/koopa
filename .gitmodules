@@ -1,3 +1,0 @@
-[submodule "system/config/dotfiles"]
-	path = system/config/dotfiles
-	url = https://github.com/mjsteinbaugh/dotfiles.git
