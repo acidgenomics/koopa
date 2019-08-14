@@ -7,6 +7,8 @@ source "$(koopa header azure)"
 # bcbio symlinks
 # Modified 2019-08-14.
 
+_koopa_assert_has_sudo
+
 bcbio_dir="/data00/bcbio"
 printf "Updating symlinks.\n"
 
