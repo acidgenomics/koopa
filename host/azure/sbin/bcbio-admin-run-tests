@@ -46,10 +46,15 @@ sudo chmod u+rwx "$tmp_dir"
     cd "$tests_dir" || exit 1
     rm -frv test_automated_output
     ./run_tests.sh hisat2
+    rm -frv test_automated_output
     ./run_tests.sh star
+    rm -frv test_automated_output
     ./run_tests.sh stranded
+    rm -frv test_automated_output
     ./run_tests.sh rnaseq
+    rm -frv test_automated_output
     ./run_tests.sh chipseq
+    rm -frv test_automated_output
     ./run_tests.sh scrnaseq
     rm -frv test_automated_output
 )
