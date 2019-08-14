@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Install reticulate Python virtual environment.
-# Updated 2019-08-02.
+# Updated 2019-08-14.
 
 _koopa_assert_is_installed python3
 
@@ -13,6 +13,8 @@ env_name="reticulate"
 env_dir="${HOME}/.virtualenvs/${env_name}"
 
 python3 -m venv "$env_dir"
+
+# shellcheck source=/dev/null
 source "${env_dir}/bin/activate"
 
 pip install --upgrade pip

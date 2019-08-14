@@ -7,4 +7,5 @@ source "$(koopa header darwin)"
 # Install OpenSSL.
 # Updated 2019-06-23.
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script openssl)"

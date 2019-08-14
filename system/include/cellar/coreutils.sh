@@ -36,7 +36,8 @@ printf "Installing %s %s.\n" "$name" "$version"
 link-cellar "$name" "$version"
 
 # Update '/usr/bin/env'.
-if _koopa_has_sudo then
+if _koopa_has_sudo
+then
     link-coreutils-env
 fi
 

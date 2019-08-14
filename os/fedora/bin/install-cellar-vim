@@ -16,4 +16,5 @@ then
     sudo yum-builddep -y vim
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script vim)"

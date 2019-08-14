@@ -18,4 +18,5 @@ then
     fi
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script openssl)"

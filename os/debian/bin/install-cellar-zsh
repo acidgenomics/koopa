@@ -12,4 +12,5 @@ then
     sudo apt-get -y build-dep zsh
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script zsh)"

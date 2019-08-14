@@ -36,4 +36,5 @@ then
     sudo yum-builddep -y R
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script r)"
