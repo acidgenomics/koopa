@@ -11,5 +11,10 @@ source "$(koopa header bash)"
 repo="${1:-git@github.com:mjsteinbaugh/dotfiles.git}"
 dest_dir="$(koopa config-dir)/dotfiles"
 
-rm -frv "$dest_dir"
+if [[ -d "$dest_dir" ]]
+then
+    printf "Dot files already exist at: '%s'.\n" "$dest_dir"
+    exit 0
+fi
+
 git clone --recursive "$repo" "$dest_dir"
