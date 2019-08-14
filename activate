@@ -58,6 +58,7 @@ then
         set -o xtrace
     fi
     force=1
+    export KOOPA_TEST=1
 fi
 
 # Check for interactive shell.
