@@ -13,6 +13,7 @@ host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.135"
 bcbio_dir="/data00/bcbio"
+group="$(_koopa_build_prefix_group)"
 
 if [[ "$source_ip" == "$host_ip" ]]
 then
@@ -22,4 +23,4 @@ fi
 
 printf "Updating '%s' from '%s'.\n" "$bcbio_dir" "$source_ip"
 rsync -av --delete "${source_user}@${source_ip}:${bcbio_dir}/" "${bcbio_dir}/"
-sudo chown -Rh root:wheel "$bcbio_dir"
+sudo chown -Rh "${source_user}:${group}" "$bcbio_dir"
