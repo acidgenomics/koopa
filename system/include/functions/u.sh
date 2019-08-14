@@ -166,6 +166,5 @@ _koopa_update_xdg_config() {
 
     relink "${home_dir}" "${config_dir}/home"
     relink "${home_dir}/activate" "${config_dir}/activate"
-    relink "${home_dir}/system/config/dotfiles" "${config_dir}/dotfiles"
     relink "${home_dir}/os/${os_type}/etc/R" "${config_dir}/R"
 }

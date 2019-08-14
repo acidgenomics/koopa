@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -Eeu o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# rsync R site package library.
+# Modified 2019-08-14.
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.135"
+
+r_home="$(koopa r-home)"
+r_dir="/data00/R"
+lib_link="${r_dir}/site-library/current"
+
+if [[ "$host_ip" != "$source_ip" ]]
+then
+    printf "Updating '%s' from '%s'.\n" "$r_dir" "$source_ip"
+    rsync -av --delete "${source_user}@${source_ip}:${r_dir}/" "${r_dir}/"
+fi
+
+# Update local symlinks.
+printf "Updating 'site-library' symlinks.\n"
+rm -frv "${r_home}/site-library"
+ln -fnsv "$lib_link" "${r_home}/site-library"
+rm -frv "/usr/local/lib64/R/site-library"
+ln -fnsv "$lib_link" "/usr/local/lib64/R/site-library"

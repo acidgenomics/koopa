@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-07-29.
+## Updated 2019-08-14.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -613,7 +613,11 @@ if (isTRUE(linux)) {
     check_version(
         name = "rstudio-server",
         version = koopa_version("rstudio-server"),
-        version_cmd = "rstudio-server version",
+        version_cmd = c(
+            "rstudio-server version",
+            "head -n 1",
+            "cut -d ' ' -f 1"
+        ),
         eval = "==",
         required = FALSE
     )
@@ -636,11 +640,7 @@ if (isTRUE(linux)) {
         name = "bcbio_nextgen.py",
         version = koopa_version("bcbio_nextgen.py"),
         version_cmd = "bcbio_nextgen.py --version",
-        eval = switch(
-            EXPR = host,
-            azure = "==",
-            ">="
-        ),
+        eval = "==",
         required = FALSE
     )
 

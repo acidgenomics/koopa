@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
@@ -21,4 +22,5 @@ then
     esac
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script python)"

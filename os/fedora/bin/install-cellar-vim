@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
@@ -15,4 +16,5 @@ then
     sudo yum-builddep -y vim
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script vim)"
