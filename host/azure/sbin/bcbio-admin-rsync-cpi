@@ -7,6 +7,8 @@ source "$(koopa header azure)"
 # rsync bcbio installation.
 # Modified 2019-07-10.
 
+_koopa_assert_has_sudo
+
 host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.135"
