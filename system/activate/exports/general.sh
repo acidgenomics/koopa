@@ -5,18 +5,6 @@
 
 
 
-# Shell type                                                                {{{1
-# ==============================================================================
-
-# Check if this is a login shell.
-_koopa_is_login_bash && export LOGIN=1
-_koopa_is_login_zsh && export LOGIN=1
-
-# Check if this is an interactive shell.
-_koopa_is_interactive && export INTERACTIVE=1
-
-
-
 # Standard globals                                                          {{{1
 # ==============================================================================
 
@@ -24,25 +12,42 @@ _koopa_is_interactive && export INTERACTIVE=1
 # consistently exported across platforms.
 
 # HOSTNAME
-[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)" && export HOSTNAME
+if [ -z "${HOSTNAME:-}" ]
+then
+    HOSTNAME="$(uname -n)"
+    export HOSTNAME
+fi
 
 # OSTYPE
 # Automatically set by bash and zsh.
 # Updated 2019-06-26.
-[ -z "${OSTYPE:-}" ] && 
-    OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')" &&
+if [ -z "${OSTYPE:-}" ]
+then
+    OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
     export OSTYPE
+fi
 
 # TERM
 # Terminal color mode. This should normally be set by the terminal client.
-[ -z "${TERM:-}" ] && export TERM="screen-256color"
+if [ -z "${TERM:-}" ]
+then
+    export TERM="screen-256color"
+fi
 
 # TODAY
 # Current date. Alternatively, can use `%F` shorthand.
-[ -z "${TODAY:-}" ] && TODAY="$(date +%Y-%m-%d)" && export TODAY
+if [ -z "${TODAY:-}" ]
+then
+    TODAY="$(date +%Y-%m-%d)"
+    export TODAY
+fi
 
 # USER
-[ -z "${USER:-}" ] && USER="$(whoami)" && export USER
+if [ -z "${USER:-}" ]
+then
+    USER="$(whoami)"
+    export USER
+fi
 
 
 
@@ -87,8 +92,10 @@ _koopa_is_interactive && export INTERACTIVE=1
 # https://github.com/Homebrew/brew/blob/master/Library/Homebrew/brew.sh
 # > export LC_ALL="C"
 
-[ "$(locale charmap 2>/dev/null)" != "UTF-8" ] &&
+if [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
+then
     export LC_ALL="en_US.UTF-8"
+fi
 
 
 
@@ -134,12 +141,19 @@ export CPU_COUNT
 
 # Enable passphrase prompting in terminal.
 # Note that this step will error if tty isn't installed.
-[ -z "${GPG_TTY:-}" ] && GPG_TTY="$(tty)" && export GPG_TTY
+if [ -z "${GPG_TTY:-}" ]
+then
+    GPG_TTY="$(tty)"
+    export GPG_TTY
+fi
 
 # Ruby                                                                      {{{2
 # ------------------------------------------------------------------------------
 
-[ -d "${HOME}/.gem" ] && export GEM_HOME="${HOME}/.gem"
+if [ -d "${HOME}/.gem" ]
+then
+    export GEM_HOME="${HOME}/.gem"
+fi
 
 # rsync                                                                     {{{2
 # ------------------------------------------------------------------------------
