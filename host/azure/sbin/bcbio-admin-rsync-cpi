@@ -22,5 +22,6 @@ then
 fi
 
 printf "Updating '%s' from '%s'.\n" "$bcbio_dir" "$source_ip"
+sudo chown -Rh "${source_user}:${group}" "$bcbio_dir"
 rsync -av --delete "${source_user}@${source_ip}:${bcbio_dir}/" "${bcbio_dir}/"
 sudo chown -Rh "${source_user}:${group}" "$bcbio_dir"
