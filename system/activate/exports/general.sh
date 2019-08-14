@@ -96,20 +96,13 @@ _koopa_is_interactive && export INTERACTIVE=1
 # ==============================================================================
 
 # Set up text editor, if unset.
-# Using vim instead of emacs by default.
+# Recommending vim by default.
 if [ -z "${EDITOR:-}" ]
 then
-    case "$(_koopa_quiet_which)" in
-        vim)
-            export EDITOR="vim"
-            ;;
-        emacs)
-            export EDITOR="emacs"
-            ;;
-        vi)
-            export EDITOR="vi"
-            ;;
-    esac
+    export EDITOR="vim"
+    export VISUAL="$EDITOR"
+else
+    export VISUAL="$EDITOR"
 fi
 
 
