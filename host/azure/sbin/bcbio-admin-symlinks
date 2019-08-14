@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# bcbio symlinks
+# Modified 2019-08-14.
+
+_koopa_assert_has_sudo
+
+bcbio_dir="/data00/bcbio"
+printf "Updating symlinks.\n"
+
+# Remove existing symlinks in `/usr/local/bin`.
+sudo rm -fv /usr/local/bin/bcbio_nextgen.py*
+
+(
+    version="1.1.5"
+    sudo ln -fnsv \
+        "${bcbio_dir}/v${version}/install/anaconda/bin/bcbio_nextgen.py" \
+        "/usr/local/bin/bcbio_nextgen.py-${version}"
+    sudo ln -fnsv \
+        "/usr/local/bin/bcbio_nextgen.py-${version}" \
+        "/usr/local/bin/bcbio_nextgen.py"
+)
+
+(
+    version="development"
+    sudo ln -fnsv \
+        "${bcbio_dir}/${version}/install/anaconda/bin/bcbio_nextgen.py" \
+        "/usr/local/bin/bcbio_nextgen.py-${version}"
+)
