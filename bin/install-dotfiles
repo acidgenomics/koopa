@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install dot files.
+# Updated 2019-08-14.
+
+# Defaults to Mike's dotfiles repo.
+repo="${1:-git@github.com:mjsteinbaugh/dotfiles.git}"
+dest_dir="$(koopa config-dir)/dotfiles"
+
+rm -frv "$dest_dir"
+git clone --recursive "$repo" "$dest_dir"
