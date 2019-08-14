@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-07-30.
+# Updated 2019-08-14.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -17,10 +17,35 @@
 
 # Never activate for specific admin accounts.
 [ "$(id -u)" -eq 0 ] && return 0
-whoami | grep -Eq "\b(admin)\b" && return 0
+whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
-# Enable test mode.
-if [ "${test:-0}" -eq 1 ]
+# Detect force mode.
+# Disabled by default.
+[ -z "${force:-}" ] && force=0
+case "$force" in
+    1|true)
+        force=1
+        ;;
+    *)
+        force=0
+        ;;
+esac
+
+# Detect test mode.
+# Disabled by default.
+[ -z "${test:-}" ] && test=0
+[ -n "${KOOPA_TEST:-}" ] && test=1
+case "$test" in
+    1|true)
+        test=1
+        ;;
+    *)
+        test=0
+        ;;
+esac
+
+# Enable verbose debugging in test mode.
+if [ "$test" -eq 1 ]
 then
     printf "Test mode enabled.\n"
     printf "Setting strict shell mode.\n"
@@ -33,27 +58,69 @@ then
         set -o posix
         set -o xtrace
     fi
-    export KOOPA_TEST=1
     force=1
+    export KOOPA_TEST=1
 fi
 
 # Check for interactive shell.
-echo "$-" | grep -q "i" && export INTERACTIVE=1
+echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
 # Force reactivation inside of interactive HPC job.
-[ -n "${SLURM_JOB_ID:-}" ] && [ -n "${INTERACTIVE:-}" ] && force=1
+[ -n "${SLURM_JOB_ID:-}" ] && [ "$interactive" -eq 1 ] && force=1
 
 # Force reactivation inside of tmux session.
 [ -z "${TMUX:-}" ] || force=1
 
-[ "${force:-0}" -eq 1 ] && export KOOPA_FORCE=1
-[ "${minimal:-0}" -eq 1 ] && export KOOPA_MINIMAL=1
-
 # Early return for non-interactive sessions.
-[ -z "${KOOPA_FORCE:-}" ] && [ -z "${INTERACTIVE:-}" ] && return 0
+[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
 
 # Early return if koopa is already active.
-[ -z "${KOOPA_FORCE:-}" ] && [ -n "${KOOPA_HOME:-}" ] && return 0
+[ "$force" -eq 0 ] && [ -n "${KOOPA_HOME:-}" ] && return 0
+
+# Detect extra mode.
+# Enabled by default.
+[ -z "${extra:-}" ] && extra=1
+case "$extra" in
+    1|true)
+        extra=1
+        ;;
+    *)
+        extra=0
+        ;;
+esac
+
+# Detect programs mode.
+# Enabled by default.
+[ -z "${programs:-}" ] && programs=1
+case "$programs" in
+    1|true)
+        programs=1
+        ;;
+    *)
+        programs=0
+        ;;
+esac
+
+# Detect minimal mode.
+# Disabled by default.
+[ -z "${minimal:-}" ] && minimal=0
+case "$minimal" in
+    1|true)
+        minimal=1
+        ;;
+    *)
+        minimal=0
+        ;;
+esac
+
+# Disable other options when running in minimal mode.
+if [ "$minimal" -eq 1 ]
+then
+    extra=0
+    programs=0
+fi
+
+unset -v force interactive minimal
 
 
 
@@ -62,7 +129,7 @@ echo "$-" | grep -q "i" && export INTERACTIVE=1
 
 usage() {
     cat << EOF
-usage: activate [-h] [--test] [--force] [--minimal]
+usage: activate [-h]
 
 Activate koopa.
 
@@ -73,13 +140,21 @@ optional arguments:
         Show this help message and exit.
 
 optional variables:
-    test=1
+    extra=1 [true]
+        Enable extra shell and OS-specific configuration.
+    minimal=0 [false]
+        Minimal mode. Simply export koopa programs into PATH.
+        Skip additional program and shell configuration.
+        Internally, this sets extra=0, programs=1.
+    programs=1 [true]
+        Enable automatic configuration of supported programs.
+
+optional variables, for debugging:
+    force=0 [false]
+        Force reactivation, even if koopa is already active.
+    test=0 [false]
         Enable verbose test mode. Used for Travis CI checks.
         This will also automatically set 'force=1'.
-    force=1
-        Force reactivation, even if koopa is already active.
-    minimal=1
-        Minimal mode. Simply export koopa programs into PATH.
 EOF
 }
 
@@ -111,9 +186,11 @@ unset -f usage
 
 # Fake realpath support, if necessary.
 # Note that `readlink -f` doesn't work on macOS.
-# # See also:
+#
+# See also:
 # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-# # Modified 2019-06-26.
+#
+# Updated 2019-06-26.
 if ! command -v realpath >/dev/null
 then
     realpath() {
@@ -157,7 +234,7 @@ else
 fi
 export KOOPA_SHELL
 
-if [ ! -f "${file:-}" ]
+if [ ! -f "$file" ]
 then
     >&2 printf "Error: Failed to detect absolute path of activation script.\n"
     return 1
@@ -182,6 +259,8 @@ activate_dir="${KOOPA_HOME}/system/activate"
 
 # shellcheck source=/dev/null
 . "${activate_dir}/preflight.sh"
+# shellcheck source=/dev/null
+. "${activate_dir}/user-profile.sh"
 
 exports_dir="${activate_dir}/exports"
 # shellcheck source=/dev/null
@@ -196,27 +275,14 @@ _koopa_update_xdg_config
 
 
 
-# Extra shell configuration                                                 {{{1
+# Program configuration                                                     {{{1
 # ==============================================================================
 
-if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
+if [ "$programs" -eq 1 ]
 then
-    # shellcheck source=/dev/null
-    . "${activate_dir}/set.sh"
-    # shellcheck source=/dev/null
-    . "${activate_dir}/umask.sh"
-    # shellcheck source=/dev/null
-    . "${activate_dir}/aliases.sh"
-    # shellcheck source=/dev/null
-    . "${activate_dir}/secrets.sh"
-    # shellcheck source=/dev/null
-    . "${activate_dir}/ssh-key.sh"
-
     programs_dir="${activate_dir}/programs"
     # shellcheck source=/dev/null
     . "${programs_dir}/conda.sh"
-    # shellcheck source=/dev/null
-    # > . "${programs_dir}/conda-envs.sh"
     # shellcheck source=/dev/null
     . "${programs_dir}/perlbrew.sh"
     # shellcheck source=/dev/null
@@ -229,7 +295,26 @@ then
     . "${programs_dir}/bcbio.sh"
     # shellcheck source=/dev/null
     . "${programs_dir}/virtualenv.sh"
-    unset -v programs_dir
+    unset -v programs programs_dir
+fi
+
+
+
+# Extra shell configuration                                                 {{{1
+# ==============================================================================
+
+if [ "$extra" -eq 1 ]
+then
+    # shellcheck source=/dev/null
+    . "${activate_dir}/set.sh"
+    # shellcheck source=/dev/null
+    . "${activate_dir}/umask.sh"
+    # shellcheck source=/dev/null
+    . "${activate_dir}/aliases.sh"
+    # shellcheck source=/dev/null
+    . "${activate_dir}/secrets.sh"
+    # shellcheck source=/dev/null
+    . "${activate_dir}/ssh-key.sh"
 
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
@@ -238,18 +323,8 @@ then
         # shellcheck source=/dev/null
         . "${bash_dir}/shopt.sh"
         # shellcheck source=/dev/null
-        . "${bash_dir}/bind.sh"
-        # shellcheck source=/dev/null
         . "${bash_dir}/ps1.sh"
         unset -v bash_dir
-    elif [ "$KOOPA_SHELL" = "zsh" ]
-    then
-        # `~/.zhsrc` file is required for Z shell to configure correctly.
-        if [ ! -f "${HOME}/.zshrc" ]
-        then
-            dotfile -q shrc
-            dotfile -q zshrc
-        fi
     fi
 
     # Platform-specific configuration.
@@ -266,9 +341,8 @@ then
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
     fi
-
-    # Set up the today bucket.
-    bash touch-today-bucket
+    
+    unset -v extra
 fi
 
 
@@ -280,7 +354,7 @@ unset -v activate_dir
 unset -v colors
 
 # Disable test mode.
-if [ -n "${KOOPA_TEST:-}" ]
+if [ "$test" -eq 1 ]
 then
     set +o errexit
     set +o nounset
@@ -292,3 +366,4 @@ then
     fi
     printf "Activation was successful.\n"
 fi
+unset -v test

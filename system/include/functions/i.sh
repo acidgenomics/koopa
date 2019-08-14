@@ -78,6 +78,13 @@ _koopa_is_local() {
 
 
 
+# Updated 2019-08-14.
+_koopa_is_login() {
+    echo "$0" | grep -Eq "^-"
+}
+
+
+
 # Updated 2019-06-21.
 _koopa_is_login_bash() {
     [ "$0" = "-bash" ]

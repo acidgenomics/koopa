@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
@@ -11,4 +12,5 @@ then
     sudo apt-get -y build-dep coreutils
 fi
 
+# shellcheck source=/dev/null
 source "$(koopa cellar-script coreutils)"
