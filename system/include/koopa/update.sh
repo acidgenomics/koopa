@@ -10,6 +10,7 @@ source "$(koopa header bash)"
 (
     cd "$KOOPA_HOME" || exit 1
     git fetch --all
+    git checkout master
     git pull
 )
 
