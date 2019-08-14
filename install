@@ -128,6 +128,8 @@ fi
 # Initialize submodules                                                     {{{1
 # ==============================================================================
 
+## FIXME Rework dotfiles approach here.
+
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
     (
@@ -170,6 +172,8 @@ force=1 . "${KOOPA_HOME}/activate"
 
 # Dot files                                                                 {{{1
 # ==============================================================================
+
+## FIXME Rethink this approach.
 
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
