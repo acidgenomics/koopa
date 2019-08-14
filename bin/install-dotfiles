@@ -15,6 +15,10 @@ if [[ -d "$dest_dir" ]]
 then
     printf "Dot files already exist at: '%s'.\n" "$dest_dir"
     exit 0
+elif [[ -L "$dest_dir" ]]
+then
+    # This will take care of legacy symlinks created by koopa.
+    rm -frv "$dest_dir"
 fi
 
 git clone --recursive "$repo" "$dest_dir"
