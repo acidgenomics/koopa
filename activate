@@ -353,9 +353,6 @@ then
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
     fi
-
-    # Set up the today bucket.
-    bash touch-today-bucket
     
     unset -v extra
 fi
