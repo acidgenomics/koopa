@@ -129,7 +129,7 @@ unset -v force interactive minimal
 
 usage() {
     cat << EOF
-usage: activate [-h] [--test] [--force] [--minimal]
+usage: activate [-h]
 
 Activate koopa.
 
@@ -140,6 +140,10 @@ optional arguments:
         Show this help message and exit.
 
 optional variables:
+    dotfiles
+        Git repository path to dotfiles.
+        Supports either SSH (recommended) or HTTPS.
+        Example: git@github.com:mjsteinbaugh/dotfiles.git
     extra=1 [true]
         Enable extra shell and OS-specific configuration.
     minimal=0 [false]
