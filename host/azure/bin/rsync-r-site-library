@@ -1,0 +1,14 @@
+#/usr/bin/env bash
+set -Eeu o pipefail
+
+# rsync R site package library.
+# Modified 2019-08-14.
+
+dir="/data00/R"
+host="mike@10.100.100.135"
+printf "Updating '%s' from '%s'.\n" "$dir" "$host"
+rsync -av --delete "${host}:${dir}/" "${dir}/"
+
+# Update local symlink.
+rm -f /usr/local/lib64/R/site-library
+ln -s /data00/R/site-library/current /usr/local/lib64/R/site-library
