@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# Clean up extracted bcbio anaconda packages.
+# Modified 2019-08-14.
+
+_koopa_assert_has_sudo
+
+bcbio_dir="/data00/bcbio"
+version="${1:-development}"
+pkgs_dir="${bcbio_dir}/${version}/install/anaconda/pkgs"
+
+if [[ ! -d "$pkgs_dir" ]]
+then
+    &>2 printf "Error: Packages directory does not exist.\n%s\n" "$pkgs_dir"
+    exit 1
+fi
+
+printf "Removing extracted Anaconda packages.\n"
+printf "Note: Package tarballs will not be removed.\n"
+
+find "$pkgs_dir" \
+    -maxdepth 1 \
+    -mindepth 1 \
+    -type d \
+    -exec rm -frv "{}" \;
