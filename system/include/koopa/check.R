@@ -264,7 +264,7 @@ check_version(
 ## Git
 check_version(
     name = "git",
-    version = koopa_version("git"),
+    version = major_koopa_version("git"),
     version_cmd = c(
         "git --version",
         "head -n 1",
@@ -308,7 +308,7 @@ check_version(
 ## htop
 check_version(
     name = "htop",
-    version = koopa_version("htop"),
+    version = major_koopa_version("htop"),
     version_cmd = c(
         "htop --version",
         "head -n 1",
