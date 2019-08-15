@@ -136,7 +136,7 @@ then
 
     # Create local config files.
     # shellcheck source=system/install/dotfiles-local.sh
-    if [[ "${shared:-0}" -eq 1 ]]
+    if [[ "${shared:-0}" -eq 0 ]]
     then
         source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
     fi
