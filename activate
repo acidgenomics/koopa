@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-08-14.
+# Updated 2019-08-15.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -349,6 +349,8 @@ fi
 
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
+
+_koopa_disk_check
 
 unset -v activate_dir
 unset -v colors
