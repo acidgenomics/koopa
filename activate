@@ -19,6 +19,8 @@
 [ "$(id -u)" -eq 0 ] && return 0
 whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
+subshell=0
+
 # Detect force mode.
 # Disabled by default.
 [ -z "${force:-}" ] && force=0
@@ -65,11 +67,21 @@ fi
 # Check for interactive shell.
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
-# Force reactivation inside of interactive HPC job.
-[ -n "${SLURM_JOB_ID:-}" ] && [ "$interactive" -eq 1 ] && force=1
+# Reload inside of interactive HPC job.
+if [ -n "${SLURM_JOB_ID:-}" ] && [ "$interactive" -eq 1 ]
+then
+    force=1
+    subshell=1
+fi
 
-# Force reactivation inside of tmux session.
-[ -z "${TMUX:-}" ] || force=1
+# Reload inside of tmux session.
+# Note that we want to skip resourcing of user configuration files here,
+# otherwise this can cause the shell to get stuck in an activation loop.
+if [ -n "${TMUX:-}" ]
+then
+    force=1
+    subshell=1
+fi
 
 # Early return for non-interactive sessions.
 [ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
@@ -257,21 +269,24 @@ activate_dir="${KOOPA_HOME}/system/activate"
 # Basic shell configuration                                                 {{{1
 # ==============================================================================
 
-# shellcheck source=/dev/null
-. "${activate_dir}/preflight.sh"
-# shellcheck source=/dev/null
-. "${activate_dir}/user-profile.sh"
+if [ "$subshell" -eq 0 ]
+then
+    # shellcheck source=/dev/null
+    . "${activate_dir}/preflight.sh"
+    # shellcheck source=/dev/null
+    . "${activate_dir}/user-profile.sh"
 
-exports_dir="${activate_dir}/exports"
-# shellcheck source=/dev/null
-. "${exports_dir}/xdg-base-directory.sh"
-# shellcheck source=/dev/null
-. "${exports_dir}/path.sh"
-# shellcheck source=/dev/null
-. "${exports_dir}/general.sh"
-unset -v exports_dir
+    exports_dir="${activate_dir}/exports"
+    # shellcheck source=/dev/null
+    . "${exports_dir}/xdg-base-directory.sh"
+    # shellcheck source=/dev/null
+    . "${exports_dir}/path.sh"
+    # shellcheck source=/dev/null
+    . "${exports_dir}/general.sh"
+    unset -v exports_dir
 
-_koopa_update_xdg_config
+    _koopa_update_xdg_config
+fi
 
 
 
@@ -281,18 +296,21 @@ _koopa_update_xdg_config
 if [ "$programs" -eq 1 ]
 then
     programs_dir="${activate_dir}/programs"
-    # shellcheck source=/dev/null
-    . "${programs_dir}/conda.sh"
+    if [ "$subshell" -eq 0 ]
+    then
+        # shellcheck source=/dev/null
+        . "${programs_dir}/aspera.sh"
+        # shellcheck source=/dev/null
+        . "${programs_dir}/ensembl-perl-api.sh"
+        # shellcheck source=/dev/null
+        . "${programs_dir}/bcbio.sh"
+    fi
     # shellcheck source=/dev/null
     . "${programs_dir}/perlbrew.sh"
     # shellcheck source=/dev/null
     . "${programs_dir}/rbenv.sh"
     # shellcheck source=/dev/null
-    . "${programs_dir}/aspera.sh"
-    # shellcheck source=/dev/null
-    . "${programs_dir}/ensembl-perl-api.sh"
-    # shellcheck source=/dev/null
-    . "${programs_dir}/bcbio.sh"
+    . "${programs_dir}/conda.sh"
     # shellcheck source=/dev/null
     . "${programs_dir}/virtualenv.sh"
     unset -v programs programs_dir
@@ -331,12 +349,15 @@ then
     if _koopa_is_darwin
     then
         darwin_dir="${activate_dir}/os/darwin"
+        if [ "$subshell" -eq 0 ]
+        then
+            # shellcheck source=/dev/null
+            . "${darwin_dir}/exports.sh"
+            # shellcheck source=/dev/null
+            . "${darwin_dir}/programs/homebrew.sh"
+        fi
         # shellcheck source=/dev/null
         . "${darwin_dir}/aliases.sh"
-        # shellcheck source=/dev/null
-        . "${darwin_dir}/exports.sh"
-        # shellcheck source=/dev/null
-        . "${darwin_dir}/programs/homebrew.sh"
         # shellcheck source=/dev/null
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
@@ -352,8 +373,12 @@ fi
 
 _koopa_disk_check
 
-unset -v activate_dir
-unset -v colors
+unset -v activate_dir subshell
+
+# Checking declared values in Bash:
+# - `declare -F`: Display function names.
+# - `declare -p`: Display the attributes and value of each name.
+# - `declare -x`: Display exported values.
 
 # Disable test mode.
 if [ "$test" -eq 1 ]
