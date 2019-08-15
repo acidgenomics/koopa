@@ -30,7 +30,7 @@ _koopa_disk_check() {
     local used
     local limit
     used="$(_koopa_disk_pct_used)"
-    limit="80"
+    limit="90"
     if [ "$used" -gt "$limit" ]
     then
         >&2 printf "Warning: Disk usage is %d%%.\n" "$used"
@@ -44,9 +44,10 @@ _koopa_disk_check() {
 _koopa_disk_pct_used() {
     local disk
     disk="${1:-/}"
-    df -h "$disk" | \
+    df "$disk" | \
         head -n 2  | \
         sed -n '2p' | \
         grep -Eo "([.0-9]+%)" | \
+        head -n 1 | \
         sed 's/%$//'
 }
