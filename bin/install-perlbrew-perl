@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Install recommended Perl release via perlbrew.
-# Updated 2019-06-24.
+# Updated 2019-08-15.
 
 # See also:
 # https://perlbrew.pl/
