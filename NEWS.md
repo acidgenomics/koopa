@@ -1,3 +1,9 @@
+## koopa 0.5.1 (2019-08-15)
+
+### Minor changes
+
+- Bug fixes for koopa activation inside a subshell (e.g. tmux or slurm queue).
+
 ## koopa 0.5.0 (2019-08-14)
 
 ### Major changes
