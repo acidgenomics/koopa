@@ -20,6 +20,7 @@ hdf5="1.10.5"
 htop="2.2.0"
 java="12.0.1"
 openssl="1.1.1c"
+perl="5.30.0"
 perlbrew="0.86"
 proj="6.1.1"
 python="3.7.4"
@@ -59,7 +60,7 @@ pinentry="1.1.0"
 # ==============================================================================
 
 # Latest version compatible with Ensembl Perl API.
-perl="5.26.3"
+ensembl_perl="5.26.3"
 
 
 
