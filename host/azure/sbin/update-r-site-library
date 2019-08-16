@@ -5,22 +5,24 @@ set -Eeu o pipefail
 source "$(koopa header azure)"
 
 # rsync R site package library.
-# Modified 2019-08-14.
+# Modified 2019-08-16.
 
 _koopa_assert_has_sudo
+
+koopa_home="$(koopa home)"
+r_home="$(koopa r-home)"
 
 host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.135"
 
-r_home="$(koopa r-home)"
 r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
 
 if [[ ! -d "$r_dir" ]]
 then
     sudo mkdir -p "$r_dir"
-    sudo chown "root:wheel" "$r_dir"
+    sudo chown "mike:wheel" "$r_dir"
     sudo chmod g+ws "$r_dir"
 fi
 
@@ -43,6 +45,7 @@ if [[ -d "/usr/lib64/R" ]]
 then
     sudo rm -frv "/usr/lib64/R/site-library"
     sudo ln -fnsv "$lib_link" "/usr/lib64/R/site-library"
+    sudo ln -fnsv "${koopa_home}/os/fedora/etc/R/"* "/usr/lib64/R/etc/."
 fi
 
 if [[ -d "/usr/local/lib64/R" ]]
