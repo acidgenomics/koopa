@@ -40,8 +40,11 @@ printf "Installing %s %s.\n" "$name" "$version"
         --build="$build_os_string" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
-    make --jobs="$CPU_COUNT" all doc info
-    make install install-doc install-html install-info
+    # This is now erroring on RHEL 7.7:
+    # > make --jobs="$CPU_COUNT" all doc info
+    # > make install install-doc install-html install-info
+    make --jobs="$CPU_COUNT"
+    make install
     rm -rf "$tmp_dir"
 )
 
