@@ -7,6 +7,8 @@ source "$(koopa header azure)"
 # rsync R site package library.
 # Modified 2019-08-14.
 
+_koopa_assert_has_sudo
+
 host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.135"
@@ -14,6 +16,16 @@ source_ip="10.100.100.135"
 r_home="$(koopa r-home)"
 r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
+
+if [[ ! -d "$r_dir" ]]
+then
+    sudo mkdir -p "$r_dir"
+    sudo chown "root:wheel" "$r_dir"
+    sudo chmod g+ws "$r_dir"
+fi
+
+sudo chgrp -Rh wheel "$r_dir"
+sudo chmod -R g+w "$r_dir"
 
 if [[ "$host_ip" != "$source_ip" ]]
 then
