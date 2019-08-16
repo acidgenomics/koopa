@@ -38,7 +38,15 @@ sudo chmod -R g+w "$r_dir"
 
 # Update local symlinks.
 printf "Updating 'site-library' symlinks.\n"
-rm -frv "${r_home}/site-library"
-ln -fnsv "$lib_link" "${r_home}/site-library"
-rm -frv "/usr/local/lib64/R/site-library"
-ln -fnsv "$lib_link" "/usr/local/lib64/R/site-library"
+
+if [[ -d "/usr/local/lib64/R" ]]
+then
+    rm -frv "/usr/local/lib64/R/site-library"
+    ln -fnsv "$lib_link" "/usr/local/lib64/R/site-library"
+fi
+
+# Assuming we're symlinking the cellarized R site library.
+# This will work for system R at `/usr/lib64/R` also.
+sudo rm -frv "${r_home}/site-library"
+sudo ln -fnsv "$lib_link" "${r_home}/site-library"
+
