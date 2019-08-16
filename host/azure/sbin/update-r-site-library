@@ -33,6 +33,9 @@ then
     rsync -av --delete "${source_user}@${source_ip}:${r_dir}/" "${r_dir}/"
 fi
 
+sudo chgrp -Rh wheel "$r_dir"
+sudo chmod -R g+w "$r_dir"
+
 # Update local symlinks.
 printf "Updating 'site-library' symlinks.\n"
 rm -frv "${r_home}/site-library"
