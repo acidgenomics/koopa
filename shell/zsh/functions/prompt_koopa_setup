@@ -3,25 +3,16 @@
 # Koopa ZSH prompt
 # Updated 2019-08-17.
 
-# Modified version of Pure, by Sindre Sorhus.
-# https://github.com/sindresorhus/koopa
-
-
-# FIXME Improve header consistency with bash PS1.
-# FIXME Rework handling of Python virtualenv.
-# FIXME Always show user and machine info.
+# Modified, lighter version of Pure, by Sindre Sorhus.
+# https://github.com/sindresorhus/pure
 
 
 
 # Debugging:
 # > _koopa_prompt_system_report
 # > typeset _koopa_prompt_state
-# For virtual environment:
-# > typeset psvar
 
-
-
-# prompt:
+# Prompt:
 # - %F     => color dict
 # - %f     => reset color
 # - %~     => current path
@@ -29,8 +20,8 @@
 # - %n     => username
 # - %m     => shortname host
 # - %(?..) => prompt conditional - %(condition.true.false)
-#
-# terminal codes:
+
+# Terminal codes:
 # - \e7   => save cursor position
 # - \e[2A => move cursor 2 lines up
 # - \e[1G => go to position 1 in terminal
@@ -43,16 +34,13 @@
 # Updated 2019-08-17.
 _koopa_prompt_system_report() {
     setopt localoptions noshwordsplit
-
     print - "- Prompt state:"
     for k v in "${(@kv)_koopa_prompt_state}"
     do
         print - "\t- $k: \`${(q)v}\`"
     done
-    
     print - "- Prompt: \`$(typeset -p PROMPT)\`"
     print - "- Virtualenv: \`$(typeset -p VIRTUAL_ENV_DISABLE_PROMPT)\`"
-
     local ohmyzsh=0
     typeset -la frameworks
     (( $+ANTIBODY_HOME )) && frameworks+=("Antibody")
@@ -65,10 +53,8 @@ _koopa_prompt_system_report() {
     (( $+ZPREZTODIR )) && frameworks+=("Prezto")
     (( $+ZPLUG_ROOT )) && frameworks+=("Zplug")
     (( $+ZPLGM )) && frameworks+=("Zplugin")
-
     (( $#frameworks == 0 )) && frameworks+=("None")
     print - "- Detected frameworks: ${(j:, :)frameworks}"
-
     if (( ohmyzsh ))
     then
         print - "\t- Oh My Zsh:"
@@ -79,9 +65,8 @@ _koopa_prompt_system_report() {
 
 
 _koopa_prompt_precmd() {
-    # Initial newline, for spaciousness.
+    # Always include an initial line break.
     print
-
     # Warn the user about potential theme conflict.
     if [[ -n "${ZSH_THEME:-}" ]]
     then
@@ -94,19 +79,19 @@ _koopa_prompt_precmd() {
 
 # Set the user string and color based on local or SSH connection.
 _koopa_prompt_state_setup() {
-    local hostname ssh_connection username
-    hostname='%F{$_koopa_prompt_colors[host]}@%m%f'
-    ssh_connection="$SSH_CONNECTION:-}"
-    if [[ -n "$ssh_connection" ]] 
+    local user wd
+    if [[ -n "${SSH_CONNECTION:-}" ]] 
     then
-        username='%F{$_koopa_prompt_colors[user:ssh]}%n%f'"$hostname"
+        user='%F{$_koopa_prompt_colors[user:ssh]}%n@%m%f'
     else
-        username='%F{$_koopa_prompt_colors[user]}%n%f'"$hostname"
+        user='%F{$_koopa_prompt_colors[user]}%n@%m%f'
     fi
+    wd='%F{${_koopa_prompt_colors[path]}}%~%f'
     typeset -gA _koopa_prompt_state
     _koopa_prompt_state+=(
-        username "$username"
-        prompt   "${PURE_PROMPT_SYMBOL:-❯}"
+        prompt  "${PURE_PROMPT_SYMBOL:-❯}"
+        user    "$user"
+        wd      "$wd"
     )
 }
 
@@ -114,10 +99,6 @@ _koopa_prompt_state_setup() {
 
 _koopa_prompt_setup() {
     setopt localoptions noshwordsplit
-    
-    # Prevent percentage showing up if output doesn't end with a newline.
-    # > export PROMPT_EOL_MARK=''
-
     prompt_opts=(subst percent)
 
     # This variable needs to be set, usually set by promptinit.
@@ -126,21 +107,19 @@ _koopa_prompt_setup() {
         typeset -g prompt_newline=$'\n%{\r%}'
     fi
 
-    zmodload zsh/datetime
-    zmodload zsh/zle
-    zmodload zsh/parameter
-    zmodload zsh/zutil
+    # > zmodload zsh/datetime
+    # > zmodload zsh/zle
+    # > zmodload zsh/parameter
+    # > zmodload zsh/zutil
     
     # Set the colors.
     typeset -gA _koopa_prompt_colors_default _koopa_prompt_colors
     _koopa_prompt_colors_default=(
-        execution_time       yellow
-        host                 242
         path                 blue
         prompt:error         red
         prompt:success       magenta
-        user                 242
-        user:ssh             default
+        user                 cyan
+        user:ssh             yellow
         virtualenv           default
     )
     _koopa_prompt_colors=("${(@kv)_koopa_prompt_colors_default}")
@@ -153,58 +132,58 @@ _koopa_prompt_setup() {
 
     # Construct the new prompt with a clean preprompt.
     # Join parts, space separated.
-    local -ah ps1 wd
+    local -ah header ps1
     
-    wd='%F{${_koopa_prompt_colors[path]}}%~%f'
+    header=(
+        "${_koopa_prompt_state[user]}"
+        "\$(_koopa_prompt_disk_used)"
+        "\$(_koopa_prompt_conda_env)"
+        "\$(_koopa_prompt_python_env)"
+    )
+    header="${(j..)header}"
     
     ps1=(
-        "$wd"
+        "$header"
+        "$prompt_newline"
+        "${_koopa_prompt_state[wd]}"
         "$prompt_newline"
     )
-
-    # FIXME This where we're defining the path.
-    PROMPT="${(j..)ps1}"
     
-    # > PROMPT+="\$(_koopa_prompt_disk_used)"
-    # > PROMPT+="\$(_koopa_prompt_conda_env)"
-    # > PROMPT+="\$(_koopa_prompt_python_env)"
-
-    # FIXME I want to show both virtual envs.
-    # If a virtualenv is activated, display it in grey.
-    # > PROMPT='%(12V.%F{$_koopa_prompt_colors[virtualenv]}%12v%f .)'
+    # Coerce array to string.
+    PROMPT="${(j..)ps1}"
     
     # Prompt turns red if the previous command didn't exit with 0.
     PROMPT+='%(?.%F{$_koopa_prompt_colors[prompt:success]}.%F{$_koopa_prompt_colors[prompt:error]})${_koopa_prompt_state[prompt]}%f '
 
     # Indicate continuation prompt by ... and use a darker color for it.
-    # > PROMPT2='%F{242}... %(1_.%_ .%_)%f%(?.%F{magenta}.%F{red})${_koopa_prompt_state[prompt]}%f '
+    PROMPT2='%F{242}... %(1_.%_ .%_)%f%(?.%F{magenta}.%F{red})${_koopa_prompt_state[prompt]}%f '
 
     # Store prompt expansion symbols for in-place expansion via (%). For
     # some reason it does not work without storing them in a variable first.
-    # > typeset -ga _koopa_prompt_debug_depth
-    # > _koopa_prompt_debug_depth=('%e' '%N' '%x')
+    typeset -ga _koopa_prompt_debug_depth
+    _koopa_prompt_debug_depth=('%e' '%N' '%x')
 
     # Compare is used to check if %N equals %x. When they differ, the main
     # prompt is used to allow displaying both filename and function. When
     # they match, we use the secondary prompt to avoid displaying duplicate
     # information.
-    # > local -A ps4_parts
-    # > ps4_parts=(
-    # >     depth     '%F{yellow}${(l:${(%)_koopa_prompt_debug_depth[1]}::+:)}%f'
-    # >     compare   '${${(%)_koopa_prompt_debug_depth[2]}:#${(%)_koopa_prompt_debug_depth[3]}}'
-    # >     main      '%F{blue}${${(%)_koopa_prompt_debug_depth[3]}:t}%f%F{242}:%I%f %F{242}@%f%F{blue}%N%f%F{242}:%i%f'
-    # >     secondary '%F{blue}%N%f%F{242}:%i'
-    # >     prompt    '%F{242}>%f '
-    # > )
+    local -A ps4_parts
+    ps4_parts=(
+        depth     '%F{yellow}${(l:${(%)_koopa_prompt_debug_depth[1]}::+:)}%f'
+        compare   '${${(%)_koopa_prompt_debug_depth[2]}:#${(%)_koopa_prompt_debug_depth[3]}}'
+        main      '%F{blue}${${(%)_koopa_prompt_debug_depth[3]}:t}%f%F{242}:%I%f %F{242}@%f%F{blue}%N%f%F{242}:%i%f'
+        secondary '%F{blue}%N%f%F{242}:%i'
+        prompt    '%F{242}>%f '
+    )
     # Combine the parts with conditional logic. First the `:+` operator is
     # used to replace `compare` either with `main` or an ampty string. Then
     # the `:-` operator is used so that if `compare` becomes an empty
     # string, it is replaced with `secondary`.
-    # > local ps4_symbols='${${'${ps4_parts[compare]}':+"'${ps4_parts[main]}'"}:-"'${ps4_parts[secondary]}'"}'
+    local ps4_symbols='${${'${ps4_parts[compare]}':+"'${ps4_parts[main]}'"}:-"'${ps4_parts[secondary]}'"}'
 
     # Improve the debug prompt (PS4), show depth by repeating the +-sign and
     # add colors to highlight essential parts like file and function name.
-    # > PROMPT4="${ps4_parts[depth]} ${ps4_symbols}${ps4_parts[prompt]}"
+    PROMPT4="${ps4_parts[depth]} ${ps4_symbols}${ps4_parts[prompt]}"
 
     # Guard against Oh My Zsh themes overriding the prompt.
     unset -v ZSH_THEME
