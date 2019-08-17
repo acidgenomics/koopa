@@ -341,8 +341,16 @@ then
         # shellcheck source=/dev/null
         . "${bash_dir}/shopt.sh"
         # shellcheck source=/dev/null
-        . "${bash_dir}/ps1.sh"
+        . "${bash_dir}/prompt.sh"
         unset -v bash_dir
+    elif [ "$KOOPA_SHELL" = "zsh" ]
+    then
+        zsh_dir="${activate_dir}/shell/zsh"
+        # > source "${zsh_dir}/oh-my-zsh.sh"
+        source "${zsh_dir}/prompt.sh"
+        source "${zsh_dir}/setopt.sh"
+        source "${zsh_dir}/bindkey.sh"
+        unset -v zsh_dir
     fi
 
     # Platform-specific configuration.
