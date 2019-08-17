@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
-# Updated 2019-06-25.
+# Updated 2019-08-16.
 
 # Useful variables:
 # https://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
@@ -124,8 +124,13 @@ then
 fi
 
 PS1="\n${user}"
-[[ -n "$mach" ]] && PS1="${PS1} | ${mach}"
-PS1="${PS1} | ${shell} | ${history}\n"
+if [[ -n "$mach" ]]
+then
+    PS1="${PS1} | ${mach}"
+fi
+PS1="${PS1} | ${shell}"
+# > PS1="${PS1} | ${history}"
+PS1="${PS1}\n"
 PS1="${PS1}${wd}\n"
 PS1="${PS1}${prompt} "
 export PS1
