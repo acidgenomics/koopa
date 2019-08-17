@@ -326,7 +326,7 @@ then
     # shellcheck source=/dev/null
     . "${activate_dir}/set.sh"
     # shellcheck source=/dev/null
-    . "${activate_dir}/umask.sh"
+    # > . "${activate_dir}/umask.sh"
     # shellcheck source=/dev/null
     . "${activate_dir}/aliases.sh"
     # shellcheck source=/dev/null
@@ -346,6 +346,7 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         zsh_dir="${activate_dir}/shell/zsh"
+        source "${zsh_dir}/fpath.sh"
         source "${zsh_dir}/oh-my-zsh.sh"
         source "${zsh_dir}/prompt.sh"
         source "${zsh_dir}/setopt.sh"
