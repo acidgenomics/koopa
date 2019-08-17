@@ -67,14 +67,12 @@ _koopa_conda_env_prefix() {
 # Updated 2019-06-27.
 _koopa_conda_prefix() {
     local prefix
-
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/conda"
     else
         prefix="${XDG_DATA_HOME}/koopa/conda"
     fi
-
     echo "$prefix"
 }
 
