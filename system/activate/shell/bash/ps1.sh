@@ -50,9 +50,10 @@ user="\u@\h"
 mach=
 if _koopa_is_remote
 then
+    # FIXME Rework this approach
     host_type="$(_koopa_host_type)"
     [[ -n "$host_type" ]] && mach="${host_type}"
-    os_type="$(_koopa_os_type)"
+    os_type="$(_koopa_os_version_prompt_string)"
     [[ -n "$os_type" ]] && [[ -n "$mach" ]] && mach="${mach} ${os_type}"
 fi
 
