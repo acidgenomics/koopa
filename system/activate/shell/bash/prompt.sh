@@ -87,14 +87,14 @@ then
     else
         user_color="36"
     fi
-    user="\[\033[01;${user_color}m\]${user}\[\033[00m\]"
+    user="\[\033[${user_color}m\]${user}\[\033[00m\]"
 
     wd_color="34"
-    wd="\[\033[01;${wd_color}m\]${wd}\[\033[00m\]"
+    wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
 
     # Match the color of zsh pure prompt.
     prompt_color="35" 
-    prompt="\[\033[01;${prompt_color}m\]${prompt}\[\033[00m\]"
+    prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
 fi
 
 # Note that we need to escape functions with a backslash here.
