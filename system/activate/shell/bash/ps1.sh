@@ -46,18 +46,10 @@
 # User name and host.
 user="\u@\h"
 
-# Remote machine information.
-mach=
-if _koopa_is_remote
-then
-    # FIXME Rework this approach
-    host_type="$(_koopa_host_type)"
-    [[ -n "$host_type" ]] && mach="${host_type}"
-    os_type="$(_koopa_os_version_prompt_string)"
-    [[ -n "$os_type" ]] && [[ -n "$mach" ]] && mach="${mach} ${os_type}"
-fi
+# OS type.
+os_type="$(_koopa_os_type_prompt_string)"
 
-# Shell name.
+# Shell name and version.
 shell="$(_koopa_shell) \v"
 
 # History.
@@ -93,27 +85,25 @@ then
     # 95 light magenta
     # 96 light cyan
     # 97 white
+    
+    header_color="36"
 
     # Change the user color based on connection type.
     if _koopa_is_remote
     then
         user_color="33"
     else
-        user_color="36"
+        user_color="$header_color"
     fi
-
     user="\[\033[01;${user_color}m\]${user}\[\033[00m\]"
 
-    if [[ -n "$mach" ]]
-    then
-        mach_color="$user_color"
-        mach="\[\033[${mach_color}m\]${mach}\[\033[00m\]"
-    fi
+    os_type_color="$header_color"
+    os_type="\[\033[${os_type_color}m\]${os_type}\[\033[00m\]"
 
-    shell_color="39"
+    shell_color="$header_color"
     shell="\[\033[${shell_color}m\]${shell}\[\033[00m\]"
 
-    history_color="$shell_color"
+    history_color="$header_color"
     history="\[\033[${history_color}m\]${history}\[\033[00m\]"
 
     wd_color="34"
@@ -124,16 +114,13 @@ then
     prompt="\[\033[01;${prompt_color}m\]${prompt}\[\033[00m\]"
 fi
 
-PS1="\n${user}"
-if [[ -n "$mach" ]]
-then
-    PS1="${PS1} | ${mach}"
-fi
-PS1="${PS1} | ${shell}"
-# > PS1="${PS1} | ${history}"
-PS1="${PS1}\n"
+PS1="\n${user} | ${os_type} | ${shell}\n"
 PS1="${PS1}${wd}\n"
 PS1="${PS1}${prompt} "
 export PS1
 
-unset -v history mach prompt prompt_color user user_color wd wd_color
+unset -v history history_color
+unset -v prompt prompt_color
+unset -v os_type os_type_color
+unset -v user user_color
+unset -v wd wd_color
