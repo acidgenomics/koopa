@@ -29,7 +29,7 @@ _koopa_delete_dotfile() {
 _koopa_disk_check() {
     local used
     local limit
-    used="$(_koopa_disk_pct_used)"
+    used="$(_koopa_disk_pct_used "$@")"
     limit="90"
     if [ "$used" -gt "$limit" ]
     then
@@ -40,7 +40,7 @@ _koopa_disk_check() {
 
 
 # Check disk usage on main drive.
-# Updated 2019-08-15.
+# Updated 2019-08-17.
 _koopa_disk_pct_used() {
     local disk
     disk="${1:-/}"
