@@ -6,6 +6,10 @@
 # Modified version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
 
+## FIXME Add header line like bashrc.
+## FIXME Prompt is ignoring configuration in condarc...
+## FIXME Look for changeps1 in `~/.condarc`.
+
 
 
 # For my own and others sanity

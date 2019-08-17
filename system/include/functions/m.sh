@@ -17,7 +17,6 @@ _koopa_macos_version() {
 # Updated 2019-08-17.
 _koopa_macos_version_short() {
     _koopa_assert_is_darwin
-    printf "%s %s\n" \
-        "macos" \
-        "$(sw_vers -productVersion)"
+    version="$(sw_vers -productVersion | cut -d '.' -f 1-2)"
+    printf "%s %s\n" "macos" "$version"
 }
