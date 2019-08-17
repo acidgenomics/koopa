@@ -346,10 +346,15 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         zsh_dir="${activate_dir}/shell/zsh"
+        # shellcheck source=/dev/null
         source "${zsh_dir}/fpath.sh"
+        # shellcheck source=/dev/null
         source "${zsh_dir}/oh-my-zsh.sh"
+        # shellcheck source=/dev/null
         source "${zsh_dir}/prompt.sh"
+        # shellcheck source=/dev/null
         source "${zsh_dir}/setopt.sh"
+        # shellcheck source=/dev/null
         source "${zsh_dir}/bindkey.sh"
         unset -v zsh_dir
     fi

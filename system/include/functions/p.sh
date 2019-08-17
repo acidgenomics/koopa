@@ -59,7 +59,7 @@ _koopa_prompt_os() {
         host_type="$(_koopa_host_type)"
         if [ -n "$host_type" ]
         then
-            string="${host_type} ${string1}"
+            string="${host_type} ${string}"
         fi
     fi
     
