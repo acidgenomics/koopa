@@ -145,47 +145,25 @@ _koopa_prompt_setup() {
     )
     _koopa_prompt_colors=("${(@kv)_koopa_prompt_colors_default}")
 
+    # Run pre commeands.
     add-zsh-hook precmd _koopa_prompt_precmd
     
+    # Set up the prompt variables.
     _koopa_prompt_state_setup
-    
-    
-    
-    
-    # Note that path is defined in the preprompt render.
-    
-    
-
-    # Initialize the preprompt array.
-    local -a preprompt_parts
-
-    # Set the path.
-    preprompt_parts+=('%F{${_koopa_prompt_colors[path]}}%~%f')
-
-    local cleaned_ps1="$PROMPT"
-    local -H MATCH MBEGIN MEND
-    
-    # Remove everything from the prompt until the newline. This
-    # removes the preprompt and only the original PROMPT remains.
-    if [[ "$PROMPT" = *"$prompt_newline"* ]]
-    then
-        cleaned_ps1=${PROMPT##*${prompt_newline}}
-    fi
-    
-    unset MATCH MBEGIN MEND
 
     # Construct the new prompt with a clean preprompt.
-    local -ah ps1
+    # Join parts, space separated.
+    local -ah ps1 wd
+    
+    wd='%F{${_koopa_prompt_colors[path]}}%~%f'
+    
     ps1=(
-        ${(j. .)preprompt_parts}  # Join parts, space separated.
-        $prompt_newline           # Separate preprompt and prompt.
-        $cleaned_ps1
+        "$wd"
+        "$prompt_newline"
     )
 
     # FIXME This where we're defining the path.
     PROMPT="${(j..)ps1}"
-    
-
     
     # > PROMPT+="\$(_koopa_prompt_disk_used)"
     # > PROMPT+="\$(_koopa_prompt_conda_env)"
@@ -199,7 +177,7 @@ _koopa_prompt_setup() {
     PROMPT+='%(?.%F{$_koopa_prompt_colors[prompt:success]}.%F{$_koopa_prompt_colors[prompt:error]})${_koopa_prompt_state[prompt]}%f '
 
     # Indicate continuation prompt by ... and use a darker color for it.
-    PROMPT2='%F{242}... %(1_.%_ .%_)%f%(?.%F{magenta}.%F{red})${_koopa_prompt_state[prompt]}%f '
+    # > PROMPT2='%F{242}... %(1_.%_ .%_)%f%(?.%F{magenta}.%F{red})${_koopa_prompt_state[prompt]}%f '
 
     # Store prompt expansion symbols for in-place expansion via (%). For
     # some reason it does not work without storing them in a variable first.
