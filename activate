@@ -346,7 +346,7 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         zsh_dir="${activate_dir}/shell/zsh"
-        # > source "${zsh_dir}/oh-my-zsh.sh"
+        source "${zsh_dir}/oh-my-zsh.sh"
         source "${zsh_dir}/prompt.sh"
         source "${zsh_dir}/setopt.sh"
         source "${zsh_dir}/bindkey.sh"
