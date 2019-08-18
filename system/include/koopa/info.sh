@@ -3,29 +3,29 @@
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-# Show koopa installation information (in a box).
-# Updated 2019-06-22.
+# Show koopa installation information.
+# Updated 2019-08-18.
 
-array=()
-array+=("$(koopa --version)")
-array+=("https://koopa.acidgenomics.com/")
-array+=("")
-array+=("## System information")
-array+=("OS: $(python -mplatform)")
+shell="${KOOPA_SHELL} $(_koopa_${KOOPA_SHELL}_version)"
+
 if _koopa_is_darwin
 then
-    array+=("    $(_koopa_macos_version)")
+    os="$(_koopa_macos_version)"
+else
+    os="$(python -mplatform)"
 fi
-array+=("Current shell: $(koopa shell)")
-array+=("Default shell: ${SHELL}")
-array+=("Terminal: ${TERM_PROGRAM} (${TERM_PROGRAM_VERSION})")
-array+=("Install path: $(koopa home)")
-array+=("")
-array+=("## Dependencies")
-array+=("$(_koopa_locate bash Bash)")
-array+=("$(_koopa_locate R)")
-array+=("$(_koopa_locate python Python)")
-array+=("")
-array+=("Run 'koopa check' to verify installation.")
+
+array=(
+    "$(koopa --version)"
+    "https://koopa.acidgenomics.com/"
+    ""
+    "## System information"
+    "Koopa home: ${KOOPA_HOME}"
+    "Shell: ${shell}"
+    "OS: ${os}"
+    "Terminal: ${TERM_PROGRAM} ${TERM_PROGRAM_VERSION}"
+    ""
+    "Run 'koopa check' to verify installation."
+)
 
 _koopa_info_box "${array[@]}"
