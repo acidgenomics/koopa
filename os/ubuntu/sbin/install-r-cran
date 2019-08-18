@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header ubuntu)"
+source "$(koopa header ubuntu)"
 
 # Install R from CRAN.
 # Updated 2019-06-25.

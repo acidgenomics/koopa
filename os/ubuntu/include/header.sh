@@ -2,4 +2,4 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header debian)"
+source "$(koopa header debian)"

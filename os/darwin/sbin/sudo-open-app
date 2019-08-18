@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header darwin)"
+source "$(koopa header darwin)"
 
 # Open application as administrator.
 # Updated 2019-06-25.

@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header harvard-odyssey)"
+source "$(koopa header harvard-odyssey)"
 
 # Launch SLURM interaction session.
 # Updated 2019-06-23.
