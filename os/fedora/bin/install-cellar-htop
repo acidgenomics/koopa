@@ -8,4 +8,4 @@ source "$(koopa header fedora)"
 # Updated 2019-06-23.
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script htop)"
+source "$(_koopa_cellar_script htop)"

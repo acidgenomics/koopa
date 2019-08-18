@@ -3,7 +3,7 @@
 # Ensembl Perl API
 # Updated 2019-06-17.
 
-ensembl_dir="$(koopa build-prefix)/ensembl"
+ensembl_dir="$(_koopa_build_prefix)/ensembl"
 
 # Early return if Ensembl git directory is missing.
 [ ! -d "$ensembl_dir" ] &&

@@ -19,4 +19,4 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script zsh)"
+source "$(_koopa_cellar_script zsh)"

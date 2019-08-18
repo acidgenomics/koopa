@@ -10,7 +10,7 @@
 # https://stackoverflow.com/questions/10406926
 
 # Only attempt to autoload for bash or zsh.
-koopa shell | grep -Eq "^(bash|zsh)$" || return 0
+_koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
 # Don't allow Python to change the prompt string.
 export VIRTUAL_ENV_DISABLE_PROMPT=1

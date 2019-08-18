@@ -13,9 +13,9 @@ _koopa_assert_has_no_environments
 
 name="hdf5"
 version="$(_koopa_variable "$name")"
-prefix="$(koopa cellar-prefix)/${name}/${version}"
-tmp_dir="$(koopa tmp-dir)/${name}"
-build_os_string="$(koopa build-os-string)"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/h5cc"
 
 major_version="$(echo "$version" | cut -d '.' -f 1-2)"

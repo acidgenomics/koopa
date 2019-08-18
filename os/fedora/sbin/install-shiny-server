@@ -13,7 +13,7 @@ source "$(koopa header fedora)"
 _koopa_assert_has_sudo
 
 name="shiny-server"
-tmp_dir="$(koopa tmp-dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 version="$(_koopa_variable "$name")"
 
 printf "Installing %s %s.\n" "$name" "$version"

@@ -12,7 +12,7 @@ source "$(koopa header bash)"
 # - https://useast.ensembl.org/info/docs/api/api_git.html
 # - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
 
-prefix="$(koopa build-prefix)/ensembl"
+prefix="$(_koopa_build_prefix)/ensembl"
 
 (
     build_mkdir "$prefix"

@@ -20,5 +20,5 @@ fi
 # shellcheck source=/dev/null
 . "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 
-rm -frv "$(koopa config-dir)"
+rm -frv "$(_koopa_config_dir)"
 rm -frv "$KOOPA_HOME"

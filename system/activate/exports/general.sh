@@ -64,7 +64,7 @@ fi
 # ==============================================================================
 
 [ -z "${HISTFILE:-}" ] && 
-    HISTFILE="$HOME/.$(koopa shell)-history" &&
+    HISTFILE="${HOME}/."$(_koopa_shell)"-history" &&
     export HISTFILE
 
 [ -z "${HISTSIZE:-}" ] && export HISTSIZE=100000
