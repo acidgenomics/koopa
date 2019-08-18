@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Koopa ZSH prompt
-# Updated 2019-08-17.
+# Updated 2019-08-18.
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -64,19 +64,6 @@ _koopa_prompt_system_report() {
 
 
 
-_koopa_prompt_zsh_version() {
-    local version
-    version="$( \
-        zsh --version | \
-        head -n 1 | \
-        cut -d ' ' -f 2 | \
-        cut -d '.' -f 1-2
-    )"
-    printf " [zsh %s]" "$version"
-}
-
-
-
 _koopa_prompt_precmd() {
     # Always include an initial line break.
     print
@@ -105,7 +92,6 @@ _koopa_prompt_state_setup() {
         prompt  "${PURE_PROMPT_SYMBOL:-❯}"
         user    "$user"
         wd      "$wd"
-        zsh     "$(_koopa_prompt_zsh_version)"
     )
 }
 
@@ -150,8 +136,6 @@ _koopa_prompt_setup() {
     
     header=(
         "${_koopa_prompt_state[user]}"
-        "${_koopa_prompt_state[zsh]}"
-        "\$(_koopa_prompt_disk_used)"
         "\$(_koopa_prompt_conda_env)"
         "\$(_koopa_prompt_python_env)"
     )

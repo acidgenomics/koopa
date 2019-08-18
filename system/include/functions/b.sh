@@ -3,6 +3,17 @@
 
 
 
+# Updated 2019-08-18.
+_koopa_bash_version() {
+    bash --version | \
+        head -n 1 | \
+        cut -d ' ' -f 4 | \
+        cut -d '(' -f 1
+        # > cut -d '.' -f 1-2
+}
+
+
+
 # Fix the group permissions on the build directory.
 # Updated 2019-06-26.
 _koopa_build_chgrp() {

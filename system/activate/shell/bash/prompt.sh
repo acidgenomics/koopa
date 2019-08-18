@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
-# Updated 2019-08-16.
+# Updated 2019-08-18.
 
 # Useful variables:
 # https://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
@@ -45,9 +45,6 @@
 
 # User name and host.
 user="\u@\h"
-
-# Shell name and version.
-shell="$(_koopa_shell) \v"
 
 # Working directory.
 wd="\w"
@@ -98,8 +95,7 @@ then
 fi
 
 # Note that we need to escape functions with a backslash here.
-PS1="${user} [${shell}]"
-PS1="${PS1}\$(_koopa_prompt_disk_used)"
+PS1="${user}"
 PS1="${PS1}\$(_koopa_prompt_conda_env)"
 PS1="${PS1}\$(_koopa_prompt_python_env)"
 PS1="${PS1}\n${wd}"
