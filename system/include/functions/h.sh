@@ -109,6 +109,13 @@ EOF
 
 
 
+# Updated 2019-08-18.
+_koopa_home() {
+    echo "$KOOPA_HOME"
+}
+
+
+
 # Simple host type name string to load up host-specific scripts.
 # Currently intended support AWS, Azure, and Harvard clusters.
 # Updated 2019-06-27.

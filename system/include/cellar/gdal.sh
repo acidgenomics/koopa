@@ -18,10 +18,10 @@ _koopa_assert_is_installed proj
 
 name="gdal"
 version="$(_koopa_variable "$name")"
-prefix="$(koopa cellar-prefix)/${name}/${version}"
-build_prefix="$(koopa build-prefix)"
-tmp_dir="$(koopa tmp-dir)/${name}"
-build_os_string="$(koopa build-os-string)"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+build_prefix="$(_koopa_build_prefix)"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/gdalinfo"
 
 printf "Installing %s %s.\n" "$name" "$version"

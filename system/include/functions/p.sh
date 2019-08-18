@@ -21,7 +21,7 @@ _koopa_prompt_conda_env() {
 _koopa_prompt_disk_used() {
     local pct used
     used="$(_koopa_disk_pct_used)"
-    case "$KOOPA_SHELL" in
+    case "$(_koopa_shell)" in
         zsh) pct="%%" ;;
         *) pct="%" ;;
     esac

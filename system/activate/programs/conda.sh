@@ -15,7 +15,7 @@
 # set prior to running this code. Attempts to activate "base" will be ignored.
 
 # Conda doesn't currently support ksh, and fish support is buggy.
-koopa shell | grep -Eq "^(bash|zsh)$" || return 0
+_koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
 # Attempt to detect the installation path automatically, if necessary.
 # Use `$CONDA_EXE` to manually set the path, for non-standard installs.

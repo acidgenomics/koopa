@@ -15,7 +15,7 @@ source "$(koopa header bash)"
 _koopa_assert_has_no_environments
 
 name="perlbrew"
-prefix="$(koopa build-prefix)/${name}"
+prefix="$(_koopa_build_prefix)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 _koopa_build_mkdir "$prefix"

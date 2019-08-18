@@ -8,4 +8,4 @@ source "$(koopa header darwin)"
 # Updated 2019-06-23.
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script openssl)"
+source "$(_koopa_cellar_script openssl)"

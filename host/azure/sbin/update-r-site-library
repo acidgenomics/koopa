@@ -9,8 +9,8 @@ source "$(koopa header azure)"
 
 _koopa_assert_has_sudo
 
-koopa_home="$(koopa home)"
-r_home="$(koopa r-home)"
+koopa_home="$(_koopa_home)"
+r_home="$(_koopa_r_home)"
 
 host_ip="$(ip-address)"
 source_user="mike"
