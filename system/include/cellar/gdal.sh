@@ -17,7 +17,7 @@ _koopa_assert_has_no_environments
 _koopa_assert_is_installed proj
 
 name="gdal"
-version="$(koopa variable "$name")"
+version="$(_koopa_variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 build_prefix="$(koopa build-prefix)"
 tmp_dir="$(koopa tmp-dir)/${name}"
