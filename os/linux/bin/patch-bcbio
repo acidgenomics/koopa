@@ -1,7 +1,7 @@
 #/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "$(_koopa_header linux)"
+source "$(koopa header linux)"
 
 # Patch bcbio installation.
 # Updated 2019-07-17.
