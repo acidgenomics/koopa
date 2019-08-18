@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 # Autopad sample file names that begin with a number.
 # Updated 2019-06-23.

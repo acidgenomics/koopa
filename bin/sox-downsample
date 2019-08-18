@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 # Downsample audio with sox.
 # Updated 2019-07-28.

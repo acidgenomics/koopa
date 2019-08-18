@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 # Recursively download a directory using wget.
 # Updated 2019-06-23.

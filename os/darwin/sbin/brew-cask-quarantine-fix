@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header darwin)"
+source "$(_koopa_header darwin)"
 
 # Disable quarantine on installed applications.
 # Updated 2019-06-25.

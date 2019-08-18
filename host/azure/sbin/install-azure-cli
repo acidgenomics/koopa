@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header azure)"
+source "$(_koopa_header azure)"
 
 # Install Azure CLI.
 # Updated 2019-06-23.

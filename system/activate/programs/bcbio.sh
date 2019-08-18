@@ -7,7 +7,7 @@
 
 if [ -z "${BCBIO_EXE:-}" ]
 then
-    host="$(koopa host-type)"
+    host="$(_koopa_host_type)"
     if [ "$host" = "harvard-o2" ]
     then
         BCBIO_EXE="/n/app/bcbio/tools/bin/bcbio_nextgen.py"

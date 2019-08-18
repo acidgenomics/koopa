@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # shellcheck source=/dev/null
-source "$(koopa header zsh)"
+source "$(_koopa_header zsh)"
 
 # Install ZSH autosuggestions.
 # Modified 2019-06-23.
