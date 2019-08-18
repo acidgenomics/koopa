@@ -10,7 +10,7 @@ set -Eeu -o pipefail
 # - https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
 
 name="rmate"
-version="$(koopa variable "$name")"
+version="$(_koopa_variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 tmp_dir="$(koopa tmp-dir)/${name}"
 exe_file="${prefix}/bin/${name}"

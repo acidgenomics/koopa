@@ -20,7 +20,7 @@ _koopa_assert_has_no_environments
 _koopa_assert_is_installed docbook2x-texi
 
 name="git"
-version="$(koopa variable "$name")"
+version="$(_koopa_variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 tmp_dir="$(koopa tmp-dir)/${name}"
 build_os_string="$(koopa build-os-string)"

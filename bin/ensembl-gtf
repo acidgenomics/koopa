@@ -35,7 +35,7 @@ build = args.build
 release = args.release
 if release is None:
     release = subprocess.check_output( \
-        "koopa variable ensembl_release_version", \
+        "_koopa_variable ensembl_release_version", \
         shell=True, universal_newlines=True \
     )
     release = release.rstrip()

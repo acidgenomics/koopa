@@ -14,8 +14,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # (c) 2018 Michael Steinbaugh.
 # This software is provided under an MIT License.
 
-version="0.5.1"
-date="2019-08-15"
+version="$(_koopa_variable koopa)"
+date="$(_koopa_variable koopa_date)"
 
 
 
@@ -70,7 +70,7 @@ return string commands:
     tmp-dir
         Koopa temporary directory path. Used primarily for build scripts.
     variable
-        Get internal koopa variable.
+        Get internal _koopa_variable.
         For example, get recommended "vim" version.
 
 optional arguments:

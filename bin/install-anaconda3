@@ -14,7 +14,7 @@ source "$(koopa header bash)"
 _koopa_assert_has_no_environments
 
 name="anaconda3"
-version="$(koopa variable "$name")"
+version="$(_koopa_variable "$name")"
 prefix="$(koopa build-prefix)/${name}"
 tmp_dir="$(koopa tmp-dir)/${name}"
 exe_file="${prefix}/bin/conda"

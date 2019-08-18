@@ -14,7 +14,7 @@
 _koopa_assert_has_no_environments
 
 name="R"
-version="$(koopa variable "$name")"
+version="$(_koopa_variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 tmp_dir="$(koopa tmp-dir)/${name}"
 build_os_string="$(koopa build-os-string)"

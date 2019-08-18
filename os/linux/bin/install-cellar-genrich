@@ -13,7 +13,7 @@ source "$(koopa header linux)"
 _koopa_assert_has_no_environments
 
 name="genrich"
-version="$(koopa variable "$name")"
+version="$(_koopa_variable "$name")"
 prefix="$(koopa cellar-prefix)/${name}/${version}"
 tmp_dir="$(koopa tmp-dir)/${name}"
 exe_file="${prefix}/bin/${name}"
