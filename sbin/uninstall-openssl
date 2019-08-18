@@ -3,7 +3,7 @@
 
 # Last tested with openssl 1.1.1c.
 
-prefix="$(koopa build-prefix)"
+prefix="$(_koopa_build_prefix)"
 set -x
 
 sudo rm -f "${prefix}/bin/c_rehash"

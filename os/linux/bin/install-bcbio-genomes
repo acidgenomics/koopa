@@ -10,7 +10,7 @@ source "$(koopa header linux)"
 _koopa_assert_is_installed bcbio_nextgen.py
 
 version="$(bcbio_nextgen.py --version)"
-tmp_dir="$(koopa tmp-dir)/bcbio"
+tmp_dir="$(_koopa_tmp_dir)/bcbio"
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 mkdir -p "$log_dir"

@@ -11,7 +11,7 @@ source "$(koopa header bash)"
 
 _koopa_assert_has_sudo
 
-build_prefix="$(koopa build-prefix)"
+build_prefix="$(_koopa_build_prefix)"
 printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
 
 if [[ ! -L "/usr/bin/env" ]]
