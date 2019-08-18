@@ -142,7 +142,7 @@ _koopa_update_xdg_config() {
     home_dir="$(_koopa_home)"
 
     local os_type
-    os_type="$(koopa os-type)"
+    os_type="$(_koopa_os_type)"
 
     mkdir -p "$config_dir"
 

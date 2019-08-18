@@ -2,6 +2,6 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 _koopa_assert_is_linux

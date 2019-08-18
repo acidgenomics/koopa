@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header debian)"
+source "$(_koopa_header debian)"
 
 # Install Perl rename.
 # Updated 2019-06-25.

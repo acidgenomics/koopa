@@ -74,12 +74,12 @@ then
 fi
 
 # Note that this will add Debian or Fedora.
-_koopa_add_bins_to_path "os/$(koopa os-type)"
+_koopa_add_bins_to_path "os/$(_koopa_os_type)"
 
 # Host type-specific                                                        {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_add_bins_to_path "host/$(koopa host-type)"
+_koopa_add_bins_to_path "host/$(_koopa_host_type)"
 
 # Private scripts                                                          {{{3
 # -----------------------------------------------------------------------------

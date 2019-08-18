@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header fedora)"
+source "$(_koopa_header fedora)"
 
 # Install Docker Community Edition.
 # Updated 2019-07-11.
@@ -14,7 +14,7 @@ source "$(koopa header fedora)"
 # Note that Fedora 28+ is required to use recommended new `dnf` approach.
 
 _koopa_assert_has_sudo
-os_type="$(koopa os-type)"
+os_type="$(_koopa_os_type)"
 
 # Remove legacy versions, if necessary.
 sudo yum -y remove \

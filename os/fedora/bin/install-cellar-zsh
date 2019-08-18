@@ -2,12 +2,12 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header fedora)"
+source "$(_koopa_header fedora)"
 
 # Install Z shell.
 # Updated 2019-07-09.
 
-os_type="$(koopa os-type)"
+os_type="$(_koopa_os_type)"
 
 if _koopa_has_sudo
 then

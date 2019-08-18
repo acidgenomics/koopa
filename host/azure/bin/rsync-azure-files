@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header azure)"
+source "$(_koopa_header azure)"
 
 # rsync to Azure Samba (SMB) file shares.
 # Updated 2019-06-25.

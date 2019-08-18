@@ -2,7 +2,7 @@
 set -Eeu o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header azure)"
+source "$(_koopa_header azure)"
 
 # rsync R site package library.
 # Modified 2019-08-16.

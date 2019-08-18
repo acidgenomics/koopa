@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header azure)"
+source "$(_koopa_header azure)"
 
 # Run bcbio-nextgen unit tests.
 # Modified 2019-08-14.

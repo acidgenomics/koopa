@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header azure)"
+source "$(_koopa_header azure)"
 
 # Clean up extracted bcbio anaconda packages.
 # Modified 2019-08-14.

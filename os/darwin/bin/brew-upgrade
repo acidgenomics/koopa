@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header darwin)"
+source "$(_koopa_header darwin)"
 
 # Upgrade Homebrew.
 # Updated 2019-06-23.
