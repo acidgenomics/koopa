@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header bash)"
+source "$(koopa header bash)"
 
 # Move files up 1 directory level.
 # Updated 2019-06-23.

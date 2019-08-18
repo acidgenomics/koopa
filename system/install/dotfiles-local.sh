@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "$(_koopa_header bash)"
+source "$(koopa header bash)"
 
 # Install dot files.
 # Updated 2019-06-23.

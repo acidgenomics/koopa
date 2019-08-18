@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header azure)"
+source "$(koopa header azure)"
 
 # rsync bcbio installation.
 # Modified 2019-08-14.

@@ -2,4 +2,4 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header fedora)"
+source "$(koopa header fedora)"

@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header azure)"
+source "$(koopa header azure)"
 
 # Install base programs recommended for Azure VM.
 # Updated 2019-06-23.

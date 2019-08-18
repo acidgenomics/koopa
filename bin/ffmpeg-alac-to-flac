@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header bash)"
+source "$(koopa header bash)"
 
 # Use ffmpeg to transcode ALAC (Apple Lossless) to FLAC.
 # Updated 2019-07-28.

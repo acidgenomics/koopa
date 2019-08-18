@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header fedora)"
+source "$(koopa header fedora)"
 
 # Install Vim.
 # Updated 2019-07-09.

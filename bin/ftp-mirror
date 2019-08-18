@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header bash)"
+source "$(koopa header bash)"
 
 # Recursively download (mirror) over FTP using wget.
 # Updated 2019-07-30.

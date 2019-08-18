@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header darwin)"
+source "$(koopa header darwin)"
 
 # Convert UTF-8 NFD to NFC.
 # Updated 2019-06-18.

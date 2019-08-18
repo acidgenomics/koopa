@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header debian)"
+source "$(koopa header debian)"
 
 # Install GNU core utilities.
 # Updated 2019-06-23.

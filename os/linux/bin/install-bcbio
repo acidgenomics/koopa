@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(_koopa_header linux)"
+source "$(koopa header linux)"
 
 # Install bcbio-nextgen.
 # Updated 2019-06-25.
