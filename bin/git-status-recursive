@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 # Get the status of all git repositories.
 # Updated 2019-06-25.

@@ -21,7 +21,7 @@ array=(
     "https://koopa.acidgenomics.com/"
     ""
     "## System information"
-    "Koopa home: ${KOOPA_HOME}"
+    "Koopa home: $(_koopa_home)"
     "Shell: ${shell}"
     "OS: ${os}"
     "Terminal: ${TERM_PROGRAM} ${TERM_PROGRAM_VERSION}"

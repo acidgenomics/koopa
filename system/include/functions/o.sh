@@ -3,6 +3,8 @@
 
 
 
+# Operating system name.
+# Always returns lowercase, with unique names for Linux distros (e.g. "debian").
 # Updated 2019-08-16.
 _koopa_os_type() {
     local id

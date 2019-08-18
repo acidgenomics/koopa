@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 # FASTQ dump from Sequence Read Archive (SRA) accession list.
 # Updated 2019-06-23.

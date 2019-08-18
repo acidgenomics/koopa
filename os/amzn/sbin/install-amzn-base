@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header amzn)"
+source "$(_koopa_header amzn)"
 
 # Install base programs recommended for Amazon Linux 2.
 # Updated 2019-06-23.

@@ -39,18 +39,9 @@ system configuration commands:
 return string commands:
     header
         Shell script header.
-    host-type
-        Return useful host type matching either:
-        - VMs: "aws", "azure".
-        - HPCs: "harvard-o2", "harvard-odyssey".
-        Returns empty for local machines and/or unsupported types.
-    os-type
-        Operating system name. Always returns lowercase, with unique names for
-        Linux distros (e.g. "debian").
-    os-version
-        Operating system version.
-    r-home
-        R installation location. Set as "\$R_HOME" internally by R.
+    home
+        Return the koopa installation path.
+        Also stored as 'KOOPA_HOME' environment variable.
 
 optional arguments:
     -h, --help
@@ -87,11 +78,7 @@ case "$1" in
         exit
         ;;
     home)
-        echo "$KOOPA_HOME"
-	exit
-        ;;
-    host-type)
-        _koopa_host_type
+        _koopa_home
         exit
         ;;
     info)
@@ -100,17 +87,6 @@ case "$1" in
         ;;
     list)
         Rscript --vanilla "${include_dir}/list.R"
-        exit
-        ;;
-    os-type)
-        _koopa_os_type
-        exit
-        ;;
-    os-version)
-        _koopa_os_version
-        ;;
-    r-home)
-        _koopa_r_home
         exit
         ;;
     update)

@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header darwin)"
+source "$(_koopa_header darwin)"
 
 # Install recommended Homebrew recipes.
 # Updated 2019-08-12.

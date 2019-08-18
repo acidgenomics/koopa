@@ -77,7 +77,7 @@ _koopa_build_os_string() {
         # This will distinguish between RedHat, Amazon, and other distros
         # instead of just returning "linux". Note that we're substituting
         # "redhat" instead of "rhel" here, when applicable.
-        os_type="$(koopa os-type)"
+        os_type="$(_koopa_os_type)"
         if echo "$os_type" | grep -q "rhel"
         then
             os_type="redhat"

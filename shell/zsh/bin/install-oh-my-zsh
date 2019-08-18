@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "$(_koopa_header bash)"
 
 # Install oh-my-zsh
 # Modified 2019-06-23.

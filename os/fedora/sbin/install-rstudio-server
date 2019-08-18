@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header fedora)"
+source "$(_koopa_header fedora)"
 
 # Install RStudio Server.
 # Updated 2019-06-23.

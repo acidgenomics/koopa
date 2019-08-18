@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
-source "$(koopa header linux)"
+source "$(_koopa_header linux)"
 
 # Install Genrich.
 # Updated 2019-06-23.
