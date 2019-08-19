@@ -18,8 +18,7 @@ export ZSH_CUSTOM="${ZSH}/custom"
 # Install oh-my-zsh automatically, if necessary.
 if [[ ! -d "$ZSH" ]]
 then
-    printf "Installing oh-my-zsh at %s.\n" "$ZSH"
-    install-oh-my-zsh
+    install-oh-my-zsh "$ZSH"
 fi
 
 
