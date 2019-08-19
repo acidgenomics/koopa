@@ -4,7 +4,7 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Show koopa installation information.
-# Updated 2019-08-18.
+# Updated 2019-08-19.
 
 shell="$(_koopa_shell)"
 shell="${shell} $(_koopa_"${shell}"_version)"
@@ -16,6 +16,8 @@ else
     os="$(python -mplatform)"
 fi
 
+# > term="Terminal: ${TERM_PROGRAM:-} ${TERM_PROGRAM_VERSION:-}"
+
 array=(
     "$(koopa --version)"
     "https://koopa.acidgenomics.com/"
@@ -24,7 +26,6 @@ array=(
     "Koopa home: $(_koopa_home)"
     "Shell: ${shell}"
     "OS: ${os}"
-    "Terminal: ${TERM_PROGRAM} ${TERM_PROGRAM_VERSION}"
     ""
     "Run 'koopa check' to verify installation."
 )
