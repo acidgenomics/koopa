@@ -6,7 +6,14 @@ source "$(koopa header zsh)"
 # Install oh-my-zsh
 # Modified 2019-08-19.
 
-zsh_dir="${HOME}/.oh-my-zsh"
-rm -rf "$zsh_dir"
+zsh_dir="${1:-${HOME}/.oh-my-zsh}"
+
+if [[ -d "$zsh_dir" ]]
+then
+    >&2 "Error: ZSH already installed at: '%s'.\n" "$zsh_dir"
+    exit 1
+fi
+
+printf "Installing oh-my-zsh at: '%s'.\n" "$zsh_dir"
+rm -frv "$zsh_dir"
 git clone https://github.com/robbyrussell/oh-my-zsh "$zsh_dir"
-unset -v zsh_dir
