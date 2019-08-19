@@ -56,32 +56,53 @@ fi
 
 # Trim the maximum number of directories in prompt (PS1).
 # For bash, requires >= v4.
-[ -z "${PROMPT_DIRTRIM:-}" ] && export PROMPT_DIRTRIM=4
+if [ -z "${PROMPT_DIRTRIM:-}" ]
+then
+    export PROMPT_DIRTRIM=4
+fi
 
 
 
 # History                                                                   {{{1
 # ==============================================================================
 
-[ -z "${HISTFILE:-}" ] && 
-    HISTFILE="${HOME}/."$(_koopa_shell)"-history" &&
+if [ -z "${HISTFILE:-}" ]
+then
+    HISTFILE="${HOME}/.$(_koopa_shell)-history"
     export HISTFILE
+fi
 
-[ -z "${HISTSIZE:-}" ] && export HISTSIZE=100000
-[ -z "${SAVEHIST:-}" ] && export SAVEHIST=100000
+if [ -z "${HISTSIZE:-}" ]
+then
+    export HISTSIZE=100000
+fi
 
-[ -z "${HISTCONTROL:-}" ] && 
+if [ -z "${SAVEHIST:-}" ]
+then
+    export SAVEHIST=100000
+fi
+
+if [ -z "${HISTCONTROL:-}" ]
+then
     export HISTCONTROL="ignoredups"
-[ -z "${HISTIGNORE:-}" ] && 
+fi
+
+if [ -z "${HISTIGNORE:-}" ]
+then
     export HISTIGNORE="&:ls:[bf]g:exit"
+fi
 
 # Add the date/time to `history` command output.
 # Note that on macOS bash will fail if `set -e` is set and this isn't exported.
-[ -z "${HISTTIMEFORMAT:-}" ] && 
+if [ -z "${HISTTIMEFORMAT:-}" ]
+then
     export HISTTIMEFORMAT="%Y%m%d %T  "
+fi
 
-[ -z "${PROMPT_COMMAND:-}" ] && 
+if [ -z "${PROMPT_COMMAND:-}" ]
+then
     export PROMPT_COMMAND="history -a"
+fi
 
 
 
