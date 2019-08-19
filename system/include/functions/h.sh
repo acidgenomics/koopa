@@ -34,7 +34,7 @@ _koopa_header() {
     then
         >&2 cat << EOF
 error: TYPE argument missing.
-usage: koopa header TYPE
+usage: _koopa_header TYPE
 
 shell:
     - bash
@@ -109,9 +109,22 @@ EOF
 
 
 
+# Updated 2019-08-18.
+_koopa_home() {
+    echo "$KOOPA_HOME"
+}
+
+
+
 # Simple host type name string to load up host-specific scripts.
-# Currently intended support AWS, Azure, and Harvard clusters.
-# Updated 2019-06-27.
+# Currently intended to support AWS, Azure, and Harvard clusters.
+#
+# Returns useful host type matching either:
+# - VMs: "aws", "azure".
+# - HPCs: "harvard-o2", "harvard-odyssey".
+#
+# Returns empty for local machines and/or unsupported types.
+# Updated 2019-08-18.
 _koopa_host_type() {
     local name
     case "$(hostname -f)" in

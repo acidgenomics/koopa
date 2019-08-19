@@ -14,8 +14,8 @@ _koopa_link_cellar() {
 
     name="$1"
     version="$2"
-    cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
-    build_prefix="$(koopa build-prefix)"
+    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+    build_prefix="$(_koopa_build_prefix)"
 
     printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
 
@@ -27,7 +27,8 @@ _koopa_link_cellar() {
 
 
 
-# Used by `koopa info`.
+# Locate a program and add its name as a prefix.
+# e.g. return `bash: /usr/bin/bash`.
 # Updated 2019-07-09.
 _koopa_locate() {
     local command

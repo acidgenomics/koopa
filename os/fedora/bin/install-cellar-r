@@ -23,7 +23,7 @@ source "$(koopa header fedora)"
 
 # There doesn't appear to be an easy way to fix these issues on RHEL 7 or 8.
 
-os_type="$(koopa os-type)"
+os_type="$(_koopa_os_type)"
 
 _koopa_assert_is_installed java
 _koopa_assert_is_installed javac
@@ -37,4 +37,4 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script r)"
+source "$(_koopa_cellar_script r)"

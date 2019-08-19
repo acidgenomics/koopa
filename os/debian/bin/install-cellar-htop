@@ -14,4 +14,4 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script htop)"
+source "$(_koopa_cellar_script htop)"

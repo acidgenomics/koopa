@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Activate Python "default" virtual environment.
-# Updated 2019-08-02.
+# Updated 2019-08-17.
 
 # Note that we're using this instead of conda as our default interactive
 # Python environment, so we can easily use pip.
@@ -10,7 +10,7 @@
 # https://stackoverflow.com/questions/10406926
 
 # Only attempt to autoload for bash or zsh.
-koopa shell | grep -Eq "^(bash|zsh)$" || return 0
+_koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
 # Don't allow Python to change the prompt string.
 export VIRTUAL_ENV_DISABLE_PROMPT=1

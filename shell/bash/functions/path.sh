@@ -10,7 +10,7 @@ _koopa_bash_add_local_bins_to_path() {
     local dir
     local dirs
     
-    _koopa_add_to_path_start "$(koopa build-prefix)/bin"
+    _koopa_add_to_path_start "$(_koopa_build_prefix)/bin"
     
     IFS=$'\n'
     read -r -d '' dirs <<< "$(_koopa_bash_find_local_bin_dirs)"
@@ -36,9 +36,9 @@ _koopa_bash_find_local_bin_dirs() {
     local tmp_file
 
     array=()
-    tmp_file="$(koopa tmp-dir)/find"
+    tmp_file="$(_koopa_tmp_dir)/find"
 
-    find "$(koopa build-prefix)" \
+    find "$(_koopa_build_prefix)" \
         -mindepth 2 \
         -maxdepth 3 \
         -name "bin" \

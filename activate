@@ -326,7 +326,7 @@ then
     # shellcheck source=/dev/null
     . "${activate_dir}/set.sh"
     # shellcheck source=/dev/null
-    . "${activate_dir}/umask.sh"
+    # > . "${activate_dir}/umask.sh"
     # shellcheck source=/dev/null
     . "${activate_dir}/aliases.sh"
     # shellcheck source=/dev/null
@@ -341,8 +341,22 @@ then
         # shellcheck source=/dev/null
         . "${bash_dir}/shopt.sh"
         # shellcheck source=/dev/null
-        . "${bash_dir}/ps1.sh"
+        . "${bash_dir}/prompt.sh"
         unset -v bash_dir
+    elif [ "$KOOPA_SHELL" = "zsh" ]
+    then
+        zsh_dir="${activate_dir}/shell/zsh"
+        # shellcheck source=/dev/null
+        source "${zsh_dir}/fpath.sh"
+        # shellcheck source=/dev/null
+        source "${zsh_dir}/oh-my-zsh.sh"
+        # shellcheck source=/dev/null
+        source "${zsh_dir}/prompt.sh"
+        # shellcheck source=/dev/null
+        source "${zsh_dir}/setopt.sh"
+        # shellcheck source=/dev/null
+        source "${zsh_dir}/bindkey.sh"
+        unset -v zsh_dir
     fi
 
     # Platform-specific configuration.

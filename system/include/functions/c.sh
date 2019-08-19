@@ -20,6 +20,21 @@ _koopa_cellar_prefix() {
 
 
 
+# Updated 2019-08-18.
+_koopa_cellar_script() {
+    local name
+    name="$1"
+    file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
+    if [ ! -f "$file" ]
+    then
+        >&2 printf "Error: No script found for '%s'.\n" "$name"
+        exit 1
+    fi
+    echo "$file"
+}
+
+
+
 # Updated 2019-06-27.
 _koopa_conda_env_list() {
     _koopa_is_installed conda || return 1
@@ -64,17 +79,22 @@ _koopa_conda_env_prefix() {
 
 
 
+# Updated 2019-08-18.
+_koopa_config_dir() {
+    echo "${XDG_CONFIG_HOME}/koopa"
+}
+
+
+
 # Updated 2019-06-27.
 _koopa_conda_prefix() {
     local prefix
-
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/conda"
     else
         prefix="${XDG_DATA_HOME}/koopa/conda"
     fi
-
     echo "$prefix"
 }
 

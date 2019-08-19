@@ -1,7 +1,10 @@
-# Koopa internal versions.
-# Updated 2019-07-26.
+# Koopa internal variables.
+# Updated 2019-08-18.
 
 
+
+koopa="0.5.2"
+koopa_date="2019-08-18"
 
 R="3.6.1"
 anaconda3="2019.03"

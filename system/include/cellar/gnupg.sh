@@ -13,9 +13,9 @@
 _koopa_assert_has_no_environments
 
 name="gnupg"
-version="$(koopa variable gpg)"
-prefix="$(koopa cellar-prefix)/${name}/${version}"
-tmp_dir="$(koopa tmp-dir)/${name}"
+version="$(_koopa_variable gpg)"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 exe_file="${prefix}/bin/gpg"
 
@@ -34,7 +34,7 @@ mkdir -p "$tmp_dir"
 
 (
     pkg="libgpg-error"
-    ver="$(koopa variable "$pkg")"
+    ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
@@ -50,7 +50,7 @@ link-cellar "$name" "$version"
 
 (
     pkg="libgcrypt"
-    ver="$(koopa variable "$pkg")"
+    ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
@@ -66,7 +66,7 @@ link-cellar "$name" "$version"
 
 (
     pkg="libassuan"
-    ver="$(koopa variable "$pkg")"
+    ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
@@ -82,7 +82,7 @@ link-cellar "$name" "$version"
 
 (
     pkg="libksba"
-    ver="$(koopa variable "$pkg")"
+    ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
@@ -98,7 +98,7 @@ link-cellar "$name" "$version"
 
 (
     pkg="npth"
-    ver="$(koopa variable "$pkg")"
+    ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
@@ -114,7 +114,7 @@ link-cellar "$name" "$version"
 
 (
     pkg="pinentry"
-    ver="$(koopa variable "$pkg")"
+    ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
@@ -130,7 +130,7 @@ link-cellar "$name" "$version"
 
 (
     pkg="gnupg"
-    ver="$(koopa variable gpg)"
+    ver="$(_koopa_variable gpg)"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
