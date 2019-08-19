@@ -10,8 +10,8 @@ source "$(koopa header bash)"
 name="$1"
 version="$2"
 
-build_prefix="$(koopa build-prefix)"
-cellar_prefix="$(koopa cellar-prefix)/${name}/${version}"
+build_prefix="$(_koopa_build_prefix)"
+cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
 array=()
 while IFS=  read -r -d $'\0'; do

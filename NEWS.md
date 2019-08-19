@@ -1,3 +1,18 @@
+## koopa 0.5.2 (2019-08-18)
+
+This release improves prompt consistency between zsh and bash.
+
+### Minor changes
+
+- Reworked prompt string configuration. Now automatically updates correctly
+  when either a conda environment or Python virtual environment are loaded.
+  Removed shell version and disk usage from the prompt.
+- Updated zsh shell configuration to use our custom, more minimal koopa prompt
+  instead of Pure prompt. This prompt is visually identical to our bash PS1.
+- Reduced the number of available string returns from main `koopa` function.
+  Instead, these are now called more consistently using internal prefixes.
+  (e.g. `_koopa_cellar_prefix` instead of `koopa cellar-prefix)`.
+
 ## koopa 0.5.1 (2019-08-15)
 
 ### Minor changes

@@ -100,7 +100,7 @@ unset -f usage
 # Script                                                                    {{{1
 # ==============================================================================
 
-dot_dir="$(koopa config-dir)/dotfiles"
+dot_dir="$(_koopa_config_dir)/dotfiles"
 
 # Private file (experimental).
 if [[ "${private:-0}" -eq 1 ]]

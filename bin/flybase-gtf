@@ -22,14 +22,14 @@ args = parser.parse_args()
 version = args.version
 if version is None:
     version = subprocess.check_output( \
-        "koopa variable flybase_release_version", \
+        "_koopa_variable flybase_release_version", \
         shell=True, universal_newlines=True \
     )
     version = version.rstrip()
 version = "r" + version
 
 date = subprocess.check_output( \
-    "koopa variable flybase_release_date", \
+    "_koopa_variable flybase_release_date", \
     shell=True, universal_newlines=True \
 )
 date = date.rstrip()

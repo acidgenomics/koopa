@@ -9,7 +9,7 @@ source "$(koopa header bash)"
 
 # Defaults to Mike's dotfiles repo.
 repo="${1:-git@github.com:mjsteinbaugh/dotfiles.git}"
-dest_dir="$(koopa config-dir)/dotfiles"
+dest_dir="$(_koopa_config_dir)/dotfiles"
 
 if [[ -d "$dest_dir" ]]
 then

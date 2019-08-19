@@ -7,7 +7,7 @@
 # - https://perlbrew.pl
 
 # Only attempt to autoload for bash or zsh.
-koopa shell | grep -Eq "^(bash|zsh)$" || return 0
+_koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
 # Check for installation, otherwise early return.
 if [ -z "${PERLBREW_ROOT:-}" ]

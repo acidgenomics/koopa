@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
-# Updated 2019-06-25.
+# Updated 2019-08-18.
 
 # Useful variables:
 # https://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
@@ -46,22 +46,6 @@
 # User name and host.
 user="\u@\h"
 
-# Remote machine information.
-mach=
-if _koopa_is_remote
-then
-    host_type="$(_koopa_host_type)"
-    [[ -n "$host_type" ]] && mach="${host_type}"
-    os_type="$(_koopa_os_type)"
-    [[ -n "$os_type" ]] && [[ -n "$mach" ]] && mach="${mach} ${os_type}"
-fi
-
-# Shell name.
-shell="$(_koopa_shell) \v"
-
-# History.
-history="c\# h\!"
-
 # Working directory.
 wd="\w"
 
@@ -100,34 +84,24 @@ then
     else
         user_color="36"
     fi
-
-    user="\[\033[01;${user_color}m\]${user}\[\033[00m\]"
-
-    if [[ -n "$mach" ]]
-    then
-        mach_color="$user_color"
-        mach="\[\033[${mach_color}m\]${mach}\[\033[00m\]"
-    fi
-
-    shell_color="39"
-    shell="\[\033[${shell_color}m\]${shell}\[\033[00m\]"
-
-    history_color="$shell_color"
-    history="\[\033[${history_color}m\]${history}\[\033[00m\]"
+    user="\[\033[${user_color}m\]${user}\[\033[00m\]"
 
     wd_color="34"
-    wd="\[\033[01;${wd_color}m\]${wd}\[\033[00m\]"
+    wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
 
     # Match the color of zsh pure prompt.
     prompt_color="35" 
-    prompt="\[\033[01;${prompt_color}m\]${prompt}\[\033[00m\]"
+    prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
 fi
 
-PS1="\n${user}"
-[[ -n "$mach" ]] && PS1="${PS1} | ${mach}"
-PS1="${PS1} | ${shell} | ${history}\n"
-PS1="${PS1}${wd}\n"
-PS1="${PS1}${prompt} "
+# Note that we need to escape functions with a backslash here.
+PS1="${user}"
+PS1="${PS1}\$(_koopa_prompt_conda_env)"
+PS1="${PS1}\$(_koopa_prompt_python_env)"
+PS1="${PS1}\n${wd}"
+PS1="\n${PS1}\n${prompt} "
 export PS1
 
-unset -v history mach prompt prompt_color user user_color wd wd_color
+unset -v prompt prompt_color
+unset -v user user_color
+unset -v wd wd_color

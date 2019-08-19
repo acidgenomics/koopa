@@ -20,4 +20,4 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script emacs)"
+source "$(_koopa_cellar_script emacs)"

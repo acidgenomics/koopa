@@ -9,7 +9,7 @@ options(
     warning = quote(quit(status = 1L))
 )
 
-message("koopa programs exported in PATH")
+message("koopa programs exported in PATH.")
 
 ## Note that these won't pick up in my current RStudio configuration.
 koopa_dir <- Sys.getenv("KOOPA_HOME")
