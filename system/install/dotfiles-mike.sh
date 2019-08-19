@@ -3,7 +3,7 @@
 # Mike-specific dot files.
 # Updated 2019-06-23.
 
-private_dir="$(koopa config-dir)/dotfiles-private"
+private_dir="$(_koopa_config_dir)/dotfiles-private"
 if [[ ! -d "$private_dir" ]]
 then
     git clone git@github.com:mjsteinbaugh/dotfiles-private.git "$private_dir"

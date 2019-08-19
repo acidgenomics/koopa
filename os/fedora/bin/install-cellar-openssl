@@ -7,7 +7,7 @@ source "$(koopa header fedora)"
 # Install OpenSSL.
 # Updated 2019-07-09.
 
-os_type="$(koopa os-type)"
+os_type="$(_koopa_os_type)"
 
 if _koopa_has_sudo
 then
@@ -19,4 +19,4 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "$(koopa cellar-script openssl)"
+source "$(_koopa_cellar_script openssl)"

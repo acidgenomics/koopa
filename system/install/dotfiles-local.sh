@@ -13,8 +13,8 @@ dotfile --force kshrc
 dotfile --force shrc
 dotfile --force zshrc
 
-host_type="$(koopa host-type)"
-os_type="$(koopa os-type)"
+host_type="$(_koopa_host_type)"
+os_type="$(_koopa_os_type)"
 
 # R
 if [[ "$os_type" == "darwin" ]]

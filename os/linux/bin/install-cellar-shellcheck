@@ -14,9 +14,9 @@ source "$(koopa header bash)"
 #   https://www.haskell.org/downloads/linux/
 
 name="shellcheck"
-version="$(koopa variable "$name")"
-prefix="$(koopa cellar-prefix)/${name}/${version}"
-tmp_dir="$(koopa tmp-dir)/${name}"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 printf "Installing %s %s.\n" "$name" "$version"

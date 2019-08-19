@@ -44,7 +44,7 @@ set -o pipefail
 # > set -x
 set -o xtrace
 
-if [ "$(koopa shell)" = "bash" ]
+if [ "$(_koopa_shell)" = "bash" ]
 then
     # Catch ERR traps properly. These won't fire in certain scenarios when the
     # `-e` flag is set.

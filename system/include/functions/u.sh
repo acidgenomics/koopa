@@ -117,7 +117,7 @@ _koopa_update_shells() {
 
     _koopa_assert_has_sudo
     
-    shell="$(koopa build-prefix)/bin/${1}"
+    shell="$(_koopa_build_prefix)/bin/${1}"
     shell_file="/etc/shells"
         
     if ! grep -q "$shell" "$shell_file"
@@ -136,13 +136,13 @@ _koopa_update_shells() {
 # Updated 2019-07-12.
 _koopa_update_xdg_config() {
     local config_dir
-    config_dir="$(koopa config-dir)"
+    config_dir="$(_koopa_config_dir)"
 
     local home_dir
-    home_dir="$(koopa home)"
+    home_dir="$(_koopa_home)"
 
     local os_type
-    os_type="$(koopa os-type)"
+    os_type="$(_koopa_os_type)"
 
     mkdir -p "$config_dir"
 

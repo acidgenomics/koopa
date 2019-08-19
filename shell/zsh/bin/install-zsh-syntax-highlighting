@@ -3,10 +3,10 @@
 # shellcheck source=/dev/null
 source "$(koopa header zsh)"
 
-# Install ZSH autosuggestions.
+# Install ZSH syntax highlighting.
 # Modified 2019-08-19.
 
-plugin="zsh-autosuggestions"
+plugin="zsh-syntax-highlighting"
 dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/${plugin}"
 
 if [[ -d "$dir" ]]

@@ -3,6 +3,17 @@
 
 
 
+# Updated 2019-08-18.
+_koopa_bash_version() {
+    bash --version | \
+        head -n 1 | \
+        cut -d ' ' -f 4 | \
+        cut -d '(' -f 1
+        # > cut -d '.' -f 1-2
+}
+
+
+
 # Fix the group permissions on the build directory.
 # Updated 2019-06-26.
 _koopa_build_chgrp() {
@@ -66,7 +77,7 @@ _koopa_build_os_string() {
         # This will distinguish between RedHat, Amazon, and other distros
         # instead of just returning "linux". Note that we're substituting
         # "redhat" instead of "rhel" here, when applicable.
-        os_type="$(koopa os-type)"
+        os_type="$(_koopa_os_type)"
         if echo "$os_type" | grep -q "rhel"
         then
             os_type="redhat"
