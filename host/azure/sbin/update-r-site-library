@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeu o pipefail
+set -Eeux o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
