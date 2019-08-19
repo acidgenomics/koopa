@@ -204,16 +204,16 @@ check_version(
 ## R
 ## Alternatively, can check using `packageVersion("base")`.
 ## Using shell version string instead here for consistency.
-check_version(
-    name = "R",
-    version = koopa_version("R"),
-    version_cmd = c(
-        "R --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    ),
-    eval = "=="
-)
+## > check_version(
+## >     name = "R",
+## >     version = koopa_version("R"),
+## >     version_cmd = c(
+## >         "R --version",
+## >         "head -n 1",
+## >         "cut -d ' ' -f 3"
+## >     ),
+## >     eval = "=="
+## > )
 
 ## Python
 check_version(
