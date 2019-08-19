@@ -136,8 +136,23 @@ plugins=(
 
 unset -v plugins_dir
 
+
+# Load Oh My Zsh                                                            {{{1
+# ==============================================================================
+
+# Fix for unbound variables in activate/deactivate scripts.
+if [ -n "${KOOPA_TEST:-}" ]
+then
+    set +u
+fi
+
 # Load oh-my-zsh.
 source "${ZSH}/oh-my-zsh.sh"
+
+if [ -n "${KOOPA_TEST:-}" ]
+then
+    set -u
+fi
 
 
 
