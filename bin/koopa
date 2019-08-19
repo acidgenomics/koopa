@@ -81,12 +81,20 @@ case "$1" in
         _koopa_home
         exit
         ;;
+    host-type)
+        _koopa_host_type
+        exit
+        ;;
     info)
         "${include_dir}/info.sh"
         exit
         ;;
     list)
         Rscript --vanilla "${include_dir}/list.R"
+        exit
+        ;;
+    os-type)
+        _koopa_os_type
         exit
         ;;
     update)
