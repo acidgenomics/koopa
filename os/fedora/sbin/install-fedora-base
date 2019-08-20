@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Updated 2019-08-19.
+# Updated 2019-08-20.
 
 # Tested against RHEL 7 and 8.
 
@@ -61,6 +61,7 @@ sudo yum -y install \
     qpdf \
     readline \
     readline-devel \
+    rust \
     tesseract-devel \
     texlive \
     texlive-bera \
