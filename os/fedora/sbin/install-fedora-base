@@ -5,9 +5,13 @@ set -Eeu -o pipefail
 source "$(koopa header fedora)"
 
 # Install base programs for Fedora.
-# Updated 2019-07-26.
+# Updated 2019-08-19.
 
 # Tested against RHEL 7 and 8.
+
+# Missing on RHEL7:
+# > sudo yum install coin-or-Clp
+# https://github.com/coin-or/Clp
 
 _koopa_assert_has_sudo
 os_type="$(_koopa_os_type)"
@@ -22,8 +26,10 @@ then
 fi
 
 sudo yum -y install \
+    ImageMagick-c++-devel \
     bzip2 \
     bzip2-devel \
+    cargo \
     cmake \
     convmv \
     coreutils \
@@ -39,19 +45,23 @@ sudo yum -y install \
     gnutls \
     gnutls-devel \
     gsl-devel \
+    leptonica-devel \
     libcurl-devel \
     libevent-devel \
     libxml2-devel \
     make \
     mariadb-devel \
+    mpfr-devel \
     ncurses \
     pcre-devel \
+    poppler-cpp-devel \
     postgresql-devel \
     proj \
     proj-devel \
     qpdf \
     readline \
     readline-devel \
+    tesseract-devel \
     texlive \
     texlive-bera \
     texlive-caption \
