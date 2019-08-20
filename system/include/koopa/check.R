@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-08-14.
+## Updated 2019-08-19.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -93,12 +93,12 @@ check_version <- function(
     required = TRUE
 ) {
     stopifnot(
-        is.character(name) && length(name) == 1L,
-        is.character(version) && length(version) == 1L,
-        is.character(version_cmd),
-        (is.character(grep_string) && length(grep_string) == 1L) ||
+        is.character(name) && identical(length(name), 1L),
+        is.character(version) && identical(length(version), 1L),
+        is.character(version_cmd) || is(version_cmd, "package_version"),
+        (is.character(grep_string) && identical(length(grep_string), 1L)) ||
             is.null(grep_string),
-        is.logical(required) && length(required) == 1L
+        is.logical(required) && identical(length(required), 1L)
     )
     eval <- match.arg(eval)
 
@@ -133,17 +133,21 @@ check_version <- function(
 
     ## Run the shell system command to extract the program version.
     ## Consider switching to `system2()` here in a future update.
-    sys_version <- system(command = pipe(version_cmd), intern = TRUE)
-    stopifnot(
-        is.character(sys_version),
-        length(sys_version) == 1L,
-        nzchar(sys_version)
-    )
-    full_sys_version <- sys_version
-
-    if (grepl("\\.", sys_version)) {
-        sys_version <- sanitize_version(sys_version)
-        sys_version <- package_version(sys_version)
+    if (is(version_cmd, "package_version")) {
+        sys_version <- version_cmd
+        full_sys_version <- sys_version
+    } else {
+        sys_version <- system(command = pipe(version_cmd), intern = TRUE)
+        stopifnot(
+            is.character(sys_version),
+            length(sys_version) == 1L,
+            nzchar(sys_version)
+        )
+        full_sys_version <- sys_version
+        if (grepl("\\.", sys_version)) {
+            sys_version <- sanitize_version(sys_version)
+            sys_version <- package_version(sys_version)
+        }
     }
 
     if (eval == ">=") {
@@ -157,6 +161,7 @@ check_version <- function(
     } else {
         status <- fail
     }
+
     message(paste0(
         "  ", status, " | ", name, " ",
         "(", full_sys_version, " ", eval, " ", version, ")\n",
@@ -207,11 +212,13 @@ check_version(
 check_version(
     name = "R",
     version = koopa_version("R"),
-    version_cmd = c(
-        "R --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    ),
+    ## > version_cmd = c(
+    ## >     "R --version",
+    ## >     "head -n 1",
+    ## >     "cut -d ' ' -f 3"
+    ## > ),
+    ## This approach works more consistently on RStudio Server Pro.
+    version_cmd = packageVersion("base"),
     eval = "=="
 )
 

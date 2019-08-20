@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # oh-my-zsh configuration
-# Updated 2019-08-17.
+# Updated 2019-08-19.
 
 # See also:
 # - https://github.com/robbyrussell/oh-my-zsh
@@ -18,8 +18,7 @@ export ZSH_CUSTOM="${ZSH}/custom"
 # Install oh-my-zsh automatically, if necessary.
 if [[ ! -d "$ZSH" ]]
 then
-    printf "Installing oh-my-zsh at %s.\n" "$ZSH"
-    install-oh-my-zsh
+    install-oh-my-zsh "$ZSH"
 fi
 
 
@@ -120,17 +119,13 @@ plugins_dir="${ZSH_CUSTOM}/plugins"
 plugin="zsh-autosuggestions"
 if [[ ! -d "${plugins_dir}/${plugin}" ]]
 then
-    printf "Installing %s.\n" "$plugin"
-    git clone "https://github.com/zsh-users/${plugin}" \
-        "${plugins_dir}/${plugin}"
+    "install-${plugin}"
 fi
 
 plugin="zsh-syntax-highlighting"
 if [[ ! -d "${plugins_dir}/${plugin}" ]]
 then
-    printf "Installing %s.\n" "$plugin"
-    git clone "https://github.com/zsh-users/${plugin}" \
-        "${plugins_dir}/${plugin}"
+    "install-${plugin}"
 fi
 
 plugins=(
@@ -141,8 +136,14 @@ plugins=(
 
 unset -v plugins_dir
 
-# Load oh-my-zsh.
-source "${ZSH}/oh-my-zsh.sh"
+
+# Load Oh My Zsh                                                            {{{1
+# ==============================================================================
+
+if [ -z "${KOOPA_TEST:-}" ]
+then
+    source "${ZSH}/oh-my-zsh.sh"
+fi
 
 
 
