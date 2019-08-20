@@ -89,6 +89,14 @@ case "$1" in
         Rscript --vanilla "${include_dir}/list.R"
         exit
         ;;
+    prompt-conda-env)
+        _koopa_prompt_conda_env
+        exit
+        ;;
+    prompt-python-env)
+        _koopa_prompt_python_env
+        exit
+        ;;
     update)
         "${include_dir}/update.sh"
         exit
