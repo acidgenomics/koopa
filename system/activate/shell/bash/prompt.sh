@@ -96,8 +96,8 @@ fi
 
 # Note that we need to escape functions with a backslash here.
 PS1="${user}"
-PS1="${PS1}\$(_koopa_prompt_conda_env)"
-PS1="${PS1}\$(_koopa_prompt_python_env)"
+PS1="${PS1}\$(koopa prompt-conda-env)"
+PS1="${PS1}\$(koopa prompt-python-env)"
 PS1="${PS1}\n${wd}"
 PS1="\n${PS1}\n${prompt} "
 export PS1
