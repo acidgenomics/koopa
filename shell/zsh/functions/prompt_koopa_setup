@@ -9,7 +9,6 @@
 
 
 # Debugging:
-# > _koopa_prompt_system_report
 # > typeset _koopa_prompt_state
 
 # Prompt:
@@ -28,39 +27,6 @@
 # - \e8   => restore cursor position
 # - \e[K  => clears everything after the cursor on the current line
 # - \e[2K => clear everything on the current line
-
-
-
-# Updated 2019-08-17.
-_koopa_prompt_system_report() {
-    setopt localoptions noshwordsplit
-    print - "- Prompt state:"
-    for k v in "${(@kv)_koopa_prompt_state}"
-    do
-        print - "\t- $k: \`${(q)v}\`"
-    done
-    print - "- Prompt: \`$(typeset -p PROMPT)\`"
-    print - "- Virtualenv: \`$(typeset -p VIRTUAL_ENV_DISABLE_PROMPT)\`"
-    local ohmyzsh=0
-    typeset -la frameworks
-    (( $+ANTIBODY_HOME )) && frameworks+=("Antibody")
-    (( $+ADOTDIR )) && frameworks+=("Antigen")
-    (( $+ANTIGEN_HS_HOME )) && frameworks+=("Antigen-hs")
-    (( $+functions[upgrade_oh_my_zsh] )) && {
-        ohmyzsh=1
-        frameworks+=("Oh My Zsh")
-    }
-    (( $+ZPREZTODIR )) && frameworks+=("Prezto")
-    (( $+ZPLUG_ROOT )) && frameworks+=("Zplug")
-    (( $+ZPLGM )) && frameworks+=("Zplugin")
-    (( $#frameworks == 0 )) && frameworks+=("None")
-    print - "- Detected frameworks: ${(j:, :)frameworks}"
-    if (( ohmyzsh ))
-    then
-        print - "\t- Oh My Zsh:"
-        print - "\t\t- Plugins: ${(j:, :)plugins}"
-    fi
-}
 
 
 
@@ -136,8 +102,8 @@ _koopa_prompt_setup() {
     
     header=(
         "${_koopa_prompt_state[user]}"
-        "\$(_koopa_prompt_conda_env)"
-        "\$(_koopa_prompt_python_env)"
+        "\$(koopa prompt-conda-env)"
+        "\$(koopa prompt-python-env)"
     )
     header="${(j..)header}"
     
