@@ -77,11 +77,10 @@ echo "$-" | grep -q "i" && interactive=1 || interactive=0
 # - Interactive HPC slurm job.
 # - Tmux session.
 # - Vim terminal.
-if [ \
-    \( -n "${SLURM_JOB_ID:-}" -a "$interactive" -eq 1 \) -o \
-    \( -n "${TMUX:-}" \) -o \
-    \( -n "${VIM_TERMINAL:-}" \) \
-    ]
+# shellcheck disable=SC2166
+if [ -n "${SLURM_JOB_ID:-}" -a "$interactive" -eq 1 ] || \
+    [ -n "${TMUX:-}" ] || \
+    [ -n "${VIM_TERMINAL:-}" ]
 then
     force=1
     subshell=1
