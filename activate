@@ -73,7 +73,7 @@ fi
 # Check for interactive shell.
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
-# Reload inside:
+# Force subshell reload inside:
 # - Interactive HPC slurm job.
 # - Emacs terminal.
 # - Tmux session.
@@ -85,7 +85,7 @@ if [ -n "${SLURM_JOB_ID:-}" -a "$interactive" -eq 1 ] || \
     [ -n "${VIM_TERMINAL:-}" ]
 then
     force=1
-    subshell=1
+    # > subshell=1
 fi
 
 # Early return for non-interactive sessions.
