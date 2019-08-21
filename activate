@@ -75,10 +75,12 @@ echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
 # Reload inside:
 # - Interactive HPC slurm job.
+# - Emacs terminal.
 # - Tmux session.
 # - Vim terminal.
 # shellcheck disable=SC2166
 if [ -n "${SLURM_JOB_ID:-}" -a "$interactive" -eq 1 ] || \
+    [ "${TERM:-}" = "eterm-color" ] || \
     [ -n "${TMUX:-}" ] || \
     [ -n "${VIM_TERMINAL:-}" ]
 then
