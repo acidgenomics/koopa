@@ -6,7 +6,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Show koopa installation information.
 # Updated 2019-08-19.
 
-shell="$(_koopa_shell)"
+shell="$KOOPA_SHELL"
 shell="${shell} $(_koopa_"${shell}"_version)"
 
 if _koopa_is_darwin
