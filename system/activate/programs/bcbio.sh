@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Include bcbio toolkit binaries in PATH, if defined.
-# Updated 2019-06-25.
+# Updated 2019-08-21.
 
 # Attempt to locate bcbio installation automatically on supported platforms.
 
