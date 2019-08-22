@@ -73,7 +73,6 @@ then
     export KOOPA_TEST=1
 fi
 
-
 # Early return for non-interactive sessions.
 [ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
 
@@ -281,9 +280,6 @@ if [ "$subshell" -eq 0 ]
 then
     # shellcheck source=/dev/null
     . "${activate_dir}/preflight.sh"
-
-    # shellcheck source=/dev/null
-    # > . "${activate_dir}/user-profile.sh"
 
     exports_dir="${activate_dir}/exports"
     # shellcheck source=/dev/null
