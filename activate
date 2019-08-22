@@ -19,8 +19,11 @@
 [ "$(id -u)" -eq 0 ] && return 0
 whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
+# Check for interactive shell.
+echo "$-" | grep -q "i" && interactive=1 || interactive=0
+
 # Detect if koopa is already active and being requested inside a subshell.
-if [ -n "${KOOPA_SHELL:-}" ]
+if [ -n "${KOOPA_HOME:-}" ]
 then
     subshell=1
 else
@@ -70,8 +73,9 @@ then
     export KOOPA_TEST=1
 fi
 
-# Check for interactive shell.
-echo "$-" | grep -q "i" && interactive=1 || interactive=0
+
+# Early return for non-interactive sessions.
+[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
 
 # Force subshell reload inside:
 # - Interactive HPC slurm job.
@@ -88,9 +92,6 @@ then
         force=1
     fi
 fi
-
-# Early return for non-interactive sessions.
-[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
 
 # Early return if koopa is already active.
 [ "$force" -eq 0 ] && [ "$subshell" -eq 1 ] && return 0
@@ -260,7 +261,8 @@ fi
 
 # Note that running realpath on the file instead of the directory will properly
 # resolve `~/.config/koopa/activate` in Mike's default `~/.shrc` config file.
-KOOPA_HOME="$(dirname "$(realpath "$file")")" && export KOOPA_HOME
+KOOPA_HOME="$(dirname "$(realpath "$file")")"
+export KOOPA_HOME
 unset -v file
 
 # Load shared functions.
@@ -279,8 +281,9 @@ if [ "$subshell" -eq 0 ]
 then
     # shellcheck source=/dev/null
     . "${activate_dir}/preflight.sh"
+
     # shellcheck source=/dev/null
-    . "${activate_dir}/user-profile.sh"
+    # > . "${activate_dir}/user-profile.sh"
 
     exports_dir="${activate_dir}/exports"
     # shellcheck source=/dev/null
