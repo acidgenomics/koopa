@@ -5,7 +5,7 @@ set -Eeux o pipefail
 source "$(koopa header azure)"
 
 # rsync R site package library.
-# Modified 2019-08-16.
+# Modified 2019-08-22.
 
 _koopa_assert_has_sudo
 
@@ -14,7 +14,7 @@ r_home="$(_koopa_r_home)"
 
 host_ip="$(ip-address)"
 source_user="mike"
-source_ip="10.100.100.135"
+source_ip="10.100.100.132"
 
 r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
