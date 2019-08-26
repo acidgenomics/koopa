@@ -87,7 +87,7 @@ fi
 # Remove legacy cruft                                                       {{{1
 # ==============================================================================
 
-rm -fr "${KOOPA_HOME}/"{config,dotfiles,include}
+rm -fr "${KOOPA_HOME}/"{config,include}
 rm -fr "${KOOPA_HOME}/bin/"{host,os,sudo}
 
 
