@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-08-21.
+# Updated 2019-08-26.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -17,7 +17,7 @@
 
 # Never activate for specific admin accounts.
 [ "$(id -u)" -eq 0 ] && return 0
-whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
+whoami | grep -Eq "\b(admin)\b" && return 0
 
 # Check for interactive shell.
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
