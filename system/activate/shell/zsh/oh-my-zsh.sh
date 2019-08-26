@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # oh-my-zsh configuration
-# Updated 2019-08-19.
+# Updated 2019-08-26.
 
 # See also:
 # - https://github.com/robbyrussell/oh-my-zsh
@@ -122,16 +122,16 @@ then
     "install-${plugin}"
 fi
 
-plugin="zsh-syntax-highlighting"
-if [[ ! -d "${plugins_dir}/${plugin}" ]]
-then
-    "install-${plugin}"
-fi
+# > plugin="zsh-syntax-highlighting"
+# > if [[ ! -d "${plugins_dir}/${plugin}" ]]
+# > then
+# >     "install-${plugin}"
+# > fi
 
+# zsh-syntax-highlighting
 plugins=(
-  git
-  zsh-autosuggestions
-  zsh-syntax-highlighting
+    git
+    zsh-autosuggestions
 )
 
 unset -v plugins_dir
