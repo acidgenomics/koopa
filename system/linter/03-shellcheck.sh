@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Recursively run shellcheck on all scripts in a directory.
-# Updated 2019-08-01.
+# Updated 2019-08-26.
 
 # shellcheck source=system/include/functions.sh
 source "${KOOPA_HOME}/system/include/functions.sh"
@@ -21,8 +21,8 @@ path="${1:-$KOOPA_HOME}"
 exclude_dirs=(
     "${KOOPA_HOME}/cellar"
     "${KOOPA_HOME}/conda"
+    "${KOOPA_HOME}/dotfiles"
     "${KOOPA_HOME}/shell/zsh/functions"
-    "${KOOPA_HOME}/system/config/dotfiles"
     ".git"
 )
 
