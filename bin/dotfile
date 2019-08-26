@@ -105,8 +105,9 @@ dot_dir="$(_koopa_config_dir)/dotfiles"
 
 # Create a dotfile symlink, if necessary.
 dot_repo="$(_koopa_home)/dotfiles"
-if [[ -d "$dot_repo"  ]] && [[ ! -L "$dot_dir" ]]
+if [[ -d "$dot_repo"  ]] && [[ ! -d "$dot_dir" ]]
 then
+    rm -frv "$dot_dir"
     ln -fnsv "$dot_repo" "$dot_dir"
 fi
 
