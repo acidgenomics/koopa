@@ -5,11 +5,11 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Install dot files.
-# Updated 2019-08-14.
+# Updated 2019-08-26.
 
-# Defaults to Mike's dotfiles repo.
-repo="${1:-git@github.com:mjsteinbaugh/dotfiles.git}"
-dest_dir="$(_koopa_config_dir)/dotfiles"
+# Defaults to the Acid Genomics dotfiles repo.
+repo="${1:-git@github.com:acidgenomics/dotfiles.git}"
+dest_dir="$(_koopa_home)/dotfiles"
 
 if [[ -d "$dest_dir" ]]
 then
