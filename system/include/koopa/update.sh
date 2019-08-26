@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Update koopa installation.
-# Updated 2019-08-14.
+# Updated 2019-08-26.
 
 # Update repo.
 (
@@ -15,10 +15,6 @@ source "$(koopa header bash)"
 )
 
 # Clean up legacy files.
-if [[ -d "${KOOPA_HOME}/dotfiles" ]]
-then
-    rm -frv "${KOOPA_HOME}/dotfiles"
-fi
 if [[ -d "${KOOPA_HOME}/system/config" ]]
 then
     rm -frv "${KOOPA_HOME}/system/config"
