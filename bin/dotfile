@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Symlink dot file.
-# Updated 2019-06-23.
+# Updated 2019-06-26.
 
 # Note that relative file path in dotfiles repo can be used as input.
 # The destination file should be specified without a leading period.
@@ -100,7 +100,15 @@ unset -f usage
 # Script                                                                    {{{1
 # ==============================================================================
 
+# Note that we're creating a symlink in local user config.
 dot_dir="$(_koopa_config_dir)/dotfiles"
+
+# Create a dotfile symlink, if necessary.
+dot_repo="$(_koopa_home)/dotfiles"
+if [[ -d "$dot_repo"  ]] && [[ ! -L "$dot_dir" ]]
+then
+    ln -fnsv "$dot_repo" "$dot_dir"
+fi
 
 # Private file (experimental).
 if [[ "${private:-0}" -eq 1 ]]
@@ -125,15 +133,17 @@ fi
 
 # Define optional destination name.
 symlink_name="${2:-}"
-[[ -z "$symlink_name" ]] && symlink_name="$(basename "$source_path")"
-
+if [[ -z "$symlink_name" ]]
+then
+    symlink_name="$(basename "$source_path")"
+fi
 symlink_path="${HOME}/.${symlink_name}"
 
 # Inform the user when nuking a broken symlink.
 if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
 then
     printf "Overwriting broken link: '%s'.\n" "$symlink_path"
-    rm -f "$symlink_path"
+    rm -fv "$symlink_path"
 fi
 
 # We're allowing force overwrite of existing symlinks only.
@@ -155,5 +165,5 @@ then
     printf "Symlinking '%s'.\n" "$(basename "$symlink_path")"
 fi
 
-rm -f "$symlink_path"
-ln -s "$source_path" "$symlink_path"
+rm -fv "$symlink_path"
+ln -fnsv "$source_path" "$symlink_path"
