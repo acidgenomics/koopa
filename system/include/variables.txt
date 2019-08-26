@@ -1,6 +1,6 @@
 # Koopa internal variables.
 
-koopa="0.5.3"
+koopa="0.5.2"
 koopa_date="2019-08-26"
 
 R="3.6.1"
