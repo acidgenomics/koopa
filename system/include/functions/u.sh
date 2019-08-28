@@ -19,7 +19,7 @@ _koopa_update_ldconfig() {
     
     if [ ! -d "$conf_source" ]
     then
-        printf "ld.so.conf.d source files missing.\n%s\n" "$conf_source"
+        >&2 printf "Error: source files missing: %s\n" "$conf_source"
         return 1
     fi
     
@@ -93,7 +93,7 @@ _koopa_update_r_config() {
 
     if [ ! -d "$r_etc_source" ]
     then
-        printf "R etc config files files missing.\n%s\n" "$r_etc_source"
+        >&2 printf "Error: source files missing: %s\n" "$r_etc_source"
         return 1
     fi
 
@@ -133,7 +133,7 @@ _koopa_update_shells() {
 
 # Update XDG configuration.
 # ~/.config/koopa
-# Updated 2019-07-12.
+# Updated 2019-08-28.
 _koopa_update_xdg_config() {
     local config_dir
     config_dir="$(_koopa_config_dir)"
@@ -155,7 +155,7 @@ _koopa_update_xdg_config() {
         then
             if [ ! -e "$source_file" ]
             then
-                >&2 "Error: Source file missing.\n%s\n" "$source_file"
+                >&2 printf "Error: Source file missing: %s\n" "$source_file"
                 return 1
             fi
             printf "Updating XDG config in %s.\n" "$config_dir"
