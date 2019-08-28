@@ -1,3 +1,10 @@
+## koopa 0.5.3 (2019-08-28)
+
+### Minor changes
+
+- Improved zsh activation and oh-my-zsh configuration handling when koopa is
+  active inside `/etc/profile.d/` on Linux (i.e. RHEL 7).
+
 ## koopa 0.5.2 (2019-08-18)
 
 This release improves prompt consistency between zsh and bash.
