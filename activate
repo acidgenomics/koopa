@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-08-26.
+# Updated 2019-08-28.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -86,7 +86,8 @@ then
     if [ -n "${SLURM_JOB_ID:-}" ] || \
         [ "${TERM:-}" = "eterm-color" ] || \
         [ -n "${TMUX:-}" ] || \
-        [ -n "${VIM_TERMINAL:-}" ]
+        [ -n "${VIM_TERMINAL:-}" ] || \
+        [ "${KOOPA_SHELL:-}" = "zsh" ]
     then
         force=1
     fi
@@ -235,11 +236,16 @@ then
 elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
+    if [ "$0" = "_src_etc_profile" ]
+    then
+        ZSHRC=0
+    else
+        ZSHRC=1
+    fi
+    export ZSHRC
     # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
     # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
-    # this case instead unexpectedly returns `_src_etc_profile`.
-    # > file="${0:a}"
-    # > file="$0"
+    # this case instead returns `_src_etc_profile`.
     # https://stackoverflow.com/a/23259585/3911732
     file="${(%):-%N}"
 else
@@ -351,10 +357,16 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         zsh_dir="${activate_dir}/shell/zsh"
-        # shellcheck source=/dev/null
-        source "${zsh_dir}/fpath.sh"
-        # shellcheck source=/dev/null
-        source "${zsh_dir}/oh-my-zsh.sh"
+        if [ "$subshell" -eq 0 ]
+        then
+            # shellcheck source=/dev/null
+            source "${zsh_dir}/fpath.sh"
+        fi
+        if [ "$ZSHRC" -eq 1 ]
+        then
+            # shellcheck source=/dev/null
+            source "${zsh_dir}/oh-my-zsh.sh"
+        fi
         # shellcheck source=/dev/null
         source "${zsh_dir}/prompt.sh"
         # shellcheck source=/dev/null
@@ -393,6 +405,11 @@ fi
 _koopa_disk_check
 
 unset -v activate_dir subshell
+
+if [ "$KOOPA_SHELL" = "zsh" ]
+then
+    unset -v ZSHRC
+fi
 
 # Checking declared values in Bash:
 # - `declare -F`: Display function names.
