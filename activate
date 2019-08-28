@@ -42,8 +42,14 @@ case "$force" in
         ;;
 esac
 
-# Detect test mode.
-# Disabled by default.
+# Skip activation for non-interactive sessions.
+[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
+
+
+
+# Enable test mode                                                          {{{1
+# ==============================================================================
+
 [ -z "${test:-}" ] && test=0
 [ -n "${KOOPA_TEST:-}" ] && test=1
 case "$test" in
@@ -55,7 +61,6 @@ case "$test" in
         ;;
 esac
 
-# Enable verbose debugging in test mode.
 if [ "$test" -eq 1 ]
 then
     printf "Test mode enabled.\n"
@@ -73,73 +78,29 @@ then
     export KOOPA_TEST=1
 fi
 
-# Early return for non-interactive sessions.
-[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
 
-# Force subshell reload inside:
-# - Interactive HPC slurm job.
-# - Emacs terminal.
-# - Tmux session.
-# - Vim terminal.
-if [ "$interactive" -eq 1 ]
+
+# Functions                                                                 {{{1
+# ==============================================================================
+
+# Fake realpath support, if necessary.
+# Note that `readlink -f` doesn't work on macOS.
+#
+# See also:
+# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
+#
+# Updated 2019-06-26.
+if ! command -v realpath >/dev/null
 then
-    if [ -n "${SLURM_JOB_ID:-}" ] || \
-        [ "${TERM:-}" = "eterm-color" ] || \
-        [ -n "${TMUX:-}" ] || \
-        [ -n "${VIM_TERMINAL:-}" ] || \
-        [ "${KOOPA_SHELL:-}" = "zsh" ]
-    then
-        force=1
-    fi
+    realpath() {
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
 fi
-
-# Early return if koopa is already active.
-[ "$force" -eq 0 ] && [ "$subshell" -eq 1 ] && return 0
-
-# Detect extra mode.
-# Enabled by default.
-[ -z "${extra:-}" ] && extra=1
-case "$extra" in
-    1|true)
-        extra=1
-        ;;
-    *)
-        extra=0
-        ;;
-esac
-
-# Detect programs mode.
-# Enabled by default.
-[ -z "${programs:-}" ] && programs=1
-case "$programs" in
-    1|true)
-        programs=1
-        ;;
-    *)
-        programs=0
-        ;;
-esac
-
-# Detect minimal mode.
-# Disabled by default.
-[ -z "${minimal:-}" ] && minimal=0
-case "$minimal" in
-    1|true)
-        minimal=1
-        ;;
-    *)
-        minimal=0
-        ;;
-esac
-
-# Disable other options when running in minimal mode.
-if [ "$minimal" -eq 1 ]
-then
-    extra=0
-    programs=0
-fi
-
-unset -v force interactive minimal
 
 
 
@@ -200,30 +161,6 @@ unset -f usage
 
 
 
-# Functions                                                                 {{{1
-# ==============================================================================
-
-# Fake realpath support, if necessary.
-# Note that `readlink -f` doesn't work on macOS.
-#
-# See also:
-# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-#
-# Updated 2019-06-26.
-if ! command -v realpath >/dev/null
-then
-    realpath() {
-        if [ "$(uname -s)" = "Darwin" ]
-        then
-            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
-        else
-            readlink -f "$@"
-        fi
-    }
-fi
-
-
-
 # Locate koopa home                                                         {{{1
 # ==============================================================================
 
@@ -268,7 +205,6 @@ fi
 # resolve `~/.config/koopa/activate` in Mike's default `~/.shrc` config file.
 KOOPA_HOME="$(dirname "$(realpath "$file")")"
 export KOOPA_HOME
-unset -v file
 
 # Load shared functions.
 # shellcheck source=system/include/functions.sh
@@ -276,6 +212,80 @@ unset -v file
 
 # Get location of activation scripts.
 activate_dir="${KOOPA_HOME}/system/activate"
+
+
+
+# Subshell handling                                                         {{{1
+# ==============================================================================
+
+# Force subshell reload inside:
+# - Interactive HPC slurm job.
+# - Emacs terminal.
+# - Tmux session.
+# - Vim terminal.
+
+if [ "$interactive" -eq 1 ]
+then
+    if [ "${KOOPA_SHELL:-}" = "zsh" ] ||
+        [ -n "${SLURM_JOB_ID:-}" ] || \
+        [ "${TERM:-}" = "eterm-color" ] || \
+        [ -n "${TMUX:-}" ] || \
+        [ -n "${VIM_TERMINAL:-}" ] || \
+    then
+        force=1
+    fi
+fi
+
+# Early return if koopa is already active.
+[ "$force" -eq 0 ] && [ "$subshell" -eq 1 ] && return 0
+
+
+
+# Optional configuration                                                    {{{1
+# ==============================================================================
+
+# Detect extra mode.
+# Enabled by default.
+[ -z "${extra:-}" ] && extra=1
+case "$extra" in
+    1|true)
+        extra=1
+        ;;
+    *)
+        extra=0
+        ;;
+esac
+
+# Detect programs mode.
+# Enabled by default.
+[ -z "${programs:-}" ] && programs=1
+case "$programs" in
+    1|true)
+        programs=1
+        ;;
+    *)
+        programs=0
+        ;;
+esac
+
+# Detect minimal mode.
+# Disabled by default.
+[ -z "${minimal:-}" ] && minimal=0
+case "$minimal" in
+    1|true)
+        minimal=1
+        ;;
+    *)
+        minimal=0
+        ;;
+esac
+
+# Disable other options when running in minimal mode.
+if [ "$minimal" -eq 1 ]
+then
+    extra=0
+    programs=0
+fi
 
 
 
@@ -393,8 +403,6 @@ then
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
     fi
-    
-    unset -v extra
 fi
 
 
@@ -404,7 +412,7 @@ fi
 
 _koopa_disk_check
 
-unset -v activate_dir subshell
+unset -v activate_dir extra file force interactive minimal subshell
 
 if [ "$KOOPA_SHELL" = "zsh" ]
 then
