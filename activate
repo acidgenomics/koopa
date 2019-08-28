@@ -230,7 +230,7 @@ then
         [ -n "${SLURM_JOB_ID:-}" ] || \
         [ "${TERM:-}" = "eterm-color" ] || \
         [ -n "${TMUX:-}" ] || \
-        [ -n "${VIM_TERMINAL:-}" ] || \
+        [ -n "${VIM_TERMINAL:-}" ]
     then
         force=1
     fi
