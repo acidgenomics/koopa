@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-set -Eeuo pipefail
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
 
 # Find broken bcbio symlinks.
-# Modified 2019-08-14.
+# Modified 2019-08-29.
 
 _koopa_assert_has_sudo
 
 bcbio_dir="/data00/bcbio"
+find-broken-symlinks "$bcbio_dir"
 
-find "$bcbio_dir" -xtype l
