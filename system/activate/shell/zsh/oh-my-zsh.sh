@@ -1,10 +1,14 @@
 #!/usr/bin/env zsh
 
 # oh-my-zsh configuration
-# Updated 2019-08-26.
+# Updated 2019-08-29.
 
 # See also:
 # - https://github.com/robbyrussell/oh-my-zsh
+# - https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins-Overview
+# - https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
+# - https://github.com/robbyrussell/oh-my-zsh/wiki/Customization
+# - https://github.com/robbyrussell/oh-my-zsh/wiki/External-themes
 
 
 
@@ -27,8 +31,9 @@ fi
 # ==============================================================================
 
 # > DISABLE_AUTO_UPDATE="true"
-DISABLE_UPDATE_PROMPT=true
 # > export UPDATE_ZSH_DAYS=14
+
+DISABLE_UPDATE_PROMPT=true
 
 
 
@@ -45,14 +50,7 @@ ZSH_DISABLE_COMPFIX="true"
 # Theme                                                                     {{{1
 # ==============================================================================
 
-# Set name of the theme to load.
 # Set theme to empty string when using koopa prompt.
-
-# See also:
-# - https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# - https://github.com/robbyrussell/oh-my-zsh/wiki/Customization#overriding-and-adding-themes
-# - https://github.com/robbyrussell/oh-my-zsh/wiki/External-themes
-
 ZSH_THEME=""
 
 
@@ -128,9 +126,13 @@ fi
 # >     "install-${plugin}"
 # > fi
 
-# zsh-syntax-highlighting
 plugins=(
+    colored-man-pages
+    command-not-found
     git
+    rsync
+    tmux
+    vi-mode
     zsh-autosuggestions
 )
 
