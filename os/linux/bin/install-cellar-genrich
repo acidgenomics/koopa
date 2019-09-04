@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header linux)"
 
 # Install Genrich.
-# Updated 2019-06-23.
+# Updated 2019-09-04.
 
 # See also:
 # - https://github.com/jsh58/Genrich
@@ -26,7 +26,8 @@ exe_file="${prefix}/bin/${name}"
     tar -xzvf "v${version}.tar.gz"
     cd "Genrich-${version}" || exit 1
     make
-    cp Genrich "${prefix}/bin"
+    mkdir -pv "${prefix}/bin"
+    cp -frv Genrich "${prefix}/bin/."
     rm -rf "$tmp_dir"
 )
 
