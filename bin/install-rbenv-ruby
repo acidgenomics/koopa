@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Install recommended Ruby release via rbenv.
-# Updated 2019-06-24.
+# Updated 2019-09-04.
 
 # See also:
 # - https://github.com/rbenv/ruby-build
@@ -19,10 +19,19 @@ _koopa_assert_has_no_environments
 
 version="$(_koopa_variable ruby)"
 
-# This step currently fails to build on RHEL 7 with OpenSSL 1.1+.
-# Pin to installing with system version (i.e. 1.0.2) instead.
+# Ensure ruby-build is current.
+ruby_build_dir="/usr/local/rbenv/plugins/ruby-build"
+if [[ -d "$ruby_build_dir" ]]
+then
+    printf "Updating ruby-build plugin: %s\n" "$ruby_build_dir"
+    (
+        cd "$ruby_build_dir" || exit 1
+        git pull
+    )
+fi
 
-# > RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
+# Ensure installation uses system OpenSSL.
+export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
 
 rbenv install "$version"
 rbenv global "$version"
