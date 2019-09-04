@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-08-28.
+# Updated 2019-09-04.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -173,12 +173,15 @@ then
 elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
-    if [ "$0" = "_src_etc_profile" ]
-    then
-        ZSHRC=0
-    else
-        ZSHRC=1
-    fi
+    # This covers both "_src_etc_profile" and "_src_etc_profile_d".
+    case "$0" in
+        _src_etc_profile*)
+            ZSHRC=0
+            ;;
+        *)
+            ZSHRC=1
+            ;;
+    esac
     export ZSHRC
     # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
     # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
