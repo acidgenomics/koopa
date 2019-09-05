@@ -1,7 +1,13 @@
 #!/bin/sh
 
-# Aliases.
-# Updated 2019-08-14.
+# Aliases
+# Updated 2019-09-05.
+
+# See also:
+# - https://github.com/MikeMcQuaid/dotfiles
+# - https://github.com/stephenturner/oneliners
+
+# Run `alias` in terminal to list current definitions.
 
 
 
@@ -10,11 +16,10 @@
 
 # > alias be="noglob bundle exec"
 # > alias gist="gist --open --copy"
-# > alias ls="ls -Fhlo --color"
 # > alias make="nice make"
 # > alias rake="noglob rake"
 # > alias rg="rg --colors 'match:style:nobold' --colors 'path:style:nobold'"
-# > alias rsync="rsync --partial --progress --human-readable --compress"
+# > alias rsync="rsync --compress --human-readable --partial --progress"
 # > alias zmv="noglob zmv -vW"
 
 
@@ -78,10 +83,28 @@ fi
 # File system navigation                                                    {{{1
 # ==============================================================================
 
+# Browse up and down.
+alias u="clear; cd ../; pwd; ls"
+alias d="clear; cd -; ls"
+
+# Navigate up parent directories without `cd`.
+# These are also supported by autojump.
+# > alias ..="cd .."
+# > alias ...="cd ../../"
+# > alias ....="cd ../../../"
+# > alias .....="cd ../../../../"
+# > alias ......="cd ../../../../../"
+
 # Listing files.
-alias la="ls -a"
-alias lF="ls -F"
-alias ll="ls -AFGlh"
+alias ls="ls --color=auto"
+alias l1="ls -1p"
+alias l.="ls -Fd .*"
+alias l="ls -AGghlo"
+alias la="ls -Ahl"
+alias ll="ls -hl"
+
+alias lhead="l | head"
+alias ltail="l | tail"
 
 # Set more sensible defaults for size commands.
 alias df="df -H"
@@ -89,6 +112,16 @@ alias du="du -sh"
 
 # Improve less defaults.
 alias less="less --ignore-case --raw-control-chars"
+
+
+
+
+# File compression                                                          {{{1
+# ==============================================================================
+
+# Pack and unpack tar.gz files.
+alias tarup="tar -czvf"
+alias tardown="tar -xzvf"
 
 
 

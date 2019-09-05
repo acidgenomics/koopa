@@ -368,6 +368,8 @@ then
         then
             # shellcheck source=/dev/null
             source "${zsh_dir}/oh-my-zsh.sh"
+            # shellcheck source=/dev/null
+            source "${zsh_dir}/autojump.sh"
         fi
         # shellcheck source=/dev/null
         source "${zsh_dir}/prompt.sh"
@@ -387,7 +389,7 @@ then
     # shellcheck source=/dev/null
     . "${activate_dir}/ssh-key.sh"
     # shellcheck source=/dev/null
-    # > . "${activate_dir}/umask.sh"
+    . "${activate_dir}/umask.sh"
 
     # Platform-specific configuration.
     if _koopa_is_darwin
