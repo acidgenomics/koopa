@@ -31,7 +31,7 @@ then
 fi
 
 # Ensure installation uses system OpenSSL.
-export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
+# > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
 
 rbenv install "$version"
 rbenv global "$version"
