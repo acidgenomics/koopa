@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-06-17.
+# Updated 2019-09-05.
 
 alias autofs="sudo automount -vc"
 alias finder-hide="setfile -a V"
@@ -15,6 +15,4 @@ alias rstudio="open -a rstudio"
 if _koopa_quiet_which exa
 then
     alias ls="exa -Fg"
-else
-    alias ls="ls -F"
 fi
