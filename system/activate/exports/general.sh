@@ -99,6 +99,10 @@ then
     export HISTTIMEFORMAT="%Y%m%d %T  "
 fi
 
+# For bash users, autojump keeps track of directories by modifying
+# `$PROMPT_COMMAND`. Do not overwrite `$PROMPT_COMMAND`:
+# https://github.com/wting/autojump
+# > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
 if [ -z "${PROMPT_COMMAND:-}" ]
 then
     export PROMPT_COMMAND="history -a"
