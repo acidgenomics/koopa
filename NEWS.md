@@ -1,3 +1,13 @@
+## koopa 0.5.4 (2019-09-05)
+
+### Minor changes
+
+- Improved alias handling for zsh configuration.
+- Added additional useful aliases and functions from Stephen Turner's oneliners
+  guide for bioinformatics.
+- Initial configuration support for autojump, currently limited to zsh. Will
+  test and add bash support in a future update.
+
 ## koopa 0.5.3 (2019-08-28)
 
 ### Minor changes
