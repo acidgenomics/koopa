@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-08-19.
+## Updated 2019-09-05.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -328,6 +328,8 @@ check_version(
     name = "openssl",
     version = switch(
         EXPR = os,
+        ## Note that macOS switched to LibreSSL in 2018.
+        darwin = "2.6.5",
         rhel7 = "1.0.2",
         koopa_version("openssl")
     ),
