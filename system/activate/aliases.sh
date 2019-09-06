@@ -97,12 +97,12 @@ alias d="clear; cd -; ls"
 
 # Listing files.
 alias ls="ls --color=auto"
-alias l1="ls -1p"
 alias l.="ls -Fd .*"
+alias l1="ls -1p"
 alias l="ls -AGghlo"
 alias la="ls -Ahl"
 alias ll="ls -hl"
-
+alias cls="clear; ls"
 alias lhead="l | head"
 alias ltail="l | tail"
 
