@@ -10,7 +10,7 @@
 # See also:
 # - https://github.com/stephenturner/oneliners
 #
-# Updated 2019-09-05.
+# Updated 2019-09-09.
 _koopa_extract() {
     local file
     file="$1"
@@ -20,15 +20,6 @@ _koopa_extract() {
         exit 1
     fi
     case "$file" in
-        *.bz2)
-            bunzip2 "$file"
-            ;;
-        *.gz)
-            gunzip "$file"
-            ;;
-        *.rar)
-            unrar x "$file"
-            ;;
         *.tar.bz2)
             tar xvjf "$file"
             ;;
@@ -37,6 +28,15 @@ _koopa_extract() {
             ;;
         *.tar.xz)
             tar Jxvf "$file"
+            ;;
+        *.bz2)
+            bunzip2 "$file"
+            ;;
+        *.gz)
+            gunzip "$file"
+            ;;
+        *.rar)
+            unrar x "$file"
             ;;
         *.tar)
             tar xvf "$file"
