@@ -1,7 +1,12 @@
 #!/usr/bin/env zsh
 
 # Set options
-# Updated 2019-08-14.
+# Updated 2019-09-09.
+
+# Disable autocorrection.
+unsetopt correct
+unsetopt correct_all
+DISABLE_CORRECTION="true"
 
 # Allow tab completion in the middle of a word.
 setopt COMPLETE_IN_WORD
