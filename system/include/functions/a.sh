@@ -38,6 +38,33 @@ _koopa_add_conda_env_to_path() {
 
 
 
+# Add a symlink into the koopa configuration directory.
+# Updated 2019-09-09.
+_koopa_add_config_link() {
+    local config_dir
+    config_dir="$(_koopa_config_dir)"
+    
+    local source_file
+    source_file="$1"
+    if [ ! -x "$source_file" ]
+    then
+        >&2 printf "Error: Does not exist: %s\n" "$source_file"
+        return 1
+    fi
+    source_file="$(realpath "$source_file")"
+    
+    local dest_name
+    dest_name="$2"
+    
+    local dest_file
+    dest_file="${config_dir}/${dest_name}"
+    
+    rm -f "$dest_file"
+    ln -fnsv "$source_file" "$dest_file"
+}
+
+
+
 # Updated 2019-06-27.
 _koopa_add_to_path_end() {
     local dir
