@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # oh-my-zsh configuration
-# Updated 2019-08-29.
+# Updated 2019-09-09.
 
 # See also:
 # - https://github.com/robbyrussell/oh-my-zsh
@@ -30,10 +30,9 @@ fi
 # Updates                                                                   {{{1
 # ==============================================================================
 
-# > DISABLE_AUTO_UPDATE="true"
+DISABLE_AUTO_UPDATE="true"
+DISABLE_UPDATE_PROMPT="true"
 # > export UPDATE_ZSH_DAYS=14
-
-DISABLE_UPDATE_PROMPT=true
 
 
 
