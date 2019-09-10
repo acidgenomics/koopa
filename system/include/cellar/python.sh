@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Python.
-# Updated 2019-06-25.
+# Updated 2019-09-09.
 
 # See also:
 # - https://www.python.org/
@@ -18,7 +18,7 @@ exe_file="${prefix}/bin/python3"
 printf "Installing %s %s.\n" "$name" "$version"
 
 rm -rf "$tmp_dir"
-mkdir "$tmp_dir"
+mkdir -p "$tmp_dir"
 
 # Ensure pip is installed and up to date.
 # This step fails on RHEL8 because there's only python3, no python.
