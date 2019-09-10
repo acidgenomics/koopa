@@ -5,15 +5,13 @@
 
 # Using unicode box drawings here.
 # Note that we're truncating lines inside the box to 68 characters.
-# Updated 2019-06-27.
+# Updated 2019-09-10.
 _koopa_info_box() {
     local array
-    local barpad
-
     array=("$@")
+    local barpad
     barpad="$(printf "━%.0s" {1..70})"
-    
-    printf "\n  %s%s%s  \n"  "┏" "$barpad" "┓"
+    printf "  %s%s%s  \n"  "┏" "$barpad" "┓"
     for i in "${array[@]}"
     do
         printf "  ┃ %-68s ┃  \n"  "${i::68}"

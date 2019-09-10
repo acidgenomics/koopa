@@ -30,4 +30,5 @@ array=(
     "Run 'koopa check' to verify installation."
 )
 
+cat "${KOOPA_HOME}/system/include/koopa/ascii-turtle.txt"
 _koopa_info_box "${array[@]}"
