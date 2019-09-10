@@ -9,6 +9,16 @@ source "$(koopa header bash)"
 config_dir="$(_koopa_config_dir)"
 
 # spacemacs
+if [[ -x "${config_dir}/rbenv" ]]
+then
+    printf "Updating rbenv.\n"
+    (
+        cd "${config_dir}/rbenv" || exit 1
+        git pull
+    )
+fi
+
+# spacemacs
 if [[ -x "${config_dir}/spacemacs" ]]
 then
     printf "Updating spacemacs.\n"
