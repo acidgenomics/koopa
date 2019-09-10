@@ -1,3 +1,15 @@
+## koopa 0.5.5 (2019-09-09)
+
+### Major changes
+
+- Updater now checks for: oh-my-zsh, spacemacs symlinks in config directory.
+
+### Minor changes
+
+- Added install support for ChromHMM.
+- Bug fix for directory creation in Python cellar script.
+- ZSH configuration improvements.
+
 ## koopa 0.5.4 (2019-09-05)
 
 ### Minor changes
