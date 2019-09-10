@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Install ChromHMM
+# Updated 2019-09-09.
+
+tmp_dir="$(_koopa_tmp_dir)"
+prefix="$(_koopa_build_prefix)"
+
+(
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget http://compbio.mit.edu/ChromHMM/ChromHMM.zip
+    unzip "ChromHMM.zip"
+    mv -v "ChromHMM" "${prefix}/."
+)
+
+printf "Path: %s\n" "${prefix}/ChromHMM/ChromHMM.jar"
