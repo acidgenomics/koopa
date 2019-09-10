@@ -16,6 +16,7 @@ prefix="$(_koopa_build_prefix)"
     wget http://compbio.mit.edu/ChromHMM/ChromHMM.zip
     unzip "ChromHMM.zip"
     mv -v "ChromHMM" "${prefix}/."
+    rm -fr "$tmp_dir"
 )
 
 printf "Path: %s\n" "${prefix}/ChromHMM/ChromHMM.jar"
