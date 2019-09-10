@@ -35,12 +35,12 @@ esac
 _koopa_build_mkdir "$prefix"
 
 (
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     curl -O "https://repo.anaconda.com/archive/${script}"
     bash "$script" -bf -p "$prefix"
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 _koopa_build_chgrp "$prefix"

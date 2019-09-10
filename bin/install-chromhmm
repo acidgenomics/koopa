@@ -19,4 +19,6 @@ prefix="$(_koopa_build_prefix)"
     rm -fr "$tmp_dir"
 )
 
+_koopa_build_chgrp "$prefix"
+
 printf "Path: %s\n" "${prefix}/ChromHMM/ChromHMM.jar"
