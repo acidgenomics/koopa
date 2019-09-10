@@ -13,7 +13,7 @@ prefix="$(_koopa_build_prefix)"
 (
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget http://compbio.mit.edu/ChromHMM/ChromHMM.zip
+    wget "http://compbio.mit.edu/ChromHMM/ChromHMM.zip"
     unzip "ChromHMM.zip"
     mv -v "ChromHMM" "${prefix}/."
     rm -fr "$tmp_dir"
