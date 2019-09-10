@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# Add biogroup user
+# Updated 2019-09-09.
+
+user="${1:-mike}"
+sudo useradd "$user"
+sudo passwd "$user"
+sudo usermod -a -G wheel "$user"
+sudo usermod -a -G biogroup "$user"
+groups "$user"
+
