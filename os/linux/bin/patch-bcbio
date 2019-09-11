@@ -1,10 +1,11 @@
 #/usr/bin/env bash
+set -Eeux -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
 # Patch bcbio installation.
-# Updated 2019-07-17.
+# Updated 2019-09-11.
 
 # Locate bcbio git directory.
 if [[ -z "${git_dir:-}" ]]

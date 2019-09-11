@@ -29,7 +29,7 @@ _koopa_bash_add_local_bins_to_path() {
 # - https://stackoverflow.com/questions/23356779
 # - https://stackoverflow.com/questions/7442417
 #
-# Modified 2019-06-17.
+# Modified 2019-09-11.
 _koopa_bash_find_local_bin_dirs() {
     local array
     local sorted
@@ -59,9 +59,8 @@ _koopa_bash_find_local_bin_dirs() {
 
     # Sort the array.
     # SC2207: Prefer mapfile or read -a to split command output.
-    # > sorted=($(sort <<<"${array[*]}"))
-    IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
-    unset IFS
+    # > IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
+    # > unset IFS
 
-    printf "%s\n" "${sorted[@]}"
+    printf "%s\n" "${array[@]}"
 }
