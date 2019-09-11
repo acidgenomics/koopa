@@ -4,39 +4,32 @@
 source "$(koopa header bash)"
 
 # Update koopa installation.
-# Updated 2019-09-09.
+# Updated 2019-09-11.
 
 config_dir="$(_koopa_config_dir)"
 
-# spacemacs
-if [[ -x "${config_dir}/rbenv" ]]
-then
-    printf "Updating rbenv.\n"
+# Loop across config directories and update git repos.
+dirs=(
+    dotfiles
+    dotfiles-private
+    oh-my-zsh
+    rbenv
+    scripts-private
+    spacemacs
+)
+for dir in "${dirs[@]}"
+do
+    # Skip directories that aren't a git repo.
+    if [[ ! -x "${config_dir}/${dir}/.git" ]]
+    then
+        continue
+    fi
+    printf "Updating %s.\n" "$dir"
     (
-        cd "${config_dir}/rbenv" || exit 1
+        cd "${config_dir}/${dir}" || exit 1
         git pull
     )
-fi
-
-# spacemacs
-if [[ -x "${config_dir}/spacemacs" ]]
-then
-    printf "Updating spacemacs.\n"
-    (
-        cd "${config_dir}/spacemacs" || exit 1
-        git pull
-    )
-fi
-
-# oh-my-zsh
-if [[ -x "${config_dir}/oh-my-zsh" ]]
-then
-    printf "Updating Oh My Zsh.\n"
-    (
-        cd "${config_dir}/oh-my-zsh" || exit 1
-        git pull
-    )
-fi
+done
 
 # Update repo.
 printf "Updating koopa.\n"
