@@ -10,6 +10,8 @@ config_dir="$(_koopa_config_dir)"
 
 # Loop across config directories and update git repos.
 dirs=(
+    Rcheck
+    docker
     dotfiles
     dotfiles-private
     oh-my-zsh
