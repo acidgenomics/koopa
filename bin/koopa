@@ -51,7 +51,7 @@ optional arguments:
 EOF
 }
 
-[[ -z "${1:-}" ]] && usage && exit
+[[ -z "${1:-}" ]] && usage && exit 0
 
 
 
