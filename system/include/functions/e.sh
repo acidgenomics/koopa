@@ -17,7 +17,7 @@ _koopa_extract() {
     if [ ! -f "$file" ]
     then
         >&2 printf "Error: Invalid file: %s\n" "$file"
-        exit 1
+        return 1
     fi
     case "$file" in
         *.tar.bz2)
