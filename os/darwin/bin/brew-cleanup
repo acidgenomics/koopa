@@ -5,8 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header darwin)"
 
 # Homebrew cleanup.
-# Updated 2019-06-23.
+# Updated 2019-09-11.
 
 brew cleanup -s
-brew cask cleanup
-brew prune
+rm -frv "$(brew --cache)"
