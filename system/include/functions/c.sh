@@ -4,17 +4,15 @@
 
 
 # Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_cellar_prefix() {
     local prefix
-
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/cellar"
     else
         prefix="${XDG_DATA_HOME}/koopa/cellar"
     fi
-
     echo "$prefix"
 }
 
@@ -28,7 +26,7 @@ _koopa_cellar_script() {
     if [ ! -f "$file" ]
     then
         >&2 printf "Error: No script found for '%s'.\n" "$name"
-        exit 1
+        return 1
     fi
     echo "$file"
 }
