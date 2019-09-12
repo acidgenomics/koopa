@@ -1,5 +1,5 @@
 ## Shared R environment configuration.
-## Updated 2019-07-26 by Michael Steinbaugh.
+## Updated 2019-09-11 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
@@ -19,6 +19,7 @@
 
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
 PATH="/usr/local/bin:/usr/bin:/bin"
+
 
 
 ## Package configuration                                                    {{{1
@@ -89,3 +90,15 @@ TZ="America/New_York"
 ##
 ## See Section 8 of the R Internals manual for many more options.
 _R_CHECK_COMPILATION_FLAGS_KNOWN_='-Wformat -Werror=format-security -Wdate-time'
+
+
+
+## Logical coercion                                                         {{{1
+## =============================================================================
+
+## Verbose information on 'length(x) = n > 1' coercion to 'logical(1)' errors.
+## https://twitter.com/henrikbengtsson/status/1172155983935631360
+
+_R_CHECK_LENGTH_1_CONDITION_=verbose
+_R_CHECK_LENGTH_1_LOGIC2_=verbose
+
