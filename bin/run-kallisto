@@ -22,17 +22,31 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+# Note that bcbio currently uses 30 bootstraps.
+# Uma's nextflow script currently uses 100.
+bootstraps=30
+
+threads="$CPU_COUNT"
+
+r1_tail="_R1_001.fastq.gz"
+r2_tail="_R2_001.fastq.gz"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: run-kallisto [-h] --fasta-file="XXX.cdna.all.fa.gz" 
-    --index-file="kallisto.idx" --fastq-dir="fastq/" --output-dir="kallisto/"
+usage: run-kallisto [-h] --fasta-file --index-file
+    --fastq-dir="fastq/" --output-dir="kallisto/"
 
 This script supports quick analysis of multiple paired-end FASTQ samples inside
-a directory. It builds a kallisto index on the fly and outputs per sample
-automatically.
+a directory. It builds a kallisto index on the fly, if necessary (unless
+'--index-file' argument is set), and outputs per sample automatically.
 
 The script will intentionally error if the output directory specified by
 '--output-dir' already exists, to prevent accidental overwrite.
@@ -47,7 +61,10 @@ required arguments:
     [OR]
     --index-file
         Kallisto index, previously generated using 'kallisto index'.
+        Example: kallisto.idx
+        If '--fasta-file' is defined, this gets generated on the fly.
 
+required arguments, with defaults:
     --fastq-dir
         Directory path containing paired-end FASTQ files.
         Defaults to 'fastq/'.
@@ -58,8 +75,16 @@ required arguments:
 optional arguments:
     -h, --help
         Show this help message and exit.
+
+internal variables:
+    bootstraps: ${bootstraps}
+    threads: ${threads}
+    r1_tail: ${r1_tail}
+    r2_tail: ${r2_tail}
 EOF
 }
+
+[[ -z "${1:-}" ]] && usage && exit 0
 
 
 
@@ -132,17 +157,6 @@ unset -f usage
 
 
 
-# Variables                                                                 {{{1
-# ==============================================================================
-
-r1_tail="_R1_001.fastq.gz"
-r2_tail="_R2_001.fastq.gz"
-
-threads="$CPU_COUNT"
-
-# Note that bcbio currently uses 30 bootstraps.
-# Uma's nextflow script currently uses 100.
-bootstraps=30
 
 
 
