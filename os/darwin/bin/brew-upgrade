@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header darwin)"
 
 # Upgrade Homebrew.
-# Updated 2019-06-23.
+# Updated 2019-09-11.
 
 brew analytics off
 
@@ -14,7 +14,7 @@ brew update
 
 printf "\nUpgrading Homebrew packages.\n"
 brew upgrade --force-bottle
-# brew list | xargs brew reinstall --force-bottle --cleanup
+# > brew list | xargs brew reinstall --force-bottle --cleanup
 
 printf "\nUpgrading Homebrew Casks.\n"
 brew cask outdated | xargs brew cask reinstall
