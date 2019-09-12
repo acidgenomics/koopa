@@ -5,16 +5,10 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Run kallisto.
-# Updated 2019-09-04.
+# Updated 2019-09-11.
 
-
-
-# > conda activate kallisto
-_koopa_assert_is_installed kallisto
-kallisto version
-# kallisto, version 0.46.0
-
-
+# Note that GTF file is only required for pseudobam generation, which we're
+# skipping here in this simple, fast mode script.
 
 # Regarding bash arrays:
 # - https://unix.stackexchange.com/questions/263883
@@ -28,44 +22,154 @@ kallisto version
 
 
 
-# Variables                                                                 {{{1
+# Usage                                                                     {{{1
 # ==============================================================================
 
-fastq_dir="fastq"
+usage() {
+cat << EOF
+usage: run-kallisto [-h] --fasta-file="XXX.cdna.all.fa.gz" 
+    --index-file="kallisto.idx" --fastq-dir="fastq/" --output-dir="kallisto/"
 
-quant_dir="kallisto"
-mkdir -pv "$quant_dir"
+This script supports quick analysis of multiple paired-end FASTQ samples inside
+a directory. It builds a kallisto index on the fly and outputs per sample
+automatically.
 
-index_file="kallisto.idx"
-index_file="${quant_dir}/${index_file}"
+The script will intentionally error if the output directory specified by
+'--output-dir' already exists, to prevent accidental overwrite.
 
-fasta_file="Homo_sapiens.GRCh38.cdna.all.fa.gz"
-# > gtf_file="Homo_sapiens.GRCh38.97.gtf.gz"
+required arguments:
+    --fasta-file
+        Transcriptome-level (i.e. cDNA) FASTA file.
+        Ensembl or GENCODE reference is recommended over RefSeq or UCSC.
+        Example: Homo_sapiens.GRCh38.cdna.all.fa.gz
+        This will generate a new kallisto index, which gets saved in the output
+        directory specified by '--output-dir'.
+    [OR]
+    --index-file
+        Kallisto index, previously generated using 'kallisto index'.
 
-# Use n-2 threads.
-threads="$((CPU_COUNT-2))"
+    --fastq-dir
+        Directory path containing paired-end FASTQ files.
+        Defaults to 'fastq/'.
+    --output-dir
+        Kallisto output directory path.
+        Defaults to 'kallisto/'.
 
-# Note that bcbio uses 30 bootstrap samples.
-# Uma's nextflow script currently uses 100.
-bootstraps=30
+optional arguments:
+    -h, --help
+        Show this help message and exit.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --fasta-file)
+            fasta_file="$2"
+            shift 2
+            ;;
+        --fastq-dir)
+            fastq_dir="${2:-fastq/}"
+            shift 2
+            ;;
+        --index-file)
+            index_file="$2"
+            shift 2
+            ;;
+        --output-dir)
+            output_dir="${2:-kallisto/}"
+            shift 2
+            ;;
+        --)
+            # End argument parsing.
+            shift
+            break
+            ;;
+        --*|-*)
+            # Unsupported flags.
+            >&2 printf "Error: Invalid flag '%s'\n" "$1"
+            exit 1
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# FASTA or kallisto index file is required.
+if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_file:-}" ]]
+then
+    >&2 printf "Error: Specify 'fasta-file' or 'index-file'.\n\n"
+    usage
+    exit 1
+fi
+if [[ -n "${fasta_file:-}" ]] && [[ -n "${index_file:-}" ]]
+then
+    >&2 printf "Error: Specify 'fasta-file' or 'index-file', but not both.\n\n"
+    usage
+    exit 1
+fi
+
+# Directories are required.
+if [[ -z "${fastq_dir:-}" ]] ||
+    [[ -z "${output_dir:-}" ]]
+then
+    >&2 printf "Error: Missing required argument.\n\n"
+    usage
+    exit 1
+fi
+
+unset -f usage
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 r1_tail="_R1_001.fastq.gz"
 r2_tail="_R2_001.fastq.gz"
 
+threads="$CPU_COUNT"
+
+# Note that bcbio currently uses 30 bootstraps.
+# Uma's nextflow script currently uses 100.
+bootstraps=30
 
 
-# kallisto index                                                            {{{1
+
+# Preflight checks                                                          {{{1
 # ==============================================================================
 
-# Generate the kallisto index.
-if [[ ! -f "$index_file" ]]
+# Check that FASTQ directory exists.
+if [[ ! -d "$fastq_dir" ]]
 then
-    kallisto index -i "$index_file" "$fasta_file"
+    >&2 printf "Error: FASTQ directory missing: %s\n" "$fastq_dir"
+    exit 1
 fi
 
+# Check that output directory doesn't exist.
+if [[ -d "$output_dir" ]]
+then
+    >&2 printf "Error: Output directory exists: %s\n" "$output_dir"
+    exit 1
+fi
+
+# Check for kallisto, and show version.
+_koopa_assert_is_installed kallisto
+kallisto version
 
 
-# kallisto quant                                                            {{{1
+
+# Sample array from FASTQ files                                             {{{1
 # ==============================================================================
 
 # Create a per-sample array from the R1 FASTQ files.
@@ -77,17 +181,36 @@ do
     array+=("$x")
 done
 
-# Loop across the per-sample array and run kallisto.
+# FIXME Error if the array is empty.
+
+
+
+# kallisto index                                                            {{{1
+# ==============================================================================
+
+# Generate the kallisto index on the fly, if necessary.
+if [[ -z "${index_file:-}" ]]
+then
+    index_file="${output_dir}/kallisto.idx"
+    kallisto index -i "$index_file" "$fasta_file"
+fi
+
+
+
+# kallisto quant                                                            {{{1
+# ==============================================================================
+
+# Loop across the per-sample array and quantify with kallisto.
 for x in "${array[@]}"
 do
     printf "kallisto quant: %s\n" "$x"
-    output_dir="${quant_dir}/${x}"
-    rm -frv "$output_dir"
-    mkdir -pv "$output_dir"
+    sample_output_dir="${output_dir}/${x}"
+    rm -fr "$output_dir"
+    mkdir -p "$output_dir"
     fastq_r1="${fastq_dir}/${x}${r1_tail}"
     fastq_r2="${fastq_dir}/${x}${r2_tail}"
     kallisto quant \
-        --output-dir="$output_dir" \
+        --output-dir="$sample_output_dir" \
         --index="$index_file" \
         --threads="$threads" \
         --bootstrap-samples="$bootstraps" \
