@@ -4,7 +4,7 @@
 
 
 # Add both `bin/` and `sbin/` to PATH.
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_add_bins_to_path() {
     local relpath
     local prefix
@@ -17,7 +17,7 @@ _koopa_add_bins_to_path() {
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_add_conda_env_to_path() {
     local env_name
     local env_list
@@ -39,7 +39,7 @@ _koopa_add_conda_env_to_path() {
 
 
 # Add a symlink into the koopa configuration directory.
-# Updated 2019-09-09.
+# Updated 2019-09-12.
 _koopa_add_config_link() {
     local config_dir
     config_dir="$(_koopa_config_dir)"
@@ -59,121 +59,144 @@ _koopa_add_config_link() {
     local dest_file
     dest_file="${config_dir}/${dest_name}"
     
-    rm -f "$dest_file"
+    rm -fv "$dest_file"
     ln -fnsv "$source_file" "$dest_file"
 }
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_add_to_path_end() {
-    local dir
-    dir="$1"
-    [ ! -d "$dir" ] && return 0
-    echo "$PATH" | grep -q "$dir" && return 0
-    export PATH="${PATH}:${dir}"
+    [ ! -d "$1" ] && return 0
+    echo "$PATH" | grep -q "$1" && return 0
+    export PATH="${PATH}:${1}"
 }
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_add_to_path_start() {
-    local dir
-    dir="$1"
-    [ ! -d "$dir" ] && return 0
-    echo "$PATH" | grep -q "$dir" && return 0
-    export PATH="${dir}:${PATH}"
+    [ ! -d "$1" ] && return 0
+    echo "$PATH" | grep -q "$1" && return 0
+    export PATH="${1}:${PATH}"
 }
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_assert_has_no_environments() {
     if ! _koopa_has_no_environments
     then
         >&2 printf "Error: active environment detected.\n"
-        exit 1
+        return 1
     fi
+    return 0
 }
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_assert_has_sudo() {
     if ! _koopa_has_sudo
     then
         >&2 printf "Error: sudo is required for this script.\n"
-        exit 1
+        return 1
     fi
+    return 0
 }
 
 
-# Updated 2019-06-27.
+
+# Updated 2019-09-12.
+_koopa_assert_is_dir() {
+    if [ ! -d "$1" ]
+    then
+        >&2 printf "Error: Not a directory: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Updated 2019-09-12.
+_koopa_assert_is_file() {
+    if [ ! -f "$1" ]
+    then
+        >&2 printf "Error: Not a file: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+# Updated 2019-09-12.
 _koopa_assert_is_darwin() {
     if ! _koopa_is_darwin
     then
         >&2 printf "Error: macOS is required.\n"
-        exit 1
-    fi
-}
-
-
-
-# Updated 2019-06-27.
-_koopa_assert_is_installed() {
-    local program
-    program="$1"
-    if ! _koopa_is_installed "$program"
-    then
-        >&2 printf "Error: %s is not installed.\n" "$program"
         return 1
     fi
+    return 0
 }
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-12.
+_koopa_assert_is_installed() {
+    if ! _koopa_is_installed "$1"
+    then
+        >&2 printf "Error: '%s' is not installed.\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Updated 2019-09-12.
 _koopa_assert_is_linux() {
     if ! _koopa_is_linux
     then
         >&2 printf "Error: Linux is required.\n"
-        exit 1
+        return 1
     fi
+    return 0
 }
 
 
 
-# Updated 2019-06-24.
+# Updated 2019-09-12.
 _koopa_assert_is_linux_debian() {
     if ! _koopa_is_linux_debian
     then
         >&2 printf "Error: Debian is required.\n"
-        exit 1
+        return 1
     fi
+    return 0
 }
 
 
 
-# Updated 2019-06-24.
+# Updated 2019-09-12.
 _koopa_assert_is_linux_fedora() {
     if ! _koopa_is_linux_fedora
     then
         >&2 printf "Error: Fedora is required.\n"
-        exit 1
+        return 1
     fi
+    return 0
 }
 
 
 
 # Check if directory already exists.
-# Updated 2019-06-27.
+# Updated 2019-09-12.
 _koopa_assert_is_not_dir() {
-    local path
-    path="$1"
-    # Error on existing installation.
-    if [ -d "$path" ]
+    if [ -d "$1" ]
     then
-        >&2 printf "Error: Directory already exists.\n%s\n" "$path"
-        exit 1
+        >&2 printf "Error: Directory exists: '%s'\n" "$1"
+        return 1
     fi
+    return 0
 }
