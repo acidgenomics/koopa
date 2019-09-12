@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Koopa ZSH prompt
-# Updated 2019-08-18.
+# Updated 2019-09-12.
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -55,7 +55,7 @@ _koopa_prompt_state_setup() {
     wd='%F{${_koopa_prompt_colors[path]}}%~%f'
     typeset -gA _koopa_prompt_state
     _koopa_prompt_state+=(
-        prompt  "${PURE_PROMPT_SYMBOL:-❯}"
+        prompt  "❯"
         user    "$user"
         wd      "$wd"
     )
@@ -121,34 +121,35 @@ _koopa_prompt_setup() {
     PROMPT+='%(?.%F{$_koopa_prompt_colors[prompt:success]}.%F{$_koopa_prompt_colors[prompt:error]})${_koopa_prompt_state[prompt]}%f '
 
     # Indicate continuation prompt by ... and use a darker color for it.
-    PROMPT2='%F{242}... %(1_.%_ .%_)%f%(?.%F{magenta}.%F{red})${_koopa_prompt_state[prompt]}%f '
+    # > PROMPT2='%F{242}... %(1_.%_ .%_)%f%(?.%F{magenta}.%F{red})${_koopa_prompt_state[prompt]}%f '
 
-    # Store prompt expansion symbols for in-place expansion via (%). For
-    # some reason it does not work without storing them in a variable first.
-    typeset -ga _koopa_prompt_debug_depth
-    _koopa_prompt_debug_depth=('%e' '%N' '%x')
+    # Store prompt expansion symbols for in-place expansion via (%). For some
+    # reason it does not work without storing them in a variable first.
+    # > typeset -ga _koopa_prompt_debug_depth
+    # > _koopa_prompt_debug_depth=('%e' '%N' '%x')
 
     # Compare is used to check if %N equals %x. When they differ, the main
-    # prompt is used to allow displaying both filename and function. When
-    # they match, we use the secondary prompt to avoid displaying duplicate
+    # prompt is used to allow displaying both filename and function. When they
+    # match, we use the secondary prompt to avoid displaying duplicate
     # information.
-    local -A ps4_parts
-    ps4_parts=(
-        depth     '%F{yellow}${(l:${(%)_koopa_prompt_debug_depth[1]}::+:)}%f'
-        compare   '${${(%)_koopa_prompt_debug_depth[2]}:#${(%)_koopa_prompt_debug_depth[3]}}'
-        main      '%F{blue}${${(%)_koopa_prompt_debug_depth[3]}:t}%f%F{242}:%I%f %F{242}@%f%F{blue}%N%f%F{242}:%i%f'
-        secondary '%F{blue}%N%f%F{242}:%i'
-        prompt    '%F{242}>%f '
-    )
-    # Combine the parts with conditional logic. First the `:+` operator is
-    # used to replace `compare` either with `main` or an ampty string. Then
-    # the `:-` operator is used so that if `compare` becomes an empty
-    # string, it is replaced with `secondary`.
-    local ps4_symbols='${${'${ps4_parts[compare]}':+"'${ps4_parts[main]}'"}:-"'${ps4_parts[secondary]}'"}'
+    # > local -A ps4_parts
+    # > ps4_parts=(
+    # >     depth     '%F{yellow}${(l:${(%)_koopa_prompt_debug_depth[1]}::+:)}%f'
+    # >     compare   '${${(%)_koopa_prompt_debug_depth[2]}:#${(%)_koopa_prompt_debug_depth[3]}}'
+    # >     main      '%F{blue}${${(%)_koopa_prompt_debug_depth[3]}:t}%f%F{242}:%I%f %F{242}@%f%F{blue}%N%f%F{242}:%i%f'
+    # >     secondary '%F{blue}%N%f%F{242}:%i'
+    # >     prompt    '%F{242}>%f '
+    # > )
+    
+    # Combine the parts with conditional logic. First the `:+` operator is used
+    # to replace `compare` either with `main` or an ampty string. Then the `:-`
+    # operator is used so that if `compare` becomes an empty string, it is
+    # replaced with `secondary`.
+    # > local ps4_symbols='${${'${ps4_parts[compare]}':+"'${ps4_parts[main]}'"}:-"'${ps4_parts[secondary]}'"}'
 
     # Improve the debug prompt (PS4), show depth by repeating the +-sign and
     # add colors to highlight essential parts like file and function name.
-    PROMPT4="${ps4_parts[depth]} ${ps4_symbols}${ps4_parts[prompt]}"
+    # > PROMPT4="${ps4_parts[depth]} ${ps4_symbols}${ps4_parts[prompt]}"
 
     # Guard against Oh My Zsh themes overriding the prompt.
     unset -v ZSH_THEME
