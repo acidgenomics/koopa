@@ -4,29 +4,16 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Run kallisto.
+# Run salmon.
 # Updated 2019-09-12.
 
 # See also:
-# - https://pachterlab.github.io/kallisto/manual
-# - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/kallisto.py
+# - https://salmon.readthedocs.io/en/latest/library_type.html
+# - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/salmon.py
 # - https://fishycat.netlify.com/en/2017/08/strandness_in_rnaseq/
 
-# Note that GTF file is only required for pseudobam generation, which we're
-# skipping here in this simple, fast mode script.
-
-# Regarding bash arrays:
-# - http://mywiki.wooledge.org/BashFAQ/020
-# - http://mywiki.wooledge.org/ParsingLs
-# - https://stackoverflow.com/a/23357277/3911732
-# - https://stackoverflow.com/questions/8213328
-# - https://unix.stackexchange.com/questions/263883
-# - https://github.com/koalaman/shellcheck/wiki/SC2206
-# - https://stackoverflow.com/questions/1951506
-
-# Array sorting:
-# - https://stackoverflow.com/questions/7442417
-# - https://stackoverflow.com/a/7442583/3911732
+# > salmon -h
+# > salmon quant --help-reads
 
 
 
@@ -34,11 +21,16 @@ source "$(koopa header bash)"
 # ==============================================================================
 
 # Illumina TruSeq stranded library prep is fr-firststrand.
-# This corresponds to '--rf-stranded' flag for kallisto quant.
+# This corresponds to 'ISR' for salmon quant.
 
-# kallisto quant args:
-# --fr-stranded             Strand specific reads, first read forward
-# --rf-stranded             Strand specific reads, first read reverse
+#                 | Paired-end | Single-end |
+# ----------------|------------|------------|
+# fr-unstranded   | -l IU      | -l U       |
+# fr-firststrand  | -l ISR     | -l SR      |
+# fr-secondstrand | -l ISF     | -l SF      |
+
+# The '--libType A' option will allow Salmon to automatically infer the library
+# type. Check the running log for the strand information.
 
 
 
@@ -46,7 +38,6 @@ source "$(koopa header bash)"
 # ==============================================================================
 
 # Note that bcbio currently uses 30 bootstraps.
-# Uma's nextflow script currently uses 100.
 bootstraps=30
 threads="$CPU_COUNT"
 
@@ -54,7 +45,7 @@ r1_tail="_R1_001.fastq.gz"
 r2_tail="_R2_001.fastq.gz"
 
 fastq_dir="fastq/"
-output_dir="kallisto/"
+output_dir="salmon/"
 
 
 
@@ -63,11 +54,11 @@ output_dir="kallisto/"
 
 usage() {
 cat << EOF
-usage: run-kallisto [-h] --fasta-file --index-file
+usage: run-salmon [-h] --fasta-file --index-file
     --fastq-dir="${fastq_dir}" --output-dir="${output_dir}"
 
 This script supports quick analysis of multiple paired-end FASTQ samples inside
-a directory. It builds a kallisto index on the fly, if necessary (unless
+a directory. It builds a salmon index on the fly, if necessary (unless
 '--index-file' argument is set), and outputs per sample automatically.
 
 The script will intentionally error if the output directory specified by
@@ -78,12 +69,12 @@ required arguments:
         Transcriptome-level (i.e. cDNA) FASTA file.
         Ensembl or GENCODE reference is recommended over RefSeq or UCSC.
         Example: Homo_sapiens.GRCh38.cdna.all.fa.gz
-        This will generate a new kallisto index, which gets saved in the output
+        This will generate a new salmon index, which gets saved in the output
         directory specified by '--output-dir'.
     [OR]
     --index-file
-        Kallisto index, previously generated using 'kallisto index'.
-        Example: kallisto.idx
+        Salmon index, previously generated using 'salmon index'.
+        Example: salmon.idx
         If '--fasta-file' is defined, this gets generated on the fly.
 
 required arguments, with defaults:
@@ -167,11 +158,11 @@ unset -f usage
 # Preflight checks                                                          {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed kallisto
+_koopa_assert_is_installed salmon
 _koopa_assert_is_dir "$fastq_dir"
 _koopa_assert_is_not_dir "$output_dir"
 
-kallisto version
+salmon --version
 
 
 
@@ -209,8 +200,12 @@ mkdir -pv "$output_dir"
 if [[ -z "${index_file:-}" ]]
 then
     _koopa_assert_is_file "$fasta_file"
-    index_file="${output_dir}/kallisto.idx"
-    kallisto index -i "$index_file" "$fasta_file"
+    index_file="${output_dir}/salmon.idx"
+    salmon index \
+        -k 31 \
+        -p "$threads" \
+        -i "$index_file" \
+        -t "$fasta_file"
 fi
 
 
@@ -218,19 +213,23 @@ fi
 # Quantify                                                                  {{{1
 # ==============================================================================
 
-# Loop across the per-sample array and quantify.
+# Loop across the per-sample array and quantify with kallisto.
 for x in "${array[@]}"
 do
-    printf "kallisto quant: %s\n" "$x"
+    printf "salmon quant: %s\n" "$x"
     sample_output_dir="${output_dir}/${x}"
     rm -frv "$sample_output_dir"
     mkdir -pv "$sample_output_dir"
     fastq_r1="${fastq_dir}/${x}${r1_tail}"
     fastq_r2="${fastq_dir}/${x}${r2_tail}"
-    kallisto quant \
-        --output-dir="$sample_output_dir" \
+    salmon quant \
+        --output="$sample_output_dir" \
+        --libType="A" \
         --index="$index_file" \
         --threads="$threads" \
-        --bootstrap-samples="$bootstraps" \
-        "$fastq_r1" "$fastq_r2"
+        --numBootstraps="$bootstraps" \
+        --gcBias \
+        --seqBias \
+        --mates1="$fastq_r1" \
+        --mates2="$fastq_r2"
 done
