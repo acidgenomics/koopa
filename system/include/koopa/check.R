@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-09-05.
+## Updated 2019-09-11.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -233,6 +233,10 @@ check_version(
     ),
     eval = "=="
 )
+
+## If you see this error, reinstall ruby, rbenv, and emacs:
+## Ignoring commonmarker-0.17.13 because its extensions are not built.
+## Try: gem pristine commonmarker --version 0.17.13
 
 ## Emacs
 check_version(
@@ -556,6 +560,20 @@ check_version(
     required = FALSE
 )
 
+## PROJ
+check_version(
+    name = "proj",
+    version = koopa_version("proj"),
+    version_cmd = c(
+        "proj  2>&1",
+        "head -n 1",
+        "cut -d ' ' -f 2",
+        "tr -d ,"
+    ),
+    eval = "==",
+    required = FALSE
+)
+
 ## GDAL
 check_version(
     name = "gdalinfo",
@@ -566,20 +584,6 @@ check_version(
     ),
     version_cmd = c(
         "gdalinfo --version",
-        "head -n 1",
-        "cut -d ' ' -f 2",
-        "tr -d ,"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## PROJ
-check_version(
-    name = "proj",
-    version = koopa_version("proj"),
-    version_cmd = c(
-        "proj  2>&1",
         "head -n 1",
         "cut -d ' ' -f 2",
         "tr -d ,"
