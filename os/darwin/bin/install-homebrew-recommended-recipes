@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header darwin)"
 
 # Install recommended Homebrew recipes.
-# Updated 2019-08-12.
+# Updated 2019-09-13.
 
 _koopa_assert_is_installed brew
 
@@ -47,6 +47,7 @@ brew cask install \
 
 brew cask install \
     1password \
+    alacritty \
     alfred \
     aspera-connect \
     authy \
