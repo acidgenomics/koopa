@@ -2,7 +2,7 @@
 # shellcheck disable=SC2039
 
 # Activate koopa.
-# Updated 2019-09-05.
+# Updated 2019-09-14.
 
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
@@ -322,6 +322,8 @@ then
     programs_dir="${activate_dir}/programs"
     if [ "$subshell" -eq 0 ]
     then
+        # shellcheck source=/dev/null
+        . "${programs_dir}/rust.sh"
         # shellcheck source=/dev/null
         . "${programs_dir}/aspera.sh"
         # shellcheck source=/dev/null
