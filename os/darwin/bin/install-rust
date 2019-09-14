@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+# Install Rust.
+# Updated 2019-09-14.
+
+_koopa_assert_is_installed brew
+brew install rust
+
+# Improve this step to not prompt.
+rustup-init
+
+rustc --version
+
