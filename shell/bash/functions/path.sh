@@ -32,10 +32,9 @@ _koopa_bash_add_local_bins_to_path() {
 # Modified 2019-09-11.
 _koopa_bash_find_local_bin_dirs() {
     local array
-    local sorted
-    local tmp_file
-
     array=()
+    
+    local tmp_file
     tmp_file="$(_koopa_tmp_dir)/find"
 
     find "$(_koopa_build_prefix)" \
@@ -58,9 +57,9 @@ _koopa_bash_find_local_bin_dirs() {
     rm -f "$tmp_file"
 
     # Sort the array.
+    # > local sorted
     # SC2207: Prefer mapfile or read -a to split command output.
     # > IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
     # > unset IFS
-
     printf "%s\n" "${array[@]}"
 }
