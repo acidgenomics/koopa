@@ -10,8 +10,8 @@ source "$(koopa header darwin)"
 _koopa_assert_is_installed brew
 brew install rust
 
-# Improve this step to not prompt.
-rustup-init
+# > rustup-init --help
+rustup-init -y --no-modify-path
 
-rustc --version
-
+exe_file="${HOME}/.cargo/bin/rustc"
+"$exe_file" --version
