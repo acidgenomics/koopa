@@ -12,7 +12,8 @@ cargo_home="${HOME}/.cargo"
 
 if [ -d "$cargo_home" ]
 then
-    source "${cargo_home}/env"
+    # shellcheck source=/dev/null
+    . "${cargo_home}/env"
 fi
 
 unset -v cargo_home
