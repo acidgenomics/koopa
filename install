@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC1090,SC1091
 set -Ee -o pipefail
 
 # Install koopa.
-# Updated 2019-08-14.
+# Updated 2019-09-16.
 
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
@@ -96,7 +97,6 @@ rm -fr "${KOOPA_HOME}/bin/"{host,os,sudo}
 # ==============================================================================
 
 printf "\nActivating koopa.\n"
-# shellcheck source=activate
 force=1 source "${KOOPA_HOME}/activate"
 
 
@@ -127,22 +127,18 @@ then
     install-dotfiles
     
     # Remove legacy dotfile cruft.
-    # shellcheck source=system/uninstall/dotfiles-legacy.sh
     source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
 
     # Always create these dotfiles, even on a shared installation.
-    # shellcheck source=system/install/dotfiles-shared.sh
     source "${KOOPA_HOME}/system/install/dotfiles-shared.sh"
 
     # Create local config files.
-    # shellcheck source=system/install/dotfiles-local.sh
     if [[ "${shared:-0}" -eq 0 ]]
     then
         source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
     fi
 
     # Configure Mike's dotfiles.
-    # shellcheck source=system/install/dotfiles-mike.sh
     if [[ "${mike:-0}" -eq 1 ]]
     then
         source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
@@ -157,9 +153,7 @@ fi
 # Clone additional Git repos of interest.
 if [[ "${mike:-}" -eq 1 ]]
 then
-    # shellcheck source=system/install/docker-mike.sh
     source "${KOOPA_HOME}/system/install/docker-mike.sh"
-    # shellcheck source=system/install/scripts-mike.sh
     source "${KOOPA_HOME}/system/install/scripts-mike.sh"
 fi
 
