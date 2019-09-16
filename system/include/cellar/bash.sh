@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Bash.
-# Updated 2019-06-26.
+# Updated 2019-09-16.
 
 # See also:
 # - https://www.gnu.org/software/bash/
@@ -19,8 +19,8 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "${gnu_mirror}/bash/bash-${version}.tar.gz"
     tar -xzvf "bash-${version}.tar.gz"
@@ -31,7 +31,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     make --jobs="$CPU_COUNT"
     make test
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 link-cellar "$name" "$version"
