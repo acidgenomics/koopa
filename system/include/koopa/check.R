@@ -1,8 +1,10 @@
-#!/usr/bin/env -S Rscript --vanilla
-## shebang requires env from coreutils >= 8.30.
+#!/usr/bin/env Rscript
+
+## > #!/usr/bin/env -S Rscript --vanilla
+## shebang with `-S` flag requires env from coreutils >= 8.30.
 
 ## Check installed program versions.
-## Updated 2019-09-11.
+## Updated 2019-09-16.
 
 ## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
@@ -258,7 +260,21 @@ check_version(
         "vim --version",
         "head -n 1",
         "cut -d ' ' -f 5"
-    )
+    ),
+    eval = "=="
+)
+
+## Neovim
+## FIXME Probably need to strip "v" here.
+check_version(
+    name = "nvim",
+    version = koopa_version("neovim"),
+    version_cmd = c(
+        "nvim --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "=="
 )
 
 ## Tmux
