@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
-# Updated 2019-08-18.
+# Updated 2019-09-15.
 
 # Useful variables:
 # https://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
@@ -50,8 +50,7 @@ user="\u@\h"
 wd="\w"
 
 # Unicode doesn't work with some monospace fonts on Windows.
-# > prompt="\$"
-prompt="❯"
+prompt="\$"  # ❯
 
 # Enable colorful prompt.
 # Match either "xterm-256color" or "screen-256color" here.
