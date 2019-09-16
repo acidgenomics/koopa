@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Koopa ZSH prompt
-# Updated 2019-09-12.
+# Updated 2019-09-16.
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -54,8 +54,9 @@ _koopa_prompt_state_setup() {
     fi
     wd='%F{${_koopa_prompt_colors[path]}}%~%f'
     typeset -gA _koopa_prompt_state
+    # Note that Unicode doesn't work well with some fonts on Windows.
     _koopa_prompt_state+=(
-        prompt  "❯"
+        prompt  "$"  # ❯
         user    "$user"
         wd      "$wd"
     )
