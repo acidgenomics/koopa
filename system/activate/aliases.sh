@@ -132,6 +132,12 @@ alias tardown="tar -xzvf"
 # Use terminal (console) mode by default instead of window system.
 # alias emacs="emacs -nw"
 alias emacs="emacs --no-window-system"
+# Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
+alias emacs-default='emacs --no-init-file --no-window-system'
+
+# Vim.
+# Allow fast, default mode that skips '.vimrc' file.
+alias vim-default='vim -i "NONE" -u "NONE" -U "NONE"'
 
 # Easier checksum calculation.
 alias sha256="shasum -a 256"
