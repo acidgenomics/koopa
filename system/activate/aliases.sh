@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-09-05.
+# Updated 2019-09-16.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -136,8 +136,12 @@ alias emacs="emacs --no-window-system"
 alias emacs-default='emacs --no-init-file --no-window-system'
 
 # Vim.
-# Allow fast, default mode that skips '.vimrc' file.
-alias vim-default='vim -i "NONE" -u "NONE" -U "NONE"'
+# Allow fast, default mode that skips RC file.
+alias vim-default='vim -i NONE -u NONE -U NONE'
+
+# Neovim.
+# Allow fast, default mode that skips RC file.
+alias nvim-default='nvim -u NONE'
 
 # Easier checksum calculation.
 alias sha256="shasum -a 256"
