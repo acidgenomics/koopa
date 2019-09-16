@@ -98,6 +98,7 @@ _R_CHECK_COMPILATION_FLAGS_KNOWN_='-Wformat -Werror=format-security -Wdate-time'
 
 ## Verbose information on 'length(x) = n > 1' coercion to 'logical(1)' errors.
 ## https://twitter.com/henrikbengtsson/status/1172155983935631360
+## Set to 'false' to disable.
 
 _R_CHECK_LENGTH_1_CONDITION_="${_R_CHECK_LENGTH_1_CONDITION_-verbose}"
 _R_CHECK_LENGTH_1_LOGIC2_="${_R_CHECK_LENGTH_1_LOGIC2_-verbose}"
