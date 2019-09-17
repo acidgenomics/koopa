@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.5.5"
-koopa_date="2019-09-09"
+koopa_date="2019-09-16"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -65,6 +65,9 @@ htop="2.2.0"
 
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
 java="12.0.2"
+
+# https://github.com/neovim/neovim/releases
+neovim="0.4.2"
 
 # https://www.openssl.org/source/
 openssl="1.1.1c"
