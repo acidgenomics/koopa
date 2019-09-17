@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Git SCM.
-# Updated 2019-07-09.
+# Updated 2019-09-17.
 
 # The compilation settings here are from the Git SCM book website.
 # Refer also to INSTALL file for details.
@@ -29,8 +29,9 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/git/git/archive/v${version}.tar.gz"
     tar -zxf "v${version}.tar.gz"
@@ -45,7 +46,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     # > make install install-doc install-html install-info
     make --jobs="$CPU_COUNT"
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 link-cellar "$name" "$version"

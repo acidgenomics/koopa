@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install GnuPG.
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - https://www.gnupg.org/
@@ -29,8 +29,9 @@ gpg --keyserver hkp://keyserver.ubuntu.com:80 \
                 2071B08A33BD3F06 \
                 8A861B1C7EFD60D9
 
-rm -rf "$tmp_dir"
-mkdir -p "$tmp_dir"
+rm -frv "$prefix"
+rm -fr "$tmp_dir"
+mkdir -pv "$tmp_dir"
 
 (
     pkg="libgpg-error"

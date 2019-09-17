@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install emacs.
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - https://www.gnu.org/software/emacs/
@@ -19,8 +19,9 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
     tar -xJvf "emacs-${version}.tar.xz"
@@ -30,7 +31,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 link-cellar "$name" "$version"
