@@ -4,7 +4,7 @@
 source "$(koopa header bash)"
 
 # Update koopa installation.
-# Updated 2019-09-11.
+# Updated 2019-09-17.
 
 config_dir="$(_koopa_config_dir)"
 
@@ -29,7 +29,15 @@ do
     printf "Updating %s.\n" "$dir"
     (
         cd "${config_dir}/${dir}" || exit 1
-        git pull
+        # Run updater script, if defined.
+        # Otherwise pull the git repo.
+        if [[ -x "UPDATE.sh" ]]
+        then
+            ./UPDATE.sh
+        else
+            git fetch --all
+            git pull
+        fi
     )
 done
 

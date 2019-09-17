@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-08-14.
+# Updated 2019-09-17.
 
 
 
@@ -127,13 +127,15 @@ fi
 # Editor                                                                    {{{1
 # ==============================================================================
 
-# Set up text editor, if unset.
+# Set text editor, if unset.
 # Recommending vim by default.
 if [ -z "${EDITOR:-}" ]
 then
     export EDITOR="vim"
-    export VISUAL="$EDITOR"
-else
+fi
+# Ensure VISUAL matches EDITOR.
+if [ -n "${EDITOR:-}" ]
+then
     export VISUAL="$EDITOR"
 fi
 
