@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Tmux terminal multiplexer.
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - https://github.com/tmux/tmux
@@ -18,7 +18,8 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
@@ -29,7 +30,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 link-cellar "$name" "$version"

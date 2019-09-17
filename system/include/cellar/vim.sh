@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Vim.
-# Updated 2019-09-16.
+# Updated 2019-09-17.
 
 # See also:
 # - https://github.com/vim/vim
