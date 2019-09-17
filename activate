@@ -4,7 +4,7 @@
 # mode when using `[` instead of `[[`.
 
 # Activate koopa.
-# Updated 2019-09-16.
+# Updated 2019-09-17.
 
 # Dropped support for ksh because it doesn't support `local` variables scoped
 # inside of functions.
@@ -287,6 +287,15 @@ then
     extra=0
     programs=0
 fi
+
+
+
+# User profile                                                              {{{1
+# ==============================================================================
+
+# FIXME Check for user config options when koopa is activated system wide.
+# FIXME Need to write a function determine if koopa is system-wide.
+# FIXME Need a function to locate user profile.
 
 
 
