@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install R.
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - https://www.r-project.org/
@@ -26,19 +26,18 @@ major_version="$(echo "$version" | cut -d "." -f 1)"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    # R will warn if R_HOME environment variable is set.
-    unset -v R_HOME
-
-    # Fix for reg-tests-1d.R error, due to unset TZ variable.
-    # https://stackoverflow.com/questions/46413691
-    export TZ="America/New_York"
-
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://cran.r-project.org/src/base/R-${major_version}/R-${version}.tar.gz"
     tar -xzvf "R-${version}.tar.gz"
     cd "R-${version}" || exit 1
+    # R will warn if R_HOME environment variable is set.
+    unset -v R_HOME
+    # Fix for reg-tests-1d.R error, due to unset TZ variable.
+    # https://stackoverflow.com/questions/46413691
+    export TZ="America/New_York"
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix" \
@@ -56,7 +55,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     make --jobs="$CPU_COUNT"
     make check
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 # We need to run this first to pick up R_HOME correctly.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install HDF5.
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - https://www.hdfgroup.org/downloads/hdf5/
@@ -23,8 +23,9 @@ major_version="$(echo "$version" | cut -d '.' -f 1-2)"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="hdf5-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/hdf5-${version}/src/${file}"
@@ -39,7 +40,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     make --jobs="$CPU_COUNT"
     # > make check
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 link-cellar "$name" "$version"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install PROJ.
-# Updated 2019-07-26.
+# Updated 2019-09-17.
 
 # See also:
 # - https://proj.org/
@@ -19,8 +19,9 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/PROJ/releases/download/${version}/${file}"
@@ -32,7 +33,7 @@ printf "Installing %s %s.\n" "$name" "$version"
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 link-cellar "$name" "$version"
