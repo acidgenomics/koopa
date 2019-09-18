@@ -1,12 +1,7 @@
 #!/usr/bin/env Rscript
 
-## > #!/usr/bin/env -S Rscript --vanilla
-## shebang with `-S` flag requires env from coreutils >= 8.30.
-
 ## Check installed program versions.
 ## Updated 2019-09-16.
-
-## Note: Ubuntu specific versions are currently pinned to 18 LTS.
 
 options(
     error = quote(quit(status = 1L)),
@@ -237,8 +232,8 @@ check_version(
 )
 
 ## If you see this error, reinstall ruby, rbenv, and emacs:
-## Ignoring commonmarker-0.17.13 because its extensions are not built.
-## Try: gem pristine commonmarker --version 0.17.13
+## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
+## ## Try: gem pristine commonmarker --version 0.17.13
 
 ## Emacs
 check_version(
@@ -265,7 +260,6 @@ check_version(
 )
 
 ## Neovim
-## FIXME Probably need to strip "v" here.
 check_version(
     name = "nvim",
     version = koopa_version("neovim"),
