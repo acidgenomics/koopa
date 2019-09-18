@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-09-17.
+# Updated 2019-09-18.
 
 
 
