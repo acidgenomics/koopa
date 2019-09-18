@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-09-16.
+# Updated 2019-09-18.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -26,6 +26,9 @@
 
 # Shortcuts                                                                 {{{1
 # ==============================================================================
+
+# Koopa home.
+alias kh="cd "$KOOPA_HOME""
 
 # Quick exit.
 alias e="exit"
