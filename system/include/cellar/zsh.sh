@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Z shell.
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - http://www.zsh.org/
@@ -20,8 +20,9 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download"
     tar -xJvf "download"
@@ -33,10 +34,10 @@ printf "Installing %s %s.\n" "$name" "$version"
     make check
     make test
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 _koopa_update_shells "$name"
 
 command -v "$exe_file"

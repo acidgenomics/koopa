@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# koopa shell bootloader.
+# (c) 2018 Michael Steinbaugh.
+# This software is provided under an MIT License.
+
 if [[ -z "${KOOPA_HOME:-}" ]]
 then
     >&2 printf "koopa is not correctly activated.\n"
@@ -9,10 +13,6 @@ fi
 
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-
-# koopa shell bootloader.
-# (c) 2018 Michael Steinbaugh.
-# This software is provided under an MIT License.
 
 version="$(_koopa_variable koopa)"
 date="$(_koopa_variable koopa_date)"
@@ -42,6 +42,9 @@ return string commands:
     home
         Return the koopa installation path.
         Also stored as 'KOOPA_HOME' environment variable.
+    variable
+        Internal koopa configuration variable.
+        For use in Python and R scripts only.
 
 optional arguments:
     -h, --help
@@ -112,6 +115,10 @@ case "$1" in
     upgrade)
         >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
         exit 1
+        ;;
+    variable)
+        _koopa_variable "$2"
+        exit
         ;;
     *)
         >&2 printf "Error: Unsupported command.\n"
