@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Download Ensembl genome annotations in GTF format.
+"""
+Download Ensembl genome annotations in GTF format.
+
+Updated 2019-09-18.
 """
 
 # See also:

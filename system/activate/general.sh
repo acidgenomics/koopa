@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-09-17.
+# Updated 2019-09-18.
 
 
 
@@ -145,7 +145,7 @@ fi
 # ==============================================================================
 
 # Get the number of cores (CPUs) available.
-# Updated 2019-06-23.
+# Updated 2019-09-18.
 if _koopa_is_darwin
 then
     CPU_COUNT="$(sysctl -n hw.ncpu)"
@@ -155,6 +155,12 @@ then
 else
     # Otherwise assume single threaded.
     CPU_COUNT=1
+fi
+# Set to n-1 cores, if applicable.
+# We're leaving a core free to monitor remote sessions.
+if [ "$CPU_COUNT" -gt 1 ]
+then
+    CPU_COUNT=$((CPU_COUNT - 1))
 fi
 export CPU_COUNT
 

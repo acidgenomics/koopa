@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install GNU Scientific Library (GSL).
-# Updated 2019-06-25.
+# Updated 2019-09-17.
 
 # See also:
 # - https://www.gnu.org/software/gsl/
@@ -18,8 +18,9 @@ exe_file="${prefix}/bin/gsl-config"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "http://mirror.keystealth.org/gnu/gsl/gsl-${version}.tar.gz"
     tar xzvf "gsl-${version}.tar.gz"
@@ -30,10 +31,10 @@ printf "Installing %s %s.\n" "$name" "$version"
     make --jobs="$CPU_COUNT"
     make check
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version

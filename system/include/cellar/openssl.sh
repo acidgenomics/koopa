@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install OpenSSL.
-# Updated 2019-07-10.
+# Updated 2019-09-17.
 
 # Currently installing as cellar-only.
 # This is useful for running RDAVIDWebService but can break other programs
@@ -23,8 +23,9 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
     tar -xvzf "openssl-${version}.tar.gz"
@@ -44,7 +45,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     make --jobs="$CPU_COUNT"
     make test
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
 "$exe_file" version

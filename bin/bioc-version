@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Bioconductor version.
+# Updated 2019-09-18.
+
+_koopa_assert_is_installed wget
+
+wget -q -O - http://bioconductor.org/bioc-version

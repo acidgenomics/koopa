@@ -56,7 +56,7 @@ _koopa_prompt_state_setup() {
     typeset -gA _koopa_prompt_state
     # Note that Unicode doesn't work well with some fonts on Windows.
     _koopa_prompt_state+=(
-        prompt  "$"❯
+        prompt  "$"
         user    "$user"
         wd      "$wd"
     )

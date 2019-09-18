@@ -1,3 +1,17 @@
+## koopa 0.5.6 (2019-09-18)
+
+### New scripts
+
+- `gencode-fasta` and `gencode-gtf` Python scripts for downloaded GENCODE
+  genome annotations. Currently supports *Homo sapiens* and *Mus musculus*.
+- (Azure) `link-msigdb`: Shared MSigDB file annotation utility.
+
+### Minor changes
+
+- Improved global activation of general exports, including `EDITOR`, which
+  defines the default text editor. "vim" is recommended by default but "emacs"
+  is also a good choice.
+
 ## koopa 0.5.5 (2019-09-09)
 
 ### Major changes
