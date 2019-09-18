@@ -2,7 +2,9 @@
 """
 Download GENCODE genome annotations in FASTA format.
 
-Only *Homo sapiens* and *Mus musculus* are currently supported.
+Updated 2019-09-18.
+
+Only *Homo sapiens* and *Mus musculus* are supported.
 
 DNA FASTA:
 Using primary assembly, like Ensembl.
@@ -13,12 +15,12 @@ Transcript (cDNA) FASTA:
 ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/
     gencode.v30.transcripts.fa.gz
 
-Legacy GRCh37 mapped release (not supported):
-https://www.gencodegenes.org/releases/grch37_mapped_releases.html
-
 GTF:
 ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/
     gencode.v30.annotation.gtf.gz
+
+Legacy GRCh37 mapped release (not supported):
+https://www.gencodegenes.org/releases/grch37_mapped_releases.html
 
 See also:
 - https://www.gencodegenes.org/pages/faq.html
