@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+# Link MSigDB annotations from Azure Files.
+# Updated 2019-09-18.
+
+rm -frv "${HOME}/msigdb"
+ln -fnsv /mnt/azbioinfoseq01/Reference/msigdb "${HOME}/."
