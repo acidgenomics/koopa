@@ -17,6 +17,13 @@ source "$(koopa header bash)"
 # - http://thegenomefactory.blogspot.com/2012/05/
 #       cool-use-of-unix-paste-with-ngs.html
 
+
+
+# 1. paste converts the input FASTQ into a 4-column file
+# 2. cut command extracts out just column 1 (the ID) and column 2 (the sequence)
+# 3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">"
+# 4. tr conversts the 2 columns back into 2 lines
+
 fastq_file="$1"
 fasta_file="${fastq_file//fastq/fasta}"
 paste - - - - < "$fastq_file" | \
