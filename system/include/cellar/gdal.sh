@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 # Install GDAL.
-# Updated 2019-07-27.
+# Updated 2019-09-17.
 
 # This requires PROD 6+.
+# Install the cellar version of that first, if necessary.
 
 # See also:
 # - https://gdal.org/
@@ -27,8 +28,9 @@ exe_file="${prefix}/bin/gdalinfo"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
@@ -47,10 +49,10 @@ printf "Installing %s %s.\n" "$name" "$version"
         --with-python="python3"
     make --jobs="$CPU_COUNT"
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 "$exe_file" --version
 command -v "$exe_file"

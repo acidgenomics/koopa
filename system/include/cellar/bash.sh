@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Bash.
-# Updated 2019-09-16.
+# Updated 2019-09-17.
 
 # See also:
 # - https://www.gnu.org/software/bash/
@@ -19,6 +19,7 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
+    rm -frv "$prefix"
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
@@ -34,7 +35,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 _koopa_update_shells "$name"
 
 "$exe_file" --version

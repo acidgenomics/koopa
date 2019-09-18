@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install Neovim.
-# Updated 2019-09-16.
+# Updated 2019-09-17.
 
 # See also:
 # - https://neovim.io/
@@ -30,6 +30,7 @@ exe_file="${prefix}/bin/nvim"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
+    rm -frv "$prefix"
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
@@ -44,6 +45,6 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 "$exe_file" --version
 command -v "$exe_file"

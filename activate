@@ -4,7 +4,7 @@
 # mode when using `[` instead of `[[`.
 
 # Activate koopa.
-# Updated 2019-09-16.
+# Updated 2019-09-18.
 
 # Dropped support for ksh because it doesn't support `local` variables scoped
 # inside of functions.
@@ -296,15 +296,12 @@ fi
 if [ "$subshell" -eq 0 ]
 then
     . "${activate_dir}/preflight.sh"
-
-    exports_dir="${activate_dir}/exports"
-    . "${exports_dir}/xdg-base-directory.sh"
-    . "${exports_dir}/path.sh"
-    . "${exports_dir}/general.sh"
-    unset -v exports_dir
-
+    . "${activate_dir}/xdg.sh"
+    . "${activate_dir}/path.sh"
     _koopa_update_xdg_config
 fi
+
+. "${activate_dir}/general.sh"
 
 
 
@@ -360,6 +357,7 @@ then
         unset -v zsh_dir
     fi
 
+    # Run these after shell-specific configuration.
     . "${activate_dir}/set.sh"
     . "${activate_dir}/aliases.sh"
     . "${activate_dir}/secrets.sh"
@@ -378,6 +376,12 @@ then
         . "${darwin_dir}/aliases.sh"
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
+    fi
+
+    # Today bucket.
+    if [ "$subshell" -eq 0 ]
+    then
+        _koopa_today_bucket
     fi
 fi
 

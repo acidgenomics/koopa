@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Install GNU core utilities.
-# Updated 2019-08-14.
+# Updated 2019-09-17.
 
 # See also:
 # - https://ftp.gnu.org/gnu/coreutils/
@@ -18,8 +18,9 @@ exe_file="${prefix}/bin/env"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$prefix"
+    rm -fr "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://ftp.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
     tar -xJvf "coreutils-${version}.tar.xz"
@@ -30,10 +31,10 @@ printf "Installing %s %s.\n" "$name" "$version"
     make --jobs="$CPU_COUNT"
     # > make check
     make install
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 # Update '/usr/bin/env'.
 if _koopa_has_sudo
