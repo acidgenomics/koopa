@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Convert a FASTQ file to FASTA format
+# Updated 2019-09-19.
+
+# Assuming input of a decompressed FASTQ file here.
+
+# See also:
+# - seqtk
+# - bioawk
+# - https://twitter.com/aaronquinlan/status/1174080730923589633
+# - https://twitter.com/torstenseemann/status/1174300653184847872
+# - http://thegenomefactory.blogspot.com/2012/05/
+#       cool-use-of-unix-paste-with-ngs.html
+
+fastq_file="$1"
+fasta_file="${fastq_file//fastq/fasta}"
+paste - - - - < "$fastq_file" | \
+    cut -f 1,2 | \
+    sed 's/^@/>/' | \
+    tr "\t" "\n" > \
+    "$fasta"
+
+
+
+# Alternate approaches:
+#
+# > seqtk seq -A
+#
+# > bioawk -c fastx '{print ">" $name; print $seq}' "$fastq_file"
+#
+# > cat "$fastq_file" | \
+# >     paste - - - - | \
+# >     awk -v FS="\t" '{print $1"\n"$2}' > \
+# >     "$fasta_file"
