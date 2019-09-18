@@ -2,6 +2,8 @@
 """
 Download Ensembl genome annotations in FASTA format.
 
+Updated 2019-09-18.
+
 See also:
 - https://docs.python.org/2/howto/argparse.html
 - https://stackoverflow.com/questions/24180527
