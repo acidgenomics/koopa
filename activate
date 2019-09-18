@@ -4,7 +4,7 @@
 # mode when using `[` instead of `[[`.
 
 # Activate koopa.
-# Updated 2019-09-17.
+# Updated 2019-09-18.
 
 # Dropped support for ksh because it doesn't support `local` variables scoped
 # inside of functions.
@@ -296,6 +296,7 @@ fi
 # FIXME Check for user config options when koopa is activated system wide.
 # FIXME Need to write a function determine if koopa is system-wide.
 # FIXME Need a function to locate user profile.
+# FIXME Touch the today-bucket using an internal function.
 
 
 
@@ -344,6 +345,11 @@ fi
 
 if [ "$extra" -eq 1 ]
 then
+    if [ "$subshell" -eq 0 ]
+    then
+        _koopa_today_bucket
+    fi
+
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
     then
@@ -369,6 +375,7 @@ then
         unset -v zsh_dir
     fi
 
+    # Run these after shell-specific configuration.
     . "${activate_dir}/set.sh"
     . "${activate_dir}/aliases.sh"
     . "${activate_dir}/secrets.sh"
