@@ -67,7 +67,7 @@ if release is None:
 
 base_url = "ftp://ftp.ebi.ac.uk/pub/databases/gencode/" + \
     "Gencode_" + organism_short + "/release_" + release + "/"
-file = "gencode.v" + 30 + ".annotation.gtf.gz"
+file = "gencode.v" + release + ".annotation.gtf.gz"
 url = base_url + file
 
 # Error if the file exists.
