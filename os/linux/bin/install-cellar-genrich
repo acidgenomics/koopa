@@ -31,7 +31,7 @@ exe_file="${prefix}/bin/${name}"
     rm -rf "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version

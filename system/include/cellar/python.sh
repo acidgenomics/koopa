@@ -38,7 +38,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 # Symlink python3 to python.
 build_prefix="$(_koopa_build_prefix)"
