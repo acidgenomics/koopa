@@ -46,7 +46,7 @@ printf "Updating koopa.\n"
 (
     cd "$KOOPA_HOME" || exit 1
     git fetch --all
-    git checkout master
+    # > git checkout master
     git pull
 )
 
