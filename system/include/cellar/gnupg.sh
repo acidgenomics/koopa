@@ -47,7 +47,7 @@ mkdir -pv "$tmp_dir"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 (
     pkg="libgcrypt"
@@ -63,7 +63,7 @@ link-cellar "$name" "$version"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 (
     pkg="libassuan"
@@ -79,7 +79,7 @@ link-cellar "$name" "$version"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 (
     pkg="libksba"
@@ -95,7 +95,7 @@ link-cellar "$name" "$version"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 (
     pkg="npth"
@@ -111,7 +111,7 @@ link-cellar "$name" "$version"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 (
     pkg="pinentry"
@@ -127,7 +127,7 @@ link-cellar "$name" "$version"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 (
     pkg="gnupg"
@@ -144,7 +144,7 @@ link-cellar "$name" "$version"
     make install
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 rm -rf "$tmp_dir"
 

@@ -34,7 +34,7 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
 )
 
-link-cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 # Update '/usr/bin/env'.
 if _koopa_has_sudo
