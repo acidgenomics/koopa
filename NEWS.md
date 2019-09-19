@@ -5,6 +5,12 @@
 - `install-rstudio-server-pro`: Added support for RStudio Server Pro
   installation on Fedora / RHEL.
 
+### Minor changes
+
+- Added 'download-' prefix to FASTA and GTF download scripts.
+- Improved Emacs `emacs` and `spacemacs` configuration files inside the dotfiles
+  repo, based on some issues seen in the Emacs GUI on macOS.
+
 ## koopa 0.5.6 (2019-09-18)
 
 ### New scripts
