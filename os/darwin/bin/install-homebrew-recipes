@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header darwin)"
 
 # Install recommended Homebrew recipes.
-# Updated 2019-09-14.
+# Updated 2019-09-19.
 
 _koopa_assert_is_installed brew
 
@@ -69,6 +69,7 @@ brew cask install \
     iterm2 \
     keka \
     libreoffice \
+    netnewswire \
     onyx \
     r \
     safari-technology-preview \
@@ -76,6 +77,7 @@ brew cask install \
     spillo \
     sublime-text \
     superduper \
+    textmate \
     torbrowser \
     tower \
     transmit \
