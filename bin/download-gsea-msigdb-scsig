@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Download GSEA MSigDb SCSig files
+# Updated 2019-09-19.
+
+# SCSig collection: Signatures of Single Cell Identities
+
+# See also:
+# http://software.broadinstitute.org/gsea/msigdb/supplementary_genesets.jsp
+
+version="1.0"
+sig_dir="${HOME}/msigdb/scsig"
+base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
+
+(
+    mkdir -pv "$sig_dir"
+    cd "$sig_dir" || exit 1
+    wget "${base_url}/scsig.all.v${version}.symbols.gmt"
+    wget "${base_url}/scsig.all.v${version}.entrez.gmt"
+    wget "${base_url}/scsig.v${version}.metadata.xls"
+    wget "${base_url}/scsig.v${version}.metadata.txt"
+)
+
