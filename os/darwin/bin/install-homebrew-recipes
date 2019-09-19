@@ -102,9 +102,11 @@ brew cask install --no-quarantine \
 
 brew cask install \
     carbon-copy-cloner \
-    dropbox \
-    little-snitch \
-    slack
+    little-snitch
+
+# > brew cask install \
+# >     dropbox \
+# >     slack
 
 
 
@@ -116,6 +118,25 @@ brew cask install \
 
 brew install bash fish ksh tcsh zsh
 brew install flac lame tcl-tk
+
+# Pesky recipes                                                             {{{2
+# ------------------------------------------------------------------------------
+
+# Additional imagemagick flags:
+# - `--with-ghostscript`
+# - `--with-pango`
+# - `--with-webpbrew`
+brew install imagemagick --with-fontconfig --with-librsvg
+
+# LLVM full mainline: `--with-toolchain` (very slow to install).
+brew install llvm
+
+# OpenBLAS is very CPU intensive when built from source.
+brew install openblas --with-openmp
+
+brew install python --with-tcl-tk
+
+brew install sox --with-flac --with-lame
 
 # Recommended                                                               {{{2
 # ------------------------------------------------------------------------------
@@ -187,23 +208,4 @@ brew install \
 # ------------------------------------------------------------------------------
 
 brew install vitorgalvao/tiny-scripts/cask-repair
-
-# Pesky recipes                                                             {{{2
-# ------------------------------------------------------------------------------
-
-# Additional imagemagick flags:
-# - `--with-ghostscript`
-# - `--with-pango`
-# - `--with-webpbrew`
-brew install imagemagick --with-fontconfig --with-librsvg
-
-# LLVM full mainline: `--with-toolchain` (very slow to install).
-brew install llvm
-
-# OpenBLAS is very CPU intensive when built from source.
-brew install openblas --with-openmp
-
-brew install python --with-tcl-tk
-
-brew install sox --with-flac --with-lame
 
