@@ -1,6 +1,7 @@
 bioawk
 samtools
 
+bowtie2
 hisat2
 kallisto
 salmon
