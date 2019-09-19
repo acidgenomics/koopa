@@ -34,178 +34,152 @@ export HOMEBREW_FORCE_BOTTLE=1
 # Casks                                                                     {{{1
 # ==============================================================================
 
-# Priority                                                                  {{{2
-# ------------------------------------------------------------------------------
+# Priority.
+brew cask install java osxfuse xquartz
 
-brew cask install \
-    java \
-    osxfuse \
-    xquartz
-
-# Recommended                                                               {{{2
-# ------------------------------------------------------------------------------
-
-brew cask install \
-    1password \
-    alacritty \
-    alfred \
-    aspera-connect \
-    authy \
-    basictex \
-    bbedit \
-    bibdesk \
-    coconutbattery \
-    coda \
-    emacs \
-    fiji \
-    firefox \
-    github \
-    google-chrome \
-    google-cloud-sdk \
-    google-drive-file-stream \
-    gpg-suite \
-    hazel \
-    igv \
-    iterm2 \
-    keka \
-    libreoffice \
-    netnewswire \
-    onyx \
-    r \
-    safari-technology-preview \
-    skype \
-    spillo \
-    sublime-text \
-    superduper \
-    textmate \
-    torbrowser \
-    tower \
-    transmit \
-    tunnelblick \
-    visual-studio-code \
-    vlc \
+# Recommended.
+casks=(
+    1password
+    alacritty
+    alfred
+    aspera-connect
+    authy
+    basictex
+    bbedit
+    bibdesk
+    coconutbattery
+    coda
+    emacs
+    fiji
+    firefox
+    github
+    google-chrome
+    google-cloud-sdk
+    google-drive-file-stream
+    gpg-suite
+    hazel
+    igv
+    iterm2
+    keka
+    libreoffice
+    netnewswire
+    onyx
+    r
+    safari-technology-preview
+    skype
+    spillo
+    sublime-text
+    superduper
+    textmate
+    torbrowser
+    tower
+    transmit
+    tunnelblick
+    visual-studio-code
+    vlc
     xld
+)
+for cask in "${casks[@]}"
+do
+    brew cask install "$cask"
+done
 
-# Gatekeeper issues                                                         {{{2
-# ------------------------------------------------------------------------------
+# These casks can have permission issues with non-admin accounts.
+brew cask install carbon-copy-cloner little-snitch
 
-brew cask install --no-quarantine \
-    calibre \
-    docker \
-    omnidisksweeper \
+# Gatekeeper issues.
+casks=(
+    calibre
+    docker
+    omnidisksweeper
     rstudio
-
-# Non-admin issues                                                          {{{2
-# ------------------------------------------------------------------------------
-
-# These casks have permission issues with non-admin accounts.
-
-brew cask install \
-    carbon-copy-cloner \
-    little-snitch
-
-# > brew cask install \
-# >     dropbox \
-# >     slack
+)
+for cask in "${casks[@]}"
+do
+    brew cask install "$cask" --no-quarantine
+done
 
 
 
 # Brews                                                                     {{{1
 # ==============================================================================
 
-# Priority                                                                  {{{2
-# ------------------------------------------------------------------------------
-
+# Priority.
 brew install bash fish ksh tcsh zsh
-brew install flac lame tcl-tk
+brew install openblas tcl-tk
+brew install flac lame
 
-# Pesky recipes                                                             {{{2
-# ------------------------------------------------------------------------------
-
-# Additional imagemagick flags:
-# - `--with-ghostscript`
-# - `--with-pango`
-# - `--with-webpbrew`
-brew install imagemagick --with-fontconfig --with-librsvg
-
-# LLVM full mainline: `--with-toolchain` (very slow to install).
-brew install llvm
-
-# OpenBLAS is very CPU intensive when built from source.
-brew install openblas --with-openmp
-
-brew install python --with-tcl-tk
-
-brew install sox --with-flac --with-lame
-
-# Recommended                                                               {{{2
-# ------------------------------------------------------------------------------
-
-brew install \
-    autoconf \
-    automake \
-    awscli \
-    bash-completion \
-    bfg \
-    ccache \
-    circleci \
-    cmake \
-    convmv \
-    coreutils \
-    curl \
-    exa \
-    exiftool \
-    ffmpeg \
-    findutils \
-    flac \
-    gcc \
-    gdal \
-    git \
-    git-lfs \
-    gsl \
-    hdf5 \
-    hub \
-    ksh \
-    leiningen \
-    libav \
-    libgit2 \
-    libiconv \
-    libressl \
-    librsvg \
-    libssh2 \
-    libxml2 \
-    libxslt \
-    mariadb-connector-c \
-    mas \
-    md5sha1sum \
-    neovim \
-    node \
-    open-mpi \
-    pandoc \
-    pandoc-citeproc \
-    pandoc-crossref \
-    pkg-config \
-    protobuf \
-    rbenv \
-    rsync \
-    ruby-build \
-    rust \
-    screen \
-    shellcheck \
-    shellharden \
-    sshfs \
-    tesseract \
-    tmux \
-    trash \
-    tree \
-    udunits \
-    vim \
-    wget \
-    youtube-dl \
+# Recommended.
+brews=(
+    autoconf
+    automake
+    awscli
+    bash-completion
+    bfg
+    ccache
+    circleci
+    cmake
+    convmv
+    coreutils
+    curl
+    exa
+    exiftool
+    ffmpeg
+    findutils
+    flac
+    gcc
+    gdal
+    git
+    git-lfs
+    gsl
+    hdf5
+    hub
+    imagemagick
+    ksh
+    leiningen
+    libav
+    libgit2
+    libiconv
+    libressl
+    librsvg
+    libssh2
+    libxml2
+    libxslt
+    llvm
+    mariadb-connector-c
+    mas
+    neovim
+    node
+    open-mpi
+    pandoc
+    pandoc-citeproc
+    pandoc-crossref
+    pkg-config
+    protobuf
+    python
+    rbenv
+    rsync
+    ruby-build
+    rust
+    screen
+    shellcheck
+    shellharden
+    sox
+    sshfs
+    tesseract
+    tmux
+    trash
+    tree
+    udunits
+    vim
+    wget
+    youtube-dl
     zlib
+)
+for brew in "${brews[@]}"
+do
+    brew install "$brew"
+done
 
-# External recipes                                                          {{{2
-# ------------------------------------------------------------------------------
-
+# External.
 brew install vitorgalvao/tiny-scripts/cask-repair
-
