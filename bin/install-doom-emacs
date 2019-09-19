@@ -5,9 +5,10 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Install Doom Emacs.
-# Updated 2019-09-19.
+# Updated 2019-09-20.
 
 install_dir="${HOME}/.emacs.d"
+exe_file="${install_dir}/bin/doom"
 
 if [[ -d "$install_dir" ]]
 then
@@ -16,4 +17,8 @@ then
 fi
 
 git clone https://github.com/hlissner/doom-emacs "$install_dir"
-"${install_dir}/bin/doom" quickstart
+"${exe_file}" quickstart
+"${exe_file}" doctor
+
+# Refresh config periodically:
+# > "${exe_file}" refresh
