@@ -1,3 +1,10 @@
+## koopa 0.5.7 (UNRELEASED)
+
+### New scripts
+
+- `install-rstudio-server-pro`: Added support for RStudio Server Pro
+  installation on Fedora / RHEL.
+
 ## koopa 0.5.6 (2019-09-18)
 
 ### New scripts
