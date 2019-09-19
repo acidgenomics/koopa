@@ -1,0 +1,7 @@
+bioawk
+samtools
+
+hisat2
+kallisto
+salmon
+star
