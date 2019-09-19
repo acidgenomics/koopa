@@ -4,11 +4,13 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
 
-# Install RStudio Server.
+# Install RStudio Server Pro.
 # Updated 2019-09-19.
 
+# Note that this is also referred to as "Commercial RStudio".
+
 # See also:
-# - https://www.rstudio.com/products/rstudio/download-server/
+# - https://www.rstudio.com/products/rstudio/download-commercial/
 
 _koopa_assert_has_sudo
 
@@ -19,7 +21,7 @@ version="$(_koopa_variable "$name")"
 printf "Installing %s %s.\n" "$name" "$version"
 
 # Remove existing config files.
-# > sudo rm -rf /etc/rstudio
+# > sudo rm -frv /etc/rstudio
 
 (
     rm -fr "$tmp_dir"
@@ -35,7 +37,15 @@ printf "Installing %s %s.\n" "$name" "$version"
 command -v "$name"
 "$name" version
 
+# Activate product license key:
+# > sudo rstudio-server license-manager activate <product-key>
+
+# If you want to move your license of RStudio Server to another system you
+# should first deactivate it on the old system with the command:
+# > sudo rstudio-server license-manager deactivate
+
 sudo "$name" stop
 sudo "$name" verify-installation
 sudo "$name" start
 sudo "$name" status
+sudo "$name" license-manager status
