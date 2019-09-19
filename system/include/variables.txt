@@ -98,6 +98,7 @@ rename="1.10"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
+# https://www.rstudio.com/products/rstudio/download-commercial/
 rstudio-server="1.2.1578"
 
 # https://www.ruby-lang.org/en/downloads/releases/
