@@ -5,14 +5,15 @@ set -Eeu -o pipefail
 source "$(koopa header bash)"
 
 # Install spacemacs.
-# Updated 2019-06-25.
+# Updated 2019-09-19.
 
-if [[ -d ".emacs.d" ]]
+install_dir="${HOME}/.emacs.d"
+
+if [[ -d "$install_dir" ]]
 then
-    >&2 printf "Error: '.emacs.d/' directory exists.\n"
+    >&2 printf "Error: Directory exists: '%s'.\n" "$install_dir"
     exit 1
 fi
 
-git clone https://github.com/syl20bnr/spacemacs.git ~/.emacs.d
-
-emacs
+git clone https://github.com/syl20bnr/spacemacs.git "$install_dir"
+emacs --no-window-system
