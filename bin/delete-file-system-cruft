@@ -14,7 +14,6 @@ cat << EOF
 usage: delete-file-system-cruft [--help|-h] [DIR]
 
 Delete file system cruft.
-Updated 2019-09-20.
 
 details:
     Recursively deletes these invisible files:
@@ -22,16 +21,20 @@ details:
     - Thumbs.db*
 
 optional positional arguments:
-    Directory path.
-    Defaults to '.'.
+    1.  Directory path.
+        Defaults to '.'.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Updated 2019-09-20.
 
 examples:
     delete-file-system-cruft .
 EOF
 }
-
-
-path="${1:-.}"
 
 
 
@@ -44,6 +47,8 @@ case "${1:-}" in
         exit
         ;;
 esac
+
+path="${1:-.}"
 
 
 
