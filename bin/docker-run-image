@@ -4,17 +4,94 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Run Docker image locally.
-# Updated 2019-07-25.
-
-_koopa_assert_is_installed docker
-
-image="$1"
 workdir="/work"
 
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: docker-run-image [--help|-h] IMAGE [--workdir="$workdir"]
+
+Pull and run a Docker image locally.
+
+details:
+    Script wrapper to call 'docker pull' and 'docker run' with suitable defaults
+    for the Acid Genomics Docker images available on Docker Hub.
+
+required positional arguments:
+    1.  Docker image name.
+        Use the full name: '<user>/<image>:<tag>'.
+        Defaults to images on DockerHub.
+        Tag is optional, but can be included (e.g. ':latest').
+        Example: 'acidgenomics/bioconductor:devel'.
+
+required arguments with defaults:
+    --workdir
+        Local working directory name.
+        Defaults to '$workdir', to avoid potential name collisions.
+
+note:
+    Updated 2019-09-20.
+
+examples:
+    docker-run-image acidgenomics/bioconductor:devel
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit 0
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+POSITIONAL=()
+
+for i in "$@"
+do
+    case "$i" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --workdir=*)
+            workdir="${i#*=}"
+            shift 1
+            ;;
+        --)
+            # End argument parsing.
+            shift 1
+            break
+            ;;
+        --*|-*)
+            # Invalid argument.
+            >&2 printf "Error: Invalid arg: '%s'\n" "$i"
+            exit 1
+            ;;
+        *)
+            # Preserve positional arguments.
+            POSITIONAL+=("$i")
+            shift 1
+            ;;
+    esac
+done
+
+# Set positional arguments in their proper place.
+set -- "${POSITIONAL[@]}"
+
+image="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed docker
 docker pull "$image"
-docker run \
-    -it \
+docker run -it \
     --volume="${PWD}:${workdir}" \
     --workdir="$workdir" \
     "$image" \
