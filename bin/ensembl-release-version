@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Ensembl release version.
+# Updated 2019-09-20.
+
+_koopa_assert_is_installed wget
+
+wget -q -O - ftp.ensembl.org/pub/current_README | \
+    sed -n 3p | \
+    cut -d ' ' -f 3
