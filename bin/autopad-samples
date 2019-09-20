@@ -28,7 +28,7 @@ padwidth=2
 
 usage() {
 cat << EOF
-usage: autopad-samples [-h|--help] [--prefix="$prefix"] [--padwidth=$padwidth]
+usage: autopad-samples [--help|-h] [--prefix="$prefix"] [--padwidth=$padwidth]
     FILE ...
 
 Autopad sample file names that begin with a number.
@@ -59,6 +59,10 @@ required arguments, with defaults:
         Auto-width detection may be added in a future release but isn't
         currently supported.
 
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
 examples:
     autopad-samples *.fastq.gz
 
@@ -86,11 +90,6 @@ EOF
 
 
 
-
-
-
-
-
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
@@ -99,7 +98,7 @@ POSITIONAL=()
 for i in "$@"
 do
     case "$i" in
-        -h|--help)
+        --help|-h)
             usage
             exit 0
             ;;
