@@ -49,10 +49,10 @@ if len(sys.argv) == 1:
     sys.exit(1)
 args = parser.parse_args()
 
-organism = args.organism.replace(" ", "_")
 build = args.build
-release = args.release
 decompress = args.decompress
+organism = args.organism.replace(" ", "_")
+release = args.release
 
 # Set the release automatically, if necessary.
 if release is None:
@@ -63,12 +63,14 @@ if release is None:
     )
     release = release.rstrip()
 
+# Set the base URL of FTP server.
 if build == "GRCh37":
     release = "87"
     base_url = "ftp://ftp.ensembl.org/pub/grch37"
 else:
     base_url = "ftp://ftp.ensembl.org/pub"
 
+# Get the file path.
 url = base_url + "/release-" + release + "/gtf/" + organism.lower() + "/" + \
     organism + "." + build + "." + release + ".gtf.gz"
 file = os.path.basename(url)
