@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Genome versions.
+# Updated 2019-09-20.
+
+ensembl="$(ensembl-release-version)"
+refseq="$(refseq-release-version)"
+wormbase="$(wormbase-release-version)"
+
+gencode="$(gencode-release-version)"
+gencode="$(echo "$gencode" | sed 's/^/  - /')"
+
+flybase="$(flybase-release-version)"
+flybase="$(echo "$flybase" | sed 's/^/  - /')"
+
+cat << EOF
+Ensembl: ${ensembl}
+RefSeq: ${refseq}
+GENCODE:
+${gencode}
+FlyBase:
+${flybase}
+WormBase: ${wormbase}
+EOF
