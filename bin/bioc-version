@@ -27,10 +27,6 @@ optional arguments:
 note:
     Bash script.
     Updated 2019-09-18.
-
-examples:
-    bioc-version
-    # > 3.9
 EOF
 }
 

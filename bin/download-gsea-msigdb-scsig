@@ -4,24 +4,58 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Download GSEA MSigDb SCSig files
-# Updated 2019-09-19.
-
-# SCSig collection: Signatures of Single Cell Identities
-
-# See also:
-# http://software.broadinstitute.org/gsea/msigdb/supplementary_genesets.jsp
-
-version="1.0"
-sig_dir="${HOME}/msigdb/scsig"
 base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
+version="1.0"
 
-(
-    mkdir -pv "$sig_dir"
-    cd "$sig_dir" || exit 1
-    wget "${base_url}/scsig.all.v${version}.symbols.gmt"
-    wget "${base_url}/scsig.all.v${version}.entrez.gmt"
-    wget "${base_url}/scsig.v${version}.metadata.xls"
-    wget "${base_url}/scsig.v${version}.metadata.txt"
-)
 
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage download-gsea-msigdb-scsig [--help|-h]
+
+Download GSEA MSigDb SCSig v${version} signature files.
+
+details:
+    Downloads to the current working directory.
+
+    SCSig collection: Signatures of Single Cell Identities.
+
+see also:
+    ${base_url}
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported arg: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+wget "${base_url}/scsig.all.v${version}.symbols.gmt"
+wget "${base_url}/scsig.all.v${version}.entrez.gmt"
+wget "${base_url}/scsig.v${version}.metadata.xls"
+wget "${base_url}/scsig.v${version}.metadata.txt"
