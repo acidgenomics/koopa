@@ -4,11 +4,59 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Ensembl release version.
-# Updated 2019-09-20.
+url="ftp.ensembl.org/pub/current_README"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: ensembl-release-version [--help|-h]
+
+Ensembl release version.
+
+details:
+    Extract the Ensembl release version from ftp.ensembl.org.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+see also:
+    ${url}
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported arg: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed wget
-
-wget -q -O - ftp.ensembl.org/pub/current_README | \
+wget -q -O - "$url" | \
     sed -n 3p | \
     cut -d ' ' -f 3

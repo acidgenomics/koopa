@@ -24,9 +24,12 @@ optional arguments:
     --help, -h
         Show this help message and exit.
 
+see also:
+    ${url}
+
 note:
     Bash script.
-    Updated 2019-09-18.
+    Updated 2019-09-20.
 EOF
 }
 

@@ -16,6 +16,8 @@ _koopa_assert_is_installed wget
 # Usage                                                                     {{{1
 # ==============================================================================
 
+# FIXME Rework to use "=" on long flags here.
+
 usage() {
     cat << EOF
 usage: ftp-mirror [-h] --host "HOSTNAME" --user "USERNAME" [--dir "REMOTE DIR"]
