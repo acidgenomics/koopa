@@ -1,45 +1,65 @@
 #!/usr/bin/env python3
-"""
-Download Ensembl genome annotations in GTF format.
-
-Updated 2019-09-18.
-"""
-
-# See also:
-# - https://docs.python.org/2/howto/argparse.html
-# - https://stackoverflow.com/questions/24180527
 
 import argparse
 import os
 import subprocess
 import sys
 
-parser = argparse.ArgumentParser()
+from argparse import RawTextHelpFormatter
+
+description = "Download Ensembl genome annotations in GTF format."
+epilog = """
+note:
+    Updated 2019-09-20.
+"""
+
+parser = argparse.ArgumentParser( \
+    description = description, \
+    epilog = epilog, \
+    formatter_class = RawTextHelpFormatter
+)
 optional = parser._action_groups.pop()
 required = parser.add_argument_group('required arguments')
 required.add_argument( \
-    "--organism", required=True, \
+    "--organism", \
+    required=True, \
+    type=str, \
     help="latin name (e.g. \"Homo sapiens\")" \
 )
 required.add_argument( \
-    "--build", required=True, \
+    "--build", \
+    required=True, \
+    type=str, \
     help="genome build (e.g. \"GRCh38\")" \
 )
 optional.add_argument( \
     "--release", \
+    type=int, \
     help="release version (e.g. \"96\")" \
 )
+optional.add_argument( \
+    "--decompress", \
+    action='store_true', \
+    help="Decompress (but keep) the original file." \
+)
 parser._action_groups.append(optional)
+# Show help when no arguments are declared.
+if len(sys.argv) == 1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
 args = parser.parse_args()
 
 organism = args.organism.replace(" ", "_")
 build = args.build
-
 release = args.release
+decompress = args.decompress
+
+# Set the release automatically, if necessary.
 if release is None:
     release = subprocess.check_output( \
         "_koopa_variable ensembl_release_version", \
-        shell=True, universal_newlines=True \
+        shell=True, \
+        universal_newlines=True \
     )
     release = release.rstrip()
 
@@ -66,6 +86,7 @@ except subprocess.CalledProcessError as e:
     sys.exit(1)
 
 # Decompress, but also keep the original compressed file.
-print("Decompressing " + file + ".")
-unzip_file = os.path.splitext(file)[0]
-os.system("gunzip -c " + file + " > " + unzip_file)
+if decompress is True:
+    print("Decompressing " + file + ".")
+    unzip_file = os.path.splitext(file)[0]
+    os.system("gunzip -c " + file + " > " + unzip_file)

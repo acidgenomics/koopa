@@ -17,15 +17,19 @@ usage: dotfile [-h|--help] [--config] [--force] [--private] [--quiet]
 Symlink a dot file.
 Updated 2019-09-20.
 
-Note that relative file path in dotfiles repo can be used as input.
-The destination file should be specified without a leading period.
+details:
+    The relative file path in dotfiles repo can be used as input. The
+    destination file should be specified without a leading period.
+
+    By default, this script is designed to work with the 'acidgenomics/dotfiles'
+    repository available on GitHub.
 
 required positional arguments:
-    1: relative_path
+    1.  relative_path
         Relative file path in dotfiles repo.
 
 optional positional arguments:
-    2: symlink_name
+    2.  symlink_name
         Name of destination symlink (without '.' prefix).
 
 optional arguments:
@@ -53,6 +57,8 @@ EOF
 
 # Using flags and positional arguments.
 # https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+
+# FIXME Rework PARAM handling consistency here.
 
 PARAMS=""
 
