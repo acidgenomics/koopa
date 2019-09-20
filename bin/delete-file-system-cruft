@@ -4,13 +4,55 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Remove file system cruft.
-# Updated 2019-06-23.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: delete-file-system-cruft [--help|-h] [DIR]
+
+Delete file system cruft.
+Updated 2019-09-20.
+
+details:
+    Recursively deletes these invisible files:
+    - .DS_Store
+    - Thumbs.db*
+
+optional positional arguments:
+    Directory path.
+    Defaults to '.'.
+
+examples:
+    delete-file-system-cruft .
+EOF
+}
+
 
 path="${1:-.}"
 
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 find "$path" \
     -type f \
-    \( -name ".DS_Store" -o -name "Thumbs.db*" \) \
+    \( -name ".DS_Store" -o \
+        -name "Thumbs.db*" \) \
     -delete \
     -print
