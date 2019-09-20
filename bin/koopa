@@ -20,7 +20,7 @@ date="$(_koopa_variable koopa_date)"
 
 usage() {
     cat << EOF
-usage: koopa [-h|--help] [-V|--version] COMMAND
+usage: koopa [--help|-h] [--version|-V] COMMAND
 
 koopa $version ($date)
 Shell bootloader for bioinformatics.
@@ -49,9 +49,9 @@ return string commands:
         For use in Python and R scripts only.
 
 optional arguments:
-    -h, --help
+    --help, -h
         Show this help message and exit.
-    -V, --version
+    --version, -V
         Version information.
 EOF
 }
