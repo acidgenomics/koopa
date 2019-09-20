@@ -4,9 +4,50 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Bioconductor version.
-# Updated 2019-09-18.
+url="http://bioconductor.org/bioc-version"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: bioc-version [-h|--help]
+
+Bioconductor version.
+Updated 2019-09-18.
+
+Extract the Bioconductor release version from bioconductor.org.
+
+optional arguments:
+    -h, --help
+        Show this help message and exit.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit
+        ;;
+    "")
+        ;;
+    *)
+        >&2 printf "Error: Unsupported arg: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed wget
-
-wget -q -O - http://bioconductor.org/bioc-version
+wget -q -O - "$url" 
