@@ -13,7 +13,7 @@ url="http://bioconductor.org/bioc-version"
 
 usage() {
 cat << EOF
-usage: bioc-version [-h|--help]
+usage: bioc-version [--help|-h]
 
 Bioconductor version.
 Updated 2019-09-18.
@@ -21,7 +21,7 @@ Updated 2019-09-18.
 Extract the Bioconductor release version from bioconductor.org.
 
 optional arguments:
-    -h, --help
+    --help, -h
         Show this help message and exit.
 EOF
 }
@@ -32,11 +32,11 @@ EOF
 # ==============================================================================
 
 case "${1:-}" in
+    "")
+        ;;
     --help|-h)
         usage
         exit
-        ;;
-    "")
         ;;
     *)
         >&2 printf "Error: Unsupported arg: '%s'\n" "$1"
