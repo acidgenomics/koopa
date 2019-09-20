@@ -55,17 +55,18 @@ if len(sys.argv) == 1:
     sys.exit(1)
 args = parser.parse_args()
 
-organism = args.organism.replace(" ", "_")
 build = args.build
-type = args.type
-release = args.release
 decompress = args.decompress
+organism = args.organism.replace(" ", "_")
+release = args.release
+type = args.type
 
 # Set the release automatically, if necessary.
 if release is None:
     release = subprocess.check_output( \
         "koopa variable ensembl_release_version", \
-        shell=True, universal_newlines=True \
+        shell=True, \
+        universal_newlines=True \
     )
     release = release.rstrip()
 
@@ -84,7 +85,6 @@ if type == "dna":
 elif type == "cdna":
     url = base_url + "/" + organism.lower() + "/cdna/" + \
         organism + "." + build + ".cdna.all.fa.gz"
-
 file = os.path.basename(url)
 
 # Error if the file exists.
