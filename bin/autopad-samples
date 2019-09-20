@@ -4,11 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Autopad sample file names that begin with a number.
-# Updated 2019-06-23.
-
-# Renaming with a "sample" prefix by default, to avoid issues in R.
-
 # See also:
 # - How to use `BASH_REMATCH`.
 #   https://unix.stackexchange.com/questions/349686
@@ -23,9 +18,128 @@ source "$(koopa header bash)"
 #   https://techblog.jeppson.org/2016/08/add-prefix-filenames-bash/
 #   rename 's/\d+/sprintf("%03d", $&)/e' *.fastq.gz
 
-files=("$@")
-padwidth=2
 prefix="sample"
+padwidth=2
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: autopad-samples [-h|--help] [--prefix="$prefix"] [--padwidth=$padwidth]
+    FILE ...
+
+Autopad sample file names that begin with a number.
+Updated 2019-09-20.
+
+details:
+    Intended for quick sanitization of FASTQ files from a sequencing vendor that
+    begin with numbers and aren't zero padded.
+
+    Autopadding file names with leading zeros helps avoided unexpected
+    downstream sorting issues due to differences in how shell environments and
+    programming languages handle natural sorting.
+
+    Here we are also renaming with a character string prefix by default, to
+    avoid valid name issues in R. See 'make.names()' for details.
+
+required positional arguments:
+    File names.
+
+required arguments, with defaults:
+    --prefix
+        Prefix name.
+        Defaults to '${prefix}'.
+    --padwidth
+        Zero padding width.
+        Defaults to '${padwidth}'.
+        Manually adjust this when working with >= 100 samples.
+        Auto-width detection may be added in a future release but isn't
+        currently supported.
+
+examples:
+    autopad-samples *.fastq.gz
+
+    input:
+    1-dmso-A-R1.fastq.qz
+    1-dmso-A-R2.fastq.gz
+    2-dmso-B-R1.fastq.gz
+    2-dmso-B-R2.fastq.gz
+    ...
+    10-compound-A-R1.fastq.gz
+    10-compound-A-R2.fastq.gz
+
+    output:
+    sample-01-dmso-A-R1.fastq.qz
+    sample-01-dmso-A-R2.fastq.gz
+    sample-02-dmso-B-R1.fastq.gz
+    sample-02-dmso-B-R2.fastq.gz
+    ...
+    sample-10-compound-A-R1.fastq.gz
+    sample-10-compound-A-R2.fastq.gz
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit 0
+
+
+
+
+
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+POSITIONAL=()
+
+for i in "$@"
+do
+    case "$i" in
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        --padwidth=*)
+            padwidth="${i#*=}"
+            shift 1
+            ;;
+        --prefix=*)
+            prefix="${i#*=}"
+            shift 1
+            ;;
+        --)
+            # End argument parsing.
+            shift 1
+            break
+            ;;
+        --*|-*)
+            # Invalid flag.
+            >&2 printf "Error: Invalid flag %s\n" "$i"
+            exit 1
+            ;;
+        *)
+            # Preserve positional arguments.
+            POSITIONAL+=("$i")
+            shift 1
+            ;;
+    esac
+done
+
+# Set positional arguments in their proper place.
+set -- "${POSITIONAL[@]}"
+
+unset -f usage
+
+files=("$@")
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 for file in "${files[@]}"
 do
