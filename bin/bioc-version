@@ -23,6 +23,10 @@ Extract the Bioconductor release version from bioconductor.org.
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+examples:
+    bioc-version
+    # > 3.9
 EOF
 }
 

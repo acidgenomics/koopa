@@ -4,11 +4,57 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Copy BAM and BAI index sidecar files to a destination.
-# Updated 2019-06-26.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: copy-bam-files [--help|-h] SOURCE_DIR DEST_DIR
+
+Copy BAM and BAI index sidecar files from a source directory to a destination.
+Updated 2019-06-26.
+
+details:
+    Supports transfers on file systems with non-standard permissions, including
+    Azure Files and Windows CIFS/SMB shares.
+
+required positional arguments:
+    Directory path, containing BAM files.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+examples:
+    copy-bam-files bam/ /data00/bam/
+EOF
+}
+
+[[ -z "${1:-}" ]] && usage && exit 0
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "$1" in
+    --help|-h)
+        usage
+        exit
+        ;;
+esac
+
+source_dir="$1"
+dest_dir="$2"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # Source directory.
-source_dir="$1"
 source_dir="$(realpath "$source_dir")"
 if [[ ! -d "$source_dir" ]]
 then
@@ -17,7 +63,6 @@ then
 fi
 
 # Destination directory.
-dest_dir="$2"
 dest_dir="$(realpath "$dest_dir")"
 if [[ ! -d "$dest_dir" ]]
 then
