@@ -34,14 +34,14 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
 )
 
-command -v "$name"
-"$name" version
-
 sudo "$name" stop
 sudo "$name" verify-installation
 sudo "$name" start
 sudo "$name" status
 sudo "$name" license-manager status
+
+command -v "$name"
+"$name" version
 
 # Activate product license key:
 # > sudo rstudio-server license-manager activate <product-key>
