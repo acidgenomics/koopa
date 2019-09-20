@@ -9,7 +9,11 @@ from argparse import RawTextHelpFormatter
 
 description = "Download Ensembl genome annotations in FASTA format."
 epilog = """
+details:
+    Downloads to the current working directory.
+
 note:
+    Python script.
     Updated 2019-09-20.
 """
 
@@ -46,7 +50,7 @@ optional.add_argument( \
 optional.add_argument( \
     "--decompress", \
     action='store_true', \
-    help="Decompress (but keep) the original file." \
+    help="decompress (but keep) the original file" \
 )
 parser._action_groups.append(optional)
 # Show help when no arguments are declared.
@@ -55,6 +59,7 @@ if len(sys.argv) == 1:
     sys.exit(1)
 args = parser.parse_args()
 
+# Parsed arguments.
 build = args.build
 decompress = args.decompress
 organism = args.organism.replace(" ", "_")

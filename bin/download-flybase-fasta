@@ -1,44 +1,81 @@
 #!/usr/bin/env python3
-"""Download FlyBase genome annotations in FASTA format.
-"""
 
 import argparse
 import os
 import subprocess
 import sys
 
-parser = argparse.ArgumentParser()
+from argparse import RawTextHelpFormatter
+
+description = "Download FlyBase genome annotations in FASTA format."
+epilog = """
+details:
+    Downloads to the current working directory.
+
+note:
+    Python script.
+    Updated 2019-09-20.
+"""
+
+parser = argparse.ArgumentParser( \
+    description = description, \
+    epilog = epilog, \
+    formatter_class = RawTextHelpFormatter
+)
 optional = parser._action_groups.pop()
 required = parser.add_argument_group('required arguments')
 required.add_argument( \
-    "--type", required=True, \
+    "--type", \
+    required=True, \
+    choices=['dna', 'cdna'], \
     help="\"dna\" (genome) or \"cdna\" (transcriptome)" \
 )
 optional.add_argument( \
     "--version", \
+    type=str, \
     help="release version (e.g. \"6.28\")" \
 )
 optional.add_argument( \
     "--date", \
+    type=str, \
     help="release date (e.g. \"2019-03\")" \
 )
+optional.add_argument( \
+    "--decompress", \
+    action='store_true', \
+    help="decompress (but keep) the original file" \
+)
+parser._action_groups.append(optional)
+# Show help when no arguments are declared.
+if len(sys.argv) == 1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
 args = parser.parse_args()
-type = args.type
 
+# Parsed arguments.
+date = args.date
+decompress = args.decompress
+type = args.type
 version = args.version
+
+# Set the release version automatically, if necessary.
 if version is None:
     version = subprocess.check_output( \
-        "_koopa_variable flybase_release_version", \
-        shell=True, universal_newlines=True \
+        "koopa variable flybase_release_version", \
+        shell=True, \
+        universal_newlines=True \
     )
     version = version.rstrip()
 version = "r" + version
 
-date = subprocess.check_output( \
-    "_koopa_variable flybase_release_date", \
-    shell=True, universal_newlines=True \
-)
-date = date.rstrip()
+# Set the release date automatically, if necessary.
+if date is None:
+    date = subprocess.check_output( \
+        "koopa variable flybase_release_date", \
+        shell=True, \
+        universal_newlines=True \
+    )
+    date = date.rstrip()
 date = "FB" + date.replace("-", "_")
 
 base_url = "ftp://ftp.flybase.net/releases/" + \
@@ -63,10 +100,6 @@ if type == "dna":
     except subprocess.CalledProcessError as e:
         print("Failed to download " + file + ".")
         sys.exit(1)
-    # Decompress, but also keep the original compressed file.
-    print("Decompressing " + file + ".")
-    unzip_file = os.path.splitext(file)[0]
-    os.system("gunzip -c " + file + " > " + unzip_file)
 elif type == "cdna":
     print("Downloading FlyBase FASTA files.")
     try:
@@ -99,3 +132,9 @@ elif type == "cdna":
         sys.exit(1)
     print("Concatenating " + file + ".")
     os.system("cat dmel-all-*-" + version + ".fasta.gz > " + file)
+
+# Decompress, but also keep the original compressed file.
+if decompress is True:
+    print("Decompressing " + file + ".")
+    unzip_file = os.path.splitext(file)[0]
+    os.system("gunzip -c " + file + " > " + unzip_file)

@@ -9,7 +9,11 @@ from argparse import RawTextHelpFormatter
 
 description = "Download Ensembl genome annotations in GTF format."
 epilog = """
+details:
+    Downloads to the current working directory.
+
 note:
+    Python script.
     Updated 2019-09-20.
 """
 
@@ -40,7 +44,7 @@ optional.add_argument( \
 optional.add_argument( \
     "--decompress", \
     action='store_true', \
-    help="Decompress (but keep) the original file." \
+    help="decompress (but keep) the original file" \
 )
 parser._action_groups.append(optional)
 # Show help when no arguments are declared.
@@ -49,6 +53,7 @@ if len(sys.argv) == 1:
     sys.exit(1)
 args = parser.parse_args()
 
+# Parsed arguments.
 build = args.build
 decompress = args.decompress
 organism = args.organism.replace(" ", "_")
@@ -57,7 +62,7 @@ release = args.release
 # Set the release automatically, if necessary.
 if release is None:
     release = subprocess.check_output( \
-        "_koopa_variable ensembl_release_version", \
+        "koopa variable ensembl_release_version", \
         shell=True, \
         universal_newlines=True \
     )
