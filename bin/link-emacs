@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# Link Emacs installation to `~/.emacs.d/`.
+# Updated 2019-09-20.
+
+name="$1"
+
+default_home=".emacs.d"
+custom_home="${default_home}-${name}"
+
+default_dir="${HOME}/${default_home}"
+custom_dir="${HOME}/${custom_home}"
+
+# Check that emacs.d is a symlink.
+if [[ ! -L "$default_dir" ]]
+then
+    >&2 printf "Error: Not a symlink: %s\n" "$default_dir"
+    exit 1
+fi
+
+# Check that custom Emacs directory exists.
+if [[ ! -d "$custom_dir" ]]
+then
+    >&2 printf "Error: Directory missing: %s\n" "$custom_dir"
+    exit 1
+fi
+
+(
+    cd ~
+    if [[ "$name" != "ess" ]]
+    then
+        rm -fv .emacs
+    elif [[ "$name" != "spacemacs" ]]
+    then
+        rm -fv .spacemacs
+    fi
+    case "$name" in
+        doom)
+            ## FIXME Need to add `--config` flag support for doom.
+            dotfile --config --force doom
+            ;;
+        ess)
+            dotfile emacs
+            ;;
+        spacemacs)
+            dotfile --force spacemacs
+            ;;
+        *)
+            >&2 printf "Error: Invalid Emacs config name.\n"
+            exit 1
+            ;;
+    esac
+    ln -fnsv "$custom_home" "$default_home"
+)
