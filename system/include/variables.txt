@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.5.7a"
-koopa_date="2019-09-19"
+koopa_date="2019-09-20"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -98,10 +98,12 @@ rename="1.10"
 rmate="1.0.2"
 
 # https://www.rstudio.com/products/rstudio/download-server/
-rstudio-server="1.2.1578"
+rstudio-server="1.2.5001"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
-rstudio-server-pro="1.2.1578-4"
+# Current version seems to be buggy with Shiny `runApp()`.
+# Previous stable: 1.2.1335-1
+rstudio-server-pro="1.2.5001-3"
 
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="2.6.4"
