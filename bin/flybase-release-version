@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+# FlyBase release version.
+# Updated 2019-09-20.
+
+_koopa_assert_is_installed curl
+
+url="ftp://ftp.flybase.net/releases/"
+release_date="$( \
+    curl --list-only --silent "$url" | \
+    grep -E "^FB[0-9]{4}_[0-9]{2}$" | \
+    sort | \
+    tail -n 1 \
+)"
+printf "date: %s\n" "$release_date"
+
+url="ftp://ftp.flybase.net/releases/current/"
+release_version="$( \
+    curl --list-only --silent "$url" | \
+    grep -E "^dmel_r[.0-9]+$" \
+)"
+printf "version: %s\n" "$release_version"
