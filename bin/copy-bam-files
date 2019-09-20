@@ -14,18 +14,21 @@ cat << EOF
 usage: copy-bam-files [--help|-h] SOURCE_DIR DEST_DIR
 
 Copy BAM and BAI index sidecar files from a source directory to a destination.
-Updated 2019-06-26.
 
 details:
     Supports transfers on file systems with non-standard permissions, including
     Azure Files and Windows CIFS/SMB shares.
 
 required positional arguments:
-    Directory path, containing BAM files.
+    1.  Source directory path, containing BAM files.
+    2.  Destination directory path.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+note:
+    Updated 2019-06-26.
 
 examples:
     copy-bam-files bam/ /data00/bam/

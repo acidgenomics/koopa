@@ -25,9 +25,6 @@ usage: koopa [--help|-h] [--version|-V] COMMAND
 koopa $version ($date)
 Shell bootloader for bioinformatics.
 
-This software is provided under an MIT License.
-See 'LICENSE' file for details.
-
 system configuration commands:
     check
         Run system dependency version checks.
@@ -53,6 +50,10 @@ optional arguments:
         Show this help message and exit.
     --version, -V
         Version information.
+
+note:
+    This software is provided under an MIT License.
+    See 'LICENSE' file for details.
 EOF
 }
 

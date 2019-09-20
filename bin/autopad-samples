@@ -32,7 +32,6 @@ usage: autopad-samples [--help|-h] [--prefix="$prefix"] [--padwidth=$padwidth]
     FILE ...
 
 Autopad sample file names that begin with a number.
-Updated 2019-09-20.
 
 details:
     Intended for quick sanitization of FASTQ files from a sequencing vendor that
@@ -46,7 +45,7 @@ details:
     avoid valid name issues in R. See 'make.names()' for details.
 
 required positional arguments:
-    File names.
+    1.  File names.
 
 required arguments, with defaults:
     --prefix
@@ -62,6 +61,9 @@ required arguments, with defaults:
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+note:
+    Updated 2019-09-20.
 
 examples:
     autopad-samples *.fastq.gz

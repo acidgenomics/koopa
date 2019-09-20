@@ -16,13 +16,16 @@ cat << EOF
 usage: bioc-version [--help|-h]
 
 Bioconductor version.
-Updated 2019-09-18.
 
-Extract the Bioconductor release version from bioconductor.org.
+details:
+    Extract the Bioconductor release version from bioconductor.org.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+note:
+    Updated 2019-09-18.
 
 examples:
     bioc-version
