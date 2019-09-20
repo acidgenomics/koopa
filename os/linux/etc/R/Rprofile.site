@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-09-18 by Michael Steinbaugh.
+## Updated 2019-09-20 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -321,13 +321,13 @@ options(
     ## unit tests currently will fail to run because of this setting, which is
     ## intentional. We need to set the `--vanilla` flag in `Rscript` calls.
 
-    if (Sys.which("conda") != "") {
-        warning(paste(
-            "conda detected.",
-            "Run `conda deactivate` prior to starting R.",
-            sep = "\n"
-        ))
-    }
+    ## > if (Sys.which("conda") != "") {
+    ## >     warning(paste(
+    ## >         "conda detected.",
+    ## >         "Run `conda deactivate` prior to starting R.",
+    ## >         sep = "\n"
+    ## >     ))
+    ## > }
 
     ## RStudio                                                              {{{2
     ## -------------------------------------------------------------------------

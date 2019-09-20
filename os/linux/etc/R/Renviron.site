@@ -1,5 +1,5 @@
 ## Shared R environment configuration.
-## Updated 2019-09-11 by Michael Steinbaugh.
+## Updated 2019-09-20 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
@@ -18,7 +18,7 @@
 ## =============================================================================
 
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
-PATH="/usr/local/bin:/usr/bin:/bin"
+PATH="/usr/local/bin:/usr/bin"
 
 
 
