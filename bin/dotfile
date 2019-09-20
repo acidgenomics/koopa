@@ -71,7 +71,7 @@ do
             force=1
             shift 1
             ;;
-        --help)
+        -h|--help)
             usage
             exit 0
             ;;
