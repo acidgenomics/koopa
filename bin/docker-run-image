@@ -34,6 +34,7 @@ required arguments with defaults:
         Defaults to '$workdir', to avoid potential name collisions.
 
 note:
+    Bash script.
     Updated 2019-09-20.
 
 examples:
