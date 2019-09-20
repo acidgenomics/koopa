@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 if [[ -z "${KOOPA_HOME:-}" ]]
 then
     >&2 printf "koopa is not correctly activated.\n"
