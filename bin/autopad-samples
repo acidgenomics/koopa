@@ -131,8 +131,6 @@ done
 # Set positional arguments in their proper place.
 set -- "${POSITIONAL[@]}"
 
-unset -f usage
-
 files=("$@")
 
 
