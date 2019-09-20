@@ -40,11 +40,10 @@ fi
     fi
     case "$name" in
         doom)
-            ## FIXME Need to add `--config` flag support for doom.
             dotfile --config --force doom
             ;;
         ess)
-            dotfile emacs
+            dotfile --force emacs
             ;;
         spacemacs)
             dotfile --force spacemacs
