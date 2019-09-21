@@ -14,8 +14,8 @@ source "$(koopa header bash)"
 for file in "$@"
 do
     mod_time="$(stat -f "%m" "$file")"
-    dest_dir="$(date -j -f "%s" "$mod_time" +"%Y/%m/%d")"
-    [[ ! -d "$dest_dir" ]] && mkdir -pv "$dest_dir"
-    dest_file="${dest_dir}/$(basename "$file")"
-    mv -v "$file" "$dest_file"
+    target_dir="$(date -j -f "%s" "$mod_time" +"%Y/%m/%d")"
+    [[ ! -d "$target_dir" ]] && mkdir -pv "$target_dir"
+    target_file="${target_dir}/$(basename "$file")"
+    mv -v "$file" "$target_file"
 done
