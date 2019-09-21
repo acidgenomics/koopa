@@ -4,8 +4,55 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Global find and replace in files using sed.
-# Updated 2019-06-23.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+find-and-replace [--help|-h] pattern replacement
+
+Global find and replace in files using sed.
+
+required positional arguments:
+    1.  Pattern string (i.e. regular expression) passed to sed.
+    2.  Replacement string.
+
+details:
+    Searches inside of files in current working directory non-recursively
+    (i.e. with a max depth of 1).
+    
+    sed syntax:
+    s/pattern/replacement/g
+
+note:
+    Bash script.
+    Updated 2019-09-21.
+
+examples:
+    find-and-replace foo bar
+EOF
+}
+
+[[ -z "${1:-}" ]] && usage && exit 0
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 from="$1"
 to="$2"
