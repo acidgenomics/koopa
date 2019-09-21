@@ -20,8 +20,8 @@ required positional arguments:
     2.  Replacement string.
 
 details:
-    Searches inside of files in current working directory non-recursively
-    (i.e. with a max depth of 1).
+    Intended to be used interactively. Searches inside of files in current
+    working directory non-recursively (i.e. with a max depth of 1).
     
     sed syntax:
     s/pattern/replacement/g
