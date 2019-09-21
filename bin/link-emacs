@@ -16,7 +16,7 @@ default_dir="${HOME}/${default_home}"
 custom_dir="${HOME}/${custom_home}"
 
 # Check that emacs.d is a symlink.
-if [[ ! -L "$default_dir" ]]
+if [[ -d "$default_dir" ]] && [[ ! -L "$default_dir" ]]
 then
     >&2 printf "Error: Not a symlink: %s\n" "$default_dir"
     exit 1
