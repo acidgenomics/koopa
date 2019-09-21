@@ -15,21 +15,25 @@ prefix="lanepool"
 
 usage() {
 cat << EOF
-usage: fastq-lanepool [--help|-h] [--source_dir="${source_dir}"]
-    [--target_dir="${target_dir}"] [--prefix="${prefix}"]
+usage: fastq-lanepool [--help|-h] --source-dir="${source_dir}"
+    --target-dir="${target_dir}" --prefix="${prefix}"
 
 Pool (concatenate) lane-split FASTQ files.
 
 required arguments, with defaults:
     --source-dir
-        Source lane-split FASTQ directory path.
+        Source directory path containing lane-split FASTQ files.
         Defaults to '${source_dir}'.
     --target-dir
-        Target concatenated FASTQ director path.
+        Target directory path where to return concatenated, lane-pooled FASTQs.
         Defaults to '${target_dir}'.
     --prefix
         Name prefix for concatenated FASTQ files.
         Defaults to '${prefix}'.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
 
 details:
     Matches against '_L00[1-9]_' lane pattern internally.
@@ -76,8 +80,6 @@ EOF
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
-# https://stackoverflow.com/questions/192249
-
 for i in "$@"
 do
     case "$i" in
@@ -114,9 +116,6 @@ target_dir="${target_dir//\//}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-# Create the target directory automatically, if necessary.
-mkdir -p "$target_dir"
-
 # Put unique samples into an array and loop.
 array=()
 while IFS=  read -r -d $'\0'; do
@@ -129,6 +128,9 @@ then
     >&2 printf "Error: No lane-split FASTQ files detected.\n"
     exit 1
 fi
+
+# Create the target directory automatically, if necessary.
+mkdir -p "$target_dir"
 
 basenames=()
 for i in "${array[@]}"
