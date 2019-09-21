@@ -11,9 +11,9 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: copy-bam-files [--help|-h] SOURCE_DIR DEST_DIR
+usage: copy-bam-files [--help|-h] source_dir target_dir
 
-Copy BAM and BAI index sidecar files from a source directory to a destination.
+Copy BAM and BAI index sidecar files from a source to a target directory.
 
 details:
     Supports transfers on file systems with non-standard permissions, including
@@ -21,7 +21,7 @@ details:
 
 required positional arguments:
     1.  Source directory path, containing BAM files.
-    2.  Destination directory path.
+    2.  Target directory path.
 
 optional arguments:
     --help, -h
@@ -51,7 +51,7 @@ case "$1" in
 esac
 
 source_dir="$1"
-dest_dir="$2"
+target_dir="$2"
 
 
 
@@ -66,15 +66,15 @@ then
     exit 1
 fi
 
-# Destination directory.
-dest_dir="$(realpath "$dest_dir")"
-if [[ ! -d "$dest_dir" ]]
+# Target directory.
+target_dir="$(realpath "$target_dir")"
+if [[ ! -d "$target_dir" ]]
 then
-    printf "\nDoes not exist:\n%s\n\n" "$dest_dir"
+    printf "\nDoes not exist:\n%s\n\n" "$target_dir"
     exit 1
 fi
 
-printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
+printf "\nSource:\n%s\n\nTarget:\n%s\n\n" "$source_dir" "$target_dir"
 
 # Note that we're allowing symlinks in the search path.
 # `-L`: Follow symbolic links.
@@ -89,7 +89,7 @@ printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 # rsync works more reliably for resuming interrupted transfers.
 # Currently using this to transfer to Azure Files, which doesn't support
 # the rsync `-av` flags.
-# > cp -iruv {} "$dest_dir/".
+# > cp -iruv {} "$target_dir/".
 # > rsync --size-only
 
 find -L "$source_dir" \
@@ -99,4 +99,4 @@ find -L "$source_dir" \
     ! -name "*-transcriptome.bam" \
     ! -path "*/work/*" \
     -print0 | xargs -0 -I {} \
-    rsync --size-only --progress {} "${dest_dir}/"
+    rsync --size-only --progress {} "${target_dir}/"

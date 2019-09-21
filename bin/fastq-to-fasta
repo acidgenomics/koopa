@@ -4,35 +4,13 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Convert a FASTQ file to FASTA format
-# Updated 2019-09-19.
-
-# Assuming input of a decompressed FASTQ file here.
-
-# See also:
-# - seqtk
-# - bioawk
-# - https://twitter.com/aaronquinlan/status/1174080730923589633
-# - https://twitter.com/torstenseemann/status/1174300653184847872
-# - http://thegenomefactory.blogspot.com/2012/05/
-#       cool-use-of-unix-paste-with-ngs.html
+source_dir="."
+target_dir="."
 
 
 
-# 1. paste converts the input FASTQ into a 4-column file
-# 2. cut command extracts out just column 1 (the ID) and column 2 (the sequence)
-# 3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">"
-# 4. tr conversts the 2 columns back into 2 lines
-
-fastq_file="$1"
-fasta_file="${fastq_file//fastq/fasta}"
-paste - - - - < "$fastq_file" | \
-    cut -f 1,2 | \
-    sed 's/^@/>/' | \
-    tr "\t" "\n" > \
-    "$fasta_file"
-
-
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Alternate approaches:
 #
@@ -44,3 +22,114 @@ paste - - - - < "$fastq_file" | \
 # >     paste - - - - | \
 # >     awk -v FS="\t" '{print $1"\n"$2}' > \
 # >     "$fasta_file"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: fastq-to-fasta [--help|-h] --source-dir="." --target-dir="."
+
+Convert FASTQ files to FASTA format.
+
+required arguments, with defaults:
+    --source-dir
+        Source directory, containing decompressed FASTQ files.
+        Requiring that files contain 'FASTQ' extension, not 'FQ'.
+        Defaults to '${source_dir}'.
+    --target-dir
+        Target directory, returning FASTA files.
+        Defaults to '${target_dir}'.
+
+details:
+    Processing steps:
+    1. paste converts the input FASTQ into a 4-column file.
+    2. cut command extracts out just column 1 (the ID) and column 2 (the
+       sequence).
+    3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">".
+    4. tr conversts the 2 columns back into 2 lines.
+
+see also:
+    - seqtk
+    - bioawk
+    - https://twitter.com/aaronquinlan/status/1174080730923589633
+    - https://twitter.com/torstenseemann/status/1174300653184847872
+    - http://thegenomefactory.blogspot.com/2012/05/
+          cool-use-of-unix-paste-with-ngs.html
+
+note:
+    Bash script.
+    Updated 2019-09-19.
+
+examples:
+    fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+for i in "$@"
+do
+    case "$i" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --source-dir=*)
+            source_dir="${i#*=}"
+            shift
+            ;;
+        --target-dir=*)
+            target_dir="${i#*=}"
+            shift
+            ;;
+        *)
+            # Invalid argument.
+            >&2 printf "Error: Invalid arg: '%s'\n" "$i"
+            exit 1
+            ;;
+    esac
+done
+
+# Handle trailing directory '/' automatically.
+source_dir="${source_dir//\//}"
+target_dir="${target_dir//\//}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# FIXME Handle compression automatically.
+
+# Put unique samples into an array and loop.
+array=()
+while IFS=  read -r -d $'\0'; do
+    array+=("$REPLY")
+done < <(find "$source_dir" -maxdepth 1 -name "*.fastq" -print0)
+
+# Error if file array is empty.
+if [[ "${#array[@]}" -eq 0 ]]
+then
+    >&2 printf "Error: No FASTQ files detected.\n"
+    exit 1
+fi
+
+# Create the target directory automatically.
+mkdir -p "$target_dir"
+
+for i in "${array[@]}"
+do
+    fastq="$1"
+    fasta="${fastq_file//fastq/fasta}"
+    paste - - - - < "$fastq" | \
+        cut -f 1,2 | \
+        sed 's/^@/>/' | \
+        tr "\t" "\n" > \
+        "$fasta"
+done
