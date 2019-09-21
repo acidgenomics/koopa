@@ -4,11 +4,44 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Pool lane-split FASTQ files.
-# Updated 2019-06-23.
+# Set the file name stem.
+name="${1:-lanepool}"
 
-# Set the file stem.
-filestem="${1:-lanepool}"
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: fastq-lanepool [--help|-h] [--source_dir="."] [--target_dir="."]
+    [--name="${name}"]
+
+Pool (concatenate) lane-split FASTQ files.
+
+required arguments, with defaults:
+    --source-dir
+        Source lane-split FASTQ directory path.
+        Defaults to current working directory.
+    --target-dir
+        Target concatenated FASTQ director path.
+        Defaults to current working directory.
+    --name
+        Name prefix for concatenated FASTQ files.
+
+details:
+    Matches against '*_L00[1-4]_R[1-4]_001.fastq.gz' pattern internally.
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+EOF
+}
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # Exit if lanesplit replicates (L001-4) don't exist.
 if [[ -z "$(find . -maxdepth 1 -name '*_L00[1-4]_*.fastq.gz' -print -quit)" ]]
