@@ -25,6 +25,8 @@ required arguments:
         '--mirror' flag.
 
 optional arguments:
+    --help, -h
+        Show this help message and exit.
     --dir
         Remote directory path. Note that this script always mirrors to the
         current working directory path on the local machine.
