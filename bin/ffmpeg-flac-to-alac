@@ -4,13 +4,58 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Use ffmpeg to transcode FLAC to ALAC (Apple Lossless).
-# Updated 2019-07-28.
 
-# See also:
-# - https://stackoverflow.com/questions/55429909
-# - https://ffmpeg.zeranoe.com/forum/viewtopic.php?f=5&t=5955
-# - https://unix.stackexchange.com/questions/415477
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: ffmpeg-flac-to-alac [--help|-h]
+
+Transcode FLAC files to ALAC (Apple Lossless).
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Looks for FLAC files in current working directory and transcodes to FLAC.
+    Calls ffmpeg internally.
+
+note:
+    Bash script.
+    Updated 2019-09-21.
+
+see also:
+    - https://stackoverflow.com/questions/55429909
+    - https://ffmpeg.zeranoe.com/forum/viewtopic.php?f=5&t=5955
+    - https://unix.stackexchange.com/questions/415477
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed ffmpeg
 

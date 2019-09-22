@@ -5,24 +5,61 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Genome versions.
-# Updated 2019-09-20.
 
-ensembl="$(ensembl-release-version)"
-refseq="$(refseq-release-version)"
-wormbase="$(wormbase-release-version)"
 
-gencode="$(gencode-release-version)"
-gencode="$(echo "$gencode" | sed 's/^/  - /')"
+# Usage                                                                     {{{1
+# ==============================================================================
 
-flybase="$(flybase-release-version)"
-flybase="$(echo "$flybase" | sed 's/^/  - /')"
+usage() {
+cat << EOF
+genome-versions [--help|-h]
+
+Genome versions.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-09-22.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+ensembl="$(ensembl-version)"
+gencode="$(gencode-version | sed 's/^/  - /')"
+refseq="$(refseq-version)"
+flybase="$(flybase-version | sed 's/^/  - /')"
+wormbase="$(wormbase-version)"
 
 cat << EOF
 Ensembl: ${ensembl}
-RefSeq: ${refseq}
 GENCODE:
 ${gencode}
+RefSeq: ${refseq}
 FlyBase:
 ${flybase}
 WormBase: ${wormbase}
