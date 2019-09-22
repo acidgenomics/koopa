@@ -119,6 +119,18 @@ _koopa_assert_is_dir() {
 
 
 
+# Updated 2019-09-22.
+_koopa_assert_is_dir_or_file() {
+    if [ ! -d "$1" ] || [ -f "$1" ]
+    then
+        >&2 printf "Error: Not a directory or file: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
 # Updated 2019-09-12.
 _koopa_assert_is_file() {
     if [ ! -f "$1" ]
