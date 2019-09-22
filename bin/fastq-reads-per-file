@@ -4,8 +4,56 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Get the number of reads per FASTQ file.
-# Updated 2019-06-23.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage fastq-reads-per-file [--help|-h] [DIR="${dir}"]
+
+Get the number of reads per FASTQ file.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Calculates the raw read count using the R1 file.
+
+note:
+    Updated 2019-09-21.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+dir="${1:-.}"
+dir="${dir//\//}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # Divide by 4.
-zcat ./*_R1.fastq.gz | wc -l | awk '{print $1/4}'
+zcat "${dir}/"*"_R1.fastq.gz" | \
+    wc -l | \
+    awk '{print $1/4}'

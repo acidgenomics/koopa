@@ -11,21 +11,23 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: ffmpeg-alac-to-flac [--help|-h]
+usage: gencode-version [--help|-h]
 
-Transcode ALAC (Apple Lossless) files to FLAC.
+GENCODE release version.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
 
 details:
-    Looks for M4A files in current working directory and transcodes to FLAC.
-    Calls ffmpeg internally.
+    Extract the GENCODE release version from the website.
+
+    Note that the FTP server can list releases that are in development ahead of
+    the public release listed on the website, so scrape the HTML instead.
 
 note:
     Bash script.
-    Updated 2019-09-21.
+    Updated 2019-09-22.
 EOF
 }
 
@@ -52,15 +54,24 @@ esac
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed ffmpeg
+_koopa_assert_is_installed wget
 
-for file in *.m4a
-do
-    ffmpeg \
-        -nostdin \
-        -i "$file" \
-        -acodec flac \
-        -c:a flac \
-        -c:v copy \
-        "${file%.*}.flac"
-done
+# Human.
+url="https://www.gencodegenes.org/human/"
+human="$( \
+    wget -q -O - "$url" | \
+    grep -Eo "Release [0-9]+" | \
+    head -n 1 | \
+    cut -d ' ' -f 2 \
+)"
+printf "human: %s\n" "$human"
+
+# Mouse.
+url="https://www.gencodegenes.org/mouse/"
+mouse="$( \
+    wget -q -O - "$url" | \
+    grep -Eo "Release M[0-9]+" | \
+    head -n 1 | \
+    cut -d ' ' -f 2 \
+)"
+printf "mouse: %s\n" "$mouse"

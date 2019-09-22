@@ -4,8 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-url="ftp.ensembl.org/pub/current_README"
-
 
 
 # Usage                                                                     {{{1
@@ -13,23 +11,25 @@ url="ftp.ensembl.org/pub/current_README"
 
 usage() {
 cat << EOF
-usage: ensembl-release-version [--help|-h]
+usage find-broken-symlinks [--help|-h] dir="."
 
-Ensembl release version.
+Find broken symlinks.
+
+required positional arguments:
+    1.  Directory path.
+        Defaults to current working directory.
 
 details:
-    Extract the Ensembl release version from ftp.ensembl.org.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
-
-see also:
-    ${url}
+    Searches recursively inside of specified directory, with no depth limit.
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-08-29.
+    
+examples:
+    touch a
+    ln -s a b
+    ln -s z c
 EOF
 }
 
@@ -39,24 +39,23 @@ EOF
 # ==============================================================================
 
 case "${1:-}" in
-    "")
-        ;;
     --help|-h)
         usage
         exit
         ;;
-    *)
-        >&2 printf "Error: Unsupported arg: '%s'\n" "$1"
-        exit 1
-        ;;
 esac
+
+dir="${1:-.}"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed wget
-wget -q -O - "$url" | \
-    sed -n 3p | \
-    cut -d ' ' -f 3
+if _koopa_is_darwin
+then
+    find "$dir" -type l -print0  | xargs -0 file | grep broken
+elif _koopa_is_linux
+then
+    find "$dir" -xtype l
+fi

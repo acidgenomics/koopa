@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+url="ftp.ensembl.org/pub/current_README"
+
 
 
 # Usage                                                                     {{{1
@@ -11,21 +13,23 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: ffmpeg-alac-to-flac [--help|-h]
+usage: ensembl-release-version [--help|-h]
 
-Transcode ALAC (Apple Lossless) files to FLAC.
+Ensembl release version.
+
+details:
+    Extract the Ensembl release version from ftp.ensembl.org.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
 
-details:
-    Looks for M4A files in current working directory and transcodes to FLAC.
-    Calls ffmpeg internally.
+see also:
+    ${url}
 
 note:
     Bash script.
-    Updated 2019-09-21.
+    Updated 2019-09-20.
 EOF
 }
 
@@ -52,15 +56,7 @@ esac
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed ffmpeg
-
-for file in *.m4a
-do
-    ffmpeg \
-        -nostdin \
-        -i "$file" \
-        -acodec flac \
-        -c:a flac \
-        -c:v copy \
-        "${file%.*}.flac"
-done
+_koopa_assert_is_installed wget
+wget -q -O - "$url" | \
+    sed -n 3p | \
+    cut -d ' ' -f 3

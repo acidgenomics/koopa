@@ -4,10 +4,55 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Push all repositories recursively.
-# Updated 2019-06-25.
 
-git_dir="${1:-.}"
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+git-push-recursive [--help|-h] [dir="."]
+
+Push all repositories recursively.
+
+optional positional arguments:
+    1.  Directory path.
+        Defaults to current working directory.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-06-25.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+dir="${1:-.}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # SC2044: For loops over find output are fragile.
 # Using `-L` flag here in case git dir is a symlink.
@@ -19,6 +64,4 @@ do
         pwd
         git push
     )
-done <   <(find -L "$git_dir" -maxdepth 2 -type d -name ".git" -print0)
-
-unset -v git_dir
+done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)
