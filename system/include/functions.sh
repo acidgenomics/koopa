@@ -1,12 +1,10 @@
 #!/bin/sh
 
 # Include POSIX functions.
-# Updated 2019-07-09.
-
-
+# Updated 2019-09-22.
 
 # Use shell globbing instead of `find`, which doesn't support source.
-for file in "${KOOPA_HOME}/system/include/functions/"*".sh"
+for file in "${KOOPA_HOME}/shell/posix/functions/"*".sh"
 do
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
