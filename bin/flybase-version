@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+url="ftp://ftp.flybase.net/releases/"
+
 
 
 # Usage                                                                     {{{1
@@ -11,21 +13,23 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: ffmpeg-alac-to-flac [--help|-h]
+usage: flybase-version [--help|-h]
 
-Transcode ALAC (Apple Lossless) files to FLAC.
+FlyBase release version.
+
+details:
+    Extract the FlyBase release version from ftp.flybase.net.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
 
-details:
-    Looks for M4A files in current working directory and transcodes to FLAC.
-    Calls ffmpeg internally.
+see also:
+    ${url}
 
 note:
     Bash script.
-    Updated 2019-09-21.
+    Updated 2019-09-20.
 EOF
 }
 
@@ -52,15 +56,18 @@ esac
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed ffmpeg
+_koopa_assert_is_installed curl
 
-for file in *.m4a
-do
-    ffmpeg \
-        -nostdin \
-        -i "$file" \
-        -acodec flac \
-        -c:a flac \
-        -c:v copy \
-        "${file%.*}.flac"
-done
+release_date="$( \
+    curl --list-only --silent "$url" | \
+    grep -E "^FB[0-9]{4}_[0-9]{2}$" | \
+    sort | \
+    tail -n 1 \
+)"
+printf "date: %s\n" "$release_date"
+
+release_version="$( \
+    curl --list-only --silent "${url}current/" | \
+    grep -E "^dmel_r[.0-9]+$" \
+)"
+printf "version: %s\n" "$release_version"

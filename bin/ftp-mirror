@@ -4,23 +4,16 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Recursively download (mirror) over FTP using wget.
-# Updated 2019-07-30.
-
-# For secure transfers, just use rsync or scp instead.
-
-_koopa_assert_is_installed wget
-
 
 
 # Usage                                                                     {{{1
 # ==============================================================================
 
-# FIXME Rework to use "=" on long flags here.
-
 usage() {
     cat << EOF
-usage: ftp-mirror [-h] --host "HOSTNAME" --user "USERNAME" [--dir "REMOTE DIR"]
+usage: ftp-mirror [--help|-h] --host="HOST" --user="USER" [--dir="DIR"]
+
+Recursively download (mirror) over FTP using wget.
 
 required arguments:
     --host
@@ -32,44 +25,52 @@ required arguments:
         '--mirror' flag.
 
 optional arguments:
+    --help, -h
+        Show this help message and exit.
     --dir
         Remote directory path. Note that this script always mirrors to the
         current working directory path on the local machine.
+
+details:
+    For secure transfers, just use rsync or scp instead.
+
+note:
+    Bash script.
+    Updated 2019-07-30.
 EOF
 }
+
+[[ -z "$*" ]] && usage && exit 0
 
 
 
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
-while (("$#"))
+dir=""
+
+for i in "$@"
 do
-    case "$1" in
-        -h|--help)
+    case "$i" in
+        --help|-h)
             usage
             exit 0
             ;;
-        --host)
-            host="$2"
-            shift 2
-            ;;
-        --user)
-            user="$2"
-            shift 2
-            ;;
-        --)
-            # End argument parsing.
+        --dir=*)
+            dir="${i#*=}"
             shift
-            break
             ;;
-        --*|-*)
-            # Unsupported flags.
-            >&2 printf "Error: Invalid flag '%s'\n" "$1"
-            exit 1
+        --host=*)
+            host="${i#*=}"
+            shift
+            ;;
+        --user=*)
+            user="${i#*=}"
+            shift
             ;;
         *)
-            shift
+            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            exit 1
             ;;
     esac
 done
@@ -77,17 +78,16 @@ done
 if [[ -z "${host:-}" ]] ||
     [[ -z "${user:-}" ]]
 then
-    >&2 printf "Error: Missing required argument.\n\n"
-    usage
+    >&2 printf "Error: Missing argument.\n\n"
     exit 1
 fi
 
-unset -f usage
 
 
-
-# Run script                                                                {{{1
+# Script                                                                    {{{1
 # ==============================================================================
+
+_koopa_assert_is_installed wget
 
 if [[ -n "${dir:-}" ]]
 then
@@ -96,7 +96,4 @@ else
     path="${host}"
 fi
 
-wget \
-    --ask-password \
-    --mirror \
-    "ftp://${user}@${path}/"*
+wget --ask-password --mirror "ftp://${user}@${path}/"*
