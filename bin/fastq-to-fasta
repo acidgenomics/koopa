@@ -61,7 +61,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-19.
+    Updated 2019-09-21.
 
 examples:
     fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
@@ -105,8 +105,6 @@ target_dir="${target_dir//\//}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-# FIXME Handle compression automatically.
-
 # Put unique samples into an array and loop.
 array=()
 while IFS=  read -r -d $'\0'; do
@@ -125,11 +123,11 @@ mkdir -p "$target_dir"
 
 for i in "${array[@]}"
 do
-    fastq="$1"
-    fasta="${fastq_file//fastq/fasta}"
-    paste - - - - < "$fastq" | \
+    fastq_file="$1"
+    fasta_file="${fastq_file//fastq/fasta}"
+    paste - - - - < "$fastq_file" | \
         cut -f 1,2 | \
         sed 's/^@/>/' | \
         tr "\t" "\n" > \
-        "$fasta"
+        "$fasta_file"
 done
