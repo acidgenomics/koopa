@@ -11,7 +11,7 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: git-pull-recursive [--help|-h] [DIR="."]
+usage: git-pull-recursive [--help|-h] [dir="."]
 
 Pull all git repositories recursively.
 
@@ -47,7 +47,7 @@ case "${1:-}" in
         ;;
 esac
 
-git_dir="${1:-.}"
+dir="${1:-.}"
 
 
 
@@ -66,4 +66,4 @@ do
         git pull --all
         git status
     )
-done <   <(find -L "$git_dir" -maxdepth 2 -type d -name ".git" -print0)
+done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)
