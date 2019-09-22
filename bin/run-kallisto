@@ -139,7 +139,6 @@ do
             shift
             ;;
         *)
-            # Invalid argument.
             >&2 printf "Error: Invalid argument: '%s'\n" "$i"
             exit 1
             ;;

@@ -62,20 +62,18 @@ EOF
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
-# Using flags and positional arguments.
-# https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
-
-# FIXME Rework PARAM handling consistency here.
-
-PARAMS=""
-
 config=0
 force=0
 private=0
 
-while (("$#"))
+POSITIONAL=()
+for i in "$@"
 do
-    case "$1" in
+    case "$i" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
         --config)
             config=1
             shift 1
@@ -84,36 +82,25 @@ do
             force=1
             shift 1
             ;;
-        -h|--help)
-            usage
-            exit 0
-            ;;
         --private)
             private=1
             shift 1
             ;;
         --)
-            # End argument parsing.
-            shift
+            shift 1
             break
             ;;
         --*|-*)
-            # Unsupported flags.
-            >&2 printf "Error: Invalid flag %s\n" "$1"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
             exit 1
             ;;
         *)
-            # Preserve positional arguments.
-            PARAMS="${PARAMS} ${1}"
-            shift
+            POSITIONAL+=("$i")
+            shift 1
             ;;
     esac
 done
-
-# Set positional arguments in their proper place.
-eval set -- "$PARAMS"
-
-unset -f usage
+set -- "${POSITIONAL[@]}"
 
 source_name="$1"
 symlink_name="${2:-}"
@@ -139,26 +126,15 @@ if [[ "$private" -eq 1 ]]
 then
     dot_dir="${dot_dir}-private"
 fi
+_koopa_assert_is_dir "$dot_dir"
 
-# Error if the dotfiles directory can't be found.
-if [[ ! -d "$dot_dir" ]]
-then
-    >&2 printf "Error: Directory missing: '%s'.\n" "$dot_dir"
-    exit 1
-fi
-
-# Error if the source file can't be found.
 if [[ "$config" -eq 1 ]]
 then
     source_path="${dot_dir}/config/${source_name}"
 else
     source_path="${dot_dir}/${source_name}"
 fi
-if [[ ! -f "$source_path" && ! -d "$source_path" ]]
-then
-    >&2 printf "Error: Source file missing: '%s'.\n" "$source_path"
-    exit 1
-fi
+_koopa_assert_is_dir_or_file "$source_path"
 
 # Define optional target symlink name.
 if [[ -z "$symlink_name" ]]

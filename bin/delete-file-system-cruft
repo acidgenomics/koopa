@@ -15,11 +15,6 @@ usage: delete-file-system-cruft [--help|-h] [DIR]
 
 Delete file system cruft.
 
-details:
-    Recursively deletes these invisible files:
-    - .DS_Store
-    - Thumbs.db*
-
 optional positional arguments:
     1.  Directory path.
         Defaults to '.'.
@@ -27,6 +22,11 @@ optional positional arguments:
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+details:
+    Recursively deletes these invisible files:
+    - .DS_Store
+    - Thumbs.db*
 
 note:
     Bash script.

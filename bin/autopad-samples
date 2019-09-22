@@ -4,6 +4,14 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+prefix="sample"
+padwidth=2
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
 # See also:
 # - How to use `BASH_REMATCH`.
 #   https://unix.stackexchange.com/questions/349686
@@ -18,9 +26,6 @@ source "$(koopa header bash)"
 #   https://techblog.jeppson.org/2016/08/add-prefix-filenames-bash/
 #   rename 's/\d+/sprintf("%03d", $&)/e' *.fastq.gz
 
-prefix="sample"
-padwidth=2
-
 
 
 # Usage                                                                     {{{1
@@ -32,17 +37,6 @@ usage: autopad-samples [--help|-h] [--prefix="$prefix"] [--padwidth=$padwidth]
     FILE ...
 
 Autopad sample file names that begin with a number.
-
-details:
-    Intended for quick sanitization of FASTQ files from a sequencing vendor that
-    begin with numbers and aren't zero padded.
-
-    Autopadding file names with leading zeros helps avoided unexpected
-    downstream sorting issues due to differences in how shell environments and
-    programming languages handle natural sorting.
-
-    Here we are also renaming with a character string prefix by default, to
-    avoid valid name issues in R. See 'make.names()' for details.
 
 required positional arguments:
     1.  File names.
@@ -61,6 +55,17 @@ required arguments, with defaults:
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+details:
+    Intended for quick sanitization of FASTQ files from a sequencing vendor that
+    begin with numbers and aren't zero padded.
+
+    Autopadding file names with leading zeros helps avoided unexpected
+    downstream sorting issues due to differences in how shell environments and
+    programming languages handle natural sorting.
+
+    Here we are also renaming with a character string prefix by default, to
+    avoid valid name issues in R. See 'make.names()' for details.
 
 note:
     Bash script.
@@ -97,7 +102,6 @@ EOF
 # ==============================================================================
 
 POSITIONAL=()
-
 for i in "$@"
 do
     case "$i" in
@@ -114,26 +118,20 @@ do
             shift 1
             ;;
         --)
-            # End argument parsing.
             shift 1
             break
             ;;
         --*|-*)
-            # Invalid argument.
-            >&2 printf "Error: Invalid arg: '%s'\n" "$i"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
             exit 1
             ;;
         *)
-            # Preserve positional arguments.
             POSITIONAL+=("$i")
             shift 1
             ;;
     esac
 done
-
-# Set positional arguments in their proper place.
 set -- "${POSITIONAL[@]}"
-
 files=("$@")
 
 
