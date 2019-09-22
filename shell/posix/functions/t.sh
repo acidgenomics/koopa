@@ -61,3 +61,21 @@ _koopa_today_bucket() {
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
 }
 
+
+
+# Trim leading and trailing white-space from string.
+#
+# This is an alternative to sed, awk, perl and other tools. The function below
+# works by finding all leading and trailing white-space and removing it from the
+# start and end of the string.
+#
+# Usage: _koopa_trim_ws "   example   string    "
+#
+# Example: _koopa_trim_ws "    Hello,  World    "
+#
+# Updated 2019-09-22.
+_koopa_trim_ws() {
+    trim="${1#${1%%[![:space:]]*}}"
+    trim="${trim%${trim##*[![:space:]]}}"
+    printf '%s\n' "$trim"
+}
