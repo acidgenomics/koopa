@@ -4,9 +4,56 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Update and commit submodules.
-# Updated 2019-06-25.
 
-git submodule update --remote --merge
-git commit -m "Update submodules."
-git push
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: git-push-submodules [--help|-h] [dir="."]
+
+Update and commit submodules.
+
+optional positional arguments:
+    1.  Directory path.
+        Defaults to current working directory.
+
+note:
+    Bash script.
+    Updated 2019-06-25.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+dir="${1:-.}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+(
+    cd "$dir" || exit 1
+    git submodule update --remote --merge
+    git commit -m "Update submodules."
+    git push
+)
+
