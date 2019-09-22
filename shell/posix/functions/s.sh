@@ -30,3 +30,29 @@ EOF
     
     echo "$shell"
 }
+
+
+
+# Strip pattern from left side (start) of string.
+#
+# Usage: _koopa_lstrip "string" "pattern"
+#
+# Example: _koopa_lstrip "The Quick Brown Fox" "The "
+#
+# Updated 2019-09-22.
+_koopa_strip_left() {
+    printf '%s\n' "${1##$2}"
+}
+
+
+
+# Strip pattern from right side (end) of string.
+#
+# Usage: _koopa_rstrip "string" "pattern"
+#
+# Example: _koopa_rstrip "The Quick Brown Fox" " Fox"
+#
+# Updated 2019-09-22.
+_koopa_strip_right() {
+    printf '%s\n' "${1%%$2}"
+}
