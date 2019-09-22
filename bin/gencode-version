@@ -11,6 +11,7 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
+usage: gencode-version [--help|-h]
 
 GENCODE release version.
 
