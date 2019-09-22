@@ -11,7 +11,7 @@ source "$(koopa header bash)"
 
 usage() {
     cat << EOF
-usage: ftp-mirror [-h] --host="HOST" --user="USER" [--dir="DIR"]
+usage: ftp-mirror [--help|-h] --host="HOST" --user="USER" [--dir="DIR"]
 
 Recursively download (mirror) over FTP using wget.
 
@@ -38,10 +38,14 @@ note:
 EOF
 }
 
+[[ -z "$*" ]] && usage && exit 0
+
 
 
 # Parse arguments                                                           {{{1
 # ==============================================================================
+
+dir=""
 
 for i in "$@"
 do
@@ -49,6 +53,10 @@ do
         --help|-h)
             usage
             exit 0
+            ;;
+        --dir=*)
+            dir="${i#*=}"
+            shift
             ;;
         --host=*)
             host="${i#*=}"
@@ -58,18 +66,9 @@ do
             user="${i#*=}"
             shift
             ;;
-        --)
-            # End argument parsing.
-            shift
-            break
-            ;;
-        --*|-*)
-            # Invalid argument.
+        *)
             >&2 printf "Error: Invalid argument: '%s'\n" "$i"
             exit 1
-            ;;
-        *)
-            shift
             ;;
     esac
 done
@@ -78,7 +77,6 @@ if [[ -z "${host:-}" ]] ||
     [[ -z "${user:-}" ]]
 then
     >&2 printf "Error: Missing argument.\n\n"
-    usage
     exit 1
 fi
 
