@@ -4,7 +4,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-url="http://bioconductor.org/bioc-version"
+url="ftp://ftp.flybase.net/releases/"
 
 
 
@@ -13,12 +13,12 @@ url="http://bioconductor.org/bioc-version"
 
 usage() {
 cat << EOF
-usage: bioc-version [--help|-h]
+usage: flybase-version [--help|-h]
 
-Bioconductor version.
+FlyBase release version.
 
 details:
-    Extract the Bioconductor release version from bioconductor.org.
+    Extract the FlyBase release version from ftp.flybase.net.
 
 optional arguments:
     --help, -h
@@ -56,6 +56,18 @@ esac
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed wget
+_koopa_assert_is_installed curl
 
-wget -q -O - "$url"
+release_date="$( \
+    curl --list-only --silent "$url" | \
+    grep -E "^FB[0-9]{4}_[0-9]{2}$" | \
+    sort | \
+    tail -n 1 \
+)"
+printf "date: %s\n" "$release_date"
+
+release_version="$( \
+    curl --list-only --silent "${url}current/" | \
+    grep -E "^dmel_r[.0-9]+$" \
+)"
+printf "version: %s\n" "$release_version"
