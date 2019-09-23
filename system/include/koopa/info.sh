@@ -4,7 +4,7 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Show koopa installation information.
-# Updated 2019-08-19.
+# Updated 2019-09-23.
 
 shell="$KOOPA_SHELL"
 shell="${shell} $(_koopa_"${shell}"_version)"
@@ -32,3 +32,9 @@ array=(
 
 cat "${KOOPA_HOME}/system/include/koopa/ascii-turtle.txt"
 _koopa_info_box "${array[@]}"
+
+# Show neofetch info, if installed.
+if _koopa_is_installed neofetch
+then
+    neofetch
+fi
