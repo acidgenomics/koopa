@@ -4,23 +4,56 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Doom Emacs.
-# Updated 2019-09-20.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-doom-emacs [--help|-h]
+
+Install Doom Emacs.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Updated 2019-09-20.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 name="doom"
 repo="https://github.com/hlissner/doom-emacs"
-
 emacs_home="${HOME}/.emacs.d"
 install_dir="${emacs_home}-${name}"
 exe_file="${install_dir}/bin/doom"
 
-# FIXME Switch to assert
-if [[ -d "$install_dir" ]]
-then
-    >&2 printf "Error: Directory exists: '%s'.\n" "$install_dir"
-    exit 1
-fi
-
+_koopa_assert_is_not_dir "$install_dir"
 git clone "$repo" "$install_dir"
 link-emacs "$name"
 
