@@ -1,0 +1,29 @@
+# Install rmate
+# Updated 2019-06-24.
+
+# For use with Remote VSCode extension.
+
+# See also:
+# - https://medium.com/@prtdomingo/editing-files-in-your-linux-virtual-machine-made-a-lot-easier-with-remote-vscode-6bb98d0639a4
+
+name="rmate"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+exe_file="${prefix}/bin/${name}"
+
+(
+    rm -rf "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    wget "https://github.com/aurora/rmate/archive/v${version}.tar.gz"
+    tar -xzvf "v${version}.tar.gz"
+    cd "rmate-${version}" || exit 1
+    chmod a+x rmate
+    cp rmate "${prefix}/bin"
+)
+
+_koopa_link_cellar "$name" "$version"
+
+command -v "$exe_file"
+"$exe_file" --version
