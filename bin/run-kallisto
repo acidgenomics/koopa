@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+# FIXME Harden, allow user to pass flags here.
+
 # Run kallisto.
 # Updated 2019-09-12.
 
