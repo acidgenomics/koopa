@@ -28,8 +28,6 @@ array=(
     "Config: $(_koopa_config_dir)"
     "Prefix: $(_koopa_build_prefix)"
     ""
-    "System information"
-    "------------------"
 )
 
 # Show neofetch info, if installed.
@@ -37,10 +35,14 @@ if _koopa_is_installed neofetch
 then
     mapfile -t nf < <( neofetch --stdout )
     array+=(
+        "System information (neofetch)"
+        "-----------------------------"
         "${nf[@]:2}"
     )
 else
     array+=(
+        "System information"
+        "------------------"
         "OS: ${os}"
         "Shell: ${shell}"
         ""
