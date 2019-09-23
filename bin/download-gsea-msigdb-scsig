@@ -18,6 +18,10 @@ usage download-gsea-msigdb-scsig [--help|-h]
 
 Download GSEA MSigDb SCSig v${version} signature files.
 
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
 details:
     Downloads to the current working directory.
 
@@ -32,23 +36,7 @@ note:
 EOF
 }
 
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported arg: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
+_koopa_help "$@"
 
 
 

@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+dir="."
+
 
 
 # Usage                                                                     {{{1
@@ -11,13 +13,13 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage find-broken-symlinks [--help|-h] dir="."
+usage find-broken-symlinks [--help|-h] [dir="${dir}"]
 
 Find broken symlinks.
 
-required positional arguments:
+optional positional arguments:
     1.  Directory path.
-        Defaults to current working directory.
+        Defaults to '${dir}'.
 
 details:
     Searches recursively inside of specified directory, with no depth limit.
@@ -33,19 +35,14 @@ examples:
 EOF
 }
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
 
-case "${1:-}" in
-    --help|-h)
-        usage
-        exit
-        ;;
-esac
-
-dir="${1:-.}"
+dir="${1:-$dir}"
 
 
 

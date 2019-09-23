@@ -59,17 +59,12 @@ EOF
 
 [[ -z "${1:-}" ]] && usage && exit 0
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
-
-case "$1" in
-    --help|-h)
-        usage
-        exit
-        ;;
-esac
 
 source_dir="$1"
 target_dir="$2"

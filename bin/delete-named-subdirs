@@ -38,17 +38,12 @@ examples:
 EOF
 }
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
-
-case "${1:-}" in
-    --help|-h)
-        usage
-        exit
-        ;;
-esac
 
 path="$1"
 subdir_name="$2"
