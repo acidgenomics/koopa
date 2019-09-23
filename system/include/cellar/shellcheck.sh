@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
 usage() {
 cat << EOF
 usage: install-cellar-shellcheck [--help|-h]
@@ -19,32 +14,11 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-06-25.
+    Updated 2019-09-23.
 EOF
 }
 
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_help "$@"
 
 name="shellcheck"
 version="$(_koopa_variable "$name")"

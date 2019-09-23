@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
 usage() {
 cat << EOF
 usage: install-cellar-genrich [--help|-h]
@@ -20,30 +15,7 @@ note:
 EOF
 }
 
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-_koopa_assert_has_no_environments
+_koopa_help "$@"
 
 name="genrich"
 version="$(_koopa_variable "$name")"

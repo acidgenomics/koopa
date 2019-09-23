@@ -1,22 +1,34 @@
 #!/usr/bin/env bash
 
-# Install Git SCM.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-git [--help|-h]
 
-# The compilation settings here are from the Git SCM book website.
-# Refer also to INSTALL file for details.
+Install Git SCM.
 
-# This currently fails if OpenSSL v1.1.1+ is installed to `/usr/local`.
-# Instead, compile Git to use the system OpenSSL in `/bin/`.
+details:
+    The compilation settings here are from the Git SCM book website.
+    Refer also to INSTALL file for details.
 
-# See also:
-# - https://git-scm.com/
-# - https://github.com/git/git
-# - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-# - https://github.com/git/git/blob/master/INSTALL
-# - https://github.com/progit/progit2/blob/master/book/01-introduction/sections/installing.asc
+    This currently fails if OpenSSL v1.1.1+ is installed to '/usr/local'.
+    Instead, compile Git to use the system OpenSSL in '/bin/'.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://git-scm.com/
+    - https://github.com/git/git
+    - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+    - https://github.com/git/git/blob/master/INSTALL
+    - https://github.com/progit/progit2/blob/master/book/01-introduction/
+          sections/installing.asc
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
+
 _koopa_assert_is_installed docbook2x-texi
 
 name="git"
