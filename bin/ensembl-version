@@ -40,7 +40,6 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed wget
 wget -q -O - "$url" | \
     sed -n 3p | \
     cut -d ' ' -f 3

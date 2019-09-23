@@ -89,7 +89,7 @@ fi
 
 _koopa_assert_is_installed wget
 
-if [[ -n "${dir:-}" ]]
+if [[ -n "$dir" ]]
 then
     path="${host}/${dir}"
 else
