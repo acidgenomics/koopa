@@ -14,43 +14,34 @@ details:
 
 note:
     Python script.
-    Updated 2019-09-20.
+    Updated 2019-09-23.
 """
 
-parser = argparse.ArgumentParser( \
-    description = description, \
-    epilog = epilog, \
-    formatter_class = RawTextHelpFormatter
+parser = argparse.ArgumentParser(
+    description=description, epilog=epilog, formatter_class=RawTextHelpFormatter
 )
 optional = parser._action_groups.pop()
-required = parser.add_argument_group('required arguments')
-required.add_argument( \
-    "--organism", \
-    required=True, \
-    type=str, \
-    help="latin name (e.g. \"Homo sapiens\")" \
+required = parser.add_argument_group("required arguments")
+required.add_argument(
+    "--organism",
+    required=True,
+    type=str,
+    help='latin name (e.g. "Homo sapiens")',
 )
-required.add_argument( \
-    "--type", \
-    required=True, \
-    choices=['dna', 'cdna'], \
-    help="\"dna\" (genome) or \"cdna\" (transcriptome)" \
+required.add_argument(
+    "--type",
+    required=True,
+    choices=["dna", "cdna"],
+    help='"dna" (genome) or "cdna" (transcriptome)',
 )
-required.add_argument( \
-    "--build", \
-    required=True, \
-    type=str, \
-    help="genome build (e.g. \"GRCh38\")" \
+required.add_argument(
+    "--build", required=True, type=str, help='genome build (e.g. "GRCh38")'
 )
-optional.add_argument( \
-    "--release", \
-    type=int, \
-    help="release version (e.g. \"96\")" \
-)
-optional.add_argument( \
-    "--decompress", \
-    action='store_true', \
-    help="decompress (but keep) the original file" \
+optional.add_argument("--release", type=int, help='release version (e.g. "96")')
+optional.add_argument(
+    "--decompress",
+    action="store_true",
+    help="decompress (but keep) the original file",
 )
 parser._action_groups.append(optional)
 # Show help when no arguments are declared.
@@ -68,10 +59,10 @@ type = args.type
 
 # Set the release automatically, if necessary.
 if release is None:
-    release = subprocess.check_output( \
-        "koopa variable ensembl_release_version", \
-        shell=True, \
-        universal_newlines=True \
+    release = subprocess.check_output(
+        "koopa variable ensembl_release_version",
+        shell=True,
+        universal_newlines=True,
     )
     release = release.rstrip()
 
@@ -85,11 +76,27 @@ base_url = base_url + "/release-" + release + "/fasta"
 
 # Get the file path of either genome or transcriptome FASTA.
 if type == "dna":
-    url = base_url + "/" + organism.lower() + "/dna/" + \
-        organism + "." + build + ".dna.primary_assembly.fa.gz"
+    url = (
+        base_url
+        + "/"
+        + organism.lower()
+        + "/dna/"
+        + organism
+        + "."
+        + build
+        + ".dna.primary_assembly.fa.gz"
+    )
 elif type == "cdna":
-    url = base_url + "/" + organism.lower() + "/cdna/" + \
-        organism + "." + build + ".cdna.all.fa.gz"
+    url = (
+        base_url
+        + "/"
+        + organism.lower()
+        + "/cdna/"
+        + organism
+        + "."
+        + build
+        + ".cdna.all.fa.gz"
+    )
 file = os.path.basename(url)
 
 # Error if the file exists.
