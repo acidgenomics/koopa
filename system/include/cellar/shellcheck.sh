@@ -29,12 +29,13 @@ exe_file="${prefix}/bin/${name}"
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
-    rm -fr "$tmp_dir"
+    rm -frv "$prefix"
+    rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     url="https://storage.googleapis.com/shellcheck/shellcheck-v${version}.linux.x86_64.tar.xz"
     wget -qO- "$url" | tar -xJv
-    mkdir -p "${prefix}/bin"
+    mkdir -pv "${prefix}/bin"
     cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
     rm -fr "$tmp_dir"
 )
