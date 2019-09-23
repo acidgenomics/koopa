@@ -30,8 +30,6 @@ EOF
 
 _koopa_help "$@"
 
-_koopa_assert_has_no_environments
-
 name="neovim"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
