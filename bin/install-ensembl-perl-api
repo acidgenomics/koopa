@@ -4,13 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Ensembl API.
-# Updated 2019-06-23.
 
-# See also:
-# - https://useast.ensembl.org/info/docs/api/api_installation.html
-# - https://useast.ensembl.org/info/docs/api/api_git.html
-# - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-ensembl-api [--help|-h]
+
+Install Ensembl Perl API.
+
+see also:
+    - https://useast.ensembl.org/info/docs/api/api_installation.html
+    - https://useast.ensembl.org/info/docs/api/api_git.html
+    - https://github.com/Ensembl/ensembl-git-tools/blob/master/README.md
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+
+EOF
+}
+
+
+
+
+
 
 prefix="$(_koopa_build_prefix)/ensembl"
 
