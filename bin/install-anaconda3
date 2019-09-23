@@ -15,6 +15,10 @@ usage: install-anaconda3 [--help|-h]
 
 Install Anaconda.
 
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
 see also:
     - https://www.anaconda.com/download
     - https://docs.anaconda.com/anaconda/install/
@@ -24,23 +28,7 @@ note:
 EOF
 }
 
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
+_koopa_help "$@"
 
 
 
