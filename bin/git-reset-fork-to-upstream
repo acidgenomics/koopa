@@ -19,12 +19,16 @@ optional positional arguments:
     1.  Directory path.
         Defaults to current working directory.
 
-note:
-    Bash script.
-    Updated 2019-06-23.
+optional arguments:
+    --help, -h
+        Show this help message and exit.
 
 see also:
     - https://stackoverflow.com/questions/42332769
+
+note:
+    Bash script.
+    Updated 2019-09-23.
 EOF
 }
 

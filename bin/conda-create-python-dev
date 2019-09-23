@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeu -
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
@@ -11,24 +11,37 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: git-status-recursive [--help|-h] [dir="."]
+usage: conda-create-internal-texlive [--help|-h]
 
-Get the status of nested git repositories recursively.
-
-optional positional arguments:
-    1.  Directory path.
-        Defaults to current working directory.
+Create Python development conda environment.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
 
 details:
-    Defaults to current working directory.
+    IDE:
+    - Jupyter Notebook
+    - Visual Studio Code
+    - Spyder
+    - PyCharm
+
+    Code formatting:
+    - black
+      https://pypi.org/project/black/
+    - flake8
+      http://flake8.pycqa.org/
+
+    Unit testing:
+    - pytest
+      http://pytest.org/
+
+see also:
+    conda env list
 
 note:
     Bash script.
-    Updated 2019-06-25.
+    Updated 2019-09-23.
 EOF
 }
 
@@ -50,21 +63,20 @@ case "${1:-}" in
         ;;
 esac
 
-dir="${1:-.}"
-
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-# SC2044: For loops over find output are fragile.
-# Using `-L` flag here in case git dir is a symlink.
-while IFS= read -r -d '' repo
-do
-    repo="$(dirname "$repo")"
-    (
-        cd "$repo" || exit 1
-        pwd
-        git status
-    )
-done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)
+_koopa_assert_is_installed conda
+
+conda create -qy \
+    --name="python-dev" \
+    black \
+    flake8 \
+    jupyter \
+    pyflakes \
+    pytest \
+    pytest-flake8 \
+    spyder
+
