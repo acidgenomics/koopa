@@ -14,29 +14,21 @@ details:
 
 note:
     Python script.
-    Updated 2019-09-20.
+    Updated 2019-09-23.
 """
 
-parser = argparse.ArgumentParser( \
-    description = description, \
-    epilog = epilog, \
-    formatter_class = RawTextHelpFormatter
+parser = argparse.ArgumentParser(
+    description=description, epilog=epilog, formatter_class=RawTextHelpFormatter
 )
 optional = parser._action_groups.pop()
-optional.add_argument( \
-    "--version", \
-    type=str, \
-    help="release version (e.g. \"6.28\")" \
+optional.add_argument(
+    "--version", type=str, help='release version (e.g. "6.28")'
 )
-optional.add_argument( \
-    "--date", \
-    type=str, \
-    help="release date (e.g. \"2019-03\")" \
-)
-optional.add_argument( \
-    "--decompress", \
-    action='store_true', \
-    help="decompress (but keep) the original file" \
+optional.add_argument("--date", type=str, help='release date (e.g. "2019-03")')
+optional.add_argument(
+    "--decompress",
+    action="store_true",
+    help="decompress (but keep) the original file",
 )
 parser._action_groups.append(optional)
 args = parser.parse_args()
@@ -48,26 +40,34 @@ version = args.version
 
 # Set the release version automatically, if necessary.
 if version is None:
-    version = subprocess.check_output( \
-        "koopa variable flybase_release_version", \
-        shell=True, \
-        universal_newlines=True \
+    version = subprocess.check_output(
+        "koopa variable flybase_release_version",
+        shell=True,
+        universal_newlines=True,
     )
     version = version.rstrip()
 version = "r" + version
 
 # Set the release date automatically, if necessary.
 if date is None:
-    date = subprocess.check_output( \
-        "koopa variable flybase_release_date", \
-        shell=True, \
-        universal_newlines=True \
+    date = subprocess.check_output(
+        "koopa variable flybase_release_date",
+        shell=True,
+        universal_newlines=True,
     )
     date = date.rstrip()
 date = "FB" + date.replace("-", "_")
 
-url = "ftp://ftp.flybase.net/releases/" + date + "/" + \
-    "dmel_" + version + "/gtf/dmel-all-" + version + ".gtf.gz"
+url = (
+    "ftp://ftp.flybase.net/releases/"
+    + date
+    + "/"
+    + "dmel_"
+    + version
+    + "/gtf/dmel-all-"
+    + version
+    + ".gtf.gz"
+)
 file = os.path.basename(url)
 
 # Error if the file exists.

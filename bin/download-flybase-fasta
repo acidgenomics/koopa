@@ -14,36 +14,28 @@ details:
 
 note:
     Python script.
-    Updated 2019-09-20.
+    Updated 2019-09-23.
 """
 
-parser = argparse.ArgumentParser( \
-    description = description, \
-    epilog = epilog, \
-    formatter_class = RawTextHelpFormatter
+parser = argparse.ArgumentParser(
+    description=description, epilog=epilog, formatter_class=RawTextHelpFormatter
 )
 optional = parser._action_groups.pop()
-required = parser.add_argument_group('required arguments')
-required.add_argument( \
-    "--type", \
-    required=True, \
-    choices=['dna', 'cdna'], \
-    help="\"dna\" (genome) or \"cdna\" (transcriptome)" \
+required = parser.add_argument_group("required arguments")
+required.add_argument(
+    "--type",
+    required=True,
+    choices=["dna", "cdna"],
+    help='"dna" (genome) or "cdna" (transcriptome)',
 )
-optional.add_argument( \
-    "--version", \
-    type=str, \
-    help="release version (e.g. \"6.28\")" \
+optional.add_argument(
+    "--version", type=str, help='release version (e.g. "6.28")'
 )
-optional.add_argument( \
-    "--date", \
-    type=str, \
-    help="release date (e.g. \"2019-03\")" \
-)
-optional.add_argument( \
-    "--decompress", \
-    action='store_true', \
-    help="decompress (but keep) the original file" \
+optional.add_argument("--date", type=str, help='release date (e.g. "2019-03")')
+optional.add_argument(
+    "--decompress",
+    action="store_true",
+    help="decompress (but keep) the original file",
 )
 parser._action_groups.append(optional)
 # Show help when no arguments are declared.
@@ -60,26 +52,27 @@ version = args.version
 
 # Set the release version automatically, if necessary.
 if version is None:
-    version = subprocess.check_output( \
-        "koopa variable flybase_release_version", \
-        shell=True, \
-        universal_newlines=True \
+    version = subprocess.check_output(
+        "koopa variable flybase_release_version",
+        shell=True,
+        universal_newlines=True,
     )
     version = version.rstrip()
 version = "r" + version
 
 # Set the release date automatically, if necessary.
 if date is None:
-    date = subprocess.check_output( \
-        "koopa variable flybase_release_date", \
-        shell=True, \
-        universal_newlines=True \
+    date = subprocess.check_output(
+        "koopa variable flybase_release_date",
+        shell=True,
+        universal_newlines=True,
     )
     date = date.rstrip()
 date = "FB" + date.replace("-", "_")
 
-base_url = "ftp://ftp.flybase.net/releases/" + \
-    date + "/dmel_" + version + "/fasta"
+base_url = (
+    "ftp://ftp.flybase.net/releases/" + date + "/dmel_" + version + "/fasta"
+)
 
 if type == "dna":
     file = "dmel-all-aligned-" + version + ".fasta.gz"
@@ -103,30 +96,24 @@ if type == "dna":
 elif type == "cdna":
     print("Downloading FlyBase FASTA files.")
     try:
-        subprocess.check_call([ \
-            "wget", \
-            base_url + "/dmel-all-transcript-" + version + ".fasta.gz" \
-        ])
-        subprocess.check_call([ \
-            "wget", \
-            base_url + "/dmel-all-miRNA-" + version + ".fasta.gz" \
-        ])
-        subprocess.check_call([ \
-            "wget", \
-            base_url + "/dmel-all-miscRNA-" + version + ".fasta.gz" \
-        ])
-        subprocess.check_call([ \
-            "wget", \
-            base_url + "/dmel-all-ncRNA-" + version + ".fasta.gz" \
-        ])
-        subprocess.check_call([ \
-            "wget", \
-            base_url + "/dmel-all-pseudogene-" + version + ".fasta.gz" \
-        ])
-        subprocess.check_call([ \
-            "wget", \
-            base_url + "/dmel-all-tRNA-" + version + ".fasta.gz" \
-        ])
+        subprocess.check_call(
+            ["wget", base_url + "/dmel-all-transcript-" + version + ".fasta.gz"]
+        )
+        subprocess.check_call(
+            ["wget", base_url + "/dmel-all-miRNA-" + version + ".fasta.gz"]
+        )
+        subprocess.check_call(
+            ["wget", base_url + "/dmel-all-miscRNA-" + version + ".fasta.gz"]
+        )
+        subprocess.check_call(
+            ["wget", base_url + "/dmel-all-ncRNA-" + version + ".fasta.gz"]
+        )
+        subprocess.check_call(
+            ["wget", base_url + "/dmel-all-pseudogene-" + version + ".fasta.gz"]
+        )
+        subprocess.check_call(
+            ["wget", base_url + "/dmel-all-tRNA-" + version + ".fasta.gz"]
+        )
     except subprocess.CalledProcessError as e:
         print(e)
         sys.exit(1)
