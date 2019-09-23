@@ -1,14 +1,22 @@
 #!/usr/bin/env bash
 
-# Install Vim.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-vim [--help|-h]
 
-# See also:
-# - https://github.com/vim/vim
+Install Vim.
 
-# Note that jedi-vim requires Python 3 support.
+details:
+    Compiling with Python 3 support.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://github.com/vim/vim
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
 
 name="vim"
 version="$(_koopa_variable "$name")"
@@ -27,7 +35,7 @@ printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -frv "$prefix"
-    rm -fr "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/vim/vim/archive/v${version}.tar.gz"

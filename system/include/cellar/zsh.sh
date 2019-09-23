@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
 
-# Install Z shell.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-zsh [--help|-h]
 
-# See also:
-# - http://www.zsh.org/
-# - http://zsh.sourceforge.net/Arc/source.html
-# - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
+Install Z shell.
 
-_koopa_assert_has_no_environments
+see also:
+    - http://www.zsh.org/
+    - http://zsh.sourceforge.net/Arc/source.html
+    - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
 
 name="zsh"
 version="$(_koopa_variable "$name")"
