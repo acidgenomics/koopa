@@ -4,12 +4,48 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Anaconda.
-# Updated 2019-06-23.
 
-# See also:
-# - https://www.anaconda.com/download
-# - https://docs.anaconda.com/anaconda/install/
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-anaconda3 [--help|-h]
+
+Install Anaconda.
+
+see also:
+    - https://www.anaconda.com/download
+    - https://docs.anaconda.com/anaconda/install/
+
+note:
+    Updated 2019-06-23.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_no_environments
 
