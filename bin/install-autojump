@@ -10,31 +10,20 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
+usage: install-autojump [--help|-h]
 
 Install autojump.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
 
 note:
     Updated 2019-09-09.
 EOF
 }
 
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
+_koopa_help "$@"
 
 
 
