@@ -20,3 +20,19 @@ _koopa_macos_version_short() {
     version="$(sw_vers -productVersion | cut -d '.' -f 1-2)"
     printf "%s %s\n" "macos" "$version"
 }
+
+
+
+# Get the major program version.
+# Updated 2019-09-23.
+_koopa_major_version() {
+    echo "$1" | cut -d '.' -f 1-2
+}
+
+
+
+# Get the minor program version.
+# Updated 2019-09-23.
+_koopa_minor_version() {
+    echo "$1" | cut -d "." -f 2-
+}
