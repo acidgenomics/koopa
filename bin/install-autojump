@@ -4,8 +4,42 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install autojump
-# Updated 2019-09-09.
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+
+Install autojump.
+
+note:
+    Updated 2019-09-09.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 name="autojump"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
