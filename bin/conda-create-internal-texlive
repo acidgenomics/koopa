@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install conda pandoc.
-# Updated 2019-09-20.
-
 
 
 # Usage                                                                     {{{1
@@ -14,13 +11,20 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: install-conda-env-pandoc [--help|-h]
+usage: conda-create-internal-texlive [--help|-h]
 
-Install pandoc conda environment.
+Create internal texlive conda environment.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
+
+details:
+    Useful environment on virtual machines running a conservative Linux release
+    (i.e. RHEL 7) that bundles a very old version of texlive.
+
+see also:
+    conda env list
 
 note:
     Bash script.
@@ -51,4 +55,9 @@ esac
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_create_conda_env pandoc
+_koopa_assert_is_installed conda
+
+name="texlive"
+prefix="$(_koopa_conda_prefix)/envs/${name}"
+
+conda create -qy --prefix="$prefix" texlive-core

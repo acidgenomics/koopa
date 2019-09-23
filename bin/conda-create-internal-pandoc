@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeu -
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
@@ -11,24 +11,24 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: git-status-recursive [--help|-h] [dir="."]
+usage: conda-create-internal-pandoc [--help|-h]
 
-Get the status of nested git repositories recursively.
-
-optional positional arguments:
-    1.  Directory path.
-        Defaults to current working directory.
+Create internal pandoc conda environment.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
 
 details:
-    Defaults to current working directory.
+    Useful environment on virtual machines running a conservative Linux release
+    (i.e. RHEL 7) that bundles a very old version of pandoc.
+
+see also:
+    conda env list
 
 note:
     Bash script.
-    Updated 2019-06-25.
+    Updated 2019-09-23.
 EOF
 }
 
@@ -50,21 +50,14 @@ case "${1:-}" in
         ;;
 esac
 
-dir="${1:-.}"
-
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-# SC2044: For loops over find output are fragile.
-# Using `-L` flag here in case git dir is a symlink.
-while IFS= read -r -d '' repo
-do
-    repo="$(dirname "$repo")"
-    (
-        cd "$repo" || exit 1
-        pwd
-        git status
-    )
-done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)
+_koopa_assert_is_installed conda
+
+name="pandoc"
+prefix="$(_koopa_conda_prefix)/envs/${name}"
+
+conda create -qy --prefix="$prefix" "$name"
