@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-09-19.
+# Updated 2019-09-23.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -138,6 +138,10 @@ alias tardown='tar -xzvf'
 # - `--no-save`
 # - `--vanilla`
 alias R='R --no-restore --no-save'
+
+# Black Python code formatter.
+# https://github.com/psf/black
+alias black="black --line-length=80"
 
 # Emacs.
 # Use terminal (console) mode by default instead of window system.

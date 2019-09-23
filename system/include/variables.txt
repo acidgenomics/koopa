@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.5.7a"
-koopa_date="2019-09-20"
+koopa_date="2019-09-23"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -29,7 +29,7 @@ clang="10.0.1"
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.7.11"
+conda="4.7.12"
 
 # https://www.gnu.org/software/coreutils/
 # https://ftp.gnu.org/gnu/coreutils/
