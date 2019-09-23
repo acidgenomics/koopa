@@ -27,23 +27,12 @@ note:
 EOF
 }
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
 
 dir="${1:-.}"
 dir="${dir//\//}"
