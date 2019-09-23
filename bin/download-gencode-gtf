@@ -27,31 +27,25 @@ details:
 
 note:
     Python script.
-    Updated 2019-09-18.
+    Updated 2019-09-23.
 """
 
-parser = argparse.ArgumentParser( \
-    description = description, \
-    epilog = epilog, \
-    formatter_class = RawTextHelpFormatter
+parser = argparse.ArgumentParser(
+    description=description, epilog=epilog, formatter_class=RawTextHelpFormatter
 )
 optional = parser._action_groups.pop()
-required = parser.add_argument_group('required arguments')
-required.add_argument( \
-    "--organism", \
-    required=True, \
-    choices=['Homo sapiens', 'Mus musculus'], \
-    help="latin name (e.g. \"Homo sapiens\")" \
+required = parser.add_argument_group("required arguments")
+required.add_argument(
+    "--organism",
+    required=True,
+    choices=["Homo sapiens", "Mus musculus"],
+    help='latin name (e.g. "Homo sapiens")',
 )
-optional.add_argument( \
-    "--release", \
-    type=str, \
-    help="release version (e.g. \"30\")" \
-)
-optional.add_argument( \
-    "--decompress", \
-    action='store_true', \
-    help="Decompress (but keep) the original file." \
+optional.add_argument("--release", type=str, help='release version (e.g. "30")')
+optional.add_argument(
+    "--decompress",
+    action="store_true",
+    help="Decompress (but keep) the original file.",
 )
 parser._action_groups.append(optional)
 # Show help when no arguments are declared.
@@ -76,14 +70,21 @@ elif organism == "Mus musculus":
 # Set the release automatically, if necessary.
 # e.g. human = 31; mouse = M22
 if release is None:
-    release = subprocess.check_output( \
-        "koopa variable gencode_" + organism_short + "_release_version", \
-        shell=True, universal_newlines=True \
+    release = subprocess.check_output(
+        "koopa variable gencode_" + organism_short + "_release_version",
+        shell=True,
+        universal_newlines=True,
     )
     release = release.rstrip()
 
-base_url = "ftp://ftp.ebi.ac.uk/pub/databases/gencode/" + \
-    "Gencode_" + organism_short + "/release_" + release + "/"
+base_url = (
+    "ftp://ftp.ebi.ac.uk/pub/databases/gencode/"
+    + "Gencode_"
+    + organism_short
+    + "/release_"
+    + release
+    + "/"
+)
 file = "gencode.v" + release + ".annotation.gtf.gz"
 url = base_url + file
 
