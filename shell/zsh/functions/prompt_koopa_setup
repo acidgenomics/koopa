@@ -15,9 +15,9 @@
 # > typeset _koopa_prompt_state
 
 # Prompt:
-# - %n     => username
-# - %m     => hostname (short)
-# - %M     => hostname (full)
+# - %n     => user name
+# - %m     => machine (host) name (up to first '.')
+# - %M     => machine (host) name (full)
 # - %~     => current path
 # - %*     => time
 # - %(?..) => prompt conditional - %(condition.true.false)
@@ -39,17 +39,19 @@ _koopa_prompt_precmd() {
 
 
 
-# FIXME Conda environment activation is messing up '%m'/'%M' flag on macOS.
+# Conda environment activation is messing up '%m'/'%M' flag on macOS.
 # This seems to be specific to Mac and doesn't happen on Linux.
 
 # Set the user string and color based on local or SSH connection.
 _koopa_prompt_state_setup() {
     local user wd
+    # > user="%n@%m"
+    user="${USER}@${HOSTNAME//.*/}"
     if [[ -n "${SSH_CONNECTION:-}" ]] 
     then
-        user='%F{$_koopa_prompt_colors[user:ssh]}%n@%m%f'
+        user="%F{$_koopa_prompt_colors[user:ssh]}${user}%f"
     else
-        user='%F{$_koopa_prompt_colors[user]}%n@%m%f'
+        user="%F{$_koopa_prompt_colors[user]}${user}%f"
     fi
     wd='%F{${_koopa_prompt_colors[path]}}%~%f'
     typeset -gA _koopa_prompt_state
