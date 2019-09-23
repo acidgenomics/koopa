@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+dir="."
+
 
 
 # Usage                                                                     {{{1
@@ -11,13 +13,13 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: git-pull-recursive [--help|-h] [dir="."]
+usage: git-pull-recursive [--help|-h] [dir="${dir}"]
 
 Pull all git repositories recursively.
 
 optional positional arguments:
     1.  Directory path.
-        Defaults to current working directory.
+        Defaults to '${dir}'.
 
 optional arguments:
     --help, -h
@@ -25,29 +27,18 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-09-23.
 EOF
 }
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
 
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
-
-dir="${1:-.}"
+dir="${1:-$dir}"
 
 
 
