@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 source "$(koopa header darwin)"
 
 # Install recommended Homebrew recipes.
-# Updated 2019-09-19.
+# Updated 2019-09-23.
 
 _koopa_assert_is_installed brew
 
@@ -148,6 +148,7 @@ brews=(
     llvm
     mariadb-connector-c
     mas
+    neofetch
     neovim
     node
     open-mpi
