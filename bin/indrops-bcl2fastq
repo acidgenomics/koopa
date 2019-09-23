@@ -21,7 +21,7 @@ optional arguments:
 
 details:
     Run at the top level of Illumina output directory containing BCL files.
-    
+
     Assuming input is Harvard inDrops v3 barcode format.
 
     Some RNA-seq processing pipelines (i.e. Harvard Biopolymers) incorrectly

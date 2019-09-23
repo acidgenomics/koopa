@@ -4,20 +4,59 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# inDrops sample barcode counts from i5 indexes.
-# Updated 2019-06-23.
 
-# See also:
-# - https://iccb.med.harvard.edu/single-cell-core
 
-# Thanks to @roryk for this script.
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: indrops-i5-sample-index-counts [--help|-h]
+
+inDrops sample barcode counts from i5 indexes.
+
+details:
+    Checks against R3 FASTQ files inside current working directory.
+
+see also:
+    https://iccb.med.harvard.edu/single-cell-core
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+    Thanks to @roryk for this script.
+EOF
+}
+
+
+
+# Parse arguments                                                           {{{1
+# ==============================================================================
+
+case "${1:-}" in
+    "")
+        ;;
+    --help|-h)
+        usage
+        exit
+        ;;
+    *)
+        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 gzip -cd ./*_R3.fastq.gz | \
-    head -1000000 | \
+    head -n -1000000 | \
     awk 'NR == 2 || NR % 4 == 2' | \
     grep -v N | \
     sort | \
     uniq -c | \
     sort -nr | \
     head -n 24 > \
-    sample_barcodes.log
+    sample-barcodes.log
