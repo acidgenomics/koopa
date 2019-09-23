@@ -95,28 +95,3 @@ _koopa_conda_prefix() {
     fi
     echo "$prefix"
 }
-
-
-
-# Create an internal conda environment.
-# Updated 2019-07-10.
-_koopa_create_conda_env() {
-    _koopa_assert_is_installed conda
-
-    local name
-    name="$1"
-
-    local app
-    app="${2:-$name}"
-
-    local channel
-    channel="${3:-conda-forge}"
-
-    local prefix
-    prefix="$(_koopa_conda_prefix)"
-
-    conda create -qy \
-        -p "${prefix}/envs/${name}" \
-        -c "$channel" \
-        "$app"
-}
