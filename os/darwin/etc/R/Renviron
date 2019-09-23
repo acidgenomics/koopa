@@ -1,0 +1,92 @@
+# R environment for macOS (darwin)
+#
+# Using Homebrew cask to install CRAN R.
+#
+# See also:
+# - `help(topic = "Renviron")`
+
+
+
+# Binary path.
+# Set a minimal, consistent PATH for R.
+# Don't allow conda here.
+PATH="/usr/local/bin:/usr/bin:/bin"
+# Homebrew Python
+PATH="/usr/local/opt/python/libexec/bin:${PATH}"
+# TeX
+PATH="${PATH}:/Library/TeX/texbin"
+# X11
+PATH="${PATH}:/opt/X11/bin"
+# clang (for CRAN R)
+# R 3.5: clang 6
+# R 3.6: clang 7
+# R 3.7: clang 8
+PATH="/usr/local/clang7/bin:${PATH}"
+# gfortran 6.1 (for CRAN R)
+PATH="/usr/local/gfortran/bin:${PATH}"
+# pandoc (RStudio)
+PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
+
+
+
+# Package configuration
+# LAPACK
+PKG_CONFIG_PATH="/usr/local/opt/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# OpenBLAS
+PKG_CONFIG_PATH="/usr/local/opt/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+# imagemagick
+PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
+
+
+
+# User package library
+#
+# General:
+# - `Sys.getenv()`.
+# - `help(topic = "R_LIBS_USER")`.
+# - `help(topic = ".libPaths")`.
+#
+# Bioconductor-specific:
+# - https://www.bioconductor.org/developers/how-to/useDevel/
+#
+# ‘%V’ R version number including the patchlevel (e.g., ‘2.5.0’).
+# ‘%v’ R version number excluding the patchlevel (e.g., ‘2.5’).
+# ‘%p’ the platform for which R was built, the value of ‘R.version$platform’.
+# ‘%o’ the underlying operating system, the value of ‘R.version$os’.
+# ‘%a’ the architecture (CPU) R was built on/for, the value of ‘R.version$arch’.
+#
+# Linux default:
+# R_LIBS_USER="~/R/%p-library/%v"
+#
+# Windows default:
+# R_LIBS_USER="~/R/win-library/%v"
+R_LIBS_USER="~/R/%p-library/%v"
+
+
+
+# Increase this for large single-cell RNA-seq projects.
+# R_MAX_NUM_DLLS=153
+
+
+
+# Always upgrade GitHub R packages, without prompting.
+# See `remotes::update_packages()` for details.
+R_REMOTES_UPGRADE="always"
+
+
+
+# Reticulate
+# Here's how to force Python available for reticulate.
+# Instead, call `use_virtualenv()` or `use_condaenv()`.
+# RETICULATE_PYTHON="~/anaconda3/envs/steinbaugh/bin/python"
+
+
+
+# XML configuration
+# libxml2
+XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
+
+
+
+# R 3.5 can sometimes error due to time zone, unless this is set.
+TZ="America/New_York"
