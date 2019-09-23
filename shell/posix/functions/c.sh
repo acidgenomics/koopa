@@ -18,8 +18,9 @@ _koopa_cellar_prefix() {
 
 
 
-# Updated 2019-08-18.
+# Updated 2019-09-23.
 _koopa_cellar_script() {
+    _koopa_assert_has_no_environments
     local name
     name="$1"
     file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
