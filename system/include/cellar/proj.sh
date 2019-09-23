@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
-# Install PROJ.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-proj [--help|-h]
 
-# See also:
-# - https://proj.org/
-# - https://github.com/OSGeo/PROJ/
+Install PROJ.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://proj.org/
+    - https://github.com/OSGeo/PROJ/
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="proj"
 version="$(_koopa_variable "$name")"

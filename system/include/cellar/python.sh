@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
-# Install Python.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-python [--help|-h]
 
-# See also:
-# - https://www.python.org/
+Install Python.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://www.python.org/
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="python"
 version="$(_koopa_variable "$name")"
@@ -19,7 +28,7 @@ printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -frv "$prefix"
-    rm -fr "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="Python-${version}.tar.xz"
