@@ -20,8 +20,7 @@ Install dot files repository.
 
 optional positional arguments:
     1.  Dot file repository URL.
-        Defaults to Acid Genomics dotfiles repo:
-        ${url}
+        Defaults to '${url}'.
 
 details:
     Installs into koopa home (e.g. '/usr/local/koopa/dotfiles/').
@@ -32,27 +31,17 @@ optional arguments:
         Show this help message and exit.
 
 note:
+    Bash script.
     Updated 2019-09-23.
 EOF
 }
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
-
-case "${1:-}" in
-    "")
-        ;;
-    --help|-h)
-        usage
-        exit
-        ;;
-    *)
-        >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        exit 1
-        ;;
-esac
 
 source_repo="${1:-$url}"
 target_dir="$(_koopa_home)/dotfiles"

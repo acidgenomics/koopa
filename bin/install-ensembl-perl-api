@@ -15,6 +15,10 @@ usage: install-ensembl-api [--help|-h]
 
 Install Ensembl Perl API.
 
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
 see also:
     - https://useast.ensembl.org/info/docs/api/api_installation.html
     - https://useast.ensembl.org/info/docs/api/api_git.html
@@ -27,17 +31,19 @@ note:
 EOF
 }
 
+_koopa_help "$@"
 
 
 
-
+# Script                                                                    {{{1
+# ==============================================================================
 
 prefix="$(_koopa_build_prefix)/ensembl"
 
 (
     build_mkdir "$prefix"
     cd "$prefix" || exit 1
-    
+
     # Install BioPerl.
     git clone -b release-1-6-924 --depth 1 \
         https://github.com/bioperl/bioperl-live.git
