@@ -103,8 +103,27 @@ EOF
             return 1
             ;;
     esac
-    
+
     echo "$path"
+}
+
+
+
+# Simple help support for scripts without arguments.
+# Updated 2019-09-23.
+_koopa_help() {
+    case "${1:-}" in
+        "")
+            ;;
+        --help|-h)
+            usage
+            exit
+            ;;
+        *)
+            >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+            exit 1
+            ;;
+    esac
 }
 
 
