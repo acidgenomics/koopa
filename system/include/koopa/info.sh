@@ -22,19 +22,33 @@ array=(
     "$(koopa --version)"
     "https://koopa.acidgenomics.com/"
     ""
-    "## System information"
-    "Koopa home: $(_koopa_home)"
-    "Shell: ${shell}"
-    "OS: ${os}"
+    "Configuration"
+    "-------------"
+    "Home: $(_koopa_home)"
+    "Config: $(_koopa_config_dir)"
+    "Prefix: $(_koopa_build_prefix)"
     ""
-    "Run 'koopa check' to verify installation."
+    "System information"
+    "------------------"
 )
-
-cat "${KOOPA_HOME}/system/include/koopa/ascii-turtle.txt"
-_koopa_info_box "${array[@]}"
 
 # Show neofetch info, if installed.
 if _koopa_is_installed neofetch
 then
-    neofetch
+    mapfile -t nf < <( neofetch --stdout )
+    array+=(
+        "${nf[@]:2}"
+    )
+else
+    array+=(
+        "OS: ${os}"
+        "Shell: ${shell}"
+        ""
+    )
 fi
+
+array+=("Run 'koopa check' to verify installation.")
+
+cat "${KOOPA_HOME}/system/include/koopa/ascii-turtle.txt"
+_koopa_info_box "${array[@]}"
+
