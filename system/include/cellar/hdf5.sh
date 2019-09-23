@@ -1,30 +1,40 @@
 #!/usr/bin/env bash
 
-# Install HDF5.
-# Updated 2019-09-17.
 
-# See also:
-# - https://www.hdfgroup.org/downloads/hdf5/
-# - https://support.hdfgroup.org/ftp/HDF5/releases
+usage() {
+cat << EOF
+usage: install-cellar-hdf5 [--help|-h]
 
-# Note that website requires registration.
+Install HDF5.
 
-_koopa_assert_has_no_environments
+details:
+    HDF Group website requires registration.
+
+see also:
+    - https://www.hdfgroup.org/downloads/hdf5/
+    - https://support.hdfgroup.org/ftp/HDF5/releases
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="hdf5"
 version="$(_koopa_variable "$name")"
+major_version="$(_koopa_major_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/h5cc"
 
-major_version="$(echo "$version" | cut -d '.' -f 1-2)"
-
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -frv "$prefix"
-    rm -fr "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="hdf5-${version}.tar.gz"
