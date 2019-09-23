@@ -5,5 +5,4 @@ set -Eeu -o pipefail
 source "$(koopa header linux)"
 
 # shellcheck source=/dev/null
-source "$(_koopa_cellar_script rmate)"
-
+source "$(_koopa_cellar_script neofetch)"
