@@ -15,21 +15,14 @@
 # > typeset _koopa_prompt_state
 
 # Prompt:
-# - %F     => color dict
-# - %f     => reset color
+# - %n     => username
+# - %m     => hostname (short)
+# - %M     => hostname (full)
 # - %~     => current path
 # - %*     => time
-# - %n     => username
-# - %m     => shortname host
 # - %(?..) => prompt conditional - %(condition.true.false)
-
-# Terminal codes:
-# - \e7   => save cursor position
-# - \e[2A => move cursor 2 lines up
-# - \e[1G => go to position 1 in terminal
-# - \e8   => restore cursor position
-# - \e[K  => clears everything after the cursor on the current line
-# - \e[2K => clear everything on the current line
+# - %F     => color dict
+# - %f     => reset color
 
 
 
@@ -45,6 +38,9 @@ _koopa_prompt_precmd() {
 }
 
 
+
+# FIXME Conda environment activation is messing up '%m'/'%M' flag on macOS.
+# This seems to be specific to Mac and doesn't happen on Linux.
 
 # Set the user string and color based on local or SSH connection.
 _koopa_prompt_state_setup() {
@@ -76,11 +72,6 @@ _koopa_prompt_setup() {
     then
         typeset -g prompt_newline=$'\n%{\r%}'
     fi
-
-    # > zmodload zsh/datetime
-    # > zmodload zsh/zle
-    # > zmodload zsh/parameter
-    # > zmodload zsh/zutil
     
     # Set the colors.
     typeset -gA _koopa_prompt_colors_default _koopa_prompt_colors
