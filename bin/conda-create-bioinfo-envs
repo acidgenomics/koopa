@@ -60,7 +60,7 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed conda
 
-bioinfo=(
+bioinfo_base=(
     bamtools
     bedtools
     bioawk
@@ -71,7 +71,7 @@ bioinfo=(
     seqtk
 )
 # shellcheck disable=SC2068
-conda create -qy --name="bioinfo" ${bioinfo[@]}
+conda create -qy --name="bioinfo-base" ${bioinfo_base[@]}
 
 # > conda create -qy --name="cromwell" cromwell
 # > conda create -qy --name="fgbio" fgbio
