@@ -16,7 +16,7 @@ usage: rsync-miniconda3 [--help|-h]
 rsync miniconda3 installation.
 
 details:
-    Currently requires sync from Mike's account.
+    Requires sync from VM45 using Mike's account.
 
 note:
     Bash script.
