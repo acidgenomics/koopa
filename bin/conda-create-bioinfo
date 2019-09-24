@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# outdated:
+# - chromhmm needs to be updated to v1.19.
+# - gatk needs to be updated to v4.
+#
+# missing:
+# - genrich
+# - sratools (fasterq-dump)
+#
+# variation:
+# - peddy
+#
+# methylation:
+# - bismark
+#
+# workflows:
+# - cromwell
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: conda-create-bioinfo [--help|-h]
+
+Create bioinformatics environment.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Installs non-R bioinformatics tools.
+    For R, compile from source instead.
+
+see also:
+    conda env list
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed conda
+
+conda create -qy --name="bioinfo" \
+    arriba \
+    atropos \
+    bamtools \
+    bioawk \
+    biobambam \
+    bowtie2 \
+    bwa \
+    chromhmm \
+    deeptools \
+    ericscript \
+    fastqc \
+    fgbio \
+    hisat2 \
+    homer \
+    kallisto \
+    kraken \
+    macs2 \
+    minimap2 \
+    multiqc \
+    nextflow \
+    oncofuse \
+    picard \
+    pizzly \
+    qualimap \
+    rapmap \
+    salmon \
+    samblaster \
+    samtools \
+    seqtk \
+    star \
+    star-fusion \
+    trimmomatic
