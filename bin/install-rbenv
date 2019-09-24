@@ -4,13 +4,38 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Ruby environment manager (rbenv).
-# Updated 2019-06-23.
 
-# See also:
-# - https://github.com/rbenv/rbenv
-# - https://blakewilliams.me/posts/system-wide-rbenv-install
-# - https://devhints.io/rbenv
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-rbenv [--help|-h]
+
+Install Ruby environment manager (rbenv).
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+see also:
+    - https://github.com/rbenv/rbenv
+    - https://blakewilliams.me/posts/system-wide-rbenv-install
+    - https://devhints.io/rbenv
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 prefix="$(_koopa_build_prefix)/rbenv"
 
