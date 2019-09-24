@@ -4,19 +4,45 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Set up python virtual environment.
-# Updated 2019-06-23.
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Python 2 method (deprecated)
+# > virtualenv "$env_dir" --system-site-packages
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-python-virtualenv [--help|-h]
+
+Set up python virtual environment.
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_no_environments
+# FIXME Allow looping for this assert call.
 _koopa_assert_is_installed python
+_koopa_assert_is_installed python3
 
 env_base_dir="${HOME}/.virtualenvs"
 env_name="${1:-default}"
 env_dir="${env_base_dir}/${env_name}"
 rm -rf "$env_dir"
-
-# Python 2 method (deprecated)
-# > virtualenv "$env_dir" --system-site-packages
 
 python3 -m venv "$env_dir"
 
