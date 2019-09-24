@@ -134,3 +134,5 @@ conda create -qy --name="macs2" macs2
 # ------------------------------------------------------------------------------
 
 conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
+
+conda env list

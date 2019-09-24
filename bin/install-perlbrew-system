@@ -4,11 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Perlbrew system Perl.
-# Updated 2019-06-23.
 
-# See also:
-# - https://stackoverflow.com/questions/25188575
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-perlbrew-system [--help|-h]
+
+Install Perlbrew system Perl.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+see also:
+    https://stackoverflow.com/questions/25188575
+
+note:
+    Updated 2019-06-23.
+EOF
+}
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 if [[ -x "/usr/local/bin/perl" ]]
 then
@@ -23,9 +45,9 @@ fi
 
 (
     cd "${PERLBREW_ROOT}/perls" || exit 1
-    rm -rf system
-    mkdir system
-    ln -s "$bin_dir" "system/bin"
+    rm -frv system
+    mkdir -pv system
+    ln -fnsv "$bin_dir" "system/bin"
 )
 
 perlbrew list
