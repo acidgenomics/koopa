@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -Eeux o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: rsync-miniconda3 [--help|-h]
+
+rsync miniconda3 installation.
+
+details:
+    Currently requires sync from Mike's account.
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_has_sudo
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.145"
+dir="/data00/miniconda3"
+group="$(_koopa_build_prefix_group)"
+
+# Check for accidental sync from source machine.
+if [[ "$source_ip" == "$host_ip" ]]
+then
+    >&2 printf "Error: On source machine: %s.\n" "$source_ip"
+    exit 1
+fi
+
+printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
+sudo chown -Rh "${source_user}:${group}" "$dir"
+rsync -av --delete "${source_user}@${source_ip}:${dir}/" "${dir}/"
+sudo chown -Rh "${source_user}:${group}" "$dir"
