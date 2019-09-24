@@ -4,10 +4,39 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Sort lines using vim.
-# Updated 2019-06-23.
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: sort-lines [--help|-h] file
+
+Sort lines, using vim.
+
+required positional arguments:
+    1.  File path.
+
+note:
+    Bash script.
+    Requires vim to be installed.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+file="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed vim
 
-file="$1"
 vim -c :sort -c :wq -E -s "$file"
