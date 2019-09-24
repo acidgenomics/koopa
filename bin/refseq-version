@@ -4,7 +4,40 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# RefSeq release version.
-# Updated 2019-09-20.
+url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
 
-wget -q -O - ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: refseq-version [--help|-h]
+
+RefSeq version.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Extract the RefSeq release version from ftp.ncbi.nlm.nih.gov.
+
+see also:
+    ${url}
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+wget -q -O - "$url"
