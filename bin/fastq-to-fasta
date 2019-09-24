@@ -96,8 +96,8 @@ do
 done
 
 # Handle trailing directory '/' automatically.
-source_dir="${source_dir//\//}"
-target_dir="${target_dir//\//}"
+source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
+target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
 
 
 

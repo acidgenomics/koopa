@@ -56,3 +56,15 @@ _koopa_strip_left() {
 _koopa_strip_right() {
     printf '%s\n' "${1%%$2}"
 }
+
+
+
+# Strip trailing slash in file path string.
+#
+# Alternate approach using sed:
+# > sed 's/\/$//' <<< "$1"
+#
+# Updated 2019-09-24.
+_koopa_strip_trailing_slash() {
+    _koopa_strip_right "$1" "/"
+}
