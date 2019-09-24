@@ -47,7 +47,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-09-24.
 
 examples:
     dotfile zshrc
@@ -134,7 +134,7 @@ then
 else
     source_path="${dot_dir}/${source_name}"
 fi
-_koopa_assert_is_dir_or_file "$source_path"
+_koopa_assert_is_existing "$source_path"
 
 # Define optional target symlink name.
 if [[ -z "$symlink_name" ]]
