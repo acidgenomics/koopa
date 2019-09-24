@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-09-16.
+## Updated 2019-09-24.
 
 options(
     error = quote(quit(status = 1L)),
@@ -265,6 +265,18 @@ check_version(
     version = koopa_version("neovim"),
     version_cmd = c(
         "nvim --version",
+        "head -n 1",
+        "cut -d ' ' -f 2"
+    ),
+    eval = "=="
+)
+
+## Neofetch
+check_version(
+    name = "neofetch",
+    version = koopa_version("neofetch"),
+    version_cmd = c(
+        "neofetch --version",
         "head -n 1",
         "cut -d ' ' -f 2"
     ),
