@@ -4,8 +4,36 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Run md5sum and generate an MD5 checksum file.
-# Updated 2019-06-23.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: md5sum-check-to-new-md5-file [--help|-h] files ...
+
+Run md5sum and generate an MD5 checksum file.
+
+required positional arguments:
+    ... Files to checksum.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="md5sum-${timestamp}.md5"
