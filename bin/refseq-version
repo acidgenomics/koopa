@@ -7,6 +7,4 @@ source "$(koopa header bash)"
 # RefSeq release version.
 # Updated 2019-09-20.
 
-_koopa_assert_is_installed wget
-
 wget -q -O - ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER

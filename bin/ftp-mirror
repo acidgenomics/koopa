@@ -87,8 +87,6 @@ fi
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed wget
-
 if [[ -n "$dir" ]]
 then
     path="${host}/${dir}"
