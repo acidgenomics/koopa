@@ -176,6 +176,18 @@ _koopa_assert_is_file() {
 
 
 
+# Assert that input matches a specified file type.
+#
+# Example: _koopa_assert_is_file_type "$x" "csv"
+#
+# Updated 2019-09-24.
+_koopa_assert_is_file_type() {
+    _koopa_assert_is_file "$1"
+    _koopa_assert_matches_pattern "$1" "\.${2}\$"
+}
+
+
+
 # Assert that programs are installed.
 #
 # Supports checking of multiple programs in a single call.
@@ -320,6 +332,23 @@ _koopa_assert_is_writable() {
     if [ ! -r "$1" ]
     then
         >&2 printf "Error: Not writable: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Assert that input matches a pattern.
+#
+# Bash alternative:
+# > [[ ! $1 =~ $2 ]]
+#
+# Updated 2019-09-24.
+_koopa_assert_matches_pattern() {
+    if ! echo "$1" | grep -q "$2"
+    then
+        >&2 printf "Error: '%s' does not match pattern '%s'.\n" "$1" "$2"
         return 1
     fi
     return 0
