@@ -187,3 +187,23 @@ wormbase_release_version="WS272"
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl_perl="5.26.3"
+
+
+
+# macOS app versions                                                        {{{1
+# ==============================================================================
+
+"Alacritty"="0.3.3"
+"Aspera Connect"="3.9.6"
+"BBEdit"="12.6.7"
+"BibDesk"="1.6.16"
+"Docker"="2.1.0.1"
+"GPG Keychain"="1.5"
+"LibreOffice"="6.3.1002"
+"Microsoft Excel="16.28"
+"Numbers"="6.1"
+"RStudio"="1.2.5001"
+"Tunnelblick"="3.8.1"
+"Visual Studio Code"="1.36.1"
+"iTerm"="3.2.7"
+
