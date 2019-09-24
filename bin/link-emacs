@@ -4,8 +4,31 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Link Emacs installation to `~/.emacs.d/`.
-# Updated 2019-09-20.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: link-emacs [--help|-h]
+
+Link Emacs installation to '~/.emacs.d/'.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 name="$1"
 
@@ -15,19 +38,8 @@ custom_home="${default_home}-${name}"
 default_dir="${HOME}/${default_home}"
 custom_dir="${HOME}/${custom_home}"
 
-# Check that emacs.d is a symlink.
-if [[ -d "$default_dir" ]] && [[ ! -L "$default_dir" ]]
-then
-    >&2 printf "Error: Not a symlink: %s\n" "$default_dir"
-    exit 1
-fi
-
-# Check that custom Emacs directory exists.
-if [[ ! -d "$custom_dir" ]]
-then
-    >&2 printf "Error: Directory missing: %s\n" "$custom_dir"
-    exit 1
-fi
+_koopa_assert_is_dir "$custom_dir"
+_koopa_assert_is_not_dir "$default_dir"
 
 (
     cd ~
