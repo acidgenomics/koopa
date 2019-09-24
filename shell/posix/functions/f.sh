@@ -3,6 +3,23 @@
 
 
 
+# Updated 2019-09-24.
+_koopa_find_dotfiles() {
+    local type="$1"
+    local header="$2"
+    printf "\n%s:\n\n" "$header"
+    find ~ \
+        -maxdepth 1 \
+        -name ".*" \
+        -type "$type" \
+        -print0 | \
+        xargs -0 -n1 basename | \
+        sort |
+        awk '{print "  ",$0}'
+}
+
+
+
 #' Find text in any file.
 #'
 #' @note Updated 2019-09-05.
