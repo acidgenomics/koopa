@@ -66,39 +66,44 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed conda
 
-# depends on R:
-# - arriba
-# - ericscript
-# - picard
-# - qualimap
+bioinfo=(
+    bamtools
+    bedtools
+    bioawk
+    biobambam
+    htslib
+    samblaster
+    samtools
+    seqtk
+)
+# shellcheck disable=SC2068
+conda create -qy --name="bioinfo" ${bioinfo[@]}
 
-conda create -qy --name="bioinfo" \
-    atropos \
-    bamtools \
-    bedtools \
-    bioawk \
-    biobambam \
-    bowtie2 \
-    bwa \
-    chromhmm \
-    deeptools \
-    fastqc \
-    fgbio \
-    hisat2 \
-    homer \
-    htslib \
-    kallisto \
-    macs2 \
-    minimap2 \
-    multiqc \
-    nextflow \
-    oncofuse \
-    pizzly \
-    rapmap \
-    salmon \
-    samblaster \
-    samtools \
-    seqtk \
-    star \
-    star-fusion \
-    trimmomatic
+conda create -qy --name="nextflow" nextflow
+conda create -qy --name="qc" fastqc multiqc qualimap
+
+conda create -qy --name="align-bwa" bwa
+conda create -qy --name="align-bowtie2" bowtie2
+conda create -qy --name="align-hisat2" hisat2
+conda create -qy --name="align-kallisto" kallisto
+conda create -qy --name="align-minimap2" minimap2
+conda create -qy --name="align-rapmap" rapmap
+conda create -qy --name="align-salmon" salmon
+conda create -qy --name="align-star" star
+
+conda create -qy --name="chipseq-chromhmm" chromhmm
+conda create -qy --name="chipseq-deeptools" deeptools
+conda create -qy --name="chipseq-homer" homer
+conda create -qy --name="chipseq-macs2" macs2
+
+conda create -qy --name="fusions-arriba" arriba
+conda create -qy --name="fusions-ericscript" ericscript
+conda create -qy --name="fusions-oncofuse" oncofuse
+conda create -qy --name="fusions-pizzly" pizzly
+conda create -qy --name="fusions-star-fusion" star-fusion
+
+# > conda create -qy --name="trim-atropos" atropos
+# > conda create -qy --name="trim-trimmomatic" trimmomatic
+
+# > conda create -qy --name="fgbio" fgbio
+# > conda create -qy --name="gatk" gatk
