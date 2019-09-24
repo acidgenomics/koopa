@@ -122,6 +122,7 @@ _koopa_assert_is_dir() {
 
 
 # FIXME Renamed this...update scripts.
+# FIXME assert_is_dir_or_file RENAMED.
 
 # Assert that input exists on disk.
 #
@@ -165,20 +166,21 @@ _koopa_assert_is_darwin() {
 
 
 
-# FIXME Vectorize this.
-
 # Assert that programs are installed.
 #
 # Supports checking of multiple programs in a single call.
+# Note that '_koopa_is_installed' is not vectorized.
 #
-# Updated 2019-09-23.
+# Updated 2019-09-24.
 _koopa_assert_is_installed() {
-    # FIXME Add a for loop here.
-    if ! _koopa_is_installed "$1"
-    then
-        >&2 printf "Error: '%s' is not installed.\n" "$1"
-        return 1
-    fi
+    for arg in "$@"
+    do
+        if ! _koopa_is_installed "$arg"
+        then
+            >&2 printf "Error: '%s' is not installed.\n" "$arg"
+            return 1
+        fi
+    done
     return 0
 }
 
