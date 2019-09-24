@@ -11,7 +11,7 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: conda-create-internal-texlive [--help|-h]
+usage: conda-create-python-dev [--help|-h]
 
 Create Python development conda environment.
 
@@ -54,8 +54,7 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed conda
 
-conda create -qy \
-    --name="python-dev" \
+conda create -qy --name="python-dev" \
     black \
     flake8 \
     jupyter \
