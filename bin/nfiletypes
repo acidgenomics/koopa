@@ -4,14 +4,54 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# List the number of files of each extension type in current directory.
-# Updated 2019-08-08.
+dir="."
 
-# See also:
-# - Stephen Turner tweet
-#   https://twitter.com/strnr/status/1159503398716227584
 
-find . \
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: nfiletypes [--help|-h] [dir="${dir}"]
+
+List the number of files of each extension type in current directory.
+
+optional positional arguments:
+    1.  Directory path.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Does not search recursively.
+
+see also:
+    - Stephen Turner tweet
+      https://twitter.com/strnr/status/1159503398716227584
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+find "$dir" \
     -maxdepth 1 \
     -type f | \
     sed 's/.*\.//' | \

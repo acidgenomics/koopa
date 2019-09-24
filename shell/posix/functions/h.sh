@@ -109,20 +109,20 @@ EOF
 
 
 
-# Simple help support for scripts without arguments.
-# Updated 2019-09-23.
+# Show usage via help flag.
+# Updated 2019-09-24.
 _koopa_help() {
     case "${1:-}" in
-        "")
-            ;;
         --help|-h)
             usage
             exit
             ;;
-        *)
-            >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-            exit 1
-            ;;
+        # > "")
+        # >     ;;
+        # > *)
+        # >     >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
+        # >     exit 1
+        # >     ;;
     esac
 }
 
