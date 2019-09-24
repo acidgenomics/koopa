@@ -108,6 +108,19 @@ _koopa_assert_has_sudo() {
 
 
 
+# Assert that platform is Darwin (macOS).
+# Updated 2019-09-23.
+_koopa_assert_is_darwin() {
+    if ! _koopa_is_darwin
+    then
+        >&2 printf "Error: macOS (Darwin) is required.\n"
+        return 1
+    fi
+    return 0
+}
+
+
+
 # Assert that input is a directory.
 # Updated 2019-09-12.
 _koopa_assert_is_dir() {
@@ -121,14 +134,24 @@ _koopa_assert_is_dir() {
 
 
 
-# FIXME Renamed this...update scripts.
-# FIXME assert_is_dir_or_file RENAMED.
+# Assert that input is executable.
+# Updated 2019-09-24.
+_koopa_assert_is_executable() {
+    if [ ! -x "$1" ]
+    then
+        >&2 printf "Error: Not executable: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
 
 # Assert that input exists on disk.
 #
 # Note that '-e' flag returns true for file, dir, or symlink.
 #
-# Updated 2019-09-23.
+# Updated 2019-09-24.
 _koopa_assert_is_existing() {
     if [ ! -e "$1" ]
     then
@@ -146,19 +169,6 @@ _koopa_assert_is_file() {
     if [ ! -f "$1" ]
     then
         >&2 printf "Error: Not a file: '%s'\n" "$1"
-        return 1
-    fi
-    return 0
-}
-
-
-
-# Assert that platform is Darwin (macOS).
-# Updated 2019-09-23.
-_koopa_assert_is_darwin() {
-    if ! _koopa_is_darwin
-    then
-        >&2 printf "Error: macOS (Darwin) is required.\n"
         return 1
     fi
     return 0
@@ -252,10 +262,65 @@ _koopa_assert_is_not_dir() {
 
 
 
-# FIXME Add these:
-# _koopa_assert_is_executable
-# _koopa_assert_is_not_file
-# _koopa_assert_is_not_symlink
-# _koopa_assert_is_readable
-# _koopa_assert_is_symlink
-# _koopa_assert_is_writable
+# Assert that input is not a file.
+# Updated 2019-09-24.
+_koopa_assert_is_not_file() {
+    if [ -f "$1" ]
+    then
+        >&2 printf "Error: Is file: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Assert that input is not a symbolic link.
+# Updated 2019-09-24.
+_koopa_assert_is_not_symlink() {
+    if [ -L "$1" ]
+    then
+        >&2 printf "Error: Is symlink: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Assert that input is readable.
+# Updated 2019-09-24.
+_koopa_assert_is_readable() {
+    if [ ! -r "$1" ]
+    then
+        >&2 printf "Error: Not readable: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Assert that input is a symbolic link.
+# Updated 2019-09-24.
+_koopa_assert_is_symlink() {
+    if [ ! -L "$1" ]
+    then
+        >&2 printf "Error: Is symlink: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
+
+
+
+# Assert that input is writable.
+# Updated 2019-09-24.
+_koopa_assert_is_writable() {
+    if [ ! -r "$1" ]
+    then
+        >&2 printf "Error: Not writable: '%s'\n" "$1"
+        return 1
+    fi
+    return 0
+}
