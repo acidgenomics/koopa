@@ -10,8 +10,8 @@ _koopa_macos_app_version() {
     plutil -p "/Applications/${1}.app/Contents/Info.plist" | \
         grep CFBundleShortVersionString |
         awk -F ' => ' '{print $2}' |
-        tr -d '"' |
-        cut -d ' ' -f 1
+        tr -d '"'
+        # > cut -d ' ' -f 1
 }
 
 
