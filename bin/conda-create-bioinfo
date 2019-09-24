@@ -23,6 +23,9 @@ source "$(koopa header bash)"
 # methylation:
 # - bismark
 #
+# contamination:
+# - kraken
+#
 # workflows:
 # - cromwell
 
@@ -63,31 +66,34 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed conda
 
+# depends on R:
+# - arriba
+# - ericscript
+# - picard
+# - qualimap
+
 conda create -qy --name="bioinfo" \
-    arriba \
     atropos \
     bamtools \
+    bedtools \
     bioawk \
     biobambam \
     bowtie2 \
     bwa \
     chromhmm \
     deeptools \
-    ericscript \
     fastqc \
     fgbio \
     hisat2 \
     homer \
+    htslib \
     kallisto \
-    kraken \
     macs2 \
     minimap2 \
     multiqc \
     nextflow \
     oncofuse \
-    picard \
     pizzly \
-    qualimap \
     rapmap \
     salmon \
     samblaster \
