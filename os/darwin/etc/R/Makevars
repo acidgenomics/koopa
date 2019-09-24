@@ -9,7 +9,7 @@
 # - https://github.com/rmacoslib/r-macos-rtools/blob/master/scripts/postinstall
 
 # Mojave CPP headers fix.
-# > oftwareupdate --list
+# > softwareupdate --list
 # > softwareupdate --install -a
 # > sudo rm -rf /Library/Developer/CommandLineTools
 # > xcode-select --install
