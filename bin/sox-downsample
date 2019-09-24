@@ -4,28 +4,62 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Downsample audio with sox.
-# Updated 2019-07-28.
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: sox-downsample [--help|-h] bits rate [dir="${dir}"]
+
+Downsample audio with sox.
+
+required positional arguments:
+    1.  Output bit depth (e.g. '16').
+    2.  Output sample rate (e.g. '44' kHz).
+
+optional positional arguments:
+    1.  Directory path, containing FLAC files.
+
+details:
+    Useful flags:
+        -b, --bits
+        -G, --guard
+        -L, --endian little
+        -r, --rate
+        -S, --show-progress
+        -v, --volume
+
+    dither only should be considered when downsampling to 16/44.
+    # > sox input.flac -G -b 16 output.flac rate -v -L 44100 dither
+
+examples:
+    sox-downsample 16 44 flac/
+
+note:
+    Bash script.
+    Requires sox to be installed.
+    Updated 2019-07-28.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed sox
 
 bits="$1"
 rate="${2}k"
 
-# Useful flags:
-# -b, --bits
-# -G, --guard
-# -L, --endian little
-# -r, --rate
-# -S, --show-progress
-# -v, --volume
-
-# dither only needed when downsampling to 16/44.
-# > sox input.flac -G -b 16 output.flac rate -v -L 44100 dither
-
 for input in *.flac
 do
     output="sox-${input}"
     sox "$input" -G -S -b "$bits" "$output" rate -v -L "$rate"
-    # > rm "$input"
 done
