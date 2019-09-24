@@ -4,9 +4,37 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Move files to the Trash folder instead of deleting.
-# Updated 2019-06-23.
-
 trash_dir="${HOME}/.Trash/"
-mkdir -p "$trash_dir"
-mv "$@" "$trash_dir"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+trash [--help|-h] files ...
+
+Move files to the trash folder instead of deleting.
+
+required positional arguments:
+    ... File paths to trash.
+
+details:
+    Moves files to '${trash_dir}'.
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+mkdir -pv "$trash_dir"
+mv -v "$@" "$trash_dir"
