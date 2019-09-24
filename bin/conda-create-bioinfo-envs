@@ -79,7 +79,10 @@ bioinfo=(
 # shellcheck disable=SC2068
 conda create -qy --name="bioinfo" ${bioinfo[@]}
 
+# > conda create -qy --name="fgbio" fgbio
+# > conda create -qy --name="gatk" gatk
 conda create -qy --name="nextflow" nextflow
+
 conda create -qy --name="qc" fastqc multiqc qualimap
 
 conda create -qy --name="align-bwa" bwa
@@ -104,6 +107,3 @@ conda create -qy --name="fusions-star-fusion" star-fusion
 
 # > conda create -qy --name="trim-atropos" atropos
 # > conda create -qy --name="trim-trimmomatic" trimmomatic
-
-# > conda create -qy --name="fgbio" fgbio
-# > conda create -qy --name="gatk" gatk
