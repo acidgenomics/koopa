@@ -4,15 +4,45 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# List PATH priority.
-# Updated 2019-06-24.
 
-# See also:
-# - https://askubuntu.com/questions/600018
+
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Alternate approaches:
 # > sed 's/:/\n/g' <<< "$PATH"
 # > tr ':' '\n' <<< "$PATH"
 
-# This uses bash parameter expansion.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: list-path-priority [--help|-h]
+
+List PATH priority.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Splits the PATH string by ':' delim.
+
+see also:
+    - https://askubuntu.com/questions/600018
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 echo "${PATH//:/$'\n'}"
