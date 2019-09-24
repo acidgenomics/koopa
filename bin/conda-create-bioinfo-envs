@@ -73,33 +73,66 @@ bioinfo_base=(
 # shellcheck disable=SC2068
 conda create -qy --name="bioinfo-base" ${bioinfo_base[@]}
 
+# Workflows                                                                 {{{2
+# ------------------------------------------------------------------------------
+
 # > conda create -qy --name="cromwell" cromwell
 # > conda create -qy --name="fgbio" fgbio
 # > conda create -qy --name="gatk" gatk
+
 conda create -qy --name="nextflow" nextflow
 
+# Quality control                                                           {{{2
+# ------------------------------------------------------------------------------
+
 conda create -qy --name="qc" fastqc multiqc qualimap
-conda create -qy --name="qc-kraken" kraken
 
-conda create -qy --name="align-bwa" bwa
-conda create -qy --name="align-bowtie2" bowtie2
-conda create -qy --name="align-hisat2" hisat2
-conda create -qy --name="align-kallisto" kallisto
-conda create -qy --name="align-minimap2" minimap2
-conda create -qy --name="align-rapmap" rapmap
-conda create -qy --name="align-salmon" salmon
-conda create -qy --name="align-star" star
+conda create -qy --name="kraken" kraken
+conda create -qy --name="picard" picard
 
-conda create -qy --name="chipseq-chromhmm" chromhmm
-conda create -qy --name="chipseq-deeptools" deeptools
-conda create -qy --name="chipseq-homer" homer
-conda create -qy --name="chipseq-macs2" macs2
+# Aligners                                                                  {{{2
+# ------------------------------------------------------------------------------
 
-conda create -qy --name="fusions-arriba" arriba
-conda create -qy --name="fusions-ericscript" ericscript
-conda create -qy --name="fusions-oncofuse" oncofuse
-conda create -qy --name="fusions-pizzly" pizzly
-conda create -qy --name="fusions-star-fusion" star-fusion
+conda create -qy --name="bowtie2" bowtie2
+conda create -qy --name="bwa" bwa
+conda create -qy --name="hisat2" hisat2
+conda create -qy --name="kallisto" kallisto
+conda create -qy --name="minimap2" minimap2
+conda create -qy --name="rapmap" rapmap
+conda create -qy --name="salmon" salmon
+conda create -qy --name="star" star
+
+# Trimming (legacy)                                                         {{{2
+# ------------------------------------------------------------------------------
 
 # > conda create -qy --name="trim-atropos" atropos
 # > conda create -qy --name="trim-trimmomatic" trimmomatic
+
+# RNA-seq                                                                   {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="bcbiornaseq" r-bcbiornaseq
+
+# ChIP-seq                                                                  {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="chromhmm" chromhmm
+conda create -qy --name="deeptools" deeptools
+conda create -qy --name="diffbind" bioconductor-diffbind
+conda create -qy --name="homer" homer
+conda create -qy --name="macs2" macs2
+
+# Single-cell RNA-seq
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
+
+# Fusion detection                                                          {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="arriba" arriba
+conda create -qy --name="ericscript" ericscript
+conda create -qy --name="oncofuse" oncofuse
+conda create -qy --name="pizzly" pizzly
+conda create -qy --name="star-fusion" star-fusion
+
