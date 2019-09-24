@@ -16,7 +16,7 @@ usage: rsync-bcbio [--help|-h]
 rsync bcbio installation.
 
 details:
-    Currently requires sync from Mike's account.
+    Requires sync from VM35 using Mike's account.
 
 note:
     Bash script.

@@ -4,8 +4,32 @@ set -Eeux o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
 
-# rsync R site package library.
-# Modified 2019-08-22.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: rsync-r-site-library [--help|-h]
+
+rsync R site package library.
+
+details:
+    Requires sync from VM32 using Mike's account.
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_sudo
 
