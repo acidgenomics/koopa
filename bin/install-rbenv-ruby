@@ -4,18 +4,52 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install recommended Ruby release via rbenv.
-# Updated 2019-09-04.
 
-# See also:
-# - https://github.com/rbenv/ruby-build
-# - https://github.com/rbenv/ruby-build/wiki
-# - https://github.com/rbenv/ruby-build/issues/377
+
+# Notes                                                                     {{{1
+
+# ==============================================================================
+
+# > rbenv install -l
+
+# Ensure installation uses system OpenSSL.
+# > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-rbenv-ruby [--help|-h]
+
+Install recommended Ruby release via rbenv.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+see also:
+    - https://github.com/rbenv/ruby-build
+    - https://github.com/rbenv/ruby-build/wiki
+    - https://github.com/rbenv/ruby-build/issues/377
+
+note:
+    Bash script.
+    Updated 2019-09-04.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed rbenv
 _koopa_assert_has_no_environments
-
-# > rbenv install -l
 
 version="$(_koopa_variable ruby)"
 
@@ -30,10 +64,6 @@ then
     )
 fi
 
-# Ensure installation uses system OpenSSL.
-# > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
-
 rbenv install "$version"
 rbenv global "$version"
-
 rbenv versions
