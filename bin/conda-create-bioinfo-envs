@@ -81,6 +81,11 @@ conda create -qy --name="bioinfo-base" ${bioinfo_base[@]}
 # > conda create -qy --name="gatk" gatk
 conda create -qy --name="nextflow" nextflow
 
+# Tools                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="gffutils" gffutils
+
 # Quality control                                                           {{{2
 # ------------------------------------------------------------------------------
 
