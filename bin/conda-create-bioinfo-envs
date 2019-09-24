@@ -112,6 +112,15 @@ conda create -qy --name="star" star
 
 conda create -qy --name="bcbiornaseq" r-bcbiornaseq
 
+# Fusion detection                                                          {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="arriba" arriba
+conda create -qy --name="ericscript" ericscript
+conda create -qy --name="oncofuse" oncofuse
+conda create -qy --name="pizzly" pizzly
+conda create -qy --name="star-fusion" star-fusion
+
 # ChIP-seq                                                                  {{{2
 # ------------------------------------------------------------------------------
 
@@ -125,13 +134,3 @@ conda create -qy --name="macs2" macs2
 # ------------------------------------------------------------------------------
 
 conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
-
-# Fusion detection                                                          {{{2
-# ------------------------------------------------------------------------------
-
-conda create -qy --name="arriba" arriba
-conda create -qy --name="ericscript" ericscript
-conda create -qy --name="oncofuse" oncofuse
-conda create -qy --name="pizzly" pizzly
-conda create -qy --name="star-fusion" star-fusion
-
