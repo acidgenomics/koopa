@@ -22,12 +22,6 @@ source "$(koopa header bash)"
 #
 # methylation:
 # - bismark
-#
-# contamination:
-# - kraken
-#
-# workflows:
-# - cromwell
 
 
 
@@ -79,11 +73,13 @@ bioinfo=(
 # shellcheck disable=SC2068
 conda create -qy --name="bioinfo" ${bioinfo[@]}
 
+# > conda create -qy --name="cromwell" cromwell
 # > conda create -qy --name="fgbio" fgbio
 # > conda create -qy --name="gatk" gatk
 conda create -qy --name="nextflow" nextflow
 
 conda create -qy --name="qc" fastqc multiqc qualimap
+conda create -qy --name="qc-kraken" kraken
 
 conda create -qy --name="align-bwa" bwa
 conda create -qy --name="align-bowtie2" bowtie2
