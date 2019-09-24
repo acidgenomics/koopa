@@ -39,8 +39,7 @@ _koopa_help "$@"
 # ==============================================================================
 
 dir="${1:-$dir}"
-# Handle trailing directory '/' automatically.
-dir="${dir//\//}"
+dir="$(_koopa_strip_trailing_slash "$dir")"
 
 
 
