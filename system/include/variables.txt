@@ -115,7 +115,7 @@ ruby="2.6.4"
 shellcheck="0.7.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
-shiny-server="1.5.9.923"
+shiny-server="1.5.12.933"
 
 # https://www.latex-project.org/get/
 tex="2019"
