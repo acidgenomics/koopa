@@ -13,14 +13,12 @@ repo="https://github.com/syl20bnr/spacemacs.git"
 emacs_home="${HOME}/.emacs.d"
 install_dir="${emacs_home}-${name}"
 
-# FIXME Switch to assert
-if [[ -d "$install_dir" ]]
-then
-    >&2 printf "Error: Directory exists: '%s'.\n" "$install_dir"
-    exit 1
-fi
+_koopa_assert_non_existing "$install_dir"
 
 git clone "$repo" "$install_dir"
 link-emacs "$name"
 
+# FIXME Need to add a symlink.
+
 emacs --no-window-system
+
