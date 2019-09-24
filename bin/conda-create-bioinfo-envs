@@ -79,7 +79,6 @@ conda create -qy --name="bioinfo-base" ${bioinfo_base[@]}
 # > conda create -qy --name="cromwell" cromwell
 # > conda create -qy --name="fgbio" fgbio
 # > conda create -qy --name="gatk" gatk
-
 conda create -qy --name="nextflow" nextflow
 
 # Quality control                                                           {{{2
