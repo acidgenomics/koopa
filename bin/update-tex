@@ -4,11 +4,34 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Update TeX.
-# Updated 2019-06-23.
 
-# See also:
-# - https://tex.stackexchange.com/questions/55437
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: update-tex [--help|-h]
+
+Update TeX installation.
+
+see also:
+    https://tex.stackexchange.com/questions/55437
+
+note:
+    Bash script.
+    Requires that texlive is already installed.
+    Updated 2019-09-24.
+
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 tlmgr update --self
 tlmgr update --list
