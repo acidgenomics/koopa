@@ -4,8 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install spacemacs.
-# Updated 2019-09-20.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-spacemacs [--help|-h]
+
+Install spacemacs.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 name="spacemacs"
 repo="https://github.com/syl20bnr/spacemacs.git"
@@ -13,12 +38,10 @@ repo="https://github.com/syl20bnr/spacemacs.git"
 emacs_home="${HOME}/.emacs.d"
 install_dir="${emacs_home}-${name}"
 
-_koopa_assert_non_existing "$install_dir"
+_koopa_assert_is_non_existing "$install_dir"
 
 git clone "$repo" "$install_dir"
 link-emacs "$name"
-
-# FIXME Need to add a symlink.
 
 emacs --no-window-system
 
