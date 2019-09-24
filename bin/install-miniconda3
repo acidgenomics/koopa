@@ -14,6 +14,10 @@ usage: install-miniconda [--help|-h]
 
 Install Miniconda.
 
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
 see also:
     - https://conda.io/miniconda.html
     - bash Miniconda3-latest-Linux-x86_64.sh -h

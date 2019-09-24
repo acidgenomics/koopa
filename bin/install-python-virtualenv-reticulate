@@ -4,10 +4,14 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+
 # Install reticulate Python virtual environment.
 # Updated 2019-08-14.
 
-_koopa_assert_is_installed python3
+# FIXME Allow looping in this call.
+_koopa_assert_is_installed python python3
 
 env_name="reticulate"
 env_dir="${HOME}/.virtualenvs/${env_name}"

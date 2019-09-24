@@ -23,6 +23,10 @@ usage: install-python-virtualenv [--help|-h]
 
 Set up python virtual environment.
 
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
 note:
     Bash script.
     Updated 2019-06-23.
@@ -36,8 +40,7 @@ EOF
 
 _koopa_assert_has_no_environments
 # FIXME Allow looping for this assert call.
-_koopa_assert_is_installed python
-_koopa_assert_is_installed python3
+_koopa_assert_is_installed python python3
 
 env_base_dir="${HOME}/.virtualenvs"
 env_name="${1:-default}"
