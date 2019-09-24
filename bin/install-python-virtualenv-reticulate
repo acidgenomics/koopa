@@ -6,9 +6,33 @@ source "$(koopa header bash)"
 
 
 
+# Usage                                                                     {{{1
+# ==============================================================================
 
-# Install reticulate Python virtual environment.
-# Updated 2019-08-14.
+usage() {
+cat << EOF
+usage: install-python-virtualenv-reticulate [--help|-h]
+
+Install reticulate Python virtual environment.
+
+details:
+    Installs louvain and umap-learn.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+note:
+    Bash script.
+    Updated 2019-08-14.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed python3 python
 
