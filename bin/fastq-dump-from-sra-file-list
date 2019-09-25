@@ -6,18 +6,28 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+filelist="SRR_Acc_List.txt"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage fastq-dump-from-sra-file-list [--help|-h] [FILELIST]
+$(_koopa_help_header)
+    [filelist="${filelist}"]
 
 FASTQ dump from Sequence Read Archive (SRA) accession list.
 
 optional positional arguments:
     1.  SRA access file list.
-        By default, looks for 'SRR_Acc_List.txt' file.
+        Defaults to '${filelist}'.
+
+$(_koopa_help_args)
 
 details:
     Requires sratools to be installed, which contains fastq-dump.
@@ -48,15 +58,15 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-filelist="${1:-SRR_Acc_List.txt}"
+filelist="${1:-$filelist}"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed fastq-dump
 _koopa_assert_is_file "$filelist"
+_koopa_assert_is_installed fastq-dump
 
 # SC2162: read without -r will mangle backslashes.
 while read -r id

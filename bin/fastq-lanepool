@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 source_dir="."
 target_dir="."
 prefix="lanepool"
@@ -15,12 +20,13 @@ prefix="lanepool"
 
 usage() {
 cat << EOF
-usage: fastq-lanepool [--help|-h] --source-dir="${source_dir}"
-    --target-dir="${target_dir}" --prefix="${prefix}"
+$(_koopa_help_header)
+    [--source-dir="${source_dir}"] [--target-dir="${target_dir}"]
+    [--prefix="${prefix}"]
 
 Pool (concatenate) lane-split FASTQ files.
 
-required arguments, with defaults:
+required arguments with defaults:
     --source-dir
         Source directory path containing lane-split FASTQ files.
         Defaults to '${source_dir}'.
@@ -31,18 +37,12 @@ required arguments, with defaults:
         Name prefix for concatenated FASTQ files.
         Defaults to '${prefix}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Matches against '_L00[1-9]_' lane pattern internally.
     Defaults to input and output in current working directory.
     Supports both compressed (*.fastq.gz) and decompressed (.fastq) FASTQ files.
-
-note:
-    Bash script.
-    Updated 2019-09-21.
 
 examples:
     # Input (2 paired-end, lane-split samples):
@@ -72,6 +72,10 @@ examples:
     # > lanepool_sample1_R2.fastq.gz
     # > lanepool_sample2_R1.fastq.gz
     # > lanepool_sample2_R2.fastq.gz
+
+note:
+    Bash script.
+    Updated 2019-09-21.
 EOF
 }
 

@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-source_dir="."
-target_dir="."
-
 
 
 # Notes                                                                     {{{1
@@ -25,16 +22,25 @@ target_dir="."
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+source_dir="."
+target_dir="."
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: fastq-to-fasta [--help|-h] --source-dir="." --target-dir="."
+$(_koopa_help_header)
+    [--source-dir="."] [--target-dir="."]
 
 Convert FASTQ files to FASTA format.
 
-required arguments, with defaults:
+required arguments with defaults:
     --source-dir
         Source directory, containing decompressed FASTQ files.
         Requiring that files contain 'FASTQ' extension, not 'FQ'.
@@ -42,6 +48,8 @@ required arguments, with defaults:
     --target-dir
         Target directory, returning FASTA files.
         Defaults to '${target_dir}'.
+
+$(_koopa_help_args)
 
 details:
     Processing steps:
@@ -59,12 +67,12 @@ see also:
     - http://thegenomefactory.blogspot.com/2012/05/
           cool-use-of-unix-paste-with-ngs.html
 
+examples:
+    fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
+
 note:
     Bash script.
     Updated 2019-09-21.
-
-examples:
-    fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
 EOF
 }
 

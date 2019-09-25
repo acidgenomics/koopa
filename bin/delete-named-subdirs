@@ -11,7 +11,8 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: delete-named-subdirs [--help|-h] DIR SUBDIR_NAME
+$(_koopa_help_header)
+    dir subdir_name
 
 Delete named subdirectories.
 
@@ -19,9 +20,7 @@ required positional arguments:
     1.  Directory path.
     2.  Subdirectory name, to delete.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Calls 'find' internally to recursively scan for a subdirectory name and
