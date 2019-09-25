@@ -6,24 +6,6 @@ source "$(koopa header bash)"
 
 
 
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Regarding bash arrays:
-# - http://mywiki.wooledge.org/BashFAQ/020
-# - http://mywiki.wooledge.org/ParsingLs
-# - https://stackoverflow.com/a/23357277/3911732
-# - https://stackoverflow.com/questions/8213328
-# - https://unix.stackexchange.com/questions/263883
-# - https://github.com/koalaman/shellcheck/wiki/SC2206
-# - https://stackoverflow.com/questions/1951506
-
-# Array sorting:
-# - https://stackoverflow.com/questions/7442417
-# - https://stackoverflow.com/a/7442583/3911732
-
-
-
 # Variables                                                                 {{{1
 # ==============================================================================
 
@@ -48,12 +30,7 @@ cat << EOF
 usage: run-kallisto [--help|-h] --fasta-file --index-file
     --fastq-dir="${fastq_dir}" --output-dir="${output_dir}"
 
-This script supports quick analysis of multiple paired-end FASTQ samples inside
-a directory. It builds a kallisto index on the fly, if necessary (unless
-'--index-file' argument is set), and outputs per sample automatically.
-
-The script will intentionally error if the output directory specified by
-'--output-dir' already exists, to prevent accidental overwrite.
+Run kallisto on multiple samples.
 
 required arguments:
     --fasta-file
@@ -81,6 +58,14 @@ optional arguments:
         Show this help message and exit.
 
 details:
+    This script supports quick analysis of multiple paired-end FASTQ samples
+    inside a directory. It builds a kallisto index on the fly, if necessary
+    (unless the '--index-file' argument is set), and outputs per sample
+    automatically.
+
+    The script will intentionally error if the output directory specified by
+    '--output-dir' already exists, to prevent accidental overwrite.
+
     Strandedness:
     Illumina TruSeq stranded library prep is 'fr-firststrand'.
     This corresponds to '--rf-stranded' flag for kallisto quant.
