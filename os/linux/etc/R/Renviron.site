@@ -46,6 +46,7 @@ R_LIBS_SITE="${R_HOME}/site-library"
 ## `@R_PLATFORM@` can be e.g. `x86_64-pc-linux-gnu`.
 ## `@MAJ_MIN_VERSION@` is likely something like '3.6'.
 ## Set this per-user via `%p` and `%v` for platform and version.
+# > R_LIBS_USER="~/R/%p-library/%v"
 R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
 
 
