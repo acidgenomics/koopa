@@ -17,9 +17,9 @@
 # > sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
 
 # Xcode 11 flags:
-CFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
-CPPFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
-CXXFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+# > CFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+# > CPPFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+# > CXXFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
 
 CC=/usr/local/clang7/bin/clang
 CXX11=/usr/local/clang7/bin/clang++
