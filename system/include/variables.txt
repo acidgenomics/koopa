@@ -24,7 +24,7 @@ bcbio_nextgen.py="1.1.5"
 # Apple LLVM version
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
-clang="10.0.1"
+clang="11.0.0"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
