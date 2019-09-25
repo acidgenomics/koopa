@@ -4,8 +4,43 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Recursively download a directory using wget.
-# Updated 2019-06-23.
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Potentially useful flags:
+# --background
+# --tries=10
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: wget-recursive [--help|-h] url user password
+
+Recursively download a directory using wget.
+
+required positional arguments:
+    1.  URL.
+    2.  User name.
+    3.  Password.
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
 
 url="$1"
 user="$2"
@@ -17,12 +52,13 @@ user="$2"
 password="$3"
 password="${password@Q}"
 
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="wget-${timestamp}.log"
-
-# Potentially useful flags:
-# --background
-# --tries=10
 
 wget \
     --user="$user" \
