@@ -2,6 +2,16 @@
 
 
 
+_koopa_help_args() {
+cat << EOF
+help arguments:
+    --help, -h
+        Show this help message and exit.
+EOF
+}
+
+
+
 # Help header string.
 # Updated 2019-09-25.
 _koopa_help_header() {

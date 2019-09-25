@@ -11,13 +11,16 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: download-github-latest [--help|-h] "user/repo"
+$(_koopa_help_header)
+    "user/repo"
 
 Download latest GitHub release tarball.
 
 required positional arguments:
     1.  Repository name, prefixed with the user or organization name.
         Example: 'acidgenomics/koopa'.
+
+$(_koopa_help_args)
 
 details:
     Downloads latest release into current working directory.

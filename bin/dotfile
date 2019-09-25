@@ -11,8 +11,9 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: dotfile [--help|-h] [--config] [--force] [--private] [--quiet]
-    RELATIVE_PATH [SYMLINK_NAME]
+$(_koopa_help_header)
+    [--config] [--force] [--private] [--quiet]
+    relative_path [symlink_name]
 
 Symlink a dot file.
 
@@ -25,8 +26,6 @@ optional positional arguments:
         Name of target symlink (without '.' prefix).
 
 optional arguments:
-    --help, -h
-        Show this help message and exit.
     --config
         Symlink into XDG config directory instead of user home.
         This path is defined by 'XDG_CONFIG_HOME' and defaults to '~/.config/'.
@@ -38,6 +37,8 @@ optional arguments:
         Checks in 'scripts-private/' directory in koopa config.
         Defaults to '~/.config/koopa/scripts-private/'.
 
+$(_koopa_help_args)
+
 details:
     The relative file path in dotfiles repo can be used as input. The target
     file should be specified without a leading period.
@@ -45,17 +46,18 @@ details:
     By default, this script is designed to work with the 'acidgenomics/dotfiles'
     repository available on GitHub.
 
-note:
-    Bash script.
-    Updated 2019-09-24.
-
 examples:
     dotfile zshrc
     dotfile --config doom
+
+note:
+    Bash script.
+    Updated 2019-09-24.
 EOF
 }
 
 [[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
@@ -70,10 +72,6 @@ POSITIONAL=()
 for i in "$@"
 do
     case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
         --config)
             config=1
             shift 1

@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 workdir="/work"
 
 
@@ -13,7 +18,8 @@ workdir="/work"
 
 usage() {
 cat << EOF
-usage: docker-run-image [--help|-h] IMAGE [--workdir="$workdir"]
+$(_koopa_help_header)
+    image [--workdir="$workdir"]
 
 Pull and run a Docker image locally.
 
@@ -29,20 +35,23 @@ required arguments with defaults:
         Local working directory name.
         Defaults to '$workdir', to avoid potential name collisions.
 
+$(_koopa_help_args)
+
 details:
     Script wrapper to call 'docker pull' and 'docker run' with suitable defaults
     for the Acid Genomics Docker images available on Docker Hub.
 
+examples:
+    docker-run-image acidgenomics/bioconductor:devel
+
 note:
     Bash script.
     Updated 2019-09-20.
-
-examples:
-    docker-run-image acidgenomics/bioconductor:devel
 EOF
 }
 
 [[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
@@ -53,10 +62,6 @@ POSITIONAL=()
 for i in "$@"
 do
     case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
         --workdir=*)
             workdir="${i#*=}"
             shift 1

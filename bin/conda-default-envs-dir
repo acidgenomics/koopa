@@ -11,13 +11,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: conda-default-envs-dir [--help|-h]
+$(_koopa_help_header)
 
 Locate the directory where conda environments are installed by default.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
     Bash script.
