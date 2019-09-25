@@ -6,21 +6,39 @@ source "$(koopa header azure)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.145"
+dir="/data00/miniconda3"
+group="$(_koopa_build_prefix_group)"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: rsync-miniconda3 [--help|-h]
+$(_koopa_help_header)
 
 rsync miniconda3 installation.
+
+$(_koopa_help_args)
 
 details:
     Requires sync from VM45 using Mike's account.
 
+internal variables:
+    source_ip: ${source_ip}
+    source_user: ${source_user}
+    dir: ${dir}
+
 note:
     Bash script.
-    Updated 2019-09-24.
+    Updated 2019-09-25.
 EOF
 }
 
@@ -30,14 +48,6 @@ _koopa_help "$@"
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_has_sudo
-
-host_ip="$(ip-address)"
-source_user="mike"
-source_ip="10.100.100.145"
-dir="/data00/miniconda3"
-group="$(_koopa_build_prefix_group)"
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
