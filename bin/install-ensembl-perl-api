@@ -11,13 +11,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: install-ensembl-api [--help|-h]
+$(_koopa_help_header)
 
 Install Ensembl Perl API.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 see also:
     - https://useast.ensembl.org/info/docs/api/api_installation.html
@@ -27,7 +25,6 @@ see also:
 note:
     Bash script.
     Updated 2019-09-23.
-
 EOF
 }
 

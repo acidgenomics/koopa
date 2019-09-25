@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 base_url="https://www.gencodegenes.org"
 
 
@@ -13,13 +18,11 @@ base_url="https://www.gencodegenes.org"
 
 usage() {
 cat << EOF
-usage: gencode-version [--help|-h]
+$(_koopa_help_header)
 
 GENCODE release version.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Extract the GENCODE release version from the website.

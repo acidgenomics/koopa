@@ -11,21 +11,22 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: install-perlbrew-system [--help|-h]
+$(_koopa_help_header)
 
 Install Perlbrew system Perl.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 see also:
     https://stackoverflow.com/questions/25188575
 
 note:
+    Bash script.
     Updated 2019-06-23.
 EOF
 }
+
+_koopa_help "$@"
 
 
 
