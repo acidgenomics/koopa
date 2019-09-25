@@ -11,13 +11,11 @@ source "$(koopa header harvard-o2)"
 
 usage() {
 cat << EOF
-srun-interactive-8gb-6hr-x11 [--help|-h]
+$(_koopa_help_header)
 
 Launch SLURM interaction session.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     1 core; 8 GB RAM; 6 hours; X11 forwarding.
