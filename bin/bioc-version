@@ -13,7 +13,7 @@ url="http://bioconductor.org/bioc-version"
 
 usage() {
 cat << EOF
-usage: bioc-version [--help|-h]
+$(_koopa_help_header)
 
 Bioconductor version.
 
