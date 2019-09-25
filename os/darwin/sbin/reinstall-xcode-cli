@@ -1,0 +1,4 @@
+# https://stackoverflow.com/questions/34617452
+
+sudo rm -rf /Library/Developer/CommandLineTools
+xcode-select --install
