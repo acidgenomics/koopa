@@ -6,32 +6,8 @@ source "$(koopa header azure)"
 
 
 
-# Usage                                                                     {{{1
+# Variables                                                                 {{{1
 # ==============================================================================
-
-usage() {
-cat << EOF
-usage: rsync-r-site-library [--help|-h]
-
-rsync R site package library.
-
-details:
-    Requires sync from VM32 using Mike's account.
-
-note:
-    Bash script.
-    Updated 2019-09-24.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-_koopa_assert_has_sudo
 
 koopa_home="$(_koopa_home)"
 r_home="$(_koopa_r_home)"
@@ -42,6 +18,41 @@ source_ip="10.100.100.132"
 
 r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+rsync R site package library.
+
+$(_koopa_help_args)
+
+details:
+    Requires sync from VM32 using Mike's account.
+
+internal variables:
+    source_ip: ${source_ip}
+    source_user: ${source_user}
+    r_home: ${r_home}
+    r_dir: ${r_dir}
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 if [[ ! -d "$r_dir" ]]
 then

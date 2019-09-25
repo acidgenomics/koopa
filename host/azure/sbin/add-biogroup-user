@@ -4,10 +4,44 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
 
-# Add biogroup user
-# Updated 2019-09-09.
 
-user="${1:-mike}"
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    user
+
+Add biogroup user
+
+required positional arguments:
+    1.  User name.
+
+examples:
+    add-biogroup-user mike
+
+note:
+    Bash script.
+    Updated 2019-09-09.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+user="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 sudo useradd "$user"
 sudo passwd "$user"
 sudo usermod -a -G wheel "$user"
