@@ -4,10 +4,36 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header harvard-odyssey)"
 
-# Launch SLURM interaction session.
-# Updated 2019-06-23.
 
-# 1 core; 1 GB RAM; 1 hour.
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: srun-interactive-1gb-1hr [--help|-h]
+
+Launch SLURM interaction session.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    1 core; 1 GB RAM; 1 hour.
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 srun -p test \
     --pty \
