@@ -109,10 +109,6 @@ R_REMOTES_UPGRADE="always"
 ## This is particularly important to set on rocker Debian images.
 TZ="America/New_York"
 
-## Increase this for large single-cell RNA-seq projects.
-## Note that 153 is the current limit for macOS.
-## > R_MAX_NUM_DLLS=153
-
 
 
 ## Compiler flags                                                           {{{1
