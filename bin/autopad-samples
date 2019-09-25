@@ -4,27 +4,13 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-prefix="sample"
-padwidth=2
 
 
-
-# Notes                                                                     {{{1
+# Variables                                                                 {{{1
 # ==============================================================================
 
-# See also:
-# - How to use `BASH_REMATCH`.
-#   https://unix.stackexchange.com/questions/349686
-# - Renaming hundreds of files at once.
-#   https://askubuntu.com/questions/473236
-# - Zero padding in bash.
-#   https://stackoverflow.com/questions/55754
-# - zeropad by Michael Metz.
-#   https://github.com/Michael-Metz/zeropad
-# - Perl `rename` isn't portable.
-#   This ships by default with some Linux distros, but not Red Hat.
-#   https://techblog.jeppson.org/2016/08/add-prefix-filenames-bash/
-#   rename 's/\d+/sprintf("%03d", $&)/e' *.fastq.gz
+prefix="sample"
+padwidth=2
 
 
 
@@ -33,7 +19,8 @@ padwidth=2
 
 usage() {
 cat << EOF
-usage: autopad-samples [--help|-h] [--prefix="$prefix"] [--padwidth=$padwidth]
+$(_koopa_help_header)
+    [--prefix="$prefix"] [--padwidth=$padwidth]
     FILE ...
 
 Autopad sample file names that begin with a number.
