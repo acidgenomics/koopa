@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: conda-default-envs-dir [--help|-h]
+
+Locate the directory where conda environments are installed by default.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed conda
+
+conda info | \
+    grep "envs directories" | \
+    cut -d ':' -f 2 | \
+    tr -d ' '
