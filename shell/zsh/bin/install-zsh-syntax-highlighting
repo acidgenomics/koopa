@@ -5,18 +5,26 @@ source "$(koopa header zsh)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+plugin="zsh-syntax-highlighting"
+source_repo="https://github.com/zsh-users/${plugin}"
+zsh_custom_dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"
+target_dir="${zsh_custom_dir}/plugins/${plugin}"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: install-zsh-syntax-highlighting [--help|-h]
+$(_koopa_help_header)
 
 Install ZSH syntax highlighting.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
     Bash script.
@@ -30,11 +38,6 @@ _koopa_help "$@"
 
 # Script                                                                 {{{1
 # ==============================================================================
-
-plugin="zsh-syntax-highlighting"
-source_repo="https://github.com/zsh-users/${plugin}"
-zsh_custom_dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"
-target_dir="${zsh_custom_dir}/plugins/${plugin}"
 
 _koopa_assert_is_not_dir "$target_dir"
 printf "Installing %s.\n" "$plugin"
