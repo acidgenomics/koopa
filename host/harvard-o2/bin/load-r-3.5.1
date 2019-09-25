@@ -11,13 +11,11 @@ source "$(koopa header harvard-o2)"
 
 usage() {
 cat << EOF
-usage: load-r-3.5.1 [--help|-h]
+$(_koopa_help_header)
 
 Load R 3.5.1 module.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Depends on GCC 6.2.
