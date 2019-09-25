@@ -82,6 +82,18 @@ _koopa_add_to_path_start() {
 
 
 
+# Convert a bash array to an R vector string.
+# Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
+# Updated 2019-09-25.
+_koopa_array_to_r_vector() {
+    local x
+    x="$(printf '"%s", ' "$@")"
+    x="$(_koopa_strip_right "$x" ", ")"
+    printf "c(%s)\n" "$x"
+}
+
+
+
 # Assert that conda and Python virtual environments aren't active.
 # Updated 2019-09-12.
 _koopa_assert_has_no_environments() {
