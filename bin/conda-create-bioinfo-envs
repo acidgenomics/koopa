@@ -30,13 +30,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: conda-create-bioinfo-envs [--help|-h]
+$(_koopa_help_header)
 
 Create multiple conda environments for bioinformatics.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Installs non-R bioinformatics tools.

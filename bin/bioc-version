@@ -17,9 +17,7 @@ $(_koopa_help_header)
 
 Bioconductor version.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Extract the Bioconductor release version from bioconductor.org.
