@@ -6,22 +6,43 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+default_home=".emacs.d"
+default_dir="${HOME}/${default_home}"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: link-emacs [--help|-h]
+$(_koopa_help_header)
+    name [dir="${default_dir}"]
 
-Link Emacs installation to '~/.emacs.d/'.
+Link Emacs installation.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+required positional arguments:
+    1.  Name of Emacs directory.
+        Example: spacemacs.
+        Looks for '${default_home}-spacemacs' internally.
+
+required positional arguments with defaults:
+    2.  Emacs default directory.
+        Where the symlink is applied.
+        Defaults to '${default_dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Links an Emacs installation (e.g. Spacemacs, Doom Emacs) into
+    '${default_dir}'.
 
 note:
     Bash script.
-    Updated 2019-09-24.
+    Updated 2019-09-25.
 EOF
 }
 
@@ -29,15 +50,18 @@ _koopa_help "$@"
 
 
 
-# Script                                                                    {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 name="$1"
+default_dir="${2:-$default_dir}"
 
-default_home=".emacs.d"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 custom_home="${default_home}-${name}"
-
-default_dir="${HOME}/${default_home}"
 custom_dir="${HOME}/${custom_home}"
 
 _koopa_assert_is_dir "$custom_dir"

@@ -4,7 +4,13 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 url="git@github.com:acidgenomics/dotfiles.git"
+target_dir="$(_koopa_home)/dotfiles"
 
 
 
@@ -18,17 +24,15 @@ usage: install-dotfiles [--help|-h]
 
 Install dot files repository.
 
-optional positional arguments:
+required positional arguments with defaults:
     1.  Dot file repository URL.
         Defaults to '${url}'.
 
-details:
-    Installs into koopa home (e.g. '/usr/local/koopa/dotfiles/').
-    Adds a symlink in koopa config (e.g. '~/.config/koopa/dotfiles').
+$(_koopa_help_args)
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+details:
+    Installs into '${target_dir}'.
+    Adds a symlink in koopa config dir.
 
 note:
     Bash script.
@@ -44,7 +48,6 @@ _koopa_help "$@"
 # ==============================================================================
 
 source_repo="${1:-$url}"
-target_dir="$(_koopa_home)/dotfiles"
 
 
 

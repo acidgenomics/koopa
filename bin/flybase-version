@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 url="ftp://ftp.flybase.net/releases/"
 
 
@@ -13,16 +18,14 @@ url="ftp://ftp.flybase.net/releases/"
 
 usage() {
 cat << EOF
-usage: flybase-version [--help|-h]
+$(_koopa_help_header)
 
 FlyBase release version.
 
+$(_koopa_help_args)
+
 details:
     Extract the FlyBase release version from ftp.flybase.net.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
 
 see also:
     ${url}

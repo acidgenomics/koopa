@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 source_repo="git@github.com:acidgenomics/Rcheck.git"
 config_dir="$(_koopa_config_dir)"
 clone_dir="${config_dir}/Rcheck"
@@ -16,13 +21,11 @@ link_name=".Rcheck"
 
 usage() {
 cat << EOF
-usage: install-rcheck [--help|-h]
+$(_koopa_help_header)
 
 Install Rcheck scripts for R package locally.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Run this script inside a git repo where you want to enable Rcheck CI.
@@ -36,7 +39,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-07-31.
+    Updated 2019-09-25.
 EOF
 }
 

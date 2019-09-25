@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 dir="."
 
 
@@ -13,17 +18,16 @@ dir="."
 
 usage() {
 cat << EOF
-git-push-recursive [--help|-h] [dir="${dir}"]
+$(_koopa_help_header)
+    [dir="${dir}"]
 
 Push all repositories recursively.
 
-optional positional arguments:
+required positional arguments with defaults:
     1.  Directory path.
         Defaults to '${dir}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
     Bash script.

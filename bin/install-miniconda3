@@ -10,13 +10,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: install-miniconda [--help|-h]
+$(_koopa_help_header)
 
 Install Miniconda.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 see also:
     - https://conda.io/miniconda.html

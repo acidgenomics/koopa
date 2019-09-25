@@ -20,13 +20,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: list-path-priority [--help|-h]
+$(_koopa_help_header)
 
 List PATH priority.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Splits the PATH string by ':' delim.

@@ -11,13 +11,16 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-find-and-replace [--help|-h] pattern replacement
+$(_koopa_help_header)
+    pattern replacement
 
 Global find and replace in files using sed.
 
 required positional arguments:
     1.  Pattern string (i.e. regular expression) passed to sed.
     2.  Replacement string.
+
+$(_koopa_help_args)
 
 details:
     Intended to be used interactively. Searches inside of files in current
@@ -26,12 +29,12 @@ details:
     sed syntax:
     s/pattern/replacement/g
 
+examples:
+    find-and-replace foo bar
+
 note:
     Bash script.
     Updated 2019-09-21.
-
-examples:
-    find-and-replace foo bar
 EOF
 }
 

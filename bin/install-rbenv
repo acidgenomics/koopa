@@ -6,18 +6,26 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+prefix="$(_koopa_build_prefix)/rbenv"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: install-rbenv [--help|-h]
+$(_koopa_help_header)
 
 Install Ruby environment manager (rbenv).
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
+
+details:
+    Installs into '${prefix}'.
 
 see also:
     - https://github.com/rbenv/rbenv
@@ -26,7 +34,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-09-25.
 EOF
 }
 
@@ -37,8 +45,6 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-prefix="$(_koopa_build_prefix)/rbenv"
-
 _koopa_build_mkdir "$prefix"
 
 # Install rbenv.
@@ -47,7 +53,7 @@ git clone \
     "$prefix"
 
 # Install ruby-build.
-mkdir -p "${prefix}/plugins"
+mkdir -pv "${prefix}/plugins"
 git clone \
     https://github.com/sstephenson/ruby-build.git \
     "${prefix}/plugins/ruby-build"
