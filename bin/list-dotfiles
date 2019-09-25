@@ -11,17 +11,19 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: list-dotfiles [--help|-h]
+$(_koopa_help_header)
 
 List dotfiles.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
+
+details:
+    List dotfiles in HOME by type.
+    Organizes into symlinks, files, and directories.
 
 note:
     Bash script.
-    Updated 2019-07-30.
+    Updated 2019-09-25.
 EOF
 }
 

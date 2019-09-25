@@ -11,19 +11,18 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: install-anaconda3 [--help|-h]
+$(_koopa_help_header)
 
 Install Anaconda.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 see also:
     - https://www.anaconda.com/download
     - https://docs.anaconda.com/anaconda/install/
 
 note:
+    Bash script.
     Updated 2019-06-23.
 EOF
 }

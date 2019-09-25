@@ -20,7 +20,8 @@ date="$(_koopa_variable koopa_date)"
 
 usage() {
     cat << EOF
-usage: koopa [--help|-h] [--version|-V] COMMAND
+$(_koopa_help_header) [--version|-V]
+    COMMAND
 
 koopa $version ($date)
 Shell bootloader for bioinformatics.

@@ -12,13 +12,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-genome-versions [--help|-h]
+$(_koopa_help_header)
 
 Genome versions.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
     Bash script.

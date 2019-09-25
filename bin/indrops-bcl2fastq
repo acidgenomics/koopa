@@ -11,13 +11,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: indrops-bcl2fastq [--help|-h]
+$(_koopa_help_header)
 
 Generate FASTQ files from multiplexed inDrops Illumina sequencing run.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Run at the top level of Illumina output directory containing BCL files.

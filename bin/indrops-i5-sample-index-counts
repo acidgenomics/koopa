@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 dir="."
 
 
@@ -13,21 +18,26 @@ dir="."
 
 usage() {
 cat << EOF
-usage: indrops-i5-sample-index-counts [--help|-h] [dir="${dir}"]
+$(_koopa_help_header)
+    [dir="${dir}"]
 
 inDrops sample barcode counts from i5 indexes.
 
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
 details:
     Checks against R3 FASTQ files inside directory.
-    Directory defaults to '${dir}'.
+    Outputs 'sample-barcodes.log' file.
 
 see also:
     https://iccb.med.harvard.edu/single-cell-core
 
 note:
     Bash script.
-    Updated 2019-09-23.
     Thanks to @roryk for this script.
+    Updated 2019-09-23.
 EOF
 }
 

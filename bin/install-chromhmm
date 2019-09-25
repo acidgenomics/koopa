@@ -6,24 +6,32 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+prefix="$(_koopa_build_prefix)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: install-chromhmm [--help|-h]
+$(_koopa_help_header)
 
 Install ChromHMM.
 
 details:
-    Installs into build prefix (e.g. '/usr/local/ChromHMM/').
+    Installs into '${prefix}/ChromHMM/'.
+    Alternatively, can install via conda instead.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
-    Updated 2019-09-09.
+    Bash script.
+    Updated 2019-09-25.
 EOF
 }
 
@@ -33,9 +41,6 @@ _koopa_help "$@"
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-tmp_dir="$(_koopa_tmp_dir)"
-prefix="$(_koopa_build_prefix)"
 
 (
     mkdir -p "$tmp_dir"

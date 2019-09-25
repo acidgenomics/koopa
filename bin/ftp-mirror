@@ -6,12 +6,20 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir=""
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
-    cat << EOF
-usage: ftp-mirror [--help|-h] --host="HOST" --user="USER" [--dir="DIR"]
+cat << EOF
+$(_koopa_help_header)
+    --host="HOST" --user="USER" [--dir="${dir}"]
 
 Recursively download (mirror) over FTP using wget.
 
@@ -25,11 +33,12 @@ required arguments:
         '--mirror' flag.
 
 optional arguments:
-    --help, -h
-        Show this help message and exit.
     --dir
         Remote directory path. Note that this script always mirrors to the
         current working directory path on the local machine.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
 
 details:
     For secure transfers, just use rsync or scp instead.
@@ -41,21 +50,16 @@ EOF
 }
 
 [[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
-
-dir=""
 
 for i in "$@"
 do
     case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
         --dir=*)
             dir="${i#*=}"
             shift

@@ -6,22 +6,34 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="spacemacs"
+repo="https://github.com/syl20bnr/spacemacs.git"
+emacs_home="${HOME}/.emacs.d"
+install_dir="${emacs_home}-${name}"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: install-spacemacs [--help|-h]
+$(_koopa_help_header)
 
 Install spacemacs.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
+
+details:
+    Installs into '${install_dir}'.
+    Links into '${emacs_home}'.
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-09-25.
 EOF
 }
 
@@ -32,14 +44,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-name="spacemacs"
-repo="https://github.com/syl20bnr/spacemacs.git"
-
-emacs_home="${HOME}/.emacs.d"
-install_dir="${emacs_home}-${name}"
-
-_koopa_assert_is_non_existing "$install_dir"
-
+_koopa_assert_is_not_dir "$install_dir"
 git clone "$repo" "$install_dir"
 link-emacs "$name"
 
