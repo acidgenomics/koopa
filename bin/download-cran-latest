@@ -22,6 +22,9 @@ details:
     Downloads latest release into current working directory.
     Can pass this file to 'R CMD INSTALL'.
 
+examples:
+    download-cran-latest tibble
+
 note:
     Bash script.
     Updated 2019-09-25.
