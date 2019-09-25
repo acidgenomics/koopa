@@ -4,8 +4,12 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-dir="."
 
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
 user="$(id -u)"
 group="$(id -g)"
 
@@ -16,11 +20,12 @@ group="$(id -g)"
 
 usage() {
 cat << EOF
-usage: reset-file-permissions [--help|-h] [dir="${dir}"]
+$(_koopa_help_header)
+    [dir="${dir}"]
 
 Reset file permissions to match umask.
 
-optional positional arguments:
+required positional arguments with defaults:
     1.  Directory path.
         Defaults to '${dir}'.
 
@@ -29,8 +34,8 @@ details:
     Note that this script works recursively, so be careful.
 
     Changes ownership to:
-    - user: "$user"
-    - group: "$group"
+    - user: "${user}"
+    - group: "${group}"
 
     Permissions by file type:
 
@@ -45,7 +50,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-09-25.
 EOF
 }
 

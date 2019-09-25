@@ -27,8 +27,9 @@ output_dir="kallisto/"
 
 usage() {
 cat << EOF
-usage: run-kallisto [--help|-h] --fasta-file --index-file
-    --fastq-dir="${fastq_dir}" --output-dir="${output_dir}"
+$(_koopa_help_header)
+    --fasta-file --index-file
+    [--fastq-dir="${fastq_dir}"] [--output-dir="${output_dir}"]
 
 Run kallisto on multiple samples.
 
@@ -45,7 +46,7 @@ required arguments:
         Example: kallisto.idx
         If '--fasta-file' is defined, this gets generated on the fly.
 
-required arguments, with defaults:
+required arguments with defaults:
     --fastq-dir
         Directory path containing paired-end FASTQ files.
         Defaults to '${fastq_dir}'.
@@ -53,9 +54,7 @@ required arguments, with defaults:
         Output directory path.
         Defaults to '${output_dir}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     This script supports quick analysis of multiple paired-end FASTQ samples

@@ -11,7 +11,8 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: move-into-dated-dirs-by-filename [--help|-h] files ...
+$(_koopa_help_header)
+    files...
 
 Move files into dated subdirectories by file name.
 
@@ -19,23 +20,21 @@ required positional arguments:
     ... File paths.
         Assuming we're matching inside current working directory.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Useful for organizing photos, scans, and videos.
+
+see also:
+    https://unix.stackexchange.com/questions/9496
 
 examples:
     - 20190101_010101_0001.mov
     - 2019-01-01-01-01-01.pdf
 
-see also:
-    https://unix.stackexchange.com/questions/9496
-
 note:
     Bash script.
-    Updated 2019-07-28.
+    Updated 2019-09-25.
 EOF
 }
 

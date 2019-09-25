@@ -20,7 +20,8 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: wget-recursive [--help|-h] url user password
+$(_koopa_help_header)
+    url user password
 
 Recursively download a directory using wget.
 
@@ -29,13 +30,11 @@ required positional arguments:
     2.  User name.
     3.  Password.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-09-25.
 EOF
 }
 

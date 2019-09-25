@@ -9,12 +9,15 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: sort-lines [--help|-h] file
+$(_koopa_help_header)
+    file
 
 Sort lines, using vim.
 
 required positional arguments:
     1.  File path.
+
+$(_koopa_help_args)
 
 note:
     Bash script.

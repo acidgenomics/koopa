@@ -13,12 +13,15 @@ trash_dir="${HOME}/.Trash/"
 
 usage() {
 cat << EOF
-trash [--help|-h] files ...
+$(_koopa_help_header)
+    files...
 
 Move files to the trash folder instead of deleting.
 
 required positional arguments:
     ... File paths to trash.
+
+$(_koopa_help_args)
 
 details:
     Moves files to '${trash_dir}'.

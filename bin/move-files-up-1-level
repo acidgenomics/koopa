@@ -11,17 +11,15 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: move-files-up-1-level [--help|-h]
+$(_koopa_help_header)
 
 Move files (but not directories) up 1 directory level.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-09-25.
 EOF
 }
 
