@@ -49,7 +49,5 @@ target_dir="${1:-$target_dir}"
 # ==============================================================================
 
 _koopa_assert_is_not_dir "$target_dir"
-
-printf "Installing oh-my-zsh at: '%s'.\n" "$target_dir"
-
+printf "Installing oh-my-zsh.\n"
 git clone "$source_repo" "$target_dir"
