@@ -13,13 +13,11 @@ url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
 
 usage() {
 cat << EOF
-usage: refseq-version [--help|-h]
+$(_koopa_help_header)
 
 RefSeq version.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Extract the RefSeq release version from ftp.ncbi.nlm.nih.gov.

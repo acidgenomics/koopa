@@ -4,6 +4,9 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
 dir="."
 
 
@@ -13,16 +16,16 @@ dir="."
 
 usage() {
 cat << EOF
-usage: nfiletypes [--help|-h] [dir="${dir}"]
+$(_koopa_help_header)
+    [dir="${dir}"]
 
 List the number of files of each extension type in current directory.
 
-optional positional arguments:
+required positional arguments with defaults:
     1.  Directory path.
+        Defaults to '${dir}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Does not search recursively.
@@ -33,7 +36,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-24.
+    Updated 2019-09-25.
 EOF
 }
 
