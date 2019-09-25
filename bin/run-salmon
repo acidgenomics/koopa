@@ -4,8 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# FIXME Allow flag passthrough here.
-
 
 
 # Variables                                                                 {{{1
@@ -28,19 +26,10 @@ output_dir="salmon/"
 
 usage() {
 cat << EOF
-usage: run-salmon [--help|-h] --fasta-file="XXX.fasta.gz" 
-    --index-file="salmon.idx" --fastq-dir="${fastq_dir}" 
-    --output-dir="${output_dir}"
+usage: run-salmon [--help|-h] --fasta-file --index-file
+    --fastq-dir="${fastq_dir}" --output-dir="${output_dir}"
 
 Run salmon on multiple samples.
-Updated 2019-09-20.
-
-This script supports quick analysis of multiple paired-end FASTQ samples inside
-a directory. It builds a salmon index on the fly, if necessary (unless
-'--index-file' argument is set), and outputs per sample automatically.
-
-The script will intentionally error if the output directory specified by
-'--output-dir' already exists, to prevent accidental overwrite.
 
 required arguments:
     --fasta-file
@@ -64,16 +53,19 @@ required arguments, with defaults:
         Defaults to '${output_dir}'.
 
 optional arguments:
-    -h, --help
+    --help, -h
         Show this help message and exit.
 
-internal variables:
-    bootstraps: ${bootstraps}
-    threads: ${threads}
-    r1_tail: ${r1_tail}
-    r2_tail: ${r2_tail}
+details:
+    This script supports quick analysis of multiple paired-end FASTQ samples
+    inside a directory. It builds a salmon index on the fly, if necessary
+    (unless the '--index-file' argument is set), and outputs per sample
+    automatically.
 
-strandedness:
+    The script will intentionally error if the output directory specified by
+    '--output-dir' already exists, to prevent accidental overwrite.
+    
+    Strandedness:
     Illumina TruSeq stranded library prep is fr-firststrand.
     This corresponds to 'ISR' for salmon quant.
 
@@ -86,30 +78,35 @@ strandedness:
     The '--libType A' option will allow Salmon to automatically infer the
     library type. Check the running log for the strand information.
 
-    See also:
+internal variables:
+    bootstraps: ${bootstraps}
+    threads: ${threads}
+    r1_tail: ${r1_tail}
+    r2_tail: ${r2_tail}
+
+see also:
     - salmon quant --help-reads
     - https://salmon.readthedocs.io/en/latest/library_type.html
     - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/salmon.py
     - https://fishycat.netlify.com/en/2017/08/strandness_in_rnaseq/
+
+note:
+    Bash script.
+    Updated 2019-09-25.
 EOF
 }
 
 [[ -z "${1:-}" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
-# https://stackoverflow.com/questions/192249
-
 for i in "$@"
 do
     case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
         --fasta-file=*)
             fasta_file="${i#*=}"
             shift
@@ -148,17 +145,14 @@ then
     exit 1
 fi
 
-unset -f usage
-
 
 
 # Preflight checks                                                          {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed salmon
 _koopa_assert_is_dir "$fastq_dir"
 _koopa_assert_is_not_dir "$output_dir"
-
+_koopa_assert_is_installed salmon
 salmon --version
 
 
