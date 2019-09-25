@@ -3,17 +3,53 @@
 # shellcheck source=/dev/null
 source "$(koopa header zsh)"
 
-# Install oh-my-zsh
-# Modified 2019-08-19.
+source_repo="https://github.com/robbyrussell/oh-my-zsh"
+target_dir="${HOME}/.oh-my-zsh"
 
-zsh_dir="${1:-${HOME}/.oh-my-zsh}"
 
-if [[ -d "$zsh_dir" ]]
-then
-    >&2 "Error: ZSH already installed at: '%s'.\n" "$zsh_dir"
-    exit 1
-fi
 
-printf "Installing oh-my-zsh at: '%s'.\n" "$zsh_dir"
-rm -frv "$zsh_dir"
-git clone https://github.com/robbyrussell/oh-my-zsh "$zsh_dir"
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-oh-my-zsh [--help|-h] [dir="${target_dir}"]
+
+Install oh-my-zsh
+
+optional positional arguments:
+    1.  Target directory.
+        Defaults to '${target_dir}'.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+see also:
+    ${source_repo}
+
+note:
+    Bash script.
+    Updated 2019-08-19.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+target_dir="${1:-$target_dir}"
+
+
+
+# Script                                                                 {{{1
+# ==============================================================================
+
+_koopa_assert_is_not_dir "$target_dir"
+
+printf "Installing oh-my-zsh at: '%s'.\n" "$target_dir"
+
+git clone "$source_repo" "$target_dir"
