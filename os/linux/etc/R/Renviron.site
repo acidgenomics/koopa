@@ -18,7 +18,7 @@
 ## =============================================================================
 
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
-PATH="/usr/local/bin:/usr/bin"
+PATH="/usr/local/bin:/usr/bin:/bin"
 
 
 
