@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header) [--strict]
+    STRING...
+
+Camel case.
+
+required positional arguments:
+    ... Character strings to sanitize.
+
+optional arguments:
+    --strict
+        Enforce strict camel syntax. Applies primarily to acronyms.
+        For example, "ID" becomes "Id".
+        Disabled by default.
+
+$(_koopa_help_args)
+
+see also:
+    - 'syntactic::camelCase()' in R.
+    - make-names
+
+examples:
+    camel-case "hello world" "foo bar"
+    camel-case --strict "gene ID"
+
+note:
+    Bash script that calls Rscript internally.
+    Requires the syntactic package to be installed.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+# Using quoted string that we can pass to Rscript.
+strict="FALSE"
+
+POSITIONAL=()
+for i in "$@"
+do
+    case "$i" in
+        --strict)
+            strict="TRUE"
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            exit 1
+            ;;
+        *)
+            POSITIONAL+=("$i")
+            shift 1
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+object="$(_koopa_array_to_r_vector "$@")"
+Rscript -e " \
+    cat(
+        syntactic::camelCase(
+            object = ${object},
+            strict = ${strict}
+        ),
+        '\n',
+        sep = ' '
+    ) \
+"
