@@ -26,7 +26,7 @@ $(_koopa_help_header)
 Autopad sample file names that begin with a number.
 
 required positional arguments:
-    1.  File names.
+    ... File names.
 
 required arguments, with defaults:
     --prefix
