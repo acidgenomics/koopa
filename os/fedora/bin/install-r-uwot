@@ -13,7 +13,7 @@ usage() {
 cat << EOF
 usage: install-r-uwot [--help|-h]
 
-Install uwot R package on RStudio Server Pro
+Install uwot R package on RStudio Server Pro.
 
 details:
     Fails unless we set full path to INSTALL.
