@@ -39,9 +39,7 @@ required arguments, with defaults:
         Auto-width detection may be added in a future release but isn't
         currently supported.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Intended for quick sanitization of FASTQ files from a sequencing vendor that
