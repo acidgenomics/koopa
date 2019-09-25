@@ -3,6 +3,11 @@
 # shellcheck source=/dev/null
 source "$(koopa header zsh)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 source_repo="https://github.com/robbyrussell/oh-my-zsh"
 target_dir="${HOME}/.oh-my-zsh"
 
@@ -13,7 +18,8 @@ target_dir="${HOME}/.oh-my-zsh"
 
 usage() {
 cat << EOF
-usage: install-oh-my-zsh [--help|-h] [dir="${target_dir}"]
+$(_koopa_help_header)
+    [dir="${target_dir}"]
 
 Install oh-my-zsh
 
@@ -21,9 +27,7 @@ optional positional arguments:
     1.  Target directory.
         Defaults to '${target_dir}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 see also:
     ${source_repo}
