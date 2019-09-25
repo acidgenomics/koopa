@@ -33,7 +33,8 @@ _koopa_help "$@"
 
 plugin="zsh-autosuggestions"
 source_repo="https://github.com/zsh-users/${plugin}"
-target_dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/${plugin}"
+zsh_custom_dir="${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"
+target_dir="${zsh_custom_dir}/plugins/${plugin}"
 
 _koopa_assert_is_not_dir "$target_dir"
 printf "Installing %s.\n" "$plugin"
