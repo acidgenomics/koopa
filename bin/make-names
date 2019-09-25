@@ -12,7 +12,7 @@ source "$(koopa header bash)"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    STRING...
+    string...
 
 Make syntactically valid names.
 

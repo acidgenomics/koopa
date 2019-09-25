@@ -26,8 +26,9 @@ output_dir="salmon/"
 
 usage() {
 cat << EOF
-usage: run-salmon [--help|-h] --fasta-file --index-file
-    --fastq-dir="${fastq_dir}" --output-dir="${output_dir}"
+$(_koopa_help_header)
+    --fasta-file --index-file
+    [--fastq-dir="${fastq_dir}"] [--output-dir="${output_dir}"]
 
 Run salmon on multiple samples.
 
@@ -44,7 +45,7 @@ required arguments:
         Example: salmon.idx
         If '--fasta-file' is defined, this gets generated on the fly.
 
-required arguments, with defaults:
+required arguments with defaults:
     --fastq-dir
         Directory path containing paired-end FASTQ files.
         Defaults to '${fastq_dir}'.
@@ -52,9 +53,7 @@ required arguments, with defaults:
         Output directory path.
         Defaults to '${output_dir}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     This script supports quick analysis of multiple paired-end FASTQ samples
@@ -64,7 +63,7 @@ details:
 
     The script will intentionally error if the output directory specified by
     '--output-dir' already exists, to prevent accidental overwrite.
-    
+
     Strandedness:
     Illumina TruSeq stranded library prep is fr-firststrand.
     This corresponds to 'ISR' for salmon quant.

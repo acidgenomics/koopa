@@ -11,9 +11,11 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: update-conda [--help|-h]
+$(_koopa_help_header)
 
 Update conda.
+
+$(_koopa_help_args)
 
 see also:
     https://bioconda.github.io/#set-up-channels
@@ -21,7 +23,7 @@ see also:
 note:
     Bash script.
     Requires that conda is already installed.
-    Updated 2019-06-23.
+    Updated 2019-09-25.
 EOF
 }
 

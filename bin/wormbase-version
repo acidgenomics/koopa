@@ -6,18 +6,26 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+url="ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: wormbase-version [--help|-h]
+$(_koopa_help_header)
 
 WormBase release version.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
+
+see also:
+    ${url}
 
 note:
     Bash script.
@@ -31,8 +39,6 @@ _koopa_help "$@"
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-url="ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
 
 curl --list-only --silent "$url" | \
     grep -Eo "letter.WS[0-9]+" | \
