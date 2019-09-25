@@ -11,12 +11,15 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: download-cran-latest [--help|-h] package
+$(_koopa_help_header)
+    package
 
 Download latest CRAN release tarball.
 
 required positional arguments:
     1.  Package name.
+
+$(_koopa_help_args)
 
 details:
     Downloads latest release into current working directory.

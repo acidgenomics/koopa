@@ -4,6 +4,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 url="ftp.ensembl.org/pub/current_README"
 
 
@@ -13,16 +18,14 @@ url="ftp.ensembl.org/pub/current_README"
 
 usage() {
 cat << EOF
-usage: ensembl-release-version [--help|-h]
+$(_koopa_help_header)
 
 Ensembl release version.
 
+$(_koopa_help_args)
+
 details:
     Extract the Ensembl release version from ftp.ensembl.org.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
 
 see also:
     ${url}

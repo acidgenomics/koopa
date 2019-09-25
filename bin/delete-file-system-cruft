@@ -6,22 +6,28 @@ source "$(koopa header bash)"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
 cat << EOF
-usage: delete-file-system-cruft [--help|-h] [DIR]
+$(_koopa_help_header)
+    dir="${dir}"
 
 Delete file system cruft.
 
 optional positional arguments:
     1.  Directory path.
-        Defaults to '.'.
+        Defaults to '${dir}'.
 
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+$(_koopa_help_args)
 
 details:
     Recursively deletes these invisible files:
@@ -44,14 +50,14 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-path="${1:-.}"
+dir="${1:-$dir}"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-find "$path" \
+find "$dir" \
     -type f \
     \( -name ".DS_Store" -o \
         -name "Thumbs.db*" \) \
