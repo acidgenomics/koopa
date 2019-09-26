@@ -1,15 +1,7 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${script_dir}/../../linux/include/header.sh"
 
 _koopa_assert_is_linux_debian
-
-# > if _koopa_has_sudo
-# > then
-# >     _koopa_assert_is_installed apt-get
-# >     _koopa_build_chgrp /usr/local
-# >     _koopa_update_ldconfig
-# >     sudo apt-get -y update
-# > fi

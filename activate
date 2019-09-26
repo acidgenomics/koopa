@@ -71,15 +71,17 @@ note:
 EOF
 }
 
+# Disable this checks for activation inside of koopa script.
+# > "")
+# >     ;;
+# > *)
+# >     >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+# >     ;;
+
 case "${1:-}" in
     --help|-h)
         usage
         exit 0
-        ;;
-    "")
-        ;;
-    *)
-        >&2 printf "Error: Invalid argument: '%s'\n" "$1"
         ;;
 esac
 
@@ -97,14 +99,6 @@ whoami | grep -Eq "\b(admin)\b" && return 0
 # Check for interactive shell.
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
-# Detect if koopa is already active and being requested inside a subshell.
-if [ -n "${KOOPA_HOME:-}" ]
-then
-    subshell=1
-else
-    subshell=0
-fi
-
 # Detect force mode.
 # Disabled by default.
 [ -z "${force:-}" ] && force=0
@@ -116,6 +110,14 @@ case "$force" in
         force=0
         ;;
 esac
+
+# Detect if koopa is already active and being requested inside a subshell.
+if [ -n "${KOOPA_HOME:-}" ] && [ "$force" -eq 0 ]
+then
+    subshell=1
+else
+    subshell=0
+fi
 
 # Skip activation for non-interactive sessions.
 [ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
