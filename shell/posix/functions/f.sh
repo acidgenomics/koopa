@@ -35,9 +35,35 @@ _koopa_find_text() {
 
 
 # Extract the file extension from input.
-# Updated 2019-09-25.
+#
+# Examples:
+# _koopa_file_ext "hello-world.txt"
+# ## txt
+#
+# _koopa_file_ext "hello-world.tar.gz"
+# ## gz
+#
+# See also: _koopa_basename_sans_ext
+#
+# Updated 2019-09-26.
 _koopa_file_ext() {
     printf "%s\n" "${1##*.}"
+}
+
+
+
+# Extract the file extension after any dots in the file name.
+# This assumes file names are not in dotted case.
+#
+# Examples:
+# _koopa_file_ext2 "hello-world.tar.gz"
+# ## tar.gz
+#
+# See also: _koopa_basename_sans_ext2
+#
+# Updated 2019-09-26.
+_koopa_file_ext2() {
+    echo "$1" | cut -d '.' -f 2-
 }
 
 
