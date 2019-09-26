@@ -3,6 +3,7 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
+_koopa_assert_has_sudo
 
 
 
@@ -47,4 +48,3 @@ sudo passwd "$user"
 sudo usermod -a -G wheel "$user"
 sudo usermod -a -G biogroup "$user"
 groups "$user"
-
