@@ -4,18 +4,40 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Update conda.
-# Updated 2019-06-23.
 
-# See also:
-# - https://bioconda.github.io/#set-up-channels
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Update conda.
+
+$(_koopa_help_args)
+
+see also:
+    https://bioconda.github.io/#set-up-channels
+
+note:
+    Bash script.
+    Requires that conda is already installed.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed conda
 
-# Update `.condarc` file.
-# > conda config --add channels defaults
-# > conda config --add channels bioconda
-# > conda config --add channels conda-forge
-
+# Update conda first.
 conda update --yes --name=base --channel=defaults conda
+
+# Then update everything in the base environment.
 conda update --yes --name=base --channel=defaults --all

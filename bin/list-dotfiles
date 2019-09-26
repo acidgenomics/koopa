@@ -4,23 +4,36 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# List dotfiles.
-# Updated 2019-07-30.
 
-find_dotfiles() {
-    local type="$1"
-    local header="$2"
-    printf "\n%s:\n\n" "$header"
-    find ~ \
-        -maxdepth 1 \
-        -name ".*" \
-        -type "$type" \
-        -print0 | \
-        xargs -0 -n1 basename | \
-        sort |
-        awk '{print "  ",$0}'
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+List dotfiles.
+
+$(_koopa_help_args)
+
+details:
+    List dotfiles in HOME by type.
+    Organizes into symlinks, files, and directories.
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
 }
 
-find_dotfiles l Symlinks
-find_dotfiles f Files
-find_dotfiles d Directories
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_find_dotfiles l Symlinks
+_koopa_find_dotfiles f Files
+_koopa_find_dotfiles d Directories

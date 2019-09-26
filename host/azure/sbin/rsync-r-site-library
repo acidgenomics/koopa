@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+set -Eeux o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+koopa_home="$(_koopa_home)"
+r_home="$(_koopa_r_home)"
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.132"
+
+r_dir="/data00/R"
+lib_link="${r_dir}/site-library/current"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+rsync R site package library.
+
+$(_koopa_help_args)
+
+details:
+    Requires sync from VM32 using Mike's account.
+
+internal variables:
+    source_ip: ${source_ip}
+    source_user: ${source_user}
+    r_home: ${r_home}
+    r_dir: ${r_dir}
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if [[ ! -d "$r_dir" ]]
+then
+    sudo mkdir -p "$r_dir"
+    sudo chown "mike:wheel" "$r_dir"
+    sudo chmod g+ws "$r_dir"
+fi
+
+sudo chgrp -Rh wheel "$r_dir"
+sudo chmod -R g+w "$r_dir"
+
+if [[ "$host_ip" != "$source_ip" ]]
+then
+    printf "Updating '%s' from '%s'.\n" "$r_dir" "$source_ip"
+    rsync -av --delete "${source_user}@${source_ip}:${r_dir}/" "${r_dir}/"
+fi
+
+sudo chgrp -Rh wheel "$r_dir"
+sudo chmod -R g+w "$r_dir"
+
+# Update local symlinks.
+printf "Updating 'site-library' symlinks.\n"
+
+if [[ -d "/usr/lib64/R" ]]
+then
+    sudo rm -frv "/usr/lib64/R/site-library"
+    sudo ln -fnsv "$lib_link" "/usr/lib64/R/site-library"
+    sudo ln -fnsv "${koopa_home}/os/fedora/etc/R/"* "/usr/lib64/R/etc/."
+fi
+
+if [[ -d "/usr/local/lib64/R" ]]
+then
+    sudo rm -frv "/usr/local/lib64/R/site-library"
+    sudo ln -fnsv "$lib_link" "/usr/local/lib64/R/site-library"
+fi
+
+# Assuming we're symlinking the cellarized R site library.
+# This will work for system R at `/usr/lib64/R` also.
+sudo rm -frv "${r_home}/site-library"
+sudo ln -fnsv "$lib_link" "${r_home}/site-library"
+

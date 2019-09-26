@@ -4,8 +4,28 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Reconfigure rJava.
-# Updated 2019-06-24.
+# Usage                                                                     {{{1
+# ==============================================================================
 
-_koopa_assert_has_sudo
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Reconfigure rJava.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 _koopa_r_javareconf

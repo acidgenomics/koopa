@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
 
-# Install Git SCM.
-# Updated 2019-07-09.
-
 # docbook2x-texi is required for `make doc` to run cleanly.
 #
 # Otherwise, you'll see this error:

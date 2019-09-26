@@ -4,18 +4,49 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install spacemacs.
-# Updated 2019-06-25.
 
-if [[ -d ".emacs.d" ]]
-then
-    >&2 printf "Error: '.emacs.d/' directory exists.\n"
-    exit 1
-fi
 
-git clone https://github.com/syl20bnr/spacemacs.git ~/.emacs.d
+# Variables                                                                 {{{1
+# ==============================================================================
 
-emacs
+name="spacemacs"
+repo="https://github.com/syl20bnr/spacemacs.git"
+emacs_home="${HOME}/.emacs.d"
+install_dir="${emacs_home}-${name}"
 
-# Fix for org-projectile warning.
-# > rm -f ~/.emacs.d/elpa/org-projectile-*/org-projectile.elc
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install spacemacs.
+
+$(_koopa_help_args)
+
+details:
+    Installs into '${install_dir}'.
+    Links into '${emacs_home}'.
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_not_dir "$install_dir"
+git clone "$repo" "$install_dir"
+link-emacs "$name"
+
+emacs --no-window-system
+

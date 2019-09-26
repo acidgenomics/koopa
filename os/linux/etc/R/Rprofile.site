@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-09-19 by Michael Steinbaugh.
+## Updated 2019-09-25 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -198,10 +198,14 @@ options(
 ## parallel                                                                 {{{2
 ## -----------------------------------------------------------------------------
 
-## Improve the default multi-core settings. Minimum of 1 core, maximum of n-2
+## Improve the default multi-core settings. Minimum of 1 core, maximum of n-1
 ## cores. `BiocParallel::MulticoreParam()` should inherit this setting.
 options(
-    mc.cores = max(1L, parallel::detectCores() - 2L)
+    mc.cores = max(1L, parallel::detectCores() - 1L)
+)
+## `install.packages()` looks for "Ncpus" global.
+options(
+    "Ncpus" = getOption("mc.cores")
 )
 
 ## readr                                                                    {{{2
@@ -317,13 +321,13 @@ options(
     ## unit tests currently will fail to run because of this setting, which is
     ## intentional. We need to set the `--vanilla` flag in `Rscript` calls.
 
-    if (Sys.which("conda") != "") {
-        warning(paste(
-            "conda detected.",
-            "Run `conda deactivate` prior to starting R.",
-            sep = "\n"
-        ))
-    }
+    ## > if (Sys.which("conda") != "") {
+    ## >     warning(paste(
+    ## >         "conda detected.",
+    ## >         "Run `conda deactivate` prior to starting R.",
+    ## >         sep = "\n"
+    ## >     ))
+    ## > }
 
     ## RStudio                                                              {{{2
     ## -------------------------------------------------------------------------

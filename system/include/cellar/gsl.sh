@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
-# Install GNU Scientific Library (GSL).
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-gsl [--help|-h]
 
-# See also:
-# - https://www.gnu.org/software/gsl/
+Install GNU Scientific Library (GSL).
 
-_koopa_assert_has_no_environments
+see also:
+    - https://www.gnu.org/software/gsl/
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
 
 name="gsl"
 version="$(_koopa_variable "$name")"

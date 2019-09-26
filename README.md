@@ -9,6 +9,11 @@ Shell bootloader for bioinformatics.
 
 These [POSIX][]-compliant shells are supported: [bash][], [zsh][].
 
+[dash][], [ksh][], and [tcsh][] shells aren't supported.
+
+Support for the non-POSIX [fish][] shell may be added in a future release, but
+is currently unsupported.
+
 Requirements:
 
 - Linux or macOS. Windows isn't supported.
@@ -97,7 +102,6 @@ on the operating system, so refer to your shell documentation for details.
 
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
-- [ksh][]: `.kshrc`, `.profile`.
 
 ## Exported tools
 
@@ -169,18 +173,19 @@ Host *
     UseKeychain yes
 ```
 
-[Aspera Connect]: https://downloads.asperasoft.com/connect2/
-[Bash]: https://www.gnu.org/software/bash/  "Bourne again shell"
+[aspera connect]: https://downloads.asperasoft.com/connect2/
+[bash]: https://www.gnu.org/software/bash/  "Bourne Again SHell"
 [bcbio]: https://bcbio-nextgen.readthedocs.io/
-[Conda]: https://conda.io/
+[conda]: https://conda.io/
+[dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist SHell"
 [dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
-[Fish]: https://fishshell.com/
-[Git]: https://git-scm.com/
-[ksh]: http://www.kornshell.com/  "KornShell"
-[PGP]: https://www.openpgp.org/
-[POSIX]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
-[Python]: https://www.python.org/
-[R]: https://www.r-project.org/
-[SSH]: https://en.wikipedia.org/wiki/Secure_Shell
-[tcsh]: https://en.wikipedia.org/wiki/Tcsh
-[Zsh]: https://www.zsh.org/  "Z shell"
+[fish]: https://fishshell.com/  "Friendly Interactive SHell"
+[git]: https://git-scm.com/
+[ksh]: http://www.kornshell.com/  "KornSHell"
+[pgp]: https://www.openpgp.org/
+[posix]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
+[python]: https://www.python.org/
+[r]: https://www.r-project.org/
+[ssh]: https://en.wikipedia.org/wiki/Secure_Shell
+[tcsh]: https://en.wikipedia.org/wiki/Tcsh  "TENEX C Shell"
+[zsh]: https://www.zsh.org/  "Z SHell"

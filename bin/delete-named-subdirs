@@ -4,13 +4,52 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Remove named subdirectories.
-# Updated 2019-06-23.
 
-# For example, useful for removing bcbio "work" directories.
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    dir subdir_name
+
+Delete named subdirectories.
+
+required positional arguments:
+    1.  Directory path.
+    2.  Subdirectory name, to delete.
+
+$(_koopa_help_args)
+
+details:
+    Calls 'find' internally to recursively scan for a subdirectory name and
+    removes those nested directories.
+
+    Useful for removing bcbio "work" directories, for example.
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+
+examples:
+    delete-named-subdirs rnaseq-data/ work
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
 
 path="$1"
 subdir_name="$2"
 
-find "$path" -type d -name "$subdir_name" -print0 | \
-    xargs -0 -I {} rm -rf {}
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+find "$path" -type d -name "$subdir_name" -print0 | xargs -0 -I {} rm -rf {}

@@ -4,34 +4,5 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
-# Install Genrich.
-# Updated 2019-09-04.
-
-# See also:
-# - https://github.com/jsh58/Genrich
-
-_koopa_assert_has_no_environments
-
-name="genrich"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-exe_file="${prefix}/bin/${name}"
-
-(
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
-    wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
-    tar -xzvf "v${version}.tar.gz"
-    cd "Genrich-${version}" || exit 1
-    make
-    mkdir -pv "${prefix}/bin"
-    cp -frv Genrich "${prefix}/bin/."
-    rm -rf "$tmp_dir"
-)
-
-_koopa_link_cellar "$name" "$version"
-
-command -v "$exe_file"
-"$exe_file" --version
+# shellcheck source=/dev/null
+source "$(_koopa_cellar_script genrich)"

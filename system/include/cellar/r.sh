@@ -1,33 +1,40 @@
 #!/usr/bin/env bash
 
-# Install R.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-r [--help|-h]
 
-# See also:
-# - https://www.r-project.org/
-# - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
-# - https://community.rstudio.com/t/compiling-r-from-source-in-opt-r/14666
-# - https://superuser.com/questions/841270/installing-r-on-rhel-7
-# - https://github.com/rstudio/rmarkdown/issues/359
-# - http://pj.freefaculty.org/blog/?p=315
+Install R.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://www.r-project.org/
+    - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
+    - https://community.rstudio.com/t/compiling-r-from-source-in-opt-r/14666
+    - https://superuser.com/questions/841270/installing-r-on-rhel-7
+    - https://github.com/rstudio/rmarkdown/issues/359
+    - http://pj.freefaculty.org/blog/?p=315
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="R"
 version="$(_koopa_variable "$name")"
+major_version="$(echo "$version" | cut -d "." -f 1)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
-major_version="$(echo "$version" | cut -d "." -f 1)"
-# > minor_version="$(echo "$version" | cut -d "." -f 2-)"
-
 printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -frv "$prefix"
-    rm -fr "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://cran.r-project.org/src/base/R-${major_version}/R-${version}.tar.gz"

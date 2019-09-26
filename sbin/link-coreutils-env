@@ -4,10 +4,36 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Link coreutils env
-# Updated 2019-08-14.
 
-# This may be necessary to re-run after yum update on RHEL7.
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: link-coreutils-env [--help|-h]
+
+Link coreutils env.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    This may be necessary to re-run after yum update on RHEL 7.
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_sudo
 

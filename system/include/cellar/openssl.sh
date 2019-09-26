@@ -1,18 +1,31 @@
 #!/usr/bin/env bash
 
-# Install OpenSSL.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-openssl [--help|-h]
 
-# Currently installing as cellar-only.
-# This is useful for running RDAVIDWebService but can break other programs
-# when installed into `/usr/local`.
+Install (cellar-only) OpenSSL.
 
-# See also:
-# - https://www.openssl.org/source/
-# - https://wiki.openssl.org/index.php/Compilation_and_Installation
-# - https://wiki.openssl.org/index.php/Binary_Compatibility
+details:
+    Currently installing as cellar-only.
 
-_koopa_assert_has_no_environments
+    This is useful for running RDAVIDWebService on a virtual machine but can
+    break other programs when installed into '/usr/local'.
+
+    Alternatively, can consider using OpenSSL available via conda.
+
+see also:
+    - https://www.openssl.org/source/
+    - https://wiki.openssl.org/index.php/Compilation_and_Installation
+    - https://wiki.openssl.org/index.php/Binary_Compatibility
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
 
 name="openssl"
 version="$(_koopa_variable "$name")"
@@ -24,7 +37,7 @@ printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -frv "$prefix"
-    rm -fr "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"

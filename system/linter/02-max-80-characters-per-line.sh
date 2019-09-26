@@ -2,12 +2,12 @@
 set -Eeu -o pipefail
 
 # Find lines containing more than 80 characters.
-# Updated 2019-08-26.
+# Updated 2019-09-23.
 
 # Returns with `true` or `false` exit codes.
 
-# shellcheck source=system/include/functions.sh
-source "${KOOPA_HOME}/system/include/functions.sh"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
 path="${1:-$KOOPA_HOME}"
 

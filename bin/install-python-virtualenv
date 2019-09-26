@@ -4,19 +4,69 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Set up python virtual environment.
-# Updated 2019-06-23.
 
-_koopa_assert_has_no_environments
-_koopa_assert_is_installed python
 
-env_base_dir="${HOME}/.virtualenvs"
-env_name="${1:-default}"
-env_dir="${env_base_dir}/${env_name}"
-rm -rf "$env_dir"
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Python 2 method (deprecated)
 # > virtualenv "$env_dir" --system-site-packages
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+env_name="default"
+env_base_dir="${HOME}/.virtualenvs"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [name="${env_name}"] [dir="${env_base_dir}"]
+
+Set up Python virtual environment.
+
+required positional arguments with defaults:
+    1.  Environment name.
+        Defaults to '${env_name}'.
+    2.  Virtual environment base directory.
+        Defaults to '${env_base_dir}'.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+env_name="${1:-$env_name}"
+env_base_dir="${2:-$env_base_dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_has_no_environments
+_koopa_assert_is_installed python3 python
+
+
+env_dir="${env_base_dir}/${env_name}"
+rm -frv "$env_dir"
 
 python3 -m venv "$env_dir"
 

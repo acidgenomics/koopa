@@ -4,8 +4,10 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
 
-# rsync to Azure Samba (SMB) file shares.
-# Updated 2019-06-25.
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Useful rsync flags:
 # -n, --dry-run               perform a trial run with no changes made
@@ -35,23 +37,65 @@ source "$(koopa header azure)"
 # --super                 receiver attempts super-user activities
 # --fake-super            store/recover privileged attrs using xattrs
 
-flags=( \
-    --recursive \
-    --human-readable \
-    --progress \
-    --stats \
-    --verbose \
-    --no-links \
-    --size-only \
-    --exclude ".git" \
-    --exclude ".gitignore" \
-    --exclude ".Rproj.user" \
-    --exclude "bam" \
-    --exclude "cram" \
-    --exclude "fastq" \
-    --exclude "sam" \
-    --exclude "work" \
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+flags=(
+    "--exclude=.Rproj.user"
+    "--exclude=.git"
+    "--exclude=.gitignore"
+    "--exclude=bam"
+    "--exclude=cram"
+    "--exclude=fastq"
+    "--exclude=sam"
+    "--exclude=work"
+    "--human-readable"
+    "--no-links"
+    "--progress"
+    "--recursive"
+    "--size-only"
+    "--stats"
+    "--verbose"
 )
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header) ...
+
+rsync to Azure Samba (SMB) file shares.
+
+required positional arguments:
+    ... Passes to rsync, with some flags set internally.
+
+$(_koopa_help_args)
+
+rsync flags set automatically:
+EOF
+printf "    %s\n" "${flags[@]}"
+cat << EOF
+
+examples:
+    rsync-azure-files results/ /mnt/azbioinfo01/project/results/
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 if _koopa_has_sudo
 then

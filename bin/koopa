@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# koopa shell bootloader.
-# (c) 2018 Michael Steinbaugh.
-# This software is provided under an MIT License.
-
 if [[ -z "${KOOPA_HOME:-}" ]]
 then
     >&2 printf "koopa is not correctly activated.\n"
@@ -24,7 +20,11 @@ date="$(_koopa_variable koopa_date)"
 
 usage() {
     cat << EOF
-usage: koopa [-h] [-V] COMMAND
+$(_koopa_help_header) [--version|-V]
+    COMMAND
+
+koopa $version ($date)
+Shell bootloader for bioinformatics.
 
 system configuration commands:
     check
@@ -47,10 +47,14 @@ return string commands:
         For use in Python and R scripts only.
 
 optional arguments:
-    -h, --help
+    --help, -h
         Show this help message and exit.
-    -V, --version
+    --version, -V
         Version information.
+
+note:
+    This software is provided under an MIT License.
+    See 'LICENSE' file for details.
 EOF
 }
 
@@ -121,7 +125,7 @@ case "$1" in
         exit
         ;;
     *)
-        >&2 printf "Error: Unsupported command.\n"
+        >&2 printf "Error: Unsupported command: '%s'\n" "$1"
         exit 1
         ;;
 esac

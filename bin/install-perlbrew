@@ -4,13 +4,34 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Perlbrew.
-# Updated 2019-06-25.
 
-# See also:
-# - https://perlbrew.pl/
-# - https://metacpan.org/pod/App::perlbrew
-# - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Perlbrew.
+
+$(_koopa_help_args)
+
+see also:
+    - https://perlbrew.pl/
+    - https://metacpan.org/pod/App::perlbrew
+    - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_no_environments
 

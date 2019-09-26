@@ -4,27 +4,44 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Uninstall Adobe software.
-# Updated 2019-06-25.
 
-_koopa_assert_has_sudo
 
-rm -rf ~/Documents/Adobe
+# Usage                                                                     {{{1
+# ==============================================================================
 
-sudo rm -rf /Library/Application\ Support/Adobe*
-sudo rm -rf /Library/Application\ Support/regid.*.com.adobe
-sudo rm -rf /Library/Caches/com.{a,A}dobe*
-sudo rm -rf /Library/Fonts/{a,A}dobe*
-sudo rm -rf /Library/Preferences/com.{a,A}dobe*
-sudo rm -rf /Library/ScriptingAdditions/Adobe\ Unit\ Types.osax
+usage() {
+cat << EOF
+$(_koopa_help_header)
 
-sudo rm -rf /Users/Shared/Adobe
+Uninstall Adobe software.
 
-sudo rm -rf ~/Library/Application\ Support/Adobe*
-sudo rm -rf ~/Library/Caches/Adobe*
-sudo rm -rf ~/Library/Caches/com.adobe*
-sudo rm -rf ~/Library/Preferences/Adobe*
-sudo rm -rf ~/Library/Preferences/ByHost/com.adobe*
-sudo rm -rf ~/Library/Preferences/Macromedia
-sudo rm -rf ~/Library/Preferences/com.{a,A}dobe*
-sudo rm -rf ~/Library/Saved\ Application\ State/com.{a,A}dobe*
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+rm -frv ~/Documents/Adobe
+
+sudo rm -frv /Library/Application\ Support/Adobe*
+sudo rm -frv /Library/Application\ Support/regid.*.com.adobe
+sudo rm -frv /Library/Caches/com.{a,A}dobe*
+sudo rm -frv /Library/Fonts/{a,A}dobe*
+sudo rm -frv /Library/Preferences/com.{a,A}dobe*
+sudo rm -frv /Library/ScriptingAdditions/Adobe\ Unit\ Types.osax
+sudo rm -frv /Users/Shared/Adobe
+sudo rm -frv ~/Library/Application\ Support/Adobe*
+sudo rm -frv ~/Library/Caches/Adobe*
+sudo rm -frv ~/Library/Caches/com.adobe*
+sudo rm -frv ~/Library/Preferences/Adobe*
+sudo rm -frv ~/Library/Preferences/ByHost/com.adobe*
+sudo rm -frv ~/Library/Preferences/Macromedia
+sudo rm -frv ~/Library/Preferences/com.{a,A}dobe*
+sudo rm -frv ~/Library/Saved\ Application\ State/com.{a,A}dobe*

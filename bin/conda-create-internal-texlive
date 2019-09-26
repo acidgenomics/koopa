@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Create internal texlive conda environment.
+
+$(_koopa_help_args)
+
+details:
+    Useful environment on virtual machines running a conservative Linux release
+    (i.e. RHEL 7) that bundles a very old version of texlive.
+
+see also:
+    conda env list
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed conda
+
+name="texlive"
+prefix="$(_koopa_conda_prefix)/envs/${name}"
+
+conda create -qy --prefix="$prefix" texlive-core

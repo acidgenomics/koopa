@@ -4,20 +4,57 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Rcheck scripts for R package locally.
-# Updated 2019-07-31.
 
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+source_repo="git@github.com:acidgenomics/Rcheck.git"
 config_dir="$(_koopa_config_dir)"
-rcheck_repo="${config_dir}/Rcheck"
+clone_dir="${config_dir}/Rcheck"
+link_name=".Rcheck"
 
-if [[ ! -d "$rcheck_repo" ]]
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Rcheck scripts for R package locally.
+
+$(_koopa_help_args)
+
+details:
+    Run this script inside a git repo where you want to enable Rcheck CI.
+    Git repo will be cloned into koopa config, if necessary.
+    Symlink will be added at '${link_name}'.
+
+    Source repo:
+        ${source_repo}
+    Target clone:
+        ${clone_dir}'
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if [[ ! -d "$clone_dir" ]]
 then
-    rm -rf "$rcheck_repo"
-    git clone git@github.com:acidgenomics/Rcheck.git "$rcheck_repo"
+    rm -frv "$clone_dir"
+    git clone "$source_repo" "$clone_dir"
 fi
 
 # Add symlink in current working directory.
-rm -rf .Rcheck
-ln -fns "$rcheck_repo" .Rcheck
-
-# Ensure necessary config files are copied.
+ln -fnsv "$clone_dir" "$link_name"
