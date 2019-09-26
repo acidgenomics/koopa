@@ -20,17 +20,24 @@ _koopa_find_dotfiles() {
 
 
 
-#' Find text in any file.
-#'
-#' @note Updated 2019-09-05.
-#'
-#' @seealso
-#' - https://github.com/stephenturner/oneliners
-#'
-#' @examples
-#' _koopa_find_text "mytext" *.txt
+# Find text in any file.
+#
+# See also: https://github.com/stephenturner/oneliners
+#
+# Examples:
+# _koopa_find_text "mytext" *.txt
+#
+# Updated 2019-09-05.
 _koopa_find_text() {
     find . -name "$2" -exec grep -il "$1" {} \;;
+}
+
+
+
+# Extract the file extension from input.
+# Updated 2019-09-25.
+_koopa_file_ext() {
+    printf "%s\n" "${1##*.}"
 }
 
 
