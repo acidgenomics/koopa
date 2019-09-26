@@ -88,27 +88,35 @@ _koopa_help "$@"
 # ==============================================================================
 
 POSITIONAL=()
-for i in "$@"
+while (("$#"))
 do
-    case "$i" in
+    case "$1" in
         --padwidth=*)
-            padwidth="${i#*=}"
+            padwidth="${1#*=}"
             shift 1
             ;;
+        --padwidth)
+            padwidth="$2"
+            shift 2
+            ;;
         --prefix=*)
-            prefix="${i#*=}"
+            prefix="${1#*=}"
             shift 1
+            ;;
+        --prefix)
+            prefix="$2"
+            shift 2
             ;;
         --)
             shift 1
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
         *)
-            POSITIONAL+=("$i")
+            POSITIONAL+=("$1")
             shift 1
             ;;
     esac

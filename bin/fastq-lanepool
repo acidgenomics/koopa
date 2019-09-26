@@ -75,36 +75,46 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-21.
+    Updated 2019-09-26.
 EOF
 }
 
+_koopa_help "$@"
 
 
-# Parse arguments                                                           {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
 
-for i in "$@"
+while (("$#"))
 do
-    case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
+    case "$1" in
         --prefix=*)
-            prefix="${i#*=}"
-            shift
+            prefix="${1#*=}"
+            shift 1
+            ;;
+        --prefix)
+            prefix="$2"
+            shift 2
             ;;
         --source-dir=*)
-            source_dir="${i#*=}"
-            shift
+            source_dir="${1#*=}"
+            shift 1
+            ;;
+        --source-dir)
+            source_dir="$2"
+            shift 2
             ;;
         --target-dir=*)
-            target_dir="${i#*=}"
-            shift
+            target_dir="${1#*=}"
+            shift 1
+            ;;
+        --target-dir)
+            target_dir="$2"
+            shift 2
             ;;
         *)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
     esac
