@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
@@ -12,12 +13,15 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Upgrade bcbio-nextgen installation.
+Install CloudBioLinux.
 
 $(_koopa_help_args)
 
+details:
+    Installs to current working directory.
+
 see also:
-    https://bcbio-nextgen.readthedocs.io/
+    http://cloudbiolinux.org/
 
 note:
     Bash script.
@@ -32,14 +36,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_has_no_environments
+_koopa_assert_is_not_dir "cloudbiolinux"
 
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-mkdir -pv "$log_dir"
-
-bcbio_nextgen.py upgrade \
-    --upgrade="stable" \
-    --tools \
-    --data \
-    --cores="$CPU_COUNT" \
-    2>&1 | tee "${log_dir}/bcbio-upgrade-$(date "+%Y%m%d_%H%M%S").log"
+# Using our forked repo, to control for unexpected upstream changes.
+git clone https://github.com/acidgenomics/cloudbiolinux.git

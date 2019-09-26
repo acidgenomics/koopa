@@ -11,7 +11,8 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: find-cellar-symlinks [--help|-h] name [version]
+$(_koopa_help_header)
+    name [version]
 
 Find cellar symbolic links.
 
@@ -22,12 +23,14 @@ optional positional arguments:
     2.  Program version.
         If left unset, the script looks for the latest version installed.
 
+$(_koopa_help_args)
+
 details:
     Find symbolic links for a cellarized program installed by koopa.
 
 note:
     Bash script.
-    Updated 2019-09-22.
+    Updated 2019-09-26.
 
 examples:
     find-cellar-symlinks R 3.6.1
@@ -37,30 +40,26 @@ EOF
 }
 
 [[ -z "${1:-}" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
-for i in "$@"
-do
-    case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
-    esac
-done
-
 name="$1"
-version="$2"
+version="${2:-}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 build_prefix="$(_koopa_build_prefix)"
 
 # Automatically detect version, if left unset.
 cellar_prefix="$(_koopa_cellar_prefix)/${name}"
-if [[ -n "${version:-}" ]]
+if [[ -n "$version" ]]
 then
     cellar_prefix="${cellar_prefix}/${version}"
 else
@@ -70,11 +69,6 @@ else
         tail -n 1
     )"
 fi
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 array=()
 while IFS=  read -r -d $'\0'; do
