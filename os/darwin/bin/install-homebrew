@@ -4,8 +4,31 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Install Homebrew.
-# Updated 2019-07-26.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Homebrew.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-07-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # Install Xcode CLT.
 xcode-select --install
