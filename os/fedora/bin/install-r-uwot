@@ -11,12 +11,14 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: install-r-uwot [--help|-h]
+$(_koopa_help_header)
 
 Install uwot R package on RStudio Server Pro.
 
+$(_koopa_help_args)
+
 details:
-    Fails unless we set full path to INSTALL.
+    Fails unless we define full path explicitly to INSTALL.
 
 see also:
     - https://github.com/jlmelville/uwot
@@ -37,7 +39,6 @@ _koopa_help "$@"
 
 name="uwot"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-
 r_home="$(_koopa_r_home)"
 install_exe="${r_home}/bin/INSTALL"
 _koopa_assert_is_executable "$install_exe"
