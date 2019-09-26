@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
-# Install Tmux terminal multiplexer.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-tmux [--help|-h]
 
-# See also:
-# - https://github.com/tmux/tmux
+Install Tmux terminal multiplexer.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://github.com/tmux/tmux
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="tmux"
 version="$(_koopa_variable "$name")"
@@ -19,8 +28,8 @@ printf "Installing %s %s.\n" "$name" "$version"
 
 (
     rm -frv "$prefix"
-    rm -fr "$tmp_dir"
-    mkdir -p "$tmp_dir"
+    rm -frv "$tmp_dir"
+    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
     tar -xzvf "tmux-${version}.tar.gz"

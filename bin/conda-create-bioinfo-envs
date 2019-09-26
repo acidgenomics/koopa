@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# outdated:
+# - chromhmm needs to be updated to v1.19.
+# - gatk needs to be updated to v4.
+#
+# missing:
+# - genrich
+# - sratools (fasterq-dump)
+#
+# variation:
+# - peddy
+#
+# methylation:
+# - bismark
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Create multiple conda environments for bioinformatics.
+
+$(_koopa_help_args)
+
+details:
+    Installs non-R bioinformatics tools.
+    For R, compile from source instead.
+
+see also:
+    conda env list
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed conda
+
+bioinfo_base=(
+    bamtools
+    bedtools
+    bioawk
+    biobambam
+    htslib
+    samblaster
+    samtools
+    seqtk
+)
+# shellcheck disable=SC2068
+conda create -qy --name="bioinfo-base" ${bioinfo_base[@]}
+
+# Workflows                                                                 {{{2
+# ------------------------------------------------------------------------------
+
+# > conda create -qy --name="cromwell" cromwell
+# > conda create -qy --name="fgbio" fgbio
+# > conda create -qy --name="gatk" gatk
+conda create -qy --name="nextflow" nextflow
+
+# Tools                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="gffutils" gffutils
+
+# Quality control                                                           {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="qc" fastqc multiqc qualimap
+
+conda create -qy --name="kraken" kraken
+conda create -qy --name="picard" picard
+
+# Aligners                                                                  {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="bowtie2" bowtie2
+conda create -qy --name="bwa" bwa
+conda create -qy --name="hisat2" hisat2
+conda create -qy --name="kallisto" kallisto
+conda create -qy --name="minimap2" minimap2
+conda create -qy --name="rapmap" rapmap
+conda create -qy --name="salmon" salmon
+conda create -qy --name="star" star
+
+# Trimming (legacy)                                                         {{{2
+# ------------------------------------------------------------------------------
+
+# > conda create -qy --name="trim-atropos" atropos
+# > conda create -qy --name="trim-trimmomatic" trimmomatic
+
+# RNA-seq                                                                   {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="bcbiornaseq" r-bcbiornaseq
+
+# Fusion detection                                                          {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="arriba" arriba
+conda create -qy --name="ericscript" ericscript
+conda create -qy --name="oncofuse" oncofuse
+conda create -qy --name="pizzly" pizzly
+conda create -qy --name="star-fusion" star-fusion
+
+# ChIP-seq                                                                  {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="chromhmm" chromhmm
+conda create -qy --name="deeptools" deeptools
+conda create -qy --name="diffbind" bioconductor-diffbind
+conda create -qy --name="homer" homer
+conda create -qy --name="macs2" macs2
+
+# Single-cell RNA-seq
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
+
+conda env list

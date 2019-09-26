@@ -4,12 +4,35 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Anaconda.
-# Updated 2019-06-23.
 
-# See also:
-# - https://www.anaconda.com/download
-# - https://docs.anaconda.com/anaconda/install/
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Anaconda.
+
+$(_koopa_help_args)
+
+see also:
+    - https://www.anaconda.com/download
+    - https://docs.anaconda.com/anaconda/install/
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_no_environments
 

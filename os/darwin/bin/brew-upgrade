@@ -4,8 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Upgrade Homebrew.
-# Updated 2019-09-11.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Upgrade Homebrew.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-11.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed brew
 
 brew analytics off
 
@@ -20,7 +45,7 @@ printf "\nUpgrading Homebrew Casks.\n"
 brew cask outdated | xargs brew cask reinstall
 
 # Mac App Store
-if [[ -x "$(command -v mas)" ]]
+if _koopa_is_installed mas
 then
     printf "\nUpgrading Mac App Store Apps.\n"
     mas upgrade

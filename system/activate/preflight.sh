@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pre-flight checks.
-# Updated 2019-06-18.
+# Updated 2019-09-24.
 
 
 
@@ -27,14 +27,5 @@ esac
 # Required programs                                                         {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed bash
-_koopa_assert_is_installed cat
-_koopa_assert_is_installed chsh
-_koopa_assert_is_installed curl
-_koopa_assert_is_installed echo
-_koopa_assert_is_installed env
-_koopa_assert_is_installed grep
-_koopa_assert_is_installed sed
-_koopa_assert_is_installed top
-_koopa_assert_is_installed wget
-_koopa_assert_is_installed which
+_koopa_assert_is_installed basename bash cat chsh curl dirname echo env grep   \
+    head less man realpath sed sh tail tee top wget which

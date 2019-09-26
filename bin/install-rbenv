@@ -4,15 +4,46 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Ruby environment manager (rbenv).
-# Updated 2019-06-23.
 
-# See also:
-# - https://github.com/rbenv/rbenv
-# - https://blakewilliams.me/posts/system-wide-rbenv-install
-# - https://devhints.io/rbenv
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 prefix="$(_koopa_build_prefix)/rbenv"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Ruby environment manager (rbenv).
+
+$(_koopa_help_args)
+
+details:
+    Installs into '${prefix}'.
+
+see also:
+    - https://github.com/rbenv/rbenv
+    - https://blakewilliams.me/posts/system-wide-rbenv-install
+    - https://devhints.io/rbenv
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_build_mkdir "$prefix"
 
@@ -22,7 +53,7 @@ git clone \
     "$prefix"
 
 # Install ruby-build.
-mkdir -p "${prefix}/plugins"
+mkdir -pv "${prefix}/plugins"
 git clone \
     https://github.com/sstephenson/ruby-build.git \
     "${prefix}/plugins/ruby-build"

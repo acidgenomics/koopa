@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header linux)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install CloudBioLinux.
+
+$(_koopa_help_args)
+
+details:
+    Installs to current working directory.
+
+see also:
+    http://cloudbiolinux.org/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_not_dir "cloudbiolinux"
+
+# Using our forked repo, to control for unexpected upstream changes.
+git clone https://github.com/acidgenomics/cloudbiolinux.git

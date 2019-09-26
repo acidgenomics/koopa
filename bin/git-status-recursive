@@ -1,13 +1,53 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+set -Eeu -
 
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Get the status of all git repositories.
-# Updated 2019-06-25.
 
-git_dir="${1:-.}"
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Get the status of nested git repositories recursively.
+
+optional positional arguments:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-06-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # SC2044: For loops over find output are fragile.
 # Using `-L` flag here in case git dir is a symlink.
@@ -19,6 +59,4 @@ do
         pwd
         git status
     )
-done <   <(find -L "$git_dir" -maxdepth 2 -type d -name ".git" -print0)
-
-unset -v git_dir
+done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)

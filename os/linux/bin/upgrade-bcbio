@@ -1,16 +1,41 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
-# Update bcbio installation.
-# Updated 2019-07-17.
 
-# Ensure conda is deactivated.
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Upgrade bcbio-nextgen installation.
+
+$(_koopa_help_args)
+
+see also:
+    https://bcbio-nextgen.readthedocs.io/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 _koopa_assert_has_no_environments
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-mkdir -p "$log_dir"
+mkdir -pv "$log_dir"
 
 bcbio_nextgen.py upgrade \
     --upgrade="stable" \
@@ -18,5 +43,3 @@ bcbio_nextgen.py upgrade \
     --data \
     --cores="$CPU_COUNT" \
     2>&1 | tee "${log_dir}/bcbio-upgrade-$(date "+%Y%m%d_%H%M%S").log"
-
-unset -v log_dir

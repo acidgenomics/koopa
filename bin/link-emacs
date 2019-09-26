@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+default_home=".emacs.d"
+default_dir="${HOME}/${default_home}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    name [dir="${default_dir}"]
+
+Link Emacs installation.
+
+required positional arguments:
+    1.  Name of Emacs directory.
+        Example: spacemacs.
+        Looks for '${default_home}-spacemacs' internally.
+
+required positional arguments with defaults:
+    2.  Emacs default directory.
+        Where the symlink is applied.
+        Defaults to '${default_dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Links an Emacs installation (e.g. Spacemacs, Doom Emacs) into
+    '${default_dir}'.
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+name="$1"
+default_dir="${2:-$default_dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+custom_home="${default_home}-${name}"
+custom_dir="${HOME}/${custom_home}"
+
+_koopa_assert_is_dir "$custom_dir"
+_koopa_assert_is_not_dir "$default_dir"
+
+(
+    cd ~
+    if [[ "$name" != "ess" ]]
+    then
+        rm -fv .emacs
+    elif [[ "$name" != "spacemacs" ]]
+    then
+        rm -fv .spacemacs
+    fi
+    case "$name" in
+        doom)
+            dotfile --config --force doom
+            ;;
+        ess)
+            dotfile --force emacs
+            ;;
+        spacemacs)
+            dotfile --force spacemacs
+            ;;
+        *)
+            >&2 printf "Error: Invalid Emacs config name.\n"
+            exit 1
+            ;;
+    esac
+    ln -fnsv "$custom_home" "$default_home"
+)

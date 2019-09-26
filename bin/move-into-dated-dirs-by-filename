@@ -4,22 +4,52 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Move files into dated subdirectories by file name.
-# Updated 2019-07-28.
 
-# Useful for organizing photos, scans, and videos.
 
-# Examples:
-# - 20190101_010101_0001.mov
-# - 2019-01-01-01-01-01.pdf
+# Usage                                                                     {{{1
+# ==============================================================================
 
-# Ensure we're escaping spaces correctly.
-# See also:
-# - https://unix.stackexchange.com/questions/9496
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    files...
 
-[[ -z "${1:-}" ]] &&
-    printf "Error: No files were specified.\n" &&
+Move files into dated subdirectories by file name.
+
+required positional arguments:
+    ... File paths.
+        Assuming we're matching inside current working directory.
+
+$(_koopa_help_args)
+
+details:
+    Useful for organizing photos, scans, and videos.
+
+see also:
+    https://unix.stackexchange.com/questions/9496
+
+examples:
+    - 20190101_010101_0001.mov
+    - 2019-01-01-01-01-01.pdf
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if [[ -z "${1:-}" ]]
+then
+    >&2 printf "Error: No files were specified.\n"
     exit 1
+fi
 
 grep_array=(
     '([0-9]{4})'

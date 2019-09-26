@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
-# Install GNU core utilities.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-coreutils [--help|-h]
 
-# See also:
-# - https://ftp.gnu.org/gnu/coreutils/
+Install GNU core utilities.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://ftp.gnu.org/gnu/coreutils/
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="coreutils"
 version="$(_koopa_variable "$name")"
@@ -36,7 +45,7 @@ printf "Installing %s %s.\n" "$name" "$version"
 
 _koopa_link_cellar "$name" "$version"
 
-# Update '/usr/bin/env'.
+# Update '/usr/bin/env', if possible.
 if _koopa_has_sudo
 then
     link-coreutils-env

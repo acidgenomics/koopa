@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header linux)"
+
+# shellcheck source=/dev/null
+source "$(_koopa_cellar_script neofetch)"

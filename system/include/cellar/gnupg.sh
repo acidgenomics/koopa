@@ -1,16 +1,25 @@
 #!/usr/bin/env bash
 
-# Install GnuPG.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-gnupg [--help|-h]
 
-# See also:
-# - https://www.gnupg.org/
-# - https://www.gnupg.org/download/
-# - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
-# - https://github.com/gpg/gnupg/blob/master/INSTALL
-# - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
+Install GnuPG suite
 
-_koopa_assert_has_no_environments
+see also:
+    - https://www.gnupg.org/
+    - https://www.gnupg.org/download/
+    - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
+    - https://github.com/gpg/gnupg/blob/master/INSTALL
+    - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="gnupg"
 version="$(_koopa_variable gpg)"

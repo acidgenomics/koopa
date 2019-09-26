@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header azure)"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.135"
+dir="/data00/bcbio"
+group="$(_koopa_build_prefix_group)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+rsync bcbio installation.
+
+$(_koopa_help_args)
+
+details:
+    Requires sync from VM35 using Mike's account.
+
+internal variables:
+    source_ip: ${source_ip}
+    source_user: ${source_user}
+    dir: ${dir}
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# Check for accidental sync from source machine.
+if [[ "$source_ip" == "$host_ip" ]]
+then
+    >&2 printf "Error: On source machine: %s.\n" "$source_ip"
+    exit 1
+fi
+
+printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
+sudo chown -Rh "${source_user}:${group}" "$dir"
+rsync -av --delete "${source_user}@${source_ip}:${dir}/" "${dir}/"
+sudo chown -Rh "${source_user}:${group}" "$dir"

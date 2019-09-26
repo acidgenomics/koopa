@@ -3,14 +3,37 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
-
-# Enable EPEL repository.
-# Updated 2019-07-10.
-
-# See also:
-# - https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
-
 _koopa_assert_has_sudo
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Enable EPEL repository.
+
+$(_koopa_help_args)
+
+see also:
+    https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 os_type="$(_koopa_os_type)"
 
 # Only allow install on RHEL 7.

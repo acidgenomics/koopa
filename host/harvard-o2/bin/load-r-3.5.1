@@ -4,12 +4,41 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header harvard-o2)"
 
-# Load R 3.5.1.
-# Updated 2019-06-23.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Load R 3.5.1 module.
+
+$(_koopa_help_args)
+
+details:
+    Depends on GCC 6.2.
+    Also loads HDF5, GSL.
+
+see also:
+    module spider R/3.5.1
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 module load gcc/6.2.0
 module load R/3.5.1
 module load hdf5/1.10.1
 module load gsl/2.3
-
 R

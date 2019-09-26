@@ -1,0 +1,31 @@
+# R for macOS Makevars configuration.
+# Necessary for building packages from source.
+# Updated 2019-09-25.
+#
+# See also:
+# - https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-FAQ.pdf
+# - https://thecoatlessprofessor.com/programming/r-compiler-tools-for-rcpp-on-macos/
+# - https://thecoatlessprofessor.com/programming/openmp-in-r-on-os-x/
+# - https://github.com/rmacoslib/r-macos-rtools/blob/master/scripts/postinstall
+
+# Mojave CPP headers fix.
+# > softwareupdate --list
+# > softwareupdate --install -a
+# > sudo rm -rf /Library/Developer/CommandLineTools
+# > xcode-select --install
+# > sudo xcodebuild -license accept
+# > sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
+
+# Xcode 11 flags:
+# > CFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+# > CPPFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+# > CXXFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
+
+CC=/usr/local/clang7/bin/clang
+CXX11=/usr/local/clang7/bin/clang++
+CXX14=/usr/local/clang7/bin/clang++
+CXX17=/usr/local/clang7/bin/clang++
+CXX1X=/usr/local/clang7/bin/clang++
+CXX98=/usr/local/clang7/bin/clang++
+CXX=/usr/local/clang7/bin/clang++
+LDFLAGS=-L/usr/local/clang7/lib

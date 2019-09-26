@@ -1,20 +1,32 @@
 #!/usr/bin/env bash
 
-# Install GDAL.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-gdal [--help|-h]
 
-# This requires PROD 6+.
-# Install the cellar version of that first, if necessary.
+Install GDAL.
 
-# See also:
-# - https://gdal.org/
-# - https://github.com/OSGeo/GDAL
-# - https://trac.osgeo.org/gdal/wiki/BuildingOnUnix
-# - https://github.com/OSGeo/gdal/issues/1352
-# - https://gis.stackexchange.com/questions/317109
-# - https://github.com/johntruckenbrodt/pyroSAR/blob/master/pyroSAR/install/install_deps.sh
+details:
+    This recipe requires PROD 6+.
+    Install the cellar version of that first, if necessary.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://gdal.org/
+    - https://github.com/OSGeo/GDAL
+    - https://trac.osgeo.org/gdal/wiki/BuildingOnUnix
+    - https://github.com/OSGeo/gdal/issues/1352
+    - https://gis.stackexchange.com/questions/317109
+    - https://github.com/johntruckenbrodt/pyroSAR/blob/master/pyroSAR/
+          install/install_deps.sh
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
 _koopa_assert_is_installed proj
 
 name="gdal"

@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
 
-# Install htop.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-htop [--help|-h]
 
-# See also:
-# - https://hisham.hm/htop/releases/
-# - https://github.com/hishamhm/htop
+Install htop.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://hisham.hm/htop/releases/
+    - https://github.com/hishamhm/htop
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
+
 _koopa_assert_is_installed python
 
 name="htop"

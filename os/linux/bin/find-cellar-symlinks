@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    name [version]
+
+Find cellar symbolic links.
+
+required positional arguments:
+    1.  Program name.
+
+optional positional arguments:
+    2.  Program version.
+        If left unset, the script looks for the latest version installed.
+
+$(_koopa_help_args)
+
+details:
+    Find symbolic links for a cellarized program installed by koopa.
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+
+examples:
+    find-cellar-symlinks R 3.6.1
+    find-cellar-symlinks emacs 26.3
+    find-cellar-symlinks vim
+EOF
+}
+
+[[ -z "${1:-}" ]] && usage && exit 0
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+name="$1"
+version="${2:-}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+build_prefix="$(_koopa_build_prefix)"
+
+# Automatically detect version, if left unset.
+cellar_prefix="$(_koopa_cellar_prefix)/${name}"
+if [[ -n "$version" ]]
+then
+    cellar_prefix="${cellar_prefix}/${version}"
+else
+    cellar_prefix="$( \
+        find "$cellar_prefix" -maxdepth 1 -type d | \
+        sort | \
+        tail -n 1
+    )"
+fi
+
+array=()
+while IFS=  read -r -d $'\0'; do
+    array+=("$REPLY")
+done < <( \
+    find -L \
+    "$build_prefix" \
+    -type f \
+    -path "${cellar_prefix}/*" \
+    ! -path "${build_prefix}/koopa" \
+    -print0
+)
+
+# Sort the array.
+IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
+unset IFS
+
+# Replace the cellar prefix with our build prefix.
+for file in "${array[@]}"
+do
+    echo "${file//$cellar_prefix/$build_prefix}"
+done
