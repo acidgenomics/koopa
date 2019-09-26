@@ -3,19 +3,46 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
-
-# Install Pandoc.
-# Updated 2019-06-25.
-
-# See also:
-# - https://pandoc.org/installing.html
-# - https://github.com/jgm/pandoc/releases
-
 _koopa_assert_has_sudo
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 name="pandoc"
 version="$(_koopa_variable "$name")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Pandoc.
+
+$(_koopa_help_args)
+
+see also:
+    - https://pandoc.org/installing.html
+    - https://github.com/jgm/pandoc/releases
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 (
     rm -rf "$tmp_dir"

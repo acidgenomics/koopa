@@ -4,8 +4,5 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
 
-# Install htop.
-# Updated 2019-06-23.
-
 # shellcheck source=/dev/null
 source "$(_koopa_cellar_script htop)"

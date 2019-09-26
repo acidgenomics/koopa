@@ -3,13 +3,36 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
-
-# Install Perl rename.
-# Updated 2019-06-25.
-
-# This variant is superior to util-linux rename.
-
 _koopa_assert_has_sudo
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Perl File::Rename.
+
+$(_koopa_help_args)
+
+details:
+    This variant is superior to util-linux rename.
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 if ! _koopa_is_installed cpanm
 then
@@ -19,7 +42,7 @@ fi
 sudo cpanm File::Rename
 
 # Alternate method:
-# perl -MCPAN -e 'install File::Rename'
+# > perl -MCPAN -e 'install File::Rename'
 
 command -v rename
 rename --version

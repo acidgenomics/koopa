@@ -4,13 +4,10 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
 
-# Install Emacs text editor.
-# Updated 2019-06-23.
-
 # Bioconductor AMI is missing these dependencies:
-# > apt-cache search libgif
-# > apt-cache search gnutls
 # > apt-cache search 'libgnutls.*-dev'
+# > apt-cache search gnutls
+# > apt-cache search libgif
 
 if _koopa_has_sudo
 then
