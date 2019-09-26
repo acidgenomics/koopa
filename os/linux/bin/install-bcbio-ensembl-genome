@@ -12,8 +12,8 @@ source "$(koopa header linux)"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    --organism ORGANISM --build BUILD --release RELEASE
-    [--indexes INDEXES]
+    --organism="ORGANISM" --build="BUILD" --release="RELEASE"
+    [--indexes="INDEXES"]
 
 Install Ensembl genome build for bcbio.
 
@@ -55,39 +55,44 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-# FIXME Rework using "=" flag approach.
-
 while (("$#"))
 do
     case "$1" in
+        --build=*)
+            build="${1#*=}"
+            shift 1
+            ;;
         --build)
             build="$2"
             shift 2
+            ;;
+        --indexes=*)
+            indexes="${1#*=}"
+            shift 1
             ;;
         --indexes)
             indexes="$2"
             shift 2
             ;;
+        --organism=*)
+            organism="${1#*=}"
+            shift 1
+            ;;
         --organism)
             organism="$2"
             shift 2
+            ;;
+        --release=*)
+            release="${1#*=}"
+            shift 1
             ;;
         --release)
             release="$2"
             shift 2
             ;;
-        --)
-            # End argument parsing.
-            shift
-            break
-            ;;
-        --*|-*)
-            # Unsupported flags.
-            >&2 printf "Error: Invalid flag '%s'\n" "$1"
-            exit 1
-            ;;
         *)
-            shift
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+            exit 1
             ;;
     esac
 done

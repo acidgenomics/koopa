@@ -110,19 +110,13 @@ EOF
 
 
 # Show usage via help flag.
-# Updated 2019-09-24.
+# Updated 2019-09-26.
 _koopa_help() {
     case "${1:-}" in
         --help|-h)
             usage
-            exit
+            exit 0
             ;;
-        # > "")
-        # >     ;;
-        # > *)
-        # >     >&2 printf "Error: Unsupported argument: '%s'\n" "$1"
-        # >     exit 1
-        # >     ;;
     esac
 }
 

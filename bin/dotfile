@@ -24,6 +24,7 @@ required positional arguments:
 optional positional arguments:
     2.  symlink_name
         Name of target symlink (without '.' prefix).
+        If unset, uses basename from relative_path argument.
 
 optional arguments:
     --config
@@ -69,9 +70,9 @@ force=0
 private=0
 
 POSITIONAL=()
-for i in "$@"
+while (("$#"))
 do
-    case "$i" in
+    case "$1" in
         --config)
             config=1
             shift 1
@@ -89,11 +90,11 @@ do
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
         *)
-            POSITIONAL+=("$i")
+            POSITIONAL+=("$1")
             shift 1
             ;;
     esac

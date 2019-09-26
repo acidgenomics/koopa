@@ -46,7 +46,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-09-26.
 EOF
 }
 
@@ -59,23 +59,27 @@ _koopa_help "$@"
 # ==============================================================================
 
 POSITIONAL=()
-for i in "$@"
+while (("$#"))
 do
-    case "$i" in
+    case "$1" in
         --workdir=*)
-            workdir="${i#*=}"
+            workdir="${1#*=}"
             shift 1
+            ;;
+        --workdir)
+            workdir="$2"
+            shift 2
             ;;
         --)
             shift 1
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
         *)
-            POSITIONAL+=("$i")
+            POSITIONAL+=("$1")
             shift 1
             ;;
     esac
