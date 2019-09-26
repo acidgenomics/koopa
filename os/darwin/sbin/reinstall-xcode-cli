@@ -1,4 +1,35 @@
-# https://stackoverflow.com/questions/34617452
+#!/usr/bin/env bash
+set -Eeu -o pipefail
 
-sudo rm -rf /Library/Developer/CommandLineTools
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Reinstall Xcode command line tools (CLI).
+
+$(_koopa_help_args)
+
+see also:
+    https://stackoverflow.com/questions/34617452
+
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+sudo rm -frv /Library/Developer/CommandLineTools
 xcode-select --install
+sudo xcodebuild -license accept

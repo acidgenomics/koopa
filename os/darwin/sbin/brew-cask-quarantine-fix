@@ -4,11 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Disable quarantine on installed applications.
-# Updated 2019-06-25.
 
-# This is useful for installed Homebrew casks.
 
-_koopa_assert_has_sudo
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Disable quarantine on installed applications.
+
+$(_koopa_help_args)
+
+details:
+    This is useful for fixing installed Homebrew casks.
+
+note:
+    Bash script.
+    Updated 2019-06-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 sudo xattr -r -d com.apple.quarantine /Applications/*.app
