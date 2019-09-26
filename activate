@@ -18,6 +18,74 @@
 
 
 
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+    cat << EOF
+usage: activate [--help|-h]
+
+Activate koopa.
+
+optional variables:
+    extra=1 [true]
+        Enable extra shell and OS-specific configuration.
+    programs=1 [true]
+        Enable automatic configuration of supported programs.
+    minimal=0 [false]
+        Minimal mode. Simply export koopa programs into PATH.
+        Skip additional program and shell configuration.
+        Internally, this sets extra=0, programs=1.
+
+optional variables, for debugging:
+    force=0 [false]
+        Force reactivation, even if koopa is already active.
+    test=0 [false]
+        Enable verbose test mode. Used for Travis CI checks.
+        This will also automatically set 'force=1'.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Currently supports bash, zsh.
+
+    For system-wide configuration on Linux, this should be called inside
+    '/etc/profile.d/koopa.sh', owned by root.
+
+    Sourcing of POSIX shell scripts via '.' (POSIX) or 'source' (bash, zsh)
+    requires that arguments are passed in at the beginning of the call, rather
+    than as positional arguments or flags. Refer to the working examples below.
+
+examples:
+    # Default mode
+    . /usr/local/koopa/activate
+
+    # Minimal mode
+    minimal=1 . /usr/local/koop/activate
+
+note:
+    POSIX script.
+    Updated 2019-09-25.
+EOF
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+    *)
+        >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+        exit 1
+        ;;
+esac
+
+unset -f usage
+
+
+
 # Pre-flight checks                                                         {{{1
 # ==============================================================================
 
@@ -107,82 +175,6 @@ then
         fi
     }
 fi
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-    cat << EOF
-usage: activate [-h]
-
-Activate koopa.
-
-optional variables:
-    extra=1 [true]
-        Enable extra shell and OS-specific configuration.
-    programs=1 [true]
-        Enable automatic configuration of supported programs.
-    minimal=0 [false]
-        Minimal mode. Simply export koopa programs into PATH.
-        Skip additional program and shell configuration.
-        Internally, this sets extra=0, programs=1.
-
-optional variables, for debugging:
-    force=0 [false]
-        Force reactivation, even if koopa is already active.
-    test=0 [false]
-        Enable verbose test mode. Used for Travis CI checks.
-        This will also automatically set 'force=1'.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
-
-details:
-    Currently supports bash, zsh.
-
-    Note that sourcing of POSIX shell scripts via '.'/'source' requires that
-    arguments are passed in at the beginning of the call, rather than as
-    positional arguments or flags. Refer to the working examples below.
-
-    For system-wide configuration on Linux, this should be called inside
-    '/etc/profile.d/koopa.sh', owned by root.
-
-examples:
-    # Default mode
-    . /usr/local/koopa/activate
-
-    # Minimal mode
-    minimal=1 . /usr/local/koop/activate
-
-note:
-    POSIX script.
-    Updated 2019-09-25.
-EOF
-}
-
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-for i in "$@"
-do
-    case "$i" in
-        -h|--help)
-            usage
-            exit
-            ;;
-        *)
-            >&2 printf "Error: Invalid argument '%s'\n" "$1"
-            exit 1
-            ;;
-    esac
-done
-
-unset -f usage
 
 
 
