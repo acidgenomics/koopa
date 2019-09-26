@@ -4,29 +4,67 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Symlink a dot file from iCloud.
-# Updated 2019-07-28.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    file
+
+Symlink a dot file from iCloud.
+
+required positional arguments:
+    1.  File name.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-07-28.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
 
 file="$1"
-local="${HOME}/.${file}"
-cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
 
-if [[ -f "$cloud" ]] && [[ -f "$local" ]]; then
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+local="${HOME}/.${file}"
+
+cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
+_koopa_assert_is_dir "$cloud"
+
+if [[ -f "$cloud" ]] && [[ -f "$local" ]]
+then
     printf "'%s' exists in both places.\n" "$file"
     printf "Deleting local copy.\n"
     rm -v "$local"
     printf "Adding symlink.\n"
-    ln -fsn "$cloud" "$local"
-elif [[ -f "$cloud" ]]; then
+    ln -fnsv "$cloud" "$local"
+elif [[ -f "$cloud" ]]
+then
     printf "'%s' is only saved on cloud.\n" "$file"
     printf "Adding local symlink.\n"
-    ln -fsn "$cloud" "$local"
-elif [[ -f "$local" ]]; then
+    ln -fsnv "$cloud" "$local"
+elif [[ -f "$local" ]]
+then
     printf "'%s' only exists locally.\n" "$file"
     printf "Moving to cloud.\n"
     mv -v "$local" "$cloud"
     printf "Adding symlink.\n"
-    ln -fsn "$cloud" "$local"
+    ln -fsnv "$cloud" "$local"
 else
     printf "Error: '%s' doesn't exist.\n" "$file"
     exit 1
