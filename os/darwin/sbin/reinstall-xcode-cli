@@ -3,6 +3,7 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
+_koopa_assert_has_sudo
 
 
 

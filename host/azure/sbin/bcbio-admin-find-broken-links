@@ -3,6 +3,7 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
+_koopa_assert_has_sudo
 
 
 
@@ -50,4 +51,3 @@ dir="${1:-$dir}"
 # ==============================================================================
 
 find-broken-symlinks "$dir"
-

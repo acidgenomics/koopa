@@ -3,6 +3,7 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
+_koopa_assert_has_sudo
 
 
 
@@ -33,8 +34,6 @@ _koopa_help "$@"
 # ==============================================================================
 
 printf "Installing TeX packages recommended for RStudio.\n"
-
-_koopa_assert_has_sudo
 
 sudo tlmgr update --self
 
