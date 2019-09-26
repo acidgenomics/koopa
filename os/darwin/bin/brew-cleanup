@@ -4,8 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Homebrew cleanup.
-# Updated 2019-09-11.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Homebrew cleanup.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-11.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed brew
 
 brew cleanup -s
 rm -frv "$(brew --cache)"
