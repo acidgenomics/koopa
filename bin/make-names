@@ -34,7 +34,8 @@ optional arguments:
 $(_koopa_help_args)
 
 see also:
-    'make.names()' in R.
+    - 'syntactic::makeNames()' in R.
+    - 'make.names()' in R (the base version).
 
 examples:
     make-names "hello world" "foo bar"
