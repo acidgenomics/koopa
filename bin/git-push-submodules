@@ -4,9 +4,53 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Update and commit submodules.
-# Updated 2019-06-25.
 
-git submodule update --remote --merge
-git commit -m "Update submodules."
-git push
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Update and commit submodules.
+
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+(
+    cd "$dir" || exit 1
+    git submodule update --remote --merge
+    git commit -m "Update submodules."
+    git push
+)
+

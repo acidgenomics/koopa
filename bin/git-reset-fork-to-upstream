@@ -4,17 +4,61 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Reset fork to upstream.
-# Updated 2019-06-23.
 
-# See also:
-# - https://stackoverflow.com/questions/42332769
 
-git checkout master
-git fetch upstream
+# Variables                                                                 {{{1
+# ==============================================================================
 
-# This will delete all your local changes to master.
-git reset --hard upstream/master
+dir="."
 
-# Take care, this will delete all your changes on your forked master.
-git push origin master --force
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Reset fork to upstream.
+
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+see also:
+    - https://stackoverflow.com/questions/42332769
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+(
+    cd "$dir" || exit 1
+    git checkout master
+    git fetch upstream
+    # This will delete all your local changes to master.
+    git reset --hard upstream/master
+    # Take care, this will delete all your changes on your forked master.
+    git push origin master --force
+)
+

@@ -4,8 +4,52 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Delete Adobe Bridge cache files.
-# Updated 2019-07-27.
 
-find . -type f -name ".BridgeCache" -delete
-find . -type f -name ".BridgeCacheT" -delete
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Delete Adobe Bridge cache files.
+
+$(_koopa_help_args)
+
+details:
+    Searches recursively for '.BridgeCache' and '.BridgeCacheT' files.
+
+note:
+    Bash script.
+    Updated 2019-07-27.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+find "$dir" \
+    -type f \
+    \( -name ".BridgeCache" -o \
+        -name ".BridgeCacheT" \) \
+    -delete \
+    -print

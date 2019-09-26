@@ -4,20 +4,64 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# inDrops sample barcode counts from i5 indexes.
-# Updated 2019-06-23.
 
-# See also:
-# - https://iccb.med.harvard.edu/single-cell-core
 
-# Thanks to @roryk for this script.
+# Variables                                                                 {{{1
+# ==============================================================================
 
-gzip -cd ./*_R3.fastq.gz | \
-    head -1000000 | \
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+inDrops sample barcode counts from i5 indexes.
+
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+details:
+    Checks against R3 FASTQ files inside directory.
+    Outputs 'sample-barcodes.log' file.
+
+see also:
+    https://iccb.med.harvard.edu/single-cell-core
+
+note:
+    Bash script.
+    Thanks to @roryk for this script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+dir="$(_koopa_strip_trailing_slash "$dir")"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+gzip -cd "${dir}/"*"_R3.fastq.gz" | \
+    head -n -1000000 | \
     awk 'NR == 2 || NR % 4 == 2' | \
     grep -v N | \
     sort | \
     uniq -c | \
     sort -nr | \
     head -n 24 > \
-    sample_barcodes.log
+    sample-barcodes.log

@@ -4,31 +4,51 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header azure)"
 
-# Symlink docker installation.
-# Updated 2019-08-14.
 
-_koopa_assert_has_sudo
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
 
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Symlink docker installation.
+
+$(_koopa_help_args)
+
+internal variables:
+    source_dir: ${source_dir}
+    dest_dir: ${dest_dir}
+
+note:
+    Bash script.
+    Updated 2019-08-14.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 sudo service docker stop
 
-if [[ -d "$dest_dir" ]]
-then
-    >&2 printf "Error: Docker exists: '%s'.\n" "$dest_dir"
-    exit 1
-fi
+_koopa_assert_is_dir "$source_dir"
+_koopa_assert_is_not_dir "$dest_dir"
 
-if [[ ! -d "$source_dir" ]]
-then
-    >&2 printf "Error: '%s' missing.\n" "$source_dir"
-    >&2 printf "Check that Docker is installed.\n"
-    exit 1
-fi
-
-sudo mv "${source_dir}/" "${dest_dir}/"
-sudo ln -s "$dest_dir" "$source_dir"
+sudo mv -v "${source_dir}/" "${dest_dir}/"
+sudo ln -fnsv "$dest_dir" "$source_dir"
 
 sudo service docker start
 docker images

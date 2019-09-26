@@ -4,22 +4,75 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Reset file permissions to match umask.
-# Updated 2019-06-23.
 
-# Currently recommending umask 0002 as default.
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
 user="$(id -u)"
 group="$(id -g)"
 
-# SC2035: Use ./*glob* or -- *glob* so names with dashes won't become options.
-chown -R "${user}:${group}" -- *
 
-find . -type d -print0 | \
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Reset file permissions to match umask.
+
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+details:
+    Currently recommending umask 0002 as default, which allows group write.
+    Note that this script works recursively, so be careful.
+
+    Changes ownership to:
+    - user: "${user}"
+    - group: "${group}"
+
+    Permissions by file type:
+
+    | type | permission             |
+    | ---- | ---------------------- |
+    | -d   | (775) u=rwx,g=rwx,o=rx |
+    | -f   | (664) u=rw,g=rw,o=r    |
+    | *.sh | (775) u=rwx,g=rwx,o=rx |
+
+examples:
+    reset-permissions fastq/
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+chown -R "${user}:${group}" "$dir"
+
+find "$dir" -type d -print0 | \
     xargs -0 -I {} chmod u=rwx,g=rwx,o=rx {}
-find . -type f -print0 | \
+find "$dir" -type f -print0 | \
     xargs -0 -I {} chmod u=rw,g=rw,o=r {}
-find . -name "*.sh" -type f -print0 | \
+find "$dir" -name "*.sh" -type f -print0 | \
     xargs -0 -I {} chmod u=rwx,g=rwx,o=rx {}
-
-unset -v user group

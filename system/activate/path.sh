@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define PATH string.
-# Updated 2019-07-27.
+# Updated 2019-09-19.
 
 # See also:
 # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
@@ -52,9 +52,7 @@ _koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
 if _koopa_is_linux
 then
     _koopa_add_bins_to_path "os/linux"
-
     id_like="$(grep "ID_LIKE" /etc/os-release | cut -d "=" -f 2)"
-
     if echo "$id_like" | grep -q "debian"
     then
         id_like="debian"
@@ -64,12 +62,10 @@ then
     else
         id_like=
     fi
-
     if [ -n "${id_like:-}" ]
     then
         _koopa_add_bins_to_path "os/${id_like}"
     fi
-
     unset -v id_like
 fi
 
@@ -81,17 +77,20 @@ _koopa_add_bins_to_path "os/$(_koopa_os_type)"
 
 _koopa_add_bins_to_path "host/$(_koopa_host_type)"
 
-# Private scripts                                                          {{{3
-# -----------------------------------------------------------------------------
+# Private scripts                                                           {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_add_to_path_start "$(_koopa_config_dir)/docker/bin"
 _koopa_add_to_path_start "$(_koopa_config_dir)/scripts-private/bin"
 
 
-
-# Java                                                                      {{{1
+# Applications                                                              {{{1
 # ==============================================================================
 
+# Doom Emacs.
+_koopa_add_to_path_start "${HOME}/.emacs.d/bin"
+
+# Java.
 if [ -z "${JAVA_HOME:-}" ]
 then
     JAVA_HOME="$(_koopa_java_home)"
@@ -102,7 +101,6 @@ then
         JAVA_HOME=
     fi
 fi
-
 if [ -d "${JAVA_HOME:-}" ]
 then
     _koopa_add_to_path_start "${JAVA_HOME}/bin"

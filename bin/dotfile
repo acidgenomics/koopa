@@ -4,12 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Symlink dot file.
-# Updated 2019-06-26.
-
-# Note that relative file path in dotfiles repo can be used as input.
-# The destination file should be specified without a leading period.
-
 
 
 # Usage                                                                     {{{1
@@ -17,83 +11,98 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-usage: dotfile [-h] RELATIVE_PATH [SYMLINK_NAME]
+$(_koopa_help_header)
+    [--config] [--force] [--private] [--quiet]
+    relative_path [symlink_name]
+
+Symlink a dot file.
 
 required positional arguments:
-    1: relative_path
+    1.  relative_path
         Relative file path in dotfiles repo.
 
 optional positional arguments:
-    2: symlink_name
-        Name of destination symlink (without '.' prefix).
+    2.  symlink_name
+        Name of target symlink (without '.' prefix).
+        If unset, uses basename from relative_path argument.
 
 optional arguments:
-    -h, --help
-        Show this help message and exit.
-    -f, --force 
+    --config
+        Symlink into XDG config directory instead of user home.
+        This path is defined by 'XDG_CONFIG_HOME' and defaults to '~/.config/'.
+    --force
         Force overwrite.
         Applies to symlinks only.
-    -p, --private
-        Private dot file.
-        Currently only works for Mike's configuration.
-    -q, --quiet
-        Quiet mode. Don't print messages.
+    --private
+        Link a private dot file.
+        Checks in 'scripts-private/' directory in koopa config.
+        Defaults to '~/.config/koopa/scripts-private/'.
+
+$(_koopa_help_args)
+
+details:
+    The relative file path in dotfiles repo can be used as input. The target
+    file should be specified without a leading period.
+
+    By default, this script is designed to work with the 'acidgenomics/dotfiles'
+    repository available on GitHub.
+
+examples:
+    dotfile zshrc
+    dotfile --config doom
+
+note:
+    Bash script.
+    Updated 2019-09-24.
 EOF
 }
 
-[[ -z "$*" ]] && usage && exit
+[[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
 # Parse arguments                                                           {{{1
 # ==============================================================================
 
-# Using flags and positional arguments.
-# https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+config=0
+force=0
+private=0
 
-PARAMS=""
-
+POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
-        -f|--force)
+        --config)
+            config=1
+            shift 1
+            ;;
+        --force)
             force=1
             shift 1
             ;;
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        -p|--private)
+        --private)
             private=1
             shift 1
             ;;
-        -q|--quiet)
-            quiet=1
-            shift 1
-            ;;
         --)
-            # End argument parsing.
-            shift
+            shift 1
             break
             ;;
         --*|-*)
-            # Unsupported flags.
-            >&2 printf "Error: Invalid flag %s\n" "$1"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
         *)
-            # Preserve positional arguments.
-            PARAMS="${PARAMS} ${1}"
-            shift
+            POSITIONAL+=("$1")
+            shift 1
             ;;
     esac
 done
+set -- "${POSITIONAL[@]}"
 
-# Set positional arguments in their proper place.
-eval set -- "$PARAMS"
-
-unset -f usage
+source_name="$1"
+symlink_name="${2:-}"
 
 
 
@@ -103,7 +112,7 @@ unset -f usage
 # Note that we're creating a symlink in local user config.
 dot_dir="$(_koopa_config_dir)/dotfiles"
 
-# Create a dotfile symlink, if necessary.
+# Create a dotfile symlink in config dir, if necessary.
 dot_repo="$(_koopa_home)/dotfiles"
 if [[ -d "$dot_repo"  ]] && [[ ! -d "$dot_dir" ]]
 then
@@ -111,34 +120,34 @@ then
     ln -fnsv "$dot_repo" "$dot_dir"
 fi
 
-# Private file (experimental).
-if [[ "${private:-0}" -eq 1 ]]
+# Private file.
+if [[ "$private" -eq 1 ]]
 then
     dot_dir="${dot_dir}-private"
 fi
+_koopa_assert_is_dir "$dot_dir"
 
-# Error if the dotfiles directory can't be found.
-if [[ ! -d "$dot_dir" ]]
+if [[ "$config" -eq 1 ]]
 then
-    >&2 printf "Error: dotfiles directory missing: '%s'.\n" "$dot_dir"
-    exit 1
+    source_path="${dot_dir}/config/${source_name}"
+else
+    source_path="${dot_dir}/${source_name}"
 fi
+_koopa_assert_is_existing "$source_path"
 
-# Error if the source file can't be found.
-source_path="${dot_dir}/${1}"
-if [[ ! -f "$source_path" && ! -d "$source_path" ]]
-then
-    >&2 printf "Error: source missing: '%s'.\n" "$source_path"
-    exit 1
-fi
-
-# Define optional destination name.
-symlink_name="${2:-}"
+# Define optional target symlink name.
 if [[ -z "$symlink_name" ]]
 then
     symlink_name="$(basename "$source_path")"
 fi
-symlink_path="${HOME}/.${symlink_name}"
+
+# Add link either in HOME (default) or XDG_CONFIG_HOME.
+if [[ "$config" -eq 1 ]]
+then
+    symlink_path="${XDG_CONFIG_HOME}/${symlink_name}"
+else
+    symlink_path="${HOME}/.${symlink_name}"
+fi
 
 # Inform the user when nuking a broken symlink.
 if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
@@ -150,9 +159,8 @@ fi
 # We're allowing force overwrite of existing symlinks only.
 if [[ -L "$symlink_path" ]] &&
     [[ -f "$symlink_path" || -d "$symlink_path" ]] &&
-    [[ -z "${force:-}" ]]
+    [[ "$force" -eq 0 ]]
 then
-    [[ -n "${quiet:-}" ]] && exit 0
     >&2 printf "Error: Existing symlink: '%s'.\n" "$symlink_path"
     exit 1
 elif [[ ! -L "$symlink_path" ]] && [[ -e "$symlink_path" ]]
@@ -161,10 +169,6 @@ then
     exit 1
 fi
 
-if [[ -z "${quiet:-}" ]]
-then
-    printf "Symlinking '%s'.\n" "$(basename "$symlink_path")"
-fi
-
+printf "Symlinking '%s'.\n" "$(basename "$symlink_path")"
 rm -fv "$symlink_path"
 ln -fnsv "$source_path" "$symlink_path"

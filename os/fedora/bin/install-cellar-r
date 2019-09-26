@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
 
-# Install R.
-# Updated 2019-07-09.
-
 # Using TeX Live 2013, we'll see this warning:
 #
 #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF

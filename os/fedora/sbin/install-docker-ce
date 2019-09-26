@@ -3,17 +3,41 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
-
-# Install Docker Community Edition.
-# Updated 2019-07-11.
-
-# See also:
-# - https://docs.docker.com/install/linux/docker-ce/fedora/
-# - https://docs.docker.com/install/linux/docker-ce/centos/
-
-# Note that Fedora 28+ is required to use recommended new `dnf` approach.
-
 _koopa_assert_has_sudo
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Docker Community Edition.
+
+$(_koopa_help_args)
+
+details:
+    Note that Fedora 28+ is required to use recommended new 'dnf' approach.
+
+see also:
+    - https://docs.docker.com/install/linux/docker-ce/fedora/
+    - https://docs.docker.com/install/linux/docker-ce/centos/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 os_type="$(_koopa_os_type)"
 
 # Remove legacy versions, if necessary.

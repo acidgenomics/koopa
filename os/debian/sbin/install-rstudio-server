@@ -3,18 +3,45 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
-
-# Install RStudio Server.
-# Updated 2019-06-25.
-
-# See also:
-# - https://www.rstudio.com/products/rstudio/download-server/
-
 _koopa_assert_has_sudo
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 name="rstudio-server"
 version="$(_koopa_variable "$name")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install RStudio Server.
+
+$(_koopa_help_args)
+
+see also:
+    https://www.rstudio.com/products/rstudio/download-server/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 

@@ -4,9 +4,53 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Rename FASTQ ".fq" extension to ".fastq".
-# Updated 2019-06-23.
 
-for file in ./*.fq; do
-    mv "$file" "${file/%.fq/.fastq}"
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir=${dir}].
+
+Rename FASTQ ".fq" extension to ".fastq".
+
+optional positional arguments:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+dir="$(_koopa_strip_trailing_slash "$dir")"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+for file in "${dir}/"*".fq"
+do
+    mv -v "$file" "${file/%.fq/.fastq}"
 done

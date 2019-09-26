@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-09-18.
+# Updated 2019-09-23.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -139,11 +139,17 @@ alias tardown='tar -xzvf'
 # - `--vanilla`
 alias R='R --no-restore --no-save'
 
+# Black Python code formatter.
+# https://github.com/psf/black
+alias black="black --line-length=80"
+
 # Emacs.
 # Use terminal (console) mode by default instead of window system.
 alias emacs='emacs --no-window-system'
 # Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
 alias emacs-default='emacs --no-init-file --no-window-system'
+# Run with 24-bit true color support.
+alias emacs-24bit='TERM=xterm-24bit emacs --no-window-system'
 
 # Neovim.
 # Allow fast, default mode that skips RC file.

@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+base_url="https://www.gencodegenes.org"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+GENCODE release version.
+
+$(_koopa_help_args)
+
+details:
+    Extract the GENCODE release version from the website.
+
+    Note that the FTP server can list releases that are in development ahead of
+    the public release listed on the website, so scrape the HTML instead.
+
+see also:
+    ${base_url}
+
+note:
+    Bash script.
+    Updated 2019-09-22.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# Human.
+url="${base_url}/human/"
+human="$( \
+    wget -q -O - "$url" | \
+    grep -Eo "Release [0-9]+" | \
+    head -n 1 | \
+    cut -d ' ' -f 2 \
+)"
+printf "human: %s\n" "$human"
+
+# Mouse.
+url="${base_url}/mouse/"
+mouse="$( \
+    wget -q -O - "$url" | \
+    grep -Eo "Release M[0-9]+" | \
+    head -n 1 | \
+    cut -d ' ' -f 2 \
+)"
+printf "mouse: %s\n" "$mouse"

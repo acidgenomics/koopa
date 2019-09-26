@@ -4,10 +4,50 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Pull all git repositories recursively.
-# Updated 2019-06-23.
 
-git_dir="${1:-.}"
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Pull all git repositories recursively.
+
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 # SC2044: For loops over find output are fragile.
 # Using `-L` flag here in case git dir is a symlink.
@@ -21,6 +61,4 @@ do
         git pull --all
         git status
     )
-done <   <(find -L "$git_dir" -maxdepth 2 -type d -name ".git" -print0)
-
-unset -v git_dir
+done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)

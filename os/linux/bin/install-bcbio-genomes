@@ -4,34 +4,70 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
-# Install bcbio-nextgen genomes.
-# Updated 2019-06-21.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install bcbio-nextgen genomes.
+
+$(_koopa_help_args)
+
+details:
+    Installs these supported genomes:
+    
+    | UCSC    | organism                |
+    | ------- | ----------------------- |
+    | BDGP6   | Drosophila melanogaster |
+    | canFam3 | Canis lupus familiaris  |
+    | hg19    | Homo sapiens            |
+    | hg38    | Homo sapiens            |
+    | mm10    | Mus musculus            |
+    | rn6     | Rattus norvegicus       |
+
+see also:
+    https://bcbio-nextgen.readthedocs.io/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed bcbio_nextgen.py
 
 version="$(bcbio_nextgen.py --version)"
 tmp_dir="$(_koopa_tmp_dir)/bcbio"
+cores="$CPU_COUNT"
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
-mkdir -p "$log_dir"
+mkdir -pv "$log_dir"
 log_file="${log_dir}/upgrade-genomes-$(date "+%Y%m%d_%H%M%S").log"
 
-cores="$((CPU_COUNT-2))"
-[[ "$cores" -lt 1 ]] && cores=1
-
 (
-    rm -rf "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     bcbio_nextgen.py upgrade \
-        --upgrade "skip" \
-        --cores "$cores" \
-        --genomes "BDGP6" \
-        --genomes "canFam3" \
-        --genomes "hg38" \
-        --genomes "hg19" \
-        --genomes "mm10" \
-        --genomes "rn6" \
+        --upgrade="skip" \
+        --cores="$cores" \
+        --genomes="BDGP6" \
+        --genomes="canFam3" \
+        --genomes="hg38" \
+        --genomes="hg19" \
+        --genomes="mm10" \
+        --genomes="rn6" \
         2>&1 | tee "$log_file"
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )

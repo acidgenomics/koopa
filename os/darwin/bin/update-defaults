@@ -4,6 +4,32 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Update macOS defaults.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 # Unhide the user library.
 chflags nohidden "${HOME}/Library"
 

@@ -2,10 +2,10 @@
 set -Eeu -o pipefail
 
 # Recursively run shellcheck on all scripts in a directory.
-# Updated 2019-08-26.
+# Updated 2019-09-23.
 
-# shellcheck source=system/include/functions.sh
-source "${KOOPA_HOME}/system/include/functions.sh"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
 # Skip test if shellcheck is not installed.
 # Currently, Travis CI does not have shellcheck installed for macOS.

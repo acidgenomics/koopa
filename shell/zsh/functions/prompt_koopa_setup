@@ -1,32 +1,28 @@
 #!/usr/bin/env zsh
 
-# Koopa ZSH prompt
-# Updated 2019-09-17.
+# Koopa ZSH prompt.
+# Updated 2019-09-23.
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
-
-
 
 # Debugging:
 # > typeset _koopa_prompt_state
 
 # Prompt:
-# - %F     => color dict
-# - %f     => reset color
+# - %n     => user name
+# - %m     => machine (host) name (up to first '.')
+# - %M     => machine (host) name (full)
 # - %~     => current path
 # - %*     => time
-# - %n     => username
-# - %m     => shortname host
 # - %(?..) => prompt conditional - %(condition.true.false)
-
-# Terminal codes:
-# - \e7   => save cursor position
-# - \e[2A => move cursor 2 lines up
-# - \e[1G => go to position 1 in terminal
-# - \e8   => restore cursor position
-# - \e[K  => clears everything after the cursor on the current line
-# - \e[2K => clear everything on the current line
+# - %F     => color dict
+# - %f     => reset color
 
 
 
@@ -43,14 +39,19 @@ _koopa_prompt_precmd() {
 
 
 
+# Conda environment activation is messing up '%m'/'%M' flag on macOS.
+# This seems to be specific to Mac and doesn't happen on Linux.
+
 # Set the user string and color based on local or SSH connection.
 _koopa_prompt_state_setup() {
     local user wd
+    # > user="%n@%m"
+    user="${USER}@${HOSTNAME//.*/}"
     if [[ -n "${SSH_CONNECTION:-}" ]] 
     then
-        user='%F{$_koopa_prompt_colors[user:ssh]}%n@%m%f'
+        user="%F{$_koopa_prompt_colors[user:ssh]}${user}%f"
     else
-        user='%F{$_koopa_prompt_colors[user]}%n@%m%f'
+        user="%F{$_koopa_prompt_colors[user]}${user}%f"
     fi
     wd='%F{${_koopa_prompt_colors[path]}}%~%f'
     typeset -gA _koopa_prompt_state
@@ -73,11 +74,6 @@ _koopa_prompt_setup() {
     then
         typeset -g prompt_newline=$'\n%{\r%}'
     fi
-
-    # > zmodload zsh/datetime
-    # > zmodload zsh/zle
-    # > zmodload zsh/parameter
-    # > zmodload zsh/zutil
     
     # Set the colors.
     typeset -gA _koopa_prompt_colors_default _koopa_prompt_colors
@@ -101,23 +97,24 @@ _koopa_prompt_setup() {
     # Join parts, space separated.
     local -ah header ps1
     
+    # Note that use of koopa causes bash to spawn here.
     header=(
         "${_koopa_prompt_state[user]}"
         "\$(koopa prompt-conda-env)"
         "\$(koopa prompt-python-env)"
     )
     header="${(j..)header}"
-    
+
     ps1=(
         "$header"
         "$prompt_newline"
         "${_koopa_prompt_state[wd]}"
         "$prompt_newline"
     )
-    
+
     # Coerce array to string.
     PROMPT="${(j..)ps1}"
-    
+
     # Prompt turns red if the previous command didn't exit with 0.
     PROMPT+='%(?.%F{$_koopa_prompt_colors[prompt:success]}.%F{$_koopa_prompt_colors[prompt:error]})${_koopa_prompt_state[prompt]}%f '
 

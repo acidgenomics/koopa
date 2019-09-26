@@ -3,11 +3,87 @@
 # SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
 # mode when using `[` instead of `[[`.
 
-# Activate koopa.
-# Updated 2019-09-18.
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Dropped support for ksh because it doesn't support `local` variables scoped
 # inside of functions.
+
+# Checking declared values in Bash:
+# - `declare -F`: Display function names.
+# - `declare -p`: Display the attributes and value of each name.
+# - `declare -x`: Display exported values.
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+    cat << EOF
+usage: activate [--help|-h]
+
+Activate koopa.
+
+optional variables:
+    extra=1 [true]
+        Enable extra shell and OS-specific configuration.
+    programs=1 [true]
+        Enable automatic configuration of supported programs.
+    minimal=0 [false]
+        Minimal mode. Simply export koopa programs into PATH.
+        Skip additional program and shell configuration.
+        Internally, this sets extra=0, programs=1.
+
+optional variables, for debugging:
+    force=0 [false]
+        Force reactivation, even if koopa is already active.
+    test=0 [false]
+        Enable verbose test mode. Used for Travis CI checks.
+        This will also automatically set 'force=1'.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+details:
+    Currently supports bash, zsh.
+
+    For system-wide configuration on Linux, this should be called inside
+    '/etc/profile.d/koopa.sh', owned by root.
+
+    Sourcing of POSIX shell scripts via '.' (POSIX) or 'source' (bash, zsh)
+    requires that arguments are passed in at the beginning of the call, rather
+    than as positional arguments or flags. Refer to the working examples below.
+
+examples:
+    # Default mode
+    . /usr/local/koopa/activate
+
+    # Minimal mode
+    minimal=1 . /usr/local/koop/activate
+
+note:
+    POSIX script.
+    Updated 2019-09-25.
+EOF
+}
+
+case "${1:-}" in
+    --help|-h)
+        usage
+        exit 0
+        ;;
+    "")
+        ;;
+    *)
+        >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+        ;;
+esac
+
+unset -f usage
 
 
 
@@ -103,63 +179,6 @@ fi
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-    cat << EOF
-usage: activate [-h]
-
-Activate koopa.
-
-supported shells: bash, zsh
-
-optional arguments:
-    -h, --help
-        Show this help message and exit.
-
-optional variables:
-    extra=1 [true]
-        Enable extra shell and OS-specific configuration.
-    minimal=0 [false]
-        Minimal mode. Simply export koopa programs into PATH.
-        Skip additional program and shell configuration.
-        Internally, this sets extra=0, programs=1.
-    programs=1 [true]
-        Enable automatic configuration of supported programs.
-
-optional variables, for debugging:
-    force=0 [false]
-        Force reactivation, even if koopa is already active.
-    test=0 [false]
-        Enable verbose test mode. Used for Travis CI checks.
-        This will also automatically set 'force=1'.
-EOF
-}
-
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
-for i in "$@"
-do
-    case "$i" in
-        -h|--help)
-            usage
-            exit
-            ;;
-        *)
-            >&2 printf "Error: Invalid argument '%s'\n" "$1"
-            exit 1
-            ;;
-    esac
-done
-
-unset -f usage
-
-
-
 # Locate koopa home                                                         {{{1
 # ==============================================================================
 
@@ -208,8 +227,8 @@ fi
 KOOPA_HOME="$(dirname "$(realpath "$file")")"
 export KOOPA_HOME
 
-# Load shared functions.
-. "${KOOPA_HOME}/system/include/functions.sh"
+# Load POSIX functions.
+. "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
 # Get location of activation scripts.
 activate_dir="${KOOPA_HOME}/system/activate"
@@ -398,11 +417,6 @@ if [ "$KOOPA_SHELL" = "zsh" ]
 then
     unset -v ZSHRC
 fi
-
-# Checking declared values in Bash:
-# - `declare -F`: Display function names.
-# - `declare -p`: Display the attributes and value of each name.
-# - `declare -x`: Display exported values.
 
 # Disable test mode.
 if [ "$test" -eq 1 ]

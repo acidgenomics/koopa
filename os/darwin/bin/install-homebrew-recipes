@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header darwin)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install recommended Homebrew recipes.
+
+$(_koopa_help_args)
+
+details:
+    Using CRAN R cask (R.app) instead of Homebrew R.
+
+    Homebrew now supports a global variable to force bottle installations.
+    Alternatively, can use '--force-bottle'.
+
+    See also:
+    - https://github.com/Homebrew/brew/pull/4520/files
+    - https://github.com/Homebrew/brew/pull/4542/files
+
+    Note that XQuartz v2.7.11 doesn't work well with wine.
+    Install v2.7.9 directly instead.
+    https://www.xquartz.org/releases/XQuartz-2.7.9.html
+    # > brew cask install xquartz
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed brew
+export HOMEBREW_FORCE_BOTTLE=1
+
+# Casks                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+# Priority.
+brew cask install java osxfuse xquartz
+
+# Recommended.
+casks=(
+    1password
+    alacritty
+    alfred
+    aspera-connect
+    authy
+    basictex
+    bbedit
+    bibdesk
+    coconutbattery
+    coda
+    emacs
+    fiji
+    firefox
+    github
+    google-chrome
+    google-cloud-sdk
+    google-drive-file-stream
+    gpg-suite
+    hazel
+    igv
+    iterm2
+    keka
+    libreoffice
+    netnewswire
+    onyx
+    r
+    safari-technology-preview
+    skype
+    spillo
+    sublime-text
+    superduper
+    textmate
+    torbrowser
+    tower
+    transmit
+    tunnelblick
+    visual-studio-code
+    vlc
+    xld
+)
+for cask in "${casks[@]}"
+do
+    brew cask install "$cask"
+done
+
+# These casks can have permission issues with non-admin accounts.
+brew cask install carbon-copy-cloner little-snitch
+
+# Gatekeeper issues.
+casks=(
+    calibre
+    docker
+    omnidisksweeper
+    rstudio
+)
+for cask in "${casks[@]}"
+do
+    brew cask install "$cask" --no-quarantine
+done
+
+# Brews                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+# Priority.
+brew install bash fish ksh tcsh zsh
+brew install openblas tcl-tk
+brew install flac lame
+
+# Recommended.
+brews=(
+    autoconf
+    automake
+    awscli
+    bash-completion
+    bfg
+    ccache
+    circleci
+    cmake
+    convmv
+    coreutils
+    curl
+    exa
+    exiftool
+    ffmpeg
+    findutils
+    flac
+    gcc
+    gdal
+    git
+    git-lfs
+    gsl
+    hdf5
+    hub
+    imagemagick
+    ksh
+    leiningen
+    libav
+    libgit2
+    libiconv
+    libressl
+    librsvg
+    libssh2
+    libxml2
+    libxslt
+    llvm
+    mariadb-connector-c
+    mas
+    neofetch
+    neovim
+    node
+    open-mpi
+    pandoc
+    pandoc-citeproc
+    pandoc-crossref
+    pkg-config
+    protobuf
+    python
+    rbenv
+    rsync
+    ruby-build
+    rust
+    screen
+    shellcheck
+    shellharden
+    sox
+    sshfs
+    tesseract
+    tmux
+    trash
+    tree
+    udunits
+    vim
+    wget
+    youtube-dl
+    zlib
+)
+for brew in "${brews[@]}"
+do
+    brew install "$brew"
+done
+
+# External.
+brew install vitorgalvao/tiny-scripts/cask-repair

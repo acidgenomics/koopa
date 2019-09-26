@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2001
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Genome versions.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-22.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+ensembl="$(ensembl-version)"
+gencode="$(gencode-version | sed 's/^/  - /')"
+refseq="$(refseq-version)"
+flybase="$(flybase-version | sed 's/^/  - /')"
+wormbase="$(wormbase-version)"
+
+cat << EOF
+Ensembl: ${ensembl}
+GENCODE:
+${gencode}
+RefSeq: ${refseq}
+FlyBase:
+${flybase}
+WormBase: ${wormbase}
+EOF

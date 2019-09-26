@@ -4,28 +4,10 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Copy BAM and BAI index sidecar files to a destination.
-# Updated 2019-06-26.
 
-# Source directory.
-source_dir="$1"
-source_dir="$(realpath "$source_dir")"
-if [[ ! -d "$source_dir" ]]
-then
-    printf "\nDoes not exist:\n%s\n\n" "$source_dir"
-    exit 1
-fi
 
-# Destination directory.
-dest_dir="$2"
-dest_dir="$(realpath "$dest_dir")"
-if [[ ! -d "$dest_dir" ]]
-then
-    printf "\nDoes not exist:\n%s\n\n" "$dest_dir"
-    exit 1
-fi
-
-printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Note that we're allowing symlinks in the search path.
 # `-L`: Follow symbolic links.
@@ -33,6 +15,7 @@ printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 # Note that we're ignoring some bcbio output cruft here.
 # Skip transferring any BAM files in the work directory, and don't copy any
 # of the transcriptome BAMs automatically.
+
 # Ignore:
 # - `work/`
 # - `*-transcriptome.bam`
@@ -40,8 +23,64 @@ printf "\nSource:\n%s\n\nDestination:\n%s\n\n" "$source_dir" "$dest_dir"
 # rsync works more reliably for resuming interrupted transfers.
 # Currently using this to transfer to Azure Files, which doesn't support
 # the rsync `-av` flags.
-# > cp -iruv {} "$dest_dir/".
+# > cp -iruv {} "$target_dir/".
 # > rsync --size-only
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    source_dir target_dir
+
+Copy BAM and BAI index sidecar files from a source to a target directory.
+
+required positional arguments:
+    1.  Source directory path, containing BAM files.
+    2.  Target directory path.
+
+$(_koopa_help_args)
+
+details:
+    Supports transfers on file systems with non-standard permissions, including
+    Azure Files and Windows CIFS/SMB shares.
+
+note:
+    Bash script.
+    Updated 2019-09-22.
+
+examples:
+    copy-bam-files bam/ /data00/bam/
+EOF
+}
+
+[[ -z "${1:-}" ]] && usage && exit 0
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+source_dir="$1"
+target_dir="$2"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_dir "$source_dir"
+_koopa_assert_is_dir "$target_dir"
+
+source_dir="$(realpath "$source_dir")"
+target_dir="$(realpath "$target_dir")"
+
+printf "\nSource:\n%s\n\nTarget:\n%s\n\n" "$source_dir" "$target_dir"
 
 find -L "$source_dir" \
     -maxdepth 4 \
@@ -50,4 +89,4 @@ find -L "$source_dir" \
     ! -name "*-transcriptome.bam" \
     ! -path "*/work/*" \
     -print0 | xargs -0 -I {} \
-    rsync --size-only --progress {} "${dest_dir}/"
+    rsync --size-only --progress {} "${target_dir}/"

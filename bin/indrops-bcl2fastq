@@ -4,8 +4,44 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Generate FASTQ files from inDrops Illumina BCL data.
-# Updated 2019-06-23.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Generate FASTQ files from multiplexed inDrops Illumina sequencing run.
+
+$(_koopa_help_args)
+
+details:
+    Run at the top level of Illumina output directory containing BCL files.
+
+    Assuming input is Harvard inDrops v3 barcode format.
+
+    Some RNA-seq processing pipelines (i.e. Harvard Biopolymers) incorrectly
+    attempt to process inDrops sequencing data to R1, R2 paired-end FASTQs.
+    Instead, R1-R4 FASTQ files should be generated for inDrops data.
+
+see also:
+    Harvard Single Cell Core
+    https://singlecellcore.hms.harvard.edu/
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_is_installed bcl2fastq
 
@@ -13,4 +49,4 @@ bcl2fastq \
     --use-bases-mask y*,y*,y*,y* \
     --mask-short-adapter-reads 0 \
     --minimum-trimmed-read-length 0 \
-    > bcl2fastq.log 2>&1
+    2>&1 | tee bcl2fastq.log

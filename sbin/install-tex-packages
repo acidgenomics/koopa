@@ -4,8 +4,33 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install TeX packages using tlmgr.
-# Updated 2019-06-25.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-tex-packages [--help|-h]
+
+Install TeX packages using tlmgr.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+
+note:
+    Bash script.
+    Updated 2019-09-24.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing TeX packages recommended for RStudio.\n"
 
@@ -40,7 +65,7 @@ packages=( \
     soul
     titlesec
     titling
-    xstring \
+    xstring
 )
 
 for package in "${packages[@]}"

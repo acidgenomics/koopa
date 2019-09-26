@@ -1,25 +1,34 @@
 #!/usr/bin/env bash
 
-# Install Neovim.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-neovim [--help|-h]
 
-# See also:
-# - https://neovim.io/
-# - https://github.com/neovim/neovim
-# - https://github.com/neovim/neovim/wiki/Installing-Neovim
-# - https://github.com/neovim/neovim/wiki/Building-Neovim
+Install Neovim.
 
-# CMAKE_BUILD_TYPE:
-# - Release: Full compiler optimisations and no debug information. Expect the
-#   best performance from this build type. Often used by package maintainers.
-# - Debug: Full debug information; little optimisations. Use this for
-#   development to get meaningful output from debuggers like gdb or lldb. This
-#   is the default, if CMAKE_BUILD_TYPE is not specified.
-# - RelWithDebInfo ("Release With Debug Info"): Enables many optimisations and
-#   adds enough debug info so that when nvim ever crashes, you can still get a
-#   backtrace.
+CMAKE_BUILD_TYPE:
+    - Release: Full compiler optimisations and no debug information. Expect the
+      best performance from this build type. Often used by package maintainers.
+    - Debug: Full debug information; little optimisations. Use this for
+      development to get meaningful output from debuggers like gdb or lldb. This
+      is the default, if CMAKE_BUILD_TYPE is not specified.
+    - RelWithDebInfo ("Release With Debug Info"): Enables many optimisations and
+      adds enough debug info so that when nvim ever crashes, you can still get a
+      backtrace.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://neovim.io/
+    - https://github.com/neovim/neovim
+    - https://github.com/neovim/neovim/wiki/Installing-Neovim
+    - https://github.com/neovim/neovim/wiki/Building-Neovim
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="neovim"
 version="$(_koopa_variable "$name")"

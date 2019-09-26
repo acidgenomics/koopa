@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
 
-# Install Vim.
-# Updated 2019-06-23.
-
 if _koopa_has_sudo
 then
     sudo apt-get -y install vim

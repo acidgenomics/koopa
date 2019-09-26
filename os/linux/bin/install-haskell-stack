@@ -4,17 +4,41 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
-# Install Haskell stack.
-# Updated 2019-06-25.
 
-# See also:
-# - https://www.haskell.org/platform/linux.html#linux-source
-# - https://www.haskellstack.org/
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Haskell stack.
+
+$(_koopa_help_args)
+
+see also:
+    - https://www.haskell.org/platform/linux.html#linux-source
+    - https://www.haskellstack.org/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_assert_has_no_environments
 
 # Installer will warn if this local directory doesn't exist.
-mkdir -p "${HOME}/.local/bin"
-_koopa_add_to_path_start "${HOME}/.local/bin"
+xdg_bin_dir="${HOME}/.local/bin"
+mkdir -pv "$xdg_bin_dir"
+_koopa_add_to_path_start "$xdg_bin_dir"
 
 curl -sSL https://get.haskellstack.org/ | "$SHELL"

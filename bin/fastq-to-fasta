@@ -4,35 +4,10 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Convert a FASTQ file to FASTA format
-# Updated 2019-09-19.
-
-# Assuming input of a decompressed FASTQ file here.
-
-# See also:
-# - seqtk
-# - bioawk
-# - https://twitter.com/aaronquinlan/status/1174080730923589633
-# - https://twitter.com/torstenseemann/status/1174300653184847872
-# - http://thegenomefactory.blogspot.com/2012/05/
-#       cool-use-of-unix-paste-with-ngs.html
 
 
-
-# 1. paste converts the input FASTQ into a 4-column file
-# 2. cut command extracts out just column 1 (the ID) and column 2 (the sequence)
-# 3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">"
-# 4. tr conversts the 2 columns back into 2 lines
-
-fastq_file="$1"
-fasta_file="${fastq_file//fastq/fasta}"
-paste - - - - < "$fastq_file" | \
-    cut -f 1,2 | \
-    sed 's/^@/>/' | \
-    tr "\t" "\n" > \
-    "$fasta_file"
-
-
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Alternate approaches:
 #
@@ -44,3 +19,127 @@ paste - - - - < "$fastq_file" | \
 # >     paste - - - - | \
 # >     awk -v FS="\t" '{print $1"\n"$2}' > \
 # >     "$fasta_file"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+source_dir="."
+target_dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [--source-dir="${source_dir}"] [--target-dir="${target_dir}"]
+
+Convert FASTQ files to FASTA format.
+
+required arguments with defaults:
+    --source-dir
+        Source directory, containing decompressed FASTQ files.
+        Requiring that files contain 'FASTQ' extension, not 'FQ'.
+        Defaults to '${source_dir}'.
+    --target-dir
+        Target directory, returning FASTA files.
+        Defaults to '${target_dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Processing steps:
+    1. paste converts the input FASTQ into a 4-column file.
+    2. cut command extracts out just column 1 (the ID) and column 2 (the
+       sequence).
+    3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">".
+    4. tr conversts the 2 columns back into 2 lines.
+
+see also:
+    - seqtk
+    - bioawk
+    - https://twitter.com/aaronquinlan/status/1174080730923589633
+    - https://twitter.com/torstenseemann/status/1174300653184847872
+    - http://thegenomefactory.blogspot.com/2012/05/
+          cool-use-of-unix-paste-with-ngs.html
+
+examples:
+    fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        --source-dir=*)
+            source_dir="${1#*=}"
+            shift 1
+            ;;
+        --source-dir)
+            source_dir="$2"
+            shift 2
+            ;;
+        --target-dir=*)
+            target_dir="${1#*=}"
+            shift 1
+            ;;
+        --target-dir)
+            target_dir="$2"
+            shift 2
+            ;;
+        *)
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+# Handle trailing directory '/' automatically.
+source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
+target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# Put unique samples into an array and loop.
+array=()
+while IFS=  read -r -d $'\0'; do
+    array+=("$REPLY")
+done < <(find "$source_dir" -maxdepth 1 -name "*.fastq" -print0)
+
+# Error if file array is empty.
+if [[ "${#array[@]}" -eq 0 ]]
+then
+    >&2 printf "Error: No FASTQ files detected.\n"
+    exit 1
+fi
+
+# Create the target directory automatically.
+mkdir -pv "$target_dir"
+
+for fastq_file in "${array[@]}"
+do
+    fasta_file="${fastq_file//fastq/fasta}"
+    paste - - - - < "$fastq_file" | \
+        cut -f 1,2 | \
+        sed 's/^@/>/' | \
+        tr "\t" "\n" > \
+        "$fasta_file"
+done

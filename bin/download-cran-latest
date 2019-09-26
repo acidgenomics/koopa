@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    package
+
+Download latest CRAN release tarball.
+
+required positional arguments:
+    1.  Package name.
+
+$(_koopa_help_args)
+
+details:
+    Downloads latest release into current working directory.
+    Can pass this file to 'R CMD INSTALL'.
+
+examples:
+    download-cran-latest tibble
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+name="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+url="https://cran.r-project.org/web/packages/${name}/"
+pattern="${name}_[.0-9]+.tar.gz"
+file="$(wget -q -O - "$url" | grep -Eo "$pattern" | head -n 1)"
+wget "https://cran.r-project.org/src/contrib/${file}"

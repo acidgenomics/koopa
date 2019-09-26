@@ -4,14 +4,51 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install Doom Emacs.
-# Updated 2019-06-23.
 
-if [[ -d ".emacs.d" ]]
-then
-    >&2 printf "Error: '.emacs.d/' directory exists.\n"
-    exit 1
-fi
 
-git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom quickstart
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="doom"
+repo="https://github.com/hlissner/doom-emacs"
+emacs_home="${HOME}/.emacs.d"
+install_dir="${emacs_home}-${name}"
+exe_file="${install_dir}/bin/doom"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install Doom Emacs.
+
+$(_koopa_help_args)
+
+details:
+    Installs into '${install_dir}'.
+    Links into '${emacs_home}'.
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_not_dir "$install_dir"
+git clone "$repo" "$install_dir"
+link-emacs "$name"
+
+"${exe_file}" quickstart
+"${exe_file}" refresh
+"${exe_file}" doctor

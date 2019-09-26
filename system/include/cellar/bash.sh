@@ -1,12 +1,21 @@
 #!/usr/bin/env bash
 
-# Install Bash.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+usage: install-cellar-bash [--help|-h]
 
-# See also:
-# - https://www.gnu.org/software/bash/
+Install Bash.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://www.gnu.org/software/bash/
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
 
 name="bash"
 version="$(_koopa_variable "$name")"

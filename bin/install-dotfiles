@@ -4,21 +4,55 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Install dot files.
-# Updated 2019-08-26.
 
-# Defaults to the Acid Genomics dotfiles repo.
-repo="${1:-git@github.com:acidgenomics/dotfiles.git}"
-dest_dir="$(_koopa_home)/dotfiles"
 
-if [[ -d "$dest_dir" ]]
-then
-    printf "Dot files already exist at: '%s'.\n" "$dest_dir"
-    exit 0
-elif [[ -L "$dest_dir" ]]
-then
-    # This will take care of legacy symlinks created by koopa.
-    rm -frv "$dest_dir"
-fi
+# Variables                                                                 {{{1
+# ==============================================================================
 
-git clone --recursive "$repo" "$dest_dir"
+url="git@github.com:acidgenomics/dotfiles.git"
+target_dir="$(_koopa_home)/dotfiles"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install-dotfiles [--help|-h]
+    [url="${url}"]
+
+Install dot files repository.
+
+required positional arguments with defaults:
+    1.  Dot file repository URL.
+        Defaults to '${url}'.
+
+$(_koopa_help_args)
+
+details:
+    Installs into '${target_dir}'.
+    Adds a symlink in koopa config dir.
+
+note:
+    Bash script.
+    Updated 2019-09-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+source_repo="${1:-$url}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_not_dir "$target_dir"
+git clone --recursive "$source_repo" "$target_dir"

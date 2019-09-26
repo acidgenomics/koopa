@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+url="ftp://ftp.flybase.net/releases/"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+FlyBase release version.
+
+$(_koopa_help_args)
+
+details:
+    Extract the FlyBase release version from ftp.flybase.net.
+
+see also:
+    ${url}
+
+note:
+    Bash script.
+    Updated 2019-09-20.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+release_date="$( \
+    curl --list-only --silent "$url" | \
+    grep -E "^FB[0-9]{4}_[0-9]{2}$" | \
+    sort | \
+    tail -n 1 \
+)"
+printf "date: %s\n" "$release_date"
+
+release_version="$( \
+    curl --list-only --silent "${url}current/" | \
+    grep -E "^dmel_r[.0-9]+$" \
+)"
+printf "version: %s\n" "$release_version"

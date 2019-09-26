@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    "user/repo"
+
+Download latest GitHub release tarball.
+
+required positional arguments:
+    1.  Repository name, prefixed with the user or organization name.
+        Example: 'acidgenomics/koopa'.
+
+$(_koopa_help_args)
+
+details:
+    Downloads latest release into current working directory.
+    Looks for 'tarball_url' line in JSON.
+
+    1. Use curl to get the JSON response for the latest release.
+    2. Use grep to find the line containing file URL.
+    3. Use cut and tr to extract the URL.
+    4. Use wget to download it.
+
+see also:
+    https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8
+
+examples:
+    download-github-latest acidgenomics/koopa
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+repo="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+tarball_url="$( \
+    curl -s "https://api.github.com/repos/${repo}/releases/latest" | \
+    grep "tarball_url" | \
+    cut -d : -f 2,3 | \
+    tr -d ' ,"' \
+)"
+tag="$(basename "$tarball_url")"
+wget "$tarball_url" -O "${tag}.tar.gz"

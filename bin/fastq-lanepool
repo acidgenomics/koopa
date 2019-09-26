@@ -4,21 +4,177 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Pool lane-split FASTQ files.
-# Updated 2019-06-23.
 
-# Set the file stem.
-filestem="${1:-lanepool}"
 
-# Exit if lanesplit replicates (L001-4) don't exist.
-if [[ -z "$(find . -maxdepth 1 -name '*_L00[1-4]_*.fastq.gz' -print -quit)" ]]
+# Variables                                                                 {{{1
+# ==============================================================================
+
+source_dir="."
+target_dir="."
+prefix="lanepool"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [--source-dir="${source_dir}"] [--target-dir="${target_dir}"]
+    [--prefix="${prefix}"]
+
+Pool (concatenate) lane-split FASTQ files.
+
+required arguments with defaults:
+    --source-dir
+        Source directory path containing lane-split FASTQ files.
+        Defaults to '${source_dir}'.
+    --target-dir
+        Target directory path where to return concatenated, lane-pooled FASTQs.
+        Defaults to '${target_dir}'.
+    --prefix
+        Name prefix for concatenated FASTQ files.
+        Defaults to '${prefix}'.
+
+$(_koopa_help_args)
+
+details:
+    Matches against '_L00[1-9]_' lane pattern internally.
+    Defaults to input and output in current working directory.
+    Supports both compressed (*.fastq.gz) and decompressed (.fastq) FASTQ files.
+
+examples:
+    # Input (2 paired-end, lane-split samples):
+    ls *.fastq.gz
+    # > sample1_L001_R1.fastq.gz
+    # > sample1_L002_R1.fastq.gz
+    # > sample1_L003_R1.fastq.gz
+    # > sample1_L004_R1.fastq.gz
+    # > sample1_L001_R2.fastq.gz
+    # > sample1_L002_R2.fastq.gz
+    # > sample1_L003_R2.fastq.gz
+    # > sample1_L004_R2.fastq.gz
+    # > sample2_L001_R1.fastq.gz
+    # > sample2_L002_R1.fastq.gz
+    # > sample2_L003_R1.fastq.gz
+    # > sample2_L004_R1.fastq.gz
+    # > sample2_L001_R2.fastq.gz
+    # > sample2_L002_R2.fastq.gz
+    # > sample2_L003_R2.fastq.gz
+    # > sample2_L004_R2.fastq.gz
+
+    # Pool the samples.
+    fastq-lanepool --source-dir="." --target-dir="." --prefix="lanepool"
+
+    # Output:
+    # > lanepool_sample1_R1.fastq.gz
+    # > lanepool_sample1_R2.fastq.gz
+    # > lanepool_sample2_R1.fastq.gz
+    # > lanepool_sample2_R2.fastq.gz
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+while (("$#"))
+do
+    case "$1" in
+        --prefix=*)
+            prefix="${1#*=}"
+            shift 1
+            ;;
+        --prefix)
+            prefix="$2"
+            shift 2
+            ;;
+        --source-dir=*)
+            source_dir="${1#*=}"
+            shift 1
+            ;;
+        --source-dir)
+            source_dir="$2"
+            shift 2
+            ;;
+        --target-dir=*)
+            target_dir="${1#*=}"
+            shift 1
+            ;;
+        --target-dir)
+            target_dir="$2"
+            shift 2
+            ;;
+        *)
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+# Handle trailing directory '/' automatically.
+source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
+target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# Put unique samples into an array and loop.
+array=()
+while IFS=  read -r -d $'\0'; do
+    array+=("$REPLY")
+done < <(find "$source_dir" -maxdepth 1 -name "*_L001_*.fastq*" -print0)
+
+# Error if file array is empty.
+if [[ "${#array[@]}" -eq 0 ]]
 then
-    >&2 printf "No lanesplit samples detected.\n"
+    >&2 printf "Error: No lane-split FASTQ files detected.\n"
     exit 1
 fi
 
-# SC2035: Use ./*glob* or -- *glob* so names with dashes won't become options.
-cat ./*_L00[1-4]_R1_001.fastq.gz > "${filestem}_R1.fastq.gz"
-cat ./*_L00[1-4]_R2_001.fastq.gz > "${filestem}_R2.fastq.gz"
-cat ./*_L00[1-4]_R3_001.fastq.gz > "${filestem}_R3.fastq.gz"
-cat ./*_L00[1-4]_R4_001.fastq.gz > "${filestem}_R4.fastq.gz"
+# Create the target directory automatically, if necessary.
+mkdir -p "$target_dir"
+
+basenames=()
+for i in "${array[@]}"
+do
+    basenames+=("$(basename "$i")")
+done
+
+head=()
+for i in "${basenames[@]}"
+do
+    i="${i//_L001_*/}"
+    head+=("$i")
+done
+
+tail=()
+for i in "${basenames[@]}"
+do
+    i="${i//*_L001_/}"
+    tail+=("$i")
+done
+
+out=()
+for i in "${basenames[@]}"
+do
+    i="${i//_L001/}"
+    i="${target_dir}/${prefix}_${i}"
+    out+=("$i")
+done
+
+# Loop across the array indices, similar to 'mapply()' approach in R.
+for i in "${!out[@]}"
+do
+    cat "${source_dir}/${head[i]}_L00"[1-9]"_${tail[i]}" > "${out[i]}"
+done

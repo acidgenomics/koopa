@@ -3,20 +3,12 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
-
-# Install bcbio-vm.
-# Updated 2019-06-25.
-
-# See also:
-# - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
-
-# Note that configuration is saved in:
-# ~/.config/bcbio-nextgen/bcbio-docker-config.yaml.
-# This sets the location of `datadir`, for example.
-
 _koopa_assert_has_sudo
-_koopa_assert_has_no_environments
-_koopa_assert_is_installed docker
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 prefix="$(_koopa_build_prefix)/bcbio-vm"
 bin_dir="${prefix}/anaconda/bin"
@@ -24,41 +16,70 @@ tmp_dir="$(_koopa_tmp_dir)/bcbio-vm"
 
 
 
-# Docker                                                                    {{{1
+# Usage                                                                     {{{1
 # ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install bcbio-vm.
+
+details:
+    Note that configuration is saved in:
+    '~/.config/bcbio-nextgen/bcbio-docker-config.yaml'.
+    This sets the location of 'datadir', for example.
+
+see also:
+    https://quay.io/repository/bcbio/bcbio-vc?tab=tags
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_has_no_environments
+_koopa_assert_is_installed docker
+
+# Docker                                                                    {{{2
+# ------------------------------------------------------------------------------
 
 sudo groupadd docker
 sudo service docker restart
 sudo gpasswd -a "$(whoami)" docker
 newgrp docker
 
-
-
-# conda                                                                     {{{1
-# ==============================================================================
+# conda                                                                     {{{2
+# ------------------------------------------------------------------------------
 
 (
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
     bash Miniconda3-latest-Linux-x86_64.sh -b -p "${prefix}/anaconda"
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
 
-
-
-# bcbio-vm                                                                  {{{1
-# ==============================================================================
+# bcbio-vm                                                                  {{{2
+# ------------------------------------------------------------------------------
 
 "${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen
 "${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen-vm
 
-sudo rm -f /usr/local/bin/bcbio_vm.py
-sudo ln -s "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
+sudo rm -fv /usr/local/bin/bcbio_vm.py
+sudo ln -fnsv "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
 
-sudo rm -f /usr/local/bin/bcbiovm_conda
-sudo ln -s "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
+sudo rm -fv /usr/local/bin/bcbiovm_conda
+sudo ln -fnsv "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
 
 sudo chgrp docker /usr/local/bin/bcbio_vm.py
 sudo chmod g+s /usr/local/bin/bcbio_vm.py

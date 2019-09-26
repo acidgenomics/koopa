@@ -1,22 +1,50 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 set -Eeux -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
-# Patch bcbio installation.
-# Updated 2019-09-11.
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Patch bcbio-nextgen installation.
+
+required positional arguments with defaults:
+    1.  Version. Use "stable" (recommended) or "development".
+        For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
+
+$(_koopa_help_args)
+
+see also:
+    https://bcbio-nextgen.readthedocs.io/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_has_no_environments
 
 # Locate bcbio git directory.
 if [[ -z "${git_dir:-}" ]]
 then
     git_dir="${HOME}/git/bcbio-nextgen"
 fi
-
-if [[ ! -d "$git_dir" ]]
-then
-    >&2 printf "Error: Failed to locate bcbio git.\n  %s\n" "$git_dir"
-fi
+_koopa_assert_is_dir "$git_dir"
 
 # Locate bcbio installation directory.
 if [[ -z "${install_dir:-}" ]]
@@ -24,13 +52,9 @@ then
     _koopa_assert_is_installed bcbio_nextgen.py
     bcbio_exe="$(command -v bcbio_nextgen.py)"
     bcbio_exe="$(realpath "$bcbio_exe")"
-    install_dir="$(dirname $(dirname $(dirname "$bcbio_exe")))"
+    install_dir="$(dirname "$(dirname "$(dirname "$bcbio_exe")")")"
 fi
-
-if [[ ! -d "$install_dir" ]]
-then
-    >&2 printf "Error: Failed to locate bcbio install.\n  %s\n" "$install_dir"
-fi
+_koopa_assert_is_dir "$install_dir"
 
 # Locate bcbio python.
 if [[ -z "${bcbio_python:-}" ]]
@@ -39,11 +63,7 @@ then
     bcbio_python="$(command -v bcbio_python)"
     bcbio_python="$(realpath "$bcbio_python")"
 fi
-
-if [[ ! -x "$bcbio_python" ]]
-then
-    >&2 printf "Error: Failed to locate bcbio_python.\n"
-fi
+_koopa_assert_is_executable "$bcbio_python"
 
 cat << EOF
 Patching bcbio installation.
@@ -59,7 +79,7 @@ EOF
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/"
 log_file="${log_dir}/bcbio-patch-${timestamp}.log"
-mkdir -p "$log_dir"
+mkdir -pv "$log_dir"
 
 # Remove Python installer cruft.
 # Note the asterisks here, they're important.

@@ -4,27 +4,48 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-# Rename files using a CSV file.
-# Updated 2019-06-23.
 
-# Check for CSV file.
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    csv_file
+
+Rename files using a CSV file.
+
+required positional arguments:
+    1.  CSV file, containing name mappings (from,to).
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-25.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
 file="$1"
 
-if [[ ! -f "$file" ]]
-then
-    >&2 printf "Error: %s does not exist.\n" "$file"
-    exit 1
-fi
 
-if [[ ! "$file" =~ .csv ]]
-then
-    >&2 printf "Error: %s is not a CSV file.\n" "$file"
-    exit 1
-fi
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_file_type "$file" "csv"
 
 while read -r line
 do
     from=${line%,*}
     to=${line#*,}
-    mv "$from" "$to"
+    mv -v "$from" "$to"
 done < "$file"

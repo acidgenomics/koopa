@@ -4,11 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
 
-# Install Tmux terminal multiplexer.
-# Updated 2019-06-23.
-
-# > apt-cache search libevent
-
 if _koopa_has_sudo
 then
     sudo apt-get -y install libevent-dev

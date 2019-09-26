@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Find broken symlinks.
+
+required positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Searches recursively inside of specified directory, with no depth limit.
+
+examples:
+    touch a
+    ln -s a b
+    ln -s z c
+
+note:
+    Bash script.
+    Updated 2019-08-29.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if _koopa_is_darwin
+then
+    find "$dir" -type l -print0  | xargs -0 file | grep broken
+elif _koopa_is_linux
+then
+    find "$dir" -xtype l
+fi

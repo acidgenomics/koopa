@@ -1,13 +1,22 @@
 #!/usr/bin/env bash
 
-# Install emacs.
-# Updated 2019-09-17.
+usage() {
+cat << EOF
+install-cellar-emacs [--help|-h]
 
-# See also:
-# - https://www.gnu.org/software/emacs/
-# - https://github.com/emacs-mirror/emacs
+Install Emacs.
 
-_koopa_assert_has_no_environments
+see also:
+    - https://www.gnu.org/software/emacs/
+    - https://github.com/emacs-mirror/emacs
+
+note:
+    Bash script.
+    Updated 2019-09-17.
+EOF
+}
+
+_koopa_help "$@"
 
 name="emacs"
 version="$(_koopa_variable "$name")"
