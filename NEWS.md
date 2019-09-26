@@ -1,4 +1,4 @@
-## koopa 0.5.7 (UNRELEASED)
+## koopa 0.6.0 (2019-09-26)
 
 ### New scripts
 
