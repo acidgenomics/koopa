@@ -3,11 +3,33 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
-
-# Update Debian.
-# Updated 2019-06-23.
-
 _koopa_assert_has_sudo
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Update Debian.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade

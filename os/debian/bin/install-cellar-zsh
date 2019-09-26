@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header debian)"
 
-# Install Z Shell.
-# Updated 2019-06-24.
-
 if _koopa_has_sudo
 then
     sudo apt-get -y build-dep zsh

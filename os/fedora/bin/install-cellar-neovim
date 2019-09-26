@@ -4,9 +4,6 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
 
-# Install Neovim.
-# Updated 2019-09-16.
-
 os_type="$(_koopa_os_type)"
 
 if _koopa_has_sudo
