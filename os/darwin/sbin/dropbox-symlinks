@@ -4,15 +4,39 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Symlink Desktop and Documents on Dropbox.
-# Updated 2019-06-25.
 
-_koopa_assert_has_sudo
 
-sudo rm -r ~/Desktop
-ln -s ~/Dropbox/Desktop ~/.
+# Usage                                                                     {{{1
+# ==============================================================================
 
-sudo rm -r ~/Documents
-ln -s ~/Dropbox/Documents ~/.
+usage() {
+cat << EOF
+$(_koopa_help_header)
 
+Symlink Desktop and Documents on Dropbox.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# Desktop.
+sudo rm -rv ~/Desktop
+ln -fnsv ~/Dropbox/Desktop ~/.
+
+# Documents.
+sudo rm -rv ~/Documents
+ln -fnsv ~/Dropbox/Documents ~/.
+
+# Relaunch Finder.
 sudo killAll Finder
