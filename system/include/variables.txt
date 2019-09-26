@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
-koopa="0.5.7a"
-koopa_date="2019-09-23"
+koopa="0.6.0a"
+koopa_date="2019-09-26"
 
 # Program versions                                                          {{{1
 # ==============================================================================
