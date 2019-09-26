@@ -76,9 +76,10 @@ case "${1:-}" in
         usage
         exit 0
         ;;
+    "")
+        ;;
     *)
         >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-        exit 1
         ;;
 esac
 
