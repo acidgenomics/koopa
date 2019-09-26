@@ -3,17 +3,49 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header fedora)"
+_koopa_assert_has_sudo
 
-# Install base programs for Fedora.
-# Updated 2019-08-20.
 
-# Tested against RHEL 7 and 8.
 
-# Missing on RHEL7:
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Missing on RHEL 7:
 # > sudo yum install coin-or-Clp
 # https://github.com/coin-or/Clp
 
-_koopa_assert_has_sudo
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install base programs for Fedora.
+
+$(_koopa_help_args)
+
+details:
+    Tested against RHEL 7 and 8.
+
+see also:
+    https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 os_type="$(_koopa_os_type)"
 
 sudo yum -y update

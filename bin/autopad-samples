@@ -80,6 +80,7 @@ EOF
 }
 
 [[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
 
 
 
@@ -90,10 +91,6 @@ POSITIONAL=()
 for i in "$@"
 do
     case "$i" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
         --padwidth=*)
             padwidth="${i#*=}"
             shift 1
