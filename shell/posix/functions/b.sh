@@ -3,6 +3,39 @@
 
 
 
+# Extract the file basename without extension.
+#
+# Examples:
+# _koopa_basename_sans_ext "hello-world.txt"
+# ## hello-world
+#
+# _koopa_basename_sans_ext "hello-world.tar.gz"
+# ## hello-world.tar
+#
+# See also: _koopa_file_ext
+#
+# Updated 2019-09-26.
+_koopa_basename_sans_ext() {
+    printf "%s\n" "${1%.*}"
+}
+
+
+
+# Extract the file basename prior to any dots in file name.
+#
+# Examples
+# _koopa_basename_sans_ext2 "hello-world.tar.gz"
+# ## hello-world
+#
+# See also: _koopa_file_ext2
+#
+# Updated 2019-09-26.
+_koopa_basename_sans_ext2() {
+    echo "$1" | cut -d '.' -f 1
+}
+
+
+
 # Updated 2019-08-18.
 _koopa_bash_version() {
     bash --version | \
