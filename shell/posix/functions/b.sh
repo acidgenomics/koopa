@@ -16,6 +16,7 @@
 #
 # Updated 2019-09-26.
 _koopa_basename_sans_ext() {
+    _koopa_assert_has_file_ext "$1"
     printf "%s\n" "${1%.*}"
 }
 
@@ -31,6 +32,7 @@ _koopa_basename_sans_ext() {
 #
 # Updated 2019-09-26.
 _koopa_basename_sans_ext2() {
+    _koopa_assert_has_file_ext "$1"
     echo "$1" | cut -d '.' -f 1
 }
 
