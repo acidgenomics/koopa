@@ -4,6 +4,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
+# FIXME Add file name sanitization support.
+
 
 
 # Usage                                                                     {{{1
@@ -53,9 +55,9 @@ _koopa_help "$@"
 strict="FALSE"
 
 POSITIONAL=()
-for i in "$@"
+while (("$#"))
 do
-    case "$i" in
+    case "$1" in
         --strict)
             strict="TRUE"
             shift 1
@@ -65,11 +67,11 @@ do
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$i"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
         *)
-            POSITIONAL+=("$i")
+            POSITIONAL+=("$1")
             shift 1
             ;;
     esac

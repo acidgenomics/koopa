@@ -1,5 +1,9 @@
 # Bash reference
 
+Argument parsing:
+- https://stackoverflow.com/questions/192249
+- https://medium.com/@Drew_Stokes/bash-argument-parsing-54f3b81a6a8f
+
 Arrays:
 - http://mywiki.wooledge.org/BashFAQ/020
 - http://mywiki.wooledge.org/ParsingLs
