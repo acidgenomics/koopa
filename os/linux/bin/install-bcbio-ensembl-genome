@@ -4,24 +4,18 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header linux)"
 
-# Install Ensembl genome build for bcbio.
-# Updated 2019-06-25.
-
-# See also:
-# - https://useast.ensembl.org/
-# - https://grch37.ensembl.org/
-
-_koopa_assert_is_installed bcbio_nextgen.py
-
 
 
 # Usage                                                                     {{{1
 # ==============================================================================
 
 usage() {
-    cat << EOF
-usage: install-ensembl-genome [-h] --organism ORGANISM --build BUILD 
-        --release RELEASE [--indexes INDEXES]
+cat << EOF
+$(_koopa_help_header)
+    --organism ORGANISM --build BUILD --release RELEASE
+    [--indexes INDEXES]
+
+Install Ensembl genome build for bcbio.
 
 required arguments:
     --organism
@@ -40,23 +34,32 @@ optional arguments:
         Note: HISAT2 is disabled by default because it requires a lot of memory
         to index (e.g. >= 200 GB). This is intended to be run on a high
         performance cluster, but is often impractical on a virtual machine.
+
+$(_koopa_help_args)
+
+see also:
+    - https://useast.ensembl.org/
+    - https://grch37.ensembl.org/
+
+note:
+    Bash script.
+    Updated 2019-09-26.
 EOF
 }
 
 [[ -z "$*" ]] && usage && exit
+_koopa_help "$@"
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
+
+# FIXME Rework using "=" flag approach.
 
 while (("$#"))
 do
     case "$1" in
-        -h|--help)
-            usage
-            exit 0
-            ;;
         --build)
             build="$2"
             shift 2
@@ -103,12 +106,15 @@ fi
 # Convert string to array.
 indexes=("$indexes")
 
-unset -f usage
 
 
-
-# Internal variables                                                        {{{1
+# Script                                                                    {{{1
 # ==============================================================================
+
+_koopa_assert_is_installed bcbio_nextgen.py
+
+# Internal variables                                                        {{{2
+# ------------------------------------------------------------------------------
 
 # Check for valid organism input.
 if ! echo "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
@@ -125,11 +131,8 @@ organism="${organism// /_}"
 cores="$((CPU_COUNT-2))"
 [[ "$cores" -lt 1 ]] && cores=1
 
-
-
-
-# Prepare directories                                                       {{{1
-# ==============================================================================
+# Prepare directories                                                       {{{2
+# ------------------------------------------------------------------------------
 
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
@@ -139,19 +142,17 @@ tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
-mkdir -p "$log_dir"
+mkdir -pv "$log_dir"
 
-
-
-# bcbio                                                                     {{{1
-# ==============================================================================
+# bcbio                                                                     {{{2
+# ------------------------------------------------------------------------------
 
 # e.g. "Hsapiens".
 bcbio_species_dir="$(echo "$organism" | \
     sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
 
 (
-    rm -rf "$tmp_dir"
+    rm -frv "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     
@@ -176,5 +177,5 @@ bcbio_species_dir="$(echo "$organism" | \
         --indexes "${indexes[@]}" \
         2>&1 | tee "$log_file"
     
-    rm -rf "$tmp_dir"
+    rm -fr "$tmp_dir"
 )
