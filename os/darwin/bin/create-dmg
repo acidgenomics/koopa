@@ -4,18 +4,56 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Create DMG image.
-# Updated 2019-06-23.
 
-dir="$1"
 
-# Check that directory exists.
-if [[ ! -d "$dir" ]]
-then
-    >&2 printf "%s directory does not exist.\n" "$dir"
-    exit 1
-fi
+# Variables                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    [dir="${dir}"]
+
+Create DMG image.
+
+required positional arguments:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-06-23.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_dir "$dir"
+
+dir="$(realpath "$dir")"
+name="$(basename "$dir")"
 
 # Create disk image from directory.
 # -ov = overwrite
-hdiutil create -volname "$dir" -srcfolder "$dir" -ov "${dir}.dmg"
+hdiutil create -volname "$name" -srcfolder "$dir" -ov "${name}.dmg"

@@ -4,11 +4,55 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "$(koopa header darwin)"
 
-# Convert UTF-8 NFD to NFC.
-# Updated 2019-06-18.
 
-_koopa_is_installed convmv
+
+# Notes                                                                     {{{1
+# ==============================================================================
 
 # Use `-i` flag for interactive.
 
-convmv -r -f utf8 -t utf8 --nfc --notest .
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    file... directory
+
+Convert UTF-8 NFD to NFC.
+
+required positional arguments with defaults:
+    ... Files and/or directory.
+        Defaults to current working directory if unset.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-06-18.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+if [[ -z "$*" ]]
+then
+    args=(".")
+else
+    args=("$@")
+fi
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_is_installed convmv
+convmv -r -f utf8 -t utf8 --nfc --notest "${args[@]}"
