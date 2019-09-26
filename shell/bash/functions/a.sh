@@ -12,9 +12,7 @@
 _koopa_add_local_bins_to_path() {
     local dir
     local dirs
-    
     _koopa_add_to_path_start "$(_koopa_build_prefix)/bin"
-    
     IFS=$'\n'
     read -r -d '' dirs <<< "$(_koopa_bash_find_local_bin_dirs)"
     unset IFS
