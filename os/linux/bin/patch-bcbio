@@ -52,7 +52,7 @@ then
     _koopa_assert_is_installed bcbio_nextgen.py
     bcbio_exe="$(command -v bcbio_nextgen.py)"
     bcbio_exe="$(realpath "$bcbio_exe")"
-    install_dir="$(dirname $(dirname $(dirname "$bcbio_exe")))"
+    install_dir="$(dirname "$(dirname "$(dirname "$bcbio_exe")")")"
 fi
 _koopa_assert_is_dir "$install_dir"
 
