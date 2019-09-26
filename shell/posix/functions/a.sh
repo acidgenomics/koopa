@@ -94,13 +94,26 @@ _koopa_array_to_r_vector() {
 
 
 
+# Assert that input contains a file extension.
+# Updated 2019-09-26
+_koopa_assert_has_file_ext() {
+    if ! echo "$1" | grep -q "\."
+    then
+        >&2 printf "Error: No file extension: '%s'\n" "$1"
+        exit 1
+    fi
+    return 0
+}
+
+
+
 # Assert that conda and Python virtual environments aren't active.
 # Updated 2019-09-12.
 _koopa_assert_has_no_environments() {
     if ! _koopa_has_no_environments
     then
         >&2 printf "Error: Active environment detected.\n"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -113,7 +126,7 @@ _koopa_assert_has_sudo() {
     if ! _koopa_has_sudo
     then
         >&2 printf "Error: sudo is required for this script.\n"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -126,7 +139,7 @@ _koopa_assert_is_darwin() {
     if ! _koopa_is_darwin
     then
         >&2 printf "Error: macOS (Darwin) is required.\n"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -139,7 +152,7 @@ _koopa_assert_is_dir() {
     if [ ! -d "$1" ]
     then
         >&2 printf "Error: Not a directory: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -152,7 +165,7 @@ _koopa_assert_is_executable() {
     if [ ! -x "$1" ]
     then
         >&2 printf "Error: Not executable: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -168,7 +181,7 @@ _koopa_assert_is_existing() {
     if [ ! -e "$1" ]
     then
         >&2 printf "Error: Does not exist: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -181,7 +194,7 @@ _koopa_assert_is_file() {
     if [ ! -f "$1" ]
     then
         >&2 printf "Error: Not a file: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -212,7 +225,7 @@ _koopa_assert_is_installed() {
         if ! _koopa_is_installed "$arg"
         then
             >&2 printf "Error: '%s' is not installed.\n" "$arg"
-            return 1
+            exit 1
         fi
     done
     return 0
@@ -226,7 +239,7 @@ _koopa_assert_is_linux() {
     if ! _koopa_is_linux
     then
         >&2 printf "Error: Linux is required.\n"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -239,7 +252,7 @@ _koopa_assert_is_linux_debian() {
     if ! _koopa_is_linux_debian
     then
         >&2 printf "Error: Debian is required.\n"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -252,7 +265,7 @@ _koopa_assert_is_linux_fedora() {
     if ! _koopa_is_linux_fedora
     then
         >&2 printf "Error: Fedora is required.\n"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -265,7 +278,7 @@ _koopa_assert_is_non_existing() {
     if [ -e "$1" ]
     then
         >&2 printf "Error: Exists: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -279,7 +292,7 @@ _koopa_assert_is_not_dir() {
     if [ -d "$1" ]
     then
         >&2 printf "Error: Directory exists: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -292,7 +305,7 @@ _koopa_assert_is_not_file() {
     if [ -f "$1" ]
     then
         >&2 printf "Error: Is file: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -305,7 +318,7 @@ _koopa_assert_is_not_symlink() {
     if [ -L "$1" ]
     then
         >&2 printf "Error: Is symlink: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -318,7 +331,7 @@ _koopa_assert_is_readable() {
     if [ ! -r "$1" ]
     then
         >&2 printf "Error: Not readable: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -331,7 +344,7 @@ _koopa_assert_is_symlink() {
     if [ ! -L "$1" ]
     then
         >&2 printf "Error: Is symlink: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -344,7 +357,7 @@ _koopa_assert_is_writable() {
     if [ ! -r "$1" ]
     then
         >&2 printf "Error: Not writable: '%s'\n" "$1"
-        return 1
+        exit 1
     fi
     return 0
 }
@@ -361,7 +374,7 @@ _koopa_assert_matches_pattern() {
     if ! echo "$1" | grep -q "$2"
     then
         >&2 printf "Error: '%s' does not match pattern '%s'.\n" "$1" "$2"
-        return 1
+        exit 1
     fi
     return 0
 }
