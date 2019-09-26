@@ -3,6 +3,7 @@ set -Eeu -o pipefail
 
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
+_koopa_assert_has_sudo
 
 
 
@@ -34,8 +35,6 @@ _koopa_help "$@"
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_has_sudo
 
 build_prefix="$(_koopa_build_prefix)"
 printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
