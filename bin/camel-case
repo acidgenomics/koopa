@@ -11,7 +11,8 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-$(_koopa_help_header) [--files] [--strict]
+$(_koopa_help_header)
+    [--files] [--rename] [--strict]
     string...
 
 Convert input into camel case.
@@ -20,10 +21,6 @@ required positional arguments:
     ... Character strings to sanitize.
 
 optional arguments:
-    --strict
-        Enforce strict camel syntax. Applies primarily to acronyms.
-        For example, "ID" becomes "Id".
-        Disabled by default.
     --files
         File name mode. Preserves file extensions. In this case, we're
         preserving anything after the first '.' in the file name. This makes
@@ -33,6 +30,10 @@ optional arguments:
         Rename input files. Sets '--files' flag automatically. Assumes we're
         renaming files in current working directory but also supports explicit
         and/or mixed file paths.
+    --strict
+        Enforce strict camel syntax. Applies primarily to acronyms.
+        For example, "ID" becomes "Id".
+        Disabled by default.
 
 $(_koopa_help_args)
 

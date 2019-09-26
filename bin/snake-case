@@ -11,7 +11,8 @@ source "$(koopa header bash)"
 
 usage() {
 cat << EOF
-$(_koopa_help_header) [--files] [--strict]
+$(_koopa_help_header)
+    [--files] [--rename]
     string...
 
 Convert input into snake case.
