@@ -41,14 +41,13 @@ see also:
     - make-names
 
 examples:
-    # FIXME Check this example
     kebab-case "hello world" "foo bar" "geneID"
-    ## hello-world foo-bar geneid
+    ## hello-world foo-bar gene-id
 
     kebab-case --files "foo_bar.fastq.gz"
     ## ./foo-bar.fastq.gz
 
-    camel-case --files 1_control_A.fastq.gz
+    kebab-case --files 1_control_A.fastq.gz
     ## ./x1-control-a.fastq.gz
 
 note:
