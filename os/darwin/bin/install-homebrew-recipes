@@ -34,7 +34,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-09-26.
 EOF
 }
 
@@ -170,6 +170,7 @@ brews=(
     pandoc
     pandoc-citeproc
     pandoc-crossref
+    parallel
     pkg-config
     protobuf
     python
