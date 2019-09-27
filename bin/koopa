@@ -4,7 +4,7 @@ if [[ -z "${KOOPA_HOME:-}" ]]
 then
     KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
         >/dev/null 2>&1 && pwd -P)"
-    # FIXME Consider taking this step out.
+    # shellcheck source=/dev/null
     force=1 minimal=1 . "${KOOPA_HOME}/activate"
 fi
 
