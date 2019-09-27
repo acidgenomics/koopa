@@ -18,6 +18,8 @@ note:
 EOF
 }
 
+_koopa_help "$@"
+
 name="vim"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
