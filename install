@@ -3,9 +3,14 @@
 set -Ee -o pipefail
 
 # Install koopa.
-# Updated 2019-09-16.
+# Updated 2019-09-27.
 
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+
+
+
+# Pre-flight checks                                                         {{{1
+# ==============================================================================
 
 # Error on root user.
 if [[ "$(id -u)" -eq 0 ]]
@@ -20,44 +25,48 @@ fi
 # ==============================================================================
 
 usage() {
-    cat << EOF
-usage: install [-h] [--dotfiles] [--mike] [--shared]
+cat << EOF
+usage: install [--help|-h] [--shared] [--dotfiles] [--mike] 
 
 Install koopa.
 
 optional arguments:
-  -h, --help
+  --help, -h
         Show this help message and exit.
+  --shared
+        Enable shared user configuration via '/etc/profile.d/koopa.sh' file.
+        Linux only. Not supported on macOS.
   --dotfiles
-        Clone Mike's dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
+        Clone the dotfiles repo (https://github.com/acidgenomics/dotfiles)
         and automatically symlink recommended default configuration files.
   --mike
         Install Mike-specific configuration.
         This flag automatically enables '--dotfiles'.
-  --shared
-        Linux only.
-        Enable shared user configuration via '/etc/profile.d/koopa.sh' file.
+
+note:
+    Bash script.
+    Updated 2019-09-27.
 EOF
 }
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 while (("$#"))
 do
     case "$1" in
-        -h|--help)
+        --help|-h)
             usage
             exit 0
             ;;
-        --mike)
-            mike=1
-            shift 1
-            ;;
         --dotfiles)
             dotfiles=1
+            shift 1
+            ;;
+        --mike)
+            mike=1
             shift 1
             ;;
         --shared)
@@ -65,13 +74,11 @@ do
             shift 1
             ;;
         --) 
-            # End argument parsing.
-            shift
+            shift 1
             break
             ;;
         --*|-*)
-            # Unsupported flags.
-            >&2 printf "Error: Invalid flag %s\n" "$1"
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
             exit 1
             ;;
     esac
@@ -85,24 +92,26 @@ fi
 
 
 
-# Remove legacy cruft                                                       {{{1
+# Script                                                                    {{{1
 # ==============================================================================
 
-rm -fr "${KOOPA_HOME}/"{config,include}
-rm -fr "${KOOPA_HOME}/bin/"{host,os,sudo}
+install_dir="${KOOPA_HOME}/system/install"
+uninstall_dir="${KOOPA_HOME}/system/uninstall"
 
+# Remove legacy cruft                                                       {{{2
+# ------------------------------------------------------------------------------
 
+rm -frv "${KOOPA_HOME}/"{config,include}
+rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
 
-# Activate koopa                                                            {{{1
-# ==============================================================================
+# Activate koopa                                                            {{{2
+# ------------------------------------------------------------------------------
 
 printf "\nActivating koopa.\n"
 force=1 source "${KOOPA_HOME}/activate"
 
-
-
-# Shared user configuration                                                 {{{1
-# ==============================================================================
+# Shared user configuration                                                 {{{2
+# ------------------------------------------------------------------------------
 
 # Checking for '/usr/local' installation automatically.
 # > if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
@@ -116,47 +125,41 @@ then
     _koopa_update_profile
 fi
 
-
-
-# Dot files                                                                 {{{1
-# ==============================================================================
+# Dot files                                                                 {{{2
+# ------------------------------------------------------------------------------
 
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
-    install-dotfiles
-    
+    # Clone dotfiles repo, if necessary.
+    if [[ ! -e "${KOOPA_HOME}/dotfiles" ]]
+    then
+        install-dotfiles
+    fi
     # Remove legacy dotfile cruft.
-    source "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
-
+    source "${uninstall_dir}/dotfiles-legacy.sh"
     # Always create these dotfiles, even on a shared installation.
-    source "${KOOPA_HOME}/system/install/dotfiles-shared.sh"
-
+    source "${install_dir}/dotfiles-shared.sh"
     # Create local config files.
     if [[ "${shared:-0}" -eq 0 ]]
     then
-        source "${KOOPA_HOME}/system/install/dotfiles-local.sh"
+        source "${install_dir}/dotfiles-local.sh"
     fi
-
-    # Configure Mike's dotfiles.
+    # Config Mike-specific dotfiles, if necessary.
     if [[ "${mike:-0}" -eq 1 ]]
     then
-        source "${KOOPA_HOME}/system/install/dotfiles-mike.sh"
+        source "${install_dir}/dotfiles-mike.sh"
     fi
 fi
 
-
-
-# Additional scripts                                                        {{{1
-# ==============================================================================
+# Additional                                                                {{{2
+# ------------------------------------------------------------------------------
 
 # Clone additional Git repos of interest.
 if [[ "${mike:-}" -eq 1 ]]
 then
-    source "${KOOPA_HOME}/system/install/docker-mike.sh"
-    source "${KOOPA_HOME}/system/install/scripts-mike.sh"
+    source "${install_dir}/docker-mike.sh"
+    source "${install_dir}/scripts-mike.sh"
 fi
-
-
 
 printf "Installation was successful.\n"

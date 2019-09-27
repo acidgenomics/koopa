@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# shellcheck source=/dev/null
-source "$(_koopa_header bash)"
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 # Uninstall koopa.
-# Updated 2019-08-14.
+# Updated 2019-09-27.
+
+# Load POSIX functions.
+. "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
 # Consider an improved approach to removing cellar links in `/usr/local/`.
 
@@ -14,11 +16,13 @@ then
     rm -fv /etc/profile.d/koopa.sh
 fi
 
-# shellcheck source=/dev/null
-. "${KOOPA_HOME}/system/uninstall/dotfiles.sh"
+uninstall_dir="${KOOPA_HOME}/system/uninstall"
 
 # shellcheck source=/dev/null
-. "${KOOPA_HOME}/system/uninstall/dotfiles-legacy.sh"
+. "${uninstall_dir}/dotfiles.sh"
+
+# shellcheck source=/dev/null
+. "${uninstall_dir}/dotfiles-legacy.sh"
 
 rm -frv "$(_koopa_config_dir)"
 rm -frv "$KOOPA_HOME"
