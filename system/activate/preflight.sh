@@ -28,4 +28,4 @@ esac
 # ==============================================================================
 
 _koopa_assert_is_installed basename bash cat chsh curl dirname echo env grep   \
-    head less man realpath sed sh tail tee top wget which
+    head less man nice parallel realpath sed sh tail tee top wget which
