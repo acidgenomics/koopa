@@ -39,6 +39,8 @@ note:
 EOF
 }
 
+_koopa_help "$@"
+
 
 
 # Usage                                                                     {{{1
