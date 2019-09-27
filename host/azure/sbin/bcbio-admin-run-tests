@@ -42,6 +42,8 @@ note:
 EOF
 }
 
+_koopa_help "$@"
+
 
 
 # Script                                                                    {{{1

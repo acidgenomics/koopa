@@ -36,6 +36,8 @@ note:
 EOF
 }
 
+_koopa_help "$@"
+
 
 
 # Arguments                                                                 {{{1
