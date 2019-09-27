@@ -69,7 +69,7 @@ _koopa_assert_is_dir "$custom_dir"
 _koopa_assert_is_not_dir "$default_dir"
 
 (
-    cd ~
+    cd "$HOME" || exit 1
     if [[ "$name" != "ess" ]]
     then
         rm -fv .emacs
