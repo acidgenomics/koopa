@@ -42,7 +42,7 @@ name="perlbrew"
 prefix="$(_koopa_build_prefix)/${name}"
 exe_file="${prefix}/bin/${name}"
 
-_koopa_build_mkdir "$prefix"
+_koopa_prefix_mkdir "$prefix"
 
 (
     # Ensure existing preferences are removed.
@@ -53,7 +53,7 @@ _koopa_build_mkdir "$prefix"
     curl -L https://install.perlbrew.pl | bash
 )
 
-_koopa_build_chgrp "$prefix"
+_koopa_prefix_chgrp "$prefix"
 
 command -v "$exe_file"
 "$exe_file" --version

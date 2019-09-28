@@ -46,7 +46,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_build_mkdir "$prefix"
+_koopa_prefix_mkdir "$prefix"
 
 # Install rbenv.
 git clone \
