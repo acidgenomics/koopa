@@ -5,6 +5,8 @@
 
 Shell bootloader for bioinformatics.
 
+Refer to the [koopa website][] for usage details.
+
 ## Installation
 
 These [POSIX][]-compliant shells are supported: [bash][], [zsh][].
@@ -30,27 +32,25 @@ Tested on:
 - RHEL 7 / CentOS 7
 - Amazon Linux 2
 
+### Shared user installation
+
+Installs to `/usr/local/koopa`. Requires sudo permissions.
+
+
 ```sh
-install="https://raw.githubusercontent.com/acidgenomics/koopa/master/install"
-curl -sSL "$install" | bash -s -- --shared
-curl -sSL "$install" | bash
+curl -sSL "https://raw.githubusercontent.com/acidgenomics/koopa/master/install" | bash -s -- --shared
 ```
 
-This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.
+This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros, but not macOS.
 
-If you're going to install any programs using the cellar scripts, also adjust the permissions for `/usr/local/`. Otherwise the link cellar commands will error and you will see symlink errors.
+If you're going to install any programs using the cellar scripts, also ensure the permissions for `/usr/local/` are group writable. The installer attempts to fix this automatically, if necessary.
 
-### Local user installation
+### Single user installation
 
-Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
+Installs to `~/.local/share/koopa`, following the recommended [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 
 ```sh
-source_repo="https://github.com/acidgenomics/koopa.git"
-XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-target_dir="${XDG_DATA_HOME}/koopa"
-mkdir -pv "$target_dir"
-git clone --recursive "$source_repo" "$target_dir"
-"${target_dir}/install"
+curl -sSL "https://raw.githubusercontent.com/acidgenomics/koopa/master/install" | bash
 ```
 
 Add these lines to your shell configuration file.
@@ -81,75 +81,7 @@ on the operating system, so refer to your shell documentation for details.
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
 
-## Exported tools
 
-Upon activation, koopa makes scripts available in `$PATH`, which are defined in the [`bin/`](bin/) directory of the repo. Run `koopa list` for a complete list.
-
-## Automatic program configuration
-
-Koopa provides automatic configuration and `$PATH` variable support for a number
-of popular bioinformatics tools. When configuring manually, ensure that
-variables are defined before sourcing the activation script.
-
-### Aspera Connect
-
-[Aspera Connect][] is a secure file transfer application commonly used by
-numerous organizations, including the NIH and Broad Institute. Koopa will
-automatically detect Aspera when it is installed at the default path of
-`~/.aspera/`. Otherwise, the installation path can be defined manually using
-the `$ASPERA_EXE` variable.
-
-```bash
-export ASPERA_EXE="${HOME}/.aspera/connect/bin/asperaconnect"
-```
-
-### bcbio
-
-[bcbio][] is a [Python][] toolkit that provides modern NGS analysis pipelines
-for RNA-seq, single-cell RNA-seq, ChIP-seq, and variant calling. Koopa provides
-automatic configuration support for the Harvard O2 and Odyssey high-performance
-computing clusters. Otherwise, the installation path can be defined manually
-using the `$BCBIO_EXE` variable.
-
-```bash
-export BCBIO_EXE="/usr/local/bin/bcbio_nextgen.py"
-```
-
-### conda
-
-[Conda][] is an open source package management system that provides pre-built
-binaries using versioned recipes for Linux and macOS.
-
-Koopa provides automatic detection and activation support when conda is
-installed at any of these locations (note priority):
-
-- `~/anaconda3/`
-- `~/miniconda3/`
-- `/usr/local/anaconda3/`
-- `/usr/local/miniconda3/`
-
-Oherwise, the installation path can be defined manually using the `$CONDA_EXE` variable.
-
-```bash
-export CONDA_EXE="${HOME}/miniconda3/bin/conda"
-```
-
-### SSH key
-
-On Linux, koopa will launch `ssh-agent` and attempt to import the default [SSH][] key at `~/.ssh/id_rsa`, if the key file exists. A different default key can be defined manually using the `$SSH_KEY` variable.
-
-```bash
-export SSH_KEY="${HOME}/.ssh/id_rsa"
-```
-
-On macOS, instead we recommend adding these lines to `~/.ssh/config` to use the system keychain:
-
-```
-Host *
-    AddKeysToAgent yes
-    IdentityFile ~/.ssh/id_rsa
-    UseKeychain yes
-```
 
 [aspera connect]: https://downloads.asperasoft.com/connect2/
 [bash]: https://www.gnu.org/software/bash/  "Bourne Again SHell"
