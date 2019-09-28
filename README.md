@@ -9,23 +9,8 @@ Refer to the [koopa][] website for usage details.
 
 ## Requirements
 
-[POSIX][]-compliant shell:
-
-| shell        | supported |
-| ------------ | --------- |
-| [**bash**][] | TRUE      |
-| [**zsh**][]  | TRUE      |
-| [dash][]     | FALSE     |
-| [ksh][]      | FALSE     |
-| [tcsh][]     | FALSE     |
-
-Operating system:
-
-| os        | supported |
-| --------- | --------- |
-| **Linux** | TRUE      |
-| **macOS** | TRUE      |
-| Windows   | FALSE     |
+- Linux or macOS.
+- [POSIX][]-compliant shell: [bash][] or [zsh][].
 
 Dependencies:
 
@@ -96,5 +81,7 @@ with `koopa check`. To obtain information about the working environment, run
 [koopa]: https://koopa.acidgenomics.com/
 [ksh]: http://www.kornshell.com/  "KornSHell"
 [posix]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
+[python]: https://www.python.org/
+[r]: https://www.r-project.org/
 [tcsh]: https://en.wikipedia.org/wiki/Tcsh  "TENEX C Shell"
 [zsh]: https://www.zsh.org/  "Z SHell"
