@@ -9,20 +9,31 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # Load POSIX functions.
 . "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
-# Consider an improved approach to removing cellar links in `/usr/local/`.
-
 if _koopa_has_sudo
 then
     rm -fv /etc/profile.d/koopa.sh
 fi
 
-uninstall_dir="${KOOPA_HOME}/system/uninstall"
-
-# shellcheck source=/dev/null
-. "${uninstall_dir}/dotfiles.sh"
-
-# shellcheck source=/dev/null
-. "${uninstall_dir}/dotfiles-legacy.sh"
+# Remove dotfiles, if necessary.
+if [[ -d "${KOOPA_HOME}/dotfiles" ]]
+then
+    _koopa_delete_dotfile Renviron
+    _koopa_delete_dotfile Rprofile
+    _koopa_delete_dotfile bash_profile
+    _koopa_delete_dotfile bashrc
+    _koopa_delete_dotfile condarc
+    _koopa_delete_dotfile forward
+    _koopa_delete_dotfile gitconfig
+    _koopa_delete_dotfile gitignore
+    _koopa_delete_dotfile kshrc
+    _koopa_delete_dotfile screenrc
+    _koopa_delete_dotfile shrc
+    _koopa_delete_dotfile spacemacs
+    _koopa_delete_dotfile tmux.conf
+    _koopa_delete_dotfile vim
+    _koopa_delete_dotfile vimrc
+    _koopa_delete_dotfile zshrc
+fi
 
 rm -frv "$(_koopa_config_dir)"
 rm -frv "$KOOPA_HOME"
