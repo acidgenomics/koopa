@@ -2,7 +2,32 @@
 # shellcheck disable=SC1090,SC1091
 set -Ee -o pipefail
 
+# FIXME Rethink this.
+
+echo "${BASH_SOURCE[0]}"
+exit 0
+
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+
+
+
+
+group="$(_koopa_build_prefix_group)"
+
+koopa_dir="/usr/local/koopa"
+sudo mkdir -p "$koopa_dir"
+
+# - darwin (macOS): admin
+# - debian: sudo
+# - fedora: wheel
+group="wheel"
+
+sudo chgrp "$group" "$koopa_dir"
+sudo chmod g+w "$koopa_dir"
+
+git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
+"${koopa_dir}/install"
+
 
 
 
@@ -51,6 +76,10 @@ EOF
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+dotfiles=0
+mike=0
+shared=0
+
 while (("$#"))
 do
     case "$1" in
@@ -82,7 +111,7 @@ do
 done
 
 # Automatically clone dotfiles in Mike mode.
-if [[ "${mike:-0}" -eq 1 ]]
+if [[ "$mike" -eq 1 ]]
 then
     dotfiles=1
 fi
@@ -91,6 +120,32 @@ fi
 
 # Script                                                                    {{{1
 # ==============================================================================
+
+group="$(_koopa_build_prefix_group)"
+
+# Clone repo                                                                {{{2
+# ------------------------------------------------------------------------------
+
+koopa_dir="/usr/local/koopa"
+sudo mkdir -p "$koopa_dir"
+
+# - darwin (macOS): admin
+# - debian: sudo
+# - fedora: wheel
+group="wheel"
+
+sudo chgrp "$group" "$koopa_dir"
+sudo chmod g+w "$koopa_dir"
+
+git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
+"${koopa_dir}/install"
+
+
+
+
+
+
+
 
 # Remove legacy cruft                                                       {{{2
 # ------------------------------------------------------------------------------
@@ -114,7 +169,7 @@ force=1 source "${KOOPA_HOME}/activate"
 # >     shared=1
 # > fi
 
-if [[ "${shared:-0}" -eq 1 ]]
+if [[ "$shared" -eq 1 ]]
 then
     _koopa_update_profile
 fi
@@ -122,7 +177,7 @@ fi
 # Dot files                                                                 {{{2
 # ------------------------------------------------------------------------------
 
-if [[ "${dotfiles:-0}" -eq 1 ]]
+if [[ "$dotfiles" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
     
@@ -167,7 +222,7 @@ then
     fi
     
     # Add Mike-specific dotfiles, if necessary.
-    if [[ "${mike:-0}" -eq 1 ]]
+    if [[ "$mike" -eq 1 ]]
     then
         source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
         target_dir="$(_koopa_config_dir)/dotfiles-private"
@@ -193,7 +248,7 @@ fi
 # ------------------------------------------------------------------------------
 
 # Mike-specific configuration.
-if [[ "${mike:-}" -eq 1 ]]
+if [[ "$mike" -eq 1 ]]
 then
     # Ensure the koopa remote is using SSH and not HTTPS.
     (

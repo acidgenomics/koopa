@@ -34,22 +34,8 @@ Tested on:
 
 **Recommended.** This requires sudo permissions.
 
-Clone the repository.
-
 ```sh
-koopa_dir="/usr/local/koopa"
-sudo mkdir -p "$koopa_dir"
-
-# - darwin (macOS): admin
-# - debian: sudo
-# - fedora: wheel
-group="wheel"
-
-sudo chgrp "$group" "$koopa_dir"
-sudo chmod g+w "$koopa_dir"
-
-git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
-"${koopa_dir}/install"
+/bin/sh -e "$(curl -fsSL https://raw.githubusercontent.com/acidgenomics/koopa/develop/install)"
 ```
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.

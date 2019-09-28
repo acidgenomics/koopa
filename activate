@@ -1,20 +1,20 @@
 #!/bin/sh
 # shellcheck disable=SC1090,SC1091,SC2039
-# SC2236: zsh doesn't handle `-n` flag in place of `! -z` correctly in POSIX
-# mode when using `[` instead of `[[`.
+# SC2236: zsh doesn't handle '-n' flag in place of '! -z' correctly in POSIX
+# mode when using '[' instead of '[['.
 
 
 
 # Notes                                                                     {{{1
 # ==============================================================================
 
-# Dropped support for ksh because it doesn't support `local` variables scoped
+# Dropped support for ksh because it doesn't support 'local' variables scoped
 # inside of functions.
 
 # Checking declared values in Bash:
-# - `declare -F`: Display function names.
-# - `declare -p`: Display the attributes and value of each name.
-# - `declare -x`: Display exported values.
+# - 'declare -F': Display function names.
+# - 'declare -p': Display the attributes and value of each name.
+# - 'declare -x': Display exported values.
 
 
 
@@ -161,7 +161,7 @@ fi
 # ==============================================================================
 
 # Fake realpath support, if necessary.
-# Note that `readlink -f` doesn't work on macOS.
+# Note that 'readlink -f' doesn't work on macOS.
 #
 # See also:
 # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
@@ -203,9 +203,9 @@ then
             ;;
     esac
     export ZSHRC
-    # Note that sourcing in `/etc/profile` doesn't return script path in `$0`,
-    # which is commonly recommended online in place of `$BASH_SOURCE`. `$0` in
-    # this case instead returns `_src_etc_profile`.
+    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
+    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
+    # this case instead returns '_src_etc_profile'.
     # https://stackoverflow.com/a/23259585/3911732
     file="${(%):-%N}"
 else
@@ -225,7 +225,7 @@ then
 fi
 
 # Note that running realpath on the file instead of the directory will properly
-# resolve `~/.config/koopa/activate` in Mike's default `~/.shrc` config file.
+# resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
 KOOPA_HOME="$(dirname "$(realpath "$file")")"
 export KOOPA_HOME
 
