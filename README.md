@@ -30,27 +30,17 @@ Tested on:
 - RHEL 7 / CentOS 7
 - Amazon Linux 2
 
-### Shared user installation
-
-**Recommended.** This requires sudo permissions.
-
 ```sh
-curl -sSL https://raw.githubusercontent.com/acidgenomics/koopa/develop/install | bash
+install="https://raw.githubusercontent.com/acidgenomics/koopa/master/install"
+curl -sSL "$install" | bash -s -- --shared
+curl -sSL "$install" | bash
 ```
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.
 
 If you're going to install any programs using the cellar scripts, also adjust the permissions for `/usr/local/`. Otherwise the link cellar commands will error and you will see symlink errors.
 
-```sh
-sudo chgrp -Rh "$group" /usr/local
-sudo chmod g+w -R /usr/local
-sudo chmod g+s /usr/local
-```
-
 ### Local user installation
-
-Use this approach on machines without sudo permissions.
 
 Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
 
