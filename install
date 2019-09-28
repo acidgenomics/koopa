@@ -2,9 +2,6 @@
 # shellcheck disable=SC1090,SC1091
 set -Ee -o pipefail
 
-# Install koopa.
-# Updated 2019-09-27.
-
 KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
 
@@ -95,9 +92,6 @@ fi
 # Script                                                                    {{{1
 # ==============================================================================
 
-install_dir="${KOOPA_HOME}/system/install"
-uninstall_dir="${KOOPA_HOME}/system/uninstall"
-
 # Remove legacy cruft                                                       {{{2
 # ------------------------------------------------------------------------------
 
@@ -131,35 +125,97 @@ fi
 if [[ "${dotfiles:-0}" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
+    
     # Clone dotfiles repo, if necessary.
-    if [[ ! -e "${KOOPA_HOME}/dotfiles" ]]
+    if [[ ! -d "${KOOPA_HOME}/dotfiles" ]]
     then
         install-dotfiles
     fi
-    # Remove legacy dotfile cruft.
-    source "${uninstall_dir}/dotfiles-legacy.sh"
+    
     # Always create these dotfiles, even on a shared installation.
-    source "${install_dir}/dotfiles-shared.sh"
+    dotfile --force "condarc"
+    dotfile --force "gitignore"
+    dotfile --force "spacemacs"
+    dotfile --force "tmux.conf"
+    dotfile --force "vim"
+    dotfile --force "vimrc"
+    
     # Create local config files.
     if [[ "${shared:-0}" -eq 0 ]]
     then
-        source "${install_dir}/dotfiles-local.sh"
+        host_type="$(_koopa_host_type)"
+        os_type="$(_koopa_os_type)"
+
+        dotfile --force "Rprofile"
+        dotfile --force "bash_profile"
+        dotfile --force "bashrc"
+        dotfile --force "kshrc"
+        dotfile --force "shrc"
+        dotfile --force "zshrc"
+
+        # R
+        if [[ "$os_type" == "darwin" ]]
+        then
+            dotfile --force "os/darwin/R"
+        elif [[ "$host_type" == "harvard-o2" ]]
+        then
+            dotfile --force "host/harvard-o2/Renviron"
+        elif [[ "$host_type" == "harvard-odyssey" ]]
+        then
+            dotfile --force "host/harvard-odyssey/Renviron"
+        fi
     fi
-    # Config Mike-specific dotfiles, if necessary.
+    
+    # Add Mike-specific dotfiles, if necessary.
     if [[ "${mike:-0}" -eq 1 ]]
     then
-        source "${install_dir}/dotfiles-mike.sh"
+        source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
+        target_dir="$(_koopa_config_dir)/dotfiles-private"
+        if [[ ! -d "$target_dir" ]]
+        then
+            git clone "$source_repo" "$private_dir"
+        fi
+        if _koopa_is_darwin
+        then
+            dotfile --force os/darwin/gitconfig
+        else
+            dotfile --force gitconfig
+        fi
+        dotfile --force --private Rsecrets
+        dotfile --force --private secrets
+        dotfile --force --private travis
+        dotfile --force Rprofile
+        dotfile --force forward
     fi
 fi
 
 # Additional                                                                {{{2
 # ------------------------------------------------------------------------------
 
-# Clone additional Git repos of interest.
+# Mike-specific configuration.
 if [[ "${mike:-}" -eq 1 ]]
 then
-    source "${install_dir}/docker-mike.sh"
-    source "${install_dir}/scripts-mike.sh"
+    # Ensure the koopa remote is using SSH and not HTTPS.
+    (
+        cd "$KOOPA_HOME" || exit 1
+        git remote set-url origin git@github.com:acidgenomics/koopa.git
+    )
+    
+    # Clone the docker repo.
+    source_repo="git@github.com:acidgenomics/docker.git"
+    target_dir="$(_koopa_config_dir)/docker"
+    if [[ ! -d "$target_dir" ]]
+    then
+        git clone --recursive "$source_repo" "$target_dir"
+    fi
+
+    # Clone the scripts-private repo.
+    source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
+    target_dir="$(_koopa_config_dir)/scripts-private"
+    if [[ ! -d "$target_dir" ]]
+    then
+        git clone --recursive "$source_repo"  "$target_dir"
+    fi
 fi
 
 printf "Installation was successful.\n"
