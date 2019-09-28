@@ -94,7 +94,7 @@ fi
 # Functions
 # ==============================================================================
 
-_koopa_build_prefix_group() {
+_koopa_prefix_group() {
     echo "FIXME"
 }
 
@@ -135,7 +135,7 @@ then
         # - darwin (macOS): admin
         # - debian: sudo
         # - fedora: wheel
-        group="$(_koopa_build_prefix_group)"
+        group="$(_koopa_prefix_group)"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+w "$target_dir"
         # Ensure build prefix is group writable (for cellar scripts).

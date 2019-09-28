@@ -11,9 +11,5 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../../posix/include/functions.sh"
 
 # Source bash functions.
-functions_dir="${script_dir}/../functions"
-for file in "${functions_dir}/"*".sh"
-do
-    # shellcheck source=/dev/null
-    [[ -f "$file" ]] && source "$file"
-done
+# shellcheck source=/dev/null
+source "${script_dir}/functions.sh"

@@ -55,7 +55,7 @@ case "$OSTYPE" in
         ;;
 esac
 
-_koopa_build_mkdir "$prefix"
+_koopa_prefix_mkdir "$prefix"
 
 (
     rm -rf "$tmp_dir"
@@ -66,7 +66,7 @@ _koopa_build_mkdir "$prefix"
     rm -rf "$tmp_dir"
 )
 
-_koopa_build_chgrp "$prefix"
+_koopa_prefix_chgrp "$prefix"
 
 command -v "$exe_file"
 "$exe_file" --version
