@@ -7,6 +7,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # Updated 2019-09-27.
 
 # Load POSIX functions.
+# shellcheck source=/dev/null
 . "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
 if _koopa_has_sudo
