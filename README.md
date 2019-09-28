@@ -7,19 +7,29 @@ Shell bootloader for bioinformatics.
 
 Refer to the [koopa][] website for usage details.
 
-## Installation
+## Requirements
 
-These [POSIX][]-compliant shells are supported: [bash][], [zsh][].
+[POSIX][]-compliant shell:
 
-[dash][], [ksh][], and [tcsh][] shells aren't supported.
+| shell        | supported |
+| ------------ | --------- |
+| [**bash**][] | TRUE      |
+| [**zsh**][]  | TRUE      |
+| [dash][]     | FALSE     |
+| [ksh][]      | FALSE     |
+| [tcsh][]     | FALSE     |
 
-Support for the non-POSIX [fish][] shell may be added in a future release, but
-is currently unsupported.
+Operating system:
 
-Requirements:
+| os        | supported |
+| --------- | --------- |
+| **Linux** | TRUE      |
+| **macOS** | TRUE      |
+| Windows   | FALSE     |
 
-- Linux or macOS. Windows isn't supported.
-- [Bash][] >= 4. Required even when using a different shell.
+Dependencies:
+
+- [Bash][] >= 4.
 - [Python][] >= 3.7.
 - [R][] >= 3.6.
 
@@ -32,7 +42,35 @@ Tested on:
 - RHEL 7 / CentOS 7
 - Amazon Linux 2
 
-### Shared user installation
+
+## Installation
+
+### Single user
+
+Installs to `~/.local/share/koopa`, following the recommended [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
+
+```sh
+curl -sSL "https://raw.githubusercontent.com/acidgenomics/koopa/master/install" | bash
+```
+
+Add these lines to your shell configuration file:
+
+```sh
+# koopa shell
+# https://koopa.acidgenomics.com/
+# shellcheck source=/dev/null
+XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+. "${XDG_DATA_HOME}/koopa/activate"
+```
+
+Not sure where to source `activate` in your configuration? Here are some general
+recommendations, in order of priority for each shell. These can differ depending
+on the operating system, so refer to your shell documentation for details.
+
+- [bash][]: `.bash_profile`, `.bashrc`.
+- [zsh][]: `.zshrc`, `.zprofile`.
+
+### Shared (for all users)
 
 Installs to `/usr/local/koopa`. Requires sudo permissions.
 
@@ -45,41 +83,12 @@ This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` f
 
 If you're going to install any programs using the cellar scripts, also ensure the permissions for `/usr/local/` are group writable. The installer attempts to fix this automatically, if necessary.
 
-### Single user installation
-
-Installs to `~/.local/share/koopa`, following the recommended [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
-
-```sh
-curl -sSL "https://raw.githubusercontent.com/acidgenomics/koopa/master/install" | bash
-```
-
-Add these lines to your shell configuration file.
-
-```sh
-# koopa shell
-# https://koopa.acidgenomics.com/
-# shellcheck source=/dev/null
-XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-. "${XDG_DATA_HOME}/koopa/activate"
-```
-
 ### Check installation
 
 Restart the shell. Koopa should now activate automatically at login. You can
 verify this with `command -v koopa`. Next, check your environment dependencies
 with `koopa check`. To obtain information about the working environment, run
 `koopa info`.
-
-## Troubleshooting
-
-### Shell configuration file
-
-Not sure where to source `activate` in your configuration? Here are some general
-recommendations, in order of priority for each shell. These can differ depending
-on the operating system, so refer to your shell documentation for details.
-
-- [bash][]: `.bash_profile`, `.bashrc`.
-- [zsh][]: `.zshrc`, `.zprofile`.
 
 [bash]: https://www.gnu.org/software/bash/  "Bourne Again SHell"
 [dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist SHell"
