@@ -35,7 +35,7 @@ Tested on:
 **Recommended.** This requires sudo permissions.
 
 ```sh
-/bin/sh -e "$(curl -fsSL https://raw.githubusercontent.com/acidgenomics/koopa/develop/install)"
+curl -sSL https://raw.githubusercontent.com/acidgenomics/koopa/develop/install | bash
 ```
 
 This will add a shared profile configuration file at `/etc/profile.d/koopa.sh` for supported Linux distros.
