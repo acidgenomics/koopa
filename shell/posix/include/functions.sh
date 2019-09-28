@@ -122,11 +122,11 @@ _koopa_assert_has_no_environments() {
 
 
 # Assert that current user has sudo (admin) permissions.
-# Updated 2019-09-12.
+# Updated 2019-09-28.
 _koopa_assert_has_sudo() {
     if ! _koopa_has_sudo
     then
-        >&2 printf "Error: sudo is required for this script.\n"
+        >&2 printf "Error: sudo is required.\n"
         exit 1
     fi
     return 0
@@ -809,11 +809,6 @@ _koopa_force_add_to_path_start() {
 
 
 
-# G                                                                         {{{1
-# ==============================================================================
-
-
-
 # H                                                                         {{{1
 # ==============================================================================
 
@@ -827,12 +822,15 @@ _koopa_has_no_environments() {
 
 
 
-# Administrator (sudo) permission.
-# Currently performing a simple check by verifying wheel group.
+# Check that current user has administrator (sudo) permission.
+#
+# Note that use of 'sudo -v' does not work consistently across platforms.
+#
 # - Darwin (macOS): admin
 # - Debian: sudo
 # - Fedora: wheel
-# Updated 2019-06-19.
+#
+# Updated 2019-09-28.
 _koopa_has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
@@ -1129,11 +1127,6 @@ _koopa_java_home() {
 
 
 
-# K                                                                         {{{1
-# ==============================================================================
-
-
-
 # L                                                                         {{{1
 # ==============================================================================
 
@@ -1227,11 +1220,6 @@ _koopa_major_version() {
 _koopa_minor_version() {
     echo "$1" | cut -d "." -f 2-
 }
-
-
-
-# N                                                                         {{{1
-# ==============================================================================
 
 
 
@@ -1613,11 +1601,6 @@ _koopa_strip_trailing_slash() {
 # T                                                                         {{{1
 # ==============================================================================
 
-#!/bin/sh
-# shellcheck disable=SC2039
-
-
-
 # Create temporary directory.
 #
 # Note: macOS requires `env LC_CTYPE=C`.
@@ -1865,21 +1848,6 @@ _koopa_variable() {
         return 1
     fi
 }
-
-
-
-# W                                                                         {{{1
-# ==============================================================================
-
-
-
-# X                                                                         {{{1
-# ==============================================================================
-
-
-
-# Y                                                                         {{{1
-# ==============================================================================
 
 
 

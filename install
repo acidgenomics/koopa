@@ -21,7 +21,7 @@ fi
 
 usage() {
 cat << EOF
-usage: install [--help|-h] [--shared] [--dotfiles] [--mike] 
+usage: install [--help|-h] [--shared] [--dotfiles] [--mike]
 
 Install koopa.
 
@@ -40,7 +40,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-09-27.
+    Updated 2019-09-28.
 EOF
 }
 
@@ -91,15 +91,30 @@ fi
 
 
 
-# Functions
+# Functions                                                                 {{{1
 # ==============================================================================
 
-_koopa_prefix_group() {
-    echo "FIXME"
+_koopa_has_sudo() {
+    groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
-_koopa_has_sudo() {
-    echo "FIXME"
+_koopa_is_linux() {
+    [ "$(uname -s)" = "Linux" ]
+}
+
+_koopa_prefix_group() {
+    if groups | grep -Eq "\b(admin)\b"
+    then
+        group="admin"
+    elif groups | grep -Eq "\b(sudo)\b"
+    then
+        group="sudo"
+    elif groups | grep -Eq "\b(wheel)\b"
+    then
+        group="wheel"
+    else
+        group="$(whoami)"
+    fi
 }
 
 
@@ -107,21 +122,19 @@ _koopa_has_sudo() {
 # Script                                                                    {{{1
 # ==============================================================================
 
-source_repo="https://github.com/acidgenomics/koopa.git"
-
-if [[ "$shared" -eq 1 ]]
-then
-    prefix="/usr/local"
-else
-    XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-    prefix="$XDG_DATA_HOME"
-fi
-target_dir="${prefix}/koopa"
-
-# Detect if we're calling from piped script (recommended) and need to clone the
-# repo locally first before proceeding.
+# In a piped install script call, clone the repo from GitHub first.
 if [[ -z "${BASH_SOURCE[0]}" ]]
 then
+    source_repo="https://github.com/acidgenomics/koopa.git"
+    if [[ "$shared" -eq 1 ]]
+    then
+        prefix="/usr/local"
+    else
+        XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+        prefix="$XDG_DATA_HOME"
+    fi
+    target_dir="${prefix}/koopa"
+    # Error if target destination directory already exists.
     if [[ -d "$target_dir" ]]
     then
         >&2 printf "Error: Directory exists: '%s'\n" "$target_dir"
@@ -130,18 +143,22 @@ then
     # Set correct admin permissions, if applicable.
     if [[ "$shared" -eq 1 ]]
     then
+        if ! _koopa_has_sudo
+        then
+            >&2 printf "Error: sudo is required for '--shared' flag.\n"
+            exit 1
+        fi
         sudo mkdir -pv "$target_dir"
-        # Get the admin group:
-        # - darwin (macOS): admin
-        # - debian: sudo
-        # - fedora: wheel
         group="$(_koopa_prefix_group)"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+w "$target_dir"
-        # Ensure build prefix is group writable (for cellar scripts).
-        sudo chgrp -Rh "$group" "$prefix"
-        sudo chmod g+w -R /usr/local
-        sudo chmod g+s /usr/local
+        # Ensure build prefix is group writable, for cellar scripts.
+        if _koopa_is_linux
+        then
+            sudo chgrp -Rh "$group" "$prefix"
+            sudo chmod g+w -R /usr/local
+            sudo chmod g+s /usr/local
+        fi
     fi
     git clone --recursive "$source_repo" "$target_dir"
     KOOPA_HOME="$target_dir"
@@ -149,6 +166,7 @@ else
     KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
         >/dev/null 2>&1 && pwd -P)"
 fi
+export KOOPA_HOME
 
 # Remove legacy cruft                                                       {{{2
 # ------------------------------------------------------------------------------
@@ -159,19 +177,19 @@ rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
 # Activate koopa                                                            {{{2
 # ------------------------------------------------------------------------------
 
-printf "\nActivating koopa.\n"
+printf "Activating koopa.\n"
 force=1 source "${KOOPA_HOME}/activate"
 
 # Shared user configuration                                                 {{{2
 # ------------------------------------------------------------------------------
 
-# Checking for '/usr/local' installation automatically.
-# > if echo "$KOOPA_HOME" | grep -qE "^/(opt|usr/local)/"
-# > then
-# >     printf "\nShared installation detected at '%s'.\n" "$KOOPA_HOME"
-# >     shared=1
-# > fi
-
+# Check for shared installation automatically.
+if [[ "$shared" -eq 0 ]] && echo "$KOOPA_HOME" | grep -qE "^/(opt|usr)/"
+then
+    printf "Shared installation detected at '%s'.\n" "$KOOPA_HOME"
+    shared=1
+fi
+# Configure shared profile automatically.
 if [[ "$shared" -eq 1 ]]
 then
     _koopa_update_profile
@@ -183,34 +201,29 @@ fi
 if [[ "$dotfiles" -eq 1 ]]
 then
     printf "\nConfiguring dotfiles.\n"
-    
     # Clone dotfiles repo, if necessary.
     if [[ ! -d "${KOOPA_HOME}/dotfiles" ]]
     then
         install-dotfiles
     fi
-    
-    # Always create these dotfiles, even on a shared installation.
+    # Always create these dotfiles.
     dotfile --force "condarc"
     dotfile --force "gitignore"
     dotfile --force "spacemacs"
     dotfile --force "tmux.conf"
     dotfile --force "vim"
     dotfile --force "vimrc"
-    
     # Create local config files.
     if [[ "${shared:-0}" -eq 0 ]]
     then
         host_type="$(_koopa_host_type)"
         os_type="$(_koopa_os_type)"
-
         dotfile --force "Rprofile"
         dotfile --force "bash_profile"
         dotfile --force "bashrc"
         dotfile --force "kshrc"
         dotfile --force "shrc"
         dotfile --force "zshrc"
-
         # R
         if [[ "$os_type" == "darwin" ]]
         then
@@ -223,7 +236,6 @@ then
             dotfile --force "host/harvard-odyssey/Renviron"
         fi
     fi
-    
     # Add Mike-specific dotfiles, if necessary.
     if [[ "$mike" -eq 1 ]]
     then
