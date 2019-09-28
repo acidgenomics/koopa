@@ -4,13 +4,18 @@
 
 
 # Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
-# Updated 2019-09-12.
+# Updated 2019-09-27.
 _koopa_cellar_prefix() {
     local prefix
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/cellar"
     else
+        if [ -z "${XDG_DATA_HOME:-}" ]
+        then
+            >&2 printf "Warning: 'XDG_DATA_HOME' is unset.\n"
+            XDG_DATA_HOME="${HOME}/.local/share"
+        fi
         prefix="${XDG_DATA_HOME}/koopa/cellar"
     fi
     echo "$prefix"
@@ -78,20 +83,30 @@ _koopa_conda_env_prefix() {
 
 
 
-# Updated 2019-08-18.
+# Updated 2019-09-27.
 _koopa_config_dir() {
+    if [ -z "${XDG_CONFIG_HOME:-}" ]
+    then
+        >&2 printf "Warning: 'XDG_CONFIG_HOME' is unset.\n"
+        XDG_CONFIG_HOME="${HOME}/.config"
+    fi
     echo "${XDG_CONFIG_HOME}/koopa"
 }
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-09-27.
 _koopa_conda_prefix() {
     local prefix
     if [ -w "$KOOPA_HOME" ]
     then
         prefix="${KOOPA_HOME}/conda"
     else
+        if [ -z "${XDG_DATA_HOME:-}" ]
+        then
+            >&2 printf "Warning: 'XDG_DATA_HOME' is unset.\n"
+            XDG_DATA_HOME="${HOME}/.local/share"
+        fi
         prefix="${XDG_DATA_HOME}/koopa/conda"
     fi
     echo "$prefix"
