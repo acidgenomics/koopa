@@ -173,7 +173,7 @@ then
         target_dir="$(_koopa_config_dir)/dotfiles-private"
         if [[ ! -d "$target_dir" ]]
         then
-            git clone "$source_repo" "$private_dir"
+            git clone "$source_repo" "$target_dir"
         fi
         if _koopa_is_darwin
         then
