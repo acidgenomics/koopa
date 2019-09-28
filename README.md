@@ -32,7 +32,7 @@ Tested on:
 
 ### Single user
 
-Install into `~/.local/share/koopa`, following the recommended [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
+Install into `~/.local/share/koopa`. Follows the recommended [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 
 ```sh
 curl -sSL "https://raw.githubusercontent.com/acidgenomics/koopa/master/install" | bash
