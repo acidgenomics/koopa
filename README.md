@@ -5,7 +5,7 @@
 
 Shell bootloader for bioinformatics.
 
-Refer to the [koopa website][] for usage details.
+Refer to the [koopa][] website for usage details.
 
 ## Installation
 
@@ -81,21 +81,11 @@ on the operating system, so refer to your shell documentation for details.
 - [bash][]: `.bash_profile`, `.bashrc`.
 - [zsh][]: `.zshrc`, `.zprofile`.
 
-
-
-[aspera connect]: https://downloads.asperasoft.com/connect2/
 [bash]: https://www.gnu.org/software/bash/  "Bourne Again SHell"
-[bcbio]: https://bcbio-nextgen.readthedocs.io/
-[conda]: https://conda.io/
 [dash]: https://wiki.archlinux.org/index.php/Dash  "Debian Almquist SHell"
-[dotfiles]: https://github.com/mjsteinbaugh/dotfiles/
 [fish]: https://fishshell.com/  "Friendly Interactive SHell"
-[git]: https://git-scm.com/
+[koopa]: https://koopa.acidgenomics.com/
 [ksh]: http://www.kornshell.com/  "KornSHell"
-[pgp]: https://www.openpgp.org/
 [posix]: https://en.wikipedia.org/wiki/POSIX  "Portable Operating System Interface"
-[python]: https://www.python.org/
-[r]: https://www.r-project.org/
-[ssh]: https://en.wikipedia.org/wiki/Secure_Shell
 [tcsh]: https://en.wikipedia.org/wiki/Tcsh  "TENEX C Shell"
 [zsh]: https://www.zsh.org/  "Z SHell"
