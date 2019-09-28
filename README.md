@@ -69,11 +69,12 @@ Use this approach on machines without sudo permissions.
 Clone the repository. Installation following the [XDG base directory specification](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) is recommended.
 
 ```sh
-# ~/.local/share/koopa
-koopa_dir="${XDG_DATA_HOME:-${HOME}/.local/share}/koopa"
-mkdir -p "$koopa_dir"
-git clone --recursive https://github.com/acidgenomics/koopa.git "$koopa_dir"
-"${koopa_dir}/install"
+source_repo="https://github.com/acidgenomics/koopa.git"
+XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+target_dir="${XDG_DATA_HOME}/koopa"
+mkdir -pv "$target_dir"
+git clone --recursive "$source_repo" "$target_dir"
+"${target_dir}/install"
 ```
 
 Add these lines to your shell configuration file.
@@ -82,7 +83,8 @@ Add these lines to your shell configuration file.
 # koopa shell
 # https://koopa.acidgenomics.com/
 # shellcheck source=/dev/null
-. "${HOME}/.local/share/koopa/activate"
+XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+. "${XDG_DATA_HOME}/koopa/activate"
 ```
 
 ### Check installation
