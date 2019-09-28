@@ -74,7 +74,7 @@ log_dir="${HOME}/logs/${HOSTNAME}/bcbio/${version}"
 log_file="${log_dir}/bcbio-install-${version}-${timestamp}.log"
 mkdir -pv "$log_dir"
 
-_koopa_build_mkdir "$prefix"
+_koopa_prefix_mkdir "$prefix"
 
 (
     rm -fr "$tmp_dir"
@@ -91,7 +91,7 @@ _koopa_build_mkdir "$prefix"
         2>&1 | tee "$log_file"
 )
 
-_koopa_build_chgrp "$prefix"
+_koopa_prefix_chgrp "$prefix"
 
 # Disable group write access to install by default.
 chmod -R g-w "$install_dir" "$tools_dir"

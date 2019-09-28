@@ -15,7 +15,7 @@ host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.135"
 dir="/data00/bcbio"
-group="$(_koopa_build_prefix_group)"
+group="$(_koopa_prefix_group)"
 
 
 
