@@ -54,7 +54,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-24.
+    Updated 2019-09-27.
 EOF
 }
 
@@ -145,6 +145,11 @@ fi
 # Add link either in HOME (default) or XDG_CONFIG_HOME.
 if [[ "$config" -eq 1 ]]
 then
+    if [[ -z "${XDG_CONFIG_HOME:-}" ]]
+    then
+        >&2 printf "Warning: 'XDG_CONFIG_HOME' is unset.\n"
+        XDG_CONFIG_HOME="${HOME}/.config"
+    fi
     symlink_path="${XDG_CONFIG_HOME}/${symlink_name}"
 else
     symlink_path="${HOME}/.${symlink_name}"
