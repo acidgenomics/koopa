@@ -56,4 +56,5 @@ source_repo="${1:-$url}"
 # ==============================================================================
 
 _koopa_assert_is_not_dir "$target_dir"
+mkdir -pv "$target_dir"
 git clone --recursive "$source_repo" "$target_dir"
