@@ -2,9 +2,10 @@
 
 if [[ -z "${KOOPA_HOME:-}" ]]
 then
-    >&2 printf "koopa is not correctly activated.\n"
-    >&2 printf "Source the 'activate' script in your shell configuration.\n"
-    exit 1
+    KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+        >/dev/null 2>&1 && pwd -P)"
+    # shellcheck source=/dev/null
+    force=1 minimal=1 . "${KOOPA_HOME}/activate"
 fi
 
 # shellcheck source=/dev/null

@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
 
 
 # Usage                                                                     {{{1
@@ -53,7 +55,7 @@ case "$OSTYPE" in
         ;;
 esac
 
-_koopa_build_mkdir "$prefix"
+_koopa_prefix_mkdir "$prefix"
 
 (
     rm -rf "$tmp_dir"
@@ -64,7 +66,7 @@ _koopa_build_mkdir "$prefix"
     rm -rf "$tmp_dir"
 )
 
-_koopa_build_chgrp "$prefix"
+_koopa_prefix_chgrp "$prefix"
 
 command -v "$exe_file"
 "$exe_file" --version

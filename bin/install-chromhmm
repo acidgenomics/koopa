@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
@@ -51,6 +52,6 @@ _koopa_help "$@"
     rm -fr "$tmp_dir"
 )
 
-_koopa_build_chgrp "$prefix"
+_koopa_prefix_chgrp "$prefix"
 
 printf "Path: %s\n" "${prefix}/ChromHMM/ChromHMM.jar"

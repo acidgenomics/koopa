@@ -2,10 +2,10 @@
 set -eu -o pipefail
 
 # ZSH shared header script.
-# Modified 2019-09-23.
+# Modified 2019-09-26.
 
-script_dir="$(cd "$(dirname "${(%):-%N}")" >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
-shell_dir="$(dirname "$(dirname "$script_dir")")"
+# Source POSIX functions.
 # shellcheck source=/dev/null
-source "${shell_dir}/posix/include/functions.sh"
+source "${script_dir}/../../posix/include/functions.sh"
