@@ -20,6 +20,8 @@ note:
 EOF
 }
 
+_koopa_help "$@"
+
 name="rmate"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"

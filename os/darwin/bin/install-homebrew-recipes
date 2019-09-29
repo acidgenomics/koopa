@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "$(koopa header darwin)"
+source "${script_dir}/../include/header.sh"
 
 
 
@@ -34,7 +34,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-09-26.
 EOF
 }
 
@@ -170,6 +170,7 @@ brews=(
     pandoc
     pandoc-citeproc
     pandoc-crossref
+    parallel
     pkg-config
     protobuf
     python

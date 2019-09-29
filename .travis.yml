@@ -16,14 +16,14 @@ jobs:
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './linter'
+        - bash -c './system/checks/linter.sh'
     - stage: test
       name: "macos"
       os: osx
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './linter'
+        - bash -c './system/checks/linter.sh'
 
 notifications:
   email:

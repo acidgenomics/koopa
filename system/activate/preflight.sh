@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pre-flight checks.
-# Updated 2019-09-24.
+# Updated 2019-09-27.
 
 
 
@@ -27,5 +27,26 @@ esac
 # Required programs                                                         {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed basename bash cat chsh curl dirname echo env grep   \
-    head less man realpath sed sh tail tee top wget which
+# > _koopa_assert_is_installed \
+# >     basename \
+# >     bash \
+# >     cat \
+# >     chsh \
+# >     curl \
+# >     dirname \
+# >     echo \
+# >     env \
+# >     grep \
+# >     head \
+# >     less \
+# >     man \
+# >     nice \
+# >     parallel \
+# >     realpath \
+# >     sed \
+# >     sh \
+# >     tail \
+# >     tee \
+# >     top \
+# >     wget \
+# >     which
