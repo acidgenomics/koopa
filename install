@@ -126,6 +126,7 @@ _koopa_prefix_group() {
 # In a piped install script call, clone the repo from GitHub first.
 if [[ -z "${BASH_SOURCE[0]}" ]]
 then
+    export KOOPA_PIPED_INSTALL=1
     source_repo="https://github.com/acidgenomics/koopa.git"
     if [[ "$shared" -eq 1 ]]
     then

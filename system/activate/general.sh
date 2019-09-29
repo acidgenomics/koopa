@@ -173,13 +173,13 @@ export CPU_COUNT
 # ------------------------------------------------------------------------------
 
 # Enable passphrase prompting in terminal.
-# Note that this step will error if tty isn't installed.
-# FIXME Rework this. Currently causes piped installer to fail.
-# > if [ -z "${GPG_TTY:-}" ]
-# > then
-# >     GPG_TTY="$(tty)"
-# >     export GPG_TTY
-# > fi
+if [ -z "${GPG_TTY:-}" ] &&
+    [ -z "${KOOPA_PIPED_INSTALL:-}" ] &&
+    _koopa_is_installed tty
+then
+    GPG_TTY="$(tty)"
+    export GPG_TTY
+fi
 
 # Ruby                                                                      {{{2
 # ------------------------------------------------------------------------------
