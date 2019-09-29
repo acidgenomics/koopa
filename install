@@ -207,7 +207,6 @@ then
     # Clone dotfiles repo, if necessary.
     if [[ ! -d "${KOOPA_HOME}/dotfiles" ]]
     then
-        echo "HELLO WORLD"
         install-dotfiles
     fi
     # Always create these dotfiles.
