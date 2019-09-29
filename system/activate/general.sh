@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-09-18.
+# Updated 2019-09-29.
 
 
 
@@ -174,11 +174,12 @@ export CPU_COUNT
 
 # Enable passphrase prompting in terminal.
 # Note that this step will error if tty isn't installed.
-if [ -z "${GPG_TTY:-}" ]
-then
-    GPG_TTY="$(tty)"
-    export GPG_TTY
-fi
+# FIXME Rework this. Currently causes piped installer to fail.
+# > if [ -z "${GPG_TTY:-}" ]
+# > then
+# >     GPG_TTY="$(tty)"
+# >     export GPG_TTY
+# > fi
 
 # Ruby                                                                      {{{2
 # ------------------------------------------------------------------------------
