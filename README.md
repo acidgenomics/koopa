@@ -5,7 +5,7 @@
 
 Shell bootloader for bioinformatics.
 
-Refer to the [koopa][] website for usage details.
+Refer to the [koopa][] website for installation instructions and usage details.
 
 ## Requirements
 
