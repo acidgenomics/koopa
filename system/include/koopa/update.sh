@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Update koopa installation.
 # Updated 2019-09-17.
