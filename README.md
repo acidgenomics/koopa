@@ -44,8 +44,8 @@ Add these lines to your shell configuration file:
 # koopa shell
 # https://koopa.acidgenomics.com/
 # shellcheck source=/dev/null
-XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-. "${XDG_DATA_HOME}/koopa/activate"
+XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config"
+. "${XDG_CONFIG_HOME}/koopa/activate"
 ```
 
 Not sure where to source `activate` in your configuration? Here are some general
