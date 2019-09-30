@@ -9,8 +9,6 @@ name="lua"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
-gnu_mirror="http://ftpmirror.gnu.org"
 exe_file="${prefix}/bin/${name}"
 
 
@@ -22,12 +20,12 @@ usage() {
 cat << EOF
 $(_koopa_help_header "install-cellar-${name}")
 
-Install Bash.
+Install Lua.
 
 $(_koopa_help_args)
 
 see also:
-    - https://www.gnu.org/software/bash/
+    http://www.lua.org/download.html
 
 note:
     Bash script.
@@ -49,20 +47,21 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "${gnu_mirror}/bash/bash-${version}.tar.gz"
-    tar -xzvf "bash-${version}.tar.gz"
-    cd "bash-${version}" || exit 1
-    ./configure \
-        --build="$build_os_string" \
-        --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
-    make test
-    make install
+    file="${name}-${version}.tar.gz"
+    curl -R -O "http://www.lua.org/ftp/${file}"
+    tar zxf "$file"
+    cd "${name}-${version}" || exit 1
+    if _koopa_is_darwin
+    then
+        make --jobs="$CPU_COUNT" macosx test
+    else
+        make --jobs="$CPU_COUNT" linux test
+    fi
+    make install INSTALL_TOP="$prefix"
     rm -fr "$tmp_dir"
 )
 
 _koopa_link_cellar "$name" "$version"
-_koopa_update_shells "$name"
 
 "$exe_file" --version
 command -v "$exe_file"
