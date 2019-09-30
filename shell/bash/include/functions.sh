@@ -83,16 +83,20 @@ EOF
 
 
 # Help header string.
-# Updated 2019-09-25.
+# Updated 2019-09-30.
 _koopa_help_header() {
-    local file
-    file="$( \
-        caller | \
-        head -n 1 | \
-        cut -d ' ' -f 2 \
-    )"
     local name
-    name="$(basename "$file")"
+    name="${1:-}"
+    if [[ -z "$name" ]]
+    then
+        local file
+        file="$( \
+            caller | \
+            head -n 1 | \
+            cut -d ' ' -f 2 \
+        )"
+        name="$(basename "$file")"
+    fi
     printf "usage: %s [--help|-h]" "$name"
 }
 
