@@ -287,9 +287,8 @@ _koopa_assert_is_non_existing() {
 
 
 # Assert that input is not a directory.
-# Updated 2019-09-12.
+# Updated 2019-09-29.
 _koopa_assert_is_not_dir() {
-    _koopa_assert_is_existing "$1"
     if [ -d "$1" ]
     then
         >&2 printf "Error: Directory exists: '%s'\n" "$1"
