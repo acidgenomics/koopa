@@ -53,14 +53,17 @@ printf "Installing %s %s.\n" "$name" "$version"
     cd "${name}-${version}" || exit 1
     if _koopa_is_darwin
     then
-        make --jobs="$CPU_COUNT" macosx test
+        make macosx test
     else
-        make --jobs="$CPU_COUNT" linux test
+        echo "AAA"
+        make linux test
     fi
+    echo "BBB"
     make install INSTALL_TOP="$prefix"
     rm -fr "$tmp_dir"
 )
 
+echo "CCC"
 _koopa_link_cellar "$name" "$version"
 
 "$exe_file" --version
