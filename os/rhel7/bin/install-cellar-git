@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# docbook2x-texi is required for `make doc` to run cleanly.
+#
+# Otherwise, you'll see this error:
+# /bin/sh: line 1: docbook2x-texi: command not found
+#
+# See also:
+# - https://github.com/progit/progit2/issues/425
+# - https://groups.google.com/forum/#!topic/git-users/DMaDpy8Bpww
+#
+# Note the capital "X" here. This differs depending on the Linux distro.
+# We're assuming Red Hat here.
+#
+# EPEL7 must be enabled for this to install (e.g. on Amazon Linux 2).
+
+if _koopa_has_sudo
+then
+    sudo yum install -y git
+    sudo yum-builddep -y git
+    sudo yum install -y docbook2X
+    if [[ ! -f /usr/bin/docbook2x-texi ]]
+    then
+        sudo ln -s /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+    fi
+fi
+
+# shellcheck source=/dev/null
+source "$(_koopa_cellar_script git)"
