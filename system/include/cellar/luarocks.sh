@@ -77,5 +77,9 @@ _koopa_assert_is_installed lua
 
 _koopa_link_cellar "$name" "$version"
 
+# Install Lmod dependencies.
+luarocks install luaposix
+luarocks install luafilesystem
+
 "$exe_file" --version
 command -v "$exe_file"
