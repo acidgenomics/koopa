@@ -4,11 +4,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-if _koopa_has_sudo
-then
-    sudo yum install -y gnupg2
-    sudo yum-builddep -y gnupg2
-fi
+_koopa_assert_has_sudo
+
+sudo yum install -y bash
+sudo yum-builddep -y bash
 
 # shellcheck source=/dev/null
-source "$(_koopa_cellar_script gnupg)"
+source "$(_koopa_cellar_script bash)"
