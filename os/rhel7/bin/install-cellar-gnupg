@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+if _koopa_has_sudo
+then
+    sudo yum install -y gnupg2
+    sudo yum-builddep -y gnupg2
+fi
+
+# shellcheck source=/dev/null
+source "$(_koopa_cellar_script gnupg)"

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# Using TeX Live 2013, we'll see this warning:
+#
+#     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
+#     vignettes and package manuals will not be rendered optimally
+
+# Missing recommendations:
+# - texlive-csvsimple
+# - texlive-fonts-extra
+# - texlive-inconsolata
+# - texlive-marginfix
+# - texlive-mathtools
+# - texlive-nowidow
+# - texlive-parnotes
+
+# There doesn't appear to be an easy way to fix these issues on RHEL 7 or 8.
+
+_koopa_assert_is_installed java
+_koopa_assert_is_installed javac
+_koopa_assert_is_installed tex
+
+if _koopa_has_sudo
+then
+    sudo yum -y install R
+    sudo yum-builddep -y R
+fi
+
+# shellcheck source=/dev/null
+source "$(_koopa_cellar_script r)"

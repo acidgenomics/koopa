@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_assert_has_sudo
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Install base programs for Red Hat Enterprise Linux (RHEL) 8.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-09-30.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+install-fedora-base
+sudo yum -y install \
+    libgit2 \
+    libssh2 \
+    util-linux-user
