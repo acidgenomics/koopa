@@ -49,6 +49,10 @@ _koopa_help "$@"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+_koopa_assert_is_installed java
+_koopa_assert_is_installed javac
+_koopa_assert_is_installed tex
+
 (
     rm -frv "$prefix"
     rm -frv "$tmp_dir"
