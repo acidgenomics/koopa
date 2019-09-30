@@ -2,10 +2,23 @@
 
 
 
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Debian:
+# > sudo apt install build-essential libreadline-dev
+
+# Fedora:
+# > install-lua
+
+# > install-cellar-lua
+
+
+
 # Variables                                                                 {{{1
 # ==============================================================================
 
-name="lua"
+name="luarocks"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
@@ -20,15 +33,18 @@ usage() {
 cat << EOF
 $(_koopa_help_header "install-cellar-${name}")
 
-Install Lua.
+Install LuaRocks.
 
 $(_koopa_help_args)
 
 see also:
-    http://www.lua.org/
+    - https://luarocks.org/
+    - https://github.com/luarocks/luarocks/wiki/
+          Installation-instructions-for-Unix
 
 note:
     Bash script.
+    Requires lua to be installed.
     Updated 2019-09-30.
 EOF
 }
@@ -42,22 +58,20 @@ _koopa_help "$@"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+_koopa_assert_is_installed lua
+
 (
     rm -frv "$prefix"
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
-    curl -R -O "http://www.lua.org/ftp/${file}"
-    tar zxf "$file"
+    wget "https://luarocks.org/releases/${file}"
+    tar zxpf "$file"
     cd "${name}-${version}" || exit 1
-    if _koopa_is_darwin
-    then
-        make macosx test
-    else
-        make linux test
-    fi
-    make install INSTALL_TOP="$prefix"
+    ./configure --prefix="$prefix"
+    make build
+    make install
     rm -fr "$tmp_dir"
 )
 
