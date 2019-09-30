@@ -1,29 +1,46 @@
 #!/usr/bin/env bash
 
-usage() {
-cat << EOF
-usage: install-cellar-bash [--help|-h]
 
-Install Bash.
 
-see also:
-    - https://www.gnu.org/software/bash/
+# Variables                                                                 {{{1
+# ==============================================================================
 
-note:
-    Bash script.
-    Updated 2019-09-23.
-EOF
-}
-
-_koopa_help "$@"
-
-name="bash"
+name="lua"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 gnu_mirror="http://ftpmirror.gnu.org"
 exe_file="${prefix}/bin/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header "install-cellar-${name}")
+
+Install Bash.
+
+$(_koopa_help_args)
+
+see also:
+    - https://www.gnu.org/software/bash/
+
+note:
+    Bash script.
+    Updated 2019-09-30.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 
