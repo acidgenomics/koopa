@@ -15,16 +15,16 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Enable EPEL repository.
+Install Lua.
 
 $(_koopa_help_args)
 
 see also:
-    https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
+    http://www.lua.org/
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-09-30.
 EOF
 }
 
@@ -35,28 +35,12 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-os_type="$(_koopa_os_type)"
-
-# Only allow install on RHEL 7.
-if [[ "$os_type" != "rhel7" ]]
-then
-    printf "RHEL 7 is required.\n"
-    exit 1
-fi
-
-# Check if EPEL is already enabled.
-if sudo yum repolist | grep -q "epel/"
-then
-    printf "EPEL 7 is already enabled.\n"
-    exit 0
-fi
-
 sudo yum install -y \
-    https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    lua \
+    lua-devel \
+    lua-filesystem \
+    lua-posix
 
-sudo yum-config-manager --enable epel
+command -v lua
+lua -v
 
-# Here's how to disable, for reference.
-# > sudo yum-config-manager --disable epel
-
-sudo yum -y install epel-release
