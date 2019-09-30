@@ -1,10 +1,29 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="git"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
+exe_file="${prefix}/bin/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-git [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
 Install Git SCM.
+
+$(_koopa_help_args)
 
 details:
     The compilation settings here are from the Git SCM book website.
@@ -23,22 +42,20 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-17.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-_koopa_assert_is_installed docbook2x-texi
 
-name="git"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
-exe_file="${prefix}/bin/${name}"
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
+
+_koopa_assert_is_installed docbook2x-texi
 
 (
     rm -frv "$prefix"

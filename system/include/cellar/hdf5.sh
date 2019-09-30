@@ -1,11 +1,30 @@
 #!/usr/bin/env bash
 
 
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="hdf5"
+version="$(_koopa_variable "$name")"
+major_version="$(_koopa_major_version "$version")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
+exe_file="${prefix}/bin/h5cc"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-hdf5 [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
 Install HDF5.
+
+$(_koopa_help_args)
 
 details:
     HDF Group website requires registration.
@@ -16,19 +35,16 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-17.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-name="hdf5"
-version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
-exe_file="${prefix}/bin/h5cc"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 
