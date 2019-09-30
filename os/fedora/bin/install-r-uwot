@@ -6,6 +6,16 @@ source "${script_dir}/../include/header.sh"
 
 
 
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="uwot"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+r_home="$(_koopa_r_home)"
+install_exe="${r_home}/bin/INSTALL"
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
@@ -26,7 +36,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-09-30.
 EOF
 }
 
@@ -37,10 +47,6 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-name="uwot"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-r_home="$(_koopa_r_home)"
-install_exe="${r_home}/bin/INSTALL"
 _koopa_assert_is_executable "$install_exe"
 
 (
