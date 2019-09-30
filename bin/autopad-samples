@@ -53,10 +53,6 @@ details:
     Here we are also renaming with a character string prefix by default, to
     avoid valid name issues in R. See 'make.names()' for details.
 
-note:
-    Bash script.
-    Updated 2019-09-20.
-
 examples:
     autopad-samples *.fastq.gz
 
@@ -77,6 +73,10 @@ examples:
     ...
     sample-10-compound-A-R1.fastq.gz
     sample-10-compound-A-R2.fastq.gz
+
+note:
+    Bash script.
+    Updated 2019-09-20.
 EOF
 }
 
@@ -85,7 +85,7 @@ _koopa_help "$@"
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 POSITIONAL=()

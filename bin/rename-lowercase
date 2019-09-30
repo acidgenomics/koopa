@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    files...
+
+required positional arguments:
+    ... File paths.
+
+$(_koopa_help_args)
+
+details:
+    Uses glob-style matching internally and does not rename recursively.
+
+examples:
+    rename-lowercase *.fastq.gz
+
+see also:
+    https://stackoverflow.com/questions/152514/
+
+note:
+    Bash script.
+    Requires Perl File::Rename to be installed.
+    Updated 2019-09-30.
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+files=("$@")
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_assert_is_installed rename
+rename -f 'y/A-Z/a-z/' "${files[@]}"
