@@ -77,9 +77,16 @@ _koopa_assert_is_installed lua
 
 _koopa_link_cellar "$name" "$version"
 
+# > build_prefix="$(_koopa_build_prefix)
+# > export LUAROCKS_PREFIX="$build_prefix"
+
 # Install Lmod dependencies.
 luarocks install luaposix
 luarocks install luafilesystem
 
+_koopa_link_cellar "$name" "$version"
+
 "$exe_file" --version
 command -v "$exe_file"
+
+lua -e 'print(package.path)'
