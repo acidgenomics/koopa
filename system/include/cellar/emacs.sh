@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-usage() {
-cat << EOF
-install-cellar-emacs [--help|-h]
 
-Install Emacs.
 
-see also:
-    - https://www.gnu.org/software/emacs/
-    - https://github.com/emacs-mirror/emacs
-
-note:
-    Bash script.
-    Updated 2019-09-17.
-EOF
-}
-
-_koopa_help "$@"
+# Variables                                                                 {{{1
+# ==============================================================================
 
 name="emacs"
 version="$(_koopa_variable "$name")"
@@ -24,6 +11,36 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header "install-cellar-${name}")
+
+Install Emacs.
+
+$(_koopa_help_args)
+
+see also:
+    - https://www.gnu.org/software/emacs/
+    - https://github.com/emacs-mirror/emacs
+
+note:
+    Bash script.
+    Updated 2019-09-30.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 

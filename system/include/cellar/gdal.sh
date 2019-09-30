@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="gdal"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+build_prefix="$(_koopa_build_prefix)"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
+exe_file="${prefix}/bin/gdalinfo"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-gdal [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
 Install GDAL.
+
+$(_koopa_help_args)
 
 details:
     This recipe requires PROD 6+.
@@ -21,23 +41,20 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-_koopa_assert_is_installed proj
 
-name="gdal"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-build_prefix="$(_koopa_build_prefix)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
-exe_file="${prefix}/bin/gdalinfo"
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
+
+_koopa_assert_is_installed proj
 
 (
     rm -frv "$prefix"

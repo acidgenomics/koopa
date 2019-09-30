@@ -1,10 +1,29 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="zsh"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/zsh"
+build_os_string="$(_koopa_build_os_string)"
+exe_file="${prefix}/bin/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-zsh [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
 Install Z shell.
+
+$(_koopa_help_args)
 
 see also:
     - http://www.zsh.org/
@@ -13,18 +32,16 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-name="zsh"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/zsh"
-build_os_string="$(_koopa_build_os_string)"
-exe_file="${prefix}/bin/${name}"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 

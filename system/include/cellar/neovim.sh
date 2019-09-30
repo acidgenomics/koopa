@@ -1,10 +1,28 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="neovim"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+exe_file="${prefix}/bin/nvim"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-neovim [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
 Install Neovim.
+
+$(_koopa_help_args)
 
 CMAKE_BUILD_TYPE:
     - Release: Full compiler optimisations and no debug information. Expect the
@@ -24,17 +42,16 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-17.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-name="neovim"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-exe_file="${prefix}/bin/nvim"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 
@@ -55,5 +72,6 @@ printf "Installing %s %s.\n" "$name" "$version"
 )
 
 _koopa_link_cellar "$name" "$version"
+
 "$exe_file" --version
 command -v "$exe_file"

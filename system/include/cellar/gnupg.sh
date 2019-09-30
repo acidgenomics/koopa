@@ -1,10 +1,29 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="gnupg"
+version="$(_koopa_variable gpg)"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
+exe_file="${prefix}/bin/gpg"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-gnupg [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
-Install GnuPG suite
+Install GnuPG suite.
+
+$(_koopa_help_args)
 
 see also:
     - https://www.gnupg.org/
@@ -15,28 +34,29 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-17.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-name="gnupg"
-version="$(_koopa_variable gpg)"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
-exe_file="${prefix}/bin/gpg"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 
 # Download GnuPG release signing keys.
-gpg --list-keys
-gpg --keyserver hkp://keyserver.ubuntu.com:80 \
-    --recv-keys 249B39D24F25E3B6 \
-                04376F3EE0856959 \
-                2071B08A33BD3F06 \
-                8A861B1C7EFD60D9
+if _koopa_is_installed gpg
+then
+    gpg --list-keys
+    gpg --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv-keys 249B39D24F25E3B6 \
+                    04376F3EE0856959 \
+                    2071B08A33BD3F06 \
+                    8A861B1C7EFD60D9
+fi
 
 rm -frv "$prefix"
 rm -fr "$tmp_dir"
@@ -48,7 +68,10 @@ mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
@@ -64,7 +87,10 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
@@ -80,7 +106,10 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
@@ -96,7 +125,10 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
@@ -112,7 +144,10 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
@@ -128,7 +163,10 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
@@ -144,7 +182,10 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    if _koopa_is_installed gpg
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
     tar -xjvf "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"

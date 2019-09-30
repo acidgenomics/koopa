@@ -1,10 +1,30 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="R"
+version="$(_koopa_variable "$name")"
+major_version="$(echo "$version" | cut -d "." -f 1)"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
+exe_file="${prefix}/bin/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-r [--help|-h]
+$(_koopa_help_header "install-cellar-r")
 
 Install R.
+
+$(_koopa_help_args)
 
 see also:
     - https://www.r-project.org/
@@ -16,19 +36,16 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-17.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-name="R"
-version="$(_koopa_variable "$name")"
-major_version="$(echo "$version" | cut -d "." -f 1)"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
-exe_file="${prefix}/bin/${name}"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 

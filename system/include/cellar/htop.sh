@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
 
-usage() {
-cat << EOF
-usage: install-cellar-htop [--help|-h]
 
-Install htop.
 
-see also:
-    - https://hisham.hm/htop/releases/
-    - https://github.com/hishamhm/htop
-
-note:
-    Bash script.
-    Updated 2019-09-17.
-EOF
-}
-
-_koopa_help "$@"
-
-_koopa_assert_is_installed python
+# Variables                                                                 {{{1
+# ==============================================================================
 
 name="htop"
 version="$(_koopa_variable "$name")"
@@ -27,7 +12,40 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header "install-cellar-${name}")
+
+Install htop.
+
+$(_koopa_help_args)
+
+see also:
+    - https://hisham.hm/htop/releases/
+    - https://github.com/hishamhm/htop
+
+note:
+    Bash script.
+    Requires Python to be installed.
+    Updated 2019-09-30.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 printf "Installing %s %s.\n" "$name" "$version"
+
+_koopa_assert_is_installed python
 
 (
     rm -frv "$prefix"

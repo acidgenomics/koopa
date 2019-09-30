@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
 
-usage() {
-cat << EOF
-usage: install-cellar-vim [--help|-h]
 
-Install Vim.
 
-details:
-    Compiling with Python 3 support.
-
-see also:
-    - https://github.com/vim/vim
-
-note:
-    Bash script.
-    Updated 2019-09-23.
-EOF
-}
-
-_koopa_help "$@"
+# Variables                                                                 {{{1
+# ==============================================================================
 
 name="vim"
 version="$(_koopa_variable "$name")"
@@ -32,6 +17,38 @@ build_prefix="$(_koopa_build_prefix)"
 python3_exe="${build_prefix}/bin/python3"
 python3_config_exe="${python3_exe}-config"
 python3_config_dir="$("$python3_config_exe" --configdir)"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header "install-cellar-${name}")
+
+Install Vim.
+
+$(_koopa_help_args)
+
+details:
+    Compiling with Python 3 support.
+
+see also:
+    - https://github.com/vim/vim
+
+note:
+    Bash script.
+    Updated 2019-09-30.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 printf "Installing %s %s.\n" "$name" "$version"
 
