@@ -1,10 +1,28 @@
 #!/usr/bin/env bash
 
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+name="rmate"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+exe_file="${prefix}/bin/${name}"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install-cellar-rmate [--help|-h]
+$(_koopa_help_header "install-cellar-${name}")
 
 Install rmate.
+
+$(_koopa_help_args)
 
 details:
     For use with Remote VSCode extension.
@@ -16,17 +34,16 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-09-30.
 EOF
 }
 
 _koopa_help "$@"
 
-name="rmate"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-exe_file="${prefix}/bin/${name}"
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 (
     rm -frv "$prefix"
