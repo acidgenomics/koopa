@@ -42,14 +42,15 @@ source "${script_dir}/../include/header.sh"
 # Variables                                                                 {{{1
 # ==============================================================================
 
+# "--exclude=bam"
+# "--exclude=cram"
+# "--exclude=fastq"
+# "--exclude=sam"
+
 flags=(
     "--exclude=.Rproj.user"
     "--exclude=.git"
     "--exclude=.gitignore"
-    "--exclude=bam"
-    "--exclude=cram"
-    "--exclude=fastq"
-    "--exclude=sam"
     "--exclude=work"
     "--human-readable"
     "--no-links"
