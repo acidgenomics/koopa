@@ -2,7 +2,7 @@
 ## shebang requires env from coreutils >= 8.30.
 
 ## List user-accessible programs exported in PATH.
-## Updated 2019-07-30.
+## Updated 2019-09-30.
 
 options(
     error = quote(quit(status = 1L)),
