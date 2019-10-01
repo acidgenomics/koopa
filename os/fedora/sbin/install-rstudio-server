@@ -33,7 +33,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-01.
 EOF
 }
 
@@ -60,10 +60,10 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
 )
 
-sudo "$name" stop
-sudo "$name" verify-installation
-sudo "$name" start
-sudo "$name" status
+# > sudo "$name" stop
+# > sudo "$name" verify-installation
+# > sudo "$name" start
+# > sudo "$name" status
 
 command -v "$name"
 "$name" version
