@@ -26,6 +26,8 @@ $(_koopa_help_header)
 
 Install bcbio-vm.
 
+$(_koopa_help_args)
+
 details:
     Note that configuration is saved in:
     '~/.config/bcbio-nextgen/bcbio-docker-config.yaml'.
@@ -36,7 +38,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-01.
 EOF
 }
 
