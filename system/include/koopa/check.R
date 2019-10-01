@@ -401,13 +401,6 @@ check_version(
     current = current_version("shellcheck"),
     expected = expected_version("shellcheck")
 )
-## This is used for shebang. Version 8.30 marks support of `-S` flag.
-check_version(
-    name = "env (coreutils)",
-    which_name = "env",
-    current = current_version("env"),
-    expected = expected_version("coreutils")
-)
 
 
 
@@ -454,6 +447,13 @@ if (isTRUE(linux)) {
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
+    ## This is used for shebang. Version 8.30 marks support of `-S` flag.
+    check_version(
+        name = "env (coreutils)",
+        which_name = "env",
+        current = current_version("env"),
+        expected = expected_version("coreutils")
+    )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
     check_version(
