@@ -6,7 +6,7 @@
 # ==============================================================================
 
 name="R"
-version="$(_koopa_variable "$name")"
+version="$(_koopa_variable "r")"
 major_version="$(echo "$version" | cut -d "." -f 1)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"

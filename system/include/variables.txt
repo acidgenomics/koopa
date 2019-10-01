@@ -8,7 +8,7 @@ koopa_date="2019-10-01"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-3/
-R="3.6.1"
+r="3.6.1"
 
 # https://repo.continuum.io/archive/
 anaconda3="2019.07"
