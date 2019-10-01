@@ -15,7 +15,8 @@ anaconda3="2019.07"
 
 # https://www.gnu.org/software/bash/
 # https://ftp.gnu.org/gnu/bash/
-bash="5.0.0"
+# Note that this requires patches.
+bash="5.0.11"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -67,7 +68,7 @@ homebrew="2.1.11"
 htop="2.2.0"
 
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
-java="12.0.2"
+java="13"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
