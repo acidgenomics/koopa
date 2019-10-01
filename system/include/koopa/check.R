@@ -222,8 +222,7 @@ check_version(
     name = "Bash",
     which_name = "bash",
     current = current_version("bash"),
-    expected = expected_version("bash"),
-    eval = ">="
+    expected = expected_version("bash")
 )
 check_version(
     name = "ZSH",
