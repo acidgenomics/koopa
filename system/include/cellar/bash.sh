@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add patch steps here.
+
 
 
 # Variables                                                                 {{{1
@@ -7,6 +9,7 @@
 
 name="bash"
 version="$(_koopa_variable "$name")"
+major_version="$(_koopa_major_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
@@ -31,7 +34,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-30.
+    Updated 2019-10-01.
 EOF
 }
 
@@ -49,9 +52,9 @@ printf "Installing %s %s.\n" "$name" "$version"
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "${gnu_mirror}/bash/bash-${version}.tar.gz"
-    tar -xzvf "bash-${version}.tar.gz"
-    cd "bash-${version}" || exit 1
+    wget "${gnu_mirror}/bash/bash-${major_version}.tar.gz"
+    tar -xzvf "bash-${major_version}.tar.gz"
+    cd "bash-${major_version}" || exit 1
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix"
