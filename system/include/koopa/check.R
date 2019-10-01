@@ -1,7 +1,11 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-09-24.
+## Updated 2019-10-01.
+
+## If you see this error, reinstall ruby, rbenv, and emacs:
+## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
+## ## Try: gem pristine commonmarker --version 0.17.13
 
 options(
     error = quote(quit(status = 1L)),
@@ -195,12 +199,8 @@ message("\nChecking required programs.")
 check_version(
     name = "bash",
     version = koopa_version("bash"),
-    version_cmd = c(
-        "bash --version",
-        "head -n 1",
-        "cut -d ' ' -f 4",
-        "cut -d '(' -f 1"
-    )
+    version_cmd = "FIXME",
+    eval = ">="
 )
 
 ## R
@@ -208,13 +208,7 @@ check_version(
 ## Using shell version string instead here for consistency.
 check_version(
     name = "R",
-    version = koopa_version("R"),
-    ## > version_cmd = c(
-    ## >     "R --version",
-    ## >     "head -n 1",
-    ## >     "cut -d ' ' -f 3"
-    ## > ),
-    ## This approach works more consistently on RStudio Server Pro.
+    version = koopa_version("r"),
     version_cmd = packageVersion("base"),
     eval = "=="
 )
@@ -223,27 +217,16 @@ check_version(
 check_version(
     name = "python3",
     version = koopa_version("python"),
-    version_cmd = c(
-        "python3 --version 2>&1",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
+    version_cmd = "FIXME",
     eval = "=="
 )
 
-## If you see this error, reinstall ruby, rbenv, and emacs:
-## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
-## ## Try: gem pristine commonmarker --version 0.17.13
 
 ## Emacs
 check_version(
     name = "emacs",
     version = koopa_version("emacs"),
-    version_cmd = c(
-        "emacs --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    ),
+    version_cmd = "FIXME",
     eval = "=="
 )
 
@@ -251,11 +234,7 @@ check_version(
 check_version(
     name = "vim",
     version = major_koopa_version("vim"),
-    version_cmd = c(
-        "vim --version",
-        "head -n 1",
-        "cut -d ' ' -f 5"
-    ),
+    version_cmd = "FIXME",
     eval = "=="
 )
 
@@ -263,11 +242,7 @@ check_version(
 check_version(
     name = "nvim",
     version = koopa_version("neovim"),
-    version_cmd = c(
-        "nvim --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
+    version_cmd = "FIXME",
     eval = "=="
 )
 
@@ -275,11 +250,7 @@ check_version(
 check_version(
     name = "neofetch",
     version = koopa_version("neofetch"),
-    version_cmd = c(
-        "neofetch --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
+    version_cmd = "FIXME",
     eval = "=="
 )
 
@@ -287,22 +258,16 @@ check_version(
 check_version(
     name = "tmux",
     version = koopa_version("tmux"),
-    version_cmd = c(
-        "tmux -V",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    )
+    version_cmd = "FIXME",
+    eval = "=="
 )
 
 ## Git
 check_version(
     name = "git",
     version = major_koopa_version("git"),
-    version_cmd = c(
-        "git --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
-    )
+    version_cmd = "FIXME",
+    eval = "=="
 )
 
 ## GnuPG
@@ -310,9 +275,6 @@ check_version(
     name = "gpg",
     version = major_koopa_version("gpg"),
     version_cmd = c(
-        "gpg --version",
-        "head -n 1",
-        "cut -d ' ' -f 3"
     )
 )
 
