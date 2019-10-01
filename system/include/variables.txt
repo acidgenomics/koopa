@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.6.0"
-koopa_date="2019-09-26"
+koopa_date="2019-10-01"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -136,7 +136,7 @@ tex="2019"
 tmux="2.9a"
 
 # https://github.com/vim/vim/releases
-vim="8.1.2044"
+vim="8.1.2106"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.7.1"
