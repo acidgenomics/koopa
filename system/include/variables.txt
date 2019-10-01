@@ -15,7 +15,7 @@ anaconda3="2019.07"
 
 # https://www.gnu.org/software/bash/
 # https://ftp.gnu.org/gnu/bash/
-bash="5.0"
+bash="5.0.0"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
