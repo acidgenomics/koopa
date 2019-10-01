@@ -8,7 +8,7 @@ major="$( \
 
 patch="$( \
     vim --version | \
-    sed -n '2p' | \
+    grep 'Included patches:' | \
     cut -d '-' -f 2 \
 )"
 
