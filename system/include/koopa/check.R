@@ -3,21 +3,34 @@
 ## Check installed program versions.
 ## Updated 2019-10-01.
 
-## If you see this error, reinstall ruby, rbenv, and emacs:
-## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
-## ## Try: gem pristine commonmarker --version 0.17.13
-
 options(
     error = quote(quit(status = 1L)),
     warning = quote(quit(status = 1L))
 )
 
-koopa_exe <- file.path(Sys.getenv("KOOPA_HOME"), "bin", "koopa")
+## FIXME Add a check for Rust.
+
+
+
+## Notes =======================================================================
+## If you see this error, reinstall ruby, rbenv, and emacs:
+## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
+## ## Try: gem pristine commonmarker --version 0.17.13
+
+
+
+## Koopa config =================================================================
+koopa_home <- Sys.getenv("KOOPA_HOME")
+## > koopa_home <- Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
+stopifnot(isTRUE(nzchar(koopa_home)))
+
+koopa_exe <- file.path(koopa_home, "bin", "koopa")
 stopifnot(file.exists(koopa_exe))
 
 host <- system(command = paste(koopa_exe, "host-type"), intern = TRUE)
 os <- system(command = paste(koopa_exe, "os-type"), intern = TRUE)
 
+## Determine if we're on Linux or not (i.e. macOS).
 r_os_string <- R.Version()[["os"]]
 if (grepl("darwin", r_os_string)) {
     linux <- FALSE
@@ -25,6 +38,9 @@ if (grepl("darwin", r_os_string)) {
     linux <- TRUE
 }
 
+
+
+## Version parsers =============================================================
 variables_file <- file.path(
     Sys.getenv("KOOPA_HOME"),
     "system",
@@ -33,142 +49,38 @@ variables_file <- file.path(
 )
 variables <- readLines(variables_file)
 
-koopa_version <- function(x) {
+expected_version <- function(x) {
     keep <- grepl(pattern = paste0("^", x, "="), x = variables)
     stopifnot(sum(keep, na.rm = TRUE) == 1L)
-    string <- variables[keep]
-    sub(
+    x <- variables[keep]
+    stopifnot(isTRUE(nzchar(x)))
+    x <- sub(
         pattern = "^(.+)=\"(.+)\"$",
         replacement = "\\2",
-        x = string
+        x = x
     )
+    x
 }
 
-major_koopa_version <- function(x) {
-    x <- koopa_version(x)
-    x <- sanitize_version(x)
-    x <- package_version(x)
-    x <- as.character(x)
+expected_major_version <- function(x) {
+    x <- expected_version(x)
+    stopifnot(isTRUE(grepl("\\.", x)))
     x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
     x
 }
 
-pipe <- function(...) {
-    paste(..., collapse = " | ")
-}
-
-installed <- function(name, required = TRUE) {
-    stopifnot(
-        is.character(name) && length(name) >= 1L,
-        is.logical(required) && length(required) == 1L
+current_version <- function(name) {
+    script <- file.path(
+        Sys.getenv("KOOPA_HOME"),
+        "system",
+        "include",
+        "version",
+        paste0(name, ".sh")
     )
-    if (isTRUE(required)) {
-        fail <- "FAIL"
-    } else {
-        fail <- "NOTE"
-    }
-    invisible(vapply(
-        X = name,
-        FUN = function(name) {
-            ok <- nzchar(Sys.which(name))
-            if (!isTRUE(ok)) {
-                message(paste0("  ", fail, " | ", name, " missing"))
-            } else {
-                message(paste0(
-                    "    OK | ", name, "\n",
-                    "       |   ", Sys.which(name)
-                ))
-            }
-            invisible(ok)
-        },
-        FUN.VALUE = logical(1L)
-    ))
-}
-
-check_version <- function(
-    name,
-    version,
-    version_cmd,
-    grep_string = NULL,
-    eval = c(">=", "=="),
-    required = TRUE
-) {
-    stopifnot(
-        is.character(name) && identical(length(name), 1L),
-        is.character(version) && identical(length(version), 1L),
-        is.character(version_cmd) || is(version_cmd, "package_version"),
-        (is.character(grep_string) && identical(length(grep_string), 1L)) ||
-            is.null(grep_string),
-        is.logical(required) && identical(length(required), 1L)
-    )
-    eval <- match.arg(eval)
-
-    if (isTRUE(required)) {
-        fail <- "FAIL"
-    } else {
-        fail <- "NOTE"
-    }
-
-    ## Check to see if program is installed.
-    which <- unname(Sys.which(name))
-    if (identical(which, "")) {
-        message(paste0("  ", fail, " | ", name, " missing"))
-        return(invisible(FALSE))
-    }
-    which <- normalizePath(which)
-
-    ## Grep string check mode.
-    if (is.character(grep_string)) {
-        x <- system(command = version_cmd[[1L]], intern = TRUE)
-        ok <- any(grepl(pattern = grep_string, x = x))
-        if (!isTRUE(ok)) {
-            message(paste0("  ", fail, " | ", grep_string, " not detected"))
-            return(invisible(FALSE))
-        }
-    }
-
-    if (grepl("\\.", version)) {
-        version <- sanitize_version(version)
-        version <- package_version(version)
-    }
-
-    ## Run the shell system command to extract the program version.
-    ## Consider switching to `system2()` here in a future update.
-    if (is(version_cmd, "package_version")) {
-        sys_version <- version_cmd
-        full_sys_version <- sys_version
-    } else {
-        sys_version <- system(command = pipe(version_cmd), intern = TRUE)
-        stopifnot(
-            is.character(sys_version),
-            length(sys_version) == 1L,
-            nzchar(sys_version)
-        )
-        full_sys_version <- sys_version
-        if (grepl("\\.", sys_version)) {
-            sys_version <- sanitize_version(sys_version)
-            sys_version <- package_version(sys_version)
-        }
-    }
-
-    if (eval == ">=") {
-        ok <- sys_version >= version
-    } else if (eval == "==") {
-        ok <- sys_version == version
-    }
-
-    if (isTRUE(ok)) {
-        status <- "  OK"
-    } else {
-        status <- fail
-    }
-
-    message(paste0(
-        "  ", status, " | ", name, " ",
-        "(", full_sys_version, " ", eval, " ", version, ")\n",
-        "       |   ", which
-    ))
-    invisible(ok)
+    if (!file.exists(script)) return(NULL)
+    x <- system(command = script, intern = TRUE)
+    stopifnot(isTRUE(nzchar(x)))
+    x
 }
 
 ## Sanitize complicated verions:
@@ -190,461 +102,412 @@ sanitize_version <- function(x) {
     x
 }
 
+check_version <- function(
+    name,
+    which_name,
+    current,
+    expected,
+    eval = c("==", ">="),
+    required = TRUE
+) {
+    if (missing(which_name)) {
+        which_name <- name
+    }
+    stopifnot(
+        is.character(name) && identical(length(name), 1L),
+        (is.character(which_name) && identical(length(which_name), 1L)) ||
+            is.null(which_name),
+        is(current, "package_version") ||
+            (is.character(current) && identical(length(current), 1L)) ||
+            is.null(current),
+        is(expected, "package_version") ||
+            (is.character(expected) && identical(length(expected), 1L)),
+        is.logical(required) && identical(length(required), 1L)
+    )
+    ## FIXME Need to add support for current pass-in as NULL.
+    eval <- match.arg(eval)
+    if (isTRUE(required)) {
+        fail <- "FAIL"
+    } else {
+        fail <- "NOTE"
+    }
+    ## Check to see if program is installed.
+    if (!is.null(which_name)) {
+        which <- unname(Sys.which(which_name))
+        if (identical(which, "")) {
+            message(sprintf(
+                fmt = "  %s | %s is not installed.",
+                fail, name
+            ))
+            return(invisible(FALSE))
+        }
+        which <- normalizePath(which)
+    } else {
+        which <- NA_character_
+    }
+    ## Sanitize the version for non-identical (e.g. GTE) comparisons.
+    if (!identical(eval, "==")) {
+        if (grepl("\\.", current)) {
+            current <- sanitize_version(current)
+            current <- package_version(current)
+        }
+        if (grepl("\\.", expected)) {
+            expected <- sanitize_version(expected)
+            expected <- package_version(expected)
+        }
+    }
+    ## Compare current to expected version.
+    if (eval == ">=") {
+        ok <- current >= expected
+    } else if (eval == "==") {
+        ok <- current == expected
+    }
+    if (isTRUE(ok)) {
+        status <- "  OK"
+    } else {
+        status <- fail
+    }
+    message(
+        sprintf(
+            fmt = paste0(
+                "  %s | %s (%s %s %s)\n",
+                "       |   %.69s"
+            ),
+            status, name,
+            current, eval, expected,
+            which
+        )
+    )
+    invisible(ok)
+}
+
+installed <- function(which, required = TRUE) {
+    stopifnot(
+        is.character(which) && length(which) >= 1L,
+        is.logical(required) && length(required) == 1L
+    )
+    if (isTRUE(required)) {
+        fail <- "FAIL"
+    } else {
+        fail <- "NOTE"
+    }
+    invisible(vapply(
+        X = which,
+        FUN = function(which) {
+            ok <- nzchar(Sys.which(which))
+            if (!isTRUE(ok)) {
+                message(sprintf(
+                    fmt = "  %s | %s missing.",
+                    fail, which
+                ))
+            } else {
+                message(sprintf(
+                    fmt = paste0(
+                        "    OK | %s\n",
+                        "       |   %.69s"
+                    ),
+                    which, Sys.which(which)
+                ))
+            }
+            invisible(ok)
+        },
+        FUN.VALUE = logical(1L)
+    ))
+}
 
 
-## Required ====================================================================
-message("\nChecking required programs.")
 
-## Bash
+## All platforms ===============================================================
 check_version(
-    name = "bash",
-    version = koopa_version("bash"),
-    version_cmd = "FIXME",
+    name = "Bash",
+    which_name = "bash",
+    current = current_version("bash"),
+    expected = expected_version("bash"),
     eval = ">="
 )
-
-## R
-## Alternatively, can check using `packageVersion("base")`.
-## Using shell version string instead here for consistency.
+check_version(
+    name = "ZSH",
+    which_name = "zsh",
+    current = current_version("zsh"),
+    expected = expected_version("zsh")
+)
+## Alternatively, can return current here using `packageVersion("base")`.
 check_version(
     name = "R",
-    version = koopa_version("r"),
-    version_cmd = packageVersion("base"),
-    eval = "=="
+    current = current_version("r"),
+    expected = expected_version("r")
 )
-
-## Python
 check_version(
-    name = "python3",
-    version = koopa_version("python"),
-    version_cmd = "FIXME",
-    eval = "=="
+    name = "Python",
+    which_name = "python3",
+    current = current_version("python"),
+    expected = expected_version("python")
 )
-
-
-## Emacs
 check_version(
-    name = "emacs",
-    version = koopa_version("emacs"),
-    version_cmd = "FIXME",
-    eval = "=="
+    name = "Vim",
+    which_name = "vim",
+    current = current_version("vim"),
+    expected = expected_version("vim")
 )
-
-## Vim
 check_version(
-    name = "vim",
-    version = major_koopa_version("vim"),
-    version_cmd = "FIXME",
-    eval = "=="
+    name = "Neovim",
+    which_name = "nvim",
+    current = current_version("neovim"),
+    expected = expected_version("neovim")
 )
-
-## Neovim
 check_version(
-    name = "nvim",
-    version = koopa_version("neovim"),
-    version_cmd = "FIXME",
-    eval = "=="
+    name = "Emacs",
+    which_name = "emacs",
+    current = current_version("emacs"),
+    expected = expected_version("emacs")
 )
-
-## Neofetch
 check_version(
-    name = "neofetch",
-    version = koopa_version("neofetch"),
-    version_cmd = "FIXME",
-    eval = "=="
+    name = "Tmux",
+    which_name = "tmux",
+    current = current_version("tmux"),
+    expected = expected_version("tmux")
 )
-
-## Tmux
-check_version(
-    name = "tmux",
-    version = koopa_version("tmux"),
-    version_cmd = "FIXME",
-    eval = "=="
-)
-
-## Git
-check_version(
-    name = "git",
-    version = major_koopa_version("git"),
-    version_cmd = "FIXME",
-    eval = "=="
-)
-
-## GnuPG
-check_version(
-    name = "gpg",
-    version = major_koopa_version("gpg"),
-    version_cmd = c(
-    )
-)
-
-## GSL
-check_version(
-    name = "gsl-config",
-    version = koopa_version("gsl"),
-    version_cmd = c(
-        "gsl-config --version",
-        "head -n 1"
-    )
-)
-
-## HDF5
-## Debian: `dpkg -s libhdf5-dev`
-check_version(
-    name = "h5cc",
-    version = major_koopa_version("hdf5"),
-    version_cmd = c(
-        "h5cc -showconfig",
-        "grep 'HDF5 Version:'",
-        "sed -E 's/^(.+): //'"
-    )
-)
-
-## htop
 check_version(
     name = "htop",
-    version = major_koopa_version("htop"),
-    version_cmd = c(
-        "htop --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    )
+    current = current_version("htop"),
+    expected = expected_version("htop")
 )
-
-## OpenSSL
 check_version(
-    name = "openssl",
-    version = switch(
+    name = "Neofetch",
+    which_name = "neofetch",
+    current = current_version("neofetch"),
+    expected = expected_version("neofetch")
+)
+check_version(
+    name = "Git",
+    which_name = "git",
+    current = current_version("git"),
+    expected = expected_version("git")
+)
+check_version(
+    name = "GnuPG",
+    which_name = "gpg",
+    current = current_version("gpg"),
+    expected = expected_version("gpg")
+)
+check_version(
+    name = "OpenSSL",
+    which_name = "openssl",
+    current = current_version("openssl"),
+    expected = switch(
         EXPR = os,
         ## Note that macOS switched to LibreSSL in 2018.
         darwin = "2.6.5",
-        rhel7 = "1.0.2",
-        koopa_version("openssl")
-    ),
-    version_cmd = c(
-        "openssl version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
+        rhel7 = "1.0.2k",
+        expected_version("openssl")
+    )
 )
-
-## Pandoc
 check_version(
-    name = "pandoc",
-    version = switch(
+    name = "Pandoc",
+    which_name = "pandoc",
+    current = current_version("pandoc"),
+    expected = switch(
         EXPR = os,
         rhel7 = "1.12.3.1",
-        koopa_version("pandoc")
-    ),
-    version_cmd = c(
-        "pandoc --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "=="
+        expected_version("pandoc")
+    )
 )
-
-## TeX Live
-## Note that we're checking the TeX Live release year here.
-## Here's what it looks like on Debian/Ubuntu:
-## TeX 3.14159265 (TeX Live 2017/Debian)
 check_version(
-    name = "tex",
-    version = switch(
+    name = "TeX Live",
+    which_name = "tex",
+    current = current_version("tex"),
+    expected = switch(
         EXPR = os,
         rhel7 = "2013",
         ubuntu = "2017",
-        koopa_version("tex")
-    ),
-    version_cmd = c(
-        "tex --version",
-        "head -n 1",
-        "cut -d '(' -f 2",
-        "cut -d ')' -f 1",
-        "cut -d ' ' -f 3",
-        "cut -d '/' -f 1"
-    ),
-    eval = "=="
+        expected_version("tex")
+    )
+)
+check_version(
+    name = "GSL",
+    which_name = "gsl-config",
+    current = current_version("gsl"),
+    expected = expected_version("gsl")
+)
+check_version(
+    name = "HDF5",
+    which_name = "h5cc",
+    current = current_version("hdf5"),
+    expected = expected_version("hdf5")
+)
+check_version(
+    name = "Conda",
+    which_name = "conda",
+    current = current_version("conda"),
+    expected = expected_version("conda")
+)
+check_version(
+    name = "Docker",
+    which_name = "docker",
+    current = current_version("docker"),
+    expected = switch(
+        EXPR = os,
+        darwin = "18.09.2",
+        expected_version("docker")
+    )
+)
+check_version(
+    name = "Perlbrew",
+    which_name = "perlbrew",
+    current = current_version("perlbrew"),
+    expected = expected_version("perlbrew")
+)
+check_version(
+    name = "Perl",
+    which_name = "perl",
+    current = current_version("perl"),
+    expected = expected_version("perl")
+)
+check_version(
+    name = "Java",
+    which_name = "java",
+    current = current_version("java"),
+    expected = expected_version("java")
+)
+check_version(
+    name = "rbenv",
+    current = current_version("rbenv"),
+    expected = expected_version("rbenv")
+)
+check_version(
+    name = "Ruby",
+    which_name = "ruby",
+    current = current_version("ruby"),
+    expected = expected_version("ruby")
+)
+check_version(
+    name = "PROJ",
+    which_name = "proj",
+    current = current_version("proj"),
+    expected = expected_version("proj")
+)
+check_version(
+    name = "GDAL",
+    which_name = "gdalinfo",
+    current = current_version("gdal"),
+    expected = switch(
+        EXPR = os,
+        darwin = "2.4.2",
+        expected_version("gdal")
+    )
+)
+check_version(
+    name = "ShellCheck",
+    which_name = "shellcheck",
+    current = current_version("shellcheck"),
+    expected = expected_version("shellcheck")
+)
+## This is used for shebang. Version 8.30 marks support of `-S` flag.
+check_version(
+    name = "env (coreutils)",
+    which_name = "env",
+    current = current_version("env"),
+    expected = expected_version("coreutils")
 )
 
-## OS-specific programs.
+
+
+## OS-specific =================================================================
 if (isTRUE(linux)) {
-    ## GCC
+    message("\nLinux specific:")
     check_version(
-        name = "gcc",
-        version = switch(
+        name = "GCC",
+        which_name = "gcc",
+        current = current_version("gcc"),
+        expected = switch(
             EXPR = os,
             rhel7 = "4.8.5",
             rhel8 = "8.2.1",
             ubuntu = "7.4.0"
-        ),
-        version_cmd = c(
-            "gcc --version",
-            "head -n 1",
-            "cut -d ' ' -f 3"
-        ),
-        eval = "=="
-    )
-    
-    ## coreutils
-    ## This is used for shebang. Version 8.30 marks support of `-S` flag, which
-    ## supports argument flags such as `--vanilla` for Rscript.
-    check_version(
-        name = "/usr/bin/env",
-        version = "8.30",
-        version_cmd = c(
-            "/usr/bin/env --version",
-            "head -n 1",
-            "cut -d ' ' -f 4"
         )
     )
-} else if (os == "darwin") {
-    ## Homebrew.
-    installed("brew")
-
-    ## clang (Apple LLVM version).
     check_version(
-        name = "clang",
-        version = koopa_version("clang"),
-        version_cmd = c(
-            "clang --version",
-            "head -n 1",
-            "cut -d ' ' -f 4"
-        ),
-        eval = "=="
-    )
-    
-    ## GCC (Apple LLVM version).
-    check_version(
-        name = "gcc",
-        version = koopa_version("clang"),
-        version_cmd = c(
-            "gcc --version 2>&1",
-            "sed -n '2p'",
-            "cut -d ' ' -f 4"
-        ),
-        eval = "=="
-    )
-}
-
-
-
-## Optional ====================================================================
-message("\nChecking optional programs.")
-
-## Z shell
-check_version(
-    name = "zsh",
-    version = koopa_version("zsh"),
-    version_cmd = c(
-        "zsh --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## Conda
-check_version(
-    name = "conda",
-    version = koopa_version("conda"),
-    version_cmd = c(
-        "conda --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## Docker
-check_version(
-    name = "docker",
-    version = switch(
-        EXPR = os,
-        darwin = "18.09.2",
-        koopa_version("docker")
-    ),
-    version_cmd = c(
-        "docker --version",
-        "head -n 1",
-        "cut -d ' ' -f 3",
-        "cut -d ',' -f 1"
-    ),
-    required = FALSE
-)
-
-## Perl
-## The cut match is a little tricky here:
-## # This is perl 5, version 16, subversion 3 (v5.16.3)
-check_version(
-    name = "perl",
-    version = koopa_version("perl"),
-    version_cmd = c(
-        "perl --version",
-        "sed -n '2p'",
-        "cut -d '(' -f 2 | cut -d ')' -f 1"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## perlbrew
-check_version(
-    name = "perlbrew",
-    version = koopa_version("perlbrew"),
-    version_cmd = c(
-        "perlbrew --version",
-        "head -n 1",
-        "cut -d '-' -f 2",
-        "cut -d '/' -f 2"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## Java
-check_version(
-    name = "java",
-    version = koopa_version("java"),
-    version_cmd = c(
-        "java -version 2>&1",
-        "head -n 1",
-        "cut -d ' ' -f 3",
-        "sed -e 's/\"//g'"
-    ),
-    required = FALSE
-)
-
-## Ruby
-check_version(
-    name = "ruby",
-    version = koopa_version("ruby"),
-    version_cmd = c(
-        "ruby --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## rbenv
-check_version(
-    name = "rbenv",
-    version = koopa_version("rbenv"),
-    version_cmd = c(
-        "rbenv --version",
-        "head -n 1",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## PROJ
-check_version(
-    name = "proj",
-    version = koopa_version("proj"),
-    version_cmd = c(
-        "proj  2>&1",
-        "head -n 1",
-        "cut -d ' ' -f 2",
-        "tr -d ,"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## GDAL
-check_version(
-    name = "gdalinfo",
-    version = switch(
-        EXPR = os,
-        darwin = "2.4.2",
-        koopa_version("gdal")
-    ),
-    version_cmd = c(
-        "gdalinfo --version",
-        "head -n 1",
-        "cut -d ' ' -f 2",
-        "tr -d ,"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## rename
-## Use Perl File::Rename, not util-linux.
-if (isTRUE(linux)) {
-    check_version(
-        name = "rename",
-        version = koopa_version("rename"),
-        version_cmd = c(
-            "rename --version",
-            "head -n 1",
-            "cut -d ' ' -f 5"
-        ),
-        grep_string = "File::Rename",
+        name = "rename (Perl File::Rename)",
+        which_name = "rename",
+        # FIXME Improve the name consistency here.
+        current = current_version("perl-file-rename"),
+        expected = expected_version("rename"),
         required = FALSE
     )
-} else if (os == "darwin") {
-    ## Homebrew rename doesn't return version on macOS.
-    installed("rename")
-}
-
-## ShellCheck
-check_version(
-    name = "shellcheck",
-    version = koopa_version("shellcheck"),
-    version_cmd = c(
-        "shellcheck --version",
-        "sed -n '2p'",
-        "cut -d ' ' -f 2"
-    ),
-    eval = "==",
-    required = FALSE
-)
-
-## OS-specific programs.
-if (isTRUE(linux)) {
-    ## RStudio Server
     check_version(
-        name = "rstudio-server",
-        version = koopa_version("rstudio-server"),
-        version_cmd = c(
-            "rstudio-server version",
-            "head -n 1",
-            "cut -d ' ' -f 1"
-        ),
-        eval = "==",
+        name = "RStudio Server",
+        which_name = "rstudio-server",
+        current = current_version("rstudio-server"),
+        expected = expected_version("rstudio-server")
+    )
+    check_version(
+        name = "Shiny Server",
+        which_name = "shiny-server",
+        current = current_version("shiny-server"),
+        expected = expected_version("shiny-server")
+    )
+    check_version(
+        name = "bcbio-nextgen",
+        which_name = "bcbio_nextgen.py",
+        # FIXME Improve name consistency
+        current = current_version("bcbio-nextgen"),
+        expected = expected_version("bcbio_nextgen.py"),
         required = FALSE
     )
-
-    ## Shiny Server
-    check_version(
-        name = "shiny-server",
-        version = koopa_version("shiny-server"),
-        version_cmd = c(
-            "shiny-server --version",
-            "head -n 1",
-            "cut -d ' ' -f 3"
-        ),
-        eval = "==",
-        required = FALSE
-    )
-
-    ## bcbio
-    check_version(
-        name = "bcbio_nextgen.py",
-        version = koopa_version("bcbio_nextgen.py"),
-        version_cmd = "bcbio_nextgen.py --version",
-        eval = "==",
-        required = FALSE
-    )
-
-    ## bcbio_vm.py
     installed("bcbio_vm.py", required = FALSE)
+} else if (os == "darwin") {
+    message("\nmacOS specific:")
+    check_version(
+        name = "Homebrew",
+        which_name = "brew",
+        current = current_version("homebrew"),
+        expected = expected_version("homebrew")
+    )
+    ## Apple LLVM version.
+    check_version(
+        name = "Clang",
+        which_name = "clang",
+        current = current_version("clang"),
+        expected = expected_version("clang")
+    )
+    ## Apple LLVM version.
+    check_version(
+        name = "GCC",
+        which_name = "gcc",
+        current = current_version("gcc-darwin"),
+        expected = expected_version("clang")
+    )
 }
+
+
+
+## Base dependencies ===========================================================
+message("\nBase dependencies:")
+installed(
+    which = c(
+        "basename",
+        "bash",
+        "cat",
+        "chsh",
+        "curl",
+        "dirname",
+        "echo",
+        "env",
+        "grep",
+        "head",
+        "less",
+        "man",
+        "nice",
+        "parallel",
+        "realpath",
+        "rename",
+        "sed",
+        "sh",
+        "tail",
+        "tee",
+        "top",
+        "wget",
+        "which"
+    ),
+    required = TRUE
+)

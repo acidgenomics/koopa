@@ -19,7 +19,7 @@ bash="5.0"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio_nextgen.py="1.1.5"
+bcbio_nextgen.py="1.1.6a"
 
 # Apple LLVM version
 # https://developer.apple.com/xcode/
@@ -36,7 +36,7 @@ conda="4.7.12"
 coreutils="8.31"
 
 # https://docs.docker.com/install/
-docker="18.09.6"
+docker="19.03.2"
 
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
@@ -58,6 +58,9 @@ gsl="2.6"
 
 # https://www.hdfgroup.org/downloads/hdf5
 hdf5="1.10.5"
+
+# https://brew.sh/
+homebrew="2.1.11"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
