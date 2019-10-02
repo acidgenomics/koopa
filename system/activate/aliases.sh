@@ -40,7 +40,7 @@ alias e='exit'
 
 # Enable colors using dircolors.
 # Note that this is commonly installed on Linux but not macOS.
-if _koopa_quiet_which dircolors
+if _koopa_is_installed dircolors
 then
     eval "$(dircolors -b)"
     alias dir='dir --color=auto'
