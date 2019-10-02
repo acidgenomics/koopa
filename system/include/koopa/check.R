@@ -8,8 +8,6 @@ options(
     warning = quote(quit(status = 1L))
 )
 
-## FIXME Add Rust compiler check.
-
 
 
 ## Notes =======================================================================
@@ -380,6 +378,17 @@ check_version(
     which_name = "ruby",
     current = current_version("ruby"),
     expected = expected_version("ruby")
+)
+check_version(
+    name = "Rust",
+    which_name = "rustc",
+    current = current_version("rust"),
+    expected = expected_version("rust")
+)
+check_version(
+    name = "rustup",
+    current = current_version("rustup"),
+    expected = expected_version("rustup")
 )
 check_version(
     name = "PROJ",
