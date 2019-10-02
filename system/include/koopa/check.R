@@ -272,11 +272,7 @@ check_version(
     name = "Java",
     which_name = "java",
     current = current_version("java"),
-    expected = switch(
-        EXPR = os,
-        rhel7 = "12.0.2",
-        expected_version("java")
-    )
+    expected = expected_version("java")
 )
 check_version(
     name = "Perl",
