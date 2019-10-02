@@ -1081,63 +1081,6 @@ _koopa_is_shared() {
 
 
 
-# J                                                                         {{{1
-# ==============================================================================
-
-# Set JAVA_HOME environment variable.
-#
-# See also:
-# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
-# - https://stackoverflow.com/questions/22290554
-#
-# Updated 2019-10-02.
-_koopa_java_home() {
-    # Early return if environment variable is set.
-    if [ -n "${JAVA_HOME:-}" ]
-    then
-        echo "$JAVA_HOME"
-        return 0
-    fi
-    # Early return if Java is not installed.
-    if ! _koopa_is_installed java
-    then
-        return 1
-    fi
-
-    local home
-    local jvm_dir
-
-    # Use automatic detection on macOS.
-    if _koopa_is_darwin
-    then
-        home="$(/usr/libexec/java_home)"
-        echo "$home"
-        return 0
-    fi
-
-    jvm_dir="/usr/lib/jvm"
-    if [ ! -d "$jvm_dir" ]
-    then
-        home=
-    elif [ -d "${jvm_dir}/java-12-oracle" ]
-    then
-        home="${jvm_dir}/java-12-oracle"
-    elif [ -d "${jvm_dir}/java-12" ]
-    then
-        home="${jvm_dir}/java-12"
-    elif [ -d "${jvm_dir}/java" ]
-    then
-        home="${jvm_dir}/java"
-    else
-        home=
-    fi
-
-    [ -d "$home" ] || return 0
-    echo "$home"
-}
-
-
-
 # L                                                                         {{{1
 # ==============================================================================
 
@@ -1158,32 +1101,6 @@ _koopa_link_cellar() {
     cp -frsv "$cellar_prefix/"* "$build_prefix/".
     _koopa_build_set_permissions "$build_prefix"
     _koopa_has_sudo && _koopa_update_ldconfig
-}
-
-
-
-# Locate the realpath of a program.
-#
-# This resolves symlinks automatically.
-# For 'which' style return, use '_koopa_which' instead.
-#
-# See also:
-# - https://stackoverflow.com/questions/7522712
-# - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
-#
-# Examples:
-# _koopa_locate bash
-# ## /usr/local/Cellar/bash/5.0.11/bin/bash
-#
-# Updated 2019-10-02.
-_koopa_locate() {
-    local command
-    command="$1"
-    local which
-    which="$(_koopa_which "$command")"
-    local path
-    path="$(realpath "$which")"
-    echo "$path"
 }
 
 
@@ -1460,49 +1377,6 @@ _koopa_r_home() {
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
-}
-
-
-
-# Update rJava configuration.
-# The default Java path differs depending on the system.
-# # > R CMD javareconf -h
-# # Environment variables that can be used to influence the detection:
-#   JAVA           path to a Java interpreter executable
-#                  By default first 'java' command found on the PATH
-#                  is taken (unless JAVA_HOME is also specified).
-#   JAVA_HOME      home of the Java environment. If not specified,
-#                  it will be detected automatically from the Java
-#                  interpreter.
-#   JAVAC          path to a Java compiler
-#   JAVAH          path to a Java header/stub generator
-#   JAR            path to a Java archive tool
-# # Updated 2019-06-27.
-_koopa_r_javareconf() {
-    local java_home
-    local java_flags
-    local r_home
-    _koopa_is_installed R || return 1
-    _koopa_is_installed java || return 1
-    # FIXME This is now breaking...
-    java_home="$(_koopa_java_home)"
-    [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    printf "Updating R Java configuration.\n"
-    java_flags=(
-        "JAVA_HOME=${java_home}" \
-        "JAVA=${java_home}/bin/java" \
-        "JAVAC=${java_home}/bin/javac" \
-        "JAVAH=${java_home}/bin/javah" \
-        "JAR=${java_home}/bin/jar" \
-    )
-    r_home="$(_koopa_r_home)"
-    _koopa_build_set_permissions "$r_home"
-    R --vanilla CMD javareconf "${java_flags[@]}"
-    if _koopa_has_sudo
-    then
-        sudo R --vanilla CMD javareconf "${java_flags[@]}"
-    fi
-    # > Rscript -e 'install.packages("rJava")'
 }
 
 
@@ -1847,45 +1721,6 @@ _koopa_variable() {
         >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
         return 1
     fi
-}
-
-
-
-# W                                                                         {{{1
-# ==============================================================================
-
-# Locate which program.
-#
-# Note that this intentionally doesn't resolve symlinks.
-# Use 'koopa_locate' for that instead.
-#
-# Examples:
-# _koopa_which bash
-# ## /usr/local/bin/bash
-#
-# Updated 2019-10-02.
-_koopa_which() {
-    local command
-    command="$1"
-    local path
-    if [ "$KOOPA_SHELL" = "zsh" ]
-    then
-        path="$(type -p "$command")"
-        if ! echo "$path" | grep -q " is "
-        then
-            >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
-            return 1
-        fi
-        path="$(echo "$path" | sed -e "s/^${command} is //")"
-    else
-        path="$(command -v "$command")"
-    fi
-    if [ -z "$path" ]
-    then
-        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
-        return 1
-    fi
-    echo "$path"
 }
 
 
