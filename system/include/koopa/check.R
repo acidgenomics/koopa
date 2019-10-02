@@ -8,8 +8,6 @@ options(
     warning = quote(quit(status = 1L))
 )
 
-## FIXME Add Rust compiler check.
-
 
 
 ## Notes =======================================================================
@@ -20,8 +18,8 @@ options(
 
 
 ## Koopa config =================================================================
+## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
 koopa_home <- Sys.getenv("KOOPA_HOME")
-## > koopa_home <- Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
 stopifnot(isTRUE(nzchar(koopa_home)))
 
 koopa_exe <- file.path(koopa_home, "bin", "koopa")
@@ -145,7 +143,7 @@ check_version <- function(
         }
         which <- normalizePath(which)
     } else {
-        which <- NA_character_
+        which <- NA
     }
     ## Sanitize the version for non-identical (e.g. GTE) comparisons.
     if (!identical(eval, "==")) {
@@ -382,6 +380,17 @@ check_version(
     expected = expected_version("ruby")
 )
 check_version(
+    name = "Rust",
+    which_name = "rustc",
+    current = current_version("rust"),
+    expected = expected_version("rust")
+)
+check_version(
+    name = "rustup",
+    current = current_version("rustup"),
+    expected = expected_version("rustup")
+)
+check_version(
     name = "PROJ",
     which_name = "proj",
     current = current_version("proj"),
@@ -421,6 +430,24 @@ if (isTRUE(linux)) {
         )
     )
     check_version(
+        name = "Lmod",
+        which_name = NULL,
+        current = current_version("lmod"),
+        expected = expected_version("lmod")
+    )
+    check_version(
+        name = "Lua",
+        which_name = "lua",
+        current = current_version("lua"),
+        expected = expected_version("lua")
+    )
+    check_version(
+        name = "LuaRocks",
+        which_name = "luarocks",
+        current = current_version("luarocks"),
+        expected = expected_version("luarocks")
+    )
+    check_version(
         name = "rename (Perl File::Rename)",
         which_name = "rename",
         current = current_version("perl-file-rename"),
@@ -441,7 +468,6 @@ if (isTRUE(linux)) {
     check_version(
         name = "bcbio-nextgen",
         which_name = "bcbio_nextgen.py",
-        # FIXME Improve name consistency
         current = current_version("bcbio-nextgen"),
         expected = expected_version("bcbio-nextgen"),
         required = FALSE
