@@ -159,6 +159,12 @@ libassuan="2.5.3"
 npth="1.6"
 pinentry="1.1.0"
 
+# Lmod
+# https://lmod.readthedocs.io/
+lmod="8.1.7"
+lua="5.3.5"
+luarocks="3.2.1"
+
 
 
 # Genomes                                                                   {{{1
