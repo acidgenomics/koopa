@@ -1090,36 +1090,48 @@ _koopa_is_shared() {
 # - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
 # - https://stackoverflow.com/questions/22290554
 #
-# Updated 2019-06-27.
+# Updated 2019-10-02.
 _koopa_java_home() {
+    # Early return if environment variable is set.
+    if [ -n "${JAVA_HOME:-}" ]
+    then
+        echo "$JAVA_HOME"
+        return 0
+    fi
+    # Early return if Java is not installed.
+    if ! _koopa_is_installed java
+    then
+        return 1
+    fi
+
     local home
     local jvm_dir
-    if [ -z "${JAVA_HOME:-}" ]
-    then    
-        if _koopa_is_darwin
-        then
-            home="$(/usr/libexec/java_home)"
-        else
-            jvm_dir="/usr/lib/jvm"
-            if [ ! -d "$jvm_dir" ]
-            then
-                home=
-            elif [ -d "${jvm_dir}/java-12-oracle" ]
-            then
-                home="${jvm_dir}/java-12-oracle"
-            elif [ -d "${jvm_dir}/java-12" ]
-            then
-                home="${jvm_dir}/java-12"
-            elif [ -d "${jvm_dir}/java" ]
-            then
-                home="${jvm_dir}/java"
-            else
-                home=
-            fi
-        fi
-    else
-        home="$JAVA_HOME"
+
+    # Use automatic detection on macOS.
+    if _koopa_is_darwin
+    then
+        home="$(/usr/libexec/java_home)"
+        echo "$home"
+        return 0
     fi
+
+    jvm_dir="/usr/lib/jvm"
+    if [ ! -d "$jvm_dir" ]
+    then
+        home=
+    elif [ -d "${jvm_dir}/java-12-oracle" ]
+    then
+        home="${jvm_dir}/java-12-oracle"
+    elif [ -d "${jvm_dir}/java-12" ]
+    then
+        home="${jvm_dir}/java-12"
+    elif [ -d "${jvm_dir}/java" ]
+    then
+        home="${jvm_dir}/java"
+    else
+        home=
+    fi
+
     [ -d "$home" ] || return 0
     echo "$home"
 }
@@ -1484,6 +1496,7 @@ _koopa_r_javareconf() {
     local r_home
     _koopa_is_installed R || return 1
     _koopa_is_installed java || return 1
+    # FIXME This is now breaking...
     java_home="$(_koopa_java_home)"
     [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
     printf "Updating R Java configuration.\n"
