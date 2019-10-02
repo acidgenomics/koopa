@@ -522,6 +522,14 @@ if (isTRUE(linux)) {
 
     message("\nPowerful virtual machine only:")
     check_version(
+        name = "bcbio-nextgen",
+        which_name = "bcbio_nextgen.py",
+        current = current_version("bcbio-nextgen"),
+        expected = expected_version("bcbio-nextgen"),
+        required = FALSE
+    )
+    installed("bcbio_vm.py", required = FALSE)
+    check_version(
         name = "Lmod",
         which_name = NULL,
         current = current_version("lmod"),
@@ -539,14 +547,6 @@ if (isTRUE(linux)) {
         current = current_version("luarocks"),
         expected = expected_version("luarocks")
     )
-    check_version(
-        name = "bcbio-nextgen",
-        which_name = "bcbio_nextgen.py",
-        current = current_version("bcbio-nextgen"),
-        expected = expected_version("bcbio-nextgen"),
-        required = FALSE
-    )
-    installed("bcbio_vm.py", required = FALSE)
 } else if (os == "darwin") {
     message("\nmacOS specific:")
     check_version(
