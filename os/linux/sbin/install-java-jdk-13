@@ -37,10 +37,12 @@ details:
     > sudo yum list installed | grep java
 
     Clean up on RHEL 7:
-    > sudo yum remove R R-devel R-java R-java-devel
-    > sudo yum remove java-1.8.0-ibm java-1.8.0-openjdk-headless
-    > sudo yum remove java-latest-openjdk java-latest-openjdk-devel
-    > sudo yum remove java-latest-openjdk-headless
+    """sh
+    sudo yum -y remove R R-devel R-java R-java-devel
+    sudo yum -y remove java-1.8.0-ibm java-1.8.0-openjdk-headless
+    sudo yum -y remove java-latest-openjdk java-latest-openjdk-devel
+    sudo yum -y remove java-latest-openjdk-headless
+    """
 
     Note that yum installs to '/usr/lib/jvm/' on Fedora.
     Symlinks are defined in '/etc/alternatives/'.
