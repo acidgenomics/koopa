@@ -105,3 +105,8 @@ update-alternatives --display javac
 
 java --version
 
+# Update rJava configuration.
+if _koopa_is_installed R
+then
+    r-javareconf
+fi
