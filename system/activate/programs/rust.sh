@@ -11,8 +11,6 @@
 cargo_home="${HOME}/.cargo"
 env_exe="${cargo_home}/env"
 
-echo "$env_exe"
-
 if [ -f "$env_exe" ]
 then
     # shellcheck source=/dev/null
