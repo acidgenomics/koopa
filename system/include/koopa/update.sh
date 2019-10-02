@@ -4,7 +4,32 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Update koopa installation.
-# Updated 2019-09-17.
+# Updated 2019-10-02.
+
+
+
+# Programs                                                                  {{{1
+# ==============================================================================
+
+if _koopa_is_darwin && _koopa_is_installed brew
+then
+    brew-upgrade
+fi
+
+if _koopa_is_installed rustup
+then
+    rustup update
+fi
+
+if _koopa_is_installed conda
+then
+    update-conda
+fi
+
+
+
+# Config dirs                                                               {{{1
+# ==============================================================================
 
 config_dir="$(_koopa_config_dir)"
 
