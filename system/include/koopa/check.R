@@ -127,7 +127,6 @@ check_version <- function(
             (is.character(expected) && identical(length(expected), 1L)),
         is.logical(required) && identical(length(required), 1L)
     )
-    ## FIXME Need to add support for current pass-in as NULL.
     eval <- match.arg(eval)
     if (isTRUE(required)) {
         fail <- "FAIL"
