@@ -18,8 +18,8 @@ options(
 
 
 ## Koopa config =================================================================
+## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
 koopa_home <- Sys.getenv("KOOPA_HOME")
-## > koopa_home <- Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
 stopifnot(isTRUE(nzchar(koopa_home)))
 
 koopa_exe <- file.path(koopa_home, "bin", "koopa")
@@ -143,7 +143,7 @@ check_version <- function(
         }
         which <- normalizePath(which)
     } else {
-        which <- NA_character_
+        which <- NA
     }
     ## Sanitize the version for non-identical (e.g. GTE) comparisons.
     if (!identical(eval, "==")) {
@@ -435,6 +435,24 @@ if (isTRUE(linux)) {
             rhel8 = "8.2.1",
             ubuntu = "7.4.0"
         )
+    )
+    check_version(
+        name = "Lmod",
+        which_name = NULL,
+        current = current_version("lmod"),
+        expected = expected_version("lmod")
+    )
+    check_version(
+        name = "Lua",
+        which_name = "lua",
+        current = current_version("lua"),
+        expected = expected_version("lua")
+    )
+    check_version(
+        name = "LuaRocks",
+        which_name = "luarocks",
+        current = current_version("luarocks"),
+        expected = expected_version("luarocks")
     )
     check_version(
         name = "rename (Perl File::Rename)",
