@@ -21,7 +21,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-09-30.
+    Updated 2019-10-02.
 EOF
 }
 
@@ -63,6 +63,7 @@ sudo yum -y install \
     mariadb-devel \
     mpfr-devel \
     ncurses \
+    parallel \
     pcre-devel \
     poppler-cpp-devel \
     postgresql-devel \
