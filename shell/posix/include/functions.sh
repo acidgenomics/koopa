@@ -1150,23 +1150,25 @@ _koopa_link_cellar() {
 
 
 
-# Locate a program and add its name as a prefix.
-# e.g. return 'bash: /usr/bin/bash'.
-# Updated 2019-09-27.
+# Locate the realpath of a program.
+#
+# Examples:
+# _koopa_locate bash
+# ## /usr/local/bin/bash
+#
+# Updated 2019-10-02.
 _koopa_locate() {
     local command
-    local name
     local path
     command="$1"
-    name="${2:-$command}"
     path="$(_koopa_quiet_which2 "$command")"
     if [ -z "$path" ]
     then
-        path="[missing]"
-    else
-        path="$(realpath "$path")"
+        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
+        return 1
     fi
-    printf "%s: %s" "$name" "$path"
+    path="$(realpath "$path")"
+    echo "$path"
 }
 
 
