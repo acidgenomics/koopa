@@ -428,6 +428,12 @@ if (isTRUE(linux)) {
         )
     )
     check_version(
+        name = "rename (Perl File::Rename)",
+        which_name = "rename",
+        current = current_version("perl-file-rename"),
+        expected = expected_version("perl-file-rename")
+    )
+    check_version(
         name = "RStudio Server",
         which_name = "rstudio-server",
         current = current_version("rstudio-server"),
@@ -439,7 +445,6 @@ if (isTRUE(linux)) {
         current = current_version("shiny-server"),
         expected = expected_version("shiny-server")
     )
-    # FIXME This is breaking if the program isn't installed.
     check_version(
         name = "bcbio-nextgen",
         which_name = "bcbio_nextgen.py",
@@ -449,12 +454,6 @@ if (isTRUE(linux)) {
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
-    check_version(
-        name = "rename (Perl File::Rename)",
-        which_name = "rename",
-        current = current_version("perl-file-rename"),
-        expected = expected_version("perl-file-rename")
-    )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
     check_version(
