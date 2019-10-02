@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Rust programming language.
-# Updated 2019-09-17.
+# Updated 2019-10-02.
 
 # Attempt to locate cargo home and source the env script.
 # This will put the rust cargo programs defined in `bin/` in the PATH.
@@ -11,7 +11,9 @@
 cargo_home="${HOME}/.cargo"
 env_exe="${cargo_home}/env"
 
-if [ -x "$env_exe" ]
+echo "$env_exe"
+
+if [ -f "$env_exe" ]
 then
     # shellcheck source=/dev/null
     . "$env_exe"
