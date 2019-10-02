@@ -17,9 +17,12 @@ Install Rust.
 
 $(_koopa_help_args)
 
+details:
+    Installs rustup via Homebrew.
+
 note:
     Bash script.
-    Updated 2019-09-14.
+    Updated 2019-10-02.
 EOF
 }
 
@@ -31,10 +34,9 @@ _koopa_help "$@"
 # ==============================================================================
 
 _koopa_assert_is_installed brew
-brew install rust
 
-# > rustup-init --help
-rustup-init -y --no-modify-path
+brew install rustup
+rustup-init -v -y --no-modify-path
 
 exe_file="${HOME}/.cargo/bin/rustc"
 "$exe_file" --version
