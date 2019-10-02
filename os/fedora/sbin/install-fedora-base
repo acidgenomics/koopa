@@ -8,6 +8,14 @@ _koopa_assert_has_sudo
 
 
 
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Install Rust using rustup instead.
+# sudo yum install cargo rust rust-doc
+
+
+
 # Usage                                                                     {{{1
 # ==============================================================================
 
@@ -39,7 +47,6 @@ sudo yum -y install \
     ImageMagick-c++-devel \
     bzip2 \
     bzip2-devel \
-    cargo \
     cmake \
     convmv \
     coreutils \
@@ -71,7 +78,6 @@ sudo yum -y install \
     qpdf \
     readline \
     readline-devel \
-    rust \
     tesseract-devel \
     texlive \
     texlive-bera \
