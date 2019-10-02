@@ -1,14 +1,10 @@
 # Koopa internal variables.
 
 koopa="0.6.0"
-koopa_date="2019-10-01"
+koopa_date="2019-10-02"
 
 # Program versions                                                          {{{1
 # ==============================================================================
-
-# https://www.r-project.org/
-# https://cloud.r-project.org/src/base/R-3/
-r="3.6.1"
 
 # https://repo.continuum.io/archive/
 anaconda3="2019.07"
@@ -20,7 +16,7 @@ bash="5.0.11"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio_nextgen.py="1.1.6a"
+bcbio-nextgen="1.1.6a"
 
 # Apple LLVM version
 # https://developer.apple.com/xcode/
@@ -100,18 +96,21 @@ perl="5.30.0"
 # https://perlbrew.pl/
 perlbrew="0.86"
 
+# https://metacpan.org/release/File-Rename
+perl-file-rename="1.10"
+
 # https://proj.org/
 proj="6.2.0"
 
 # https://www.python.org/downloads/
 python="3.7.4"
 
+# https://www.r-project.org/
+# https://cloud.r-project.org/src/base/R-3/
+r="3.6.1"
+
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
-
-# Perl File-Rename
-# https://metacpan.org/release/File-Rename
-rename="1.10"
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
