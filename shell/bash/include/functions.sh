@@ -113,47 +113,21 @@ _koopa_help_header() {
 #
 # Updated 2019-10-02.
 _koopa_java_home() {
+    # Early return if Java is not installed.
+    if ! _koopa_is_installed java
+    then
+        return 1
+    fi
     # Early return if environment variable is set.
     if [ -n "${JAVA_HOME:-}" ]
     then
         echo "$JAVA_HOME"
         return 0
     fi
-    # Early return if Java is not installed.
-    if ! _koopa_is_installed java
-    then
-        return 1
-    fi
-
+    local java_exe
+    java_exe="$(_koopa_locate "java")"
     local home
-    local jvm_dir
-
-    # Use automatic detection on macOS.
-    if _koopa_is_darwin
-    then
-        home="$(/usr/libexec/java_home)"
-        echo "$home"
-        return 0
-    fi
-
-    jvm_dir="/usr/lib/jvm"
-    if [ ! -d "$jvm_dir" ]
-    then
-        home=
-    elif [ -d "${jvm_dir}/java-12-oracle" ]
-    then
-        home="${jvm_dir}/java-12-oracle"
-    elif [ -d "${jvm_dir}/java-12" ]
-    then
-        home="${jvm_dir}/java-12"
-    elif [ -d "${jvm_dir}/java" ]
-    then
-        home="${jvm_dir}/java"
-    else
-        home=
-    fi
-
-    [ -d "$home" ] || return 0
+    home="$(dirname "$(dirname "${java_exe}")")"
     echo "$home"
 }
 
