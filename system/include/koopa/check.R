@@ -27,8 +27,8 @@ stopifnot(isTRUE(nzchar(koopa_home)))
 koopa_exe <- file.path(koopa_home, "bin", "koopa")
 stopifnot(file.exists(koopa_exe))
 
-host <- system(command = paste(koopa_exe, "host-type"), intern = TRUE)
-os <- system(command = paste(koopa_exe, "os-type"), intern = TRUE)
+host <- system2(command = koopa_exe, args = "host-type", stdout = TRUE)
+os <- system2(command = koopa_exe, args = "os-type", stdout = TRUE)
 
 ## Determine if we're on Linux or not (i.e. macOS).
 r_os_string <- R.Version()[["os"]]
@@ -78,9 +78,12 @@ current_version <- function(name) {
         paste0(name, ".sh")
     )
     if (!file.exists(script)) return(NULL)
-    x <- system(command = script, intern = TRUE)
-    stopifnot(isTRUE(nzchar(x)))
-    x
+    tryCatch(
+        expr = system2(command = script, stdout = TRUE, stderr = FALSE),
+        error = function(e) {
+            NULL
+        }
+    )
 }
 
 ## Sanitize complicated verions:
@@ -124,7 +127,6 @@ check_version <- function(
             (is.character(expected) && identical(length(expected), 1L)),
         is.logical(required) && identical(length(required), 1L)
     )
-    ## FIXME Need to add support for current pass-in as NULL.
     eval <- match.arg(eval)
     if (isTRUE(required)) {
         fail <- "FAIL"
@@ -421,10 +423,8 @@ if (isTRUE(linux)) {
     check_version(
         name = "rename (Perl File::Rename)",
         which_name = "rename",
-        # FIXME Improve the name consistency here.
         current = current_version("perl-file-rename"),
-        expected = expected_version("rename"),
-        required = FALSE
+        expected = expected_version("perl-file-rename")
     )
     check_version(
         name = "RStudio Server",
@@ -443,7 +443,7 @@ if (isTRUE(linux)) {
         which_name = "bcbio_nextgen.py",
         # FIXME Improve name consistency
         current = current_version("bcbio-nextgen"),
-        expected = expected_version("bcbio_nextgen.py"),
+        expected = expected_version("bcbio-nextgen"),
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
