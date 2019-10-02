@@ -1871,6 +1871,12 @@ _koopa_which() {
     if [ "$KOOPA_SHELL" = "zsh" ]
     then
         path="$(type -p "$command")"
+        if ! echo "$path" | grep -q " is "
+        then
+            >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
+            return 1
+        fi
+        path="$(echo "$path" | sed -e "s/^${command} is //")"
     else
         path="$(command -v "$command")"
     fi
