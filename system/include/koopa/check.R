@@ -457,7 +457,6 @@ if (isTRUE(linux)) {
     check_version(
         name = "bcbio-nextgen",
         which_name = "bcbio_nextgen.py",
-        # FIXME Improve name consistency
         current = current_version("bcbio-nextgen"),
         expected = expected_version("bcbio-nextgen"),
         required = FALSE
