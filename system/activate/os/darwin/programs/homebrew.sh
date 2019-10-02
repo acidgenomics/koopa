@@ -3,7 +3,7 @@
 # Homebrew
 # Updated 2019-06-20.
 
-if _koopa_quiet_which brew
+if _koopa_is_installed brew
 then
     HOMEBREW_PREFIX="$(brew --prefix)"
     export HOMEBREW_PREFIX

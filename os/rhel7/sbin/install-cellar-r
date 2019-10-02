@@ -21,7 +21,7 @@ _koopa_assert_has_sudo
 
 # There doesn't appear to be an easy way to fix these issues on RHEL 7 or 8.
 
-sudo yum -y install R
+# > sudo yum -y install R
 sudo yum-builddep -y R
 
 # shellcheck source=/dev/null

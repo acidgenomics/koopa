@@ -998,11 +998,11 @@ _koopa_is_darwin() {
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-10-02.
 _koopa_is_installed() {
     local program
     program="$1"
-    _koopa_quiet_which "$program"
+    command -v "$program" >/dev/null
 }
 
 
@@ -1081,51 +1081,6 @@ _koopa_is_shared() {
 
 
 
-# J                                                                         {{{1
-# ==============================================================================
-
-# Set JAVA_HOME environment variable.
-#
-# See also:
-# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
-# - https://stackoverflow.com/questions/22290554
-#
-# Updated 2019-06-27.
-_koopa_java_home() {
-    local home
-    local jvm_dir
-    if [ -z "${JAVA_HOME:-}" ]
-    then    
-        if _koopa_is_darwin
-        then
-            home="$(/usr/libexec/java_home)"
-        else
-            jvm_dir="/usr/lib/jvm"
-            if [ ! -d "$jvm_dir" ]
-            then
-                home=
-            elif [ -d "${jvm_dir}/java-12-oracle" ]
-            then
-                home="${jvm_dir}/java-12-oracle"
-            elif [ -d "${jvm_dir}/java-12" ]
-            then
-                home="${jvm_dir}/java-12"
-            elif [ -d "${jvm_dir}/java" ]
-            then
-                home="${jvm_dir}/java"
-            else
-                home=
-            fi
-        fi
-    else
-        home="$JAVA_HOME"
-    fi
-    [ -d "$home" ] || return 0
-    echo "$home"
-}
-
-
-
 # L                                                                         {{{1
 # ==============================================================================
 
@@ -1146,27 +1101,6 @@ _koopa_link_cellar() {
     cp -frsv "$cellar_prefix/"* "$build_prefix/".
     _koopa_build_set_permissions "$build_prefix"
     _koopa_has_sudo && _koopa_update_ldconfig
-}
-
-
-
-# Locate a program and add its name as a prefix.
-# e.g. return 'bash: /usr/bin/bash'.
-# Updated 2019-09-27.
-_koopa_locate() {
-    local command
-    local name
-    local path
-    command="$1"
-    name="${2:-$command}"
-    path="$(_koopa_quiet_which2 "$command")"
-    if [ -z "$path" ]
-    then
-        path="[missing]"
-    else
-        path="$(realpath "$path")"
-    fi
-    printf "%s: %s" "$name" "$path"
 }
 
 
@@ -1434,23 +1368,6 @@ _koopa_quiet_expr() {
 
 
 
-# Consider not using `&>` here, it isn't POSIX.
-# https://unix.stackexchange.com/a/80632
-# > command -v "$1" >/dev/null
-# > command -v "$1" 2>/dev/null
-_koopa_quiet_which() {
-    command -v "$1" >/dev/null
-}
-
-
-
-# Updated 2019-06-22.
-_koopa_quiet_which2() {
-    command -v "$1" 2>/dev/null
-}
-
-
-
 # R                                                                         {{{1
 # ==============================================================================
 
@@ -1460,48 +1377,6 @@ _koopa_r_home() {
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
-}
-
-
-
-# Update rJava configuration.
-# The default Java path differs depending on the system.
-# # > R CMD javareconf -h
-# # Environment variables that can be used to influence the detection:
-#   JAVA           path to a Java interpreter executable
-#                  By default first 'java' command found on the PATH
-#                  is taken (unless JAVA_HOME is also specified).
-#   JAVA_HOME      home of the Java environment. If not specified,
-#                  it will be detected automatically from the Java
-#                  interpreter.
-#   JAVAC          path to a Java compiler
-#   JAVAH          path to a Java header/stub generator
-#   JAR            path to a Java archive tool
-# # Updated 2019-06-27.
-_koopa_r_javareconf() {
-    local java_home
-    local java_flags
-    local r_home
-    _koopa_is_installed R || return 1
-    _koopa_is_installed java || return 1
-    java_home="$(_koopa_java_home)"
-    [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    printf "Updating R Java configuration.\n"
-    java_flags=(
-        "JAVA_HOME=${java_home}" \
-        "JAVA=${java_home}/bin/java" \
-        "JAVAC=${java_home}/bin/javac" \
-        "JAVAH=${java_home}/bin/javah" \
-        "JAR=${java_home}/bin/jar" \
-    )
-    r_home="$(_koopa_r_home)"
-    _koopa_build_set_permissions "$r_home"
-    R --vanilla CMD javareconf "${java_flags[@]}"
-    if _koopa_has_sudo
-    then
-        sudo R --vanilla CMD javareconf "${java_flags[@]}"
-    fi
-    # > Rscript -e 'install.packages("rJava")'
 }
 
 
