@@ -533,6 +533,7 @@ installed(
         "sh",
         "tail",
         "tee",
+        "tree",
         "top",
         "wget",
         "which"
