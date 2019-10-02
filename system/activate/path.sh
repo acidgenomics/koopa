@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Define PATH string.
-# Updated 2019-09-19.
+# Updated 2019-10-02.
 
 # See also:
 # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
@@ -89,21 +89,3 @@ _koopa_add_to_path_start "$(_koopa_config_dir)/scripts-private/bin"
 
 # Doom Emacs.
 _koopa_add_to_path_start "${HOME}/.emacs.d/bin"
-
-# Java.
-if [ -z "${JAVA_HOME:-}" ]
-then
-    JAVA_HOME="$(_koopa_java_home)"
-    if [ -d "$JAVA_HOME" ]
-    then
-        export JAVA_HOME
-    else
-        JAVA_HOME=
-    fi
-fi
-if [ -d "${JAVA_HOME:-}" ]
-then
-    _koopa_add_to_path_start "${JAVA_HOME}/bin"
-else
-    unset -v JAVA_HOME
-fi
