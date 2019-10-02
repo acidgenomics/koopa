@@ -75,11 +75,13 @@ current_version <- function(name) {
         "version",
         paste0(name, ".sh")
     )
-    if (!file.exists(script)) return(NULL)
+    if (!file.exists(script)) {
+        return(NA_character_)
+    }
     tryCatch(
         expr = system2(command = script, stdout = TRUE, stderr = FALSE),
         error = function(e) {
-            NULL
+            NA_character_
         }
     )
 }
@@ -111,6 +113,11 @@ check_version <- function(
     eval = c("==", ">="),
     required = TRUE
 ) {
+    # FIXME
+    print(current)
+    print(expected)
+
+
     if (missing(which_name)) {
         which_name <- name
     }
