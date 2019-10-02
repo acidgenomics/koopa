@@ -126,6 +126,12 @@ rstudio-server-pro="1.2.5001-3"
 # https://www.ruby-lang.org/en/downloads/releases/
 ruby="2.6.4"
 
+# https://www.rust-lang.org/
+rust="1.38.0"
+
+# https://rustup.rs/
+rustup="1.19.0"
+
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.7.0"
 
