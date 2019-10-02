@@ -325,8 +325,42 @@ check_version(
 
 
 
-## Dependencies =================================================================
-message("\nDependencies:")
+## Basic dependencies ==========================================================
+message("\nBasic dependencies:")
+installed(
+    which = c(
+        "basename",
+        "bash",
+        "cat",
+        "chsh",
+        "curl",
+        "dirname",
+        "echo",
+        "env",
+        "grep",
+        "head",
+        "less",
+        "man",
+        "nice",
+        "parallel",
+        "realpath",
+        "rename",
+        "sed",
+        "sh",
+        "tail",
+        "tee",
+        "tree",
+        "top",
+        "wget",
+        "which"
+    ),
+    required = TRUE
+)
+
+
+
+## Heavy dependencies ==========================================================
+message("\nHeavy dependencies:")
 check_version(
     name = "GDAL",
     which_name = "gdalinfo",
@@ -474,6 +508,20 @@ if (isTRUE(linux)) {
         expected = expected_version("perl-file-rename")
     )
     check_version(
+        name = "RStudio Server",
+        which_name = "rstudio-server",
+        current = current_version("rstudio-server"),
+        expected = expected_version("rstudio-server")
+    )
+    check_version(
+        name = "Shiny Server",
+        which_name = "shiny-server",
+        current = current_version("shiny-server"),
+        expected = expected_version("shiny-server")
+    )
+
+    message("\nPowerful virtual machine only:")
+    check_version(
         name = "Lmod",
         which_name = NULL,
         current = current_version("lmod"),
@@ -490,18 +538,6 @@ if (isTRUE(linux)) {
         which_name = "luarocks",
         current = current_version("luarocks"),
         expected = expected_version("luarocks")
-    )
-    check_version(
-        name = "RStudio Server",
-        which_name = "rstudio-server",
-        current = current_version("rstudio-server"),
-        expected = expected_version("rstudio-server")
-    )
-    check_version(
-        name = "Shiny Server",
-        which_name = "shiny-server",
-        current = current_version("shiny-server"),
-        expected = expected_version("shiny-server")
     )
     check_version(
         name = "bcbio-nextgen",
@@ -537,34 +573,3 @@ if (isTRUE(linux)) {
 
 
 
-## Base dependencies ===========================================================
-message("\nBase dependencies:")
-installed(
-    which = c(
-        "basename",
-        "bash",
-        "cat",
-        "chsh",
-        "curl",
-        "dirname",
-        "echo",
-        "env",
-        "grep",
-        "head",
-        "less",
-        "man",
-        "nice",
-        "parallel",
-        "realpath",
-        "rename",
-        "sed",
-        "sh",
-        "tail",
-        "tee",
-        "tree",
-        "top",
-        "wget",
-        "which"
-    ),
-    required = TRUE
-)
