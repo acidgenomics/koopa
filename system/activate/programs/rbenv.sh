@@ -11,13 +11,13 @@
 # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
 
 # Configure shared installation, if necessary.
-if ! _koopa_quiet_which rbenv && [ -d "/usr/local/rbenv" ]
+if ! _koopa_is_installed rbenv && [ -d "/usr/local/rbenv" ]
 then
     export RBENV_ROOT="/usr/local/rbenv"
     _koopa_add_to_path_start "${RBENV_ROOT}/bin"
 fi
 
-if _koopa_quiet_which rbenv
+if _koopa_is_installed rbenv
 then
     eval "$(rbenv init -)"
 fi
