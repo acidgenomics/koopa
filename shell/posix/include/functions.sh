@@ -998,11 +998,11 @@ _koopa_is_darwin() {
 
 
 
-# Updated 2019-06-27.
+# Updated 2019-10-02.
 _koopa_is_installed() {
     local program
     program="$1"
-    _koopa_quiet_which "$program"
+    command -v "$program" >/dev/null
 }
 
 
@@ -1152,22 +1152,25 @@ _koopa_link_cellar() {
 
 # Locate the realpath of a program.
 #
+# This resolves symlinks automatically.
+# For 'which' style return, use '_koopa_which' instead.
+#
+# See also:
+# - https://stackoverflow.com/questions/7522712
+# - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
+#
 # Examples:
 # _koopa_locate bash
-# ## /usr/local/bin/bash
+# ## /usr/local/Cellar/bash/5.0.11/bin/bash
 #
 # Updated 2019-10-02.
 _koopa_locate() {
     local command
-    local path
     command="$1"
-    path="$(_koopa_quiet_which2 "$command")"
-    if [ -z "$path" ]
-    then
-        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
-        return 1
-    fi
-    path="$(realpath "$path")"
+    local which
+    which="$(_koopa_which "$command")"
+    local path
+    path="$(realpath "$which")"
     echo "$path"
 }
 
@@ -1432,23 +1435,6 @@ _koopa_quiet_cd() {
 # `expr` is faster than using `case`.
 _koopa_quiet_expr() {
     expr "$1" : "$2" 1>/dev/null
-}
-
-
-
-# Consider not using `&>` here, it isn't POSIX.
-# https://unix.stackexchange.com/a/80632
-# > command -v "$1" >/dev/null
-# > command -v "$1" 2>/dev/null
-_koopa_quiet_which() {
-    command -v "$1" >/dev/null
-}
-
-
-
-# Updated 2019-06-22.
-_koopa_quiet_which2() {
-    command -v "$1" 2>/dev/null
 }
 
 
@@ -1848,6 +1834,39 @@ _koopa_variable() {
         >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
         return 1
     fi
+}
+
+
+
+# W                                                                         {{{1
+# ==============================================================================
+
+# Locate which program.
+#
+# Note that this intentionally doesn't resolve symlinks.
+# Use 'koopa_locate' for that instead.
+#
+# Examples:
+# _koopa_which bash
+# ## /usr/local/bin/bash
+#
+# Updated 2019-10-02.
+_koopa_which() {
+    local command
+    command="$1"
+    local path
+    if [ "$KOOPA_SHELL" = "zsh" ]
+    then
+        path="$(type -p "$command")"
+    else
+        path="$(command -v "$command")"
+    fi
+    if [ -z "$path" ]
+    then
+        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
+        return 1
+    fi
+    echo "$path"
 }
 
 
