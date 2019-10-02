@@ -113,21 +113,22 @@ _koopa_help_header() {
 #
 # Updated 2019-10-02.
 _koopa_java_home() {
-    # Early return if Java is not installed.
-    if ! _koopa_is_installed java
-    then
-        return 1
-    fi
+    _koopa_assert_is_installed java
     # Early return if environment variable is set.
     if [ -n "${JAVA_HOME:-}" ]
     then
         echo "$JAVA_HOME"
         return 0
     fi
-    local java_exe
-    java_exe="$(_koopa_locate "java")"
     local home
-    home="$(dirname "$(dirname "${java_exe}")")"
+    if _koopa_is_darwin
+    then
+        home="$(/usr/libexec/java_home)"
+    else
+        local java_exe
+        java_exe="$(_koopa_locate "java")"
+        home="$(dirname "$(dirname "${java_exe}")")"
+    fi
     echo "$home"
 }
 
@@ -175,14 +176,13 @@ _koopa_locate() {
 #   JAVAC          path to a Java compiler
 #   JAVAH          path to a Java header/stub generator
 #   JAR            path to a Java archive tool
-# # Updated 2019-06-27.
+# # Updated 2019-10-02.
 _koopa_r_javareconf() {
+    _koopa_assert_is_installed R
+    _koopa_assert_is_installed java
     local java_home
     local java_flags
     local r_home
-    _koopa_is_installed R || return 1
-    _koopa_is_installed java || return 1
-    # FIXME This is now breaking...
     java_home="$(_koopa_java_home)"
     [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
     printf "Updating R Java configuration.\n"
@@ -200,7 +200,7 @@ _koopa_r_javareconf() {
     then
         sudo R --vanilla CMD javareconf "${java_flags[@]}"
     fi
-    # > Rscript -e 'install.packages("rJava")'
+    Rscript -e 'install.packages("rJava")'
 }
 
 
