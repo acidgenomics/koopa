@@ -11,7 +11,7 @@ _koopa_assert_has_sudo
 # Variables                                                                 {{{1
 # ==============================================================================
 
-prefix="$(_koopa_build_prefix)/bcbio-vm"
+prefix="/opt/bcbio-vm"
 bin_dir="${prefix}/anaconda/bin"
 tmp_dir="$(_koopa_tmp_dir)/bcbio-vm"
 
@@ -29,6 +29,9 @@ Install bcbio-vm.
 $(_koopa_help_args)
 
 details:
+    Installs to '${prefix}'.
+    Symlinks are added to '/usr/local/bin/'.
+
     Note that configuration is saved in:
     '~/.config/bcbio-nextgen/bcbio-docker-config.yaml'.
     This sets the location of 'datadir', for example.
@@ -80,8 +83,11 @@ fi
 # bcbio-vm                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-"${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen
-"${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen-vm
+"${bin_dir}/conda" install --yes \
+    --channel="conda-forge" \
+    --channel=bioconda \
+    bcbio-nextgen \
+    bcbio-nextgen-vm
 
 sudo rm -fv /usr/local/bin/bcbio_vm.py
 sudo ln -fnsv "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
