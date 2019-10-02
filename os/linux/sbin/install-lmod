@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
 _koopa_assert_has_sudo
 
 
@@ -8,6 +12,10 @@ _koopa_assert_has_sudo
 # ==============================================================================
 
 # Use Spider Cache on Loads................................... : NO
+
+# RHEL 7 alternative:
+# > sudo yum -y install Lmod
+# > sudo yum-builddep -y Lmod
 
 
 
@@ -27,18 +35,26 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 usage() {
 cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
+$(_koopa_help_header)
 
 Install Lmod.
 
 $(_koopa_help_args)
 
+details:
+    Ensure Lua and LuaRocks are installed prior to this step.
+
+    Installs into:
+    - '${prefix}'
+    - '${data_dir}'
+
 see also:
-    https://lmod.readthedocs.io/
+    - https://lmod.readthedocs.io/
+    - https://lmod.readthedocs.io/en/latest/030_installing.html
 
 note:
     Bash script.
-    Updated 2019-09-30.
+    Updated 2019-10-02.
 EOF
 }
 
@@ -51,6 +67,7 @@ _koopa_help "$@"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+_koopa_assert_is_installed lua luarocks
 # > _koopa_assert_is_not_dir "$prefix"
 
 sudo mkdir -pv "$prefix"
@@ -70,4 +87,16 @@ sudo mkdir -pv "$prefix"
     rm -fr "$tmp_dir"
 )
 
-module spider
+# bash, zsh:
+sudo ln -fnsv /opt/apps/lmod/lmod/init/profile \
+    /etc/profile.d/z00_lmod.sh
+# csh, tcsh:
+# > sudo ln -fnsv /opt/apps/lmod/lmod/init/cshrc \
+# >     /etc/profile.d/z00_lmod.csh
+# fish:
+# > sudo ln -fnsv /opt/apps/lmod/lmod/init/profile.fish \
+# >     /etc/fish/conf.d/z00_lmod.fish
+
+module --version
+# > module spider
+
