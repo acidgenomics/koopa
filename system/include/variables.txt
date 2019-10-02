@@ -145,7 +145,9 @@ tex="2019"
 tmux="2.9a"
 
 # https://github.com/vim/vim/releases
-vim="8.1.2106"
+# vim should only be updated every 50 releases on multiples of 50.
+# https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
+vim="8.1.2100"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.7.1"
