@@ -27,8 +27,8 @@ stopifnot(isTRUE(nzchar(koopa_home)))
 koopa_exe <- file.path(koopa_home, "bin", "koopa")
 stopifnot(file.exists(koopa_exe))
 
-host <- system(command = paste(koopa_exe, "host-type"), intern = TRUE)
-os <- system(command = paste(koopa_exe, "os-type"), intern = TRUE)
+host <- system2(command = paste(koopa_exe, "host-type"), stdout = TRUE)
+os <- system2(command = paste(koopa_exe, "os-type"), stdout = TRUE)
 
 ## Determine if we're on Linux or not (i.e. macOS).
 r_os_string <- R.Version()[["os"]]
@@ -78,9 +78,12 @@ current_version <- function(name) {
         paste0(name, ".sh")
     )
     if (!file.exists(script)) return(NULL)
-    x <- system(command = script, intern = TRUE)
-    stopifnot(isTRUE(nzchar(x)))
-    x
+    tryCatch(
+        expr = system(command = script, intern = TRUE),
+        error = function(e) {
+            NULL
+        }
+    )
 }
 
 ## Sanitize complicated verions:
@@ -426,14 +429,6 @@ if (isTRUE(linux)) {
         )
     )
     check_version(
-        name = "rename (Perl File::Rename)",
-        which_name = "rename",
-        # FIXME Improve the name consistency here.
-        current = current_version("perl-file-rename"),
-        expected = expected_version("rename"),
-        required = FALSE
-    )
-    check_version(
         name = "RStudio Server",
         which_name = "rstudio-server",
         current = current_version("rstudio-server"),
@@ -445,15 +440,22 @@ if (isTRUE(linux)) {
         current = current_version("shiny-server"),
         expected = expected_version("shiny-server")
     )
+    # FIXME This is breaking if the program isn't installed.
     check_version(
         name = "bcbio-nextgen",
         which_name = "bcbio_nextgen.py",
         # FIXME Improve name consistency
         current = current_version("bcbio-nextgen"),
-        expected = expected_version("bcbio_nextgen.py"),
+        expected = expected_version("bcbio-nextgen"),
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
+    check_version(
+        name = "rename (Perl File::Rename)",
+        which_name = "rename",
+        current = current_version("perl-file-rename"),
+        expected = expected_version("perl-file-rename")
+    )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
     check_version(
