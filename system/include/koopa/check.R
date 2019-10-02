@@ -27,8 +27,8 @@ stopifnot(isTRUE(nzchar(koopa_home)))
 koopa_exe <- file.path(koopa_home, "bin", "koopa")
 stopifnot(file.exists(koopa_exe))
 
-host <- system2(command = paste(koopa_exe, "host-type"), stdout = TRUE)
-os <- system2(command = paste(koopa_exe, "os-type"), stdout = TRUE)
+host <- system2(command = koopa_exe, args = "host-type", stdout = TRUE)
+os <- system2(command = koopa_exe, args = "os-type", stdout = TRUE)
 
 ## Determine if we're on Linux or not (i.e. macOS).
 r_os_string <- R.Version()[["os"]]
@@ -79,7 +79,7 @@ current_version <- function(name) {
     )
     if (!file.exists(script)) return(NULL)
     tryCatch(
-        expr = system(command = script, intern = TRUE),
+        expr = system2(command = script, stdout = TRUE, stderr = FALSE),
         error = function(e) {
             NULL
         }
