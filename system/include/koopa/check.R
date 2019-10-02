@@ -1,14 +1,14 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-01.
+## Updated 2019-10-02.
 
 options(
     error = quote(quit(status = 1L)),
     warning = quote(quit(status = 1L))
 )
 
-## FIXME Add a check for Rust.
+## FIXME Add Rust compiler check.
 
 
 
