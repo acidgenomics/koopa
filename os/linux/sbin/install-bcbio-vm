@@ -34,11 +34,12 @@ details:
     This sets the location of 'datadir', for example.
 
 see also:
-    https://quay.io/repository/bcbio/bcbio-vc?tab=tags
+    - https://github.com/bcbio/bcbio-nextgen-vm
+    - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
 
 note:
     Bash script.
-    Updated 2019-10-01.
+    Updated 2019-10-02.
 EOF
 }
 
@@ -49,16 +50,20 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+_koopa_assert_is_not_dir "$prefix"
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed docker
 
 # Docker                                                                    {{{2
 # ------------------------------------------------------------------------------
 
-sudo groupadd docker
-sudo service docker restart
-sudo gpasswd -a "$(whoami)" docker
-newgrp docker
+if ! groups | grep -q "docker"
+then
+    sudo groupadd docker
+    sudo service docker restart
+    sudo gpasswd -a "$(whoami)" docker
+    newgrp docker
+fi
 
 # conda                                                                     {{{2
 # ------------------------------------------------------------------------------
