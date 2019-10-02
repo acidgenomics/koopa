@@ -17,7 +17,7 @@ options(
 
 
 
-## Koopa config =================================================================
+## Koopa config ================================================================
 ## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
 koopa_home <- Sys.getenv("KOOPA_HOME")
 stopifnot(isTRUE(nzchar(koopa_home)))
@@ -220,7 +220,8 @@ installed <- function(which, required = TRUE) {
 
 
 
-## All platforms ===============================================================
+## Shells ======================================================================
+message("\nShells:")
 check_version(
     name = "Bash",
     which_name = "bash",
@@ -233,23 +234,16 @@ check_version(
     current = current_version("zsh"),
     expected = expected_version("zsh")
 )
-## Alternatively, can return current here using `packageVersion("base")`.
+
+
+
+## Editors =====================================================================
+message("\nEditors:")
 check_version(
-    name = "R",
-    current = current_version("r"),
-    expected = expected_version("r")
-)
-check_version(
-    name = "Python",
-    which_name = "python3",
-    current = current_version("python"),
-    expected = expected_version("python")
-)
-check_version(
-    name = "Vim",
-    which_name = "vim",
-    current = current_version("vim"),
-    expected = expected_version("vim")
+    name = "Emacs",
+    which_name = "emacs",
+    current = current_version("emacs"),
+    expected = expected_version("emacs")
 )
 check_version(
     name = "Neovim",
@@ -258,39 +252,106 @@ check_version(
     expected = expected_version("neovim")
 )
 check_version(
-    name = "Emacs",
-    which_name = "emacs",
-    current = current_version("emacs"),
-    expected = expected_version("emacs")
-)
-check_version(
     name = "Tmux",
     which_name = "tmux",
     current = current_version("tmux"),
     expected = expected_version("tmux")
 )
 check_version(
-    name = "htop",
-    current = current_version("htop"),
-    expected = expected_version("htop")
+    name = "Vim",
+    which_name = "vim",
+    current = current_version("vim"),
+    expected = expected_version("vim")
+)
+
+
+
+## Languages ===============================================================
+message("\nLanguages:")
+check_version(
+    name = "Java",
+    which_name = "java",
+    current = current_version("java"),
+    expected = switch(
+        EXPR = os,
+        rhel7 = "12.0.2",
+        expected_version("java")
+    )
 )
 check_version(
-    name = "Neofetch",
-    which_name = "neofetch",
-    current = current_version("neofetch"),
-    expected = expected_version("neofetch")
+    name = "Perl",
+    which_name = "perl",
+    current = current_version("perl"),
+    expected = expected_version("perl")
 )
 check_version(
-    name = "Git",
-    which_name = "git",
-    current = current_version("git"),
-    expected = expected_version("git")
+    name = "Perl : Perlbrew",
+    which_name = "perlbrew",
+    current = current_version("perlbrew"),
+    expected = expected_version("perlbrew")
 )
 check_version(
-    name = "GnuPG",
-    which_name = "gpg",
-    current = current_version("gpg"),
-    expected = expected_version("gpg")
+    name = "Python",
+    which_name = "python3",
+    current = current_version("python"),
+    expected = expected_version("python")
+)
+## Alternatively, can return current here using `packageVersion("base")`.
+check_version(
+    name = "R",
+    current = current_version("r"),
+    expected = expected_version("r")
+)
+check_version(
+    name = "Ruby",
+    which_name = "ruby",
+    current = current_version("ruby"),
+    expected = expected_version("ruby")
+)
+check_version(
+    name = "Ruby : rbenv",
+    which_name = "rbenv",
+    current = current_version("rbenv"),
+    expected = expected_version("rbenv")
+)
+check_version(
+    name = "Rust",
+    which_name = "rustc",
+    current = current_version("rust"),
+    expected = expected_version("rust")
+)
+check_version(
+    name = "Rust : rustup",
+    which_name = "rustup",
+    current = current_version("rustup"),
+    expected = expected_version("rustup")
+)
+
+
+
+## Dependencies =================================================================
+message("\nDependencies:")
+check_version(
+    name = "GDAL",
+    which_name = "gdalinfo",
+    current = current_version("gdal"),
+    expected = switch(
+        EXPR = os,
+        darwin = "2.4.2",
+        expected_version("gdal")
+    )
+)
+check_version(
+    name = "GSL",
+    which_name = "gsl-config",
+    current = current_version("gsl"),
+    expected = expected_version("gsl")
+)
+check_version(
+    name = "HDF5",
+    which_name = "h5cc",
+    current = current_version("hdf5"),
+    expected = expected_version("hdf5")
 )
 check_version(
     name = "OpenSSL",
@@ -315,6 +376,12 @@ check_version(
     )
 )
 check_version(
+    name = "PROJ",
+    which_name = "proj",
+    current = current_version("proj"),
+    expected = expected_version("proj")
+)
+check_version(
     name = "TeX Live",
     which_name = "tex",
     current = current_version("tex"),
@@ -325,18 +392,45 @@ check_version(
         expected_version("tex")
     )
 )
+
+
+
+## Tools =======================================================================
+message("\nTools:")
 check_version(
-    name = "GSL",
-    which_name = "gsl-config",
-    current = current_version("gsl"),
-    expected = expected_version("gsl")
+    name = "Git",
+    which_name = "git",
+    current = current_version("git"),
+    expected = expected_version("git")
 )
 check_version(
-    name = "HDF5",
-    which_name = "h5cc",
-    current = current_version("hdf5"),
-    expected = expected_version("hdf5")
+    name = "GnuPG",
+    which_name = "gpg",
+    current = current_version("gpg"),
+    expected = expected_version("gpg")
 )
+check_version(
+    name = "htop",
+    current = current_version("htop"),
+    expected = expected_version("htop")
+)
+check_version(
+    name = "Neofetch",
+    which_name = "neofetch",
+    current = current_version("neofetch"),
+    expected = expected_version("neofetch")
+)
+check_version(
+    name = "ShellCheck",
+    which_name = "shellcheck",
+    current = current_version("shellcheck"),
+    expected = expected_version("shellcheck")
+)
+
+
+
+## Environments ================================================================
+message("\nEnvironments:")
 check_version(
     name = "Conda",
     which_name = "conda",
@@ -352,68 +446,6 @@ check_version(
         darwin = "18.09.2",
         expected_version("docker")
     )
-)
-check_version(
-    name = "Perlbrew",
-    which_name = "perlbrew",
-    current = current_version("perlbrew"),
-    expected = expected_version("perlbrew")
-)
-check_version(
-    name = "Perl",
-    which_name = "perl",
-    current = current_version("perl"),
-    expected = expected_version("perl")
-)
-check_version(
-    name = "Java",
-    which_name = "java",
-    current = current_version("java"),
-    expected = expected_version("java")
-)
-check_version(
-    name = "rbenv",
-    current = current_version("rbenv"),
-    expected = expected_version("rbenv")
-)
-check_version(
-    name = "Ruby",
-    which_name = "ruby",
-    current = current_version("ruby"),
-    expected = expected_version("ruby")
-)
-check_version(
-    name = "Rust",
-    which_name = "rustc",
-    current = current_version("rust"),
-    expected = expected_version("rust")
-)
-check_version(
-    name = "rustup",
-    current = current_version("rustup"),
-    expected = expected_version("rustup")
-)
-check_version(
-    name = "PROJ",
-    which_name = "proj",
-    current = current_version("proj"),
-    expected = expected_version("proj")
-)
-check_version(
-    name = "GDAL",
-    which_name = "gdalinfo",
-    current = current_version("gdal"),
-    expected = switch(
-        EXPR = os,
-        darwin = "2.4.2",
-        expected_version("gdal")
-    )
-)
-check_version(
-    name = "ShellCheck",
-    which_name = "shellcheck",
-    current = current_version("shellcheck"),
-    expected = expected_version("shellcheck")
 )
 
 
@@ -432,6 +464,19 @@ if (isTRUE(linux)) {
             ubuntu = "7.4.0"
         )
     )
+    ## This is used for shebang. Version 8.30 marks support of `-S` flag.
+    check_version(
+        name = "env (coreutils)",
+        which_name = "env",
+        current = current_version("env"),
+        expected = expected_version("coreutils")
+    )
+    check_version(
+        name = "rename (Perl File::Rename)",
+        which_name = "rename",
+        current = current_version("perl-file-rename"),
+        expected = expected_version("perl-file-rename")
+    )
     check_version(
         name = "Lmod",
         which_name = NULL,
@@ -449,12 +494,6 @@ if (isTRUE(linux)) {
         which_name = "luarocks",
         current = current_version("luarocks"),
         expected = expected_version("luarocks")
-    )
-    check_version(
-        name = "rename (Perl File::Rename)",
-        which_name = "rename",
-        current = current_version("perl-file-rename"),
-        expected = expected_version("perl-file-rename")
     )
     check_version(
         name = "RStudio Server",
@@ -476,13 +515,6 @@ if (isTRUE(linux)) {
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
-    ## This is used for shebang. Version 8.30 marks support of `-S` flag.
-    check_version(
-        name = "env (coreutils)",
-        which_name = "env",
-        current = current_version("env"),
-        expected = expected_version("coreutils")
-    )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
     check_version(
