@@ -71,6 +71,7 @@ conda create -qy --name="bioinfo-base" \
     samblaster \
     samtools \
     seqtk
+
 conda create -qy --name="qc" \
     fastqc \
     multiqc \
@@ -82,6 +83,7 @@ conda create -qy --name="qc" \
 # > conda-create-env cromwell
 # > conda-create-env fgbio
 # > conda-create-env gatk
+
 conda-create-env nextflow
 
 # Tools                                                                     {{{2
@@ -112,8 +114,8 @@ conda-create-env star
 # bcbio                                                                     {{{2
 # ------------------------------------------------------------------------------
 
-conda-create-env r-bcbiornaseq
-conda-create-env r-bcbiosinglecell
+# > conda-create-env r-bcbiornaseq
+# > conda-create-env r-bcbiosinglecell
 
 # Fusion detection                                                          {{{2
 # ------------------------------------------------------------------------------
@@ -127,9 +129,10 @@ conda-create-env star-fusion
 # ChIP-seq                                                                  {{{2
 # ------------------------------------------------------------------------------
 
+# > conda-create-env bioconductor-diffbind
+
 conda-create-env chromhmm
 conda-create-env deeptools
-conda-create-env bioconductor-diffbind
 conda-create-env homer
 conda-create-env macs2
 
