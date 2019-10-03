@@ -59,81 +59,77 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed conda
 
-bioinfo_base=(
-    bamtools
-    bedtools
-    bioawk
-    biobambam
-    htslib
-    samblaster
-    samtools
+# Custom                                                                    {{{2
+# ------------------------------------------------------------------------------
+
+conda create -qy --name="bioinfo-base" \
+    bamtools \
+    bedtools \
+    bioawk \
+    biobambam \
+    htslib \
+    samblaster \
+    samtools \
     seqtk
-)
-# shellcheck disable=SC2068
-conda create -qy --name="bioinfo-base" ${bioinfo_base[@]}
+conda create -qy --name="qc" \
+    fastqc \
+    multiqc \
+    qualimap
 
 # Workflows                                                                 {{{2
 # ------------------------------------------------------------------------------
 
-# > conda create -qy --name="cromwell" cromwell
-# > conda create -qy --name="fgbio" fgbio
-# > conda create -qy --name="gatk" gatk
-conda create -qy --name="nextflow" nextflow
+# > conda-create-env cromwell
+# > conda-create-env fgbio
+# > conda-create-env gatk
+conda-create-env nextflow
 
 # Tools                                                                     {{{2
 # ------------------------------------------------------------------------------
 
-conda create -qy --name="gffutils" gffutils
-conda create -qy --name="igvtools" igvtools
+conda-create-env gffutils
+conda-create-env igvtools
 
 # Quality control                                                           {{{2
 # ------------------------------------------------------------------------------
 
-conda create -qy --name="qc" fastqc multiqc qualimap
-
-conda create -qy --name="kraken" kraken
-conda create -qy --name="picard" picard
+conda-create-env kraken
+conda-create-env picard
 
 # Aligners                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-conda create -qy --name="bowtie2" bowtie2
-conda create -qy --name="bwa" bwa
-conda create -qy --name="hisat2" hisat2
-conda create -qy --name="kallisto" kallisto
-conda create -qy --name="minimap2" minimap2
-conda create -qy --name="rapmap" rapmap
-conda create -qy --name="salmon" salmon
-conda create -qy --name="star" star
-
-# Trimming (legacy)                                                         {{{2
-# ------------------------------------------------------------------------------
-
-# > conda create -qy --name="trim-atropos" atropos
-# > conda create -qy --name="trim-trimmomatic" trimmomatic
+conda-create-env bowtie2
+conda-create-env bwa
+conda-create-env hisat2
+conda-create-env kallisto
+conda-create-env minimap2
+conda-create-env rapmap
+conda-create-env salmon
+conda-create-env star
 
 # bcbio                                                                     {{{2
 # ------------------------------------------------------------------------------
 
-conda create -qy --name="bcbiornaseq" r-bcbiornaseq
-conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
+conda-create-env r-bcbiornaseq
+conda-create-env r-bcbiosinglecell
 
 # Fusion detection                                                          {{{2
 # ------------------------------------------------------------------------------
 
-conda create -qy --name="arriba" arriba
-conda create -qy --name="ericscript" ericscript
-conda create -qy --name="oncofuse" oncofuse
-conda create -qy --name="pizzly" pizzly
-conda create -qy --name="star-fusion" star-fusion
+conda-create-env arriba
+conda-create-env ericscript
+conda-create-env oncofuse
+conda-create-env pizzly
+conda-create-env star-fusion
 
 # ChIP-seq                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-conda create -qy --name="chromhmm" chromhmm
-conda create -qy --name="deeptools" deeptools
-conda create -qy --name="diffbind" bioconductor-diffbind
-conda create -qy --name="homer" homer
-conda create -qy --name="macs2" macs2
+conda-create-env chromhmm
+conda-create-env deeptools
+conda-create-env bioconductor-diffbind
+conda-create-env homer
+conda-create-env macs2
 
 conda env list
