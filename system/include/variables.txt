@@ -99,6 +99,9 @@ perlbrew="0.86"
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
 
+# https://github.com/broadinstitute/picard
+picard="2.21.1"
+
 # https://proj.org/
 proj="6.2.0"
 
