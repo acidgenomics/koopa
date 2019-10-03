@@ -33,14 +33,18 @@ required positional arguments with defaults:
 $(_koopa_help_args)
 
 details:
-    Check that other Java versions are not installed before continuing.
-    > sudo yum list installed | grep java
+    Check that other Java versions are not installed before continuing:
+    """sh
+    sudo yum list installed | grep java
+    """
 
     Clean up on RHEL 7:
-    > sudo yum remove R R-devel R-java R-java-devel
-    > sudo yum remove java-1.8.0-ibm java-1.8.0-openjdk-headless
-    > sudo yum remove java-latest-openjdk java-latest-openjdk-devel
-    > sudo yum remove java-latest-openjdk-headless
+    """sh
+    sudo yum -y remove R R-devel R-java R-java-devel
+    sudo yum -y remove java-1.8.0-ibm java-1.8.0-openjdk-headless
+    sudo yum -y remove java-latest-openjdk java-latest-openjdk-devel
+    sudo yum -y remove java-latest-openjdk-headless
+    """
 
     Note that yum installs to '/usr/lib/jvm/' on Fedora.
     Symlinks are defined in '/etc/alternatives/'.
@@ -105,3 +109,8 @@ update-alternatives --display javac
 
 java --version
 
+# Update rJava configuration.
+if _koopa_is_installed R
+then
+    r-javareconf
+fi
