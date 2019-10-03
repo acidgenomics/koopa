@@ -213,7 +213,8 @@ if [[ -z "${index_file:-}" ]]
 then
     _koopa_assert_is_file "$fasta_file"
     index_file="${output_dir}/kallisto.idx"
-    kallisto index -i "$index_file" "$fasta_file"
+    kallisto index -i "$index_file" "$fasta_file" |
+        tee "${output_dir}/kallisto-index.log"
 fi
 
 # Quantify                                                                  {{{2
@@ -233,5 +234,6 @@ do
         --index="$index_file" \
         --output-dir="$sample_output_dir" \
         --threads="$threads" \
-        "$fastq_r1" "$fastq_r2"
+        "$fastq_r1" "$fastq_r2" |
+        tee "${sample_output_dir}/kallisto-quant.log"
 done
