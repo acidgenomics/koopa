@@ -101,7 +101,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-02.
 EOF
 }
 
@@ -110,7 +110,7 @@ _koopa_help "$@"
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 while (("$#"))
@@ -169,6 +169,8 @@ then
     exit 1
 fi
 
+fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
+output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 
 
 # Script                                                                    {{{1
