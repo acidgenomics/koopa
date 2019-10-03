@@ -543,7 +543,7 @@ _koopa_conda_env_list() {
 
 # Note that we're allowing env_list passthrough as second positional variable,
 # to speed up loading upon activation.
-# Updated 2019-06-27.
+# Updated 2019-10-03.
 _koopa_conda_env_prefix() {
     local env_name
     local env_list
@@ -551,21 +551,23 @@ _koopa_conda_env_prefix() {
     local path
     _koopa_is_installed conda || return 1
     env_name="$1"
+    [ -n "$env_name" ] || return 1
     env_list="${2:-}"
-    prefix="$(_koopa_conda_prefix)"
     if [ -z "$env_list" ]
     then
         env_list="$(_koopa_conda_env_list)"
     fi
-    # Restrict to environments that match internal koopa installs.
-    # Early return if no environments are installed.
-    env_list="$(echo "$env_list" | grep "$prefix")"
-    [ -z "$env_list" ] && return 1
+    env_list="$(echo "$env_list" | grep "$env_name")"
+    if [ -z "$env_list" ]
+    then
+        >&2 printf "Error: Failed to detect prefix for '%s'.\n" "$env_name"
+        return 1
+    fi
     path="$( \
         echo "$env_list" | \
-        grep "/envs/${env_name}" \
+        grep "/envs/${env_name}" | \
+        head -n 1 \
     )"
-    [ -z "$path" ] && return 1
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
 }
 
