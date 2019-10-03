@@ -49,4 +49,4 @@ name="$1"
 
 _koopa_assert_is_installed conda
 
-conda remove --name="${name}" --all
+conda remove --yes --name="${name}" --all
