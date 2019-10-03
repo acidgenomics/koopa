@@ -116,9 +116,9 @@ sudo yum -y install \
     zip
 
 # These packages require EPEL for RHEL 7 but work natively on RHEL 8.
+# > java-latest-openjdk
+# > java-latest-openjdk-devel
 sudo yum -y install \
     hdf5 \
     hdf5-devel \
-    java-latest-openjdk \
-    java-latest-openjdk-devel \
     libsodium-devel
