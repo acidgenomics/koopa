@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-09-23.
+# Updated 2019-10-03.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -131,13 +131,9 @@ alias tardown='tar -xzvf'
 # ==============================================================================
 
 # R.
-# Useful flags:
-# - `--no-environ`
-# - `--no-init`
-# - `--no-restore`
-# - `--no-save`
-# - `--vanilla`
-alias R='R --no-restore --no-save'
+alias R='R --no-restore --no-save --quiet'
+# @mikelove https://gist.github.com/mikelove/d96fb988db039250fb8d
+alias rhelp="Rscript -e 'args <- commandArgs(TRUE); help(args[2], package=args[3], help_type=\"html\"); Sys.sleep(5)' --args"
 
 # Black Python code formatter.
 # https://github.com/psf/black
@@ -149,7 +145,10 @@ alias emacs='emacs --no-window-system'
 # Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
 alias emacs-default='emacs --no-init-file --no-window-system'
 # Run with 24-bit true color support.
-alias emacs-24bit='TERM=xterm-24bit emacs --no-window-system'
+alias emacs24='TERM=xterm-24bit emacs --no-window-system'
+
+# Git.
+alias glog="git log --graph"
 
 # Neovim.
 # Allow fast, default mode that skips RC file.
