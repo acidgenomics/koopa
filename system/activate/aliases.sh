@@ -139,6 +139,9 @@ alias rhelp="Rscript -e 'args <- commandArgs(TRUE); help(args[2], package=args[3
 # https://github.com/psf/black
 alias black="black --line-length=80"
 
+# File system usage.
+alias df2="df --portability --print-type --si | sort"
+
 # Emacs.
 # Use terminal (console) mode by default instead of window system.
 alias emacs='emacs --no-window-system'
