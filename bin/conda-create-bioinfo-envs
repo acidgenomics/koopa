@@ -89,6 +89,7 @@ conda-create-env nextflow
 
 conda-create-env gffutils
 conda-create-env igvtools
+conda-create-env jupyter
 
 # Quality control                                                           {{{2
 # ------------------------------------------------------------------------------
