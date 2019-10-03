@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-09-25 by Michael Steinbaugh.
+## Updated 2019-10-03 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -8,27 +8,18 @@
 ## Notes                                                                    {{{1
 ## =============================================================================
 
-## Tested on Linux, macOS, and Windows.
+## Tested on Linux and macOS.
 
 ## > help(topic = "Rprofile")
 
-## Example profiles, for reference:
-## - Stephen Turner's profile
-##   http://gettinggeneticsdone.blogspot.com/2013/07/customize-rprofile.html
-## - Jim Hester's profile
-##   https://github.com/jimhester/dotfiles/blob/master/R/Rprofile
-## - Efficient R programming
-##   https://csgillespie.github.io/efficientR/set-up.html
-## - Debian example config file by Dirk Eddelbuettel.
-
 ## Never set `options(stringsAsFactors = FALSE)`.
-## Code will be non-portable!
-
-## If devtools runs into an unzip error, set option: `unzip = "/usr/bin/unzip"`.
+## Code will be non-portable.
 
 ## Restart R clean inside RStudio project with:
-## Session -> Restart R (Ctrl + Shift + F10).
+##     Session -> Restart R (Ctrl + Shift + F10).
+##
 ## `.rs.restartR()` will reload but not detach packages, which isn't helpful.
+##
 ## See also:
 ## - https://stackoverflow.com/questions/6313079
 ## - https://support.rstudio.com/hc/en-us/community/posts/200653076
@@ -38,14 +29,26 @@
 ## - `install.packages.compile.from.source = "binary"`
 ## - `repos = BiocManager::repositories()`
 
+## If devtools runs into an unzip error, set option: `unzip = "/usr/bin/unzip"`.
+
 
 
 ## Examples                                                                 {{{1
 ## =============================================================================
 
-## From Debian empty `Rprofile.site` file:
+## - Stephen Turner's profile
+##   http://gettinggeneticsdone.blogspot.com/2013/07/customize-rprofile.html
+## - Jim Hester's profile
+##   https://github.com/jimhester/dotfiles/blob/master/R/Rprofile
+## - Mike Love's profile
+##   https://gist.github.com/mikelove/c3f7ff05ce18541b8b92
+## - Efficient R programming
+##   https://csgillespie.github.io/efficientR/set-up.html
+## - Debian example config file by Dirk Eddelbuettel.
 
-## Example `.Rprofile` file
+## From the default Debian configuration:
+
+## Example `.Rprofile` file:
 ## > options(width = 65L, digits = 5L)
 ## > options(show.signif.stars = FALSE)
 ## > setHook(
@@ -56,7 +59,7 @@
 ## > .First <- function() cat("\n   Welcome to R!\n\n")
 ## > .Last <- function()  cat("\n   Goodbye!\n\n")
 
-## Example `Rprofile.site` file.
+## Example `Rprofile.site` file:
 ## > local({
 ## >     ## Add MASS to the default packages, set a CRAN mirror.
 ## >     old <- getOption("defaultPackages")
@@ -99,6 +102,7 @@ attach(.env)
 
 local({
     repos <- getOption("repos")
+    ## Can use https://cran.rstudio.com/ here instead.
     repos["CRAN"] <- "https://cloud.r-project.org"
     options(repos = repos)
 })
@@ -119,7 +123,7 @@ options(
     width = 80L
 )
 
-## Turn on completion of installed package names.
+## Turn on auto-completion of installed package names.
 if (isTRUE(interactive())) {
     utils::rc.settings(ipck = TRUE)
 }
@@ -261,6 +265,15 @@ options(
     ## Compiler                                                             {{{2
     ## -------------------------------------------------------------------------
 
+    ## Important! Check that the compiler is expected GCC version on Linux or
+    ## expected Clang version on macOS.
+    ##
+    ## Note that conda can mask expected GCC, so be careful with PATH.
+    ##
+    ## DO NOT compile packages from source on macOS using Apple LLVM Clang/GCC.
+    ## Instead, install specific Clang and GNU Fortran binaries:
+    ## https://cran.r-project.org/bin/macosx/tools/
+
     if (Sys.getenv("HMS_CLUSTER") == "o2") {
         ## > module load gcc/6.2.0
         gcc_bin_dir <- "/n/app/gcc/6.2.0/bin"
@@ -273,13 +286,11 @@ options(
             )
         ))
         rm(gcc_bin_dir)
-
         ## > module load R/3.5.1
         stopifnot(identical(
             Sys.which("R"),
             c(R = "/n/app/R/3.5.1/bin/R")
         ))
-
         ## > module load hdf5/1.10.1
         stopifnot(identical(
             Sys.which("h5cc"),
@@ -338,18 +349,15 @@ options(
     } else {
         rstudio <- FALSE
     }
-
     ## Fix file permissions. RStudio doesn't pick up the system umask.
+    ## Note that we're allowing group write here by default.
     if (isTRUE(rstudio)) {
         Sys.umask("0002")
     }
-
-    if (isTRUE(interactive())) {
-        if (isTRUE(rstudio)) {
-            cat("RStudio detected.\n\n")
-        }
+    ## Inform user that session is running inside of RStudio.
+    if (isTRUE(rstudio) && isTRUE(interactive())) {
+        cat("RStudio detected.\n\n")
     }
-
     rm(rstudio)
 
     ## Secrets                                                              {{{1
@@ -357,10 +365,10 @@ options(
 
     ## Load per-user secrets that we don't want to save in a shared Renviron.
     if (file.exists("~/.Rsecrets")) {
-        if (isTRUE(interactive())) {
-            cat("Loaded '~/.Rsecrets' file.\n\n")
-        }
         source("~/.Rsecrets")
+        # > if (isTRUE(interactive())) {
+        # >     cat("Loaded '~/.Rsecrets' file.\n\n")
+        # > }
     }
 
     ## Minimal session info                                                 {{{2
@@ -368,6 +376,7 @@ options(
 
     if (isTRUE(interactive())) {
         cat(
+            R.version$version.string, "\n\n",
             "R Home:\n",
             "  ", normalizePath(R.home()), "\n",
             "Package Library:\n",
@@ -378,7 +387,6 @@ options(
             sep = ""
         )
     }
-
     rm(r_ver)
 }
 
