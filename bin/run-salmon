@@ -212,7 +212,8 @@ then
         -k 31 \
         -p "$threads" \
         -i "$index_file" \
-        -t "$fasta_file"
+        -t "$fasta_file" \
+        2>&1 | tee "${output_dir}/salmon-index.log"
 fi
 
 # Quantify                                                                  {{{2
@@ -236,5 +237,6 @@ do
         --numBootstraps="$bootstraps" \
         --output="$sample_output_dir" \
         --seqBias \
-        --threads="$threads"
+        --threads="$threads" \
+        2>&1 | tee "${sample_output_dir}/salmon-quant.log"
 done
