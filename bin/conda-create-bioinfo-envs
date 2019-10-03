@@ -46,7 +46,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-24.
+    Updated 2019-10-03.
 EOF
 }
 
@@ -84,6 +84,7 @@ conda create -qy --name="nextflow" nextflow
 # ------------------------------------------------------------------------------
 
 conda create -qy --name="gffutils" gffutils
+conda create -qy --name="igvtools" igvtools
 
 # Quality control                                                           {{{2
 # ------------------------------------------------------------------------------
@@ -111,10 +112,11 @@ conda create -qy --name="star" star
 # > conda create -qy --name="trim-atropos" atropos
 # > conda create -qy --name="trim-trimmomatic" trimmomatic
 
-# RNA-seq                                                                   {{{2
+# bcbio                                                                     {{{2
 # ------------------------------------------------------------------------------
 
 conda create -qy --name="bcbiornaseq" r-bcbiornaseq
+conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
 
 # Fusion detection                                                          {{{2
 # ------------------------------------------------------------------------------
@@ -133,10 +135,5 @@ conda create -qy --name="deeptools" deeptools
 conda create -qy --name="diffbind" bioconductor-diffbind
 conda create -qy --name="homer" homer
 conda create -qy --name="macs2" macs2
-
-# Single-cell RNA-seq
-# ------------------------------------------------------------------------------
-
-conda create -qy --name="bcbiosinglecell" r-bcbiosinglecell
 
 conda env list
