@@ -32,9 +32,12 @@ details:
     Installs into '${install_dir}'.
     Links into '${emacs_home}'.
 
+see also:
+    http://spacemacs.org/
+
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-03.
 EOF
 }
 
