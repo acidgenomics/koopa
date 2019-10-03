@@ -11,7 +11,7 @@ _koopa_assert_has_sudo
 # Variables                                                                 {{{1
 # ==============================================================================
 
-prefix="$(_koopa_build_prefix)/bcbio-vm"
+prefix="/opt/bcbio-vm"
 bin_dir="${prefix}/anaconda/bin"
 tmp_dir="$(_koopa_tmp_dir)/bcbio-vm"
 
@@ -29,16 +29,20 @@ Install bcbio-vm.
 $(_koopa_help_args)
 
 details:
+    Installs to '${prefix}'.
+    Symlinks are added to '/usr/local/bin/'.
+
     Note that configuration is saved in:
     '~/.config/bcbio-nextgen/bcbio-docker-config.yaml'.
     This sets the location of 'datadir', for example.
 
 see also:
-    https://quay.io/repository/bcbio/bcbio-vc?tab=tags
+    - https://github.com/bcbio/bcbio-nextgen-vm
+    - https://quay.io/repository/bcbio/bcbio-vc?tab=tags
 
 note:
     Bash script.
-    Updated 2019-10-01.
+    Updated 2019-10-02.
 EOF
 }
 
@@ -49,16 +53,20 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+_koopa_assert_is_not_dir "$prefix"
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed docker
 
 # Docker                                                                    {{{2
 # ------------------------------------------------------------------------------
 
-sudo groupadd docker
-sudo service docker restart
-sudo gpasswd -a "$(whoami)" docker
-newgrp docker
+if ! groups | grep -q "docker"
+then
+    sudo groupadd docker
+    sudo service docker restart
+    sudo gpasswd -a "$(whoami)" docker
+    newgrp docker
+fi
 
 # conda                                                                     {{{2
 # ------------------------------------------------------------------------------
@@ -75,8 +83,11 @@ newgrp docker
 # bcbio-vm                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-"${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen
-"${bin_dir}/conda" install --yes -c conda-forge -c bioconda bcbio-nextgen-vm
+"${bin_dir}/conda" install --yes \
+    --channel="conda-forge" \
+    --channel=bioconda \
+    bcbio-nextgen \
+    bcbio-nextgen-vm
 
 sudo rm -fv /usr/local/bin/bcbio_vm.py
 sudo ln -fnsv "${bin_dir}/bcbio_vm.py" /usr/local/bin/bcbio_vm.py
@@ -87,13 +98,14 @@ sudo ln -fnsv "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
 sudo chgrp docker /usr/local/bin/bcbio_vm.py
 sudo chmod g+s /usr/local/bin/bcbio_vm.py
 
+bcbio_vm.py --datadir="$data_dir" saveconfig
+
 # v1.1.3
 # > data_dir="${prefix}/v1.1.3"
 # > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
 
 # latest
-data_dir="${prefix}/latest"
-image="quay.io/bcbio/bcbio-vc"
+# > data_dir="${prefix}/latest"
+# > image="quay.io/bcbio/bcbio-vc"
 
-bcbio_vm.py --datadir="$data_dir" saveconfig
-bcbio_vm.py install --tools --image "$image"
+# > bcbio_vm.py install --tools --image "$image"
