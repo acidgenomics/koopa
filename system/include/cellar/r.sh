@@ -5,13 +5,13 @@
 # Variables                                                                 {{{1
 # ==============================================================================
 
-name="R"
-version="$(_koopa_variable "r")"
+name="r"
+version="$(_koopa_variable "$name")"
 major_version="$(echo "$version" | cut -d "." -f 1)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
-exe_file="${prefix}/bin/${name}"
+exe_file="${prefix}/bin/R"
 
 
 
@@ -20,7 +20,7 @@ exe_file="${prefix}/bin/${name}"
 
 usage() {
 cat << EOF
-$(_koopa_help_header "install-cellar-r")
+$(_koopa_help_header "install-cellar-${name}")
 
 Install R.
 
@@ -47,7 +47,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
+printf "Installing %s %s.\n" "R" "$version"
 
 _koopa_assert_is_installed java
 _koopa_assert_is_installed javac
