@@ -102,8 +102,8 @@ attach(.env)
 
 local({
     repos <- getOption("repos")
-    ## Can use https://cran.rstudio.com/ here instead.
-    repos["CRAN"] <- "https://cloud.r-project.org"
+    ## Can use "https://cloud.r-project.org" here instead.
+    repos["CRAN"] <- "https://cran.rstudio.com"
     options(repos = repos)
 })
 
