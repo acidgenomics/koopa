@@ -40,10 +40,26 @@ details:
 
     Clean up on RHEL 7:
     """sh
-    sudo yum -y remove R R-devel R-java R-java-devel
-    sudo yum -y remove java-1.8.0-ibm java-1.8.0-openjdk-headless
-    sudo yum -y remove java-latest-openjdk java-latest-openjdk-devel
-    sudo yum -y remove java-latest-openjdk-headless
+    sudo yum -y remove \
+        R \
+        R-devel \
+        R-java \
+        R-java-devel \
+        java-1.8.0-ibm \
+        java-1.8.0-openjdk-debug \
+        java-1.8.0-openjdk-debuginfo \
+        java-1.8.0-openjdk-demo-debug \
+        java-1.8.0-openjdk-devel-debug \
+        java-1.8.0-openjdk-headless \
+        java-1.8.0-openjdk-headless-debug \
+        java-1.8.0-openjdk-javadoc \
+        java-1.8.0-openjdk-javadoc-debug \
+        java-1.8.0-openjdk-javadoc-zip \
+        java-1.8.0-openjdk-javadoc-zip-debug \
+        java-1.8.0-openjdk-src-debug \
+        java-latest-openjdk \
+        java-latest-openjdk-devel \
+        java-latest-openjdk-headless
     """
 
     Note that yum installs to '/usr/lib/jvm/' on Fedora.
