@@ -74,6 +74,7 @@ paste -d "," \
 
 rm .t2g
 
-# Sort and remove duplicate lines.
-# > awk '!a[$0]++' tx2gene.csv
-sort -u tx2gene.csv
+# Remove duplicate lines.
+# https://stackoverflow.com/questions/9377040
+# > sort -u tx2gene.csv
+awk '!a[$0]++' tx2gene.csv
