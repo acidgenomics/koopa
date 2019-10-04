@@ -52,6 +52,8 @@ fasta_file="$1"
 # Script                                                                    {{{1
 # ==============================================================================
 
+printf "Generating transcript-to-gene mappings from '%s'.\n" "$fasta_file"
+
 # Check for expected input.
 pattern=".cdna.all.fa.gz"
 if ! echo "$fasta_file" | grep -q "$pattern"
@@ -60,21 +62,26 @@ then
     exit 1
 fi
 
-# We're creating an invisible tmp file in current working directory here.
 zcat "$fasta_file" | \
     grep '>' | \
     cut -d ' ' -f1,4 > \
-    .t2g
+    .t2g1
 
-# Note that paste defaults to tab delimiters.
+# Outputting as CSV instead of TSV.
 paste -d "," \
-    <(cut -d '>' -f2 .t2g | cut -d ' ' -f1) \
-    <(cut -d ' ' -f2 .t2g | cut -d ':' -f2) >> \
-    tx2gene.csv
-
-rm .t2g
+    <(cut -d '>' -f2 .t2g1 | cut -d ' ' -f1) \
+    <(cut -d ' ' -f2 .t2g1 | cut -d ':' -f2) >> \
+    .t2g2
 
 # Remove duplicate lines.
+# Note that awk is significantly faster than sort for large files.
 # https://stackoverflow.com/questions/9377040
 # > sort -u tx2gene.csv
-awk '!a[$0]++' tx2gene.csv
+awk '!a[$0]++' .t2g2 > .t2g3
+
+cp .t2g3 tx2gene.csv
+rm .t2g*
+
+# Return the number of transcripts.
+count="$(wc -l tx2gene.csv | cut -d ' ' -f 1)"
+printf "%d transcripts detected.\n" "$count"
