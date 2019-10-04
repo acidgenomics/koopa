@@ -42,7 +42,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-02.
+    Updated 2019-10-04.
 EOF
 }
 
@@ -98,14 +98,13 @@ sudo ln -fnsv "${bin_dir}/conda" /usr/local/bin/bcbiovm_conda
 sudo chgrp docker /usr/local/bin/bcbio_vm.py
 sudo chmod g+s /usr/local/bin/bcbio_vm.py
 
-bcbio_vm.py --datadir="$data_dir" saveconfig
-
 # v1.1.3
 # > data_dir="${prefix}/v1.1.3"
 # > image="quay.io/bcbio/bcbio-vc:1.1.3-v1.1.3"
 
 # latest
-# > data_dir="${prefix}/latest"
+data_dir="${prefix}/latest"
 # > image="quay.io/bcbio/bcbio-vc"
 
+bcbio_vm.py --datadir="$data_dir" saveconfig
 # > bcbio_vm.py install --tools --image "$image"
