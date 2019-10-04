@@ -27,7 +27,9 @@ details:
     Assumes input FASTA is gzip compressed.
 
 see also:
+    Modified version of @ag1805x script.
     - https://support.bioconductor.org/p/123134/
+    - https://gist.github.com/ag1805x/63007cf0ba20b078d6d3c849064a1bff
 
 note:
     Bash script.
