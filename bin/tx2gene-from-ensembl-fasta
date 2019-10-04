@@ -26,6 +26,9 @@ details:
 
     Assumes input FASTA is gzip compressed.
 
+    Note that transcript and gene identifier versions are maintained in the
+    output.
+
 see also:
     Modified version of @ag1805x script.
     - https://support.bioconductor.org/p/123134/
