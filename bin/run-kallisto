@@ -173,6 +173,7 @@ fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
 output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 
 
+
 # Script                                                                    {{{1
 # ==============================================================================
 
@@ -184,6 +185,9 @@ kallisto version
 
 # Sample array from FASTQ files                                             {{{2
 # ------------------------------------------------------------------------------
+
+# Resolve FASTQ directory symlink, if necessary.
+fastq_dir="$(realpath "$fastq_dir")"
 
 # Create a per-sample array from the R1 FASTQ files.
 array=()

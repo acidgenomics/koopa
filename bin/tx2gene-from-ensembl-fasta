@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    fasta_file
+
+Generate transcript-to-gene mappings from Ensembl FASTA.
+
+details:
+    Ensembl GTF files do not contain complete transcript-to-gene mappings.
+    This is particularly an issue for Homo sapiens reference genome.
+
+    This script generates a complete tx2gene.csv mapping file from the reference
+    transcriptome input instead, suitable for use with 'tximport()' in R.
+
+    Assumes input FASTA is gzip compressed.
+
+    Note that transcript and gene identifier versions are maintained in the
+    output.
+
+see also:
+    Modified version of @ag1805x script.
+    - https://support.bioconductor.org/p/123134/
+    - https://gist.github.com/ag1805x/63007cf0ba20b078d6d3c849064a1bff
+
+note:
+    Bash script.
+    Updated 2019-10-04.
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+fasta_file="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+printf "Generating transcript-to-gene mappings from '%s'.\n" "$fasta_file"
+
+# Check for expected input.
+pattern=".cdna.all.fa.gz"
+if ! echo "$fasta_file" | grep -q "$pattern"
+then
+    >&2 printf "Error: Not Ensembl transcriptome FASTA: '%s'.\n" "$fasta_file"
+    exit 1
+fi
+
+zcat "$fasta_file" | \
+    grep '>' | \
+    cut -d ' ' -f1,4 > \
+    .t2g1
+
+# Outputting as CSV instead of TSV.
+paste -d "," \
+    <(cut -d '>' -f2 .t2g1 | cut -d ' ' -f1) \
+    <(cut -d ' ' -f2 .t2g1 | cut -d ':' -f2) >> \
+    .t2g2
+
+# Remove duplicate lines.
+# Note that awk is significantly faster than sort for large files.
+# https://stackoverflow.com/questions/9377040
+# > sort -u tx2gene.csv
+awk '!a[$0]++' .t2g2 > .t2g3
+
+cp .t2g3 tx2gene.csv
+rm .t2g*
+
+# Return the number of transcripts.
+count="$(wc -l tx2gene.csv | cut -d ' ' -f 1)"
+printf "%d transcripts detected.\n" "$count"
