@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.6.0"
-koopa_date="2019-10-02"
+koopa_date="2019-10-04"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -175,21 +175,21 @@ pinentry="1.1.0"
 # Genomes                                                                   {{{1
 # ==============================================================================
 
+# Important! Match Ensembl (and corresponding GENCODE) release version to the
+# latest version supported by Bioconductor AnnotationHub. This makes downstream
+# workflows in R simpler.
+
 # Ensembl
 # https://useast.ensembl.org/
-ensembl_release_date="2019-09"
-ensembl_release_version="98"
+ensembl_release_version="97"
 
 # GENCODE
 # https://www.gencodegenes.org/
-# Note that they use British dates (DD-MM-YY).
-gencode_release_date="2019-09-19"
-gencode_human_release_version="32"
-gencode_mouse_release_version="M23"
+gencode_human_release_version="31"
+gencode_mouse_release_version="M22"
 
 # RefSeq
 # https://www.ncbi.nlm.nih.gov/refseq/
-refseq_release_date="2019-09-16"
 refseq_release_version="96"
 
 # FlyBase

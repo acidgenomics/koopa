@@ -31,7 +31,7 @@ required.add_argument(
 required.add_argument(
     "--build", required=True, type=str, help='genome build (e.g. "GRCh38")'
 )
-optional.add_argument("--release", type=int, help='release version (e.g. "96")')
+optional.add_argument("--release", type=str, help='release version (e.g. "96")')
 optional.add_argument(
     "--decompress",
     action="store_true",

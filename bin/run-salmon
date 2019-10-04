@@ -178,6 +178,9 @@ salmon --version
 # Sample array from FASTQ files                                             {{{2
 # ------------------------------------------------------------------------------
 
+# Resolve FASTQ directory symlink, if necessary.
+fastq_dir="$(realpath "$fastq_dir")"
+
 # Create a per-sample array from the R1 FASTQ files.
 array=()
 while IFS= read -r -d $'\0'
