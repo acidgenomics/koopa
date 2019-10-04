@@ -56,6 +56,12 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+if [[ "$host_ip" == "$source_ip" ]]
+then
+    >&2 printf "Error: Attempting to sync from source machine.\n"
+    exit 1
+fi
+
 if [[ ! -d "$r_dir" ]]
 then
     sudo mkdir -p "$r_dir"
@@ -66,10 +72,10 @@ fi
 sudo chgrp -Rh wheel "$r_dir"
 sudo chmod -R g+w "$r_dir"
 
-if [[ "$host_ip" == "$source_ip" ]]
+# Fix shiny installed as root, if necessary.
+if [[ -d "${lib_link}/shiny" ]]
 then
-    >&2 printf "Error: Attempting to sync from source machine.\n"
-    exit 1
+    sudo chown -R "$USER" "${lib_link}/shiny"
 fi
 
 printf "Updating '%s' from '%s'.\n" "$r_dir" "$source_ip"
