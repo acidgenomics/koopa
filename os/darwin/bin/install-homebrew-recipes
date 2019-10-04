@@ -34,7 +34,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-10-01.
+    Updated 2019-10-04.
 EOF
 }
 
@@ -78,6 +78,7 @@ casks=(
     igv
     iterm2
     keka
+    kitty
     libreoffice
     netnewswire
     onyx
