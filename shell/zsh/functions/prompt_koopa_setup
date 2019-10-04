@@ -55,9 +55,11 @@ _koopa_prompt_state_setup() {
     fi
     wd='%F{${_koopa_prompt_colors[path]}}%~%f'
     typeset -gA _koopa_prompt_state
+    # Details on prompt expansion:
+    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
     # Note that Unicode doesn't work well with some fonts on Windows.
     _koopa_prompt_state+=(
-        prompt  "$"
+        prompt  "%%"
         user    "$user"
         wd      "$wd"
     )
