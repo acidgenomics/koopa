@@ -27,7 +27,9 @@ details:
     Assumes input FASTA is gzip compressed.
 
 see also:
+    Modified version of @ag1805x script.
     - https://support.bioconductor.org/p/123134/
+    - https://gist.github.com/ag1805x/63007cf0ba20b078d6d3c849064a1bff
 
 note:
     Bash script.
@@ -43,7 +45,7 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-fasta="$1"
+fasta_file="$1"
 
 
 
@@ -52,14 +54,14 @@ fasta="$1"
 
 # Check for expected input.
 pattern=".cdna.all.fa.gz"
-if ! echo "$fasta" | grep -q "$pattern"
+if ! echo "$fasta_file" | grep -q "$pattern"
 then
-    >&2 printf "Error: Not Ensembl transcriptome FASTA: '%s'.\n" "$fasta"
+    >&2 printf "Error: Not Ensembl transcriptome FASTA: '%s'.\n" "$fasta_file"
     exit 1
 fi
 
-# Use of 7 here will include gene symbol.
-zcat "$fasta" | \
+# We're creating an invisible tmp file in current working directory here.
+zcat "$fasta_file" | \
     grep '>' | \
     cut -d ' ' -f1,4 > \
     .t2g
