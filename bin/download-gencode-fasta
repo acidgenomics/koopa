@@ -14,9 +14,9 @@ details:
 
     Only Homo sapiens and Mus musculus genomes are supported.
 
-    DNA FASTA file: Using primary assembly, like Ensembl.
-    (e.g. ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M21/
-        GRCm38.primary_assembly.genome.fa.gz)
+    DNA FASTA file: Use primary assembly.
+    (e.g. ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/
+        GRCh38.primary_assembly.genome.fa.gz)
 
     Transcript (cDNA) FASTA file:
     (e.g. ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_30/
@@ -31,7 +31,7 @@ details:
 
 note:
     Python script.
-    Updated 2019-09-23.
+    Updated 2019-10-05.
 """
 
 parser = argparse.ArgumentParser(
@@ -100,7 +100,7 @@ base_url = (
 if type == "dna":
     file = build + ".primary_assembly.genome.fa.gz"
 elif type == "cdna":
-    file = "gencode.v" + release + ".annotation.gtf.gz"
+    file = "gencode.v" + release + ".transcripts.fa.gz"
 url = base_url + file
 
 # Error if the file exists.
