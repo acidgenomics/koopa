@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+output_file="tx2gene.csv"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    fasta_file
+
+Generate transcript-to-gene mappings from FlyBase FASTA.
+
+details:
+    This script generates a '${output_file}' mapping file from the reference
+    transcriptome input instead, suitable for use with 'tximport()' in R.
+
+    Assumes input FASTA is gzip compressed.
+
+    Note that transcript and gene identifier versions are maintained in the
+    output.
+    
+    Internal processing steps:
+    1. Decompress FASTA and pipe to stdout.
+    2. Keep only headers prefixed with '>'.
+    3. Keep only transcript (1) and gene (9) identifier columns.
+    4. Trim header prefix '>'.
+    5. Extract gene identifier via FBgn[0-9]{7} pattern match.
+    6. Prepare ',' delim for CSV output.
+    7. Remove duplicate lines.
+    8. Write to '${output_file}'.
+
+note:
+    Bash script.
+    Updated 2019-10-05.
+EOF
+}
+
+[[ -z "$*" ]] && usage && exit 0
+_koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+fasta_file="$1"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+printf "Generating '%s' from '%s'.\n" "$output_file" "$fasta_file"
+
+_koopa_assert_is_not_file "$output_file"
+
+# Check for FlyBase transcriptome input.
+pattern="dmel-transcriptome-"
+if ! echo "$fasta_file" | grep -q "$pattern"
+then
+    >&2 printf "Error: Not Ensembl transcriptome FASTA: '%s'.\n" "$fasta_file"
+    exit 1
+fi
+
+gunzip -c "$fasta_file" | \
+    grep '>' | \
+    cut -d ' ' -f1,9 | \
+    tr -d '>' | \
+    sed -E 's/ parent=(FBgn[0-9]{7}).*/,\1/g' | \
+    awk '!a[$0]++' > \
+    "$output_file"
+
+# Return the number of transcripts.
+count="$(_koopa_line_count "$output_file")"
+printf "%d transcripts detected.\n" "$count"
