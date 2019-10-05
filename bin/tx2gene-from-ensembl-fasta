@@ -7,6 +7,22 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Remove duplicate lines.
+# Note that awk is significantly faster than sort for large files.
+# https://stackoverflow.com/questions/9377040
+# > sort -u tx2gene.csv
+
+# Outputting as CSV instead of TSV.
+# > paste -d "," \
+# >     <(cut -d '>' -f2 .t2g1 | cut -d ' ' -f1) \
+# >     <(cut -d ' ' -f2 .t2g1 | cut -d ':' -f2) >> \
+# >     .t2g2
+
+
+
 # Variables                                                                 {{{1
 # ==============================================================================
 
@@ -35,6 +51,15 @@ details:
 
     Note that transcript and gene identifier versions are maintained in the
     output.
+    
+    Internal processing steps:
+    1. Decompress FASTA and pipe to stdout.
+    2. Keep only headers prefixed with '>'.
+    3. Keep only transcript (1) and gene (4) identifier columns.
+    4. Remove duplicate lines.
+    5. Trim header prefix '>'.
+    6. Prepare ',' delim for CSV output.
+    7. Write to '${output_file}'.
 
 see also:
     Modified version of @ag1805x script.
@@ -74,27 +99,13 @@ then
     exit 1
 fi
 
-# Avoid using zcat here. Doesn't work on macOS.
 gunzip -c "$fasta_file" | \
     grep '>' | \
-    cut -d ' ' -f1,4 > \
-    .t2g1
-
-# Outputting as CSV instead of TSV.
-paste -d "," \
-    <(cut -d '>' -f2 .t2g1 | cut -d ' ' -f1) \
-    <(cut -d ' ' -f2 .t2g1 | cut -d ':' -f2) >> \
-    .t2g2
-
-# Remove duplicate lines.
-# Note that awk is significantly faster than sort for large files.
-# https://stackoverflow.com/questions/9377040
-# > sort -u tx2gene.csv
-awk '!a[$0]++' .t2g2 > .t2g3
-
-# Copy final output and remove temp files.
-cp .t2g3 "$output_file"
-rm .t2g*
+    cut -d ' ' -f1,4 | \
+    awk '!a[$0]++' | \
+    tr -d '>' | \
+    sed -E 's/ [a-z]+:/,/g' > \
+    "$output_file"
 
 # Return the number of transcripts.
 count="$(_koopa_line_count "$output_file")"
