@@ -42,7 +42,7 @@ Generate transcript-to-gene mappings from Ensembl FASTA.
 
 details:
     Ensembl GTF files do not contain complete transcript-to-gene mappings.
-    This is particularly an issue for Homo sapiens reference genome.
+    This is particularly an issue for the Homo sapiens reference genome.
 
     This script generates a '${output_file}' mapping file from the reference
     transcriptome input instead, suitable for use with 'tximport()' in R.
