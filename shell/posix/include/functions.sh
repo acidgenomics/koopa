@@ -304,7 +304,7 @@ _koopa_assert_is_not_dir() {
 _koopa_assert_is_not_file() {
     if [ -f "$1" ]
     then
-        >&2 printf "Error: Is file: '%s'\n" "$1"
+        >&2 printf "Error: File exists: '%s'\n" "$1"
         exit 1
     fi
     return 0
@@ -317,7 +317,7 @@ _koopa_assert_is_not_file() {
 _koopa_assert_is_not_symlink() {
     if [ -L "$1" ]
     then
-        >&2 printf "Error: Is symlink: '%s'\n" "$1"
+        >&2 printf "Error: Symlink exists: '%s'\n" "$1"
         exit 1
     fi
     return 0
@@ -339,11 +339,11 @@ _koopa_assert_is_readable() {
 
 
 # Assert that input is a symbolic link.
-# Updated 2019-09-24.
+# Updated 2019-10-05.
 _koopa_assert_is_symlink() {
     if [ ! -L "$1" ]
     then
-        >&2 printf "Error: Is symlink: '%s'\n" "$1"
+        >&2 printf "Error: Not symlink: '%s'\n" "$1"
         exit 1
     fi
     return 0
@@ -373,7 +373,7 @@ _koopa_assert_is_writable() {
 _koopa_assert_matches_pattern() {
     if ! echo "$1" | grep -q "$2"
     then
-        >&2 printf "Error: '%s' does not match pattern '%s'.\n" "$1" "$2"
+        >&2 printf "Error: '%s' doesn't match pattern '%s'.\n" "$1" "$2"
         exit 1
     fi
     return 0
@@ -1086,8 +1086,24 @@ _koopa_is_shared() {
 # L                                                                         {{{1
 # ==============================================================================
 
+# Return the number of lines in a file.
+#
+# Example: _koopa_line_count tx2gene.csv
+#
+# Updated 2019-10-05.
+_koopa_line_count() {
+    wc -l "$1" | \
+    xargs | \
+    cut -d ' ' -f 1
+}
+
+
+
 # Symlink cellar into build directory.
 # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
+#
+# Example: _koopa_link_cellar emacs 26.3
+#
 # Updated 2019-09-28.
 _koopa_link_cellar() {
     local name
