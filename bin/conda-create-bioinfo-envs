@@ -46,7 +46,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-03.
+    Updated 2019-10-06.
 EOF
 }
 
@@ -89,6 +89,7 @@ conda-create-env nextflow
 # Tools                                                                     {{{2
 # ------------------------------------------------------------------------------
 
+conda-create-env black
 conda-create-env gffutils
 conda-create-env igvtools
 conda-create-env jupyter
