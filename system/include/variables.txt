@@ -18,6 +18,9 @@ bash="5.0.11"
 # https://github.com/bcbio/bcbio-nextgen/releases
 bcbio-nextgen="1.1.6a"
 
+# http://bioconductor.org/
+bioconductor="3.9.0"
+
 # Apple LLVM version
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
@@ -57,7 +60,7 @@ gsl="2.6"
 hdf5="1.10.5"
 
 # https://brew.sh/
-homebrew="2.1.11"
+homebrew="2.1.12"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -101,6 +104,9 @@ perl-file-rename="1.10"
 
 # https://github.com/broadinstitute/picard
 picard="2.21.1"
+
+# https://pypi.org/project/pip/
+pip="19.1.1"
 
 # https://proj.org/
 proj="6.2.0"

@@ -186,6 +186,12 @@ then
     export GPG_TTY
 fi
 
+# Python                                                                    {{{2
+# ------------------------------------------------------------------------------
+
+# Don't allow Python to change the prompt string.
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
 # Ruby                                                                      {{{2
 # ------------------------------------------------------------------------------
 

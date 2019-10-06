@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-02.
+## Updated 2019-10-06.
 
 options(
     error = quote(quit(status = 1L)),
@@ -184,6 +184,10 @@ check_version <- function(
     invisible(ok)
 }
 
+is_installed <- function(which) {
+    nzchar(Sys.which(which))
+}
+
 installed <- function(which, required = TRUE) {
     stopifnot(
         is.character(which) && length(which) >= 1L,
@@ -267,7 +271,26 @@ check_version(
 
 
 ## Languages ===============================================================
-message("\nLanguages:")
+message("\nPrimary languages:")
+check_version(
+    name = "Python",
+    which_name = "python3",
+    current = current_version("python"),
+    expected = expected_version("python")
+)
+check_version(
+    name = "Python : pip",
+    which_name = "pip",
+    current = current_version("pip"),
+    expected = expected_version("pip")
+)
+check_version(
+    name = "R",
+    current = packageVersion("base"),
+    expected = expected_version("r")
+)
+
+message("\nSecondary languages:")
 check_version(
     name = "Java",
     which_name = "java",
@@ -280,48 +303,42 @@ check_version(
     current = current_version("perl"),
     expected = expected_version("perl")
 )
-check_version(
-    name = "Perl : Perlbrew",
-    which_name = "perlbrew",
-    current = current_version("perlbrew"),
-    expected = expected_version("perlbrew")
-)
-check_version(
-    name = "Python",
-    which_name = "python3",
-    current = current_version("python"),
-    expected = expected_version("python")
-)
-## Alternatively, can return current here using `packageVersion("base")`.
-check_version(
-    name = "R",
-    current = current_version("r"),
-    expected = expected_version("r")
-)
+if (is_installed("perl")) {
+    check_version(
+        name = "Perl : Perlbrew",
+        which_name = "perlbrew",
+        current = current_version("perlbrew"),
+        expected = expected_version("perlbrew")
+    )
+}
 check_version(
     name = "Ruby",
     which_name = "ruby",
     current = current_version("ruby"),
     expected = expected_version("ruby")
 )
-check_version(
-    name = "Ruby : rbenv",
-    which_name = "rbenv",
-    current = current_version("rbenv"),
-    expected = expected_version("rbenv")
-)
+if (is_installed("ruby")) {
+    check_version(
+        name = "Ruby : rbenv",
+        which_name = "rbenv",
+        current = current_version("rbenv"),
+        expected = expected_version("rbenv")
+    )
+}
 check_version(
     name = "Rust",
     which_name = "rustc",
     current = current_version("rust"),
     expected = expected_version("rust")
 )
-check_version(
-    name = "Rust : rustup",
-    which_name = "rustup",
-    current = current_version("rustup"),
-    expected = expected_version("rustup")
-)
+if (is_installed("rustc")) {
+    check_version(
+        name = "Rust : rustup",
+        which_name = "rustup",
+        current = current_version("rustup"),
+        expected = expected_version("rustup")
+    )
+}
 
 
 
@@ -570,6 +587,3 @@ if (isTRUE(linux)) {
         expected = expected_version("clang")
     )
 }
-
-
-
