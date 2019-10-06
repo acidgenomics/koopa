@@ -12,9 +12,6 @@
 # Only attempt to autoload for bash or zsh.
 _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
-# Don't allow Python to change the prompt string.
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-
 env_name="default"
 
 [ -z "${PYTHON_EXE:-}" ] && \
