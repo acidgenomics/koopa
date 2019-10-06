@@ -1,0 +1,199 @@
+#!/usr/bin/env python3
+
+import argparse
+import os
+import sys
+import textwrap
+
+sys.path.insert(0, os.getenv("KOOPA_HOME"))
+import pykoopa
+
+from pykoopa.download import wget
+from pykoopa.genome import ensembl_version
+from pykoopa.sys import eprint
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+base_url = "ftp://ftp.ensembl.org/pub"
+grch37_base_url = base_url + "/pub/grch37"
+grch37_release = "87"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+description = "Download Ensembl genome."
+epilog = """
+details:
+    Creates a new directory in the current working directory.
+
+    Important! When working in R, be sure to match the Ensembl release version
+    to the latest version supported by AnnotationHub.
+    
+    The legacy Homo sapiens GRCh37 (hg19) build is supported. If requested, the
+    corresponding release version is set internally automatically.
+
+see also:
+    - https://useast.ensembl.org/
+    - ftp://ftp.ensembl.org/pub/
+
+note:
+    Python script.
+    Updated 2019-10-05.
+"""
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+parser = argparse.ArgumentParser(
+    description=description,
+    epilog=epilog,
+    formatter_class=argparse.RawTextHelpFormatter
+)
+optional = parser._action_groups.pop()
+required = parser.add_argument_group("required arguments")
+required.add_argument(
+    "--organism",
+    required=True,
+    type=str,
+    help="latin name (e.g. 'Homo sapiens')",
+)
+required.add_argument(
+    "--build",
+    required=True,
+    type=str,
+    help="genome build (e.g. 'GRCh38')"
+)
+optional.add_argument(
+    "--type",
+    default="genome",
+    const="genome",
+    nargs="?",
+    choices=["genome", "transcriptome", "all", "none"],
+    help=textwrap.dedent("""\
+        'genome': primary assembly (DNA)
+        'transcriptome': transcripts (cDNA/RNA)
+        'all': Download all reference types
+        'none': Skip download
+    """)
+)
+optional.add_argument(
+    "--annotation",
+    default="gtf",
+    const="gtf",
+    nargs="?",
+    choices=["gtf", "gff", "all", "none"],
+    help=textwrap.dedent("""\
+        'gtf': GTF (GFFv2; recommended)
+        'gff': GFF3 (harder to parse)
+        'all': Download all annotation formats
+        'none': Skip download
+    """)
+)
+optional.add_argument(
+    "--release",
+    type=str,
+    help="release version (e.g. '97')"
+)
+optional.add_argument(
+    "--decompress",
+    action="store_true",
+    help="decompress, but keep the compressed file",
+)
+parser._action_groups.append(optional)
+if len(sys.argv) == 1:
+    parser.print_help(sys.stderr)
+    sys.exit(1)
+args = parser.parse_args()
+
+annotation = args.annotation
+build = args.build
+decompress = args.decompress
+organism = args.organism.replace(" ", "_")
+release = args.release
+type = args.type
+
+if type == "none" and annotation == "none":
+    eprint("Error: 'type' or 'annotation' are required.")
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if build == "GRCh37":
+    base_url = grch37_base_url
+    release = grch37_release
+if release is None:
+    release = ensembl_version()
+release_url = (
+    base_url
+    + "/release-" +
+    release
+)
+genome_url = (
+    release_url
+    + "/fasta/"
+    + organism.lower()
+    + "/dna/"
+    + organism
+    + "."
+    + build
+    + ".dna.primary_assembly.fa.gz"
+)
+transcriptome_url = (
+    release_url
+    + "/fasta/"
+    + organism.lower()
+    + "/cdna/"
+    + organism
+    + "."
+    + build
+    + ".cdna.all.fa.gz"
+)
+gtf_url = (
+    release_url
+    + "/gtf/"
+    + organism.lower()
+    + "/"
+    + organism
+    + "."
+    + build
+    + "."
+    + release
+    + ".gtf.gz"
+)
+gff_url = (
+    release_url
+    + "/gff3/"
+    + organism.lower()
+    + "/"
+    + organism
+    + "."
+    + build
+    + "."
+    + release
+    + ".gff3.gz"
+)
+
+if type == "genome":
+    wget(genome_url)
+elif type == "transcriptome":
+    wget(transcriptome_url)
+elif type == "all":
+    wget(genome_url)
+    wget(transcriptome_url)
+
+if annotation == "gtf":
+    wget(gtf_url)
+elif type == "gff":
+    wget(gff_url)
+elif type == "all":
+    wget(gtf_url)
+    wget(gff_url)
