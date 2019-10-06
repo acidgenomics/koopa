@@ -8,6 +8,15 @@ import sys
 import textwrap
 
 
+# Concatenate args into a string suitable for use in shell commands.
+# Updated 2019-10-06.
+def arg_string(*args):
+    if len(args) == 0:
+        return None
+    else:
+        args = ' "%s"' % args
+        return args
+
 
 # Decompress but keep original compressed file.
 # Updated 2019-10-06.
@@ -16,8 +25,7 @@ def decompress_but_keep_original(file):
     print("Decompressing '" + file + "'.")
     unzip_file = os.path.splitext(file)[0]
     os.system("gunzip -c " + file + " > " + unzip_file)
-    return(unzip_file)
-
+    return unzip_file
 
 
 # Print to stderr.
@@ -32,7 +40,6 @@ def eprint(*args, **kwargs):
     sys.exit(1)
 
 
-
 # Make a directory recursively and don't error if exists.
 #
 # See also:
@@ -45,7 +52,6 @@ def init_dir(dir):
     os.makedirs(name=dir, exist_ok=True)
 
 
-
 # Paste URL.
 #
 # Deals with sanitization of trailing slashes automatically.
@@ -56,7 +62,6 @@ def init_dir(dir):
 # Updated 2019-10-06.
 def paste_url(*args):
     return "/".join(arg.strip("/") for arg in args)
-
 
 
 # Download a file using wget.
@@ -81,4 +86,4 @@ def wget(url, output_file=None, output_dir=None, decompress=False):
             eprint("Failed to download '" + output_file + "'.")
     if decompress is True:
         output_file = decompress_but_keep_original(output_file)
-    return(output_file)
+    return output_file
