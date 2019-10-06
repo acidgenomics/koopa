@@ -172,41 +172,6 @@ pinentry="1.1.0"
 
 
 
-# Genomes                                                                   {{{1
-# ==============================================================================
-
-# Important! Match Ensembl (and corresponding GENCODE) release version to the
-# latest version supported by Bioconductor AnnotationHub. This makes downstream
-# workflows in R simpler.
-
-# Ensembl
-# https://useast.ensembl.org/
-ensembl_release_version="97"
-
-# GENCODE
-# https://www.gencodegenes.org/
-gencode_human_release_version="31"
-gencode_mouse_release_version="M22"
-
-# RefSeq
-# https://www.ncbi.nlm.nih.gov/refseq/
-refseq_release_version="96"
-
-# FlyBase
-# Support for this may be removed in the future, due to paywall.
-# https://flybase.org/
-# ftp://ftp.flybase.net/releases
-# https://flybase.org/cgi-bin/get_static_page.pl?file=release_notes.html
-# Note that version is specific to D. melanogaster.
-flybase_release_date="2019-04"
-flybase_release_version="6.29"
-
-# WormBase
-# https://wormbase.org/about/release_schedule
-wormbase_release_version="WS272"
-
-
-
 # Legacy pinnings                                                           {{{1
 # ==============================================================================
 

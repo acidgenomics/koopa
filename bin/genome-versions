@@ -33,17 +33,15 @@ _koopa_help "$@"
 # ==============================================================================
 
 ensembl="$(ensembl-version)"
-gencode="$(gencode-version | sed 's/^/  - /')"
+gencode="$(gencode-version "Homo sapiens")"
 refseq="$(refseq-version)"
-flybase="$(flybase-version | sed 's/^/  - /')"
+flybase="$(flybase-version)"
 wormbase="$(wormbase-version)"
 
 cat << EOF
 Ensembl: ${ensembl}
-GENCODE:
-${gencode}
+GENCODE: ${gencode}
 RefSeq: ${refseq}
-FlyBase:
-${flybase}
+FlyBase: ${flybase}
 WormBase: ${wormbase}
 EOF

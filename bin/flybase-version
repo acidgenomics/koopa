@@ -20,20 +20,27 @@ url="ftp://ftp.flybase.net/releases/"
 usage() {
 cat << EOF
 $(_koopa_help_header)
+    [--dmel]
 
 FlyBase release version.
+
+optional arguments:
+    --dmel
+        Return current Drosophila melanogaster genome build version.
+        Example: 'dmel_r6.29'.
 
 $(_koopa_help_args)
 
 details:
     Extract the FlyBase release version from ftp.flybase.net.
+    Example: 'FB2019_04'.
 
 see also:
     ${url}
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-10-05.
 EOF
 }
 
@@ -44,16 +51,35 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-release_date="$( \
-    curl --list-only --silent "$url" | \
-    grep -E "^FB[0-9]{4}_[0-9]{2}$" | \
-    sort | \
-    tail -n 1 \
-)"
-printf "date: %s\n" "$release_date"
+dmel=0
 
-release_version="$( \
+while (("$#"))
+do
+    case "$1" in
+        --dmel)
+            dmel=1
+            shift 1
+            ;;
+        *)
+            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if [[ "$dmel" -eq 1 ]]
+then
     curl --list-only --silent "${url}current/" | \
-    grep -E "^dmel_r[.0-9]+$" \
-)"
-printf "version: %s\n" "$release_version"
+        grep -E "^dmel_r[.0-9]+$" | \
+        head -n 1
+else
+    curl --list-only --silent "$url" | \
+        grep -E "^FB[0-9]{4}_[0-9]{2}$" | \
+        sort | \
+        tail -n 1
+fi
