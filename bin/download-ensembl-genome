@@ -8,17 +8,17 @@ import textwrap
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
 import pykoopa
 
-from pykoopa.download import wget
 from pykoopa.genome import ensembl_version
-from pykoopa.sys import eprint
+from pykoopa.syntactic import kebab_case
+from pykoopa.sys import eprint, wget
 
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
-base_url = "ftp://ftp.ensembl.org/pub"
-grch37_base_url = base_url + "/pub/grch37"
+base_url = "ftp://ftp.ensembl.org/pub/"
+grch37_base_url = base_url + "grch37/"
 grch37_release = "87"
 
 
@@ -33,9 +33,12 @@ details:
 
     Important! When working in R, be sure to match the Ensembl release version
     to the latest version supported by AnnotationHub.
-    
+
     The legacy Homo sapiens GRCh37 (hg19) build is supported. If requested, the
     corresponding release version is set internally automatically.
+
+    Verify checksums in shell with:
+    > grep "$(sum *.gz)" "CHECKSUMS"
 
 see also:
     - https://useast.ensembl.org/
@@ -72,28 +75,28 @@ required.add_argument(
 )
 optional.add_argument(
     "--type",
-    default="genome",
-    const="genome",
+    default="all",
+    const="all",
     nargs="?",
-    choices=["genome", "transcriptome", "all", "none"],
+    choices=["all", "genome", "transcriptome", "none"],
     help=textwrap.dedent("""\
+        'all': download all reference types
         'genome': primary assembly (DNA)
         'transcriptome': transcripts (cDNA/RNA)
-        'all': Download all reference types
-        'none': Skip download
+        'none': skip download
     """)
 )
 optional.add_argument(
     "--annotation",
-    default="gtf",
-    const="gtf",
+    default="all",
+    const="all",
     nargs="?",
-    choices=["gtf", "gff", "all", "none"],
+    choices=["all", "gtf", "gff", "none"],
     help=textwrap.dedent("""\
-        'gtf': GTF (GFFv2; recommended)
-        'gff': GFF3 (harder to parse)
-        'all': Download all annotation formats
-        'none': Skip download
+        'all': download all annotation formats
+        'gtf': GTF (GFFv2)
+        'gff': GFF3
+        'none': skip download
     """)
 )
 optional.add_argument(
@@ -115,12 +118,14 @@ args = parser.parse_args()
 annotation = args.annotation
 build = args.build
 decompress = args.decompress
-organism = args.organism.replace(" ", "_")
+organism = args.organism
 release = args.release
 type = args.type
 
 if type == "none" and annotation == "none":
     eprint("Error: 'type' or 'annotation' are required.")
+
+organism = organism.replace(" ", "_")
 
 
 
@@ -132,68 +137,125 @@ if build == "GRCh37":
     release = grch37_release
 if release is None:
     release = ensembl_version()
+
 release_url = (
     base_url
-    + "/release-" +
-    release
-)
-genome_url = (
-    release_url
-    + "/fasta/"
-    + organism.lower()
-    + "/dna/"
-    + organism
-    + "."
-    + build
-    + ".dna.primary_assembly.fa.gz"
-)
-transcriptome_url = (
-    release_url
-    + "/fasta/"
-    + organism.lower()
-    + "/cdna/"
-    + organism
-    + "."
-    + build
-    + ".cdna.all.fa.gz"
-)
-gtf_url = (
-    release_url
-    + "/gtf/"
-    + organism.lower()
-    + "/"
-    + organism
-    + "."
-    + build
-    + "."
+    + "release-"
     + release
-    + ".gtf.gz"
-)
-gff_url = (
-    release_url
-    + "/gff3/"
-    + organism.lower()
     + "/"
-    + organism
-    + "."
-    + build
-    + "."
-    + release
-    + ".gff3.gz"
 )
+output_dir = kebab_case(
+    organism
+    + " "
+    + build
+    + " "
+    + "ensembl"
+    + " "
+    + release
+)
+
+def download_genome(release_url, output_dir):
+    output_dir = os.path.join(output_dir, "genome-fasta")
+    base_url = (
+        release_url
+        + "fasta/"
+        + organism.lower()
+        + "/dna/"
+    )
+    readme_url = (base_url + "README")
+    checksums_url = (base_url + "CHECKSUMS")
+    fasta_url = (
+        base_url
+        + organism
+        + "."
+        + build
+        + ".dna.primary_assembly.fa.gz"
+    )
+    wget(url=readme_url, output_dir=output_dir)
+    wget(url=checksums_url, output_dir=output_dir)
+    wget(url=fasta_url, output_dir=output_dir)
+
+def download_transcriptome(release_url, output_dir):
+    output_dir = os.path.join(output_dir, "transcriptome-fasta")
+    base_url = (
+        release_url
+        + "fasta/"
+        + organism.lower()
+        + "/cdna/"
+    )
+    readme_url = (base_url + "README")
+    checksums_url = (base_url + "CHECKSUMS")
+    fasta_url = (
+        base_url
+        + organism
+        + "."
+        + build
+        + ".cdna.all.fa.gz"
+    )
+    wget(url=readme_url, output_dir=output_dir)
+    wget(url=checksums_url, output_dir=output_dir)
+    wget(url=fasta_url, output_dir=output_dir)
+
+def download_gtf(release_url, output_dir):
+    output_dir = os.path.join(output_dir, "gtf")
+    base_url = (
+        release_url
+        + "gtf/"
+        + organism.lower()
+        + "/"
+    )
+    readme_url = (base_url + "README")
+    checksums_url = (base_url + "CHECKSUMS")
+    gtf_url = (
+        base_url
+        + organism
+        + "."
+        + build
+        + "."
+        + release
+        + ".gtf.gz"
+    )
+    wget(url=readme_url, output_dir=output_dir)
+    wget(url=checksums_url, output_dir=output_dir)
+    wget(url=gtf_url, output_dir=output_dir)
+
+def download_gff(release_url, output_dir):
+    output_dir = os.path.join(output_dir, "gff")
+    base_url = (
+        release_url
+        + "gff3/"
+        + organism.lower()
+        + "/"
+    )
+    readme_url = (base_url + "README")
+    checksums_url = (base_url + "CHECKSUMS")
+    gff_url = (
+        base_url
+        + organism
+        + "."
+        + build
+        + "."
+        + release
+        + ".gff3.gz"
+    )
+    wget(url=readme_url, output_dir=output_dir)
+    wget(url=checksums_url, output_dir=output_dir)
+    wget(url=gff_url, output_dir=output_dir)
 
 if type == "genome":
-    wget(genome_url)
+    download_genome(release_url=release_url, output_dir=output_dir)
 elif type == "transcriptome":
-    wget(transcriptome_url)
+    download_transcriptome(release_url=release_url, output_dir=output_dir)
 elif type == "all":
-    wget(genome_url)
-    wget(transcriptome_url)
+    download_genome(release_url=release_url, output_dir=output_dir)
+    download_transcriptome(release_url=release_url, output_dir=output_dir)
 
 if annotation == "gtf":
-    wget(gtf_url)
+    download_gtf(release_url=release_url, output_dir=output_dir)
 elif type == "gff":
-    wget(gff_url)
+    download_gff(release_url=release_url, output_dir=output_dir)
 elif type == "all":
-    wget(gtf_url)
-    wget(gff_url)
+    download_gtf(release_url=release_url, output_dir=output_dir)
+    download_gff(release_url=release_url, output_dir=output_dir)
+
+print("Genome downloaded successfully to '" + output_dir + "'.")
