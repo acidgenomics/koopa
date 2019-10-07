@@ -1,22 +1,32 @@
 #!/usr/bin/env python3
 
-# FIXME Create a top level directory.
-# FIXME Ensure we download README automatically, for data provenance.
-
 import argparse
 import os
-import subprocess
 import sys
+import textwrap
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
 import pykoopa
+from pykoopa.genome import refseq_version
+from pykoopa.syntactic import kebab_case
+from pykoopa.sys import eprint, wget
 
-from argparse import RawTextHelpFormatter
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+organism="Homo sapiens"
+organism_short="H_sapiens"
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
 
 description = "Download RefSeq genome."
 epilog = """
 details:
-    Downloads to the current working directory.
+    Creates a new directory in the current working directory.
+    Only Homo sapiens genome is supported.
 
     Primary RefSeq URLs:
     - https://www.ncbi.nlm.nih.gov/projects/genome/guide/human/
@@ -55,105 +65,78 @@ note:
     Updated 2019-10-05.
 """
 
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
 parser = argparse.ArgumentParser(
-    description=description, epilog=epilog, formatter_class=RawTextHelpFormatter
+    description=description,
+    epilog=epilog,
+    formatter_class=argparse.RawTextHelpFormatter,
 )
-optional = parser._action_groups.pop()
-required = parser.add_argument_group("required arguments")
-required.add_argument(
-    "--organism",
-    required=True,
-    type=str,
-    help='latin name (e.g. "Homo sapiens")',
+parser.add_argument(
+    "--build",
+    default="GRCh38",
+    const="GRCh38",
+    nargs="?",
+    choices=["GRCh38", "GRCh38"],
+    help="genome build (e.g. 'GRCh38')"
 )
-required.add_argument(
+parser.add_argument(
     "--type",
-    required=True,
-    choices=["dna", "cdna"],
-    help='"dna" (genome) or "cdna" (transcriptome)',
+    default="all",
+    const="all",
+    nargs="?",
+    choices=["all", "genome", "transcriptome", "none"],
+    help=textwrap.dedent(
+        """\
+        'all': download all reference types
+        'genome': primary assembly (DNA)
+        'transcriptome': transcripts (cDNA/RNA)
+        'none': skip download
+    """
+    ),
 )
-required.add_argument(
-    "--build", required=True, type=str, help='genome build (e.g. "GRCh38")'
-)
-
-# FIXME Add annotation = GTF, GFF
-
-optional.add_argument("--release", type=str, help='release version (e.g. "96")')
-optional.add_argument(
+parser.add_argument(
     "--decompress",
     action="store_true",
     help="decompress (but keep) the original file",
 )
-parser._action_groups.append(optional)
-# Show help when no arguments are declared.
-if len(sys.argv) == 1:
-    parser.print_help(sys.stderr)
-    sys.exit(1)
 args = parser.parse_args()
 
-# Parsed arguments.
 build = args.build
 decompress = args.decompress
-organism = args.organism.replace(" ", "_")
-release = args.release
 type = args.type
 
-# Set the release automatically, if necessary.
-if release is None:
-    release = subprocess.check_output(
-        "koopa variable ensembl_release_version",
-        shell=True,
-        universal_newlines=True,
-    )
-    release = release.rstrip()
 
-# Set the base URL of FTP server.
-if build == "GRCh37":
-    release = "87"
-    base_url = "ftp://ftp.ensembl.org/pub/grch37"
-else:
-    base_url = "ftp://ftp.ensembl.org/pub"
-base_url = base_url + "/release-" + release + "/fasta"
+# Script                                                                    {{{1
+# ==============================================================================
 
-# Get the file path of either genome or transcriptome FASTA.
-if type == "dna":
-    url = (
-        base_url
-        + "/"
-        + organism.lower()
-        + "/dna/"
-        + organism
-        + "."
-        + build
-        + ".dna.primary_assembly.fa.gz"
-    )
-elif type == "cdna":
-    url = (
-        base_url
-        + "/"
-        + organism.lower()
-        + "/cdna/"
-        + organism
-        + "."
-        + build
-        + ".cdna.all.fa.gz"
-    )
-file = os.path.basename(url)
+release = refseq_version()
+release_url = (
+    "ftp://ftp.ncbi.nlm.nih.gov/"
+    + "refseq/"
+    + "H_sapiens/"
+    + "annotation/"
+    + build
+    + "_latest/"
+    + "refseq_identifiers/"
+)
+output_dir = kebab_case(
+    organism + " " + build + " " + "refseq" + " " + release
+)
 
-# Error if the file exists.
-if os.path.isfile(file):
-    print(file + " has already been downloaded.")
-    sys.exit(0)
+wget(
+    url=release_url + "GRCh38_latest_assembly_report.txt",
+    output_dir=output_dir
+)
+wget(
+    url=release_url + "README.txt",
+    output_dir=output_dir
+)
 
-print("Downloading " + file + ".")
-try:
-    subprocess.check_call(["wget", url])
-except subprocess.CalledProcessError as e:
-    print("Failed to download " + file + ".")
-    sys.exit(1)
+# GRCh38_latest_genomic.fna.gz
+# GRCh38_latest_rna.fna.gz
 
-# Decompress, but also keep the original compressed file.
-if decompress is True:
-    print("Decompressing " + file + ".")
-    unzip_file = os.path.splitext(file)[0]
-    os.system("gunzip -c " + file + " > " + unzip_file)
+# GRCh38_latest_genomic.gtf.gz
+# GRCh38_latest_genomic.gff.gz
