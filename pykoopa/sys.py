@@ -87,6 +87,9 @@ def paste_url(*args):
 
     Deals with sanitization of trailing slashes automatically.
 
+    Examples:
+    paste_url("https://basejump.acidgenomics.com", "news", "news-0.1.html")
+
     See also:
     - urlparse
     - https://codereview.stackexchange.com/questions/175421/
