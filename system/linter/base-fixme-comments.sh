@@ -20,7 +20,7 @@ exclude_dirs=(
 )
 exclude_files=(
     "$(basename "$0")"
-    "${KOOPA_HOME}/.pylintrc"
+    ".pylintrc"
 )
 
 # Full path exclusion seems to only work on macOS.
