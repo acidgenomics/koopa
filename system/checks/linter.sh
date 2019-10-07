@@ -13,7 +13,7 @@ for file in "${linter_dir}/"*".sh"
 do
     if [[ -n "${CI:-}" ]]
     then
-        case "$file" in
+        case "$(basename "$file")" in
             python-*|r-*)
                 ;;
             *)
