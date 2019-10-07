@@ -154,12 +154,12 @@ md5sums_url = base_url + "MD5SUMS"
 
 
 def download_genome(genome_fasta_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "genome-fasta")
+    output_dir = os.path.join(output_dir, "genome")
     wget(url=genome_fasta_url, output_dir=output_dir, decompress=decompress)
 
 
 def download_transcriptome(transcriptome_fasta_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "transcriptome-fasta")
+    output_dir = os.path.join(output_dir, "transcriptome")
     wget(
         url=transcriptome_fasta_url,
         output_dir=output_dir,
