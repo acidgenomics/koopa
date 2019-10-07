@@ -59,8 +59,6 @@ merge=("${ext_files[@]}" "${shebang_files[@]}")
 files="$(printf "%q\n" "${merge[@]}" | sort -u)"
 mapfile -t files <<< "$files"
 
-echo "${files[@]}"
-
 # Note that setting '--jobs=0' flag here enables multicore.
 pylint --jobs=0 --score=n "${files[@]}"
 
