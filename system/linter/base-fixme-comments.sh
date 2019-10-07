@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Find FIXME and TODO comments.
-# Updated 2019-09-23.
+# Updated 2019-10-07.
 
 # Returns with `true` or `false` exit codes.
 
@@ -53,7 +53,6 @@ hits="$( \
 )"
 
 name="$(_koopa_basename_sans_ext "$0")"
-
 if [[ -n "$hits" ]]
 then
     printf "FAIL | %s\n" "$name"

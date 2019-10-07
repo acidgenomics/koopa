@@ -41,12 +41,13 @@ hits="$( \
         sort || echo "" \
 )"
 
+name="$(_koopa_basename_sans_ext "$0")"
 if [[ -n "$hits" ]]
 then
-    printf "FAIL | %s\n" "$(basename "$0")"
+    printf "FAIL | %s\n" "$name"
     echo "$hits"
     exit 1
 else
-    printf "  OK | %s\n" "$(basename "$0")"
+    printf "  OK | %s\n" "$name"
     exit 0
 fi

@@ -2,16 +2,18 @@
 set -Eeu -o pipefail
 
 # Recursively run shellcheck on all scripts in a directory.
-# Updated 2019-09-23.
+# Updated 2019-10-07.
 
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
+
+script_bn="$(_koopa_basename_sans_ext "$0")"
 
 # Skip test if shellcheck is not installed.
 # Currently, Travis CI does not have shellcheck installed for macOS.
 if ! _koopa_is_installed shellcheck
 then
-    printf "NOTE | %s\n" "$(basename "$0")"
+    printf "NOTE | %s\n" "$script_bn"
     printf "     |   shellcheck missing.\n"
     exit 0
 fi
@@ -35,12 +37,11 @@ then
     done
 fi
 
-# Prepend the `--exclude-dir=` flag.
+# Prepend the '--exclude-dir=' flag.
 exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
-
 grep -Elr \
     --binary-files="without-match" \
     "${exclude_dirs[@]}" \
@@ -48,5 +49,5 @@ grep -Elr \
     "$path" | \
     xargs -I {} shellcheck -x {}
 
-printf "  OK | %s\n" "$(basename "$0")"
+printf "  OK | %s\n" "$script_bn"
 exit 0
