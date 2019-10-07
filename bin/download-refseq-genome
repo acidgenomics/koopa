@@ -15,8 +15,8 @@ from pykoopa.sys import eprint, wget
 # Variables                                                                 {{{1
 # ==============================================================================
 
-organism="Homo sapiens"
-organism_short="H_sapiens"
+organism = "Homo sapiens"
+organism_short = "H_sapiens"
 
 
 # Usage                                                                     {{{1
@@ -79,8 +79,8 @@ parser.add_argument(
     default="GRCh38",
     const="GRCh38",
     nargs="?",
-    choices=["GRCh38", "GRCh38"],
-    help="genome build (e.g. 'GRCh38')"
+    choices=["GRCh38", "GRCh37"],
+    help="genome build (e.g. 'GRCh38')",
 )
 parser.add_argument(
     "--type",
@@ -98,12 +98,28 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
+    "--annotation",
+    default="all",
+    const="all",
+    nargs="?",
+    choices=["all", "gtf", "gff", "none"],
+    help=textwrap.dedent(
+        """\
+        'all': download all annotation formats
+        'gtf': GTF (GFFv2)
+        'gff': GFF3
+        'none': skip download
+    """
+    ),
+)
+parser.add_argument(
     "--decompress",
     action="store_true",
     help="decompress (but keep) the original file",
 )
 args = parser.parse_args()
 
+annotation = args.annotation
 build = args.build
 decompress = args.decompress
 type = args.type
@@ -122,21 +138,69 @@ release_url = (
     + "_latest/"
     + "refseq_identifiers/"
 )
-output_dir = kebab_case(
-    organism + " " + build + " " + "refseq" + " " + release
-)
+output_dir = kebab_case(organism + " " + build + " " + "refseq" + " " + release)
 
+
+def download_genome(release_url, output_dir, decompress):
+    output_dir = os.path.join(output_dir, "genome")
+    fasta_url = release_url + build + "_latest_genomic.fna.gz"
+    wget(url=fasta_url, output_dir=output_dir, decompress=decompress)
+
+
+def download_transcriptome(release_url, output_dir, decompress):
+    output_dir = os.path.join(output_dir, "transcriptome")
+    transcriptome_url = release_url + build + "_latest_rna.fna.gz"
+    wget(url=transcriptome_url, output_dir=output_dir, decompress=decompress)
+
+
+def download_gtf(release_url, output_dir, decompress):
+    output_dir = os.path.join(output_dir, "gtf")
+    gtf_url = release_url + build + "_latest_genomic.gtf.gz"
+    wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
+
+
+def download_gff(release_url, output_dir, decompress):
+    output_dir = os.path.join(output_dir, "gff")
+    gff_url = release_url + build + "_latest_genomic.gff.gz"
+    wget(url=gff_url, output_dir=output_dir, decompress=decompress)
+
+
+wget(url=release_url + "README.txt", output_dir=output_dir)
 wget(
-    url=release_url + "GRCh38_latest_assembly_report.txt",
-    output_dir=output_dir
-)
-wget(
-    url=release_url + "README.txt",
-    output_dir=output_dir
+    url=release_url + build + "_latest_assembly_report.txt",
+    output_dir=output_dir,
 )
 
-# GRCh38_latest_genomic.fna.gz
-# GRCh38_latest_rna.fna.gz
+if type == "genome":
+    download_genome(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+elif type == "transcriptome":
+    download_transcriptome(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+elif type == "all":
+    download_genome(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+    download_transcriptome(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
 
-# GRCh38_latest_genomic.gtf.gz
-# GRCh38_latest_genomic.gff.gz
+if annotation == "gtf":
+    download_gtf(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+elif annotation == "gff":
+    download_gff(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+elif annotation == "all":
+    download_gtf(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+    download_gff(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+
+print("Genome downloaded successfully to '" + output_dir + "'.")
