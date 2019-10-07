@@ -1,29 +1,31 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name,redefined-outer-name
+# pylint: enable=invalid-name
+"""
+Download RefSeq genome.
+"""
 
 import argparse
 import os
 import sys
-import textwrap
+
+from textwrap import dedent
+
+# pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-import pykoopa
 from pykoopa.genome import refseq_version
 from pykoopa.syntactic import kebab_case
-from pykoopa.sys import eprint, wget
+from pykoopa.sys import paste_url, wget
 
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-organism = "Homo sapiens"
-organism_short = "H_sapiens"
+# pylint: enable=wrong-import-position
 
 
 # Usage                                                                     {{{1
 # ==============================================================================
 
-description = "Download RefSeq genome."
-epilog = """
+DESCRIPTION = "Download RefSeq genome."
+EPILOG = """
 details:
     Creates a new directory in the current working directory.
     Only Homo sapiens genome is supported.
@@ -62,16 +64,18 @@ details:
 
 note:
     Python script.
-    Updated 2019-10-05.
+    Updated 2019-10-07.
 """
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+# pylint: disable=invalid-name,protected-access,redefined-builtin
+
 parser = argparse.ArgumentParser(
-    description=description,
-    epilog=epilog,
+    description=DESCRIPTION,
+    epilog=EPILOG,
     formatter_class=argparse.RawTextHelpFormatter,
 )
 parser.add_argument(
@@ -88,7 +92,7 @@ parser.add_argument(
     const="all",
     nargs="?",
     choices=["all", "genome", "transcriptome", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all reference types
         'genome': primary assembly (DNA)
@@ -103,7 +107,7 @@ parser.add_argument(
     const="all",
     nargs="?",
     choices=["all", "gtf", "gff", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all annotation formats
         'gtf': GTF (GFFv2)
@@ -124,50 +128,74 @@ build = args.build
 decompress = args.decompress
 type = args.type
 
+organism = "Homo sapiens"
+organism_short = "H_sapiens"
+
+release = refseq_version()
+release_url = paste_url(
+    "ftp://ftp.ncbi.nlm.nih.gov",
+    "refseq",
+    organism_short,
+    "annotation",
+    build + "_latest",
+    "refseq_identifiers",
+)
+output_dir = kebab_case(organism + " " + build + " " + "refseq" + " " + release)
+
+# pylint: enable=invalid-name,protected-access,redefined-builtin
+
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-release = refseq_version()
-release_url = (
-    "ftp://ftp.ncbi.nlm.nih.gov/"
-    + "refseq/"
-    + "H_sapiens/"
-    + "annotation/"
-    + build
-    + "_latest/"
-    + "refseq_identifiers/"
-)
-output_dir = kebab_case(organism + " " + build + " " + "refseq" + " " + release)
-
 
 def download_genome(release_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "genome")
-    fasta_url = release_url + build + "_latest_genomic.fna.gz"
-    wget(url=fasta_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download genome FASTA.
+    """
+    wget(
+        url=paste_url(release_url, build + "_latest_genomic.fna.gz"),
+        output_dir=os.path.join(output_dir, "genome"),
+        decompress=decompress,
+    )
 
 
 def download_transcriptome(release_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "transcriptome")
-    transcriptome_url = release_url + build + "_latest_rna.fna.gz"
-    wget(url=transcriptome_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download transcriptome FASTA.
+    """
+    wget(
+        url=paste_url(release_url, build + "_latest_rna.fna.gz"),
+        output_dir=os.path.join(output_dir, "transcriptome"),
+        decompress=decompress,
+    )
 
 
 def download_gtf(release_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "gtf")
-    gtf_url = release_url + build + "_latest_genomic.gtf.gz"
-    wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download GTF file.
+    """
+    wget(
+        url=paste_url(release_url, build + "_latest_genomic.gtf.gz"),
+        output_dir=os.path.join(output_dir, "gtf"),
+        decompress=decompress,
+    )
 
 
 def download_gff(release_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "gff")
-    gff_url = release_url + build + "_latest_genomic.gff.gz"
-    wget(url=gff_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download GFF3 file.
+    """
+    wget(
+        url=paste_url(release_url, build + "_latest_genomic.gff.gz"),
+        output_dir=os.path.join(output_dir, "gff"),
+        decompress=decompress,
+    )
 
 
-wget(url=release_url + "README.txt", output_dir=output_dir)
+wget(url=paste_url(release_url, "README.txt"), output_dir=output_dir)
 wget(
-    url=release_url + build + "_latest_assembly_report.txt",
+    url=paste_url(release_url, build + "_latest_assembly_report.txt"),
     output_dir=output_dir,
 )
 
