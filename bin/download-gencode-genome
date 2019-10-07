@@ -153,47 +153,91 @@ genome_fasta_url = base_url + build + ".primary_assembly.genome.fa.gz"
 md5sums_url = base_url + "MD5SUMS"
 
 
-def download_genome(genome_fasta_url, output_dir):
+def download_genome(genome_fasta_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "genome-fasta")
-    wget(url=genome_fasta_url, output_dir=output_dir)
+    wget(
+        url=genome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
-def download_transcriptome(transcriptome_fasta_url, output_dir):
+def download_transcriptome(transcriptome_fasta_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "transcriptome-fasta")
-    wget(url=transcriptome_fasta_url, output_dir=output_dir)
+    wget(
+        url=transcriptome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
-def download_gtf(gtf_url, output_dir):
+def download_gtf(gtf_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "gtf")
-    wget(url=gtf_url, output_dir=output_dir)
+    wget(
+        url=gtf_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
-def download_gff(gff_url, output_dir):
+def download_gff(gff_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "gff")
-    wget(url=gff_url, output_dir=output_dir)
+    wget(
+        url=gff_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
 wget(url=readme_url, output_dir=output_dir)
 wget(url=md5sums_url, output_dir=output_dir)
 
 if type == "genome":
-    download_genome(genome_fasta_url=genome_fasta_url, output_dir=output_dir)
+    download_genome(
+        genome_fasta_url=genome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif type == "transcriptome":
     download_transcriptome(
-        transcriptome_fasta_url=transcriptome_fasta_url, output_dir=output_dir
+        transcriptome_fasta_url=transcriptome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
     )
 elif type == "all":
-    download_genome(genome_fasta_url=genome_fasta_url, output_dir=output_dir)
+    download_genome(
+        genome_fasta_url=genome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
     download_transcriptome(
-        transcriptome_fasta_url=transcriptome_fasta_url, output_dir=output_dir
+        transcriptome_fasta_url=transcriptome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
     )
 
 if annotation == "gtf":
-    download_gtf(gtf_url=gtf_url, output_dir=output_dir)
+    download_gtf(
+        gtf_url=gtf_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif annotation == "gff":
-    download_gff(gff_url=gff_url, output_dir=output_dir)
+    download_gff(
+        gff_url=gff_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif annotation == "all":
-    download_gtf(gtf_url=gtf_url, output_dir=output_dir)
-    download_gff(gff_url=gff_url, output_dir=output_dir)
+    download_gtf(
+        gtf_url=gtf_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
+    download_gff(
+        gff_url=gff_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 print("Genome downloaded successfully to '" + output_dir + "'.")

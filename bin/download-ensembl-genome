@@ -136,7 +136,7 @@ output_dir = kebab_case(
 )
 
 
-def download_genome(release_url, output_dir):
+def download_genome(release_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "genome-fasta")
     base_url = release_url + "fasta/" + organism.lower() + "/dna/"
     readme_url = base_url + "README"
@@ -146,10 +146,14 @@ def download_genome(release_url, output_dir):
     )
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
-    wget(url=fasta_url, output_dir=output_dir)
+    wget(
+        url=fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
-def download_transcriptome(release_url, output_dir):
+def download_transcriptome(release_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "transcriptome-fasta")
     base_url = release_url + "fasta/" + organism.lower() + "/cdna/"
     readme_url = base_url + "README"
@@ -157,10 +161,14 @@ def download_transcriptome(release_url, output_dir):
     fasta_url = base_url + organism + "." + build + ".cdna.all.fa.gz"
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
-    wget(url=fasta_url, output_dir=output_dir)
+    wget(
+        url=fasta_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
-def download_gtf(release_url, output_dir):
+def download_gtf(release_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "gtf")
     base_url = release_url + "gtf/" + organism.lower() + "/"
     readme_url = base_url + "README"
@@ -168,10 +176,14 @@ def download_gtf(release_url, output_dir):
     gtf_url = base_url + organism + "." + build + "." + release + ".gtf.gz"
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
-    wget(url=gtf_url, output_dir=output_dir)
+    wget(
+        url=gtf_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
-def download_gff(release_url, output_dir):
+def download_gff(release_url, output_dir, decompress):
     output_dir = os.path.join(output_dir, "gff")
     base_url = release_url + "gff3/" + organism.lower() + "/"
     readme_url = base_url + "README"
@@ -179,23 +191,59 @@ def download_gff(release_url, output_dir):
     gff_url = base_url + organism + "." + build + "." + release + ".gff3.gz"
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
-    wget(url=gff_url, output_dir=output_dir)
+    wget(
+        url=gff_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 
 if type == "genome":
-    download_genome(release_url=release_url, output_dir=output_dir)
+    download_genome(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif type == "transcriptome":
-    download_transcriptome(release_url=release_url, output_dir=output_dir)
+    download_transcriptome(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif type == "all":
-    download_genome(release_url=release_url, output_dir=output_dir)
-    download_transcriptome(release_url=release_url, output_dir=output_dir)
+    download_genome(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
+    download_transcriptome(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 if annotation == "gtf":
-    download_gtf(release_url=release_url, output_dir=output_dir)
+    download_gtf(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif annotation == "gff":
-    download_gff(release_url=release_url, output_dir=output_dir)
+    download_gff(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 elif annotation == "all":
-    download_gtf(release_url=release_url, output_dir=output_dir)
-    download_gff(release_url=release_url, output_dir=output_dir)
+    download_gtf(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
+    download_gff(
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress
+    )
 
 print("Genome downloaded successfully to '" + output_dir + "'.")
