@@ -1,22 +1,31 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name,redefined-outer-name
+# pylint: enable=invalid-name
+"""
+Download GENCODE genome.
+"""
 
 import argparse
 import os
 import sys
-import textwrap
+
+from textwrap import dedent
+
+# pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-import pykoopa
 from pykoopa.genome import gencode_version
 from pykoopa.syntactic import kebab_case
-from pykoopa.sys import eprint, wget
+from pykoopa.sys import eprint, paste_url, wget
+
+# pylint: enable=wrong-import-position
 
 
 # Usage                                                                     {{{1
 # ==============================================================================
 
-description = "Download GENCODE genome."
-epilog = """
+DESCRIPTION = "Download GENCODE genome."
+EPILOG = """
 details:
     Creates a new directory in the current working directory.
     Only Homo sapiens and Mus musculus genomes are supported.
@@ -31,16 +40,18 @@ details:
 
 note:
     Python script.
-    Updated 2019-10-05.
+    Updated 2019-10-07.
 """
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+# pylint: disable=invalid-name,protected-access,redefined-builtin
+
 parser = argparse.ArgumentParser(
-    description=description,
-    epilog=epilog,
+    description=DESCRIPTION,
+    epilog=EPILOG,
     formatter_class=argparse.RawTextHelpFormatter,
 )
 optional = parser._action_groups.pop()
@@ -57,7 +68,7 @@ optional.add_argument(
     const="all",
     nargs="?",
     choices=["all", "genome", "transcriptome", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all reference types
         'genome': primary assembly (DNA)
@@ -72,7 +83,7 @@ optional.add_argument(
     const="all",
     nargs="?",
     choices=["all", "gtf", "gff", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all annotation formats
         'gtf': GTF (GFFv2)
@@ -104,10 +115,6 @@ type = args.type
 if type == "none" and annotation == "none":
     eprint("Error: 'type' or 'annotation' are required.")
 
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 if organism == "Homo sapiens":
     organism_short = "human"
     if build is None:
@@ -121,60 +128,90 @@ elif organism == "Mus musculus":
 if release is None:
     release = gencode_version(organism=organism)
 
-base_url = (
-    "ftp://ftp.ebi.ac.uk/pub/databases/gencode/"
-    + "Gencode_"
-    + organism_short
-    + "/release_"
-    + release
-    + "/"
+base_url = paste_url(
+    "ftp://ftp.ebi.ac.uk",
+    "pub",
+    "databases",
+    "gencode/",
+    "Gencode_" + organism_short,
+    "release_" + release,
 )
 output_dir = kebab_case(
     organism + " " + build + " " + "gencode" + " " + release
 )
 
 if build == "GRCh37":
-    base_url = base_url + "GRCh37_mapping/"
-    transcriptome_fasta_url = (
-        base_url + "gencode.v" + release + "lift37.transcripts.fa.gz"
+    base_url = paste_url(base_url, "GRCh37_mapping")
+    transcriptome_fasta_url = paste_url(
+        base_url, "gencode.v" + release + "lift37.transcripts.fa.gz"
     )
-    gtf_url = base_url + "gencode.v" + release + "lift37.annotation.gtf.gz"
-    gff_url = base_url + "gencode.v" + release + "lift37.annotation.gff3.gz"
-    readme_url = base_url + "_README_GRCh37_mapping.txt"
+    gtf_url = paste_url(
+        base_url, "gencode.v" + release + "lift37.annotation.gtf.gz"
+    )
+    gff_url = paste_url(
+        base_url, "gencode.v" + release + "lift37.annotation.gff3.gz"
+    )
+    readme_url = paste_url(base_url, "_README_GRCh37_mapping.txt")
 else:
-    transcriptome_fasta_url = (
-        base_url + "gencode.v" + release + ".transcripts.fa.gz"
+    transcriptome_fasta_url = paste_url(
+        base_url, "gencode.v" + release + ".transcripts.fa.gz"
     )
-    gtf_url = base_url + "gencode.v" + release + ".annotation.gtf.gz"
-    gff_url = base_url + "gencode.v" + release + ".annotation.gff3.gz"
-    readme_url = base_url + "_README.TXT"
+    gtf_url = paste_url(base_url, "gencode.v" + release + ".annotation.gtf.gz")
+    gff_url = paste_url(base_url, "gencode.v" + release + ".annotation.gff3.gz")
+    readme_url = paste_url(base_url, "_README.TXT")
 
-genome_fasta_url = base_url + build + ".primary_assembly.genome.fa.gz"
-md5sums_url = base_url + "MD5SUMS"
+genome_fasta_url = paste_url(base_url, build + ".primary_assembly.genome.fa.gz")
+md5sums_url = paste_url(base_url, "MD5SUMS")
+
+# pylint: enable=invalid-name,protected-access,redefined-builtin
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 
 def download_genome(genome_fasta_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "genome")
-    wget(url=genome_fasta_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download genome FASTA.
+    """
+    wget(
+        url=genome_fasta_url,
+        output_dir=os.path.join(output_dir, "genome"),
+        decompress=decompress,
+    )
 
 
 def download_transcriptome(transcriptome_fasta_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "transcriptome")
+    """
+    Download transcriptome FASTA.
+    """
     wget(
         url=transcriptome_fasta_url,
-        output_dir=output_dir,
+        output_dir=os.path.join(output_dir, "transcriptome"),
         decompress=decompress,
     )
 
 
 def download_gtf(gtf_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "gtf")
-    wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download GTF file.
+    """
+    wget(
+        url=gtf_url,
+        output_dir=os.path.join(output_dir, "gtf"),
+        decompress=decompress,
+    )
 
 
 def download_gff(gff_url, output_dir, decompress):
-    output_dir = os.path.join(output_dir, "gff")
-    wget(url=gff_url, output_dir=output_dir, decompress=decompress)
+    """
+    Download GFF3 file.
+    """
+    wget(
+        url=gff_url,
+        output_dir=os.path.join(output_dir, "gff"),
+        decompress=decompress,
+    )
 
 
 wget(url=readme_url, output_dir=output_dir)

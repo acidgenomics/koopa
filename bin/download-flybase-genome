@@ -12,6 +12,7 @@ import sys
 from textwrap import dedent
 
 # pylint: disable=wrong-import-position
+
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
 from pykoopa.genome import flybase_dmel_version, flybase_version
 from pykoopa.syntactic import kebab_case
