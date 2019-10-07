@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-06.
+## Updated 2019-10-07.
 
 options(
     error = quote(quit(status = 1L)),
@@ -19,18 +19,18 @@ options(
 
 ## Koopa config ================================================================
 ## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
-koopa_home <- Sys.getenv("KOOPA_HOME")
-stopifnot(isTRUE(nzchar(koopa_home)))
+koopaHome <- Sys.getenv("KOOPA_HOME")
+stopifnot(isTRUE(nzchar(koopaHome)))
 
-koopa_exe <- file.path(koopa_home, "bin", "koopa")
-stopifnot(file.exists(koopa_exe))
+koopaEXE <- file.path(koopaHome, "bin", "koopa")
+stopifnot(file.exists(koopaEXE))
 
-host <- system2(command = koopa_exe, args = "host-type", stdout = TRUE)
-os <- system2(command = koopa_exe, args = "os-type", stdout = TRUE)
+host <- system2(command = koopaEXE, args = "host-type", stdout = TRUE)
+os <- system2(command = koopaEXE, args = "os-type", stdout = TRUE)
 
 ## Determine if we're on Linux or not (i.e. macOS).
-r_os_string <- R.Version()[["os"]]
-if (grepl("darwin", r_os_string)) {
+rOSString <- R.Version()[["os"]]
+if (grepl("darwin", rOSString)) {
     linux <- FALSE
 } else {
     linux <- TRUE
@@ -39,15 +39,15 @@ if (grepl("darwin", r_os_string)) {
 
 
 ## Version parsers =============================================================
-variables_file <- file.path(
+variablesFile <- file.path(
     Sys.getenv("KOOPA_HOME"),
     "system",
     "include",
     "variables.txt"
 )
-variables <- readLines(variables_file)
+variables <- readLines(variablesFile)
 
-expected_version <- function(x) {
+expectedVersion <- function(x) {
     keep <- grepl(pattern = paste0("^", x, "="), x = variables)
     stopifnot(sum(keep, na.rm = TRUE) == 1L)
     x <- variables[keep]
@@ -60,14 +60,14 @@ expected_version <- function(x) {
     x
 }
 
-expected_major_version <- function(x) {
-    x <- expected_version(x)
+expectedMajorVersion <- function(x) {
+    x <- expectedVersion(x)
     stopifnot(isTRUE(grepl("\\.", x)))
     x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
     x
 }
 
-current_version <- function(name) {
+currentVersion <- function(name) {
     script <- file.path(
         Sys.getenv("KOOPA_HOME"),
         "system",
@@ -88,7 +88,7 @@ current_version <- function(name) {
 ## - 2.7.15rc1 to 2.7.15
 ## - 1.10.0-patch1 to 1.10.0
 ## - 1.0.2k-fips to 1.0.2
-sanitize_version <- function(x) {
+sanitizeVersion <- function(x) {
     ## Strip trailing "+" (e.g. "Python 2.7.15+").
     x <- sub("\\+$", "", x)
     ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
@@ -103,24 +103,24 @@ sanitize_version <- function(x) {
     x
 }
 
-check_version <- function(
+checkVersion <- function(
     name,
-    which_name,
+    whichName,
     current,
     expected,
     eval = c("==", ">="),
     required = TRUE
 ) {
-    if (missing(which_name)) {
-        which_name <- name
+    if (missing(whichName)) {
+        whichName <- name
     }
     if (identical(current, character())) {
         current <- NA_character_
     }
     stopifnot(
         is.character(name) && identical(length(name), 1L),
-        (is.character(which_name) && identical(length(which_name), 1L)) ||
-            is.null(which_name),
+        (is.character(whichName) && identical(length(whichName), 1L)) ||
+            is.null(whichName),
         is(current, "package_version") ||
             (is.character(current) && identical(length(current), 1L)) ||
             is.null(current),
@@ -135,8 +135,8 @@ check_version <- function(
         fail <- "NOTE"
     }
     ## Check to see if program is installed.
-    if (!is.null(which_name)) {
-        which <- unname(Sys.which(which_name))
+    if (!is.null(whichName)) {
+        which <- unname(Sys.which(whichName))
         if (identical(which, "")) {
             message(sprintf(
                 fmt = "  %s | %s is not installed.",
@@ -151,11 +151,11 @@ check_version <- function(
     ## Sanitize the version for non-identical (e.g. GTE) comparisons.
     if (!identical(eval, "==")) {
         if (grepl("\\.", current)) {
-            current <- sanitize_version(current)
+            current <- sanitizeVersion(current)
             current <- package_version(current)
         }
         if (grepl("\\.", expected)) {
-            expected <- sanitize_version(expected)
+            expected <- sanitizeVersion(expected)
             expected <- package_version(expected)
         }
     }
@@ -184,7 +184,7 @@ check_version <- function(
     invisible(ok)
 }
 
-is_installed <- function(which) {
+isInstalled <- function(which) {
     nzchar(Sys.which(which))
 }
 
@@ -226,117 +226,117 @@ installed <- function(which, required = TRUE) {
 
 ## Shells ======================================================================
 message("\nShells:")
-check_version(
+checkVersion(
     name = "Bash",
-    which_name = "bash",
-    current = current_version("bash"),
-    expected = expected_version("bash")
+    whichName = "bash",
+    current = currentVersion("bash"),
+    expected = expectedVersion("bash")
 )
-check_version(
+checkVersion(
     name = "ZSH",
-    which_name = "zsh",
-    current = current_version("zsh"),
-    expected = expected_version("zsh")
+    whichName = "zsh",
+    current = currentVersion("zsh"),
+    expected = expectedVersion("zsh")
 )
 
 
 
 ## Editors =====================================================================
 message("\nEditors:")
-check_version(
+checkVersion(
     name = "Emacs",
-    which_name = "emacs",
-    current = current_version("emacs"),
-    expected = expected_version("emacs")
+    whichName = "emacs",
+    current = currentVersion("emacs"),
+    expected = expectedVersion("emacs")
 )
-check_version(
+checkVersion(
     name = "Neovim",
-    which_name = "nvim",
-    current = current_version("neovim"),
-    expected = expected_version("neovim")
+    whichName = "nvim",
+    current = currentVersion("neovim"),
+    expected = expectedVersion("neovim")
 )
-check_version(
+checkVersion(
     name = "Tmux",
-    which_name = "tmux",
-    current = current_version("tmux"),
-    expected = expected_version("tmux")
+    whichName = "tmux",
+    current = currentVersion("tmux"),
+    expected = expectedVersion("tmux")
 )
-check_version(
+checkVersion(
     name = "Vim",
-    which_name = "vim",
-    current = current_version("vim"),
-    expected = expected_version("vim")
+    whichName = "vim",
+    current = currentVersion("vim"),
+    expected = expectedVersion("vim")
 )
 
 
 
 ## Languages ===============================================================
 message("\nPrimary languages:")
-check_version(
+checkVersion(
     name = "Python",
-    which_name = "python3",
-    current = current_version("python"),
-    expected = expected_version("python")
+    whichName = "python3",
+    current = currentVersion("python"),
+    expected = expectedVersion("python")
 )
-check_version(
+checkVersion(
     name = "Python : pip",
-    which_name = "pip",
-    current = current_version("pip"),
-    expected = expected_version("pip")
+    whichName = "pip",
+    current = currentVersion("pip"),
+    expected = expectedVersion("pip")
 )
-check_version(
+checkVersion(
     name = "R",
     current = packageVersion("base"),
-    expected = expected_version("r")
+    expected = expectedVersion("r")
 )
 
 message("\nSecondary languages:")
-check_version(
+checkVersion(
     name = "Java",
-    which_name = "java",
-    current = current_version("java"),
-    expected = expected_version("java")
+    whichName = "java",
+    current = currentVersion("java"),
+    expected = expectedVersion("java")
 )
-check_version(
+checkVersion(
     name = "Perl",
-    which_name = "perl",
-    current = current_version("perl"),
-    expected = expected_version("perl")
+    whichName = "perl",
+    current = currentVersion("perl"),
+    expected = expectedVersion("perl")
 )
-if (is_installed("perl")) {
-    check_version(
+if (isInstalled("perl")) {
+    checkVersion(
         name = "Perl : Perlbrew",
-        which_name = "perlbrew",
-        current = current_version("perlbrew"),
-        expected = expected_version("perlbrew")
+        whichName = "perlbrew",
+        current = currentVersion("perlbrew"),
+        expected = expectedVersion("perlbrew")
     )
 }
-check_version(
+checkVersion(
     name = "Ruby",
-    which_name = "ruby",
-    current = current_version("ruby"),
-    expected = expected_version("ruby")
+    whichName = "ruby",
+    current = currentVersion("ruby"),
+    expected = expectedVersion("ruby")
 )
-if (is_installed("ruby")) {
-    check_version(
+if (isInstalled("ruby")) {
+    checkVersion(
         name = "Ruby : rbenv",
-        which_name = "rbenv",
-        current = current_version("rbenv"),
-        expected = expected_version("rbenv")
+        whichName = "rbenv",
+        current = currentVersion("rbenv"),
+        expected = expectedVersion("rbenv")
     )
 }
-check_version(
+checkVersion(
     name = "Rust",
-    which_name = "rustc",
-    current = current_version("rust"),
-    expected = expected_version("rust")
+    whichName = "rustc",
+    current = currentVersion("rust"),
+    expected = expectedVersion("rust")
 )
-if (is_installed("rustc")) {
-    check_version(
+if (isInstalled("rustc")) {
+    checkVersion(
         name = "Rust : rustup",
-        which_name = "rustup",
-        current = current_version("rustup"),
-        expected = expected_version("rustup")
+        whichName = "rustup",
+        current = currentVersion("rustup"),
+        expected = expectedVersion("rustup")
     )
 }
 
@@ -378,65 +378,65 @@ installed(
 
 ## Heavy dependencies ==========================================================
 message("\nHeavy dependencies:")
-check_version(
+checkVersion(
     name = "GDAL",
-    which_name = "gdalinfo",
-    current = current_version("gdal"),
+    whichName = "gdalinfo",
+    current = currentVersion("gdal"),
     expected = switch(
         EXPR = os,
         darwin = "2.4.2",
-        expected_version("gdal")
+        expectedVersion("gdal")
     )
 )
-check_version(
+checkVersion(
     name = "GSL",
-    which_name = "gsl-config",
-    current = current_version("gsl"),
-    expected = expected_version("gsl")
+    whichName = "gsl-config",
+    current = currentVersion("gsl"),
+    expected = expectedVersion("gsl")
 )
-check_version(
+checkVersion(
     name = "HDF5",
-    which_name = "h5cc",
-    current = current_version("hdf5"),
-    expected = expected_version("hdf5")
+    whichName = "h5cc",
+    current = currentVersion("hdf5"),
+    expected = expectedVersion("hdf5")
 )
-check_version(
+checkVersion(
     name = "OpenSSL",
-    which_name = "openssl",
-    current = current_version("openssl"),
+    whichName = "openssl",
+    current = currentVersion("openssl"),
     expected = switch(
         EXPR = os,
         ## Note that macOS switched to LibreSSL in 2018.
         darwin = "2.6.5",
         rhel7 = "1.0.2k",
-        expected_version("openssl")
+        expectedVersion("openssl")
     )
 )
-check_version(
+checkVersion(
     name = "Pandoc",
-    which_name = "pandoc",
-    current = current_version("pandoc"),
+    whichName = "pandoc",
+    current = currentVersion("pandoc"),
     expected = switch(
         EXPR = os,
         rhel7 = "1.12.3.1",
-        expected_version("pandoc")
+        expectedVersion("pandoc")
     )
 )
-check_version(
+checkVersion(
     name = "PROJ",
-    which_name = "proj",
-    current = current_version("proj"),
-    expected = expected_version("proj")
+    whichName = "proj",
+    current = currentVersion("proj"),
+    expected = expectedVersion("proj")
 )
-check_version(
+checkVersion(
     name = "TeX Live",
-    which_name = "tex",
-    current = current_version("tex"),
+    whichName = "tex",
+    current = currentVersion("tex"),
     expected = switch(
         EXPR = os,
         rhel7 = "2013",
         ubuntu = "2017",
-        expected_version("tex")
+        expectedVersion("tex")
     )
 )
 
@@ -444,54 +444,54 @@ check_version(
 
 ## Tools =======================================================================
 message("\nTools:")
-check_version(
+checkVersion(
     name = "Git",
-    which_name = "git",
-    current = current_version("git"),
-    expected = expected_version("git")
+    whichName = "git",
+    current = currentVersion("git"),
+    expected = expectedVersion("git")
 )
-check_version(
+checkVersion(
     name = "GnuPG",
-    which_name = "gpg",
-    current = current_version("gpg"),
-    expected = expected_version("gpg")
+    whichName = "gpg",
+    current = currentVersion("gpg"),
+    expected = expectedVersion("gpg")
 )
-check_version(
+checkVersion(
     name = "htop",
-    current = current_version("htop"),
-    expected = expected_version("htop")
+    current = currentVersion("htop"),
+    expected = expectedVersion("htop")
 )
-check_version(
+checkVersion(
     name = "Neofetch",
-    which_name = "neofetch",
-    current = current_version("neofetch"),
-    expected = expected_version("neofetch")
+    whichName = "neofetch",
+    current = currentVersion("neofetch"),
+    expected = expectedVersion("neofetch")
 )
-check_version(
+checkVersion(
     name = "ShellCheck",
-    which_name = "shellcheck",
-    current = current_version("shellcheck"),
-    expected = expected_version("shellcheck")
+    whichName = "shellcheck",
+    current = currentVersion("shellcheck"),
+    expected = expectedVersion("shellcheck")
 )
 
 
 
 ## Environments ================================================================
 message("\nEnvironments:")
-check_version(
+checkVersion(
     name = "Conda",
-    which_name = "conda",
-    current = current_version("conda"),
-    expected = expected_version("conda")
+    whichName = "conda",
+    current = currentVersion("conda"),
+    expected = expectedVersion("conda")
 )
-check_version(
+checkVersion(
     name = "Docker",
-    which_name = "docker",
-    current = current_version("docker"),
+    whichName = "docker",
+    current = currentVersion("docker"),
     expected = switch(
         EXPR = os,
         darwin = "18.09.2",
-        expected_version("docker")
+        expectedVersion("docker")
     )
 )
 
@@ -500,10 +500,10 @@ check_version(
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
     message("\nLinux specific:")
-    check_version(
+    checkVersion(
         name = "GCC",
-        which_name = "gcc",
-        current = current_version("gcc"),
+        whichName = "gcc",
+        current = currentVersion("gcc"),
         expected = switch(
             EXPR = os,
             rhel7 = "4.8.5",
@@ -512,78 +512,78 @@ if (isTRUE(linux)) {
         )
     )
     ## This is used for shebang. Version 8.30 marks support of `-S` flag.
-    check_version(
+    checkVersion(
         name = "env (coreutils)",
-        which_name = "env",
-        current = current_version("env"),
-        expected = expected_version("coreutils")
+        whichName = "env",
+        current = currentVersion("env"),
+        expected = expectedVersion("coreutils")
     )
-    check_version(
+    checkVersion(
         name = "rename (Perl File::Rename)",
-        which_name = "rename",
-        current = current_version("perl-file-rename"),
-        expected = expected_version("perl-file-rename")
+        whichName = "rename",
+        current = currentVersion("perl-file-rename"),
+        expected = expectedVersion("perl-file-rename")
     )
-    check_version(
+    checkVersion(
         name = "RStudio Server",
-        which_name = "rstudio-server",
-        current = current_version("rstudio-server"),
-        expected = expected_version("rstudio-server")
+        whichName = "rstudio-server",
+        current = currentVersion("rstudio-server"),
+        expected = expectedVersion("rstudio-server")
     )
-    check_version(
+    checkVersion(
         name = "Shiny Server",
-        which_name = "shiny-server",
-        current = current_version("shiny-server"),
-        expected = expected_version("shiny-server")
+        whichName = "shiny-server",
+        current = currentVersion("shiny-server"),
+        expected = expectedVersion("shiny-server")
     )
 
     message("\nPowerful virtual machine only:")
-    check_version(
+    checkVersion(
         name = "bcbio-nextgen",
-        which_name = "bcbio_nextgen.py",
-        current = current_version("bcbio-nextgen"),
-        expected = expected_version("bcbio-nextgen"),
+        whichName = "bcbio_nextgen.py",
+        current = currentVersion("bcbio-nextgen"),
+        expected = expectedVersion("bcbio-nextgen"),
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
-    check_version(
+    checkVersion(
         name = "Lmod",
-        which_name = NULL,
-        current = current_version("lmod"),
-        expected = expected_version("lmod")
+        whichName = NULL,
+        current = currentVersion("lmod"),
+        expected = expectedVersion("lmod")
     )
-    check_version(
+    checkVersion(
         name = "Lua",
-        which_name = "lua",
-        current = current_version("lua"),
-        expected = expected_version("lua")
+        whichName = "lua",
+        current = currentVersion("lua"),
+        expected = expectedVersion("lua")
     )
-    check_version(
+    checkVersion(
         name = "LuaRocks",
-        which_name = "luarocks",
-        current = current_version("luarocks"),
-        expected = expected_version("luarocks")
+        whichName = "luarocks",
+        current = currentVersion("luarocks"),
+        expected = expectedVersion("luarocks")
     )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
-    check_version(
+    checkVersion(
         name = "Homebrew",
-        which_name = "brew",
-        current = current_version("homebrew"),
-        expected = expected_version("homebrew")
+        whichName = "brew",
+        current = currentVersion("homebrew"),
+        expected = expectedVersion("homebrew")
     )
     ## Apple LLVM version.
-    check_version(
+    checkVersion(
         name = "Clang",
-        which_name = "clang",
-        current = current_version("clang"),
-        expected = expected_version("clang")
+        whichName = "clang",
+        current = currentVersion("clang"),
+        expected = expectedVersion("clang")
     )
     ## Apple LLVM version.
-    check_version(
+    checkVersion(
         name = "GCC",
-        which_name = "gcc",
-        current = current_version("gcc-darwin"),
-        expected = expected_version("clang")
+        whichName = "gcc",
+        current = currentVersion("gcc-darwin"),
+        expected = expectedVersion("clang")
     )
 }
