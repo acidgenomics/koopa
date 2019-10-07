@@ -18,6 +18,10 @@ exclude_dirs=(
     "${KOOPA_HOME}/shell/zsh/functions"
     ".git"
 )
+exclude_files=(
+    "$(basename "$0")"
+    "${KOOPA_HOME}/.pylintrc"
+)
 
 # Full path exclusion seems to only work on macOS.
 if ! _koopa_is_darwin
@@ -26,15 +30,22 @@ then
     do
         exclude_dirs[$i]="$(basename "${exclude_dirs[$i]}")"
     done
+    for i in "${!exclude_files[@]}"
+    do
+        exclude_files[$i]="$(basename "${exclude_files[$i]}")"
+    done
 fi
 
-# Prepend the `--exclude-dir=` flag.
+# Prepend the '--exclude=' flag.
+exclude_files=("${exclude_files[@]/#/--exclude=}")
+
+# Prepend the '--exclude-dir=' flag.
 exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 hits="$( \
     grep -Elr \
         --binary-files="without-match" \
-        --exclude="$(basename "$0")" \
+        "${exclude_files[@]}" \
         "${exclude_dirs[@]}" \
         "\b(FIXME|TODO)\b" \
         "$path" | \
