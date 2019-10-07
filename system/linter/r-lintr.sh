@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Recursively run pylint on all Python scripts in a directory.
+# Recursively run lintr on all R scripts in a directory.
 # Updated 2019-10-07.
 
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
-
-# Skip test if pylint is not installed.
-if ! _koopa_is_installed pylint
-then
-    printf "NOTE | %s\n" "$(basename "$0")"
-    printf "     |   pylint missing.\n"
-    exit 0
-fi
 
 path="${1:-$KOOPA_HOME}"
 
@@ -34,20 +26,35 @@ then
     done
 fi
 
-# Prepend the `--exclude-dir=` flag.
+# Prepend the '--exclude-dir=' flag.
 exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
+
+# Find scripts by file extension.
+ext_files=()
+while IFS=  read -r -d $'\0'
+do
+    ext_files+=("$REPLY")
+done < <(find "${KOOPA_HOME}/system" -iname "*.R" -print0)
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
-
-# Note that setting '--jobs=0' flag here enables multicore.
-
-grep -Elr \
+shebang_files="$( \
+    grep -Elr \
     --binary-files="without-match" \
     "${exclude_dirs[@]}" \
-    '^#!/.*\bpython(3)?\b$' \
-    "$path" | \
-    xargs -I {} pylint --jobs=0 --score=n {}
+    '^#!/.*\bRscript\b$' \
+    "$path" \
+)"
+mapfile -t shebang_files <<< "$shebang_files"
+
+merge=("${ext_files[@]}" "${shebang_files[@]}")
+files="$(printf "%q\n" "${merge[@]}" | sort -u)"
+mapfile -t files <<< "$files"
+
+for file in "${files[@]}"
+do
+    Rscript -e "lintr::lint(file = \"${file}\")"
+done
 
 printf "  OK | %s\n" "$(basename "$0")"
 exit 0
