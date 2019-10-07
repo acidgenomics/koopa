@@ -153,8 +153,12 @@ def download_genome(release_url, output_dir, decompress):
     base_url = paste_url(release_url, "fasta", organism.lower(), "dna")
     readme_url = paste_url(base_url, "README")
     checksums_url = paste_url(base_url, "CHECKSUMS")
+    if organism == "Homo sapiens" or organism == "Mus musculus":
+        assembly="primary_assembly"
+    else:
+        assembly="toplevel"
     fasta_url = paste_url(
-        base_url, organism + "." + build + ".dna.primary_assembly.fa.gz"
+        base_url, organism + "." + build + ".dna." + assembly + ".fa.gz"
     )
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
