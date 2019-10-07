@@ -395,10 +395,14 @@ _koopa_assert_matches_pattern() {
 #
 # See also: _koopa_file_ext
 #
-# Updated 2019-09-26.
+# Updated 2019-10-07.
 _koopa_basename_sans_ext() {
     _koopa_assert_has_file_ext "$1"
-    printf "%s\n" "${1%.*}"
+    local x
+    x="$1"
+    x="$(basename "$x")"
+    x="${x%.*}"
+    printf "%s\n" "$x"
 }
 
 
@@ -411,10 +415,10 @@ _koopa_basename_sans_ext() {
 #
 # See also: _koopa_file_ext2
 #
-# Updated 2019-09-26.
+# Updated 2019-10-07.
 _koopa_basename_sans_ext2() {
     _koopa_assert_has_file_ext "$1"
-    echo "$1" | cut -d '.' -f 1
+    basename "$1" | cut -d '.' -f 1
 }
 
 
