@@ -1,29 +1,30 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name,redefined-outer-name
+# pylint: enable=invalid-name
+"""
+Download FlyBase genome.
+"""
 
 import argparse
 import os
 import sys
-import textwrap
 
+from textwrap import dedent
+
+# pylint: disable=wrong-import-position
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-import pykoopa
 from pykoopa.genome import flybase_dmel_version, flybase_version
 from pykoopa.syntactic import kebab_case
-from pykoopa.sys import decompress_but_keep_original, eprint, wget
+from pykoopa.sys import decompress_but_keep_original, eprint, paste_url, wget
 
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-organism = "Drosophila melanogaster"
-build = "BDGP6"
+# pylint: enable=wrong-import-position
 
 
 # Usage                                                                     {{{1
 # ==============================================================================
 
-description = "Download FlyBase genome."
-epilog = """
+DESCRIPTION = "Download FlyBase genome."
+EPILOG = """
 details:
     Creates a new directory in the current working directory.
     Currently only supports Drosophila melanogaster genome.
@@ -36,16 +37,18 @@ see also:
 
 note:
     Python script.
-    Updated 2019-10-05.
+    Updated 2019-10-07.
 """
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+# pylint: disable=invalid-name,protected-access,redefined-builtin
+
 parser = argparse.ArgumentParser(
-    description=description,
-    epilog=epilog,
+    description=DESCRIPTION,
+    epilog=EPILOG,
     formatter_class=argparse.RawTextHelpFormatter,
 )
 parser.add_argument(
@@ -54,7 +57,7 @@ parser.add_argument(
     const="all",
     nargs="?",
     choices=["all", "genome", "transcriptome", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all reference types
         'genome': primary assembly (DNA)
@@ -69,7 +72,7 @@ parser.add_argument(
     const="all",
     nargs="?",
     choices=["all", "gtf", "gff", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all annotation formats
         'gtf': GTF (GFFv2)
@@ -102,101 +105,107 @@ type = args.type
 if type == "none" and annotation == "none":
     eprint("Error: 'type' or 'annotation' are required.")
 
-
-# Script                                                                    {{{1
-# ==============================================================================
+organism = "Drosophila melanogaster"
+build = "BDGP6"
 
 if release is None:
     release = flybase_version()
 if dmel is None:
     dmel = flybase_dmel_version()
 
-base_url = "ftp://ftp.flybase.net/"
-release_url = base_url + "releases/" + release + "/dmel_" + dmel + "/"
+base_url = "ftp://ftp.flybase.net"
+release_url = paste_url(base_url, "releases", release, "dmel_" + dmel)
 output_dir = kebab_case(
     organism + " " + build + " " + "flybase" + " " + release
 )
 
+# pylint: enable=invalid-name,protected-access,redefined-builtin
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 
 def download_genome(release_url, output_dir, decompress, dmel):
+    """
+    Download genome FASTA.
+    """
     output_dir = os.path.join(output_dir, "genome")
-    wget(url=release_url + "fasta/" + "md5sum.txt", output_dir=output_dir)
+    fasta_url = paste_url(release_url, "fasta")
+    wget(url=paste_url(fasta_url, "md5sum.txt"), output_dir=output_dir)
     wget(
-        url=release_url + "fasta/" + "dmel-all-aligned-" + dmel + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-aligned-" + dmel + ".fasta.gz"),
         output_dir=output_dir,
         decompress=decompress,
     )
 
 
 def download_transcriptome(release_url, output_dir, decompress, dmel):
+    """
+    Download transcriptome FASTA.
+    """
     output_dir = os.path.join(output_dir, "transcriptome")
     cat_dir = os.path.join(output_dir, "cat")
-    output_fasta_file = (
-        output_dir + "/" + "dmel-transcriptome-" + dmel + ".fasta.gz"
+    output_fasta_file = os.path.join(
+        output_dir, "dmel-transcriptome-" + dmel + ".fasta.gz"
     )
-    wget(url=release_url + "fasta/" + "md5sum.txt", output_dir=cat_dir)
+    fasta_url = paste_url(release_url, "fasta")
+    wget(url=paste_url(fasta_url, "md5sum.txt"), output_dir=cat_dir)
     wget(
-        url=release_url
-        + "fasta/"
-        + "dmel-all-transcript-"
-        + dmel
-        + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-transcript-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
     wget(
-        url=release_url + "fasta/" + "dmel-all-miRNA-" + dmel + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-miRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
     wget(
-        url=release_url + "fasta/" + "dmel-all-miscRNA-" + dmel + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-miscRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
     wget(
-        url=release_url + "fasta/" + "dmel-all-ncRNA-" + dmel + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-ncRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
     wget(
-        url=release_url
-        + "fasta/"
-        + "dmel-all-pseudogene-"
-        + dmel
-        + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-pseudogene-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
     wget(
-        url=release_url + "fasta/" + "dmel-all-tRNA-" + dmel + ".fasta.gz",
+        url=paste_url(fasta_url, "dmel-all-tRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
     if not os.path.isfile(output_fasta_file):
         print("Concatenating '" + output_fasta_file + "'.")
-        os.system(
-            "cat "
-            + cat_dir
-            + "/"
-            + "dmel-all-*-"
-            + dmel
-            + ".fasta.gz > "
-            + output_fasta_file
-        )
+        fasta_glob = os.path.join(cat_dir, "dmel-all-*-" + dmel, ".fasta.gz")
+        os.system("cat " + fasta_glob + " > " + output_fasta_file)
         if decompress is True:
             decompress_but_keep_original(output_fasta_file)
 
 
 def download_gtf(release_url, output_dir, decompress, dmel):
+    """
+    Download GTF file.
+    """
     output_dir = os.path.join(output_dir, "gtf")
-    wget(url=release_url + "gtf/" + "md5sum.txt", output_dir=output_dir)
+    gtf_url = paste_url(release_url, "gtf")
+    wget(url=paste_url(gtf_url, "md5sum.txt"), output_dir=output_dir)
     wget(
-        url=release_url + "gtf/" + "dmel-all-" + dmel + ".gtf.gz",
+        url=paste_url(gtf_url, "dmel-all-" + dmel + ".gtf.gz"),
         output_dir=output_dir,
         decompress=decompress,
     )
 
 
 def download_gff(release_url, output_dir, decompress, dmel):
+    """
+    Download GFF3 file.
+    """
     output_dir = os.path.join(output_dir, "gff")
-    wget(url=release_url + "gff/" + "md5sum.txt", output_dir=output_dir)
+    gff_url = paste_url(release_url, "gff")
+    wget(url=paste_url(gff_url, "md5sum.txt"), output_dir=output_dir)
     wget(
-        url=release_url + "gff/" + "dmel-all-" + dmel + ".gff.gz",
+        url=paste_url(gff_url, "dmel-all-" + dmel + ".gff.gz"),
         output_dir=output_dir,
         decompress=decompress,
     )
