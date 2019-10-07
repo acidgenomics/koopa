@@ -13,7 +13,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    [--files] [--rename]
+    [--files] [--prefix] [--rename]
     string...
 
 Convert input into kebab case.
@@ -27,6 +27,9 @@ optional arguments:
         preserving anything after the first '.' in the file name. This makes
         supporting complex file names (e.g. '*.fastq.gz') easier. Note that this
         flag on its own does not rename input.
+    --prefix
+        Include "x" prefix for names that are syntactically invalid in R.
+        This includes files that begin with a number.
     --rename
         Rename input files. Sets '--files' flag automatically. Assumes we're
         renaming files in current working directory but also supports explicit
@@ -55,7 +58,7 @@ examples:
 note:
     Bash script that calls Rscript internally.
     Requires the syntactic package to be installed.
-    Updated 2019-09-26.
+    Updated 2019-10-07.
 EOF
 }
 
@@ -67,6 +70,7 @@ _koopa_help "$@"
 # ==============================================================================
 
 files=0
+prefix="FALSE"
 rename=0
 
 POSITIONAL=()
@@ -75,6 +79,10 @@ do
     case "$1" in
         --files)
             files=1
+            shift 1
+            ;;
+        --prefix)
+            prefix="TRUE"
             shift 1
             ;;
         --rename)
@@ -109,7 +117,16 @@ set -- "${POSITIONAL[@]}"
 if [[ "$files" -eq 0 ]]
 then
     object="$(_koopa_array_to_r_vector "$@")"
-    Rscript -e "cat(syntactic::kebabCase(object = ${object}), '\n', sep = ' ')"
+    Rscript -e " \
+        cat(
+            syntactic::kebabCase(
+                object = ${object},
+                prefix = ${prefix}
+            ),
+            '\n',
+            sep = ' '
+        ) \
+    "
     exit 0
 fi
 
