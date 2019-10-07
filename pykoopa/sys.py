@@ -40,6 +40,7 @@ def assert_is_file(path):
         print("Error: Not file: '" + path + "'")
         sys.exit(0)
 
+
 def decompress_but_keep_original(file):
     """
     Decompress but keep original compressed file.
@@ -87,11 +88,13 @@ def paste_url(*args):
     Deals with sanitization of trailing slashes automatically.
 
     See also:
+    - urlparse
     - https://codereview.stackexchange.com/questions/175421/
 
-    Updated 2019-10-06.
+    Updated 2019-10-07.
     """
-    return "/".join(arg.strip("/") for arg in args)
+    out = "/".join(arg.strip("/") for arg in args)
+    return out
 
 
 def wget(url, output_file=None, output_dir=None, decompress=False):
