@@ -20,12 +20,16 @@ def ensembl_version():
     return _genome_version("ensembl")
 
 
+def flybase_dmel_version():
+    return _genome_version("flybase", "--dmel")
+
+
 def flybase_version():
     return _genome_version("flybase")
 
 
 def gencode_version(organism):
-    return _genome_version("gencode", organism)
+    return _genome_version("gencode", ("\"" + organism + "\""))
 
 
 def refseq_version():

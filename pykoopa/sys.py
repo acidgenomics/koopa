@@ -14,7 +14,7 @@ def arg_string(*args):
     if len(args) == 0:
         return None
     else:
-        args = ' "%s"' % args
+        args = " %s" % args
         return args
 
 
