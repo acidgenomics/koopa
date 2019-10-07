@@ -94,11 +94,15 @@ if len(sys.argv) == 1:
     sys.exit(1)
 args = parser.parse_args()
 
+annotation = args.annotation
 build = args.build
 decompress = args.decompress
 organism = args.organism
 release = args.release
 type = args.type
+
+if type == "none" and annotation == "none":
+    eprint("Error: 'type' or 'annotation' are required.")
 
 
 # Script                                                                    {{{1
