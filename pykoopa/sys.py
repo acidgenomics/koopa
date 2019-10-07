@@ -9,8 +9,6 @@ import os
 import subprocess
 import sys
 
-from pykoopa.assert import assert_is_file
-
 
 def arg_string(*args):
     """
@@ -19,10 +17,28 @@ def arg_string(*args):
     """
     if len(args) == 0:
         return None
-    else:
-        args = " %s" % args
-        return args
+    args = " %s" % args
+    return args
 
+
+def assert_is_not_file(path):
+    """
+    Does the input not contain a file?
+    Updated 2019-10-07.
+    """
+    if os.path.isfile(path):
+        print("Error: File exists: '" + path + "'")
+        sys.exit(0)
+
+
+def assert_is_file(path):
+    """
+    Does the input contain a file?
+    Updated 2019-10-07.
+    """
+    if not os.path.isfile(path):
+        print("Error: Not file: '" + path + "'")
+        sys.exit(0)
 
 def decompress_but_keep_original(file):
     """
@@ -39,40 +55,40 @@ def decompress_but_keep_original(file):
 def eprint(*args, **kwargs):
     """
     Print to stderr.
-    
+
     See also:
     - 'sys.stderr.write()'.
     - https://stackoverflow.com/questions/5574702
-    
+
     Updated 2019-10-06.
     """
     print(*args, file=sys.stderr, **kwargs)
     sys.exit(1)
 
 
-def init_dir(dir):
+def init_dir(name):
     """
     Make a directory recursively and don't error if exists.
-    
+
     See also:
     - 'basejump::initDir()' in R.
     - 'mkdir -p' in shell.
     - https://stackoverflow.com/questions/600268
-    
+
     Updated 2019-10-06.
     """
-    os.makedirs(name=dir, exist_ok=True)
+    os.makedirs(name=name, exist_ok=True)
 
 
 def paste_url(*args):
     """
     Paste URL.
-    
+
     Deals with sanitization of trailing slashes automatically.
-    
+
     See also:
     - https://codereview.stackexchange.com/questions/175421/
-    
+
     Updated 2019-10-06.
     """
     return "/".join(arg.strip("/") for arg in args)
@@ -98,7 +114,7 @@ def wget(url, output_file=None, output_dir=None, decompress=False):
         init_dir(output_dir)
         try:
             subprocess.check_call(["wget", "-O", output_file, url])
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError:
             eprint("Failed to download '" + output_file + "'.")
     if decompress is True:
         output_file = decompress_but_keep_original(output_file)
