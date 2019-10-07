@@ -1,30 +1,31 @@
 #!/usr/bin/env python3
+# pylint: disable=invalid-name,redefined-outer-name
+# pylint: enable=invalid-name
+"""
+Download Ensembl genome.
+"""
 
 import argparse
 import os
 import sys
-import textwrap
+
+from textwrap import dedent
+
+# pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-import pykoopa
 from pykoopa.genome import ensembl_version
 from pykoopa.syntactic import kebab_case
-from pykoopa.sys import eprint, wget
+from pykoopa.sys import eprint, paste_url, wget
 
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-base_url = "ftp://ftp.ensembl.org/pub/"
-grch37_base_url = base_url + "grch37/"
-grch37_release = "87"
+# pylint: enable=wrong-import-position
 
 
 # Usage                                                                     {{{1
 # ==============================================================================
 
-description = "Download Ensembl genome."
-epilog = """
+DESCRIPTION = "Download Ensembl genome."
+EPILOG = """
 details:
     Creates a new directory in the current working directory.
 
@@ -43,16 +44,18 @@ see also:
 
 note:
     Python script.
-    Updated 2019-10-05.
+    Updated 2019-10-07.
 """
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+# pylint: disable=invalid-name,protected-access,redefined-builtin
+
 parser = argparse.ArgumentParser(
-    description=description,
-    epilog=epilog,
+    description=DESCRIPTION,
+    epilog=EPILOG,
     formatter_class=argparse.RawTextHelpFormatter,
 )
 optional = parser._action_groups.pop()
@@ -72,7 +75,7 @@ optional.add_argument(
     const="all",
     nargs="?",
     choices=["all", "genome", "transcriptome", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all reference types
         'genome': primary assembly (DNA)
@@ -87,7 +90,7 @@ optional.add_argument(
     const="all",
     nargs="?",
     choices=["all", "gtf", "gff", "none"],
-    help=textwrap.dedent(
+    help=dedent(
         """\
         'all': download all annotation formats
         'gtf': GTF (GFFv2)
@@ -120,9 +123,9 @@ if type == "none" and annotation == "none":
 
 organism = organism.replace(" ", "_")
 
-
-# Script                                                                    {{{1
-# ==============================================================================
+base_url = "ftp://ftp.ensembl.org/pub"
+grch37_base_url = paste_url(base_url, "grch37")
+grch37_release = "87"
 
 if build == "GRCh37":
     base_url = grch37_base_url
@@ -130,19 +133,28 @@ if build == "GRCh37":
 if release is None:
     release = ensembl_version()
 
-release_url = base_url + "release-" + release + "/"
+release_url = paste_url(base_url, "release-" + release)
 output_dir = kebab_case(
     organism + " " + build + " " + "ensembl" + " " + release
 )
 
+# pylint: enable=invalid-name,protected-access,redefined-builtin
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 
 def download_genome(release_url, output_dir, decompress):
+    """
+    Download genome FASTA.
+    """
     output_dir = os.path.join(output_dir, "genome")
-    base_url = release_url + "fasta/" + organism.lower() + "/dna/"
-    readme_url = base_url + "README"
-    checksums_url = base_url + "CHECKSUMS"
-    fasta_url = (
-        base_url + organism + "." + build + ".dna.primary_assembly.fa.gz"
+    base_url = paste_url(release_url, "fasta", organism.lower(), "dna")
+    readme_url = paste_url(base_url, "README")
+    checksums_url = paste_url(base_url, "CHECKSUMS")
+    fasta_url = paste_url(
+        base_url, organism + "." + build + ".dna.primary_assembly.fa.gz"
     )
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
@@ -150,33 +162,46 @@ def download_genome(release_url, output_dir, decompress):
 
 
 def download_transcriptome(release_url, output_dir, decompress):
+    """
+    Download transcriptome FASTA.
+    """
     output_dir = os.path.join(output_dir, "transcriptome")
-    base_url = release_url + "fasta/" + organism.lower() + "/cdna/"
-    readme_url = base_url + "README"
-    checksums_url = base_url + "CHECKSUMS"
-    fasta_url = base_url + organism + "." + build + ".cdna.all.fa.gz"
+    base_url = paste_url(release_url, "fasta", organism.lower(), "cdna")
+    readme_url = paste_url(base_url, "README")
+    checksums_url = paste_url(base_url, "CHECKSUMS")
+    fasta_url = paste_url(base_url, organism + "." + build + ".cdna.all.fa.gz")
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=fasta_url, output_dir=output_dir, decompress=decompress)
 
 
 def download_gtf(release_url, output_dir, decompress):
+    """
+    Download GTF file.
+    """
     output_dir = os.path.join(output_dir, "gtf")
-    base_url = release_url + "gtf/" + organism.lower() + "/"
-    readme_url = base_url + "README"
-    checksums_url = base_url + "CHECKSUMS"
-    gtf_url = base_url + organism + "." + build + "." + release + ".gtf.gz"
+    base_url = paste_url(release_url, "gtf", organism.lower())
+    readme_url = paste_url(base_url, "README")
+    checksums_url = paste_url(base_url, "CHECKSUMS")
+    gtf_url = paste_url(
+        base_url, organism + "." + build + "." + release + ".gtf.gz"
+    )
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
 
 
 def download_gff(release_url, output_dir, decompress):
+    """
+    Download GFF3 file.
+    """
     output_dir = os.path.join(output_dir, "gff")
-    base_url = release_url + "gff3/" + organism.lower() + "/"
-    readme_url = base_url + "README"
-    checksums_url = base_url + "CHECKSUMS"
-    gff_url = base_url + organism + "." + build + "." + release + ".gff3.gz"
+    base_url = paste_url(release_url, "gff3", organism.lower())
+    readme_url = paste_url(base_url, "README")
+    checksums_url = paste_url(base_url, "CHECKSUMS")
+    gff_url = paste_url(
+        base_url, organism + "." + build + "." + release + ".gff3.gz"
+    )
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gff_url, output_dir=output_dir, decompress=decompress)
