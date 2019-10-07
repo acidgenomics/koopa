@@ -1,8 +1,7 @@
-#!/usr/bin/env -S Rscript --vanilla
-## shebang requires env from coreutils >= 8.30.
+#!/usr/bin/env Rscript
 
 ## List user-accessible programs exported in PATH.
-## Updated 2019-09-30.
+## Updated 2019-10-07.
 
 options(
     error = quote(quit(status = 1L)),
@@ -11,12 +10,13 @@ options(
 
 message("koopa programs exported in PATH.")
 
-## Note that these won't pick up in my current RStudio configuration.
-koopa_dir <- Sys.getenv("KOOPA_HOME")
+## Note that these won't pick up in isolated RStudio configuration.
+## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
+koopaHome <- Sys.getenv("KOOPA_HOME")
 path <- Sys.getenv("PATH")
 stopifnot(
-    nzchar(koopa_dir),
-    grepl("koopa", path)
+    nzchar(koopaHome),
+    any(grepl("koopa", path))
 )
 
 printPrograms <- function(path) {
@@ -26,7 +26,8 @@ printPrograms <- function(path) {
         all.files = FALSE,
         full.names = TRUE
     )
-    files <- files[!file.info(files)$isdir]
+    keep <- !file.info(files)[["isdir"]]
+    files <- files[keep]
     if (length(files) == 0L) {
         return()
     }
