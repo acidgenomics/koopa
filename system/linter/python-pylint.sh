@@ -7,10 +7,12 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
+script_bn="$(_koopa_basename_sans_ext "$0")"
+
 # Skip test if pylint is not installed.
 if ! _koopa_is_installed pylint
 then
-    printf "NOTE | %s\n" "$(basename "$0")"
+    printf "NOTE | %s\n" "$script_bn"
     printf "     |   pylint missing.\n"
     exit 0
 fi
@@ -62,5 +64,5 @@ mapfile -t files <<< "$files"
 # Note that setting '--jobs=0' flag here enables multicore.
 pylint --jobs=0 --score=n "${files[@]}"
 
-printf "  OK | %s\n" "$(basename "$0")"
+printf "  OK | %s\n" "$script_bn"
 exit 0

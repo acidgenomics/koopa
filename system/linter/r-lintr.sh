@@ -7,6 +7,8 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
+script_bn="$(_koopa_basename_sans_ext "$0")"
+
 path="${1:-$KOOPA_HOME}"
 
 exclude_dirs=(
@@ -56,5 +58,5 @@ do
     Rscript -e "lintr::lint(file = \"${file}\")"
 done
 
-printf "  OK | %s\n" "$(basename "$0")"
+printf "  OK | %s\n" "$script_bn"
 exit 0
