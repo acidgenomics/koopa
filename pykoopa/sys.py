@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
+"""
+System utilities.
+"""
 
 from __future__ import print_function
 
 import os
 import subprocess
 import sys
-import textwrap
+
+from pykoopa.assert import assert_is_file
 
 
-# Concatenate args into a string suitable for use in shell commands.
-# Updated 2019-10-06.
 def arg_string(*args):
+    """
+    Concatenate args into a string suitable for use in shell commands.
+    Updated 2019-10-06.
+    """
     if len(args) == 0:
         return None
     else:
@@ -18,9 +24,11 @@ def arg_string(*args):
         return args
 
 
-# Decompress but keep original compressed file.
-# Updated 2019-10-06.
 def decompress_but_keep_original(file):
+    """
+    Decompress but keep original compressed file.
+    Updated 2019-10-06.
+    """
     assert_is_file(file)
     print("Decompressing '" + file + "'.")
     unzip_file = os.path.splitext(file)[0]
@@ -28,46 +36,54 @@ def decompress_but_keep_original(file):
     return unzip_file
 
 
-# Print to stderr.
-#
-# See also:
-# - 'sys.stderr.write()'.
-# - https://stackoverflow.com/questions/5574702
-#
-# Updated 2019-10-06.
 def eprint(*args, **kwargs):
+    """
+    Print to stderr.
+    
+    See also:
+    - 'sys.stderr.write()'.
+    - https://stackoverflow.com/questions/5574702
+    
+    Updated 2019-10-06.
+    """
     print(*args, file=sys.stderr, **kwargs)
     sys.exit(1)
 
 
-# Make a directory recursively and don't error if exists.
-#
-# See also:
-# - 'basejump::initDir()' in R.
-# - 'mkdir -p' in shell.
-# - https://stackoverflow.com/questions/600268
-#
-# Updated 2019-10-06.
 def init_dir(dir):
+    """
+    Make a directory recursively and don't error if exists.
+    
+    See also:
+    - 'basejump::initDir()' in R.
+    - 'mkdir -p' in shell.
+    - https://stackoverflow.com/questions/600268
+    
+    Updated 2019-10-06.
+    """
     os.makedirs(name=dir, exist_ok=True)
 
 
-# Paste URL.
-#
-# Deals with sanitization of trailing slashes automatically.
-#
-# See also:
-# - https://codereview.stackexchange.com/questions/175421/
-#
-# Updated 2019-10-06.
 def paste_url(*args):
+    """
+    Paste URL.
+    
+    Deals with sanitization of trailing slashes automatically.
+    
+    See also:
+    - https://codereview.stackexchange.com/questions/175421/
+    
+    Updated 2019-10-06.
+    """
     return "/".join(arg.strip("/") for arg in args)
 
 
-# Download a file using wget.
-# If output_file is unset, download to current working directory as basename.
-# Updated 2019-10-06.
 def wget(url, output_file=None, output_dir=None, decompress=False):
+    """
+    Download a file using wget.
+    If output_file is unset, download to working directory as basename.
+    Updated 2019-10-06.
+    """
     if not (output_file is None or output_dir is None):
         eprint("Error: Specify 'output_file' or 'output_dir' but not both.")
     if output_file is None:
