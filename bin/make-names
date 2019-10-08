@@ -90,6 +90,8 @@ set -- "${POSITIONAL[@]}"
 # Script                                                                    {{{1
 # ==============================================================================
 
+script_name="$(basename "$0")"
+
 # Rename file mode                                                          {{{2
 # ------------------------------------------------------------------------------
 
@@ -106,7 +108,7 @@ then
         source_ext_arr+=("$(_koopa_file_ext2 "$x")")
     done
     target_arr=()
-    read -r -a target_bn_arr <<< "$(make-names "${source_bn_arr[@]}")"
+    read -r -a target_bn_arr <<< "$("$script_name" "${source_bn_arr[@]}")"
     for i in "${!source_arr[@]}"
     do
         target_dn="${source_dn_arr[$i]}"
