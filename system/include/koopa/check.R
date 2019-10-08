@@ -270,7 +270,7 @@ checkVersion(
 
 
 
-## Languages ===============================================================
+## Languages ===================================================================
 message("\nPrimary languages:")
 checkVersion(
     name = "Python",
@@ -284,9 +284,11 @@ checkVersion(
     current = currentVersion("pip"),
     expected = expectedVersion("pip")
 )
+# Can use `packageVersion("base")` instead but it doesn't always return the
+# correct value for RStudio Server Pro.
 checkVersion(
     name = "R",
-    current = packageVersion("base"),
+    current = currentVersion("r"),
     expected = expectedVersion("r")
 )
 
