@@ -847,9 +847,7 @@ _koopa_is_darwin() {
 _koopa_is_installed() {
     # Is the requested program name installed?
     # Updated 2019-10-02.
-    local program
-    program="$1"
-    command -v "$program" >/dev/null
+    command -v "$1" >/dev/null
 }
 
 
@@ -952,7 +950,7 @@ _koopa_java_home() {
         home="$(/usr/libexec/java_home)"
     else
         local java_exe
-        java_exe="$(_koopa_locate "java")"
+        java_exe="$(_koopa_realpath "java")"
         home="$(dirname "$(dirname "${java_exe}")")"
     fi
     echo "$home"
@@ -971,32 +969,6 @@ _koopa_line_count() {
     wc -l "$1" | \
     xargs | \
     cut -d ' ' -f 1
-}
-
-
-# FIXME Not working on zsh.
-_koopa_locate() {
-    # Locate the realpath of a program.
-    #
-    # This resolves symlinks automatically.
-    # For 'which' style return, use '_koopa_which' instead.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/7522712
-    # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
-    #
-    # Examples:
-    # _koopa_locate bash
-    # ## /usr/local/Cellar/bash/5.0.11/bin/bash
-    #
-    # Updated 2019-10-02.
-    local command
-    command="$1"
-    local which
-    which="$(_koopa_which "$command")"
-    local path
-    path="$(realpath "$which")"
-    echo "$path"
 }
 
 
@@ -1206,6 +1178,27 @@ _koopa_r_home() {
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
+}
+
+
+_koopa_realpath() {
+    # Locate the realpath of a program.
+    #
+    # This resolves symlinks automatically.
+    # For 'which' style return, use '_koopa_which' instead.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/7665
+    # - https://unix.stackexchange.com/questions/85249
+    # - https://stackoverflow.com/questions/7522712
+    # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
+    #
+    # Examples:
+    # _koopa_realpath bash
+    # ## /usr/local/Cellar/bash/5.0.11/bin/bash
+    #
+    # Updated 2019-10-08.
+    realpath "$(_koopa_which "$1")"
 }
 
 
@@ -1524,34 +1517,18 @@ _koopa_variable() {
 # W                                                                         {{{1
 # ==============================================================================
 
-# FIXME Not working currently on zsh.
 _koopa_which() {
     # Locate which program.
     #
     # Note that this intentionally doesn't resolve symlinks.
-    # Use 'koopa_locate' for that instead.
+    # Use 'koopa_realpath' for that output instead.
     #
-    # Not currently working for zsh.
-    # 'command -v' doesn't return anything back inside a function.
-    # Also tried:
-    # - 'type -p'
-    # - 'whence -p'
-    #
-    # Examples:
+    # Example:
     # _koopa_which bash
     # ## /usr/local/bin/bash
     #
-    # Updated 2019-10-02.
-    local command
-    command="$1"
-    local path
-    path="$(command -v "$command")"
-    if [ -z "$path" ]
-    then
-        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
-        return 1
-    fi
-    echo "$path"
+    # Updated 2019-10-08.
+    command -v "$1"
 }
 
 
@@ -1564,3 +1541,5 @@ _koopa_zsh_version() {
         head -n 1 | \
         cut -d ' ' -f 2
 }
+
+
