@@ -19,27 +19,23 @@ $(_koopa_help_header)
 Convert input into kebab case.
 
 required positional arguments:
-    ... Character strings to sanitize.
+    ... Character strings or file names to sanitize.
 
 optional arguments:
-    --files
-        File name mode. Preserves file extensions. In this case, we're
-        preserving anything after the first '.' in the file name. This makes
-        supporting complex file names (e.g. '*.fastq.gz') easier. Note that this
-        flag on its own does not rename input.
-    --prefix
-        Include "x" prefix for names that are syntactically invalid in R.
-        This includes files that begin with a number.
     --rename
-        Rename input files. Sets '--files' flag automatically. Assumes we're
-        renaming files in current working directory but also supports explicit
-        and/or mixed file paths.
+        Rename input files. Assumes we're renaming files in current working
+        directory but also supports explicit and/or mixed file paths. Errors
+        intentionally if requested input does not exist on disk. Disabled by
+        default.
+    --prefix
+        Include "x" prefix for names that are syntactically invalid in R. This
+        includes files that begin with a number. Disabled by default.
 
 $(_koopa_help_args)
 
 details:
-    Also known as dashed or hyphen case.
-    Note that strings beginning with a number will be prefixed with 'x'.
+    Runs in string mode by default.
+    File rename mode can be enabled by setting '--rename' flag.
 
 see also:
     - 'syntactic::kebabCase()' in R.
@@ -52,13 +48,13 @@ examples:
     kebab-case --files "foo_bar.fastq.gz"
     ## ./foo-bar.fastq.gz
 
-    kebab-case --files 1_control_A.fastq.gz
+    kebab-case --files --prefix 1_control_A.fastq.gz
     ## ./x1-control-a.fastq.gz
 
 note:
     Bash script that calls Rscript internally.
     Requires the syntactic package to be installed.
-    Updated 2019-10-07.
+    Updated 2019-10-08.
 EOF
 }
 
@@ -69,7 +65,6 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-files=0
 prefix="FALSE"
 rename=0
 
@@ -77,16 +72,11 @@ POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
-        --files)
-            files=1
-            shift 1
-            ;;
         --prefix)
             prefix="TRUE"
             shift 1
             ;;
         --rename)
-            files=1
             rename=1
             shift 1
             ;;
@@ -111,68 +101,68 @@ set -- "${POSITIONAL[@]}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-# String mode                                                               {{{2
-# ------------------------------------------------------------------------------
+script_name="$(basename "$0")"
 
-if [[ "$files" -eq 0 ]]
-then
-    object="$(_koopa_array_to_r_vector "$@")"
-    Rscript -e " \
-        cat(
-            syntactic::kebabCase(
-                object = ${object},
-                prefix = ${prefix}
-            ),
-            '\n',
-            sep = ' '
-        ) \
-    "
-    exit 0
-fi
-
-# File mode                                                                 {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$files" -eq 1 ]]
-then
-    source=("$@")
-    dirname=()
-    basename=()
-    ext=()
-
-    # Mapply-style approach, looping across the file input.
-    for x in "${source[@]}"
-    do
-        dirname+=("$(dirname "$x")")
-        basename+=("$(_koopa_basename_sans_ext2 "$x")")
-        ext+=("$(_koopa_file_ext2 "$x")")
-    done
-
-    # Sanitize the base name.
-    kebab="$(kebab-case "${basename[@]}")"
-    # SC2206: Split robustly with mapfile or read -a.
-    read -r -a kebab <<< "$kebab"
-
-    target=()
-    for i in "${!source[@]}"
-    do
-        target+=( \
-            "$(printf "%s/%s.%s" \
-                "${dirname[$i]}" "${kebab[$i]}" "${ext[$i]}" \
-            )" \
-        )
-    done
-fi
-
-# Rename mode                                                               {{{2
+# Rename file mode                                                          {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$rename" -eq 1 ]]
 then
-    for i in "${!source[@]}"
+    flags=()
+    if [[ "$prefix" == "TRUE" ]]
+    then
+        flags+=("--prefix")
+    fi
+    source_arr=("$@")
+    source_dn_arr=()
+    source_bn_arr=()
+    source_ext_arr=()
+    for x in "${source_arr[@]}"
     do
-        mv -v "${source[$i]}" "${target[$i]}"
+        source_dn_arr+=("$(dirname "$x")")
+        source_bn_arr+=("$(_koopa_basename_sans_ext2 "$x")")
+        source_ext_arr+=("$(_koopa_file_ext2 "$x")")
     done
-else
-    echo "${target[@]}"
+    target_arr=()
+    read -r -a target_bn_arr <<< \
+        "$("$script_name" "${flags[@]}" "${source_bn_arr[@]}")"
+    for i in "${!source_arr[@]}"
+    do
+        target_dn="${source_dn_arr[$i]}"
+        target_bn="${target_bn_arr[$i]}"
+        target_ext="${source_ext_arr[$i]}"
+        if [[ -n "$target_ext" ]]
+        then
+            target_ext=".${target_ext}"
+        fi
+        target_arr+=( \
+            "$(printf "%s/%s%s" \
+                "$target_dn" "$target_bn" "$target_ext" \
+            )" \
+        )
+    done
+    for i in "${!source_arr[@]}"
+    do
+        mv \
+            --no-target-directory \
+            --verbose \
+            "${source_arr[$i]}" \
+            "${target_arr[$i]}"
+    done
+    exit 0
 fi
+
+# String mode                                                               {{{2
+# ------------------------------------------------------------------------------
+
+object="$(_koopa_array_to_r_vector "$@")"
+Rscript -e " \
+    cat(
+        syntactic::kebabCase(
+            object = ${object},
+            prefix = ${prefix}
+        ),
+        '\n',
+        sep = ' '
+    ) \
+"
