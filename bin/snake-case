@@ -48,7 +48,7 @@ examples:
     snake-case --files "foo-bar.fastq.gz"
     ## ./foo_bar.fastq.gz
 
-    snake-case --files 1-control-A.fastq.gz
+    snake-case --files --prefix 1-control-A.fastq.gz
     ## ./x1_control_a.fastq.gz
 
 note:
@@ -101,6 +101,8 @@ set -- "${POSITIONAL[@]}"
 # Script                                                                    {{{1
 # ==============================================================================
 
+script_name="$(basename "$0")"
+
 # Rename file mode                                                          {{{2
 # ------------------------------------------------------------------------------
 
@@ -123,7 +125,7 @@ then
     done
     target_arr=()
     read -r -a target_bn_arr <<< \
-        "$(snake-case "${flags[@]}" "${source_bn_arr[@]}")"
+        "$("$script_name" "${flags[@]}" "${source_bn_arr[@]}")"
     for i in "${!source_arr[@]}"
     do
         target_dn="${source_dn_arr[$i]}"
