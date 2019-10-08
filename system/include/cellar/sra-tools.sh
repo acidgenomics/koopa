@@ -5,30 +5,33 @@
 # Notes                                                                     {{{1
 # ==============================================================================
 
-# sudo yum install libxml2-devel
-# sudo yum install libmagic-devel
-# sudo yum install libhdf5-devel
+# RHEL 7 dependencies
+# file-devel : libmagic
+# > sudo yum -y install \
+# >     file-devel \
+# >     libhdf5-devel \
+# >     libxml2-devel
+
+# ncbi-vdb will fail to install unless we extract the tarballs to the same
+# top level directory without version numbers.
+# ## required ngs-sdk package not found.
+# https://github.com/ncbi/sra-tools/issues/48
+
+# > sudo ldconfig -v
+# > export LD_LIBRARY_PATH=/usr/local/lib64
 
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
-# Install in order:
-# ngs
-# ncbi-vdb
-# sra-tools
-
 name="sra-tools"
 version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
-patches="$(echo "$version" | cut -d '.' -f 3)"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
-gnu_mirror="https://ftpmirror.gnu.org"
-exe_file="${prefix}/bin/${name}"
 
+build_prefix="${tmp_dir}/ncbi-outdir"
+ngs_libdir="$(_koopa_build_prefix)/lib64"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
 
 
@@ -39,12 +42,13 @@ usage() {
 cat << EOF
 $(_koopa_help_header "install-cellar-${name}")
 
-Install SRA toolkit from source.
+Install SRA toolkit.
 
 $(_koopa_help_args)
 
 details:
-    Requires ngs and ncbi-vdb to be installed.
+    Installs NCBI NGS language bindings (ngs) and ncbi-vdb automatically.
+    This install method supports ngs-python.
 
 see also:
     - https://github.com/ncbi/sra-tools/wiki/Building-and-Installing-from-Source
@@ -66,40 +70,80 @@ _koopa_help "$@"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+# Ensure current jar binary is in path, otherwise install will fail.
+java_home="$(_koopa_java_home)"
+_koopa_add_to_path_start "${java_home}/bin"
+_koopa_assert_is_installed jar
+
+export NGS_LIBDIR="$ngs_libdir"
+export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
+# > ld -L$NGS_LIBDIR -lngs-sdk ...
+
+rm -frv "$prefix"
+rm -fr "$tmp_dir"
+mkdir -p "$tmp_dir"
+
+# ngs                                                                       {{{1
+# ------------------------------------------------------------------------------
+
 (
-    rm -frv "$prefix"
-    rm -fr "$tmp_dir"
-    mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "${gnu_mirror}/bash/bash-${major_version}.tar.gz"
-    tar -xzvf "bash-${major_version}.tar.gz"
-    cd "bash-${major_version}" || exit 1
-    # Apply patches. Can pipe curl call directly to 'patch -p0' instead.
-    (
-        mkdir -pv patches
-        cd patches || exit 1
-        base_url="https://ftp.gnu.org/gnu/bash/bash-${major_version}-patches"
-        mv_tr="$(echo "$major_version" | tr -d '.')"
-        range="$(printf "%03d-%03d" "1" "$patches")"
-        request="${base_url}/bash${mv_tr}-[${range}]"
-        curl "$request" -O
-        cd .. || exit 1
-        for file in patches/*
-        do
-            patch -p0 --input="$file"
-        done
-    )
+    wget -O "ngs.tar.gz" \
+        "https://github.com/ncbi/ngs/archive/${version}.tar.gz"
+    tar -xzvf "ngs.tar.gz"
+    mv "ngs-${version}" "ngs"
+    cd "ngs" || exit 1
     ./configure \
-        --build="$build_os_string" \
+        --build-prefix="$build_prefix" \
         --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
-    make test
-    make install
-    rm -fr "$tmp_dir"
+    # Make each of the sub-projects.
+    make -C ngs-sdk
+    make -C ngs-java
+    make -C ngs-python
+    # Install each of the sub-projects.
+    make -C ngs-sdk install
+    make -C ngs-java install
+    make -C ngs-python install
 )
 
 _koopa_link_cellar "$name" "$version"
-_koopa_update_shells "$name"
 
-"$exe_file" --version
-command -v "$exe_file"
+# ncbi-vdb                                                                  {{{1
+# ------------------------------------------------------------------------------
+
+(
+    cd "$tmp_dir" || exit 1
+    wget -O "ncbi-vdb.tar.gz" \
+        "https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
+    tar -xzvf "ncbi-vdb.tar.gz"
+    mv "ncbi-vdb-${version}" "ncbi-vdb"
+    cd "ncbi-vdb" || exit 1
+    ./configure \
+        --build-prefix="$build_prefix" \
+        --prefix="$prefix"
+    make --jobs="$CPU_COUNT"
+    make install
+)
+
+_koopa_link_cellar "$name" "$version"
+
+# sra-tools                                                                 {{{1
+# ------------------------------------------------------------------------------
+
+(
+    cd "$tmp_dir" || exit 1
+    wget -O "sra-tools.tar.gz" \
+        "https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
+    tar -xzvf "sra-tools.tar.gz"
+    mv "sra-tools-${version}" "sra-tools"
+    cd "sra-tools" || exit 1
+    ./configure \
+        --build-prefix="$build_prefix" \
+        --prefix="$prefix"
+    make --jobs="$CPU_COUNT"
+    make install
+)
+
+_koopa_link_cellar "$name" "$version"
+
+rm -fr "$tmp_dir"
