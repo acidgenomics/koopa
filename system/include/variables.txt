@@ -147,6 +147,9 @@ shellcheck="0.7.0"
 # https://www.rstudio.com/products/shiny/download-server/
 shiny-server="1.5.12.933"
 
+# https://github.com/ncbi/sra-tools/releases
+sra-tools="2.10.0"
+
 # https://www.latex-project.org/get/
 tex="2019"
 
