@@ -2,13 +2,12 @@
 # shellcheck disable=SC2039
 
 
-
 # A                                                                         {{{1
 # ==============================================================================
 
-# Add nested `bin/` and `sbin/` directories to PATH.
-# Updated 2019-09-12.
 _koopa_add_bins_to_path() {
+    # Add nested `bin/` and `sbin/` directories to PATH.
+    # Updated 2019-09-12.
     local relpath
     local prefix
     relpath="${1:-}"
@@ -19,11 +18,10 @@ _koopa_add_bins_to_path() {
 }
 
 
-
-# Add conda environment to PATH.
-# Experimental: working method to improve pandoc and texlive on RHEL 7.
-# Updated 2019-09-12.
 _koopa_add_conda_env_to_path() {
+    # Add conda environment to PATH.
+    # Experimental: working method to improve pandoc and texlive on RHEL 7.
+    # Updated 2019-09-12.
     local env_name
     local env_list
     local prefix
@@ -38,15 +36,14 @@ _koopa_add_conda_env_to_path() {
 }
 
 
-
-# Add a symlink into the koopa configuration directory.
-#
-# Examples:
-# _koopa_add_config_link vimrc
-# _koopa_add_config_link vim
-#
-# Updated 2019-09-23.
 _koopa_add_config_link() {
+    # Add a symlink into the koopa configuration directory.
+    #
+    # Examples:
+    # _koopa_add_config_link vimrc
+    # _koopa_add_config_link vim
+    #
+    # Updated 2019-09-23.
     local config_dir
     config_dir="$(_koopa_config_dir)"
     local source_file
@@ -62,31 +59,28 @@ _koopa_add_config_link() {
 }
 
 
-
-# Add directory to end of PATH.
-# Updated 2019-09-12.
 _koopa_add_to_path_end() {
+    # Add directory to end of PATH.
+    # Updated 2019-09-12.
     [ ! -d "$1" ] && return 0
     echo "$PATH" | grep -q "$1" && return 0
     export PATH="${PATH}:${1}"
 }
 
 
-
-# Add directory to start of PATH.
-# Updated 2019-09-12.
 _koopa_add_to_path_start() {
+    # Add directory to start of PATH.
+    # Updated 2019-09-12.
     [ ! -d "$1" ] && return 0
     echo "$PATH" | grep -q "$1" && return 0
     export PATH="${1}:${PATH}"
 }
 
 
-
-# Convert a bash array to an R vector string.
-# Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
-# Updated 2019-09-25.
 _koopa_array_to_r_vector() {
+    # Convert a bash array to an R vector string.
+    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
+    # Updated 2019-09-25.
     local x
     x="$(printf '"%s", ' "$@")"
     x="$(_koopa_strip_right "$x" ", ")"
@@ -94,10 +88,9 @@ _koopa_array_to_r_vector() {
 }
 
 
-
-# Assert that input contains a file extension.
-# Updated 2019-09-26
 _koopa_assert_has_file_ext() {
+    # Assert that input contains a file extension.
+    # Updated 2019-09-26
     if ! echo "$1" | grep -q "\."
     then
         >&2 printf "Error: No file extension: '%s'\n" "$1"
@@ -107,10 +100,9 @@ _koopa_assert_has_file_ext() {
 }
 
 
-
-# Assert that conda and Python virtual environments aren't active.
-# Updated 2019-09-12.
 _koopa_assert_has_no_environments() {
+    # Assert that conda and Python virtual environments aren't active.
+    # Updated 2019-09-12.
     if ! _koopa_has_no_environments
     then
         >&2 printf "Error: Active environment detected.\n"
@@ -120,10 +112,9 @@ _koopa_assert_has_no_environments() {
 }
 
 
-
-# Assert that current user has sudo (admin) permissions.
-# Updated 2019-09-28.
 _koopa_assert_has_sudo() {
+    # Assert that current user has sudo (admin) permissions.
+    # Updated 2019-09-28.
     if ! _koopa_has_sudo
     then
         >&2 printf "Error: sudo is required.\n"
@@ -133,10 +124,9 @@ _koopa_assert_has_sudo() {
 }
 
 
-
-# Assert that platform is Darwin (macOS).
-# Updated 2019-09-23.
 _koopa_assert_is_darwin() {
+    # Assert that platform is Darwin (macOS).
+    # Updated 2019-09-23.
     if ! _koopa_is_darwin
     then
         >&2 printf "Error: macOS (Darwin) is required.\n"
@@ -146,10 +136,9 @@ _koopa_assert_is_darwin() {
 }
 
 
-
-# Assert that input is a directory.
-# Updated 2019-09-12.
 _koopa_assert_is_dir() {
+    # Assert that input is a directory.
+    # Updated 2019-09-12.
     if [ ! -d "$1" ]
     then
         >&2 printf "Error: Not a directory: '%s'\n" "$1"
@@ -159,10 +148,9 @@ _koopa_assert_is_dir() {
 }
 
 
-
-# Assert that input is executable.
-# Updated 2019-09-24.
 _koopa_assert_is_executable() {
+    # Assert that input is executable.
+    # Updated 2019-09-24.
     if [ ! -x "$1" ]
     then
         >&2 printf "Error: Not executable: '%s'\n" "$1"
@@ -172,13 +160,12 @@ _koopa_assert_is_executable() {
 }
 
 
-
-# Assert that input exists on disk.
-#
-# Note that '-e' flag returns true for file, dir, or symlink.
-#
-# Updated 2019-09-24.
 _koopa_assert_is_existing() {
+    # Assert that input exists on disk.
+    #
+    # Note that '-e' flag returns true for file, dir, or symlink.
+    #
+    # Updated 2019-09-24.
     if [ ! -e "$1" ]
     then
         >&2 printf "Error: Does not exist: '%s'\n" "$1"
@@ -188,10 +175,9 @@ _koopa_assert_is_existing() {
 }
 
 
-
-# Assert that input is a file.
-# Updated 2019-09-12.
 _koopa_assert_is_file() {
+    # Assert that input is a file.
+    # Updated 2019-09-12.
     if [ ! -f "$1" ]
     then
         >&2 printf "Error: Not a file: '%s'\n" "$1"
@@ -201,26 +187,24 @@ _koopa_assert_is_file() {
 }
 
 
-
-# Assert that input matches a specified file type.
-#
-# Example: _koopa_assert_is_file_type "$x" "csv"
-#
-# Updated 2019-09-24.
 _koopa_assert_is_file_type() {
+    # Assert that input matches a specified file type.
+    #
+    # Example: _koopa_assert_is_file_type "$x" "csv"
+    #
+    # Updated 2019-09-24.
     _koopa_assert_is_file "$1"
     _koopa_assert_matches_pattern "$1" "\.${2}\$"
 }
 
 
-
-# Assert that programs are installed.
-#
-# Supports checking of multiple programs in a single call.
-# Note that '_koopa_is_installed' is not vectorized.
-#
-# Updated 2019-09-24.
 _koopa_assert_is_installed() {
+    # Assert that programs are installed.
+    #
+    # Supports checking of multiple programs in a single call.
+    # Note that '_koopa_is_installed' is not vectorized.
+    #
+    # Updated 2019-09-24.
     for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
@@ -233,10 +217,9 @@ _koopa_assert_is_installed() {
 }
 
 
-
-# Assert that platform is Linux.
-# Updated 2019-09-12.
 _koopa_assert_is_linux() {
+    # Assert that platform is Linux.
+    # Updated 2019-09-12.
     if ! _koopa_is_linux
     then
         >&2 printf "Error: Linux is required.\n"
@@ -246,10 +229,9 @@ _koopa_assert_is_linux() {
 }
 
 
-
-# Assert that platform is Debian Linux.
-# Updated 2019-09-12.
 _koopa_assert_is_linux_debian() {
+    # Assert that platform is Debian Linux.
+    # Updated 2019-09-12.
     if ! _koopa_is_linux_debian
     then
         >&2 printf "Error: Debian is required.\n"
@@ -259,10 +241,9 @@ _koopa_assert_is_linux_debian() {
 }
 
 
-
-# Assert that platform is Fedora Linux.
-# Updated 2019-09-12.
 _koopa_assert_is_linux_fedora() {
+    # Assert that platform is Fedora Linux.
+    # Updated 2019-09-12.
     if ! _koopa_is_linux_fedora
     then
         >&2 printf "Error: Fedora is required.\n"
@@ -272,10 +253,9 @@ _koopa_assert_is_linux_fedora() {
 }
 
 
-
-# Assert that input does not exist on disk.
-# Updated 2019-09-23.
 _koopa_assert_is_non_existing() {
+    # Assert that input does not exist on disk.
+    # Updated 2019-09-23.
     if [ -e "$1" ]
     then
         >&2 printf "Error: Exists: '%s'\n" "$1"
@@ -285,10 +265,9 @@ _koopa_assert_is_non_existing() {
 }
 
 
-
-# Assert that input is not a directory.
-# Updated 2019-09-29.
 _koopa_assert_is_not_dir() {
+    # Assert that input is not a directory.
+    # Updated 2019-09-29.
     if [ -d "$1" ]
     then
         >&2 printf "Error: Directory exists: '%s'\n" "$1"
@@ -298,10 +277,9 @@ _koopa_assert_is_not_dir() {
 }
 
 
-
-# Assert that input is not a file.
-# Updated 2019-09-24.
 _koopa_assert_is_not_file() {
+    # Assert that input is not a file.
+    # Updated 2019-09-24.
     if [ -f "$1" ]
     then
         >&2 printf "Error: File exists: '%s'\n" "$1"
@@ -311,10 +289,24 @@ _koopa_assert_is_not_file() {
 }
 
 
+_koopa_assert_is_not_installed() {
+    # Assert that programs are not installed.
+    # Updated 2019-10-08.
+    for arg in "$@"
+    do
+        if _koopa_is_installed "$arg"
+        then
+            >&2 printf "Error: '%s' is installed.\n" "$arg"
+            exit 1
+        fi
+    done
+    return 0
+}
 
-# Assert that input is not a symbolic link.
-# Updated 2019-09-24.
+
 _koopa_assert_is_not_symlink() {
+    # Assert that input is not a symbolic link.
+    # Updated 2019-09-24.
     if [ -L "$1" ]
     then
         >&2 printf "Error: Symlink exists: '%s'\n" "$1"
@@ -324,10 +316,9 @@ _koopa_assert_is_not_symlink() {
 }
 
 
-
-# Assert that input is readable.
-# Updated 2019-09-24.
 _koopa_assert_is_readable() {
+    # Assert that input is readable.
+    # Updated 2019-09-24.
     if [ ! -r "$1" ]
     then
         >&2 printf "Error: Not readable: '%s'\n" "$1"
@@ -337,10 +328,9 @@ _koopa_assert_is_readable() {
 }
 
 
-
-# Assert that input is a symbolic link.
-# Updated 2019-10-05.
 _koopa_assert_is_symlink() {
+    # Assert that input is a symbolic link.
+    # Updated 2019-10-05.
     if [ ! -L "$1" ]
     then
         >&2 printf "Error: Not symlink: '%s'\n" "$1"
@@ -350,10 +340,9 @@ _koopa_assert_is_symlink() {
 }
 
 
-
-# Assert that input is writable.
-# Updated 2019-09-24.
 _koopa_assert_is_writable() {
+    # Assert that input is writable.
+    # Updated 2019-09-24.
     if [ ! -r "$1" ]
     then
         >&2 printf "Error: Not writable: '%s'\n" "$1"
@@ -363,14 +352,13 @@ _koopa_assert_is_writable() {
 }
 
 
-
-# Assert that input matches a pattern.
-#
-# Bash alternative:
-# > [[ ! $1 =~ $2 ]]
-#
-# Updated 2019-09-24.
 _koopa_assert_matches_pattern() {
+    # Assert that input matches a pattern.
+    #
+    # Bash alternative:
+    # > [[ ! $1 =~ $2 ]]
+    #
+    # Updated 2019-09-24.
     if ! echo "$1" | grep -q "$2"
     then
         >&2 printf "Error: '%s' doesn't match pattern '%s'.\n" "$1" "$2"
@@ -380,23 +368,22 @@ _koopa_assert_matches_pattern() {
 }
 
 
-
 # B                                                                         {{{1
 # ==============================================================================
 
-# Extract the file basename without extension.
-#
-# Examples:
-# _koopa_basename_sans_ext "hello-world.txt"
-# ## hello-world
-#
-# _koopa_basename_sans_ext "hello-world.tar.gz"
-# ## hello-world.tar
-#
-# See also: _koopa_file_ext
-#
-# Updated 2019-10-07.
 _koopa_basename_sans_ext() {
+    # Extract the file basename without extension.
+    #
+    # Examples:
+    # _koopa_basename_sans_ext "hello-world.txt"
+    # ## hello-world
+    #
+    # _koopa_basename_sans_ext "hello-world.tar.gz"
+    # ## hello-world.tar
+    #
+    # See also: _koopa_file_ext
+    #
+    # Updated 2019-10-07.
     _koopa_assert_has_file_ext "$1"
     local x
     x="$1"
@@ -406,25 +393,23 @@ _koopa_basename_sans_ext() {
 }
 
 
-
-# Extract the file basename prior to any dots in file name.
-#
-# Examples
-# _koopa_basename_sans_ext2 "hello-world.tar.gz"
-# ## hello-world
-#
-# See also: _koopa_file_ext2
-#
-# Updated 2019-10-07.
 _koopa_basename_sans_ext2() {
+    # Extract the file basename prior to any dots in file name.
+    #
+    # Examples
+    # _koopa_basename_sans_ext2 "hello-world.tar.gz"
+    # ## hello-world
+    #
+    # See also: _koopa_file_ext2
+    #
+    # Updated 2019-10-07.
     _koopa_assert_has_file_ext "$1"
     basename "$1" | cut -d '.' -f 1
 }
 
 
-
-# Updated 2019-09-27.
 _koopa_bash_version() {
+    # Updated 2019-09-27.
     bash --version | \
         head -n 1 | \
         cut -d ' ' -f 4 | \
@@ -432,44 +417,9 @@ _koopa_bash_version() {
 }
 
 
-
-# Build string for `make` configuration.
-#
-# Use this for `configure --build` flag.
-#
-# This function will distinguish between RedHat, Amazon, and other distros
-# instead of just returning "linux". Note that we're substituting "redhat"
-# instead of "rhel" here, when applicable.
-#
-# - AWS:    x86_64-amzn-linux-gnu
-# - Darwin: x86_64-darwin15.6.0
-# - RedHat: x86_64-redhat-linux-gnu
-#
-# Updated 2019-09-27.
-_koopa_build_os_string() {
-    local mach
-    local os_type
-    local string
-    mach="$(uname -m)"
-    if _koopa_is_darwin
-    then
-        string="${mach}-${OSTYPE}"
-    else
-        os_type="$(_koopa_os_type)"
-        if echo "$os_type" | grep -q "rhel"
-        then
-            os_type="redhat"
-        fi
-        string="${mach}-${os_type}-${OSTYPE}"
-    fi
-    echo "$string"
-}
-
-
-
-# Return the installation prefix to use.
-# Updated 2019-09-27.
 _koopa_build_prefix() {
+    # Return the installation prefix to use.
+    # Updated 2019-09-27.
     local prefix
     if _koopa_is_shared && _koopa_has_sudo
     then
@@ -481,116 +431,11 @@ _koopa_build_prefix() {
 }
 
 
-
-# Set permissions on program built from source.
-# Updated 2019-06-27.
-_koopa_build_set_permissions() {
-    local path
-    path="$1"
-    if _koopa_has_sudo
-    then
-        sudo chown -Rh "root" "$path"
-    else
-        chown -Rh "$(whoami)" "$path"
-    fi
-    _koopa_prefix_chgrp "$path"
-}
-
-
-
 # C                                                                         {{{1
 # ==============================================================================
 
-# Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
-# Updated 2019-09-27.
-_koopa_cellar_prefix() {
-    local prefix
-    if [ -w "$KOOPA_HOME" ]
-    then
-        prefix="${KOOPA_HOME}/cellar"
-    else
-        if [ -z "${XDG_DATA_HOME:-}" ]
-        then
-            >&2 printf "Warning: 'XDG_DATA_HOME' is unset.\n"
-            XDG_DATA_HOME="${HOME}/.local/share"
-        fi
-        prefix="${XDG_DATA_HOME}/koopa/cellar"
-    fi
-    echo "$prefix"
-}
-
-
-
-# Updated 2019-09-23.
-_koopa_cellar_script() {
-    _koopa_assert_has_no_environments
-    local name
-    name="$1"
-    file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
-    if [ ! -f "$file" ]
-    then
-        >&2 printf "Error: No script found for '%s'.\n" "$name"
-        return 1
-    fi
-    echo "$file"
-}
-
-
-
-# Updated 2019-06-27.
-_koopa_conda_env_list() {
-    _koopa_is_installed conda || return 1
-    conda env list --json
-}
-
-
-
-# Note that we're allowing env_list passthrough as second positional variable,
-# to speed up loading upon activation.
-# Updated 2019-10-03.
-_koopa_conda_env_prefix() {
-    local env_name
-    local env_list
-    local prefix
-    local path
-    _koopa_is_installed conda || return 1
-    env_name="$1"
-    [ -n "$env_name" ] || return 1
-    env_list="${2:-}"
-    if [ -z "$env_list" ]
-    then
-        env_list="$(_koopa_conda_env_list)"
-    fi
-    env_list="$(echo "$env_list" | grep "$env_name")"
-    if [ -z "$env_list" ]
-    then
-        >&2 printf "Error: Failed to detect prefix for '%s'.\n" "$env_name"
-        return 1
-    fi
-    path="$( \
-        echo "$env_list" | \
-        grep "/envs/${env_name}" | \
-        head -n 1 \
-    )"
-    echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
-}
-
-
-
-# Updated 2019-09-27.
-_koopa_config_dir() {
-    if [ -z "${XDG_CONFIG_HOME:-}" ]
-    then
-        >&2 printf "Warning: 'XDG_CONFIG_HOME' is unset.\n"
-        XDG_CONFIG_HOME="${HOME}/.config"
-    fi
-    echo "${XDG_CONFIG_HOME}/koopa"
-}
-
-
-
-# Updated 2019-09-27.
 _koopa_conda_prefix() {
+    # Updated 2019-09-27.
     local prefix
     if [ -w "$KOOPA_HOME" ]
     then
@@ -607,13 +452,23 @@ _koopa_conda_prefix() {
 }
 
 
+_koopa_config_dir() {
+    # Updated 2019-09-27.
+    if [ -z "${XDG_CONFIG_HOME:-}" ]
+    then
+        >&2 printf "Warning: 'XDG_CONFIG_HOME' is unset.\n"
+        XDG_CONFIG_HOME="${HOME}/.config"
+    fi
+    echo "${XDG_CONFIG_HOME}/koopa"
+}
+
 
 # D                                                                         {{{1
 # ==============================================================================
 
-# Delete a dot file.
-# Updated 2019-06-27.
 _koopa_delete_dotfile() {
+    # Delete a dot file.
+    # Updated 2019-06-27.
     local path
     local name
     path="${HOME}/.${1}"
@@ -629,10 +484,9 @@ _koopa_delete_dotfile() {
 }
 
 
-
-# Check that disk has enough free space.
-# Updated 2019-08-15.
 _koopa_disk_check() {
+    # Check that disk has enough free space.
+    # Updated 2019-08-15.
     local used
     local limit
     used="$(_koopa_disk_pct_used "$@")"
@@ -644,10 +498,9 @@ _koopa_disk_check() {
 }
 
 
-
-# Check disk usage on main drive.
-# Updated 2019-08-17.
 _koopa_disk_pct_used() {
+    # Check disk usage on main drive.
+    # Updated 2019-08-17.
     local disk
     disk="${1:-/}"
     df "$disk" | \
@@ -659,19 +512,18 @@ _koopa_disk_pct_used() {
 }
 
 
-
 # E                                                                         {{{1
 # ==============================================================================
 
-# Extract compressed files automatically.
-#
-# As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
-#
-# See also:
-# - https://github.com/stephenturner/oneliners
-#
-# Updated 2019-09-09.
 _koopa_extract() {
+    # Extract compressed files automatically.
+    #
+    # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
+    #
+    # See also:
+    # - https://github.com/stephenturner/oneliners
+    #
+    # Updated 2019-09-09.
     local file
     file="$1"
     if [ ! -f "$file" ]
@@ -723,12 +575,11 @@ _koopa_extract() {
 }
 
 
-
 # F                                                                         {{{1
 # ==============================================================================
 
-# Updated 2019-09-24.
 _koopa_find_dotfiles() {
+    # Updated 2019-09-24.
     local type="$1"
     local header="$2"
     printf "\n%s:\n\n" "$header"
@@ -743,59 +594,55 @@ _koopa_find_dotfiles() {
 }
 
 
-
-# Find text in any file.
-#
-# See also: https://github.com/stephenturner/oneliners
-#
-# Examples:
-# _koopa_find_text "mytext" *.txt
-#
-# Updated 2019-09-05.
 _koopa_find_text() {
+    # Find text in any file.
+    #
+    # See also: https://github.com/stephenturner/oneliners
+    #
+    # Examples:
+    # _koopa_find_text "mytext" *.txt
+    #
+    # Updated 2019-09-05.
     find . -name "$2" -exec grep -il "$1" {} \;;
 }
 
 
-
-# Extract the file extension from input.
-#
-# Examples:
-# _koopa_file_ext "hello-world.txt"
-# ## txt
-#
-# _koopa_file_ext "hello-world.tar.gz"
-# ## gz
-#
-# See also: _koopa_basename_sans_ext
-#
-# Updated 2019-09-26.
 _koopa_file_ext() {
+    # Extract the file extension from input.
+    #
+    # Examples:
+    # _koopa_file_ext "hello-world.txt"
+    # ## txt
+    #
+    # _koopa_file_ext "hello-world.tar.gz"
+    # ## gz
+    #
+    # See also: _koopa_basename_sans_ext
+    #
+    # Updated 2019-09-26.
     _koopa_assert_has_file_ext "$1"
     printf "%s\n" "${1##*.}"
 }
 
 
-
-# Extract the file extension after any dots in the file name.
-# This assumes file names are not in dotted case.
-#
-# Examples:
-# _koopa_file_ext2 "hello-world.tar.gz"
-# ## tar.gz
-#
-# See also: _koopa_basename_sans_ext2
-#
-# Updated 2019-09-26.
 _koopa_file_ext2() {
+    # Extract the file extension after any dots in the file name.
+    # This assumes file names are not in dotted case.
+    #
+    # Examples:
+    # _koopa_file_ext2 "hello-world.tar.gz"
+    # ## tar.gz
+    #
+    # See also: _koopa_basename_sans_ext2
+    #
+    # Updated 2019-09-26.
     _koopa_assert_has_file_ext "$1"
     echo "$1" | cut -d '.' -f 2-
 }
 
 
-
-# Updated 2019-06-27.
 _koopa_force_add_to_path_end() {
+    # Updated 2019-06-27.
     local dir
     dir="$1"
     _koopa_remove_from_path "$dir"
@@ -803,9 +650,8 @@ _koopa_force_add_to_path_end() {
 }
 
 
-
-# Updated 2019-06-27.
 _koopa_force_add_to_path_start() {
+    # Updated 2019-06-27.
     local dir
     dir="$1"
     _koopa_remove_from_path "$dir"
@@ -813,38 +659,36 @@ _koopa_force_add_to_path_start() {
 }
 
 
-
 # H                                                                         {{{1
 # ==============================================================================
 
-# Detect activation of virtual environments.
-# Updated 2019-06-25.
 _koopa_has_no_environments() {
+    # Detect activation of virtual environments.
+    # Updated 2019-06-25.
     [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
     [ -x "$(command -v deactivate)" ] && return 1
     return 0
 }
 
 
-
-# Check that current user has administrator (sudo) permission.
-#
-# Note that use of 'sudo -v' does not work consistently across platforms.
-#
-# - Darwin (macOS): admin
-# - Debian: sudo
-# - Fedora: wheel
-#
-# Updated 2019-09-28.
 _koopa_has_sudo() {
+    # Check that current user has administrator (sudo) permission.
+    #
+    # Note that use of 'sudo -v' does not work consistently across platforms.
+    #
+    # - Darwin (macOS): admin
+    # - Debian: sudo
+    # - Fedora: wheel
+    #
+    # Updated 2019-09-28.
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
 
-
-# Source script header.
-# Updated 2019-09-27.
 _koopa_header() {
+    # Source script header.
+    # Useful for private scripts using koopa code outside of package.
+    # Updated 2019-09-27.
     local path
     if [ -z "${1:-}" ]
     then
@@ -870,10 +714,8 @@ host type:
     - harvard-o2
     - harvard-odyssey
 EOF
-
         return 1
     fi
-    
     case "$1" in
         # shell ----------------------------------------------------------------
         bash)
@@ -920,10 +762,9 @@ EOF
 }
 
 
-
-# Show usage via help flag.
-# Updated 2019-09-26.
 _koopa_help() {
+    # Show usage via help flag.
+    # Updated 2019-09-26.
     case "${1:-}" in
         --help|-h)
             usage
@@ -933,24 +774,22 @@ _koopa_help() {
 }
 
 
-
-# Updated 2019-08-18.
 _koopa_home() {
+    # Updated 2019-08-18.
     echo "$KOOPA_HOME"
 }
 
 
-
-# Simple host type name string to load up host-specific scripts.
-# Currently intended to support AWS, Azure, and Harvard clusters.
-#
-# Returns useful host type matching either:
-# - VMs: "aws", "azure".
-# - HPCs: "harvard-o2", "harvard-odyssey".
-#
-# Returns empty for local machines and/or unsupported types.
-# Updated 2019-08-18.
 _koopa_host_type() {
+    # Simple host type name string to load up host-specific scripts.
+    # Currently intended to support AWS, Azure, and Harvard clusters.
+    #
+    # Returns useful host type matching either:
+    # - VMs: "aws", "azure".
+    # - HPCs: "harvard-o2", "harvard-odyssey".
+    #
+    # Returns empty for local machines and/or unsupported types.
+    # Updated 2019-08-18.
     local name
     case "$(hostname -f)" in
         # VMs
@@ -975,14 +814,16 @@ _koopa_host_type() {
 }
 
 
-
 # I                                                                         {{{1
 # ==============================================================================
 
-# Using unicode box drawings here.
-# Note that we're truncating lines inside the box to 68 characters.
-# Updated 2019-09-10.
 _koopa_info_box() {
+    # Info box.
+    #
+    # Using unicode box drawings here.
+    # Note that we're truncating lines inside the box to 68 characters.
+    #
+    # Updated 2019-09-10.
     local array
     array=("$@")
     local barpad
@@ -996,143 +837,175 @@ _koopa_info_box() {
 }
 
 
-
-# Updated 2019-06-22.
 _koopa_is_darwin() {
+    # Is the operating system Darwin (macOS)?
+    # Updated 2019-06-22.
     [ "$(uname -s)" = "Darwin" ]
 }
 
 
-
-# Updated 2019-10-02.
 _koopa_is_installed() {
+    # Is the requested program name installed?
+    # Updated 2019-10-02.
     local program
     program="$1"
     command -v "$program" >/dev/null
 }
 
 
-
-# Updated 2019-06-21.
 _koopa_is_interactive() {
+    # Is the current shell interactive?
+    # Updated 2019-06-21.
     echo "$-" | grep -q "i"
 }
 
 
-
-# Updated 2019-06-21.
 _koopa_is_linux() {
+    # Updated 2019-06-21.
     [ "$(uname -s)" = "Linux" ]
 }
 
 
-
-# Updated 2019-06-24.
 _koopa_is_linux_debian() {
+    # Updated 2019-06-24.
     [ -f /etc/os-release ] || return 1
     grep "ID="      /etc/os-release | grep -q "debian" ||
     grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
 
-
-# Updated 2019-06-24.
 _koopa_is_linux_fedora() {
+    # Updated 2019-06-24.
     [ -f /etc/os-release ] || return 1
     grep "ID="      /etc/os-release | grep -q "fedora" ||
     grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 }
 
 
-
-# Updated 2019-06-25.
 _koopa_is_local() {
+    # Is koopa installed only for the current user?
+    # Updated 2019-06-25.
     echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
 }
 
 
-
-# Updated 2019-08-14.
 _koopa_is_login() {
+    # Is the current shell a login shell?
+    # Updated 2019-08-14.
     echo "$0" | grep -Eq "^-"
 }
 
 
-
-# Updated 2019-06-21.
 _koopa_is_login_bash() {
+    # Is the current shell a login bash shell?
+    # Updated 2019-06-21.
     [ "$0" = "-bash" ]
 }
 
 
-
-# Updated 2019-06-21.
 _koopa_is_login_zsh() {
+    # Is the current shell a login zsh shell?
+    # Updated 2019-06-21.
     [ "$0" = "-zsh" ]
 }
 
 
-
-# Updated 2019-06-25.
 _koopa_is_remote() {
+    # Is the current shell session a remote connection over SSH?
+    # Updated 2019-06-25.
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
 
-
-# Updated 2019-06-25.
 _koopa_is_shared() {
+    # Is koopa installed for all users (shared)?
+    # Updated 2019-06-25.
     ! _koopa_is_local
 }
 
+
+# J                                                                         {{{1
+# ==============================================================================
+
+_koopa_java_home() {
+    # Set JAVA_HOME environment variable.
+    #
+    # See also:
+    # - https://www.mkyong.com/java/
+    #       how-to-set-java_home-environment-variable-on-mac-os-x/
+    # - https://stackoverflow.com/questions/22290554
+    #
+    # Updated 2019-10-08.
+    if ! _koopa_is_installed java
+    then
+        return 0
+    fi
+    # Early return if environment variable is set.
+    if [ -n "${JAVA_HOME:-}" ]
+    then
+        echo "$JAVA_HOME"
+        return 0
+    fi
+    local home
+    if _koopa_is_darwin
+    then
+        home="$(/usr/libexec/java_home)"
+    else
+        local java_exe
+        java_exe="$(_koopa_locate "java")"
+        home="$(dirname "$(dirname "${java_exe}")")"
+    fi
+    echo "$home"
+}
 
 
 # L                                                                         {{{1
 # ==============================================================================
 
-# Return the number of lines in a file.
-#
-# Example: _koopa_line_count tx2gene.csv
-#
-# Updated 2019-10-05.
 _koopa_line_count() {
+    # Return the number of lines in a file.
+    #
+    # Example: _koopa_line_count tx2gene.csv
+    #
+    # Updated 2019-10-05.
     wc -l "$1" | \
     xargs | \
     cut -d ' ' -f 1
 }
 
 
-
-# Symlink cellar into build directory.
-# e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
-#
-# Example: _koopa_link_cellar emacs 26.3
-#
-# Updated 2019-09-28.
-_koopa_link_cellar() {
-    local name
-    local version
-    local cellar_prefix
-    local build_prefix
-    name="$1"
-    version="$2"
-    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-    build_prefix="$(_koopa_build_prefix)"
-    printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
-    _koopa_build_set_permissions "$cellar_prefix"
-    cp -frsv "$cellar_prefix/"* "$build_prefix/".
-    _koopa_build_set_permissions "$build_prefix"
-    _koopa_has_sudo && _koopa_update_ldconfig
+# FIXME Not working on zsh.
+_koopa_locate() {
+    # Locate the realpath of a program.
+    #
+    # This resolves symlinks automatically.
+    # For 'which' style return, use '_koopa_which' instead.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/7522712
+    # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
+    #
+    # Examples:
+    # _koopa_locate bash
+    # ## /usr/local/Cellar/bash/5.0.11/bin/bash
+    #
+    # Updated 2019-10-02.
+    local command
+    command="$1"
+    local which
+    which="$(_koopa_which "$command")"
+    local path
+    path="$(realpath "$which")"
+    echo "$path"
 }
-
 
 
 # M                                                                         {{{1
 # ==============================================================================
 
-# Extract the version of a macOS application.
-# Updated 2019-09-28.
 _koopa_macos_app_version() {
+    # Extract the version of a macOS application.
+    # Updated 2019-09-28.
     _koopa_assert_is_darwin
     plutil -p "/Applications/${1}.app/Contents/Info.plist" | \
         grep CFBundleShortVersionString |
@@ -1141,9 +1014,9 @@ _koopa_macos_app_version() {
 }
 
 
-
-# Updated 2019-08-17.
 _koopa_macos_version() {
+    # macOS version string.
+    # Updated 2019-08-17.
     _koopa_assert_is_darwin
     printf "%s %s (%s)\n" \
         "$(sw_vers -productName)" \
@@ -1152,39 +1025,37 @@ _koopa_macos_version() {
 }
 
 
-
-# Updated 2019-08-17.
 _koopa_macos_version_short() {
+    # Shorter macOS version string.
+    # Updated 2019-08-17.
     _koopa_assert_is_darwin
     version="$(sw_vers -productVersion | cut -d '.' -f 1-2)"
     printf "%s %s\n" "macos" "$version"
 }
 
 
-
-# Get the major program version.
-# Updated 2019-09-23.
 _koopa_major_version() {
+    # Get the major program version.
+    # Updated 2019-09-23.
     echo "$1" | cut -d '.' -f 1-2
 }
 
 
-
-# Get the minor program version.
-# Updated 2019-09-23.
 _koopa_minor_version() {
+    # Get the minor program version.
+    # Updated 2019-09-23.
     echo "$1" | cut -d "." -f 2-
 }
-
 
 
 # O                                                                         {{{1
 # ==============================================================================
 
-# Operating system name.
-# Always returns lowercase, with unique names for Linux distros (e.g. "debian").
-# Updated 2019-08-16.
 _koopa_os_type() {
+    # Operating system name.
+    # Always returns lowercase, with unique names for Linux distros
+    # (e.g. "debian").
+    # Updated 2019-08-16.
     local id
     if _koopa_is_darwin
     then
@@ -1212,84 +1083,20 @@ _koopa_os_type() {
 }
 
 
-
-# Updated 2019-06-22.
-# Note that this returns Darwin version information for macOS.
 _koopa_os_version() {
+    # Operating system version.
+    # Updated 2019-06-22.
+    # Note that this returns Darwin version information for macOS.
     uname -r
 }
-
 
 
 # P                                                                         {{{1
 # ==============================================================================
 
-# Fix the group permissions on the build directory.
-# Updated 2019-09-27.
-_koopa_prefix_chgrp() {
-    local path
-    local group
-    path="$1"
-    group="$(_koopa_prefix_group)"
-    if _koopa_has_sudo
-    then
-        sudo chgrp -Rh "$group" "$path"
-        sudo chmod -R g+w "$path"
-    else
-        chgrp -Rh "$group" "$path"
-        chmod -R g+w "$path"
-    fi
-}
-
-
-
-# Set the admin or regular user group automatically.
-# Updated 2019-09-27.
-_koopa_prefix_group() {
-    local group
-    if _koopa_is_shared && _koopa_has_sudo
-    then
-        if groups | grep -Eq "\b(admin)\b"
-        then
-            group="admin"
-        elif groups | grep -Eq "\b(sudo)\b"
-        then
-            group="sudo"
-        elif groups | grep -Eq "\b(wheel)\b"
-        then
-            group="wheel"
-        else
-            group="$(whoami)"
-        fi
-    else
-        group="$(whoami)"
-    fi
-    echo "$group"
-}
-
-
-
-# Create directory in build prefix.
-# Updated 2019-09-27.
-_koopa_prefix_mkdir() {
-    local path
-    path="$1"
-    _koopa_assert_is_not_dir "$path"
-    if _koopa_has_sudo
-    then
-        sudo mkdir -p "$path"
-        sudo chown "$(whoami)" "$path"
-    else
-        mkdir -p "$path"
-    fi
-    _koopa_prefix_chgrp "$path"
-}
-
-
-
-# Get conda environment name for prompt string.
-# Updated 2019-08-17.
 _koopa_prompt_conda_env() {
+    # Get conda environment name for prompt string.
+    # Updated 2019-08-17.
     local name
     if [ -n "${CONDA_DEFAULT_ENV:-}" ]
     then
@@ -1301,9 +1108,8 @@ _koopa_prompt_conda_env() {
 }
 
 
-
-# Updated 2019-08-17.
 _koopa_prompt_disk_used() {
+    # Updated 2019-08-17.
     local pct used
     used="$(_koopa_disk_pct_used)"
     case "$(_koopa_shell)" in
@@ -1318,9 +1124,8 @@ _koopa_prompt_disk_used() {
 }
 
 
-
-# Updated 2019-08-17.
 _koopa_prompt_os() {
+    # Updated 2019-08-17.
     local id
     local string
     local version
@@ -1353,11 +1158,10 @@ _koopa_prompt_os() {
 }
 
 
-
-# Get Python virtual environment name for prompt string.
-# https://stackoverflow.com/questions/10406926
-# Updated 2019-08-17.
 _koopa_prompt_python_env() {
+    # Get Python virtual environment name for prompt string.
+    # https://stackoverflow.com/questions/10406926
+    # Updated 2019-08-17.
     local name
     if [ -n "${VIRTUAL_ENV:-}" ]
     then
@@ -1370,65 +1174,71 @@ _koopa_prompt_python_env() {
 }
 
 
-
 # Q                                                                         {{{1
 # ==============================================================================
 
 _koopa_quiet_cd() {
+    # Updated 2019-10-08.
     cd "$@" >/dev/null || return 1
 }
 
 
-
-# Regular expression matching that is POSIX compliant.
-# https://stackoverflow.com/questions/21115121
-# Avoid using `[[ =~ ]]` in sh config files.
-# `expr` is faster than using `case`.
 _koopa_quiet_expr() {
+    # Regular expression matching that is POSIX compliant.
+    #
+    # Avoid using `[[ =~ ]]` in sh config files.
+    # `expr` is faster than using `case`.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/21115121
+    #
+    # Updated 2019-10-08.
     expr "$1" : "$2" 1>/dev/null
 }
-
 
 
 # R                                                                         {{{1
 # ==============================================================================
 
-# Get `R_HOME`, rather than exporting as global variable.
-# Updated 2019-06-27.
 _koopa_r_home() {
+    # Get `R_HOME`, rather than exporting as global variable.
+    # Updated 2019-06-27.
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
 }
 
 
-
-# Look into an improved POSIX method here. This works for bash and ksh.
-# Note that this won't work on the first item in PATH.
-# # Alternate approach using sed:
-# > echo "$PATH" | sed "s|:${dir}||g"
-# # Updated 2019-07-10.
 _koopa_remove_from_path() {
+    # Remove directory from PATH.
+    #
+    # Look into an improved POSIX method here.
+    # This works for bash and ksh.
+    # Note that this won't work on the first item in PATH.
+    #
+    # Alternate approach using sed:
+    # > echo "$PATH" | sed "s|:${dir}||g"
+    #
+    # Updated 2019-07-10.
     local dir
     dir="$1"
     export PATH="${PATH//:$dir/}"
 }
 
 
-
-# Updated 2019-06-21.
 _koopa_rsync_flags() {
+    # Improved rsync default flags.
+    # Updated 2019-06-21.
     echo "--archive --copy-links --delete-before --human-readable --progress"
 }
-
 
 
 # S                                                                         {{{1
 # ==============================================================================
 
-# Note that this isn't necessarily the default shell (`$SHELL`).
-# Updated 2019-06-27.
 _koopa_shell() {
+    # Note that this isn't necessarily the default shell ('$SHELL').
+    # Updated 2019-06-27.
     local shell
     if [ -n "${BASH_VERSION:-}" ]
     then
@@ -1450,85 +1260,65 @@ Supported: bash, ksh, zsh.
 EOF
         return 1
     fi
-    
     echo "$shell"
 }
 
 
-
-# Strip pattern from left side (start) of string.
-#
-# Usage: _koopa_lstrip "string" "pattern"
-#
-# Example: _koopa_lstrip "The Quick Brown Fox" "The "
-#
-# Updated 2019-09-22.
 _koopa_strip_left() {
+    # Strip pattern from left side (start) of string.
+    #
+    # Usage: _koopa_lstrip "string" "pattern"
+    #
+    # Example: _koopa_lstrip "The Quick Brown Fox" "The "
+    #
+    # Updated 2019-09-22.
     printf '%s\n' "${1##$2}"
 }
 
 
-
-# Strip pattern from right side (end) of string.
-#
-# Usage: _koopa_rstrip "string" "pattern"
-#
-# Example: _koopa_rstrip "The Quick Brown Fox" " Fox"
-#
-# Updated 2019-09-22.
 _koopa_strip_right() {
+    # Strip pattern from right side (end) of string.
+    #
+    # Usage: _koopa_rstrip "string" "pattern"
+    #
+    # Example: _koopa_rstrip "The Quick Brown Fox" " Fox"
+    #
+    # Updated 2019-09-22.
     printf '%s\n' "${1%%$2}"
 }
 
 
-
-# Strip trailing slash in file path string.
-#
-# Alternate approach using sed:
-# > sed 's/\/$//' <<< "$1"
-#
-# Updated 2019-09-24.
 _koopa_strip_trailing_slash() {
+    # Strip trailing slash in file path string.
+    #
+    # Alternate approach using sed:
+    # > sed 's/\/$//' <<< "$1"
+    #
+    # Updated 2019-09-24.
     _koopa_strip_right "$1" "/"
 }
-
 
 
 # T                                                                         {{{1
 # ==============================================================================
 
-# Create temporary directory.
-#
-# Note: macOS requires `env LC_CTYPE=C`.
-# Otherwise, you'll see this error: `tr: Illegal byte sequence`.
-# This doesn't seem to work reliably, so using timestamp instead.
-#
-# See also:
-# - https://gist.github.com/earthgecko/3089509
-#
-# Updated 2019-09-04.
-_koopa_tmp_dir() {
-    local unique
-    local dir
-    unique="$(date "+%Y%m%d-%H%M%S")"
-    dir="/tmp/koopa-$(id -u)-${unique}"
-    # This doesn't work well with zsh.
-    # > mkdir -p "$dir"
-    # > chown "$USER" "$dir"
-    # > chmod 0775 "$dir"
-    echo "$dir"
-}
-
-
-
-# Create a dated file today bucket.
-# Also adds a `~/today` symlink for quick access.
-#
-# How to check if a symlink target matches a specific path:
-# https://stackoverflow.com/questions/19860345
-#
-# Updated 2019-09-28.
 _koopa_today_bucket() {
+    # Create a dated file today bucket.
+    # Also adds a `~/today` symlink for quick access.
+    #
+    # How to check if a symlink target matches a specific path:
+    # https://stackoverflow.com/questions/19860345
+    #
+    # Useful link flags:
+    # -f, --force
+    #        remove existing destination files
+    # -n, --no-dereference
+    #        treat LINK_NAME as a normal file if it is a symbolic link to a
+    #        directory
+    # -s, --symbolic
+    #        make symbolic links instead of hard links
+    #
+    # Updated 2019-09-28.
     bucket_dir="${HOME}/bucket"
     # Early return if there's no bucket directory on the system.
     if [[ ! -d "$bucket_dir" ]]
@@ -1544,44 +1334,34 @@ _koopa_today_bucket() {
     fi
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
-    # Note the use of `-n` flag here.
-    # -f, --force
-    #        remove existing destination files
-    # -n, --no-dereference
-    #        treat LINK_NAME as a normal file if it is a symbolic link to a
-    #        directory
-    # -s, --symbolic
-    #        make symbolic links instead of hard links
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
 }
 
 
-
-# Trim leading and trailing white-space from string.
-#
-# This is an alternative to sed, awk, perl and other tools. The function below
-# works by finding all leading and trailing white-space and removing it from the
-# start and end of the string.
-#
-# Usage: _koopa_trim_ws "   example   string    "
-#
-# Example: _koopa_trim_ws "    Hello,  World    "
-#
-# Updated 2019-09-22.
 _koopa_trim_ws() {
+    # Trim leading and trailing white-space from string.
+    #
+    # This is an alternative to sed, awk, perl and other tools. The function
+    # works by finding all leading and trailing white-space and removing it from
+    # the start and end of the string.
+    #
+    # Usage: _koopa_trim_ws "   example   string    "
+    #
+    # Example: _koopa_trim_ws "    Hello,  World    "
+    #
+    # Updated 2019-09-22.
     trim="${1#${1%%[![:space:]]*}}"
     trim="${trim%${trim##*[![:space:]]}}"
     printf '%s\n' "$trim"
 }
 
 
-
 # U                                                                         {{{1
 # ==============================================================================
 
-# Update dynamic linker (LD) configuration.
-# Updated 2019-07-10.
 _koopa_update_ldconfig() {
+    # Update dynamic linker (LD) configuration.
+    # Updated 2019-07-10.
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
     [ -d /etc/ld.so.conf.d ] || return 0
@@ -1610,10 +1390,9 @@ _koopa_update_ldconfig() {
 }
 
 
-
-# Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-# Updated 2019-06-29.
 _koopa_update_profile() {
+    # Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
+    # Updated 2019-06-29.
     local file
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -1636,10 +1415,9 @@ EOF"
 }
 
 
-
-# Add shared R configuration symlinks in '${R_HOME}/etc'.
-# Updated 2019-09-28.
 _koopa_update_r_config() {
+    # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    # Updated 2019-09-28.
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     local r_home
@@ -1670,10 +1448,9 @@ _koopa_update_r_config() {
 }
 
 
-
-# Update shell configuration.
-# Updated 2019-09-28.
 _koopa_update_shells() {
+    # Update shell configuration.
+    # Updated 2019-09-28.
     local shell
     local shell_file
     _koopa_assert_has_sudo
@@ -1688,11 +1465,10 @@ _koopa_update_shells() {
 }
 
 
-
-# Update XDG configuration.
-# ~/.config/koopa
-# Updated 2019-08-28.
 _koopa_update_xdg_config() {
+    # Update XDG configuration.
+    # Path: '~/.config/koopa'.
+    # Updated 2019-08-28.
     local config_dir
     config_dir="$(_koopa_config_dir)"
     local home_dir
@@ -1723,13 +1499,12 @@ _koopa_update_xdg_config() {
 }
 
 
-
 # V                                                                         {{{1
 # ==============================================================================
 
-# Get version stored internally in versions.txt file.
-# Updated 2019-06-27.
 _koopa_variable() {
+    # Get version stored internally in versions.txt file.
+    # Updated 2019-06-27.
     local what
     local file
     local match
@@ -1746,12 +1521,45 @@ _koopa_variable() {
 }
 
 
+# W                                                                         {{{1
+# ==============================================================================
+
+# FIXME Not working currently on zsh.
+_koopa_which() {
+    # Locate which program.
+    #
+    # Note that this intentionally doesn't resolve symlinks.
+    # Use 'koopa_locate' for that instead.
+    #
+    # Not currently working for zsh.
+    # 'command -v' doesn't return anything back inside a function.
+    # Also tried:
+    # - 'type -p'
+    # - 'whence -p'
+    #
+    # Examples:
+    # _koopa_which bash
+    # ## /usr/local/bin/bash
+    #
+    # Updated 2019-10-02.
+    local command
+    command="$1"
+    local path
+    path="$(command -v "$command")"
+    if [ -z "$path" ]
+    then
+        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
+        return 1
+    fi
+    echo "$path"
+}
+
 
 # Z                                                                         {{{1
 # ==============================================================================
 
-# Updated 2019-08-18.
 _koopa_zsh_version() {
+    # Updated 2019-08-18.
     zsh --version | \
         head -n 1 | \
         cut -d ' ' -f 2
