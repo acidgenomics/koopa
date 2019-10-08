@@ -230,19 +230,19 @@ _koopa_link_cellar() {
     #
     # Example: _koopa_link_cellar emacs 26.3
     #
-    # Updated 2019-09-28.
+    # Updated 2019-10-08.
     local name
     local version
-    local cellar_prefix
     local build_prefix
+    local cellar_prefix
     name="$1"
     version="$2"
-    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
     build_prefix="$(_koopa_build_prefix)"
+    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
     printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
+    # > _koopa_build_set_permissions "$build_prefix"
     _koopa_build_set_permissions "$cellar_prefix"
     cp -frsv "$cellar_prefix/"* "$build_prefix/".
-    _koopa_build_set_permissions "$build_prefix"
     _koopa_has_sudo && _koopa_update_ldconfig
 }
 
@@ -250,8 +250,6 @@ _koopa_link_cellar() {
 # P                                                                         {{{1
 # ==============================================================================
 
-# FIXME This is too slow because it runs on '/usr/local/".
-# Rethink this approach.
 _koopa_prefix_chgrp() {
     # Fix the group permissions on the build directory.
     # Updated 2019-09-27.
