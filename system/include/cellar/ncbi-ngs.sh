@@ -5,9 +5,20 @@
 # Notes                                                                     {{{1
 # ==============================================================================
 
-# sudo yum install libxml2-devel
-# sudo yum install libmagic-devel
-# sudo yum install libhdf5-devel
+# ncbi-vdb will fail to install unless we extract the tarballs to the same
+# top level directory without version numbers.
+# ## required ngs-sdk package not found.
+# https://github.com/ncbi/sra-tools/issues/48
+
+# RHEL 7 dependencies
+# file-devel : libmagic
+# > sudo yum -y install \
+# >     file-devel \
+# >     libhdf5-devel \
+# >     libxml2-devel
+
+# > sudo ldconfig -v
+# > export LD_LIBRARY_PATH=/usr/local/lib64
 
 
 
@@ -16,13 +27,11 @@
 
 name="ncbi-ngs"
 version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+ncbi_vdb_version="$(_koopa_variable "ncbi-vdb")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
-ncbi_vdb_version="$(_koopa_variable "ncbi-vdb")"
-
-java_home="$(_koopa_java_home)"
-_koopa_add_to_path_start "$java_home"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+build_prefix="${tmp_dir}/ncbi-outdir"
 
 
 
@@ -39,6 +48,7 @@ $(_koopa_help_args)
 
 see also:
     - https://github.com/ncbi/ngs/wiki/Building-and-Installing-from-Source
+    - https://github.com/ncbi/ncbi-vdb/wiki/Building-and-Installing-from-Source
 
 note:
     Bash script.
@@ -55,34 +65,27 @@ _koopa_help "$@"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+# Ensure current jar binary is in path, otherwise install will fail.
+java_home="$(_koopa_java_home)"
+_koopa_add_to_path_start "${java_home}/bin"
 _koopa_assert_is_installed jar
 
 rm -frv "$prefix"
 rm -fr "$tmp_dir"
 mkdir -p "$tmp_dir"
 
-# Clone ncbi-vdb repo to enable ngs-python support.
-(
-    cd "$tmp_dir" || exit 1
-    wget -O "ncbi-vdb.tar.gz" \
-        "https://github.com/ncbi/ncbi-vdb/archive/${ncbi_vdb_version}.tar.gz"
-    tar -xzvf "ncbi-vdb.tar.gz"
-)
+# ngs                                                                       {{{1
+# ------------------------------------------------------------------------------
 
-
-# Build and install ngs.
 (
     cd "$tmp_dir" || exit 1
     wget -O "ngs.tar.gz" \
         "https://github.com/ncbi/ngs/archive/${version}.tar.gz"
     tar -xzvf "ngs.tar.gz"
-    cd "ngs-${version}" || exit 1
-
-    # ./configure --help
-    # '--with-ncbi-vdb-prefix' flag doesn't seem to be supported?
-    # Refer to 'konfigure.perl' script for details.
+    mv "ngs-${version}" "ngs"
+    cd "ngs" || exit 1
     ./configure \
-        --build-prefix="build" \
+        --build-prefix="$build_prefix" \
         --prefix="$prefix"
     # Make each of the sub-projects.
     make -C ngs-sdk
@@ -91,16 +94,35 @@ mkdir -p "$tmp_dir"
     # Install each of the sub-projects.
     make -C ngs-sdk install
     make -C ngs-java install
-    # Need to install ngs-sdk and ncbi-vdb to run ngs-python.
     make -C ngs-python install
-
-    make --jobs="$CPU_COUNT"
-    make test
-    make install
-    rm -fr "$tmp_dir"
 )
 
 _koopa_link_cellar "$name" "$version"
+
+# ncbi-vdb                                                                  {{{1
+# ------------------------------------------------------------------------------
+
+export NGS_LIBDIR="${prefix}/lib64"
+export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
+# > ld -L$NGS_LIBDIR -lngs-sdk ...
+
+(
+    cd "$tmp_dir" || exit 1
+    wget -O "ncbi-vdb.tar.gz" \
+        "https://github.com/ncbi/ncbi-vdb/archive/${ncbi_vdb_version}.tar.gz"
+    tar -xzvf "ncbi-vdb.tar.gz"
+    mv "ncbi-vdb-${ncbi_vdb_version}" "ncbi-vdb"
+    cd "ncbi-vdb" || exit 1
+    ./configure \
+        --build-prefix="$build_prefix" \
+        --prefix="$prefix"
+    make --jobs="$CPU_COUNT"
+    make install
+)
+
+_koopa_link_cellar "$name" "$version"
+
+rm -fr "$tmp_dir"
 
 cat << EOF
 Reload the shell.
