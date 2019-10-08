@@ -13,30 +13,30 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    [--files] [--rename]
-    string...
+    [--rename]
+    string|file...
 
 Make syntactically valid names.
 
 required positional arguments:
-    ... Character strings to sanitize.
+    ... Character strings or file names to sanitize.
 
 optional arguments:
-    --files
-        File name mode. Preserves file extensions. In this case, we're
-        preserving anything after the first '.' in the file name. This makes
-        supporting complex file names (e.g. '*.fastq.gz') easier. Note that this
-        flag on its own does not rename input.
     --rename
-        Rename input files. Sets '--files' flag automatically. Assumes we're
-        renaming files in current working directory but also supports explicit
-        and/or mixed file paths.
+        Rename input files. Assumes we're renaming files in current working
+        directory but also supports explicit and/or mixed file paths. Errors
+        intentionally if requested input does not exist on disk. Disabled by
+        default.
 
 $(_koopa_help_args)
 
+details:
+    Runs in string mode by default.
+    File rename mode can be enabled by setting '--rename' flag.
+
 see also:
-    - 'syntactic::makeNames()' in R.
-    - 'make.names()' in R (the base version).
+    - 'syntactic::makeNames()' in R. Sanitizes using underscores (good).
+    - 'make.names()' in R (the base version). Sanitizes using dots (bad).
 
 examples:
     make-names "hello world" "foo bar"
@@ -48,7 +48,7 @@ examples:
 note:
     Bash script that calls Rscript internally.
     Requires the syntactic package to be installed.
-    Updated 2019-09-26.
+    Updated 2019-10-08.
 EOF
 }
 
@@ -59,19 +59,13 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-files=0
 rename=0
 
 POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
-        --files)
-            files=1
-            shift 1
-            ;;
         --rename)
-            files=1
             rename=1
             shift 1
             ;;
@@ -96,59 +90,57 @@ set -- "${POSITIONAL[@]}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-# String mode                                                               {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$files" -eq 0 ]]
-then
-    names="$(_koopa_array_to_r_vector "$@")"
-    Rscript -e "cat(syntactic::makeNames(names = ${names}), '\n', sep = ' ')"
-    exit 0
-fi
-
-# File mode                                                                 {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$files" -eq 1 ]]
-then
-    source=("$@")
-    dirname=()
-    basename=()
-    ext=()
-
-    # Mapply-style approach, looping across the file input.
-    for x in "${source[@]}"
-    do
-        dirname+=("$(dirname "$x")")
-        basename+=("$(_koopa_basename_sans_ext2 "$x")")
-        ext+=("$(_koopa_file_ext2 "$x")")
-    done
-
-    # Sanitize the base name.
-    names="$(make-names "${basename[@]}")"
-    # SC2206: Split robustly with mapfile or read -a.
-    read -r -a names <<< "$names"
-
-    target=()
-    for i in "${!source[@]}"
-    do
-        target+=( \
-            "$(printf "%s/%s.%s" \
-                "${dirname[$i]}" "${names[$i]}" "${ext[$i]}" \
-            )" \
-        )
-    done
-fi
-
-# Rename mode                                                               {{{2
+# Rename file mode                                                          {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$rename" -eq 1 ]]
 then
-    for i in "${!source[@]}"
+    source_arr=("$@")
+    source_dn_arr=()
+    source_bn_arr=()
+    source_ext_arr=()
+    for x in "${source_arr[@]}"
     do
-        mv -v "${source[$i]}" "${target[$i]}"
+        source_dn_arr+=("$(dirname "$x")")
+        source_bn_arr+=("$(_koopa_basename_sans_ext2 "$x")")
+        source_ext_arr+=("$(_koopa_file_ext2 "$x")")
     done
-else
-    echo "${target[@]}"
+    target_arr=()
+    read -r -a target_bn_arr <<< "$(make-names "${source_bn_arr[@]}")"
+    for i in "${!source_arr[@]}"
+    do
+        target_dn="${source_dn_arr[$i]}"
+        target_bn="${target_bn_arr[$i]}"
+        target_ext="${source_ext_arr[$i]}"
+        if [[ -n "$target_ext" ]]
+        then
+            target_ext=".${target_ext}"
+        fi
+        target_arr+=( \
+            "$(printf "%s/%s%s" \
+                "$target_dn" "$target_bn" "$target_ext" \
+            )" \
+        )
+    done
+    for i in "${!source_arr[@]}"
+    do
+        mv \
+            --no-target-directory \
+            --verbose \
+            "${source_arr[$i]}" \
+            "${target_arr[$i]}"
+    done
+    exit 0
 fi
+
+# String mode                                                               {{{2
+# ------------------------------------------------------------------------------
+
+object="$(_koopa_array_to_r_vector "$@")"
+Rscript -e " \
+    cat(
+        syntactic::makeNames(${object}),
+        '\n',
+        sep = ' '
+    ) \
+"

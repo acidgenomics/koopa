@@ -19,18 +19,23 @@ $(_koopa_help_header)
 Convert input into snake case.
 
 required positional arguments:
-    ... Character strings to sanitize.
+    ... Character strings or file names to sanitize.
 
 optional arguments:
     --rename
         Rename input files. Assumes we're renaming files in current working
         directory but also supports explicit and/or mixed file paths. Errors
-        intentionally if requested input does not exist on disk.
+        intentionally if requested input does not exist on disk. Disabled by
+        default.
     --prefix
         Include "x" prefix for names that are syntactically invalid in R. This
-        includes files that begin with a number.
+        includes files that begin with a number. Disabled by default.
 
 $(_koopa_help_args)
+
+details:
+    Runs in string mode by default.
+    File rename mode can be enabled by setting '--rename' flag.
 
 see also:
     - 'syntactic::snakeCase()' in R.
