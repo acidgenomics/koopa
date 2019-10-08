@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
 
-
 # A                                                                         {{{1
 # ==============================================================================
 
-# Add local builds to PATH (e.g. '/usr/local').
-#
-# This will recurse through the local library and find 'bin/' subdirs.
-#
-# Note: read `-a` flag doesn't work on macOS. zsh related?
-#
-# Updated 2019-06-20.
 _koopa_add_local_bins_to_path() {
+    # Add local builds to PATH (e.g. '/usr/local').
+    #
+    # This will recurse through the local library and find 'bin/' subdirs.
+    # Note: read `-a` flag doesn't work on macOS. zsh related?
+    #
+    # Updated 2019-06-20.
     local dir
     local dirs
     _koopa_add_to_path_start "$(_koopa_build_prefix)/bin"
@@ -26,18 +24,142 @@ _koopa_add_local_bins_to_path() {
 }
 
 
+# B                                                                         {{{1
+# ==============================================================================
+
+_koopa_build_os_string() {
+    # Build string for 'make' configuration.
+    #
+    # Use this for 'configure --build' flag.
+    #
+    # This function will distinguish between RedHat, Amazon, and other distros
+    # instead of just returning "linux". Note that we're substituting "redhat"
+    # instead of "rhel" here, when applicable.
+    #
+    # - AWS:    x86_64-amzn-linux-gnu
+    # - Darwin: x86_64-darwin15.6.0
+    # - RedHat: x86_64-redhat-linux-gnu
+    #
+    # Updated 2019-09-27.
+    local mach
+    local os_type
+    local string
+    mach="$(uname -m)"
+    if _koopa_is_darwin
+    then
+        string="${mach}-${OSTYPE}"
+    else
+        os_type="$(_koopa_os_type)"
+        if echo "$os_type" | grep -q "rhel"
+        then
+            os_type="redhat"
+        fi
+        string="${mach}-${os_type}-${OSTYPE}"
+    fi
+    echo "$string"
+}
+
+
+_koopa_build_set_permissions() {
+    # Set permissions on program built from source.
+    # Updated 2019-06-27.
+    local path
+    path="$1"
+    if _koopa_has_sudo
+    then
+        sudo chown -Rh "root" "$path"
+    else
+        chown -Rh "$(whoami)" "$path"
+    fi
+    _koopa_prefix_chgrp "$path"
+}
+
+
+# C                                                                         {{{1
+# ==============================================================================
+
+_koopa_cellar_prefix() {
+    # Avoid setting to `/usr/local/cellar`, as this can conflict with Homebrew.
+    # Updated 2019-09-27.
+    local prefix
+    if [[ -w "$KOOPA_HOME" ]]
+    then
+        prefix="${KOOPA_HOME}/cellar"
+    else
+        if [[ -z "${XDG_DATA_HOME:-}" ]]
+        then
+            >&2 printf "Warning: 'XDG_DATA_HOME' is unset.\n"
+            XDG_DATA_HOME="${HOME}/.local/share"
+        fi
+        prefix="${XDG_DATA_HOME}/koopa/cellar"
+    fi
+    echo "$prefix"
+}
+
+
+_koopa_cellar_script() {
+    # Updated 2019-10-08.
+    _koopa_assert_has_no_environments
+    local name
+    name="$1"
+    file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
+    _koopa_assert_is_file "$file"
+    echo "$file"
+}
+
+
+_koopa_conda_env_list() {
+    # Updated 2019-06-27.
+    _koopa_is_installed conda || return 1
+    conda env list --json
+}
+
+
+_koopa_conda_env_prefix() {
+    # Return conda environment prefix (path).
+    #
+    # Note that we're allowing env_list passthrough as second positional
+    # variable, to speed up loading upon activation.
+    #
+    # Updated 2019-10-08.
+    local env_name
+    local env_list
+    local prefix
+    local path
+    _koopa_is_installed conda || return 1
+    env_name="$1"
+    [[ -n "$env_name" ]] || return 1
+    env_list="${2:-}"
+    if [[ -z "$env_list" ]]
+    then
+        env_list="$(_koopa_conda_env_list)"
+    fi
+    env_list="$(echo "$env_list" | grep "$env_name")"
+    if [[ -z "$env_list" ]]
+    then
+        >&2 printf "Error: Failed to detect prefix for '%s'.\n" "$env_name"
+        return 1
+    fi
+    path="$( \
+        echo "$env_list" | \
+        grep "/envs/${env_name}" | \
+        head -n 1 \
+    )"
+    echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
+}
+
 
 # F                                                                         {{{1
 # ==============================================================================
 
-# Find local bin directories.
-#
-# See also:
-# - https://stackoverflow.com/questions/23356779
-# - https://stackoverflow.com/questions/7442417
-#
-# Modified 2019-09-11.
 _koopa_find_local_bin_dirs() {
+    # Find local bin directories.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/23356779
+    # - https://stackoverflow.com/questions/7442417
+    #
+    # Updated 2019-09-11.
     local array
     array=()
     local tmp_file
@@ -68,7 +190,6 @@ _koopa_find_local_bin_dirs() {
 }
 
 
-
 # H                                                                         {{{1
 # ==============================================================================
 
@@ -81,10 +202,9 @@ EOF
 }
 
 
-
-# Help header string.
-# Updated 2019-09-30.
 _koopa_help_header() {
+    # Help header string.
+    # Updated 2019-09-30.
     local name
     name="${1:-}"
     if [[ -z "$name" ]]
@@ -101,83 +221,116 @@ _koopa_help_header() {
 }
 
 
-
-# J                                                                         {{{1
-# ==============================================================================
-
-# Set JAVA_HOME environment variable.
-#
-# See also:
-# - https://www.mkyong.com/java/how-to-set-java_home-environment-variable-on-mac-os-x/
-# - https://stackoverflow.com/questions/22290554
-#
-# Updated 2019-10-02.
-_koopa_java_home() {
-    _koopa_assert_is_installed java
-    # Early return if environment variable is set.
-    if [ -n "${JAVA_HOME:-}" ]
-    then
-        echo "$JAVA_HOME"
-        return 0
-    fi
-    local home
-    if _koopa_is_darwin
-    then
-        home="$(/usr/libexec/java_home)"
-    else
-        local java_exe
-        java_exe="$(_koopa_locate "java")"
-        home="$(dirname "$(dirname "${java_exe}")")"
-    fi
-    echo "$home"
-}
-
-
-
 # L                                                                         {{{1
 # ==============================================================================
 
-# Locate the realpath of a program.
-#
-# This resolves symlinks automatically.
-# For 'which' style return, use '_koopa_which' instead.
-#
-# See also:
-# - https://stackoverflow.com/questions/7522712
-# - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
-#
-# Examples:
-# _koopa_locate bash
-# ## /usr/local/Cellar/bash/5.0.11/bin/bash
-#
-# Updated 2019-10-02.
-_koopa_locate() {
-    local command
-    command="$1"
-    local which
-    which="$(_koopa_which "$command")"
-    local path
-    path="$(realpath "$which")"
-    echo "$path"
+_koopa_link_cellar() {
+    # Symlink cellar into build directory.
+    # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
+    #
+    # Example: _koopa_link_cellar emacs 26.3
+    #
+    # Updated 2019-09-28.
+    local name
+    local version
+    local cellar_prefix
+    local build_prefix
+    name="$1"
+    version="$2"
+    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+    build_prefix="$(_koopa_build_prefix)"
+    printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
+    _koopa_build_set_permissions "$cellar_prefix"
+    cp -frsv "$cellar_prefix/"* "$build_prefix/".
+    _koopa_build_set_permissions "$build_prefix"
+    _koopa_has_sudo && _koopa_update_ldconfig
 }
 
 
+# P                                                                         {{{1
+# ==============================================================================
 
-# Update rJava configuration.
-# The default Java path differs depending on the system.
-# # > R CMD javareconf -h
-# # Environment variables that can be used to influence the detection:
-#   JAVA           path to a Java interpreter executable
-#                  By default first 'java' command found on the PATH
-#                  is taken (unless JAVA_HOME is also specified).
-#   JAVA_HOME      home of the Java environment. If not specified,
-#                  it will be detected automatically from the Java
-#                  interpreter.
-#   JAVAC          path to a Java compiler
-#   JAVAH          path to a Java header/stub generator
-#   JAR            path to a Java archive tool
-# # Updated 2019-10-02.
+# FIXME This is too slow because it runs on '/usr/local/".
+# Rethink this approach.
+_koopa_prefix_chgrp() {
+    # Fix the group permissions on the build directory.
+    # Updated 2019-09-27.
+    local path
+    local group
+    path="$1"
+    group="$(_koopa_prefix_group)"
+    if _koopa_has_sudo
+    then
+        sudo chgrp -Rh "$group" "$path"
+        sudo chmod -R g+w "$path"
+    else
+        chgrp -Rh "$group" "$path"
+        chmod -R g+w "$path"
+    fi
+}
+
+
+_koopa_prefix_group() {
+    # Set the admin or regular user group automatically.
+    # Updated 2019-09-27.
+    local group
+    if _koopa_is_shared && _koopa_has_sudo
+    then
+        if groups | grep -Eq "\b(admin)\b"
+        then
+            group="admin"
+        elif groups | grep -Eq "\b(sudo)\b"
+        then
+            group="sudo"
+        elif groups | grep -Eq "\b(wheel)\b"
+        then
+            group="wheel"
+        else
+            group="$(whoami)"
+        fi
+    else
+        group="$(whoami)"
+    fi
+    echo "$group"
+}
+
+
+_koopa_prefix_mkdir() {
+    # Create directory in build prefix.
+    # Updated 2019-09-27.
+    local path
+    path="$1"
+    _koopa_assert_is_not_dir "$path"
+    if _koopa_has_sudo
+    then
+        sudo mkdir -p "$path"
+        sudo chown "$(whoami)" "$path"
+    else
+        mkdir -p "$path"
+    fi
+    _koopa_prefix_chgrp "$path"
+}
+
+
+# R                                                                         {{{1
+# ==============================================================================
+
 _koopa_r_javareconf() {
+    # Update rJava configuration.
+    # The default Java path differs depending on the system.
+    # # > R CMD javareconf -h
+    # # Environment variables that can be used to influence the detection:
+    #   JAVA           path to a Java interpreter executable
+    #                  By default first 'java' command found on the PATH
+    #                  is taken (unless JAVA_HOME is also specified).
+    #   JAVA_HOME      home of the Java environment. If not specified,
+    #                  it will be detected automatically from the Java
+    #                  interpreter.
+    #   JAVAC          path to a Java compiler
+    #   JAVAH          path to a Java header/stub generator
+    #   JAR            path to a Java archive tool
+    #
+    # Updated 2019-10-02.
     _koopa_assert_is_installed R
     _koopa_assert_is_installed java
     local java_home
@@ -204,13 +357,12 @@ _koopa_r_javareconf() {
 }
 
 
-
 # S                                                                         {{{1
 # ==============================================================================
 
-# Get the calling script name.
-# Updated 2019-09-25.
 _koopa_script_name() {
+    # Get the calling script name.
+    # Updated 2019-09-25.
     local file
     file="$( \
         caller | \
@@ -221,35 +373,27 @@ _koopa_script_name() {
 }
 
 
-
-# W                                                                         {{{1
+# T                                                                         {{{1
 # ==============================================================================
 
-# Locate which program.
-#
-# Note that this intentionally doesn't resolve symlinks.
-# Use 'koopa_locate' for that instead.
-#
-# Not currently working for zsh.
-# 'command -v' doesn't return anything back inside a function.
-# Also tried:
-# - 'type -p'
-# - 'whence -p'
-#
-# Examples:
-# _koopa_which bash
-# ## /usr/local/bin/bash
-#
-# Updated 2019-10-02.
-_koopa_which() {
-    local command
-    command="$1"
-    local path
-    path="$(command -v "$command")"
-    if [ -z "$path" ]
-    then
-        >&2 printf "Warning: Failed to locate '%s'.\n" "$command"
-        return 1
-    fi
-    echo "$path"
+_koopa_tmp_dir() {
+    # Create temporary directory.
+    #
+    # Note: macOS requires `env LC_CTYPE=C`.
+    # Otherwise, you'll see this error: `tr: Illegal byte sequence`.
+    # This doesn't seem to work reliably, so using timestamp instead.
+    #
+    # See also:
+    # - https://gist.github.com/earthgecko/3089509
+    #
+    # Updated 2019-09-04.
+    local unique
+    local dir
+    unique="$(date "+%Y%m%d-%H%M%S")"
+    dir="/tmp/koopa-$(id -u)-${unique}"
+    # This doesn't work well with zsh.
+    # > mkdir -p "$dir"
+    # > chown "$USER" "$dir"
+    # > chmod 0775 "$dir"
+    echo "$dir"
 }
