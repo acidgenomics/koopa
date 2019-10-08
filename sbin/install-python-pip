@@ -16,9 +16,15 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Install TeX packages using tlmgr.
+Install pip package manager for Python.
 
 $(_koopa_help_args)
+
+details:
+    Installs into '/usr/local/' by default.
+
+see also:
+    https://pip.pypa.io/en/stable/installing/
 
 note:
     Bash script.
@@ -33,41 +39,8 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing TeX packages recommended for RStudio.\n"
+_koopa_assert_is_not_installed pip
 
-sudo tlmgr update --self
-
-packages=( \
-    collection-fontsrecommended  # priority
-    collection-latexrecommended  # priority
-    bera  # beramono
-    caption
-    changepage
-    csvsimple
-    enumitem
-    etoolbox
-    fancyhdr
-    footmisc
-    framed
-    geometry
-    hyperref
-    inconsolata
-    marginfix
-    mathtools
-    natbib
-    nowidow
-    parnotes
-    parskip
-    placeins
-    preprint  # authblk
-    sectsty
-    soul
-    titlesec
-    titling
-    xstring
-)
-
-for package in "${packages[@]}"
-do
-    sudo tlmgr install "$package"
-done
+curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+sudo "/usr/local/bin/python3" "get-pip.py"
+rm "get-pip.py"

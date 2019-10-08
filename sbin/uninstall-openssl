@@ -14,16 +14,18 @@ _koopa_assert_has_sudo
 
 usage() {
 cat << EOF
-usage: uninstall-openssl [--help|-h]
+$(_koopa_help_header)
 
 Remove local installation of OpenSSL.
+
+$(_koopa_help_args)
 
 details:
     Last tested with openssl 1.1.1c.
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-08.
 EOF
 }
 
