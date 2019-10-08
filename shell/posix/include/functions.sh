@@ -111,7 +111,7 @@ _koopa_array_to_r_vector() {
 _koopa_assert_has_file_ext() {
     # Assert that input contains a file extension.
     # Updated 2019-09-26
-    if ! echo "$1" | grep -q "\."
+    if ! _koopa_has_file_ext "$1"
     then
         >&2 printf "Error: No file extension: '%s'\n" "$1"
         exit 1
@@ -403,10 +403,14 @@ _koopa_basename_sans_ext() {
     #
     # See also: _koopa_file_ext
     #
-    # Updated 2019-10-07.
-    _koopa_assert_has_file_ext "$1"
+    # Updated 2019-10-08.
     local x
     x="$1"
+    if ! _koopa_has_file_ext "$x"
+    then
+        printf "%s\n" "$x"
+        return 0
+    fi
     x="$(basename "$x")"
     x="${x%.*}"
     printf "%s\n" "$x"
@@ -422,9 +426,15 @@ _koopa_basename_sans_ext2() {
     #
     # See also: _koopa_file_ext2
     #
-    # Updated 2019-10-07.
-    _koopa_assert_has_file_ext "$1"
-    basename "$1" | cut -d '.' -f 1
+    # Updated 2019-10-08.
+    local x
+    x="$1"
+    if ! _koopa_has_file_ext "$x"
+    then
+        printf "%s\n" "$x"
+        return 0
+    fi
+    basename "$x" | cut -d '.' -f 1
 }
 
 
@@ -598,6 +608,40 @@ _koopa_extract() {
 # F                                                                         {{{1
 # ==============================================================================
 
+_koopa_file_ext() {
+    # Extract the file extension from input.
+    #
+    # Examples:
+    # _koopa_file_ext "hello-world.txt"
+    # ## txt
+    #
+    # _koopa_file_ext "hello-world.tar.gz"
+    # ## gz
+    #
+    # See also: _koopa_basename_sans_ext
+    #
+    # Updated 2019-10-08.
+    _koopa_has_file_ext "$1" || return 0
+    printf "%s\n" "${1##*.}"
+}
+
+
+_koopa_file_ext2() {
+    # Extract the file extension after any dots in the file name.
+    # This assumes file names are not in dotted case.
+    #
+    # Examples:
+    # _koopa_file_ext2 "hello-world.tar.gz"
+    # ## tar.gz
+    #
+    # See also: _koopa_basename_sans_ext2
+    #
+    # Updated 2019-10-08.
+    _koopa_has_file_ext "$1" || return 0
+    echo "$1" | cut -d '.' -f 2-
+}
+
+
 _koopa_find_dotfiles() {
     # Updated 2019-09-24.
     local type="$1"
@@ -627,40 +671,6 @@ _koopa_find_text() {
 }
 
 
-_koopa_file_ext() {
-    # Extract the file extension from input.
-    #
-    # Examples:
-    # _koopa_file_ext "hello-world.txt"
-    # ## txt
-    #
-    # _koopa_file_ext "hello-world.tar.gz"
-    # ## gz
-    #
-    # See also: _koopa_basename_sans_ext
-    #
-    # Updated 2019-09-26.
-    _koopa_assert_has_file_ext "$1"
-    printf "%s\n" "${1##*.}"
-}
-
-
-_koopa_file_ext2() {
-    # Extract the file extension after any dots in the file name.
-    # This assumes file names are not in dotted case.
-    #
-    # Examples:
-    # _koopa_file_ext2 "hello-world.tar.gz"
-    # ## tar.gz
-    #
-    # See also: _koopa_basename_sans_ext2
-    #
-    # Updated 2019-09-26.
-    _koopa_assert_has_file_ext "$1"
-    echo "$1" | cut -d '.' -f 2-
-}
-
-
 _koopa_force_add_to_path_end() {
     # Updated 2019-06-27.
     local dir
@@ -681,6 +691,14 @@ _koopa_force_add_to_path_start() {
 
 # H                                                                         {{{1
 # ==============================================================================
+
+_koopa_has_file_ext() {
+    # Does the input contain a file extension?
+    # Simply looks for a "." and returns true/false.
+    # Updated 2019-10-08.
+    echo "$1" | grep -q "\."
+}
+
 
 _koopa_has_no_environments() {
     # Detect activation of virtual environments.
