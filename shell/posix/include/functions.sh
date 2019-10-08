@@ -2,6 +2,26 @@
 # shellcheck disable=SC2039
 
 
+# Fake realpath support, if necessary.
+# Note that 'readlink -f' doesn't work on macOS.
+#
+# See also:
+# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
+#
+# Updated 2019-06-26.
+if ! command -v realpath >/dev/null
+then
+    realpath() {
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
+fi
+
+
 # A                                                                         {{{1
 # ==============================================================================
 
