@@ -46,7 +46,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-06.
+    Updated 2019-10-08.
 EOF
 }
 
@@ -93,6 +93,7 @@ conda-create-env black
 conda-create-env gffutils
 conda-create-env igvtools
 conda-create-env jupyter
+conda-create-env wgsim
 
 # Quality control                                                           {{{2
 # ------------------------------------------------------------------------------
@@ -109,6 +110,7 @@ conda-create-env hisat2
 conda-create-env kallisto
 conda-create-env minimap2
 conda-create-env rapmap
+conda-create-env rsem
 conda-create-env salmon
 conda-create-env star
 
