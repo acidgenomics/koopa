@@ -242,8 +242,14 @@ _koopa_link_cellar() {
     printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
     # > _koopa_build_set_permissions "$build_prefix"
     _koopa_build_set_permissions "$cellar_prefix"
-    cp -frsv "$cellar_prefix/"* "$build_prefix/".
-    _koopa_has_sudo && _koopa_update_ldconfig
+    if _koopa_is_shared
+    then
+        _koopa_assert_has_sudo
+        sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        _koopa_update_ldconfig
+    else
+        cp -frsv "$cellar_prefix/"* "$build_prefix/".
+    fi
 }
 
 
