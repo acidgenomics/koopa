@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-07.
+## Updated 2019-10-08.
 
 options(
     error = quote(quit(status = 1L)),
@@ -523,6 +523,11 @@ if (isTRUE(linux)) {
         whichName = "rename",
         current = currentVersion("perl-file-rename"),
         expected = expectedVersion("perl-file-rename")
+    )
+    checkVersion(
+        name = "bcl2fastq",
+        current = currentVersion("bcl2fastq"),
+        expected = expectedVersion("bcl2fastq")
     )
     checkVersion(
         name = "RStudio Server",
