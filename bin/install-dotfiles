@@ -10,8 +10,9 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Variables                                                                 {{{1
 # ==============================================================================
 
-url="git@github.com:acidgenomics/dotfiles.git"
 target_dir="$(_koopa_home)/dotfiles"
+# > url="git@github.com:acidgenomics/dotfiles.git"
+url="https://github.com/acidgenomics/dotfiles.git"
 
 
 
@@ -37,7 +38,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-10-09.
 EOF
 }
 
