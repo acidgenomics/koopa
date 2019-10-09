@@ -74,7 +74,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-02.
+    Updated 2019-10-09.
 EOF
 }
 
@@ -86,42 +86,55 @@ _koopa_help "$@"
 # ==============================================================================
 
 jdk_dir="${1:-$jdk_dir}"
+jdk_version_dir="${jdk_dir}/jdk-${version}"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-sudo mkdir -pv "${jdk_dir}"
-_koopa_prefix_chgrp "${jdk_dir}"
-sudo chmod g+s "${jdk_dir}"
-
-(
-    cd "${jdk_dir}" || exit 1
-    file="openjdk-13_linux-x64_bin.tar.gz"
-    _koopa_assert_is_not_file "$file"
-    wget "https://download.java.net/java/GA/jdk13/5b8a42f3905b406298b72d750b6919f6/33/GPL/${file}"
-    tar -xzvf "$file" -C "$jdk_dir"
-)
+# Download and extract the JDK, if necessary.
+if [[ ! -d "$jdk_version_dir" ]]
+then
+    sudo mkdir -pv "${jdk_dir}"
+    _koopa_prefix_chgrp "${jdk_dir}"
+    sudo chmod g+s "${jdk_dir}"
+    (
+        cd "${jdk_dir}" || exit 1
+        file="openjdk-13_linux-x64_bin.tar.gz"
+        hash="5b8a42f3905b406298b72d750b6919f6"
+        url="https://download.java.net/java/GA/jdk13/${hash}/33/GPL/${file}"
+        wget "$url"
+        tar -xzvf "$file" -C "$jdk_dir"
+    )
+fi
 
 _koopa_build_set_permissions "${jdk_dir}"
 
+priority="100"
 sudo update-alternatives --install \
     "/usr/bin/java" \
     "java" \
     "${jdk_dir}/jdk-${version}/bin/java" \
-    "100"
+    "$priority"
 sudo update-alternatives --install \
     "/usr/bin/javac" \
     "javac" \
     "${jdk_dir}/jdk-${version}/bin/javac" \
-    "100"
+    "$priority"
+sudo update-alternatives --install \
+    "/usr/bin/jar" \
+    "jar" \
+    "${jdk_dir}/jdk-${version}/bin/jar" \
+    "$priority"
 
 sudo update-alternatives --config java
 sudo update-alternatives --config javac
+sudo update-alternatives --config jar
 
 update-alternatives --display java
 update-alternatives --display javac
+update-alternatives --display jar
 
 java --version
 
