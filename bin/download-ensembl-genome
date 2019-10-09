@@ -49,6 +49,7 @@ see also:
 
     Using STAR aligner for RNA-seq?
     Here's a relevant section from the manual:
+    https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
     ## 2.2.1 Which chromosomes/scaffolds/patches to include?
     ## It is strongly recommended to include major chromosomes (e.g., for human
     ## chr1-22,chrX,chrY,chrM,) as well as un-placed and un-localized scaffolds.
@@ -59,7 +60,8 @@ see also:
     ## even worse, may be aligned to wrong loci on the chromosomes. Generally,
     ## patches and alternative haplotypes should not be included in the genome.
     ## Examples of acceptable genome sequence files:
-    ## ENSEMBL: files marked with '.dna.primary.assembly'.
+    ## - ENSEMBL: files marked with '.dna.primary.assembly'.
+    ## - GENCODE: files marked with PRI (primary).
 
     GRCh38 alternatives to Ensembl primary assembly:
     (consider using GENCODE also)
