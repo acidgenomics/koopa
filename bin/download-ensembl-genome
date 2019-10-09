@@ -14,7 +14,7 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import ensembl_version
+from pykoopa.genome import ensembl_version, tx2gene_from_fasta
 from pykoopa.syntactic import kebab_case
 from pykoopa.sys import eprint, paste_url, wget
 
@@ -44,7 +44,7 @@ see also:
 
 note:
     Python script.
-    Updated 2019-10-07.
+    Updated 2019-10-09.
 """
 
 
@@ -153,10 +153,10 @@ def download_genome(release_url, output_dir, decompress):
     base_url = paste_url(release_url, "fasta", organism.lower(), "dna")
     readme_url = paste_url(base_url, "README")
     checksums_url = paste_url(base_url, "CHECKSUMS")
-    if organism == "Homo sapiens" or organism == "Mus musculus":
-        assembly="primary_assembly"
+    if organism in ("Homo sapiens", "Mus musculus"):
+        assembly = "primary_assembly"
     else:
-        assembly="toplevel"
+        assembly = "toplevel"
     fasta_url = paste_url(
         base_url, organism + "." + build + ".dna." + assembly + ".fa.gz"
     )
@@ -242,5 +242,8 @@ elif annotation == "all":
     download_gff(
         release_url=release_url, output_dir=output_dir, decompress=decompress
     )
+
+if type != "genome":
+    tx2gene_from_fasta(source_name="ensembl", output_dir=output_dir)
 
 print("Genome downloaded successfully to '" + output_dir + "'.")
