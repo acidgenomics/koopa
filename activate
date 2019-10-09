@@ -71,13 +71,6 @@ note:
 EOF
 }
 
-# Disable this checks for activation inside of koopa script.
-# > "")
-# >     ;;
-# > *)
-# >     >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-# >     ;;
-
 case "${1:-}" in
     --help|-h)
         usage
@@ -160,16 +153,17 @@ fi
 # Functions                                                                 {{{1
 # ==============================================================================
 
-# Fake realpath support, if necessary.
-# Note that 'readlink -f' doesn't work on macOS.
-#
-# See also:
-# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-#
-# Updated 2019-06-26.
 if ! command -v realpath >/dev/null
 then
     realpath() {
+        # Fake realpath support, if necessary.
+        # Note that 'readlink -f' doesn't work on macOS.
+        #
+        # See also:
+        # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/
+        #       run_tests.sh
+        #
+        # Updated 2019-06-26.
         if [ "$(uname -s)" = "Darwin" ]
         then
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
