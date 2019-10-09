@@ -13,8 +13,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    [--files] [--prefix] [--rename]
-    string...
+    [--rename] [--prefix]
+    string|file...
 
 Convert input into kebab case.
 
@@ -23,13 +23,16 @@ required positional arguments:
 
 optional arguments:
     --rename
-        Rename input files. Assumes we're renaming files in current working
-        directory but also supports explicit and/or mixed file paths. Errors
-        intentionally if requested input does not exist on disk. Disabled by
-        default.
+        Rename input files.
+        Coerces file names to lower case prior to applying function, simplifying
+            handling of mixed case.
+        Assumes we're renaming files in current working directory, but also
+            supports explicit and/or mixed file paths. Doesn't work recursively.
+        Disabled by default.
     --prefix
-        Include "x" prefix for names that are syntactically invalid in R. This
-        includes files that begin with a number. Disabled by default.
+        Include "x" prefix for names that are syntactically invalid in R.
+        Note that this includes strings beginning with a number.
+        Disabled by default.
 
 $(_koopa_help_args)
 
@@ -124,21 +127,28 @@ then
         source_ext_arr+=("$(_koopa_file_ext2 "$x")")
     done
     target_arr=()
+    target_dn_arr=("${source_dn_arr[@]}")
+    target_bn_arr=("${source_bn_arr[@]}")
+    target_ext_arr=("${source_ext_arr[@]}")
+    # Make basenames lowercase prior to applying function.
+    # This simplifies handling of mixed case.
+    target_bn_arr=("${target_bn_arr[@],,}")
+    # Sanitize basenames.
     read -r -a target_bn_arr <<< \
-        "$("$script_name" "${flags[@]}" "${source_bn_arr[@]}")"
+        "$("$script_name" "${flags[@]}" "${target_bn_arr[@]}")"
     for i in "${!source_arr[@]}"
     do
-        target_dn="${source_dn_arr[$i]}"
+        target_dn="${target_dn_arr[$i]}"
         target_bn="${target_bn_arr[$i]}"
-        target_ext="${source_ext_arr[$i]}"
+        target_ext="${target_ext_arr[$i]}"
+        # Add back leading period to extension, if necessary.
+        # Note that this step supports files without an extension.
         if [[ -n "$target_ext" ]]
         then
             target_ext=".${target_ext}"
         fi
         target_arr+=( \
-            "$(printf "%s/%s%s" \
-                "$target_dn" "$target_bn" "$target_ext" \
-            )" \
+            "$(printf "%s/%s%s" "$target_dn" "$target_bn" "$target_ext")" \
         )
     done
     for i in "${!source_arr[@]}"
