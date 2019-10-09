@@ -2,16 +2,17 @@
 # shellcheck disable=SC2039
 
 
-# Fake realpath support, if necessary.
-# Note that 'readlink -f' doesn't work on macOS.
-#
-# See also:
-# - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
-#
-# Updated 2019-06-26.
 if ! command -v realpath >/dev/null
 then
     realpath() {
+        # Fake realpath support, if necessary.
+        # Note that 'readlink -f' doesn't work on macOS.
+        #
+        # See also:
+        # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/
+        #       run_tests.sh
+        #
+        # Updated 2019-06-26.
         if [ "$(uname -s)" = "Darwin" ]
         then
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
@@ -689,6 +690,15 @@ _koopa_force_add_to_path_start() {
 }
 
 
+# G                                                                         {{{1
+# ==============================================================================
+
+_koopa_gsub() {
+    # Updated 2019-10-09.
+    echo "$1" | sed -E "s/${2}/${3}/g"
+}
+
+
 # H                                                                         {{{1
 # ==============================================================================
 
@@ -1330,6 +1340,13 @@ _koopa_strip_trailing_slash() {
 }
 
 
+_koopa_sub() {
+    # Updated 2019-10-09.
+    # See also: _koopa_gsub
+    echo "$1" | sed -E "s/${2}/${3}/"
+}
+
+
 # T                                                                         {{{1
 # ==============================================================================
 
@@ -1579,5 +1596,3 @@ _koopa_zsh_version() {
         head -n 1 | \
         cut -d ' ' -f 2
 }
-
-
