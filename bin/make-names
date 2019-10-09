@@ -23,16 +23,18 @@ required positional arguments:
 
 optional arguments:
     --rename
-        Rename input files. Assumes we're renaming files in current working
-        directory but also supports explicit and/or mixed file paths. Errors
-        intentionally if requested input does not exist on disk. Disabled by
-        default.
+        Rename input files.
+        Assumes we're renaming files in current working directory, but also
+            supports explicit and/or mixed file paths. Doesn't work recursively.
+        Disabled by default.
 
 $(_koopa_help_args)
 
 details:
     Runs in string mode by default.
     File rename mode can be enabled by setting '--rename' flag.
+    If you need to standardize file names prefixed with a number, consider using
+        kebab or snake case functions instead, which support '--prefix' flag.
 
 see also:
     - 'syntactic::makeNames()' in R. Sanitizes using underscores (good).
@@ -108,20 +110,24 @@ then
         source_ext_arr+=("$(_koopa_file_ext2 "$x")")
     done
     target_arr=()
-    read -r -a target_bn_arr <<< "$("$script_name" "${source_bn_arr[@]}")"
+    target_dn_arr=("${source_dn_arr[@]}")
+    target_bn_arr=("${source_bn_arr[@]}")
+    target_ext_arr=("${source_ext_arr[@]}")
+    # Sanitize basenames.
+    read -r -a target_bn_arr <<< "$("$script_name" "${target_bn_arr[@]}")"
     for i in "${!source_arr[@]}"
     do
-        target_dn="${source_dn_arr[$i]}"
+        target_dn="${target_dn_arr[$i]}"
         target_bn="${target_bn_arr[$i]}"
-        target_ext="${source_ext_arr[$i]}"
+        target_ext="${target_ext_arr[$i]}"
+        # Add back leading period to extension, if necessary.
+        # Note that this step supports files without an extension.
         if [[ -n "$target_ext" ]]
         then
             target_ext=".${target_ext}"
         fi
         target_arr+=( \
-            "$(printf "%s/%s%s" \
-                "$target_dn" "$target_bn" "$target_ext" \
-            )" \
+            "$(printf "%s/%s%s" "$target_dn" "$target_bn" "$target_ext")" \
         )
     done
     for i in "${!source_arr[@]}"

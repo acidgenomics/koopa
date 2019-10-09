@@ -24,10 +24,10 @@ required positional arguments:
 optional arguments:
     --rename
         Rename input files.
-        Coerces file names to lower case prior to applying function, simplifying
-            handling of mixed case.
         Assumes we're renaming files in current working directory, but also
             supports explicit and/or mixed file paths. Doesn't work recursively.
+        Coerces file names to lower case prior to applying function, simplifying
+            handling of mixed case.
         Disabled by default.
     --prefix
         Include "x" prefix for names that are syntactically invalid in R.
