@@ -47,6 +47,20 @@ see also:
     - https://lh3.github.io/2017/11/13/which-human-reference-genome-to-use
     - https://bioinformatics.stackexchange.com/questions/540/
 
+    Using STAR aligner for RNA-seq?
+    Here's a relevant section from the manual:
+    ## 2.2.1 Which chromosomes/scaffolds/patches to include?
+    ## It is strongly recommended to include major chromosomes (e.g., for human
+    ## chr1-22,chrX,chrY,chrM,) as well as un-placed and un-localized scaffolds.
+    ## Typically, un-placed/un-localized scaffolds add just a few MegaBases to
+    ## the genome length, however, a substantial number of reads may map to
+    ## ribosomal RNA (rRNA) repeats on these scaffolds. These reads would be
+    ## reported as unmapped if the scaffolds are not included in the genome, or,
+    ## even worse, may be aligned to wrong loci on the chromosomes. Generally,
+    ## patches and alternative haplotypes should not be included in the genome.
+    ## Examples of acceptable genome sequence files:
+    ## ENSEMBL: files marked with '.dna.primary.assembly'.
+
     GRCh38 alternatives to Ensembl primary assembly:
     (consider using GENCODE also)
     - ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/
@@ -182,7 +196,7 @@ def download_genome(release_url, output_dir, decompress):
     base_url = paste_url(release_url, "fasta", organism.lower(), "dna")
     readme_url = paste_url(base_url, "README")
     checksums_url = paste_url(base_url, "CHECKSUMS")
-    if organism in ("Homo sapiens", "Mus musculus"):
+    if organism in ("Homo_sapiens", "Mus_musculus"):
         assembly = "primary_assembly"
     else:
         assembly = "toplevel"
@@ -222,7 +236,7 @@ def download_gtf(release_url, output_dir, decompress):
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
-    if organism in ("Homo sapiens", "Mus musculus"):
+    if organism in ("Homo_sapiens", "Mus_musculus"):
         gtf_patch_url = paste_url(
             base_url,
             organism
