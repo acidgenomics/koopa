@@ -14,7 +14,11 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import flybase_dmel_version, flybase_version
+from pykoopa.genome import (
+    flybase_dmel_version,
+    flybase_version,
+    tx2gene_from_fasta,
+)
 from pykoopa.syntactic import kebab_case
 from pykoopa.sys import decompress_but_keep_original, eprint, paste_url, wget
 
@@ -267,5 +271,8 @@ elif annotation == "all":
         decompress=decompress,
         dmel=dmel,
     )
+
+if type != "genome":
+    tx2gene_from_fasta(source_name="flybase", output_dir=output_dir)
 
 print("Genome downloaded successfully to '" + output_dir + "'.")

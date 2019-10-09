@@ -14,7 +14,7 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import gencode_version
+from pykoopa.genome import gencode_version, tx2gene_from_fasta
 from pykoopa.syntactic import kebab_case
 from pykoopa.sys import eprint, paste_url, wget
 
@@ -248,5 +248,8 @@ elif annotation == "gff":
 elif annotation == "all":
     download_gtf(gtf_url=gtf_url, output_dir=output_dir, decompress=decompress)
     download_gff(gff_url=gff_url, output_dir=output_dir, decompress=decompress)
+
+if type != "genome":
+    tx2gene_from_fasta(source_name="gencode", output_dir=output_dir)
 
 print("Genome downloaded successfully to '" + output_dir + "'.")
