@@ -139,6 +139,8 @@ then
         target_dn="${source_dn_arr[$i]}"
         target_bn="${target_bn_arr[$i]}"
         target_ext="${target_ext_arr[$i]}"
+        # Add back leading period to extension, if necessary.
+        # Note that this step supports files without an extension.
         if [[ -n "$target_ext" ]]
         then
             target_ext=".${target_ext}"
