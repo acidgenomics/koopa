@@ -24,8 +24,6 @@ required positional arguments:
 optional arguments:
     --rename
         Rename input files.
-        Coerces file names to lower case prior to applying function, simplifying
-            handling of mixed case.
         Assumes we're renaming files in current working directory, but also
             supports explicit and/or mixed file paths. Doesn't work recursively.
         Disabled by default.
@@ -150,6 +148,8 @@ then
         target_dn="${target_dn_arr[$i]}"
         target_bn="${target_bn_arr[$i]}"
         target_ext="${target_ext_arr[$i]}"
+        # Add back leading period to extension, if necessary.
+        # Note that this step supports files without an extension.
         if [[ -n "$target_ext" ]]
         then
             target_ext=".${target_ext}"
