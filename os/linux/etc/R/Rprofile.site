@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-03 by Michael Steinbaugh.
+## Updated 2019-10-09 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -228,6 +228,10 @@ options(
 ## > help(topic = "Startup", package = "base")
 
 .First <- function() {
+    if (isTRUE(interactive())) {
+        cat("\n", R.version$version.string, "\n\n", sep = "")
+    }
+
     ## Get the R version without patch (e.g. 3.6).
     r_ver <- paste(
         R.version[["major"]],
@@ -236,109 +240,110 @@ options(
     )
     r_ver <- numeric_version(r_ver)
 
-    ## Library path                                                         {{{2
+    ## Conda                                                                {{{2
     ## -------------------------------------------------------------------------
 
-    ## This check doesn't work well with conda environments, so skipping.
+    ## Check for active conda.
+    ## Can cause compilation issues due to GCC version mismatch.
 
-    ## Check that the local library matches the R version.
-    ## libs <- .libPaths()
-    ## if (
-    ##     ## Site library.
-    ##     !any(grepl(pattern = "site-library", x = libs)) &&
-    ##     ## User library.
-    ##     !any(grepl(
-    ##         pattern = file.path(
-    ##             paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
-    ##         ),
-    ##         x = libs
-    ##     ))
-    ## ) {
-    ##     warning(paste0(
-    ##         "Failed to detect ", r_ver, " site or user library.", "\n",
-    ##         ".libPaths():", "\n",
-    ##         paste(libs, collapse = "\n")
-    ##     ))
-    ## }
-    ## rm(libs)
+    if (Sys.which("conda") != "") {
+        cat(
+            sprintf(
+                fmt = "conda '%s' environment detected.",
+                Sys.getenv("CONDA_DEFAULT_ENV")
+            ),
+            "Don't install packages from source with conda active.",
+            "",
+            sep = "\n"
+        )
+        conda <- TRUE
+    } else {
+        conda <- FALSE
+    }
 
     ## Compiler                                                             {{{2
     ## -------------------------------------------------------------------------
 
-    ## Important! Check that the compiler is expected GCC version on Linux or
-    ## expected Clang version on macOS.
+    ## Check that the compiler is expected GCC version on Linux or expected
+    ## Clang version on macOS.
     ##
-    ## Note that conda can mask expected GCC, so be careful with PATH.
-    ##
-    ## DO NOT compile packages from source on macOS using Apple LLVM Clang/GCC.
+    ## Do not compile packages from source on macOS using Apple LLVM Clang/GCC.
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
-
-    if (Sys.getenv("HMS_CLUSTER") == "o2") {
-        ## > module load gcc/6.2.0
-        gcc_bin_dir <- "/n/app/gcc/6.2.0/bin"
-        stopifnot(identical(
-            x = Sys.which(c("gcc", "g++", "gfortran")),
-            y = c(
-                "gcc"      = file.path(gcc_bin_dir, "gcc"),
-                "g++"      = file.path(gcc_bin_dir, "g++"),
-                "gfortran" = file.path(gcc_bin_dir, "gfortran")
-            )
-        ))
-        rm(gcc_bin_dir)
-        ## > module load R/3.5.1
-        stopifnot(identical(
-            Sys.which("R"),
-            c(R = "/n/app/R/3.5.1/bin/R")
-        ))
-        ## > module load hdf5/1.10.1
-        stopifnot(identical(
-            Sys.which("h5cc"),
-            c(h5cc = "/n/app/hdf5/1.10.1/bin/h5cc")
-        ))
-    } else if (Sys.info()[["sysname"]] == "Darwin") {
-        ## Use recommended CRAN compiler settings.
-        if (r_ver == "3.5") {
-            clang_ver <- "6"
-        } else if (r_ver == "3.6") {
-            clang_ver <- "7"
-        }
-        clang_bin_dir <-
-            file.path("", "usr", "local", paste0("clang", clang_ver), "bin")
-        stopifnot(identical(
-            x = Sys.which(c("clang", "clang++", "gfortran")),
-            y = c(
-                "clang"    = file.path(clang_bin_dir, "clang"),
-                "clang++"  = file.path(clang_bin_dir, "clang++"),
-                "gfortran" = "/usr/local/gfortran/bin/gfortran"
-            )
-        ))
-        rm(clang_bin_dir, clang_ver)
-    } else if (Sys.info()[["sysname"]] == "Linux") {
-        stopifnot(identical(
-            x = Sys.which(c("gcc", "g++", "gfortran")),
-            y = c(
-                "gcc"      = "/usr/bin/gcc",
-                "g++"      = "/usr/bin/g++",
-                "gfortran" = "/usr/bin/gfortran"
-            )
-        ))
+    
+    if (!isTRUE(conda)) {
+        if (Sys.getenv("HMS_CLUSTER") == "o2") {
+            ## > module load gcc/6.2.0
+            ## > module load R/3.6.1
+            ## > module load hdf5/1.10.1
+            gcc_bin_dir <- "/n/app/gcc/6.2.0/bin"
+            stopifnot(identical(
+                x = Sys.which(c("R", "gcc", "g++", "gfortran", "h5cc")),
+                y = c(
+                    "R"        = "/n/app/R/3.6.1/bin/R",
+                    "gcc"      = file.path(gcc_bin_dir, "gcc"),
+                    "g++"      = file.path(gcc_bin_dir, "g++"),
+                    "gfortran" = file.path(gcc_bin_dir, "gfortran"),
+                    "h5cc"     = "/n/app/hdf5/1.10.1/bin/h5cc"
+                )
+            ))
+            rm(gcc_bin_dir)
+        } else if (Sys.info()[["sysname"]] == "Darwin") {
+            ## Use recommended CRAN compiler settings.
+            if (r_ver == "3.5") {
+                clang_ver <- "6"
+            } else if (r_ver == "3.6") {
+                clang_ver <- "7"
+            }
+            clang_bin_dir <- file.path(
+                "", "usr", "local", paste0("clang", clang_ver), "bin")
+            stopifnot(identical(
+                x = Sys.which(c("clang", "clang++", "gfortran")),
+                y = c(
+                    "clang"    = file.path(clang_bin_dir, "clang"),
+                    "clang++"  = file.path(clang_bin_dir, "clang++"),
+                    "gfortran" = "/usr/local/gfortran/bin/gfortran"
+                )
+            ))
+            rm(clang_bin_dir, clang_ver)
+        } else if (Sys.info()[["sysname"]] == "Linux") {
+            stopifnot(identical(
+                x = Sys.which(c("gcc", "g++", "gfortran")),
+                y = c(
+                    "gcc"      = "/usr/bin/gcc",
+                    "g++"      = "/usr/bin/g++",
+                    "gfortran" = "/usr/bin/gfortran"
+                )
+            ))
+        } 
     }
 
-    ## Conda                                                                {{{2
+    ## Library path                                                         {{{2
     ## -------------------------------------------------------------------------
 
-    ## Check for active conda. Can cause compilation issues. Note that bcbio
-    ## unit tests currently will fail to run because of this setting, which is
-    ## intentional. We need to set the `--vanilla` flag in `Rscript` calls.
+    ## Check that library matches R version.
 
-    ## > if (Sys.which("conda") != "") {
-    ## >     warning(paste(
-    ## >         "conda detected.",
-    ## >         "Run `conda deactivate` prior to starting R.",
-    ## >         sep = "\n"
-    ## >     ))
-    ## > }
+    if (!isTRUE(conda)) {
+        libs <- .libPaths()
+        if (
+            ## Site library.
+            !any(grepl(pattern = "site-library", x = libs)) &&
+            ## User library.
+            !any(grepl(
+                pattern = file.path(
+                    paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
+                ),
+                x = libs
+            ))
+        ) {
+            stop(sprintf(
+                "Failed to detect R %s library in '.libPaths()':\n%s",
+                r_ver,
+                paste(libs, collapse = "\n")
+            ))
+        }
+        rm(libs)
+    }
 
     ## RStudio                                                              {{{2
     ## -------------------------------------------------------------------------
@@ -366,9 +371,9 @@ options(
     ## Load per-user secrets that we don't want to save in a shared Renviron.
     if (file.exists("~/.Rsecrets")) {
         source("~/.Rsecrets")
-        # > if (isTRUE(interactive())) {
-        # >     cat("Loaded '~/.Rsecrets' file.\n\n")
-        # > }
+        if (isTRUE(interactive())) {
+            cat("Loaded '~/.Rsecrets' file.\n\n")
+        }
     }
 
     ## Minimal session info                                                 {{{2
@@ -376,7 +381,6 @@ options(
 
     if (isTRUE(interactive())) {
         cat(
-            R.version$version.string, "\n\n",
             "R Home:\n",
             "  ", normalizePath(R.home()), "\n",
             "Package Library:\n",
@@ -387,7 +391,8 @@ options(
             sep = ""
         )
     }
-    rm(r_ver)
+    
+    rm(conda, r_ver)
 }
 
 
