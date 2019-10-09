@@ -127,16 +127,18 @@ then
         source_ext_arr+=("$(_koopa_file_ext2 "$x")")
     done
     target_arr=()
+    target_dn_arr=("${source_dn_arr[@]}")
+    target_bn_arr=("${source_bn_arr[@]}")
+    target_ext_arr=("${source_ext_arr[@]}")
     # Make basenames lowercase prior to applying function.
     # This simplifies handling of mixed case.
-    target_bn_arr=("${source_bn_arr[@],,}")
+    target_bn_arr=("${target_bn_arr[@],,}")
     # Sanitize basenames.
     read -r -a target_bn_arr <<< \
         "$("$script_name" "${flags[@]}" "${target_bn_arr[@]}")"
-    target_ext_arr=("${source_ext_arr[@]}")
     for i in "${!source_arr[@]}"
     do
-        target_dn="${source_dn_arr[$i]}"
+        target_dn="${target_dn_arr[$i]}"
         target_bn="${target_bn_arr[$i]}"
         target_ext="${target_ext_arr[$i]}"
         # Add back leading period to extension, if necessary.
@@ -146,9 +148,7 @@ then
             target_ext=".${target_ext}"
         fi
         target_arr+=( \
-            "$(printf "%s/%s%s" \
-                "$target_dn" "$target_bn" "$target_ext" \
-            )" \
+            "$(printf "%s/%s%s" "$target_dn" "$target_bn" "$target_ext")" \
         )
     done
     for i in "${!source_arr[@]}"
