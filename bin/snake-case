@@ -151,11 +151,13 @@ then
     done
     for i in "${!source_arr[@]}"
     do
-        mv \
-            --no-target-directory \
-            --verbose \
-            "${source_arr[$i]}" \
-            "${target_arr[$i]}"
+        if _koopa_is_darwin
+        then
+            flags=("-v")
+        else
+            flags=("--no-target-directory" "--verbose")
+        fi
+        mv "${flags[@]}" "${source_arr[$i]}" "${target_arr[$i]}"
     done
     exit 0
 fi
