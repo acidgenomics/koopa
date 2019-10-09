@@ -42,6 +42,35 @@ see also:
     - https://useast.ensembl.org/
     - ftp://ftp.ensembl.org/pub/
 
+    Which Homo sapiens genome assembly FASTA to use?
+    - https://steinbaugh.com/posts/bcbio-homo-sapiens-genome.html
+    - https://lh3.github.io/2017/11/13/which-human-reference-genome-to-use
+    - https://bioinformatics.stackexchange.com/questions/540/
+
+    GRCh38 alternatives to Ensembl primary assembly:
+    (consider using GENCODE also)
+    - ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405/
+          GCA_000001405.15_GRCh38/
+          seqs_for_alignment_pipelines.ucsc_ids/
+          GCA_000001405.15_GRCh38_no_alt_analysis_set.fna.gz
+    - ftp://ftp.ncbi.nlm.nih.gov/genbank/genomes/Eukaryotes/
+          vertebrates_mammals/Homo_sapiens/GRCh38/seqs_for_alignment_pipelines/
+          GCA_000001405.15_GRCh38_full_plus_hs38d1_analysis_set.fna
+    - http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/
+          GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
+
+    GRCh37 alternatives to Ensembl primary assembly:
+    - ftp://ftp-trace.ncbi.nih.gov/1000genomes/ftp/technical/reference/
+          human_g1k_v37.fasta.gz
+
+    Note that Ensembl GTF is missing annotations for some transcripts defined
+    in transcriptome FASTA (human and mouse).
+    In this case, use '*.chr_patch_hapl_scaff.gtf.gz' GTF file for annotations.
+
+    See related issues:
+    - https://github.com/COMBINE-lab/salmon/issues/122
+    - https://github.com/COMBINE-lab/salmon/issues/336
+
 note:
     Python script.
     Updated 2019-10-09.
@@ -193,6 +222,17 @@ def download_gtf(release_url, output_dir, decompress):
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
+    if organism in ("Homo sapiens", "Mus musculus"):
+        gtf_patch_url = paste_url(
+            base_url,
+            organism
+            + "."
+            + build
+            + "."
+            + release
+            + ".chr_patch_hapl_scaff.gtf.gz"
+        )
+        wget(url=gtf_patch_url, output_dir=output_dir, decompress=decompress)
 
 
 def download_gff(release_url, output_dir, decompress):
@@ -209,6 +249,17 @@ def download_gff(release_url, output_dir, decompress):
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gff_url, output_dir=output_dir, decompress=decompress)
+    if organism in ("Homo sapiens", "Mus musculus"):
+        gtf_patch_url = paste_url(
+            base_url,
+            organism
+            + "."
+            + build
+            + "."
+            + release
+            + ".chr_patch_hapl_scaff.gff3.gz"
+        )
+        wget(url=gtf_patch_url, output_dir=output_dir, decompress=decompress)
 
 
 if type == "genome":
