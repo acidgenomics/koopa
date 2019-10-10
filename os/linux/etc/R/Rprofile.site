@@ -229,16 +229,22 @@ options(
 
 .First <- function() {
     if (isTRUE(interactive())) {
-        cat("\n", R.version$version.string, "\n\n", sep = "")
+        cat(sprintf("\n%s\n\n", R.version$version.string))
     }
-
-    ## Get the R version without patch (e.g. 3.6).
-    r_ver <- paste(
+    
+    ## Get the full R version, including patch (e.g. 3.6.1).
+    r_ver_full <- numeric_version(paste(
+        R.version[["major"]],
+        R.version[["minor"]],
+        sep = "."
+    ))
+    
+    ## Get the short R version without patch (e.g. 3.6).
+    r_ver_short <- numeric_version(paste(
         R.version[["major"]],
         substr(x = R.version[["minor"]], start = 1, stop = 1),
         sep = "."
-    )
-    r_ver <- numeric_version(r_ver)
+    ))
 
     ## Conda                                                                {{{2
     ## -------------------------------------------------------------------------
@@ -253,7 +259,7 @@ options(
                     fmt = "conda '%s' environment detected.",
                     Sys.getenv("CONDA_DEFAULT_ENV")
                 ),
-                "Don't install packages from source with conda active.",
+                "Don't install packages from source with conda active!",
                 "",
                 sep = "\n"
             )
@@ -278,33 +284,44 @@ options(
             ## > module load gcc/6.2.0
             ## > module load R/3.6.1
             ## > module load hdf5/1.10.1
-            gcc_bin_dir <- "/n/app/gcc/6.2.0/bin"
+            gcc_bin_dir <- file.path("", "n", "app", "gcc", "6.2.0", "bin")
             stopifnot(identical(
                 x = Sys.which(c("R", "gcc", "g++", "gfortran", "h5cc")),
                 y = c(
-                    "R"        = "/n/app/R/3.6.1/bin/R",
+                    "R"        = file.path(
+                                     "", "n", "app",
+                                     "R", r_ver_full, "bin", "R"
+                                 ),
                     "gcc"      = file.path(gcc_bin_dir, "gcc"),
                     "g++"      = file.path(gcc_bin_dir, "g++"),
                     "gfortran" = file.path(gcc_bin_dir, "gfortran"),
-                    "h5cc"     = "/n/app/hdf5/1.10.1/bin/h5cc"
+                    "h5cc"     = file.path(
+                                     "", "n", "app",
+                                     "hdf5", "1.10.1", "bin", "h5cc"
+                                 )
                 )
             ))
             rm(gcc_bin_dir)
         } else if (Sys.info()[["sysname"]] == "Darwin") {
             ## Use recommended CRAN compiler settings.
-            if (r_ver == "3.5") {
+            if (r_ver_short == "3.5") {
                 clang_ver <- "6"
-            } else if (r_ver == "3.6") {
+            } else if (r_ver_short == "3.6") {
                 clang_ver <- "7"
             }
             clang_bin_dir <- file.path(
-                "", "usr", "local", paste0("clang", clang_ver), "bin")
+                "", "usr", "local",
+                paste0("clang", clang_ver), "bin"
+            )
             stopifnot(identical(
                 x = Sys.which(c("clang", "clang++", "gfortran")),
                 y = c(
                     "clang"    = file.path(clang_bin_dir, "clang"),
                     "clang++"  = file.path(clang_bin_dir, "clang++"),
-                    "gfortran" = "/usr/local/gfortran/bin/gfortran"
+                    "gfortran" = file.path(
+                                     "", "usr", "local",
+                                     "gfortran", "bin", "gfortran"
+                                 )
                 )
             ))
             rm(clang_bin_dir, clang_ver)
@@ -312,9 +329,9 @@ options(
             stopifnot(identical(
                 x = Sys.which(c("gcc", "g++", "gfortran")),
                 y = c(
-                    "gcc"      = "/usr/bin/gcc",
-                    "g++"      = "/usr/bin/g++",
-                    "gfortran" = "/usr/bin/gfortran"
+                    "gcc"      = file.path("", "usr", "bin", "gcc"),
+                    "g++"      = file.path("", "usr", "bin", "g++"),
+                    "gfortran" = file.path("", "usr", "bin", "gfortran")
                 )
             ))
         } 
@@ -333,14 +350,14 @@ options(
             ## User library.
             !any(grepl(
                 pattern = file.path(
-                    paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver
+                    paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver_short
                 ),
                 x = libs
             ))
         ) {
             stop(sprintf(
                 "Failed to detect R %s library in '.libPaths()':\n%s",
-                r_ver,
+                r_ver_short,
                 paste(libs, collapse = "\n")
             ))
         }
@@ -371,10 +388,11 @@ options(
     ## -------------------------------------------------------------------------
 
     ## Load per-user secrets that we don't want to save in a shared Renviron.
-    if (file.exists("~/.Rsecrets")) {
-        source("~/.Rsecrets")
+    secrets_file <- file.path("~", ".Rsecrets")
+    if (file.exists(secrets_file)) {
+        source(secrets_file)
         if (isTRUE(interactive())) {
-            cat("Loaded '~/.Rsecrets' file.\n\n")
+            cat(sprintf("Loaded '%s' file.\n\n", secrets_file))
         }
     }
 
@@ -382,19 +400,23 @@ options(
     ## -------------------------------------------------------------------------
 
     if (isTRUE(interactive())) {
-        cat(
-            "R Home:\n",
-            "  ", normalizePath(R.home()), "\n",
-            "Package Library:\n",
-            "  ", normalizePath(.libPaths()[[1L]]), "\n",
-            "Working Directory:\n",
-            "  ", normalizePath(getwd()), "\n",
-            "\n",
-            sep = ""
-        )
+        path_string <- paste0("  %.", getOption("width") - 4L, "s")
+        cat(sprintf(
+            fmt = paste(
+                "R Home:",            path_string,
+                "Package Library:",   path_string,
+                "Working Directory:", path_string,
+                "", "",
+                sep = "\n"
+            ),
+            normalizePath(R.home(), mustWork = TRUE),
+            normalizePath(.libPaths()[[1L]], mustWork = TRUE),
+            normalizePath(getwd(), mustWork = TRUE)
+        ))
+        rm(path_string)
     }
     
-    rm(conda, r_ver)
+    rm(conda, r_ver_full, r_ver_short)
 }
 
 
