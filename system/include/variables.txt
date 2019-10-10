@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.6.0"
-koopa_date="2019-10-08"
+koopa_date="2019-10-10"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -16,7 +16,7 @@ bash="5.0.11"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.1.6a"
+bcbio-nextgen="1.1.6"
 
 bcl2fastq="2.20.0.422"
 
