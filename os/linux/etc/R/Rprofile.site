@@ -228,10 +228,6 @@ options(
 ## > help(topic = "Startup", package = "base")
 
 .First <- function() {
-    if (isTRUE(interactive())) {
-        cat(sprintf("\n%s\n\n", R.version$version.string))
-    }
-    
     ## Get the full R version, including patch (e.g. 3.6.1).
     r_ver_full <- numeric_version(paste(
         R.version[["major"]],
@@ -254,15 +250,15 @@ options(
 
     if (Sys.which("conda") != "") {
         if (isTRUE(interactive())) {
-            cat(
-                sprintf(
-                    fmt = "conda '%s' environment detected.",
-                    Sys.getenv("CONDA_DEFAULT_ENV")
+            message(sprintf(
+                fmt = paste(
+                    "conda '%s' environment detected.",
+                    "Don't install packages from source with conda active!",
+                    "",
+                    sep = "\n"
                 ),
-                "Don't install packages from source with conda active!",
-                "",
-                sep = "\n"
-            )
+                Sys.getenv("CONDA_DEFAULT_ENV")
+            ))
         }
         conda <- TRUE
     } else {
@@ -380,7 +376,7 @@ options(
     }
     ## Inform user that session is running inside of RStudio.
     if (isTRUE(rstudio) && isTRUE(interactive())) {
-        cat("RStudio detected.\n\n")
+        message("RStudio detected.")
     }
     rm(rstudio)
 
@@ -392,21 +388,23 @@ options(
     if (file.exists(secrets_file)) {
         source(secrets_file)
         if (isTRUE(interactive())) {
-            cat(sprintf("Loaded '%s' file.\n\n", secrets_file))
+            message(sprintf("Loaded '%s' file.", secrets_file))
         }
     }
 
     ## Minimal session info                                                 {{{2
     ## -------------------------------------------------------------------------
-
+    
     if (isTRUE(interactive())) {
         path_string <- paste0("  %.", getOption("width") - 4L, "s")
         cat(sprintf(
             fmt = paste(
+                "",
                 "R Home:",            path_string,
                 "Package Library:",   path_string,
                 "Working Directory:", path_string,
-                "", "",
+                "",
+                "",
                 sep = "\n"
             ),
             normalizePath(R.home(), mustWork = TRUE),
@@ -414,6 +412,18 @@ options(
             normalizePath(getwd(), mustWork = TRUE)
         ))
         rm(path_string)
+        if (isTRUE(
+            "BiocVersion" %in% rownames(utils::installed.packages())
+        )) {
+            cat(sprintf(
+                fmt = "R %s / Bioconductor %s\n",
+                r_ver_full,
+                utils::packageVersion("BiocVersion")
+            ))
+        } else {
+            cat(sprintf(fmt = "R %s\n", r_ver_full))
+        }
+        cat("\n")
     }
     
     rm(conda, r_ver_full, r_ver_short)
