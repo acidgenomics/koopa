@@ -247,15 +247,17 @@ options(
     ## Can cause compilation issues due to GCC version mismatch.
 
     if (Sys.which("conda") != "") {
-        cat(
-            sprintf(
-                fmt = "conda '%s' environment detected.",
-                Sys.getenv("CONDA_DEFAULT_ENV")
-            ),
-            "Don't install packages from source with conda active.",
-            "",
-            sep = "\n"
-        )
+        if (isTRUE(interactive())) {
+            cat(
+                sprintf(
+                    fmt = "conda '%s' environment detected.",
+                    Sys.getenv("CONDA_DEFAULT_ENV")
+                ),
+                "Don't install packages from source with conda active.",
+                "",
+                sep = "\n"
+            )
+        }
         conda <- TRUE
     } else {
         conda <- FALSE
