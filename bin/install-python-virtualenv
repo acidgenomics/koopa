@@ -33,7 +33,7 @@ $(_koopa_help_header)
 
 Set up Python virtual environment.
 
-required positional arguments with defaults:
+optional positional arguments with defaults:
     1.  Environment name.
         Defaults to '${env_name}'.
     2.  Virtual environment base directory.
@@ -43,7 +43,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-11.
 EOF
 }
 

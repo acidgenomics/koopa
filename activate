@@ -336,7 +336,7 @@ then
     . "${programs_dir}/perlbrew.sh"
     . "${programs_dir}/rbenv.sh"
     . "${programs_dir}/conda.sh"
-    # > . "${programs_dir}/virtualenv.sh"
+    . "${programs_dir}/virtualenv.sh"
     unset -v programs programs_dir
 fi
 
