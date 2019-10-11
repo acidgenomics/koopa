@@ -414,11 +414,11 @@ options(
         if (isTRUE(
             "BiocVersion" %in% rownames(utils::installed.packages())
         )) {
-            bioc_ver <- sub(
+            bioc_ver <- numeric_version(sub(
                 pattern = "^([[:digit:]]+)\\.([[:digit:]]+)\\.([[:digit:]]+)$",
                 replacement="\\1.\\2",
                 x = utils::packageVersion("BiocVersion")
-            )
+            ))
             cat(sprintf(
                 fmt = "R %s / Bioconductor %s\n",
                 r_ver_full, bioc_ver
