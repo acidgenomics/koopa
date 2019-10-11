@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Homebrew
-# Updated 2019-06-20.
+# Updated 2019-10-11.
 
 if _koopa_is_installed brew
 then
@@ -14,10 +14,14 @@ then
     export HOMEBREW_NO_ANALYTICS=1
 fi
 
-
-
 # Python
-# https://docs.brew.sh/Homebrew-and-Python
-# > brew info python
-# > python -V
-_koopa_add_to_path_start /usr/local/opt/python/libexec/bin
+#
+# See also:
+# - https://docs.brew.sh/Homebrew-and-Python
+# - brew info python
+#
+# Don't add to PATH if a virtual environment is active.
+if [ -z "${VIRTUAL_ENV:-}" ]
+then
+    _koopa_add_to_path_start /usr/local/opt/python/libexec/bin
+fi
