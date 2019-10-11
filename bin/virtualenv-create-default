@@ -7,14 +7,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Python 2 method (deprecated)
-# > virtualenv "$env_dir" --system-site-packages
-
-
-
 # Variables                                                                 {{{1
 # ==============================================================================
 
@@ -65,11 +57,20 @@ env_base_dir="${2:-$env_base_dir}"
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed python3 python
 
-
 env_dir="${env_base_dir}/${env_name}"
+pip_exe="${env_dir}/bin/pip"
+
 rm -frv "$env_dir"
-
 python3 -m venv "$env_dir"
+"$pip_exe" install --upgrade pip
+"$pip_exe" install black flake8 pyflakes pytest pytest-flake8
+"$pip_exe" list
 
-printf "Python %s environment installed successfully.\n" "$env_name"
-printf "Source the 'activate' binary:\n%s\n" "${env_dir}/bin/activate"
+cat << EOF
+
+Python '${env_name}' environment installed successfully.
+
+Restart the shell or source the 'activate' script:
+${env_dir}/bin/activate"
+
+EOF
