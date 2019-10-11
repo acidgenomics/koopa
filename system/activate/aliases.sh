@@ -137,7 +137,7 @@ alias rhelp="Rscript -e 'args <- commandArgs(TRUE); help(args[2], package=args[3
 
 # Black Python code formatter.
 # https://github.com/psf/black
-alias black="black --line-length=79"
+# > alias black="black --line-length=79"
 
 # File system usage.
 alias df2="df --portability --print-type --si | sort"
