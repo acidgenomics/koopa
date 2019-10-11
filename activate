@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-06.
+    Updated 2019-10-11.
 EOF
 }
 
@@ -387,6 +387,7 @@ then
         then
             . "${darwin_dir}/exports.sh"
             . "${darwin_dir}/programs/homebrew.sh"
+            . "${darwin_dir}/programs/coreutils.sh"
         fi
         . "${darwin_dir}/aliases.sh"
         . "${darwin_dir}/grc-colors.sh"
