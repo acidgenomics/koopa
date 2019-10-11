@@ -20,10 +20,10 @@ $(_koopa_help_args)
 
 details:
     IDE:
-    - Jupyter Notebook
     - Visual Studio Code
     - Spyder
     - PyCharm
+    - Jupyter
 
     Code formatting:
     - black
@@ -56,9 +56,6 @@ _koopa_assert_is_installed conda
 conda create -qy --name="python-dev" \
     black \
     flake8 \
-    jupyter \
     pyflakes \
     pytest \
-    pytest-flake8 \
-    spyder
-
+    pytest-flake8
