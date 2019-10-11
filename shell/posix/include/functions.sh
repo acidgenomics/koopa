@@ -80,6 +80,24 @@ _koopa_add_config_link() {
 }
 
 
+_koopa_add_to_manpath_end() {
+    # Add directory to end of MANPATH.
+    # Updated 2019-10-11.
+    [ ! -d "$1" ] && return 0
+    echo "$MANPATH" | grep -q "$1" && return 0
+    export MANPATH="${MANPATH}:${1}"
+}
+
+
+_koopa_add_to_manpath_start() {
+    # Add directory to start of MANPATH.
+    # Updated 2019-10-11.
+    [ ! -d "$1" ] && return 0
+    echo "$MANPATH" | grep -q "$1" && return 0
+    export MANPATH="${1}:${MANPATH}"
+}
+
+
 _koopa_add_to_path_end() {
     # Add directory to end of PATH.
     # Updated 2019-09-12.

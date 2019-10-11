@@ -10,7 +10,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Variables                                                                 {{{1
 # ==============================================================================
 
-env_name="reticulate"
+env_name="default"
 env_base_dir="${HOME}/.virtualenvs"
 
 
@@ -23,9 +23,9 @@ cat << EOF
 $(_koopa_help_header)
     [name="${env_name}"] [dir="${env_base_dir}"]
 
-Install reticulate Python virtual environment.
+Set up Python virtual environment.
 
-required positional arguments with defaults:
+optional positional arguments with defaults:
     1.  Environment name.
         Defaults to '${env_name}'.
     2.  Virtual environment base directory.
@@ -33,12 +33,9 @@ required positional arguments with defaults:
 
 $(_koopa_help_args)
 
-details:
-    Also installs louvain and umap-learn packages.
-
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-11.
 EOF
 }
 
@@ -57,15 +54,23 @@ env_base_dir="${2:-$env_base_dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
+_koopa_assert_has_no_environments
 _koopa_assert_is_installed python3 python
 
 env_dir="${env_base_dir}/${env_name}"
+pip_exe="${env_dir}/bin/pip"
+
 rm -frv "$env_dir"
-
 python3 -m venv "$env_dir"
+"$pip_exe" install --upgrade pip
+"$pip_exe" install black flake8 pyflakes pytest pytest-flake8
+"$pip_exe" list
 
-# shellcheck source=/dev/null
-source "${env_dir}/bin/activate"
+cat << EOF
 
-pip install --upgrade pip
-pip install louvain umap-learn
+Python '${env_name}' environment installed successfully.
+
+Restart the shell or source the 'activate' script:
+${env_dir}/bin/activate"
+
+EOF
