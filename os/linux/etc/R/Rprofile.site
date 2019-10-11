@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-09 by Michael Steinbaugh.
+## Updated 2019-10-11 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -234,7 +234,6 @@ options(
         R.version[["minor"]],
         sep = "."
     ))
-    
     ## Get the short R version without patch (e.g. 3.6).
     r_ver_short <- numeric_version(paste(
         R.version[["major"]],
@@ -415,10 +414,14 @@ options(
         if (isTRUE(
             "BiocVersion" %in% rownames(utils::installed.packages())
         )) {
+            bioc_ver <- sub(
+                pattern = "^([[:digit:]]+)\\.([[:digit:]]+)\\.([[:digit:]]+)$",
+                replacement="\\1.\\2",
+                x = utils::packageVersion("BiocVersion")
+            )
             cat(sprintf(
                 fmt = "R %s / Bioconductor %s\n",
-                r_ver_full,
-                utils::packageVersion("BiocVersion")
+                r_ver_full, bioc_ver
             ))
         } else {
             cat(sprintf(fmt = "R %s\n", r_ver_full))
