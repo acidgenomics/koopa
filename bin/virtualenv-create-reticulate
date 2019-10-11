@@ -7,18 +7,10 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Python 2 method (deprecated)
-# > virtualenv "$env_dir" --system-site-packages
-
-
-
 # Variables                                                                 {{{1
 # ==============================================================================
 
-env_name="default"
+env_name="reticulate"
 env_base_dir="${HOME}/.virtualenvs"
 
 
@@ -31,7 +23,7 @@ cat << EOF
 $(_koopa_help_header)
     [name="${env_name}"] [dir="${env_base_dir}"]
 
-Set up Python virtual environment.
+Install reticulate Python virtual environment.
 
 required positional arguments with defaults:
     1.  Environment name.
@@ -41,9 +33,12 @@ required positional arguments with defaults:
 
 $(_koopa_help_args)
 
+details:
+    Also installs louvain and umap-learn packages.
+
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-11.
 EOF
 }
 
@@ -62,14 +57,13 @@ env_base_dir="${2:-$env_base_dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_has_no_environments
 _koopa_assert_is_installed python3 python
 
-
 env_dir="${env_base_dir}/${env_name}"
+pip_exe="${env_dir}/bin/pip"
+
 rm -frv "$env_dir"
-
 python3 -m venv "$env_dir"
-
-printf "Python %s environment installed successfully.\n" "$env_name"
-printf "Source the 'activate' binary:\n%s\n" "${env_dir}/bin/activate"
+"$pip_exe" install --upgrade pip
+"$pip_exe" install louvain umap-learn
+"$pip_exe" list
