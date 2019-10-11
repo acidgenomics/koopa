@@ -54,7 +54,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-10-09.
+    Updated 2019-10-11.
 EOF
 }
 
@@ -88,6 +88,8 @@ gunzip -c "$fasta_file" | \
     tr -d '>' | \
     sed 's/|/,/g' > \
     "$output_file"
+
+_koopa_ensure_newline_at_end_of_file "$output_file"
 
 # Return the number of transcripts.
 count="$(_koopa_line_count "$output_file")"

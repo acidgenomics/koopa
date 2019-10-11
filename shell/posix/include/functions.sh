@@ -546,6 +546,23 @@ _koopa_disk_pct_used() {
 # E                                                                         {{{1
 # ==============================================================================
 
+_koopa_ensure_newline_at_end_of_file() {
+    # Ensure output CSV contains trailing line break.
+    #
+    # Otherwise 'readr::read_csv()' will skip the last line in R.
+    # https://unix.stackexchange.com/questions/31947
+    #
+    # Benchmarks:
+    # vi -ecwq file                                    2.544 sec
+    # paste file 1<> file                             31.943 sec
+    # ed -s file <<< w                             1m  4.422 sec
+    # sed -i -e '$a\' file                         3m 20.931 sec
+    #
+    # Updated 2019-10-11.
+    [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
+}
+
+
 _koopa_extract() {
     # Extract compressed files automatically.
     #
