@@ -76,8 +76,8 @@ then
     unset -v bin_dir
 
     # Keep conda accessible but close out of base environment.
-    conda deactivate
-    
+    # > conda deactivate
+
     if [ -n "${KOOPA_TEST:-}" ]
     then
         set -u
