@@ -14,19 +14,24 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import (
+from pykoopa.genome import (  # noqa
     flybase_dmel_version,
     flybase_version,
     tx2gene_from_fasta,
 )
-from pykoopa.syntactic import kebab_case
-from pykoopa.sys import decompress_but_keep_original, eprint, paste_url, wget
+from pykoopa.syntactic import kebab_case  # noqa
+from pykoopa.sys import (  # noqa
+    decompress_but_keep_original,
+    eprint,
+    paste_url,
+    wget,
+)
 
 # pylint: enable=wrong-import-position
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
+# Usage                                                                    {{{1
+# =============================================================================
 
 DESCRIPTION = "Download FlyBase genome."
 EPILOG = """
@@ -46,8 +51,8 @@ note:
 """
 
 
-# Arguments                                                                 {{{1
-# ==============================================================================
+# Arguments                                                                {{{1
+# =============================================================================
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
 
@@ -127,8 +132,8 @@ output_dir = kebab_case(
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
 
-# Script                                                                    {{{1
-# ==============================================================================
+# Script                                                                   {{{1
+# =============================================================================
 
 
 def download_genome(release_url, output_dir, decompress, dmel):

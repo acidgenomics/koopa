@@ -14,15 +14,15 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import ensembl_version, tx2gene_from_fasta
-from pykoopa.syntactic import kebab_case
-from pykoopa.sys import eprint, paste_url, wget
+from pykoopa.genome import ensembl_version, tx2gene_from_fasta  # noqa
+from pykoopa.syntactic import kebab_case  # noqa
+from pykoopa.sys import eprint, paste_url, wget  # noqa
 
 # pylint: enable=wrong-import-position
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
+# Usage                                                                    {{{1
+# =============================================================================
 
 DESCRIPTION = "Download Ensembl genome."
 EPILOG = """
@@ -51,14 +51,6 @@ see also:
     Here's a relevant section from the manual:
     https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
     ## 2.2.1 Which chromosomes/scaffolds/patches to include?
-    ## It is strongly recommended to include major chromosomes (e.g., for human
-    ## chr1-22,chrX,chrY,chrM,) as well as un-placed and un-localized scaffolds.
-    ## Typically, un-placed/un-localized scaffolds add just a few MegaBases to
-    ## the genome length, however, a substantial number of reads may map to
-    ## ribosomal RNA (rRNA) repeats on these scaffolds. These reads would be
-    ## reported as unmapped if the scaffolds are not included in the genome, or,
-    ## even worse, may be aligned to wrong loci on the chromosomes. Generally,
-    ## patches and alternative haplotypes should not be included in the genome.
     ## Examples of acceptable genome sequence files:
     ## - ENSEMBL: files marked with '.dna.primary.assembly'.
     ## - GENCODE: files marked with PRI (primary).
@@ -89,12 +81,12 @@ see also:
 
 note:
     Python script.
-    Updated 2019-10-09.
+    Updated 2019-10-11.
 """
 
 
-# Arguments                                                                 {{{1
-# ==============================================================================
+# Arguments                                                                {{{1
+# =============================================================================
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
 
@@ -144,7 +136,9 @@ optional.add_argument(
     """
     ),
 )
-optional.add_argument("--release", type=str, help="release version (e.g. '97')")
+optional.add_argument(
+    "--release", type=str, help="release version (e.g. '97')"
+)
 optional.add_argument(
     "--decompress",
     action="store_true",
@@ -186,8 +180,8 @@ output_dir = kebab_case(
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
 
-# Script                                                                    {{{1
-# ==============================================================================
+# Script                                                                   {{{1
+# =============================================================================
 
 
 def download_genome(release_url, output_dir, decompress):
@@ -246,7 +240,7 @@ def download_gtf(release_url, output_dir, decompress):
             + build
             + "."
             + release
-            + ".chr_patch_hapl_scaff.gtf.gz"
+            + ".chr_patch_hapl_scaff.gtf.gz",
         )
         wget(url=gtf_patch_url, output_dir=output_dir, decompress=decompress)
 
@@ -273,7 +267,7 @@ def download_gff(release_url, output_dir, decompress):
             + build
             + "."
             + release
-            + ".chr_patch_hapl_scaff.gff3.gz"
+            + ".chr_patch_hapl_scaff.gff3.gz",
         )
         wget(url=gtf_patch_url, output_dir=output_dir, decompress=decompress)
 

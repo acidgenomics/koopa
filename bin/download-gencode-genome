@@ -14,15 +14,15 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import gencode_version, tx2gene_from_fasta
-from pykoopa.syntactic import kebab_case
-from pykoopa.sys import eprint, paste_url, wget
+from pykoopa.genome import gencode_version, tx2gene_from_fasta  # noqa
+from pykoopa.syntactic import kebab_case  # noqa
+from pykoopa.sys import eprint, paste_url, wget  # noqa
 
 # pylint: enable=wrong-import-position
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
+# Usage                                                                    {{{1
+# =============================================================================
 
 DESCRIPTION = "Download GENCODE genome."
 EPILOG = """
@@ -40,12 +40,12 @@ details:
 
 note:
     Python script.
-    Updated 2019-10-07.
+    Updated 2019-10-11.
 """
 
 
-# Arguments                                                                 {{{1
-# ==============================================================================
+# Arguments                                                                {{{1
+# =============================================================================
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
 
@@ -93,7 +93,9 @@ optional.add_argument(
     ),
 )
 optional.add_argument("--build", type=str, help="genome build (e.g. 'GRCh38')")
-optional.add_argument("--release", type=str, help="release version (e.g. '32')")
+optional.add_argument(
+    "--release", type=str, help="release version (e.g. '32')"
+)
 optional.add_argument(
     "--decompress",
     action="store_true",
@@ -121,7 +123,7 @@ if organism == "Homo sapiens":
         build = "GRCh38"
 elif organism == "Mus musculus":
     organism_short = "mouse"
-    if not build is None:
+    if build is not None:
         eprint("Error: 'build' is only supported for Homo sapiens.")
     build = "GRCm38"
 
@@ -157,17 +159,21 @@ else:
         base_url, "gencode.v" + release + ".transcripts.fa.gz"
     )
     gtf_url = paste_url(base_url, "gencode.v" + release + ".annotation.gtf.gz")
-    gff_url = paste_url(base_url, "gencode.v" + release + ".annotation.gff3.gz")
+    gff_url = paste_url(
+        base_url, "gencode.v" + release + ".annotation.gff3.gz"
+    )
     readme_url = paste_url(base_url, "_README.TXT")
 
-genome_fasta_url = paste_url(base_url, build + ".primary_assembly.genome.fa.gz")
+genome_fasta_url = paste_url(
+    base_url, build + ".primary_assembly.genome.fa.gz"
+)
 md5sums_url = paste_url(base_url, "MD5SUMS")
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
 
-# Script                                                                    {{{1
-# ==============================================================================
+# Script                                                                   {{{1
+# =============================================================================
 
 
 def download_genome(genome_fasta_url, output_dir, decompress):

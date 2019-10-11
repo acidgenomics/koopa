@@ -14,15 +14,15 @@ from textwrap import dedent
 # pylint: disable=wrong-import-position
 
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
-from pykoopa.genome import refseq_version
-from pykoopa.syntactic import kebab_case
-from pykoopa.sys import paste_url, wget
+from pykoopa.genome import refseq_version  # noqa
+from pykoopa.syntactic import kebab_case  # noqa
+from pykoopa.sys import paste_url, wget  # noqa
 
 # pylint: enable=wrong-import-position
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
+# Usage                                                                    {{{1
+# =============================================================================
 
 DESCRIPTION = "Download RefSeq genome."
 EPILOG = """
@@ -68,8 +68,8 @@ note:
 """
 
 
-# Arguments                                                                 {{{1
-# ==============================================================================
+# Arguments                                                                {{{1
+# =============================================================================
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
 
@@ -140,13 +140,15 @@ release_url = paste_url(
     build + "_latest",
     "refseq_identifiers",
 )
-output_dir = kebab_case(organism + " " + build + " " + "refseq" + " " + release)
+output_dir = kebab_case(
+    organism + " " + build + " " + "refseq" + " " + release
+)
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
 
-# Script                                                                    {{{1
-# ==============================================================================
+# Script                                                                   {{{1
+# =============================================================================
 
 
 def download_genome(release_url, output_dir, decompress):
