@@ -38,7 +38,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-11.
 EOF
 }
 
@@ -60,12 +60,10 @@ env_base_dir="${2:-$env_base_dir}"
 _koopa_assert_is_installed python3 python
 
 env_dir="${env_base_dir}/${env_name}"
+pip_exe="${env_dir}/bin/pip"
+
 rm -frv "$env_dir"
-
 python3 -m venv "$env_dir"
-
-# shellcheck source=/dev/null
-source "${env_dir}/bin/activate"
-
-pip install --upgrade pip
-pip install louvain umap-learn
+"$pip_exe" install --upgrade pip
+"$pip_exe" install louvain umap-learn
+"$pip_exe" list
