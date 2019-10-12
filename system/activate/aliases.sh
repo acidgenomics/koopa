@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-10-03.
+# Updated 2019-10-12.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -56,30 +56,25 @@ fi
 # File and folder manipulation                                              {{{1
 # ==============================================================================
 
-# Note that I'm improving the interactivity and verbosity here by default.
+# Assuming that GNU coreutils are installed.
+# Here we're improving the interactivity and verbosity here by default.
+# Note: macOS doesn't use current GNU coreutils by default, so be sure to
+# install the newer versions using Homebrew.
 
 # Copy files.
-# Allowing recursive by default via `-r` flag.
-alias cp='cp -irv'
+alias cp='cp --archive --interactive --verbose'
 
-# Create directory.
-# Allowing recursive here by default via `-p` flag.
-alias mkdir='mkdir -vp'
+# Make (create) directory.
+alias mkdir='mkdir --parents --verbose'
 
 # Move files.
-alias mv='mv -iv'
+alias mv='mv --interactive --verbose'
 
 # Remove (delete) files.
-# ## Don't enable recursion here by default via `-r` flag.
+#
+# Don't enable recursion here by default via '-r' flag.
 # This helps protect against accidental directory deletion.
-# ## The `-I` flag only prompts once, which is awesome.
-# However this not on macOS, so use `-i` flag there instead.
-if _koopa_is_darwin
-then
-    alias rm='rm -iv'
-else
-    alias rm='rm -Iv'
-fi
+alias rm='rm --interactive="once" --verbose'
 
 
 
