@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Define the prompt string.
-# Updated 2019-09-17.
+# Updated 2019-10-12.
 
 # Useful variables:
 # https://www.cyberciti.biz/tips/howto-linux-unix-bash-shell-setup-prompt.html
@@ -43,14 +43,19 @@
 # > export CONDA_PROMPT_MODIFIER
 # > conda="$CONDA_PROMPT_MODIFIER"
 
+# Conda environment name.
+# Note that subshell exec needs to be escaped here, so it is evaluated
+# dynamically when the prompt is refreshed. See also venv below.
+conda="\$(koopa prompt-conda)"
+# Prompt symbol.
+# Note that Unicode doesn't work well with some Windows fonts.
+prompt="\$"
 # User name and host.
 user="\u@\h"
-
+# Python virtual environment name.
+venv="\$(koopa prompt-venv)"
 # Working directory.
 wd="\w"
-
-# Unicode doesn't work with some monospace fonts on Windows.
-prompt="\$"
 
 # Enable colorful prompt.
 # Match either "xterm-256color" or "screen-256color" here.
@@ -76,31 +81,31 @@ then
     # 96 light cyan
     # 97 white
 
-    # Change the user color based on connection type.
-    if _koopa_is_remote
-    then
-        user_color="33"
-    else
-        user_color="36"
-    fi
-    user="\[\033[${user_color}m\]${user}\[\033[00m\]"
-
-    wd_color="34"
-    wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
-
-    # Match the color of zsh pure prompt.
+    conda_color="33"
     prompt_color="35" 
+    user_color="36"
+    venv_color="33"
+    wd_color="34"
+
+    # Change the user color based on connection type.
+    # > if _koopa_is_remote
+    # > then
+    # >     user_color="33"
+    # > fi
+
+    conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
     prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
+    user="\[\033[${user_color}m\]${user}\[\033[00m\]"
+    venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
+    wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
 fi
 
-# Note that we need to escape functions with a backslash here.
-PS1="${user}"
-PS1="${PS1}\$(koopa prompt-conda-env)"
-PS1="${PS1}\$(koopa prompt-python-env)"
-PS1="${PS1}\n${wd}"
-PS1="\n${PS1}\n${prompt} "
+PS1="\n${user}${conda}${venv}\n${wd}\n${prompt} "
 export PS1
 
-unset -v prompt prompt_color
-unset -v user user_color
-unset -v wd wd_color
+unset -v \
+    conda conda_color \
+    prompt prompt_color \
+    venv venv_color \
+    user user_color \
+    wd wd_color
