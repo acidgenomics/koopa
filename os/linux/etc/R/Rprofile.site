@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-11 by Michael Steinbaugh.
+## Updated 2019-10-12 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -374,9 +374,9 @@ options(
         Sys.umask("0002")
     }
     ## Inform user that session is running inside of RStudio.
-    if (isTRUE(rstudio) && isTRUE(interactive())) {
-        message("RStudio detected.")
-    }
+    ## > if (isTRUE(rstudio) && isTRUE(interactive())) {
+    ## >     message("RStudio detected.")
+    ## > }
     rm(rstudio)
 
     ## Secrets                                                              {{{1
