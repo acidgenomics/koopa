@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-11.
+    Updated 2019-10-12.
 EOF
 }
 
@@ -328,7 +328,7 @@ then
     . "${programs_dir}/perlbrew.sh"
     . "${programs_dir}/rbenv.sh"
     . "${programs_dir}/conda.sh"
-    . "${programs_dir}/virtualenv.sh"
+    . "${programs_dir}/venv.sh"
     unset -v programs programs_dir
 fi
 
