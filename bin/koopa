@@ -105,12 +105,12 @@ case "$1" in
         _koopa_os_type
         exit
         ;;
-    prompt-conda-env)
-        _koopa_prompt_conda_env
+    prompt-conda)
+        _koopa_prompt_conda
         exit
         ;;
-    prompt-python-env)
-        _koopa_prompt_python_env
+    prompt-venv)
+        _koopa_prompt_venv
         exit
         ;;
     update)
