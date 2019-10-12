@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# Activate Python "default" virtual environment.
-# Updated 2019-08-17.
+# Activate Python default virtual environment.
+# Updated 2019-10-12.
 
 # Note that we're using this instead of conda as our default interactive
 # Python environment, so we can easily use pip.
@@ -12,7 +12,7 @@
 # Only attempt to autoload for bash or zsh.
 _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
-env_name="default"
+env_name="base"
 
 [ -z "${PYTHON_EXE:-}" ] && \
     [ -f "${HOME}/.virtualenvs/${env_name}/bin/python" ] && \
