@@ -141,10 +141,17 @@ _koopa_assert_has_file_ext() {
 
 _koopa_assert_has_no_environments() {
     # Assert that conda and Python virtual environments aren't active.
-    # Updated 2019-09-12.
+    # Updated 2019-10-12.
     if ! _koopa_has_no_environments
     then
-        >&2 printf "Error: Active environment detected.\n"
+        >&2 cat << EOF
+Error: Active environment detected.
+       (conda and/or python venv)
+
+Deactivate using:
+    conda: conda deactivate
+    venv:  deactivate
+EOF
         exit 1
     fi
     return 0
