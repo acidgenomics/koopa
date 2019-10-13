@@ -45,7 +45,7 @@ details:
     The relative file path in dotfiles repo can be used as input. The target
     file should be specified without a leading period.
 
-    By default, this script is designed to work with the 'acidgenomics/dotfiles'
+    By default, this script is designed to work with the 'mjsteinbaugh/dotfiles'
     repository available on GitHub.
 
 examples:

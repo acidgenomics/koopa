@@ -11,8 +11,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # ==============================================================================
 
 target_dir="$(_koopa_home)/dotfiles"
-# > url="git@github.com:acidgenomics/dotfiles.git"
-url="https://github.com/acidgenomics/dotfiles.git"
+url="https://github.com/mjsteinbaugh/dotfiles.git"
 
 
 
