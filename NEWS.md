@@ -1,9 +1,14 @@
-## koopa 0.6.0 (2019-09-26)
+## koopa 0.6.0 (2019-10-13)
 
 ### New scripts
 
 - `install-rstudio-server-pro`: Added support for RStudio Server Pro
   installation on Fedora / RHEL.
+
+### Major changes
+
+- Improved prompt string configuration support and colors for git, conda
+  environent, and Python virtual environment (venv) names.
 
 ### Minor changes
 

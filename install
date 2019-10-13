@@ -33,7 +33,7 @@ optional arguments:
         Enable shared user configuration via '/etc/profile.d/koopa.sh' file.
         Linux only. Not supported on macOS.
   --dotfiles
-        Clone the dotfiles repo (https://github.com/acidgenomics/dotfiles)
+        Clone the dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
         and automatically symlink recommended default configuration files.
   --mike
         Install Mike-specific configuration.
