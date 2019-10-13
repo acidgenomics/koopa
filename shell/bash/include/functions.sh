@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 
+
 # A                                                                         {{{1
 # ==============================================================================
 
@@ -22,6 +23,7 @@ _koopa_add_local_bins_to_path() {
         _koopa_add_to_path_start "$dir"
     done
 }
+
 
 
 # B                                                                         {{{1
@@ -59,7 +61,6 @@ _koopa_build_os_string() {
     echo "$string"
 }
 
-
 _koopa_build_set_permissions() {
     # Set permissions on program built from source.
     # Updated 2019-06-27.
@@ -73,6 +74,7 @@ _koopa_build_set_permissions() {
     fi
     _koopa_prefix_chgrp "$path"
 }
+
 
 
 # C                                                                         {{{1

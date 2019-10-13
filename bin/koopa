@@ -109,6 +109,10 @@ case "$1" in
         _koopa_prompt_conda
         exit
         ;;
+    prompt-git)
+        _koopa_prompt_git
+        exit
+        ;;
     prompt-venv)
         _koopa_prompt_venv
         exit

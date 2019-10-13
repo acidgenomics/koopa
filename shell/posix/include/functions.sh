@@ -3,29 +3,6 @@
 
 
 
-if ! command -v realpath >/dev/null
-then
-    realpath() {
-        # Real path to file/directory on disk.
-        #
-        # Note that 'readlink -f' doesn't work on macOS.
-        #
-        # See also:
-        # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/
-        #       run_tests.sh
-        #
-        # Updated 2019-06-26.
-        if [ "$(uname -s)" = "Darwin" ]
-        then
-            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
-        else
-            readlink -f "$@"
-        fi
-    }
-fi
-
-
-
 # A                                                                         {{{1
 # ==============================================================================
 
@@ -407,12 +384,12 @@ _koopa_basename_sans_ext() {
     x="$1"
     if ! _koopa_has_file_ext "$x"
     then
-        printf "%s\n" "$x"
+        echo "$x"
         return 0
     fi
     x="$(basename "$x")"
     x="${x%.*}"
-    printf "%s\n" "$x"
+    echo "$x"
 }
 
 _koopa_basename_sans_ext2() {
@@ -429,7 +406,7 @@ _koopa_basename_sans_ext2() {
     x="$1"
     if ! _koopa_has_file_ext "$x"
     then
-        printf "%s\n" "$x"
+        echo "$x"
         return 0
     fi
     basename "$x" | cut -d '.' -f 1
@@ -460,6 +437,12 @@ _koopa_build_prefix() {
 
 # C                                                                         {{{1
 # ==============================================================================
+
+_koopa_conda_env() {
+    # Conda environment name.
+    # Updated 2019-10-13.
+    echo "${CONDA_DEFAULT_ENV:-}"
+}
 
 _koopa_conda_prefix() {
     # Updated 2019-09-27.
@@ -701,6 +684,23 @@ _koopa_force_add_to_path_start() {
 # G                                                                         {{{1
 # ==============================================================================
 
+_koopa_git_branch() {
+    # Current git branch name.
+    # Handles detached HEAD state.
+    #
+    # Alternatives:
+    # > git name-rev --name-only HEAD
+    # > git rev-parse --abbrev-ref HEAD
+    #
+    # See also:
+    # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
+    #       git-completion.bash?id=HEAD
+    #
+    # Updated 2019-10-13.
+    _koopa_is_git || return 1
+    git symbolic-ref --short -q HEAD
+}
+
 _koopa_gsub() {
     # Updated 2019-10-09.
     echo "$1" | sed -E "s/${2}/${3}/g"
@@ -892,6 +892,23 @@ _koopa_is_darwin() {
     # Is the operating system Darwin (macOS)?
     # Updated 2019-06-22.
     [ "$(uname -s)" = "Darwin" ]
+}
+
+_koopa_is_git() {
+    # Is the current working directory a git repository?
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/2180270
+    #
+    # Updated 2019-10-13.
+    if git rev-parse --git-dir > /dev/null 2>&1
+    then
+        # TRUE
+        return 0
+    else
+        # FALSE
+        return 1
+    fi
 }
 
 _koopa_is_installed() {
@@ -1089,7 +1106,7 @@ _koopa_os_type() {
             id="${id}${version}"
         fi
     else
-        id=""
+        id=
     fi
     echo "$id"
 }
@@ -1108,19 +1125,20 @@ _koopa_os_version() {
 
 _koopa_prompt_conda() {
     # Get conda environment name for prompt string.
-    # Updated 2019-10-12.
-    local name
-    if [ -n "${CONDA_DEFAULT_ENV:-}" ]
+    # Updated 2019-10-13.
+    local env
+    env="$(_koopa_conda_env)"
+    if [ -n "$env" ]
     then
-        name="$CONDA_DEFAULT_ENV"
+        printf " conda:%s\n" "${env}"
     else
-        name=""
+        return 0
     fi
-    [ -n "$name" ] && printf " conda:%s" "${name}"
 }
 
 _koopa_prompt_disk_used() {
-    # Updated 2019-10-12.
+    # Get current disk usage on primary drive.
+    # Updated 2019-10-13.
     local pct used
     used="$(_koopa_disk_pct_used)"
     case "$(_koopa_shell)" in
@@ -1131,11 +1149,21 @@ _koopa_prompt_disk_used() {
             pct="%"
             ;;
     esac
-    printf " disk:%d%s" "$used" "$pct"
+    printf " disk:%d%s\n" "$used" "$pct"
+}
+
+_koopa_prompt_git() {
+    # Return the current git branch, if applicable.
+    # Updated 2019-10-13.
+    _koopa_is_git || return 0
+    local branch
+    branch="$(_koopa_git_branch)"
+    printf " git:%s\n" "$branch"
 }
 
 _koopa_prompt_os() {
-    # Updated 2019-10-12.
+    # Get the operating system information.
+    # Updated 2019-10-13.
     local id
     local string
     local version
@@ -1152,16 +1180,16 @@ _koopa_prompt_os() {
             awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release | \
             tr -d '"' \
         )"
-        string="${id} ${version}"
+        string="${id}-${version}"
     else
-        string=""
+        string=
     fi
     if _koopa_is_remote
     then
         host_type="$(_koopa_host_type)"
         if [ -n "$host_type" ]
         then
-            string="${host_type} ${string}"
+            string="${host_type}-${string}"
         fi
     fi
     echo "$string"
@@ -1170,16 +1198,15 @@ _koopa_prompt_os() {
 _koopa_prompt_venv() {
     # Get Python virtual environment name for prompt string.
     # https://stackoverflow.com/questions/10406926
-    # Updated 2019-10-12.
-    local name
-    if [ -n "${VIRTUAL_ENV:-}" ]
+    # Updated 2019-10-13.
+    local env
+    env="$(_koopa_venv)"
+    if [ -n "$env" ]
     then
-        # Strip out the path and just leave the env name.
-        name="${VIRTUAL_ENV##*/}"
+        printf " venv:%s\n" "${env}"
     else
-        name=""
+        return 0
     fi
-    [ -n "$name" ] && printf " venv:%s" "$name"
 }
 
 
@@ -1550,6 +1577,18 @@ _koopa_variable() {
     fi
 }
 
+_koopa_venv() {
+    local env
+    if [ -n "${VIRTUAL_ENV:-}" ]
+    then
+        # Strip out the path and just leave the env name.
+        env="${VIRTUAL_ENV##*/}"
+    else
+        env=
+    fi
+    echo "$env"
+}
+
 
 
 # W                                                                         {{{1
@@ -1580,3 +1619,36 @@ _koopa_zsh_version() {
         head -n 1 | \
         cut -d ' ' -f 2
 }
+
+
+
+# Fallback support                                                          {{{1
+# ==============================================================================
+
+if _koopa_is_installed echo
+then
+    echo() {
+        printf "%s\n" "$1"
+    }
+fi
+
+if ! _koopa_is_installed realpath
+then
+    realpath() {
+        # Real path to file/directory on disk.
+        #
+        # Note that 'readlink -f' doesn't work on macOS.
+        #
+        # See also:
+        # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/
+        #       run_tests.sh
+        #
+        # Updated 2019-06-26.
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
+fi

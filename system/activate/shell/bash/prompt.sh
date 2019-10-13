@@ -47,13 +47,20 @@
 # Note that subshell exec needs to be escaped here, so it is evaluated
 # dynamically when the prompt is refreshed. See also venv below.
 conda="\$(koopa prompt-conda)"
+
+# Current git branch.
+git="\$(koopa prompt-git)"
+
 # Prompt symbol.
 # Note that Unicode doesn't work well with some Windows fonts.
 prompt="\$"
+
 # User name and host.
 user="\u@\h"
+
 # Python virtual environment name.
 venv="\$(koopa prompt-venv)"
+
 # Working directory.
 wd="\w"
 
@@ -82,6 +89,7 @@ then
     # 97 white
 
     conda_color="33"
+    git_color="32"
     prompt_color="35" 
     user_color="36"
     venv_color="33"
@@ -94,17 +102,19 @@ then
     # > fi
 
     conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
+    git="\[\033[${git_color}m\]${git}\[\033[00m\]"
     prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
     user="\[\033[${user_color}m\]${user}\[\033[00m\]"
     venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
     wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
 fi
 
-PS1="\n${user}${conda}${venv}\n${wd}\n${prompt} "
+PS1="\n${user}${git}${conda}${venv}\n${wd}\n${prompt} "
 export PS1
 
 unset -v \
     conda conda_color \
+    git git_color \
     prompt prompt_color \
     venv venv_color \
     user user_color \
