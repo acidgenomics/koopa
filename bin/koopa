@@ -105,16 +105,8 @@ case "$1" in
         _koopa_os_type
         exit
         ;;
-    prompt-conda)
-        _koopa_prompt_conda
-        exit
-        ;;
-    prompt-git)
-        _koopa_prompt_git
-        exit
-        ;;
-    prompt-venv)
-        _koopa_prompt_venv
+    prompt)
+        _koopa_prompt
         exit
         ;;
     update)
