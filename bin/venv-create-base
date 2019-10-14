@@ -35,7 +35,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-10-12.
+    Updated 2019-10-14.
 EOF
 }
 
@@ -63,7 +63,7 @@ pip_exe="${env_dir}/bin/pip"
 rm -frv "$env_dir"
 python3 -m venv "$env_dir"
 "$pip_exe" install --upgrade pip
-"$pip_exe" install black flake8 pyflakes pytest pytest-flake8
+"$pip_exe" install black flake8 pyflakes pylint pytest pytest-flake8
 "$pip_exe" list
 
 cat << EOF
