@@ -940,9 +940,8 @@ _koopa_is_git_clean() {
     # Is the current git repo clean, or does it have unstaged changes?
     #
     # See also:
-    # - _koopa_assert_is_git
-    # - git status --porcelain
     # - https://stackoverflow.com/questions/3878624
+    # - https://stackoverflow.com/questions/3258243
     #
     # Updated 2019-10-14.
 
@@ -951,11 +950,13 @@ _koopa_is_git_clean() {
     then
         return 1
     fi
-    # Is the repo behind and in need of a pull?
+    
+    # In need of a pull or push?
     if [ "$(git rev-parse HEAD)" != "$(git rev-parse @{u})" ]
     then
         return 1
     fi
+    
     return 0
 }
 
