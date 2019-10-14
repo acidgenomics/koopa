@@ -522,11 +522,11 @@ _koopa_delete_dotfile() {
 
 _koopa_disk_check() {
     # Check that disk has enough free space.
-    # Updated 2019-08-15.
+    # Updated 2019-10-14.
     local used
     local limit
     used="$(_koopa_disk_pct_used "$@")"
-    limit="90"
+    limit="95"
     if [ "$used" -gt "$limit" ]
     then
         >&2 printf "Warning: Disk usage is %d%%.\n" "$used"
