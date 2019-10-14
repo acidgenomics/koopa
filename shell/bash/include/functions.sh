@@ -98,7 +98,6 @@ _koopa_cellar_prefix() {
     echo "$prefix"
 }
 
-
 _koopa_cellar_script() {
     # Updated 2019-10-08.
     _koopa_assert_has_no_environments
@@ -109,13 +108,11 @@ _koopa_cellar_script() {
     echo "$file"
 }
 
-
 _koopa_conda_env_list() {
     # Updated 2019-06-27.
     _koopa_is_installed conda || return 1
     conda env list --json
 }
-
 
 _koopa_conda_env_prefix() {
     # Return conda environment prefix (path).
@@ -149,6 +146,7 @@ _koopa_conda_env_prefix() {
     )"
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
 }
+
 
 
 # F                                                                         {{{1
@@ -192,6 +190,7 @@ _koopa_find_local_bin_dirs() {
 }
 
 
+
 # H                                                                         {{{1
 # ==============================================================================
 
@@ -202,7 +201,6 @@ help arguments:
         Show this help message and exit.
 EOF
 }
-
 
 _koopa_help_header() {
     # Help header string.
@@ -221,6 +219,7 @@ _koopa_help_header() {
     fi
     printf "usage: %s [--help|-h]" "$name"
 }
+
 
 
 # L                                                                         {{{1
@@ -255,6 +254,7 @@ _koopa_link_cellar() {
 }
 
 
+
 # P                                                                         {{{1
 # ==============================================================================
 
@@ -274,7 +274,6 @@ _koopa_prefix_chgrp() {
         chmod -R g+w "$path"
     fi
 }
-
 
 _koopa_prefix_group() {
     # Set the admin or regular user group automatically.
@@ -300,7 +299,6 @@ _koopa_prefix_group() {
     echo "$group"
 }
 
-
 _koopa_prefix_mkdir() {
     # Create directory in build prefix.
     # Updated 2019-09-27.
@@ -316,6 +314,7 @@ _koopa_prefix_mkdir() {
     fi
     _koopa_prefix_chgrp "$path"
 }
+
 
 
 # R                                                                         {{{1
@@ -363,6 +362,7 @@ _koopa_r_javareconf() {
 }
 
 
+
 # S                                                                         {{{1
 # ==============================================================================
 
@@ -377,6 +377,7 @@ _koopa_script_name() {
     )"
     basename "$file"
 }
+
 
 
 # T                                                                         {{{1
