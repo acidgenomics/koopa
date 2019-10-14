@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-12.
+    Updated 2019-10-14.
 EOF
 }
 
@@ -234,9 +234,10 @@ activate_dir="${KOOPA_HOME}/system/activate"
 
 if [ "$interactive" -eq 1 ]
 then
-    if [ "${KOOPA_SHELL:-}" = "zsh" ] ||
-        [ -n "${SLURM_JOB_ID:-}" ] || \
+    if [ "${KOOPA_SHELL:-}" = "zsh" ] || \
         [ "${TERM:-}" = "eterm-color" ] || \
+        [ -n "${RSTUDIO:-}" ] || \
+        [ -n "${SLURM_JOB_ID:-}" ] || \
         [ -n "${TMUX:-}" ] || \
         [ -n "${VIM_TERMINAL:-}" ]
     then
