@@ -57,5 +57,6 @@ conda create -qy --name="python-dev" \
     black \
     flake8 \
     pyflakes \
+    pylint \
     pytest \
     pytest-flake8
