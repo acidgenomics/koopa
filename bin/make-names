@@ -50,7 +50,7 @@ examples:
 note:
     Bash script that calls Rscript internally.
     Requires the syntactic package to be installed.
-    Updated 2019-10-09.
+    Updated 2019-10-14.
 EOF
 }
 
@@ -132,12 +132,12 @@ then
     done
     for i in "${!source_arr[@]}"
     do
-        if _koopa_is_darwin
-        then
-            flags=("-v")
-        else
-            flags=("--no-target-directory" "--verbose")
-        fi
+        flags=(
+            "--no-clobber"
+            "--no-target-directory"
+            "--strip-trailing-slashes"
+            "--verbose"
+        )
         mv "${flags[@]}" "${source_arr[$i]}" "${target_arr[$i]}"
     done
     exit 0
