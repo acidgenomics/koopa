@@ -1259,9 +1259,9 @@ _koopa_prompt() {
     fi
     printf "%s%s%s%s%s%s%s%s%s " \
         "$newline" \
-        "$user" "$git" "$conda" "$venv" \
+        "$user" "$conda" "$venv" \
         "$newline" \
-        "$wd" \
+        "$wd" "$git" \
         "$newline" \
         "$prompt"
 }
