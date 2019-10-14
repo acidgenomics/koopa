@@ -205,6 +205,17 @@ _koopa_assert_is_file_type() {
     _koopa_assert_is_matching_regex "$1" "\.${2}\$"
 }
 
+_koopa_assert_is_git() {
+    # Assert that current directory is a git repo.
+    # Updated 2019-10-14.
+    if ! _koopa_is_git
+    then
+        >&2 printf "Error: Not a git repo.\n"
+        exit 1
+    fi
+    return 0
+}
+
 _koopa_assert_is_installed() {
     # Assert that programs are installed.
     #
@@ -709,13 +720,15 @@ _koopa_git_branch() {
     # > git rev-parse --abbrev-ref HEAD
     #
     # See also:
+    # - _koopa_assert_is_git
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     #
     # Updated 2019-10-13.
-    _koopa_is_git || return 1
     git symbolic-ref --short -q HEAD
 }
+
+
 
 _koopa_gsub() {
     # Updated 2019-10-09.
@@ -891,17 +904,17 @@ _koopa_info_box() {
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
     #
-    # Updated 2019-09-10.
+    # Updated 2019-10-14.
     local array
     array=("$@")
     local barpad
     barpad="$(printf "━%.0s" {1..70})"
-    printf "  %s%s%s  \n"  "┏" "$barpad" "┓"
+    printf "  %s%s%s  \n" "┏" "$barpad" "┓"
     for i in "${array[@]}"
     do
-        printf "  ┃ %-68s ┃  \n"  "${i::68}"
+        printf "  ┃ %-68s ┃  \n" "${i::68}"
     done
-    printf "  %s%s%s  \n\n"  "┗" "$barpad" "┛"
+    printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
 _koopa_is_darwin() {
@@ -916,13 +929,31 @@ _koopa_is_git() {
     # See also:
     # - https://stackoverflow.com/questions/2180270
     #
-    # Updated 2019-10-13.
+    # Updated 2019-10-14.
     if git rev-parse --git-dir > /dev/null 2>&1
     then
-        # TRUE
         return 0
     else
-        # FALSE
+        return 1
+    fi
+}
+
+_koopa_is_git_clean() {
+    # Is the current git repo clean, or does it have unstaged changes?
+    #
+    # See also:
+    # - _koopa_assert_is_git
+    # - git status --porcelain
+    # - https://stackoverflow.com/questions/3878624
+    #
+    # Updated 2019-10-14
+    # > 
+    if git diff-index --quiet HEAD --
+    then
+        # Clean: up to date.
+        return 0
+    else
+        # Dirty: unstaged changes.
         return 1
     fi
 }
@@ -983,8 +1014,8 @@ _koopa_is_login_zsh() {
 }
 
 _koopa_is_matching_fixed() {
-    # Updated 2019-10-13.
-    echo "$1" | fgrep -q "$2"
+    # Updated 2019-10-14.
+    echo "$1" | grep -Fq "$2"
 }
 
 _koopa_is_matching_regex() {
@@ -1152,23 +1183,21 @@ _koopa_os_version() {
 _koopa_prompt() {
     # Prompt string.
     #
+    # Note that Unicode characters don't work well with some Windows fonts.
+    #
     # User name and host.
-    # bash: user="\u@\h"
-    # zsh:  user="%n@%m"
+    # - bash : user="\u@\h"
+    # - zsh  : user="%n@%m"
     #
     # zsh: conda environment activation is messing up '%m'/'%M' flag on macOS.
     # This seems to be specific to macOS and doesn't happen on Linux.
     #
-    # Note that Unicode characters don't work well with some Windows fonts.
+    # See also:
+    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
+    #       robbyrussell.zsh-theme
     #
-    # Updated 2019-10-13.
-    local newline \
-        conda conda_color \
-        git git_color \
-        prompt prompt_color \
-        venv venv_color \
-        user user_color \
-        wd wd_color
+    # Updated 2019-10-14.
+    local conda git newline prompt user venv wd
     user="${USER}@${HOSTNAME//.*/}"
     # Note that subshell exec need to be escaped here, so they are evaluated
     # dynamically when the prompt is refreshed.
@@ -1190,6 +1219,7 @@ _koopa_prompt() {
     # Enable colorful prompt, when possible.
     if _koopa_is_matching_fixed "${TERM:-}" "256color"
     then
+        local conda_color git_color prompt_color user_color venv_color wd_color
         case "$KOOPA_SHELL" in
             bash)
                 conda_color="33"
@@ -1207,23 +1237,21 @@ _koopa_prompt() {
                 wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
                 ;;
             zsh)
-                typeset -gA colors colors_default
-                colors_default=(
-                    conda   yellow
-                    git     green
-                    path    blue
-                    prompt  magenta
-                    user    cyan
-                    venv    yellow
-                )
-                colors=("${(@kv)colors_default}")
+                # SC2154: fg is referenced but not assigned.
+                # shellcheck disable=SC2154
+                conda_color="${fg[yellow]}"
+                git_color="${fg[green]}"
+                prompt_color="${fg[magenta]}"
+                user_color="${fg[cyan]}"
+                venv_color="${fg[yellow]}"
+                wd_color="${fg[blue]}"
                 # Colorize the variable strings.
-                conda="%F{$colors[conda]}${conda}%f"
-                git="%F{$colors[git]}${git}%f"
-                prompt="%F{$colors[prompt]}${prompt}%f"
-                user="%F{$colors[user]}${user}%f"
-                venv="%F{$colors[venv]}${venv}%f"
-                wd="%F{$colors[path]}${wd}%f"
+                conda="%F%{${conda_color}%}${conda}%f"
+                git="%F%{${git_color}%}${git}%f"
+                prompt="%F%{${prompt_color}%}${prompt}%f"
+                user="%F%{${user_color}%}${user}%f"
+                venv="%F%{${venv_color}%}${venv}%f"
+                wd="%F%{${wd_color}%}${wd}%f"
                 ;;
         esac
     fi
@@ -1265,15 +1293,20 @@ _koopa_prompt_disk_used() {
     printf " disk:%d%s\n" "$used" "$pct"
 }
 
-# FIXME Add a "*" indicator whether branch is current.
-
 _koopa_prompt_git() {
     # Return the current git branch, if applicable.
-    # Updated 2019-10-13.
+    # Also indicate status with "*" if dirty (i.e. has unstaged changes).
+    # Updated 2019-10-14.
     _koopa_is_git || return 0
-    local branch
-    branch="$(_koopa_git_branch)"
-    printf " git:%s\n" "$branch"
+    local git_branch git_status
+    git_branch="$(_koopa_git_branch)"
+    if _koopa_is_git_clean
+    then
+        git_status=""
+    else
+        git_status="*"
+    fi
+    printf " git:%s%s\n" "$git_branch" "$git_status"
 }
 
 _koopa_prompt_os() {

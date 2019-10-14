@@ -1,20 +1,56 @@
-## koopa 0.6.0 (2019-10-13)
+## koopa 0.6.0 (2019-10-14)
 
 ### New scripts
 
+- Added syntactic naming scripts: `camel-case`, `kebab-case`, `snake-case`, and
+  `make-names`. These scripts support file renaming via glob matching with the
+  `--rename` flag. They call the [syntactic][] R package internally.
 - `install-rstudio-server-pro`: Added support for RStudio Server Pro
   installation on Fedora / RHEL.
+- `download-cran-latest`: Pull down the latest R package release from CRAN.
+- Added support for RefSeq genome with `download-refseq-genome`. Can get current
+  RefSeq release version with `refseq-version` script.
+- `install-python-pip`: Quickly install `pip` into current Python library.
+- Added cellar scripts for: `genrich`, `lua`, `luarocks`, `neofetch`, `rmate`,
+  `shellcheck`, and `sra-tools`.
+- Added internal version detection scripts via the shell for multiple programs,
+  including bash, bioconductor, clang, condam docker, emacs, etc.
+  See `system/include/version` for scripts.
 
 ### Major changes
 
 - Improved prompt string configuration support and colors for git, conda
-  environent, and Python virtual environment (venv) names.
+  environent, and Python virtual environment (venv) names. The internal code
+  has been consolidate and simplified, for improved consistency between bash
+  and zsh shells. Note that bash uses "$" prefix, whereas zsh uses "%".
+- Now defining pykoopa Python import internally in the package, making it easier
+  to share functions across Python scripts exported in `bin/`.
+- Updated dotfiles configuration to use pylint and flake8 for Python checks.
+  See separate dotfiles repo for changes.
+- Improved conda environment creation scripts. New `conda-create-env-bioinfo`
+  automatically sets up multiple useful environment for bioinformatics.
+  Added general `conda-create-env` and `conda-remove-env` scripts for quick
+  environment creation and deletion.
+- Renamed and reworked genome download scripts:
+  `ensembl-fasta`, `ensembl-gtf` merged into `download-ensembl-genome`;
+  `flybase-fastq`, `flybase-gtf` merged into `download-flybase-genome`;
+  `gencode-fastq`, `gencode-gtf` merged into `download-gencode-genome`.
+- Renamed rsync scripts for Azure VM admin. Now prefixed with `rsync-*`.
+- Added additional internal POSIX functions, including assert checks.
+- GNU coreutils are now included in PATH for macOS, when installed via
+  [Homebrew][]. Normally they are prefixed with "g*" on macOS instead.
 
 ### Minor changes
 
 - Added 'download-' prefix to FASTA and GTF download scripts.
 - Improved Emacs `emacs` and `spacemacs` configuration files inside the dotfiles
   repo, based on some issues seen in the Emacs GUI on macOS.
+- Added R lintr config to check R scripts.
+- System linter used for CI checks can now check against Python scripts.
+- Migrated away from `source "$(koopa header bash)"` method to sourcing internal
+  functions via a relative path instead.
+- Removed some unused scripts: `extract-fastq`, `ffmpeg-*`, `gzip-dir`.
+- Added draft configuration of 24-bit terminal color support with `terminfo`.
 
 ## koopa 0.5.6 (2019-09-18)
 
@@ -479,3 +515,6 @@ Now exporting new scripts in `bin/`, accessible in `$PATH`.
 
 - Initial stable release.
 - Repo was previously named "seqcloud".
+
+[homebrew]: https://brew.sh/
+[syntactic]: https://syntactic.acidgenomics.com/
