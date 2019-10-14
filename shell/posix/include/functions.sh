@@ -728,8 +728,6 @@ _koopa_git_branch() {
     git symbolic-ref --short -q HEAD
 }
 
-
-
 _koopa_gsub() {
     # Updated 2019-10-09.
     echo "$1" | sed -E "s/${2}/${3}/g"
@@ -1800,4 +1798,3 @@ then
         fi
     }
 fi
-
