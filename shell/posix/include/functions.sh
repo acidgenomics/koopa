@@ -200,9 +200,9 @@ _koopa_assert_is_file_type() {
     #
     # Example: _koopa_assert_is_file_type "$x" "csv"
     #
-    # Updated 2019-09-24.
+    # Updated 2019-10-13.
     _koopa_assert_is_file "$1"
-    _koopa_assert_matches_pattern "$1" "\.${2}\$"
+    _koopa_assert_is_matching_regex "$1" "\.${2}\$"
 }
 
 _koopa_assert_is_installed() {
@@ -347,16 +347,23 @@ _koopa_assert_is_writable() {
     return 0
 }
 
-_koopa_assert_matches_pattern() {
-    # Assert that input matches a pattern.
-    #
-    # Bash alternative:
-    # > [[ ! $1 =~ $2 ]]
-    #
-    # Updated 2019-09-24.
-    if ! echo "$1" | grep -q "$2"
+_koopa_assert_is_matching_fixed() {
+    # Assert that input matches a fixed pattern.
+    # Updated 2019-10-13.
+    if ! _koopa_is_matching_fixed "$1" "$2"
     then
-        >&2 printf "Error: '%s' doesn't match pattern '%s'.\n" "$1" "$2"
+        >&2 printf "Error: '%s' doesn't match fixed pattern '%s'.\n" "$1" "$2"
+        exit 1
+    fi
+    return 0
+}
+
+_koopa_assert_is_matching_regex() {
+    # Assert that input matches a regular expression pattern.
+    # Updated 2019-10-13.
+    if ! _koopa_is_matching_regex "$1" "$2"
+    then
+        >&2 printf "Error: '%s' doesn't match regex pattern '%s'.\n" "$1" "$2"
         exit 1
     fi
     return 0
@@ -440,6 +447,15 @@ _koopa_build_prefix() {
 
 _koopa_conda_env() {
     # Conda environment name.
+    #
+    # Alternate approach:
+    # > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
+    # > export CONDA_PROMPT_MODIFIER
+    # > conda="$CONDA_PROMPT_MODIFIER"
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/42481726
+    #
     # Updated 2019-10-13.
     echo "${CONDA_DEFAULT_ENV:-}"
 }
@@ -966,6 +982,16 @@ _koopa_is_login_zsh() {
     [ "$0" = "-zsh" ]
 }
 
+_koopa_is_matching_fixed() {
+    # Updated 2019-10-13.
+    echo "$1" | fgrep -q "$2"
+}
+
+_koopa_is_matching_regex() {
+    # Updated 2019-10-13.
+    echo "$1" | grep -Eq "$2"
+}
+
 _koopa_is_remote() {
     # Is the current shell session a remote connection over SSH?
     # Updated 2019-06-25.
@@ -1123,6 +1149,93 @@ _koopa_os_version() {
 # P                                                                         {{{1
 # ==============================================================================
 
+_koopa_prompt() {
+    # Prompt string.
+    #
+    # User name and host.
+    # bash: user="\u@\h"
+    # zsh:  user="%n@%m"
+    #
+    # zsh: conda environment activation is messing up '%m'/'%M' flag on macOS.
+    # This seems to be specific to macOS and doesn't happen on Linux.
+    #
+    # Note that Unicode characters don't work well with some Windows fonts.
+    #
+    # Updated 2019-10-13.
+    local newline \
+        conda conda_color \
+        git git_color \
+        prompt prompt_color \
+        venv venv_color \
+        user user_color \
+        wd wd_color
+    user="${USER}@${HOSTNAME//.*/}"
+    # Note that subshell exec need to be escaped here, so they are evaluated
+    # dynamically when the prompt is refreshed.
+    conda="\$(_koopa_prompt_conda)"
+    git="\$(_koopa_prompt_git)"
+    venv="\$(_koopa_prompt_venv)"
+    case "$KOOPA_SHELL" in
+        bash)
+            newline='\n'
+            prompt='\$'
+            wd='\w'
+            ;;
+        zsh)
+            newline=$'\n'
+            prompt='%%'
+            wd='%~'
+            ;;
+    esac
+    # Enable colorful prompt, when possible.
+    if _koopa_is_matching_fixed "${TERM:-}" "256color"
+    then
+        case "$KOOPA_SHELL" in
+            bash)
+                conda_color="33"
+                git_color="32"
+                prompt_color="35"
+                user_color="36"
+                venv_color="33"
+                wd_color="34"
+                # Colorize the variable strings.
+                conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
+                git="\[\033[${git_color}m\]${git}\[\033[00m\]"
+                prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
+                user="\[\033[${user_color}m\]${user}\[\033[00m\]"
+                venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
+                wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
+                ;;
+            zsh)
+                typeset -gA colors colors_default
+                colors_default=(
+                    conda   yellow
+                    git     green
+                    path    blue
+                    prompt  magenta
+                    user    cyan
+                    venv    yellow
+                )
+                colors=("${(@kv)colors_default}")
+                # Colorize the variable strings.
+                conda="%F{$colors[conda]}${conda}%f"
+                git="%F{$colors[git]}${git}%f"
+                prompt="%F{$colors[prompt]}${prompt}%f"
+                user="%F{$colors[user]}${user}%f"
+                venv="%F{$colors[venv]}${venv}%f"
+                wd="%F{$colors[path]}${wd}%f"
+                ;;
+        esac
+    fi
+    printf "%s%s%s%s%s%s%s%s%s " \
+        "$newline" \
+        "$user" "$git" "$conda" "$venv" \
+        "$newline" \
+        "$wd" \
+        "$newline" \
+        "$prompt"
+}
+
 _koopa_prompt_conda() {
     # Get conda environment name for prompt string.
     # Updated 2019-10-13.
@@ -1151,6 +1264,8 @@ _koopa_prompt_disk_used() {
     esac
     printf " disk:%d%s\n" "$used" "$pct"
 }
+
+# FIXME Add a "*" indicator whether branch is current.
 
 _koopa_prompt_git() {
     # Return the current git branch, if applicable.
@@ -1652,3 +1767,4 @@ then
         fi
     }
 fi
+

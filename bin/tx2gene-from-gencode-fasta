@@ -79,7 +79,7 @@ printf "Generating '%s' from '%s'.\n" \
     "$(basename "$fasta_file")"
 
 _koopa_assert_is_not_file "$output_file"
-_koopa_assert_matches_pattern "$fasta_file" ".transcripts.fa.gz"
+_koopa_assert_is_matching_fixed "$fasta_file" ".transcripts.fa.gz"
 
 gunzip -c "$fasta_file" | \
     grep '>' | \

@@ -150,6 +150,8 @@ fi
 # Overrides                                                                 {{{1
 # ==============================================================================
 
+# > export ZSH_COMPDUMP="/tmp/zcompdump-${USER}"
+
 # Darken the autosuggest text color.
 # Define using xterm-256 color code.
 #
