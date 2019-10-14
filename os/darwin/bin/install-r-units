@@ -3,7 +3,7 @@
 install.packages(
     pkgs = "units",
     type = "source",
-    configure.args=c(
+    configure.args = c(
         "--with-udunits2-lib=/usr/local/lib",
         "--with-udunits2-include=/usr/include/udunits2"
     )
