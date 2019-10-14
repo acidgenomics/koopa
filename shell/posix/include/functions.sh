@@ -1308,7 +1308,7 @@ _koopa_prompt_git() {
     else
         git_status="*"
     fi
-    printf " git:%s%s\n" "$git_branch" "$git_status"
+    printf " %s%s\n" "$git_branch" "$git_status"
 }
 
 _koopa_prompt_os() {
