@@ -105,10 +105,6 @@ case "$1" in
         _koopa_os_type
         exit
         ;;
-    prompt)
-        _koopa_prompt
-        exit
-        ;;
     update)
         "${include_dir}/update.sh"
         exit
