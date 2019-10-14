@@ -944,16 +944,19 @@ _koopa_is_git_clean() {
     # - git status --porcelain
     # - https://stackoverflow.com/questions/3878624
     #
-    # Updated 2019-10-14
-    # > 
-    if git diff-index --quiet HEAD --
+    # Updated 2019-10-14.
+
+    # Are there unstaged changes?
+    if ! git diff-index --quiet HEAD --
     then
-        # Clean: up to date.
-        return 0
-    else
-        # Dirty: unstaged changes.
         return 1
     fi
+    # Is the repo behind and in need of a pull?
+    if [ "$(git rev-parse HEAD)" != "$(git rev-parse @{u})" ]
+    then
+        return 1
+    fi
+    return 0
 }
 
 _koopa_is_installed() {
