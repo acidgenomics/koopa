@@ -376,12 +376,9 @@ then
     if _koopa_is_darwin
     then
         darwin_dir="${activate_dir}/os/darwin"
-        if [ "$subshell" -eq 0 ]
-        then
-            . "${darwin_dir}/exports.sh"
-            . "${darwin_dir}/programs/homebrew.sh"
-            . "${darwin_dir}/programs/coreutils.sh"
-        fi
+        . "${darwin_dir}/exports.sh"
+        . "${darwin_dir}/programs/homebrew.sh"
+        . "${darwin_dir}/programs/coreutils.sh"
         . "${darwin_dir}/aliases.sh"
         . "${darwin_dir}/grc-colors.sh"
         unset -v darwin_dir
