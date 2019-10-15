@@ -741,9 +741,9 @@ _koopa_has_file_ext() {
 
 _koopa_has_no_environments() {
     # Detect activation of virtual environments.
-    # Updated 2019-06-25.
+    # Updated 2019-10-15.
     [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
-    [ -x "$(command -v deactivate)" ] && return 1
+    [ -x "$(command -v deactivate)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
     return 0
 }
 
