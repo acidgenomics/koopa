@@ -9,7 +9,7 @@
 if _koopa_is_installed brew
 then
     coreutils_dir="/usr/local/opt/coreutils/libexec"
-    _koopa_add_to_path_start "${coreutils_dir}/gnubin"
-    _koopa_add_to_manpath_start "${coreutils_dir}/gnuman"
+    _koopa_force_add_to_path_start "${coreutils_dir}/gnubin"
+    _koopa_force_add_to_manpath_start "${coreutils_dir}/gnuman"
     unset -v coreutils_dir
 fi
