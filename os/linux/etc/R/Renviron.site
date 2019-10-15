@@ -5,7 +5,8 @@
 
 ## See also:
 ## - https://support.rstudio.com/hc/en-us/articles/215733837
-## - https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Managing-libraries
+## - https://cran.r-project.org/doc/manuals/r-release/
+##       R-admin.html#Managing-libraries
 ## - https://community.rstudio.com/t/setting-up-a-site-library/3916
 ## - Debian example config file by Dirk Eddelbuettel.
 
