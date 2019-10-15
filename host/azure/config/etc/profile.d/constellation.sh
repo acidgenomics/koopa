@@ -8,8 +8,8 @@
 # Koopa                                                                     {{{1
 # ==============================================================================
 
-# admin, bioinfo, and root accounts are always skipped.
-KOOPA_SKIP_USERS="barbara.bryant phil.drapeau"
+# admin and root accounts are always skipped.
+KOOPA_SKIP_USERS="bioinfo barbara.bryant phil.drapeau"
 export KOOPA_SKIP_USERS
 
 
