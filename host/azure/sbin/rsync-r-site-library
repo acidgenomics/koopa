@@ -45,7 +45,7 @@ internal variables:
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -62,6 +62,8 @@ then
     exit 1
 fi
 
+flags="$(_koopa_rsync_flags)"
+
 if [[ ! -d "$r_dir" ]]
 then
     sudo mkdir -p "$r_dir"
@@ -69,8 +71,8 @@ then
     sudo chmod g+ws "$r_dir"
 fi
 
-sudo chgrp -Rh wheel "$r_dir"
-sudo chmod -R g+w "$r_dir"
+# > sudo chgrp -Rh wheel "$r_dir"
+# > sudo chmod -R g+w "$r_dir"
 
 # Fix shiny installed as root, if necessary.
 if [[ -d "${lib_link}/shiny" ]]
@@ -79,14 +81,14 @@ then
 fi
 
 printf "Updating '%s' from '%s'.\n" "$r_dir" "$source_ip"
-rsync -av \
-    --delete \
+# shellcheck disable=SC2086
+rsync $flags \
     --rsync-path="sudo rsync" \
     "${source_user}@${source_ip}:${r_dir}/" \
     "${r_dir}/"
 
-sudo chgrp -Rh wheel "$r_dir"
-sudo chmod -R g+w "$r_dir"
+# > sudo chgrp -Rh wheel "$r_dir"
+# > sudo chmod -R g+w "$r_dir"
 
 # Update local symlinks.
 printf "Updating 'site-library' symlinks.\n"
