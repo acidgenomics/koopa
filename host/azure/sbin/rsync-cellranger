@@ -13,8 +13,9 @@ _koopa_assert_has_sudo
 
 host_ip="$(ip-address)"
 source_user="mike"
-source_ip="10.100.100.145"
-conda_dir="/data00/miniconda3"
+source_ip="10.100.100.133"
+cellranger_dir="/data00/cellranger"
+cellranger_atac_dir="/data00/cellranger-atac"
 
 
 
@@ -25,17 +26,18 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-rsync miniconda3 installation.
+rsync Cell Ranger installation.
 
 $(_koopa_help_args)
 
 details:
-    Requires sync from VM45 using Mike's account.
+    Requires sync from VM33 using Mike's account.
 
 internal variables:
     source_ip: ${source_ip}
     source_user: ${source_user}
-    conda_dir: ${conda_dir}
+    cellranger_dir: ${cellranger_dir}
+    cellranger_atac_dir: ${cellranger_atac_dir}
 
 note:
     Bash script.
@@ -59,7 +61,15 @@ fi
 
 flags="$(_koopa_rsync_flags)"
 
-dir="$conda_dir"
+dir="$cellranger_dir"
+printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
+# shellcheck disable=SC2086
+rsync $flags \
+    --rsync-path="sudo rsync" \
+    "${source_user}@${source_ip}:${dir}/" \
+    "${dir}/"
+
+dir="$cellranger_atac_dir"
 printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
 # shellcheck disable=SC2086
 rsync $flags \

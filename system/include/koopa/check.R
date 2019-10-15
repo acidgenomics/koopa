@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-08.
+## Updated 2019-10-15.
 
 options(
     error = quote(quit(status = 1L)),
@@ -409,8 +409,8 @@ checkVersion(
     expected = switch(
         EXPR = os,
         ## Note that macOS switched to LibreSSL in 2018.
-        darwin = "2.6.5",
-        rhel7 = "1.0.2k",
+        ## > darwin = "2.6.5",
+        ## > rhel7 = "1.0.2k",
         expectedVersion("openssl")
     )
 )

@@ -1,16 +1,11 @@
 ## Shared R environment configuration.
-## Updated 2019-10-14 by Michael Steinbaugh.
+## Updated 2019-10-15 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
 ## See also:
-## - https://support.rstudio.com/hc/en-us/articles/215733837
-## - https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Managing-libraries
-## - https://community.rstudio.com/t/setting-up-a-site-library/3916
-## - Debian example config file by Dirk Eddelbuettel.
-
-## Example `~/.Renviron` on Unix.
-## > R_LIBS="~/R/library"
+## - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
+##       Renviron.site
 
 
 
@@ -19,21 +14,35 @@
 
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
 PATH="/usr/local/bin:/usr/bin:/bin"
+
 ## Homebrew Python
 ## > PATH="/usr/local/opt/python/libexec/bin:${PATH}"
+
 ## TeX
 PATH="${PATH}:/Library/TeX/texbin"
+
 ## X11
 PATH="${PATH}:/opt/X11/bin"
+
 ## clang (for CRAN R)
 ## R 3.5: clang 6
 ## R 3.6: clang 7
 ## R 3.7: clang 8
 PATH="/usr/local/clang7/bin:${PATH}"
+
 ## gfortran 6.1 (for CRAN R)
 PATH="/usr/local/gfortran/bin:${PATH}"
+
 ## pandoc (RStudio)
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
+
+
+
+## Package library path                                                     {{{1
+## =============================================================================
+
+R_LIBS_SITE="${R_HOME}/site-library"
+R_LIBS_USER="~/R/%p-library/%v"
 
 
 
@@ -42,8 +51,10 @@ PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 ## LAPACK
 PKG_CONFIG_PATH="/usr/local/opt/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
+
 ## OpenBLAS
 PKG_CONFIG_PATH="/usr/local/opt/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
+
 ## imagemagick
 PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
@@ -57,65 +68,12 @@ XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
 
 
 
-## Package library path                                                     {{{1
-## =============================================================================
-
-## General:
-## - `Sys.getenv()`.
-## - `help(topic = "R_LIBS_USER")`.
-## - `help(topic = ".libPaths")`.
-##
-## Bioconductor-specific:
-## - https://www.bioconductor.org/developers/how-to/useDevel/
-##
-## Variables:
-## - `%V`: R version number including the patchlevel (e.g., `2.5.0`).
-## - `%v`: R version number excluding the patchlevel (e.g., `2.5`).
-## - `%p`: The platform for which R was built; value of `R.version$platform`.
-## - `%o`: The underlying operating system; value of `R.version$os`.
-## - `%a`: The CPU architecture (CPU); value of `R.version$arch`.
-
-## Note that RStudio Server can disable user package installations.
-## Set `allow-package-installation=0` in `/etc/rstudio/rsession.conf`.
-
-## Check the return of these in an R session:
-## - `.libPaths()`
-## - `.Library`
-## - `.Library.site`
-
-R_LIBS_SITE="${R_HOME}/site-library"
-
-## Linux default:
-## R_LIBS_USER="~/R/%p-library/%v"
-##
-## Windows default:
-## R_LIBS_USER="~/R/win-library/%v"
-##
-## `@R_PLATFORM@` can be e.g. `x86_64-pc-linux-gnu`.
-## `@MAJ_MIN_VERSION@` is likely something like '3.6'.
-## Set this per-user via `%p` and `%v` for platform and version.
-## > R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
-R_LIBS_USER="~/R/%p-library/%v"
-
-
-
 ## GitHub remote installs                                                   {{{1
 ## =============================================================================
 
 ## Always upgrade GitHub R packages, without prompting.
 ## See `remotes::update_packages()` for details.
 R_REMOTES_UPGRADE="always"
-
-
-
-## Reticulate                                                               {{{1
-## =============================================================================
-
-## Reticulate allows you to run Python code inside of R.
-
-## Here's how to force Python available for reticulate.
-## Instead, call `use_virtualenv()` or `use_condaenv()`.
-## > RETICULATE_PYTHON="~/miniconda3/envs/reticulate/bin/python"
 
 
 
