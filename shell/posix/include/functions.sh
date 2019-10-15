@@ -7,7 +7,7 @@
 # ==============================================================================
 
 _koopa_add_bins_to_path() {
-    # Add nested `bin/` and `sbin/` directories to PATH.
+    # Add nested 'bin/' and 'sbin/' directories to PATH.
     # Updated 2019-09-12.
     local relpath
     local prefix
@@ -1366,8 +1366,8 @@ _koopa_quiet_cd() {
 _koopa_quiet_expr() {
     # Regular expression matching that is POSIX compliant.
     #
-    # Avoid using `[[ =~ ]]` in sh config files.
-    # `expr` is faster than using `case`.
+    # Avoid using '[[ =~ ]]' in sh config files.
+    # 'expr' is faster than using 'case'.
     #
     # See also:
     # - https://stackoverflow.com/questions/21115121
@@ -1382,7 +1382,7 @@ _koopa_quiet_expr() {
 # ==============================================================================
 
 _koopa_r_home() {
-    # Get `R_HOME`, rather than exporting as global variable.
+    # Get 'R_HOME', rather than exporting as global variable.
     # Updated 2019-06-27.
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
@@ -1528,7 +1528,7 @@ _koopa_sub() {
 
 _koopa_today_bucket() {
     # Create a dated file today bucket.
-    # Also adds a `~/today` symlink for quick access.
+    # Also adds a '~/today' symlink for quick access.
     #
     # How to check if a symlink target matches a specific path:
     # https://stackoverflow.com/questions/19860345
