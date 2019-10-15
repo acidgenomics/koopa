@@ -9,9 +9,6 @@
 ## - https://community.rstudio.com/t/setting-up-a-site-library/3916
 ## - Debian example config file by Dirk Eddelbuettel.
 
-## Example `~/.Renviron` on Unix.
-## > R_LIBS="~/R/library"
-
 
 
 ## System path                                                              {{{1
