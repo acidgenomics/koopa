@@ -87,7 +87,7 @@ unset -f usage
 
 # Never activate for specific admin accounts.
 [ "$(id -u)" -eq 0 ] && return 0
-whoami | grep -Eq "\b(admin)\b" && return 0
+whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
 
 # Check for interactive shell.
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
