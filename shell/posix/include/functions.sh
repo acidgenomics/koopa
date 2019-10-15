@@ -1415,7 +1415,6 @@ _koopa_remove_from_manpath() {
     export MANPATH="${MANPATH//:$1/}"
 }
 
-
 _koopa_remove_from_path() {
     # Remove directory from PATH.
     #
@@ -1431,9 +1430,33 @@ _koopa_remove_from_path() {
 }
 
 _koopa_rsync_flags() {
-    # Improved rsync default flags.
-    # Updated 2019-06-21.
+    # rsync flags.
+    #
+    # Useful flags:
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -z, --compress              compress file data during the transfer
+    # -L, --copy-links            transform symlink into referent file/dir
+    #     --delete-before         receiver deletes before xfer, not during
+    # -h, --human-readable        output numbers in a human-readable format
+    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
+    #     --progress              show progress during transfer
+    #     --dry-run
+    #     --one-file-system
+    #     --acls --xattrs
+    #     --iconv=utf-8,utf-8-mac
+    #
+    # Updated 2019-10-15.
     echo "--archive --copy-links --delete-before --human-readable --progress"
+}
+
+_koopa_rsync_flags_sudo() {
+    # rsync sudo flags.
+    # Use this when syncing across machines via sudo.
+    # Updated 2019-10-15.
+    local flags
+    flags="$(_koopa_rsync_flags)"
+    flags="${flags} --rsync-path=\"sudo rsync\""
+    echo "$flags"
 }
 
 
