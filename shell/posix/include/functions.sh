@@ -57,14 +57,6 @@ _koopa_add_config_link() {
     ln -fnsv "$source_file" "$dest_file"
 }
 
-_koopa_add_to_manpath_end() {
-    # Add directory to end of MANPATH.
-    # Updated 2019-10-11.
-    [ ! -d "$1" ] && return 0
-    echo "$MANPATH" | grep -q "$1" && return 0
-    export MANPATH="${MANPATH}:${1}"
-}
-
 _koopa_add_to_manpath_start() {
     # Add directory to start of MANPATH.
     # Updated 2019-10-11.
@@ -690,20 +682,22 @@ _koopa_find_text() {
     find . -name "$2" -exec grep -il "$1" {} \;;
 }
 
+_koopa_force_add_to_manpath_start() {
+    # Updated 2019-10-14.
+    _koopa_remove_from_manpath "$1"
+    _koopa_add_to_manpath_start "$1"
+}
+
 _koopa_force_add_to_path_end() {
-    # Updated 2019-06-27.
-    local dir
-    dir="$1"
-    _koopa_remove_from_path "$dir"
-    _koopa_add_to_path_end "$dir"
+    # Updated 2019-10-14.
+    _koopa_remove_from_path "$1"
+    _koopa_add_to_path_end "$1"
 }
 
 _koopa_force_add_to_path_start() {
-    # Updated 2019-06-27.
-    local dir
-    dir="$1"
-    _koopa_remove_from_path "$dir"
-    _koopa_add_to_path_start "$dir"
+    # Updated 2019-10-14.
+    _koopa_remove_from_path "$1"
+    _koopa_add_to_path_start "$1"
 }
 
 
@@ -1415,6 +1409,13 @@ _koopa_realpath() {
     realpath "$(_koopa_which "$1")"
 }
 
+_koopa_remove_from_manpath() {
+    # Remove directory from MANPATH.
+    # Updated 2019-10-14.
+    export MANPATH="${MANPATH//:$1/}"
+}
+
+
 _koopa_remove_from_path() {
     # Remove directory from PATH.
     #
@@ -1425,10 +1426,8 @@ _koopa_remove_from_path() {
     # Alternate approach using sed:
     # > echo "$PATH" | sed "s|:${dir}||g"
     #
-    # Updated 2019-07-10.
-    local dir
-    dir="$1"
-    export PATH="${PATH//:$dir/}"
+    # Updated 2019-10-14.
+    export PATH="${PATH//:$1/}"
 }
 
 _koopa_rsync_flags() {
