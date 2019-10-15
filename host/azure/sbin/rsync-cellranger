@@ -14,6 +14,8 @@ _koopa_assert_has_sudo
 host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.133"
+cellranger_dir="/usr/local/cellranger"
+cellranger_atac_dir="/usr/local/cellranger-atac"
 
 
 
@@ -34,6 +36,8 @@ details:
 internal variables:
     source_ip: ${source_ip}
     source_user: ${source_user}
+    cellranger_dir: ${cellranger_dir}
+    cellranger_atac_dir: ${cellranger_atac_dir}
 
 note:
     Bash script.
@@ -55,22 +59,20 @@ then
     exit 1
 fi
 
-dir="/usr/local/cellranger"
+flags="$(_koopa_rsync_flags)"
+
+dir="$cellranger_dir"
 printf "Updating '%s' from '%s'.\n" "$(basename "$dir")" "$source_ip"
-rsync \
-    --archive \
-    --delete \
-    --verbose \
+# shellcheck disable=SC2086
+rsync $flags \
     --rsync-path="sudo rsync" \
     "${source_user}@${source_ip}:${dir}/" \
     "${dir}/"
 
-dir="/usr/local/cellranger-atac"
+dir="$cellranger_atac_dir"
 printf "Updating '%s' from '%s'.\n" "$(basename "$dir")" "$source_ip"
-rsync \
-    --archive \
-    --delete \
-    --verbose \
+# shellcheck disable=SC2086
+rsync $flags \
     --rsync-path="sudo rsync" \
     "${source_user}@${source_ip}:${dir}/" \
     "${dir}/"

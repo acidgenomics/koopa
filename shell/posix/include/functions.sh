@@ -1445,18 +1445,10 @@ _koopa_rsync_flags() {
     #     --acls --xattrs
     #     --iconv=utf-8,utf-8-mac
     #
+    # Use --rsync-path="sudo rsync" to sync across machines with sudo.
+    #
     # Updated 2019-10-15.
-    echo "--archive --copy-links --delete-before --human-readable --progress"
-}
-
-_koopa_rsync_flags_sudo() {
-    # rsync sudo flags.
-    # Use this when syncing across machines via sudo.
-    # Updated 2019-10-15.
-    local flags
-    flags="$(_koopa_rsync_flags)"
-    flags="${flags} --rsync-path=\"sudo rsync\""
-    echo "$flags"
+    echo "--archive --delete-before --human-readable --progress"
 }
 
 
