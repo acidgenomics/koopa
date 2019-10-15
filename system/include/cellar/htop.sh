@@ -5,13 +5,19 @@
 # Notes                                                                     {{{1
 # ==============================================================================
 
+# htop may fail to compile/load due to libncurses.
+# We can fix this by disabling Unicode support in the build.
+#
 # error while loading shared libraries: libncursesw.so.6
 #
 # Current configuration on RHEL 7 has libncursesw.so.5
 #
-# ldd ./htop
 # ldconfig -p | grep libncurses
 # ldconfig -p | grep libtinfow
+# ldd ./htop
+#
+# See also:
+# - https://github.com/hishamhm/htop/issues/858
 
 
 
