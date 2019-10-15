@@ -38,7 +38,7 @@ conda="4.7.12"
 coreutils="8.31"
 
 # https://docs.docker.com/install/
-docker="19.03.2"
+docker="19.03.3"
 
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
