@@ -68,8 +68,8 @@ alias cp='cp --archive --interactive --verbose'
 alias mkdir='mkdir --parents --verbose'
 
 # Move files.
-alias mv="mv --interactive --no-target-directory --strip-trailing-slashes \
---verbose"
+# --strip-trailing-slashes --no-target-directory
+alias mv="mv --interactive --verbose"
 
 # Remove (delete) files.
 #
