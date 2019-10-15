@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-10-12.
+# Updated 2019-10-14.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -68,13 +68,14 @@ alias cp='cp --archive --interactive --verbose'
 alias mkdir='mkdir --parents --verbose'
 
 # Move files.
-alias mv='mv --interactive --verbose'
+alias mv="mv --interactive --no-target-directory --strip-trailing-slashes \
+--verbose"
 
 # Remove (delete) files.
 #
 # Don't enable recursion here by default via '-r' flag.
 # This helps protect against accidental directory deletion.
-alias rm='rm --interactive="once" --verbose'
+alias rm='rm --dir --interactive="once" --preserve-root --verbose'
 
 
 
