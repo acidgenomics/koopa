@@ -29,7 +29,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-10-02.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -65,6 +65,7 @@ sudo yum -y install \
     leptonica-devel \
     libcurl-devel \
     libevent-devel \
+    libhdf5-devel \
     libxml2-devel \
     make \
     mariadb-devel \

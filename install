@@ -30,7 +30,7 @@ optional arguments:
   --help, -h
         Show this help message and exit.
   --shared
-        Enable shared user configuration via '/etc/profile.d/koopa.sh' file.
+        Enable shared user configuration via '/etc/profile.d/zzz-koopa.sh' file.
         Linux only. Not supported on macOS.
   --dotfiles
         Clone the dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)

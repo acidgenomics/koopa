@@ -33,7 +33,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-30.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -47,6 +47,7 @@ _koopa_help "$@"
 enable-epel-7
 install-fedora-base
 sudo yum -y install \
+    file-devel \
     libgit2-devel \
     libssh2-devel \
     pandoc \

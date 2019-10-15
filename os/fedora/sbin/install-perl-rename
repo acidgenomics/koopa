@@ -24,7 +24,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -40,7 +40,7 @@ then
     sudo yum -y install perl-App-cpanminus
 fi
 
-sudo cpanm File::Rename
+sudo cpanm -f File::Rename
 
 # Alternate method:
 # > perl -MCPAN -e 'install File::Rename'
