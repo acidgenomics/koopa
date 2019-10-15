@@ -37,7 +37,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-08.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -62,6 +62,6 @@ downloads/software/bcl2fastq/${file}"
     cd "$tmp_dir" || exit 1
     wget "$url"
     unzip "$file"
-    sudo rpm --install "bcl2fastq2-v${version}-Linux-x86_64.rpm"
+    sudo rpm --force --install -v "bcl2fastq2-v${version}-Linux-x86_64.rpm"
     rm -fr "$tmp_dir"
 )

@@ -46,7 +46,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-08.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -93,6 +93,7 @@ conda-create-env black
 conda-create-env gffutils
 conda-create-env igvtools
 conda-create-env jupyter
+conda-create-env sra-tools
 conda-create-env wgsim
 
 # Quality control                                                           {{{2

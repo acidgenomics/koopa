@@ -7,7 +7,7 @@
 # ==============================================================================
 
 _koopa_add_bins_to_path() {
-    # Add nested `bin/` and `sbin/` directories to PATH.
+    # Add nested 'bin/' and 'sbin/' directories to PATH.
     # Updated 2019-09-12.
     local relpath
     local prefix
@@ -741,9 +741,9 @@ _koopa_has_file_ext() {
 
 _koopa_has_no_environments() {
     # Detect activation of virtual environments.
-    # Updated 2019-06-25.
+    # Updated 2019-10-15.
     [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
-    [ -x "$(command -v deactivate)" ] && return 1
+    [ -x "$(command -v deactivate)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
     return 0
 }
 
@@ -1366,8 +1366,8 @@ _koopa_quiet_cd() {
 _koopa_quiet_expr() {
     # Regular expression matching that is POSIX compliant.
     #
-    # Avoid using `[[ =~ ]]` in sh config files.
-    # `expr` is faster than using `case`.
+    # Avoid using '[[ =~ ]]' in sh config files.
+    # 'expr' is faster than using 'case'.
     #
     # See also:
     # - https://stackoverflow.com/questions/21115121
@@ -1382,7 +1382,7 @@ _koopa_quiet_expr() {
 # ==============================================================================
 
 _koopa_r_home() {
-    # Get `R_HOME`, rather than exporting as global variable.
+    # Get 'R_HOME', rather than exporting as global variable.
     # Updated 2019-06-27.
     _koopa_assert_is_installed R
     _koopa_assert_is_installed Rscript
@@ -1415,7 +1415,6 @@ _koopa_remove_from_manpath() {
     export MANPATH="${MANPATH//:$1/}"
 }
 
-
 _koopa_remove_from_path() {
     # Remove directory from PATH.
     #
@@ -1431,9 +1430,25 @@ _koopa_remove_from_path() {
 }
 
 _koopa_rsync_flags() {
-    # Improved rsync default flags.
-    # Updated 2019-06-21.
-    echo "--archive --copy-links --delete-before --human-readable --progress"
+    # rsync flags.
+    #
+    # Useful flags:
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -z, --compress              compress file data during the transfer
+    # -L, --copy-links            transform symlink into referent file/dir
+    #     --delete-before         receiver deletes before xfer, not during
+    # -h, --human-readable        output numbers in a human-readable format
+    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
+    #     --progress              show progress during transfer
+    #     --dry-run
+    #     --one-file-system
+    #     --acls --xattrs
+    #     --iconv=utf-8,utf-8-mac
+    #
+    # Use --rsync-path="sudo rsync" to sync across machines with sudo.
+    #
+    # Updated 2019-10-15.
+    echo "--archive --delete-before --human-readable --progress"
 }
 
 
@@ -1513,7 +1528,7 @@ _koopa_sub() {
 
 _koopa_today_bucket() {
     # Create a dated file today bucket.
-    # Also adds a `~/today` symlink for quick access.
+    # Also adds a '~/today' symlink for quick access.
     #
     # How to check if a symlink target matches a specific path:
     # https://stackoverflow.com/questions/19860345
@@ -1599,15 +1614,24 @@ _koopa_update_ldconfig() {
 }
 
 _koopa_update_profile() {
-    # Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-    # Updated 2019-06-29.
+    # Add shared 'zzz-koopa.sh' configuration file to '/etc/profile.d/'.
+    # Updated 2019-10-15.
     local file
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-    file="/etc/profile.d/koopa.sh"
+    # Early return if config file already exists.
+    file="/etc/profile.d/zzz-koopa.sh"
     if [ -f "$file" ]
     then
         printf "Note: '%s' exists.\n" "$file"
+        return 0
+    fi
+    # Rename existing 'koopa.sh' file, if applicable.
+    old_file="/etc/profile.d/koopa.sh"
+    if [ -f "$old_file" ]
+    then
+        printf "Renaming '%s' to '%s'.\n" "$old_file" "$file"
+        sudo mv -v "$old_file" "$file"
         return 0
     fi
     printf "Adding '%s'.\n" "$file"
@@ -1774,12 +1798,13 @@ _koopa_zsh_version() {
 # Fallback support                                                          {{{1
 # ==============================================================================
 
-if _koopa_is_installed echo
-then
-    echo() {
-        printf "%s\n" "$1"
-    }
-fi
+# Note that this doesn't support '-ne' flag.
+# > if ! _koopa_is_installed echo
+# > then
+# >     echo() {
+# >         printf "%s\n" "$1"
+# >     }
+# > fi
 
 if ! _koopa_is_installed realpath
 then

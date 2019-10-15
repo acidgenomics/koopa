@@ -1,16 +1,14 @@
 ## Shared R environment configuration.
-## Updated 2019-09-24 by Michael Steinbaugh.
+## Updated 2019-10-15 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
 ## See also:
 ## - https://support.rstudio.com/hc/en-us/articles/215733837
-## - https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Managing-libraries
+## - https://cran.r-project.org/doc/manuals/r-release/
+##       R-admin.html#Managing-libraries
 ## - https://community.rstudio.com/t/setting-up-a-site-library/3916
 ## - Debian example config file by Dirk Eddelbuettel.
-
-## Example `~/.Renviron` on Unix.
-## > R_LIBS="~/R/library"
 
 
 
@@ -56,8 +54,6 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
 ## - `.Library`
 ## - `.Library.site`
 
-R_LIBS_SITE="${R_HOME}/site-library"
-
 ## Linux default:
 ## R_LIBS_USER="~/R/%p-library/%v"
 ##
@@ -68,6 +64,8 @@ R_LIBS_SITE="${R_HOME}/site-library"
 ## `@MAJ_MIN_VERSION@` is likely something like '3.6'.
 ## Set this per-user via `%p` and `%v` for platform and version.
 ## > R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
+
+R_LIBS_SITE="${R_HOME}/site-library"
 R_LIBS_USER="~/R/%p-library/%v"
 
 
@@ -99,6 +97,26 @@ R_REMOTES_UPGRADE="always"
 ## Here's how to force Python available for reticulate.
 ## Instead, call `use_virtualenv()` or `use_condaenv()`.
 ## > RETICULATE_PYTHON="~/miniconda3/envs/reticulate/bin/python"
+
+
+
+## ROracle                                                                  {{{1
+## =============================================================================
+
+# Do not set `LD_LIBRARY_PATH`, use `/etc/ld.so.conf.d/` approach instead.
+# This can break GCC compilation of rhdf5, if set in bash profile.
+#
+# See also:
+# - https://docs.oracle.com/cd/E83411_01/OREAD/
+#       installing-rstudio-server.htm#OREAD223
+# - http://cran.cnr.berkeley.edu/web/packages/ROracle/INSTALL
+#
+# Updated 2019-10-15.
+ORACLE_HOME="/usr/lib/oracle/12.2/client64"
+OCI_INC="/usr/include/oracle/12.2/client64"
+OCI_LIB="${ORACLE_HOME}/lib"
+TNS_ADMIN="${ORACLE_HOME}/network/admin"
+PATH="${PATH}:${ORACLE_HOME}/bin"
 
 
 
