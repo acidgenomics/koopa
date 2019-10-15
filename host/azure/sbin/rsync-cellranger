@@ -62,7 +62,7 @@ fi
 flags="$(_koopa_rsync_flags)"
 
 dir="$cellranger_dir"
-printf "Updating '%s' from '%s'.\n" "$(basename "$dir")" "$source_ip"
+printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
 # shellcheck disable=SC2086
 rsync $flags \
     --rsync-path="sudo rsync" \
@@ -70,7 +70,7 @@ rsync $flags \
     "${dir}/"
 
 dir="$cellranger_atac_dir"
-printf "Updating '%s' from '%s'.\n" "$(basename "$dir")" "$source_ip"
+printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
 # shellcheck disable=SC2086
 rsync $flags \
     --rsync-path="sudo rsync" \
