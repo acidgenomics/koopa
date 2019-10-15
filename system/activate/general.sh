@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-09-29.
+# Updated 2019-10-15.
 
 
 
@@ -202,19 +202,6 @@ fi
 
 # rsync                                                                     {{{2
 # ------------------------------------------------------------------------------
-
-# Useful flags:
-# -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
-# -z, --compress              compress file data during the transfer
-# -L, --copy-links            transform symlink into referent file/dir
-#     --delete-before         receiver deletes before xfer, not during
-# -h, --human-readable        output numbers in a human-readable format
-#     --iconv=CONVERT_SPEC    request charset conversion of filenames
-#     --progress              show progress during transfer
-#     --dry-run
-#     --one-file-system
-#     --acls --xattrs
-#     --iconv=utf-8,utf-8-mac
 
 if [ -z "${RSYNC_FLAGS:-}" ]
 then
