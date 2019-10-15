@@ -90,7 +90,7 @@ neofetch="6.1.0"
 neovim="0.4.2"
 
 # https://www.openssl.org/source/
-openssl="1.1.1c"
+openssl="1.1.1d"
 
 # https://pandoc.org/releases.html
 pandoc="2.7.3"
