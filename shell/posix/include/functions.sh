@@ -1614,15 +1614,24 @@ _koopa_update_ldconfig() {
 }
 
 _koopa_update_profile() {
-    # Add shared `koopa.sh` configuration file to `/etc/profile.d/`.
-    # Updated 2019-06-29.
+    # Add shared 'zzz-koopa.sh' configuration file to '/etc/profile.d/'.
+    # Updated 2019-10-15.
     local file
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-    file="/etc/profile.d/koopa.sh"
+    # Early return if config file already exists.
+    file="/etc/profile.d/zzz-koopa.sh"
     if [ -f "$file" ]
     then
         printf "Note: '%s' exists.\n" "$file"
+        return 0
+    fi
+    # Rename existing 'koopa.sh' file, if applicable.
+    old_file="/etc/profile.d/koopa.sh"
+    if [ -f "$old_file" ]
+    then
+        printf "Renaming '%s' to '%s'.\n" "$old_file" "$file"
+        sudo mv -v "$old_file" "$file"
         return 0
     fi
     printf "Adding '%s'.\n" "$file"

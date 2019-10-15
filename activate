@@ -52,7 +52,7 @@ details:
     Currently supports bash, zsh.
 
     For system-wide configuration on Linux, this should be called inside
-    '/etc/profile.d/koopa.sh', owned by root.
+    '/etc/profile.d/zzz-koopa.sh', owned by root.
 
     Sourcing of POSIX shell scripts via '.' (POSIX) or 'source' (bash, zsh)
     requires that arguments are passed in at the beginning of the call, rather
