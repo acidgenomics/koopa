@@ -9,8 +9,7 @@
 # ==============================================================================
 
 # admin and root accounts are always skipped.
-KOOPA_SKIP_USERS="bioinfo barbara.bryant phil.drapeau"
-export KOOPA_SKIP_USERS
+export KOOPA_SKIP_USERS="bioinfo barbara.bryant phil.drapeau"
 
 
 
