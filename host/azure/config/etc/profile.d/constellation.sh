@@ -1,5 +1,16 @@
+#!/bin/sh
+
 # CPI shared shell configuration.
 # Updated 2019-10-15 by Michael Steinbaugh.
+
+
+
+# Koopa                                                                     {{{1
+# ==============================================================================
+
+# admin, bioinfo, and root accounts are always skipped.
+KOOPA_SKIP_USERS="barbara.bryant phil.drapeau"
+export KOOPA_SKIP_USERS
 
 
 
@@ -18,9 +29,8 @@ export D5="/mnt/azbioinfoseq05"
 # ==============================================================================
 
 # This value will be detected and configured automatically by koopa.
-
-# BCBIO_EXE="/data00/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
-BCBIO_EXE="/data00/bcbio/development/tools/bin/bcbio_nextgen.py"
+# > export BCBIO_EXE="/data00/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
+export BCBIO_EXE="/data00/bcbio/development/tools/bin/bcbio_nextgen.py"
 
 
 
@@ -30,7 +40,6 @@ BCBIO_EXE="/data00/bcbio/development/tools/bin/bcbio_nextgen.py"
 # > PATH="${PATH}:/usr/local/cellranger/2.1.0"
 # > PATH="${PATH}:/usr/local/cellranger/3.0.0"
 # > PATH="${PATH}:/usr/local/cellranger/3.0.2"
-
 PATH="${PATH}:/usr/local/cellranger/3.1.0"
 PATH="${PATH}:/usr/local/cellranger-atac/1.1.0"
 
