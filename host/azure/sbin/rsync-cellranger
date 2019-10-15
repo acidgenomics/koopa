@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_assert_has_sudo
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+host_ip="$(ip-address)"
+source_user="mike"
+source_ip="10.100.100.133"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+rsync Cell Ranger installation.
+
+$(_koopa_help_args)
+
+details:
+    Requires sync from VM33 using Mike's account.
+
+internal variables:
+    source_ip: ${source_ip}
+    source_user: ${source_user}
+
+note:
+    Bash script.
+    Updated 2019-10-15.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+# Check for accidental sync from source machine.
+if [[ "$source_ip" == "$host_ip" ]]
+then
+    >&2 printf "Error: On source machine: %s.\n" "$source_ip"
+    exit 1
+fi
+
+dir="/usr/local/cellranger"
+printf "Updating '%s' from '%s'.\n" "$(basename "$dir")" "$source_ip"
+rsync \
+    --archive \
+    --delete \
+    --verbose \
+    --rsync-path="sudo rsync" \
+    "${source_user}@${source_ip}:${dir}/" \
+    "${dir}/"
+
+dir="/usr/local/cellranger-atac"
+printf "Updating '%s' from '%s'.\n" "$(basename "$dir")" "$source_ip"
+rsync \
+    --archive \
+    --delete \
+    --verbose \
+    --rsync-path="sudo rsync" \
+    "${source_user}@${source_ip}:${dir}/" \
+    "${dir}/"
