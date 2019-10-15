@@ -409,7 +409,7 @@ checkVersion(
     expected = switch(
         EXPR = os,
         ## Note that macOS switched to LibreSSL in 2018.
-        darwin = "2.6.5",
+        ## > darwin = "2.6.5",
         ## > rhel7 = "1.0.2k",
         expectedVersion("openssl")
     )
