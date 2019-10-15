@@ -2,6 +2,19 @@
 
 
 
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# error while loading shared libraries: libncursesw.so.6
+#
+# Current configuration on RHEL 7 has libncursesw.so.5
+#
+# ldd ./htop
+# ldconfig -p | grep libncurses
+# ldconfig -p | grep libtinfow
+
+
+
 # Variables                                                                 {{{1
 # ==============================================================================
 
@@ -32,7 +45,7 @@ see also:
 note:
     Bash script.
     Requires Python to be installed.
-    Updated 2019-09-30.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -57,6 +70,7 @@ _koopa_assert_is_installed python
     cd "htop-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
+        --disable-unicode \
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make check
