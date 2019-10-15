@@ -1798,12 +1798,13 @@ _koopa_zsh_version() {
 # Fallback support                                                          {{{1
 # ==============================================================================
 
-if ! _koopa_is_installed echo
-then
-    echo() {
-        printf "%s\n" "$1"
-    }
-fi
+# Note that this doesn't support '-ne' flag.
+# > if ! _koopa_is_installed echo
+# > then
+# >     echo() {
+# >         printf "%s\n" "$1"
+# >     }
+# > fi
 
 if ! _koopa_is_installed realpath
 then
