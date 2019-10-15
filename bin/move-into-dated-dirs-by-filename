@@ -20,6 +20,7 @@ Move files into dated subdirectories by file name.
 required positional arguments:
     ... File paths.
         Assuming we're matching inside current working directory.
+        Supports glob matching, but try to keep it simple.
 
 $(_koopa_help_args)
 
@@ -35,7 +36,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -53,7 +54,7 @@ then
 fi
 
 grep_array=(
-    '([0-9]{4})'
+    '^([0-9]{4})'
     '([-_])?'
     '([0-9]{2})'
     '([-_])?'
@@ -64,23 +65,24 @@ grep_array=(
     '([0-9]{2})'
     '([-_])?'
     '([0-9]{2})'
-    '\..+$'
+    '(.+)$'
 )
 grep_string="$(printf %s "${grep_array[@]}" $'\n')"
 
 for file in "$@"
 do
+    # Using Bash built-in regular expressions here.
     if [[ "$file" =~ $grep_string ]]
     then
         year="${BASH_REMATCH[1]}"
         month="${BASH_REMATCH[3]}"
         day="${BASH_REMATCH[5]}"
         subdir="${year}/${month}/${day}"
-        mkdir -pv "$subdir"
-        mv -iv "$file" "$subdir"
+        mkdir --parents --verbose "$subdir"
+        mv --no-clobber --verbose "$file" "$subdir"
     else
-        printf "Error: '%s' file does not contain date in name.\n" "$file"
-        printf "grep string: '%s'\n" "$grep_string"
+        >&2 printf "Error: '%s' file does not contain date in name.\n" "$file"
+        >&2 printf "grep string: '%s'\n" "$grep_string"
         exit 1
     fi
 done
