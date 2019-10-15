@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-14.
+    Updated 2019-10-15.
 EOF
 }
 
@@ -87,7 +87,12 @@ unset -f usage
 
 # Never activate for specific admin accounts.
 [ "$(id -u)" -eq 0 ] && return 0
-whoami | grep -Eq "\b(admin|bioinfo)\b" && return 0
+whoami | grep -Eq "\badmin\b" && return 0
+[ -n "${USER:-}" ] && USER="$(whoami)" && export USER
+if [ -n "${KOOPA_SKIP_USERS:-}" ]
+then
+    echo "$KOOPA_SKIP_USERS" | grep -Eq "\b${USER}\b" && return 0
+fi
 
 # Check for interactive shell.
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
