@@ -104,6 +104,8 @@ rm -frv "${HOME}/.virtualenvs"
         --enable-shared \
         --without-ensurepip
     make --jobs="$CPU_COUNT"
+    # Multiprocessing tests can fail on very large multi-core VMs due to too
+    # many open files, so disable tests if necessary.
     make test
     make install
     rm -fr "$tmp_dir"
