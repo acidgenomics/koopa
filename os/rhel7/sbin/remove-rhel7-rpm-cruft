@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_assert_has_sudo
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Remove legacy RHEL 7 RPM cruft on Azure VMs.
+
+note:
+    Bash script.
+    Updated 2019-10-16.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+sudo yum remove \
+    R-core \
+    R-core-devel \
+    perl-App-cpanminus
+
+# We're using newer R installation at '/usr/local/lib64/R' instead.
+sudo rm -frv /usr/lib64/R
+
+# Remove system pip, if necessary.
+# > /usr/bin/pip uninstall pip
+# Uninstalling pip-8.1.2:
+#   /usr/bin/pip
+#   /usr/bin/pip2
+#   /usr/bin/pip2.7
+#   /usr/lib/python2.7/site-packages/pip
+#   /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
+
