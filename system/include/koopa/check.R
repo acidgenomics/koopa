@@ -520,12 +520,12 @@ if (isTRUE(linux)) {
         current = currentVersion("env"),
         expected = expectedVersion("coreutils")
     )
-    checkVersion(
-        name = "rename (Perl File::Rename)",
-        whichName = "rename",
-        current = currentVersion("perl-file-rename"),
-        expected = expectedVersion("perl-file-rename")
-    )
+    ## > checkVersion(
+    ## >     name = "rename (Perl File::Rename)",
+    ## >     whichName = "rename",
+    ## >     current = currentVersion("perl-file-rename"),
+    ## >     expected = expectedVersion("perl-file-rename")
+    ## > )
     checkVersion(
         name = "bcl2fastq",
         current = currentVersion("bcl2fastq"),
