@@ -14,6 +14,7 @@ _koopa_assert_has_sudo
 name="bcl2fastq"
 version="$(_koopa_variable "$name")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
+prefix="$(_koopa_build_prefix)/${name}"
 
 
 
@@ -29,7 +30,7 @@ Install Illumina BCL to FASTQ converter.
 $(_koopa_help_args)
 
 details:
-    Installs to '/usr/local/bin/bcl2fastq'.
+    Installs to '${prefix}'.
 
 see also:
     https://support.illumina.com/content/dam/illumina-support/documents/
@@ -37,7 +38,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-15.
+    Updated 2019-10-16.
 EOF
 }
 
@@ -62,6 +63,13 @@ downloads/software/bcl2fastq/${file}"
     cd "$tmp_dir" || exit 1
     wget "$url"
     unzip "$file"
-    sudo rpm --force --install -v "bcl2fastq2-v${version}-Linux-x86_64.rpm"
+    sudo rpm -v \
+        --force \
+        --install \
+        --prefix="${prefix}" \
+        "bcl2fastq2-v${version}-Linux-x86_64.rpm"
     rm -fr "$tmp_dir"
 )
+
+# Remove redundant nested 'bcl2fastq' directory.
+sudo rm -frv "${prefix}/bcl2fastq"
