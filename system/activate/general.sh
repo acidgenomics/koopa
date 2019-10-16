@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-10-15.
+# Updated 2019-10-16.
 
 
 
@@ -56,10 +56,10 @@ fi
 
 # Trim the maximum number of directories in prompt (PS1).
 # For bash, requires >= v4.
-if [ -z "${PROMPT_DIRTRIM:-}" ]
-then
-    export PROMPT_DIRTRIM=4
-fi
+# > if [ -z "${PROMPT_DIRTRIM:-}" ]
+# > then
+# >     export PROMPT_DIRTRIM=4
+# > fi
 
 
 
