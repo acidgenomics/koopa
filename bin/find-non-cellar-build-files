@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Find non-cellarized (symlink) files in build directory.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-10-16.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+prefix="$(_koopa_build_prefix)"
+find "$prefix" \
+    -type f \
+    \( \
+           -path "${prefix}/bin/*"     \
+        -o -path "${prefix}/etc/*"     \
+        -o -path "${prefix}/include/*" \
+        -o -path "${prefix}/lib/*"     \
+        -o -path "${prefix}/lib64/*"   \
+        -o -path "${prefix}/libexec/*" \
+        -o -path "${prefix}/man/*"     \
+        -o -path "${prefix}/sbin/*"    \
+        -o -path "${prefix}/share/*"   \
+        -o -path "${prefix}/src/*"     \
+    \) | sort
+
