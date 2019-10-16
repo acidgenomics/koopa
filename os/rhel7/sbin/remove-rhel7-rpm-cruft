@@ -60,9 +60,11 @@ sudo yum remove \
     R \
     R-core \
     R-core-devel \
-    R-devel
+    R-devel \
     R-java \
-    R-java-devel
+    R-java-devel \
+    libRmath \
+    libRmath-devel
 sudo rm -frv /usr/lib64/R
 
 # Java                                                                      {{{2
