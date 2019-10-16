@@ -5,10 +5,14 @@
 # Notes                                                                     {{{1
 # ==============================================================================
 
-# # generate-posix-vars failed
-# Double check that venv and conda environments unloaded clean, and that
-# conda python is not in PATH.
-
+# The '--enable-optimizations' flag can boost Python performance by ~10% but
+# currently runs into build issues with old compilation chains (e.g. GCC 4),
+# which are common on RHEL and other conservative cluster/VM configurations.
+# Therefore, we are disabling this flag by default.
+#
+# Recently, I'm seeing a new 'generate-posix-vars' error pop up with 3.8.0
+# installs on RHEL 7 machines.
+#
 # See also:
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
@@ -69,7 +73,6 @@ rm -frv "${HOME}/.virtualenvs"
     wget "$url"
     tar xfv "Python-${version}.tar.xz"
     cd "Python-${version}" || exit 1
-    # Disable '--enable-optimizations' for very old GCC vesrions.
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix" \
