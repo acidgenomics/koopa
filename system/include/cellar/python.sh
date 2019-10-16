@@ -69,10 +69,10 @@ rm -frv "${HOME}/.virtualenvs"
     wget "$url"
     tar xfv "Python-${version}.tar.xz"
     cd "Python-${version}" || exit 1
+    # Disable '--enable-optimizations' for very old GCC vesrions.
     ./configure \
         --build="$build_os_string" \
         --prefix="$prefix" \
-        --enable-optimizations \
         --enable-shared \
         --without-ensurepip
     make --jobs="$CPU_COUNT"
