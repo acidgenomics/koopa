@@ -5,37 +5,9 @@
 # Notes                                                                     {{{1
 # ==============================================================================
 
-# Python 3.8.0 is failing to compile on RHEL 7.
-
-# generate-posix-vars failed
-# Are we only hitting this error when running zsh?
-# Yes, this could be zsh specific. Try it on a different VM.
-
-# Yeah I think this is freaking out if conda or virtualenv are activated.
-# Even when you deactivate, the session isn't clean.
-
-# Could not import runpy module
-
-# Consider setting CPPFLAGS and LDFLAGS.
-# OpenSSL related issue?
-# Ensure we're not activating miniconda or virtualenv upon login.
-
-# Consider disabling multi-core make if still running into issues.
-
-# > CPPFLAGS="\
-# >     -I/opt/X11/include \
-# >     -I/usr/local/opt/zlib/include \
-# >     -I/usr/local/opt/sqlite3/include \
-# >     -I/usr/local/opt/openssl/include \
-# > "
-# > LDFLAGS="\
-# >     -L/opt/X11/lib \
-# >     -L/usr/local/lib \
-# >     -L/usr/local/opt/openssl/lib \
-# > "
-
-# Consider disabling '--enable-optimizations' flag.
-# Note that '--with-lto' flag doesn't work with old versions of GCC.
+# # generate-posix-vars failed
+# Double check that venv and conda environments unloaded clean, and that
+# conda python is not in PATH.
 
 # See also:
 # - https://bugs.python.org/issue33374
