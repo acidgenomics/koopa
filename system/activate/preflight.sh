@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pre-flight checks.
-# Updated 2019-09-27.
+# Updated 2019-10-16.
 
 
 
@@ -21,3 +21,10 @@ case "$(uname -s)" in
         return 1
         ;;
 esac
+
+
+
+# Bad settings                                                              {{{1
+# ==============================================================================
+
+_koopa_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"

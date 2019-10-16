@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-15.
+    Updated 2019-10-16.
 EOF
 }
 
@@ -237,17 +237,14 @@ activate_dir="${KOOPA_HOME}/system/activate"
 # - Tmux session.
 # - Vim terminal.
 
-if [ "$interactive" -eq 1 ]
+if [ "${KOOPA_SHELL:-}" = "zsh" ] || \
+    [ "${TERM:-}" = "eterm-color" ] || \
+    [ -n "${RSTUDIO:-}" ] || \
+    [ -n "${SLURM_JOB_ID:-}" ] || \
+    [ -n "${TMUX:-}" ] || \
+    [ -n "${VIM_TERMINAL:-}" ]
 then
-    if [ "${KOOPA_SHELL:-}" = "zsh" ] || \
-        [ "${TERM:-}" = "eterm-color" ] || \
-        [ -n "${RSTUDIO:-}" ] || \
-        [ -n "${SLURM_JOB_ID:-}" ] || \
-        [ -n "${TMUX:-}" ] || \
-        [ -n "${VIM_TERMINAL:-}" ]
-    then
-        force=1
-    fi
+    force=1
 fi
 
 # Early return if koopa is already active.
