@@ -518,7 +518,7 @@ _koopa_disk_check() {
     local used
     local limit
     used="$(_koopa_disk_pct_used "$@")"
-    limit="95"
+    limit="90"
     if [ "$used" -gt "$limit" ]
     then
         >&2 printf "Warning: Disk usage is %d%%.\n" "$used"
