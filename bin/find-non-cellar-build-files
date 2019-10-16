@@ -35,15 +35,16 @@ prefix="$(_koopa_build_prefix)"
 find "$prefix" \
     -type f \
     \( \
-           -path "${prefix}/bin/*"     \
-        -o -path "${prefix}/etc/*"     \
-        -o -path "${prefix}/include/*" \
-        -o -path "${prefix}/lib/*"     \
-        -o -path "${prefix}/lib64/*"   \
-        -o -path "${prefix}/libexec/*" \
-        -o -path "${prefix}/man/*"     \
-        -o -path "${prefix}/sbin/*"    \
-        -o -path "${prefix}/share/*"   \
-        -o -path "${prefix}/src/*"     \
+           -path "${prefix}/bin/*"                   \
+        -o -path "${prefix}/etc/*"                   \
+        -o -path "${prefix}/include/*"               \
+        -o -path "${prefix}/lib/*"                   \
+        -o -path "${prefix}/lib64/*"                 \
+        -o -path "${prefix}/libexec/*"               \
+        -o -path "${prefix}/man/*"                   \
+        -o -path "${prefix}/sbin/*"                  \
+        -o -path "${prefix}/share/*"                 \
+        -o -path "${prefix}/share/emacs/site-lisp/*" \
+        -o -path "${prefix}/src/*"                   \
     \) | sort
 
