@@ -141,7 +141,7 @@ ruby="2.6.4"
 rust="1.38.0"
 
 # https://rustup.rs/
-rustup="1.20.0"
+rustup="1.20.2"
 
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.7.0"
