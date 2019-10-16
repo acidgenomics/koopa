@@ -1767,6 +1767,22 @@ _koopa_venv() {
 # W                                                                         {{{1
 # ==============================================================================
 
+_koopa_warn_if_export() {
+    # Warn if variable is exported in current shell session.
+    # Useful for checking against unwanted compiler settings.
+    # In particular, useful to check for 'LD_LIBRARY_PATH'.
+    # Updated 2019-10-16.
+    local arg
+    for arg in "$@"
+    do
+        if declare -x | grep -Eq "\b${arg}\b="
+        then
+            >&2 printf "Warning: '%s' is exported.\n" "$arg"
+        fi
+    done
+    return 0
+}
+
 _koopa_which() {
     # Locate which program.
     #
