@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CPI shared shell configuration.
-# Updated 2019-10-15 by Michael Steinbaugh.
+# Updated 2019-10-16 by Michael Steinbaugh.
 
 
 
@@ -70,6 +70,7 @@ alias shinystatus="sudo systemctl status shiny-server"
 alias shinystart="sudo systemctl start shiny-server"
 alias shinyrestart="sudo systemctl restart shiny-server"
 
+# Consider setting this in 'Renviron.site' instead.
 export SHINYAPPDATA="/mnt/azbioifnoseq05/appdata"
 
 
