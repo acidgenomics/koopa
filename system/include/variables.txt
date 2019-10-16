@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.6.1a"
-koopa_date="2019-10-15"
+koopa_date="2019-10-16"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -114,7 +114,7 @@ pip="19.3"
 proj="6.2.0"
 
 # https://www.python.org/downloads/
-python="3.7.4"
+python="3.8.0"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-3/
