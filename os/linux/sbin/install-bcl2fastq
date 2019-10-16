@@ -72,4 +72,4 @@ downloads/software/bcl2fastq/${file}"
 )
 
 # Remove redundant nested 'bcl2fastq' directory.
-rm -frv "${prefix}/bcl2fastq"
+sudo rm -frv "${prefix}/bcl2fastq"
