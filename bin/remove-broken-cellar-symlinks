@@ -37,10 +37,12 @@ mapfile -t broken <<< "$(find-broken-symlinks "$prefix")"
 n_broken="${#broken[@]}"
 [[ "$n_broken" -gt 1 ]] || exit 0
 printf "%d broken symlinks detected.\n" "$n_broken"
-if _koopa_has_sudo
-then
-    sudo rm -v "${broken[@]}"
-else
-    rm -v "${broken[@]}"
-fi
-
+for file in "${broken[@]}"
+do
+    if _koopa_has_sudo
+    then
+        sudo rm -v "$file"
+    else
+        rm -v "$file"
+    fi
+done
