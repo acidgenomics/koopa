@@ -55,6 +55,8 @@ sudo rm -fv \
 # R                                                                         {{{2
 # ------------------------------------------------------------------------------
 
+# > sudo yum list installed | grep R
+
 # We're using newer R installation at '/usr/local/lib64/R' instead.
 sudo yum remove \
     R \
