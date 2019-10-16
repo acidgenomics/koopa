@@ -45,7 +45,7 @@ _koopa_help "$@"
 #   /usr/lib/python2.7/site-packages/pip
 #   /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
 
-sudo rm -fv \
+sudo rm -frv \
     /usr/bin/pip \
     /usr/bin/pip2 \
     /usr/bin/pip2.7 \
