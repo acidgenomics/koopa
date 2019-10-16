@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Remove broken cellar symbolic links.
+
+$(_koopa_help_args)
+
+note:
+    Bash script.
+    Updated 2019-10-26.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+prefix="$(_koopa_build_prefix)"
+# Note that empty array will still contain a length of 1 here.
+mapfile -t broken <<< "$(find-broken-symlinks "$prefix")"
+n_broken="${#broken[@]}"
+[[ "$n_broken" -gt 1 ]] || exit 0
+printf "%d broken symlinks detected.\n" "$n_broken"
+if _koopa_has_sudo
+then
+    sudo rm -v "${broken[@]}"
+else
+    rm -v "${broken[@]}"
+fi
+
