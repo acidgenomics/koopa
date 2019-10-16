@@ -81,6 +81,9 @@ _koopa_help "$@"
 
 printf "Installing %s %s.\n" "$name" "$version"
 
+printf "Removing existing virtual environments.\n"
+rm -frv "${HOME}/.virtualenvs"
+
 (
     rm -frv "$prefix"
     rm -frv "$tmp_dir"
@@ -111,3 +114,10 @@ ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
 command -v "$exe_file"
 "$exe_file" --version
+
+cat << EOF
+Python installation was successful.
+
+Reinstall cellar vim, which depends on Python.
+Reinstall virtual environments, which were removed.
+EOF
