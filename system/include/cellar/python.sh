@@ -2,6 +2,44 @@
 
 
 
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Python 3.8.0 is failing to compile on RHEL 7.
+# generate-posix-vars failed
+
+# Yeah I think this is freaking out if conda or virtualenv are activated.
+# Even when you deactivate, the session isn't clean.
+
+# Either that or running make with multicore is erroring, can't tell yet.
+
+# Could not import runpy module
+
+# Consider setting CPPFLAGS and LDFLAGS.
+# OpenSSL related issue?
+# Ensure we're not activating miniconda or virtualenv upon login.
+
+# > CPPFLAGS="\
+# >     -I/opt/X11/include \
+# >     -I/usr/local/opt/zlib/include \
+# >     -I/usr/local/opt/sqlite3/include \
+# >     -I/usr/local/opt/openssl/include \
+# > "
+# > LDFLAGS="\
+# >     -L/opt/X11/lib \
+# >     -L/usr/local/lib \
+# >     -L/usr/local/opt/openssl/lib \
+# > "
+
+# Consider disabling '--enable-optimizations' flag.
+# Note that '--with-lto' flag doesn't work with old versions of GCC.
+
+# See also:
+# - https://bugs.python.org/issue33374
+# - https://github.com/pyenv/pyenv/issues/1388
+
+
+
 # Variables                                                                 {{{1
 # ==============================================================================
 
@@ -30,7 +68,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-30.
+    Updated 2019-10-16.
 EOF
 }
 
@@ -60,15 +98,16 @@ printf "Installing %s %s.\n" "$name" "$version"
         --enable-shared \
         --without-ensurepip
     make --jobs="$CPU_COUNT"
+    make test
     make install
     rm -fr "$tmp_dir"
 )
 
 _koopa_link_cellar "$name" "$version"
 
-# Symlink python3 to python.
 build_prefix="$(_koopa_build_prefix)"
-ln -fns "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
+printf "Symlinking 'python3' to 'python' in '%s'.\n" "$build_prefix"
+ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
 command -v "$exe_file"
 "$exe_file" --version
