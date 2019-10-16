@@ -9,11 +9,10 @@
 
 # generate-posix-vars failed
 # Are we only hitting this error when running zsh?
+# Yes, this could be zsh specific. Try it on a different VM.
 
 # Yeah I think this is freaking out if conda or virtualenv are activated.
 # Even when you deactivate, the session isn't clean.
-
-# Either that or running make with multicore is erroring, can't tell yet.
 
 # Could not import runpy module
 
