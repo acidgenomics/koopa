@@ -1528,6 +1528,28 @@ _koopa_sub() {
 # T                                                                         {{{1
 # ==============================================================================
 
+_koopa_tmp_dir() {
+    # Create temporary directory.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/4632028
+    # - https://gist.github.com/earthgecko/3089509
+    #
+    # Note: macOS requires 'env LC_CTYPE=C'.
+    # Otherwise, you'll see this error: 'tr: Illegal byte sequence'.
+    # This doesn't seem to work reliably, so using timestamp instead.
+    #
+    # Alternate approach:
+    # > local unique
+    # > local dir
+    # > unique="$(date "+%Y%m%d-%H%M%S")"
+    # > dir="/tmp/koopa-$(id -u)-${unique}"
+    # > echo "$dir"
+    #
+    # Updated 2019-10-17.
+    mktemp -d
+}
+
 _koopa_today_bucket() {
     # Create a dated file today bucket.
     # Also adds a '~/today' symlink for quick access.
