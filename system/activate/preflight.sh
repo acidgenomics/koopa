@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Pre-flight checks.
-# Updated 2019-10-16.
+# Updated 2019-10-17.
 
 
 
@@ -26,5 +26,10 @@ esac
 
 # Bad settings                                                              {{{1
 # ==============================================================================
+
+if [ -n "${RSTUDIO:-}" ]
+then
+    return 0
+fi
 
 _koopa_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"
