@@ -386,21 +386,21 @@ _koopa_script_name() {
 _koopa_tmp_dir() {
     # Create temporary directory.
     #
-    # Note: macOS requires `env LC_CTYPE=C`.
-    # Otherwise, you'll see this error: `tr: Illegal byte sequence`.
+    # Note: macOS requires 'env LC_CTYPE=C'.
+    # Otherwise, you'll see this error: 'tr: Illegal byte sequence'.
     # This doesn't seem to work reliably, so using timestamp instead.
     #
     # See also:
+    # - https://stackoverflow.com/questions/4632028
     # - https://gist.github.com/earthgecko/3089509
     #
-    # Updated 2019-09-04.
-    local unique
-    local dir
-    unique="$(date "+%Y%m%d-%H%M%S")"
-    dir="/tmp/koopa-$(id -u)-${unique}"
-    # This doesn't work well with zsh.
-    # > mkdir -p "$dir"
-    # > chown "$USER" "$dir"
-    # > chmod 0775 "$dir"
-    echo "$dir"
+    # Alternate approach:
+    # > local unique
+    # > local dir
+    # > unique="$(date "+%Y%m%d-%H%M%S")"
+    # > dir="/tmp/koopa-$(id -u)-${unique}"
+    # > echo "$dir"
+    #
+    # Updated 2019-10-17.
+    mktemp -d
 }
