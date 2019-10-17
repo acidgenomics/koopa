@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-10-16.
+# Updated 2019-10-17.
 
 
 
@@ -32,6 +32,12 @@ fi
 if [ -z "${TERM:-}" ]
 then
     export TERM="screen-256color"
+fi
+
+# TMPDIR
+if [ -z "${TMPDIR:-}" ]
+then
+    export TMPDIR="/tmp"
 fi
 
 # TODAY
