@@ -912,16 +912,14 @@ _koopa_is_darwin() {
 
 _koopa_is_file_system_case_sensitive() {
     # Is the file system case sensitive?
-    # Updated 2019-10-17.
+    # Updated 2019-10-18.
     touch .koopa-checkcase .koopa-checkCase
     count="$(find . -maxdepth 1 -iname ".koopa-checkcase" | wc -l)"
-    rm .koopa-check*
+    rm .koopa-check* >/dev/null 2>&1
     if [ "$count" -eq 2 ]
     then
-        echo "TRUE"
         return 0
     else
-        echo "FALSE"
         return 1
     fi
 }
