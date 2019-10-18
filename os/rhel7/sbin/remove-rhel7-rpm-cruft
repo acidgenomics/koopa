@@ -94,6 +94,13 @@ sudo rm -frv \
     '/usr/lib/python2.7/site-packages/pip' \
     '/usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info'
 
+# Rust                                                                      {{{2
+# ------------------------------------------------------------------------------
+
+echo "Removing Rust."
+echo "Use rustup installation instead."
+sudo yum remove 'rust-*'
+
 # Tex Live                                                                  {{{2
 # ------------------------------------------------------------------------------
 
