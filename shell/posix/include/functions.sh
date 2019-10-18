@@ -27,7 +27,7 @@ _koopa_add_conda_env_to_path() {
     [ -n "${CONDA_PREFIX:-}" ] || return 0
     local bin_dir
     bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
-    [ ! -d "$bin_dir" ] || return 0
+    [ -d "$bin_dir" ] || return 0
     _koopa_add_to_path_end "$bin_dir"
 }
 
