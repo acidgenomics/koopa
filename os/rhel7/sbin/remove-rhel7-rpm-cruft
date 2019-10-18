@@ -59,7 +59,7 @@ echo "Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
 sudo yum remove \
     '*-pandoc' \
     '*-pandoc-*' \
-    'pandoc-*'
+    'pandoc-*' \
     pandoc \
 
 # Perl                                                                      {{{2
