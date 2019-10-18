@@ -63,12 +63,10 @@ organism="$1"
 case "$organism" in
     "Homo sapiens")
         short_name="human"
-        url="${base_url}/${short_name}/"
         pattern="Release [0-9]+"
         ;;
     "Mus musculus")
         short_name="mouse"
-        url="${base_url}/${short_name}/"
         pattern="Release M[0-9]+"
         ;;
     *)
@@ -77,6 +75,7 @@ case "$organism" in
         ;;
 esac
 
+url="${base_url}/${short_name}/"
 wget -q -O - "$url" | \
     grep -Eo "$pattern" | \
     head -n 1 | \
