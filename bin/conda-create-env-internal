@@ -14,20 +14,20 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Create internal texlive conda environment.
+Create internal conda environments.
 
 $(_koopa_help_args)
 
 details:
     Useful environment on virtual machines running a conservative Linux release
-    (i.e. RHEL 7) that bundles a very old version of texlive.
+    (i.e. RHEL 7) that bundles a very old version of pandoc.
 
 see also:
     conda env list
 
 note:
     Bash script.
-    Updated 2019-09-23.
+    Updated 2019-10-18.
 EOF
 }
 
@@ -40,7 +40,13 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed conda
 
-name="texlive"
-prefix="$(_koopa_conda_prefix)/envs/${name}"
+prefix="$(_koopa_conda_internal_prefix)/envs"
+envs=(
+    "pandoc"
+    "texlive-core"
+)
 
-conda create -qy --prefix="$prefix" texlive-core
+for env in "${envs[@]}"
+do
+    conda create -qy --prefix="${prefix}/${env}" "$env"
+done
