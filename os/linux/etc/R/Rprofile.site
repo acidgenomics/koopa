@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-12 by Michael Steinbaugh.
+## Updated 2019-10-18 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -138,8 +138,11 @@ options(
     deparse.max.lines = 3L,
     showErrorCalls = TRUE,
     showWarnCalls = TRUE,
+    ## Defaults to 60 seconds, which is too long.
+    timeout = 5L,
     warn = 1L,
-    warning.length = 8170L  # Maximum
+    ## Set to maximum supported length.
+    warning.length = 8170L
 )
 
 ## Note that edgeR and pheatmap currently fail these checks.
