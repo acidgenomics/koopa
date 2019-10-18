@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-16.
+## Updated 2019-10-18.
 
 options(
     error = quote(quit(status = 1L)),
@@ -402,27 +402,22 @@ checkVersion(
     current = currentVersion("hdf5"),
     expected = expectedVersion("hdf5")
 )
+## Note that macOS switched to LibreSSL in 2018.
+## > darwin = "2.6.5"
+## > rhel7 = "1.0.2k"
 checkVersion(
     name = "OpenSSL",
     whichName = "openssl",
     current = currentVersion("openssl"),
-    expected = switch(
-        EXPR = os,
-        ## Note that macOS switched to LibreSSL in 2018.
-        ## > darwin = "2.6.5",
-        ## > rhel7 = "1.0.2k",
-        expectedVersion("openssl")
-    )
+    expected = expectedVersion("openssl")
 )
+## Now using conda instead of system.
+## > rhel7 = "1.12.3.1"
 checkVersion(
     name = "Pandoc",
     whichName = "pandoc",
     current = currentVersion("pandoc"),
-    expected = switch(
-        EXPR = os,
-        rhel7 = "1.12.3.1",
-        expectedVersion("pandoc")
-    )
+    expected = expectedVersion("pandoc")
 )
 checkVersion(
     name = "PROJ",
@@ -430,16 +425,14 @@ checkVersion(
     current = currentVersion("proj"),
     expected = expectedVersion("proj")
 )
+## Now using conda instead of system.
+## > rhel7 = "2013"
+## > ubuntu = "2017"
 checkVersion(
     name = "TeX Live",
     whichName = "tex",
     current = currentVersion("tex"),
-    expected = switch(
-        EXPR = os,
-        rhel7 = "2013",
-        ubuntu = "2017",
-        expectedVersion("tex")
-    )
+    expected = expectedVersion("tex")
 )
 
 
