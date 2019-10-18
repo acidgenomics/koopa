@@ -917,6 +917,22 @@ _koopa_is_darwin() {
     [ "$(uname -s)" = "Darwin" ]
 }
 
+_koopa_is_file_system_case_sensitive() {
+    # Is the file system case sensitive?
+    # Updated 2019-10-17.
+    touch .koopa-checkcase .koopa-checkCase
+    count="$(find . -maxdepth 1 -iname ".koopa-checkcase" | wc -l)"
+    rm .koopa-check*
+    if [ "$count" -eq 2 ]
+    then
+        echo "TRUE"
+        return 0
+    else
+        echo "FALSE"
+        return 1
+    fi
+}
+
 _koopa_is_git() {
     # Is the current working directory a git repository?
     #
