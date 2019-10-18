@@ -910,6 +910,10 @@ _koopa_is_darwin() {
     [ "$(uname -s)" = "Darwin" ]
 }
 
+_koopa_is_file_system_case_insensitive() {
+    ! _koopa_is_file_system_case_sensitive
+}
+
 _koopa_is_file_system_case_sensitive() {
     # Is the file system case sensitive?
     # Updated 2019-10-18.
