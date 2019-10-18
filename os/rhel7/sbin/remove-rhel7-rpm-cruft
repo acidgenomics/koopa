@@ -30,6 +30,46 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+# R                                                                         {{{2
+# ------------------------------------------------------------------------------
+
+echo "Removing R."
+echo "Use the newer R installation at '/usr/local/lib64/R' instead."
+sudo yum remove \
+    'R-*' \
+    R \
+    libRmath \
+    libRmath-devel
+sudo rm -frv /usr/lib64/R
+
+# Java                                                                      {{{2
+# ------------------------------------------------------------------------------
+
+echo "Removing Java."
+echo "Use the newer JDK installation at '/opt/jdk' instead."
+sudo yum remove \
+    '*-openjdk*' \
+    'java-*'
+
+# Pandoc                                                                    {{{2
+# ------------------------------------------------------------------------------
+
+echo "Removing Pandoc."
+echo "Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
+sudo yum remove \
+    '*-pandoc' \
+    '*-pandoc-*' \
+    'pandoc-*'
+    pandoc \
+
+# Perl                                                                      {{{2
+# ------------------------------------------------------------------------------
+
+echo "Removing Perl CPAN Minus."
+echo "Use Perlbrew approach instead."
+sudo yum remove \
+    perl-App-cpanminus
+
 # Python                                                                    {{{2
 # ------------------------------------------------------------------------------
 
@@ -45,6 +85,8 @@ _koopa_help "$@"
 #   /usr/lib/python2.7/site-packages/pip
 #   /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
 
+echo "Removing Python system pip."
+echo "Use venv to manage packages instead."
 sudo rm -frv \
     /usr/bin/pip \
     /usr/bin/pip2 \
@@ -52,27 +94,14 @@ sudo rm -frv \
     /usr/lib/python2.7/site-packages/pip \
     /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
 
-# R                                                                         {{{2
+# Tex Live                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-# We're using newer R installation at '/usr/local/lib64/R' instead.
+echo "Removing Tex Live."
+echo "Use conda version instead at '/usr/local/miniconda3/envs/texlive-core'."
 sudo yum remove \
-    'R-*' \
-    R \
-    libRmath \
-    libRmath-devel
-sudo rm -frv /usr/lib64/R
-
-# Java                                                                      {{{2
-# ------------------------------------------------------------------------------
-
-sudo yum remove \
-    '*-openjdk*' \
-    'java-*'
-
-# Perl                                                                      {{{2
-# ------------------------------------------------------------------------------
-
-sudo yum remove \
-    perl-App-cpanminus
-
+    '*-tex' \
+    'texlive-*' \
+    latex2html \
+    texi2html \
+    texlive
