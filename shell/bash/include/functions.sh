@@ -108,26 +108,20 @@ _koopa_cellar_script() {
     echo "$file"
 }
 
-_koopa_conda_env_list() {
-    # Updated 2019-06-27.
-    _koopa_is_installed conda || return 1
-    conda env list --json
-}
-
 _koopa_conda_env_prefix() {
-    # Return conda environment prefix (path).
+    # Return prefix for a specified conda environment.
     #
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
     #
-    # Updated 2019-10-08.
-    local env_name
-    local env_list
-    local prefix
-    local path
+    # Updated 2019-10-18.
     _koopa_is_installed conda || return 1
+
+    local env_name
     env_name="$1"
     [[ -n "$env_name" ]] || return 1
+
+    local env_list
     env_list="${2:-}"
     if [[ -z "$env_list" ]]
     then
@@ -139,6 +133,8 @@ _koopa_conda_env_prefix() {
         >&2 printf "Error: Failed to detect prefix for '%s'.\n" "$env_name"
         return 1
     fi
+
+    local path
     path="$( \
         echo "$env_list" | \
         grep "/envs/${env_name}" | \
@@ -368,6 +364,7 @@ _koopa_r_javareconf() {
 
 _koopa_script_name() {
     # Get the calling script name.
+    # Note that this 'caller' approach works in Bash.
     # Updated 2019-09-25.
     local file
     file="$( \

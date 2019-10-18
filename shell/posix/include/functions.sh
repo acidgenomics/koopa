@@ -20,19 +20,18 @@ _koopa_add_bins_to_path() {
 
 _koopa_add_conda_env_to_path() {
     # Add conda environment to PATH.
-    # Experimental: working method to improve pandoc and texlive on RHEL 7.
+    # Note that we want to add to end of PATH, to not mask compilers.
     # Updated 2019-09-12.
-    local env_name
-    local env_list
-    local prefix
-    _koopa_is_installed conda || return 1
-    env_name="$1"
-    env_list="${2:-}"
-    prefix="$(_koopa_conda_env_prefix "$env_name" "$env_list")"
-    [ -n "$prefix" ] || return 1
-    prefix="${prefix}/bin"
-    [ -d "$prefix" ] || return 1
-    _koopa_add_to_path_start "$prefix"
+    _koopa_is_installed conda || return 0
+    [ -n "${CONDA_PREFIX:-}" ] || return 0
+    local bin_dir
+    bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
+    if [ ! -d "$bin_dir" ]
+    then
+        >&2 printf "Error: conda environment '%s' missing.\n" "$1"
+        return 1
+    fi
+    _koopa_add_to_path_end "$bin_dir"
 }
 
 _koopa_add_config_link() {
@@ -465,21 +464,18 @@ _koopa_conda_env() {
     echo "${CONDA_DEFAULT_ENV:-}"
 }
 
-_koopa_conda_prefix() {
-    # Updated 2019-09-27.
-    local prefix
-    if [ -w "$KOOPA_HOME" ]
-    then
-        prefix="${KOOPA_HOME}/conda"
-    else
-        if [ -z "${XDG_DATA_HOME:-}" ]
-        then
-            >&2 printf "Warning: 'XDG_DATA_HOME' is unset.\n"
-            XDG_DATA_HOME="${HOME}/.local/share"
-        fi
-        prefix="${XDG_DATA_HOME}/koopa/conda"
-    fi
-    echo "$prefix"
+_koopa_conda_env_list() {
+    # Return a list of conda environments in JSON format.
+    # Updated 2019-06-27.
+    _koopa_is_installed conda || return 1
+    conda env list --json
+}
+
+_koopa_conda_internal_prefix() {
+    # Path to koopa's internal conda environments.
+    # This may be removed in a future update.
+    # Updated 2019-10-18.
+    echo "${KOOPA_HOME}/conda"
 }
 
 _koopa_config_dir() {

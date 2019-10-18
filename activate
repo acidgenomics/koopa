@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-16.
+    Updated 2019-10-18.
 EOF
 }
 
@@ -320,19 +320,26 @@ fi
 
 if [ "$programs" -eq 1 ]
 then
-    programs_dir="${activate_dir}/programs"
+    . "${activate_dir}/programs/conda.sh"
+    . "${activate_dir}/programs/venv.sh"
+    . "${activate_dir}/programs/perlbrew.sh"
+    . "${activate_dir}/programs/rbenv.sh"
     if [ "$subshell" -eq 0 ]
     then
-        . "${programs_dir}/rust.sh"
-        . "${programs_dir}/aspera.sh"
-        . "${programs_dir}/ensembl-perl-api.sh"
-        . "${programs_dir}/bcbio.sh"
+        . "${activate_dir}/programs/ensembl-perl-api.sh"
+        . "${activate_dir}/programs/rust.sh"
+        if _koopa_is_darwin
+        then
+            . "${activate_dir}/os/darwin/programs/homebrew.sh"
+            . "${activate_dir}/os/darwin/programs/coreutils.sh"
+            # > . "${activate_dir}/os/darwin/programs/google-cloud-sdk.sh"
+        elif _koopa_is_linux
+        then
+            . "${activate_dir}/os/linux/programs/aspera.sh"
+            . "${activate_dir}/os/linux/programs/bcbio.sh"
+            . "${activate_dir}/os/linux/programs/conda-envs.sh"
+        fi
     fi
-    . "${programs_dir}/perlbrew.sh"
-    . "${programs_dir}/rbenv.sh"
-    . "${programs_dir}/conda.sh"
-    . "${programs_dir}/venv.sh"
-    unset -v programs programs_dir
 fi
 
 
@@ -345,26 +352,22 @@ then
     # Shell-specific configuration.
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        bash_dir="${activate_dir}/shell/bash"
-        . "${bash_dir}/shopt.sh"
-        . "${bash_dir}/prompt.sh"
-        unset -v bash_dir
+        . "${activate_dir}/shell/bash/shopt.sh"
+        . "${activate_dir}/shell/bash/prompt.sh"
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        zsh_dir="${activate_dir}/shell/zsh"
         if [ "$subshell" -eq 0 ]
         then
-            . "${zsh_dir}/fpath.sh"
+            . "${activate_dir}/shell/zsh/fpath.sh"
         fi
         if [ "$ZSHRC" -eq 1 ]
         then
-            . "${zsh_dir}/oh-my-zsh.sh"
-            . "${zsh_dir}/autojump.sh"
+            . "${activate_dir}/shell/zsh/oh-my-zsh.sh"
+            . "${activate_dir}/shell/zsh/autojump.sh"
         fi
-        . "${zsh_dir}/prompt.sh"
-        . "${zsh_dir}/setopt.sh"
-        . "${zsh_dir}/bindkey.sh"
-        unset -v zsh_dir
+        . "${activate_dir}/shell/zsh/prompt.sh"
+        . "${activate_dir}/shell/zsh/setopt.sh"
+        . "${activate_dir}/shell/zsh/bindkey.sh"
     fi
 
     # Run these after shell-specific configuration.
@@ -377,13 +380,9 @@ then
     # Platform-specific configuration.
     if _koopa_is_darwin
     then
-        darwin_dir="${activate_dir}/os/darwin"
-        . "${darwin_dir}/exports.sh"
-        . "${darwin_dir}/programs/homebrew.sh"
-        . "${darwin_dir}/programs/coreutils.sh"
-        . "${darwin_dir}/aliases.sh"
-        . "${darwin_dir}/grc-colors.sh"
-        unset -v darwin_dir
+        . "${activate_dir}/os/darwin/exports.sh"
+        . "${activate_dir}/os/darwin/aliases.sh"
+        . "${activate_dir}/os/darwin/grc-colors.sh"
     fi
 
     # Today bucket.
@@ -400,7 +399,7 @@ fi
 
 _koopa_disk_check
 
-unset -v activate_dir extra file force interactive minimal subshell
+unset -v activate_dir extra file force interactive minimal programs subshell
 
 if [ "$KOOPA_SHELL" = "zsh" ]
 then
