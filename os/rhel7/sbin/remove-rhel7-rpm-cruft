@@ -110,5 +110,5 @@ sudo yum remove \
     '*-tex' \
     'latex2html' \
     'texi2html' \
-    'texlive'
-    'texlive-*' \
+    'texlive' \
+    'texlive-*'
