@@ -36,10 +36,10 @@ _koopa_help "$@"
 echo "Removing R."
 echo "Use the newer R installation at '/usr/local/lib64/R' instead."
 sudo yum remove \
+    'R' \
     'R-*' \
-    R \
-    libRmath \
-    libRmath-devel
+    'libRmath' \
+    'libRmath-devel'
 sudo rm -frv /usr/lib64/R
 
 # Java                                                                      {{{2
@@ -59,8 +59,8 @@ echo "Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
 sudo yum remove \
     '*-pandoc' \
     '*-pandoc-*' \
-    'pandoc-*' \
-    pandoc \
+    'pandoc' \
+    'pandoc-*'
 
 # Perl                                                                      {{{2
 # ------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ sudo yum remove \
 echo "Removing Perl CPAN Minus."
 echo "Use Perlbrew approach instead."
 sudo yum remove \
-    perl-App-cpanminus
+    'perl-App-cpanminus'
 
 # Python                                                                    {{{2
 # ------------------------------------------------------------------------------
@@ -88,11 +88,11 @@ sudo yum remove \
 echo "Removing Python system pip."
 echo "Use venv to manage packages instead."
 sudo rm -frv \
-    /usr/bin/pip \
-    /usr/bin/pip2 \
-    /usr/bin/pip2.7 \
-    /usr/lib/python2.7/site-packages/pip \
-    /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
+    '/usr/bin/pip' \
+    '/usr/bin/pip2' \
+    '/usr/bin/pip2.7' \
+    '/usr/lib/python2.7/site-packages/pip' \
+    '/usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info'
 
 # Tex Live                                                                  {{{2
 # ------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ echo "Removing Tex Live."
 echo "Use conda version instead at '/usr/local/miniconda3/envs/texlive-core'."
 sudo yum remove \
     '*-tex' \
+    'latex2html' \
+    'texi2html' \
+    'texlive'
     'texlive-*' \
-    latex2html \
-    texi2html \
-    texlive
