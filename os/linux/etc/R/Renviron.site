@@ -1,5 +1,5 @@
 ## Shared R environment configuration.
-## Updated 2019-10-15 by Michael Steinbaugh.
+## Updated 2019-10-18 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
@@ -15,8 +15,13 @@
 ## System path                                                              {{{1
 ## =============================================================================
 
-## Restrict path, so we don't load any binaries from conda or python virtualenv.
+## Restrict path, so we don't mask compiler binaries with conda or venv.
 PATH="/usr/local/bin:/usr/bin:/bin"
+
+## Use conda versions of Pandoc and Tex Live.
+## These are very old on RHEL 7 and hard to compile.
+PATH="${PATH}:/usr/local/miniconda3/envs/pandoc/bin"
+PATH="${PATH}:/usr/local/miniconda3/envs/texlive-core/bin"
 
 
 
