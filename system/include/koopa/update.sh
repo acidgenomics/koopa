@@ -4,26 +4,30 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Update koopa installation.
-# Updated 2019-10-02.
+# Updated 2019-10-19.
 
 
 
 # Programs                                                                  {{{1
 # ==============================================================================
 
-if _koopa_is_darwin && _koopa_is_installed brew
+# Conda
+if _koopa_is_installed conda
 then
-    brew-upgrade
+    update-conda
+    conda clean --yes --packages --tarballs
 fi
 
+# Rust
 if _koopa_is_installed rustup
 then
     rustup update
 fi
 
-if _koopa_is_installed conda
+# Homebrew
+if _koopa_is_darwin && _koopa_is_installed brew
 then
-    update-conda
+    brew-upgrade
 fi
 
 
