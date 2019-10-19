@@ -28,6 +28,7 @@ fi
 if _koopa_is_darwin && _koopa_is_installed brew
 then
     brew-upgrade
+    brew-cleanup
 fi
 
 
