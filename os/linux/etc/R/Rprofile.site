@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-18 by Michael Steinbaugh.
+## Updated 2019-10-19 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -417,6 +417,8 @@ options(
         if (isTRUE(
             "BiocVersion" %in% rownames(utils::installed.packages())
         )) {
+            ## Alternatively can use 'BiocManager::version()', but this approach
+            ## is faster because the package doesn't get loaded.
             bioc_ver <- numeric_version(sub(
                 pattern = "^([[:digit:]]+)\\.([[:digit:]]+)\\.([[:digit:]]+)$",
                 replacement="\\1.\\2",
