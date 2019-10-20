@@ -1032,6 +1032,14 @@ _koopa_is_matching_regex() {
     echo "$1" | grep -Eq "$2"
 }
 
+_koopa_is_r_package_installed() {
+    # Is the requested R package installed?
+    # Updated 2019-10-20.
+    _koopa_is_installed R || return 1
+    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" | \
+        grep -q "TRUE"
+}
+
 _koopa_is_remote() {
     # Is the current shell session a remote connection over SSH?
     # Updated 2019-06-25.
