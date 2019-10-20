@@ -15,14 +15,17 @@
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-## Homebrew Python
-## > PATH="/usr/local/opt/python/libexec/bin:${PATH}"
-
 ## TeX
 PATH="${PATH}:/Library/TeX/texbin"
 
 ## X11
 PATH="${PATH}:/opt/X11/bin"
+
+## Homebrew coreutils
+PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
+
+## Homebrew Python
+## > PATH="/usr/local/opt/python/libexec/bin:${PATH}"
 
 ## clang (for CRAN R)
 ## R 3.5: clang 6
