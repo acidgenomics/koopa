@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-18.
+## Updated 2019-10-20.
 
 options(
     error = quote(quit(status = 1L)),
@@ -17,7 +17,7 @@ options(
 
 
 
-## Koopa config ================================================================
+## Variables ===================================================================
 ## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
 koopaHome <- Sys.getenv("KOOPA_HOME")
 stopifnot(isTRUE(nzchar(koopaHome)))
@@ -36,9 +36,6 @@ if (grepl("darwin", rOSString)) {
     linux <- TRUE
 }
 
-
-
-## Version parsers =============================================================
 variablesFile <- file.path(
     Sys.getenv("KOOPA_HOME"),
     "system",
@@ -47,62 +44,9 @@ variablesFile <- file.path(
 )
 variables <- readLines(variablesFile)
 
-expectedVersion <- function(x) {
-    keep <- grepl(pattern = paste0("^", x, "="), x = variables)
-    stopifnot(sum(keep, na.rm = TRUE) == 1L)
-    x <- variables[keep]
-    stopifnot(isTRUE(nzchar(x)))
-    x <- sub(
-        pattern = "^(.+)=\"(.+)\"$",
-        replacement = "\\2",
-        x = x
-    )
-    x
-}
 
-expectedMajorVersion <- function(x) {
-    x <- expectedVersion(x)
-    stopifnot(isTRUE(grepl("\\.", x)))
-    x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
-    x
-}
 
-currentVersion <- function(name) {
-    script <- file.path(
-        Sys.getenv("KOOPA_HOME"),
-        "system",
-        "include",
-        "version",
-        paste0(name, ".sh")
-    )
-    stopifnot(isTRUE(file.exists(script)))
-    tryCatch(
-        expr = system2(command = script, stdout = TRUE, stderr = FALSE),
-        error = function(e) {
-            character()
-        }
-    )
-}
-
-## Sanitize complicated verions:
-## - 2.7.15rc1 to 2.7.15
-## - 1.10.0-patch1 to 1.10.0
-## - 1.0.2k-fips to 1.0.2
-sanitizeVersion <- function(x) {
-    ## Strip trailing "+" (e.g. "Python 2.7.15+").
-    x <- sub("\\+$", "", x)
-    ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
-    x <- gsub("\"", "", x)
-    ## Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
-    x <- sub("(-|_).+$", "", x)
-    x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
-    ## Strip leading letter.
-    x <- sub("^[a-z]+", "", x)
-    ## Strip trailing letter.
-    x <- sub("[a-z]+$", "", x)
-    x
-}
-
+## Functions ===================================================================
 checkVersion <- function(
     name,
     whichName,
@@ -184,8 +128,71 @@ checkVersion <- function(
     invisible(ok)
 }
 
-isInstalled <- function(which) {
-    nzchar(Sys.which(which))
+currentVersion <- function(name) {
+    script <- file.path(
+        Sys.getenv("KOOPA_HOME"),
+        "system",
+        "include",
+        "version",
+        paste0(name, ".sh")
+    )
+    stopifnot(isTRUE(file.exists(script)))
+    tryCatch(
+        expr = system2(command = script, stdout = TRUE, stderr = FALSE),
+        error = function(e) {
+            character()
+        }
+    )
+}
+
+expectedMajorVersion <- function(x) {
+    x <- expectedVersion(x)
+    stopifnot(isTRUE(grepl("\\.", x)))
+    x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
+    x
+}
+
+expectedVersion <- function(x) {
+    keep <- grepl(pattern = paste0("^", x, "="), x = variables)
+    stopifnot(sum(keep, na.rm = TRUE) == 1L)
+    x <- variables[keep]
+    stopifnot(isTRUE(nzchar(x)))
+    x <- sub(
+        pattern = "^(.+)=\"(.+)\"$",
+        replacement = "\\2",
+        x = x
+    )
+    x
+}
+
+hasGNUCoreutils <- function(command = "env") {
+    status <- "FAIL"
+    x <- tryCatch(
+        expr = system2(
+            command = command,
+            args = "--version",
+            stdout = TRUE,
+            stderr = FALSE
+        ),
+        error = function(e) {
+            NULL
+        }
+    )
+    if (!is.null(x)) {
+        x <- head(x, n = 1L)
+        x <- grepl("GNU", x)
+        if (isTRUE(x)) {
+            status <- "  OK"
+        }
+    }
+    message(sprintf(
+        fmt = paste0(
+            "  %s | GNU Coreutils\n",
+            "       |   %.69s"
+        ),
+        status,
+        dirname(Sys.which("env"))
+    ))
 }
 
 installed <- function(which, required = TRUE) {
@@ -220,6 +227,29 @@ installed <- function(which, required = TRUE) {
         },
         FUN.VALUE = logical(1L)
     ))
+}
+
+isInstalled <- function(which) {
+    nzchar(Sys.which(which))
+}
+
+## Sanitize complicated verions:
+## - 2.7.15rc1 to 2.7.15
+## - 1.10.0-patch1 to 1.10.0
+## - 1.0.2k-fips to 1.0.2
+sanitizeVersion <- function(x) {
+    ## Strip trailing "+" (e.g. "Python 2.7.15+").
+    x <- sub("\\+$", "", x)
+    ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
+    x <- gsub("\"", "", x)
+    ## Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
+    x <- sub("(-|_).+$", "", x)
+    x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
+    ## Strip leading letter.
+    x <- sub("^[a-z]+", "", x)
+    ## Strip trailing letter.
+    x <- sub("[a-z]+$", "", x)
+    x
 }
 
 
@@ -346,30 +376,131 @@ if (isInstalled("rustc")) {
 
 ## Basic dependencies ==========================================================
 message("\nBasic dependencies:")
+hasGNUCoreutils()
+## > installed(
+## >     which = c(
+## >         ## "[",
+## >         "b2sum",
+## >         "base32",
+## >         "base64",
+## >         "basename",
+## >         "basenc",
+## >         "cat",
+## >         "chcon",
+## >         "chgrp",
+## >         "chmod",
+## >         "chown",
+## >         "chroot",
+## >         "cksum",
+## >         "comm",
+## >         "cp",
+## >         "csplit",
+## >         "cut",
+## >         "date",
+## >         "dd",
+## >         "df",
+## >         "dir",
+## >         "dircolors",
+## >         "dirname",
+## >         "du",
+## >         "echo",
+## >         "env",
+## >         "expand",
+## >         "expr",
+## >         "factor",
+## >         "false",
+## >         "fmt",
+## >         "fold",
+## >         "groups",
+## >         "head",
+## >         "hostid",
+## >         "id",
+## >         "install",
+## >         "join",
+## >         "kill",
+## >         "link",
+## >         "ln",
+## >         "logname",
+## >         "ls",
+## >         "md5sum",
+## >         "mkdir",
+## >         "mkfifo",
+## >         "mknod",
+## >         "mktemp",
+## >         "mv",
+## >         "nice",
+## >         "nl",
+## >         "nohup",
+## >         "nproc",
+## >         "numfmt",
+## >         "od",
+## >         "paste",
+## >         "pathchk",
+## >         "pinky",
+## >         "pr",
+## >         "printenv",
+## >         "printf",
+## >         "ptx",
+## >         "pwd",
+## >         "readlink",
+## >         "realpath",
+## >         "rm",
+## >         "rmdir",
+## >         "runcon",
+## >         "seq",
+## >         "sha1sum",
+## >         "sha224sum",
+## >         "sha256sum",
+## >         "sha384sum",
+## >         "sha512sum",
+## >         "shred",
+## >         "shuf",
+## >         "sleep",
+## >         "sort",
+## >         "split",
+## >         "stat",
+## >         "stdbuf",
+## >         "stty",
+## >         "sum",
+## >         "sync",
+## >         "tac",
+## >         "tail",
+## >         "tee",
+## >         "test",
+## >         "timeout",
+## >         "touch",
+## >         "tr",
+## >         "true",
+## >         "truncate",
+## >         "tsort",
+## >         "tty",
+## >         "uname",
+## >         "unexpand",
+## >         "uniq",
+## >         "unlink",
+## >         "uptime",
+## >         "users",
+## >         "vdir",
+## >         "wc",
+## >         "who",
+## >         "whoami",
+## >         "yes"
+## >     ),
+## >     required = TRUE
+## > )
 installed(
     which = c(
-        "basename",
-        "bash",
-        "cat",
         "chsh",
         "curl",
-        "dirname",
-        "echo",
-        "env",
         "grep",
-        "head",
         "less",
         "man",
-        "nice",
         "parallel",
-        "realpath",
         "rename",
         "sed",
         "sh",
-        "tail",
-        "tee",
-        "tree",
         "top",
+        "tree",
         "wget",
         "which"
     ),
