@@ -24,11 +24,6 @@
 ## - https://stackoverflow.com/questions/6313079
 ## - https://support.rstudio.com/hc/en-us/community/posts/200653076
 
-## Useful installation options, but leave disabled by default:
-## - `install.packages.check.source = "no"`
-## - `install.packages.compile.from.source = "binary"`
-## - `repos = BiocManager::repositories()`
-
 ## If devtools runs into an unzip error, set option: `unzip = "/usr/bin/unzip"`.
 
 
@@ -76,7 +71,7 @@
 ## Keeping these commands out of `.First()`, otherwise the user `.Rprofile`
 ## won't pick up the return values correctly.
 
-options(rprofile.site = TRUE)
+options("rprofile.site" = TRUE)
 
 ## Create hidden environment to stash values.
 .env <- new.env()
@@ -90,7 +85,7 @@ attach(.env)
 
 
 
-## Repositories                                                             {{{1
+## Package installation                                                     {{{1
 ## =============================================================================
 
 ## We set the cloud mirror, which is 'network-close' to everybody, as default.
@@ -104,8 +99,24 @@ local({
     repos <- getOption("repos")
     ## Can use "https://cloud.r-project.org" here instead.
     repos["CRAN"] <- "https://cran.rstudio.com"
-    options(repos = repos)
+    options("repos" = repos)
 })
+
+## Always install from source.
+options("pkgType" = "source")
+
+## Set custom compiler options.
+## > options(
+## >     "configure.args" = NULL,
+## >     "configure.vars" = NULL
+## > )
+
+## Binary package mode. Doesn't work on Linux.
+## > options(
+## >     "install.packages.check.source" = "no",
+## >     "install.packages.compile.from.source" = "binary",
+## >     "pkgType" = "binary"
+## > )
 
 
 
@@ -113,14 +124,15 @@ local({
 ## =============================================================================
 
 options(
-    browserNLdisabled = TRUE,
+    "browserNLdisabled" = TRUE,
     ## Remove "+" line prefix in output, making code easier to copy.
-    continue = " ",
-    max.print = 1000L,
-    menu.graphics = FALSE,
-    prompt = "> ",
-    show.signif.stars = FALSE,
-    width = 80L
+    "continue" = " ",
+    "max.print" = 1000L,
+    "menu.graphics" = FALSE,
+    "prompt" = "> ",
+    "show.signif.stars" = FALSE,
+    "verbose" = FALSE,
+    "width" = 80L
 )
 
 ## Turn on auto-completion of installed package names.
@@ -135,20 +147,20 @@ if (isTRUE(interactive())) {
 
 ## Improve the warnings and include backtrace of call stack.
 options(
-    deparse.max.lines = 3L,
-    showErrorCalls = TRUE,
-    showWarnCalls = TRUE,
-    ## Defaults to 60 seconds, which is too long.
-    timeout = 5L,
-    warn = 1L,
+    "deparse.max.lines" = 3L,
+    "showErrorCalls" = TRUE,
+    "showWarnCalls" = TRUE,
+    ## Timeouts default to 60 seconds, which is too long.
+    "timeout" = 5L,
+    "warn" = 1L,
     ## Set to maximum supported length.
-    warning.length = 8170L
+    "warning.length" = 8170L
 )
 
 ## Note that edgeR and pheatmap currently fail these checks.
 options(
-    warnPartialMatchAttr = TRUE,
-    warnPartialMatchDollar = TRUE
+    "warnPartialMatchAttr" = TRUE,
+    "warnPartialMatchDollar" = TRUE
 )
 
 ## Improve stack traces for error messages.
@@ -169,9 +181,9 @@ options(
 ## - https://github.com/rstudio/rstudio/pull/4726
 
 options(
-    error = quote(rlang::entrace()),
-    rlang_backtrace_on_error = "full",
-    rstudio.errors.suppressed = FALSE
+    "error" = quote(rlang::entrace()),
+    "rlang_backtrace_on_error" = "full",
+    "rstudio.errors.suppressed" = FALSE
 )
 
 ## Quiet down about registered S3 method collisons.
@@ -189,8 +201,8 @@ Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
 ## -----------------------------------------------------------------------------
 
 options(
-    crayon.enabled = TRUE,
-    crayon.colors = 256L
+    "crayon.enabled" = TRUE,
+    "crayon.colors" = 256L
 )
 
 ## httr                                                                     {{{2
@@ -199,7 +211,7 @@ options(
 ## Enable OAuth token generation using httr on a remote R server. This is used
 ## by googlesheets, for example.
 options(
-    httr_oob_default = TRUE
+    "httr_oob_default" = TRUE
 )
 
 ## parallel                                                                 {{{2
@@ -208,7 +220,7 @@ options(
 ## Improve the default multi-core settings. Minimum of 1 core, maximum of n-1
 ## cores. `BiocParallel::MulticoreParam()` should inherit this setting.
 options(
-    mc.cores = max(1L, parallel::detectCores() - 1L)
+    "mc.cores" = max(1L, parallel::detectCores() - 1L)
 )
 ## `install.packages()` looks for "Ncpus" global.
 options(
@@ -219,8 +231,8 @@ options(
 ## -----------------------------------------------------------------------------
 
 options(
-    readr.num_columns = 0L,
-    readr.show_progress = FALSE
+    "readr.num_columns" = 0L,
+    "readr.show_progress" = FALSE
 )
 
 

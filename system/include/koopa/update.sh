@@ -4,16 +4,24 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Update koopa installation.
-# Updated 2019-10-19.
+# Updated 2019-10-20.
 
 
 
 # Programs                                                                  {{{1
 # ==============================================================================
 
+# R
+if _koopa_is_r_package_installed bb8
+then
+    echo "Updating R packages."
+    Rscript -e 'bb8::updatePackages()'
+fi
+
 # Conda
 if _koopa_is_installed conda
 then
+    echo "Updating conda."
     update-conda
     conda clean --yes --packages --tarballs
 fi
@@ -21,6 +29,7 @@ fi
 # Rust
 if _koopa_is_installed rustup
 then
+    echo "Updating Rust."
     rustup update
 fi
 
