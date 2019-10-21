@@ -54,6 +54,9 @@ genrich="0.6"
 # https://github.com/git/git/releases
 git="2.23.0"
 
+# https://golang.org/dl/
+go="1.13.3"
+
 # https://www.gnu.org/software/gsl/
 # http://mirrors.syringanetworks.net/gnu/gsl/
 gsl="2.6"
@@ -148,6 +151,9 @@ shellcheck="0.7.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
 shiny-server="1.5.12.933"
+
+# https://github.com/sylabs/singularity/releases
+singularity="3.4.2"
 
 # https://www.latex-project.org/get/
 tex="2019"
