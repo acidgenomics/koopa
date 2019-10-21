@@ -20,15 +20,14 @@ _koopa_add_bins_to_path() {
 
 _koopa_add_conda_env_to_path() {
     # Add conda environment to PATH.
-    # Note that we want to add to end of PATH, to not mask compilers.
     # Consider warning if the environment is missing.
-    # Updated 2019-10-18.
+    # Updated 2019-10-21.
     _koopa_is_installed conda || return 0
     [ -n "${CONDA_PREFIX:-}" ] || return 0
     local bin_dir
     bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
     [ -d "$bin_dir" ] || return 0
-    _koopa_add_to_path_end "$bin_dir"
+    _koopa_add_to_path_start "$bin_dir"
 }
 
 _koopa_add_config_link() {
