@@ -4,6 +4,6 @@
 # this warning in first line:
 # # WARNING: ignoring environment value of R_HOME
 
-R --version | \
-    grep 'R version' | \
-    cut -d ' ' -f 3
+R --version             \
+    | grep 'R version'  \
+    | cut -d ' ' -f 3
