@@ -621,11 +621,7 @@ checkVersion(
     name = "Docker",
     whichName = "docker",
     current = currentVersion("docker"),
-    expected = switch(
-        EXPR = os,
-        darwin = "18.09.2",
-        expectedVersion("docker")
-    )
+    expected = expectedVersion("docker")
 )
 
 
@@ -652,27 +648,21 @@ if (isTRUE(linux)) {
         expected = expectedVersion("coreutils")
     )
     ## > checkVersion(
+    ## >     name = "bcl2fastq",
+    ## >     current = currentVersion("bcl2fastq"),
+    ## >     expected = expectedVersion("bcl2fastq")
+    ## > )
+    ## > checkVersion(
     ## >     name = "rename (Perl File::Rename)",
     ## >     whichName = "rename",
     ## >     current = currentVersion("perl-file-rename"),
     ## >     expected = expectedVersion("perl-file-rename")
-    ## > )
-    ## > checkVersion(
-    ## >     name = "bcl2fastq",
-    ## >     current = currentVersion("bcl2fastq"),
-    ## >     expected = expectedVersion("bcl2fastq")
     ## > )
     checkVersion(
         name = "RStudio Server",
         whichName = "rstudio-server",
         current = currentVersion("rstudio-server"),
         expected = expectedVersion("rstudio-server")
-    )
-    checkVersion(
-        name = "Shiny Server",
-        whichName = "shiny-server",
-        current = currentVersion("shiny-server"),
-        expected = expectedVersion("shiny-server")
     )
 
     message("\nPowerful virtual machine only:")
@@ -701,6 +691,18 @@ if (isTRUE(linux)) {
         whichName = "luarocks",
         current = currentVersion("luarocks"),
         expected = expectedVersion("luarocks")
+    )
+    checkVersion(
+        name = "Shiny Server",
+        whichName = "shiny-server",
+        current = currentVersion("shiny-server"),
+        expected = expectedVersion("shiny-server")
+    )
+    checkVersion(
+        name = "Singularity",
+        whichName = "singularity",
+        current = currentVersion("singularity"),
+        expected = expectedVersion("singularity")
     )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
