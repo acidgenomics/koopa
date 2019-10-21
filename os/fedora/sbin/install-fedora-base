@@ -29,7 +29,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-10-15.
+    Updated 2019-10-21.
 EOF
 }
 
@@ -42,7 +42,6 @@ _koopa_help "$@"
 
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
-
 sudo yum -y install \
     ImageMagick-c++-devel \
     bzip2 \
@@ -50,6 +49,7 @@ sudo yum -y install \
     cmake \
     convmv \
     coreutils \
+    cryptsetup \
     curl \
     gcc \
     gcc-c++ \
@@ -61,16 +61,23 @@ sudo yum -y install \
     git \
     gnutls \
     gnutls-devel \
+    golang \
     gsl-devel \
+    hdf5 \
+    hdf5-devel \
     leptonica-devel \
     libcurl-devel \
     libevent-devel \
     libhdf5-devel \
+    libseccomp-devel \
+    libsodium-devel \
+    libuuid-devel \
     libxml2-devel \
     make \
     mariadb-devel \
     mpfr-devel \
     ncurses \
+    openssl-devel \
     parallel \
     pcre-devel \
     poppler-cpp-devel \
@@ -80,31 +87,8 @@ sudo yum -y install \
     qpdf \
     readline \
     readline-devel \
+    squashfs-tools \
     tesseract-devel \
-    texlive \
-    texlive-bera \
-    texlive-caption \
-    texlive-changepage \
-    texlive-collection-fontsrecommended \
-    texlive-collection-latexrecommended \
-    texlive-enumitem \
-    texlive-etoolbox \
-    texlive-fancyhdr \
-    texlive-footmisc \
-    texlive-framed \
-    texlive-geometry \
-    texlive-hyperref \
-    texlive-latex-fonts \
-    texlive-natbib \
-    texlive-parskip \
-    texlive-pdftex \
-    texlive-placeins \
-    texlive-preprint \
-    texlive-sectsty \
-    texlive-soul \
-    texlive-titlesec \
-    texlive-titling \
-    texlive-xstring \
     tmux \
     tree \
     unixODBC-devel \
@@ -116,10 +100,36 @@ sudo yum -y install \
     yum-utils \
     zip
 
-# These packages require EPEL for RHEL 7 but work natively on RHEL 8.
-# > java-latest-openjdk
-# > java-latest-openjdk-devel
-sudo yum -y install \
-    hdf5 \
-    hdf5-devel \
-    libsodium-devel
+# Java
+# Install latest JDK manually instead.
+# > sudo yum -y install \
+# >     java-latest-openjdk \
+# >     java-latest-openjdk-devel
+
+# TeX Live
+# Use conda recipe instead.
+# > sudo yum -y install \
+# >     texlive \
+# >     texlive-bera \
+# >     texlive-caption \
+# >     texlive-changepage \
+# >     texlive-collection-fontsrecommended \
+# >     texlive-collection-latexrecommended \
+# >     texlive-enumitem \
+# >     texlive-etoolbox \
+# >     texlive-fancyhdr \
+# >     texlive-footmisc \
+# >     texlive-framed \
+# >     texlive-geometry \
+# >     texlive-hyperref \
+# >     texlive-latex-fonts \
+# >     texlive-natbib \
+# >     texlive-parskip \
+# >     texlive-pdftex \
+# >     texlive-placeins \
+# >     texlive-preprint \
+# >     texlive-sectsty \
+# >     texlive-soul \
+# >     texlive-titlesec \
+# >     texlive-titling \
+# >     texlive-xstring
