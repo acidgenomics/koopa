@@ -617,12 +617,6 @@ checkVersion(
     current = currentVersion("conda"),
     expected = expectedVersion("conda")
 )
-checkVersion(
-    name = "Docker",
-    whichName = "docker",
-    current = currentVersion("docker"),
-    expected = expectedVersion("docker")
-)
 
 
 
@@ -639,6 +633,12 @@ if (isTRUE(linux)) {
             rhel8 = "8.2.1",
             ubuntu = "7.4.0"
         )
+    )
+    checkVersion(
+        name = "RStudio Server",
+        whichName = "rstudio-server",
+        current = currentVersion("rstudio-server"),
+        expected = expectedVersion("rstudio-server")
     )
     ## This is used for shebang. Version 8.30 marks support of `-S` flag.
     checkVersion(
@@ -658,12 +658,6 @@ if (isTRUE(linux)) {
     ## >     current = currentVersion("perl-file-rename"),
     ## >     expected = expectedVersion("perl-file-rename")
     ## > )
-    checkVersion(
-        name = "RStudio Server",
-        whichName = "rstudio-server",
-        current = currentVersion("rstudio-server"),
-        expected = expectedVersion("rstudio-server")
-    )
 
     message("\nPowerful virtual machine only:")
     checkVersion(
@@ -674,6 +668,12 @@ if (isTRUE(linux)) {
         required = FALSE
     )
     installed("bcbio_vm.py", required = FALSE)
+    checkVersion(
+        name = "Docker",
+        whichName = "docker",
+        current = currentVersion("docker"),
+        expected = expectedVersion("docker")
+    )
     checkVersion(
         name = "Lmod",
         whichName = NULL,
