@@ -910,16 +910,13 @@ _koopa_is_darwin() {
     [ "$(uname -s)" = "Darwin" ]
 }
 
-_koopa_is_file_system_case_insensitive() {
-    ! _koopa_is_file_system_case_sensitive
-}
-
 _koopa_is_file_system_case_sensitive() {
     # Is the file system case sensitive?
-    # Updated 2019-10-18.
-    touch .koopa-checkcase .koopa-checkCase
-    count="$(find . -maxdepth 1 -iname ".koopa-checkcase" | wc -l)"
-    rm .koopa-check* >/dev/null 2>&1
+    # Linux is case sensitive by default, whereas macOS and Windows are not.
+    # Updated 2019-10-21.
+    touch ".acid-checkcase" ".acid-checkCase"
+    count="$(find . -maxdepth 1 -iname ".acid-checkcase" | wc -l)"
+    _koopa_quiet_rm .acid-check* 
     if [ "$count" -eq 2 ]
     then
         return 0
@@ -1395,6 +1392,12 @@ _koopa_quiet_expr() {
     #
     # Updated 2019-10-08.
     expr "$1" : "$2" 1>/dev/null
+}
+
+_koopa_quiet_rm() {
+    # Quiet remove.
+    # Updated 2019-10-21.
+    rm -f "$@" >/dev/null 2>&1
 }
 
 
