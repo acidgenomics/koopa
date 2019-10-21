@@ -14,17 +14,16 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Update conda.
+Update Rust
 
 $(_koopa_help_args)
 
-see also:
-    https://bioconda.github.io/#set-up-channels
+details:
+    Calls rustup internally.
 
 note:
     Bash script.
-    Requires that conda is already installed.
-    Updated 2019-09-25.
+    Updated 2019-10-20.
 EOF
 }
 
@@ -35,14 +34,12 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-if ! _koopa_is_installed conda
+if ! _koopa_is_installed rustup
 then
-    >&2 printf "Warning: conda is not installed.\n"
+    >&2 printf "Warning: rustup is not installed.\n"
     exit 0
 fi
 
-echo "Updating Conda."
+echo "Updating Rust via rustup."
 
-conda update --yes --name=base --channel=defaults conda
-conda update --yes --name=base --channel=defaults --all
-conda clean --yes --packages --tarballs
+rustup update

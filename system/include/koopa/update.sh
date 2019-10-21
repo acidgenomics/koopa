@@ -11,33 +11,25 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Programs                                                                  {{{1
 # ==============================================================================
 
-# R
-if _koopa_is_r_package_installed bb8
-then
-    echo "Updating R packages."
-    Rscript -e 'bb8::updatePackages()'
-fi
+# > update-venv
+update-conda
+update-rust
+update-r-packages
 
-# Conda
-if _koopa_is_installed conda
-then
-    echo "Updating conda."
-    update-conda
-    conda clean --yes --packages --tarballs
-fi
+# Sudo permissions                                                          {{{2
+# ------------------------------------------------------------------------------
 
-# Rust
-if _koopa_is_installed rustup
-then
-    echo "Updating Rust."
-    rustup update
-fi
+# > if _koopa_has_sudo
+# > then
+# >     update-tex
+# > fi
 
-# Homebrew
-if _koopa_is_darwin && _koopa_is_installed brew
+# OS-specific                                                               {{{2
+# ------------------------------------------------------------------------------
+
+if _koopa_is_darwin
 then
-    brew-upgrade
-    brew-cleanup
+    update-homebrew
 fi
 
 
@@ -96,6 +88,7 @@ then
 fi
 
 cat << EOF
+
 koopa updated successfully.
 Shell must be reloaded for changes to take effect.
 EOF
