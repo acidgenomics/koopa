@@ -1,4 +1,4 @@
 #!/bin/sh
 
-gsl-config --version | \
-    head -n 1
+gsl-config --version  \
+    | head -n 1
