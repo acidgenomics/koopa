@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-20.
+## Updated 2019-10-21.
 
 options(
     error = quote(quit(status = 1L)),
@@ -323,6 +323,13 @@ checkVersion(
 )
 
 message("\nSecondary languages:")
+checkVersion(
+    name = "Go",
+    whichName = "go",
+    current = currentVersion("go"),
+    expected = expectedMajorVersion("go"),
+    eval = ">="
+)
 checkVersion(
     name = "Java",
     whichName = "java",
