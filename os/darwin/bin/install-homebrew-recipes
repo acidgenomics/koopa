@@ -18,23 +18,24 @@ Install recommended Homebrew recipes.
 $(_koopa_help_args)
 
 details:
+    Refer to Homebrew 'Brewfile' documentation.
+
     Using CRAN R cask (R.app) instead of Homebrew R.
 
     Homebrew now supports a global variable to force bottle installations.
     Alternatively, can use '--force-bottle'.
 
-    See also:
+    Note that XQuartz v2.7.11 doesn't work well with wine.
+    In this case, install v2.7.9 directly instead.
+    https://www.xquartz.org/releases/XQuartz-2.7.9.html
+
+see also:
     - https://github.com/Homebrew/brew/pull/4520/files
     - https://github.com/Homebrew/brew/pull/4542/files
 
-    Note that XQuartz v2.7.11 doesn't work well with wine.
-    Install v2.7.9 directly instead.
-    https://www.xquartz.org/releases/XQuartz-2.7.9.html
-    # > brew cask install xquartz
-
 note:
     Bash script.
-    Updated 2019-10-04.
+    Updated 2019-10-21.
 EOF
 }
 
@@ -106,9 +107,9 @@ done
 brew cask install carbon-copy-cloner little-snitch
 
 # Gatekeeper issues.
+# > docker
 casks=(
     calibre
-    docker
     omnidisksweeper
     rstudio
 )
@@ -147,6 +148,7 @@ brews=(
     gdal
     git
     git-lfs
+    go
     gsl
     hdf5
     hub
@@ -164,6 +166,7 @@ brews=(
     llvm
     mariadb-connector-c
     mas
+    mongodb
     neofetch
     neovim
     node
