@@ -27,6 +27,14 @@ Install base programs for Fedora.
 
 $(_koopa_help_args)
 
+details:
+    Singularity dependencies:
+    - libseccomp-devel
+    - libuuid-devel
+    - openssl-devel
+    - squashfs-tools
+    - wget
+
 note:
     Bash script.
     Updated 2019-10-21.
@@ -68,7 +76,6 @@ sudo yum -y install \
     leptonica-devel \
     libcurl-devel \
     libevent-devel \
-    libhdf5-devel \
     libseccomp-devel \
     libsodium-devel \
     libuuid-devel \
@@ -89,6 +96,30 @@ sudo yum -y install \
     readline-devel \
     squashfs-tools \
     tesseract-devel \
+    texlive \
+    texlive-bera \
+    texlive-caption \
+    texlive-changepage \
+    texlive-collection-fontsrecommended \
+    texlive-collection-latexrecommended \
+    texlive-enumitem \
+    texlive-etoolbox \
+    texlive-fancyhdr \
+    texlive-footmisc \
+    texlive-framed \
+    texlive-geometry \
+    texlive-hyperref \
+    texlive-latex-fonts \
+    texlive-natbib \
+    texlive-parskip \
+    texlive-pdftex \
+    texlive-placeins \
+    texlive-preprint \
+    texlive-sectsty \
+    texlive-soul \
+    texlive-titlesec \
+    texlive-titling \
+    texlive-xstring \
     tmux \
     tree \
     unixODBC-devel \
@@ -105,31 +136,3 @@ sudo yum -y install \
 # > sudo yum -y install \
 # >     java-latest-openjdk \
 # >     java-latest-openjdk-devel
-
-# TeX Live
-# Use conda recipe instead.
-# > sudo yum -y install \
-# >     texlive \
-# >     texlive-bera \
-# >     texlive-caption \
-# >     texlive-changepage \
-# >     texlive-collection-fontsrecommended \
-# >     texlive-collection-latexrecommended \
-# >     texlive-enumitem \
-# >     texlive-etoolbox \
-# >     texlive-fancyhdr \
-# >     texlive-footmisc \
-# >     texlive-framed \
-# >     texlive-geometry \
-# >     texlive-hyperref \
-# >     texlive-latex-fonts \
-# >     texlive-natbib \
-# >     texlive-parskip \
-# >     texlive-pdftex \
-# >     texlive-placeins \
-# >     texlive-preprint \
-# >     texlive-sectsty \
-# >     texlive-soul \
-# >     texlive-titlesec \
-# >     texlive-titling \
-# >     texlive-xstring

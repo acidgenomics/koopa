@@ -21,7 +21,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-09-30.
+    Updated 2019-10-21.
 EOF
 }
 
@@ -36,4 +36,5 @@ install-fedora-base
 sudo yum -y install \
     libgit2 \
     libssh2 \
+    python3 \
     util-linux-user
