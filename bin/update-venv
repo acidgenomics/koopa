@@ -14,17 +14,19 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Update conda.
+Upgrade all Python packages installed via pip.
 
 $(_koopa_help_args)
 
+details:
+    Applies to currently activated Pyton virtual environment.
+
 see also:
-    https://bioconda.github.io/#set-up-channels
+    https://stackoverflow.com/a/3452888/3911732
 
 note:
     Bash script.
-    Requires that conda is already installed.
-    Updated 2019-09-25.
+    Updated 2019-10-20.    
 EOF
 }
 
@@ -35,14 +37,13 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-if ! _koopa_is_installed conda
+if ! _koopa_is_venv_active
 then
-    >&2 printf "Warning: conda is not installed.\n"
+    >&2 printf "Warning: No active venv detected.\n"
     exit 0
 fi
 
-echo "Updating Conda."
-
-conda update --yes --name=base --channel=defaults conda
-conda update --yes --name=base --channel=defaults --all
-conda clean --yes --packages --tarballs
+pip list --outdated --format=freeze \
+    | grep -v '^\-e' \
+    | cut -d = -f 1  \
+    | xargs -n1 pip install --upgrade

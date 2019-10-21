@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
@@ -13,13 +14,19 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Homebrew cleanup.
+Update R package library.
 
 $(_koopa_help_args)
 
+details:
+    Calls 'bb8::updatePackages()' to auto-update the current library.
+    
+see also:
+    .libPaths()
+
 note:
     Bash script.
-    Updated 2019-09-11.
+    Updated 2019-10-20.
 EOF
 }
 
@@ -30,7 +37,11 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed brew
+if ! _koopa_is_r_package_installed bb8
+then
+    >&2 printf "Warning: bb8 R package is not installed.\n"
+    exit 0
+fi
 
-brew cleanup -s
-rm -frv "$(brew --cache)"
+echo "Updating R package library."
+Rscript -e 'bb8::updatePackages()'

@@ -129,6 +129,17 @@ _koopa_assert_has_sudo() {
     return 0
 }
 
+_koopa_assert_is_conda_active() {
+    # Assert that a Conda environment is active.
+    # Updated 2019-10-20.
+    if ! _koopa_is_conda_active
+    then
+        >&2 printf "Error: No active Conda environment detected.\n"
+        exit 1
+    fi
+    return 0
+}
+
 _koopa_assert_is_darwin() {
     # Assert that platform is Darwin (macOS).
     # Updated 2019-09-23.
@@ -315,6 +326,17 @@ _koopa_assert_is_not_symlink() {
     return 0
 }
 
+_koopa_assert_is_r_package_installed() {
+    # Assert that a specific R package is installed.
+    # Updated 2019-10-20.
+    if ! _koopa_is_r_package_installed "$1"
+    then
+        >&2 printf "Error: '%s' R package is not installed.\n" "$1"
+        exit 1
+    fi
+    return 0
+}
+
 _koopa_assert_is_readable() {
     # Assert that input is readable.
     # Updated 2019-09-24.
@@ -332,6 +354,18 @@ _koopa_assert_is_symlink() {
     if [ ! -L "$1" ]
     then
         >&2 printf "Error: Not symlink: '%s'\n" "$1"
+        exit 1
+    fi
+    return 0
+}
+
+_koopa_assert_is_venv_active() {
+    # Assert that a Python virtual environment is active.
+    # Updated 2019-10-20.
+    _koopa_assert_is_installed pip
+    if ! _koopa_is_venv_active
+    then
+        >&2 printf "Error: No active Python venv detected.\n"
         exit 1
     fi
     return 0
@@ -736,9 +770,9 @@ _koopa_has_file_ext() {
 
 _koopa_has_no_environments() {
     # Detect activation of virtual environments.
-    # Updated 2019-10-15.
-    [ -x "$(command -v conda)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
-    [ -x "$(command -v deactivate)" ] && [ -n "${CONDA_PREFIX:-}" ] && return 1
+    # Updated 2019-10-20.
+    _koopa_is_conda_active && return 1
+    _koopa_is_venv_active && return 1
     return 0
 }
 
@@ -904,6 +938,12 @@ _koopa_info_box() {
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
+_koopa_is_conda_active() {
+    # Is there a Conda environment active?
+    # Updated 2019-10-20.
+    [ -n "${CONDA_DEFAULT_ENV:-}" ]
+}
+
 _koopa_is_darwin() {
     # Is the operating system Darwin (macOS)?
     # Updated 2019-06-22.
@@ -1050,6 +1090,12 @@ _koopa_is_shared() {
     # Is koopa installed for all users (shared)?
     # Updated 2019-06-25.
     ! _koopa_is_local
+}
+
+_koopa_is_venv_active() {
+    # Is there a Python virtual environment active?
+    # Updated 2019-10-20.
+    [ -n "${VIRTUAL_ENV:-}" ]
 }
 
 

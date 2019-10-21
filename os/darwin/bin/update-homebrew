@@ -13,13 +13,13 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Upgrade Homebrew.
+Update Homebrew.
 
 $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-09-11.
+    Updated 2019-10-20.
 EOF
 }
 
@@ -30,23 +30,30 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed brew
+if ! _koopa_assert_is_installed
+then
+    >&2 printf "Warning: brew is not installed.\n"
+    exit 0
+fi
 
 brew analytics off
 
 printf "\nUpdating Homebrew.\n"
 brew update
 
-printf "\nUpgrading Homebrew packages.\n"
+printf "\nUpdating brews.\n"
 brew upgrade --force-bottle
 # > brew list | xargs brew reinstall --force-bottle --cleanup
 
-printf "\nUpgrading Homebrew Casks.\n"
+printf "\nUpdating casks.\n"
 brew cask outdated | xargs brew cask reinstall
 
-# Mac App Store
 if _koopa_is_installed mas
 then
     printf "\nUpgrading Mac App Store Apps.\n"
     mas upgrade
 fi
+
+printf "\nRunning cleanup.\n"
+brew cleanup -s
+rm -frv "$(brew --cache)"
