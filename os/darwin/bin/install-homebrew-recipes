@@ -182,6 +182,7 @@ brews=(
     rsync
     ruby-build
     rust
+    rustup-init
     screen
     shellcheck
     shellharden
