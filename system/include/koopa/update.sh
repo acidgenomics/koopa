@@ -11,8 +11,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Programs                                                                  {{{1
 # ==============================================================================
 
-# > update-venv
 update-conda
+update-venv
 update-rust
 update-r-packages
 
