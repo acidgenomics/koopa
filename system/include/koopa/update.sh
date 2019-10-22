@@ -4,7 +4,7 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Update koopa installation.
-# Updated 2019-10-20.
+# Updated 2019-10-22.
 
 
 
@@ -16,6 +16,20 @@ update-venv
 update-rust
 update-r-packages
 
+# OS-specific                                                               {{{2
+# ------------------------------------------------------------------------------
+
+if _koopa_is_darwin
+then
+    update-homebrew
+elif _koopa_is_linux
+then
+    if [[ -d "${KOOPA_HOME}/cellar" ]]
+    then
+        remove-broken-cellar-symlinks
+    fi
+fi
+
 # Sudo permissions                                                          {{{2
 # ------------------------------------------------------------------------------
 
@@ -23,14 +37,6 @@ update-r-packages
 # > then
 # >     update-tex
 # > fi
-
-# OS-specific                                                               {{{2
-# ------------------------------------------------------------------------------
-
-if _koopa_is_darwin
-then
-    update-homebrew
-fi
 
 
 

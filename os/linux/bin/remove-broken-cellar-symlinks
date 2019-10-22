@@ -19,7 +19,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-10-26.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -30,11 +30,16 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+echo "Checking for broken cellar symlinks."
+
 prefix="$(_koopa_build_prefix)"
+
 # Note that empty array will still contain a length of 1 here.
 mapfile -t broken <<< "$(find-broken-symlinks "$prefix")"
 _koopa_is_array_non_empty "${broken[@]}" || exit 0
+
 printf "%d broken symlinks detected.\n" "${#broken[@]}"
+
 for file in "${broken[@]}"
 do
     [[ -n "$file" ]] || exit 0
