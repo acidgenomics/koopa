@@ -7,7 +7,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
-# Variables                                                                 {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 dir="."
@@ -22,16 +22,16 @@ cat << EOF
 $(_koopa_help_header)
     [dir="${dir}"]
 
-Find broken symlinks.
+Remove empty directories.
 
-required positional arguments with defaults:
+optinoal positional arguments with defaults:
     1.  Directory path.
         Defaults to '${dir}'.
 
 $(_koopa_help_args)
 
 details:
-    Searches recursively inside of specified directory, with no depth limit.
+    Script always removes empty directories recursively.
 
 note:
     Bash script.
@@ -43,7 +43,7 @@ _koopa_help "$@"
 
 
 
-# Arguments                                                                 {{{1
+# Arguments    i                                                            {{{1
 # ==============================================================================
 
 dir="${1:-$dir}"
@@ -53,10 +53,4 @@ dir="${1:-$dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-if _koopa_is_darwin
-then
-    find "$dir" -type l -print0 | xargs -0 file | grep broken
-elif _koopa_is_linux
-then
-    find "$dir" -xtype l
-fi
+find "$dir" -mindepth 1 -type d -empty -delete -print
