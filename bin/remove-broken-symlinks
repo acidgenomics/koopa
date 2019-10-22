@@ -20,7 +20,7 @@ dir="."
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    dir="${dir}"
+    [dir="${dir}"]
 
 Remove broken symbolic links.
 
@@ -43,8 +43,18 @@ _koopa_help "$@"
 
 
 
+# Arguments    i                                                            {{{1
+# ==============================================================================
+
+dir="${1:-$dir}"
+
+
+
 # Script                                                                    {{{1
 # ==============================================================================
+
+dir="$(realpath "$dir")"
+printf "Removing broken symlinks in '%s'.\n" "$dir"
 
 mapfile -t arr <<< "$(find-broken-symlinks "$dir")"
 _koopa_is_array_non_empty "${arr[@]}" || exit 0

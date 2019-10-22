@@ -30,6 +30,4 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-prefix="$(_koopa_build_prefix)"
-printf "Removing broken symlinks in '%s'.\n" "$prefix"
-remove-broken-symlinks "$prefix"
+remove-broken-symlinks "$(_koopa_build_prefix)"
