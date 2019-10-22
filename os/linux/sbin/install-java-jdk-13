@@ -53,7 +53,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-09.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -88,7 +88,7 @@ then
     )
 fi
 
-_koopa_build_set_permissions "${jdk_dir}"
+_koopa_set_permissions "${jdk_dir}"
 
 priority="100"
 sudo update-alternatives --install \
