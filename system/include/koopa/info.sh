@@ -4,7 +4,7 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Show koopa installation information.
-# Updated 2019-09-23.
+# Updated 2019-10-21.
 
 shell="$KOOPA_SHELL"
 shell="${shell} $(_koopa_"${shell}"_version)"
@@ -33,7 +33,8 @@ array=(
 # Show neofetch info, if installed.
 if _koopa_is_installed neofetch
 then
-    mapfile -t nf < <( neofetch --stdout )
+    # Using process substitution here.
+    mapfile -t nf < <(neofetch --stdout)
     array+=(
         "System information (neofetch)"
         "-----------------------------"

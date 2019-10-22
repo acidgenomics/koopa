@@ -44,17 +44,11 @@ then
 fi
 
 pip install --upgrade pip
-
 lines="$(pip list --outdated --format=freeze)"
 mapfile -t array <<< "$lines"
-n="${#array[@]}"
-if [[ "$n" -eq 0 ]]
-then
-    printf "Virtual environment is up-to-date.\n"
-    exit 0
-fi
-printf "%d outdated packages detected.\n" "$n"
-echo "$lines"                \
-    | cut -d '=' -f 1        \
+[[ -n "${array[0]}" ]] || exit 0
+printf "%d outdated packages detected.\n" "${#array[@]}"
+echo "$lines" \
+    | cut -d '=' -f 1 \
     | xargs -n1 pip install --upgrade
 
