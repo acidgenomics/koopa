@@ -41,7 +41,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-09-28.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -95,15 +95,7 @@ fi
 # Functions                                                                 {{{1
 # ==============================================================================
 
-_koopa_has_sudo() {
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
-}
-
-_koopa_is_linux() {
-    [ "$(uname -s)" = "Linux" ]
-}
-
-_koopa_prefix_group() {
+_koopa_group() {
     if groups | grep -Eq "\b(admin)\b"
     then
         group="admin"
@@ -116,6 +108,14 @@ _koopa_prefix_group() {
     else
         group="$(whoami)"
     fi
+}
+
+_koopa_has_sudo() {
+    groups | grep -Eq "\b(admin|sudo|wheel)\b"
+}
+
+_koopa_is_linux() {
+    [ "$(uname -s)" = "Linux" ]
 }
 
 
@@ -151,7 +151,7 @@ then
             exit 1
         fi
         sudo mkdir -pv "$target_dir"
-        group="$(_koopa_prefix_group)"
+        group="$(_koopa_group)"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+w "$target_dir"
         # Ensure build prefix is group writable, for cellar scripts.
