@@ -219,6 +219,23 @@ _koopa_help_header() {
 # L                                                                         {{{1
 # ==============================================================================
 
+_koopa_is_array_non_empty() {
+    # Is the array non-empty?
+    # Particularly useful for checking against mapfile return, which currently
+    # returns a length of 1 for empty input, due to newlines line break.
+    # Updated 2019-10-22.
+    local arr
+    arr=("$@")
+    [[ "${#arr[@]}" -eq 0 ]] && return 1
+    [[ -z "${arr[0]}" ]] && return 1
+    return 0
+}
+
+
+
+# L                                                                         {{{1
+# ==============================================================================
+
 _koopa_link_cellar() {
     # Symlink cellar into build directory.
     # e.g. '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
