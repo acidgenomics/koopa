@@ -15,13 +15,20 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Reinstall Xcode command line tools (CLI).
+Update macOS directly from the command line.
 
 $(_koopa_help_args)
 
-see also:
-    https://stackoverflow.com/questions/34617452
+details:
+    Install recommended software updates and reboot, if necessary.
+    Note that this will not upgrade to a newer macOS release.
 
+seealso:
+    softwareupdate --help
+
+note:
+    Bash script.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -32,6 +39,6 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-sudo rm -frv /Library/Developer/CommandLineTools
-xcode-select --install
-sudo xcodebuild -license accept
+softwareupdate --list
+softwareupdate --install --recommended --restart
+
