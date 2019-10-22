@@ -40,5 +40,5 @@ _koopa_help "$@"
 # ==============================================================================
 
 softwareupdate --list
-softwareupdate --install --recommended --restart
+sudo softwareupdate --install --recommended --restart
 
