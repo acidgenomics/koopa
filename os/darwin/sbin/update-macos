@@ -25,6 +25,7 @@ details:
 
 seealso:
     softwareupdate --help
+    softwareupdate --list
 
 note:
     Bash script.
@@ -39,6 +40,4 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-softwareupdate --list
 sudo softwareupdate --install --recommended --restart
-
