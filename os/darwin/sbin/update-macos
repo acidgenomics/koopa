@@ -40,4 +40,9 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+cat << EOF
+Updating macOS via 'softwareupdate'.
+Restart may be required.
+EOF
+
 sudo softwareupdate --install --recommended --restart
