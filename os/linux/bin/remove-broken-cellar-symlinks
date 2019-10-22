@@ -30,23 +30,6 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-echo "Checking for broken cellar symlinks."
-
 prefix="$(_koopa_build_prefix)"
-
-# Note that empty array will still contain a length of 1 here.
-mapfile -t broken <<< "$(find-broken-symlinks "$prefix")"
-_koopa_is_array_non_empty "${broken[@]}" || exit 0
-
-printf "%d broken symlinks detected.\n" "${#broken[@]}"
-
-for file in "${broken[@]}"
-do
-    [[ -n "$file" ]] || exit 0
-    if _koopa_has_sudo
-    then
-        sudo rm -v "$file"
-    else
-        rm -v "$file"
-    fi
-done
+printf "Removing broken symlinks in '%s'.\n" "$prefix"
+remove-broken-symlinks "$prefix"
