@@ -53,9 +53,9 @@ dir="${1:-$dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-find "$dir" \
-    -mindepth 1 \
-    -type d \
-    --exclude-dir=".git" \
-    -empty \
+find "$dir"                                                                    \
+    -mindepth 1                                                                \
+    -type d                                                                    \
+    -not -path "*/.git/*"                                                      \
+    -empty                                                                     \
     -print
