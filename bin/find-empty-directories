@@ -22,7 +22,7 @@ cat << EOF
 $(_koopa_help_header)
     [dir="${dir}"]
 
-Find broken symlinks.
+Find empty directories.
 
 required positional arguments with defaults:
     1.  Directory path.
@@ -53,10 +53,4 @@ dir="${1:-$dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-if _koopa_is_darwin
-then
-    find "$dir" -type l -print0 | xargs -0 file | grep broken
-elif _koopa_is_linux
-then
-    find "$dir" -xtype l
-fi
+find "$dir" -mindepth 1 -type d -empty -print
