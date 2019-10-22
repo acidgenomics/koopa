@@ -455,10 +455,10 @@ _koopa_basename_sans_ext2() {
 
 _koopa_bash_version() {
     # Updated 2019-09-27.
-    bash --version | \
-        head -n 1 | \
-        cut -d ' ' -f 4 | \
-        cut -d '(' -f 1
+    bash --version                                                             \
+        | head -n 1                                                            \
+        | cut -d ' ' -f 4                                                      \
+        | cut -d '(' -f 1
 }
 
 _koopa_build_prefix() {
@@ -558,12 +558,12 @@ _koopa_disk_pct_used() {
     # Updated 2019-08-17.
     local disk
     disk="${1:-/}"
-    df "$disk" | \
-        head -n 2  | \
-        sed -n '2p' | \
-        grep -Eo "([.0-9]+%)" | \
-        head -n 1 | \
-        sed 's/%$//'
+    df "$disk"                                                                 \
+        | head -n 2                                                            \
+        | sed -n '2p'                                                          \
+        | grep -Eo "([.0-9]+%)"                                                \
+        | head -n 1                                                            \
+        | sed 's/%$//'
 }
 
 
@@ -605,13 +605,13 @@ _koopa_extract() {
     fi
     case "$file" in
         *.tar.bz2)
-            tar xvjf "$file"
+            tar -xvjf "$file"
             ;;
         *.tar.gz)
-            tar xvzf "$file"
+            tar -xvzf "$file"
             ;;
         *.tar.xz)
-            tar Jxvf "$file"
+            tar -Jxvf "$file"
             ;;
         *.bz2)
             bunzip2 "$file"
@@ -620,16 +620,16 @@ _koopa_extract() {
             gunzip "$file"
             ;;
         *.rar)
-            unrar x "$file"
+            unrar -x "$file"
             ;;
         *.tar)
-            tar xvf "$file"
+            tar -xvf "$file"
             ;;
         *.tbz2)
-            tar xvjf "$file"
+            tar -xvjf "$file"
             ;;
         *.tgz)
-            tar xvzf "$file"
+            tar -xvzf "$file"
             ;;
         *.zip)
             unzip "$file"
@@ -638,7 +638,7 @@ _koopa_extract() {
             uncompress "$file"
             ;;
         *.7z)
-            7z x "$file"
+            7z -x "$file"
             ;;
         *)
             >&2 printf "Error: Unsupported extension: %s\n" "$file"
@@ -684,18 +684,21 @@ _koopa_file_ext2() {
 }
 
 _koopa_find_dotfiles() {
-    # Updated 2019-09-24.
+    # Find dotfiles by type.
+    # 1. Type ('f' file; or 'd' directory).
+    # 2. Header message (e.g. "Files")
+    # Updated 2019-10-22.
     local type="$1"
     local header="$2"
     printf "\n%s:\n\n" "$header"
-    find ~ \
-        -maxdepth 1 \
-        -name ".*" \
-        -type "$type" \
-        -print0 | \
-        xargs -0 -n1 basename | \
-        sort |
-        awk '{print "  ",$0}'
+    find "$HOME"                                                               \
+        -maxdepth 1                                                            \
+        -name ".*"                                                             \
+        -type "$type"                                                          \
+        -print0                                                                \
+        | xargs -0 -n1 basename                                                \
+        | sort                                                                 \
+        | awk '{print "  ",$0}'
 }
 
 _koopa_find_text() {
@@ -1023,15 +1026,15 @@ _koopa_is_linux() {
 _koopa_is_linux_debian() {
     # Updated 2019-06-24.
     [ -f /etc/os-release ] || return 1
-    grep "ID="      /etc/os-release | grep -q "debian" ||
-    grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+    grep "ID=" /etc/os-release | grep -q "debian" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
 _koopa_is_linux_fedora() {
     # Updated 2019-06-24.
     [ -f /etc/os-release ] || return 1
-    grep "ID="      /etc/os-release | grep -q "fedora" ||
-    grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+    grep "ID=" /etc/os-release | grep -q "fedora" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 }
 
 _koopa_is_local() {
@@ -1072,8 +1075,8 @@ _koopa_is_r_package_installed() {
     # Is the requested R package installed?
     # Updated 2019-10-20.
     _koopa_is_installed R || return 1
-    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" | \
-        grep -q "TRUE"
+    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())"             \
+        | grep -q "TRUE"
 }
 
 _koopa_is_remote() {
@@ -1141,9 +1144,9 @@ _koopa_line_count() {
     # Example: _koopa_line_count tx2gene.csv
     #
     # Updated 2019-10-05.
-    wc -l "$1" | \
-    xargs | \
-    cut -d ' ' -f 1
+    wc -l "$1"                                                                 \
+    | xargs                                                                    \
+    | cut -d ' ' -f 1
 }
 
 
@@ -1155,19 +1158,19 @@ _koopa_macos_app_version() {
     # Extract the version of a macOS application.
     # Updated 2019-09-28.
     _koopa_assert_is_darwin
-    plutil -p "/Applications/${1}.app/Contents/Info.plist" | \
-        grep CFBundleShortVersionString |
-        awk -F ' => ' '{print $2}' |
-        tr -d '"'
+    plutil -p "/Applications/${1}.app/Contents/Info.plist"                     \
+        | grep CFBundleShortVersionString                                      \
+        | awk -F ' => ' '{print $2}'                                           \
+        | tr -d '"'
 }
 
 _koopa_macos_version() {
     # macOS version string.
     # Updated 2019-08-17.
     _koopa_assert_is_darwin
-    printf "%s %s (%s)\n" \
-        "$(sw_vers -productName)" \
-        "$(sw_vers -productVersion)" \
+    printf "%s %s (%s)\n"                                                      \
+        "$(sw_vers -productName)"                                              \
+        "$(sw_vers -productVersion)"                                           \
         "$(sw_vers -buildVersion)"
 }
 
@@ -1200,24 +1203,24 @@ _koopa_os_type() {
     # Operating system name.
     # Always returns lowercase, with unique names for Linux distros
     # (e.g. "debian").
-    # Updated 2019-08-16.
+    # Updated 2019-10-22.
     local id
     if _koopa_is_darwin
     then
         id="$(uname -s | tr '[:upper:]' '[:lower:]')"
     elif _koopa_is_linux
     then
-        id="$( \
-            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
-            tr -d '"' \
+        id="$(                                                                 \
+            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release                   \
+            | tr -d '"'                                                        \
         )"
         # Include the major release version for RHEL.
         if [ "$id" = "rhel" ]
         then
-            version="$( \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release | \
-                tr -d '"' | \
-                cut -d '.' -f 1
+            version="$(                                                        \
+                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release       \
+                | tr -d '"'                                                    \
+                | cut -d '.' -f 1                                              \
             )"
             id="${id}${version}"
         fi
@@ -1370,7 +1373,7 @@ _koopa_prompt_git() {
 
 _koopa_prompt_os() {
     # Get the operating system information.
-    # Updated 2019-10-13.
+    # Updated 2019-10-22.
     local id
     local string
     local version
@@ -1379,13 +1382,13 @@ _koopa_prompt_os() {
         string="$(_koopa_macos_version_short)"
     elif _koopa_is_linux
     then
-        id="$( \
-            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release | \
-            tr -d '"' \
+        id="$(                                                                 \
+            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release                   \
+            | tr -d '"'                                                        \
         )"
-        version="$( \
-            awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release | \
-            tr -d '"' \
+        version="$(                                                            \
+            awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release           \
+            | tr -d '"'                                                        \
         )"
         string="${id}-${version}"
     else
@@ -1895,9 +1898,9 @@ _koopa_which() {
 
 _koopa_zsh_version() {
     # Updated 2019-08-18.
-    zsh --version | \
-        head -n 1 | \
-        cut -d ' ' -f 2
+    zsh --version                                                              \
+        | head -n 1                                                            \
+        | cut -d ' ' -f 2
 }
 
 
