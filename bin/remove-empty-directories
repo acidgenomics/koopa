@@ -43,7 +43,7 @@ _koopa_help "$@"
 
 
 
-# Arguments    i                                                            {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 dir="${1:-$dir}"
@@ -53,4 +53,10 @@ dir="${1:-$dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-find "$dir" -mindepth 1 -type d -empty -delete -print
+find "$dir" \
+    -mindepth 1 \
+    -type d \
+    --exclude-dir=".git" \
+    -empty \
+    -delete \
+    -print

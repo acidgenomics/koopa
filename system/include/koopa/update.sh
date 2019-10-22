@@ -24,10 +24,9 @@ then
     update-homebrew
 elif _koopa_is_linux
 then
-    if [[ -d "${KOOPA_HOME}/cellar" ]]
-    then
-        remove-broken-cellar-symlinks
-    fi
+    reset-prefix-permissions
+    remove-broken-cellar-symlinks
+    # FIXME Remove empty directories in prefix and cellar
 fi
 
 # Sudo permissions                                                          {{{2

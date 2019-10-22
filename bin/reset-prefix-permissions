@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
+prefix="$(_koopa_build_prefix)"
+group="$(_koopa_group)"
+if _koopa_is_shared
+then
+    user="root"
+else
+    user="$USER"
+fi
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+
+Reset build prefix permissions.
+
+$(_koopa_help_args)
+
+details:
+    Recursively reset user and group permissions on default target build
+    prefix directory. Primarily intended for use with cellar install scripts.
+
+    Group write access will be enabled.
+
+    For a shared installation, 'root:root' permissions are often too
+    restrictive and hard to manage, so we're enabling admin group write access.
+
+internal variables:
+    prefix: '${prefix}'
+    user: '${user}'
+    group: '${group}'
+
+note:
+    Bash script.
+    Updated 2019-10-22.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+if _koopa_is_shared
+then
+    _koopa_assert_has_sudo
+fi
+
+printf "Resetting user ('%s') and group ('%s') permissions on '%s'.\n" \
+    "$user" "$group" "$prefix"
+
+_koopa_set_permissions "$prefix"
+
+# Ensure group on top level is sticky.
+if _koopa_is_shared
+then
+    sudo chmod g+s "$prefix"
+else
+    chmod g+s "$prefix"
+fi
