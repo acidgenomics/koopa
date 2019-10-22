@@ -24,7 +24,7 @@ see also:
 note:
     Bash script.
     Requires that conda is already installed.
-    Updated 2019-09-25.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -45,4 +45,8 @@ echo "Updating Conda."
 
 conda update --yes --name=base --channel=defaults conda
 conda update --yes --name=base --channel=defaults --all
-conda clean --yes --packages --tarballs
+
+if [[ -d "${CONDA_PREFIX:-}/pkgs" ]]
+then
+    conda clean --yes --packages --tarballs
+fi
