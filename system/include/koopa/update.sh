@@ -11,31 +11,25 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Programs                                                                  {{{1
 # ==============================================================================
 
+if _koopa_is_darwin
+then
+    update-homebrew
+    # > if _koopa_has_sudo
+    # > then
+    # >     update-tex
+    # > fi
+elif _koopa_is_linux
+then
+    reset-prefix-permissions
+    prefix="$(_koopa_build_prefix)"
+    remove-broken-symlinks "$prefix"
+    remove-empty-dirs "$prefix"
+fi
+
 update-conda
 update-venv
 update-rust
 update-r-packages
-
-# OS-specific                                                               {{{2
-# ------------------------------------------------------------------------------
-
-if _koopa_is_darwin
-then
-    update-homebrew
-elif _koopa_is_linux
-then
-    reset-prefix-permissions
-    remove-broken-cellar-symlinks
-    # FIXME Remove empty directories in prefix and cellar
-fi
-
-# Sudo permissions                                                          {{{2
-# ------------------------------------------------------------------------------
-
-# > if _koopa_has_sudo
-# > then
-# >     update-tex
-# > fi
 
 
 
