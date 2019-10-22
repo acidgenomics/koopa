@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+dir="."
+
+
+
+# Usage                                                                     {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+$(_koopa_help_header)
+    dir="${dir}"
+
+Remove broken symbolic links.
+
+optinoal positional arguments with defaults:
+    1.  Directory path.
+        Defaults to '${dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Script always removes broken links recursively.
+
+note:
+    Bash script.
+    Updated 2019-10-22.
+EOF
+}
+
+_koopa_help "$@"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+mapfile -t arr <<< "$(find-broken-symlinks "$dir")"
+_koopa_is_array_non_empty "${arr[@]}" || exit 0
+
+printf "%d broken symlinks detected.\n" "${#arr[@]}"
+
+for file in "${arr[@]}"
+do
+    [[ -z "$file" ]] && continue
+    rm -v "$file"
+done
