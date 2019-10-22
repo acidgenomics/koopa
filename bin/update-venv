@@ -44,9 +44,11 @@ then
 fi
 
 pip install --upgrade pip
+
 lines="$(pip list --outdated --format=freeze)"
 mapfile -t array <<< "$lines"
-[[ -n "${array[0]}" ]] || exit 0
+_koopa_is_array_non_empty "${array[@]}" || exit 0
+
 printf "%d outdated packages detected.\n" "${#array[@]}"
 echo "$lines" \
     | cut -d '=' -f 1 \
