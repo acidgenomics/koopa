@@ -461,6 +461,38 @@ _koopa_bash_version() {
         | cut -d '(' -f 1
 }
 
+_koopa_build_os_string() {
+    # Build string for 'make' configuration.
+    #
+    # Use this for 'configure --build' flag.
+    #
+    # This function will distinguish between RedHat, Amazon, and other distros
+    # instead of just returning "linux". Note that we're substituting "redhat"
+    # instead of "rhel" here, when applicable.
+    #
+    # - AWS:    x86_64-amzn-linux-gnu
+    # - Darwin: x86_64-darwin15.6.0
+    # - RedHat: x86_64-redhat-linux-gnu
+    #
+    # Updated 2019-09-27.
+    local mach
+    local os_type
+    local string
+    mach="$(uname -m)"
+    if _koopa_is_darwin
+    then
+        string="${mach}-${OSTYPE}"
+    else
+        os_type="$(_koopa_os_type)"
+        if echo "$os_type" | grep -q "rhel"
+        then
+            os_type="redhat"
+        fi
+        string="${mach}-${os_type}-${OSTYPE}"
+    fi
+    echo "$string"
+}
+
 _koopa_build_prefix() {
     # Return the installation prefix to use.
     # Updated 2019-09-27.
@@ -478,6 +510,24 @@ _koopa_build_prefix() {
 
 # C                                                                         {{{1
 # ==============================================================================
+
+_koopa_cellar_prefix() {
+    # Cellar prefix.
+    # Avoid setting to '/usr/local/cellar', as this can conflict with Homebrew.
+    # Updated 2019-10-22.
+    echo "${KOOPA_HOME}/cellar"
+}
+
+_koopa_cellar_script() {
+    # Return source path for a koopa cellar build script.
+    # Updated 2019-10-08.
+    _koopa_assert_has_no_environments
+    local name
+    name="$1"
+    file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
+    _koopa_assert_is_file "$file"
+    echo "$file"
+}
 
 _koopa_conda_env() {
     # Conda environment name.
@@ -499,6 +549,43 @@ _koopa_conda_env_list() {
     # Updated 2019-06-27.
     _koopa_is_installed conda || return 1
     conda env list --json
+}
+
+_koopa_conda_env_prefix() {
+    # Return prefix for a specified conda environment.
+    #
+    # Note that we're allowing env_list passthrough as second positional
+    # variable, to speed up loading upon activation.
+    #
+    # Example: _koopa_conda_env_prefix "deeptools"
+    #
+    # Updated 2019-10-22.
+    _koopa_is_installed conda || return 1
+
+    local env_name
+    env_name="$1"
+    [ -n "$env_name" ] || return 1
+
+    local env_list
+    env_list="${2:-}"
+    if [ -z "$env_list" ]
+    then
+        env_list="$(_koopa_conda_env_list)"
+    fi
+    env_list="$(echo "$env_list" | grep "$env_name")"
+    if [ -z "$env_list" ]
+    then
+        >&2 printf "Error: Failed to detect prefix for '%s'.\n" "$env_name"
+        return 1
+    fi
+
+    local path
+    path="$(                                                                   \
+        echo "$env_list"                                                       \
+        | grep "/envs/${env_name}"                                             \
+        | head -n 1                                                            \
+    )"
+    echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
 }
 
 _koopa_conda_internal_prefix() {
@@ -753,6 +840,36 @@ _koopa_git_branch() {
     git symbolic-ref --short -q HEAD
 }
 
+_koopa_group() {
+    # Return the approach group to use with koopa installation.
+    #
+    # Returns current user for local install.
+    # Dynamically returns the admin group for shared install.
+    #
+    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
+    #
+    # Updated 2019-10-22.
+    local group
+    if _koopa_is_shared && _koopa_has_sudo
+    then
+        if groups | grep -Eq "\b(admin)\b"
+        then
+            group="admin"
+        elif groups | grep -Eq "\b(sudo)\b"
+        then
+            group="sudo"
+        elif groups | grep -Eq "\b(wheel)\b"
+        then
+            group="wheel"
+        else
+            group="$(whoami)"
+        fi
+    else
+        group="$(whoami)"
+    fi
+    echo "$group"
+}
+
 _koopa_gsub() {
     # Updated 2019-10-09.
     echo "$1" | sed -E "s/${2}/${3}/g"
@@ -876,6 +993,16 @@ _koopa_help() {
             exit 0
             ;;
     esac
+}
+
+_koopa_help_args() {
+    # Standardize the help arguments shown in usage.
+    # Updated 2019-10-22.
+    cat << EOF
+help arguments:
+    --help, -h
+        Show this help message and exit.
+EOF
 }
 
 _koopa_home() {
@@ -1149,6 +1276,38 @@ _koopa_line_count() {
     | cut -d ' ' -f 1
 }
 
+_koopa_link_cellar() {
+    # Symlink cellar into build directory.
+    #
+    # If you run into permissions issues during link, check the build prefix
+    # permissions. Ensure group is not 'root', and that group has write access.
+    #
+    # This can be reset easily with '_koopa_set_permissions'.
+    #
+    # Example: _koopa_link_cellar emacs 26.3
+    # # '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
+    #
+    # Updated 2019-10-22.
+    local name
+    local version
+    local build_prefix
+    local cellar_prefix
+    name="$1"
+    version="$2"
+    build_prefix="$(_koopa_build_prefix)"
+    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+    printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
+    _koopa_set_permissions "$cellar_prefix"
+    if _koopa_is_shared
+    then
+        _koopa_assert_has_sudo
+        sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        _koopa_update_ldconfig
+    else
+        cp -frsv "$cellar_prefix/"* "$build_prefix/".
+    fi
+}
+
 
 
 # M                                                                         {{{1
@@ -1241,6 +1400,40 @@ _koopa_os_version() {
 
 # P                                                                         {{{1
 # ==============================================================================
+
+_koopa_prefix_chgrp() {
+    # Fix the group permissions on the target build prefix.
+    # Updated 2019-10-22.
+    local path
+    local group
+    path="$1"
+    group="$(_koopa_group)"
+    if _koopa_has_sudo
+    then
+        sudo chgrp -Rh "$group" "$path"
+        sudo chmod -R g+w "$path"
+    else
+        chgrp -Rh "$group" "$path"
+        chmod -R g+w "$path"
+    fi
+}
+
+_koopa_prefix_mkdir() {
+    # Create directory in target build prefix.
+    # Sets correct group and write permissions automatically.
+    # Updated 2019-10-22.
+    local path
+    path="$1"
+    _koopa_assert_is_not_dir "$path"
+    if _koopa_has_sudo
+    then
+        sudo mkdir -p "$path"
+        sudo chown "$(whoami)" "$path"
+    else
+        mkdir -p "$path"
+    fi
+    _koopa_prefix_chgrp "$path"
+}
 
 _koopa_prompt() {
     # Prompt string.
@@ -1444,8 +1637,8 @@ _koopa_quiet_expr() {
 
 _koopa_quiet_rm() {
     # Quiet remove.
-    # Updated 2019-10-21.
-    rm -f "$@" >/dev/null 2>&1
+    # Updated 2019-10-22.
+    rm -fr "$@" >/dev/null 2>&1
 }
 
 
@@ -1527,6 +1720,21 @@ _koopa_rsync_flags() {
 
 # S                                                                         {{{1
 # ==============================================================================
+
+_koopa_set_permissions() {
+    # Set permissions on a koopa-related directory.
+    # Generally used to reset the build prefix directory (e.g. '/usr/local').
+    # Updated 2019-10-22.
+    local path
+    path="$1"
+    if _koopa_is_shared
+    then
+        sudo chown -Rh "root" "$path"
+    else
+        chown -Rh "$(whoami)" "$path"
+    fi
+    _koopa_prefix_chgrp "$path"
+}
 
 _koopa_shell() {
     # Note that this isn't necessarily the default shell ('$SHELL').
@@ -1742,7 +1950,7 @@ EOF"
 
 _koopa_update_r_config() {
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # Updated 2019-09-28.
+    # Updated 2019-10-22.
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     local r_home
@@ -1768,7 +1976,7 @@ _koopa_update_r_config() {
     printf "Creating site library.\n"
     site_library="${r_home}/site-library"
     sudo mkdir -pv "$site_library"
-    _koopa_build_set_permissions "$r_home"
+    _koopa_set_permissions "$r_home"
     _koopa_r_javareconf
 }
 

@@ -35,7 +35,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -59,4 +59,4 @@ git clone \
     https://github.com/sstephenson/ruby-build.git \
     "${prefix}/plugins/ruby-build"
 
-_koopa_build_set_permissions "$prefix"
+_koopa_set_permissions "$prefix"
