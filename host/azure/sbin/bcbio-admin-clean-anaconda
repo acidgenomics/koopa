@@ -13,7 +13,7 @@ _koopa_assert_has_sudo
 
 bcbio_dir="/data00/bcbio"
 version="development"
-pkgs_dir="${bcbio_dir}/${version}/install/anaconda/pkgs"
+conda_dir="${bcbio_dir}/${version}/install/anaconda"
 
 
 
@@ -23,19 +23,23 @@ pkgs_dir="${bcbio_dir}/${version}/install/anaconda/pkgs"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    [pkgs_dir="${pkgs_dir}"]
+    [conda_dir="${conda_dir}"]
 
-Clean up extracted bcbio anaconda packages.
+Clean up bcbio anaconda installation.
 
 required positional arguments with defaults:
-    1.  Anaconda packages directory.
-        Defaults to '${pkgs_dir}'.
+    1.  Anaconda directory (i.e. path to CONDA_PREFIX).
+        Defaults to '${conda_dir}'.
 
 $(_koopa_help_args)
 
+details:
+    Currently removes extracted packages, which can contain broken symlinks.
+    The original source tarballs are kept, for data provenance.
+
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-22.
 EOF
 }
 
@@ -46,20 +50,19 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-pkgs_dir="${1:-$pkgs_dir}"
+conda_dir="${1:-$conda_dir}"
+conda_exe="${conda_dir}/bin/conda"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_dir "$pkgs_dir"
+printf "Conda: '%s'.\n" "$conda_exe"
 
-printf "Removing extracted Anaconda packages.\n"
-printf "Note: Package tarballs will not be removed.\n"
+cat << EOF
+Removing extracted Anaconda packages.
+Note: Source tarballs will not be removed.
+EOF
 
-find "$pkgs_dir" \
-    -maxdepth 1 \
-    -mindepth 1 \
-    -type d \
-    -exec rm -frv "{}" \;
+"$conda_exe" clean --yes --packages
