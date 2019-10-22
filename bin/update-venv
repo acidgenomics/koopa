@@ -43,6 +43,8 @@ then
     exit 0
 fi
 
+echo "Updating Python virtual environment."
+
 pip install --upgrade pip
 
 lines="$(pip list --outdated --format=freeze)"
