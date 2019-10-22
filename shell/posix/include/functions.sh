@@ -1083,9 +1083,9 @@ _koopa_is_file_system_case_sensitive() {
     # Is the file system case sensitive?
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # Updated 2019-10-21.
-    touch ".acid-checkcase" ".acid-checkCase"
-    count="$(find . -maxdepth 1 -iname ".acid-checkcase" | wc -l)"
-    _koopa_quiet_rm .acid-check* 
+    touch ".tmp.checkcase" ".tmp.checkCase"
+    count="$(find . -maxdepth 1 -iname ".tmp.checkcase" | wc -l)"
+    _koopa_quiet_rm .tmp.check* 
     if [ "$count" -eq 2 ]
     then
         return 0
