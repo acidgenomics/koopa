@@ -30,7 +30,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-22.
 
 examples:
     find-cellar-symlinks R 3.6.1
@@ -83,8 +83,7 @@ done < <( \
 )
 
 # Sort the array.
-IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
-unset IFS
+mapfile -t array < <(sort <<<"${array[*]}")
 
 # Replace the cellar prefix with our build prefix.
 for file in "${array[@]}"
