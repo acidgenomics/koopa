@@ -58,4 +58,5 @@ find "$dir"                                                                    \
     -type d                                                                    \
     -not -path "*/.git/*"                                                      \
     -empty                                                                     \
-    -print
+    -print                                                                     \
+    | sort
