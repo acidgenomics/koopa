@@ -33,7 +33,7 @@ _koopa_help "$@"
 prefix="$(_koopa_build_prefix)"
 # Note that empty array will still contain a length of 1 here.
 mapfile -t broken <<< "$(find-broken-symlinks "$prefix")"
-[[ -n "${broken[0]}" ]] || exit 0
+_koopa_is_array_non_empty "${broken[@]}" || exit 0
 printf "%d broken symlinks detected.\n" "${#broken[@]}"
 for file in "${broken[@]}"
 do
