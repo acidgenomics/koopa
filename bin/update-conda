@@ -45,8 +45,4 @@ echo "Updating Conda."
 
 conda update --yes --name=base --channel=defaults conda
 conda update --yes --name=base --channel=defaults --all
-
-if [[ -d "${CONDA_PREFIX:-}/pkgs" ]]
-then
-    conda clean --yes --packages --tarballs
-fi
+conda clean --yes --tarballs
