@@ -6,17 +6,16 @@
 # ==============================================================================
 
 _koopa_add_local_bins_to_path() {
-    # Add local builds to PATH (e.g. '/usr/local').
+    # Add local build bins to PATH (e.g. '/usr/local').
     #
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read `-a` flag doesn't work on macOS. zsh related?
     #
-    # Updated 2019-06-20.
+    # Updated 2019-10-22.
     local dir
     local dirs
     _koopa_add_to_path_start "$(_koopa_build_prefix)/bin"
-    IFS=$'\n'
-    read -r -d '' dirs <<< "$(_koopa_bash_find_local_bin_dirs)"
+    IFS=$'\n' read -r -d '' dirs <<< "$(_koopa_bash_find_local_bin_dirs)"
     unset IFS
     for dir in "${dirs[@]}"
     do
@@ -155,7 +154,7 @@ _koopa_find_local_bin_dirs() {
     # - https://stackoverflow.com/questions/23356779
     # - https://stackoverflow.com/questions/7442417
     #
-    # Updated 2019-09-11.
+    # Updated 2019-10-22.
     local array
     array=()
     local tmp_file
@@ -178,10 +177,9 @@ _koopa_find_local_bin_dirs() {
     done < "$tmp_file"
     rm -f "$tmp_file"
     # Sort the array.
-    # > local sorted
-    # SC2207: Prefer mapfile or read -a to split command output.
-    # > IFS=$'\n' mapfile -t array < <(sort <<<"${array[*]}")
+    # > IFS=$'\n' array=($(sort <<<"${array[*]}"))
     # > unset IFS
+    readarray -t array < <(printf '%s\0' "${array[@]}" | sort -z | xargs -0n1)
     printf "%s\n" "${array[@]}"
 }
 
