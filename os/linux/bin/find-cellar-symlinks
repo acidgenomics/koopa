@@ -70,9 +70,9 @@ else
     )"
 fi
 
-array=()
+links=()
 while IFS=  read -r -d $'\0'; do
-    array+=("$REPLY")
+    links+=("$REPLY")
 done < <( \
     find -L \
     "$build_prefix" \
@@ -83,10 +83,12 @@ done < <( \
 )
 
 # Sort the array.
-mapfile -t array < <(sort <<<"${array[*]}")
+# > IFS=$'\n' links=($(sort <<<"${links[*]}"))
+# > unset IFS
+readarray -t links < <(printf '%s\0' "${links[@]}" | sort -z | xargs -0n1)
 
 # Replace the cellar prefix with our build prefix.
-for file in "${array[@]}"
+for file in "${links[@]}"
 do
     echo "${file//$cellar_prefix/$build_prefix}"
 done
