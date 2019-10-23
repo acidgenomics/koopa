@@ -47,7 +47,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -76,8 +76,7 @@ do
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-            exit 1
+            _koopa_invalid_arg "$1"
             ;;
         *)
             POSITIONAL+=("$1")

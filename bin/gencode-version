@@ -41,7 +41,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-05.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -70,13 +70,12 @@ case "$organism" in
         pattern="Release M[0-9]+"
         ;;
     *)
-        >&2 printf "Error: Unsupported organism: '%s'\n" "$organism"
-        exit 1
+        _koopa_stop "Unsupported organism: '${organism}'."
         ;;
 esac
 
 url="${base_url}/${short_name}/"
-wget -q -O - "$url" | \
-    grep -Eo "$pattern" | \
-    head -n 1 | \
-    cut -d ' ' -f 2
+wget -q -O - "$url"                                                            \
+    | grep -Eo "$pattern"                                                      \
+    | head -n 1                                                                \
+    | cut -d ' ' -f 2

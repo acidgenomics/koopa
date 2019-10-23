@@ -22,7 +22,7 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
     [--prefix="$prefix"] [--padwidth=$padwidth]
-    FILE ...
+    files...
 
 Autopad sample file names that begin with a number.
 
@@ -113,8 +113,7 @@ do
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-            exit 1
+            _koopa_invalid_arg "$1"
             ;;
         *)
             POSITIONAL+=("$1")

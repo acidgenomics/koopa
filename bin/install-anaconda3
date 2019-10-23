@@ -24,7 +24,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -51,8 +51,7 @@ case "$OSTYPE" in
         script="Anaconda3-${version}-MacOSX-x86_64.sh"
         ;;
     *)
-        >&2 printf "Error: %s is not supported." "$OSTYPE"
-        exit 1
+        _koopa_stop "'${OSTYPE}' is not supported."
         ;;
 esac
 

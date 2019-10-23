@@ -110,15 +110,13 @@ case "$1" in
         exit
         ;;
     upgrade)
-        >&2 printf "Error: Use 'update' instead of 'upgrade'.\n"
-        exit 1
+        _koopa_stop "Use 'update' instead of 'upgrade'."
         ;;
     variable)
         _koopa_variable "$2"
         exit
         ;;
     *)
-        >&2 printf "Error: Unsupported command: '%s'\n" "$1"
-        exit 1
+        _koopa_invalid_arg "$1"
         ;;
 esac
