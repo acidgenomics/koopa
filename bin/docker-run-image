@@ -51,7 +51,7 @@ note:
 EOF
 }
 
-[[ -z "$*" ]] && usage && exit 0
+_koopa_assert_has_args "$@"
 _koopa_help "$@"
 
 
@@ -96,8 +96,8 @@ image="$1"
 _koopa_assert_is_installed docker
 
 docker pull "$image"
-docker run -it \
-    --volume="${PWD}:${workdir}" \
-    --workdir="$workdir" \
-    "$image" \
+docker run -it                                                                 \
+    --volume="${PWD}:${workdir}"                                               \
+    --workdir="$workdir"                                                       \
+    "$image"                                                                   \
     bash
