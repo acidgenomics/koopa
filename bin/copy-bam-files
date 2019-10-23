@@ -7,28 +7,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Note that we're allowing symlinks in the search path.
-# `-L`: Follow symbolic links.
-
-# Note that we're ignoring some bcbio output cruft here.
-# Skip transferring any BAM files in the work directory, and don't copy any
-# of the transcriptome BAMs automatically.
-
-# Ignore:
-# - `work/`
-# - `*-transcriptome.bam`
-
-# rsync works more reliably for resuming interrupted transfers.
-# Currently using this to transfer to Azure Files, which doesn't support
-# the rsync `-av` flags.
-# > cp -iruv {} "$target_dir/".
-# > rsync --size-only
-
-
-
 # Usage                                                                     {{{1
 # ==============================================================================
 
@@ -49,17 +27,32 @@ details:
     Supports transfers on file systems with non-standard permissions, including
     Azure Files and Windows CIFS/SMB shares.
 
-note:
-    Bash script.
-    Updated 2019-09-22.
+    We're allowing symlinks in the search path (via 'find -L' internally).
+
+    Note that we're ignoring some bcbio output cruft here.
+    Skip transfer of BAM files in the 'work/' directory, and don't copy any
+    of the transcriptome BAMs automatically.
+
+    Ignore list:
+    - 'work/'
+    - '*-transcriptome.bam'
+
+    rsync works more reliably for resuming interrupted transfers. Currently
+    using this to transfer to Azure Files
+
+    Alternate method:
+    > cp -iruv source target
 
 examples:
     copy-bam-files bam/ /data00/bam/
+
+note:
+    Bash script.
+    Updated 2019-10-23.
 EOF
 }
 
-[[ -z "${1:-}" ]] && usage && exit 0
-
+_koopa_assert_has_args "$@"
 _koopa_help "$@"
 
 
@@ -83,11 +76,10 @@ target_dir="$(realpath "$target_dir")"
 
 printf "\nSource:\n%s\n\nTarget:\n%s\n\n" "$source_dir" "$target_dir"
 
-find -L "$source_dir" \
-    -maxdepth 4 \
-    -type f \
-    \( -name "*.bam" -or -name "*.bam.bai" \) \
-    ! -name "*-transcriptome.bam" \
-    ! -path "*/work/*" \
-    -print0 | xargs -0 -I {} \
-    rsync --size-only --progress {} "${target_dir}/"
+find -L "$source_dir"                                                          \
+    -maxdepth 4                                                                \
+    -type f                                                                    \
+    \( -name "*.bam" -or -name "*.bam.bai" \)                                  \
+    ! -name "*-transcriptome.bam"                                              \
+    ! -path "*/work/*"                                                         \
+    -print0 | xargs -0 -I {} rsync --size-only --progress {} "${target_dir}/"
