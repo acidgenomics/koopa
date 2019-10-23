@@ -19,11 +19,12 @@ Remove legacy RHEL 7 RPM cruft on Azure VMs.
 
 note:
     Bash script.
-    Updated 2019-10-18.
+    Updated 2019-10-23.
 EOF
 }
 
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
@@ -33,8 +34,10 @@ _koopa_help "$@"
 # R                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-echo "Removing R."
-echo "Use the newer R installation at '/usr/local/lib64/R' instead."
+_koopa_message "\
+Removing R.
+Use the newer R installation at '/usr/local/lib64/R' instead."
+
 sudo yum remove \
     'R' \
     'R-*' \
@@ -45,8 +48,10 @@ sudo rm -frv /usr/lib64/R
 # Java                                                                      {{{2
 # ------------------------------------------------------------------------------
 
-echo "Removing Java."
-echo "Use the newer JDK installation at '/opt/jdk' instead."
+_koopa_message "\
+Removing Java.
+Use the newer JDK installation at '/opt/jdk' instead."
+
 sudo yum remove \
     '*-openjdk*' \
     'java-*'
@@ -54,8 +59,10 @@ sudo yum remove \
 # Pandoc                                                                    {{{2
 # ------------------------------------------------------------------------------
 
-echo "Removing Pandoc."
-echo "Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
+_koopa_message "\
+Removing Pandoc.
+Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
+
 sudo yum remove \
     '*-pandoc' \
     '*-pandoc-*' \
@@ -65,8 +72,10 @@ sudo yum remove \
 # Perl                                                                      {{{2
 # ------------------------------------------------------------------------------
 
-echo "Removing Perl CPAN Minus."
-echo "Use Perlbrew approach instead."
+_koopa_message "\
+Removing Perl CPAN Minus.
+Use Perlbrew approach instead."
+
 sudo yum remove \
     'perl-App-cpanminus'
 
@@ -85,8 +94,10 @@ sudo yum remove \
 #   /usr/lib/python2.7/site-packages/pip
 #   /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
 
-echo "Removing Python system pip."
-echo "Use venv to manage packages instead."
+_koopa_message "\
+Removing Python system pip.
+Use venv to manage packages instead."
+
 sudo rm -frv \
     '/usr/bin/pip' \
     '/usr/bin/pip2' \
@@ -97,18 +108,22 @@ sudo rm -frv \
 # Rust                                                                      {{{2
 # ------------------------------------------------------------------------------
 
-echo "Removing Rust."
-echo "Use rustup installation instead."
+_koopa_message "\
+Removing Rust.
+Use rustup installation instead."
+
 sudo yum remove 'rust-*'
 
 # Tex Live                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-echo "Removing Tex Live."
-echo "Use conda version instead at '/usr/local/miniconda3/envs/texlive-core'."
-sudo yum remove \
-    '*-tex' \
-    'latex2html' \
-    'texi2html' \
-    'texlive' \
-    'texlive-*'
+# > _koopa_message "\
+# > Removing TeX Live.
+# > Use conda version instead at '/usr/local/miniconda3/envs/texlive-core'."
+# >
+# > sudo yum remove \
+# >     '*-tex' \
+# >     'latex2html' \
+# >     'texi2html' \
+# >     'texlive' \
+# >     'texlive-*'
