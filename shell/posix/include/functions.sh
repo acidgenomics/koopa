@@ -88,86 +88,78 @@ _koopa_array_to_r_vector() {
 
 _koopa_assert_has_file_ext() {
     # Assert that input contains a file extension.
-    # Updated 2019-09-26
+    # Updated 2019-10-23.
     if ! _koopa_has_file_ext "$1"
     then
-        >&2 printf "Error: No file extension: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "No file extension: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_has_no_environments() {
     # Assert that conda and Python virtual environments aren't active.
-    # Updated 2019-10-16.
+    # Updated 2019-10-23.
     if ! _koopa_has_no_environments
     then
-        >&2 cat << EOF
-Error: Active environment detected.
+        _koopa_stop "\
+Active environment detected.
        (conda and/or python venv)
 
 Deactivate using:
     venv:  deactivate
     conda: conda deactivate
 
-Deactivate venv prior to conda, otherwise conda python may be left in path.
-EOF
-        exit 1
+Deactivate venv prior to conda, otherwise conda python may be left in path."
     fi
     return 0
 }
 
 _koopa_assert_has_sudo() {
     # Assert that current user has sudo (admin) permissions.
-    # Updated 2019-09-28.
+    # Updated 2019-10-23.
     if ! _koopa_has_sudo
     then
-        >&2 printf "Error: sudo is required.\n"
-        exit 1
+        _koopa_stop "sudo is required."
     fi
     return 0
 }
 
 _koopa_assert_is_conda_active() {
     # Assert that a Conda environment is active.
-    # Updated 2019-10-20.
+    # Updated 2019-10-23.
     if ! _koopa_is_conda_active
     then
-        >&2 printf "Error: No active Conda environment detected.\n"
-        exit 1
+        _koopa_stop "No active Conda environment detected."
     fi
     return 0
 }
 
 _koopa_assert_is_darwin() {
     # Assert that platform is Darwin (macOS).
-    # Updated 2019-09-23.
+    # Updated 2019-10-23.
     if ! _koopa_is_darwin
     then
-        >&2 printf "Error: macOS (Darwin) is required.\n"
-        exit 1
+        _koopa_stop "macOS (Darwin) is required."
     fi
     return 0
 }
 
 _koopa_assert_is_dir() {
     # Assert that input is a directory.
-    # Updated 2019-09-12.
+    # Updated 2019-10-23.
     if [ ! -d "$1" ]
     then
-        >&2 printf "Error: Not a directory: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Not a directory: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_executable() {
     # Assert that input is executable.
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     if [ ! -x "$1" ]
     then
-        >&2 printf "Error: Not executable: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Not executable: '${1}'."
     fi
     return 0
 }
@@ -175,11 +167,10 @@ _koopa_assert_is_executable() {
 _koopa_assert_is_existing() {
     # Assert that input exists on disk.
     # Note that '-e' flag returns true for file, dir, or symlink.
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     if [ ! -e "$1" ]
     then
-        >&2 printf "Error: Does not exist: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Does not exist: '${1}'."
     fi
     return 0
 }
@@ -189,8 +180,7 @@ _koopa_assert_is_file() {
     # Updated 2019-09-12.
     if [ ! -f "$1" ]
     then
-        >&2 printf "Error: Not a file: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Not a file: '${1}'."
     fi
     return 0
 }
@@ -200,18 +190,17 @@ _koopa_assert_is_file_type() {
     #
     # Example: _koopa_assert_is_file_type "$x" "csv"
     #
-    # Updated 2019-10-13.
+    # Updated 2019-10-23.
     _koopa_assert_is_file "$1"
     _koopa_assert_is_matching_regex "$1" "\.${2}\$"
 }
 
 _koopa_assert_is_git() {
     # Assert that current directory is a git repo.
-    # Updated 2019-10-14.
+    # Updated 2019-10-23.
     if ! _koopa_is_git
     then
-        >&2 printf "Error: Not a git repo.\n"
-        exit 1
+        _koopa_stop "Not a git repo."
     fi
     return 0
 }
@@ -222,13 +211,12 @@ _koopa_assert_is_installed() {
     # Supports checking of multiple programs in a single call.
     # Note that '_koopa_is_installed' is not vectorized.
     #
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
         then
-            >&2 printf "Error: '%s' is not installed.\n" "$arg"
-            exit 1
+            _koopa_stop "'${arg}' is not installed."
         fi
     done
     return 0
@@ -236,79 +224,72 @@ _koopa_assert_is_installed() {
 
 _koopa_assert_is_linux() {
     # Assert that platform is Linux.
-    # Updated 2019-09-12.
+    # Updated 2019-10-23.
     if ! _koopa_is_linux
     then
-        >&2 printf "Error: Linux is required.\n"
-        exit 1
+        _koopa_stop "Linux is required."
     fi
     return 0
 }
 
 _koopa_assert_is_linux_debian() {
     # Assert that platform is Debian Linux.
-    # Updated 2019-09-12.
+    # Updated 2019-10-23.
     if ! _koopa_is_linux_debian
     then
-        >&2 printf "Error: Debian is required.\n"
-        exit 1
+        _koopa_stop "Debian is required."
     fi
     return 0
 }
 
 _koopa_assert_is_linux_fedora() {
     # Assert that platform is Fedora Linux.
-    # Updated 2019-09-12.
+    # Updated 2019-10-23.
     if ! _koopa_is_linux_fedora
     then
-        >&2 printf "Error: Fedora is required.\n"
-        exit 1
+        _koopa_stop "Fedora is required."
     fi
     return 0
 }
 
 _koopa_assert_is_non_existing() {
     # Assert that input does not exist on disk.
-    # Updated 2019-09-23.
+    # Updated 2019-10-23.
     if [ -e "$1" ]
     then
-        >&2 printf "Error: Exists: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Exists: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_not_dir() {
     # Assert that input is not a directory.
-    # Updated 2019-09-29.
+    # Updated 2019-10-23.
     if [ -d "$1" ]
     then
-        >&2 printf "Error: Directory exists: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Directory exists: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_not_file() {
     # Assert that input is not a file.
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     if [ -f "$1" ]
     then
-        >&2 printf "Error: File exists: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "File exists: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_not_installed() {
     # Assert that programs are not installed.
-    # Updated 2019-10-08.
+    # Updated 2019-10-23.
     for arg in "$@"
     do
         if _koopa_is_installed "$arg"
         then
-            >&2 printf "Error: '%s' is installed.\n" "$arg"
-            exit 1
+            _koopa_stop "'${arg}' is installed."
         fi
     done
     return 0
@@ -316,89 +297,81 @@ _koopa_assert_is_not_installed() {
 
 _koopa_assert_is_not_symlink() {
     # Assert that input is not a symbolic link.
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     if [ -L "$1" ]
     then
-        >&2 printf "Error: Symlink exists: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Symlink exists: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_r_package_installed() {
     # Assert that a specific R package is installed.
-    # Updated 2019-10-20.
+    # Updated 2019-10-23.
     if ! _koopa_is_r_package_installed "$1"
     then
-        >&2 printf "Error: '%s' R package is not installed.\n" "$1"
-        exit 1
+        _koopa_stop "'${1}' R package is not installed."
     fi
     return 0
 }
 
 _koopa_assert_is_readable() {
     # Assert that input is readable.
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     if [ ! -r "$1" ]
     then
-        >&2 printf "Error: Not readable: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Not readable: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_symlink() {
     # Assert that input is a symbolic link.
-    # Updated 2019-10-05.
+    # Updated 2019-10-23.
     if [ ! -L "$1" ]
     then
-        >&2 printf "Error: Not symlink: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Not symlink: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_venv_active() {
     # Assert that a Python virtual environment is active.
-    # Updated 2019-10-20.
+    # Updated 2019-10-23.
     _koopa_assert_is_installed pip
     if ! _koopa_is_venv_active
     then
-        >&2 printf "Error: No active Python venv detected.\n"
-        exit 1
+        _koopa_stop "No active Python venv detected."
     fi
     return 0
 }
 
 _koopa_assert_is_writable() {
     # Assert that input is writable.
-    # Updated 2019-09-24.
+    # Updated 2019-10-23.
     if [ ! -r "$1" ]
     then
-        >&2 printf "Error: Not writable: '%s'\n" "$1"
-        exit 1
+        _koopa_stop "Not writable: '${1}'."
     fi
     return 0
 }
 
 _koopa_assert_is_matching_fixed() {
     # Assert that input matches a fixed pattern.
-    # Updated 2019-10-13.
+    # Updated 2019-10-23.
     if ! _koopa_is_matching_fixed "$1" "$2"
     then
-        >&2 printf "Error: '%s' doesn't match fixed pattern '%s'.\n" "$1" "$2"
-        exit 1
+        _koopa_stop "'${1}' doesn't match fixed pattern '${2}'."
     fi
     return 0
 }
 
 _koopa_assert_is_matching_regex() {
     # Assert that input matches a regular expression pattern.
-    # Updated 2019-10-13.
+    # Updated 2019-10-23.
     if ! _koopa_is_matching_regex "$1" "$2"
     then
-        >&2 printf "Error: '%s' doesn't match regex pattern '%s'.\n" "$1" "$2"
-        exit 1
+        _koopa_stop "'${1}' doesn't match regex pattern '${2}'."
     fi
     return 0
 }
@@ -1878,6 +1851,13 @@ _koopa_status_ok() {
     _koopa_echo_green "    [OK] ${1}"
 }
 
+_koopa_stop() {
+    # Error message.
+    # Updated 2019-10-23.
+    >&2 _koopa_echo_red_bold "Error: ${1}"
+    exit 1
+}
+
 _koopa_strip_left() {
     # Strip pattern from left side (start) of string.
     #
@@ -1908,13 +1888,6 @@ _koopa_strip_trailing_slash() {
     #
     # Updated 2019-09-24.
     _koopa_strip_right "$1" "/"
-}
-
-_koopa_stop() {
-    # Error message.
-    # Updated 2019-10-23.
-    >&2 _koopa_echo_red_bold "Error: ${1}"
-    exit 1
 }
 
 _koopa_sub() {
