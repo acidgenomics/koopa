@@ -13,7 +13,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    [--rename] [--prefix] [--strict]
+    [--rename] [--strict] [--prefix]
     string|file...
 
 Convert input into camel case.
@@ -23,13 +23,15 @@ required positional arguments:
 
 optional arguments:
     --rename
-        Rename input files.
-        Assumes we're renaming files in current working directory, but also
-            supports explicit and/or mixed file paths. Doesn't work recursively.
-        Disabled by default.
+        Rename input files. Assumes we're renaming files in current working
+        directory, but also supports explicit and/or mixed file paths. Doesn't
+        work recursively.
+    --strict
+        Enforce strict camel case output, coercing acronyms.
+        For example, 'geneID' becomes 'geneId'.
     --prefix
         Include "x" prefix for names that are syntactically invalid in R.
-        Note that this includes strings beginning with a number.
+        Note that this includes input beginning with a number.
         Disabled by default.
 
 $(_koopa_help_args)
@@ -40,7 +42,6 @@ details:
 
 see also:
     - 'syntactic::camelCase()' in R.
-    - make-names
 
 examples:
     camel-case "hello world" "foo bar"
@@ -49,16 +50,16 @@ examples:
     camel-case --strict "gene ID"
     ## geneId
 
-    camel-case --files "foo-bar.fastq.gz"
+    camel-case --rename "foo-bar.fastq.gz"
     ## ./fooBar.fastq.gz
 
-    camel-case --files --prefix 1-control-A.fastq.gz
+    camel-case --rename --prefix 1-control-A.fastq.gz
     ## ./x1ControlA.fastq.gz
 
 note:
     Bash script that calls Rscript internally.
     Requires the syntactic package to be installed.
-    Updated 2019-10-14.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -69,9 +70,9 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-prefix="FALSE"
-rename=0
+rename="FALSE"
 strict="FALSE"
+prefix="FALSE"
 
 POSITIONAL=()
 while (("$#"))
@@ -82,7 +83,7 @@ do
             shift 1
             ;;
         --rename)
-            rename=1
+            rename="TRUE"
             shift 1
             ;;
         --strict)
@@ -110,75 +111,14 @@ set -- "${POSITIONAL[@]}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-script_name="$(basename "$0")"
-
-# Rename file mode                                                          {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$rename" -eq 1 ]]
-then
-    flags=()
-    if [[ "$prefix" == "TRUE" ]]
-    then
-        flags+=("--prefix")
-    fi
-    if [[ "$strict" == "TRUE" ]]
-    then
-        flags+=("--strict")
-    fi
-    source_arr=("$@")
-    source_dn_arr=()
-    source_bn_arr=()
-    source_ext_arr=()
-    for x in "${source_arr[@]}"
-    do
-        source_dn_arr+=("$(dirname "$x")")
-        source_bn_arr+=("$(_koopa_basename_sans_ext2 "$x")")
-        source_ext_arr+=("$(_koopa_file_ext2 "$x")")
-    done
-    target_arr=()
-    target_dn_arr=("${source_dn_arr[@]}")
-    target_bn_arr=("${source_bn_arr[@]}")
-    target_ext_arr=("${source_ext_arr[@]}")
-    # Sanitize basenames.
-    read -r -a target_bn_arr <<< \
-        "$("$script_name" "${flags[@]}" "${target_bn_arr[@]}")"
-    for i in "${!source_arr[@]}"
-    do
-        target_dn="${target_dn_arr[$i]}"
-        target_bn="${target_bn_arr[$i]}"
-        target_ext="${target_ext_arr[$i]}"
-        # Add back leading period to extension, if necessary.
-        # Note that this step supports files without an extension.
-        if [[ -n "$target_ext" ]]
-        then
-            target_ext=".${target_ext}"
-        fi
-        target_arr+=( \
-            "$(printf "%s/%s%s" "$target_dn" "$target_bn" "$target_ext")" \
-        )
-    done
-    for i in "${!source_arr[@]}"
-    do
-        flags=(
-            "--no-clobber"
-            "--no-target-directory"
-            "--strip-trailing-slashes"
-            "--verbose"
-        )
-        mv "${flags[@]}" "${source_arr[$i]}" "${target_arr[$i]}"
-    done
-    exit 0
-fi
-
-# String mode                                                               {{{2
-# ------------------------------------------------------------------------------
+_koopa_assert_is_r_package_installed "syntactic"
 
 object="$(_koopa_array_to_r_vector "$@")"
 Rscript -e " \
     cat(
         syntactic::camelCase(
             object = ${object},
+            rename = ${rename},
             strict = ${strict},
             prefix = ${prefix}
         ),
