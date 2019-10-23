@@ -76,11 +76,11 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-10-23.
 EOF
 }
 
-[[ -z "$*" ]] && usage && exit 0
+_koopa_assert_has_args "$@"
 _koopa_help "$@"
 
 

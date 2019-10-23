@@ -54,11 +54,11 @@ details:
 
 note:
     Bash script.
-    Updated 2019-10-11.
+    Updated 2019-10-23.
 EOF
 }
 
-[[ -z "$*" ]] && usage && exit 0
+_koopa_assert_has_args "$@"
 _koopa_help "$@"
 
 
@@ -81,13 +81,13 @@ printf "Generating '%s' from '%s'.\n" \
 _koopa_assert_is_not_file "$output_file"
 _koopa_assert_is_matching_fixed "$fasta_file" ".transcripts.fa.gz"
 
-gunzip -c "$fasta_file" | \
-    grep '>' | \
-    cut -d '|' -f1,2 | \
-    awk '!a[$0]++' | \
-    tr -d '>' | \
-    sed 's/|/,/g' > \
-    "$output_file"
+gunzip -c "$fasta_file"                                                        \
+    | grep '>'                                                                 \
+    | cut -d '|' -f1,2                                                         \
+    | awk '!a[$0]++'                                                           \
+    | tr -d '>'                                                                \
+    | sed 's/|/,/g'                                                            \
+    > "$output_file"
 
 # Return the number of transcripts.
 count="$(_koopa_line_count "$output_file")"
