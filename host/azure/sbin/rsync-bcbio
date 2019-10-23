@@ -15,6 +15,7 @@ host_ip="$(ip-address)"
 source_user="mike"
 source_ip="10.100.100.135"
 bcbio_dir="/data00/bcbio"
+flags="$(_koopa_rsync_flags)"
 
 
 
@@ -39,11 +40,18 @@ internal variables:
 
 note:
     Bash script.
-    Updated 2019-10-15.
+    Updated 2019-10-23.
 EOF
 }
 
 _koopa_help "$@"
+
+
+
+# Arguments                                                                 {{{1
+# ==============================================================================
+
+bcbio_dir="$(_koopa_strip_trailing_slash "$bcbio_dir")"
 
 
 
@@ -53,16 +61,13 @@ _koopa_help "$@"
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
 then
-    >&2 printf "Error: On source machine: %s.\n" "$source_ip"
-    exit 1
+    _koopa_stop "On source machine: '${source_ip}'."
 fi
 
-flags="$(_koopa_rsync_flags)"
-
 dir="$bcbio_dir"
-printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
+_koopa_message "Updating '${dir}' from '${source_ip}'."
 # shellcheck disable=SC2086
-rsync $flags \
-    --rsync-path="sudo rsync" \
-    "${source_user}@${source_ip}:${dir}/" \
+rsync $flags                                                                   \
+    --rsync-path="sudo rsync"                                                  \
+    "${source_user}@${source_ip}:${dir}/"                                      \
     "${dir}/"

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Koopa ZSH prompt.
-# Updated 2019-10-14.
+# Updated 2019-10-23.
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -22,7 +22,7 @@
 _koopa_prompt_precmd() {
     if [[ -n "${ZSH_THEME:-}" ]]
     then
-        >&2 print "Warning: Oh My Zsh theme is enabled.\n"
+        _koopa_warning "Oh My Zsh theme is enabled."
         unset ZSH_THEME
     fi
 }

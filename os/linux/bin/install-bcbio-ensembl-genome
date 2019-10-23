@@ -43,7 +43,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -91,8 +91,7 @@ do
             shift 2
             ;;
         *)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-            exit 1
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
@@ -101,9 +100,7 @@ if [[ -z "${organism:-}" ]] ||
     [[ -z "${build:-}" ]] ||
     [[ -z "${release:-}" ]]
 then
-    >&2 printf "Error: Missing required argument.\n\n"
-    usage
-    exit 1
+    _koopa_missing_arg
 fi
 
 [[ -z "${indexes:-}" ]] && indexes="bowtie2 seq star"
@@ -124,9 +121,7 @@ _koopa_assert_is_installed bcbio_nextgen.py
 # Check for valid organism input.
 if ! echo "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
 then
-    >&2 printf "Invalid organism: %s.\n" "$organism"
-    >&2 printf "Requiring full Latin, case sensitive: e.g. 'Homo sapiens'.\n"
-    exit 1
+    _koopa_stop "Invalid organism: '${organism}'."
 fi
 
 # Sanitize spaces into underscores.
@@ -141,9 +136,7 @@ cores="$((CPU_COUNT-2))"
 
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
-
 tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
-
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
@@ -153,34 +146,32 @@ mkdir -pv "$log_dir"
 # ------------------------------------------------------------------------------
 
 # e.g. "Hsapiens".
-bcbio_species_dir="$(echo "$organism" | \
-    sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g")"
+bcbio_species_dir="$(                                                          \
+    echo "$organism"                                                           \
+    | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g"                                   \
+)"
 
 (
     rm -frv "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    
     # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
     ensembl-fasta --organism "$organism" --build "$build" --type "dna"
     gtf="${organism}.${build}.dna.primary_assembly.fa"
     [ ! -f "$fasta" ] && printf "FASTA failure.\n" && exit 1
     fasta="$(realpath "$fasta")"
-    
     # e.g. Homo_sapiens.GRCh38.96.gtf
     ensembl-gtf --organism "$organism" --build "$build" --release "$release"
     gtf="${organism}.${build}.${release}.gtf"
     [ ! -f "$gtf" ] && printf "GTF failure.\n" && exit 1
     gtf="$(realpath "$gtf")"
-    
-    bcbio_setup_genome.py \
-        --name "$bcbio_species_dir" \
-        --build "$bcbio_genome_name" \
-        --cores "$cores" \
-        --fasta "$fasta" \
-        --gtf "$gtf" \
-        --indexes "${indexes[@]}" \
+    bcbio_setup_genome.py                                                      \
+        --name "$bcbio_species_dir"                                            \
+        --build "$bcbio_genome_name"                                           \
+        --cores "$cores"                                                       \
+        --fasta "$fasta"                                                       \
+        --gtf "$gtf"                                                           \
+        --indexes "${indexes[@]}"                                              \
         2>&1 | tee "$log_file"
-    
     rm -fr "$tmp_dir"
 )
