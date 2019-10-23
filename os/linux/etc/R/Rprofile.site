@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-19 by Michael Steinbaugh.
+## Updated 2019-10-23 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -73,6 +73,11 @@
 
 options("rprofile.site" = TRUE)
 
+
+
+## Hidden environment                                                       {{{1
+## =============================================================================
+
 ## Create hidden environment to stash values.
 .env <- new.env()
 
@@ -80,6 +85,15 @@ options("rprofile.site" = TRUE)
 assign(x = "seed", value = 1123581321L, envir = .env)
 stopifnot(is.integer(.env[["seed"]]))
 set.seed(.env[["seed"]])
+
+## Check if a package is installed.
+assign(
+    x = ".isInstalled",
+    value = function(pkg) {
+        pkg %in% rownames(utils::installed.packages())
+    },
+    envir = .env
+)
 
 attach(.env)
 
@@ -180,11 +194,13 @@ options(
 ## - https://github.com/rstudio/rstudio/issues/4723
 ## - https://github.com/rstudio/rstudio/pull/4726
 
-options(
-    "error" = quote(rlang::entrace()),
-    "rlang_backtrace_on_error" = "full",
-    "rstudio.errors.suppressed" = FALSE
-)
+if (.isInstalled("rlang")) {
+    options(
+        "error" = quote(rlang::entrace()),
+        "rlang_backtrace_on_error" = "full",
+        "rstudio.errors.suppressed" = FALSE
+    )
+}
 
 ## Quiet down about registered S3 method collisons.
 ## See also:
@@ -197,43 +213,40 @@ Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
 ## Package-specific options                                                 {{{1
 ## =============================================================================
 
-## crayon                                                                   {{{2
-## -----------------------------------------------------------------------------
+if (.isInstalled("crayon")) {
+    options(
+        "crayon.enabled" = TRUE,
+        "crayon.colors" = 256L
+    )
+}
 
-options(
-    "crayon.enabled" = TRUE,
-    "crayon.colors" = 256L
-)
+if (.isInstalled("httr")) {
+    ## Enable OAuth token generation using httr on a remote R server.
+    ## This is used by googlesheets, for example.
+    options(
+        "httr_oob_default" = TRUE
+    )
+}
 
-## httr                                                                     {{{2
-## -----------------------------------------------------------------------------
+if (.isInstalled("parallel")) {
+    ## Improve the default multi-core settings.
+    ## Minimum of 1 core, maximum of n - 1 cores.
+    ## `BiocParallel::MulticoreParam()` should inherit this setting.
+    options(
+        "mc.cores" = max(1L, parallel::detectCores() - 1L)
+    )
+    ## `install.packages()` looks for "Ncpus" global.
+    options(
+        "Ncpus" = getOption("mc.cores")
+    )
+}
 
-## Enable OAuth token generation using httr on a remote R server. This is used
-## by googlesheets, for example.
-options(
-    "httr_oob_default" = TRUE
-)
-
-## parallel                                                                 {{{2
-## -----------------------------------------------------------------------------
-
-## Improve the default multi-core settings. Minimum of 1 core, maximum of n-1
-## cores. `BiocParallel::MulticoreParam()` should inherit this setting.
-options(
-    "mc.cores" = max(1L, parallel::detectCores() - 1L)
-)
-## `install.packages()` looks for "Ncpus" global.
-options(
-    "Ncpus" = getOption("mc.cores")
-)
-
-## readr                                                                    {{{2
-## -----------------------------------------------------------------------------
-
-options(
-    "readr.num_columns" = 0L,
-    "readr.show_progress" = FALSE
-)
+if (.isInstalled("readr")) {
+    options(
+        "readr.num_columns" = 0L,
+        "readr.show_progress" = FALSE
+    )
+}
 
 
 
@@ -408,7 +421,7 @@ options(
 
     ## Minimal session info                                                 {{{2
     ## -------------------------------------------------------------------------
-    
+
     if (isTRUE(interactive())) {
         path_string <- paste0("  %.", getOption("width") - 4L, "s")
         cat(sprintf(
@@ -445,7 +458,7 @@ options(
         }
         cat("\n")
     }
-    
+
     rm(conda, r_ver_full, r_ver_short)
 }
 
@@ -456,6 +469,6 @@ options(
 
 .Last <- function() {
     if (interactive()) {
-        message("Goodbye at ", date(), ".\n")
+        message(sprintf("Goodbye at %s.", date()))
     }
 }
