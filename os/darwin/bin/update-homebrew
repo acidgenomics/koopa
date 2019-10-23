@@ -19,7 +19,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-10-20.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -32,7 +32,7 @@ _koopa_help "$@"
 
 if ! _koopa_assert_is_installed
 then
-    >&2 printf "Warning: brew is not installed.\n"
+    _koopa_warning "Homebrew is not installed."
     exit 0
 fi
 

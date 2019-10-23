@@ -36,7 +36,7 @@ _koopa_help "$@"
 
 if ! _koopa_is_installed rustup
 then
-    >&2 printf "Warning: rustup is not installed.\n"
+    _koopa_warning "rustup is not installed."
     exit 0
 fi
 

@@ -21,6 +21,8 @@ source_ip="10.100.100.132"
 r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
 
+flags="$(_koopa_rsync_flags)"
+
 
 
 # Usage                                                                     {{{1
@@ -45,7 +47,7 @@ internal variables:
 
 note:
     Bash script.
-    Updated 2019-10-15.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -56,13 +58,11 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-if [[ "$host_ip" == "$source_ip" ]]
+# Check for accidental sync from source machine.
+if [[ "$source_ip" == "$host_ip" ]]
 then
-    >&2 printf "Error: Attempting to sync from source machine.\n"
-    exit 1
+    _koopa_stop "On source machine: '${source_ip}'."
 fi
-
-flags="$(_koopa_rsync_flags)"
 
 if [[ ! -d "$r_dir" ]]
 then
@@ -80,18 +80,18 @@ then
     sudo chown -R "$USER" "${lib_link}/shiny"
 fi
 
-printf "Updating '%s' from '%s'.\n" "$r_dir" "$source_ip"
+_koopa_message "Updating '${r_dir}' from '${source_ip}'."
 # shellcheck disable=SC2086
-rsync $flags \
-    --rsync-path="sudo rsync" \
-    "${source_user}@${source_ip}:${r_dir}/" \
+rsync $flags                                                                   \
+    --rsync-path="sudo rsync"                                                  \
+    "${source_user}@${source_ip}:${r_dir}/"                                    \
     "${r_dir}/"
 
 # > sudo chgrp -Rh wheel "$r_dir"
 # > sudo chmod -R g+w "$r_dir"
 
 # Update local symlinks.
-printf "Updating 'site-library' symlinks.\n"
+_koopa_message "Updating 'site-library' symlinks."
 
 if [[ -d "/usr/lib64/R" ]]
 then

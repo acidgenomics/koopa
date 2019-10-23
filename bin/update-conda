@@ -37,7 +37,7 @@ _koopa_help "$@"
 
 if ! _koopa_is_installed conda
 then
-    >&2 printf "Warning: conda is not installed.\n"
+    _koopa_warning "Conda is not installed."
     exit 0
 fi
 
