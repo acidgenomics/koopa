@@ -86,6 +86,18 @@ _koopa_array_to_r_vector() {
     printf "c(%s)\n" "$x"
 }
 
+_koopa_assert_has_args() {
+    # Assert that the user has passed required arguments to a script.
+    # Updated 2019-10-23.
+    if [ "$#" -eq 0 ]
+    then
+        _koopa_stop "\
+Required arguments missing.
+Run with '--help' flag for usage details."
+    fi
+    return 0
+}
+
 _koopa_assert_has_file_ext() {
     # Assert that input contains a file extension.
     # Updated 2019-10-23.
