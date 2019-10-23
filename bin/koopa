@@ -59,7 +59,7 @@ note:
 EOF
 }
 
-[[ -z "${1:-}" ]] && usage && exit 0
+_koopa_assert_has_args "$@"
 
 
 

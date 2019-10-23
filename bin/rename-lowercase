@@ -32,19 +32,12 @@ see also:
 note:
     Bash script.
     Requires Perl File::Rename to be installed.
-    Updated 2019-09-30.
+    Updated 2019-10-23.
 EOF
 }
 
-[[ -z "$*" ]] && usage && exit 0
+_koopa_assert_has_args "$@"
 _koopa_help "$@"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
-files=("$@")
 
 
 
@@ -52,4 +45,4 @@ files=("$@")
 # ==============================================================================
 
 _koopa_assert_is_installed rename
-rename -f 'y/A-Z/a-z/' "${files[@]}"
+rename -f 'y/A-Z/a-z/' "$@"
