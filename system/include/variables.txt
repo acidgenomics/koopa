@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.6.1"
-koopa_date="2019-10-22"
+koopa_date="2019-10-23"
 
 # Program versions                                                          {{{1
 # ==============================================================================
@@ -111,7 +111,7 @@ perl-file-rename="1.10"
 picard="2.21.1"
 
 # https://pypi.org/project/pip/
-pip="19.3"
+pip="19.3.1"
 
 # https://proj.org/
 proj="6.2.0"
