@@ -35,7 +35,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-21.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -53,12 +53,10 @@ to="$2"
 # Check for unescaped slashes.
 if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
 then
-    >&2 printf "Error: Unescaped '/' detected: %s\n" "$from"
-    exit 1
+    _koopa_stop "Unescaped '/' detected: '${from}'."
 elif echo "$to" | grep -q "/" && echo "$to" | grep -Fqv "\\"
 then
-    >&2 printf "Error: Unescaped '/' detected: %s\n" "$to"
-    exit 1
+    _koopa_stop "Unescaped '/' detected: '${to}'."
 fi
 
 find . -maxdepth 1 -type f -exec sed -i "s/${from}/${to}/g" {} \;

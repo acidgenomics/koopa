@@ -57,6 +57,7 @@ note:
 EOF
 }
 
+[[ -z "$*" ]] && usage && exit 0
 _koopa_help "$@"
 
 
