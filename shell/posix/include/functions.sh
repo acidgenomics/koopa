@@ -658,6 +658,97 @@ _koopa_disk_pct_used() {
 # E                                                                         {{{1
 # ==============================================================================
 
+_koopa_echo_ansi() {
+    # Print a colored line in console.
+    #
+    # Currently using ANSI escape codes.
+    # This is the classic 8 color terminal approach.
+    #
+    # - '0;': normal
+    # - '1;': bright or bold
+    #
+    # echo command requires '-e' flag to allow backslash escapes.
+    #
+    # See also:
+    # - https://en.wikipedia.org/wiki/ANSI_escape_code
+    # - https://stackoverflow.com/questions/5947742
+    # - https://stackoverflow.com/questions/15736223
+    # - https://bixense.com/clicolors/
+    #
+    # Updated 2019-10-23.
+    local color escape nocolor string
+    escape="$1"
+    string="$2"
+    nocolor="\033[0m"
+    color="\033[${escape}m"
+    # > printf "%b%s%b\n" "$color" "$nocolor" "$string"
+    echo -e "${color}${string}${nocolor}"
+}
+
+_koopa_echo_black() {
+    _koopa_echo_ansi "0;30" "$1"
+}
+
+_koopa_echo_black_bold() {
+    _koopa_echo_ansi "1;30" "$1"
+}
+
+_koopa_echo_blue() {
+    _koopa_echo_ansi "0;34" "$1"
+}
+
+_koopa_echo_blue_bold() {
+    _koopa_echo_ansi "1;34" "$1"
+}
+
+_koopa_echo_cyan() {
+    _koopa_echo_ansi "0;36" "$1"
+}
+
+_koopa_echo_cyan_bold() {
+    _koopa_echo_ansi "1;36" "$1"
+}
+
+_koopa_echo_green() {
+    _koopa_echo_ansi "0;32" "$1"
+}
+
+_koopa_echo_green_bold() {
+    _koopa_echo_ansi "1;32" "$1"
+}
+
+_koopa_echo_magenta() {
+    _koopa_echo_ansi "0;35" "$1"
+}
+
+_koopa_echo_magenta_bold() {
+    _koopa_echo_ansi "1;35" "$1"
+}
+
+_koopa_echo_red() {
+    _koopa_echo_ansi "0;31" "$1"
+}
+
+_koopa_echo_red_bold() {
+    _koopa_echo_ansi "1;31" "$1"
+}
+
+_koopa_echo_yellow() {
+    _koopa_echo_ansi "0;33" "$1"
+}
+
+_koopa_echo_yellow_bold() {
+    _koopa_echo_ansi "1;33" "$1"
+}
+
+_koopa_echo_white() {
+    _koopa_echo_ansi "0;37" "$1"
+}
+
+_koopa_echo_white_bold() {
+    _koopa_echo_ansi "1;37" "$1"
+}
+
 _koopa_ensure_newline_at_end_of_file() {
     # Ensure output CSV contains trailing line break.
     #
@@ -1347,6 +1438,12 @@ _koopa_major_version() {
     echo "$1" | cut -d '.' -f 1-2
 }
 
+_koopa_message() {
+    # General message.
+    # Updated 2019-10-23.
+    _koopa_echo_cyan_bold "$1"
+}
+
 _koopa_minor_version() {
     # Get the minor program version.
     # Updated 2019-09-23.
@@ -1763,6 +1860,24 @@ EOF
     echo "$shell"
 }
 
+_koopa_status_fail() {
+    # Status FAIL.
+    # Updated 2019-10-23.
+    _koopa_echo_red "  [FAIL] ${1}"
+}
+
+_koopa_status_note() {
+    # Status NOTE.
+    # Updated 2019-10-23.
+    _koopa_echo_yellow "  [NOTE] ${1}"
+}
+
+_koopa_status_ok() {
+    # Status OK.
+    # Updated 2019-10-23.
+    _koopa_echo_green "    [OK] ${1}"
+}
+
 _koopa_strip_left() {
     # Strip pattern from left side (start) of string.
     #
@@ -1795,10 +1910,23 @@ _koopa_strip_trailing_slash() {
     _koopa_strip_right "$1" "/"
 }
 
+_koopa_stop() {
+    # Error message.
+    # Updated 2019-10-23.
+    >&2 _koopa_echo_red_bold "Error: ${1}"
+    exit 1
+}
+
 _koopa_sub() {
     # Updated 2019-10-09.
     # See also: _koopa_gsub
     echo "$1" | sed -E "s/${2}/${3}/"
+}
+
+_koopa_success() {
+    # Success message.
+    # Updated 2019-10-23.
+    _koopa_echo_green_bold "$1"
 }
 
 
@@ -2085,6 +2213,12 @@ _koopa_warn_if_export() {
     return 0
 }
 
+_koopa_warning() {
+    # Warning message.
+    # Updated 2019-10-23.
+    >&2 _koopa_echo_yellow_bold "Warning: ${1}"
+}
+
 _koopa_which() {
     # Locate which program.
     #
@@ -2113,7 +2247,7 @@ _koopa_zsh_version() {
 
 
 
-# Fallback support                                                          {{{1
+# Fallback                                                                  {{{1
 # ==============================================================================
 
 # Note that this doesn't support '-ne' flag.
