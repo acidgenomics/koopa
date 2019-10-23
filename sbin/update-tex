@@ -43,7 +43,7 @@ then
     exit 0
 fi
 
-echo "Updating Tex Live."
+_koopa_message "Updating TeX Live."
 
 sudo tlmgr update --self
 sudo tlmgr update --list
