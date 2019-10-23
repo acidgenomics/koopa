@@ -98,6 +98,18 @@ Run with '--help' flag for usage details."
     return 0
 }
 
+_koopa_assert_has_no_args() {
+    # Assert that the user has not passed any arguments to a script.
+    # Updated 2019-10-23.
+    if [ "$#" -ne 0 ]
+    then
+        _koopa_stop "\
+Invalid argument: '${1}'.
+Run with '--help' flag for usage details."
+    fi
+    return 0
+}
+
 _koopa_assert_has_file_ext() {
     # Assert that input contains a file extension.
     # Updated 2019-10-23.
