@@ -23,12 +23,9 @@ required positional arguments:
 
 optional arguments:
     --rename
-        Rename input files.
-        Assumes we're renaming files in current working directory, but also
-            supports explicit and/or mixed file paths. Doesn't work recursively.
-        Coerces file names to lower case prior to applying function, simplifying
-            handling of mixed case.
-        Disabled by default.
+        Rename input files. Assumes we're renaming files in current working
+        directory, but also supports explicit and/or mixed file paths. Doesn't
+        work recursively.
     --prefix
         Include "x" prefix for names that are syntactically invalid in R.
         Note that this includes strings beginning with a number.
@@ -42,22 +39,21 @@ details:
 
 see also:
     - 'syntactic::kebabCase()' in R.
-    - make-names
 
 examples:
     kebab-case "hello world" "foo bar" "geneID"
     ## hello-world foo-bar gene-id
 
-    kebab-case --files "foo_bar.fastq.gz"
+    kebab-case --rename "foo_bar.fastq.gz"
     ## ./foo-bar.fastq.gz
 
-    kebab-case --files --prefix 1_control_A.fastq.gz
+    kebab-case --rename --prefix 1_control_A.fastq.gz
     ## ./x1-control-a.fastq.gz
 
 note:
     Bash script that calls Rscript internally.
     Requires the syntactic package to be installed.
-    Updated 2019-10-14.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -68,8 +64,8 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+rename="FALSE"
 prefix="FALSE"
-rename=0
 
 POSITIONAL=()
 while (("$#"))
@@ -80,7 +76,7 @@ do
             shift 1
             ;;
         --rename)
-            rename=1
+            rename="TRUE"
             shift 1
             ;;
         --)
@@ -104,74 +100,14 @@ set -- "${POSITIONAL[@]}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-script_name="$(basename "$0")"
-
-# Rename file mode                                                          {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$rename" -eq 1 ]]
-then
-    flags=()
-    if [[ "$prefix" == "TRUE" ]]
-    then
-        flags+=("--prefix")
-    fi
-    source_arr=("$@")
-    source_dn_arr=()
-    source_bn_arr=()
-    source_ext_arr=()
-    for x in "${source_arr[@]}"
-    do
-        source_dn_arr+=("$(dirname "$x")")
-        source_bn_arr+=("$(_koopa_basename_sans_ext2 "$x")")
-        source_ext_arr+=("$(_koopa_file_ext2 "$x")")
-    done
-    target_arr=()
-    target_dn_arr=("${source_dn_arr[@]}")
-    target_bn_arr=("${source_bn_arr[@]}")
-    target_ext_arr=("${source_ext_arr[@]}")
-    # Make basenames lowercase prior to applying function.
-    # This simplifies handling of mixed case.
-    target_bn_arr=("${target_bn_arr[@],,}")
-    # Sanitize basenames.
-    read -r -a target_bn_arr <<< \
-        "$("$script_name" "${flags[@]}" "${target_bn_arr[@]}")"
-    for i in "${!source_arr[@]}"
-    do
-        target_dn="${target_dn_arr[$i]}"
-        target_bn="${target_bn_arr[$i]}"
-        target_ext="${target_ext_arr[$i]}"
-        # Add back leading period to extension, if necessary.
-        # Note that this step supports files without an extension.
-        if [[ -n "$target_ext" ]]
-        then
-            target_ext=".${target_ext}"
-        fi
-        target_arr+=( \
-            "$(printf "%s/%s%s" "$target_dn" "$target_bn" "$target_ext")" \
-        )
-    done
-    for i in "${!source_arr[@]}"
-    do
-        flags=(
-            "--no-clobber"
-            "--no-target-directory"
-            "--strip-trailing-slashes"
-            "--verbose"
-        )
-        mv "${flags[@]}" "${source_arr[$i]}" "${target_arr[$i]}"
-    done
-    exit 0
-fi
-
-# String mode                                                               {{{2
-# ------------------------------------------------------------------------------
+_koopa_assert_is_r_package_installed "syntactic"
 
 object="$(_koopa_array_to_r_vector "$@")"
 Rscript -e " \
     cat(
         syntactic::kebabCase(
             object = ${object},
+            rename = ${rename},
             prefix = ${prefix}
         ),
         '\n',
