@@ -54,7 +54,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-27.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -63,7 +63,7 @@ _koopa_help "$@"
 
 
 
-# Parse arguments                                                           {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
 config=0
@@ -91,8 +91,7 @@ do
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-            exit 1
+            _koopa_invalid_arg "$1"
             ;;
         *)
             POSITIONAL+=("$1")
@@ -147,7 +146,7 @@ if [[ "$config" -eq 1 ]]
 then
     if [[ -z "${XDG_CONFIG_HOME:-}" ]]
     then
-        >&2 printf "Warning: 'XDG_CONFIG_HOME' is unset.\n"
+        _koopa_warning "'XDG_CONFIG_HOME' is unset."
         XDG_CONFIG_HOME="${HOME}/.config"
     fi
     symlink_path="${XDG_CONFIG_HOME}/${symlink_name}"
@@ -167,11 +166,11 @@ if [[ -L "$symlink_path" ]] &&
     [[ -f "$symlink_path" || -d "$symlink_path" ]] &&
     [[ "$force" -eq 0 ]]
 then
-    >&2 printf "Error: Existing symlink: '%s'.\n" "$symlink_path"
+    _koopa_stop "Existing symlink: '${symlink_path}'."
     exit 1
 elif [[ ! -L "$symlink_path" ]] && [[ -e "$symlink_path" ]]
 then
-    >&2 printf "Error: Existing file: '%s'.\n" "$symlink_path"
+    _koopa_stop "Existing file: '${symlink_path}'."
     exit 1
 fi
 

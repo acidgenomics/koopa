@@ -46,7 +46,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-07-30.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -86,8 +86,7 @@ do
             shift 2
             ;;
         *)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-            exit 1
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
@@ -95,8 +94,7 @@ done
 if [[ -z "${host:-}" ]] ||
     [[ -z "${user:-}" ]]
 then
-    >&2 printf "Error: Missing argument.\n\n"
-    exit 1
+    _koopa_missing_arg
 fi
 
 

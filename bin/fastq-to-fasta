@@ -73,7 +73,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -104,8 +104,7 @@ do
             shift 2
             ;;
         *)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
-            exit 1
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
@@ -128,8 +127,7 @@ done < <(find "$source_dir" -maxdepth 1 -name "*.fastq" -print0)
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]
 then
-    >&2 printf "Error: No FASTQ files detected.\n"
-    exit 1
+    _koopa_stop "No FASTQ files detected."
 fi
 
 # Create the target directory automatically.
@@ -138,9 +136,8 @@ mkdir -pv "$target_dir"
 for fastq_file in "${array[@]}"
 do
     fasta_file="${fastq_file//fastq/fasta}"
-    paste - - - - < "$fastq_file" | \
-        cut -f 1,2 | \
-        sed 's/^@/>/' | \
-        tr "\t" "\n" > \
-        "$fasta_file"
+    paste - - - - < "$fastq_file"                                              \
+        | cut -f 1,2                                                           \
+        | sed 's/^@/>/'                                                        \
+        | tr "\t" "\n" > "$fasta_file"
 done

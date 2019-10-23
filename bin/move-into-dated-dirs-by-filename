@@ -36,22 +36,17 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-10-15.
+    Updated 2019-10-23.
 EOF
 }
 
+[[ -z "$*" ]] && usage && exit 0
 _koopa_help "$@"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-if [[ -z "${1:-}" ]]
-then
-    >&2 printf "Error: No files were specified.\n"
-    exit 1
-fi
 
 grep_array=(
     '^([0-9]{4})'
@@ -81,8 +76,6 @@ do
         mkdir --parents --verbose "$subdir"
         mv --no-clobber --verbose "$file" "$subdir"
     else
-        >&2 printf "Error: '%s' file does not contain date in name.\n" "$file"
-        >&2 printf "grep string: '%s'\n" "$grep_string"
-        exit 1
+        _koopa_stop "'${file}' does not contain date."
     fi
 done

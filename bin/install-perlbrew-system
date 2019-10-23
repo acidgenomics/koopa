@@ -23,7 +23,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -41,8 +41,7 @@ elif [[ -x "/usr/bin/perl" ]]
 then
     bin_dir="/usr/bin"
 else
-    >&2 printf "Error: Failed to detect system Perl.\n"
-    exit 1
+    _koopa_stop "Failed to detect system Perl."
 fi
 
 (
