@@ -26,7 +26,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-22.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -39,11 +39,11 @@ _koopa_help "$@"
 
 if ! _koopa_is_venv_active
 then
-    >&2 printf "Warning: No active venv detected.\n"
+    _koopa_warning "No active Python venv detected."
     exit 0
 fi
 
-echo "Updating Python virtual environment."
+echo "Updating Python venv."
 
 pip install --upgrade pip
 
@@ -52,7 +52,7 @@ mapfile -t array <<< "$lines"
 _koopa_is_array_non_empty "${array[@]}" || exit 0
 
 printf "%d outdated packages detected.\n" "${#array[@]}"
-echo "$lines" \
-    | cut -d '=' -f 1 \
+echo "$lines"                                                                  \
+    | cut -d '=' -f 1                                                          \
     | xargs -n1 pip install --upgrade
 

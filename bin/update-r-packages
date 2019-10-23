@@ -22,11 +22,11 @@ details:
     Calls 'bb8::updatePackages()' to auto-update the current library.
     
 see also:
-    .libPaths()
+    '.libPaths()' in R.
 
 note:
     Bash script.
-    Updated 2019-10-20.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -39,7 +39,7 @@ _koopa_help "$@"
 
 if ! _koopa_is_r_package_installed bb8
 then
-    >&2 printf "Warning: bb8 R package is not installed.\n"
+    _koopa_warning "bb8 R package is not installed."
     exit 0
 fi
 

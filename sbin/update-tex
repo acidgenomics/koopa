@@ -26,7 +26,7 @@ see also:
 note:
     Bash script.
     Requires that texlive is already installed.
-    Updated 2019-10-20.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -39,7 +39,7 @@ _koopa_help "$@"
 
 if ! _koopa_is_installed tlmgr
 then
-    >&2 printf "Error: tlmgr is not installed.\n"
+    _koopa_warning "tlmgr is not installed."
     exit 0
 fi
 
