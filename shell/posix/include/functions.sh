@@ -1131,6 +1131,12 @@ _koopa_info_box() {
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
+_koopa_invalid_arg() {
+    # Error on invalid argument.
+    # Updated 2019-10-23.
+    _koopa_stop "Invalid argument: '${1}'."
+}
+
 _koopa_is_conda_active() {
     # Is there a Conda environment active?
     # Updated 2019-10-20.
@@ -1421,6 +1427,12 @@ _koopa_minor_version() {
     # Get the minor program version.
     # Updated 2019-09-23.
     echo "$1" | cut -d "." -f 2-
+}
+
+_koopa_missing_arg() {
+    # Error on a missing argument.
+    # Updated 2019-10-23.
+    _koopa_stop "Missing required argument."
 }
 
 
