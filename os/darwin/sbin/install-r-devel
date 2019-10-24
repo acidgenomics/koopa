@@ -42,7 +42,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-09-26.
+    Updated 2019-10-24.
 EOF
 }
 
@@ -53,7 +53,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing r-devel %s for %s.\n" "$r_version" "$macos_version"
+_koopa_message "Installing r-devel ${r_version} for ${macos_version}."
 
 (
     rm -fr "$tmp_dir"
@@ -65,22 +65,19 @@ printf "Installing r-devel %s for %s.\n" "$r_version" "$macos_version"
     if [[ -d "/Library/Frameworks/R.framework" ]]
     then
         printf "Backing up existing 'R.framework'.\n"
-        sudo mv \
-            "/Library/Frameworks/R.framework" \
+        sudo mv "/Library/Frameworks/R.framework" \
             "/Library/Frameworks/R.framework.bak"
     fi
     # Now we're ready to install.
-    sudo tar fvxz "$tarball" -C /
+    sudo tar -xzvf "$tarball" -C /
     rm -fr "$tmp_dir"
 )
 
 # Create versioned symlinks.
-sudo mv \
-    "/Library/Frameworks/R.framework" \
+sudo mv "/Library/Frameworks/R.framework" \
     "/Library/Frameworks/R-${r_version}.framework"
-sudo ln -s \
-    "/Library/Frameworks/R-${r_version}.framework" \
+sudo ln -fnsv "/Library/Frameworks/R-${r_version}.framework" \
     "/Library/Frameworks/R.framework"
 
-printf "R-%s installed correctly.\n" "$r_version"
-printf "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct.\n"
+_koopa_message "R-${r_version} installed correctly."
+_koopa_message "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."

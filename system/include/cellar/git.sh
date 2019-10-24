@@ -53,9 +53,9 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
-
 _koopa_assert_is_installed docbook2x-texi
+
+_koopa_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"

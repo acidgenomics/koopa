@@ -33,11 +33,11 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing TeX packages recommended for RStudio.\n"
+_koopa_message "Installing TeX packages recommended for RStudio."
 
 sudo tlmgr update --self
 
-packages=( \
+packages=(
     collection-fontsrecommended  # priority
     collection-latexrecommended  # priority
     bera  # beramono

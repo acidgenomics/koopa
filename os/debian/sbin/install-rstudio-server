@@ -44,7 +44,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
+_koopa_message "Installing ${name} ${version}."
 
 # Note that R is already configured on Bioconductor image.
 sudo apt-get -y install r-base

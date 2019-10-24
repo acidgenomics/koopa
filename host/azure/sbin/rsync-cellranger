@@ -68,7 +68,7 @@ then
 fi
 
 dir="$cellranger_dir"
-printf "Updating '%s' from '%s'.\n" "$dir" "$source_ip"
+_koopa_message "Updating '${dir}' from '${source_ip}'."
 # shellcheck disable=SC2086
 rsync $flags \
     --rsync-path="sudo rsync" \

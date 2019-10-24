@@ -47,11 +47,11 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "R" "$version"
-
 _koopa_assert_is_installed java
 _koopa_assert_is_installed javac
 _koopa_assert_is_installed tex
+
+_koopa_message "Installing R ${version}."
 
 (
     rm -frv "$prefix"

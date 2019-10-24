@@ -74,12 +74,13 @@ output_file="${2:-$output_file}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Generating '%s' from '%s'.\n" \
-    "$(basename "$output_file")" \
-    "$(basename "$fasta_file")"
+_koopa_assert_is_file "$fasta_file"
+_koopa_assert_is_matching_fixed "$fasta_file" ".transcripts.fa.gz"
 
 _koopa_assert_is_not_file "$output_file"
-_koopa_assert_is_matching_fixed "$fasta_file" ".transcripts.fa.gz"
+
+_koopa_message "Generating '$(basename "$output_file")' from \
+'$(basename "$fasta_file")'."
 
 gunzip -c "$fasta_file"                                                        \
     | grep '>'                                                                 \
@@ -91,4 +92,4 @@ gunzip -c "$fasta_file"                                                        \
 
 # Return the number of transcripts.
 count="$(_koopa_line_count "$output_file")"
-printf "%d transcripts detected.\n" "$count"
+_koopa_message "${count} transcripts detected."

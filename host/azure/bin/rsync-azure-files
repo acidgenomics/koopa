@@ -77,17 +77,12 @@ required positional arguments:
 
 $(_koopa_help_args)
 
-rsync flags set automatically:
-EOF
-printf "    %s\n" "${flags[@]}"
-cat << EOF
-
 examples:
     rsync-azure-files results/ /mnt/azbioinfo01/project/results/
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-23.
 EOF
 }
 

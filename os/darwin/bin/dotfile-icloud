@@ -23,7 +23,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-07-28.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -48,24 +48,23 @@ _koopa_assert_is_dir "$cloud"
 
 if [[ -f "$cloud" ]] && [[ -f "$local" ]]
 then
-    printf "'%s' exists in both places.\n" "$file"
-    printf "Deleting local copy.\n"
+    _koopa_message "'${file}' exists in both places."
+    _koopa_message "Deleting local copy."
     rm -v "$local"
-    printf "Adding symlink.\n"
+    _koopa_message "Adding symlink."
     ln -fnsv "$cloud" "$local"
 elif [[ -f "$cloud" ]]
 then
-    printf "'%s' is only saved on cloud.\n" "$file"
-    printf "Adding local symlink.\n"
+    _koopa_message "'${file}' is only saved on iCloud."
+    _koopa_message "Adding local symlink."
     ln -fsnv "$cloud" "$local"
 elif [[ -f "$local" ]]
 then
-    printf "'%s' only exists locally.\n" "$file"
-    printf "Moving to cloud.\n"
+    _koopa_message "'${file}' only exists locally."
+    _koopa_message "Moving to iCloud."
     mv -v "$local" "$cloud"
-    printf "Adding symlink.\n"
+    _koopa_message "Adding symlink."
     ln -fsnv "$cloud" "$local"
 else
-    printf "Error: '%s' doesn't exist.\n" "$file"
-    exit 1
+    _koopa_stop "'${file}' doesn't exist."
 fi
