@@ -71,11 +71,11 @@ def tx2gene_from_fasta(source_name, output_dir):
     assumes that output_dir has a specific structure, containing a
     "transcriptome" subdirectory with the FASTA.
 
-    Updated 2019-10-09.
+    Updated 2019-10-24.
     """
     cmd = "tx2gene-from-" + source_name + "-fasta"
     transcriptome_dir = os.path.join(output_dir, "transcriptome")
-    input_file = os.path.join(transcriptome_dir, "*.fa.gz")
+    input_file = os.path.join(transcriptome_dir, "*.fa(sta).gz")
     output_file = os.path.join(transcriptome_dir, "tx2gene.csv")
     if os.path.isfile(output_file):
         print("File exists: '" + output_file + "'.")
