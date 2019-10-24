@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CPI shared shell configuration.
-# Updated 2019-10-16 by Michael Steinbaugh.
+# Updated 2019-10-24 by Michael Steinbaugh.
 
 
 
@@ -40,7 +40,8 @@ export D5="/mnt/azbioinfoseq05"
 
 # This value will be detected and configured automatically by koopa.
 # > export BCBIO_EXE="/data00/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
-export BCBIO_EXE="/data00/bcbio/development/tools/bin/bcbio_nextgen.py"
+# > export BCBIO_EXE="/data00/bcbio/v1.1.7/tools/bin/bcbio_nextgen.py"
+# > export BCBIO_EXE="/data00/bcbio/development/tools/bin/bcbio_nextgen.py"
 
 
 
