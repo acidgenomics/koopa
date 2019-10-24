@@ -68,12 +68,12 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
-
 # Ensure current jar binary is in path, otherwise install will fail.
 java_home="$(_koopa_java_home)"
 _koopa_add_to_path_start "${java_home}/bin"
 _koopa_assert_is_installed jar
+
+_koopa_message "Installing ${name} ${version}."
 
 export NGS_LIBDIR="$ngs_libdir"
 export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"

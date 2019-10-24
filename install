@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
 set -Ee -o pipefail
-set -x
 
 
 
@@ -11,7 +10,7 @@ set -x
 # Error on root user.
 if [[ "$(id -u)" -eq 0 ]]
 then
-    >&2 printf "Don't install koopa as root.\n"
+    >&2 echo "Error: Don't install koopa as root."
     exit 1
 fi
 
@@ -41,7 +40,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-10-22.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -78,7 +77,7 @@ do
             break
             ;;
         --*|-*)
-            >&2 printf "Error: Invalid argument: '%s'\n" "$1"
+            >&2 echo "Error: Invalid argument: '${1}'."
             exit 1
             ;;
     esac
@@ -115,7 +114,7 @@ _koopa_has_sudo() {
 }
 
 _koopa_is_linux() {
-    [ "$(uname -s)" = "Linux" ]
+    [[ "$(uname -s)" == "Linux" ]]
 }
 
 
@@ -139,7 +138,7 @@ then
     # Error if target destination directory already exists.
     if [[ -d "$target_dir" ]]
     then
-        >&2 printf "Error: Directory exists: '%s'\n" "$target_dir"
+        >&2 echo "Error: Directory exists: '${target_dir}'."
         exit 1
     fi
     # Set correct admin permissions, if applicable.
@@ -147,7 +146,7 @@ then
     then
         if ! _koopa_has_sudo
         then
-            >&2 printf "Error: sudo is required for shared installation.\n"
+            >&2 echo "Error: sudo is required for shared installation."
             exit 1
         fi
         sudo mkdir -pv "$target_dir"
@@ -179,7 +178,7 @@ rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
 # Activate koopa                                                            {{{2
 # ------------------------------------------------------------------------------
 
-printf "Activating koopa.\n"
+echo "Activating koopa."
 force=1 source "${KOOPA_HOME}/activate"
 
 # Shared user configuration                                                 {{{2
@@ -188,7 +187,7 @@ force=1 source "${KOOPA_HOME}/activate"
 # Check for shared installation automatically.
 if [[ "$shared" -eq 0 ]] && echo "$KOOPA_HOME" | grep -qE "^/(opt|usr)/"
 then
-    printf "Shared installation detected at '%s'.\n" "$KOOPA_HOME"
+    echo "Shared installation detected at '${KOOPA_HOME}'"
     shared=1
 fi
 
@@ -203,7 +202,7 @@ fi
 
 if [[ "$dotfiles" -eq 1 ]]
 then
-    printf "\nConfiguring dotfiles.\n"
+    echo "Configuring dotfiles."
     # Clone dotfiles repo, if necessary.
     if [[ ! -d "${KOOPA_HOME}/dotfiles" ]]
     then
@@ -291,4 +290,4 @@ then
     fi
 fi
 
-printf "Installation was successful.\n"
+echo "Installation was successful."

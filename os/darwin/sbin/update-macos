@@ -29,7 +29,7 @@ seealso:
 
 note:
     Bash script.
-    Updated 2019-10-22.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -40,9 +40,15 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-cat << EOF
-Updating macOS via 'softwareupdate'.
-Restart may be required.
-EOF
+if _koopa_is_installed mas
+then
+    _koopa_message "Updating App Store apps via 'mas'."
+    mas upgrade
+fi
+
+print
+
+_koopa_message "Updating macOS via 'softwareupdate'."
+_koopa_note "Restart may be required."
 
 sudo softwareupdate --install --recommended --restart

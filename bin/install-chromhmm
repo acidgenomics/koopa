@@ -32,7 +32,7 @@ $(_koopa_help_args)
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -43,6 +43,8 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+_koopa_message "Installing ChromHMM."
+
 (
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
@@ -52,6 +54,6 @@ _koopa_help "$@"
     rm -fr "$tmp_dir"
 )
 
-_koopa_prefix_chgrp "$prefix"
+_koopa_set_permissions "$prefix"
 
-printf "Path: %s\n" "${prefix}/ChromHMM/ChromHMM.jar"
+_koopa_message "Path: '${prefix}/ChromHMM/ChromHMM.jar'"

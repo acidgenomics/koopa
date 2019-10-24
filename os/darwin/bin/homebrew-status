@@ -17,12 +17,17 @@ Homebrew status.
 
 $(_koopa_help_args)
 
+see also:
+    - brew doctor
+    - brew linkage
+
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-10-23.
 EOF
 }
 
+_koopa_assert_has_no_args "$@"
 _koopa_help "$@"
 
 
@@ -32,27 +37,31 @@ _koopa_help "$@"
 
 _koopa_assert_is_installed brew
 
-printf "\ndoctor:\n"
-brew doctor
-
-printf "\nlinkage:"
-brew linkage
-
-printf "\nleaves:\n"
-brew leaves
-
-"\ndependency tree:\n"
+_koopa_message "dependency tree:"
 brew deps --installed --tree
 
-printf "\nversions:\n"
+print
+
+_koopa_message "leaves:"
+brew leaves
+
+print
+
+_koopa_message "versions:"
 brew list --versions
 
-printf "\nmissing:\n"
+print
+
+_koopa_message "missing:"
 brew missing
 
-printf "\noutdated:\n"
+print
+
+_koopa_message "outdated:"
 brew outdated
 brew cask outdated
 
-printf "\ninfo:\n"
+print
+
+_koopa_message "info:"
 brew info

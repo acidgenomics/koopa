@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-18.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -138,8 +138,8 @@ esac
 
 if [ "$test" -eq 1 ]
 then
-    printf "Test mode enabled.\n"
-    printf "Setting strict shell mode.\n"
+    echo "Test mode enabled."
+    echo "Setting strict shell mode."
     set -o errexit
     set -o nounset
     if [ -n "${BASH_VERSION:-}" ]
@@ -200,18 +200,21 @@ then
     # https://stackoverflow.com/a/23259585/3911732
     file="${(%):-%N}"
 else
-    >&2 printf "Error: Failed to detect supported shell.\n"
-    >&2 printf "Supported: bash, zsh.\n\n"
-    >&2 printf "  SHELL: %s\n" "$SHELL"
-    >&2 printf "      0: %s\n" "$0"
-    >&2 printf "      -: %s\n" "$-"
+    >&2 cat << EOF
+Error: Failed to detect supported shell.
+Supported: bash, zsh.
+
+  SHELL: '${SHELL}'
+      0: '${0}'
+      -: '${-}'
+EOF
     return 1
 fi
 export KOOPA_SHELL
 
 if [ ! -f "$file" ]
 then
-    >&2 printf "Error: Failed to detect absolute path of activation script.\n"
+    >&2 echo "Error: Failed to detect absolute path of activation script."
     return 1
 fi
 
@@ -417,6 +420,6 @@ then
         set -o posix
         set -o pipefail
     fi
-    printf "Activation was successful.\n"
+    echo "Activation was successful."
 fi
 unset -v test

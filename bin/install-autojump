@@ -34,7 +34,7 @@ _koopa_help "$@"
 name="autojump"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
-printf "Installing %s.\n" "$name"
+_koopa_message "Installing ${name}."
 
 (
     rm -fr "$tmp_dir"
@@ -45,4 +45,4 @@ printf "Installing %s.\n" "$name"
     rm -fr "$tmp_dir"
 )
 
-printf "Reload the current shell.\n"
+_koopa_note "Reload the current shell."

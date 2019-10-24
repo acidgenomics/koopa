@@ -38,22 +38,20 @@ fi
 
 brew analytics off
 
-printf "\nUpdating Homebrew.\n"
+_koopa_message "Updating Homebrew."
 brew update
 
-printf "\nUpdating brews.\n"
+print
+
+_koopa_message "Updating brews."
 brew upgrade --force-bottle
 # > brew list | xargs brew reinstall --force-bottle --cleanup
 
-printf "\nUpdating casks.\n"
+print
+
+_koopa_message "Updating casks."
 brew cask outdated | xargs brew cask reinstall
 
-if _koopa_is_installed mas
-then
-    printf "\nUpgrading Mac App Store Apps.\n"
-    mas upgrade
-fi
-
-printf "\nRunning cleanup.\n"
+_koopa_message "Running cleanup."
 brew cleanup -s
 rm -frv "$(brew --cache)"

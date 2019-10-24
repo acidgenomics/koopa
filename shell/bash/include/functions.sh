@@ -169,3 +169,14 @@ _koopa_script_name() {
     )"
     basename "$file"
 }
+
+
+
+# Fallback                                                                  {{{1
+# ==============================================================================
+
+# print is a useful zsh built-in but not defined in bash.
+
+print() {
+    echo ""
+}

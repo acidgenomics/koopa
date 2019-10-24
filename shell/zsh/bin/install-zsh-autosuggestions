@@ -41,5 +41,5 @@ _koopa_help "$@"
 # ==============================================================================
 
 _koopa_assert_is_not_dir "$target_dir"
-printf "Installing %s.\n" "$plugin"
+_koopa_message "Installing ${plugin}."
 git clone "$source_repo" "$target_dir"

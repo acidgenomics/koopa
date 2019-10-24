@@ -74,7 +74,7 @@ case "$1" in
         exit
         ;;
     --version|-V)
-        printf "koopa %s (%s)\n" "$version" "$date"
+        echo "koopa ${version} (${date})"
         exit
         ;;
     check)

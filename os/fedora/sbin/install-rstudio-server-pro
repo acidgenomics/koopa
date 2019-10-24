@@ -47,7 +47,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
+_koopa_message "Installing ${name} ${version}."
 
 # Remove existing config files.
 # > sudo rm -frv /etc/rstudio

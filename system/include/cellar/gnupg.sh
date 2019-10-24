@@ -45,7 +45,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
+_koopa_message "Installing ${name} ${version}."
 
 # Download GnuPG release signing keys.
 if _koopa_is_installed gpg

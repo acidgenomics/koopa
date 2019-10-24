@@ -39,7 +39,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Updating symlinks.\n"
+_koopa_message "Updating symlinks."
 
 # Remove existing symlinks in `/usr/local/bin`.
 sudo rm -fv /usr/local/bin/bcbio_nextgen.py*

@@ -201,7 +201,7 @@ then
     _koopa_stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
 fi
 
-printf "%d samples detected.\n" "${#array[@]}"
+_koopa_message "${#array[@]} samples detected."
 
 # Index                                                                     {{{2
 # ------------------------------------------------------------------------------
@@ -225,7 +225,7 @@ fi
 # Loop across the per-sample array and quantify.
 for x in "${array[@]}"
 do
-    printf "kallisto quant: %s\n" "$x"
+    _koopa_message "kallisto quant: ${x}"
     sample_output_dir="${output_dir}/${x}"
     rm -frv "$sample_output_dir"
     mkdir -pv "$sample_output_dir"

@@ -39,7 +39,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-10-22.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -58,11 +58,8 @@ conda_exe="${conda_dir}/bin/conda"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Conda: '%s'.\n" "$conda_exe"
-
-cat << EOF
-Removing extracted Anaconda packages.
-Note: Source tarballs will not be removed.
-EOF
+_koopa_message "Conda: '${conda_exe}'."
+_koopa_message "Removing extracted Anaconda packages."
+_koopa_note "Source tarballs will not be removed."
 
 "$conda_exe" clean --yes --packages
