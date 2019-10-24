@@ -124,7 +124,11 @@ _koopa_prefix_mkdir "$prefix"
         2>&1 | tee "$log_file"
 )
 
-_koopa_set_permissions "$prefix"
+# Keep install owned by current user, so we can install genomes easily.
+_koopa_prefix_chgrp "$prefix"
+
+# Here's how to set to root, otherwise:
+# > _koopa_set_permissions "$prefix"
 
 # Disable group write access to install.
 # > chmod -R g-w "$install_dir" "$tools_dir"
