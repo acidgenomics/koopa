@@ -100,9 +100,8 @@ _koopa_message "Installing bcbio '${version}' into '${prefix}'."
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 
-log_dir="${log_dir}/${version}"
 timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="${log_dir}/bcbio-install-${version}-${timestamp}.log"
+log_file="${log_dir}/${timestamp}-install-${version}-.log"
 _koopa_message "Saving install log at '${log_file}"
 mkdir -pv "$log_dir"
 
