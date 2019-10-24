@@ -49,9 +49,9 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
-
 _koopa_assert_is_installed rpm
+
+_koopa_message "Installing ${name} ${version}."
 
 file="bcl2fastq2-v2-20-0-linux-x86-64.zip"
 url="https://support.illumina.com/content/dam/illumina-support/documents/\

@@ -46,7 +46,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
+_koopa_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
@@ -54,7 +54,8 @@ printf "Installing %s %s.\n" "$name" "$version"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="hdf5-${version}.tar.gz"
-    url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/hdf5-${version}/src/${file}"
+    url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/\
+hdf5-${version}/src/${file}"
     wget "$url"
     tar -xzvf "$file"
     cd "hdf5-${version}" || exit 1

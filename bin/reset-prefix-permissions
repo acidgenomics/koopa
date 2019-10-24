@@ -64,8 +64,8 @@ then
     _koopa_assert_has_sudo
 fi
 
-printf "Resetting user ('%s') and group ('%s') permissions on '%s'.\n" \
-    "$user" "$group" "$prefix"
+_koopa_message "Resetting user ('${user}') and group ('${group}') permissions \
+on '${prefix}'."
 
 _koopa_set_permissions "$prefix"
 

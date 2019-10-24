@@ -142,6 +142,6 @@ do
         newname="${prefix}_${num}${stem}"
         mv -nv "$oldname" "$newname"
     else
-        printf "Skipping %s.\n" "$file"
+        _koopa_message "Skipping '${file}'."
     fi
 done

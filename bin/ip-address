@@ -18,9 +18,18 @@ IP address.
 
 $(_koopa_help_args)
 
+details:
+    For macOS, multiple values may return, representing wired and wireless IPs.
+
+see also:
+    - https://apple.stackexchange.com/questions/20547
+
+    Alternate approach for macOS:
+    > ipconfig getifaddr en0
+
 note:
     Bash script.
-    Updated 2019-06-23.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -33,9 +42,7 @@ _koopa_help "$@"
 
 if _koopa_is_darwin
 then
-    printf "en0: %s\n" "$(ipconfig getifaddr en0)"
-    printf "en1: %s\n" "$(ipconfig getifaddr en1)"
-    printf "en2: %s\n" "$(ipconfig getifaddr en2)"
+    ifconfig | grep "inet " | grep "broadcast" | awk '{print $2}' | sort
 else
     hostname -I | awk '{print $1}'
 fi

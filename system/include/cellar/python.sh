@@ -47,7 +47,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-16.
+    Updated 2019-10-23.
 EOF
 }
 
@@ -58,10 +58,13 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-printf "Installing %s %s.\n" "$name" "$version"
+_koopa_message "Installing ${name} ${version}."
 
-printf "Removing existing virtual environments.\n"
-rm -frv "${HOME}/.virtualenvs"
+if [[ -d "${HOME}/.virtualenvs" ]]
+then
+    _koopa_note "Removing existing virtual environments."
+    rm -frv "${HOME}/.virtualenvs"
+fi
 
 (
     rm -frv "$prefix"
@@ -89,7 +92,7 @@ rm -frv "${HOME}/.virtualenvs"
 _koopa_link_cellar "$name" "$version"
 
 build_prefix="$(_koopa_build_prefix)"
-printf "Symlinking 'python3' to 'python' in '%s'.\n" "$build_prefix"
+_koopa_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
 ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
 command -v "$exe_file"

@@ -157,7 +157,7 @@ fi
 # Inform the user when nuking a broken symlink.
 if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
 then
-    printf "Overwriting broken link: '%s'.\n" "$symlink_path"
+    _koopa_message "Overwriting broken link: '${symlink_path}'."
     rm -fv "$symlink_path"
 fi
 
@@ -174,6 +174,6 @@ then
     exit 1
 fi
 
-printf "Symlinking '%s'.\n" "$(basename "$symlink_path")"
+_koopa_message "Symlinking '$(basename "$symlink_path")'."
 rm -fv "$symlink_path"
 ln -fnsv "$source_path" "$symlink_path"
