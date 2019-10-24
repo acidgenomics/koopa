@@ -75,7 +75,7 @@ def tx2gene_from_fasta(source_name, output_dir):
     """
     cmd = "tx2gene-from-" + source_name + "-fasta"
     transcriptome_dir = os.path.join(output_dir, "transcriptome")
-    input_file = os.path.join(transcriptome_dir, "*.fa(sta).gz")
+    input_file = os.path.join(transcriptome_dir, "*.fa*.gz")
     output_file = os.path.join(transcriptome_dir, "tx2gene.csv")
     if os.path.isfile(output_file):
         print("File exists: '" + output_file + "'.")
