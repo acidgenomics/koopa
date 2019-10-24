@@ -187,7 +187,7 @@ def download_transcriptome(release_url, output_dir, decompress, dmel):
     )
     if not os.path.isfile(output_fasta_file):
         print("Concatenating '" + output_fasta_file + "'.")
-        fasta_glob = os.path.join(cat_dir, "dmel-all-*-" + dmel, ".fasta.gz")
+        fasta_glob = os.path.join(cat_dir, "dmel-all-*.fasta.gz")
         os.system("cat " + fasta_glob + " > " + output_fasta_file)
         if decompress is True:
             decompress_but_keep_original(output_fasta_file)
