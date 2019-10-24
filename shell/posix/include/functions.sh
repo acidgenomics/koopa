@@ -928,6 +928,16 @@ _koopa_git_branch() {
     git symbolic-ref --short -q HEAD
 }
 
+_koopa_github_latest_release() {
+    # Get the latest release version from GitHub.
+    # Updated 2019-10-24.
+    # Example: _koopa_github_latest_release "acidgenomics/koopa"
+    curl -s "https://github.com/${1}/releases/latest" 2>&1                     \
+        | grep -Eo '/tag/[.0-9v]+'                                             \
+        | cut -d '/' -f 3                                                      \
+        | sed 's/^v//'
+}
+
 _koopa_group() {
     # Return the approach group to use with koopa installation.
     #
