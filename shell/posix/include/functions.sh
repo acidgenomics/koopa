@@ -607,6 +607,38 @@ _koopa_config_dir() {
 # D                                                                         {{{1
 # ==============================================================================
 
+_koopa_deactivate_conda() {
+    # Deactivate Conda environment.
+    # Updated 2019-10-25.
+    if [ -n "${CONDA_DEFAULT_ENV:-}" ]
+    then
+        conda deactivate
+    fi
+    return 0
+}
+
+_koopa_deactivate_envs() {
+    # Deactivate Conda and Python environments.
+    # Updated 2019-10-25.
+    _koopa_deactivate_venv
+    _koopa_deactivate_conda
+}
+
+_koopa_deactivate_venv() {
+    # Deactivate Python virtual environment.
+    # Updated 2019-10-25.
+    if [ -n "${VIRTUAL_ENV:-}" ]
+    then
+        # This approach messes up autojump path.
+        # # shellcheck disable=SC1090
+        # > source "${VIRTUAL_ENV}/bin/activate"
+        # > deactivate
+        _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
+        unset -v VIRTUAL_ENV
+    fi
+    return 0
+}
+
 _koopa_delete_dotfile() {
     # Delete a dot file.
     # Updated 2019-06-27.
