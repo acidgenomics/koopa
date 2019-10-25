@@ -1290,18 +1290,31 @@ _koopa_is_linux() {
     [ "$(uname -s)" = "Linux" ]
 }
 
+# FIXME Rename to simply _koopa_is_debian
 _koopa_is_linux_debian() {
+    # Is the operating system Debian?
     # Updated 2019-06-24.
     [ -f /etc/os-release ] || return 1
     grep "ID=" /etc/os-release | grep -q "debian" ||
         grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
+# FIXME Rename to simply _koopa_is_fedora
 _koopa_is_linux_fedora() {
+    # Is the operating system Fedora?
     # Updated 2019-06-24.
     [ -f /etc/os-release ] || return 1
     grep "ID=" /etc/os-release | grep -q "fedora" ||
         grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+}
+
+_koopa_is_rhel7() {
+    # Is the operating system RHEL 7?
+    # Updated 2019-10-25.
+    [ -f /etc/os-release ] || return 1
+    grep -q 'ID="rhel"' /etc/os-release || return 1
+    grep -q 'VERSION_ID="7' /etc/os-release || return 1
+    return 0
 }
 
 _koopa_is_local() {
