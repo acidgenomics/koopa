@@ -47,7 +47,7 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-10-23.
+    Updated 2019-10-25.
 EOF
 }
 
@@ -87,6 +87,7 @@ done
 set -- "${POSITIONAL[@]}"
 
 image="$1"
+workdir="$(_koopa_strip_trailing_slash "$workdir")"
 
 
 

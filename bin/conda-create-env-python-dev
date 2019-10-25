@@ -40,11 +40,12 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-11.
+    Updated 2019-10-15.
 EOF
 }
 
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
