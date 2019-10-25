@@ -69,6 +69,35 @@ _koopa_find_local_bin_dirs() {
 # H                                                                         {{{1
 # ==============================================================================
 
+_koopa_help() {
+    # Show usage via help flag.
+    # Now calls 'man' to display nicely formatted manual page.
+    # Updated 2019-10-25.
+    case "${1:-}" in
+        --help|-h)
+            local file name
+            file="$(                                                           \
+                caller                                                         \
+                | head -n 1                                                    \
+                | cut -d ' ' -f 2                                              \
+            )"
+            name="$(basename "$file")"
+            man "$name"
+            exit 0
+            ;;
+    esac
+}
+
+_koopa_help_args() {
+    # Standardize the help arguments shown in usage.
+    # Updated 2019-10-22.
+    cat << EOF
+help arguments:
+    --help, -h
+        Show this help message and exit.
+EOF
+}
+
 _koopa_help_header() {
     # Help header string.
     # Note that we're using 'caller' here, which is Bash-specific.

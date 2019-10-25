@@ -20,7 +20,7 @@ dir="."
 usage() {
 cat << EOF
 $(_koopa_help_header)
-    dir="${dir}"
+    [dir="${dir}"]
 
 Delete file system cruft.
 
@@ -37,7 +37,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-10-25.
 
 examples:
     delete-file-system-cruft .

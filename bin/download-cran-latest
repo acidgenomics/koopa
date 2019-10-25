@@ -31,11 +31,12 @@ examples:
 
 note:
     Bash script.
-    Updated 2019-09-25.
+    Updated 2019-10-25.
 EOF
 }
 
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
