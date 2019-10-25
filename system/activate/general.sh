@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # General global variable exports.
-# Updated 2019-10-17.
+# Updated 2019-10-25.
 
 
 
@@ -18,9 +18,14 @@ then
     export HOSTNAME
 fi
 
+# PAGER
+if [ -z "${PAGER:-}" ]
+then
+    export PAGER="less"
+fi
+
 # OSTYPE
 # Automatically set by bash and zsh.
-# Updated 2019-06-26.
 if [ -z "${OSTYPE:-}" ]
 then
     OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
