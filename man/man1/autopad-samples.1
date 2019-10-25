@@ -8,22 +8,18 @@ autopad-samples \- autopad sample file names that begin with a number
 .IR file ...
 .SH OPTIONS
 .TP
-.BR \-\-PREFIX =\fIPREFIX\fR
+.BR \-\-prefix =\fIPREFIX\fR
 Prefix name.
 .TP
-.BR \-\-PATHWIDTH =\fIPADWIDTH\fR
+.BR \-\-padwidth =\fIPADWIDTH\fR
 Zero padding width.
 Manually adjust this when working with >= 100 samples.
 .SH DESCRIPTION
-Intended for quick sanitization of FASTQ files from a sequencing vendor that
-begin with numbers and aren't zero padded.
+Intended for quick sanitization of FASTQ files from a sequencing vendor that begin with numbers and aren't zero padded.
 .PP
-Autopadding file names with leading zeros helps avoided unexpected
-downstream sorting issues due to differences in how shell environments and
-programming languages handle natural sorting.
+Autopadding file names with leading zeros helps avoided unexpected downstream sorting issues due to differences in how shell environments and programming languages handle natural sorting.
 .PP
-Here we are also renaming with a character string prefix by default, to
-avoid valid name issues in R. See 'make.names()' for details.
+Here we are also renaming with a character string prefix by default, to avoid valid name issues in R. See 'make.names()' for details.
 .SH EXAMPLE
 autopad-samples *.fastq.gz
 .PP
