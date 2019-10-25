@@ -44,15 +44,18 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
+# Note that LLVM 7 is required to install llvmlite Python module.
+# This is now required to install umap-learn.
+
 enable-epel-7
 install-fedora-base
 sudo yum -y install \
+    'llvm7*' \
     file-devel \
     libgit2-devel \
     libssh2-devel \
     llvm \
     llvm-devel \
-    llvm7.0 \
     pandoc \
     pandoc-citeproc \
     sshpass \
