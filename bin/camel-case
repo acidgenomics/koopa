@@ -5,66 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [--rename] [--strict] [--prefix]
-    string|file...
-
-Convert input into camel case.
-
-required positional arguments:
-    ... Character strings or file names to sanitize.
-
-optional arguments:
-    --rename
-        Rename input files. Assumes we're renaming files in current working
-        directory, but also supports explicit and/or mixed file paths. Doesn't
-        work recursively.
-    --strict
-        Enforce strict camel case output, coercing acronyms.
-        For example, 'geneID' becomes 'geneId'.
-    --prefix
-        Include "x" prefix for names that are syntactically invalid in R.
-        Note that this includes input beginning with a number.
-        Disabled by default.
-
-$(_koopa_help_args)
-
-details:
-    Runs in string mode by default.
-    File rename mode can be enabled by setting '--rename' flag.
-
-see also:
-    - 'syntactic::camelCase()' in R.
-
-examples:
-    camel-case "hello world" "foo bar"
-    ## helloWorld fooBar
-
-    camel-case --strict "gene ID"
-    ## geneId
-
-    camel-case --rename "foo-bar.fastq.gz"
-    ## ./fooBar.fastq.gz
-
-    camel-case --rename --prefix 1-control-A.fastq.gz
-    ## ./x1ControlA.fastq.gz
-
-note:
-    Bash script that calls Rscript internally.
-    Requires the syntactic package to be installed.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
