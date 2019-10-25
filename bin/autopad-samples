@@ -5,6 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -12,76 +15,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 prefix="sample"
 padwidth=2
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [--prefix="$prefix"] [--padwidth=$padwidth]
-    files...
-
-Autopad sample file names that begin with a number.
-
-required positional arguments:
-    ... File names.
-
-required arguments, with defaults:
-    --prefix
-        Prefix name.
-        Defaults to '${prefix}'.
-    --padwidth
-        Zero padding width.
-        Defaults to '${padwidth}'.
-        Manually adjust this when working with >= 100 samples.
-        Auto-width detection may be added in a future release but isn't
-        currently supported.
-
-$(_koopa_help_args)
-
-details:
-    Intended for quick sanitization of FASTQ files from a sequencing vendor that
-    begin with numbers and aren't zero padded.
-
-    Autopadding file names with leading zeros helps avoided unexpected
-    downstream sorting issues due to differences in how shell environments and
-    programming languages handle natural sorting.
-
-    Here we are also renaming with a character string prefix by default, to
-    avoid valid name issues in R. See 'make.names()' for details.
-
-examples:
-    autopad-samples *.fastq.gz
-
-    input:
-    1-dmso-A-R1.fastq.qz
-    1-dmso-A-R2.fastq.gz
-    2-dmso-B-R1.fastq.gz
-    2-dmso-B-R2.fastq.gz
-    ...
-    10-compound-A-R1.fastq.gz
-    10-compound-A-R2.fastq.gz
-
-    output:
-    sample-01-dmso-A-R1.fastq.qz
-    sample-01-dmso-A-R2.fastq.gz
-    sample-02-dmso-B-R1.fastq.gz
-    sample-02-dmso-B-R2.fastq.gz
-    ...
-    sample-10-compound-A-R1.fastq.gz
-    sample-10-compound-A-R2.fastq.gz
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
-_koopa_help "$@"
 
 
 

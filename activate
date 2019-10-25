@@ -404,6 +404,8 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
+. "${activate_dir}/manpath.sh"
+
 _koopa_disk_check
 
 unset -v activate_dir extra file force interactive minimal programs subshell

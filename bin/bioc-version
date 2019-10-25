@@ -5,44 +5,13 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-url="http://bioconductor.org/bioc-version"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Bioconductor version.
-
-$(_koopa_help_args)
-
-details:
-    Extract the Bioconductor release version from bioconductor.org.
-
-see also:
-    ${url}
-
-note:
-    Bash script.
-    Updated 2019-09-20.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-version="$(wget -q -O - "$url")"
+version="$(wget -q -O - "https://bioconductor.org/bioc-version")"
 echo "$version"

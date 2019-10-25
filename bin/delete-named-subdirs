@@ -31,7 +31,7 @@ details:
 
 note:
     Bash script.
-    Updated 2019-09-20.
+    Updated 2019-10-25.
 
 examples:
     delete-named-subdirs rnaseq-data/ work
@@ -39,6 +39,7 @@ EOF
 }
 
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
