@@ -168,6 +168,16 @@ _koopa_assert_is_darwin() {
     return 0
 }
 
+_koopa_assert_is_debian() {
+    # Assert that platform is Debian.
+    # Updated 2019-10-25.
+    if ! _koopa_is_debian
+    then
+        _koopa_stop "Debian is required."
+    fi
+    return 0
+}
+
 _koopa_assert_is_dir() {
     # Assert that input is a directory.
     # Updated 2019-10-23.
@@ -195,6 +205,16 @@ _koopa_assert_is_existing() {
     if [ ! -e "$1" ]
     then
         _koopa_stop "Does not exist: '${1}'."
+    fi
+    return 0
+}
+
+_koopa_assert_is_fedora() {
+    # Assert that platform is Fedora.
+    # Updated 2019-10-25.
+    if ! _koopa_is_fedora
+    then
+        _koopa_stop "Fedora is required."
     fi
     return 0
 }
@@ -252,26 +272,6 @@ _koopa_assert_is_linux() {
     if ! _koopa_is_linux
     then
         _koopa_stop "Linux is required."
-    fi
-    return 0
-}
-
-_koopa_assert_is_linux_debian() {
-    # Assert that platform is Debian Linux.
-    # Updated 2019-10-23.
-    if ! _koopa_is_linux_debian
-    then
-        _koopa_stop "Debian is required."
-    fi
-    return 0
-}
-
-_koopa_assert_is_linux_fedora() {
-    # Assert that platform is Fedora Linux.
-    # Updated 2019-10-23.
-    if ! _koopa_is_linux_fedora
-    then
-        _koopa_stop "Fedora is required."
     fi
     return 0
 }
@@ -1219,6 +1219,22 @@ _koopa_is_darwin() {
     [ "$(uname -s)" = "Darwin" ]
 }
 
+_koopa_is_debian() {
+    # Is the operating system Debian?
+    # Updated 2019-10-25.
+    [ -f /etc/os-release ] || return 1
+    grep "ID=" /etc/os-release | grep -q "debian" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+}
+
+_koopa_is_fedora() {
+    # Is the operating system Fedora?
+    # Updated 2019-10-25.
+    [ -f /etc/os-release ] || return 1
+    grep "ID=" /etc/os-release | grep -q "fedora" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+}
+
 _koopa_is_file_system_case_sensitive() {
     # Is the file system case sensitive?
     # Linux is case sensitive by default, whereas macOS and Windows are not.
@@ -1290,33 +1306,6 @@ _koopa_is_linux() {
     [ "$(uname -s)" = "Linux" ]
 }
 
-# FIXME Rename to simply _koopa_is_debian
-_koopa_is_linux_debian() {
-    # Is the operating system Debian?
-    # Updated 2019-06-24.
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "debian" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "debian"
-}
-
-# FIXME Rename to simply _koopa_is_fedora
-_koopa_is_linux_fedora() {
-    # Is the operating system Fedora?
-    # Updated 2019-06-24.
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "fedora" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
-}
-
-_koopa_is_rhel7() {
-    # Is the operating system RHEL 7?
-    # Updated 2019-10-25.
-    [ -f /etc/os-release ] || return 1
-    grep -q 'ID="rhel"' /etc/os-release || return 1
-    grep -q 'VERSION_ID="7' /etc/os-release || return 1
-    return 0
-}
-
 _koopa_is_local() {
     # Is koopa installed only for the current user?
     # Updated 2019-06-25.
@@ -1357,6 +1346,15 @@ _koopa_is_r_package_installed() {
     _koopa_is_installed R || return 1
     Rscript -e "\"$1\" %in% rownames(utils::installed.packages())"             \
         | grep -q "TRUE"
+}
+
+_koopa_is_rhel7() {
+    # Is the operating system RHEL 7?
+    # Updated 2019-10-25.
+    [ -f /etc/os-release ] || return 1
+    grep -q 'ID="rhel"' /etc/os-release || return 1
+    grep -q 'VERSION_ID="7' /etc/os-release || return 1
+    return 0
 }
 
 _koopa_is_remote() {
