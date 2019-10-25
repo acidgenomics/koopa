@@ -1118,27 +1118,6 @@ EOF
     echo "$path"
 }
 
-_koopa_help() {
-    # Show usage via help flag.
-    # Updated 2019-09-26.
-    case "${1:-}" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
-    esac
-}
-
-_koopa_help_args() {
-    # Standardize the help arguments shown in usage.
-    # Updated 2019-10-22.
-    cat << EOF
-help arguments:
-    --help, -h
-        Show this help message and exit.
-EOF
-}
-
 _koopa_home() {
     # Updated 2019-08-18.
     echo "$KOOPA_HOME"
