@@ -664,6 +664,10 @@ _koopa_echo_ansi() {
     # - '0;': normal
     # - '1;': bright or bold
     #
+    # (taken from Travis CI config)
+    # - clear=\033[0K
+    # - nocolor=\033[0m
+    #
     # echo command requires '-e' flag to allow backslash escapes.
     #
     # See also:
