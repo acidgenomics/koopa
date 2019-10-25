@@ -6,10 +6,6 @@ source "${script_dir}/../include/header.sh"
 
 
 
-# FIXME Add note regarding HISAT2 being a memory hog:
-# Ran out of memory; automatically trying more memory-economical parameters.
-
-
 # Variables                                                                 {{{1
 # ==============================================================================
 
@@ -57,6 +53,13 @@ details:
     Log file will be saved at:
     '${log_file}'
 
+    If you hit this error, disable HISAT2 indexing:
+    'Ran out of memory; automatically trying more memory-economical parameters.'
+    HISAT2 currently requires a ton of RAM to index the human genome, and will
+    fail on virtual machines with < 200 GB RAM.
+
+    Note that as of v1.1.7 bcbio now supports STAR for hg38.
+
 see also:
     - https://bcbio-nextgen.readthedocs.io/
     - https://github.com/bcbio/bcbio-nextgen/tree/master/config/genomes
@@ -64,7 +67,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-24.
+    Updated 2019-10-25.
 EOF
 }
 
