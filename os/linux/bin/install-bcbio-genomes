@@ -6,6 +6,10 @@ source "${script_dir}/../include/header.sh"
 
 
 
+# FIXME Add note regarding HISAT2 being a memory hog:
+# Ran out of memory; automatically trying more memory-economical parameters.
+
+
 # Variables                                                                 {{{1
 # ==============================================================================
 
