@@ -526,6 +526,16 @@ _koopa_cellar_script() {
     echo "$file"
 }
 
+_koopa_conda_default_envs_dir() {
+    # Locate the directory where conda environments are installed by default.
+    # Updated 2019-10-26.
+    _koopa_assert_is_installed conda
+    conda info                                                                 \
+        | grep "envs directories"                                              \
+        | cut -d ':' -f 2                                                      \
+        | tr -d ' '
+}
+
 _koopa_conda_env() {
     # Conda environment name.
     #
