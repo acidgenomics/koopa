@@ -72,7 +72,7 @@ _koopa_find_local_bin_dirs() {
 _koopa_help() {
     # Show usage via help flag.
     # Now calls 'man' to display nicely formatted manual page.
-    # Updated 2019-10-25.
+    # Updated 2019-10-26.
     case "${1:-}" in
         --help|-h)
             local file name
@@ -82,7 +82,12 @@ _koopa_help() {
                 | cut -d ' ' -f 2                                              \
             )"
             name="$(basename "$file")"
-            man "$name"
+            if [[ -f "${KOOPA_HOME}/man/man1/${name}.1" ]]
+            then
+                man "$name"
+            else 
+                usage
+            fi
             exit 0
             ;;
     esac
