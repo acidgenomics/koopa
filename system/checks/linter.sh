@@ -2,9 +2,9 @@
 set -Eeu -o pipefail
 
 # Linter checks.
-# Updated 2019-10-07.
+# Updated 2019-10-26.
 
-KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." \
+KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
 export KOOPA_HOME
 
