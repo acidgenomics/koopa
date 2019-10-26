@@ -5,48 +5,17 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-url="ftp://ftp.ensembl.org/pub/current_README"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Ensembl release version.
-
-$(_koopa_help_args)
-
-details:
-    Extract the Ensembl release version from ftp.ensembl.org.
-
-see also:
-    ${url}
-
-note:
-    Bash script.
-    Updated 2019-09-20.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-version="$( \
-    wget -q -O - "$url" | \
-    sed -n 3p | \
-    cut -d ' ' -f 3 \
+version="$(                                                                    \
+    wget -q -O - "ftp://ftp.ensembl.org/pub/current_README"                    \
+    | sed -n 3p                                                                \
+    | cut -d ' ' -f 3                                                          \
 )"
 echo "$version"
