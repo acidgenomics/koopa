@@ -5,6 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
+
 
 
 # Notes                                                                     {{{1
@@ -28,56 +31,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 source_dir="."
 target_dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [--source-dir="${source_dir}"] [--target-dir="${target_dir}"]
-
-Convert FASTQ files to FASTA format.
-
-required arguments with defaults:
-    --source-dir
-        Source directory, containing decompressed FASTQ files.
-        Requiring that files contain 'FASTQ' extension, not 'FQ'.
-        Defaults to '${source_dir}'.
-    --target-dir
-        Target directory, returning FASTA files.
-        Defaults to '${target_dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Processing steps:
-    1. paste converts the input FASTQ into a 4-column file.
-    2. cut command extracts out just column 1 (the ID) and column 2 (the
-       sequence).
-    3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">".
-    4. tr conversts the 2 columns back into 2 lines.
-
-see also:
-    - seqtk
-    - bioawk
-    - https://twitter.com/aaronquinlan/status/1174080730923589633
-    - https://twitter.com/torstenseemann/status/1174300653184847872
-    - http://thegenomefactory.blogspot.com/2012/05/
-          cool-use-of-unix-paste-with-ngs.html
-
-examples:
-    fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
 
 
 
