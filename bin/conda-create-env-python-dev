@@ -5,54 +5,14 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Create Python development conda environment.
-
-$(_koopa_help_args)
-
-details:
-    IDE:
-    - Visual Studio Code
-    - Spyder
-    - PyCharm
-    - Jupyter
-
-    Code formatting:
-    - black
-      https://pypi.org/project/black/
-    - flake8
-      http://flake8.pycqa.org/
-
-    Unit testing:
-    - pytest
-      http://pytest.org/
-
-see also:
-    conda env list
-
-note:
-    Bash script.
-    Updated 2019-10-15.
-EOF
-}
-
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed conda
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_installed conda
 
 conda create -qy --name="python-dev" \
     black \
