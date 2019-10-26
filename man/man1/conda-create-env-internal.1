@@ -1,0 +1,17 @@
+.TH CONDA-CREATE-ENV-INTERNAL 1 2019-10-26 Bash
+.SH NAME
+conda-create-env-internal \- create an internal conda environment
+.SH SYNOPSIS
+.B conda-create-env-internal
+.IR name
+.SH DESCRIPTION
+Create an internal conda environment that isn't accessible by name in the environment list.
+Useful when running on a conservative Linux release (i.e. RHEL 7) that bundles very old versions of software that are hard to install.
+This can be a useful approach to upgrading Pandoc or TeX Live, for example.
+.SH EXAMPLE
+conda-create-env-internal pandoc
+.SH SEE ALSO
+.IP
+\(bu conda env list
+.IP
+\(bu https://steinbaugh.com/posts/conda.html
