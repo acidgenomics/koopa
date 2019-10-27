@@ -1454,10 +1454,10 @@ _koopa_line_count() {
     #
     # Example: _koopa_line_count tx2gene.csv
     #
-    # Updated 2019-10-05.
+    # Updated 2019-10-27.
     wc -l "$1"                                                                 \
-    | xargs                                                                    \
-    | cut -d ' ' -f 1
+        | xargs                                                                \
+        | cut -d ' ' -f 1
 }
 
 _koopa_link_cellar() {
@@ -1507,17 +1507,14 @@ _koopa_list_manpath_priority() {
 _koopa_list_path_priority() {
     # Split PATH string by ':' delim into lines.
     #
-    # Alternate approaches:
-    # > sed 's/:/\n/g' <<< "$PATH"
-    # > tr ':' '\n' <<< "$PATH"
+    # Bash parameter expansion:
+    # > echo "${PATH//:/$'\n'}"
     #
     # see also:
     # - https://askubuntu.com/questions/600018
     #
     # Updated 2019-10-27.
-    local string
-    string="${1:-$PATH}"
-    echo "${string//:/$'\n'}"
+    tr ':' '\n' <<< "${1:-$PATH}"
 }
 
 
