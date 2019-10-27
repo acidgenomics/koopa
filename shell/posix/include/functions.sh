@@ -52,6 +52,15 @@ _koopa_add_config_link() {
     ln -fnsv "$source_file" "$dest_file"
 }
 
+_koopa_add_to_fpath_end() {
+    # Add directory to end of FPATH.
+    # Currently only useful for ZSH activation.
+    # Updated 2019-10-27.
+    [ ! -d "$1" ] && return 0
+    echo "$FPATH" | grep -q "$1" && return 0
+    export FPATH="${FPATH}:${1}"
+}
+
 _koopa_add_to_fpath_start() {
     # Add directory to start of FPATH.
     # Currently only useful for ZSH activation.
@@ -59,6 +68,14 @@ _koopa_add_to_fpath_start() {
     [ ! -d "$1" ] && return 0
     echo "$FPATH" | grep -q "$1" && return 0
     export FPATH="${1}:${FPATH}"
+}
+
+_koopa_add_to_manpath_end() {
+    # Add directory to start of MANPATH.
+    # Updated 2019-10-27.
+    [ ! -d "$1" ] && return 0
+    echo "$MANPATH" | grep -q "$1" && return 0
+    export MANPATH="${MANPATH}:${1}"
 }
 
 _koopa_add_to_manpath_start() {
@@ -943,6 +960,24 @@ _koopa_find_text() {
     find . -name "$2" -exec grep -il "$1" {} \;;
 }
 
+_koopa_force_add_to_fpath_end() {
+    # Updated 2019-10-27.
+    _koopa_remove_from_fpath "$1"
+    _koopa_add_to_fpath_end "$1"
+}
+
+_koopa_force_add_to_fpath_start() {
+    # Updated 2019-10-27.
+    _koopa_remove_from_fpath "$1"
+    _koopa_add_to_fpath_start "$1"
+}
+
+_koopa_force_add_to_manpath_end() {
+    # Updated 2019-10-27.
+    _koopa_remove_from_manpath "$1"
+    _koopa_add_to_manpath_end "$1"
+}
+
 _koopa_force_add_to_manpath_start() {
     # Updated 2019-10-14.
     _koopa_remove_from_manpath "$1"
@@ -960,6 +995,7 @@ _koopa_force_add_to_path_start() {
     _koopa_remove_from_path "$1"
     _koopa_add_to_path_start "$1"
 }
+
 
 
 
@@ -1456,6 +1492,34 @@ _koopa_link_cellar() {
     fi
 }
 
+_koopa_list_fpath_priority() {
+    # Split FPATH string by ':' delim into lines.
+    # Updated 2019-10-27.
+    _koopa_list_path_priority "$FPATH"
+}
+
+_koopa_list_manpath_priority() {
+    # Split FPATH string by ':' delim into lines.
+    # Updated 2019-10-27.
+    _koopa_list_path_priority "$MANPATH"
+}
+
+_koopa_list_path_priority() {
+    # Split PATH string by ':' delim into lines.
+    #
+    # Alternate approaches:
+    # > sed 's/:/\n/g' <<< "$PATH"
+    # > tr ':' '\n' <<< "$PATH"
+    #
+    # see also:
+    # - https://askubuntu.com/questions/600018
+    #
+    # Updated 2019-10-27.
+    local string
+    string="${1:-$PATH}"
+    echo "${string//:/$'\n'}"
+}
+
 
 
 # M                                                                         {{{1
@@ -1844,6 +1908,12 @@ _koopa_realpath() {
     #
     # Updated 2019-10-08.
     realpath "$(_koopa_which "$1")"
+}
+
+_koopa_remove_from_fpath() {
+    # Remove directory from FPATH.
+    # Updated 2019-10-27.
+    export FPATH="${FPATH//:$1/}"
 }
 
 _koopa_remove_from_manpath() {
