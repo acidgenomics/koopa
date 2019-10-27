@@ -860,7 +860,7 @@ _koopa_extract() {
             7z -x "$file"
             ;;
         *)
-            _koopa_stop "Unsupported extension: '${file}'.
+            _koopa_stop "Unsupported extension: '${file}'."
             ;;
    esac
 }
@@ -2338,3 +2338,4 @@ then
         fi
     }
 fi
+
