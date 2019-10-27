@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-23 by Michael Steinbaugh.
+## Updated 2019-10-27 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -116,8 +116,10 @@ local({
     options("repos" = repos)
 })
 
-## Always install from source.
-options("pkgType" = "source")
+## Always install from source on Linux.
+if (R.Version()[["os"]] == "linux-gnu") {
+    options("pkgType" = "source")
+}
 
 ## Set custom compiler options.
 ## > options(
