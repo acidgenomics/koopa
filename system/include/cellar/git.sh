@@ -63,7 +63,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/git/git/archive/v${version}.tar.gz"
-    tar -zxf "v${version}.tar.gz"
+    _koopa_extract "v${version}.tar.gz"
     cd "git-${version}" || exit 1
     make configure
     ./configure \

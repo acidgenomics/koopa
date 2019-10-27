@@ -5,8 +5,7 @@ x="$(rename --version | head -n 1)"
 # Check for Perl rename.
 if ! echo "$x" | grep -q 'File::Rename'
 then
-    >&2 printf "Error: Not installed: Perl File::Rename.\n"
-    exit 1
+    _koopa_stop "Perl File::Rename is not installed."
 fi
 
 echo "$x" | cut -d ' ' -f 5

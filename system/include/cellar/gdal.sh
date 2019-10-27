@@ -64,7 +64,7 @@ _koopa_assert_is_installed proj
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
     wget "$url"
-    tar -xzvf "$file"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     # Use `configure --help` for build options.
     #     # If you don't need python support you can suppress it at configure using

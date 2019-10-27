@@ -74,7 +74,7 @@ fi
     file="Python-${version}.tar.xz"
     url="https://www.python.org/ftp/python/${version}/${file}"
     wget "$url"
-    tar xfv "Python-${version}.tar.xz"
+    _koopa_extract "Python-${version}.tar.xz"
     cd "Python-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

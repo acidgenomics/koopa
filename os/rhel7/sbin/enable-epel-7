@@ -40,14 +40,13 @@ os_type="$(_koopa_os_type)"
 # Only allow install on RHEL 7.
 if [[ "$os_type" != "rhel7" ]]
 then
-    printf "RHEL 7 is required.\n"
-    exit 1
+    _koopa_stop "RHEL 7 is required."
 fi
 
 # Check if EPEL is already enabled.
 if sudo yum repolist | grep -q "epel/"
 then
-    printf "EPEL 7 is already enabled.\n"
+    _koopa_note "EPEL 7 is already enabled."
     exit 0
 fi
 

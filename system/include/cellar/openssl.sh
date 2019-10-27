@@ -58,7 +58,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
-    tar -xvzf "openssl-${version}.tar.gz"
+    _koopa_extract "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
     if _koopa_is_darwin
     then

@@ -52,6 +52,15 @@ _koopa_add_config_link() {
     ln -fnsv "$source_file" "$dest_file"
 }
 
+_koopa_add_to_fpath_start() {
+    # Add directory to start of FPATH.
+    # Currently only useful for ZSH activation.
+    # Updated 2019-10-27.
+    [ ! -d "$1" ] && return 0
+    echo "$FPATH" | grep -q "$1" && return 0
+    export FPATH="${1}:${FPATH}"
+}
+
 _koopa_add_to_manpath_start() {
     # Add directory to start of MANPATH.
     # Updated 2019-10-11.
@@ -823,15 +832,16 @@ _koopa_extract() {
     then
         _koopa_stop "Invalid file: '${file}'."
     fi
+    _koopa_message "Extracting '${file}'."
     case "$file" in
         *.tar.bz2)
-            tar -xvjf "$file"
+            tar -xjvf "$file"
             ;;
         *.tar.gz)
-            tar -xvzf "$file"
+            tar -xzvf "$file"
             ;;
         *.tar.xz)
-            tar -Jxvf "$file"
+            tar -xJvf "$file"
             ;;
         *.bz2)
             bunzip2 "$file"
@@ -846,10 +856,10 @@ _koopa_extract() {
             tar -xvf "$file"
             ;;
         *.tbz2)
-            tar -xvjf "$file"
+            tar -xjvf "$file"
             ;;
         *.tgz)
-            tar -xvzf "$file"
+            tar -xzvf "$file"
             ;;
         *.zip)
             unzip "$file"

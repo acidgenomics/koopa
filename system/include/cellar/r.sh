@@ -59,7 +59,7 @@ _koopa_message "Installing R ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://cran.r-project.org/src/base/R-${major_version}/R-${version}.tar.gz"
-    tar -xzvf "R-${version}.tar.gz"
+    _koopa_extract "R-${version}.tar.gz"
     cd "R-${version}" || exit 1
     # R will warn if R_HOME environment variable is set.
     unset -v R_HOME

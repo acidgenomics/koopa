@@ -64,7 +64,7 @@ _koopa_message "Installing r-devel ${r_version} for ${macos_version}."
     # Back up, if necessary.
     if [[ -d "/Library/Frameworks/R.framework" ]]
     then
-        printf "Backing up existing 'R.framework'.\n"
+        _koopa_note "Backing up existing 'R.framework'."
         sudo mv "/Library/Frameworks/R.framework" \
             "/Library/Frameworks/R.framework.bak"
     fi

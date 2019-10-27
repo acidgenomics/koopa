@@ -38,7 +38,7 @@ _koopa_help "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-echo "Updating Microsoft Office via 'msupdate'."
+_koopa_message "Updating Microsoft Office via 'msupdate'."
 
 update_exe="/Library/Application Support/Microsoft/MAU2.0/\
 Microsoft AutoUpdate.app/Contents/MacOS/msupdate"

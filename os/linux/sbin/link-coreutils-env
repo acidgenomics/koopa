@@ -38,11 +38,11 @@ _koopa_help "$@"
 # ==============================================================================
 
 build_prefix="$(_koopa_build_prefix)"
-printf "Replacing '/usr/bin/env' with '/usr/local/bin/env'.\n"
+_koopa_message "Replacing '/usr/bin/env' with '/usr/local/bin/env'."
 
 if [[ ! -L "/usr/bin/env" ]]
 then
-    printf "System version will be renamed to 'env.bak'.\n"
+    _koopa_note "System version will be renamed to 'env.bak'.\n"
     sudo rm -fv "/usr/bin/env.bak"
     sudo mv -fv "/usr/bin/env" "/usr/bin/env.bak"
 else

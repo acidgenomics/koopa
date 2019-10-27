@@ -72,7 +72,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://hisham.hm/htop/releases/${version}/htop-${version}.tar.gz"
-    tar -xzvf "htop-${version}.tar.gz"
+    _koopa_extract "htop-${version}.tar.gz"
     cd "htop-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

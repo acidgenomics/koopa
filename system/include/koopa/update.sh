@@ -4,7 +4,7 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Update koopa installation.
-# Updated 2019-10-22.
+# Updated 2019-10-27.
 
 
 
@@ -56,7 +56,7 @@ do
     then
         continue
     fi
-    printf "Updating %s.\n" "$dir"
+    _koopa_message "Updating '${dir}'."
     (
         cd "${config_dir}/${dir}" || exit 1
         # Run updater script, if defined.
@@ -72,7 +72,7 @@ do
 done
 
 # Update repo.
-printf "Updating koopa.\n"
+_koopa_message "Updating koopa."
 (
     cd "$KOOPA_HOME" || exit 1
     git fetch --all
@@ -86,8 +86,5 @@ then
     rm -frv "${KOOPA_HOME}/system/config"
 fi
 
-cat << EOF
-
-koopa updated successfully.
-Shell must be reloaded for changes to take effect.
-EOF
+_koopa_message "koopa update was successful."
+_koopa_note "Shell must be reloaded for changes to take effect."

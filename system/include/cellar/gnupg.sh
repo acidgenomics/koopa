@@ -72,7 +72,7 @@ mkdir -pv "$tmp_dir"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
@@ -91,7 +91,7 @@ _koopa_link_cellar "$name" "$version"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
@@ -110,7 +110,7 @@ _koopa_link_cellar "$name" "$version"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
@@ -129,7 +129,7 @@ _koopa_link_cellar "$name" "$version"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
@@ -148,7 +148,7 @@ _koopa_link_cellar "$name" "$version"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
@@ -167,7 +167,7 @@ _koopa_link_cellar "$name" "$version"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make --jobs="$CPU_COUNT"
@@ -186,7 +186,7 @@ _koopa_link_cellar "$name" "$version"
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    tar -xjvf "${pkg}-${ver}.tar.bz2"
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
