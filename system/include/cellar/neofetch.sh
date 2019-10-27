@@ -48,7 +48,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/dylanaraps/${name}/archive/${version}.tar.gz"
-    tar -xzvf "${version}.tar.gz"
+    _koopa_extract "${version}.tar.gz"
     cd "${name}-${version}" || exit 1
     mkdir -pv "$prefix"
     make PREFIX="$prefix" install

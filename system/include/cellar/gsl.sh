@@ -49,7 +49,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "http://mirror.keystealth.org/gnu/gsl/gsl-${version}.tar.gz"
-    tar xzvf "gsl-${version}.tar.gz"
+    _koopa_extract "gsl-${version}.tar.gz"
     cd "gsl-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

@@ -47,7 +47,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
-    tar -xzvf "v${version}.tar.gz"
+    _koopa_extract "v${version}.tar.gz"
     cd "Genrich-${version}" || exit 1
     make
     mkdir -pv "${prefix}/bin"

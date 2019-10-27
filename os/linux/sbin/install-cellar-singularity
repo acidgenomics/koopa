@@ -58,7 +58,7 @@ _koopa_message "Installing ${name} ${version}."
     file="singularity-${version}.tar.gz"
     url_stem="https://github.com/sylabs/singularity/releases/download"
     wget "${url_stem}/v${version}/${file}"
-    tar -xzvf "$file"
+    _koopa_extract "$file"
     cd "singularity" || exit 1
     ./mconfig --prefix="$prefix"
     make -C builddir

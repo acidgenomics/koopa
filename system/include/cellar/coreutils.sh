@@ -49,7 +49,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://ftp.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
-    tar -xJvf "coreutils-${version}.tar.xz"
+    _koopa_extract "coreutils-${version}.tar.xz"
     cd "coreutils-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

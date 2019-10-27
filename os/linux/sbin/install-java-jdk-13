@@ -84,6 +84,7 @@ then
         hash="5b8a42f3905b406298b72d750b6919f6"
         url="https://download.java.net/java/GA/jdk13/${hash}/33/GPL/${file}"
         wget "$url"
+        _koopa_message "Extracting '${file}' to '${jdk_dir}'."
         tar -xzvf "$file" -C "$jdk_dir"
     )
 fi

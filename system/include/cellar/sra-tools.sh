@@ -90,7 +90,7 @@ mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget -O "ngs.tar.gz" \
         "https://github.com/ncbi/ngs/archive/${version}.tar.gz"
-    tar -xzvf "ngs.tar.gz"
+    _koopa_extract "ngs.tar.gz"
     mv "ngs-${version}" "ngs"
     cd "ngs" || exit 1
     ./configure \
@@ -115,7 +115,7 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -O "ncbi-vdb.tar.gz" \
         "https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
-    tar -xzvf "ncbi-vdb.tar.gz"
+    _koopa_extract "ncbi-vdb.tar.gz"
     mv "ncbi-vdb-${version}" "ncbi-vdb"
     cd "ncbi-vdb" || exit 1
     ./configure \
@@ -134,7 +134,7 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     wget -O "sra-tools.tar.gz" \
         "https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
-    tar -xzvf "sra-tools.tar.gz"
+    _koopa_extract "sra-tools.tar.gz"
     mv "sra-tools-${version}" "sra-tools"
     cd "sra-tools" || exit 1
     ./configure \

@@ -6,7 +6,7 @@
 koopa_fpath="${KOOPA_HOME}/shell/zsh/functions"
 if [[ ! -d "$koopa_fpath" ]]
 then
-    >&2 printf "Error: fpath directory is missing: '%s'.\n" "$koopa_fpath"
+    _koopa_warning "fpath directory is missing: '${koopa_fpath}'."
     return 1
 fi
 export FPATH="${koopa_fpath}:${FPATH}"

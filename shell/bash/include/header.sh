@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Bash shared header script.
-# Modified 2019-09-26.
+# Updated 2019-09-26.
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 
@@ -10,6 +10,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../posix/include/functions.sh"
 
-# Source bash functions.
+# Source Bash functions.
 # shellcheck source=/dev/null
 source "${script_dir}/functions.sh"

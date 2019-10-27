@@ -50,7 +50,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
-    tar -xJvf "emacs-${version}.tar.xz"
+    _koopa_extract "emacs-${version}.tar.xz"
     cd "emacs-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

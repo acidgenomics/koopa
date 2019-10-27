@@ -77,7 +77,7 @@ sudo mkdir -pv "$prefix"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/TACC/Lmod/archive/${version}.tar.gz"
-    tar xzvf "${version}.tar.gz"
+    _koopa_extract "${version}.tar.gz"
     cd "Lmod-${version}" || exit 1
     ./configure \
         --prefix="${prefix}" \
