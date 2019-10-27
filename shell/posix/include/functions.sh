@@ -566,7 +566,7 @@ _koopa_conda_env_prefix() {
     #
     # Example: _koopa_conda_env_prefix "deeptools"
     #
-    # Updated 2019-10-22.
+    # Updated 2019-10-27.
     _koopa_is_installed conda || return 1
 
     local env_name
@@ -582,8 +582,7 @@ _koopa_conda_env_prefix() {
     env_list="$(echo "$env_list" | grep "$env_name")"
     if [ -z "$env_list" ]
     then
-        >&2 printf "Error: Failed to detect prefix for '%s'.\n" "$env_name"
-        return 1
+        _koopa_stop "Failed to detect prefix for '${env_name}'."
     fi
 
     local path
@@ -815,14 +814,13 @@ _koopa_extract() {
     #
     # See also:
     # - https://github.com/stephenturner/oneliners
-    #
-    # Updated 2019-09-09.
+    #6
+    # Updated 2019-10-27.
     local file
     file="$1"
     if [ ! -f "$file" ]
     then
-        >&2 printf "Error: Invalid file: %s\n" "$file"
-        return 1
+        _koopa_stop "Invalid file: '${file}'."
     fi
     case "$file" in
         *.tar.bz2)
@@ -862,7 +860,7 @@ _koopa_extract() {
             7z -x "$file"
             ;;
         *)
-            >&2 printf "Error: Unsupported extension: %s\n" "$file"
+            _koopa_stop "Unsupported extension: '${file}'.
             ;;
    esac
 }
@@ -1121,8 +1119,7 @@ EOF
             path="${KOOPA_HOME}/host/harvard-odyssey/include/header.sh"
             ;;
         *)
-            >&2 printf "Error: '%s' is not supported.\n" "$1"
-            return 1
+            _koopa_stop "'${1}' is not supported."
             ;;
     esac
     echo "$path"
@@ -2081,7 +2078,7 @@ _koopa_trim_ws() {
 
 _koopa_update_ldconfig() {
     # Update dynamic linker (LD) configuration.
-    # Updated 2019-07-10.
+    # Updated 2019-10-27.
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
     [ -d /etc/ld.so.conf.d ] || return 0
@@ -2092,8 +2089,7 @@ _koopa_update_ldconfig() {
     conf_source="${KOOPA_HOME}/os/${os_type}/etc/ld.so.conf.d"
     if [ ! -d "$conf_source" ]
     then
-        >&2 printf "Error: source files missing: %s\n" "$conf_source"
-        return 1
+        _koopa_stop "Source files missing: '${conf_source}'."
     fi
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
@@ -2163,8 +2159,7 @@ _koopa_update_r_config() {
     r_etc_source="${KOOPA_HOME}/os/${os_type}/etc/R"
     if [ ! -d "$r_etc_source" ]
     then
-        >&2 printf "Error: source files missing: %s\n" "$r_etc_source"
-        return 1
+        _koopa_stop "Source files missing: '${r_etc_source}'."
     fi
     sudo ln -fnsv "${r_etc_source}/"* "${r_home}/etc/".
     printf "Creating site library.\n"
@@ -2210,7 +2205,7 @@ _koopa_update_xdg_config() {
         then
             if [ ! -e "$source_file" ]
             then
-                >&2 printf "Error: Source file missing: %s\n" "$source_file"
+                _koopa_warning "Source file missing: '${source_file}'."
                 return 1
             fi
             printf "Updating XDG config in %s.\n" "$config_dir"
@@ -2230,7 +2225,7 @@ _koopa_update_xdg_config() {
 
 _koopa_variable() {
     # Get version stored internally in versions.txt file.
-    # Updated 2019-06-27.
+    # Updated 2019-10-27.
     local what
     local file
     local match
@@ -2241,8 +2236,7 @@ _koopa_variable() {
     then
         echo "$match" | cut -d "\"" -f 2
     else
-        >&2 printf "Error: %s not defined in %s.\n" "$what" "$file"
-        return 1
+        _koopa_stop "'${what}' not defined in '${file}'."
     fi
 }
 
