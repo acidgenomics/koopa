@@ -1510,6 +1510,12 @@ _koopa_list_path_priority() {
     # Bash parameter expansion:
     # > echo "${PATH//:/$'\n'}"
     #
+    # Can generate a unique PATH string with:
+    # > _koopa_list_path_priority \
+    # >     | tac \
+    # >     | awk '!a[$0]++' \
+    # >     | tac
+    #
     # see also:
     # - https://askubuntu.com/questions/600018
     #
