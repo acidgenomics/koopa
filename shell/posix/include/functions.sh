@@ -602,10 +602,10 @@ _koopa_conda_internal_prefix() {
 }
 
 _koopa_config_dir() {
-    # Updated 2019-09-27.
+    # Updated 2019-10-27.
     if [ -z "${XDG_CONFIG_HOME:-}" ]
     then
-        >&2 printf "Warning: 'XDG_CONFIG_HOME' is unset.\n"
+        _koopa_warning "'XDG_CONFIG_HOME' is unset."
         XDG_CONFIG_HOME="${HOME}/.config"
     fi
     echo "${XDG_CONFIG_HOME}/koopa"
@@ -657,25 +657,26 @@ _koopa_delete_dotfile() {
     name="$(basename "$path")"
     if [ -L "$path" ]
     then
-        printf "Removing '%s'.\n" "$name"
+        _koopa_message "Removing '${name}'."
         rm -f "$path"
     elif [ -f "$path" ] || [ -d "$path" ]
     then
-        printf "Warning: Not symlink: %s\n" "$name"
+        _koopa_warning "Not a symlink: '${name}'."
     fi
 }
 
 _koopa_disk_check() {
     # Check that disk has enough free space.
-    # Updated 2019-10-14.
+    # Updated 2019-10-27.
     local used
     local limit
     used="$(_koopa_disk_pct_used "$@")"
     limit="90"
     if [ "$used" -gt "$limit" ]
     then
-        >&2 printf "Warning: Disk usage is %d%%.\n" "$used"
+        _koopa_warning "Disk usage is ${used}%."
     fi
+    return 0
 }
 
 _koopa_disk_pct_used() {
@@ -1433,7 +1434,7 @@ _koopa_link_cellar() {
     version="$2"
     build_prefix="$(_koopa_build_prefix)"
     cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-    printf "Linking %s in %s.\n" "$cellar_prefix" "$build_prefix"
+    _koopa_message "Linking '${cellar_prefix}' in '${build_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
     if _koopa_is_shared
     then
@@ -1460,6 +1461,7 @@ _koopa_macos_app_version() {
         | tr -d '"'
 }
 
+# FIXME Take these out and move to separate version script.
 _koopa_macos_version() {
     # macOS version string.
     # Updated 2019-08-17.
@@ -2094,7 +2096,7 @@ _koopa_update_ldconfig() {
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    printf "Updating ldconfig in '/etc/ld.so.conf.d/'.\n"
+    _koopa_message "Updating ldconfig in '/etc/ld.so.conf.d/'."
     local source_file
     local dest_file
     for source_file in "${conf_source}/"*".conf"
@@ -2122,11 +2124,11 @@ _koopa_update_profile() {
     old_file="/etc/profile.d/koopa.sh"
     if [ -f "$old_file" ]
     then
-        printf "Renaming '%s' to '%s'.\n" "$old_file" "$file"
+        _koopa_message "Renaming '${old_file}' to '${file}'."
         sudo mv -v "$old_file" "$file"
         return 0
     fi
-    printf "Adding '%s'.\n" "$file"
+    _koopa_message "Adding '${file}'."
     sudo mkdir -p "$(dirname file)"
     sudo bash -c "cat << EOF > $file
 #!/bin/sh
@@ -2152,7 +2154,7 @@ _koopa_update_r_config() {
     # >     cut -d ' ' -f 3 | \
     # >     grep -Eo "^[0-9]+\.[0-9]+"
     # > )"
-    printf "Updating '%s'.\n" "$r_home"
+    _koopa_message "Updating '${r_home}'."
     local os_type
     os_type="$(_koopa_os_type)"
     local r_etc_source
@@ -2162,7 +2164,7 @@ _koopa_update_r_config() {
         _koopa_stop "Source files missing: '${r_etc_source}'."
     fi
     sudo ln -fnsv "${r_etc_source}/"* "${r_home}/etc/".
-    printf "Creating site library.\n"
+    _koopa_message "Creating site library."
     site_library="${r_home}/site-library"
     sudo mkdir -pv "$site_library"
     _koopa_set_permissions "$r_home"
@@ -2179,10 +2181,10 @@ _koopa_update_shells() {
     shell_file="/etc/shells"
     if ! grep -q "$shell" "$shell_file"
     then
-        printf "Updating '%s' to include '%s'.\n" "$shell_file" "$shell"
+        _koopa_message "Updating '${shell_file}' to include '${shell}'."
         sudo sh -c "echo ${shell} >> ${shell_file}"
     fi
-    printf "Run 'chsh -s %s %s' to change default shell.\n" "$shell" "$USER"
+    _koopa_note "Run 'chsh -s ${shell} ${USER}' to change the default shell."
 }
 
 _koopa_update_xdg_config() {
@@ -2208,7 +2210,7 @@ _koopa_update_xdg_config() {
                 _koopa_warning "Source file missing: '${source_file}'."
                 return 1
             fi
-            printf "Updating XDG config in %s.\n" "$config_dir"
+            _koopa_message "Updating XDG config in '${config_dir}'."
             rm -fv "$dest_file"
             ln -fnsv "$source_file" "$dest_file"
         fi
@@ -2264,13 +2266,13 @@ _koopa_warn_if_export() {
     # Warn if variable is exported in current shell session.
     # Useful for checking against unwanted compiler settings.
     # In particular, useful to check for 'LD_LIBRARY_PATH'.
-    # Updated 2019-10-16.
+    # Updated 2019-10-27.
     local arg
     for arg in "$@"
     do
         if declare -x | grep -Eq "\b${arg}\b="
         then
-            >&2 printf "Warning: '%s' is exported.\n" "$arg"
+            _koopa_warning "'${arg}' is exported."
         fi
     done
     return 0
