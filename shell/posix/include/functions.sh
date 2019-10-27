@@ -2107,7 +2107,7 @@ _koopa_update_ldconfig() {
 
 _koopa_update_profile() {
     # Add shared 'zzz-koopa.sh' configuration file to '/etc/profile.d/'.
-    # Updated 2019-10-15.
+    # Updated 2019-10-27.
     local file
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -2115,7 +2115,7 @@ _koopa_update_profile() {
     file="/etc/profile.d/zzz-koopa.sh"
     if [ -f "$file" ]
     then
-        printf "Note: '%s' exists.\n" "$file"
+        _koopa_note "'${file}' exists."
         return 0
     fi
     # Rename existing 'koopa.sh' file, if applicable.
@@ -2188,7 +2188,7 @@ _koopa_update_shells() {
 _koopa_update_xdg_config() {
     # Update XDG configuration.
     # Path: '~/.config/koopa'.
-    # Updated 2019-08-28.
+    # Updated 2019-10-27.
     local config_dir
     config_dir="$(_koopa_config_dir)"
     local home_dir
@@ -2215,7 +2215,10 @@ _koopa_update_xdg_config() {
     }
     relink "${home_dir}" "${config_dir}/home"
     relink "${home_dir}/activate" "${config_dir}/activate"
-    relink "${home_dir}/os/${os_type}/etc/R" "${config_dir}/R"
+    if [ -d "${home_dir}/os/${os_type}" ]
+    then
+        relink "${home_dir}/os/${os_type}/etc/R" "${config_dir}/R"
+    fi
 }
 
 
