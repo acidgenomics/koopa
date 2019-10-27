@@ -13,4 +13,19 @@ _koopa_assert_has_no_args "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_list_fpath_priority
+all="$(_koopa_list_fpath_priority)"
+mapfile -t all_arr < <(echo "$all")
+
+unique="$(echo "$all" | awk '!a[$0]++')"
+mapfile -t unique_arr < <(echo "$unique")
+
+n_all="${#all_arr[@]}"
+n_unique="${#unique_arr[@]}"
+n_dupes="$((n_all-n_unique))"
+
+if [[ "$n_dupes" -gt 0 ]]
+then
+    _koopa_note "${n_dupes} duplicate(s) detected in FPATH."
+fi
+
+echo "$all"
