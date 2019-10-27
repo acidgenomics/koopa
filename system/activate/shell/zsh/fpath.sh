@@ -9,5 +9,5 @@ then
     _koopa_warning "fpath directory is missing: '${koopa_fpath}'."
     return 1
 fi
-_koopa_add_to_fpath_start "$koopa_fpath"
+_koopa_force_add_to_fpath_start "$koopa_fpath"
 unset -v koopa_fpath
