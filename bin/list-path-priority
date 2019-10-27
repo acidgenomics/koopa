@@ -10,9 +10,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # Notes                                                                     {{{1
 # ==============================================================================
 
-# Alternate approaches:
-# > sed 's/:/\n/g' <<< "$PATH"
-# > tr ':' '\n' <<< "$PATH"
 
 
 
@@ -30,20 +27,18 @@ $(_koopa_help_args)
 details:
     Splits the PATH string by ':' delim.
 
-see also:
-    - https://askubuntu.com/questions/600018
-
 note:
     Bash script.
-    Updated 2019-09-24.
+    Updated 2019-10-27.
 EOF
 }
 
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
-# Usage                                                                     {{{1
+# Script                                                                    {{{1
 # ==============================================================================
 
-echo "${PATH//:/$'\n'}"
+_koopa_list_path_priority
