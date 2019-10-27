@@ -50,8 +50,9 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://sourceforge.net/projects/zsh/files/zsh/${version}/zsh-${version}.tar.xz/download"
-    tar -xJvf "download"
+    wget "https://sourceforge.net/projects/zsh/files/zsh/${version}/\
+zsh-${version}.tar.xz/download"
+    _koopa_extract "download"
     cd "zsh-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

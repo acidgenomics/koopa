@@ -67,7 +67,7 @@ _koopa_assert_is_installed lua
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
     wget "https://luarocks.org/releases/${file}"
-    tar zxpf "$file"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     ./configure --prefix="$prefix"
     make build

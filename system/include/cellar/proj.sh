@@ -52,7 +52,7 @@ _koopa_message "Installing ${name} ${version}."
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/PROJ/releases/download/${version}/${file}"
     wget "$url"
-    tar -xzvf "$file"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

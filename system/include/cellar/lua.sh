@@ -49,7 +49,7 @@ _koopa_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
     curl -R -O "http://www.lua.org/ftp/${file}"
-    tar zxf "$file"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     if _koopa_is_darwin
     then

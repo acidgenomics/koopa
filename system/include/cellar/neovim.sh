@@ -61,7 +61,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/${name}/${name}/archive/v${version}.tar.gz"
-    tar -xzvf "v${version}.tar.gz"
+    _koopa_extract "v${version}.tar.gz"
     cd "${name}-${version}" || exit 1
     make \
         --jobs="$CPU_COUNT" \

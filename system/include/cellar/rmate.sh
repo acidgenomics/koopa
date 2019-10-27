@@ -51,7 +51,7 @@ _koopa_help "$@"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/aurora/rmate/archive/v${version}.tar.gz"
-    tar -xzvf "v${version}.tar.gz"
+    _koopa_extract "v${version}.tar.gz"
     cd "rmate-${version}" || exit 1
     chmod a+x rmate
     cp rmate "${prefix}/bin"

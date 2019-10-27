@@ -56,7 +56,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "${gnu_mirror}/bash/bash-${major_version}.tar.gz"
-    tar -xzvf "bash-${major_version}.tar.gz"
+    _koopa_extract "bash-${major_version}.tar.gz"
     cd "bash-${major_version}" || exit 1
     # Apply patches. Can pipe curl call directly to 'patch -p0' instead.
     (

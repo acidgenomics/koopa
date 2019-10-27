@@ -49,7 +49,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
-    tar -xzvf "tmux-${version}.tar.gz"
+    _koopa_extract "tmux-${version}.tar.gz"
     cd "tmux-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
