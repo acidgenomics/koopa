@@ -117,8 +117,11 @@ local({
 })
 
 ## Always install from source on Linux.
-if (R.Version()[["os"]] == "linux-gnu") {
+## Allow binary install on macOS and Windows.
+if (identical(R.Version()[["os"]], "linux-gnu")) {
     options("pkgType" = "source")
+} else {
+    options("pkgType" = "both")
 }
 
 ## Set custom compiler options.
