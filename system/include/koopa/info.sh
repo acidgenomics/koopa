@@ -4,19 +4,10 @@
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Show koopa installation information.
-# Updated 2019-10-21.
+# Updated 2019-10-28.
 
 shell="$KOOPA_SHELL"
 shell="${shell} $(_koopa_"${shell}"_version)"
-
-if _koopa_is_darwin
-then
-    os="$(_koopa_macos_version)"
-else
-    os="$(python -mplatform)"
-fi
-
-# > term="Terminal: ${TERM_PROGRAM:-} ${TERM_PROGRAM_VERSION:-}"
 
 array=(
     "$(koopa --version)"
@@ -41,6 +32,18 @@ then
         "${nf[@]:2}"
     )
 else
+    if _koopa_is_darwin
+    then
+        os="$(                                                                 \
+            printf "%s %s (%s)\n"                                              \
+                "$(sw_vers -productName)"                                      \
+                "$(sw_vers -productVersion)"                                   \
+                "$(sw_vers -buildVersion)"                                     \
+        )"
+    else
+        os="$(python -mplatform)"
+    fi
+    # > term="Terminal: ${TERM_PROGRAM:-} ${TERM_PROGRAM_VERSION:-}"
     array+=(
         "System information"
         "------------------"
@@ -54,4 +57,3 @@ array+=("Run 'koopa check' to verify installation.")
 
 cat "${KOOPA_HOME}/system/include/koopa/ascii-turtle.txt"
 _koopa_info_box "${array[@]}"
-
