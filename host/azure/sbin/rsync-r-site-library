@@ -24,7 +24,7 @@ r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
 
 mapfile -t flags < <(_koopa_rsync_flags)
-flags+=("--owner")
+flags+=("--omit-dir-times")
 
 
 
@@ -58,14 +58,14 @@ _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
 rsync ${flags[@]}                                                              \
-    --rsync-path="sudo rsync"                                                  \
+    --rsync-path="sudo /usr/bin/rsync"                                         \
     "${source_user}@${source_ip}:${r_dir}/"                                    \
     "${r_dir}/"
 
-sudo chown -h root \
-    "${r_dir}" \
-    "${r_dir}/"* \
-    "${r_dir}/site-library/"*
+# > sudo chown -h root \
+# >     "${r_dir}" \
+# >     "${r_dir}/"* \
+# >     "${r_dir}/site-library/"*
 
 # > sudo chgrp -Rh wheel "$r_dir"
 # > sudo chmod -R g+w "$r_dir"
