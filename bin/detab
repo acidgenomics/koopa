@@ -11,10 +11,22 @@ _koopa_assert_is_installed vim
 
 
 
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# Alternate approaches:
+# > vim -s
+# > vim -w/W
+
+# See also:
+# https://stackoverflow.com/questions/18860020
+
+
+
 # Script                                                                    {{{1
 # ==============================================================================
 
 vim                                                                            \
-    -c :set expandtab tabstop=4 shiftwidth=4                                   \
+    -c "set expandtab tabstop=4 shiftwidth=4"                                  \
     -c :%retab                                                                 \
     -c :wq -E -s "$1"
