@@ -35,7 +35,7 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-10-21.
+    Updated 2019-10-28.
 EOF
 }
 
@@ -156,6 +156,7 @@ brews=(
     imagemagick
     ksh
     leiningen
+    lesspipe
     libav
     libgit2
     libiconv
