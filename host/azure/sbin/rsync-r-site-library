@@ -12,16 +12,18 @@ _koopa_assert_has_sudo
 # Variables                                                                 {{{1
 # ==============================================================================
 
-source_user="mike"
+source_user="$USER"
 
 host_ip="$(ip-address)"
 source_ip="10.100.100.132"
 
+r_dir="/data00/R"
+_koopa_assert_is_dir "$r_dir"
+
+lib_link="${r_dir}/site-library/current"
+
 koopa_home="$(_koopa_home)"
 r_home="$(_koopa_r_home)"
-
-r_dir="/data00/R"
-lib_link="${r_dir}/site-library/current"
 
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
@@ -37,20 +39,10 @@ then
     _koopa_stop "On source machine: '${source_ip}'."
 fi
 
-if [[ ! -d "$r_dir" ]]
-then
-    sudo mkdir -p "$r_dir"
-    sudo chown "${source_user}:wheel" "$r_dir"
-    sudo chmod g+ws "$r_dir"
-fi
-
-# > sudo chgrp -Rh wheel "$r_dir"
-# > sudo chmod -R g+w "$r_dir"
-
 # Fix shiny installed as root, if necessary.
 if [[ -d "${lib_link}/shiny" ]]
 then
-    sudo chown -R "$USER" "${lib_link}/shiny"
+    sudo chown -R "$source_user" "${lib_link}/shiny"
 fi
 
 _koopa_message "Updating '${r_dir}' from '${source_ip}'."
@@ -61,14 +53,6 @@ rsync ${flags[@]}                                                              \
     --rsync-path="sudo /usr/bin/rsync"                                         \
     "${source_user}@${source_ip}:${r_dir}/"                                    \
     "${r_dir}/"
-
-# > sudo chown -h root \
-# >     "${r_dir}" \
-# >     "${r_dir}/"* \
-# >     "${r_dir}/site-library/"*
-
-# > sudo chgrp -Rh wheel "$r_dir"
-# > sudo chmod -R g+w "$r_dir"
 
 # Update local symlinks.
 _koopa_message "Updating 'site-library' symlinks."
