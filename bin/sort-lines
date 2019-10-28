@@ -5,44 +5,13 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    file
-
-Sort lines, using vim.
-
-required positional arguments:
-    1.  File path.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Requires vim to be installed.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
-file="$1"
+_koopa_assert_has_args "$@"
+_koopa_assert_is_installed vim
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed vim
-
-vim -c :sort -c :wq -E -s "$file"
+vim -c :sort -c :wq -E -s "$1"
