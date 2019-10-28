@@ -1543,10 +1543,6 @@ _koopa_macos_version() {
     # macOS version string.
     # Updated 2019-08-17.
     _koopa_assert_is_darwin
-    printf "%s %s (%s)\n"                                                      \
-        "$(sw_vers -productName)"                                              \
-        "$(sw_vers -productVersion)"                                           \
-        "$(sw_vers -buildVersion)"
 }
 
 _koopa_macos_version_short() {
