@@ -12,12 +12,13 @@ _koopa_assert_has_sudo
 # Variables                                                                 {{{1
 # ==============================================================================
 
-source_user="mike"
+source_user="$USER"
 
 host_ip="$(ip-address)"
 source_ip="10.100.100.135"
 
-bcbio_dir="/data00/bcbio"
+bcbio_dir="/usr/local/bcbio"
+_koopa_assert_is_dir "$bcbio_dir"
 
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
