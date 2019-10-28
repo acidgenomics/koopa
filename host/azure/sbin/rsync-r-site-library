@@ -40,7 +40,7 @@ fi
 if [[ ! -d "$r_dir" ]]
 then
     sudo mkdir -p "$r_dir"
-    sudo chown "root:wheel" "$r_dir"
+    sudo chown "${source_user}:wheel" "$r_dir"
     sudo chmod g+ws "$r_dir"
 fi
 
