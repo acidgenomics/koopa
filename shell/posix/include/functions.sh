@@ -1897,6 +1897,7 @@ _koopa_rsync_flags() {
     # -A, --acls                  preserve ACLs (implies -p)
     # -H, --hard-links            preserve hard links
     # -L, --copy-links            transform symlink into referent file/dir
+    # -O, --omit-dir-times        omit directories from --times
     # -P                          same as --partial --progress
     # -S, --sparse                handle sparse files efficiently
     # -X, --xattrs                preserve extended attributes
@@ -1915,7 +1916,6 @@ _koopa_rsync_flags() {
     # - https://unix.stackexchange.com/questions/165423
     #
     # Updated 2019-10-28.
-    # --acls --xattrs
     echo "--archive --delete-before --human-readable --progress"
 }
 
