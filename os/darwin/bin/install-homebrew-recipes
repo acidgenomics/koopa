@@ -190,6 +190,7 @@ brews=(
     sox
     sshfs
     tesseract
+    the_silver_searcher  # ag
     tmux
     trash
     tree
