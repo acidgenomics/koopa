@@ -1889,25 +1889,34 @@ _koopa_remove_from_path() {
 _koopa_rsync_flags() {
     # rsync flags.
     #
-    # Useful flags:
-    #     --acls --xattrs
     #     --delete-before         receiver deletes before xfer, not during
-    #     --dry-run
     #     --iconv=CONVERT_SPEC    request charset conversion of filenames
-    #     --iconv=utf-8,utf-8-mac
-    #     --one-file-system
+    #     --numeric-ids           don't map uid/gid values by user/group name
+    #     --partial               keep partially transferred files
     #     --progress              show progress during transfer
+    # -A, --acls                  preserve ACLs (implies -p)
+    # -H, --hard-links            preserve hard links
     # -L, --copy-links            transform symlink into referent file/dir
+    # -P                          same as --partial --progress
+    # -S, --sparse                handle sparse files efficiently
+    # -X, --xattrs                preserve extended attributes
     # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
     # -g, --group                 preserve group
     # -h, --human-readable        output numbers in a human-readable format
+    # -n, --dry-run               perform a trial run with no changes made
     # -o, --owner                 preserve owner (super-user only)
+    # -r, --recursive             recurse into directories
+    # -x, --one-file-system       don't cross filesystem boundaries    
     # -z, --compress              compress file data during the transfer
     #
-    # Use --rsync-path="sudo rsync" to sync across machines with sudo.
+    # Use '--rsync-path="sudo rsync"' to sync across machines with sudo.
+    #
+    # See also:
+    # - https://unix.stackexchange.com/questions/165423
     #
     # Updated 2019-10-28.
-    echo "--archive --delete-before --group --human-readable --progress"
+    # --acls --xattrs
+    echo "--archive --delete-before --human-readable --progress"
 }
 
 
