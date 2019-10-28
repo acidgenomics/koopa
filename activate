@@ -337,7 +337,6 @@ then
         if [ "$ZSHRC" -eq 1 ]
         then
             . "${activate_dir}/shell/zsh/oh-my-zsh.sh"
-            . "${activate_dir}/shell/zsh/lesspipe.sh"
             . "${activate_dir}/shell/zsh/autojump.sh"
         fi
         . "${activate_dir}/shell/zsh/prompt.sh"
@@ -379,6 +378,7 @@ then
     . "${activate_dir}/programs/rbenv.sh"
     if [ "$subshell" -eq 0 ]
     then
+        . "${activate_dir}/programs/lesspipe.sh"
         . "${activate_dir}/programs/ensembl-perl-api.sh"
         . "${activate_dir}/programs/rust.sh"
         if _koopa_is_darwin
