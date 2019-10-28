@@ -24,33 +24,6 @@ flags+=("--omit-dir-times")
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-rsync bcbio installation.
-
-$(_koopa_help_args)
-
-details:
-    Requires sync from VM35 using Mike's account.
-
-internal variables:
-    source_ip: ${source_ip}
-    source_user: ${source_user}
-    bcbio_dir: ${bcbio_dir}
-
-note:
-    Bash script.
-    Updated 2019-10-28.
-EOF
-}
-
-
-
 # Script                                                                    {{{1
 # ==============================================================================
 
