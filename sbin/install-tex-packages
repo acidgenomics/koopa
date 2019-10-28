@@ -20,9 +20,12 @@ Install TeX packages using tlmgr.
 
 $(_koopa_help_args)
 
+see also:
+    - https://github.com/vsbuffalo/dotfiles
+
 note:
     Bash script.
-    Updated 2019-10-08.
+    Updated 2019-10-28.
 EOF
 }
 
@@ -37,10 +40,12 @@ _koopa_message "Installing TeX packages recommended for RStudio."
 
 sudo tlmgr update --self
 
+
 packages=(
     collection-fontsrecommended  # priority
     collection-latexrecommended  # priority
     bera  # beramono
+    biblatex
     caption
     changepage
     csvsimple
@@ -52,6 +57,7 @@ packages=(
     geometry
     hyperref
     inconsolata
+    logreq
     marginfix
     mathtools
     natbib
@@ -64,6 +70,8 @@ packages=(
     soul
     titlesec
     titling
+    units
+    wasysym
     xstring
 )
 
