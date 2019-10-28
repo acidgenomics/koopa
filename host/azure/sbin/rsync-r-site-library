@@ -23,7 +23,8 @@ r_home="$(_koopa_r_home)"
 r_dir="/data00/R"
 lib_link="${r_dir}/site-library/current"
 
-flags="$(_koopa_rsync_flags)"
+mapfile -t flags < <(_koopa_rsync_flags)
+flags+=("--owner")
 
 
 
@@ -39,7 +40,7 @@ fi
 if [[ ! -d "$r_dir" ]]
 then
     sudo mkdir -p "$r_dir"
-    sudo chown "mike:wheel" "$r_dir"
+    sudo chown "root:wheel" "$r_dir"
     sudo chmod g+ws "$r_dir"
 fi
 
@@ -53,11 +54,18 @@ then
 fi
 
 _koopa_message "Updating '${r_dir}' from '${source_ip}'."
-# shellcheck disable=SC2086
-rsync $flags                                                                   \
+_koopa_note "Using flags: ${flags[*]}"
+
+# shellcheck disable=SC2068
+rsync ${flags[@]}                                                              \
     --rsync-path="sudo rsync"                                                  \
     "${source_user}@${source_ip}:${r_dir}/"                                    \
     "${r_dir}/"
+
+sudo chown -h root \
+    "${r_dir}" \
+    "${r_dir}/"* \
+    "${r_dir}/site-library/"*
 
 # > sudo chgrp -Rh wheel "$r_dir"
 # > sudo chmod -R g+w "$r_dir"
