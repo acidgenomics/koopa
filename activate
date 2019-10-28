@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-25.
+    Updated 2019-10-28.
 EOF
 }
 
@@ -337,6 +337,7 @@ then
         if [ "$ZSHRC" -eq 1 ]
         then
             . "${activate_dir}/shell/zsh/oh-my-zsh.sh"
+            . "${activate_dir}/shell/zsh/lesspipe.sh"
             . "${activate_dir}/shell/zsh/autojump.sh"
         fi
         . "${activate_dir}/shell/zsh/prompt.sh"
