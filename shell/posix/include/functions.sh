@@ -1538,21 +1538,6 @@ _koopa_macos_app_version() {
         | tr -d '"'
 }
 
-# FIXME Take these out and move to separate version script.
-_koopa_macos_version() {
-    # macOS version string.
-    # Updated 2019-08-17.
-    _koopa_assert_is_darwin
-}
-
-_koopa_macos_version_short() {
-    # Shorter macOS version string.
-    # Updated 2019-08-17.
-    _koopa_assert_is_darwin
-    version="$(sw_vers -productVersion | cut -d '.' -f 1-2)"
-    printf "%s %s\n" "macos" "$version"
-}
-
 _koopa_major_version() {
     # Get the major program version.
     # Updated 2019-09-23.
@@ -1797,40 +1782,6 @@ _koopa_prompt_git() {
         git_status="*"
     fi
     printf " %s%s\n" "$git_branch" "$git_status"
-}
-
-_koopa_prompt_os() {
-    # Get the operating system information.
-    # Updated 2019-10-22.
-    local id
-    local string
-    local version
-    if _koopa_is_darwin
-    then
-        string="$(_koopa_macos_version_short)"
-    elif _koopa_is_linux
-    then
-        id="$(                                                                 \
-            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release                   \
-            | tr -d '"'                                                        \
-        )"
-        version="$(                                                            \
-            awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release           \
-            | tr -d '"'                                                        \
-        )"
-        string="${id}-${version}"
-    else
-        string=
-    fi
-    if _koopa_is_remote
-    then
-        host_type="$(_koopa_host_type)"
-        if [ -n "$host_type" ]
-        then
-            string="${host_type}-${string}"
-        fi
-    fi
-    echo "$string"
 }
 
 _koopa_prompt_venv() {
