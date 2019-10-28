@@ -15,7 +15,7 @@ _koopa_assert_has_sudo
 source_user="$USER"
 
 host_ip="$(ip-address)"
-source_ip="10.100.100.145"
+source_ip="10.100.100.132"
 
 conda_dir="/usr/local/miniconda3"
 _koopa_assert_is_dir "$conda_dir"
