@@ -127,6 +127,8 @@ brew install bash fish ksh tcsh zsh
 brew install openblas tcl-tk
 brew install flac lame
 
+# llvm can be useful but takes up 4 GB of disk space.
+
 # Recommended.
 brews=(
     autoconf
@@ -165,7 +167,6 @@ brews=(
     libssh2
     libxml2
     libxslt
-    llvm
     mariadb-connector-c
     mas
     neofetch
