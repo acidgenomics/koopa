@@ -58,6 +58,9 @@ details:
     requires that arguments are passed in at the beginning of the call, rather
     than as positional arguments or flags. Refer to the working examples below.
 
+    Specific users can be skipped by exporting 'KOOPA_USERS_NO_ACTIVATE'.
+    Extra shell config can be skipped by exporting 'KOOPA_USERS_NO_EXTRA'.
+
 examples:
     # Default mode
     . /usr/local/koopa/activate
@@ -89,9 +92,11 @@ unset -f usage
 [ "$(id -u)" -eq 0 ] && return 0
 whoami | grep -Eq "\badmin\b" && return 0
 [ -n "${USER:-}" ] && USER="$(whoami)" && export USER
-if [ -n "${KOOPA_SKIP_USERS:-}" ]
+
+# Skip specific users, if desired.
+if [ -n "${KOOPA_USERS_NO_ACTIVATE:-}" ]
 then
-    echo "$KOOPA_SKIP_USERS" | grep -Eq "\b${USER}\b" && return 0
+    echo "$KOOPA_USERS_NO_ACTIVATE" | grep -Eq "\b${USER}\b" && return 0
 fi
 
 # Check for interactive shell.
@@ -258,7 +263,18 @@ fi
 # Optional configuration                                                    {{{1
 # ==============================================================================
 
-# Detect extra mode.
+# Extra mode                                                                {{{2
+# ------------------------------------------------------------------------------
+
+# Skip for specific users, if desired.
+if [ -n "${KOOPA_USERS_NO_EXTRA:-}" ]
+then
+    if echo "$KOOPA_USERS_NO_EXTRA" | grep -Eq "\b${USER}\b"
+    then
+        extra=0
+    fi
+fi
+
 # Enabled by default.
 [ -z "${extra:-}" ] && extra=1
 case "$extra" in
@@ -270,7 +286,18 @@ case "$extra" in
         ;;
 esac
 
-# Detect programs mode.
+# Programs mode                                                             {{{2
+# ------------------------------------------------------------------------------
+
+# Skip for specific users, if desired.
+if [ -n "${KOOPA_USERS_NO_PROGRAMS:-}" ]
+then
+    if echo "$KOOPA_USERS_NO_PROGRAMS" | grep -Eq "\b${USER}\b"
+    then
+        programs=0
+    fi
+fi
+
 # Enabled by default.
 [ -z "${programs:-}" ] && programs=1
 case "$programs" in
@@ -282,7 +309,18 @@ case "$programs" in
         ;;
 esac
 
-# Detect minimal mode.
+# Minimal mode                                                              {{{2
+# ------------------------------------------------------------------------------
+
+# Enable for specific users, if desired.
+if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
+then
+    if echo "$KOOPA_USERS_MINIMAL" | grep -Eq "\b${USER}\b"
+    then
+        minimal=0
+    fi
+fi
+
 # Disabled by default.
 [ -z "${minimal:-}" ] && minimal=0
 case "$minimal" in
@@ -294,7 +332,7 @@ case "$minimal" in
         ;;
 esac
 
-# Disable other options when running in minimal mode.
+# Override other flags, if necessary.
 if [ "$minimal" -eq 1 ]
 then
     extra=0
