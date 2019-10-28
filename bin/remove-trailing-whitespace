@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
+
+
+
+# Notes                                                                     {{{1
+# ==============================================================================
+
+# https://stackoverflow.com/questions/4438306
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+sed -i 's/[ \t]*$//' "$1"
