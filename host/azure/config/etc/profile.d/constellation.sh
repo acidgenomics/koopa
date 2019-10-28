@@ -41,11 +41,11 @@ export D5="/mnt/azbioinfoseq05"
 # This value will be detected and configured automatically by koopa.
 
 # development
-# > export BCBIO_EXE="/data00/bcbio/development/tools/bin/bcbio_nextgen.py"
+# > export BCBIO_EXE="/usr/local/bcbio/development/tools/bin/bcbio_nextgen.py"
 
 # stable
-# > export BCBIO_EXE="/data00/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
-export BCBIO_EXE="/data00/bcbio/v1.1.7/tools/bin/bcbio_nextgen.py"
+# > export BCBIO_EXE="/usr/local/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
+export BCBIO_EXE="/usr/local/bcbio/v1.1.7/tools/bin/bcbio_nextgen.py"
 
 
 
