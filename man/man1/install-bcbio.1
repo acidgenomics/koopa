@@ -1,0 +1,27 @@
+.TH INSTALL-BCBIO 1 2019-10-28 Bash
+.SH NAME
+install-bcbio \- install bcbio-nextgen
+.SH SYNOPSIS
+.B install-bcbio
+[\fB\-\-prefix\fR=\fI"/usr/local/bcbio"\fR]
+[\fB\-\-version\fR=\fI"stable"\fR]
+.SH OPTIONS
+.TP
+.BR \-\-prefix
+Target directory prefix.
+Note that 'install/' and 'tools/' directories will be created under this path.
+On Azure, set this to '/data00/bcbio/v1.1.7'.
+.TP
+.BR \-\-version
+Install "stable" (recommended) or "development" release.
+For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
+.SH DESCRIPTION
+Only installs the RNA-seq pipeline.
+No genomes will be installed.
+Use 'install-bcbio-genomes' to install recommended default genomes.
+.SH SEE ALSO
+    - https://bcbio-nextgen.readthedocs.io/
+    - https://github.com/bcbio/bcbio-nextgen/releases/latest
+.SH EXAMPLE
+install-bcbio \-\-prefix="/data00/bcbio/v1.1.7" \-\-version="stable"
+install-bcbio \-\-prefix="/data00/bcbio/development" \-\-version="development"
