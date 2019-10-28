@@ -1890,22 +1890,24 @@ _koopa_rsync_flags() {
     # rsync flags.
     #
     # Useful flags:
-    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
-    # -z, --compress              compress file data during the transfer
-    # -L, --copy-links            transform symlink into referent file/dir
-    #     --delete-before         receiver deletes before xfer, not during
-    # -h, --human-readable        output numbers in a human-readable format
-    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
-    #     --progress              show progress during transfer
-    #     --dry-run
-    #     --one-file-system
     #     --acls --xattrs
+    #     --delete-before         receiver deletes before xfer, not during
+    #     --dry-run
+    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
     #     --iconv=utf-8,utf-8-mac
+    #     --one-file-system
+    #     --progress              show progress during transfer
+    # -L, --copy-links            transform symlink into referent file/dir
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -g, --group                 preserve group
+    # -h, --human-readable        output numbers in a human-readable format
+    # -o, --owner                 preserve owner (super-user only)
+    # -z, --compress              compress file data during the transfer
     #
     # Use --rsync-path="sudo rsync" to sync across machines with sudo.
     #
-    # Updated 2019-10-15.
-    echo "--archive --delete-before --human-readable --progress"
+    # Updated 2019-10-28.
+    echo "--archive --delete-before --group --human-readable --progress"
 }
 
 
