@@ -1,0 +1,31 @@
+.TH PATCH-BCBIO 1 2019-10-28 Bash
+.SH NAME
+patch-bcbio \- patch bcbio-nextgen installation
+.SH SYNOPSIS
+.B patch-bcbio
+[\fB\-\-git-dir\fR=\fI"~/git/bcbio-nextgen"\fR]
+[\fB\-\-bcbio-python\fR=\fI"AUTO"\fR]
+[\fB\-\-install-dir\fR=\fI"AUTO"\fR]
+.SH OPTIONS
+.TP
+.BR \-\-git-dir
+(Forked) bcbio-nextgen git repo.
+.TP
+.BR \-\-bcbio-python
+Path to 'bcbio_python'.
+If unset, the script attempts to locate automatically, based on PATH.
+.TP
+.BR \-\-install-dir
+Path to bcbio installation.
+This is the path that contains 'anaconda/', 'config/', 'galaxy/', 'genomes/',
+and 'manifest/' subdirectories.
+For example, on Azure this is '/data00/bcbio/development/install'.
+If unset, the script attempts to locate automatically based on '--bcbio-python'.
+.SH DESCRIPTION
+Patch bcbio-nextgen installation.
+.SH EXAMPLE
+patch-bcbio
+--git-dir="~/git/bcbio-nextgen"
+--bcbio-python="/data00/bcbio/development/tools/bin/bcbio_python"
+.SH SEE ALSO
+https://bcbio-nextgen.readthedocs.io/

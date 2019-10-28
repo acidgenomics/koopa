@@ -4,40 +4,45 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Patch bcbio-nextgen installation.
-
-required positional arguments with defaults:
-    1.  Version. Use "stable" (recommended) or "development".
-        For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
-
-$(_koopa_help_args)
-
-see also:
-    https://bcbio-nextgen.readthedocs.io/
-
-note:
-    Bash script.
-    Updated 2019-09-26.
-EOF
-}
-
 _koopa_help "$@"
 
 
 
-# Script                                                                    {{{1
+# Arguments                                                                 {{{1
 # ==============================================================================
 
-_koopa_assert_has_no_environments
+while (("$#"))
+do
+    case "$1" in
+        --bcbio-python=*)
+            bcbio_python="${1#*=}"
+            shift 1
+            ;;
+        --bcbio-python)
+            bcbio_python="$2"
+            shift 2
+            ;;
+        --git-dir=*)
+            git_dir="${1#*=}"
+            shift 1
+            ;;
+        --git-dir)
+            git_dir="$2"
+            shift 2
+            ;;
+        --install-dir=*)
+            install_dir="${1#*=}"
+            shift 1
+            ;;
+        --install-dir)
+            install_dir="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
 
 # Locate bcbio git directory.
 if [[ -z "${git_dir:-}" ]]
@@ -46,51 +51,55 @@ then
 fi
 _koopa_assert_is_dir "$git_dir"
 
-# Locate bcbio installation directory.
-if [[ -z "${install_dir:-}" ]]
-then
-    _koopa_assert_is_installed bcbio_nextgen.py
-    bcbio_exe="$(command -v bcbio_nextgen.py)"
-    bcbio_exe="$(realpath "$bcbio_exe")"
-    install_dir="$(dirname "$(dirname "$(dirname "$bcbio_exe")")")"
-fi
-_koopa_assert_is_dir "$install_dir"
-
 # Locate bcbio python.
 if [[ -z "${bcbio_python:-}" ]]
 then
-    _koopa_assert_is_installed bcbio_python
-    bcbio_python="$(command -v bcbio_python)"
-    bcbio_python="$(realpath "$bcbio_python")"
+    bcbio_python="$(_koopa_realpath "bcbio_python")"
 fi
 _koopa_assert_is_executable "$bcbio_python"
 
-cat << EOF
-Patching bcbio installation.
+# Locate bcbio installation directory.
+if [[ -z "${install_dir:-}" ]]
+then
+    install_dir="$(dirname "$(dirname "$(dirname "$bcbio_python")")")"
+fi
+_koopa_assert_is_dir "$install_dir"
 
-install_dir:
-    ${install_dir}
-bcbio_nextgen.py:
-    ${bcbio_exe}
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_message "Patching bcbio installation."
+
+cat << EOF
+git_dir:
+  ${git_dir}
 bcbio_python:
-    ${bcbio_python}
+  ${bcbio_python}
+install_dir:
+  ${install_dir}
 EOF
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/"
-log_file="${log_dir}/bcbio-patch-${timestamp}.log"
+log_file="${log_dir}/${timestamp}-patch-bcbio.log"
+_koopa_message "Saving log to '${log_file}'."
 mkdir -pv "$log_dir"
 
-# Remove Python installer cruft.
-# Note the asterisks here, they're important.
+_koopa_message "Removing Python cache and compiled pyc files in Git repo."
+find "$git_dir" -name "*.pyc" -delete
+find "$git_dir" -name "__pycache__" -type d -exec rm -rv {} \;
+
+_koopa_message "Removing Python installer cruft inside 'anaconda/lib/'."
 rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
 
 # Install command must be run relative to our forked git repo.
 # Note the use of absolute path to bcbio_python here.
 (
     cd "$git_dir" || exit 1
+    _koopa_message "Removing any existing unit test output."
     rm -frv tests/test_automated_output
+    _koopa_message "Patching installation via 'setup.py' script."
     "$bcbio_python" setup.py install 2>&1 | tee "$log_file"
 )
-
-"$bcbio_exe" --version
