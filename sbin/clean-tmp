@@ -12,4 +12,9 @@ _koopa_assert_has_sudo
 # Script                                                                    {{{1
 # ==============================================================================
 
-sudo find "$TMPDIR" -mindepth 1 -maxdepth 1 -ctime +7 -exec rm -frv {} \;
+sudo find /tmp -mindepth 1 -maxdepth 1 -ctime +14 -exec rm -frv {} \;
+
+if [[ "${TMPDIR:-}" != "/tmp" ]]
+then
+    sudo find "$TMPDIR" -mindepth 1 -maxdepth 1 -ctime +14 -exec rm -frv {} \;
+fi
