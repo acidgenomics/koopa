@@ -12,13 +12,16 @@ _koopa_assert_has_sudo
 # Variables                                                                 {{{1
 # ==============================================================================
 
-source_user="mike"
+source_user="$USER"
 
 host_ip="$(ip-address)"
 source_ip="10.100.100.133"
 
-cellranger_dir="/data00/cellranger"
-cellranger_atac_dir="/data00/cellranger-atac"
+cellranger_dir="/usr/local/cellranger"
+_koopa_assert_is_dir "$cellranger_dir"
+
+cellranger_atac_dir="/usr/local/cellranger-atac"
+_koopa_assert_is_dir "$cellranger_atac_dir"
 
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
