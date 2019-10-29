@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2039
 
 # Homebrew.
 # Updated 2019-10-29.
@@ -54,12 +55,17 @@ fi
 # Google Cloud SDK                                                          {{{1
 # ==============================================================================
 
-prefix="${HOMEBREW_PREFIX}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
-if [ -d "$prefix" ]
-then
+_koopa_activate_google_cloud_sdk() {
+    ! _koopa_is_installed gcloud || return 0
+    local prefix
+    prefix="${HOMEBREW_PREFIX}/Caskroom"
+    prefix="${prefix}/google-cloud-sdk/latest/google-cloud-sdk"
+    [ -d "$prefix" ] || return 0
     # shellcheck source=/dev/null
-    . "${prefix}/path.bash.inc"
+    . "${prefix}/path.${KOOPA_SHELL}.inc"
     # shellcheck source=/dev/null
-    . "${prefix}/completion.bash.inc"
-fi
-unset -v prefix
+    . "${prefix}/completion.${KOOPA_SHELL}.inc"
+}
+
+_koopa_activate_google_cloud_sdk
+
