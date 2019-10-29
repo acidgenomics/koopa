@@ -6,6 +6,58 @@
 # A                                                                         {{{1
 # ==============================================================================
 
+_koopa_activate_aspera() {
+    # """
+    # Include Aspera Connect binaries in PATH, if defined.
+    # Updated 2019-06-25.
+    # """
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="${HOME}/.aspera/connect"
+    fi
+    [ -d "$prefix" ] || return 0
+    _koopa_add_to_path_start "${prefix}/bin"
+    return 0
+}
+
+_koopa_activate_bcbio() {
+    # """
+    # Include bcbio toolkit binaries in PATH, if defined.
+    # Attempt to locate bcbio installation automatically on supported platforms.
+    # Updated 2019-10-29.
+    # """
+    _koopa_is_linux || return 0
+    ! _koopa_is_installed bcbio_nextgen.py || return 0
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        local host
+        host="$(_koopa_host_type)"
+        if [ "$host" = "harvard-o2" ]
+        then
+            prefix="/n/app/bcbio/tools"
+        elif [ "$host" = "harvard-odyssey" ]
+        then
+            prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
+        elif [ -d "/usr/local/bcbio/stable/tools" ]
+        then
+            prefix="/usr/local/bcbio/stable/tools"
+        else
+            return 0
+        fi
+    fi
+    [ -d "$prefix" ] || return 0
+    # Exporting at the end of PATH so we don't mask gcc or R.
+    # This is particularly important to avoid unexpected compilation issues
+    # due to compilers in conda masking the system versions.
+    _koopa_force_add_to_path_end "${prefix}/bin"
+    unset -v PYTHONHOME PYTHONPATH
+    return 0
+}
+
 _koopa_activate_conda() {
     # """
     # Activate conda.
@@ -58,6 +110,17 @@ _koopa_activate_conda() {
         [ -n "${KOOPA_TEST:-}" ] && set -u
     fi
     return 0
+}
+
+_koopa_activate_conda_envs() {
+    # """
+    # Put useful conda environments in PATH.
+    # Updated 2019-10-29.
+    # """
+    _koopa_is_linux || return 0
+    _koopa_is_installed conda || return 0
+    _koopa_add_conda_env_to_path pandoc
+    # > _koopa_add_conda_env_to_path texlive-core
 }
 
 _koopa_activate_ensembl_perl_api() {
