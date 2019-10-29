@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# Activate Conda.
-# Updated 2019-06-29.
-
 # Note that conda must be reactivated inside of tmux.
 
 # It's no longer recommended to directly export conda in `$PATH`.
@@ -13,9 +10,6 @@
 #
 # Note that an environment will only be activated when `$CONDA_DEFAULT_ENV` is
 # set prior to running this code. Attempts to activate "base" will be ignored.
-
-# Conda doesn't currently support ksh, and fish support is buggy.
-_koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
 
 # Attempt to detect the installation path automatically, if necessary.
 # Use `$CONDA_EXE` to manually set the path, for non-standard installs.
