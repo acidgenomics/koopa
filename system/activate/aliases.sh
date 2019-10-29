@@ -41,7 +41,6 @@ alias e='exit'
 # Enable colors using dircolors.
 if _koopa_is_installed dircolors
 then
-    echo "HELLO THERE"
     # Note that the '-b' flag here exports Bash LS_COLORS string.
     eval "$(dircolors -b)"
     alias dir='dir --color=auto'
