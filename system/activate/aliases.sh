@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Aliases
-# Updated 2019-10-14.
+# Updated 2019-10-29.
 
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
@@ -39,9 +39,10 @@ alias e='exit'
 # ==============================================================================
 
 # Enable colors using dircolors.
-# Note that this is commonly installed on Linux but not macOS.
 if _koopa_is_installed dircolors
 then
+    echo "HELLO THERE"
+    # Note that the '-b' flag here exports Bash LS_COLORS string.
     eval "$(dircolors -b)"
     alias dir='dir --color=auto'
     alias egrep='egrep --color=auto'
