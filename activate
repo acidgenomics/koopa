@@ -329,13 +329,10 @@ if [ "$minimal" -eq 0 ]
 then
     if [ "$subshell" -eq 0 ]
     then
-        . "${activate_dir}/programs/ensembl-perl-api.sh"
         . "${activate_dir}/programs/rust.sh"
         if _koopa_is_darwin
         then
             . "${activate_dir}/os/darwin/programs/homebrew.sh"
-            . "${activate_dir}/os/darwin/programs/coreutils.sh"
-            # > . "${activate_dir}/os/darwin/programs/google-cloud-sdk.sh"
         elif _koopa_is_linux
         then
             . "${activate_dir}/os/linux/programs/aspera.sh"
@@ -345,7 +342,9 @@ then
     fi
 
     . "${activate_dir}/programs.sh"
-    . "${activate_dir}/programs/conda.sh"
+
+    _koopa_activate_ensembl_perl_api
+    _koopa_activate_conda
     . "${activate_dir}/programs/perlbrew.sh"
     . "${activate_dir}/programs/rbenv.sh"
 
@@ -384,20 +383,17 @@ then
         . "${activate_dir}/shell/zsh/bindkey.sh"
     fi
 
-    # Run these after shell-specific configuration.
-    . "${activate_dir}/set.sh"
-    # Note that dircolors won't be picked up correctly on macOS unless we locate
-    # GNU coreutils first above (see programs).
-    . "${activate_dir}/secrets.sh"
-    . "${activate_dir}/ssh-key.sh"
-    . "${activate_dir}/umask.sh"
-
     # Platform-specific configuration.
     if _koopa_is_darwin
     then
         . "${activate_dir}/os/darwin/exports.sh"
         . "${activate_dir}/os/darwin/aliases.sh"
     fi
+
+    _koopa_activate_secrets
+    _koopa_activate_ssh_key
+
+    . "${activate_dir}/extra.sh"
 
     if [ "$subshell" -eq 0 ]
     then

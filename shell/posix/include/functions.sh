@@ -6,6 +6,105 @@
 # A                                                                         {{{1
 # ==============================================================================
 
+_koopa_activate_conda() {
+    # Activate conda.
+    # Updated 2019-10-29.
+    #
+    # It's no longer recommended to directly export conda in '$PATH'.
+    # Instead source the `activate` script.
+    [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
+    [ -z "${CONDA_PREFIX:-}" ] || return 0
+    local exe
+    exe="${CONDA_EXE:-}"
+    if [ -z "$exe" ]
+    then
+        local prefix
+        if [ -d "${HOME}/.local/anaconda3" ]
+        then
+            prefix="${HOME}/.local/anaconda3"
+        elif [ -d "${HOME}/.local/miniconda3" ]
+        then
+            prefix="${HOME}/.local/miniconda3"
+        elif [ -d "${HOME}/anaconda3" ]
+        then
+            prefix="${HOME}/anaconda3"
+        elif [ -d "${HOME}/miniconda3" ]
+        then
+            prefix="${HOME}/miniconda3"
+        elif [ -d "/usr/local/anaconda3" ]
+        then
+            prefix="/usr/local/anaconda3"
+        elif [ -d "/usr/local/miniconda3" ]
+        then
+            prefix="/usr/local/miniconda3"
+        elif [ -d "/opt/anaconda3" ]
+        then
+            prefix="/opt/anaconda3"
+        elif [ -d "/opt/miniconda3" ]
+        then
+            prefix="/opt/miniconda3"
+        else
+            return 0
+        fi
+        exe="${prefix}/bin/conda"
+    fi
+    [ -x "$exe" ] || return 0
+    local bin_dir
+    bin_dir="$(dirname "$exe")"
+    [ -n "${KOOPA_TEST:-}" ] && set +u
+    # shellcheck source=/dev/null
+    . "${bin_dir}/activate"
+    [ -n "${KOOPA_TEST:-}" ] && set -u
+}
+
+_koopa_activate_ensembl_perl_api() {
+    # Activate Ensembl Perl API.
+    # > perlbrew switch perl-5.26
+    # Updated 2019-10-29.
+    local prefix
+    prefix="$(_koopa_build_prefix)/ensembl"
+    [ -d "prefix" ] || return 0
+    _koopa_add_to_path_start "${prefix}/ensembl-git-tools/bin"
+    PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
+    PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
+    PERL5LIB="${PERL5LIB}:${prefix}/ensembl-compara/modules"
+    PERL5LIB="${PERL5LIB}:${prefix}/ensembl-variation/modules"
+    PERL5LIB="${PERL5LIB}:${prefix}/ensembl-funcgen/modules"
+    export PERL5LIB
+}
+
+_koopa_activate_secrets() {
+    # Source secrets file.
+    # Updated 2019-10-29.
+    # shellcheck source=/dev/null
+    if [ -f "${HOME}/.secrets" ]
+    then
+        . "${HOME}/.secrets"
+    fi
+}
+
+_koopa_activate_ssh_key() {
+    # Import an SSH key automatically, using 'SSH_KEY' global variable.
+    #
+    # NOTE: SCP will fail unless this is interactive only.
+    # ssh-agent will prompt for password if there's one set.
+    #
+    # To change SSH key passphrase:
+    # > ssh-keygen -p
+    #
+    # List currently loaded keys:
+    # > ssh-add -L
+    #
+    # Updated 2019-10-29.
+    _koopa_is_linux || return 0
+    _koopa_is_interactive || return 0
+    local ssh_key
+    ssh_key="${SSH_KEY:-${HOME}/.ssh/id_rsa}"
+    [ -r "$ssh_key" ] || return 0
+    eval "$(ssh-agent -s)" > /dev/null 2>&1
+    ssh-add "$ssh_key" > /dev/null 2>&1
+}
+
 _koopa_add_bins_to_path() {
     # Add nested 'bin/' and 'sbin/' directories to PATH.
     # Updated 2019-09-12.
@@ -1804,8 +1903,8 @@ _koopa_prompt_venv() {
 # ==============================================================================
 
 _koopa_quiet_cd() {
-    # Updated 2019-10-08.
-    cd "$@" >/dev/null || return 1
+    # Updated 2019-10-29.
+    cd "$@" > /dev/null || return 1
 }
 
 _koopa_quiet_expr() {
@@ -1823,8 +1922,8 @@ _koopa_quiet_expr() {
 
 _koopa_quiet_rm() {
     # Quiet remove.
-    # Updated 2019-10-22.
-    rm -fr "$@" >/dev/null 2>&1
+    # Updated 2019-10-29.
+    rm -fr "$@" > /dev/null 2>&1
 }
 
 

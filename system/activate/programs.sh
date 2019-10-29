@@ -1,5 +1,85 @@
 #!/bin/sh
 
+# Run 'alias' in terminal to list current definitions.
+
+# See also:
+# - https://github.com/MikeMcQuaid/dotfiles
+# - https://github.com/stephenturner/oneliners
+
+
+
+# Core                                                                      {{{1
+# ==============================================================================
+
+alias df='df -H'
+alias df2='df --portability --print-type --si | sort'
+
+alias du='du -sh'
+alias less='less --ignore-case --raw-control-chars'
+
+alias sha256='shasum -a 256'
+alias tarup='tar -czvf'
+alias tardown='tar -xzvf'
+
+
+
+# File system navigation                                                    {{{1
+# ==============================================================================
+
+alias e='exit'
+alias kh='cd $KOOPA_HOME'
+
+# Navigate up parent directories without `cd`.
+# These are also supported by autojump.
+# > alias ..='cd ..'
+# > alias ...='cd ../../'
+# > alias ....='cd ../../../'
+# > alias .....='cd ../../../../'
+# > alias ......='cd ../../../../../'
+
+alias l.='ls -Fd .*'
+alias l1='ls -1p'
+alias l='ls -AGghlo'
+alias la='ls -Ahl'
+alias ll='ls -hl'
+
+alias cls='clear; ls'
+alias lhead='l | head'
+alias ltail='l | tail'
+
+# Browse up and down.
+alias u='clear; cd ../; pwd; ls'
+alias d='clear; cd -; ls'
+
+
+
+# GNU coreutils                                                             {{{1
+# ==============================================================================
+
+# Note: macOS doesn't bundle GNU coreutils, so be sure to install via Homebrew.
+
+alias cp='cp --archive --interactive --verbose'
+alias mkdir='mkdir --parents --verbose'
+alias mv="mv --interactive --verbose"
+alias rm='rm --dir --interactive="once" --preserve-root --verbose'
+
+if _koopa_is_installed dircolors
+then
+    # This will set the 'LD_COLORS' environment variable.
+    if [ -f "${KOOPA_HOME}/dotfiles/dircolors" ]
+    then
+        eval "$(dircolors "${KOOPA_HOME}/dotfiles/dircolors")"
+    else
+        eval "$(dircolors -b)"
+    fi
+    alias dir='dir --color=auto'
+    alias egrep='egrep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias grep='grep --color=auto'
+    alias ls='ls --color=auto'
+    alias vdir='vdir --color=auto'
+fi
+
 
 
 # Default text editor                                                       {{{1
@@ -30,19 +110,19 @@ fi
 
 
 
-# dircolors                                                                 {{{1
+# Emacs                                                                     {{{1
 # ==============================================================================
 
-if _koopa_is_installed dircolors
-then
-    # Use the custom colors defined in dotfiles, if possible.
-    if [ -f "${KOOPA_HOME}/dotfiles/dircolors" ]
-    then
-        eval "$(dircolors "${KOOPA_HOME}/dotfiles/dircolors")"
-    else
-        eval "$(dircolors -b)"
-    fi
-fi
+_koopa_add_to_path_start "${HOME}/.emacs.d/bin"
+
+alias emacs='emacs --no-window-system'
+
+# Use terminal (console) mode by default instead of window system.
+# Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
+alias emacs-default='emacs --no-init-file --no-window-system'
+
+# Run with 24-bit true color support.
+alias emacs24='TERM=xterm-24bit emacs --no-window-system'
 
 
 
@@ -54,7 +134,7 @@ fi
 # See also: https://the.exa.website/
 if _koopa_is_installed exa
 then
-    alias ls="exa -Fg"
+    alias ls='exa -Fg'
 fi
 
 
@@ -108,6 +188,13 @@ fi
 
 
 
+# Neovim                                                                    {{{1
+# ==============================================================================
+
+alias nvim-default='nvim -u NONE'
+
+
+
 # Python                                                                    {{{1
 # ==============================================================================
 
@@ -116,6 +203,13 @@ if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
 then
     export VIRTUAL_ENV_DISABLE_PROMPT=1
 fi
+
+
+
+# R                                                                         {{{1
+# ==============================================================================
+
+alias R='R --no-restore --no-save --quiet'
 
 
 
@@ -137,3 +231,23 @@ then
     RSYNC_FLAGS="$(_koopa_rsync_flags)"
     export RSYNC_FLAGS
 fi
+
+
+
+# Shiny Server                                                              {{{1
+# ==============================================================================
+
+if _koopa_is_linux
+then
+    alias shiny-status='sudo systemctl status shiny-server'
+    alias shiny-start='sudo systemctl start shiny-server'
+    alias shiny-restart='sudo systemctl restart shiny-server'
+fi
+
+
+
+# Vim                                                                      {{{1
+# ==============================================================================
+
+# Allow fast, default mode that skips RC file.
+alias vim-default='vim -i NONE -u NONE -U NONE'
