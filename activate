@@ -327,32 +327,25 @@ fi
 
 if [ "$minimal" -eq 0 ]
 then
-    if [ "$subshell" -eq 0 ]
-    then
-        . "${activate_dir}/programs/rust.sh"
-        if _koopa_is_darwin
-        then
-            . "${activate_dir}/os/darwin/programs/homebrew.sh"
-        elif _koopa_is_linux
-        then
-            . "${activate_dir}/os/linux/programs/aspera.sh"
-            . "${activate_dir}/os/linux/programs/bcbio.sh"
-            . "${activate_dir}/os/linux/programs/conda-envs.sh"
-        fi
-    fi
-
     . "${activate_dir}/programs.sh"
 
-    _koopa_activate_ensembl_perl_api
     _koopa_activate_conda
-    . "${activate_dir}/programs/perlbrew.sh"
-    . "${activate_dir}/programs/rbenv.sh"
+    _koopa_activate_ensembl_perl_api
+    _koopa_activate_perlbrew
+    _koopa_activate_rbenv
+    _koopa_activate_rust
 
-    # This needs to be run last, otherwise PATH can get messed upon
-    # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
-    # Refer to 'declare -f deactivate' for function source code.
-    # Note that 'deactivate' is still messing up autojump path.
-    . "${activate_dir}/programs/venv.sh"
+    if _koopa_is_darwin
+    then
+        . "${activate_dir}/os/darwin/programs/homebrew.sh"
+    elif _koopa_is_linux
+    then
+        . "${activate_dir}/os/linux/programs/aspera.sh"
+        . "${activate_dir}/os/linux/programs/bcbio.sh"
+        . "${activate_dir}/os/linux/programs/conda-envs.sh"
+    fi
+
+    _koopa_activate_venv
 fi
 
 
