@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Activate Conda
+# Activate Conda.
 # Updated 2019-06-29.
 
 # Note that conda must be reactivated inside of tmux.

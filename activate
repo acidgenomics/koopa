@@ -381,6 +381,8 @@ then
             . "${activate_dir}/os/linux/programs/conda-envs.sh"
         fi
     fi
+    # Ensure we configure this after GNU coreutils (for macOS).
+    . "${activate_dir}/programs/dircolors.sh"
     # This needs to be run last, otherwise PATH can get messed upon
     # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
     # Refer to 'declare -f deactivate' for function source code.
