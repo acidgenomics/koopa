@@ -5,42 +5,24 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Miniconda.
-
-$(_koopa_help_args)
-
-see also:
-    - https://conda.io/miniconda.html
-    - bash Miniconda3-latest-Linux-x86_64.sh -h
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
+_koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_environments
+
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
 
 name="miniconda3"
 prefix="$(_koopa_build_prefix)/${name}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/conda"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 case "$OSTYPE" in
     linux-gnu)
