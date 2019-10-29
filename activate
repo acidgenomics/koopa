@@ -318,29 +318,6 @@ _koopa_update_xdg_config
 
 
 
-# Additional program configuration                                          {{{1
-# ==============================================================================
-
-if [ "$minimal" -eq 0 ]
-then
-    if _koopa_is_darwin
-    then
-        . "${activate_dir}/os/darwin/programs/homebrew.sh"
-    fi
-    . "${activate_dir}/programs.sh"
-    _koopa_activate_aspera
-    _koopa_activate_ensembl_perl_api
-    _koopa_activate_perlbrew
-    _koopa_activate_rbenv
-    _koopa_activate_rust
-    _koopa_activate_bcbio
-    _koopa_activate_conda
-    _koopa_activate_conda_envs
-    _koopa_activate_venv
-fi
-
-
-
 # Extra shell configuration                                                 {{{1
 # ==============================================================================
 
@@ -380,6 +357,29 @@ then
     _koopa_activate_secrets
     _koopa_activate_ssh_key
     _koopa_today_bucket
+fi
+
+
+
+# Additional program configuration                                          {{{1
+# ==============================================================================
+
+if [ "$minimal" -eq 0 ]
+then
+    if _koopa_is_darwin
+    then
+        . "${activate_dir}/os/darwin/programs/homebrew.sh"
+    fi
+    . "${activate_dir}/programs.sh"
+    _koopa_activate_aspera
+    _koopa_activate_ensembl_perl_api
+    _koopa_activate_perlbrew
+    _koopa_activate_rbenv
+    _koopa_activate_rust
+    _koopa_activate_bcbio
+    _koopa_activate_conda
+    _koopa_activate_conda_envs
+    _koopa_activate_venv
 fi
 
 
