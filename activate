@@ -70,7 +70,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-28.
+    Updated 2019-10-29.
 EOF
 }
 
@@ -394,7 +394,6 @@ then
     then
         . "${activate_dir}/os/darwin/exports.sh"
         . "${activate_dir}/os/darwin/aliases.sh"
-        . "${activate_dir}/os/darwin/grc-colors.sh"
     fi
 
     # Today bucket.
