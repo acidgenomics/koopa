@@ -341,18 +341,15 @@ fi
 
 
 
-# Basic shell configuration                                                 {{{1
+# Minimal shell configuration                                               {{{1
 # ==============================================================================
+
+. "${activate_dir}/minimal.sh"
 
 if [ "$subshell" -eq 0 ]
 then
-    . "${activate_dir}/preflight.sh"
-    . "${activate_dir}/xdg.sh"
-    . "${activate_dir}/path.sh"
     _koopa_update_xdg_config
 fi
-
-. "${activate_dir}/general.sh"
 
 
 
@@ -361,9 +358,12 @@ fi
 
 if [ "$programs" -eq 1 ]
 then
+    . "${activate_dir}/programs.sh"
+
     . "${activate_dir}/programs/conda.sh"
     . "${activate_dir}/programs/perlbrew.sh"
     . "${activate_dir}/programs/rbenv.sh"
+
     if [ "$subshell" -eq 0 ]
     then
         . "${activate_dir}/programs/lesspipe.sh"
@@ -381,8 +381,10 @@ then
             . "${activate_dir}/os/linux/programs/conda-envs.sh"
         fi
     fi
+
     # Ensure we configure this after GNU coreutils (for macOS).
     . "${activate_dir}/programs/dircolors.sh"
+
     # This needs to be run last, otherwise PATH can get messed upon
     # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
     # Refer to 'declare -f deactivate' for function source code.
