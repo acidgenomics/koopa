@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CPI shared shell configuration.
-# Updated 2019-10-24 by Michael Steinbaugh.
+# Updated 2019-10-29 by Michael Steinbaugh.
 
 
 
@@ -19,8 +19,8 @@
 # Koopa                                                                     {{{1
 # ==============================================================================
 
-export KOOPA_USERS_NO_ACTIVATE="michael.steinbaugh phil.drapeau"
 export KOOPA_USERS_NO_EXTRA="bioinfo barbara.bryant"
+export KOOPA_USERS_SKIP="michael.steinbaugh phil.drapeau"
 
 
 
@@ -32,16 +32,6 @@ export D2="/mnt/azbioinfoseq02"
 export D3="/mnt/azbioinfoseq03"
 export D4="/mnt/azbioinfoseq04"
 export D5="/mnt/azbioinfoseq05"
-
-
-
-# bcbio                                                                     {{{1
-# ==============================================================================
-
-# This value will be detected and configured automatically by koopa.
-
-# > export BCBIO_EXE="/usr/local/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
-export BCBIO_EXE="/usr/local/bcbio/v1.1.7/tools/bin/bcbio_nextgen.py"
 
 
 

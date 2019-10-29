@@ -29,24 +29,21 @@ Activate koopa.
 
 optional variables:
     extra=1 [true]
-        Enable extra shell and OS-specific configuration.
-    programs=1 [true]
-        Enable automatic configuration of supported programs.
+        Enable extra shell configuration.
+        This setting enables automatic prompt string configuration.
+        Can disable per user with 'KOOPA_USERS_NO_EXTRA=user1 user2'.
     minimal=0 [false]
-        Minimal mode. Simply export koopa programs into PATH.
-        Skip additional program and shell configuration.
-        Internally, this sets extra=0, programs=1.
-
-optional variables, for debugging:
+        Minimal mode.
+        Simply load koopa programs into PATH.
+        Skips additional program and shell configuration.
+        This will automatically set 'extra=0'.
+        Can enable per user with 'KOOPA_USERS_MINIMAL=user1 user2'.
     force=0 [false]
-        Force reactivation, even if koopa is already active.
+        Force activation inside of subshells.
     test=0 [false]
-        Enable verbose test mode. Used for Travis CI checks.
-        This will also automatically set 'force=1'.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
+        Enable verbose test mode.
+        Used for Travis CI checks.
+        This will also automatically set 'force=1; minimal=0'.
 
 details:
     Currently supports bash, zsh.
@@ -54,12 +51,12 @@ details:
     For system-wide configuration on Linux, this should be called inside
     '/etc/profile.d/zzz-koopa.sh', owned by root.
 
+    Activation of specific users can be skipped via:
+    > export KOOPA_USERS_SKIP='user1 user2'
+
     Sourcing of POSIX shell scripts via '.' (POSIX) or 'source' (bash, zsh)
     requires that arguments are passed in at the beginning of the call, rather
-    than as positional arguments or flags. Refer to the working examples below.
-
-    Specific users can be skipped by exporting 'KOOPA_USERS_NO_ACTIVATE'.
-    Extra shell config can be skipped by exporting 'KOOPA_USERS_NO_EXTRA'.
+    than as positional arguments or flags. Refer to the working examples.
 
 examples:
     # Default mode
@@ -85,25 +82,48 @@ unset -f usage
 
 
 
-# Pre-flight checks                                                         {{{1
+# Skip activation for specific users                                        {{{1
 # ==============================================================================
 
-# Never activate for specific admin accounts.
+# Never allow activation for root.
 [ "$(id -u)" -eq 0 ] && return 0
-whoami | grep -Eq "\badmin\b" && return 0
 [ -n "${USER:-}" ] && USER="$(whoami)" && export USER
-
-# Skip specific users, if desired.
-if [ -n "${KOOPA_USERS_NO_ACTIVATE:-}" ]
+# Always skip on accounts containing "admin" in the name.
+echo "$USER" | grep -Eq "\badmin\b" && return 0
+# Allow optional skip for specific users.
+if [ -n "${KOOPA_USERS_SKIP:-}" ]
 then
-    echo "$KOOPA_USERS_NO_ACTIVATE" | grep -Eq "\b${USER}\b" && return 0
+    echo "$KOOPA_USERS_SKIP" | grep -Eq "\b${USER}\b" && return 0
 fi
 
-# Check for interactive shell.
+
+
+# Variables                                                                 {{{1
+# ==============================================================================
+
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
-# Detect force mode.
-# Disabled by default.
+# Force mode                                                                {{{2
+# ------------------------------------------------------------------------------
+
+# Always force activation inside:
+# - Emacs terminal.
+# - RStudio terminal.
+# - SLURM interactive job.
+# - Tmux session.
+# - Vim terminal.
+# - ZSH subshells.
+
+if [ "${KOOPA_SHELL:-}" = "zsh" ] || \
+    [ "${TERM:-}" = "eterm-color" ] || \
+    [ -n "${RSTUDIO:-}" ] || \
+    [ -n "${SLURM_JOB_ID:-}" ] || \
+    [ -n "${TMUX:-}" ] || \
+    [ -n "${VIM_TERMINAL:-}" ]
+then
+    force=1
+fi
+
 [ -z "${force:-}" ] && force=0
 case "$force" in
     1|true)
@@ -114,7 +134,9 @@ case "$force" in
         ;;
 esac
 
-# Detect if koopa is already active and being requested inside a subshell.
+# Subshell                                                                  {{{2
+# ------------------------------------------------------------------------------
+
 if [ -n "${KOOPA_HOME:-}" ] && [ "$force" -eq 0 ]
 then
     subshell=1
@@ -122,13 +144,55 @@ else
     subshell=0
 fi
 
-# Skip activation for non-interactive sessions.
-[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
+# Extra mode                                                                {{{2
+# ------------------------------------------------------------------------------
 
+if [ -n "${KOOPA_USERS_NO_EXTRA:-}" ]
+then
+    if echo "$KOOPA_USERS_NO_EXTRA" | grep -Eq "\b${USER}\b"
+    then
+        extra=0
+    fi
+fi
 
+[ -z "${extra:-}" ] && extra=1
+case "$extra" in
+    1|true)
+        extra=1
+        ;;
+    *)
+        extra=0
+        ;;
+esac
 
-# Enable test mode                                                          {{{1
-# ==============================================================================
+# Minimal mode                                                              {{{2
+# ------------------------------------------------------------------------------
+
+if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
+then
+    if echo "$KOOPA_USERS_MINIMAL" | grep -Eq "\b${USER}\b"
+    then
+        minimal=1
+    fi
+fi
+
+[ -z "${minimal:-}" ] && minimal=0
+case "$minimal" in
+    1|true)
+        minimal=1
+        ;;
+    *)
+        minimal=0
+        ;;
+esac
+
+if [ "$minimal" -eq 1 ]
+then
+    extra=0
+fi
+
+# Test mode                                                                 {{{2
+# ------------------------------------------------------------------------------
 
 [ -z "${test:-}" ] && test=0
 [ -n "${KOOPA_TEST:-}" ] && test=1
@@ -154,9 +218,19 @@ then
         set -o posix
         set -o xtrace
     fi
+    extra=1
     force=1
+    minimal=0
     export KOOPA_TEST=1
 fi
+
+
+
+# Skip activation if non-interactive, or in a subshell                      {{{1
+# ==============================================================================
+
+[ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
+[ "$force" -eq 0 ] && [ "$subshell" -eq 1 ] && return 0
 
 
 
@@ -236,123 +310,11 @@ activate_dir="${KOOPA_HOME}/system/activate"
 
 
 
-# Subshell handling                                                         {{{1
+# Minimal configuration                                                     {{{1
 # ==============================================================================
 
-# Force subshell reload inside:
-# - Interactive HPC slurm job.
-# - Emacs terminal.
-# - Tmux session.
-# - Vim terminal.
-
-if [ "${KOOPA_SHELL:-}" = "zsh" ] || \
-    [ "${TERM:-}" = "eterm-color" ] || \
-    [ -n "${RSTUDIO:-}" ] || \
-    [ -n "${SLURM_JOB_ID:-}" ] || \
-    [ -n "${TMUX:-}" ] || \
-    [ -n "${VIM_TERMINAL:-}" ]
-then
-    force=1
-fi
-
-# Early return if koopa is already active.
-[ "$force" -eq 0 ] && [ "$subshell" -eq 1 ] && return 0
-
-
-
-# Optional configuration                                                    {{{1
-# ==============================================================================
-
-# Extra mode                                                                {{{2
-# ------------------------------------------------------------------------------
-
-# Skip for specific users, if desired.
-if [ -n "${KOOPA_USERS_NO_EXTRA:-}" ]
-then
-    if echo "$KOOPA_USERS_NO_EXTRA" | grep -Eq "\b${USER}\b"
-    then
-        extra=0
-    fi
-fi
-
-# Enabled by default.
-[ -z "${extra:-}" ] && extra=1
-case "$extra" in
-    1|true)
-        extra=1
-        ;;
-    *)
-        extra=0
-        ;;
-esac
-
-# Programs mode                                                             {{{2
-# ------------------------------------------------------------------------------
-
-# Skip for specific users, if desired.
-if [ -n "${KOOPA_USERS_NO_PROGRAMS:-}" ]
-then
-    if echo "$KOOPA_USERS_NO_PROGRAMS" | grep -Eq "\b${USER}\b"
-    then
-        programs=0
-    fi
-fi
-
-# Enabled by default.
-[ -z "${programs:-}" ] && programs=1
-case "$programs" in
-    1|true)
-        programs=1
-        ;;
-    *)
-        programs=0
-        ;;
-esac
-
-# Minimal mode                                                              {{{2
-# ------------------------------------------------------------------------------
-
-# Enable for specific users, if desired.
-if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
-then
-    if echo "$KOOPA_USERS_MINIMAL" | grep -Eq "\b${USER}\b"
-    then
-        minimal=0
-    fi
-fi
-
-# Disabled by default.
-[ -z "${minimal:-}" ] && minimal=0
-case "$minimal" in
-    1|true)
-        minimal=1
-        ;;
-    *)
-        minimal=0
-        ;;
-esac
-
-# Override other flags, if necessary.
-if [ "$minimal" -eq 1 ]
-then
-    extra=0
-    programs=0
-fi
-
-
-
-# Basic shell configuration                                                 {{{1
-# ==============================================================================
-
-if [ "$subshell" -eq 0 ]
-then
-    . "${activate_dir}/preflight.sh"
-    . "${activate_dir}/xdg.sh"
-    . "${activate_dir}/path.sh"
-    _koopa_update_xdg_config
-fi
-
-. "${activate_dir}/general.sh"
+. "${activate_dir}/minimal.sh"
+_koopa_update_xdg_config
 
 
 
@@ -361,80 +323,63 @@ fi
 
 if [ "$extra" -eq 1 ]
 then
-    # Shell-specific configuration.
+    # Shell-specific configuration                                          {{{2
+    # --------------------------------------------------------------------------
+
     if [ "$KOOPA_SHELL" = "bash" ]
     then
         . "${activate_dir}/shell/bash/shopt.sh"
         . "${activate_dir}/shell/bash/prompt.sh"
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        if [ "$subshell" -eq 0 ]
-        then
-            . "${activate_dir}/shell/zsh/fpath.sh"
-        fi
+        . "${activate_dir}/shell/zsh/fpath.sh"
         if [ "$ZSHRC" -eq 1 ]
         then
             . "${activate_dir}/shell/zsh/oh-my-zsh.sh"
             . "${activate_dir}/shell/zsh/autojump.sh"
         fi
-        . "${activate_dir}/shell/zsh/prompt.sh"
         . "${activate_dir}/shell/zsh/setopt.sh"
         . "${activate_dir}/shell/zsh/bindkey.sh"
+        . "${activate_dir}/shell/zsh/prompt.sh"
     fi
 
-    # Run these after shell-specific configuration.
-    . "${activate_dir}/set.sh"
-    . "${activate_dir}/aliases.sh"
-    . "${activate_dir}/secrets.sh"
-    . "${activate_dir}/ssh-key.sh"
-    . "${activate_dir}/umask.sh"
+    # Platform-specific configuration                                       {{{2
+    # --------------------------------------------------------------------------
 
-    # Platform-specific configuration.
     if _koopa_is_darwin
     then
         . "${activate_dir}/os/darwin/exports.sh"
         . "${activate_dir}/os/darwin/aliases.sh"
     fi
 
-    # Today bucket.
-    if [ "$subshell" -eq 0 ]
-    then
-        _koopa_today_bucket
-    fi
+    . "${activate_dir}/extra.sh"
+
+    _koopa_activate_secrets
+    _koopa_activate_ssh_key
+    _koopa_today_bucket
 fi
 
 
 
-# Program configuration                                                     {{{1
+# Additional program configuration                                          {{{1
 # ==============================================================================
 
-if [ "$programs" -eq 1 ]
+if [ "$minimal" -eq 0 ]
 then
-    . "${activate_dir}/programs/conda.sh"
-    . "${activate_dir}/programs/perlbrew.sh"
-    . "${activate_dir}/programs/rbenv.sh"
-    if [ "$subshell" -eq 0 ]
+    if _koopa_is_darwin
     then
-        . "${activate_dir}/programs/lesspipe.sh"
-        . "${activate_dir}/programs/ensembl-perl-api.sh"
-        . "${activate_dir}/programs/rust.sh"
-        if _koopa_is_darwin
-        then
-            . "${activate_dir}/os/darwin/programs/homebrew.sh"
-            . "${activate_dir}/os/darwin/programs/coreutils.sh"
-            # > . "${activate_dir}/os/darwin/programs/google-cloud-sdk.sh"
-        elif _koopa_is_linux
-        then
-            . "${activate_dir}/os/linux/programs/aspera.sh"
-            . "${activate_dir}/os/linux/programs/bcbio.sh"
-            . "${activate_dir}/os/linux/programs/conda-envs.sh"
-        fi
+        . "${activate_dir}/os/darwin/programs/homebrew.sh"
     fi
-    # This needs to be run last, otherwise PATH can get messed upon
-    # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
-    # Refer to 'declare -f deactivate' for function source code.
-    # Note that 'deactivate' is still messing up autojump path.
-    . "${activate_dir}/programs/venv.sh"
+    . "${activate_dir}/programs.sh"
+    _koopa_activate_aspera
+    _koopa_activate_ensembl_perl_api
+    _koopa_activate_perlbrew
+    _koopa_activate_rbenv
+    _koopa_activate_rust
+    _koopa_activate_bcbio
+    _koopa_activate_conda
+    _koopa_activate_conda_envs
+    _koopa_activate_venv
 fi
 
 
@@ -442,18 +387,11 @@ fi
 # Post-flight checks and clean-up                                           {{{1
 # ==============================================================================
 
-. "${activate_dir}/manpath.sh"
-
-_koopa_disk_check
-
-unset -v activate_dir extra file force interactive minimal programs subshell
-
 if [ "$KOOPA_SHELL" = "zsh" ]
 then
     unset -v ZSHRC
 fi
 
-# Disable test mode.
 if [ "$test" -eq 1 ]
 then
     set +o errexit
@@ -466,4 +404,10 @@ then
     fi
     echo "Activation was successful."
 fi
-unset -v test
+
+if [ "$minimal" -eq 0 ] && [ "$subshell" -eq 0 ]
+then
+    _koopa_disk_check
+fi
+
+unset -v activate_dir file force interactive minimal subshell test
