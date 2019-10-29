@@ -358,15 +358,8 @@ fi
 
 if [ "$programs" -eq 1 ]
 then
-    . "${activate_dir}/programs.sh"
-
-    . "${activate_dir}/programs/conda.sh"
-    . "${activate_dir}/programs/perlbrew.sh"
-    . "${activate_dir}/programs/rbenv.sh"
-
     if [ "$subshell" -eq 0 ]
     then
-        . "${activate_dir}/programs/lesspipe.sh"
         . "${activate_dir}/programs/ensembl-perl-api.sh"
         . "${activate_dir}/programs/rust.sh"
         if _koopa_is_darwin
@@ -382,8 +375,10 @@ then
         fi
     fi
 
-    # Ensure we configure this after GNU coreutils (for macOS).
-    . "${activate_dir}/programs/dircolors.sh"
+    . "${activate_dir}/programs.sh"
+    . "${activate_dir}/programs/conda.sh"
+    . "${activate_dir}/programs/perlbrew.sh"
+    . "${activate_dir}/programs/rbenv.sh"
 
     # This needs to be run last, otherwise PATH can get messed upon
     # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
