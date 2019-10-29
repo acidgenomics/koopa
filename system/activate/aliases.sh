@@ -43,6 +43,13 @@ if _koopa_is_installed dircolors
 then
     # Note that the '-b' flag here exports Bash LS_COLORS string.
     eval "$(dircolors -b)"
+
+    # https://unix.stackexchange.com/questions/241726
+
+    # 777 directories.
+    LS_COLORS="${LS_COLORS}:ow=35;01"
+    export LS_COLORS
+
     alias dir='dir --color=auto'
     alias egrep='egrep --color=auto'
     alias fgrep='fgrep --color=auto'
