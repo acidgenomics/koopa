@@ -35,16 +35,6 @@ export D5="/mnt/azbioinfoseq05"
 
 
 
-# bcbio                                                                     {{{1
-# ==============================================================================
-
-# This value will be detected and configured automatically by koopa.
-
-# > export BCBIO_EXE="/usr/local/bcbio/v1.1.5/tools/bin/bcbio_nextgen.py"
-export BCBIO_EXE="/usr/local/bcbio/v1.1.7/tools/bin/bcbio_nextgen.py"
-
-
-
 # Cell Ranger                                                               {{{1
 # ==============================================================================
 
