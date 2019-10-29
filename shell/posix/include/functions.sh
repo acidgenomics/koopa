@@ -7,18 +7,20 @@
 # ==============================================================================
 
 _koopa_activate_conda() {
+    # """
     # Activate conda.
     # Updated 2019-10-29.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the `activate` script.
+    # """
     [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
     [ -z "${CONDA_PREFIX:-}" ] || return 0
-    local exe
-    exe="${CONDA_EXE:-}"
-    if [ -z "$exe" ]
+    ! _koopa_is_installed conda || return 0
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
     then
-        local prefix
         if [ -d "${HOME}/.local/anaconda3" ]
         then
             prefix="${HOME}/.local/anaconda3"
@@ -46,23 +48,29 @@ _koopa_activate_conda() {
         else
             return 0
         fi
-        exe="${prefix}/bin/conda"
     fi
-    [ -x "$exe" ] || return 0
-    local bin_dir
-    bin_dir="$(dirname "$exe")"
-    [ -n "${KOOPA_TEST:-}" ] && set +u
-    # shellcheck source=/dev/null
-    . "${bin_dir}/activate"
-    [ -n "${KOOPA_TEST:-}" ] && set -u
+    script="${prefix}/bin/activate"
+    if [ -r "$script" ]
+    then
+        [ -n "${KOOPA_TEST:-}" ] && set +u
+        # shellcheck source=/dev/null
+        . "$script"
+        [ -n "${KOOPA_TEST:-}" ] && set -u
+    fi
+    return 0
 }
 
 _koopa_activate_ensembl_perl_api() {
     # Activate Ensembl Perl API.
-    # > perlbrew switch perl-5.26
     # Updated 2019-10-29.
+    # Note that this currently requires Perl 5.26.
+    # > perlbrew switch perl-5.26
     local prefix
-    prefix="$(_koopa_build_prefix)/ensembl"
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="$(_koopa_build_prefix)/ensembl"
+    fi
     [ -d "prefix" ] || return 0
     _koopa_add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
@@ -71,19 +79,124 @@ _koopa_activate_ensembl_perl_api() {
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-variation/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-funcgen/modules"
     export PERL5LIB
+    return 0
+}
+
+_koopa_activate_perlbrew() {
+    # Activate Perlbrew.
+    #
+    # See also:
+    # - https://perlbrew.pl
+    # Only attempt to autoload for bash or zsh.
+    #
+    # Updated 2019-10-29.
+    [ -z "${PERLBREW_ROOT:-}" ] || return 0
+    ! _koopa_is_installed perlbrew || return 0
+    _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        if [ -d "${HOME}/perl5/perlbrew" ]
+        then
+            prefix="${HOME}/perl5/perlbrew"
+        elif [ -d "/usr/local/perlbrew" ]
+        then
+            prefix="/usr/local/perlbrew"
+        else
+            return 0
+        fi
+    fi
+    local script
+    script="${prefix}/etc/bashrc"
+    if [ -r "$script" ]
+    then
+        [ -n "${KOOPA_TEST:-}" ] && set +u
+        # Note that this is also compatible with zsh.
+        # shellcheck source=/dev/null
+        . "$script"
+        [ -n "${KOOPA_TEST:-}" ] && set -u
+    fi
+    return 0
+}
+
+_koopa_activate_rbenv() {
+    # Activate Ruby environment manager (rbenv).
+    # Updated 2019-10-29.
+    #
+    # See also:
+    # - https://github.com/rbenv/rbenv
+    #
+    # Alternate approaches:
+    # > _koopa_add_to_path_start "$(rbenv root)/shims"
+    # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
+    #
+    # Configure shared installation, if necessary.
+    [ -z "${RBENV_ROOT:-}" ] || return 0
+    ! _koopa_is_installed rbenv || return 0
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="/usr/local/rbenv"
+    fi
+    [ -d "$prefix" ] || return 0
+    local script
+    script="${prefix}/bin/rbenv"
+    if [ -r "$script" ]
+    then
+        export RBENV_ROOT="$prefix"
+        _koopa_add_to_path_start "${prefix}/bin"
+        eval "$("$script" init -)"
+    fi
+    return 0
+}
+
+_koopa_activate_rust() {
+    # Activate Rust programming language.
+    # Updated 2019-10-29.
+    #
+    # Attempt to locate cargo home and source the env script.
+    # This will put the rust cargo programs defined in 'bin/' in the PATH.
+    #
+    # Alternatively, can just add '${cargo_home}/bin' to PATH.
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="${HOME}/.cargo"
+    fi
+    [ -d "$prefix" ] || return 0
+    local script
+    script="${prefix}/env"
+    if [ -r "$script" ]
+    then
+        # shellcheck source=/dev/null
+        . "$script"
+    fi
+    return 0
 }
 
 _koopa_activate_secrets() {
     # Source secrets file.
     # Updated 2019-10-29.
     # shellcheck source=/dev/null
-    if [ -f "${HOME}/.secrets" ]
+    local file
+    file="${1:-}"
+    if [ -z "$file" ]
     then
-        . "${HOME}/.secrets"
+        file="${HOME}/.secrets"
     fi
+    if [ -r "$file" ]
+    then
+        # shellcheck source=/dev/null
+        . "$file"
+    fi
+    return 0
 }
 
 _koopa_activate_ssh_key() {
+    # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
     #
     # NOTE: SCP will fail unless this is interactive only.
@@ -96,13 +209,55 @@ _koopa_activate_ssh_key() {
     # > ssh-add -L
     #
     # Updated 2019-10-29.
+    # """
     _koopa_is_linux || return 0
     _koopa_is_interactive || return 0
-    local ssh_key
-    ssh_key="${SSH_KEY:-${HOME}/.ssh/id_rsa}"
-    [ -r "$ssh_key" ] || return 0
+    local key
+    key="${1:-}"
+    if [ -z "$key" ]
+    then
+        key="${SSH_KEY:-"${HOME}/.ssh/id_rsa"}"
+    fi
+    [ -r "$key" ] || return 0
     eval "$(ssh-agent -s)" > /dev/null 2>&1
-    ssh-add "$ssh_key" > /dev/null 2>&1
+    ssh-add "$key" > /dev/null 2>&1
+    return 0
+}
+
+_koopa_activate_venv() {
+    # """
+    # Activate Python default virtual environment.
+    # Updated 2019-10-29.
+    #
+    # Note that we're using this instead of conda as our default interactive
+    # Python environment, so we can easily use pip.
+    #
+    # Here's how to write a function to detect virtual environment name:
+    # https://stackoverflow.com/questions/10406926
+    #
+    # Only attempt to autoload for bash or zsh.
+    #
+    # This needs to be run last, otherwise PATH can get messed upon
+    # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
+    # Refer to 'declare -f deactivate' for function source code.
+    # Note that 'deactivate' is still messing up autojump path.
+    # """
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
+    local env_name
+    env_name="${1:-}"
+    if [ -z "$env_name" ]
+    then
+        env_name="base"
+    fi
+    local script
+    script="${HOME}/.virtualenvs/${env_name}/bin/activate"
+    if [ -r "$script" ]
+    then
+        # shellcheck source=/dev/null
+        . "$script"
+    fi
+    return 0
 }
 
 _koopa_add_bins_to_path() {
