@@ -13,9 +13,9 @@ _koopa_assert_has_no_args "$@"
 # Script                                                                    {{{1
 # ==============================================================================
 
-version="$(                                                                    \
-    wget -q -O - "ftp://ftp.ensembl.org/pub/current_README"                    \
-    | sed -n 3p                                                                \
-    | cut -d ' ' -f 3                                                          \
+version="$( \
+    wget -q -O - "ftp://ftp.ensembl.org/pub/current_README" \
+    | sed -n 3p \
+    | cut -d ' ' -f 3 \
 )"
 echo "$version"

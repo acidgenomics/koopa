@@ -89,8 +89,8 @@ mkdir -pv "$target_dir"
 for fastq_file in "${array[@]}"
 do
     fasta_file="${fastq_file//fastq/fasta}"
-    paste - - - - < "$fastq_file"                                              \
-        | cut -f 1,2                                                           \
-        | sed 's/^@/>/'                                                        \
+    paste - - - - < "$fastq_file" \
+        | cut -f 1,2 \
+        | sed 's/^@/>/' \
         | tr "\t" "\n" > "$fasta_file"
 done

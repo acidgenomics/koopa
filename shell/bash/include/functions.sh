@@ -40,17 +40,17 @@ _koopa_find_local_bin_dirs() {
     array=()
     local tmp_file
     tmp_file="$(_koopa_tmp_dir)/find"
-    find "$(_koopa_build_prefix)"                                              \
-        -mindepth 2                                                            \
-        -maxdepth 3                                                            \
-        -name "bin"                                                            \
-        ! -path "*/Caskroom/*"                                                 \
-        ! -path "*/Cellar/*"                                                   \
-        ! -path "*/Homebrew/*"                                                 \
-        ! -path "*/anaconda3/*"                                                \
-        ! -path "*/bcbio/*"                                                    \
-        ! -path "*/lib/*"                                                      \
-        ! -path "*/miniconda3/*"                                               \
+    find "$(_koopa_build_prefix)" \
+        -mindepth 2 \
+        -maxdepth 3 \
+        -name "bin" \
+        ! -path "*/Caskroom/*" \
+        ! -path "*/Cellar/*" \
+        ! -path "*/Homebrew/*" \
+        ! -path "*/anaconda3/*" \
+        ! -path "*/bcbio/*" \
+        ! -path "*/lib/*" \
+        ! -path "*/miniconda3/*" \
         -print0 > "$tmp_file"
     while IFS=  read -r -d $'\0'
     do
@@ -76,10 +76,10 @@ _koopa_help() {
     case "${1:-}" in
         --help|-h)
             local file name
-            file="$(                                                           \
-                caller                                                         \
-                | head -n 1                                                    \
-                | cut -d ' ' -f 2                                              \
+            file="$( \
+                caller \
+                | head -n 1 \
+                | cut -d ' ' -f 2 \
             )"
             name="$(basename "$file")"
             if [[ -f "${KOOPA_HOME}/man/man1/${name}.1" ]]
@@ -112,10 +112,10 @@ _koopa_help_header() {
     if [[ -z "$name" ]]
     then
         local file
-        file="$(                                                               \
-            caller                                                             \
-            | head -n 1                                                        \
-            | cut -d ' ' -f 2                                                  \
+        file="$( \
+            caller \
+            | head -n 1 \
+            | cut -d ' ' -f 2 \
         )"
         name="$(basename "$file")"
     fi
@@ -196,10 +196,10 @@ _koopa_script_name() {
     # Note that we're using 'caller' approach, which is Bash-specific.
     # Updated 2019-10-22.
     local file
-    file="$(                                                                   \
-        caller                                                                 \
-        | head -n 1                                                            \
-        | cut -d ' ' -f 2                                                      \
+    file="$( \
+        caller \
+        | head -n 1 \
+        | cut -d ' ' -f 2 \
     )"
     basename "$file"
 }

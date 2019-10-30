@@ -146,9 +146,9 @@ mkdir -pv "$log_dir"
 # ------------------------------------------------------------------------------
 
 # e.g. "Hsapiens".
-bcbio_species_dir="$(                                                          \
-    echo "$organism"                                                           \
-    | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g"                                   \
+bcbio_species_dir="$( \
+    echo "$organism" \
+    | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g" \
 )"
 
 (
@@ -165,13 +165,13 @@ bcbio_species_dir="$(                                                          \
     gtf="${organism}.${build}.${release}.gtf"
     [ ! -f "$gtf" ] && _koopa_stop "GTF failure."
     gtf="$(realpath "$gtf")"
-    bcbio_setup_genome.py                                                      \
-        --name "$bcbio_species_dir"                                            \
-        --build "$bcbio_genome_name"                                           \
-        --cores "$cores"                                                       \
-        --fasta "$fasta"                                                       \
-        --gtf "$gtf"                                                           \
-        --indexes "${indexes[@]}"                                              \
+    bcbio_setup_genome.py \
+        --name "$bcbio_species_dir" \
+        --build "$bcbio_genome_name" \
+        --cores "$cores" \
+        --fasta "$fasta" \
+        --gtf "$gtf" \
+        --indexes "${indexes[@]}" \
         2>&1 | tee "$log_file"
     rm -fr "$tmp_dir"
 )

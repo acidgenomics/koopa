@@ -63,21 +63,21 @@ if [[ -n "$version" ]]
 then
     cellar_prefix="${cellar_prefix}/${version}"
 else
-    cellar_prefix="$(                                                          \
-        find "$cellar_prefix" -maxdepth 1 -type d                              \
-        | sort                                                                 \
-        | tail -n 1                                                            \
+    cellar_prefix="$( \
+        find "$cellar_prefix" -maxdepth 1 -type d \
+        | sort \
+        | tail -n 1 \
     )"
 fi
 
 links=()
 while IFS=  read -r -d $'\0'; do
     links+=("$REPLY")
-done < <(                                                                      \
-    find -L "$build_prefix"                                                    \
-    -type f                                                                    \
-    -path "${cellar_prefix}/*"                                                 \
-    ! -path "${build_prefix}/koopa"                                            \
+done < <( \
+    find -L "$build_prefix" \
+    -type f \
+    -path "${cellar_prefix}/*" \
+    ! -path "${build_prefix}/koopa" \
     -print0
 )
 

@@ -80,13 +80,13 @@ _koopa_prefix_mkdir "$prefix"
     cd "$tmp_dir" || exit 1
     file="bcbio_nextgen_install.py"
     wget "https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-    python "$file"                                                             \
-        "$install_dir"                                                         \
-        --tooldir="$tools_dir"                                                 \
-        --upgrade="$version"                                                   \
-        --datatarget="rnaseq"                                                  \
-        --nodata                                                               \
-        --isolate                                                              \
+    python "$file" \
+        "$install_dir" \
+        --tooldir="$tools_dir" \
+        --upgrade="$version" \
+        --datatarget="rnaseq" \
+        --nodata \
+        --isolate \
         2>&1 | tee "$log_file"
 )
 

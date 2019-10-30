@@ -53,10 +53,10 @@ dir="${1:-$dir}"
 # Script                                                                    {{{1
 # ==============================================================================
 
-find "$dir"                                                                    \
-    -mindepth 1                                                                \
-    -type d                                                                    \
-    -not -path "*/.git/*"                                                      \
-    -empty                                                                     \
-    -delete                                                                    \
+find "$dir" \
+    -mindepth 1 \
+    -type d \
+    -not -path "*/.git/*" \
+    -empty \
+    -delete \
     -print

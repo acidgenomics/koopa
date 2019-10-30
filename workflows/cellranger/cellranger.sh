@@ -27,7 +27,7 @@ transcriptome="${HOME}/refdata-cellranger-mm10-1.2.0"
 cellranger count \
     --id="sample1" \
     --sample="sample1" \
-    --fastqs="$fastqs"  \
+    --fastqs="$fastqs" \
     --transcriptome="$transcriptome" \
     --localcores="$localcores" \
     --localmem="$localmem" \
