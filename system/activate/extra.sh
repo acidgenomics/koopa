@@ -41,7 +41,7 @@
 # - https://stackoverflow.com/questions/13268796
 # - https://askubuntu.com/questions/44534
 
-umask 0002
+# > umask 0002
 
 
 
