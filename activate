@@ -363,13 +363,13 @@ then
         fi
     fi
 
+    . "${activate_dir}/extra.sh"
+
     if _koopa_is_darwin
     then
         . "${activate_dir}/os/darwin/exports.sh"
         . "${activate_dir}/os/darwin/aliases.sh"
     fi
-
-    . "${activate_dir}/extra.sh"
 
     _koopa_activate_secrets
     _koopa_activate_ssh_key
