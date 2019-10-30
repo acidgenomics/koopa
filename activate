@@ -103,6 +103,46 @@ fi
 
 echo "$-" | grep -q "i" && interactive=1 || interactive=0
 
+# Shell                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+if [ -n "${BASH_VERSION:-}" ]
+then
+    KOOPA_SHELL="bash"
+    # shellcheck disable=SC2039
+    # SC2039: In POSIX sh, array references are undefined.
+    file="${BASH_SOURCE[0]}"
+elif [ -n "${ZSH_VERSION:-}" ]
+then
+    KOOPA_SHELL="zsh"
+    # This covers both '_src_etc_profile' and '_src_etc_profile_d'.
+    case "$0" in
+        _src_etc_profile*)
+            return 0
+            ;;
+        *)
+            export ZSHRC=1
+            ;;
+    esac
+    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
+    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
+    # this case instead returns '_src_etc_profile'.
+    # https://stackoverflow.com/a/23259585/3911732
+    file="${(%):-%N}"
+else
+    >&2 cat << EOF
+Error: Failed to detect supported shell.
+Supported: bash, zsh.
+
+  SHELL: '${SHELL}'
+      0: '${0}'
+      -: '${-}'
+EOF
+    return 1
+fi
+
+export KOOPA_SHELL
+
 # Force mode                                                                {{{2
 # ------------------------------------------------------------------------------
 
@@ -112,13 +152,11 @@ echo "$-" | grep -q "i" && interactive=1 || interactive=0
 # - SLURM interactive job.
 # - Tmux session.
 # - Vim terminal.
-# - ZSH subshells.
 
-if [ "${KOOPA_SHELL:-}" = "zsh" ] || \
-    [ "${TERM:-}" = "eterm-color" ] || \
-    [ -n "${RSTUDIO:-}" ] || \
-    [ -n "${SLURM_JOB_ID:-}" ] || \
-    [ -n "${TMUX:-}" ] || \
+if [ "${TERM:-}" = "eterm-color" ] ||
+    [ -n "${RSTUDIO:-}" ] ||
+    [ -n "${SLURM_JOB_ID:-}" ] ||
+    [ -n "${TMUX:-}" ] ||
     [ -n "${VIM_TERMINAL:-}" ]
 then
     force=1
@@ -234,8 +272,14 @@ fi
 
 
 
-# Functions                                                                 {{{1
+# Locate home and source functions                                          {{{1
 # ==============================================================================
+
+if [ ! -f "$file" ]
+then
+    >&2 echo "Error: Failed to detect absolute path of activation script."
+    return 1
+fi
 
 if ! command -v realpath >/dev/null
 then
@@ -247,54 +291,6 @@ then
             readlink -f "$@"
         fi
     }
-fi
-
-
-
-# Locate koopa home                                                         {{{1
-# ==============================================================================
-
-if [ -n "${BASH_VERSION:-}" ]
-then
-    KOOPA_SHELL="bash"
-    # shellcheck disable=SC2039
-    # SC2039: In POSIX sh, array references are undefined.
-    file="${BASH_SOURCE[0]}"
-elif [ -n "${ZSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="zsh"
-    # This covers both "_src_etc_profile" and "_src_etc_profile_d".
-    case "$0" in
-        _src_etc_profile*)
-            ZSHRC=0
-            ;;
-        *)
-            ZSHRC=1
-            ;;
-    esac
-    export ZSHRC
-    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
-    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
-    # this case instead returns '_src_etc_profile'.
-    # https://stackoverflow.com/a/23259585/3911732
-    file="${(%):-%N}"
-else
-    >&2 cat << EOF
-Error: Failed to detect supported shell.
-Supported: bash, zsh.
-
-  SHELL: '${SHELL}'
-      0: '${0}'
-      -: '${-}'
-EOF
-    return 1
-fi
-export KOOPA_SHELL
-
-if [ ! -f "$file" ]
-then
-    >&2 echo "Error: Failed to detect absolute path of activation script."
-    return 1
 fi
 
 # Note that running realpath on the file instead of the directory will properly
