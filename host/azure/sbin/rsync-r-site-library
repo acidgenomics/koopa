@@ -49,9 +49,9 @@ _koopa_message "Updating '${r_dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
-rsync ${flags[@]}                                                              \
-    --rsync-path="sudo /usr/bin/rsync"                                         \
-    "${source_user}@${source_ip}:${r_dir}/"                                    \
+rsync ${flags[@]} \
+    --rsync-path="sudo /usr/bin/rsync" \
+    "${source_user}@${source_ip}:${r_dir}/" \
     "${r_dir}/"
 
 # Update local symlinks.

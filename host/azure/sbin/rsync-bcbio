@@ -38,7 +38,7 @@ _koopa_message "Updating '${bcbio_dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
-rsync ${flags[@]}                                                              \
-    --rsync-path="sudo /usr/bin/rsync"                                         \
-    "${source_user}@${source_ip}:${bcbio_dir}/"                                \
+rsync ${flags[@]} \
+    --rsync-path="sudo /usr/bin/rsync" \
+    "${source_user}@${source_ip}:${bcbio_dir}/" \
     "${bcbio_dir}/"
