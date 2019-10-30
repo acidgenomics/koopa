@@ -22,6 +22,32 @@ _koopa_activate_aspera() {
     return 0
 }
 
+_koopa_activate_autojump() {
+    # """
+    # Activate autojump.
+    # Updated 2019-10-29.
+    #
+    # Currently only supported for ZSH.
+    #
+    # See also:
+    # - https://github.com/wting/autojump
+    # """
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="${HOME}/.autojump"
+    fi
+    local script
+    script="${prefix}/etc/profile.d/autojump.sh"
+    if [ -r "$script"  ]
+    then
+        # shellcheck source=/dev/null
+        . "$script"
+        autoload -U compinit && compinit -u
+    fi
+}
+
 _koopa_activate_bcbio() {
     # """
     # Include bcbio toolkit binaries in PATH, if defined.

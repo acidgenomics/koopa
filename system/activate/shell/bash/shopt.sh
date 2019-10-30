@@ -15,4 +15,3 @@ shopt -s cmdhist
 
 # Enable history appending instead of overwriting.
 shopt -s histappend
-
