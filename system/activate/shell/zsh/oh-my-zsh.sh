@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # oh-my-zsh configuration
-# Updated 2019-09-09.
+# Updated 2019-10-29.
 
 # See also:
 # - https://github.com/robbyrussell/oh-my-zsh
@@ -27,29 +27,19 @@ fi
 
 
 
-# Updates                                                                   {{{1
-# ==============================================================================
-
-DISABLE_AUTO_UPDATE="true"
-DISABLE_UPDATE_PROMPT="true"
-
-
-
-# Security                                                                  {{{1
-# ==============================================================================
-
-# Ignore warning about insecure directories identified by compfix.
-# > compaudit | xargs chmod g-w,o-w
-
-ZSH_DISABLE_COMPFIX="true"
-
-
-
-# Theme                                                                     {{{1
+# General                                                                   {{{1
 # ==============================================================================
 
 # Set theme to empty string when using koopa prompt.
 ZSH_THEME=""
+
+# Ignore warning about insecure directories identified by compfix.
+# > compaudit | xargs chmod g-w,o-w
+ZSH_DISABLE_COMPFIX="true"
+
+# Disable automatic updates.
+DISABLE_AUTO_UPDATE="true"
+DISABLE_UPDATE_PROMPT="true"
 
 
 
@@ -83,7 +73,6 @@ DISABLE_AUTO_TITLE="true"
 
 
 
-
 # Git                                                                       {{{1
 # ==============================================================================
 
@@ -110,9 +99,11 @@ HIST_STAMPS="yyyy-mm-dd"
 # Standard plugins can be found in '~/.oh-my-zsh/plugins/'.
 # Custom plugins may be added to '~/.oh-my-zsh/custom/plugins/'.
 
+# zsh-syntax-highlighting is cool but can slow down paste into terminal.
+
 custom_plugins=(
     zsh-autosuggestions
-    zsh-syntax-highlighting
+    # zsh-syntax-highlighting
 )
 
 for plugin in "${custom_plugins[@]}"
@@ -148,8 +139,6 @@ fi
 # Overrides                                                                 {{{1
 # ==============================================================================
 
-# > export ZSH_COMPDUMP="/tmp/zcompdump-${USER}"
-
 # Darken the autosuggest text color.
 # Define using xterm-256 color code.
 #
@@ -159,3 +148,7 @@ fi
 #
 # This works well in combo with Dracula theme.
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
+
+# Relocate zcompdump to temporary dir.
+# Note that this can slow down ZSH but is useful for debugging.
+# > export ZSH_COMPDUMP="/tmp/zcompdump-${USER}"
