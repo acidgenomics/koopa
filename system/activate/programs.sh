@@ -134,7 +134,7 @@ alias emacs24='TERM=xterm-24bit emacs --no-window-system'
 # See also: https://the.exa.website/
 if _koopa_is_installed exa
 then
-    alias ls='exa -Fg'
+    alias l='exa -Fg'
 fi
 
 
