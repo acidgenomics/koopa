@@ -5,42 +5,22 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_environments
 
 
-# Usage                                                                     {{{1
+
+# Variables                                                                 {{{1
 # ==============================================================================
 
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Perlbrew.
-
-$(_koopa_help_args)
-
-see also:
-    - https://perlbrew.pl/
-    - https://metacpan.org/pod/App::perlbrew
-    - https://github.com/gugod/App-perlbrew/wiki/Perlbrew-In-Shell-Scripts
-
-note:
-    Bash script.
-    Updated 2019-09-24.
-EOF
-}
-
-_koopa_help "$@"
+name="perlbrew"
+prefix="$(_koopa_build_prefix)/${name}"
+exe_file="${prefix}/bin/${name}"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_has_no_environments
-
-name="perlbrew"
-prefix="$(_koopa_build_prefix)/${name}"
-exe_file="${prefix}/bin/${name}"
 
 _koopa_prefix_mkdir "$prefix"
 
@@ -48,12 +28,11 @@ _koopa_prefix_mkdir "$prefix"
     # Ensure existing preferences are removed.
     export PERLBREW_HOME="${PERLBREW_HOME:-${HOME}/.perlbrew}"
     rm -rf "$PERLBREW_HOME"
-    
     export PERLBREW_ROOT="$prefix"
     curl -L https://install.perlbrew.pl | bash
 )
 
-_koopa_prefix_chgrp "$prefix"
+_koopa_set_permissions "$prefix"
 
 command -v "$exe_file"
 "$exe_file" --version

@@ -72,12 +72,11 @@ jdk_version_dir="${jdk_dir}/jdk-${version}"
 # Script                                                                    {{{1
 # ==============================================================================
 
+_koopa_prefix_mkdir "$jdk_dir"
+
 # Download and extract the JDK, if necessary.
 if [[ ! -d "$jdk_version_dir" ]]
 then
-    sudo mkdir -pv "${jdk_dir}"
-    _koopa_prefix_chgrp "${jdk_dir}"
-    sudo chmod g+s "${jdk_dir}"
     (
         cd "${jdk_dir}" || exit 1
         file="openjdk-13_linux-x64_bin.tar.gz"
@@ -89,7 +88,7 @@ then
     )
 fi
 
-_koopa_set_permissions "${jdk_dir}"
+_koopa_set_permissions "$jdk_dir"
 
 priority="100"
 sudo update-alternatives --install \

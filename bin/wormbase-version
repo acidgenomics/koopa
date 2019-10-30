@@ -5,37 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
 url="ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-WormBase release version.
-
-$(_koopa_help_args)
-
-see also:
-    - ${url}
-    - https://wormbase.org/about/release_schedule
-
-note:
-    Bash script.
-    Updated 2019-10-05.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

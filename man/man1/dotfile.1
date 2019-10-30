@@ -1,0 +1,46 @@
+
+
+
+
+    [--config] [--force] [--private] [--quiet]
+    relative_path [symlink_name]
+
+Symlink a dot file.
+
+required positional arguments:
+    1.  relative_path
+        Relative file path in dotfiles repo.
+
+optional positional arguments:
+    2.  symlink_name
+        Name of target symlink (without '.' prefix).
+        If unset, uses basename from relative_path argument.
+
+optional arguments:
+    --config
+        Symlink into XDG config directory instead of user home.
+        This path is defined by 'XDG_CONFIG_HOME' and defaults to '~/.config/'.
+    --force
+        Force overwrite.
+        Applies to symlinks only.
+    --private
+        Link a private dot file.
+        Checks in 'scripts-private/' directory in koopa config.
+        Defaults to '~/.config/koopa/scripts-private/'.
+
+$(_koopa_help_args)
+
+details:
+    The relative file path in dotfiles repo can be used as input. The target
+    file should be specified without a leading period.
+
+    By default, this script is designed to work with the 'mjsteinbaugh/dotfiles'
+    repository available on GitHub.
+
+examples:
+    dotfile zshrc
+    dotfile --config doom
+
+note:
+    Bash script.
+    Updated 2019-10-23.

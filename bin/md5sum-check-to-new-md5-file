@@ -5,40 +5,20 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
-# Usage                                                                     {{{1
+
+# Arguments                                                                 {{{1
 # ==============================================================================
 
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    files...
-
-Run md5sum and generate an MD5 checksum file.
-
-required positional arguments:
-    ... Files to checksum.
-
-$(_koopa_help_args)
-
-details:
-    Outputs to 'md5sum-<TIMESTAMP>.md5' file containing timestamp in name.
-
-note:
-    Bash script.
-    Updated 2019-09-25.
-EOF
-}
-
-_koopa_help "$@"
+timestamp="$(date "+%Y%m%d-%H%M%S")"
+log_file="md5sum-${timestamp}.md5"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="md5sum-${timestamp}.md5"
 
 md5sum "$@" 2>&1 | tee "$log_file"

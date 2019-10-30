@@ -1,0 +1,26 @@
+
+
+
+    name [dir="${default_dir}"]
+
+Link Emacs installation.
+
+required positional arguments:
+    1.  Name of Emacs directory.
+        Example: spacemacs.
+        Looks for '${default_home}-spacemacs' internally.
+
+required positional arguments with defaults:
+    2.  Emacs default directory.
+        Where the symlink is applied.
+        Defaults to '${default_dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Links an Emacs installation (e.g. Spacemacs, Doom Emacs) into
+    '${default_dir}'.
+
+note:
+    Bash script.
+    Updated 2019-10-23.

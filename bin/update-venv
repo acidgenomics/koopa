@@ -5,43 +5,19 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Upgrade all Python packages installed via pip.
-
-$(_koopa_help_args)
-
-details:
-    Applies to currently activated Pyton virtual environment.
-
-see also:
-    https://stackoverflow.com/a/3452888/3911732
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
 
 if ! _koopa_is_venv_active
 then
     _koopa_warning "No active Python venv detected."
     exit 0
 fi
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_message "Updating Python venv."
 
@@ -55,4 +31,3 @@ _koopa_message "${#array[@]} outdated packages detected."
 echo "$lines" \
     | cut -d '=' -f 1 \
     | xargs -n1 pip install --upgrade
-

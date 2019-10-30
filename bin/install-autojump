@@ -5,34 +5,21 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
-# Usage                                                                     {{{1
+
+# Variables                                                                 {{{1
 # ==============================================================================
 
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install autojump.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-09.
-EOF
-}
-
-_koopa_help "$@"
+name="autojump"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-name="autojump"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 _koopa_message "Installing ${name}."
 
@@ -45,4 +32,4 @@ _koopa_message "Installing ${name}."
     rm -fr "$tmp_dir"
 )
 
-_koopa_note "Reload the current shell."
+_koopa_note "Reload the shell to complete installation."

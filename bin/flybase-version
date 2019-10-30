@@ -5,46 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
 url="ftp://ftp.flybase.net/releases/"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [--dmel]
-
-FlyBase release version.
-
-optional arguments:
-    --dmel
-        Return current Drosophila melanogaster genome build version.
-        Example: 'dmel_r6.29'.
-
-$(_koopa_help_args)
-
-details:
-    Extract the FlyBase release version from ftp.flybase.net.
-    Example: 'FB2019_04'.
-
-see also:
-    ${url}
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

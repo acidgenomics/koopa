@@ -5,6 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -14,37 +17,6 @@ source_repo="git@github.com:acidgenomics/Rcheck.git"
 config_dir="$(_koopa_config_dir)"
 clone_dir="${config_dir}/Rcheck"
 link_name=".Rcheck"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Rcheck scripts for R package locally.
-
-$(_koopa_help_args)
-
-details:
-    Run this script inside a git repo where you want to enable Rcheck CI.
-    Git repo will be cloned into koopa config, if necessary.
-    Symlink will be added at '${link_name}'.
-
-    Source repo:
-        ${source_repo}
-    Target clone:
-        ${clone_dir}'
-
-note:
-    Bash script.
-    Updated 2019-09-25.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

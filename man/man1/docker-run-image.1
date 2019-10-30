@@ -1,0 +1,31 @@
+
+
+
+    image [--workdir="$workdir"]
+
+Pull and run a Docker image locally.
+
+required positional arguments:
+    1.  Docker image name.
+        Use the full name: '<user>/<image>:<tag>'.
+        Defaults to images on DockerHub.
+        Tag is optional, but can be included (e.g. ':latest').
+        Example: 'acidgenomics/bioconductor:devel'.
+
+required arguments with defaults:
+    --workdir
+        Local working directory name.
+        Defaults to '$workdir', to avoid potential name collisions.
+
+$(_koopa_help_args)
+
+details:
+    Script wrapper to call 'docker pull' and 'docker run' with suitable defaults
+    for the Acid Genomics Docker images available on Docker Hub.
+
+examples:
+    docker-run-image acidgenomics/bioconductor:devel
+
+note:
+    Bash script.
+    Updated 2019-10-25.

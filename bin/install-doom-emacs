@@ -5,6 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -16,37 +18,13 @@ emacs_home="${HOME}/.emacs.d"
 install_dir="${emacs_home}-${name}"
 exe_file="${install_dir}/bin/doom"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Doom Emacs.
-
-$(_koopa_help_args)
-
-details:
-    Installs into '${install_dir}'.
-    Links into '${emacs_home}'.
-
-note:
-    Bash script.
-    Updated 2019-09-20.
-EOF
-}
-
-_koopa_help "$@"
+_koopa_assert_is_not_dir "$install_dir"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_not_dir "$install_dir"
 git clone "$repo" "$install_dir"
 link-emacs "$name"
 

@@ -5,60 +5,25 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-env_name="base"
-env_base_dir="${HOME}/.virtualenvs"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [name="${env_name}"] [dir="${env_base_dir}"]
-
-Set up Python virtual environment.
-
-optional positional arguments with defaults:
-    1.  Environment name.
-        Defaults to '${env_name}'.
-    2.  Virtual environment base directory.
-        Defaults to '${env_base_dir}'.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-10-14.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_environments
+_koopa_assert_is_installed python3 python
 
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-env_name="${1:-$env_name}"
-env_base_dir="${2:-$env_base_dir}"
+env_name="${1:-"base"}"
+env_base_dir="${2:-"${HOME}/.virtualenvs"}"
+
+env_dir="${env_base_dir}/${env_name}"
+pip_exe="${env_dir}/bin/pip"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_has_no_environments
-_koopa_assert_is_installed python3 python
-
-env_dir="${env_base_dir}/${env_name}"
-pip_exe="${env_dir}/bin/pip"
 
 rm -frv "$env_dir"
 python3 -m venv "$env_dir"
@@ -66,11 +31,5 @@ python3 -m venv "$env_dir"
 "$pip_exe" install black flake8 pyflakes pylint pytest pytest-flake8
 "$pip_exe" list
 
-cat << EOF
-
-Python '${env_name}' environment installed successfully.
-
-Restart the shell or source the 'activate' script:
-${env_dir}/bin/activate"
-
-EOF
+_koopa_message "Python '${env_name}' environment installed successfully."
+_koopa_note "Restart the shell."

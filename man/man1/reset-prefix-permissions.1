@@ -1,0 +1,24 @@
+
+
+
+Reset build prefix permissions.
+
+$(_koopa_help_args)
+
+details:
+    Recursively reset user and group permissions on default target build
+    prefix directory. Primarily intended for use with cellar install scripts.
+
+    Group write access will be enabled.
+
+    For a shared installation, 'root:root' permissions are often too
+    restrictive and hard to manage, so we're enabling admin group write access.
+
+internal variables:
+    prefix: '${prefix}'
+    user: '${user}'
+    group: '${group}'
+
+note:
+    Bash script.
+    Updated 2019-10-22.

@@ -5,29 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Perlbrew system Perl.
-
-$(_koopa_help_args)
-
-see also:
-    https://stackoverflow.com/questions/25188575
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 

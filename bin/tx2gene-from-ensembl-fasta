@@ -5,6 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
+
 
 
 # Notes                                                                     {{{1
@@ -23,85 +26,20 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 
 
-# Variables                                                                 {{{1
-# ==============================================================================
-
-output_file="tx2gene.csv"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    fasta_file [output_file="${output_file}"]
-
-Generate transcript-to-gene mappings from Ensembl FASTA.
-
-required positional arguments:
-    1.  Transcriptome FASTA file.
-        Assuming input FASTA is gzip compressed.
-
-optional positional arguments with defaults:
-    2.  Output CSV file.
-        Defaults to '${output_file}'.
-
-$(_koopa_help_args)
-
-details:
-    Generates a CSV mapping file from the reference transcriptome input,
-        suitable for use with 'tximport()' in R.
-    Output does not contain column names.
-    Transcript and gene identifier versions are maintained.
-
-    Column 1: transcripts
-    Column 2: genes
- 
-    Internal processing steps:
-    1. Decompress FASTA and pipe to stdout.
-    2. Keep only headers prefixed with '>'.
-    3. Keep only transcript (1) and gene (4) identifier columns.
-    4. Remove duplicate lines.
-    5. Trim header prefix '>'.
-    6. Prepare ',' delim for CSV output.
-    7. Write to '${output_file}'.
-
-    Ensembl GTF files do not contain complete transcript-to-gene mappings.
-    This is particularly an issue for the Homo sapiens reference genome.
-
-see also:
-    Modified version of @ag1805x script.
-    - https://support.bioconductor.org/p/123134/
-    - https://gist.github.com/ag1805x/63007cf0ba20b078d6d3c849064a1bff
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
-_koopa_help "$@"
-
-
-
 # Arguments                                                                 {{{1
 # ==============================================================================
 
 fasta_file="$1"
-output_file="${2:-$output_file}"
+output_file="${2:-"tx2gene.csv"}"
+
+_koopa_assert_is_file "$fasta_file"
+_koopa_assert_is_matching_fixed "$fasta_file" ".cdna.all.fa.gz"
+_koopa_assert_is_not_file "$output_file"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_file "$fasta_file"
-_koopa_assert_is_matching_fixed "$fasta_file" ".cdna.all.fa.gz"
-
-_koopa_assert_is_not_file "$output_file"
 
 _koopa_message "Generating '$(basename "$output_file")' from \
 '$(basename "$fasta_file")'."

@@ -5,39 +5,6 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-usage fastq-reads-per-file [--help|-h]
-    [dir="${dir}"]
-
-Get the number of reads per FASTQ file.
-
-required positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Calculates the raw read count using the R1 file.
-
-note:
-    Updated 2019-09-21.
-EOF
-}
-
 _koopa_help "$@"
 
 
@@ -45,7 +12,7 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-"."}"
 dir="$(_koopa_strip_trailing_slash "$dir")"
 
 
