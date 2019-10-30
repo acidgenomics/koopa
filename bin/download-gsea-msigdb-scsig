@@ -5,6 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -12,34 +15,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
 version="1.0"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Download GSEA MSigDb SCSig v${version} signature files.
-
-$(_koopa_help_args)
-
-details:
-    Downloads to the current working directory.
-    SCSig collection: Signatures of Single Cell Identities.
-
-see also:
-    ${base_url}
-
-note:
-    Bash script.
-    Updated 2019-09-20.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

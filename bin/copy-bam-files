@@ -5,55 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    source_dir target_dir
-
-Copy BAM and BAI index sidecar files from a source to a target directory.
-
-required positional arguments:
-    1.  Source directory path, containing BAM files.
-    2.  Target directory path.
-
-$(_koopa_help_args)
-
-details:
-    Supports transfers on file systems with non-standard permissions, including
-    Azure Files and Windows CIFS/SMB shares.
-
-    We're allowing symlinks in the search path (via 'find -L' internally).
-
-    Note that we're ignoring some bcbio output cruft here.
-    Skip transfer of BAM files in the 'work/' directory, and don't copy any
-    of the transcriptome BAMs automatically.
-
-    Ignore list:
-    - 'work/'
-    - '*-transcriptome.bam'
-
-    rsync works more reliably for resuming interrupted transfers. Currently
-    using this to transfer to Azure Files
-
-    Alternate method:
-    > cp -iruv source target
-
-examples:
-    copy-bam-files bam/ /data00/bam/
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
@@ -63,13 +16,13 @@ _koopa_help "$@"
 source_dir="$1"
 target_dir="$2"
 
+_koopa_assert_is_dir "$source_dir"
+_koopa_assert_is_dir "$target_dir"
+
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_dir "$source_dir"
-_koopa_assert_is_dir "$target_dir"
 
 source_dir="$(realpath "$source_dir")"
 target_dir="$(realpath "$target_dir")"

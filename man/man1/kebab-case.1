@@ -1,0 +1,44 @@
+
+
+
+    [--rename] [--prefix]
+    string|file...
+
+Convert input into kebab case.
+
+required positional arguments:
+    ... Character strings or file names to sanitize.
+
+optional arguments:
+    --rename
+        Rename input files. Assumes we're renaming files in current working
+        directory, but also supports explicit and/or mixed file paths. Doesn't
+        work recursively.
+    --prefix
+        Include "x" prefix for names that are syntactically invalid in R.
+        Note that this includes strings beginning with a number.
+        Disabled by default.
+
+$(_koopa_help_args)
+
+details:
+    Runs in string mode by default.
+    File rename mode can be enabled by setting '--rename' flag.
+
+see also:
+    - 'syntactic::kebabCase()' in R.
+
+examples:
+    kebab-case "hello world" "foo bar" "geneID"
+    ## hello-world foo-bar gene-id
+
+    kebab-case --rename "foo_bar.fastq.gz"
+    ## ./foo-bar.fastq.gz
+
+    kebab-case --rename --prefix 1_control_A.fastq.gz
+    ## ./x1-control-a.fastq.gz
+
+note:
+    Bash script that calls Rscript internally.
+    Requires the syntactic package to be installed.
+    Updated 2019-10-23.

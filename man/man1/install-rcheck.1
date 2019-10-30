@@ -1,0 +1,21 @@
+
+
+
+
+Install Rcheck scripts for R package locally.
+
+$(_koopa_help_args)
+
+details:
+    Run this script inside a git repo where you want to enable Rcheck CI.
+    Git repo will be cloned into koopa config, if necessary.
+    Symlink will be added at '${link_name}'.
+
+    Source repo:
+        ${source_repo}
+    Target clone:
+        ${clone_dir}'
+
+note:
+    Bash script.
+    Updated 2019-09-25.

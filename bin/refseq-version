@@ -5,39 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
 url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-RefSeq version.
-
-$(_koopa_help_args)
-
-details:
-    Extract the RefSeq release version from ftp.ncbi.nlm.nih.gov.
-
-see also:
-    ${url}
-
-note:
-    Bash script.
-    Updated 2019-09-24.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

@@ -5,41 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
 prefix="$(_koopa_build_prefix)/rbenv"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Ruby environment manager (rbenv).
-
-$(_koopa_help_args)
-
-details:
-    Installs into '${prefix}'.
-
-see also:
-    - https://github.com/rbenv/rbenv
-    - https://blakewilliams.me/posts/system-wide-rbenv-install
-    - https://devhints.io/rbenv
-
-note:
-    Bash script.
-    Updated 2019-10-22.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

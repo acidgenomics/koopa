@@ -5,40 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
+
 
 
 # Variables                                                                 {{{1
 # ==============================================================================
 
-trash_dir="${HOME}/.Trash/"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    files...
-
-Move files to the trash folder instead of deleting.
-
-required positional arguments:
-    ... File paths to trash.
-
-$(_koopa_help_args)
-
-details:
-    Moves files to '${trash_dir}'.
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
-_koopa_help "$@"
+trash_dir="${HOME}/.trash/"
 
 
 

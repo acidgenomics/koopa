@@ -5,26 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Reconfigure rJava.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-25.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 

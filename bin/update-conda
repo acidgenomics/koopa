@@ -5,41 +5,19 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Update conda.
-
-$(_koopa_help_args)
-
-see also:
-    https://bioconda.github.io/#set-up-channels
-
-note:
-    Bash script.
-    Requires that conda is already installed.
-    Updated 2019-10-22.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
 
 if ! _koopa_is_installed conda
 then
     _koopa_warning "Conda is not installed."
     exit 0
 fi
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
 
 _koopa_message "Updating Conda."
 conda update --yes --name=base --channel=defaults conda

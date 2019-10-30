@@ -5,37 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Update R package library.
-
-$(_koopa_help_args)
-
-details:
-    Calls 'bb8::updatePackages()' to auto-update the current library.
-    
-see also:
-    '.libPaths()' in R.
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
 
 if ! _koopa_is_r_package_installed bb8
 then
@@ -43,6 +14,10 @@ then
     exit 0
 fi
 
-_koopa_message "Updating R package library."
 
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_message "Updating R package library."
 Rscript -e 'bb8::updatePackages()'
