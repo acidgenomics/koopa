@@ -342,7 +342,6 @@ then
         . "${activate_dir}/os/darwin/aliases.sh"
     fi
 
-    # Put this at the end, so it doesn't get overwritten by oh-my-zsh.
     . "${activate_dir}/extra.sh"
 
     _koopa_activate_secrets
@@ -362,7 +361,6 @@ then
     then
         . "${activate_dir}/os/darwin/programs/homebrew.sh"
     fi
-    . "${activate_dir}/programs.sh"
     _koopa_activate_aspera
     _koopa_activate_ensembl_perl_api
     _koopa_activate_perlbrew
@@ -371,6 +369,7 @@ then
     _koopa_activate_bcbio
     _koopa_activate_conda
     _koopa_activate_conda_envs
+    . "${activate_dir}/programs.sh"
     _koopa_activate_venv
 fi
 
