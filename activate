@@ -89,7 +89,7 @@ unset -f usage
 [ "$(id -u)" -eq 0 ] && return 0
 [ -n "${USER:-}" ] && USER="$(whoami)" && export USER
 # Always skip on accounts containing "admin" in the name.
-echo "$USER" | grep -Eq "\badmin\b" && return 0
+echo "$USER" | grep -Eq "\b(admin|shiny)\b" && return 0
 # Allow optional skip for specific users.
 if [ -n "${KOOPA_USERS_SKIP:-}" ]
 then
