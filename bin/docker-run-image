@@ -97,8 +97,8 @@ workdir="$(_koopa_strip_trailing_slash "$workdir")"
 _koopa_assert_is_installed docker
 
 docker pull "$image"
-docker run -it                                                                 \
-    --volume="${PWD}:${workdir}"                                               \
-    --workdir="$workdir"                                                       \
-    "$image"                                                                   \
+docker run -it \
+    --volume="${PWD}:${workdir}" \
+    --workdir="$workdir" \
+    "$image" \
     bash
