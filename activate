@@ -319,9 +319,6 @@ _koopa_update_xdg_config
 
 if [ "$extra" -eq 1 ]
 then
-    # Shell-specific configuration                                          {{{2
-    # --------------------------------------------------------------------------
-
     if [ "$KOOPA_SHELL" = "bash" ]
     then
         . "${activate_dir}/shell/bash/shopt.sh"
@@ -339,20 +336,19 @@ then
         . "${activate_dir}/shell/zsh/prompt.sh"
     fi
 
-    # Platform-specific configuration                                       {{{2
-    # --------------------------------------------------------------------------
-
     if _koopa_is_darwin
     then
         . "${activate_dir}/os/darwin/exports.sh"
         . "${activate_dir}/os/darwin/aliases.sh"
     fi
 
+    # Put this at the end, so it doesn't get overwritten by oh-my-zsh.
     . "${activate_dir}/extra.sh"
 
     _koopa_activate_secrets
     _koopa_activate_ssh_key
     _koopa_today_bucket
+    _koopa_disk_check
 fi
 
 
@@ -380,13 +376,8 @@ fi
 
 
 
-# Post-flight checks and clean-up                                           {{{1
+# Post-flight                                                               {{{1
 # ==============================================================================
-
-if [ "$KOOPA_SHELL" = "zsh" ]
-then
-    unset -v ZSHRC
-fi
 
 if [ "$test" -eq 1 ]
 then
@@ -401,9 +392,4 @@ then
     echo "Activation was successful."
 fi
 
-if [ "$minimal" -eq 0 ] && [ "$subshell" -eq 0 ]
-then
-    _koopa_disk_check
-fi
-
-unset -v activate_dir file force interactive minimal subshell test
+unset -v ZSHRC activate_dir file force interactive minimal subshell test
