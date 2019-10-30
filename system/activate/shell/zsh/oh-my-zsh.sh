@@ -107,22 +107,21 @@ HIST_STAMPS="yyyy-mm-dd"
 # Plugins                                                                   {{{1
 # ==============================================================================
 
-# Standard plugins can be found in `~/.oh-my-zsh/plugins/`.
-# Custom plugins may be added to `~/.oh-my-zsh/custom/plugins/`.
+# Standard plugins can be found in '~/.oh-my-zsh/plugins/'.
+# Custom plugins may be added to '~/.oh-my-zsh/custom/plugins/'.
 
-plugins_dir="${ZSH_CUSTOM}/plugins"
+custom_plugins=(
+    zsh-autosuggestions
+    zsh-syntax-highlighting
+)
 
-plugin="zsh-autosuggestions"
-if [[ ! -d "${plugins_dir}/${plugin}" ]]
-then
-    "install-${plugin}"
-fi
-
-# > plugin="zsh-syntax-highlighting"
-# > if [[ ! -d "${plugins_dir}/${plugin}" ]]
-# > then
-# >     "install-${plugin}"
-# > fi
+for plugin in "${custom_plugins[@]}"
+do
+    if [[ ! -d "${ZSH_CUSTOM}/plugins/${plugin}" ]]
+    then
+        "install-${plugin}"
+    fi
+done
 
 plugins=(
     colored-man-pages
@@ -131,16 +130,15 @@ plugins=(
     rsync
     tmux
     vi-mode
-    zsh-autosuggestions
+    "${custom_plugins[@]}"
 )
 
-unset -v plugins_dir
 
 
 # Load Oh My Zsh                                                            {{{1
 # ==============================================================================
 
-if [ -z "${KOOPA_TEST:-}" ]
+if [[ -z "${KOOPA_TEST:-}" ]]
 then
     source "${ZSH}/oh-my-zsh.sh"
 fi
