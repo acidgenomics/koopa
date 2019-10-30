@@ -352,7 +352,7 @@ then
         if [ "$ZSHRC" -eq 1 ]
         then
             . "${activate_dir}/shell/zsh/oh-my-zsh.sh"
-            . "${activate_dir}/shell/zsh/autojump.sh"
+            _koopa_activate_autojump
         fi
         . "${activate_dir}/shell/zsh/setopt.sh"
         . "${activate_dir}/shell/zsh/bindkey.sh"
