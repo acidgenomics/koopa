@@ -75,7 +75,7 @@ case "$organism" in
 esac
 
 url="${base_url}/${short_name}/"
-wget -q -O - "$url"                                                            \
-    | grep -Eo "$pattern"                                                      \
-    | head -n 1                                                                \
+wget -q -O - "$url" \
+    | grep -Eo "$pattern" \
+    | head -n 1 \
     | cut -d ' ' -f 2

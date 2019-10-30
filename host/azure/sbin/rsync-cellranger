@@ -39,14 +39,14 @@ fi
 
 _koopa_message "Updating '${cellranger_dir}' from '${source_ip}'."
 # shellcheck disable=SC2068
-rsync ${flags[@]}                                                              \
-    --rsync-path="sudo /usr/bin/rsync"                                         \
-    "${source_user}@${source_ip}:${cellranger_dir}/"                           \
+rsync ${flags[@]} \
+    --rsync-path="sudo /usr/bin/rsync" \
+    "${source_user}@${source_ip}:${cellranger_dir}/" \
     "${cellranger_dir}/"
 
 _koopa_message "Updating '${cellranger_atac_dir}' from '${source_ip}'."
 # shellcheck disable=SC2068
-rsync ${flags[@]}                                                              \
-    --rsync-path="sudo /usr/bin/rsync"                                         \
-    "${source_user}@${source_ip}:${cellranger_atac_dir}/"                      \
+rsync ${flags[@]} \
+    --rsync-path="sudo /usr/bin/rsync" \
+    "${source_user}@${source_ip}:${cellranger_atac_dir}/" \
     "${cellranger_atac_dir}/"

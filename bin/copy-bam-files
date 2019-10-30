@@ -79,11 +79,11 @@ Source: '${source_dir}'
 Target: '${target_dir}'\
 "
 
-find -L "$source_dir"                                                          \
-    -maxdepth 4                                                                \
-    -type f                                                                    \
-    \( -name "*.bam" -or -name "*.bam.bai" \)                                  \
-    ! -name "*-transcriptome.bam"                                              \
-    ! -path "*/work/*"                                                         \
-    -print0 | xargs -0 -I {}                                                   \
+find -L "$source_dir" \
+    -maxdepth 4 \
+    -type f \
+    \( -name "*.bam" -or -name "*.bam.bai" \) \
+    ! -name "*-transcriptome.bam" \
+    ! -path "*/work/*" \
+    -print0 | xargs -0 -I {} \
         rsync --size-only --progress {} "${target_dir}/"

@@ -34,11 +34,11 @@ then
 else
     if _koopa_is_darwin
     then
-        os="$(                                                                 \
-            printf "%s %s (%s)\n"                                              \
-                "$(sw_vers -productName)"                                      \
-                "$(sw_vers -productVersion)"                                   \
-                "$(sw_vers -buildVersion)"                                     \
+        os="$( \
+            printf "%s %s (%s)\n" \
+                "$(sw_vers -productName)" \
+                "$(sw_vers -productVersion)" \
+                "$(sw_vers -buildVersion)" \
         )"
     else
         os="$(python -mplatform)"

@@ -821,9 +821,9 @@ _koopa_basename_sans_ext2() {
 
 _koopa_bash_version() {
     # Updated 2019-09-27.
-    bash --version                                                             \
-        | head -n 1                                                            \
-        | cut -d ' ' -f 4                                                      \
+    bash --version \
+        | head -n 1 \
+        | cut -d ' ' -f 4 \
         | cut -d '(' -f 1
 }
 
@@ -899,9 +899,9 @@ _koopa_conda_default_envs_dir() {
     # Locate the directory where conda environments are installed by default.
     # Updated 2019-10-26.
     _koopa_assert_is_installed conda
-    conda info                                                                 \
-        | grep "envs directories"                                              \
-        | cut -d ':' -f 2                                                      \
+    conda info \
+        | grep "envs directories" \
+        | cut -d ':' -f 2 \
         | tr -d ' '
 }
 
@@ -955,10 +955,10 @@ _koopa_conda_env_prefix() {
     fi
 
     local path
-    path="$(                                                                   \
-        echo "$env_list"                                                       \
-        | grep "/envs/${env_name}"                                             \
-        | head -n 1                                                            \
+    path="$( \
+        echo "$env_list" \
+        | grep "/envs/${env_name}" \
+        | head -n 1 \
     )"
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
 }
@@ -1053,11 +1053,11 @@ _koopa_disk_pct_used() {
     # Updated 2019-08-17.
     local disk
     disk="${1:-/}"
-    df "$disk"                                                                 \
-        | head -n 2                                                            \
-        | sed -n '2p'                                                          \
-        | grep -Eo "([.0-9]+%)"                                                \
-        | head -n 1                                                            \
+    df "$disk" \
+        | head -n 2 \
+        | sed -n '2p' \
+        | grep -Eo "([.0-9]+%)" \
+        | head -n 1 \
         | sed 's/%$//'
 }
 
@@ -1281,13 +1281,13 @@ _koopa_find_dotfiles() {
     local type="$1"
     local header="$2"
     printf "\n%s:\n\n" "$header"
-    find "$HOME"                                                               \
-        -maxdepth 1                                                            \
-        -name ".*"                                                             \
-        -type "$type"                                                          \
-        -print0                                                                \
-        | xargs -0 -n1 basename                                                \
-        | sort                                                                 \
+    find "$HOME" \
+        -maxdepth 1 \
+        -name ".*" \
+        -type "$type" \
+        -print0 \
+        | xargs -0 -n1 basename \
+        | sort \
         | awk '{print "  ",$0}'
 }
 
@@ -1366,9 +1366,9 @@ _koopa_github_latest_release() {
     # Get the latest release version from GitHub.
     # Updated 2019-10-24.
     # Example: _koopa_github_latest_release "acidgenomics/koopa"
-    curl -s "https://github.com/${1}/releases/latest" 2>&1                     \
-        | grep -Eo '/tag/[.0-9v]+'                                             \
-        | cut -d '/' -f 3                                                      \
+    curl -s "https://github.com/${1}/releases/latest" 2>&1 \
+        | grep -Eo '/tag/[.0-9v]+' \
+        | cut -d '/' -f 3 \
         | sed 's/^v//'
 }
 
@@ -1720,7 +1720,7 @@ _koopa_is_r_package_installed() {
     # Is the requested R package installed?
     # Updated 2019-10-20.
     _koopa_is_installed R || return 1
-    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())"             \
+    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
         | grep -q "TRUE"
 }
 
@@ -1798,8 +1798,8 @@ _koopa_line_count() {
     # Example: _koopa_line_count tx2gene.csv
     #
     # Updated 2019-10-27.
-    wc -l "$1"                                                                 \
-        | xargs                                                                \
+    wc -l "$1" \
+        | xargs \
         | cut -d ' ' -f 1
 }
 
@@ -1875,9 +1875,9 @@ _koopa_macos_app_version() {
     # Extract the version of a macOS application.
     # Updated 2019-09-28.
     _koopa_assert_is_darwin
-    plutil -p "/Applications/${1}.app/Contents/Info.plist"                     \
-        | grep CFBundleShortVersionString                                      \
-        | awk -F ' => ' '{print $2}'                                           \
+    plutil -p "/Applications/${1}.app/Contents/Info.plist" \
+        | grep CFBundleShortVersionString \
+        | awk -F ' => ' '{print $2}' \
         | tr -d '"'
 }
 
@@ -1932,17 +1932,17 @@ _koopa_os_type() {
         id="$(uname -s | tr '[:upper:]' '[:lower:]')"
     elif _koopa_is_linux
     then
-        id="$(                                                                 \
-            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release                   \
-            | tr -d '"'                                                        \
+        id="$( \
+            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
+            | tr -d '"' \
         )"
         # Include the major release version for RHEL.
         if [ "$id" = "rhel" ]
         then
-            version="$(                                                        \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release       \
-                | tr -d '"'                                                    \
-                | cut -d '.' -f 1                                              \
+            version="$( \
+                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
+                | tr -d '"' \
+                | cut -d '.' -f 1 \
             )"
             id="${id}${version}"
         fi
@@ -2689,8 +2689,8 @@ _koopa_which() {
 
 _koopa_zsh_version() {
     # Updated 2019-08-18.
-    zsh --version                                                              \
-        | head -n 1                                                            \
+    zsh --version \
+        | head -n 1 \
         | cut -d ' ' -f 2
 }
 
