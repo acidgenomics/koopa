@@ -1,0 +1,35 @@
+$(_koopa_help_header) [--version|-V]
+    COMMAND
+
+koopa $version ($date)
+Shell bootloader for bioinformatics.
+
+system configuration commands:
+    check
+        Run system dependency version checks.
+    info
+        Show system information.
+    list
+        List programs accessible in "\$PATH".
+    update
+        Update koopa installation to latest version.
+
+return string commands:
+    header
+        Shell script header.
+    home
+        Return the koopa installation path.
+        Also stored as 'KOOPA_HOME' environment variable.
+    variable
+        Internal koopa configuration variable.
+        For use in Python and R scripts only.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+    --version, -V
+        Version information.
+
+note:
+    This software is provided under an MIT License.
+    See 'LICENSE' file for details.

@@ -1,0 +1,33 @@
+
+
+
+
+    [filelist="${filelist}"]
+
+FASTQ dump from Sequence Read Archive (SRA) accession list.
+
+optional positional arguments:
+    1.  SRA access file list.
+        Defaults to '${filelist}'.
+
+$(_koopa_help_args)
+
+details:
+    Requires sratools to be installed, which contains fastq-dump.
+
+    This script loops across an SRA accession file list and calls 
+    'fastq-dump --split-files' internally.
+
+    Note that this will skip FASTQ files that have already been extracted.
+    This is useful because fastq-dump can take a long time and get interrupted.
+
+see also:
+    Look into using fasterq-dump instead of fastq-dump.
+    Consider using '--split-3' flag by default instead?
+
+    10X Genomics single-cell RNA-seq data format.
+    https://kb.10xgenomics.com/hc/en-us/articles/115003802691
+
+note:
+    Bash script.
+    Updated 2019-09-20.

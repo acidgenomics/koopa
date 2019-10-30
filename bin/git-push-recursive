@@ -5,37 +5,6 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [dir="${dir}"]
-
-Push all repositories recursively.
-
-required positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-23.
-EOF
-}
-
 _koopa_help "$@"
 
 
@@ -43,7 +12,7 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-"."}"
 
 
 

@@ -5,40 +5,6 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
-dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [dir="${dir}"]
-
-Remove empty directories.
-
-optinoal positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Script always removes empty directories recursively.
-
-note:
-    Bash script.
-    Updated 2019-10-22.
-EOF
-}
-
 _koopa_help "$@"
 
 
@@ -46,7 +12,7 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-"."}"
 
 
 

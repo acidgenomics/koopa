@@ -5,30 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    csv_file
-
-Rename files using a CSV file.
-
-required positional arguments:
-    1.  CSV file, containing name mappings (from,to).
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-25.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
@@ -36,17 +14,16 @@ _koopa_help "$@"
 # ==============================================================================
 
 file="$1"
+_koopa_assert_is_file_type "$file" "csv"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_file_type "$file" "csv"
-
 while read -r line
 do
-    from=${line%,*}
-    to=${line#*,}
+    from="${line%,*}"
+    to="${line#*,}"
     mv -v "$from" "$to"
 done < "$file"

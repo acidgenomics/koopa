@@ -5,53 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [dir="${dir}"]
-
-Delete file system cruft.
-
-optional positional arguments:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Recursively deletes these invisible files:
-    - .DS_Store
-    - Thumbs.db*
-
-note:
-    Bash script.
-    Updated 2019-10-25.
-
-examples:
-    delete-file-system-cruft .
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-.}"
 
 
 

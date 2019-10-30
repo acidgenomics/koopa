@@ -5,62 +5,24 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-env_name="reticulate"
-env_base_dir="${HOME}/.virtualenvs"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [name="${env_name}"] [dir="${env_base_dir}"]
-
-Install reticulate Python virtual environment.
-
-required positional arguments with defaults:
-    1.  Environment name.
-        Defaults to '${env_name}'.
-    2.  Virtual environment base directory.
-        Defaults to '${env_base_dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Also installs louvain and umap-learn packages.
-
-note:
-    Bash script.
-    Updated 2019-10-11.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_is_installed python3 python
 
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-env_name="${1:-$env_name}"
-env_base_dir="${2:-$env_base_dir}"
+env_name="${1:-"reticulate"}"
+env_base_dir="${2:-"${HOME}/.virtualenvs"}"
+
+env_dir="${env_base_dir}/${env_name}"
+pip_exe="${env_dir}/bin/pip"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_installed python3 python
-
-env_dir="${env_base_dir}/${env_name}"
-pip_exe="${env_dir}/bin/pip"
 
 rm -frv "$env_dir"
 python3 -m venv "$env_dir"

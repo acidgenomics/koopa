@@ -5,26 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Move files (but not directories) up 1 directory level.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-25.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
@@ -33,4 +15,4 @@ _koopa_help "$@"
 
 find . -type f -mindepth 2 -exec mv {} . \;
 find . -mindepth 2
-find . -type d -delete
+find . -type d -delete -print

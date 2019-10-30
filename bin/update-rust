@@ -5,34 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Update Rust
-
-$(_koopa_help_args)
-
-details:
-    Calls rustup internally.
-
-note:
-    Bash script.
-    Updated 2019-10-20.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
 
 if ! _koopa_is_installed rustup
 then
@@ -40,6 +14,10 @@ then
     exit 0
 fi
 
-_koopa_message "Updating Rust via rustup."
 
+
+# Script                                                                    {{{1
+# ==============================================================================
+
+_koopa_message "Updating Rust via rustup."
 rustup update

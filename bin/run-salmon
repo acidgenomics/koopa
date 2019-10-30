@@ -5,6 +5,10 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
+_koopa_assert_is_installed salmon
+
 
 
 # Variables                                                                 {{{1
@@ -18,87 +22,8 @@ threads="$CPU_COUNT"
 r1_tail="_R1_001.fastq.gz"
 r2_tail="_R2_001.fastq.gz"
 
-fastq_dir="fastq/"
-output_dir="salmon/"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    --fasta-file="FASTA" --index-file="INDEX"
-    [--fastq-dir="${fastq_dir}"] [--output-dir="${output_dir}"]
-
-Run salmon on multiple samples.
-
-required arguments:
-    --fasta-file
-        Transcriptome-level (i.e. cDNA) FASTA file.
-        Ensembl or GENCODE reference is recommended over RefSeq or UCSC.
-        Example: Homo_sapiens.GRCh38.cdna.all.fa.gz
-        This will generate a new salmon index, which gets saved in the output
-        directory specified by '--output-dir'.
-    [OR]
-    --index-file
-        Salmon index, previously generated using 'salmon index'.
-        Example: salmon.idx
-        If '--fasta-file' is defined, this gets generated on the fly.
-
-required arguments with defaults:
-    --fastq-dir
-        Directory path containing paired-end FASTQ files.
-        Defaults to '${fastq_dir}'.
-    --output-dir
-        Output directory path.
-        Defaults to '${output_dir}'.
-
-$(_koopa_help_args)
-
-details:
-    This script supports quick analysis of multiple paired-end FASTQ samples
-    inside a directory. It builds a salmon index on the fly, if necessary
-    (unless the '--index-file' argument is set), and outputs per sample
-    automatically.
-
-    The script will intentionally error if the output directory specified by
-    '--output-dir' already exists, to prevent accidental overwrite.
-
-    Strandedness:
-    Illumina TruSeq stranded library prep is fr-firststrand.
-    This corresponds to 'ISR' for salmon quant.
-
-                    | Paired-end | Single-end |
-    ----------------|------------|------------|
-    fr-unstranded   | -l IU      | -l U       |
-    fr-firststrand  | -l ISR     | -l SR      |
-    fr-secondstrand | -l ISF     | -l SF      |
-
-    The '--libType A' option will allow Salmon to automatically infer the
-    library type. Check the running log for the strand information.
-
-internal variables:
-    bootstraps: ${bootstraps}
-    threads: ${threads}
-    r1_tail: ${r1_tail}
-    r2_tail: ${r2_tail}
-
-see also:
-    - salmon quant --help-reads
-    - https://salmon.readthedocs.io/en/latest/library_type.html
-    - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/salmon.py
-    - https://fishycat.netlify.com/en/2017/08/strandness_in_rnaseq/
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
-_koopa_help "$@"
+fastq_dir="fastq"
+output_dir="salmon"
 
 
 
@@ -160,14 +85,13 @@ fi
 fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
 output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 
+_koopa_assert_is_dir "$fastq_dir"
+_koopa_assert_is_not_dir "$output_dir"
+
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_dir "$fastq_dir"
-_koopa_assert_is_not_dir "$output_dir"
-_koopa_assert_is_installed salmon
 
 salmon --version
 

@@ -5,6 +5,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -13,74 +15,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 source_dir="."
 target_dir="."
 prefix="lanepool"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [--source-dir="${source_dir}"] [--target-dir="${target_dir}"]
-    [--prefix="${prefix}"]
-
-Pool (concatenate) lane-split FASTQ files.
-
-required arguments with defaults:
-    --source-dir
-        Source directory path containing lane-split FASTQ files.
-        Defaults to '${source_dir}'.
-    --target-dir
-        Target directory path where to return concatenated, lane-pooled FASTQs.
-        Defaults to '${target_dir}'.
-    --prefix
-        Name prefix for concatenated FASTQ files.
-        Defaults to '${prefix}'.
-
-$(_koopa_help_args)
-
-details:
-    Matches against '_L00[1-9]_' lane pattern internally.
-    Defaults to input and output in current working directory.
-    Supports both compressed (*.fastq.gz) and decompressed (.fastq) FASTQ files.
-
-examples:
-    # Input (2 paired-end, lane-split samples):
-    ls *.fastq.gz
-    # > sample1_L001_R1.fastq.gz
-    # > sample1_L002_R1.fastq.gz
-    # > sample1_L003_R1.fastq.gz
-    # > sample1_L004_R1.fastq.gz
-    # > sample1_L001_R2.fastq.gz
-    # > sample1_L002_R2.fastq.gz
-    # > sample1_L003_R2.fastq.gz
-    # > sample1_L004_R2.fastq.gz
-    # > sample2_L001_R1.fastq.gz
-    # > sample2_L002_R1.fastq.gz
-    # > sample2_L003_R1.fastq.gz
-    # > sample2_L004_R1.fastq.gz
-    # > sample2_L001_R2.fastq.gz
-    # > sample2_L002_R2.fastq.gz
-    # > sample2_L003_R2.fastq.gz
-    # > sample2_L004_R2.fastq.gz
-
-    # Pool the samples.
-    fastq-lanepool --source-dir="." --target-dir="." --prefix="lanepool"
-
-    # Output:
-    # > lanepool_sample1_R1.fastq.gz
-    # > lanepool_sample1_R2.fastq.gz
-    # > lanepool_sample2_R1.fastq.gz
-    # > lanepool_sample2_R2.fastq.gz
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

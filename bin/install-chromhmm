@@ -5,6 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -12,31 +15,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 prefix="$(_koopa_build_prefix)"
 tmp_dir="$(_koopa_tmp_dir)"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install ChromHMM.
-
-details:
-    Installs into '${prefix}/ChromHMM/'.
-    Alternatively, can install via conda instead.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

@@ -5,60 +5,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [--rename] [--prefix]
-    string|file...
-
-Convert input into snake case.
-
-required positional arguments:
-    ... Character strings or file names to sanitize.
-
-optional arguments:
-    --rename
-        Rename input files. Assumes we're renaming files in current working
-        directory, but also supports explicit and/or mixed file paths. Doesn't
-        work recursively.
-    --prefix
-        Include "x" prefix for names that are syntactically invalid in R.
-        Note that this includes input beginning with a number.
-        Disabled by default.
-
-$(_koopa_help_args)
-
-details:
-    Runs in string mode by default.
-    File rename mode can be enabled by setting '--rename' flag.
-
-see also:
-    - 'syntactic::snakeCase()' in R.
-
-examples:
-    snake-case "hello world" "foo bar" "geneID"
-    ## hello_world foo_bar gene_id
-
-    snake-case --rename "foo-bar.fastq.gz"
-    ## ./foo_bar.fastq.gz
-
-    snake-case --rename --prefix 1-control-A.fastq.gz
-    ## ./x1_control_a.fastq.gz
-
-note:
-    Bash script that calls Rscript internally.
-    Requires the syntactic package to be installed.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
+_koopa_assert_is_r_package_installed syntactic
 
 
 
@@ -99,8 +48,6 @@ set -- "${POSITIONAL[@]}"
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_r_package_installed "syntactic"
 
 object="$(_koopa_array_to_r_vector "$@")"
 Rscript -e " \

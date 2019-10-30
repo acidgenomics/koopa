@@ -11,110 +11,60 @@ fi
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-version="$(_koopa_variable koopa)"
-date="$(_koopa_variable koopa_date)"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-    cat << EOF
-$(_koopa_help_header) [--version|-V]
-    COMMAND
-
-koopa $version ($date)
-Shell bootloader for bioinformatics.
-
-system configuration commands:
-    check
-        Run system dependency version checks.
-    info
-        Show system information.
-    list
-        List programs accessible in "\$PATH".
-    update
-        Update koopa installation to latest version.
-
-return string commands:
-    header
-        Shell script header.
-    home
-        Return the koopa installation path.
-        Also stored as 'KOOPA_HOME' environment variable.
-    variable
-        Internal koopa configuration variable.
-        For use in Python and R scripts only.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
-    --version, -V
-        Version information.
-
-note:
-    This software is provided under an MIT License.
-    See 'LICENSE' file for details.
-EOF
-}
-
+_koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Parse arguments                                                           {{{1
-# ==============================================================================
-
+version="$(_koopa_variable koopa)"
+date="$(_koopa_variable koopa_date)"
 include_dir="${KOOPA_HOME}/system/include/koopa"
 
 case "$1" in
     --help|-h)
         usage
-        exit
+        exit 0
         ;;
     --version|-V)
         echo "koopa ${version} (${date})"
-        exit
+        exit 0
         ;;
     check)
         Rscript --vanilla "${include_dir}/check.R"
-        exit
+        exit 0
         ;;
     header)
         _koopa_header "${2:-}"
-        exit
+        exit 0
         ;;
     home)
         _koopa_home
-        exit
+        exit 0
         ;;
     host-type)
         _koopa_host_type
-        exit
+        exit 0
         ;;
     info)
         "${include_dir}/info.sh"
-        exit
+        exit 0
         ;;
     list)
         Rscript --vanilla "${include_dir}/list.R"
-        exit
+        exit 0
         ;;
     os-type)
         _koopa_os_type
-        exit
+        exit 0
         ;;
     update)
         "${include_dir}/update.sh"
-        exit
+        exit 0
         ;;
     upgrade)
         _koopa_stop "Use 'update' instead of 'upgrade'."
         ;;
     variable)
         _koopa_variable "$2"
-        exit
+        exit 0
         ;;
     *)
         _koopa_invalid_arg "$1"
