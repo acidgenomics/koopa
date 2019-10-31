@@ -118,6 +118,14 @@ then
     export OSTYPE
 fi
 
+# SHELL
+# Note that this doesn't currently get set by RStudio terminal.
+if [ -z "${SHELL:-}" ]
+then
+    SHELL="$(_koopa_realpath "$KOOPA_SHELL")"
+    export SHELL
+fi
+
 # TERM
 # Terminal color mode. This should normally be set by the terminal client.
 if [ -z "${TERM:-}" ]
