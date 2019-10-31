@@ -29,9 +29,7 @@ export KOOPA_USERS_SKIP="michael.steinbaugh phil.drapeau"
 
 if [ -e "/mnt/resource" ]
 then
-    mkdir -p "/mnt/resource/alttmp"
-    # > chmod 1777 "/mnt/resource/alttmp"
-    export TMPDIR="/mnt/resource/alttmp"
+    export TMPDIR="/mnt/resource"
 fi
 
 
