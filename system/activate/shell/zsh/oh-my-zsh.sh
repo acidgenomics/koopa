@@ -4,102 +4,46 @@
 # Updated 2019-10-29.
 
 # See also:
+# - https://github.com/robbyrussell/oh-my-zsh/blob/master/templates/
+#       zshrc.zsh-template
 # - https://github.com/robbyrussell/oh-my-zsh
+# - https://github.com/robbyrussell/oh-my-zsh/wiki
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/Plugins-Overview
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/Customization
 # - https://github.com/robbyrussell/oh-my-zsh/wiki/External-themes
 
+[[ -z "${KOOPA_TEST:-}" ]] || return 0
 
-
-# Install                                                                   {{{1
-# ==============================================================================
-
-# Path to oh-my-zsh installation.
 export ZSH="${HOME}/.oh-my-zsh"
 export ZSH_CUSTOM="${ZSH}/custom"
 
-# Install oh-my-zsh automatically, if necessary.
+# Note that this can slow down ZSH but is useful for debugging.
+# > export ZSH_COMPDUMP="/tmp/zcompdump-${USER}"
+
+# Ignore warning about insecure directories identified by compfix.
+# > compaudit | xargs chmod g-w
+# > ZSH_DISABLE_COMPFIX="true"
+
 if [[ ! -d "$ZSH" ]]
 then
     install-oh-my-zsh "$ZSH"
 fi
 
-
-
-# General                                                                   {{{1
-# ==============================================================================
-
-# Set theme to empty string when using koopa prompt.
-ZSH_THEME=""
-
-# Ignore warning about insecure directories identified by compfix.
-# > compaudit | xargs chmod g-w,o-w
-ZSH_DISABLE_COMPFIX="true"
-
-# Disable automatic updates.
-DISABLE_AUTO_UPDATE="true"
-DISABLE_UPDATE_PROMPT="true"
-
-
-
-# Completion                                                                {{{1
-# ==============================================================================
-
-# Enable case-sensitive completion.
+# ENABLE_CORRECTION="true"
 CASE_SENSITIVE="true"
-
-# Uncomment the following line to display red dots whilst waiting for
-# completion.
-COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
-
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# > HYPHEN_INSENSITIVE="true"
-
-
-
-# Terminal window                                                           {{{1
-# ==============================================================================
-
-# Uncomment the following line to disable colors in ls.
-# > DISABLE_LS_COLORS="true"
-
-# Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
-
-
-
-# Git                                                                       {{{1
-# ==============================================================================
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
+DISABLE_AUTO_UPDATE="true"
+DISABLE_MAGIC_FUNCTIONS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-#
-# You can set one of the optional three formats:
-# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-#
-# Or set a custom format using the strftime function format specifications.
-# See 'man strftime' for details.
+DISABLE_UPDATE_PROMPT="true"
 HIST_STAMPS="yyyy-mm-dd"
-
-
-
-# Plugins                                                                   {{{1
-# ==============================================================================
+HYPHEN_INSENSITIVE="true"
+ZSH_THEME=""
 
 # Standard plugins can be found in '~/.oh-my-zsh/plugins/'.
 # Custom plugins may be added to '~/.oh-my-zsh/custom/plugins/'.
-
-# zsh-syntax-highlighting is cool but can slow down paste into terminal.
+# zsh-syntax-highlighting plugin is cool but slows down paste into terminal.
 
 custom_plugins=(
     zsh-autosuggestions
@@ -124,17 +68,7 @@ plugins=(
     "${custom_plugins[@]}"
 )
 
-
-
-# Load Oh My Zsh                                                            {{{1
-# ==============================================================================
-
-if [[ -z "${KOOPA_TEST:-}" ]]
-then
-    source "${ZSH}/oh-my-zsh.sh"
-fi
-
-
+source "${ZSH}/oh-my-zsh.sh"
 
 # Overrides                                                                 {{{1
 # ==============================================================================
@@ -148,7 +82,3 @@ fi
 #
 # This works well in combo with Dracula theme.
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
-
-# Relocate zcompdump to temporary dir.
-# Note that this can slow down ZSH but is useful for debugging.
-# > export ZSH_COMPDUMP="/tmp/zcompdump-${USER}"
