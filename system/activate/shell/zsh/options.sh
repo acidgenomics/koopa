@@ -1,12 +1,19 @@
 #!/usr/bin/env zsh
 
-# Set options
-# Updated 2019-09-09.
+# ZSH shell options.
+# Updated 2019-10-31.
 
-# Disable autocorrection.
+# Vim key bindings.
+# Use '-e' for Emacs.
+bindkey -v
+
+# Disable auto-correction.
 unsetopt correct
 unsetopt correct_all
 DISABLE_CORRECTION="true"
+
+# Disable trailing slash '/' on tab auto-completion of directory names.
+setopt noautoparamslash
 
 # Allow tab completion in the middle of a word.
 setopt COMPLETE_IN_WORD
