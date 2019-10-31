@@ -60,6 +60,11 @@ umask 0002
 # >         ;;
 # > esac
 
+if [ -z "${INPUTRC:-}" ] && [ -r "${HOME}/.inputrc" ]
+then
+    export INPUTRC="${HOME}/.inputrc"
+fi
+
 
 
 # Core                                                                      {{{1
