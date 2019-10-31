@@ -57,12 +57,13 @@ PATH="${PATH}:/usr/local/cellranger-atac/1.1.0"
 # Shiny                                                                     {{{1
 # ==============================================================================
 
-alias shinystatus="sudo systemctl status shiny-server"
-alias shinystart="sudo systemctl start shiny-server"
-alias shinyrestart="sudo systemctl restart shiny-server"
-
 # Consider setting this in 'Renviron.site' instead.
 export SHINYAPPDATA="/mnt/azbioifnoseq05/appdata"
+
+alias shinyrestart="sudo systemctl restart shiny-server"
+alias shinystart="sudo systemctl start shiny-server"
+alias shinystatus="sudo systemctl status shiny-server"
+
 
 
 
