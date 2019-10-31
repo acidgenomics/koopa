@@ -4,7 +4,8 @@
 # Updated 2019-10-31.
 
 # Disable trailing slash '/' on tab auto-completion of directory names.
-set mark-directories off
+# Using INPUTRC approach instead (see '~/.inputrc').
+# > bind 'set mark-directories off'
 
 # Correct minor directory changing spelling mistakes.
 shopt -s cdspell
