@@ -2112,17 +2112,22 @@ _koopa_prompt() {
     # Note that Unicode characters don't work well with some Windows fonts.
     #
     # User name and host.
-    # - bash : user="\u@\h"
-    # - zsh  : user="%n@%m"
+    # - Bash : user="\u@\h"
+    # - ZSH  : user="%n@%m"
     #
-    # zsh: conda environment activation is messing up '%m'/'%M' flag on macOS.
+    # Bash: The default value is '\s-\v\$ '.
+    #
+    # ZSH: conda environment activation is messing up '%m'/'%M' flag on macOS.
     # This seems to be specific to macOS and doesn't happen on Linux.
     #
     # See also:
     # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
     #       robbyrussell.zsh-theme
+    # - https://www.cyberciti.biz/tips/
+    #       howto-linux-unix-bash-shell-setup-prompt.html
+    # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     #
-    # Updated 2019-10-14.
+    # Updated 2019-10-31.
     local conda git newline prompt user venv wd
     user="${USER}@${HOSTNAME//.*/}"
     # Note that subshell exec need to be escaped here, so they are evaluated

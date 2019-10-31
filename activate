@@ -344,18 +344,18 @@ if [ "$extra" -eq 1 ]
 then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        . "${activate_dir}/shell/bash/options.sh"
-        . "${activate_dir}/shell/bash/prompt.sh"
+        . "${activate_dir}/shell/bash/init.sh"
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        . "${activate_dir}/shell/zsh/fpath.sh"
-        if [ "$ZSHRC" -eq 1 ]
-        then
-            . "${activate_dir}/shell/zsh/oh-my-zsh.sh"
+        . "${activate_dir}/shell/zsh/init.zsh"
+        # if [ "$ZSHRC" -eq 1 ]
+        # then
+            # . "${activate_dir}/shell/zsh/oh-my-zsh.zsh"
+            # . "${activate_dir}/shell/zsh/antigen.zsh"
             _koopa_activate_autojump
-        fi
-        . "${activate_dir}/shell/zsh/options.sh"
-        . "${activate_dir}/shell/zsh/prompt.sh"
+        # fi
+        . "${activate_dir}/shell/zsh/options.zsh"
+        . "${activate_dir}/shell/zsh/prompt.zsh"
     fi
 
     . "${activate_dir}/extra.sh"
