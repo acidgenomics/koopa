@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-30.
+    Updated 2019-10-31.
 EOF
 }
 
@@ -371,6 +371,11 @@ then
     _koopa_activate_ssh_key
     _koopa_today_bucket
     _koopa_disk_check
+
+    if _koopa_is_azure
+    then
+        _koopa_check_mount "/mnt/rdrive"
+    fi
 fi
 
 

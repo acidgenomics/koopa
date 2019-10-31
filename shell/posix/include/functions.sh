@@ -895,6 +895,17 @@ _koopa_cellar_script() {
     echo "$file"
 }
 
+_koopa_check_mount() {
+    # Check if a drive is mounted.
+    # Usage of find is recommended over ls here.
+    # Updated 2019-10-31.
+    if [ "$(find "$1" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
+    then
+        _koopa_warning "'${1}' is unmounted."
+    fi
+    return 0
+}
+
 _koopa_conda_default_envs_dir() {
     # Locate the directory where conda environments are installed by default.
     # Updated 2019-10-26.
@@ -1581,6 +1592,18 @@ _koopa_invalid_arg() {
     # Error on invalid argument.
     # Updated 2019-10-23.
     _koopa_stop "Invalid argument: '${1}'."
+}
+
+_koopa_is_aws() {
+    # Is the current session running on AWS?
+    # Updated 2019-10-31.
+    [ "$(_koopa_host_type)" = "aws" ]
+}
+
+_koopa_is_azure() {
+    # Is the current session running on Microsoft Azure?
+    # Updated 2019-10-31.
+    [ "$(_koopa_host_type)" = "azure" ]
 }
 
 _koopa_is_conda_active() {
