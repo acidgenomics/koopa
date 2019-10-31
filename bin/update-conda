@@ -23,5 +23,5 @@ _koopa_message "Updating Conda."
 conda update --yes --name=base --channel=defaults conda
 conda update --yes --name=base --channel=defaults --all
 
-_koopa_message "Removing tarballs."
-conda clean --yes --tarballs
+# > _koopa_message "Removing tarballs."
+# > conda clean --yes --tarballs
