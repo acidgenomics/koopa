@@ -30,7 +30,7 @@ esac
 
 
 
-setopt noautoparamkeys noautoparamslash nomarkdirs
+setopt noautoparamkeys noautoparamslash
 unsetopt markdirs
 
 # zstyle ':completion:*' accept-exact-dirs true
