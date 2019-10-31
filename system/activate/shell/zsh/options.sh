@@ -3,57 +3,41 @@
 # ZSH shell options.
 # Updated 2019-10-31.
 
+# Debug with:
+# - bindkey
+# - setopt
+
 # See also:
 # - http://zsh.sourceforge.net/Doc/Release/Completion-System.html
 # - http://zsh.sourceforge.net/Doc/Release/Options.html
-
-# Vim key bindings.
-# Use '-e' for Emacs.
-bindkey -v
-
-# Disable auto-correction.
-unsetopt correct
-unsetopt correct_all
-DISABLE_CORRECTION="true"
-
-# Disable trailing slash '/' on tab auto-completion of directory names.
-# FIXME This isn't working for zsh.
-# setopt noautoparamkeys
-# setopt noautoparamslash
-
-# setopt no_auto_remove_slash
-# setopt auto_remove_slash
-
-# unsetopt NO_AUTO_REMOVE_SLASH
-# setopt AUTO_REMOVE_SLASH
-
-zstyle ':completion:*' path-completion false
-zstyle ':completion:*' accept-exact-dirs true
+# - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/completion.zsh
+# - http://zsh.sourceforge.net/Guide/zshguide06.html
+# - http://zsh.sourceforge.net/Doc/Release/Options.html#index-MARKDIRS
 
 
 
+# Map key bindings to default editor.
+# Note that Bash currently uses Emacs by default.
+case "${EDITOR:-}" in
+    emacs)
+        bindkey -e
+        ;;
+    vi|vim)
+        bindkey -v
+        ;;
+esac
 
-# Allow tab completion in the middle of a word.
-setopt COMPLETE_IN_WORD
 
-# Restart running processes on exit.
-# > setopt HUP
 
-# Don't hang up background jobs.
-setopt NO_HUP
+# Completion
+# > autoload -U compinit; compinit -C
 
-# Append history file.
-setopt APPEND_HISTORY
+# Enforce trailing slash '/' on tab auto-completion of directory names.
+# Currently there doesn't seem to be a clear way to disable this in ZSH.
+# setopt markdirs
 
-# For sharing history between zsh processes.
-setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
+setopt noautoparamkeys noautoparamslash
 
-# Don't show duplicate history entires.
-setopt HIST_FIND_NO_DUPS
-
-# Remove unnecessary blanks from history.
-setopt HIST_REDUCE_BLANKS
-
-# Keep background processes at full speed.
-# > setopt NOBGNICE
+# zstyle ':completion:*' accept-exact-dirs true
+# zstyle ':completion:*' path-completion false
+# zstyle ':completion:*' special-dirs false
