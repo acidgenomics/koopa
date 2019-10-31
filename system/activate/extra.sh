@@ -51,6 +51,7 @@
 alias df='df -H'
 alias df2='df --portability --print-type --si | sort'
 alias du='du -sh'
+alias h='history'
 alias less='less --ignore-case --raw-control-chars'
 alias sha256='shasum -a 256'
 alias tarup='tar -czvf'
@@ -63,6 +64,7 @@ alias tardown='tar -xzvf'
 
 alias e='exit'
 alias kh='cd $KOOPA_HOME'
+alias reload='exec "$SHELL" -l'
 
 # Navigate up parent directories without `cd`.
 # These are also supported by autojump.
