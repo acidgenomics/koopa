@@ -370,18 +370,22 @@ then
     _koopa_activate_secrets
     _koopa_activate_ssh_key
     _koopa_today_bucket
-    _koopa_disk_check
 
-    if _koopa_is_azure
-    then
-        _koopa_check_mount "/mnt/rdrive"
-    fi
 fi
 
 
 
 # Post-flight                                                               {{{1
 # ==============================================================================
+
+if [ "$minimal" -eq 0 ]
+then
+    _koopa_disk_check
+    if _koopa_is_azure
+    then
+        _koopa_check_mount "/mnt/rdrive"
+    fi
+fi
 
 if [ "$test" -eq 1 ]
 then
