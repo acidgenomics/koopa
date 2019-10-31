@@ -381,10 +381,7 @@ fi
 if [ "$minimal" -eq 0 ]
 then
     _koopa_disk_check
-    if _koopa_is_azure
-    then
-        _koopa_check_mount "/mnt/rdrive"
-    fi
+    _koopa_is_azure && _koopa_check_azure
 fi
 
 if [ "$test" -eq 1 ]
