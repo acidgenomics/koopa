@@ -27,3 +27,23 @@ case "${EDITOR:-}" in
         bindkey -v
         ;;
 esac
+
+
+
+setopt \
+    alwaystoend \
+    autocd \
+    autopushd \
+    completeinword \
+    extendedhistory \
+    histexpiredupsfirst \
+    histignoredups \
+    histignorespace \
+    histverify \
+    incappendhistory \
+    interactivecomments \
+    longlistjobs \
+    noflowcontrol \
+    pushdignoredups \
+    pushdminus \
+    sharehistory
