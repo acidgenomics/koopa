@@ -13,6 +13,18 @@
 
 
 
+# Dot files                                                                 {{{1
+# ==============================================================================
+
+dotfiles="$(_koopa_config_dir)/dotfiles"
+if [ -d "$dotfiles" ]
+then
+    export DOTFILES="$dotfiles"
+fi
+unset -v dotfiles
+
+
+
 # umask                                                                     {{{1
 # ==============================================================================
 
