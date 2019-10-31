@@ -362,8 +362,7 @@ then
 
     if _koopa_is_darwin
     then
-        . "${activate_dir}/os/darwin/exports.sh"
-        . "${activate_dir}/os/darwin/aliases.sh"
+        . "${activate_dir}/os/darwin/init.sh"
     fi
 
     _koopa_activate_secrets
