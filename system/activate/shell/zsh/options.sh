@@ -31,6 +31,7 @@ esac
 
 
 setopt noautoparamkeys noautoparamslash nomarkdirs
+unsetopt markdirs
 
 # zstyle ':completion:*' accept-exact-dirs true
 # zstyle ':completion:*' path-completion false
