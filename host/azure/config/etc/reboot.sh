@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CPI Azure VM start-up script that runs at reboot.
-# Updated 2019-10-16.
+# Updated 2019-10-31.
 
 
 
@@ -31,7 +31,7 @@
 # Script                                                                    {{{1
 # ==============================================================================
 
-if [ -d "/mnt/resource" ]
+if [ -e "/mnt/resource" ]
 then
     chgrp biogroup "/mnt/resource"
     chmod 775 "/mnt/resource"
