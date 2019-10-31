@@ -13,6 +13,7 @@
 # - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/completion.zsh
 # - http://zsh.sourceforge.net/Guide/zshguide06.html
 # - http://zsh.sourceforge.net/Doc/Release/Options.html#index-MARKDIRS
+# - http://zsh.sourceforge.net/Doc/Release/Options.html#index-NOMARKDIRS
 
 
 
@@ -29,14 +30,7 @@ esac
 
 
 
-# Completion
-# > autoload -U compinit; compinit -C
-
-# Enforce trailing slash '/' on tab auto-completion of directory names.
-# Currently there doesn't seem to be a clear way to disable this in ZSH.
-# setopt markdirs
-
-setopt noautoparamkeys noautoparamslash
+setopt noautoparamkeys noautoparamslash nomarkdirs
 
 # zstyle ':completion:*' accept-exact-dirs true
 # zstyle ':completion:*' path-completion false
