@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CPI shared shell configuration.
-# Updated 2019-10-29 by Michael Steinbaugh.
+# Updated 2019-10-31 by Michael Steinbaugh.
 
 
 
@@ -21,6 +21,18 @@
 
 export KOOPA_USERS_NO_EXTRA="bioinfo barbara.bryant"
 export KOOPA_USERS_SKIP="michael.steinbaugh phil.drapeau"
+
+
+
+# Temporary SSD                                                             {{{1
+# ==============================================================================
+
+if [ -e "/mnt/resource" ]
+then
+    mkdir -p "/mnt/resource/alttmp"
+    chmod 1777 "/mnt/resource/alttmp"
+    export TMPDIR="/mnt/resource/alttmp"
+fi
 
 
 
