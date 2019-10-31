@@ -10,10 +10,10 @@
 # See also:
 # - http://zsh.sourceforge.net/Doc/Release/Completion-System.html
 # - http://zsh.sourceforge.net/Doc/Release/Options.html
-# - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/completion.zsh
-# - http://zsh.sourceforge.net/Guide/zshguide06.html
 # - http://zsh.sourceforge.net/Doc/Release/Options.html#index-MARKDIRS
 # - http://zsh.sourceforge.net/Doc/Release/Options.html#index-NOMARKDIRS
+# - http://zsh.sourceforge.net/Guide/zshguide06.html
+# - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/completion.zsh
 
 
 
@@ -27,12 +27,3 @@ case "${EDITOR:-}" in
         bindkey -v
         ;;
 esac
-
-
-
-setopt noautoparamkeys noautoparamslash
-unsetopt markdirs
-
-# zstyle ':completion:*' accept-exact-dirs true
-# zstyle ':completion:*' path-completion false
-# zstyle ':completion:*' special-dirs false
