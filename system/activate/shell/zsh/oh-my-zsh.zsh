@@ -18,55 +18,67 @@
 export ZSH="${HOME}/.oh-my-zsh"
 export ZSH_CUSTOM="${ZSH}/custom"
 
-# Note that this can slow down ZSH but is useful for debugging.
-# > export ZSH_COMPDUMP="/tmp/zcompdump-${USER}"
-
-# Ignore warning about insecure directories identified by compfix.
-# > compaudit | xargs chmod g-w
-# > ZSH_DISABLE_COMPFIX="true"
-
 if [[ ! -d "$ZSH" ]]
 then
     install-oh-my-zsh "$ZSH"
 fi
 
-# ENABLE_CORRECTION="true"
 CASE_SENSITIVE="true"
 DISABLE_AUTO_TITLE="true"
 DISABLE_AUTO_UPDATE="true"
-DISABLE_MAGIC_FUNCTIONS="true"
+DISABLE_MAGIC_FUNCTION="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 DISABLE_UPDATE_PROMPT="true"
 HIST_STAMPS="yyyy-mm-dd"
 HYPHEN_INSENSITIVE="true"
+ZSH_DISABLE_COMPFIX="true"
 ZSH_THEME=""
 
 # Standard plugins can be found in '~/.oh-my-zsh/plugins/'.
 # Custom plugins may be added to '~/.oh-my-zsh/custom/plugins/'.
-# zsh-syntax-highlighting plugin is cool but slows down paste into terminal.
-
-custom_plugins=(
-    zsh-autosuggestions
-    # zsh-syntax-highlighting
-)
-
-for plugin in "${custom_plugins[@]}"
-do
-    if [[ ! -d "${ZSH_CUSTOM}/plugins/${plugin}" ]]
-    then
-        "install-${plugin}"
-    fi
-done
 
 plugins=(
+    # autojump
+    # bundler
+    # cabal
+    # common-aliases
+    # gem
+    # gpg-agent
+    # npm
+    # pylint
+    # python
+    # rails
+    # ruby
+    # rvm
     colored-man-pages
     command-not-found
+    cpanm
+    dircycle
+    dirhistory
+    docker
     git
+    last-working-dir
+    perl
+    pip
     rsync
     tmux
     vi-mode
-    "${custom_plugins[@]}"
 )
+
+if _koopa_is_fedora
+then
+    plugins+=(
+        dnf
+        yum
+    )
+elif _koopa_is_darwin
+then
+    plugins+=(
+        brew
+        osx
+        vscode
+    )
+fi
 
 source "${ZSH}/oh-my-zsh.sh"
 

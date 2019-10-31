@@ -32,3 +32,7 @@ shopt -s cmdhist
 
 # Enable history appending instead of overwriting.
 shopt -s histappend
+
+# Prompt.
+PS1="$(_koopa_prompt)"
+export PS1
