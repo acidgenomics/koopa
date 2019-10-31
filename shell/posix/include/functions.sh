@@ -92,9 +92,9 @@ _koopa_activate_conda() {
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the `activate` script.
     # """
-    [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
-    [ -z "${CONDA_PREFIX:-}" ] || return 0
-    ! _koopa_is_installed conda || return 0
+    # > [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
+    # > [ -z "${CONDA_PREFIX:-}" ] || return 0
+    # > ! _koopa_is_installed conda || return 0
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
