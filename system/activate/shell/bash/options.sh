@@ -3,9 +3,22 @@
 # Bash shell options.
 # Updated 2019-10-31.
 
-# Disable trailing slash '/' on tab auto-completion of directory names.
-# Using INPUTRC approach instead (see '~/.inputrc').
-# > bind 'set mark-directories off'
+# Readline input options.
+if [ -z "${INPUTRC:-}" ] && [ -r "${HOME}/.inputrc" ]
+then
+    export INPUTRC="${HOME}/.inputrc"
+fi
+
+# Map key bindings to default editor.
+# Note that Bash currently uses Emacs by default.
+case "${EDITOR:-}" in
+    emacs)
+        set -o emacs
+        ;;
+    vi|vim)
+        set -o vi
+        ;;
+esac
 
 # Correct minor directory changing spelling mistakes.
 shopt -s cdspell
