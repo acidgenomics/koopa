@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-# Shell options.
-# Updated 2019-06-25.
+# Bash shell options.
+# Updated 2019-10-31.
+
+# Disable trailing slash '/' on tab auto-completion of directory names.
+set mark-directories off
 
 # Correct minor directory changing spelling mistakes.
 shopt -s cdspell
