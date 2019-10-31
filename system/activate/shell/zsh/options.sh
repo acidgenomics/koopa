@@ -3,6 +3,10 @@
 # ZSH shell options.
 # Updated 2019-10-31.
 
+# See also:
+# - http://zsh.sourceforge.net/Doc/Release/Completion-System.html
+# - http://zsh.sourceforge.net/Doc/Release/Options.html
+
 # Vim key bindings.
 # Use '-e' for Emacs.
 bindkey -v
@@ -13,7 +17,21 @@ unsetopt correct_all
 DISABLE_CORRECTION="true"
 
 # Disable trailing slash '/' on tab auto-completion of directory names.
-setopt noautoparamslash
+# FIXME This isn't working for zsh.
+# setopt noautoparamkeys
+# setopt noautoparamslash
+
+# setopt no_auto_remove_slash
+# setopt auto_remove_slash
+
+# unsetopt NO_AUTO_REMOVE_SLASH
+# setopt AUTO_REMOVE_SLASH
+
+zstyle ':completion:*' path-completion false
+zstyle ':completion:*' accept-exact-dirs true
+
+
+
 
 # Allow tab completion in the middle of a word.
 setopt COMPLETE_IN_WORD

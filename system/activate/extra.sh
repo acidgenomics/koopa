@@ -45,28 +45,6 @@ umask 0002
 
 
 
-# Readline                                                                  {{{1
-# ==============================================================================
-
-# Currently uses emacs by default.
-# https://unix.stackexchange.com/questions/30454
-
-# > case "$EDITOR" in
-# >     emacs)
-# >         set -o emacs
-# >         ;;
-# >     vi|vim)
-# >         set -o vi
-# >         ;;
-# > esac
-
-if [ -z "${INPUTRC:-}" ] && [ -r "${HOME}/.inputrc" ]
-then
-    export INPUTRC="${HOME}/.inputrc"
-fi
-
-
-
 # Core                                                                      {{{1
 # ==============================================================================
 
