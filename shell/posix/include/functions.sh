@@ -895,6 +895,36 @@ _koopa_cellar_script() {
     echo "$file"
 }
 
+_koopa_check_azure() {
+    # Check Azure VM integrity.
+    # Updated 2019-10-31.
+    _koopa_is_azure || return 0
+    if [ -e "/mnt/resource" ]
+    then
+        _koopa_check_group "/mnt/resource" "biogroup"
+    fi
+    _koopa_check_mount "/mnt/rdrive"
+    return 0
+}
+
+_koopa_check_group() {
+    # Check if file or directory has an expected group.
+    # Updated 2019-10-31.
+    if [ ! -e "$1" ]
+    then
+        _koopa_warning "'${1}' does not exist."
+        return 1
+    fi
+    local group
+    group="$(_koopa_stat_group "$1")"
+    if [ "$group" != "$2" ]
+    then
+        _koopa_warning "'${1}' current group '${group}' is not '${2}'."
+        return 1
+    fi
+    return 0
+}
+
 _koopa_check_mount() {
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
@@ -902,6 +932,7 @@ _koopa_check_mount() {
     if [ "$(find "$1" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
     then
         _koopa_warning "'${1}' is unmounted."
+        return 1
     fi
     return 0
 }
@@ -2330,6 +2361,20 @@ EOF
         return 1
     fi
     echo "$shell"
+}
+
+_koopa_stat_group() {
+    # Get the current group of a file or directory.
+    # Updated 2019-10-31.
+    [ -e "$1" ] || return 1
+    stat -c '%G' "$1"
+}
+
+_koopa_stat_user() {
+    # Get the current user (owner) of a file or directory.
+    # Updated 2019-10-31.
+    [ -e "$1" ] || return 1
+    stat -c '%U' "$1"
 }
 
 _koopa_status_fail() {
