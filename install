@@ -209,33 +209,33 @@ then
         install-dotfiles
     fi
     # Always create these dotfiles.
-    dotfile --force "condarc"
-    dotfile --force "gitignore"
-    dotfile --force "spacemacs"
-    dotfile --force "tmux.conf"
-    dotfile --force "vim"
-    dotfile --force "vimrc"
+    link-dotfile --force "condarc"
+    link-dotfile --force "gitignore"
+    link-dotfile --force "spacemacs"
+    link-dotfile --force "tmux.conf"
+    link-dotfile --force "vim"
+    link-dotfile --force "vimrc"
     # Create local config files.
     if [[ "$shared" -eq 0 ]]
     then
         host_type="$(_koopa_host_type)"
         os_type="$(_koopa_os_type)"
-        dotfile --force "Rprofile"
-        dotfile --force "bash_profile"
-        dotfile --force "bashrc"
-        dotfile --force "kshrc"
-        dotfile --force "shrc"
-        dotfile --force "zshrc"
+        link-dotfile --force "Rprofile"
+        link-dotfile --force "bash_profile"
+        link-dotfile --force "bashrc"
+        link-dotfile --force "kshrc"
+        link-dotfile --force "shrc"
+        link-dotfile --force "zshrc"
         # R
         if [[ "$os_type" == "darwin" ]]
         then
-            dotfile --force "os/darwin/R"
+            link-dotfile --force "os/darwin/R"
         elif [[ "$host_type" == "harvard-o2" ]]
         then
-            dotfile --force "host/harvard-o2/Renviron"
+            link-dotfile --force "host/harvard-o2/Renviron"
         elif [[ "$host_type" == "harvard-odyssey" ]]
         then
-            dotfile --force "host/harvard-odyssey/Renviron"
+            link-dotfile --force "host/harvard-odyssey/Renviron"
         fi
     fi
     # Add Mike-specific dotfiles, if necessary.
@@ -249,15 +249,15 @@ then
         fi
         if _koopa_is_darwin
         then
-            dotfile --force os/darwin/gitconfig
+            link-dotfile --force os/darwin/gitconfig
         else
-            dotfile --force gitconfig
+            link-dotfile --force gitconfig
         fi
-        dotfile --force --private Rsecrets
-        dotfile --force --private secrets
-        dotfile --force --private travis
-        dotfile --force Rprofile
-        dotfile --force forward
+        link-dotfile --force --private Rsecrets
+        link-dotfile --force --private secrets
+        link-dotfile --force --private travis
+        link-dotfile --force Rprofile
+        link-dotfile --force forward
     fi
 fi
 
