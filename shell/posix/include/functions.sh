@@ -901,9 +901,45 @@ _koopa_check_azure() {
     _koopa_is_azure || return 0
     if [ -e "/mnt/resource" ]
     then
-        _koopa_check_group "/mnt/resource" "biogroup"
+        _koopa_check_user "/mnt/resource" "root"
+        _koopa_check_group "/mnt/resource" "root"
+        _koopa_check_access_octal "/mnt/resource" "1777"
     fi
     _koopa_check_mount "/mnt/rdrive"
+    return 0
+}
+
+_koopa_check_access_human() {
+    # Check if file or directory has expected human readable access.
+    # Updated 2019-10-31.
+    if [ ! -e "$1" ]
+    then
+        _koopa_warning "'${1}' does not exist."
+        return 1
+    fi
+    local access
+    access="$(_koopa_stat_access_human "$1")"
+    if [ "$access" != "$2" ]
+    then
+        _koopa_warning "'${1}' current access '${access}' is not '${2}'."
+    fi
+    return 0
+}
+
+_koopa_check_access_octal() {
+    # Check if file or directory has expected octal access.
+    # Updated 2019-10-31.
+    if [ ! -e "$1" ]
+    then
+        _koopa_warning "'${1}' does not exist."
+        return 1
+    fi
+    local access
+    access="$(_koopa_stat_access_octal "$1")"
+    if [ "$access" != "$2" ]
+    then
+        _koopa_warning "'${1}' current access '${access}' is not '${2}'."
+    fi
     return 0
 }
 
@@ -932,6 +968,24 @@ _koopa_check_mount() {
     if [ "$(find "$1" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
     then
         _koopa_warning "'${1}' is unmounted."
+        return 1
+    fi
+    return 0
+}
+
+_koopa_check_user() {
+    # Check if file or directory has an expected user.
+    # Updated 2019-10-31.
+    if [ ! -e "$1" ]
+    then
+        _koopa_warning "'${1}' does not exist."
+        return 1
+    fi
+    local user
+    user="$(_koopa_stat_user "$1")"
+    if [ "$user" != "$2" ]
+    then
+        _koopa_warning "'${1}' current user '${user}' is not '${2}'."
         return 1
     fi
     return 0
@@ -2363,17 +2417,27 @@ EOF
     echo "$shell"
 }
 
+_koopa_stat_access_human() {
+    # Get the current access permissions in human readable form.
+    # Updated 2019-10-31.
+    stat -c '%A' "$1"
+}
+
+_koopa_stat_access_octal() {
+    # Get the current access permissions in octal form.
+    # Updated 2019-10-31.
+    stat -c '%a' "$1"
+}
+
 _koopa_stat_group() {
     # Get the current group of a file or directory.
     # Updated 2019-10-31.
-    [ -e "$1" ] || return 1
     stat -c '%G' "$1"
 }
 
 _koopa_stat_user() {
     # Get the current user (owner) of a file or directory.
     # Updated 2019-10-31.
-    [ -e "$1" ] || return 1
     stat -c '%U' "$1"
 }
 
