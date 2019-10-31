@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-# Set ZSH functions path.
-# Updated 2019-08-17.
+# Initialize ZSH.
+# Updated 2019-10-31.
 
 koopa_fpath="${KOOPA_HOME}/shell/zsh/functions"
 if [[ ! -d "$koopa_fpath" ]]
@@ -11,3 +11,6 @@ then
 fi
 _koopa_force_add_to_fpath_start "$koopa_fpath"
 unset -v koopa_fpath
+
+# > autoload -U compaudit compinit
+autoload -U colors && colors
