@@ -2692,6 +2692,14 @@ _koopa_update_r_config() {
     _koopa_r_javareconf
 }
 
+_koopa_update_r_config_macos() {
+    # Update R config on macOS.
+    # Need to include Makevars to build packages from source.
+    # Updated 2019-10-31.
+    mkdir -pv "${HOME}/.R"
+    ln -fnsv "/usr/local/koopa/os/darwin/etc/R/Makevars" "${HOME}/.R/."
+}
+
 _koopa_update_shells() {
     # Update shell configuration.
     # Updated 2019-09-28.
