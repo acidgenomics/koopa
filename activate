@@ -67,7 +67,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-10-31.
+    Updated 2019-11-01.
 EOF
 }
 
@@ -348,13 +348,9 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         . "${activate_dir}/shell/zsh/init.zsh"
-        # if [ "$ZSHRC" -eq 1 ]
-        # then
-            # . "${activate_dir}/shell/zsh/antigen.zsh"
-            _koopa_activate_autojump
-        # fi
         . "${activate_dir}/shell/zsh/options.zsh"
         . "${activate_dir}/shell/zsh/prompt.zsh"
+        _koopa_activate_autojump
     fi
 
     . "${activate_dir}/extra.sh"
@@ -367,19 +363,12 @@ then
     _koopa_activate_secrets
     _koopa_activate_ssh_key
     _koopa_today_bucket
-
 fi
 
 
 
 # Post-flight                                                               {{{1
 # ==============================================================================
-
-if [ "$minimal" -eq 0 ]
-then
-    _koopa_disk_check
-    _koopa_is_azure && _koopa_check_azure
-fi
 
 if [ "$test" -eq 1 ]
 then
