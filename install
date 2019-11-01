@@ -40,7 +40,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-10-23.
+    Updated 2019-11-01.
 EOF
 }
 
@@ -157,8 +157,8 @@ then
         if _koopa_is_linux
         then
             sudo chgrp -Rh "$group" "$prefix"
-            sudo chmod g+w -R /usr/local
-            sudo chmod g+s /usr/local
+            sudo chmod g+w -R "$prefix"
+            sudo chmod g+s "$prefix"
         fi
     fi
     git clone --recursive "$source_repo" "$target_dir"
@@ -203,6 +203,7 @@ fi
 if [[ "$dotfiles" -eq 1 ]]
 then
     echo "Configuring dotfiles."
+    # FIXME Simplify this approach, using dotfiles_dir or DOTFILES global.
     # Clone dotfiles repo, if necessary.
     if [[ ! -d "${KOOPA_HOME}/dotfiles" ]]
     then
@@ -270,9 +271,9 @@ then
     # Ensure the koopa remote is using SSH and not HTTPS.
     (
         cd "$KOOPA_HOME" || exit 1
-        git remote set-url origin git@github.com:acidgenomics/koopa.git
+        git remote set-url origin "git@github.com:acidgenomics/koopa.git"
     )
-    
+
     # Clone the docker repo.
     source_repo="git@github.com:acidgenomics/docker.git"
     target_dir="$(_koopa_config_dir)/docker"
