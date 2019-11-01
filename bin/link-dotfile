@@ -74,12 +74,7 @@ then
 fi
 _koopa_assert_is_dir "$dot_dir"
 
-if [[ "$config" -eq 1 ]]
-then
-    source_path="${dot_dir}/config/${source_name}"
-else
-    source_path="${dot_dir}/${source_name}"
-fi
+source_path="${dot_dir}/${source_name}"
 _koopa_assert_is_existing "$source_path"
 
 # Define optional target symlink name.
