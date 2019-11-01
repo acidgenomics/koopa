@@ -1,1 +1,0 @@
-compaudit | sudo xargs chmod g-w,o-w
