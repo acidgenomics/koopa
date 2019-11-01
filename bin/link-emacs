@@ -33,7 +33,11 @@ custom_home="${default_home}-${name}"
 custom_dir="${HOME}/${custom_home}"
 
 _koopa_assert_is_dir "$custom_dir"
-_koopa_assert_is_not_dir "$default_dir"
+
+if [ -d "$default_dir" ] && [ ! -L "$default_dir" ]
+then
+    _koopa_stop "Emacs directory detected at '${default_dir}'."
+fi
 
 (
     cd "$HOME" || exit 1
