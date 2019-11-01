@@ -1,24 +1,22 @@
 #!/usr/bin/env zsh
 
 # Antigen.
-# Updated 2019-10-31.
+# Updated 2019-11-01.
 #
 # See also:
 # - https://github.com/zsh-users/antigen
 # - https://github.com/zsh-users/antigen/wiki/Configuration
 
 ADOTDIR="${HOME}/.antigen"
-
 source "${KOOPA_HOME}/shell/zsh/include/antigen.zsh"
 
-# antigen use oh-my-zsh
-
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
-# antigen bundle git
-# antigen bundle heroku
-# antigen bundle pip
-# antigen bundle lein
-# antigen bundle command-not-found
+# > antigen use oh-my-zsh
+# > antigen bundle command-not-found
+# > antigen bundle git
+# > antigen bundle heroku
+# > antigen bundle lein
+# > antigen bundle pip
 
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle zsh-users/zsh-completions
