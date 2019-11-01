@@ -28,7 +28,7 @@ case "$1" in
         exit 0
         ;;
     check)
-        Rscript --vanilla "${include_dir}/check.R"
+        "${include_dir}/check.sh"
         exit 0
         ;;
     header)
@@ -48,7 +48,7 @@ case "$1" in
         exit 0
         ;;
     list)
-        Rscript --vanilla "${include_dir}/list.R"
+        "${include_dir}/list.sh"
         exit 0
         ;;
     os-type)

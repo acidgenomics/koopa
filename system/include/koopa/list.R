@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## List user-accessible programs exported in PATH.
-## Updated 2019-10-07.
+## Updated 2019-11-01.
 
 options(
     error = quote(quit(status = 1L)),
@@ -20,6 +20,7 @@ stopifnot(
 )
 
 printPrograms <- function(path) {
+    if (!dir.exists(path)) return(invisible())
     path <- normalizePath(path, mustWork = TRUE)
     files <- list.files(
         path = path,
