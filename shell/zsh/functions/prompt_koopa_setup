@@ -19,16 +19,7 @@
 # - %~ : current path
 # - %(?..) : prompt conditional - %(condition.true.false)
 
-_koopa_prompt_precmd() {
-    if [[ -n "${ZSH_THEME:-}" ]]
-    then
-        _koopa_warning "Oh My Zsh theme is enabled."
-        unset ZSH_THEME
-    fi
-}
-
 _koopa_prompt_setup() {
-    add-zsh-hook precmd _koopa_prompt_precmd
     PROMPT="$(_koopa_prompt)"
 }
 

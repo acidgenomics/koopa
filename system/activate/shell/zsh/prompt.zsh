@@ -10,7 +10,9 @@
 # This won't work if an oh-my-zsh theme is enabled.
 # This step must be sourced after oh-my-zsh.
 
+[ -n "${KOOPA_TEST:-}" ] && set +u
 setopt promptsubst
 autoload -U promptinit
 promptinit
 prompt koopa
+[ -n "${KOOPA_TEST:-}" ] && set -u

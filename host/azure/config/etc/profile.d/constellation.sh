@@ -1,7 +1,8 @@
 #!/bin/sh
 
 # CPI shared shell configuration.
-# Updated 2019-10-31 by Michael Steinbaugh.
+# Updated 2019-11-01 by Michael Steinbaugh.
+
 
 
 
@@ -19,6 +20,7 @@
 # Koopa                                                                     {{{1
 # ==============================================================================
 
+# > export KOOPA_TEST=1
 export KOOPA_USERS_NO_EXTRA="bioinfo barbara.bryant"
 export KOOPA_USERS_SKIP="michael.steinbaugh phil.drapeau"
 

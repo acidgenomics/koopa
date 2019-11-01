@@ -16,6 +16,20 @@
 # - 'declare -p': Display the attributes and value of each name.
 # - 'declare -x': Display exported values.
 
+# Checking elapsed time:
+#
+# Bash has a built-in timer variable ('SECONDS').
+# > start=$SECONDS
+# > do stuff
+# > end=$SECONDS
+# > duration=$(( end - start ))
+# > echo "stuff took $duration seconds to complete"
+#
+# See also:
+# - https://www.gnu.org/savannah-checkouts/gnu/bash/manual/
+#       bash.html#index-SECONDS
+# - https://unix.stackexchange.com/questions/314365
+
 
 
 # Usage                                                                     {{{1
@@ -275,6 +289,11 @@ fi
 # Locate home and source functions                                          {{{1
 # ==============================================================================
 
+if [ "$test" -eq 1 ]
+then
+    duration_start="$(date -u +%s)"
+fi
+
 if [ ! -f "$file" ]
 then
     >&2 echo "Error: Failed to detect absolute path of activation script."
@@ -372,6 +391,9 @@ fi
 
 if [ "$test" -eq 1 ]
 then
+    duration_stop="$(date -u +%s)"
+    duration="$(bc <<<"$duration_stop-$duration_start")"
+    echo "Activation was successful (${duration} seconds)."
     set +o errexit
     set +o nounset
     if [ -n "${BASH_VERSION:-}" ]
@@ -380,7 +402,17 @@ then
         set -o posix
         set -o pipefail
     fi
-    echo "Activation was successful."
 fi
 
-unset -v ZSHRC activate_dir file force interactive minimal subshell test
+unset -v \
+    ZSHRC \
+    activate_dir \
+    duration \
+    duration_start \
+    duration_stop \
+    file \
+    force \
+    interactive \
+    minimal \
+    subshell \
+    test

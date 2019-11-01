@@ -42,9 +42,11 @@ _koopa_activate_autojump() {
     script="${prefix}/etc/profile.d/autojump.sh"
     if [ -r "$script"  ]
     then
+        [ -n "${KOOPA_TEST:-}" ] && set +u
         # shellcheck source=/dev/null
         . "$script"
         autoload -U compinit && compinit -u
+        [ -n "${KOOPA_TEST:-}" ] && set -u
     fi
 }
 
