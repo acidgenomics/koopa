@@ -4,6 +4,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_sudo
+
 
 
 # Notes                                                                     {{{1
@@ -63,39 +66,7 @@ flags=(
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header) ...
-
-rsync to Azure Samba (SMB) file shares.
-
-required positional arguments:
-    ... Passes to rsync, with some flags set internally.
-
-$(_koopa_help_args)
-
-examples:
-    rsync-azure-files results/ /mnt/azbioinfo01/project/results/
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
 # Script                                                                    {{{1
 # ==============================================================================
 
-if _koopa_has_sudo
-then
-    sudo rsync "${flags[@]}" "$@"
-else
-    rsync "${flags[@]}" "$@"
-fi
+rsync "${flags[@]}" --rsync-path="sudo rsync" "$@"

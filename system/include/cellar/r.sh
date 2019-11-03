@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed java javac tex
+
 
 
 # Variables                                                                 {{{1
@@ -15,41 +19,8 @@ exe_file="${prefix}/bin/R"
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install R.
-
-$(_koopa_help_args)
-
-see also:
-    - https://www.r-project.org/
-    - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
-    - https://community.rstudio.com/t/compiling-r-from-source-in-opt-r/14666
-    - https://superuser.com/questions/841270/installing-r-on-rhel-7
-    - https://github.com/rstudio/rmarkdown/issues/359
-    - http://pj.freefaculty.org/blog/?p=315
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_installed java
-_koopa_assert_is_installed javac
-_koopa_assert_is_installed tex
 
 _koopa_message "Installing R ${version}."
 
@@ -79,7 +50,7 @@ _koopa_message "Installing R ${version}."
         --with-lapack \
         --with-readline \
         --with-tcltk \
-        --with-x=no
+        --with-x="no"
     make --jobs="$CPU_COUNT"
     make check
     make install

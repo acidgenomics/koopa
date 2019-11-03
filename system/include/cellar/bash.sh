@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -14,34 +17,6 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 gnu_mirror="https://ftpmirror.gnu.org"
 exe_file="${prefix}/bin/${name}"
-
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install Bash.
-
-$(_koopa_help_args)
-
-details:
-    Patches (${patches}) are applied automatically.
-
-see also:
-    - https://www.gnu.org/software/bash/
-
-note:
-    Bash script.
-    Updated 2019-10-01.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

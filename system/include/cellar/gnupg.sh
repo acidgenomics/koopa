@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -11,34 +14,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 exe_file="${prefix}/bin/gpg"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install GnuPG suite.
-
-$(_koopa_help_args)
-
-see also:
-    - https://www.gnupg.org/
-    - https://www.gnupg.org/download/
-    - https://gist.github.com/simbo1905/ba3e8af9a45435db6093aea35c6150e8
-    - https://github.com/gpg/gnupg/blob/master/INSTALL
-    - https://www.dewinter.com/gnupg_howto/english/GPGMiniHowto-2.html
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

@@ -4,47 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-dir="/data00/bcbio"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [dir="${dir}"]
-
-Find broken bcbio symlinks.
-
-required positional arguments with defaults:
-    1.  bcbio directory.
-        Defaults to '${dir}'.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-08-29.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_sudo
 
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-"/data00/bcbio"}"
 
 
 

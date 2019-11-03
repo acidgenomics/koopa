@@ -4,40 +4,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Azure CLI.
-
-$(_koopa_help_args)
-
-see also:
-    https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_sudo
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+sudo rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
 sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
-sudo yum install azure-cli
+sudo yum -y install azure-cli
 
 command -v az
 az --version
