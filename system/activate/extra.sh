@@ -117,7 +117,7 @@ then
     # This will set the 'LD_COLORS' environment variable.
     if [ -f "${KOOPA_HOME}/dotfiles/dircolors" ]
     then
-        eval "$(dircolors "${KOOPA_HOME}/dotfiles/dircolors")"
+        eval "$(dircolors "${KOOPA_HOME}/dotfiles/app/coreutils/dircolors")"
     else
         eval "$(dircolors -b)"
     fi
