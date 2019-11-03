@@ -15,9 +15,7 @@ _koopa_assert_is_installed python3 python
 
 env_name="${1:-"reticulate"}"
 env_base_dir="${2:-"${HOME}/.virtualenvs"}"
-
 env_dir="${env_base_dir}/${env_name}"
-pip_exe="${env_dir}/bin/pip"
 
 
 
@@ -26,6 +24,6 @@ pip_exe="${env_dir}/bin/pip"
 
 rm -frv "$env_dir"
 python3 -m venv "$env_dir"
-"$pip_exe" install --upgrade pip
-"$pip_exe" install louvain umap-learn
-"$pip_exe" list
+python3 -m pip install --upgrade pip
+python3 -m pip install louvain umap-learn
+python3 -m pip list
