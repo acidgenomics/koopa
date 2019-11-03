@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -12,34 +15,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/h5cc"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install HDF5.
-
-$(_koopa_help_args)
-
-details:
-    HDF Group website requires registration.
-
-see also:
-    - https://www.hdfgroup.org/downloads/hdf5/
-    - https://support.hdfgroup.org/ftp/HDF5/releases
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

@@ -4,6 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
 
 
@@ -11,47 +12,22 @@ _koopa_assert_has_sudo
 # Variables                                                                 {{{1
 # ==============================================================================
 
-bcbio_dir="/data00/bcbio"
-version="${1:-development}"
+version="${1:-"development"}"
+bcbio_dir="/usr/local/bcbio"
+tmp_dir="${TMPDIR:-"/tmp"}"
 
 bin_dir="${bcbio_dir}/${version}/tools/bin"
 git_dir="${bcbio_dir}/git"
 tests_dir="${git_dir}/tests"
 
-tmp_dir="/mnt/resource"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Run bcbio-nextgen unit tests.
-
-$(_koopa_help_args)
-
-details:
-    Refer to tests/data/automated for YAML recipes.
-
-note:
-    Bash script.
-    Updated 2019-08-14.
-EOF
-}
-
-_koopa_help "$@"
+_koopa_assert_is_dir "$bin_dir"
+_koopa_assert_is_dir "$tests_dir"
+_koopa_assert_is_dir "$tmp_dir"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_dir "$bin_dir"
-_koopa_assert_is_dir "$tests_dir"
-_koopa_assert_is_dir "$tmp_dir"
 
 # Ensure tmp SSD drive is configured correctly.
 sudo chown "$USER" "$tmp_dir"

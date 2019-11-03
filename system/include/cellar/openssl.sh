@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -10,40 +13,6 @@ version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/${name}"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install (cellar-only) OpenSSL.
-
-$(_koopa_help_args)
-
-details:
-    Currently installing as cellar-only.
-
-    This is useful for running RDAVIDWebService on a virtual machine but can
-    break other programs when installed into '/usr/local'.
-
-    Alternatively, can consider using OpenSSL available via conda.
-
-see also:
-    - https://www.openssl.org/source/
-    - https://wiki.openssl.org/index.php/Compilation_and_Installation
-    - https://wiki.openssl.org/index.php/Binary_Compatibility
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

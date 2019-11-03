@@ -4,25 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Link MSigDB annotations from Azure Files.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-18.
-EOF
-}
-
 _koopa_help "$@"
 
 
@@ -31,4 +12,4 @@ _koopa_help "$@"
 # ==============================================================================
 
 rm -frv "${HOME}/msigdb"
-ln -fnsv /mnt/azbioinfoseq01/Reference/msigdb "${HOME}/."
+ln -fnsv "/mnt/azbioinfoseq01/Reference/msigdb" "${HOME}/."

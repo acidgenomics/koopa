@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed docbook2x-texi
+
 
 
 # Variables                                                                 {{{1
@@ -14,46 +18,8 @@ exe_file="${prefix}/bin/${name}"
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install Git SCM.
-
-$(_koopa_help_args)
-
-details:
-    The compilation settings here are from the Git SCM book website.
-    Refer also to INSTALL file for details.
-
-    This currently fails if OpenSSL v1.1.1+ is installed to '/usr/local'.
-    Instead, compile Git to use the system OpenSSL in '/bin/'.
-
-see also:
-    - https://git-scm.com/
-    - https://github.com/git/git
-    - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-    - https://github.com/git/git/blob/master/INSTALL
-    - https://github.com/progit/progit2/blob/master/book/01-introduction/
-          sections/installing.asc
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_installed docbook2x-texi
 
 _koopa_message "Installing ${name} ${version}."
 

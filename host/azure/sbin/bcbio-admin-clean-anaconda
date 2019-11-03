@@ -4,6 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
 
 
@@ -13,43 +14,13 @@ _koopa_assert_has_sudo
 
 bcbio_dir="/data00/bcbio"
 version="development"
-conda_dir="${bcbio_dir}/${version}/install/anaconda"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [conda_dir="${conda_dir}"]
-
-Clean up bcbio anaconda installation.
-
-required positional arguments with defaults:
-    1.  Anaconda directory (i.e. path to CONDA_PREFIX).
-        Defaults to '${conda_dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Currently removes extracted packages, which can contain broken symlinks.
-    The original source tarballs are kept, for data provenance.
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
 
 
 
 # Arguments                                                                 {{{1
 # ==============================================================================
 
+conda_dir="${bcbio_dir}/${version}/install/anaconda"
 conda_dir="${1:-$conda_dir}"
 conda_exe="${conda_dir}/bin/conda"
 

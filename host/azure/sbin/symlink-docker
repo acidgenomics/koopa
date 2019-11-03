@@ -23,17 +23,7 @@ usage() {
 cat << EOF
 $(_koopa_help_header)
 
-Symlink docker installation.
 
-$(_koopa_help_args)
-
-internal variables:
-    source_dir: ${source_dir}
-    dest_dir: ${dest_dir}
-
-note:
-    Bash script.
-    Updated 2019-08-14.
 EOF
 }
 

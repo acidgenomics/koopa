@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -11,32 +14,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/zsh"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install Z shell.
-
-$(_koopa_help_args)
-
-see also:
-    - http://www.zsh.org/
-    - http://zsh.sourceforge.net/Arc/source.html
-    - https://github.com/robbyrussell/oh-my-zsh/wiki/Installing-ZSH
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -10,43 +13,6 @@ version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/nvim"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install Neovim.
-
-$(_koopa_help_args)
-
-CMAKE_BUILD_TYPE:
-    - Release: Full compiler optimisations and no debug information. Expect the
-      best performance from this build type. Often used by package maintainers.
-    - Debug: Full debug information; little optimisations. Use this for
-      development to get meaningful output from debuggers like gdb or lldb. This
-      is the default, if CMAKE_BUILD_TYPE is not specified.
-    - RelWithDebInfo ("Release With Debug Info"): Enables many optimisations and
-      adds enough debug info so that when nvim ever crashes, you can still get a
-      backtrace.
-
-see also:
-    - https://neovim.io/
-    - https://github.com/neovim/neovim
-    - https://github.com/neovim/neovim/wiki/Installing-Neovim
-    - https://github.com/neovim/neovim/wiki/Building-Neovim
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
 
 
 
