@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+
 
 
 # Variables                                                                 {{{1
@@ -17,33 +20,6 @@ build_prefix="$(_koopa_build_prefix)"
 python3_exe="${build_prefix}/bin/python3"
 python3_config_exe="${python3_exe}-config"
 python3_config_dir="$("$python3_config_exe" --configdir)"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install Vim.
-
-$(_koopa_help_args)
-
-details:
-    Compiling with Python 3 support.
-
-see also:
-    - https://github.com/vim/vim
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

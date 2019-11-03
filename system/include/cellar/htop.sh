@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed python
+
 
 
 # Notes                                                                     {{{1
@@ -33,36 +37,8 @@ exe_file="${prefix}/bin/${name}"
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install htop.
-
-$(_koopa_help_args)
-
-see also:
-    - https://hisham.hm/htop/releases/
-    - https://github.com/hishamhm/htop
-
-note:
-    Bash script.
-    Requires Python to be installed.
-    Updated 2019-10-15.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_installed python
 
 _koopa_message "Installing ${name} ${version}."
 

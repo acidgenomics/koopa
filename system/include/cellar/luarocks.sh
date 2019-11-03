@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed lua
+
 
 
 # Notes                                                                     {{{1
@@ -26,39 +30,10 @@ exe_file="${prefix}/bin/${name}"
 
 
 
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install LuaRocks.
-
-$(_koopa_help_args)
-
-see also:
-    - https://luarocks.org/
-    - https://github.com/luarocks/luarocks/wiki/
-          Installation-instructions-for-Unix
-
-note:
-    Bash script.
-    Requires lua to be installed.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
 # Script                                                                    {{{1
 # ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
-
-_koopa_assert_is_installed lua
 
 (
     rm -frv "$prefix"

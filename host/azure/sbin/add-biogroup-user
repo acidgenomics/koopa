@@ -4,33 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    user
-
-Add biogroup user
-
-required positional arguments:
-    1.  User name.
-
-examples:
-    add-biogroup-user mike
-
-note:
-    Bash script.
-    Updated 2019-09-09.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_sudo
 
 
 

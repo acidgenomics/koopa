@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed jar
+
 
 
 # Notes                                                                     {{{1
@@ -27,57 +31,24 @@
 
 name="sra-tools"
 version="$(_koopa_variable "$name")"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-
 build_prefix="${tmp_dir}/ncbi-outdir"
 ngs_libdir="$(_koopa_build_prefix)/lib64"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header "install-cellar-${name}")
-
-Install SRA toolkit.
-
-$(_koopa_help_args)
-
-details:
-    Installs NCBI NGS language bindings (ngs) and ncbi-vdb automatically.
-    This install method supports ngs-python.
-
-see also:
-    - https://github.com/ncbi/sra-tools/wiki/Building-and-Installing-from-Source
-    - https://github.com/ncbi/ngs/wiki/Building-and-Installing-from-Source
-    - https://github.com/ncbi/ncbi-vdb/wiki/Building-and-Installing-from-Source
-
-note:
-    Bash script.
-    Updated 2019-10-08.
-EOF
-}
-
-_koopa_help "$@"
+# Ensure current jar binary is in path, otherwise install will fail.
+java_home="$(_koopa_java_home)"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-# Ensure current jar binary is in path, otherwise install will fail.
-java_home="$(_koopa_java_home)"
-_koopa_add_to_path_start "${java_home}/bin"
-_koopa_assert_is_installed jar
-
 _koopa_message "Installing ${name} ${version}."
+_koopa_add_to_path_start "${java_home}/bin"
 
 export NGS_LIBDIR="$ngs_libdir"
 export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
-# > ld -L$NGS_LIBDIR -lngs-sdk ...
 
 rm -frv "$prefix"
 rm -fr "$tmp_dir"
