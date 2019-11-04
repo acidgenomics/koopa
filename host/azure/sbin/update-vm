@@ -1,3 +1,12 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_help "$@"
+_koopa_assert_has_sudo
+
 sudo yum update -y
 install-rhel7-base
 remove-rhel7-rpm-cruft
@@ -5,3 +14,5 @@ remove-rhel7-rpm-cruft
 rsync-bcbio
 rsync-miniconda3
 rsync-r-site-library
+
+koopa check
