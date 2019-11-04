@@ -81,16 +81,3 @@ then
 fi
 
 source "${ZSH}/oh-my-zsh.sh"
-
-# Overrides                                                                 {{{1
-# ==============================================================================
-
-# Darken the autosuggest text color.
-# Define using xterm-256 color code.
-#
-# See also:
-# - https://stackoverflow.com/questions/47310537
-# - https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
-#
-# This works well in combo with Dracula theme.
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=240"
