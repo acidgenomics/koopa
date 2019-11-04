@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 sudo rm -rv "${HOME}/Desktop"
 ln -fnsv "${HOME}/Dropbox/Desktop" "${HOME}/."
 

@@ -7,28 +7,11 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_is_installed convmv
 
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Use '-i' flag for interactive.
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 if [[ -z "$*" ]]
 then
     args=(".")
 else
     args=("$@")
 fi
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 convmv -r -f utf8 -t utf8 --nfc --notest "${args[@]}"

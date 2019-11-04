@@ -8,9 +8,4 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 sed -i 's/[ \t]*$//' "$1"

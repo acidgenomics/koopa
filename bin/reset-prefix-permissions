@@ -8,10 +8,10 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+if _koopa_is_shared
+then
+    _koopa_assert_has_sudo
+fi
 
 prefix="$(_koopa_build_prefix)"
 group="$(_koopa_group)"
@@ -21,16 +21,6 @@ then
     user="root"
 else
     user="$USER"
-fi
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-if _koopa_is_shared
-then
-    _koopa_assert_has_sudo
 fi
 
 _koopa_message "Resetting user ('${user}') and group ('${group}') permissions \

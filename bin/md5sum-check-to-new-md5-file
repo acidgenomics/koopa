@@ -8,17 +8,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="md5sum-${timestamp}.md5"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 md5sum "$@" 2>&1 | tee "$log_file"

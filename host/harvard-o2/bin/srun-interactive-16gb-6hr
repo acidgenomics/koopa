@@ -6,11 +6,6 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 srun -p interactive \
     --pty -c 1 \
     --mem 16G \

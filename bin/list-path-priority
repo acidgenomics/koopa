@@ -8,11 +8,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 all="$(_koopa_list_path_priority)"
 mapfile -t all_arr < <(echo "$all")
 

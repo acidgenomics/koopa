@@ -4,11 +4,6 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed proj
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="gdal"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -16,11 +11,6 @@ build_prefix="$(_koopa_build_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/gdalinfo"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

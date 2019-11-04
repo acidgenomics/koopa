@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 os_type="$(_koopa_os_type)"
 
 # Only allow install on RHEL 7.

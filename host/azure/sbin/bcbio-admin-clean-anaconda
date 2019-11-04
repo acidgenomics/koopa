@@ -7,30 +7,14 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 bcbio_dir="/data00/bcbio"
 version="development"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 conda_dir="${bcbio_dir}/${version}/install/anaconda"
 conda_dir="${1:-$conda_dir}"
 conda_exe="${conda_dir}/bin/conda"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 _koopa_message "Conda: '${conda_exe}'."
 _koopa_message "Removing extracted Anaconda packages."
 _koopa_note "Source tarballs will not be removed."
-
 "$conda_exe" clean --yes --packages

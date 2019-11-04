@@ -8,17 +8,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 version="$(wget -q -O - "$url")"
 echo "$version"

@@ -7,24 +7,9 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+source_repo="${1:-"https://github.com/mjsteinbaugh/dotfiles.git"}"
 
 target_dir="$(_koopa_home)/dotfiles"
 _koopa_assert_is_not_dir "$target_dir"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
-source_repo="${1:-"https://github.com/mjsteinbaugh/dotfiles.git"}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 git clone --recursive "$source_repo" "$target_dir"
