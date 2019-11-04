@@ -20,7 +20,12 @@ from pykoopa.genome import (  # noqa
     tx2gene_from_fasta,
 )
 from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import decompress_but_keep_original, eprint, paste_url, wget  # noqa
+from pykoopa.sys import (
+    decompress_but_keep_original,
+    eprint,
+    paste_url,
+    wget,
+)  # noqa
 
 # pylint: enable=wrong-import-position
 
@@ -82,10 +87,14 @@ parser.add_argument(
     "--release", type=str, help="flybase release version (e.g. 'FB2019_04')"
 )
 parser.add_argument(
-    "--dmel", type=str, help="drosophila melanogaster release version (e.g. 'r6.29')"
+    "--dmel",
+    type=str,
+    help="drosophila melanogaster release version (e.g. 'r6.29')",
 )
 parser.add_argument(
-    "--decompress", action="store_true", help="decompress, but keep the compressed file"
+    "--decompress",
+    action="store_true",
+    help="decompress, but keep the compressed file",
 )
 args = parser.parse_args()
 
@@ -108,7 +117,9 @@ if dmel is None:
 
 base_url = "ftp://ftp.flybase.net"
 release_url = paste_url(base_url, "releases", release, "dmel_" + dmel)
-output_dir = kebab_case(organism + " " + build + " " + "flybase" + " " + release)
+output_dir = kebab_case(
+    organism + " " + build + " " + "flybase" + " " + release
+)
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
@@ -200,34 +211,58 @@ def download_gff(release_url, output_dir, decompress, dmel):
 
 if type == "genome":
     download_genome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
 elif type == "transcriptome":
     download_transcriptome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
 elif type == "all":
     download_genome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
     download_transcriptome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
 
 if annotation == "gtf":
     download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
 elif annotation == "gff":
     download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
 elif annotation == "all":
     download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
     download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress, dmel=dmel
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
+        dmel=dmel,
     )
 
 if type != "genome":

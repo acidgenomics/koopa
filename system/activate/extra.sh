@@ -237,6 +237,9 @@ alias nvim-default='nvim -u NONE'
 # Python                                                                    {{{1
 # ==============================================================================
 
+# Note that 79 characters conforms to PEP8 (see flake8 for details).
+alias black="black --line-length=79"
+
 # Don't allow Python to change the prompt string by default.
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
 then
