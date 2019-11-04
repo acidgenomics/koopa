@@ -8,18 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 from="$1"
 to="$2"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # Check for unescaped slashes.
 if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"

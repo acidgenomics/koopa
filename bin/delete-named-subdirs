@@ -8,17 +8,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 path="$1"
 subdir_name="$2"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 find "$path" -type d -name "$subdir_name" -print0 | xargs -0 -I {} rm -rf {}

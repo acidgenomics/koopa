@@ -9,17 +9,7 @@ _koopa_help "$@"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed conda
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 name="$1"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 prefix="$(_koopa_conda_internal_prefix)/envs"
+
 conda create -qy --prefix="${prefix}/${name}" "$name"

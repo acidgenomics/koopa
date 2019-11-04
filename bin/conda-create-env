@@ -9,16 +9,6 @@ _koopa_help "$@"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed conda
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 name="$1"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 conda create -qy --name="$name" "$name"
