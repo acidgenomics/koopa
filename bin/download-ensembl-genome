@@ -20,10 +20,6 @@ from pykoopa.sys import eprint, paste_url, wget  # noqa
 
 # pylint: enable=wrong-import-position
 
-
-# Usage                                                                    {{{1
-# =============================================================================
-
 DESCRIPTION = "Download Ensembl genome."
 EPILOG = """
 details:
@@ -84,10 +80,6 @@ note:
     Updated 2019-10-11.
 """
 
-
-# Arguments                                                                {{{1
-# =============================================================================
-
 # pylint: disable=invalid-name,protected-access,redefined-builtin
 
 parser = argparse.ArgumentParser(
@@ -98,10 +90,7 @@ parser = argparse.ArgumentParser(
 optional = parser._action_groups.pop()
 required = parser.add_argument_group("required arguments")
 required.add_argument(
-    "--organism",
-    required=True,
-    type=str,
-    help="latin name (e.g. 'Homo sapiens')",
+    "--organism", required=True, type=str, help="latin name (e.g. 'Homo sapiens')"
 )
 required.add_argument(
     "--build", required=True, type=str, help="genome build (e.g. 'GRCh38')"
@@ -136,13 +125,9 @@ optional.add_argument(
     """
     ),
 )
+optional.add_argument("--release", type=str, help="release version (e.g. '97')")
 optional.add_argument(
-    "--release", type=str, help="release version (e.g. '97')"
-)
-optional.add_argument(
-    "--decompress",
-    action="store_true",
-    help="decompress, but keep the compressed file",
+    "--decompress", action="store_true", help="decompress, but keep the compressed file"
 )
 parser._action_groups.append(optional)
 if len(sys.argv) == 1:
@@ -173,15 +158,9 @@ if release is None:
     release = ensembl_version()
 
 release_url = paste_url(base_url, "release-" + release)
-output_dir = kebab_case(
-    organism + " " + build + " " + "ensembl" + " " + release
-)
+output_dir = kebab_case(organism + " " + build + " " + "ensembl" + " " + release)
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
-
-
-# Script                                                                   {{{1
-# =============================================================================
 
 
 def download_genome(release_url, output_dir, decompress):
@@ -226,21 +205,14 @@ def download_gtf(release_url, output_dir, decompress):
     base_url = paste_url(release_url, "gtf", organism.lower())
     readme_url = paste_url(base_url, "README")
     checksums_url = paste_url(base_url, "CHECKSUMS")
-    gtf_url = paste_url(
-        base_url, organism + "." + build + "." + release + ".gtf.gz"
-    )
+    gtf_url = paste_url(base_url, organism + "." + build + "." + release + ".gtf.gz")
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gtf_url, output_dir=output_dir, decompress=decompress)
     if organism in ("Homo_sapiens", "Mus_musculus"):
         gtf_patch_url = paste_url(
             base_url,
-            organism
-            + "."
-            + build
-            + "."
-            + release
-            + ".chr_patch_hapl_scaff.gtf.gz",
+            organism + "." + build + "." + release + ".chr_patch_hapl_scaff.gtf.gz",
         )
         wget(url=gtf_patch_url, output_dir=output_dir, decompress=decompress)
 
@@ -253,21 +225,14 @@ def download_gff(release_url, output_dir, decompress):
     base_url = paste_url(release_url, "gff3", organism.lower())
     readme_url = paste_url(base_url, "README")
     checksums_url = paste_url(base_url, "CHECKSUMS")
-    gff_url = paste_url(
-        base_url, organism + "." + build + "." + release + ".gff3.gz"
-    )
+    gff_url = paste_url(base_url, organism + "." + build + "." + release + ".gff3.gz")
     wget(url=readme_url, output_dir=output_dir)
     wget(url=checksums_url, output_dir=output_dir)
     wget(url=gff_url, output_dir=output_dir, decompress=decompress)
     if organism in ("Homo sapiens", "Mus musculus"):
         gtf_patch_url = paste_url(
             base_url,
-            organism
-            + "."
-            + build
-            + "."
-            + release
-            + ".chr_patch_hapl_scaff.gff3.gz",
+            organism + "." + build + "." + release + ".chr_patch_hapl_scaff.gff3.gz",
         )
         wget(url=gtf_patch_url, output_dir=output_dir, decompress=decompress)
 
@@ -289,20 +254,12 @@ elif type == "all":
     )
 
 if annotation == "gtf":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
+    download_gtf(release_url=release_url, output_dir=output_dir, decompress=decompress)
 elif annotation == "gff":
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
+    download_gff(release_url=release_url, output_dir=output_dir, decompress=decompress)
 elif annotation == "all":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
+    download_gtf(release_url=release_url, output_dir=output_dir, decompress=decompress)
+    download_gff(release_url=release_url, output_dir=output_dir, decompress=decompress)
 
 if type != "genome":
     tx2gene_from_fasta(source_name="ensembl", output_dir=output_dir)
