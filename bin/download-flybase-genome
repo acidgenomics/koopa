@@ -22,9 +22,9 @@ from pykoopa.genome import (  # noqa
 from pykoopa.syntactic import kebab_case  # noqa
 from pykoopa.sys import (
     decompress_but_keep_original,
+    download,
     eprint,
     paste_url,
-    wget,
 )  # noqa
 
 # pylint: enable=wrong-import-position
@@ -130,8 +130,8 @@ def download_genome(release_url, output_dir, decompress, dmel):
     """
     output_dir = os.path.join(output_dir, "genome")
     fasta_url = paste_url(release_url, "fasta")
-    wget(url=paste_url(fasta_url, "md5sum.txt"), output_dir=output_dir)
-    wget(
+    download(url=paste_url(fasta_url, "md5sum.txt"), output_dir=output_dir)
+    download(
         url=paste_url(fasta_url, "dmel-all-aligned-" + dmel + ".fasta.gz"),
         output_dir=output_dir,
         decompress=decompress,
@@ -148,28 +148,28 @@ def download_transcriptome(release_url, output_dir, decompress, dmel):
         output_dir, "dmel-transcriptome-" + dmel + ".fasta.gz"
     )
     fasta_url = paste_url(release_url, "fasta")
-    wget(url=paste_url(fasta_url, "md5sum.txt"), output_dir=cat_dir)
-    wget(
+    download(url=paste_url(fasta_url, "md5sum.txt"), output_dir=cat_dir)
+    download(
         url=paste_url(fasta_url, "dmel-all-transcript-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
-    wget(
+    download(
         url=paste_url(fasta_url, "dmel-all-miRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
-    wget(
+    download(
         url=paste_url(fasta_url, "dmel-all-miscRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
-    wget(
+    download(
         url=paste_url(fasta_url, "dmel-all-ncRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
-    wget(
+    download(
         url=paste_url(fasta_url, "dmel-all-pseudogene-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
-    wget(
+    download(
         url=paste_url(fasta_url, "dmel-all-tRNA-" + dmel + ".fasta.gz"),
         output_dir=cat_dir,
     )
@@ -187,8 +187,8 @@ def download_gtf(release_url, output_dir, decompress, dmel):
     """
     output_dir = os.path.join(output_dir, "gtf")
     gtf_url = paste_url(release_url, "gtf")
-    wget(url=paste_url(gtf_url, "md5sum.txt"), output_dir=output_dir)
-    wget(
+    download(url=paste_url(gtf_url, "md5sum.txt"), output_dir=output_dir)
+    download(
         url=paste_url(gtf_url, "dmel-all-" + dmel + ".gtf.gz"),
         output_dir=output_dir,
         decompress=decompress,
@@ -201,8 +201,8 @@ def download_gff(release_url, output_dir, decompress, dmel):
     """
     output_dir = os.path.join(output_dir, "gff")
     gff_url = paste_url(release_url, "gff")
-    wget(url=paste_url(gff_url, "md5sum.txt"), output_dir=output_dir)
-    wget(
+    download(url=paste_url(gff_url, "md5sum.txt"), output_dir=output_dir)
+    download(
         url=paste_url(gff_url, "dmel-all-" + dmel + ".gff.gz"),
         output_dir=output_dir,
         decompress=decompress,

@@ -16,7 +16,7 @@ from textwrap import dedent
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
 from pykoopa.genome import gencode_version, tx2gene_from_fasta  # noqa
 from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import eprint, paste_url, wget  # noqa
+from pykoopa.sys import download, eprint, paste_url  # noqa
 
 # pylint: enable=wrong-import-position
 
@@ -49,7 +49,10 @@ parser = argparse.ArgumentParser(
 optional = parser._action_groups.pop()
 required = parser.add_argument_group("required arguments")
 required.add_argument(
-    "--organism", required=True, type=str, help="latin name (e.g. 'Homo sapiens')"
+    "--organism",
+    required=True,
+    type=str,
+    help="latin name (e.g. 'Homo sapiens')",
 )
 optional.add_argument(
     "--type",
@@ -82,9 +85,13 @@ optional.add_argument(
     ),
 )
 optional.add_argument("--build", type=str, help="genome build (e.g. 'GRCh38')")
-optional.add_argument("--release", type=str, help="release version (e.g. '32')")
 optional.add_argument(
-    "--decompress", action="store_true", help="decompress, but keep the compressed file"
+    "--release", type=str, help="release version (e.g. '32')"
+)
+optional.add_argument(
+    "--decompress",
+    action="store_true",
+    help="decompress, but keep the compressed file",
 )
 parser._action_groups.append(optional)
 if len(sys.argv) == 1:
@@ -123,25 +130,35 @@ base_url = paste_url(
     "Gencode_" + organism_short,
     "release_" + release,
 )
-output_dir = kebab_case(organism + " " + build + " " + "gencode" + " " + release)
+output_dir = kebab_case(
+    organism + " " + build + " " + "gencode" + " " + release
+)
 
 if build == "GRCh37":
     base_url = paste_url(base_url, "GRCh37_mapping")
     transcriptome_fasta_url = paste_url(
         base_url, "gencode.v" + release + "lift37.transcripts.fa.gz"
     )
-    gtf_url = paste_url(base_url, "gencode.v" + release + "lift37.annotation.gtf.gz")
-    gff_url = paste_url(base_url, "gencode.v" + release + "lift37.annotation.gff3.gz")
+    gtf_url = paste_url(
+        base_url, "gencode.v" + release + "lift37.annotation.gtf.gz"
+    )
+    gff_url = paste_url(
+        base_url, "gencode.v" + release + "lift37.annotation.gff3.gz"
+    )
     readme_url = paste_url(base_url, "_README_GRCh37_mapping.txt")
 else:
     transcriptome_fasta_url = paste_url(
         base_url, "gencode.v" + release + ".transcripts.fa.gz"
     )
     gtf_url = paste_url(base_url, "gencode.v" + release + ".annotation.gtf.gz")
-    gff_url = paste_url(base_url, "gencode.v" + release + ".annotation.gff3.gz")
+    gff_url = paste_url(
+        base_url, "gencode.v" + release + ".annotation.gff3.gz"
+    )
     readme_url = paste_url(base_url, "_README.TXT")
 
-genome_fasta_url = paste_url(base_url, build + ".primary_assembly.genome.fa.gz")
+genome_fasta_url = paste_url(
+    base_url, build + ".primary_assembly.genome.fa.gz"
+)
 md5sums_url = paste_url(base_url, "MD5SUMS")
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
@@ -151,7 +168,7 @@ def download_genome(genome_fasta_url, output_dir, decompress):
     """
     Download genome FASTA.
     """
-    wget(
+    download(
         url=genome_fasta_url,
         output_dir=os.path.join(output_dir, "genome"),
         decompress=decompress,
@@ -162,7 +179,7 @@ def download_transcriptome(transcriptome_fasta_url, output_dir, decompress):
     """
     Download transcriptome FASTA.
     """
-    wget(
+    download(
         url=transcriptome_fasta_url,
         output_dir=os.path.join(output_dir, "transcriptome"),
         decompress=decompress,
@@ -173,22 +190,32 @@ def download_gtf(gtf_url, output_dir, decompress):
     """
     Download GTF file.
     """
-    wget(url=gtf_url, output_dir=os.path.join(output_dir, "gtf"), decompress=decompress)
+    download(
+        url=gtf_url,
+        output_dir=os.path.join(output_dir, "gtf"),
+        decompress=decompress,
+    )
 
 
 def download_gff(gff_url, output_dir, decompress):
     """
     Download GFF3 file.
     """
-    wget(url=gff_url, output_dir=os.path.join(output_dir, "gff"), decompress=decompress)
+    download(
+        url=gff_url,
+        output_dir=os.path.join(output_dir, "gff"),
+        decompress=decompress,
+    )
 
 
-wget(url=readme_url, output_dir=output_dir)
-wget(url=md5sums_url, output_dir=output_dir)
+download(url=readme_url, output_dir=output_dir)
+download(url=md5sums_url, output_dir=output_dir)
 
 if type == "genome":
     download_genome(
-        genome_fasta_url=genome_fasta_url, output_dir=output_dir, decompress=decompress
+        genome_fasta_url=genome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif type == "transcriptome":
     download_transcriptome(
@@ -198,7 +225,9 @@ elif type == "transcriptome":
     )
 elif type == "all":
     download_genome(
-        genome_fasta_url=genome_fasta_url, output_dir=output_dir, decompress=decompress
+        genome_fasta_url=genome_fasta_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
     download_transcriptome(
         transcriptome_fasta_url=transcriptome_fasta_url,
