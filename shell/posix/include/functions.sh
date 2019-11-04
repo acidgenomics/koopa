@@ -1159,6 +1159,36 @@ _koopa_disk_pct_used() {
         | sed 's/%$//'
 }
 
+_koopa_dotfiles_config_link() {
+    # Dotfiles directory.
+    # Note that we're not checking for existence here, which is handled inside
+    # 'link-dotfile' script automatically instead.
+    # Updated 2019-11-04.
+    echo "$(_koopa_config_dir)/dotfiles"
+}
+
+_koopa_dotfiles_private_config_link() {
+    # Updated 2019-11-04.
+    echo "$(_koopa_dotfiles_config_link)-private"
+}
+
+_koopa_dotfiles_source_repo() {
+    # Dotfiles source repository.
+    # Updated 2019-11-04.
+    if [ -d "${DOTFILES:-}" ]
+    then
+        echo "$DOTFILES"
+        return 0
+    fi
+    local dotfiles
+    dotfiles="$(_koopa_home)/dotfiles"
+    if [ ! -d "$dotfiles" ]
+    then
+        _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
+    fi
+    echo "$dotfiles"
+}
+
 
 
 # E                                                                         {{{1
