@@ -28,7 +28,7 @@ sudo chown root:wheel "${KOOPA_HOME}/host/azure/config/etc/reboot.sh"
 # Ensure that shared bioinfo user has correct dotfiles.
 sudo -u bioinfo -H "$SHELL" -c "\
     rm -fr ~/.condarc; \
-    /usr/local/koopa/bin/link-dotfile app/emacs/minimal/emacs.el emacs \
+    /usr/local/koopa/bin/link-dotfile --force app/emacs/minimal/emacs.el emacs \
 "
 
 remove-broken-symlinks "$HOME"
