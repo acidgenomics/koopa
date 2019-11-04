@@ -4,30 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    name
-
-Open application.
-
-required positional arguments with defaults:
-    1.  Application name.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 

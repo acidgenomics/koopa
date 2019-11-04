@@ -34,9 +34,9 @@ _koopa_message "Installing ${name} ${version}."
     wget "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
-    # Use `configure --help` for build options.
-    #     # If you don't need python support you can suppress it at configure using
-    # `--without-python`.
+    # Use 'configure --help' for build options.
+    # If you don't need python support you can suppress it at configure using
+    # '--without-python'.
     CPPFLAGS="-I${build_prefix}/include" \
         LDFLAGS="-L${build_prefix}/lib" \
         ./configure \

@@ -4,31 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Disable quarantine on installed applications.
-
-$(_koopa_help_args)
-
-details:
-    This is useful for fixing installed Homebrew casks.
-
-note:
-    Bash script.
-    Updated 2019-06-25.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_sudo
 
 
 

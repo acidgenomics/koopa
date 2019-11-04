@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+# FIXME Need to add documentation.
+# FIXME Switch to bash script?
+
 install.packages(
     pkgs = "units",
     type = "source",

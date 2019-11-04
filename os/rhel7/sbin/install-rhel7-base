@@ -4,45 +4,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Missing on RHEL 7:
-# > sudo yum install coin-or-Clp
-# https://github.com/coin-or/Clp
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install base programs for Red Hat Enterprise Linux (RHEL) 7.
-
-$(_koopa_help_args)
-
-see also:
-    https://aws.amazon.com/premiumsupport/knowledge-center/ec2-enable-epel/
-
-note:
-    Bash script.
-    Updated 2019-10-25.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_sudo
 
 # Note that LLVM 7 is required to install llvmlite Python module.
 # This is now required to install umap-learn.

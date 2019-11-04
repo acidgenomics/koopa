@@ -4,7 +4,7 @@ set -Eeu -o pipefail
 # Find lines containing more than 80 characters.
 # Updated 2019-10-14.
 
-# Returns with `true` or `false` exit codes.
+# Returns with 'true' or 'false' exit codes.
 
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
@@ -29,7 +29,7 @@ then
     done
 fi
 
-# Prepend the `--exclude-dir=` flag.
+# Prepend the '--exclude-dir' flag.
 exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 hits="$( \

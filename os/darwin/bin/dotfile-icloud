@@ -4,30 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    file
-
-Symlink a dot file from iCloud.
-
-required positional arguments:
-    1.  File name.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 
@@ -35,16 +13,14 @@ _koopa_help "$@"
 # ==============================================================================
 
 file="$1"
+local="${HOME}/.${file}"
+cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
+_koopa_assert_is_dir "$cloud"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-local="${HOME}/.${file}"
-
-cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
-_koopa_assert_is_dir "$cloud"
 
 if [[ -f "$cloud" ]] && [[ -f "$local" ]]
 then

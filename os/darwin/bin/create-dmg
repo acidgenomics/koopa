@@ -4,40 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    [dir="${dir}"]
-
-Create DMG image.
-
-required positional arguments:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-$(_koopa_help_args)
-
-details:
-    Volume name is set automatically as basename of directory path.
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
 
 
@@ -45,18 +11,15 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-"."}"
+_koopa_assert_is_dir "$dir"
+
+dir="$(realpath "$dir")"
+name="$(basename "$dir")"
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_dir "$dir"
-
-dir="$(realpath "$dir")"
-name="$(basename "$dir")"
-
-# Create disk image from directory.
-# -ov = overwrite
 hdiutil create -volname "$name" -srcfolder "$dir" -ov "${name}.dmg"

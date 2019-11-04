@@ -92,7 +92,7 @@ _koopa_activate_conda() {
     # Updated 2019-10-29.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
-    # Instead source the `activate` script.
+    # Instead source the 'activate' script.
     # """
     # > [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
     # > [ -z "${CONDA_PREFIX:-}" ] || return 0

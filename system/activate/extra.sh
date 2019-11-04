@@ -34,7 +34,7 @@ unset -v dotfiles
 # - 'fmask': Only files.
 # - 'dmask': Only directories.
 #
-# Use 'umask -S' to return 'u,g,o`' values.
+# Use 'umask -S' to return 'u,g,o' values.
 #
 # - 0022: u=rwx,g=rx,o=rx
 #         User can write, others can read. Usually default.
@@ -78,7 +78,7 @@ alias e='exit'
 alias kh='cd $KOOPA_HOME'
 alias reload='exec "$SHELL" -l'
 
-# Navigate up parent directories without `cd`.
+# Navigate up parent directories without 'cd'.
 # These are also supported by autojump.
 # > alias ..='cd ..'
 # > alias ...='cd ../../'
