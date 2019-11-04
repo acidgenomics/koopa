@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-11-03.
+    Updated 2019-11-04.
 EOF
 }
 
@@ -372,9 +372,9 @@ then
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
         . "${activate_dir}/shell/zsh/init.zsh"
+        . "${activate_dir}/shell/zsh/plugins.zsh"
         . "${activate_dir}/shell/zsh/options.zsh"
         . "${activate_dir}/shell/zsh/prompt.zsh"
-        _koopa_activate_autojump
     fi
 
     . "${activate_dir}/extra.sh"
