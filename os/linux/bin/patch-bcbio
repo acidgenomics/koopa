@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_environments
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 while (("$#"))
 do
     case "$1" in
@@ -65,11 +60,6 @@ then
     install_dir="$(dirname "$(dirname "$(dirname "$bcbio_python")")")"
 fi
 _koopa_assert_is_dir "$install_dir"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Patching bcbio installation."
 

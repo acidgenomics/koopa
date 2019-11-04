@@ -4,35 +4,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 _koopa_assert_has_sudo
 
 
 
-# Usage                                                                     {{{1
+# R                                                                         {{{1
 # ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Remove legacy RHEL 7 RPM cruft on Azure VMs.
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_help "$@"
-_koopa_assert_has_no_args "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-# R                                                                         {{{2
-# ------------------------------------------------------------------------------
 
 _koopa_message "\
 Removing R.
@@ -45,8 +24,10 @@ sudo yum remove \
     'libRmath-devel'
 sudo rm -frv /usr/lib64/R
 
-# Java                                                                      {{{2
-# ------------------------------------------------------------------------------
+
+
+# Java                                                                      {{{1
+# ==============================================================================
 
 _koopa_message "\
 Removing Java.
@@ -56,8 +37,10 @@ sudo yum remove \
     '*-openjdk*' \
     'java-*'
 
-# Pandoc                                                                    {{{2
-# ------------------------------------------------------------------------------
+
+
+# Pandoc                                                                    {{{1
+# ==============================================================================
 
 _koopa_message "\
 Removing Pandoc.
@@ -69,8 +52,10 @@ sudo yum remove \
     'pandoc' \
     'pandoc-*'
 
-# Perl                                                                      {{{2
-# ------------------------------------------------------------------------------
+
+
+# Perl                                                                      {{{1
+# ==============================================================================
 
 _koopa_message "\
 Removing Perl CPAN Minus.
@@ -79,8 +64,10 @@ Use Perlbrew approach instead."
 sudo yum remove \
     'perl-App-cpanminus'
 
-# Python                                                                    {{{2
-# ------------------------------------------------------------------------------
+
+
+# Python                                                                    {{{1
+# ==============================================================================
 
 # Use a newer version of pip in a virtual environment instead.
 
@@ -105,8 +92,10 @@ sudo rm -frv \
     '/usr/lib/python2.7/site-packages/pip' \
     '/usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info'
 
-# Rust                                                                      {{{2
-# ------------------------------------------------------------------------------
+
+
+# Rust                                                                      {{{1
+# ==============================================================================
 
 _koopa_message "\
 Removing Rust.
@@ -114,8 +103,10 @@ Use rustup installation instead."
 
 sudo yum remove 'rust-*'
 
-# Tex Live                                                                  {{{2
-# ------------------------------------------------------------------------------
+
+
+# Tex Live                                                                  {{{1
+# ==============================================================================
 
 # > _koopa_message "\
 # > Removing TeX Live.

@@ -4,45 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 _koopa_assert_has_sudo
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
 
 name="rstudio-server"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 version="$(_koopa_variable "$name")"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install RStudio Server.
-
-$(_koopa_help_args)
-
-see also:
-    https://www.rstudio.com/products/rstudio/download-server/
-
-note:
-    Bash script.
-    Updated 2019-10-01.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

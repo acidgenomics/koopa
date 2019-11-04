@@ -4,48 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 _koopa_assert_has_sudo
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
 
 name="rstudio-server"
 tmp_dir="$(_koopa_tmp_dir)/${name}-pro"
 version="$(_koopa_variable "${name}-pro")"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install RStudio Server Pro.
-
-$(_koopa_help_args)
-
-details:
-    Note that this is also referred to as "Commercial RStudio".
-
-see also:
-    https://www.rstudio.com/products/rstudio/download-commercial/
-
-note:
-    Bash script.
-    Updated 2019-09-26.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 
@@ -63,11 +28,11 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-sudo "$name" stop
-sudo "$name" verify-installation
-sudo "$name" start
-sudo "$name" status
-sudo "$name" license-manager status
+# > sudo "$name" stop
+# > sudo "$name" verify-installation
+# > sudo "$name" start
+# > sudo "$name" status
+# > sudo "$name" license-manager status
 
 command -v "$name"
 "$name" version

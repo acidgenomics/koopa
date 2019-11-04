@@ -4,40 +4,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-usage: link-coreutils-env [--help|-h]
-
-Link coreutils env.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
-
-details:
-    This may be necessary to re-run after yum update on RHEL 7.
-
-note:
-    Bash script.
-    Updated 2019-10-01.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 build_prefix="$(_koopa_build_prefix)"
+
 _koopa_message "Replacing '/usr/bin/env' with '/usr/local/bin/env'."
 
 if [[ ! -L "/usr/bin/env" ]]
