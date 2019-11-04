@@ -8,10 +8,5 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 version="$(wget -q -O - "https://bioconductor.org/bioc-version")"
 echo "$version"
