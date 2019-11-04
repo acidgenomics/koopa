@@ -159,9 +159,8 @@ _koopa_r_javareconf() {
     #   JAVAH          path to a Java header/stub generator
     #   JAR            path to a Java archive tool
     #
-    # Updated 2019-10-22.
-    _koopa_assert_is_installed R
-    _koopa_assert_is_installed java
+    # Updated 2019-11-04.
+    _koopa_assert_is_installed R java
     local java_home
     local java_flags
     local r_home
