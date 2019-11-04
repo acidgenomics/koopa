@@ -37,5 +37,8 @@ remove-broken-symlinks "/data00/bcbio"
 remove-broken-symlinks "/data00/cellranger"
 remove-broken-cellar-symlinks
 
+sudo rm -frv /usr/local/bin/cellranger-2.1.0
+sudo rm -frv /usr/local/bin/miniconda3
+
 koopa update
 koopa check
