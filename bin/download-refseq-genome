@@ -20,10 +20,6 @@ from pykoopa.sys import paste_url, wget  # noqa
 
 # pylint: enable=wrong-import-position
 
-
-# Usage                                                                    {{{1
-# =============================================================================
-
 DESCRIPTION = "Download RefSeq genome."
 EPILOG = """
 details:
@@ -66,10 +62,6 @@ note:
     Python script.
     Updated 2019-10-07.
 """
-
-
-# Arguments                                                                {{{1
-# =============================================================================
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
 
@@ -117,9 +109,7 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
-    "--decompress",
-    action="store_true",
-    help="decompress (but keep) the original file",
+    "--decompress", action="store_true", help="decompress (but keep) the original file"
 )
 args = parser.parse_args()
 
@@ -140,15 +130,9 @@ release_url = paste_url(
     build + "_latest",
     "refseq_identifiers",
 )
-output_dir = kebab_case(
-    organism + " " + build + " " + "refseq" + " " + release
-)
+output_dir = kebab_case(organism + " " + build + " " + "refseq" + " " + release)
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
-
-
-# Script                                                                   {{{1
-# =============================================================================
 
 
 def download_genome(release_url, output_dir, decompress):
@@ -218,19 +202,11 @@ elif type == "all":
     )
 
 if annotation == "gtf":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
+    download_gtf(release_url=release_url, output_dir=output_dir, decompress=decompress)
 elif annotation == "gff":
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
+    download_gff(release_url=release_url, output_dir=output_dir, decompress=decompress)
 elif annotation == "all":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
-    )
+    download_gtf(release_url=release_url, output_dir=output_dir, decompress=decompress)
+    download_gff(release_url=release_url, output_dir=output_dir, decompress=decompress)
 
 print("Genome downloaded successfully to '" + output_dir + "'.")
