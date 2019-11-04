@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Bash shared header script.
-# Updated 2019-09-26.
+# Updated 2019-11-04.
 
 KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"

@@ -2,14 +2,16 @@
 set -eu -o pipefail
 
 # ZSH shared header script.
-# Updated 2019-10-28.
+# Updated 2019-11-04.
 
-script_dir="$(cd "$(dirname "${(%):-%N}")" >/dev/null 2>&1 && pwd -P)"
+KOOPA_ZSH_INC="$(cd "$(dirname "${(%):-%N}")" >/dev/null 2>&1 && pwd -P)"
 
 # Source POSIX functions.
 # shellcheck source=/dev/null
-source "${script_dir}/../../posix/include/functions.sh"
+source "${KOOPA_ZSH_INC}/../../posix/include/functions.sh"
 
 # Source ZSH functions.
 # shellcheck source=/dev/null
-# > source "${script_dir}/functions.sh"
+# > source "${KOOPA_ZSH_INC}/functions.sh"
+
+unset -v KOOPA_ZSH_INC
