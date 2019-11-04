@@ -4,38 +4,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 _koopa_assert_has_sudo
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Lua.
-
-$(_koopa_help_args)
-
-see also:
-    http://www.lua.org/
-
-note:
-    Bash script.
-    Updated 2019-09-30.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-sudo yum install -y \
+sudo yum -y install \
     lua \
     lua-devel \
     lua-filesystem \
@@ -43,4 +16,3 @@ sudo yum install -y \
 
 command -v lua
 lua -v
-

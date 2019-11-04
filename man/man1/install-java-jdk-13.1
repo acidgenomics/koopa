@@ -1,0 +1,35 @@
+
+
+
+    [dir="${jdk_dir}"]
+
+Install Java Development Kit (JDK) 13.
+
+required positional arguments with defaults:
+    1.  JDK installation directory.
+        Defaults to '${jdk_dir}'.
+
+$(_koopa_help_args)
+
+details:
+    Check that other Java versions are not installed before continuing:
+    """sh
+    sudo yum list installed | grep java
+    """
+
+    Clean up on RHEL 7:
+    remove-rhel7-rpm-cruft
+
+    Note that yum installs to '/usr/lib/jvm/' on Fedora.
+    Symlinks are defined in '/etc/alternatives/'.
+
+see also:
+    - https://jdk.java.net/
+    - https://stackoverflow.com/questions/12787757/
+          how-to-use-the-command-update-alternatives-config-java
+    - https://www.digitalocean.com/community/tutorials/
+          how-to-manually-install-oracle-java-on-a-debian-or-ubuntu-vps
+
+note:
+    Bash script.
+    Updated 2019-10-22.

@@ -4,49 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install recommended Homebrew recipes.
-
-$(_koopa_help_args)
-
-details:
-    Refer to Homebrew 'Brewfile' documentation.
-
-    Using CRAN R cask (R.app) instead of Homebrew R.
-
-    Homebrew now supports a global variable to force bottle installations.
-    Alternatively, can use '--force-bottle'.
-
-    Note that XQuartz v2.7.11 doesn't work well with wine.
-    In this case, install v2.7.9 directly instead.
-    https://www.xquartz.org/releases/XQuartz-2.7.9.html
-
-see also:
-    - https://github.com/Homebrew/brew/pull/4520/files
-    - https://github.com/Homebrew/brew/pull/4542/files
-
-note:
-    Bash script.
-    Updated 2019-10-28.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed brew
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-_koopa_assert_is_installed brew
 export HOMEBREW_FORCE_BOTTLE=1
 
 # Casks                                                                     {{{2

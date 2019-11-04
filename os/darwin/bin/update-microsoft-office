@@ -4,34 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Update Microsoft Office from the command line.
-
-$(_koopa_help_args)
-
-details:
-    Calls 'msupdate' script internally.
-
-see also:
-    - https://docs.microsoft.com/en-us/deployoffice/mac/
-          update-office-for-mac-using-msupdate
-    - msupdate --help
-
-note:
-    Bash script.
-    Updated 2019-10-22.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
@@ -43,6 +17,3 @@ _koopa_message "Updating Microsoft Office via 'msupdate'."
 update_exe="/Library/Application Support/Microsoft/MAU2.0/\
 Microsoft AutoUpdate.app/Contents/MacOS/msupdate"
 "$update_exe" --install
-
-
-

@@ -4,28 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Launch SLURM interaction session.
-
-$(_koopa_help_args)
-
-details:
-    1 core; 8 GB RAM; 6 hours; X11 forwarding.
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
 
 

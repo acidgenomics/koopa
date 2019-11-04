@@ -4,6 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
 
 
@@ -14,20 +15,8 @@ _koopa_assert_has_sudo
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-
-EOF
-}
-
-_koopa_help "$@"
+_koopa_assert_is_dir "$source_dir"
+_koopa_assert_is_not_dir "$dest_dir"
 
 
 
@@ -36,10 +25,7 @@ _koopa_help "$@"
 
 sudo service docker stop
 
-_koopa_assert_is_dir "$source_dir"
-_koopa_assert_is_not_dir "$dest_dir"
-
-sudo mv -v "${source_dir}/" "${dest_dir}/"
+sudo mv -v "$source_dir" "$dest_dir"
 sudo ln -fnsv "$dest_dir" "$source_dir"
 
 sudo service docker start

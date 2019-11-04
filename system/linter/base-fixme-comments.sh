@@ -4,7 +4,7 @@ set -Eeu -o pipefail
 # Find FIXME and TODO comments.
 # Updated 2019-10-07.
 
-# Returns with `true` or `false` exit codes.
+# Returns with 'true' or 'false' exit codes.
 
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"

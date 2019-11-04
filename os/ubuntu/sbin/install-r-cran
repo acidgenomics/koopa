@@ -42,7 +42,7 @@ sudo apt-key adv \
     --keyserver keyserver.ubuntu.com \
     --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 
-# Modify `/etc/apt/sources.list` file.
+# Modify '/etc/apt/sources.list' file.
 sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu ${release}-cran35/"
 
 sudo apt-get update

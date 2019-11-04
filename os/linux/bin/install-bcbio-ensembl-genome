@@ -4,55 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    --organism="ORGANISM" --build="BUILD" --release="RELEASE"
-    [--indexes="INDEXES"]
-
-Install Ensembl genome build for bcbio.
-
-required arguments:
-    --organism
-        Full latin name (e.g. "Homo sapiens").
-        Pass this argument in quoted as a string.
-    --build
-        Genome build (e.g. "GRCh38").
-    --release
-        Release version (e.g. "96").
-
-optional arguments:
-    --indexes
-        Aligners to index.
-        Pass this argument in quoted as a string.
-        Default: --indexes "bowtie2 seq star"
-        Note: HISAT2 is disabled by default because it requires a lot of memory
-        to index (e.g. >= 200 GB). This is intended to be run on a high
-        performance cluster, but is often impractical on a virtual machine.
-
-$(_koopa_help_args)
-
-see also:
-    - https://useast.ensembl.org/
-    - https://grch37.ensembl.org/
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-[[ -z "$*" ]] && usage && exit
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
+_koopa_assert_is_installed bcbio_nextgen.py
 
 
 
-# Arguments                                                                 {{{1
+# Variables                                                                 {{{1
 # ==============================================================================
 
 while (("$#"))
@@ -108,16 +66,6 @@ fi
 # Convert string to array.
 indexes=("$indexes")
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-_koopa_assert_is_installed bcbio_nextgen.py
-
-# Internal variables                                                        {{{2
-# ------------------------------------------------------------------------------
-
 # Check for valid organism input.
 if ! echo "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
 then
@@ -128,22 +76,8 @@ fi
 # Use bash built-in rather than sed, when possible.
 organism="${organism// /_}"
 
-cores="$((CPU_COUNT-2))"
-[[ "$cores" -lt 1 ]] && cores=1
-
-# Prepare directories                                                       {{{2
-# ------------------------------------------------------------------------------
-
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
-tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
-mkdir -pv "$log_dir"
-
-# bcbio                                                                     {{{2
-# ------------------------------------------------------------------------------
 
 # e.g. "Hsapiens".
 bcbio_species_dir="$( \
@@ -151,19 +85,32 @@ bcbio_species_dir="$( \
     | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g" \
 )"
 
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+timestamp="$(date "+%Y%m%d-%H%M%S")"
+log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
+
+tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
+cores="$CPU_COUNT"
+
+
+
+# Script                                                                    {{{1
+# ==============================================================================
+
 (
-    rm -frv "$tmp_dir"
+    mkdir -pv "$log_dir"
+    rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
     ensembl-fasta --organism "$organism" --build "$build" --type "dna"
     gtf="${organism}.${build}.dna.primary_assembly.fa"
-    [ ! -f "$fasta" ] && _koopa_stop "FASTA failure."
+    [[ ! -f "$fasta" ]] && _koopa_stop "FASTA failure."
     fasta="$(realpath "$fasta")"
     # e.g. Homo_sapiens.GRCh38.96.gtf
     ensembl-gtf --organism "$organism" --build "$build" --release "$release"
     gtf="${organism}.${build}.${release}.gtf"
-    [ ! -f "$gtf" ] && _koopa_stop "GTF failure."
+    [[ ! -f "$gtf" ]] && _koopa_stop "GTF failure."
     gtf="$(realpath "$gtf")"
     bcbio_setup_genome.py \
         --name "$bcbio_species_dir" \
