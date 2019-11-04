@@ -8,17 +8,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 repo="$1"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 tarball_url="$( \
     curl -s "https://api.github.com/repos/${repo}/releases/latest" | \

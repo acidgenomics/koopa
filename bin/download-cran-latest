@@ -8,17 +8,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 name="$1"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 url="https://cran.r-project.org/web/packages/${name}/"
 pattern="${name}_[.0-9]+.tar.gz"

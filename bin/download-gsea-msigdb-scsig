@@ -8,18 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
 version="1.0"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 wget "${base_url}/scsig.all.v${version}.symbols.gmt"
 wget "${base_url}/scsig.all.v${version}.entrez.gmt"
