@@ -17,7 +17,7 @@ _koopa_message "\
 Removing R.
 Use the newer R installation at '/usr/local/lib64/R' instead."
 
-sudo yum remove \
+sudo yum -y remove \
     'R' \
     'R-*' \
     'libRmath' \
@@ -33,7 +33,7 @@ _koopa_message "\
 Removing Java.
 Use the newer JDK installation at '/opt/jdk' instead."
 
-sudo yum remove \
+sudo yum -y remove \
     '*-openjdk*' \
     'java-*'
 
@@ -46,7 +46,7 @@ _koopa_message "\
 Removing Pandoc.
 Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
 
-sudo yum remove \
+sudo yum -y remove \
     '*-pandoc' \
     '*-pandoc-*' \
     'pandoc' \
@@ -61,7 +61,7 @@ _koopa_message "\
 Removing Perl CPAN Minus.
 Use Perlbrew approach instead."
 
-sudo yum remove \
+sudo yum -y remove \
     'perl-App-cpanminus'
 
 
@@ -70,7 +70,12 @@ sudo yum remove \
 # ==============================================================================
 
 # Uma installed this on VM44.
-sudo yum remove 'python3*'
+
+_koopa_message "\
+Removing Python 3 yum install.
+Install from source using cellar script instead."
+
+sudo yum -y remove 'python3*'
 
 # Use a newer version of pip in a virtual environment instead.
 
@@ -104,7 +109,7 @@ _koopa_message "\
 Removing Rust.
 Use rustup installation instead."
 
-sudo yum remove 'rust-*'
+sudo yum -y remove 'rust-*'
 
 
 
@@ -115,7 +120,7 @@ sudo yum remove 'rust-*'
 # > Removing TeX Live.
 # > Use conda version instead at '/usr/local/miniconda3/envs/texlive-core'."
 # >
-# > sudo yum remove \
+# > sudo yum -y remove \
 # >     '*-tex' \
 # >     'latex2html' \
 # >     'texi2html' \
