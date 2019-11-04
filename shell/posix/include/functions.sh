@@ -1705,6 +1705,31 @@ _koopa_info_box() {
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
+_koopa_install_mike() {
+    # Install additional Mike-specific config files.
+    # Updated 2019-11-04.
+    install-dotfiles --mike
+    # docker
+    source_repo="git@github.com:acidgenomics/docker.git"
+    target_dir="$(_koopa_config_dir)/docker"
+    if [[ ! -d "$target_dir" ]]
+    then
+        git clone --recursive "$source_repo" "$target_dir"
+    fi
+    # scripts-private
+    source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
+    target_dir="$(_koopa_config_dir)/scripts-private"
+    if [[ ! -d "$target_dir" ]]
+    then
+        git clone --recursive "$source_repo"  "$target_dir"
+    fi
+    # Use SSH instead of HTTPS.
+    (
+        cd "$KOOPA_HOME" || exit 1
+        git remote set-url origin "git@github.com:acidgenomics/koopa.git"
+    )
+}
+
 _koopa_invalid_arg() {
     # Error on invalid argument.
     # Updated 2019-10-23.

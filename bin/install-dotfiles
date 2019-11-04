@@ -7,9 +7,62 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
+while (("$#"))
+do
+    case "$1" in
+        --mike)
+            mike=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+
+
+# dotfiles                                                                  {{{1
+# ==============================================================================
+
 source_repo="${1:-"https://github.com/mjsteinbaugh/dotfiles.git"}"
-
 target_dir="$(_koopa_home)/dotfiles"
-_koopa_assert_is_not_dir "$target_dir"
+if [[ -d "$target_dir" ]]
+then
+    _koopa_note "Dotfiles already installed at '${target_dir}'."
+else
+    _koopa_message "Installing dotfiles into '${target_dir}'."
+    git clone --recursive "$source_repo" "$target_dir"
+    if [[ -x "${target_dir}/INSTALL.sh" ]]
+    then
+        "${target_dir}/INSTALL.sh"
+    fi
+fi
+if [[ "$mike" -eq 1 ]]
+then
+    (
+        cd "$target_dir" || exit 1
+        git remote set-url origin "git@github.com:mjsteinbaugh/dotfiles.git"
+    )
+fi
 
-git clone --recursive "$source_repo" "$target_dir"
+
+
+# dotfiles-private                                                          {{{1
+# ==============================================================================
+
+if [[ "$mike" -eq 1 ]]
+then
+    source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
+    target_dir="$(_koopa_config_dir)/dotfiles-private"
+    if [[ -d "$target_dir" ]]
+    then
+        _koopa_note "Dotfiles already installed at '${target_dir}'."
+    else
+        git clone --recursive "$source_repo" "$target_dir"
+        if [[ -x "${target_dir}/INSTALL.sh" ]]
+        then
+            "${target_dir}/INSTALL.sh"
+        fi
+    fi
+fi
