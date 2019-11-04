@@ -4,34 +4,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Git large file storage (LFS).
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-26.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+url="https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh"
+curl -s "$url" | sudo bash
 sudo apt-get -y install git git-lfs
 git lfs install

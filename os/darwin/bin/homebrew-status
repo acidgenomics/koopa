@@ -4,38 +4,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Homebrew status.
-
-$(_koopa_help_args)
-
-see also:
-    - brew doctor
-    - brew linkage
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_no_args "$@"
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed brew
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
-
-_koopa_assert_is_installed brew
 
 _koopa_message "dependency tree:"
 brew deps --installed --tree

@@ -4,41 +4,18 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Symlink Desktop and Documents on Dropbox.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-26.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_sudo
 
 
 
 # Script                                                                    {{{1
 # ==============================================================================
 
-# Desktop.
-sudo rm -rv ~/Desktop
-ln -fnsv ~/Dropbox/Desktop ~/.
+sudo rm -rv "${HOME}/Desktop"
+ln -fnsv "${HOME}/Dropbox/Desktop" "${HOME}/."
 
-# Documents.
-sudo rm -rv ~/Documents
-ln -fnsv ~/Dropbox/Documents ~/.
+sudo rm -rv "${HOME}/Documents"
+ln -fnsv "${HOME}/Dropbox/Documents" "${HOME}/."
 
-# Relaunch Finder.
 sudo killAll Finder

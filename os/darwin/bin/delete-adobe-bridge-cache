@@ -4,35 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
-dir="."
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Delete Adobe Bridge cache files.
-
-$(_koopa_help_args)
-
-details:
-    Searches recursively for '.BridgeCache' and '.BridgeCacheT' files.
-
-note:
-    Bash script.
-    Updated 2019-07-27.
-EOF
-}
-
 _koopa_help "$@"
 
 
@@ -40,7 +11,7 @@ _koopa_help "$@"
 # Arguments                                                                 {{{1
 # ==============================================================================
 
-dir="${1:-$dir}"
+dir="${1:-"."}"
 
 
 

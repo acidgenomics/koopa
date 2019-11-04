@@ -4,26 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Update macOS defaults.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-25.
-EOF
-}
-
 _koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 
 
@@ -42,12 +24,12 @@ defaults write NSGlobalDomain NSWindowResizeTime .001
 killall Dock
 killall Finder
 
-# Don't write `.DS_Store` files to network storage.
+# Don't write '.DS_Store' files to network storage.
 defaults write com.apple.desktopservices DSDontWriteNetworkStores true
 
 # Save screenshots into Documents, instead of Desktop.
 screenshots_dir="${HOME}/Documents/Screenshots"
-mkdir -p "$screenshots_dir"
+mkdir -pv "$screenshots_dir"
 defaults write com.apple.screencapture disable-shadow -bool true
 defaults write com.apple.screencapture location "$screenshots_dir"
 defaults write com.apple.screencapture name Screenshot

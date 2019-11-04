@@ -4,32 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Load R 3.5.1 module.
-
-$(_koopa_help_args)
-
-details:
-    Depends on GCC 6.2.
-    Also loads HDF5, GSL.
-
-see also:
-    module spider R/3.5.1
-
-note:
-    Bash script.
-    Updated 2019-06-23.
-EOF
-}
-
 _koopa_help "$@"
 
 

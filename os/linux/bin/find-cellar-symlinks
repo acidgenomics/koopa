@@ -4,43 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-    name [version]
-
-Find cellar symbolic links.
-
-required positional arguments:
-    1.  Program name.
-
-optional positional arguments:
-    2.  Program version.
-        If left unset, the script looks for the latest version installed.
-
-$(_koopa_help_args)
-
-details:
-    Find symbolic links for a cellarized program installed by koopa.
-
-examples:
-    find-cellar-symlinks R 3.6.1
-    find-cellar-symlinks emacs 26.3
-    find-cellar-symlinks vim
-
-note:
-    Bash script.
-    Updated 2019-10-23.
-EOF
-}
-
-_koopa_assert_has_args "$@"
 _koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 
 

@@ -4,73 +4,19 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Use Spider Cache on Loads................................... : NO
-
-# RHEL 7 alternative:
-# > sudo yum -y install Lmod
-# > sudo yum-builddep -y Lmod
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_assert_is_installed lua luarocks
 
 name="lmod"
 version="$(_koopa_variable "$name")"
 prefix="/opt/apps"
+_koopa_assert_is_not_dir "$prefix"
 data_dir="/opt/moduleData"
+_koopa_assert_is_not_dir "$data_dir"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Lmod.
-
-$(_koopa_help_args)
-
-details:
-    Ensure Lua and LuaRocks are installed prior to this step.
-
-    Installs into:
-    - '${prefix}'
-    - '${data_dir}'
-
-see also:
-    - https://lmod.readthedocs.io/
-    - https://lmod.readthedocs.io/en/latest/030_installing.html
-
-note:
-    Bash script.
-    Updated 2019-10-02.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-_koopa_assert_is_installed lua luarocks
-# > _koopa_assert_is_not_dir "$prefix"
-
 _koopa_message "Installing ${name} ${version}."
-
-sudo mkdir -pv "$prefix"
 
 (
     rm -fr "$tmp_dir"
@@ -88,15 +34,16 @@ sudo mkdir -pv "$prefix"
 )
 
 # bash, zsh:
-sudo ln -fnsv /opt/apps/lmod/lmod/init/profile \
-    /etc/profile.d/z00_lmod.sh
+sudo ln -fnsv "/opt/apps/lmod/lmod/init/profile" \
+    "/etc/profile.d/z00_lmod.sh"
+
 # csh, tcsh:
 # > sudo ln -fnsv /opt/apps/lmod/lmod/init/cshrc \
 # >     /etc/profile.d/z00_lmod.csh
+
 # fish:
 # > sudo ln -fnsv /opt/apps/lmod/lmod/init/profile.fish \
 # >     /etc/fish/conf.d/z00_lmod.fish
 
 module --version
 # > module spider
-

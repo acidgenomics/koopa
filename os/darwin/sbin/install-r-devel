@@ -4,6 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 _koopa_assert_has_sudo
 
 
@@ -14,39 +16,6 @@ _koopa_assert_has_sudo
 r_version="3.6-branch"
 macos_version="el-capitan"
 tmp_dir="$(_koopa_tmp_dir)/r-devel"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install R-devel for macOS.
-
-$(_koopa_help_args)
-
-details:
-    Note that this step will overwrite an existing R installation, located at:
-    '/Library/Frameworks/R.framework'.
-
-    If necessary, rename your previous install first (e.g. 'R-3.6.1.framework').
-    Use symlinks to point 'R.framework' to a specific version.
-
-    Pulling down a bioc-devel Docker image is now recommended instead.
-
-see also:
-    https://mac.r-project.org/
-
-note:
-    Bash script.
-    Updated 2019-10-24.
-EOF
-}
-
-_koopa_help "$@"
 
 
 

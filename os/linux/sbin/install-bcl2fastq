@@ -4,52 +4,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_assert_is_installed rpm
 
 name="bcl2fastq"
 version="$(_koopa_variable "$name")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 prefix="$(_koopa_build_prefix)/${name}"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Illumina BCL to FASTQ converter.
-
-$(_koopa_help_args)
-
-details:
-    Installs to '${prefix}'.
-
-see also:
-    https://support.illumina.com/content/dam/illumina-support/documents/
-        downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip
-
-note:
-    Bash script.
-    Updated 2019-10-16.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-_koopa_assert_is_installed rpm
 
 _koopa_message "Installing ${name} ${version}."
 

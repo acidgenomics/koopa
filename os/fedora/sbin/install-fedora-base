@@ -4,49 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Install Rust using rustup instead.
-# sudo yum install cargo rust rust-doc
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install base programs for Fedora.
-
-$(_koopa_help_args)
-
-details:
-    Singularity dependencies:
-    - libseccomp-devel
-    - libuuid-devel
-    - openssl-devel
-    - squashfs-tools
-    - wget
-
-note:
-    Bash script.
-    Updated 2019-10-21.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_sudo
 
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"

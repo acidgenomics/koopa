@@ -4,39 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install base programs recommended for Debian.
-
-$(_koopa_help_args)
-
-note:
-    Bash script.
-    Updated 2019-09-26.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_sudo
+_koopa_assert_has_no_args "$@"
 
 sudo apt-get update
 
 # Following the recommendations in docker-bioconductor recipes.
 # https://github.com/acidgenomics/docker-bioconductor
-sudo apt-get install -y \
+sudo apt-get -y install \
     autoconf \
     automake \
     cargo \
@@ -64,7 +40,7 @@ sudo apt-get install -y \
     xorg
 
 # Extra programs that are useful on an interactive VM.
-sudo apt-get install -y \
+sudo apt-get -y install \
     emacs \
     git \
     gnupg2 \

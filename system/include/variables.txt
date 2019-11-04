@@ -133,7 +133,7 @@ rmate="1.0.2"
 rstudio-server="1.2.5001"
 
 # https://www.rstudio.com/products/rstudio/download-commercial/
-# Current version seems to be buggy with Shiny `runApp()`.
+# Current version seems to be buggy with Shiny 'runApp()'.
 # Previous stable: 1.2.1335-1
 rstudio-server-pro="1.2.5001-3"
 

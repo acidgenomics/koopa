@@ -21,7 +21,7 @@ bcbio_dir="/usr/local/bcbio"
 
 _koopa_message "Updating symlinks."
 
-# Remove existing symlinks in `/usr/local/bin`.
+# Remove existing symlinks in '/usr/local/bin'.
 sudo rm -fv /usr/local/bin/bcbio_nextgen.py*
 
 (

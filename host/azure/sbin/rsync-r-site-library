@@ -71,7 +71,7 @@ then
 fi
 
 # Assuming we're symlinking the cellarized R site library.
-# This will work for system R at `/usr/lib64/R` also.
+# This will work for system R at '/usr/lib64/R' also.
 sudo rm -frv "${r_home}/site-library"
 sudo ln -fnsv "$lib_link" "${r_home}/site-library"
 

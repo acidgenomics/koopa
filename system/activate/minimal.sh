@@ -140,7 +140,7 @@ then
 fi
 
 # TODAY
-# Current date. Alternatively, can use `%F` shorthand.
+# Current date. Alternatively, can use '%F' shorthand.
 if [ -z "${TODAY:-}" ]
 then
     TODAY="$(date +%Y-%m-%d)"
@@ -185,15 +185,15 @@ then
     export HISTIGNORE="&:ls:[bf]g:exit"
 fi
 
-# Add the date/time to `history` command output.
-# Note that on macOS bash will fail if `set -e` is set and this isn't exported.
+# Add the date/time to 'history' command output.
+# Note that on macOS bash will fail if 'set -e' is set and this isn't exported.
 if [ -z "${HISTTIMEFORMAT:-}" ]
 then
     export HISTTIMEFORMAT="%Y%m%d %T  "
 fi
 
 # For bash users, autojump keeps track of directories by modifying
-# `$PROMPT_COMMAND`. Do not overwrite `$PROMPT_COMMAND`:
+# '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND':
 # https://github.com/wting/autojump
 # > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
 if [ -z "${PROMPT_COMMAND:-}" ]
@@ -246,7 +246,7 @@ export CPU_COUNT
 # ==============================================================================
 
 # Note that here we're making sure local binaries are included.
-# Inspect `/etc/profile` if system PATH appears misconfigured.
+# Inspect '/etc/profile' if system PATH appears misconfigured.
 
 # See also:
 # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard

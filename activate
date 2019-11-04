@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-11-01.
+    Updated 2019-11-03.
 EOF
 }
 
@@ -291,7 +291,12 @@ fi
 
 if [ "$test" -eq 1 ]
 then
-    duration_start="$(date -u +%s)"
+    if [ "$(uname -s)" = "Darwin" ]
+    then
+        duration_start="$(gdate -u +%s%3N)"
+    else
+        duration_start="$(date -u +%s%3N)"
+    fi
 fi
 
 if [ ! -f "$file" ]
@@ -391,9 +396,14 @@ fi
 
 if [ "$test" -eq 1 ]
 then
-    duration_stop="$(date -u +%s)"
+    if [ "$(uname -s)" = "Darwin" ]
+    then
+        duration_stop="$(gdate -u +%s%3N)"
+    else
+        duration_stop="$(date -u +%s%3N)"
+    fi
     duration="$(bc <<<"$duration_stop-$duration_start")"
-    echo "Activation was successful (${duration} seconds)."
+    echo "Activation was successful (${duration} ms)."
     set +o errexit
     set +o nounset
     if [ -n "${BASH_VERSION:-}" ]
