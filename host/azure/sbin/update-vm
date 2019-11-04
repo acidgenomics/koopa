@@ -1,0 +1,7 @@
+sudo yum update -y
+install-rhel7-base
+remove-rhel7-rpm-cruft
+
+rsync-bcbio
+rsync-miniconda3
+rsync-r-site-library

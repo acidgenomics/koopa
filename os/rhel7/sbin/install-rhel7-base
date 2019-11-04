@@ -20,7 +20,8 @@ sudo yum -y install \
     libssh2-devel \
     llvm \
     llvm-devel \
-    pandoc \
-    pandoc-citeproc \
     sshpass \
     udunits2-devel
+
+# Now using conda to manage Pandoc instead.
+# > sudo yum -y install pandoc pandoc-citeproc
