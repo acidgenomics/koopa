@@ -22,8 +22,9 @@ then
 fi
 
 # Ensure that reboot script has correct permissions.
+# This will get fixed automatically in the 'koopa update' call below.
 # > sudo crontab -e
-sudo chown root:wheel "${KOOPA_HOME}/host/azure/config/etc/reboot.sh"
+# > sudo chown root:wheel "${KOOPA_HOME}/host/azure/config/etc/reboot.sh"
 
 # Ensure that shared bioinfo user has correct dotfiles.
 sudo -u bioinfo -H "$SHELL" -c "\
@@ -36,4 +37,5 @@ remove-broken-symlinks "/data00/bcbio"
 remove-broken-symlinks "/data00/cellranger"
 remove-broken-cellar-symlinks
 
+koopa update
 koopa check
