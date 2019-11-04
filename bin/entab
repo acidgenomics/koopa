@@ -9,11 +9,6 @@ _koopa_help "$@"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed vim
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 vim \
     -c "set noexpandtab tabstop=4 shiftwidth=4" \
     -c :%retab! \

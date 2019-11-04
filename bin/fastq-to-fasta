@@ -5,14 +5,6 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_help "$@"
-_koopa_assert_has_args "$@"
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
 # Alternate approaches:
 #
 # > seqtk seq -A
@@ -24,18 +16,11 @@ _koopa_assert_has_args "$@"
 # >     awk -v FS="\t" '{print $1"\n"$2}' > \
 # >     "$fasta_file"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_help "$@"
+_koopa_assert_has_args "$@"
 
 source_dir="."
 target_dir="."
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 while (("$#"))
 do
@@ -62,14 +47,8 @@ do
     esac
 done
 
-# Handle trailing directory '/' automatically.
 source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
 target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # Put unique samples into an array and loop.
 array=()

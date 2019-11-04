@@ -8,23 +8,12 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 source_dir="$1"
-target_dir="$2"
-
 _koopa_assert_is_dir "$source_dir"
-_koopa_assert_is_dir "$target_dir"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 source_dir="$(realpath "$source_dir")"
+
+target_dir="$2"
+_koopa_assert_is_dir "$target_dir"
 target_dir="$(realpath "$target_dir")"
 
 _koopa_message "\

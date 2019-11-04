@@ -9,17 +9,7 @@ _koopa_help "$@"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed docker
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 workdir="/work"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 POSITIONAL=()
 while (("$#"))
@@ -50,11 +40,6 @@ set -- "${POSITIONAL[@]}"
 
 image="$1"
 workdir="$(_koopa_strip_trailing_slash "$workdir")"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 docker pull "$image"
 docker run -it \

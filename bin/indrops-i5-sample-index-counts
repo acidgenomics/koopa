@@ -7,18 +7,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 dir="${1:-"."}"
 dir="$(_koopa_strip_trailing_slash "$dir")"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 gzip -cd "${dir}/"*"_R3.fastq.gz" | \
     head -n -1000000 | \

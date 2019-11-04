@@ -8,18 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="autojump"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name}."
 

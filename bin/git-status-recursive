@@ -7,17 +7,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 dir="${1:-"."}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # Using '-L' flag here in case git dir is a symlink.
 while IFS= read -r -d '' repo

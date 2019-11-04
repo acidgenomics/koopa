@@ -7,19 +7,9 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 source_dir="."
 target_dir="."
 prefix="lanepool"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 while (("$#"))
 do
@@ -54,14 +44,8 @@ do
     esac
 done
 
-# Handle trailing directory '/' automatically.
 source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
 target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # Put unique samples into an array and loop.
 array=()

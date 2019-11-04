@@ -8,18 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 prefix="sample"
 padwidth=2
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 POSITIONAL=()
 while (("$#"))
@@ -56,11 +46,6 @@ do
 done
 set -- "${POSITIONAL[@]}"
 files=("$@")
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 for file in "${files[@]}"
 do

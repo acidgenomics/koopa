@@ -8,12 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 prefix="$(_koopa_build_prefix)"
+
 find "$prefix" \
     -type f \
     \( \
@@ -30,4 +26,3 @@ find "$prefix" \
     \) \
     -not -path "${prefix}/share/emacs/site-lisp/*" \
     | sort
-

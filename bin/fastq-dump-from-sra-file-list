@@ -9,18 +9,8 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed fastq-dump
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 filelist="${1:-"SRR_Acc_List.txt"}"
 _koopa_assert_is_file "$filelist"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 while read -r id
 do

@@ -7,17 +7,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 dir="${1:-"."}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # SC2044: For loops over find output are fragile.
 # Using '-L' flag here in case git dir is a symlink.

@@ -30,11 +30,8 @@ _koopa_assert_is_installed conda
 
 
 
-# Script                                                                    {{{1
+# Base                                                                      {{{1
 # ==============================================================================
-
-# Base                                                                      {{{2
-# ------------------------------------------------------------------------------
 
 conda create -qy --name="bioinfo-base" \
     bamtools \
@@ -46,8 +43,10 @@ conda create -qy --name="bioinfo-base" \
     samtools \
     seqtk
 
-# Workflows                                                                 {{{2
-# ------------------------------------------------------------------------------
+
+
+# Workflows                                                                 {{{1
+# ==============================================================================
 
 # > conda-create-env cromwell
 # > conda-create-env fgbio
@@ -55,8 +54,10 @@ conda create -qy --name="bioinfo-base" \
 
 conda-create-env nextflow
 
-# Tools                                                                     {{{2
-# ------------------------------------------------------------------------------
+
+
+# Tools                                                                     {{{1
+# ==============================================================================
 
 # > conda-create-env wgsim
 
@@ -67,8 +68,10 @@ conda-create-env pandoc
 conda-create-env sra-tools
 conda-create-env texlive-core
 
-# Quality control                                                           {{{2
-# ------------------------------------------------------------------------------
+
+
+# Quality control                                                           {{{1
+# ==============================================================================
 
 conda-create-env fastqc
 conda-create-env kraken
@@ -76,8 +79,10 @@ conda-create-env multiqc
 conda-create-env picard
 conda-create-env qualimap
 
-# Aligners                                                                  {{{2
-# ------------------------------------------------------------------------------
+
+
+# Aligners                                                                  {{{1
+# ==============================================================================
 
 conda-create-env bowtie2
 conda-create-env bwa
@@ -89,21 +94,27 @@ conda-create-env rsem
 conda-create-env salmon
 conda-create-env star
 
-# ChIP-seq                                                                  {{{2
-# ------------------------------------------------------------------------------
+
+
+# ChIP-seq                                                                  {{{1
+# ==============================================================================
 
 conda-create-env chromhmm
 conda-create-env deeptools
 conda-create-env homer
 conda-create-env macs2
 
-# Fusion detection                                                          {{{2
-# ------------------------------------------------------------------------------
+
+
+# Fusion detection                                                          {{{1
+# ==============================================================================
 
 conda-create-env arriba
 conda-create-env ericscript
 conda-create-env oncofuse
 conda-create-env pizzly
 conda-create-env star-fusion
+
+
 
 conda env list
