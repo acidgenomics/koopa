@@ -36,6 +36,7 @@ Use the newer JDK installation at '/opt/jdk' instead."
 sudo yum -y remove \
     '*-openjdk*' \
     'java-*'
+sudo rm -frv /usr/lib/jvm/*
 
 
 
