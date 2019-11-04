@@ -4,34 +4,11 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed lua
 
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# Debian:
-# > sudo apt install build-essential libreadline-dev
-
-# Fedora:
-# > install-lua
-
-# > install-cellar-lua
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="luarocks"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/${name}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

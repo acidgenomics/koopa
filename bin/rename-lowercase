@@ -7,11 +7,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 _koopa_assert_is_installed rename
+
 rename -f 'y/A-Z/a-z/' "$@"

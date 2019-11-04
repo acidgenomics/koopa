@@ -7,21 +7,11 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
 
 _koopa_assert_is_dir "$source_dir"
 _koopa_assert_is_not_dir "$dest_dir"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 sudo service docker stop
 

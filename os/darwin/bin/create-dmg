@@ -6,20 +6,10 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 dir="${1:-"."}"
 _koopa_assert_is_dir "$dir"
 
 dir="$(realpath "$dir")"
 name="$(basename "$dir")"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 hdiutil create -volname "$name" -srcfolder "$dir" -ov "${name}.dmg"

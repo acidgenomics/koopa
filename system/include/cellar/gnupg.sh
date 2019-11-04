@@ -3,22 +3,12 @@
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="gnupg"
 version="$(_koopa_variable gpg)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 exe_file="${prefix}/bin/gpg"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

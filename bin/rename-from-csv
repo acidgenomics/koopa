@@ -8,18 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 file="$1"
 _koopa_assert_is_file_type "$file" "csv"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 while read -r line
 do

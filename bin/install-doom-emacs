@@ -7,23 +7,14 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="doom"
 repo="https://github.com/hlissner/doom-emacs"
 emacs_home="${HOME}/.emacs.d"
-install_dir="${emacs_home}-${name}"
-exe_file="${install_dir}/bin/doom"
 
+install_dir="${emacs_home}-${name}"
 _koopa_assert_is_not_dir "$install_dir"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+exe_file="${install_dir}/bin/doom"
 
 git clone "$repo" "$install_dir"
 link-emacs "$name"

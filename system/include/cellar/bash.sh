@@ -3,11 +3,6 @@
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="bash"
 version="$(_koopa_variable "$name")"
 major_version="$(_koopa_major_version "$version")"
@@ -17,11 +12,6 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 gnu_mirror="https://ftpmirror.gnu.org"
 exe_file="${prefix}/bin/${name}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

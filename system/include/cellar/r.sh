@@ -4,11 +4,6 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed java javac tex
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="r"
 version="$(_koopa_variable "$name")"
 major_version="$(echo "$version" | cut -d "." -f 1)"
@@ -16,11 +11,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/R"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing R ${version}."
 

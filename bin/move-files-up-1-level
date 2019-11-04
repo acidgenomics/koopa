@@ -6,13 +6,12 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
-_koopa_assert_has_no_args "$@"
 
+dir="${1:-"."}"
 
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-find . -type f -mindepth 2 -exec mv {} . \;
-find . -mindepth 2
-find . -type d -delete -print
+(
+    cd "$dir" || exit 1
+    find . -type f -mindepth 2 -exec mv {} . \;
+    find . -mindepth 2
+    find . -type d -delete -print
+)

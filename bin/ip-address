@@ -8,14 +8,13 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 if _koopa_is_darwin
 then
-    ifconfig | grep "inet " | grep "broadcast" | awk '{print $2}' | sort
+    ifconfig \
+    | grep "inet " \
+    | grep "broadcast" \
+    | awk '{print $2}' \
+    | sort
 else
     hostname -I | awk '{print $1}'
 fi

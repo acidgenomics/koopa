@@ -5,11 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
 
 module load gcc/6.2.0
 module load R/3.5.1

@@ -8,11 +8,6 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_sudo
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 sudo rm -frv /Library/Developer/CommandLineTools
 xcode-select --install
 sudo xcodebuild -license accept

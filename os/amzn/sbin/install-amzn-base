@@ -6,11 +6,6 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 install-fedora-base
 
 # Install utils such as chsh.

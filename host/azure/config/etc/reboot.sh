@@ -1,12 +1,7 @@
 #!/bin/sh
 
 # CPI Azure VM start-up script that runs at reboot.
-# Updated 2019-10-31.
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
+# Updated 2019-11-03.
 
 # Avoid writing our config files into '/etc/' when possible.
 # Use '/usr/local/' instead, especially for program installs.
@@ -21,11 +16,6 @@
 # Don't overwrite existing lines there, they're important for authentication.
 # > sudo crontab -e
 # @reboot /usr/local/koopa/host/azure/config/etc/reboot.sh
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 if [ -e "/mnt/resource" ]
 then

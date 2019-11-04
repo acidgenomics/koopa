@@ -8,18 +8,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 url="ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 version="$( \
     curl --list-only --silent "$url" | \
     grep -Eo "letter.WS[0-9]+" | \

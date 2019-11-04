@@ -6,10 +6,5 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 rm -frv "${HOME}/msigdb"
 ln -fnsv "/mnt/azbioinfoseq01/Reference/msigdb" "${HOME}/."

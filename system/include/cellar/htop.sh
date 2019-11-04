@@ -4,41 +4,12 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed python
 
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# htop may fail to compile/load due to libncurses.
-# We can fix this by disabling Unicode support in the build.
-#
-# error while loading shared libraries: libncursesw.so.6
-#
-# Current configuration on RHEL 7 has libncursesw.so.5
-#
-# ldconfig -p | grep libncurses
-# ldconfig -p | grep libtinfow
-# ldd ./htop
-#
-# See also:
-# - https://github.com/hishamhm/htop/issues/858
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="htop"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

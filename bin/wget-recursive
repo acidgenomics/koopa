@@ -8,18 +8,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_file="wget-${timestamp}.log"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 url="$1"
 user="$2"
@@ -29,11 +19,6 @@ user="$2"
 # See also: https://unix.stackexchange.com/questions/379181
 password="$3"
 password="${password@Q}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 wget \
     --user="$user" \

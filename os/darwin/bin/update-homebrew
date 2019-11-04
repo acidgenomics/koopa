@@ -13,11 +13,6 @@ then
     exit 0
 fi
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 brew analytics off
 
 _koopa_message "Updating Homebrew."

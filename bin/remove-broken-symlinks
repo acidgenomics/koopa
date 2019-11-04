@@ -7,18 +7,8 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 
-
-
-# Arguments    i                                                            {{{1
-# ==============================================================================
-
 dir="${1:-"."}"
 dir="$(realpath "$dir")"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Removing broken symlinks in '${dir}'."
 

@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 _koopa_message "Updating Microsoft Office via 'msupdate'."
 
 update_exe="/Library/Application Support/Microsoft/MAU2.0/\

@@ -10,21 +10,6 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_environments
 _koopa_assert_is_installed rbenv
 
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
-# > rbenv install -l
-
-# Ensure installation uses system OpenSSL.
-# > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 version="$(_koopa_variable ruby)"
 
 # Ensure ruby-build is current.

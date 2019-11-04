@@ -6,23 +6,14 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
 
 name="spacemacs"
 repo="https://github.com/syl20bnr/spacemacs.git"
 emacs_home="${HOME}/.emacs.d"
+
 install_dir="${emacs_home}-${name}"
-
 _koopa_assert_is_not_dir "$install_dir"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 git clone "$repo" "$install_dir"
 link-emacs "$name"

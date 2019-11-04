@@ -7,18 +7,8 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 name="$1"
 version="${2:-}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 build_prefix="$(_koopa_build_prefix)"
 

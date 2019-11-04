@@ -3,11 +3,6 @@
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 name="vim"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -20,11 +15,6 @@ build_prefix="$(_koopa_build_prefix)"
 python3_exe="${build_prefix}/bin/python3"
 python3_config_exe="${python3_exe}-config"
 python3_config_dir="$("$python3_config_exe" --configdir)"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 

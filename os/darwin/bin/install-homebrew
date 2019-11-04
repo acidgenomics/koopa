@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 # Install Xcode CLT.
 xcode-select --install
 

@@ -7,9 +7,4 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 sudo xattr -r -d com.apple.quarantine /Applications/*.app

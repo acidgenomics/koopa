@@ -6,12 +6,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
-_koopa_assert_is_installed perl perlbrew
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_is_installed cpan perl perlbrew
 
 cpan App::cpanminus
 cpanm File::Rename

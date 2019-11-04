@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-_koopa_help "$@"
-_koopa_assert_has_no_args "$@"
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
 # The '--enable-optimizations' flag can boost Python performance by ~10% but
 # currently runs into build issues with old compilation chains (e.g. GCC 4),
 # which are common on RHEL and other conservative cluster/VM configurations.
@@ -20,10 +12,8 @@ _koopa_assert_has_no_args "$@"
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
 
 name="python"
 version="$(_koopa_variable "$name")"
@@ -31,11 +21,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/python3"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Installing ${name} ${version}."
 
