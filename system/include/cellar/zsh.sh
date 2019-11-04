@@ -17,10 +17,9 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    file="zsh.tar.xz"
-    curl -o "$file" \
-        "https://sourceforge.net/projects/zsh/files/zsh/${version}/\
-zsh-${version}.tar.xz/download"
+    file="zsh-${version}.tar.xz"
+    wget -O "$file" "https://sourceforge.net/projects/zsh/files/\
+zsh/${version}/${file}/download"
     _koopa_extract "$file"
     cd "zsh-${version}" || exit 1
     ./configure \
