@@ -78,7 +78,6 @@ if [[ "$config" -eq 1 ]]
 then
     if [[ -z "${XDG_CONFIG_HOME:-}" ]]
     then
-        _koopa_warning "'XDG_CONFIG_HOME' is unset."
         XDG_CONFIG_HOME="${HOME}/.config"
     fi
     symlink_path="${XDG_CONFIG_HOME}/${symlink_name}"
