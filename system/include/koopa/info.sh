@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
-
-# Show koopa installation information.
-# Updated 2019-10-28.
+source "${script_dir}/../../../shell/bash/include/header.sh"
 
 shell="$KOOPA_SHELL"
 shell="${shell} $(_koopa_"${shell}"_version)"
