@@ -5,41 +5,13 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_assert_has_sudo
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install TeX packages using tlmgr.
-
-$(_koopa_help_args)
-
-see also:
-    - https://github.com/vsbuffalo/dotfiles
-
-note:
-    Bash script.
-    Updated 2019-10-28.
-EOF
-}
-
 _koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_sudo
 
 _koopa_message "Installing TeX packages recommended for RStudio."
 
 sudo tlmgr update --self
-
 
 packages=(
     collection-fontsrecommended  # priority
