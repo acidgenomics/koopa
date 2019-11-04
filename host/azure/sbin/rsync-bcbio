@@ -13,7 +13,12 @@ host_ip="$(ip-address)"
 source_ip="10.100.100.135"
 
 bcbio_dir="/usr/local/bcbio"
-_koopa_assert_is_dir "$bcbio_dir"
+
+if [[ ! -d "$bcbio_dir" ]]
+then
+    _koopa_note "bcbio is not installed at '${bcbio_dir}'. Skipping."
+    exit 0
+fi
 
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
