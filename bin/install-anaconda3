@@ -37,6 +37,9 @@ _koopa_prefix_mkdir "$prefix"
     rm -fr "$tmp_dir"
 )
 
+ln -fnsv "${KOOPA_HOME}/os/linux/conda/condarc" \
+    "${prefix}/.condarc"
+
 _koopa_set_permissions "$prefix"
 
 command -v "$exe_file"
