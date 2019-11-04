@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 source_user="$USER"
 
 host_ip="$(ip-address)"
@@ -27,11 +22,6 @@ r_home="$(_koopa_r_home)"
 
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
@@ -74,4 +64,3 @@ fi
 # This will work for system R at '/usr/lib64/R' also.
 sudo rm -frv "${r_home}/site-library"
 sudo ln -fnsv "$lib_link" "${r_home}/site-library"
-

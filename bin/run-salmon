@@ -9,11 +9,6 @@ _koopa_help "$@"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed salmon
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 # Note that bcbio currently uses 30 bootstraps.
 # Uma's nextflow script currently uses 100 for kallisto.
 bootstraps=30
@@ -24,11 +19,6 @@ r2_tail="_R2_001.fastq.gz"
 
 fastq_dir="fastq"
 output_dir="salmon"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 while (("$#"))
 do
@@ -88,15 +78,12 @@ output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 _koopa_assert_is_dir "$fastq_dir"
 _koopa_assert_is_not_dir "$output_dir"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 salmon --version
 
-# Sample array from FASTQ files                                             {{{2
-# ------------------------------------------------------------------------------
+
+
+# Sample array from FASTQ files                                             {{{1
+# ==============================================================================
 
 # Resolve FASTQ directory symlink, if necessary.
 fastq_dir="$(realpath "$fastq_dir")"
@@ -119,8 +106,10 @@ fi
 
 _koopa_message "${#array[@]} samples detected."
 
-# Index                                                                     {{{2
-# ------------------------------------------------------------------------------
+
+
+# Index                                                                     {{{1
+# ==============================================================================
 
 mkdir -pv "$output_dir"
 
@@ -137,8 +126,10 @@ then
         2>&1 | tee "${output_dir}/salmon-index.log"
 fi
 
-# Quantify                                                                  {{{2
-# ------------------------------------------------------------------------------
+
+
+# Quantify                                                                  {{{1
+# ==============================================================================
 
 # Loop across the per-sample array and quantify with kallisto.
 for x in "${array[@]}"

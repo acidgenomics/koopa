@@ -7,20 +7,11 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
-file="$1"
-local="${HOME}/.${file}"
 cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
 _koopa_assert_is_dir "$cloud"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
+file="$1"
+local="${HOME}/.${file}"
 
 if [[ -f "$cloud" ]] && [[ -f "$local" ]]
 then

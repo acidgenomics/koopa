@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-_koopa_help "$@"
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed jar
-
-
-
-# Notes                                                                     {{{1
-# ==============================================================================
-
 # RHEL 7 dependencies
 # file-devel : libmagic
 # > sudo yum -y install \
@@ -24,10 +15,9 @@ _koopa_assert_is_installed jar
 # > sudo ldconfig -v
 # > export LD_LIBRARY_PATH=/usr/local/lib64
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_help "$@"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed jar
 
 name="sra-tools"
 version="$(_koopa_variable "$name")"
@@ -39,11 +29,6 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 # Ensure current jar binary is in path, otherwise install will fail.
 java_home="$(_koopa_java_home)"
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 _koopa_message "Installing ${name} ${version}."
 _koopa_add_to_path_start "${java_home}/bin"
 
@@ -54,8 +39,10 @@ rm -frv "$prefix"
 rm -fr "$tmp_dir"
 mkdir -p "$tmp_dir"
 
+
+
 # ngs                                                                       {{{1
-# ------------------------------------------------------------------------------
+# ==============================================================================
 
 (
     cd "$tmp_dir" || exit 1
@@ -79,8 +66,10 @@ mkdir -p "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
 
+
+
 # ncbi-vdb                                                                  {{{1
-# ------------------------------------------------------------------------------
+# ==============================================================================
 
 (
     cd "$tmp_dir" || exit 1
@@ -98,8 +87,10 @@ _koopa_link_cellar "$name" "$version"
 
 _koopa_link_cellar "$name" "$version"
 
+
+
 # sra-tools                                                                 {{{1
-# ------------------------------------------------------------------------------
+# ==============================================================================
 
 (
     cd "$tmp_dir" || exit 1

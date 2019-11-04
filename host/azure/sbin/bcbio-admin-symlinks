@@ -7,17 +7,7 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 bcbio_dir="/usr/local/bcbio"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 _koopa_message "Updating symlinks."
 

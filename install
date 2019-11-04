@@ -2,22 +2,12 @@
 # shellcheck disable=SC1090,SC1091
 set -Ee -o pipefail
 
-
-
-# Pre-flight checks                                                         {{{1
-# ==============================================================================
-
 # Error on root user.
 if [[ "$(id -u)" -eq 0 ]]
 then
     >&2 echo "Error: Don't install koopa as root."
     exit 1
 fi
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
 
 usage() {
 cat << EOF
@@ -43,11 +33,6 @@ note:
     Updated 2019-11-01.
 EOF
 }
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
 
 dotfiles=0
 mike=0
@@ -89,11 +74,6 @@ then
     dotfiles=1
 fi
 
-
-
-# Functions                                                                 {{{1
-# ==============================================================================
-
 _koopa_group() {
     if groups | grep -Eq "\b(admin)\b"
     then
@@ -116,11 +96,6 @@ _koopa_has_sudo() {
 _koopa_is_linux() {
     [[ "$(uname -s)" == "Linux" ]]
 }
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # In a piped install script call, clone the repo from GitHub first.
 if [[ -z "${BASH_SOURCE[0]}" ]]
@@ -169,20 +144,11 @@ else
 fi
 export KOOPA_HOME
 
-# Remove legacy cruft                                                       {{{2
-# ------------------------------------------------------------------------------
-
 rm -frv "${KOOPA_HOME}/"{config,include}
 rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
 
-# Activate koopa                                                            {{{2
-# ------------------------------------------------------------------------------
-
 echo "Activating koopa."
 force=1 source "${KOOPA_HOME}/activate"
-
-# Shared user configuration                                                 {{{2
-# ------------------------------------------------------------------------------
 
 # Check for shared installation automatically.
 if [[ "$shared" -eq 0 ]] && echo "$KOOPA_HOME" | grep -qE "^/(opt|usr)/"
@@ -196,9 +162,6 @@ if [[ "$shared" -eq 1 ]]
 then
     _koopa_update_profile
 fi
-
-# Dot files                                                                 {{{2
-# ------------------------------------------------------------------------------
 
 if [[ "$dotfiles" -eq 1 ]]
 then
@@ -231,9 +194,6 @@ then
         link-dotfile --force --private travis
     fi
 fi
-
-# Additional                                                                {{{2
-# ------------------------------------------------------------------------------
 
 # Mike-specific configuration.
 if [[ "$mike" -eq 1 ]]

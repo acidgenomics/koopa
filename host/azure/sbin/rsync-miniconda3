@@ -7,11 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
-
 source_user="$USER"
 
 host_ip="$(ip-address)"
@@ -22,11 +17,6 @@ _koopa_assert_is_dir "$conda_dir"
 
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]

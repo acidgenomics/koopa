@@ -7,10 +7,5 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
 install-fedora-base
 install-azure-cli

@@ -4,51 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_help "$@"
 _koopa_assert_has_sudo
-
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+_koopa_assert_is_installed go
 
 name="singularity"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)"
 exe_file="${prefix}/bin/singularity"
-
-
-
-# Usage                                                                     {{{1
-# ==============================================================================
-
-usage() {
-cat << EOF
-$(_koopa_help_header)
-
-Install Singularity.
-
-see also:
-    - https://sylabs.io/guides/3.4/user-guide/quick_start.html
-    - https://github.com/sylabs/singularity/releases
-
-    > ./mconfig --help
-    > singularity help
-
-note:
-    Bash script.
-    Updated 2019-10-21.
-EOF
-}
-
-_koopa_help "$@"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
-
-_koopa_assert_is_installed go
 
 _koopa_message "Installing ${name} ${version}."
 

@@ -7,16 +7,6 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
 dir="${1:-"/data00/bcbio"}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 find-broken-symlinks "$dir"

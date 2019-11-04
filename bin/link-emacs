@@ -8,30 +8,14 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
 
-
-
-# Variables                                                                 {{{1
-# ==============================================================================
+name="$1"
 
 default_home=".emacs.d"
 default_dir="${HOME}/${default_home}"
-
-
-
-# Arguments                                                                 {{{1
-# ==============================================================================
-
-name="$1"
 default_dir="${2:-$default_dir}"
-
-
-
-# Script                                                                    {{{1
-# ==============================================================================
 
 custom_home="${default_home}-${name}"
 custom_dir="${HOME}/${custom_home}"
-
 _koopa_assert_is_dir "$custom_dir"
 
 if [ -d "$default_dir" ] && [ ! -L "$default_dir" ]
