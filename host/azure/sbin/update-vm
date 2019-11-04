@@ -16,6 +16,10 @@ rsync-miniconda3
 rsync-r-site-library
 
 # Ensure that conda has a system configuration file.
+if [[ ! -f "/usr/local/miniconda3/.condarc" ]]
+then
+    _koopa_warning "Shared conda system configuration file missing."
+fi
 
 # Ensure that reboot script has correct permissions.
 # > sudo crontab -e
@@ -23,8 +27,8 @@ sudo chown root:wheel "${KOOPA_HOME}/host/azure/config/etc/reboot.sh"
 
 # Ensure that shared bioinfo user has correct dotfiles.
 sudo -u bioinfo -H "$SHELL" -c "\
-    $USERNAME/$PROJECT; \
-    svn update \
-" 
+    link-dotfile app/conda/condarc; \
+    link-dotfile app/emacs/minimal/emacs.el emacs \
+"
 
 koopa check
