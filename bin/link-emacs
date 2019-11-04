@@ -34,13 +34,13 @@ fi
     fi
     case "$name" in
         doom)
-            link-dotfile --force --config app/emacs/doom/config.d doom
+            link-dotfile --force --config "app/emacs/doom/config.d" "doom"
             ;;
         minimal)
-            link-dotfile --force app/emacs/minimal/emacs.el
+            link-dotfile --force "app/emacs/minimal/emacs.el"
             ;;
         spacemacs)
-            link-dotfile --force app/emacs/spacemacs/spacemacs.el spacemacs
+            link-dotfile --force "app/emacs/spacemacs/spacemacs.el" "spacemacs"
             ;;
         *)
             _koopa_stop "Invalid Emacs config name."
