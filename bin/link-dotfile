@@ -46,13 +46,12 @@ set -- "${POSITIONAL[@]}"
 source_name="$1"
 symlink_name="${2:-}"
 
-# Note that we're creating a symlink in local user config.
-dot_dir="$(_koopa_config_dir)/dotfiles"
+dot_dir="$(_koopa_dotfiles_config_link)"
 
-# Create a dotfile symlink in config dir, if necessary.
-dot_repo="$(_koopa_home)/dotfiles"
-if [[ -d "$dot_repo"  ]] && [[ ! -d "$dot_dir" ]]
+# Note that this step automatically links into koopa config for users.
+if [[ ! -d "$dot_dir" ]]
 then
+    dot_repo="$(_koopa_dotfiles_source_repo)"
     rm -frv "$dot_dir"
     ln -fnsv "$dot_repo" "$dot_dir"
 fi
@@ -60,8 +59,9 @@ fi
 # Private file.
 if [[ "$private" -eq 1 ]]
 then
-    dot_dir="${dot_dir}-private"
+    dot_dir="$(_koopa_dotfiles_private_config_link)"
 fi
+
 _koopa_assert_is_dir "$dot_dir"
 
 source_path="${dot_dir}/${source_name}"
