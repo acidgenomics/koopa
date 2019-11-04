@@ -30,7 +30,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-11-01.
+    Updated 2019-11-04.
 EOF
 }
 
@@ -97,7 +97,7 @@ _koopa_is_linux() {
     [[ "$(uname -s)" == "Linux" ]]
 }
 
-# In a piped install script call, clone the repo from GitHub first.
+# In a piped install script call, we'll clone the repo from GitHub first.
 if [[ -z "${BASH_SOURCE[0]}" ]]
 then
     export KOOPA_PIPED_INSTALL=1
@@ -128,7 +128,6 @@ then
         group="$(_koopa_group)"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+w "$target_dir"
-        # Ensure build prefix is group writable, for cellar scripts.
         if _koopa_is_linux
         then
             sudo chgrp -Rh "$group" "$prefix"
@@ -150,75 +149,23 @@ rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
 echo "Activating koopa."
 force=1 source "${KOOPA_HOME}/activate"
 
-# Check for shared installation automatically.
 if [[ "$shared" -eq 0 ]] && echo "$KOOPA_HOME" | grep -qE "^/(opt|usr)/"
 then
     echo "Shared installation detected at '${KOOPA_HOME}'"
     shared=1
 fi
 
-# Configure shared profile automatically.
 if [[ "$shared" -eq 1 ]]
 then
     _koopa_update_profile
 fi
 
-if [[ "$dotfiles" -eq 1 ]]
-then
-    echo "Configuring dotfiles."
-    # FIXME Need to inform the user more clearly about existing dotfiles...
-    # Add a warning step here.
-    # FIXME Simplify this approach, using dotfiles_dir or DOTFILES global.
-    # Clone dotfiles repo, if necessary.
-    if [[ ! -d "${KOOPA_HOME}/dotfiles" ]]
-    then
-        install-dotfiles
-    fi
-    # Add Mike-specific dotfiles, if necessary.
-    if [[ "$mike" -eq 1 ]]
-    then
-        source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
-        target_dir="$(_koopa_config_dir)/dotfiles-private"
-        if [[ ! -d "$target_dir" ]]
-        then
-            git clone "$source_repo" "$target_dir"
-        fi
-        if _koopa_is_darwin
-        then
-            link-dotfile --force os/darwin/gitconfig
-        else
-            link-dotfile --force gitconfig
-        fi
-        link-dotfile --force --private Rsecrets
-        link-dotfile --force --private secrets
-        link-dotfile --force --private travis
-    fi
-fi
-
-# Mike-specific configuration.
 if [[ "$mike" -eq 1 ]]
 then
-    # Ensure the koopa remote is using SSH and not HTTPS.
-    (
-        cd "$KOOPA_HOME" || exit 1
-        git remote set-url origin "git@github.com:acidgenomics/koopa.git"
-    )
-
-    # Clone the docker repo.
-    source_repo="git@github.com:acidgenomics/docker.git"
-    target_dir="$(_koopa_config_dir)/docker"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo" "$target_dir"
-    fi
-
-    # Clone the scripts-private repo.
-    source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
-    target_dir="$(_koopa_config_dir)/scripts-private"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo"  "$target_dir"
-    fi
+    _koopa_install_mike
+elif [[ "$dotfiles" -eq 1 ]]
+then
+    install-dotfiles
 fi
 
 echo "Installation was successful."
