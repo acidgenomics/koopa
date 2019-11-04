@@ -16,7 +16,7 @@ from textwrap import dedent
 sys.path.insert(0, os.getenv("KOOPA_HOME"))
 from pykoopa.genome import refseq_version  # noqa
 from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import paste_url, wget  # noqa
+from pykoopa.sys import download, paste_url  # noqa
 
 # pylint: enable=wrong-import-position
 
@@ -109,7 +109,9 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
-    "--decompress", action="store_true", help="decompress (but keep) the original file"
+    "--decompress",
+    action="store_true",
+    help="decompress (but keep) the original file",
 )
 args = parser.parse_args()
 
@@ -130,7 +132,9 @@ release_url = paste_url(
     build + "_latest",
     "refseq_identifiers",
 )
-output_dir = kebab_case(organism + " " + build + " " + "refseq" + " " + release)
+output_dir = kebab_case(
+    organism + " " + build + " " + "refseq" + " " + release
+)
 
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
@@ -139,7 +143,7 @@ def download_genome(release_url, output_dir, decompress):
     """
     Download genome FASTA.
     """
-    wget(
+    download(
         url=paste_url(release_url, build + "_latest_genomic.fna.gz"),
         output_dir=os.path.join(output_dir, "genome"),
         decompress=decompress,
@@ -150,7 +154,7 @@ def download_transcriptome(release_url, output_dir, decompress):
     """
     Download transcriptome FASTA.
     """
-    wget(
+    download(
         url=paste_url(release_url, build + "_latest_rna.fna.gz"),
         output_dir=os.path.join(output_dir, "transcriptome"),
         decompress=decompress,
@@ -161,7 +165,7 @@ def download_gtf(release_url, output_dir, decompress):
     """
     Download GTF file.
     """
-    wget(
+    download(
         url=paste_url(release_url, build + "_latest_genomic.gtf.gz"),
         output_dir=os.path.join(output_dir, "gtf"),
         decompress=decompress,
@@ -172,15 +176,15 @@ def download_gff(release_url, output_dir, decompress):
     """
     Download GFF3 file.
     """
-    wget(
+    download(
         url=paste_url(release_url, build + "_latest_genomic.gff.gz"),
         output_dir=os.path.join(output_dir, "gff"),
         decompress=decompress,
     )
 
 
-wget(url=paste_url(release_url, "README.txt"), output_dir=output_dir)
-wget(
+download(url=paste_url(release_url, "README.txt"), output_dir=output_dir)
+download(
     url=paste_url(release_url, build + "_latest_assembly_report.txt"),
     output_dir=output_dir,
 )
@@ -202,11 +206,19 @@ elif type == "all":
     )
 
 if annotation == "gtf":
-    download_gtf(release_url=release_url, output_dir=output_dir, decompress=decompress)
+    download_gtf(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
 elif annotation == "gff":
-    download_gff(release_url=release_url, output_dir=output_dir, decompress=decompress)
+    download_gff(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
 elif annotation == "all":
-    download_gtf(release_url=release_url, output_dir=output_dir, decompress=decompress)
-    download_gff(release_url=release_url, output_dir=output_dir, decompress=decompress)
+    download_gtf(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
+    download_gff(
+        release_url=release_url, output_dir=output_dir, decompress=decompress
+    )
 
 print("Genome downloaded successfully to '" + output_dir + "'.")

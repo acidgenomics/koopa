@@ -17,4 +17,4 @@ tarball_url="$( \
     tr -d ' ,"' \
 )"
 tag="$(basename "$tarball_url")"
-wget "$tarball_url" -O "${tag}.tar.gz"
+_koopa_download "$tarball_url" "${tag}.tar.gz"
