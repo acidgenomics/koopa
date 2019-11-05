@@ -12,10 +12,11 @@ sudo chmod 2775 /usr/local
 
 install-rhel7-base
 remove-rhel7-rpm-cruft
+install-openjdk
+
 install-cellar-coreutils
 install-cellar-bash
 install-cellar-zsh
-install-openjdk
 install-cellar-r
 install-cellar-python
 install-cellar-vim
@@ -30,14 +31,17 @@ install-cellar-neofetch
 install-cellar-gnupg
 install-cellar-proj
 install-cellar-gdal
-
-
-
 install-cellar-hdf5
 
-# Perl
-# Ruby
-# Rust
+install-perlbrew
+install-rbenv
+install-rust
+
+(
+    _koopa_deactivate_envs
+    install-perlbrew-perl
+    install-rbenv-ruby
+)
 
 rm -frv ~/.virtualenvs
 venv-create-base
