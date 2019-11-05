@@ -159,8 +159,8 @@ _koopa_r_javareconf() {
     #   JAVAH          path to a Java header/stub generator
     #   JAR            path to a Java archive tool
     #
-    # Updated 2019-11-04.
-    _koopa_assert_is_installed R java
+    # Updated 2019-11-05.
+    _koopa_assert_is_installed R java || return 0
     local java_home
     local java_flags
     local r_home
@@ -177,11 +177,11 @@ _koopa_r_javareconf() {
     r_home="$(_koopa_r_home)"
     _koopa_set_permissions "$r_home"
     R --vanilla CMD javareconf "${java_flags[@]}"
-    if _koopa_is_shared
-    then
-        _koopa_assert_has_sudo
-        sudo R --vanilla CMD javareconf "${java_flags[@]}"
-    fi
+    # > if _koopa_is_shared
+    # > then
+    # >     _koopa_assert_has_sudo
+    # >     sudo R --vanilla CMD javareconf "${java_flags[@]}"
+    # > fi
     Rscript -e 'install.packages("rJava")'
 }
 
