@@ -36,16 +36,19 @@ unset -v prefix
 # Python                                                                    {{{1
 # ==============================================================================
 
+# Homebrew is lagging too long on new Python releases, so install manually
+# instead. See 'python.sh' script for activation.
+#
 # Don't add to PATH if a virtual environment is active.
 #
 # See also:
 # - https://docs.brew.sh/Homebrew-and-Python
 # - brew info python
 
-if [ -z "${VIRTUAL_ENV:-}" ]
-then
-    _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
-fi
+# > if [ -z "${VIRTUAL_ENV:-}" ]
+# > then
+# >     _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
+# > fi
 
 
 
