@@ -27,6 +27,7 @@ install-openjdk
 install-cellar-r
 install-cellar-python
 install-cellar-vim
+install-cellar-neovim
 install-cellar-emacs
 install-cellar-tmux
 install-cellar-git
@@ -34,11 +35,17 @@ install-rstudio-server
 install-cellar-htop
 install-cellar-shellcheck
 
-
-
-
+install-cellar-neofetch
 install-cellar-gnupg
+
+install-cellar-proj
 install-cellar-gdal
+
+install-cellar-hdf5
+
+# Perl
+# Ruby
+# Rust
 
 rm -frv ~/.virtualenvs
 venv-create-base
