@@ -10,8 +10,6 @@ required positional arguments:
     1.  Repository name, prefixed with the user or organization name.
         Example: 'acidgenomics/koopa'.
 
-$(_koopa_help_args)
-
 details:
     Downloads latest release into current working directory.
     Looks for 'tarball_url' line in JSON.
@@ -20,9 +18,6 @@ details:
     2. Use grep to find the line containing file URL.
     3. Use cut and tr to extract the URL.
     4. Use wget to download it.
-
-see also:
-    https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8
 
 examples:
     download-github-latest acidgenomics/koopa
