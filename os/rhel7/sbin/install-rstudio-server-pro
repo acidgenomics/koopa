@@ -36,10 +36,14 @@ _koopa_message "Installing ${name} ${version}."
 
 command -v rstudio-server
 rstudio-server version
+rstudio-server license-manager verify
 
-# Activate product license key:
-# > sudo rstudio-server license-manager activate <product-key>
+cat << EOF
+Activate product license key (if necessary):
+> sudo rstudio-server license-manager activate <product-key>
 
-# If you want to move your license of RStudio Server to another system you
-# should first deactivate it on the old system with the command:
-# > sudo rstudio-server license-manager deactivate
+If you want to move your license of RStudio Server to another system you should
+first deactivate it on the old system with the command:
+> sudo rstudio-server license-manager deactivate
+EOF
+
