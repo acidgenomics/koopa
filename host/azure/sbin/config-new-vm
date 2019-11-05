@@ -35,7 +35,6 @@ install-cellar-git
 install-rstudio-server
 install-cellar-htop
 install-cellar-shellcheck
-
 install-cellar-neofetch
 install-cellar-gnupg
 
