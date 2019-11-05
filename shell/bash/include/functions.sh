@@ -25,6 +25,24 @@ _koopa_add_local_bins_to_path() {
 
 
 
+# D                                                                         {{{1
+# ==============================================================================
+
+_koopa_die() {
+    # Die with a stack trace, via caller.
+    # https://unix.stackexchange.com/a/250533
+    # Updated 2019-11-05.
+    local frame=0
+    while caller $frame
+    do
+        ((frame++))
+    done
+    echo "$*"
+    exit 1
+}
+
+
+
 # F                                                                         {{{1
 # ==============================================================================
 
@@ -90,13 +108,8 @@ _koopa_help() {
     # Updated 2019-11-05.
     case "${1:-}" in
         --help|-h)
-            local file man_file name
-            file="$( \
-                caller 1 \
-                | head -n 1 \
-                | cut -d ' ' -f 3 \
-            )"
-            name="$(basename "$file")"
+            local man_file name
+            name="$(basename "$0")"
             man_file="${KOOPA_HOME}/man/man1/${name}.1"
             if [[ -f "$man_file" ]]
             then
