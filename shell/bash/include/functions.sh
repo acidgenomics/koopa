@@ -160,7 +160,7 @@ _koopa_r_javareconf() {
     #   JAR            path to a Java archive tool
     #
     # Updated 2019-11-05.
-    _koopa_assert_is_installed R java || return 0
+    _koopa_assert_is_installed R java
     local java_home
     local java_flags
     local r_home
