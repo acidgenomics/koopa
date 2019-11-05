@@ -72,21 +72,37 @@ _koopa_find_local_bin_dirs() {
 _koopa_help() {
     # Show usage via help flag.
     # Now calls 'man' to display nicely formatted manual page.
-    # Updated 2019-10-26.
+    #
+    # We're calling inside Bash 'header.sh', so we want to set EXPR to 1 here,
+    # to move up the stack an extra level.
+    #
+    # > help caller
+    # caller: caller [expr]
+    # Return the context of the current subroutine call.
+    #
+    # Without EXPR, returns "$line $filename".  With EXPR, returns
+    # "$line $subroutine $filename"; this extra information can be used to
+    # provide a stack trace.
+    #
+    # The value of EXPR indicates how many call frames to go back before the
+    # current one; the top frame is frame 0.
+    #
+    # Updated 2019-11-05.
     case "${1:-}" in
         --help|-h)
-            local file name
+            local file man_file name
             file="$( \
-                caller \
+                caller 1 \
                 | head -n 1 \
-                | cut -d ' ' -f 2 \
+                | cut -d ' ' -f 3 \
             )"
             name="$(basename "$file")"
-            if [[ -f "${KOOPA_HOME}/man/man1/${name}.1" ]]
+            man_file="${KOOPA_HOME}/man/man1/${name}.1"
+            if [[ -f "$man_file" ]]
             then
                 man "$name"
-            else 
-                usage
+            else
+                _koopa_warning "man file missing: '${man_file}'."
             fi
             exit 0
             ;;
