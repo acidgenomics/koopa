@@ -1,10 +1,15 @@
-#!/usr/bin/env Rscript
+#!/usr/bin/env bash
 
-install.packages(
-    pkgs = "units",
-    type = "source",
-    configure.args = c(
-        "--with-udunits2-lib=/usr/local/lib",
-        "--with-udunits2-include=/usr/include/udunits2"
-    )
-)
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+Rscript -e "\
+    install.packages(
+        pkgs = \"units\",
+        type = \"source\",
+        configure.args = c(
+            \"--with-udunits2-lib=/usr/local/lib\",
+            \"--with-udunits2-include=/usr/include/udunits2\"
+        )
+    )"
