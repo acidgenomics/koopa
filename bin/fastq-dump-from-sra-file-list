@@ -4,10 +4,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-
-_koopa_help "$@"
 _koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed fastq-dump
+_koopa_assert_is_installed "fastq-dump"
 
 filelist="${1:-"SRR_Acc_List.txt"}"
 _koopa_assert_is_file "$filelist"
