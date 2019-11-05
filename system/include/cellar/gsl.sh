@@ -19,7 +19,7 @@ _koopa_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="gsl-${version}.tar.gz"
     url="http://mirror.keystealth.org/gnu/gsl/${file}"
-    wget "$url"
+    _koopa_download "$url"
     _koopa_extract "$file"
     cd "gsl-${version}" || exit 1
     ./configure \
