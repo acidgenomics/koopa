@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_help "$@"
+_koopa_assert_has_sudo
+
+# > sudo chown -R root:wheel /usr/local
+# > sudo chmod -R g+w /usr/local
+# > sudo chmod g+s /usr/local
+
+# > sudo crontab -e
+# > @reboot /usr/local/koopa/host/azure/config/etc/reboot.sh
+
+sudo ln -fnsv \
+    /usr/local/koopa/host/azure/config/etc/profile.d/constellation.sh \
+    /etc/profile.d/.
+
+install-rhel7-base
+remove-rhel7-rpm-cruft
+
+install-cellar-coreutils
+install-cellar-bash
+install-cellar-zsh
+install-openjdk
+install-cellar-r
+install-cellar-python
+install-cellar-vim
+install-cellar-emacs
+install-cellar-tmux
+install-cellar-htop
+install-cellar-shellcheck
+install-rstudio-server
+install-cellar-git
+install-cellar-gnupg
+install-cellar-gdal
