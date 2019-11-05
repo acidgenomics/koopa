@@ -17,8 +17,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "http://ftp.gnu.org/gnu/emacs/emacs-${version}.tar.xz"
-    _koopa_extract "emacs-${version}.tar.xz"
+    file="emacs-${version}.tar.xz"
+    url="http://ftp.gnu.org/gnu/emacs/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "emacs-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

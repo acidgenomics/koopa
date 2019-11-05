@@ -7,9 +7,10 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed curl
 
 version="$( \
-    wget -q -O - "ftp://ftp.ensembl.org/pub/current_README" \
+    curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
     | sed -n 3p \
     | cut -d ' ' -f 3 \
 )"

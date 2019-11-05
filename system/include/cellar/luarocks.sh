@@ -18,7 +18,8 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
-    wget "https://luarocks.org/releases/${file}"
+    url="https://luarocks.org/releases/${file}"
+    _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     ./configure --prefix="$prefix"

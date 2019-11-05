@@ -21,7 +21,7 @@ _koopa_message "Installing ${name} ${version}."
     file="hdf5-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/\
 hdf5-${version}/src/${file}"
-    wget "$url"
+    _koopa_download "$url"
     _koopa_extract "$file"
     cd "hdf5-${version}" || exit 1
     ./configure \

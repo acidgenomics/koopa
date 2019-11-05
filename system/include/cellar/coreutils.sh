@@ -17,8 +17,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://ftp.gnu.org/gnu/coreutils/coreutils-${version}.tar.xz"
-    _koopa_extract "coreutils-${version}.tar.xz"
+    file="coreutils-${version}.tar.xz"
+    url="https://ftp.gnu.org/gnu/coreutils/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "coreutils-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

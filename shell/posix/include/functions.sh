@@ -1189,6 +1189,25 @@ _koopa_dotfiles_source_repo() {
     echo "$dotfiles"
 }
 
+_koopa_download() {
+    # Download a file.
+    # Alternatively, can use wget instead of curl:
+    # > wget -O file url
+    # > wget -q -O - url (piped to stdout)
+    # > wget -qO-
+    # Updated 2019-11-04.
+    _koopa_assert_is_installed curl
+    local url
+    url="$1"
+    local file
+    file="${2:-}"
+    if [ -z "$file" ]
+    then
+        file="$(basename "$url")"
+    fi
+    curl -L -o "$file" "$url"
+}
+
 
 
 # E                                                                         {{{1

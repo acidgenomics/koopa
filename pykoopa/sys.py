@@ -100,11 +100,11 @@ def paste_url(*args):
     return out
 
 
-def wget(url, output_file=None, output_dir=None, decompress=False):
+def download(url, output_file=None, output_dir=None, decompress=False):
     """
-    Download a file using wget.
+    Download a file using curl.
     If output_file is unset, download to working directory as basename.
-    Updated 2019-10-06.
+    Updated 2019-11-04.
     """
     if not (output_file is None or output_dir is None):
         eprint("Error: Specify 'output_file' or 'output_dir' but not both.")
@@ -119,7 +119,7 @@ def wget(url, output_file=None, output_dir=None, decompress=False):
         print("Downloading '" + output_file + "'.")
         init_dir(output_dir)
         try:
-            subprocess.check_call(["wget", "-O", output_file, url])
+            subprocess.check_call(["curl", "-L", "-o", output_file, url])
         except subprocess.CalledProcessError:
             eprint("Failed to download '" + output_file + "'.")
     if decompress is True:

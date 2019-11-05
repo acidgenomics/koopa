@@ -31,8 +31,8 @@ mkdir -pv "$tmp_dir"
     pkg="libgpg-error"
     ver="$(_koopa_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    wget -c "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"

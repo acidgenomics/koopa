@@ -37,8 +37,10 @@ fi
     rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p "${prefix}/anaconda"
+    file="Miniconda3-latest-Linux-x86_64.sh"
+    url="https://repo.continuum.io/miniconda/${file}"
+    _koopa_download "$url"
+    bash "$file" -b -p "${prefix}/anaconda"
     rm -fr "$tmp_dir"
 )
 

@@ -7,6 +7,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 _koopa_assert_has_args "$@"
+_koopa_assert_is_installed curl
 
 organism="$1"
 
@@ -27,7 +28,7 @@ esac
 base_url="https://www.gencodegenes.org"
 url="${base_url}/${short_name}/"
 
-wget -q -O - "$url" \
+curl --silent "$url" \
     | grep -Eo "$pattern" \
     | head -n 1 \
     | cut -d ' ' -f 2
