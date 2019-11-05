@@ -7,9 +7,8 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
-# > sudo chown -R root:wheel /usr/local
-# > sudo chmod -R g+w /usr/local
-# > sudo chmod g+s /usr/local
+sudo chown -R root:wheel /usr/local
+sudo chmod 2775 /usr/local
 
 # > sudo crontab -e
 # > @reboot /usr/local/koopa/host/azure/config/etc/reboot.sh
@@ -30,9 +29,32 @@ install-cellar-python
 install-cellar-vim
 install-cellar-emacs
 install-cellar-tmux
+install-cellar-git
+install-rstudio-server
 install-cellar-htop
 install-cellar-shellcheck
-install-rstudio-server
-install-cellar-git
+
+
+
+
 install-cellar-gnupg
 install-cellar-gdal
+
+rm -frv ~/.virtualenvs
+venv-create-base
+
+# miniconda3
+sudo mkdir /data00/miniconda3
+sudo chown mike:wheel /data00/miniconda3
+sudo chmod 2775 /data00/miniconda3
+sudo ln -fnsv /data00/miniconda3 /usr/local/miniconda3
+
+# R site library
+sudo mkdir /data00/R
+sudo chown mike:wheel /data00/R
+sudo chmod 2775 /data00/R
+rsync-r-site-library
+
+update-vm
+koopa update
+koopa check
