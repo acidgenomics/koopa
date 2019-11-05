@@ -10,7 +10,6 @@ _koopa_assert_has_no_environments
 prefix="$(_koopa_build_prefix)/bcbio"
 version="stable"
 
-current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
 tmp_dir="$(_koopa_tmp_dir)/bcbio"
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
@@ -44,20 +43,28 @@ done
 
 prefix="$(_koopa_strip_trailing_slash "$prefix")"
 
-_koopa_message "Installing bcbio '${version}' into '${prefix}'."
-
 if [[ "$version" == "stable" ]]
 then
-    _koopa_message "Current release version is '${current}'."
+    # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
+    _koopa_bcbio_version() {
+        curl --silent "https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/requirements-conda.txt" \
+            | grep 'bcbio-nextgen=' \
+            | cut -d '=' -f 2
+    }
+    current="$(_koopa_bcbio_version)"
+    prefix="${prefix}/${current}"
+else
+    prefix="${prefix}/${version}"
 fi
 
-install_dir="${prefix}/install"
-tools_dir="${prefix}/tools"
+_koopa_message "Installing bcbio into '${prefix}'."
 
 _koopa_message "Saving install log at '${log_file}'."
 mkdir -pv "$log_dir"
 
 _koopa_prefix_mkdir "$prefix"
+install_dir="${prefix}/install"
+tools_dir="${prefix}/tools"
 
 (
     rm -fr "$tmp_dir"
