@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# https://openjdk.java.net/
+# https://jdk.java.net/13/
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
@@ -8,19 +11,33 @@ _koopa_help "$@"
 _koopa_assert_has_sudo
 
 jdk_dir="${1:-"/opt/jdk"}"
-version="13"
-jdk_version_dir="${jdk_dir}/jdk-${version}"
 
-_koopa_prefix_mkdir "$jdk_dir"
+version="$(_koopa_variable "java")"
+jdk_version_dir="${jdk_dir}/jdk-${version}"
+# > _koopa_assert_is_not_dir "$jdk_version_dir"
+
+_koopa_message "Installing JDK at '${jdk_version_dir}'."
+
+if [[ ! -d "$jdk_dir" ]]
+then
+    _koopa_prefix_mkdir "$jdk_dir"
+fi
 
 # Download and extract the JDK, if necessary.
 if [[ ! -d "$jdk_version_dir" ]]
 then
     (
         cd "${jdk_dir}" || exit 1
-        file="openjdk-13_linux-x64_bin.tar.gz"
-        hash="5b8a42f3905b406298b72d750b6919f6"
-        url="https://download.java.net/java/GA/jdk13/${hash}/33/GPL/${file}"
+        file="openjdk-${version}_linux-x64_bin.tar.gz"
+        case "$version" in
+            13.0.1)
+                unique="cec27d702aa74d5a8630c65ae61e4305/9"
+                ;;
+            13)
+                unique="5b8a42f3905b406298b72d750b6919f6/33"
+                ;;
+        esac
+        url="https://download.java.net/java/GA/jdk${version}/${unique}/GPL/${file}"
         _koopa_download "$url"
         _koopa_message "Extracting '${file}' to '${jdk_dir}'."
         tar -xzvf "$file" -C "$jdk_dir"
