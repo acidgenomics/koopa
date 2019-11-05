@@ -9,7 +9,6 @@ source "${script_dir}/../include/header.sh"
 # > apt-cache search gnutls
 # > apt-cache search libgif
 
-_koopa_help "$@"
 
 if _koopa_is_shared
 then
