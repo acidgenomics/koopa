@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-_koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed docbook2x-texi
 
