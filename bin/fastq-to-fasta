@@ -4,6 +4,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
+_koopa_assert_has_args "$@"
 
 # Alternate approaches:
 #
@@ -15,9 +16,6 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 # >     paste - - - - | \
 # >     awk -v FS="\t" '{print $1"\n"$2}' > \
 # >     "$fasta_file"
-
-_koopa_help "$@"
-_koopa_assert_has_args "$@"
 
 source_dir="."
 target_dir="."
