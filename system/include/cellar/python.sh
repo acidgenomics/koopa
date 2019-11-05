@@ -37,8 +37,8 @@ fi
     cd "$tmp_dir" || exit 1
     file="Python-${version}.tar.xz"
     url="https://www.python.org/ftp/python/${version}/${file}"
-    wget "$url"
-    _koopa_extract "Python-${version}.tar.xz"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "Python-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

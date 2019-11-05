@@ -22,8 +22,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/TACC/Lmod/archive/${version}.tar.gz"
-    _koopa_extract "${version}.tar.gz"
+    file="${version}.tar.gz"
+    url="https://github.com/TACC/Lmod/archive/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "Lmod-${version}" || exit 1
     ./configure \
         --prefix="${prefix}" \

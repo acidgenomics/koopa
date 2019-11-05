@@ -21,7 +21,7 @@ _koopa_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
-    wget "$url"
+    _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     # Use 'configure --help' for build options.

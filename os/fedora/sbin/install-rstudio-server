@@ -23,7 +23,7 @@ _koopa_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="${name}-rhel-${version}-x86_64.rpm"
     url="https://download2.rstudio.org/server/centos6/x86_64/${file}"
-    wget "$url"
+    _koopa_download "$url"
     sudo yum -y install "$file"
     rm -fr "$tmp_dir"
 )
