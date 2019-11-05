@@ -3,6 +3,8 @@
 koopa="0.7.0a"
 koopa_date="2019-11-05"
 
+
+
 # Program versions                                                          {{{1
 # ==============================================================================
 
@@ -186,9 +188,7 @@ pinentry="1.1.0"
 
 # SRA toolkit
 # https://github.com/ncbi/ngs/releases
-ncbi-ngs="2.10.0"
 # https://github.com/ncbi/ncbi-vdb/releases
-ncbi-vdb="2.10.0"
 # https://github.com/ncbi/sra-tools/releases
 sra-tools="2.10.0"
 
