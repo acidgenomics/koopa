@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_help "$@"
+_koopa_assert_has_sudo
+
+name="python"
+version="$(_koopa_variable "$name")"
+major_version="$(_koopa_major_version "$version")"
+
+file="python-${version}-macosx10.9.pkg"
+url="https://www.python.org/ftp/python/${version}/${file}"
+_koopa_download "$url"
+
+sudo installer -pkg "$file" -target /
+
+py_dir="/Library/Frameworks/Python.framework/Versions/${major_version}/bin"
+py_exe="${py_dir}/python${major_version}"
+pip_exe="${py_dir}/pip${major_version}"
+
+command -v "$py_exe"
+"$py_exe" --version
+
+command -v "$pip_exe"
+"$pip_exe" --version
