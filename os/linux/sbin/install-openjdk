@@ -16,7 +16,7 @@ version="$(_koopa_variable "java")"
 jdk_version_dir="${jdk_dir}/jdk-${version}"
 # > _koopa_assert_is_not_dir "$jdk_version_dir"
 
-_koopa_message "Installing JDK at '${jdk_version_dir}'."
+_koopa_message "Installing JDK ${version} at '${jdk_version_dir}'."
 
 if [[ ! -d "$jdk_dir" ]]
 then
