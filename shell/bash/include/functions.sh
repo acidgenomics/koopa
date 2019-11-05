@@ -30,7 +30,21 @@ _koopa_add_local_bins_to_path() {
 
 _koopa_die() {
     # Die with a stack trace, via caller.
-    # https://unix.stackexchange.com/a/250533
+    #
+    # > help caller
+    # caller: caller [expr]
+    # Return the context of the current subroutine call.
+    #
+    # Without EXPR, returns "$line $filename".  With EXPR, returns
+    # "$line $subroutine $filename"; this extra information can be used to
+    # provide a stack trace.
+    #
+    # The value of EXPR indicates how many call frames to go back before the
+    # current one; the top frame is frame 0.
+    #
+    # See also:
+    # - https://unix.stackexchange.com/a/250533
+    #
     # Updated 2019-11-05.
     local frame=0
     while caller $frame
@@ -89,22 +103,7 @@ _koopa_find_local_bin_dirs() {
 
 _koopa_help() {
     # Show usage via help flag.
-    # Now calls 'man' to display nicely formatted manual page.
-    #
-    # We're calling inside Bash 'header.sh', so we want to set EXPR to 1 here,
-    # to move up the stack an extra level.
-    #
-    # > help caller
-    # caller: caller [expr]
-    # Return the context of the current subroutine call.
-    #
-    # Without EXPR, returns "$line $filename".  With EXPR, returns
-    # "$line $subroutine $filename"; this extra information can be used to
-    # provide a stack trace.
-    #
-    # The value of EXPR indicates how many call frames to go back before the
-    # current one; the top frame is frame 0.
-    #
+    # Now always calls 'man' to display nicely formatted manual page.
     # Updated 2019-11-05.
     case "${1:-}" in
         --help|-h)
@@ -115,7 +114,7 @@ _koopa_help() {
             then
                 man "$name"
             else
-                _koopa_warning "man file missing: '${man_file}'."
+                _koopa_warning "Manual file missing: '${man_file}'."
             fi
             exit 0
             ;;
@@ -130,25 +129,6 @@ help arguments:
     --help, -h
         Show this help message and exit.
 EOF
-}
-
-_koopa_help_header() {
-    # Help header string.
-    # Note that we're using 'caller' here, which is Bash-specific.
-    # Updated 2019-10-22.
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
-    then
-        local file
-        file="$( \
-            caller \
-            | head -n 1 \
-            | cut -d ' ' -f 2 \
-        )"
-        name="$(basename "$file")"
-    fi
-    printf "usage: %s [--help|-h]" "$name"
 }
 
 
