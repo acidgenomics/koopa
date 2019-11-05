@@ -7,6 +7,14 @@ source "${script_dir}/../include/header.sh"
 _koopa_help "$@"
 _koopa_assert_has_sudo
 
+sudo ln -fnsv \
+    /usr/local/koopa/host/azure/config/etc/profile.d/constellation.sh \
+    /etc/profile.d/.
+
+sudo ln -fnsv \
+    /usr/local/koopa/host/azure/config/etc/cron.d/* \
+    /etc/cron.d/.
+
 sudo yum update -y
 install-rhel7-base
 remove-rhel7-rpm-cruft
