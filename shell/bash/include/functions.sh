@@ -121,16 +121,6 @@ _koopa_help() {
     esac
 }
 
-_koopa_help_args() {
-    # Standardize the help arguments shown in usage.
-    # Updated 2019-10-22.
-    cat << EOF
-help arguments:
-    --help, -h
-        Show this help message and exit.
-EOF
-}
-
 
 
 # L                                                                         {{{1
