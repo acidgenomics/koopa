@@ -16,8 +16,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/dylanaraps/${name}/archive/${version}.tar.gz"
-    _koopa_extract "${version}.tar.gz"
+    file="${version}.tar.gz"
+    url="https://github.com/dylanaraps/${name}/archive/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     mkdir -pv "$prefix"
     make PREFIX="$prefix" install

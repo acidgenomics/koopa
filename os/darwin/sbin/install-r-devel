@@ -18,8 +18,9 @@ _koopa_message "Installing r-devel ${r_version} for ${macos_version}."
     rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    tarball="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
-    wget "https://mac.r-project.org/${macos_version}/R-${r_version}/${tarball}"
+    file="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
+    url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
+    _koopa_download "$url"
     # Back up, if necessary.
     if [[ -d "/Library/Frameworks/R.framework" ]]
     then
@@ -28,7 +29,7 @@ _koopa_message "Installing r-devel ${r_version} for ${macos_version}."
             "/Library/Frameworks/R.framework.bak"
     fi
     # Now we're ready to install.
-    sudo tar -xzvf "$tarball" -C /
+    sudo tar -xzvf "$file" -C /
     rm -fr "$tmp_dir"
 )
 

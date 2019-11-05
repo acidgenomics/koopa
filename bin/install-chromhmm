@@ -16,8 +16,9 @@ _koopa_message "Installing ChromHMM."
 (
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "http://compbio.mit.edu/ChromHMM/ChromHMM.zip"
-    unzip "ChromHMM.zip"
+    file="ChromHMM.zip"
+    _koopa_download "http://compbio.mit.edu/ChromHMM/${file}"
+    _koopa_extract "$file"
     mv -v "ChromHMM" "${prefix}/."
     rm -fr "$tmp_dir"
 )

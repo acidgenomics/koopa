@@ -7,6 +7,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed curl
 
-version="$(wget -q -O - "https://bioconductor.org/bioc-version")"
+version="$(curl --silent "https://bioconductor.org/bioc-version")"
 echo "$version"

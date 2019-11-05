@@ -9,5 +9,5 @@ _koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
 url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
-version="$(wget -q -O - "$url")"
+version="$(curl --silent "$url")"
 echo "$version"

@@ -23,7 +23,7 @@ _koopa_message "Installing ${name} ${version}."
     rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/vim/vim/archive/v${version}.tar.gz"
+    _koopa_download "https://github.com/vim/vim/archive/v${version}.tar.gz"
     _koopa_extract "v${version}.tar.gz"
     cd "vim-${version}" || exit 1
     ./configure \

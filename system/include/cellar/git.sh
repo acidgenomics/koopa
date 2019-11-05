@@ -18,8 +18,9 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/git/git/archive/v${version}.tar.gz"
-    _koopa_extract "v${version}.tar.gz"
+    file="v${version}.tar.gz"
+    _koopa_download "https://github.com/git/git/archive/${file}"
+    _koopa_extract "$file"
     cd "git-${version}" || exit 1
     make configure
     ./configure \

@@ -46,9 +46,10 @@ mkdir -p "$tmp_dir"
 
 (
     cd "$tmp_dir" || exit 1
-    wget -O "ngs.tar.gz" \
-        "https://github.com/ncbi/ngs/archive/${version}.tar.gz"
-    _koopa_extract "ngs.tar.gz"
+    file="ngs.tar.gz"
+    url="https://github.com/ncbi/ngs/archive/${version}.tar.gz"
+    _koopa_download "$url" "$file"
+    _koopa_extract "$file"
     mv "ngs-${version}" "ngs"
     cd "ngs" || exit 1
     ./configure \

@@ -16,12 +16,14 @@ exe_file="${prefix}/bin/singularity"
 
 _koopa_message "Installing ${name} ${version}."
 
+file="singularity-${version}.tar.gz"
+url="https://github.com/sylabs/singularity/releases/download/\
+v${version}/${file}"
+
 (
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    file="singularity-${version}.tar.gz"
-    url_stem="https://github.com/sylabs/singularity/releases/download"
-    wget "${url_stem}/v${version}/${file}"
+    _koopa_download "$url"
     _koopa_extract "$file"
     cd "singularity" || exit 1
     ./mconfig --prefix="$prefix"

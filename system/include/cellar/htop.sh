@@ -18,8 +18,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://hisham.hm/htop/releases/${version}/htop-${version}.tar.gz"
-    _koopa_extract "htop-${version}.tar.gz"
+    file="htop-${version}.tar.gz"
+    url="https://hisham.hm/htop/releases/${version}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "htop-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \

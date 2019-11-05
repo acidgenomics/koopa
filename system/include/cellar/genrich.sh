@@ -15,8 +15,9 @@ _koopa_message "Installing ${name} ${version}."
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/jsh58/Genrich/archive/v${version}.tar.gz"
-    _koopa_extract "v${version}.tar.gz"
+    file="v${version}.tar.gz"
+    _koopa_download "https://github.com/jsh58/Genrich/archive/${file}"
+    _koopa_extract "$file"
     cd "Genrich-${version}" || exit 1
     make
     mkdir -pv "${prefix}/bin"

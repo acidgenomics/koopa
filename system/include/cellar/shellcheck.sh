@@ -18,7 +18,7 @@ _koopa_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="shellcheck-v${version}.linux.x86_64.tar.xz"
     url="https://storage.googleapis.com/shellcheck/${file}"
-    wget -qO- "$url"
+    _koopa_download "$url"
     _koopa_extract "$file"
     mkdir -pv "${prefix}/bin"
     cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"

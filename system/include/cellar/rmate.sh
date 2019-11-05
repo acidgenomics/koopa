@@ -14,8 +14,10 @@ exe_file="${prefix}/bin/${name}"
     rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/aurora/rmate/archive/v${version}.tar.gz"
-    _koopa_extract "v${version}.tar.gz"
+    file="v${version}.tar.gz"
+    url="https://github.com/aurora/rmate/archive/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "rmate-${version}" || exit 1
     chmod a+x rmate
     cp rmate "${prefix}/bin"

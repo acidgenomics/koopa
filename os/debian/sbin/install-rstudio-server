@@ -27,7 +27,7 @@ url="https://download2.rstudio.org/server/bionic/amd64/${file}"
     rm -rf "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "$url"
+    _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
     rm -rf "$tmp_dir"
 )
