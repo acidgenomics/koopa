@@ -16,11 +16,10 @@ _koopa_assert_is_installed conda
 
 # outdated:
 # - chromhmm needs to be updated to v1.19.
-# - gatk needs to be updated to v4.
 #
 # missing:
 # - genrich
-# - sratools (fasterq-dump)
+# - sra-tools (fasterq-dump)
 #
 # variation:
 # - peddy
@@ -48,10 +47,9 @@ conda create -qy --name="bioinfo-base" \
 # Workflows                                                                 {{{1
 # ==============================================================================
 
-# > conda-create-env cromwell
-# > conda-create-env fgbio
-# > conda-create-env gatk
-
+conda-create-env cromwell
+conda-create-env fgbio
+conda-create-env gatk4
 conda-create-env nextflow
 
 
