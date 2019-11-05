@@ -11,18 +11,6 @@ _koopa_deactivate_envs
 sudo chown -R root:wheel /usr/local
 sudo chmod 2775 /usr/local
 
-# > sudo crontab -e
-# > @reboot /usr/local/koopa/host/azure/config/etc/reboot.sh
-
-sudo ln -fnsv \
-    /usr/local/koopa/host/azure/config/etc/cron.d/* \
-    /etc/cron.d/.
-
-
-sudo ln -fnsv \
-    /usr/local/koopa/host/azure/config/etc/profile.d/constellation.sh \
-    /etc/profile.d/.
-
 install-rhel7-base
 remove-rhel7-rpm-cruft
 
