@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-_koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
 name="bash"
