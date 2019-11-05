@@ -17,8 +17,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/tmux/tmux/releases/download/${version}/tmux-${version}.tar.gz"
-    _koopa_extract "tmux-${version}.tar.gz"
+    file="tmux-${version}.tar.gz"
+    url="https://github.com/tmux/tmux/releases/download/${version}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "tmux-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
