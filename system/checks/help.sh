@@ -18,6 +18,8 @@ done < <( \
         -mindepth 1 \
         -type d \
         \( -name "bin" -o -name "sbin" \) \
+        -not -path "*/cellar/*" \
+        -not -path "*/dotfiles/*" \
         -print0 \
     )
 
