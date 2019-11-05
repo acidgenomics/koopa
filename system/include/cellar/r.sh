@@ -5,7 +5,6 @@
 # > _koopa_r_javareconf
 # > sudo: R: command not found
 
-_koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed java javac tex
 
