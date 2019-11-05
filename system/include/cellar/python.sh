@@ -12,7 +12,6 @@
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
 
-_koopa_help "$@"
 _koopa_assert_has_no_args "$@"
 
 name="python"

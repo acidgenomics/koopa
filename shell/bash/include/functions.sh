@@ -25,6 +25,38 @@ _koopa_add_local_bins_to_path() {
 
 
 
+# D                                                                         {{{1
+# ==============================================================================
+
+_koopa_die() {
+    # Die with a stack trace, via caller.
+    #
+    # > help caller
+    # caller: caller [expr]
+    # Return the context of the current subroutine call.
+    #
+    # Without EXPR, returns "$line $filename".  With EXPR, returns
+    # "$line $subroutine $filename"; this extra information can be used to
+    # provide a stack trace.
+    #
+    # The value of EXPR indicates how many call frames to go back before the
+    # current one; the top frame is frame 0.
+    #
+    # See also:
+    # - https://unix.stackexchange.com/a/250533
+    #
+    # Updated 2019-11-05.
+    local frame=0
+    while caller $frame
+    do
+        ((frame++))
+    done
+    echo "$*"
+    exit 1
+}
+
+
+
 # F                                                                         {{{1
 # ==============================================================================
 
@@ -71,22 +103,18 @@ _koopa_find_local_bin_dirs() {
 
 _koopa_help() {
     # Show usage via help flag.
-    # Now calls 'man' to display nicely formatted manual page.
-    # Updated 2019-10-26.
+    # Now always calls 'man' to display nicely formatted manual page.
+    # Updated 2019-11-05.
     case "${1:-}" in
         --help|-h)
-            local file name
-            file="$( \
-                caller \
-                | head -n 1 \
-                | cut -d ' ' -f 2 \
-            )"
-            name="$(basename "$file")"
-            if [[ -f "${KOOPA_HOME}/man/man1/${name}.1" ]]
+            local man_file name
+            name="$(basename "$0")"
+            man_file="${KOOPA_HOME}/man/man1/${name}.1"
+            if [[ -f "$man_file" ]]
             then
                 man "$name"
-            else 
-                usage
+            else
+                _koopa_warning "Manual file missing: '${man_file}'."
             fi
             exit 0
             ;;
@@ -101,25 +129,6 @@ help arguments:
     --help, -h
         Show this help message and exit.
 EOF
-}
-
-_koopa_help_header() {
-    # Help header string.
-    # Note that we're using 'caller' here, which is Bash-specific.
-    # Updated 2019-10-22.
-    local name
-    name="${1:-}"
-    if [[ -z "$name" ]]
-    then
-        local file
-        file="$( \
-            caller \
-            | head -n 1 \
-            | cut -d ' ' -f 2 \
-        )"
-        name="$(basename "$file")"
-    fi
-    printf "usage: %s [--help|-h]" "$name"
 }
 
 

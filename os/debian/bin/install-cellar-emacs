@@ -9,7 +9,8 @@ source "${script_dir}/../include/header.sh"
 # > apt-cache search gnutls
 # > apt-cache search libgif
 
-if _koopa_has_sudo
+
+if _koopa_is_shared
 then
     sudo apt-get -y install gnutls-bin libgnutls28-dev
     sudo apt-get -y install libgif-dev
