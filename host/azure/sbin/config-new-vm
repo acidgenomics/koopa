@@ -4,6 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+export KOOPA_FORCE=1
+
 _koopa_assert_has_sudo
 _koopa_deactivate_envs
 
@@ -43,6 +45,7 @@ install-rust
     install-rbenv-ruby
 )
 
+# venv
 rm -frv ~/.virtualenvs
 venv-create-base
 

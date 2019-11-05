@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-11-04.
+    Updated 2019-11-05.
 EOF
 }
 
@@ -167,7 +167,8 @@ export KOOPA_SHELL
 # - Tmux session.
 # - Vim terminal.
 
-if [ "${TERM:-}" = "eterm-color" ] ||
+if [ -n "${KOOPA_FORCE:-}" ] ||
+    [ "${TERM:-}" = "eterm-color" ] ||
     [ -n "${RSTUDIO:-}" ] ||
     [ -n "${SLURM_JOB_ID:-}" ] ||
     [ -n "${TMUX:-}" ] ||
