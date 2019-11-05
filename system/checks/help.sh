@@ -7,6 +7,8 @@ set -Eeu -o pipefail
 KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
 export KOOPA_HOME
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 dirs=()
@@ -32,7 +34,7 @@ do
     done < <(find "$dir" -mindepth 1 -maxdepth 1 -type f -print0)
     for file in "${files[@]}"
     do
-        echo "$file"
+        _koopa_message "$file"
         nice "$file" --help > /dev/null
     done
 done

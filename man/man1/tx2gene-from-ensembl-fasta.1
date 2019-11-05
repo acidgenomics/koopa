@@ -1,6 +1,5 @@
 
 
-
     fasta_file [output_file="${output_file}"]
 
 Generate transcript-to-gene mappings from Ensembl FASTA.
@@ -11,7 +10,7 @@ required positional arguments:
 
 optional positional arguments with defaults:
     2.  Output CSV file.
-        Defaults to '${output_file}'.
+        Defaults to 'tx2gene.csv'.
 
 
 details:
@@ -30,7 +29,7 @@ details:
     4. Remove duplicate lines.
     5. Trim header prefix '>'.
     6. Prepare ',' delim for CSV output.
-    7. Write to '${output_file}'.
+    7. Write to 'tx2gene.csv'.
 
     Ensembl GTF files do not contain complete transcript-to-gene mappings.
     This is particularly an issue for the Homo sapiens reference genome.
