@@ -74,9 +74,10 @@ _koopa_link_cellar "$name" "$version"
 
 (
     cd "$tmp_dir" || exit 1
-    wget -O "ncbi-vdb.tar.gz" \
-        "https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
-    _koopa_extract "ncbi-vdb.tar.gz"
+    file="ncbi-vdb.tar.gz"
+    url="https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
+    _koopa_download "$url" "$file"
+    _koopa_extract "$file"
     mv "ncbi-vdb-${version}" "ncbi-vdb"
     cd "ncbi-vdb" || exit 1
     ./configure \
@@ -95,9 +96,10 @@ _koopa_link_cellar "$name" "$version"
 
 (
     cd "$tmp_dir" || exit 1
-    wget -O "sra-tools.tar.gz" \
-        "https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
-    _koopa_extract "sra-tools.tar.gz"
+    file="sra-tools.tar.gz"
+    url="https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
+    _koopa_download "$url" "$file"
+    _koopa_extract "$file"
     mv "sra-tools-${version}" "sra-tools"
     cd "sra-tools" || exit 1
     ./configure \

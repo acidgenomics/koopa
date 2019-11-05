@@ -16,8 +16,10 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    wget "https://github.com/${name}/${name}/archive/v${version}.tar.gz"
-    _koopa_extract "v${version}.tar.gz"
+    file="v${version}.tar.gz"
+    url="https://github.com/${name}/${name}/archive/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     make \
         --jobs="$CPU_COUNT" \
