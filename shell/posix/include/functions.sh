@@ -213,7 +213,7 @@ _koopa_activate_perlbrew() {
 
 _koopa_activate_rbenv() {
     # Activate Ruby environment manager (rbenv).
-    # Updated 2019-10-29.
+    # Updated 2019-11-05.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -221,10 +221,12 @@ _koopa_activate_rbenv() {
     # Alternate approaches:
     # > _koopa_add_to_path_start "$(rbenv root)/shims"
     # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
-    #
-    # Configure shared installation, if necessary.
+    if _koopa_is_installed rbenv
+    then
+        eval "$(rbenv init -)"
+        return 0
+    fi
     [ -z "${RBENV_ROOT:-}" ] || return 0
-    ! _koopa_is_installed rbenv || return 0
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
