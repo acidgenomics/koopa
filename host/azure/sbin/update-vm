@@ -60,6 +60,7 @@ if [[ "$rsync" -eq 1 ]]
 then
     _koopa_message "Running rsync scripts (password required)."
     rsync-bcbio
+    rsync-cellranger
     if [[ ! -d "/usr/local/conda" ]]
     then
         sudo rm -frv /usr/local/miniconda3
