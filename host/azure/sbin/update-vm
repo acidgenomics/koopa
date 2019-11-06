@@ -83,9 +83,12 @@ fi
 # Ensure that shared bioinfo user has correct dotfiles.
 if [[ -d "${KOOPA_HOME}/dotfiles" ]]
 then
-    _koopa_message "Updating bioinfo user symlinks."
+    _koopa_message "Updating bioinfo user dotfiles."
     sudo -u bioinfo -H "$SHELL" -c "\
-        rm -fr ~/.condarc; \
+        rm -fv ~/.bash_logout; \
+        rm -fv ~/.bash_profile; \
+        rm -fv ~/.bashrc; \
+        rm -fv ~/.condarc; \
         /usr/local/koopa/bin/link-dotfile --force \
             app/emacs/minimal/emacs.el emacs \
     "
