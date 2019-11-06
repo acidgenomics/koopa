@@ -91,7 +91,8 @@ brew install bash fish ksh tcsh zsh
 brew install openblas tcl-tk
 brew install flac lame
 
-# llvm can be useful but takes up 4 GB of disk space.
+# llvm takes up 4 GB of disk space but is required for some Python packages.
+# In particular, if we want to install umap-learn, this is now required.
 
 # Recommended.
 brews=(
@@ -132,6 +133,7 @@ brews=(
     libssh2
     libxml2
     libxslt
+    llvm
     mariadb-connector-c
     mas
     neofetch
