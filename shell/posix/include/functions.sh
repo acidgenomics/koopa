@@ -89,7 +89,7 @@ _koopa_activate_bcbio() {
 _koopa_activate_conda() {
     # """
     # Activate conda.
-    # Updated 2019-10-29.
+    # Updated 2019-11-06.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -101,24 +101,36 @@ _koopa_activate_conda() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        if [ -d "${HOME}/.local/anaconda3" ]
+        if [ -d "${HOME}/.local/conda" ]
+        then
+            prefix="${HOME}/.local/conda"
+        elif [ -d "${HOME}/.local/anaconda3" ]
         then
             prefix="${HOME}/.local/anaconda3"
         elif [ -d "${HOME}/.local/miniconda3" ]
         then
             prefix="${HOME}/.local/miniconda3"
+        elif [ -d "${HOME}/conda" ]
+        then
+            prefix="${HOME}/conda"
         elif [ -d "${HOME}/anaconda3" ]
         then
             prefix="${HOME}/anaconda3"
         elif [ -d "${HOME}/miniconda3" ]
         then
             prefix="${HOME}/miniconda3"
+        elif [ -d "/usr/local/conda" ]
+        then
+            prefix="/usr/local/conda"
         elif [ -d "/usr/local/anaconda3" ]
         then
             prefix="/usr/local/anaconda3"
         elif [ -d "/usr/local/miniconda3" ]
         then
             prefix="/usr/local/miniconda3"
+        elif [ -d "/opt/conda" ]
+        then
+            prefix="/opt/conda"
         elif [ -d "/opt/anaconda3" ]
         then
             prefix="/opt/anaconda3"
