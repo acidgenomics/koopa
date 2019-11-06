@@ -11,6 +11,7 @@ export KOOPA_HOME
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 _koopa_message "Checking manual files for '--help' support."
+export MANPATH="${KOOPA_HOME}/man:${MANPATH}"
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 dirs=()
