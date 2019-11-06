@@ -104,7 +104,7 @@ _koopa_find_local_bin_dirs() {
 _koopa_help() {
     # Show usage via help flag.
     # Now always calls 'man' to display nicely formatted manual page.
-    # Updated 2019-11-05.
+    # Updated 2019-11-06.
     case "${1:-}" in
         --help|-h)
             local man_file name
@@ -114,7 +114,7 @@ _koopa_help() {
             then
                 man "$name"
             else
-                _koopa_warning "Manual file missing: '${man_file}'."
+                _koopa_stop "Manual file missing: '${man_file}'."
             fi
             exit 0
             ;;
