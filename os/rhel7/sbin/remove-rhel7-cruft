@@ -44,7 +44,7 @@ sudo rm -frv /usr/lib/jvm/*
 
 _koopa_message "\
 Removing Pandoc.
-Use conda version instead at '/usr/local/miniconda3/envs/pandoc'."
+Use conda version instead."
 
 sudo yum -y remove \
     '*-pandoc' \
