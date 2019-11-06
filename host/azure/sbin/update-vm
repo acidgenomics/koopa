@@ -20,8 +20,13 @@ do
     esac
 done
 
+# profile.d
 _koopa_update_profile
+sudo ln -fnsv \
+    /usr/local/koopa/host/azure/etc/profile.d/constellation.sh \
+    /etc/profile.d/.
 
+# cron.d
 sudo rm -fv /etc/cron.d/cpi-*
 sudo ln -fnsv \
     /usr/local/koopa/host/azure/etc/cron.d/constellation \
