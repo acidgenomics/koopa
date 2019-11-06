@@ -11,11 +11,10 @@ _koopa_assert_is_installed python3 python
 env_name="${1:-"base"}"
 env_base_dir="${2:-"${HOME}/.virtualenvs"}"
 env_dir="${env_base_dir}/${env_name}"
-py_exe="${env_dir}/bin/python3"
 
 rm -frv "$env_dir"
-
 python3 -m venv "$env_dir"
+py_exe="${env_dir}/bin/python3"
 
 "$py_exe" -m pip install --upgrade pip
 "$py_exe" -m pip install black flake8 pyflakes pylint pytest pytest-flake8
