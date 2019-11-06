@@ -15,11 +15,14 @@ rm -frv "$env_dir"
 python3 -m venv "$env_dir"
 py_exe="${env_dir}/bin/python3"
 
+# Now failing on macOS because of llvmlite, fun.
+# llvmlite
+# Can't find llvm-config, LLVM_CONFIG
+
 "$py_exe" -m pip install --upgrade pip
 "$py_exe" -m pip install Cython
 "$py_exe" -m pip install numpy
 "$py_exe" -m pip install scikit-learn
-"$py_exe" -m pip install llvmlite
 "$py_exe" -m pip install numba
 "$py_exe" -m pip install umap-learn
 "$py_exe" -m pip install louvain
