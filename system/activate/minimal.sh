@@ -120,11 +120,8 @@ fi
 
 # SHELL
 # Note that this doesn't currently get set by RStudio terminal.
-if [ -z "${SHELL:-}" ]
-then
-    SHELL="$(_koopa_realpath "$KOOPA_SHELL")"
-    export SHELL
-fi
+SHELL="$(_koopa_realpath "$KOOPA_SHELL")"
+export SHELL
 
 # TERM
 # Terminal color mode. This should normally be set by the terminal client.
