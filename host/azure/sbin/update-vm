@@ -50,8 +50,11 @@ sudo cp -v /usr/local/koopa/host/azure/etc/cron.d/constellation \
 
 # Refer to 'https://github.com/acidgenomics/docker' for details.
 _koopa_message "Updating Docker config."
-sudo ln -fnsv /usr/local/koopa/os/fedora/etc/docker/* /etc/docker/.
 sudo systemctl stop docker
+sudo ln -fnsv /usr/local/koopa/os/fedora/etc/docker/* /etc/docker/.
+sudo rm -frv /var/lib/docker
+sudo mkdir -pv /data00/var/lib/docker
+sudo ln -fnsv /data00/var/lib/docker /var/lib/docker
 sudo systemctl enable docker
 sudo systemctl start docker
 
