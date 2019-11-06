@@ -4,6 +4,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
+_koopa_assert_has_no_environments
+_koopa_assert_is_installed python3 python
 
 if _koopa_is_darwin
 then
@@ -28,17 +30,16 @@ then
     export DYLD_LIBRARY_PATH="/usr/local/opt/libomp/lib"
     export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
     
-    # umap-learn > numba > llvmlite
-    # Note that llvmlite currently requires LLVM 7.
-    # https://github.com/numba/llvmlite/issues/523
-    # > brew install llvm@7
-    
     # Homebrew LLVM
+    # > brew install llvm@7
     llvm_dir="/usr/local/opt/llvm@7"
     export LLVM_CONFIG="${llvm_dir}/bin/llvm-config"
 fi
 
 # Check that LLVM 7 is configured correctly.
+# umap-learn > numba > llvmlite
+# Note that llvmlite currently requires LLVM 7.
+# https://github.com/numba/llvmlite/issues/523
 if [[ -z "${LLVM_CONFIG:-}" ]]
 then
     _koopa_stop "Export 'LLVM_CONFIG' to locate LLVM 7 llvm-config."
@@ -51,8 +52,6 @@ then
 fi
 
 _koopa_message "LLVM: '${LLVM_CONFIG}'."
-
-_koopa_assert_is_installed python3 python
 
 env_name="r-reticulate"
 env_base_dir="${1:-"${HOME}/.virtualenvs"}"
