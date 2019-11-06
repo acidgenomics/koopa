@@ -48,6 +48,13 @@ sudo rm -fv /etc/cron.d/constellation
 sudo cp -v /usr/local/koopa/host/azure/etc/cron.d/constellation \
     /etc/cron.d/constellation
 
+# Refer to 'https://github.com/acidgenomics/docker' for details.
+_koopa_message "Updating Docker config."
+sudo ln -fnsv /usr/local/koopa/os/fedora/etc/docker/* /etc/docker/.
+sudo systemctl stop docker
+sudo systemctl enable docker
+sudo systemctl start docker
+
 if [[ "$yum" -eq 1 ]]
 then
     _koopa_message "Updating yum/rpm packages."
