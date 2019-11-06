@@ -17,6 +17,7 @@ jobs:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './system/checks/linter.sh'
+        - bash -c './system/checks/help.sh'
     - stage: test
       name: "macos"
       os: osx
@@ -24,6 +25,7 @@ jobs:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './system/checks/linter.sh'
+        - bash -c './system/checks/help.sh'
 
 notifications:
   email:
