@@ -16,7 +16,7 @@ fi
 
 if _koopa_is_azure
 then
-    update-vm
+    update-vm --all
 else
     update-conda
 fi
