@@ -64,12 +64,6 @@ then
     rsync-r
 fi
 
-# Ensure that conda has a system configuration file.
-if [[ ! -f "/usr/local/miniconda3/.condarc" ]]
-then
-    _koopa_warning "Shared conda system configuration file missing."
-fi
-
 # Ensure that shared bioinfo user has correct dotfiles.
 if [[ -d "${KOOPA_HOME}/dotfiles" ]]
 then
