@@ -53,6 +53,9 @@ sudo update-alternatives --install \
     "java" \
     "${jdk_dir}/jdk-${version}/bin/java" \
     "$priority"
+sudo update-alternatives --set \
+    "java" \
+    "${jdk_dir}/jdk-${version}/bin/java"
 
 sudo rm -fv /var/lib/alternatives/javac
 sudo update-alternatives --install \
@@ -60,6 +63,9 @@ sudo update-alternatives --install \
     "javac" \
     "${jdk_dir}/jdk-${version}/bin/javac" \
     "$priority"
+sudo update-alternatives --set \
+    "javac" \
+    "${jdk_dir}/jdk-${version}/bin/javac"
 
 sudo rm -fv /var/lib/alternatives/jar
 sudo update-alternatives --install \
@@ -67,10 +73,9 @@ sudo update-alternatives --install \
     "jar" \
     "${jdk_dir}/jdk-${version}/bin/jar" \
     "$priority"
-
-sudo update-alternatives --config java
-sudo update-alternatives --config javac
-sudo update-alternatives --config jar
+sudo update-alternatives --set \
+    "jar" \
+    "${jdk_dir}/jdk-${version}/bin/jar"
 
 update-alternatives --display java
 update-alternatives --display javac
