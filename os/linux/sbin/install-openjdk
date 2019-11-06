@@ -46,16 +46,22 @@ fi
 _koopa_set_permissions "$jdk_dir"
 
 priority="100"
+
+sudo rm -fv /var/lib/alternatives/java
 sudo update-alternatives --install \
     "/usr/bin/java" \
     "java" \
     "${jdk_dir}/jdk-${version}/bin/java" \
     "$priority"
+
+sudo rm -fv /var/lib/alternatives/javac
 sudo update-alternatives --install \
     "/usr/bin/javac" \
     "javac" \
     "${jdk_dir}/jdk-${version}/bin/javac" \
     "$priority"
+
+sudo rm -fv /var/lib/alternatives/jar
 sudo update-alternatives --install \
     "/usr/bin/jar" \
     "jar" \
