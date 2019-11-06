@@ -77,6 +77,7 @@ fi
 
 sudo rm -frv /usr/local/bin/cellranger-2.1.0
 sudo rm -frv /usr/local/bin/miniconda3
+sudo rm -frv /usr/local/miniconda3
 
 if [[ "$broken" -eq 1 ]]
 then
