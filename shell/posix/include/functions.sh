@@ -2707,36 +2707,22 @@ _koopa_update_ldconfig() {
 }
 
 _koopa_update_profile() {
-    # Add shared 'zzz-koopa.sh' configuration file to '/etc/profile.d/'.
-    # Updated 2019-10-27.
-    local file
+    # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
+    # Updated 2019-11-05.
+    local symlink
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
     # Early return if config file already exists.
-    file="/etc/profile.d/zzz-koopa.sh"
-    if [ -f "$file" ]
+    symlink="/etc/profile.d/zzz-koopa.sh"
+    if [ -L "$symlink" ]
     then
-        _koopa_note "'${file}' exists."
+        _koopa_note "'${symlink}' exists."
         return 0
     fi
-    # Rename existing 'koopa.sh' file, if applicable.
-    old_file="/etc/profile.d/koopa.sh"
-    if [ -f "$old_file" ]
-    then
-        _koopa_message "Renaming '${old_file}' to '${file}'."
-        sudo mv -v "$old_file" "$file"
-        return 0
-    fi
-    _koopa_message "Adding '${file}'."
-    sudo mkdir -p "$(dirname file)"
-    sudo bash -c "cat << EOF > $file
-#!/bin/sh
-
-# koopa shell
-# https://github.com/acidgenomics/koopa
-# shellcheck source=/dev/null
-. ${KOOPA_HOME}/activate
-EOF"
+    _koopa_message "Adding '${symlink}'."
+    sudo rm -fv "/etc/profile.d/koopa.sh"
+    sudo ln -fnsv "${KOOPA_HOME}/os/linux/etc/profile.d/zzz-koopa.sh" "$symlink"
+    return 0
 }
 
 _koopa_update_r_config() {
