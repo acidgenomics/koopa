@@ -10,6 +10,8 @@ export KOOPA_HOME
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
+_koopa_message "Checking manual files for '--help' support."
+
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 dirs=()
 while IFS= read -r -d $'\0'
