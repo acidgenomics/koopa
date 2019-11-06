@@ -12,6 +12,7 @@ source "${script_dir}/../../../shell/bash/include/header.sh"
 if _koopa_is_darwin
 then
     update-homebrew
+    update-r-packages
     # > if _koopa_has_sudo
     # > then
     # >     update-tex
@@ -27,7 +28,6 @@ fi
 update-conda
 update-venv
 update-rust
-update-r-packages
 
 
 
