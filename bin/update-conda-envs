@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+_koopa_assert_has_no_args "$@"
+
+while IFS= read -r -d '' prefix
+do
+    _koopa_message "Updating '${prefix}'."
+    conda update -y --prefix="$prefix" --all
+done < <( \
+    find "${CONDA_PREFIX}/envs" \
+        -mindepth 1 \
+        -maxdepth 1 \
+        -type d \
+        -print0 \
+        | sort -z \
+)
+

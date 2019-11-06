@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Check that all scripts support '--help' flag.
-# Updated 2019-11-05.
+# Updated 2019-11-06.
 
 KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
@@ -12,7 +12,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 dirs=()
-while IFS=  read -r -d $'\0'
+while IFS= read -r -d $'\0'
 do
     dirs+=("$REPLY")
 done < <( \
@@ -23,15 +23,23 @@ done < <( \
         -not -path "*/cellar/*" \
         -not -path "*/dotfiles/*" \
         -print0 \
+        | sort -z \
     )
 
 for dir in "${dirs[@]}"
 do
     files=()
-    while IFS=  read -r -d $'\0'
+    while IFS= read -r -d $'\0'
     do
         files+=("$REPLY")
-    done < <(find "$dir" -mindepth 1 -maxdepth 1 -type f -print0)
+    done < <( \
+        find "$dir" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type f \
+            -print0 \
+            | sort -z \
+        )
     for file in "${files[@]}"
     do
         _koopa_message "$file"
