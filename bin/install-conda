@@ -24,7 +24,7 @@ done
 if [[ "$anaconda" -eq 1 ]]
 then
     name="anaconda3"
-    # FIXME Get the current Anaconda installer version automatically.
+    # Or get the current Anaconda installer version automatically.
     # https://www.anaconda.com/distribution/#linux
     # https://www.anaconda.com/distribution/#macos
     version="$(_koopa_variable "$name")"
@@ -84,7 +84,7 @@ else
     )
 fi
 
-ln -fnsv "${KOOPA_HOME}/os/linux/conda/condarc" \
+ln -fnsv "${KOOPA_HOME}/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
 _koopa_set_permissions "$prefix"
