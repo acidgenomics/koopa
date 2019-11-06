@@ -44,9 +44,9 @@ sudo ln -fnsv \
 
 _koopa_message "Updating '/etc/cron.d'."
 sudo rm -fv /etc/cron.d/cpi-*
-sudo ln -fnsv \
-    /usr/local/koopa/host/azure/etc/cron.d/constellation \
-    /etc/cron.d/.
+sudo rm -fv /etc/cron.d/constellation
+sudo cp -v /usr/local/koopa/host/azure/etc/cron.d/constellation \
+    /etc/cron.d/constellation
 
 if [[ "$yum" -eq 1 ]]
 then
