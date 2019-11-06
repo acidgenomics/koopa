@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # CPI Azure VM start-up script that runs at reboot.
-# Updated 2019-11-03.
+# Updated 2019-11-06.
 
 # Avoid writing our config files into '/etc/' when possible.
 # Use '/usr/local/' instead, especially for program installs.
