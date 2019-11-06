@@ -79,7 +79,10 @@ then
     prefix="$(_koopa_build_prefix)"
     remove-broken-symlinks "$prefix"
     remove-empty-dirs "$prefix"
+    remove-broken-cellar-symlinks
 fi
+
+# > remove-broken-symlinks "$HOME"
 
 _koopa_message "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
