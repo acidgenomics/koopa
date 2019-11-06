@@ -60,7 +60,23 @@ if [[ "$rsync" -eq 1 ]]
 then
     _koopa_message "Running rsync scripts (password required)."
     rsync-bcbio
+    if [[ ! -d "/usr/local/conda" ]]
+    then
+        sudo rm -frv /usr/local/miniconda3
+        sudo rm -frv /data00/miniconda3
+        sudo mkdir -pv /data00/conda
+        sudo chmod 2775 /data00/conda
+        sudo chown -Rh mike:wheel /data00/conda
+        rm -frv /usr/local/conda
+        sudo ln -fnsv /data00/conda /usr/local/conda
+    fi
     rsync-conda
+    if [[ ! -d "/data00/R" ]]
+    then
+        sudo mkdir -pv /data00/R
+        sudo chmod 2775 /data00/R
+        sudo chown -Rh mike:wheel /data00/R
+    fi
     rsync-r
 fi
 
