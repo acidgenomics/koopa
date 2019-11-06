@@ -120,6 +120,7 @@ brews=(
     gsl
     hdf5
     hub
+    igraph
     imagemagick
     ksh
     leiningen
