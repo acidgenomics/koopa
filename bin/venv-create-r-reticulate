@@ -4,21 +4,68 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_is_installed llvm-config python3 python
+
+if _koopa_is_darwin
+then
+    # These compiler flags are now required for scikit-learn to compile, which
+    # now requires OpenMP that is unsupported by system default gcc alias.
+    # Ensure that we're using the correct Clang and LLVM settings.
+    #
+    # clang: error: unsupported option '-fopenmp'
+    # brew info libomp
+    #
+    # See also:
+    # - http://llvmlite.pydata.org/
+    # - https://github.com/scikit-learn/scikit-learn/issues/13371
+    # - https://scikit-learn.org/dev/developers/advanced_installation.html
+
+    # System Clang (Xcode)
+    export CC="/usr/bin/clang"
+    export CXX="/usr/bin/clang++"
+    export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
+    export CPPFLAGS="${CPPFLAGS:-} -Xpreprocessor -fopenmp"
+    export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
+    export DYLD_LIBRARY_PATH="/usr/local/opt/libomp/lib"
+    export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
+    
+    # umap-learn > numba > llvmlite
+    # Note that llvmlite currently requires LLVM 7.
+    # https://github.com/numba/llvmlite/issues/523
+    # > brew install llvm@7
+    
+    # Homebrew LLVM
+    llvm_dir="/usr/local/opt/llvm@7"
+    export LLVM_CONFIG="${llvm_dir}/bin/llvm-config"
+fi
+
+# Check that LLVM 7 is configured correctly.
+if [[ -z "${LLVM_CONFIG:-}" ]]
+then
+    _koopa_stop "Export 'LLVM_CONFIG' to locate LLVM 7 llvm-config."
+fi
+
+llvm_ver="$("$LLVM_CONFIG" --version | cut -d '.' -f 1)"
+if [[ "$llvm_ver" != "7" ]]
+then
+    _koopa_stop "Failed to detect LLVM 7 via 'LLVM_CONFIG'."
+fi
+
+_koopa_message "LLVM: '${LLVM_CONFIG}'."
+
+_koopa_assert_is_installed python3 python
 
 env_name="r-reticulate"
 env_base_dir="${1:-"${HOME}/.virtualenvs"}"
 env_dir="${env_base_dir}/${env_name}"
 
-rm -frv "$env_dir"
+rm -fr "$env_dir"
 python3 -m venv "$env_dir"
 py_exe="${env_dir}/bin/python3"
 
 "$py_exe" -m pip install --upgrade pip
 "$py_exe" -m pip install Cython
-"$py_exe" -m pip install numpy
-"$py_exe" -m pip install scikit-learn
-"$py_exe" -m pip install numba
+"$py_exe" -m pip install llvmlite
+# Depends on: numpy, scipy, joblib, scikit-learn, llvmlite, numba
 "$py_exe" -m pip install umap-learn
 "$py_exe" -m pip install louvain
 "$py_exe" -m pip list

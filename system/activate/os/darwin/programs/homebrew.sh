@@ -50,25 +50,6 @@ unset -v prefix
 # >     _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
 # > fi
 
-# These compiler flags are now required for scikit-learn to compile, which now
-# requires OpenMP that is unsupported by system default gcc alias. Ensure that
-# we're using the correct Clang settings.
-#
-# clang: error: unsupported option '-fopenmp'
-# brew info libomp
-#
-# See also:
-# - https://github.com/scikit-learn/scikit-learn/issues/13371
-# - https://scikit-learn.org/dev/developers/advanced_installation.html
-
-export CC="/usr/bin/clang"
-export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
-export CPPFLAGS="${CPPFLAGS:-} -Xpreprocessor -fopenmp"
-export CXX="/usr/bin/clang++"
-export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
-export DYLD_LIBRARY_PATH="/usr/local/opt/libomp/lib"
-export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
-
 
 
 # Google Cloud SDK                                                          {{{1
