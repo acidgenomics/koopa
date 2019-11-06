@@ -4,11 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
-
-
-# Programs                                                                  {{{1
-# ==============================================================================
-
 if _koopa_is_darwin
 then
     update-homebrew
@@ -17,26 +12,20 @@ then
     # > then
     # >     update-tex
     # > fi
-elif _koopa_is_linux
-then
-    reset-prefix-permissions
-    prefix="$(_koopa_build_prefix)"
-    remove-broken-symlinks "$prefix"
-    remove-empty-dirs "$prefix"
 fi
 
-update-conda
+if _koopa_is_azure
+then
+    update-vm
+else
+    update-conda
+fi
+
 update-venv
 update-rust
 
-
-
-# Config dirs                                                               {{{1
-# ==============================================================================
-
-config_dir="$(_koopa_config_dir)"
-
 # Loop across config directories and update git repos.
+config_dir="$(_koopa_config_dir)"
 dirs=(
     Rcheck
     docker
@@ -82,6 +71,14 @@ _koopa_message "Updating koopa."
 if [[ -d "${KOOPA_HOME}/system/config" ]]
 then
     rm -frv "${KOOPA_HOME}/system/config"
+fi
+
+if _koopa_is_linux
+then
+    reset-prefix-permissions
+    prefix="$(_koopa_build_prefix)"
+    remove-broken-symlinks "$prefix"
+    remove-empty-dirs "$prefix"
 fi
 
 _koopa_message "koopa update was successful."
