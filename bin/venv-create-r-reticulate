@@ -63,7 +63,6 @@ py_exe="${env_dir}/bin/python3"
 
 "$py_exe" -m pip install --upgrade pip
 "$py_exe" -m pip install Cython
-"$py_exe" -m pip install llvmlite
 # Depends on: numpy, scipy, joblib, scikit-learn, llvmlite, numba
 "$py_exe" -m pip install umap-learn
 "$py_exe" -m pip install louvain
