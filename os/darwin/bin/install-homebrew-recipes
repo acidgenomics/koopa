@@ -126,6 +126,7 @@ brews=(
     libav
     libgit2
     libiconv
+    libomp
     libressl
     librsvg
     libssh2
