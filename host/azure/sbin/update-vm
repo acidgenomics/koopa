@@ -58,7 +58,7 @@ fi
 
 if [[ "$rsync" -eq 1 ]]
 then
-    _koopa-message "Running rsync scripts (password required)."
+    _koopa_message "Running rsync scripts (password required)."
     rsync-bcbio
     rsync-conda
     rsync-r
