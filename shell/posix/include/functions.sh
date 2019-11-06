@@ -1083,10 +1083,10 @@ _koopa_conda_internal_prefix() {
 }
 
 _koopa_config_dir() {
-    # Updated 2019-10-27.
+    # Updated 2019-11-06.
     if [ -z "${XDG_CONFIG_HOME:-}" ]
     then
-        _koopa_warning "'XDG_CONFIG_HOME' is unset."
+        # > _koopa_warning "'XDG_CONFIG_HOME' is unset."
         XDG_CONFIG_HOME="${HOME}/.config"
     fi
     echo "${XDG_CONFIG_HOME}/koopa"
