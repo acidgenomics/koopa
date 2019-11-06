@@ -9,20 +9,14 @@ required positional arguments with defaults:
     1.  JDK installation directory.
         Defaults to '${jdk_dir}'.
 
-
 details:
-    Check that other Java versions are not installed before continuing:
-    """sh
-    sudo yum list installed | grep java
-    """
-
-    Clean up on RHEL 7:
-    remove-rhel7-rpm-cruft
-
     Note that yum installs to '/usr/lib/jvm/' on Fedora.
     Symlinks are defined in '/etc/alternatives/'.
 
 see also:
+    > sudo yum list installed | grep java
+    > remove-rhel7-rpm-cruft
+
     - https://jdk.java.net/
     - https://stackoverflow.com/questions/12787757/
           how-to-use-the-command-update-alternatives-config-java
@@ -31,4 +25,4 @@ see also:
 
 note:
     Bash script.
-    Updated 2019-11-05.
+    Updated 2019-11-06.

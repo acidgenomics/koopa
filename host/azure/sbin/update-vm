@@ -12,6 +12,12 @@ yum=0
 while (("$#"))
 do
     case "$1" in
+        --all)
+            broken=1
+            rsync=1
+            yum=1
+            shift 1
+            ;;
         --broken)
             broken=1
             shift 1
@@ -47,15 +53,15 @@ then
     _koopa_message "Updating yum/rpm packages."
     sudo yum update -y
     install-rhel7-base
-    remove-rhel7-rpm-cruft
+    remove-rhel7-cruft
 fi
 
 if [[ "$rsync" -eq 1 ]]
 then
     _koopa-message "Running rsync scripts (password required)."
     rsync-bcbio
-    rsync-miniconda3
-    rsync-r-site-library
+    rsync-conda
+    rsync-r
 fi
 
 # Ensure that conda has a system configuration file.
