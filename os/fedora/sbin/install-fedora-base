@@ -43,6 +43,8 @@ sudo yum -y install \
     mpfr-devel \
     ncurses \
     openssl-devel \
+    pandoc \
+    pandoc-citeproc \
     parallel \
     pcre-devel \
     poppler-cpp-devel \
