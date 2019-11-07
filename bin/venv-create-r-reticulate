@@ -13,6 +13,8 @@ then
     # now requires OpenMP that is unsupported by system default gcc alias.
     # Ensure that we're using the correct Clang and LLVM settings.
     #
+    # Refer to 'system/activate/program.sh' for LLVM_CONFIG export.
+    #
     # clang: error: unsupported option '-fopenmp'
     # brew info libomp
     #
@@ -29,11 +31,6 @@ then
     export CXXFLAGS="${CXXFLAGS:-} -I/usr/local/opt/libomp/include"
     export DYLD_LIBRARY_PATH="/usr/local/opt/libomp/lib"
     export LDFLAGS="${LDFLAGS:-} -L/usr/local/opt/libomp/lib -lomp"
-    
-    # Homebrew LLVM
-    # > brew install llvm@7
-    llvm_dir="/usr/local/opt/llvm@7"
-    export LLVM_CONFIG="${llvm_dir}/bin/llvm-config"
 fi
 
 # Check that LLVM 7 is configured correctly.
