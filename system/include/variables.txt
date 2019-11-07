@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-11-06"
+koopa_date="2019-11-07"
 
 
 
@@ -25,7 +25,7 @@ bcl2fastq="2.20.0.422"
 # http://bioconductor.org/
 bioconductor="3.10"
 
-# Apple LLVM version
+# Apple Xcode version
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
 clang="11.0.0"
@@ -75,6 +75,10 @@ htop="2.2.0"
 
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
 java="13.0.1"
+
+# LLVM
+# Version 7 is required for umap-learn > numba > llvmlite
+llvm="7"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
