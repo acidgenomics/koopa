@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-10-21.
+## Updated 2019-11-07.
 
 options(
     error = quote(quit(status = 1L)),
@@ -11,6 +11,10 @@ options(
 
 
 ## Notes =======================================================================
+## Semantic versioning
+## https://semver.org/
+## MAJOR.MINOR.PATCH
+
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
 ## ## Try: gem pristine commonmarker --version 0.17.13
@@ -18,7 +22,9 @@ options(
 
 
 ## Variables ===================================================================
+## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
+
 koopaHome <- Sys.getenv("KOOPA_HOME")
 stopifnot(isTRUE(nzchar(koopaHome)))
 
@@ -128,6 +134,18 @@ checkVersion <- function(
     invisible(ok)
 }
 
+currentMajorVersion <- function(name) {
+    x <- currentVersion(name)
+    x <- majorVersion(x)
+    x
+}
+
+currentMinorVersion <- function(name) {
+    x <- currentVersion(name)
+    x <- minorVersion(x)
+    x
+}
+
 currentVersion <- function(name) {
     script <- file.path(
         Sys.getenv("KOOPA_HOME"),
@@ -147,8 +165,14 @@ currentVersion <- function(name) {
 
 expectedMajorVersion <- function(x) {
     x <- expectedVersion(x)
+    x <- majorVersion(x)
+    x
+}
+
+expectedMinorVersion <- function(x) {
+    x <- expectedVersion(x)
     stopifnot(isTRUE(grepl("\\.", x)))
-    x <- gsub("^(.+)\\.(.+)\\.(.+)$", "\\1.\\2", x)
+    x <- minorVersion(x)
     x
 }
 
@@ -231,6 +255,18 @@ installed <- function(which, required = TRUE) {
 
 isInstalled <- function(which) {
     nzchar(Sys.which(which))
+}
+
+## e.g. vim 8
+majorVersion <- function(x) {
+    strsplit(x, split = "\\.")[[1L]][[1L]]
+}
+
+## e.g. vim 8.1
+minorVersion <- function(x) {
+    x <- strsplit(x, split = "\\.")[[1L]]
+    x <- paste(x[seq_len(2L)], collapse = ".")
+    x
 }
 
 ## Sanitize complicated verions:
@@ -326,9 +362,8 @@ message("\nSecondary languages:")
 checkVersion(
     name = "Go",
     whichName = "go",
-    current = currentVersion("go"),
-    expected = expectedMajorVersion("go"),
-    eval = ">="
+    current = currentMinorVersion("go"),
+    expected = expectedMinorVersion("go")
 )
 checkVersion(
     name = "Java",
@@ -539,6 +574,12 @@ checkVersion(
     whichName = "h5cc",
     current = currentVersion("hdf5"),
     expected = expectedVersion("hdf5")
+)
+checkVersion(
+    name = "LLVM",
+    whichName = NULL,
+    current = currentMajorVersion("llvm"),
+    expected = expectedMajorVersion("llvm")
 )
 ## Note that macOS switched to LibreSSL in 2018.
 ## > darwin = "2.6.5"
