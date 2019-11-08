@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-11-06.
+    Updated 2019-11-08.
 EOF
 }
 
@@ -356,7 +356,6 @@ then
     _koopa_activate_rust
     _koopa_activate_bcbio
     _koopa_activate_conda
-    _koopa_activate_conda_envs
     . "${activate_dir}/programs.sh"
     _koopa_activate_venv
 fi
