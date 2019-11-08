@@ -152,17 +152,6 @@ _koopa_activate_conda() {
     return 0
 }
 
-_koopa_activate_conda_envs() {
-    # """
-    # Put useful conda environments in PATH.
-    # Updated 2019-10-29.
-    # """
-    _koopa_is_linux || return 0
-    _koopa_is_installed conda || return 0
-    _koopa_add_conda_env_to_path pandoc
-    # > _koopa_add_conda_env_to_path texlive-core
-}
-
 _koopa_activate_ensembl_perl_api() {
     # Activate Ensembl Perl API.
     # Updated 2019-10-29.
