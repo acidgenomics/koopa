@@ -15,6 +15,11 @@ overhaluled and improved.
   loaded by other program scripts. For example, be careful not to mask
   `deactivate` for Python venv.
 
+### Minor changes
+
+- Reorganied bcbio admin scripts previously defined for Azure VMs. Migraged
+  these scripts to Linux `sbin/`.
+
 ## koopa 0.6.0 (2019-10-14)
 
 ### New scripts
