@@ -3,11 +3,10 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-
-export KOOPA_FORCE=1
-
 _acid_assert_has_sudo
 _acid_deactivate_envs
+
+export KOOPA_FORCE=1
 
 sudo chmod 2775 /usr/local
 sudo chown -Rh root:wheel /usr/local
