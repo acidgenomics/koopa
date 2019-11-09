@@ -5,11 +5,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _acid_is_installed convmv
 
-if [[ -z "$*" ]]
-then
-    args=(".")
-else
-    args=("$@")
-fi
-
-convmv -r -f utf8 -t utf8 --nfc --notest "${args[@]}"
+convmv -r -f utf8 -t utf8 --nfc --notest "$@"
