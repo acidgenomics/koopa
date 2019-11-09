@@ -1,6 +1,6 @@
-.TH CAMEL-CASE 1 2019-10-25 Bash
+.TH CAMEL-CASE 1 2019-11-09 Bash
 .SH NAME
-camel-case \- convert input into camel case
+camel-case \- Convert input into camel case
 .SH SYNOPSIS
 .B camel-case
 [\fB\-\-rename\fR]
@@ -10,23 +10,20 @@ camel-case \- convert input into camel case
 .SH OPTIONS
 .TP
 .BR \-\-rename
-Rename input files.
-Assumes we're renaming files in current working directory, but also supports explicit and/or mixed file paths.
-Doesn't work recursively.
+Rename input files. Assumes we're renaming files in current working directory, but also supports explicit and/or mixed file paths. Doesn't work recursively.
 .TP
 .BR \-\-strict
-Enforce strict camel case output, coercing acronyms.
-For example, 'geneID' becomes 'geneId'.
+Enforce strict camel case output, coercing acronyms. For example, 'geneID' becomes 'geneId'.
 .TP
 .BR \-\-prefix
-Include "x" prefix for names that are syntactically invalid in R.
-Note that this includes input beginning with a number.
-Disabled by default.
+Include "x" prefix for names that are syntactically invalid in R. Note that this includes input beginning with a number. Disabled by default.
 .SH DESCRIPTION
-Runs in string mode by default.
-File rename mode can be enabled by setting '--rename' flag.
+Runs in string mode by default. File rename mode can be enabled by setting '--rename' flag.
 .SH SEE ALSO
-See 'syntactic::camelCase()' in R.
+.IP
+\(bu 'syntactic::camelCase()' in R.
+.IP
+\(bu https://syntactic.acidgenomics.com/
 .SH EXAMPLE
 camel-case "hello world" "foo bar"
     ## helloWorld fooBar
@@ -40,5 +37,4 @@ camel-case --rename "foo-bar.fastq.gz"
 camel-case --rename --prefix 1-control-A.fastq.gz
     ## ./x1ControlA.fastq.gz
 .SH NOTE
-Bash script that calls Rscript internally.
-Requires the syntactic package to be installed.
+Bash script that calls Rscript internally. Requires the syntactic package to be installed.

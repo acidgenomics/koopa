@@ -1,43 +1,33 @@
-
-
-
-    [--rename] [--prefix]
-    string|file...
-
-Convert input into kebab case.
-
-required positional arguments:
-    ... Character strings or file names to sanitize.
-
-optional arguments:
-    --rename
-        Rename input files. Assumes we're renaming files in current working
-        directory, but also supports explicit and/or mixed file paths. Doesn't
-        work recursively.
-    --prefix
-        Include "x" prefix for names that are syntactically invalid in R.
-        Note that this includes strings beginning with a number.
-        Disabled by default.
-
-
-details:
-    Runs in string mode by default.
-    File rename mode can be enabled by setting '--rename' flag.
-
-see also:
-    - 'syntactic::kebabCase()' in R.
-
-examples:
-    kebab-case "hello world" "foo bar" "geneID"
+.TH KEBAB-CASE 1 2019-11-09 Bash
+.SH NAME
+kebab-case \- Convert input into kebab case
+.SH SYNOPSIS
+.B kebab-case
+[\fB\-\-rename\fR]
+[\fB\-\-prefix\fR]
+.IR string|file ...
+.SH OPTIONS
+.TP
+.BR \-\-rename
+Rename input files. Assumes we're renaming files in current working directory, but also supports explicit and/or mixed file paths. Doesn't work recursively.
+.TP
+.BR \-\-prefix
+Include "x" prefix for names that are syntactically invalid in R. Note that this includes input beginning with a number. Disabled by default.
+.SH DESCRIPTION
+Runs in string mode by default. File rename mode can be enabled by setting '--rename' flag.
+.SH SEE ALSO
+.IP
+\(bu 'syntactic::kebabCase()' in R.
+.IP
+\(bu https://syntactic.acidgenomics.com/
+.SH EXAMPLE
+kebab-case "hello world" "foo bar" "geneID"
     ## hello-world foo-bar gene-id
-
-    kebab-case --rename "foo_bar.fastq.gz"
+.PP
+kebab-case --rename "foo_bar.fastq.gz"
     ## ./foo-bar.fastq.gz
-
-    kebab-case --rename --prefix 1_control_A.fastq.gz
+.PP
+kebab-case --rename --prefix 1_control_A.fastq.gz
     ## ./x1-control-a.fastq.gz
-
-note:
-    Bash script that calls Rscript internally.
-    Requires the syntactic package to be installed.
-    Updated 2019-10-23.
+.SH NOTE
+Bash script that calls Rscript internally. Requires the syntactic package to be installed.
