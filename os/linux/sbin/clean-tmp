@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
+source "${script_dir}/../include/header.sh"
 
 _acid_assert_has_no_args "$@"
-_acid_assert_has_sudo
 
 sudo find "/tmp" -mindepth 1 -maxdepth 1 -ctime +30 -exec rm -frv {} \;
 

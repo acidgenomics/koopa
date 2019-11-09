@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _kookpa_assert_has_no_args "$@"
-_acid_assert_has_sudo
+
 
 name="shiny-server"
 tmp_dir="$(_acid_tmp_dir)/${name}"
