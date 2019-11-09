@@ -14,7 +14,6 @@ source "${KOOPA_BASH_INC}/../../posix/include/functions.sh"
 # Source Bash functions.
 # shellcheck source=/dev/null
 source "${KOOPA_BASH_INC}/functions.sh"
-
 _acid_help "$@"
 
 # Require sudo permission to run 'sbin/' scripts.
