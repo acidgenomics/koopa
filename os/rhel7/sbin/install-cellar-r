@@ -3,7 +3,6 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-
 _acid_assert_has_sudo
 
 # Using TeX Live 2013, we'll see this warning:

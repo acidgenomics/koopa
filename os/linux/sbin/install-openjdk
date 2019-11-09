@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# https://openjdk.java.net/
-# https://jdk.java.net/13/
-
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-
 _acid_assert_has_sudo
+
+# https://openjdk.java.net/
+# https://jdk.java.net/13/
 
 jdk_dir="${1:-"/opt/jdk"}"
 
