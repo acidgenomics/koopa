@@ -4,7 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-
 # Using TeX Live 2013, we'll see this warning:
 #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
 #     vignettes and package manuals will not be rendered optimally
