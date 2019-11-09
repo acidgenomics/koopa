@@ -4,12 +4,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_environments
+_acid_assert_has_no_environments
 
-prefix="$(_koopa_build_prefix)/bcbio"
+prefix="$(_acid_build_prefix)/bcbio"
 version="stable"
 
-tmp_dir="$(_koopa_tmp_dir)/bcbio"
+tmp_dir="$(_acid_tmp_dir)/bcbio"
 
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
@@ -35,35 +35,35 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _acid_invalid_arg "$1"
             ;;
     esac
 done
 
-prefix="$(_koopa_strip_trailing_slash "$prefix")"
+prefix="$(_acid_strip_trailing_slash "$prefix")"
 
 if [[ "$version" == "stable" ]]
 then
-    # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
-    _koopa_bcbio_version() {
+    # > current="$(_acid_github_latest_release "bcbio/bcbio-nextgen")"
+    _acid_bcbio_version() {
         curl --silent "https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/requirements-conda.txt" \
             | grep 'bcbio-nextgen=' \
             | cut -d '=' -f 2
     }
-    current="$(_koopa_bcbio_version)"
+    current="$(_acid_bcbio_version)"
     prefix="${prefix}/${current}"
 else
     prefix="${prefix}/${version}"
 fi
 
-_koopa_assert_is_not_dir "$prefix"
+_acid_assert_is_not_dir "$prefix"
 
-_koopa_message "Installing bcbio into '${prefix}'."
+_acid_message "Installing bcbio into '${prefix}'."
 
-_koopa_message "Saving install log at '${log_file}'."
+_acid_message "Saving install log at '${log_file}'."
 mkdir -pv "$log_dir"
 
-_koopa_prefix_mkdir "$prefix"
+_acid_prefix_mkdir "$prefix"
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 
@@ -73,7 +73,7 @@ tools_dir="${prefix}/tools"
     cd "$tmp_dir" || exit 1
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-    _koopa_download "$url"
+    _acid_download "$url"
     python "$file" \
         "$install_dir" \
         --tooldir="$tools_dir" \
@@ -85,10 +85,10 @@ tools_dir="${prefix}/tools"
 )
 
 # Keep install owned by current user, so we can install genomes easily.
-_koopa_prefix_chgrp "$prefix"
+_acid_prefix_chgrp "$prefix"
 
 # Here's how to set to root, otherwise:
-# > _koopa_set_permissions "$prefix"
+# > _acid_set_permissions "$prefix"
 
 # Disable group write access to install.
 # > chmod -R g-w "$install_dir" "$tools_dir"

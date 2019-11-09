@@ -10,7 +10,7 @@ export KOOPA_HOME
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_message "Checking manual files for '--help' support."
+_acid_message "Checking manual files for '--help' support."
 export MANPATH="${KOOPA_HOME}/man:${MANPATH:-}"
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
@@ -45,7 +45,7 @@ do
         )
     for file in "${files[@]}"
     do
-        _koopa_message "$file"
+        _acid_message "$file"
         nice "$file" --help > /dev/null
     done
 done

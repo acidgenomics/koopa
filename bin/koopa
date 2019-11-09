@@ -9,10 +9,10 @@ then
 fi
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+_acid_assert_has_args "$@"
 
-version="$(_koopa_variable koopa)"
-date="$(_koopa_variable koopa_date)"
+version="$(_acid_variable koopa)"
+date="$(_acid_variable koopa_date)"
 include_dir="${KOOPA_HOME}/system/include/koopa"
 
 case "$1" in
@@ -29,15 +29,15 @@ case "$1" in
         exit 0
         ;;
     header)
-        _koopa_header "${2:-}"
+        _acid_header "${2:-}"
         exit 0
         ;;
     home)
-        _koopa_home
+        _acid_home
         exit 0
         ;;
     host-type)
-        _koopa_host_type
+        _acid_host_type
         exit 0
         ;;
     info)
@@ -49,7 +49,7 @@ case "$1" in
         exit 0
         ;;
     os-type)
-        _koopa_os_type
+        _acid_os_type
         exit 0
         ;;
     update)
@@ -57,13 +57,13 @@ case "$1" in
         exit 0
         ;;
     upgrade)
-        _koopa_stop "Use 'update' instead of 'upgrade'."
+        _acid_stop "Use 'update' instead of 'upgrade'."
         ;;
     variable)
-        _koopa_variable "$2"
+        _acid_variable "$2"
         exit 0
         ;;
     *)
-        _koopa_invalid_arg "$1"
+        _acid_invalid_arg "$1"
         ;;
 esac

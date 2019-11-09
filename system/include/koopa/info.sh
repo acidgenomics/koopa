@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
 shell="$KOOPA_SHELL"
-shell="${shell} $(_koopa_"${shell}"_version)"
+shell="${shell} $(_acid_"${shell}"_version)"
 
 array=(
     "$(koopa --version)"
@@ -13,14 +13,14 @@ array=(
     ""
     "Configuration"
     "-------------"
-    "Home: $(_koopa_home)"
-    "Config: $(_koopa_config_dir)"
-    "Prefix: $(_koopa_build_prefix)"
+    "Home: $(_acid_home)"
+    "Config: $(_acid_config_dir)"
+    "Prefix: $(_acid_build_prefix)"
     ""
 )
 
 # Show neofetch info, if installed.
-if _koopa_is_installed neofetch
+if _acid_is_installed neofetch
 then
     # Using process substitution here.
     mapfile -t nf < <(neofetch --stdout)
@@ -30,7 +30,7 @@ then
         "${nf[@]:2}"
     )
 else
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         os="$( \
             printf "%s %s (%s)\n" \
@@ -54,4 +54,4 @@ fi
 array+=("Run 'koopa check' to verify installation.")
 
 cat "${KOOPA_HOME}/system/include/koopa/ascii-turtle.txt"
-_koopa_info_box "${array[@]}"
+_acid_info_box "${array[@]}"

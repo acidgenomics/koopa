@@ -5,7 +5,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
+_acid_assert_has_args "$@"
 
 grep_array=(
     '^([0-9]{4})'
@@ -35,6 +35,6 @@ do
         mkdir --parents --verbose "$subdir"
         mv --no-clobber --verbose "$file" "$subdir"
     else
-        _koopa_stop "'${file}' does not contain date."
+        _acid_stop "'${file}' does not contain date."
     fi
 done

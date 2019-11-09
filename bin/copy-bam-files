@@ -4,17 +4,17 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+_acid_assert_has_args "$@"
 
 source_dir="$1"
-_koopa_assert_is_dir "$source_dir"
+_acid_assert_is_dir "$source_dir"
 source_dir="$(realpath "$source_dir")"
 
 target_dir="$2"
-_koopa_assert_is_dir "$target_dir"
+_acid_assert_is_dir "$target_dir"
 target_dir="$(realpath "$target_dir")"
 
-_koopa_message "\
+_acid_message "\
 Source: '${source_dir}'
 Target: '${target_dir}'\
 "

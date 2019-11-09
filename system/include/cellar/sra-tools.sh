@@ -15,21 +15,21 @@
 # > sudo ldconfig -v
 # > export LD_LIBRARY_PATH=/usr/local/lib64
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed jar
+_acid_assert_has_no_args "$@"
+_acid_assert_is_installed jar
 
 name="sra-tools"
-version="$(_koopa_variable "$name")"
+version="$(_acid_variable "$name")"
 build_prefix="${tmp_dir}/ncbi-outdir"
-ngs_libdir="$(_koopa_build_prefix)/lib64"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+ngs_libdir="$(_acid_build_prefix)/lib64"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
 
 # Ensure current jar binary is in path, otherwise install will fail.
-java_home="$(_koopa_java_home)"
+java_home="$(_acid_java_home)"
 
-_koopa_message "Installing ${name} ${version}."
-_koopa_add_to_path_start "${java_home}/bin"
+_acid_message "Installing ${name} ${version}."
+_acid_add_to_path_start "${java_home}/bin"
 
 export NGS_LIBDIR="$ngs_libdir"
 export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
@@ -47,8 +47,8 @@ mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="ngs.tar.gz"
     url="https://github.com/ncbi/ngs/archive/${version}.tar.gz"
-    _koopa_download "$url" "$file"
-    _koopa_extract "$file"
+    _acid_download "$url" "$file"
+    _acid_extract "$file"
     mv "ngs-${version}" "ngs"
     cd "ngs" || exit 1
     ./configure \
@@ -64,7 +64,7 @@ mkdir -p "$tmp_dir"
     make -C ngs-python install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 
 
@@ -75,8 +75,8 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     file="ncbi-vdb.tar.gz"
     url="https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
-    _koopa_download "$url" "$file"
-    _koopa_extract "$file"
+    _acid_download "$url" "$file"
+    _acid_extract "$file"
     mv "ncbi-vdb-${version}" "ncbi-vdb"
     cd "ncbi-vdb" || exit 1
     ./configure \
@@ -86,7 +86,7 @@ _koopa_link_cellar "$name" "$version"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 
 
@@ -97,8 +97,8 @@ _koopa_link_cellar "$name" "$version"
     cd "$tmp_dir" || exit 1
     file="sra-tools.tar.gz"
     url="https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
-    _koopa_download "$url" "$file"
-    _koopa_extract "$file"
+    _acid_download "$url" "$file"
+    _acid_extract "$file"
     mv "sra-tools-${version}" "sra-tools"
     cd "sra-tools" || exit 1
     ./configure \
@@ -108,6 +108,6 @@ _koopa_link_cellar "$name" "$version"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 rm -fr "$tmp_dir"

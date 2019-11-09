@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
 name="gnupg"
-version="$(_koopa_variable gpg)"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+version="$(_acid_variable gpg)"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 exe_file="${prefix}/bin/gpg"
 
-_koopa_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version}."
 
 # Download GnuPG release signing keys.
-if _koopa_is_installed gpg
+if _acid_is_installed gpg
 then
     gpg --list-keys
     gpg --keyserver hkp://keyserver.ubuntu.com:80 \
@@ -28,129 +28,129 @@ mkdir -pv "$tmp_dir"
 
 (
     pkg="libgpg-error"
-    ver="$(_koopa_variable "$pkg")"
+    ver="$(_acid_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 (
     pkg="libgcrypt"
-    ver="$(_koopa_variable "$pkg")"
+    ver="$(_acid_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 (
     pkg="libassuan"
-    ver="$(_koopa_variable "$pkg")"
+    ver="$(_acid_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 (
     pkg="libksba"
-    ver="$(_koopa_variable "$pkg")"
+    ver="$(_acid_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 (
     pkg="npth"
-    ver="$(_koopa_variable "$pkg")"
+    ver="$(_acid_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 (
     pkg="pinentry"
-    ver="$(_koopa_variable "$pkg")"
+    ver="$(_acid_variable "$pkg")"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
     make --jobs="$CPU_COUNT"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 (
     pkg="gnupg"
-    ver="$(_koopa_variable gpg)"
+    ver="$(_acid_variable gpg)"
     cd "$tmp_dir" || exit 1
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
-    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
-    if _koopa_is_installed gpg
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _acid_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _acid_is_installed gpg
     then
         gpg --verify "${pkg}-${ver}.tar.bz2.sig"
     fi
-    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    _acid_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
     make --jobs="$CPU_COUNT"
@@ -158,7 +158,7 @@ _koopa_link_cellar "$name" "$version"
     make install
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 rm -rf "$tmp_dir"
 

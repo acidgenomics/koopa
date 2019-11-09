@@ -4,24 +4,24 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 version="${1:-"development"}"
 
 bcbio_dir="/usr/local/bcbio"
-_koopa_assert_is_dir "$bcbio_dir"
+_acid_assert_is_dir "$bcbio_dir"
 
 bin_dir="${bcbio_dir}/${version}/tools/bin"
-_koopa_assert_is_dir "$bin_dir"
+_acid_assert_is_dir "$bin_dir"
 
 git_dir="${bcbio_dir}/git"
-_koopa_assert_is_dir "$git_dir"
+_acid_assert_is_dir "$git_dir"
 
 tests_dir="${git_dir}/tests"
-_koopa_assert_is_dir "$tests_dir"
+_acid_assert_is_dir "$tests_dir"
 
 tmp_dir="${TMPDIR:-"/tmp"}"
-_koopa_assert_is_dir "$tmp_dir"
+_acid_assert_is_dir "$tmp_dir"
 
 # Ensure tmp SSD drive is configured correctly.
 sudo chown "$USER" "$tmp_dir"
