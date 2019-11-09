@@ -6,10 +6,14 @@ overhaluled and improved.
 ### Major changes
 
 - Documentation has been migrated into `man`-compatible format, and are now
-    saved in `man/man1/`.
-- Renamed all internal functions with `_acid_` prefix instead of previous
-  `_koopa_` prefix. This convention is also now used in the `pykoopa` internal
-  Python package (using `koopa_`) defined inside koopa.
+    saved in `man/man1/`. These are accessible per program via the `--help`
+    flag, which now spawns `man` internally. Python scripts still use the
+    argparser help format.
+- Renamed all internal shell functions with `_acid_` prefix instead of previous
+  `_koopa_` prefix. Note that we always want to use an internal prefix, so we
+  don't accidentally mask any system functions defined for bash and/or zsh
+  loaded by other program scripts. For example, be careful not to mask
+  `deactivate` for Python venv.
 
 ## koopa 0.6.0 (2019-10-14)
 

@@ -1,8 +1,8 @@
-.TH BCBIO-ADMIN-RUN-TESTS 1 2019-11-09 Bash
+.TH BCBIO-ADMIN-CLEAN-CONDA 1 2019-11-09 Bash
 .SH NAME
-bcbio-admin-run-tests \- Run bcbio unit tests
+bcbio-admin-clean-conda \- Clean internal bcbio Conda installation
 .SH SYNOPSIS
-.B bcbio-admin-run-tests
+.B bcbio-admin-clean-conda
 [\fB\-\-bcbio-prefix="/usr/local/bcbio"\fR]
 [\fB\-\-version="development"\fR]
 .SH OPTIONS
@@ -13,6 +13,4 @@ Top level bcbio installation prefix. On a typical VM setup, this will include 'd
 .BR \-\-version
 Versioned bcbio installation subdirectory name inside prefix defined by '\-\-bcbio-prefix' flag. Defaults to 'development' but 'stable' will also work on a standard VM setup.
 .SH DESCRIPTION
-Run RNA-seq and ChIP-seq unit tests.
-.SH SEE ALSO
-Refer to 'tests/data/automated/' for YAML recipes.
+Removes extracted packages, which can contain broken symlinks. The original source tarballs are kept, for data provenance. Internally the script attempts to locate conda at 'BCBIO_PREFIX/VERSION/install/anaconda/bin/conda'.
