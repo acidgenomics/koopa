@@ -3,29 +3,46 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-
 _acid_assert_has_sudo
 
-version="${1:-"development"}"
+bcbio_prefix="/usr/local/bcbio"
+version="development"
 
-bcbio_dir="/usr/local/bcbio"
-_acid_assert_is_dir "$bcbio_dir"
+while (("$#"))
+do
+    case "$1" in
+        --bcbio-prefix=*)
+            bcbio_prefix="${1#*=}"
+            shift 1
+            ;;
+        --bcbio-prefix)
+            bcbio_prefix="$2"
+            shift 2
+            ;;
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _acid_invalid_arg "$1"
+            ;;
+    esac
+done
 
-bin_dir="${bcbio_dir}/${version}/tools/bin"
+_acid_assert_is_dir "$bcbio_prefix"
+
+bin_dir="${bcbio_prefix}/${version}/tools/bin"
 _acid_assert_is_dir "$bin_dir"
 
-git_dir="${bcbio_dir}/git"
+git_dir="${bcbio_prefix}/git"
 _acid_assert_is_dir "$git_dir"
 
 tests_dir="${git_dir}/tests"
 _acid_assert_is_dir "$tests_dir"
-
-tmp_dir="${TMPDIR:-"/tmp"}"
-_acid_assert_is_dir "$tmp_dir"
-
-# Ensure tmp SSD drive is configured correctly.
-sudo chown "$USER" "$tmp_dir"
-sudo chmod u+rwx "$tmp_dir"
 
 (
     export PATH="${bin_dir}:${PATH}"
@@ -35,12 +52,10 @@ sudo chmod u+rwx "$tmp_dir"
     rm -frv test_automated_output
     ./run_tests.sh star
     rm -frv test_automated_output
-    # Currently failing for v1.1.6a.
     ./run_tests.sh fastrnaseq
     rm -frv test_automated_output
     ./run_tests.sh stranded
     rm -frv test_automated_output
-    # Currently failing for v1.1.6a.
     ./run_tests.sh rnaseq
     rm -frv test_automated_output
     ./run_tests.sh chipseq
