@@ -7,10 +7,10 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 dir="${1:-"."}"
 
-if _koopa_is_darwin
+if _acid_is_darwin
 then
     find "$dir" -type l -print0 | xargs -0 file | grep broken
-elif _koopa_is_linux
+elif _acid_is_linux
 then
     find "$dir" -xtype l
 fi

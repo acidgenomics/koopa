@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_is_installed bcbio_nextgen.py
+_acid_assert_is_installed bcbio_nextgen.py
 
 genomes="${1:-"BDGP6,canFam3,hg38,mm10,rn6"}"
 IFS=', ' read -r -a genomes <<< "$genomes"
@@ -14,14 +14,14 @@ version="$(bcbio_nextgen.py --version)"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 log_file="${log_dir}/${timestamp}-install-bcbio-genomes-${version}.log"
 
-tmp_dir="$(_koopa_tmp_dir)/bcbio"
+tmp_dir="$(_acid_tmp_dir)/bcbio"
 cores="$CPU_COUNT"
 
-bcbio_exe="$(_koopa_realpath "bcbio_nextgen.py")"
+bcbio_exe="$(_acid_realpath "bcbio_nextgen.py")"
 bcbio_dir="$(cd "$(dirname "$bcbio_exe")/../.." && pwd -P)"
 genomes_dir="${bcbio_dir}/genomes"
 
-_koopa_message "Installing bcbio genomes '${genomes[*]}' into '${genomes_dir}'."
+_acid_message "Installing bcbio genomes '${genomes[*]}' into '${genomes_dir}'."
 
 genome_flags=()
 for genome in "${genomes[@]}"

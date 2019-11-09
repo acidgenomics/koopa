@@ -5,15 +5,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 . "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
-if _koopa_is_shared
+if _acid_is_shared
 then
     rm -fv "/etc/profile.d/zzz-koopa.sh"
 fi
 
-if [[ -f "$(_koopa_dotfiles_config_link)/UNINSTALL.sh" ]]
+if [[ -f "$(_acid_dotfiles_config_link)/UNINSTALL.sh" ]]
 then
-    "$(_koopa_dotfiles_config_link)/UNINSTALL.sh"
+    "$(_acid_dotfiles_config_link)/UNINSTALL.sh"
 fi
 
-rm -frv "$(_koopa_config_dir)"
+rm -frv "$(_acid_config_dir)"
 rm -frv "$KOOPA_HOME"

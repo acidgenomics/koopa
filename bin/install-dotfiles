@@ -13,7 +13,7 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _acid_invalid_arg "$1"
             ;;
     esac
 done
@@ -24,12 +24,12 @@ done
 # ==============================================================================
 
 source_repo="${1:-"https://github.com/mjsteinbaugh/dotfiles.git"}"
-target_dir="$(_koopa_home)/dotfiles"
+target_dir="$(_acid_home)/dotfiles"
 if [[ -d "$target_dir" ]]
 then
-    _koopa_note "Dotfiles already installed at '${target_dir}'."
+    _acid_note "Dotfiles already installed at '${target_dir}'."
 else
-    _koopa_message "Installing dotfiles into '${target_dir}'."
+    _acid_message "Installing dotfiles into '${target_dir}'."
     git clone --recursive "$source_repo" "$target_dir"
     if [[ -x "${target_dir}/INSTALL.sh" ]]
     then
@@ -52,10 +52,10 @@ fi
 if [[ "$mike" -eq 1 ]]
 then
     source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
-    target_dir="$(_koopa_config_dir)/dotfiles-private"
+    target_dir="$(_acid_config_dir)/dotfiles-private"
     if [[ -d "$target_dir" ]]
     then
-        _koopa_note "Dotfiles already installed at '${target_dir}'."
+        _acid_note "Dotfiles already installed at '${target_dir}'."
     else
         git clone --recursive "$source_repo" "$target_dir"
         if [[ -x "${target_dir}/INSTALL.sh" ]]

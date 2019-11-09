@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed docbook2x-texi
+_acid_assert_has_no_args "$@"
+_acid_assert_is_installed docbook2x-texi
 
 name="git"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+version="$(_acid_variable "$name")"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
+build_os_string="$(_acid_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
-_koopa_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
@@ -18,8 +18,8 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="v${version}.tar.gz"
-    _koopa_download "https://github.com/git/git/archive/${file}"
-    _koopa_extract "$file"
+    _acid_download "https://github.com/git/git/archive/${file}"
+    _acid_extract "$file"
     cd "git-${version}" || exit 1
     make configure
     ./configure \
@@ -34,7 +34,7 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 "$exe_file" --version
 command -v "$exe_file"

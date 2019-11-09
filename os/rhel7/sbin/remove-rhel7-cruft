@@ -4,15 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_sudo
+_acid_assert_has_no_args "$@"
+_acid_assert_has_sudo
 
 
 
 # R                                                                         {{{1
 # ==============================================================================
 
-_koopa_message "\
+_acid_message "\
 Removing R.
 Use the newer R installation at '/usr/local/lib64/R' instead."
 
@@ -28,7 +28,7 @@ sudo rm -frv /usr/lib64/R
 # Java                                                                      {{{1
 # ==============================================================================
 
-_koopa_message "\
+_acid_message "\
 Removing Java.
 Use the newer JDK installation at '/opt/jdk' instead."
 
@@ -42,7 +42,7 @@ sudo rm -frv /usr/lib/jvm/*
 # Pandoc                                                                    {{{1
 # ==============================================================================
 
-# > _koopa_message "\
+# > _acid_message "\
 # > Removing Pandoc.
 # > Use conda version instead."
 # >
@@ -57,7 +57,7 @@ sudo rm -frv /usr/lib/jvm/*
 # Perl                                                                      {{{1
 # ==============================================================================
 
-_koopa_message "\
+_acid_message "\
 Removing Perl CPAN Minus.
 Use Perlbrew approach instead."
 
@@ -71,7 +71,7 @@ sudo yum -y remove \
 
 # Uma installed this on VM44.
 
-_koopa_message "\
+_acid_message "\
 Removing Python 3 yum install.
 Install from source using cellar script instead."
 
@@ -89,7 +89,7 @@ sudo yum -y remove 'python3*'
 #   /usr/lib/python2.7/site-packages/pip
 #   /usr/lib/python2.7/site-packages/pip-8.1.2-py2.7.egg-info
 
-_koopa_message "\
+_acid_message "\
 Removing Python system pip.
 Use venv to manage packages instead."
 
@@ -105,7 +105,7 @@ sudo rm -frv \
 # Rust                                                                      {{{1
 # ==============================================================================
 
-_koopa_message "\
+_acid_message "\
 Removing Rust.
 Use rustup installation instead."
 
@@ -116,7 +116,7 @@ sudo yum -y remove 'rust-*'
 # Tex Live                                                                  {{{1
 # ==============================================================================
 
-# > _koopa_message "\
+# > _acid_message "\
 # > Removing TeX Live.
 # > Use conda version instead at '/usr/local/miniconda3/envs/texlive-core'."
 # >

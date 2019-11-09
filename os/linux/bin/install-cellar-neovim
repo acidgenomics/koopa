@@ -6,4 +6,4 @@ source "${script_dir}/../include/header.sh"
 
 
 # shellcheck source=/dev/null
-source "$(_koopa_cellar_script neovim)"
+source "$(_acid_cellar_script neovim)"

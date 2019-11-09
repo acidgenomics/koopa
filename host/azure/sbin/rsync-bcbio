@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 source_user="$USER"
 
@@ -15,22 +15,22 @@ bcbio_dir="/usr/local/bcbio"
 
 if [[ ! -d "$bcbio_dir" ]]
 then
-    _koopa_note "bcbio is not installed at '${bcbio_dir}'. Skipping."
+    _acid_note "bcbio is not installed at '${bcbio_dir}'. Skipping."
     exit 0
 fi
 
-mapfile -t flags < <(_koopa_rsync_flags)
+mapfile -t flags < <(_acid_rsync_flags)
 flags+=("--omit-dir-times")
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
 then
-    _koopa_note "On source machine: '${source_ip}'. Skipping."
+    _acid_note "On source machine: '${source_ip}'. Skipping."
     exit 0
 fi
 
-_koopa_message "Updating '${bcbio_dir}' from '${source_ip}'."
-_koopa_note "Using flags: ${flags[*]}"
+_acid_message "Updating '${bcbio_dir}' from '${source_ip}'."
+_acid_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
 rsync ${flags[@]} \

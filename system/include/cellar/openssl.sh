@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
 name="openssl"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+version="$(_acid_variable "$name")"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
 exe_file="${prefix}/bin/${name}"
 
-_koopa_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
@@ -16,9 +16,9 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
     curl -O "https://www.openssl.org/source/openssl-${version}.tar.gz"
-    _koopa_extract "openssl-${version}.tar.gz"
+    _acid_extract "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         ./Configure \
             darwin64-x86_64-cc \

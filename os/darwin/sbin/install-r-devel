@@ -4,14 +4,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_sudo
+_acid_assert_has_no_args "$@"
+_acid_assert_has_sudo
 
 r_version="3.6-branch"
 macos_version="el-capitan"
-tmp_dir="$(_koopa_tmp_dir)/r-devel"
+tmp_dir="$(_acid_tmp_dir)/r-devel"
 
-_koopa_message "Installing r-devel ${r_version} for ${macos_version}."
+_acid_message "Installing r-devel ${r_version} for ${macos_version}."
 
 (
     rm -fr "$tmp_dir"
@@ -19,11 +19,11 @@ _koopa_message "Installing r-devel ${r_version} for ${macos_version}."
     cd "$tmp_dir" || exit 1
     file="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
     url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
-    _koopa_download "$url"
+    _acid_download "$url"
     # Back up, if necessary.
     if [[ -d "/Library/Frameworks/R.framework" ]]
     then
-        _koopa_note "Backing up existing 'R.framework'."
+        _acid_note "Backing up existing 'R.framework'."
         sudo mv "/Library/Frameworks/R.framework" \
             "/Library/Frameworks/R.framework.bak"
     fi
@@ -38,5 +38,5 @@ sudo mv "/Library/Frameworks/R.framework" \
 sudo ln -fnsv "/Library/Frameworks/R-${r_version}.framework" \
     "/Library/Frameworks/R.framework"
 
-_koopa_message "R-${r_version} installed correctly."
-_koopa_message "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
+_acid_message "R-${r_version} installed correctly."
+_acid_message "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."

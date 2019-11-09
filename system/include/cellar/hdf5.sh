@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
 name="hdf5"
-version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+version="$(_acid_variable "$name")"
+major_version="$(_acid_major_version "$version")"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
+build_os_string="$(_acid_build_os_string)"
 exe_file="${prefix}/bin/h5cc"
 
-_koopa_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
@@ -20,8 +20,8 @@ _koopa_message "Installing ${name} ${version}."
     file="hdf5-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/\
 hdf5-${version}/src/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
+    _acid_download "$url"
+    _acid_extract "$file"
     cd "hdf5-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -34,7 +34,7 @@ hdf5-${version}/src/${file}"
     rm -fr "$tmp_dir"
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" -showconfig

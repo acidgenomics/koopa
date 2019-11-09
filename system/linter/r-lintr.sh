@@ -7,7 +7,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
-script_bn="$(_koopa_basename_sans_ext "$0")"
+script_bn="$(_acid_basename_sans_ext "$0")"
 
 path="${1:-$KOOPA_HOME}"
 
@@ -20,7 +20,7 @@ exclude_dirs=(
 )
 
 # Full path exclusion seems to only work on macOS.
-if ! _koopa_is_darwin
+if ! _acid_is_darwin
 then
     for i in "${!exclude_dirs[@]}"
     do

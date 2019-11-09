@@ -24,7 +24,7 @@ exclude_files=(
 )
 
 # Full path exclusion seems to only work on macOS.
-if ! _koopa_is_darwin
+if ! _acid_is_darwin
 then
     for i in "${!exclude_dirs[@]}"
     do
@@ -52,7 +52,7 @@ hits="$( \
         sort || echo "" \
 )"
 
-name="$(_koopa_basename_sans_ext "$0")"
+name="$(_acid_basename_sans_ext "$0")"
 if [[ -n "$hits" ]]
 then
     printf "FAIL | %s\n" "$name"

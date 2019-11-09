@@ -5,13 +5,13 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
-if ! _koopa_is_installed rustup
+if ! _acid_is_installed rustup
 then
-    _koopa_warning "rustup is not installed."
+    _acid_warning "rustup is not installed."
     exit 0
 fi
 
-_koopa_message "Updating Rust via rustup."
+_acid_message "Updating Rust via rustup."
 rustup update

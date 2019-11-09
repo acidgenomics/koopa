@@ -4,7 +4,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+_acid_assert_has_args "$@"
 
 name="$1"
 
@@ -14,11 +14,11 @@ default_dir="${2:-$default_dir}"
 
 custom_home="${default_home}-${name}"
 custom_dir="${HOME}/${custom_home}"
-_koopa_assert_is_dir "$custom_dir"
+_acid_assert_is_dir "$custom_dir"
 
 if [ -d "$default_dir" ] && [ ! -L "$default_dir" ]
 then
-    _koopa_stop "Emacs directory detected at '${default_dir}'."
+    _acid_stop "Emacs directory detected at '${default_dir}'."
 fi
 
 (
@@ -41,7 +41,7 @@ fi
             link-dotfile --force "app/emacs/spacemacs/spacemacs.el" "spacemacs"
             ;;
         *)
-            _koopa_stop "Invalid Emacs config name."
+            _acid_stop "Invalid Emacs config name."
             ;;
     esac
     ln -fnsv "$custom_home" "$default_home"

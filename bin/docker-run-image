@@ -4,8 +4,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
-_koopa_assert_is_installed "docker"
+_acid_assert_has_args "$@"
+_acid_assert_is_installed "docker"
 
 workdir="/work"
 
@@ -26,7 +26,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            _acid_invalid_arg "$1"
             ;;
         *)
             POSITIONAL+=("$1")
@@ -37,7 +37,7 @@ done
 set -- "${POSITIONAL[@]}"
 
 image="$1"
-workdir="$(_koopa_strip_trailing_slash "$workdir")"
+workdir="$(_acid_strip_trailing_slash "$workdir")"
 
 docker pull "$image"
 docker run -it \

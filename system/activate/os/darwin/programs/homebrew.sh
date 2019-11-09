@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_is_installed brew || return 0
+_acid_is_installed brew || return 0
 
 
 
@@ -26,8 +26,8 @@ export HOMEBREW_NO_ANALYTICS=1
 prefix="/usr/local/opt/coreutils/libexec"
 if [ -d "$prefix" ]
 then
-    _koopa_force_add_to_path_start "${prefix}/gnubin"
-    _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    _acid_force_add_to_path_start "${prefix}/gnubin"
+    _acid_force_add_to_manpath_start "${prefix}/gnuman"
 fi
 unset -v prefix
 
@@ -47,7 +47,7 @@ unset -v prefix
 
 # > if [ -z "${VIRTUAL_ENV:-}" ]
 # > then
-# >     _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
+# >     _acid_add_to_path_start "/usr/local/opt/python/libexec/bin"
 # > fi
 
 
@@ -55,19 +55,19 @@ unset -v prefix
 # Google Cloud SDK                                                          {{{1
 # ==============================================================================
 
-_koopa_activate_google_cloud_sdk() {
-    # > ! _koopa_is_installed gcloud || return 0
+_acid_activate_google_cloud_sdk() {
+    # > ! _acid_is_installed gcloud || return 0
     local prefix
     prefix="${HOMEBREW_PREFIX}"
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     [ -d "$prefix" ] || return 0
     local shell
-    shell="$(_koopa_shell)"
+    shell="$(_acid_shell)"
     # shellcheck source=/dev/null
     . "${prefix}/path.${shell}.inc"
     # shellcheck source=/dev/null
     . "${prefix}/completion.${shell}.inc"
 }
 
-_koopa_activate_google_cloud_sdk
+_acid_activate_google_cloud_sdk
 

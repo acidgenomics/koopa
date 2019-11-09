@@ -1,3 +1,16 @@
+## koopa 0.7.0 (UNRELEASED)
+
+This is a pretty major update, where a lot of the internal functions have been
+overhaluled and improved.
+
+### Major changes
+
+- Documentation has been migrated into `man`-compatible format, and are now
+    saved in `man/man1/`.
+- Renamed all internal functions with `_acid_` prefix instead of previous
+  `_koopa_` prefix. This convention is also now used in the `pykoopa` internal
+  Python package (using `koopa_`) defined inside koopa.
+
 ## koopa 0.6.0 (2019-10-14)
 
 ### New scripts
@@ -108,7 +121,7 @@ This release improves prompt consistency between zsh and bash.
   instead of Pure prompt. This prompt is visually identical to our bash PS1.
 - Reduced the number of available string returns from main `koopa` function.
   Instead, these are now called more consistently using internal prefixes.
-  (e.g. `_koopa_cellar_prefix` instead of `koopa cellar-prefix)`.
+  (e.g. `_acid_cellar_prefix` instead of `koopa cellar-prefix)`.
 
 ## koopa 0.5.1 (2019-08-15)
 

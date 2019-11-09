@@ -12,20 +12,20 @@
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
 name="python"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+version="$(_acid_variable "$name")"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
+build_os_string="$(_acid_build_os_string)"
 exe_file="${prefix}/bin/python3"
 
-_koopa_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version}."
 
 if [[ -d "${HOME}/.virtualenvs" ]]
 then
-    _koopa_note "Removing existing virtual environments."
+    _acid_note "Removing existing virtual environments."
     rm -frv "${HOME}/.virtualenvs"
 fi
 
@@ -36,8 +36,8 @@ fi
     cd "$tmp_dir" || exit 1
     file="Python-${version}.tar.xz"
     url="https://www.python.org/ftp/python/${version}/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
+    _acid_download "$url"
+    _acid_extract "$file"
     cd "Python-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -52,10 +52,10 @@ fi
     rm -fr "$tmp_dir"
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
-build_prefix="$(_koopa_build_prefix)"
-_koopa_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
+build_prefix="$(_acid_build_prefix)"
+_acid_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
 ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
 command -v "$exe_file"

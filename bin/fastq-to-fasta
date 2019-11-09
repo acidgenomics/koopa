@@ -4,7 +4,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
+_acid_assert_has_args "$@"
 
 # Alternate approaches:
 #
@@ -40,13 +40,13 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _acid_invalid_arg "$1"
             ;;
     esac
 done
 
-source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
-target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
+source_dir="$(_acid_strip_trailing_slash "$source_dir")"
+target_dir="$(_acid_strip_trailing_slash "$target_dir")"
 
 # Put unique samples into an array and loop.
 array=()
@@ -57,7 +57,7 @@ done < <(find "$source_dir" -maxdepth 1 -name "*.fastq" -print0)
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]
 then
-    _koopa_stop "No FASTQ files detected."
+    _acid_stop "No FASTQ files detected."
 fi
 
 # Create the target directory automatically.

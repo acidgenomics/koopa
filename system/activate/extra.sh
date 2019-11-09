@@ -16,7 +16,7 @@
 # Dot files                                                                 {{{1
 # ==============================================================================
 
-dotfiles="$(_koopa_config_dir)/dotfiles"
+dotfiles="$(_acid_config_dir)/dotfiles"
 if [ -d "$dotfiles" ]
 then
     export DOTFILES="$dotfiles"
@@ -112,7 +112,7 @@ alias mkdir='mkdir --parents --verbose'
 alias mv="mv --interactive --verbose"
 alias rm='rm --dir --interactive="once" --preserve-root --verbose'
 
-if _koopa_is_installed dircolors
+if _acid_is_installed dircolors
 then
     # This will set the 'LD_COLORS' environment variable.
     dircolors_file="${KOOPA_HOME}/dotfiles/app/coreutils/dircolors"
@@ -163,7 +163,7 @@ fi
 # Emacs                                                                     {{{1
 # ==============================================================================
 
-_koopa_add_to_path_start "${HOME}/.emacs.d/bin"
+_acid_add_to_path_start "${HOME}/.emacs.d/bin"
 
 alias emacs='emacs --no-window-system'
 
@@ -182,7 +182,7 @@ alias emacs24='TERM=xterm-24bit emacs --no-window-system'
 # Use exa instead of ls, if installed.
 # It has better color support than dircolors.
 # See also: https://the.exa.website/
-if _koopa_is_installed exa
+if _acid_is_installed exa
 then
     alias l='exa -Fg'
 fi
@@ -202,7 +202,7 @@ export GIT_MERGE_AUTOEDIT="no"
 # Enable passphrase prompting in terminal.
 if [ -z "${GPG_TTY:-}" ] &&
     [ -z "${KOOPA_PIPED_INSTALL:-}" ] &&
-    _koopa_is_installed tty
+    _acid_is_installed tty
 then
     GPG_TTY="$(tty)"
     export GPG_TTY
@@ -219,9 +219,9 @@ fi
 # - https://github.com/wofr06/lesspipe
 
 if [ -n "${LESSOPEN:-}" ] &&
-    _koopa_is_installed "lesspipe.sh"
+    _acid_is_installed "lesspipe.sh"
 then
-    lesspipe_exe="$(_koopa_realpath "lesspipe.sh")"
+    lesspipe_exe="$(_acid_realpath "lesspipe.sh")"
     export LESSOPEN="|${lesspipe_exe} %s"
     export LESS_ADVANCED_PREPROCESSOR=1
 fi
@@ -271,7 +271,7 @@ fi
 
 if [ -z "${RSYNC_FLAGS:-}" ]
 then
-    RSYNC_FLAGS="$(_koopa_rsync_flags)"
+    RSYNC_FLAGS="$(_acid_rsync_flags)"
     export RSYNC_FLAGS
 fi
 
@@ -280,7 +280,7 @@ fi
 # Shiny Server                                                              {{{1
 # ==============================================================================
 
-if _koopa_is_linux
+if _acid_is_linux
 then
     alias shiny-status='sudo systemctl status shiny-server'
     alias shiny-start='sudo systemctl start shiny-server'

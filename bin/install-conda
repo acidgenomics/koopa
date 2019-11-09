@@ -4,7 +4,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_no_environments
+_acid_assert_has_no_environments
 
 anaconda=0
 
@@ -16,7 +16,7 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _acid_invalid_arg "$1"
             ;;
     esac
 done
@@ -27,18 +27,18 @@ then
     # Or get the current Anaconda installer version automatically.
     # https://www.anaconda.com/distribution/#linux
     # https://www.anaconda.com/distribution/#macos
-    version="$(_koopa_variable "$name")"
+    version="$(_acid_variable "$name")"
 else
     name="miniconda3"
 fi
 
-prefix="$(_koopa_build_prefix)/conda"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+prefix="$(_acid_build_prefix)/conda"
+tmp_dir="$(_acid_tmp_dir)/${name}"
 exe_file="${prefix}/bin/conda"
 
 if [[ ! -L "$prefix" ]]
 then
-    _koopa_prefix_mkdir "$prefix"
+    _acid_prefix_mkdir "$prefix"
 fi
 
 if [[ "$anaconda" -eq 1 ]]
@@ -51,14 +51,14 @@ then
             script="Anaconda3-${version}-MacOSX-x86_64.sh"
             ;;
         *)
-            _koopa_stop "'${OSTYPE}' is not supported."
+            _acid_stop "'${OSTYPE}' is not supported."
             ;;
     esac
     (
         rm -fr "$tmp_dir"
         mkdir -p "$tmp_dir"
         cd "$tmp_dir" || exit 1
-        _koopa_download "https://repo.anaconda.com/archive/${script}"
+        _acid_download "https://repo.anaconda.com/archive/${script}"
         bash "$script" -bf -p "$prefix"
         rm -fr "$tmp_dir"
     )
@@ -71,14 +71,14 @@ else
             script="Miniconda3-latest-MacOSX-x86_64.sh"
             ;;
         *)
-            _koopa_stop "'${OSTYPE}' is not supported."
+            _acid_stop "'${OSTYPE}' is not supported."
             ;;
     esac
     (
         rm -rf "$tmp_dir"
         mkdir -p "$tmp_dir"
         cd "$tmp_dir" || exit 1
-        _koopa_download "https://repo.continuum.io/miniconda/${script}"
+        _acid_download "https://repo.continuum.io/miniconda/${script}"
         bash "$script" -bf -p "$prefix"
         rm -rf "$tmp_dir"
     )
@@ -87,7 +87,7 @@ fi
 ln -fnsv "${KOOPA_HOME}/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
-_koopa_set_permissions "$prefix"
+_acid_set_permissions "$prefix"
 
 command -v "$exe_file"
 "$exe_file" --version

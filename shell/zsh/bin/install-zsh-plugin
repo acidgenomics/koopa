@@ -10,7 +10,7 @@ source_repo="https://github.com/${plugin}"
 
 zsh_custom_dir="$ZSH_CUSTOM"
 target_dir="${zsh_custom_dir}/plugins/${plugin}"
-_koopa_assert_is_not_dir "$target_dir"
+_acid_assert_is_not_dir "$target_dir"
 
-_koopa_message "Installing ${plugin}."
+_acid_message "Installing ${plugin}."
 git clone "$source_repo" "$target_dir"

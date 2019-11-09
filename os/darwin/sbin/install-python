@@ -4,15 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 name="python"
-version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
+version="$(_acid_variable "$name")"
+major_version="$(_acid_major_version "$version")"
 
 file="python-${version}-macosx10.9.pkg"
 url="https://www.python.org/ftp/python/${version}/${file}"
-_koopa_download "$url"
+_acid_download "$url"
 
 sudo installer -pkg "$file" -target /
 rm "$file"

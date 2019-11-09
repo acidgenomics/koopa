@@ -335,7 +335,7 @@ activate_dir="${KOOPA_HOME}/system/activate"
 # ==============================================================================
 
 . "${activate_dir}/minimal.sh"
-_koopa_update_xdg_config
+_acid_update_xdg_config
 
 
 
@@ -344,20 +344,20 @@ _koopa_update_xdg_config
 
 if [ "$minimal" -eq 0 ]
 then
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         . "${activate_dir}/os/darwin/programs/homebrew.sh"
         . "${activate_dir}/os/darwin/programs/python.sh"
     fi
-    _koopa_activate_aspera
-    _koopa_activate_ensembl_perl_api
-    _koopa_activate_perlbrew
-    _koopa_activate_rbenv
-    _koopa_activate_rust
-    _koopa_activate_bcbio
-    _koopa_activate_conda
+    _acid_activate_aspera
+    _acid_activate_ensembl_perl_api
+    _acid_activate_perlbrew
+    _acid_activate_rbenv
+    _acid_activate_rust
+    _acid_activate_bcbio
+    _acid_activate_conda
     . "${activate_dir}/programs.sh"
-    _koopa_activate_venv
+    _acid_activate_venv
 fi
 
 
@@ -380,14 +380,14 @@ then
 
     . "${activate_dir}/extra.sh"
 
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         . "${activate_dir}/os/darwin/init.sh"
     fi
 
-    _koopa_activate_secrets
-    _koopa_activate_ssh_key
-    _koopa_today_bucket
+    _acid_activate_secrets
+    _acid_activate_ssh_key
+    _acid_today_bucket
 fi
 
 

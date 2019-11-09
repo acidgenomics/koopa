@@ -6,7 +6,7 @@
 # A                                                                         {{{1
 # ==============================================================================
 
-_koopa_activate_aspera() {
+_acid_activate_aspera() {
     # """
     # Include Aspera Connect binaries in PATH, if defined.
     # Updated 2019-06-25.
@@ -18,11 +18,11 @@ _koopa_activate_aspera() {
         prefix="${HOME}/.aspera/connect"
     fi
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/bin"
+    _acid_add_to_path_start "${prefix}/bin"
     return 0
 }
 
-_koopa_activate_autojump() {
+_acid_activate_autojump() {
     # """
     # Activate autojump.
     # Updated 2019-10-29.
@@ -50,20 +50,20 @@ _koopa_activate_autojump() {
     fi
 }
 
-_koopa_activate_bcbio() {
+_acid_activate_bcbio() {
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
     # Attempt to locate bcbio installation automatically on supported platforms.
     # Updated 2019-10-29.
     # """
-    _koopa_is_linux || return 0
-    ! _koopa_is_installed bcbio_nextgen.py || return 0
+    _acid_is_linux || return 0
+    ! _acid_is_installed bcbio_nextgen.py || return 0
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
         local host
-        host="$(_koopa_host_type)"
+        host="$(_acid_host_type)"
         if [ "$host" = "harvard-o2" ]
         then
             prefix="/n/app/bcbio/tools"
@@ -81,12 +81,12 @@ _koopa_activate_bcbio() {
     # Exporting at the end of PATH so we don't mask gcc or R.
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
-    _koopa_force_add_to_path_end "${prefix}/bin"
+    _acid_force_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
 
-_koopa_activate_conda() {
+_acid_activate_conda() {
     # """
     # Activate conda.
     # Updated 2019-11-06.
@@ -96,7 +96,7 @@ _koopa_activate_conda() {
     # """
     # > [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
     # > [ -z "${CONDA_PREFIX:-}" ] || return 0
-    # > ! _koopa_is_installed conda || return 0
+    # > ! _acid_is_installed conda || return 0
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -152,7 +152,7 @@ _koopa_activate_conda() {
     return 0
 }
 
-_koopa_activate_ensembl_perl_api() {
+_acid_activate_ensembl_perl_api() {
     # Activate Ensembl Perl API.
     # Updated 2019-10-29.
     # Note that this currently requires Perl 5.26.
@@ -161,10 +161,10 @@ _koopa_activate_ensembl_perl_api() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="$(_koopa_build_prefix)/ensembl"
+        prefix="$(_acid_build_prefix)/ensembl"
     fi
     [ -d "prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/ensembl-git-tools/bin"
+    _acid_add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-compara/modules"
@@ -174,7 +174,7 @@ _koopa_activate_ensembl_perl_api() {
     return 0
 }
 
-_koopa_activate_perlbrew() {
+_acid_activate_perlbrew() {
     # Activate Perlbrew.
     #
     # See also:
@@ -183,8 +183,8 @@ _koopa_activate_perlbrew() {
     #
     # Updated 2019-10-29.
     [ -z "${PERLBREW_ROOT:-}" ] || return 0
-    ! _koopa_is_installed perlbrew || return 0
-    _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
+    ! _acid_is_installed perlbrew || return 0
+    _acid_shell | grep -Eq "^(bash|zsh)$" || return 0
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -212,7 +212,7 @@ _koopa_activate_perlbrew() {
     return 0
 }
 
-_koopa_activate_rbenv() {
+_acid_activate_rbenv() {
     # Activate Ruby environment manager (rbenv).
     # Updated 2019-11-05.
     #
@@ -220,9 +220,9 @@ _koopa_activate_rbenv() {
     # - https://github.com/rbenv/rbenv
     #
     # Alternate approaches:
-    # > _koopa_add_to_path_start "$(rbenv root)/shims"
-    # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
-    if _koopa_is_installed rbenv
+    # > _acid_add_to_path_start "$(rbenv root)/shims"
+    # > _acid_add_to_path_start "${HOME}/.rbenv/shims"
+    if _acid_is_installed rbenv
     then
         eval "$(rbenv init -)"
         return 0
@@ -240,13 +240,13 @@ _koopa_activate_rbenv() {
     if [ -r "$script" ]
     then
         export RBENV_ROOT="$prefix"
-        _koopa_add_to_path_start "${prefix}/bin"
+        _acid_add_to_path_start "${prefix}/bin"
         eval "$("$script" init -)"
     fi
     return 0
 }
 
-_koopa_activate_rust() {
+_acid_activate_rust() {
     # Activate Rust programming language.
     # Updated 2019-10-29.
     #
@@ -271,7 +271,7 @@ _koopa_activate_rust() {
     return 0
 }
 
-_koopa_activate_secrets() {
+_acid_activate_secrets() {
     # Source secrets file.
     # Updated 2019-10-29.
     # shellcheck source=/dev/null
@@ -289,7 +289,7 @@ _koopa_activate_secrets() {
     return 0
 }
 
-_koopa_activate_ssh_key() {
+_acid_activate_ssh_key() {
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
     #
@@ -304,8 +304,8 @@ _koopa_activate_ssh_key() {
     #
     # Updated 2019-10-29.
     # """
-    _koopa_is_linux || return 0
-    _koopa_is_interactive || return 0
+    _acid_is_linux || return 0
+    _acid_is_interactive || return 0
     local key
     key="${1:-}"
     if [ -z "$key" ]
@@ -318,7 +318,7 @@ _koopa_activate_ssh_key() {
     return 0
 }
 
-_koopa_activate_venv() {
+_acid_activate_venv() {
     # """
     # Activate Python default virtual environment.
     # Updated 2019-10-29.
@@ -337,7 +337,7 @@ _koopa_activate_venv() {
     # Note that 'deactivate' is still messing up autojump path.
     # """
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
+    _acid_shell | grep -Eq "^(bash|zsh)$" || return 0
     local env_name
     env_name="${1:-}"
     if [ -z "$env_name" ]
@@ -354,7 +354,7 @@ _koopa_activate_venv() {
     return 0
 }
 
-_koopa_add_bins_to_path() {
+_acid_add_bins_to_path() {
     # Add nested 'bin/' and 'sbin/' directories to PATH.
     # Updated 2019-09-12.
     local relpath
@@ -362,35 +362,35 @@ _koopa_add_bins_to_path() {
     relpath="${1:-}"
     prefix="$KOOPA_HOME"
     [ -n "$relpath" ] && prefix="${prefix}/${relpath}"
-    _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
-    _koopa_add_to_path_start "${prefix}/bin"
+    _acid_has_sudo && _acid_add_to_path_start "${prefix}/sbin"
+    _acid_add_to_path_start "${prefix}/bin"
 }
 
-_koopa_add_conda_env_to_path() {
+_acid_add_conda_env_to_path() {
     # Add conda environment to PATH.
     # Consider warning if the environment is missing.
     # Updated 2019-10-21.
-    _koopa_is_installed conda || return 0
+    _acid_is_installed conda || return 0
     [ -n "${CONDA_PREFIX:-}" ] || return 0
     local bin_dir
     bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
     [ -d "$bin_dir" ] || return 0
-    _koopa_add_to_path_start "$bin_dir"
+    _acid_add_to_path_start "$bin_dir"
 }
 
-_koopa_add_config_link() {
+_acid_add_config_link() {
     # Add a symlink into the koopa configuration directory.
     #
     # Examples:
-    # _koopa_add_config_link vimrc
-    # _koopa_add_config_link vim
+    # _acid_add_config_link vimrc
+    # _acid_add_config_link vim
     #
     # Updated 2019-09-23.
     local config_dir
-    config_dir="$(_koopa_config_dir)"
+    config_dir="$(_acid_config_dir)"
     local source_file
     source_file="$1"
-    _koopa_assert_is_existing "$source_file"
+    _acid_assert_is_existing "$source_file"
     source_file="$(realpath "$source_file")"
     local dest_name
     dest_name="$2"
@@ -400,7 +400,7 @@ _koopa_add_config_link() {
     ln -fnsv "$source_file" "$dest_file"
 }
 
-_koopa_add_to_fpath_end() {
+_acid_add_to_fpath_end() {
     # Add directory to end of FPATH.
     # Currently only useful for ZSH activation.
     # Updated 2019-10-27.
@@ -409,7 +409,7 @@ _koopa_add_to_fpath_end() {
     export FPATH="${FPATH}:${1}"
 }
 
-_koopa_add_to_fpath_start() {
+_acid_add_to_fpath_start() {
     # Add directory to start of FPATH.
     # Currently only useful for ZSH activation.
     # Updated 2019-10-27.
@@ -418,7 +418,7 @@ _koopa_add_to_fpath_start() {
     export FPATH="${1}:${FPATH}"
 }
 
-_koopa_add_to_manpath_end() {
+_acid_add_to_manpath_end() {
     # Add directory to start of MANPATH.
     # Updated 2019-10-27.
     [ ! -d "$1" ] && return 0
@@ -426,7 +426,7 @@ _koopa_add_to_manpath_end() {
     export MANPATH="${MANPATH}:${1}"
 }
 
-_koopa_add_to_manpath_start() {
+_acid_add_to_manpath_start() {
     # Add directory to start of MANPATH.
     # Updated 2019-10-11.
     [ ! -d "$1" ] && return 0
@@ -434,7 +434,7 @@ _koopa_add_to_manpath_start() {
     export MANPATH="${1}:${MANPATH}"
 }
 
-_koopa_add_to_path_end() {
+_acid_add_to_path_end() {
     # Add directory to end of PATH.
     # Updated 2019-09-12.
     [ ! -d "$1" ] && return 0
@@ -442,7 +442,7 @@ _koopa_add_to_path_end() {
     export PATH="${PATH}:${1}"
 }
 
-_koopa_add_to_path_start() {
+_acid_add_to_path_start() {
     # Add directory to start of PATH.
     # Updated 2019-09-12.
     [ ! -d "$1" ] && return 0
@@ -450,56 +450,56 @@ _koopa_add_to_path_start() {
     export PATH="${1}:${PATH}"
 }
 
-_koopa_array_to_r_vector() {
+_acid_array_to_r_vector() {
     # Convert a bash array to an R vector string.
     # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
     # Updated 2019-09-25.
     local x
     x="$(printf '"%s", ' "$@")"
-    x="$(_koopa_strip_right "$x" ", ")"
+    x="$(_acid_strip_right "$x" ", ")"
     printf "c(%s)\n" "$x"
 }
 
-_koopa_assert_has_args() {
+_acid_assert_has_args() {
     # Assert that the user has passed required arguments to a script.
     # Updated 2019-10-23.
     if [ "$#" -eq 0 ]
     then
-        _koopa_stop "\
+        _acid_stop "\
 Required arguments missing.
 Run with '--help' flag for usage details."
     fi
     return 0
 }
 
-_koopa_assert_has_no_args() {
+_acid_assert_has_no_args() {
     # Assert that the user has not passed any arguments to a script.
     # Updated 2019-10-23.
     if [ "$#" -ne 0 ]
     then
-        _koopa_stop "\
+        _acid_stop "\
 Invalid argument: '${1}'.
 Run with '--help' flag for usage details."
     fi
     return 0
 }
 
-_koopa_assert_has_file_ext() {
+_acid_assert_has_file_ext() {
     # Assert that input contains a file extension.
     # Updated 2019-10-23.
-    if ! _koopa_has_file_ext "$1"
+    if ! _acid_has_file_ext "$1"
     then
-        _koopa_stop "No file extension: '${1}'."
+        _acid_stop "No file extension: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_has_no_environments() {
+_acid_assert_has_no_environments() {
     # Assert that conda and Python virtual environments aren't active.
     # Updated 2019-10-23.
-    if ! _koopa_has_no_environments
+    if ! _acid_has_no_environments
     then
-        _koopa_stop "\
+        _acid_stop "\
 Active environment detected.
        (conda and/or python venv)
 
@@ -512,264 +512,264 @@ Deactivate venv prior to conda, otherwise conda python may be left in path."
     return 0
 }
 
-_koopa_assert_has_sudo() {
+_acid_assert_has_sudo() {
     # Assert that current user has sudo (admin) permissions.
     # Updated 2019-10-23.
-    if ! _koopa_has_sudo
+    if ! _acid_has_sudo
     then
-        _koopa_stop "sudo is required."
+        _acid_stop "sudo is required."
     fi
     return 0
 }
 
-_koopa_assert_is_conda_active() {
+_acid_assert_is_conda_active() {
     # Assert that a Conda environment is active.
     # Updated 2019-10-23.
-    if ! _koopa_is_conda_active
+    if ! _acid_is_conda_active
     then
-        _koopa_stop "No active Conda environment detected."
+        _acid_stop "No active Conda environment detected."
     fi
     return 0
 }
 
-_koopa_assert_is_darwin() {
+_acid_assert_is_darwin() {
     # Assert that platform is Darwin (macOS).
     # Updated 2019-10-23.
-    if ! _koopa_is_darwin
+    if ! _acid_is_darwin
     then
-        _koopa_stop "macOS (Darwin) is required."
+        _acid_stop "macOS (Darwin) is required."
     fi
     return 0
 }
 
-_koopa_assert_is_debian() {
+_acid_assert_is_debian() {
     # Assert that platform is Debian.
     # Updated 2019-10-25.
-    if ! _koopa_is_debian
+    if ! _acid_is_debian
     then
-        _koopa_stop "Debian is required."
+        _acid_stop "Debian is required."
     fi
     return 0
 }
 
-_koopa_assert_is_dir() {
+_acid_assert_is_dir() {
     # Assert that input is a directory.
     # Updated 2019-10-23.
     if [ ! -d "$1" ]
     then
-        _koopa_stop "Not a directory: '${1}'."
+        _acid_stop "Not a directory: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_executable() {
+_acid_assert_is_executable() {
     # Assert that input is executable.
     # Updated 2019-10-23.
     if [ ! -x "$1" ]
     then
-        _koopa_stop "Not executable: '${1}'."
+        _acid_stop "Not executable: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_existing() {
+_acid_assert_is_existing() {
     # Assert that input exists on disk.
     # Note that '-e' flag returns true for file, dir, or symlink.
     # Updated 2019-10-23.
     if [ ! -e "$1" ]
     then
-        _koopa_stop "Does not exist: '${1}'."
+        _acid_stop "Does not exist: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_fedora() {
+_acid_assert_is_fedora() {
     # Assert that platform is Fedora.
     # Updated 2019-10-25.
-    if ! _koopa_is_fedora
+    if ! _acid_is_fedora
     then
-        _koopa_stop "Fedora is required."
+        _acid_stop "Fedora is required."
     fi
     return 0
 }
 
-_koopa_assert_is_file() {
+_acid_assert_is_file() {
     # Assert that input is a file.
     # Updated 2019-09-12.
     if [ ! -f "$1" ]
     then
-        _koopa_stop "Not a file: '${1}'."
+        _acid_stop "Not a file: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_file_type() {
+_acid_assert_is_file_type() {
     # Assert that input matches a specified file type.
     #
-    # Example: _koopa_assert_is_file_type "$x" "csv"
+    # Example: _acid_assert_is_file_type "$x" "csv"
     #
     # Updated 2019-10-23.
-    _koopa_assert_is_file "$1"
-    _koopa_assert_is_matching_regex "$1" "\.${2}\$"
+    _acid_assert_is_file "$1"
+    _acid_assert_is_matching_regex "$1" "\.${2}\$"
 }
 
-_koopa_assert_is_git() {
+_acid_assert_is_git() {
     # Assert that current directory is a git repo.
     # Updated 2019-10-23.
-    if ! _koopa_is_git
+    if ! _acid_is_git
     then
-        _koopa_stop "Not a git repo."
+        _acid_stop "Not a git repo."
     fi
     return 0
 }
 
-_koopa_assert_is_installed() {
+_acid_assert_is_installed() {
     # Assert that programs are installed.
     #
     # Supports checking of multiple programs in a single call.
-    # Note that '_koopa_is_installed' is not vectorized.
+    # Note that '_acid_is_installed' is not vectorized.
     #
     # Updated 2019-10-23.
     for arg in "$@"
     do
-        if ! _koopa_is_installed "$arg"
+        if ! _acid_is_installed "$arg"
         then
-            _koopa_stop "'${arg}' is not installed."
+            _acid_stop "'${arg}' is not installed."
         fi
     done
     return 0
 }
 
-_koopa_assert_is_linux() {
+_acid_assert_is_linux() {
     # Assert that platform is Linux.
     # Updated 2019-10-23.
-    if ! _koopa_is_linux
+    if ! _acid_is_linux
     then
-        _koopa_stop "Linux is required."
+        _acid_stop "Linux is required."
     fi
     return 0
 }
 
-_koopa_assert_is_non_existing() {
+_acid_assert_is_non_existing() {
     # Assert that input does not exist on disk.
     # Updated 2019-10-23.
     if [ -e "$1" ]
     then
-        _koopa_stop "Exists: '${1}'."
+        _acid_stop "Exists: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_not_dir() {
+_acid_assert_is_not_dir() {
     # Assert that input is not a directory.
     # Updated 2019-10-23.
     if [ -d "$1" ]
     then
-        _koopa_stop "Directory exists: '${1}'."
+        _acid_stop "Directory exists: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_not_file() {
+_acid_assert_is_not_file() {
     # Assert that input is not a file.
     # Updated 2019-10-23.
     if [ -f "$1" ]
     then
-        _koopa_stop "File exists: '${1}'."
+        _acid_stop "File exists: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_not_installed() {
+_acid_assert_is_not_installed() {
     # Assert that programs are not installed.
     # Updated 2019-10-23.
     for arg in "$@"
     do
-        if _koopa_is_installed "$arg"
+        if _acid_is_installed "$arg"
         then
-            _koopa_stop "'${arg}' is installed."
+            _acid_stop "'${arg}' is installed."
         fi
     done
     return 0
 }
 
-_koopa_assert_is_not_symlink() {
+_acid_assert_is_not_symlink() {
     # Assert that input is not a symbolic link.
     # Updated 2019-10-23.
     if [ -L "$1" ]
     then
-        _koopa_stop "Symlink exists: '${1}'."
+        _acid_stop "Symlink exists: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_r_package_installed() {
+_acid_assert_is_r_package_installed() {
     # Assert that a specific R package is installed.
     # Updated 2019-10-23.
-    if ! _koopa_is_r_package_installed "$1"
+    if ! _acid_is_r_package_installed "$1"
     then
-        _koopa_stop "'${1}' R package is not installed."
+        _acid_stop "'${1}' R package is not installed."
     fi
     return 0
 }
 
-_koopa_assert_is_readable() {
+_acid_assert_is_readable() {
     # Assert that input is readable.
     # Updated 2019-10-23.
     if [ ! -r "$1" ]
     then
-        _koopa_stop "Not readable: '${1}'."
+        _acid_stop "Not readable: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_symlink() {
+_acid_assert_is_symlink() {
     # Assert that input is a symbolic link.
     # Updated 2019-10-23.
     if [ ! -L "$1" ]
     then
-        _koopa_stop "Not symlink: '${1}'."
+        _acid_stop "Not symlink: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_venv_active() {
+_acid_assert_is_venv_active() {
     # Assert that a Python virtual environment is active.
     # Updated 2019-10-23.
-    _koopa_assert_is_installed pip
-    if ! _koopa_is_venv_active
+    _acid_assert_is_installed pip
+    if ! _acid_is_venv_active
     then
-        _koopa_stop "No active Python venv detected."
+        _acid_stop "No active Python venv detected."
     fi
     return 0
 }
 
-_koopa_assert_is_writable() {
+_acid_assert_is_writable() {
     # Assert that input is writable.
     # Updated 2019-10-23.
     if [ ! -r "$1" ]
     then
-        _koopa_stop "Not writable: '${1}'."
+        _acid_stop "Not writable: '${1}'."
     fi
     return 0
 }
 
-_koopa_assert_is_matching_fixed() {
+_acid_assert_is_matching_fixed() {
     # Assert that input matches a fixed pattern.
     # Updated 2019-10-23.
-    if ! _koopa_is_matching_fixed "$1" "$2"
+    if ! _acid_is_matching_fixed "$1" "$2"
     then
-        _koopa_stop "'${1}' doesn't match fixed pattern '${2}'."
+        _acid_stop "'${1}' doesn't match fixed pattern '${2}'."
     fi
     return 0
 }
 
-_koopa_assert_is_matching_regex() {
+_acid_assert_is_matching_regex() {
     # Assert that input matches a regular expression pattern.
     # Updated 2019-10-23.
-    if ! _koopa_is_matching_regex "$1" "$2"
+    if ! _acid_is_matching_regex "$1" "$2"
     then
-        _koopa_stop "'${1}' doesn't match regex pattern '${2}'."
+        _acid_stop "'${1}' doesn't match regex pattern '${2}'."
     fi
     return 0
 }
@@ -779,22 +779,22 @@ _koopa_assert_is_matching_regex() {
 # B                                                                         {{{1
 # ==============================================================================
 
-_koopa_basename_sans_ext() {
+_acid_basename_sans_ext() {
     # Extract the file basename without extension.
     #
     # Examples:
-    # _koopa_basename_sans_ext "hello-world.txt"
+    # _acid_basename_sans_ext "hello-world.txt"
     # ## hello-world
     #
-    # _koopa_basename_sans_ext "hello-world.tar.gz"
+    # _acid_basename_sans_ext "hello-world.tar.gz"
     # ## hello-world.tar
     #
-    # See also: _koopa_file_ext
+    # See also: _acid_file_ext
     #
     # Updated 2019-10-08.
     local x
     x="$1"
-    if ! _koopa_has_file_ext "$x"
+    if ! _acid_has_file_ext "$x"
     then
         echo "$x"
         return 0
@@ -804,19 +804,19 @@ _koopa_basename_sans_ext() {
     echo "$x"
 }
 
-_koopa_basename_sans_ext2() {
+_acid_basename_sans_ext2() {
     # Extract the file basename prior to any dots in file name.
     #
     # Examples
-    # _koopa_basename_sans_ext2 "hello-world.tar.gz"
+    # _acid_basename_sans_ext2 "hello-world.tar.gz"
     # ## hello-world
     #
-    # See also: _koopa_file_ext2
+    # See also: _acid_file_ext2
     #
     # Updated 2019-10-08.
     local x
     x="$1"
-    if ! _koopa_has_file_ext "$x"
+    if ! _acid_has_file_ext "$x"
     then
         echo "$x"
         return 0
@@ -824,7 +824,7 @@ _koopa_basename_sans_ext2() {
     basename "$x" | cut -d '.' -f 1
 }
 
-_koopa_bash_version() {
+_acid_bash_version() {
     # Updated 2019-09-27.
     bash --version \
         | head -n 1 \
@@ -832,7 +832,7 @@ _koopa_bash_version() {
         | cut -d '(' -f 1
 }
 
-_koopa_build_os_string() {
+_acid_build_os_string() {
     # Build string for 'make' configuration.
     #
     # Use this for 'configure --build' flag.
@@ -850,11 +850,11 @@ _koopa_build_os_string() {
     local os_type
     local string
     mach="$(uname -m)"
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         string="${mach}-${OSTYPE}"
     else
-        os_type="$(_koopa_os_type)"
+        os_type="$(_acid_os_type)"
         if echo "$os_type" | grep -q "rhel"
         then
             os_type="redhat"
@@ -864,11 +864,11 @@ _koopa_build_os_string() {
     echo "$string"
 }
 
-_koopa_build_prefix() {
+_acid_build_prefix() {
     # Return the installation prefix to use.
     # Updated 2019-09-27.
     local prefix
-    if _koopa_is_shared && _koopa_has_sudo
+    if _acid_is_shared && _acid_has_sudo
     then
         prefix="/usr/local"
     else
@@ -882,131 +882,131 @@ _koopa_build_prefix() {
 # C                                                                         {{{1
 # ==============================================================================
 
-_koopa_cellar_prefix() {
+_acid_cellar_prefix() {
     # Cellar prefix.
     # Avoid setting to '/usr/local/cellar', as this can conflict with Homebrew.
     # Updated 2019-10-22.
     echo "${KOOPA_HOME}/cellar"
 }
 
-_koopa_cellar_script() {
+_acid_cellar_script() {
     # Return source path for a koopa cellar build script.
     # Updated 2019-10-08.
-    _koopa_assert_has_no_environments
+    _acid_assert_has_no_environments
     local name
     name="$1"
     file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
-    _koopa_assert_is_file "$file"
+    _acid_assert_is_file "$file"
     echo "$file"
 }
 
-_koopa_check_azure() {
+_acid_check_azure() {
     # Check Azure VM integrity.
     # Updated 2019-10-31.
-    _koopa_is_azure || return 0
+    _acid_is_azure || return 0
     if [ -e "/mnt/resource" ]
     then
-        _koopa_check_user "/mnt/resource" "root"
-        _koopa_check_group "/mnt/resource" "root"
-        _koopa_check_access_octal "/mnt/resource" "1777"
+        _acid_check_user "/mnt/resource" "root"
+        _acid_check_group "/mnt/resource" "root"
+        _acid_check_access_octal "/mnt/resource" "1777"
     fi
-    _koopa_check_mount "/mnt/rdrive"
+    _acid_check_mount "/mnt/rdrive"
     return 0
 }
 
-_koopa_check_access_human() {
+_acid_check_access_human() {
     # Check if file or directory has expected human readable access.
     # Updated 2019-10-31.
     if [ ! -e "$1" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _acid_warning "'${1}' does not exist."
         return 1
     fi
     local access
-    access="$(_koopa_stat_access_human "$1")"
+    access="$(_acid_stat_access_human "$1")"
     if [ "$access" != "$2" ]
     then
-        _koopa_warning "'${1}' current access '${access}' is not '${2}'."
+        _acid_warning "'${1}' current access '${access}' is not '${2}'."
     fi
     return 0
 }
 
-_koopa_check_access_octal() {
+_acid_check_access_octal() {
     # Check if file or directory has expected octal access.
     # Updated 2019-10-31.
     if [ ! -e "$1" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _acid_warning "'${1}' does not exist."
         return 1
     fi
     local access
-    access="$(_koopa_stat_access_octal "$1")"
+    access="$(_acid_stat_access_octal "$1")"
     if [ "$access" != "$2" ]
     then
-        _koopa_warning "'${1}' current access '${access}' is not '${2}'."
+        _acid_warning "'${1}' current access '${access}' is not '${2}'."
     fi
     return 0
 }
 
-_koopa_check_group() {
+_acid_check_group() {
     # Check if file or directory has an expected group.
     # Updated 2019-10-31.
     if [ ! -e "$1" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _acid_warning "'${1}' does not exist."
         return 1
     fi
     local group
-    group="$(_koopa_stat_group "$1")"
+    group="$(_acid_stat_group "$1")"
     if [ "$group" != "$2" ]
     then
-        _koopa_warning "'${1}' current group '${group}' is not '${2}'."
+        _acid_warning "'${1}' current group '${group}' is not '${2}'."
         return 1
     fi
     return 0
 }
 
-_koopa_check_mount() {
+_acid_check_mount() {
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
     # Updated 2019-10-31.
     if [ "$(find "$1" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
     then
-        _koopa_warning "'${1}' is unmounted."
+        _acid_warning "'${1}' is unmounted."
         return 1
     fi
     return 0
 }
 
-_koopa_check_user() {
+_acid_check_user() {
     # Check if file or directory has an expected user.
     # Updated 2019-10-31.
     if [ ! -e "$1" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _acid_warning "'${1}' does not exist."
         return 1
     fi
     local user
-    user="$(_koopa_stat_user "$1")"
+    user="$(_acid_stat_user "$1")"
     if [ "$user" != "$2" ]
     then
-        _koopa_warning "'${1}' current user '${user}' is not '${2}'."
+        _acid_warning "'${1}' current user '${user}' is not '${2}'."
         return 1
     fi
     return 0
 }
 
-_koopa_conda_default_envs_dir() {
+_acid_conda_default_envs_dir() {
     # Locate the directory where conda environments are installed by default.
     # Updated 2019-10-26.
-    _koopa_assert_is_installed conda
+    _acid_assert_is_installed conda
     conda info \
         | grep "envs directories" \
         | cut -d ':' -f 2 \
         | tr -d ' '
 }
 
-_koopa_conda_env() {
+_acid_conda_env() {
     # Conda environment name.
     #
     # Alternate approach:
@@ -1021,23 +1021,23 @@ _koopa_conda_env() {
     echo "${CONDA_DEFAULT_ENV:-}"
 }
 
-_koopa_conda_env_list() {
+_acid_conda_env_list() {
     # Return a list of conda environments in JSON format.
     # Updated 2019-06-27.
-    _koopa_is_installed conda || return 1
+    _acid_is_installed conda || return 1
     conda env list --json
 }
 
-_koopa_conda_env_prefix() {
+_acid_conda_env_prefix() {
     # Return prefix for a specified conda environment.
     #
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
     #
-    # Example: _koopa_conda_env_prefix "deeptools"
+    # Example: _acid_conda_env_prefix "deeptools"
     #
     # Updated 2019-10-27.
-    _koopa_is_installed conda || return 1
+    _acid_is_installed conda || return 1
 
     local env_name
     env_name="$1"
@@ -1047,12 +1047,12 @@ _koopa_conda_env_prefix() {
     env_list="${2:-}"
     if [ -z "$env_list" ]
     then
-        env_list="$(_koopa_conda_env_list)"
+        env_list="$(_acid_conda_env_list)"
     fi
     env_list="$(echo "$env_list" | grep "$env_name")"
     if [ -z "$env_list" ]
     then
-        _koopa_stop "Failed to detect prefix for '${env_name}'."
+        _acid_stop "Failed to detect prefix for '${env_name}'."
     fi
 
     local path
@@ -1064,18 +1064,18 @@ _koopa_conda_env_prefix() {
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
 }
 
-_koopa_conda_internal_prefix() {
+_acid_conda_internal_prefix() {
     # Path to koopa's internal conda environments.
     # This may be removed in a future update.
     # Updated 2019-10-18.
     echo "${KOOPA_HOME}/conda"
 }
 
-_koopa_config_dir() {
+_acid_config_dir() {
     # Updated 2019-11-06.
     if [ -z "${XDG_CONFIG_HOME:-}" ]
     then
-        # > _koopa_warning "'XDG_CONFIG_HOME' is unset."
+        # > _acid_warning "'XDG_CONFIG_HOME' is unset."
         XDG_CONFIG_HOME="${HOME}/.config"
     fi
     echo "${XDG_CONFIG_HOME}/koopa"
@@ -1086,7 +1086,7 @@ _koopa_config_dir() {
 # D                                                                         {{{1
 # ==============================================================================
 
-_koopa_deactivate_conda() {
+_acid_deactivate_conda() {
     # Deactivate Conda environment.
     # Updated 2019-10-25.
     if [ -n "${CONDA_DEFAULT_ENV:-}" ]
@@ -1096,14 +1096,14 @@ _koopa_deactivate_conda() {
     return 0
 }
 
-_koopa_deactivate_envs() {
+_acid_deactivate_envs() {
     # Deactivate Conda and Python environments.
     # Updated 2019-10-25.
-    _koopa_deactivate_venv
-    _koopa_deactivate_conda
+    _acid_deactivate_venv
+    _acid_deactivate_conda
 }
 
-_koopa_deactivate_venv() {
+_acid_deactivate_venv() {
     # Deactivate Python virtual environment.
     # Updated 2019-10-25.
     if [ -n "${VIRTUAL_ENV:-}" ]
@@ -1112,13 +1112,13 @@ _koopa_deactivate_venv() {
         # # shellcheck disable=SC1090
         # > source "${VIRTUAL_ENV}/bin/activate"
         # > deactivate
-        _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
+        _acid_remove_from_path "${VIRTUAL_ENV}/bin"
         unset -v VIRTUAL_ENV
     fi
     return 0
 }
 
-_koopa_delete_dotfile() {
+_acid_delete_dotfile() {
     # Delete a dot file.
     # Updated 2019-06-27.
     local path
@@ -1127,29 +1127,29 @@ _koopa_delete_dotfile() {
     name="$(basename "$path")"
     if [ -L "$path" ]
     then
-        _koopa_message "Removing '${name}'."
+        _acid_message "Removing '${name}'."
         rm -f "$path"
     elif [ -f "$path" ] || [ -d "$path" ]
     then
-        _koopa_warning "Not a symlink: '${name}'."
+        _acid_warning "Not a symlink: '${name}'."
     fi
 }
 
-_koopa_disk_check() {
+_acid_disk_check() {
     # Check that disk has enough free space.
     # Updated 2019-10-27.
     local used
     local limit
-    used="$(_koopa_disk_pct_used "$@")"
+    used="$(_acid_disk_pct_used "$@")"
     limit="90"
     if [ "$used" -gt "$limit" ]
     then
-        _koopa_warning "Disk usage is ${used}%."
+        _acid_warning "Disk usage is ${used}%."
     fi
     return 0
 }
 
-_koopa_disk_pct_used() {
+_acid_disk_pct_used() {
     # Check disk usage on main drive.
     # Updated 2019-08-17.
     local disk
@@ -1162,20 +1162,20 @@ _koopa_disk_pct_used() {
         | sed 's/%$//'
 }
 
-_koopa_dotfiles_config_link() {
+_acid_dotfiles_config_link() {
     # Dotfiles directory.
     # Note that we're not checking for existence here, which is handled inside
     # 'link-dotfile' script automatically instead.
     # Updated 2019-11-04.
-    echo "$(_koopa_config_dir)/dotfiles"
+    echo "$(_acid_config_dir)/dotfiles"
 }
 
-_koopa_dotfiles_private_config_link() {
+_acid_dotfiles_private_config_link() {
     # Updated 2019-11-04.
-    echo "$(_koopa_dotfiles_config_link)-private"
+    echo "$(_acid_dotfiles_config_link)-private"
 }
 
-_koopa_dotfiles_source_repo() {
+_acid_dotfiles_source_repo() {
     # Dotfiles source repository.
     # Updated 2019-11-04.
     if [ -d "${DOTFILES:-}" ]
@@ -1184,22 +1184,22 @@ _koopa_dotfiles_source_repo() {
         return 0
     fi
     local dotfiles
-    dotfiles="$(_koopa_home)/dotfiles"
+    dotfiles="$(_acid_home)/dotfiles"
     if [ ! -d "$dotfiles" ]
     then
-        _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
+        _acid_stop "Dotfiles are not installed at '${dotfiles}'."
     fi
     echo "$dotfiles"
 }
 
-_koopa_download() {
+_acid_download() {
     # Download a file.
     # Alternatively, can use wget instead of curl:
     # > wget -O file url
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # Updated 2019-11-04.
-    _koopa_assert_is_installed curl
+    _acid_assert_is_installed curl
     local url
     url="$1"
     local file
@@ -1216,7 +1216,7 @@ _koopa_download() {
 # E                                                                         {{{1
 # ==============================================================================
 
-_koopa_echo_ansi() {
+_acid_echo_ansi() {
     # Print a colored line in console.
     #
     # Currently using ANSI escape codes.
@@ -1247,71 +1247,71 @@ _koopa_echo_ansi() {
     echo -e "${color}${string}${nocolor}"
 }
 
-_koopa_echo_black() {
-    _koopa_echo_ansi "0;30" "$1"
+_acid_echo_black() {
+    _acid_echo_ansi "0;30" "$1"
 }
 
-_koopa_echo_black_bold() {
-    _koopa_echo_ansi "1;30" "$1"
+_acid_echo_black_bold() {
+    _acid_echo_ansi "1;30" "$1"
 }
 
-_koopa_echo_blue() {
-    _koopa_echo_ansi "0;34" "$1"
+_acid_echo_blue() {
+    _acid_echo_ansi "0;34" "$1"
 }
 
-_koopa_echo_blue_bold() {
-    _koopa_echo_ansi "1;34" "$1"
+_acid_echo_blue_bold() {
+    _acid_echo_ansi "1;34" "$1"
 }
 
-_koopa_echo_cyan() {
-    _koopa_echo_ansi "0;36" "$1"
+_acid_echo_cyan() {
+    _acid_echo_ansi "0;36" "$1"
 }
 
-_koopa_echo_cyan_bold() {
-    _koopa_echo_ansi "1;36" "$1"
+_acid_echo_cyan_bold() {
+    _acid_echo_ansi "1;36" "$1"
 }
 
-_koopa_echo_green() {
-    _koopa_echo_ansi "0;32" "$1"
+_acid_echo_green() {
+    _acid_echo_ansi "0;32" "$1"
 }
 
-_koopa_echo_green_bold() {
-    _koopa_echo_ansi "1;32" "$1"
+_acid_echo_green_bold() {
+    _acid_echo_ansi "1;32" "$1"
 }
 
-_koopa_echo_magenta() {
-    _koopa_echo_ansi "0;35" "$1"
+_acid_echo_magenta() {
+    _acid_echo_ansi "0;35" "$1"
 }
 
-_koopa_echo_magenta_bold() {
-    _koopa_echo_ansi "1;35" "$1"
+_acid_echo_magenta_bold() {
+    _acid_echo_ansi "1;35" "$1"
 }
 
-_koopa_echo_red() {
-    _koopa_echo_ansi "0;31" "$1"
+_acid_echo_red() {
+    _acid_echo_ansi "0;31" "$1"
 }
 
-_koopa_echo_red_bold() {
-    _koopa_echo_ansi "1;31" "$1"
+_acid_echo_red_bold() {
+    _acid_echo_ansi "1;31" "$1"
 }
 
-_koopa_echo_yellow() {
-    _koopa_echo_ansi "0;33" "$1"
+_acid_echo_yellow() {
+    _acid_echo_ansi "0;33" "$1"
 }
 
-_koopa_echo_yellow_bold() {
-    _koopa_echo_ansi "1;33" "$1"
+_acid_echo_yellow_bold() {
+    _acid_echo_ansi "1;33" "$1"
 }
 
-_koopa_echo_white() {
-    _koopa_echo_ansi "0;37" "$1"
+_acid_echo_white() {
+    _acid_echo_ansi "0;37" "$1"
 }
 
-_koopa_echo_white_bold() {
-    _koopa_echo_ansi "1;37" "$1"
+_acid_echo_white_bold() {
+    _acid_echo_ansi "1;37" "$1"
 }
 
-_koopa_ensure_newline_at_end_of_file() {
+_acid_ensure_newline_at_end_of_file() {
     # Ensure output CSV contains trailing line break.
     #
     # Otherwise 'readr::read_csv()' will skip the last line in R.
@@ -1327,7 +1327,7 @@ _koopa_ensure_newline_at_end_of_file() {
     [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
 }
 
-_koopa_extract() {
+_acid_extract() {
     # Extract compressed files automatically.
     #
     # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
@@ -1340,9 +1340,9 @@ _koopa_extract() {
     file="$1"
     if [ ! -f "$file" ]
     then
-        _koopa_stop "Invalid file: '${file}'."
+        _acid_stop "Invalid file: '${file}'."
     fi
-    _koopa_message "Extracting '${file}'."
+    _acid_message "Extracting '${file}'."
     case "$file" in
         *.tar.bz2)
             tar -xjvf "$file"
@@ -1381,7 +1381,7 @@ _koopa_extract() {
             7z -x "$file"
             ;;
         *)
-            _koopa_stop "Unsupported extension: '${file}'."
+            _acid_stop "Unsupported extension: '${file}'."
             ;;
    esac
 }
@@ -1391,39 +1391,39 @@ _koopa_extract() {
 # F                                                                         {{{1
 # ==============================================================================
 
-_koopa_file_ext() {
+_acid_file_ext() {
     # Extract the file extension from input.
     #
     # Examples:
-    # _koopa_file_ext "hello-world.txt"
+    # _acid_file_ext "hello-world.txt"
     # ## txt
     #
-    # _koopa_file_ext "hello-world.tar.gz"
+    # _acid_file_ext "hello-world.tar.gz"
     # ## gz
     #
-    # See also: _koopa_basename_sans_ext
+    # See also: _acid_basename_sans_ext
     #
     # Updated 2019-10-08.
-    _koopa_has_file_ext "$1" || return 0
+    _acid_has_file_ext "$1" || return 0
     printf "%s\n" "${1##*.}"
 }
 
-_koopa_file_ext2() {
+_acid_file_ext2() {
     # Extract the file extension after any dots in the file name.
     # This assumes file names are not in dotted case.
     #
     # Examples:
-    # _koopa_file_ext2 "hello-world.tar.gz"
+    # _acid_file_ext2 "hello-world.tar.gz"
     # ## tar.gz
     #
-    # See also: _koopa_basename_sans_ext2
+    # See also: _acid_basename_sans_ext2
     #
     # Updated 2019-10-08.
-    _koopa_has_file_ext "$1" || return 0
+    _acid_has_file_ext "$1" || return 0
     echo "$1" | cut -d '.' -f 2-
 }
 
-_koopa_find_dotfiles() {
+_acid_find_dotfiles() {
     # Find dotfiles by type.
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
@@ -1441,52 +1441,52 @@ _koopa_find_dotfiles() {
         | awk '{print "  ",$0}'
 }
 
-_koopa_find_text() {
+_acid_find_text() {
     # Find text in any file.
     #
     # See also: https://github.com/stephenturner/oneliners
     #
     # Examples:
-    # _koopa_find_text "mytext" *.txt
+    # _acid_find_text "mytext" *.txt
     #
     # Updated 2019-09-05.
     find . -name "$2" -exec grep -il "$1" {} \;;
 }
 
-_koopa_force_add_to_fpath_end() {
+_acid_force_add_to_fpath_end() {
     # Updated 2019-10-27.
-    _koopa_remove_from_fpath "$1"
-    _koopa_add_to_fpath_end "$1"
+    _acid_remove_from_fpath "$1"
+    _acid_add_to_fpath_end "$1"
 }
 
-_koopa_force_add_to_fpath_start() {
+_acid_force_add_to_fpath_start() {
     # Updated 2019-10-27.
-    _koopa_remove_from_fpath "$1"
-    _koopa_add_to_fpath_start "$1"
+    _acid_remove_from_fpath "$1"
+    _acid_add_to_fpath_start "$1"
 }
 
-_koopa_force_add_to_manpath_end() {
+_acid_force_add_to_manpath_end() {
     # Updated 2019-10-27.
-    _koopa_remove_from_manpath "$1"
-    _koopa_add_to_manpath_end "$1"
+    _acid_remove_from_manpath "$1"
+    _acid_add_to_manpath_end "$1"
 }
 
-_koopa_force_add_to_manpath_start() {
+_acid_force_add_to_manpath_start() {
     # Updated 2019-10-14.
-    _koopa_remove_from_manpath "$1"
-    _koopa_add_to_manpath_start "$1"
+    _acid_remove_from_manpath "$1"
+    _acid_add_to_manpath_start "$1"
 }
 
-_koopa_force_add_to_path_end() {
+_acid_force_add_to_path_end() {
     # Updated 2019-10-14.
-    _koopa_remove_from_path "$1"
-    _koopa_add_to_path_end "$1"
+    _acid_remove_from_path "$1"
+    _acid_add_to_path_end "$1"
 }
 
-_koopa_force_add_to_path_start() {
+_acid_force_add_to_path_start() {
     # Updated 2019-10-14.
-    _koopa_remove_from_path "$1"
-    _koopa_add_to_path_start "$1"
+    _acid_remove_from_path "$1"
+    _acid_add_to_path_start "$1"
 }
 
 
@@ -1495,7 +1495,7 @@ _koopa_force_add_to_path_start() {
 # G                                                                         {{{1
 # ==============================================================================
 
-_koopa_git_branch() {
+_acid_git_branch() {
     # Current git branch name.
     # Handles detached HEAD state.
     #
@@ -1504,7 +1504,7 @@ _koopa_git_branch() {
     # > git rev-parse --abbrev-ref HEAD
     #
     # See also:
-    # - _koopa_assert_is_git
+    # - _acid_assert_is_git
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     #
@@ -1512,17 +1512,17 @@ _koopa_git_branch() {
     git symbolic-ref --short -q HEAD
 }
 
-_koopa_github_latest_release() {
+_acid_github_latest_release() {
     # Get the latest release version from GitHub.
     # Updated 2019-10-24.
-    # Example: _koopa_github_latest_release "acidgenomics/koopa"
+    # Example: _acid_github_latest_release "acidgenomics/koopa"
     curl -s "https://github.com/${1}/releases/latest" 2>&1 \
         | grep -Eo '/tag/[.0-9v]+' \
         | cut -d '/' -f 3 \
         | sed 's/^v//'
 }
 
-_koopa_group() {
+_acid_group() {
     # Return the approach group to use with koopa installation.
     #
     # Returns current user for local install.
@@ -1532,7 +1532,7 @@ _koopa_group() {
     #
     # Updated 2019-10-22.
     local group
-    if _koopa_is_shared && _koopa_has_sudo
+    if _acid_is_shared && _acid_has_sudo
     then
         if groups | grep -Eq "\b(admin)\b"
         then
@@ -1552,7 +1552,7 @@ _koopa_group() {
     echo "$group"
 }
 
-_koopa_gsub() {
+_acid_gsub() {
     # Updated 2019-10-09.
     echo "$1" | sed -E "s/${2}/${3}/g"
 }
@@ -1562,22 +1562,22 @@ _koopa_gsub() {
 # H                                                                         {{{1
 # ==============================================================================
 
-_koopa_has_file_ext() {
+_acid_has_file_ext() {
     # Does the input contain a file extension?
     # Simply looks for a "." and returns true/false.
     # Updated 2019-10-08.
     echo "$1" | grep -q "\."
 }
 
-_koopa_has_no_environments() {
+_acid_has_no_environments() {
     # Detect activation of virtual environments.
     # Updated 2019-10-20.
-    _koopa_is_conda_active && return 1
-    _koopa_is_venv_active && return 1
+    _acid_is_conda_active && return 1
+    _acid_is_venv_active && return 1
     return 0
 }
 
-_koopa_has_sudo() {
+_acid_has_sudo() {
     # Check that current user has administrator (sudo) permission.
     #
     # Note that use of 'sudo -v' does not work consistently across platforms.
@@ -1590,7 +1590,7 @@ _koopa_has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
-_koopa_header() {
+_acid_header() {
     # Source script header.
     # Useful for private scripts using koopa code outside of package.
     # Updated 2019-09-27.
@@ -1599,7 +1599,7 @@ _koopa_header() {
     then
         >&2 cat << EOF
 error: TYPE argument missing.
-usage: _koopa_header TYPE
+usage: _acid_header TYPE
 
 shell:
     - bash
@@ -1659,18 +1659,18 @@ EOF
             path="${KOOPA_HOME}/host/harvard-odyssey/include/header.sh"
             ;;
         *)
-            _koopa_stop "'${1}' is not supported."
+            _acid_stop "'${1}' is not supported."
             ;;
     esac
     echo "$path"
 }
 
-_koopa_home() {
+_acid_home() {
     # Updated 2019-08-18.
     echo "$KOOPA_HOME"
 }
 
-_koopa_host_type() {
+_acid_host_type() {
     # Simple host type name string to load up host-specific scripts.
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
@@ -1708,7 +1708,7 @@ _koopa_host_type() {
 # I                                                                         {{{1
 # ==============================================================================
 
-_koopa_info_box() {
+_acid_info_box() {
     # Info box.
     #
     # Using unicode box drawings here.
@@ -1727,20 +1727,20 @@ _koopa_info_box() {
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
-_koopa_install_mike() {
+_acid_install_mike() {
     # Install additional Mike-specific config files.
     # Updated 2019-11-04.
     install-dotfiles --mike
     # docker
     source_repo="git@github.com:acidgenomics/docker.git"
-    target_dir="$(_koopa_config_dir)/docker"
+    target_dir="$(_acid_config_dir)/docker"
     if [[ ! -d "$target_dir" ]]
     then
         git clone --recursive "$source_repo" "$target_dir"
     fi
     # scripts-private
     source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
-    target_dir="$(_koopa_config_dir)/scripts-private"
+    target_dir="$(_acid_config_dir)/scripts-private"
     if [[ ! -d "$target_dir" ]]
     then
         git clone --recursive "$source_repo"  "$target_dir"
@@ -1752,37 +1752,37 @@ _koopa_install_mike() {
     )
 }
 
-_koopa_invalid_arg() {
+_acid_invalid_arg() {
     # Error on invalid argument.
     # Updated 2019-10-23.
-    _koopa_stop "Invalid argument: '${1}'."
+    _acid_stop "Invalid argument: '${1}'."
 }
 
-_koopa_is_aws() {
+_acid_is_aws() {
     # Is the current session running on AWS?
     # Updated 2019-10-31.
-    [ "$(_koopa_host_type)" = "aws" ]
+    [ "$(_acid_host_type)" = "aws" ]
 }
 
-_koopa_is_azure() {
+_acid_is_azure() {
     # Is the current session running on Microsoft Azure?
     # Updated 2019-10-31.
-    [ "$(_koopa_host_type)" = "azure" ]
+    [ "$(_acid_host_type)" = "azure" ]
 }
 
-_koopa_is_conda_active() {
+_acid_is_conda_active() {
     # Is there a Conda environment active?
     # Updated 2019-10-20.
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
-_koopa_is_darwin() {
+_acid_is_darwin() {
     # Is the operating system Darwin (macOS)?
     # Updated 2019-06-22.
     [ "$(uname -s)" = "Darwin" ]
 }
 
-_koopa_is_debian() {
+_acid_is_debian() {
     # Is the operating system Debian?
     # Updated 2019-10-25.
     [ -f /etc/os-release ] || return 1
@@ -1790,7 +1790,7 @@ _koopa_is_debian() {
         grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
-_koopa_is_fedora() {
+_acid_is_fedora() {
     # Is the operating system Fedora?
     # Updated 2019-10-25.
     [ -f /etc/os-release ] || return 1
@@ -1798,13 +1798,13 @@ _koopa_is_fedora() {
         grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 }
 
-_koopa_is_file_system_case_sensitive() {
+_acid_is_file_system_case_sensitive() {
     # Is the file system case sensitive?
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # Updated 2019-10-21.
     touch ".tmp.checkcase" ".tmp.checkCase"
     count="$(find . -maxdepth 1 -iname ".tmp.checkcase" | wc -l)"
-    _koopa_quiet_rm .tmp.check* 
+    _acid_quiet_rm .tmp.check* 
     if [ "$count" -eq 2 ]
     then
         return 0
@@ -1813,7 +1813,7 @@ _koopa_is_file_system_case_sensitive() {
     fi
 }
 
-_koopa_is_git() {
+_acid_is_git() {
     # Is the current working directory a git repository?
     #
     # See also:
@@ -1828,7 +1828,7 @@ _koopa_is_git() {
     fi
 }
 
-_koopa_is_git_clean() {
+_acid_is_git_clean() {
     # Is the current git repo clean, or does it have unstaged changes?
     #
     # See also:
@@ -1852,66 +1852,66 @@ _koopa_is_git_clean() {
     return 0
 }
 
-_koopa_is_installed() {
+_acid_is_installed() {
     # Is the requested program name installed?
     # Updated 2019-10-02.
     command -v "$1" >/dev/null
 }
 
-_koopa_is_interactive() {
+_acid_is_interactive() {
     # Is the current shell interactive?
     # Updated 2019-06-21.
     echo "$-" | grep -q "i"
 }
 
-_koopa_is_linux() {
+_acid_is_linux() {
     # Updated 2019-06-21.
     [ "$(uname -s)" = "Linux" ]
 }
 
-_koopa_is_local() {
+_acid_is_local() {
     # Is koopa installed only for the current user?
     # Updated 2019-06-25.
     echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
 }
 
-_koopa_is_login() {
+_acid_is_login() {
     # Is the current shell a login shell?
     # Updated 2019-08-14.
     echo "$0" | grep -Eq "^-"
 }
 
-_koopa_is_login_bash() {
+_acid_is_login_bash() {
     # Is the current shell a login bash shell?
     # Updated 2019-06-21.
     [ "$0" = "-bash" ]
 }
 
-_koopa_is_login_zsh() {
+_acid_is_login_zsh() {
     # Is the current shell a login zsh shell?
     # Updated 2019-06-21.
     [ "$0" = "-zsh" ]
 }
 
-_koopa_is_matching_fixed() {
+_acid_is_matching_fixed() {
     # Updated 2019-10-14.
     echo "$1" | grep -Fq "$2"
 }
 
-_koopa_is_matching_regex() {
+_acid_is_matching_regex() {
     # Updated 2019-10-13.
     echo "$1" | grep -Eq "$2"
 }
 
-_koopa_is_r_package_installed() {
+_acid_is_r_package_installed() {
     # Is the requested R package installed?
     # Updated 2019-10-20.
-    _koopa_is_installed R || return 1
+    _acid_is_installed R || return 1
     Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
         | grep -q "TRUE"
 }
 
-_koopa_is_rhel7() {
+_acid_is_rhel7() {
     # Is the operating system RHEL 7?
     # Updated 2019-10-25.
     [ -f /etc/os-release ] || return 1
@@ -1920,19 +1920,19 @@ _koopa_is_rhel7() {
     return 0
 }
 
-_koopa_is_remote() {
+_acid_is_remote() {
     # Is the current shell session a remote connection over SSH?
     # Updated 2019-06-25.
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
-_koopa_is_shared() {
+_acid_is_shared() {
     # Is koopa installed for all users (shared)?
     # Updated 2019-06-25.
-    ! _koopa_is_local
+    ! _acid_is_local
 }
 
-_koopa_is_venv_active() {
+_acid_is_venv_active() {
     # Is there a Python virtual environment active?
     # Updated 2019-10-20.
     [ -n "${VIRTUAL_ENV:-}" ]
@@ -1943,7 +1943,7 @@ _koopa_is_venv_active() {
 # J                                                                         {{{1
 # ==============================================================================
 
-_koopa_java_home() {
+_acid_java_home() {
     # Set JAVA_HOME environment variable.
     #
     # See also:
@@ -1952,7 +1952,7 @@ _koopa_java_home() {
     # - https://stackoverflow.com/questions/22290554
     #
     # Updated 2019-10-08.
-    if ! _koopa_is_installed java
+    if ! _acid_is_installed java
     then
         return 0
     fi
@@ -1963,12 +1963,12 @@ _koopa_java_home() {
         return 0
     fi
     local home
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         home="$(/usr/libexec/java_home)"
     else
         local java_exe
-        java_exe="$(_koopa_realpath "java")"
+        java_exe="$(_acid_realpath "java")"
         home="$(dirname "$(dirname "${java_exe}")")"
     fi
     echo "$home"
@@ -1979,10 +1979,10 @@ _koopa_java_home() {
 # L                                                                         {{{1
 # ==============================================================================
 
-_koopa_line_count() {
+_acid_line_count() {
     # Return the number of lines in a file.
     #
-    # Example: _koopa_line_count tx2gene.csv
+    # Example: _acid_line_count tx2gene.csv
     #
     # Updated 2019-10-27.
     wc -l "$1" \
@@ -1990,15 +1990,15 @@ _koopa_line_count() {
         | cut -d ' ' -f 1
 }
 
-_koopa_link_cellar() {
+_acid_link_cellar() {
     # Symlink cellar into build directory.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
     #
-    # This can be reset easily with '_koopa_set_permissions'.
+    # This can be reset easily with '_acid_set_permissions'.
     #
-    # Example: _koopa_link_cellar emacs 26.3
+    # Example: _acid_link_cellar emacs 26.3
     # # '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
     #
     # Updated 2019-10-22.
@@ -2008,40 +2008,40 @@ _koopa_link_cellar() {
     local cellar_prefix
     name="$1"
     version="$2"
-    build_prefix="$(_koopa_build_prefix)"
-    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-    _koopa_message "Linking '${cellar_prefix}' in '${build_prefix}'."
-    _koopa_set_permissions "$cellar_prefix"
-    if _koopa_is_shared
+    build_prefix="$(_acid_build_prefix)"
+    cellar_prefix="$(_acid_cellar_prefix)/${name}/${version}"
+    _acid_message "Linking '${cellar_prefix}' in '${build_prefix}'."
+    _acid_set_permissions "$cellar_prefix"
+    if _acid_is_shared
     then
-        _koopa_assert_has_sudo
+        _acid_assert_has_sudo
         sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
-        _koopa_update_ldconfig
+        _acid_update_ldconfig
     else
         cp -frsv "$cellar_prefix/"* "$build_prefix/".
     fi
 }
 
-_koopa_list_fpath_priority() {
+_acid_list_fpath_priority() {
     # Split FPATH string by ':' delim into lines.
     # Updated 2019-10-27.
-    _koopa_list_path_priority "$FPATH"
+    _acid_list_path_priority "$FPATH"
 }
 
-_koopa_list_manpath_priority() {
+_acid_list_manpath_priority() {
     # Split FPATH string by ':' delim into lines.
     # Updated 2019-10-27.
-    _koopa_list_path_priority "$MANPATH"
+    _acid_list_path_priority "$MANPATH"
 }
 
-_koopa_list_path_priority() {
+_acid_list_path_priority() {
     # Split PATH string by ':' delim into lines.
     #
     # Bash parameter expansion:
     # > echo "${PATH//:/$'\n'}"
     #
     # Can generate a unique PATH string with:
-    # > _koopa_list_path_priority \
+    # > _acid_list_path_priority \
     # >     | tac \
     # >     | awk '!a[$0]++' \
     # >     | tac
@@ -2058,38 +2058,38 @@ _koopa_list_path_priority() {
 # M                                                                         {{{1
 # ==============================================================================
 
-_koopa_macos_app_version() {
+_acid_macos_app_version() {
     # Extract the version of a macOS application.
     # Updated 2019-09-28.
-    _koopa_assert_is_darwin
+    _acid_assert_is_darwin
     plutil -p "/Applications/${1}.app/Contents/Info.plist" \
         | grep CFBundleShortVersionString \
         | awk -F ' => ' '{print $2}' \
         | tr -d '"'
 }
 
-_koopa_major_version() {
+_acid_major_version() {
     # Get the major program version.
     # Updated 2019-09-23.
     echo "$1" | cut -d '.' -f 1-2
 }
 
-_koopa_message() {
+_acid_message() {
     # General message.
     # Updated 2019-10-23.
-    _koopa_echo_cyan_bold "$1"
+    _acid_echo_cyan_bold "$1"
 }
 
-_koopa_minor_version() {
+_acid_minor_version() {
     # Get the minor program version.
     # Updated 2019-09-23.
     echo "$1" | cut -d "." -f 2-
 }
 
-_koopa_missing_arg() {
+_acid_missing_arg() {
     # Error on a missing argument.
     # Updated 2019-10-23.
-    _koopa_stop "Missing required argument."
+    _acid_stop "Missing required argument."
 }
 
 
@@ -2097,10 +2097,10 @@ _koopa_missing_arg() {
 # N                                                                         {{{1
 # ==============================================================================
 
-_koopa_note() {
+_acid_note() {
     # General note message.
     # Updated 2019-10-23.
-    _koopa_echo_magenta_bold "Note: ${1}"
+    _acid_echo_magenta_bold "Note: ${1}"
 }
 
 
@@ -2108,16 +2108,16 @@ _koopa_note() {
 # O                                                                         {{{1
 # ==============================================================================
 
-_koopa_os_type() {
+_acid_os_type() {
     # Operating system name.
     # Always returns lowercase, with unique names for Linux distros
     # (e.g. "debian").
     # Updated 2019-10-22.
     local id
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         id="$(uname -s | tr '[:upper:]' '[:lower:]')"
-    elif _koopa_is_linux
+    elif _acid_is_linux
     then
         id="$( \
             awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
@@ -2139,7 +2139,7 @@ _koopa_os_type() {
     echo "$id"
 }
 
-_koopa_os_version() {
+_acid_os_version() {
     # Operating system version.
     # Updated 2019-06-22.
     # Note that this returns Darwin version information for macOS.
@@ -2151,14 +2151,14 @@ _koopa_os_version() {
 # P                                                                         {{{1
 # ==============================================================================
 
-_koopa_prefix_chgrp() {
+_acid_prefix_chgrp() {
     # Fix the group permissions on the target build prefix.
     # Updated 2019-10-22.
     local path
     local group
     path="$1"
-    group="$(_koopa_group)"
-    if _koopa_has_sudo
+    group="$(_acid_group)"
+    if _acid_has_sudo
     then
         sudo chgrp -Rh "$group" "$path"
         sudo chmod -R g+w "$path"
@@ -2168,24 +2168,24 @@ _koopa_prefix_chgrp() {
     fi
 }
 
-_koopa_prefix_mkdir() {
+_acid_prefix_mkdir() {
     # Create directory in target build prefix.
     # Sets correct group and write permissions automatically.
     # Updated 2019-10-22.
     local path
     path="$1"
-    _koopa_assert_is_not_dir "$path"
-    if _koopa_has_sudo
+    _acid_assert_is_not_dir "$path"
+    if _acid_has_sudo
     then
         sudo mkdir -p "$path"
         sudo chown "$(whoami)" "$path"
     else
         mkdir -p "$path"
     fi
-    _koopa_prefix_chgrp "$path"
+    _acid_prefix_chgrp "$path"
 }
 
-_koopa_prompt() {
+_acid_prompt() {
     # Prompt string.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
@@ -2211,9 +2211,9 @@ _koopa_prompt() {
     user="${USER}@${HOSTNAME//.*/}"
     # Note that subshell exec need to be escaped here, so they are evaluated
     # dynamically when the prompt is refreshed.
-    conda="\$(_koopa_prompt_conda)"
-    git="\$(_koopa_prompt_git)"
-    venv="\$(_koopa_prompt_venv)"
+    conda="\$(_acid_prompt_conda)"
+    git="\$(_acid_prompt_git)"
+    venv="\$(_acid_prompt_venv)"
     case "$KOOPA_SHELL" in
         bash)
             newline='\n'
@@ -2227,7 +2227,7 @@ _koopa_prompt() {
             ;;
     esac
     # Enable colorful prompt, when possible.
-    if _koopa_is_matching_fixed "${TERM:-}" "256color"
+    if _acid_is_matching_fixed "${TERM:-}" "256color"
     then
         local conda_color git_color prompt_color user_color venv_color wd_color
         case "$KOOPA_SHELL" in
@@ -2274,11 +2274,11 @@ _koopa_prompt() {
         "$prompt"
 }
 
-_koopa_prompt_conda() {
+_acid_prompt_conda() {
     # Get conda environment name for prompt string.
     # Updated 2019-10-13.
     local env
-    env="$(_koopa_conda_env)"
+    env="$(_acid_conda_env)"
     if [ -n "$env" ]
     then
         printf " conda:%s\n" "${env}"
@@ -2287,12 +2287,12 @@ _koopa_prompt_conda() {
     fi
 }
 
-_koopa_prompt_disk_used() {
+_acid_prompt_disk_used() {
     # Get current disk usage on primary drive.
     # Updated 2019-10-13.
     local pct used
-    used="$(_koopa_disk_pct_used)"
-    case "$(_koopa_shell)" in
+    used="$(_acid_disk_pct_used)"
+    case "$(_acid_shell)" in
         zsh)
             pct="%%"
             ;;
@@ -2303,14 +2303,14 @@ _koopa_prompt_disk_used() {
     printf " disk:%d%s\n" "$used" "$pct"
 }
 
-_koopa_prompt_git() {
+_acid_prompt_git() {
     # Return the current git branch, if applicable.
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # Updated 2019-10-14.
-    _koopa_is_git || return 0
+    _acid_is_git || return 0
     local git_branch git_status
-    git_branch="$(_koopa_git_branch)"
-    if _koopa_is_git_clean
+    git_branch="$(_acid_git_branch)"
+    if _acid_is_git_clean
     then
         git_status=""
     else
@@ -2319,12 +2319,12 @@ _koopa_prompt_git() {
     printf " %s%s\n" "$git_branch" "$git_status"
 }
 
-_koopa_prompt_venv() {
+_acid_prompt_venv() {
     # Get Python virtual environment name for prompt string.
     # https://stackoverflow.com/questions/10406926
     # Updated 2019-10-13.
     local env
-    env="$(_koopa_venv)"
+    env="$(_acid_venv)"
     if [ -n "$env" ]
     then
         printf " venv:%s\n" "${env}"
@@ -2338,12 +2338,12 @@ _koopa_prompt_venv() {
 # Q                                                                         {{{1
 # ==============================================================================
 
-_koopa_quiet_cd() {
+_acid_quiet_cd() {
     # Updated 2019-10-29.
     cd "$@" > /dev/null || return 1
 }
 
-_koopa_quiet_expr() {
+_acid_quiet_expr() {
     # Regular expression matching that is POSIX compliant.
     #
     # Avoid using '[[ =~ ]]' in sh config files.
@@ -2356,7 +2356,7 @@ _koopa_quiet_expr() {
     expr "$1" : "$2" 1>/dev/null
 }
 
-_koopa_quiet_rm() {
+_acid_quiet_rm() {
     # Quiet remove.
     # Updated 2019-10-29.
     rm -fr "$@" > /dev/null 2>&1
@@ -2367,19 +2367,19 @@ _koopa_quiet_rm() {
 # R                                                                         {{{1
 # ==============================================================================
 
-_koopa_r_home() {
+_acid_r_home() {
     # Get 'R_HOME', rather than exporting as global variable.
     # Updated 2019-06-27.
-    _koopa_assert_is_installed R
-    _koopa_assert_is_installed Rscript
+    _acid_assert_is_installed R
+    _acid_assert_is_installed Rscript
     Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))'
 }
 
-_koopa_realpath() {
+_acid_realpath() {
     # Locate the realpath of a program.
     #
     # This resolves symlinks automatically.
-    # For 'which' style return, use '_koopa_which' instead.
+    # For 'which' style return, use '_acid_which' instead.
     #
     # See also:
     # - https://stackoverflow.com/questions/7665
@@ -2388,26 +2388,26 @@ _koopa_realpath() {
     # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
     #
     # Examples:
-    # _koopa_realpath bash
+    # _acid_realpath bash
     # ## /usr/local/Cellar/bash/5.0.11/bin/bash
     #
     # Updated 2019-10-08.
-    realpath "$(_koopa_which "$1")"
+    realpath "$(_acid_which "$1")"
 }
 
-_koopa_remove_from_fpath() {
+_acid_remove_from_fpath() {
     # Remove directory from FPATH.
     # Updated 2019-10-27.
     export FPATH="${FPATH//:$1/}"
 }
 
-_koopa_remove_from_manpath() {
+_acid_remove_from_manpath() {
     # Remove directory from MANPATH.
     # Updated 2019-10-14.
     export MANPATH="${MANPATH//:$1/}"
 }
 
-_koopa_remove_from_path() {
+_acid_remove_from_path() {
     # Remove directory from PATH.
     #
     # Look into an improved POSIX method here.
@@ -2421,7 +2421,7 @@ _koopa_remove_from_path() {
     export PATH="${PATH//:$1/}"
 }
 
-_koopa_rsync_flags() {
+_acid_rsync_flags() {
     # rsync flags.
     #
     #     --delete-before         receiver deletes before xfer, not during
@@ -2459,22 +2459,22 @@ _koopa_rsync_flags() {
 # S                                                                         {{{1
 # ==============================================================================
 
-_koopa_set_permissions() {
+_acid_set_permissions() {
     # Set permissions on a koopa-related directory.
     # Generally used to reset the build prefix directory (e.g. '/usr/local').
     # Updated 2019-10-22.
     local path
     path="$1"
-    if _koopa_is_shared
+    if _acid_is_shared
     then
         sudo chown -Rh "root" "$path"
     else
         chown -Rh "$(whoami)" "$path"
     fi
-    _koopa_prefix_chgrp "$path"
+    _acid_prefix_chgrp "$path"
 }
 
-_koopa_shell() {
+_acid_shell() {
     # Note that this isn't necessarily the default shell ('$SHELL').
     # Updated 2019-06-27.
     local shell
@@ -2501,97 +2501,97 @@ EOF
     echo "$shell"
 }
 
-_koopa_stat_access_human() {
+_acid_stat_access_human() {
     # Get the current access permissions in human readable form.
     # Updated 2019-10-31.
     stat -c '%A' "$1"
 }
 
-_koopa_stat_access_octal() {
+_acid_stat_access_octal() {
     # Get the current access permissions in octal form.
     # Updated 2019-10-31.
     stat -c '%a' "$1"
 }
 
-_koopa_stat_group() {
+_acid_stat_group() {
     # Get the current group of a file or directory.
     # Updated 2019-10-31.
     stat -c '%G' "$1"
 }
 
-_koopa_stat_user() {
+_acid_stat_user() {
     # Get the current user (owner) of a file or directory.
     # Updated 2019-10-31.
     stat -c '%U' "$1"
 }
 
-_koopa_status_fail() {
+_acid_status_fail() {
     # Status FAIL.
     # Updated 2019-10-23.
-    _koopa_echo_red "  [FAIL] ${1}"
+    _acid_echo_red "  [FAIL] ${1}"
 }
 
-_koopa_status_note() {
+_acid_status_note() {
     # Status NOTE.
     # Updated 2019-10-23.
-    _koopa_echo_yellow "  [NOTE] ${1}"
+    _acid_echo_yellow "  [NOTE] ${1}"
 }
 
-_koopa_status_ok() {
+_acid_status_ok() {
     # Status OK.
     # Updated 2019-10-23.
-    _koopa_echo_green "    [OK] ${1}"
+    _acid_echo_green "    [OK] ${1}"
 }
 
-_koopa_stop() {
+_acid_stop() {
     # Error message.
     # Updated 2019-10-23.
-    >&2 _koopa_echo_red_bold "Error: ${1}"
+    >&2 _acid_echo_red_bold "Error: ${1}"
     exit 1
 }
 
-_koopa_strip_left() {
+_acid_strip_left() {
     # Strip pattern from left side (start) of string.
     #
-    # Usage: _koopa_lstrip "string" "pattern"
+    # Usage: _acid_lstrip "string" "pattern"
     #
-    # Example: _koopa_lstrip "The Quick Brown Fox" "The "
+    # Example: _acid_lstrip "The Quick Brown Fox" "The "
     #
     # Updated 2019-09-22.
     printf '%s\n' "${1##$2}"
 }
 
-_koopa_strip_right() {
+_acid_strip_right() {
     # Strip pattern from right side (end) of string.
     #
-    # Usage: _koopa_rstrip "string" "pattern"
+    # Usage: _acid_rstrip "string" "pattern"
     #
-    # Example: _koopa_rstrip "The Quick Brown Fox" " Fox"
+    # Example: _acid_rstrip "The Quick Brown Fox" " Fox"
     #
     # Updated 2019-09-22.
     printf '%s\n' "${1%%$2}"
 }
 
-_koopa_strip_trailing_slash() {
+_acid_strip_trailing_slash() {
     # Strip trailing slash in file path string.
     #
     # Alternate approach using sed:
     # > sed 's/\/$//' <<< "$1"
     #
     # Updated 2019-09-24.
-    _koopa_strip_right "$1" "/"
+    _acid_strip_right "$1" "/"
 }
 
-_koopa_sub() {
+_acid_sub() {
     # Updated 2019-10-09.
-    # See also: _koopa_gsub
+    # See also: _acid_gsub
     echo "$1" | sed -E "s/${2}/${3}/"
 }
 
-_koopa_success() {
+_acid_success() {
     # Success message.
     # Updated 2019-10-23.
-    _koopa_echo_green_bold "$1"
+    _acid_echo_green_bold "$1"
 }
 
 
@@ -2599,7 +2599,7 @@ _koopa_success() {
 # T                                                                         {{{1
 # ==============================================================================
 
-_koopa_tmp_dir() {
+_acid_tmp_dir() {
     # Create temporary directory.
     #
     # See also:
@@ -2621,7 +2621,7 @@ _koopa_tmp_dir() {
     mktemp -d
 }
 
-_koopa_today_bucket() {
+_acid_today_bucket() {
     # Create a dated file today bucket.
     # Also adds a '~/today' symlink for quick access.
     #
@@ -2656,16 +2656,16 @@ _koopa_today_bucket() {
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
 }
 
-_koopa_trim_ws() {
+_acid_trim_ws() {
     # Trim leading and trailing white-space from string.
     #
     # This is an alternative to sed, awk, perl and other tools. The function
     # works by finding all leading and trailing white-space and removing it from
     # the start and end of the string.
     #
-    # Usage: _koopa_trim_ws "   example   string    "
+    # Usage: _acid_trim_ws "   example   string    "
     #
-    # Example: _koopa_trim_ws "    Hello,  World    "
+    # Example: _acid_trim_ws "    Hello,  World    "
     #
     # Updated 2019-09-22.
     trim="${1#${1%%[![:space:]]*}}"
@@ -2678,25 +2678,25 @@ _koopa_trim_ws() {
 # U                                                                         {{{1
 # ==============================================================================
 
-_koopa_update_ldconfig() {
+_acid_update_ldconfig() {
     # Update dynamic linker (LD) configuration.
     # Updated 2019-10-27.
-    _koopa_is_linux || return 0
-    _koopa_has_sudo || return 0
+    _acid_is_linux || return 0
+    _acid_has_sudo || return 0
     [ -d /etc/ld.so.conf.d ] || return 0
-    _koopa_assert_is_installed ldconfig
+    _acid_assert_is_installed ldconfig
     local os_type
-    os_type="$(_koopa_os_type)"
+    os_type="$(_acid_os_type)"
     local conf_source
     conf_source="${KOOPA_HOME}/os/${os_type}/etc/ld.so.conf.d"
     if [ ! -d "$conf_source" ]
     then
-        _koopa_stop "Source files missing: '${conf_source}'."
+        _acid_stop "Source files missing: '${conf_source}'."
     fi
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    _koopa_message "Updating ldconfig in '/etc/ld.so.conf.d/'."
+    _acid_message "Updating ldconfig in '/etc/ld.so.conf.d/'."
     local source_file
     local dest_file
     for source_file in "${conf_source}/"*".conf"
@@ -2707,28 +2707,28 @@ _koopa_update_ldconfig() {
     sudo ldconfig
 }
 
-_koopa_update_profile() {
+_acid_update_profile() {
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # Updated 2019-11-05.
     local symlink
-    _koopa_is_linux || return 0
-    _koopa_has_sudo || return 0
+    _acid_is_linux || return 0
+    _acid_has_sudo || return 0
     # Early return if config file already exists.
     symlink="/etc/profile.d/zzz-koopa.sh"
     [ -L "$symlink" ] && return 0
-    _koopa_message "Adding '${symlink}'."
+    _acid_message "Adding '${symlink}'."
     sudo rm -fv "/etc/profile.d/koopa.sh"
     sudo ln -fnsv "${KOOPA_HOME}/os/linux/etc/profile.d/zzz-koopa.sh" "$symlink"
     return 0
 }
 
-_koopa_update_r_config() {
+_acid_update_r_config() {
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # Updated 2019-10-22.
-    _koopa_has_sudo || return 0
-    _koopa_is_installed R || return 0
+    _acid_has_sudo || return 0
+    _acid_is_installed R || return 0
     local r_home
-    r_home="$(_koopa_r_home)"
+    r_home="$(_acid_r_home)"
     # > local version
     # > version="$( \
     # >     R --version | \
@@ -2736,24 +2736,24 @@ _koopa_update_r_config() {
     # >     cut -d ' ' -f 3 | \
     # >     grep -Eo "^[0-9]+\.[0-9]+"
     # > )"
-    _koopa_message "Updating '${r_home}'."
+    _acid_message "Updating '${r_home}'."
     local os_type
-    os_type="$(_koopa_os_type)"
+    os_type="$(_acid_os_type)"
     local r_etc_source
     r_etc_source="${KOOPA_HOME}/os/${os_type}/etc/R"
     if [ ! -d "$r_etc_source" ]
     then
-        _koopa_stop "Source files missing: '${r_etc_source}'."
+        _acid_stop "Source files missing: '${r_etc_source}'."
     fi
     sudo ln -fnsv "${r_etc_source}/"* "${r_home}/etc/".
-    _koopa_message "Creating site library."
+    _acid_message "Creating site library."
     site_library="${r_home}/site-library"
     sudo mkdir -pv "$site_library"
-    _koopa_set_permissions "$r_home"
-    _koopa_r_javareconf
+    _acid_set_permissions "$r_home"
+    _acid_r_javareconf
 }
 
-_koopa_update_r_config_macos() {
+_acid_update_r_config_macos() {
     # Update R config on macOS.
     # Need to include Makevars to build packages from source.
     # Updated 2019-10-31.
@@ -2761,32 +2761,32 @@ _koopa_update_r_config_macos() {
     ln -fnsv "/usr/local/koopa/os/darwin/etc/R/Makevars" "${HOME}/.R/."
 }
 
-_koopa_update_shells() {
+_acid_update_shells() {
     # Update shell configuration.
     # Updated 2019-09-28.
     local shell
     local shell_file
-    _koopa_assert_has_sudo
-    shell="$(_koopa_build_prefix)/bin/${1}"
+    _acid_assert_has_sudo
+    shell="$(_acid_build_prefix)/bin/${1}"
     shell_file="/etc/shells"
     if ! grep -q "$shell" "$shell_file"
     then
-        _koopa_message "Updating '${shell_file}' to include '${shell}'."
+        _acid_message "Updating '${shell_file}' to include '${shell}'."
         sudo sh -c "echo ${shell} >> ${shell_file}"
     fi
-    _koopa_note "Run 'chsh -s ${shell} ${USER}' to change the default shell."
+    _acid_note "Run 'chsh -s ${shell} ${USER}' to change the default shell."
 }
 
-_koopa_update_xdg_config() {
+_acid_update_xdg_config() {
     # Update XDG configuration.
     # Path: '~/.config/koopa'.
     # Updated 2019-10-27.
     local config_dir
-    config_dir="$(_koopa_config_dir)"
+    config_dir="$(_acid_config_dir)"
     local home_dir
-    home_dir="$(_koopa_home)"
+    home_dir="$(_acid_home)"
     local os_type
-    os_type="$(_koopa_os_type)"
+    os_type="$(_acid_os_type)"
     mkdir -pv "$config_dir"
     relink() {
         local source_file
@@ -2797,10 +2797,10 @@ _koopa_update_xdg_config() {
         then
             if [ ! -e "$source_file" ]
             then
-                _koopa_warning "Source file missing: '${source_file}'."
+                _acid_warning "Source file missing: '${source_file}'."
                 return 1
             fi
-            _koopa_message "Updating XDG config in '${config_dir}'."
+            _acid_message "Updating XDG config in '${config_dir}'."
             rm -fv "$dest_file"
             ln -fnsv "$source_file" "$dest_file"
         fi
@@ -2818,7 +2818,7 @@ _koopa_update_xdg_config() {
 # V                                                                         {{{1
 # ==============================================================================
 
-_koopa_variable() {
+_acid_variable() {
     # Get version stored internally in versions.txt file.
     # Updated 2019-10-27.
     local what
@@ -2831,11 +2831,11 @@ _koopa_variable() {
     then
         echo "$match" | cut -d "\"" -f 2
     else
-        _koopa_stop "'${what}' not defined in '${file}'."
+        _acid_stop "'${what}' not defined in '${file}'."
     fi
 }
 
-_koopa_venv() {
+_acid_venv() {
     local env
     if [ -n "${VIRTUAL_ENV:-}" ]
     then
@@ -2852,7 +2852,7 @@ _koopa_venv() {
 # W                                                                         {{{1
 # ==============================================================================
 
-_koopa_warn_if_export() {
+_acid_warn_if_export() {
     # Warn if variable is exported in current shell session.
     # Useful for checking against unwanted compiler settings.
     # In particular, useful to check for 'LD_LIBRARY_PATH'.
@@ -2862,26 +2862,26 @@ _koopa_warn_if_export() {
     do
         if declare -x | grep -Eq "\b${arg}\b="
         then
-            _koopa_warning "'${arg}' is exported."
+            _acid_warning "'${arg}' is exported."
         fi
     done
     return 0
 }
 
-_koopa_warning() {
+_acid_warning() {
     # Warning message.
     # Updated 2019-10-23.
-    >&2 _koopa_echo_yellow_bold "Warning: ${1}"
+    >&2 _acid_echo_yellow_bold "Warning: ${1}"
 }
 
-_koopa_which() {
+_acid_which() {
     # Locate which program.
     #
     # Note that this intentionally doesn't resolve symlinks.
     # Use 'koopa_realpath' for that output instead.
     #
     # Example:
-    # _koopa_which bash
+    # _acid_which bash
     # ## /usr/local/bin/bash
     #
     # Updated 2019-10-08.
@@ -2893,7 +2893,7 @@ _koopa_which() {
 # Z                                                                         {{{1
 # ==============================================================================
 
-_koopa_zsh_version() {
+_acid_zsh_version() {
     # Updated 2019-08-18.
     zsh --version \
         | head -n 1 \
@@ -2906,14 +2906,14 @@ _koopa_zsh_version() {
 # ==============================================================================
 
 # Note that this doesn't support '-ne' flag.
-# > if ! _koopa_is_installed echo
+# > if ! _acid_is_installed echo
 # > then
 # >     echo() {
 # >         printf "%s\n" "$1"
 # >     }
 # > fi
 
-if ! _koopa_is_installed realpath
+if ! _acid_is_installed realpath
 then
     realpath() {
         # Real path to file/directory on disk.

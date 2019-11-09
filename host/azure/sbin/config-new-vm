@@ -6,8 +6,8 @@ source "${script_dir}/../include/header.sh"
 
 export KOOPA_FORCE=1
 
-_koopa_assert_has_sudo
-_koopa_deactivate_envs
+_acid_assert_has_sudo
+_acid_deactivate_envs
 
 sudo chmod 2775 /usr/local
 sudo chown -Rh root:wheel /usr/local
@@ -41,7 +41,7 @@ install-rbenv
 install-rust
 
 (
-    _koopa_deactivate_envs
+    _acid_deactivate_envs
     install-perlbrew-perl
     install-rbenv-ruby
 )

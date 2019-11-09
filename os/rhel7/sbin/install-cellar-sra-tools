@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 sudo yum -y install \
     file-devel \
@@ -12,4 +12,4 @@ sudo yum -y install \
     libxml2-devel
 
 # shellcheck source=/dev/null
-source "$(_koopa_cellar_script sra-tools)"
+source "$(_acid_cellar_script sra-tools)"

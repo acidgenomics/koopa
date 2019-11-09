@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 source_user="$USER"
 
@@ -12,29 +12,29 @@ host_ip="$(ip-address)"
 source_ip="10.100.100.133"
 
 cellranger_dir="/usr/local/cellranger"
-_koopa_assert_is_dir "$cellranger_dir"
+_acid_assert_is_dir "$cellranger_dir"
 
 cellranger_atac_dir="/usr/local/cellranger-atac"
-_koopa_assert_is_dir "$cellranger_atac_dir"
+_acid_assert_is_dir "$cellranger_atac_dir"
 
-mapfile -t flags < <(_koopa_rsync_flags)
+mapfile -t flags < <(_acid_rsync_flags)
 flags+=("--omit-dir-times")
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
 then
-    _koopa_note "On source machine: '${source_ip}'. Skipping."
+    _acid_note "On source machine: '${source_ip}'. Skipping."
     exit 0
 fi
 
-_koopa_message "Updating '${cellranger_dir}' from '${source_ip}'."
+_acid_message "Updating '${cellranger_dir}' from '${source_ip}'."
 # shellcheck disable=SC2068
 rsync ${flags[@]} \
     --rsync-path="sudo /usr/bin/rsync" \
     "${source_user}@${source_ip}:${cellranger_dir}/" \
     "${cellranger_dir}/"
 
-_koopa_message "Updating '${cellranger_atac_dir}' from '${source_ip}'."
+_acid_message "Updating '${cellranger_atac_dir}' from '${source_ip}'."
 # shellcheck disable=SC2068
 rsync ${flags[@]} \
     --rsync-path="sudo /usr/bin/rsync" \

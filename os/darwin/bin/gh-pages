@@ -6,7 +6,7 @@ source "${script_dir}/../include/header.sh"
 
 
 dir="${1:-"."}"
-_koopa_assert_is_dir "$dir"
+_acid_assert_is_dir "$dir"
 
 (
     cd "$dir" || exit 1

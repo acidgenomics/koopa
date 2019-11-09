@@ -4,10 +4,10 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_no_environments
-_koopa_assert_is_installed python3 python
+_acid_assert_has_no_environments
+_acid_assert_is_installed python3 python
 
-if _koopa_is_darwin
+if _acid_is_darwin
 then
     # These compiler flags are now required for scikit-learn to compile, which
     # now requires OpenMP that is unsupported by system default gcc alias.
@@ -39,16 +39,16 @@ fi
 # https://github.com/numba/llvmlite/issues/523
 if [[ -z "${LLVM_CONFIG:-}" ]]
 then
-    _koopa_stop "Export 'LLVM_CONFIG' to locate LLVM 7 llvm-config."
+    _acid_stop "Export 'LLVM_CONFIG' to locate LLVM 7 llvm-config."
 fi
 
 llvm_ver="$("$LLVM_CONFIG" --version | cut -d '.' -f 1)"
 if [[ "$llvm_ver" != "7" ]]
 then
-    _koopa_stop "Failed to detect LLVM 7 via 'LLVM_CONFIG'."
+    _acid_stop "Failed to detect LLVM 7 via 'LLVM_CONFIG'."
 fi
 
-_koopa_message "LLVM: '${LLVM_CONFIG}'."
+_acid_message "LLVM: '${LLVM_CONFIG}'."
 
 env_name="r-reticulate"
 env_base_dir="${1:-"${HOME}/.virtualenvs"}"

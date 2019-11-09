@@ -4,11 +4,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 bcbio_dir="/usr/local/bcbio"
 
-_koopa_message "Updating symlinks."
+_acid_message "Updating symlinks."
 
 # Remove existing symlinks in '/usr/local/bin'.
 sudo rm -fv /usr/local/bin/bcbio_nextgen.py*

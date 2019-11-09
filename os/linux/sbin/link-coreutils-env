@@ -4,15 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
-build_prefix="$(_koopa_build_prefix)"
+build_prefix="$(_acid_build_prefix)"
 
-_koopa_message "Replacing '/usr/bin/env' with '/usr/local/bin/env'."
+_acid_message "Replacing '/usr/bin/env' with '/usr/local/bin/env'."
 
 if [[ ! -L "/usr/bin/env" ]]
 then
-    _koopa_note "System version will be renamed to 'env.bak'.\n"
+    _acid_note "System version will be renamed to 'env.bak'.\n"
     sudo rm -fv "/usr/bin/env.bak"
     sudo mv -fv "/usr/bin/env" "/usr/bin/env.bak"
 else

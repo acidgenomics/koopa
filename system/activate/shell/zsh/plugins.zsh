@@ -3,7 +3,7 @@
 # Initialize ZSH plugins.
 # Updated 2019-11-04.
 
-_koopa_activate_autojump
+_acid_activate_autojump
 
 plugins_dir="${KOOPA_HOME}/dotfiles/shell/zsh/plugins"
 [[ -d "$plugins_dir" ]] || return 0

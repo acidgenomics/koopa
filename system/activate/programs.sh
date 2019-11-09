@@ -8,10 +8,10 @@
 # Note that LLVM 7 specifically is now required to install umap-learn.
 # Current version LLVM 9 isn't supported by numba > llvmlite yet.
 llvm_config=
-if _koopa_is_rhel7
+if _acid_is_rhel7
 then
     llvm_config="/usr/bin/llvm-config-7.0-64"
-elif _koopa_is_darwin
+elif _acid_is_darwin
 then
     # Homebrew LLVM 7
     # > brew install llvm@7
