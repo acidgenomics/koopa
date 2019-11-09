@@ -1,18 +1,10 @@
-
-
-
-    [dir="${dir}"]
-
-Create DMG image.
-
-required positional arguments:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-
-details:
-    Volume name is set automatically as basename of directory path.
-
-note:
-    Bash script.
-    Updated 2019-06-23.
+.TH CREATE-DMG 1 2019-11-09 Bash
+.SH NAME
+create-dmg \- Create a DMG image from a directory
+.SH SYNOPSIS
+.B create-dmg
+.IR dir
+.SH DESCRIPTION
+Volume name is set automatically as basename of directory path.
+.SH EXAMPLE
+create-dmg rnaseq-project
