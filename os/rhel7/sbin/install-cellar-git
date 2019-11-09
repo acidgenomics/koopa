@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 # docbook2x-texi is required for 'make doc' to run cleanly.
 #
@@ -30,4 +30,4 @@ then
 fi
 
 # shellcheck source=/dev/null
-source "$(_koopa_cellar_script git)"
+source "$(_acid_cellar_script git)"

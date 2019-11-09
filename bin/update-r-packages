@@ -5,13 +5,13 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
-if ! _koopa_is_r_package_installed bb8
+if ! _acid_is_r_package_installed bb8
 then
-    _koopa_warning "bb8 R package is not installed."
+    _acid_warning "bb8 R package is not installed."
     exit 0
 fi
 
-_koopa_message "Updating R package library."
+_acid_message "Updating R package library."
 Rscript -e 'bb8::updatePackages()'

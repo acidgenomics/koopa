@@ -6,7 +6,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
 dir="${1:-"."}"
-dir="$(_koopa_strip_trailing_slash "$dir")"
+dir="$(_acid_strip_trailing_slash "$dir")"
 
 # Divide by 4.
 zcat "${dir}/"*"_R1.fastq.gz" | \

@@ -3,7 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_sudo
+_acid_assert_has_sudo
 
 broken=0
 rsync=0
@@ -31,25 +31,25 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _acid_invalid_arg "$1"
             ;;
     esac
 done
 
-_koopa_message "Updating '/etc/profile.d'."
-_koopa_update_profile
+_acid_message "Updating '/etc/profile.d'."
+_acid_update_profile
 sudo ln -fnsv \
     /usr/local/koopa/host/azure/etc/profile.d/constellation.sh \
     /etc/profile.d/.
 
-_koopa_message "Updating '/etc/cron.d'."
+_acid_message "Updating '/etc/cron.d'."
 sudo rm -fv /etc/cron.d/cpi-*
 sudo rm -fv /etc/cron.d/constellation
 sudo cp -v /usr/local/koopa/host/azure/etc/cron.d/constellation \
     /etc/cron.d/constellation
 
 # Refer to 'https://github.com/acidgenomics/docker' for details.
-_koopa_message "Updating Docker config."
+_acid_message "Updating Docker config."
 sudo systemctl stop docker
 sudo ln -fnsv /usr/local/koopa/os/fedora/etc/docker/* /etc/docker/.
 sudo rm -frv /var/lib/docker
@@ -60,7 +60,7 @@ sudo systemctl start docker
 
 if [[ "$yum" -eq 1 ]]
 then
-    _koopa_message "Updating yum/rpm packages."
+    _acid_message "Updating yum/rpm packages."
     sudo yum update -y
     install-rhel7-base
     remove-rhel7-cruft
@@ -68,7 +68,7 @@ fi
 
 if [[ "$rsync" -eq 1 ]]
 then
-    _koopa_message "Running rsync scripts (password required)."
+    _acid_message "Running rsync scripts (password required)."
     rsync-bcbio
     rsync-cellranger
     if [[ ! -d "/usr/local/conda" ]]
@@ -94,7 +94,7 @@ fi
 # Ensure that shared bioinfo user has correct dotfiles.
 if [[ -d "${KOOPA_HOME}/dotfiles" ]]
 then
-    _koopa_message "Updating bioinfo user dotfiles."
+    _acid_message "Updating bioinfo user dotfiles."
     sudo -u bioinfo -H "$SHELL" -c "\
         rm -fv ~/.bash_logout; \
         rm -fv ~/.bash_profile; \

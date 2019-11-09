@@ -28,7 +28,7 @@ esac
 # Note that we're skipping this checks inside RStudio shell.
 if [ -z "${RSTUDIO:-}" ]
 then
-    _koopa_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"
+    _acid_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"
 fi
 
 
@@ -70,7 +70,7 @@ fi
 if [ -z "${XDG_RUNTIME_DIR:-}" ]
 then
     XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    if _koopa_is_darwin
+    if _acid_is_darwin
     then
         XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
     fi
@@ -120,7 +120,7 @@ fi
 
 # SHELL
 # Note that this doesn't currently get set by RStudio terminal.
-SHELL="$(_koopa_realpath "$KOOPA_SHELL")"
+SHELL="$(_acid_realpath "$KOOPA_SHELL")"
 export SHELL
 
 # TERM
@@ -158,7 +158,7 @@ fi
 
 if [ -z "${HISTFILE:-}" ]
 then
-    HISTFILE="${HOME}/.$(_koopa_shell)-history"
+    HISTFILE="${HOME}/.$(_acid_shell)-history"
     export HISTFILE
 fi
 
@@ -219,10 +219,10 @@ fi
 
 # Get the number of cores (CPUs) available.
 # Updated 2019-09-18.
-if _koopa_is_darwin
+if _acid_is_darwin
 then
     CPU_COUNT="$(sysctl -n hw.ncpu)"
-elif _koopa_is_linux
+elif _acid_is_linux
 then
     CPU_COUNT="$(getconf _NPROCESSORS_ONLN)"
 else
@@ -251,24 +251,24 @@ export CPU_COUNT
 # Standard paths                                                            {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_add_to_path_end "/usr/local/bin"
-_koopa_add_to_path_end "/usr/bin"
-_koopa_add_to_path_end "/bin"
+_acid_add_to_path_end "/usr/local/bin"
+_acid_add_to_path_end "/usr/bin"
+_acid_add_to_path_end "/bin"
 
-_koopa_has_sudo &&
-    _koopa_add_to_path_end "/usr/local/sbin"
-_koopa_has_sudo &&
-    _koopa_add_to_path_end "/usr/sbin"
+_acid_has_sudo &&
+    _acid_add_to_path_end "/usr/local/sbin"
+_acid_has_sudo &&
+    _acid_add_to_path_end "/usr/sbin"
 
-_koopa_add_to_path_start "${HOME}/bin"
-_koopa_add_to_path_start "${HOME}/local/bin"
-_koopa_add_to_path_start "${HOME}/.local/bin"
+_acid_add_to_path_start "${HOME}/bin"
+_acid_add_to_path_start "${HOME}/local/bin"
+_acid_add_to_path_start "${HOME}/.local/bin"
 
 # Koopa paths                                                               {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_add_bins_to_path
-_koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
+_acid_add_bins_to_path
+_acid_add_bins_to_path "shell/${KOOPA_SHELL}"
 
 # - ID="amzn"
 #   ID_LIKE="centos rhel fedora"
@@ -277,9 +277,9 @@ _koopa_add_bins_to_path "shell/${KOOPA_SHELL}"
 # - ID="ubuntu"
 #   ID_LIKE=debian
 
-if _koopa_is_linux
+if _acid_is_linux
 then
-    _koopa_add_bins_to_path "os/linux"
+    _acid_add_bins_to_path "os/linux"
     id_like="$(grep "ID_LIKE" /etc/os-release | cut -d "=" -f 2)"
     if echo "$id_like" | grep -q "debian"
     then
@@ -292,23 +292,23 @@ then
     fi
     if [ -n "${id_like:-}" ]
     then
-        _koopa_add_bins_to_path "os/${id_like}"
+        _acid_add_bins_to_path "os/${id_like}"
     fi
     unset -v id_like
 fi
 
-_koopa_add_bins_to_path "os/$(_koopa_os_type)"
-_koopa_add_bins_to_path "host/$(_koopa_host_type)"
+_acid_add_bins_to_path "os/$(_acid_os_type)"
+_acid_add_bins_to_path "host/$(_acid_host_type)"
 
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_add_to_path_start "$(_koopa_config_dir)/docker/bin"
-_koopa_add_to_path_start "$(_koopa_config_dir)/scripts-private/bin"
+_acid_add_to_path_start "$(_acid_config_dir)/docker/bin"
+_acid_add_to_path_start "$(_acid_config_dir)/scripts-private/bin"
 
 
 
 # MANPATH                                                                   {{{1
 # ==============================================================================
 
-_koopa_force_add_to_manpath_start "${KOOPA_HOME}/man"
+_acid_force_add_to_manpath_start "${KOOPA_HOME}/man"

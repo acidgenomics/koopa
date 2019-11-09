@@ -1,27 +1,27 @@
 #!/usr/bin/env bash
 
 name="vim"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+version="$(_acid_variable "$name")"
+prefix="$(_acid_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_acid_tmp_dir)/${name}"
+build_os_string="$(_acid_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
 # Using this to set Python 3 flags automatically below.
-build_prefix="$(_koopa_build_prefix)"
+build_prefix="$(_acid_build_prefix)"
 python3_exe="${build_prefix}/bin/python3"
 python3_config_exe="${python3_exe}-config"
 python3_config_dir="$("$python3_config_exe" --configdir)"
 
-_koopa_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
     rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    _koopa_download "https://github.com/vim/vim/archive/v${version}.tar.gz"
-    _koopa_extract "v${version}.tar.gz"
+    _acid_download "https://github.com/vim/vim/archive/v${version}.tar.gz"
+    _acid_extract "v${version}.tar.gz"
     cd "vim-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -35,7 +35,7 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-_koopa_link_cellar "$name" "$version"
+_acid_link_cellar "$name" "$version"
 
 "$exe_file" --version
 command -v "$exe_file"

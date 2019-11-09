@@ -4,14 +4,14 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
 name="spacemacs"
 repo="https://github.com/syl20bnr/spacemacs.git"
 emacs_home="${HOME}/.emacs.d"
 
 install_dir="${emacs_home}-${name}"
-_koopa_assert_is_not_dir "$install_dir"
+_acid_assert_is_not_dir "$install_dir"
 
 git clone "$repo" "$install_dir"
 link-emacs "$name"

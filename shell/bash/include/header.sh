@@ -15,6 +15,6 @@ source "${KOOPA_BASH_INC}/../../posix/include/functions.sh"
 # shellcheck source=/dev/null
 source "${KOOPA_BASH_INC}/functions.sh"
 
-_koopa_help "$@"
+_acid_help "$@"
 
 unset -v KOOPA_BASH_INC

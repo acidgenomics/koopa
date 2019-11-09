@@ -4,12 +4,12 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
-prefix="$(_koopa_build_prefix)/ensembl"
+prefix="$(_acid_build_prefix)/ensembl"
 
 (
-    _koopa_prefix_mkdir "$prefix"
+    _acid_prefix_mkdir "$prefix"
     cd "$prefix" || exit 1
     # Install BioPerl.
     git clone -b release-1-6-924 --depth 1 \
@@ -22,7 +22,7 @@ prefix="$(_koopa_build_prefix)/ensembl"
     git clone "https://github.com/Ensembl/ensembl-io.git"
 )
 
-_koopa_set_permissions "$prefix"
+_acid_set_permissions "$prefix"
 
-_koopa_message "Ensembl API installed correctly."
-_koopa_note "Reload the current shell."
+_acid_message "Ensembl API installed correctly."
+_acid_note "Reload the current shell."

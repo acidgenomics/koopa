@@ -5,7 +5,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+_acid_assert_has_no_args "$@"
 
 url="ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
 version="$( \
