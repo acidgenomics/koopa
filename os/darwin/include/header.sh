@@ -5,5 +5,4 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
 
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-
 _acid_assert_is_darwin

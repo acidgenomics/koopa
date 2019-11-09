@@ -9,7 +9,6 @@ KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
 export KOOPA_HOME
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-
 _acid_message "Checking manual files for '--help' support."
 export MANPATH="${KOOPA_HOME}/man:${MANPATH:-}"
 
