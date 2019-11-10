@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Initialize ZSH plugins.
-# Updated 2019-11-04.
+# Updated 2019-11-10.
 
 _acid_activate_autojump
 
@@ -12,6 +12,8 @@ if [[ -d "${plugins_dir}/zsh-autosuggestions" ]]
 then
     source "${plugins_dir}/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
+
+unset -v plugins_dir
 
 # Set the autosuggest text color.
 # Define using xterm-256 color code.

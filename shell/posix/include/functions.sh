@@ -2623,20 +2623,24 @@ _acid_today_bucket() {
     # -s, --symbolic
     #        make symbolic links instead of hard links
     #
-    # Updated 2019-09-28.
+    # Updated 2019-11-10.
+    local bucket_dir
     bucket_dir="${HOME}/bucket"
     # Early return if there's no bucket directory on the system.
     if [[ ! -d "$bucket_dir" ]]
     then
         return 0
     fi
+    local today
     today="$(date +%Y-%m-%d)"
+    local today_dir
     today_dir="${HOME}/today"
     # Early return if we've already updated the symlink.
     if readlink "$today_dir" | grep -q "$today"
     then
         return 0
     fi
+    local bucket_today
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
