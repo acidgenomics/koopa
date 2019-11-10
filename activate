@@ -421,6 +421,7 @@ unset -v \
     duration \
     duration_start \
     duration_stop \
+    extra \
     file \
     force \
     interactive \
