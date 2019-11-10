@@ -122,6 +122,7 @@ then
     else
         eval "$(dircolors -b)"
     fi
+    unset -v dircolors_file
     alias dir='dir --color=auto'
     alias egrep='egrep --color=auto'
     alias fgrep='fgrep --color=auto'
