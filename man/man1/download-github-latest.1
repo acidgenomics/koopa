@@ -1,27 +1,16 @@
-
-
-
-
-    "user/repo"
-
-Download latest GitHub release tarball.
-
-required positional arguments:
-    1.  Repository name, prefixed with the user or organization name.
-        Example: 'acidgenomics/koopa'.
-
-details:
-    Downloads latest release into current working directory.
-    Looks for 'tarball_url' line in JSON.
-
-    1. Use curl to get the JSON response for the latest release.
-    2. Use grep to find the line containing file URL.
-    3. Use cut and tr to extract the URL.
-    4. Use wget to download it.
-
-examples:
-    download-github-latest acidgenomics/koopa
-
-note:
-    Bash script.
-    Updated 2019-09-25.
+.TH DOWNLOAD-GITHUB-LATEST 1 2019-11-10 Bash
+.SH NAME
+download-github-latest \-
+Download latest GitHub release tarball
+.SH SYNOPSIS
+.B download-github-latest
+.IR USER/REPO
+.SH OPTIONS
+.TP
+.BR USER/REPO
+Repository name, prefixed with the user or organization name.
+Example: 'acidgenomics/koopa'.
+.SH DESCRIPTION
+Downloads latest release into current working directory. Looks for 'tarball_url' line in JSON. Note that this does not clone the code currently available on 'master' branch.
+.SH EXAMPLE
+download-github-latest "acidgenomics/koopa"

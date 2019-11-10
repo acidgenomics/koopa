@@ -1,30 +1,19 @@
-
-
-
-    image [--workdir="$workdir"]
-
-Pull and run a Docker image locally.
-
-required positional arguments:
-    1.  Docker image name.
-        Use the full name: '<user>/<image>:<tag>'.
-        Defaults to images on DockerHub.
-        Tag is optional, but can be included (e.g. ':latest').
-        Example: 'acidgenomics/bioconductor:devel'.
-
-required arguments with defaults:
-    --workdir
-        Local working directory name.
-        Defaults to '$workdir', to avoid potential name collisions.
-
-
-details:
-    Script wrapper to call 'docker pull' and 'docker run' with suitable defaults
-    for the Acid Genomics Docker images available on Docker Hub.
-
-examples:
-    docker-run-image acidgenomics/bioconductor:devel
-
-note:
-    Bash script.
-    Updated 2019-10-25.
+.TH DOCKER-RUN-IMAGE 1 2019-11-10 Bash
+.SH NAME
+docker-run-image \-
+Pull and run a Docker image
+.SH SYNOPSIS
+.B docker-run-image
+.IR IMAGE
+.IR [--workdir="/work"]
+.SH OPTIONS
+.TP
+.BR IMAGE
+Docker image name. Use the full name: '<user>/<image>:<tag>'. Defaults to images on DockerHub. Tag is optional, but can be included (e.g. ':latest').
+.TP
+.BR \-\-workdir
+Local working directory mount path.
+.SH DESCRIPTION
+Script wrapper to call 'docker pull' and 'docker run' with suitable defaults for the Acid Genomics Docker images available on Docker Hub.
+.SH EXAMPLE
+docker-run-image acidgenomics/bioconductor:devel
