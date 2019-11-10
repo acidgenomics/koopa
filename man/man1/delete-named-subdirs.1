@@ -1,26 +1,19 @@
-
-
-
-
-
-    dir subdir_name
-
-Delete named subdirectories.
-
-required positional arguments:
-    1.  Directory path.
-    2.  Subdirectory name, to delete.
-
-
-details:
-    Calls 'find' internally to recursively scan for a subdirectory name and
-    removes those nested directories.
-
-    Useful for removing bcbio "work" directories, for example.
-
-note:
-    Bash script.
-    Updated 2019-10-25.
-
-examples:
-    delete-named-subdirs rnaseq-data/ work
+.TH DELETE-NAMED-SUBDIRS 1 2019-11-10 Bash
+.SH NAME
+delete-named-subdirs \-
+Delete named subdirectories
+.SH SYNOPSIS
+.B delete-named-subdirs
+.IR [DIR="."]
+.IR SUBDIR_NAME
+.SH OPTIONS
+.TP
+.BR DIR
+Directory path where to perform search.
+.TP
+.BR SUBDIR_NAME
+Subdirectory name to delete.
+.SH DESCRIPTION
+Calls 'find' internally to recursively scan for a subdirectory name and removes those nested directories. Useful for removing bcbio "work/" directories, for example.
+.SH EXAMPLE
+delete-named-subdirs "rnaseq-data/" "work"

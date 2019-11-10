@@ -3,5 +3,8 @@
 list-path-priority \- list path priority
 .SH SYNOPSIS
 .B list-path-priority
+.IR [PATH="$PATH"]
 .SH DESCRIPTION
 Splits the PATH string by ':' delim.
+.SH NOTE
+FPATH, MANPATH, etc. are supported. Just pass in that value as the first argument.
