@@ -1,0 +1,17 @@
+.TH BCBIO-ADMIN-CLEAN-CONDA 1 2019-11-09 Bash
+.SH NAME
+bcbio-admin-clean-conda \-
+Clean internal bcbio Conda installation
+.SH SYNOPSIS
+.B bcbio-admin-clean-conda
+[\fB\-\-bcbio-prefix="/usr/local/bcbio"\fR]
+[\fB\-\-version="development"\fR]
+.SH OPTIONS
+.TP
+.BR \-\-bcbio-prefix
+Top level bcbio installation prefix. On a typical VM setup, this will include 'development' and 'stable' subdirectories, and potentially additional versioned installs (e.g. 1.1.8).
+.TP
+.BR \-\-version
+Versioned bcbio installation subdirectory name inside prefix defined by '\-\-bcbio-prefix' flag. Defaults to 'development' but 'stable' will also work on a standard VM setup.
+.SH DESCRIPTION
+Removes extracted packages, which can contain broken symlinks. The original source tarballs are kept, for data provenance. Internally the script attempts to locate conda at 'BCBIO_PREFIX/VERSION/install/anaconda/bin/conda'.
