@@ -1,5 +1,17 @@
-
-
-
-
-PLACEHOLDER
+.TH EXTRACT 1 2019-11-10 Bash
+.SH NAME
+extract \-
+Extract files from a compressed archive
+.SH SYNOPSIS
+.B extract
+.IR FILE
+.SH DESCRIPTION
+Decompress a compressed archive file automatically without having to manually set any file format flags, such as those that need to be based to 'tar'.
+.SH EXAMPLE
+extract example.tar.gz
+.P
+extract example.tar.bz2
+.P
+extract example.tar.xz
+.P
+extract example.zip
