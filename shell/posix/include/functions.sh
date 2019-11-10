@@ -1593,7 +1593,7 @@ _acid_has_sudo() {
 _acid_header() {
     # Source script header.
     # Useful for private scripts using koopa code outside of package.
-    # Updated 2019-09-27.
+    # Updated 2019-11-10.
     local path
     if [ -z "${1:-}" ]
     then
@@ -1615,9 +1615,8 @@ os type:
                 - amzn
 
 host type:
+    - aws
     - azure
-    - harvard-o2
-    - harvard-odyssey
 EOF
         return 1
     fi
@@ -1649,14 +1648,11 @@ EOF
                     path="${KOOPA_HOME}/os/amzn/include/header.sh"
                     ;;
         # host -----------------------------------------------------------------
+        aws)
+            path="${KOOPA_HOME}/host/aws/include/header.sh"
+            ;;
         azure)
             path="${KOOPA_HOME}/host/azure/include/header.sh"
-            ;;
-        harvard-o2)
-            path="${KOOPA_HOME}/host/harvard-o2/include/header.sh"
-            ;;
-        harvard-odyssey)
-            path="${KOOPA_HOME}/host/harvard-odyssey/include/header.sh"
             ;;
         *)
             _acid_stop "'${1}' is not supported."
@@ -2020,18 +2016,6 @@ _acid_link_cellar() {
     else
         cp -frsv "$cellar_prefix/"* "$build_prefix/".
     fi
-}
-
-_acid_list_fpath_priority() {
-    # Split FPATH string by ':' delim into lines.
-    # Updated 2019-10-27.
-    _acid_list_path_priority "$FPATH"
-}
-
-_acid_list_manpath_priority() {
-    # Split FPATH string by ':' delim into lines.
-    # Updated 2019-10-27.
-    _acid_list_path_priority "$MANPATH"
 }
 
 _acid_list_path_priority() {

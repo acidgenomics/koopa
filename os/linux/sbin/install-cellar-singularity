@@ -25,7 +25,6 @@ v${version}/${file}"
     cd "singularity" || exit 1
     ./mconfig --prefix="$prefix"
     make -C builddir
-    # Singularity must be installed as root to function correctly.
     sudo make -C builddir installi
     rm -fr "$tmp_dir"
 )

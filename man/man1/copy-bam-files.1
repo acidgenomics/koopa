@@ -1,41 +1,36 @@
-
-
-
-
-
-
-    source_dir target_dir
-
-Copy BAM and BAI index sidecar files from a source to a target directory.
-
-required positional arguments:
-    1.  Source directory path, containing BAM files.
-    2.  Target directory path.
-
-
-details:
-    Supports transfers on file systems with non-standard permissions, including
-    Azure Files and Windows CIFS/SMB shares.
-
-    We're allowing symlinks in the search path (via 'find -L' internally).
-
-    Note that we're ignoring some bcbio output cruft here.
-    Skip transfer of BAM files in the 'work/' directory, and don't copy any
-    of the transcriptome BAMs automatically.
-
-    Ignore list:
+.TH CREATE-DMG 1 2019-11-09 Bash
+.SH NAME
+copy-bam-files \-
+Copy BAM and BAI index sidecar files from a source directory to a target directory
+.SH SYNOPSIS
+.B copy-bam-files
+.IR SOURCE_DIR
+.IR TARGET_DIR
+.SH OPTIONS
+.TP
+.BR SOURCE_DIR
+Source directory path, containing BAM files.
+.TP
+.BR TARGET_DIR
+Target directory path.
+.SH DESCRIPTION
+Supports transfers on file systems with non-standard permissions, including
+Azure Files and Windows CIFS/SMB shares.
+.P
+We're allowing symlinks in the search path (via 'find -L' internally).
+.P
+Note that we're ignoring some bcbio output cruft here.
+Skip transfer of BAM files in the 'work/' directory, and don't copy any
+of the transcriptome BAMs automatically.
+.P
+Ignore list:
     - 'work/'
     - '*-transcriptome.bam'
-
-    rsync works more reliably for resuming interrupted transfers. Currently
-    using this to transfer to Azure Files
-
-    Alternate method:
+.P
+rsync works more reliably for resuming interrupted transfers. Currently
+using this to transfer to Azure Files
+.P
+Alternate method:
     > cp -iruv source target
-
-examples:
-    copy-bam-files bam/ /data00/bam/
-
-note:
-    Bash script.
-    Updated 2019-10-23.
+.SH EXAMPLE
+copy-bam-files "bam/" "/data00/bam/"
