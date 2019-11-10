@@ -212,6 +212,20 @@ _acid_activate_perlbrew() {
     return 0
 }
 
+
+# FIXME Ensure we're handling MANPATH correctly here.
+# man and share/man
+_acid_activate_prefix() {
+    # Automatically configure PATH and MANPATH for a specified prefix.
+    # Updated 2019-11-10.
+    local prefix
+    prefix="$1"
+    _acid_has_sudo && _acid_add_to_path_start "${prefix}/sbin"
+    _acid_add_to_path_start "${prefix}/bin"
+    _acid_add_to_manpath_start "${prefix}/man"
+    _acid_add_to_manpath_start "${prefix}/share/man"
+}
+
 _acid_activate_rbenv() {
     # Activate Ruby environment manager (rbenv).
     # Updated 2019-11-05.
@@ -352,18 +366,6 @@ _acid_activate_venv() {
         . "$script"
     fi
     return 0
-}
-
-_acid_add_bins_to_path() {
-    # Add nested 'bin/' and 'sbin/' directories to PATH.
-    # Updated 2019-09-12.
-    local relpath
-    local prefix
-    relpath="${1:-}"
-    prefix="$KOOPA_HOME"
-    [ -n "$relpath" ] && prefix="${prefix}/${relpath}"
-    _acid_has_sudo && _acid_add_to_path_start "${prefix}/sbin"
-    _acid_add_to_path_start "${prefix}/bin"
 }
 
 _acid_add_conda_env_to_path() {

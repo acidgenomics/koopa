@@ -239,7 +239,7 @@ export CPU_COUNT
 
 
 
-# PATH                                                                      {{{1
+# Path prefixes                                                             {{{1
 # ==============================================================================
 
 # Note that here we're making sure local binaries are included.
@@ -248,67 +248,45 @@ export CPU_COUNT
 # See also:
 # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 
-# Standard paths                                                            {{{2
+# Standard Unix paths                                                       {{{2
 # ------------------------------------------------------------------------------
 
 _acid_add_to_path_end "/usr/local/bin"
 _acid_add_to_path_end "/usr/bin"
 _acid_add_to_path_end "/bin"
-
-_acid_has_sudo &&
-    _acid_add_to_path_end "/usr/local/sbin"
-_acid_has_sudo &&
-    _acid_add_to_path_end "/usr/sbin"
-
-_acid_add_to_path_start "${HOME}/bin"
-_acid_add_to_path_start "${HOME}/local/bin"
+_acid_has_sudo && _acid_add_to_path_end "/usr/local/sbin"
+_acid_has_sudo && _acid_add_to_path_end "/usr/sbin"
+# > _acid_add_to_path_start "${HOME}/bin"
+# > _acid_add_to_path_start "${HOME}/local/bin"
 _acid_add_to_path_start "${HOME}/.local/bin"
+
+_acid_add_to_manpath_end "/usr/local/share/man"
+_acid_add_to_manpath_end "/usr/share/man"
+_acid_add_to_manpath_start "${HOME}/.local/share/man"
 
 # Koopa paths                                                               {{{2
 # ------------------------------------------------------------------------------
 
-_acid_add_bins_to_path
-_acid_add_bins_to_path "shell/${KOOPA_SHELL}"
-
-# - ID="amzn"
-#   ID_LIKE="centos rhel fedora"
-# - ID="rhel"
-#   ID_LIKE="fedora"
-# - ID="ubuntu"
-#   ID_LIKE=debian
+_acid_activate_prefix "$KOOPA_HOME"
+_acid_activate_prefix "${KOOPA_HOME}/shell/${KOOPA_SHELL}"
 
 if _acid_is_linux
 then
-    _acid_add_bins_to_path "os/linux"
-    id_like="$(grep "ID_LIKE" /etc/os-release | cut -d "=" -f 2)"
-    if echo "$id_like" | grep -q "debian"
+    _acid_activate_prefix "${KOOPA_HOME}/os/linux"
+    if _acid_is_debian
     then
-        id_like="debian"
-    elif echo "$id_like" | grep -q "fedora"
+        _acid_activate_prefix "${KOOPA_HOME}/os/debian"
+    elif _acid_is_fedora
     then
-        id_like="fedora"
-    else
-        id_like=
+        _acid_activate_prefix "${KOOPA_HOME}/os/fedora"
     fi
-    if [ -n "${id_like:-}" ]
-    then
-        _acid_add_bins_to_path "os/${id_like}"
-    fi
-    unset -v id_like
 fi
 
-_acid_add_bins_to_path "os/$(_acid_os_type)"
-_acid_add_bins_to_path "host/$(_acid_host_type)"
+_acid_activate_prefix "${KOOPA_HOME}/os/$(_acid_os_type)"
+_acid_activate_prefix "${KOOPA_HOME}/host/$(_acid_host_type)"
 
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------
 
-_acid_add_to_path_start "$(_acid_config_dir)/docker/bin"
-_acid_add_to_path_start "$(_acid_config_dir)/scripts-private/bin"
-
-
-
-# MANPATH                                                                   {{{1
-# ==============================================================================
-
-_acid_force_add_to_manpath_start "${KOOPA_HOME}/man"
+_acid_activate_prefix "$(_acid_config_dir)/docker/bin"
+_acid_activate_prefix "$(_acid_config_dir)/scripts-private/bin"

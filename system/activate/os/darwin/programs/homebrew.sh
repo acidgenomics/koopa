@@ -36,8 +36,8 @@ unset -v prefix
 # Python                                                                    {{{1
 # ==============================================================================
 
-# Homebrew is lagging too long on new Python releases, so install manually
-# instead. See 'python.sh' script for activation.
+# Homebrew is lagging on new Python releases, so install manually instead.
+# See 'python.sh' script for activation.
 #
 # Don't add to PATH if a virtual environment is active.
 #
@@ -47,7 +47,9 @@ unset -v prefix
 
 # > if [ -z "${VIRTUAL_ENV:-}" ]
 # > then
+# >     # /usr/local/opt/python/bin
 # >     _acid_add_to_path_start "/usr/local/opt/python/libexec/bin"
+# >     _acid_add_to_manpath_start "/usr/local/opt/python/share/man"
 # > fi
 
 
