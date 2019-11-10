@@ -6,6 +6,7 @@ py_dir="/Library/Frameworks/Python.framework/Versions/${major_version}/bin"
 
 if [ -z "${VIRTUAL_ENV:-}" ]
 then
+    # Note that MANPATH ('../share/man') will be set automatically.
     _acid_add_to_path_start "$py_dir"
 fi
 
