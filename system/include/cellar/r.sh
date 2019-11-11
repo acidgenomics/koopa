@@ -5,7 +5,6 @@
 # > _acid_r_javareconf
 # > sudo: R: command not found
 
-_acid_assert_has_no_args "$@"
 _acid_assert_is_installed java javac tex
 
 name="r"

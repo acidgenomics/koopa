@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-_acid_assert_has_no_args "$@"
 _acid_assert_is_installed proj
 
 name="gdal"

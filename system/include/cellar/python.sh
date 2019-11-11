@@ -12,8 +12,6 @@
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
 
-_acid_assert_has_no_args "$@"
-
 name="python"
 version="$(_acid_variable "$name")"
 prefix="$(_acid_cellar_prefix)/${name}/${version}"

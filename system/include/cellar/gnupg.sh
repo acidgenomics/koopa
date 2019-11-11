@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-_acid_assert_has_no_args "$@"
-
 name="gnupg"
 version="$(_acid_variable gpg)"
 prefix="$(_acid_cellar_prefix)/${name}/${version}"
