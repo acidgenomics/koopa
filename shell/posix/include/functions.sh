@@ -404,10 +404,8 @@ _acid_add_to_fpath_end() {
     # Currently only useful for ZSH activation.
     # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    local fpath
-    fpath="${FPATH:-}"
-    echo "$fpath" | grep -q "$1" && return 0
-    export FPATH="${fpath}:${1}"
+    echo "${FPATH:-}" | grep -q "$1" && return 0
+    export FPATH="${FPATH:-}:${1}"
 }
 
 _acid_add_to_fpath_start() {
@@ -415,50 +413,40 @@ _acid_add_to_fpath_start() {
     # Currently only useful for ZSH activation.
     # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    local fpath
-    fpath="${FPATH:-}"
-    echo "$fpath" | grep -q "$1" && return 0
-    export FPATH="${1}:${fpath}"
+    echo "${FPATH:-}" | grep -q "$1" && return 0
+    export FPATH="${1}:${FPATH:-}"
 }
 
 _acid_add_to_manpath_end() {
     # Add directory to start of MANPATH.
     # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    local manpath
-    manpath="${MANPATH:-}"
-    echo "$manpath" | grep -q "$1" && return 0
-    export MANPATH="${manpath}:${1}"
+    echo "${MANPATH:-}" | grep -q "$1" && return 0
+    export MANPATH="${MANPATH:-}:${1}"
 }
 
 _acid_add_to_manpath_start() {
     # Add directory to start of MANPATH.
     # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    local manpath
-    manpath="${MANPATH:-}"
-    echo "$manpath" | grep -q "$1" && return 0
-    export MANPATH="${1}:${manpath}"
+    echo "${MANPATH:-}" | grep -q "$1" && return 0
+    export MANPATH="${1}:${MANPATH:-}"
 }
 
 _acid_add_to_path_end() {
     # Add directory to end of PATH.
     # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    local path
-    path="${PATH:-}"
-    echo "$path" | grep -q "$1" && return 0
-    export PATH="${path}:${1}"
+    echo "${PATH:-}" | grep -q "$1" && return 0
+    export PATH="${PATH:-}:${1}"
 }
 
 _acid_add_to_path_start() {
     # Add directory to start of PATH.
     # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    local path
-    path="${PATH:-}"
     echo "$path" | grep -q "$1" && return 0
-    export PATH="${1}:${path}"
+    export PATH="${1}:${PATH:-}"
 }
 
 _acid_array_to_r_vector() {
