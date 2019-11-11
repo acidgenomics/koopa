@@ -402,51 +402,63 @@ _acid_add_config_link() {
 _acid_add_to_fpath_end() {
     # Add directory to end of FPATH.
     # Currently only useful for ZSH activation.
-    # Updated 2019-10-27.
+    # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    echo "$FPATH" | grep -q "$1" && return 0
-    export FPATH="${FPATH}:${1}"
+    local fpath
+    fpath="${FPATH:-}"
+    echo "$fpath" | grep -q "$1" && return 0
+    export FPATH="${fpath}:${1}"
 }
 
 _acid_add_to_fpath_start() {
     # Add directory to start of FPATH.
     # Currently only useful for ZSH activation.
-    # Updated 2019-10-27.
+    # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    echo "$FPATH" | grep -q "$1" && return 0
-    export FPATH="${1}:${FPATH}"
+    local fpath
+    fpath="${FPATH:-}"
+    echo "$fpath" | grep -q "$1" && return 0
+    export FPATH="${1}:${fpath}"
 }
 
 _acid_add_to_manpath_end() {
     # Add directory to start of MANPATH.
-    # Updated 2019-10-27.
+    # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    echo "$MANPATH" | grep -q "$1" && return 0
-    export MANPATH="${MANPATH}:${1}"
+    local manpath
+    manpath="${MANPATH:-}"
+    echo "$manpath" | grep -q "$1" && return 0
+    export MANPATH="${manpath}:${1}"
 }
 
 _acid_add_to_manpath_start() {
     # Add directory to start of MANPATH.
-    # Updated 2019-10-11.
+    # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    echo "$MANPATH" | grep -q "$1" && return 0
-    export MANPATH="${1}:${MANPATH}"
+    local manpath
+    manpath="${MANPATH:-}"
+    echo "$manpath" | grep -q "$1" && return 0
+    export MANPATH="${1}:${manpath}"
 }
 
 _acid_add_to_path_end() {
     # Add directory to end of PATH.
-    # Updated 2019-09-12.
+    # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    echo "$PATH" | grep -q "$1" && return 0
-    export PATH="${PATH}:${1}"
+    local path
+    path="${PATH:-}"
+    echo "$path" | grep -q "$1" && return 0
+    export PATH="${path}:${1}"
 }
 
 _acid_add_to_path_start() {
     # Add directory to start of PATH.
-    # Updated 2019-09-12.
+    # Updated 2019-11-11.
     [ ! -d "$1" ] && return 0
-    echo "$PATH" | grep -q "$1" && return 0
-    export PATH="${1}:${PATH}"
+    local path
+    path="${PATH:-}"
+    echo "$path" | grep -q "$1" && return 0
+    export PATH="${1}:${path}"
 }
 
 _acid_array_to_r_vector() {
