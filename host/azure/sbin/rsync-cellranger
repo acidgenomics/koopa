@@ -10,10 +10,13 @@ host_ip="$(ip-address)"
 source_ip="10.100.100.133"
 
 cellranger_dir="/usr/local/cellranger"
-_acid_assert_is_dir "$cellranger_dir"
-
 cellranger_atac_dir="/usr/local/cellranger-atac"
-_acid_assert_is_dir "$cellranger_atac_dir"
+
+if [[ ! -d "$cellranger_dir" ]] && [[ ! -d "$cellranger_atac_dir" ]]
+then
+    _acid_note "Cell Ranger is not installed at '${cellranger_dir}'. Skipping."
+    exit 0
+fi
 
 mapfile -t flags < <(_acid_rsync_flags)
 flags+=("--omit-dir-times")
