@@ -10,5 +10,4 @@ then
     sudo apt-get -y build-dep htop
 fi
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script htop)"
+_acid_cellar_script htop

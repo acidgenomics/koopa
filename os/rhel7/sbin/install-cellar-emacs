@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y emacs
 sudo yum-builddep -y emacs
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script emacs)"
+_acid_cellar_script emacs

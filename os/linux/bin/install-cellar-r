@@ -24,5 +24,4 @@ _acid_assert_is_installed java
 _acid_assert_is_installed javac
 _acid_assert_is_installed tex
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script r)"
+_acid_cellar_script r

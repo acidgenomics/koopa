@@ -9,5 +9,4 @@ then
     sudo apt-get -y build-dep zsh
 fi
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script zsh)"
+_acid_cellar_script zsh

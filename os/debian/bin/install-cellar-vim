@@ -10,5 +10,4 @@ then
     sudo apt-get -y build-dep vim
 fi
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script vim)"
+_acid_cellar_script vim
