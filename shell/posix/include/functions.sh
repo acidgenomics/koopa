@@ -212,9 +212,6 @@ _acid_activate_perlbrew() {
     return 0
 }
 
-
-# FIXME Ensure we're handling MANPATH correctly here.
-# man and share/man
 _acid_activate_prefix() {
     # Automatically configure PATH and MANPATH for a specified prefix.
     # Updated 2019-11-10.
