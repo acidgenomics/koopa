@@ -288,5 +288,5 @@ _acid_activate_prefix "${KOOPA_HOME}/host/$(_acid_host_type)"
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------
 
-_acid_activate_prefix "$(_acid_config_dir)/docker/bin"
-_acid_activate_prefix "$(_acid_config_dir)/scripts-private/bin"
+_acid_activate_prefix "$(_acid_config_dir)/docker"
+_acid_activate_prefix "$(_acid_config_dir)/scripts-private"
