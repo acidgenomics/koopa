@@ -103,19 +103,22 @@ _acid_find_local_bin_dirs() {
 
 _acid_help() {
     # Show usage via help flag.
+    #
     # Now always calls 'man' to display nicely formatted manual page.
-    # Updated 2019-11-06.
+    #
+    # Alternate approach:
+    # > path="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/192319
+    #
+    # Updated 2019-11-11.
     case "${1:-}" in
         --help|-h)
-            local man_file name
-            name="$(basename "$0")"
-            man_file="${KOOPA_HOME}/man/man1/${name}.1"
-            if [[ -f "$man_file" ]]
-            then
-                man "$name"
-            else
-                _acid_stop "Manual file missing: '${man_file}'."
-            fi
+            local name path
+            path="$0"
+            name="${path##*/}"
+            man "$name"
             exit 0
             ;;
     esac
