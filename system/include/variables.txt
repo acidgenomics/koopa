@@ -96,7 +96,7 @@ luarocks="3.2.1"
 neofetch="6.1.0"
 
 # https://github.com/neovim/neovim/releases
-neovim="0.4.2"
+neovim="0.4.3"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
@@ -120,7 +120,7 @@ picard="2.21.1"
 pip="19.3.1"
 
 # https://proj.org/
-proj="6.2.0"
+proj="6.2.1"
 
 # https://www.python.org/downloads/
 python="3.8.0"
@@ -149,7 +149,7 @@ rstudio-server-pro="1.2.5019-6"
 ruby="2.6.4"
 
 # https://www.rust-lang.org/
-rust="1.38.0"
+rust="1.39.0"
 
 # https://rustup.rs/
 rustup="1.20.2"
@@ -172,7 +172,7 @@ tmux="2.9a"
 # https://github.com/vim/vim/releases
 # vim should only be updated every 50 releases on multiples of 50.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.1.2200"
+vim="8.1.2250"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.7.1"
