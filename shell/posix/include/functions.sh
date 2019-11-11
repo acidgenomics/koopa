@@ -895,12 +895,12 @@ _acid_cellar_script() {
     name="$1"
     file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
     _acid_assert_is_file "$file"
-    (
-        # > _acid_deactivate_envs
-        _acid_assert_has_no_envs
-        # shellcheck source=/dev/null
-        . "$file"
-    )
+    echo "$name"
+    echo "$file"
+    # > _acid_deactivate_envs
+    _acid_assert_has_no_envs
+    # shellcheck source=/dev/null
+    . "$file"
 }
 
 _acid_check_azure() {
