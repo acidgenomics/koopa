@@ -15,7 +15,6 @@
 # > sudo ldconfig -v
 # > export LD_LIBRARY_PATH=/usr/local/lib64
 
-_acid_assert_has_no_args "$@"
 _acid_assert_is_installed jar
 
 name="sra-tools"

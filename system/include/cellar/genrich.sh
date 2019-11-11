@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-_acid_assert_has_no_args "$@"
-
 name="genrich"
 version="$(_acid_variable "$name")"
 prefix="$(_acid_cellar_prefix)/${name}/${version}"
