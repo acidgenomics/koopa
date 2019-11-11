@@ -9,5 +9,4 @@ then
     sudo apt-get -y build-dep coreutils
 fi
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script coreutils)"
+_acid_cellar_script coreutils

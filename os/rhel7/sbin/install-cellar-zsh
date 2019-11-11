@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y zsh
 sudo yum-builddep -y zsh
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script zsh)"
+_acid_cellar_script zsh

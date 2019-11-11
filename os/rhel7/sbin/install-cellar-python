@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum -y install python
 sudo yum-builddep -y python
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script python)"
+_acid_cellar_script python

@@ -9,5 +9,4 @@ sudo yum -y install \
     libhdf5-devel \
     libxml2-devel
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script sra-tools)"
+_acid_cellar_script sra-tools

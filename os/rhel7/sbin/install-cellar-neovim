@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y neovim
 sudo yum-builddep -y neovim
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script neovim)"
+_acid_cellar_script neovim

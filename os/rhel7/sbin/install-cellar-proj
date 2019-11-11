@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum -y install proj proj-devel
 sudo yum-builddep -y proj
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script proj)"
+_acid_cellar_script proj
