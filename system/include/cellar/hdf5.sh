@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-_acid_assert_has_no_args "$@"
-
 name="hdf5"
 version="$(_acid_variable "$name")"
 major_version="$(_acid_major_version "$version")"
