@@ -168,4 +168,5 @@ _R_CHECK_LENGTH_1_LOGIC2_="${_R_CHECK_LENGTH_1_LOGIC2_-verbose}"
 
 
 # https://twitter.com/michael_chirico/status/1193831562724331520
+# https://yihui.name/en/2017/12/last-13-lines-of-output/
 _R_CHECK_TESTS_NLINES_=0
