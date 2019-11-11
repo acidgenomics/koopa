@@ -7,7 +7,7 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _acid_assert_has_args "$@"
 _acid_assert_is_installed "docker"
 
-workdir="/work"
+workdir="/mnt/work"
 
 POSITIONAL=()
 while (("$#"))
