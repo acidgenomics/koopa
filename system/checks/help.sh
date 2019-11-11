@@ -10,13 +10,33 @@ export KOOPA_HOME
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _acid_message "Checking manual files for '--help' support."
-export MANPATH="${KOOPA_HOME}/man:${MANPATH:-}"
 
-# Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
-dirs=()
+# Put all 'man/' dirs into an array and loop.
+man_dirs=()
 while IFS= read -r -d $'\0'
 do
-    dirs+=("$REPLY")
+    man_dirs+=("$REPLY")
+done < <( \
+    find "$KOOPA_HOME" \
+        -mindepth 1 \
+        -type d \
+        -name "man" \
+        -not -path "*/cellar/*" \
+        -not -path "*/dotfiles/*" \
+        -print0 \
+        | sort -z \
+    )
+
+for dir in "${man_dirs[@]}"
+do
+    _acid_add_to_manpath_start "$dir"
+done
+
+# Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
+bin_dirs=()
+while IFS= read -r -d $'\0'
+do
+    bin_dirs+=("$REPLY")
 done < <( \
     find "$KOOPA_HOME" \
         -mindepth 1 \
@@ -28,7 +48,7 @@ done < <( \
         | sort -z \
     )
 
-for dir in "${dirs[@]}"
+for dir in "${bin_dirs[@]}"
 do
     files=()
     while IFS= read -r -d $'\0'
@@ -45,6 +65,6 @@ do
     for file in "${files[@]}"
     do
         _acid_message "$file"
-        nice "$file" --help > /dev/null
+        "$file" --help > /dev/null
     done
 done
