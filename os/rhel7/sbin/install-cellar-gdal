@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum -y install gdal gdal-devel
 sudo yum-builddep -y gdal
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script gdal)"
+_acid_cellar_script gdal

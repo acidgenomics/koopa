@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y openssl
 sudo yum-builddep -y openssl
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script openssl)"
+_acid_cellar_script openssl

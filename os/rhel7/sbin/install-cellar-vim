@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y vim
 sudo yum-builddep -y vim
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script vim)"
+_acid_cellar_script vim

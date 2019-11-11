@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y gsl-devel
 sudo yum-builddep -y gsl-devel
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script gsl)"
+_acid_cellar_script gsl

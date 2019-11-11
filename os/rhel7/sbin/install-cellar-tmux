@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y tmux
 sudo yum-builddep -y tmux
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script tmux)"
+_acid_cellar_script tmux

@@ -5,7 +5,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _acid_assert_has_no_args "$@"
-_acid_assert_has_no_environments
+_acid_assert_has_no_envs
 _acid_assert_is_installed "rbenv"
 
 version="$(_acid_variable ruby)"

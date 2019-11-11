@@ -493,7 +493,7 @@ _acid_assert_has_file_ext() {
     return 0
 }
 
-_acid_assert_has_no_environments() {
+_acid_assert_has_no_envs() {
     # Assert that conda and Python virtual environments aren't active.
     # Updated 2019-10-23.
     if ! _acid_has_no_environments
@@ -890,13 +890,16 @@ _acid_cellar_prefix() {
 
 _acid_cellar_script() {
     # Return source path for a koopa cellar build script.
-    # Updated 2019-10-08.
-    _acid_assert_has_no_environments
+    # Updated 2019-11-11.
     local name
     name="$1"
     file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
     _acid_assert_is_file "$file"
-    echo "$file"
+    (
+        _acid_deactivate_envs
+        _acid_assert_has_no_envs
+        . "$file"
+    )
 }
 
 _acid_check_azure() {

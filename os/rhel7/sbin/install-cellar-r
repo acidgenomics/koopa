@@ -22,5 +22,4 @@ source "${script_dir}/../include/header.sh"
 # > sudo yum -y install R
 sudo yum-builddep -y R
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script r)"
+_acid_cellar_script r

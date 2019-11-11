@@ -27,5 +27,4 @@ then
     sudo ln -fnsv /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
 fi
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script git)"
+_acid_cellar_script git

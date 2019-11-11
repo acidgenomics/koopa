@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y bash
 sudo yum-builddep -y bash
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script bash)"
+_acid_cellar_script bash

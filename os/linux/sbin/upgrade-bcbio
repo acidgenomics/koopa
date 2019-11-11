@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 _acid_assert_has_no_args "$@"
-_acid_assert_has_no_environments
+_acid_assert_has_no_envs
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 mkdir -pv "$log_dir"

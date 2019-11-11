@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y gnupg2
 sudo yum-builddep -y gnupg2
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script gnupg)"
+_acid_cellar_script gnupg

@@ -7,5 +7,4 @@ source "${script_dir}/../include/header.sh"
 sudo yum install -y coreutils
 sudo yum-builddep -y coreutils
 
-# shellcheck source=/dev/null
-source "$(_acid_cellar_script coreutils)"
+_acid_cellar_script coreutils
