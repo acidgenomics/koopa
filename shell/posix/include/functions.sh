@@ -896,8 +896,9 @@ _acid_cellar_script() {
     file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
     _acid_assert_is_file "$file"
     (
-        _acid_deactivate_envs
+        # > _acid_deactivate_envs
         _acid_assert_has_no_envs
+        # shellcheck source=/dev/null
         . "$file"
     )
 }
