@@ -16,7 +16,7 @@ fi
 
 if _acid_is_azure
 then
-    update-vm --all
+    update-azure-vm --all
 else
     update-conda
 fi
