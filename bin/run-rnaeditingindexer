@@ -22,10 +22,14 @@ _acid_assert_is_installed docker
 # https://github.com/a2iEditing/RNAEditingIndexer/search?q=index+file&unscoped_q=index+file
 # Genome must be indexed by BEDGenomeIndexer
 
+# Note that '--verbose' flag includes more output in summary CSV.
+
 bam_dir="${HOME}/rnaedit/bam"
 bam_suffix=".bam"
 output_dir="${HOME}/rnaedit/output"
 genome="hg38"
+
+example=0
 
 while (("$#"))
 do
@@ -37,6 +41,10 @@ do
         --bam-dir)
             bam_dir="$2"
             shift 2
+            ;;
+        --example)
+            example=1
+            shift 1
             ;;
         --genome=*)
             genome="${1#*=}"
@@ -60,11 +68,10 @@ do
     esac
 done
 
-# FIXME Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
+# Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
 # RNAEditingIndex can fail on relative paths.
-
-# Note that genome indexing to generate ucscHg38Genome.fa.fai is currently
-# failing due to root permission requirement.
+bam_dir="$(_acid_realpath "$bam_dir")"
+output_dir="$(_acid_realpath "$output_dir")"
 
 mkdir -pv "$output_dir"
 
@@ -72,13 +79,19 @@ mnt_bam_dir="/mnt/bam"
 mnt_output_dir="/mnt/output"
 
 # Minimal example:
-bam_dir="/bin/AEI/RNAEditingIndexer/TestResources/BAMs"
-bam_suffix="_sampled_with_0.1.Aligned.sortedByCoord.out.bam.AluChr1Only.bam"
+if [[ "$example" -eq 1 ]]
+then
+    bam_dir="/bin/AEI/RNAEditingIndexer/TestResources/BAMs"
+    bam_suffix="_sampled_with_0.1.Aligned.sortedByCoord.out.bam.AluChr1Only.bam"
+fi
+
+# Note that genome indexing to generate 'ucscHg38Genome.fa.fai' is currently
+# failing due to root permission requirement.
+# Otherwise, set permissions as current user for better output.
+# > -u "$(id -u "${USER}"):$(id -g "${USER}")" \
 
 # --paired_end
 # --stranded
-
-# -u "$(id -u "${USER}"):$(id -g "${USER}")" \
 
 docker run \
     -v "${bam_dir}:${mnt_bam_dir}:ro" \
