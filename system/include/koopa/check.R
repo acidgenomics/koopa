@@ -746,24 +746,28 @@ if (isTRUE(linux) && isTRUE(Sys.getenv("CPU_COUNT") >= 7L)) {
         name = "Lmod",
         whichName = NULL,
         current = currentVersion("lmod"),
-        expected = expectedVersion("lmod")
+        expected = expectedVersion("lmod"),
+        required = FALSE
     )
     checkVersion(
         name = "Lua",
         whichName = "lua",
         current = currentVersion("lua"),
-        expected = expectedVersion("lua")
+        expected = expectedVersion("lua"),
+        required = FALSE
     )
     checkVersion(
         name = "LuaRocks",
         whichName = "luarocks",
         current = currentVersion("luarocks"),
-        expected = expectedVersion("luarocks")
+        expected = expectedVersion("luarocks"),
+        required = FALSE
     )
     checkVersion(
         name = "Singularity",
         whichName = "singularity",
         current = currentVersion("singularity"),
-        expected = expectedVersion("singularity")
+        expected = expectedVersion("singularity"),
+        required = FALSE
     )
 }
