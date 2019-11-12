@@ -50,6 +50,12 @@ fi
     rm -fr "$tmp_dir"
 )
 
+_acid_message "Installing pip."
+script="get-pip.py"
+_acid_download "https://bootstrap.pypa.io/${script}"
+"$exe_file" "$script" --no-warn-script-location
+rm "$script"
+
 _acid_link_cellar "$name" "$version"
 
 build_prefix="$(_acid_build_prefix)"
@@ -63,5 +69,5 @@ cat << EOF
 Python installation was successful.
 
 Reinstall cellar vim, which depends on Python.
-Reinstall virtual environments, which were removed.
+Reinstall virtual environments, which have been removed.
 EOF
