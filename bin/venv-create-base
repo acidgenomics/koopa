@@ -16,7 +16,7 @@ python3 -m venv "$env_dir"
 py_exe="${env_dir}/bin/python3"
 
 "$py_exe" -m pip install --upgrade pip
-"$py_exe" -m pip install black flake8 pyflakes pylint pytest pytest-flake8
+# > "$py_exe" -m pip install black flake8 pyflakes pylint pytest pytest-flake8
 "$py_exe" -m pip list
 
 _acid_message "Python '${env_name}' environment installed successfully."
