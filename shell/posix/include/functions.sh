@@ -141,12 +141,20 @@ _acid_activate_conda() {
             return 0
         fi
     fi
+    local name
+    name="${2:-"base"}"
     script="${prefix}/bin/activate"
     if [ -r "$script" ]
     then
         [ -n "${KOOPA_TEST:-}" ] && set +u
         # shellcheck source=/dev/null
         . "$script"
+        # Ensure base environment gets deactivated by default.
+        if [ "$name" = "base" ]
+        then
+            # Don't use the full conda path here; will return config error.
+            conda deactivate
+        fi
         [ -n "${KOOPA_TEST:-}" ] && set -u
     fi
     return 0
