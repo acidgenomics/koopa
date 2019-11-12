@@ -22,5 +22,19 @@ python3 \
 # This recommended step will modify shell RC file, which we don't want.
 # > python3 -m pipx ensurepath
 
-_acid_message "pipx installed successfully."
+envs=(
+    black
+    flake8
+    pyflakes
+    pylint
+    pytest
+)
+
+for env in "${envs[@]}"
+do
+    # Can pass '--force' flag here to force reinstall.
+    "${HOME}/.local/bin/pipx" install "$env"
+done
+
+_acid_message "pipx installed successfully at '${HOME}/.local/pipx."
 _acid_note "Restart the shell."
