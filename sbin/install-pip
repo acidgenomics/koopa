@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+_acid_assert_has_no_args "$@"
+_acid_assert_has_no_envs
+_acid_assert_is_installed python3
+
+_acid_message "Installing pip."
+
+python_exe="$(_acid_realpath "python3")"
+python_version="$(_acid_current_version "python")"
+
+_acid_note "Python ${python_version}: ${python_exe}"
+
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py --no-warn-script-location
+rm get-pip.py
