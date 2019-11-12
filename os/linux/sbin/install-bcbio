@@ -83,6 +83,10 @@ tools_dir="${prefix}/tools"
         2>&1 | tee "$log_file"
 )
 
+_koopa_message "Fixing MACS2/numpy issue."
+_koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
+"${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
+
 # Keep install owned by current user, so we can install genomes easily.
 _acid_prefix_chgrp "$prefix"
 
@@ -92,6 +96,3 @@ _acid_prefix_chgrp "$prefix"
 # Disable group write access to install.
 # > chmod -R g-w "$install_dir" "$tools_dir"
 
-# Fix for current macs2/numpy issue.
-# https://github.com/bcbio/bcbio-nextgen/issues/2853
-# > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
