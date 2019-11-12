@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-07.
+## Updated 2019-11-12.
 
 options(
     error = quote(quit(status = 1L)),
@@ -304,6 +304,12 @@ checkVersion(
     current = currentVersion("zsh"),
     expected = expectedVersion("zsh")
 )
+checkVersion(
+    name = "Fish",
+    whichName = "fish",
+    current = currentVersion("fish"),
+    expected = expectedVersion("fish")
+)
 
 
 
@@ -551,66 +557,17 @@ installed(
 
 
 
-## Heavy dependencies ==========================================================
-message("\nHeavy dependencies:")
-checkVersion(
-    name = "GDAL",
-    whichName = "gdalinfo",
-    current = currentVersion("gdal"),
-    expected = switch(
-        EXPR = os,
-        darwin = "2.4.2",
-        expectedVersion("gdal")
-    )
-)
-checkVersion(
-    name = "GSL",
-    whichName = "gsl-config",
-    current = currentVersion("gsl"),
-    expected = expectedVersion("gsl")
-)
-checkVersion(
-    name = "HDF5",
-    whichName = "h5cc",
-    current = currentVersion("hdf5"),
-    expected = expectedVersion("hdf5")
-)
-checkVersion(
-    name = "LLVM",
-    whichName = NULL,
-    current = currentMajorVersion("llvm"),
-    expected = expectedMajorVersion("llvm")
-)
-## Note that macOS switched to LibreSSL in 2018.
-## > checkVersion(
-## >     name = "OpenSSL",
-## >     whichName = "openssl",
-## >     current = currentVersion("openssl"),
-## >     expected = expectedVersion("openssl")
-## > )
-checkVersion(
-    name = "Pandoc",
-    whichName = "pandoc",
-    current = currentVersion("pandoc"),
-    expected = expectedVersion("pandoc")
-)
-checkVersion(
-    name = "PROJ",
-    whichName = "proj",
-    current = currentVersion("proj"),
-    expected = expectedVersion("proj")
-)
-checkVersion(
-    name = "TeX Live",
-    whichName = "tex",
-    current = currentVersion("tex"),
-    expected = expectedVersion("tex")
-)
 
 
 
 ## Tools =======================================================================
 message("\nTools:")
+checkVersion(
+    name = "Conda",
+    whichName = "conda",
+    current = currentVersion("conda"),
+    expected = expectedVersion("conda")
+)
 checkVersion(
     name = "Git",
     whichName = "git",
@@ -643,13 +600,57 @@ checkVersion(
 
 
 
-## Environments ================================================================
-message("\nEnvironments:")
+## Heavy dependencies ==========================================================
+message("\nHeavy dependencies:")
 checkVersion(
-    name = "Conda",
-    whichName = "conda",
-    current = currentVersion("conda"),
-    expected = expectedVersion("conda")
+    name = "PROJ",
+    whichName = "proj",
+    current = currentVersion("proj"),
+    expected = expectedVersion("proj")
+)
+checkVersion(
+    name = "GDAL",
+    whichName = "gdalinfo",
+    current = currentVersion("gdal"),
+    expected = expectedVersion("gdal")
+)
+checkVersion(
+    name = "GSL",
+    whichName = "gsl-config",
+    current = currentVersion("gsl"),
+    expected = expectedVersion("gsl")
+)
+checkVersion(
+    name = "HDF5",
+    whichName = "h5cc",
+    current = currentVersion("hdf5"),
+    expected = expectedVersion("hdf5")
+)
+checkVersion(
+    name = "LLVM",
+    whichName = NULL,
+    current = currentMajorVersion("llvm"),
+    expected = expectedMajorVersion("llvm")
+)
+
+## Note that macOS switched to LibreSSL in 2018.
+checkVersion(
+    name = "OpenSSL",
+    whichName = "openssl",
+    current = currentVersion("openssl"),
+    expected = expectedVersion("openssl")
+)
+checkVersion(
+    name = "Pandoc",
+    whichName = "pandoc",
+    current = currentVersion("pandoc"),
+    expected = expectedVersion("pandoc")
+)
+checkVersion(
+    name = "TeX Live",
+    whichName = "tex",
+    current = currentVersion("tex"),
+    expected = expectedVersion("tex")
 )
 
 
@@ -682,62 +683,11 @@ if (isTRUE(linux)) {
         expected = expectedVersion("coreutils")
     )
     ## > checkVersion(
-    ## >     name = "bcl2fastq",
-    ## >     current = currentVersion("bcl2fastq"),
-    ## >     expected = expectedVersion("bcl2fastq")
-    ## > )
-    ## > checkVersion(
     ## >     name = "rename (Perl File::Rename)",
     ## >     whichName = "rename",
     ## >     current = currentVersion("perl-file-rename"),
     ## >     expected = expectedVersion("perl-file-rename")
     ## > )
-
-    message("\nPowerful virtual machine only:")
-    checkVersion(
-        name = "bcbio-nextgen",
-        whichName = "bcbio_nextgen.py",
-        current = currentVersion("bcbio-nextgen"),
-        expected = expectedVersion("bcbio-nextgen"),
-        required = FALSE
-    )
-    ## > installed("bcbio_vm.py", required = FALSE)
-    checkVersion(
-        name = "Docker",
-        whichName = "docker",
-        current = currentVersion("docker"),
-        expected = expectedVersion("docker")
-    )
-    checkVersion(
-        name = "Lmod",
-        whichName = NULL,
-        current = currentVersion("lmod"),
-        expected = expectedVersion("lmod")
-    )
-    checkVersion(
-        name = "Lua",
-        whichName = "lua",
-        current = currentVersion("lua"),
-        expected = expectedVersion("lua")
-    )
-    checkVersion(
-        name = "LuaRocks",
-        whichName = "luarocks",
-        current = currentVersion("luarocks"),
-        expected = expectedVersion("luarocks")
-    )
-    checkVersion(
-        name = "Shiny Server",
-        whichName = "shiny-server",
-        current = currentVersion("shiny-server"),
-        expected = expectedVersion("shiny-server")
-    )
-    checkVersion(
-        name = "Singularity",
-        whichName = "singularity",
-        current = currentVersion("singularity"),
-        expected = expectedVersion("singularity")
-    )
 } else if (os == "darwin") {
     message("\nmacOS specific:")
     checkVersion(
@@ -759,5 +709,65 @@ if (isTRUE(linux)) {
         whichName = "gcc",
         current = currentVersion("gcc-darwin"),
         expected = expectedVersion("clang")
+    )
+}
+
+
+
+## High performance ============================================================
+if (isTRUE(linux) && isTRUE(Sys.getenv("CPU_COUNT") >= 7L)) {
+    message("\nHigh performance (HPC/VM):")
+    checkVersion(
+        name = "Docker",
+        whichName = "docker",
+        current = currentVersion("docker"),
+        expected = expectedVersion("docker")
+    )
+    checkVersion(
+        name = "Shiny Server",
+        whichName = "shiny-server",
+        current = currentVersion("shiny-server"),
+        expected = expectedVersion("shiny-server")
+    )
+    checkVersion(
+        name = "bcbio-nextgen",
+        whichName = "bcbio_nextgen.py",
+        current = currentVersion("bcbio-nextgen"),
+        expected = expectedVersion("bcbio-nextgen"),
+        required = FALSE
+    )
+    ## > installed("bcbio_vm.py", required = FALSE)
+    ## > checkVersion(
+    ## >     name = "bcl2fastq",
+    ## >     current = currentVersion("bcl2fastq"),
+    ## >     expected = expectedVersion("bcl2fastq")
+    ## > )
+    checkVersion(
+        name = "Lmod",
+        whichName = NULL,
+        current = currentVersion("lmod"),
+        expected = expectedVersion("lmod"),
+        required = FALSE
+    )
+    checkVersion(
+        name = "Lua",
+        whichName = "lua",
+        current = currentVersion("lua"),
+        expected = expectedVersion("lua"),
+        required = FALSE
+    )
+    checkVersion(
+        name = "LuaRocks",
+        whichName = "luarocks",
+        current = currentVersion("luarocks"),
+        expected = expectedVersion("luarocks"),
+        required = FALSE
+    )
+    checkVersion(
+        name = "Singularity",
+        whichName = "singularity",
+        current = currentVersion("singularity"),
+        expected = expectedVersion("singularity"),
+        required = FALSE
     )
 }
