@@ -10,6 +10,13 @@ export HOMEBREW_FORCE_BOTTLE=1
 
 
 
+# Taps                                                                      {{{1
+# ==============================================================================
+
+brew tap osgeo/osgeo4mac
+
+
+
 # Casks                                                                     {{{1
 # ==============================================================================
 
@@ -94,6 +101,9 @@ brew install flac lame
 # In particular, if we want to install umap-learn, this is now required.
 # Note that numba > llvmlite currently only works with LLVM 7.
 
+# Use osgeo-gdal instead of regular gdal.
+# This gets updated more regularly.
+
 # Recommended.
 brews=(
     autoconf
@@ -113,7 +123,6 @@ brews=(
     findutils
     flac
     gcc
-    gdal
     git
     git-lfs
     go
@@ -141,6 +150,7 @@ brews=(
     neovim
     node
     open-mpi
+    osgeo-gdal
     pandoc
     pandoc-citeproc
     pandoc-crossref
