@@ -254,10 +254,14 @@ export CPU_COUNT
 _acid_add_to_path_end "/usr/local/bin"
 _acid_add_to_path_end "/usr/bin"
 _acid_add_to_path_end "/bin"
+
 _acid_has_sudo && _acid_add_to_path_end "/usr/local/sbin"
 _acid_has_sudo && _acid_add_to_path_end "/usr/sbin"
+
 # > _acid_add_to_path_start "${HOME}/bin"
 # > _acid_add_to_path_start "${HOME}/local/bin"
+
+# I think if XDG is configured correctly this gets added automatically.
 _acid_add_to_path_start "${HOME}/.local/bin"
 
 _acid_add_to_manpath_end "/usr/local/share/man"
