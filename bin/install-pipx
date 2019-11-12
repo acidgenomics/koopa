@@ -11,7 +11,7 @@ _acid_assert_is_installed pip python3
 _acid_message "Installing pipx."
 
 python_exe="$(_acid_realpath "python3")"
-_acid_note "Python: ${python_exe}"
+_acid_message "Python: ${python_exe}"
 
 python3 \
     -m pip install \
