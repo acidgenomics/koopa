@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+_acid_assert_has_no_envs
+_acid_assert_is_installed pip python3
+
+python3 \
+    -m pip install \
+    --no-warn-script-location \
+    --user \
+    pipx
+
+# This recommended step will modify shell RC file, which we don't want.
+# > python3 -m pipx ensurepath
+
+_acid_message "pipx installed successfully."
+_acid_note "Restart the shell."
