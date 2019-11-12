@@ -51,7 +51,7 @@ fish="3.0.2"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.0.1"
+gdal="3.0.2"
 
 # https://github.com/jsh58/Genrich/releases
 genrich="0.6"
