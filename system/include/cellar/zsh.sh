@@ -3,7 +3,7 @@
 name="zsh"
 version="$(_acid_variable "$name")"
 prefix="$(_acid_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_acid_tmp_dir)/zsh"
+tmp_dir="$(_acid_tmp_dir)/${name}"
 build_os_string="$(_acid_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
