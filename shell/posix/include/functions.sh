@@ -1092,6 +1092,20 @@ _acid_config_dir() {
     echo "${XDG_CONFIG_HOME}/koopa"
 }
 
+_acid_current_version() {
+    # Get the current version of a supported program.
+    # Updated 2019-11-12.
+    local name
+    name="$1"
+    local script
+    script="${KOOPA_HOME}/system/include/version/${name}.sh"
+    if [ ! -x "$script" ]
+    then
+        _koopa_stop "'${name}' is not supported."
+    fi
+    "$script"
+}
+
 
 
 # D                                                                         {{{1
