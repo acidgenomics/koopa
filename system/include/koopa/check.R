@@ -701,7 +701,7 @@ if (isTRUE(linux)) {
         expected = expectedVersion("bcbio-nextgen"),
         required = FALSE
     )
-    installed("bcbio_vm.py", required = FALSE)
+    ## > installed("bcbio_vm.py", required = FALSE)
     checkVersion(
         name = "Docker",
         whichName = "docker",
