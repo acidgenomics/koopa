@@ -13,7 +13,7 @@ _acid_message "Installing pip."
 python_exe="$(_acid_realpath "python3")"
 python_version="$(_acid_current_version "python")"
 
-_acid_note "Python ${python_version}: ${python_exe}"
+_acid_message "Python ${python_version}: ${python_exe}"
 
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py --no-warn-script-location
