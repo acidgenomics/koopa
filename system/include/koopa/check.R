@@ -582,16 +582,12 @@ checkVersion(
     expected = expectedMajorVersion("llvm")
 )
 ## Note that macOS switched to LibreSSL in 2018.
-## > darwin = "2.6.5"
-## > rhel7 = "1.0.2k"
-checkVersion(
-    name = "OpenSSL",
-    whichName = "openssl",
-    current = currentVersion("openssl"),
-    expected = expectedVersion("openssl")
-)
-## Now using conda instead of system.
-## > rhel7 = "1.12.3.1"
+## > checkVersion(
+## >     name = "OpenSSL",
+## >     whichName = "openssl",
+## >     current = currentVersion("openssl"),
+## >     expected = expectedVersion("openssl")
+## > )
 checkVersion(
     name = "Pandoc",
     whichName = "pandoc",
@@ -604,9 +600,6 @@ checkVersion(
     current = currentVersion("proj"),
     expected = expectedVersion("proj")
 )
-## Now using conda instead of system.
-## > rhel7 = "2013"
-## > ubuntu = "2017"
 checkVersion(
     name = "TeX Live",
     whichName = "tex",
