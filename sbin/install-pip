@@ -18,3 +18,10 @@ _acid_message "Python ${python_version}: ${python_exe}"
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 python3 get-pip.py --no-warn-script-location
 rm get-pip.py
+
+# Re-link cellar if necessary.
+if echo "$python_exe" | grep -q "/cellar/"
+then
+    _acid_message "Updating cellar symlinks."
+    link-cellar "python" "$python_version"
+fi
