@@ -64,7 +64,7 @@ do
         )
     for file in "${files[@]}"
     do
-        _acid_message "$file"
+        echo "$file"
         "$file" --help > /dev/null
     done
 done
