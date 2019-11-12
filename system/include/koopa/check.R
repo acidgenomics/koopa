@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-07.
+## Updated 2019-11-12.
 
 options(
     error = quote(quit(status = 1L)),
@@ -303,6 +303,12 @@ checkVersion(
     whichName = "zsh",
     current = currentVersion("zsh"),
     expected = expectedVersion("zsh")
+)
+checkVersion(
+    name = "Fish",
+    whichName = "fish",
+    current = currentVersion("fish"),
+    expected = expectedVersion("fish")
 )
 
 
