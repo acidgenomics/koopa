@@ -5,22 +5,41 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _acid_assert_has_no_args "$@"
 
+# Clean up previous:
+# - openjdk-12-jdk
+# - openjdk-12-jre
+# - python
+
+# Bioconductor AMI is missing these dependencies:
+# > apt-cache search 'libgnutls.*-dev'
+# > apt-cache search gnutls
+# > apt-cache search libgif
+
 sudo apt-get update
 
-# Following the recommendations in docker-bioconductor recipes.
-# https://github.com/acidgenomics/docker-bioconductor
 sudo apt-get -y install \
     autoconf \
     automake \
     cargo \
+    emacs \
+    fish \
+    git \
+    gnupg2 \
+    gnutls-bin \
     gtk-doc-tools \
+    htop \
     libbz2-dev \
     libcairo2-dev \
     libcurl4-openssl-dev \
+    libevent-dev \
     libfreetype6-dev \
     libgdal-dev \
+    libgif-dev \
     libglu1-mesa-dev \
+    libgnutls28-dev \
+    libgsl-dev \
     libharfbuzz-dev \
+    libhdf5-dev \
     liblzma-dev \
     libmagick++-dev \
     libmariadb-client-lgpl-dev \
@@ -29,29 +48,30 @@ sudo apt-get -y install \
     libssl-dev \
     libtool \
     libudunits2-dev \
-    libxml2-dev \
     libx11-dev \
+    libxml2-dev \
     libz-dev \
-    pkg-config \
-    texlive \
-    xorg
-
-# Extra programs that are useful on an interactive VM.
-sudo apt-get -y install \
-    emacs \
-    git \
-    gnupg2 \
-    htop \
-    libgsl-dev \
-    libhdf5-dev \
-    openjdk-12-jdk \
-    openjdk-12-jre \
     pandoc \
     pandoc-citeproc \
     perl \
-    python \
+    pkg-config \
+    python3 \
+    python3-pip \
     r-base \
     r-base-dev \
+    texlive \
+    tmux \
+    vim \
+    xorg \
+    zsh
+
+sudo apt-get -y build-dep \
+    bash \
+    coreutils \
+    emacs \
+    fish \
+    htop \
     tmux \
     vim \
     zsh
+
