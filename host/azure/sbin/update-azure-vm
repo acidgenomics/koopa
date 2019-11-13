@@ -62,7 +62,6 @@ then
     _acid_message "Updating yum/rpm packages."
     sudo yum update -y
     install-rhel7-base
-    remove-rhel7-cruft
 fi
 
 if [[ "$rsync" -eq 1 ]]
