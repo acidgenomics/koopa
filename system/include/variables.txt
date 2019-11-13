@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-11-07"
+koopa_date="2019-11-13"
 
 
 
@@ -123,8 +123,14 @@ picard="2.21.1"
 # https://pypi.org/project/pip/
 pip="19.3.1"
 
+# https://pypi.org/project/pipx/
+pipx="0.14.0.0"
+
 # https://proj.org/
 proj="6.2.1"
+
+# https://github.com/pyenv/pyenv
+pyenv="1.2.15"
 
 # https://www.python.org/downloads/
 python="3.8.0"
