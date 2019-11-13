@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-11-08.
+    Updated 2019-11-13.
 EOF
 }
 
@@ -349,14 +349,15 @@ then
         . "${activate_dir}/os/darwin/programs/homebrew.sh"
         . "${activate_dir}/os/darwin/programs/python.sh"
     fi
+    _acid_activate_llvm
     _acid_activate_aspera
     _acid_activate_ensembl_perl_api
     _acid_activate_perlbrew
-    _acid_activate_rbenv
     _acid_activate_rust
+    _acid_activate_rbenv
+    _acid_activate_pyenv
     _acid_activate_bcbio
     _acid_activate_conda
-    . "${activate_dir}/programs.sh"
     _acid_activate_venv
 fi
 
