@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-12.
+## Updated 2019-11-13.
 
 options(
     error = quote(quit(status = 1L)),
@@ -350,12 +350,26 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-checkVersion(
-    name = "Python : pip",
-    whichName = "pip",
-    current = currentVersion("pip"),
-    expected = expectedVersion("pip")
-)
+if (isInstalled("python")) {
+    checkVersion(
+        name = "Python : pip",
+        whichName = "pip",
+        current = currentVersion("pip"),
+        expected = expectedVersion("pip")
+    )
+    checkVersion(
+        name = "Python : pipx",
+        whichName = "pipx",
+        current = currentVersion("pipx"),
+        expected = expectedVersion("pipx")
+    )
+    checkVersion(
+        name = "Python : pyenv",
+        whichName = "pyenv",
+        current = currentVersion("pyenv"),
+        expected = expectedVersion("pyenv")
+    )
+}
 # Can use `packageVersion("base")` instead but it doesn't always return the
 # correct value for RStudio Server Pro.
 checkVersion(
