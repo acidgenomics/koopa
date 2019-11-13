@@ -53,8 +53,9 @@ _acid_activate_autojump() {
 _acid_activate_bcbio() {
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # Attempt to locate bcbio installation automatically on supported platforms.
     # Updated 2019-10-29.
+    #
+    # Attempt to locate bcbio installation automatically on supported platforms.
     # """
     _acid_is_linux || return 0
     ! _acid_is_installed bcbio_nextgen.py || return 0
@@ -93,10 +94,11 @@ _acid_activate_conda() {
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
-    # """
+    #
     # > [ -z "${CONDA_DEFAULT_ENV:-}" ] || return 0
     # > [ -z "${CONDA_PREFIX:-}" ] || return 0
     # > ! _acid_is_installed conda || return 0
+    # """
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -161,10 +163,13 @@ _acid_activate_conda() {
 }
 
 _acid_activate_ensembl_perl_api() {
+    # """
     # Activate Ensembl Perl API.
     # Updated 2019-10-29.
+    #
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
+    # """
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -182,14 +187,40 @@ _acid_activate_ensembl_perl_api() {
     return 0
 }
 
+_acid_activate_llvm() {
+    # """
+    # Activate LLVM config.
+    # Updated 2019-11-13.
+    #
+    # Note that LLVM 7 specifically is now required to install umap-learn.
+    # Current version LLVM 9 isn't supported by numba > llvmlite yet.
+    #
+    # Homebrew LLVM 7
+    # > brew install llvm@7
+    # """
+    local llvm_config
+    llvm_config=
+    if _acid_is_rhel7
+    then
+        llvm_config="/usr/bin/llvm-config-7.0-64"
+    elif _acid_is_darwin
+    then
+        llvm_config="/usr/local/opt/llvm@7/bin/llvm-config"
+    fi
+    [ -x "$llvm_config" ] && export LLVM_CONFIG="$llvm_config"
+    return 0
+}
+
 _acid_activate_perlbrew() {
+    # """
     # Activate Perlbrew.
+    # Updated 2019-10-29.
+    #
+    # Only attempt to autoload for bash or zsh.
     #
     # See also:
     # - https://perlbrew.pl
-    # Only attempt to autoload for bash or zsh.
-    #
-    # Updated 2019-10-29.
+    # """
     [ -z "${PERLBREW_ROOT:-}" ] || return 0
     ! _acid_is_installed perlbrew || return 0
     _acid_shell | grep -Eq "^(bash|zsh)$" || return 0
@@ -221,8 +252,10 @@ _acid_activate_perlbrew() {
 }
 
 _acid_activate_prefix() {
+    # """
     # Automatically configure PATH and MANPATH for a specified prefix.
     # Updated 2019-11-10.
+    # """
     local prefix
     prefix="$1"
     _acid_has_sudo && _acid_add_to_path_start "${prefix}/sbin"
@@ -231,9 +264,40 @@ _acid_activate_prefix() {
     _acid_add_to_manpath_start "${prefix}/share/man"
 }
 
+_acid_activate_pyenv() {
+    # """
+    # Activate Python version manager (pyenv).
+    # Updated 2019-11-13.
+    #
+    # Note that pyenv forks rbenv, so activation is very similar.
+    # """
+    if _acid_is_installed pyenv
+    then
+        return 0
+    fi
+    [ -z "${PYENV_ROOT:-}" ] || return 0
+    local prefix
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="/usr/local/pyenv"
+    fi
+    [ -d "$prefix" ] || return 0
+    local script
+    script="${prefix}/bin/pyenv"
+    if [ -r "$script" ]
+    then
+        export PYENV_ROOT="$prefix"
+        _acid_activate_prefix "$prefix"
+        eval "$("$script" init -)"
+    fi
+    return 0
+}
+
 _acid_activate_rbenv() {
-    # Activate Ruby environment manager (rbenv).
-    # Updated 2019-11-05.
+    # """
+    # Activate Ruby version manager (rbenv).
+    # Updated 2019-11-13.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -241,6 +305,7 @@ _acid_activate_rbenv() {
     # Alternate approaches:
     # > _acid_add_to_path_start "$(rbenv root)/shims"
     # > _acid_add_to_path_start "${HOME}/.rbenv/shims"
+    # """
     if _acid_is_installed rbenv
     then
         eval "$(rbenv init -)"
@@ -259,13 +324,14 @@ _acid_activate_rbenv() {
     if [ -r "$script" ]
     then
         export RBENV_ROOT="$prefix"
-        _acid_add_to_path_start "${prefix}/bin"
+        _acid_activate_prefix "$prefix"
         eval "$("$script" init -)"
     fi
     return 0
 }
 
 _acid_activate_rust() {
+    # """
     # Activate Rust programming language.
     # Updated 2019-10-29.
     #
@@ -273,6 +339,7 @@ _acid_activate_rust() {
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
+    # """
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -291,9 +358,10 @@ _acid_activate_rust() {
 }
 
 _acid_activate_secrets() {
+    # """
     # Source secrets file.
     # Updated 2019-10-29.
-    # shellcheck source=/dev/null
+    # """
     local file
     file="${1:-}"
     if [ -z "$file" ]
@@ -311,6 +379,7 @@ _acid_activate_secrets() {
 _acid_activate_ssh_key() {
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
+    # Updated 2019-10-29.
     #
     # NOTE: SCP will fail unless this is interactive only.
     # ssh-agent will prompt for password if there's one set.
@@ -320,8 +389,6 @@ _acid_activate_ssh_key() {
     #
     # List currently loaded keys:
     # > ssh-add -L
-    #
-    # Updated 2019-10-29.
     # """
     _acid_is_linux || return 0
     _acid_is_interactive || return 0
