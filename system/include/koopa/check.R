@@ -642,31 +642,40 @@ checkVersion(
 )
 checkVersion(
     name = "LLVM",
-    whichName = NULL,
+    whichName = "llvm-config",
     current = currentMajorVersion("llvm"),
     expected = expectedMajorVersion("llvm")
 )
 
 ## Note that macOS switched to LibreSSL in 2018.
-checkVersion(
-    name = "OpenSSL",
-    whichName = "openssl",
-    current = currentVersion("openssl"),
-    expected = expectedVersion("openssl")
-)
-checkVersion(
-    name = "Pandoc",
-    whichName = "pandoc",
-    current = currentVersion("pandoc"),
-    expected = expectedVersion("pandoc")
-)
-checkVersion(
-    name = "TeX Live",
-    whichName = "tex",
-    current = currentVersion("tex"),
-    expected = expectedVersion("tex")
-)
+## > checkVersion(
+## >     name = "OpenSSL",
+## >     whichName = "openssl",
+## >     current = currentVersion("openssl"),
+## >     expected = expectedVersion("openssl")
+## > )
+## > checkVersion(
+## >     name = "Pandoc",
+## >     whichName = "pandoc",
+## >     current = currentVersion("pandoc"),
+## >     expected = expectedVersion("pandoc")
+## > )
+## > checkVersion(
+## >     name = "TeX Live",
+## >     whichName = "tex",
+## >     current = currentVersion("tex"),
+## >     expected = expectedVersion("tex")
+## > )
 
+installed(
+    which = c(
+        "openssl",
+        "pandoc",
+        "pandoc-citeproc",
+        "tex"
+    ),
+    required = TRUE
+)
 
 
 ## OS-specific =================================================================
