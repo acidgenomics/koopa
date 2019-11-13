@@ -5,7 +5,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _acid_assert_has_no_args "$@"
 
-
 # Note that LLVM 7 is required to install llvmlite Python module.
 # This is now required to install umap-learn.
 
@@ -13,13 +12,69 @@ enable-epel-7
 install-fedora-base
 sudo yum -y install \
     'llvm7*' \
+    R \
+    bash \
+    coreutils \
+    docbook2X \
+    emacs \
     file-devel \
+    gdal \
+    gdal-devel \
+    git \
+    gnupg2 \
+    gsl-devel \
     libgit2-devel \
+    libhdf5-devel \
     libssh2-devel \
+    libxml2-devel \
     llvm \
     llvm-devel \
+    neovim \
+    openssl \
+    pandoc \
+    pandoc-citeproc \
+    proj \
+    proj-devel \
+    python \
     sshpass \
-    udunits2-devel
+    tmux \
+    udunits2-devel \
+    vim \
+    zsh
 
-# Now using conda to manage Pandoc instead.
-# > sudo yum -y install pandoc pandoc-citeproc
+sudo yum-builddep -y \
+    R \
+    bash \
+    coreutils \
+    emacs \
+    gdal \
+    git \
+    gnupg2 \
+    gsl-devel \
+    neovim \
+    openssl \
+    proj \
+    python \
+    tmux \
+    vim \
+    zsh
+
+# Git: docbook2x-texi is required for 'make doc' to run cleanly.
+#
+# Otherwise, you'll see this error:
+# /bin/sh: line 1: docbook2x-texi: command not found
+#
+# See also:
+# - https://github.com/progit/progit2/issues/425
+# - https://groups.google.com/forum/#!topic/git-users/DMaDpy8Bpww
+#
+# Note the capital "X" here. This differs depending on the Linux distro.
+# We're assuming Red Hat here.
+#
+# EPEL7 must be enabled for this to install (e.g. on Amazon Linux 2).
+if [[ ! -f /usr/bin/docbook2x-texi ]]
+then
+    sudo ln -fnsv /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+fi
+
+# FIXME Remove RPM cruft at the end.
