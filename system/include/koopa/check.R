@@ -350,7 +350,7 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-if (isInstalled("python")) {
+if (isInstalled("python3")) {
     checkVersion(
         name = "Python : pip",
         whichName = "pip",
