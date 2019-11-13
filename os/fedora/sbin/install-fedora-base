@@ -7,7 +7,9 @@ source "${script_dir}/../include/header.sh"
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
 sudo yum -y install \
+    'llvm7*' \
     ImageMagick-c++-devel \
+    bash \
     bzip2 \
     bzip2-devel \
     cmake \
@@ -15,6 +17,8 @@ sudo yum -y install \
     coreutils \
     cryptsetup \
     curl \
+    emacs \
+    file-devel \
     gcc \
     gcc-c++ \
     gcc-gfortran \
@@ -23,12 +27,15 @@ sudo yum -y install \
     geos \
     geos-devel \
     git \
+    gnupg2 \
     gnutls \
     gnutls-devel \
     golang \
     gsl-devel \
     hdf5 \
     hdf5-devel \
+    java-latest-openjdk \
+    java-latest-openjdk-devel \
     leptonica-devel \
     libcurl-devel \
     libevent-devel \
@@ -36,10 +43,14 @@ sudo yum -y install \
     libsodium-devel \
     libuuid-devel \
     libxml2-devel \
+    llvm \
+    llvm-devel \
     make \
     mariadb-devel \
     mpfr-devel \
     ncurses \
+    neovim \
+    openssl \
     openssl-devel \
     pandoc \
     pandoc-citeproc \
@@ -53,6 +64,7 @@ sudo yum -y install \
     readline \
     readline-devel \
     squashfs-tools \
+    sshpass \
     tesseract-devel \
     texlive \
     texlive-bera \
@@ -82,15 +94,11 @@ sudo yum -y install \
     tree \
     unixODBC-devel \
     util-linux \
+    vim \
     wget \
     xmlto \
     xz \
     xz-devel \
     yum-utils \
-    zip
-
-# Java
-# Install latest JDK manually instead.
-# > sudo yum -y install \
-# >     java-latest-openjdk \
-# >     java-latest-openjdk-devel
+    zip \
+    zsh
