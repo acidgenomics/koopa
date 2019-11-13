@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_HOME}/shell/bash/include/header.sh"
+_acid_assert_has_no_args "$@"
+
+prefix="$(_acid_build_prefix)/pyenv"
+
+_acid_prefix_mkdir "$prefix"
+
+# Install pyenv.
+git clone \
+    https://github.com/pyenv/pyenv.git \
+    "$prefix"
+
+_acid_set_permissions "$prefix"
