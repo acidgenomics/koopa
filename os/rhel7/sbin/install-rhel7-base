@@ -23,6 +23,8 @@ sudo yum -y install \
     git \
     gnupg2 \
     gsl-devel \
+    java-latest-openjdk \
+    java-latest-openjdk-devel \
     libgit2-devel \
     libhdf5-devel \
     libssh2-devel \
@@ -76,5 +78,3 @@ if [[ ! -f /usr/bin/docbook2x-texi ]]
 then
     sudo ln -fnsv /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
 fi
-
-# FIXME Remove RPM cruft at the end.
