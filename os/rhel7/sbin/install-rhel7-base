@@ -11,38 +11,13 @@ _acid_assert_has_no_args "$@"
 enable-epel-7
 install-fedora-base
 sudo yum -y install \
-    'llvm7*' \
     R \
-    bash \
-    coreutils \
     docbook2X \
-    emacs \
-    file-devel \
-    gdal \
-    gdal-devel \
-    git \
-    gnupg2 \
-    gsl-devel \
-    java-latest-openjdk \
-    java-latest-openjdk-devel \
     libgit2-devel \
     libssh2-devel \
-    libxml2-devel \
-    llvm \
-    llvm-devel \
-    neovim \
-    openssl \
     pandoc \
     pandoc-citeproc \
-    proj \
-    proj-devel \
-    python \
-    sshpass \
-    tmux \
-    udunits2-devel \
-    vim \
-    zsh
-
+    udunits2-devel
 sudo yum-builddep -y \
     R \
     bash \
