@@ -30,11 +30,13 @@ _acid_message "Installing ${name} ${version}."
         mv_tr="$(echo "$major_version" | tr -d '.')"
         range="$(printf "%03d-%03d" "1" "$patches")"
         request="${base_url}/bash${mv_tr}-[${range}]"
-        _acid_download "$request"
+        # > _acid_download "$request"
+        curl "$request" -O
         cd .. || exit 1
         for file in patches/*
         do
-            patch -p0 --input="$file"
+            # https://stackoverflow.com/questions/14282617
+            patch -p0 --ignore-whitespace --input="$file"
         done
     )
     ./configure \
