@@ -90,7 +90,7 @@ _acid_activate_bcbio() {
 _acid_activate_conda() {
     # """
     # Activate conda.
-    # Updated 2019-11-06.
+    # Updated 2019-11-14.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -103,18 +103,14 @@ _acid_activate_conda() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        if [ -d "${HOME}/.local/conda" ]
+        local app_prefix
+        app_prefix="$(_acid_app_prefix)"
+        if [ -d "${app_prefix}/conda" ]
         then
-            prefix="${HOME}/.local/conda"
-        elif [ -d "${HOME}/.local/anaconda3" ]
+            prefix="${app_prefix}/conda"
+        elif [ -d "${HOME}/.local/share/conda" ]
         then
-            prefix="${HOME}/.local/anaconda3"
-        elif [ -d "${HOME}/.local/miniconda3" ]
-        then
-            prefix="${HOME}/.local/miniconda3"
-        elif [ -d "${HOME}/conda" ]
-        then
-            prefix="${HOME}/conda"
+            prefix="${HOME}/.local/share/conda"
         elif [ -d "${HOME}/anaconda3" ]
         then
             prefix="${HOME}/anaconda3"
@@ -528,7 +524,14 @@ _acid_app_prefix() {
     # Custom application install prefix.
     # Updated 2019-11-14.
     # Inspired by HMS RC devops approach on O2 cluster.
-    echo "/n/app"
+    local prefix
+    if _acid_is_shared
+    then
+        prefix="/n/app"
+    else
+        prefix="$XDG_DATA_HOME"
+    fi
+    echo "$prefix"
 }
 
 _acid_array_to_r_vector() {
