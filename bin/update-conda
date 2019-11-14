@@ -8,7 +8,7 @@ _acid_assert_has_no_args "$@"
 
 if ! _acid_is_installed conda
 then
-    _acid_warning "Conda is not installed."
+    _acid_note "Conda is not installed."
     exit 0
 fi
 
