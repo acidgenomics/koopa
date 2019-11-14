@@ -19,6 +19,7 @@ sudo yum -y install \
     curl \
     emacs \
     file-devel \
+    fish \
     gcc \
     gcc-c++ \
     gcc-gfortran \
