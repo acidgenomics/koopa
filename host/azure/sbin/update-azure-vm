@@ -35,6 +35,12 @@ do
     esac
 done
 
+if [[ -e "/bin/env.bak" ]]
+then
+    sudo rm /bin/env
+    sudo mv /bin/env.bak /bin/env
+fi
+
 _acid_message "Updating '/etc/profile.d'."
 _acid_update_profile
 sudo ln -fnsv \
