@@ -643,7 +643,8 @@ checkVersion(
 )
 checkVersion(
     name = "LLVM",
-    whichName = "llvm-config",
+    ## > whichName = "llvm-config",
+    whichName = NULL,
     current = currentMajorVersion("llvm"),
     expected = expectedMajorVersion("llvm")
 )
