@@ -11,7 +11,7 @@ _acid_assert_is_installed "rbenv"
 version="$(_acid_variable ruby)"
 
 # Ensure ruby-build is current.
-ruby_build_dir="/usr/local/rbenv/plugins/ruby-build"
+ruby_build_dir="$(rbenv root)/plugins/ruby-build"
 if [[ -d "$ruby_build_dir" ]]
 then
     _acid_message "Updating ruby-build plugin: '${ruby_build_dir}'."
