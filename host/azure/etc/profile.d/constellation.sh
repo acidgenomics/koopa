@@ -50,11 +50,11 @@ export D5="/mnt/azbioinfoseq05"
 # Cell Ranger                                                               {{{1
 # ==============================================================================
 
-# > PATH="${PATH}:/usr/local/cellranger/2.1.0"
-# > PATH="${PATH}:/usr/local/cellranger/3.0.0"
-# > PATH="${PATH}:/usr/local/cellranger/3.0.2"
-PATH="${PATH}:/usr/local/cellranger/3.1.0"
-PATH="${PATH}:/usr/local/cellranger-atac/1.1.0"
+# > PATH="${PATH}:/n/app/cellranger/2.1.0"
+# > PATH="${PATH}:/n/app/cellranger/3.0.0"
+# > PATH="${PATH}:/n/app/cellranger/3.0.2"
+PATH="${PATH}:/n/app/cellranger/3.1.0"
+PATH="${PATH}:/n/app/cellranger-atac/1.1.0"
 
 
 

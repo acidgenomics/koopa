@@ -18,11 +18,6 @@
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-## Use conda versions of Pandoc and Tex Live.
-## These are very old on RHEL 7 and hard to compile.
-PATH="${PATH}:/usr/local/miniconda3/envs/pandoc/bin"
-PATH="${PATH}:/usr/local/miniconda3/envs/texlive-core/bin"
-
 
 
 ## Package configuration                                                    {{{1
