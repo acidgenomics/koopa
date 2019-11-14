@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-11-13"
+koopa_date="2019-11-14"
 
 
 
@@ -87,7 +87,8 @@ llvm="7"
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-lmod="8.2.3"
+# Update every minor version, ignoring the patch releases.
+lmod="8.2"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua

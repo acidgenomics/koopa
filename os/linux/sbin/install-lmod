@@ -7,10 +7,13 @@ _acid_assert_is_installed lua luarocks
 
 name="lmod"
 version="$(_acid_variable "$name")"
-prefix="/opt/apps"
+
+prefix="/opt/${name}/app"
 _acid_assert_is_not_dir "$prefix"
-data_dir="/opt/moduleData"
+
+data_dir="/opt/${name}/moduleData"
 _acid_assert_is_not_dir "$data_dir"
+
 tmp_dir="$(_acid_tmp_dir)/${name}"
 
 _acid_message "Installing ${name} ${version}."
@@ -33,16 +36,14 @@ _acid_message "Installing ${name} ${version}."
 )
 
 # bash, zsh:
-sudo ln -fnsv "/opt/apps/lmod/lmod/init/profile" \
+sudo ln -fnsv "${prefix}/lmod/lmod/init/profile" \
     "/etc/profile.d/z00_lmod.sh"
-
 # csh, tcsh:
-# > sudo ln -fnsv /opt/apps/lmod/lmod/init/cshrc \
-# >     /etc/profile.d/z00_lmod.csh
-
+sudo ln -fnsv "${prefix}/lmod/lmod/init/cshrc" \
+    "/etc/profile.d/z00_lmod.csh"
 # fish:
-# > sudo ln -fnsv /opt/apps/lmod/lmod/init/profile.fish \
-# >     /etc/fish/conf.d/z00_lmod.fish
+sudo ln -fnsv "${prefix}/lmod/lmod/init/profile.fish" \
+    "/etc/fish/conf.d/z00_lmod.fish"
 
 module --version
 # > module spider
