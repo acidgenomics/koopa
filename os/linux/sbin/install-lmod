@@ -16,7 +16,7 @@ data_dir="${prefix}/moduleData"
 
 tmp_dir="$(_acid_tmp_dir)/${name}"
 
-_acid_message "Installing ${name} ${version}."
+_acid_message "Installing ${name} ${version} at '${prefix}'."
 
 (
     rm -fr "$tmp_dir"
