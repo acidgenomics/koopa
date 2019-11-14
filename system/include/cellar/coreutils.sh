@@ -30,11 +30,5 @@ _acid_message "Installing ${name} ${version}."
 
 _acid_link_cellar "$name" "$version"
 
-# Update '/usr/bin/env', if possible.
-if _acid_has_sudo
-then
-    link-coreutils-env
-fi
-
 "$exe_file" --version
 command -v "$exe_file"
