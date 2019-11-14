@@ -7,7 +7,8 @@ _acid_assert_has_no_envs
 
 export KOOPA_FORCE=1
 
-sudo mkdir -pv /n/app
+sudo mkdir -pv /data00/n/app
+sudo ln -fnsv /data00/n /n
 
 sudo chmod 2775 /usr/local
 sudo chown -Rh root:wheel /usr/local
