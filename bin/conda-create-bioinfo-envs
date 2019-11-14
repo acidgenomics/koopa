@@ -17,7 +17,6 @@ _acid_assert_is_installed "conda"
 #
 # missing:
 # - genrich
-# - sra-tools (fasterq-dump)
 #
 # variation:
 # - peddy
@@ -27,18 +26,31 @@ _acid_assert_is_installed "conda"
 
 
 
-# Base                                                                      {{{1
+# Bioinfo base                                                              {{{1
 # ==============================================================================
 
-conda create -qy --name="bioinfo-base" \
-    bamtools \
-    bedtools \
-    bioawk \
-    biobambam \
-    htslib \
-    samblaster \
-    samtools \
-    seqtk
+conda-create-env bamtools
+conda-create-env bedtools
+conda-create-env bioawk
+conda-create-env biobambam
+conda-create-env htslib
+conda-create-env samblaster
+conda-create-env samtools
+conda-create-env seqtk
+
+
+
+# Tools                                                                     {{{1
+# ==============================================================================
+
+# > conda-create-env pandoc
+# > conda-create-env texlive-core
+# > conda-create-env wgsim
+
+conda-create-env gffutils
+conda-create-env igvtools
+conda-create-env jupyter
+conda-create-env sra-tools
 
 
 
@@ -49,20 +61,6 @@ conda-create-env cromwell
 conda-create-env fgbio
 conda-create-env gatk4
 conda-create-env nextflow
-
-
-
-# Tools                                                                     {{{1
-# ==============================================================================
-
-# > conda-create-env wgsim
-
-conda-create-env gffutils
-conda-create-env igvtools
-conda-create-env jupyter
-conda-create-env pandoc
-conda-create-env sra-tools
-conda-create-env texlive-core
 
 
 
