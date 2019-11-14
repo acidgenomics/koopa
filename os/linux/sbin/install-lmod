@@ -11,8 +11,8 @@ version="$(_acid_variable "$name")"
 prefix="$(_acid_app_prefix)/${name}"
 _acid_assert_is_not_dir "$prefix"
 
+apps_dir="${prefix}/apps"
 data_dir="${prefix}/moduleData"
-_acid_assert_is_not_dir "$data_dir"
 
 tmp_dir="$(_acid_tmp_dir)/${name}"
 
@@ -28,7 +28,7 @@ _acid_message "Installing ${name} ${version} at '${prefix}'."
     _acid_extract "$file"
     cd "Lmod-${version}" || exit 1
     ./configure \
-        --prefix="${prefix}/apps" \
+        --prefix="$apps_dir" \
         --with-spiderCacheDir="${data_dir}/cacheDir" \
         --with-updateSystemFn="${data_dir}/system.txt"
     sudo make install
@@ -36,13 +36,13 @@ _acid_message "Installing ${name} ${version} at '${prefix}'."
 )
 
 # bash, zsh:
-sudo ln -fnsv "${prefix}/lmod/lmod/init/profile" \
+sudo ln -fnsv "${apps_dir}/lmod/lmod/init/profile" \
     "/etc/profile.d/z00_lmod.sh"
 # csh, tcsh:
-sudo ln -fnsv "${prefix}/lmod/lmod/init/cshrc" \
+sudo ln -fnsv "${apps_dir}/lmod/lmod/init/cshrc" \
     "/etc/profile.d/z00_lmod.csh"
 # fish:
-sudo ln -fnsv "${prefix}/lmod/lmod/init/profile.fish" \
+sudo ln -fnsv "${apps_dir}/lmod/lmod/init/profile.fish" \
     "/etc/fish/conf.d/z00_lmod.fish"
 
 # > module --version
