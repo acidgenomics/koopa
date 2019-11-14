@@ -8,7 +8,7 @@ _acid_assert_has_no_args "$@"
 
 if ! _acid_is_venv_active
 then
-    _acid_warning "No active Python venv detected."
+    _acid_note "No active Python venv detected."
     exit 0
 fi
 
