@@ -45,5 +45,5 @@ sudo ln -fnsv "${prefix}/lmod/lmod/init/cshrc" \
 sudo ln -fnsv "${prefix}/lmod/lmod/init/profile.fish" \
     "/etc/fish/conf.d/z00_lmod.fish"
 
-module --version
+# > module --version
 # > module spider
