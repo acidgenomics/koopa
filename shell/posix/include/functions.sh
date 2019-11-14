@@ -103,7 +103,7 @@ _acid_activate_conda() {
     then
         prefix="$(_acid_app_prefix)/conda"
     fi
-    [ -d "prefix" ] || return 0
+    [ -d "$prefix" ] || return 0
     local name
     name="${2:-"base"}"
     script="${prefix}/bin/activate"
@@ -137,7 +137,7 @@ _acid_activate_ensembl_perl_api() {
     then
         prefix="$(_acid_app_prefix)/ensembl"
     fi
-    [ -d "prefix" ] || return 0
+    [ -d "$prefix" ] || return 0
     _acid_add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
@@ -191,7 +191,7 @@ _acid_activate_perlbrew() {
     then
         prefix="$(_acid_app_prefix)/perlbrew"
     fi
-    [ -d "prefix" ] || return 0
+    [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/etc/bashrc"
     if [ -r "$script" ]
