@@ -1,11 +1,12 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-13.
+## Updated 2019-11-14.
 
 options(
-    error = quote(quit(status = 1L)),
-    warning = quote(quit(status = 1L))
+    "error" = quote(quit(status = 1L)),
+    "mc.cores" = max(1L, parallel::detectCores() - 1L),
+    "warning" = quote(quit(status = 1L))
 )
 
 
@@ -738,7 +739,10 @@ if (isTRUE(linux)) {
 
 
 ## High performance ============================================================
-if (isTRUE(linux) && isTRUE(Sys.getenv("CPU_COUNT") >= 7L)) {
+if (
+    isTRUE(linux) &&
+    isTRUE(getOption("mc.cores") >= 7L)
+) {
     message("\nHigh performance (HPC/VM):")
     checkVersion(
         name = "Docker",
