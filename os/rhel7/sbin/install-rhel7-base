@@ -23,6 +23,7 @@ sudo yum-builddep -y \
     bash \
     coreutils \
     emacs \
+    fish \
     gdal \
     git \
     gnupg2 \
