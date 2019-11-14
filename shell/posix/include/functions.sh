@@ -25,7 +25,7 @@ _acid_activate_aspera() {
 _acid_activate_autojump() {
     # """
     # Activate autojump.
-    # Updated 2019-10-29.
+    # Updated 2019-11-14.
     #
     # Currently only supported for ZSH.
     #
@@ -38,6 +38,7 @@ _acid_activate_autojump() {
     then
         prefix="${HOME}/.autojump"
     fi
+    [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
     if [ -r "$script"  ]
@@ -53,7 +54,7 @@ _acid_activate_autojump() {
 _acid_activate_bcbio() {
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # Updated 2019-10-29.
+    # Updated 2019-11-14.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     # """
@@ -71,11 +72,8 @@ _acid_activate_bcbio() {
         elif [ "$host" = "harvard-odyssey" ]
         then
             prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
-        elif [ -d "/usr/local/bcbio/stable/tools" ]
-        then
-            prefix="/usr/local/bcbio/stable/tools"
         else
-            return 0
+            prefix="$(_acid_app_prefix)/bcbio/stable/tools"
         fi
     fi
     [ -d "$prefix" ] || return 0
@@ -90,7 +88,7 @@ _acid_activate_bcbio() {
 _acid_activate_conda() {
     # """
     # Activate conda.
-    # Updated 2019-11-06.
+    # Updated 2019-11-14.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -103,46 +101,9 @@ _acid_activate_conda() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        if [ -d "${HOME}/.local/conda" ]
-        then
-            prefix="${HOME}/.local/conda"
-        elif [ -d "${HOME}/.local/anaconda3" ]
-        then
-            prefix="${HOME}/.local/anaconda3"
-        elif [ -d "${HOME}/.local/miniconda3" ]
-        then
-            prefix="${HOME}/.local/miniconda3"
-        elif [ -d "${HOME}/conda" ]
-        then
-            prefix="${HOME}/conda"
-        elif [ -d "${HOME}/anaconda3" ]
-        then
-            prefix="${HOME}/anaconda3"
-        elif [ -d "${HOME}/miniconda3" ]
-        then
-            prefix="${HOME}/miniconda3"
-        elif [ -d "/usr/local/conda" ]
-        then
-            prefix="/usr/local/conda"
-        elif [ -d "/usr/local/anaconda3" ]
-        then
-            prefix="/usr/local/anaconda3"
-        elif [ -d "/usr/local/miniconda3" ]
-        then
-            prefix="/usr/local/miniconda3"
-        elif [ -d "/opt/conda" ]
-        then
-            prefix="/opt/conda"
-        elif [ -d "/opt/anaconda3" ]
-        then
-            prefix="/opt/anaconda3"
-        elif [ -d "/opt/miniconda3" ]
-        then
-            prefix="/opt/miniconda3"
-        else
-            return 0
-        fi
+        prefix="$(_acid_app_prefix)/conda"
     fi
+    [ -d "$prefix" ] || return 0
     local name
     name="${2:-"base"}"
     script="${prefix}/bin/activate"
@@ -165,7 +126,7 @@ _acid_activate_conda() {
 _acid_activate_ensembl_perl_api() {
     # """
     # Activate Ensembl Perl API.
-    # Updated 2019-10-29.
+    # Updated 2019-11-14.
     #
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
@@ -174,9 +135,9 @@ _acid_activate_ensembl_perl_api() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="$(_acid_build_prefix)/ensembl"
+        prefix="$(_acid_app_prefix)/ensembl"
     fi
-    [ -d "prefix" ] || return 0
+    [ -d "$prefix" ] || return 0
     _acid_add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
@@ -214,7 +175,7 @@ _acid_activate_llvm() {
 _acid_activate_perlbrew() {
     # """
     # Activate Perlbrew.
-    # Updated 2019-10-29.
+    # Updated 2019-11-14.
     #
     # Only attempt to autoload for bash or zsh.
     #
@@ -228,16 +189,9 @@ _acid_activate_perlbrew() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        if [ -d "${HOME}/perl5/perlbrew" ]
-        then
-            prefix="${HOME}/perl5/perlbrew"
-        elif [ -d "/usr/local/perlbrew" ]
-        then
-            prefix="/usr/local/perlbrew"
-        else
-            return 0
-        fi
+        prefix="$(_acid_app_prefix)/perlbrew"
     fi
+    [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/etc/bashrc"
     if [ -r "$script" ]
@@ -267,7 +221,7 @@ _acid_activate_prefix() {
 _acid_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
-    # Updated 2019-11-13.
+    # Updated 2019-11-14.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -280,7 +234,7 @@ _acid_activate_pyenv() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="/usr/local/pyenv"
+        prefix="$(_acid_app_prefix)/pyenv"
     fi
     [ -d "$prefix" ] || return 0
     local script
@@ -297,7 +251,7 @@ _acid_activate_pyenv() {
 _acid_activate_rbenv() {
     # """
     # Activate Ruby version manager (rbenv).
-    # Updated 2019-11-13.
+    # Updated 2019-11-14.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -316,7 +270,7 @@ _acid_activate_rbenv() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="/usr/local/rbenv"
+        prefix="$(_acid_app_prefix)/rbenv"
     fi
     [ -d "$prefix" ] || return 0
     local script
@@ -528,7 +482,14 @@ _acid_app_prefix() {
     # Custom application install prefix.
     # Updated 2019-11-14.
     # Inspired by HMS RC devops approach on O2 cluster.
-    echo "/n/app"
+    local prefix
+    if _acid_is_shared
+    then
+        prefix="/n/app"
+    else
+        prefix="$XDG_DATA_HOME"
+    fi
+    echo "$prefix"
 }
 
 _acid_array_to_r_vector() {
