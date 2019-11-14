@@ -23,7 +23,6 @@ _acid_message "Installing ${name} ${version}."
 
 
 (
-    rm -frv "$prefix"
     rm -fr "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1

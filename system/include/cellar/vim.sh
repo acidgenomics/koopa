@@ -16,7 +16,6 @@ python3_config_dir="$("$python3_config_exe" --configdir)"
 _acid_message "Installing ${name} ${version}."
 
 (
-    rm -frv "$prefix"
     rm -frv "$tmp_dir"
     mkdir -pv "$tmp_dir"
     cd "$tmp_dir" || exit 1
