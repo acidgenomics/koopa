@@ -927,8 +927,8 @@ _acid_build_prefix() {
 _acid_cellar_prefix() {
     # Cellar prefix.
     # Avoid setting to '/usr/local/cellar', as this can conflict with Homebrew.
-    # Updated 2019-10-22.
-    echo "${KOOPA_HOME}/cellar"
+    # Updated 2019-11-14.
+    echo "$(_acid_app_prefix)/cellar"
 }
 
 _acid_cellar_script() {
