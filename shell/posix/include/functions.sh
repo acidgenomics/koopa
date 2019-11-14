@@ -524,6 +524,13 @@ _acid_add_to_path_start() {
     export PATH="${1}:${PATH:-}"
 }
 
+_acid_app_prefix() {
+    # Custom application install prefix.
+    # Updated 2019-11-14.
+    # Inspired by HMS RC devops approach on O2 cluster.
+    echo "/n/app"
+}
+
 _acid_array_to_r_vector() {
     # Convert a bash array to an R vector string.
     # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.

@@ -32,7 +32,7 @@ else
     name="miniconda3"
 fi
 
-prefix="$(_acid_build_prefix)/conda"
+prefix="$(_acid_app_prefix)/conda"
 tmp_dir="$(_acid_tmp_dir)/${name}"
 exe_file="${prefix}/bin/conda"
 
