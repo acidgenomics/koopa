@@ -20,7 +20,6 @@ then
                     8A861B1C7EFD60D9
 fi
 
-rm -frv "$prefix"
 rm -fr "$tmp_dir"
 mkdir -pv "$tmp_dir"
 
