@@ -3,13 +3,20 @@
 
 
 
+# FIXME Rename _koopa_home and KOOPA_HOME to KOOPA_PREFIX
+# FIXME Define _koopa_venv_prefix function and use that internally.
+# FIXME Define _koopa_pyenv_prefix
+# FIXME Define _koopa_rbenv_prefix
+
+
+
 # A                                                                         {{{1
 # ==============================================================================
 
 _koopa_activate_aspera() {
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # Updated 2019-06-25.
+    # Updated 2019-11-15.
     # """
     local prefix
     prefix="${1:-}"
@@ -18,14 +25,14 @@ _koopa_activate_aspera() {
         prefix="${HOME}/.aspera/connect"
     fi
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/bin"
+    _koopa_activate_prefix "$prefix"
     return 0
 }
 
 _koopa_activate_autojump() {
     # """
     # Activate autojump.
-    # Updated 2019-11-14.
+    # Updated 2019-11-15.
     #
     # Currently only supported for ZSH.
     #
@@ -36,7 +43,7 @@ _koopa_activate_autojump() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="${HOME}/.autojump"
+        prefix="${XDG_DATA_HOME}/autojump"
     fi
     [ -d "$prefix" ] || return 0
     local script
@@ -49,6 +56,7 @@ _koopa_activate_autojump() {
         autoload -U compinit && compinit -u
         [ -n "${KOOPA_TEST:-}" ] && set -u
     fi
+    return 0
 }
 
 _koopa_activate_bcbio() {
@@ -216,12 +224,13 @@ _koopa_activate_prefix() {
     _koopa_add_to_path_start "${prefix}/bin"
     _koopa_add_to_manpath_start "${prefix}/man"
     _koopa_add_to_manpath_start "${prefix}/share/man"
+    return 0
 }
 
 _koopa_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
-    # Updated 2019-11-14.
+    # Updated 2019-11-15.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -234,7 +243,7 @@ _koopa_activate_pyenv() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="$(_koopa_app_prefix)/pyenv"
+        prefix="${XDG_DATA_HOME}/pyenv"
     fi
     [ -d "$prefix" ] || return 0
     local script
@@ -251,7 +260,7 @@ _koopa_activate_pyenv() {
 _koopa_activate_rbenv() {
     # """
     # Activate Ruby version manager (rbenv).
-    # Updated 2019-11-14.
+    # Updated 2019-11-15.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -270,7 +279,7 @@ _koopa_activate_rbenv() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="$(_koopa_app_prefix)/rbenv"
+        prefix="${XDG_DATA_HOME}/rbenv"
     fi
     [ -d "$prefix" ] || return 0
     local script
@@ -385,7 +394,7 @@ _koopa_activate_venv() {
         env_name="base"
     fi
     local script
-    script="${HOME}/.virtualenvs/${env_name}/bin/activate"
+    script="${XDG_DATA_HOME}/virtualenvs/${env_name}/bin/activate"
     if [ -r "$script" ]
     then
         # shellcheck source=/dev/null
