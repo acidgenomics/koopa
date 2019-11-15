@@ -926,9 +926,11 @@ _acid_build_prefix() {
 
 _acid_cellar_prefix() {
     # Cellar prefix.
-    # Avoid setting to '/usr/local/cellar', as this can conflict with Homebrew.
     # Updated 2019-11-14.
-    # echo "$(_acid_app_prefix)/cellar"
+    #
+    # Ensure this points to a local mount (e.g. '/usr/local') instead of our
+    # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
+    # issues on some virtual machines.
     echo "$(_acid_build_prefix)/cellar"
 }
 
