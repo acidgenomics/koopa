@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This still needs tweaks after migration to '/n/app' configuration.
-
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
@@ -115,7 +113,7 @@ then
     "
 fi
 
-sudo rm -frv /usr/local/bin/cellranger-2.1.0
+sudo rm -frv /usr/local/bin/cellranger*
 sudo rm -frv /usr/local/bin/miniconda3
 sudo rm -frv /usr/local/miniconda3
 
