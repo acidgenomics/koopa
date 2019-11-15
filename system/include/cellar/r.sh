@@ -12,7 +12,7 @@ version="$(_koopa_variable "$name")"
 major_version="$(echo "$version" | cut -d "." -f 1)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/R"
 
 _koopa_message "Installing R ${version}."
@@ -33,7 +33,7 @@ _koopa_message "Installing R ${version}."
     # https://stackoverflow.com/questions/46413691
     export TZ="America/New_York"
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix" \
         --enable-BLAS-shlib \
         --enable-R-profiling \

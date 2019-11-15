@@ -14,7 +14,7 @@ _koopa_add_local_bins_to_path() {
     # Updated 2019-10-22.
     local dir
     local dirs
-    _koopa_add_to_path_start "$(_koopa_build_prefix)/bin"
+    _koopa_add_to_path_start "$(_koopa_make_prefix)/bin"
     IFS=$'\n' read -r -d '' dirs <<< "$(_koopa_bash_find_local_bin_dirs)"
     unset IFS
     for dir in "${dirs[@]}"
@@ -72,7 +72,7 @@ _koopa_find_local_bin_dirs() {
     array=()
     local tmp_file
     tmp_file="$(_koopa_tmp_dir)/find"
-    find "$(_koopa_build_prefix)" \
+    find "$(_koopa_make_prefix)" \
         -mindepth 2 \
         -maxdepth 3 \
         -name "bin" \

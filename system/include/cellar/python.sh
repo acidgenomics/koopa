@@ -16,7 +16,7 @@ name="python"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/python3"
 
 _koopa_message "Installing ${name} ${version}."
@@ -38,7 +38,7 @@ fi
     _koopa_extract "$file"
     cd "Python-${version}" || exit 1
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix" \
         --enable-shared \
         --without-ensurepip
@@ -60,7 +60,7 @@ rm "$script"
 
 _koopa_link_cellar "$name" "$version"
 
-build_prefix="$(_koopa_build_prefix)"
+build_prefix="$(_koopa_make_prefix)"
 _koopa_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
 ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 

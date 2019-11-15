@@ -76,7 +76,7 @@ fi
 if _koopa_is_linux
 then
     reset-prefix-permissions
-    prefix="$(_koopa_build_prefix)"
+    prefix="$(_koopa_make_prefix)"
     remove-broken-symlinks "$prefix"
     remove-empty-dirs "$prefix"
     remove-broken-cellar-symlinks

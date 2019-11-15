@@ -4,11 +4,11 @@ name="vim"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/${name}"
 
 # Using this to set Python 3 flags automatically below.
-build_prefix="$(_koopa_build_prefix)"
+build_prefix="$(_koopa_make_prefix)"
 python3_exe="${build_prefix}/bin/python3"
 python3_config_exe="${python3_exe}-config"
 python3_config_dir="$("$python3_config_exe" --configdir)"
@@ -24,7 +24,7 @@ _koopa_message "Installing ${name} ${version}."
     _koopa_extract "v${version}.tar.gz"
     cd "vim-${version}" || exit 1
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix" \
         --enable-python3interp="yes" \
         --with-python3-command="${python3_exe}" \

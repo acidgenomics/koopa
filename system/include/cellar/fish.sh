@@ -16,7 +16,7 @@ name="fish"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/${name}"
 
 _koopa_message "Installing ${name} ${version}."
@@ -32,7 +32,7 @@ _koopa_message "Installing ${name} ${version}."
     _koopa_extract "$file"
     cd "fish-${version}" || exit 1
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     # Disable testing (see error above)

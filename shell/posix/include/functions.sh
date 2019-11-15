@@ -874,7 +874,7 @@ _koopa_bash_version() {
         | cut -d '(' -f 1
 }
 
-_koopa_build_os_string() {
+_koopa_make_build_string() {
     # Build string for 'make' configuration.
     #
     # Use this for 'configure --build' flag.
@@ -906,7 +906,7 @@ _koopa_build_os_string() {
     echo "$string"
 }
 
-_koopa_build_prefix() {
+_koopa_make_prefix() {
     # Return the installation prefix to use.
     # Updated 2019-09-27.
     local prefix
@@ -931,7 +931,7 @@ _koopa_cellar_prefix() {
     # Ensure this points to a local mount (e.g. '/usr/local') instead of our
     # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
     # issues on some virtual machines.
-    echo "$(_koopa_build_prefix)/cellar"
+    echo "$(_koopa_make_prefix)/cellar"
 }
 
 _koopa_cellar_script() {
@@ -2067,7 +2067,7 @@ _koopa_link_cellar() {
     local cellar_prefix
     name="$1"
     version="$2"
-    build_prefix="$(_koopa_build_prefix)"
+    build_prefix="$(_koopa_make_prefix)"
     cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
     _koopa_message "Linking '${cellar_prefix}' in '${build_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
@@ -2818,7 +2818,7 @@ _koopa_update_shells() {
     local shell
     local shell_file
     _koopa_assert_has_sudo
-    shell="$(_koopa_build_prefix)/bin/${1}"
+    shell="$(_koopa_make_prefix)/bin/${1}"
     shell_file="/etc/shells"
     if ! grep -q "$shell" "$shell_file"
     then
