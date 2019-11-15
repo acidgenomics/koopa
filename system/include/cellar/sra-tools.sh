@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # RHEL 7 dependencies
 # file-devel : libmagic
