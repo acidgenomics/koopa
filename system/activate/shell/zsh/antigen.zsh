@@ -8,7 +8,7 @@
 # - https://github.com/zsh-users/antigen/wiki/Configuration
 
 ADOTDIR="${HOME}/.antigen"
-source "${KOOPA_HOME}/shell/zsh/include/antigen.zsh"
+source "${KOOPA_PREFIX}/shell/zsh/include/antigen.zsh"
 
 # Bundles from the default repo (robbyrussell's oh-my-zsh).
 # > antigen use oh-my-zsh

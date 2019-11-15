@@ -137,22 +137,22 @@ then
         fi
     fi
     git clone --recursive "$source_repo" "$target_dir"
-    KOOPA_HOME="$target_dir"
+    KOOPA_PREFIX="$target_dir"
 else
-    KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
         >/dev/null 2>&1 && pwd -P)"
 fi
-export KOOPA_HOME
+export KOOPA_PREFIX
 
-rm -frv "${KOOPA_HOME}/"{config,include}
-rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
+rm -frv "${KOOPA_PREFIX}/"{config,include}
+rm -frv "${KOOPA_PREFIX}/bin/"{host,os,sudo}
 
 echo "Activating koopa."
-force=1 source "${KOOPA_HOME}/activate"
+force=1 source "${KOOPA_PREFIX}/activate"
 
 if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
 then
-    echo "Shared installation detected at '${KOOPA_HOME}'"
+    echo "Shared installation detected at '${KOOPA_PREFIX}'"
     shared=1
 fi
 

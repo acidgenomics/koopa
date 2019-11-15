@@ -5,7 +5,7 @@ set -Eeu -o pipefail
 # Updated 2019-10-07.
 
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
 script_bn="$(_koopa_basename_sans_ext "$0")"
 
@@ -21,10 +21,10 @@ fi
 path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
-    "${KOOPA_HOME}/cellar"
-    "${KOOPA_HOME}/conda"
-    "${KOOPA_HOME}/dotfiles"
-    "${KOOPA_HOME}/shell/zsh/functions"
+    "${KOOPA_PREFIX}/cellar"
+    "${KOOPA_PREFIX}/conda"
+    "${KOOPA_PREFIX}/dotfiles"
+    "${KOOPA_PREFIX}/shell/zsh/functions"
     ".git"
 )
 

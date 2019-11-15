@@ -15,7 +15,7 @@ _koopa_assert_is_dir "$r_dir"
 
 lib_link="${r_dir}/site-library/current"
 
-koopa_home="$(_koopa_prefix)"
+KOOPA_PREFIX="$(_koopa_prefix)"
 r_home="$(_koopa_r_home)"
 
 mapfile -t flags < <(_koopa_rsync_flags)
@@ -50,7 +50,7 @@ if [[ -d "/usr/lib64/R" ]]
 then
     sudo rm -frv "/usr/lib64/R/site-library"
     sudo ln -fnsv "$lib_link" "/usr/lib64/R/site-library"
-    sudo ln -fnsv "${koopa_home}/os/fedora/etc/R/"* "/usr/lib64/R/etc/."
+    sudo ln -fnsv "${KOOPA_PREFIX}/os/fedora/etc/R/"* "/usr/lib64/R/etc/."
 fi
 
 if [[ -d "/usr/local/lib64/R" ]]

@@ -69,9 +69,9 @@ _koopa_message "Updating koopa."
 )
 
 # Clean up legacy files.
-if [[ -d "${KOOPA_HOME}/system/config" ]]
+if [[ -d "${KOOPA_PREFIX}/system/config" ]]
 then
-    rm -frv "${KOOPA_HOME}/system/config"
+    rm -frv "${KOOPA_PREFIX}/system/config"
 fi
 
 if _koopa_is_linux

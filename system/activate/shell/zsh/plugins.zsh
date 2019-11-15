@@ -5,7 +5,7 @@
 
 _koopa_activate_autojump
 
-plugins_dir="${KOOPA_HOME}/dotfiles/shell/zsh/plugins"
+plugins_dir="${KOOPA_PREFIX}/dotfiles/shell/zsh/plugins"
 [[ -d "$plugins_dir" ]] || return 0
 
 if [[ -d "${plugins_dir}/zsh-autosuggestions" ]]

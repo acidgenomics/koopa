@@ -24,9 +24,9 @@ options(
 
 ## Variables ===================================================================
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
-## > Sys.setenv("KOOPA_HOME" = "/usr/local/koopa")
+## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
 
-koopaHome <- Sys.getenv("KOOPA_HOME")
+koopaHome <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(isTRUE(nzchar(koopaHome)))
 
 koopaEXE <- file.path(koopaHome, "bin", "koopa")
@@ -44,7 +44,7 @@ if (grepl("darwin", rOSString)) {
 }
 
 variablesFile <- file.path(
-    Sys.getenv("KOOPA_HOME"),
+    Sys.getenv("KOOPA_PREFIX"),
     "system",
     "include",
     "variables.txt"
@@ -149,7 +149,7 @@ currentMinorVersion <- function(name) {
 
 currentVersion <- function(name) {
     script <- file.path(
-        Sys.getenv("KOOPA_HOME"),
+        Sys.getenv("KOOPA_PREFIX"),
         "system",
         "include",
         "version",

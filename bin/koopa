@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-if [[ -z "${KOOPA_HOME:-}" ]]
+if [[ -z "${KOOPA_PREFIX:-}" ]]
 then
-    KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
         >/dev/null 2>&1 && pwd -P)"
     # shellcheck source=/dev/null
-    force=1 minimal=1 . "${KOOPA_HOME}/activate"
+    force=1 minimal=1 . "${KOOPA_PREFIX}/activate"
 fi
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 
 version="$(_koopa_variable koopa)"
 date="$(_koopa_variable koopa_date)"
-include_dir="${KOOPA_HOME}/system/include/koopa"
+include_dir="${KOOPA_PREFIX}/system/include/koopa"
 
 case "$1" in
     --help|-h)

@@ -4,11 +4,11 @@ set -Eeu -o pipefail
 # Check that all scripts support '--help' flag.
 # Updated 2019-11-06.
 
-KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
+KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
-export KOOPA_HOME
+export KOOPA_PREFIX
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_message "Checking manual files for '--help' support."
 
 # Put all 'man/' dirs into an array and loop.

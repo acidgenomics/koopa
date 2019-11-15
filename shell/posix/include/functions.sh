@@ -3,7 +3,7 @@
 
 
 
-# FIXME Rename _koopa_prefix and KOOPA_HOME to KOOPA_PREFIX
+# FIXME Rename _koopa_prefix and KOOPA_PREFIX to KOOPA_PREFIX
 # FIXME Define _koopa_venv_prefix function and use that internally.
 # FIXME Define _koopa_pyenv_prefix
 # FIXME Define _koopa_rbenv_prefix
@@ -968,7 +968,7 @@ _koopa_cellar_script() {
     # """
     local name
     name="$1"
-    file="${KOOPA_HOME}/system/include/cellar/${name}.sh"
+    file="${KOOPA_PREFIX}/system/include/cellar/${name}.sh"
     _koopa_assert_is_file "$file"
     echo "$name"
     echo "$file"
@@ -1181,7 +1181,7 @@ _koopa_current_version() {
     local name
     name="$1"
     local script
-    script="${KOOPA_HOME}/system/include/version/${name}.sh"
+    script="${KOOPA_PREFIX}/system/include/version/${name}.sh"
     if [ ! -x "$script" ]
     then
         _koopa_stop "'${name}' is not supported."
@@ -1777,36 +1777,36 @@ EOF
     case "$1" in
         # shell ----------------------------------------------------------------
         bash)
-            path="${KOOPA_HOME}/shell/bash/include/header.sh"
+            path="${KOOPA_PREFIX}/shell/bash/include/header.sh"
             ;;
         zsh)
-            path="${KOOPA_HOME}/shell/zsh/include/header.sh"
+            path="${KOOPA_PREFIX}/shell/zsh/include/header.sh"
             ;;
         # os -------------------------------------------------------------------
         darwin)
-            path="${KOOPA_HOME}/os/darwin/include/header.sh"
+            path="${KOOPA_PREFIX}/os/darwin/include/header.sh"
             ;;
         linux)
-            path="${KOOPA_HOME}/os/linux/include/header.sh"
+            path="${KOOPA_PREFIX}/os/linux/include/header.sh"
             ;;
             debian)
-                path="${KOOPA_HOME}/os/debian/include/header.sh"
+                path="${KOOPA_PREFIX}/os/debian/include/header.sh"
                 ;;
                 ubuntu)
-                    path="${KOOPA_HOME}/os/ubuntu/include/header.sh"
+                    path="${KOOPA_PREFIX}/os/ubuntu/include/header.sh"
                     ;;
             fedora)
-                path="${KOOPA_HOME}/os/fedora/include/header.sh"
+                path="${KOOPA_PREFIX}/os/fedora/include/header.sh"
                 ;;
                 amzn)
-                    path="${KOOPA_HOME}/os/amzn/include/header.sh"
+                    path="${KOOPA_PREFIX}/os/amzn/include/header.sh"
                     ;;
         # host -----------------------------------------------------------------
         aws)
-            path="${KOOPA_HOME}/host/aws/include/header.sh"
+            path="${KOOPA_PREFIX}/host/aws/include/header.sh"
             ;;
         azure)
-            path="${KOOPA_HOME}/host/azure/include/header.sh"
+            path="${KOOPA_PREFIX}/host/azure/include/header.sh"
             ;;
         *)
             _koopa_stop "'${1}' is not supported."
@@ -3019,7 +3019,7 @@ _koopa_update_ldconfig() {
     local os_type
     os_type="$(_koopa_os_type)"
     local conf_source
-    conf_source="${KOOPA_HOME}/os/${os_type}/etc/ld.so.conf.d"
+    conf_source="${KOOPA_PREFIX}/os/${os_type}/etc/ld.so.conf.d"
     if [ ! -d "$conf_source" ]
     then
         _koopa_stop "Source files missing: '${conf_source}'."
@@ -3051,7 +3051,7 @@ _koopa_update_profile() {
     [ -L "$symlink" ] && return 0
     _koopa_message "Adding '${symlink}'."
     sudo rm -fv "/etc/profile.d/koopa.sh"
-    sudo ln -fnsv "${KOOPA_HOME}/os/linux/etc/profile.d/zzz-koopa.sh" "$symlink"
+    sudo ln -fnsv "${KOOPA_PREFIX}/os/linux/etc/profile.d/zzz-koopa.sh" "$symlink"
     return 0
 }
 
@@ -3075,7 +3075,7 @@ _koopa_update_r_config() {
     local os_type
     os_type="$(_koopa_os_type)"
     local r_etc_source
-    r_etc_source="${KOOPA_HOME}/os/${os_type}/etc/R"
+    r_etc_source="${KOOPA_PREFIX}/os/${os_type}/etc/R"
     if [ ! -d "$r_etc_source" ]
     then
         _koopa_stop "Source files missing: '${r_etc_source}'."
@@ -3170,7 +3170,7 @@ _koopa_variable() {
     local file
     local match
     what="$1"
-    file="${KOOPA_HOME}/system/include/variables.txt"
+    file="${KOOPA_PREFIX}/system/include/variables.txt"
     match="$(grep -E "^${what}=" "$file" || echo "")"
     if [ -n "$match" ]
     then

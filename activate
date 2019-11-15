@@ -74,10 +74,10 @@ details:
 
 examples:
     # Default mode
-    . KOOPA_HOME/activate
+    . KOOPA_PREFIX/activate
 
     # Minimal mode
-    minimal=1 . KOOPA_HOME/activate
+    minimal=1 . KOOPA_PREFIX/activate
 
 note:
     POSIX script.
@@ -190,7 +190,7 @@ esac
 # Subshell                                                                  {{{2
 # ------------------------------------------------------------------------------
 
-if [ -n "${KOOPA_HOME:-}" ] && [ "$force" -eq 0 ]
+if [ -n "${KOOPA_PREFIX:-}" ] && [ "$force" -eq 0 ]
 then
     subshell=1
 else
@@ -320,14 +320,14 @@ fi
 
 # Note that running realpath on the file instead of the directory will properly
 # resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
-KOOPA_HOME="$(dirname "$(realpath "$file")")"
-export KOOPA_HOME
+KOOPA_PREFIX="$(dirname "$(realpath "$file")")"
+export KOOPA_PREFIX
 
 # Load POSIX functions.
-. "${KOOPA_HOME}/shell/posix/include/functions.sh"
+. "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
 # Get location of activation scripts.
-activate_dir="${KOOPA_HOME}/system/activate"
+activate_dir="${KOOPA_PREFIX}/system/activate"
 
 
 

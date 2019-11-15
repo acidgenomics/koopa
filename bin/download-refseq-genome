@@ -13,7 +13,7 @@ from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-sys.path.insert(0, os.getenv("KOOPA_HOME"))
+sys.path.insert(0, os.getenv("KOOPA_PREFIX"))
 from pykoopa.genome import refseq_version  # noqa
 from pykoopa.syntactic import kebab_case  # noqa
 from pykoopa.sys import download, paste_url  # noqa
