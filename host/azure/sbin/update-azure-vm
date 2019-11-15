@@ -46,21 +46,21 @@ fi
 _koopa_message "Updating '/etc/profile.d'."
 _koopa_update_profile
 sudo ln -fnsv \
-    "${KOOPA_HOME}/host/azure/etc/profile.d/constellation.sh" \
+    "${KOOPA_PREFIX}/host/azure/etc/profile.d/constellation.sh" \
     "/etc/profile.d/."
 
 _koopa_message "Updating '/etc/cron.d'."
 sudo rm -fv "/etc/cron.d/cpi-"*
 sudo rm -fv "/etc/cron.d/constellation"
 sudo cp -v \
-    "${KOOPA_HOME}/host/azure/etc/cron.d/constellation" \
+    "${KOOPA_PREFIX}/host/azure/etc/cron.d/constellation" \
     "/etc/cron.d/constellation"
 
 # Refer to 'https://github.com/acidgenomics/docker' for details.
 _koopa_message "Updating Docker config."
 sudo systemctl stop docker
 sudo ln -fnsv \
-    "${KOOPA_HOME}/os/fedora/etc/docker/"* \
+    "${KOOPA_PREFIX}/os/fedora/etc/docker/"* \
     "/etc/docker/."
 sudo rm -frv "/var/lib/docker"
 sudo mkdir -pv "/data00/var/lib/docker"
@@ -101,7 +101,7 @@ then
 fi
 
 # Ensure that shared bioinfo user has correct dotfiles.
-if [[ -d "${KOOPA_HOME}/dotfiles" ]]
+if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
 then
     _koopa_message "Updating bioinfo user dotfiles."
     sudo -u bioinfo -H "$SHELL" -c "\

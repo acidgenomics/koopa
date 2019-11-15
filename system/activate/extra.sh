@@ -115,7 +115,7 @@ alias rm='rm --dir --interactive="once" --preserve-root --verbose'
 if _koopa_is_installed dircolors
 then
     # This will set the 'LD_COLORS' environment variable.
-    dircolors_file="${KOOPA_HOME}/dotfiles/app/coreutils/dircolors"
+    dircolors_file="${KOOPA_PREFIX}/dotfiles/app/coreutils/dircolors"
     if [ -f "$dircolors_file" ]
     then
         eval "$(dircolors "$dircolors_file")"
