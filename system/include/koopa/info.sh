@@ -11,11 +11,17 @@ array=(
     ""
     "Configuration"
     "-------------"
-    "Home: $(_koopa_prefix)"
-    "Config: $(_koopa_config_dir)"
-    "Prefix: $(_koopa_make_prefix)"
+    "Koopa prefix: $(_koopa_prefix)"
+    "Config prefix: $(_koopa_config_prefix)"
+    "App prefix: $(_koopa_app_prefix)"
+    "Make prefix: $(_koopa_make_prefix)"
     ""
 )
+
+if _koopa_is_linux
+then
+    array+=("Cellar prefix: $(_koopa_cellar_prefix)")
+fi
 
 # Show neofetch info, if installed.
 if _koopa_is_installed neofetch
