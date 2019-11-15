@@ -49,15 +49,15 @@ then
     _koopa_stop "Failed to detect LLVM 7 via 'LLVM_CONFIG'."
 fi
 
-_koopa_message "LLVM: '${LLVM_CONFIG}'."
+name="r-reticulate"
+prefix="${XDG_DATA_HOME}/virtualenvs/${name}"
 
-env_name="r-reticulate"
-env_base_dir="${1:-"${HOME}/.virtualenvs"}"
-env_dir="${env_base_dir}/${env_name}"
+_koopa_message "Installing Python '${name}' environment at '${prefix}'."
+_koopa_note "LLVM: '${LLVM_CONFIG}'."
 
-rm -fr "$env_dir"
-python3 -m venv "$env_dir"
-py_exe="${env_dir}/bin/python3"
+rm -fr "$prefix"
+python3 -m venv "$prefix"
+py_exe="${prefix}/bin/python3"
 
 "$py_exe" -m pip install --upgrade pip
 "$py_exe" -m pip install Cython

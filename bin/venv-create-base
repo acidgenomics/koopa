@@ -8,17 +8,14 @@ source "${KOOPA_HOME}/shell/bash/include/header.sh"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed python3 python
 
-env_name="base"
-env_base_dir="${1:-"${HOME}/.virtualenvs"}"
-env_dir="${env_base_dir}/${env_name}"
+name="base"
+prefix="${XDG_DATA_HOME}/virtualenvs/${name}"
 
-rm -frv "$env_dir"
-python3 -m venv "$env_dir"
-py_exe="${env_dir}/bin/python3"
+_koopa_message "Installing Python '${name}' environment at '${prefix}'."
+
+rm -fr "$prefix"
+python3 -m venv "$prefix"
+py_exe="${prefix}/bin/python3"
 
 "$py_exe" -m pip install --upgrade pip
-# > "$py_exe" -m pip install black flake8 pyflakes pylint pytest pytest-flake8
 "$py_exe" -m pip list
-
-_koopa_message "Python '${env_name}' environment installed successfully."
-_koopa_note "Restart the shell."
