@@ -16,7 +16,7 @@
 # Dot files                                                                 {{{1
 # ==============================================================================
 
-dotfiles="$(_koopa_config_dir)/dotfiles"
+dotfiles="$(_koopa_config_prefix)/dotfiles"
 if [ -d "$dotfiles" ]
 then
     export DOTFILES="$dotfiles"

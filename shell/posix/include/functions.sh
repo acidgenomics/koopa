@@ -6,7 +6,7 @@
 # Prefixes                                                                  {{{1
 # ==============================================================================
 
-_koopa_prefix() {
+_koopa_prefix() {                                                         # {{{3
     # """
     # Koopa prefix (home).
     # Updated 2019-08-18.
@@ -14,7 +14,7 @@ _koopa_prefix() {
     echo "$KOOPA_PREFIX"
 }
 
-_koopa_app_prefix() {
+_koopa_app_prefix() {                                                     # {{{3
     # """
     # Custom application install prefix.
     # Updated 2019-11-14.
@@ -31,7 +31,32 @@ _koopa_app_prefix() {
     echo "$prefix"
 }
 
-_koopa_make_prefix() {
+_koopa_cellar_prefix() {                                                  # {{{3
+    # """
+    # Cellar prefix.
+    # Updated 2019-11-14.
+    #
+    # Ensure this points to a local mount (e.g. '/usr/local') instead of our
+    # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
+    # issues on some virtual machines.
+    # """
+    echo "$(_koopa_make_prefix)/cellar"
+}
+
+_koopa_config_prefix() {                                                  # {{{3
+    # """
+    # Local koopa config directory.
+    # Updated 2019-11-06.
+    # """
+    if [ -z "${XDG_CONFIG_HOME:-}" ]
+    then
+        # > _koopa_warning "'XDG_CONFIG_HOME' is unset."
+        XDG_CONFIG_HOME="${HOME}/.config"
+    fi
+    echo "${XDG_CONFIG_HOME}/koopa"
+}
+
+_koopa_make_prefix() {                                                    # {{{3
     # """
     # Return the installation prefix to use.
     # Updated 2019-09-27.
@@ -46,10 +71,7 @@ _koopa_make_prefix() {
     echo "$prefix"
 }
 
-# Applications                                                              {{{2
-# ------------------------------------------------------------------------------
-
-_koopa_aspera_prefix() {
+_koopa_aspera_prefix() {                                                  # {{{3
     # """
     # Aspera Connect prefix.
     # Updated 2019-11-15.
@@ -57,7 +79,7 @@ _koopa_aspera_prefix() {
     echo "${HOME}/.aspera/connect"
 }
 
-_koopa_autojump_prefix() {
+_koopa_autojump_prefix() {                                                # {{{3
     # """
     # autojump prefix.
     # Updated 2019-11-15.
@@ -65,7 +87,7 @@ _koopa_autojump_prefix() {
     echo "${HOME}/.autojump"
 }
 
-_koopa_bcbio_prefix() {
+_koopa_bcbio_prefix() {                                                   # {{{3
     # """
     # bcbio-nextgen prefix.
     # Updated 2019-11-15.
@@ -84,7 +106,7 @@ _koopa_bcbio_prefix() {
     echo "$prefix"
 }
 
-_koopa_ensembl_perl_api_prefix() {
+_koopa_ensembl_perl_api_prefix() {                                        # {{{3
     # """
     # Ensembl Perl API prefix.
     # Updated 2019-11-15.
@@ -93,7 +115,7 @@ _koopa_ensembl_perl_api_prefix() {
     echo "$prefix"
 }
 
-_koopa_perlbrew_prefix() {
+_koopa_perlbrew_prefix() {                                                # {{{3
     # """
     # Perlbrew prefix.
     # Updated 2019-11-15.
@@ -103,7 +125,7 @@ _koopa_perlbrew_prefix() {
     echo "$prefix"
 }
 
-_koopa_pyenv_prefix() {
+_koopa_pyenv_prefix() {                                                   # {{{3
     # """
     # pyenv prefix.
     # Updated 2019-11-15.
@@ -111,7 +133,7 @@ _koopa_pyenv_prefix() {
     echo "${XDG_DATA_HOME}/pyenv"
 }
 
-_koopa_rbenv_prefix() {
+_koopa_rbenv_prefix() {                                                   # {{{3
     # """
     # rbenv prefix.
     # Updated 2019-11-15.
@@ -119,7 +141,7 @@ _koopa_rbenv_prefix() {
     echo "${XDG_DATA_HOME}/rbenv"
 }
 
-_koopa_rust_prefix() {
+_koopa_rust_prefix() {                                                    # {{{3
     # """
     # Rust prefix.
     # Updated 2019-11-15.
@@ -127,7 +149,7 @@ _koopa_rust_prefix() {
     echo "${HOME}/.cargo"
 }
 
-_koopa_venv_prefix() {
+_koopa_venv_prefix() {                                                    # {{{3
     # """
     # Python venv prefix.
     # Updated 2019-11-15.
@@ -140,7 +162,7 @@ _koopa_venv_prefix() {
 # Activation                                                                {{{1
 # ==============================================================================
 
-_koopa_activate_prefix() {
+_koopa_activate_prefix() {                                                # {{{3
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
     # Updated 2019-11-10.
@@ -154,7 +176,7 @@ _koopa_activate_prefix() {
     return 0
 }
 
-_koopa_activate_aspera() {
+_koopa_activate_aspera() {                                                # {{{3
     # """
     # Include Aspera Connect binaries in PATH, if defined.
     # Updated 2019-11-15.
@@ -165,7 +187,7 @@ _koopa_activate_aspera() {
     _koopa_activate_prefix "$prefix"
 }
 
-_koopa_activate_autojump() {
+_koopa_activate_autojump() {                                              # {{{3
     # """
     # Activate autojump.
     # Updated 2019-11-15.
@@ -191,7 +213,7 @@ _koopa_activate_autojump() {
     return 0
 }
 
-_koopa_activate_bcbio() {
+_koopa_activate_bcbio() {                                                 # {{{3
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
     # Updated 2019-11-15.
@@ -212,7 +234,7 @@ _koopa_activate_bcbio() {
     return 0
 }
 
-_koopa_activate_conda() {
+_koopa_activate_conda() {                                                 # {{{3
     # """
     # Activate conda.
     # Updated 2019-11-14.
@@ -245,7 +267,7 @@ _koopa_activate_conda() {
     return 0
 }
 
-_koopa_activate_ensembl_perl_api() {
+_koopa_activate_ensembl_perl_api() {                                      # {{{3
     # """
     # Activate Ensembl Perl API.
     # Updated 2019-11-14.
@@ -266,7 +288,7 @@ _koopa_activate_ensembl_perl_api() {
     return 0
 }
 
-_koopa_activate_llvm() {
+_koopa_activate_llvm() {                                                  # {{{3
     # """
     # Activate LLVM config.
     # Updated 2019-11-13.
@@ -290,7 +312,7 @@ _koopa_activate_llvm() {
     return 0
 }
 
-_koopa_activate_perlbrew() {
+_koopa_activate_perlbrew() {                                              # {{{3
     # """
     # Activate Perlbrew.
     # Updated 2019-11-15.
@@ -317,7 +339,7 @@ _koopa_activate_perlbrew() {
     return 0
 }
 
-_koopa_activate_pyenv() {
+_koopa_activate_pyenv() {                                                 # {{{3
     # """
     # Activate Python version manager (pyenv).
     # Updated 2019-11-15.
@@ -341,7 +363,7 @@ _koopa_activate_pyenv() {
     return 0
 }
 
-_koopa_activate_rbenv() {
+_koopa_activate_rbenv() {                                                 # {{{3
     # """
     # Activate Ruby version manager (rbenv).
     # Updated 2019-11-15.
@@ -371,7 +393,7 @@ _koopa_activate_rbenv() {
     return 0
 }
 
-_koopa_activate_rust() {
+_koopa_activate_rust() {                                                  # {{{3
     # """
     # Activate Rust programming language.
     # Updated 2019-10-29.
@@ -392,7 +414,7 @@ _koopa_activate_rust() {
     return 0
 }
 
-_koopa_activate_secrets() {
+_koopa_activate_secrets() {                                               # {{{3
     # """
     # Source secrets file.
     # Updated 2019-10-29.
@@ -409,7 +431,7 @@ _koopa_activate_secrets() {
     return 0
 }
 
-_koopa_activate_ssh_key() {
+_koopa_activate_ssh_key() {                                               # {{{3
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
     # Updated 2019-10-29.
@@ -433,7 +455,7 @@ _koopa_activate_ssh_key() {
     return 0
 }
 
-_koopa_activate_venv() {
+_koopa_activate_venv() {                                                  # {{{3
     # """
     # Activate Python default virtual environment.
     # Updated 2019-11-15.
@@ -463,6 +485,446 @@ _koopa_activate_venv() {
     # shellcheck source=/dev/null
     . "$script"
     return 0
+}
+
+
+
+# Messages                                                                  {{{1
+# ==============================================================================
+
+_koopa_echo_ansi() {                                                      # {{{3
+    # """
+    # Print a colored line in console.
+    # Updated 2019-10-23.
+    #
+    # Currently using ANSI escape codes.
+    # This is the classic 8 color terminal approach.
+    #
+    # - '0;': normal
+    # - '1;': bright or bold
+    #
+    # (taken from Travis CI config)
+    # - clear=\033[0K
+    # - nocolor=\033[0m
+    #
+    # echo command requires '-e' flag to allow backslash escapes.
+    #
+    # See also:
+    # - https://en.wikipedia.org/wiki/ANSI_escape_code
+    # - https://stackoverflow.com/questions/5947742
+    # - https://stackoverflow.com/questions/15736223
+    # - https://bixense.com/clicolors/
+    # """
+    local color escape nocolor string
+    escape="$1"
+    string="$2"
+    nocolor="\033[0m"
+    color="\033[${escape}m"
+    # > printf "%b%s%b\n" "$color" "$nocolor" "$string"
+    echo -e "${color}${string}${nocolor}"
+}
+
+_koopa_echo_black() {                                                     # {{{3
+    _koopa_echo_ansi "0;30" "$1"
+}
+
+_koopa_echo_black_bold() {                                                # {{{3
+    _koopa_echo_ansi "1;30" "$1"
+}
+
+_koopa_echo_blue() {                                                      # {{{3
+    _koopa_echo_ansi "0;34" "$1"
+}
+
+_koopa_echo_blue_bold() {                                                 # {{{3
+    _koopa_echo_ansi "1;34" "$1"
+}
+
+_koopa_echo_cyan() {                                                      # {{{3
+    _koopa_echo_ansi "0;36" "$1"
+}
+
+_koopa_echo_cyan_bold() {                                                 # {{{3
+    _koopa_echo_ansi "1;36" "$1"
+}
+
+_koopa_echo_green() {                                                     # {{{3
+    _koopa_echo_ansi "0;32" "$1"
+}
+
+_koopa_echo_green_bold() {                                                # {{{3
+    _koopa_echo_ansi "1;32" "$1"
+}
+
+_koopa_echo_magenta() {                                                   # {{{3
+    _koopa_echo_ansi "0;35" "$1"
+}
+
+_koopa_echo_magenta_bold() {                                              # {{{3
+    _koopa_echo_ansi "1;35" "$1"
+}
+
+_koopa_echo_red() {                                                       # {{{3
+    _koopa_echo_ansi "0;31" "$1"
+}
+
+_koopa_echo_red_bold() {                                                  # {{{3
+    _koopa_echo_ansi "1;31" "$1"
+}
+
+_koopa_echo_yellow() {                                                    # {{{3
+    _koopa_echo_ansi "0;33" "$1"
+}
+
+_koopa_echo_yellow_bold() {                                               # {{{3
+    _koopa_echo_ansi "1;33" "$1"
+}
+
+_koopa_echo_white() {                                                     # {{{3
+    _koopa_echo_ansi "0;37" "$1"
+}
+
+_koopa_echo_white_bold() {                                                # {{{3
+    _koopa_echo_ansi "1;37" "$1"
+}
+
+_koopa_ensure_newline_at_end_of_file() {                                  # {{{3
+    # """
+    # Ensure output CSV contains trailing line break.
+    # Updated 2019-10-11.
+    #
+    # Otherwise 'readr::read_csv()' will skip the last line in R.
+    # https://unix.stackexchange.com/questions/31947
+    #
+    # Slower alternatives:
+    # vi -ecwq file
+    # paste file 1<> file
+    # ed -s file <<< w
+    # sed -i -e '$a\' file
+    # """
+    [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
+}
+
+
+
+
+# Path manipulation                                                         {{{1
+# ==============================================================================
+
+_koopa_add_to_path_start() {                                              # {{{3
+    # """
+    # Add directory to start of PATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "$path" | grep -q "$1" && return 0
+    export PATH="${1}:${PATH:-}"
+}
+
+_koopa_add_to_path_end() {                                                # {{{3
+    # """
+    # Add directory to end of PATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${PATH:-}" | grep -q "$1" && return 0
+    export PATH="${PATH:-}:${1}"
+}
+
+_koopa_force_add_to_path_end() {                                          # {{{3
+    _koopa_remove_from_path "$1"
+    _koopa_add_to_path_end "$1"
+}
+
+_koopa_force_add_to_path_start() {                                        # {{{3
+    _koopa_remove_from_path "$1"
+    _koopa_add_to_path_start "$1"
+}
+
+_koopa_remove_from_path() {                                               # {{{3
+    # """
+    # Remove directory from PATH.
+    # Updated 2019-10-14.
+    #
+    # Look into an improved POSIX method here.
+    # This works for bash and ksh.
+    # Note that this won't work on the first item in PATH.
+    #
+    # Alternate approach using sed:
+    # > echo "$PATH" | sed "s|:${dir}||g"
+    # """
+    export PATH="${PATH//:$1/}"
+}
+
+_koopa_add_to_fpath_start() {                                             # {{{3
+    # """
+    # Add directory to start of FPATH.
+    # Updated 2019-11-11.
+    #
+    # Currently only useful for ZSH activation.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${FPATH:-}" | grep -q "$1" && return 0
+    export FPATH="${1}:${FPATH:-}"
+}
+
+_koopa_add_to_fpath_end() {                                               # {{{3
+    # """
+    # Add directory to end of FPATH.
+    # Updated 2019-11-11.
+    #
+    # Currently only useful for ZSH activation.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${FPATH:-}" | grep -q "$1" && return 0
+    export FPATH="${FPATH:-}:${1}"
+}
+
+_koopa_force_add_to_fpath_start() {                                       # {{{3
+    _koopa_remove_from_fpath "$1"
+    _koopa_add_to_fpath_start "$1"
+}
+
+_koopa_force_add_to_fpath_end() {                                         # {{{3
+    _koopa_remove_from_fpath "$1"
+    _koopa_add_to_fpath_end "$1"
+}
+
+_koopa_remove_from_fpath() {                                              # {{{3
+    # """
+    # Remove directory from FPATH.
+    # Updated 2019-10-27.
+    # """
+    export FPATH="${FPATH//:$1/}"
+}
+
+_koopa_add_to_manpath_start() {                                           # {{{3
+    # """
+    # Add directory to start of MANPATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${MANPATH:-}" | grep -q "$1" && return 0
+    export MANPATH="${1}:${MANPATH:-}"
+}
+
+_koopa_add_to_manpath_end() {                                             # {{{3
+    # """
+    # Add directory to start of MANPATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${MANPATH:-}" | grep -q "$1" && return 0
+    export MANPATH="${MANPATH:-}:${1}"
+}
+
+_koopa_force_add_to_manpath_start() {                                     # {{{3
+    _koopa_remove_from_manpath "$1"
+    _koopa_add_to_manpath_start "$1"
+}
+
+_koopa_force_add_to_manpath_end() {                                       # {{{3
+    _koopa_remove_from_manpath "$1"
+    _koopa_add_to_manpath_end "$1"
+}
+
+_koopa_remove_from_manpath() {                                            # {{{3
+    # """
+    # Remove directory from MANPATH.
+    # Updated 2019-10-14.
+    # """
+    export MANPATH="${MANPATH//:$1/}"
+}
+
+_koopa_add_conda_env_to_path() {                                          # {{{3
+    # """
+    # Add conda environment to PATH.
+    # Updated 2019-10-21.
+    #
+    # Consider warning if the environment is missing.
+    # """
+    _koopa_is_installed conda || return 0
+    [ -n "${CONDA_PREFIX:-}" ] || return 0
+    local bin_dir
+    bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
+    [ -d "$bin_dir" ] || return 0
+    _koopa_add_to_path_start "$bin_dir"
+}
+
+_koopa_add_config_link() {                                                # {{{3
+    # """
+    # Add a symlink into the koopa configuration directory.
+    # Updated 2019-09-23.
+    #
+    # Examples:
+    # _koopa_add_config_link vimrc
+    # _koopa_add_config_link vim
+    # """
+    local config_dir
+    config_dir="$(_koopa_config_prefix)"
+    local source_file
+    source_file="$1"
+    _koopa_assert_is_existing "$source_file"
+    source_file="$(realpath "$source_file")"
+    local dest_name
+    dest_name="$2"
+    local dest_file
+    dest_file="${config_dir}/${dest_name}"
+    rm -fv "$dest_file"
+    ln -fnsv "$source_file" "$dest_file"
+}
+
+
+
+# File names                                                                {{{1
+# ==============================================================================
+
+_koopa_basename_sans_ext() {                                              # {{{3
+    # """
+    # Extract the file basename without extension.
+    # Updated 2019-10-08.
+    #
+    # Examples:
+    # _koopa_basename_sans_ext "hello-world.txt"
+    # ## hello-world
+    #
+    # _koopa_basename_sans_ext "hello-world.tar.gz"
+    # ## hello-world.tar
+    #
+    # See also: _koopa_file_ext
+    # """
+    local x
+    x="$1"
+    if ! _koopa_has_file_ext "$x"
+    then
+        echo "$x"
+        return 0
+    fi
+    x="$(basename "$x")"
+    x="${x%.*}"
+    echo "$x"
+}
+
+_koopa_basename_sans_ext2() {                                             # {{{3
+    # """
+    # Extract the file basename prior to any dots in file name.
+    # Updated 2019-10-08.
+    #
+    # Examples:
+    # _koopa_basename_sans_ext2 "hello-world.tar.gz"
+    # ## hello-world
+    #
+    # See also: _koopa_file_ext2
+    # """
+    local x
+    x="$1"
+    if ! _koopa_has_file_ext "$x"
+    then
+        echo "$x"
+        return 0
+    fi
+    basename "$x" | cut -d '.' -f 1
+}
+
+
+
+# Environments                                                              {{{1
+# ==============================================================================
+
+# Conda                                                                     {{{2
+# ------------------------------------------------------------------------------
+
+_koopa_conda_default_envs_prefix() {                                      # {{{3
+    # """
+    # Locate the directory where conda environments are installed by default.
+    # Updated 2019-10-26.
+    # """
+    _koopa_assert_is_installed conda
+    conda info \
+        | grep "envs directories" \
+        | cut -d ':' -f 2 \
+        | tr -d ' '
+}
+
+_koopa_conda_env() {                                                      # {{{3
+    # """
+    # Conda environment name.
+    # Updated 2019-10-13.
+    #
+    # Alternate approach:
+    # > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
+    # > export CONDA_PROMPT_MODIFIER
+    # > conda="$CONDA_PROMPT_MODIFIER"
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/42481726
+    # """
+    echo "${CONDA_DEFAULT_ENV:-}"
+}
+
+_koopa_conda_env_list() {                                                 # {{{3
+    # """
+    # Return a list of conda environments in JSON format.
+    # Updated 2019-06-27.
+    # """
+    _koopa_is_installed conda || return 1
+    conda env list --json
+}
+
+_koopa_conda_env_prefix() {                                               # {{{3
+    # """
+    # Return prefix for a specified conda environment.
+    # Updated 2019-10-27.
+    #
+    # Note that we're allowing env_list passthrough as second positional
+    # variable, to speed up loading upon activation.
+    #
+    # Example: _koopa_conda_env_prefix "deeptools"
+    # """
+    _koopa_is_installed conda || return 1
+
+    local env_name
+    env_name="$1"
+    [ -n "$env_name" ] || return 1
+
+    local env_list
+    env_list="${2:-}"
+    if [ -z "$env_list" ]
+    then
+        env_list="$(_koopa_conda_env_list)"
+    fi
+    env_list="$(echo "$env_list" | grep "$env_name")"
+    if [ -z "$env_list" ]
+    then
+        _koopa_stop "Failed to detect prefix for '${env_name}'."
+    fi
+
+    local path
+    path="$( \
+        echo "$env_list" \
+        | grep "/envs/${env_name}" \
+        | head -n 1 \
+    )"
+    echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
+}
+
+# Python venv                                                               {{{2
+# ------------------------------------------------------------------------------
+
+_koopa_venv() {
+    # """
+    # Python virtual environment name.
+    # Updated 2019-11-15.
+    # """
+    local env
+    if [ -n "${VIRTUAL_ENV:-}" ]
+    then
+        # Strip out the path and just leave the env name.
+        env="${VIRTUAL_ENV##*/}"
+    else
+        env=
+    fi
+    echo "$env"
 }
 
 
@@ -841,220 +1303,6 @@ _koopa_assert_is_matching_regex() {
     return 0
 }
 
-
-
-
-
-
-
-
-
-
-# A                                                                         {{{1
-# ==============================================================================
-
-_koopa_add_conda_env_to_path() {
-    # """
-    # Add conda environment to PATH.
-    # Updated 2019-10-21.
-    #
-    # Consider warning if the environment is missing.
-    # """
-    _koopa_is_installed conda || return 0
-    [ -n "${CONDA_PREFIX:-}" ] || return 0
-    local bin_dir
-    bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
-    [ -d "$bin_dir" ] || return 0
-    _koopa_add_to_path_start "$bin_dir"
-}
-
-_koopa_add_config_link() {
-    # """
-    # Add a symlink into the koopa configuration directory.
-    # Updated 2019-09-23.
-    #
-    # Examples:
-    # _koopa_add_config_link vimrc
-    # _koopa_add_config_link vim
-    # """
-    local config_dir
-    config_dir="$(_koopa_config_dir)"
-    local source_file
-    source_file="$1"
-    _koopa_assert_is_existing "$source_file"
-    source_file="$(realpath "$source_file")"
-    local dest_name
-    dest_name="$2"
-    local dest_file
-    dest_file="${config_dir}/${dest_name}"
-    rm -fv "$dest_file"
-    ln -fnsv "$source_file" "$dest_file"
-}
-
-_koopa_add_to_fpath_end() {
-    # """
-    # Add directory to end of FPATH.
-    # Updated 2019-11-11.
-    #
-    # Currently only useful for ZSH activation.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${FPATH:-}" | grep -q "$1" && return 0
-    export FPATH="${FPATH:-}:${1}"
-}
-
-_koopa_add_to_fpath_start() {
-    # """
-    # Add directory to start of FPATH.
-    # Updated 2019-11-11.
-    #
-    # Currently only useful for ZSH activation.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${FPATH:-}" | grep -q "$1" && return 0
-    export FPATH="${1}:${FPATH:-}"
-}
-
-_koopa_add_to_manpath_end() {
-    # """
-    # Add directory to start of MANPATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${MANPATH:-}" | grep -q "$1" && return 0
-    export MANPATH="${MANPATH:-}:${1}"
-}
-
-_koopa_add_to_manpath_start() {
-    # """
-    # Add directory to start of MANPATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${MANPATH:-}" | grep -q "$1" && return 0
-    export MANPATH="${1}:${MANPATH:-}"
-}
-
-_koopa_add_to_path_end() {
-    # """
-    # Add directory to end of PATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${PATH:-}" | grep -q "$1" && return 0
-    export PATH="${PATH:-}:${1}"
-}
-
-_koopa_add_to_path_start() {
-    # """
-    # Add directory to start of PATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "$path" | grep -q "$1" && return 0
-    export PATH="${1}:${PATH:-}"
-}
-
-_koopa_array_to_r_vector() {
-    # """
-    # Convert a bash array to an R vector string.
-    # Updated 2019-09-25.
-    #
-    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
-    # """
-    local x
-    x="$(printf '"%s", ' "$@")"
-    x="$(_koopa_strip_right "$x" ", ")"
-    printf "c(%s)\n" "$x"
-}
-
-
-
-
-# B                                                                         {{{1
-# ==============================================================================
-
-_koopa_basename_sans_ext() {
-    # """
-    # Extract the file basename without extension.
-    # Updated 2019-10-08.
-    #
-    # Examples:
-    # _koopa_basename_sans_ext "hello-world.txt"
-    # ## hello-world
-    #
-    # _koopa_basename_sans_ext "hello-world.tar.gz"
-    # ## hello-world.tar
-    #
-    # See also: _koopa_file_ext
-    # """
-    local x
-    x="$1"
-    if ! _koopa_has_file_ext "$x"
-    then
-        echo "$x"
-        return 0
-    fi
-    x="$(basename "$x")"
-    x="${x%.*}"
-    echo "$x"
-}
-
-_koopa_basename_sans_ext2() {
-    # """
-    # Extract the file basename prior to any dots in file name.
-    # Updated 2019-10-08.
-    #
-    # Examples:
-    # _koopa_basename_sans_ext2 "hello-world.tar.gz"
-    # ## hello-world
-    #
-    # See also: _koopa_file_ext2
-    # """
-    local x
-    x="$1"
-    if ! _koopa_has_file_ext "$x"
-    then
-        echo "$x"
-        return 0
-    fi
-    basename "$x" | cut -d '.' -f 1
-}
-
-
-
-# C                                                                         {{{1
-# ==============================================================================
-
-_koopa_cellar_prefix() {
-    # """
-    # Cellar prefix.
-    # Updated 2019-11-14.
-    #
-    # Ensure this points to a local mount (e.g. '/usr/local') instead of our
-    # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
-    # issues on some virtual machines.
-    # """
-    echo "$(_koopa_make_prefix)/cellar"
-}
-
-_koopa_cellar_script() {
-    # """
-    # Return source path for a koopa cellar build script.
-    # Updated 2019-11-11.
-    # """
-    local name
-    name="$1"
-    file="${KOOPA_PREFIX}/system/include/cellar/${name}.sh"
-    _koopa_assert_is_file "$file"
-    echo "$name"
-    echo "$file"
-    # > _koopa_deactivate_envs
-    _koopa_assert_has_no_envs
-    # shellcheck source=/dev/null
-    . "$file"
-}
-
 _koopa_check_azure() {
     # """
     # Check Azure VM integrity.
@@ -1163,91 +1411,45 @@ _koopa_check_user() {
     return 0
 }
 
-_koopa_conda_default_envs_dir() {
+
+
+# Other                                                                     {{{1
+# ==============================================================================
+
+# A                                                                         {{{2
+# ------------------------------------------------------------------------------
+
+_koopa_array_to_r_vector() {
     # """
-    # Locate the directory where conda environments are installed by default.
-    # Updated 2019-10-26.
+    # Convert a bash array to an R vector string.
+    # Updated 2019-09-25.
+    #
+    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
     # """
-    _koopa_assert_is_installed conda
-    conda info \
-        | grep "envs directories" \
-        | cut -d ':' -f 2 \
-        | tr -d ' '
+    local x
+    x="$(printf '"%s", ' "$@")"
+    x="$(_koopa_strip_right "$x" ", ")"
+    printf "c(%s)\n" "$x"
 }
 
-_koopa_conda_env() {
-    # """
-    # Conda environment name.
-    # Updated 2019-10-13.
-    #
-    # Alternate approach:
-    # > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
-    # > export CONDA_PROMPT_MODIFIER
-    # > conda="$CONDA_PROMPT_MODIFIER"
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/42481726
-    # """
-    echo "${CONDA_DEFAULT_ENV:-}"
-}
+# C                                                                         {{{2
+# ------------------------------------------------------------------------------
 
-_koopa_conda_env_list() {
+_koopa_cellar_script() {
     # """
-    # Return a list of conda environments in JSON format.
-    # Updated 2019-06-27.
+    # Return source path for a koopa cellar build script.
+    # Updated 2019-11-11.
     # """
-    _koopa_is_installed conda || return 1
-    conda env list --json
-}
-
-_koopa_conda_env_prefix() {
-    # """
-    # Return prefix for a specified conda environment.
-    # Updated 2019-10-27.
-    #
-    # Note that we're allowing env_list passthrough as second positional
-    # variable, to speed up loading upon activation.
-    #
-    # Example: _koopa_conda_env_prefix "deeptools"
-    # """
-    _koopa_is_installed conda || return 1
-
-    local env_name
-    env_name="$1"
-    [ -n "$env_name" ] || return 1
-
-    local env_list
-    env_list="${2:-}"
-    if [ -z "$env_list" ]
-    then
-        env_list="$(_koopa_conda_env_list)"
-    fi
-    env_list="$(echo "$env_list" | grep "$env_name")"
-    if [ -z "$env_list" ]
-    then
-        _koopa_stop "Failed to detect prefix for '${env_name}'."
-    fi
-
-    local path
-    path="$( \
-        echo "$env_list" \
-        | grep "/envs/${env_name}" \
-        | head -n 1 \
-    )"
-    echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
-}
-
-_koopa_config_dir() {
-    # """
-    # Local koopa config directory.
-    # Updated 2019-11-06.
-    # """
-    if [ -z "${XDG_CONFIG_HOME:-}" ]
-    then
-        # > _koopa_warning "'XDG_CONFIG_HOME' is unset."
-        XDG_CONFIG_HOME="${HOME}/.config"
-    fi
-    echo "${XDG_CONFIG_HOME}/koopa"
+    local name
+    name="$1"
+    file="${KOOPA_PREFIX}/system/include/cellar/${name}.sh"
+    _koopa_assert_is_file "$file"
+    echo "$name"
+    echo "$file"
+    # > _koopa_deactivate_envs
+    _koopa_assert_has_no_envs
+    # shellcheck source=/dev/null
+    . "$file"
 }
 
 _koopa_current_version() {
@@ -1266,10 +1468,8 @@ _koopa_current_version() {
     "$script"
 }
 
-
-
-# D                                                                         {{{1
-# ==============================================================================
+# D                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_deactivate_conda() {
     # """
@@ -1368,7 +1568,7 @@ _koopa_dotfiles_config_link() {
     # Note that we're not checking for existence here, which is handled inside
     # 'link-dotfile' script automatically instead.
     # """
-    echo "$(_koopa_config_dir)/dotfiles"
+    echo "$(_koopa_config_prefix)/dotfiles"
 }
 
 _koopa_dotfiles_private_config_link() {
@@ -1420,123 +1620,8 @@ _koopa_download() {
     curl -L -o "$file" "$url"
 }
 
-
-
-# E                                                                         {{{1
-# ==============================================================================
-
-_koopa_echo_ansi() {
-    # """
-    # Print a colored line in console.
-    # Updated 2019-10-23.
-    #
-    # Currently using ANSI escape codes.
-    # This is the classic 8 color terminal approach.
-    #
-    # - '0;': normal
-    # - '1;': bright or bold
-    #
-    # (taken from Travis CI config)
-    # - clear=\033[0K
-    # - nocolor=\033[0m
-    #
-    # echo command requires '-e' flag to allow backslash escapes.
-    #
-    # See also:
-    # - https://en.wikipedia.org/wiki/ANSI_escape_code
-    # - https://stackoverflow.com/questions/5947742
-    # - https://stackoverflow.com/questions/15736223
-    # - https://bixense.com/clicolors/
-    # """
-    local color escape nocolor string
-    escape="$1"
-    string="$2"
-    nocolor="\033[0m"
-    color="\033[${escape}m"
-    # > printf "%b%s%b\n" "$color" "$nocolor" "$string"
-    echo -e "${color}${string}${nocolor}"
-}
-
-_koopa_echo_black() {
-    _koopa_echo_ansi "0;30" "$1"
-}
-
-_koopa_echo_black_bold() {
-    _koopa_echo_ansi "1;30" "$1"
-}
-
-_koopa_echo_blue() {
-    _koopa_echo_ansi "0;34" "$1"
-}
-
-_koopa_echo_blue_bold() {
-    _koopa_echo_ansi "1;34" "$1"
-}
-
-_koopa_echo_cyan() {
-    _koopa_echo_ansi "0;36" "$1"
-}
-
-_koopa_echo_cyan_bold() {
-    _koopa_echo_ansi "1;36" "$1"
-}
-
-_koopa_echo_green() {
-    _koopa_echo_ansi "0;32" "$1"
-}
-
-_koopa_echo_green_bold() {
-    _koopa_echo_ansi "1;32" "$1"
-}
-
-_koopa_echo_magenta() {
-    _koopa_echo_ansi "0;35" "$1"
-}
-
-_koopa_echo_magenta_bold() {
-    _koopa_echo_ansi "1;35" "$1"
-}
-
-_koopa_echo_red() {
-    _koopa_echo_ansi "0;31" "$1"
-}
-
-_koopa_echo_red_bold() {
-    _koopa_echo_ansi "1;31" "$1"
-}
-
-_koopa_echo_yellow() {
-    _koopa_echo_ansi "0;33" "$1"
-}
-
-_koopa_echo_yellow_bold() {
-    _koopa_echo_ansi "1;33" "$1"
-}
-
-_koopa_echo_white() {
-    _koopa_echo_ansi "0;37" "$1"
-}
-
-_koopa_echo_white_bold() {
-    _koopa_echo_ansi "1;37" "$1"
-}
-
-_koopa_ensure_newline_at_end_of_file() {
-    # """
-    # Ensure output CSV contains trailing line break.
-    # Updated 2019-10-11.
-    #
-    # Otherwise 'readr::read_csv()' will skip the last line in R.
-    # https://unix.stackexchange.com/questions/31947
-    #
-    # Benchmarks:
-    # vi -ecwq file                                                    2.544 sec
-    # paste file 1<> file                                             31.943 sec
-    # ed -s file <<< w                                             1m  4.422 sec
-    # sed -i -e '$a\' file                                         3m 20.931 sec
-    # """
-    [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
-}
+# E                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_extract() {
     # """
@@ -1598,10 +1683,8 @@ _koopa_extract() {
    esac
 }
 
-
-
-# F                                                                         {{{1
-# ==============================================================================
+# F                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_file_ext() {
     # """
@@ -1672,41 +1755,8 @@ _koopa_find_text() {
     find . -name "$2" -exec grep -il "$1" {} \;;
 }
 
-_koopa_force_add_to_fpath_end() {
-    _koopa_remove_from_fpath "$1"
-    _koopa_add_to_fpath_end "$1"
-}
-
-_koopa_force_add_to_fpath_start() {
-    _koopa_remove_from_fpath "$1"
-    _koopa_add_to_fpath_start "$1"
-}
-
-_koopa_force_add_to_manpath_end() {
-    _koopa_remove_from_manpath "$1"
-    _koopa_add_to_manpath_end "$1"
-}
-
-_koopa_force_add_to_manpath_start() {
-    _koopa_remove_from_manpath "$1"
-    _koopa_add_to_manpath_start "$1"
-}
-
-_koopa_force_add_to_path_end() {
-    _koopa_remove_from_path "$1"
-    _koopa_add_to_path_end "$1"
-}
-
-_koopa_force_add_to_path_start() {
-    _koopa_remove_from_path "$1"
-    _koopa_add_to_path_start "$1"
-}
-
-
-
-
-# G                                                                         {{{1
-# ==============================================================================
+# G                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_git_branch() {
     # """
@@ -1779,10 +1829,8 @@ _koopa_gsub() {
     echo "$1" | sed -E "s/${2}/${3}/g"
 }
 
-
-
-# H                                                                         {{{1
-# ==============================================================================
+# H                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_has_file_ext() {
     # """
@@ -1928,10 +1976,8 @@ _koopa_host_type() {
     echo "$name"
 }
 
-
-
-# I                                                                         {{{1
-# ==============================================================================
+# I                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_info_box() {
     # """
@@ -1961,14 +2007,14 @@ _koopa_install_mike() {
     install-dotfiles --mike
     # docker
     source_repo="git@github.com:acidgenomics/docker.git"
-    target_dir="$(_koopa_config_dir)/docker"
+    target_dir="$(_koopa_config_prefix)/docker"
     if [[ ! -d "$target_dir" ]]
     then
         git clone --recursive "$source_repo" "$target_dir"
     fi
     # scripts-private
     source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
-    target_dir="$(_koopa_config_dir)/scripts-private"
+    target_dir="$(_koopa_config_prefix)/scripts-private"
     if [[ ! -d "$target_dir" ]]
     then
         git clone --recursive "$source_repo"  "$target_dir"
@@ -2212,10 +2258,8 @@ _koopa_is_venv_active() {
     [ -n "${VIRTUAL_ENV:-}" ]
 }
 
-
-
-# J                                                                         {{{1
-# ==============================================================================
+# J                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_java_home() {
     # """
@@ -2249,10 +2293,8 @@ _koopa_java_home() {
     echo "$home"
 }
 
-
-
-# L                                                                         {{{1
-# ==============================================================================
+# L                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_line_count() {
     # """
@@ -2319,10 +2361,8 @@ _koopa_list_path_priority() {
     tr ':' '\n' <<< "${1:-$PATH}"
 }
 
-
-
-# M                                                                         {{{1
-# ==============================================================================
+# M                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_macos_app_version() {
     # """
@@ -2401,10 +2441,8 @@ _koopa_missing_arg() {
     _koopa_stop "Missing required argument."
 }
 
-
-
-# N                                                                         {{{1
-# ==============================================================================
+# N                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_note() {
     # """
@@ -2414,10 +2452,8 @@ _koopa_note() {
     _koopa_echo_magenta_bold "Note: ${1}"
 }
 
-
-
-# O                                                                         {{{1
-# ==============================================================================
+# O                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_os_type() {
     # """
@@ -2463,10 +2499,8 @@ _koopa_os_version() {
     uname -r
 }
 
-
-
-# P                                                                         {{{1
-# ==============================================================================
+# P                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_prefix_chgrp() {
     # """
@@ -2666,10 +2700,8 @@ _koopa_prompt_venv() {
     fi
 }
 
-
-
-# Q                                                                         {{{1
-# ==============================================================================
+# Q                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_quiet_cd() {
     # """
@@ -2701,10 +2733,8 @@ _koopa_quiet_rm() {
     rm -fr "$@" > /dev/null 2>&1
 }
 
-
-
-# R                                                                         {{{1
-# ==============================================================================
+# R                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_r_home() {
     # """
@@ -2735,37 +2765,6 @@ _koopa_realpath() {
     # ## /usr/local/Cellar/bash/5.0.11/bin/bash
     # """
     realpath "$(_koopa_which "$1")"
-}
-
-_koopa_remove_from_fpath() {
-    # """
-    # Remove directory from FPATH.
-    # Updated 2019-10-27.
-    # """
-    export FPATH="${FPATH//:$1/}"
-}
-
-_koopa_remove_from_manpath() {
-    # """
-    # Remove directory from MANPATH.
-    # Updated 2019-10-14.
-    # """
-    export MANPATH="${MANPATH//:$1/}"
-}
-
-_koopa_remove_from_path() {
-    # """
-    # Remove directory from PATH.
-    # Updated 2019-10-14.
-    #
-    # Look into an improved POSIX method here.
-    # This works for bash and ksh.
-    # Note that this won't work on the first item in PATH.
-    #
-    # Alternate approach using sed:
-    # > echo "$PATH" | sed "s|:${dir}||g"
-    # """
-    export PATH="${PATH//:$1/}"
 }
 
 _koopa_rsync_flags() {
@@ -2802,10 +2801,8 @@ _koopa_rsync_flags() {
     echo "--archive --delete-before --human-readable --progress"
 }
 
-
-
-# S                                                                         {{{1
-# ==============================================================================
+# S                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_set_permissions() {
     # """
@@ -2969,10 +2966,8 @@ _koopa_success() {
     _koopa_echo_green_bold "$1"
 }
 
-
-
-# T                                                                         {{{1
-# ==============================================================================
+# T                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_tmp_dir() {
     # """
@@ -3056,10 +3051,8 @@ _koopa_trim_ws() {
     printf '%s\n' "$trim"
 }
 
-
-
-# U                                                                         {{{1
-# ==============================================================================
+# U                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_update_ldconfig() {
     # """
@@ -3105,7 +3098,9 @@ _koopa_update_profile() {
     [ -L "$symlink" ] && return 0
     _koopa_message "Adding '${symlink}'."
     sudo rm -fv "/etc/profile.d/koopa.sh"
-    sudo ln -fnsv "${KOOPA_PREFIX}/os/linux/etc/profile.d/zzz-koopa.sh" "$symlink"
+    sudo ln -fnsv \
+        "${KOOPA_PREFIX}/os/linux/etc/profile.d/zzz-koopa.sh" \
+        "$symlink"
     return 0
 }
 
@@ -3179,7 +3174,7 @@ _koopa_update_xdg_config() {
     # Path: '~/.config/koopa'.
     # """
     local config_dir
-    config_dir="$(_koopa_config_dir)"
+    config_dir="$(_koopa_config_prefix)"
     local home_dir
     home_dir="$(_koopa_prefix)"
     local os_type
@@ -3210,10 +3205,8 @@ _koopa_update_xdg_config() {
     fi
 }
 
-
-
-# V                                                                         {{{1
-# ==============================================================================
+# V                                                                         {{{2
+# ------------------------------------------------------------------------------
 
 _koopa_variable() {
     # """
@@ -3234,28 +3227,10 @@ _koopa_variable() {
     fi
 }
 
-_koopa_venv() {
-    # """
-    # Python virtual environment name.
-    # Updated 2019-11-15.
-    # """
-    local env
-    if [ -n "${VIRTUAL_ENV:-}" ]
-    then
-        # Strip out the path and just leave the env name.
-        env="${VIRTUAL_ENV##*/}"
-    else
-        env=
-    fi
-    echo "$env"
-}
+# W                                                                         {{{2
+# ------------------------------------------------------------------------------
 
-
-
-# W                                                                         {{{1
-# ==============================================================================
-
-_koopa_warn_if_export() {
+_koopa_warn_if_export() {                                                 # {{{3
     # """
     # Warn if variable is exported in current shell session.
     # Updated 2019-10-27.
@@ -3274,7 +3249,7 @@ _koopa_warn_if_export() {
     return 0
 }
 
-_koopa_warning() {
+_koopa_warning() {                                                        # {{{3
     # """
     # Warning message.
     # Updated 2019-10-23.
@@ -3282,7 +3257,7 @@ _koopa_warning() {
     >&2 _koopa_echo_yellow_bold "Warning: ${1}"
 }
 
-_koopa_which() {
+_koopa_which() {                                                          # {{{3
     # """
     # Locate which program.
     # Updated 2019-10-08.
@@ -3304,7 +3279,7 @@ _koopa_which() {
 
 if ! _koopa_is_installed realpath
 then
-    realpath() {
+    realpath() {                                                          # {{{3
         # """
         # Real path to file/directory on disk.
         # Updated 2019-06-26.
