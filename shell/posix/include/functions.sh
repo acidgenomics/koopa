@@ -71,6 +71,9 @@ _koopa_make_prefix() {                                                    # {{{3
     echo "$prefix"
 }
 
+# Applications                                                              {{{2
+# ------------------------------------------------------------------------------
+
 _koopa_aspera_prefix() {                                                  # {{{3
     # """
     # Aspera Connect prefix.
@@ -492,6 +495,20 @@ _koopa_activate_venv() {                                                  # {{{3
 # Messages                                                                  {{{1
 # ==============================================================================
 
+_koopa_success() {                                                        # {{{3
+    # Success message.
+    # Updated 2019-10-23.
+    _koopa_echo_green_bold "$1"
+}
+
+_koopa_warning() {                                                        # {{{3
+    # """
+    # Warning message.
+    # Updated 2019-10-23.
+    # """
+    >&2 _koopa_echo_yellow_bold "Warning: ${1}"
+}
+
 _koopa_echo_ansi() {                                                      # {{{3
     # """
     # Print a colored line in console.
@@ -587,24 +604,6 @@ _koopa_echo_white() {                                                     # {{{3
 _koopa_echo_white_bold() {                                                # {{{3
     _koopa_echo_ansi "1;37" "$1"
 }
-
-_koopa_ensure_newline_at_end_of_file() {                                  # {{{3
-    # """
-    # Ensure output CSV contains trailing line break.
-    # Updated 2019-10-11.
-    #
-    # Otherwise 'readr::read_csv()' will skip the last line in R.
-    # https://unix.stackexchange.com/questions/31947
-    #
-    # Slower alternatives:
-    # vi -ecwq file
-    # paste file 1<> file
-    # ed -s file <<< w
-    # sed -i -e '$a\' file
-    # """
-    [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
-}
-
 
 
 
@@ -831,6 +830,15 @@ _koopa_basename_sans_ext2() {                                             # {{{3
 # Environments                                                              {{{1
 # ==============================================================================
 
+_koopa_deactivate_envs() {
+    # """
+    # Deactivate Conda and Python environments.
+    # Updated 2019-10-25.
+    # """
+    _koopa_deactivate_venv
+    _koopa_deactivate_conda
+}
+
 # Conda                                                                     {{{2
 # ------------------------------------------------------------------------------
 
@@ -908,10 +916,40 @@ _koopa_conda_env_prefix() {                                               # {{{3
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
 }
 
+_koopa_deactivate_conda() {
+    # """
+    # Deactivate Conda environment.
+    # Updated 2019-10-25.
+    # """
+    if [ -n "${CONDA_DEFAULT_ENV:-}" ]
+    then
+        conda deactivate
+    fi
+    return 0
+}
+
 # Python venv                                                               {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_venv() {
+_koopa_deactivate_venv() {                                                # {{{3
+    # """
+    # Deactivate Python virtual environment.
+    # Updated 2019-10-25.
+    #
+    # The standard approach currently messes up autojump path:
+    # # shellcheck disable=SC1090
+    # > source "${VIRTUAL_ENV}/bin/activate"
+    # > deactivate
+    # """
+    if [ -n "${VIRTUAL_ENV:-}" ]
+    then
+        _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
+        unset -v VIRTUAL_ENV
+    fi
+    return 0
+}
+
+_koopa_venv() {                                                           # {{{3
     # """
     # Python virtual environment name.
     # Updated 2019-11-15.
@@ -932,7 +970,7 @@ _koopa_venv() {
 # Assert checks                                                             {{{1
 # ==============================================================================
 
-_koopa_assert_has_args() {
+_koopa_assert_has_args() {                                                # {{{3
     # """
     # Assert that the user has passed required arguments to a script.
     # Updated 2019-10-23.
@@ -946,7 +984,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_no_args() {
+_koopa_assert_has_no_args() {                                             # {{{3
     # """
     # Assert that the user has not passed any arguments to a script.
     # Updated 2019-10-23.
@@ -960,7 +998,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_file_ext() {
+_koopa_assert_has_file_ext() {                                            # {{{3
     # """
     # Assert that input contains a file extension.
     # Updated 2019-10-23.
@@ -972,7 +1010,7 @@ _koopa_assert_has_file_ext() {
     return 0
 }
 
-_koopa_assert_has_no_envs() {
+_koopa_assert_has_no_envs() {                                             # {{{3
     # """
     # Assert that conda and Python virtual environments aren't active.
     # Updated 2019-10-23.
@@ -992,7 +1030,7 @@ Deactivate venv prior to conda, otherwise conda python may be left in path."
     return 0
 }
 
-_koopa_assert_has_sudo() {
+_koopa_assert_has_sudo() {                                                # {{{3
     # """
     # Assert that current user has sudo (admin) permissions.
     # Updated 2019-10-23.
@@ -1004,7 +1042,7 @@ _koopa_assert_has_sudo() {
     return 0
 }
 
-_koopa_assert_is_conda_active() {
+_koopa_assert_is_conda_active() {                                         # {{{3
     # """
     # Assert that a Conda environment is active.
     # Updated 2019-10-23.
@@ -1016,7 +1054,7 @@ _koopa_assert_is_conda_active() {
     return 0
 }
 
-_koopa_assert_is_darwin() {
+_koopa_assert_is_darwin() {                                               # {{{3
     # """
     # Assert that platform is Darwin (macOS).
     # Updated 2019-10-23.
@@ -1028,7 +1066,7 @@ _koopa_assert_is_darwin() {
     return 0
 }
 
-_koopa_assert_is_debian() {
+_koopa_assert_is_debian() {                                               # {{{3
     # """
     # Assert that platform is Debian.
     # Updated 2019-10-25.
@@ -1040,7 +1078,7 @@ _koopa_assert_is_debian() {
     return 0
 }
 
-_koopa_assert_is_dir() {
+_koopa_assert_is_dir() {                                                  # {{{3
     # """
     # Assert that input is a directory.
     # Updated 2019-10-23.
@@ -1052,7 +1090,7 @@ _koopa_assert_is_dir() {
     return 0
 }
 
-_koopa_assert_is_executable() {
+_koopa_assert_is_executable() {                                           # {{{3
     # """
     # Assert that input is executable.
     # Updated 2019-10-23.
@@ -1064,7 +1102,7 @@ _koopa_assert_is_executable() {
     return 0
 }
 
-_koopa_assert_is_existing() {
+_koopa_assert_is_existing() {                                             # {{{3
     # """
     # Assert that input exists on disk.
     # Updated 2019-10-23.
@@ -1078,7 +1116,7 @@ _koopa_assert_is_existing() {
     return 0
 }
 
-_koopa_assert_is_fedora() {
+_koopa_assert_is_fedora() {                                               # {{{3
     # """
     # Assert that platform is Fedora.
     # Updated 2019-10-25.
@@ -1090,7 +1128,7 @@ _koopa_assert_is_fedora() {
     return 0
 }
 
-_koopa_assert_is_file() {
+_koopa_assert_is_file() {                                                 # {{{3
     # """
     # Assert that input is a file.
     # Updated 2019-09-12.
@@ -1102,7 +1140,7 @@ _koopa_assert_is_file() {
     return 0
 }
 
-_koopa_assert_is_file_type() {
+_koopa_assert_is_file_type() {                                            # {{{3
     # """
     # Assert that input matches a specified file type.
     # Updated 2019-10-23.
@@ -1113,7 +1151,7 @@ _koopa_assert_is_file_type() {
     _koopa_assert_is_matching_regex "$1" "\.${2}\$"
 }
 
-_koopa_assert_is_git() {
+_koopa_assert_is_git() {                                                  # {{{3
     # """
     # Assert that current directory is a git repo.
     # Updated 2019-10-23.
@@ -1125,7 +1163,7 @@ _koopa_assert_is_git() {
     return 0
 }
 
-_koopa_assert_is_installed() {
+_koopa_assert_is_installed() {                                            # {{{3
     # """
     # Assert that programs are installed.
     # Updated 2019-10-23.
@@ -1143,7 +1181,7 @@ _koopa_assert_is_installed() {
     return 0
 }
 
-_koopa_assert_is_linux() {
+_koopa_assert_is_linux() {                                                # {{{3
     # """
     # Assert that platform is Linux.
     # Updated 2019-10-23.
@@ -1155,7 +1193,7 @@ _koopa_assert_is_linux() {
     return 0
 }
 
-_koopa_assert_is_non_existing() {
+_koopa_assert_is_non_existing() {                                         # {{{3
     # """
     # Assert that input does not exist on disk.
     # Updated 2019-10-23.
@@ -1167,7 +1205,7 @@ _koopa_assert_is_non_existing() {
     return 0
 }
 
-_koopa_assert_is_not_dir() {
+_koopa_assert_is_not_dir() {                                              # {{{3
     # """
     # Assert that input is not a directory.
     # Updated 2019-10-23.
@@ -1179,7 +1217,7 @@ _koopa_assert_is_not_dir() {
     return 0
 }
 
-_koopa_assert_is_not_file() {
+_koopa_assert_is_not_file() {                                             # {{{3
     # """
     # Assert that input is not a file.
     # Updated 2019-10-23.
@@ -1191,7 +1229,7 @@ _koopa_assert_is_not_file() {
     return 0
 }
 
-_koopa_assert_is_not_installed() {
+_koopa_assert_is_not_installed() {                                        # {{{3
     # """
     # Assert that programs are not installed.
     # Updated 2019-10-23.
@@ -1206,7 +1244,7 @@ _koopa_assert_is_not_installed() {
     return 0
 }
 
-_koopa_assert_is_not_symlink() {
+_koopa_assert_is_not_symlink() {                                          # {{{3
     # """
     # Assert that input is not a symbolic link.
     # Updated 2019-10-23.
@@ -1218,7 +1256,7 @@ _koopa_assert_is_not_symlink() {
     return 0
 }
 
-_koopa_assert_is_r_package_installed() {
+_koopa_assert_is_r_package_installed() {                                  # {{{3
     # """
     # Assert that a specific R package is installed.
     # Updated 2019-10-23.
@@ -1230,7 +1268,7 @@ _koopa_assert_is_r_package_installed() {
     return 0
 }
 
-_koopa_assert_is_readable() {
+_koopa_assert_is_readable() {                                             # {{{3
     # """
     # Assert that input is readable.
     # Updated 2019-10-23.
@@ -1242,7 +1280,7 @@ _koopa_assert_is_readable() {
     return 0
 }
 
-_koopa_assert_is_symlink() {
+_koopa_assert_is_symlink() {                                              # {{{3
     # """
     # Assert that input is a symbolic link.
     # Updated 2019-10-23.
@@ -1254,7 +1292,7 @@ _koopa_assert_is_symlink() {
     return 0
 }
 
-_koopa_assert_is_venv_active() {
+_koopa_assert_is_venv_active() {                                          # {{{3
     # """
     # Assert that a Python virtual environment is active.
     # Updated 2019-10-23.
@@ -1267,7 +1305,7 @@ _koopa_assert_is_venv_active() {
     return 0
 }
 
-_koopa_assert_is_writable() {
+_koopa_assert_is_writable() {                                             # {{{3
     # """
     # Assert that input is writable.
     # Updated 2019-10-23.
@@ -1279,7 +1317,7 @@ _koopa_assert_is_writable() {
     return 0
 }
 
-_koopa_assert_is_matching_fixed() {
+_koopa_assert_is_matching_fixed() {                                       # {{{3
     # """
     # Assert that input matches a fixed pattern.
     # Updated 2019-10-23.
@@ -1291,7 +1329,7 @@ _koopa_assert_is_matching_fixed() {
     return 0
 }
 
-_koopa_assert_is_matching_regex() {
+_koopa_assert_is_matching_regex() {                                       # {{{3
     # """
     # Assert that input matches a regular expression pattern.
     # Updated 2019-10-23.
@@ -1303,7 +1341,7 @@ _koopa_assert_is_matching_regex() {
     return 0
 }
 
-_koopa_check_azure() {
+_koopa_check_azure() {                                                    # {{{3
     # """
     # Check Azure VM integrity.
     # Updated 2019-10-31.
@@ -1319,7 +1357,7 @@ _koopa_check_azure() {
     return 0
 }
 
-_koopa_check_access_human() {
+_koopa_check_access_human() {                                             # {{{3
     # """
     # Check if file or directory has expected human readable access.
     # Updated 2019-10-31.
@@ -1338,7 +1376,7 @@ _koopa_check_access_human() {
     return 0
 }
 
-_koopa_check_access_octal() {
+_koopa_check_access_octal() {                                             # {{{3
     # """
     # Check if file or directory has expected octal access.
     # Updated 2019-10-31.
@@ -1357,7 +1395,7 @@ _koopa_check_access_octal() {
     return 0
 }
 
-_koopa_check_group() {
+_koopa_check_group() {                                                    # {{{3
     # """
     # Check if file or directory has an expected group.
     # Updated 2019-10-31.
@@ -1377,7 +1415,7 @@ _koopa_check_group() {
     return 0
 }
 
-_koopa_check_mount() {
+_koopa_check_mount() {                                                    # {{{3
     # """
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
@@ -1391,7 +1429,7 @@ _koopa_check_mount() {
     return 0
 }
 
-_koopa_check_user() {
+_koopa_check_user() {                                                     # {{{3
     # """
     # Check if file or directory has an expected user.
     # Updated 2019-10-31.
@@ -1411,6 +1449,272 @@ _koopa_check_user() {
     return 0
 }
 
+_koopa_has_file_ext() {                                                   # {{{3
+    # """
+    # Does the input contain a file extension?
+    # Updated 2019-10-08.
+    #
+    # Simply looks for a "." and returns true/false.
+    # """
+    echo "$1" | grep -q "\."
+}
+
+_koopa_has_no_environments() {                                            # {{{3
+    # """
+    # Detect activation of virtual environments.
+    # Updated 2019-10-20.
+    # """
+    _koopa_is_conda_active && return 1
+    _koopa_is_venv_active && return 1
+    return 0
+}
+
+_koopa_has_sudo() {                                                       # {{{3
+    # """
+    # Check that current user has administrator (sudo) permission.
+    # Updated 2019-09-28.
+    #
+    # Note that use of 'sudo -v' does not work consistently across platforms.
+    #
+    # - Darwin (macOS): admin
+    # - Debian: sudo
+    # - Fedora: wheel
+    # """
+    groups | grep -Eq "\b(admin|sudo|wheel)\b"
+}
+
+_koopa_invalid_arg() {                                                    # {{{3
+    # """
+    # Error on invalid argument.
+    # Updated 2019-10-23.
+    # """
+    _koopa_stop "Invalid argument: '${1}'."
+}
+
+_koopa_is_aws() {                                                         # {{{3
+    # """
+    # Is the current session running on AWS?
+    # Updated 2019-10-31.
+    # """
+    [ "$(_koopa_host_type)" = "aws" ]
+}
+
+_koopa_is_azure() {                                                       # {{{3
+    # """
+    # Is the current session running on Microsoft Azure?
+    # Updated 2019-10-31.
+    # """
+    [ "$(_koopa_host_type)" = "azure" ]
+}
+
+_koopa_is_conda_active() {                                                # {{{3
+    # """
+    # Is there a Conda environment active?
+    # Updated 2019-10-20.
+    # """
+    [ -n "${CONDA_DEFAULT_ENV:-}" ]
+}
+
+_koopa_is_darwin() {                                                      # {{{3
+    # """
+    # Is the operating system Darwin (macOS)?
+    # Updated 2019-06-22.
+    # """
+    [ "$(uname -s)" = "Darwin" ]
+}
+
+_koopa_is_debian() {                                                      # {{{3
+    # """
+    # Is the operating system Debian?
+    # Updated 2019-10-25.
+    # """
+    [ -f /etc/os-release ] || return 1
+    grep "ID=" /etc/os-release | grep -q "debian" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+}
+
+_koopa_is_fedora() {                                                      # {{{3
+    # """
+    # Is the operating system Fedora?
+    # Updated 2019-10-25.
+    # """
+    [ -f /etc/os-release ] || return 1
+    grep "ID=" /etc/os-release | grep -q "fedora" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+}
+
+_koopa_is_file_system_case_sensitive() {                                  # {{{3
+    # """
+    # Is the file system case sensitive?
+    # Updated 2019-10-21.
+    #
+    # Linux is case sensitive by default, whereas macOS and Windows are not.
+    # """
+    touch ".tmp.checkcase" ".tmp.checkCase"
+    count="$(find . -maxdepth 1 -iname ".tmp.checkcase" | wc -l)"
+    _koopa_quiet_rm .tmp.check* 
+    if [ "$count" -eq 2 ]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+_koopa_is_git() {                                                         # {{{3
+    # """
+    # Is the current working directory a git repository?
+    # Updated 2019-10-14.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/2180270
+    # """
+    if git rev-parse --git-dir > /dev/null 2>&1
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+_koopa_is_git_clean() {                                                   # {{{3
+    # """
+    # Is the current git repo clean, or does it have unstaged changes?
+    # Updated 2019-10-14.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/3878624
+    # - https://stackoverflow.com/questions/3258243
+    # """
+    # Are there unstaged changes?
+    if ! git diff-index --quiet HEAD --
+    then
+        return 1
+    fi
+    # In need of a pull or push?
+    if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
+    then
+        return 1
+    fi
+    return 0
+}
+
+_koopa_is_installed() {                                                   # {{{3
+    # """
+    # Is the requested program name installed?
+    # Updated 2019-10-02.
+    # """
+    command -v "$1" >/dev/null
+}
+
+_koopa_is_interactive() {                                                 # {{{3
+    # """
+    # Is the current shell interactive?
+    # Updated 2019-06-21.
+    # """
+    echo "$-" | grep -q "i"
+}
+
+_koopa_is_linux() {                                                       # {{{3
+    # """
+    # Updated 2019-06-21.
+    # """
+    [ "$(uname -s)" = "Linux" ]
+}
+
+_koopa_is_local_install() {                                               # {{{3
+    # """
+    # Is koopa installed only for the current user?
+    # Updated 2019-06-25.
+    # """
+    echo "$KOOPA_PREFIX" | grep -Eq "^${HOME}"
+}
+
+_koopa_is_login() {                                                       # {{{3
+    # """
+    # Is the current shell a login shell?
+    # Updated 2019-08-14.
+    # """
+    echo "$0" | grep -Eq "^-"
+}
+
+_koopa_is_login_bash() {                                                  # {{{3
+    # """
+    # Is the current shell a login bash shell?
+    # Updated 2019-06-21.
+    # """
+    [ "$0" = "-bash" ]
+}
+
+_koopa_is_login_zsh() {                                                   # {{{3
+    # """
+    # Is the current shell a login zsh shell?
+    # Updated 2019-06-21.
+    # """
+    [ "$0" = "-zsh" ]
+}
+
+_koopa_is_matching_fixed() {                                              # {{{3
+    # """
+    # Does the input match a fixed string?
+    # Updated 2019-10-14.
+    # """
+    echo "$1" | grep -Fq "$2"
+}
+
+_koopa_is_matching_regex() {                                              # {{{3
+    # """
+    # Does the input match a regular expression?
+    # Updated 2019-10-13.
+    # """
+    echo "$1" | grep -Eq "$2"
+}
+
+_koopa_is_r_package_installed() {                                         # {{{3
+    # """
+    # Is the requested R package installed?
+    # Updated 2019-10-20.
+    # """
+    _koopa_is_installed R || return 1
+    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
+        | grep -q "TRUE"
+}
+
+_koopa_is_rhel7() {                                                       # {{{3
+    # """
+    # Is the operating system RHEL 7?
+    # Updated 2019-10-25.
+    # """
+    [ -f /etc/os-release ] || return 1
+    grep -q 'ID="rhel"' /etc/os-release || return 1
+    grep -q 'VERSION_ID="7' /etc/os-release || return 1
+    return 0
+}
+
+_koopa_is_remote() {                                                      # {{{3
+    # """
+    # Is the current shell session a remote connection over SSH?
+    # Updated 2019-06-25.
+    # """
+    [ -n "${SSH_CONNECTION:-}" ]
+}
+
+_koopa_is_shared_install() {                                              # {{{3
+    # """
+    # Is koopa installed for all users (shared)?
+    # Updated 2019-06-25.
+    # """
+    ! _koopa_is_local_install
+}
+
+_koopa_is_venv_active() {                                                 # {{{3
+    # """
+    # Is there a Python virtual environment active?
+    # Updated 2019-10-20.
+    # """
+    [ -n "${VIRTUAL_ENV:-}" ]
+}
+
 
 
 # Other                                                                     {{{1
@@ -1419,7 +1723,7 @@ _koopa_check_user() {
 # A                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_array_to_r_vector() {
+_koopa_array_to_r_vector() {                                              # {{{3
     # """
     # Convert a bash array to an R vector string.
     # Updated 2019-09-25.
@@ -1435,7 +1739,7 @@ _koopa_array_to_r_vector() {
 # C                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_cellar_script() {
+_koopa_cellar_script() {                                                  # {{{3
     # """
     # Return source path for a koopa cellar build script.
     # Updated 2019-11-11.
@@ -1452,7 +1756,7 @@ _koopa_cellar_script() {
     . "$file"
 }
 
-_koopa_current_version() {
+_koopa_current_version() {                                                # {{{3
     # """
     # Get the current version of a supported program.
     # Updated 2019-11-12.
@@ -1471,46 +1775,7 @@ _koopa_current_version() {
 # D                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_deactivate_conda() {
-    # """
-    # Deactivate Conda environment.
-    # Updated 2019-10-25.
-    # """
-    if [ -n "${CONDA_DEFAULT_ENV:-}" ]
-    then
-        conda deactivate
-    fi
-    return 0
-}
-
-_koopa_deactivate_envs() {
-    # """
-    # Deactivate Conda and Python environments.
-    # Updated 2019-10-25.
-    # """
-    _koopa_deactivate_venv
-    _koopa_deactivate_conda
-}
-
-_koopa_deactivate_venv() {
-    # """
-    # Deactivate Python virtual environment.
-    # Updated 2019-10-25.
-    #
-    # The standard approach currently messes up autojump path:
-    # # shellcheck disable=SC1090
-    # > source "${VIRTUAL_ENV}/bin/activate"
-    # > deactivate
-    # """
-    if [ -n "${VIRTUAL_ENV:-}" ]
-    then
-        _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
-        unset -v VIRTUAL_ENV
-    fi
-    return 0
-}
-
-_koopa_delete_dotfile() {
+_koopa_delete_dotfile() {                                                 # {{{3
     # """
     # Delete a dot file.
     # Updated 2019-06-27.
@@ -1529,7 +1794,7 @@ _koopa_delete_dotfile() {
     fi
 }
 
-_koopa_disk_check() {
+_koopa_disk_check() {                                                     # {{{3
     # """
     # Check that disk has enough free space.
     # Updated 2019-10-27.
@@ -1545,7 +1810,7 @@ _koopa_disk_check() {
     return 0
 }
 
-_koopa_disk_pct_used() {
+_koopa_disk_pct_used() {                                                  # {{{3
     # """
     # Check disk usage on main drive.
     # Updated 2019-08-17.
@@ -1560,7 +1825,7 @@ _koopa_disk_pct_used() {
         | sed 's/%$//'
 }
 
-_koopa_dotfiles_config_link() {
+_koopa_dotfiles_config_link() {                                           # {{{3
     # """
     # Dotfiles directory.
     # Updated 2019-11-04.
@@ -1571,7 +1836,7 @@ _koopa_dotfiles_config_link() {
     echo "$(_koopa_config_prefix)/dotfiles"
 }
 
-_koopa_dotfiles_private_config_link() {
+_koopa_dotfiles_private_config_link() {                                   # {{{3
     # """
     # Private dotfiles directory.
     # Updated 2019-11-04.
@@ -1579,7 +1844,7 @@ _koopa_dotfiles_private_config_link() {
     echo "$(_koopa_dotfiles_config_link)-private"
 }
 
-_koopa_dotfiles_source_repo() {
+_koopa_dotfiles_source_repo() {                                           # {{{3
     # """
     # Dotfiles source repository.
     # Updated 2019-11-04.
@@ -1598,7 +1863,7 @@ _koopa_dotfiles_source_repo() {
     echo "$dotfiles"
 }
 
-_koopa_download() {
+_koopa_download() {                                                       # {{{3
     # """
     # Download a file.
     # Updated 2019-11-04.
@@ -1623,7 +1888,24 @@ _koopa_download() {
 # E                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_extract() {
+_koopa_ensure_newline_at_end_of_file() {                                  # {{{3
+    # """
+    # Ensure output CSV contains trailing line break.
+    # Updated 2019-10-11.
+    #
+    # Otherwise 'readr::read_csv()' will skip the last line in R.
+    # https://unix.stackexchange.com/questions/31947
+    #
+    # Slower alternatives:
+    # vi -ecwq file
+    # paste file 1<> file
+    # ed -s file <<< w
+    # sed -i -e '$a\' file
+    # """
+    [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
+}
+
+_koopa_extract() {                                                        # {{{3
     # """
     # Extract compressed files automatically.
     # Updated 2019-10-27.
@@ -1686,7 +1968,7 @@ _koopa_extract() {
 # F                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_file_ext() {
+_koopa_file_ext() {                                                       # {{{3
     # """
     # Extract the file extension from input.
     # Updated 2019-10-08.
@@ -1704,7 +1986,7 @@ _koopa_file_ext() {
     printf "%s\n" "${1##*.}"
 }
 
-_koopa_file_ext2() {
+_koopa_file_ext2() {                                                      # {{{3
     # """
     # Extract the file extension after any dots in the file name.
     # Updated 2019-10-08.
@@ -1721,7 +2003,7 @@ _koopa_file_ext2() {
     echo "$1" | cut -d '.' -f 2-
 }
 
-_koopa_find_dotfiles() {
+_koopa_find_dotfiles() {                                                  # {{{3
     # """
     # Find dotfiles by type.
     # Updated 2019-10-22.
@@ -1742,7 +2024,7 @@ _koopa_find_dotfiles() {
         | awk '{print "  ",$0}'
 }
 
-_koopa_find_text() {
+_koopa_find_text() {                                                      # {{{3
     # """
     # Find text in any file.
     # Updated 2019-09-05.
@@ -1758,7 +2040,7 @@ _koopa_find_text() {
 # G                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_git_branch() {
+_koopa_git_branch() {                                                     # {{{3
     # """
     # Current git branch name.
     # Updated 2019-10-13.
@@ -1777,7 +2059,7 @@ _koopa_git_branch() {
     git symbolic-ref --short -q HEAD
 }
 
-_koopa_github_latest_release() {
+_koopa_github_latest_release() {                                          # {{{3
     # """
     # Get the latest release version from GitHub.
     # Updated 2019-10-24.
@@ -1790,7 +2072,7 @@ _koopa_github_latest_release() {
         | sed 's/^v//'
 }
 
-_koopa_group() {
+_koopa_group() {                                                          # {{{3
     # """
     # Return the approach group to use with koopa installation.
     # Updated 2019-10-22.
@@ -1821,7 +2103,7 @@ _koopa_group() {
     echo "$group"
 }
 
-_koopa_gsub() {
+_koopa_gsub() {                                                           # {{{3
     # """
     # Global substitution.
     # Updated 2019-10-09.
@@ -1832,41 +2114,7 @@ _koopa_gsub() {
 # H                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_has_file_ext() {
-    # """
-    # Does the input contain a file extension?
-    # Updated 2019-10-08.
-    #
-    # Simply looks for a "." and returns true/false.
-    # """
-    echo "$1" | grep -q "\."
-}
-
-_koopa_has_no_environments() {
-    # """
-    # Detect activation of virtual environments.
-    # Updated 2019-10-20.
-    # """
-    _koopa_is_conda_active && return 1
-    _koopa_is_venv_active && return 1
-    return 0
-}
-
-_koopa_has_sudo() {
-    # """
-    # Check that current user has administrator (sudo) permission.
-    # Updated 2019-09-28.
-    #
-    # Note that use of 'sudo -v' does not work consistently across platforms.
-    #
-    # - Darwin (macOS): admin
-    # - Debian: sudo
-    # - Fedora: wheel
-    # """
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
-}
-
-_koopa_header() {
+_koopa_header() {                                                         # {{{3
     # """
     # Source script header.
     # Updated 2019-11-10.
@@ -1940,7 +2188,7 @@ EOF
     echo "$path"
 }
 
-_koopa_host_type() {
+_koopa_host_type() {                                                      # {{{3
     # """
     # Simple host type name string to load up host-specific scripts.
     # Updated 2019-08-18.
@@ -1979,7 +2227,7 @@ _koopa_host_type() {
 # I                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_info_box() {
+_koopa_info_box() {                                                       # {{{3
     # """
     # Info box.
     # Updated 2019-10-14.
@@ -1999,7 +2247,7 @@ _koopa_info_box() {
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
-_koopa_install_mike() {
+_koopa_install_mike() {                                                   # {{{3
     # """
     # Install additional Mike-specific config files.
     # Updated 2019-11-04.
@@ -2026,242 +2274,10 @@ _koopa_install_mike() {
     )
 }
 
-_koopa_invalid_arg() {
-    # """
-    # Error on invalid argument.
-    # Updated 2019-10-23.
-    # """
-    _koopa_stop "Invalid argument: '${1}'."
-}
-
-_koopa_is_aws() {
-    # """
-    # Is the current session running on AWS?
-    # Updated 2019-10-31.
-    # """
-    [ "$(_koopa_host_type)" = "aws" ]
-}
-
-_koopa_is_azure() {
-    # """
-    # Is the current session running on Microsoft Azure?
-    # Updated 2019-10-31.
-    # """
-    [ "$(_koopa_host_type)" = "azure" ]
-}
-
-_koopa_is_conda_active() {
-    # """
-    # Is there a Conda environment active?
-    # Updated 2019-10-20.
-    # """
-    [ -n "${CONDA_DEFAULT_ENV:-}" ]
-}
-
-_koopa_is_darwin() {
-    # """
-    # Is the operating system Darwin (macOS)?
-    # Updated 2019-06-22.
-    # """
-    [ "$(uname -s)" = "Darwin" ]
-}
-
-_koopa_is_debian() {
-    # """
-    # Is the operating system Debian?
-    # Updated 2019-10-25.
-    # """
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "debian" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "debian"
-}
-
-_koopa_is_fedora() {
-    # """
-    # Is the operating system Fedora?
-    # Updated 2019-10-25.
-    # """
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "fedora" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
-}
-
-_koopa_is_file_system_case_sensitive() {
-    # """
-    # Is the file system case sensitive?
-    # Updated 2019-10-21.
-    #
-    # Linux is case sensitive by default, whereas macOS and Windows are not.
-    # """
-    touch ".tmp.checkcase" ".tmp.checkCase"
-    count="$(find . -maxdepth 1 -iname ".tmp.checkcase" | wc -l)"
-    _koopa_quiet_rm .tmp.check* 
-    if [ "$count" -eq 2 ]
-    then
-        return 0
-    else
-        return 1
-    fi
-}
-
-_koopa_is_git() {
-    # """
-    # Is the current working directory a git repository?
-    # Updated 2019-10-14.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/2180270
-    # """
-    if git rev-parse --git-dir > /dev/null 2>&1
-    then
-        return 0
-    else
-        return 1
-    fi
-}
-
-_koopa_is_git_clean() {
-    # """
-    # Is the current git repo clean, or does it have unstaged changes?
-    # Updated 2019-10-14.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/3878624
-    # - https://stackoverflow.com/questions/3258243
-    # """
-    # Are there unstaged changes?
-    if ! git diff-index --quiet HEAD --
-    then
-        return 1
-    fi
-    # In need of a pull or push?
-    if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
-    then
-        return 1
-    fi
-    return 0
-}
-
-_koopa_is_installed() {
-    # """
-    # Is the requested program name installed?
-    # Updated 2019-10-02.
-    # """
-    command -v "$1" >/dev/null
-}
-
-_koopa_is_interactive() {
-    # """
-    # Is the current shell interactive?
-    # Updated 2019-06-21.
-    # """
-    echo "$-" | grep -q "i"
-}
-
-_koopa_is_linux() {
-    # """
-    # Updated 2019-06-21.
-    # """
-    [ "$(uname -s)" = "Linux" ]
-}
-
-_koopa_is_local_install() {
-    # """
-    # Is koopa installed only for the current user?
-    # Updated 2019-06-25.
-    # """
-    echo "$KOOPA_PREFIX" | grep -Eq "^${HOME}"
-}
-
-_koopa_is_login() {
-    # """
-    # Is the current shell a login shell?
-    # Updated 2019-08-14.
-    # """
-    echo "$0" | grep -Eq "^-"
-}
-
-_koopa_is_login_bash() {
-    # """
-    # Is the current shell a login bash shell?
-    # Updated 2019-06-21.
-    # """
-    [ "$0" = "-bash" ]
-}
-
-_koopa_is_login_zsh() {
-    # """
-    # Is the current shell a login zsh shell?
-    # Updated 2019-06-21.
-    # """
-    [ "$0" = "-zsh" ]
-}
-
-_koopa_is_matching_fixed() {
-    # """
-    # Does the input match a fixed string?
-    # Updated 2019-10-14.
-    # """
-    echo "$1" | grep -Fq "$2"
-}
-
-_koopa_is_matching_regex() {
-    # """
-    # Does the input match a regular expression?
-    # Updated 2019-10-13.
-    # """
-    echo "$1" | grep -Eq "$2"
-}
-
-_koopa_is_r_package_installed() {
-    # """
-    # Is the requested R package installed?
-    # Updated 2019-10-20.
-    # """
-    _koopa_is_installed R || return 1
-    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
-        | grep -q "TRUE"
-}
-
-_koopa_is_rhel7() {
-    # """
-    # Is the operating system RHEL 7?
-    # Updated 2019-10-25.
-    # """
-    [ -f /etc/os-release ] || return 1
-    grep -q 'ID="rhel"' /etc/os-release || return 1
-    grep -q 'VERSION_ID="7' /etc/os-release || return 1
-    return 0
-}
-
-_koopa_is_remote() {
-    # """
-    # Is the current shell session a remote connection over SSH?
-    # Updated 2019-06-25.
-    # """
-    [ -n "${SSH_CONNECTION:-}" ]
-}
-
-_koopa_is_shared_install() {
-    # """
-    # Is koopa installed for all users (shared)?
-    # Updated 2019-06-25.
-    # """
-    ! _koopa_is_local_install
-}
-
-_koopa_is_venv_active() {
-    # """
-    # Is there a Python virtual environment active?
-    # Updated 2019-10-20.
-    # """
-    [ -n "${VIRTUAL_ENV:-}" ]
-}
-
 # J                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_java_home() {
+_koopa_java_home() {                                                      # {{{3
     # """
     # Set JAVA_HOME environment variable.
     # Updated 2019-10-08.
@@ -2296,7 +2312,7 @@ _koopa_java_home() {
 # L                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_line_count() {
+_koopa_line_count() {                                                     # {{{3
     # """
     # Return the number of lines in a file.
     # Updated 2019-10-27.
@@ -2308,7 +2324,7 @@ _koopa_line_count() {
         | cut -d ' ' -f 1
 }
 
-_koopa_link_cellar() {
+_koopa_link_cellar() {                                                    # {{{3
     # """
     # Symlink cellar into build directory.
     # Updated 2019-10-22.
@@ -2341,7 +2357,7 @@ _koopa_link_cellar() {
     fi
 }
 
-_koopa_list_path_priority() {
+_koopa_list_path_priority() {                                             # {{{3
     # """
     # Split PATH string by ':' delim into lines.
     # Updated 2019-10-27.
@@ -2364,7 +2380,7 @@ _koopa_list_path_priority() {
 # M                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_macos_app_version() {
+_koopa_macos_app_version() {                                              # {{{3
     # """
     # Extract the version of a macOS application.
     # Updated 2019-09-28.
@@ -2376,7 +2392,7 @@ _koopa_macos_app_version() {
         | tr -d '"'
 }
 
-_koopa_make_build_string() {
+_koopa_make_build_string() {                                              # {{{3
     # """
     # OS build string for 'make' configuration.
     # Updated 2019-09-27.
@@ -2409,7 +2425,7 @@ _koopa_make_build_string() {
     echo "$string"
 }
 
-_koopa_major_version() {
+_koopa_major_version() {                                                  # {{{3
     # """
     # Get the major program version.
     # Updated 2019-09-23.
@@ -2417,7 +2433,7 @@ _koopa_major_version() {
     echo "$1" | cut -d '.' -f 1-2
 }
 
-_koopa_message() {
+_koopa_message() {                                                        # {{{3
     # """
     # General message.
     # Updated 2019-10-23.
@@ -2425,7 +2441,7 @@ _koopa_message() {
     _koopa_echo_cyan_bold "$1"
 }
 
-_koopa_minor_version() {
+_koopa_minor_version() {                                                  # {{{3
     # """
     # Get the minor program version.
     # Updated 2019-09-23.
@@ -2433,7 +2449,7 @@ _koopa_minor_version() {
     echo "$1" | cut -d "." -f 2-
 }
 
-_koopa_missing_arg() {
+_koopa_missing_arg() {                                                    # {{{3
     # """
     # Error on a missing argument.
     # Updated 2019-10-23.
@@ -2444,7 +2460,7 @@ _koopa_missing_arg() {
 # N                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_note() {
+_koopa_note() {                                                           # {{{3
     # """
     # General note message.
     # Updated 2019-10-23.
@@ -2455,7 +2471,7 @@ _koopa_note() {
 # O                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_os_type() {
+_koopa_os_type() {                                                        # {{{3
     # """
     # Operating system name.
     # Updated 2019-10-22.
@@ -2489,7 +2505,7 @@ _koopa_os_type() {
     echo "$id"
 }
 
-_koopa_os_version() {
+_koopa_os_version() {                                                     # {{{3
     # """
     # Operating system version.
     # Updated 2019-06-22.
@@ -2502,7 +2518,7 @@ _koopa_os_version() {
 # P                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_prefix_chgrp() {
+_koopa_prefix_chgrp() {                                                   # {{{3
     # """
     # Fix the group permissions on the target build prefix.
     # Updated 2019-10-22.
@@ -2521,7 +2537,7 @@ _koopa_prefix_chgrp() {
     fi
 }
 
-_koopa_prefix_mkdir() {
+_koopa_prefix_mkdir() {                                                   # {{{3
     # """
     # Create directory in target build prefix.
     # Updated 2019-10-22.
@@ -2541,7 +2557,7 @@ _koopa_prefix_mkdir() {
     _koopa_prefix_chgrp "$path"
 }
 
-_koopa_prompt() {
+_koopa_prompt() {                                                         # {{{3
     # """
     # Prompt string.
     # Updated 2019-10-31.
@@ -2631,7 +2647,7 @@ _koopa_prompt() {
         "$prompt"
 }
 
-_koopa_prompt_conda() {
+_koopa_prompt_conda() {                                                   # {{{3
     # """
     # Get conda environment name for prompt string.
     # Updated 2019-10-13.
@@ -2646,7 +2662,7 @@ _koopa_prompt_conda() {
     fi
 }
 
-_koopa_prompt_disk_used() {
+_koopa_prompt_disk_used() {                                               # {{{3
     # """
     # Get current disk usage on primary drive.
     # Updated 2019-10-13.
@@ -2664,7 +2680,7 @@ _koopa_prompt_disk_used() {
     printf " disk:%d%s\n" "$used" "$pct"
 }
 
-_koopa_prompt_git() {
+_koopa_prompt_git() {                                                     # {{{3
     # """
     # Return the current git branch, if applicable.
     # Updated 2019-10-14.
@@ -2683,7 +2699,7 @@ _koopa_prompt_git() {
     printf " %s%s\n" "$git_branch" "$git_status"
 }
 
-_koopa_prompt_venv() {
+_koopa_prompt_venv() {                                                    # {{{3
     # """
     # Get Python virtual environment name for prompt string.
     # Updated 2019-10-13.
@@ -2703,7 +2719,7 @@ _koopa_prompt_venv() {
 # Q                                                                         {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_quiet_cd() {
+_koopa_quiet_cd() {                                                       # {{{3
     # """
     # Change directory quietly
     # Updated 2019-10-29.
@@ -2711,7 +2727,7 @@ _koopa_quiet_cd() {
     cd "$@" > /dev/null || return 1
 }
 
-_koopa_quiet_expr() {
+_koopa_quiet_expr() {                                                     # {{{3
     # """
     # Quiet regular expression matching that is POSIX compliant.
     # Updated 2019-10-08.
@@ -2958,12 +2974,6 @@ _koopa_sub() {
     # See also: _koopa_gsub (for global matching).
     # """
     echo "$1" | sed -E "s/${2}/${3}/"
-}
-
-_koopa_success() {
-    # Success message.
-    # Updated 2019-10-23.
-    _koopa_echo_green_bold "$1"
 }
 
 # T                                                                         {{{2
@@ -3247,14 +3257,6 @@ _koopa_warn_if_export() {                                                 # {{{3
         fi
     done
     return 0
-}
-
-_koopa_warning() {                                                        # {{{3
-    # """
-    # Warning message.
-    # Updated 2019-10-23.
-    # """
-    >&2 _koopa_echo_yellow_bold "Warning: ${1}"
 }
 
 _koopa_which() {                                                          # {{{3
