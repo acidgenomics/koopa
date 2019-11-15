@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 name="hdf5"
 version="$(_koopa_variable "$name")"

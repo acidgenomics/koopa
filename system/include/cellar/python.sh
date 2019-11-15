@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # The '--enable-optimizations' flag can boost Python performance by ~10% but
 # currently runs into build issues with old compilation chains (e.g. GCC 4),
