@@ -107,6 +107,7 @@ brew install flac lame
 # Recommended.
 brews=(
     autoconf
+    autojump
     automake
     awscli
     bash-completion
@@ -157,6 +158,7 @@ brews=(
     parallel
     pkg-config
     protobuf
+    pyenv
     python
     rbenv
     rsync
