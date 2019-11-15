@@ -103,15 +103,56 @@ _koopa_perlbrew_prefix() {
     echo "$prefix"
 }
 
-# FIXME _koopa_pyenv_prefix
-# FIXME _koopa_rbenv_prefix
-# FIXME _koopa_rust_prefix
-# FIXME _koopa_venv_prefix
+_koopa_pyenv_prefix() {
+    # """
+    # pyenv prefix.
+    # Updated 2019-11-15.
+    # """
+    echo "${XDG_DATA_HOME}/pyenv"
+}
+
+_koopa_rbenv_prefix() {
+    # """
+    # rbenv prefix.
+    # Updated 2019-11-15.
+    # """
+    echo "${XDG_DATA_HOME}/rbenv"
+}
+
+_koopa_rust_prefix() {
+    # """
+    # Rust prefix.
+    # Updated 2019-11-15.
+    # """
+    echo "${HOME}/.cargo"
+}
+
+_koopa_venv_prefix() {
+    # """
+    # Python venv prefix.
+    # Updated 2019-11-15.
+    # """
+    echo "${XDG_DATA_HOME}/virtualenvs"
+}
 
 
 
 # Activation                                                                {{{1
 # ==============================================================================
+
+_koopa_activate_prefix() {
+    # """
+    # Automatically configure PATH and MANPATH for a specified prefix.
+    # Updated 2019-11-10.
+    # """
+    local prefix
+    prefix="$1"
+    _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
+    _koopa_add_to_path_start "${prefix}/bin"
+    _koopa_add_to_manpath_start "${prefix}/man"
+    _koopa_add_to_manpath_start "${prefix}/share/man"
+    return 0
+}
 
 _koopa_activate_aspera() {
     # """
@@ -276,20 +317,6 @@ _koopa_activate_perlbrew() {
     return 0
 }
 
-_koopa_activate_prefix() {
-    # """
-    # Automatically configure PATH and MANPATH for a specified prefix.
-    # Updated 2019-11-10.
-    # """
-    local prefix
-    prefix="$1"
-    _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
-    _koopa_add_to_path_start "${prefix}/bin"
-    _koopa_add_to_manpath_start "${prefix}/man"
-    _koopa_add_to_manpath_start "${prefix}/share/man"
-    return 0
-}
-
 _koopa_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
@@ -303,11 +330,7 @@ _koopa_activate_pyenv() {
     fi
     [ -z "${PYENV_ROOT:-}" ] || return 0
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="${XDG_DATA_HOME}/pyenv"
-    fi
+    prefix="$(_koopa_pyenv_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/bin/pyenv"
@@ -337,11 +360,7 @@ _koopa_activate_rbenv() {
     fi
     [ -z "${RBENV_ROOT:-}" ] || return 0
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="${XDG_DATA_HOME}/rbenv"
-    fi
+    prefix="$(_koopa_rbenv_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/bin/rbenv"
@@ -363,11 +382,7 @@ _koopa_activate_rust() {
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="${HOME}/.cargo"
-    fi
+    prefix="$(_koopa_rust_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/env"
@@ -411,11 +426,7 @@ _koopa_activate_ssh_key() {
     _koopa_is_linux || return 0
     _koopa_is_interactive || return 0
     local key
-    key="${1:-}"
-    if [ -z "$key" ]
-    then
-        key="${SSH_KEY:-"${HOME}/.ssh/id_rsa"}"
-    fi
+    key="${SSH_KEY:-"${HOME}/.ssh/id_rsa"}"
     [ -r "$key" ] || return 0
     eval "$(ssh-agent -s)" > /dev/null 2>&1
     ssh-add "$key" > /dev/null 2>&1
@@ -425,7 +436,7 @@ _koopa_activate_ssh_key() {
 _koopa_activate_venv() {
     # """
     # Activate Python default virtual environment.
-    # Updated 2019-10-29.
+    # Updated 2019-11-15.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
@@ -442,14 +453,12 @@ _koopa_activate_venv() {
     # """
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
-    local env_name
-    env_name="${1:-}"
-    if [ -z "$env_name" ]
-    then
-        env_name="base"
-    fi
+    local name
+    name="${1:-"base"}"
+    local prefix
+    prefix="$(_koopa_venv_prefix)"
     local script
-    script="${XDG_DATA_HOME}/virtualenvs/${env_name}/bin/activate"
+    script="${prefix}/${name}/bin/activate"
     [ -r "$script" ] || return 0
     # shellcheck source=/dev/null
     . "$script"
