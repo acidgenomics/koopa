@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 name="rmate"
 version="$(_koopa_variable "$name")"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 name="gsl"
 version="$(_koopa_variable "$name")"

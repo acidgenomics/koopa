@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
 # Need to improve this:
 # > _koopa_update_r_config
