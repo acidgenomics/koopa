@@ -29,5 +29,5 @@ _koopa_message "Installing ${name} ${version}."
 
 _koopa_link_cellar "$name" "$version"
 
-"$exe_file" --version
+"$exe_file" -v
 command -v "$exe_file"
