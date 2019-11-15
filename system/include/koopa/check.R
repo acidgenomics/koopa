@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-14.
+## Updated 2019-11-15.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -677,6 +677,7 @@ installed(
 )
 
 
+
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
     message("\nLinux specific:")
@@ -698,19 +699,19 @@ if (isTRUE(linux)) {
         expected = expectedVersion("rstudio-server")
     )
     ## This is used for shebang. Version 8.30 marks support of `-S` flag.
-    checkVersion(
-        name = "env (coreutils)",
-        whichName = "env",
-        current = currentVersion("env"),
-        expected = expectedVersion("coreutils")
-    )
+    ## > checkVersion(
+    ## >     name = "env (coreutils)",
+    ## >     whichName = "env",
+    ## >     current = currentVersion("env"),
+    ## >     expected = expectedVersion("coreutils")
+    ## > )
     ## > checkVersion(
     ## >     name = "rename (Perl File::Rename)",
     ## >     whichName = "rename",
     ## >     current = currentVersion("perl-file-rename"),
     ## >     expected = expectedVersion("perl-file-rename")
     ## > )
-} else if (os == "darwin") {
+} else if (identical(os, "darwin")) {
     message("\nmacOS specific:")
     checkVersion(
         name = "Homebrew",
@@ -732,6 +733,9 @@ if (isTRUE(linux)) {
         current = currentVersion("gcc-darwin"),
         expected = expectedVersion("clang")
     )
+
+
+
 }
 
 

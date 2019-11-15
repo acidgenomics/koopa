@@ -40,7 +40,7 @@ conda="4.7.12"
 coreutils="8.31"
 
 # https://docs.docker.com/install/
-docker="19.03.4"
+docker="19.03.5"
 
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
@@ -172,7 +172,7 @@ shellcheck="0.7.0"
 shiny-server="1.5.12.933"
 
 # https://github.com/sylabs/singularity/releases
-singularity="3.4.2-1"
+singularity="3.5.0"
 
 # https://www.latex-project.org/get/
 tex="2019"
