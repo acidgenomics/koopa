@@ -74,10 +74,10 @@ details:
 
 examples:
     # Default mode
-    . /usr/local/koopa/activate
+    . KOOPA_HOME/activate
 
     # Minimal mode
-    minimal=1 . /usr/local/koop/activate
+    minimal=1 . KOOPA_HOME/activate
 
 note:
     POSIX script.
