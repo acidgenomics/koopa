@@ -7,7 +7,7 @@
 # https://github.com/sindresorhus/pure
 
 # Debugging:
-# > typeset _acid_prompt_state
+# > typeset _koopa_prompt_state
 
 # Prompt:
 # - %* : time
@@ -19,8 +19,8 @@
 # - %~ : current path
 # - %(?..) : prompt conditional - %(condition.true.false)
 
-_acid_prompt_setup() {
-    PROMPT="$(_acid_prompt)"
+_koopa_prompt_setup() {
+    PROMPT="$(_koopa_prompt)"
 }
 
-_acid_prompt_setup "$@"
+_koopa_prompt_setup "$@"

@@ -4,12 +4,12 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
 base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
 version="1.0"
 
-_acid_download "${base_url}/scsig.all.v${version}.symbols.gmt"
-_acid_download "${base_url}/scsig.all.v${version}.entrez.gmt"
-_acid_download "${base_url}/scsig.v${version}.metadata.xls"
-_acid_download "${base_url}/scsig.v${version}.metadata.txt"
+_koopa_download "${base_url}/scsig.all.v${version}.symbols.gmt"
+_koopa_download "${base_url}/scsig.all.v${version}.entrez.gmt"
+_koopa_download "${base_url}/scsig.v${version}.metadata.xls"
+_koopa_download "${base_url}/scsig.v${version}.metadata.txt"

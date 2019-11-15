@@ -3,8 +3,8 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_no_args "$@"
-_acid_assert_is_installed brew
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed brew
 
 brew install rustup
 rustup-init -v -y --no-modify-path

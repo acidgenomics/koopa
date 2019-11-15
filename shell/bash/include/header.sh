@@ -15,12 +15,12 @@ source "${KOOPA_BASH_INC}/../../posix/include/functions.sh"
 # shellcheck source=/dev/null
 source "${KOOPA_BASH_INC}/functions.sh"
 
-_acid_help "$@"
+_koopa_help "$@"
 
 # Require sudo permission to run 'sbin/' scripts.
 if echo "$0" | grep -q "/sbin/"
 then
-    _acid_assert_has_sudo
+    _koopa_assert_has_sudo
 fi
 
 unset -v KOOPA_BASH_INC

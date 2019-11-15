@@ -3,7 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_no_envs
+_koopa_assert_has_no_envs
 
 while (("$#"))
 do
@@ -33,7 +33,7 @@ do
             shift 2
             ;;
         *)
-            _acid_invalid_arg "$1"
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
@@ -43,23 +43,23 @@ if [[ -z "${git_dir:-}" ]]
 then
     git_dir="${HOME}/git/bcbio-nextgen"
 fi
-_acid_assert_is_dir "$git_dir"
+_koopa_assert_is_dir "$git_dir"
 
 # Locate bcbio python.
 if [[ -z "${bcbio_python:-}" ]]
 then
-    bcbio_python="$(_acid_realpath "bcbio_python")"
+    bcbio_python="$(_koopa_realpath "bcbio_python")"
 fi
-_acid_assert_is_executable "$bcbio_python"
+_koopa_assert_is_executable "$bcbio_python"
 
 # Locate bcbio installation directory.
 if [[ -z "${install_dir:-}" ]]
 then
     install_dir="$(dirname "$(dirname "$(dirname "$bcbio_python")")")"
 fi
-_acid_assert_is_dir "$install_dir"
+_koopa_assert_is_dir "$install_dir"
 
-_acid_message "Patching bcbio installation."
+_koopa_message "Patching bcbio installation."
 
 cat << EOF
 git_dir:
@@ -73,22 +73,22 @@ EOF
 timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio/"
 log_file="${log_dir}/${timestamp}-patch-bcbio.log"
-_acid_message "Saving log to '${log_file}'."
+_koopa_message "Saving log to '${log_file}'."
 mkdir -pv "$log_dir"
 
-_acid_message "Removing Python cache and compiled pyc files in Git repo."
+_koopa_message "Removing Python cache and compiled pyc files in Git repo."
 find "$git_dir" -name "*.pyc" -delete
 find "$git_dir" -name "__pycache__" -type d -exec rm -rv {} \;
 
-_acid_message "Removing Python installer cruft inside 'anaconda/lib/'."
+_koopa_message "Removing Python installer cruft inside 'anaconda/lib/'."
 rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
 
 # Install command must be run relative to our forked git repo.
 # Note the use of absolute path to bcbio_python here.
 (
     cd "$git_dir" || exit 1
-    _acid_message "Removing any existing unit test output."
+    _koopa_message "Removing any existing unit test output."
     rm -frv tests/test_automated_output
-    _acid_message "Patching installation via 'setup.py' script."
+    _koopa_message "Patching installation via 'setup.py' script."
     "$bcbio_python" setup.py install 2>&1 | tee "$log_file"
 )

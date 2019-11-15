@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 name="zsh"
-version="$(_acid_variable "$name")"
-prefix="$(_acid_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_acid_tmp_dir)/${name}"
-build_os_string="$(_acid_build_os_string)"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
-_acid_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version}."
 
 (
     rm -fr "$tmp_dir"
@@ -15,8 +15,8 @@ _acid_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     url_stem="https://sourceforge.net/projects/zsh/files/zsh"
     file="zsh-${version}.tar.xz"
-    _acid_download "${url_stem}/${version}/${file}/download" "$file"
-    _acid_extract "$file"
+    _koopa_download "${url_stem}/${version}/${file}/download" "$file"
+    _koopa_extract "$file"
     cd "zsh-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -28,8 +28,8 @@ _acid_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-_acid_link_cellar "$name" "$version"
-_acid_update_shells "$name"
+_koopa_link_cellar "$name" "$version"
+_koopa_update_shells "$name"
 
 command -v "$exe_file"
 "$exe_file" --version

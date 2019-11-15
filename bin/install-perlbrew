@@ -4,15 +4,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
-_acid_assert_has_no_envs
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
 
 name="perlbrew"
-prefix="$(_acid_app_prefix)/${name}"
+prefix="$(_koopa_app_prefix)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 rm -fr "${HOME}/.perlbrew"
-_acid_prefix_mkdir "$prefix"
+_koopa_prefix_mkdir "$prefix"
 
 (
     # Ensure existing preferences are removed.
@@ -22,7 +22,7 @@ _acid_prefix_mkdir "$prefix"
     curl -L https://install.perlbrew.pl | bash
 )
 
-_acid_set_permissions "$prefix"
+_koopa_set_permissions "$prefix"
 
 command -v "$exe_file"
 "$exe_file" --version

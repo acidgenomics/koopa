@@ -4,7 +4,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_args "$@"
+_koopa_assert_has_args "$@"
 
 config=0
 force=0
@@ -31,7 +31,7 @@ do
             break
             ;;
         --*|-*)
-            _acid_invalid_arg "$1"
+            _koopa_invalid_arg "$1"
             ;;
         *)
             POSITIONAL+=("$1")
@@ -44,12 +44,12 @@ set -- "${POSITIONAL[@]}"
 source_name="$1"
 symlink_name="${2:-}"
 
-dot_dir="$(_acid_dotfiles_config_link)"
+dot_dir="$(_koopa_dotfiles_config_link)"
 
 # Note that this step automatically links into koopa config for users.
 if [[ ! -d "$dot_dir" ]]
 then
-    dot_repo="$(_acid_dotfiles_source_repo)"
+    dot_repo="$(_koopa_dotfiles_source_repo)"
     rm -frv "$dot_dir"
     ln -fnsv "$dot_repo" "$dot_dir"
 fi
@@ -57,13 +57,13 @@ fi
 # Private file.
 if [[ "$private" -eq 1 ]]
 then
-    dot_dir="$(_acid_dotfiles_private_config_link)"
+    dot_dir="$(_koopa_dotfiles_private_config_link)"
 fi
 
-_acid_assert_is_dir "$dot_dir"
+_koopa_assert_is_dir "$dot_dir"
 
 source_path="${dot_dir}/${source_name}"
-_acid_assert_is_existing "$source_path"
+_koopa_assert_is_existing "$source_path"
 
 # Define optional target symlink name.
 if [[ -z "$symlink_name" ]]
@@ -86,7 +86,7 @@ fi
 # Inform the user when nuking a broken symlink.
 if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
 then
-    _acid_message "Overwriting broken link: '${symlink_path}'."
+    _koopa_message "Overwriting broken link: '${symlink_path}'."
     rm -fv "$symlink_path"
 fi
 
@@ -95,14 +95,14 @@ if [[ -L "$symlink_path" ]] &&
     [[ -f "$symlink_path" || -d "$symlink_path" ]] &&
     [[ "$force" -eq 0 ]]
 then
-    _acid_stop "Existing symlink: '${symlink_path}'."
+    _koopa_stop "Existing symlink: '${symlink_path}'."
     exit 1
 elif [[ ! -L "$symlink_path" ]] && [[ -e "$symlink_path" ]]
 then
-    _acid_stop "Existing file: '${symlink_path}'."
+    _koopa_stop "Existing file: '${symlink_path}'."
     exit 1
 fi
 
-_acid_message "Symlinking '$(basename "$symlink_path")'."
+_koopa_message "Symlinking '$(basename "$symlink_path")'."
 rm -fv "$symlink_path"
 ln -fnsv "$source_path" "$symlink_path"

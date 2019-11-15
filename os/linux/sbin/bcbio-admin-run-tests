@@ -27,21 +27,21 @@ do
             shift 2
             ;;
         *)
-            _acid_invalid_arg "$1"
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
 
-_acid_assert_is_dir "$bcbio_prefix"
+_koopa_assert_is_dir "$bcbio_prefix"
 
 bin_dir="${bcbio_prefix}/${version}/tools/bin"
-_acid_assert_is_dir "$bin_dir"
+_koopa_assert_is_dir "$bin_dir"
 
 git_dir="${bcbio_prefix}/git"
-_acid_assert_is_dir "$git_dir"
+_koopa_assert_is_dir "$git_dir"
 
 tests_dir="${git_dir}/tests"
-_acid_assert_is_dir "$tests_dir"
+_koopa_assert_is_dir "$tests_dir"
 
 (
     export PATH="${bin_dir}:${PATH}"

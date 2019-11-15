@@ -27,21 +27,21 @@ do
             shift 2
             ;;
         *)
-            _acid_invalid_arg "$1"
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
 
-_acid_assert_is_dir "$bcbio_prefix"
+_koopa_assert_is_dir "$bcbio_prefix"
 
 conda_dir="${bcbio_prefix}/${version}/install/anaconda"
-_acid_assert_is_dir "$conda_dir"
+_koopa_assert_is_dir "$conda_dir"
 
 conda_exe="${conda_dir}/bin/conda"
-_acid_assert_is_executable "$conda_exe"
+_koopa_assert_is_executable "$conda_exe"
 
-_acid_message "Conda: '${conda_exe}'."
-_acid_message "Removing extracted Conda packages."
-_acid_note "Package tarballs will be preserved."
+_koopa_message "Conda: '${conda_exe}'."
+_koopa_message "Removing extracted Conda packages."
+_koopa_note "Package tarballs will be preserved."
 
 "$conda_exe" clean --yes --packages
