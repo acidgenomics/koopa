@@ -271,7 +271,7 @@ _koopa_add_to_manpath_start "${HOME}/.local/share/man"
 # Koopa paths                                                               {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_activate_prefix "$KOOPA_HOME"
+_koopa_activate_prefix "$KOOPA_PREFIX"
 _koopa_activate_prefix "${KOOPA_HOME}/shell/${KOOPA_SHELL}"
 
 if _koopa_is_linux

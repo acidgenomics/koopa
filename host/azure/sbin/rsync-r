@@ -15,7 +15,7 @@ _koopa_assert_is_dir "$r_dir"
 
 lib_link="${r_dir}/site-library/current"
 
-koopa_home="$(_koopa_home)"
+koopa_home="$(_koopa_prefix)"
 r_home="$(_koopa_r_home)"
 
 mapfile -t flags < <(_koopa_rsync_flags)

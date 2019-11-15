@@ -25,7 +25,7 @@ done
 # ==============================================================================
 
 source_repo="${1:-"https://github.com/mjsteinbaugh/dotfiles.git"}"
-target_dir="$(_koopa_home)/dotfiles"
+target_dir="$(_koopa_prefix)/dotfiles"
 if [[ -d "$target_dir" ]]
 then
     _koopa_note "Dotfiles already installed at '${target_dir}'."
