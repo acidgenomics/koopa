@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This still needs tweaks after migration to '/n/app' configuration.
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
@@ -35,31 +37,35 @@ do
     esac
 done
 
+# Don't attempt to patch system env to support '-S' flag.
 if [[ -e "/bin/env.bak" ]]
 then
-    sudo rm /bin/env
-    sudo mv /bin/env.bak /bin/env
+    sudo rm "/bin/env"
+    sudo mv "/bin/env.bak" "/bin/env"
 fi
 
 _acid_message "Updating '/etc/profile.d'."
 _acid_update_profile
 sudo ln -fnsv \
-    /usr/local/koopa/host/azure/etc/profile.d/constellation.sh \
-    /etc/profile.d/.
+    "${KOOPA_HOME}/host/azure/etc/profile.d/constellation.sh" \
+    "/etc/profile.d/."
 
 _acid_message "Updating '/etc/cron.d'."
-sudo rm -fv /etc/cron.d/cpi-*
-sudo rm -fv /etc/cron.d/constellation
-sudo cp -v /usr/local/koopa/host/azure/etc/cron.d/constellation \
-    /etc/cron.d/constellation
+sudo rm -fv "/etc/cron.d/cpi-"*
+sudo rm -fv "/etc/cron.d/constellation"
+sudo cp -v \
+    "${KOOPA_HOME}/host/azure/etc/cron.d/constellation" \
+    "/etc/cron.d/constellation"
 
 # Refer to 'https://github.com/acidgenomics/docker' for details.
 _acid_message "Updating Docker config."
 sudo systemctl stop docker
-sudo ln -fnsv /usr/local/koopa/os/fedora/etc/docker/* /etc/docker/.
-sudo rm -frv /var/lib/docker
-sudo mkdir -pv /data00/var/lib/docker
-sudo ln -fnsv /data00/var/lib/docker /var/lib/docker
+sudo ln -fnsv \
+    "${KOOPA_HOME}/os/fedora/etc/docker/"* \
+    "/etc/docker/."
+sudo rm -frv "/var/lib/docker"
+sudo mkdir -pv "/data00/var/lib/docker"
+sudo ln -fnsv "/data00/var/lib/docker" "/var/lib/docker"
 sudo systemctl enable docker
 sudo systemctl start docker
 

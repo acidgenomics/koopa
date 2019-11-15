@@ -15,7 +15,7 @@ allow_other_channels: false
 
 # Change default environment directory path.
 # > envs_dirs:
-# >   - /usr/local/miniconda3/envs
+# >   - /n/app/conda/envs
 
 # Don't change the command prompt (PS1) upon activation.
 # > conda config --set changeps1 no

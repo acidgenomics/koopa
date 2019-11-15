@@ -104,7 +104,8 @@ then
     source_repo="https://github.com/acidgenomics/koopa.git"
     if [[ "$shared" -eq 1 ]]
     then
-        prefix="/usr/local"
+        # Previously '/usr/local' until 2019-11-14.
+        prefix="/n/app"
     else
         XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
         prefix="$XDG_DATA_HOME"
