@@ -5,7 +5,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 . "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
-if _koopa_is_shared
+if _koopa_is_shared_install
 then
     rm -fv "/etc/profile.d/zzz-koopa.sh"
 fi
