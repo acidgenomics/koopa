@@ -7,7 +7,13 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed pip python3
 
-_koopa_message "Installing pipx."
+# Customize install with environment variables.
+# https://pipxproject.github.io/pipx/installation/
+export PIPX_BIN_DIR="${PIPX_BIN_DIR:-"${HOME}/.local/bin"}"
+export PIPX_HOME="${PIPX_HOME:-"${HOME}/.local/pipx"}"
+pipx_exe="${PIPX_BIN_DIR}/pipx"
+
+_koopa_message "Installing pipx at '${PIPX_HOME}' and '${PIPX_BIN_DIR}'."
 
 python_exe="$(_koopa_realpath "python3")"
 _koopa_message "Python: ${python_exe}"
@@ -32,8 +38,8 @@ envs=(
 for env in "${envs[@]}"
 do
     # Can pass '--force' flag here to force reinstall.
-    "${HOME}/.local/bin/pipx" install "$env"
+    "$pipx_exe" install "$env"
 done
 
-_koopa_message "pipx installed successfully at '${HOME}/.local/pipx."
+_koopa_message "pipx installed successfully."
 _koopa_note "Restart the shell."
