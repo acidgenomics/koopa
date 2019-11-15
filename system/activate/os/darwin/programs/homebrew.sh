@@ -17,6 +17,24 @@ export HOMEBREW_NO_ANALYTICS=1
 
 
 
+# profile.d                                                                 {{{1
+# ==============================================================================
+
+if [ -d /usr/local/etc/profile.d ]
+then
+    for i in /usr/local/etc/profile.d/*.sh
+    do
+        if [ -r "$i" ]
+        then
+            # shellcheck source=/dev/null
+            . "$i"
+        fi
+    done
+    unset i
+fi
+
+
+
 # GNU coreutils                                                             {{{1
 # ==============================================================================
 
