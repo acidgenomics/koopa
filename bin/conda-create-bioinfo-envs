@@ -61,6 +61,7 @@ conda-create-env cromwell
 conda-create-env fgbio
 conda-create-env gatk4
 conda-create-env nextflow
+conda-create-env snakemake
 
 
 
