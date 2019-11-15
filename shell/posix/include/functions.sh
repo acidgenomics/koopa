@@ -6,13 +6,29 @@
 # Prefixes                                                                  {{{1
 # ==============================================================================
 
-
 _koopa_prefix() {
     # """
     # Koopa prefix (home).
     # Updated 2019-08-18.
     # """
     echo "$KOOPA_PREFIX"
+}
+
+_koopa_app_prefix() {
+    # """
+    # Custom application install prefix.
+    # Updated 2019-11-14.
+    #
+    # Inspired by HMS RC devops approach on O2 cluster.
+    # """
+    local prefix
+    if _koopa_is_shared_install
+    then
+        prefix="/n/app"
+    else
+        prefix="$XDG_DATA_HOME"
+    fi
+    echo "$prefix"
 }
 
 _koopa_make_prefix() {
@@ -30,15 +46,67 @@ _koopa_make_prefix() {
     echo "$prefix"
 }
 
-# FIXME _koopa_prefix_aspera
-# FIXME _koopa_prefix_autojump
-# FIXME _koopa_prefix_bcbio
-# FIXME _koopa_prefix_ensembl_perl_api
-# FIXME _koopa_prefix_perlbrew
-# FIXME _koopa_prefix_pyenv
-# FIXME _koopa_prefix_rbenv
-# FIXME _koopa_prefix_rust
-# FIXME _koopa_prefix_venv
+# Applications                                                              {{{2
+# ------------------------------------------------------------------------------
+
+_koopa_aspera_prefix() {
+    # """
+    # Aspera Connect prefix.
+    # Updated 2019-11-15.
+    # """
+    echo "${HOME}/.aspera/connect"
+}
+
+_koopa_autojump_prefix() {
+    # """
+    # autojump prefix.
+    # Updated 2019-11-15.
+    # """
+    echo "${HOME}/.autojump"
+}
+
+_koopa_bcbio_prefix() {
+    # """
+    # bcbio-nextgen prefix.
+    # Updated 2019-11-15.
+    local prefix
+    local host
+    host="$(_koopa_host_type)"
+    if [ "$host" = "harvard-o2" ]
+    then
+        prefix="/n/app/bcbio/tools"
+    elif [ "$host" = "harvard-odyssey" ]
+    then
+        prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
+    else
+        prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
+    fi
+    echo "$prefix"
+}
+
+_koopa_ensembl_perl_api_prefix() {
+    # """
+    # Ensembl Perl API prefix.
+    # Updated 2019-11-15.
+    local prefix
+    prefix="$(_koopa_app_prefix)/ensembl"
+    echo "$prefix"
+}
+
+_koopa_perlbrew_prefix() {
+    # """
+    # Perlbrew prefix.
+    # Updated 2019-11-15.
+    # """
+    local prefix
+    prefix="$(_koopa_app_prefix)/perlbrew"
+    echo "$prefix"
+}
+
+# FIXME _koopa_pyenv_prefix
+# FIXME _koopa_rbenv_prefix
+# FIXME _koopa_rust_prefix
+# FIXME _koopa_venv_prefix
 
 
 
@@ -51,14 +119,9 @@ _koopa_activate_aspera() {
     # Updated 2019-11-15.
     # """
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="${HOME}/.aspera/connect"
-    fi
+    prefix="$(_koopa_aspera_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
-    return 0
 }
 
 _koopa_activate_autojump() {
@@ -70,11 +133,7 @@ _koopa_activate_autojump() {
     # - https://github.com/wting/autojump
     # """
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="${HOME}/.autojump"
-    fi
+    prefix="$(_koopa_autojump_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
     local script
@@ -94,7 +153,7 @@ _koopa_activate_autojump() {
 _koopa_activate_bcbio() {
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # Updated 2019-11-14.
+    # Updated 2019-11-15.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -105,21 +164,7 @@ _koopa_activate_bcbio() {
     _koopa_is_linux || return 0
     ! _koopa_is_installed bcbio_nextgen.py || return 0
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        local host
-        host="$(_koopa_host_type)"
-        if [ "$host" = "harvard-o2" ]
-        then
-            prefix="/n/app/bcbio/tools"
-        elif [ "$host" = "harvard-odyssey" ]
-        then
-            prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
-        else
-            prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
-        fi
-    fi
+    prefix="$(_koopa_bcbio_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_force_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
@@ -159,8 +204,6 @@ _koopa_activate_conda() {
     return 0
 }
 
-# FIXME Add a check for Perl 5.26 here.
-
 _koopa_activate_ensembl_perl_api() {
     # """
     # Activate Ensembl Perl API.
@@ -170,11 +213,7 @@ _koopa_activate_ensembl_perl_api() {
     # > perlbrew switch perl-5.26
     # """
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="$(_koopa_app_prefix)/ensembl"
-    fi
+    prefix="$(_koopa_ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
@@ -213,7 +252,7 @@ _koopa_activate_llvm() {
 _koopa_activate_perlbrew() {
     # """
     # Activate Perlbrew.
-    # Updated 2019-11-14.
+    # Updated 2019-11-15.
     #
     # Only attempt to autoload for bash or zsh.
     #
@@ -224,11 +263,7 @@ _koopa_activate_perlbrew() {
     ! _koopa_is_installed perlbrew || return 0
     _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
     local prefix
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="$(_koopa_app_prefix)/perlbrew"
-    fi
+    prefix="$(_koopa_perlbrew_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/etc/bashrc"
@@ -909,23 +944,6 @@ _koopa_add_to_path_start() {
     [ ! -d "$1" ] && return 0
     echo "$path" | grep -q "$1" && return 0
     export PATH="${1}:${PATH:-}"
-}
-
-_koopa_app_prefix() {
-    # """
-    # Custom application install prefix.
-    # Updated 2019-11-14.
-    #
-    # Inspired by HMS RC devops approach on O2 cluster.
-    # """
-    local prefix
-    if _koopa_is_shared_install
-    then
-        prefix="/n/app"
-    else
-        prefix="$XDG_DATA_HOME"
-    fi
-    echo "$prefix"
 }
 
 _koopa_array_to_r_vector() {
