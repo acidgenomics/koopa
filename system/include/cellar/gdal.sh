@@ -5,9 +5,9 @@ _koopa_assert_is_installed proj
 name="gdal"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-build_prefix="$(_koopa_build_prefix)"
+build_prefix="$(_koopa_make_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/gdalinfo"
 
 _koopa_message "Installing ${name} ${version}."
@@ -28,7 +28,7 @@ _koopa_message "Installing ${name} ${version}."
     CPPFLAGS="-I${build_prefix}/include" \
         LDFLAGS="-L${build_prefix}/lib" \
         ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix" \
         --with-proj="$build_prefix" \
         --with-python="python3"

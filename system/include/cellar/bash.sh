@@ -6,7 +6,7 @@ major_version="$(_koopa_major_version "$version")"
 patches="$(echo "$version" | cut -d '.' -f 3)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 gnu_mirror="https://ftpmirror.gnu.org"
 exe_file="${prefix}/bin/${name}"
 
@@ -39,7 +39,7 @@ _koopa_message "Installing ${name} ${version}."
         done
     )
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix"
     make --jobs="$CPU_COUNT"
     make test

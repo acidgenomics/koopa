@@ -20,7 +20,7 @@ _koopa_assert_is_installed jar
 name="sra-tools"
 version="$(_koopa_variable "$name")"
 build_prefix="${tmp_dir}/ncbi-outdir"
-ngs_libdir="$(_koopa_build_prefix)/lib64"
+ngs_libdir="$(_koopa_make_prefix)/lib64"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
