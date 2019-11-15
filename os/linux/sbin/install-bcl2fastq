@@ -13,7 +13,7 @@ prefix="$(_acid_build_prefix)/${name}"
 _acid_message "Installing ${name} ${version}."
 
 file="bcl2fastq2-v2-20-0-linux-x86-64.zip"
-url="https://support.illumina.com/content/dam/illumina-support/documents/\
+url="ftp://webdata2:webdata2@ussd-ftp.illumina.com/\
 downloads/software/bcl2fastq/${file}"
 
 (
