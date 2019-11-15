@@ -26,7 +26,7 @@ update-venv
 update-rust
 
 # Loop across config directories and update git repos.
-config_dir="$(_koopa_config_dir)"
+config_dir="$(_koopa_config_prefix)"
 dirs=(
     Rcheck
     docker

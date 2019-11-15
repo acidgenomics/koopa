@@ -292,5 +292,5 @@ _koopa_activate_prefix "${KOOPA_PREFIX}/host/$(_koopa_host_type)"
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_activate_prefix "$(_koopa_config_dir)/docker"
-_koopa_activate_prefix "$(_koopa_config_dir)/scripts-private"
+_koopa_activate_prefix "$(_koopa_config_prefix)/docker"
+_koopa_activate_prefix "$(_koopa_config_prefix)/scripts-private"

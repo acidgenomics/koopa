@@ -53,7 +53,7 @@ fi
 if [[ "$mike" -eq 1 ]]
 then
     source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
-    target_dir="$(_koopa_config_dir)/dotfiles-private"
+    target_dir="$(_koopa_config_prefix)/dotfiles-private"
     if [[ -d "$target_dir" ]]
     then
         _koopa_note "Dotfiles already installed at '${target_dir}'."
