@@ -1136,7 +1136,7 @@ _acid_current_version() {
     script="${KOOPA_HOME}/system/include/version/${name}.sh"
     if [ ! -x "$script" ]
     then
-        _koopa_stop "'${name}' is not supported."
+        _acid_stop "'${name}' is not supported."
     fi
     "$script"
 }

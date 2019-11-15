@@ -83,8 +83,8 @@ tools_dir="${prefix}/tools"
         2>&1 | tee "$log_file"
 )
 
-_koopa_message "Fixing MACS2/numpy issue."
-_koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
+_acid_message "Fixing MACS2/numpy issue."
+_acid_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
 "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
 # Keep install owned by current user, so we can install genomes easily.
