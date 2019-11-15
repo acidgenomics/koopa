@@ -11,8 +11,8 @@ options(
 message("koopa programs exported in PATH.")
 
 ## Note that these won't pick up in isolated RStudio configuration.
-## > Sys.setenv("KOOPA_HOME" = "/n/app/koopa")
-koopaHome <- Sys.getenv("KOOPA_HOME")
+## > Sys.setenv("KOOPA_PREFIX" = "/n/app/koopa")
+koopaHome <- Sys.getenv("KOOPA_PREFIX")
 path <- Sys.getenv("PATH")
 stopifnot(
     nzchar(koopaHome),

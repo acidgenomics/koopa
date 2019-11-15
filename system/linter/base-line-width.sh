@@ -7,16 +7,16 @@ set -Eeu -o pipefail
 # Returns with 'true' or 'false' exit codes.
 
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
 path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
-    "${KOOPA_HOME}/cellar"
-    "${KOOPA_HOME}/conda"
-    "${KOOPA_HOME}/dotfiles"
-    "${KOOPA_HOME}/os/darwin/etc/R/rstudio"
-    "${KOOPA_HOME}/shell/zsh/functions"
+    "${KOOPA_PREFIX}/cellar"
+    "${KOOPA_PREFIX}/conda"
+    "${KOOPA_PREFIX}/dotfiles"
+    "${KOOPA_PREFIX}/os/darwin/etc/R/rstudio"
+    "${KOOPA_PREFIX}/shell/zsh/functions"
     ".git"
 )
 

@@ -272,22 +272,22 @@ _koopa_add_to_manpath_start "${HOME}/.local/share/man"
 # ------------------------------------------------------------------------------
 
 _koopa_activate_prefix "$KOOPA_PREFIX"
-_koopa_activate_prefix "${KOOPA_HOME}/shell/${KOOPA_SHELL}"
+_koopa_activate_prefix "${KOOPA_PREFIX}/shell/${KOOPA_SHELL}"
 
 if _koopa_is_linux
 then
-    _koopa_activate_prefix "${KOOPA_HOME}/os/linux"
+    _koopa_activate_prefix "${KOOPA_PREFIX}/os/linux"
     if _koopa_is_debian
     then
-        _koopa_activate_prefix "${KOOPA_HOME}/os/debian"
+        _koopa_activate_prefix "${KOOPA_PREFIX}/os/debian"
     elif _koopa_is_fedora
     then
-        _koopa_activate_prefix "${KOOPA_HOME}/os/fedora"
+        _koopa_activate_prefix "${KOOPA_PREFIX}/os/fedora"
     fi
 fi
 
-_koopa_activate_prefix "${KOOPA_HOME}/os/$(_koopa_os_type)"
-_koopa_activate_prefix "${KOOPA_HOME}/host/$(_koopa_host_type)"
+_koopa_activate_prefix "${KOOPA_PREFIX}/os/$(_koopa_os_type)"
+_koopa_activate_prefix "${KOOPA_PREFIX}/host/$(_koopa_host_type)"
 
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------

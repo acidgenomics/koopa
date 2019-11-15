@@ -3,7 +3,7 @@
 # Initialize ZSH.
 # Updated 2019-10-31.
 
-koopa_fpath="${KOOPA_HOME}/shell/zsh/functions"
+koopa_fpath="${KOOPA_PREFIX}/shell/zsh/functions"
 if [[ ! -d "$koopa_fpath" ]]
 then
     _koopa_warning "fpath directory is missing: '${koopa_fpath}'."

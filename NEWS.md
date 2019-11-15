@@ -272,7 +272,7 @@ This enables shared shell configuratino of all users, via configuration in
 
 ### Minor changes
 
-- `KOOPA_HOME` path is always expanded, and symlinks are now resolved.
+- `KOOPA_PREFIX` path is always expanded, and symlinks are now resolved.
 - Improved Travis CI testing approach.
 - Reorganized workflow scripts.
 - Split out functions into individual scripts.

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_no_envs
 
 anaconda=0
@@ -87,7 +87,7 @@ else
     )
 fi
 
-ln -fnsv "${KOOPA_HOME}/os/linux/etc/conda/condarc" \
+ln -fnsv "${KOOPA_PREFIX}/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
 _koopa_set_permissions "$prefix"

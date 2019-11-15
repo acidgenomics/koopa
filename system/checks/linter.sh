@@ -4,11 +4,11 @@ set -Eeu -o pipefail
 # Linter checks.
 # Updated 2019-10-26.
 
-KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
+KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
-export KOOPA_HOME
+export KOOPA_PREFIX
 
-linter_dir="${KOOPA_HOME}/system/linter"
+linter_dir="${KOOPA_PREFIX}/system/linter"
 for file in "${linter_dir}/"*".sh"
 do
     if [[ -n "${CI:-}" ]]

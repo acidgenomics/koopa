@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-. "${KOOPA_HOME}/shell/posix/include/functions.sh"
+. "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
 if _koopa_is_shared_install
 then
