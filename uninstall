@@ -16,4 +16,4 @@ then
 fi
 
 rm -frv "$(_koopa_config_dir)"
-rm -frv "$KOOPA_HOME"
+rm -frv "$KOOPA_PREFIX"

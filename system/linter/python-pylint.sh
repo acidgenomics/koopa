@@ -17,7 +17,7 @@ then
     exit 0
 fi
 
-path="${1:-$KOOPA_HOME}"
+path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
     "${KOOPA_HOME}/cellar"

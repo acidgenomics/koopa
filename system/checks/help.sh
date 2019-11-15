@@ -17,7 +17,7 @@ while IFS= read -r -d $'\0'
 do
     man_dirs+=("$REPLY")
 done < <( \
-    find "$KOOPA_HOME" \
+    find "$KOOPA_PREFIX" \
         -mindepth 1 \
         -type d \
         -name "man" \
@@ -38,7 +38,7 @@ while IFS= read -r -d $'\0'
 do
     bin_dirs+=("$REPLY")
 done < <( \
-    find "$KOOPA_HOME" \
+    find "$KOOPA_PREFIX" \
         -mindepth 1 \
         -type d \
         \( -name "bin" -o -name "sbin" \) \

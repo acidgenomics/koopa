@@ -150,7 +150,7 @@ rm -frv "${KOOPA_HOME}/bin/"{host,os,sudo}
 echo "Activating koopa."
 force=1 source "${KOOPA_HOME}/activate"
 
-if [[ "$shared" -eq 0 ]] && echo "$KOOPA_HOME" | grep -qE "^/(opt|usr)/"
+if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
 then
     echo "Shared installation detected at '${KOOPA_HOME}'"
     shared=1

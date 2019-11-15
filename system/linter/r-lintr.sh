@@ -9,7 +9,7 @@ source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
 script_bn="$(_koopa_basename_sans_ext "$0")"
 
-path="${1:-$KOOPA_HOME}"
+path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
     "${KOOPA_HOME}/cellar"

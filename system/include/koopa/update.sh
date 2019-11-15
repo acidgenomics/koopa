@@ -62,7 +62,7 @@ done
 # Update repo.
 _koopa_message "Updating koopa."
 (
-    cd "$KOOPA_HOME" || exit 1
+    cd "$KOOPA_PREFIX" || exit 1
     git fetch --all
     # > git checkout master
     git pull
