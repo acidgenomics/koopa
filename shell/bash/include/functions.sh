@@ -179,7 +179,7 @@ _koopa_r_javareconf() {
     r_home="$(_koopa_r_home)"
     _koopa_set_permissions "$r_home"
     R --vanilla CMD javareconf "${java_flags[@]}"
-    # > if _koopa_is_shared
+    # > if _koopa_is_shared_install
     # > then
     # >     _koopa_assert_has_sudo
     # >     sudo R --vanilla CMD javareconf "${java_flags[@]}"
