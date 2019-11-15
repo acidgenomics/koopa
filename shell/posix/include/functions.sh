@@ -41,7 +41,7 @@ _koopa_activate_autojump() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="${HOME}/autojump"
+        prefix="${HOME}/.autojump"
     fi
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
