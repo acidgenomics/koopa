@@ -3,14 +3,46 @@
 
 
 
-# FIXME Rename _koopa_prefix and KOOPA_PREFIX to KOOPA_PREFIX
-# FIXME Define _koopa_venv_prefix function and use that internally.
-# FIXME Define _koopa_pyenv_prefix
-# FIXME Define _koopa_rbenv_prefix
+# Prefixes                                                                  {{{1
+# ==============================================================================
+
+
+_koopa_prefix() {
+    # """
+    # Koopa prefix (home).
+    # Updated 2019-08-18.
+    # """
+    echo "$KOOPA_PREFIX"
+}
+
+_koopa_make_prefix() {
+    # """
+    # Return the installation prefix to use.
+    # Updated 2019-09-27.
+    # """
+    local prefix
+    if _koopa_is_shared_install && _koopa_has_sudo
+    then
+        prefix="/usr/local"
+    else
+        prefix="${HOME}/.local"
+    fi
+    echo "$prefix"
+}
+
+# FIXME _koopa_prefix_aspera
+# FIXME _koopa_prefix_autojump
+# FIXME _koopa_prefix_bcbio
+# FIXME _koopa_prefix_ensembl_perl_api
+# FIXME _koopa_prefix_perlbrew
+# FIXME _koopa_prefix_pyenv
+# FIXME _koopa_prefix_rbenv
+# FIXME _koopa_prefix_rust
+# FIXME _koopa_prefix_venv
 
 
 
-# A                                                                         {{{1
+# Activation                                                                {{{1
 # ==============================================================================
 
 _koopa_activate_aspera() {
@@ -389,137 +421,10 @@ _koopa_activate_venv() {
     return 0
 }
 
-_koopa_add_conda_env_to_path() {
-    # """
-    # Add conda environment to PATH.
-    # Updated 2019-10-21.
-    #
-    # Consider warning if the environment is missing.
-    # """
-    _koopa_is_installed conda || return 0
-    [ -n "${CONDA_PREFIX:-}" ] || return 0
-    local bin_dir
-    bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
-    [ -d "$bin_dir" ] || return 0
-    _koopa_add_to_path_start "$bin_dir"
-}
 
-_koopa_add_config_link() {
-    # """
-    # Add a symlink into the koopa configuration directory.
-    # Updated 2019-09-23.
-    #
-    # Examples:
-    # _koopa_add_config_link vimrc
-    # _koopa_add_config_link vim
-    # """
-    local config_dir
-    config_dir="$(_koopa_config_dir)"
-    local source_file
-    source_file="$1"
-    _koopa_assert_is_existing "$source_file"
-    source_file="$(realpath "$source_file")"
-    local dest_name
-    dest_name="$2"
-    local dest_file
-    dest_file="${config_dir}/${dest_name}"
-    rm -fv "$dest_file"
-    ln -fnsv "$source_file" "$dest_file"
-}
 
-_koopa_add_to_fpath_end() {
-    # """
-    # Add directory to end of FPATH.
-    # Updated 2019-11-11.
-    #
-    # Currently only useful for ZSH activation.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${FPATH:-}" | grep -q "$1" && return 0
-    export FPATH="${FPATH:-}:${1}"
-}
-
-_koopa_add_to_fpath_start() {
-    # """
-    # Add directory to start of FPATH.
-    # Updated 2019-11-11.
-    #
-    # Currently only useful for ZSH activation.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${FPATH:-}" | grep -q "$1" && return 0
-    export FPATH="${1}:${FPATH:-}"
-}
-
-_koopa_add_to_manpath_end() {
-    # """
-    # Add directory to start of MANPATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${MANPATH:-}" | grep -q "$1" && return 0
-    export MANPATH="${MANPATH:-}:${1}"
-}
-
-_koopa_add_to_manpath_start() {
-    # """
-    # Add directory to start of MANPATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${MANPATH:-}" | grep -q "$1" && return 0
-    export MANPATH="${1}:${MANPATH:-}"
-}
-
-_koopa_add_to_path_end() {
-    # """
-    # Add directory to end of PATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "${PATH:-}" | grep -q "$1" && return 0
-    export PATH="${PATH:-}:${1}"
-}
-
-_koopa_add_to_path_start() {
-    # """
-    # Add directory to start of PATH.
-    # Updated 2019-11-11.
-    # """
-    [ ! -d "$1" ] && return 0
-    echo "$path" | grep -q "$1" && return 0
-    export PATH="${1}:${PATH:-}"
-}
-
-_koopa_app_prefix() {
-    # """
-    # Custom application install prefix.
-    # Updated 2019-11-14.
-    #
-    # Inspired by HMS RC devops approach on O2 cluster.
-    # """
-    local prefix
-    if _koopa_is_shared_install
-    then
-        prefix="/n/app"
-    else
-        prefix="$XDG_DATA_HOME"
-    fi
-    echo "$prefix"
-}
-
-_koopa_array_to_r_vector() {
-    # """
-    # Convert a bash array to an R vector string.
-    # Updated 2019-09-25.
-    #
-    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
-    # """
-    local x
-    x="$(printf '"%s", ' "$@")"
-    x="$(_koopa_strip_right "$x" ", ")"
-    printf "c(%s)\n" "$x"
-}
+# Assert checks                                                             {{{1
+# ==============================================================================
 
 _koopa_assert_has_args() {
     # """
@@ -891,6 +796,151 @@ _koopa_assert_is_matching_regex() {
     fi
     return 0
 }
+
+
+
+
+
+
+
+
+
+
+# A                                                                         {{{1
+# ==============================================================================
+
+_koopa_add_conda_env_to_path() {
+    # """
+    # Add conda environment to PATH.
+    # Updated 2019-10-21.
+    #
+    # Consider warning if the environment is missing.
+    # """
+    _koopa_is_installed conda || return 0
+    [ -n "${CONDA_PREFIX:-}" ] || return 0
+    local bin_dir
+    bin_dir="${CONDA_PREFIX}/envs/${1}/bin"
+    [ -d "$bin_dir" ] || return 0
+    _koopa_add_to_path_start "$bin_dir"
+}
+
+_koopa_add_config_link() {
+    # """
+    # Add a symlink into the koopa configuration directory.
+    # Updated 2019-09-23.
+    #
+    # Examples:
+    # _koopa_add_config_link vimrc
+    # _koopa_add_config_link vim
+    # """
+    local config_dir
+    config_dir="$(_koopa_config_dir)"
+    local source_file
+    source_file="$1"
+    _koopa_assert_is_existing "$source_file"
+    source_file="$(realpath "$source_file")"
+    local dest_name
+    dest_name="$2"
+    local dest_file
+    dest_file="${config_dir}/${dest_name}"
+    rm -fv "$dest_file"
+    ln -fnsv "$source_file" "$dest_file"
+}
+
+_koopa_add_to_fpath_end() {
+    # """
+    # Add directory to end of FPATH.
+    # Updated 2019-11-11.
+    #
+    # Currently only useful for ZSH activation.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${FPATH:-}" | grep -q "$1" && return 0
+    export FPATH="${FPATH:-}:${1}"
+}
+
+_koopa_add_to_fpath_start() {
+    # """
+    # Add directory to start of FPATH.
+    # Updated 2019-11-11.
+    #
+    # Currently only useful for ZSH activation.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${FPATH:-}" | grep -q "$1" && return 0
+    export FPATH="${1}:${FPATH:-}"
+}
+
+_koopa_add_to_manpath_end() {
+    # """
+    # Add directory to start of MANPATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${MANPATH:-}" | grep -q "$1" && return 0
+    export MANPATH="${MANPATH:-}:${1}"
+}
+
+_koopa_add_to_manpath_start() {
+    # """
+    # Add directory to start of MANPATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${MANPATH:-}" | grep -q "$1" && return 0
+    export MANPATH="${1}:${MANPATH:-}"
+}
+
+_koopa_add_to_path_end() {
+    # """
+    # Add directory to end of PATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "${PATH:-}" | grep -q "$1" && return 0
+    export PATH="${PATH:-}:${1}"
+}
+
+_koopa_add_to_path_start() {
+    # """
+    # Add directory to start of PATH.
+    # Updated 2019-11-11.
+    # """
+    [ ! -d "$1" ] && return 0
+    echo "$path" | grep -q "$1" && return 0
+    export PATH="${1}:${PATH:-}"
+}
+
+_koopa_app_prefix() {
+    # """
+    # Custom application install prefix.
+    # Updated 2019-11-14.
+    #
+    # Inspired by HMS RC devops approach on O2 cluster.
+    # """
+    local prefix
+    if _koopa_is_shared_install
+    then
+        prefix="/n/app"
+    else
+        prefix="$XDG_DATA_HOME"
+    fi
+    echo "$prefix"
+}
+
+_koopa_array_to_r_vector() {
+    # """
+    # Convert a bash array to an R vector string.
+    # Updated 2019-09-25.
+    #
+    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
+    # """
+    local x
+    x="$(printf '"%s", ' "$@")"
+    x="$(_koopa_strip_right "$x" ", ")"
+    printf "c(%s)\n" "$x"
+}
+
 
 
 
@@ -1815,14 +1865,6 @@ EOF
     echo "$path"
 }
 
-_koopa_prefix() {
-    # """
-    # Koopa prefix (home).
-    # Updated 2019-08-18.
-    # """
-    echo "$KOOPA_PREFIX"
-}
-
 _koopa_host_type() {
     # """
     # Simple host type name string to load up host-specific scripts.
@@ -2298,21 +2340,6 @@ _koopa_make_build_string() {
         string="${mach}-${os_type}-${OSTYPE}"
     fi
     echo "$string"
-}
-
-_koopa_make_prefix() {
-    # """
-    # Return the installation prefix to use.
-    # Updated 2019-09-27.
-    # """
-    local prefix
-    if _koopa_is_shared_install && _koopa_has_sudo
-    then
-        prefix="/usr/local"
-    else
-        prefix="${HOME}/.local"
-    fi
-    echo "$prefix"
 }
 
 _koopa_major_version() {
