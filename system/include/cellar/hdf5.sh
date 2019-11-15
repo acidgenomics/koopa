@@ -5,7 +5,7 @@ version="$(_koopa_variable "$name")"
 major_version="$(_koopa_major_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/h5cc"
 
 _koopa_message "Installing ${name} ${version}."
@@ -22,7 +22,7 @@ hdf5-${version}/src/${file}"
     _koopa_extract "$file"
     cd "hdf5-${version}" || exit 1
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix" \
         --enable-cxx \
         --enable-fortran

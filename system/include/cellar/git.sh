@@ -6,7 +6,7 @@ name="git"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-build_os_string="$(_koopa_build_os_string)"
+build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/${name}"
 
 _koopa_message "Installing ${name} ${version}."
@@ -21,7 +21,7 @@ _koopa_message "Installing ${name} ${version}."
     cd "git-${version}" || exit 1
     make configure
     ./configure \
-        --build="$build_os_string" \
+        --build="$build" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
     # This is now erroring on RHEL 7.7:

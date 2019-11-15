@@ -15,7 +15,7 @@ array=(
     "-------------"
     "Home: $(_koopa_home)"
     "Config: $(_koopa_config_dir)"
-    "Prefix: $(_koopa_build_prefix)"
+    "Prefix: $(_koopa_make_prefix)"
     ""
 )
 

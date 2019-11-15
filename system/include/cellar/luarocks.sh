@@ -28,7 +28,7 @@ _koopa_message "Installing ${name} ${version}."
 
 _koopa_link_cellar "$name" "$version"
 
-# > build_prefix="$(_koopa_build_prefix)
+# > build_prefix="$(_koopa_make_prefix)
 # > export LUAROCKS_PREFIX="$build_prefix"
 
 # Install Lmod dependencies.
