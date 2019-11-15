@@ -5,7 +5,7 @@
 # A                                                                         {{{1
 # ==============================================================================
 
-_acid_add_local_bins_to_path() {
+_koopa_add_local_bins_to_path() {
     # Add local build bins to PATH (e.g. '/usr/local').
     #
     # This will recurse through the local library and find 'bin/' subdirs.
@@ -14,12 +14,12 @@ _acid_add_local_bins_to_path() {
     # Updated 2019-10-22.
     local dir
     local dirs
-    _acid_add_to_path_start "$(_acid_build_prefix)/bin"
-    IFS=$'\n' read -r -d '' dirs <<< "$(_acid_bash_find_local_bin_dirs)"
+    _koopa_add_to_path_start "$(_koopa_build_prefix)/bin"
+    IFS=$'\n' read -r -d '' dirs <<< "$(_koopa_bash_find_local_bin_dirs)"
     unset IFS
     for dir in "${dirs[@]}"
     do
-        _acid_add_to_path_start "$dir"
+        _koopa_add_to_path_start "$dir"
     done
 }
 
@@ -28,7 +28,7 @@ _acid_add_local_bins_to_path() {
 # D                                                                         {{{1
 # ==============================================================================
 
-_acid_die() {
+_koopa_die() {
     # Die with a stack trace, via caller.
     #
     # > help caller
@@ -60,7 +60,7 @@ _acid_die() {
 # F                                                                         {{{1
 # ==============================================================================
 
-_acid_find_local_bin_dirs() {
+_koopa_find_local_bin_dirs() {
     # Find local bin directories.
     #
     # See also:
@@ -71,8 +71,8 @@ _acid_find_local_bin_dirs() {
     local array
     array=()
     local tmp_file
-    tmp_file="$(_acid_tmp_dir)/find"
-    find "$(_acid_build_prefix)" \
+    tmp_file="$(_koopa_tmp_dir)/find"
+    find "$(_koopa_build_prefix)" \
         -mindepth 2 \
         -maxdepth 3 \
         -name "bin" \
@@ -88,7 +88,7 @@ _acid_find_local_bin_dirs() {
     do
         array+=("$REPLY")
     done < "$tmp_file"
-    _acid_quiet_rm "$tmp_file"
+    _koopa_quiet_rm "$tmp_file"
     # Sort the array.
     # > IFS=$'\n' array=($(sort <<<"${array[*]}"))
     # > unset IFS
@@ -101,7 +101,7 @@ _acid_find_local_bin_dirs() {
 # H                                                                         {{{1
 # ==============================================================================
 
-_acid_help() {
+_koopa_help() {
     # Show usage via help flag.
     #
     # Now always calls 'man' to display nicely formatted manual page.
@@ -129,7 +129,7 @@ _acid_help() {
 # L                                                                         {{{1
 # ==============================================================================
 
-_acid_is_array_non_empty() {
+_koopa_is_array_non_empty() {
     # Is the array non-empty?
     # Particularly useful for checking against mapfile return, which currently
     # returns a length of 1 for empty input, due to newlines line break.
@@ -146,7 +146,7 @@ _acid_is_array_non_empty() {
 # R                                                                         {{{1
 # ==============================================================================
 
-_acid_r_javareconf() {
+_koopa_r_javareconf() {
     # Update rJava configuration.
     # The default Java path differs depending on the system.
     # # > R CMD javareconf -h
@@ -162,13 +162,13 @@ _acid_r_javareconf() {
     #   JAR            path to a Java archive tool
     #
     # Updated 2019-11-05.
-    _acid_assert_is_installed R java
+    _koopa_assert_is_installed R java
     local java_home
     local java_flags
     local r_home
-    java_home="$(_acid_java_home)"
+    java_home="$(_koopa_java_home)"
     [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    _acid_message "Updating R Java configuration."
+    _koopa_message "Updating R Java configuration."
     java_flags=(
         "JAVA_HOME=${java_home}"
         "JAVA=${java_home}/bin/java"
@@ -176,12 +176,12 @@ _acid_r_javareconf() {
         "JAVAH=${java_home}/bin/javah"
         "JAR=${java_home}/bin/jar"
     )
-    r_home="$(_acid_r_home)"
-    _acid_set_permissions "$r_home"
+    r_home="$(_koopa_r_home)"
+    _koopa_set_permissions "$r_home"
     R --vanilla CMD javareconf "${java_flags[@]}"
-    # > if _acid_is_shared
+    # > if _koopa_is_shared
     # > then
-    # >     _acid_assert_has_sudo
+    # >     _koopa_assert_has_sudo
     # >     sudo R --vanilla CMD javareconf "${java_flags[@]}"
     # > fi
     Rscript -e 'install.packages("rJava")'
@@ -192,7 +192,7 @@ _acid_r_javareconf() {
 # S                                                                         {{{1
 # ==============================================================================
 
-_acid_script_name() {
+_koopa_script_name() {
     # Get the calling script name.
     # Note that we're using 'caller' approach, which is Bash-specific.
     # Updated 2019-10-22.

@@ -34,5 +34,5 @@ shopt -s cmdhist
 shopt -s histappend
 
 # Prompt.
-PS1="$(_acid_prompt)"
+PS1="$(_koopa_prompt)"
 export PS1

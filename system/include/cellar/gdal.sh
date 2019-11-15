@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-_acid_assert_is_installed proj
+_koopa_assert_is_installed proj
 
 name="gdal"
-version="$(_acid_variable "$name")"
-prefix="$(_acid_cellar_prefix)/${name}/${version}"
-build_prefix="$(_acid_build_prefix)"
-tmp_dir="$(_acid_tmp_dir)/${name}"
-build_os_string="$(_acid_build_os_string)"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+build_prefix="$(_koopa_build_prefix)"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/gdalinfo"
 
-_acid_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
@@ -19,8 +19,8 @@ _acid_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
-    _acid_download "$url"
-    _acid_extract "$file"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     # Use 'configure --help' for build options.
     # If you don't need python support you can suppress it at configure using
@@ -37,7 +37,7 @@ _acid_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-_acid_link_cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 "$exe_file" --version
 command -v "$exe_file"

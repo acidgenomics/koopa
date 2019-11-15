@@ -3,33 +3,33 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_args "$@"
+_koopa_assert_has_args "$@"
 
 cloud="${HOME}/Library/Mobile\ Documents/com~apple~CloudDocs"
-_acid_assert_is_dir "$cloud"
+_koopa_assert_is_dir "$cloud"
 
 file="$1"
 local="${HOME}/.${file}"
 
 if [[ -f "$cloud" ]] && [[ -f "$local" ]]
 then
-    _acid_message "'${file}' exists in both places."
-    _acid_message "Deleting local copy."
+    _koopa_message "'${file}' exists in both places."
+    _koopa_message "Deleting local copy."
     rm -v "$local"
-    _acid_message "Adding symlink."
+    _koopa_message "Adding symlink."
     ln -fnsv "$cloud" "$local"
 elif [[ -f "$cloud" ]]
 then
-    _acid_message "'${file}' is only saved on iCloud."
-    _acid_message "Adding local symlink."
+    _koopa_message "'${file}' is only saved on iCloud."
+    _koopa_message "Adding local symlink."
     ln -fsnv "$cloud" "$local"
 elif [[ -f "$local" ]]
 then
-    _acid_message "'${file}' only exists locally."
-    _acid_message "Moving to iCloud."
+    _koopa_message "'${file}' only exists locally."
+    _koopa_message "Moving to iCloud."
     mv -v "$local" "$cloud"
-    _acid_message "Adding symlink."
+    _koopa_message "Adding symlink."
     ln -fsnv "$cloud" "$local"
 else
-    _acid_stop "'${file}' doesn't exist."
+    _koopa_stop "'${file}' doesn't exist."
 fi

@@ -4,17 +4,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
-if _acid_is_darwin
+if _koopa_is_darwin
 then
     update-homebrew
     update-r-packages
-    # > if _acid_has_sudo
+    # > if _koopa_has_sudo
     # > then
     # >     update-tex
     # > fi
 fi
 
-if _acid_is_azure
+if _koopa_is_azure
 then
     update-azure-vm --all
 else
@@ -25,7 +25,7 @@ update-venv
 update-rust
 
 # Loop across config directories and update git repos.
-config_dir="$(_acid_config_dir)"
+config_dir="$(_koopa_config_dir)"
 dirs=(
     Rcheck
     docker
@@ -43,7 +43,7 @@ do
     then
         continue
     fi
-    _acid_message "Updating '${dir}'."
+    _koopa_message "Updating '${dir}'."
     (
         cd "${config_dir}/${dir}" || exit 1
         # Run updater script, if defined.
@@ -59,7 +59,7 @@ do
 done
 
 # Update repo.
-_acid_message "Updating koopa."
+_koopa_message "Updating koopa."
 (
     cd "$KOOPA_HOME" || exit 1
     git fetch --all
@@ -73,10 +73,10 @@ then
     rm -frv "${KOOPA_HOME}/system/config"
 fi
 
-if _acid_is_linux
+if _koopa_is_linux
 then
     reset-prefix-permissions
-    prefix="$(_acid_build_prefix)"
+    prefix="$(_koopa_build_prefix)"
     remove-broken-symlinks "$prefix"
     remove-empty-dirs "$prefix"
     remove-broken-cellar-symlinks
@@ -84,5 +84,5 @@ fi
 
 # > remove-broken-symlinks "$HOME"
 
-_acid_message "koopa update was successful."
-_acid_note "Shell must be reloaded for changes to take effect."
+_koopa_message "koopa update was successful."
+_koopa_note "Shell must be reloaded for changes to take effect."

@@ -13,17 +13,17 @@
 # - https://github.com/pyenv/pyenv/issues/1388
 
 name="python"
-version="$(_acid_variable "$name")"
-prefix="$(_acid_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_acid_tmp_dir)/${name}"
-build_os_string="$(_acid_build_os_string)"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/python3"
 
-_acid_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version}."
 
 if [[ -d "${HOME}/.virtualenvs" ]]
 then
-    _acid_note "Removing existing virtual environments."
+    _koopa_note "Removing existing virtual environments."
     rm -frv "${HOME}/.virtualenvs"
 fi
 
@@ -34,8 +34,8 @@ fi
     cd "$tmp_dir" || exit 1
     file="Python-${version}.tar.xz"
     url="https://www.python.org/ftp/python/${version}/${file}"
-    _acid_download "$url"
-    _acid_extract "$file"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "Python-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -50,18 +50,18 @@ fi
     rm -fr "$tmp_dir"
 )
 
-_acid_link_cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
-_acid_message "Installing pip."
+_koopa_message "Installing pip."
 script="get-pip.py"
-_acid_download "https://bootstrap.pypa.io/${script}"
+_koopa_download "https://bootstrap.pypa.io/${script}"
 "$exe_file" "$script" --no-warn-script-location
 rm "$script"
 
-_acid_link_cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
-build_prefix="$(_acid_build_prefix)"
-_acid_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
+build_prefix="$(_koopa_build_prefix)"
+_koopa_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
 ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
 command -v "$exe_file"

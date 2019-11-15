@@ -9,15 +9,15 @@ source "${script_dir}/../include/header.sh"
 
 jdk_dir="${1:-"/opt/jdk"}"
 
-version="$(_acid_variable "java")"
+version="$(_koopa_variable "java")"
 jdk_version_dir="${jdk_dir}/jdk-${version}"
-# > _acid_assert_is_not_dir "$jdk_version_dir"
+# > _koopa_assert_is_not_dir "$jdk_version_dir"
 
-_acid_message "Installing JDK ${version} at '${jdk_version_dir}'."
+_koopa_message "Installing JDK ${version} at '${jdk_version_dir}'."
 
 if [[ ! -d "$jdk_dir" ]]
 then
-    _acid_prefix_mkdir "$jdk_dir"
+    _koopa_prefix_mkdir "$jdk_dir"
 fi
 
 # Download and extract the JDK, if necessary.
@@ -35,13 +35,13 @@ then
                 ;;
         esac
         url="https://download.java.net/java/GA/jdk${version}/${unique}/GPL/${file}"
-        _acid_download "$url"
-        _acid_message "Extracting '${file}' to '${jdk_dir}'."
+        _koopa_download "$url"
+        _koopa_message "Extracting '${file}' to '${jdk_dir}'."
         tar -xzvf "$file" -C "$jdk_dir"
     )
 fi
 
-_acid_set_permissions "$jdk_dir"
+_koopa_set_permissions "$jdk_dir"
 
 priority="100"
 
@@ -82,7 +82,7 @@ update-alternatives --display jar
 java --version
 
 # Update rJava configuration.
-if _acid_is_installed R
+if _koopa_is_installed R
 then
     r-javareconf
 fi

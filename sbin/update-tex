@@ -4,15 +4,15 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-if ! _acid_is_installed tlmgr
+if ! _koopa_is_installed tlmgr
 then
-    _acid_warning "tlmgr is not installed."
+    _koopa_warning "tlmgr is not installed."
     exit 0
 fi
 
-_acid_message "Updating TeX Live."
+_koopa_message "Updating TeX Live."
 
 sudo tlmgr update --self
 sudo tlmgr update --list

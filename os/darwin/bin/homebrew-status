@@ -3,34 +3,34 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_no_args "$@"
-_acid_assert_is_installed brew
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed brew
 
-_acid_message "dependency tree:"
+_koopa_message "dependency tree:"
 brew deps --installed --tree
 
 print
 
-_acid_message "leaves:"
+_koopa_message "leaves:"
 brew leaves
 
 print
 
-_acid_message "versions:"
+_koopa_message "versions:"
 brew list --versions
 
 print
 
-_acid_message "missing:"
+_koopa_message "missing:"
 brew missing
 
 print
 
-_acid_message "outdated:"
+_koopa_message "outdated:"
 brew outdated
 brew cask outdated
 
 print
 
-_acid_message "info:"
+_koopa_message "info:"
 brew info

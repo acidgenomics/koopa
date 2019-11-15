@@ -5,7 +5,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
 
-all="$(_acid_list_path_priority "$@")"
+all="$(_koopa_list_path_priority "$@")"
 mapfile -t all_arr < <(echo "$all")
 
 unique="$(echo "$all" | awk '!a[$0]++')"
@@ -17,7 +17,7 @@ n_dupes="$((n_all-n_unique))"
 
 if [[ "$n_dupes" -gt 0 ]]
 then
-    _acid_note "${n_dupes} duplicate(s) detected."
+    _koopa_note "${n_dupes} duplicate(s) detected."
 fi
 
 echo "$all"

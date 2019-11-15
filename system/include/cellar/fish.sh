@@ -13,13 +13,13 @@
 # make: *** [test_interactive] Error 1
 
 name="fish"
-version="$(_acid_variable "$name")"
-prefix="$(_acid_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_acid_tmp_dir)/${name}"
-build_os_string="$(_acid_build_os_string)"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/${name}"
 
-_acid_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version}."
 
 
 (
@@ -28,8 +28,8 @@ _acid_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="fish-3.0.2.tar.gz"
     url="https://github.com/fish-shell/fish-shell/releases/download/${version}/${file}"
-    _acid_download "$url"
-    _acid_extract "$file"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "fish-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -41,8 +41,8 @@ _acid_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-_acid_link_cellar "$name" "$version"
-_acid_update_shells "$name"
+_koopa_link_cellar "$name" "$version"
+_koopa_update_shells "$name"
 
 command -v "$exe_file"
 "$exe_file" --version
