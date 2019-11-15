@@ -33,9 +33,8 @@ case "$1" in
         _koopa_header "${2:-}"
         exit 0
         ;;
-    home)
-        _koopa_home
-        exit 0
+    upgrade)
+        _koopa_stop "Use 'prefix' instead of 'home'."
         ;;
     host-type)
         _koopa_host_type
@@ -51,6 +50,10 @@ case "$1" in
         ;;
     os-type)
         _koopa_os_type
+        exit 0
+        ;;
+    prefix)
+        _koopa_prefix
         exit 0
         ;;
     update)

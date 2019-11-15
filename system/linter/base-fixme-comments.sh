@@ -9,7 +9,7 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
-path="${1:-$KOOPA_HOME}"
+path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
     "${KOOPA_HOME}/cellar"

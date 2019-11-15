@@ -3,7 +3,7 @@
 
 
 
-# FIXME Rename _koopa_home and KOOPA_HOME to KOOPA_PREFIX
+# FIXME Rename _koopa_prefix and KOOPA_HOME to KOOPA_PREFIX
 # FIXME Define _koopa_venv_prefix function and use that internally.
 # FIXME Define _koopa_pyenv_prefix
 # FIXME Define _koopa_rbenv_prefix
@@ -1313,7 +1313,7 @@ _koopa_dotfiles_source_repo() {
         return 0
     fi
     local dotfiles
-    dotfiles="$(_koopa_home)/dotfiles"
+    dotfiles="$(_koopa_prefix)/dotfiles"
     if [ ! -d "$dotfiles" ]
     then
         _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
@@ -1815,12 +1815,12 @@ EOF
     echo "$path"
 }
 
-_koopa_home() {
+_koopa_prefix() {
     # """
-    # Koopa home path (prefix).
+    # Koopa prefix (home).
     # Updated 2019-08-18.
     # """
-    echo "$KOOPA_HOME"
+    echo "$KOOPA_PREFIX"
 }
 
 _koopa_host_type() {
@@ -1906,7 +1906,7 @@ _koopa_install_mike() {
     fi
     # Use SSH instead of HTTPS.
     (
-        cd "$KOOPA_HOME" || exit 1
+        cd "$KOOPA_PREFIX" || exit 1
         git remote set-url origin "git@github.com:acidgenomics/koopa.git"
     )
 }
@@ -2055,7 +2055,7 @@ _koopa_is_local_install() {
     # Is koopa installed only for the current user?
     # Updated 2019-06-25.
     # """
-    echo "$KOOPA_HOME" | grep -Eq "^${HOME}"
+    echo "$KOOPA_PREFIX" | grep -Eq "^${HOME}"
 }
 
 _koopa_is_login() {
@@ -3127,7 +3127,7 @@ _koopa_update_xdg_config() {
     local config_dir
     config_dir="$(_koopa_config_dir)"
     local home_dir
-    home_dir="$(_koopa_home)"
+    home_dir="$(_koopa_prefix)"
     local os_type
     os_type="$(_koopa_os_type)"
     mkdir -pv "$config_dir"
