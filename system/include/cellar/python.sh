@@ -50,6 +50,8 @@ fi
     rm -fr "$tmp_dir"
 )
 
+_acid_link_cellar "$name" "$version"
+
 _acid_message "Installing pip."
 script="get-pip.py"
 _acid_download "https://bootstrap.pypa.io/${script}"
