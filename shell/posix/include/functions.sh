@@ -34,8 +34,6 @@ _koopa_activate_autojump() {
     # Activate autojump.
     # Updated 2019-11-15.
     #
-    # Currently only supported for ZSH.
-    #
     # See also:
     # - https://github.com/wting/autojump
     # """
@@ -43,18 +41,20 @@ _koopa_activate_autojump() {
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="${XDG_DATA_HOME}/autojump"
+        prefix="${HOME}/autojump"
     fi
     [ -d "$prefix" ] || return 0
+    _koopa_activate_prefix "$prefix"
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
-    if [ -r "$script"  ]
+    [ -r "$script" ] || return 0
+    [ -n "${KOOPA_TEST:-}" ] && set +u
+    # shellcheck source=/dev/null
+    . "$script"
+    [ -n "${KOOPA_TEST:-}" ] && set -u
+    if [ "$KOOPA_SHELL" = "zsh" ]
     then
-        [ -n "${KOOPA_TEST:-}" ] && set +u
-        # shellcheck source=/dev/null
-        . "$script"
         autoload -U compinit && compinit -u
-        [ -n "${KOOPA_TEST:-}" ] && set -u
     fi
     return 0
 }
@@ -113,19 +113,17 @@ _koopa_activate_conda() {
     local name
     name="${2:-"base"}"
     script="${prefix}/bin/activate"
-    if [ -r "$script" ]
+    [ -r "$script" ] || return 0
+    [ -n "${KOOPA_TEST:-}" ] && set +u
+    # shellcheck source=/dev/null
+    . "$script"
+    # Ensure base environment gets deactivated by default.
+    if [ "$name" = "base" ]
     then
-        [ -n "${KOOPA_TEST:-}" ] && set +u
-        # shellcheck source=/dev/null
-        . "$script"
-        # Ensure base environment gets deactivated by default.
-        if [ "$name" = "base" ]
-        then
-            # Don't use the full conda path here; will return config error.
-            conda deactivate
-        fi
-        [ -n "${KOOPA_TEST:-}" ] && set -u
+        # Don't use the full conda path here; will return config error.
+        conda deactivate
     fi
+    [ -n "${KOOPA_TEST:-}" ] && set -u
     return 0
 }
 
@@ -202,14 +200,12 @@ _koopa_activate_perlbrew() {
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/etc/bashrc"
-    if [ -r "$script" ]
-    then
-        [ -n "${KOOPA_TEST:-}" ] && set +u
-        # Note that this is also compatible with zsh.
-        # shellcheck source=/dev/null
-        . "$script"
-        [ -n "${KOOPA_TEST:-}" ] && set -u
-    fi
+    [ -r "$script" ] || return 0
+    [ -n "${KOOPA_TEST:-}" ] && set +u
+    # Note that this is also compatible with zsh.
+    # shellcheck source=/dev/null
+    . "$script"
+    [ -n "${KOOPA_TEST:-}" ] && set -u
     return 0
 }
 
@@ -248,12 +244,10 @@ _koopa_activate_pyenv() {
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/bin/pyenv"
-    if [ -r "$script" ]
-    then
-        export PYENV_ROOT="$prefix"
-        _koopa_activate_prefix "$prefix"
-        eval "$("$script" init -)"
-    fi
+    [ -r "$script" ] || return 0
+    export PYENV_ROOT="$prefix"
+    _koopa_activate_prefix "$prefix"
+    eval "$("$script" init -)"
     return 0
 }
 
@@ -284,12 +278,10 @@ _koopa_activate_rbenv() {
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/bin/rbenv"
-    if [ -r "$script" ]
-    then
-        export RBENV_ROOT="$prefix"
-        _koopa_activate_prefix "$prefix"
-        eval "$("$script" init -)"
-    fi
+    [ -r "$script" ] || return 0
+    export RBENV_ROOT="$prefix"
+    _koopa_activate_prefix "$prefix"
+    eval "$("$script" init -)"
     return 0
 }
 
@@ -312,11 +304,9 @@ _koopa_activate_rust() {
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/env"
-    if [ -r "$script" ]
-    then
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
+    [ -r "$script" ] || return 0
+    # shellcheck source=/dev/null
+    . "$script"
     return 0
 }
 
@@ -331,11 +321,9 @@ _koopa_activate_secrets() {
     then
         file="${HOME}/.secrets"
     fi
-    if [ -r "$file" ]
-    then
-        # shellcheck source=/dev/null
-        . "$file"
-    fi
+    [ -r "$file" ] || return 0
+    # shellcheck source=/dev/null
+    . "$file"
     return 0
 }
 
@@ -395,11 +383,9 @@ _koopa_activate_venv() {
     fi
     local script
     script="${XDG_DATA_HOME}/virtualenvs/${env_name}/bin/activate"
-    if [ -r "$script" ]
-    then
-        # shellcheck source=/dev/null
-        . "$script"
-    fi
+    [ -r "$script" ] || return 0
+    # shellcheck source=/dev/null
+    . "$script"
     return 0
 }
 
