@@ -5,9 +5,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
-shell="$KOOPA_SHELL"
-shell="${shell} $(_koopa_"${shell}"_version)"
-
 array=(
     "$(koopa --version)"
     "https://koopa.acidgenomics.com/"
@@ -42,6 +39,10 @@ else
     else
         os="$(python -mplatform)"
     fi
+    shell_name="$KOOPA_SHELL"
+    shell_version="$(_koopa_current_version "${shell_name}")"
+    shell="${shell_name} ${shell_version}"
+    unset -v shell_name shell_version
     # > term="Terminal: ${TERM_PROGRAM:-} ${TERM_PROGRAM_VERSION:-}"
     array+=(
         "System information"
