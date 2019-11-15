@@ -1,22 +1,28 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
-KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_HOME}/shell/bash/include/header.sh"
+source "${script_dir}/../include/header.sh"
+
 _koopa_assert_has_no_args "$@"
 
 name="autojump"
+prefix="${XDG_DATA_HOME}/${name}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 _koopa_message "Installing ${name}."
 
 (
+    # FIXME Standardize this step into a function...too repetitive.
     rm -fr "$tmp_dir"
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     git clone https://github.com/wting/autojump.git .
-    ./install.py
+    # Run with '--help' flag for options.
+    ./install.py \
+        --destdir="$prefix" \
+        --prefix="$prefix"
     rm -fr "$tmp_dir"
 )
 
