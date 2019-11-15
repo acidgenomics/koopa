@@ -3,20 +3,20 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_is_installed lua luarocks
+_koopa_assert_is_installed lua luarocks
 
 name="lmod"
-version="$(_acid_variable "$name")"
+version="$(_koopa_variable "$name")"
 
-prefix="$(_acid_app_prefix)/${name}"
-_acid_assert_is_not_dir "$prefix"
+prefix="$(_koopa_app_prefix)/${name}"
+_koopa_assert_is_not_dir "$prefix"
 
 apps_dir="${prefix}/apps"
 data_dir="${prefix}/moduleData"
 
-tmp_dir="$(_acid_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 
-_acid_message "Installing ${name} ${version} at '${prefix}'."
+_koopa_message "Installing ${name} ${version} at '${prefix}'."
 
 (
     rm -fr "$tmp_dir"
@@ -24,8 +24,8 @@ _acid_message "Installing ${name} ${version} at '${prefix}'."
     cd "$tmp_dir" || exit 1
     file="${version}.tar.gz"
     url="https://github.com/TACC/Lmod/archive/${file}"
-    _acid_download "$url"
-    _acid_extract "$file"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "Lmod-${version}" || exit 1
     ./configure \
         --prefix="$apps_dir" \

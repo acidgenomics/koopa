@@ -5,12 +5,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 name="python"
-version="$(_acid_variable "$name")"
-major_version="$(_acid_major_version "$version")"
+version="$(_koopa_variable "$name")"
+major_version="$(_koopa_major_version "$version")"
 
 file="python-${version}-macosx10.9.pkg"
 url="https://www.python.org/ftp/python/${version}/${file}"
-_acid_download "$url"
+_koopa_download "$url"
 
 sudo installer -pkg "$file" -target /
 rm "$file"

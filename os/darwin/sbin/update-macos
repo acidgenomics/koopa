@@ -3,17 +3,17 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-if _acid_is_installed mas
+if _koopa_is_installed mas
 then
-    _acid_message "Updating App Store apps via 'mas'."
+    _koopa_message "Updating App Store apps via 'mas'."
     mas upgrade
 fi
 
 print
 
-_acid_message "Updating macOS via 'softwareupdate'."
-_acid_note "Restart may be required."
+_koopa_message "Updating macOS via 'softwareupdate'."
+_koopa_note "Restart may be required."
 
 sudo softwareupdate --install --recommended --restart

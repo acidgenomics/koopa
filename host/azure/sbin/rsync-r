@@ -10,20 +10,20 @@ host_ip="$(ip-address)"
 source_ip="10.100.100.132"
 
 r_dir="/data00/R"
-_acid_assert_is_dir "$r_dir"
+_koopa_assert_is_dir "$r_dir"
 
 lib_link="${r_dir}/site-library/current"
 
-koopa_home="$(_acid_home)"
-r_home="$(_acid_r_home)"
+koopa_home="$(_koopa_home)"
+r_home="$(_koopa_r_home)"
 
-mapfile -t flags < <(_acid_rsync_flags)
+mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
 then
-    _acid_note "On source machine: '${source_ip}'. Skipping."
+    _koopa_note "On source machine: '${source_ip}'. Skipping."
     exit 0
 fi
 
@@ -33,8 +33,8 @@ then
     sudo chown -R "$source_user" "${lib_link}/shiny"
 fi
 
-_acid_message "Updating '${r_dir}' from '${source_ip}'."
-_acid_note "Using flags: ${flags[*]}"
+_koopa_message "Updating '${r_dir}' from '${source_ip}'."
+_koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
 rsync ${flags[@]} \
@@ -43,7 +43,7 @@ rsync ${flags[@]} \
     "${r_dir}/"
 
 # Update local symlinks.
-_acid_message "Updating 'site-library' symlinks."
+_koopa_message "Updating 'site-library' symlinks."
 
 if [[ -d "/usr/lib64/R" ]]
 then

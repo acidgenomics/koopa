@@ -6,5 +6,5 @@ source "${script_dir}/../../../shell/bash/include/header.sh"
 
 Rscript --vanilla "${script_dir}/check.R"
 
-_acid_disk_check
-_acid_is_azure && _acid_check_azure
+_koopa_disk_check
+_koopa_is_azure && _koopa_check_azure

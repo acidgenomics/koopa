@@ -74,7 +74,7 @@ then
     dotfiles=1
 fi
 
-_acid_group() {
+_koopa_group() {
     if groups | grep -Eq "\b(admin)\b"
     then
         group="admin"
@@ -89,11 +89,11 @@ _acid_group() {
     fi
 }
 
-_acid_has_sudo() {
+_koopa_has_sudo() {
     groups | grep -Eq "\b(admin|sudo|wheel)\b"
 }
 
-_acid_is_linux() {
+_koopa_is_linux() {
     [[ "$(uname -s)" == "Linux" ]]
 }
 
@@ -120,16 +120,16 @@ then
     # Set correct admin permissions, if applicable.
     if [[ "$shared" -eq 1 ]]
     then
-        if ! _acid_has_sudo
+        if ! _koopa_has_sudo
         then
             >&2 echo "Error: sudo is required for shared installation."
             exit 1
         fi
         sudo mkdir -pv "$target_dir"
-        group="$(_acid_group)"
+        group="$(_koopa_group)"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+w "$target_dir"
-        if _acid_is_linux
+        if _koopa_is_linux
         then
             sudo chgrp -Rh "$group" "$prefix"
             sudo chmod g+w -R "$prefix"
@@ -158,12 +158,12 @@ fi
 
 if [[ "$shared" -eq 1 ]]
 then
-    _acid_update_profile
+    _koopa_update_profile
 fi
 
 if [[ "$mike" -eq 1 ]]
 then
-    _acid_install_mike
+    _koopa_install_mike
 elif [[ "$dotfiles" -eq 1 ]]
 then
     install-dotfiles

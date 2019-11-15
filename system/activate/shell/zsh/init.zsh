@@ -6,10 +6,10 @@
 koopa_fpath="${KOOPA_HOME}/shell/zsh/functions"
 if [[ ! -d "$koopa_fpath" ]]
 then
-    _acid_warning "fpath directory is missing: '${koopa_fpath}'."
+    _koopa_warning "fpath directory is missing: '${koopa_fpath}'."
     return 1
 fi
-_acid_force_add_to_fpath_start "$koopa_fpath"
+_koopa_force_add_to_fpath_start "$koopa_fpath"
 unset -v koopa_fpath
 
 # > autoload -U compaudit compinit

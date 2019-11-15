@@ -3,14 +3,14 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_no_envs
-_acid_assert_is_installed docker
+_koopa_assert_has_no_envs
+_koopa_assert_is_installed docker
 
 prefix="/opt/bcbio-vm"
-_acid_assert_is_not_dir "$prefix"
+_koopa_assert_is_not_dir "$prefix"
 
 bin_dir="${prefix}/anaconda/bin"
-tmp_dir="$(_acid_tmp_dir)/bcbio-vm"
+tmp_dir="$(_koopa_tmp_dir)/bcbio-vm"
 
 
 
@@ -36,7 +36,7 @@ fi
     cd "$tmp_dir" || exit 1
     file="Miniconda3-latest-Linux-x86_64.sh"
     url="https://repo.continuum.io/miniconda/${file}"
-    _acid_download "$url"
+    _koopa_download "$url"
     bash "$file" -b -p "${prefix}/anaconda"
     rm -fr "$tmp_dir"
 )

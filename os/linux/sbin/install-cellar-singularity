@@ -3,15 +3,15 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_is_installed go
+_koopa_assert_is_installed go
 
 name="singularity"
-version="$(_acid_variable "$name")"
-prefix="$(_acid_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_acid_tmp_dir)"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)"
 exe_file="${prefix}/bin/singularity"
 
-_acid_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version}."
 
 file="singularity-${version}.tar.gz"
 url="https://github.com/sylabs/singularity/releases/download/\
@@ -20,8 +20,8 @@ v${version}/${file}"
 (
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
-    _acid_download "$url"
-    _acid_extract "$file"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "singularity" || exit 1
     ./mconfig --prefix="$prefix"
     make -C builddir
@@ -29,7 +29,7 @@ v${version}/${file}"
     rm -fr "$tmp_dir"
 )
 
-_acid_link_cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 "$exe_file" version
 command -v "$exe_file"

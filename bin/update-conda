@@ -4,17 +4,17 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-if ! _acid_is_installed conda
+if ! _koopa_is_installed conda
 then
-    _acid_note "Conda is not installed."
+    _koopa_note "Conda is not installed."
     exit 0
 fi
 
-_acid_message "Updating Conda."
+_koopa_message "Updating Conda."
 conda update --yes --name=base --channel=defaults conda
 conda update --yes --name=base --channel=defaults --all
 
-# > _acid_message "Removing tarballs."
+# > _koopa_message "Removing tarballs."
 # > conda clean --yes --tarballs

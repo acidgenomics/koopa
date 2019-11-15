@@ -7,8 +7,8 @@ source "${script_dir}/../include/header.sh"
 source_dir="/var/lib/docker"
 dest_dir="/data00/docker"
 
-_acid_assert_is_dir "$source_dir"
-_acid_assert_is_not_dir "$dest_dir"
+_koopa_assert_is_dir "$source_dir"
+_koopa_assert_is_not_dir "$dest_dir"
 
 sudo service docker stop
 

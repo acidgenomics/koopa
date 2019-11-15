@@ -7,11 +7,11 @@ set -Eeu -o pipefail
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/posix/include/functions.sh"
 
-script_bn="$(_acid_basename_sans_ext "$0")"
+script_bn="$(_koopa_basename_sans_ext "$0")"
 
 # Skip test if shellcheck is not installed.
 # Currently, Travis CI does not have shellcheck installed for macOS.
-if ! _acid_is_installed shellcheck
+if ! _koopa_is_installed shellcheck
 then
     printf "NOTE | %s\n" "$script_bn"
     printf "     |   shellcheck missing.\n"
@@ -29,7 +29,7 @@ exclude_dirs=(
 )
 
 # Full path exclusion seems to only work on macOS.
-if ! _acid_is_darwin
+if ! _koopa_is_darwin
 then
     for i in "${!exclude_dirs[@]}"
     do

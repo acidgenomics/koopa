@@ -9,7 +9,7 @@ KOOPA_HOME="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
 export KOOPA_HOME
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_message "Checking manual files for '--help' support."
+_koopa_message "Checking manual files for '--help' support."
 
 # Put all 'man/' dirs into an array and loop.
 man_dirs=()
@@ -29,7 +29,7 @@ done < <( \
 
 for dir in "${man_dirs[@]}"
 do
-    _acid_add_to_manpath_start "$dir"
+    _koopa_add_to_manpath_start "$dir"
 done
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.

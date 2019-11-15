@@ -28,7 +28,7 @@ esac
 # Note that we're skipping this checks inside RStudio shell.
 if [ -z "${RSTUDIO:-}" ]
 then
-    _acid_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"
+    _koopa_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"
 fi
 
 
@@ -70,7 +70,7 @@ fi
 if [ -z "${XDG_RUNTIME_DIR:-}" ]
 then
     XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    if _acid_is_darwin
+    if _koopa_is_darwin
     then
         XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
     fi
@@ -120,7 +120,7 @@ fi
 
 # SHELL
 # Note that this doesn't currently get set by RStudio terminal.
-SHELL="$(_acid_realpath "$KOOPA_SHELL")"
+SHELL="$(_koopa_realpath "$KOOPA_SHELL")"
 export SHELL
 
 # TERM
@@ -158,7 +158,7 @@ fi
 
 if [ -z "${HISTFILE:-}" ]
 then
-    HISTFILE="${HOME}/.$(_acid_shell)-history"
+    HISTFILE="${HOME}/.$(_koopa_shell)-history"
     export HISTFILE
 fi
 
@@ -219,10 +219,10 @@ fi
 
 # Get the number of cores (CPUs) available.
 # Updated 2019-09-18.
-if _acid_is_darwin
+if _koopa_is_darwin
 then
     CPU_COUNT="$(sysctl -n hw.ncpu)"
-elif _acid_is_linux
+elif _koopa_is_linux
 then
     CPU_COUNT="$(getconf _NPROCESSORS_ONLN)"
 else
@@ -251,46 +251,46 @@ export CPU_COUNT
 # Standard Unix paths                                                       {{{2
 # ------------------------------------------------------------------------------
 
-_acid_add_to_path_end "/usr/local/bin"
-_acid_add_to_path_end "/usr/bin"
-_acid_add_to_path_end "/bin"
+_koopa_add_to_path_end "/usr/local/bin"
+_koopa_add_to_path_end "/usr/bin"
+_koopa_add_to_path_end "/bin"
 
-_acid_has_sudo && _acid_add_to_path_end "/usr/local/sbin"
-_acid_has_sudo && _acid_add_to_path_end "/usr/sbin"
+_koopa_has_sudo && _koopa_add_to_path_end "/usr/local/sbin"
+_koopa_has_sudo && _koopa_add_to_path_end "/usr/sbin"
 
-# > _acid_add_to_path_start "${HOME}/bin"
-# > _acid_add_to_path_start "${HOME}/local/bin"
+# > _koopa_add_to_path_start "${HOME}/bin"
+# > _koopa_add_to_path_start "${HOME}/local/bin"
 
 # I think if XDG is configured correctly this gets added automatically.
-_acid_add_to_path_start "${HOME}/.local/bin"
+_koopa_add_to_path_start "${HOME}/.local/bin"
 
-_acid_add_to_manpath_end "/usr/local/share/man"
-_acid_add_to_manpath_end "/usr/share/man"
-_acid_add_to_manpath_start "${HOME}/.local/share/man"
+_koopa_add_to_manpath_end "/usr/local/share/man"
+_koopa_add_to_manpath_end "/usr/share/man"
+_koopa_add_to_manpath_start "${HOME}/.local/share/man"
 
 # Koopa paths                                                               {{{2
 # ------------------------------------------------------------------------------
 
-_acid_activate_prefix "$KOOPA_HOME"
-_acid_activate_prefix "${KOOPA_HOME}/shell/${KOOPA_SHELL}"
+_koopa_activate_prefix "$KOOPA_HOME"
+_koopa_activate_prefix "${KOOPA_HOME}/shell/${KOOPA_SHELL}"
 
-if _acid_is_linux
+if _koopa_is_linux
 then
-    _acid_activate_prefix "${KOOPA_HOME}/os/linux"
-    if _acid_is_debian
+    _koopa_activate_prefix "${KOOPA_HOME}/os/linux"
+    if _koopa_is_debian
     then
-        _acid_activate_prefix "${KOOPA_HOME}/os/debian"
-    elif _acid_is_fedora
+        _koopa_activate_prefix "${KOOPA_HOME}/os/debian"
+    elif _koopa_is_fedora
     then
-        _acid_activate_prefix "${KOOPA_HOME}/os/fedora"
+        _koopa_activate_prefix "${KOOPA_HOME}/os/fedora"
     fi
 fi
 
-_acid_activate_prefix "${KOOPA_HOME}/os/$(_acid_os_type)"
-_acid_activate_prefix "${KOOPA_HOME}/host/$(_acid_host_type)"
+_koopa_activate_prefix "${KOOPA_HOME}/os/$(_koopa_os_type)"
+_koopa_activate_prefix "${KOOPA_HOME}/host/$(_koopa_host_type)"
 
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------
 
-_acid_activate_prefix "$(_acid_config_dir)/docker"
-_acid_activate_prefix "$(_acid_config_dir)/scripts-private"
+_koopa_activate_prefix "$(_koopa_config_dir)/docker"
+_koopa_activate_prefix "$(_koopa_config_dir)/scripts-private"

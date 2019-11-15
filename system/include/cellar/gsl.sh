@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 name="gsl"
-version="$(_acid_variable "$name")"
-prefix="$(_acid_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_acid_tmp_dir)/${name}"
-build_os_string="$(_acid_build_os_string)"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+build_os_string="$(_koopa_build_os_string)"
 exe_file="${prefix}/bin/gsl-config"
 
-_acid_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version}."
 
 (
     rm -frv "$prefix"
@@ -16,8 +16,8 @@ _acid_message "Installing ${name} ${version}."
     cd "$tmp_dir" || exit 1
     file="gsl-${version}.tar.gz"
     url="http://mirror.keystealth.org/gnu/gsl/${file}"
-    _acid_download "$url"
-    _acid_extract "$file"
+    _koopa_download "$url"
+    _koopa_extract "$file"
     cd "gsl-${version}" || exit 1
     ./configure \
         --build="$build_os_string" \
@@ -28,7 +28,7 @@ _acid_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-_acid_link_cellar "$name" "$version"
+_koopa_link_cellar "$name" "$version"
 
 command -v "$exe_file"
 "$exe_file" --version

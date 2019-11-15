@@ -37,13 +37,13 @@ do
             shift 2
             ;;
         *)
-            _acid_invalid_arg "$1"
+            _koopa_invalid_arg "$1"
             ;;
     esac
 done
 
-source_dir="$(_acid_strip_trailing_slash "$source_dir")"
-target_dir="$(_acid_strip_trailing_slash "$target_dir")"
+source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
+target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
 
 # Put unique samples into an array and loop.
 array=()
@@ -54,7 +54,7 @@ done < <(find "$source_dir" -maxdepth 1 -name "*_L001_*.fastq*" -print0)
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]
 then
-    _acid_stop "No lane-split FASTQ files detected."
+    _koopa_stop "No lane-split FASTQ files detected."
 fi
 
 # Create the target directory automatically, if necessary.

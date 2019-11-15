@@ -4,9 +4,9 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-_acid_message "Installing TeX packages recommended for RStudio."
+_koopa_message "Installing TeX packages recommended for RStudio."
 
 sudo tlmgr update --self
 

@@ -4,30 +4,30 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-if _acid_is_shared
+if _koopa_is_shared
 then
-    _acid_assert_has_sudo
+    _koopa_assert_has_sudo
 fi
 
-prefix="$(_acid_build_prefix)"
-group="$(_acid_group)"
+prefix="$(_koopa_build_prefix)"
+group="$(_koopa_group)"
 
-if _acid_is_shared
+if _koopa_is_shared
 then
     user="root"
 else
     user="$USER"
 fi
 
-_acid_message "Resetting user ('${user}') and group ('${group}') permissions \
+_koopa_message "Resetting user ('${user}') and group ('${group}') permissions \
 on '${prefix}'."
 
-_acid_set_permissions "$prefix"
+_koopa_set_permissions "$prefix"
 
 # Ensure group on top level is sticky.
-if _acid_is_shared
+if _koopa_is_shared
 then
     sudo chmod g+s "$prefix"
 else

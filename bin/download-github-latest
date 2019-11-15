@@ -4,7 +4,7 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_args "$@"
+_koopa_assert_has_args "$@"
 
 repo="$1"
 
@@ -15,4 +15,4 @@ tarball_url="$( \
     tr -d ' ,"' \
 )"
 tag="$(basename "$tarball_url")"
-_acid_download "$tarball_url" "${tag}.tar.gz"
+_koopa_download "$tarball_url" "${tag}.tar.gz"

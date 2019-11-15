@@ -3,30 +3,30 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-if ! _acid_assert_is_installed
+if ! _koopa_assert_is_installed
 then
-    _acid_warning "Homebrew is not installed."
+    _koopa_warning "Homebrew is not installed."
     exit 0
 fi
 
 brew analytics off
 
-_acid_message "Updating Homebrew."
+_koopa_message "Updating Homebrew."
 brew update
 
 print
 
-_acid_message "Updating brews."
+_koopa_message "Updating brews."
 brew upgrade --force-bottle
 # > brew list | xargs brew reinstall --force-bottle --cleanup
 
 print
 
-_acid_message "Updating casks."
+_koopa_message "Updating casks."
 brew cask outdated | xargs brew cask reinstall
 
-_acid_message "Running cleanup."
+_koopa_message "Running cleanup."
 brew cleanup -s
 rm -frv "$(brew --cache)"

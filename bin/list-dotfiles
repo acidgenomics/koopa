@@ -4,8 +4,8 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
-_acid_find_dotfiles l "Symlinks"
-_acid_find_dotfiles f "Files"
-_acid_find_dotfiles d "Directories"
+_koopa_find_dotfiles l "Symlinks"
+_koopa_find_dotfiles f "Files"
+_koopa_find_dotfiles d "Directories"

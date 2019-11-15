@@ -4,14 +4,14 @@ KOOPA_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_HOME}/shell/bash/include/header.sh"
-_acid_assert_has_no_args "$@"
+_koopa_assert_has_no_args "$@"
 
 CONDA_PREFIX="$(cd "$(dirname "$CONDA_EXE")/.." \
     >/dev/null 2>&1 && pwd -P)"
 
 while IFS= read -r -d '' prefix
 do
-    _acid_message "Updating '${prefix}'."
+    _koopa_message "Updating '${prefix}'."
     "$CONDA_EXE" update -y --prefix="$prefix" --all
 done < <( \
     find "${CONDA_PREFIX}/envs" \

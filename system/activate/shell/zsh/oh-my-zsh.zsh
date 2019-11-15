@@ -65,13 +65,13 @@ plugins=(
     vi-mode
 )
 
-if _acid_is_fedora
+if _koopa_is_fedora
 then
     plugins+=(
         dnf
         yum
     )
-elif _acid_is_darwin
+elif _koopa_is_darwin
 then
     plugins+=(
         brew
