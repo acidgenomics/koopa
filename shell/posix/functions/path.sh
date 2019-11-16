@@ -7,7 +7,7 @@ _koopa_add_to_path_start() {                                              # {{{3
     # Updated 2019-11-11.
     # """
     [ ! -d "$1" ] && return 0
-    echo "$path" | grep -q "$1" && return 0
+    echo "${PATH:-}" | grep -q "$1" && return 0
     export PATH="${1}:${PATH:-}"
 }
 

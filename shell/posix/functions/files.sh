@@ -201,6 +201,24 @@ _koopa_file_ext2() {                                                      # {{{3
     echo "$1" | cut -d '.' -f 2-
 }
 
+_koopa_find_broken_symlinks() {                                           # {{{3
+    # """
+    # Find broken symlinks.
+    # Updated 2019-11-16.
+    # """
+    dir="${1:-"."}"
+    if _koopa_is_darwin
+    then
+        find "$dir" -type l -print0 \
+        | xargs -0 file \
+        | grep broken \
+        | cut -d ':' -f 1
+    elif _koopa_is_linux
+    then
+        find "$dir" -xtype l
+    fi
+}
+
 _koopa_find_dotfiles() {                                                  # {{{3
     # """
     # Find dotfiles by type.
