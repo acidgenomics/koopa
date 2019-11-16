@@ -49,7 +49,7 @@ _koopa_assert_is_dir "$git_dir"
 # Locate bcbio python.
 if [[ -z "${bcbio_python:-}" ]]
 then
-    bcbio_python="$(_koopa_realpath "bcbio_python")"
+    bcbio_python="$(_koopa_which_realpath "bcbio_python")"
 fi
 _koopa_assert_is_executable "$bcbio_python"
 

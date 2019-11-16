@@ -8,9 +8,14 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 dir="${1:-"."}"
 
+# FIXME Convert to function
+
 if _koopa_is_darwin
 then
-    find "$dir" -type l -print0 | xargs -0 file | grep broken
+    find "$dir" -type l -print0 \
+    | xargs -0 file \
+    | grep broken \
+    | cut -d ':' -f 1
 elif _koopa_is_linux
 then
     find "$dir" -xtype l

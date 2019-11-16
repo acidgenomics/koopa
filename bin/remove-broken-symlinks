@@ -6,6 +6,8 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+# FIXME Convert to function
+
 dir="${1:-"."}"
 dir="$(realpath "$dir")"
 
@@ -17,5 +19,6 @@ _koopa_is_array_non_empty "${arr[@]}" || exit 0
 for file in "${arr[@]}"
 do
     [[ -z "$file" ]] && continue
+    echo "$file"
     rm -v "$file"
 done
