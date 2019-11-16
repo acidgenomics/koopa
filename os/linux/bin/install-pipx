@@ -16,7 +16,7 @@ pipx_exe="${PIPX_BIN_DIR}/pipx"
 
 _koopa_message "Installing pipx at '${PIPX_HOME}' and '${PIPX_BIN_DIR}'."
 
-python_exe="$(_koopa_realpath "python3")"
+python_exe="$(_koopa_which_realpath "python3")"
 _koopa_message "Python: ${python_exe}"
 
 python3 \

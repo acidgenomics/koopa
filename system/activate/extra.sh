@@ -222,7 +222,7 @@ fi
 if [ -n "${LESSOPEN:-}" ] &&
     _koopa_is_installed "lesspipe.sh"
 then
-    lesspipe_exe="$(_koopa_realpath "lesspipe.sh")"
+    lesspipe_exe="$(_koopa_which_realpath "lesspipe.sh")"
     export LESSOPEN="|${lesspipe_exe} %s"
     export LESS_ADVANCED_PREPROCESSOR=1
 fi
