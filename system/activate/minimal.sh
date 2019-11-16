@@ -120,7 +120,7 @@ fi
 
 # SHELL
 # Note that this doesn't currently get set by RStudio terminal.
-SHELL="$(_koopa_realpath "$KOOPA_SHELL")"
+SHELL="$(_koopa_which_realpath "$KOOPA_SHELL")"
 export SHELL
 
 # TERM

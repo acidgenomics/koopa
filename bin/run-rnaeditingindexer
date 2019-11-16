@@ -71,8 +71,8 @@ done
 
 # Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
 # RNAEditingIndex can fail on relative paths.
-bam_dir="$(_koopa_realpath "$bam_dir")"
-output_dir="$(_koopa_realpath "$output_dir")"
+bam_dir="$(_koopa_which_realpath "$bam_dir")"
+output_dir="$(_koopa_which_realpath "$output_dir")"
 
 mkdir -pv "$output_dir"
 
