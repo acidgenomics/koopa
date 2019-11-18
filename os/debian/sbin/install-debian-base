@@ -49,6 +49,7 @@ sudo apt-get -y install \
     libssl-dev \
     libtool \
     libudunits2-dev \
+    libv8-dev \
     libx11-dev \
     libxml2-dev \
     libz-dev \
