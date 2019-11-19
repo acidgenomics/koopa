@@ -10,7 +10,7 @@ source_user="$USER"
 host_ip="$(ip-address)"
 source_ip="10.100.100.132"
 
-r_dir="/data00/R"
+r_dir="/n/app/r"
 _koopa_assert_is_dir "$r_dir"
 
 lib_link="${r_dir}/site-library/current"
