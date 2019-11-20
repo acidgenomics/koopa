@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+_koopa_assert_is_not_dir "${HOME}/.aspera"
+_koopa_assert_is_not_installed ascp
+
+name="aspera"
+version="$(_koopa_variable "$name")"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+prefix="${HOME}/.aspera/connect"
+exe_file="${prefix}/bin/ascp"
+
+_koopa_message "Installing Aspera Connect to '${prefix}'."
+
+(
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    file="ibm-aspera-connect-${version}.175481-linux-g2.12-64.tar.gz"
+    url="https://download.asperasoft.com/download/sw/connect/${version}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    script="${file//.tar.gz/.sh}"
+    "./${script}"
+)
+
+command -v "$exe_file"
+"$exe_file" --version
