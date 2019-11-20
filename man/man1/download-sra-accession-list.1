@@ -1,0 +1,20 @@
+.TH DOWNLOAD-SRA-ACCESSION-LIST 1 2019-11-20 Bash
+.SH NAME
+download-sra-accession-list \-
+Download SRA accession list
+.SH SYNOPSIS
+.B download-sra-accession-list
+ID [FILE="SraAccList.txt"]
+.SH OPTIONS
+.TP
+.BR ID
+SRP or PRJNA project identifier.
+.TP
+.BR FILE
+Output file.
+.SH EXAMPLE
+download-sra-accession-list SRP000000
+.PP
+download-sra-accession-list PRJNA000000
+.SH NOTE
+Requires efetch from entrez-direct to be installed. Available via bioconda.
