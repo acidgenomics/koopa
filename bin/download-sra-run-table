@@ -6,8 +6,12 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed "curl"
+_koopa_assert_has_args "$@"
+# Install bioconda entrez-direct recipe.
+_koopa_assert_is_installed esearch efetch
 
-version="$(curl --silent "https://bioconductor.org/bioc-version")"
-echo "$version"
+id="$1"
+
+esearch -db sra -q "$id" \
+    | efetch -format runinfo \
+    > SraRunTable.txt
