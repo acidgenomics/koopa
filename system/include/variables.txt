@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-11-14"
+koopa_date="2019-11-20"
 
 
 
@@ -10,6 +10,11 @@ koopa_date="2019-11-14"
 
 # https://repo.continuum.io/archive/
 anaconda3="2019.10"
+
+# https://www.ibm.com/products/aspera
+# https://downloads.asperasoft.com/connect2/
+# https://downloads.asperasoft.com/en/downloads/8?list
+aspera="3.9.7"
 
 # https://www.gnu.org/software/bash/
 # https://ftp.gnu.org/gnu/bash/
