@@ -1,43 +1,30 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_deactivate_envs() {
+_koopa_activate_conda_env() {
     # """
-    # Deactivate Conda and Python environments.
-    # Updated 2019-10-25.
-    # """
-    _koopa_deactivate_venv
-    _koopa_deactivate_conda
-}
-
-_koopa_deactivate_conda() {                                               # {{{3
-    # """
-    # Deactivate Conda environment.
-    # Updated 2019-10-25.
-    # """
-    if [ -n "${CONDA_DEFAULT_ENV:-}" ]
-    then
-        conda deactivate
-    fi
-    return 0
-}
-
-_koopa_deactivate_venv() {                                                # {{{3
-    # """
-    # Deactivate Python virtual environment.
-    # Updated 2019-10-25.
+    # Activate a conda environment.
+    # Updated 2019-11-21.
     #
-    # The standard approach currently messes up autojump path:
-    # # shellcheck disable=SC1090
-    # > source "${VIRTUAL_ENV}/bin/activate"
-    # > deactivate
+    # Designed to work inside calling scripts and/or subshells.
+    #
+    # Currently, the conda activation script returns a 'conda()' function in
+    # the current shell that doesn't propagate to subshells. This function
+    # attempts to rectify the current situation.
+    #
+    # Note that the conda activation script currently has unbound variables
+    # (e.g. PS1), that will cause this step to fail unless we temporarily
+    # disable unbound variable checks.
     # """
-    if [ -n "${VIRTUAL_ENV:-}" ]
+    _koopa_assert_is_installed conda
+    set +u
+    if ! type conda | grep -q conda.sh
     then
-        _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
-        unset -v VIRTUAL_ENV
+        # shellcheck source=/dev/null
+        . "$(conda info --base)/etc/profile.d/conda.sh"
     fi
-    return 0
+    conda activate "$1"
+    set -u
 }
 
 _koopa_conda_default_envs_prefix() {                                      # {{{3
@@ -112,6 +99,45 @@ _koopa_conda_env_prefix() {                                               # {{{3
         | head -n 1 \
     )"
     echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
+}
+
+_koopa_deactivate_conda() {                                               # {{{3
+    # """
+    # Deactivate Conda environment.
+    # Updated 2019-10-25.
+    # """
+    if [ -n "${CONDA_DEFAULT_ENV:-}" ]
+    then
+        conda deactivate
+    fi
+    return 0
+}
+
+_koopa_deactivate_envs() {
+    # """
+    # Deactivate Conda and Python environments.
+    # Updated 2019-10-25.
+    # """
+    _koopa_deactivate_venv
+    _koopa_deactivate_conda
+}
+
+_koopa_deactivate_venv() {                                                # {{{3
+    # """
+    # Deactivate Python virtual environment.
+    # Updated 2019-10-25.
+    #
+    # The standard approach currently messes up autojump path:
+    # # shellcheck disable=SC1090
+    # > source "${VIRTUAL_ENV}/bin/activate"
+    # > deactivate
+    # """
+    if [ -n "${VIRTUAL_ENV:-}" ]
+    then
+        _koopa_remove_from_path "${VIRTUAL_ENV}/bin"
+        unset -v VIRTUAL_ENV
+    fi
+    return 0
 }
 
 _koopa_venv() {                                                           # {{{3

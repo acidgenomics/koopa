@@ -14,6 +14,31 @@ _koopa_array_to_r_vector() {                                              # {{{3
     printf "c(%s)\n" "$x"
 }
 
+_koopa_cpu_count() {
+    # """
+    # Get the number of cores (CPUs) available.
+    # Updated 2019-11-21.
+    # """
+    local n
+    if _koopa_is_darwin
+    then
+        n="$(sysctl -n hw.ncpu)"
+    elif _koopa_is_linux
+    then
+        n="$(getconf _NPROCESSORS_ONLN)"
+    else
+        # Otherwise assume single threaded.
+        n=1
+    fi
+    # Set to n-1 cores, if applicable.
+    # We're leaving a core free to monitor remote sessions.
+    if [ "$n" -gt 1 ]
+    then
+        n=$((n - 1))
+    fi
+    echo "$n"
+}
+
 _koopa_quiet_cd() {                                                       # {{{3
     # """
     # Change directory quietly
