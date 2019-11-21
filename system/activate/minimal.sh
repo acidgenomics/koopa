@@ -205,10 +205,10 @@ fi
 
 # Force UTF-8 to avoid encoding issues for users with broken locale settings.
 # https://github.com/Homebrew/brew/blob/master/Library/Homebrew/brew.sh
-# > export LC_ALL="C"
 
-if [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
+if [ -z "${LC_ALL:-}" ] && [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
 then
+    # > export LC_ALL="C"
     export LC_ALL="en_US.UTF-8"
 fi
 
@@ -217,25 +217,11 @@ fi
 # CPU count                                                                 {{{1
 # ==============================================================================
 
-# Get the number of cores (CPUs) available.
-# Updated 2019-09-18.
-if _koopa_is_darwin
+if [ -z "${CPU_COUNT:-}" ]
 then
-    CPU_COUNT="$(sysctl -n hw.ncpu)"
-elif _koopa_is_linux
-then
-    CPU_COUNT="$(getconf _NPROCESSORS_ONLN)"
-else
-    # Otherwise assume single threaded.
-    CPU_COUNT=1
+    CPU_COUNT="$(_koopa_cpu_count)"
+    export CPU_COUNT
 fi
-# Set to n-1 cores, if applicable.
-# We're leaving a core free to monitor remote sessions.
-if [ "$CPU_COUNT" -gt 1 ]
-then
-    CPU_COUNT=$((CPU_COUNT - 1))
-fi
-export CPU_COUNT
 
 
 

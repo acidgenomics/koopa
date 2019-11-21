@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# https://reneshbedre.github.io/blog/fqutil.html
+# https://www.biostars.org/p/111040/
+# https://github.com/LangilleLab/microbiome_helper/wiki/Download_From_SRA
+
+_koopa_assert_is_installed ascp prefetch
+_koopa_assert_is_file SRRAccList.txt
+
+file="${1:-"SraAccList.txt"}"
+
+find . \(-name "*.lock" -o -name "*.tmp"\) -delete
+sort -u "$file" \
+    | parallel -j "$CPU_COUNT" \
+        "prefetch --verbose {}"
