@@ -5,6 +5,7 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
 # > _koopa_assert_has_args "$@"
 _koopa_assert_is_installed docker
 
@@ -25,9 +26,9 @@ _koopa_assert_is_installed docker
 
 # Note that '--verbose' flag includes more output in summary CSV.
 
-bam_dir="${HOME}/rnaedit/bam"
-bam_suffix=".bam"
-output_dir="${HOME}/rnaedit/output"
+bam_dir="bam"
+bam_suffix=".Aligned.sortedByCoord.out.bam"
+output_dir="rnaedit"
 genome="hg38"
 
 example=0
@@ -74,6 +75,7 @@ done
 bam_dir="$(_koopa_which_realpath "$bam_dir")"
 output_dir="$(_koopa_which_realpath "$output_dir")"
 
+rm -frv "$output_dir"
 mkdir -pv "$output_dir"
 
 mnt_bam_dir="/mnt/bam"
@@ -102,7 +104,7 @@ docker run \
         --genome "$genome" \
         --keep_cmpileup \
         --verbose \
-        -d "$bam_dir" \
+        -d "$mnt_bam_dir" \
         -f "$bam_suffix" \
         -l "${mnt_output_dir}/logs" \
         -o "${mnt_output_dir}/cmpileups" \
