@@ -24,18 +24,27 @@ _koopa_add_config_link() {                                                # {{{3
     ln -fnsv "$source_file" "$dest_file"
 }
 
+_koopa_cd_tmp_dir() {
+    # """
+    # Prepare and navigate (cd) to temporary directory.
+    # Updated 2019-11-21.
+    #
+    # Used primarily for cellar build scripts.
+    # """
+    rm -fr "$1"
+    mkdir -p "$1"
+    cd "$1" || exit 1
+}
+
 _koopa_cellar_script() {                                                  # {{{3
     # """
     # Return source path for a koopa cellar build script.
-    # Updated 2019-11-16.
+    # Updated 2019-11-21.
     # """
     local name
     name="$1"
     file="$(_koopa_prefix)/system/include/cellar/${name}.sh"
     _koopa_assert_is_file "$file"
-    echo "$name"
-    echo "$file"
-    # > _koopa_deactivate_envs
     _koopa_assert_has_no_envs
     # shellcheck source=/dev/null
     . "$file"

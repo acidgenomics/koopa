@@ -10,9 +10,7 @@ exe_file="${prefix}/bin/${name}"
 _koopa_message "Installing ${name} ${version}."
 
 (
-    rm -rf "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="v${version}.tar.gz"
     _koopa_download "https://github.com/jsh58/Genrich/archive/${file}"
     _koopa_extract "$file"

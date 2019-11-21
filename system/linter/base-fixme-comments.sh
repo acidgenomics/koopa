@@ -12,8 +12,6 @@ source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
-    "${KOOPA_PREFIX}/cellar"
-    "${KOOPA_PREFIX}/conda"
     "${KOOPA_PREFIX}/dotfiles"
     "${KOOPA_PREFIX}/shell/zsh/functions"
     ".git"

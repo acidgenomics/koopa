@@ -3,30 +3,18 @@ set -Eeu -o pipefail
 
 # https://github.com/fish-shell/fish-shell/#building
 
-# RHEL 7 build warning:
-# checking the doxygen version... 1.8.5
-# configure: WARNING: doxygen version 1.8.5 found, but 1.8.7 required
-
-# Seeing a 'make test' error pop up on RHEL 7:
-# cd tests; ../test/root/bin/fish interactive.fish
-# Testing interactive functionality
-# Tests disabled: `expect` not found
-# make: *** [test_interactive] Error 1
-
 name="fish"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
+jobs="$(_koopa_cpu_count)"
 exe_file="${prefix}/bin/${name}"
 
 _koopa_message "Installing ${name} ${version}."
 
-
 (
-    rm -fr "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="fish-3.0.2.tar.gz"
     url="https://github.com/fish-shell/fish-shell/releases/download/${version}/${file}"
     _koopa_download "$url"
@@ -35,8 +23,7 @@ _koopa_message "Installing ${name} ${version}."
     ./configure \
         --build="$build" \
         --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
-    # Disable testing (see error above)
+    make --jobs="$jobs"
     # > make test
     make install
     rm -fr "$tmp_dir"

@@ -5,6 +5,7 @@ name="gnupg"
 version="$(_koopa_variable gpg)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
+jobs="$(_koopa_cpu_count)"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 exe_file="${prefix}/bin/gpg"
 
@@ -22,7 +23,7 @@ then
 fi
 
 rm -fr "$tmp_dir"
-mkdir -pv "$tmp_dir"
+mkdir -p "$tmp_dir"
 
 (
     pkg="libgpg-error"
@@ -37,7 +38,7 @@ mkdir -pv "$tmp_dir"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -56,7 +57,7 @@ _koopa_link_cellar "$name" "$version"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -75,7 +76,7 @@ _koopa_link_cellar "$name" "$version"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -94,7 +95,7 @@ _koopa_link_cellar "$name" "$version"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -113,7 +114,7 @@ _koopa_link_cellar "$name" "$version"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -132,7 +133,7 @@ _koopa_link_cellar "$name" "$version"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix" --enable-pinentry-curses
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -151,7 +152,7 @@ _koopa_link_cellar "$name" "$version"
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
     ./configure --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make check
     make install
 )

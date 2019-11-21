@@ -12,10 +12,7 @@ exe_file="${prefix}/bin/${name}"
 _koopa_message "Installing ${name} ${version}."
 
 (
-    rm -frv "$prefix"
-    rm -fr "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="${name}-${version}.tar.gz"
     url="https://luarocks.org/releases/${file}"
     _koopa_download "$url"

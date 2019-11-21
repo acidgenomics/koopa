@@ -5,17 +5,21 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
-_koopa_assert_has_no_args "$@"
 
-CONDA_PREFIX="$(cd "$(dirname "$CONDA_EXE")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed conda
+
+prefix="$(_koopa_conda_prefix)"
+conda_exe="${prefix}/bin/conda"
+
+update-conda
 
 while IFS= read -r -d '' prefix
 do
     _koopa_message "Updating '${prefix}'."
-    "$CONDA_EXE" update -y --prefix="$prefix" --all
+    "$conda_exe" update -y --prefix="$prefix" --all
 done < <( \
-    find "${CONDA_PREFIX}/envs" \
+    find "${prefix}/envs" \
         -mindepth 1 \
         -maxdepth 1 \
         -type d \
