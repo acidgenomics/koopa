@@ -5,13 +5,14 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed salmon
 
-# Note that bcbio currently uses 30 bootstraps.
-# Uma's nextflow script currently uses 100 for kallisto.
+# bcbio currently uses 30 bootstraps.
+# Uma's nextflow script currently uses 100.
 bootstraps=30
-threads="$CPU_COUNT"
+threads="$(_koopa_cpu_count)"
 
 r1_tail="_R1_001.fastq.gz"
 r2_tail="_R2_001.fastq.gz"
