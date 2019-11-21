@@ -25,7 +25,7 @@ _koopa_message "Installing ${name} ${version}."
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
     # This is now erroring on RHEL 7.7:
-    # > make --jobs="$CPU_COUNT" all doc info
+    # > make --jobs="$jobs" all doc info
     # > make install install-doc install-html install-info
     make --jobs="$jobs"
     make install
