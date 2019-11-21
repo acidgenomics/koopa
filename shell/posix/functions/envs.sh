@@ -18,12 +18,15 @@ _koopa_activate_conda_env() {
     # """
     _koopa_assert_is_installed conda
     local name
-    _koopa_message "Activating '${name}' conda environment."
+    name="$1"
+    local prefix
+    prefix="$(_koopa_conda_prefix)"
+    _koopa_message "Activating '${name}' conda environment at '${prefix}'."
     set +u
     if ! type conda | grep -q conda.sh
     then
         # shellcheck source=/dev/null
-        . "$(conda info --base)/etc/profile.d/conda.sh"
+        . "${prefix}/etc/profile.d/conda.sh"
     fi
     conda activate "$name"
     set -u

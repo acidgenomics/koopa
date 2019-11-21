@@ -111,6 +111,15 @@ _koopa_bcbio_prefix() {                                                   # {{{3
     echo "$prefix"
 }
 
+_koopa_conda_prefix() {
+    # """
+    # Conda prefix
+    # Updated 2019-11-21.
+    # """
+    _koopa_assert_is_installed conda
+    conda info --base
+}
+
 _koopa_ensembl_perl_api_prefix() {                                        # {{{3
     # """
     # Ensembl Perl API prefix.
