@@ -18,6 +18,7 @@ version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
+jobs="$(_koopa_cpu_count)"
 exe_file="${prefix}/bin/python3"
 
 _koopa_message "Installing ${name} ${version}."
@@ -29,10 +30,7 @@ then
 fi
 
 (
-    rm -frv "$prefix"
-    rm -frv "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="Python-${version}.tar.xz"
     url="https://www.python.org/ftp/python/${version}/${file}"
     _koopa_download "$url"
@@ -43,7 +41,7 @@ fi
         --prefix="$prefix" \
         --enable-shared \
         --without-ensurepip
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     # Multiprocessing tests can fail on very large multi-core VMs due to too
     # many open files, so disable tests if necessary.
     # > make test
