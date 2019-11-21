@@ -7,15 +7,13 @@ major_version="$(_koopa_major_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
+jobs="$(_koopa_cpu_count)"
 exe_file="${prefix}/bin/h5cc"
 
 _koopa_message "Installing ${name} ${version}."
 
 (
-    rm -frv "$prefix"
-    rm -frv "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="hdf5-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/\
 hdf5-${version}/src/${file}"
@@ -27,7 +25,7 @@ hdf5-${version}/src/${file}"
         --prefix="$prefix" \
         --enable-cxx \
         --enable-fortran
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     # > make check
     make install
     rm -fr "$tmp_dir"

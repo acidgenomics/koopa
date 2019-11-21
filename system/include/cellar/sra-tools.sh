@@ -24,6 +24,7 @@ build_prefix="${tmp_dir}/ncbi-outdir"
 ngs_libdir="$(_koopa_make_prefix)/lib64"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
+jobs="$(_koopa_cpu_count)"
 
 # Ensure current jar binary is in path, otherwise install will fail.
 java_home="$(_koopa_java_home)"
@@ -82,7 +83,7 @@ _koopa_link_cellar "$name" "$version"
     ./configure \
         --build-prefix="$build_prefix" \
         --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 
@@ -104,7 +105,7 @@ _koopa_link_cellar "$name" "$version"
     ./configure \
         --build-prefix="$build_prefix" \
         --prefix="$prefix"
-    make --jobs="$CPU_COUNT"
+    make --jobs="$jobs"
     make install
 )
 

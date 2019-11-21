@@ -10,10 +10,7 @@ exe_file="${prefix}/bin/${name}"
 _koopa_message "Installing ${name} ${version}."
 
 (
-    rm -frv "$prefix"
-    rm -frv "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
     url="https://github.com/dylanaraps/${name}/archive/${file}"
     echo "$url"

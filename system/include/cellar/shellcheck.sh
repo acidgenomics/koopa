@@ -10,10 +10,7 @@ exe_file="${prefix}/bin/${name}"
 _koopa_message "Installing ${name} ${version}."
 
 (
-    rm -frv "$prefix"
-    rm -frv "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="shellcheck-v${version}.linux.x86_64.tar.xz"
     url="https://storage.googleapis.com/shellcheck/${file}"
     _koopa_download "$url"
