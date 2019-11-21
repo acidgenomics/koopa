@@ -4,15 +4,19 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+log_file="${log_dir}/bcbio-upgrade-$(date "+%Y%m%d_%H%M%S").log"
 mkdir -pv "$log_dir"
+
+cores="$(_koopa_cpu_count)"
 
 bcbio_nextgen.py upgrade \
     --upgrade="stable" \
     --tools \
     --data \
-    --cores="$CPU_COUNT" \
-    2>&1 | tee "${log_dir}/bcbio-upgrade-$(date "+%Y%m%d_%H%M%S").log"
+    --cores="$cores" \
+    2>&1 | tee "$log_file"
