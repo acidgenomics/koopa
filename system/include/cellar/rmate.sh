@@ -8,10 +8,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/${name}"
 
 (
-    rm -frv "$prefix"
-    rm -frv "$tmp_dir"
-    mkdir -pv "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="v${version}.tar.gz"
     url="https://github.com/aurora/rmate/archive/${file}"
     _koopa_download "$url"
