@@ -12,6 +12,8 @@ _koopa_assert_is_installed conda
 prefix="$(_koopa_conda_prefix)"
 conda_exe="${prefix}/bin/conda"
 
+update-conda
+
 while IFS= read -r -d '' prefix
 do
     _koopa_message "Updating '${prefix}'."
