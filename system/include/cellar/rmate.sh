@@ -18,6 +18,7 @@ exe_file="${prefix}/bin/${name}"
     _koopa_extract "$file"
     cd "rmate-${version}" || exit 1
     chmod a+x rmate
+    mkdir -p "${prefix}/bin"
     cp rmate "${prefix}/bin"
 )
 
