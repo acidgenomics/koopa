@@ -22,6 +22,15 @@ _koopa_assert_is_dir "$dir"
 mapfile -t flags < <(_koopa_rsync_flags)
 flags+=("--omit-dir-times")
 
+# Skip programs that are specific to powerful multi-core VMs.
+if ! _koopa_is_powerful
+then
+    flags+=("--exclude='bcbio'")
+    flags+=("--exclude='cellranger'")
+    flags+=("--exclude='cellranger-atac'")
+    flags+=("--exclude='omicsoft'")
+fi
+
 _koopa_message "Updating '${dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
