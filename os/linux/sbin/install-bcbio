@@ -46,7 +46,8 @@ if [[ "$version" == "stable" ]]
 then
     # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
     _koopa_bcbio_version() {
-        curl --silent "https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/requirements-conda.txt" \
+        curl --silent "https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
+/master/requirements-conda.txt" \
             | grep 'bcbio-nextgen=' \
             | cut -d '=' -f 2
     }
@@ -68,9 +69,7 @@ install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 
 (
-    rm -fr "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
     _koopa_download "$url"
@@ -79,14 +78,15 @@ tools_dir="${prefix}/tools"
         --tooldir="$tools_dir" \
         --upgrade="$version" \
         --datatarget="rnaseq" \
+        --datatarget="variation" \
         --nodata \
         --isolate \
         2>&1 | tee "$log_file"
 )
 
-_koopa_message "Fixing MACS2/numpy issue."
-_koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
-"${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
+# > _koopa_message "Fixing MACS2/numpy issue."
+# > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
+# > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
 # Keep install owned by current user, so we can install genomes easily.
 _koopa_prefix_chgrp "$prefix"
