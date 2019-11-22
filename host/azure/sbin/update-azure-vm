@@ -9,6 +9,13 @@ broken=0
 rsync=0
 yum=0
 
+#sudo rm -rf /usr/local/Genrich
+#sudo rm -rf /usr/local/conda
+#sudo rm -rf /usr/local/omicsoft
+#sudo rm -rf /usr/local/perlbrew
+#sudo rm -rf /usr/local/pyenv
+#sudo rm -rf /usr/local/rbenv
+
 while (("$#"))
 do
     case "$1" in
