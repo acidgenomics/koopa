@@ -287,6 +287,21 @@ _koopa_assert_is_not_symlink() {                                          # {{{3
     return 0
 }
 
+_koopa_is_powerful() {                                                    # {{{3
+    # """
+    # Is the current machine powerful?
+    # Updated 2019-11-22.
+    # """
+    local cores
+    cores="$(_koopa_cpu_count)"
+    if [ "$cores" -ge 7 ]
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
 _koopa_assert_is_r_package_installed() {                                  # {{{3
     # """
     # Assert that a specific R package is installed.
