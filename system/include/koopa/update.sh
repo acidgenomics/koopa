@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
-_koopa_remove_broken_symlinks "$(_koopa_config_prefix)"
+# _koopa_remove_broken_symlinks "$(_koopa_config_prefix)"
 
 if _koopa_is_darwin
 then
