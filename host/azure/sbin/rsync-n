@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+host_ip="$(ip-address)"
+source_ip="10.100.100.132"
+source_user="$USER"
+
+# Check for accidental sync from source machine.
+if [[ "$source_ip" == "$host_ip" ]]
+then
+    _koopa_note "On source machine: '${source_ip}'. Skipping."
+    exit 0
+fi
+
+dir="/n/app"
+_koopa_assert_is_dir "$dir"
+
+mapfile -t flags < <(_koopa_rsync_flags)
+flags+=("--omit-dir-times")
+
+# Skip programs that are specific to powerful multi-core VMs.
+if ! _koopa_is_powerful
+then
+    flags+=("--exclude='bcbio'")
+    flags+=("--exclude='cellranger'")
+    flags+=("--exclude='cellranger-atac'")
+    flags+=("--exclude='omicsoft'")
+fi
+
+_koopa_message "Updating '${dir}' from '${source_ip}'."
+_koopa_note "Using flags: ${flags[*]}"
+
+# shellcheck disable=SC2068
+rsync ${flags[@]} \
+    --rsync-path="sudo /usr/bin/rsync" \
+    "${source_user}@${source_ip}:${dir}/" \
+    "${dir}/"

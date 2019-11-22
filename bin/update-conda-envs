@@ -27,3 +27,4 @@ done < <( \
         | sort -z \
 )
 
+"$conda_exe" clean --yes --all

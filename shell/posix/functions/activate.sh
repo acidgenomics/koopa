@@ -154,9 +154,10 @@ _koopa_activate_llvm() {                                                  # {{{3
 _koopa_activate_perlbrew() {                                              # {{{3
     # """
     # Activate Perlbrew.
-    # Updated 2019-11-15.
+    # Updated 2019-11-22.
     #
     # Only attempt to autoload for bash or zsh.
+    # Delete '~/.perlbrew' directory if you see errors at login.
     #
     # See also:
     # - https://perlbrew.pl
