@@ -8,15 +8,22 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-log_file="${log_dir}/bcbio-upgrade-$(date "+%Y%m%d_%H%M%S").log"
-mkdir -pv "$log_dir"
-
+tmp_dir="$(_koopa_tmp_dir)/bcbio"
 cores="$(_koopa_cpu_count)"
 
-bcbio_nextgen.py upgrade \
-    --upgrade="stable" \
-    --tools \
-    --data \
-    --cores="$cores" \
-    2>&1 | tee "$log_file"
+timestamp="$(date "+%Y%m%d-%H%M%S")"
+log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
+log_file="${log_dir}/${timestamp}-update-bcbio.log"
+
+_koopa_message "Saving install log at '${log_file}'."
+mkdir -pv "$log_dir"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    bcbio_nextgen.py upgrade \
+        --upgrade="stable" \
+        --tools \
+        --data \
+        --cores="$cores" \
+        2>&1 | tee "$log_file"
+)
