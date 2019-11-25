@@ -149,13 +149,12 @@ _koopa_update_profile() {                                                 # {{{3
     local symlink
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-    # Early return if config file already exists.
     symlink="/etc/profile.d/zzz-koopa.sh"
-    [ -L "$symlink" ] && return 0
+    # > [ -L "$symlink" ] && return 0
     _koopa_message "Adding '${symlink}'."
     sudo rm -fv "/etc/profile.d/koopa.sh"
     sudo ln -fnsv \
-        "${KOOPA_PREFIX}/os/linux/etc/profile.d/zzz-koopa.sh" \
+        "$(_koopa_prefix)/os/linux/etc/profile.d/zzz-koopa.sh" \
         "$symlink"
     return 0
 }
