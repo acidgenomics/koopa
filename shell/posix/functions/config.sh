@@ -73,6 +73,25 @@ _koopa_prefix_mkdir() {                                                   # {{{3
     _koopa_prefix_chgrp "$path"
 }
 
+_koopa_prepare_make_prefix() {
+    # """
+    # Ensure the make prefix is writable.
+    # Updated 2019-11-25.
+    #
+    # Run this function prior to cellar installs.
+    # """
+    local prefix
+    prefix="$(_koopa_make_prefix)"
+    _koopa_set_permissions "$prefix"
+    if _koopa_is_shared_install
+    then
+        sudo chmod g+s "$prefix"
+    else
+        chmod g+s "$prefix"
+    fi
+    return 0
+}
+
 _koopa_set_permissions() {                                                # {{{3
     # """
     # Set permissions on a koopa-related directory.
