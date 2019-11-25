@@ -88,5 +88,10 @@ fi
 
 # > remove-broken-symlinks "$HOME"
 
+# > _koopa_update_r_config
+_koopa_update_profile
+_koopa_update_ldconfig
+_koopa_update_xdg_config
+
 _koopa_message "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
