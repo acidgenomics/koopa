@@ -17,19 +17,19 @@ _koopa_make_build_string() {                                              # {{{3
     # - RedHat: x86_64-redhat-linux-gnu
     # """
     local mach
-    local os_type
+    local os_id
     local string
     mach="$(uname -m)"
     if _koopa_is_darwin
     then
         string="${mach}-${OSTYPE}"
     else
-        os_type="$(_koopa_os_type)"
-        if echo "$os_type" | grep -q "rhel"
+        os_id="$(_koopa_os_id)"
+        if echo "$os_id" | grep -q "rhel"
         then
-            os_type="redhat"
+            os_id="redhat"
         fi
-        string="${mach}-${os_type}-${OSTYPE}"
+        string="${mach}-${os_id}-${OSTYPE}"
     fi
     echo "$string"
 }
@@ -100,10 +100,10 @@ _koopa_update_ldconfig() {                                                # {{{3
     _koopa_has_sudo || return 0
     [ -d /etc/ld.so.conf.d ] || return 0
     _koopa_assert_is_installed ldconfig
-    local os_type
-    os_type="$(_koopa_os_type)"
+    local os_id
+    os_id="$(_koopa_os_id)"
     local conf_source
-    conf_source="${KOOPA_PREFIX}/os/${os_type}/etc/ld.so.conf.d"
+    conf_source="${KOOPA_PREFIX}/os/${os_id}/etc/ld.so.conf.d"
     if [ ! -d "$conf_source" ]
     then
         _koopa_stop "Source files missing: '${conf_source}'."
@@ -158,10 +158,10 @@ _koopa_update_r_config() {                                                # {{{3
     # >     grep -Eo "^[0-9]+\.[0-9]+"
     # > )"
     _koopa_message "Updating '${r_home}'."
-    local os_type
-    os_type="$(_koopa_os_type)"
+    local os_id
+    os_id="$(_koopa_os_id)"
     local r_etc_source
-    r_etc_source="${KOOPA_PREFIX}/os/${os_type}/etc/R"
+    r_etc_source="${KOOPA_PREFIX}/os/${os_id}/etc/R"
     if [ ! -d "$r_etc_source" ]
     then
         _koopa_stop "Source files missing: '${r_etc_source}'."
@@ -214,8 +214,8 @@ _koopa_update_xdg_config() {                                              # {{{3
     config_dir="$(_koopa_config_prefix)"
     local home_dir
     home_dir="$(_koopa_prefix)"
-    local os_type
-    os_type="$(_koopa_os_type)"
+    local os_id
+    os_id="$(_koopa_os_id)"
     mkdir -pv "$config_dir"
     relink() {
         local source_file
@@ -236,8 +236,8 @@ _koopa_update_xdg_config() {                                              # {{{3
     }
     relink "${home_dir}" "${config_dir}/home"
     relink "${home_dir}/activate" "${config_dir}/activate"
-    if [ -d "${home_dir}/os/${os_type}" ]
+    if [ -d "${home_dir}/os/${os_id}" ]
     then
-        relink "${home_dir}/os/${os_type}/etc/R" "${config_dir}/R"
+        relink "${home_dir}/os/${os_id}/etc/R" "${config_dir}/R"
     fi
 }

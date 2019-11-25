@@ -33,8 +33,8 @@ case "$1" in
         _koopa_header "${2:-}"
         exit 0
         ;;
-    host-type)
-        _koopa_host_type
+    host-id)
+        _koopa_host_id
         exit 0
         ;;
     info)
@@ -45,8 +45,8 @@ case "$1" in
         "${include_dir}/list.sh"
         exit 0
         ;;
-    os-type)
-        _koopa_os_type
+    os-id)
+        _koopa_os_id
         exit 0
         ;;
     prefix)

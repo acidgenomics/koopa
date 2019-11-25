@@ -140,7 +140,7 @@ _koopa_activate_llvm() {                                                  # {{{3
     # """
     local llvm_config
     llvm_config=
-    if _koopa_is_rhel7
+    if _koopa_is_rhel_7
     then
         llvm_config="/usr/bin/llvm-config-7.0-64"
     elif _koopa_is_darwin
