@@ -54,7 +54,8 @@ case "$1" in
         exit 0
         ;;
     update)
-        "${include_dir}/update.sh"
+        shift 1
+        "${include_dir}/update.sh" "$@"
         exit 0
         ;;
     upgrade)
