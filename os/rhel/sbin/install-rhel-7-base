@@ -12,10 +12,17 @@ _koopa_assert_has_no_args "$@"
 enable-epel-7
 install-fedora-base
 sudo yum -y install \
+    'llvm7*' \
     R \
     docbook2X \
+    file-devel \
+    fish \
+    gdal \
+    gdal-devel \
+    leptonica-devel \
     libgit2-devel \
     libssh2-devel \
+    neovim \
     pandoc \
     pandoc-citeproc \
     udunits2-devel \
