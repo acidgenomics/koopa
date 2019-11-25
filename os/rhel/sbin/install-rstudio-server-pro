@@ -11,7 +11,17 @@ name="rstudio-server-pro"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 version="$(_koopa_variable "$name")"
 
-_koopa_message "Installing ${name} ${version}."
+if _koopa_is_rhel_7
+then
+    os_id="centos6"
+elif _koopa_is_rhel_8
+then
+    os_id="fedora28"
+else
+    _koopa_stop "RHEL 7 or 8 is required."
+fi
+
+_koopa_message "Installing ${name} ${version} (${os_id})."
 
 # Remove existing config files.
 # > sudo rm -frv /etc/rstudio
@@ -21,7 +31,7 @@ _koopa_message "Installing ${name} ${version}."
     mkdir -p "$tmp_dir"
     cd "$tmp_dir" || exit 1
     file="rstudio-server-rhel-pro-${version}-x86_64.rpm"
-    url="https://download2.rstudio.org/server/centos6/x86_64/${file}"
+    url="https://download2.rstudio.org/server/${os_id}/x86_64/${file}"
     _koopa_download "$url"
     sudo yum -y install "$file"
     rm -fr "$tmp_dir"
