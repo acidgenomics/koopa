@@ -9,20 +9,12 @@ _koopa_gsub() {                                                           # {{{3
     echo "$1" | sed -E "s/${2}/${3}/g"
 }
 
-_koopa_major_version() {                                                  # {{{3
+_koopa_minor_version() {                                                  # {{{3
     # """
     # Get the major program version.
     # Updated 2019-09-23.
     # """
     echo "$1" | cut -d '.' -f 1-2
-}
-
-_koopa_minor_version() {                                                  # {{{3
-    # """
-    # Get the minor program version.
-    # Updated 2019-09-23.
-    # """
-    echo "$1" | cut -d "." -f 2-
 }
 
 _koopa_strip_left() {                                                     # {{{3

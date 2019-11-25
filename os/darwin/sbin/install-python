@@ -7,7 +7,7 @@ source "${script_dir}/../include/header.sh"
 
 name="python"
 version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
+minor_version="$(_koopa_minor_version "$version")"
 
 file="python-${version}-macosx10.9.pkg"
 url="https://www.python.org/ftp/python/${version}/${file}"
@@ -16,9 +16,9 @@ _koopa_download "$url"
 sudo installer -pkg "$file" -target /
 rm "$file"
 
-py_dir="/Library/Frameworks/Python.framework/Versions/${major_version}/bin"
-py_exe="${py_dir}/python${major_version}"
-pip_exe="${py_dir}/pip${major_version}"
+py_dir="/Library/Frameworks/Python.framework/Versions/${minor_version}/bin"
+py_exe="${py_dir}/python${minor_version}"
+pip_exe="${py_dir}/pip${minor_version}"
 
 command -v "$py_exe"
 "$py_exe" --version

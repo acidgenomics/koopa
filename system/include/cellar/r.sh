@@ -10,7 +10,7 @@ _koopa_assert_is_installed java javac tex
 
 name="r"
 version="$(_koopa_variable "$name")"
-major_version="$(echo "$version" | cut -d "." -f 1)"
+minor_version="$(echo "$version" | cut -d "." -f 1)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
@@ -21,7 +21,7 @@ _koopa_message "Installing R ${version}."
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     file="R-${version}.tar.gz"
-    url="https://cran.r-project.org/src/base/R-${major_version}/${file}"
+    url="https://cran.r-project.org/src/base/R-${minor_version}/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "R-${version}" || exit 1
