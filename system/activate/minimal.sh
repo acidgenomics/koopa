@@ -206,7 +206,7 @@ fi
 # Force UTF-8 to avoid encoding issues for users with broken locale settings.
 # https://github.com/Homebrew/brew/blob/master/Library/Homebrew/brew.sh
 
-if [ -z "${LC_ALL:-}" ] && [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
+if [ -z "${LC_ALL:-}" ] || [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
 then
     # > export LC_ALL="C"
     export LC_ALL="en_US.UTF-8"
