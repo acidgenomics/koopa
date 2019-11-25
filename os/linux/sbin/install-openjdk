@@ -59,7 +59,7 @@ sudo update-alternatives --install \
     "$priority"
 sudo update-alternatives --set \
     "javac" \
-    "${jdk_dir}/jdk-${version}/bin/javac"
+    "${prefix}/bin/javac"
 
 sudo rm -fv /var/lib/alternatives/jar
 sudo update-alternatives --install \
