@@ -726,14 +726,33 @@ _koopa_is_r_package_installed() {                                         # {{{3
         | grep -q "TRUE"
 }
 
-_koopa_is_rhel7() {                                                       # {{{3
+_koopa_is_rhel() {                                                        # {{{3
     # """
-    # Is the operating system RHEL 7?
-    # Updated 2019-10-25.
+    # Is the operating system RHEL?
+    # Updated 2019-11-25.
     # """
     [ -f /etc/os-release ] || return 1
     grep -q 'ID="rhel"' /etc/os-release || return 1
+    return 0
+}
+
+_koopa_is_rhel7() {                                                       # {{{3
+    # """
+    # Is the operating system RHEL 7?
+    # Updated 2019-11-25.
+    # """
+    _koopa_is_rhel || return 1
     grep -q 'VERSION_ID="7' /etc/os-release || return 1
+    return 0
+}
+
+_koopa_is_rhel8() {                                                       # {{{3
+    # """
+    # Is the operating system RHEL 8?
+    # Updated 2019-11-25.
+    # """
+    _koopa_is_rhel || return 1
+    grep -q 'VERSION_ID="8' /etc/os-release || return 1
     return 0
 }
 
