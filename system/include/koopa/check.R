@@ -9,6 +9,8 @@ options(
     "warning" = quote(quit(status = 1L))
 )
 
+requireNamespace("methods")
+
 
 
 ## Notes =======================================================================
