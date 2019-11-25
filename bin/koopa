@@ -45,8 +45,8 @@ case "$1" in
         "${include_dir}/list.sh"
         exit 0
         ;;
-    os-id)
-        _koopa_os_id
+    os-string)
+        _koopa_os_string
         exit 0
         ;;
     prefix)

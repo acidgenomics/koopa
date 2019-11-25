@@ -32,8 +32,8 @@ stopifnot(isTRUE(nzchar(koopaHome)))
 koopaEXE <- file.path(koopaHome, "bin", "koopa")
 stopifnot(file.exists(koopaEXE))
 
-host <- system2(command = koopaEXE, args = "host-type", stdout = TRUE)
-os <- system2(command = koopaEXE, args = "os-type", stdout = TRUE)
+host <- system2(command = koopaEXE, args = "host-id", stdout = TRUE)
+os <- system2(command = koopaEXE, args = "os-string", stdout = TRUE)
 
 ## Determine if we're on Linux or not (i.e. macOS).
 rOSString <- R.Version()[["os"]]
@@ -681,15 +681,17 @@ installed(
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
     message("\nLinux specific:")
+    ## https://gcc.gnu.org/releases.html
     checkVersion(
         name = "GCC",
         whichName = "gcc",
         current = currentVersion("gcc"),
         expected = switch(
             EXPR = os,
-            rhel_7 = "4.8.5",
-            rhel_8 = "8.2.1",
-            ubuntu_18 = "7.4.0"
+            `amzn-2` = "7.3.1",
+            `rhel-7` = "4.8.5",
+            `rhel-8` = "8.2.1",
+            `ubuntu-18` = "7.4.0"
         )
     )
     checkVersion(
