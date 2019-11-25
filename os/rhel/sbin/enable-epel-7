@@ -5,14 +5,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-os_type="$(_koopa_os_type)"
-
-# Only allow install on RHEL 7.
-if [[ "$os_type" != "rhel7" ]]
-then
-    _koopa_stop "RHEL 7 is required."
-fi
-
 # Check if EPEL is already enabled.
 if sudo yum repolist | grep -q "epel/"
 then
