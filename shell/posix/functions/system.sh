@@ -39,7 +39,7 @@ _koopa_cd_tmp_dir() {
 _koopa_cellar_script() {                                                  # {{{3
     # """
     # Return source path for a koopa cellar build script.
-    # Updated 2019-11-21.
+    # Updated 2019-11-25.
     # """
     local name
     name="$1"
@@ -48,6 +48,8 @@ _koopa_cellar_script() {                                                  # {{{3
     _koopa_assert_has_no_envs
     # shellcheck source=/dev/null
     . "$file"
+    _koopa_success "'${name}' installed successfully."
+    return 0
 }
 
 _koopa_current_version() {                                                # {{{3
