@@ -13,6 +13,7 @@ enable-epel-7
 install-fedora-base
 sudo yum -y install \
     'llvm7*' \
+    ImageMagick-c++-devel \
     R \
     docbook2X \
     file-devel \
