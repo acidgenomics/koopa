@@ -15,13 +15,14 @@ array=(
     "Config prefix: $(_koopa_config_prefix)"
     "App prefix: $(_koopa_app_prefix)"
     "Make prefix: $(_koopa_make_prefix)"
-    ""
 )
 
 if _koopa_is_linux
 then
     array+=("Cellar prefix: $(_koopa_cellar_prefix)")
 fi
+
+array+=("")
 
 # Show neofetch info, if installed.
 if _koopa_is_installed neofetch
