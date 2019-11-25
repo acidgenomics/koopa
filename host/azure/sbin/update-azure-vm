@@ -126,8 +126,5 @@ sudo rm -frv /usr/local/{conda,miniconda3}
 
 if [[ "$broken" -eq 1 ]]
 then
-    remove-broken-symlinks "/n"
-    # remove-broken-symlinks "/data00/bcbio"
-    # remove-broken-symlinks "/data00/cellranger"
-    # remove-broken-symlinks "/data00/conda"
+    remove-broken-symlinks "/n/app"
 fi
