@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-_koopa_assert_is_installed docbook2x-texi
+# > _koopa_assert_is_installed docbook2x-texi
 
 name="git"
 version="$(_koopa_variable "$name")"
