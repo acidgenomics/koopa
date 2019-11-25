@@ -1,8 +1,8 @@
 #!/bin/sh
 
 version="$(_koopa_variable "python")"
-major_version="$(_koopa_major_version "$version")"
-py_dir="/Library/Frameworks/Python.framework/Versions/${major_version}/bin"
+minor_version="$(_koopa_minor_version "$version")"
+py_dir="/Library/Frameworks/Python.framework/Versions/${minor_version}/bin"
 
 if [ -z "${VIRTUAL_ENV:-}" ]
 then
@@ -10,4 +10,4 @@ then
     _koopa_add_to_path_start "$py_dir"
 fi
 
-unset -v major_version py_dir version
+unset -v minor_version py_dir version
