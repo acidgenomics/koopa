@@ -3,7 +3,7 @@ set -Eeu -o pipefail
 
 name="hdf5"
 version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
+minor_version="$(_koopa_minor_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
@@ -14,7 +14,7 @@ _koopa_message "Installing ${name} ${version}."
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     file="hdf5-${version}.tar.gz"
-    url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${major_version}/\
+    url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${minor_version}/\
 hdf5-${version}/src/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
