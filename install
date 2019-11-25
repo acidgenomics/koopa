@@ -30,7 +30,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-11-04.
+    Updated 2019-11-25.
 EOF
 }
 
@@ -127,14 +127,9 @@ then
         fi
         sudo mkdir -pv "$target_dir"
         group="$(_koopa_group)"
+        echo "$group"
         sudo chgrp "$group" "$target_dir"
-        sudo chmod g+w "$target_dir"
-        if _koopa_is_linux
-        then
-            sudo chgrp -Rh "$group" "$prefix"
-            sudo chmod g+w -R "$prefix"
-            sudo chmod g+s "$prefix"
-        fi
+        sudo chmod g+ws "$target_dir"
     fi
     git clone --recursive "$source_repo" "$target_dir"
     KOOPA_PREFIX="$target_dir"
