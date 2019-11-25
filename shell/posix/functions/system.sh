@@ -188,7 +188,7 @@ _koopa_group() {                                                          # {{{3
 _koopa_header() {                                                         # {{{3
     # """
     # Source script header.
-    # Updated 2019-11-10.
+    # Updated 2019-11-25.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
@@ -203,16 +203,17 @@ shell:
     - bash
     - zsh
 
-os type:
+os:
+    - amzn
+    - centos
     - darwin
+    - debian
+    - fedora
     - linux
-        - debian
-            - ubuntu
-        - fedora
-            - [rhel]
-                - amzn
+    - rhel
+    - ubuntu
 
-host type:
+host:
     - aws
     - azure
 EOF
@@ -227,24 +228,30 @@ EOF
             path="${KOOPA_PREFIX}/shell/zsh/include/header.sh"
             ;;
         # os -------------------------------------------------------------------
+        amzn)
+            path="${KOOPA_PREFIX}/os/amzn/include/header.sh"
+            ;;
+        centos)
+            path="${KOOPA_PREFIX}/os/centos/include/header.sh"
+            ;;
         darwin)
             path="${KOOPA_PREFIX}/os/darwin/include/header.sh"
+            ;;
+        debian)
+            path="${KOOPA_PREFIX}/os/debian/include/header.sh"
+            ;;
+        fedora)
+            path="${KOOPA_PREFIX}/os/fedora/include/header.sh"
             ;;
         linux)
             path="${KOOPA_PREFIX}/os/linux/include/header.sh"
             ;;
-            debian)
-                path="${KOOPA_PREFIX}/os/debian/include/header.sh"
-                ;;
-                ubuntu)
-                    path="${KOOPA_PREFIX}/os/ubuntu/include/header.sh"
-                    ;;
-            fedora)
-                path="${KOOPA_PREFIX}/os/fedora/include/header.sh"
-                ;;
-                amzn)
-                    path="${KOOPA_PREFIX}/os/amzn/include/header.sh"
-                    ;;
+        rhel)
+            path="${KOOPA_PREFIX}/os/rhel/include/header.sh"
+            ;;
+        ubuntu)
+            path="${KOOPA_PREFIX}/os/ubuntu/include/header.sh"
+            ;;
         # host -----------------------------------------------------------------
         aws)
             path="${KOOPA_PREFIX}/host/aws/include/header.sh"
@@ -259,10 +266,10 @@ EOF
     echo "$path"
 }
 
-_koopa_host_type() {                                                      # {{{3
+_koopa_host_id() {                                                        # {{{3
     # """
-    # Simple host type name string to load up host-specific scripts.
-    # Updated 2019-08-18.
+    # Simple host ID string to load up host-specific scripts.
+    # Updated 2019-11-25.
     #
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
@@ -272,27 +279,27 @@ _koopa_host_type() {                                                      # {{{3
     #
     # Returns empty for local machines and/or unsupported types.
     # """
-    local name
+    local id
     case "$(hostname -f)" in
         # VMs
         *.ec2.internal)
-            name="aws"
+            id="aws"
             ;;
         azlabapp*)
-            name="azure"
+            id="azure"
             ;;
         # HPCs
         *.o2.rc.hms.harvard.edu)
-            name="harvard-o2"
+            id="harvard-o2"
             ;;
         *.rc.fas.harvard.edu)
-            name="harvard-odyssey"
+            id="harvard-odyssey"
             ;;
         *)
-            name=
+            id=
             ;;
     esac
-    echo "$name"
+    echo "$id"
 }
 
 _koopa_info_box() {                                                       # {{{3
@@ -387,38 +394,46 @@ _koopa_macos_app_version() {                                              # {{{3
         | tr -d '"'
 }
 
-_koopa_os_type() {                                                        # {{{3
+_koopa_os_id() {                                                          # {{{3
     # """
-    # Operating system name.
-    # Updated 2019-10-22.
+    # Operating system ID.
+    # Updated 2019-11-25.
+    #
+    # Just return the OS platform ID (e.g. "debian").
+    # """
+    _koopa_os_string | cut -d '-' -f 1
+}
+
+_koopa_os_string() {                                                      # {{{3
+    # """
+    # Operating system string.
+    # Updated 2019-11-25.
+    #
+    # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
     # Always returns lowercase, with unique names for Linux distros
-    # (e.g. "debian").
-    # """
+    # (e.g. "rhel-8").
     local id
+    local version
     if _koopa_is_darwin
     then
-        id="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        id="darwin"
+        version="$(uname -r)"
     elif _koopa_is_linux
     then
         id="$( \
             awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
             | tr -d '"' \
         )"
-        # Include the major release version for RHEL.
-        if [ "$id" = "rhel" ]
-        then
-            version="$( \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
-                | tr -d '"' \
-                | cut -d '.' -f 1 \
-            )"
-            id="${id}${version}"
-        fi
-    else
-        id=
+        # Include the major release version.
+        version="$( \
+            awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
+            | tr -d '"' \
+            | cut -d '.' -f 1 \
+        )"
     fi
-    echo "$id"
+    echo "${id}-${version}"
 }
 
 _koopa_os_version() {                                                     # {{{3
