@@ -75,6 +75,7 @@ then
 fi
 
 _koopa_group() {
+    local group
     if groups | grep -Eq "\b(admin)\b"
     then
         group="admin"
@@ -87,6 +88,7 @@ _koopa_group() {
     else
         group="$(whoami)"
     fi
+    echo "$group"
 }
 
 _koopa_has_sudo() {
@@ -100,7 +102,6 @@ _koopa_is_linux() {
 # In a piped install script call, we'll clone the repo from GitHub first.
 if [[ -z "${BASH_SOURCE[0]}" ]]
 then
-    echo "PIPED INSTALL"
     export KOOPA_PIPED_INSTALL=1
     source_repo="https://github.com/acidgenomics/koopa.git"
     if [[ "$shared" -eq 1 ]]
@@ -118,7 +119,6 @@ then
         >&2 echo "Error: Directory exists: '${target_dir}'."
         exit 1
     fi
-    echo "UH OK"
     # Set correct admin permissions, if applicable.
     if [[ "$shared" -eq 1 ]]
     then
@@ -129,14 +129,10 @@ then
         fi
         sudo mkdir -pv "$target_dir"
         group="$(_koopa_group)"
-        echo "$group"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+ws "$target_dir"
-        echo "YES"
-    else
-        echo "NO"
     fi
-    echo "HMM"
+    echo "Installing koopa at '${target_dir}'."
     git clone --recursive "$source_repo" "$target_dir"
     KOOPA_PREFIX="$target_dir"
 else
