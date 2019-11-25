@@ -28,8 +28,6 @@ sudo yum -y install \
     gnutls-devel \
     golang \
     gsl-devel \
-    hdf5 \
-    hdf5-devel \
     java-latest-openjdk \
     java-latest-openjdk-devel \
     libcurl-devel \
@@ -56,7 +54,6 @@ sudo yum -y install \
     readline-devel \
     squashfs-tools \
     sshpass \
-    tesseract-devel \
     texlive \
     texlive-bera \
     texlive-caption \

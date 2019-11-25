@@ -20,12 +20,15 @@ sudo yum -y install \
     fish \
     gdal \
     gdal-devel \
+    hdf5 \
+    hdf5-devel \
     leptonica-devel \
     libgit2-devel \
     libssh2-devel \
     neovim \
     pandoc \
     pandoc-citeproc \
+    tesseract-devel \
     udunits2-devel \
     v8-devel
 sudo yum-builddep -y \
