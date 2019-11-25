@@ -270,6 +270,11 @@ then
     then
         _koopa_activate_prefix "${KOOPA_PREFIX}/os/fedora"
     fi
+
+    if _koopa_is_rhel
+    then
+        _koopa_activate_prefix "${KOOPA_PREFIX}/os/rhel"
+    fi
 fi
 
 _koopa_activate_prefix "${KOOPA_PREFIX}/os/$(_koopa_os_id)"
