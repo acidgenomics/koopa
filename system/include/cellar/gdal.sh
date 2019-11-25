@@ -10,7 +10,6 @@ build_prefix="$(_koopa_make_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
-exe_file="${prefix}/bin/gdalinfo"
 
 _koopa_message "Installing ${name} ${version}."
 
@@ -37,6 +36,3 @@ _koopa_message "Installing ${name} ${version}."
 )
 
 _koopa_link_cellar "$name" "$version"
-
-"$exe_file" --version
-command -v "$exe_file"

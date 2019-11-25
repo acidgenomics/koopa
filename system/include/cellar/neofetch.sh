@@ -5,7 +5,6 @@ name="neofetch"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-exe_file="${prefix}/bin/${name}"
 
 _koopa_message "Installing ${name} ${version}."
 
@@ -23,6 +22,3 @@ _koopa_message "Installing ${name} ${version}."
 )
 
 _koopa_link_cellar "$name" "$version"
-
-"$exe_file" --version
-command -v "$exe_file"
