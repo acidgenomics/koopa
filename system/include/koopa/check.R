@@ -693,7 +693,8 @@ if (isTRUE(linux)) {
             `amzn-2` = "7.3.1",
             `rhel-7` = "4.8.5",
             `rhel-8` = "8.2.1",
-            `ubuntu-18` = "7.4.0"
+            `ubuntu-18` = "7.4.0",
+            NULL
         )
     )
     checkVersion(
