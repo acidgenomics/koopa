@@ -387,12 +387,6 @@ checkVersion(
     expected = expectedVersion("perl")
 )
 checkVersion(
-    name = "Perl : Perlbrew",
-    whichName = "perlbrew",
-    current = currentVersion("perlbrew"),
-    expected = expectedVersion("perlbrew")
-)
-checkVersion(
     name = "Ruby",
     whichName = "ruby",
     current = currentVersion("ruby"),
@@ -785,20 +779,30 @@ if (
 ## Current user ================================================================
 message("\nCurrent user only:")
 checkVersion(
+    name = "Perl : Perlbrew",
+    whichName = "perlbrew",
+    current = currentVersion("perlbrew"),
+    expected = expectedVersion("perlbrew"),
+    required = FALSE
+)
+checkVersion(
     name = "Python : pipx",
     whichName = "pipx",
     current = currentVersion("pipx"),
-    expected = expectedVersion("pipx")
+    expected = expectedVersion("pipx"),
+    required = FALSE
 )
 checkVersion(
     name = "Python : pyenv",
     whichName = "pyenv",
     current = currentVersion("pyenv"),
-    expected = expectedVersion("pyenv")
+    expected = expectedVersion("pyenv"),
+    required = FALSE
 )
 checkVersion(
     name = "Ruby : rbenv",
     whichName = "rbenv",
     current = currentVersion("rbenv"),
-    expected = expectedVersion("rbenv")
+    expected = expectedVersion("rbenv"),
+    required = FALSE
 )
