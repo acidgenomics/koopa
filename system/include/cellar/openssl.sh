@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# Keep this cellar only.
+
 name="openssl"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 jobs="$(_koopa_cpu_count)"
-exe_file="${prefix}/bin/${name}"
 
 _koopa_message "Installing ${name} ${version}."
 
@@ -32,8 +33,3 @@ _koopa_message "Installing ${name} ${version}."
     make install
     rm -fr "$tmp_dir"
 )
-
-# Keep this cellar only.
-
-"$exe_file" version
-command -v "$exe_file"

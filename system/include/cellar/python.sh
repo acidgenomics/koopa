@@ -63,12 +63,5 @@ build_prefix="$(_koopa_make_prefix)"
 _koopa_message "Symlinking 'python3' to 'python' in '${build_prefix}'."
 ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
-command -v "$exe_file"
-"$exe_file" --version
-
-cat << EOF
-Python installation was successful.
-
-Reinstall cellar vim, which depends on Python.
-Reinstall virtual environments, which have been removed.
-EOF
+_koopa_note "Reinstall virtual environments, which have been removed."
+_koopa_note "Reinstall cellar vim, which depends on Python."

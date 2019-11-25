@@ -20,6 +20,3 @@ exe_file="${prefix}/bin/${name}"
 )
 
 _koopa_link_cellar "$name" "$version"
-
-command -v "$exe_file"
-"$exe_file" --version

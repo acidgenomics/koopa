@@ -15,7 +15,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
-exe_file="${prefix}/bin/R"
 
 _koopa_message "Installing R ${version}."
 
@@ -58,6 +57,3 @@ _koopa_update_r_config
 
 # Run again to ensure R site config files propagate correctly.
 _koopa_link_cellar "$name" "$version"
-
-command -v "$exe_file"
-"$exe_file" --version
