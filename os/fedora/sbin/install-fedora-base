@@ -8,7 +8,6 @@ source "${script_dir}/../include/header.sh"
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
 sudo yum -y install \
-    ImageMagick-c++-devel \
     bash \
     bzip2 \
     bzip2-devel \
