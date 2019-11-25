@@ -8,7 +8,6 @@ source "${script_dir}/../include/header.sh"
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
 sudo yum -y install \
-    'llvm7*' \
     ImageMagick-c++-devel \
     bash \
     bzip2 \
@@ -19,13 +18,9 @@ sudo yum -y install \
     cryptsetup \
     curl \
     emacs \
-    file-devel \
-    fish \
     gcc \
     gcc-c++ \
     gcc-gfortran \
-    gdal \
-    gdal-devel \
     geos \
     geos-devel \
     git \
@@ -38,7 +33,6 @@ sudo yum -y install \
     hdf5-devel \
     java-latest-openjdk \
     java-latest-openjdk-devel \
-    leptonica-devel \
     libcurl-devel \
     libevent-devel \
     libseccomp-devel \
@@ -51,14 +45,10 @@ sudo yum -y install \
     mariadb-devel \
     mpfr-devel \
     ncurses \
-    neovim \
     openssl \
     openssl-devel \
-    pandoc \
-    pandoc-citeproc \
     parallel \
     pcre-devel \
-    poppler-cpp-devel \
     postgresql-devel \
     proj \
     proj-devel \
