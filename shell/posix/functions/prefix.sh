@@ -95,14 +95,14 @@ _koopa_autojump_prefix() {                                                # {{{3
 _koopa_bcbio_prefix() {                                                   # {{{3
     # """
     # bcbio-nextgen prefix.
-    # Updated 2019-11-15.
+    # Updated 2019-11-25.
     local prefix
-    local host
-    host="$(_koopa_host_type)"
-    if [ "$host" = "harvard-o2" ]
+    local host_id
+    host_id="$(_koopa_host_id)"
+    if [ "$host_id" = "harvard-o2" ]
     then
         prefix="/n/app/bcbio/tools"
-    elif [ "$host" = "harvard-odyssey" ]
+    elif [ "$host_id" = "harvard-odyssey" ]
     then
         prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
     else

@@ -540,17 +540,17 @@ _koopa_invalid_arg() {                                                    # {{{3
 _koopa_is_aws() {                                                         # {{{3
     # """
     # Is the current session running on AWS?
-    # Updated 2019-10-31.
+    # Updated 2019-11-25.
     # """
-    [ "$(_koopa_host_type)" = "aws" ]
+    [ "$(_koopa_host_id)" = "aws" ]
 }
 
 _koopa_is_azure() {                                                       # {{{3
     # """
     # Is the current session running on Microsoft Azure?
-    # Updated 2019-10-31.
+    # Updated 2019-11-25.
     # """
-    [ "$(_koopa_host_type)" = "azure" ]
+    [ "$(_koopa_host_id)" = "azure" ]
 }
 
 _koopa_is_conda_active() {                                                # {{{3
@@ -737,7 +737,7 @@ _koopa_is_rhel() {                                                        # {{{3
     return 0
 }
 
-_koopa_is_rhel7() {                                                       # {{{3
+_koopa_is_rhel_7() {                                                       # {{{3
     # """
     # Is the operating system RHEL 7?
     # Updated 2019-11-25.
@@ -748,7 +748,7 @@ _koopa_is_rhel7() {                                                       # {{{3
     return 0
 }
 
-_koopa_is_rhel8() {                                                       # {{{3
+_koopa_is_rhel_8() {                                                       # {{{3
     # """
     # Is the operating system RHEL 8?
     # Updated 2019-11-25.

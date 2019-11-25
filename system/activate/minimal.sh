@@ -272,8 +272,8 @@ then
     fi
 fi
 
-_koopa_activate_prefix "${KOOPA_PREFIX}/os/$(_koopa_os_type)"
-_koopa_activate_prefix "${KOOPA_PREFIX}/host/$(_koopa_host_type)"
+_koopa_activate_prefix "${KOOPA_PREFIX}/os/$(_koopa_os_id)"
+_koopa_activate_prefix "${KOOPA_PREFIX}/host/$(_koopa_host_id)"
 
 # Private scripts                                                           {{{2
 # ------------------------------------------------------------------------------

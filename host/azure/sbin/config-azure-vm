@@ -14,8 +14,7 @@ sudo ln -fnsv /data00/n /n
 sudo chmod 2775 /usr/local
 sudo chown -Rh root:wheel /usr/local
 
-install-rhel7-base
-remove-rhel7-cruft
+install-rhel-7-base
 
 install-openjdk
 

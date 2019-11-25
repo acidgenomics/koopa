@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-15.
+## Updated 2019-11-25.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -687,9 +687,9 @@ if (isTRUE(linux)) {
         current = currentVersion("gcc"),
         expected = switch(
             EXPR = os,
-            rhel7 = "4.8.5",
-            rhel8 = "8.2.1",
-            ubuntu = "7.4.0"
+            rhel_7 = "4.8.5",
+            rhel_8 = "8.2.1",
+            ubuntu_18 = "7.4.0"
         )
     )
     checkVersion(

@@ -79,7 +79,7 @@ if [[ "$yum" -eq 1 ]]
 then
     _koopa_message "Updating yum/rpm packages."
     sudo yum update -y
-    install-rhel7-base
+    install-rhel-7-base
 fi
 
 if [[ "$rsync" -eq 1 ]]
