@@ -130,6 +130,9 @@ then
         echo "$group"
         sudo chgrp "$group" "$target_dir"
         sudo chmod g+ws "$target_dir"
+        echo "YES"
+    else
+        echo "NO"
     fi
     git clone --recursive "$source_repo" "$target_dir"
     KOOPA_PREFIX="$target_dir"
