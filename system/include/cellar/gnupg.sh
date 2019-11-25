@@ -7,7 +7,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 jobs="$(_koopa_cpu_count)"
 gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
-exe_file="${prefix}/bin/gpg"
 
 _koopa_message "Installing ${name} ${version}."
 
@@ -165,6 +164,3 @@ rm -rf "$tmp_dir"
 # > rm -rf ~/.gnugp
 
 gpgconf --kill gpg-agent
-
-command -v "$exe_file"
-"$exe_file" --version
