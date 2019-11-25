@@ -43,7 +43,12 @@ else
                 "$(sw_vers -buildVersion)" \
         )"
     else
-        os="$(python -mplatform)"
+        if _koopa_is_installed python
+        then
+            os="$(python -mplatform)"
+        else
+            os="$(uname --all)"
+        fi
     fi
     shell_name="$KOOPA_SHELL"
     shell_version="$(_koopa_current_version "${shell_name}")"
