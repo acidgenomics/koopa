@@ -353,26 +353,12 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-if (isInstalled("python3")) {
-    checkVersion(
-        name = "Python : pip",
-        whichName = "pip",
-        current = currentVersion("pip"),
-        expected = expectedVersion("pip")
-    )
-    checkVersion(
-        name = "Python : pipx",
-        whichName = "pipx",
-        current = currentVersion("pipx"),
-        expected = expectedVersion("pipx")
-    )
-    checkVersion(
-        name = "Python : pyenv",
-        whichName = "pyenv",
-        current = currentVersion("pyenv"),
-        expected = expectedVersion("pyenv")
-    )
-}
+checkVersion(
+    name = "Python : pip",
+    whichName = "pip",
+    current = currentVersion("pip"),
+    expected = expectedVersion("pip")
+)
 # Can use `packageVersion("base")` instead but it doesn't always return the
 # correct value for RStudio Server Pro.
 checkVersion(
@@ -400,42 +386,30 @@ checkVersion(
     current = currentVersion("perl"),
     expected = expectedVersion("perl")
 )
-if (isInstalled("perl")) {
-    checkVersion(
-        name = "Perl : Perlbrew",
-        whichName = "perlbrew",
-        current = currentVersion("perlbrew"),
-        expected = expectedVersion("perlbrew")
-    )
-}
+checkVersion(
+    name = "Perl : Perlbrew",
+    whichName = "perlbrew",
+    current = currentVersion("perlbrew"),
+    expected = expectedVersion("perlbrew")
+)
 checkVersion(
     name = "Ruby",
     whichName = "ruby",
     current = currentVersion("ruby"),
     expected = expectedVersion("ruby")
 )
-if (isInstalled("ruby")) {
-    checkVersion(
-        name = "Ruby : rbenv",
-        whichName = "rbenv",
-        current = currentVersion("rbenv"),
-        expected = expectedVersion("rbenv")
-    )
-}
 checkVersion(
     name = "Rust",
     whichName = "rustc",
     current = currentVersion("rust"),
     expected = expectedVersion("rust")
 )
-if (isInstalled("rustc")) {
-    checkVersion(
-        name = "Rust : rustup",
-        whichName = "rustup",
-        current = currentVersion("rustup"),
-        expected = expectedVersion("rustup")
-    )
-}
+checkVersion(
+    name = "Rust : rustup",
+    whichName = "rustup",
+    current = currentVersion("rustup"),
+    expected = expectedVersion("rustup")
+)
 
 
 
@@ -591,7 +565,7 @@ checkVersion(
 checkVersion(
     name = "GnuPG",
     whichName = "gpg",
-    current = currentVersion("gpg"),
+    current = currentVersion("gnupg"),
     expected = expectedVersion("gpg")
 )
 checkVersion(
@@ -797,11 +771,34 @@ if (
         expected = expectedVersion("luarocks"),
         required = FALSE
     )
-    checkVersion(
-        name = "Singularity",
-        whichName = "singularity",
-        current = currentVersion("singularity"),
-        expected = expectedVersion("singularity"),
-        required = FALSE
-    )
+    # > checkVersion(
+    # >     name = "Singularity",
+    # >     whichName = "singularity",
+    # >     current = currentVersion("singularity"),
+    # >     expected = expectedVersion("singularity"),
+    # >     required = FALSE
+    # > )
 }
+
+
+
+## Current user ================================================================
+message("\nCurrent user only:")
+checkVersion(
+    name = "Python : pipx",
+    whichName = "pipx",
+    current = currentVersion("pipx"),
+    expected = expectedVersion("pipx")
+)
+checkVersion(
+    name = "Python : pyenv",
+    whichName = "pyenv",
+    current = currentVersion("pyenv"),
+    expected = expectedVersion("pyenv")
+)
+checkVersion(
+    name = "Ruby : rbenv",
+    whichName = "rbenv",
+    current = currentVersion("rbenv"),
+    expected = expectedVersion("rbenv")
+)
