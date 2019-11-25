@@ -45,7 +45,7 @@ _koopa_message "Installing R ${version}."
         --with-tcltk \
         --with-x="no"
     make --jobs="$jobs"
-    make check
+    # > make check
     make install
     rm -fr "$tmp_dir"
 )
