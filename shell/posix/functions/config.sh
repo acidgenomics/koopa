@@ -165,6 +165,22 @@ _koopa_update_ldconfig() {                                                # {{{3
     sudo ldconfig
 }
 
+_koopa_update_lmod_config() {                                             # {{{3
+    # """
+    # Link lmod configuration files in '/etc/profile.d/'.
+    # Updated 2019-11-26.
+    # """
+    _koopa_is_linux || return 0
+    _koopa_has_sudo || return 0
+    _koopa_message "Updating Lmod configuration in '/etc/profile.d/'."
+    local init_dir
+    init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
+    [ -d "$init_dir" ] || return 0
+    ln -fnsv "${init_dir}/cshrc" "/etc/profile.d/z00_lmod.csh"
+    ln -fnsv "${init_dir}/profile" "/etc/profile.d/z00_lmod.sh"
+    return 0
+}
+
 _koopa_update_profile() {                                                 # {{{3
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
