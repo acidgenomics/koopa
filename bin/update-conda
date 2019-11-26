@@ -16,6 +16,5 @@ fi
 _koopa_message "Updating Conda."
 conda update --yes --name=base --channel=defaults conda
 conda update --yes --name=base --channel=defaults --all
-
-# > _koopa_message "Removing tarballs."
-# > conda clean --yes --tarballs
+# > conda clean --yes --all
+_koopa_set_permissions "$(_koopa_conda_prefix)"
