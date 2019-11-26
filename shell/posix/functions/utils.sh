@@ -94,7 +94,7 @@ _koopa_update_git_repo() {                                                # {{{3
     [ -x "${repo}/.git" ] || return 0
     _koopa_message "Updating '${repo}'."
     (
-        cd "${config_prefix}/${repo}" || exit 1
+        cd "$repo" || exit 1
         # Run updater script, if defined.
         # Otherwise pull the git repo.
         if [[ -x "UPDATE.sh" ]]
