@@ -30,15 +30,18 @@ done
 config_prefix="$(_koopa_config_prefix)"
 _koopa_message "Updating user config at '${config_prefix}'."
 
+# Rcheck
+# doom emacs
+# oh-my-zsh
+# rbenv
+# pyenv
+# spacemacs
+
 repos=(
-    Rcheck
     docker
     dotfiles
     dotfiles-private
-    oh-my-zsh
-    rbenv
     scripts-private
-    spacemacs
 )
 for repo in "${repos[@]}"
 do
