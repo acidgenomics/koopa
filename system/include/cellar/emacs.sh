@@ -20,7 +20,8 @@ _koopa_message "Installing ${name} ${version}."
     ./configure \
         --build="$build" \
         --prefix="$prefix" \
-        --with-x-toolkit="no"
+        --with-x-toolkit="no" \
+        --with-xpm="no"
     make --jobs="$jobs"
     make install
     rm -fr "$tmp_dir"
