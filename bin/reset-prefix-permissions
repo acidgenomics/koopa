@@ -5,32 +5,5 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
-_koopa_assert_has_no_args "$@"
 
-if _koopa_is_shared_install
-then
-    _koopa_assert_has_sudo
-fi
-
-prefix="$(_koopa_make_prefix)"
-group="$(_koopa_group)"
-
-if _koopa_is_shared_install
-then
-    user="root"
-else
-    user="$USER"
-fi
-
-_koopa_message "Resetting user ('${user}') and group ('${group}') permissions \
-on '${prefix}'."
-
-_koopa_set_permissions "$prefix"
-
-# Ensure group on top level is sticky.
-if _koopa_is_shared_install
-then
-    sudo chmod g+s "$prefix"
-else
-    chmod g+s "$prefix"
-fi
+_koopa_reset_prefix_permissions "$@"

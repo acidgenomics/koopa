@@ -92,22 +92,46 @@ _koopa_prepare_make_prefix() {
     return 0
 }
 
+_koopa_reset_prefix_permissions() {
+    # """
+    # Reset prefix permissions.
+    # Updated 2019-11-26.
+    # """
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        prefix="$(_koopa_make_prefix)"
+    fi
+    _koopa_set_permissions "$prefix"
+    # Ensure group on top level is sticky.
+    if _koopa_is_shared_install
+    then
+        sudo chmod g+s "$prefix"
+    else
+        chmod g+s "$prefix"
+    fi
+    return 0
+}
+
 _koopa_set_permissions() {                                                # {{{3
     # """
     # Set permissions on a koopa-related directory.
-    # Updated 2019-10-22.
+    # Updated 2019-11-26.
     #
     # Generally used to reset the build prefix directory (e.g. '/usr/local').
     # """
     local path
     path="$1"
+    _koopa_message "Setting permissions on '${path}'."
     if _koopa_is_shared_install
     then
+        _koopa_assert_has_sudo
         sudo chown -Rh "root" "$path"
     else
         chown -Rh "$(whoami)" "$path"
     fi
     _koopa_prefix_chgrp "$path"
+    return 0
 }
 
 _koopa_update_ldconfig() {                                                # {{{3
