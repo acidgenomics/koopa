@@ -30,6 +30,8 @@ sudo yum -y install \
     gsl-devel \
     java-latest-openjdk \
     java-latest-openjdk-devel \
+    libacl1 \
+    libacl1-dev \
     libcurl-devel \
     libevent-devel \
     libseccomp-devel \
