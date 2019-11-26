@@ -82,3 +82,28 @@ _koopa_quiet_rm() {                                                       # {{{3
     # """
     rm -fr "$@" > /dev/null 2>&1
 }
+
+_koopa_update_git_repo() {                                                # {{{3
+    # """
+    # Update a git repository.
+    # Updated 2019-11-26.
+    # """
+    local repo
+    repo="$1"
+    [ -d "${repo}" ] || return 0
+    [ -x "${repo}/.git" ] || return 0
+    _koopa_message "Updating '${repo}'."
+    (
+        cd "${config_prefix}/${repo}" || exit 1
+        # Run updater script, if defined.
+        # Otherwise pull the git repo.
+        if [[ -x "UPDATE.sh" ]]
+        then
+            ./UPDATE.sh
+        else
+            git fetch --all
+            git pull
+        fi
+    )
+    return 0
+}

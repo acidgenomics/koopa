@@ -30,13 +30,7 @@ done
 config_prefix="$(_koopa_config_prefix)"
 _koopa_message "Updating user config at '${config_prefix}'."
 
-# Rcheck
-# autojump
-# doom emacs
-# oh-my-zsh
-# rbenv
-# pyenv
-# spacemacs
+rm -frv "${config_prefix}/{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}"
 
 repos=(
     docker
@@ -46,24 +40,8 @@ repos=(
 )
 for repo in "${repos[@]}"
 do
-    # Skip directories that aren't a git repo.
-    if [[ ! -x "${config_prefix}/${repo}/.git" ]]
-    then
-        continue
-    fi
-    _koopa_message "Updating '${repo}'."
-    (
-        cd "${config_prefix}/${repo}" || exit 1
-        # Run updater script, if defined.
-        # Otherwise pull the git repo.
-        if [[ -x "UPDATE.sh" ]]
-        then
-            ./UPDATE.sh
-        else
-            git fetch --all
-            git pull
-        fi
-    )
+    repo="${config_prefix}/${repo}"
+    _koopa_update_git_repo "$repo"
 done
 
 (
@@ -99,6 +77,9 @@ then
     fi
     update-venv
     update-rust
+    _koopa_update_git_repo "${HOME}/.emacs.d-doom"
+    _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
+    _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
     if _koopa_is_linux
     then
         reset-prefix-permissions
