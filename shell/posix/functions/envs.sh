@@ -15,6 +15,13 @@ _koopa_activate_conda_env() {
     # Note that the conda activation script currently has unbound variables
     # (e.g. PS1), that will cause this step to fail unless we temporarily
     # disable unbound variable checks.
+    #
+    # Alternate approach:
+    # > eval "$(conda shell.bash hook)"
+    #
+    # See also:
+    # - https://github.com/conda/conda/issues/7980
+    # - https://stackoverflow.com/questions/34534513
     # """
     _koopa_assert_is_installed conda
     local name
