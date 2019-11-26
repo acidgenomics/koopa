@@ -70,9 +70,13 @@ sudo systemctl start docker
 sudo rm -frv /opt/jdk
 
 _koopa_message "Updating '/data00' structure."
-sudo rm -frv /data00/{conda,var}
-sudo ln -fnsv "/n/app/bcbio" "/data00/bcbio"
+sudo rm -frv "/data00/"{R,bcbio,cellranger,cellranger-atac,conda,docker,var}
 sudo ln -fnsv "/n/app/r" "/data00/R"
+
+if _koopa_is_powerful
+then
+    sudo ln -fnsv "/n/app/bcbio" "/data00/bcbio"
+fi
 
 # Ensure that shared bioinfo user has correct dotfiles.
 if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
