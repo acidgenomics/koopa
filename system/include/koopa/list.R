@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## List user-accessible programs exported in PATH.
-## Updated 2019-11-01.
+## Updated 2019-11-26.
 
 options(
     error = quote(quit(status = 1L)),
@@ -11,7 +11,7 @@ options(
 message("koopa programs exported in PATH.")
 
 ## Note that these won't pick up in isolated RStudio configuration.
-## > Sys.setenv("KOOPA_PREFIX" = "/n/app/koopa")
+## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
 koopaHome <- Sys.getenv("KOOPA_PREFIX")
 path <- Sys.getenv("PATH")
 stopifnot(
