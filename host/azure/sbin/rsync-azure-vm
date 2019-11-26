@@ -41,6 +41,7 @@ then
     flags+=("--exclude=cellranger")
     flags+=("--exclude=cellranger-atac")
     flags+=("--exclude=omicsoft")
+    flags+=("--exclude=rnaeditingindexer")
 fi
 
 _koopa_message "Updating '${dir}' from '${source_ip}'."

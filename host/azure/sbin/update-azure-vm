@@ -5,28 +5,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-broken=0
+KOOPA_PREFIX="$(_koopa_prefix)"
+
 rsync=0
 yum=0
-
-#sudo rm -rf /usr/local/Genrich
-#sudo rm -rf /usr/local/conda
-#sudo rm -rf /usr/local/omicsoft
-#sudo rm -rf /usr/local/perlbrew
-#sudo rm -rf /usr/local/pyenv
-#sudo rm -rf /usr/local/rbenv
 
 while (("$#"))
 do
     case "$1" in
         --all)
-            broken=1
             rsync=1
             yum=1
-            shift 1
-            ;;
-        --broken)
-            broken=1
             shift 1
             ;;
         --rsync)
@@ -69,43 +58,19 @@ sudo systemctl stop docker
 sudo ln -fnsv \
     "${KOOPA_PREFIX}/os/fedora/etc/docker/"* \
     "/etc/docker/."
+sudo rm -frv "/data00/var/lib/docker"
 sudo rm -frv "/var/lib/docker"
-sudo mkdir -pv "/data00/var/lib/docker"
-sudo ln -fnsv "/data00/var/lib/docker" "/var/lib/docker"
+sudo mkdir -pv "/n/var/lib/docker"
+sudo ln -fnsv "/n/var/lib/docker" "/var/lib/docker"
 sudo systemctl enable docker
 sudo systemctl start docker
 
-if [[ "$yum" -eq 1 ]]
-then
-    _koopa_message "Updating yum/rpm packages."
-    sudo yum update -y
-    install-rhel-7-base
-fi
+# Clean up /data00 drive
+# Ensure we have a /data00/bcbio symlink.
 
-if [[ "$rsync" -eq 1 ]]
-then
-    _koopa_message "Running rsync scripts (password required)."
-    # rsync-bcbio
-    # rsync-cellranger
-    # if [[ ! -d "/usr/local/conda" ]]
-    # then
-    #     sudo rm -frv /usr/local/miniconda3
-    #     sudo rm -frv /data00/miniconda3
-    #     sudo mkdir -pv /data00/conda
-    #     sudo chmod 2775 /data00/conda
-    #     sudo chown -Rh mike:wheel /data00/conda
-    #     rm -frv /usr/local/conda
-    #     sudo ln -fnsv /data00/conda /usr/local/conda
-    # fi
-    # rsync-conda
-    # if [[ ! -d "/data00/R" ]]
-    # then
-    #     sudo mkdir -pv /data00/R
-    #     sudo chmod 2775 /data00/R
-    #     sudo chown -Rh mike:wheel /data00/R
-    # fi
-    # rsync-r
-fi
+# Consider moving this to /n
+# Don't run this on VM32 yet.
+# sudo rm -rf /data00/var
 
 # Ensure that shared bioinfo user has correct dotfiles.
 if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
@@ -121,10 +86,14 @@ then
     "
 fi
 
-sudo rm -frv /usr/local/bin/{cellranger*,miniconda3}
-sudo rm -frv /usr/local/{conda,miniconda3}
-
-if [[ "$broken" -eq 1 ]]
+if [[ "$yum" -eq 1 ]]
 then
-    remove-broken-symlinks "/n/app"
+    _koopa_message "Updating system packages."
+    sudo yum update -y
+    install-rhel-7-base
+fi
+
+if [[ "$rsync" -eq 1 ]]
+then
+    rsync-azure-vm
 fi
