@@ -176,8 +176,8 @@ _koopa_update_lmod_config() {                                             # {{{3
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
     [ -d "$init_dir" ] || return 0
-    ln -fnsv "${init_dir}/cshrc" "/etc/profile.d/z00_lmod.csh"
-    ln -fnsv "${init_dir}/profile" "/etc/profile.d/z00_lmod.sh"
+    sudo ln -fnsv "${init_dir}/cshrc" "/etc/profile.d/z00_lmod.csh"
+    sudo ln -fnsv "${init_dir}/profile" "/etc/profile.d/z00_lmod.sh"
     return 0
 }
 
