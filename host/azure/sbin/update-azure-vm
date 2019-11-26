@@ -64,6 +64,9 @@ sudo ln -fnsv "/n/var/lib/docker" "/var/lib/docker"
 sudo systemctl enable docker
 sudo systemctl start docker
 
+# Moved to '/n/app/jdk'.
+sudo rm -frv /opt/jdk
+
 _koopa_message "Updating '/data00' structure."
 sudo rm -frv /data00/{conda,var}
 sudo ln -fnsv "/n/app/bcbio" "/data00/bcbio"
