@@ -17,7 +17,7 @@ then
 fi
 
 mapfile -t flags < <(_koopa_rsync_flags)
-flags+=("--omit-dir-times")
+# > flags+=("--omit-dir-times")
 flags_bak=("${flags[@]}")
 
 
@@ -25,9 +25,14 @@ flags_bak=("${flags[@]}")
 # /n/app                                                                    {{{1
 # ==============================================================================
 
+sudo mkdir -pv /data00/n
+sudo chown root:root /data00/n
+sudo chmod 0755 /data00/n
+sudo ln -fnsfv /data00/n /n
+
 dir="/n/app"
-_koopa_assert_is_dir "$dir"
-_koopa_set_permissions "$dir"
+sudo mkdir -pv "$dir"
+sudo chown -Rh "$USER" "$dir"
 
 # Skip programs that are specific to powerful multi-core VMs.
 if ! _koopa_is_powerful
@@ -55,7 +60,7 @@ _koopa_set_permissions "$dir"
 
 dir="/usr/local"
 _koopa_assert_is_dir "$dir"
-_koopa_set_permissions "$dir"
+sudo chown -Rh "$USER" "$dir"
 
 flags=("${flags_bak[@]}")
 
