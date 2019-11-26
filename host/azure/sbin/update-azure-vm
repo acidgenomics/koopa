@@ -65,7 +65,7 @@ sudo systemctl enable docker
 sudo systemctl start docker
 
 _koopa_message "Updating '/data00' structure."
-sudo rm -frv "/data00/var"
+sudo rm -frv /data00/{conda,var}
 sudo ln -fnsv "/n/app/bcbio" "/data00/bcbio"
 sudo ln -fnsv "/n/app/r" "/data00/R"
 
