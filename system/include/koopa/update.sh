@@ -31,6 +31,7 @@ config_prefix="$(_koopa_config_prefix)"
 _koopa_message "Updating user config at '${config_prefix}'."
 
 # Rcheck
+# autojump
 # doom emacs
 # oh-my-zsh
 # rbenv
