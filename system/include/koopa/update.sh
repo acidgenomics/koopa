@@ -84,7 +84,7 @@ then
     _koopa_update_git_repo "${XDG_DATA_HOME}/rbenv"
     if _koopa_is_linux
     then
-        reset-prefix-permissions
+        _koopa_reset_prefix_permissions
         prefix="$(_koopa_make_prefix)"
         remove-broken-symlinks "$prefix"
         remove-empty-dirs "$prefix"
