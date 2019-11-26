@@ -20,6 +20,10 @@ _koopa_message "Installing ${name} ${version}."
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "ruby-${version}" || exit 1
+    # This will fail on Ubuntu 18 otherwise.
+    # https://github.com/rbenv/ruby-build/issues/156
+    # https://github.com/rbenv/ruby-build/issues/729
+    export RUBY_CONFIGURE_OPTS=--disable-install-doc
     ./configure \
         --build="$build" \
         --prefix="$prefix"
