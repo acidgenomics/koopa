@@ -65,6 +65,10 @@ sudo ln -fnsv "/n/var/lib/docker" "/var/lib/docker"
 sudo systemctl enable docker
 sudo systemctl start docker
 
+# Ensure legacy symlinks exist, so we don't break bcbio or R.
+sudo ln -fnsv /n/app/bcbio /data00/bcbio
+sudo ln -fnsv /n/app/r /data00/R
+
 # Clean up /data00 drive
 # Ensure we have a /data00/bcbio symlink.
 
