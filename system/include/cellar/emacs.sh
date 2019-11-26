@@ -19,7 +19,8 @@ _koopa_message "Installing ${name} ${version}."
     cd "emacs-${version}" || exit 1
     ./configure \
         --build="$build" \
-        --prefix="$prefix"
+        --prefix="$prefix" \
+        --with-x-toolkit="no"
     make --jobs="$jobs"
     make install
     rm -fr "$tmp_dir"
