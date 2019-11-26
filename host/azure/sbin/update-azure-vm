@@ -7,6 +7,7 @@ source "${script_dir}/../include/header.sh"
 
 KOOPA_PREFIX="$(_koopa_prefix)"
 
+all=0
 rsync=0
 yum=0
 
@@ -14,6 +15,7 @@ while (("$#"))
 do
     case "$1" in
         --all)
+            all=1
             rsync=1
             yum=1
             shift 1
