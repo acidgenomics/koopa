@@ -30,7 +30,7 @@ done
 config_prefix="$(_koopa_config_prefix)"
 _koopa_message "Updating user config at '${config_prefix}'."
 
-rm -frv "${config_prefix}/{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}"
+rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
 
 repos=(
     docker
