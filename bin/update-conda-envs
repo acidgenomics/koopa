@@ -28,3 +28,4 @@ done < <( \
 )
 
 "$conda_exe" clean --yes --all
+_koopa_set_permissions "$(_koopa_conda_prefix)"

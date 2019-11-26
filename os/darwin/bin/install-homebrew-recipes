@@ -47,6 +47,7 @@ casks=(
     hazel
     igv
     iterm2
+    julia
     keka
     kitty
     libreoffice
