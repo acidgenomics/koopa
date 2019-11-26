@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-25.
+## Updated 2019-11-26.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -381,6 +381,12 @@ checkVersion(
     expected = expectedVersion("java")
 )
 checkVersion(
+    name = "Julia",
+    whichName = "julia",
+    current = currentVersion("julia"),
+    expected = expectedVersion("julia")
+)
+checkVersion(
     name = "Perl",
     whichName = "perl",
     current = currentVersion("perl"),
@@ -391,18 +397,6 @@ checkVersion(
     whichName = "ruby",
     current = currentVersion("ruby"),
     expected = expectedVersion("ruby")
-)
-checkVersion(
-    name = "Rust",
-    whichName = "rustc",
-    current = currentVersion("rust"),
-    expected = expectedVersion("rust")
-)
-checkVersion(
-    name = "Rust : rustup",
-    whichName = "rustup",
-    current = currentVersion("rustup"),
-    expected = expectedVersion("rustup")
 )
 
 
@@ -804,5 +798,19 @@ checkVersion(
     whichName = "rbenv",
     current = currentVersion("rbenv"),
     expected = expectedVersion("rbenv"),
+    required = FALSE
+)
+checkVersion(
+    name = "Rust",
+    whichName = "rustc",
+    current = currentVersion("rust"),
+    expected = expectedVersion("rust"),
+    required = FALSE
+)
+checkVersion(
+    name = "Rust : rustup",
+    whichName = "rustup",
+    current = currentVersion("rustup"),
+    expected = expectedVersion("rustup"),
     required = FALSE
 )
