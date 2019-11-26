@@ -80,6 +80,8 @@ then
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
+    _koopa_update_git_repo "${XDG_DATA_HOME}/pyenv"
+    _koopa_update_git_repo "${XDG_DATA_HOME}/rbenv"
     if _koopa_is_linux
     then
         reset-prefix-permissions
