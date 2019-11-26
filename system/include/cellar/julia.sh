@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# This is currently erroring out if LLVM 7 is installed.
+# See also:
+# - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
+# - https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
+# - https://docs.julialang.org/en/v1/devdocs/llvm/
+# - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md#llvm
+# - https://github.com/JuliaLang/julia/blob/master/Make.inc
 
-# https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
-# https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
-# https://docs.julialang.org/en/v1/devdocs/llvm/
+# How to disable this?
+# Warning: git information unavailable; versioning information limited
 
 name="julia"
 version="$(_koopa_variable "$name")"
@@ -17,22 +21,23 @@ _koopa_message "Installing ${name} ${version}."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
-    file="v${version}.tar.gz"
-    url="https://github.com/JuliaLang/julia/archive/${file}"
+    # > file="v${version}.tar.gz"
+    # > url="https://github.com/JuliaLang/julia/archive/${file}"
+    file="julia-${version}-full.tar.gz"
+    url="https://github.com/JuliaLang/julia/releases/download/v${version}/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "julia-${version}" || exit 1
-    # Customize 'Make.user' file.
-    # > echo "prefix=${prefix}" >> "Make.user"
-    cat >"Make.user" <<EOL
+    # Customize the 'Make.user' file.
+    # Need to ensure we configure internal LLVM build here.
+    cat > Make.user << EOL
 prefix=${prefix}
 
-# This doesn't work.
-# LLVM_VER = 7.0.1
+USE_LLVM_SHLIB=0
+USE_SYSTEM_LLVM=0
 
-# This doesn't work either.
-# LLVM_DEBUG = Release
-# LLVM_ASSERTIONS = 1
+# > LLVM_DEBUG=Release
+# > LLVM_ASSERTIONS=1
 EOL
     # This step is currently erroring out on RHEL 7 due to LLVM 7.
     make --jobs="$jobs"
