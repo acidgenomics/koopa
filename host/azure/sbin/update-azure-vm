@@ -97,3 +97,8 @@ if [[ "$rsync" -eq 1 ]]
 then
     rsync-azure-vm
 fi
+
+if [[ "$all" -eq 1 ]]
+then
+    install-openjdk
+fi
