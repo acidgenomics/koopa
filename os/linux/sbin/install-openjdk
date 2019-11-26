@@ -78,7 +78,7 @@ update-alternatives --display jar
 java --version
 
 # Update rJava configuration.
-if _koopa_is_installed R
-then
-    r-javareconf
-fi
+# > if _koopa_is_installed R
+# > then
+# >     r-javareconf
+# > fi
