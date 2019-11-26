@@ -8,15 +8,15 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_no_args "$@"
 
 source_repo="git@github.com:acidgenomics/Rcheck.git"
-config_dir="$(_koopa_config_prefix)"
-clone_dir="${config_dir}/Rcheck"
+target_dir="$(_koopa_local_app_prefix)/Rcheck"
 link_name=".Rcheck"
 
-if [[ ! -d "$clone_dir" ]]
+# This will clone the Git repo once, if necessary.
+if [[ ! -d "$target_dir" ]]
 then
-    rm -frv "$clone_dir"
-    git clone "$source_repo" "$clone_dir"
+    mkdir -pv "$target_dir"
+    git clone "$source_repo" "$target_dir"
 fi
 
 # Add symlink in current working directory.
-ln -fnsv "$clone_dir" "$link_name"
+ln -fnsv "$target_dir" "$link_name"

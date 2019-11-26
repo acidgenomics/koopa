@@ -26,7 +26,7 @@ _koopa_app_prefix() {                                                     # {{{3
     then
         prefix="/n/app"
     else
-        prefix="$XDG_DATA_HOME"
+        prefix="$(_koopa_local_app_prefix)"
     fi
     echo "$prefix"
 }
@@ -54,6 +54,14 @@ _koopa_config_prefix() {                                                  # {{{3
         XDG_CONFIG_HOME="${HOME}/.config"
     fi
     echo "${XDG_CONFIG_HOME}/koopa"
+}
+
+_koopa_local_app_prefix() {
+    # """
+    # Local user-specific application prefix.
+    # Updated 2019-11-26.
+    # """
+    echo "${XDG_DATA_HOME}"
 }
 
 _koopa_make_prefix() {                                                    # {{{3
