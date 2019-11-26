@@ -106,5 +106,6 @@ fi
 
 if [[ "$all" -eq 1 ]]
 then
+    _koopa_update_lmod_config
     install-openjdk
 fi
