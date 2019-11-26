@@ -54,6 +54,7 @@ sudo yum -y install \
     qpdf \
     readline \
     readline-devel \
+    sqlite3 \
     squashfs-tools \
     sshpass \
     texlive \
