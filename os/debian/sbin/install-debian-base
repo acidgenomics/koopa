@@ -33,16 +33,25 @@ fi
 
 sudo apt update
 sudo apt -y dist-upgrade
+
+# Including 'bash' here will remove 'r-base'.
 sudo apt -y build-dep \
-    bash \
     coreutils \
     emacs-defaults \
     fish \
     git \
     htop \
+    neovim \
     tmux \
     vim \
     zsh
+
+# 'libcurl4-gnutls-dev' gets installed by 'git' above.
+#
+# Conflicts:
+# libcurl4-gnutls-dev
+# libcurl4-openssl-dev
+
 sudo apt -y install \
     autoconf \
     automake \
@@ -59,7 +68,6 @@ sudo apt -y install \
     libacl1-dev \
     libbz2-dev \
     libcairo2-dev \
-    libcurl4-openssl-dev \
     libevent-dev \
     libfreetype6-dev \
     libgdal-dev \
@@ -97,4 +105,5 @@ sudo apt -y install \
     vim \
     xorg \
     zsh
+
 sudo apt -y autoremove
