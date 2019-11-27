@@ -43,6 +43,34 @@ set -Eeu -o pipefail
 #     LIBnn=lib \
 #     --with-blas="-L/usr/lib/openblas-base/ -lopenblas" \
 
+# R is now configured for x86_64-ubuntu-linux-gnu
+# 
+#   Source directory:            .
+#   Installation directory:      /usr/local/cellar/r/3.6.1
+# 
+#   C compiler:                  gcc  -g -O2
+#   Fortran fixed-form compiler: gfortran -fno-optimize-sibling-calls -g -O2
+# 
+#   Default C++ compiler:        g++ -std=gnu++11  -g -O2
+#   C++98 compiler:              g++ -std=gnu++98  -g -O2
+#   C++11 compiler:              g++ -std=gnu++11  -g -O2
+#   C++14 compiler:              g++ -std=gnu++14  -g -O2
+#   C++17 compiler:              g++ -std=gnu++17  -g -O2
+#   Fortran free-form compiler:  gfortran -fno-optimize-sibling-calls -g -O2
+#   Obj-C compiler:
+# 
+#   Interfaces supported:
+#   External libraries:          readline, BLAS(OpenBLAS), curl
+#   Additional capabilities:     PNG, JPEG, TIFF, NLS, cairo, ICU
+#   Options enabled:             shared R library, shared BLAS, R profiling, memory profiling
+# 
+#   Capabilities skipped:
+#   Options not enabled:
+# 
+#   Recommended packages:        yes
+# 
+# configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals will not be rendered optimally
+
 _koopa_assert_is_installed java javac tex
 
 name="r"
