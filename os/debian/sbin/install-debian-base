@@ -103,6 +103,7 @@ sudo apt -y install \
     libz-dev \
     pandoc \
     pandoc-citeproc \
+    parallel \
     perl \
     pkg-config \
     python3 \
