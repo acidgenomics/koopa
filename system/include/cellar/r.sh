@@ -6,10 +6,15 @@ set -Eeu -o pipefail
 # > _koopa_r_javareconf
 # > sudo: R: command not found
 
+# Refer to the 'Installation + Administration' manual.
+
 # Ubuntu build with OpenBLAS compile errors:
 #
-# https://r.789695.n4.nabble.com/
-#     Error-when-compiling-R-with-openblas-td4693330.html
+# See also:
+# - https://r-sig-debian.r-project.narkive.com/TXtnZNg5/
+#       libr-so-error-to-install-r-3-5-0-in-ubuntu-18-04
+# - https://r.789695.n4.nabble.com/
+#       Error-when-compiling-R-with-openblas-td4693330.html
 #
 # gcc -Wl,--export-dynamic -fopenmp  -L"../../lib" -L/usr/local/lib -o R.bin 
 # Rmain.o  -lR -lRblas
@@ -31,6 +36,12 @@ set -Eeu -o pipefail
 #
 # collect2: error: ld returned 1 exit status
 # Makefile:145: recipe for target 'R.bin' failed
+
+# Ubuntu draft config:
+# This is still failing due to libR.so (see above)
+# Potentially useful flags:
+#     LIBnn=lib \
+#     --with-blas="-L/usr/lib/openblas-base/ -lopenblas" \
 
 _koopa_assert_is_installed java javac tex
 
