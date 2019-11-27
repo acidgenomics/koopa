@@ -22,6 +22,7 @@ sudo apt-get -y install \
     autoconf \
     automake \
     cargo \
+    cmake \
     emacs \
     fish \
     git \
@@ -29,6 +30,8 @@ sudo apt-get -y install \
     gnutls-bin \
     gtk-doc-tools \
     htop \
+    libacl1 \
+    libacl1-dev \
     libbz2-dev \
     libcairo2-dev \
     libcurl4-openssl-dev \
