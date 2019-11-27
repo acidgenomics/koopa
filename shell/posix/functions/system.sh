@@ -354,33 +354,52 @@ _koopa_install_mike() {                                                   # {{{1
 _koopa_link_cellar() {                                                    # {{{1
     # """
     # Symlink cellar into build directory.
-    # Updated 2019-10-22.
+    # Updated 2019-11-27.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
     #
     # This can be reset easily with '_koopa_set_permissions'.
     #
+    # Note that Debian symlinks 'man' to 'share/man', which is non-standard.
+    # This is currently corrected in 'install-debian-base', but top-level
+    # symlink checks may need to be added here in a future update.
+    #
     # Example: _koopa_link_cellar emacs 26.3
-    # # '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
     # """
     local name
     local version
-    local build_prefix
+    local make_prefix
     local cellar_prefix
     name="$1"
-    version="$2"
-    build_prefix="$(_koopa_make_prefix)"
-    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-    _koopa_message "Linking '${cellar_prefix}' in '${build_prefix}'."
+    version="${2:-}"
+    make_prefix="$(_koopa_make_prefix)"
+    _koopa_assert_is_dir "$make_prefix"
+    cellar_prefix="$(_koopa_cellar_prefix)/${name}"
+    _koopa_assert_is_dir "$cellar_prefix"
+    if [ -n "$version" ]
+    then
+        cellar_prefix="${cellar_prefix}/${version}"
+    else
+        cellar_prefix="$( \
+            find "$cellar_prefix" \
+                -mindepth 1 \
+                -maxdepth 1 \
+                -type d \
+            | sort \
+            | tail -n 1 \
+        )"
+    fi
+    _koopa_assert_is_dir "$cellar_prefix"
+    _koopa_message "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        sudo cp -frsv "$cellar_prefix/"* "$make_prefix/".
         _koopa_update_ldconfig
     else
-        cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        cp -frsv "$cellar_prefix/"* "$make_prefix/".
     fi
 }
 
