@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_add_config_link() {                                                # {{{3
+_koopa_add_config_link() {                                                # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
     # Updated 2019-09-23.
@@ -24,7 +24,7 @@ _koopa_add_config_link() {                                                # {{{3
     ln -fnsv "$source_file" "$dest_file"
 }
 
-_koopa_cd_tmp_dir() {
+_koopa_cd_tmp_dir() {                                                     # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
     # Updated 2019-11-21.
@@ -36,7 +36,7 @@ _koopa_cd_tmp_dir() {
     cd "$1" || exit 1
 }
 
-_koopa_cellar_script() {                                                  # {{{3
+_koopa_cellar_script() {                                                  # {{{1
     # """
     # Return source path for a koopa cellar build script.
     # Updated 2019-11-25.
@@ -52,7 +52,7 @@ _koopa_cellar_script() {                                                  # {{{3
     return 0
 }
 
-_koopa_current_version() {                                                # {{{3
+_koopa_current_version() {                                                # {{{1
     # """
     # Get the current version of a supported program.
     # Updated 2019-11-16.
@@ -68,7 +68,7 @@ _koopa_current_version() {                                                # {{{3
     "$script"
 }
 
-_koopa_dotfiles_config_link() {                                           # {{{3
+_koopa_dotfiles_config_link() {                                           # {{{1
     # """
     # Dotfiles directory.
     # Updated 2019-11-04.
@@ -79,7 +79,7 @@ _koopa_dotfiles_config_link() {                                           # {{{3
     echo "$(_koopa_config_prefix)/dotfiles"
 }
 
-_koopa_dotfiles_private_config_link() {                                   # {{{3
+_koopa_dotfiles_private_config_link() {                                   # {{{1
     # """
     # Private dotfiles directory.
     # Updated 2019-11-04.
@@ -87,7 +87,7 @@ _koopa_dotfiles_private_config_link() {                                   # {{{3
     echo "$(_koopa_dotfiles_config_link)-private"
 }
 
-_koopa_dotfiles_source_repo() {                                           # {{{3
+_koopa_dotfiles_source_repo() {                                           # {{{1
     # """
     # Dotfiles source repository.
     # Updated 2019-11-04.
@@ -106,7 +106,7 @@ _koopa_dotfiles_source_repo() {                                           # {{{3
     echo "$dotfiles"
 }
 
-_koopa_disk_check() {                                                     # {{{3
+_koopa_disk_check() {                                                     # {{{1
     # """
     # Check that disk has enough free space.
     # Updated 2019-10-27.
@@ -122,7 +122,7 @@ _koopa_disk_check() {                                                     # {{{3
     return 0
 }
 
-_koopa_disk_pct_used() {                                                  # {{{3
+_koopa_disk_pct_used() {                                                  # {{{1
     # """
     # Check disk usage on main drive.
     # Updated 2019-08-17.
@@ -137,7 +137,7 @@ _koopa_disk_pct_used() {                                                  # {{{3
         | sed 's/%$//'
 }
 
-_koopa_git_branch() {                                                     # {{{3
+_koopa_git_branch() {                                                     # {{{1
     # """
     # Current git branch name.
     # Updated 2019-10-13.
@@ -156,7 +156,7 @@ _koopa_git_branch() {                                                     # {{{3
     git symbolic-ref --short -q HEAD
 }
 
-_koopa_group() {                                                          # {{{3
+_koopa_group() {                                                          # {{{1
     # """
     # Return the approach group to use with koopa installation.
     # Updated 2019-10-22.
@@ -187,7 +187,7 @@ _koopa_group() {                                                          # {{{3
     echo "$group"
 }
 
-_koopa_header() {                                                         # {{{3
+_koopa_header() {                                                         # {{{1
     # """
     # Source script header.
     # Updated 2019-11-25.
@@ -268,7 +268,7 @@ EOF
     echo "$path"
 }
 
-_koopa_host_id() {                                                        # {{{3
+_koopa_host_id() {                                                        # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
     # Updated 2019-11-25.
@@ -304,7 +304,7 @@ _koopa_host_id() {                                                        # {{{3
     echo "$id"
 }
 
-_koopa_info_box() {                                                       # {{{3
+_koopa_info_box() {                                                       # {{{1
     # """
     # Info box.
     # Updated 2019-10-14.
@@ -324,7 +324,7 @@ _koopa_info_box() {                                                       # {{{3
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
 }
 
-_koopa_install_mike() {                                                   # {{{3
+_koopa_install_mike() {                                                   # {{{1
     # """
     # Install additional Mike-specific config files.
     # Updated 2019-11-04.
@@ -351,40 +351,58 @@ _koopa_install_mike() {                                                   # {{{3
     )
 }
 
-_koopa_link_cellar() {                                                    # {{{3
+_koopa_link_cellar() {                                                    # {{{1
     # """
     # Symlink cellar into build directory.
-    # Updated 2019-10-22.
+    # Updated 2019-11-27.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
     #
     # This can be reset easily with '_koopa_set_permissions'.
     #
+    # Note that Debian symlinks 'man' to 'share/man', which is non-standard.
+    # This is currently corrected in 'install-debian-base', but top-level
+    # symlink checks may need to be added here in a future update.
+    #
     # Example: _koopa_link_cellar emacs 26.3
-    # # '/usr/local/koopa/cellar/tmux/2.9a/*' to '/usr/local/*'.
     # """
     local name
     local version
-    local build_prefix
+    local make_prefix
     local cellar_prefix
     name="$1"
-    version="$2"
-    build_prefix="$(_koopa_make_prefix)"
-    cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-    _koopa_message "Linking '${cellar_prefix}' in '${build_prefix}'."
+    version="${2:-}"
+    make_prefix="$(_koopa_make_prefix)"
+    _koopa_assert_is_dir "$make_prefix"
+    cellar_prefix="$(_koopa_cellar_prefix)/${name}"
+    _koopa_assert_is_dir "$cellar_prefix"
+    if [ -z "$version" ]
+    then
+        version="$( \
+            find "$cellar_prefix" \
+                -mindepth 1 \
+                -maxdepth 1 \
+                -type d \
+            | sort \
+            | tail -n 1 \
+        )"
+    fi
+    cellar_prefix="${cellar_prefix}/${version}"
+    _koopa_assert_is_dir "$cellar_prefix"
+    _koopa_message "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        sudo cp -frsv "$cellar_prefix/"* "$make_prefix/".
         _koopa_update_ldconfig
     else
-        cp -frsv "$cellar_prefix/"* "$build_prefix/".
+        cp -frsv "$cellar_prefix/"* "$make_prefix/".
     fi
 }
 
-_koopa_macos_app_version() {                                              # {{{3
+_koopa_macos_app_version() {                                              # {{{1
     # """
     # Extract the version of a macOS application.
     # Updated 2019-09-28.
@@ -396,7 +414,7 @@ _koopa_macos_app_version() {                                              # {{{3
         | tr -d '"'
 }
 
-_koopa_os_id() {                                                          # {{{3
+_koopa_os_id() {                                                          # {{{1
     # """
     # Operating system ID.
     # Updated 2019-11-25.
@@ -406,7 +424,7 @@ _koopa_os_id() {                                                          # {{{3
     _koopa_os_string | cut -d '-' -f 1
 }
 
-_koopa_os_string() {                                                      # {{{3
+_koopa_os_string() {                                                      # {{{1
     # """
     # Operating system string.
     # Updated 2019-11-25.
@@ -438,7 +456,7 @@ _koopa_os_string() {                                                      # {{{3
     echo "${id}-${version}"
 }
 
-_koopa_os_version() {                                                     # {{{3
+_koopa_os_version() {                                                     # {{{1
     # """
     # Operating system version.
     # Updated 2019-06-22.
@@ -448,7 +466,7 @@ _koopa_os_version() {                                                     # {{{3
     uname -r
 }
 
-_koopa_shell() {                                                          # {{{3
+_koopa_shell() {                                                          # {{{1
     # """
     # Note that this isn't necessarily the default shell ('$SHELL').
     # Updated 2019-06-27.
@@ -477,7 +495,7 @@ EOF
     echo "$shell"
 }
 
-_koopa_today_bucket() {                                                   # {{{3
+_koopa_today_bucket() {                                                   # {{{1
     # """
     # Create a dated file today bucket.
     # Updated 2019-11-10.
@@ -518,7 +536,7 @@ _koopa_today_bucket() {                                                   # {{{3
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
 }
 
-_koopa_tmp_dir() {                                                        # {{{3
+_koopa_tmp_dir() {                                                        # {{{1
     # """
     # Create temporary directory.
     # Updated 2019-10-17.
@@ -541,7 +559,7 @@ _koopa_tmp_dir() {                                                        # {{{3
     mktemp -d
 }
 
-_koopa_variable() {                                                       # {{{3
+_koopa_variable() {                                                       # {{{1
     # """
     # Get version stored internally in versions.txt file.
     # Updated 2019-10-27.
