@@ -17,6 +17,7 @@ _koopa_assert_has_no_args "$@"
 # > apt-cache search libgif
 
 sudo apt update
+sudo apt -y dist-upgrade
 sudo apt -y install \
     autoconf \
     automake \
