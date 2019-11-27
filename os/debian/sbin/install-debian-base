@@ -42,6 +42,7 @@ sudo apt -y build-dep \
     git \
     htop \
     neovim \
+    perl \
     tmux \
     vim \
     zsh
