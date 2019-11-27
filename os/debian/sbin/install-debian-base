@@ -47,6 +47,8 @@ sudo apt -y install \
     liblzma-dev \
     libmagick++-dev \
     libmariadb-client-lgpl-dev \
+    libopenblas-base \
+    libopenblas-dev \
     libpng-dev \
     libssh2-1-dev \
     libssl-dev \
