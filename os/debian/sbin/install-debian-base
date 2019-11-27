@@ -70,6 +70,7 @@ sudo apt -y install \
     git \
     gnupg2 \
     gnutls-bin \
+    golang-go \
     gtk-doc-tools \
     htop \
     libacl1 \
