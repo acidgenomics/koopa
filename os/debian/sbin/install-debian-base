@@ -51,6 +51,7 @@ sudo apt -y install \
     libssh2-1-dev \
     libssl-dev \
     libtool \
+    libtool-bin \
     libudunits2-dev \
     libv8-dev \
     libx11-dev \
