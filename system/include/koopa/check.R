@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-26.
+## Updated 2019-11-27.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -389,8 +389,8 @@ checkVersion(
 checkVersion(
     name = "Perl",
     whichName = "perl",
-    current = currentVersion("perl"),
-    expected = expectedVersion("perl")
+    current = currentMinorVersion("perl"),
+    expected = expectedMinorVersion("perl")
 )
 checkVersion(
     name = "Ruby",
