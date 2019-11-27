@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# Refer to the 'Installation + Administration' manual.
+
 # Need to improve this:
 # > _koopa_update_r_config
 # > _koopa_r_javareconf
 # > sudo: R: command not found
 
-# Refer to the 'Installation + Administration' manual.
+
 
 # Ubuntu build with OpenBLAS compile errors:
 #
@@ -16,9 +18,7 @@ set -Eeu -o pipefail
 # - https://r.789695.n4.nabble.com/
 #       Error-when-compiling-R-with-openblas-td4693330.html
 #
-# gcc -Wl,--export-dynamic -fopenmp  -L"../../lib" -L/usr/local/lib -o R.bin 
-# Rmain.o  -lR -lRblas
-#
+# gcc -Wl,--export-dynamic -fopenmp  -L"../../lib" -L/usr/local/lib -o R.bin Rmain.o  -lR -lRblas
 # ../../lib/libR.so: undefined reference to `drot_'
 # ../../lib/libR.so: undefined reference to `drotg_'
 # ../../lib/libR.so: undefined reference to `dswap_'
@@ -33,15 +33,18 @@ set -Eeu -o pipefail
 # ../../lib/libR.so: undefined reference to `dasum_'
 # ../../lib/libR.so: undefined reference to `ddot_'
 # ../../lib/libR.so: undefined reference to `dgemv_'
-#
 # collect2: error: ld returned 1 exit status
 # Makefile:145: recipe for target 'R.bin' failed
+
+
 
 # Ubuntu draft config:
 # This is still failing due to libR.so (see above)
 # Potentially useful flags:
-#     LIBnn=lib \
-#     --with-blas="-L/usr/lib/openblas-base/ -lopenblas" \
+# - LIBnn=lib \
+# - --with-blas="-L/usr/lib/openblas-base/ -lopenblas" \
+
+
 
 # R is now configured for x86_64-ubuntu-linux-gnu
 # 
@@ -69,7 +72,43 @@ set -Eeu -o pipefail
 # 
 #   Recommended packages:        yes
 # 
+# configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF vignettes
+# and package manuals will not be rendered optimally
+
+
+
+# More minimal configure attempt on Ubuntu:
+# ./configure --prefix="$prefix"
+#
+# R is now configured for x86_64-pc-linux-gnu
+# 
+#   Source directory:            .
+#   Installation directory:      /usr/local/cellar/r/3.6.1
+# 
+#   C compiler:                  gcc  -g -O2
+#   Fortran fixed-form compiler: gfortran -fno-optimize-sibling-calls -g -O2
+# 
+#   Default C++ compiler:        g++ -std=gnu++11  -g -O2
+#   C++98 compiler:              g++ -std=gnu++98  -g -O2
+#   C++11 compiler:              g++ -std=gnu++11  -g -O2
+#   C++14 compiler:              g++ -std=gnu++14  -g -O2
+#   C++17 compiler:              g++ -std=gnu++17  -g -O2
+#   Fortran free-form compiler:  gfortran -fno-optimize-sibling-calls -g -O2
+#   Obj-C compiler:
+# 
+#   Interfaces supported:        X11
+#   External libraries:          readline, curl
+#   Additional capabilities:     PNG, JPEG, TIFF, NLS, cairo, ICU
+#   Options enabled:             shared BLAS, R profiling
+# 
+#   Capabilities skipped:
+#   Options not enabled:         memory profiling
+# 
+#   Recommended packages:        yes
+# 
 # configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals will not be rendered optimally
+
+
 
 _koopa_assert_is_installed java javac tex
 
