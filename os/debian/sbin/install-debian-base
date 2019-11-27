@@ -16,9 +16,8 @@ _koopa_assert_has_no_args "$@"
 # > apt-cache search gnutls
 # > apt-cache search libgif
 
-sudo apt-get update
-
-sudo apt-get -y install \
+sudo apt update
+sudo apt -y install \
     autoconf \
     automake \
     cargo \
@@ -69,8 +68,7 @@ sudo apt-get -y install \
     vim \
     xorg \
     zsh
-
-sudo apt-get -y build-dep \
+sudo apt -y build-dep \
     bash \
     coreutils \
     emacs \
