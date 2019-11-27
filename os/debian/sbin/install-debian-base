@@ -68,13 +68,17 @@ sudo apt -y install \
     vim \
     xorg \
     zsh
-sudo apt -y build-dep \
-    bash \
-    coreutils \
-    emacs \
-    fish \
-    htop \
-    tmux \
-    vim \
-    zsh
+
+# You must put some 'source' URIs in your sources.list
+# https://askubuntu.com/questions/496549
+
+# > sudo apt -y build-dep \
+# >     bash \
+# >     coreutils \
+# >     emacs \
+# >     fish \
+# >     htop \
+# >     tmux \
+# >     vim \
+# >     zsh
 
