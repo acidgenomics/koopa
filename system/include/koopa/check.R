@@ -139,12 +139,14 @@ checkVersion <- function(
 
 currentMajorVersion <- function(name) {
     x <- currentVersion(name)
+    if (!isTRUE(nzchar(x))) return(NULL)
     x <- majorVersion(x)
     x
 }
 
 currentMinorVersion <- function(name) {
     x <- currentVersion(name)
+    if (!isTRUE(nzchar(x))) return(NULL)
     x <- minorVersion(x)
     x
 }
