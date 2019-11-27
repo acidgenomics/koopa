@@ -6,6 +6,32 @@ set -Eeu -o pipefail
 # > _koopa_r_javareconf
 # > sudo: R: command not found
 
+# Ubuntu build with OpenBLAS compile errors:
+#
+# https://r.789695.n4.nabble.com/
+#     Error-when-compiling-R-with-openblas-td4693330.html
+#
+# gcc -Wl,--export-dynamic -fopenmp  -L"../../lib" -L/usr/local/lib -o R.bin 
+# Rmain.o  -lR -lRblas
+#
+# ../../lib/libR.so: undefined reference to `drot_'
+# ../../lib/libR.so: undefined reference to `drotg_'
+# ../../lib/libR.so: undefined reference to `dswap_'
+# ../../lib/libR.so: undefined reference to `dgemm_'
+# ../../lib/libR.so: undefined reference to `dnrm2_'
+# ../../lib/libR.so: undefined reference to `dscal_'
+# ../../lib/libR.so: undefined reference to `zgemm_'
+# ../../lib/libR.so: undefined reference to `dtrsm_'
+# ../../lib/libR.so: undefined reference to `daxpy_'
+# ../../lib/libR.so: undefined reference to `dcopy_'
+# ../../lib/libR.so: undefined reference to `dsyrk_'
+# ../../lib/libR.so: undefined reference to `dasum_'
+# ../../lib/libR.so: undefined reference to `ddot_'
+# ../../lib/libR.so: undefined reference to `dgemv_'
+#
+# collect2: error: ld returned 1 exit status
+# Makefile:145: recipe for target 'R.bin' failed
+
 _koopa_assert_is_installed java javac tex
 
 name="r"
