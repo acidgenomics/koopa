@@ -60,6 +60,8 @@ sudo apt -y build-dep \
 # libcurl4-gnutls-dev
 # libcurl4-openssl-dev
 
+# Note that 'golang-go' is not officially supported.
+
 sudo apt -y install \
     autoconf \
     automake \
@@ -70,7 +72,6 @@ sudo apt -y install \
     git \
     gnupg2 \
     gnutls-bin \
-    golang-go \
     gtk-doc-tools \
     htop \
     libacl1 \
