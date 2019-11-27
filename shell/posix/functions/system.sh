@@ -377,9 +377,11 @@ _koopa_link_cellar() {                                                    # {{{1
     _koopa_assert_is_dir "$make_prefix"
     cellar_prefix="$(_koopa_cellar_prefix)/${name}"
     _koopa_assert_is_dir "$cellar_prefix"
-    if [ -z "$version" ]
+    if [ -n "$version" ]
     then
-        version="$( \
+        cellar_prefix="${cellar_prefix}/${version}"
+    else
+        cellar_prefix="$( \
             find "$cellar_prefix" \
                 -mindepth 1 \
                 -maxdepth 1 \
@@ -388,7 +390,6 @@ _koopa_link_cellar() {                                                    # {{{1
             | tail -n 1 \
         )"
     fi
-    cellar_prefix="${cellar_prefix}/${version}"
     _koopa_assert_is_dir "$cellar_prefix"
     _koopa_message "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
