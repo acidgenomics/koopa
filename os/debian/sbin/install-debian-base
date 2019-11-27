@@ -38,6 +38,7 @@ sudo apt -y build-dep \
     coreutils \
     emacs-defaults \
     fish \
+    git \
     htop \
     tmux \
     vim \
