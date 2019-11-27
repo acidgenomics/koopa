@@ -186,7 +186,7 @@ singularity="3.5.0"
 tex="2019"
 
 # https://github.com/tmux/tmux/releases
-tmux="2.9a"
+tmux="3.0"
 
 # https://github.com/vim/vim/releases
 # vim should only be updated every 50 releases on multiples of 50.
