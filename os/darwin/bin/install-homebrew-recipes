@@ -27,7 +27,6 @@ brew cask install java osxfuse xquartz
 # Recommended.
 casks=(
     1password
-    alacritty
     alfred
     aspera-connect
     authy
@@ -80,6 +79,7 @@ brew cask install carbon-copy-cloner little-snitch
 # Gatekeeper issues.
 # > docker
 casks=(
+    alacritty
     calibre
     omnidisksweeper
     rstudio
