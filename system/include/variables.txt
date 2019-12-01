@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-11-26"
+koopa_date="2019-12-01"
 
 
 
@@ -186,7 +186,7 @@ singularity="3.5.0"
 tex="2019"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.0"
+tmux="3.0a"
 
 # https://github.com/vim/vim/releases
 # vim should only be updated every 50 releases on multiples of 50.
