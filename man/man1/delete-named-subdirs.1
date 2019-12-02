@@ -4,14 +4,14 @@ delete-named-subdirs \-
 Delete named subdirectories
 .SH SYNOPSIS
 .B delete-named-subdirs
-.IR [DIR="."]
-.IR SUBDIR_NAME
+[dir="."]
+subdir_name
 .SH OPTIONS
 .TP
-.BR DIR
+.B dir
 Directory path where to perform search.
 .TP
-.BR SUBDIR_NAME
+.B subdir_name
 Subdirectory name to delete.
 .SH DESCRIPTION
 Calls 'find' internally to recursively scan for a subdirectory name and removes those nested directories. Useful for removing bcbio "work/" directories, for example.
