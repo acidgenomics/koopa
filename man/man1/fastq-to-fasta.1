@@ -17,11 +17,17 @@ Target directory, returning FASTA files.
 .SH DESCRIPTION
 Convert FASTQ files to FASTA format.
 .PP
+.nr step 1 1
 Processing steps:
-    1. paste converts the input FASTQ into a 4-column file.
-    2. cut command extracts out just column 1 (the ID) and column 2 (the
-       sequence).
-    3. sed replaces the FASTQ ID prefix "@" with the FASTA ID prefix ">".
-    4. tr conversts the 2 columns back into 2 lines.
+.IP \n[step] 4
+paste converts the input FASTQ into a 4-column file.
+.IP \n+[step]
+cut command extracts out just column 1 (the ID) and column 2 (the sequence).
+.IP \n+[step]
+sed replaces the FASTQ ID prefix '@' with the FASTA ID prefix '>'.
+.IP \n+[step]
+tr conversts the 2 columns back into 2 lines.
 .SH EXAMPLE
-fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
+.nf
+.B fastq-to-fasta --source-dir="fastq/" --target-dir="fasta/"
+.fi

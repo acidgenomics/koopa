@@ -6,7 +6,7 @@ Autopad sample file names that begin with a number
 .B autopad-samples
 [\fB\-\-prefix\fP=\fI"sample"\fP]
 [\fB\-\-padwidth\fP=\fI2\fP]
-file ...
+.I file ...
 .SH OPTIONS
 .TP
 .B \-\-prefix
@@ -22,24 +22,22 @@ Autopadding file names with leading zeros helps avoided unexpected downstream so
 .PP
 Here we are also renaming with a character string prefix by default, to avoid valid name issues in R. See 'make.names()' for details.
 .SH EXAMPLE
-.EX
-autopad-samples *.fastq.gz
-.PP
-    ## input:
-    ## > 1-dmso-A-R1.fastq.qz
-    ## > 1-dmso-A-R2.fastq.gz
-    ## > 2-dmso-B-R1.fastq.gz
-    ## > 2-dmso-B-R2.fastq.gz
-    ## > ...
-    ## > 10-compound-A-R1.fastq.gz
-    ## > 10-compound-A-R2.fastq.gz
-    ##
-    ## output:
-    ## > sample-01-dmso-A-R1.fastq.qz
-    ## > sample-01-dmso-A-R2.fastq.gz
-    ## > sample-02-dmso-B-R1.fastq.gz
-    ## > sample-02-dmso-B-R2.fastq.gz
-    ## > ...
-    ## > sample-10-compound-A-R1.fastq.gz
-    ## > sample-10-compound-A-R2.fastq.gz
-.EE
+.nf
+.B autopad-samples *.fastq.gz
+Input:
+## 1-dmso-A-R1.fastq.qz
+## 1-dmso-A-R2.fastq.gz
+## 2-dmso-B-R1.fastq.gz
+## 2-dmso-B-R2.fastq.gz
+## ...
+## 10-compound-A-R1.fastq.gz
+## 10-compound-A-R2.fastq.gz
+Output:
+## sample-01-dmso-A-R1.fastq.qz
+## sample-01-dmso-A-R2.fastq.gz
+## sample-02-dmso-B-R1.fastq.gz
+## sample-02-dmso-B-R2.fastq.gz
+## ...
+## sample-10-compound-A-R1.fastq.gz
+## sample-10-compound-A-R2.fastq.gz
+.fi

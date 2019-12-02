@@ -4,7 +4,7 @@ fastq-dump-from-sra-file-list \-
 FASTQ dump from Sequence Read Archive (SRA) accession list
 .SH SYNOPSIS
 .B fastq-dump-from-sra-file-list
-[filelist="SRR_Acc_List.txt"]
+[filelist=\fI"SRR_Acc_List.txt"\fP]
 .SH OPTIONS
 .TP
 .B filelist
@@ -24,4 +24,6 @@ Single cell RNA-seq barcode formats:
 .IP
 \(bu Harvard inDrops v3 (https://singlecellcore.hms.harvard.edu)
 .SH EXAMPLE
-fastq-dump-from-sra-file-list SRR_Acc_List.txt
+.nf
+.B fastq-dump-from-sra-file-list SRR_Acc_List.txt
+.fi

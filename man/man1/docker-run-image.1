@@ -4,8 +4,8 @@ docker-run-image \-
 Pull and run a Docker image
 .SH SYNOPSIS
 .B docker-run-image
-image
-[\-\-workdir="/mnt/work"]
+.I image
+[\fB\-\-workdir\fP=\fI"/mnt/work"\fP]
 .SH OPTIONS
 .TP
 .B IMAGE
@@ -16,4 +16,6 @@ Local working directory mount path.
 .SH DESCRIPTION
 Script wrapper to call 'docker pull' and 'docker run' with suitable defaults for the Acid Genomics Docker images available on Docker Hub.
 .SH EXAMPLE
-docker-run-image acidgenomics/bioconductor:devel
+.nf
+.B docker-run-image acidgenomics/bioconductor:devel
+.fi
