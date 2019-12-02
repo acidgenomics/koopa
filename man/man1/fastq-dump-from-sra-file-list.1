@@ -1,10 +1,37 @@
+.TH FASTQ-DUMP-FROM-SRA-FILE-LIST 1 2019-11-28 Bash
+.SH NAME
+fastq-dump-from-sra-file-list \-
+FASTQ dump from Sequence Read Archive (SRA) accession list
+.SH SYNOPSIS
+.B fastq-dump-from-sra-file-list
+
+
+[\fB\-\-rename\fR]
+
+.IR 
+
+
+
+.IR FILE
+.SH DESCRIPTION
+Decompress a compressed archive file automatically without having to manually set any file format flags, such as those that need to be based to 'tar'.
+.SH EXAMPLE
+extract example.tar.gz
+.P
+extract example.tar.bz2
+.P
+extract example.tar.xz
+.P
+extract example.zip
 
 
 
 
-    [filelist="${filelist}"]
 
-FASTQ dump from Sequence Read Archive (SRA) accession list.
+
+    [FILELIST="SRR_Acc_List.txt"]
+
+
 
 optional positional arguments:
     1.  SRA access file list.
