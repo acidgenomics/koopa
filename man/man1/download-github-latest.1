@@ -4,7 +4,7 @@ download-github-latest \-
 Download latest GitHub release tarball
 .SH SYNOPSIS
 .B download-github-latest
-user/repo
+.I user/repo
 .SH OPTIONS
 .TP
 .B user/repo
@@ -13,4 +13,6 @@ Example: 'acidgenomics/koopa'.
 .SH DESCRIPTION
 Downloads latest release into current working directory. Looks for 'tarball_url' line in JSON. Note that this does not clone the code currently available on 'master' branch.
 .SH EXAMPLE
-download-github-latest "acidgenomics/koopa"
+.nf
+.B download-github-latest "acidgenomics/koopa"
+.fi

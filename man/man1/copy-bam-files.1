@@ -4,8 +4,8 @@ copy-bam-files \-
 Copy BAM and BAI index sidecar files from a source directory to a target directory
 .SH SYNOPSIS
 .B copy-bam-files
-source_dir
-target_dir
+.I source_dir
+.I target_dir
 .SH OPTIONS
 .TP
 .B source_dir
@@ -24,13 +24,19 @@ Skip transfer of BAM files in the 'work/' directory, and don't copy any
 of the transcriptome BAMs automatically.
 .PP
 Ignore list:
-    - 'work/'
-    - '*-transcriptome.bam'
+.IP
+\(bu 'work/'
+.IP
+\(bu '*-transcriptome.bam'
 .PP
 rsync works more reliably for resuming interrupted transfers. Currently
-using this to transfer to Azure Files
+using this to transfer to Azure Files.
 .PP
 Alternate method:
-    > cp -iruv source target
+.RS
+.B cp -iruv source target
+.RE
 .SH EXAMPLE
-copy-bam-files "bam/" "/data00/bam/"
+.nf
+.B copy-bam-files "bam/" "/data00/bam/"
+.fi

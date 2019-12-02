@@ -4,8 +4,8 @@ download-sra-run-info-table \-
 Download SRA run info table
 .SH SYNOPSIS
 .B download-sra-run-info-table
-id
-[file="SraRunTable.txt"]
+.I id
+[file=\fI"SraRunTable.txt"\fP]
 .SH OPTIONS
 .TP
 .B id
@@ -14,8 +14,10 @@ SRP or PRJNA project identifier.
 .B file
 Output file.
 .SH EXAMPLE
-download-sra-run-info-table SRP000000
+.nf
+.B download-sra-run-info-table SRP000000
 .PP
-download-sra-run-info-table PRJNA000000
+.B download-sra-run-info-table PRJNA000000
+.fi
 .SH NOTE
 Requires efetch from entrez-direct to be installed. Available via bioconda.

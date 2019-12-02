@@ -6,7 +6,7 @@ Convert input into kebab case
 .B kebab-case
 [\fB\-\-rename\fP]
 [\fB\-\-prefix\fP]
-string|file ...
+.I string|file ...
 .SH OPTIONS
 .TP
 .B \-\-rename
@@ -22,13 +22,15 @@ Runs in string mode by default. File rename mode can be enabled by setting '--re
 .IP
 \(bu https://syntactic.acidgenomics.com/
 .SH EXAMPLE
-kebab-case "hello world" "foo bar" "geneID"
-    ## hello-world foo-bar gene-id
+.nf
+.B kebab-case "hello world" "foo bar" "geneID"
+## hello-world foo-bar gene-id
 .PP
-kebab-case --rename "foo_bar.fastq.gz"
-    ## ./foo-bar.fastq.gz
+.B kebab-case --rename "foo_bar.fastq.gz"
+## ./foo-bar.fastq.gz
 .PP
-kebab-case --rename --prefix 1_control_A.fastq.gz
-    ## ./x1-control-a.fastq.gz
+.B kebab-case --rename --prefix 1_control_A.fastq.gz
+## ./x1-control-a.fastq.gz
+.fi
 .SH NOTE
 Bash script that calls Rscript internally. Requires the syntactic package to be installed.
