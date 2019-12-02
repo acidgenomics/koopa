@@ -28,13 +28,13 @@ Runs in string mode by default. File rename mode can be enabled by setting '--re
 .SH EXAMPLE
 camel-case "hello world" "foo bar"
     ## helloWorld fooBar
-.PP
+.P
 camel-case --strict "gene ID"
     ## geneId
-.PP
+.P
 camel-case --rename "foo-bar.fastq.gz"
     ## ./fooBar.fastq.gz
-.PP
+.P
 camel-case --rename --prefix 1-control-A.fastq.gz
     ## ./x1ControlA.fastq.gz
 .SH NOTE
