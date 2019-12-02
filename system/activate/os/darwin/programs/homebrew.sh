@@ -35,13 +35,22 @@ fi
 
 
 
-# GNU coreutils                                                             {{{1
+# GNU utils                                                                 {{{1
 # ==============================================================================
 
 # Linked using "g*" prefix by default.
 # > brew info coreutils
+# > brew info findutils
 
 prefix="/usr/local/opt/coreutils/libexec"
+if [ -d "$prefix" ]
+then
+    _koopa_force_add_to_path_start "${prefix}/gnubin"
+    _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+fi
+unset -v prefix
+
+prefix="/usr/local/opt/findutils/libexec"
 if [ -d "$prefix" ]
 then
     _koopa_force_add_to_path_start "${prefix}/gnubin"
