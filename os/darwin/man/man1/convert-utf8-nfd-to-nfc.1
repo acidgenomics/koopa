@@ -4,7 +4,7 @@ convert-utf8-nfd-to-nfc \-
 Convert UTF-8 NFD to NFC
 .SH SYNOPSIS
 .B convert-utf8-nfd-to-nfc
-.IR FILE|DIR ...
+file|dir ...
 .SH DESCRIPTION
 Unicode on macOS is insane. macOS for some reason uses NFD, whereas every other popular platform uses NFC. This script is particularly useful for handling files created on macOS that have been copied to a Linux file system (e.g. onto NAS). Uses standard file globbing to match.
 .SH NOTE

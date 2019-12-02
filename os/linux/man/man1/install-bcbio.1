@@ -4,14 +4,14 @@ install-bcbio \-
 Install bcbio-nextgen Python toolkit
 .SH SYNOPSIS
 .B install-bcbio
-[\fB\-\-prefix\fR=\fI"/usr/local/bcbio"\fR]
-[\fB\-\-version\fR=\fI"stable"\fR]
+[\fB\-\-prefix\fP=\fI"/usr/local/bcbio"\fP]
+[\fB\-\-version\fP=\fI"stable"\fP]
 .SH OPTIONS
 .TP
-.BR \-\-prefix
+.B \-\-prefix
 Target directory prefix. Note that 'install/' and 'tools/' directories will be created under this path. On Azure, set this to '/data00/bcbio/v1.1.7'.
 .TP
-.BR \-\-version
+.B \-\-version
 Install "stable" (recommended) or "development" release. For legacy versions (e.g. v1.1.3), use bcbio-vm instead.
 .SH DESCRIPTION
 Only installs the RNA-seq pipeline. No genomes will be installed. Use 'install-bcbio-genomes' to install recommended default genomes.
