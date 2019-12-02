@@ -1,18 +1,13 @@
-
-
-
-
-    [dir="${dir}"]
-
+.TH FASTQ-READS-PER-FILE 1 2019-12-02 Bash
+.SH NAME
+fastq-reads-per-file \-
 Get the number of reads per FASTQ file.
-
-required positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-
-details:
-    Calculates the raw read count using the R1 file.
-
-note:
-    Updated 2019-09-21.
+.SH SYNOPSIS
+.B fastq-reads-per-file
+[dir=\fI"."\fP]
+.SH OPTIONS
+.TP
+.B dir
+Directory path containing FASTQ files.
+.SH DESCRIPTION
+Calculates the raw read count using the R1 file.
