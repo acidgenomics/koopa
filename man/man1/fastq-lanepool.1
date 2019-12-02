@@ -22,29 +22,29 @@ Matches against '_L00[1-9]_' lane pattern internally.
 Defaults to input and output in current working directory.
 Supports both compressed ('*.fastq.gz') and decompressed ('*.fastq') FASTQ files.
 .SH EXAMPLE
-.EX
+.nf
 Input (2 paired-end, lane-split samples):
 .B ls *.fastq.gz
-## sample1_L001_R1.fastq.gz
-## sample1_L002_R1.fastq.gz
-## sample1_L003_R1.fastq.gz
-## sample1_L004_R1.fastq.gz
-## sample1_L001_R2.fastq.gz
-## sample1_L002_R2.fastq.gz
-## sample1_L003_R2.fastq.gz
-## sample1_L004_R2.fastq.gz
-## sample2_L001_R1.fastq.gz
-## sample2_L002_R1.fastq.gz
-## sample2_L003_R1.fastq.gz
-## sample2_L004_R1.fastq.gz
-## sample2_L001_R2.fastq.gz
-## sample2_L002_R2.fastq.gz
-## sample2_L003_R2.fastq.gz
-## sample2_L004_R2.fastq.gz
+    ## sample1_L001_R1.fastq.gz
+    ## sample1_L002_R1.fastq.gz
+    ## sample1_L003_R1.fastq.gz
+    ## sample1_L004_R1.fastq.gz
+    ## sample1_L001_R2.fastq.gz
+    ## sample1_L002_R2.fastq.gz
+    ## sample1_L003_R2.fastq.gz
+    ## sample1_L004_R2.fastq.gz
+    ## sample2_L001_R1.fastq.gz
+    ## sample2_L002_R1.fastq.gz
+    ## sample2_L003_R1.fastq.gz
+    ## sample2_L004_R1.fastq.gz
+    ## sample2_L001_R2.fastq.gz
+    ## sample2_L002_R2.fastq.gz
+    ## sample2_L003_R2.fastq.gz
+    ## sample2_L004_R2.fastq.gz
 Pool the samples.
 .B fastq-lanepool --source-dir="." --target-dir="." --prefix="lanepool"
-## lanepool_sample1_R1.fastq.gz
-## lanepool_sample1_R2.fastq.gz
-## lanepool_sample2_R1.fastq.gz
-## lanepool_sample2_R2.fastq.gz
-.EE
+    ## lanepool_sample1_R1.fastq.gz
+    ## lanepool_sample1_R2.fastq.gz
+    ## lanepool_sample2_R1.fastq.gz
+    ## lanepool_sample2_R2.fastq.gz
+.fi
