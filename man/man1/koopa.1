@@ -1,35 +1,45 @@
-
-
-
-
-Shell bootloader for bioinformatics.
-
-system configuration commands:
-    check
-        Run system dependency version checks.
-    info
-        Show system information.
-    list
-        List programs accessible in 'PATH'.
-    update
-        Update koopa installation to latest version.
-
-return string commands:
-    header
-        Shell script header.
-    home
-        Return the koopa installation path.
-        Also stored as 'KOOPA_PREFIX' environment variable.
-    variable
-        Internal koopa configuration variable.
-        For use in Python and R scripts only.
-
-optional arguments:
-    --help, -h
-        Show this help message and exit.
-    --version, -V
-        Version information.
-
-note:
-    This software is provided under an MIT License.
-    See 'LICENSE' file for details.
+.TH KOOPA 1 2019-12-02 Bash
+.SH NAME
+koopa \-
+Shell bootloader for bioinformatics
+.SH OPTIONS
+.PP
+System configuration:
+.TP
+.B check
+Run system dependency version checks.
+.TP
+.B info
+Show system information.
+.TP
+.B list
+List programs accessible in 'PATH'.
+.TP
+.B update
+Update koopa installation to latest version.
+Run with '\fB--system\fP' flag to also update the system configuration.
+.PP
+Character string return:
+.TP
+.B header
+Shell script header.
+Useful for experimental shell scripts that are not currently saved inside koopa.
+.TP
+.B prefix
+Return the koopa installation path prefix.
+Also stored as 'KOOPA_PREFIX' environment variable.
+.TP
+.B variable
+Internal koopa configuration variable.
+Recommended for use in Python and R scripts only.
+.PP
+Default:
+.TP
+.B \-\-help, \-h
+Show this help message and exit.
+.TP
+.B \-\-version, \-V
+Version information.
+.SH COPYRIGHT
+This software is provided under an MIT License.
+See 'LICENSE' file for details.
