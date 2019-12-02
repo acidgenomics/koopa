@@ -1,59 +1,27 @@
-.TH FASTQ-DUMP-FROM-SRA-FILE-LIST 1 2019-11-28 Bash
+.TH FASTQ-DUMP-FROM-SRA-FILE-LIST 1 2019-12-02 Bash
 .SH NAME
 fastq-dump-from-sra-file-list \-
 FASTQ dump from Sequence Read Archive (SRA) accession list
 .SH SYNOPSIS
 .B fastq-dump-from-sra-file-list
-
-
-[\fB\-\-rename\fR]
-
-.IR 
-
-
-
-.IR FILE
+[filelist="SRR_Acc_List.txt"]
+.SH OPTIONS
+.TP
+.BR filelist
+SRA access file list.
 .SH DESCRIPTION
-Decompress a compressed archive file automatically without having to manually set any file format flags, such as those that need to be based to 'tar'.
+Requires sratools to be installed, which contains fastq-dump.
+.P
+This script loops across an SRA accession file list and calls 'fastq-dump --split-files' internally.
+.P
+Note that this will skip FASTQ files that have already been extracted. This is useful because fastq-dump can take a long time and get interrupted.
+.SH SEE ALSO
+Use fasterq-dump instead of fastq-dump, since it supports multiple threads.
+.P
+Single cell RNA-seq barcode formats:
+.IP
+\(bu 10X Genomics (https://kb.10xgenomics.com/hc/en-us/articles/115003802691)
+.IP
+\(bu Harvard inDrops v3 (https://singlecellcore.hms.harvard.edu)
 .SH EXAMPLE
-extract example.tar.gz
-.P
-extract example.tar.bz2
-.P
-extract example.tar.xz
-.P
-extract example.zip
-
-
-
-
-
-
-    [FILELIST="SRR_Acc_List.txt"]
-
-
-
-optional positional arguments:
-    1.  SRA access file list.
-        Defaults to '${filelist}'.
-
-
-details:
-    Requires sratools to be installed, which contains fastq-dump.
-
-    This script loops across an SRA accession file list and calls 
-    'fastq-dump --split-files' internally.
-
-    Note that this will skip FASTQ files that have already been extracted.
-    This is useful because fastq-dump can take a long time and get interrupted.
-
-see also:
-    Look into using fasterq-dump instead of fastq-dump.
-    Consider using '--split-3' flag by default instead?
-
-    10X Genomics single-cell RNA-seq data format.
-    https://kb.10xgenomics.com/hc/en-us/articles/115003802691
-
-note:
-    Bash script.
-    Updated 2019-09-20.
+fastq-dump-from-sra-file-list SRR_Acc_List.txt
