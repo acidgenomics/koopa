@@ -4,14 +4,14 @@ docker-run-image \-
 Pull and run a Docker image
 .SH SYNOPSIS
 .B docker-run-image
-.IR IMAGE
-.IR [--workdir="/mnt/work"]
+image
+[\-\-workdir="/mnt/work"]
 .SH OPTIONS
 .TP
-.BR IMAGE
+.B IMAGE
 Docker image name. Use the full name: '<user>/<image>:<tag>'. Defaults to images on DockerHub. Tag is optional, but can be included (e.g. ':latest').
 .TP
-.BR \-\-workdir
+.B \-\-workdir
 Local working directory mount path.
 .SH DESCRIPTION
 Script wrapper to call 'docker pull' and 'docker run' with suitable defaults for the Acid Genomics Docker images available on Docker Hub.
