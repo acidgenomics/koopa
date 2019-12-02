@@ -1,16 +1,14 @@
-
-
-
-
-    [dir="${dir}"]
-
+.TH GIT-PULL-RECURSIVE 1 2019-12-02 Bash
+.SH NAME
+git-pull-recursive \-
 Pull all git repositories recursively.
-
-required positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-
-note:
-    Bash script.
-    Updated 2019-09-23.
+.SH SYNOPSIS
+.B git-pull-recursive
+[dir=\fI"."\fP]
+.SH OPTIONS
+.B dir
+Directory path.
+.SH EXAMPLE
+.nf
+.B git-pull-recursive ~/git
+.fi
