@@ -16,20 +16,20 @@ Target directory path.
 .SH DESCRIPTION
 Supports transfers on file systems with non-standard permissions, including
 Azure Files and Windows CIFS/SMB shares.
-.P
+.PP
 We're allowing symlinks in the search path (via 'find -L' internally).
-.P
+.PP
 Note that we're ignoring some bcbio output cruft here.
 Skip transfer of BAM files in the 'work/' directory, and don't copy any
 of the transcriptome BAMs automatically.
-.P
+.PP
 Ignore list:
     - 'work/'
     - '*-transcriptome.bam'
-.P
+.PP
 rsync works more reliably for resuming interrupted transfers. Currently
 using this to transfer to Azure Files
-.P
+.PP
 Alternate method:
     > cp -iruv source target
 .SH EXAMPLE
