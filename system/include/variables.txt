@@ -50,6 +50,10 @@ docker="19.03.5"
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
 
+# https://www.gnu.org/software/findutils/
+# https://ftp.gnu.org/gnu/findutils/
+findutils="4.7.0"
+
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
 fish="3.0.2"
