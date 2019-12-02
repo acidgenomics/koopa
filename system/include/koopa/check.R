@@ -521,6 +521,7 @@ installed(
     which = c(
         "chsh",
         "curl",
+        "find",
         "grep",
         "less",
         "man",
@@ -531,7 +532,8 @@ installed(
         "top",
         "tree",
         "wget",
-        "which"
+        "which",
+        "xargs"
     ),
     required = TRUE
 )
@@ -702,9 +704,6 @@ if (isTRUE(linux)) {
         current = currentVersion("gcc-darwin"),
         expected = expectedVersion("clang")
     )
-
-
-
 }
 
 
