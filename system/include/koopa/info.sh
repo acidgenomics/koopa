@@ -11,15 +11,15 @@ array=(
     ""
     "Configuration"
     "-------------"
-    "Koopa prefix: $(_koopa_prefix)"
-    "Config prefix: $(_koopa_config_prefix)"
-    "App prefix: $(_koopa_app_prefix)"
-    "Make prefix: $(_koopa_make_prefix)"
+    "Koopa Prefix: $(_koopa_prefix)"
+    "Config Prefix: $(_koopa_config_prefix)"
+    "App Prefix: $(_koopa_app_prefix)"
+    "Make Prefix: $(_koopa_make_prefix)"
 )
 
 if _koopa_is_linux
 then
-    array+=("Cellar prefix: $(_koopa_cellar_prefix)")
+    array+=("Cellar Prefix: $(_koopa_cellar_prefix)")
 fi
 
 array+=("")
