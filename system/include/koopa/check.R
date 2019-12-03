@@ -774,6 +774,13 @@ if (
 ## Current user ================================================================
 message("\nCurrent user only:")
 checkVersion(
+    name = "exa",
+    whichName = "exa",
+    current = currentVersion("exa"),
+    expected = expectedVersion("exa"),
+    required = FALSE
+)
+checkVersion(
     name = "Perl : Perlbrew",
     whichName = "perlbrew",
     current = currentVersion("perlbrew"),
