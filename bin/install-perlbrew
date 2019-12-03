@@ -13,7 +13,9 @@ name="perlbrew"
 prefix="$(_koopa_app_prefix)/${name}"
 exe_file="${prefix}/bin/${name}"
 
-rm -fr "${HOME}/.perlbrew"
+_koopa_message "Installing Perlbrew at '${prefix}'."
+
+rm -frv "${HOME}/.perlbrew"
 _koopa_prefix_mkdir "$prefix"
 
 (
