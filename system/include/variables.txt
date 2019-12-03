@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-12-01"
+koopa_date="2019-12-03"
 
 
 
@@ -25,6 +25,8 @@ bash="5.0.11"
 # https://github.com/bcbio/bcbio-nextgen/releases
 bcbio-nextgen="1.1.8"
 
+# https://support.illumina.com/sequencing/sequencing_software/
+#     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
 
 # http://bioconductor.org/
@@ -49,6 +51,9 @@ docker="19.03.5"
 
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
+
+# https://github.com/ogham/exa/releases
+exa="0.9.0"
 
 # https://www.gnu.org/software/findutils/
 # https://ftp.gnu.org/gnu/findutils/
