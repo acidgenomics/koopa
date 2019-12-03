@@ -27,6 +27,7 @@ brew cask install java osxfuse xquartz
 # Recommended.
 casks=(
     1password
+    adoptopenjdk  # igv
     alfred
     aspera-connect
     authy

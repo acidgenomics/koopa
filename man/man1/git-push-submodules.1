@@ -1,16 +1,14 @@
-
-
-
-
-    [dir="${dir}"]
-
-Update and commit submodules.
-
-required positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-
-note:
-    Bash script.
-    Updated 2019-09-23.
+.TH GIT-PUSH-SUBMODULES 1 2019-12-02 Bash
+.SH NAME
+git-push-submodules \-
+Push all git submodules recursively.
+.SH SYNOPSIS
+.B git-push-submodules
+[dir=\fI"."\fP]
+.SH OPTIONS
+.B dir
+Directory path.
+.SH EXAMPLE
+.nf
+.B git-push-submodules .
+.fi
