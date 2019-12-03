@@ -27,7 +27,7 @@ _koopa_app_prefix() {                                                     # {{{3
         if _koopa_is_darwin
         then
             # Catalina doesn't allow directory creation at volume root.
-            prefix="$(_koopa_app_prefix)"
+            prefix="$(_koopa_make_prefix)"
         else
             prefix="/n/app"
         fi
