@@ -47,7 +47,6 @@ casks=(
     hazel
     igv
     iterm2
-    julia
     keka
     kitty
     libreoffice
@@ -82,6 +81,7 @@ brew cask install carbon-copy-cloner little-snitch
 casks=(
     alacritty
     calibre
+    julia
     omnidisksweeper
     rstudio
 )
