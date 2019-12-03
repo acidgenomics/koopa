@@ -17,14 +17,20 @@ _koopa_prefix() {                                                         # {{{3
 _koopa_app_prefix() {                                                     # {{{3
     # """
     # Custom application install prefix.
-    # Updated 2019-11-14.
+    # Updated 2019-12-03.
     #
     # Inspired by HMS RC devops approach on O2 cluster.
     # """
     local prefix
     if _koopa_is_shared_install
     then
-        prefix="/n/app"
+        if _koopa_is_darwin
+        then
+            # Catalina doesn't allow directory creation at volume root.
+            prefix="$(_koopa_app_prefix)"
+        else
+            prefix="/n/app"
+        fi
     else
         prefix="$(_koopa_local_app_prefix)"
     fi
