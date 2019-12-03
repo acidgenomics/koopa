@@ -12,8 +12,6 @@ fi
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 
-version="$(_koopa_variable koopa)"
-date="$(_koopa_variable koopa_date)"
 include_dir="${KOOPA_PREFIX}/system/include/koopa"
 
 case "$1" in
@@ -22,7 +20,13 @@ case "$1" in
         exit 0
         ;;
     --version|-V)
+        version="$(_koopa_variable koopa)"
+        date="$(_koopa_variable koopa_date)"
         echo "koopa ${version} (${date})"
+        exit 0
+        ;;
+    app-prefix)
+        _koopa_app_prefix
         exit 0
         ;;
     check)
@@ -32,6 +36,9 @@ case "$1" in
     header)
         _koopa_header "${2:-}"
         exit 0
+        ;;
+    home)
+        _koopa_stop "Use 'prefix' instead of 'home'."
         ;;
     host-id)
         _koopa_host_id
@@ -43,6 +50,10 @@ case "$1" in
         ;;
     list)
         "${include_dir}/list.sh"
+        exit 0
+        ;;
+    make-prefix)
+        _koopa_make_prefix
         exit 0
         ;;
     os-string)
