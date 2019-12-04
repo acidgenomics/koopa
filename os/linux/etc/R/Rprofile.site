@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-10-27 by Michael Steinbaugh.
+## Updated 2019-12-04 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -25,6 +25,9 @@
 ## - https://support.rstudio.com/hc/en-us/community/posts/200653076
 
 ## If devtools runs into an unzip error, set option: `unzip = "/usr/bin/unzip"`.
+
+## Check floating point (decimal) handling with `str(.Machine)`.
+## https://twitter.com/MazdakS/status/1201937547116589062
 
 
 
