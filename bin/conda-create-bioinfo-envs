@@ -64,6 +64,7 @@ conda-create-env samblaster                 # base
 conda-create-env samtools                   # base
 conda-create-env seqtk                      # base
 conda-create-env snakemake                  # workflows
+conda-create-env squid                      # variation
 conda-create-env sra-tools                  # tools
 conda-create-env star                       # aligners
 conda-create-env star-fusion                # fusion
