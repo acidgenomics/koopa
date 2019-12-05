@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-11-27.
+## Updated 2019-12-05.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -820,5 +820,15 @@ checkVersion(
     whichName = "rustup",
     current = currentVersion("rustup"),
     expected = expectedVersion("rustup"),
+    required = FALSE
+)
+installed(
+    which = c(
+        "autojump",
+        "black",
+        "flake8",
+        "pylint",
+        "pytest"
+    ),
     required = FALSE
 )
