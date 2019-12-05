@@ -53,6 +53,22 @@ do
             output_dir="$2"
             shift 2
             ;;
+        --r1-tail=*)
+            r1_tail="${1#*=}"
+            shift 1
+            ;;
+        --r1-tail)
+            r1_tail="$2"
+            shift 2
+            ;;
+        --r2-tail=*)
+            r2_tail="${1#*=}"
+            shift 1
+            ;;
+        --r2-tail)
+            r2_tail="$2"
+            shift 2
+            ;;
         *)
             _koopa_invalid_arg "$1"
             ;;
