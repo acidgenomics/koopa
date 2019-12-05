@@ -31,10 +31,10 @@ _koopa_message "Installing ${name} ${version}."
 
 _koopa_link_cellar "$name" "$version"
 
-# Install CPANminus.
-cpan App::cpanminus
+_koopa_message "Installing CPAN Minus."
+"${prefix}/bin/cpan" App::cpanminus
 _koopa_link_cellar "$name" "$version"
 
-# Install File::Rename module.
-cpanm File::Rename
-link-cellar perl
+_koopa_message "Installing 'File::Rename' module."
+"${prefix}/bin/cpanm" File::Rename
+_koopa_link_cellar "$name" "$version"
