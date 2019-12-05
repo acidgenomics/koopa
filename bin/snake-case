@@ -8,8 +8,9 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_r_package_installed syntactic
 
-rename="FALSE"
 prefix="FALSE"
+recursive="FALSE"
+rename="FALSE"
 
 POSITIONAL=()
 while (("$#"))
@@ -17,6 +18,10 @@ do
     case "$1" in
         --prefix)
             prefix="TRUE"
+            shift 1
+            ;;
+        --recursive)
+            recursive="TRUE"
             shift 1
             ;;
         --rename)
@@ -44,6 +49,7 @@ Rscript -e " \
         syntactic::snakeCase(
             object = ${object},
             rename = ${rename},
+            recursive = ${recursive},
             prefix = ${prefix}
         ),
         '\n',
