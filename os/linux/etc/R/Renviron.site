@@ -1,5 +1,5 @@
 ## Shared R environment configuration.
-## Updated 2019-11-11 by Michael Steinbaugh.
+## Updated 2019-12-05 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
@@ -17,6 +17,22 @@
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
 PATH="/usr/local/bin:/usr/bin:/bin"
+
+
+
+## Temporary files                                                          {{{1
+## =============================================================================
+
+## RStudio doesn't inherit 'TMPDIR' from current shell session, so we need to
+## provide a fallback symlink for virtual machines using a temporary SSD.
+##
+## For example on Azure:
+## > sudo ln -fnsv /mnt/resource /tmp/rstudio-tmp
+##
+## If this symlink doesn't exist, RStudio will fall back to '/tmp'.
+##
+## Refer to 'tempdir()' in R for details.
+TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
 
 
 
