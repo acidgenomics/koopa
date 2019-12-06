@@ -429,12 +429,15 @@ _koopa_os_id() {                                                          # {{{1
 _koopa_os_string() {                                                      # {{{1
     # """
     # Operating system string.
-    # Updated 2019-11-25.
+    # Updated 2019-12-06.
     #
     # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
     # Always returns lowercase, with unique names for Linux distros
     # (e.g. "rhel-8").
+    #
+    # Alternatively, use hostnamectl.
+    # https://linuxize.com/post/how-to-check-linux-version/
     local id
     local version
     if _koopa_is_darwin
@@ -444,16 +447,23 @@ _koopa_os_string() {                                                      # {{{1
         version="$(uname -r)"
     elif _koopa_is_linux
     then
-        id="$( \
-            awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
-            | tr -d '"' \
-        )"
-        # Include the major release version.
-        version="$( \
-            awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
-            | tr -d '"' \
-            | cut -d '.' -f 1 \
-        )"
+        if [ -r /etc/os/release ]
+        then
+            id="$( \
+                awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
+                | tr -d '"' \
+            )"
+            # Include the major release version.
+            version="$( \
+                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
+                | tr -d '"' \
+                | cut -d '.' -f 1 \
+            )"
+        else
+            # This provides fallback support for Arch Linux.
+            id="linux"
+            version="$(uname -r | cut -d '-' -f 1)"
+        fi
     fi
     echo "${id}-${version}"
 }
