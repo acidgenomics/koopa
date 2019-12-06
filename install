@@ -2,13 +2,6 @@
 # shellcheck disable=SC1090,SC1091
 set -Ee -o pipefail
 
-# Error on root user.
-# > if [[ "$(id -u)" -eq 0 ]]
-# > then
-# >     >&2 echo "Error: Don't install koopa as root."
-# >     exit 1
-# > fi
-
 usage() {
 cat << EOF
 usage: install [--help|-h] [--shared] [--dotfiles] [--mike]
@@ -30,7 +23,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2019-11-25.
+    Updated 2019-12-06.
 EOF
 }
 
@@ -92,7 +85,8 @@ _koopa_group() {
 }
 
 _koopa_has_sudo() {
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
+    [[ "$(id -u)" -eq 0 ]] && return 0
+    groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
 
 _koopa_is_linux() {
