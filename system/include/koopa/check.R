@@ -78,10 +78,14 @@ checkVersion <- function(
             (is.character(current) && identical(length(current), 1L)) ||
             is.null(current),
         is(expected, "package_version") ||
-            (is.character(expected) && identical(length(expected), 1L)),
+            (is.character(expected) && identical(length(expected), 1L)) ||
+            is.null(expected),
         is.logical(required) && identical(length(required), 1L)
     )
     eval <- match.arg(eval)
+    if (is.null(expected)) {
+        return(invisible())
+    }
     if (isTRUE(required)) {
         fail <- "FAIL"
     } else {
@@ -652,6 +656,7 @@ if (isTRUE(linux)) {
         expected = switch(
             EXPR = os,
             `amzn-2` = "7.3.1",
+            `fedora-31` = "9.2.1",
             `rhel-7` = "4.8.5",
             `rhel-8` = "8.2.1",
             `ubuntu-18` = "7.4.0",
