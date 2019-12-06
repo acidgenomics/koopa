@@ -40,6 +40,8 @@ set -- "${POSITIONAL[@]}"
 image="$1"
 workdir="$(_koopa_strip_trailing_slash "$workdir")"
 
+# > bash -il
+
 docker pull "$image"
 docker run -it \
     --volume="${PWD}:${workdir}" \
