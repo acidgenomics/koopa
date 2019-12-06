@@ -413,11 +413,12 @@ hasGNUCoreutils()
 installed(
     which = c(
         ## "[",
+        ## "basenc",
+        ## "rename",
         "b2sum",
         "base32",
         "base64",
         "basename",
-        "basenc",
         "cat",
         "chcon",
         "chgrp",
@@ -484,7 +485,6 @@ installed(
         "pwd",
         "readlink",
         "realpath",
-        "rename",
         "rm",
         "rmdir",
         "runcon",
