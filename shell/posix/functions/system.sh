@@ -281,9 +281,15 @@ _koopa_host_id() {                                                        # {{{1
     #
     # Returns empty for local machines and/or unsupported types.
     # """
-    _koopa_assert_is_installed hostname
     local id
-    case "$(hostname -f)" in
+    if [ -r /etc/hostname ]
+    then
+        id="$(cat /etc/hostname)"
+    else
+        _koopa_assert_is_installed hostname
+        id="$(hostname -f)"
+    fi
+    case "$id" in
         # VMs
         *.ec2.internal)
             id="aws"
@@ -297,9 +303,6 @@ _koopa_host_id() {                                                        # {{{1
             ;;
         *.rc.fas.harvard.edu)
             id="harvard-odyssey"
-            ;;
-        *)
-            id=
             ;;
     esac
     echo "$id"
