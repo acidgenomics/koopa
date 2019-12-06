@@ -3,11 +3,11 @@
 set -Ee -o pipefail
 
 # Error on root user.
-if [[ "$(id -u)" -eq 0 ]]
-then
-    >&2 echo "Error: Don't install koopa as root."
-    exit 1
-fi
+# > if [[ "$(id -u)" -eq 0 ]]
+# > then
+# >     >&2 echo "Error: Don't install koopa as root."
+# >     exit 1
+# > fi
 
 usage() {
 cat << EOF
