@@ -281,7 +281,7 @@ _koopa_host_id() {                                                        # {{{1
     #
     # Returns empty for local machines and/or unsupported types.
     # """
-    _koopa_is_installed "hostname" || return 1
+    _koopa_assert_is_installed hostname
     local id
     case "$(hostname -f)" in
         # VMs
