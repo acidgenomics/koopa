@@ -271,7 +271,7 @@ EOF
 _koopa_host_id() {                                                        # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
-    # Updated 2019-11-25.
+    # Updated 2019-12-06.
     #
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
@@ -281,6 +281,7 @@ _koopa_host_id() {                                                        # {{{1
     #
     # Returns empty for local machines and/or unsupported types.
     # """
+    _koopa_is_installed "hostname" || return 1
     local id
     case "$(hostname -f)" in
         # VMs
