@@ -518,7 +518,7 @@ _koopa_has_no_environments() {                                            # {{{3
 _koopa_has_sudo() {                                                       # {{{3
     # """
     # Check that current user has administrator (sudo) permission.
-    # Updated 2019-09-28.
+    # Updated 2019-12-06.
     #
     # Note that use of 'sudo -v' does not work consistently across platforms.
     #
@@ -526,7 +526,8 @@ _koopa_has_sudo() {                                                       # {{{3
     # - Debian: sudo
     # - Fedora: wheel
     # """
-    groups | grep -Eq "\b(admin|sudo|wheel)\b"
+    [ "$(id -u)" -eq 0 ] && return 0
+    groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
 
 _koopa_invalid_arg() {                                                    # {{{3
