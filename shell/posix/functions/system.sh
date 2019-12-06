@@ -447,7 +447,7 @@ _koopa_os_string() {                                                      # {{{1
         version="$(uname -r)"
     elif _koopa_is_linux
     then
-        if [ -r /etc/os/release ]
+        if [ -r /etc/os-release ]
         then
             id="$( \
                 awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
@@ -460,8 +460,10 @@ _koopa_os_string() {                                                      # {{{1
                 | cut -d '.' -f 1 \
             )"
         else
-            # This provides fallback support for Arch Linux.
             id="linux"
+        fi
+        if [ -z "$version" ]
+        then
             version="$(uname -r | cut -d '-' -f 1)"
         fi
     fi
