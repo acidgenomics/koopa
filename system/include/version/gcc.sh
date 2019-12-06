@@ -2,4 +2,5 @@
 
 gcc --version \
     | head -n 1 \
-    | cut -d ' ' -f 3
+    | grep -Eo '[0-9]\.[0-9]\.[0-9]' \
+    | head -n 1
