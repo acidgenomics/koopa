@@ -440,6 +440,7 @@ _koopa_os_string() {                                                      # {{{1
     # https://linuxize.com/post/how-to-check-linux-version/
     local id
     local version
+    local string
     if _koopa_is_darwin
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
@@ -462,12 +463,17 @@ _koopa_os_string() {                                                      # {{{1
         else
             id="linux"
         fi
-        if [ -z "$version" ]
-        then
-            version="$(uname -r | cut -d '-' -f 1)"
-        fi
     fi
-    echo "${id}-${version}"
+    if [ -z "$id" ]
+    then
+        _koopa_stop "Failed to detect OS ID."
+    fi
+    string="$id"
+    if [ -n "$version" ]
+    then
+        string="${string}-${version}"
+    fi
+    echo "$string"
 }
 
 _koopa_os_version() {                                                     # {{{1
