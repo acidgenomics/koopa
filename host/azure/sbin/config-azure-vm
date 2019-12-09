@@ -15,30 +15,37 @@ sudo ln -fnsv /data00/n /n
 
 install-rhel-7-base
 install-openjdk
+
 install-cellar-coreutils
 install-cellar-bash
 install-cellar-zsh
+install-cellar-fish
+install-cellar-tmux
+install-cellar-git
+install-cellar-gnupg
 install-cellar-lua
 install-cellar-luarocks
+# Skip this step on Debian/Ubuntu.
 install-cellar-r
 install-cellar-python
 install-cellar-vim
 install-cellar-neovim
 install-cellar-emacs
-install-cellar-tmux
-install-cellar-git
-install-rstudio-server
 install-cellar-htop
 install-cellar-shellcheck
 install-cellar-neofetch
-install-cellar-gnupg
 install-cellar-proj
 install-cellar-gdal
 install-cellar-hdf5
 install-cellar-genrich
+install-cellar-perl
+install-cellar-ruby
+
 install-perlbrew
 install-rbenv
 install-rust
+
+install-rstudio-server
 
 r-javareconf
 
