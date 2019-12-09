@@ -111,6 +111,7 @@ sudo apt -y install \
     python3-pip \
     r-base \
     r-base-dev \
+    sqlite3 \
     texlive \
     tmux \
     vim \
