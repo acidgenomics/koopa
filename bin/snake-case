@@ -40,14 +40,10 @@ set -- "${POSITIONAL[@]}"
 
 object="$(_koopa_array_to_r_vector "$@")"
 Rscript -e " \
-    cat(
-        syntactic::snakeCase(
-            object = ${object},
-            rename = TRUE,
-            recursive = ${recursive},
-            prefix = ${prefix}
-        ),
-        '\n',
-        sep = ' '
+    syntactic::snakeCase(
+        object = ${object},
+        rename = TRUE,
+        recursive = ${recursive},
+        prefix = ${prefix}
     ) \
 "

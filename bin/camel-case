@@ -45,15 +45,11 @@ set -- "${POSITIONAL[@]}"
 
 object="$(_koopa_array_to_r_vector "$@")"
 Rscript -e " \
-    cat(
-        syntactic::camelCase(
-            object = ${object},
-            rename = TRUE,
-            recursive = ${recursive},
-            strict = ${strict},
-            prefix = ${prefix}
-        ),
-        '\n',
-        sep = ' '
+    syntactic::camelCase(
+        object = ${object},
+        rename = TRUE,
+        recursive = ${recursive},
+        strict = ${strict},
+        prefix = ${prefix}
     ) \
 "
