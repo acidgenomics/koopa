@@ -10,7 +10,6 @@ _koopa_assert_is_r_package_installed syntactic
 
 prefix="FALSE"
 recursive="FALSE"
-rename="FALSE"
 
 POSITIONAL=()
 while (("$#"))
@@ -22,10 +21,6 @@ do
             ;;
         --recursive)
             recursive="TRUE"
-            shift 1
-            ;;
-        --rename)
-            rename="TRUE"
             shift 1
             ;;
         --)
@@ -48,7 +43,7 @@ Rscript -e " \
     cat(
         syntactic::snakeCase(
             object = ${object},
-            rename = ${rename},
+            rename = TRUE,
             recursive = ${recursive},
             prefix = ${prefix}
         ),

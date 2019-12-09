@@ -10,7 +10,6 @@ _koopa_assert_is_r_package_installed "syntactic"
 
 prefix="FALSE"
 recursive="FALSE"
-rename="FALSE"
 strict="FALSE"
 
 POSITIONAL=()
@@ -23,10 +22,6 @@ do
             ;;
         --recursive)
             recursive="TRUE"
-            shift 1
-            ;;
-        --rename)
-            rename="TRUE"
             shift 1
             ;;
         --strict)
@@ -53,7 +48,7 @@ Rscript -e " \
     cat(
         syntactic::camelCase(
             object = ${object},
-            rename = ${rename},
+            rename = TRUE,
             recursive = ${recursive},
             strict = ${strict},
             prefix = ${prefix}
