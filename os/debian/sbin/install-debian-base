@@ -80,6 +80,7 @@ sudo apt -y install \
     libbz2-dev \
     libcairo2-dev \
     libevent-dev \
+    libffi-dev \
     libfreetype6-dev \
     libgdal-dev \
     libgif-dev \

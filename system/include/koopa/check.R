@@ -711,7 +711,7 @@ if (isTRUE(linux)) {
 ## High performance ============================================================
 if (
     isTRUE(linux) &&
-    isTRUE(getOption("mc.cores") >= 7L)
+    isTRUE(getOption("mc.cores") >= 3L)
 ) {
     message("\nHigh performance (HPC/VM):")
     checkVersion(
