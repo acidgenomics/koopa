@@ -5,6 +5,22 @@ set -Eeu -o pipefail
 # https://metacpan.org/pod/distribution/perl/INSTALL
 # https://perlmaven.com/how-to-build-perl-from-source-code
 
+# Using 'PERL_MM_USE_DEFAULT' below to avoid interactive prompt to configure
+# CPAN.pm for the first time.
+#
+# Otherwise you'll hit this interactive prompt:
+#
+# CPAN.pm requires configuration, but most of it can be done automatically.
+# If you answer 'no' below, you will enter an interactive dialog for each
+# configuration option instead.
+#
+# Would you like to configure as much as possible automatically? [yes]
+#
+# See also:
+# - https://metacpan.org/pod/CPAN::FirstTime
+# - https://www.reddit.com/r/perl/comments/1xed7b/
+#       how_can_i_configure_cpan_as_much_as_possible/
+
 name="perl"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -31,8 +47,10 @@ _koopa_message "Installing ${name} ${version}."
 
 _koopa_link_cellar "$name" "$version"
 
+export PERL_MM_USE_DEFAULT=1
+
 _koopa_message "Installing CPAN Minus."
-"${prefix}/bin/cpan" App::cpanminus
+"${prefix}/bin/cpan" -i App::cpanminus
 _koopa_link_cellar "$name" "$version"
 
 _koopa_message "Installing 'File::Rename' module."
