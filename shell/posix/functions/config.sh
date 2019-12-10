@@ -264,14 +264,14 @@ _koopa_update_shells() {                                                  # {{{3
 _koopa_update_xdg_config() {                                              # {{{3
     # """
     # Update XDG configuration.
-    # Updated 2019-10-27.
+    # Updated 2019-12-06.
     #
     # Path: '~/.config/koopa'.
     # """
     local config_dir
     config_dir="$(_koopa_config_prefix)"
-    local home_dir
-    home_dir="$(_koopa_prefix)"
+    local prefix_dir
+    prefix_dir="$(_koopa_prefix)"
     local os_id
     os_id="$(_koopa_os_id)"
     mkdir -pv "$config_dir"
@@ -292,10 +292,10 @@ _koopa_update_xdg_config() {                                              # {{{3
             ln -fnsv "$source_file" "$dest_file"
         fi
     }
-    relink "${home_dir}" "${config_dir}/home"
-    relink "${home_dir}/activate" "${config_dir}/activate"
-    if [ -d "${home_dir}/os/${os_id}" ]
+    relink "${prefix_dir}" "${config_dir}/home"
+    relink "${prefix_dir}/activate" "${config_dir}/activate"
+    if [ -d "${prefix_dir}/os/${os_id}" ]
     then
-        relink "${home_dir}/os/${os_id}/etc/R" "${config_dir}/R"
+        relink "${prefix_dir}/os/${os_id}/etc/R" "${config_dir}/R"
     fi
 }

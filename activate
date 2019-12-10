@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-11-13.
+    Updated 2019-12-06.
 EOF
 }
 
@@ -100,10 +100,13 @@ unset -f usage
 # ==============================================================================
 
 # Never allow activation for root.
-[ "$(id -u)" -eq 0 ] && return 0
+# > [ "$(id -u)" -eq 0 ] && return 0
+
 [ -n "${USER:-}" ] && USER="$(whoami)" && export USER
+
 # Always skip on accounts containing "admin" in the name.
 echo "$USER" | grep -Eq "\b(admin|shiny)\b" && return 0
+
 # Allow optional skip for specific users.
 if [ -n "${KOOPA_USERS_SKIP:-}" ]
 then
