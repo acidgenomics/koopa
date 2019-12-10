@@ -1,5 +1,5 @@
 ## Shared R environment configuration.
-## Updated 2019-12-05 by Michael Steinbaugh.
+## Updated 2019-12-09 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
@@ -120,13 +120,30 @@ R_REMOTES_UPGRADE="always"
 ## =============================================================================
 
 ## This requires installation of the Oracle Database Instant Client.
-## Install using RPM file.
+## Install using RPM files.
+##
+## Previous version on RHEL 7: 12.2.0.1.0-1
+##
+## Install basic, devel, jdbc, odbc, and sqlplus.
+##
+## Fedora/RHEL:
+## > sudo yum list installed | grep 'oracle-instantclient'
+## > sudo yum remove 'oracle-instantclient*'
+## > sudo rpm -i oracle-instantclient*-basic-*.x86_64.rpm
+## > sudo rpm -i oracle-instantclient*-devel-*.x86_64.rpm
+## > sudo rpm -i oracle-instantclient*-sqlplus-*.x86_64.rpm
+## > sudo rpm -i oracle-instantclient*-jdbc-*.x86_64.rpm
+## > sudo rpm -i oracle-instantclient*-odbc-*.x86_64.rpm
 ##
 ## For Debian/Ubuntu, convert the RPM into DEB format using alien.
 ## > sudo apt-get install alien
 ##
 ## See also:
+## - https://www.oracle.com/database/technologies/instant-client/
+##       linux-x86-64-downloads.html
 ## - https://www.oracle.com/database/technologies/instant-client.html
+## - http://www.oracle.com/technetwork/database/features/instant-client/
+##       index-097480.html
 ## - https://help.ubuntu.com/community/Oracle%20Instant%20Client
 ## - https://docs.oracle.com/en/database/oracle/r-enterprise/1.5.1/oread/
 ##       installing-oracle-database-instant-client.html
@@ -144,8 +161,10 @@ R_REMOTES_UPGRADE="always"
 ##
 ## Updated 2019-12-09.
 
-ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/12.2/client64}"
-OCI_INC="${OCI_INC-/usr/include/oracle/12.2/client64}"
+ORACLE_VERSION="${ORACLE_VERSION-19.5}"
+
+ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/${ORACLE_VERSION}/client64}"
+OCI_INC="${OCI_INC-/usr/include/oracle/${ORACLE_VERSION}/client64}"
 
 OCI_LIB="${ORACLE_HOME}/lib"
 TNS_ADMIN="${ORACLE_HOME}/network/admin"
