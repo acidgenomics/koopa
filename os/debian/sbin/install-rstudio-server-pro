@@ -39,9 +39,7 @@ _koopa_message "Installing ${name} ${version}."
 # > sudo rm -frv /etc/rstudio
 
 (
-    rm -fr "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="rstudio-server-pro-${version}-amd64.deb"
     url="https://download2.rstudio.org/server/${os_codename}/amd64/${file}"
     _koopa_download "$url"

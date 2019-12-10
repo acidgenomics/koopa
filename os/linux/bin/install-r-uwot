@@ -14,9 +14,7 @@ install_exe="${r_home}/bin/INSTALL"
 _koopa_assert_is_executable "$install_exe"
 
 (
-    rm -fr "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     download-cran-latest "$name"
     "$install_exe" "$name"*".tar.gz"
     rm -fr "$tmp_dir"

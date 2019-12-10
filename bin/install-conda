@@ -58,9 +58,7 @@ then
             ;;
     esac
     (
-        rm -fr "$tmp_dir"
-        mkdir -p "$tmp_dir"
-        cd "$tmp_dir" || exit 1
+        _koopa_cd_tmp_dir "$tmp_dir"
         _koopa_download "https://repo.anaconda.com/archive/${script}"
         bash "$script" -bf -p "$prefix"
         rm -fr "$tmp_dir"
@@ -78,9 +76,7 @@ else
             ;;
     esac
     (
-        rm -rf "$tmp_dir"
-        mkdir -p "$tmp_dir"
-        cd "$tmp_dir" || exit 1
+        _koop_cd_tmp_dir "$tmp_dir"
         _koopa_download "https://repo.continuum.io/miniconda/${script}"
         bash "$script" -bf -p "$prefix"
         rm -rf "$tmp_dir"

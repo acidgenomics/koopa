@@ -13,6 +13,7 @@ timestamp="$(date "+%Y%m%d_%H%M%S")"
 version="$(bcbio_nextgen.py --version)"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 log_file="${log_dir}/${timestamp}-install-bcbio-genomes-${version}.log"
+mkdir -pv "$log_dir"
 
 tmp_dir="$(_koopa_tmp_dir)/bcbio"
 cores="$(_koopa_cpu_count)"
@@ -36,10 +37,7 @@ flags=(
 )
 
 (
-    mkdir -pv "$log_dir"
-    rm -frv "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     bcbio_nextgen.py upgrade "${flags[@]}" 2>&1 | tee "$log_file"
     rm -fr "$tmp_dir"
 )

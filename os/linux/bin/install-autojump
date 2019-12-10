@@ -15,9 +15,7 @@ _koopa_message "Installing ${name}."
 rm -frv "${HOME}/.autojump"
 
 (
-    rm -fr "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     git clone https://github.com/wting/autojump.git .
     # Run script with '--help' flag for options.
     ./install.py
