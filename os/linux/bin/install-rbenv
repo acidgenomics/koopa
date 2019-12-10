@@ -23,5 +23,3 @@ mkdir -pv "${prefix}/plugins"
 git clone \
     https://github.com/sstephenson/ruby-build.git \
     "${prefix}/plugins/ruby-build"
-
-_koopa_set_permissions "$prefix"
