@@ -13,6 +13,9 @@ set -Eeu -o pipefail
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
 
+# Install libffi if you hit cryptic '_ctypes' module errors.
+# https://stackoverflow.com/questions/27022373
+
 name="python"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
