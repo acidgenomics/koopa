@@ -31,15 +31,17 @@ install-cellar-python
 install-cellar-vim
 install-cellar-neovim
 install-cellar-emacs
+install-cellar-proj
+# This one takes a while to compile.
+install-cellar-gdal
+install-cellar-hdf5
+install-cellar-gsl
+install-cellar-perl
+install-cellar-ruby
 install-cellar-htop
 install-cellar-shellcheck
 install-cellar-neofetch
-install-cellar-proj
-install-cellar-gdal
-install-cellar-hdf5
 install-cellar-genrich
-install-cellar-perl
-install-cellar-ruby
 
 install-perlbrew
 install-rbenv
