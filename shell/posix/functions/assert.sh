@@ -730,12 +730,12 @@ _koopa_is_r_package_installed() {                                         # {{{3
 _koopa_is_rhel() {                                                        # {{{3
     # """
     # Is the operating system RHEL?
-    # Updated 2019-11-25.
+    # Updated 2019-12-09.
     # """
     [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "rhel" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "rhel"
-    return 0
+    grep "ID=" /etc/os-release | grep -q "rhel" && return 0
+    grep "ID_LIKE=" /etc/os-release | grep -q "rhel" && return 0
+    return 1
 }
 
 _koopa_is_rhel_7() {                                                      # {{{3
