@@ -19,8 +19,7 @@ exe_file="${prefix}/bin/ascp"
 _koopa_message "Installing Aspera Connect to '${prefix}'."
 
 (
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="ibm-aspera-connect-${version}.175481-linux-g2.12-64.tar.gz"
     url="https://download.asperasoft.com/download/sw/connect/${version}/${file}"
     _koopa_download "$url"

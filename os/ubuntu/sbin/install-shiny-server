@@ -19,9 +19,7 @@ version="$(_koopa_variable "$name")"
 _koopa_message "Installing ${name} ${version}."
 
 (
-    rm -fr "$tmp_dir"
-    mkdir -p "$tmp_dir"
-    cd "$tmp_dir" || exit 1
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="shiny-server-${version}-amd64.deb"
     url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
     _koopa_download "$url"
