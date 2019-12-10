@@ -442,22 +442,23 @@ if (.isInstalled("readr")) {
     ## -------------------------------------------------------------------------
 
     if (isTRUE(interactive())) {
-        path_string <- paste0("  %.", getOption("width") - 4L, "s")
+        path_string <- paste0("    %.", getOption("width") - 4L, "s")
         cat(sprintf(
             fmt = paste(
                 "",
-                "R Home:",            path_string,
-                "Package Library:",   path_string,
-                "Working Directory:", path_string,
-                "",
                 "R %s",
+                "",
+                "- R Home:", path_string,
+                "- Package Library:", path_string,
+                "- Working Directory:", path_string,
+                "",
                 "",
                 sep = "\n"
             ),
+            r_ver_full,
             normalizePath(R.home(), mustWork = TRUE),
             normalizePath(.libPaths()[[1L]], mustWork = TRUE),
-            normalizePath(getwd(), mustWork = TRUE),
-            r_ver_full
+            normalizePath(getwd(), mustWork = TRUE)
         ))
         rm(path_string)
     }
