@@ -28,7 +28,7 @@ esac
 # Note that we're skipping this checks inside RStudio shell.
 if [ -z "${RSTUDIO:-}" ]
 then
-    _koopa_warn_if_export "JAVA_HOME" "LD_LIBRARY_PATH" "PYTHONHOME" "R_HOME"
+    _koopa_warn_if_export JAVA_HOME LD_LIBRARY_PATH PYTHONHOME R_HOME
 fi
 
 
