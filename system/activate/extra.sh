@@ -295,3 +295,10 @@ fi
 
 # Allow fast, default mode that skips RC file.
 alias vim-default='vim -i NONE -u NONE -U NONE'
+
+
+
+# autojump                                                                  {{{1
+# ==============================================================================
+
+_koopa_activate_autojump

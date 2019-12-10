@@ -1,9 +1,7 @@
 #!/usr/bin/env zsh
 
 # Initialize ZSH plugins.
-# Updated 2019-11-10.
-
-_koopa_activate_autojump
+# Updated 2019-12-09.
 
 plugins_dir="${KOOPA_PREFIX}/dotfiles/shell/zsh/plugins"
 [[ -d "$plugins_dir" ]] || return 0
