@@ -38,6 +38,7 @@ install-cellar-hdf5
 install-cellar-gsl
 install-cellar-perl
 install-cellar-ruby
+install-cellar-julia
 install-cellar-htop
 install-cellar-shellcheck
 install-cellar-neofetch
@@ -47,6 +48,7 @@ install-perlbrew
 install-rbenv
 install-rust
 
+# Add a check for which machine to install RStudio Server Pro.
 install-rstudio-server
 
 r-javareconf
