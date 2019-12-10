@@ -33,6 +33,10 @@ case "$1" in
         "${include_dir}/check.sh"
         exit 0
         ;;
+    develop)
+        "${include_dir}/develop.sh"
+        exit 0
+        ;;
     header)
         _koopa_header "${2:-}"
         exit 0
