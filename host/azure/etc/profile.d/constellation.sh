@@ -1,8 +1,7 @@
 #!/bin/sh
 
 # CPI shared shell configuration.
-# Updated 2019-11-01 by Michael Steinbaugh.
-
+# Updated 2019-12-09 by Michael Steinbaugh.
 
 
 
@@ -61,7 +60,7 @@ PATH="${PATH}:/n/app/cellranger-atac/1.1.0"
 # Oracle                                                                    {{{1
 # ==============================================================================
 
-# Configuration moved to '/usr/local/lib64/R/etc/Renviron.site'.
+# Configuration moved to '/usr/local/lib64/R/etc/Renviron.site' file.
 # Refer to "ROracle" section.
 
 
@@ -75,7 +74,6 @@ export SHINYAPPDATA="/mnt/azbioifnoseq05/appdata"
 alias shinyrestart="sudo systemctl restart shiny-server"
 alias shinystart="sudo systemctl start shiny-server"
 alias shinystatus="sudo systemctl status shiny-server"
-
 
 
 
