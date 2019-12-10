@@ -287,6 +287,9 @@ _koopa_host_id() {                                                        # {{{1
         *.ec2.internal)
             id="aws"
             ;;
+        awslabapp*)
+            id="aws"
+            ;;
         azlabapp*)
             id="azure"
             ;;
