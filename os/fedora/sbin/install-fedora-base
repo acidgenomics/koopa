@@ -5,6 +5,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_assert_has_no_args "$@"
+
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
 sudo yum -y install \

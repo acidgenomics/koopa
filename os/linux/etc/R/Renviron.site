@@ -120,21 +120,10 @@ R_REMOTES_UPGRADE="always"
 ## =============================================================================
 
 ## This requires installation of the Oracle Database Instant Client.
-## Install using RPM files.
-##
-## Previous version on RHEL 7: 12.2.0.1.0-1
+## Refer to 'install-oracle-instantclient' script for details.
 ##
 ## Install basic, devel, jdbc, odbc, and sqlplus.
-##
-## Fedora/RHEL:
-## > sudo yum list installed | grep 'oracle-instantclient'
-## > sudo rm -v /etc/ld.so.conf.d/oracle-instantclient.conf
-## > sudo yum remove 'oracle-instantclient*'
-## > sudo rpm -i oracle-instantclient*-basic-*.x86_64.rpm
-## > sudo rpm -i oracle-instantclient*-devel-*.x86_64.rpm
-## > sudo rpm -i oracle-instantclient*-sqlplus-*.x86_64.rpm
-## > sudo rpm -i oracle-instantclient*-jdbc-*.x86_64.rpm
-## > sudo rpm -i oracle-instantclient*-odbc-*.x86_64.rpm
+## Previous version on RHEL 7 VM: 12.2.0.1.0.
 ##
 ## For Debian/Ubuntu, convert the RPM into DEB format using alien.
 ## > sudo apt-get install alien
@@ -162,10 +151,8 @@ R_REMOTES_UPGRADE="always"
 ##
 ## Updated 2019-12-09.
 
-ORACLE_VERSION="${ORACLE_VERSION-19.5}"
-
-ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/${ORACLE_VERSION}/client64}"
-OCI_INC="${OCI_INC-/usr/include/oracle/${ORACLE_VERSION}/client64}"
+ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/19.5/client64}"
+OCI_INC="${OCI_INC-/usr/include/oracle/19.5/client64}"
 
 OCI_LIB="${ORACLE_HOME}/lib"
 TNS_ADMIN="${ORACLE_HOME}/network/admin"
