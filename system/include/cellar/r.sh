@@ -3,6 +3,11 @@ set -Eeu -o pipefail
 
 # Refer to the 'Installation + Administration' manual.
 
+if _koopa_is_debian
+then
+    _koopa_stop "Install R CRAN binary instead for Debian/Ubuntu."
+fi
+
 _koopa_assert_is_installed java javac tex
 
 name="r"

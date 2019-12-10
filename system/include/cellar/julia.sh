@@ -11,6 +11,22 @@ set -Eeu -o pipefail
 # How to disable this?
 # Warning: git information unavailable; versioning information limited
 
+# Compile failure on Ubuntu 18:
+# The program is attempting to use system LLVM 6, even when we request not to.
+# > julia --version
+# /usr/lib/x86_64-linux-gnu/libLLVM-6.0.so: version `JL_LLVM_6.0' not found
+# (required by /usr/local/cellar/julia/1.3.0/bin/../lib/libjulia.so.1)
+
+# https://discourse.julialang.org/t/problem-building-julia-version-jl-llvm-6-0-not-found/11545
+
+# inside julia folder
+# find . -name libLLVM-6.0.so
+# gives
+# ./usr/lib/libLLVM-6.0.so
+# ./deps/scratch/llvm-6.0.0/build_Release/lib/libLLVM-6.0.so
+# export LD_LIBRARY_PATH="$(pwd)/usr/lib/:$LD_LIBRARY_PATH"
+# make
+
 name="julia"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -32,15 +48,13 @@ _koopa_message "Installing ${name} ${version}."
     # Need to ensure we configure internal LLVM build here.
     cat > Make.user << EOL
 prefix=${prefix}
-
 USE_LLVM_SHLIB=0
 USE_SYSTEM_LLVM=0
-
 # > LLVM_DEBUG=Release
 # > LLVM_ASSERTIONS=1
 EOL
-    # This step is currently erroring out on RHEL 7 due to LLVM 7.
     make --jobs="$jobs"
+    # > make test
     make install
     rm -fr "$tmp_dir"
 )

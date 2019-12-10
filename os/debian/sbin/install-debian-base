@@ -69,6 +69,7 @@ sudo apt -y install \
     cmake \
     emacs \
     fish \
+    gdebi-core \
     git \
     gnupg2 \
     gnutls-bin \
