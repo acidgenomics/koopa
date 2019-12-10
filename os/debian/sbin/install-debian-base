@@ -63,6 +63,7 @@ sudo apt -y build-dep \
 # Note that 'golang-go' is not officially supported.
 
 sudo apt -y install \
+    alien \
     autoconf \
     automake \
     cargo \
