@@ -119,17 +119,34 @@ R_REMOTES_UPGRADE="always"
 ## ROracle                                                                  {{{1
 ## =============================================================================
 
-# Do not set `LD_LIBRARY_PATH`, use `/etc/ld.so.conf.d/` approach instead.
-# This can break GCC compilation of rhdf5, if set in bash profile.
-#
-# See also:
-# - http://cran.cnr.berkeley.edu/web/packages/ROracle/INSTALL
-# - https://docs.oracle.com/cd/E83411_01/OREAD/
-#       installing-rstudio-server.htm#OREAD223
-#
-# Updated 2019-12-09.
-ORACLE_HOME="/usr/lib/oracle/12.2/client64"
-OCI_INC="/usr/include/oracle/12.2/client64"
+## This requires installation of the Oracle Database Instant Client.
+## Install using RPM file.
+##
+## For Debian/Ubuntu, convert the RPM into DEB format using alien.
+## > sudo apt-get install alien
+##
+## See also:
+## - https://www.oracle.com/database/technologies/instant-client.html
+## - https://help.ubuntu.com/community/Oracle%20Instant%20Client
+## - https://docs.oracle.com/en/database/oracle/r-enterprise/1.5.1/oread/
+##       installing-oracle-database-instant-client.html
+##       #GUID-A61C2824-B9C7-4344-A7A2-E7FE0F05695D
+##
+## Do not set `LD_LIBRARY_PATH`.
+## Use `/etc/ld.so.conf.d/oracle-instantclient.conf` approach instead.
+## This can break GCC compilation of rhdf5, if set in bash profile.
+## Contains: /usr/lib/oracle/12.2/client64/lib
+##
+## See also:
+## - http://cran.cnr.berkeley.edu/web/packages/ROracle/INSTALL
+## - https://docs.oracle.com/cd/E83411_01/OREAD/
+##       installing-rstudio-server.htm#OREAD223
+##
+## Updated 2019-12-09.
+
+ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/12.2/client64}"
+OCI_INC="${OCI_INC-/usr/include/oracle/12.2/client64}"
+
 OCI_LIB="${ORACLE_HOME}/lib"
 TNS_ADMIN="${ORACLE_HOME}/network/admin"
 PATH="${PATH}:${ORACLE_HOME}/bin"
