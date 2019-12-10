@@ -38,18 +38,21 @@ install-cellar-hdf5
 install-cellar-gsl
 install-cellar-perl
 install-cellar-ruby
+# This is currently erroring out on Ubuntu 18 LTS (see notes).
 install-cellar-julia
 install-cellar-htop
 install-cellar-shellcheck
 install-cellar-neofetch
 install-cellar-genrich
 
+install-rust
 install-perlbrew
 install-rbenv
-install-rust
+install-pyenv
 
 # Add a check for which machine to install RStudio Server Pro.
-install-rstudio-server
+# > install-rstudio-server-pro
+# > install-rstudio-server
 
 r-javareconf
 
