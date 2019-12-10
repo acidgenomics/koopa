@@ -128,6 +128,7 @@ R_REMOTES_UPGRADE="always"
 ##
 ## Fedora/RHEL:
 ## > sudo yum list installed | grep 'oracle-instantclient'
+## > sudo rm -v /etc/ld.so.conf.d/oracle-instantclient.conf
 ## > sudo yum remove 'oracle-instantclient*'
 ## > sudo rpm -i oracle-instantclient*-basic-*.x86_64.rpm
 ## > sudo rpm -i oracle-instantclient*-devel-*.x86_64.rpm
