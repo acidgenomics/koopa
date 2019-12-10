@@ -17,5 +17,3 @@ _koopa_message "Installing pyenv at '${prefix}'."
 git clone \
     https://github.com/pyenv/pyenv.git \
     "$prefix"
-
-_koopa_set_permissions "$prefix"
