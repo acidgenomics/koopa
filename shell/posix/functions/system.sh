@@ -422,6 +422,16 @@ _koopa_macos_app_version() {                                              # {{{1
         | tr -d '"'
 }
 
+_koopa_os_codename() {                                                    # {{{1
+    # """
+    # Operating system code name.
+    # Updated 2019-12-09.
+    # """
+    _koopa_assert_is_linux
+    awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
+        | tr -d '"'
+}
+
 _koopa_os_id() {                                                          # {{{1
     # """
     # Operating system ID.
