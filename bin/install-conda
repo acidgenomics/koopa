@@ -76,7 +76,7 @@ else
             ;;
     esac
     (
-        _koop_cd_tmp_dir "$tmp_dir"
+        _koopa_cd_tmp_dir "$tmp_dir"
         _koopa_download "https://repo.continuum.io/miniconda/${script}"
         bash "$script" -bf -p "$prefix"
         rm -rf "$tmp_dir"
