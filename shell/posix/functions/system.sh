@@ -426,10 +426,14 @@ _koopa_os_codename() {                                                    # {{{1
     # """
     # Operating system code name.
     # Updated 2019-12-09.
+    #
+    # Alternate approach:
+    # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
+    # >     | tr -d '"'
     # """
-    _koopa_assert_is_linux
-    awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
-        | tr -d '"'
+    _koopa_assert_is_debian
+    _koopa_assert_is_installed lsb_release
+    lsb_release -cs
 }
 
 _koopa_os_id() {                                                          # {{{1
