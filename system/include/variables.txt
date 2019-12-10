@@ -123,6 +123,10 @@ neovim="0.4.3"
 # https://www.openssl.org/source/
 openssl="1.1.1d"
 
+# https://www.oracle.com/database/technologies/instant-client/
+#     linux-x86-64-downloads.html
+oracle-instantclient="19.5.0.0.0-1"
+
 # https://pandoc.org/releases.html
 pandoc="2.7.3"
 
