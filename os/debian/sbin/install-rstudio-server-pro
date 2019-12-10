@@ -6,18 +6,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # https://rstudio.com/products/rstudio/download-commercial/
-
 # Other unsupported versions:
 # Debian 8 / Ubuntu 14, 16
 # Debian 9
 
 _koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed gdebi
+_koopa_assert_is_installed R gdebi
+_koopa_assert_is_not_installed rstudio-server
 
 name="rstudio-server-pro"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 version="$(_koopa_variable "$name")"
-
 os_codename="$(_koopa_os_codename)"
 
 if ! _koopa_is_ubuntu
@@ -46,7 +45,7 @@ _koopa_message "Installing ${name} ${version}."
     file="rstudio-server-pro-${version}-amd64.deb"
     url="https://download2.rstudio.org/server/${os_codename}/amd64/${file}"
     _koopa_download "$url"
-    sudo gdebi -n "$file"
+    sudo gdebi --non-interactive "$file"
     rm -fr "$tmp_dir"
 )
 
