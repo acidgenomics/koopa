@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-12-05 by Michael Steinbaugh.
+## Updated 2019-12-09 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -309,7 +309,7 @@ if (.isInstalled("readr")) {
     ## Do not compile packages from source on macOS using Apple LLVM Clang/GCC.
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
-    
+
     if (!isTRUE(conda)) {
         if (Sys.getenv("HMS_CLUSTER") == "o2") {
             ## > module load gcc/6.2.0
@@ -427,6 +427,17 @@ if (.isInstalled("readr")) {
         }
     }
 
+    ## Default packages                                                     {{{2
+    ## -------------------------------------------------------------------------
+
+    if (interactive()) {
+        if (.isInstalled("BiocManager")) {
+            options(
+                defaultPackages = c(getOption("defaultPackages"), "BiocManager")
+            )
+        }
+    }
+
     ## Minimal session info                                                 {{{2
     ## -------------------------------------------------------------------------
 
@@ -439,32 +450,16 @@ if (.isInstalled("readr")) {
                 "Package Library:",   path_string,
                 "Working Directory:", path_string,
                 "",
+                "R %s",
                 "",
                 sep = "\n"
             ),
             normalizePath(R.home(), mustWork = TRUE),
             normalizePath(.libPaths()[[1L]], mustWork = TRUE),
-            normalizePath(getwd(), mustWork = TRUE)
+            normalizePath(getwd(), mustWork = TRUE),
+            r_ver_full
         ))
         rm(path_string)
-        if (isTRUE(
-            "BiocVersion" %in% rownames(utils::installed.packages())
-        )) {
-            ## Alternatively can use 'BiocManager::version()', but this approach
-            ## is faster because the package doesn't get loaded.
-            bioc_ver <- numeric_version(sub(
-                pattern = "^([[:digit:]]+)\\.([[:digit:]]+)\\.([[:digit:]]+)$",
-                replacement="\\1.\\2",
-                x = utils::packageVersion("BiocVersion")
-            ))
-            cat(sprintf(
-                fmt = "R %s / Bioconductor %s\n",
-                r_ver_full, bioc_ver
-            ))
-        } else {
-            cat(sprintf(fmt = "R %s\n", r_ver_full))
-        }
-        cat("\n")
     }
 
     rm(conda, r_ver_full, r_ver_short)
