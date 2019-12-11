@@ -1,4 +1,5 @@
 install.packages("BiocManager")
+
 install.packages("remotes")
 
 library(BiocManager)
@@ -63,6 +64,9 @@ install("trimcluster")
 install("varhandle")
 install("visNetwork")
 install("xlsx")
+
+## cBioPortal
+install("cgdsr")
 
 
 
