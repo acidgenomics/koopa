@@ -68,13 +68,14 @@ tools_dir="${prefix}/tools"
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
     _koopa_download "$url"
-    # v1.1.9 install is currently hanging when "rnaseq" and "variation" data 
-    # targets are both enabled.
+    # v1.1.9 install is currently hanging on conda environment solve for tools,
+    # independent of '--datatarget' flags used below.
     python3 "$file" \
         "$install_dir" \
         --tooldir="$tools_dir" \
         --upgrade="$version" \
         --datatarget="rnaseq" \
+        --datatarget="variation" \
         --nodata \
         --isolate \
         2>&1 | tee "$log_file"
