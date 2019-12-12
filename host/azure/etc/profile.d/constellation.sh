@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# CPI shared shell configuration.
-# Updated 2019-12-09 by Michael Steinbaugh.
+# Constellation Pharma shared shell configuration.
+# Updated 2019-12-12 by Michael Steinbaugh.
 
 
 
