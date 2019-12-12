@@ -1,25 +1,17 @@
-
-
-
-    name [dir="${default_dir}"]
-
-Link Emacs installation.
-
-required positional arguments:
-    1.  Name of Emacs directory.
-        Example: spacemacs.
-        Looks for '${default_home}-spacemacs' internally.
-
-required positional arguments with defaults:
-    2.  Emacs default directory.
-        Where the symlink is applied.
-        Defaults to '${default_dir}'.
-
-
-details:
-    Links an Emacs installation (e.g. Spacemacs, Doom Emacs) into
-    '${default_dir}'.
-
-note:
-    Bash script.
-    Updated 2019-10-23.
+.TH LINK-EMACS 1 2019-12-12 Bash
+.SH NAME
+link-emacs \-
+Link Emacs installation
+.SH SYNOPSIS
+.B link-emacs
+.I name
+.SH OPTIONS
+.TP
+.B name
+Name of Emacs directory.
+Currently supports 'doom', 'minimal' (i.e. minmal ESS config), and 'spacemacs'.
+Looks for '~/emacs-NAME/' directory internally.
+.SH DESCRIPTION
+Links at '~/.emacs.d/'.
+.SH EXAMPLE
+.B link-emacs spacemacs
