@@ -5,7 +5,7 @@ Run kallisto on multiple FASTQs inside a directory.
 .SH SYNOPSIS
 .B run-kallisto
 \fB\-\-fasta-file\fP=\fI"XXX.fa.gz"\fP
-\fB\-\-index-file\fP=\fI"XXX.idx"\fP
+\fB\-\-index-file\fP=\fI"kallisto/kallisto.idx"\fP
 [\fB\-\-fastq-dir\fP=\fI"fastq/"\fP]
 [\fB\-\-output-dir\fP=\fI"kallisto/"\fP]
 [\fB--r1-tail\fP=\fI"_R1_001.fastq.gz"\fP]
@@ -15,15 +15,15 @@ Run kallisto on multiple FASTQs inside a directory.
 .B \-\-fasta-file
 Transcriptome-level (i.e. cDNA) FASTA file.
 Ensembl or GENCODE reference is recommended over RefSeq or UCSC.
-This will generate a new kallisto index, which gets saved in the output directory specified by \fB--output-dir\fP.
-Example: Homo_sapiens.GRCh38.cdna.all.fa.gz
+This will generate a new kallisto index, which gets saved in the output directory specified by \fB--output-dir\fP as 'kallisto.idx'.
+Example: 'Homo_sapiens.GRCh38.cdna.all.fa.gz'.
 .TP
 [OR]
 .TP
 .B \-\-index-file
 Kallisto index, previously generated using \fBkallisto index\fP.
 If \fB--fasta-file\fP is defined, this gets generated on the fly.
-Example: kallisto.idx
+Example: 'kallisto/kallisto.idx'.
 .TP
 .B \-\-fastq-dir
 Directory path containing paired-end FASTQ files.
