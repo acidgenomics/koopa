@@ -1,20 +1,19 @@
-
-
-
-
-    [url="${url}"]
-
+.TH INSTALL-DOTFILES 1 2019-12-12 Bash
+.SH NAME
+install-dotfiles \-
 Install dot files repository.
-
-required positional arguments with defaults:
-    1.  Dot file repository URL.
-        Defaults to '${url}'.
-
-
-details:
-    Installs into '${target_dir}'.
-    Adds a symlink in koopa config dir.
-
-note:
-    Bash script.
-    Updated 2019-10-09.
+.SH SYNOPSIS
+.B install-dotfiles
+.B \-\-mike
+[url=\fI"https://github.com/mjsteinbaugh/dotfiles.git"\fP]
+.SH OPTIONS
+.TP
+.B url
+Dot file repository URL.
+.TP
+.B \-\-mike
+Configures dot files repo for SSH instead of HTTPS.
+Also installs 'dotfiles-private' repo into \fBkoopa config-prefix\fP.
+.SH DESCRIPTION
+Installs into \fBkoopa prefix\fP at 'dotfiles'.
+Adds a symlink in \fBkoopa config-prefix\fP.

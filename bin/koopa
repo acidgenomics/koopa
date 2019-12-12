@@ -15,6 +15,7 @@ _koopa_assert_has_args "$@"
 include_dir="${KOOPA_PREFIX}/system/include/koopa"
 
 case "$1" in
+    # Unix standard (general) --------------------------------------------------
     --help|-h)
         usage
         exit 0
@@ -25,10 +26,7 @@ case "$1" in
         echo "koopa ${version} (${date})"
         exit 0
         ;;
-    app-prefix)
-        _koopa_app_prefix
-        exit 0
-        ;;
+    # System configuration -----------------------------------------------------
     check)
         "${include_dir}/check.sh"
         exit 0
@@ -37,23 +35,34 @@ case "$1" in
         "${include_dir}/develop.sh"
         exit 0
         ;;
-    header)
-        _koopa_header "${2:-}"
-        exit 0
-        ;;
-    home)
-        _koopa_stop "Use 'prefix' instead of 'home'."
-        ;;
-    host-id)
-        _koopa_host_id
-        exit 0
-        ;;
     info)
         "${include_dir}/info.sh"
         exit 0
         ;;
     list)
         "${include_dir}/list.sh"
+        exit 0
+        ;;
+    update)
+        shift 1
+        "${include_dir}/update.sh" "$@"
+        exit 0
+        ;;
+    # Character string return --------------------------------------------------
+    app-prefix)
+        _koopa_app_prefix
+        exit 0
+        ;;
+    config-prefix)
+        _koopa_config_prefix
+        exit 0
+        ;;
+    header)
+        _koopa_header "${2:-}"
+        exit 0
+        ;;
+    host-id)
+        _koopa_host_id
         exit 0
         ;;
     make-prefix)
@@ -68,17 +77,16 @@ case "$1" in
         _koopa_prefix
         exit 0
         ;;
-    update)
-        shift 1
-        "${include_dir}/update.sh" "$@"
-        exit 0
-        ;;
-    upgrade)
-        _koopa_stop "Use 'update' instead of 'upgrade'."
-        ;;
     variable)
         _koopa_variable "$2"
         exit 0
+        ;;
+    # Deprecated args / error catching -----------------------------------------
+    home)
+        _koopa_stop "Defunct: Use 'prefix' instead of 'home'."
+        ;;
+    upgrade)
+        _koopa_stop "Defunct: Use 'update' instead of 'upgrade'."
         ;;
     *)
         _koopa_invalid_arg "$1"
