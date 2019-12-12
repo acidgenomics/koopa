@@ -255,6 +255,13 @@ fi
 
 alias R='R --no-restore --no-save --quiet'
 
+if _koopa_is_installed shiny-server
+then
+    alias shiny-restart="sudo systemctl restart shiny-server"
+    alias shiny-start="sudo systemctl start shiny-server"
+    alias shiny-status="sudo systemctl status shiny-server"
+fi
+
 
 
 # Ruby                                                                      {{{1
