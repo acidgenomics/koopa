@@ -32,7 +32,7 @@ Run with '\fB--system\fP' flag to also update the system configuration.
 .B app-prefix
 Application installation prefix.
 Refers to applications that don't need to be build using \fBmake\fP, and can be installed on an external disk, for space-constrained virtual machines.
-Defaults to '/n/app/' on most Linux machines.
+Defaults to '/n/app/' on most machines.
 .TP
 .B config-prefix
 User-specific local configuration prefix.
@@ -45,12 +45,15 @@ Useful for experimental scripts that are not currently saved inside koopa.
 .TP
 .B host-id
 General platform identifier string.
-Intended for identification of cloud platforms,
-such as 'aws' (Amazon Web Services), 'azure' (Microsoft Azure), or 'gcp' (Google Cloud Platform).
+Intended for identification of cloud platforms, such as 'aws' (Amazon Web Services), 'azure' (Microsoft Azure), or 'gcp' (Google Cloud Platform).
+.TP
+.B local-app-prefix
+Local application prefix.
+Defaults to 'XDG_DATA_HOME' on most machines.
 .TP
 .B make-prefix
 Prefix for cellarized \fBmake\fP scripts.
-Defaults to '/usr/local/' on most Linux machines.
+Defaults to '/usr/local/' on most machines.
 .TP
 .B os-string
 Operating system identifier string.

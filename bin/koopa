@@ -65,6 +65,10 @@ case "$1" in
         _koopa_host_id
         exit 0
         ;;
+    local-app-prefix)
+        _koopa_local_app_prefix
+        exit 0
+        ;;
     make-prefix)
         _koopa_make_prefix
         exit 0
