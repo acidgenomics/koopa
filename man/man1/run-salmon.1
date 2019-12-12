@@ -1,10 +1,12 @@
+.TH RUN-SALMON 1 2019-12-11 Bash
+.SH NAME
+run-salmon \-
+Run salmon on multiple FASTQs inside a directory.
 
-
-
-    --fasta-file="FASTA" --index-file="INDEX"
-    [--fastq-dir="${fastq_dir}"] [--output-dir="${output_dir}"]
-
-Run salmon on multiple samples.
+--fasta-file="FASTA"
+--index-file="INDEX"
+[--fastq-dir="${fastq_dir}"]
+[--output-dir="${output_dir}"]
 
 required arguments:
     --fasta-file
@@ -27,19 +29,18 @@ required arguments with defaults:
         Output directory path.
         Defaults to '${output_dir}'.
 
-
-details:
+.SH DESCRIPTION
     This script supports quick analysis of multiple paired-end FASTQ samples
     inside a directory. It builds a salmon index on the fly, if necessary
     (unless the '--index-file' argument is set), and outputs per sample
     automatically.
 
-    The script will intentionally error if the output directory specified by
-    '--output-dir' already exists, to prevent accidental overwrite.
-
-    Strandedness:
-    Illumina TruSeq stranded library prep is fr-firststrand.
-    This corresponds to 'ISR' for salmon quant.
+The script will intentionally error if the output directory specified by
+\fB--output-dir\fP already exists, to prevent accidental overwrite.
+.SS Strandedness
+Illumina TruSeq stranded library type is first read reverse.
+This corresponds to 'ISR' for salmon quant.
+Previously, this was \fB--library-type fr-firststrand\fP for TopHat.
 
                     | Paired-end | Single-end |
     ----------------|------------|------------|
@@ -47,21 +48,14 @@ details:
     fr-firststrand  | -l ISR     | -l SR      |
     fr-secondstrand | -l ISF     | -l SF      |
 
-    The '--libType A' option will allow Salmon to automatically infer the
-    library type. Check the running log for the strand information.
-
-internal variables:
-    bootstraps: ${bootstraps}
-    threads: ${threads}
-    r1_tail: ${r1_tail}
-    r2_tail: ${r2_tail}
-
-see also:
-    - salmon quant --help-reads
-    - https://salmon.readthedocs.io/en/latest/library_type.html
-    - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/salmon.py
-    - https://fishycat.netlify.com/en/2017/08/strandness_in_rnaseq/
-
-note:
-    Bash script.
-    Updated 2019-10-23.
+The \fB--libType A\fP argument will allow Salmon to automatically infer the library type.
+Check the run log for the strand information.
+.SH SEE ALSO
+.IP
+\(bu salmon quant --help-reads
+.IP
+\(bu https://salmon.readthedocs.io/en/latest/library_type.html
+.IP
+\(bu https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/
+.IP
+\(bu https://fishycat.netlify.com/en/2017/08/strandness_in_rnaseq/
