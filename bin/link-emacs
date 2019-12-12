@@ -11,7 +11,6 @@ name="$1"
 
 default_home=".emacs.d"
 default_dir="${HOME}/${default_home}"
-default_dir="${2:-$default_dir}"
 
 custom_home="${default_home}-${name}"
 custom_dir="${HOME}/${custom_home}"
