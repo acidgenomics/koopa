@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-12-03"
+koopa_date="2019-12-13"
 
 
 
@@ -23,7 +23,8 @@ bash="5.0.11"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.1.9"
+# Note that stable version currently still has alpha "a" tag in release.
+bcbio-nextgen="1.1.9a"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
@@ -40,7 +41,7 @@ clang="11.0.0"
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.7.12"
+conda="4.8.0"
 
 # https://www.gnu.org/software/coreutils/
 # https://ftp.gnu.org/gnu/coreutils/
