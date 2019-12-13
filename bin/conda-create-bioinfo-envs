@@ -68,5 +68,6 @@ conda-create-env squid                      # variation
 conda-create-env sra-tools                  # tools
 conda-create-env star                       # aligners
 conda-create-env star-fusion                # fusion
+conda-create-env vardict                    # variation
 
 conda env list
