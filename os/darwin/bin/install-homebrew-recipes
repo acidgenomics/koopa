@@ -14,6 +14,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 # Taps                                                                      {{{1
 # ==============================================================================
 
+brew tap mongodb/brew
 brew tap osgeo/osgeo4mac
 
 
@@ -50,7 +51,6 @@ casks=(
     keka
     kitty
     libreoffice
-    mongodb
     netnewswire
     onyx
     r
@@ -151,6 +151,7 @@ brews=(
     llvm@7
     mariadb-connector-c
     mas
+    mongodb-community
     neofetch
     neovim
     node
