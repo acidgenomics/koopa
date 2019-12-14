@@ -4,9 +4,10 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
+
 _koopa_assert_has_no_args "$@"
 
-if ! _koopa_assert_is_installed
+if ! _koopa_is_installed brew
 then
     _koopa_warning "Homebrew is not installed."
     exit 0
@@ -26,7 +27,13 @@ brew upgrade --force-bottle
 print
 
 _koopa_message "Updating casks."
-brew cask outdated | xargs brew cask reinstall
+# This step will error out if there are no casks to upgrade.
+# > brew cask outdated | xargs brew cask reinstall
+casks="$(brew cask outdated)"
+if [[ -n "$casks" ]]
+then
+    brew cask reinstall "${casks[@]}"
+fi
 
 _koopa_message "Running cleanup."
 brew cleanup -s
