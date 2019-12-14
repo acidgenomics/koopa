@@ -66,6 +66,7 @@ casks=(
     tunnelblick
     visual-studio-code
     vlc
+    wine-stable
     xld
 )
 for cask in "${casks[@]}"
