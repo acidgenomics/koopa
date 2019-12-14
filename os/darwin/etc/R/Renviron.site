@@ -1,5 +1,5 @@
 ## Shared R environment configuration.
-## Updated 2019-10-15 by Michael Steinbaugh.
+## Updated 2019-12-14 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 
@@ -45,7 +45,7 @@ PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 ## =============================================================================
 
 R_LIBS_SITE="${R_HOME}/site-library"
-R_LIBS_USER="~/R/%p-library/%v"
+R_LIBS_USER="~/Library/R/%v/library"
 
 
 

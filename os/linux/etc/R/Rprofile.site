@@ -385,12 +385,7 @@ if (.isInstalled("readr")) {
             ## Site library.
             !any(grepl(pattern = "site-library", x = libs)) &&
             ## User library.
-            !any(grepl(
-                pattern = file.path(
-                    paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver_short
-                ),
-                x = libs
-            ))
+            !any(grepl(pattern = r_ver_short, x = libs))
         ) {
             stop(sprintf(
                 "Failed to detect R %s library in '.libPaths()':\n%s",
