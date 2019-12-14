@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-12-13"
+koopa_date="2019-12-14"
 
 
 
@@ -203,9 +203,10 @@ tex="2019"
 tmux="3.0a"
 
 # https://github.com/vim/vim/releases
-# vim should only be updated every 50 releases on multiples of 50.
+# Homebrew updates every '*.0000' patch release on on multiples of 50.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.1.2350"
+# For cellar scripts, let's pin to the stable release instead.
+vim="8.2.0"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.7.1"
