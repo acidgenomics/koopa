@@ -22,11 +22,14 @@ brew tap osgeo/osgeo4mac
 # Casks                                                                     {{{1
 # ==============================================================================
 
-# Priority.
-brew cask install java osxfuse xquartz
+installed_casks="$(brew cask list)"
 
-# Recommended.
 casks=(
+    # Priority
+    java
+    osxfuse
+    xquartz
+    # Alphabetical
     1password
     adoptopenjdk  # igv
     alfred
@@ -68,14 +71,18 @@ casks=(
     vlc
     wine-stable
     xld
+    # Non-admin permission issues
+    carbon-copy-cloner
+    little-snitch
 )
 for cask in "${casks[@]}"
 do
+    if echo "$installed_casks" | grep -Eq "^${cask}$"
+    then
+        continue
+    fi
     brew cask install "$cask"
 done
-
-# These casks can have permission issues with non-admin accounts.
-brew cask install carbon-copy-cloner little-snitch
 
 # Gatekeeper issues.
 # > docker
@@ -88,6 +95,10 @@ casks=(
 )
 for cask in "${casks[@]}"
 do
+    if echo "$installed_casks" | grep -Eq "^${cask}$"
+    then
+        continue
+    fi
     brew cask install "$cask" --no-quarantine
 done
 
@@ -96,11 +107,6 @@ done
 # Brews                                                                     {{{1
 # ==============================================================================
 
-# Priority.
-brew install bash fish ksh tcsh zsh
-brew install openblas tcl-tk
-brew install flac lame
-
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
 # In particular, if we want to install umap-learn, this is now required.
 # Note that numba > llvmlite currently only works with LLVM 7.
@@ -108,8 +114,21 @@ brew install flac lame
 # Use osgeo-gdal instead of regular gdal.
 # This gets updated more regularly.
 
+installed_brews="$(brew list)"
+
 # Recommended.
 brews=(
+    # Priority
+    bash
+    fish
+    ksh
+    tcsh
+    zsh
+    openblas
+    tcl-tk
+    flac
+    lame
+    # Alphabetical
     autoconf
     autojump
     automake
@@ -186,11 +205,15 @@ brews=(
     wget
     youtube-dl
     zlib
+    # External
+    vitorgalvao/tiny-scripts/cask-repair
 )
 for brew in "${brews[@]}"
 do
+    name="$(basename "$brew")"
+    if echo "$installed_brews" | grep -Eq "^${name}$"
+    then
+        continue
+    fi
     brew install "$brew"
 done
-
-# External.
-brew install vitorgalvao/tiny-scripts/cask-repair
