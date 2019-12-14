@@ -73,6 +73,9 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
 ## Linux default:
 ## R_LIBS_USER="~/R/%p-library/%v"
 ##
+## macOS default (3.6+):
+## R_LIBS_USER="~/Library/R/%v/library"
+##
 ## Windows default:
 ## R_LIBS_USER="~/R/win-library/%v"
 ##
@@ -81,8 +84,8 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
 ## Set this per-user via `%p` and `%v` for platform and version.
 ## > R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
 
-R_LIBS_SITE="${R_HOME}/site-library"
-R_LIBS_USER="~/R/%p-library/%v"
+## > R_LIBS_SITE="${R_HOME}/site-library"
+## > R_LIBS_USER="~/R/%p-library/%v"
 
 
 
