@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-12-14"
+koopa_date="2019-12-16"
 
 
 
@@ -160,7 +160,7 @@ python="3.8.0"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-3/
-r="3.6.1"
+r="3.6.2"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
