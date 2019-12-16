@@ -22,6 +22,7 @@ _koopa_link_r_etc() {                                                     # {{{1
     fi
     _koopa_message "Updating '${r_home}'."
     ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
+    return 0
 }
 
 _koopa_link_r_site_library() {                                            # {{{1
@@ -45,6 +46,14 @@ _koopa_link_r_site_library() {                                            # {{{1
     rm -frv "$lib_target"
     mkdir -pv "$lib_source"
     ln -fnsv "$lib_source" "$lib_target"
+    if _koopa_is_debian
+    then
+        local lib_local_target
+        lib_local_target="/usr/local/lib/R/site-library"
+        sudo rm -frv "$lib_local_target"
+        sudo ln -fnsv "$lib_source" "$lib_local_target"
+    fi
+    return 0
 }
 
 _koopa_make_build_string() {                                              # {{{1
