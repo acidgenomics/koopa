@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-12-11 by Michael Steinbaugh.
+## Updated 2019-12-14 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -344,7 +344,7 @@ if (.isInstalled("readr")) {
                 "", "usr", "local",
                 paste0("clang", clang_ver), "bin"
             )
-            stopifnot(identical(
+            if (!identical(
                 x = Sys.which(c("clang", "clang++", "gfortran")),
                 y = c(
                     "clang"    = file.path(clang_bin_dir, "clang"),
@@ -354,7 +354,13 @@ if (.isInstalled("readr")) {
                                      "gfortran", "bin", "gfortran"
                                  )
                 )
-            ))
+            )) {
+                stop(
+                    "Install clang and gfortran from CRAN ",
+                    "Development Tools and Libraries.\n",
+                    "https://cran.r-project.org/bin/macosx/tools/"
+                )
+            }
             rm(clang_bin_dir, clang_ver)
         } else if (Sys.info()[["sysname"]] == "Linux") {
             stopifnot(identical(
@@ -379,12 +385,7 @@ if (.isInstalled("readr")) {
             ## Site library.
             !any(grepl(pattern = "site-library", x = libs)) &&
             ## User library.
-            !any(grepl(
-                pattern = file.path(
-                    paste0(Sys.getenv("R_PLATFORM"), "-library"), r_ver_short
-                ),
-                x = libs
-            ))
+            !any(grepl(pattern = r_ver_short, x = libs))
         ) {
             stop(sprintf(
                 "Failed to detect R %s library in '.libPaths()':\n%s",

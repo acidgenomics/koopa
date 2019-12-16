@@ -137,7 +137,7 @@ _koopa_set_permissions() {                                                # {{{3
 _koopa_update_ldconfig() {                                                # {{{3
     # """
     # Update dynamic linker (LD) configuration.
-    # Updated 2019-10-27.
+    # Updated 2019-12-16.
     # """
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -145,12 +145,11 @@ _koopa_update_ldconfig() {                                                # {{{3
     _koopa_assert_is_installed ldconfig
     local os_id
     os_id="$(_koopa_os_id)"
+    local prefix
+    prefix="$(_koopa_prefix)"
     local conf_source
-    conf_source="${KOOPA_PREFIX}/os/${os_id}/etc/ld.so.conf.d"
-    if [ ! -d "$conf_source" ]
-    then
-        _koopa_stop "Source files missing: '${conf_source}'."
-    fi
+    conf_source="${prefix}/os/${os_id}/etc/ld.so.conf.d"
+    [ -d "$conf_source" ] || return 0
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816

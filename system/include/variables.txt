@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-12-03"
+koopa_date="2019-12-16"
 
 
 
@@ -23,7 +23,8 @@ bash="5.0.11"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-bcbio-nextgen="1.1.9"
+# Note that stable version currently still has alpha "a" tag in release.
+bcbio-nextgen="1.1.9a"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
@@ -40,7 +41,7 @@ clang="11.0.0"
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.7.12"
+conda="4.8.0"
 
 # https://www.gnu.org/software/coreutils/
 # https://ftp.gnu.org/gnu/coreutils/
@@ -159,7 +160,7 @@ python="3.8.0"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-3/
-r="3.6.1"
+r="3.6.2"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
@@ -202,9 +203,10 @@ tex="2019"
 tmux="3.0a"
 
 # https://github.com/vim/vim/releases
-# vim should only be updated every 50 releases on multiples of 50.
+# Homebrew updates every '*.0000' patch release on on multiples of 50.
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-vim="8.1.2350"
+# For cellar scripts, let's pin to the stable release instead.
+vim="8.2.0"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.7.1"
