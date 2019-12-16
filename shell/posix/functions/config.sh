@@ -13,6 +13,8 @@ _koopa_link_r_etc() {                                                     # {{{1
     r_home="$(_koopa_r_home)"
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
+    local os_id
+    os_id="$(_koopa_os_id)"
     local r_etc_source
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     if [ ! -d "$r_etc_source" ]
