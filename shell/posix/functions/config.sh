@@ -1,7 +1,53 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_make_build_string() {                                              # {{{3
+_koopa_link_r_etc() {                                                     # {{{1
+    # """
+    # Link R config files inside 'etc/'.
+    # Updated 2019-12-16.
+    #
+    # Applies to 'Renviron.site' and 'Rprofile.site' files.
+    # Note that on macOS, we don't want to copy the 'Makevars' file here.
+    # """
+    local r_home
+    r_home="$(_koopa_r_home)"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local r_etc_source
+    r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
+    if [ ! -d "$r_etc_source" ]
+    then
+        _koopa_note "Source files missing: '${r_etc_source}'."
+        return 0
+    fi
+    _koopa_message "Updating '${r_home}'."
+    ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
+}
+
+_koopa_link_r_site_library() {                                            # {{{1
+    # """
+    # Link R site library.
+    # Updated 2019-12-16.
+    # """
+    local r_home
+    r_home="$(_koopa_r_home)"
+    local version
+    version="$(_koopa_current_version r)"
+    local minor_version
+    minor_version="$(_koopa_minor_version "$version")"
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
+    _koopa_message "Creating site library at '${r_home}'."
+    local lib_source
+    lib_source="${app_prefix}/r/${minor_version}/site-library"
+    local lib_target
+    lib_target="${r_home}/site-library"
+    rm -frv "$lib_target"
+    mkdir -pv "$lib_source"
+    ln -fnsv "$lib_source" "$lib_target"
+}
+
+_koopa_make_build_string() {                                              # {{{1
     # """
     # OS build string for 'make' configuration.
     # Updated 2019-09-27.
@@ -34,7 +80,7 @@ _koopa_make_build_string() {                                              # {{{3
     echo "$string"
 }
 
-_koopa_prefix_chgrp() {                                                   # {{{3
+_koopa_prefix_chgrp() {                                                   # {{{1
     # """
     # Fix the group permissions on the target build prefix.
     # Updated 2019-10-22.
@@ -53,7 +99,7 @@ _koopa_prefix_chgrp() {                                                   # {{{3
     fi
 }
 
-_koopa_prefix_mkdir() {                                                   # {{{3
+_koopa_prefix_mkdir() {                                                   # {{{1
     # """
     # Create directory in target build prefix.
     # Updated 2019-10-22.
@@ -73,7 +119,7 @@ _koopa_prefix_mkdir() {                                                   # {{{3
     _koopa_prefix_chgrp "$path"
 }
 
-_koopa_prepare_make_prefix() {
+_koopa_prepare_make_prefix() {                                            # {{{1
     # """
     # Ensure the make prefix is writable.
     # Updated 2019-11-25.
@@ -92,7 +138,7 @@ _koopa_prepare_make_prefix() {
     return 0
 }
 
-_koopa_reset_prefix_permissions() {
+_koopa_reset_prefix_permissions() {                                       # {{{1
     # """
     # Reset prefix permissions.
     # Updated 2019-11-26.
@@ -113,7 +159,7 @@ _koopa_reset_prefix_permissions() {
     return 0
 }
 
-_koopa_set_permissions() {                                                # {{{3
+_koopa_set_permissions() {                                                # {{{1
     # """
     # Set permissions on a koopa-related directory.
     # Updated 2019-11-26.
@@ -134,7 +180,7 @@ _koopa_set_permissions() {                                                # {{{3
     return 0
 }
 
-_koopa_update_ldconfig() {                                                # {{{3
+_koopa_update_ldconfig() {                                                # {{{1
     # """
     # Update dynamic linker (LD) configuration.
     # Updated 2019-12-16.
@@ -164,7 +210,7 @@ _koopa_update_ldconfig() {                                                # {{{3
     sudo ldconfig
 }
 
-_koopa_update_lmod_config() {                                             # {{{3
+_koopa_update_lmod_config() {                                             # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
     # Updated 2019-11-26.
@@ -180,7 +226,7 @@ _koopa_update_lmod_config() {                                             # {{{3
     return 0
 }
 
-_koopa_update_profile() {                                                 # {{{3
+_koopa_update_profile() {                                                 # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # Updated 2019-11-05.
@@ -198,38 +244,32 @@ _koopa_update_profile() {                                                 # {{{3
     return 0
 }
 
-_koopa_update_r_config() {                                                # {{{3
+_koopa_update_r_config() {                                                # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # Updated 2019-10-22.
+    # Updated 2019-12-16.
     # """
     _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     local r_home
     r_home="$(_koopa_r_home)"
-    # > local version
-    # > version="$( \
-    # >     R --version | \
-    # >     head -n 1 | \
-    # >     cut -d ' ' -f 3 | \
-    # >     grep -Eo "^[0-9]+\.[0-9]+"
-    # > )"
-    _koopa_message "Updating '${r_home}'."
-    local os_id
-    os_id="$(_koopa_os_id)"
-    local r_etc_source
-    r_etc_source="${KOOPA_PREFIX}/os/${os_id}/etc/R"
-    if [ ! -d "$r_etc_source" ]
-    then
-        _koopa_stop "Source files missing: '${r_etc_source}'."
-    fi
-    sudo ln -fnsv "${r_etc_source}/"* "${r_home}/etc/".
-    _koopa_message "Creating site library."
-    site_library="${r_home}/site-library"
-    sudo mkdir -pv "$site_library"
+    _koopa_link_r_etc
+    _koopa_link_r_site_library
     _koopa_set_permissions "$r_home"
     _koopa_r_javareconf
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 _koopa_update_r_config_macos() {                                          # {{{3
     # """
