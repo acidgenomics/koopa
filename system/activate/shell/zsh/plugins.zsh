@@ -6,15 +6,13 @@
 ZSH_PLUGINS_DIR="${KOOPA_PREFIX}/dotfiles/shell/zsh/plugins"
 [[ -d "$ZSH_PLUGINS_DIR" ]] || return 0
 
-# FIXME This is now popping up:
+# This error is now popping up:
 # _zsh_autosuggest_highlight_apply:3: POSTDISPLAY: parameter not set
 
-if [[ -d "${ZSH_PLUGINS_DIR}/zsh-autosuggestions" ]]
-then
-    source "${ZSH_PLUGINS_DIR}/zsh-autosuggestions/zsh-autosuggestions.zsh"
-fi
-
-unset -v ZSH_PLUGINS_DIR
+# > if [[ -d "${ZSH_PLUGINS_DIR}/zsh-autosuggestions" ]]
+# > then
+# >     source "${ZSH_PLUGINS_DIR}/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# > fi
 
 # Set the autosuggest text color.
 # Define using xterm-256 color code.
@@ -25,3 +23,5 @@ unset -v ZSH_PLUGINS_DIR
 #
 # 'fg=240' also works well with Dracula theme.
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=005"
+
+unset -v ZSH_PLUGINS_DIR
