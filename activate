@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-12-12.
+    Updated 2019-12-17.
 EOF
 }
 
@@ -287,6 +287,13 @@ fi
 
 [ "$force" -eq 0 ] && [ "$interactive" -eq 0 ] && return 0
 [ "$force" -eq 0 ] && [ "$subshell" -eq 1 ] && return 0
+
+# From default Debian bashrc:
+# If not running interactively, don't do anything.
+# > case $- in
+# >     *i*) ;;
+# >       *) return;;
+# > esac
 
 
 
