@@ -60,6 +60,11 @@ unset -v dotfiles
 # Core                                                                      {{{1
 # ==============================================================================
 
+# This is from Debian bashrc:
+# Add an 'alert' alias for long running commands.
+# Use like so: sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
 alias df='df -H'
 alias df2='df --portability --print-type --si | sort'
 alias du='du -sh'
@@ -85,6 +90,11 @@ alias reload='exec "$SHELL" -l'
 # > alias ....='cd ../../../'
 # > alias .....='cd ../../../../'
 # > alias ......='cd ../../../../../'
+
+# From Debian bashrc:
+# > alias l='ls -CF'
+# > alias la='ls -A'
+# > alias ll='ls -alF'
 
 alias l.='ls -Fd .*'
 alias l1='ls -1p'
@@ -190,10 +200,27 @@ fi
 
 
 
+# GCC                                                                       {{{1
+# ==============================================================================
+
+# Colored GCC warnings and errors.
+if [ -z "${GCC_COLORS:-}" ]
+then
+    # SC1004: This backslash+linefeed is literal. Break outside single quotes if
+    # you just want to break the line.
+    export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:'\
+'locus=01:quote=01'
+fi
+
+
+
 # Git                                                                       {{{1
 # ==============================================================================
 
-export GIT_MERGE_AUTOEDIT="no"
+if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
+then
+    export GIT_MERGE_AUTOEDIT="no"
+fi
 
 
 
