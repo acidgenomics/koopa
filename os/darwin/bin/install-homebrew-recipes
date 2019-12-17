@@ -41,6 +41,7 @@ casks=(
     bibdesk
     coconutbattery
     coda
+    deluge
     emacs
     fiji
     firefox
@@ -53,17 +54,23 @@ casks=(
     igv
     iterm2
     keka
+    kid3
     kitty
     libreoffice
+    makemkv
+    museeks
     netnewswire
     onyx
+    photosweeper-x
     r
     safari-technology-preview
+    scrivener
     skype
     spillo
     sublime-text
     superduper
     textmate
+    tiny-player
     torbrowser
     tower
     transmit
@@ -177,12 +184,14 @@ brews=(
     neovim
     node
     open-mpi
+    openblas
     osgeo-gdal
     pandoc
     pandoc-citeproc
     pandoc-crossref
     parallel
     pkg-config
+    podofo
     protobuf
     pyenv
     python
