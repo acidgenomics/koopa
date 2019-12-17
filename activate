@@ -175,8 +175,7 @@ if [ -n "${KOOPA_FORCE:-}" ] ||
     [ -n "${RSTUDIO:-}" ] ||
     [ -n "${SLURM_JOB_ID:-}" ] ||
     [ -n "${TMUX:-}" ] ||
-    [ -n "${VIM_TERMINAL:-}" ] ||
-    [ "${SHLVL:-}" -gt 1 ]
+    [ -n "${VIM_TERMINAL:-}" ]
 then
     force=1
 fi
@@ -193,6 +192,8 @@ esac
 
 # Subshell                                                                  {{{2
 # ------------------------------------------------------------------------------
+
+# > [ "${SHLVL:-}" -gt 1 ]
 
 if [ -n "${KOOPA_PREFIX:-}" ] && [ "$force" -eq 0 ]
 then
