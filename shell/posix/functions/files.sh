@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_basename_sans_ext() {                                              # {{{3
+_koopa_basename_sans_ext() {                                              # {{{1
     # """
     # Extract the file basename without extension.
     # Updated 2019-10-08.
@@ -27,7 +27,7 @@ _koopa_basename_sans_ext() {                                              # {{{3
     echo "$x"
 }
 
-_koopa_basename_sans_ext2() {                                             # {{{3
+_koopa_basename_sans_ext2() {                                             # {{{1
     # """
     # Extract the file basename prior to any dots in file name.
     # Updated 2019-10-08.
@@ -48,7 +48,7 @@ _koopa_basename_sans_ext2() {                                             # {{{3
     basename "$x" | cut -d '.' -f 1
 }
 
-_koopa_delete_dotfile() {                                                 # {{{3
+_koopa_delete_dotfile() {                                                 # {{{1
     # """
     # Delete a dot file.
     # Updated 2019-06-27.
@@ -67,7 +67,7 @@ _koopa_delete_dotfile() {                                                 # {{{3
     fi
 }
 
-_koopa_download() {                                                       # {{{3
+_koopa_download() {                                                       # {{{1
     # """
     # Download a file.
     # Updated 2019-11-04.
@@ -89,7 +89,7 @@ _koopa_download() {                                                       # {{{3
     curl -L -o "$file" "$url"
 }
 
-_koopa_ensure_newline_at_end_of_file() {                                  # {{{3
+_koopa_ensure_newline_at_end_of_file() {                                  # {{{1
     # """
     # Ensure output CSV contains trailing line break.
     # Updated 2019-10-11.
@@ -106,7 +106,7 @@ _koopa_ensure_newline_at_end_of_file() {                                  # {{{3
     [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
 }
 
-_koopa_extract() {                                                        # {{{3
+_koopa_extract() {                                                        # {{{1
     # """
     # Extract compressed files automatically.
     # Updated 2019-10-27.
@@ -166,7 +166,7 @@ _koopa_extract() {                                                        # {{{3
    esac
 }
 
-_koopa_file_ext() {                                                       # {{{3
+_koopa_file_ext() {                                                       # {{{1
     # """
     # Extract the file extension from input.
     # Updated 2019-10-08.
@@ -184,7 +184,7 @@ _koopa_file_ext() {                                                       # {{{3
     printf "%s\n" "${1##*.}"
 }
 
-_koopa_file_ext2() {                                                      # {{{3
+_koopa_file_ext2() {                                                      # {{{1
     # """
     # Extract the file extension after any dots in the file name.
     # Updated 2019-10-08.
@@ -201,7 +201,7 @@ _koopa_file_ext2() {                                                      # {{{3
     echo "$1" | cut -d '.' -f 2-
 }
 
-_koopa_find_broken_symlinks() {                                           # {{{3
+_koopa_find_broken_symlinks() {                                           # {{{1
     # """
     # Find broken symlinks.
     # Updated 2019-11-16.
@@ -219,7 +219,7 @@ _koopa_find_broken_symlinks() {                                           # {{{3
     fi
 }
 
-_koopa_find_dotfiles() {                                                  # {{{3
+_koopa_find_dotfiles() {                                                  # {{{1
     # """
     # Find dotfiles by type.
     # Updated 2019-10-22.
@@ -240,7 +240,7 @@ _koopa_find_dotfiles() {                                                  # {{{3
         | awk '{print "  ",$0}'
 }
 
-_koopa_find_text() {                                                      # {{{3
+_koopa_find_text() {                                                      # {{{1
     # """
     # Find text in any file.
     # Updated 2019-09-05.
@@ -253,7 +253,7 @@ _koopa_find_text() {                                                      # {{{3
     find . -name "$2" -exec grep -il "$1" {} \;;
 }
 
-_koopa_github_latest_release() {                                          # {{{3
+_koopa_github_latest_release() {                                          # {{{1
     # """
     # Get the latest release version from GitHub.
     # Updated 2019-10-24.
@@ -266,7 +266,7 @@ _koopa_github_latest_release() {                                          # {{{3
         | sed 's/^v//'
 }
 
-_koopa_line_count() {                                                     # {{{3
+_koopa_line_count() {                                                     # {{{1
     # """
     # Return the number of lines in a file.
     # Updated 2019-10-27.
@@ -278,7 +278,7 @@ _koopa_line_count() {                                                     # {{{3
         | cut -d ' ' -f 1
 }
 
-_koopa_rsync_flags() {                                                    # {{{3
+_koopa_rsync_flags() {                                                    # {{{1
     # """
     # rsync flags.
     # Updated 2019-10-28.
@@ -312,7 +312,7 @@ _koopa_rsync_flags() {                                                    # {{{3
     echo "--archive --delete-before --human-readable --progress"
 }
 
-_koopa_stat_access_human() {                                              # {{{3
+_koopa_stat_access_human() {                                              # {{{1
     # """
     # Get the current access permissions in human readable form.
     # Updated 2019-10-31.
@@ -320,7 +320,7 @@ _koopa_stat_access_human() {                                              # {{{3
     stat -c '%A' "$1"
 }
 
-_koopa_stat_access_octal() {                                              # {{{3
+_koopa_stat_access_octal() {                                              # {{{1
     # """
     # Get the current access permissions in octal form.
     # Updated 2019-10-31.
@@ -328,7 +328,7 @@ _koopa_stat_access_octal() {                                              # {{{3
     stat -c '%a' "$1"
 }
 
-_koopa_stat_group() {                                                     # {{{3
+_koopa_stat_group() {                                                     # {{{1
     # """
     # Get the current group of a file or directory.
     # Updated 2019-10-31.
@@ -336,7 +336,7 @@ _koopa_stat_group() {                                                     # {{{3
     stat -c '%G' "$1"
 }
 
-_koopa_stat_user() {                                                      # {{{3
+_koopa_stat_user() {                                                      # {{{1
     # """
     # Get the current user (owner) of a file or directory.
     # Updated 2019-10-31.

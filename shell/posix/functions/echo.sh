@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_echo_ansi() {                                                      # {{{3
+_koopa_echo_ansi() {                                                      # {{{1
     # """
     # Print a colored line in console.
     # Updated 2019-10-23.
@@ -33,71 +33,71 @@ _koopa_echo_ansi() {                                                      # {{{3
     echo -e "${color}${string}${nocolor}"
 }
 
-_koopa_echo_black() {                                                     # {{{3
+_koopa_echo_black() {                                                     # {{{1
     _koopa_echo_ansi "0;30" "$1"
 }
 
-_koopa_echo_black_bold() {                                                # {{{3
+_koopa_echo_black_bold() {                                                # {{{1
     _koopa_echo_ansi "1;30" "$1"
 }
 
-_koopa_echo_blue() {                                                      # {{{3
+_koopa_echo_blue() {                                                      # {{{1
     _koopa_echo_ansi "0;34" "$1"
 }
 
-_koopa_echo_blue_bold() {                                                 # {{{3
+_koopa_echo_blue_bold() {                                                 # {{{1
     _koopa_echo_ansi "1;34" "$1"
 }
 
-_koopa_echo_cyan() {                                                      # {{{3
+_koopa_echo_cyan() {                                                      # {{{1
     _koopa_echo_ansi "0;36" "$1"
 }
 
-_koopa_echo_cyan_bold() {                                                 # {{{3
+_koopa_echo_cyan_bold() {                                                 # {{{1
     _koopa_echo_ansi "1;36" "$1"
 }
 
-_koopa_echo_green() {                                                     # {{{3
+_koopa_echo_green() {                                                     # {{{1
     _koopa_echo_ansi "0;32" "$1"
 }
 
-_koopa_echo_green_bold() {                                                # {{{3
+_koopa_echo_green_bold() {                                                # {{{1
     _koopa_echo_ansi "1;32" "$1"
 }
 
-_koopa_echo_magenta() {                                                   # {{{3
+_koopa_echo_magenta() {                                                   # {{{1
     _koopa_echo_ansi "0;35" "$1"
 }
 
-_koopa_echo_magenta_bold() {                                              # {{{3
+_koopa_echo_magenta_bold() {                                              # {{{1
     _koopa_echo_ansi "1;35" "$1"
 }
 
-_koopa_echo_red() {                                                       # {{{3
+_koopa_echo_red() {                                                       # {{{1
     _koopa_echo_ansi "0;31" "$1"
 }
 
-_koopa_echo_red_bold() {                                                  # {{{3
+_koopa_echo_red_bold() {                                                  # {{{1
     _koopa_echo_ansi "1;31" "$1"
 }
 
-_koopa_echo_yellow() {                                                    # {{{3
+_koopa_echo_yellow() {                                                    # {{{1
     _koopa_echo_ansi "0;33" "$1"
 }
 
-_koopa_echo_yellow_bold() {                                               # {{{3
+_koopa_echo_yellow_bold() {                                               # {{{1
     _koopa_echo_ansi "1;33" "$1"
 }
 
-_koopa_echo_white() {                                                     # {{{3
+_koopa_echo_white() {                                                     # {{{1
     _koopa_echo_ansi "0;37" "$1"
 }
 
-_koopa_echo_white_bold() {                                                # {{{3
+_koopa_echo_white_bold() {                                                # {{{1
     _koopa_echo_ansi "1;37" "$1"
 }
 
-_koopa_message() {                                                        # {{{3
+_koopa_message() {                                                        # {{{1
     # """
     # General message.
     # Updated 2019-10-23.
@@ -105,7 +105,7 @@ _koopa_message() {                                                        # {{{3
     _koopa_echo_cyan_bold "$1"
 }
 
-_koopa_note() {                                                           # {{{3
+_koopa_note() {                                                           # {{{1
     # """
     # General note message.
     # Updated 2019-10-23.
@@ -113,7 +113,7 @@ _koopa_note() {                                                           # {{{3
     _koopa_echo_magenta_bold "Note: ${1}"
 }
 
-_koopa_status_fail() {                                                    # {{{3
+_koopa_status_fail() {                                                    # {{{1
     # """
     # Status FAIL.
     # Updated 2019-10-23.
@@ -121,7 +121,7 @@ _koopa_status_fail() {                                                    # {{{3
     _koopa_echo_red "  [FAIL] ${1}"
 }
 
-_koopa_status_note() {                                                    # {{{3
+_koopa_status_note() {                                                    # {{{1
     # """
     # Status NOTE.
     # Updated 2019-10-23.
@@ -129,7 +129,7 @@ _koopa_status_note() {                                                    # {{{3
     _koopa_echo_yellow "  [NOTE] ${1}"
 }
 
-_koopa_status_ok() {                                                      # {{{3
+_koopa_status_ok() {                                                      # {{{1
     # """
     # Status OK.
     # Updated 2019-10-23.
@@ -137,7 +137,7 @@ _koopa_status_ok() {                                                      # {{{3
     _koopa_echo_green "    [OK] ${1}"
 }
 
-_koopa_stop() {                                                           # {{{3
+_koopa_stop() {                                                           # {{{1
     # """
     # Stop with an error message.
     # Updated 2019-10-23.
@@ -146,7 +146,7 @@ _koopa_stop() {                                                           # {{{3
     exit 1
 }
 
-_koopa_success() {                                                        # {{{3
+_koopa_success() {                                                        # {{{1
     # """
     # Success message.
     # Updated 2019-10-23.
@@ -154,7 +154,7 @@ _koopa_success() {                                                        # {{{3
     _koopa_echo_green_bold "$1"
 }
 
-_koopa_warning() {                                                        # {{{3
+_koopa_warning() {                                                        # {{{1
     # """
     # Warning message.
     # Updated 2019-10-23.

@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_assert_has_args() {                                                # {{{3
+_koopa_assert_has_args() {                                                # {{{1
     # """
     # Assert that the user has passed required arguments to a script.
     # Updated 2019-10-23.
@@ -15,7 +15,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_no_args() {                                             # {{{3
+_koopa_assert_has_no_args() {                                             # {{{1
     # """
     # Assert that the user has not passed any arguments to a script.
     # Updated 2019-10-23.
@@ -29,7 +29,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_file_ext() {                                            # {{{3
+_koopa_assert_has_file_ext() {                                            # {{{1
     # """
     # Assert that input contains a file extension.
     # Updated 2019-10-23.
@@ -41,7 +41,7 @@ _koopa_assert_has_file_ext() {                                            # {{{3
     return 0
 }
 
-_koopa_assert_has_no_envs() {                                             # {{{3
+_koopa_assert_has_no_envs() {                                             # {{{1
     # """
     # Assert that conda and Python virtual environments aren't active.
     # Updated 2019-10-23.
@@ -61,7 +61,7 @@ Deactivate venv prior to conda, otherwise conda python may be left in path."
     return 0
 }
 
-_koopa_assert_has_sudo() {                                                # {{{3
+_koopa_assert_has_sudo() {                                                # {{{1
     # """
     # Assert that current user has sudo (admin) permissions.
     # Updated 2019-10-23.
@@ -73,7 +73,7 @@ _koopa_assert_has_sudo() {                                                # {{{3
     return 0
 }
 
-_koopa_assert_is_conda_active() {                                         # {{{3
+_koopa_assert_is_conda_active() {                                         # {{{1
     # """
     # Assert that a Conda environment is active.
     # Updated 2019-10-23.
@@ -85,7 +85,7 @@ _koopa_assert_is_conda_active() {                                         # {{{3
     return 0
 }
 
-_koopa_assert_is_darwin() {                                               # {{{3
+_koopa_assert_is_darwin() {                                               # {{{1
     # """
     # Assert that platform is Darwin (macOS).
     # Updated 2019-10-23.
@@ -97,7 +97,7 @@ _koopa_assert_is_darwin() {                                               # {{{3
     return 0
 }
 
-_koopa_assert_is_debian() {                                               # {{{3
+_koopa_assert_is_debian() {                                               # {{{1
     # """
     # Assert that platform is Debian.
     # Updated 2019-10-25.
@@ -109,7 +109,7 @@ _koopa_assert_is_debian() {                                               # {{{3
     return 0
 }
 
-_koopa_assert_is_dir() {                                                  # {{{3
+_koopa_assert_is_dir() {                                                  # {{{1
     # """
     # Assert that input is a directory.
     # Updated 2019-10-23.
@@ -121,7 +121,7 @@ _koopa_assert_is_dir() {                                                  # {{{3
     return 0
 }
 
-_koopa_assert_is_executable() {                                           # {{{3
+_koopa_assert_is_executable() {                                           # {{{1
     # """
     # Assert that input is executable.
     # Updated 2019-10-23.
@@ -133,7 +133,7 @@ _koopa_assert_is_executable() {                                           # {{{3
     return 0
 }
 
-_koopa_assert_is_existing() {                                             # {{{3
+_koopa_assert_is_existing() {                                             # {{{1
     # """
     # Assert that input exists on disk.
     # Updated 2019-10-23.
@@ -147,7 +147,7 @@ _koopa_assert_is_existing() {                                             # {{{3
     return 0
 }
 
-_koopa_assert_is_fedora() {                                               # {{{3
+_koopa_assert_is_fedora() {                                               # {{{1
     # """
     # Assert that platform is Fedora.
     # Updated 2019-10-25.
@@ -159,7 +159,7 @@ _koopa_assert_is_fedora() {                                               # {{{3
     return 0
 }
 
-_koopa_assert_is_file() {                                                 # {{{3
+_koopa_assert_is_file() {                                                 # {{{1
     # """
     # Assert that input is a file.
     # Updated 2019-09-12.
@@ -171,7 +171,7 @@ _koopa_assert_is_file() {                                                 # {{{3
     return 0
 }
 
-_koopa_assert_is_file_type() {                                            # {{{3
+_koopa_assert_is_file_type() {                                            # {{{1
     # """
     # Assert that input matches a specified file type.
     # Updated 2019-10-23.
@@ -182,7 +182,7 @@ _koopa_assert_is_file_type() {                                            # {{{3
     _koopa_assert_is_matching_regex "$1" "\.${2}\$"
 }
 
-_koopa_assert_is_git() {                                                  # {{{3
+_koopa_assert_is_git() {                                                  # {{{1
     # """
     # Assert that current directory is a git repo.
     # Updated 2019-10-23.
@@ -194,7 +194,7 @@ _koopa_assert_is_git() {                                                  # {{{3
     return 0
 }
 
-_koopa_assert_is_installed() {                                            # {{{3
+_koopa_assert_is_installed() {                                            # {{{1
     # """
     # Assert that programs are installed.
     # Updated 2019-10-23.
@@ -212,7 +212,7 @@ _koopa_assert_is_installed() {                                            # {{{3
     return 0
 }
 
-_koopa_assert_is_linux() {                                                # {{{3
+_koopa_assert_is_linux() {                                                # {{{1
     # """
     # Assert that platform is Linux.
     # Updated 2019-10-23.
@@ -224,7 +224,7 @@ _koopa_assert_is_linux() {                                                # {{{3
     return 0
 }
 
-_koopa_assert_is_non_existing() {                                         # {{{3
+_koopa_assert_is_non_existing() {                                         # {{{1
     # """
     # Assert that input does not exist on disk.
     # Updated 2019-10-23.
@@ -236,7 +236,7 @@ _koopa_assert_is_non_existing() {                                         # {{{3
     return 0
 }
 
-_koopa_assert_is_not_dir() {                                              # {{{3
+_koopa_assert_is_not_dir() {                                              # {{{1
     # """
     # Assert that input is not a directory.
     # Updated 2019-10-23.
@@ -248,7 +248,7 @@ _koopa_assert_is_not_dir() {                                              # {{{3
     return 0
 }
 
-_koopa_assert_is_not_file() {                                             # {{{3
+_koopa_assert_is_not_file() {                                             # {{{1
     # """
     # Assert that input is not a file.
     # Updated 2019-10-23.
@@ -260,7 +260,7 @@ _koopa_assert_is_not_file() {                                             # {{{3
     return 0
 }
 
-_koopa_assert_is_not_installed() {                                        # {{{3
+_koopa_assert_is_not_installed() {                                        # {{{1
     # """
     # Assert that programs are not installed.
     # Updated 2019-10-23.
@@ -287,7 +287,7 @@ _koopa_assert_is_not_root() {                                             # {{{1
     return 0
 }
 
-_koopa_assert_is_not_symlink() {                                          # {{{3
+_koopa_assert_is_not_symlink() {                                          # {{{1
     # """
     # Assert that input is not a symbolic link.
     # Updated 2019-10-23.
@@ -299,7 +299,7 @@ _koopa_assert_is_not_symlink() {                                          # {{{3
     return 0
 }
 
-_koopa_is_powerful() {                                                    # {{{3
+_koopa_is_powerful() {                                                    # {{{1
     # """
     # Is the current machine powerful?
     # Updated 2019-11-22.
@@ -314,7 +314,7 @@ _koopa_is_powerful() {                                                    # {{{3
     fi
 }
 
-_koopa_assert_is_r_package_installed() {                                  # {{{3
+_koopa_assert_is_r_package_installed() {                                  # {{{1
     # """
     # Assert that a specific R package is installed.
     # Updated 2019-10-23.
@@ -326,7 +326,7 @@ _koopa_assert_is_r_package_installed() {                                  # {{{3
     return 0
 }
 
-_koopa_assert_is_readable() {                                             # {{{3
+_koopa_assert_is_readable() {                                             # {{{1
     # """
     # Assert that input is readable.
     # Updated 2019-10-23.
@@ -350,7 +350,7 @@ _koopa_assert_is_root() {                                                 # {{{1
     return 0
 }
 
-_koopa_assert_is_symlink() {                                              # {{{3
+_koopa_assert_is_symlink() {                                              # {{{1
     # """
     # Assert that input is a symbolic link.
     # Updated 2019-10-23.
@@ -362,7 +362,7 @@ _koopa_assert_is_symlink() {                                              # {{{3
     return 0
 }
 
-_koopa_assert_is_venv_active() {                                          # {{{3
+_koopa_assert_is_venv_active() {                                          # {{{1
     # """
     # Assert that a Python virtual environment is active.
     # Updated 2019-10-23.
@@ -375,7 +375,7 @@ _koopa_assert_is_venv_active() {                                          # {{{3
     return 0
 }
 
-_koopa_assert_is_writable() {                                             # {{{3
+_koopa_assert_is_writable() {                                             # {{{1
     # """
     # Assert that input is writable.
     # Updated 2019-10-23.
@@ -387,7 +387,7 @@ _koopa_assert_is_writable() {                                             # {{{3
     return 0
 }
 
-_koopa_assert_is_matching_fixed() {                                       # {{{3
+_koopa_assert_is_matching_fixed() {                                       # {{{1
     # """
     # Assert that input matches a fixed pattern.
     # Updated 2019-10-23.
@@ -399,7 +399,7 @@ _koopa_assert_is_matching_fixed() {                                       # {{{3
     return 0
 }
 
-_koopa_assert_is_matching_regex() {                                       # {{{3
+_koopa_assert_is_matching_regex() {                                       # {{{1
     # """
     # Assert that input matches a regular expression pattern.
     # Updated 2019-10-23.
@@ -411,7 +411,7 @@ _koopa_assert_is_matching_regex() {                                       # {{{3
     return 0
 }
 
-_koopa_check_azure() {                                                    # {{{3
+_koopa_check_azure() {                                                    # {{{1
     # """
     # Check Azure VM integrity.
     # Updated 2019-10-31.
@@ -427,7 +427,7 @@ _koopa_check_azure() {                                                    # {{{3
     return 0
 }
 
-_koopa_check_access_human() {                                             # {{{3
+_koopa_check_access_human() {                                             # {{{1
     # """
     # Check if file or directory has expected human readable access.
     # Updated 2019-10-31.
@@ -446,7 +446,7 @@ _koopa_check_access_human() {                                             # {{{3
     return 0
 }
 
-_koopa_check_access_octal() {                                             # {{{3
+_koopa_check_access_octal() {                                             # {{{1
     # """
     # Check if file or directory has expected octal access.
     # Updated 2019-10-31.
@@ -465,7 +465,7 @@ _koopa_check_access_octal() {                                             # {{{3
     return 0
 }
 
-_koopa_check_group() {                                                    # {{{3
+_koopa_check_group() {                                                    # {{{1
     # """
     # Check if file or directory has an expected group.
     # Updated 2019-10-31.
@@ -485,7 +485,7 @@ _koopa_check_group() {                                                    # {{{3
     return 0
 }
 
-_koopa_check_mount() {                                                    # {{{3
+_koopa_check_mount() {                                                    # {{{1
     # """
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
@@ -499,7 +499,7 @@ _koopa_check_mount() {                                                    # {{{3
     return 0
 }
 
-_koopa_check_user() {                                                     # {{{3
+_koopa_check_user() {                                                     # {{{1
     # """
     # Check if file or directory has an expected user.
     # Updated 2019-10-31.
@@ -519,7 +519,7 @@ _koopa_check_user() {                                                     # {{{3
     return 0
 }
 
-_koopa_has_file_ext() {                                                   # {{{3
+_koopa_has_file_ext() {                                                   # {{{1
     # """
     # Does the input contain a file extension?
     # Updated 2019-10-08.
@@ -529,7 +529,7 @@ _koopa_has_file_ext() {                                                   # {{{3
     echo "$1" | grep -q "\."
 }
 
-_koopa_has_no_environments() {                                            # {{{3
+_koopa_has_no_environments() {                                            # {{{1
     # """
     # Detect activation of virtual environments.
     # Updated 2019-10-20.
@@ -539,7 +539,7 @@ _koopa_has_no_environments() {                                            # {{{3
     return 0
 }
 
-_koopa_has_sudo() {                                                       # {{{3
+_koopa_has_sudo() {                                                       # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
     # Updated 2019-12-06.
@@ -554,7 +554,7 @@ _koopa_has_sudo() {                                                       # {{{3
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
 
-_koopa_invalid_arg() {                                                    # {{{3
+_koopa_invalid_arg() {                                                    # {{{1
     # """
     # Error on invalid argument.
     # Updated 2019-10-23.
@@ -562,7 +562,7 @@ _koopa_invalid_arg() {                                                    # {{{3
     _koopa_stop "Invalid argument: '${1}'."
 }
 
-_koopa_is_aws() {                                                         # {{{3
+_koopa_is_aws() {                                                         # {{{1
     # """
     # Is the current session running on AWS?
     # Updated 2019-11-25.
@@ -570,7 +570,7 @@ _koopa_is_aws() {                                                         # {{{3
     [ "$(_koopa_host_id)" = "aws" ]
 }
 
-_koopa_is_azure() {                                                       # {{{3
+_koopa_is_azure() {                                                       # {{{1
     # """
     # Is the current session running on Microsoft Azure?
     # Updated 2019-11-25.
@@ -578,7 +578,7 @@ _koopa_is_azure() {                                                       # {{{3
     [ "$(_koopa_host_id)" = "azure" ]
 }
 
-_koopa_is_conda_active() {                                                # {{{3
+_koopa_is_conda_active() {                                                # {{{1
     # """
     # Is there a Conda environment active?
     # Updated 2019-10-20.
@@ -586,7 +586,7 @@ _koopa_is_conda_active() {                                                # {{{3
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
-_koopa_is_darwin() {                                                      # {{{3
+_koopa_is_darwin() {                                                      # {{{1
     # """
     # Is the operating system Darwin (macOS)?
     # Updated 2019-06-22.
@@ -594,7 +594,7 @@ _koopa_is_darwin() {                                                      # {{{3
     [ "$(uname -s)" = "Darwin" ]
 }
 
-_koopa_is_debian() {                                                      # {{{3
+_koopa_is_debian() {                                                      # {{{1
     # """
     # Is the operating system Debian?
     # Updated 2019-10-25.
@@ -604,7 +604,7 @@ _koopa_is_debian() {                                                      # {{{3
         grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
-_koopa_is_fedora() {                                                      # {{{3
+_koopa_is_fedora() {                                                      # {{{1
     # """
     # Is the operating system Fedora?
     # Updated 2019-10-25.
@@ -614,7 +614,7 @@ _koopa_is_fedora() {                                                      # {{{3
         grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 }
 
-_koopa_is_file_system_case_sensitive() {                                  # {{{3
+_koopa_is_file_system_case_sensitive() {                                  # {{{1
     # """
     # Is the file system case sensitive?
     # Updated 2019-10-21.
@@ -632,7 +632,7 @@ _koopa_is_file_system_case_sensitive() {                                  # {{{3
     fi
 }
 
-_koopa_is_git() {                                                         # {{{3
+_koopa_is_git() {                                                         # {{{1
     # """
     # Is the current working directory a git repository?
     # Updated 2019-10-14.
@@ -648,7 +648,7 @@ _koopa_is_git() {                                                         # {{{3
     fi
 }
 
-_koopa_is_git_clean() {                                                   # {{{3
+_koopa_is_git_clean() {                                                   # {{{1
     # """
     # Is the current git repo clean, or does it have unstaged changes?
     # Updated 2019-10-14.
@@ -670,7 +670,7 @@ _koopa_is_git_clean() {                                                   # {{{3
     return 0
 }
 
-_koopa_is_installed() {                                                   # {{{3
+_koopa_is_installed() {                                                   # {{{1
     # """
     # Is the requested program name installed?
     # Updated 2019-10-02.
@@ -678,7 +678,7 @@ _koopa_is_installed() {                                                   # {{{3
     command -v "$1" >/dev/null
 }
 
-_koopa_is_interactive() {                                                 # {{{3
+_koopa_is_interactive() {                                                 # {{{1
     # """
     # Is the current shell interactive?
     # Updated 2019-06-21.
@@ -686,14 +686,14 @@ _koopa_is_interactive() {                                                 # {{{3
     echo "$-" | grep -q "i"
 }
 
-_koopa_is_linux() {                                                       # {{{3
+_koopa_is_linux() {                                                       # {{{1
     # """
     # Updated 2019-06-21.
     # """
     [ "$(uname -s)" = "Linux" ]
 }
 
-_koopa_is_local_install() {                                               # {{{3
+_koopa_is_local_install() {                                               # {{{1
     # """
     # Is koopa installed only for the current user?
     # Updated 2019-06-25.
@@ -701,7 +701,7 @@ _koopa_is_local_install() {                                               # {{{3
     echo "$KOOPA_PREFIX" | grep -Eq "^${HOME}"
 }
 
-_koopa_is_login() {                                                       # {{{3
+_koopa_is_login() {                                                       # {{{1
     # """
     # Is the current shell a login shell?
     # Updated 2019-08-14.
@@ -709,7 +709,7 @@ _koopa_is_login() {                                                       # {{{3
     echo "$0" | grep -Eq "^-"
 }
 
-_koopa_is_login_bash() {                                                  # {{{3
+_koopa_is_login_bash() {                                                  # {{{1
     # """
     # Is the current shell a login bash shell?
     # Updated 2019-06-21.
@@ -717,7 +717,7 @@ _koopa_is_login_bash() {                                                  # {{{3
     [ "$0" = "-bash" ]
 }
 
-_koopa_is_login_zsh() {                                                   # {{{3
+_koopa_is_login_zsh() {                                                   # {{{1
     # """
     # Is the current shell a login zsh shell?
     # Updated 2019-06-21.
@@ -725,7 +725,7 @@ _koopa_is_login_zsh() {                                                   # {{{3
     [ "$0" = "-zsh" ]
 }
 
-_koopa_is_matching_fixed() {                                              # {{{3
+_koopa_is_matching_fixed() {                                              # {{{1
     # """
     # Does the input match a fixed string?
     # Updated 2019-10-14.
@@ -733,7 +733,7 @@ _koopa_is_matching_fixed() {                                              # {{{3
     echo "$1" | grep -Fq "$2"
 }
 
-_koopa_is_matching_regex() {                                              # {{{3
+_koopa_is_matching_regex() {                                              # {{{1
     # """
     # Does the input match a regular expression?
     # Updated 2019-10-13.
@@ -741,7 +741,7 @@ _koopa_is_matching_regex() {                                              # {{{3
     echo "$1" | grep -Eq "$2"
 }
 
-_koopa_is_r_package_installed() {                                         # {{{3
+_koopa_is_r_package_installed() {                                         # {{{1
     # """
     # Is the requested R package installed?
     # Updated 2019-10-20.
@@ -751,7 +751,7 @@ _koopa_is_r_package_installed() {                                         # {{{3
         | grep -q "TRUE"
 }
 
-_koopa_is_rhel() {                                                        # {{{3
+_koopa_is_rhel() {                                                        # {{{1
     # """
     # Is the operating system RHEL?
     # Updated 2019-12-09.
@@ -763,7 +763,7 @@ _koopa_is_rhel() {                                                        # {{{3
     return 1
 }
 
-_koopa_is_rhel_7() {                                                      # {{{3
+_koopa_is_rhel_7() {                                                      # {{{1
     # """
     # Is the operating system RHEL 7?
     # Updated 2019-11-25.
@@ -774,7 +774,7 @@ _koopa_is_rhel_7() {                                                      # {{{3
     return 0
 }
 
-_koopa_is_rhel_8() {                                                      # {{{3
+_koopa_is_rhel_8() {                                                      # {{{1
     # """
     # Is the operating system RHEL 8?
     # Updated 2019-11-25.
@@ -793,7 +793,7 @@ _koopa_is_remote() {                                                      # {{{1
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
-_koopa_is_root() {
+_koopa_is_root() {                                                        # {{{1
     # """
     # Is the current user root?
     # Updated 2019-12-17
@@ -801,7 +801,7 @@ _koopa_is_root() {
     [ "$(id -u)" -eq 0 ]
 }
 
-_koopa_is_shared_install() {                                              # {{{3
+_koopa_is_shared_install() {                                              # {{{1
     # """
     # Is koopa installed for all users (shared)?
     # Updated 2019-06-25.
@@ -809,7 +809,7 @@ _koopa_is_shared_install() {                                              # {{{3
     ! _koopa_is_local_install
 }
 
-_koopa_is_venv_active() {                                                 # {{{3
+_koopa_is_venv_active() {                                                 # {{{1
     # """
     # Is there a Python virtual environment active?
     # Updated 2019-10-20.
@@ -817,7 +817,7 @@ _koopa_is_venv_active() {                                                 # {{{3
     [ -n "${VIRTUAL_ENV:-}" ]
 }
 
-_koopa_missing_arg() {                                                    # {{{3
+_koopa_missing_arg() {                                                    # {{{1
     # """
     # Error on a missing argument.
     # Updated 2019-10-23.
@@ -825,7 +825,7 @@ _koopa_missing_arg() {                                                    # {{{3
     _koopa_stop "Missing required argument."
 }
 
-_koopa_warn_if_export() {                                                 # {{{3
+_koopa_warn_if_export() {                                                 # {{{1
     # """
     # Warn if variable is exported in current shell session.
     # Updated 2019-10-27.

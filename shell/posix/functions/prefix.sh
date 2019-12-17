@@ -1,12 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-
-
-# Koopa system                                                              {{{1
-# ==============================================================================
-
-_koopa_prefix() {                                                         # {{{3
+_koopa_prefix() {                                                         # {{{1
     # """
     # Koopa prefix (home).
     # Updated 2019-08-18.
@@ -14,7 +9,7 @@ _koopa_prefix() {                                                         # {{{3
     echo "$KOOPA_PREFIX"
 }
 
-_koopa_app_prefix() {                                                     # {{{3
+_koopa_app_prefix() {                                                     # {{{1
     # """
     # Custom application install prefix.
     # Updated 2019-12-03.
@@ -37,7 +32,7 @@ _koopa_app_prefix() {                                                     # {{{3
     echo "$prefix"
 }
 
-_koopa_cellar_prefix() {                                                  # {{{3
+_koopa_cellar_prefix() {                                                  # {{{1
     # """
     # Cellar prefix.
     # Updated 2019-11-14.
@@ -49,7 +44,7 @@ _koopa_cellar_prefix() {                                                  # {{{3
     echo "$(_koopa_make_prefix)/cellar"
 }
 
-_koopa_config_prefix() {                                                  # {{{3
+_koopa_config_prefix() {                                                  # {{{1
     # """
     # Local koopa config directory.
     # Updated 2019-11-06.
@@ -62,7 +57,7 @@ _koopa_config_prefix() {                                                  # {{{3
     echo "${XDG_CONFIG_HOME}/koopa"
 }
 
-_koopa_local_app_prefix() {
+_koopa_local_app_prefix() {                                               # {{{1
     # """
     # Local user-specific application prefix.
     # Updated 2019-11-26.
@@ -70,7 +65,7 @@ _koopa_local_app_prefix() {
     echo "${XDG_DATA_HOME}"
 }
 
-_koopa_make_prefix() {                                                    # {{{3
+_koopa_make_prefix() {                                                    # {{{1
     # """
     # Return the installation prefix to use.
     # Updated 2019-09-27.
@@ -85,12 +80,7 @@ _koopa_make_prefix() {                                                    # {{{3
     echo "$prefix"
 }
 
-
-
-# Applications                                                              {{{1
-# ==============================================================================
-
-_koopa_aspera_prefix() {                                                  # {{{3
+_koopa_aspera_prefix() {                                                  # {{{1
     # """
     # Aspera Connect prefix.
     # Updated 2019-11-15.
@@ -98,7 +88,7 @@ _koopa_aspera_prefix() {                                                  # {{{3
     echo "${HOME}/.aspera/connect"
 }
 
-_koopa_autojump_prefix() {                                                # {{{3
+_koopa_autojump_prefix() {                                                # {{{1
     # """
     # autojump prefix.
     # Updated 2019-11-15.
@@ -106,7 +96,7 @@ _koopa_autojump_prefix() {                                                # {{{3
     echo "${HOME}/.autojump"
 }
 
-_koopa_bcbio_prefix() {                                                   # {{{3
+_koopa_bcbio_prefix() {                                                   # {{{1
     # """
     # bcbio-nextgen prefix.
     # Updated 2019-11-25.
@@ -125,7 +115,7 @@ _koopa_bcbio_prefix() {                                                   # {{{3
     echo "$prefix"
 }
 
-_koopa_conda_prefix() {
+_koopa_conda_prefix() {                                                   # {{{1
     # """
     # Conda prefix
     # Updated 2019-11-21.
@@ -134,7 +124,7 @@ _koopa_conda_prefix() {
     conda info --base
 }
 
-_koopa_ensembl_perl_api_prefix() {                                        # {{{3
+_koopa_ensembl_perl_api_prefix() {                                        # {{{1
     # """
     # Ensembl Perl API prefix.
     # Updated 2019-11-15.
@@ -143,7 +133,7 @@ _koopa_ensembl_perl_api_prefix() {                                        # {{{3
     echo "$prefix"
 }
 
-_koopa_java_home() {                                                      # {{{3
+_koopa_java_home() {                                                      # {{{1
     # """
     # Java home.
     # Updated 2019-11-16.
@@ -175,7 +165,7 @@ _koopa_java_home() {                                                      # {{{3
     echo "$home"
 }
 
-_koopa_perlbrew_prefix() {                                                # {{{3
+_koopa_perlbrew_prefix() {                                                # {{{1
     # """
     # Perlbrew prefix.
     # Updated 2019-11-15.
@@ -185,7 +175,7 @@ _koopa_perlbrew_prefix() {                                                # {{{3
     echo "$prefix"
 }
 
-_koopa_pyenv_prefix() {                                                   # {{{3
+_koopa_pyenv_prefix() {                                                   # {{{1
     # """
     # pyenv prefix.
     # Updated 2019-11-15.
@@ -193,7 +183,7 @@ _koopa_pyenv_prefix() {                                                   # {{{3
     echo "${XDG_DATA_HOME}/pyenv"
 }
 
-_koopa_r_home() {                                                         # {{{3
+_koopa_r_home() {                                                         # {{{1
     # """
     # Get 'R_HOME', rather than exporting as global variable.
     # Updated 2019-12-16.
@@ -205,7 +195,7 @@ _koopa_r_home() {                                                         # {{{3
     echo "$home"
 }
 
-_koopa_rbenv_prefix() {                                                   # {{{3
+_koopa_rbenv_prefix() {                                                   # {{{1
     # """
     # rbenv prefix.
     # Updated 2019-11-15.
@@ -213,7 +203,7 @@ _koopa_rbenv_prefix() {                                                   # {{{3
     echo "${XDG_DATA_HOME}/rbenv"
 }
 
-_koopa_rust_prefix() {                                                    # {{{3
+_koopa_rust_prefix() {                                                    # {{{1
     # """
     # Rust prefix.
     # Updated 2019-11-15.
@@ -221,7 +211,7 @@ _koopa_rust_prefix() {                                                    # {{{3
     echo "${HOME}/.cargo"
 }
 
-_koopa_venv_prefix() {                                                    # {{{3
+_koopa_venv_prefix() {                                                    # {{{1
     # """
     # Python venv prefix.
     # Updated 2019-11-15.

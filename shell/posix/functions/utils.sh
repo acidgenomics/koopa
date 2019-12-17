@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_array_to_r_vector() {                                              # {{{3
+_koopa_array_to_r_vector() {                                              # {{{1
     # """
     # Convert a bash array to an R vector string.
     # Updated 2019-09-25.
@@ -14,7 +14,7 @@ _koopa_array_to_r_vector() {                                              # {{{3
     printf "c(%s)\n" "$x"
 }
 
-_koopa_bcbio_version() {
+_koopa_bcbio_version() {                                                  # {{{1
     # """
     # Get current bcbio-nextgen stable release version.
     # Updated 2019-11-22.
@@ -28,7 +28,7 @@ _koopa_bcbio_version() {
         | cut -d '=' -f 2
 }
 
-_koopa_cpu_count() {
+_koopa_cpu_count() {                                                      # {{{1
     # """
     # Get the number of cores (CPUs) available.
     # Updated 2019-11-21.
@@ -53,7 +53,7 @@ _koopa_cpu_count() {
     echo "$n"
 }
 
-_koopa_quiet_cd() {                                                       # {{{3
+_koopa_quiet_cd() {                                                       # {{{1
     # """
     # Change directory quietly
     # Updated 2019-10-29.
@@ -61,7 +61,7 @@ _koopa_quiet_cd() {                                                       # {{{3
     cd "$@" > /dev/null || return 1
 }
 
-_koopa_quiet_expr() {                                                     # {{{3
+_koopa_quiet_expr() {                                                     # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
     # Updated 2019-10-08.
@@ -75,7 +75,7 @@ _koopa_quiet_expr() {                                                     # {{{3
     expr "$1" : "$2" 1>/dev/null
 }
 
-_koopa_quiet_rm() {                                                       # {{{3
+_koopa_quiet_rm() {                                                       # {{{1
     # """
     # Remove quietly.
     # Updated 2019-10-29.
@@ -83,7 +83,7 @@ _koopa_quiet_rm() {                                                       # {{{3
     rm -fr "$@" > /dev/null 2>&1
 }
 
-_koopa_update_git_repo() {                                                # {{{3
+_koopa_update_git_repo() {                                                # {{{1
     # """
     # Update a git repository.
     # Updated 2019-11-26.

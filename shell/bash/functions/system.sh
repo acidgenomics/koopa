@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_add_local_bins_to_path() {                                         # {{{3
+_koopa_add_local_bins_to_path() {                                         # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
     # Updated 2019-10-22.
@@ -19,7 +19,7 @@ _koopa_add_local_bins_to_path() {                                         # {{{3
     done
 }
 
-_koopa_find_local_bin_dirs() {                                            # {{{3
+_koopa_find_local_bin_dirs() {                                            # {{{1
     # """
     # Find local bin directories.
     # Updated 2019-10-22.
@@ -56,7 +56,7 @@ _koopa_find_local_bin_dirs() {                                            # {{{3
     printf "%s\n" "${array[@]}"
 }
 
-_koopa_help() {                                                           # {{{3
+_koopa_help() {                                                           # {{{1
     # """
     # Show usage via '--help' flag.
     # Updated 2019-11-16.
@@ -80,7 +80,7 @@ _koopa_help() {                                                           # {{{3
     esac
 }
 
-_koopa_is_array_non_empty() {                                             # {{{3
+_koopa_is_array_non_empty() {                                             # {{{1
     # """
     # Is the array non-empty?
     # Updated 2019-10-22.
@@ -95,7 +95,7 @@ _koopa_is_array_non_empty() {                                             # {{{3
     return 0
 }
 
-_koopa_r_javareconf() {                                                   # {{{3
+_koopa_r_javareconf() {                                                   # {{{1
     # """
     # Update R Java configuration.
     # Updated 2019-11-16.
@@ -140,7 +140,7 @@ _koopa_r_javareconf() {                                                   # {{{3
     Rscript -e 'install.packages("rJava")'
 }
 
-_koopa_script_name() {                                                    # {{{3
+_koopa_script_name() {                                                    # {{{1
     # """
     # Get the calling script name.
     # Updated 2019-10-22.
