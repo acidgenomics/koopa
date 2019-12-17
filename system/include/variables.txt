@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2019-12-16"
+koopa_date="2019-12-17"
 
 
 
@@ -73,7 +73,7 @@ genrich="0.6"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.24.0"
+git="2.24.1"
 
 # https://golang.org/dl/
 go="1.13.4"
