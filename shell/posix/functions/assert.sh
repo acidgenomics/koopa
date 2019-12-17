@@ -275,6 +275,18 @@ _koopa_assert_is_not_installed() {                                        # {{{3
     return 0
 }
 
+_koopa_assert_is_not_root() {                                             # {{{1
+    # """
+    # Assert that current user is not root.
+    # Updated 2019-12-17.
+    # """
+    if _koopa_is_root
+    then
+        _koopa_stop "root user detected."
+    fi
+    return 0
+}
+
 _koopa_assert_is_not_symlink() {                                          # {{{3
     # """
     # Assert that input is not a symbolic link.
@@ -322,6 +334,18 @@ _koopa_assert_is_readable() {                                             # {{{3
     if [ ! -r "$1" ]
     then
         _koopa_stop "Not readable: '${1}'."
+    fi
+    return 0
+}
+
+_koopa_assert_is_root() {                                                 # {{{1
+    # """
+    # Assert that the current user is root.
+    # Updated 2019-12-17.
+    # """
+    if ! _koopa_is_root
+    then
+        _koopa_stop "root user is required."
     fi
     return 0
 }
@@ -761,12 +785,20 @@ _koopa_is_rhel_8() {                                                      # {{{3
     return 0
 }
 
-_koopa_is_remote() {                                                      # {{{3
+_koopa_is_remote() {                                                      # {{{1
     # """
     # Is the current shell session a remote connection over SSH?
     # Updated 2019-06-25.
     # """
     [ -n "${SSH_CONNECTION:-}" ]
+}
+
+_koopa_is_root() {
+    # """
+    # Is the current user root?
+    # Updated 2019-12-17
+    # """
+    [ "$(id -u)" -eq 0 ]
 }
 
 _koopa_is_shared_install() {                                              # {{{3
