@@ -156,8 +156,6 @@ EOF
     return 1
 fi
 
-echo "$-" | grep -q "i" && KOOPA_INTERACTIVE=1 || KOOPA_INTERACTIVE=0
-
 # Alternatively, can attempt to compare SHLVL value.
 [ -n "${KOOPA_PREFIX:-}" ] && KOOPA_SUBSHELL=1 || KOOPA_SUBSHELL=0
 
