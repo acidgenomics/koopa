@@ -3,18 +3,18 @@
 # Initialize ZSH plugins.
 # Updated 2019-12-17.
 
-plugins_dir="${KOOPA_PREFIX}/dotfiles/shell/zsh/plugins"
-[[ -d "$plugins_dir" ]] || return 0
+ZSH_PLUGINS_DIR="${KOOPA_PREFIX}/dotfiles/shell/zsh/plugins"
+[[ -d "$ZSH_PLUGINS_DIR" ]] || return 0
 
 # FIXME This is now popping up:
 # _zsh_autosuggest_highlight_apply:3: POSTDISPLAY: parameter not set
 
-# if [[ -d "${plugins_dir}/zsh-autosuggestions" ]]
-# then
-#     source "${plugins_dir}/zsh-autosuggestions/zsh-autosuggestions.zsh"
-# fi
+if [[ -d "${ZSH_PLUGINS_DIR}/zsh-autosuggestions" ]]
+then
+    source "${ZSH_PLUGINS_DIR}/zsh-autosuggestions/zsh-autosuggestions.zsh"
+fi
 
-unset -v plugins_dir
+unset -v ZSH_PLUGINS_DIR
 
 # Set the autosuggest text color.
 # Define using xterm-256 color code.
