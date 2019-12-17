@@ -1,15 +1,18 @@
 #!/usr/bin/env zsh
 
 # Initialize ZSH plugins.
-# Updated 2019-12-09.
+# Updated 2019-12-17.
 
 plugins_dir="${KOOPA_PREFIX}/dotfiles/shell/zsh/plugins"
 [[ -d "$plugins_dir" ]] || return 0
 
-if [[ -d "${plugins_dir}/zsh-autosuggestions" ]]
-then
-    source "${plugins_dir}/zsh-autosuggestions/zsh-autosuggestions.zsh"
-fi
+# FIXME This is now popping up:
+# _zsh_autosuggest_highlight_apply:3: POSTDISPLAY: parameter not set
+
+# if [[ -d "${plugins_dir}/zsh-autosuggestions" ]]
+# then
+#     source "${plugins_dir}/zsh-autosuggestions/zsh-autosuggestions.zsh"
+# fi
 
 unset -v plugins_dir
 
