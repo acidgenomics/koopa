@@ -171,7 +171,6 @@ _koopa_activate_perlbrew() {                                              # {{{1
     local script
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
-    # FIXME It's the unbound variable check...
     [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
