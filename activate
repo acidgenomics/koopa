@@ -312,14 +312,12 @@ then
     _koopa_activate_llvm
     _koopa_activate_aspera
     _koopa_activate_ensembl_perl_api
-    # FIXME this is breaking zsh-autosuggestions
-    #_koopa_activate_perlbrew
+    _koopa_activate_perlbrew
     _koopa_activate_rust
     _koopa_activate_rbenv
     _koopa_activate_pyenv
     _koopa_activate_bcbio
-    # FIXME this is breaking zsh-autosuggestions
-    #_koopa_activate_conda
+    _koopa_activate_conda
     _koopa_activate_venv
 fi
 
@@ -338,8 +336,7 @@ then
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/init.zsh"
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/options.zsh"
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/plugins.zsh"
-        # FIXME this is breaking zsh-autosuggestions
-        # . "${KOOPA_ACTIVATE_DIR}/shell/zsh/prompt.zsh"
+        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/prompt.zsh"
     fi
 
     . "${KOOPA_ACTIVATE_DIR}/extra.sh"

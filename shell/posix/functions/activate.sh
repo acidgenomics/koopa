@@ -41,10 +41,10 @@ _koopa_activate_autojump() {                                              # {{{3
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
     [ -r "$script" ] || return 0
-    [ -n "${KOOPA_TEST:-}" ] && set +u
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
-    [ -n "${KOOPA_TEST:-}" ] && set -u
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
     if [ "$KOOPA_SHELL" = "zsh" ]
     then
         autoload -U compinit && compinit -u
@@ -76,7 +76,7 @@ _koopa_activate_bcbio() {                                                 # {{{3
 _koopa_activate_conda() {                                                 # {{{3
     # """
     # Activate conda.
-    # Updated 2019-11-14.
+    # Updated 2019-12-17.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -93,7 +93,7 @@ _koopa_activate_conda() {                                                 # {{{3
     name="${2:-"base"}"
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
-    [ -n "${KOOPA_TEST:-}" ] && set +u
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
     # Ensure base environment gets deactivated by default.
@@ -102,7 +102,7 @@ _koopa_activate_conda() {                                                 # {{{3
         # Don't use the full conda path here; will return config error.
         conda deactivate
     fi
-    [ -n "${KOOPA_TEST:-}" ] && set -u
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
     return 0
 }
 
@@ -151,10 +151,10 @@ _koopa_activate_llvm() {                                                  # {{{3
     return 0
 }
 
-_koopa_activate_perlbrew() {                                              # {{{3
+_koopa_activate_perlbrew() {                                              # {{{1
     # """
     # Activate Perlbrew.
-    # Updated 2019-11-22.
+    # Updated 2019-12-17.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -171,11 +171,12 @@ _koopa_activate_perlbrew() {                                              # {{{3
     local script
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
-    [ -n "${KOOPA_TEST:-}" ] && set +u
+    # FIXME It's the unbound variable check...
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
     . "$script"
-    [ -n "${KOOPA_TEST:-}" ] && set -u
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
     return 0
 }
 
