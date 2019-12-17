@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_activate_prefix() {                                                # {{{3
+_koopa_activate_prefix() {                                                # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
     # Updated 2019-11-10.
@@ -15,7 +15,7 @@ _koopa_activate_prefix() {                                                # {{{3
     return 0
 }
 
-_koopa_activate_aspera() {                                                # {{{3
+_koopa_activate_aspera() {                                                # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
     # Updated 2019-11-15.
@@ -26,7 +26,7 @@ _koopa_activate_aspera() {                                                # {{{3
     _koopa_activate_prefix "$prefix"
 }
 
-_koopa_activate_autojump() {                                              # {{{3
+_koopa_activate_autojump() {                                              # {{{1
     # """
     # Activate autojump.
     # Updated 2019-11-15.
@@ -52,7 +52,7 @@ _koopa_activate_autojump() {                                              # {{{3
     return 0
 }
 
-_koopa_activate_bcbio() {                                                 # {{{3
+_koopa_activate_bcbio() {                                                 # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
     # Updated 2019-11-15.
@@ -73,7 +73,7 @@ _koopa_activate_bcbio() {                                                 # {{{3
     return 0
 }
 
-_koopa_activate_conda() {                                                 # {{{3
+_koopa_activate_conda() {                                                 # {{{1
     # """
     # Activate conda.
     # Updated 2019-12-17.
@@ -106,7 +106,7 @@ _koopa_activate_conda() {                                                 # {{{3
     return 0
 }
 
-_koopa_activate_ensembl_perl_api() {                                      # {{{3
+_koopa_activate_ensembl_perl_api() {                                      # {{{1
     # """
     # Activate Ensembl Perl API.
     # Updated 2019-11-14.
@@ -127,7 +127,7 @@ _koopa_activate_ensembl_perl_api() {                                      # {{{3
     return 0
 }
 
-_koopa_activate_llvm() {                                                  # {{{3
+_koopa_activate_llvm() {                                                  # {{{1
     # """
     # Activate LLVM config.
     # Updated 2019-11-13.
@@ -179,7 +179,7 @@ _koopa_activate_perlbrew() {                                              # {{{1
     return 0
 }
 
-_koopa_activate_pyenv() {                                                 # {{{3
+_koopa_activate_pyenv() {                                                 # {{{1
     # """
     # Activate Python version manager (pyenv).
     # Updated 2019-11-15.
@@ -203,7 +203,7 @@ _koopa_activate_pyenv() {                                                 # {{{3
     return 0
 }
 
-_koopa_activate_rbenv() {                                                 # {{{3
+_koopa_activate_rbenv() {                                                 # {{{1
     # """
     # Activate Ruby version manager (rbenv).
     # Updated 2019-11-15.
@@ -233,7 +233,7 @@ _koopa_activate_rbenv() {                                                 # {{{3
     return 0
 }
 
-_koopa_activate_rust() {                                                  # {{{3
+_koopa_activate_rust() {                                                  # {{{1
     # """
     # Activate Rust programming language.
     # Updated 2019-10-29.
@@ -254,7 +254,7 @@ _koopa_activate_rust() {                                                  # {{{3
     return 0
 }
 
-_koopa_activate_secrets() {                                               # {{{3
+_koopa_activate_secrets() {                                               # {{{1
     # """
     # Source secrets file.
     # Updated 2019-10-29.
@@ -271,7 +271,7 @@ _koopa_activate_secrets() {                                               # {{{3
     return 0
 }
 
-_koopa_activate_ssh_key() {                                               # {{{3
+_koopa_activate_ssh_key() {                                               # {{{1
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
     # Updated 2019-10-29.
@@ -295,7 +295,7 @@ _koopa_activate_ssh_key() {                                               # {{{3
     return 0
 }
 
-_koopa_activate_venv() {                                                  # {{{3
+_koopa_activate_venv() {                                                  # {{{1
     # """
     # Activate Python default virtual environment.
     # Updated 2019-11-15.

@@ -3,7 +3,7 @@
 
 if ! _koopa_is_installed realpath
 then
-    realpath() {                                                          # {{{3
+    realpath() {                                                          # {{{1
         # """
         # Real path to file/directory on disk.
         # Updated 2019-06-26.

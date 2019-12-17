@@ -270,19 +270,7 @@ _koopa_update_r_config() {                                                # {{{1
     _koopa_r_javareconf
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-_koopa_update_r_config_macos() {                                          # {{{3
+_koopa_update_r_config_macos() {                                          # {{{1
     # """
     # Update R config on macOS.
     # Updated 2019-10-31.
@@ -293,7 +281,7 @@ _koopa_update_r_config_macos() {                                          # {{{3
     ln -fnsv "/usr/local/koopa/os/darwin/etc/R/Makevars" "${HOME}/.R/."
 }
 
-_koopa_update_shells() {                                                  # {{{3
+_koopa_update_shells() {                                                  # {{{1
     # """
     # Update shell configuration.
     # Updated 2019-09-28.
@@ -311,7 +299,7 @@ _koopa_update_shells() {                                                  # {{{3
     _koopa_note "Run 'chsh -s ${shell} ${USER}' to change the default shell."
 }
 
-_koopa_update_xdg_config() {                                              # {{{3
+_koopa_update_xdg_config() {                                              # {{{1
     # """
     # Update XDG configuration.
     # Updated 2019-12-06.
