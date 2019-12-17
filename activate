@@ -175,7 +175,8 @@ if [ -n "${KOOPA_FORCE:-}" ] ||
     [ -n "${RSTUDIO:-}" ] ||
     [ -n "${SLURM_JOB_ID:-}" ] ||
     [ -n "${TMUX:-}" ] ||
-    [ -n "${VIM_TERMINAL:-}" ]
+    [ -n "${VIM_TERMINAL:-}" ] ||
+    [ "${SHLVL:-}" -gt 1 ]
 then
     force=1
 fi
