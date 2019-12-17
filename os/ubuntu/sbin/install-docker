@@ -41,7 +41,7 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 # Ensure current user is added to Docker group.
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
 
 docker --version
 command -v docker
