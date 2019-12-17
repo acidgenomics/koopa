@@ -157,7 +157,9 @@ EOF
 fi
 
 echo "$-" | grep -q "i" && KOOPA_INTERACTIVE=1 || KOOPA_INTERACTIVE=0
-[ "${SHLVL:-}" -gt 1 ] && KOOPA_SUBSHELL=1 || KOOPA_SUBSHELL=0
+
+# Alternatively, can attempt to compare SHLVL value.
+[ -n "${KOOPA_PREFIX:-}" ] && KOOPA_SUBSHELL=1 || KOOPA_SUBSHELL=0
 
 # Extra mode                                                                {{{2
 # ------------------------------------------------------------------------------
