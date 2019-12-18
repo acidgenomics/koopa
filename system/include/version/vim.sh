@@ -12,4 +12,11 @@ patch="$( \
     | cut -d '-' -f 2 \
 )"
 
-printf "%s.%s\n" "$major" "$patch"
+if [ -n "$patch" ]
+then
+    version="${major}.${patch}"
+else
+    version="${major}"
+fi
+
+echo "$version"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_remove_broken_symlinks() {
+_koopa_remove_broken_symlinks() {                                         # {{{1
     # """
     # Remove broken symlinks.
     # Updated 2019-11-16.

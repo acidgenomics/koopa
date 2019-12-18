@@ -5,15 +5,21 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed "docker"
 
+bash=0
 workdir="/mnt/work"
 
 POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
+        --bash)
+            bash=1
+            shift 1
+            ;;
         --workdir=*)
             workdir="${1#*=}"
             shift 1
@@ -40,10 +46,19 @@ set -- "${POSITIONAL[@]}"
 image="$1"
 workdir="$(_koopa_strip_trailing_slash "$workdir")"
 
-# > bash -il
-
 docker pull "$image"
-docker run -it \
-    --volume="${PWD}:${workdir}" \
-    --workdir="$workdir" \
+
+flags=(
+    "--interactive"
+    "--tty"
+    "--volume=${PWD}:${workdir}"
+    "--workdir=${workdir}"
     "$image"
+)
+
+if [[ "$bash" -eq 1 ]]
+then
+    flags+=("bash")
+fi
+
+docker run "${flags[@]}"

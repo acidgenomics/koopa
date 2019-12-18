@@ -4,6 +4,7 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
+
 _koopa_assert_is_installed bcbio_nextgen.py
 
 genomes="${1:-"BDGP6,canFam3,hg38,mm10,rn6"}"

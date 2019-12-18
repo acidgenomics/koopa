@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_gsub() {                                                           # {{{3
+_koopa_gsub() {                                                           # {{{1
     # """
     # Global substitution.
     # Updated 2019-10-09.
@@ -9,7 +9,7 @@ _koopa_gsub() {                                                           # {{{3
     echo "$1" | sed -E "s/${2}/${3}/g"
 }
 
-_koopa_minor_version() {                                                  # {{{3
+_koopa_minor_version() {                                                  # {{{1
     # """
     # Get the major program version.
     # Updated 2019-09-23.
@@ -17,7 +17,7 @@ _koopa_minor_version() {                                                  # {{{3
     echo "$1" | cut -d '.' -f 1-2
 }
 
-_koopa_strip_left() {                                                     # {{{3
+_koopa_strip_left() {                                                     # {{{1
     # """
     # Strip pattern from left side (start) of string.
     # Updated 2019-09-22.
@@ -29,7 +29,7 @@ _koopa_strip_left() {                                                     # {{{3
     printf '%s\n' "${1##$2}"
 }
 
-_koopa_strip_right() {                                                    # {{{3
+_koopa_strip_right() {                                                    # {{{1
     # """
     # Strip pattern from right side (end) of string.
     # Updated 2019-09-22.
@@ -41,7 +41,7 @@ _koopa_strip_right() {                                                    # {{{3
     printf '%s\n' "${1%%$2}"
 }
 
-_koopa_strip_trailing_slash() {                                           # {{{3
+_koopa_strip_trailing_slash() {                                           # {{{1
     # """
     # Strip trailing slash in file path string.
     # Updated 2019-09-24.
@@ -52,7 +52,7 @@ _koopa_strip_trailing_slash() {                                           # {{{3
     _koopa_strip_right "$1" "/"
 }
 
-_koopa_sub() {                                                            # {{{3
+_koopa_sub() {                                                            # {{{1
     # """
     # Substitution.
     # Updated 2019-10-09.
@@ -61,7 +61,7 @@ _koopa_sub() {                                                            # {{{3
     echo "$1" | sed -E "s/${2}/${3}/"
 }
 
-_koopa_trim_ws() {                                                        # {{{3
+_koopa_trim_ws() {                                                        # {{{1
     # """
     # Trim leading and trailing white-space from string.
     # Updated 2019-09-22.

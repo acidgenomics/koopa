@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-12-09.
+## Updated 2019-12-18.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -345,8 +345,8 @@ checkVersion(
 checkVersion(
     name = "Vim",
     whichName = "vim",
-    current = currentVersion("vim"),
-    expected = expectedVersion("vim")
+    current = currentMinorVersion("vim"),
+    expected = expectedMinorVersion("vim")
 )
 
 
@@ -421,6 +421,7 @@ installed(
         "base32",
         "base64",
         "basename",
+        "bc",
         "cat",
         "chcon",
         "chgrp",
