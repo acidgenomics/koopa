@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-12-16.
+## Updated 2019-12-18.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -421,6 +421,7 @@ installed(
         "base32",
         "base64",
         "basename",
+        "bc",
         "cat",
         "chcon",
         "chgrp",
