@@ -3,12 +3,6 @@
 # SC2236: zsh doesn't handle '-n' flag in place of '! -z' correctly in POSIX
 # mode when using '[' instead of '[['.
 
-# If not running interactively, don't do anything.
-case "$-" in
-    *i*) ;;
-    *) return ;;
-esac
-
 
 
 # Notes                                                                     {{{1
@@ -52,6 +46,9 @@ optional variables:
         Enable extra shell configuration.
         This setting enables automatic prompt string configuration.
         Can disable per user with 'KOOPA_USERS_NO_EXTRA=user1 user2'.
+    force=0 [false]
+        Force activation inside of non-interactive shells.
+        Not generally recommended, but used by koopa installer.
     minimal=0 [false]
         Minimal mode.
         Simply load koopa programs into PATH.
@@ -84,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-12-17.
+    Updated 2019-12-18.
 EOF
 }
 
@@ -99,21 +96,43 @@ unset -f usage
 
 
 
-# Skip activation for specific users                                        {{{1
+# Pre-flight checks                                                         {{{1
 # ==============================================================================
 
-# Skip activation for root user.
-# > [ "$(id -u)" -eq 0 ] && return 0
+# Force mode                                                                {{{2
+# ------------------------------------------------------------------------------
 
-[ -n "${USER:-}" ] && USER="$(whoami)" && export USER
+# This is currently used by the koopa installer.
 
-# Always skip on accounts containing "admin" in the name.
-echo "$USER" | grep -Eq "\b(admin|shiny)\b" && return 0
+case "${force:-}" in
+    1|true)
+        KOOPA_FORCE=1
+        ;;
+    *)
+        KOOPA_FORCE=0
+        ;;
+esac
 
-# Allow optional skip for specific users.
-if [ -n "${KOOPA_USERS_SKIP:-}" ]
+export KOOPA_FORCE
+
+# User-specific configuration                                               {{{2
+# ------------------------------------------------------------------------------
+
+if [ "$KOOPA_FORCE" -ne 1 ]
 then
-    echo "$KOOPA_USERS_SKIP" | grep -Eq "\b${USER}\b" && return 0
+    # Skip activation for root user.
+    # > [ "$(id -u)" -eq 0 ] && return 0
+
+    [ -n "${USER:-}" ] && USER="$(whoami)" && export USER
+
+    # Always skip on accounts containing "admin" in the name.
+    echo "$USER" | grep -Eq "\b(admin|shiny)\b" && return 0
+
+    # Allow optional skip for specific users.
+    if [ -n "${KOOPA_USERS_SKIP:-}" ]
+    then
+        echo "$KOOPA_USERS_SKIP" | grep -Eq "\b${USER}\b" && return 0
+    fi
 fi
 
 
@@ -158,6 +177,9 @@ fi
 
 # Alternatively, can attempt to compare SHLVL value.
 [ -n "${KOOPA_PREFIX:-}" ] && KOOPA_SUBSHELL=1 || KOOPA_SUBSHELL=0
+
+export KOOPA_SHELL
+export KOOPA_SUBSHELL
 
 # Extra mode                                                                {{{2
 # ------------------------------------------------------------------------------
@@ -237,9 +259,6 @@ then
 fi
 
 unset -v extra minimal test
-
-export KOOPA_SHELL
-export KOOPA_SUBSHELL
 
 export KOOPA_EXTRA
 export KOOPA_MINIMAL
