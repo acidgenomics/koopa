@@ -302,10 +302,11 @@ _koopa_update_shells() {                                                  # {{{1
 _koopa_update_xdg_config() {                                              # {{{1
     # """
     # Update XDG configuration.
-    # Updated 2019-12-06.
+    # Updated 2019-12-18.
     #
     # Path: '~/.config/koopa'.
     # """
+    _koopa_is_root && return 0
     local config_dir
     config_dir="$(_koopa_config_prefix)"
     local prefix_dir
