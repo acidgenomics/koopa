@@ -107,6 +107,59 @@ alias d='clear; cd -; ls'
 
 
 
+# History                                                                   {{{1
+# ==============================================================================
+
+# See bash(1) for more options.
+# For setting history length, see HISTSIZE and HISTFILESIZE.
+
+# Don't keep duplicate lines in the history.
+# Alternatively, set "ignoreboth" to also ignore lines starting with space.
+if [ -z "${HISTCONTROL:-}" ]
+then
+    export HISTCONTROL="ignoredups"
+fi
+
+# Standardize the history file name across shells.
+if [ -z "${HISTFILE:-}" ]
+then
+    HISTFILE="${HOME}/.$(_koopa_shell)-history"
+    export HISTFILE
+fi
+
+if [ -z "${HISTSIZE:-}" ]
+then
+    export HISTSIZE=100000
+fi
+
+if [ -z "${SAVEHIST:-}" ]
+then
+    export SAVEHIST=100000
+fi
+
+if [ -z "${HISTIGNORE:-}" ]
+then
+    export HISTIGNORE="&:ls:[bf]g:exit"
+fi
+
+# Add the date/time to 'history' command output.
+# Note that on macOS bash will fail if 'set -e' is set and this isn't exported.
+if [ -z "${HISTTIMEFORMAT:-}" ]
+then
+    export HISTTIMEFORMAT="%Y%m%d %T  "
+fi
+
+# For bash users, autojump keeps track of directories by modifying
+# '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND' in this case.
+# See also: https://github.com/wting/autojump
+# > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
+if [ -z "${PROMPT_COMMAND:-}" ]
+then
+    export PROMPT_COMMAND="history -a"
+fi
+
+
+
 # GNU coreutils                                                             {{{1
 # ==============================================================================
 
