@@ -449,7 +449,7 @@ _koopa_os_id() {                                                          # {{{1
 _koopa_os_string() {                                                      # {{{1
     # """
     # Operating system string.
-    # Updated 2019-12-06.
+    # Updated 2019-12-18.
     #
     # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
@@ -489,7 +489,7 @@ _koopa_os_string() {                                                      # {{{1
         _koopa_stop "Failed to detect OS ID."
     fi
     string="$id"
-    if [ -n "$version" ]
+    if [ -n "${version:-}" ]
     then
         string="${string}-${version}"
     fi
