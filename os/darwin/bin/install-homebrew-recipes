@@ -14,6 +14,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 # Taps                                                                      {{{1
 # ==============================================================================
 
+_koopa_message "Updating taps."
 brew tap mongodb/brew
 brew tap osgeo/osgeo4mac
 
@@ -22,8 +23,8 @@ brew tap osgeo/osgeo4mac
 # Casks                                                                     {{{1
 # ==============================================================================
 
+_koopa_message "Installing casks."
 installed_casks="$(brew cask list)"
-
 casks=(
     # Priority
     java
@@ -40,6 +41,7 @@ casks=(
     bibdesk
     coconutbattery
     coda
+    deluge
     emacs
     fiji
     firefox
@@ -52,17 +54,23 @@ casks=(
     igv
     iterm2
     keka
+    kid3
     kitty
     libreoffice
+    makemkv
+    museeks
     netnewswire
     onyx
+    photosweeper-x
     r
     safari-technology-preview
+    scrivener
     skype
     spillo
     sublime-text
     superduper
     textmate
+    tiny-player
     torbrowser
     tower
     transmit
@@ -79,16 +87,17 @@ for cask in "${casks[@]}"
 do
     if echo "$installed_casks" | grep -Eq "^${cask}$"
     then
+        _koopa_note "${cask} is already installed."
         continue
     fi
     brew cask install "$cask"
 done
 
-# Gatekeeper issues.
-# > docker
+_koopa_message "Installing casks with Gatekeeper issues."
 casks=(
     alacritty
     calibre
+    docker
     julia
     omnidisksweeper
     rstudio
@@ -97,6 +106,7 @@ for cask in "${casks[@]}"
 do
     if echo "$installed_casks" | grep -Eq "^${cask}$"
     then
+        _koopa_note "${cask} is already installed."
         continue
     fi
     brew cask install "$cask" --no-quarantine
@@ -114,9 +124,8 @@ done
 # Use osgeo-gdal instead of regular gdal.
 # This gets updated more regularly.
 
+_koopa_message "Installing brews."
 installed_brews="$(brew list)"
-
-# Recommended.
 brews=(
     # Priority
     bash
@@ -175,12 +184,14 @@ brews=(
     neovim
     node
     open-mpi
+    openblas
     osgeo-gdal
     pandoc
     pandoc-citeproc
     pandoc-crossref
     parallel
     pkg-config
+    podofo
     protobuf
     pyenv
     python
@@ -213,6 +224,7 @@ do
     name="$(basename "$brew")"
     if echo "$installed_brews" | grep -Eq "^${name}$"
     then
+        _koopa_note "${name} is already installed."
         continue
     fi
     brew install "$brew"

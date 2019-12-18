@@ -32,14 +32,13 @@ _koopa_message "Installing R ${version}."
     # Fix for reg-tests-1d.R error, due to unset TZ variable.
     # https://stackoverflow.com/questions/46413691
     export TZ="America/New_York"
-    # Problematic flags on Debian:
-    # --enable-BLAS-shlib
-    # --enable-R-shlib
     ./configure \
         --build="$build" \
-        --prefix="$prefix" \
+        --enable-BLAS-shlib \
         --enable-R-profiling \
+        --enable-R-shlib \
         --enable-memory-profiling \
+        --prefix="$prefix" \
         --with-blas \
         --with-cairo \
         --with-jpeglib \

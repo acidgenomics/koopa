@@ -86,6 +86,11 @@ alias reload='exec "$SHELL" -l'
 # > alias .....='cd ../../../../'
 # > alias ......='cd ../../../../../'
 
+# From Debian bashrc:
+# > alias l='ls -CF'
+# > alias la='ls -A'
+# > alias ll='ls -alF'
+
 alias l.='ls -Fd .*'
 alias l1='ls -1p'
 alias l='ls -AGghlo'
@@ -99,6 +104,59 @@ alias ltail='l | tail'
 # Browse up and down.
 alias u='clear; cd ../; pwd; ls'
 alias d='clear; cd -; ls'
+
+
+
+# History                                                                   {{{1
+# ==============================================================================
+
+# See bash(1) for more options.
+# For setting history length, see HISTSIZE and HISTFILESIZE.
+
+# Don't keep duplicate lines in the history.
+# Alternatively, set "ignoreboth" to also ignore lines starting with space.
+if [ -z "${HISTCONTROL:-}" ]
+then
+    export HISTCONTROL="ignoredups"
+fi
+
+# Standardize the history file name across shells.
+if [ -z "${HISTFILE:-}" ]
+then
+    HISTFILE="${HOME}/.$(_koopa_shell)-history"
+    export HISTFILE
+fi
+
+if [ -z "${HISTSIZE:-}" ]
+then
+    export HISTSIZE=100000
+fi
+
+if [ -z "${SAVEHIST:-}" ]
+then
+    export SAVEHIST=100000
+fi
+
+if [ -z "${HISTIGNORE:-}" ]
+then
+    export HISTIGNORE="&:ls:[bf]g:exit"
+fi
+
+# Add the date/time to 'history' command output.
+# Note that on macOS bash will fail if 'set -e' is set and this isn't exported.
+if [ -z "${HISTTIMEFORMAT:-}" ]
+then
+    export HISTTIMEFORMAT="%Y%m%d %T  "
+fi
+
+# For bash users, autojump keeps track of directories by modifying
+# '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND' in this case.
+# See also: https://github.com/wting/autojump
+# > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
+if [ -z "${PROMPT_COMMAND:-}" ]
+then
+    export PROMPT_COMMAND="history -a"
+fi
 
 
 
@@ -161,6 +219,13 @@ fi
 
 
 
+# Docker                                                                    {{{1
+# ==============================================================================
+
+alias docker-prune='docker system prune --all --force'
+
+
+
 # Emacs                                                                     {{{1
 # ==============================================================================
 
@@ -190,10 +255,27 @@ fi
 
 
 
+# GCC                                                                       {{{1
+# ==============================================================================
+
+# Colored GCC warnings and errors.
+if [ -z "${GCC_COLORS:-}" ]
+then
+    # SC1004: This backslash+linefeed is literal. Break outside single quotes if
+    # you just want to break the line.
+    export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:'\
+'locus=01:quote=01'
+fi
+
+
+
 # Git                                                                       {{{1
 # ==============================================================================
 
-export GIT_MERGE_AUTOEDIT="no"
+if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
+then
+    export GIT_MERGE_AUTOEDIT="no"
+fi
 
 
 
