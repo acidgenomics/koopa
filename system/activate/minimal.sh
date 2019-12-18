@@ -153,69 +153,6 @@ fi
 
 
 
-# History                                                                   {{{1
-# ==============================================================================
-
-if [ -z "${HISTFILE:-}" ]
-then
-    HISTFILE="${HOME}/.$(_koopa_shell)-history"
-    export HISTFILE
-fi
-
-if [ -z "${HISTSIZE:-}" ]
-then
-    export HISTSIZE=100000
-fi
-
-if [ -z "${SAVEHIST:-}" ]
-then
-    export SAVEHIST=100000
-fi
-
-if [ -z "${HISTCONTROL:-}" ]
-then
-    export HISTCONTROL="ignoredups"
-fi
-
-if [ -z "${HISTIGNORE:-}" ]
-then
-    export HISTIGNORE="&:ls:[bf]g:exit"
-fi
-
-# Add the date/time to 'history' command output.
-# Note that on macOS bash will fail if 'set -e' is set and this isn't exported.
-if [ -z "${HISTTIMEFORMAT:-}" ]
-then
-    export HISTTIMEFORMAT="%Y%m%d %T  "
-fi
-
-# For bash users, autojump keeps track of directories by modifying
-# '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND':
-# https://github.com/wting/autojump
-# > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
-if [ -z "${PROMPT_COMMAND:-}" ]
-then
-    export PROMPT_COMMAND="history -a"
-fi
-
-
-
-# Locale / encoding                                                         {{{1
-# ==============================================================================
-
-# Force UTF-8 to avoid encoding issues for users with broken locale settings.
-# https://github.com/Homebrew/brew/blob/master/Library/Homebrew/brew.sh
-
-# This step errors out on Fedora 31.
-
-# > if [ -z "${LC_ALL:-}" ] || [ "$(locale charmap 2>/dev/null)" != "UTF-8" ]
-# > then
-# >     # > export LC_ALL="C"
-# >     export LC_ALL="en_US.UTF-8"
-# > fi
-
-
-
 # CPU count                                                                 {{{1
 # ==============================================================================
 

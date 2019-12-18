@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Bash shell options.
-# Updated 2019-12-17.
+# Updated 2019-12-18.
 
 # Readline input options.
 if [ -z "${INPUTRC:-}" ] && [ -r "${HOME}/.inputrc" ]
@@ -11,15 +11,6 @@ fi
 
 # Make less more friendly for non-text input files, see lesspipe(1).
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# Don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options.
-export HISTCONTROL="ignoreboth"
-
-# For setting history length.
-# See HISTSIZE and HISTFILESIZE in bash(1).
-export HISTSIZE=1000
-export HISTFILESIZE=2000
 
 # Map key bindings to default editor.
 # Note that Bash currently uses Emacs by default.
@@ -44,7 +35,8 @@ shopt -s cmdhist
 
 # If set, the pattern "**" used in a pathname expansion context will match all
 # files and zero or more directories and subdirectories.
-shopt -s globstar
+# Disabling by default because this can error on macOS (Travis CI).
+# > shopt -s globstar
 
 # Append to the history file, don't overwrite it.
 shopt -s histappend
