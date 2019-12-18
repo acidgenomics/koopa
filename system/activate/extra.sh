@@ -60,11 +60,6 @@ unset -v dotfiles
 # Core                                                                      {{{1
 # ==============================================================================
 
-# This is from Debian bashrc:
-# Add an 'alert' alias for long running commands.
-# Use like so: sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 alias df='df -H'
 alias df2='df --portability --print-type --si | sort'
 alias du='du -sh'
@@ -168,6 +163,13 @@ if [ -z "${PAGER:-}" ]
 then
     export PAGER="less"
 fi
+
+
+
+# Docker                                                                    {{{1
+# ==============================================================================
+
+alias docker-prune='docker system prune --all --force'
 
 
 
