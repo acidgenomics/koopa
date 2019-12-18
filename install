@@ -4,7 +4,7 @@ set -Ee -o pipefail
 
 usage() {
 cat << EOF
-usage: install [--help|-h] [--shared] [--dotfiles] [--mike]
+usage: install [--help|-h] [--shared] [--test] [--dotfiles] [--mike]
 
 Install koopa.
 
