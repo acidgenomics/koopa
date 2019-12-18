@@ -9,27 +9,31 @@ usage: install [--help|-h] [--shared] [--dotfiles] [--mike]
 Install koopa.
 
 optional arguments:
-  --help, -h
+    --help, -h
         Show this help message and exit.
-  --shared
+    --shared
         Enable shared user configuration via '/etc/profile.d/zzz-koopa.sh' file.
         Linux only. Not supported on macOS.
-  --dotfiles
+    --test
+        Enable verbose test mode.
+        Useful for Travis CI and building Docker images.
+    --dotfiles
         Clone the dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
         and automatically symlink recommended default configuration files.
-  --mike
+    --mike
         Install Mike-specific configuration.
         This flag automatically enables '--dotfiles'.
 
 note:
     Bash script.
-    Updated 2019-12-06.
+    Updated 2019-12-18.
 EOF
 }
 
 dotfiles=0
 mike=0
 shared=0
+test=0
 
 while (("$#"))
 do
@@ -48,6 +52,10 @@ do
             ;;
         --shared)
             shared=1
+            shift 1
+            ;;
+        --test)
+            test=1
             shift 1
             ;;
         --) 
@@ -138,7 +146,7 @@ rm -frv "${KOOPA_PREFIX}/"{config,include}
 rm -frv "${KOOPA_PREFIX}/bin/"{host,os,sudo}
 
 echo "Activating koopa."
-force=1 source "${KOOPA_PREFIX}/activate"
+force=1 test="$test" source "${KOOPA_PREFIX}/activate"
 
 if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
 then
