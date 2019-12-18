@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_add_to_path_start() {                                              # {{{3
+_koopa_add_to_path_start() {                                              # {{{1
     # """
     # Add directory to start of PATH.
     # Updated 2019-11-11.
@@ -11,7 +11,7 @@ _koopa_add_to_path_start() {                                              # {{{3
     export PATH="${1}:${PATH:-}"
 }
 
-_koopa_add_to_path_end() {                                                # {{{3
+_koopa_add_to_path_end() {                                                # {{{1
     # """
     # Add directory to end of PATH.
     # Updated 2019-11-11.
@@ -21,17 +21,17 @@ _koopa_add_to_path_end() {                                                # {{{3
     export PATH="${PATH:-}:${1}"
 }
 
-_koopa_force_add_to_path_end() {                                          # {{{3
+_koopa_force_add_to_path_end() {                                          # {{{1
     _koopa_remove_from_path "$1"
     _koopa_add_to_path_end "$1"
 }
 
-_koopa_force_add_to_path_start() {                                        # {{{3
+_koopa_force_add_to_path_start() {                                        # {{{1
     _koopa_remove_from_path "$1"
     _koopa_add_to_path_start "$1"
 }
 
-_koopa_remove_from_path() {                                               # {{{3
+_koopa_remove_from_path() {                                               # {{{1
     # """
     # Remove directory from PATH.
     # Updated 2019-10-14.
@@ -46,7 +46,7 @@ _koopa_remove_from_path() {                                               # {{{3
     export PATH="${PATH//:$1/}"
 }
 
-_koopa_add_to_fpath_start() {                                             # {{{3
+_koopa_add_to_fpath_start() {                                             # {{{1
     # """
     # Add directory to start of FPATH.
     # Updated 2019-11-11.
@@ -58,7 +58,7 @@ _koopa_add_to_fpath_start() {                                             # {{{3
     export FPATH="${1}:${FPATH:-}"
 }
 
-_koopa_add_to_fpath_end() {                                               # {{{3
+_koopa_add_to_fpath_end() {                                               # {{{1
     # """
     # Add directory to end of FPATH.
     # Updated 2019-11-11.
@@ -70,17 +70,17 @@ _koopa_add_to_fpath_end() {                                               # {{{3
     export FPATH="${FPATH:-}:${1}"
 }
 
-_koopa_force_add_to_fpath_start() {                                       # {{{3
+_koopa_force_add_to_fpath_start() {                                       # {{{1
     _koopa_remove_from_fpath "$1"
     _koopa_add_to_fpath_start "$1"
 }
 
-_koopa_force_add_to_fpath_end() {                                         # {{{3
+_koopa_force_add_to_fpath_end() {                                         # {{{1
     _koopa_remove_from_fpath "$1"
     _koopa_add_to_fpath_end "$1"
 }
 
-_koopa_remove_from_fpath() {                                              # {{{3
+_koopa_remove_from_fpath() {                                              # {{{1
     # """
     # Remove directory from FPATH.
     # Updated 2019-10-27.
@@ -88,7 +88,7 @@ _koopa_remove_from_fpath() {                                              # {{{3
     export FPATH="${FPATH//:$1/}"
 }
 
-_koopa_add_to_manpath_start() {                                           # {{{3
+_koopa_add_to_manpath_start() {                                           # {{{1
     # """
     # Add directory to start of MANPATH.
     # Updated 2019-11-11.
@@ -98,7 +98,7 @@ _koopa_add_to_manpath_start() {                                           # {{{3
     export MANPATH="${1}:${MANPATH:-}"
 }
 
-_koopa_add_to_manpath_end() {                                             # {{{3
+_koopa_add_to_manpath_end() {                                             # {{{1
     # """
     # Add directory to start of MANPATH.
     # Updated 2019-11-11.
@@ -108,17 +108,17 @@ _koopa_add_to_manpath_end() {                                             # {{{3
     export MANPATH="${MANPATH:-}:${1}"
 }
 
-_koopa_force_add_to_manpath_start() {                                     # {{{3
+_koopa_force_add_to_manpath_start() {                                     # {{{1
     _koopa_remove_from_manpath "$1"
     _koopa_add_to_manpath_start "$1"
 }
 
-_koopa_force_add_to_manpath_end() {                                       # {{{3
+_koopa_force_add_to_manpath_end() {                                       # {{{1
     _koopa_remove_from_manpath "$1"
     _koopa_add_to_manpath_end "$1"
 }
 
-_koopa_remove_from_manpath() {                                            # {{{3
+_koopa_remove_from_manpath() {                                            # {{{1
     # """
     # Remove directory from MANPATH.
     # Updated 2019-10-14.
@@ -126,7 +126,7 @@ _koopa_remove_from_manpath() {                                            # {{{3
     export MANPATH="${MANPATH//:$1/}"
 }
 
-_koopa_add_conda_env_to_path() {                                          # {{{3
+_koopa_add_conda_env_to_path() {                                          # {{{1
     # """
     # Add conda environment to PATH.
     # Updated 2019-10-21.
@@ -141,7 +141,7 @@ _koopa_add_conda_env_to_path() {                                          # {{{3
     _koopa_add_to_path_start "$bin_dir"
 }
 
-_koopa_list_path_priority() {                                             # {{{3
+_koopa_list_path_priority() {                                             # {{{1
     # """
     # Split PATH string by ':' delim into lines.
     # Updated 2019-10-27.
@@ -161,7 +161,7 @@ _koopa_list_path_priority() {                                             # {{{3
     tr ':' '\n' <<< "${1:-$PATH}"
 }
 
-_koopa_which() {                                                          # {{{3
+_koopa_which() {                                                          # {{{1
     # """
     # Locate which program.
     # Updated 2019-10-08.
@@ -176,7 +176,7 @@ _koopa_which() {                                                          # {{{3
     command -v "$1"
 }
 
-_koopa_which_realpath() {                                                 # {{{3
+_koopa_which_realpath() {                                                 # {{{1
     # """
     # Locate the realpath of a program.
     # Updated 2019-11-16.
