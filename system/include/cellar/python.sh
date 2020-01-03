@@ -54,11 +54,7 @@ fi
 
 _koopa_link_cellar "$name" "$version"
 
-_koopa_message "Installing pip."
-script="get-pip.py"
-_koopa_download "https://bootstrap.pypa.io/${script}"
-"$exe_file" "$script" --no-warn-script-location
-rm "$script"
+_koopa_install_pip "$exe_file"
 
 _koopa_link_cellar "$name" "$version"
 
