@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-01-02"
+koopa_date="2020-01-03"
 
 
 
@@ -182,10 +182,10 @@ rstudio-server-pro="1.2.5019-6"
 ruby="2.6.5"
 
 # https://www.rust-lang.org/
-rust="1.39.0"
+rust="1.40.0"
 
 # https://rustup.rs/
-rustup="1.21.0"
+rustup="1.21.1"
 
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.7.0"
