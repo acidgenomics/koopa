@@ -195,6 +195,7 @@ brews=(
     protobuf
     pyenv
     python
+    python@2
     rbenv
     rsync
     ruby-build
@@ -229,3 +230,6 @@ do
     fi
     brew install "$brew"
 done
+
+brew unlink python
+brew unlink python@2
