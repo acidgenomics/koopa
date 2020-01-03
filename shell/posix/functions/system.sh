@@ -358,6 +358,21 @@ _koopa_install_mike() {                                                   # {{{1
     )
 }
 
+_koopa_install_pip() {                                                    # {{{1
+    # """
+    # Install pip for Python.
+    # Updated 2020-01-03.
+    # """
+    local python
+    python="$1"
+    _koopa_message "Installing pip for Python at '${python}'."
+    local file
+    file="get-pip.py"
+    _koopa_download "https://bootstrap.pypa.io/${file}"
+    "$python" "$file" --no-warn-script-location
+    rm "$file"
+}
+
 _koopa_link_cellar() {                                                    # {{{1
     # """
     # Symlink cellar into build directory.
