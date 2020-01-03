@@ -16,6 +16,7 @@ fi
 _koopa_message "Updating Rust via rustup."
 
 # Bug fix for v1.21.0
+# https://github.com/rust-lang/rustup/issues/2166
 mkdir -p ~/.rustup/downloads
 
 export RUST_BACKTRACE=full

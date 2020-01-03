@@ -23,6 +23,12 @@ do
     esac
 done
 
+# Ensure invisible files get nuked on macOS.
+if _koopa_is_darwin
+then
+    find "$koopa_prefix" -name ".DS_Store" -delete
+fi
+
 # _koopa_remove_broken_symlinks "$(_koopa_config_prefix)"
 
 # Loop across config directories and update git repos.
