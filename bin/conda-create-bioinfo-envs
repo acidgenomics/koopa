@@ -22,6 +22,9 @@ _koopa_assert_is_installed "conda"
 # methylation:
 # - bismark
 #
+# single-cell rna-seq:
+# - stream
+#
 # > conda-create-env pandoc
 # > conda-create-env texlive-core
 # > conda-create-env wgsim
@@ -68,7 +71,6 @@ conda-create-env squid                      # variation
 conda-create-env sra-tools                  # tools
 conda-create-env star                       # aligners
 conda-create-env star-fusion                # fusion
-conda-create-env stream                     # single-cell
 conda-create-env vardict                    # variation
 
 conda env list
