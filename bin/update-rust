@@ -14,4 +14,10 @@ then
 fi
 
 _koopa_message "Updating Rust via rustup."
+
+# Bug fix for v1.21.0
+mkdir -p ~/.rustup/downloads
+
+export RUST_BACKTRACE=full
+# > rustup update stable
 rustup update
