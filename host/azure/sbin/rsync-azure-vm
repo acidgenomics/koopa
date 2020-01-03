@@ -6,7 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 host_ip="$(ip-address)"
-source_ip="10.100.100.135"
+source_ip="10.100.100.132"  # *.135
 source_user="$USER"
 
 # Check for accidental sync from source machine.
