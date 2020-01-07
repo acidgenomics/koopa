@@ -147,13 +147,13 @@ picard="2.21.1"
 pip="19.3.1"
 
 # https://pypi.org/project/pipx/
-pipx="0.15.1.0"
+pipx="0.15.1.1"
 
 # https://proj.org/
 proj="6.2.1"
 
 # https://github.com/pyenv/pyenv
-pyenv="1.2.15"
+pyenv="1.2.16"
 
 # https://www.python.org/downloads/
 python="3.8.1"
