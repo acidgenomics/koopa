@@ -41,7 +41,7 @@ clang="11.0.0"
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.8.0"
+conda="4.8.1"
 
 # https://www.gnu.org/software/coreutils/
 # https://ftp.gnu.org/gnu/coreutils/
