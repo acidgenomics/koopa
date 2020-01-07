@@ -25,6 +25,10 @@ _koopa_assert_is_installed "conda"
 # single-cell rna-seq:
 # - stream
 #
+# jupyter notebook (legacy):
+# - notebook
+# - jupyter?
+#
 # > conda-create-env pandoc
 # > conda-create-env texlive-core
 # > conda-create-env wgsim
@@ -49,7 +53,7 @@ conda-create-env hisat2                     # aligners
 conda-create-env homer                      # chip-seq
 conda-create-env htslib                     # base
 conda-create-env igvtools                   # tools
-conda-create-env jupyter                    # tools
+conda-create-env jupyterlab                 # tools
 conda-create-env kallisto                   # aligners
 conda-create-env kraken                     # qc
 conda-create-env macs2                      # chip-seq
