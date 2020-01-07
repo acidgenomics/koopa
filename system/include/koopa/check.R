@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2019-12-18.
+## Updated 2020-01-07.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -36,6 +36,7 @@ stopifnot(file.exists(koopaEXE))
 
 host <- system2(command = koopaEXE, args = "host-id", stdout = TRUE)
 os <- system2(command = koopaEXE, args = "os-string", stdout = TRUE)
+shell <- Sys.getenv("KOOPA_SHELL")
 
 ## Determine if we're on Linux or not (i.e. macOS).
 rOSString <- R.Version()[["os"]]
@@ -774,6 +775,16 @@ if (
 
 ## Current user ================================================================
 message("\nCurrent user only:")
+
+if (identical(shell, "zsh")) {
+    checkVersion(
+        name = "autojump",
+        whichName = "autojump",
+        current = currentVersion("autojump"),
+        expected = expectedVersion("autojump"),
+        required = FALSE
+    )
+}
 checkVersion(
     name = "exa",
     whichName = "exa",
