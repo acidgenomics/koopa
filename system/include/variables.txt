@@ -108,8 +108,7 @@ llvm="7"
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-# Update every minor version, ignoring the patch releases.
-lmod="8.2"
+lmod="8.2.10"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
