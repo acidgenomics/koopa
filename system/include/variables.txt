@@ -11,6 +11,9 @@ koopa_date="2020-01-07"
 # https://repo.continuum.io/archive/
 anaconda3="2019.10"
 
+# https://github.com/wting/autojump/releases
+autojump="22.5.3"
+
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
