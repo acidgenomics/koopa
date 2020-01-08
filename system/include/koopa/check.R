@@ -779,6 +779,13 @@ if (
 ## Extra programs ==============================================================
 message("\nExtra programs:")
 
+checkVersion(
+    name = "ag (The Silver Searcher)",
+    whichName = "ag",
+    current = currentVersion("ag"),
+    expected = expectedVersion("ag"),
+    required = FALSE
+)
 if (identical(shell, "zsh")) {
     checkVersion(
         name = "autojump",
@@ -793,6 +800,20 @@ checkVersion(
     whichName = "exa",
     current = currentVersion("exa"),
     expected = expectedVersion("exa"),
+    required = FALSE
+)
+checkVersion(
+    name = "fd",
+    whichName = "fd",
+    current = currentVersion("fd"),
+    expected = expectedVersion("fd"),
+    required = FALSE
+)
+checkVersion(
+    name = "fzf",
+    whichName = "fzf",
+    current = currentVersion("fzf"),
+    expected = expectedVersion("fzf"),
     required = FALSE
 )
 checkVersion(
@@ -837,14 +858,10 @@ checkVersion(
     expected = expectedVersion("rustup"),
     required = FALSE
 )
-installed(
-    which = c(
-        "ag",
-        "fd",
-        "fzf"
-    ),
-    required = FALSE
-)
+
+## Python packages =============================================================
+message("\nPython packages:")
+
 installed(
     which = c(
         "black",
