@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2020-01-07.
+## Updated 2020-01-08.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -229,10 +229,11 @@ hasGNUCoreutils <- function(command = "env") {
     ))
 }
 
-installed <- function(which, required = TRUE) {
+installed <- function(which, required = TRUE, path = TRUE) {
     stopifnot(
         is.character(which) && length(which) >= 1L,
-        is.logical(required) && length(required) == 1L
+        is.logical(required) && length(required) == 1L,
+        is.logical(path) && length(path) == 1L
     )
     if (isTRUE(required)) {
         fail <- "FAIL"
@@ -249,13 +250,14 @@ installed <- function(which, required = TRUE) {
                     fail, which
                 ))
             } else {
-                message(sprintf(
-                    fmt = paste0(
-                        "    OK | %s\n",
-                        "       |   %.69s"
-                    ),
-                    which, Sys.which(which)
-                ))
+                msg <- sprintf("    OK | %s", which)
+                if (isTRUE(path)) {
+                    msg <- paste0(
+                        msg, "\n",
+                        sprintf("       |   %.69s", Sys.which(which))
+                    )
+                }
+                message(msg)
             }
             invisible(ok)
         },
@@ -408,6 +410,46 @@ checkVersion(
 
 
 
+## Tools =======================================================================
+message("\nTools:")
+checkVersion(
+    name = "Conda",
+    whichName = "conda",
+    current = currentVersion("conda"),
+    expected = expectedVersion("conda")
+)
+checkVersion(
+    name = "Git",
+    whichName = "git",
+    current = currentVersion("git"),
+    expected = expectedVersion("git")
+)
+checkVersion(
+    name = "GnuPG",
+    whichName = "gpg",
+    current = currentVersion("gnupg"),
+    expected = expectedVersion("gpg")
+)
+checkVersion(
+    name = "htop",
+    current = currentVersion("htop"),
+    expected = expectedVersion("htop")
+)
+checkVersion(
+    name = "Neofetch",
+    whichName = "neofetch",
+    current = currentVersion("neofetch"),
+    expected = expectedVersion("neofetch")
+)
+checkVersion(
+    name = "ShellCheck",
+    whichName = "shellcheck",
+    current = currentVersion("shellcheck"),
+    expected = expectedVersion("shellcheck")
+)
+
+
+
 ## Basic dependencies ==========================================================
 message("\nBasic dependencies:")
 hasGNUCoreutils()
@@ -536,47 +578,8 @@ installed(
         "xargs",
         "yes"
     ),
-    required = TRUE
-)
-
-
-
-## Tools =======================================================================
-message("\nTools:")
-checkVersion(
-    name = "Conda",
-    whichName = "conda",
-    current = currentVersion("conda"),
-    expected = expectedVersion("conda")
-)
-checkVersion(
-    name = "Git",
-    whichName = "git",
-    current = currentVersion("git"),
-    expected = expectedVersion("git")
-)
-checkVersion(
-    name = "GnuPG",
-    whichName = "gpg",
-    current = currentVersion("gnupg"),
-    expected = expectedVersion("gpg")
-)
-checkVersion(
-    name = "htop",
-    current = currentVersion("htop"),
-    expected = expectedVersion("htop")
-)
-checkVersion(
-    name = "Neofetch",
-    whichName = "neofetch",
-    current = currentVersion("neofetch"),
-    expected = expectedVersion("neofetch")
-)
-checkVersion(
-    name = "ShellCheck",
-    whichName = "shellcheck",
-    current = currentVersion("shellcheck"),
-    expected = expectedVersion("shellcheck")
+    required = TRUE,
+    path = FALSE
 )
 
 
@@ -773,8 +776,8 @@ if (
 
 
 
-## Current user ================================================================
-message("\nCurrent user only:")
+## Extra programs ==============================================================
+message("\nExtra programs:")
 
 if (identical(shell, "zsh")) {
     checkVersion(
@@ -836,7 +839,14 @@ checkVersion(
 )
 installed(
     which = c(
-        "autojump",
+        "ag",
+        "fd",
+        "fzf"
+    ),
+    required = FALSE
+)
+installed(
+    which = c(
         "black",
         "flake8",
         "pylint",
