@@ -117,7 +117,7 @@ llvm="7"
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
 # https://github.com/TACC/Lmod
-lmod="8.2.10"
+lmod="8.2"
 
 # http://www.lua.org/download.html
 # https://github.com/lua/lua
