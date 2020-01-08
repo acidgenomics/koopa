@@ -138,7 +138,6 @@ _koopa_activate_fzf() {
     [ -d "$dir" ] || return 0
     local shell
     shell="$(_koopa_shell)"
-    echo "HELLO THERE"
     # Auto-completion.
     # shellcheck source=/dev/null
     . "${dir}/shell/completion.${shell}" 2> /dev/null
