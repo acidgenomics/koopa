@@ -364,7 +364,7 @@ checkVersion(
 )
 checkVersion(
     name = "Python : pip",
-    whichName = "pip",
+    whichName = "pip3",
     current = currentVersion("pip"),
     expected = expectedVersion("pip")
 )
