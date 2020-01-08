@@ -387,7 +387,8 @@ alias vim-default='vim -i NONE -u NONE -U NONE'
 
 
 
-# autojump                                                                  {{{1
+# Activation functions                                                      {{{1
 # ==============================================================================
 
 _koopa_activate_autojump
+_koopa_activate_fzf
