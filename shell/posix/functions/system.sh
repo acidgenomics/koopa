@@ -4,7 +4,7 @@
 _koopa_add_config_link() {                                                # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # Updated 2019-09-23.
+    # Updated 2020-01-09.
     #
     # Examples:
     # _koopa_add_config_link vimrc
@@ -20,7 +20,7 @@ _koopa_add_config_link() {                                                # {{{1
     dest_name="$2"
     local dest_file
     dest_file="${config_dir}/${dest_name}"
-    rm -fv "$dest_file"
+    rm -f "$dest_file"
     ln -fnsv "$source_file" "$dest_file"
 }
 
@@ -65,7 +65,7 @@ _koopa_current_version() {                                                # {{{1
     then
         _koopa_stop "'${name}' is not supported."
     fi
-    "$script"
+    . "$script"
 }
 
 _koopa_dotfiles_config_link() {                                           # {{{1
@@ -519,6 +519,29 @@ _koopa_os_version() {                                                     # {{{1
     # Note that this returns Darwin version information for macOS.
     # """
     uname -r
+}
+
+_koopa_relink() {                                                         # {{{1
+    # """
+    # Re-create a symbolic link dynamically, if broken.
+    # Updated 2020-01-09.
+    # """
+    local source_file
+    source_file="$1"
+    local dest_file
+    dest_file="$2"
+    if [ ! -e "$dest_file" ]
+    then
+        if [ ! -e "$source_file" ]
+        then
+            _koopa_warning "Source file missing: '${source_file}'."
+            return 1
+        fi
+        # > _koopa_message "Updating XDG config in '${config_dir}'."
+        rm -f "$dest_file"
+        ln -fns "$source_file" "$dest_file"
+    fi
+    return 0
 }
 
 _koopa_shell() {                                                          # {{{1

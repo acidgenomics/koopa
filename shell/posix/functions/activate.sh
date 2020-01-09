@@ -73,6 +73,36 @@ _koopa_activate_bcbio() {                                                 # {{{1
     return 0
 }
 
+_koopa_activate_broot() {
+    # """
+    # Activate broot directory tree utility.
+    # The br function script must be sourced for activation.
+    # See 'broot --install' for details.
+    #
+    # Configuration file gets saved at '${prefs_dir}/conf.toml'.
+    #
+    # Note that for macOS, we're assuming installation via Homebrew.
+    # If installed as crate, it will use the same path as for Linux.
+    #
+    # https://github.com/Canop/broot
+    # Updated 2020-01-09.
+    # """
+    local config_dir
+    if _koopa_is_darwin
+    then
+        config_dir="${HOME}/Library/Preferences/org.dystroy.broot"
+    else
+        config_dir="${HOME}/.config/broot"
+    fi
+    [ -d "$config_dir" ] || return 0
+    local br_script
+    br_script="${config_dir}/launcher/bash/br"
+    _koopa_assert_is_file "$br_script"
+    # shellcheck source=/dev/null
+    . "$br_script"
+    return 0
+}
+
 _koopa_activate_conda() {                                                 # {{{1
     # """
     # Activate conda.
@@ -131,7 +161,7 @@ _koopa_activate_fzf() {
     # """
     # Activate fzf, command-line fuzzy finder.
     # https://github.com/junegunn/fzf
-    # Updated 2020-01-08.
+    # Updated 2020-01-09.
     _koopa_is_installed fzf || return 0
     local dir
     dir="/usr/local/opt/fzf"
@@ -140,7 +170,7 @@ _koopa_activate_fzf() {
     shell="$(_koopa_shell)"
     # Auto-completion.
     # shellcheck source=/dev/null
-    . "${dir}/shell/completion.${shell}" 2> /dev/null
+    . "${dir}/shell/completion.${shell}"
     # Key bindings.
     # shellcheck source=/dev/null
     . "${dir}/shell/key-bindings.${shell}"
@@ -150,7 +180,7 @@ _koopa_activate_fzf() {
 _koopa_activate_llvm() {                                                  # {{{1
     # """
     # Activate LLVM config.
-    # Updated 2019-11-13.
+    # Updated 2020-01-09.
     #
     # Note that LLVM 7 specifically is now required to install umap-learn.
     # Current version LLVM 9 isn't supported by numba > llvmlite yet.
@@ -166,6 +196,8 @@ _koopa_activate_llvm() {                                                  # {{{1
     elif _koopa_is_darwin
     then
         llvm_config="/usr/local/opt/llvm@7/bin/llvm-config"
+    else
+        llvm_config="/usr/bin/llvm-config-7"
     fi
     [ -x "$llvm_config" ] && export LLVM_CONFIG="$llvm_config"
     return 0
