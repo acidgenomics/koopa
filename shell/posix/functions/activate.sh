@@ -73,6 +73,30 @@ _koopa_activate_bcbio() {                                                 # {{{1
     return 0
 }
 
+_koopa_activate_broot() {
+    # """
+    # Activate broot directory tree utility.
+    # The br function script must be sourced for activation.
+    # See 'broot --install' for details.
+    #
+    # Configuration file gets saved at '${prefs_dir}/conf.toml'.
+    #
+    # https://github.com/Canop/broot
+    # Updated 2020-01-09.
+    # """
+    local prefs_dir
+    prefs_dir="${HOME}/Library/Preferences/org.dystroy.broot"
+    local br_script
+    if _koopa_is_darwin
+    then
+        br_script="${prefs_dir}/launcher/bash/br"
+        # shellcheck source=/dev/null
+        . "$br_script"
+
+    fi
+    return 0
+}
+
 _koopa_activate_conda() {                                                 # {{{1
     # """
     # Activate conda.
