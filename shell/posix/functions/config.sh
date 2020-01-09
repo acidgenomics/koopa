@@ -302,7 +302,7 @@ _koopa_update_shells() {                                                  # {{{1
 _koopa_update_xdg_config() {                                              # {{{1
     # """
     # Update XDG configuration.
-    # Updated 2019-12-18.
+    # Updated 2020-01-09.
     #
     # Path: '~/.config/koopa'.
     # """
@@ -313,28 +313,12 @@ _koopa_update_xdg_config() {                                              # {{{1
     prefix_dir="$(_koopa_prefix)"
     local os_id
     os_id="$(_koopa_os_id)"
-    mkdir -pv "$config_dir"
-    relink() {
-        local source_file
-        source_file="$1"
-        local dest_file
-        dest_file="$2"
-        if [ ! -e "$dest_file" ]
-        then
-            if [ ! -e "$source_file" ]
-            then
-                _koopa_warning "Source file missing: '${source_file}'."
-                return 1
-            fi
-            _koopa_message "Updating XDG config in '${config_dir}'."
-            rm -fv "$dest_file"
-            ln -fnsv "$source_file" "$dest_file"
-        fi
-    }
-    relink "${prefix_dir}" "${config_dir}/home"
-    relink "${prefix_dir}/activate" "${config_dir}/activate"
+    mkdir -p "$config_dir"
+    _koopa_relink "${prefix_dir}" "${config_dir}/home"
+    _koopa_relink "${prefix_dir}/activate" "${config_dir}/activate"
     if [ -d "${prefix_dir}/os/${os_id}" ]
     then
-        relink "${prefix_dir}/os/${os_id}/etc/R" "${config_dir}/R"
+        _koopa_relink "${prefix_dir}/os/${os_id}/etc/R" "${config_dir}/R"
     fi
+    return 0
 }
