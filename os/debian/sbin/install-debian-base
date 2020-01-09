@@ -124,8 +124,16 @@ sudo apt -y install \
 
 # Clang LLVM
 # See also: https://apt.llvm.org/
+# Note that regular llvm recipe currently installs version 6.
 llvm_version="$(_koopa_variable llvm)"
 llvm_version="$(_koopa_major_version "$llvm_version")"
+sudo apt -y install \
+    "clang-${llvm_version}" \
+    "llvm-${llvm_version}" \
+    "llvm-${llvm_version}-dev"
+
+# Legacy LLVM 7 is still needed for Python llvmlite.
+llvm_version="7"
 sudo apt -y install \
     "clang-${llvm_version}" \
     "llvm-${llvm_version}" \
