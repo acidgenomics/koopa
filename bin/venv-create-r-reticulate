@@ -43,18 +43,20 @@ then
     _koopa_stop "Export 'LLVM_CONFIG' to locate LLVM 7 llvm-config."
 fi
 
-llvm_ver="$("$LLVM_CONFIG" --version)"
-llvm_ver="$(_koopa_major_version "$llvm_ver")"
-if [[ "$llvm_ver" != "7" ]]
-then
-    _koopa_stop "Failed to detect LLVM 7 via 'LLVM_CONFIG'."
-fi
+# FIXME Ensure this installs before removing.
+# > llvm_ver="$("$LLVM_CONFIG" --version)"
+# > llvm_ver="$(_koopa_major_version "$llvm_ver")"
+# > llvm_ver_ok="7"
+# > if [[ "$llvm_ver" != "$llvm_ver_ok" ]]
+# > then
+# >     _koopa_stop "Failed to detect LLVM '${llvm_ver_ok}' via 'LLVM_CONFIG'."
+# > fi
 
 name="r-reticulate"
 prefix="${XDG_DATA_HOME}/virtualenvs/${name}"
 
 _koopa_message "Installing Python '${name}' environment at '${prefix}'."
-_koopa_note "LLVM: '${LLVM_CONFIG}'."
+_koopa_message "LLVM: '${LLVM_CONFIG}'."
 
 rm -fr "$prefix"
 python3 -m venv "$prefix"
