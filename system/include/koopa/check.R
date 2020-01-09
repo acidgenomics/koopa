@@ -407,17 +407,64 @@ checkVersion(
     current = currentVersion("ruby"),
     expected = expectedVersion("ruby")
 )
+checkVersion(
+    name = "Rust",
+    whichName = "rustc",
+    current = currentVersion("rust"),
+    expected = expectedVersion("rust"),
+    required = FALSE
+)
 
 
 
-## Tools =======================================================================
-message("\nTools:")
+## Version managers ============================================================
+message("\nVersion managers:")
 checkVersion(
     name = "Conda",
     whichName = "conda",
     current = currentVersion("conda"),
     expected = expectedVersion("conda")
 )
+checkVersion(
+    name = "Perl : Perlbrew",
+    whichName = "perlbrew",
+    current = currentVersion("perlbrew"),
+    expected = expectedVersion("perlbrew"),
+    required = FALSE
+)
+checkVersion(
+    name = "Python : pipx",
+    whichName = "pipx",
+    current = currentVersion("pipx"),
+    expected = expectedVersion("pipx"),
+    required = FALSE
+)
+checkVersion(
+    name = "Python : pyenv",
+    whichName = "pyenv",
+    current = currentVersion("pyenv"),
+    expected = expectedVersion("pyenv"),
+    required = FALSE
+)
+checkVersion(
+    name = "Ruby : rbenv",
+    whichName = "rbenv",
+    current = currentVersion("rbenv"),
+    expected = expectedVersion("rbenv"),
+    required = FALSE
+)
+checkVersion(
+    name = "Rust : rustup",
+    whichName = "rustup",
+    current = currentVersion("rustup"),
+    expected = expectedVersion("rustup"),
+    required = FALSE
+)
+
+
+
+## Tools =======================================================================
+message("\nTools:")
 checkVersion(
     name = "Git",
     whichName = "git",
@@ -782,9 +829,8 @@ if (
 
 
 
-## Extra programs ==============================================================
-message("\nExtra programs:")
-
+## Next-gen shell ==============================================================
+message("\nNext-gen shell:")
 checkVersion(
     name = "ag (The Silver Searcher)",
     whichName = "ag",
@@ -792,15 +838,20 @@ checkVersion(
     expected = expectedVersion("ag"),
     required = FALSE
 )
-if (identical(shell, "zsh")) {
-    checkVersion(
-        name = "autojump",
-        whichName = "autojump",
-        current = currentVersion("autojump"),
-        expected = expectedVersion("autojump"),
-        required = FALSE
-    )
-}
+checkVersion(
+    name = "autojump",
+    whichName = "autojump",
+    current = currentVersion("autojump"),
+    expected = expectedVersion("autojump"),
+    required = FALSE
+)
+checkVersion(
+    name = "broot",
+    whichName = "broot",
+    current = currentVersion("broot"),
+    expected = expectedVersion("broot"),
+    required = FALSE
+)
 checkVersion(
     name = "exa",
     whichName = "exa",
@@ -822,52 +873,9 @@ checkVersion(
     expected = expectedVersion("fzf"),
     required = FALSE
 )
-checkVersion(
-    name = "Perl : Perlbrew",
-    whichName = "perlbrew",
-    current = currentVersion("perlbrew"),
-    expected = expectedVersion("perlbrew"),
-    required = FALSE
-)
-checkVersion(
-    name = "Python : pipx",
-    whichName = "pipx",
-    current = currentVersion("pipx"),
-    expected = expectedVersion("pipx"),
-    required = FALSE
-)
-checkVersion(
-    name = "Python : pyenv",
-    whichName = "pyenv",
-    current = currentVersion("pyenv"),
-    expected = expectedVersion("pyenv"),
-    required = FALSE
-)
-checkVersion(
-    name = "Ruby : rbenv",
-    whichName = "rbenv",
-    current = currentVersion("rbenv"),
-    expected = expectedVersion("rbenv"),
-    required = FALSE
-)
-checkVersion(
-    name = "Rust",
-    whichName = "rustc",
-    current = currentVersion("rust"),
-    expected = expectedVersion("rust"),
-    required = FALSE
-)
-checkVersion(
-    name = "Rust : rustup",
-    whichName = "rustup",
-    current = currentVersion("rustup"),
-    expected = expectedVersion("rustup"),
-    required = FALSE
-)
 
 ## Python packages =============================================================
 message("\nPython packages:")
-
 installed(
     which = c(
         "black",
