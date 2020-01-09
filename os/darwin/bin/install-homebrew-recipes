@@ -152,9 +152,11 @@ brews=(
     curl
     exa
     exiftool
+    fd
     ffmpeg
     findutils
     flac
+    fzf
     gcc
     git
     git-lfs
