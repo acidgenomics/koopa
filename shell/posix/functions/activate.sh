@@ -81,19 +81,25 @@ _koopa_activate_broot() {
     #
     # Configuration file gets saved at '${prefs_dir}/conf.toml'.
     #
+    # Note that for macOS, we're assuming installation via Homebrew.
+    # If installed as crate, it will use the same path as for Linux.
+    #
     # https://github.com/Canop/broot
     # Updated 2020-01-09.
     # """
-    local prefs_dir
-    prefs_dir="${HOME}/Library/Preferences/org.dystroy.broot"
-    local br_script
+    local config_dir
     if _koopa_is_darwin
     then
-        br_script="${prefs_dir}/launcher/bash/br"
-        # shellcheck source=/dev/null
-        . "$br_script"
-
+        config_dir="${HOME}/Library/Preferences/org.dystroy.broot"
+    else
+        config_dir="${HOME}/.config/broot"
     fi
+    [ -d "$config_dir" ] || return 0
+    local br_script
+    br_script="${config_dir}/launcher/bash/br"
+    _koopa_assert_is_file "$br_script"
+    # shellcheck source=/dev/null
+    . "$br_script"
     return 0
 }
 
