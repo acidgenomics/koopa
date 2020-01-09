@@ -43,7 +43,8 @@ then
     _koopa_stop "Export 'LLVM_CONFIG' to locate LLVM 7 llvm-config."
 fi
 
-llvm_ver="$("$LLVM_CONFIG" --version | cut -d '.' -f 1)"
+llvm_ver="$("$LLVM_CONFIG" --version)"
+llvm_ver="$(_koopa_major_version "$llvm_ver")"
 if [[ "$llvm_ver" != "7" ]]
 then
     _koopa_stop "Failed to detect LLVM 7 via 'LLVM_CONFIG'."
