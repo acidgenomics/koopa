@@ -65,7 +65,7 @@ _koopa_current_version() {                                                # {{{1
     then
         _koopa_stop "'${name}' is not supported."
     fi
-    "$script"
+    . "$script"
 }
 
 _koopa_dotfiles_config_link() {                                           # {{{1
