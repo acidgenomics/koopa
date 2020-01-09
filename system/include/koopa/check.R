@@ -650,7 +650,11 @@ checkVersion(
     ## > whichName = "llvm-config",
     whichName = NULL,
     current = currentMajorVersion("llvm"),
-    expected = expectedMajorVersion("llvm")
+    expected = switch(
+        EXPR = os,
+        `rhel-7` = "7",
+        expectedMajorVersion("llvm")
+    )
 )
 checkVersion(
     name = "SQLite",
