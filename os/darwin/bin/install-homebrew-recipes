@@ -207,6 +207,7 @@ brews=(
     shellcheck
     shellharden
     sox
+    sqlite
     sshfs
     tesseract
     the_silver_searcher  # ag
