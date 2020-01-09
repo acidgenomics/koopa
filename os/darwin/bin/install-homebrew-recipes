@@ -178,6 +178,7 @@ brews=(
     libssh2
     libxml2
     libxslt
+    llvm
     llvm@7
     mariadb-connector-c
     mas
