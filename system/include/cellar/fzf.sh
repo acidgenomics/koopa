@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+_koopa_assert_is_installed go
+
 # https://github.com/junegunn/fzf/blob/master/BUILD.md
 
 name="fzf"
@@ -12,6 +14,9 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 jobs="$(_koopa_cpu_count)"
 
 _koopa_message "Installing ${name} ${version}."
+
+goroot="$(go env GOROOT)"
+_koopa_message "Go is installed at '${goroot}'."
 
 rm -frv "$prefix" "$opt_prefix"
 mkdir -pv "$prefix" "$opt_prefix"
@@ -30,7 +35,7 @@ mkdir -pv "$prefix" "$opt_prefix"
     # > ./install --help
     ./install --bin --no-update-rc
     # Following approach used in Homebrew recipe here.
-    rm -fr src target
+    rm -fr .[[:alnum:]]* src target
     # Install into opt prefix and then link essential directories.
     cp -rv . "$opt_prefix"
     rm -fr "$tmp_dir"
