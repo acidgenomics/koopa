@@ -188,18 +188,19 @@ _koopa_activate_llvm() {                                                  # {{{1
     # Homebrew LLVM 7
     # > brew install llvm@7
     # """
-    local llvm_config
-    llvm_config=
-    if _koopa_is_rhel_7
+    local config
+    config="${LLVM_CONFIG:-}"
+    [ -x "$config" ] && return 0
+    if _koopa_is_darwin
     then
-        llvm_config="/usr/bin/llvm-config-7.0-64"
-    elif _koopa_is_darwin
-    then
-        llvm_config="/usr/local/opt/llvm@7/bin/llvm-config"
+        # llvm@7
+        config="/usr/local/opt/llvm/bin/llvm-config"
     else
-        llvm_config="/usr/bin/llvm-config-7"
+        # Attempt to find the latest version automatically.
+        # RHEL 7: llvm-config-7.0-64
+        config="$(find /usr/bin -name "llvm-config-*" | sort | tail -n 1)"
     fi
-    [ -x "$llvm_config" ] && export LLVM_CONFIG="$llvm_config"
+    [ -x "$config" ] && export LLVM_CONFIG="$config"
     return 0
 }
 

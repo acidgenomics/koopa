@@ -8,6 +8,7 @@ _koopa_assert_has_no_args "$@"
 
 # Note that LLVM 7 is required to install llvmlite Python module.
 # This is now required to install umap-learn.
+# LLVM8+ aren't currently available through yum.
 
 enable-epel-7
 install-fedora-base
