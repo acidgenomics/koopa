@@ -39,9 +39,14 @@ mkdir -pv "$prefix" "$opt_prefix"
 
 _koopa_set_permissions "$opt_prefix"
 
-# Link relevant make directories from opt into cellar.
+_koopa_message "Linking 'bin' and 'man' directories from 'opt' into 'cellar'."
 cp -frsv \
     "${opt_prefix}/"{bin,man} \
     "${prefix}/."
+
+_koopa_message "Linking 'plugin' and 'shell' directories in 'opt'."
+ln -fnsv \
+    "${opt_prefix}/"{plugin,shell} \
+    "$(dirname "$opt_prefix")/."
 
 _koopa_link_cellar "$name" "$version"
