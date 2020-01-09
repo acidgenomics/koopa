@@ -122,4 +122,13 @@ sudo apt -y install \
     xorg \
     zsh
 
+# Clang LLVM
+# See also: https://apt.llvm.org/
+llvm_version="$(_koopa_variable llvm)"
+llvm_version="$(_koopa_major_version "$llvm_version")"
+sudo apt -y install \
+    "clang-${llvm_version}" \
+    "llvm-${llvm_version}" \
+    "llvm-${llvm_version}-dev"
+
 sudo apt -y autoremove
