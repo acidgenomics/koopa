@@ -1,5 +1,5 @@
 ## Shared R profile configuration.
-## Updated 2019-12-14 by Michael Steinbaugh.
+## Updated 2020-01-07 by Michael Steinbaugh.
 
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 
@@ -431,13 +431,17 @@ if (.isInstalled("readr")) {
     ## Default packages                                                     {{{2
     ## -------------------------------------------------------------------------
 
-    if (interactive()) {
-        if (.isInstalled("BiocManager")) {
-            options(
-                defaultPackages = c(getOption("defaultPackages"), "BiocManager")
-            )
-        }
-    }
+    ## Attach BiocManager automatically.
+    ## > if (interactive()) {
+    ## >     if (.isInstalled("BiocManager")) {
+    ## >         options(
+    ## >             defaultPackages = c(
+    ## >                 getOption("defaultPackages"),
+    ## >                 "BiocManager"
+    ## >             )
+    ## >         )
+    ## >     }
+    ## > }
 
     ## Minimal session info                                                 {{{2
     ## -------------------------------------------------------------------------
