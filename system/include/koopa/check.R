@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2020-01-08.
+## Updated 2020-01-09.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -311,7 +311,7 @@ checkVersion(
     expected = expectedVersion("bash")
 )
 checkVersion(
-    name = "ZSH",
+    name = "Zsh",
     whichName = "zsh",
     current = currentVersion("zsh"),
     expected = expectedVersion("zsh")
@@ -362,12 +362,6 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-checkVersion(
-    name = "Python : pip",
-    whichName = "pip3",
-    current = currentVersion("pip"),
-    expected = expectedVersion("pip")
-)
 # Can use `packageVersion("base")` instead but it doesn't always return the
 # correct value for RStudio Server Pro.
 checkVersion(
@@ -410,14 +404,55 @@ checkVersion(
 
 
 
-## Tools =======================================================================
-message("\nTools:")
+## Version managers ============================================================
+message("\nVersion managers (shared):")
 checkVersion(
     name = "Conda",
     whichName = "conda",
     current = currentVersion("conda"),
     expected = expectedVersion("conda")
 )
+checkVersion(
+    name = "Perl : Perlbrew",
+    whichName = "perlbrew",
+    current = currentVersion("perlbrew"),
+    expected = expectedVersion("perlbrew"),
+    required = FALSE
+)
+checkVersion(
+    name = "Python : pip",
+    whichName = "pip3",
+    current = currentVersion("pip"),
+    expected = expectedVersion("pip")
+)
+
+message("\nVersion managers (current user):")
+checkVersion(
+    name = "Python : pipx",
+    whichName = "pipx",
+    current = currentVersion("pipx"),
+    expected = expectedVersion("pipx"),
+    required = FALSE
+)
+checkVersion(
+    name = "Python : pyenv",
+    whichName = "pyenv",
+    current = currentVersion("pyenv"),
+    expected = expectedVersion("pyenv"),
+    required = FALSE
+)
+checkVersion(
+    name = "Ruby : rbenv",
+    whichName = "rbenv",
+    current = currentVersion("rbenv"),
+    expected = expectedVersion("rbenv"),
+    required = FALSE
+)
+
+
+
+## Tools =======================================================================
+message("\nTools:")
 checkVersion(
     name = "Git",
     whichName = "git",
@@ -617,6 +652,12 @@ checkVersion(
     current = currentMajorVersion("llvm"),
     expected = expectedMajorVersion("llvm")
 )
+checkVersion(
+    name = "SQLite",
+    whichName = "sqlite3",
+    current = currentVersion("sqlite"),
+    expected = expectedVersion("sqlite")
+)
 
 ## Note that macOS switched to LibreSSL in 2018.
 ## > checkVersion(
@@ -776,25 +817,43 @@ if (
 
 
 
-## Extra programs ==============================================================
-message("\nExtra programs:")
-
-checkVersion(
-    name = "ag (The Silver Searcher)",
-    whichName = "ag",
-    current = currentVersion("ag"),
-    expected = expectedVersion("ag"),
+## Python packages =============================================================
+message("\nPython packages (current user):")
+installed(
+    which = c(
+        "black",
+        "flake8",
+        "pylint",
+        "pytest"
+    ),
     required = FALSE
 )
-if (identical(shell, "zsh")) {
-    checkVersion(
-        name = "autojump",
-        whichName = "autojump",
-        current = currentVersion("autojump"),
-        expected = expectedVersion("autojump"),
-        required = FALSE
-    )
-}
+
+
+
+## Rust cargo ==================================================================
+message("\nRust cargo crates (current user):")
+checkVersion(
+    name = "Rust compiler",
+    whichName = "rustc",
+    current = currentVersion("rust"),
+    expected = expectedVersion("rust"),
+    required = FALSE
+)
+checkVersion(
+    name = "rustup",
+    whichName = "rustup",
+    current = currentVersion("rustup"),
+    expected = expectedVersion("rustup"),
+    required = FALSE
+)
+checkVersion(
+    name = "broot",
+    whichName = "broot",
+    current = currentVersion("broot"),
+    expected = expectedVersion("broot"),
+    required = FALSE
+)
 checkVersion(
     name = "exa",
     whichName = "exa",
@@ -809,6 +868,25 @@ checkVersion(
     expected = expectedVersion("fd"),
     required = FALSE
 )
+
+
+
+## Next-gen shell ==============================================================
+message("\nNext-gen shell:")
+checkVersion(
+    name = "The Silver Searcher (Ag)",
+    whichName = "ag",
+    current = currentVersion("the-silver-searcher"),
+    expected = expectedVersion("the-silver-searcher"),
+    required = FALSE
+)
+checkVersion(
+    name = "autojump",
+    whichName = "autojump",
+    current = currentVersion("autojump"),
+    expected = expectedVersion("autojump"),
+    required = FALSE
+)
 checkVersion(
     name = "fzf",
     whichName = "fzf",
@@ -816,58 +894,4 @@ checkVersion(
     expected = expectedVersion("fzf"),
     required = FALSE
 )
-checkVersion(
-    name = "Perl : Perlbrew",
-    whichName = "perlbrew",
-    current = currentVersion("perlbrew"),
-    expected = expectedVersion("perlbrew"),
-    required = FALSE
-)
-checkVersion(
-    name = "Python : pipx",
-    whichName = "pipx",
-    current = currentVersion("pipx"),
-    expected = expectedVersion("pipx"),
-    required = FALSE
-)
-checkVersion(
-    name = "Python : pyenv",
-    whichName = "pyenv",
-    current = currentVersion("pyenv"),
-    expected = expectedVersion("pyenv"),
-    required = FALSE
-)
-checkVersion(
-    name = "Ruby : rbenv",
-    whichName = "rbenv",
-    current = currentVersion("rbenv"),
-    expected = expectedVersion("rbenv"),
-    required = FALSE
-)
-checkVersion(
-    name = "Rust",
-    whichName = "rustc",
-    current = currentVersion("rust"),
-    expected = expectedVersion("rust"),
-    required = FALSE
-)
-checkVersion(
-    name = "Rust : rustup",
-    whichName = "rustup",
-    current = currentVersion("rustup"),
-    expected = expectedVersion("rustup"),
-    required = FALSE
-)
 
-## Python packages =============================================================
-message("\nPython packages:")
-
-installed(
-    which = c(
-        "black",
-        "flake8",
-        "pylint",
-        "pytest"
-    ),
-    required = FALSE
-)
