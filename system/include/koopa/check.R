@@ -3,9 +3,6 @@
 ## Check installed program versions.
 ## Updated 2020-01-09.
 
-## LLVM check is failing silently on Ubuntu 18. Need to fix this.
-## https://apt.llvm.org/
-
 options(
     "error" = quote(quit(status = 1L)),
     "mc.cores" = max(1L, parallel::detectCores() - 1L),
@@ -648,7 +645,6 @@ checkVersion(
     current = currentVersion("hdf5"),
     expected = expectedVersion("hdf5")
 )
-# FIXME This isn't installed correctly on AWS Ubuntu 18 LTS.
 checkVersion(
     name = "LLVM",
     ## > whichName = "llvm-config",
