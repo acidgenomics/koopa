@@ -3,6 +3,9 @@
 ## Check installed program versions.
 ## Updated 2020-01-09.
 
+## LLVM check is failing silently on Ubuntu 18. Need to fix this.
+## https://apt.llvm.org/
+
 options(
     "error" = quote(quit(status = 1L)),
     "mc.cores" = max(1L, parallel::detectCores() - 1L),
@@ -311,7 +314,7 @@ checkVersion(
     expected = expectedVersion("bash")
 )
 checkVersion(
-    name = "ZSH",
+    name = "Zsh",
     whichName = "zsh",
     current = currentVersion("zsh"),
     expected = expectedVersion("zsh")
@@ -362,12 +365,6 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-checkVersion(
-    name = "Python : pip",
-    whichName = "pip3",
-    current = currentVersion("pip"),
-    expected = expectedVersion("pip")
-)
 # Can use `packageVersion("base")` instead but it doesn't always return the
 # correct value for RStudio Server Pro.
 checkVersion(
@@ -407,18 +404,11 @@ checkVersion(
     current = currentVersion("ruby"),
     expected = expectedVersion("ruby")
 )
-checkVersion(
-    name = "Rust",
-    whichName = "rustc",
-    current = currentVersion("rust"),
-    expected = expectedVersion("rust"),
-    required = FALSE
-)
 
 
 
 ## Version managers ============================================================
-message("\nVersion managers:")
+message("\nVersion managers (shared):")
 checkVersion(
     name = "Conda",
     whichName = "conda",
@@ -432,6 +422,14 @@ checkVersion(
     expected = expectedVersion("perlbrew"),
     required = FALSE
 )
+checkVersion(
+    name = "Python : pip",
+    whichName = "pip3",
+    current = currentVersion("pip"),
+    expected = expectedVersion("pip")
+)
+
+message("\nVersion managers (current user):")
 checkVersion(
     name = "Python : pipx",
     whichName = "pipx",
@@ -451,13 +449,6 @@ checkVersion(
     whichName = "rbenv",
     current = currentVersion("rbenv"),
     expected = expectedVersion("rbenv"),
-    required = FALSE
-)
-checkVersion(
-    name = "Rust : rustup",
-    whichName = "rustup",
-    current = currentVersion("rustup"),
-    expected = expectedVersion("rustup"),
     required = FALSE
 )
 
@@ -657,6 +648,7 @@ checkVersion(
     current = currentVersion("hdf5"),
     expected = expectedVersion("hdf5")
 )
+# FIXME This isn't installed correctly on AWS Ubuntu 18 LTS.
 checkVersion(
     name = "LLVM",
     ## > whichName = "llvm-config",
@@ -829,20 +821,34 @@ if (
 
 
 
-## Next-gen shell ==============================================================
-message("\nNext-gen shell:")
+## Python packages =============================================================
+message("\nPython packages (current user):")
+installed(
+    which = c(
+        "black",
+        "flake8",
+        "pylint",
+        "pytest"
+    ),
+    required = FALSE
+)
+
+
+
+## Rust cargo ==================================================================
+message("\nRust cargo crates (current user):")
 checkVersion(
-    name = "The Silver Searcher (Ag)",
-    whichName = "ag",
-    current = currentVersion("the-silver-searcher"),
-    expected = expectedVersion("the-silver-searcher"),
+    name = "Rust compiler",
+    whichName = "rustc",
+    current = currentVersion("rust"),
+    expected = expectedVersion("rust"),
     required = FALSE
 )
 checkVersion(
-    name = "autojump",
-    whichName = "autojump",
-    current = currentVersion("autojump"),
-    expected = expectedVersion("autojump"),
+    name = "rustup",
+    whichName = "rustup",
+    current = currentVersion("rustup"),
+    expected = expectedVersion("rustup"),
     required = FALSE
 )
 checkVersion(
@@ -866,6 +872,25 @@ checkVersion(
     expected = expectedVersion("fd"),
     required = FALSE
 )
+
+
+
+## Next-gen shell ==============================================================
+message("\nNext-gen shell:")
+checkVersion(
+    name = "The Silver Searcher (Ag)",
+    whichName = "ag",
+    current = currentVersion("the-silver-searcher"),
+    expected = expectedVersion("the-silver-searcher"),
+    required = FALSE
+)
+checkVersion(
+    name = "autojump",
+    whichName = "autojump",
+    current = currentVersion("autojump"),
+    expected = expectedVersion("autojump"),
+    required = FALSE
+)
 checkVersion(
     name = "fzf",
     whichName = "fzf",
@@ -874,14 +899,3 @@ checkVersion(
     required = FALSE
 )
 
-## Python packages =============================================================
-message("\nPython packages:")
-installed(
-    which = c(
-        "black",
-        "flake8",
-        "pylint",
-        "pytest"
-    ),
-    required = FALSE
-)
