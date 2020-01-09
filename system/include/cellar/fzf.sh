@@ -16,17 +16,12 @@ _koopa_message "Installing ${name} ${version}."
 rm -frv "$prefix" "$opt_prefix"
 mkdir -pv "$prefix" "$opt_prefix"
 
-goroot="${tmp_dir}/go"
-mkdir -pv "$goroot"
-export GOROOT="$goroot"
-
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
     _koopa_download "https://github.com/junegunn/fzf/archive/${file}"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
-    # Build fzf binary for your platform in 'target/'.
     make --jobs="$jobs"
     make test
     # This will copy fzf binary from 'target/' to 'bin/' inside tmp dir.
@@ -37,7 +32,7 @@ export GOROOT="$goroot"
     # Following approach used in Homebrew recipe here.
     rm -fr src target
     # Install into opt prefix and then link essential directories.
-    cp -irv . "$opt_prefix"
+    cp -rv . "$opt_prefix"
     rm -fr "$tmp_dir"
 )
 
