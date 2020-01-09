@@ -180,7 +180,7 @@ _koopa_activate_fzf() {
 _koopa_activate_llvm() {                                                  # {{{1
     # """
     # Activate LLVM config.
-    # Updated 2019-11-13.
+    # Updated 2020-01-09.
     #
     # Note that LLVM 7 specifically is now required to install umap-learn.
     # Current version LLVM 9 isn't supported by numba > llvmlite yet.
@@ -196,6 +196,8 @@ _koopa_activate_llvm() {                                                  # {{{1
     elif _koopa_is_darwin
     then
         llvm_config="/usr/local/opt/llvm@7/bin/llvm-config"
+    else
+        llvm_config="/usr/bin/llvm-config-7"
     fi
     [ -x "$llvm_config" ] && export LLVM_CONFIG="$llvm_config"
     return 0
