@@ -16,6 +16,10 @@ _koopa_message "Installing ${name} ${version}."
 rm -frv "$prefix" "$opt_prefix"
 mkdir -pv "$prefix" "$opt_prefix"
 
+goroot="${tmp_dir}/go"
+mkdir -pv "$goroot"
+export GOROOT="$goroot"
+
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
