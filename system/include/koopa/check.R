@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2020-01-08.
+## Updated 2020-01-09.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -616,6 +616,12 @@ checkVersion(
     whichName = NULL,
     current = currentMajorVersion("llvm"),
     expected = expectedMajorVersion("llvm")
+)
+checkVersion(
+    name = "SQLite",
+    whichName = "sqlite3",
+    current = currentVersion("sqlite"),
+    expected = expectedVersion("sqlite")
 )
 
 ## Note that macOS switched to LibreSSL in 2018.
