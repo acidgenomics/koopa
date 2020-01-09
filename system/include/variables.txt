@@ -113,8 +113,8 @@ java="13.0.1"
 
 # LLVM
 # Note that version 7 is currently required for umap-learn > numba > llvmlite.
-# llvm="9.0.1"
-llvm="7"
+# llvm="7"
+llvm="9.0.1"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html
