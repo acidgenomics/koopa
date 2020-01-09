@@ -161,7 +161,7 @@ _koopa_activate_fzf() {
     # """
     # Activate fzf, command-line fuzzy finder.
     # https://github.com/junegunn/fzf
-    # Updated 2020-01-08.
+    # Updated 2020-01-09.
     _koopa_is_installed fzf || return 0
     local dir
     dir="/usr/local/opt/fzf"
@@ -170,7 +170,7 @@ _koopa_activate_fzf() {
     shell="$(_koopa_shell)"
     # Auto-completion.
     # shellcheck source=/dev/null
-    . "${dir}/shell/completion.${shell}" 2> /dev/null
+    . "${dir}/shell/completion.${shell}"
     # Key bindings.
     # shellcheck source=/dev/null
     . "${dir}/shell/key-bindings.${shell}"
