@@ -4,6 +4,7 @@ set -Eeu -o pipefail
 _koopa_assert_is_installed go
 
 # https://github.com/junegunn/fzf/blob/master/BUILD.md
+# Note that this script will download files into '~/go'.
 
 name="fzf"
 version="$(_koopa_variable "$name")"
