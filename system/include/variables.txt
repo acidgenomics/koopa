@@ -218,8 +218,9 @@ sqlite-year="2019"
 # https://www.latex-project.org/get/
 tex="2019"
 
+# Ag
 # https://github.com/ggreer/the_silver_searcher
-the-silver-searcher="2.2.0"  # ag
+the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
 tmux="3.0a"

@@ -832,10 +832,10 @@ if (
 ## Next-gen shell ==============================================================
 message("\nNext-gen shell:")
 checkVersion(
-    name = "ag (The Silver Searcher)",
+    name = "The Silver Searcher (Ag)",
     whichName = "ag",
-    current = currentVersion("ag"),
-    expected = expectedVersion("ag"),
+    current = currentVersion("the-silver-searcher"),
+    expected = expectedVersion("the-silver-searcher"),
     required = FALSE
 )
 checkVersion(
