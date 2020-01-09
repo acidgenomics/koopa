@@ -8,9 +8,6 @@ koopa_date="2020-01-09"
 # Program versions                                                          {{{1
 # ==============================================================================
 
-# https://github.com/ggreer/the_silver_searcher
-ag="2.2.0"
-
 # https://repo.continuum.io/archive/
 anaconda3="2019.10"
 
@@ -220,6 +217,9 @@ sqlite-year="2019"
 
 # https://www.latex-project.org/get/
 tex="2019"
+
+# https://github.com/ggreer/the_silver_searcher
+the-silver-searcher="2.2.0"  # ag
 
 # https://github.com/tmux/tmux/releases
 tmux="3.0a"
