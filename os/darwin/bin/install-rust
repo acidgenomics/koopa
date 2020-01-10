@@ -4,11 +4,19 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
+
 _koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+_koopa_assert_is_not_installed rustup
 _koopa_assert_is_installed brew
 
+_koopa_message "Installing rustup via Homebrew."
 brew install rustup
-rustup-init -v -y --no-modify-path
 
-exe_file="${HOME}/.cargo/bin/rustc"
-"$exe_file" --version
+export CARGO_HOME="${HOME}/.cargo"
+export RUSTUP_HOME="${HOME}/.rustup"
+
+_koopa_note "CARGO_HOME: '${CARGO_HOME}'."
+_koopa_note "RUSTUP_HOME: '${RUSTUP_HOME}'."
+
+rustup-init -v -y --no-modify-path
