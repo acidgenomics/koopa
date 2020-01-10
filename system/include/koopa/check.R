@@ -401,11 +401,17 @@ checkVersion(
     current = currentVersion("ruby"),
     expected = expectedVersion("ruby")
 )
+checkVersion(
+    name = "Rust",
+    whichName = "rustc",
+    current = currentVersion("rust"),
+    expected = expectedVersion("rust")
+)
 
 
 
 ## Version managers ============================================================
-message("\nVersion managers (shared):")
+message("\nVersion managers:")
 checkVersion(
     name = "Conda",
     whichName = "conda",
@@ -416,8 +422,7 @@ checkVersion(
     name = "Perl : Perlbrew",
     whichName = "perlbrew",
     current = currentVersion("perlbrew"),
-    expected = expectedVersion("perlbrew"),
-    required = FALSE
+    expected = expectedVersion("perlbrew")
 )
 checkVersion(
     name = "Python : pip",
@@ -425,28 +430,35 @@ checkVersion(
     current = currentVersion("pip"),
     expected = expectedVersion("pip")
 )
-
-message("\nVersion managers (current user):")
 checkVersion(
     name = "Python : pipx",
     whichName = "pipx",
     current = currentVersion("pipx"),
-    expected = expectedVersion("pipx"),
-    required = FALSE
+    expected = expectedVersion("pipx")
 )
 checkVersion(
     name = "Python : pyenv",
     whichName = "pyenv",
     current = currentVersion("pyenv"),
-    expected = expectedVersion("pyenv"),
-    required = FALSE
+    expected = expectedVersion("pyenv")
 )
 checkVersion(
     name = "Ruby : rbenv",
     whichName = "rbenv",
     current = currentVersion("rbenv"),
-    expected = expectedVersion("rbenv"),
-    required = FALSE
+    expected = expectedVersion("rbenv")
+)
+checkVersion(
+    name = "Rust : cargo",
+    whichName = "cargo",
+    current = currentVersion("cargo"),
+    expected = expectedVersion("rust")
+)
+checkVersion(
+    name = "Rust : rustup",
+    whichName = "rustup",
+    current = currentVersion("rustup"),
+    expected = expectedVersion("rustup")
 )
 
 
@@ -481,6 +493,29 @@ checkVersion(
     whichName = "shellcheck",
     current = currentVersion("shellcheck"),
     expected = expectedVersion("shellcheck")
+)
+
+
+
+## Shell tools =================================================================
+message("\nShell tools:")
+checkVersion(
+    name = "autojump",
+    whichName = "autojump",
+    current = currentVersion("autojump"),
+    expected = expectedVersion("autojump")
+)
+checkVersion(
+    name = "fzf",
+    whichName = "fzf",
+    current = currentVersion("fzf"),
+    expected = expectedVersion("fzf")
+)
+checkVersion(
+    name = "The Silver Searcher (Ag)",
+    whichName = "ag",
+    current = currentVersion("the-silver-searcher"),
+    expected = expectedVersion("the-silver-searcher")
 )
 
 
@@ -829,8 +864,7 @@ installed(
         "flake8",
         "pylint",
         "pytest"
-    ),
-    required = FALSE
+    )
 )
 
 
@@ -838,64 +872,20 @@ installed(
 ## Rust cargo ==================================================================
 message("\nRust cargo crates:")
 checkVersion(
-    name = "Rust compiler",
-    whichName = "rustc",
-    current = currentVersion("rust"),
-    expected = expectedVersion("rust"),
-    required = FALSE
-)
-checkVersion(
-    name = "rustup",
-    whichName = "rustup",
-    current = currentVersion("rustup"),
-    expected = expectedVersion("rustup"),
-    required = FALSE
-)
-checkVersion(
     name = "broot",
     whichName = "broot",
     current = currentVersion("broot"),
-    expected = expectedVersion("broot"),
-    required = FALSE
+    expected = expectedVersion("broot")
 )
 checkVersion(
     name = "exa",
     whichName = "exa",
     current = currentVersion("exa"),
-    expected = expectedVersion("exa"),
-    required = FALSE
+    expected = expectedVersion("exa")
 )
 checkVersion(
     name = "fd",
     whichName = "fd",
     current = currentVersion("fd"),
-    expected = expectedVersion("fd"),
-    required = FALSE
+    expected = expectedVersion("fd")
 )
-
-
-
-## Next-gen shell ==============================================================
-message("\nNext-gen shell:")
-checkVersion(
-    name = "The Silver Searcher (Ag)",
-    whichName = "ag",
-    current = currentVersion("the-silver-searcher"),
-    expected = expectedVersion("the-silver-searcher"),
-    required = FALSE
-)
-checkVersion(
-    name = "autojump",
-    whichName = "autojump",
-    current = currentVersion("autojump"),
-    expected = expectedVersion("autojump"),
-    required = FALSE
-)
-checkVersion(
-    name = "fzf",
-    whichName = "fzf",
-    current = currentVersion("fzf"),
-    expected = expectedVersion("fzf"),
-    required = FALSE
-)
-
