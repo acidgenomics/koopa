@@ -203,7 +203,7 @@ _koopa_rbenv_prefix() {                                                   # {{{1
     echo "${XDG_DATA_HOME}/rbenv"
 }
 
-_koopa_rust_prefix() {                                                    # {{{1
+_koopa_rust_cargo_prefix() {                                              # {{{1
     # """
     # Rust prefix.
     # Updated 2020-01-10.
@@ -216,12 +216,12 @@ _koopa_rust_prefix() {                                                    # {{{1
     local prefix
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
-    # Check for shared installation (Linux).
+    # Shared installation (Linux).
     if [ -d "${app_prefix}/rust/cargo" ]
     then
         prefix="${app_prefix}/rust/cargo"
     else
-        # This is the default, also used for macOS.
+        # Local user installation, used on macOS.
         prefix="${HOME}/.cargo"
     fi
     echo "$prefix"
