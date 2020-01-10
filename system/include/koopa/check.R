@@ -822,7 +822,7 @@ if (
 
 
 ## Python packages =============================================================
-message("\nPython packages (current user):")
+message("\nPython pipx packages:")
 installed(
     which = c(
         "black",
@@ -836,7 +836,7 @@ installed(
 
 
 ## Rust cargo ==================================================================
-message("\nRust cargo crates (current user):")
+message("\nRust cargo crates:")
 checkVersion(
     name = "Rust compiler",
     whichName = "rustc",
