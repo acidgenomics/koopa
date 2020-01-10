@@ -91,9 +91,25 @@ _koopa_aspera_prefix() {                                                  # {{{1
 _koopa_autojump_prefix() {                                                # {{{1
     # """
     # autojump prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-10.
     # """
-    echo "${HOME}/.autojump"
+    local prefix
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
+    # Shared installation (Linux).
+    if [ -x "${make_prefix}/bin/autojump" ]
+    then
+        # This is the current target of cellar script.
+        prefix="$make_prefix"
+    elif [ -x "/usr/bin/autojump" ]
+    then
+        # Also support installation via package manager.
+        prefix="/usr"
+    else
+        # Local user installation (macOS).
+        prefix="${HOME}/.autojump"
+    fi
+    echo "$prefix"
 }
 
 _koopa_bcbio_prefix() {                                                   # {{{1
@@ -190,6 +206,7 @@ _koopa_pyenv_prefix() {                                                   # {{{1
     then
         prefix="${app_prefix}/pyenv"
     else
+        # Local user installation (macOS).
         prefix="${XDG_DATA_HOME}/pyenv"
     fi
     echo "$prefix"

@@ -35,7 +35,6 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 _koopa_message "Installing ${name} ${version}."
-_koopa_prefix_mkdir "$prefix"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -44,15 +43,10 @@ _koopa_prefix_mkdir "$prefix"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "autojump-release-v${version}" || exit 1
-
     ./install.py \
-        --destdir "target" \
+        --destdir "$prefix" \
         --prefix="" \
         --zshshare "share/zsh/site-functions"
-    # Nuke the 'etc/profile.d/autojump.sh' script.
-    # koopa handles this automatically.
-    rm -fr target/etc
-    cp -rv target/* "${prefix}/."
     rm -fr "$tmp_dir"
 )
 
