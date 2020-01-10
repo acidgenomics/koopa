@@ -10,7 +10,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-_koopa_assert_is_installed cargo rustc
+_koopa_assert_is_installed cargo rustc rustup
 
 crates=(
     # https://github.com/Canop/broot
