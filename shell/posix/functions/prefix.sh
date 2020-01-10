@@ -178,9 +178,21 @@ _koopa_perlbrew_prefix() {                                                # {{{1
 _koopa_pyenv_prefix() {                                                   # {{{1
     # """
     # pyenv prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-10.
+    #
+    # See also approach used for rbenv.
     # """
-    echo "${XDG_DATA_HOME}/pyenv"
+    local prefix
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
+    # Shared installation (Linux)
+    if [ -d "${app_prefix}/pyenv" ]
+    then
+        prefix="${app_prefix}/pyenv"
+    else
+        prefix="${XDG_DATA_HOME}/pyenv"
+    fi
+    echo "$prefix"
 }
 
 _koopa_r_home() {                                                         # {{{1
@@ -198,9 +210,24 @@ _koopa_r_home() {                                                         # {{{1
 _koopa_rbenv_prefix() {                                                   # {{{1
     # """
     # rbenv prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-10.
+    #
+    # See also:
+    # - RBENV_ROOT
+    # - https://gist.github.com/saegey/5499096
     # """
-    echo "${XDG_DATA_HOME}/rbenv"
+    local prefix
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
+    # Shared installation (Linux).
+    if [ -d "${app_prefix}/rbenv" ]
+    then
+        prefix="${app_prefix}/rbenv"
+    else
+        # Local user installation (macOS).
+        prefix="${XDG_DATA_HOME}/rbenv"
+    fi
+    echo "$prefix"
 }
 
 _koopa_rust_cargo_prefix() {                                              # {{{1
