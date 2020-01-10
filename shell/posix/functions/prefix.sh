@@ -206,9 +206,25 @@ _koopa_rbenv_prefix() {                                                   # {{{1
 _koopa_rust_prefix() {                                                    # {{{1
     # """
     # Rust prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-10.
+    #
+    # See also:
+    # - https://github.com/rust-lang/rustup#environment-variables
+    # - CARGO_HOME
+    # - RUSTUP_HOME
     # """
-    echo "${HOME}/.cargo"
+    local prefix
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
+    # Check for shared installation (Linux).
+    if [ -d "${app_prefix}/rust/cargo" ]
+    then
+        prefix="${app_prefix}/rust/cargo"
+    else
+        # This is the default, also used for macOS.
+        prefix="${HOME}/.cargo"
+    fi
+    echo "$prefix"
 }
 
 _koopa_venv_prefix() {                                                    # {{{1
