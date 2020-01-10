@@ -289,19 +289,34 @@ _koopa_activate_rbenv() {                                                 # {{{1
 _koopa_activate_rust() {                                                  # {{{1
     # """
     # Activate Rust programming language.
-    # Updated 2019-10-29.
+    # Updated 2020-01-10.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
-    local prefix
-    prefix="$(_koopa_rust_prefix)"
-    [ -d "$prefix" ] || return 0
+    local cargo_prefix
+    cargo_prefix="$(_koopa_rust_cargo_prefix)"
+    [ -d "$cargo_prefix" ] || return 0
+    local shared_rust_prefix
+    shared_rust_prefix="$(_koopa_app_prefix)/rust"
+    local shared_cargo_prefix
+    shared_cargo_prefix="${shared_rust_prefix}/cargo"
+    if [ "$cargo_prefix" = "$shared_cargo_prefix" ]
+    then
+        local shared_rustup_prefix
+        shared_rustup_prefix="${shared_rust_prefix}/rustup"
+        if [ ! -d "$shared_rustup_prefix" ]
+        then
+            _koopa_warning "Rustup not installed at '${shared_rustup_prefix}'."
+        fi
+        export RUSTUP_HOME="$shared_rustup_prefix"
+    fi
     local script
-    script="${prefix}/env"
+    script="${cargo_prefix}/env"
     [ -r "$script" ] || return 0
+    export CARGO_HOME="$cargo_prefix"
     # shellcheck source=/dev/null
     . "$script"
     return 0
