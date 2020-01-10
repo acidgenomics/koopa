@@ -20,3 +20,5 @@ _koopa_note "CARGO_HOME: '${CARGO_HOME}'."
 _koopa_note "RUSTUP_HOME: '${RUSTUP_HOME}'."
 
 rustup-init -v -y --no-modify-path
+
+_koopa_note "Restart the shell to finish Rust activation."
