@@ -27,3 +27,5 @@ _koopa_note "RUSTUP_HOME: '${RUSTUP_HOME}'."
 curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
 
 _koopa_set_permissions "$prefix"
+
+_koopa_note "Restart the shell to finish Rust activation."
