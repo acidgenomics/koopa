@@ -31,6 +31,9 @@ _koopa_activate_autojump() {                                              # {{{1
     # Activate autojump.
     # Updated 2019-11-15.
     #
+    # Purge install with 'j --purge'.
+    # Location: ~/.local/share/autojump/autojump.txt
+    #
     # See also:
     # - https://github.com/wting/autojump
     # """
