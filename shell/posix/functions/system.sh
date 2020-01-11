@@ -65,6 +65,7 @@ _koopa_current_version() {                                                # {{{1
     then
         _koopa_stop "'${name}' is not supported."
     fi
+    # shellcheck source=/dev/null
     . "$script"
 }
 
