@@ -242,7 +242,7 @@ _koopa_update_profile() {                                                 # {{{1
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # Updated 2020-01-11.
     # """
-    _koopa_is_shared || return 0
+    _koopa_is_shared_install || return 0
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
     local symlink
