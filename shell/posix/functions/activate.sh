@@ -4,10 +4,10 @@
 _koopa_activate_prefix() {                                                # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # Updated 2019-11-10.
+    # Updated 2020-01-12.
     # """
     local prefix
-    prefix="$1"
+    prefix="${1:?}"
     _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
     _koopa_add_to_path_start "${prefix}/bin"
     _koopa_add_to_manpath_start "${prefix}/man"
@@ -15,15 +15,18 @@ _koopa_activate_prefix() {                                                # {{{1
     return 0
 }
 
+
+
 _koopa_activate_aspera() {                                                # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # Updated 2019-11-15.
+    # Updated 2020-01-12.
     # """
     local prefix
     prefix="$(_koopa_aspera_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
+    return 0
 }
 
 _koopa_activate_autojump() {                                              # {{{1
@@ -76,7 +79,7 @@ _koopa_activate_bcbio() {                                                 # {{{1
     return 0
 }
 
-_koopa_activate_broot() {
+_koopa_activate_broot() {                                                 # {{{1
     # """
     # Activate broot directory tree utility.
     # The br function script must be sourced for activation.
@@ -123,7 +126,7 @@ _koopa_activate_conda() {                                                 # {{{1
     fi
     [ -d "$prefix" ] || return 0
     local name
-    name="${2:-"base"}"
+    name="${2:-base}"
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
     [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
@@ -160,7 +163,7 @@ _koopa_activate_ensembl_perl_api() {                                      # {{{1
     return 0
 }
 
-_koopa_activate_fzf() {
+_koopa_activate_fzf() {                                                   # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
     # https://github.com/junegunn/fzf
@@ -183,7 +186,7 @@ _koopa_activate_fzf() {
 _koopa_activate_llvm() {                                                  # {{{1
     # """
     # Activate LLVM config.
-    # Updated 2020-01-09.
+    # Updated 2020-01-12.
     #
     # Note that LLVM 7 specifically is now required to install umap-learn.
     # Current version LLVM 9 isn't supported by numba > llvmlite yet.
@@ -191,9 +194,8 @@ _koopa_activate_llvm() {                                                  # {{{1
     # Homebrew LLVM 7
     # > brew install llvm@7
     # """
+    [ -x "${LLVM_CONFIG:-}" ] && return 0
     local config
-    config="${LLVM_CONFIG:-}"
-    [ -x "$config" ] && return 0
     if _koopa_is_darwin
     then
         # llvm@7
@@ -210,7 +212,7 @@ _koopa_activate_llvm() {                                                  # {{{1
 _koopa_activate_perlbrew() {                                              # {{{1
     # """
     # Activate Perlbrew.
-    # Updated 2019-12-17.
+    # Updated 2020-01-12.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -218,7 +220,7 @@ _koopa_activate_perlbrew() {                                              # {{{1
     # See also:
     # - https://perlbrew.pl
     # """
-    [ -z "${PERLBREW_ROOT:-}" ] || return 0
+    [ -n "${PERLBREW_ROOT:-}" ] && return 0
     ! _koopa_is_installed perlbrew || return 0
     _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
     local prefix
@@ -238,7 +240,7 @@ _koopa_activate_perlbrew() {                                              # {{{1
 _koopa_activate_pipx() {                                                  # {{{1
     # """
     # Activate pipx for Python.
-    # Updated 2020-01-11.
+    # Updated 2020-01-12.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -251,8 +253,8 @@ _koopa_activate_pipx() {                                                  # {{{1
     # overridden by setting the environment variable 'PIPX_BIN_DIR'.
     # """
     _koopa_is_installed pipx || return 0
-    [ -z "${PIPX_HOME:-}" ] || return 0
-    [ -z "${PIPX_BIN_DIR:-}" ] || return 0
+    [ -n "${PIPX_HOME:-}" ] && return 0
+    [ -n "${PIPX_BIN_DIR:-}" ] && return 0
     local shared_prefix
     shared_prefix="$(_koopa_app_prefix)/python/pipx"
     if [ -d "$shared_prefix" ]
@@ -274,15 +276,12 @@ _koopa_activate_pipx() {                                                  # {{{1
 _koopa_activate_pyenv() {                                                 # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # Updated 2019-11-15.
+    # Updated 2020-01-12.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
-    if _koopa_is_installed pyenv
-    then
-        return 0
-    fi
-    [ -z "${PYENV_ROOT:-}" ] || return 0
+    _koopa_is_installed pyenv && return 0
+    [ -n "${PYENV_ROOT:-}" ] && return 0
     local prefix
     prefix="$(_koopa_pyenv_prefix)"
     [ -d "$prefix" ] || return 0
@@ -312,7 +311,7 @@ _koopa_activate_rbenv() {                                                 # {{{1
         eval "$(rbenv init -)"
         return 0
     fi
-    [ -z "${RBENV_ROOT:-}" ] || return 0
+    [ -n "${RBENV_ROOT:-}" ] && return 0
     local prefix
     prefix="$(_koopa_rbenv_prefix)"
     [ -d "$prefix" ] || return 0
@@ -364,14 +363,10 @@ _koopa_activate_rust() {                                                  # {{{1
 _koopa_activate_secrets() {                                               # {{{1
     # """
     # Source secrets file.
-    # Updated 2019-10-29.
+    # Updated 2020-01-12.
     # """
     local file
-    file="${1:-}"
-    if [ -z "$file" ]
-    then
-        file="${HOME}/.secrets"
-    fi
+    file="${1:-"${HOME}/.secrets"}"
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"
@@ -405,7 +400,7 @@ _koopa_activate_ssh_key() {                                               # {{{1
 _koopa_activate_venv() {                                                  # {{{1
     # """
     # Activate Python default virtual environment.
-    # Updated 2019-11-15.
+    # Updated 2020-01-12.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
@@ -420,10 +415,10 @@ _koopa_activate_venv() {                                                  # {{{1
     # Refer to 'declare -f deactivate' for function source code.
     # Note that 'deactivate' is still messing up autojump path.
     # """
-    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    [ -n "${VIRTUAL_ENV:-}" ] && return 0
     _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
     local name
-    name="${1:-"base"}"
+    name="${1:-base}"
     local prefix
     prefix="$(_koopa_venv_prefix)"
     local script

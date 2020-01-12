@@ -4,67 +4,71 @@
 _koopa_basename_sans_ext() {                                              # {{{1
     # """
     # Extract the file basename without extension.
-    # Updated 2019-10-08.
+    # Updated 2020-01-12.
     #
     # Examples:
-    # _koopa_basename_sans_ext "hello-world.txt"
+    # _koopa_basename_sans_ext "dir/hello-world.txt"
     # ## hello-world
     #
-    # _koopa_basename_sans_ext "hello-world.tar.gz"
+    # _koopa_basename_sans_ext "dir/hello-world.tar.gz"
     # ## hello-world.tar
     #
     # See also: _koopa_file_ext
     # """
-    local x
-    x="$1"
-    if ! _koopa_has_file_ext "$x"
+    local file
+    file="${1:?}"
+    local bn
+    bn="$(basename "$file")"
+    if ! _koopa_has_file_ext "$file"
     then
-        echo "$x"
+        echo "$bn"
         return 0
     fi
-    x="$(basename "$x")"
-    x="${x%.*}"
-    echo "$x"
+    bn="${bn%.*}"
+    echo "$bn"
 }
 
 _koopa_basename_sans_ext2() {                                             # {{{1
     # """
     # Extract the file basename prior to any dots in file name.
-    # Updated 2019-10-08.
+    # Updated 2020-01-12.
     #
     # Examples:
-    # _koopa_basename_sans_ext2 "hello-world.tar.gz"
+    # _koopa_basename_sans_ext2 "dir/hello-world.tar.gz"
     # ## hello-world
     #
     # See also: _koopa_file_ext2
     # """
-    local x
-    x="$1"
-    if ! _koopa_has_file_ext "$x"
+    local file
+    file="${1:?}"
+    local bn
+    bn="$(basename "$file")"
+    if ! _koopa_has_file_ext "$file"
     then
-        echo "$x"
+        echo "$bn"
         return 0
     fi
-    basename "$x" | cut -d '.' -f 1
+    echo "$bn" | cut -d '.' -f 1
 }
 
 _koopa_delete_dotfile() {                                                 # {{{1
     # """
     # Delete a dot file.
-    # Updated 2019-06-27.
+    # Updated 2020-01-12.
     # """
-    local path
     local name
-    path="${HOME}/.${1}"
-    name="$(basename "$path")"
+    name="${1:?}"
+    local path
+    path="${HOME}/.${name}"
     if [ -L "$path" ]
     then
         _koopa_message "Removing '${name}'."
         rm -f "$path"
     elif [ -f "$path" ] || [ -d "$path" ]
     then
-        _koopa_warning "Not a symlink: '${name}'."
+        _koopa_warning "Not a symlink: '${path}'."
     fi
+    return 0
 }
 
 _koopa_download() {                                                       # {{{1
@@ -79,21 +83,18 @@ _koopa_download() {                                                       # {{{1
     # """
     _koopa_assert_is_installed curl
     local url
-    url="$1"
+    url="${1:?}"
     local file
-    file="${2:-}"
-    if [ -z "$file" ]
-    then
-        file="$(basename "$url")"
-    fi
+    file="${2:-$(basename "$url")}"
     _koopa_message "Downloading '${url}' to '${file}'."
     curl -L -o "$file" "$url"
+    return 0
 }
 
 _koopa_ensure_newline_at_end_of_file() {                                  # {{{1
     # """
     # Ensure output CSV contains trailing line break.
-    # Updated 2019-10-11.
+    # Updated 2020-01-12.
     #
     # Otherwise 'readr::read_csv()' will skip the last line in R.
     # https://unix.stackexchange.com/questions/31947
@@ -104,13 +105,15 @@ _koopa_ensure_newline_at_end_of_file() {                                  # {{{1
     # ed -s file <<< w
     # sed -i -e '$a\' file
     # """
-    [ -n "$(tail -c1 "$1")" ] && printf '\n' >>"$1"
+    local file
+    file="${1:?}"
+    [ -n "$(tail -c1 "$file")" ] && printf '\n' >>"$file"
 }
 
 _koopa_extract() {                                                        # {{{1
     # """
     # Extract compressed files automatically.
-    # Updated 2019-10-27.
+    # Updated 2020-01-12.
     #
     # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
     #
@@ -118,7 +121,7 @@ _koopa_extract() {                                                        # {{{1
     # - https://github.com/stephenturner/oneliners
     # """
     local file
-    file="$1"
+    file="${1:?}"
     if [ ! -f "$file" ]
     then
         _koopa_stop "Invalid file: '${file}'."
@@ -165,12 +168,13 @@ _koopa_extract() {                                                        # {{{1
             _koopa_stop "Unsupported extension: '${file}'."
             ;;
    esac
+   return 0
 }
 
 _koopa_file_ext() {                                                       # {{{1
     # """
     # Extract the file extension from input.
-    # Updated 2019-10-08.
+    # Updated 2020-01-12.
     #
     # Examples:
     # _koopa_file_ext "hello-world.txt"
@@ -181,14 +185,16 @@ _koopa_file_ext() {                                                       # {{{1
     #
     # See also: _koopa_basename_sans_ext
     # """
-    _koopa_has_file_ext "$1" || return 0
-    printf "%s\n" "${1##*.}"
+    local file
+    file="${1:?}"
+    _koopa_has_file_ext "$file" || return 0
+    printf "%s\n" "${file##*.}"
 }
 
 _koopa_file_ext2() {                                                      # {{{1
     # """
     # Extract the file extension after any dots in the file name.
-    # Updated 2019-10-08.
+    # Updated 2020-01-12.
     #
     # This assumes file names are not in dotted case.
     #
@@ -198,8 +204,10 @@ _koopa_file_ext2() {                                                      # {{{1
     #
     # See also: _koopa_basename_sans_ext2
     # """
-    _koopa_has_file_ext "$1" || return 0
-    echo "$1" | cut -d '.' -f 2-
+    local file
+    file="${1:?}"
+    _koopa_has_file_ext "$file" || return 0
+    echo "$file" | cut -d '.' -f 2-
 }
 
 _koopa_find_broken_symlinks() {                                           # {{{1
@@ -223,13 +231,15 @@ _koopa_find_broken_symlinks() {                                           # {{{1
 _koopa_find_dotfiles() {                                                  # {{{1
     # """
     # Find dotfiles by type.
-    # Updated 2019-10-22.
+    # Updated 2020-01-12.
     #
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
-    local type="$1"
-    local header="$2"
+    local type
+    type="${1:?}"
+    local header
+    header="${2:?}"
     printf "\n%s:\n\n" "$header"
     find "$HOME" \
         -maxdepth 1 \
@@ -244,24 +254,30 @@ _koopa_find_dotfiles() {                                                  # {{{1
 _koopa_find_text() {                                                      # {{{1
     # """
     # Find text in any file.
-    # Updated 2019-09-05.
+    # Updated 2020-01-12.
     #
     # See also: https://github.com/stephenturner/oneliners
     #
     # Examples:
     # _koopa_find_text "mytext" *.txt
     # """
-    find . -name "$2" -exec grep -il "$1" {} \;;
+    local pattern
+    pattern="${1:?}"
+    local file_name
+    file_name="${2:?}"
+    find . -name "$file_name" -exec grep -il "$pattern" {} \;;
 }
 
 _koopa_github_latest_release() {                                          # {{{1
     # """
     # Get the latest release version from GitHub.
-    # Updated 2019-10-24.
+    # Updated 2020-01-12.
     #
     # Example: _koopa_github_latest_release "acidgenomics/koopa"
     # """
-    curl -s "https://github.com/${1}/releases/latest" 2>&1 \
+    local repo
+    repo="${1:?}"
+    curl -s "https://github.com/${repo}/releases/latest" 2>&1 \
         | grep -Eo '/tag/[.0-9v]+' \
         | cut -d '/' -f 3 \
         | sed 's/^v//'
@@ -270,11 +286,13 @@ _koopa_github_latest_release() {                                          # {{{1
 _koopa_line_count() {                                                     # {{{1
     # """
     # Return the number of lines in a file.
-    # Updated 2019-10-27.
+    # Updated 2020-01-12.
     #
     # Example: _koopa_line_count tx2gene.csv
     # """
-    wc -l "$1" \
+    local file
+    file="${1:?}"
+    wc -l "$file" \
         | xargs \
         | cut -d ' ' -f 1
 }
@@ -316,31 +334,31 @@ _koopa_rsync_flags() {                                                    # {{{1
 _koopa_stat_access_human() {                                              # {{{1
     # """
     # Get the current access permissions in human readable form.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    stat -c '%A' "$1"
+    stat -c '%A' "${1:?}"
 }
 
 _koopa_stat_access_octal() {                                              # {{{1
     # """
     # Get the current access permissions in octal form.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    stat -c '%a' "$1"
+    stat -c '%a' "${1:?}"
 }
 
 _koopa_stat_group() {                                                     # {{{1
     # """
     # Get the current group of a file or directory.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    stat -c '%G' "$1"
+    stat -c '%G' "${1:?}"
 }
 
 _koopa_stat_user() {                                                      # {{{1
     # """
     # Get the current user (owner) of a file or directory.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    stat -c '%U' "$1"
+    stat -c '%U' "${1:?}"
 }
