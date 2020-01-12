@@ -5,7 +5,9 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
 _koopa_assert_has_no_envs
+_koopa_assert_is_not_installed conda
 
 anaconda=0
 
@@ -33,7 +35,7 @@ else
     name="miniconda3"
 fi
 
-prefix="$(_koopa_app_prefix)/conda"
+prefix="$(_koopa_conda_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 exe_file="${prefix}/bin/conda"
 
@@ -88,5 +90,5 @@ ln -fnsv "${KOOPA_PREFIX}/os/linux/etc/conda/condarc" \
 
 _koopa_set_permissions "$prefix"
 
-command -v "$exe_file"
-"$exe_file" --version
+_koopa_success "Conda installed successfully."
+_koopa_note "Restart the shell to complete activation."
