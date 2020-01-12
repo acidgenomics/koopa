@@ -2,13 +2,15 @@
 set -Eeu -o pipefail
 
 # Linter checks.
-# Updated 2019-10-26.
+# Updated 2020-01-12.
 
-KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
+script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
     >/dev/null 2>&1 && pwd -P)"
+
+KOOPA_PREFIX="$(cd "${script_dir}/../.." >/dev/null 2>&1 && pwd -P)"
 export KOOPA_PREFIX
 
-linter_dir="${KOOPA_PREFIX}/system/linter"
+linter_dir="${script_dir}/linter"
 for file in "${linter_dir}/"*".sh"
 do
     if [[ -n "${CI:-}" ]]
