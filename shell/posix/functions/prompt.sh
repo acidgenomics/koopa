@@ -4,7 +4,7 @@
 _koopa_prompt() {                                                         # {{{1
     # """
     # Prompt string.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
     #
@@ -24,14 +24,24 @@ _koopa_prompt() {                                                         # {{{1
     #       howto-linux-unix-bash-shell-setup-prompt.html
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
-    local conda git newline prompt user venv wd
-    user="${USER}@${HOSTNAME//.*/}"
+    local shell
+    shell="${KOOPA_SHELL:?}"
+    local hostname
+    hostname="${HOSTNAME:?}"
+    hostname="${hostname//.*/}"
+    local user
+    user="${USER:?}"
+    user="${user}@${hostname}"
     # Note that subshell exec need to be escaped here, so they are evaluated
     # dynamically when the prompt is refreshed.
+    local conda
     conda="\$(_koopa_prompt_conda)"
+    local git
     git="\$(_koopa_prompt_git)"
+    local venv
     venv="\$(_koopa_prompt_venv)"
-    case "$KOOPA_SHELL" in
+    local newline prompt wd
+    case "$shell" in
         bash)
             newline='\n'
             prompt='\$'
@@ -47,7 +57,7 @@ _koopa_prompt() {                                                         # {{{1
     if _koopa_is_matching_fixed "${TERM:-}" "256color"
     then
         local conda_color git_color prompt_color user_color venv_color wd_color
-        case "$KOOPA_SHELL" in
+        case "$shell" in
             bash)
                 conda_color="33"
                 git_color="32"
@@ -94,25 +104,22 @@ _koopa_prompt() {                                                         # {{{1
 _koopa_prompt_conda() {                                                   # {{{1
     # """
     # Get conda environment name for prompt string.
-    # Updated 2019-10-13.
+    # Updated 2020-01-12.
     # """
     local env
     env="$(_koopa_conda_env)"
-    if [ -n "$env" ]
-    then
-        printf " conda:%s\n" "${env}"
-    else
-        return 0
-    fi
+    [ -n "$env" ] || return 0
+    printf " conda:%s\n" "${env}"
 }
 
 _koopa_prompt_disk_used() {                                               # {{{1
     # """
     # Get current disk usage on primary drive.
-    # Updated 2019-10-13.
+    # Updated 2020-01-12.
     # """
-    local pct used
+    local used
     used="$(_koopa_disk_pct_used)"
+    local pct
     case "$(_koopa_shell)" in
         zsh)
             pct="%%"
@@ -127,13 +134,14 @@ _koopa_prompt_disk_used() {                                               # {{{1
 _koopa_prompt_git() {                                                     # {{{1
     # """
     # Return the current git branch, if applicable.
-    # Updated 2019-10-14.
+    # Updated 2020-01-12.
     #
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # """
     _koopa_is_git || return 0
-    local git_branch git_status
+    local git_branch
     git_branch="$(_koopa_git_branch)"
+    local git_status
     if _koopa_is_git_clean
     then
         git_status=""
@@ -146,16 +154,12 @@ _koopa_prompt_git() {                                                     # {{{1
 _koopa_prompt_venv() {                                                    # {{{1
     # """
     # Get Python virtual environment name for prompt string.
-    # Updated 2019-10-13.
+    # Updated 2020-01-12.
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """
     local env
     env="$(_koopa_venv)"
-    if [ -n "$env" ]
-    then
-        printf " venv:%s\n" "${env}"
-    else
-        return 0
-    fi
+    [ -n "$env" ] || return 0
+    printf " venv:%s\n" "${env}"
 }

@@ -4,7 +4,7 @@
 _koopa_activate_conda_env() {                                             # {{{1
     # """
     # Activate a conda environment.
-    # Updated 2019-11-21.
+    # Updated 2020-01-12.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -25,10 +25,12 @@ _koopa_activate_conda_env() {                                             # {{{1
     # """
     _koopa_assert_is_installed conda
     local name
-    name="$1"
+    name="${1:?}"
     local prefix
     prefix="$(_koopa_conda_prefix)"
     _koopa_message "Activating '${name}' conda environment at '${prefix}'."
+    # Note that this function should only be called inside executable scripts,
+    # so safe to adjust unbound variable settings here.
     set +u
     if ! type conda | grep -q conda.sh
     then
@@ -37,6 +39,7 @@ _koopa_activate_conda_env() {                                             # {{{1
     fi
     conda activate "$name"
     set -u
+    return 0
 }
 
 _koopa_conda_default_envs_prefix() {                                      # {{{1
@@ -54,7 +57,7 @@ _koopa_conda_default_envs_prefix() {                                      # {{{1
 _koopa_conda_env() {                                                      # {{{1
     # """
     # Conda environment name.
-    # Updated 2019-10-13.
+    # Updated 2020-01-12.
     #
     # Alternate approach:
     # > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
@@ -79,7 +82,7 @@ _koopa_conda_env_list() {                                                 # {{{1
 _koopa_conda_env_prefix() {                                               # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # Updated 2019-10-27.
+    # Updated 2020-01-12.
     #
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
@@ -87,23 +90,16 @@ _koopa_conda_env_prefix() {                                               # {{{1
     # Example: _koopa_conda_env_prefix "deeptools"
     # """
     _koopa_is_installed conda || return 1
-
     local env_name
-    env_name="$1"
+    env_name="${1:?}"
     [ -n "$env_name" ] || return 1
-
     local env_list
-    env_list="${2:-}"
-    if [ -z "$env_list" ]
-    then
-        env_list="$(_koopa_conda_env_list)"
-    fi
+    env_list="${2:-$(_koopa_conda_env_list)}"
     env_list="$(echo "$env_list" | grep "$env_name")"
     if [ -z "$env_list" ]
     then
         _koopa_stop "Failed to detect prefix for '${env_name}'."
     fi
-
     local path
     path="$( \
         echo "$env_list" \
@@ -155,15 +151,14 @@ _koopa_deactivate_venv() {                                                # {{{1
 _koopa_venv() {                                                           # {{{1
     # """
     # Python virtual environment name.
-    # Updated 2019-11-15.
+    # Updated 2020-01-12.
     # """
     local env
-    if [ -n "${VIRTUAL_ENV:-}" ]
+    env="${VIRTUAL_ENV:-}"
+    if [ -n "$env" ]
     then
         # Strip out the path and just leave the env name.
-        env="${VIRTUAL_ENV##*/}"
-    else
-        env=
+        env="${env##*/}"
     fi
     echo "$env"
 }

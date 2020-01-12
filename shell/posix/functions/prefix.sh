@@ -4,15 +4,15 @@
 _koopa_prefix() {                                                         # {{{1
     # """
     # Koopa prefix (home).
-    # Updated 2019-08-18.
+    # Updated 2020-01-12.
     # """
-    echo "$KOOPA_PREFIX"
+    echo "${KOOPA_PREFIX:?}"
 }
 
 _koopa_app_prefix() {                                                     # {{{1
     # """
     # Custom application install prefix.
-    # Updated 2019-12-03.
+    # Updated 2020-01-12.
     #
     # Inspired by HMS RC devops approach on O2 cluster.
     # """
@@ -24,10 +24,12 @@ _koopa_app_prefix() {                                                     # {{{1
             # Catalina doesn't allow directory creation at volume root.
             prefix="$(_koopa_make_prefix)"
         else
+            # This approach allows us to save apps on a network share.
+            # Particularly useful for AWS, Azure, and GCP VMs.
             prefix="/n/app"
         fi
     else
-        prefix="$(_koopa_local_app_prefix)"
+        prefix="${XDG_DATA_HOME:?}"
     fi
     echo "$prefix"
 }
@@ -47,35 +49,23 @@ _koopa_cellar_prefix() {                                                  # {{{1
 _koopa_config_prefix() {                                                  # {{{1
     # """
     # Local koopa config directory.
-    # Updated 2019-11-06.
+    # Updated 2020-01-12.
     # """
-    if [ -z "${XDG_CONFIG_HOME:-}" ]
-    then
-        # > _koopa_warning "'XDG_CONFIG_HOME' is unset."
-        XDG_CONFIG_HOME="${HOME}/.config"
-    fi
-    echo "${XDG_CONFIG_HOME}/koopa"
-}
-
-_koopa_local_app_prefix() {                                               # {{{1
-    # """
-    # Local user-specific application prefix.
-    # Updated 2019-11-26.
-    # """
-    echo "${XDG_DATA_HOME}"
+    echo "${XDG_CONFIG_HOME:?}/koopa"
 }
 
 _koopa_make_prefix() {                                                    # {{{1
     # """
     # Return the installation prefix to use.
-    # Updated 2019-09-27.
+    # Updated 2020-01-12.
     # """
     local prefix
     if _koopa_is_shared_install && _koopa_has_sudo
     then
         prefix="/usr/local"
     else
-        prefix="${HOME}/.local"
+        # This is the top-level directory of XDG_DATA_HOME.
+        prefix="${HOME:?}/.local"
     fi
     echo "$prefix"
 }
@@ -83,15 +73,15 @@ _koopa_make_prefix() {                                                    # {{{1
 _koopa_aspera_prefix() {                                                  # {{{1
     # """
     # Aspera Connect prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-12.
     # """
-    echo "${HOME}/.aspera/connect"
+    echo "${HOME:?}/.aspera/connect"
 }
 
 _koopa_autojump_prefix() {                                                # {{{1
     # """
     # autojump prefix.
-    # Updated 2020-01-10.
+    # Updated 2020-01-12.
     # """
     local prefix
     local make_prefix
@@ -107,7 +97,7 @@ _koopa_autojump_prefix() {                                                # {{{1
         prefix="/usr"
     else
         # Local user installation (macOS).
-        prefix="${HOME}/.autojump"
+        prefix="${HOME:?}/.autojump"
     fi
     echo "$prefix"
 }
@@ -115,7 +105,8 @@ _koopa_autojump_prefix() {                                                # {{{1
 _koopa_bcbio_prefix() {                                                   # {{{1
     # """
     # bcbio-nextgen prefix.
-    # Updated 2019-11-25.
+    # Updated 2020-01-12.
+    _koopa_assert_is_linux
     local prefix
     local host_id
     host_id="$(_koopa_host_id)"
@@ -159,10 +150,7 @@ _koopa_java_home() {                                                      # {{{1
     #       how-to-set-java_home-environment-variable-on-mac-os-x/
     # - https://stackoverflow.com/questions/22290554
     # """
-    if ! _koopa_is_installed java
-    then
-        return 0
-    fi
+    _koopa_is_installed java || return 0
     # Early return if environment variable is set.
     if [ -n "${JAVA_HOME:-}" ]
     then
@@ -194,7 +182,7 @@ _koopa_perlbrew_prefix() {                                                # {{{1
 _koopa_pyenv_prefix() {                                                   # {{{1
     # """
     # Python pyenv prefix.
-    # Updated 2020-01-11.
+    # Updated 2020-01-12.
     #
     # See also approach used for rbenv.
     # """
@@ -207,7 +195,7 @@ _koopa_pyenv_prefix() {                                                   # {{{1
         prefix="$shared_prefix"
     else
         # Local user installation (macOS).
-        prefix="${XDG_DATA_HOME}/pyenv"
+        prefix="${XDG_DATA_HOME:?}/pyenv"
     fi
     echo "$prefix"
 }
@@ -215,10 +203,9 @@ _koopa_pyenv_prefix() {                                                   # {{{1
 _koopa_r_home() {                                                         # {{{1
     # """
     # Get 'R_HOME', rather than exporting as global variable.
-    # Updated 2019-12-16.
+    # Updated 2020-01-12.
     # """
-    _koopa_assert_is_installed R
-    _koopa_assert_is_installed Rscript
+    _koopa_assert_is_installed R Rscript
     local home
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
     echo "$home"
@@ -227,7 +214,7 @@ _koopa_r_home() {                                                         # {{{1
 _koopa_rbenv_prefix() {                                                   # {{{1
     # """
     # Ruby rbenv prefix.
-    # Updated 2020-01-11.
+    # Updated 2020-01-12.
     #
     # See also:
     # - RBENV_ROOT
@@ -242,7 +229,7 @@ _koopa_rbenv_prefix() {                                                   # {{{1
         prefix="$shared_prefix"
     else
         # Local user installation (macOS).
-        prefix="${XDG_DATA_HOME}/rbenv"
+        prefix="${XDG_DATA_HOME:?}/rbenv"
     fi
     echo "$prefix"
 }
@@ -250,7 +237,7 @@ _koopa_rbenv_prefix() {                                                   # {{{1
 _koopa_rust_cargo_prefix() {                                              # {{{1
     # """
     # Rust cargo install prefix.
-    # Updated 2020-01-11.
+    # Updated 2020-01-12.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -266,7 +253,7 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
         prefix="$shared_prefix"
     else
         # Local user installation, used on macOS.
-        prefix="${HOME}/.cargo"
+        prefix="${HOME:?}/.cargo"
     fi
     echo "$prefix"
 }
@@ -274,7 +261,7 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
 _koopa_venv_prefix() {                                                    # {{{1
     # """
     # Python venv prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-12.
     # """
-    echo "${XDG_DATA_HOME}/virtualenvs"
+    echo "${XDG_DATA_HOME:?}/virtualenvs"
 }

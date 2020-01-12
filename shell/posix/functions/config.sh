@@ -61,7 +61,7 @@ _koopa_link_r_site_library() {                                            # {{{1
 _koopa_make_build_string() {                                              # {{{1
     # """
     # OS build string for 'make' configuration.
-    # Updated 2019-09-27.
+    # Updated 2020-01-12.
     #
     # Use this for 'configure --build' flag.
     #
@@ -74,19 +74,21 @@ _koopa_make_build_string() {                                              # {{{1
     # - RedHat: x86_64-redhat-linux-gnu
     # """
     local mach
+    mach="$(uname -m)"
+    local os_type
+    os_type="${OSTYPE:?}"
     local os_id
     local string
-    mach="$(uname -m)"
     if _koopa_is_darwin
     then
-        string="${mach}-${OSTYPE}"
+        string="${mach}-${os_type}"
     else
         os_id="$(_koopa_os_id)"
         if echo "$os_id" | grep -q "rhel"
         then
             os_id="redhat"
         fi
-        string="${mach}-${os_id}-${OSTYPE}"
+        string="${mach}-${os_id}-${os_type}"
     fi
     echo "$string"
 }
@@ -94,11 +96,11 @@ _koopa_make_build_string() {                                              # {{{1
 _koopa_prefix_chgrp() {                                                   # {{{1
     # """
     # Fix the group permissions on the target build prefix.
-    # Updated 2019-10-22.
+    # Updated 2020-01-12.
     # """
     local path
+    path="${1:?}"
     local group
-    path="$1"
     group="$(_koopa_group)"
     if _koopa_has_sudo
     then
@@ -113,12 +115,12 @@ _koopa_prefix_chgrp() {                                                   # {{{1
 _koopa_prefix_mkdir() {                                                   # {{{1
     # """
     # Create directory in target build prefix.
-    # Updated 2019-10-22.
+    # Updated 2020-01-12.
     #
     # Sets correct group and write permissions automatically.
     # """
     local path
-    path="$1"
+    path="${1:?}"
     _koopa_assert_is_not_dir "$path"
     if _koopa_has_sudo
     then
@@ -152,13 +154,9 @@ _koopa_prepare_make_prefix() {                                            # {{{1
 _koopa_reset_prefix_permissions() {                                       # {{{1
     # """
     # Reset prefix permissions.
-    # Updated 2019-11-26.
+    # Updated 2020-01-12.
     # """
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        prefix="$(_koopa_make_prefix)"
-    fi
+    prefix="${1:-$(_koopa_make_prefix)}"
     _koopa_set_permissions "$prefix"
     # Ensure group on top level is sticky.
     if _koopa_is_shared_install
@@ -173,12 +171,12 @@ _koopa_reset_prefix_permissions() {                                       # {{{1
 _koopa_set_permissions() {                                                # {{{1
     # """
     # Set permissions on a koopa-related directory.
-    # Updated 2019-11-26.
+    # Updated 2020-01-12.
     #
     # Generally used to reset the build prefix directory (e.g. '/usr/local').
     # """
     local path
-    path="$1"
+    path="${1:?}"
     _koopa_message "Setting permissions on '${path}'."
     if _koopa_is_shared_install
     then
@@ -286,19 +284,21 @@ _koopa_update_r_config_macos() {                                          # {{{1
 _koopa_update_shells() {                                                  # {{{1
     # """
     # Update shell configuration.
-    # Updated 2019-09-28.
+    # Updated 2020-01-12.
     # """
-    local shell
-    local shell_file
     _koopa_assert_has_sudo
-    shell="$(_koopa_make_prefix)/bin/${1}"
+    local shell_name
+    shell_name="${1:?}"
+    local shell_path
+    shell_path="$(_koopa_make_prefix)/bin/${shell_name}"
+    local shell_file
     shell_file="/etc/shells"
-    if ! grep -q "$shell" "$shell_file"
+    if ! grep -q "$shell_path" "$shell_file"
     then
-        _koopa_message "Updating '${shell_file}' to include '${shell}'."
-        sudo sh -c "echo ${shell} >> ${shell_file}"
+        _koopa_message "Updating '${shell_file}' to include '${shell_path}'."
+        sudo sh -c "echo ${shell_path} >> ${shell_file}"
     fi
-    _koopa_note "Run 'chsh -s ${shell} ${USER}' to change the default shell."
+    _koopa_note "Run 'chsh -s ${shell_path} ${USER}' to change default shell."
 }
 
 _koopa_update_xdg_config() {                                              # {{{1
