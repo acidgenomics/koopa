@@ -4,24 +4,21 @@
 _koopa_add_config_link() {                                                # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # Updated 2020-01-09.
-    #
-    # Examples:
-    # _koopa_add_config_link vimrc
-    # _koopa_add_config_link vim
+    # Updated 2020-01-12.
     # """
     local config_dir
     config_dir="$(_koopa_config_prefix)"
     local source_file
-    source_file="$1"
+    source_file="${1:?}"
     _koopa_assert_is_existing "$source_file"
     source_file="$(realpath "$source_file")"
     local dest_name
-    dest_name="$2"
+    dest_name="${2:?}"
     local dest_file
     dest_file="${config_dir}/${dest_name}"
     rm -f "$dest_file"
     ln -fnsv "$source_file" "$dest_file"
+    return 0
 }
 
 _koopa_cd_tmp_dir() {                                                     # {{{1
@@ -31,19 +28,22 @@ _koopa_cd_tmp_dir() {                                                     # {{{1
     #
     # Used primarily for cellar build scripts.
     # """
-    rm -fr "$1"
-    mkdir -p "$1"
-    cd "$1" || exit 1
+    local dir
+    dir="${1:?}"
+    rm -fr "$dir"
+    mkdir -p "$dir"
+    # Note that we don't want to run this inside a subshell here.
+    cd "$dir" || exit 1
     return 0
 }
 
 _koopa_current_version() {                                                # {{{1
     # """
     # Get the current version of a supported program.
-    # Updated 2019-11-16.
+    # Updated 2020-01-12.
     # """
     local name
-    name="$1"
+    name="${1:?}"
     local script
     script="$(_koopa_prefix)/system/include/version/${name}.sh"
     if [ ! -x "$script" ]
@@ -114,7 +114,7 @@ _koopa_disk_pct_used() {                                                  # {{{1
     # Updated 2019-08-17.
     # """
     local disk
-    disk="${1:-/}"
+    disk="${1:-"/"}"
     df "$disk" \
         | head -n 2 \
         | sed -n '2p' \
@@ -176,38 +176,14 @@ _koopa_group() {                                                          # {{{1
 _koopa_header() {                                                         # {{{1
     # """
     # Source script header.
-    # Updated 2019-11-25.
+    # Updated 2020-01-12.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
+    local type
+    type="${1:?}"
     local path
-    if [ -z "${1:-}" ]
-    then
-        >&2 cat << EOF
-error: TYPE argument missing.
-usage: _koopa_header TYPE
-
-shell:
-    - bash
-    - zsh
-
-os:
-    - amzn
-    - centos
-    - darwin
-    - debian
-    - fedora
-    - linux
-    - rhel
-    - ubuntu
-
-host:
-    - aws
-    - azure
-EOF
-        return 1
-    fi
-    case "$1" in
+    case "$type" in
         # shell ----------------------------------------------------------------
         bash)
             path="${KOOPA_PREFIX}/shell/bash/include/header.sh"
@@ -388,7 +364,7 @@ _koopa_install_pipx() {
 _koopa_link_cellar() {                                                    # {{{1
     # """
     # Symlink cellar into build directory.
-    # Updated 2019-11-27.
+    # Updated 2020-01-12.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -402,13 +378,13 @@ _koopa_link_cellar() {                                                    # {{{1
     # Example: _koopa_link_cellar emacs 26.3
     # """
     local name
+    name="${1:?}"
     local version
-    local make_prefix
-    local cellar_prefix
-    name="$1"
     version="${2:-}"
+    local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     _koopa_assert_is_dir "$make_prefix"
+    local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)/${name}"
     _koopa_assert_is_dir "$cellar_prefix"
     if [ -n "$version" ]
@@ -435,15 +411,18 @@ _koopa_link_cellar() {                                                    # {{{1
     else
         cp -frsv "$cellar_prefix/"* "$make_prefix/".
     fi
+    return 0
 }
 
 _koopa_macos_app_version() {                                              # {{{1
     # """
     # Extract the version of a macOS application.
-    # Updated 2019-09-28.
+    # Updated 2020-01-12.
     # """
     _koopa_assert_is_darwin
-    plutil -p "/Applications/${1}.app/Contents/Info.plist" \
+    local name
+    name="${1:?}"
+    plutil -p "/Applications/${name}.app/Contents/Info.plist" \
         | grep CFBundleShortVersionString \
         | awk -F ' => ' '{print $2}' \
         | tr -d '"'
@@ -536,12 +515,12 @@ _koopa_os_version() {                                                     # {{{1
 _koopa_relink() {                                                         # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # Updated 2020-01-09.
+    # Updated 2020-01-12.
     # """
     local source_file
-    source_file="$1"
+    source_file="${1:?}"
     local dest_file
-    dest_file="$2"
+    dest_file="${2:?}"
     if [ ! -e "$dest_file" ]
     then
         if [ ! -e "$source_file" ]
@@ -605,7 +584,7 @@ _koopa_today_bucket() {                                                   # {{{1
     #        make symbolic links instead of hard links
     # """
     local bucket_dir
-    bucket_dir="${HOME}/bucket"
+    bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
     if [[ ! -d "$bucket_dir" ]]
     then
@@ -649,22 +628,22 @@ _koopa_tmp_dir() {                                                        # {{{1
     mktemp -d
 }
 
-## FIXME Need to improve this parser to handle comments.
 _koopa_variable() {                                                       # {{{1
     # """
     # Get version stored internally in versions.txt file.
     # Updated 2020-01-12.
     # """
-    local what
     local file
-    local match
-    what="$1"
-    file="${KOOPA_PREFIX}/system/include/variables.txt"
-    match="$(grep -E "^${what}=" "$file" || echo "")"
-    if [ -n "$match" ]
-    then
-        echo "$match" | cut -d "\"" -f 2
-    else
-        _koopa_stop "'${what}' not defined in '${file}'."
-    fi
+    file="$(_koopa_prefix)/system/include/variables.txt"
+    local key
+    key="${1:?}"
+    local value
+    # Note that this approach handles inline comments.
+    value="$( \
+        grep -Eo "^${key}=\"[^\"]+\"" "$file" \
+        || _koopa_stop "'${key}' not defined in '${file}'." \
+    )"
+    echo "$value" \
+        | head -n 1 \
+        | cut -d "\"" -f 2
 }
