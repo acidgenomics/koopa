@@ -29,7 +29,7 @@ _koopa_app_prefix() {                                                     # {{{1
             prefix="/n/app"
         fi
     else
-        prefix="${XDG_DATA_HOME:?}"
+        prefix="$(_koopa_local_app_prefix)"
     fi
     echo "$prefix"
 }
@@ -54,6 +54,16 @@ _koopa_config_prefix() {                                                  # {{{1
     echo "${XDG_CONFIG_HOME:?}/koopa"
 }
 
+_koopa_local_app_prefix() {                                               # {{{1
+    # """
+    # Local user application install prefix.
+    # Updated 2020-01-12.
+    #
+    # This is the default app path when koopa is installed per user.
+    # """
+    echo "${XDG_DATA_HOME:?}"
+}
+
 _koopa_make_prefix() {                                                    # {{{1
     # """
     # Return the installation prefix to use.
@@ -69,6 +79,8 @@ _koopa_make_prefix() {                                                    # {{{1
     fi
     echo "$prefix"
 }
+
+
 
 _koopa_aspera_prefix() {                                                  # {{{1
     # """
@@ -125,10 +137,16 @@ _koopa_bcbio_prefix() {                                                   # {{{1
 _koopa_conda_prefix() {                                                   # {{{1
     # """
     # Conda prefix
-    # Updated 2019-11-21.
+    # Updated 2020-01-12.
     # """
-    _koopa_assert_is_installed conda
-    conda info --base
+    local prefix
+    if _koopa_is_installed conda
+    then
+        prefix="$(conda info --base)"
+    else
+        prefix="$(_koopa_app_prefix)/conda"
+    fi
+    echo "$prefix"
 }
 
 _koopa_ensembl_perl_api_prefix() {                                        # {{{1
@@ -172,10 +190,15 @@ _koopa_java_home() {                                                      # {{{1
 _koopa_perlbrew_prefix() {                                                # {{{1
     # """
     # Perlbrew prefix.
-    # Updated 2020-01-11.
+    # Updated 2020-01-12.
     # """
     local prefix
-    prefix="$(_koopa_app_prefix)/perl/perlbrew"
+    if [ -z "${PERLBREW_ROOT}" ]
+    then
+        prefix="$PERLBREW_ROOT"
+    else
+        prefix="$(_koopa_app_prefix)/perl/perlbrew"
+    fi
     echo "$prefix"
 }
 
@@ -187,16 +210,7 @@ _koopa_pyenv_prefix() {                                                   # {{{1
     # See also approach used for rbenv.
     # """
     local prefix
-    # Shared installation (Linux).
-    local shared_prefix
-    shared_prefix="$(_koopa_app_prefix)/python/pyenv"
-    if [ -d "$shared_prefix" ]
-    then
-        prefix="$shared_prefix"
-    else
-        # Local user installation (macOS).
-        prefix="${XDG_DATA_HOME:?}/pyenv"
-    fi
+    prefix="$(_koopa_app_prefix)/python/pyenv"
     echo "$prefix"
 }
 
@@ -221,16 +235,7 @@ _koopa_rbenv_prefix() {                                                   # {{{1
     # - https://gist.github.com/saegey/5499096
     # """
     local prefix
-    # Shared installation (Linux).
-    local shared_prefix
-    shared_prefix="$(_koopa_app_prefix)/ruby/rbenv"
-    if [ -d "$shared_prefix" ]
-    then
-        prefix="$shared_prefix"
-    else
-        # Local user installation (macOS).
-        prefix="${XDG_DATA_HOME:?}/rbenv"
-    fi
+    prefix="$(_koopa_app_prefix)/ruby/rbenv"
     echo "$prefix"
 }
 
@@ -245,14 +250,10 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
     # - RUSTUP_HOME
     # """
     local prefix
-    # Shared installation (Linux).
-    local shared_prefix
-    shared_prefix="$(_koopa_app_prefix)/rust/cargo"
-    if [ -d "$shared_prefix" ]
+    if _koopa_is_shared_install
     then
-        prefix="$shared_prefix"
+        prefix="$(_koopa_app_prefix)/rust/cargo"
     else
-        # Local user installation, used on macOS.
         prefix="${HOME:?}/.cargo"
     fi
     echo "$prefix"
@@ -263,5 +264,7 @@ _koopa_venv_prefix() {                                                    # {{{1
     # Python venv prefix.
     # Updated 2020-01-12.
     # """
-    echo "${XDG_DATA_HOME:?}/virtualenvs"
+    local prefix
+    prefix="$(_koopa_app_prefix)/python/virtualenvs"
+    echo "$prefix"
 }
