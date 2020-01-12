@@ -27,13 +27,14 @@ _koopa_add_config_link() {                                                # {{{1
 _koopa_cd_tmp_dir() {                                                     # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
-    # Updated 2019-11-21.
+    # Updated 2020-01-12.
     #
     # Used primarily for cellar build scripts.
     # """
     rm -fr "$1"
     mkdir -p "$1"
     cd "$1" || exit 1
+    return 0
 }
 
 _koopa_current_version() {                                                # {{{1
@@ -648,10 +649,11 @@ _koopa_tmp_dir() {                                                        # {{{1
     mktemp -d
 }
 
+## FIXME Need to improve this parser to handle comments.
 _koopa_variable() {                                                       # {{{1
     # """
     # Get version stored internally in versions.txt file.
-    # Updated 2019-10-27.
+    # Updated 2020-01-12.
     # """
     local what
     local file

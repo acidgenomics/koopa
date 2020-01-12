@@ -32,9 +32,9 @@ Run with '--help' flag for usage details."
 _koopa_assert_has_file_ext() {                                            # {{{1
     # """
     # Assert that input contains a file extension.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if ! _koopa_has_file_ext "$1"
+    if ! _koopa_has_file_ext "${1:?}"
     then
         _koopa_stop "No file extension: '${1}'."
     fi
@@ -112,9 +112,9 @@ _koopa_assert_is_debian() {                                               # {{{1
 _koopa_assert_is_dir() {                                                  # {{{1
     # """
     # Assert that input is a directory.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ ! -d "$1" ]
+    if [ ! -d "${1:?}" ]
     then
         _koopa_stop "Not a directory: '${1}'."
     fi
@@ -124,9 +124,9 @@ _koopa_assert_is_dir() {                                                  # {{{1
 _koopa_assert_is_executable() {                                           # {{{1
     # """
     # Assert that input is executable.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ ! -x "$1" ]
+    if [ ! -x "${1:?}" ]
     then
         _koopa_stop "Not executable: '${1}'."
     fi
@@ -136,11 +136,11 @@ _koopa_assert_is_executable() {                                           # {{{1
 _koopa_assert_is_existing() {                                             # {{{1
     # """
     # Assert that input exists on disk.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     #
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
-    if [ ! -e "$1" ]
+    if [ ! -e "${1:?}" ]
     then
         _koopa_stop "Does not exist: '${1}'."
     fi
@@ -162,9 +162,9 @@ _koopa_assert_is_fedora() {                                               # {{{1
 _koopa_assert_is_file() {                                                 # {{{1
     # """
     # Assert that input is a file.
-    # Updated 2019-09-12.
+    # Updated 2020-01-12.
     # """
-    if [ ! -f "$1" ]
+    if [ ! -f "${1:?}" ]
     then
         _koopa_stop "Not a file: '${1}'."
     fi
@@ -174,12 +174,16 @@ _koopa_assert_is_file() {                                                 # {{{1
 _koopa_assert_is_file_type() {                                            # {{{1
     # """
     # Assert that input matches a specified file type.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     #
     # Example: _koopa_assert_is_file_type "$x" "csv"
     # """
-    _koopa_assert_is_file "$1"
-    _koopa_assert_is_matching_regex "$1" "\.${2}\$"
+    local file
+    file="${1:?}"
+    local ext
+    ext="${2:?}"
+    _koopa_assert_is_file "$file"
+    _koopa_assert_is_matching_regex "$file" "\.${ext}\$"
 }
 
 _koopa_assert_is_git() {                                                  # {{{1
@@ -227,9 +231,9 @@ _koopa_assert_is_linux() {                                                # {{{1
 _koopa_assert_is_non_existing() {                                         # {{{1
     # """
     # Assert that input does not exist on disk.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ -e "$1" ]
+    if [ -e "${1:?}" ]
     then
         _koopa_stop "Exists: '${1}'."
     fi
@@ -239,9 +243,9 @@ _koopa_assert_is_non_existing() {                                         # {{{1
 _koopa_assert_is_not_dir() {                                              # {{{1
     # """
     # Assert that input is not a directory.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ -d "$1" ]
+    if [ -d "${1:?}" ]
     then
         _koopa_stop "Directory exists: '${1}'."
     fi
@@ -251,9 +255,9 @@ _koopa_assert_is_not_dir() {                                              # {{{1
 _koopa_assert_is_not_file() {                                             # {{{1
     # """
     # Assert that input is not a file.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ -f "$1" ]
+    if [ -f "${1:?}" ]
     then
         _koopa_stop "File exists: '${1}'."
     fi
@@ -290,9 +294,9 @@ _koopa_assert_is_not_root() {                                             # {{{1
 _koopa_assert_is_not_symlink() {                                          # {{{1
     # """
     # Assert that input is not a symbolic link.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ -L "$1" ]
+    if [ -L "${1:?}" ]
     then
         _koopa_stop "Symlink exists: '${1}'."
     fi
@@ -317,9 +321,9 @@ _koopa_is_powerful() {                                                    # {{{1
 _koopa_assert_is_r_package_installed() {                                  # {{{1
     # """
     # Assert that a specific R package is installed.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if ! _koopa_is_r_package_installed "$1"
+    if ! _koopa_is_r_package_installed "${1:?}"
     then
         _koopa_stop "'${1}' R package is not installed."
     fi
@@ -329,9 +333,9 @@ _koopa_assert_is_r_package_installed() {                                  # {{{1
 _koopa_assert_is_readable() {                                             # {{{1
     # """
     # Assert that input is readable.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ ! -r "$1" ]
+    if [ ! -r "${1:?}" ]
     then
         _koopa_stop "Not readable: '${1}'."
     fi
@@ -353,9 +357,9 @@ _koopa_assert_is_root() {                                                 # {{{1
 _koopa_assert_is_symlink() {                                              # {{{1
     # """
     # Assert that input is a symbolic link.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ ! -L "$1" ]
+    if [ ! -L "${1:?}" ]
     then
         _koopa_stop "Not symlink: '${1}'."
     fi
@@ -378,9 +382,9 @@ _koopa_assert_is_venv_active() {                                          # {{{1
 _koopa_assert_is_writable() {                                             # {{{1
     # """
     # Assert that input is writable.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if [ ! -r "$1" ]
+    if [ ! -r "${1:?}" ]
     then
         _koopa_stop "Not writable: '${1}'."
     fi
@@ -390,11 +394,15 @@ _koopa_assert_is_writable() {                                             # {{{1
 _koopa_assert_is_matching_fixed() {                                       # {{{1
     # """
     # Assert that input matches a fixed pattern.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if ! _koopa_is_matching_fixed "$1" "$2"
+    local string
+    string="${1:?}"
+    local pattern
+    pattern="${2:?}"
+    if ! _koopa_is_matching_fixed "$string" "$pattern"
     then
-        _koopa_stop "'${1}' doesn't match fixed pattern '${2}'."
+        _koopa_stop "'${string}' doesn't match fixed pattern '${pattern}'."
     fi
     return 0
 }
@@ -402,11 +410,15 @@ _koopa_assert_is_matching_fixed() {                                       # {{{1
 _koopa_assert_is_matching_regex() {                                       # {{{1
     # """
     # Assert that input matches a regular expression pattern.
-    # Updated 2019-10-23.
+    # Updated 2020-01-12.
     # """
-    if ! _koopa_is_matching_regex "$1" "$2"
+    local string
+    string="${1:?}"
+    local pattern
+    pattern="${2:?}"
+    if ! _koopa_is_matching_regex "$string" "$pattern"
     then
-        _koopa_stop "'${1}' doesn't match regex pattern '${2}'."
+        _koopa_stop "'${string}' doesn't match regex pattern '${pattern}'."
     fi
     return 0
 }
@@ -430,18 +442,22 @@ _koopa_check_azure() {                                                    # {{{1
 _koopa_check_access_human() {                                             # {{{1
     # """
     # Check if file or directory has expected human readable access.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    if [ ! -e "$1" ]
+    local file
+    file="${1:?}"
+    local code
+    code="${2:?}"
+    if [ ! -e "$file" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _koopa_warning "'${file}' does not exist."
         return 1
     fi
     local access
-    access="$(_koopa_stat_access_human "$1")"
-    if [ "$access" != "$2" ]
+    access="$(_koopa_stat_access_human "$file")"
+    if [ "$access" != "$code" ]
     then
-        _koopa_warning "'${1}' current access '${access}' is not '${2}'."
+        _koopa_warning "'${file}' current access '${access}' is not '${code}'."
     fi
     return 0
 }
@@ -449,18 +465,22 @@ _koopa_check_access_human() {                                             # {{{1
 _koopa_check_access_octal() {                                             # {{{1
     # """
     # Check if file or directory has expected octal access.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    if [ ! -e "$1" ]
+    local file
+    file="${1:?}"
+    local code
+    code="${2:?}"
+    if [ ! -e "$file" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _koopa_warning "'${file}' does not exist."
         return 1
     fi
     local access
-    access="$(_koopa_stat_access_octal "$1")"
-    if [ "$access" != "$2" ]
+    access="$(_koopa_stat_access_octal "$file")"
+    if [ "$access" != "$code" ]
     then
-        _koopa_warning "'${1}' current access '${access}' is not '${2}'."
+        _koopa_warning "'${file}' current access '${access}' is not '${code}'."
     fi
     return 0
 }
@@ -468,18 +488,22 @@ _koopa_check_access_octal() {                                             # {{{1
 _koopa_check_group() {                                                    # {{{1
     # """
     # Check if file or directory has an expected group.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    if [ ! -e "$1" ]
+    local file
+    file="${1:?}"
+    local code
+    code="${2:?}"
+    if [ ! -e "$file" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _koopa_warning "'${file}' does not exist."
         return 1
     fi
     local group
-    group="$(_koopa_stat_group "$1")"
-    if [ "$group" != "$2" ]
+    group="$(_koopa_stat_group "$file")"
+    if [ "$group" != "$code" ]
     then
-        _koopa_warning "'${1}' current group '${group}' is not '${2}'."
+        _koopa_warning "'${file}' current group '${group}' is not '${code}'."
         return 1
     fi
     return 0
@@ -489,11 +513,13 @@ _koopa_check_mount() {                                                    # {{{1
     # """
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
-    # Updated 2019-10-31.
+    # Updated 2020-01-12.
     # """
-    if [ "$(find "$1" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
+    local path
+    path="${1:?}"
+    if [ "$(find "$path" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
     then
-        _koopa_warning "'${1}' is unmounted."
+        _koopa_warning "'${path}' is unmounted."
         return 1
     fi
     return 0
@@ -501,19 +527,23 @@ _koopa_check_mount() {                                                    # {{{1
 
 _koopa_check_user() {                                                     # {{{1
     # """
-    # Check if file or directory has an expected user.
-    # Updated 2019-10-31.
+    # Check if file or directory is owned by an expected user.
+    # Updated 2020-01-12.
     # """
-    if [ ! -e "$1" ]
+    local file
+    file="${1:?}"
+    local expected
+    expected="${2:?}"
+    if [ ! -e "$file" ]
     then
-        _koopa_warning "'${1}' does not exist."
+        _koopa_warning "'${file}' does not exist on disk."
         return 1
     fi
-    local user
-    user="$(_koopa_stat_user "$1")"
-    if [ "$user" != "$2" ]
+    local owner
+    owner="$(_koopa_stat_user "$owner")"
+    if [ "$owner" != "$expected" ]
     then
-        _koopa_warning "'${1}' current user '${user}' is not '${2}'."
+        _koopa_warning "'${file}' current user '${owner}' is not '${expected}'."
         return 1
     fi
     return 0
@@ -522,11 +552,13 @@ _koopa_check_user() {                                                     # {{{1
 _koopa_has_file_ext() {                                                   # {{{1
     # """
     # Does the input contain a file extension?
-    # Updated 2019-10-08.
+    # Updated 2020-01-12.
     #
     # Simply looks for a "." and returns true/false.
     # """
-    echo "$1" | grep -q "\."
+    local file
+    file="${1:?}"
+    echo "$file" | grep -q "\."
 }
 
 _koopa_has_no_environments() {                                            # {{{1
@@ -559,7 +591,9 @@ _koopa_invalid_arg() {                                                    # {{{1
     # Error on invalid argument.
     # Updated 2019-10-23.
     # """
-    _koopa_stop "Invalid argument: '${1}'."
+    local arg
+    arg="${1:?}"
+    _koopa_stop "Invalid argument: '${arg}'."
 }
 
 _koopa_is_aws() {                                                         # {{{1
@@ -728,17 +762,25 @@ _koopa_is_login_zsh() {                                                   # {{{1
 _koopa_is_matching_fixed() {                                              # {{{1
     # """
     # Does the input match a fixed string?
-    # Updated 2019-10-14.
+    # Updated 2020-01-12.
     # """
-    echo "$1" | grep -Fq "$2"
+    local string
+    string="${1:?}"
+    local pattern
+    pattern="${2:?}"
+    echo "$string" | grep -Fq "$pattern"
 }
 
 _koopa_is_matching_regex() {                                              # {{{1
     # """
     # Does the input match a regular expression?
-    # Updated 2019-10-13.
+    # Updated 2020-01-12.
     # """
-    echo "$1" | grep -Eq "$2"
+    local string
+    string="${1:?}"
+    local pattern
+    pattern="${2:?}"
+    echo "$string" | grep -Eq "$pattern"
 }
 
 _koopa_is_r_package_installed() {                                         # {{{1

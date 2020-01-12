@@ -17,13 +17,15 @@ _koopa_array_to_r_vector() {                                              # {{{1
 _koopa_bcbio_version() {                                                  # {{{1
     # """
     # Get current bcbio-nextgen stable release version.
-    # Updated 2019-11-22.
+    # Updated 2020-01-12.
     #
     # Alternate approach:
     # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
     # """
-    curl --silent "https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
-/master/requirements-conda.txt" \
+    local url
+    url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
+/master/requirements-conda.txt"
+    curl --silent "$url" \
         | grep 'bcbio-nextgen=' \
         | cut -d '=' -f 2
 }
@@ -59,6 +61,7 @@ _koopa_quiet_cd() {                                                       # {{{1
     # Updated 2019-10-29.
     # """
     cd "$@" > /dev/null || return 1
+    return 0
 }
 
 _koopa_quiet_expr() {                                                     # {{{1
@@ -81,6 +84,7 @@ _koopa_quiet_rm() {                                                       # {{{1
     # Updated 2019-10-29.
     # """
     rm -fr "$@" > /dev/null 2>&1
+    return 0
 }
 
 _koopa_update_git_repo() {                                                # {{{1
