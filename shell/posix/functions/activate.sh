@@ -235,6 +235,42 @@ _koopa_activate_perlbrew() {                                              # {{{1
     return 0
 }
 
+_koopa_activate_pipx() {                                                  # {{{1
+    # """
+    # Activate pipx for Python.
+    # Updated 2020-01-11.
+    #
+    # Customize pipx location with environment variables.
+    # https://pipxproject.github.io/pipx/installation/
+    #
+    # PIPX_HOME: The default virtual environment location is '~/.local/pipx'
+    # and can be overridden by setting the environment variable 'PIPX_HOME'.
+    # Virtual environments will be installed to '$PIPX_HOME/venvs').
+    #
+    # PIPX_BIN_DIR: The default app location is '~/.local/bin' and can be
+    # overridden by setting the environment variable 'PIPX_BIN_DIR'.
+    # """
+    _koopa_is_installed pipx || return 0
+    [ -z "${PIPX_HOME:-}" ] || return 0
+    [ -z "${PIPX_BIN_DIR:-}" ] || return 0
+    local shared_prefix
+    shared_prefix="$(_koopa_app_prefix)/python/pipx"
+    if [ -d "$shared_prefix" ]
+    then
+        # Shared user installation.
+        PIPX_HOME="$shared_prefix"
+        PIPX_BIN_DIR="${shared_prefix}/bin"
+    else
+        # Local user installation.
+        PIPX_HOME="${HOME}/.local/pipx"
+        PIPX_BIN_DIR="${HOME}/.local/bin"
+    fi
+    export PIPX_HOME
+    export PIPX_BIN_DIR
+    _koopa_add_to_path_start "$PIPX_BIN_DIR"
+    return 0
+}
+
 _koopa_activate_pyenv() {                                                 # {{{1
     # """
     # Activate Python version manager (pyenv).
