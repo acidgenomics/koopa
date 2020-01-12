@@ -67,7 +67,7 @@ _koopa_quiet_cd() {                                                       # {{{1
 _koopa_quiet_expr() {                                                     # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
-    # Updated 2019-10-08.
+    # Updated 2020-01-12.
     #
     # Avoid using '[[ =~ ]]' in sh config files.
     # 'expr' is faster than using 'case'.
@@ -75,7 +75,7 @@ _koopa_quiet_expr() {                                                     # {{{1
     # See also:
     # - https://stackoverflow.com/questions/21115121
     # """
-    expr "$1" : "$2" 1>/dev/null
+    expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
 _koopa_quiet_rm() {                                                       # {{{1
@@ -93,7 +93,7 @@ _koopa_update_git_repo() {                                                # {{{1
     # Updated 2019-11-26.
     # """
     local repo
-    repo="$1"
+    repo="${1:?}"
     [ -d "${repo}" ] || return 0
     [ -x "${repo}/.git" ] || return 0
     _koopa_message "Updating '${repo}'."
