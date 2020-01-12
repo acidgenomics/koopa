@@ -393,3 +393,4 @@ alias vim-default='vim -i NONE -u NONE -U NONE'
 _koopa_activate_autojump
 _koopa_activate_broot
 _koopa_activate_fzf
+_koopa_activate_pipx
