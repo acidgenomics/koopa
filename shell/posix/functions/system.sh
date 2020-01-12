@@ -491,7 +491,7 @@ _koopa_os_string() {                                                      # {{{1
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
         id="darwin"
-        version="$(uname -r)"
+        version="$(uname -r | cut -d '.' -f 1)"
     elif _koopa_is_linux
     then
         if [ -r /etc/os-release ]
