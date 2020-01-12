@@ -330,6 +330,7 @@ _koopa_info_box() {                                                       # {{{1
         printf "  ┃ %-68s ┃  \n" "${i::68}"
     done
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
+    return 0
 }
 
 _koopa_install_mike() {                                                   # {{{1
@@ -357,6 +358,7 @@ _koopa_install_mike() {                                                   # {{{1
         cd "$KOOPA_PREFIX" || exit 1
         git remote set-url origin "git@github.com:acidgenomics/koopa.git"
     )
+    return 0
 }
 
 _koopa_install_pip() {                                                    # {{{1
@@ -365,13 +367,37 @@ _koopa_install_pip() {                                                    # {{{1
     # Updated 2020-01-03.
     # """
     local python
-    python="$1"
-    _koopa_message "Installing pip for Python at '${python}'."
+    python="${1:-python3}"
+    _koopa_message "Installing pip for Python '${python}'."
     local file
     file="get-pip.py"
     _koopa_download "https://bootstrap.pypa.io/${file}"
     "$python" "$file" --no-warn-script-location
     rm "$file"
+    return 0
+}
+
+_koopa_install_pipx() {
+    # """
+    # Install pipx for Python.
+    # Updated 2020-01-11.
+    #
+    # Local user installation:
+    # Use the '--user' flag with 'pip install' call.
+    #
+    # This recommended step will modify shell RC file, which we don't want.
+    # > "$python" -m pipx ensurepath
+    # """
+    local python
+    python="${1:-python3}"
+    _koopa_message "Installing pipx for Python '${python}'."
+    "$python" -m pip install --no-warn-script-location pipx
+    local prefix
+    prefix="$(_koopa_app_prefix)/python/pipx"
+    _koopa_prefix_mkdir "$prefix"
+    _koopa_message "pipx installed successfully."
+    _koopa_note "Restart the shell to activate pipx."
+    return 0
 }
 
 _koopa_link_cellar() {                                                    # {{{1
