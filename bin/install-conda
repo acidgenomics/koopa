@@ -37,7 +37,6 @@ fi
 
 prefix="$(_koopa_conda_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-exe_file="${prefix}/bin/conda"
 
 _koopa_message "Installing Conda at '${prefix}'."
 
