@@ -9,9 +9,8 @@ source "${script_dir}/../include/header.sh"
 # https://jdk.java.net/13/
 
 version="$(_koopa_variable "java")"
-jdk_dir="$(_koopa_app_prefix)/jdk"
+jdk_dir="$(_koopa_app_prefix)/java/openjdk"
 prefix="${jdk_dir}/${version}"
-# > _koopa_assert_is_not_dir "$jdk_version_dir"
 
 _koopa_message "Installing JDK ${version} at '${prefix}'."
 
