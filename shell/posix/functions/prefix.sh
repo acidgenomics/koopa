@@ -184,27 +184,27 @@ _koopa_java_home() {                                                      # {{{1
 _koopa_perlbrew_prefix() {                                                # {{{1
     # """
     # Perlbrew prefix.
-    # Updated 2019-11-15.
+    # Updated 2020-01-11.
     # """
     local prefix
-    prefix="$(_koopa_app_prefix)/perlbrew"
+    prefix="$(_koopa_app_prefix)/perl/perlbrew"
     echo "$prefix"
 }
 
 _koopa_pyenv_prefix() {                                                   # {{{1
     # """
-    # pyenv prefix.
-    # Updated 2020-01-10.
+    # Python pyenv prefix.
+    # Updated 2020-01-11.
     #
     # See also approach used for rbenv.
     # """
     local prefix
-    local app_prefix
-    app_prefix="$(_koopa_app_prefix)"
-    # Shared installation (Linux)
-    if [ -d "${app_prefix}/pyenv" ]
+    # Shared installation (Linux).
+    local shared_prefix
+    shared_prefix="$(_koopa_app_prefix)/python/pyenv"
+    if [ -d "$shared_prefix" ]
     then
-        prefix="${app_prefix}/pyenv"
+        prefix="$shared_prefix"
     else
         # Local user installation (macOS).
         prefix="${XDG_DATA_HOME}/pyenv"
@@ -226,20 +226,20 @@ _koopa_r_home() {                                                         # {{{1
 
 _koopa_rbenv_prefix() {                                                   # {{{1
     # """
-    # rbenv prefix.
-    # Updated 2020-01-10.
+    # Ruby rbenv prefix.
+    # Updated 2020-01-11.
     #
     # See also:
     # - RBENV_ROOT
     # - https://gist.github.com/saegey/5499096
     # """
     local prefix
-    local app_prefix
-    app_prefix="$(_koopa_app_prefix)"
     # Shared installation (Linux).
-    if [ -d "${app_prefix}/rbenv" ]
+    local shared_prefix
+    shared_prefix="$(_koopa_app_prefix)/ruby/rbenv"
+    if [ -d "$shared_prefix" ]
     then
-        prefix="${app_prefix}/rbenv"
+        prefix="$shared_prefix"
     else
         # Local user installation (macOS).
         prefix="${XDG_DATA_HOME}/rbenv"
@@ -249,8 +249,8 @@ _koopa_rbenv_prefix() {                                                   # {{{1
 
 _koopa_rust_cargo_prefix() {                                              # {{{1
     # """
-    # Rust prefix.
-    # Updated 2020-01-10.
+    # Rust cargo install prefix.
+    # Updated 2020-01-11.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -258,12 +258,12 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
     # - RUSTUP_HOME
     # """
     local prefix
-    local app_prefix
-    app_prefix="$(_koopa_app_prefix)"
     # Shared installation (Linux).
-    if [ -d "${app_prefix}/rust/cargo" ]
+    local shared_prefix
+    shared_prefix="$(_koopa_app_prefix)/rust/cargo"
+    if [ -d "$shared_prefix" ]
     then
-        prefix="${app_prefix}/rust/cargo"
+        prefix="$shared_prefix"
     else
         # Local user installation, used on macOS.
         prefix="${HOME}/.cargo"
