@@ -14,7 +14,7 @@ _koopa_assert_is_not_installed rbenv
 # > prefix="${XDG_DATA_HOME}/rbenv"
 
 # Shared user approach:
-prefix="$(_koopa_app_prefix)/rbenv"
+prefix="$(_koopa_app_prefix)/ruby/rbenv"
 
 _koopa_prefix_mkdir "$prefix"
 _koopa_message "Installing rbenv at '${prefix}'."

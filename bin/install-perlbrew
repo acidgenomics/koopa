@@ -10,7 +10,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 name="perlbrew"
-prefix="$(_koopa_app_prefix)/${name}"
+prefix="$(_koopa_app_prefix)/perl/${name}"
 exe_file="${prefix}/bin/${name}"
 
 _koopa_prefix_mkdir "$prefix"
