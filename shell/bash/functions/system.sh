@@ -17,6 +17,7 @@ _koopa_add_local_bins_to_path() {                                         # {{{1
     do
         _koopa_add_to_path_start "$dir"
     done
+    return 0
 }
 
 _koopa_find_local_bin_dirs() {                                            # {{{1
@@ -59,7 +60,7 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
 _koopa_help() {                                                           # {{{1
     # """
     # Show usage via '--help' flag.
-    # Updated 2019-11-16.
+    # Updated 2020-01-12.
     #
     # Now always calls 'man' to display nicely formatted manual page.
     #
@@ -78,6 +79,7 @@ _koopa_help() {                                                           # {{{1
             exit 0
             ;;
     esac
+    return 0
 }
 
 _koopa_is_array_non_empty() {                                             # {{{1

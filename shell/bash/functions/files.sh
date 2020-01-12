@@ -3,7 +3,7 @@
 _koopa_remove_broken_symlinks() {                                         # {{{1
     # """
     # Remove broken symlinks.
-    # Updated 2019-11-16.
+    # Updated 2020-01-12.
     # """
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
@@ -15,4 +15,5 @@ _koopa_remove_broken_symlinks() {                                         # {{{1
         [[ -z "$file" ]] && continue
         rm -v "$file"
     done
+    return 0
 }
