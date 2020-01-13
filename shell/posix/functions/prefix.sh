@@ -19,7 +19,7 @@ _koopa_app_prefix() {                                                     # {{{1
     local prefix
     if _koopa_is_shared_install
     then
-        if _koopa_is_darwin
+        if _koopa_is_macos
         then
             # Catalina doesn't allow directory creation at volume root.
             prefix="$(_koopa_make_prefix)"
@@ -176,7 +176,7 @@ _koopa_java_home() {                                                      # {{{1
         return 0
     fi
     local home
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         home="$(/usr/libexec/java_home)"
     else

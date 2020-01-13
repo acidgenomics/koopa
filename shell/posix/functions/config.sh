@@ -61,7 +61,7 @@ _koopa_link_r_site_library() {                                            # {{{1
 _koopa_make_build_string() {                                              # {{{1
     # """
     # OS build string for 'make' configuration.
-    # Updated 2020-01-12.
+    # Updated 2020-01-13.
     #
     # Use this for 'configure --build' flag.
     #
@@ -70,7 +70,7 @@ _koopa_make_build_string() {                                              # {{{1
     # instead of "rhel" here, when applicable.
     #
     # - AWS:    x86_64-amzn-linux-gnu
-    # - Darwin: x86_64-darwin15.6.0
+    # - macOS: x86_64-darwin15.6.0
     # - RedHat: x86_64-redhat-linux-gnu
     # """
     local mach
@@ -79,7 +79,7 @@ _koopa_make_build_string() {                                              # {{{1
     os_type="${OSTYPE:?}"
     local os_id
     local string
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         string="${mach}-${os_type}"
     else
@@ -278,7 +278,7 @@ _koopa_update_r_config_macos() {                                          # {{{1
     # Need to include Makevars to build packages from source.
     # """
     mkdir -pv "${HOME}/.R"
-    ln -fnsv "/usr/local/koopa/os/darwin/etc/R/Makevars" "${HOME}/.R/."
+    ln -fnsv "/usr/local/koopa/os/macos/etc/R/Makevars" "${HOME}/.R/."
 }
 
 _koopa_update_shells() {                                                  # {{{1

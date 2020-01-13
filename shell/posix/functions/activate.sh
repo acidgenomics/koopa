@@ -94,7 +94,7 @@ _koopa_activate_broot() {                                                 # {{{1
     # Updated 2020-01-13.
     # """
     local config_dir
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         config_dir="${HOME}/Library/Preferences/org.dystroy.broot"
     else
@@ -201,7 +201,7 @@ _koopa_activate_llvm() {                                                  # {{{1
     # """
     [ -x "${LLVM_CONFIG:-}" ] && return 0
     local config
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         # llvm@7
         config="/usr/local/opt/llvm/bin/llvm-config"
