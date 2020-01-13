@@ -18,5 +18,7 @@ find "$prefix" \
     -not -path "${prefix}/cellar/*" \
     -not -path "${prefix}/koopa/*" \
     -not -path "${prefix}/opt/*" \
+    -not -path "${prefix}/share/applications/mimeinfo.cache" \
     -not -path "${prefix}/share/emacs/site-lisp/*" \
+    -not -path "${prefix}/share/zsh/site-functions/*" \
     | sort
