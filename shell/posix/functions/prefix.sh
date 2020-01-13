@@ -259,6 +259,21 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
     echo "$prefix"
 }
 
+_koopa_rust_rustup_prefix() {                                             # {{{1
+    # """
+    # Rust rustup install prefix.
+    # Updated 2020-01-13.
+    # """
+    local prefix
+    if _koopa_is_shared_install
+    then
+        prefix="$(_koopa_app_prefix)/rust/rustup"
+    else
+        prefix="${HOME:?}/.rustup"
+    fi
+    echo "$prefix"
+}
+
 _koopa_venv_prefix() {                                                    # {{{1
     # """
     # Python venv prefix.
