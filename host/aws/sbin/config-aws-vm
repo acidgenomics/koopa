@@ -22,3 +22,4 @@ install-debian-base
 install-openjdk
 
 install-cellar-coreutils
+install-cellar-tmux
