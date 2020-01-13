@@ -20,7 +20,7 @@ rm -fr "$prefix"
     curl -R -O "http://www.lua.org/ftp/${file}"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         make macosx test
     else
