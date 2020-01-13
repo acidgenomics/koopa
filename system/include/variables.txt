@@ -38,7 +38,7 @@ bioconductor="3.10"
 
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.11.7"
+broot="0.11.8"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/

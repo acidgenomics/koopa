@@ -23,6 +23,6 @@ crates=(
 
 for crate in "${crates[@]}"
 do
-    cargo install "$crate"
+    cargo install --force "$crate"
 done
 
