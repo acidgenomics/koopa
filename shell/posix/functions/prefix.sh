@@ -193,7 +193,7 @@ _koopa_perlbrew_prefix() {                                                # {{{1
     # Updated 2020-01-12.
     # """
     local prefix
-    if [ -z "${PERLBREW_ROOT:-}" ]
+    if [ -n "${PERLBREW_ROOT:-}" ]
     then
         prefix="$PERLBREW_ROOT"
     else
