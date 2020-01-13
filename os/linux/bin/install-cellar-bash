@@ -15,7 +15,9 @@ build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 gnu_mirror="https://ftpmirror.gnu.org"
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_assert_is_not_dir "$prefix"
+
+_koopa_message "Installing ${name} ${version} at '${prefix}'."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -47,8 +49,12 @@ _koopa_message "Installing ${name} ${version}."
     make --jobs="$jobs"
     make test
     make install
-    rm -fr "$tmp_dir"
 )
+
+rm -fr "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
 _koopa_update_shells "$name"
+
+_koopa_success "Installation of ${name} was successful."
+_koopa_note "Reload the shell to complete activation."
