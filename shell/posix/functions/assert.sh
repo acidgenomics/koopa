@@ -528,22 +528,23 @@ _koopa_check_mount() {                                                    # {{{1
 _koopa_check_user() {                                                     # {{{1
     # """
     # Check if file or directory is owned by an expected user.
-    # Updated 2020-01-12.
+    # Updated 2020-01-13.
     # """
     local file
     file="${1:?}"
-    local expected
-    expected="${2:?}"
     if [ ! -e "$file" ]
     then
         _koopa_warning "'${file}' does not exist on disk."
         return 1
     fi
-    local owner
-    owner="$(_koopa_stat_user "$owner")"
-    if [ "$owner" != "$expected" ]
+    local expected_user
+    expected_user="${2:?}"
+    local current_user
+    current_user="$(_koopa_stat_user "$file")"
+    if [ "$current_user" != "$expected_user" ]
     then
-        _koopa_warning "'${file}' current user '${owner}' is not '${expected}'."
+        _koopa_warning "'${file}' user '${current_user}' is not \
+'${expected_user}'."
         return 1
     fi
     return 0
