@@ -34,7 +34,9 @@ version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version} at '${prefix}'."
+
+rm -fr "$prefix"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -47,9 +49,11 @@ _koopa_message "Installing ${name} ${version}."
         --destdir "$prefix" \
         --prefix="" \
         --zshshare "share/zsh/site-functions"
-    rm -fr "$tmp_dir"
 )
+
+rm -fr "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
 
-_koopa_note "Reload the shell to complete installation."
+_koopa_success "Installation of ${name} was successful."
+_koopa_note "Reload the shell to complete activation."
