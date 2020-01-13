@@ -6,4 +6,4 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
 
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
-_koopa_assert_is_darwin
+_koopa_assert_is_macos
