@@ -74,7 +74,7 @@ _koopa_delete_dotfile() {                                                 # {{{1
 _koopa_download() {                                                       # {{{1
     # """
     # Download a file.
-    # Updated 2020-01-02.
+    # Updated 2020-01-13.
     #
     # Alternatively, can use wget instead of curl:
     # > wget -O file url
@@ -85,7 +85,7 @@ _koopa_download() {                                                       # {{{1
     local url
     url="${1:?}"
     local file
-    file="${2:-$(basename "$url")}"
+    file="${2:-"${PWD:?}/$(basename "$url")"}"
     _koopa_message "Downloading '${url}' to '${file}'."
     curl -L -o "$file" "$url"
     return 0
