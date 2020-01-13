@@ -28,3 +28,7 @@ do
     pipx install --force "$env"
 done
 
+_koopa_set_permissions "$PIPX_HOME"
+
+_koopa_success "pipx environments installed successfully."
+_koopa_note "Restart the shell to ensure programs are available in PATH."
