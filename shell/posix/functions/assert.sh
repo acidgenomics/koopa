@@ -537,6 +537,7 @@ _koopa_check_user() {                                                     # {{{1
         _koopa_warning "'${file}' does not exist on disk."
         return 1
     fi
+    file="$(realpath "$file")"
     local expected_user
     expected_user="${2:?}"
     local current_user
