@@ -57,12 +57,6 @@ rm -frv "$prefix"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "julia-${version}" || exit 1
-
-    # Bug fix for Ubuntu 18 compile failure.
-    # This still doesn't seem to work?
-    # > LD_LIBRARY_PATH="$(pwd)/usr/lib:${LD_LIBRARY_PATH:-}"
-    # > export LD_LIBRARY_PATH
-
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
     cat > Make.user << EOL
