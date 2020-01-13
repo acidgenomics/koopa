@@ -22,7 +22,7 @@ exclude_files=(
 )
 
 # Full path exclusion seems to only work on macOS.
-if ! _koopa_is_darwin
+if ! _koopa_is_macos
 then
     for i in "${!exclude_dirs[@]}"
     do

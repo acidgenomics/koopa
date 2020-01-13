@@ -85,14 +85,14 @@ _koopa_assert_is_conda_active() {                                         # {{{1
     return 0
 }
 
-_koopa_assert_is_darwin() {                                               # {{{1
+_koopa_assert_is_macos() {                                                # {{{1
     # """
-    # Assert that platform is Darwin (macOS).
-    # Updated 2019-10-23.
+    # Assert that platform is macOS (Darwin).
+    # Updated 2020-01-13.
     # """
-    if ! _koopa_is_darwin
+    if ! _koopa_is_macos
     then
-        _koopa_stop "macOS (Darwin) is required."
+        _koopa_stop "macOS is required."
     fi
     return 0
 }
@@ -580,7 +580,7 @@ _koopa_has_sudo() {                                                       # {{{1
     #
     # Note that use of 'sudo -v' does not work consistently across platforms.
     #
-    # - Darwin (macOS): admin
+    # - macOS: admin
     # - Debian: sudo
     # - Fedora: wheel
     # """
@@ -622,10 +622,10 @@ _koopa_is_conda_active() {                                                # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
-_koopa_is_darwin() {                                                      # {{{1
+_koopa_is_macos() {                                                       # {{{1
     # """
-    # Is the operating system Darwin (macOS)?
-    # Updated 2019-06-22.
+    # Is the operating system macOS (Darwin)?
+    # Updated 2020-01-13.
     # """
     [ "$(uname -s)" = "Darwin" ]
 }

@@ -213,10 +213,10 @@ _koopa_file_ext2() {                                                      # {{{1
 _koopa_find_broken_symlinks() {                                           # {{{1
     # """
     # Find broken symlinks.
-    # Updated 2019-11-16.
+    # Updated 2020-01-13.
     # """
     dir="${1:-"."}"
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         find "$dir" -type l -print0 \
         | xargs -0 file \

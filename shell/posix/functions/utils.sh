@@ -33,10 +33,10 @@ _koopa_bcbio_version() {                                                  # {{{1
 _koopa_cpu_count() {                                                      # {{{1
     # """
     # Get the number of cores (CPUs) available.
-    # Updated 2019-11-21.
+    # Updated 2020-01-13.
     # """
     local n
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         n="$(sysctl -n hw.ncpu)"
     elif _koopa_is_linux

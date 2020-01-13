@@ -35,7 +35,7 @@ then
         "${nf[@]:2}"
     )
 else
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         os="$( \
             printf "%s %s (%s)\n" \
