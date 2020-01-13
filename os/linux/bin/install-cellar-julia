@@ -24,8 +24,8 @@ source "${script_dir}/../include/header.sh"
 # > julia --version
 # /usr/lib/x86_64-linux-gnu/libLLVM-6.0.so: version `JL_LLVM_6.0' not found
 # (required by /usr/local/cellar/julia/1.3.0/bin/../lib/libjulia.so.1)
-# https://discourse.julialang.org/t/problem-building-julia-version-jl-llvm-6-0-not-found/11545
 
+# https://discourse.julialang.org/t/problem-building-julia-version-jl-llvm-6-0-not-found/11545
 # inside julia folder
 # find . -name libLLVM-6.0.so
 # gives
@@ -46,6 +46,8 @@ _koopa_message "Installing ${name} ${version}."
 # See 'build.md' file for LLVM details.
 unset LLVM_CONFIG
 
+rm -frv "$prefix"
+
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     # > file="v${version}.tar.gz"
@@ -55,19 +57,26 @@ unset LLVM_CONFIG
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "julia-${version}" || exit 1
+
+    # Bug fix for Ubuntu 18 compile failure.
+    # This still doesn't seem to work?
+    # > LD_LIBRARY_PATH="$(pwd)/usr/lib:${LD_LIBRARY_PATH:-}"
+    # > export LD_LIBRARY_PATH
+
     # Customize the 'Make.user' file.
     # Need to ensure we configure internal LLVM build here.
     cat > Make.user << EOL
 prefix=${prefix}
+# > LLVM_ASSERTIONS=1
+# > LLVM_DEBUG=Release
+USE_BINARYBUILDER=0
 USE_LLVM_SHLIB=0
 USE_SYSTEM_LLVM=0
-# > LLVM_DEBUG=Release
-# > LLVM_ASSERTIONS=1
 EOL
     make --jobs="$jobs"
     # > make test
     make install
-    rm -fr "$tmp_dir"
+    # > rm -fr "$tmp_dir"
 )
 
 _koopa_link_cellar "$name" "$version"
