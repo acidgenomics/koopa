@@ -40,23 +40,15 @@ exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
-mapfile -t files < <( \
+mapfile -t shebang_files < <( \
     grep -Elr \
-    --binary-files="without-match" \
-    "${exclude_dirs[@]}" \
-    '^#!/.*\b(ba)?sh\b$' \
-    "$path" \
-    | sort \
+        --binary-files="without-match" \
+        "${exclude_dirs[@]}" \
+        '^#!/.*\b(ba)?sh\b$' \
+        "$path"
 )
 
-# > _koopa_message "Checking ${#files[@]} scripts with shellcheck."
-
-# Loop across the array and run shellcheck.
-for file in "${files[@]}"
-do
-    # > echo "$file"
-    shellcheck -x "$file"
-done
+shellcheck -x "${shebang_files[@]}"
 
 printf "  OK | %s\n" "$script_bn"
 exit 0
