@@ -49,9 +49,9 @@ _koopa_cellar_prefix() {                                                  # {{{1
 _koopa_config_prefix() {                                                  # {{{1
     # """
     # Local koopa config directory.
-    # Updated 2020-01-12.
+    # Updated 2020-01-13.
     # """
-    echo "${XDG_CONFIG_HOME:?}/koopa"
+    echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
 }
 
 _koopa_local_app_prefix() {                                               # {{{1
