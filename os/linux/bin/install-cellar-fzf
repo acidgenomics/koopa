@@ -5,10 +5,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_is_installed go
-
 # https://github.com/junegunn/fzf/blob/master/BUILD.md
 # Note that this script will download files into '~/go'.
+
+_koopa_assert_is_installed go
 
 name="fzf"
 version="$(_koopa_variable "$name")"
@@ -23,7 +23,7 @@ _koopa_message "Installing ${name} ${version}."
 goroot="$(go env GOROOT)"
 _koopa_message "Go is installed at '${goroot}'."
 
-rm -frv "$prefix" "$opt_prefix"
+rm -fr "$prefix" "$opt_prefix"
 mkdir -pv "$prefix" "$opt_prefix"
 
 (
@@ -43,8 +43,9 @@ mkdir -pv "$prefix" "$opt_prefix"
     rm -fr .[[:alnum:]]* src target
     # Install into opt prefix and then link essential directories.
     cp -rv . "$opt_prefix"
-    rm -fr "$tmp_dir"
 )
+
+rm -fr "$tmp_dir"
 
 _koopa_set_permissions "$opt_prefix"
 
@@ -59,3 +60,6 @@ ln -fnsv \
     "$(dirname "$opt_prefix")/."
 
 _koopa_link_cellar "$name" "$version"
+
+_koopa_success "Installation of ${name} was successful."
+_koopa_note "Reload the shell to complete activation."

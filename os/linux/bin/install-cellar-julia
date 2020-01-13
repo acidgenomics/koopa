@@ -53,7 +53,6 @@ _koopa_message "Installing ${name} ${version}."
 
 rm -frv "$prefix"
 
-
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     # Binary
@@ -93,7 +92,10 @@ EOL
         # > make test
         make install
     fi
-    rm -fr "$tmp_dir"
 )
 
+rm -fr "$tmp_dir"
+
 _koopa_link_cellar "$name" "$version"
+
+_koopa_success "Installation of ${name} was successful."
