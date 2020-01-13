@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Bash shell options.
-# Updated 2019-12-18.
+# Updated 2020-01-13.
 
 # Readline input options.
 if [ -z "${INPUTRC:-}" ] && [ -r "${HOME}/.inputrc" ]
@@ -48,18 +48,21 @@ export PS1
 # Enable programmable completion features. You don't need to enable this if it's
 # already enabled in '/etc/bash.bashrc' and '/etc/profile' sources
 # '/etc/bash.bashrc'.
-if ! shopt -oq posix
-then
-    if [ -f /usr/share/bash-completion/bash_completion ]
-    then
-        # shellcheck source=/dev/null
-        . /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]
-    then
-        # shellcheck source=/dev/null
-        . /etc/bash_completion
-    fi
-fi
+#
+# This causes the koopa installer to error, if enabled.
+#
+# > if ! shopt -oq posix
+# > then
+# >     if [ -f /usr/share/bash-completion/bash_completion ]
+# >     then
+# >         # shellcheck source=/dev/null
+# >         . /usr/share/bash-completion/bash_completion
+# >     elif [ -f /etc/bash_completion ]
+# >     then
+# >         # shellcheck source=/dev/null
+# >         . /etc/bash_completion
+# >     fi
+# > fi
 
 # Alias definitions.
 # You may want to put all your additions into a separate file, instead of adding
