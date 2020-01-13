@@ -9,6 +9,8 @@ _koopa_assert_has_no_args "$@"
 
 prefix="$(_koopa_make_prefix)"
 
+# Note that we're intentionally ignoring 'opt' here.
+
 find "$prefix" \
     -type f \
     \( \
