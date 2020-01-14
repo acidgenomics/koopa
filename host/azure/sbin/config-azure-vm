@@ -60,8 +60,12 @@ then
         install-perlbrew-perl
         install-rbenv-ruby
     )
+    # bcbio-nextgen
+    # 10x genomics cellranger, cellranger-atac
 else
     install-rstudio-server
 fi
 
 install-shiny-server
+
+update-azure-vm

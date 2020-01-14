@@ -33,7 +33,7 @@ do
     esac
 done
 
-if [[ -z "${data_disk:-}" ]] || [[ -z "${user:-}" ]]
+if [[ -z "${data_disk:-}" ]] || [[ -z "${source_ip:-}" ]]
 then
     _koopa_missing_arg
 fi
