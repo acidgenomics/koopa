@@ -34,7 +34,7 @@ stopifnot(isTRUE(nzchar(koopaHome)))
 koopaEXE <- file.path(koopaHome, "bin", "koopa")
 stopifnot(file.exists(koopaEXE))
 
-if (Sys.getenv("KOOPA_EXTRA") == 1) {
+if (Sys.getenv("KOOPA_EXTRA") == 1L) {
     extra <- TRUE
 } else {
     extra <- FALSE
