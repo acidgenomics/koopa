@@ -39,3 +39,8 @@ install-cellar-python
 install-cellar-vim
 install-cellar-neovim
 install-cellar-emacs
+install-cellar-proj
+
+# fzf, broot, ag, etc...
+install-cellar-autojump
+# rust crates
