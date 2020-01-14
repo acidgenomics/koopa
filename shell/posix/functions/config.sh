@@ -35,6 +35,7 @@ _koopa_link_r_etc() {                                                     # {{{1
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
     # """
+    _koopa_assert_has_sudo
     local r_home
     r_home="$(_koopa_r_home)"
     local koopa_prefix
@@ -49,7 +50,7 @@ _koopa_link_r_etc() {                                                     # {{{1
         return 0
     fi
     _koopa_message "Updating '${r_home}'."
-    ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
+    sudo ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
     return 0
 }
 
@@ -58,6 +59,7 @@ _koopa_link_r_site_library() {                                            # {{{1
     # Link R site library.
     # Updated 2020-01-14.
     # """
+    _koopa_assert_has_sudo
     local r_home
     r_home="$(_koopa_r_home)"
     local version
@@ -71,9 +73,9 @@ _koopa_link_r_site_library() {                                            # {{{1
     lib_source="${app_prefix}/r/${minor_version}/site-library"
     local lib_target
     lib_target="${r_home}/site-library"
-    rm -frv "$lib_target"
-    mkdir -pv "$lib_source"
-    ln -fnsv "$lib_source" "$lib_target"
+    sudo rm -frv "$lib_target"
+    sudo mkdir -pv "$lib_source"
+    sudo ln -fnsv "$lib_source" "$lib_target"
     if _koopa_is_debian
     then
         # Link the site-library in '/usr/lib/R' instead.
