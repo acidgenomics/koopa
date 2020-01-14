@@ -21,33 +21,31 @@ sudo ln -fnsv /data01/n /n
 
 install-debian-base
 install-openjdk
-install-cellar-coreutils
-install-cellar-bash
-install-cellar-zsh
-install-cellar-fish
-install-cellar-tmux
-install-cellar-git
-install-cellar-gnupg
-install-cellar-lua
-install-cellar-luarocks
-install-cellar-python
-install-cellar-vim
-install-cellar-neovim
-install-cellar-emacs
-install-cellar-proj
-install-cellar-gdal
+
+if _koopa_is_matching_fixed "${HOSTNAME:?}" awslabapp32
+then
+    install-cellar-coreutils
+    install-cellar-bash
+    install-cellar-zsh
+    install-cellar-fish
+    install-cellar-tmux
+    install-cellar-git
+    install-cellar-gnupg
+    install-cellar-lua
+    install-cellar-luarocks
+    install-cellar-python
+    install-cellar-vim
+    install-cellar-neovim
+    install-cellar-emacs
+    install-cellar-proj
+    install-cellar-gdal
+    install-rstudio-server-pro
+else
+    install-rstudio-server
+fi
 
 # install-cellar-autojump
 # fzf, broot, ag, etc...
 # rust crates
 # python environments
 # conda environments
-
-if _koopa_is_matching_fixed "${HOSTNAME:?}" awslabapp32
-then
-    install-rstudio-server-pro
-    # bcbio-nextgen
-    # 10x genomics cellranger, cellranger-atac
-else
-    install-rstudio-server
-fi
