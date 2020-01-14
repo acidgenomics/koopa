@@ -33,3 +33,6 @@ _koopa_message "Installing ${name} ${version}."
 
 _koopa_link_cellar "$name" "$version"
 _koopa_update_shells "$name"
+
+_koopa_success "Installation of ${name} was successful."
+_koopa_note "Reload the shell to complete activation."

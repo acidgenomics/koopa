@@ -52,3 +52,5 @@ export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
 )
 
 _koopa_link_cellar "$name" "$version"
+
+_koopa_success "Installation of ${name} was successful."
