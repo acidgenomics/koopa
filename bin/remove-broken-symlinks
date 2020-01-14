@@ -7,4 +7,3 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_remove_broken_symlinks "$@"
-
