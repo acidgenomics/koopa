@@ -36,15 +36,16 @@ _koopa_link_docker() {                                                    # {{{1
     [ -d "/n" ] || return 0
     _koopa_assert_has_sudo
     _koopa_assert_is_linux
+    _koopa_message "Updating Docker configuration."
     local lib_sys
     lib_sys="/var/lib/docker"
     local lib_n
     lib_n="/n/var/lib/docker"
     local os_id
     os_id="$(_koopa_os_id)"
-    _koopa_message "Updating Docker config at '${lib_n}'."
+    _koopa_note "Moving Docker lib from '${lib_sys}' to '${lib_n}'."
     local etc_source
-    etc_source="${KOOPA_PREFIX}/os/${os_id}/etc/docker"
+    etc_source="$(_koopa_prefix)/os/${os_id}/etc/docker"
     if [ -d "$etc_source" ]
     then
         sudo ln -fnsv "$etc_source"* "/etc/docker/."
