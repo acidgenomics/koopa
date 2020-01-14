@@ -5,14 +5,38 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_assert_has_args "$@"
+_koopa_assert_is_installed rsync
 
+while (("$#"))
+do
+    case "$1" in
+        --data-disk=*)
+            data_disk="${1#*=}"
+            shift 1
+            ;;
+        --data-disk)
+            data_disk="$2"
+            shift 2
+            ;;
+        --source-ip=*)
+            source_ip="${1#*=}"
+            shift 1
+            ;;
+        --source-ip)
+            source_ip="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
 
-source_ip="10.100.100.132"  # *.135
-
-# Azure: data00, AWS: data01
-data_disk="/data00"
-
-
+if [[ -z "${data_disk:-}" ]] || [[ -z "${user:-}" ]]
+then
+    _koopa_missing_arg
+fi
 
 host_ip="$(ip-address)"
 source_user="$USER"
