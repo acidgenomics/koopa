@@ -8,9 +8,10 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_is_debian
 _koopa_assert_has_no_envs
 
+_koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
 
-# Remove default user configuration files.
+# Remove default user shell configuration files.
 sudo rm -fv /etc/skel/.{bash_logout,bashrc,profile}
 rm -fv ~/.{bash_logout,bashrc,profile}
 
@@ -18,8 +19,16 @@ rm -fv ~/.{bash_logout,bashrc,profile}
 sudo mkdir -pv /data01/n/app
 sudo ln -fnsv /data01/n /n
 
+# Note that we're installing R using apt instead of cellar approach.
+# Refer to 'install-debian-base' for details.
+# Is 'install-debian' handling the Ubuntu installation correctly?
+# Check my Dockerfile for details.
+
 install-debian-base
 install-openjdk
 
 install-cellar-coreutils
+install-cellar-bash
 install-cellar-tmux
+
+# Check R configuration approach here.
