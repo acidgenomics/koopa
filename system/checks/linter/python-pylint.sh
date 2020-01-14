@@ -28,7 +28,7 @@ exclude_dirs=(
 )
 
 # Full path exclusion seems to only work on macOS.
-if ! _koopa_is_darwin
+if ! _koopa_is_macos
 then
     for i in "${!exclude_dirs[@]}"
     do
@@ -48,14 +48,13 @@ done < <(find "${KOOPA_PREFIX}/pykoopa" -iname "*.py" -print0)
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
-shebang_files="$( \
+mapfile -t shebang_files < <( \
     grep -Elr \
-    --binary-files="without-match" \
-    "${exclude_dirs[@]}" \
-    '^#!/.*\bpython(3)?\b$' \
-    "$path" \
-)"
-mapfile -t shebang_files <<< "$shebang_files"
+        --binary-files="without-match" \
+        "${exclude_dirs[@]}" \
+        '^#!/.*\bpython(3)?\b$' \
+        "$path"
+)
 
 merge=("${ext_files[@]}" "${shebang_files[@]}")
 files="$(printf "%q\n" "${merge[@]}" | sort -u)"

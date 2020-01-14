@@ -91,10 +91,10 @@ _koopa_activate_broot() {                                                 # {{{1
     # If installed as crate, it will use the same path as for Linux.
     #
     # https://github.com/Canop/broot
-    # Updated 2020-01-09.
+    # Updated 2020-01-13.
     # """
     local config_dir
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         config_dir="${HOME}/Library/Preferences/org.dystroy.broot"
     else
@@ -103,7 +103,7 @@ _koopa_activate_broot() {                                                 # {{{1
     [ -d "$config_dir" ] || return 0
     local br_script
     br_script="${config_dir}/launcher/bash/br"
-    _koopa_assert_is_file "$br_script"
+    [ -f "$br_script" ] || return 0
     # shellcheck source=/dev/null
     . "$br_script"
     return 0
@@ -166,20 +166,25 @@ _koopa_activate_ensembl_perl_api() {                                      # {{{1
 _koopa_activate_fzf() {                                                   # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
+    # Updated 2020-01-13.
+    #
+    # See also:
     # https://github.com/junegunn/fzf
-    # Updated 2020-01-09.
+    # """
     _koopa_is_installed fzf || return 0
     local dir
     dir="/usr/local/opt/fzf"
     [ -d "$dir" ] || return 0
     local shell
     shell="$(_koopa_shell)"
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
     # Auto-completion.
     # shellcheck source=/dev/null
     . "${dir}/shell/completion.${shell}"
     # Key bindings.
     # shellcheck source=/dev/null
     . "${dir}/shell/key-bindings.${shell}"
+    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
     return 0
 }
 
@@ -196,7 +201,7 @@ _koopa_activate_llvm() {                                                  # {{{1
     # """
     [ -x "${LLVM_CONFIG:-}" ] && return 0
     local config
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         # llvm@7
         config="/usr/local/opt/llvm/bin/llvm-config"

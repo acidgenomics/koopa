@@ -24,7 +24,7 @@ do
 done
 
 # Ensure invisible files get nuked on macOS.
-if _koopa_is_darwin
+if _koopa_is_macos
 then
     find "$koopa_prefix" -name ".DS_Store" -delete
 fi
@@ -65,7 +65,7 @@ _koopa_update_profile
 if [[ "$system" -eq 1 ]]
 then
     _koopa_message "Updating system configuration."
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         update-homebrew
         update-r-packages

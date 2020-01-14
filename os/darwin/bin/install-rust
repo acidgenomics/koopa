@@ -7,18 +7,27 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-_koopa_assert_is_not_installed rustup
-_koopa_assert_is_installed brew
+_koopa_assert_is_installed rustup-init
+_koopa_assert_is_not_installed rustc rustup
 
-_koopa_message "Installing rustup via Homebrew."
-brew install rustup
+_koopa_message "Installing Rust via rustup-init (Homebrew)."
 
-export CARGO_HOME="${HOME}/.cargo"
-export RUSTUP_HOME="${HOME}/.rustup"
+CARGO_HOME="$(_koopa_rust_cargo_prefix)"
+RUSTUP_HOME="$(_koopa_rust_rustup_prefix)"
 
 _koopa_note "CARGO_HOME: '${CARGO_HOME}'."
 _koopa_note "RUSTUP_HOME: '${RUSTUP_HOME}'."
 
+_koopa_assert_is_not_dir "$CARGO_HOME"
+_koopa_assert_is_not_dir "$RUSTUP_HOME"
+
+_koopa_prefix_mkdir "$CARGO_HOME"
+_koopa_prefix_mkdir "$RUSTUP_HOME"
+
 rustup-init -v -y --no-modify-path
 
-_koopa_note "Restart the shell to finish Rust activation."
+_koopa_set_permissions "$CARGO_HOME"
+_koopa_set_permissions "$RUSTUP_HOME"
+
+_koopa_success "Installation of Rust was successful."
+_koopa_note "Restart the shell to finish activation."
