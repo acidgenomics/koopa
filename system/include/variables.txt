@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-01-09"
+koopa_date="2020-01-13"
 
 
 
@@ -38,7 +38,7 @@ bioconductor="3.10"
 
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.11.7"
+broot="0.11.8"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
@@ -161,7 +161,7 @@ picard="2.21.1"
 pip="19.3.1"
 
 # https://pypi.org/project/pipx/
-pipx="0.15.1.1"
+pipx="0.15.1.2"
 
 # https://proj.org/
 proj="6.3.0"

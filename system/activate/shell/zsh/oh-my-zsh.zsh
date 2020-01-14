@@ -71,7 +71,7 @@ then
         dnf
         yum
     )
-elif _koopa_is_darwin
+elif _koopa_is_macos
 then
     plugins+=(
         brew

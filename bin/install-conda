@@ -47,7 +47,7 @@ fi
 
 if [[ "$anaconda" -eq 1 ]]
 then
-    case "$OSTYPE" in
+    case "${OSTYPE:?}" in
         linux-gnu)
             script="Anaconda3-${version}-Linux-x86_64.sh"
             ;;
@@ -65,7 +65,7 @@ then
         rm -fr "$tmp_dir"
     )
 else
-    case "$OSTYPE" in
+    case "${OSTYPE:?}" in
         linux-gnu)
             script="Miniconda3-latest-Linux-x86_64.sh"
             ;;

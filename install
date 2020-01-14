@@ -14,19 +14,19 @@ optional arguments:
     --shared
         Enable shared user configuration via '/etc/profile.d/zzz-koopa.sh' file.
         Linux only. Not supported on macOS.
-    --test
-        Enable verbose test mode.
-        Useful for Travis CI and building Docker images.
     --dotfiles
         Clone the dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
         and automatically symlink recommended default configuration files.
     --mike
         Install Mike-specific configuration.
         This flag automatically enables '--dotfiles'.
+    --test
+        Enable verbose test mode.
+        Useful for Travis CI and building Docker images.
 
 note:
     Bash script.
-    Updated 2019-12-18.
+    Updated 2020-01-13.
 EOF
 }
 

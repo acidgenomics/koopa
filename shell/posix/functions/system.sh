@@ -210,6 +210,9 @@ _koopa_header() {                                                         # {{{1
         linux)
             path="${KOOPA_PREFIX}/os/linux/include/header.sh"
             ;;
+        macos)
+            path="${KOOPA_PREFIX}/os/macos/include/header.sh"
+            ;;
         rhel)
             path="${KOOPA_PREFIX}/os/rhel/include/header.sh"
             ;;
@@ -297,8 +300,13 @@ _koopa_info_box() {                                                       # {{{1
 _koopa_install_mike() {                                                   # {{{1
     # """
     # Install additional Mike-specific config files.
-    # Updated 2019-11-04.
+    # Updated 2020-01-13.
     # """
+    _koopa_message "Setting koopa remote to Git (SSH) instead of HTTPS."
+    (
+        cd "${KOOPA_PREFIX:?}" || exit 1
+        git remote set-url origin "git@github.com:acidgenomics/koopa.git"
+    )
     install-dotfiles --mike
     # docker
     source_repo="git@github.com:acidgenomics/docker.git"
@@ -314,11 +322,6 @@ _koopa_install_mike() {                                                   # {{{1
     then
         git clone --recursive "$source_repo"  "$target_dir"
     fi
-    # Use SSH instead of HTTPS.
-    (
-        cd "$KOOPA_PREFIX" || exit 1
-        git remote set-url origin "git@github.com:acidgenomics/koopa.git"
-    )
     return 0
 }
 
@@ -419,7 +422,7 @@ _koopa_macos_app_version() {                                              # {{{1
     # Extract the version of a macOS application.
     # Updated 2020-01-12.
     # """
-    _koopa_assert_is_darwin
+    _koopa_assert_is_macos
     local name
     name="${1:?}"
     plutil -p "/Applications/${name}.app/Contents/Info.plist" \
@@ -455,7 +458,7 @@ _koopa_os_id() {                                                          # {{{1
 _koopa_os_string() {                                                      # {{{1
     # """
     # Operating system string.
-    # Updated 2019-12-18.
+    # Updated 2020-01-13.
     #
     # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
@@ -467,11 +470,12 @@ _koopa_os_string() {                                                      # {{{1
     local id
     local version
     local string
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
-        id="darwin"
-        version="$(uname -r | cut -d '.' -f 1)"
+        id="macos"
+        version="$(_koopa_current_version "$id")"
+        version="$(_koopa_minor_version "$version")"
     elif _koopa_is_linux
     then
         if [ -r /etc/os-release ]
@@ -483,9 +487,9 @@ _koopa_os_string() {                                                      # {{{1
             # Include the major release version.
             version="$( \
                 awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
-                | tr -d '"' \
-                | cut -d '.' -f 1 \
+                | tr -d '"'
             )"
+            version="$(_koopa_major_version "$version")"
         else
             id="linux"
         fi
@@ -505,11 +509,16 @@ _koopa_os_string() {                                                      # {{{1
 _koopa_os_version() {                                                     # {{{1
     # """
     # Operating system version.
-    # Updated 2019-06-22.
+    # Updated 2020-01-13.
     #
-    # Note that this returns Darwin version information for macOS.
+    # Note that uname returns Darwin kernel version for macOS.
     # """
-    uname -r
+    if _koopa_is_macos
+    then
+        _koopa_current_version macos
+    else
+        uname -r
+    fi
 }
 
 _koopa_relink() {                                                         # {{{1

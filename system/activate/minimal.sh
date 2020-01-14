@@ -70,7 +70,7 @@ fi
 if [ -z "${XDG_RUNTIME_DIR:-}" ]
 then
     XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
     fi
