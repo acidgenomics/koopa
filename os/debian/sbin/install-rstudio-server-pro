@@ -53,9 +53,7 @@ _koopa_message "Installing ${name} ${version}."
 # > sudo "$name" status
 # > sudo "$name" license-manager status
 
-command -v rstudio-server
-rstudio-server version
-rstudio-server license-manager verify
+_koopa_success "Installation of $name was successful."
 
 cat << EOF
 Activate product license key (if necessary):
@@ -66,3 +64,4 @@ first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
 EOF
 
+# > rstudio-server license-manager verify
