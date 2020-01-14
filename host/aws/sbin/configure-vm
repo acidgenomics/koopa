@@ -36,7 +36,7 @@ do
     esac
 done
 
-data_disk="/data01"
+data_disk="/mnt/data01"
 
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
