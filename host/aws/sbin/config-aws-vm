@@ -29,6 +29,11 @@ install-openjdk
 
 install-cellar-coreutils
 install-cellar-bash
+install-cellar-zsh
+install-cellar-fish
+
+
+
 install-cellar-tmux
 
 # Check R configuration approach here.
