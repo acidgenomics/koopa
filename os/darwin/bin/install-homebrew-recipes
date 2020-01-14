@@ -146,6 +146,7 @@ brews=(
     awscli
     bash-completion
     bfg
+    broot
     ccache
     circleci
     cmake
