@@ -5,17 +5,29 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-cpi=0
+_koopa_assert_is_rhel_7
+_koopa_assert_has_no_envs
+
+cpi="false"
+source="false"
 
 while (("$#"))
 do
     case "$1" in
+        --cpi=*)
+            cpi="${1#*=}"
+            shift 1
+            ;;
         --cpi)
-            cpi=1
+            cpi="true"
+            shift 1
+            ;;
+        --source=*)
+            source="${1#*=}"
             shift 1
             ;;
         --source)
-            source=1
+            source="true"
             shift 1
             ;;
         *)
@@ -24,38 +36,26 @@ do
     esac
 done
 
-_koopa_assert_is_rhel_7
-_koopa_assert_has_no_envs
+data_disk="/data00"
 
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
 
 # Remove default user shell configuration files.
-# FIXME Check to see if these are symlinks.
 sudo rm -fv /etc/skel/.{bash_logout,bash_profile,bashrc,emacs,zshrc}
-rm -fv ~/.{bash_logout,bash_profile,bashrc,emacs,zshrc}
 
-# Don't attempt to patch system env to support '-S' flag.
-# Should no longer be an issue on VMs, as of 2020.
-if [[ -e "/bin/env.bak" ]]
-then
-    sudo rm "/bin/env"
-    sudo mv "/bin/env.bak" "/bin/env"
-fi
-
-# OpenJDK moved to '/n/app'.
-sudo rm -frv /opt/jdk
 
 # Prepare '/n/' share.
-sudo mkdir -pv /data00/n/app
-sudo ln -fnsv /data00/n /n
+sudo mkdir -pv "${data_disk}/n/app"
+sudo ln -fnsv "${data_disk}/n" /n
 
 install-rhel-7-base
 install-azure-cli
 install-openjdk
 
-if _koopa_is_matching_fixed "$HOSTNAME" azlabapp32
+if [[ "$source" == "true" ]]
 then
+
     install-cellar-coreutils
     install-cellar-bash
     install-cellar-zsh
@@ -92,11 +92,7 @@ then
     install-pyenv
     install-rstudio-server-pro
     r-javareconf
-else
-    install-rstudio-server
 fi
-
-install-shiny-server
 
 if [[ "$cpi" -eq 1 ]]
 then
@@ -130,7 +126,35 @@ then
     _koopa_message "Updating '/data00' structure."
     sudo rm -frv "/data00/"{R,bcbio,cellranger,cellranger-atac,conda,docker,var}
 
-    rsync-vm --data-disk="/data00" --source-ip="10.100.100.132"
+    if _koopa_is_matching_fixed "$HOSTNAME" azlabapp32
+    then
+        install-rstudio-server-pro
+    fi
 
-    _koopa_update_lmod_config
+    rsync-vm --data-disk="/data00" --source-ip="10.100.100.132"
 fi
+
+if ! _koopa_is_installed rstudio-server
+then
+    install-rstudio-server
+fi
+
+if ! _koopa_is_installed shiny-server
+then
+    install-shiny-server
+fi
+
+_koopa_update_lmod_config
+
+# Don't attempt to patch system env to support '-S' flag.
+# Should no longer be an issue on VMs, as of 2020.
+if [[ -e "/bin/env.bak" ]]
+then
+    sudo rm -v "/bin/env"
+    sudo mv -v "/bin/env.bak" "/bin/env"
+fi
+
+# OpenJDK moved to '/n/app'.
+sudo rm -frv /opt/jdk
+
+_koopa_success "Azure VM is configured correctly."
