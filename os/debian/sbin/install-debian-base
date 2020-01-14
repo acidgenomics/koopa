@@ -73,6 +73,7 @@ sudo apt -y install \
     cargo \
     cmake \
     emacs \
+    firefox \
     fish \
     gdebi-core \
     git \
