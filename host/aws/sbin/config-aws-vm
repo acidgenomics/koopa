@@ -33,5 +33,7 @@ install-cellar-zsh
 install-cellar-fish
 install-cellar-tmux
 install-cellar-git
+install-cellar-gnupg
 
-# Check R configuration approach here.
+# Need to automatically configure Rprofile.site, Renviron.site, and site-library
+# for Debian and Ubuntu.
