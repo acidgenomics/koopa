@@ -30,7 +30,7 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
 _koopa_link_r_etc() {                                                     # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # Updated 2019-12-16.
+    # Updated 2020-01-14.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -56,7 +56,7 @@ _koopa_link_r_etc() {                                                     # {{{1
 _koopa_link_r_site_library() {                                            # {{{1
     # """
     # Link R site library.
-    # Updated 2019-12-16.
+    # Updated 2020-01-14.
     # """
     local r_home
     r_home="$(_koopa_r_home)"
@@ -76,10 +76,8 @@ _koopa_link_r_site_library() {                                            # {{{1
     ln -fnsv "$lib_source" "$lib_target"
     if _koopa_is_debian
     then
-        local lib_local_target
-        lib_local_target="/usr/local/lib/R/site-library"
-        sudo rm -frv "$lib_local_target"
-        sudo ln -fnsv "$lib_source" "$lib_local_target"
+        # Link the site-library in '/usr/lib/R' instead.
+        sudo rm -frv /usr/local/lib/R
     fi
     return 0
 }
