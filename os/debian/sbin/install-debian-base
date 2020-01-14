@@ -124,8 +124,7 @@ sudo apt -y install \
     xorg \
     zsh
 
-# This supports both Debian and Ubuntu.
-# See corresponding install scripts.
+install-docker
 install-r
 
 # LLVM (clang)
