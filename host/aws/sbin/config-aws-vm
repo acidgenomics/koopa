@@ -50,3 +50,6 @@ fi
 # rust crates
 # python environments
 # conda environments
+
+install-shiny-server
+update-aws-vm
