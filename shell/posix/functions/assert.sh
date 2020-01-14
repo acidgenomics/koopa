@@ -85,18 +85,6 @@ _koopa_assert_is_conda_active() {                                         # {{{1
     return 0
 }
 
-_koopa_assert_is_macos() {                                                # {{{1
-    # """
-    # Assert that platform is macOS (Darwin).
-    # Updated 2020-01-13.
-    # """
-    if ! _koopa_is_macos
-    then
-        _koopa_stop "macOS is required."
-    fi
-    return 0
-}
-
 _koopa_assert_is_debian() {                                               # {{{1
     # """
     # Assert that platform is Debian.
@@ -224,6 +212,18 @@ _koopa_assert_is_linux() {                                                # {{{1
     if ! _koopa_is_linux
     then
         _koopa_stop "Linux is required."
+    fi
+    return 0
+}
+
+_koopa_assert_is_macos() {                                                # {{{1
+    # """
+    # Assert that platform is macOS (Darwin).
+    # Updated 2020-01-13.
+    # """
+    if ! _koopa_is_macos
+    then
+        _koopa_stop "macOS is required."
     fi
     return 0
 }
@@ -419,6 +419,18 @@ _koopa_assert_is_matching_regex() {                                       # {{{1
     if ! _koopa_is_matching_regex "$string" "$pattern"
     then
         _koopa_stop "'${string}' doesn't match regex pattern '${pattern}'."
+    fi
+    return 0
+}
+
+_koopa_assert_is_ubuntu() {                                               # {{{1
+    # """
+    # Assert that platform is Ubuntu.
+    # Updated 2020-01-14.
+    # """
+    if ! _koopa_is_ubuntu
+    then
+        _koopa_stop "Ubuntu is required."
     fi
     return 0
 }
@@ -622,14 +634,6 @@ _koopa_is_conda_active() {                                                # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
-_koopa_is_macos() {                                                       # {{{1
-    # """
-    # Is the operating system macOS (Darwin)?
-    # Updated 2020-01-13.
-    # """
-    [ "$(uname -s)" = "Darwin" ]
-}
-
 _koopa_is_debian() {                                                      # {{{1
     # """
     # Is the operating system Debian?
@@ -761,6 +765,14 @@ _koopa_is_login_zsh() {                                                   # {{{1
     [ "$0" = "-zsh" ]
 }
 
+_koopa_is_macos() {                                                       # {{{1
+    # """
+    # Is the operating system macOS (Darwin)?
+    # Updated 2020-01-13.
+    # """
+    [ "$(uname -s)" = "Darwin" ]
+}
+
 _koopa_is_matching_fixed() {                                              # {{{1
     # """
     # Does the input match a fixed string?
@@ -851,6 +863,16 @@ _koopa_is_shared_install() {                                              # {{{1
     # Updated 2019-06-25.
     # """
     ! _koopa_is_local_install
+}
+
+_koopa_is_ubuntu() {                                                      # {{{1
+    # """
+    # Is the operating system Ubuntu?
+    # Updated 2020-01-14.
+    # """
+    [ -f /etc/os-release ] || return 1
+    grep "ID=" /etc/os-release | grep -q "ubuntu" ||
+        grep "ID_LIKE=" /etc/os-release | grep -q "ubuntu"
 }
 
 _koopa_is_venv_active() {                                                 # {{{1
