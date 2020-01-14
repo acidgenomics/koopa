@@ -34,6 +34,12 @@ install-cellar-fish
 install-cellar-tmux
 install-cellar-git
 install-cellar-gnupg
+install-cellar-lua
+install-cellar-luarocks
+# Don't run 'install-cellar-r' here.
+install-cellar-python
+
+
 
 # Need to automatically configure Rprofile.site, Renviron.site, and site-library
 # for Debian and Ubuntu.

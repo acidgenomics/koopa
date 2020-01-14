@@ -29,7 +29,7 @@ _koopa_assert_is_installed tex
 
 if _koopa_is_debian
 then
-    _koopa_stop "Install R CRAN binary instead for Debian/Ubuntu."
+    _koopa_stop "Use 'install-r' to install R CRAN binary release instead."
 fi
 
 _koopa_assert_is_installed java javac tex
