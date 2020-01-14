@@ -8,6 +8,8 @@ source "${script_dir}/../include/header.sh"
 # Install latest version of R.
 # https://cran.r-project.org/bin/linux/debian/
 
+_koopa_is_installed R && exit 0
+
 release="$(lsb_release -s -c)"
 
 # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
