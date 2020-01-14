@@ -130,11 +130,15 @@ install-r
 # LLVM (clang)
 # https://apt.llvm.org/
 # Note that regular llvm recipe currently installs version 6.
-llvm_version="$(_koopa_variable llvm)"
-llvm_version="$(_koopa_major_version "$llvm_version")"
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-sudo ./llvm.sh "$llvm_version"
-rm llvm.sh
+if [[ -z "${LLVM_CONFIG:-}" ]]
+then
+    _koopa_message "Installing LLVM."
+    llvm_version="$(_koopa_variable llvm)"
+    llvm_version="$(_koopa_major_version "$llvm_version")"
+    wget https://apt.llvm.org/llvm.sh
+    chmod +x llvm.sh
+    sudo ./llvm.sh "$llvm_version"
+    rm llvm.sh
+fi
 
 sudo apt -y autoremove
