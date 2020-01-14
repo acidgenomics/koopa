@@ -43,55 +43,11 @@ _koopa_prepare_make_prefix
 # Remove default user shell configuration files.
 sudo rm -fv /etc/skel/.{bash_logout,bash_profile,bashrc,emacs,zshrc}
 
-
 # Prepare '/n/' share.
 sudo mkdir -pv "${data_disk}/n/app"
 sudo ln -fnsv "${data_disk}/n" /n
 
 install-rhel-7-base
-install-azure-cli
-install-openjdk
-
-if [[ "$source" == "true" ]]
-then
-
-    install-cellar-coreutils
-    install-cellar-bash
-    install-cellar-zsh
-    install-cellar-fish
-    install-cellar-tmux
-    install-cellar-git
-    install-cellar-gnupg
-    install-cellar-lua
-    install-cellar-luarocks
-    install-cellar-r
-    install-cellar-python
-    install-cellar-vim
-    install-cellar-neovim
-    install-cellar-emacs
-    install-cellar-sqlite
-    install-cellar-proj
-    install-cellar-gdal
-    install-cellar-hdf5
-    install-cellar-go
-    install-cellar-gsl
-    install-cellar-perl
-    install-cellar-ruby
-    install-cellar-julia
-    install-cellar-htop
-    install-cellar-shellcheck
-    install-cellar-neofetch
-    install-cellar-genrich
-    install-cellar-autojump
-    install-cellar-fzf
-    install-cellar-the-silver-searcher
-    install-rust
-    install-perlbrew
-    install-rbenv
-    install-pyenv
-    install-rstudio-server-pro
-    r-javareconf
-fi
 
 if [[ "$cpi" -eq 1 ]]
 then
@@ -131,6 +87,51 @@ then
     fi
 
     rsync-vm --data-disk="/data00" --source-ip="10.100.100.132"
+fi
+
+install-azure-cli
+install-openjdk
+
+if [[ "$source" == "true" ]]
+then
+    # /usr/local/cellar
+    install-cellar-coreutils
+    install-cellar-bash
+    install-cellar-zsh
+    install-cellar-fish
+    install-cellar-tmux
+    install-cellar-git
+    install-cellar-gnupg
+    install-cellar-lua
+    install-cellar-luarocks
+    install-cellar-r
+    install-cellar-python
+    install-cellar-vim
+    install-cellar-neovim
+    install-cellar-emacs
+    install-cellar-sqlite
+    install-cellar-proj
+    install-cellar-gdal
+    install-cellar-hdf5
+    install-cellar-go
+    install-cellar-gsl
+    install-cellar-perl
+    install-cellar-ruby
+    install-cellar-julia
+    install-cellar-htop
+    install-cellar-shellcheck
+    install-cellar-neofetch
+    install-cellar-genrich
+    install-cellar-autojump
+    install-cellar-fzf
+    install-cellar-the-silver-searcher
+    # /n/app
+    install-rust
+    install-perlbrew
+    install-rbenv
+    install-pyenv
+    install-rstudio-server-pro
+    r-javareconf
 fi
 
 if ! _koopa_is_installed rstudio-server
