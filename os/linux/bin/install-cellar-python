@@ -30,7 +30,7 @@ build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 exe_file="${prefix}/bin/python3"
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version} at '${prefix}'."
 
 if [[ -d "${HOME}/.virtualenvs" ]]
 then
