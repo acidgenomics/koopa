@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2020-01-11.
+## Updated 2020-01-14.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -33,6 +33,12 @@ stopifnot(isTRUE(nzchar(koopaHome)))
 
 koopaEXE <- file.path(koopaHome, "bin", "koopa")
 stopifnot(file.exists(koopaEXE))
+
+if (Sys.getenv("KOOPA_EXTRA") == 1) {
+    extra <- TRUE
+} else {
+    extra <- FALSE
+}
 
 host <- system2(command = koopaEXE, args = "host-id", stdout = TRUE)
 os <- system2(command = koopaEXE, args = "os-string", stdout = TRUE)
@@ -500,23 +506,43 @@ checkVersion(
 ## Shell tools =================================================================
 message("\nShell tools:")
 checkVersion(
-    name = "autojump",
-    whichName = "autojump",
-    current = currentVersion("autojump"),
-    expected = expectedVersion("autojump")
-)
-checkVersion(
-    name = "fzf",
-    whichName = "fzf",
-    current = currentVersion("fzf"),
-    expected = expectedVersion("fzf")
-)
-checkVersion(
     name = "The Silver Searcher (Ag)",
     whichName = "ag",
     current = currentVersion("the-silver-searcher"),
     expected = expectedVersion("the-silver-searcher")
 )
+checkVersion(
+    name = "exa",
+    whichName = "exa",
+    current = currentVersion("exa"),
+    expected = expectedVersion("exa")
+)
+checkVersion(
+    name = "fd",
+    whichName = "fd",
+    current = currentVersion("fd"),
+    expected = expectedVersion("fd")
+)
+if (isTRUE(extra)) {
+    checkVersion(
+        name = "autojump",
+        whichName = "autojump",
+        current = currentVersion("autojump"),
+        expected = expectedVersion("autojump")
+    )
+    checkVersion(
+        name = "broot",
+        whichName = "broot",
+        current = currentVersion("broot"),
+        expected = expectedVersion("broot")
+    )
+    checkVersion(
+        name = "fzf",
+        whichName = "fzf",
+        current = currentVersion("fzf"),
+        expected = expectedVersion("fzf")
+    )
+}
 
 
 
@@ -870,27 +896,4 @@ installed(
         "pylint",
         "pytest"
     )
-)
-
-
-
-## Rust cargo ==================================================================
-message("\nRust cargo crates:")
-checkVersion(
-    name = "broot",
-    whichName = "broot",
-    current = currentVersion("broot"),
-    expected = expectedVersion("broot")
-)
-checkVersion(
-    name = "exa",
-    whichName = "exa",
-    current = currentVersion("exa"),
-    expected = expectedVersion("exa")
-)
-checkVersion(
-    name = "fd",
-    whichName = "fd",
-    current = currentVersion("fd"),
-    expected = expectedVersion("fd")
 )
