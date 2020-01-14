@@ -13,6 +13,10 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     local sudo_file
     sudo_file="/etc/sudoers.d/sudo"
     _koopa_message "Updating '${sudo_file}' to include '${group}'."
+    if [ ! -f "$sudo_file" ]
+    then
+        sudo touch "$sudo_file"
+    fi
     if ! sudo grep -q "$group" "$sudo_file"
     then
         sudo sh -c "echo '%${group} ALL=(ALL) NOPASSWD: ALL' >> ${sudo_file}"
