@@ -157,4 +157,8 @@ fi
 # OpenJDK moved to '/n/app'.
 sudo rm -frv /opt/jdk
 
+_koopa_set_permissions /usr/local
+_koopa_set_permissions /n/app
+sudo chmod 0777 /n/app/python/pyenv/shims
+
 _koopa_success "Azure VM is configured correctly."

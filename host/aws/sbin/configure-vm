@@ -125,4 +125,8 @@ fi
 
 _koopa_update_lmod_config
 
+_koopa_set_permissions /usr/local
+_koopa_set_permissions /n/app
+sudo chmod 0777 /n/app/python/pyenv/shims
+
 _koopa_success "AWS VM is configured correctly."
