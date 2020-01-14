@@ -279,6 +279,42 @@ _koopa_assert_is_not_installed() {                                        # {{{1
     return 0
 }
 
+_koopa_assert_is_rhel() {                                                 # {{{1
+    # """
+    # Assert that platform is RHEL.
+    # Updated 2020-01-14.
+    # """
+    if ! _koopa_is_rhel
+    then
+        _koopa_stop "RHEL is required."
+    fi
+    return 0
+}
+
+_koopa_assert_is_rhel_7() {                                               # {{{1
+    # """
+    # Assert that platform is RHEL 7.
+    # Updated 2020-01-14.
+    # """
+    if ! _koopa_is_rhel_7
+    then
+        _koopa_stop "RHEL 7 is required."
+    fi
+    return 0
+}
+
+_koopa_assert_is_rhel_8() {                                               # {{{1
+    # """
+    # Assert that platform is RHEL 8.
+    # Updated 2020-01-14.
+    # """
+    if ! _koopa_is_rhel_8
+    then
+        _koopa_stop "RHEL 8 is required."
+    fi
+    return 0
+}
+
 _koopa_assert_is_not_root() {                                             # {{{1
     # """
     # Assert that current user is not root.
