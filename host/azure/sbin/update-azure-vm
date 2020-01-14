@@ -87,7 +87,7 @@ then
     _koopa_message "Updating '/data00' structure."
     sudo rm -frv "/data00/"{R,bcbio,cellranger,cellranger-atac,conda,docker,var}
 
-    rsync-azure-vm
+    rsync-vm --data-disk="/data00" --source-ip="10.100.100.132"
 
     _koopa_update_lmod_config
     install-openjdk
