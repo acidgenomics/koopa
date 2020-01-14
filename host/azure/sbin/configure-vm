@@ -54,18 +54,18 @@ then
     _koopa_message "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
-        "${KOOPA_PREFIX}/host/azure/etc/profile.d/constellation.sh" \
+        "$(_koopa_prefix)/host/azure/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
 
     _koopa_message "Updating '/etc/cron.d'."
     sudo rm -fv "/etc/cron.d/cpi-"*
     sudo rm -fv "/etc/cron.d/constellation"
     sudo cp -v \
-        "${KOOPA_PREFIX}/host/azure/etc/cron.d/constellation" \
+        "$(_koopa_prefix)/host/azure/etc/cron.d/constellation" \
         "/etc/cron.d/constellation"
 
     # Ensure that shared bioinfo user has correct dotfiles.
-    if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
+    if [[ -d "$(_koopa_prefix)/dotfiles" ]]
     then
         _koopa_message "Updating bioinfo user dotfiles."
         sudo -u bioinfo -H "$SHELL" -c "\

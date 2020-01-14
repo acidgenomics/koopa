@@ -39,7 +39,6 @@ done
 data_disk="/mnt/data01"
 
 _koopa_enable_passwordless_sudo
-_koopa_prepare_make_prefix
 
 # Remove default user shell configuration files.
 sudo rm -fv /etc/skel/.{bash_logout,bashrc,profile}
@@ -48,6 +47,8 @@ sudo rm -fv /etc/skel/.{bash_logout,bashrc,profile}
 sudo mkdir -pv "${data_disk}/n/app"
 sudo ln -fnsv "${data_disk}/n" /n
 
+_koopa_prepare_make_prefix
+
 install-debian-base
 
 if [[ "$cpi" == "true" ]]
@@ -55,7 +56,7 @@ then
     _koopa_message "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
-        "${KOOPA_PREFIX}/host/aws/etc/profile.d/constellation.sh" \
+        "$(_koopa_prefix)/host/aws/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
 
     if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
