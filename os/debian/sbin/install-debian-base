@@ -5,7 +5,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+# Install R using 'install-r' script instead, which sets up apt to support
+# newer official release from CRAN.
 
 # Clean up previous:
 # - openjdk-12-jdk
@@ -16,6 +17,16 @@ _koopa_assert_has_no_args "$@"
 # > apt-cache search 'libgnutls.*-dev'
 # > apt-cache search gnutls
 # > apt-cache search libgif
+
+# 'libcurl4-gnutls-dev' gets installed by 'git' above.
+#
+# Conflicts:
+# libcurl4-gnutls-dev
+# libcurl4-openssl-dev
+
+# Note that 'golang-go' is not officially supported.
+
+_koopa_assert_has_no_args "$@"
 
 # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default, which
 # is non-standard and can cause cellar link script to break.
@@ -54,14 +65,6 @@ sudo apt -y build-dep \
     tmux \
     vim \
     zsh
-
-# 'libcurl4-gnutls-dev' gets installed by 'git' above.
-#
-# Conflicts:
-# libcurl4-gnutls-dev
-# libcurl4-openssl-dev
-
-# Note that 'golang-go' is not officially supported.
 
 sudo apt -y install \
     alien \
@@ -113,8 +116,6 @@ sudo apt -y install \
     pkg-config \
     python3 \
     python3-pip \
-    r-base \
-    r-base-dev \
     sqlite3 \
     texlive \
     tmux \
