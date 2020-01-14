@@ -83,3 +83,5 @@ _koopa_update_r_config
 
 # Run again to ensure R site config files propagate correctly.
 _koopa_link_cellar "$name" "$version"
+
+_koopa_success "Installation of ${name} was successful."
