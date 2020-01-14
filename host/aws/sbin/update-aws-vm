@@ -27,13 +27,8 @@ do
     esac
 done
 
-_koopa_message "Updating Docker config."
-sudo systemctl stop docker
-sudo rm -frv "/var/lib/docker"
-sudo mkdir -pv "/n/var/lib/docker"
-sudo ln -fnsv "/n/var/lib/docker" "/var/lib/docker"
-sudo systemctl enable docker
-sudo systemctl start docker
+
+_koopa_link_docker
 
 if [[ "$apt" -eq 1 ]]
 then
@@ -49,7 +44,7 @@ then
         "${KOOPA_PREFIX}/host/aws/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
 
-    # rsync-aws-vm
+    rsync-vm --data-disk="/data01" --source-ip="10.201.20.32"
 
     # _koopa_update_lmod_config
     # install-openjdk

@@ -38,16 +38,7 @@ fi
 # OpenJDK moved to '/n/app'.
 sudo rm -frv /opt/jdk
 
-_koopa_message "Updating Docker config."
-sudo systemctl stop docker
-sudo ln -fnsv \
-    "${KOOPA_PREFIX}/os/fedora/etc/docker/"* \
-    "/etc/docker/."
-sudo rm -frv "/var/lib/docker"
-sudo mkdir -pv "/n/var/lib/docker"
-sudo ln -fnsv "/n/var/lib/docker" "/var/lib/docker"
-sudo systemctl enable docker
-sudo systemctl start docker
+_koopa_link_docker
 
 if [[ "$yum" -eq 1 ]]
 then
