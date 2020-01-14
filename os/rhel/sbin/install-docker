@@ -35,5 +35,6 @@ sudo gpasswd -a "$USER" docker
 # Ready to start Docker.
 sudo systemctl start docker
 
-docker --version
-command -v docker
+_koopa_link_docker
+
+_koopa_success "Installation of Docker was successful."
