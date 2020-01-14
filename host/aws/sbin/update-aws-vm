@@ -27,7 +27,6 @@ do
     esac
 done
 
-
 _koopa_link_docker
 
 if [[ "$apt" -eq 1 ]]
