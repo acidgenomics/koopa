@@ -58,8 +58,14 @@ fi
 
 _koopa_link_cellar "$name" "$version"
 
-_koopa_install_pip "$exe_file"
-_koopa_install_pipx "$exe_file"
+# Ubuntu 18 LTS clean install, now seeing this error:
+# python3: error while loading shared libraries: libpython3.8.so.1.0: cannot
+# open shared object file: No such file or directory
+
+(
+    _koopa_install_pip "$exe_file"
+    _koopa_install_pipx "$exe_file"
+)
 
 _koopa_link_cellar "$name" "$version"
 
