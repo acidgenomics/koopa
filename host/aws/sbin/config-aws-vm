@@ -31,9 +31,7 @@ install-cellar-coreutils
 install-cellar-bash
 install-cellar-zsh
 install-cellar-fish
-
-
-
 install-cellar-tmux
+install-cellar-git
 
 # Check R configuration approach here.
