@@ -8,6 +8,36 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_is_debian
 _koopa_assert_has_no_envs
 
+cpi="false"
+source="false"
+
+while (("$#"))
+do
+    case "$1" in
+        --cpi=*)
+            cpi="${1#*=}"
+            shift 1
+            ;;
+        --cpi)
+            cpi="true"
+            shift 1
+            ;;
+        --source=*)
+            source="${1#*=}"
+            shift 1
+            ;;
+        --source)
+            source="true"
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+data_disk="/data01"
+
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
 
@@ -16,13 +46,13 @@ sudo rm -fv /etc/skel/.{bash_logout,bashrc,profile}
 rm -fv ~/.{bash_logout,bashrc,profile}
 
 # Prepare '/n/' share.
-sudo mkdir -pv /data01/n/app
-sudo ln -fnsv /data01/n /n
+sudo mkdir -pv "${data_disk}/n/app"
+sudo ln -fnsv "${data_disk}/n" /n
 
 install-debian-base
 install-openjdk
 
-if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
+if [[ "$source" == "true" ]]
 then
     install-cellar-coreutils
     install-cellar-bash
@@ -57,17 +87,33 @@ then
     install-perlbrew
     install-rbenv
     install-pyenv
-    install-rstudio-server-pro
     r-javareconf
+    # bcbio-nextgen
+    # 10X Genomics CellRanger, CellRanger ATAC
+    # conda-create-bioinfo-envs
+    # install-rust-cargo-crates
+fi
+
+if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
+then
+    install-rstudio-server-pro
 else
     install-rstudio-server
 fi
 
-# bcbio-nextgen
-# 10X Genomics CellRanger, CellRanger ATAC
-# conda-create-bioinfo-envs
-# install-rust-cargo-crates
-# rust crates
-
 install-shiny-server
-update-aws-vm
+
+if [[ "$cpi" == "true" ]]
+then
+    _koopa_message "Updating '/etc/profile.d'."
+    _koopa_update_profile
+    sudo ln -fnsv \
+        "${KOOPA_PREFIX}/host/aws/etc/profile.d/constellation.sh" \
+        "/etc/profile.d/."
+
+    rsync-vm --data-disk="$data_disk" --source-ip="10.201.20.32"
+fi
+
+_koopa_update_lmod_config
+
+_koopa_success "AWS VM is configured correctly."
