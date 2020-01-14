@@ -8,14 +8,19 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_is_rhel_7
 _koopa_assert_has_no_envs
 
+_koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
 
+# Remove default user shell configuration files.
+sudo rm -fv /etc/skel/.{bash_logout,bash_profile,bashrc,emacs,zshrc}
+rm -fv ~/.{bash_logout,bash_profile,bashrc,emacs,zshrc}
+
+# Prepare '/n/' share.
 sudo mkdir -pv /data00/n/app
 sudo ln -fnsv /data00/n /n
 
 install-rhel-7-base
 install-openjdk
-
 install-cellar-coreutils
 install-cellar-bash
 install-cellar-zsh
@@ -44,16 +49,13 @@ install-cellar-htop
 install-cellar-shellcheck
 install-cellar-neofetch
 install-cellar-genrich
-
 install-rust
 install-perlbrew
 install-rbenv
 install-pyenv
-
 # Add a check for which machine to install RStudio Server Pro.
 # > install-rstudio-server-pro
 # > install-rstudio-server
-
 r-javareconf
 
 (
