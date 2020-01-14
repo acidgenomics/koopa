@@ -47,5 +47,4 @@ _koopa_message "Installing ${name} ${version} (${os_id})."
 # > sudo "$name" start
 # > sudo "$name" status
 
-command -v "$name"
-"$name" version
+_koopa_success "Installation of $name was successful."
