@@ -27,6 +27,37 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     return 0
 }
 
+_koopa_link_docker() {                                                    # {{{1
+    # """
+    # Link Docker library onto data disk for VM.
+    # Updated 2020-01-14.
+    # """
+    _koopa_is_installed docker || return 0
+    [ -d "/n" ] || return 0
+    _koopa_assert_has_sudo
+    _koopa_assert_is_linux
+    local lib_sys
+    lib_sys="/var/lib/docker"
+    local lib_n
+    lib_n="/n/var/lib/docker"
+    local os_id
+    os_id="$(_koopa_os_id)"
+    _koopa_message "Updating Docker config at '${lib_n}'."
+    local etc_source
+    etc_source="${KOOPA_PREFIX}/os/${os_id}/etc/docker"
+    if [ -d "$etc_source" ]
+    then
+        sudo ln -fnsv "$etc_source"* "/etc/docker/."
+    fi
+    sudo systemctl stop docker
+    sudo rm -frv "$lib_sys"
+    sudo mkdir -pv "$lib_n"
+    sudo ln -fnsv "$lib_n" "$lib_sys"
+    sudo systemctl enable docker
+    sudo systemctl start docker
+    return 0
+}
+
 _koopa_link_r_etc() {                                                     # {{{1
     # """
     # Link R config files inside 'etc/'.
