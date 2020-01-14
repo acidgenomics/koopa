@@ -5,8 +5,16 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-host_ip="$(ip-address)"
+
+
 source_ip="10.100.100.132"  # *.135
+
+# Azure: data00, AWS: data01
+data_disk="/data00"
+
+
+
+host_ip="$(ip-address)"
 source_user="$USER"
 
 # Check for accidental sync from source machine.
@@ -20,15 +28,15 @@ mapfile -t flags < <(_koopa_rsync_flags)
 # > flags+=("--omit-dir-times")
 flags_bak=("${flags[@]}")
 
-
-
 # /n/app                                                                    {{{1
 # ==============================================================================
 
-sudo mkdir -pv /data00/n
-sudo chown root:root /data00/n
-sudo chmod 0755 /data00/n
-sudo ln -fnsfv /data00/n /n
+n_source="${data_disk}/n"
+
+sudo mkdir -pv "${data_disk}/n"
+sudo chown root:root "$n_source"
+sudo chmod 0755 "$n_source"
+sudo ln -fnsfv "$n_source" /n
 
 dir="/n/app"
 sudo mkdir -pv "$dir"
@@ -55,7 +63,6 @@ rsync ${flags[@]} \
     "${dir}/"
 
 _koopa_set_permissions "$dir"
-
 
 # /usr/local                                                              # {{{1
 # ==============================================================================
