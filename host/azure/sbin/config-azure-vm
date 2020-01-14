@@ -30,20 +30,17 @@ install-cellar-git
 install-cellar-gnupg
 install-cellar-lua
 install-cellar-luarocks
-# Skip this step on Debian/Ubuntu.
 install-cellar-r
 install-cellar-python
 install-cellar-vim
 install-cellar-neovim
 install-cellar-emacs
-install-cellar-proj
-# This one takes a while to compile.
+install-cellar-proj  # slow
 install-cellar-gdal
 install-cellar-hdf5
 install-cellar-gsl
 install-cellar-perl
 install-cellar-ruby
-# This is currently erroring out on Ubuntu 18 LTS (see notes).
 install-cellar-julia
 install-cellar-htop
 install-cellar-shellcheck
@@ -53,9 +50,16 @@ install-rust
 install-perlbrew
 install-rbenv
 install-pyenv
-# Add a check for which machine to install RStudio Server Pro.
-# > install-rstudio-server-pro
-# > install-rstudio-server
+
+# Check for which machine to install RStudio Server Pro.
+if _koopa_is_matching_fixed "${HOSTNAME:?}" azlabapp32
+then
+    install-rstudio-server-pro
+else
+    install-rstudio-server
+fi
+
+install-shiny-server
 r-javareconf
 
 (
