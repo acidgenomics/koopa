@@ -27,5 +27,4 @@ _koopa_message "Installing ${name} ${version}."
     rm -fr "$tmp_dir"
 )
 
-command -v "$name"
-"$name" --version
+_koopa_success "Installation of $name was successful."
