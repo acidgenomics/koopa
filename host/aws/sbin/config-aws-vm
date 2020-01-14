@@ -19,11 +19,6 @@ rm -fv ~/.{bash_logout,bashrc,profile}
 sudo mkdir -pv /data01/n/app
 sudo ln -fnsv /data01/n /n
 
-# Note that we're installing R using apt instead of cellar approach.
-# Refer to 'install-debian-base' for details.
-# Is 'install-debian' handling the Ubuntu installation correctly?
-# Check my Dockerfile for details.
-
 install-debian-base
 install-openjdk
 install-cellar-coreutils
@@ -40,7 +35,19 @@ install-cellar-vim
 install-cellar-neovim
 install-cellar-emacs
 install-cellar-proj
+install-cellar-gdal
 
+# install-cellar-autojump
 # fzf, broot, ag, etc...
-install-cellar-autojump
 # rust crates
+# python environments
+# conda environments
+
+if _koopa_is_matching_fixed "${HOSTNAME:?}" awslabapp32
+then
+    install-rstudio-server-pro
+    # bcbio-nextgen
+    # 10x genomics cellranger, cellranger-atac
+else
+    install-rstudio-server
+fi

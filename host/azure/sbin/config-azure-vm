@@ -36,7 +36,7 @@ install-cellar-vim
 install-cellar-neovim
 install-cellar-emacs
 install-cellar-proj  # slow
-install-cellar-gdal
+install-cellar-gdal  # slow
 install-cellar-hdf5
 install-cellar-gsl
 install-cellar-perl
@@ -51,7 +51,6 @@ install-perlbrew
 install-rbenv
 install-pyenv
 
-# Check for which machine to install RStudio Server Pro.
 if _koopa_is_matching_fixed "${HOSTNAME:?}" azlabapp32
 then
     install-rstudio-server-pro
