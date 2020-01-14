@@ -239,7 +239,8 @@ _koopa_activate_pipx
 
 # Lmod fix for Zsh activation failure on Ubuntu 18 LTS.
 # See related GitHub issue: https://github.com/TACC/Lmod/issues/434
-if [ -z "${LMOD_ROOT:-}" ] && [ -f "/etc/profile.d/z00_lmod.sh" ]
+if [ "${KOOPA_ZSHRC:-}" -eq 1 ] && [ -z "${LMOD_ROOT:-}" ] && \
+    [ -f "/etc/profile.d/z00_lmod.sh" ]
 then
     # shellcheck disable=SC1091
     . "/etc/profile.d/z00_lmod.sh"
