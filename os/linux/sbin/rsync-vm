@@ -65,7 +65,7 @@ sudo ln -fnsfv "$n_source" /n
 dir="/n/app"
 sudo mkdir -pv "$dir"
 sudo chown -Rh "$USER" "$dir"
-sudo chmod g-s "${dir}/"*
+# > sudo chmod g-s "${dir}/"*
 
 # Skip programs that are specific to powerful multi-core VMs.
 if ! _koopa_is_powerful
