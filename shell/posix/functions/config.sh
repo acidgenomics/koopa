@@ -1,6 +1,28 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_enable_passwordless_sudo() {                                       # {{{1
+    # """
+    # Enable passwordless sudo access for all admin users.
+    # Updated 2020-01-14.
+    # """
+    _koopa_assert_is_linux
+    _koopa_assert_has_sudo
+    local group
+    group="$(_koopa_group)"
+    local sudo_file
+    sudo_file="/etc/sudoers.d/sudo"
+    _koopa_message "Updating '${sudo_file}' to include '${group}'."
+    if ! sudo grep -q "$group" "$sudo_file"
+    then
+        sudo sh -c "echo '%${group} ALL=(ALL) NOPASSWD: ALL' >> ${sudo_file}"
+    else
+        _koopa_note "Passwordless sudo already enabled for '${group}'."
+    fi
+    sudo chmod 0440 "$sudo_file"
+    return 0
+}
+
 _koopa_link_r_etc() {                                                     # {{{1
     # """
     # Link R config files inside 'etc/'.
@@ -110,6 +132,7 @@ _koopa_prefix_chgrp() {                                                   # {{{1
         chgrp -Rh "$group" "$path"
         chmod -R g+w "$path"
     fi
+    return 0
 }
 
 _koopa_prefix_mkdir() {                                                   # {{{1
@@ -130,6 +153,7 @@ _koopa_prefix_mkdir() {                                                   # {{{1
         mkdir -p "$path"
     fi
     _koopa_prefix_chgrp "$path"
+    return 0
 }
 
 _koopa_prepare_make_prefix() {                                            # {{{1
@@ -217,6 +241,7 @@ _koopa_update_ldconfig() {                                                # {{{1
         sudo ln -fnsv "$source_file" "$dest_file"
     done
     sudo ldconfig
+    return 0
 }
 
 _koopa_update_lmod_config() {                                             # {{{1
@@ -268,6 +293,7 @@ _koopa_update_r_config() {                                                # {{{1
     _koopa_link_r_site_library
     _koopa_set_permissions "$r_home"
     _koopa_r_javareconf
+    return 0
 }
 
 _koopa_update_r_config_macos() {                                          # {{{1
@@ -279,6 +305,7 @@ _koopa_update_r_config_macos() {                                          # {{{1
     # """
     mkdir -pv "${HOME}/.R"
     ln -fnsv "/usr/local/koopa/os/macos/etc/R/Makevars" "${HOME}/.R/."
+    return 0
 }
 
 _koopa_update_shells() {                                                  # {{{1
@@ -299,6 +326,7 @@ _koopa_update_shells() {                                                  # {{{1
         sudo sh -c "echo ${shell_path} >> ${shell_file}"
     fi
     _koopa_note "Run 'chsh -s ${shell_path} ${USER}' to change default shell."
+    return 0
 }
 
 _koopa_update_xdg_config() {                                              # {{{1
