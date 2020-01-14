@@ -53,6 +53,7 @@ install-openjdk
 
 if [[ "$source" == "true" ]]
 then
+    # /usr/local/cellar
     install-cellar-coreutils
     install-cellar-bash
     install-cellar-zsh
@@ -82,6 +83,7 @@ then
     install-cellar-autojump
     install-cellar-fzf
     install-cellar-the-silver-searcher
+    # /n/app
     install-rust
     install-perlbrew
     install-rbenv
