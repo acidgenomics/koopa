@@ -224,3 +224,10 @@ _koopa_activate_prefix "${KOOPA_PREFIX}/host/$(_koopa_host_id)"
 
 _koopa_activate_prefix "$(_koopa_config_prefix)/docker"
 _koopa_activate_prefix "$(_koopa_config_prefix)/scripts-private"
+
+
+
+# Activation functions                                                      {{{1
+# ==============================================================================
+
+_koopa_activate_pipx
