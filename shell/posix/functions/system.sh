@@ -300,13 +300,13 @@ _koopa_info_box() {                                                       # {{{1
 _koopa_install_mike() {                                                   # {{{1
     # """
     # Install additional Mike-specific config files.
-    # Updated 2020-01-13.
+    # Updated 2020-01-14.
     # """
-    _koopa_message "Setting koopa remote to Git (SSH) instead of HTTPS."
-    (
-        cd "${KOOPA_PREFIX:?}" || exit 1
-        git remote set-url origin "git@github.com:acidgenomics/koopa.git"
-    )
+    # > _koopa_message "Setting koopa remote to Git (SSH) instead of HTTPS."
+    # > (
+    # >     cd "${KOOPA_PREFIX:?}" || exit 1
+    # >     git remote set-url origin "git@github.com:acidgenomics/koopa.git"
+    # > )
     install-dotfiles --mike
     # docker
     source_repo="git@github.com:acidgenomics/docker.git"
