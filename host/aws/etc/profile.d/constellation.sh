@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Constellation Pharma shared shell configuration.
-# Updated 2019-12-12 by Michael Steinbaugh.
+# Updated 2020-01-14 by Michael Steinbaugh.
 
 
 
@@ -20,5 +20,5 @@
 # ==============================================================================
 
 # > export KOOPA_TEST=1
-export KOOPA_USERS_NO_EXTRA="bioinfo barbara.bryant"
+export KOOPA_USERS_NO_EXTRA="barbara.bryant"
 export KOOPA_USERS_SKIP="phil.drapeau"
