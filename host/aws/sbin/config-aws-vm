@@ -21,9 +21,9 @@ sudo ln -fnsv /data01/n /n
 
 install-debian-base
 install-openjdk
-install-docker
+# install-docker
 
-if _koopa_is_matching_fixed "${HOSTNAME:?}" awslabapp32
+if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
 then
     install-cellar-coreutils
     install-cellar-bash
@@ -38,18 +38,37 @@ then
     install-cellar-vim
     install-cellar-neovim
     install-cellar-emacs
+    install-cellar-sqlite
     install-cellar-proj
     install-cellar-gdal
+    install-cellar-hdf5
+    install-cellar-gsl
+    install-cellar-go
+    install-cellar-perl
+    install-cellar-ruby
+    install-cellar-julia
+    install-cellar-htop
+    install-cellar-shellcheck
+    install-cellar-neofetch
+    install-cellar-genrich
+    install-cellar-autojump
+    install-cellar-fzf
+    install-cellar-the-silver-searcher
+    install-rust
+    install-perlbrew
+    install-rbenv
+    install-pyenv
     install-rstudio-server-pro
+    r-javareconf
 else
     install-rstudio-server
 fi
 
-# install-cellar-autojump
-# fzf, broot, ag, etc...
+# bcbio-nextgen
+# 10X Genomics CellRanger, CellRanger ATAC
+# conda-create-bioinfo-envs
+# install-rust-cargo-crates
 # rust crates
-# python environments
-# conda environments
 
 install-shiny-server
 update-aws-vm
