@@ -18,7 +18,7 @@ python3_exe="${build_prefix}/bin/python3"
 python3_config_exe="${python3_exe}-config"
 python3_config_dir="$("$python3_config_exe" --configdir)"
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version} at '${prefix}'."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

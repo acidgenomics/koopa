@@ -33,7 +33,7 @@ jobs="$(_koopa_cpu_count)"
 # Ensure current jar binary is in path, otherwise install will fail.
 java_home="$(_koopa_java_home)"
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_message "Installing ${name} ${version} at '${prefix}'."
 _koopa_add_to_path_start "${java_home}/bin"
 
 export NGS_LIBDIR="$ngs_libdir"
