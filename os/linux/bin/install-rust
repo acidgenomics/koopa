@@ -7,7 +7,6 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-_koopa_assert_is_not_installed rustc rustup
 
 _koopa_message "Installing Rust via rustup script (http://sh.rustup.rs)."
 
