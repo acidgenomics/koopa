@@ -126,6 +126,8 @@ done
 # Use osgeo-gdal instead of regular gdal.
 # This gets updated more regularly.
 
+# Don't install 'rust' alongside 'rustup-init'.
+
 _koopa_message "Installing brews."
 installed_brews="$(brew list)"
 brews=(
@@ -205,7 +207,6 @@ brews=(
     rbenv
     rsync
     ruby-build
-    rust
     rustup-init
     screen
     shellcheck

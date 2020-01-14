@@ -20,7 +20,7 @@ _koopa_message "Installing ${name} ${version}."
     _koopa_download "https://www.openssl.org/source/openssl-${version}.tar.gz"
     _koopa_extract "openssl-${version}.tar.gz"
     cd "openssl-${version}" || exit 1
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         ./Configure \
             darwin64-x86_64-cc \

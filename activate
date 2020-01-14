@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2019-12-18.
+    Updated 2020-01-13.
 EOF
 }
 
@@ -323,7 +323,7 @@ _koopa_update_xdg_config
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         . "${KOOPA_ACTIVATE_DIR}/os/darwin/programs/homebrew.sh"
         . "${KOOPA_ACTIVATE_DIR}/os/darwin/programs/python.sh"
@@ -360,7 +360,7 @@ then
 
     . "${KOOPA_ACTIVATE_DIR}/extra.sh"
 
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         . "${KOOPA_ACTIVATE_DIR}/os/darwin/init.sh"
     fi

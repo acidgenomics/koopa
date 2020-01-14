@@ -19,7 +19,7 @@ _koopa_app_prefix() {                                                     # {{{1
     local prefix
     if _koopa_is_shared_install
     then
-        if _koopa_is_darwin
+        if _koopa_is_macos
         then
             # Catalina doesn't allow directory creation at volume root.
             prefix="$(_koopa_make_prefix)"
@@ -49,9 +49,9 @@ _koopa_cellar_prefix() {                                                  # {{{1
 _koopa_config_prefix() {                                                  # {{{1
     # """
     # Local koopa config directory.
-    # Updated 2020-01-12.
+    # Updated 2020-01-13.
     # """
-    echo "${XDG_CONFIG_HOME:?}/koopa"
+    echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
 }
 
 _koopa_local_app_prefix() {                                               # {{{1
@@ -176,7 +176,7 @@ _koopa_java_home() {                                                      # {{{1
         return 0
     fi
     local home
-    if _koopa_is_darwin
+    if _koopa_is_macos
     then
         home="$(/usr/libexec/java_home)"
     else
@@ -255,6 +255,21 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
         prefix="$(_koopa_app_prefix)/rust/cargo"
     else
         prefix="${HOME:?}/.cargo"
+    fi
+    echo "$prefix"
+}
+
+_koopa_rust_rustup_prefix() {                                             # {{{1
+    # """
+    # Rust rustup install prefix.
+    # Updated 2020-01-13.
+    # """
+    local prefix
+    if _koopa_is_shared_install
+    then
+        prefix="$(_koopa_app_prefix)/rust/rustup"
+    else
+        prefix="${HOME:?}/.rustup"
     fi
     echo "$prefix"
 }

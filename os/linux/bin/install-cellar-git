@@ -14,6 +14,8 @@ jobs="$(_koopa_cpu_count)"
 
 _koopa_message "Installing ${name} ${version}."
 
+rm -fr "$prefix"
+
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     file="v${version}.tar.gz"
@@ -30,7 +32,10 @@ _koopa_message "Installing ${name} ${version}."
     # > make install install-doc install-html install-info
     make --jobs="$jobs"
     make install
-    rm -fr "$tmp_dir"
 )
 
+rm -fr "$tmp_dir"
+
 _koopa_link_cellar "$name" "$version"
+
+_koopa_success "Installation of ${name} was successful."

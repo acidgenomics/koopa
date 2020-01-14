@@ -697,7 +697,8 @@ checkVersion(
     current = currentVersion("sqlite"),
     expected = switch(
         EXPR = os,
-        `darwin-18` = "3.24.0",
+        `macos-10.14` = "3.24.0",
+        `macos-10.15` = "3.28.0",
         expectedVersion("sqlite")
     )
 )

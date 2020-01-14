@@ -14,6 +14,8 @@ gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
 _koopa_message "Installing ${name} ${version}."
 
+rm -fr "$prefix"
+
 # Download GnuPG release signing keys.
 if _koopa_is_installed gpg
 then
@@ -25,13 +27,10 @@ then
                     8A861B1C7EFD60D9
 fi
 
-rm -fr "$tmp_dir"
-mkdir -p "$tmp_dir"
-
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="libgpg-error"
     ver="$(_koopa_variable "$pkg")"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -48,9 +47,9 @@ mkdir -p "$tmp_dir"
 _koopa_link_cellar "$name" "$version"
 
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="libgcrypt"
     ver="$(_koopa_variable "$pkg")"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -67,9 +66,9 @@ _koopa_link_cellar "$name" "$version"
 _koopa_link_cellar "$name" "$version"
 
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="libassuan"
     ver="$(_koopa_variable "$pkg")"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -86,9 +85,9 @@ _koopa_link_cellar "$name" "$version"
 _koopa_link_cellar "$name" "$version"
 
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="libksba"
     ver="$(_koopa_variable "$pkg")"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -105,9 +104,9 @@ _koopa_link_cellar "$name" "$version"
 _koopa_link_cellar "$name" "$version"
 
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="npth"
     ver="$(_koopa_variable "$pkg")"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -124,9 +123,9 @@ _koopa_link_cellar "$name" "$version"
 _koopa_link_cellar "$name" "$version"
 
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="pinentry"
     ver="$(_koopa_variable "$pkg")"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -143,9 +142,9 @@ _koopa_link_cellar "$name" "$version"
 _koopa_link_cellar "$name" "$version"
 
 (
+    _koopa_cd_tmp_dir "$tmp_dir"
     pkg="gnupg"
     ver="$(_koopa_variable gpg)"
-    cd "$tmp_dir" || exit 1
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
     _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
     if _koopa_is_installed gpg
@@ -168,3 +167,5 @@ rm -rf "$tmp_dir"
 # > rm -rf ~/.gnugp
 
 gpgconf --kill gpg-agent
+
+_koopa_success "Installation of ${name} was successful."

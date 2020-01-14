@@ -1,19 +1,13 @@
-
-
-
-
-    [dir="${dir}"]
-
+.TH REMOVE-BROKEN-SYMLINKS 1 2019-01-13 Bash
+.SH NAME
+remove-broken-symlinks \-
 Remove broken symbolic links.
-
-optinoal positional arguments with defaults:
-    1.  Directory path.
-        Defaults to '${dir}'.
-
-
-details:
-    Script always removes broken links recursively.
-
-note:
-    Bash script.
-    Updated 2019-10-22.
+.SH SYNOPSIS
+.B remove-broken-symlinks
+[dir=\fI"."\fP]
+.SH OPTIONS
+.TP
+.B dir
+Directory path.
+.SH DESCRIPTION
+Script always removes broken links recursively.

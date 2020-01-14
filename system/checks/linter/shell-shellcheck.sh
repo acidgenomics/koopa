@@ -27,7 +27,7 @@ exclude_dirs=(
 )
 
 # Full path exclusion seems to only work on macOS.
-if ! _koopa_is_darwin
+if ! _koopa_is_macos
 then
     for i in "${!exclude_dirs[@]}"
     do
@@ -40,12 +40,15 @@ exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 # This step recursively grep matches files with regular expressions.
 # Here we're checking for the shebang, rather than relying on file extension.
-grep -Elr \
-    --binary-files="without-match" \
-    "${exclude_dirs[@]}" \
-    '^#!/.*\b(ba)?sh\b$' \
-    "$path" | \
-    xargs -I {} shellcheck -x {}
+mapfile -t shebang_files < <( \
+    grep -Elr \
+        --binary-files="without-match" \
+        "${exclude_dirs[@]}" \
+        '^#!/.*\b(ba)?sh\b$' \
+        "$path"
+)
+
+shellcheck -x "${shebang_files[@]}"
 
 printf "  OK | %s\n" "$script_bn"
 exit 0
