@@ -123,6 +123,10 @@ sudo apt -y install \
     xorg \
     zsh
 
+# This supports both Debian and Ubuntu.
+# See corresponding install scripts.
+install-r
+
 # LLVM (clang)
 # https://apt.llvm.org/
 # Note that regular llvm recipe currently installs version 6.
