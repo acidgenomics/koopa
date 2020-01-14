@@ -21,7 +21,6 @@ sudo ln -fnsv /data01/n /n
 
 install-debian-base
 install-openjdk
-# install-docker
 
 if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
 then
