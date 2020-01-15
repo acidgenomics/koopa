@@ -5,12 +5,20 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# Need to configure Zsh to support system-wide config files in '/etc/zsh'.
+# Note that RHEL 7 locates these to '/etc' by default instead.
+# https://github.com/Homebrew/legacy-homebrew/issues/25719
+# https://github.com/TACC/Lmod/issues/434
+
 name="zsh"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+etc_dir="${prefix}/etc/zsh"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
+
+_koopa_assert_is_not_dir "$prefix"
 
 _koopa_message "Installing ${name} ${version} at '${prefix}'."
 
@@ -23,10 +31,11 @@ _koopa_message "Installing ${name} ${version} at '${prefix}'."
     cd "zsh-${version}" || exit 1
     ./configure \
         --build="$build" \
-        --prefix="$prefix"
+        --prefix="$prefix" \
+        --enable-etcdir="$etc_dir"
     make --jobs="$jobs"
-    make check
-    make test
+    # > make check
+    # > make test
     make install
     rm -fr "$tmp_dir"
 )
