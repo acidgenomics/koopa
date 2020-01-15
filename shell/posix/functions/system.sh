@@ -233,6 +233,42 @@ _koopa_header() {                                                         # {{{1
     echo "$path"
 }
 
+_koopa_help() {                                                           # {{{1
+    # """
+    # Show usage via '--help' flag.
+    # Updated 2020-01-15.
+    #
+    # Note that using 'path' as a local variable here will mess up Zsh.
+    #
+    # Now always calls 'man' to display nicely formatted manual page.
+    #
+    # Alternate approach:
+    # > path="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/192319
+    # """
+    _koopa_assert_is_installed man
+    case "${1:-}" in
+        --help|-h)
+            local file name shell
+            shell="$(_koopa_shell)"
+            case "$shell" in
+                bash)
+                    file="$0"
+                    ;;
+                zsh)
+                    file="${ZSH_ARGZERO:?}"
+                    ;;
+            esac
+            name="${file##*/}"
+            man "$name"
+            exit 0
+            ;;
+    esac
+    return 0
+}
+
 _koopa_host_id() {                                                        # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
