@@ -55,9 +55,9 @@ done
     git fetch --all
     # > git checkout master
     git pull
-    _koopa_set_permissions "$koopa_prefix"
 )
 
+_koopa_set_permissions "$koopa_prefix"
 _koopa_update_xdg_config
 _koopa_update_ldconfig
 _koopa_update_profile
@@ -97,6 +97,18 @@ then
         remove-broken-cellar-symlinks
     fi
 fi
+
+# Zsh compaudit fix.
+if _koopa_is_shared_install
+then
+    chmod="sudo chmod"
+else
+    chmod="chmod"
+fi
+# Note that word split here is intentional.
+$chmod g-w \
+    "${koopa_prefix}/shell/zsh/functions" \
+    "${koopa_prefix}/shell/zsh"
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
