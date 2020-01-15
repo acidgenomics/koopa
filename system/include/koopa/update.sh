@@ -105,8 +105,10 @@ then
 else
     chmod="chmod"
 fi
-"$chmod" g-w "${koopa_prefix}/shell/zsh/functions"
-"$chmod" g-w "${koopa_prefix}/shell/zsh"
+# Note that word split here is intentional.
+$chmod g-w \
+    "${koopa_prefix}/shell/zsh/functions" \
+    "${koopa_prefix}/shell/zsh"
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
