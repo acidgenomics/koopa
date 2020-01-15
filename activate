@@ -149,19 +149,27 @@ then
 elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
-    # This covers both '_src_etc_profile' and '_src_etc_profile_d'.
+    # Zsh currently requires presence of '~/.zshrc' file for clean activation
+    # on some systems.
+    #
+    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
+    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
+    # this case instead returns '_src_etc_profile'.
+    #
+    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
+    #
+    # See also:
+    # https://stackoverflow.com/a/23259585/3911732
     case "$0" in
         _src_etc_profile*)
+            # Early return when inside '/etc/profile.d/zzz-koopa.sh' script.
             return 0
             ;;
         *)
             export KOOPA_ZSHRC=1
             ;;
     esac
-    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
-    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
-    # this case instead returns '_src_etc_profile'.
-    # https://stackoverflow.com/a/23259585/3911732
+
     KOOPA_SOURCE="${(%):-%N}"
 else
     >&2 cat << EOF
