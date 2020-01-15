@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Constellation Pharma shared shell configuration.
+# Constellation Pharma AWS VM shared shell configuration.
 # Updated 2020-01-14 by Michael Steinbaugh.
 
 
@@ -19,6 +19,6 @@
 # Koopa                                                                     {{{1
 # ==============================================================================
 
-# > export KOOPA_TEST=1
+export KOOPA_CONFIG="constellation-aws"
 export KOOPA_USERS_NO_EXTRA="barbara.bryant"
 export KOOPA_USERS_SKIP="phil.drapeau"
