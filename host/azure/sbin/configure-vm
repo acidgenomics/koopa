@@ -49,7 +49,7 @@ sudo ln -fnsv "${data_disk}/n" /n
 
 install-rhel-7-base
 
-if [[ "$cpi" -eq 1 ]]
+if [[ "$cpi" == "true" ]]
 then
     _koopa_message "Updating '/etc/profile.d'."
     _koopa_update_profile
