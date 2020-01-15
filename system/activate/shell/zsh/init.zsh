@@ -38,7 +38,3 @@ autoload -Uz colors && colors
 # Suppressing warning for KOOPA_TEST mode:
 # compinit:141: parse error: condition expected: $1
 autoload -Uz compinit && compinit 2>/dev/null
-
-# compinit warn about directories with group write access.
-# Here's an alias that will quickly fix this issue.
-alias zsh-compaudit-fix="compaudit | xargs sudo chmod g-w"
