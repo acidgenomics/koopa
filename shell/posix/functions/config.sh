@@ -17,6 +17,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
     user="${USER:?}"
     local user_string
     user_string="$(getent passwd "$user")"
+    _koopa_message "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "echo '${user_string}' >> ${passwd_file}"
