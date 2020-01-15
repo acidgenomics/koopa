@@ -38,7 +38,7 @@ do
 done
 
 # Remove default user shell configuration files.
-sudo rm -fv /etc/skel/.*
+sudo rm -fv /etc/skel/.{bash_logout,bashrc,emacs,profile,zshrc}
 
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
