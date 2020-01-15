@@ -190,4 +190,6 @@ _koopa_set_permissions /n/app
 
 sudo chmod 0777 /n/app/python/pyenv/shims
 
+koopa update
+
 _koopa_success "${KOOPA_CONFIG} VM is configured correctly."
