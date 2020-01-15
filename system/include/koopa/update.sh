@@ -97,11 +97,7 @@ then
     fi
 fi
 
-# Zsh compaudit fix.
-if _koopa_is_shared_install && [ "${KOOPA_SHELL:-}" == "zsh" ]
-then
-    compinit-compaudit-fix
-fi
+_koopa_is_installed compinit-compaudit-fix && compinit-compaudit-fix
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
