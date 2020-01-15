@@ -1,6 +1,31 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_add_user_to_etc_passwd() {                                         # {{{1
+    # """
+    # Any any type of user, including domain user to passwd file.
+    # Updated 2020-01-15.
+    #
+    # Necessary for running 'chsh' with a Kerberos / Active Directory domain
+    # account, on AWS or Azure for example.
+    # """
+    _koopa_assert_is_linux
+    local passwd_file
+    passwd_file="/etc/passwd"
+    [ -f "$passwd_file" ] || return 1
+    local user
+    user="${USER:?}"
+    local user_string
+    user_string="$(getent passwd "$user")"
+    if ! sudo grep -q "$user" "$passwd_file"
+    then
+        sudo sh -c "echo '${user_string}' >> ${passwd_file}"
+    else
+        _koopa_note "$user already defined in '${passwd_file}'."
+    fi
+    return 0
+}
+
 _koopa_enable_passwordless_sudo() {                                       # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
