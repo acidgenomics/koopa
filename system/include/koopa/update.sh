@@ -99,8 +99,14 @@ then
 fi
 
 # Zsh compaudit fix.
-chmod g-w "${koopa_prefix}/shell/zsh/functions"
-chmod g-w "${koopa_prefix}/shell/zsh"
+if _koopa_is_shared_install
+then
+    chmod="sudo chmod"
+else
+    chmod="chmod"
+fi
+"$chmod" g-w "${koopa_prefix}/shell/zsh/functions"
+"$chmod" g-w "${koopa_prefix}/shell/zsh"
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
