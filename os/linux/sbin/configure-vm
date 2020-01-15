@@ -7,26 +7,28 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_envs
 
-cpi="false"
-source="false"
+case "${KOOPA_CONFIG:-}" in
+    constellation-aws)
+        data_disk="/mnt/data01"
+        source_ip="10.201.20.32"
+        ;;
+    constellation-azure)
+        data_disk="/data00"
+        source_ip="10.100.100.132"
+        ;;
+    *)
+        _koopa_stop "Failed to detect supported VM config in 'KOOPA_CONFIG'."
+        exit 1
+        ;;
+esac
+
+source=0
 
 while (("$#"))
 do
     case "$1" in
-        --cpi=*)
-            cpi="${1#*=}"
-            shift 1
-            ;;
-        --cpi)
-            cpi="true"
-            shift 1
-            ;;
-        --source=*)
-            source="${1#*=}"
-            shift 1
-            ;;
         --source)
-            source="true"
+            source=1
             shift 1
             ;;
         *)
@@ -35,22 +37,54 @@ do
     esac
 done
 
-data_disk="/data00"
+# Remove default user shell configuration files.
+sudo rm -fv /etc/skel/.*
 
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
 
-# Remove default user shell configuration files.
-sudo rm -fv /etc/skel/.{bash_logout,bash_profile,bashrc,emacs,zshrc}
-
-# Prepare '/n/' share.
-sudo mkdir -pv "${data_disk}/n/app"
-sudo ln -fnsv "${data_disk}/n" /n
-
-install-rhel-7-base
-
-if [[ "$cpi" == "true" ]]
+# Prepare '/n/' share on data disk.
+if [[ -d "${data_disk:-}" ]]
 then
+    _koopa_message "Symlinking '/n' on '${data_disk}'."
+    sudo mkdir -pv "${data_disk}/n/app"
+    sudo ln -fnsv "${data_disk}/n" /n
+fi
+
+if [[ "${KOOPA_CONFIG:-}" == "constellation-aws" ]]
+then
+    # Constellation AWS                                                   # {{{1
+    # --------------------------------------------------------------------------
+    install-debian-base
+
+    _koopa_message "Updating '/etc/profile.d'."
+    _koopa_update_profile
+    sudo ln -fnsv \
+        "$(_koopa_prefix)/host/aws/etc/profile.d/constellation.sh" \
+        "/etc/profile.d/."
+
+    if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
+    then
+        install-rstudio-server-pro
+    fi
+elif [[ "${KOOPA_CONFIG:-}" == "constellation-azure" ]]
+then
+    # Constellation Azure                                                 # {{{1
+    # --------------------------------------------------------------------------
+    install-rhel-7-base
+    install-azure-cli
+
+    # Don't attempt to patch system env to support '-S' flag.
+    # Should no longer be an issue on VMs, as of 2020.
+    if [[ -e "/bin/env.bak" ]]
+    then
+        sudo rm -v "/bin/env"
+        sudo mv -v "/bin/env.bak" "/bin/env"
+    fi
+
+    # OpenJDK moved to '/n/app'.
+    sudo rm -frv /opt/jdk
+
     _koopa_message "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
@@ -85,14 +119,13 @@ then
     then
         install-rstudio-server-pro
     fi
-
-    rsync-vm --data-disk="/data00" --source-ip="10.100.100.132"
 fi
 
-install-azure-cli
+rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+
 install-openjdk
 
-if [[ "$source" == "true" ]]
+if [[ "$source" -eq 1 ]]
 then
     # /usr/local/cellar
     install-cellar-coreutils
@@ -104,7 +137,10 @@ then
     install-cellar-gnupg
     install-cellar-lua
     install-cellar-luarocks
-    install-cellar-r
+    if ! _koopa_is_debian
+    then
+        install-cellar-r
+    fi
     install-cellar-python
     install-cellar-vim
     install-cellar-neovim
@@ -130,8 +166,11 @@ then
     install-perlbrew
     install-rbenv
     install-pyenv
-    install-rstudio-server-pro
     r-javareconf
+    # conda-create-bioinfo-envs
+    # install-rust-cargo-crates
+    # bcbio-nextgen
+    # 10X Genomics CellRanger, CellRanger ATAC
 fi
 
 if ! _koopa_is_installed rstudio-server
@@ -146,19 +185,9 @@ fi
 
 _koopa_update_lmod_config
 
-# Don't attempt to patch system env to support '-S' flag.
-# Should no longer be an issue on VMs, as of 2020.
-if [[ -e "/bin/env.bak" ]]
-then
-    sudo rm -v "/bin/env"
-    sudo mv -v "/bin/env.bak" "/bin/env"
-fi
-
-# OpenJDK moved to '/n/app'.
-sudo rm -frv /opt/jdk
-
 _koopa_set_permissions /usr/local
 _koopa_set_permissions /n/app
+
 sudo chmod 0777 /n/app/python/pyenv/shims
 
-_koopa_success "Azure VM is configured correctly."
+_koopa_success "${KOOPA_CONFIG} VM is configured correctly."
