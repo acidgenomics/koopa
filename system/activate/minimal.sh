@@ -231,17 +231,3 @@ _koopa_activate_prefix "$(_koopa_config_prefix)/scripts-private"
 # ==============================================================================
 
 _koopa_activate_pipx
-
-
-
-# Hot fixes                                                                 {{{1
-# ==============================================================================
-
-# Lmod fix for Zsh activation failure on Ubuntu 18 LTS.
-# See related GitHub issue: https://github.com/TACC/Lmod/issues/434
-if [ "${KOOPA_ZSHRC:-}" -eq 1 ] && [ -z "${LMOD_ROOT:-}" ] && \
-    [ -f "/etc/profile.d/z00_lmod.sh" ]
-then
-    # shellcheck disable=SC1091
-    . "/etc/profile.d/z00_lmod.sh"
-fi

@@ -32,7 +32,7 @@ _koopa_activate_aspera() {                                                # {{{1
 _koopa_activate_autojump() {                                              # {{{1
     # """
     # Activate autojump.
-    # Updated 2019-11-15.
+    # Updated 2020-01-15.
     #
     # Purge install with 'j --purge'.
     # Location: ~/.local/share/autojump/autojump.txt
@@ -51,10 +51,6 @@ _koopa_activate_autojump() {                                              # {{{1
     # shellcheck source=/dev/null
     . "$script"
     [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
-    if [ "$KOOPA_SHELL" = "zsh" ]
-    then
-        autoload -U compinit && compinit -u
-    fi
     return 0
 }
 
