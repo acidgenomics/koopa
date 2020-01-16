@@ -11,4 +11,6 @@ _koopa_assert_has_args "$@"
 dir="$1"
 subdir_name="$2"
 
-find "$dir" -type d -name "$subdir_name" -print0 | xargs -0 -I {} rm -rf {}
+find "$dir" -type d -name "$subdir_name" -print0 \
+    | xargs -0 -I {} \
+    rm -rf {}
