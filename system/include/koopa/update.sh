@@ -26,7 +26,7 @@ done
 # Ensure invisible files get nuked on macOS.
 if _koopa_is_macos
 then
-    find "$koopa_prefix" -name ".DS_Store" -delete
+    find "$koopa_prefix" -type f -name ".DS_Store" -delete
 fi
 
 # _koopa_remove_broken_symlinks "$(_koopa_config_prefix)"
@@ -85,8 +85,6 @@ then
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
-    # > _koopa_update_git_repo "${XDG_DATA_HOME}/pyenv"
-    # > _koopa_update_git_repo "${XDG_DATA_HOME}/rbenv"
     if _koopa_is_linux
     then
         _koopa_reset_prefix_permissions
@@ -97,7 +95,19 @@ then
     fi
 fi
 
+# Ensure Zsh compinit doesn't warn about group write permissions.
 _koopa_is_installed compinit-compaudit-fix && compinit-compaudit-fix
+
+# Linux-specific permission fixes.
+if _koopa_is_linux && _koopa_is_shared_install
+then
+    pyenv_prefix="$(_koopa_pyenv_prefix)"
+    # Ensure Python pyenv shims have correct permissions.
+    if [[ -d "${pyenv_prefix}/shims" ]]
+    then
+        sudo chmod 0777 "${pyenv_prefix}/shims"
+    fi
+fi
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."

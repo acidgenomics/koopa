@@ -212,14 +212,4 @@ fi
 
 _koopa_update_lmod_config
 
-_koopa_set_permissions "/usr/local"
-_koopa_set_permissions "/n/app"
-
-if [[ -d "/n/app/python/pyenv/shims" ]]
-then
-    sudo chmod 0777 "/n/app/python/pyenv/shims"
-fi
-
-koopa update
-
 _koopa_success "${KOOPA_CONFIG} VM is configured correctly."
