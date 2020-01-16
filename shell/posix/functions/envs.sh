@@ -82,7 +82,7 @@ _koopa_conda_env_list() {                                                 # {{{1
 _koopa_conda_env_prefix() {                                               # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     #
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
@@ -100,13 +100,13 @@ _koopa_conda_env_prefix() {                                               # {{{1
     then
         _koopa_stop "Failed to detect prefix for '${env_name}'."
     fi
-    local path
-    path="$( \
+    local env_dir
+    env_dir="$( \
         echo "$env_list" \
         | grep "/envs/${env_name}" \
         | head -n 1 \
     )"
-    echo "$path" | sed -E 's/^.*"(.+)".*$/\1/'
+    echo "$env_dir" | sed -E 's/^.*"(.+)".*$/\1/'
 }
 
 _koopa_deactivate_conda() {                                               # {{{1

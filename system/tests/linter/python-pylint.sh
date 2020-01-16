@@ -26,7 +26,15 @@ ext_files=()
 while IFS= read -r -d $'\0'
 do
     ext_files+=("$REPLY")
-done < <(find "$prefix" -iname "*.py" -print0)
+done < <( \
+    find "$prefix" \
+        -mindepth 1 \
+        -type f \
+        -iname "*.py" \
+        -not -path "${KOOPA_PREFIX}/.git/*" \
+        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -print0 \
+)
 
 # Find scripts by shebang.
 mapfile -t shebang_files < <( \
@@ -40,7 +48,7 @@ mapfile -t shebang_files < <( \
     grep -El \
         --binary-files="without-match" \
         '^#!/.*\bpython(3)?\b$' \
-        {}
+        {} \
 )
 
 merge=("${ext_files[@]}" "${shebang_files[@]}")
