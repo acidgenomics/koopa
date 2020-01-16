@@ -16,13 +16,17 @@ prefix="${1:-$KOOPA_PREFIX}"
 
 # shellcheck disable=SC2016
 illegal_strings=(
+    ' path='
+    '; do'
+    '; then'
+    '<  <'
     '<<<<<<<'
     '>>>>>>>'
+    'IFS=  '
+    '\$path'
     '\bFIXME\b'
     '\bTODO\b'
     '^path='
-    ' path='
-    '\$path'
 )
 grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
 
