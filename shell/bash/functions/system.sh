@@ -45,7 +45,7 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
         ! -path "*/lib/*" \
         ! -path "*/miniconda3/*" \
         -print0 > "$tmp_file"
-    while IFS=  read -r -d $'\0'
+    while IFS= read -r -d $'\0'
     do
         array+=("$REPLY")
     done < "$tmp_file"

@@ -43,7 +43,7 @@ exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 # Find scripts by file extension.
 ext_files=()
-while IFS=  read -r -d $'\0'
+while IFS= read -r -d $'\0'
 do
     ext_files+=("$REPLY")
 done < <(find "${KOOPA_PREFIX}/pykoopa" -iname "*.py" -print0)
