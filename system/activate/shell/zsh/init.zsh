@@ -1,26 +1,20 @@
 #!/usr/bin/env zsh
 
+# """
 # Initialize Zsh.
-# Updated 2020-01-15.
-
+# Updated 2020-01-16.
+#
 # Note on path (and also fpath) arrays in Zsh:
 # https://www.zsh.org/mla/users/2012/msg00785.html
 #
-# At startup, zsh ties the array variable '$path' to the environment string
-# '$PATH'. If you run:
-# 
-#    print "${path[@]}"
-#    print "$PATH"
+# At startup, zsh ties the array variable 'path' to the environment string
+# 'PATH' (colon-delimited). If you see only the first element of 'PATH' when
+# printing 'path', you have the ksharrays option set.
 #
-# You should see strings that are identical except that the first one has
-# spaces, where the second has colons.
-#
-# (If instead you see only the first element of '$PATH' when printing '$path',
-# you have the ksharrays option set, and must use '${path[@]}' instead.)
-
-# What's the difference between 'autoload' and 'autoload -U'?
+# What's the difference between 'autoload' and 'autoload -Uz'?
 # https://unix.stackexchange.com/questions/214296
 # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
+# """
 
 koopa_fpath="${KOOPA_PREFIX}/shell/zsh/functions"
 if [[ ! -d "$koopa_fpath" ]]

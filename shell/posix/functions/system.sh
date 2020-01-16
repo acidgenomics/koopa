@@ -176,61 +176,63 @@ _koopa_group() {                                                          # {{{1
 _koopa_header() {                                                         # {{{1
     # """
     # Source script header.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
-    local type
-    type="${1:?}"
-    local path
-    case "$type" in
+    local header_type
+    header_type="${1:?}"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local file
+    case "$header_type" in
         # shell ----------------------------------------------------------------
         bash)
-            path="${KOOPA_PREFIX}/shell/bash/include/header.sh"
+            file="${koopa_prefix}/shell/bash/include/header.sh"
             ;;
         zsh)
-            path="${KOOPA_PREFIX}/shell/zsh/include/header.sh"
+            file="${koopa_prefix}/shell/zsh/include/header.sh"
             ;;
         # os -------------------------------------------------------------------
         amzn)
-            path="${KOOPA_PREFIX}/os/amzn/include/header.sh"
+            file="${koopa_prefix}/os/amzn/include/header.sh"
             ;;
         centos)
-            path="${KOOPA_PREFIX}/os/centos/include/header.sh"
+            file="${koopa_prefix}/os/centos/include/header.sh"
             ;;
         darwin)
-            path="${KOOPA_PREFIX}/os/darwin/include/header.sh"
+            file="${koopa_prefix}/os/darwin/include/header.sh"
             ;;
         debian)
-            path="${KOOPA_PREFIX}/os/debian/include/header.sh"
+            file="${koopa_prefix}/os/debian/include/header.sh"
             ;;
         fedora)
-            path="${KOOPA_PREFIX}/os/fedora/include/header.sh"
+            file="${koopa_prefix}/os/fedora/include/header.sh"
             ;;
         linux)
-            path="${KOOPA_PREFIX}/os/linux/include/header.sh"
+            file="${koopa_prefix}/os/linux/include/header.sh"
             ;;
         macos)
-            path="${KOOPA_PREFIX}/os/macos/include/header.sh"
+            file="${koopa_prefix}/os/macos/include/header.sh"
             ;;
         rhel)
-            path="${KOOPA_PREFIX}/os/rhel/include/header.sh"
+            file="${koopa_prefix}/os/rhel/include/header.sh"
             ;;
         ubuntu)
-            path="${KOOPA_PREFIX}/os/ubuntu/include/header.sh"
+            file="${koopa_prefix}/os/ubuntu/include/header.sh"
             ;;
         # host -----------------------------------------------------------------
         aws)
-            path="${KOOPA_PREFIX}/host/aws/include/header.sh"
+            file="${koopa_prefix}/host/aws/include/header.sh"
             ;;
         azure)
-            path="${KOOPA_PREFIX}/host/azure/include/header.sh"
+            file="${koopa_prefix}/host/azure/include/header.sh"
             ;;
         *)
-            _koopa_stop "'${1}' is not supported."
+            _koopa_invalid_arg "$1"
             ;;
     esac
-    echo "$path"
+    echo "$file"
 }
 
 _koopa_help() {                                                           # {{{1
@@ -243,7 +245,7 @@ _koopa_help() {                                                           # {{{1
     # Now always calls 'man' to display nicely formatted manual page.
     #
     # Bash alternate approach:
-    # > path="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
+    # > file="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
     #
     # Zsh parameter notes:
     # - '$0': The name used to invoke the current shell, or as set by the -c

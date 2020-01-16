@@ -52,9 +52,9 @@ fi
 
 if [[ -n "$dir" ]]
 then
-    path="${host}/${dir}"
+    dir="${host}/${dir}"
 else
-    path="${host}"
+    dir="${host}"
 fi
 
-wget --ask-password --mirror "ftp://${user}@${path}/"*
+wget --ask-password --mirror "ftp://${user}@${dir}/"*

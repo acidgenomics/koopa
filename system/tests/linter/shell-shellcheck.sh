@@ -4,53 +4,43 @@ set -Eeu -o pipefail
 # """
 # Recursively run shellcheck on all scripts in a directory.
 # Updated 2019-10-07.
+#
+# Use find first, pass to array, and then call grep.
+# This is better supported across platforms.
 # """
 
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
-script_bn="$(_koopa_basename_sans_ext "$0")"
+name="$(_koopa_basename_sans_ext "$0")"
 
 # Skip test if shellcheck is not installed.
 # Currently, Travis CI does not have shellcheck installed for macOS.
 if ! _koopa_is_installed shellcheck
 then
-    printf "NOTE | %s\n" "$script_bn"
+    printf "NOTE | %s\n" "$name"
     printf "     |   shellcheck missing.\n"
     exit 0
 fi
 
-path="${1:-$KOOPA_PREFIX}"
+prefix="${1:-$KOOPA_PREFIX}"
 
-exclude_dirs=(
-    "${KOOPA_PREFIX}/dotfiles"
-    "${KOOPA_PREFIX}/shell/zsh/functions"
-    ".git"
-)
-
-# Full path exclusion seems to only work on macOS.
-if ! _koopa_is_macos
-then
-    for i in "${!exclude_dirs[@]}"
-    do
-        exclude_dirs[$i]="$(basename "${exclude_dirs[$i]}")"
-    done
-fi
-
-# Prepend the '--exclude-dir=' flag.
-exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
-
-# This step recursively grep matches files with regular expressions.
-# Here we're checking for the shebang, rather than relying on file extension.
+# Find scripts by shebang.
 mapfile -t shebang_files < <( \
-    grep -Elr \
+    find "$prefix" \
+        -mindepth 1 \
+        -type f \
+        -not -path "${KOOPA_PREFIX}/.git/*" \
+        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -print0 \
+    | xargs -0 -I {} \
+    grep -El \
         --binary-files="without-match" \
-        "${exclude_dirs[@]}" \
         '^#!/.*\b(ba)?sh\b$' \
-        "$path"
+        {} \
 )
 
 shellcheck -x "${shebang_files[@]}"
 
-printf "  OK | %s\n" "$script_bn"
+printf "  OK | %s\n" "$name"
 exit 0

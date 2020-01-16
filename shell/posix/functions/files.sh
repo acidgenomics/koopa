@@ -54,19 +54,19 @@ _koopa_basename_sans_ext2() {                                             # {{{1
 _koopa_delete_dotfile() {                                                 # {{{1
     # """
     # Delete a dot file.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
     local name
     name="${1:?}"
-    local path
-    path="${HOME}/.${name}"
-    if [ -L "$path" ]
+    local filepath
+    filepath="${HOME}/.${name}"
+    if [ -L "$filepath" ]
     then
-        _koopa_message "Removing '${name}'."
-        rm -f "$path"
-    elif [ -f "$path" ] || [ -d "$path" ]
+        _koopa_message "Removing '${filepath}'."
+        rm -f "$filepath"
+    elif [ -f "$filepath" ] || [ -d "$filepath" ]
     then
-        _koopa_warning "Not a symlink: '${path}'."
+        _koopa_warning "Not a symlink: '${filepath}'."
     fi
     return 0
 }

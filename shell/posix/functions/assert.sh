@@ -44,7 +44,7 @@ _koopa_assert_has_file_ext() {                                            # {{{1
 _koopa_assert_has_no_envs() {                                             # {{{1
     # """
     # Assert that conda and Python virtual environments aren't active.
-    # Updated 2019-10-23.
+    # Updated 2020-01-16.
     # """
     if ! _koopa_has_no_environments
     then
@@ -56,7 +56,7 @@ Deactivate using:
     venv:  deactivate
     conda: conda deactivate
 
-Deactivate venv prior to conda, otherwise conda python may be left in path."
+Deactivate venv prior to conda, otherwise conda python may be left in PATH."
     fi
     return 0
 }
@@ -561,13 +561,13 @@ _koopa_check_mount() {                                                    # {{{1
     # """
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    local path
-    path="${1:?}"
-    if [ "$(find "$path" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
+    local mnt
+    mnt="${1:?}"
+    if [ "$(find "$mnt" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
     then
-        _koopa_warning "'${path}' is unmounted."
+        _koopa_warning "'${mnt}' is unmounted."
         return 1
     fi
     return 0

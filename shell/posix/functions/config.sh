@@ -180,19 +180,19 @@ _koopa_make_build_string() {                                              # {{{1
 _koopa_prefix_chgrp() {                                                   # {{{1
     # """
     # Fix the group permissions on the target build prefix.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    local path
-    path="${1:?}"
+    local prefix
+    prefix="${1:?}"
     local group
     group="$(_koopa_group)"
     if _koopa_has_sudo
     then
-        sudo chgrp -Rh "$group" "$path"
-        sudo chmod -R g+w "$path"
+        sudo chgrp -Rh "$group" "$prefix"
+        sudo chmod -R g+w "$prefix"
     else
-        chgrp -Rh "$group" "$path"
-        chmod -R g+w "$path"
+        chgrp -Rh "$group" "$prefix"
+        chmod -R g+w "$prefix"
     fi
     return 0
 }
@@ -200,21 +200,21 @@ _koopa_prefix_chgrp() {                                                   # {{{1
 _koopa_prefix_mkdir() {                                                   # {{{1
     # """
     # Create directory in target build prefix.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     #
     # Sets correct group and write permissions automatically.
     # """
-    local path
-    path="${1:?}"
-    _koopa_assert_is_not_dir "$path"
+    local prefix
+    prefix="${1:?}"
+    _koopa_assert_is_not_dir "$prefix"
     if _koopa_has_sudo
     then
-        sudo mkdir -p "$path"
-        sudo chown "$(whoami)" "$path"
+        sudo mkdir -pv "$prefix"
+        sudo chown "$(whoami)" "$prefix"
     else
-        mkdir -p "$path"
+        mkdir -pv "$prefix"
     fi
-    _koopa_prefix_chgrp "$path"
+    _koopa_prefix_chgrp "$prefix"
     return 0
 }
 
@@ -256,22 +256,22 @@ _koopa_reset_prefix_permissions() {                                       # {{{1
 
 _koopa_set_permissions() {                                                # {{{1
     # """
-    # Set permissions on a koopa-related directory.
-    # Updated 2020-01-12.
+    # Set permissions on a koopa-related directory prefix.
+    # Updated 2020-01-16.
     #
     # Generally used to reset the build prefix directory (e.g. '/usr/local').
     # """
-    local path
-    path="${1:?}"
-    _koopa_message "Setting permissions on '${path}'."
+    local prefix
+    prefix="${1:?}"
+    _koopa_message "Setting permissions on '${prefix}'."
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo chown -Rh "root" "$path"
+        sudo chown -Rh "root" "$prefix"
     else
-        chown -Rh "$(whoami)" "$path"
+        chown -Rh "$(whoami)" "$prefix"
     fi
-    _koopa_prefix_chgrp "$path"
+    _koopa_prefix_chgrp "$prefix"
     return 0
 }
 
@@ -373,21 +373,23 @@ _koopa_update_r_config_macos() {                                          # {{{1
 _koopa_update_shells() {                                                  # {{{1
     # """
     # Update shell configuration.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
     _koopa_assert_has_sudo
     local shell_name
     shell_name="${1:?}"
-    local shell_path
-    shell_path="$(_koopa_make_prefix)/bin/${shell_name}"
-    local shell_file
-    shell_file="/etc/shells"
-    if ! grep -q "$shell_path" "$shell_file"
+    local shell_exe
+    shell_exe="$(_koopa_make_prefix)/bin/${shell_name}"
+    local shell_etc_file
+    shell_etc_file="/etc/shells"
+    if ! grep -q "$shell_exe" "$shell_etc_file"
     then
-        _koopa_message "Updating '${shell_file}' to include '${shell_path}'."
-        sudo sh -c "echo ${shell_path} >> ${shell_file}"
+        _koopa_message "Updating '${shell_etc_file}' to include '${shell_exe}'."
+        sudo sh -c "echo ${shell_exe} >> ${shell_etc_file}"
+    else
+        _koopa_success "'${shell_exe}' already defined in '${shell_etc_file}'."
     fi
-    _koopa_note "Run 'chsh -s ${shell_path} ${USER}' to change default shell."
+    _koopa_note "Run 'chsh -s ${shell_exe} ${USER}' to change default shell."
     return 0
 }
 
