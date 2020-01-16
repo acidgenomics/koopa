@@ -236,7 +236,7 @@ _koopa_remove_from_path() {                                               # {{{1
 _koopa_which() {                                                          # {{{1
     # """
     # Locate which program.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     #
     # Note that this intentionally doesn't resolve symlinks.
     # Use 'koopa_realpath' for that output instead.
@@ -247,13 +247,19 @@ _koopa_which() {                                                          # {{{1
     # """
     local cmd
     cmd="${1:?}"
-    command -v "$cmd"
+    local app_path
+    app_path="$(command -v "$cmd")"
+    if [ -z "$app_path" ]
+    then
+        _koopa_stop "'${cmd}' is not installed."
+    fi
+    echo "$app_path"
 }
 
 _koopa_which_realpath() {                                                 # {{{1
     # """
     # Locate the realpath of a program.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     #
     # This resolves symlinks automatically.
     # For 'which' style return, use '_koopa_which' instead.
@@ -270,5 +276,7 @@ _koopa_which_realpath() {                                                 # {{{1
     # """
     local cmd
     cmd="${1:?}"
-    realpath "$(_koopa_which "$cmd")"
+    local app_path
+    app_path="$(_koopa_which "$cmd")"
+    realpath "$app_path"
 }
