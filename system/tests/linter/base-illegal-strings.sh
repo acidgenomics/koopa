@@ -46,7 +46,7 @@ done < <( \
     | sort
 )
 
-hits="$( \
+failures="$( \
     grep -En \
         --binary-files="without-match" \
         "$grep_pattern" \
@@ -55,10 +55,10 @@ hits="$( \
 )"
 
 name="$(_koopa_basename_sans_ext "$0")"
-if [[ -n "$hits" ]]
+if [[ -n "$failures" ]]
 then
     printf "FAIL | %s\n" "$name"
-    echo "$hits"
+    echo "$failures"
     exit 1
 else
     printf "  OK | %s\n" "$name"
