@@ -16,10 +16,10 @@ prefix="${1:-$KOOPA_PREFIX}"
 
 grep_pattern="^[^\n]{81}"
 
-array=()
+files=()
 while IFS= read -r -d $'\0'
 do
-    array+=("$REPLY")
+    files+=("$REPLY")
 done < <( \
     find "$prefix" \
     -mindepth 1 \
@@ -35,7 +35,7 @@ failures="$( \
     grep -En \
         --binary-files="without-match" \
         "$grep_pattern" \
-        "${array[@]}" \
+        "${files[@]}" \
         || echo "" \
 )"
 

@@ -30,10 +30,10 @@ illegal_strings=(
 )
 grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
 
-array=()
+files=()
 while IFS= read -r -d $'\0'
 do
-    array+=("$REPLY")
+    files+=("$REPLY")
 done < <( \
     find "$prefix" \
     -mindepth 1 \
@@ -50,7 +50,7 @@ failures="$( \
     grep -En \
         --binary-files="without-match" \
         "$grep_pattern" \
-        "${array[@]}" \
+        "${files[@]}" \
         || echo "" \
 )"
 
