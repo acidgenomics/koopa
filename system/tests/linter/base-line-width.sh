@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Find lines containing more than 80 characters.
-# Updated 2019-10-14.
+# Updated 2020-01-16.
 
 # Returns with 'true' or 'false' exit codes.
 
@@ -13,7 +13,6 @@ path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
     "${KOOPA_PREFIX}/dotfiles"
-    "${KOOPA_PREFIX}/os/darwin/etc/R/rstudio"
     "${KOOPA_PREFIX}/shell/zsh/functions"
     ".git"
 )
