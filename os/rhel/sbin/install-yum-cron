@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+if _koopa_is_installed yum-cron
+then
+    _koopa_success "yum-cron is already installed."
+    exit 0
+fi
+
+# Note that this requires EPEL to be enabled.
+sudo yum -y install yum-cron
+
+sudo systemctl enable yum-cron.service
+sudo systemctl start yum-cron.service
+# > sudo systemctl status yum-cron.service
+
+_koopa_success "Installation of yum-cron was successful."
