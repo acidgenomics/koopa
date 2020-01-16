@@ -4,39 +4,39 @@ set -Eeu -o pipefail
 # """
 # Find lines containing more than 80 characters.
 # Updated 2020-01-16.
+#
+# Use find first, pass to array, and then call grep.
+# This is better supported across platforms.
 # """
 
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
-path="${1:-$KOOPA_PREFIX}"
+prefix="${1:-$KOOPA_PREFIX}"
 
-exclude_dirs=(
-    "${KOOPA_PREFIX}/dotfiles"
-    "${KOOPA_PREFIX}/shell/zsh/functions"
-    ".git"
+grep_pattern="^[^\n]{81}"
+
+array=()
+while IFS= read -r -d $'\0'
+do
+    array+=("$REPLY")
+done < <( \
+    find "$prefix" \
+    -mindepth 1 \
+    -type f \
+    -not -name "*.md" \
+    -not -path "${KOOPA_PREFIX}/.git/*" \
+    -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+    -print0 \
+    | sort
 )
 
-# Full path exclusion seems to only work on macOS.
-if ! _koopa_is_macos
-then
-    for i in "${!exclude_dirs[@]}"
-    do
-        exclude_dirs[$i]="$(basename "${exclude_dirs[$i]}")"
-    done
-fi
-
-# Prepend the '--exclude-dir' flag.
-exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
-
 hits="$( \
-    grep -Enr \
+    grep -En \
         --binary-files="without-match" \
-        --exclude="*.md" \
-        "${exclude_dirs[@]}" \
-        "^[^\n]{81}" \
-        "$path" | \
-        sort || echo "" \
+        "$grep_pattern" \
+        "${array[@]}" \
+        || echo "" \
 )"
 
 name="$(_koopa_basename_sans_ext "$0")"
