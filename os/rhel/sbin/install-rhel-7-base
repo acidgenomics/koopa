@@ -6,12 +6,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
-# Note that LLVM 7 is required to install llvmlite Python module.
-# This is now required to install umap-learn.
-# LLVM8+ aren't currently available through yum.
+# Note that LLVM is required to install llvmlite Python module.
+# LLVM 8+ releases aren't currently available through yum.
 
 enable-epel-7
 install-fedora-base
+install-yum-cron
+
 sudo yum -y install \
     'llvm7*' \
     ImageMagick-c++-devel \
@@ -63,7 +64,7 @@ sudo yum -y install \
 # Note the capital "X" here. This differs depending on the Linux distro.
 # We're assuming Red Hat here.
 #
-# EPEL7 must be enabled for this to install (e.g. on Amazon Linux 2).
+# EPEL 7 must be enabled for this to install (e.g. on Amazon Linux 2).
 if [[ ! -f /usr/bin/docbook2x-texi ]]
 then
     sudo ln -fnsv /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
