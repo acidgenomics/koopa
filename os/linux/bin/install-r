@@ -5,11 +5,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Refer to the 'Installation + Administration' manual.
+#
 # Using TeX Live 2013, we'll see this warning:
 #
 #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
 #     vignettes and package manuals will not be rendered optimally
-
+#
 # Missing recommendations:
 # - texlive-csvsimple
 # - texlive-fonts-extra
@@ -18,19 +21,9 @@ source "${script_dir}/../include/header.sh"
 # - texlive-mathtools
 # - texlive-nowidow
 # - texlive-parnotes
-
+#
 # There doesn't appear to be an easy way to fix these issues on RHEL 7 or 8.
-
-_koopa_assert_is_installed java
-_koopa_assert_is_installed javac
-_koopa_assert_is_installed tex
-
-# Refer to the 'Installation + Administration' manual.
-
-if _koopa_is_debian
-then
-    _koopa_stop "Use 'install-r' to install R CRAN binary release instead."
-fi
+#"""
 
 _koopa_assert_is_installed java javac tex
 
