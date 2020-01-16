@@ -86,7 +86,7 @@ tools_dir="${prefix}/tools"
 # > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
 # Keep install owned by current user, so we can install genomes easily.
-_koopa_prefix_chgrp "$prefix"
+_koopa_chgrp "$prefix"
 
 # Here's how to set to root, otherwise:
 # > _koopa_set_permissions "$prefix"
