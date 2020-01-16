@@ -5,7 +5,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-case "${KOOPA_CONFIG:-}" in
+_koopa_assert_has_no_envs
+
+koopa_prefix="$(_koopa_prefix)"
+config="${KOOPA_CONFIG:-unknown}"
+
+case "$config" in
     constellation-aws)
         data_disk="/mnt/data01"
         source_ip="10.201.20.32"
@@ -14,15 +19,9 @@ case "${KOOPA_CONFIG:-}" in
         data_disk="/data00"
         source_ip="10.100.100.132"
         ;;
-    *)
-        _koopa_note "No virtual machine config set in 'KOOPA_CONFIG'. Skipping."
-        exit 1
-        ;;
 esac
 
-_koopa_assert_has_no_envs
-
-_koopa_message "Configuring '${KOOPA_CONFIG}' virtual machine."
+_koopa_message "Configuring '${config}' virtual machine."
 
 source=0
 
@@ -40,33 +39,34 @@ do
 done
 
 # Remove default user shell configuration files.
-sudo rm -fv /etc/skel/.{bash_logout,bashrc,emacs,profile,zshrc}
+sudo rm -fv "/etc/skel/."{bash_logout,bashrc,emacs,profile,zshrc}
 
 # Remove local user install cruft.
-rm -frv ~/.local/bin/activate-global-python-argcomplete
-rm -frv ~/.local/bin/black
-rm -frv ~/.local/bin/blackd
-rm -frv ~/.local/bin/distro
-rm -frv ~/.local/bin/epylint
-rm -frv ~/.local/bin/flake8
-rm -frv ~/.local/bin/pipx
-rm -frv ~/.local/bin/pyflakes
-rm -frv ~/.local/bin/pylint
-rm -frv ~/.local/bin/pyreverse
-rm -frv ~/.local/bin/pytest
-rm -frv ~/.local/bin/py.test
-rm -frv ~/.local/bin/python-argcomplete-check-easy-install-script
-rm -frv ~/.local/bin/python-argcomplete-tcsh
-rm -frv ~/.local/bin/register-python-argcomplete
-rm -frv ~/.local/bin/symilar
-rm -frv ~/.local/bin/userpath
-rm -frv ~/.local/lib/python3.7
-rm -frv ~/.local/lib/python3.8
-rm -frv ~/.local/pipx
-rm -frv ~/.local/share/pyenv
-rm -frv ~/.local/share/rbenv
-rm -frv ~/.local/share/virtualenvs
-rm -frv ~/.virtualenvs
+rm -frv \
+    "${HOME}/.local/bin/activate-global-python-argcomplete" \
+    "${HOME}/.local/bin/black" \
+    "${HOME}/.local/bin/blackd" \
+    "${HOME}/.local/bin/distro" \
+    "${HOME}/.local/bin/epylint" \
+    "${HOME}/.local/bin/flake8" \
+    "${HOME}/.local/bin/pipx" \
+    "${HOME}/.local/bin/py.test" \
+    "${HOME}/.local/bin/pyflakes" \
+    "${HOME}/.local/bin/pylint" \
+    "${HOME}/.local/bin/pyreverse" \
+    "${HOME}/.local/bin/pytest" \
+    "${HOME}/.local/bin/python-argcomplete-check-easy-install-script" \
+    "${HOME}/.local/bin/python-argcomplete-tcsh" \
+    "${HOME}/.local/bin/register-python-argcomplete" \
+    "${HOME}/.local/bin/symilar" \
+    "${HOME}/.local/bin/userpath" \
+    "${HOME}/.local/lib/python3.7" \
+    "${HOME}/.local/lib/python3.8" \
+    "${HOME}/.local/pipx" \
+    "${HOME}/.local/share/pyenv" \
+    "${HOME}/.local/share/rbenv" \
+    "${HOME}/.local/share/virtualenvs" \
+    "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
@@ -76,31 +76,30 @@ if [[ -d "${data_disk:-}" ]]
 then
     _koopa_message "Symlinking '/n' on '${data_disk}'."
     sudo mkdir -pv "${data_disk}/n/app"
-    sudo ln -fnsv "${data_disk}/n" /n
+    sudo ln -fnsv "${data_disk}/n" "/n"
 fi
 
-if [[ "${KOOPA_CONFIG:-}" == "constellation-aws" ]]
+if [[ "$config" == "constellation-aws" ]]
 then
     # Constellation AWS                                                   # {{{1
     # --------------------------------------------------------------------------
     install-debian-base
-
+    # Set up '/etc/profile.d'.
     _koopa_message "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
-        "$(_koopa_prefix)/host/aws/etc/profile.d/constellation.sh" \
+        "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
-
+    # Install RStudio Server Pro, if applicable.
     if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
     then
         install-rstudio-server-pro
     fi
-elif [[ "${KOOPA_CONFIG:-}" == "constellation-azure" ]]
+elif [[ "$config" == "constellation-azure" ]]
 then
     # Constellation Azure                                                 # {{{1
     # --------------------------------------------------------------------------
     install-rhel-7-base
-
     # Don't attempt to patch system env to support '-S' flag.
     # Should no longer be an issue on VMs, as of 2020.
     if [[ -e "/bin/env.bak" ]]
@@ -108,25 +107,21 @@ then
         sudo rm -v "/bin/env"
         sudo mv -v "/bin/env.bak" "/bin/env"
     fi
-
     # OpenJDK moved to '/n/app'.
-    sudo rm -frv /opt/jdk
-
+    sudo rm -frv "/opt/jdk"
+    # Set up '/etc/profile.d'.
     _koopa_message "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
-        "$(_koopa_prefix)/host/azure/etc/profile.d/constellation.sh" \
+        "${koopa_prefix}/host/azure/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
-
+    # Set up '/etc/cron.d'.
     _koopa_message "Updating '/etc/cron.d'."
-    sudo rm -fv "/etc/cron.d/cpi-"*
-    sudo rm -fv "/etc/cron.d/constellation"
-    sudo cp -v \
-        "$(_koopa_prefix)/host/azure/etc/cron.d/constellation" \
+    sudo cp -fv \
+        "${koopa_prefix}/host/azure/etc/cron.d/constellation" \
         "/etc/cron.d/constellation"
-
     # Ensure that shared bioinfo user has correct dotfiles.
-    if [[ -d "$(_koopa_prefix)/dotfiles" ]]
+    if [[ -d "${koopa_prefix}/dotfiles" ]]
     then
         _koopa_message "Updating bioinfo user dotfiles."
         sudo -u bioinfo -H "$SHELL" -c "\
@@ -138,56 +133,57 @@ then
                 app/emacs/minimal/emacs.el emacs \
         "
     fi
-
-    _koopa_message "Updating '/data00' structure."
-    sudo rm -frv "/data00/"{R,bcbio,cellranger,cellranger-atac,conda,docker,var}
-
+    # Ensure data disk has consistency directory structure.
+    _koopa_message "Updating '${data_disk}' structure."
+    sudo rm -frv "${data_disk}/"{R,bcbio,cellranger,cellranger-atac,conda,\
+docker,var}
+    # Install RStudio Server Pro, if applicable.
     if _koopa_is_matching_fixed "$HOSTNAME" azlabapp32
     then
         install-rstudio-server-pro
     fi
 fi
 
-rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+if [[ -d "$data_disk" ]]
+then
+    rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+fi
 
 install-openjdk
 
 if [[ "$source" -eq 1 ]]
 then
     # /usr/local/cellar
-    install-cellar-coreutils
-    install-cellar-bash
-    install-cellar-zsh
-    install-cellar-fish
-    install-cellar-tmux
-    install-cellar-git
-    install-cellar-gnupg
-    install-cellar-lua
-    install-cellar-luarocks
-    if ! _koopa_is_debian
-    then
-        install-cellar-r
-    fi
-    install-cellar-python
-    install-cellar-vim
-    install-cellar-neovim
-    install-cellar-emacs
-    install-cellar-sqlite
-    install-cellar-proj
-    install-cellar-gdal
-    install-cellar-hdf5
-    install-cellar-go
-    install-cellar-gsl
-    install-cellar-perl
-    install-cellar-ruby
-    install-cellar-julia
-    install-cellar-htop
-    install-cellar-shellcheck
-    install-cellar-neofetch
-    install-cellar-genrich
-    install-cellar-autojump
-    install-cellar-fzf
-    install-cellar-the-silver-searcher
+    install-coreutils
+    install-bash
+    install-zsh
+    install-fish
+    install-tmux
+    install-git
+    install-gnupg
+    install-lua
+    install-luarocks
+    install-r
+    install-python
+    install-vim
+    install-neovim
+    install-emacs
+    install-sqlite
+    install-proj
+    install-gdal
+    install-hdf5
+    install-go
+    install-gsl
+    install-perl
+    install-ruby
+    install-julia
+    install-htop
+    install-shellcheck
+    install-neofetch
+    install-genrich
+    install-autojump
+    install-fzf
+    install-the-silver-searcher
     # /n/app
     install-rust
     install-perlbrew
@@ -196,8 +192,8 @@ then
     r-javareconf
     # conda-create-bioinfo-envs
     # install-rust-cargo-crates
-    # bcbio-nextgen
-    # 10X Genomics CellRanger, CellRanger ATAC
+    # Install bcbio-nextgen
+    # Install 10X Genomics CellRanger, CellRanger ATAC
 fi
 
 if _koopa_is_azure
@@ -218,10 +214,13 @@ fi
 
 _koopa_update_lmod_config
 
-_koopa_set_permissions /usr/local
-_koopa_set_permissions /n/app
+_koopa_set_permissions "/usr/local"
+_koopa_set_permissions "/n/app"
 
-sudo chmod 0777 /n/app/python/pyenv/shims
+if [[ -d "/n/app/python/pyenv/shims" ]]
+then
+    sudo chmod 0777 "/n/app/python/pyenv/shims"
+fi
 
 koopa update
 
