@@ -98,17 +98,39 @@ fi
 # Linux-specific permission fixes.
 if _koopa_is_linux && _koopa_is_shared_install
 then
+    cellar_prefix="$(_koopa_cellar_prefix)"
+    make_prefix="$(_koopa_make_prefix)"
     # Avoid compaudit warnings regarding group write access.
     # Note that running 'compinit-compaudit-fix' script will cause the shell
     # session to exit, so don't run here.
-    sudo chmod g-w \
+    _koopa_message "Fixing Zsh permissions to pass compaudit checks."
+    sudo chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
+    if _koopa_is_installed zsh
+    then
+        zsh_exe="$(_koopa_which_realpath zsh)"
+        if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
+        then
+            sudo chmod -v g-w \
+                "/usr/local/share/zsh" \
+                "/usr/local/share/zsh/site-functions"
+        fi
+        if _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}"
+        then
+            sudo chmod -v g-w \
+                "/usr/local/cellar/zsh/"*"/share/zsh" \
+                "/usr/local/cellar/zsh/"*"/share/zsh/"* \
+                "/usr/local/cellar/zsh/"*"/share/zsh/"*"/functions"
+        fi
+    fi
+
     # Ensure Python pyenv shims have correct permissions.
     pyenv_prefix="$(_koopa_pyenv_prefix)"
     if [[ -d "${pyenv_prefix}/shims" ]]
     then
-        sudo chmod 0777 "${pyenv_prefix}/shims"
+        _koopa_message "Fixing pyenv shim permissions."
+        sudo chmod -v 0777 "${pyenv_prefix}/shims"
     fi
 fi
 
