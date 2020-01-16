@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Check that all scripts support '--help' flag.
-# Updated 2020-01-14.
+# Updated 2020-01-16.
 
 KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
@@ -25,8 +25,8 @@ done < <( \
         -not -path "*/cellar/*" \
         -not -path "*/dotfiles/*" \
         -print0 \
-        | sort -z \
-    )
+    | sort -z \
+)
 
 for dir in "${man_dirs[@]}"
 do
@@ -46,8 +46,8 @@ done < <( \
         -not -path "*/cellar/*" \
         -not -path "*/dotfiles/*" \
         -print0 \
-        | sort -z \
-    )
+    | sort -z \
+)
 
 for dir in "${bin_dirs[@]}"
 do
@@ -61,11 +61,11 @@ do
             -maxdepth 1 \
             -type f \
             -print0 \
-            | sort -z \
-        )
+        | sort -z \
+    )
     for file in "${files[@]}"
     do
-        echo "$file"
+        # > echo "$file"
         "$file" --help > /dev/null
     done
 done
