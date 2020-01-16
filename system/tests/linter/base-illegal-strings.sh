@@ -4,8 +4,6 @@ set -Eeu -o pipefail
 # """
 # Find illegal strings, such as FIXME, TODO, and messed up git merges.
 # Updated 2020-01-16.
-#
-# @return 'true' or 'false' exit codes.
 # """
 
 # shellcheck source=/dev/null
@@ -46,12 +44,12 @@ illegal_strings=(
     '<<<<<<<'
     '>>>>>>>'
     '\bFIXME\b'
-    '\bHEAD\b'
     '\bTODO\b'
 )
 grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
+
 hits="$( \
-    grep -Elr \
+    grep -Enr \
         --binary-files="without-match" \
         "${exclude_files[@]}" \
         "${exclude_dirs[@]}" \
