@@ -95,14 +95,17 @@ then
     fi
 fi
 
-# Ensure Zsh compinit doesn't warn about group write permissions.
-_koopa_is_installed compinit-compaudit-fix && compinit-compaudit-fix
-
 # Linux-specific permission fixes.
 if _koopa_is_linux && _koopa_is_shared_install
 then
-    pyenv_prefix="$(_koopa_pyenv_prefix)"
+    # Avoid compaudit warnings regarding group write access.
+    # Note that running 'compinit-compaudit-fix' script will cause the shell
+    # session to exit, so don't run here.
+    sudo chmod g-w \
+        "${koopa_prefix}/shell/zsh" \
+        "${koopa_prefix}/shell/zsh/functions"
     # Ensure Python pyenv shims have correct permissions.
+    pyenv_prefix="$(_koopa_pyenv_prefix)"
     if [[ -d "${pyenv_prefix}/shims" ]]
     then
         sudo chmod 0777 "${pyenv_prefix}/shims"
