@@ -40,6 +40,32 @@ done
 # Remove default user shell configuration files.
 sudo rm -fv /etc/skel/.{bash_logout,bashrc,emacs,profile,zshrc}
 
+# Remove local user install cruft.
+rm -frv ~/.local/bin/activate-global-python-argcomplete
+rm -frv ~/.local/bin/black
+rm -frv ~/.local/bin/blackd
+rm -frv ~/.local/bin/distro
+rm -frv ~/.local/bin/epylint
+rm -frv ~/.local/bin/flake8
+rm -frv ~/.local/bin/pipx
+rm -frv ~/.local/bin/pyflakes
+rm -frv ~/.local/bin/pylint
+rm -frv ~/.local/bin/pyreverse
+rm -frv ~/.local/bin/pytest
+rm -frv ~/.local/bin/py.test
+rm -frv ~/.local/bin/python-argcomplete-check-easy-install-script
+rm -frv ~/.local/bin/python-argcomplete-tcsh
+rm -frv ~/.local/bin/register-python-argcomplete
+rm -frv ~/.local/bin/symilar
+rm -frv ~/.local/bin/userpath
+rm -frv ~/.local/lib/python3.7
+rm -frv ~/.local/lib/python3.8
+rm -frv ~/.local/pipx
+rm -frv ~/.local/share/pyenv
+rm -frv ~/.local/share/rbenv
+rm -frv ~/.local/share/virtualenvs
+rm -frv ~/.virtualenvs
+
 _koopa_enable_passwordless_sudo
 _koopa_prepare_make_prefix
 
@@ -174,7 +200,7 @@ fi
 
 if _koopa_is_azure
 then
-    # Install this after installing Python 3.
+    _koopa_message "Installing Azure-specific apps."
     install-azure-cli
 fi
 

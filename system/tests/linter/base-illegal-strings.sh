@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-# Find FIXME and TODO comments.
-# Updated 2019-10-07.
-
-# Returns with 'true' or 'false' exit codes.
+# """
+# Find illegal strings, such as FIXME, TODO, and messed up git merges.
+# Updated 2020-01-16.
+# """
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 path="${1:-$KOOPA_PREFIX}"
 
@@ -40,12 +40,20 @@ exclude_files=("${exclude_files[@]/#/--exclude=}")
 # Prepend the '--exclude-dir=' flag.
 exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
+illegal_strings=(
+    '<<<<<<<'
+    '>>>>>>>'
+    '\bFIXME\b'
+    '\bTODO\b'
+)
+grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
+
 hits="$( \
-    grep -Elr \
+    grep -Enr \
         --binary-files="without-match" \
         "${exclude_files[@]}" \
         "${exclude_dirs[@]}" \
-        "\b(FIXME|TODO)\b" \
+        "$grep_pattern" \
         "$path" | \
         sort || echo "" \
 )"
