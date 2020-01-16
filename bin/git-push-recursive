@@ -18,4 +18,4 @@ do
         pwd
         git push
     )
-done <   <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)
+done < <(find -L "$dir" -maxdepth 2 -type d -name ".git" -print0)

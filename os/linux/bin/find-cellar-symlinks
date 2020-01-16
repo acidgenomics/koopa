@@ -25,7 +25,8 @@ else
 fi
 
 links=()
-while IFS=  read -r -d $'\0'; do
+while IFS= read -r -d $'\0'
+do
     links+=("$REPLY")
 done < <( \
     find -L "$build_prefix" \
