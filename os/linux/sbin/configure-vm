@@ -72,7 +72,6 @@ then
     # Constellation Azure                                                 # {{{1
     # --------------------------------------------------------------------------
     install-rhel-7-base
-    install-azure-cli
 
     # Don't attempt to patch system env to support '-S' flag.
     # Should no longer be an issue on VMs, as of 2020.
@@ -171,6 +170,12 @@ then
     # install-rust-cargo-crates
     # bcbio-nextgen
     # 10X Genomics CellRanger, CellRanger ATAC
+fi
+
+if _koopa_is_azure
+then
+    # Install this after installing Python 3.
+    install-azure-cli
 fi
 
 if ! _koopa_is_installed rstudio-server
