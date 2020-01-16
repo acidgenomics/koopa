@@ -57,31 +57,6 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
     printf "%s\n" "${array[@]}"
 }
 
-_koopa_help() {                                                           # {{{1
-    # """
-    # Show usage via '--help' flag.
-    # Updated 2020-01-12.
-    #
-    # Now always calls 'man' to display nicely formatted manual page.
-    #
-    # Alternate approach:
-    # > path="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/192319
-    # """
-    case "${1:-}" in
-        --help|-h)
-            local name path
-            path="$0"
-            name="${path##*/}"
-            man "$name"
-            exit 0
-            ;;
-    esac
-    return 0
-}
-
 _koopa_is_array_non_empty() {                                             # {{{1
     # """
     # Is the array non-empty?
