@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# """
 # Recursively run shellcheck on all scripts in a directory.
 # Updated 2019-10-07.
+# """
 
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
