@@ -5,8 +5,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_envs
-
 case "${KOOPA_CONFIG:-}" in
     constellation-aws)
         data_disk="/mnt/data01"
@@ -17,10 +15,14 @@ case "${KOOPA_CONFIG:-}" in
         source_ip="10.100.100.132"
         ;;
     *)
-        _koopa_stop "Failed to detect supported VM config in 'KOOPA_CONFIG'."
+        _koopa_note "No virtual machine config set in 'KOOPA_CONFIG'. Skipping."
         exit 1
         ;;
 esac
+
+_koopa_assert_has_no_envs
+
+_koopa_message "Configuring '${KOOPA_CONFIG}' virtual machine."
 
 source=0
 
