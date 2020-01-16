@@ -153,7 +153,6 @@ install-openjdk
 
 if [[ "$source" -eq 1 ]]
 then
-    # /usr/local/cellar
     install-coreutils
     install-bash
     install-zsh
@@ -184,7 +183,6 @@ then
     install-autojump
     install-fzf
     install-the-silver-searcher
-    # /n/app
     install-rust
     install-perlbrew
     install-rbenv
