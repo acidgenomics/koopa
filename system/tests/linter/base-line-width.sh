@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# """
 # Find lines containing more than 80 characters.
-# Updated 2019-10-14.
-
-# Returns with 'true' or 'false' exit codes.
+# Updated 2020-01-16.
+# """
 
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
@@ -13,7 +13,6 @@ path="${1:-$KOOPA_PREFIX}"
 
 exclude_dirs=(
     "${KOOPA_PREFIX}/dotfiles"
-    "${KOOPA_PREFIX}/os/darwin/etc/R/rstudio"
     "${KOOPA_PREFIX}/shell/zsh/functions"
     ".git"
 )
@@ -31,7 +30,7 @@ fi
 exclude_dirs=("${exclude_dirs[@]/#/--exclude-dir=}")
 
 hits="$( \
-    grep -Elr \
+    grep -Enr \
         --binary-files="without-match" \
         --exclude="*.md" \
         "${exclude_dirs[@]}" \
