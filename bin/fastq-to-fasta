@@ -52,7 +52,8 @@ target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
 
 # Put unique samples into an array and loop.
 array=()
-while IFS=  read -r -d $'\0'; do
+while IFS= read -r -d $'\0'
+do
     array+=("$REPLY")
 done < <(find "$source_dir" -maxdepth 1 -name "*.fastq" -print0)
 
