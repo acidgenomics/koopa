@@ -5,7 +5,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
+# /usr/local/koopa
 koopa_prefix="$(_koopa_prefix)"
+# ~/.config/koopa
+config_prefix="$(_koopa_config_prefix)"
+# /n/app
+app_prefix="$(_koopa_app_prefix)"
+# /usr/local
+make_prefix="$(_koopa_make_prefix)"
+# /usr/local/cellar
+cellar_prefix="$(_koopa_cellar_prefix)"
+
 _koopa_message "Updating koopa at '${koopa_prefix}'."
 
 system=0
@@ -23,19 +33,30 @@ do
     esac
 done
 
+if [[ "$system" -eq 1 ]]
+then
+    echo "config prefix: ${config_prefix}"
+    echo "app prefix: ${app_prefix}"
+    echo "make prefix: ${make_prefix}"
+fi
+
+# Ensure accidental swap files created by vim get nuked.
+find . -type f -name "*.swp" -delete
+
 # Ensure invisible files get nuked on macOS.
 if _koopa_is_macos
 then
     find "$koopa_prefix" -type f -name ".DS_Store" -delete
 fi
 
-# _koopa_remove_broken_symlinks "$(_koopa_config_prefix)"
+_koopa_set_permissions "$koopa_prefix"
+_koopa_update_xdg_config
+_koopa_update_ldconfig
+_koopa_update_profile
 
 # Loop across config directories and update git repos.
 # Consider nesting these under 'app' directory.
-config_prefix="$(_koopa_config_prefix)"
 _koopa_message "Updating user config at '${config_prefix}'."
-
 rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
 
 repos=(
@@ -57,11 +78,6 @@ done
     git pull
 )
 
-_koopa_set_permissions "$koopa_prefix"
-_koopa_update_xdg_config
-_koopa_update_ldconfig
-_koopa_update_profile
-
 if [[ "$system" -eq 1 ]]
 then
     _koopa_message "Updating system configuration."
@@ -69,10 +85,6 @@ then
     then
         update-homebrew
         update-r-packages
-        # > if _koopa_has_sudo
-        # > then
-        # >     update-tex
-        # > fi
     fi
     if _koopa_is_installed configure-vm
     then
@@ -82,56 +94,51 @@ then
         update-venv
         update-rust
     fi
+    # Update managed git repos.
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
-    if _koopa_is_linux
+    if _koopa_is_linux && _koopa_is_shared_install
     then
-        _koopa_reset_prefix_permissions
-        prefix="$(_koopa_make_prefix)"
-        remove-broken-symlinks "$prefix"
-        remove-empty-dirs "$prefix"
-        remove-broken-cellar-symlinks
+        _koopa_remove_broken_symlinks "$make_prefix"
+        _koopa_remove_broken_symlinks "$app_prefix"
+        if _koopa_is_installed zsh
+        then
+            _koopa_message "Fixing Zsh permissions to pass compaudit checks."
+            zsh_exe="$(_koopa_which_realpath zsh)"
+            if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
+            then
+                sudo chmod -v g-w \
+                    "/usr/local/share/zsh" \
+                    "/usr/local/share/zsh/site-functions"
+            fi
+            if _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}"
+            then
+                sudo chmod -v g-w \
+                    "/usr/local/cellar/zsh/"*"/share/zsh" \
+                    "/usr/local/cellar/zsh/"*"/share/zsh/"* \
+                    "/usr/local/cellar/zsh/"*"/share/zsh/"*"/functions"
+            fi
+        fi
+        # Ensure Python pyenv shims have correct permissions.
+        pyenv_prefix="$(_koopa_pyenv_prefix)"
+        if [[ -d "${pyenv_prefix}/shims" ]]
+        then
+            _koopa_message "Fixing pyenv shim permissions."
+            sudo chmod -v 0777 "${pyenv_prefix}/shims"
+        fi
     fi
 fi
 
-# Linux-specific permission fixes.
-if _koopa_is_linux && _koopa_is_shared_install
+# Avoid compaudit warnings regarding group write access.
+# Note that running 'compinit-compaudit-fix' script will cause the shell
+# session to exit, so don't run here.
+if _koopa_is_shared_install
 then
-    cellar_prefix="$(_koopa_cellar_prefix)"
-    make_prefix="$(_koopa_make_prefix)"
-    # Avoid compaudit warnings regarding group write access.
-    # Note that running 'compinit-compaudit-fix' script will cause the shell
-    # session to exit, so don't run here.
-    _koopa_message "Fixing Zsh permissions to pass compaudit checks."
     sudo chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
-    if _koopa_is_installed zsh
-    then
-        zsh_exe="$(_koopa_which_realpath zsh)"
-        if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
-        then
-            sudo chmod -v g-w \
-                "/usr/local/share/zsh" \
-                "/usr/local/share/zsh/site-functions"
-        fi
-        if _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}"
-        then
-            sudo chmod -v g-w \
-                "/usr/local/cellar/zsh/"*"/share/zsh" \
-                "/usr/local/cellar/zsh/"*"/share/zsh/"* \
-                "/usr/local/cellar/zsh/"*"/share/zsh/"*"/functions"
-        fi
-    fi
 
-    # Ensure Python pyenv shims have correct permissions.
-    pyenv_prefix="$(_koopa_pyenv_prefix)"
-    if [[ -d "${pyenv_prefix}/shims" ]]
-    then
-        _koopa_message "Fixing pyenv shim permissions."
-        sudo chmod -v 0777 "${pyenv_prefix}/shims"
-    fi
 fi
 
 _koopa_success "koopa update was successful."

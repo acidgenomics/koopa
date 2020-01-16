@@ -1,6 +1,128 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_chgrp() {                                                          # {{{1
+    # """
+    # Set group only (keep current user).
+    # Updated 2020-01-16.
+    # """
+    local prefix
+    prefix="${1:?}"
+    local group
+    group="$(_koopa_group)"
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo chgrp -R "$group" "$prefix"
+    else
+        chmod -R "$group" "$prefix"
+    fi
+    return 0
+}
+
+_koopa_chmod() {                                                          # {{{1
+    # """
+    # Set file modification permissions on the target prefix.
+    # Updated 2020-01-16.
+    #
+    # This sets group write access by default for shared install, which is
+    # useful so we don't have to constantly switch to root for admin.
+    # """
+    local prefix
+    prefix="${1:?}"
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo chmod -R g+w "$prefix"
+    else
+        chmod -R g-w "$prefix"
+    fi
+    return 0
+}
+
+_koopa_chown() {                                                          # {{{1
+    # """
+    # Set ownership (user and group) on the target prefix.
+    # Updated 2020-01-16.
+    # """
+    local prefix
+    prefix="${1:?}"
+    local group
+    group="$(_koopa_group)"
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo chown -Rh "root:${group}" "$prefix"
+    else
+        chown -Rh "${USER:?}:${group}" "$prefix"
+    fi
+    return 0
+}
+
+_koopa_mkdir() {                                                          # {{{1
+    # """
+    # Make directory at target prefix.
+    # Updated 2020-01-16.
+    #
+    # Errors intentionally if the directory already exists.
+    # Sets correct group and write permissions automatically.
+    # """
+    local prefix
+    prefix="${1:?}"
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo mkdir -pv "$prefix"
+    else
+        mkdir -pv "$prefix"
+    fi
+    _koopa_set_permissions "$prefix"
+    return 0
+}
+
+_koopa_set_permissions() {                                                # {{{1
+    # """
+    # Set permissions on a koopa-related directory prefix.
+    # Updated 2020-01-16.
+    # """
+    local prefix
+    prefix="${1:?}"
+    _koopa_chown "$prefix"
+    _koopa_chmod "$prefix"
+    return 0
+}
+
+_koopa_set_sticky_group() {                                               # {{{1
+    # """
+    # Set sticky group bit.
+    # Updated 2020-01-16.
+    # """
+    local prefix
+    prefix="${1:?}"
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo chmod g+s "$prefix"
+    else
+        chmod g+s "$prefix"
+    fi
+    return 0
+}
+
+_koopa_prefix_mkdir() {                                                   # {{{1
+    # """
+    # Make directory at target prefix, only if it doesn't exist.
+    # Updated 2020-01-16.
+    # """
+    local prefix
+    prefix="${1:?}"
+    _koopa_assert_is_not_dir "$prefix"
+    _koopa_mkdir "$prefix"
+    return 0
+}
+
+
+
 _koopa_add_user_to_etc_passwd() {                                         # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
@@ -175,104 +297,6 @@ _koopa_make_build_string() {                                              # {{{1
         string="${mach}-${os_id}-${os_type}"
     fi
     echo "$string"
-}
-
-_koopa_prefix_chgrp() {                                                   # {{{1
-    # """
-    # Fix the group permissions on the target build prefix.
-    # Updated 2020-01-16.
-    # """
-    local prefix
-    prefix="${1:?}"
-    local group
-    group="$(_koopa_group)"
-    if _koopa_has_sudo
-    then
-        sudo chgrp -Rh "$group" "$prefix"
-        sudo chmod -R g+w "$prefix"
-    else
-        chgrp -Rh "$group" "$prefix"
-        chmod -R g+w "$prefix"
-    fi
-    return 0
-}
-
-_koopa_prefix_mkdir() {                                                   # {{{1
-    # """
-    # Create directory in target build prefix.
-    # Updated 2020-01-16.
-    #
-    # Sets correct group and write permissions automatically.
-    # """
-    local prefix
-    prefix="${1:?}"
-    _koopa_assert_is_not_dir "$prefix"
-    if _koopa_has_sudo
-    then
-        sudo mkdir -pv "$prefix"
-        sudo chown "$(whoami)" "$prefix"
-    else
-        mkdir -pv "$prefix"
-    fi
-    _koopa_prefix_chgrp "$prefix"
-    return 0
-}
-
-_koopa_prepare_make_prefix() {                                            # {{{1
-    # """
-    # Ensure the make prefix is writable.
-    # Updated 2019-11-25.
-    #
-    # Run this function prior to cellar installs.
-    # """
-    local prefix
-    prefix="$(_koopa_make_prefix)"
-    _koopa_set_permissions "$prefix"
-    if _koopa_is_shared_install
-    then
-        sudo chmod g+s "$prefix"
-    else
-        chmod g+s "$prefix"
-    fi
-    return 0
-}
-
-_koopa_reset_prefix_permissions() {                                       # {{{1
-    # """
-    # Reset prefix permissions.
-    # Updated 2020-01-12.
-    # """
-    prefix="${1:-$(_koopa_make_prefix)}"
-    _koopa_set_permissions "$prefix"
-    # Ensure group on top level is sticky.
-    if _koopa_is_shared_install
-    then
-        sudo chmod g+s "$prefix"
-    else
-        chmod g+s "$prefix"
-    fi
-    return 0
-}
-
-_koopa_set_permissions() {                                                # {{{1
-    # """
-    # Set permissions on a koopa-related directory prefix.
-    # Updated 2020-01-16.
-    #
-    # Generally used to reset the build prefix directory (e.g. '/usr/local').
-    # """
-    local prefix
-    prefix="${1:?}"
-    _koopa_message "Setting permissions on '${prefix}'."
-    if _koopa_is_shared_install
-    then
-        _koopa_assert_has_sudo
-        sudo chown -Rh "root" "$prefix"
-    else
-        chown -Rh "$(whoami)" "$prefix"
-    fi
-    _koopa_prefix_chgrp "$prefix"
-    return 0
 }
 
 _koopa_update_ldconfig() {                                                # {{{1
