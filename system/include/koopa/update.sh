@@ -74,20 +74,19 @@ then
         # >     update-tex
         # > fi
     fi
-    if _koopa_is_azure
+    if _koopa_is_installed configure-vm
     then
-        # We're rsyncing config, so don't update conda.
-        update-azure-vm --all
+        configure-vm
     else
         update-conda
+        update-venv
+        update-rust
     fi
-    update-venv
-    update-rust
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
-    _koopa_update_git_repo "${XDG_DATA_HOME}/pyenv"
-    _koopa_update_git_repo "${XDG_DATA_HOME}/rbenv"
+    # > _koopa_update_git_repo "${XDG_DATA_HOME}/pyenv"
+    # > _koopa_update_git_repo "${XDG_DATA_HOME}/rbenv"
     if _koopa_is_linux
     then
         _koopa_reset_prefix_permissions
@@ -98,17 +97,7 @@ then
     fi
 fi
 
-# Zsh compaudit fix.
-if _koopa_is_shared_install
-then
-    chmod="sudo chmod"
-else
-    chmod="chmod"
-fi
-# Note that word split here is intentional.
-$chmod g-w \
-    "${koopa_prefix}/shell/zsh/functions" \
-    "${koopa_prefix}/shell/zsh"
+_koopa_is_installed compinit-compaudit-fix && compinit-compaudit-fix
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
