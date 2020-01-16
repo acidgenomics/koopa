@@ -22,12 +22,12 @@ do
     files+=("$REPLY")
 done < <( \
     find "$prefix" \
-    -mindepth 1 \
-    -type f \
-    -not -name "*.md" \
-    -not -path "${KOOPA_PREFIX}/.git/*" \
-    -not -path "${KOOPA_PREFIX}/dotfiles/*" \
-    -print0 \
+        -mindepth 1 \
+        -type f \
+        -not -name "*.md" \
+        -not -path "${KOOPA_PREFIX}/.git/*" \
+        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -print0 \
     | sort
 )
 
@@ -36,7 +36,7 @@ failures="$( \
         --binary-files="without-match" \
         "$grep_pattern" \
         "${files[@]}" \
-        || echo "" \
+    || echo "" \
 )"
 
 name="$(_koopa_basename_sans_ext "$0")"
