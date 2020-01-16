@@ -8,6 +8,8 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_envs
 
 koopa_prefix="$(_koopa_prefix)"
+make_prefix="$(_koopa_make_prefix)"
+app_prefix="$(_koopa_app_prefix)"
 config="${KOOPA_CONFIG:-unknown}"
 
 case "$config" in
@@ -69,14 +71,21 @@ rm -frv \
     "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
-_koopa_prepare_make_prefix
+
+# Prepare '/usr/local' for write access.
+_koopa_mkdir "$make_prefix"
+_koopa_set_sticky_group "$make_prefix"
 
 # Prepare '/n/' share on data disk.
 if [[ -d "${data_disk:-}" ]]
 then
     _koopa_message "Symlinking '/n' on '${data_disk}'."
-    sudo mkdir -pv "${data_disk}/n/app"
-    sudo ln -fnsv "${data_disk}/n" "/n"
+    # e.g. '/mnt/data01/n/app'.
+    app_prefix_real="${data_disk}${app_prefix}"
+    sudo mkdir -pv "$app_prefix_real"
+    _koopa_set_sticky_group "$app_prefix_real"
+    n_real="$(dirname "$app_prefix_real")"
+    sudo ln -fnsv "$n_real" "/n"
 fi
 
 if [[ "$config" == "constellation-aws" ]]
@@ -181,12 +190,15 @@ then
     install-neofetch
     install-genrich
     install-autojump
-    install-fzf
     install-the-silver-searcher
-    install-rust
-    install-perlbrew
-    install-rbenv
-    install-pyenv
+    if [[ -d "$app_prefix" ]]
+    then
+        install-fzf
+        install-rust
+        install-perlbrew
+        install-rbenv
+        install-pyenv
+    fi
     r-javareconf
     # conda-create-bioinfo-envs
     # install-rust-cargo-crates
