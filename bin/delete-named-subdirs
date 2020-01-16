@@ -8,7 +8,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_args "$@"
 
-path="$1"
+dir="$1"
 subdir_name="$2"
 
-find "$path" -type d -name "$subdir_name" -print0 | xargs -0 -I {} rm -rf {}
+find "$dir" -type d -name "$subdir_name" -print0 | xargs -0 -I {} rm -rf {}
