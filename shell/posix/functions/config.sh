@@ -161,11 +161,8 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     local sudo_file
     sudo_file="/etc/sudoers.d/sudo"
     _koopa_message "Updating '${sudo_file}' to include '${group}'."
-    if [ ! -f "$sudo_file" ]
-    then
-        sudo touch "$sudo_file"
-        sudo chmod -v 0440 "$sudo_file"
-    fi
+    sudo touch "$sudo_file"
+    sudo chmod -v 0440 "$sudo_file"
     if sudo grep -q "$group" "$sudo_file"
     then
         _koopa_success "Passwordless sudo already enabled for '${group}'."
