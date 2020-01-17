@@ -32,12 +32,15 @@ Run with '--help' flag for usage details."
 _koopa_assert_has_file_ext() {                                            # {{{1
     # """
     # Assert that input contains a file extension.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if ! _koopa_has_file_ext "${1:?}"
-    then
-        _koopa_stop "No file extension: '${1}'."
-    fi
+    for arg
+    do
+        if ! _koopa_has_file_ext "$arg"
+        then
+            _koopa_stop "No file extension: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -100,38 +103,47 @@ _koopa_assert_is_debian() {                                               # {{{1
 _koopa_assert_is_dir() {                                                  # {{{1
     # """
     # Assert that input is a directory.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ ! -d "${1:?}" ]
-    then
-        _koopa_stop "Not a directory: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -d "$arg" ]
+        then
+            _koopa_stop "Not directory: '${arg}'."
+        fi
+    done
     return 0
 }
 
 _koopa_assert_is_executable() {                                           # {{{1
     # """
     # Assert that input is executable.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ ! -x "${1:?}" ]
-    then
-        _koopa_stop "Not executable: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -x "$arg" ]
+        then
+            _koopa_stop "Not executable: '${arg}'."
+        fi
+    done
     return 0
 }
 
 _koopa_assert_is_existing() {                                             # {{{1
     # """
     # Assert that input exists on disk.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     #
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
-    if [ ! -e "${1:?}" ]
-    then
-        _koopa_stop "Does not exist: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -e "$arg" ]
+        then
+            _koopa_stop "Does not exist: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -150,12 +162,15 @@ _koopa_assert_is_fedora() {                                               # {{{1
 _koopa_assert_is_file() {                                                 # {{{1
     # """
     # Assert that input is a file.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ ! -f "${1:?}" ]
-    then
-        _koopa_stop "Not a file: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -f "$arg" ]
+        then
+            _koopa_stop "Not file: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -189,12 +204,9 @@ _koopa_assert_is_git() {                                                  # {{{1
 _koopa_assert_is_installed() {                                            # {{{1
     # """
     # Assert that programs are installed.
-    # Updated 2019-10-23.
-    #
-    # Supports checking of multiple programs in a single call.
-    # Note that '_koopa_is_installed' is not vectorized.
+    # Updated 2020-01-16.
     # """
-    for arg in "$@"
+    for arg
     do
         if ! _koopa_is_installed "$arg"
         then
@@ -231,45 +243,54 @@ _koopa_assert_is_macos() {                                                # {{{1
 _koopa_assert_is_non_existing() {                                         # {{{1
     # """
     # Assert that input does not exist on disk.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ -e "${1:?}" ]
-    then
-        _koopa_stop "Exists: '${1}'."
-    fi
+    for arg
+    do
+        if [ -e "$arg" ]
+        then
+            _koopa_stop "Exists: '${arg}'."
+        fi
+    done
     return 0
 }
 
 _koopa_assert_is_not_dir() {                                              # {{{1
     # """
     # Assert that input is not a directory.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ -d "${1:?}" ]
-    then
-        _koopa_stop "Directory exists: '${1}'."
-    fi
+    for arg
+    do
+        if [ -d "$arg" ]
+        then
+            _koopa_stop "Directory exists: '${arg}'."
+        fi
+    done
     return 0
 }
 
 _koopa_assert_is_not_file() {                                             # {{{1
     # """
     # Assert that input is not a file.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ -f "${1:?}" ]
-    then
-        _koopa_stop "File exists: '${1}'."
-    fi
+    for arg
+    do
+        if [ -f "$arg" ]
+        then
+            _koopa_stop "File exists: '${1}'."
+        fi
+    done
     return 0
 }
 
 _koopa_assert_is_not_installed() {                                        # {{{1
     # """
     # Assert that programs are not installed.
-    # Updated 2019-10-23.
+    # Updated 2020-01-16.
     # """
-    for arg in "$@"
+    for arg
     do
         if _koopa_is_installed "$arg"
         then
@@ -330,12 +351,15 @@ _koopa_assert_is_not_root() {                                             # {{{1
 _koopa_assert_is_not_symlink() {                                          # {{{1
     # """
     # Assert that input is not a symbolic link.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ -L "${1:?}" ]
-    then
-        _koopa_stop "Symlink exists: '${1}'."
-    fi
+    for arg
+    do
+        if [ -L "$arg" ]
+        then
+            _koopa_stop "Symlink exists: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -356,25 +380,31 @@ _koopa_is_powerful() {                                                    # {{{1
 
 _koopa_assert_is_r_package_installed() {                                  # {{{1
     # """
-    # Assert that a specific R package is installed.
-    # Updated 2020-01-12.
+    # Assert that specific R packages are installed.
+    # Updated 2020-01-16.
     # """
-    if ! _koopa_is_r_package_installed "${1:?}"
-    then
-        _koopa_stop "'${1}' R package is not installed."
-    fi
+    for arg
+    do
+        if ! _koopa_is_r_package_installed "${arg}"
+        then
+            _koopa_stop "'${arg}' R package is not installed."
+        fi
+    done
     return 0
 }
 
 _koopa_assert_is_readable() {                                             # {{{1
     # """
     # Assert that input is readable.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ ! -r "${1:?}" ]
-    then
-        _koopa_stop "Not readable: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -r "$arg" ]
+        then
+            _koopa_stop "Not readable: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -393,12 +423,15 @@ _koopa_assert_is_root() {                                                 # {{{1
 _koopa_assert_is_symlink() {                                              # {{{1
     # """
     # Assert that input is a symbolic link.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ ! -L "${1:?}" ]
-    then
-        _koopa_stop "Not symlink: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -L "$arg" ]
+        then
+            _koopa_stop "Not symlink: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -418,12 +451,15 @@ _koopa_assert_is_venv_active() {                                          # {{{1
 _koopa_assert_is_writable() {                                             # {{{1
     # """
     # Assert that input is writable.
-    # Updated 2020-01-12.
+    # Updated 2020-01-16.
     # """
-    if [ ! -r "${1:?}" ]
-    then
-        _koopa_stop "Not writable: '${1}'."
-    fi
+    for arg
+    do
+        if [ ! -r "$arg" ]
+        then
+            _koopa_stop "Not writable: '${arg}'."
+        fi
+    done
     return 0
 }
 
