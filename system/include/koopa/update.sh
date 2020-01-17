@@ -100,9 +100,8 @@ then
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
     if _koopa_is_linux && _koopa_is_shared_install
     then
-        # These steps will cause the shell to exit. Need to fix.
-        # > _koopa_remove_broken_symlinks "$make_prefix"
-        # > _koopa_remove_broken_symlinks "$app_prefix"
+        _koopa_remove_broken_symlinks "$make_prefix"
+        _koopa_remove_broken_symlinks "$app_prefix"
         if _koopa_is_installed zsh
         then
             _koopa_message "Fixing Zsh permissions to pass compaudit checks."
