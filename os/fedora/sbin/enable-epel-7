@@ -10,7 +10,7 @@ _koopa_assert_has_no_args "$@"
 # Check if EPEL is already enabled.
 if sudo yum repolist | grep -q "epel/"
 then
-    _koopa_note "EPEL is already enabled."
+    _koopa_success "EPEL 7 is already enabled."
     exit 0
 fi
 
