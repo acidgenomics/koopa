@@ -59,6 +59,27 @@ _koopa_chown() {                                                          # {{{1
     return 0
 }
 
+_koopa_chown_user() {                                                     # {{{1
+    # """
+    # Set ownership to current user.
+    # Updated 2020-01-17.
+    # """
+    local prefix
+    prefix="${1:?}"
+    local user
+    user="${USER:?}"
+    local group
+    group="$(_koopa_group)"
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo chown -Rh "${user}:${group}" "$prefix"
+    else
+        chown -Rh "${user}:${group}" "$prefix"
+    fi
+    return 0
+}
+
 _koopa_mkdir() {                                                          # {{{1
     # """
     # Make directory at target prefix.
@@ -88,6 +109,18 @@ _koopa_set_permissions() {                                                # {{{1
     local prefix
     prefix="${1:?}"
     _koopa_chown "$prefix"
+    _koopa_chmod "$prefix"
+    return 0
+}
+
+_koopa_set_permissions_user() {                                           # {{{1
+    # """
+    # Set permissions on a target prefix to current user.
+    # Updated 2020-01-17.
+    # """
+    local prefix
+    prefix="${1:?}"
+    _koopa_chown_user "$prefix"
     _koopa_chmod "$prefix"
     return 0
 }
