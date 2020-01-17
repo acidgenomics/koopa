@@ -164,14 +164,14 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     if [ ! -f "$sudo_file" ]
     then
         sudo touch "$sudo_file"
+        sudo chmod -v 0440 "$sudo_file"
     fi
-    if ! sudo grep -q "$group" "$sudo_file"
+    if sudo grep -q "$group" "$sudo_file"
     then
-        sudo sh -c "echo '%${group} ALL=(ALL) NOPASSWD: ALL' >> ${sudo_file}"
-    else
         _koopa_success "Passwordless sudo already enabled for '${group}'."
+        return 0
     fi
-    sudo chmod 0440 "$sudo_file"
+    sudo sh -c "echo '%${group} ALL=(ALL) NOPASSWD: ALL' >> ${sudo_file}"
     _koopa_success "Passwordless sudo enabled for '${group}'."
     return 0
 }
