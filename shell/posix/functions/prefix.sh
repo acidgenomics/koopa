@@ -15,6 +15,8 @@ _koopa_app_prefix() {                                                     # {{{1
     # Updated 2020-01-12.
     #
     # Inspired by HMS RC devops approach on O2 cluster.
+    #
+    # Alternatively, can consider using '/n/opt' instead of '/n/app' here.
     # """
     local prefix
     if _koopa_is_shared_install

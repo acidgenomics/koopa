@@ -6,8 +6,8 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+_koopa_exit_if_installed conda
 _koopa_assert_has_no_envs
-_koopa_assert_is_not_installed conda
 
 anaconda=0
 
