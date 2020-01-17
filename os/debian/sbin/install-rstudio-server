@@ -5,11 +5,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+name="rstudio-server"
+
+_koopa_exit_if_installed "$name"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
-_koopa_assert_is_not_installed rstudio-server
 
-name="rstudio-server"
 version="$(_koopa_variable "$name")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 os_codename="$(_koopa_os_codename)"

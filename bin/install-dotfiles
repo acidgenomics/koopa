@@ -19,8 +19,6 @@ do
     esac
 done
 
-
-
 # dotfiles                                                                  {{{1
 # ==============================================================================
 
@@ -29,7 +27,7 @@ target_dir="$(_koopa_prefix)/dotfiles"
 
 if [[ -d "$target_dir" ]]
 then
-    _koopa_note "Dotfiles already installed at '${target_dir}'."
+    _koopa_success "Dotfiles are already installed at '${target_dir}'."
 else
     _koopa_message "Installing dotfiles into '${target_dir}'."
     git clone --recursive "$source_repo" "$target_dir"
@@ -47,8 +45,6 @@ then
     )
 fi
 
-
-
 # dotfiles-private                                                          {{{1
 # ==============================================================================
 
@@ -58,7 +54,7 @@ then
     target_dir="$(_koopa_config_prefix)/dotfiles-private"
     if [[ -d "$target_dir" ]]
     then
-        _koopa_note "Dotfiles already installed at '${target_dir}'."
+        _koopa_success "Dotfiles are already installed at '${target_dir}'."
     else
         git clone --recursive "$source_repo" "$target_dir"
         if [[ -x "${target_dir}/INSTALL.sh" ]]

@@ -12,6 +12,9 @@ make_prefix="$(_koopa_make_prefix)"
 app_prefix="$(_koopa_app_prefix)"
 config="${KOOPA_CONFIG:-unknown}"
 
+data_disk=
+source_ip=
+
 case "$config" in
     constellation-aws)
         data_disk="/mnt/data01"
@@ -77,7 +80,7 @@ _koopa_mkdir "$make_prefix"
 _koopa_set_sticky_group "$make_prefix"
 
 # Prepare '/n/' share on data disk.
-if [[ -d "${data_disk:-}" ]]
+if [[ -d "$data_disk" ]]
 then
     _koopa_message "Symlinking '/n' on '${data_disk}'."
     # e.g. '/mnt/data01/n/app'.
@@ -153,12 +156,15 @@ docker,var}
     fi
 fi
 
-if [[ -d "$data_disk" ]]
+if [[ -d "$data_disk" ]] && [[ -n "$source_ip" ]]
 then
     rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
 fi
 
-install-openjdk
+if [[ -d "$app_prefix" ]]
+then
+    install-openjdk
+fi
 
 if [[ "$source" -eq 1 ]]
 then
@@ -180,7 +186,6 @@ then
     install-proj
     install-gdal
     install-hdf5
-    install-go
     install-gsl
     install-perl
     install-ruby
@@ -193,17 +198,24 @@ then
     install-the-silver-searcher
     if [[ -d "$app_prefix" ]]
     then
+        # install-bcbio
+        # install-cellranger
+        # install-cellranger-atac
+        # install-chromhmm
+        # install-ensembl-perl-api
+        # install-lmod
+        install-conda
         install-fzf
+        install-go
         install-rust
         install-perlbrew
-        install-rbenv
         install-pyenv
+        install-rbenv
+        (conda-create-bioinfo-envs)
+        (install-rust-crates)
+        (pipx-install-envs)
     fi
     r-javareconf
-    # conda-create-bioinfo-envs
-    # install-rust-cargo-crates
-    # Install bcbio-nextgen
-    # Install 10X Genomics CellRanger, CellRanger ATAC
 fi
 
 if _koopa_is_azure
@@ -212,16 +224,16 @@ then
     install-azure-cli
 fi
 
-if ! _koopa_is_installed rstudio-server
+if _koopa_is_installed install-rstudio-server
 then
     install-rstudio-server
 fi
 
-if ! _koopa_is_installed shiny-server
+if _koopa_is_installed install-shiny-server
 then
     install-shiny-server
 fi
 
 _koopa_update_lmod_config
 
-_koopa_success "${KOOPA_CONFIG} VM is configured correctly."
+_koopa_success "Configuration completed successfully."

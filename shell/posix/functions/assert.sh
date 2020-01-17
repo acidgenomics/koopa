@@ -635,6 +635,22 @@ _koopa_check_user() {                                                     # {{{1
     return 0
 }
 
+_koopa_exit_if_installed() {
+    # """
+    # Exit with success if an app is installed.
+    # Updated 2020-01-16.
+    # """
+    for arg
+    do
+        if _koopa_is_installed "$arg"
+        then
+            _koopa_success "'${arg}' is already installed."
+            exit 0
+        fi
+    done
+    return 0
+}
+
 _koopa_has_file_ext() {                                                   # {{{1
     # """
     # Does the input contain a file extension?

@@ -5,11 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-if _koopa_is_installed az
-then
-    _koopa_success "Azure CLI (az) is already installed."
-    exit 0
-fi
+_koopa_exit_if_installed az
 
 sudo rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
 sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
