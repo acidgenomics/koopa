@@ -7,12 +7,13 @@ source "${script_dir}/../include/header.sh"
 
 # https://rstudio.com/products/shiny/download-server/ubuntu/
 
+name="shiny-server"
+
+_koopa_exit_if_installed "$name"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
-_koopa_assert_is_not_installed shiny-server
 _koopa_assert_is_r_package_installed shiny
 
-name="shiny-server"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 version="$(_koopa_variable "$name")"
 
