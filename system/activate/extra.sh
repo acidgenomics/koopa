@@ -75,7 +75,7 @@ alias tardown='tar -xzvf'
 # ==============================================================================
 
 alias e='exit'
-alias kh='cd $KOOPA_PREFIX'
+alias k='cd $KOOPA_PREFIX'
 alias reload='exec "$SHELL" -l'
 
 # Navigate up parent directories without 'cd'.
