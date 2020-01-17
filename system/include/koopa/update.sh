@@ -100,8 +100,9 @@ then
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
     if _koopa_is_linux && _koopa_is_shared_install
     then
-        _koopa_remove_broken_symlinks "$make_prefix"
-        _koopa_remove_broken_symlinks "$app_prefix"
+        # These steps will cause the shell to exit. Need to fix.
+        # > _koopa_remove_broken_symlinks "$make_prefix"
+        # > _koopa_remove_broken_symlinks "$app_prefix"
         if _koopa_is_installed zsh
         then
             _koopa_message "Fixing Zsh permissions to pass compaudit checks."
@@ -130,15 +131,14 @@ then
     fi
 fi
 
-# Avoid compaudit warnings regarding group write access.
-# Note that running 'compinit-compaudit-fix' script will cause the shell
-# session to exit, so don't run here.
+# Avoid compaudit warnings regarding group write access. Note that running
+# 'compinit-compaudit-fix' script will cause the shell session to exit, so don't
+# run here.
 if _koopa_is_shared_install
 then
     sudo chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
-
 fi
 
 _koopa_success "koopa update was successful."
