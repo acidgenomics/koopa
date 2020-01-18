@@ -86,7 +86,7 @@ for cask in "${casks[@]}"
 do
     if echo "$installed_casks" | grep -Eq "^${cask}$"
     then
-        _koopa_success "'${cask}' is already installed."
+        _koopa_note "'${cask}' is already installed."
         continue
     fi
     brew cask install "$cask"
@@ -105,7 +105,7 @@ for cask in "${casks[@]}"
 do
     if echo "$installed_casks" | grep -Eq "^${cask}$"
     then
-        _koopa_success "'${cask}' is already installed."
+        _koopa_note "'${cask}' is already installed."
         continue
     fi
     brew cask install "$cask" --no-quarantine
@@ -230,7 +230,7 @@ do
     name="$(basename "$brew")"
     if echo "$installed_brews" | grep -Eq "^${name}$"
     then
-        _koopa_success "'${name}' is already installed."
+        _koopa_note "'${name}' is already installed."
         continue
     fi
     brew install "$brew"
