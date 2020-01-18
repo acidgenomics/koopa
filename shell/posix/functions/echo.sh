@@ -211,10 +211,9 @@ _koopa_note() {                                                           # {{{1
     # Updated 2020-01-17.
     # """
     local c1 c2 nc pre str
-    pre="ℹ"
-    pre="$(_koopa_emoji) ${pre}  "
+    pre="  ----  "
     str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "cyan")"
+    c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "white")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
@@ -227,13 +226,13 @@ _koopa_stop() {                                                           # {{{1
     # """
     local c1 c2 nc pre str
     pre="🔥"
-    pre="$(_koopa_emoji) ${pre}  ERROR: "
+    pre="${pre} KOOPA ERROR: "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "red-bold")"
     c2="$(_koopa_ansi_escape_code "white-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
-    # exit 1
+    exit 1
 }
 
 _koopa_success() {                                                        # {{{1
@@ -243,10 +242,10 @@ _koopa_success() {                                                        # {{{1
     # """
     local c1 c2 nc pre str
     pre="✔"
-    pre="$(_koopa_emoji) ${pre}  "
+    pre="${pre}  "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "green")"
-    c2="$(_koopa_ansi_escape_code "white-bold")"
+    c2="$(_koopa_ansi_escape_code "green-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
@@ -258,7 +257,7 @@ _koopa_warning() {                                                        # {{{1
     # """
     local c1 c2 nc pre str
     pre="!!"
-    pre="$(_koopa_emoji) ${pre} WARNING: "
+    pre="${pre} WARNING: "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "yellow-bold")"
     c2="$(_koopa_ansi_escape_code "white-bold")"
