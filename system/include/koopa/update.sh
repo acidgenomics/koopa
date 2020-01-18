@@ -18,6 +18,13 @@ cellar_prefix="$(_koopa_cellar_prefix)"
 
 _koopa_message "Updating koopa at '${koopa_prefix}'."
 
+if _koopa_is_shared_install
+then
+    _koopa_note "Shared installation detected."
+    _koopa_note "sudo privileges are required."
+    _koopa_assert_has_sudo
+fi
+
 system=0
 
 while (("$#"))
