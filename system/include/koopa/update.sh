@@ -16,7 +16,7 @@ make_prefix="$(_koopa_make_prefix)"
 # /usr/local/cellar
 cellar_prefix="$(_koopa_cellar_prefix)"
 
-_koopa_message "Updating koopa at '${koopa_prefix}'."
+_koopa_h1 "Updating koopa at '${koopa_prefix}'."
 
 if _koopa_is_shared_install
 then
@@ -42,9 +42,9 @@ done
 
 if [[ "$system" -eq 1 ]]
 then
-    echo "config prefix: ${config_prefix}"
-    echo "app prefix: ${app_prefix}"
-    echo "make prefix: ${make_prefix}"
+    _koopa_note "config prefix: ${config_prefix}"
+    _koopa_note "make prefix: ${make_prefix}"
+    _koopa_note "app prefix: ${app_prefix}"
 fi
 
 # Ensure accidental swap files created by vim get nuked.
@@ -63,7 +63,7 @@ _koopa_update_profile
 
 # Loop across config directories and update git repos.
 # Consider nesting these under 'app' directory.
-_koopa_message "Updating user config at '${config_prefix}'."
+_koopa_h1 "Updating user config at '${config_prefix}'."
 rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
 
 repos=(
@@ -87,7 +87,7 @@ done
 
 if [[ "$system" -eq 1 ]]
 then
-    _koopa_message "Updating system configuration."
+    _koopa_h1 "Updating system configuration."
     if _koopa_is_macos
     then
         update-homebrew
@@ -111,7 +111,7 @@ then
         _koopa_remove_broken_symlinks "$app_prefix"
         if _koopa_is_installed zsh
         then
-            _koopa_message "Fixing Zsh permissions to pass compaudit checks."
+            _koopa_h1 "Fixing Zsh permissions to pass compaudit checks."
             zsh_exe="$(_koopa_which_realpath zsh)"
             if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
             then
@@ -131,7 +131,7 @@ then
         pyenv_prefix="$(_koopa_pyenv_prefix)"
         if [[ -d "${pyenv_prefix}/shims" ]]
         then
-            _koopa_message "Fixing pyenv shim permissions."
+            _koopa_h1 "Fixing pyenv shim permissions."
             sudo chmod -v 0777 "${pyenv_prefix}/shims"
         fi
     fi

@@ -13,7 +13,7 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)"
 exe_file="${prefix}/bin/singularity"
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_h1 "Installing ${name} ${version}."
 
 file="singularity-${version}.tar.gz"
 url="https://github.com/sylabs/singularity/releases/download/\

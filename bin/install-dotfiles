@@ -29,7 +29,7 @@ if [[ -d "$target_dir" ]]
 then
     _koopa_success "Dotfiles are already installed at '${target_dir}'."
 else
-    _koopa_message "Installing dotfiles into '${target_dir}'."
+    _koopa_h1 "Installing dotfiles into '${target_dir}'."
     git clone --recursive "$source_repo" "$target_dir"
     if [[ -x "${target_dir}/INSTALL.sh" ]]
     then

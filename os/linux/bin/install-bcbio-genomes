@@ -23,7 +23,7 @@ bcbio_exe="$(_koopa_which_realpath "bcbio_nextgen.py")"
 bcbio_dir="$(cd "$(dirname "$bcbio_exe")/../.." && pwd -P)"
 genomes_dir="${bcbio_dir}/genomes"
 
-_koopa_message "Installing bcbio genomes '${genomes[*]}' into '${genomes_dir}'."
+_koopa_h1 "Installing bcbio genomes '${genomes[*]}' into '${genomes_dir}'."
 
 genome_flags=()
 for genome in "${genomes[@]}"

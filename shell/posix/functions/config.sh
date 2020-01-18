@@ -172,7 +172,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
     user="${USER:?}"
     local user_string
     user_string="$(getent passwd "$user")"
-    _koopa_message "Updating '${passwd_file}' to include '${user}'."
+    _koopa_h1 "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "echo '${user_string}' >> ${passwd_file}"
@@ -193,7 +193,7 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     group="$(_koopa_group)"
     local sudo_file
     sudo_file="/etc/sudoers.d/sudo"
-    _koopa_message "Updating '${sudo_file}' to include '${group}'."
+    _koopa_h1 "Updating '${sudo_file}' to include '${group}'."
     sudo touch "$sudo_file"
     sudo chmod -v 0440 "$sudo_file"
     if sudo grep -q "$group" "$sudo_file"
@@ -215,7 +215,7 @@ _koopa_link_docker() {                                                    # {{{1
     [ -d "/n" ] || return 0
     _koopa_assert_has_sudo
     _koopa_assert_is_linux
-    _koopa_message "Updating Docker configuration."
+    _koopa_h1 "Updating Docker configuration."
     local lib_sys
     lib_sys="/var/lib/docker"
     local lib_n
@@ -260,7 +260,7 @@ _koopa_link_r_etc() {                                                     # {{{1
         _koopa_note "Source files missing: '${r_etc_source}'."
         return 0
     fi
-    _koopa_message "Updating '${r_home}'."
+    _koopa_h1 "Updating '${r_home}'."
     sudo ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
     return 0
 }
@@ -279,7 +279,7 @@ _koopa_link_r_site_library() {                                            # {{{1
     minor_version="$(_koopa_minor_version "$version")"
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
-    _koopa_message "Creating site library at '${r_home}'."
+    _koopa_h1 "Creating site library at '${r_home}'."
     local lib_source
     lib_source="${app_prefix}/r/${minor_version}/site-library"
     local lib_target
@@ -349,7 +349,7 @@ _koopa_update_ldconfig() {                                                # {{{1
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    _koopa_message "Updating ldconfig in '/etc/ld.so.conf.d/'."
+    _koopa_h1 "Updating ldconfig in '/etc/ld.so.conf.d/'."
     local source_file
     local dest_file
     for source_file in "${conf_source}/"*".conf"
@@ -368,7 +368,7 @@ _koopa_update_lmod_config() {                                             # {{{1
     # """
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-    _koopa_message "Updating Lmod configuration in '/etc/profile.d/'."
+    _koopa_h1 "Updating Lmod configuration in '/etc/profile.d/'."
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
     [ -d "$init_dir" ] || return 0
@@ -389,7 +389,7 @@ _koopa_update_profile() {                                                 # {{{1
     symlink="/etc/profile.d/zzz-koopa.sh"
     # Early return if link already exists.
     [ -L "$symlink" ] && return 0
-    _koopa_message "Adding '${symlink}'."
+    _koopa_h1 "Adding '${symlink}'."
     sudo rm -fv "/etc/profile.d/koopa.sh"
     sudo ln -fnsv \
         "$(_koopa_prefix)/os/linux/etc/profile.d/zzz-koopa.sh" \
@@ -439,7 +439,7 @@ _koopa_update_shells() {                                                  # {{{1
     shell_etc_file="/etc/shells"
     if ! grep -q "$shell_exe" "$shell_etc_file"
     then
-        _koopa_message "Updating '${shell_etc_file}' to include '${shell_exe}'."
+        _koopa_h1 "Updating '${shell_etc_file}' to include '${shell_exe}'."
         sudo sh -c "echo ${shell_exe} >> ${shell_etc_file}"
     else
         _koopa_success "'${shell_exe}' already defined in '${shell_etc_file}'."

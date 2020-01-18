@@ -17,7 +17,7 @@ gnu_mirror="https://ftpmirror.gnu.org"
 
 _koopa_assert_is_not_dir "$prefix"
 
-_koopa_message "Installing ${name} ${version} at '${prefix}'."
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

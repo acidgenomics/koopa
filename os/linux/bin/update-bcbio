@@ -15,7 +15,7 @@ timestamp="$(date "+%Y%m%d-%H%M%S")"
 log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
 log_file="${log_dir}/${timestamp}-update-bcbio.log"
 
-_koopa_message "Saving install log at '${log_file}'."
+_koopa_h1 "Saving install log at '${log_file}'."
 mkdir -pv "$log_dir"
 
 (

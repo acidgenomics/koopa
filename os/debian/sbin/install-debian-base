@@ -133,7 +133,7 @@ install-r
 # Note that regular llvm recipe currently installs version 6.
 if [[ -z "${LLVM_CONFIG:-}" ]]
 then
-    _koopa_message "Installing LLVM."
+    _koopa_h1 "Installing LLVM."
     llvm_version="$(_koopa_variable llvm)"
     llvm_version="$(_koopa_major_version "$llvm_version")"
     wget https://apt.llvm.org/llvm.sh

@@ -77,7 +77,7 @@ then
     flags+=("--exclude=rnaeditingindexer")
 fi
 
-_koopa_message "Updating '${dir}' from '${source_ip}'."
+_koopa_h1 "Updating '${dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
@@ -97,7 +97,7 @@ sudo chown -Rh "$USER" "$dir"
 
 flags=("${flags_bak[@]}")
 
-_koopa_message "Updating '${dir}' from '${source_ip}'."
+_koopa_h1 "Updating '${dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068

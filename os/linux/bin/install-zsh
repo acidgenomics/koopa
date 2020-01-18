@@ -26,7 +26,7 @@ jobs="$(_koopa_cpu_count)"
 
 _koopa_assert_is_not_dir "$prefix"
 
-_koopa_message "Installing ${name} ${version} at '${prefix}'."
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -48,7 +48,7 @@ _koopa_message "Installing ${name} ${version} at '${prefix}'."
 
 if _koopa_is_debian
 then
-    _koopa_message "Linking shared config scripts into '${etc_dir}'."
+    _koopa_h1 "Linking shared config scripts into '${etc_dir}'."
     mkdir -pv "$etc_dir"
     ln -fnsv \
         "$(_koopa_prefix)/os/$(_koopa_os_id)/etc/zsh/"* \

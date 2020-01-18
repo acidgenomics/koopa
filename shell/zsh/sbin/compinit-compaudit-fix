@@ -13,5 +13,5 @@ then
     exit 0
 fi
 
-_koopa_message "Fixing Zsh compinit configuration with compaudit."
+_koopa_h1 "Fixing Zsh compinit configuration with compaudit."
 compaudit 2>/dev/null | xargs sudo chmod g-w

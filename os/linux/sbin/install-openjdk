@@ -12,7 +12,7 @@ version="$(_koopa_variable "java")"
 jdk_dir="$(_koopa_app_prefix)/java/openjdk"
 prefix="${jdk_dir}/${version}"
 
-_koopa_message "Installing OpenJDK ${version} at '${prefix}'."
+_koopa_h1 "Installing OpenJDK ${version} at '${prefix}'."
 
 # Download and extract the JDK, if necessary.
 if [[ ! -d "$prefix" ]]

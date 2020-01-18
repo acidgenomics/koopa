@@ -35,7 +35,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 
-_koopa_message "Installing R ${version} at '${prefix}'."
+_koopa_h1 "Installing R ${version} at '${prefix}'."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
