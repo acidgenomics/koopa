@@ -288,7 +288,7 @@ _koopa_status_fail() {                                                    # {{{1
     # Updated 2020-01-17.
     # """
     local c1 nc pre str
-    pre="      FAIL"
+    pre="        FAIL"
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "red-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -301,7 +301,7 @@ _koopa_status_note() {                                                    # {{{1
     # Updated 2020-01-17.
     # """
     local c1 nc pre str
-    pre="      NOTE"
+    pre="        NOTE"
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "magenta")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -314,7 +314,7 @@ _koopa_status_ok() {                                                      # {{{1
     # Updated 2020-01-17.
     # """
     local c1 nc pre str
-    pre="        OK"
+    pre="          OK"
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "green")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
