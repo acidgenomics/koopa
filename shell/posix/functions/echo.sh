@@ -196,11 +196,11 @@ _koopa_h1() {                                                        # {{{1
     # Alternatives: ==> (Homebrew) / ⇨  / →
     # """
     local c1 c2 nc pre str
-    pre="➔"
-    pre="$(_koopa_emoji)   ${pre}  "
+    pre="==>"
+    pre="$(_koopa_emoji) ${pre}  "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "blue")"
-    c2="$(_koopa_ansi_escape_code "white-bold")"
+    c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "\n${c1}${pre}${c2}${str}${nc}"
 }
@@ -211,11 +211,11 @@ _koopa_h2() {                                                        # {{{1
     # Updated 2020-01-17.
     # """
     local c1 c2 nc pre str
-    pre="➔"
-    pre="     ${pre}  "
+    pre="-->"
+    pre="   ${pre}  "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "magenta")"
-    c2="$(_koopa_ansi_escape_code "white")"
+    c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
@@ -226,10 +226,10 @@ _koopa_note() {                                                           # {{{1
     # Updated 2020-01-17.
     # """
     local c1 c2 nc pre str
-    pre="  ----  "
+    pre="   ---  "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "yellow")"
-    c2="$(_koopa_ansi_escape_code "white")"
+    c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
@@ -244,7 +244,7 @@ _koopa_stop() {                                                           # {{{1
     pre="${pre} KOOPA ERROR: "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "red-bold")"
-    c2="$(_koopa_ansi_escape_code "white-bold")"
+    c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
     exit 1
@@ -275,7 +275,7 @@ _koopa_warning() {                                                        # {{{1
     pre="${pre} WARNING: "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "yellow-bold")"
-    c2="$(_koopa_ansi_escape_code "white-bold")"
+    c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
 }
