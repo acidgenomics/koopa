@@ -16,7 +16,7 @@ version="$(_koopa_variable ruby)"
 ruby_build_dir="$(rbenv root)/plugins/ruby-build"
 if [[ -d "$ruby_build_dir" ]]
 then
-    _koopa_message "Updating ruby-build plugin: '${ruby_build_dir}'."
+    _koopa_h1 "Updating ruby-build plugin: '${ruby_build_dir}'."
     (
         cd "$ruby_build_dir" || exit 1
         git pull

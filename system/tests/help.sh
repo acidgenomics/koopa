@@ -10,7 +10,7 @@ export KOOPA_PREFIX
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_message "Running manual file '--help' flag checks."
+_koopa_h1 "Running manual file '--help' flag checks."
 
 # Put all 'man/' dirs into an array and loop.
 man_dirs=()

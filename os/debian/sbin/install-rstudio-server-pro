@@ -30,7 +30,7 @@ then
     _koopa_stop "Unsupported OS version: '${os_codename}'."
 fi
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_h1 "Installing ${name} ${version}."
 
 # Remove existing config files.
 # > sudo rm -frv /etc/rstudio

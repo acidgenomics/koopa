@@ -26,7 +26,7 @@ case "$config" in
         ;;
 esac
 
-_koopa_message "Configuring '${config}' virtual machine."
+_koopa_h1 "Configuring '${config}' virtual machine."
 
 source=0
 
@@ -82,7 +82,7 @@ _koopa_set_sticky_group "$make_prefix"
 # Prepare '/n/' share on data disk.
 if [[ -d "$data_disk" ]]
 then
-    _koopa_message "Symlinking '/n' on '${data_disk}'."
+    _koopa_h1 "Symlinking '/n' on '${data_disk}'."
     # e.g. '/mnt/data01/n/app'.
     app_prefix_real="${data_disk}${app_prefix}"
     sudo mkdir -pv "$app_prefix_real"
@@ -97,7 +97,7 @@ then
     # --------------------------------------------------------------------------
     install-debian-base
     # Set up '/etc/profile.d'.
-    _koopa_message "Updating '/etc/profile.d'."
+    _koopa_h1 "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
@@ -122,20 +122,20 @@ then
     # OpenJDK moved to '/n/app'.
     sudo rm -frv "/opt/jdk"
     # Set up '/etc/profile.d'.
-    _koopa_message "Updating '/etc/profile.d'."
+    _koopa_h1 "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/azure/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
     # Set up '/etc/cron.d'.
-    _koopa_message "Updating '/etc/cron.d'."
+    _koopa_h1 "Updating '/etc/cron.d'."
     sudo cp -fv \
         "${koopa_prefix}/host/azure/etc/cron.d/constellation" \
         "/etc/cron.d/constellation"
     # Ensure that shared bioinfo user has correct dotfiles.
     if [[ -d "${koopa_prefix}/dotfiles" ]]
     then
-        _koopa_message "Updating bioinfo user dotfiles."
+        _koopa_h1 "Updating bioinfo user dotfiles."
         sudo -u bioinfo -H "$SHELL" -c "\
             rm -fv ~/.bash_logout; \
             rm -fv ~/.bash_profile; \
@@ -146,7 +146,7 @@ then
         "
     fi
     # Ensure data disk has consistency directory structure.
-    _koopa_message "Updating '${data_disk}' structure."
+    _koopa_h1 "Updating '${data_disk}' structure."
     sudo rm -frv "${data_disk}/"{R,bcbio,cellranger,cellranger-atac,conda,\
 docker,var}
     # Install RStudio Server Pro, if applicable.
@@ -220,7 +220,7 @@ fi
 
 if _koopa_is_azure
 then
-    _koopa_message "Installing Azure-specific apps."
+    _koopa_h1 "Installing Azure-specific apps."
     install-azure-cli
 fi
 

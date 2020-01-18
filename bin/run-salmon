@@ -118,7 +118,7 @@ then
     _koopa_stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
 fi
 
-_koopa_message "${#array[@]} samples detected."
+_koopa_h1 "${#array[@]} samples detected."
 
 
 
@@ -148,7 +148,7 @@ fi
 # Loop across the per-sample array and quantify with kallisto.
 for x in "${array[@]}"
 do
-    _koopa_message "salmon quant: ${x}"
+    _koopa_h1 "salmon quant: ${x}"
     sample_output_dir="${output_dir}/${x}"
     rm -frv "$sample_output_dir"
     mkdir -pv "$sample_output_dir"

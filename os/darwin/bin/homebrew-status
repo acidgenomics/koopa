@@ -7,31 +7,31 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed brew
 
-_koopa_message "dependency tree:"
+_koopa_h1 "dependency tree:"
 brew deps --installed --tree
 
 print
 
-_koopa_message "leaves:"
+_koopa_h1 "leaves:"
 brew leaves
 
 print
 
-_koopa_message "versions:"
+_koopa_h1 "versions:"
 brew list --versions
 
 print
 
-_koopa_message "missing:"
+_koopa_h1 "missing:"
 brew missing
 
 print
 
-_koopa_message "outdated:"
+_koopa_h1 "outdated:"
 brew outdated
 brew cask outdated
 
 print
 
-_koopa_message "info:"
+_koopa_h1 "info:"
 brew info

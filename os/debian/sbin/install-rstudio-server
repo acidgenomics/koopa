@@ -29,7 +29,7 @@ then
     _koopa_stop "Unsupported OS version: '${os_codename}'."
 fi
 
-_koopa_message "Installing ${name} ${version}."
+_koopa_h1 "Installing ${name} ${version}."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

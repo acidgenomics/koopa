@@ -11,7 +11,7 @@ _koopa_assert_has_no_envs
 # rustup-init may be installed by Homebrew on macOS.
 _koopa_assert_is_not_installed rustup-init
 
-_koopa_message "Installing Rust via rustup script (http://sh.rustup.rs)."
+_koopa_h1 "Installing Rust via rustup script (http://sh.rustup.rs)."
 
 CARGO_HOME="$(_koopa_rust_cargo_prefix)"
 export CARGO_HOME

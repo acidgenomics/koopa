@@ -13,7 +13,7 @@ _koopa_assert_is_not_installed perlbrew
 prefix="$(_koopa_perlbrew_prefix)"
 
 _koopa_prefix_mkdir "$prefix"
-_koopa_message "Installing Perlbrew at '${prefix}'."
+_koopa_h1 "Installing Perlbrew at '${prefix}'."
 
 rm -frv "${HOME}/.perlbrew"
 

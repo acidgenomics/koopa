@@ -15,7 +15,7 @@ output_file="${2:-"tx2gene.csv"}"
 _koopa_assert_is_matching_fixed "$fasta_file" "dmel-transcriptome-"
 _koopa_assert_is_not_file "$output_file"
 
-_koopa_message "Generating '$(basename "$output_file")' from \
+_koopa_h1 "Generating '$(basename "$output_file")' from \
 '$(basename "$fasta_file")'."
 
 gunzip -c "$fasta_file" \
@@ -28,4 +28,4 @@ gunzip -c "$fasta_file" \
 
 # Return the number of transcripts.
 count="$(_koopa_line_count "$output_file")"
-_koopa_message "${count} transcripts detected."
+_koopa_h1 "${count} transcripts detected."

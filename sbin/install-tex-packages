@@ -7,7 +7,7 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_no_args "$@"
 
-_koopa_message "Installing TeX packages recommended for RStudio."
+_koopa_h1 "Installing TeX packages recommended for RStudio."
 
 sudo tlmgr update --self
 

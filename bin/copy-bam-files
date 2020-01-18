@@ -16,7 +16,7 @@ target_dir="$2"
 _koopa_assert_is_dir "$target_dir"
 target_dir="$(realpath "$target_dir")"
 
-_koopa_message "\
+_koopa_h1 "\
 Source: '${source_dir}'
 Target: '${target_dir}'\
 "

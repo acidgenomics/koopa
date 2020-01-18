@@ -16,7 +16,7 @@ while read -r id
 do
     if [[ ! -f "${id}.fastq.gz" ]] && [[ ! -f "${id}_1.fastq.gz" ]]
     then
-        _koopa_message "SRA Accession ID: '${id}'."
+        _koopa_h1 "SRA Accession ID: '${id}'."
         fastq-dump --gzip --split-files "${id}"
     fi
 done < "$filelist"

@@ -98,7 +98,7 @@ _koopa_r_javareconf() {                                                   # {{{1
     local r_home
     java_home="$(_koopa_java_home)"
     [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    _koopa_message "Updating R Java configuration."
+    _koopa_h1 "Updating R Java configuration."
     java_flags=(
         "JAVA_HOME=${java_home}"
         "JAVA=${java_home}/bin/java"

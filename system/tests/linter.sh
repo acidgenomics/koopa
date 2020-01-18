@@ -14,7 +14,7 @@ export KOOPA_PREFIX
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_message "Running linter checks."
+_koopa_h1 "Running linter checks."
 
 linter_dir="${script_dir}/linter"
 for file in "${linter_dir}/"*".sh"

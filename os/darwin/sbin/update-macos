@@ -8,13 +8,13 @@ _koopa_assert_has_no_args "$@"
 
 if _koopa_is_installed mas
 then
-    _koopa_message "Updating App Store apps via 'mas'."
+    _koopa_h1 "Updating App Store apps via 'mas'."
     mas upgrade
 fi
 
 print
 
-_koopa_message "Updating macOS via 'softwareupdate'."
+_koopa_h1 "Updating macOS via 'softwareupdate'."
 _koopa_note "Restart may be required."
 
 sudo softwareupdate --install --recommended --restart

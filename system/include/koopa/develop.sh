@@ -6,7 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
 koopa_prefix="$(_koopa_prefix)"
-_koopa_message "Switching koopa to develop branch at '${koopa_prefix}'."
+_koopa_h1 "Switching koopa to develop branch at '${koopa_prefix}'."
 
 (
     cd "$koopa_prefix" || exit 1

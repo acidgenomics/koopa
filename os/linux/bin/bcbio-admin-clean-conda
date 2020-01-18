@@ -41,8 +41,8 @@ _koopa_assert_is_dir "$conda_dir"
 conda_exe="${conda_dir}/bin/conda"
 _koopa_assert_is_executable "$conda_exe"
 
-_koopa_message "Conda: '${conda_exe}'."
-_koopa_message "Removing extracted Conda packages."
+_koopa_h1 "Conda: '${conda_exe}'."
+_koopa_h1 "Removing extracted Conda packages."
 _koopa_note "Package tarballs will be preserved."
 
 "$conda_exe" clean --yes --packages

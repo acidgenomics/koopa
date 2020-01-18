@@ -15,7 +15,7 @@ fi
 
 version="$(_koopa_version ruby)"
 
-_koopa_message "Updating Ruby to ${version}."
+_koopa_h1 "Updating Ruby to ${version}."
 rbenv install "$version"
 rbenv global "$version"
 rbenv versions

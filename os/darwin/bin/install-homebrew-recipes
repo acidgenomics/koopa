@@ -13,7 +13,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 # Taps                                                                      {{{1
 # ==============================================================================
 
-_koopa_message "Updating taps."
+_koopa_h1 "Updating taps."
 brew tap mongodb/brew
 brew tap osgeo/osgeo4mac
 
@@ -22,7 +22,7 @@ brew tap osgeo/osgeo4mac
 
 # Install XQuartz 2.7.9 manually instead of using cask.
 
-_koopa_message "Installing casks."
+_koopa_h1 "Installing casks."
 installed_casks="$(brew cask list)"
 casks=(
     # Priority
@@ -92,7 +92,7 @@ do
     brew cask install "$cask"
 done
 
-_koopa_message "Installing casks with Gatekeeper issues."
+_koopa_h1 "Installing casks with Gatekeeper issues."
 casks=(
     alacritty
     calibre
@@ -127,7 +127,7 @@ done
 #
 # And be sure not to install 'rust' alongside 'rustup-init'.
 
-_koopa_message "Installing brews."
+_koopa_h1 "Installing brews."
 installed_brews="$(brew list)"
 brews=(
     # Priority

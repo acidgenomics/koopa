@@ -54,9 +54,9 @@ fi
 
 _koopa_assert_is_not_dir "$prefix"
 
-_koopa_message "Installing bcbio into '${prefix}'."
+_koopa_h1 "Installing bcbio into '${prefix}'."
 
-_koopa_message "Saving install log at '${log_file}'."
+_koopa_h1 "Saving install log at '${log_file}'."
 mkdir -pv "$log_dir"
 
 _koopa_prefix_mkdir "$prefix"
@@ -81,7 +81,7 @@ tools_dir="${prefix}/tools"
         2>&1 | tee "$log_file"
 )
 
-# > _koopa_message "Fixing MACS2/numpy issue."
+# > _koopa_h1 "Fixing MACS2/numpy issue."
 # > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
 # > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 

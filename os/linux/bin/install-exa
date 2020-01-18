@@ -9,6 +9,6 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed "cargo"
 _koopa_assert_is_not_installed "exa"
 
-_koopa_message "Installing exa via Rust cargo."
+_koopa_h1 "Installing exa via Rust cargo."
 
 cargo install exa
