@@ -61,5 +61,4 @@ do
     Rscript -e "lintr::lint(file = \"${file}\")"
 done
 
-printf "  OK | %s\n" "$name"
-exit 0
+_koopa_status_ok "$name"
