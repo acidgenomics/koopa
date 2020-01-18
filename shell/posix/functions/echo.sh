@@ -272,9 +272,12 @@ _koopa_status_fail() {                                                    # {{{1
     # Status FAIL.
     # Updated 2020-01-17.
     # """
-    local str
-    str="  [FAIL] ${1:?}"
-    _koopa_echo_red "$str"
+    local c1 nc pre str
+    pre="        FAIL"
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "red-bold")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    >&2 echo -e "${c1}${pre}${nc} | ${str}"
 }
 
 _koopa_status_note() {                                                    # {{{1
@@ -282,9 +285,12 @@ _koopa_status_note() {                                                    # {{{1
     # Status NOTE.
     # Updated 2020-01-17.
     # """
-    local str
-    str="  [NOTE] ${1:?}"
-    _koopa_echo_yellow "$str"
+    local c1 nc pre str
+    pre="        NOTE"
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "magenta")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    >&2 echo -e "${c1}${pre}${nc} | ${str}"
 }
 
 _koopa_status_ok() {                                                      # {{{1
@@ -292,7 +298,10 @@ _koopa_status_ok() {                                                      # {{{1
     # Status OK.
     # Updated 2020-01-17.
     # """
-    local str
-    str="    [OK] ${1:?}"
-    _koopa_echo_green "$str"
+    local c1 nc pre str
+    pre="          OK"
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "green")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    echo -e "${c1}${pre}${nc} | ${str}"
 }

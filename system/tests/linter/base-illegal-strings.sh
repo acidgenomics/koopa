@@ -57,10 +57,10 @@ failures="$( \
 name="$(_koopa_basename_sans_ext "$0")"
 if [[ -n "$failures" ]]
 then
-    printf "FAIL | %s\n" "$name"
+    _koopa_status_fail "$name"
     echo "$failures"
     exit 1
 else
-    printf "  OK | %s\n" "$name"
+    _koopa_status_ok "$name"
     exit 0
 fi
