@@ -226,7 +226,7 @@ _koopa_note() {                                                           # {{{1
     # Updated 2020-01-17.
     # """
     local c1 c2 nc pre str
-    pre="   ---  "
+    pre="   ***  "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default")"
