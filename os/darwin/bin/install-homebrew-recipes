@@ -116,12 +116,16 @@ done
 
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
 # In particular, if we want to install umap-learn, this is now required.
-# Note that numba > llvmlite currently only works with LLVM 7.
 
 # Use osgeo-gdal instead of regular gdal.
 # This gets updated more regularly.
 
-# Don't install 'rust' alongside 'rustup-init'.
+# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
+#
+# I hit some permissions issues with the 'rustup' cellar symlink installed at
+# '/usr/local/bin/rustup' that doesn't occur when running the official script.
+#
+# And be sure not to install 'rust' alongside 'rustup-init'.
 
 _koopa_message "Installing brews."
 installed_brews="$(brew list)"
@@ -179,7 +183,6 @@ brews=(
     libxml2
     libxslt
     llvm
-    llvm@7
     mariadb-connector-c
     mas
     mongodb-community
@@ -202,7 +205,6 @@ brews=(
     rbenv
     rsync
     ruby-build
-    rustup-init
     screen
     shellcheck
     shellharden
