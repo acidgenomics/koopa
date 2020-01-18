@@ -48,7 +48,7 @@ then
 fi
 
 # Ensure accidental swap files created by vim get nuked.
-find . -type f -name "*.swp" -delete
+find "$koopa_prefix" -type f -name "*.swp" -delete
 
 # Ensure invisible files get nuked on macOS.
 if _koopa_is_macos
