@@ -90,13 +90,13 @@ _koopa_quiet_rm() {                                                       # {{{1
 _koopa_update_git_repo() {                                                # {{{1
     # """
     # Update a git repository.
-    # Updated 2019-11-26.
+    # Updated 2020-01-17.
     # """
     local repo
     repo="${1:?}"
     [ -d "${repo}" ] || return 0
     [ -x "${repo}/.git" ] || return 0
-    _koopa_message "Updating '${repo}'."
+    _koopa_h2 "Updating '${repo}'."
     (
         cd "$repo" || exit 1
         # Run updater script, if defined.

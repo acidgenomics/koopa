@@ -14,5 +14,5 @@ then
     exit 0
 fi
 
-_koopa_message "Updating R package library."
+_koopa_h1 "Updating R package library."
 Rscript -e 'bb8::updatePackages()'

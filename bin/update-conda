@@ -14,7 +14,7 @@ then
     exit 0
 fi
 
-_koopa_message "Updating Conda."
+_koopa_h1 "Updating Conda."
 conda update --yes --name=base --channel=defaults conda
 conda update --yes --name=base --channel=defaults --all
 # > conda clean --yes --all

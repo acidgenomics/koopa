@@ -16,7 +16,7 @@ update-conda
 
 while IFS= read -r -d '' prefix
 do
-    _koopa_message "Updating '${prefix}'."
+    _koopa_h1 "Updating '${prefix}'."
     "$conda_exe" update -y --prefix="$prefix" --all
 done < <( \
     find "${prefix}/envs" \

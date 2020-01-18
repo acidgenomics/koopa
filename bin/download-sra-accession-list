@@ -12,7 +12,7 @@ _koopa_assert_is_installed esearch efetch
 id="$1"
 file="${2:-"SraAccList.txt"}"
 
-_koopa_message "Downloading SRA '${id}' to '${file}'."
+_koopa_h1 "Downloading SRA '${id}' to '${file}'."
 
 esearch -db sra -q "$id" \
     | efetch -format runinfo \

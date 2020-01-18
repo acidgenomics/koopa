@@ -14,22 +14,22 @@ local="${HOME}/.${file}"
 
 if [[ -f "$cloud" ]] && [[ -f "$local" ]]
 then
-    _koopa_message "'${file}' exists in both places."
-    _koopa_message "Deleting local copy."
+    _koopa_h1 "'${file}' exists in both places."
+    _koopa_h1 "Deleting local copy."
     rm -v "$local"
-    _koopa_message "Adding symlink."
+    _koopa_h1 "Adding symlink."
     ln -fnsv "$cloud" "$local"
 elif [[ -f "$cloud" ]]
 then
-    _koopa_message "'${file}' is only saved on iCloud."
-    _koopa_message "Adding local symlink."
+    _koopa_h1 "'${file}' is only saved on iCloud."
+    _koopa_h1 "Adding local symlink."
     ln -fsnv "$cloud" "$local"
 elif [[ -f "$local" ]]
 then
-    _koopa_message "'${file}' only exists locally."
-    _koopa_message "Moving to iCloud."
+    _koopa_h1 "'${file}' only exists locally."
+    _koopa_h1 "Moving to iCloud."
     mv -v "$local" "$cloud"
-    _koopa_message "Adding symlink."
+    _koopa_h1 "Adding symlink."
     ln -fsnv "$cloud" "$local"
 else
     _koopa_stop "'${file}' doesn't exist."

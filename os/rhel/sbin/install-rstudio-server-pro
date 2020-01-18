@@ -25,7 +25,7 @@ else
     _koopa_stop "RHEL 7 or 8 is required."
 fi
 
-_koopa_message "Installing ${name} ${version} (${os_id})."
+_koopa_h1 "Installing ${name} ${version} (${os_id})."
 
 # Remove existing config files.
 # > sudo rm -frv /etc/rstudio
