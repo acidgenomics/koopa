@@ -58,4 +58,4 @@ mapfile -t files <<< "$files"
 # Note that setting '--jobs=0' flag here enables multicore.
 pylint --jobs=0 --score=n "${files[@]}"
 
-printf "  OK | %s\n" "$name"
+_koopa_status_ok "$name"

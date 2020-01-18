@@ -42,5 +42,4 @@ mapfile -t shebang_files < <( \
 
 shellcheck -x "${shebang_files[@]}"
 
-printf "  OK | %s\n" "$name"
-exit 0
+_koopa_status_ok "$name"
