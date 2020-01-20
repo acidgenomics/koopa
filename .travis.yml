@@ -1,5 +1,5 @@
-# https://docs.travis-ci.com/user/languages/minimal-and-generic/
-language: minimal
+os: linux
+language: shell
 
 branches:
   only:
