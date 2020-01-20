@@ -1,4 +1,3 @@
-os: linux
 language: shell
 
 branches:
@@ -9,6 +8,7 @@ jobs:
   include:
     - stage: test
       name: "linux"
+      os: linux
       addons:
         apt:
           packages:
