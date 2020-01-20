@@ -1,5 +1,4 @@
-# https://docs.travis-ci.com/user/languages/minimal-and-generic/
-language: minimal
+language: shell
 
 branches:
   only:
@@ -9,6 +8,7 @@ jobs:
   include:
     - stage: test
       name: "linux"
+      os: linux
       addons:
         apt:
           packages:
