@@ -1,9 +1,8 @@
-## Shared R environment configuration.
-## Updated 2019-12-11 by Michael Steinbaugh.
-
-## See `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
-
+## Shared R environment configuration for Linux.
+## Updated 2020-01-18 by Michael Steinbaugh.
+##
 ## See also:
+## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 ## - https://support.rstudio.com/hc/en-us/articles/215733837
 ## - https://cran.r-project.org/doc/manuals/r-release/
 ##       R-admin.html#Managing-libraries
@@ -116,6 +115,12 @@ R_REMOTES_UPGRADE="always"
 ## Here's how to force Python available for reticulate.
 ## Instead, call `use_virtualenv()` or `use_condaenv()`.
 ## > RETICULATE_PYTHON="~/miniconda3/envs/reticulate/bin/python"
+
+## Default path to virtual environments.
+## If left unset, defaults to `~/.virtualenvs`.
+## Check with `virtualenv_list()`.
+## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
+WORKON_HOME="/n/app/python/virtualenvs"
 
 
 
