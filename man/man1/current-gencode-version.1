@@ -1,19 +1,19 @@
-.TH GENCODE-VERSION 1 2019-12-02 Bash
+.TH CURRENT-GENCODE-VERSION 1 2020-01-20 Bash
 .SH NAME
-gencode-version \-
+current-gencode-version \-
 GENCODE release version
 .SH SYNOPSIS
-.B gencode-version
+.B current-gencode-version
 .I organism
 .SH OPTIONS
 .TP
 .B organism
 Organism name. Use full Latin, case sensitive. 'Homo sapiens' or 'Mus musculus' are supported.
 .SH DESCRIPTION
-Extract the GENCODE release version from the website. Note that the FTP server can list releases that are in development ahead of the public release listed on the website, so scrape the HTML instead.
+Extract the current GENCODE release version from the website. Note that the FTP server can list releases that are in development ahead of the public release listed on the website, so scrape the HTML instead.
 .SH EXAMPLE
 .nf
-.B gencode-version 'Homo sapiens'
+.B current-gencode-version "Homo sapiens"
 .fi
 .SH SEE ALSO
 https://www.gencodegenes.org/
