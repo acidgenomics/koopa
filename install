@@ -20,6 +20,10 @@ optional arguments:
     --mike
         Install Mike-specific configuration.
         This flag automatically enables '--dotfiles'.
+    --non-interactive
+        Don't prompt about configuration variables.
+        Note that when '--shared' or '--test' are declared, this is set
+        automatically internally.
     --test
         Enable verbose test mode.
         Useful for Travis CI and building Docker images.
