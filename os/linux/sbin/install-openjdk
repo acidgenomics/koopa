@@ -17,17 +17,22 @@ _koopa_h1 "Installing OpenJDK ${version} at '${prefix}'."
 # Download and extract the JDK, if necessary.
 if [[ ! -d "$prefix" ]]
 then
-    _koopa_prefix_mkdir "$jdk_dir"
+    _koopa_mkdir "$jdk_dir"
     (
         cd "${jdk_dir}" || exit 1
         file="openjdk-${version}_linux-x64_bin.tar.gz"
         case "$version" in
-            13.0.1)
-                unique="cec27d702aa74d5a8630c65ae61e4305/9"
-                ;;
             13)
                 unique="5b8a42f3905b406298b72d750b6919f6/33"
                 ;;
+            13.0.1)
+                unique="cec27d702aa74d5a8630c65ae61e4305/9"
+                ;;
+            13.0.2)
+                unique="d4173c853231432d94f001e99d882ca7/8"
+                ;;
+            *)
+                _koopa_stop "Unsupported version: '${version}'."
         esac
         url="https://download.java.net/java/GA/jdk${version}/${unique}/GPL/${file}"
         _koopa_download "$url"
