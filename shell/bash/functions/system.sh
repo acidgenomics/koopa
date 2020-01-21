@@ -92,7 +92,16 @@ _koopa_r_javareconf() {                                                   # {{{1
     #   JAVAH          path to a Java header/stub generator
     #   JAR            path to a Java archive tool
     # """
-    _koopa_assert_is_installed R java
+    if ! _koopa_is_installed R
+    then
+        _koopa_warning "R is not installed."
+        return 1
+    fi
+    if ! _koopa_is_installed java
+    then
+        _koopa_warning "java is not installed."
+        return 1
+    fi
     local java_home
     local java_flags
     local r_home
