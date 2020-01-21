@@ -42,9 +42,9 @@ done
 
 if [[ "$system" -eq 1 ]]
 then
-    _koopa_note "config prefix: ${config_prefix}"
-    _koopa_note "make prefix: ${make_prefix}"
-    _koopa_note "app prefix: ${app_prefix}"
+    _koopa_info "config prefix: ${config_prefix}"
+    _koopa_info "make prefix: ${make_prefix}"
+    _koopa_info "app prefix: ${app_prefix}"
 fi
 
 # Ensure accidental swap files created by vim get nuked.
