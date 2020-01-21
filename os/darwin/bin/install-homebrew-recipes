@@ -20,15 +20,32 @@ brew tap osgeo/osgeo4mac
 # Casks                                                                     {{{1
 # ==============================================================================
 
-# Install XQuartz 2.7.9 manually instead of using cask.
+# Install XQuartz 2.7.9 manually instead of using xquartz cask.
+
+_koopa_h1 "Installing casks with Gatekeeper issues."
+casks=(
+    alacritty
+    calibre
+    docker
+    java
+    julia
+    omnidisksweeper
+    osxfuse
+    rstudio
+)
+for cask in "${casks[@]}"
+do
+    if echo "$installed_casks" | grep -Eq "^${cask}$"
+    then
+        _koopa_note "'${cask}' is already installed."
+        continue
+    fi
+    brew cask install "$cask" --no-quarantine
+done
 
 _koopa_h1 "Installing casks."
 installed_casks="$(brew cask list)"
 casks=(
-    # Priority
-    java
-    osxfuse
-    # > xquartz
     # Alphabetical
     1password
     adoptopenjdk  # igv
@@ -90,25 +107,6 @@ do
         continue
     fi
     brew cask install "$cask"
-done
-
-_koopa_h1 "Installing casks with Gatekeeper issues."
-casks=(
-    alacritty
-    calibre
-    docker
-    julia
-    omnidisksweeper
-    rstudio
-)
-for cask in "${casks[@]}"
-do
-    if echo "$installed_casks" | grep -Eq "^${cask}$"
-    then
-        _koopa_note "'${cask}' is already installed."
-        continue
-    fi
-    brew cask install "$cask" --no-quarantine
 done
 
 # Brews                                                                     {{{1
