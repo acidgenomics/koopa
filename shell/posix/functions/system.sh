@@ -238,7 +238,7 @@ _koopa_header() {                                                         # {{{1
 _koopa_help() {                                                           # {{{1
     # """
     # Show usage via '--help' flag.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -277,9 +277,9 @@ _koopa_help() {                                                           # {{{1
     # - http://zsh.sourceforge.net/Doc/Release/Parameters.html
     # - https://stackoverflow.com/questions/35677745
     # """
-    _koopa_assert_is_installed man
     case "${1:-}" in
         --help|-h)
+            _koopa_assert_is_installed man
             local file name shell
             shell="$(_koopa_shell)"
             case "$shell" in
@@ -377,7 +377,7 @@ _koopa_install_mike() {                                                   # {{{1
     # Install additional Mike-specific config files.
     # Updated 2020-01-14.
     # """
-    # > _koopa_h1 "Setting koopa remote to Git (SSH) instead of HTTPS."
+    # > _koopa_h2 "Setting koopa remote to Git (SSH) instead of HTTPS."
     # > (
     # >     cd "${KOOPA_PREFIX:?}" || exit 1
     # >     git remote set-url origin "git@github.com:acidgenomics/koopa.git"
@@ -407,7 +407,7 @@ _koopa_install_pip() {                                                    # {{{1
     # """
     local python
     python="${1:-python3}"
-    _koopa_h1 "Installing pip for Python '${python}'."
+    _koopa_h2 "Installing pip for Python '${python}'."
     local file
     file="get-pip.py"
     _koopa_download "https://bootstrap.pypa.io/${file}"
@@ -429,12 +429,12 @@ _koopa_install_pipx() {
     # """
     local python
     python="${1:-python3}"
-    _koopa_h1 "Installing pipx for Python '${python}'."
+    _koopa_h2 "Installing pipx for Python '${python}'."
     "$python" -m pip install --no-warn-script-location pipx
     local prefix
     prefix="$(_koopa_app_prefix)/python/pipx"
     _koopa_prefix_mkdir "$prefix"
-    _koopa_h1 "pipx installed successfully."
+    _koopa_h2 "pipx installed successfully."
     _koopa_note "Restart the shell to activate pipx."
     return 0
 }
@@ -479,7 +479,7 @@ _koopa_link_cellar() {                                                    # {{{1
         )"
     fi
     _koopa_assert_is_dir "$cellar_prefix"
-    _koopa_h1 "Linking '${cellar_prefix}' in '${make_prefix}'."
+    _koopa_h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
     if _koopa_is_shared_install
     then
@@ -612,7 +612,7 @@ _koopa_relink() {                                                         # {{{1
             _koopa_warning "Source file missing: '${source_file}'."
             return 1
         fi
-        # > _koopa_h1 "Updating XDG config in '${config_dir}'."
+        # > _koopa_h2 "Updating XDG config in '${config_dir}'."
         rm -f "$dest_file"
         ln -fns "$source_file" "$dest_file"
     fi

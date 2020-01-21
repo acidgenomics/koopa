@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+set -Eeux -o pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
@@ -43,8 +43,13 @@ do
     esac
 done
 
+# Remove default root configuration files.
+sudo rm -fv "/root/."\
+{bash_logout,bash_profile,bashrc,cshrc,profile,tcshrc,zshrc}
+
 # Remove default user shell configuration files.
-sudo rm -fv "/etc/skel/."{bash_logout,bashrc,emacs,profile,zshrc}
+sudo rm -fv "/etc/skel/."\
+{bash_logout,bash_profile,bashrc,cshrc,emacs,profile,tcshrc,zshrc}
 
 # Remove local user install cruft.
 rm -frv \
@@ -224,14 +229,17 @@ then
     install-azure-cli
 fi
 
-if _koopa_is_installed install-rstudio-server
+if _koopa_is_installed R
 then
-    install-rstudio-server
-fi
+    if _koopa_is_installed install-rstudio-server
+    then
+        install-rstudio-server
+    fi
 
-if _koopa_is_installed install-shiny-server
-then
-    install-shiny-server
+    if _koopa_is_installed install-shiny-server
+    then
+        install-shiny-server
+    fi
 fi
 
 _koopa_update_lmod_config

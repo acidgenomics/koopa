@@ -222,8 +222,8 @@ _koopa_h2() {                                                        # {{{1
 
 _koopa_info() {                                                           # {{{1
     # """
-    # General note (info).
-    # Updated 2020-01-18.
+    # General info.
+    # Updated 2020-01-21.
     # """
     local c1 c2 nc pre str
     pre="   ---  "
@@ -236,7 +236,7 @@ _koopa_info() {                                                           # {{{1
 
 _koopa_note() {                                                           # {{{1
     # """
-    # General note (info).
+    # General note.
     # Updated 2020-01-17.
     # """
     local c1 c2 nc pre str
