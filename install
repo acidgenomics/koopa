@@ -220,22 +220,27 @@ then
     dotfiles=0
 fi
 
-if [[ "$prompt" -eq 1 ]] && [[ -z "${dotfiles:-}" ]]
+if [[ -z "${dotfiles:-}" ]]
 then
-    read -r -n 1 -p "Install dotfiles (y/n)? " choice
-    case "$choice" in
-        y|Y)
-            dotfiles=1
-            ;;
-        n|N)
-            dotfiles=0
-            ;;
-        *)
-            >&2 echo "Error: Invalid input."
-            exit 1
-            ;;
-    esac
-    echo
+    if [[ "$prompt" -eq 1 ]]
+    then
+        read -r -n 1 -p "Install dotfiles (y/n)? " choice
+        case "$choice" in
+            y|Y)
+                dotfiles=1
+                ;;
+            n|N)
+                dotfiles=0
+                ;;
+            *)
+                >&2 echo "Error: Invalid input."
+                exit 1
+                ;;
+        esac
+        echo
+    else
+        dotfiles=0
+    fi
 fi
 
 if [[ "$mike" -eq 1 ]]
