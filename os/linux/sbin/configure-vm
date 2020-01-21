@@ -229,14 +229,17 @@ then
     install-azure-cli
 fi
 
-if _koopa_is_installed install-rstudio-server
+if _koopa_is_installed R
 then
-    install-rstudio-server
-fi
+    if _koopa_is_installed install-rstudio-server
+    then
+        install-rstudio-server
+    fi
 
-if _koopa_is_installed install-shiny-server
-then
-    install-shiny-server
+    if _koopa_is_installed install-shiny-server
+    then
+        install-shiny-server
+    fi
 fi
 
 _koopa_update_lmod_config
