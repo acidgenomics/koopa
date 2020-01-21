@@ -60,22 +60,26 @@ _koopa_is_linux() {
     [[ "$(uname -s)" == "Linux" ]]
 }
 
+piped=0
+
+# Detect if we're running from a piped install (e.g. koopa.acidgenomics.com).
+if [[ -z "${BASH_SOURCE[0]}" ]]
+then
+    piped=1
+else
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+        >/dev/null 2>&1 && pwd -P)"
+    if [[ ! -x "${script_dir}/activate" ]]
+    then
+        piped=1
+    fi
+fi
+
 dotfiles=
 mike=0
 prompt=1
 shared=0
 test=0
-
-# Detect if we're running from a piped install (e.g. koopa.acidgenomics.com).
-if [[ -z "${BASH_SOURCE[0]}" ]]
-then
-    echo "DEBUG 1: PIPED INSTALL"
-    piped=1
-    # This is used by activation scripts (see 'extra.sh').
-    export KOOPA_PIPED_INSTALL=1
-else
-    piped=0
-fi
 
 while (("$#"))
 do
@@ -127,10 +131,10 @@ fi
 
 if [[ "$piped" -eq 1 ]]
 then
-    echo "DEBUG 2: STILL PIPED"
+    # This is used by activation scripts (see 'extra.sh').
+    export KOOPA_PIPED_INSTALL=1
     if [[ "$prompt" -eq 1 ]] && _koopa_has_sudo
     then
-        echo "DEBUG 3: SHOULD BE PROMPTING"
         read -r -n 1 -p "Install for all users (y/n)? " choice
         case "$choice" in
             y|Y)
@@ -140,7 +144,6 @@ then
                 shared=0
                 ;;
             *)
-                echo "UHHHHH"
                 >&2 echo "Error: Invalid input."
                 exit 1
                 ;;
