@@ -86,9 +86,9 @@ tools_dir="${prefix}/tools"
 # > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
 # Clean up conda packages.
-bcbio_conda="${install_dir}/anaconda/bin/conda"
-# > bcbio_conda="${tools_dir}/bin/bcbio_conda"
-"$bcbio_conda" clean --all --verbose --yes
+conda_exe="${install_dir}/anaconda/bin/conda"
+# > conda_exe="${tools_dir}/bin/bcbio_conda"
+"$conda_exe" clean --all --verbose --yes
 
 # Keep install owned by current user, so we can install genomes easily.
 # > _koopa_chgrp "$prefix"
