@@ -4,7 +4,7 @@
 _koopa_activate_conda_env() {                                             # {{{1
     # """
     # Activate a conda environment.
-    # Updated 2020-01-12.
+    # Updated 2020-01-21.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -28,7 +28,7 @@ _koopa_activate_conda_env() {                                             # {{{1
     name="${1:?}"
     local prefix
     prefix="$(_koopa_conda_prefix)"
-    _koopa_h1 "Activating '${name}' conda environment at '${prefix}'."
+    _koopa_h2 "Activating '${name}' conda environment at '${prefix}'."
     # Note that this function should only be called inside executable scripts,
     # so safe to adjust unbound variable settings here.
     set +u
