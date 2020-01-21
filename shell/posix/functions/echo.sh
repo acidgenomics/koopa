@@ -220,9 +220,23 @@ _koopa_h2() {                                                        # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
+_koopa_info() {                                                           # {{{1
+    # """
+    # General info.
+    # Updated 2020-01-21.
+    # """
+    local c1 c2 nc pre str
+    pre="   ---  "
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "default")"
+    c2="$(_koopa_ansi_escape_code "default")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    echo -e "${c1}${pre}${c2}${str}${nc}"
+}
+
 _koopa_note() {                                                           # {{{1
     # """
-    # General note (info).
+    # General note.
     # Updated 2020-01-17.
     # """
     local c1 c2 nc pre str
