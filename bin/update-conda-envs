@@ -10,7 +10,8 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed conda
 
 prefix="$(_koopa_conda_prefix)"
-conda_exe="${prefix}/bin/conda"
+conda_exe="${prefix}/condabin/conda"
+# > conda_exe="${prefix}/bin/conda"
 
 update-conda
 
