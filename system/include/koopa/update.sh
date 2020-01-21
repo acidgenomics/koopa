@@ -42,9 +42,11 @@ done
 
 if [[ "$system" -eq 1 ]]
 then
+    echo
     _koopa_info "config prefix: ${config_prefix}"
     _koopa_info "make prefix: ${make_prefix}"
     _koopa_info "app prefix: ${app_prefix}"
+    echo
 fi
 
 # Ensure accidental swap files created by vim get nuked.
