@@ -16,15 +16,6 @@ make_prefix="$(_koopa_make_prefix)"
 # /usr/local/cellar
 cellar_prefix="$(_koopa_cellar_prefix)"
 
-_koopa_h1 "Updating koopa at '${koopa_prefix}'."
-
-if _koopa_is_shared_install
-then
-    _koopa_note "Shared installation detected."
-    _koopa_note "sudo privileges are required."
-    _koopa_assert_has_sudo
-fi
-
 system=0
 
 while (("$#"))
@@ -40,13 +31,20 @@ do
     esac
 done
 
-if [[ "$system" -eq 1 ]]
+_koopa_h1 "Updating koopa at '${koopa_prefix}'."
+
+if _koopa_is_shared_install
 then
-    echo
-    _koopa_info "config prefix: ${config_prefix}"
-    _koopa_info "make prefix: ${make_prefix}"
-    _koopa_info "app prefix: ${app_prefix}"
-    echo
+    if [[ "$system" -eq 1 ]]
+    then
+        _koopa_info "config prefix: ${config_prefix}"
+        _koopa_info "make prefix: ${make_prefix}"
+        _koopa_info "app prefix: ${app_prefix}"
+        echo
+    fi
+    _koopa_note "Shared installation detected."
+    _koopa_note "sudo privileges are required."
+    _koopa_assert_has_sudo
 fi
 
 # Ensure accidental swap files created by vim get nuked.
