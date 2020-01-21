@@ -15,7 +15,7 @@ conda_exe="${conda_prefix}/condabin/conda"
 
 _koopa_h1 "Updating environments at '${conda_prefix}'."
 
-_koopa-h2 "Updating conda installation."
+_koopa_h2 "Updating conda installation."
 update-conda > /dev/null
 
 while IFS= read -r -d '' env_prefix
