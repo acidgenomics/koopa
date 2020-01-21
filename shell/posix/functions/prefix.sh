@@ -219,9 +219,13 @@ _koopa_pyenv_prefix() {                                                   # {{{1
 _koopa_r_home() {                                                         # {{{1
     # """
     # Get 'R_HOME', rather than exporting as global variable.
-    # Updated 2020-01-12.
+    # Updated 2020-01-21.
     # """
-    _koopa_assert_is_installed R Rscript
+    if ! _koopa_is_installed R
+    then
+        _koopa_warning "R is not installed."
+        return 1
+    fi
     local home
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
     echo "$home"
