@@ -98,6 +98,7 @@ then
         configure-vm
     else
         update-conda
+        # > update-conda-envs
         update-venv
         update-rust
     fi
