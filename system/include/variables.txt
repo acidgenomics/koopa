@@ -96,7 +96,7 @@ go="1.13.4"
 gsl="2.6"
 
 # https://www.hdfgroup.org/downloads/hdf5
-hdf5="1.10.5"
+hdf5="1.10.6"
 
 # https://brew.sh/
 homebrew="2.1.16"
