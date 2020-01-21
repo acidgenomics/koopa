@@ -162,8 +162,13 @@ then
 
     if [[ "$prompt" -eq 1 ]]
     then
-        read -e -r -p "Install prefix: " -i "${prefix}" prefix
+        # https://github.com/koalaman/shellcheck/wiki/SC2162
+        # -e -r
+        # shellcheck disable=SC2162
+        read -p "Install prefix: " -i "${prefix}" prefix
     fi
+
+    echo "$prefix"
 
 I   # Error if target destination directory already exists.
     if [[ -d "$prefix" ]]
