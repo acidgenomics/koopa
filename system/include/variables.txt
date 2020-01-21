@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-01-17"
+koopa_date="2020-01-21"
 
 
 
@@ -38,7 +38,7 @@ bioconductor="3.10"
 
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.11.9"
+broot="0.12.0"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
@@ -96,7 +96,7 @@ go="1.13.4"
 gsl="2.6"
 
 # https://www.hdfgroup.org/downloads/hdf5
-hdf5="1.10.5"
+hdf5="1.10.6"
 
 # https://brew.sh/
 homebrew="2.1.16"
@@ -158,10 +158,10 @@ perl-file-rename="1.10"
 picard="2.21.1"
 
 # https://pypi.org/project/pip/
-pip="19.3.1"
+pip="20.0.1"
 
 # https://pypi.org/project/pipx/
-pipx="0.15.1.2"
+pipx="0.15.1.3"
 
 # https://proj.org/
 proj="6.3.0"
@@ -178,6 +178,9 @@ r="3.6.2"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
+
+# https://github.com/BurntSushi/ripgrep/releases
+ripgrep="11.0.2"
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"

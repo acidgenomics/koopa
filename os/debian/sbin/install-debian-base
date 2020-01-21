@@ -5,28 +5,32 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
 # Install R using 'install-r' script instead, which sets up apt to support
 # newer official release from CRAN.
-
+#
 # Clean up previous:
 # - openjdk-12-jdk
 # - openjdk-12-jre
 # - python
-
+#
 # Bioconductor AMI is missing these dependencies:
 # > apt-cache search 'libgnutls.*-dev'
 # > apt-cache search gnutls
 # > apt-cache search libgif
-
+#
 # 'libcurl4-gnutls-dev' gets installed by 'git' above.
 #
 # Conflicts:
 # libcurl4-gnutls-dev
 # libcurl4-openssl-dev
-
+#
 # Note that 'golang-go' is not officially supported.
+# """
 
 _koopa_assert_has_no_args "$@"
+
+export DEBIAN_FRONTEND="noninteractive"
 
 # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default, which
 # is non-standard and can cause cellar link script to break.
@@ -50,11 +54,11 @@ then
     sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
 fi
 
-sudo apt update
-sudo apt -y dist-upgrade
+sudo apt-get update
+sudo apt-get -y dist-upgrade
 
 # Including 'bash' here will remove 'r-base'.
-sudo apt -y build-dep \
+sudo apt-get -y build-dep \
     coreutils \
     emacs-defaults \
     fish \
@@ -66,7 +70,7 @@ sudo apt -y build-dep \
     vim \
     zsh
 
-sudo apt -y install \
+sudo apt-get -y install \
     alien \
     autoconf \
     automake \
@@ -142,4 +146,4 @@ then
     rm llvm.sh
 fi
 
-sudo apt -y autoremove
+sudo apt-get -y autoremove

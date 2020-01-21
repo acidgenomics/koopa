@@ -23,7 +23,7 @@ _koopa_chgrp() {                                                          # {{{1
 _koopa_chmod() {                                                          # {{{1
     # """
     # Set file modification permissions on the target prefix.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     #
     # This sets group write access by default for shared install, which is
     # useful so we don't have to constantly switch to root for admin.
@@ -33,9 +33,9 @@ _koopa_chmod() {                                                          # {{{1
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo chmod -R g+w "$prefix"
+        sudo chmod -R u+rw,g+rw "$prefix"
     else
-        chmod -R g-w "$prefix"
+        chmod -R u+rw,g+r,g-w "$prefix"
     fi
     return 0
 }
@@ -159,7 +159,7 @@ _koopa_prefix_mkdir() {                                                   # {{{1
 _koopa_add_user_to_etc_passwd() {                                         # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # Updated 2020-01-15.
+    # Updated 2020-01-21.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
@@ -172,7 +172,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
     user="${USER:?}"
     local user_string
     user_string="$(getent passwd "$user")"
-    _koopa_h1 "Updating '${passwd_file}' to include '${user}'."
+    _koopa_h2 "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "echo '${user_string}' >> ${passwd_file}"
@@ -185,7 +185,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
 _koopa_enable_passwordless_sudo() {                                       # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     # """
     _koopa_assert_is_linux
     _koopa_assert_has_sudo
@@ -193,7 +193,7 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     group="$(_koopa_group)"
     local sudo_file
     sudo_file="/etc/sudoers.d/sudo"
-    _koopa_h1 "Updating '${sudo_file}' to include '${group}'."
+    _koopa_h2 "Updating '${sudo_file}' to include '${group}'."
     sudo touch "$sudo_file"
     sudo chmod -v 0440 "$sudo_file"
     if sudo grep -q "$group" "$sudo_file"
@@ -209,13 +209,13 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
 _koopa_link_docker() {                                                    # {{{1
     # """
     # Link Docker library onto data disk for VM.
-    # Updated 2020-01-14.
+    # Updated 2020-01-21.
     # """
     _koopa_is_installed docker || return 0
     [ -d "/n" ] || return 0
     _koopa_assert_has_sudo
     _koopa_assert_is_linux
-    _koopa_h1 "Updating Docker configuration."
+    _koopa_h2 "Updating Docker configuration."
     local lib_sys
     lib_sys="/var/lib/docker"
     local lib_n
@@ -241,7 +241,7 @@ _koopa_link_docker() {                                                    # {{{1
 _koopa_link_r_etc() {                                                     # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # Updated 2020-01-14.
+    # Updated 2020-01-21.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -260,7 +260,7 @@ _koopa_link_r_etc() {                                                     # {{{1
         _koopa_note "Source files missing: '${r_etc_source}'."
         return 0
     fi
-    _koopa_h1 "Updating '${r_home}'."
+    _koopa_h2 "Updating '${r_home}'."
     sudo ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
     return 0
 }
@@ -279,7 +279,7 @@ _koopa_link_r_site_library() {                                            # {{{1
     minor_version="$(_koopa_minor_version "$version")"
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
-    _koopa_h1 "Creating site library at '${r_home}'."
+    _koopa_h2 "Creating site library at '${r_home}'."
     local lib_source
     lib_source="${app_prefix}/r/${minor_version}/site-library"
     local lib_target
@@ -333,7 +333,7 @@ _koopa_make_build_string() {                                              # {{{1
 _koopa_update_ldconfig() {                                                # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # Updated 2019-12-16.
+    # Updated 2020-01-21.
     # """
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -349,7 +349,7 @@ _koopa_update_ldconfig() {                                                # {{{1
     # Create symlinks with "koopa-" prefix.
     # Note that we're using shell globbing here.
     # https://unix.stackexchange.com/questions/218816
-    _koopa_h1 "Updating ldconfig in '/etc/ld.so.conf.d/'."
+    _koopa_h2 "Updating ldconfig in '/etc/ld.so.conf.d/'."
     local source_file
     local dest_file
     for source_file in "${conf_source}/"*".conf"
@@ -364,11 +364,11 @@ _koopa_update_ldconfig() {                                                # {{{1
 _koopa_update_lmod_config() {                                             # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # Updated 2019-11-26.
+    # Updated 2020-01-21.
     # """
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-    _koopa_h1 "Updating Lmod configuration in '/etc/profile.d/'."
+    _koopa_h2 "Updating Lmod configuration in '/etc/profile.d/'."
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
     [ -d "$init_dir" ] || return 0
@@ -380,7 +380,7 @@ _koopa_update_lmod_config() {                                             # {{{1
 _koopa_update_profile() {                                                 # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # Updated 2020-01-11.
+    # Updated 2020-01-21.
     # """
     _koopa_is_shared_install || return 0
     _koopa_is_linux || return 0
@@ -389,7 +389,7 @@ _koopa_update_profile() {                                                 # {{{1
     symlink="/etc/profile.d/zzz-koopa.sh"
     # Early return if link already exists.
     [ -L "$symlink" ] && return 0
-    _koopa_h1 "Adding '${symlink}'."
+    _koopa_h2 "Adding '${symlink}'."
     sudo rm -fv "/etc/profile.d/koopa.sh"
     sudo ln -fnsv \
         "$(_koopa_prefix)/os/linux/etc/profile.d/zzz-koopa.sh" \
@@ -428,7 +428,7 @@ _koopa_update_r_config_macos() {                                          # {{{1
 _koopa_update_shells() {                                                  # {{{1
     # """
     # Update shell configuration.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     # """
     _koopa_assert_has_sudo
     local shell_name
@@ -439,7 +439,7 @@ _koopa_update_shells() {                                                  # {{{1
     shell_etc_file="/etc/shells"
     if ! grep -q "$shell_exe" "$shell_etc_file"
     then
-        _koopa_h1 "Updating '${shell_etc_file}' to include '${shell_exe}'."
+        _koopa_h2 "Updating '${shell_etc_file}' to include '${shell_exe}'."
         sudo sh -c "echo ${shell_exe} >> ${shell_etc_file}"
     else
         _koopa_success "'${shell_exe}' already defined in '${shell_etc_file}'."

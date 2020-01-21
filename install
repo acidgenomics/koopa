@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
-set -Ee -o pipefail
+set -Eeu -o pipefail
 
 usage() {
 cat << EOF
@@ -20,60 +20,19 @@ optional arguments:
     --mike
         Install Mike-specific configuration.
         This flag automatically enables '--dotfiles'.
+    --non-interactive
+        Don't prompt about configuration variables.
+        Note that when '--shared' or '--test' are declared, this is set
+        automatically internally.
     --test
         Enable verbose test mode.
         Useful for Travis CI and building Docker images.
 
 note:
     Bash script.
-    Updated 2020-01-13.
+    Updated 2020-01-21.
 EOF
 }
-
-dotfiles=0
-mike=0
-shared=0
-test=0
-
-while (("$#"))
-do
-    case "$1" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
-        --dotfiles)
-            dotfiles=1
-            shift 1
-            ;;
-        --mike)
-            mike=1
-            shift 1
-            ;;
-        --shared)
-            shared=1
-            shift 1
-            ;;
-        --test)
-            test=1
-            shift 1
-            ;;
-        --) 
-            shift 1
-            break
-            ;;
-        --*|-*)
-            >&2 echo "Error: Invalid argument: '${1}'."
-            exit 1
-            ;;
-    esac
-done
-
-# Automatically clone dotfiles in Mike mode.
-if [[ "$mike" -eq 1 ]]
-then
-    dotfiles=1
-fi
 
 _koopa_group() {
     local group
@@ -101,11 +60,97 @@ _koopa_is_linux() {
     [[ "$(uname -s)" == "Linux" ]]
 }
 
-# In a piped install script call, we'll clone the repo from GitHub first.
-if [[ -z "${BASH_SOURCE[0]}" ]]
+piped=0
+
+# Detect if we're running from a piped install (e.g. koopa.acidgenomics.com).
+if [[ -z "${BASH_SOURCE[0]:-}" ]]
 then
+    piped=1
+else
+    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+        >/dev/null 2>&1 && pwd -P)"
+    if [[ ! -x "${script_dir}/activate" ]]
+    then
+        piped=1
+    fi
+fi
+
+dotfiles=
+mike=0
+prompt=1
+shared=0
+test=0
+
+while (("$#"))
+do
+    case "$1" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --dotfiles)
+            dotfiles=1
+            shift 1
+            ;;
+        --mike)
+            mike=1
+            shift 1
+            ;;
+        --non-interactive)
+            prompt=0
+            shift 1
+            ;;
+        --shared)
+            shared=1
+            shift 1
+            ;;
+        --test)
+            test=1
+            shift 1
+            ;;
+        --) 
+            shift 1
+            break
+            ;;
+        --*|-*)
+            >&2 echo "Error: Invalid argument: '${1}'."
+            exit 1
+            ;;
+    esac
+done
+
+if [[ "$shared" -eq 1 ]] || [[ "$test" -eq 1 ]]
+then
+    prompt=0
+fi
+
+if [[ "$mike" -eq 1 ]]
+then
+    dotfiles=1
+fi
+
+if [[ "$piped" -eq 1 ]]
+then
+    # This is used by activation scripts (see 'extra.sh').
     export KOOPA_PIPED_INSTALL=1
-    source_repo="https://github.com/acidgenomics/koopa.git"
+    if [[ "$prompt" -eq 1 ]] && _koopa_has_sudo
+    then
+        read -r -n 1 -p "Install for all users (y/n)? " choice
+        case "$choice" in
+            y|Y)
+                shared=1
+                ;;
+            n|N)
+                shared=0
+                ;;
+            *)
+                >&2 echo "Error: Invalid input."
+                exit 1
+                ;;
+        esac
+        echo ""
+    fi
+
     if [[ "$shared" -eq 1 ]]
     then
         prefix="/usr/local"
@@ -113,13 +158,19 @@ then
         XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
         prefix="$XDG_DATA_HOME"
     fi
-    target_dir="${prefix}/koopa"
-    # Error if target destination directory already exists.
-    if [[ -d "$target_dir" ]]
+    prefix="${prefix}/koopa"
+
+    if [[ "$prompt" -eq 1 ]]
     then
-        >&2 echo "Error: Directory exists: '${target_dir}'."
+        read -e -r -p "Install prefix: " -i "${prefix}" prefix
+    fi
+
+    if [[ -d "$prefix" ]]
+    then
+        >&2 echo "Error: Directory exists: '${prefix}'."
         exit 1
     fi
+
     # Set correct admin permissions, if applicable.
     if [[ "$shared" -eq 1 ]]
     then
@@ -128,35 +179,68 @@ then
             >&2 echo "Error: sudo is required for shared installation."
             exit 1
         fi
-        sudo mkdir -pv "$target_dir"
+        sudo mkdir -pv "$prefix"
         group="$(_koopa_group)"
-        sudo chgrp "$group" "$target_dir"
-        sudo chmod g+ws "$target_dir"
+        sudo chgrp "$group" "$prefix"
+        sudo chmod g+ws "$prefix"
     fi
-    echo "Installing koopa at '${target_dir}'."
-    git clone --recursive "$source_repo" "$target_dir"
-    KOOPA_PREFIX="$target_dir"
+    echo "Downloading koopa."
+    source_repo="https://github.com/acidgenomics/koopa.git"
+    git clone --recursive "$source_repo" "$prefix"
+    KOOPA_PREFIX="$prefix"
 else
     KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
         >/dev/null 2>&1 && pwd -P)"
 fi
 export KOOPA_PREFIX
+echo "Installing koopa at '$KOOPA_PREFIX'."
+
+if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
+then
+    echo "Shared installation detected."
+    shared=1
+fi
 
 rm -frv "${KOOPA_PREFIX}/"{config,include}
 rm -frv "${KOOPA_PREFIX}/bin/"{host,os,sudo}
 
 echo "Activating koopa."
+set +u
 force=1 test="$test" source "${KOOPA_PREFIX}/activate"
-
-if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
-then
-    echo "Shared installation detected at '${KOOPA_PREFIX}'"
-    shared=1
-fi
+set -u
 
 if [[ "$shared" -eq 1 ]]
 then
     _koopa_update_profile
+fi
+
+# Don't prompt if dotfiles are already cloned into koopa install.
+if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
+then
+    dotfiles=0
+fi
+
+if [[ -z "${dotfiles:-}" ]]
+then
+    if [[ "$prompt" -eq 1 ]]
+    then
+        read -r -n 1 -p "Install dotfiles (y/n)? " choice
+        case "$choice" in
+            y|Y)
+                dotfiles=1
+                ;;
+            n|N)
+                dotfiles=0
+                ;;
+            *)
+                >&2 echo "Error: Invalid input."
+                exit 1
+                ;;
+        esac
+        echo
+    else
+        dotfiles=0
+    fi
 fi
 
 if [[ "$mike" -eq 1 ]]
@@ -167,4 +251,6 @@ then
     install-dotfiles
 fi
 
-echo "Installation was successful."
+koopa update > /dev/null
+_koopa_success "Installation of koopa was successful."
+_koopa_note "Shell must be reloaded for changes to take effect."

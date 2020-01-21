@@ -75,7 +75,7 @@ _koopa_is_array_non_empty() {                                             # {{{1
 _koopa_r_javareconf() {                                                   # {{{1
     # """
     # Update R Java configuration.
-    # Updated 2019-11-16.
+    # Updated 2020-01-21.
     #
     # The default Java path differs depending on the system.
     #
@@ -92,13 +92,22 @@ _koopa_r_javareconf() {                                                   # {{{1
     #   JAVAH          path to a Java header/stub generator
     #   JAR            path to a Java archive tool
     # """
-    _koopa_assert_is_installed R java
+    if ! _koopa_is_installed R
+    then
+        _koopa_warning "R is not installed."
+        return 1
+    fi
+    if ! _koopa_is_installed java
+    then
+        _koopa_warning "java is not installed."
+        return 1
+    fi
     local java_home
     local java_flags
     local r_home
     java_home="$(_koopa_java_home)"
     [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    _koopa_h1 "Updating R Java configuration."
+    _koopa_h2 "Updating R Java configuration."
     java_flags=(
         "JAVA_HOME=${java_home}"
         "JAVA=${java_home}/bin/java"

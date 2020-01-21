@@ -85,12 +85,12 @@ tools_dir="${prefix}/tools"
 # > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
 # > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
+# Clean up conda packages.
+conda_exe="${install_dir}/anaconda/bin/conda"
+# > conda_exe="${tools_dir}/bin/bcbio_conda"
+"$conda_exe" clean --all --verbose --yes
+
 # Keep install owned by current user, so we can install genomes easily.
-_koopa_chgrp "$prefix"
+# > _koopa_chgrp "$prefix"
 
-# Here's how to set to root, otherwise:
-# > _koopa_set_permissions "$prefix"
-
-# Disable group write access to install.
-# > chmod -R g-w "$install_dir" "$tools_dir"
-
+_koopa_set_permissions "$prefix"

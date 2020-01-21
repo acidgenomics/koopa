@@ -9,17 +9,21 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed conda
 
-prefix="$(_koopa_conda_prefix)"
-conda_exe="${prefix}/bin/conda"
+conda_prefix="$(_koopa_conda_prefix)"
+conda_exe="${conda_prefix}/condabin/conda"
+# > conda_exe="${conda_prefix}/bin/conda"
 
-update-conda
+_koopa_h1 "Updating environments at '${conda_prefix}'."
 
-while IFS= read -r -d '' prefix
+_koopa_h2 "Updating conda installation."
+update-conda > /dev/null
+
+while IFS= read -r -d '' env_prefix
 do
-    _koopa_h1 "Updating '${prefix}'."
-    "$conda_exe" update -y --prefix="$prefix" --all
+    _koopa_h2 "Updating '${env_prefix}'."
+    "$conda_exe" update -y --prefix="$env_prefix" --all
 done < <( \
-    find "${prefix}/envs" \
+    find "${conda_prefix}/envs" \
         -mindepth 1 \
         -maxdepth 1 \
         -type d \
@@ -28,4 +32,4 @@ done < <( \
 )
 
 "$conda_exe" clean --yes --all
-_koopa_set_permissions "$(_koopa_conda_prefix)"
+_koopa_set_permissions "$conda_prefix"
