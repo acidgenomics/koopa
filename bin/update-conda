@@ -15,7 +15,9 @@ then
 fi
 
 prefix="$(_koopa_conda_prefix)"
+
 conda_exe="${prefix}/condabin/conda"
+# > conda_exe="${prefix}/bin/conda"
 
 _koopa_h1 "Updating Conda at '${prefix}'."
 
