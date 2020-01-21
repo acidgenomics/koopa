@@ -23,7 +23,7 @@ _koopa_chgrp() {                                                          # {{{1
 _koopa_chmod() {                                                          # {{{1
     # """
     # Set file modification permissions on the target prefix.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     #
     # This sets group write access by default for shared install, which is
     # useful so we don't have to constantly switch to root for admin.
@@ -33,8 +33,9 @@ _koopa_chmod() {                                                          # {{{1
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo chmod -R g+w "$prefix"
+        sudo chmod -R g+rw "$prefix"
     else
+        chmod -R g+r "$prefix"
         chmod -R g-w "$prefix"
     fi
     return 0
