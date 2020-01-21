@@ -246,5 +246,5 @@ then
     install-dotfiles
 fi
 
-koopa update
+koopa update >/dev/null 2>&1
 _koopa_success "Installation of koopa was successful."
