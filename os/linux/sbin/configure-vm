@@ -43,8 +43,13 @@ do
     esac
 done
 
+# Remove default root configuration files.
+sudo rm -fv "/root/."\
+{bash_logout,bash_profile,bashrc,cshrc,profile,tcshrc,zshrc}
+
 # Remove default user shell configuration files.
-sudo rm -fv "/etc/skel/."{bash_logout,bashrc,emacs,profile,zshrc}
+sudo rm -fv "/etc/skel/."\
+{bash_logout,bash_profile,bashrc,cshrc,emacs,profile,tcshrc,zshrc}
 
 # Remove local user install cruft.
 rm -frv \
