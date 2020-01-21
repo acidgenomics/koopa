@@ -238,7 +238,7 @@ _koopa_header() {                                                         # {{{1
 _koopa_help() {                                                           # {{{1
     # """
     # Show usage via '--help' flag.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -277,9 +277,9 @@ _koopa_help() {                                                           # {{{1
     # - http://zsh.sourceforge.net/Doc/Release/Parameters.html
     # - https://stackoverflow.com/questions/35677745
     # """
-    _koopa_assert_is_installed man
     case "${1:-}" in
         --help|-h)
+            _koopa_assert_is_installed man
             local file name shell
             shell="$(_koopa_shell)"
             case "$shell" in
