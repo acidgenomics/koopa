@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 ## Check installed program versions.
-## Updated 2020-01-14.
+## Updated 2020-01-21.
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -522,6 +522,12 @@ checkVersion(
     whichName = "fd",
     current = currentVersion("fd"),
     expected = expectedVersion("fd")
+)
+checkVersion(
+    name = "ripgrep",
+    whichName = "rg",
+    current = currentVersion("ripgrep"),
+    expected = expectedVersion("ripgrep")
 )
 if (isTRUE(extra)) {
     checkVersion(
