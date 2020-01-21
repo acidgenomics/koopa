@@ -112,7 +112,7 @@ then
         _koopa_remove_broken_symlinks "$app_prefix"
         if _koopa_is_installed zsh
         then
-            _koopa_h1 "Fixing Zsh permissions to pass compaudit checks."
+            _koopa_h2 "Fixing Zsh permissions to pass compaudit checks."
             zsh_exe="$(_koopa_which_realpath zsh)"
             if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
             then
@@ -132,7 +132,7 @@ then
         pyenv_prefix="$(_koopa_pyenv_prefix)"
         if [[ -d "${pyenv_prefix}/shims" ]]
         then
-            _koopa_h1 "Fixing pyenv shim permissions."
+            _koopa_h2 "Fixing pyenv shim permissions."
             sudo chmod -v 0777 "${pyenv_prefix}/shims"
         fi
     fi

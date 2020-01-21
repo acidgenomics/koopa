@@ -54,7 +54,7 @@ _koopa_basename_sans_ext2() {                                             # {{{1
 _koopa_delete_dotfile() {                                                 # {{{1
     # """
     # Delete a dot file.
-    # Updated 2020-01-16.
+    # Updated 2020-01-21.
     # """
     local name
     name="${1:?}"
@@ -62,7 +62,7 @@ _koopa_delete_dotfile() {                                                 # {{{1
     filepath="${HOME}/.${name}"
     if [ -L "$filepath" ]
     then
-        _koopa_h1 "Removing '${filepath}'."
+        _koopa_h2 "Removing '${filepath}'."
         rm -f "$filepath"
     elif [ -f "$filepath" ] || [ -d "$filepath" ]
     then
@@ -74,7 +74,7 @@ _koopa_delete_dotfile() {                                                 # {{{1
 _koopa_download() {                                                       # {{{1
     # """
     # Download a file.
-    # Updated 2020-01-14.
+    # Updated 2020-01-21.
     #
     # Alternatively, can use wget instead of curl:
     # > wget -O file url
@@ -94,7 +94,7 @@ _koopa_download() {                                                       # {{{1
         bn="$(basename "$url")"
         file="${wd}/${bn}"
     fi
-    _koopa_h1 "Downloading '${url}' to '${file}'."
+    _koopa_h2 "Downloading '${url}' to '${file}'."
     curl -L -o "$file" "$url"
     return 0
 }
@@ -121,7 +121,7 @@ _koopa_ensure_newline_at_end_of_file() {                                  # {{{1
 _koopa_extract() {                                                        # {{{1
     # """
     # Extract compressed files automatically.
-    # Updated 2020-01-12.
+    # Updated 2020-01-21.
     #
     # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
     #
@@ -134,7 +134,7 @@ _koopa_extract() {                                                        # {{{1
     then
         _koopa_stop "Invalid file: '${file}'."
     fi
-    _koopa_h1 "Extracting '${file}'."
+    _koopa_h2 "Extracting '${file}'."
     case "$file" in
         *.tar.bz2)
             tar -xjvf "$file"
