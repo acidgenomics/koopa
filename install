@@ -165,10 +165,6 @@ then
         read -e -r -p "Install prefix: " -i "${prefix}" prefix
     fi
 
-    echo "$prefix"
-    exit 0
-
-I   # Error if target destination directory already exists.
     if [[ -d "$prefix" ]]
     then
         >&2 echo "Error: Directory exists: '${prefix}'."
