@@ -14,9 +14,11 @@ conda_exe="${prefix}/bin/conda"
 
 update-conda
 
+_koopa_h1 "Updating environments at '${prefix}'."
+
 while IFS= read -r -d '' prefix
 do
-    _koopa_h1 "Updating '${prefix}'."
+    _koopa_h2 "Updating '${prefix}'."
     "$conda_exe" update -y --prefix="$prefix" --all
 done < <( \
     find "${prefix}/envs" \
