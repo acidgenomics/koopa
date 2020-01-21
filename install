@@ -163,8 +163,6 @@ then
     if [[ "$prompt" -eq 1 ]]
     then
         read -e -r -p "Install prefix: " -i "${prefix}" prefix
-        echo ""
-        echo "prefix: $prefix"
     fi
 
 I   # Error if target destination directory already exists.
