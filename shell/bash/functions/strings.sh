@@ -28,3 +28,11 @@ _koopa_paste0() {                                                         # {{{1
     # Echo without the first delimiter.
     echo "${str:${#delim}}"
 }
+
+_koopa_to_string() {                                                      # {{{1
+    # """
+    # Paste arguments to a comma separated string.
+    # Updated 2020-01-21.
+    # """
+    _koopa_paste0 ", " "$@"
+}
