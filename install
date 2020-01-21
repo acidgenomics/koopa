@@ -63,7 +63,7 @@ _koopa_is_linux() {
 piped=0
 
 # Detect if we're running from a piped install (e.g. koopa.acidgenomics.com).
-if [[ -z "${BASH_SOURCE[0]}" ]]
+if [[ -z "${BASH_SOURCE[0]:-}" ]]
 then
     piped=1
 else
