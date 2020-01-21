@@ -201,6 +201,7 @@ brews=(
     python
     python@2
     rbenv
+    ripgrep
     rsync
     ruby-build
     screen
