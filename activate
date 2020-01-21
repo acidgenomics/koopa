@@ -123,7 +123,7 @@ then
     # Skip activation for root user.
     # > [ "$(id -u)" -eq 0 ] && return 0
 
-    [ -n "${USER:-}" ] && USER="$(whoami)" && export USER
+    [ -z "${USER:-}" ] && USER="$(whoami)" && export USER
 
     # Always skip on accounts containing "admin" in the name.
     echo "$USER" | grep -Eq "\b(admin|shiny)\b" && return 0

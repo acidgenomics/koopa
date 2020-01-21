@@ -14,8 +14,15 @@ then
     exit 0
 fi
 
-_koopa_h1 "Updating Conda."
-conda update --yes --name=base --channel=defaults conda
-conda update --yes --name=base --channel=defaults --all
-# > conda clean --yes --all
-_koopa_set_permissions "$(_koopa_conda_prefix)"
+prefix="$(_koopa_conda_prefix)"
+
+conda_exe="${prefix}/condabin/conda"
+# > conda_exe="${prefix}/bin/conda"
+
+_koopa_h1 "Updating Conda at '${prefix}'."
+
+"$conda_exe" update --yes --name=base --channel=defaults conda
+"$conda_exe" update --yes --name=base --channel=defaults --all
+"$conda_exe" clean --yes --all
+
+_koopa_set_permissions "$prefix"

@@ -1,10 +1,11 @@
+## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-01-18 by Michael Steinbaugh.
+## Updated 2019-20-21 by Michael Steinbaugh.
 ##
-## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
 ## - https://github.com/acidgenomics/koopa/blob/master/os/linux/etc/R/
 ##       Renviron.site
+## """
 
 
 
