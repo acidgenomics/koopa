@@ -33,10 +33,9 @@ _koopa_chmod() {                                                          # {{{1
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo chmod -R g+rw "$prefix"
+        sudo chmod -R u+rw,g+rw "$prefix"
     else
-        chmod -R g+r "$prefix"
-        chmod -R g-w "$prefix"
+        chmod -R u+rw,g+r,g-w "$prefix"
     fi
     return 0
 }
