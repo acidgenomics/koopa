@@ -26,3 +26,8 @@ sudo yum -y install \
     libssh2 \
     python3 \
     util-linux-user
+
+if ! _koopa_is_docker
+then
+    install-docker
+fi
