@@ -57,6 +57,7 @@ sudo yum -y install \
     readline-devel \
     squashfs-tools \
     sshpass \
+    systemd \
     texlive \
     texlive-bera \
     texlive-caption \
