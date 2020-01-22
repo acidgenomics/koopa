@@ -1,6 +1,0 @@
-.TH RSYNC-N 1 2019-11-22 Bash
-.SH NAME
-rsync-n \-
-rsync '/n/' mount point
-.SH DESCRIPTION
-Requires sync from Azure VM32 using Mike's account.

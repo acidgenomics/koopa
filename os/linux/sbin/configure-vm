@@ -14,6 +14,7 @@ config="${KOOPA_CONFIG:-unknown}"
 
 data_disk=
 source_ip=
+rsync=0
 
 case "$config" in
     constellation-aws)
@@ -27,21 +28,6 @@ case "$config" in
 esac
 
 _koopa_h1 "Configuring '${config}' virtual machine."
-
-source=0
-
-while (("$#"))
-do
-    case "$1" in
-        --source)
-            source=1
-            shift 1
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-done
 
 # Remove default root configuration files.
 sudo rm -fv "/root/."\
@@ -87,7 +73,7 @@ _koopa_set_sticky_group "$make_prefix"
 # Prepare '/n/' share on data disk.
 if [[ -d "$data_disk" ]]
 then
-    _koopa_h1 "Symlinking '/n' on '${data_disk}'."
+    _koopa_h2 "Symlinking '/n' on '${data_disk}'."
     # e.g. '/mnt/data01/n/app'.
     app_prefix_real="${data_disk}${app_prefix}"
     sudo mkdir -pv "$app_prefix_real"
@@ -96,13 +82,33 @@ then
     sudo ln -fnsv "$n_real" "/n"
 fi
 
+if _koopa_is_debian
+then
+    # This also applies to Ubuntu.
+    install-debian-base
+elif _koopa_is_amzn
+then
+    # Note that this layers on top of RHEL 7.
+    install-amzn-base
+elif _koopa_is_rhel_8
+then
+    # This also applies to CentOS 8.
+    install-rhel-8-base
+elif _koopa_is_rhel_7
+then
+    # This also applies to CentOS 7.
+    install-rhel-7-base
+elif _koopa_is_fedora
+then
+    install-fedora-base
+fi
+
 if [[ "$config" == "constellation-aws" ]]
 then
     # Constellation AWS                                                   # {{{1
     # --------------------------------------------------------------------------
-    install-debian-base
     # Set up '/etc/profile.d'.
-    _koopa_h1 "Updating '/etc/profile.d'."
+    _koopa_h2 "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
@@ -116,7 +122,6 @@ elif [[ "$config" == "constellation-azure" ]]
 then
     # Constellation Azure                                                 # {{{1
     # --------------------------------------------------------------------------
-    install-rhel-7-base
     # Don't attempt to patch system env to support '-S' flag.
     # Should no longer be an issue on VMs, as of 2020.
     if [[ -e "/bin/env.bak" ]]
@@ -127,20 +132,20 @@ then
     # OpenJDK moved to '/n/app'.
     sudo rm -frv "/opt/jdk"
     # Set up '/etc/profile.d'.
-    _koopa_h1 "Updating '/etc/profile.d'."
+    _koopa_h2 "Updating '/etc/profile.d'."
     _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/azure/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
     # Set up '/etc/cron.d'.
-    _koopa_h1 "Updating '/etc/cron.d'."
+    _koopa_h2 "Updating '/etc/cron.d'."
     sudo cp -fv \
         "${koopa_prefix}/host/azure/etc/cron.d/constellation" \
         "/etc/cron.d/constellation"
     # Ensure that shared bioinfo user has correct dotfiles.
     if [[ -d "${koopa_prefix}/dotfiles" ]]
     then
-        _koopa_h1 "Updating bioinfo user dotfiles."
+        _koopa_h2 "Updating bioinfo user dotfiles."
         sudo -u bioinfo -H "$SHELL" -c "\
             rm -fv ~/.bash_logout; \
             rm -fv ~/.bash_profile; \
@@ -151,7 +156,7 @@ then
         "
     fi
     # Ensure data disk has consistency directory structure.
-    _koopa_h1 "Updating '${data_disk}' structure."
+    _koopa_h2 "Updating '${data_disk}' structure."
     sudo rm -frv "${data_disk}/"{R,bcbio,cellranger,cellranger-atac,conda,\
 docker,var}
     # Install RStudio Server Pro, if applicable.
@@ -163,15 +168,23 @@ fi
 
 if [[ -d "$data_disk" ]] && [[ -n "$source_ip" ]]
 then
-    rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+    host_ip="$(ip-address)"
+    if [[ "$source_ip" != "$host_ip" ]]
+    then
+        rsync=1
+        rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+    fi
 fi
 
-if [[ -d "$app_prefix" ]]
+if _koopa_is_azure
 then
-    install-openjdk
+    _koopa_h2 "Installing Azure-specific apps."
+    install-azure-cli
 fi
 
-if [[ "$source" -eq 1 ]]
+install-openjdk
+
+if [[ "$rsync" -eq 0 ]]
 then
     install-coreutils
     install-bash
@@ -201,41 +214,31 @@ then
     install-genrich
     install-autojump
     install-the-silver-searcher
-    if [[ -d "$app_prefix" ]]
-    then
-        # install-bcbio
-        # install-cellranger
-        # install-cellranger-atac
-        # install-chromhmm
-        # install-ensembl-perl-api
-        # install-lmod
-        install-conda
-        install-fzf
-        install-go
-        install-rust
-        install-perlbrew
-        install-pyenv
-        install-rbenv
-        (conda-create-bioinfo-envs)
-        (install-rust-crates)
-        (pipx-install-envs)
-    fi
-    r-javareconf
-fi
-
-if _koopa_is_azure
-then
-    _koopa_h1 "Installing Azure-specific apps."
-    install-azure-cli
+    install-fzf
+    install-go
+    install-conda
+    install-rust
+    install-perlbrew
+    install-pyenv
+    install-rbenv
+    (pipx-install-envs)
+    (install-rust-crates)
+    # > (conda-create-bioinfo-envs)
+    # install-bcbio
+    # install-cellranger
+    # install-cellranger-atac
+    # install-chromhmm
+    # install-ensembl-perl-api
+    # install-lmod
 fi
 
 if _koopa_is_installed R
 then
+    r-javareconf
     if _koopa_is_installed install-rstudio-server
     then
         install-rstudio-server
     fi
-
     if _koopa_is_installed install-shiny-server
     then
         install-shiny-server
