@@ -87,7 +87,7 @@ mkdir -pv "$log_dir"
 # Clean up conda packages.
 conda_exe="${install_dir}/anaconda/bin/conda"
 # > conda_exe="${tools_dir}/bin/bcbio_conda"
-"$conda_exe" clean --all --verbose --yes
+"$conda_exe" clean --yes --packages
 
 # Keep install owned by current user, so we can install genomes easily.
 # > _koopa_chgrp "$prefix"
