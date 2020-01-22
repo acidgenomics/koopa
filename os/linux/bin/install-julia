@@ -5,16 +5,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
 # Install the generic binaries by default, when possible.
 # https://julialang.org/downloads/
-
+#
 # Build from source instructions:
 # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
 # - https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
 # - https://docs.julialang.org/en/v1/devdocs/llvm/
 # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md#llvm
 # - https://github.com/JuliaLang/julia/blob/master/Make.inc
-
+#
 # Source compile failure on Ubuntu 18 LTS.
 # The program is attempting to use system LLVM 6, even when we request not to.
 #
@@ -25,6 +26,16 @@ source "${script_dir}/../include/header.sh"
 # See also:
 # https://discourse.julialang.org/t/
 #     problem-building-julia-version-jl-llvm-6-0-not-found/11545
+# """
+
+name="julia"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+_koopa_is_dir "$prefix" && exit 0
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_envs
 
 # Default to binary installation.
 install="binary"
@@ -42,16 +53,9 @@ do
     esac
 done
 
-name="julia"
-version="$(_koopa_variable "$name")"
 minor_version="$(_koopa_minor_version "$version")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 jobs="$(_koopa_cpu_count)"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-rm -frv "$prefix"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

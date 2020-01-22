@@ -8,13 +8,16 @@ source "${script_dir}/../include/header.sh"
 name="gnupg"
 version="$(_koopa_variable gpg)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-jobs="$(_koopa_cpu_count)"
-gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
+_koopa_is_dir "$prefix" && exit 0
 
 _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
-rm -fr "$prefix"
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+tmp_dir="$(_koopa_tmp_dir)/${name}"
+jobs="$(_koopa_cpu_count)"
+gcrypt_url="https://www.gnupg.org/ftp/gcrypt"
 
 # Download GnuPG release signing keys.
 if _koopa_is_installed gpg
