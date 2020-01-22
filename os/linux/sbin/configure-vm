@@ -10,10 +10,11 @@ _koopa_assert_has_no_envs
 koopa_prefix="$(_koopa_prefix)"
 make_prefix="$(_koopa_make_prefix)"
 app_prefix="$(_koopa_app_prefix)"
-config="${KOOPA_CONFIG:-unknown}"
 
+config="${KOOPA_CONFIG:-}"
 data_disk=
 source_ip=
+
 rsync=0
 
 case "$config" in
@@ -27,7 +28,12 @@ case "$config" in
         ;;
 esac
 
-_koopa_h1 "Configuring '${config}' virtual machine."
+if [[ -n "$config" ]]
+then
+    _koopa_h1 "Configuring '${config}' virtual machine."
+else
+    _koopa_h1 "Configuring virtual machine."
+fi
 
 # Remove default root configuration files.
 sudo rm -fv "/root/."\
@@ -66,37 +72,42 @@ rm -frv \
 
 _koopa_enable_passwordless_sudo
 
-# Prepare '/usr/local' for write access.
+# Prepare make prefix (e.g. '/usr/local') for write access.
 _koopa_mkdir "$make_prefix"
-_koopa_set_sticky_group "$make_prefix"
+_koopa_set_permissions "$make_prefix"
 
-# Prepare '/n/' share on data disk.
+# Prepare app prefix (e.g. '/n/app') for write access.
 if [[ -d "$data_disk" ]]
 then
-    _koopa_h2 "Symlinking '/n' on '${data_disk}'."
+    _koopa_h2 "Symlinking '${app_prefix}' on '${data_disk}'."
     # e.g. '/mnt/data01/n/app'.
     app_prefix_real="${data_disk}${app_prefix}"
+    # e.g. '/n'.
+    n_prefix_link="$(dirname "$app_prefix")"
+    # e.g. '/mnt/data01/n'.
+    n_prefix_real="$(dirname "$app_prefix_real")"
     sudo mkdir -pv "$app_prefix_real"
-    _koopa_set_sticky_group "$app_prefix_real"
-    n_real="$(dirname "$app_prefix_real")"
-    sudo ln -fnsv "$n_real" "/n"
+    sudo ln -fnsv "$n_prefix_real" "$n_prefix_link"
+else
+    _koopa_mkdir "$app_prefix"
 fi
+_koopa_set_permissions "$app_prefix"
 
 if _koopa_is_debian
 then
-    # This also applies to Ubuntu.
+    # Also applies to Ubuntu.
     install-debian-base
 elif _koopa_is_amzn
 then
-    # Note that this layers on top of RHEL 7.
+    # Layers on top of RHEL 7.
     install-amzn-base
 elif _koopa_is_rhel_8
 then
-    # This also applies to CentOS 8.
+    # Also applies to CentOS 8.
     install-rhel-8-base
 elif _koopa_is_rhel_7
 then
-    # This also applies to CentOS 7.
+    # Also applies to CentOS 7.
     install-rhel-7-base
 elif _koopa_is_fedora
 then
@@ -169,8 +180,11 @@ fi
 if [[ -d "$data_disk" ]] && [[ -n "$source_ip" ]]
 then
     host_ip="$(ip-address)"
-    if [[ "$source_ip" != "$host_ip" ]]
+    if [[ "$source_ip" == "$host_ip" ]]
     then
+        _koopa_note "Skipping rsync because '${host_ip}' is source machine."
+        rsync=0
+    else
         rsync=1
         rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
     fi
@@ -182,6 +196,7 @@ then
     install-azure-cli
 fi
 
+# Always run this because it must configure java alternatives.
 install-openjdk
 
 if [[ "$rsync" -eq 0 ]]
@@ -217,19 +232,14 @@ then
     install-fzf
     install-go
     install-conda
+    install-lmod
     install-rust
     install-perlbrew
     install-pyenv
     install-rbenv
     (pipx-install-envs)
     (install-rust-crates)
-    # > (conda-create-bioinfo-envs)
-    # install-bcbio
-    # install-cellranger
-    # install-cellranger-atac
-    # install-chromhmm
-    # install-ensembl-perl-api
-    # install-lmod
+    (conda-create-bioinfo-envs)
 fi
 
 if _koopa_is_installed R
