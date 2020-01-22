@@ -667,6 +667,19 @@ _koopa_exit_if_dir() {                                                    # {{{1
     return 0
 }
 
+_koopa_exit_if_docker() {                                                 # {{{1
+    # """
+    # Exit with note if running inside Docker.
+    # Updated 2020-01-22.
+    # """
+    if _koopa_is_docker
+    then
+        _koopa_note "Not supported when running inside Docker."
+        exit 0
+    fi
+    return 0
+}
+
 _koopa_has_file_ext() {                                                   # {{{1
     # """
     # Does the input contain a file extension?

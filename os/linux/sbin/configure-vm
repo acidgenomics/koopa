@@ -237,6 +237,8 @@ then
     install-perlbrew
     install-pyenv
     install-rbenv
+    _koopa_is_installed install-docker && install-docker
+    _koopa_is_installed install-llvm && install-llvm
     (pipx-install-envs)
     (install-rust-crates)
     (conda-create-bioinfo-envs)
@@ -245,14 +247,8 @@ fi
 if _koopa_is_installed R
 then
     r-javareconf
-    if _koopa_is_installed install-rstudio-server
-    then
-        install-rstudio-server
-    fi
-    if _koopa_is_installed install-shiny-server
-    then
-        install-shiny-server
-    fi
+    _koopa_is_installed install-rstudio-server && install-rstudio-server
+    _koopa_is_installed install-shiny-server && install-shiny-server
 fi
 
 _koopa_update_lmod_config

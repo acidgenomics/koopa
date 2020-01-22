@@ -10,7 +10,8 @@ source "${script_dir}/../include/header.sh"
 
 # Configures at '/var/lib/docker/'.
 
-_koopa_is_installed docker && exit 0
+_koopa_exit_if_docker
+_koopa_exit_if_installed docker
 _koopa_assert_has_no_args "$@"
 
 # Remove legacy versions, if necessary.
