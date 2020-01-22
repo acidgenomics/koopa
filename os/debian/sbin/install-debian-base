@@ -136,11 +136,3 @@ sudo DEBIAN_FRONTEND=noninteractive \
         zsh
 
 sudo apt-get -y autoremove
-
-if ! _koopa_is_docker
-then
-    install-docker
-fi
-
-install-r
-install-llvm
