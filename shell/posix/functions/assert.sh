@@ -706,6 +706,14 @@ _koopa_is_aws() {                                                         # {{{1
     [ "$(_koopa_host_id)" = "aws" ]
 }
 
+_koopa_is_amzn() {                                                        # {{{1
+    # """
+    # Is the operating system Amazon Linux?
+    # Updated 2020-01-21.
+    # """
+    [ "$(_koopa_os_id)" = "amzn" ]
+}
+
 _koopa_is_azure() {                                                       # {{{1
     # """
     # Is the current session running on Microsoft Azure?
