@@ -212,6 +212,7 @@ _koopa_link_docker() {                                                    # {{{1
     # Updated 2020-01-22.
     # """
     _koopa_is_installed docker || return 0
+    _koopa_assert_is_installed systemctl
     [ -d "/n" ] || return 0
     _koopa_assert_has_sudo
     _koopa_assert_is_linux

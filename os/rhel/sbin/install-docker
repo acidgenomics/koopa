@@ -7,6 +7,7 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_is_installed docker && exit 0
 _koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed systemctl
 
 # Remove legacy versions, if necessary.
 sudo yum -y remove \
