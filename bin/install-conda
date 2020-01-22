@@ -89,5 +89,7 @@ ln -fnsv "${KOOPA_PREFIX}/os/linux/etc/conda/condarc" \
 
 _koopa_set_permissions "$prefix"
 
+(update-conda)
+
 _koopa_success "Conda installed successfully."
 _koopa_note "Restart the shell to complete activation."
