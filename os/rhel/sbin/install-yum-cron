@@ -6,6 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _koopa_exit_if_installed yum-cron
+_koopa_assert_is_installed systemctl
 
 # Note that this requires EPEL to be enabled.
 sudo yum -y install yum-cron

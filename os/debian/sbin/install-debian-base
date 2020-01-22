@@ -135,7 +135,9 @@ sudo DEBIAN_FRONTEND=noninteractive \
         xorg \
         zsh
 
-install-docker
+# This will error out inside Docker images.
+# > install-docker
+
 install-r
 
 # LLVM (clang)

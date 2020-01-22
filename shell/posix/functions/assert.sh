@@ -756,6 +756,19 @@ _koopa_is_debian() {                                                      # {{{1
         grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
+_koopa_is_docker() {                                                      # {{{1
+    # """
+    # Is the current shell running inside Docker?
+    # Updated 2020-01-22.
+    #
+    # https://stackoverflow.com/questions/23513045
+    # """
+    local file
+    file="/proc/1/cgroup"
+    [ -f "$file" ] || return 1
+    grep -q ':/docker/' "$file"
+}
+
 _koopa_is_fedora() {                                                      # {{{1
     # """
     # Is the operating system Fedora?
