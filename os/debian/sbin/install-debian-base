@@ -126,6 +126,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         python3 \
         python3-pip \
         sqlite3 \
+        systemd \
         texlive \
         tree \
         tmux \
