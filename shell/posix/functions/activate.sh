@@ -187,7 +187,7 @@ _koopa_activate_fzf() {                                                   # {{{1
 _koopa_activate_llvm() {                                                  # {{{1
     # """
     # Activate LLVM config.
-    # Updated 2020-01-12.
+    # Updated 2020-01-22.
     #
     # Note that LLVM 7 specifically is now required to install umap-learn.
     # Current version LLVM 9 isn't supported by numba > llvmlite yet.
@@ -202,6 +202,9 @@ _koopa_activate_llvm() {                                                  # {{{1
         # llvm@7
         config="/usr/local/opt/llvm/bin/llvm-config"
     else
+        # Note that findutils isn't installed on Linux distros by default
+        # (e.g. Docker fedora image), and will error here otherwise.
+        ! _koopa_is_installed find && return 0
         # Attempt to find the latest version automatically.
         # RHEL 7: llvm-config-7.0-64
         config="$(find /usr/bin -name "llvm-config-*" | sort | tail -n 1)"
