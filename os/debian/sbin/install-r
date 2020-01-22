@@ -20,7 +20,8 @@ sudo apt-key adv \
 sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/debian ${release}-cran35/"
 
 sudo apt-get update
-sudo apt-get -y install r-base r-base-dev
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y install r-base r-base-dev
 
 _koopa_link_r_etc
 _koopa_link_r_site_library

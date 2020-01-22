@@ -55,79 +55,84 @@ then
 fi
 
 sudo apt-get update
-sudo apt-get -y dist-upgrade
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y dist-upgrade
 
 # Including 'bash' here will remove 'r-base'.
-sudo apt-get -y build-dep \
-    coreutils \
-    emacs-defaults \
-    fish \
-    git \
-    htop \
-    neovim \
-    perl \
-    tmux \
-    vim \
-    zsh
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y build-dep \
+        coreutils \
+        emacs-defaults \
+        fish \
+        git \
+        htop \
+        neovim \
+        perl \
+        tmux \
+        vim \
+        zsh
 
-sudo apt-get -y install \
-    alien \
-    autoconf \
-    automake \
-    cargo \
-    cmake \
-    emacs \
-    firefox \
-    fish \
-    gdebi-core \
-    git \
-    gnupg2 \
-    gnutls-bin \
-    gtk-doc-tools \
-    htop \
-    libacl1 \
-    libacl1-dev \
-    libbz2-dev \
-    libcairo2-dev \
-    libevent-dev \
-    libffi-dev \
-    libfreetype6-dev \
-    libgdal-dev \
-    libgif-dev \
-    libglu1-mesa-dev \
-    libgnutls28-dev \
-    libgsl-dev \
-    libharfbuzz-dev \
-    libhdf5-dev \
-    liblzma-dev \
-    libmagick++-dev \
-    libmariadb-client-lgpl-dev \
-    libopenblas-base \
-    libopenblas-dev \
-    libpng-dev \
-    libssh2-1-dev \
-    libssl-dev \
-    libtool \
-    libtool-bin \
-    libudunits2-dev \
-    libv8-dev \
-    libx11-dev \
-    libxml2-dev \
-    libz-dev \
-    pandoc \
-    pandoc-citeproc \
-    parallel \
-    perl \
-    pkg-config \
-    python3 \
-    python3-pip \
-    sqlite3 \
-    texlive \
-    tree \
-    tmux \
-    vim \
-    xorg \
-    zsh
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y install \
+        alien \
+        autoconf \
+        automake \
+        cargo \
+        cmake \
+        emacs \
+        firefox \
+        fish \
+        gdebi-core \
+        git \
+        gnupg2 \
+        gnutls-bin \
+        gtk-doc-tools \
+        htop \
+        libacl1 \
+        libacl1-dev \
+        libbz2-dev \
+        libcairo2-dev \
+        libevent-dev \
+        libffi-dev \
+        libfreetype6-dev \
+        libgdal-dev \
+        libgif-dev \
+        libglu1-mesa-dev \
+        libgnutls28-dev \
+        libgsl-dev \
+        libharfbuzz-dev \
+        libhdf5-dev \
+        liblzma-dev \
+        libmagick++-dev \
+        libmariadb-client-lgpl-dev \
+        libopenblas-base \
+        libopenblas-dev \
+        libpng-dev \
+        libssh2-1-dev \
+        libssl-dev \
+        libtool \
+        libtool-bin \
+        libudunits2-dev \
+        libv8-dev \
+        libx11-dev \
+        libxml2-dev \
+        libz-dev \
+        keyboard-configuration \
+        pandoc \
+        pandoc-citeproc \
+        parallel \
+        perl \
+        pkg-config \
+        python3 \
+        python3-pip \
+        sqlite3 \
+        texlive \
+        tree \
+        tmux \
+        tzdata \
+        vim \
+        xorg \
+        zsh
 
 install-docker
 install-r
