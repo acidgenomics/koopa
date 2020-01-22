@@ -135,23 +135,12 @@ sudo DEBIAN_FRONTEND=noninteractive \
         xorg \
         zsh
 
-# This will error out inside Docker images.
-# > install-docker
+sudo apt-get -y autoremove
 
-install-r
-
-# LLVM (clang)
-# https://apt.llvm.org/
-# Note that regular llvm recipe currently installs version 6.
-if [[ -z "${LLVM_CONFIG:-}" ]]
+if ! _koopa_is_docker
 then
-    _koopa_h1 "Installing LLVM."
-    llvm_version="$(_koopa_variable llvm)"
-    llvm_version="$(_koopa_major_version "$llvm_version")"
-    wget https://apt.llvm.org/llvm.sh
-    chmod +x llvm.sh
-    sudo ./llvm.sh "$llvm_version"
-    rm llvm.sh
+    install-docker
 fi
 
-sudo apt-get -y autoremove
+install-r
+install-llvm

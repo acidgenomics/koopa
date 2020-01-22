@@ -69,3 +69,8 @@ if [[ ! -f /usr/bin/docbook2x-texi ]]
 then
     sudo ln -fnsv /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
 fi
+
+if ! _koopa_is_docker
+then
+    install-docker
+fi
