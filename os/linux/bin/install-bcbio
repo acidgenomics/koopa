@@ -44,7 +44,7 @@ else
     prefix="${prefix}/${version}"
 fi
 
-_koopa_is_dir "$prefix" && exit 0
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing bcbio-nextgen into '${prefix}'."
 

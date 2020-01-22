@@ -635,16 +635,32 @@ _koopa_check_user() {                                                     # {{{1
     return 0
 }
 
-_koopa_exit_if_installed() {
+_koopa_exit_if_installed() {                                              # {{{1
     # """
-    # Exit with success if an app is installed.
-    # Updated 2020-01-16.
+    # Exit with note if an app is installed.
+    # Updated 2020-01-22.
     # """
     for arg
     do
         if _koopa_is_installed "$arg"
         then
-            _koopa_success "'${arg}' is already installed."
+            _koopa_note "'${arg}' is already installed."
+            exit 0
+        fi
+    done
+    return 0
+}
+
+_koopa_exit_if_dir() {                                                    # {{{1
+    # """
+    # Exit with note if directory exists.
+    # Updated 2020-01-22.
+    # """
+    for arg
+    do
+        if [ -d "$arg" ]
+        then
+            _koopa_note "Directory exists: '${arg}'."
             exit 0
         fi
     done
