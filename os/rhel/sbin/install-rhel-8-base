@@ -6,8 +6,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
+# """
 # Is LLVM 8+ available yet?
-
+#
 # Missing:
 # - 'llvm7*'
 # - file-devel
@@ -19,6 +20,7 @@ _koopa_assert_has_no_args "$@"
 # - pandoc
 # - pandoc-citeproc
 # - poppler-cpp-devel
+# """
 
 install-fedora-base
 sudo yum -y install \
@@ -26,8 +28,3 @@ sudo yum -y install \
     libssh2 \
     python3 \
     util-linux-user
-
-if ! _koopa_is_docker
-then
-    install-docker
-fi
