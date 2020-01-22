@@ -31,5 +31,5 @@ done < <( \
         | sort -z \
 )
 
-"$conda_exe" clean --yes --all
+"$conda_exe" clean --yes --packages
 _koopa_set_permissions "$conda_prefix"
