@@ -209,13 +209,15 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
 _koopa_link_docker() {                                                    # {{{1
     # """
     # Link Docker library onto data disk for VM.
-    # Updated 2020-01-21.
+    # Updated 2020-01-22.
     # """
     _koopa_is_installed docker || return 0
     [ -d "/n" ] || return 0
     _koopa_assert_has_sudo
     _koopa_assert_is_linux
     _koopa_h2 "Updating Docker configuration."
+    _koopa_note "Stopping Docker."
+    sudo systemctl stop docker
     local lib_sys
     lib_sys="/var/lib/docker"
     local lib_n
@@ -227,12 +229,13 @@ _koopa_link_docker() {                                                    # {{{1
     etc_source="$(_koopa_prefix)/os/${os_id}/etc/docker"
     if [ -d "$etc_source" ]
     then
-        sudo ln -fnsv "$etc_source"* "/etc/docker/."
+        sudo mkdir -pv "/etc/docker"
+        sudo ln -fnsv "${etc_source}"* "/etc/docker/."
     fi
-    sudo systemctl stop docker
     sudo rm -frv "$lib_sys"
     sudo mkdir -pv "$lib_n"
     sudo ln -fnsv "$lib_n" "$lib_sys"
+    _koopa_note "Restarting Docker."
     sudo systemctl enable docker
     sudo systemctl start docker
     return 0
