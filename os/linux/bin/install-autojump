@@ -30,7 +30,8 @@ source "${script_dir}/../include/header.sh"
 name="autojump"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-_koopa_is_dir "$prefix" && exit 0
+
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 

@@ -18,7 +18,8 @@ source "${script_dir}/../include/header.sh"
 name="sra-tools"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-_koopa_is_dir "$prefix" && exit 0
+
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
@@ -26,10 +27,10 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed jar
 
-build_prefix="${tmp_dir}/ncbi-outdir"
+jobs="$(_koopa_cpu_count)"
 ngs_libdir="$(_koopa_make_prefix)/lib64"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-jobs="$(_koopa_cpu_count)"
+build_prefix="${tmp_dir}/ncbi-outdir"
 
 # Ensure current jar binary is in path, otherwise install will fail.
 java_home="$(_koopa_java_home)"

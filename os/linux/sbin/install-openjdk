@@ -12,6 +12,9 @@ version="$(_koopa_variable "java")"
 jdk_dir="$(_koopa_app_prefix)/java/openjdk"
 prefix="${jdk_dir}/${version}"
 
+# Don't early return if directory exists here.
+# We need to ensure alternatives code runs (see below).
+
 _koopa_h1 "Installing OpenJDK ${version} at '${prefix}'."
 
 # Download and extract the JDK, if necessary.
