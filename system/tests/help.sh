@@ -65,7 +65,7 @@ do
     )
     for file in "${files[@]}"
     do
-        # > echo "$file"
+        _koopa_info "$file"
         "$file" --help > /dev/null
     done
 done
