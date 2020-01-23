@@ -232,19 +232,19 @@ then
     install-go
     install-rust
 
-    # Editors.
-    ! _koopa_is_docker && install-emacs
-    install-vim
-    install-neovim
-    install-tmux
-
     # Shell tools.
     install-shellcheck
+    install-tmux
     install-htop
     install-neofetch
     install-autojump
     install-the-silver-searcher
     install-fzf
+
+    # Text editors.
+    ! _koopa_is_docker && install-emacs
+    install-vim
+    install-neovim
 
     # Bioinformatics apps.
     install-genrich
