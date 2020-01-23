@@ -57,6 +57,7 @@ _koopa_assert_has_no_envs
 build="$(_koopa_make_build_string)"
 exe_file="${prefix}/bin/python3"
 jobs="$(_koopa_cpu_count)"
+make_prefix="$(_koopa_make_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 if [[ -d "${HOME}/.virtualenvs" ]]
@@ -77,10 +78,10 @@ fi
         --prefix="$prefix" \
         --enable-shared \
         --without-ensurepip \
-        CPPFLAGS="-I${prefix}/extlib/include" \
-        LDFLAGS="-L${prefix}/extlib/lib \
-            -Wl,--rpath=${prefix}/lib \
-            -Wl,--rpath=${prefix}/extlib/lib"
+        CPPFLAGS="-I${make_prefix}/extlib/include" \
+        LDFLAGS="-L${make_prefix}/extlib/lib \
+            -Wl,--rpath=${make_prefix}/lib \
+            -Wl,--rpath=${make_prefix}/extlib/lib"
     make --jobs="$jobs"
     # > make test
     make install
