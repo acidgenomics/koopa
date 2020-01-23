@@ -212,8 +212,8 @@ then
     install-luarocks
     install-r
     install-python  # need to install pip, pipx.
-    #install-vim
-    #install-neovim
+    install-vim     # haven't double checked this yet with Ubuntu VM.
+    install-neovim
     #install-emacs
     #install-sqlite
     #install-proj
@@ -239,9 +239,12 @@ then
     #install-rbenv
     #_koopa_is_installed install-docker && install-docker
     #_koopa_is_installed install-llvm && install-llvm
+
     #(pipx-install-envs)
     #(install-rust-crates)
     #(conda-create-bioinfo-envs)
+
+    # Need to add an R package install recipe here.
 fi
 
 if _koopa_is_installed R

@@ -55,7 +55,8 @@ fi
         --build="$build" \
         --prefix="$prefix" \
         --enable-shared \
-        --without-ensurepip
+        --without-ensurepip \
+        LDFLAGS="-Wl,-rpath ${prefix}/lib"
     make --jobs="$jobs"
     # Multiprocessing tests can fail on very large multi-core VMs due to too
     # many open files, so disable tests if necessary.
@@ -70,6 +71,8 @@ _koopa_link_cellar "$name" "$version"
 # Ubuntu 18 LTS clean install, now seeing this error:
 # python3: error while loading shared libraries: libpython3.8.so.1.0: cannot
 # open shared object file: No such file or directory
+# https://stackoverflow.com/questions/43333207
+# Trying LDFLAGS setting here to fix.
 
 # > (
 # >     _koopa_deactivate_envs
