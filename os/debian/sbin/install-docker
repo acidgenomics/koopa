@@ -5,14 +5,19 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
 # Currently supports overlay2, aufs and btrfs storage drivers.
 # https://docs.docker.com/install/linux/docker-ce/debian/
-
+#
 # Configures at '/var/lib/docker/'.
+# """
 
 _koopa_exit_if_docker
 _koopa_exit_if_installed docker
 _koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed add-apt-repository
+
+release="$(_koopa_os_codename)"
 
 # Remove legacy versions, if necessary.
 sudo apt-get -y remove docker docker-engine docker.io containerd runc
@@ -41,7 +46,7 @@ sudo apt-key fingerprint 0EBFCD88
 # Set up the stable repository.
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/debian \
-   $(lsb_release -cs) \
+   ${release} \
    stable"
 
 sudo apt-get update
