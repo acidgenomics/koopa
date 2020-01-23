@@ -337,7 +337,7 @@ _koopa_make_build_string() {                                              # {{{1
 _koopa_update_ldconfig() {                                                # {{{1
     # """
     # Update dynamic linker (LD) configuration.
-    # Updated 2020-01-21.
+    # Updated 2020-01-23.
     # """
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
@@ -359,7 +359,7 @@ _koopa_update_ldconfig() {                                                # {{{1
     for source_file in "${conf_source}/"*".conf"
     do
         dest_file="/etc/ld.so.conf.d/koopa-$(basename "$source_file")"
-        sudo ln -fnsv "$source_file" "$dest_file"
+        sudo ln -fns "$source_file" "$dest_file"
     done
     sudo ldconfig
     return 0
