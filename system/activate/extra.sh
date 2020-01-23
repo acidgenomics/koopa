@@ -6,7 +6,7 @@
 # ==============================================================================
 
 # Run 'alias' in terminal to list current definitions.
-
+#
 # See also:
 # - https://github.com/MikeMcQuaid/dotfiles
 # - https://github.com/stephenturner/oneliners
@@ -54,56 +54,6 @@ unset -v dotfiles
 # - https://askubuntu.com/questions/44534
 
 # > umask 0002
-
-
-
-# Core                                                                      {{{1
-# ==============================================================================
-
-alias df='df -H'
-alias df2='df --portability --print-type --si | sort'
-alias du='du -sh'
-alias h='history'
-alias less='less --ignore-case --raw-control-chars'
-alias sha256='shasum -a 256'
-alias tarup='tar -czvf'
-alias tardown='tar -xzvf'
-
-
-
-# File system navigation                                                    {{{1
-# ==============================================================================
-
-alias e='exit'
-alias k='cd $KOOPA_PREFIX'
-alias reload='exec "$SHELL" -l'
-
-# Navigate up parent directories without 'cd'.
-# These are also supported by autojump.
-# > alias ..='cd ..'
-# > alias ...='cd ../../'
-# > alias ....='cd ../../../'
-# > alias .....='cd ../../../../'
-# > alias ......='cd ../../../../../'
-
-# From Debian bashrc:
-# > alias l='ls -CF'
-# > alias la='ls -A'
-# > alias ll='ls -alF'
-
-alias l.='ls -Fd .*'
-alias l1='ls -1p'
-alias l='ls -AGghlo'
-alias la='ls -Ahl'
-alias ll='ls -hl'
-
-alias cls='clear; ls'
-alias lhead='l | head'
-alias ltail='l | tail'
-
-# Browse up and down.
-alias u='clear; cd ../; pwd; ls'
-alias d='clear; cd -; ls'
 
 
 
@@ -163,12 +113,6 @@ fi
 # GNU coreutils                                                             {{{1
 # ==============================================================================
 
-# Note: macOS doesn't bundle GNU coreutils, so be sure to install via Homebrew.
-
-alias cp='cp --archive --interactive --verbose'
-alias mkdir='mkdir --parents --verbose'
-alias mv="mv --interactive --verbose"
-alias rm='rm --dir --interactive="once" --preserve-root --verbose'
 
 if _koopa_is_installed dircolors
 then
@@ -245,13 +189,6 @@ alias emacs24='TERM=xterm-24bit emacs --no-window-system'
 # exa                                                                    {{{1
 # ==============================================================================
 
-# Use exa instead of ls, if installed.
-# It has better color support than dircolors.
-# See also: https://the.exa.website/
-if _koopa_is_installed exa
-then
-    alias l='exa -Fg'
-fi
 
 
 
@@ -314,37 +251,13 @@ fi
 
 
 
-# Neovim                                                                    {{{1
-# ==============================================================================
-
-alias nvim-default='nvim -u NONE'
-
-
-
 # Python                                                                    {{{1
 # ==============================================================================
-
-# Note that 79 characters conforms to PEP8 (see flake8 for details).
-alias black="black --line-length=79"
 
 # Don't allow Python to change the prompt string by default.
 if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
 then
     export VIRTUAL_ENV_DISABLE_PROMPT=1
-fi
-
-
-
-# R                                                                         {{{1
-# ==============================================================================
-
-alias R='R --no-restore --no-save --quiet'
-
-if _koopa_is_installed shiny-server
-then
-    alias shiny-restart="sudo systemctl restart shiny-server"
-    alias shiny-start="sudo systemctl start shiny-server"
-    alias shiny-status="sudo systemctl status shiny-server"
 fi
 
 
@@ -370,29 +283,91 @@ fi
 
 
 
-# Shiny Server                                                              {{{1
-# ==============================================================================
-
-if _koopa_is_linux
-then
-    alias shiny-status='sudo systemctl status shiny-server'
-    alias shiny-start='sudo systemctl start shiny-server'
-    alias shiny-restart='sudo systemctl restart shiny-server'
-fi
-
-
-
-# Vim                                                                      {{{1
-# ==============================================================================
-
-# Allow fast, default mode that skips RC file.
-alias vim-default='vim -i NONE -u NONE -U NONE'
-
-
-
 # Activation functions                                                      {{{1
 # ==============================================================================
 
 _koopa_activate_autojump
 _koopa_activate_broot
 _koopa_activate_fzf
+
+
+
+# Aliases                                                                   {{{1
+# ==============================================================================
+
+# Shortcuts                                                               # {{{2
+# ------------------------------------------------------------------------------
+
+alias k='cd $KOOPA_PREFIX'
+alias ku='koopa update'
+
+alias e='exit'
+alias h='history'
+
+if _koopa_is_installed exa
+then
+    alias l='exa -F'
+    alias la='exa -Fal --group'
+    alias ll='exa -Fl --group'
+else
+    alias l='ls -F'
+    alias la='ls -Fahl'
+    alias ll='ls -BFhl'
+fi
+
+alias l.='l -d .*'
+alias l1='ls -1'
+
+# Browse up and down.
+alias u='clear; cd ../; pwd; l'
+alias d='clear; cd -; l'
+
+# Navigate up parent directories without 'cd'.
+# These are also supported by autojump.
+# > alias ..='cd ..'
+# > alias ...='cd ../../'
+# > alias ....='cd ../../../'
+# > alias .....='cd ../../../../'
+# > alias ......='cd ../../../../../'
+
+
+
+# Improved app defaults                                                   # {{{2
+# ------------------------------------------------------------------------------
+
+# Note that macOS ships with a very old version of GNU coreutils.
+# Update these using Homebrew.
+
+alias R='R --no-restore --no-save --quiet'
+# Note that 79 characters conforms to PEP8 (see flake8 for details).
+alias black="black --line-length=79"
+alias cp='cp --archive --interactive --verbose'
+alias df='df -H'
+alias du='du -sh'
+alias less='less --ignore-case --raw-control-chars'
+alias mkdir='mkdir --parents --verbose'
+alias mv="mv --interactive --verbose"
+alias rm='rm --dir --interactive="once" --preserve-root --verbose'
+
+# App alternates                                                          # {{{2
+# ------------------------------------------------------------------------------
+
+alias cls='clear; ls'
+alias df2='df --portability --print-type --si | sort'
+alias lhead='l | head'
+alias ltail='l | tail'
+# Default mode that doesn't load user config.
+alias nvim-default='nvim -u NONE'
+alias reload='exec "$SHELL" -l'
+alias sha256='shasum -a 256'
+alias tardown='tar -xzvf'
+alias tarup='tar -czvf'
+# Default mode that doesn't load user config.
+alias vim-default='vim -i NONE -u NONE -U NONE'
+
+if _koopa_is_installed shiny-server
+then
+    alias shiny-restart="sudo systemctl restart shiny-server"
+    alias shiny-start="sudo systemctl start shiny-server"
+    alias shiny-status="sudo systemctl status shiny-server"
+fi
