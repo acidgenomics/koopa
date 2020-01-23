@@ -210,38 +210,38 @@ then
     install-gnupg
     install-lua
     install-luarocks
-    install-r
-    install-python
-    install-vim
-    install-neovim
-    install-emacs
-    install-sqlite
-    install-proj
-    install-gdal
-    install-hdf5
-    install-gsl
-    install-perl
-    install-ruby
-    install-julia
-    install-htop
-    install-shellcheck
-    install-neofetch
-    install-genrich
-    install-autojump
-    install-the-silver-searcher
-    install-fzf
-    install-go
-    install-conda
-    install-lmod
-    install-rust
-    install-perlbrew
-    install-pyenv
-    install-rbenv
-    _koopa_is_installed install-docker && install-docker
-    _koopa_is_installed install-llvm && install-llvm
-    (pipx-install-envs)
-    (install-rust-crates)
-    (conda-create-bioinfo-envs)
+    #install-r
+    #install-python
+    #install-vim
+    #install-neovim
+    #install-emacs
+    #install-sqlite
+    #install-proj
+    #install-gdal
+    #install-hdf5
+    #install-gsl
+    #install-perl
+    #install-ruby
+    #install-julia
+    #install-htop
+    #install-shellcheck
+    #install-neofetch
+    #install-genrich
+    #install-autojump
+    #install-the-silver-searcher
+    #install-fzf
+    #install-go
+    #install-conda
+    #install-lmod
+    #install-rust
+    #install-perlbrew
+    #install-pyenv
+    #install-rbenv
+    #_koopa_is_installed install-docker && install-docker
+    #_koopa_is_installed install-llvm && install-llvm
+    #(pipx-install-envs)
+    #(install-rust-crates)
+    #(conda-create-bioinfo-envs)
 fi
 
 if _koopa_is_installed R
