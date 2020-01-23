@@ -55,7 +55,7 @@ fi
         --build="$build" \
         --prefix="$prefix" \
         --enable-shared \
-        --without-ensurepip \
+        --without-ensurepip
     make --jobs="$jobs"
     # Multiprocessing tests can fail on very large multi-core VMs due to too
     # many open files, so disable tests if necessary.
