@@ -9,9 +9,9 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed "conda"
 
-name="$1"
 force=0
 
+POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
@@ -19,8 +19,22 @@ do
             force=1
             shift 1
             ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift 1
+            ;;
     esac
 done
+set -- "${POSITIONAL[@]}"
+
+name="$1"
 
 if [[ "$force" -eq 1 ]]
 then
@@ -30,4 +44,5 @@ else
     _koopa_exit_if_dir "${env_prefix}/${name}"
 fi
 
+_koopa_info "Creating '${name}' conda environment."
 conda create -qy --name="$name" "$name"
