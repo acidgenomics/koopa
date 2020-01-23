@@ -442,7 +442,7 @@ _koopa_install_pipx() {
 _koopa_link_cellar() {                                                    # {{{1
     # """
     # Symlink cellar into build directory.
-    # Updated 2020-01-12.
+    # Updated 2020-01-23.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -484,10 +484,10 @@ _koopa_link_cellar() {                                                    # {{{1
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo cp -frsv "$cellar_prefix/"* "$make_prefix/".
+        sudo cp -frs "$cellar_prefix/"* "$make_prefix/".
         _koopa_update_ldconfig
     else
-        cp -frsv "$cellar_prefix/"* "$make_prefix/".
+        cp -frs "$cellar_prefix/"* "$make_prefix/".
     fi
     return 0
 }
