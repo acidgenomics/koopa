@@ -31,9 +31,9 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed sed sudo
 
-export DEBIAN_FRONTEND="noninteractive"
-
 _koopa_h1 "Installing Debian base system."
+
+export DEBIAN_FRONTEND="noninteractive"
 
 # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default, which
 # is non-standard and can cause cellar link script to break.
@@ -61,11 +61,11 @@ sudo apt-get update
 
 _koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
 sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get -y dist-upgrade
+    apt-get --no-install-recommends --yes dist-upgrade
 
 _koopa_h2 "Installing recommending packages."
 sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install \
+    apt-get --no-install-recommends --yes install \
         alien \
         apt-utils \
         autoconf \
@@ -136,7 +136,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
 _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
 # Including 'bash' here will remove 'r-base'.
 sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get -y build-dep \
+    apt-get --no-install-recommends --yes build-dep \
         coreutils \
         emacs-defaults \
         fish \
@@ -150,3 +150,5 @@ sudo DEBIAN_FRONTEND=noninteractive \
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get -y autoremove
+
+sudo rm -fr /var/lib/apt/lists/*
