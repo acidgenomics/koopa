@@ -42,13 +42,11 @@ fi
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install apt-utils
-sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y dist-upgrade
-
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y install \
         alien \
+        apt-utils \
         autoconf \
         automake \
         bc \
