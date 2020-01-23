@@ -33,6 +33,8 @@ _koopa_assert_is_installed sed sudo
 
 export DEBIAN_FRONTEND="noninteractive"
 
+_koopa_h1 "Installing Debian base system."
+
 # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default, which
 # is non-standard and can cause cellar link script to break.
 if [[ -L /usr/local/man ]]
@@ -40,9 +42,28 @@ then
     sudo rm -v /usr/local/man
 fi
 
+# Enable Debian sources.
+# To use 'build-dep', you must uncomment deb-src lines:
+# > sudo vim /etc/apt/sources.list
+#
+# Otherwise you'll hit this error:
+# You must put some 'source' URIs in your sources.list
+#
+# https://askubuntu.com/questions/496549
+if [[ ! -f /etc/apt/sources.list~ ]]
+then
+    _koopa_h2 "Enabling Debian sources for 'build-dep'."
+    sudo cp /etc/apt/sources.list /etc/apt/sources.list~
+    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+fi
+
 sudo apt-get update
+
+_koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y dist-upgrade
+
+_koopa_h2 "Installing recommending packages."
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y install \
         alien \
@@ -112,21 +133,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         xorg \
         zsh
 
-# Enable Debian sources.
-# To use 'build-dep', you must uncomment deb-src lines:
-# > sudo vim /etc/apt/sources.list
-#
-# Otherwise you'll hit this error:
-# You must put some 'source' URIs in your sources.list
-#
-# https://askubuntu.com/questions/496549
-if [[ ! -f /etc/apt/sources.list~ ]]
-then
-    echo "Enabling Debian sources for 'build-dep'."
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list~
-    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
-fi
-
+_koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
 # Including 'bash' here will remove 'r-base'.
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y build-dep \
@@ -141,4 +148,5 @@ sudo DEBIAN_FRONTEND=noninteractive \
         vim \
         zsh
 
+_koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get -y autoremove
