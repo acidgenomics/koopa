@@ -242,8 +242,14 @@ then
         install-emacs
         _koopa_is_installed install-docker && install-docker
     fi
+
+    # > _koopa_activate_pipx
     #(pipx-install-envs)
+
+    # > _koopa_activate_rustup
     #(install-rust-crates)
+
+    # > _koopa_activate_conda
     #(conda-create-bioinfo-envs)
 
     # Consider adding an R package recipe here.
