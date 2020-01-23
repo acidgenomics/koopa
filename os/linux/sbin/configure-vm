@@ -201,55 +201,79 @@ install-openjdk
 
 if [[ "$rsync" -eq 0 ]]
 then
+    # Compilers.
+    _koopa_is_installed install-llvm && install-llvm
+
+    # Core.
     install-coreutils
+
+    # Shells.
     install-bash
     install-zsh
     install-fish
-    install-tmux
+
+    # General tools.
     install-git
     install-gnupg
     install-lua
     install-luarocks
+    install-sqlite
+    install-proj
+    install-gdal
+    install-hdf5
+    install-gsl
+
+    # Languages.
     install-r
     install-python
+    install-perl
+    install-ruby
+    install-julia
+    install-go
+    install-rust
+
+    # Editors.
+    ! _koopa_is_docker && install-emacs
     install-vim
     install-neovim
-    install-emacs
-    #install-sqlite
-    #install-proj
-    #install-gdal
-    #install-hdf5
-    #install-gsl
-    #install-perl
-    #install-ruby
-    #install-julia
-    #install-htop
-    #install-shellcheck
-    #install-neofetch
-    #install-genrich
-    #install-autojump
-    #install-the-silver-searcher
-    #install-fzf
-    #install-go
-    #install-conda
-    #install-lmod
-    #install-rust
-    #install-perlbrew
-    #install-pyenv
-    #install-rbenv
-    #_koopa_is_installed install-docker && install-docker
-    #_koopa_is_installed install-llvm && install-llvm
+    install-tmux
 
+    # Shell tools.
+    install-shellcheck
+    install-htop
+    install-neofetch
+    install-autojump
+    install-the-silver-searcher
+    install-fzf
+
+    # Bioinformatics apps.
+    install-genrich
+
+    # Environment managers.
+    ! _koopa_is_docker && _koopa_is_installed install-docker && install-docker
+    install-conda
+    install-perlbrew
+    install-pyenv
+    install-rbenv
+    install-lmod
+
+    # > _koopa_activate_pipx
     #(pipx-install-envs)
+
+    # > _koopa_activate_rustup
     #(install-rust-crates)
+
+    # > _koopa_activate_conda
     #(conda-create-bioinfo-envs)
 
-    # Need to add an R package install recipe here.
+    # Consider adding an R package recipe here.
+    # Can use the Bioconductor Docker image as a reference.
 fi
 
-if _koopa_is_installed R
+r-javareconf
+
+if ! _koopa_is_docker
 then
-    r-javareconf
     _koopa_is_installed install-rstudio-server && install-rstudio-server
     _koopa_is_installed install-shiny-server && install-shiny-server
 fi
