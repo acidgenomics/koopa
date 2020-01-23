@@ -30,4 +30,5 @@ else
     _koopa_exit_if_dir "${env_prefix}/${name}"
 fi
 
+_koopa_info "Creating '${name}' conda environment."
 conda create -qy --name="$name" "$name"
