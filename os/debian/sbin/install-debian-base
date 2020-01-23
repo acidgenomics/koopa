@@ -67,14 +67,17 @@ _koopa_h2 "Installing recommending packages."
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get --no-install-recommends --yes install \
         alien \
+        apt-listchanges \
         apt-utils \
         autoconf \
         automake \
         bc \
         cargo \
         cmake \
+        coreutils \
         curl \
         emacs \
+        findutils \
         firefox \
         fish \
         gdebi-core \
@@ -83,6 +86,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         gnutls-bin \
         gtk-doc-tools \
         htop \
+        keyboard-configuration \
         libacl1 \
         libacl1-dev \
         libbz2-dev \
@@ -113,7 +117,6 @@ sudo DEBIAN_FRONTEND=noninteractive \
         libxml2-dev \
         libz-dev \
         lsb-release \
-        keyboard-configuration \
         pandoc \
         pandoc-citeproc \
         parallel \
@@ -126,9 +129,10 @@ sudo DEBIAN_FRONTEND=noninteractive \
         sudo \
         systemd \
         texlive \
-        tree \
         tmux \
+        tree \
         tzdata \
+        unattended-upgrades \
         vim \
         xorg \
         zsh
