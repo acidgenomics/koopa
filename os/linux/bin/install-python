@@ -78,10 +78,7 @@ fi
         --prefix="$prefix" \
         --enable-shared \
         --without-ensurepip \
-        CPPFLAGS="-I${make_prefix}/extlib/include" \
-        LDFLAGS="-L${make_prefix}/extlib/lib \
-            -Wl,--rpath=${make_prefix}/lib \
-            -Wl,--rpath=${make_prefix}/extlib/lib"
+        LDFLAGS="-Wl,--rpath=${make_prefix}/lib"
     make --jobs="$jobs"
     # > make test
     make install
