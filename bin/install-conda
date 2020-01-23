@@ -36,14 +36,12 @@ else
 fi
 
 prefix="$(_koopa_conda_prefix)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing Conda at '${prefix}'."
 
-if [[ ! -L "$prefix" ]]
-then
-    _koopa_prefix_mkdir "$prefix"
-fi
+_koopa_prefix_mkdir "$prefix"
+tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 if [[ "$anaconda" -eq 1 ]]
 then
@@ -88,6 +86,12 @@ ln -fnsv "${KOOPA_PREFIX}/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
 _koopa_set_permissions "$prefix"
+
+set +u
+_koopa_activate_conda
+set -u
+
+update-conda
 
 _koopa_success "Conda installed successfully."
 _koopa_note "Restart the shell to complete activation."
