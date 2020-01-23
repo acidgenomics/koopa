@@ -210,7 +210,7 @@ then
     install-gnupg
     install-lua
     install-luarocks
-    #install-r
+    install-r
     #install-python
     #install-vim
     #install-neovim
