@@ -19,7 +19,8 @@ _koopa_assert_has_no_args "$@"
 # /var/log/unattended-upgrades/
 
 sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get -y install unattended-upgrades apt-listchanges
+    apt-get --no-install-recommends --yes \
+        install apt-listchanges unattended-upgrades
 
 # The file '/etc/apt/apt.conf.d/20auto-upgrades' can be created manually or by
 # running the following command as root:
