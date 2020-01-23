@@ -27,10 +27,57 @@ source "${script_dir}/../include/header.sh"
 # Makefile:421: recipe for target 'src' failed
 # make: *** [src] Error 2
 #
-# Suggestion (doesn't work):
+# The 'etc/PROBLEMS' file has some details on this issue.
+# https://fossies.org/linux/emacs/etc/PROBLEMS
+#
+# 2877 *** Segfault during 'make'
+# 2878 
+# 2879 If Emacs segfaults when 'make' executes one of these commands:
+# 2880 
+# 2881   LC_ALL=C ./temacs -batch -l loadup bootstrap
+# 2882   LC_ALL=C ./temacs -batch -l loadup dump
+# 2883 
+# 2884 the problem may be due to inadequate workarounds for address space
+# 2885 layout randomization (ASLR), an operating system feature that
+# 2886 randomizes the virtual address space of a process.  ASLR is commonly
+# 2887 enabled in Linux and NetBSD kernels, and is intended to deter exploits
+# 2888 of pointer-related bugs in applications.  If ASLR is enabled, the
+# 2889 command:
+# 2890 
+# 2891    cat /proc/sys/kernel/randomize_va_space  # GNU/Linux
+# 2892    sysctl security.pax.aslr.global          # NetBSD
+# 2893 
+# 2894 outputs a nonzero value.
+# 2895 
+# 2896 These segfaults should not occur on most modern systems, because the
+# 2897 Emacs build procedure uses the command 'setfattr' or 'paxctl' to mark
+# 2898 the Emacs executable as requiring non-randomized address space, and
+# 2899 Emacs uses the 'personality' system call to disable address space
+# 2900 randomization when dumping.  However, older kernels may not support
+# 2901 'setfattr', 'paxctl', or 'personality', and newer Linux kernels have a
+# 2902 secure computing mode (seccomp) that can be configured to disable the
+# 2903 'personality' call.
+# 2904 
+# 2905 It may be possible to work around the 'personality' problem in a newer
+# 2906 Linux kernel by configuring seccomp to allow the 'personality' call.
+# 2907 For example, if you are building Emacs under Docker, you can run the
+# 2908 Docker container with a security profile that allows 'personality' by
+# 2909 using Docker's --security-opt option with an appropriate profile; see
+# 2910 <https://docs.docker.com/engine/security/seccomp/>.
+# 2911 
+# 2912 To work around the ASLR problem in either an older or a newer kernel,
+# 2913 you can temporarily disable the feature while building Emacs.  On
+# 2914 GNU/Linux you can do so using the following command (as root).
+# 2915 
+# 2916     echo 0 > /proc/sys/kernel/randomize_va_space
+# 2917 
+# 2918 You can re-enable the feature when you are done, by echoing the
+# 2919 original value back to the file.
+#
+# Suggestion 1 (doesn't work):
 # CFLAGS="-no-pie"
 #
-# Suggestion (doesn't work):
+# Suggestion 2 (doesn't work):
 # > aslr_file="/proc/sys/kernel/randomize_va_space"
 # > aslr_value="$(cat "$aslr_file")"
 # > echo 0 > /proc/sys/kernel/randomize_va_space

@@ -214,7 +214,7 @@ then
     install-python
     install-vim
     install-neovim
-    #install-emacs
+    install-emacs
     #install-sqlite
     #install-proj
     #install-gdal
