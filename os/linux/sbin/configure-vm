@@ -211,9 +211,8 @@ then
     install-lua
     install-luarocks
     install-r
-    # This is erroring out on Ubuntu 18 due to LDCONFIG....
-    install-python  # need to install pip, pipx.
-    install-vim     # haven't double checked this yet with Ubuntu VM.
+    install-python
+    install-vim
     install-neovim
     #install-emacs
     #install-sqlite
