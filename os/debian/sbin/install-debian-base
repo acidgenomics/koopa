@@ -72,6 +72,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         autoconf \
         automake \
         bc \
+        ca-certificates \
         cargo \
         cmake \
         coreutils \
