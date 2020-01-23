@@ -5,6 +5,33 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Emacs is failing to compile on Ubuntu 18 LTS.
+#
+# Finding pointers to doc strings...
+# Finding pointers to doc strings...done
+# Dumping under the name emacs
+# **************************************************
+# Warning: Your system has a gap between BSS and the
+# heap (29024367 bytes).  This usually means that exec-shield
+# or something similar is in effect.  The dump may
+# fail because of this.  See the section about
+# exec-shield in etc/PROBLEMS for more information.
+# **************************************************
+# 12816512 of 33554432 static heap bytes used
+# /bin/bash: line 1:  7508 Segmentation fault      (core dumped) 
+#     ./temacs --batch --load loadup bootstrap
+# make[1]: *** [bootstrap-emacs] Error 139
+# Makefile:740: recipe for target 'bootstrap-emacs' failed
+# make[1]: Leaving directory '/tmp/tmp.Os2bIejEX7/emacs/emacs-26.3/src'
+# Makefile:421: recipe for target 'src' failed
+# make: *** [src] Error 2
+#
+# See also:
+# - https://askubuntu.com/questions/837306
+# - http://debbugs.gnu.org/24682
+# """
+
 name="emacs"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -31,7 +58,8 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --build="$build" \
         --prefix="$prefix" \
         --with-x-toolkit="no" \
-        --with-xpm="no"
+        --with-xpm="no" \
+        CFLAGS="-no-pie"
     make --jobs="$jobs"
     make install
 )
