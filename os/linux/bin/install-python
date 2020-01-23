@@ -11,15 +11,32 @@ source "${script_dir}/../include/header.sh"
 # which are common on RHEL and other conservative cluster/VM configurations.
 # Therefore, we are disabling this flag by default.
 #
+#
+# Multiprocessing tests can fail on very large multi-core VMs due to too many
+# open files, so disable tests if necessary.
+#
+#
 # Recently, I'm seeing a new 'generate-posix-vars' error pop up with 3.8.0
 # installs on RHEL 7 machines.
+#
+#
+# Install libffi if you hit cryptic '_ctypes' module errors.
+# https://stackoverflow.com/questions/27022373
 #
 # See also:
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
 #
-# Install libffi if you hit cryptic '_ctypes' module errors.
-# https://stackoverflow.com/questions/27022373
+#
+# Ubuntu 18 LTS requires LDFLAGS to be set, otherwise we hit:
+# python3: error while loading shared libraries: libpython3.8.so.1.0: cannot
+# open shared object file: No such file or directory
+#
+# This alone works, but I've set other paths, as recommended.
+# LDFLAGS="-Wl,-rpath ${prefix}/lib"
+#
+# See also:
+# https://stackoverflow.com/questions/43333207
 # """
 
 name="python"
@@ -55,10 +72,12 @@ fi
         --build="$build" \
         --prefix="$prefix" \
         --enable-shared \
-        --without-ensurepip
+        --without-ensurepip \
+        CPPFLAGS="-I${prefix}/extlib/include" \
+        LDFLAGS="-L${prefix}/extlib/lib \
+            -Wl,--rpath=${prefix}/lib \
+            -Wl,--rpath=${prefix}/extlib/lib"
     make --jobs="$jobs"
-    # Multiprocessing tests can fail on very large multi-core VMs due to too
-    # many open files, so disable tests if necessary.
     # > make test
     make install
 )
@@ -66,14 +85,6 @@ fi
 rm -fr "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
-
-# Ubuntu 18 LTS clean install, now seeing this error:
-# python3: error while loading shared libraries: libpython3.8.so.1.0: cannot
-# open shared object file: No such file or directory
-# https://stackoverflow.com/questions/43333207
-# Trying LDFLAGS setting here to fix...doesn't work.
-# LDFLAGS="-Wl,-rpath ${prefix}/lib"
-# sudo apt-get install libpython3.x-dev
 
 # > (
 # >     _koopa_deactivate_envs
