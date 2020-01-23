@@ -22,13 +22,19 @@ do
     esac
 done
 
+echo "AAA"
+
 if [[ "$force" -eq 1 ]]
 then
+    echo "BBB"
     conda remove --name "$name" --all
 else
+    echo "CCC"
     env_prefix="$(_koopa_conda_default_envs_prefix)"
     _koopa_exit_if_dir "${env_prefix}/${name}"
 fi
+
+echo "DDD"
 
 _koopa_info "Creating '${name}' conda environment."
 conda create -qy --name="$name" "$name"
