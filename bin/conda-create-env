@@ -6,16 +6,12 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-echo "UHHH"
-
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed "conda"
 
-name="$1"
 force=0
 
-echo "HMMM"
-
+POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
@@ -23,22 +19,30 @@ do
             force=1
             shift 1
             ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift 1
+            ;;
     esac
 done
+set -- "${POSITIONAL[@]}"
 
-echo "AAA"
+name="$1"
 
 if [[ "$force" -eq 1 ]]
 then
-    echo "BBB"
     conda remove --name "$name" --all
 else
-    echo "CCC"
     env_prefix="$(_koopa_conda_default_envs_prefix)"
     _koopa_exit_if_dir "${env_prefix}/${name}"
 fi
-
-echo "DDD"
 
 _koopa_info "Creating '${name}' conda environment."
 conda create -qy --name="$name" "$name"
