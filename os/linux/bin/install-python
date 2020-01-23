@@ -16,13 +16,14 @@ source "${script_dir}/../include/header.sh"
 # open files, so disable tests if necessary.
 #
 #
-# Recently, I'm seeing a new 'generate-posix-vars' error pop up with 3.8.0
-# installs on RHEL 7 machines.
-#
-#
 # Install libffi if you hit cryptic '_ctypes' module errors.
-# https://stackoverflow.com/questions/27022373
 #
+# See also:
+# - https://stackoverflow.com/questions/27022373
+#
+#
+# I'm seeing a 'generate-posix-vars' error pop up with 3.8.0 install on RHEL 7.
+# 
 # See also:
 # - https://bugs.python.org/issue33374
 # - https://github.com/pyenv/pyenv/issues/1388
@@ -35,8 +36,11 @@ source "${script_dir}/../include/header.sh"
 # This alone works, but I've set other paths, as recommended.
 # LDFLAGS="-Wl,-rpath ${prefix}/lib"
 #
+# Check config with:
+# > ldd /usr/local/bin/python3
+#
 # See also:
-# https://stackoverflow.com/questions/43333207
+# - https://stackoverflow.com/questions/43333207
 # """
 
 name="python"
@@ -51,7 +55,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 build="$(_koopa_make_build_string)"
-# > exe_file="${prefix}/bin/python3"
+exe_file="${prefix}/bin/python3"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
@@ -86,13 +90,10 @@ rm -fr "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
 
-# > (
-# >     _koopa_deactivate_envs
-# >     _koopa_install_pip "$exe_file"
-# >     _koopa_install_pipx "$exe_file"
-# > )
-# >
-# > _koopa_link_cellar "$name" "$version"
+_koopa_install_pip "$exe_file"
+_koopa_install_pipx "$exe_file"
+
+_koopa_link_cellar "$name" "$version"
 
 # > build_prefix="$(_koopa_make_prefix)"
 # > _koopa_h1 "Symlinking 'python3' to 'python' in '${build_prefix}'."
