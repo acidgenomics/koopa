@@ -29,6 +29,8 @@ do
     esac
 done
 
+_koopa_h2 "Installing bioinfo conda environments."
+
 conda-create-env bamtools                   # base                      # 0.043G
 conda-create-env bedtools                   # base                      # 0.082G
 conda-create-env bioawk                     # base                      # 0.027G
