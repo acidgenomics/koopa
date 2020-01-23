@@ -253,4 +253,9 @@ fi
 
 _koopa_update_lmod_config
 
+if _koopa_is_debian
+then
+    sudo rm -rf /var/lib/apt/lists/*
+fi
+
 _koopa_success "Configuration completed successfully."
