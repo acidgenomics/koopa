@@ -5,10 +5,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
 # Install latest version of R.
 # https://cran.r-project.org/bin/linux/ubuntu/README.html
+# """
 
-release="$(lsb_release -s -c)"
+koopa_assert_is_installed add-apt-repository
+
+release="$(_koopa_os_codename)"
 
 # Release is signed by Michael Rutter <marutter@gmail.com>.
 # Refer to 'Secure apt' section for details.
@@ -17,7 +21,8 @@ sudo apt-key adv \
     --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
 
 # Modify '/etc/apt/sources.list' file.
-sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu ${release}-cran35/"
+sudo add-apt-repository \
+    "deb https://cloud.r-project.org/bin/linux/ubuntu ${release}-cran35/"
 
 sudo apt-get update
 sudo apt-get -y install r-base r-base-dev

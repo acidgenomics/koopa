@@ -5,10 +5,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
 # Install latest version of R.
 # https://cran.r-project.org/bin/linux/debian/
+# """
 
-release="$(lsb_release -s -c)"
+_koopa_assert_is_installed add-apt-repository
+
+release="$(_koopa_os_codename)"
 
 # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
 # Refer to 'Secure apt' section for details.
@@ -17,7 +21,8 @@ sudo apt-key adv \
     --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
 
 # Modify '/etc/apt/sources.list' file.
-sudo add-apt-repository "deb https://cloud.r-project.org/bin/linux/debian ${release}-cran35/"
+sudo add-apt-repository \
+    "deb https://cloud.r-project.org/bin/linux/debian ${release}-cran35/"
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
