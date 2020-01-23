@@ -76,6 +76,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         cmake \
         coreutils \
         curl \
+        dirmngr \
         findutils \
         gcc \
         gdebi-core \
