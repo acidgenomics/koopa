@@ -40,22 +40,9 @@ then
     sudo rm -v /usr/local/man
 fi
 
-# Enable Debian sources.
-# To use 'build-dep', you must uncomment deb-src lines:
-# > sudo vim /etc/apt/sources.list
-#
-# Otherwise you'll hit this error:
-# You must put some 'source' URIs in your sources.list
-#
-# https://askubuntu.com/questions/496549
-if [[ ! -f /etc/apt/sources.list~ ]]
-then
-    echo "Enabling Debian sources for 'build-dep'."
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list~
-    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
-fi
-
 sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get -y install apt-utils
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get -y dist-upgrade
 
@@ -123,6 +110,21 @@ sudo DEBIAN_FRONTEND=noninteractive \
         vim \
         xorg \
         zsh
+
+# Enable Debian sources.
+# To use 'build-dep', you must uncomment deb-src lines:
+# > sudo vim /etc/apt/sources.list
+#
+# Otherwise you'll hit this error:
+# You must put some 'source' URIs in your sources.list
+#
+# https://askubuntu.com/questions/496549
+if [[ ! -f /etc/apt/sources.list~ ]]
+then
+    echo "Enabling Debian sources for 'build-dep'."
+    sudo cp /etc/apt/sources.list /etc/apt/sources.list~
+    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+fi
 
 # Including 'bash' here will remove 'r-base'.
 sudo DEBIAN_FRONTEND=noninteractive \
