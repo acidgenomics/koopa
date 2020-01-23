@@ -11,11 +11,12 @@ koopa_prefix="$(_koopa_prefix)"
 make_prefix="$(_koopa_make_prefix)"
 app_prefix="$(_koopa_app_prefix)"
 
+docker="$(_koopa_is_docker)"
+rsync=0
+
 config="${KOOPA_CONFIG:-}"
 data_disk=
 source_ip=
-
-rsync=0
 
 case "$config" in
     constellation-aws)
@@ -31,6 +32,9 @@ esac
 if [[ -n "$config" ]]
 then
     _koopa_h1 "Configuring '${config}' virtual machine."
+elif [[ "$docker" -eq 0 ]]
+then
+    _koopa_h1 "Configuring Docker image."
 else
     _koopa_h1 "Configuring virtual machine."
 fi
@@ -197,92 +201,116 @@ then
 fi
 
 # Always run this because it must configure java alternatives.
-install-openjdk
+install-openjdk                                                         # 0.316G
 
 if [[ "$rsync" -eq 0 ]]
 then
     # Compilers.
-    _koopa_is_installed install-llvm && install-llvm
+    if ! _koopa_is_docker
+    then
+        # /usr/lib/llvm-9                                               # 0.285G
+        _koopa_is_installed install-llvm && install-llvm
+    fi
 
     # Core.
-    install-coreutils
+    install-coreutils                                                   # 0.038G
 
     # Shells.
-    install-bash
-    install-zsh
-    install-fish
+    install-bash                                                        # 0.014G
+    install-zsh                                                         # 0.011G
+    if ! _koopa_is_docker
+    then
+        install-fish                                                    # 0.082G
+    fi
 
     # General tools.
-    install-git
-    install-gnupg
-    install-lua
-    install-luarocks
-    install-sqlite
-    install-proj
-    install-gdal
-    install-hdf5
-    install-gsl
+    install-git                                                         # 0.158G
+    if ! _koopa_is_docker
+    then
+        install-gnupg                                                   # 0.038G
+        install-lua                                                     # 0.001G
+        install-luarocks                                                # 0.002G
+        install-sqlite                                                  # 0.026G
+        install-proj                                                    # 0.132G
+        install-gdal                # requires proj                     # 0.611G
+        install-hdf5                # requires gdal                     # 0.022G
+        install-gsl                                                     # 0.043G
+    fi
 
     # Languages.
-    install-r
-    install-python
-    install-perl
-    install-ruby
-    install-julia
-    install-go
-    install-rust
+    install-r                                                           # 0.182G
+    install-python                                                      # 0.195G
+    install-perl                                                        # 0.081G
+    if ! _koopa_is_docker
+    then
+        install-go                                                      # 0.338G
+        install-julia                                                   # 0.339G
+        install-ruby                                                    # 0.178G
+        install-rust                                                    # 0.724G
+    fi
 
     # Shell tools.
-    install-shellcheck
-    install-tmux
-    install-htop
-    install-neofetch
-    install-autojump
-    install-the-silver-searcher
-    install-fzf
+    install-autojump                                                    # 0.000G
+    install-htop                                                        # 0.001G
+    install-shellcheck                                                  # 0.008G
+    install-the-silver-searcher                                         # 0.000G
+    install-tmux                                                        # 0.001G
+    if ! _koopa_is_docker
+    then
+        install-fzf                 # requires go                       # 0.003G
+        install-neofetch                                                # 0.003G
+    fi
 
     # Text editors.
-    ! _koopa_is_docker && install-emacs
     install-vim
-    install-neovim
+    if ! _koopa_is_docker
+    then
+        install-emacs               # can't build on docker             #     NA
+        install-neovim                                                  # 0.029G
+    fi
 
     # Bioinformatics apps.
-    install-genrich
+    if ! _koopa_is_docker
+    then
+        install-genrich                                                 # 0.000G
+    fi
 
     # Environment managers.
-    ! _koopa_is_docker && _koopa_is_installed install-docker && install-docker
-    install-conda
-    install-perlbrew
-    install-pyenv
-    install-rbenv
-    install-lmod
+    install-conda                                                       # 0.493G
+    install-perlbrew                                                    # 0.003G
+    install-pyenv                                                       # 0.009G
+    if ! _koopa_is_docker
+    then
+        _koopa_is_installed install-docker && install-docker
+        install-rbenv                                                   # 0.006G
+        install-lmod                                                    # 0.002G
 
-    # > _koopa_activate_pipx
-    #(pipx-install-envs)
+        # > _koopa_activate_pipx
+        #(pipx-install-envs)
 
-    # > _koopa_activate_rustup
-    #(install-rust-crates)
+        # > _koopa_activate_rustup
+        #(install-rust-crates)
 
-    # > _koopa_activate_conda
-    #(conda-create-bioinfo-envs)
+        # > _koopa_activate_conda
+        #(conda-create-bioinfo-envs)
 
-    # Consider adding an R package recipe here.
-    # Can use the Bioconductor Docker image as a reference.
+        # Consider adding an R package recipe here.
+        # Can use the Bioconductor Docker image as a reference.
+    fi
 fi
 
 r-javareconf
 
-if ! _koopa_is_docker
+if _koopa_is_docker
 then
+    if _koopa_is_debian
+    then
+        sudo rm -rf /var/lib/apt/lists/*
+    fi
+else
     _koopa_is_installed install-rstudio-server && install-rstudio-server
     _koopa_is_installed install-shiny-server && install-shiny-server
-fi
-
-_koopa_update_lmod_config
-
-if _koopa_is_debian
-then
-    sudo rm -rf /var/lib/apt/lists/*
+    _koopa_update_lmod_config
 fi
 
 _koopa_success "Configuration completed successfully."

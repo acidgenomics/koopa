@@ -40,6 +40,7 @@ then
         url="https://download.java.net/java/GA/jdk${version}/${unique}/GPL/${file}"
         _koopa_download "$url"
         _koopa_extract "$file"
+        _koopa_is_docker && rm -v "$file"
         mv -v "jdk-${version}" "$version"
     )
 fi
