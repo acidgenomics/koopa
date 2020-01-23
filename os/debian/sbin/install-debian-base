@@ -136,6 +136,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         tzdata \
         unattended-upgrades \
         vim \
+        wget \
         xorg \
         zsh
 
