@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2020-01-13.
+    Updated 2020-01-23.
 EOF
 }
 
@@ -104,15 +104,22 @@ unset -f usage
 
 # This is currently used by the koopa installer.
 
-case "${force:-}" in
-    1|true)
-        KOOPA_FORCE=1
-        ;;
-    *)
-        KOOPA_FORCE=0
-        ;;
-esac
+if [ -z "${KOOPA_FORCE:-}" ]
+then
+    case "${force:-}" in
+        0|false)
+            KOOPA_FORCE=0
+            ;;
+        1|true)
+            KOOPA_FORCE=1
+            ;;
+        *)
+            KOOPA_FORCE=0
+            ;;
+    esac
+fi
 
+unset -v force
 export KOOPA_FORCE
 
 # User-specific configuration                                               {{{2
@@ -123,6 +130,7 @@ then
     # Skip activation for root user.
     # > [ "$(id -u)" -eq 0 ] && return 0
 
+    # Ensure 'USER' global is always defined.
     [ -z "${USER:-}" ] && USER="$(whoami)" && export USER
 
     # Always skip on accounts containing "admin" in the name.
@@ -192,17 +200,23 @@ export KOOPA_SUBSHELL
 # Extra mode                                                                {{{2
 # ------------------------------------------------------------------------------
 
-case "${extra:-}" in
-    1|true)
-        KOOPA_EXTRA=1
-        ;;
-    0|false)
-        KOOPA_EXTRA=0
-        ;;
-    *)
-        KOOPA_EXTRA=1
-        ;;
-esac
+if [ -z "${KOOPA_EXTRA:-}" ]
+then
+    case "${extra:-}" in
+        0|false)
+            KOOPA_EXTRA=0
+            ;;
+        1|true)
+            KOOPA_EXTRA=1
+            ;;
+        *)
+            KOOPA_EXTRA=1
+            ;;
+    esac
+fi
+
+unset -v extra
+export KOOPA_EXTRA
 
 if [ -n "${KOOPA_USERS_NO_EXTRA:-}" ]
 then
@@ -215,14 +229,23 @@ fi
 # Minimal mode                                                              {{{2
 # ------------------------------------------------------------------------------
 
-case "${minimal:-}" in
-    1|true)
-        KOOPA_MINIMAL=1
-        ;;
-    *)
-        KOOPA_MINIMAL=0
-        ;;
-esac
+if [ -z "${KOOPA_MINIMAL:-}" ]
+then
+    case "${minimal:-}" in
+        0|false)
+            KOOPA_MINIMAL=0
+            ;;
+        1|true)
+            KOOPA_MINIMAL=1
+            ;;
+        *)
+            KOOPA_MINIMAL=0
+            ;;
+    esac
+fi
+
+unset -v minimal
+export KOOPA_MINIMAL
 
 if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
 then
@@ -240,14 +263,23 @@ fi
 # Test mode                                                                 {{{2
 # ------------------------------------------------------------------------------
 
-case "${test:-}" in
-    1|true)
-        KOOPA_TEST=1
-        ;;
-    *)
-        KOOPA_TEST=0
-        ;;
-esac
+if [ -z "${KOOPA_TEST:-}" ]
+then
+    case "${test:-}" in
+        0|false)
+            KOOPA_TEST=0
+            ;;
+        1|true)
+            KOOPA_TEST=1
+            ;;
+        *)
+            KOOPA_TEST=0
+            ;;
+    esac
+fi
+
+unset -v test
+export KOOPA_TEST
 
 if [ "$KOOPA_TEST" -eq 1 ]
 then
@@ -266,11 +298,7 @@ then
     KOOPA_MINIMAL=0
 fi
 
-unset -v extra minimal test
-
-export KOOPA_EXTRA
-export KOOPA_MINIMAL
-export KOOPA_TEST
+unset -v extra minimal
 
 
 
