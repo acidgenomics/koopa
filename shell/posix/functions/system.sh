@@ -54,6 +54,37 @@ _koopa_current_version() {                                                # {{{1
     . "$script"
 }
 
+_koopa_disk_check() {                                                     # {{{1
+    # """
+    # Check that disk has enough free space.
+    # Updated 2019-10-27.
+    # """
+    local used
+    local limit
+    used="$(_koopa_disk_pct_used "$@")"
+    limit="90"
+    if [ "$used" -gt "$limit" ]
+    then
+        _koopa_warning "Disk usage is ${used}%."
+    fi
+    return 0
+}
+
+_koopa_disk_pct_used() {                                                  # {{{1
+    # """
+    # Check disk usage on main drive.
+    # Updated 2019-08-17.
+    # """
+    local disk
+    disk="${1:-"/"}"
+    df "$disk" \
+        | head -n 2 \
+        | sed -n '2p' \
+        | grep -Eo "([.0-9]+%)" \
+        | head -n 1 \
+        | sed 's/%$//'
+}
+
 _koopa_dotfiles_config_link() {                                           # {{{1
     # """
     # Dotfiles directory.
@@ -90,37 +121,6 @@ _koopa_dotfiles_source_repo() {                                           # {{{1
         _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
     fi
     echo "$dotfiles"
-}
-
-_koopa_disk_check() {                                                     # {{{1
-    # """
-    # Check that disk has enough free space.
-    # Updated 2019-10-27.
-    # """
-    local used
-    local limit
-    used="$(_koopa_disk_pct_used "$@")"
-    limit="90"
-    if [ "$used" -gt "$limit" ]
-    then
-        _koopa_warning "Disk usage is ${used}%."
-    fi
-    return 0
-}
-
-_koopa_disk_pct_used() {                                                  # {{{1
-    # """
-    # Check disk usage on main drive.
-    # Updated 2019-08-17.
-    # """
-    local disk
-    disk="${1:-"/"}"
-    df "$disk" \
-        | head -n 2 \
-        | sed -n '2p' \
-        | grep -Eo "([.0-9]+%)" \
-        | head -n 1 \
-        | sed 's/%$//'
 }
 
 _koopa_git_branch() {                                                     # {{{1
