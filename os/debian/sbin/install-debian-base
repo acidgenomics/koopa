@@ -51,8 +51,10 @@ sudo DEBIAN_FRONTEND=noninteractive \
         alien \
         autoconf \
         automake \
+        bc \
         cargo \
         cmake \
+        curl \
         emacs \
         firefox \
         fish \
@@ -102,6 +104,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         python3-pip \
         software-properties-common \
         sqlite3 \
+        sudo \
         systemd \
         texlive \
         tree \
