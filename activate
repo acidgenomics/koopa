@@ -287,12 +287,12 @@ then
     echo "Setting strict shell mode."
     set -o errexit
     set -o nounset
+    set -o xtrace
     if [ -n "${BASH_VERSION:-}" ]
     then
         set -o errtrace
         set -o pipefail
         set -o posix
-        set -o xtrace
     fi
     KOOPA_EXTRA=1
     KOOPA_MINIMAL=0
@@ -432,11 +432,12 @@ then
     unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
     set +o errexit
     set +o nounset
+    set +o xtrace
     if [ -n "${BASH_VERSION:-}" ]
     then
-        set -o errtrace
-        set -o posix
-        set -o pipefail
+        set +o errtrace
+        set +o pipefail
+        set +o posix
     fi
 fi
 
