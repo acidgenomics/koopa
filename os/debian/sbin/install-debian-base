@@ -81,6 +81,8 @@ sudo DEBIAN_FRONTEND=noninteractive \
         firefox \
         fish \
         gdebi-core \
+        gcc \
+        gfortran \
         git \
         gnupg2 \
         gnutls-bin \
