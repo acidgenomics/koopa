@@ -8,7 +8,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 name="base"
 prefix="$(_koopa_venv_prefix)/${name}"
-_koopa_exit_if_dir_exists "$prefix"
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing Python '${name}' virtual environment at '${prefix}'."
 
