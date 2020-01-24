@@ -7,10 +7,30 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 # """
+# Depends on: numpy, scipy, joblib, scikit-learn, llvmlite, numba
+#
+#
 # Check that LLVM is configured correctly.
 # umap-learn > numba > llvmlite
 # Note that llvmlite currently requires LLVM 7+.
 # https://github.com/numba/llvmlite/issues/523
+#
+#
+# macOS compiler flags:
+# These flags are now required for scikit-learn to compile, which now requires
+# OpenMP that is unsupported by system default gcc alias.
+#
+# Ensure that we're using the correct Clang and LLVM settings.
+#
+# Refer to 'system/activate/program.sh' for LLVM_CONFIG export.
+#
+# clang: error: unsupported option '-fopenmp'
+# brew info libomp
+#
+# See also:
+# - http://llvmlite.pydata.org/
+# - https://github.com/scikit-learn/scikit-learn/issues/13371
+# - https://scikit-learn.org/dev/developers/advanced_installation.html
 # """
 
 name="r-reticulate"
@@ -20,25 +40,11 @@ _koopa_exit_if_dir "$prefix"
 _koopa_h1 "Installing Python '${name}' environment at '${prefix}'."
 
 _koopa_assert_has_no_envs
+_koopa_assert_is_current_version python
 _koopa_assert_is_installed python3
 
 if _koopa_is_macos
 then
-    # These compiler flags are now required for scikit-learn to compile, which
-    # now requires OpenMP that is unsupported by system default gcc alias.
-    # Ensure that we're using the correct Clang and LLVM settings.
-    #
-    # Refer to 'system/activate/program.sh' for LLVM_CONFIG export.
-    #
-    # clang: error: unsupported option '-fopenmp'
-    # brew info libomp
-    #
-    # See also:
-    # - http://llvmlite.pydata.org/
-    # - https://github.com/scikit-learn/scikit-learn/issues/13371
-    # - https://scikit-learn.org/dev/developers/advanced_installation.html
-
-    # System Clang (Xcode)
     export CC="/usr/bin/clang"
     export CXX="/usr/bin/clang++"
     export CFLAGS="${CFLAGS:-} -I/usr/local/opt/libomp/include"
@@ -60,10 +66,8 @@ _koopa_prefix_mkdir "$prefix"
 python3 -m venv "$prefix"
 py_exe="${prefix}/bin/python3"
 
-"$py_exe" -m pip install --upgrade pip
-# Older release required this manual step to install:
+"$py_exe" -m pip install --upgrade pip setuptools wheel
 # > "$py_exe" -m pip install Cython
-# Depends on: numpy, scipy, joblib, scikit-learn, llvmlite, numba
 "$py_exe" -m pip install louvain umap-learn
 "$py_exe" -m pip list
 
