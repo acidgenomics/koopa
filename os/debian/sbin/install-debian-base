@@ -77,12 +77,15 @@ sudo DEBIAN_FRONTEND=noninteractive \
         coreutils \
         curl \
         dirmngr \
+        emacs \
         findutils \
         gcc \
         gdebi-core \
         gfortran \
         git \
+        gnupg \
         gnutls-bin \
+        gpg-agent \
         gtk-doc-tools \
         keyboard-configuration \
         libacl1 \
@@ -127,11 +130,8 @@ sudo DEBIAN_FRONTEND=noninteractive \
 ! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
     apt-get --no-install-recommends --yes install \
         cargo \
-        emacs \
         firefox \
         fish \
-        gnupg \
-        gpg-agent \
         htop \
         pandoc \
         pandoc-citeproc \
