@@ -1,6 +1,9 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+# Note that these are defined primarily to catch errors in private scripts that
+# are defined outside of the koopa package.
+
 _koopa_defunct() {
     # """
     # Make a function defunct.
@@ -25,18 +28,4 @@ _koopa_is_darwin() {
     # Updated 2020-01-14.
     # """
     _koopa_defunct "_koopa_is_macos"
-}
-
-_koopa_prefix_chgrp() {
-    # """
-    # Updated 2020-01-16.
-    # """
-    _koopa_defunct "_koopa_chgrp"
-}
-
-_koopa_reset_prefix_permissions() {
-    # """
-    # Updated 2020-01-16.
-    # """
-    _koopa_defunct "_koopa_prepare_prefix"
 }
