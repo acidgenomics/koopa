@@ -50,10 +50,11 @@ fi
 # You must put some 'source' URIs in your sources.list
 #
 # https://askubuntu.com/questions/496549
-if [[ ! -f /etc/apt/sources.list~ ]]
+
+if grep -Eq '^# deb-src ' /etc/apt/sources.list
 then
     _koopa_h2 "Enabling Debian sources for 'build-dep'."
-    sudo cp /etc/apt/sources.list /etc/apt/sources.list~
+    sudo cp -fv /etc/apt/sources.list /etc/apt/sources.list~
     sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
 fi
 
@@ -163,23 +164,26 @@ sudo DEBIAN_FRONTEND=noninteractive \
             tmux \
             zsh
 
-_koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
-sudo apt-get update
-# Including 'bash' here will remove 'r-base'.
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get --no-install-recommends --yes build-dep \
-        coreutils \
-        git \
-        htop \
-        perl \
-        tmux \
-        vim \
-        zsh
-! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get --no-install-recommends --yes build-dep \
-        emacs-defaults \
-        fish \
-        neovim
+if grep -Eq '^# deb-src ' /etc/apt/sources.list
+then
+    _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
+    sudo apt-get update
+    # Including 'bash' here will remove 'r-base'.
+    sudo DEBIAN_FRONTEND=noninteractive \
+        apt-get --no-install-recommends --yes build-dep \
+            coreutils \
+            git \
+            htop \
+            perl \
+            tmux \
+            vim \
+            zsh
+    ! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
+        apt-get --no-install-recommends --yes build-dep \
+            emacs-defaults \
+            fish \
+            neovim
+fi
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get -y autoremove
