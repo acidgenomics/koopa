@@ -743,7 +743,8 @@ _koopa_has_sudo() {                                                       # {{{1
     # - Fedora: wheel
     # """
     [ "$(id -u)" -eq 0 ] && return 0
-    _koopa_assert_is_installed grep groups sudo
+    _koopa_is_installed sudo || return 1
+    _koopa_assert_is_installed grep groups
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
 
