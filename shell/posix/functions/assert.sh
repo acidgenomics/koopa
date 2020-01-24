@@ -1067,6 +1067,45 @@ _koopa_is_shared_install() {                                              # {{{1
     ! _koopa_is_local_install
 }
 
+_koopa_is_set_nounset() {                                                 # {{{1
+    # """
+    # Is shell running in 'nounset' variable mode?
+    # Updated 2020-01-24.
+    #
+    # Many activation scripts, including Perlbrew and others have unset
+    # variables that can cause the shell session to exit.
+    #
+    # How to enable:
+    # > set -o nounset
+    # > set -u
+    #
+    # Bash:
+    # shopt -o (arg?)
+    # Enabled: 'nounset [...] on'.
+    #
+    # shopt -op (arg?)
+    # Enabled: 'set -o nounset'.
+    #
+    # Zsh:
+    # setopt
+    # Enabled: 'nounset'.
+    # """
+    local shell
+    shell="$(_koopa_shell)"
+    case "$shell" in
+        bash)
+            # > shopt -op nounset | grep -q 'set -o nounset'
+            shopt -oq nounset
+            ;;
+        zsh)
+            setopt | grep -q 'nounset'
+            ;;
+        *)
+            _koopa_stop "Unknown error."
+            ;;
+    esac
+}
+
 _koopa_is_ubuntu() {                                                      # {{{1
     # """
     # Is the operating system Ubuntu?

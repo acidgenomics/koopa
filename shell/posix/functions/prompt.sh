@@ -4,7 +4,7 @@
 _koopa_prompt() {                                                         # {{{1
     # """
     # Prompt string.
-    # Updated 2020-01-12.
+    # Updated 2020-01-24.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
     #
@@ -25,7 +25,7 @@ _koopa_prompt() {                                                         # {{{1
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
     local shell
-    shell="${KOOPA_SHELL:?}"
+    shell="$(_koopa_shell)"
     local hostname
     hostname="${HOSTNAME:?}"
     hostname="${hostname//.*/}"
