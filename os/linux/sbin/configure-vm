@@ -11,12 +11,10 @@ koopa_prefix="$(_koopa_prefix)"
 make_prefix="$(_koopa_make_prefix)"
 app_prefix="$(_koopa_app_prefix)"
 
-docker="$(_koopa_is_docker)"
-rsync=0
-
 config="${KOOPA_CONFIG:-}"
 data_disk=
 source_ip=
+rsync=0
 
 case "$config" in
     constellation-aws)
@@ -32,9 +30,6 @@ esac
 if [[ -n "$config" ]]
 then
     _koopa_h1 "Configuring '${config}' virtual machine."
-elif [[ "$docker" -eq 0 ]]
-then
-    _koopa_h1 "Configuring Docker image."
 else
     _koopa_h1 "Configuring virtual machine."
 fi
@@ -95,6 +90,7 @@ then
 else
     _koopa_mkdir "$app_prefix"
 fi
+
 _koopa_set_permissions "$app_prefix"
 
 if _koopa_is_debian
@@ -312,5 +308,18 @@ else
     _koopa_is_installed install-shiny-server && install-shiny-server
     _koopa_update_lmod_config
 fi
+
+# > update-rust
+# > update-conda
+# > update-conda-envs
+# > update-venv
+
+_koopa_set_permissions "$make_prefix" "$app_prefix"
+
+_koopa_remove_broken_symlinks "$make_prefix"
+_koopa_remove_broken_symlinks "$app_prefix"
+
+_koopa_fix_pyenv_permissions
+_koopa_fix_rbenv_permissions
 
 _koopa_success "Configuration completed successfully."
