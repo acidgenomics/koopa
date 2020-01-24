@@ -702,6 +702,23 @@ _koopa_has_no_environments() {                                            # {{{1
     return 0
 }
 
+_koopa_has_passwordless_sudo() {                                          # {{{1
+    # """
+    # Check if sudo is active or doesn't require a password.
+    # Updated 2020-01-24.
+    #
+    # See also:
+    # https://askubuntu.com/questions/357220
+    # """
+    _koopa_is_installed sudo || return 1
+    if sudo -n true 2>/dev/null
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
 _koopa_has_sudo() {                                                       # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
@@ -726,24 +743,8 @@ _koopa_has_sudo() {                                                       # {{{1
     # - Fedora: wheel
     # """
     [ "$(id -u)" -eq 0 ] && return 0
-    _koopa_is_installed sudo || return 1
+    _koopa_assert_is_installed grep groups sudo
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
-}
-
-_koopa_has_passwordless_sudo() {                                          # {{{1
-    # """
-    # Check if sudo is active or doesn't require a password.
-    # Updated 2020-01-24.
-    #
-    # See also:
-    # https://askubuntu.com/questions/357220
-    # """
-    if sudo -n true 2>/dev/null
-    then
-        return 0
-    else
-        return 1
-    fi
 }
 
 _koopa_invalid_arg() {                                                    # {{{1
