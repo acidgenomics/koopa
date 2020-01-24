@@ -44,7 +44,7 @@ sudo yum -y install \
     lua \
     lua-devel \
     lua-filesystem \
-    lua-posix
+    lua-posix \
     make \
     mariadb-devel \
     mpfr-devel \
