@@ -72,20 +72,21 @@ sudo DEBIAN_FRONTEND=noninteractive \
         autoconf \
         automake \
         bc \
-        cargo \
+        ca-certificates \
         cmake \
         coreutils \
         curl \
+        dirmngr \
         emacs \
         findutils \
-        firefox \
-        fish \
+        gcc \
         gdebi-core \
+        gfortran \
         git \
-        gnupg2 \
+        gnupg \
         gnutls-bin \
+        gpg-agent \
         gtk-doc-tools \
-        htop \
         keyboard-configuration \
         libacl1 \
         libacl1-dev \
@@ -117,22 +118,29 @@ sudo DEBIAN_FRONTEND=noninteractive \
         libxml2-dev \
         libz-dev \
         lsb-release \
-        pandoc \
-        pandoc-citeproc \
         parallel \
-        perl \
         pkg-config \
-        python3 \
-        python3-pip \
         software-properties-common \
-        sqlite3 \
         sudo \
         systemd \
-        texlive \
-        tmux \
         tree \
         tzdata \
         unattended-upgrades \
+        wget
+! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get --no-install-recommends --yes install \
+        cargo \
+        firefox \
+        fish \
+        htop \
+        pandoc \
+        pandoc-citeproc \
+        perl \
+        python3 \
+        python3-pip \
+        sqlite3 \
+        texlive \
+        tmux \
         vim \
         xorg \
         zsh
@@ -142,15 +150,17 @@ _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get --no-install-recommends --yes build-dep \
         coreutils \
-        emacs-defaults \
-        fish \
         git \
         htop \
-        neovim \
         perl \
         tmux \
         vim \
         zsh
+! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get --no-install-recommends --yes build-dep \
+        emacs-defaults \
+        fish \
+        neovim
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get -y autoremove
