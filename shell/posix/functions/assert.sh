@@ -707,14 +707,45 @@ _koopa_has_sudo() {                                                       # {{{1
     # Check that current user has administrator (sudo) permission.
     # Updated 2019-12-06.
     #
+    # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
+    # 'groups' taking a long time to return for domain users.
+    #
+    # Avoid prompting with '-n, --non-interactive', but note that this isn't
+    # supported on all systems.
+    #
     # Note that use of 'sudo -v' does not work consistently across platforms.
+    #
+    # Alternate approach:
+    # > sudo -l
+    #
+    # List all users with sudo access:
+    # > getent group sudo
     #
     # - macOS: admin
     # - Debian: sudo
     # - Fedora: wheel
     # """
     [ "$(id -u)" -eq 0 ] && return 0
+    _koopa_is_installed sudo || return 1
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
+}
+
+_koopa_has_passwordless_sudo() {                                          # {{{1
+    # """
+    # Check if sudo is active or doesn't require a password.
+    # Updated 2020-01-24.
+    #
+    # See also:
+    # https://askubuntu.com/questions/357220
+    # """
+    if sudo -n true 2>/dev/null
+    then
+        echo "YES"
+        return 0
+    else
+        echo "NO"
+        return 1
+    fi
 }
 
 _koopa_invalid_arg() {                                                    # {{{1
