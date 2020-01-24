@@ -164,6 +164,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
             zsh
 
 _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
+sudo apt-get update
 # Including 'bash' here will remove 'r-base'.
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get --no-install-recommends --yes build-dep \
