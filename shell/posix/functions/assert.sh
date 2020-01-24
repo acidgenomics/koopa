@@ -740,10 +740,8 @@ _koopa_has_passwordless_sudo() {                                          # {{{1
     # """
     if sudo -n true 2>/dev/null
     then
-        echo "YES"
         return 0
     else
-        echo "NO"
         return 1
     fi
 }
