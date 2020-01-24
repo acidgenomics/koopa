@@ -6,15 +6,15 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_envs
-_koopa_assert_is_installed python3 python
-
 name="base"
 prefix="$(_koopa_venv_prefix)/${name}"
+_koopa_exit_if_dir_exists "$prefix"
 
 _koopa_h1 "Installing Python '${name}' virtual environment at '${prefix}'."
 
-rm -fr "$prefix"
+_koopa_assert_has_no_envs
+_koopa_assert_is_installed python3
+
 _koopa_prefix_mkdir "$prefix"
 
 python3 -m venv "$prefix"
