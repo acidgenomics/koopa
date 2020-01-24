@@ -90,25 +90,27 @@ else
     _koopa_mkdir "$app_prefix"
 fi
 
+_koopa_h2 "Installing base system."
+
 if _koopa_is_debian
 then
     # Also applies to Ubuntu.
-    install-debian-base
+    install-debian-base > /dev/null
 elif _koopa_is_amzn
 then
     # Layers on top of RHEL 7.
-    install-amzn-base
+    install-amzn-base > /dev/null
 elif _koopa_is_rhel_8
 then
     # Also applies to CentOS 8.
-    install-rhel-8-base
+    install-rhel-8-base > /dev/null
 elif _koopa_is_rhel_7
 then
     # Also applies to CentOS 7.
-    install-rhel-7-base
+    install-rhel-7-base > /dev/null
 elif _koopa_is_fedora
 then
-    install-fedora-base
+    install-fedora-base > /dev/null
 fi
 
 if [[ "$config" == "constellation-aws" ]]
@@ -183,7 +185,10 @@ then
         rsync=0
     else
         rsync=1
-        rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+        rsync-vm \
+            --data-disk="$data_disk" \
+            --source-ip="$source_ip" \
+            > /dev/null
     fi
 fi
 
