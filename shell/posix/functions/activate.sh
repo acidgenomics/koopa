@@ -32,7 +32,7 @@ _koopa_activate_aspera() {                                                # {{{1
 _koopa_activate_autojump() {                                              # {{{1
     # """
     # Activate autojump.
-    # Updated 2020-01-15.
+    # Updated 2020-01-24.
     #
     # Purge install with 'j --purge'.
     # Location: ~/.local/share/autojump/autojump.txt
@@ -47,10 +47,12 @@ _koopa_activate_autojump() {                                              # {{{1
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
     [ -r "$script" ] || return 0
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
+    local is_nounset
+    is_nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$is_nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
+    [ "$is_nounset" -eq 1 ] && set -u
     return 0
 }
 
