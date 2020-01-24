@@ -38,12 +38,10 @@ then
     _koopa_missing_arg
 fi
 
-host_ip="$(ip-address)"
 source_user="$USER"
+host_ip="$(ip-address)"
 
-
-
-
+_koopa_h1 "Syncing configuration from '${source_ip}'."
 
 # Check for accidental sync from source machine.
 if [[ "$source_ip" == "$host_ip" ]]
@@ -59,17 +57,19 @@ flags_bak=("${flags[@]}")
 # /n/app                                                                    {{{1
 # ==============================================================================
 
+# Create the '/n' symlink, if necessary.
 n_source="${data_disk}/n"
-
 sudo mkdir -pv "${data_disk}/n"
 sudo chown root:root "$n_source"
 sudo chmod 0755 "$n_source"
 sudo ln -fnsfv "$n_source" /n
 
 dir="/n/app"
+
+_koopa_h2 "Updating '${dir}' from '${source_ip}'."
+
 sudo mkdir -pv "$dir"
 sudo chown -Rh "$USER" "$dir"
-# > sudo chmod g-s "${dir}/"*
 
 # Skip programs that are specific to powerful multi-core VMs.
 if ! _koopa_is_powerful
@@ -81,7 +81,6 @@ then
     flags+=("--exclude=rnaeditingindexer")
 fi
 
-_koopa_h2 "Updating '${dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
@@ -90,18 +89,21 @@ rsync ${flags[@]} \
     "${source_user}@${source_ip}:${dir}/" \
     "${dir}/"
 
+_koopa_h2 "Setting permissions on '${dir}'."
 _koopa_set_permissions "$dir"
 
 # /usr/local                                                              # {{{1
 # ==============================================================================
 
 dir="/usr/local"
-_koopa_assert_is_dir "$dir"
+
+_koopa_h2 "Updating '${dir}' from '${source_ip}'."
+
+sudo mkdir -pv "$dir"
 sudo chown -Rh "$USER" "$dir"
 
 flags=("${flags_bak[@]}")
 
-_koopa_h2 "Updating '${dir}' from '${source_ip}'."
 _koopa_note "Using flags: ${flags[*]}"
 
 # shellcheck disable=SC2068
@@ -110,5 +112,6 @@ rsync ${flags[@]} \
     "${source_user}@${source_ip}:${dir}/" \
     "${dir}/"
 
+_koopa_h2 "Setting permissions on '${dir}'."
 _koopa_set_permissions "$dir"
 
