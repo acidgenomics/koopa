@@ -251,6 +251,7 @@ then
     install-dotfiles
 fi
 
-koopa update > /dev/null
+_koopa_fix_zsh_permissions
+
 _koopa_success "Installation of koopa was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
