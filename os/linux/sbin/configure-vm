@@ -292,7 +292,7 @@ then
     fi
 fi
 
-r-javareconf
+_koopa_r_javareconf
 
 if _koopa_is_docker
 then
@@ -311,7 +311,11 @@ fi
 # > update-conda-envs
 # > update-venv
 
-_koopa_set_permissions "$make_prefix" "$app_prefix"
+_koopa_h2 "Setting permissions on '${make_prefix}'."
+_koopa_set_permissions "$make_prefix"
+
+_koopa_h2 "Setting permissions on '${app_prefix}'."
+_koopa_set_permissions "$app_prefix"
 
 _koopa_remove_broken_symlinks "$make_prefix"
 _koopa_remove_broken_symlinks "$app_prefix"

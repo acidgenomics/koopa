@@ -75,7 +75,7 @@ _koopa_is_array_non_empty() {                                             # {{{1
 _koopa_r_javareconf() {                                                   # {{{1
     # """
     # Update R Java configuration.
-    # Updated 2020-01-21.
+    # Updated 2020-01-24.
     #
     # The default Java path differs depending on the system.
     #
@@ -91,6 +91,10 @@ _koopa_r_javareconf() {                                                   # {{{1
     #   JAVAC          path to a Java compiler
     #   JAVAH          path to a Java header/stub generator
     #   JAR            path to a Java archive tool
+    #
+    # How to check that rJava works:
+    # > library(rJava)
+    # > .jinit()
     # """
     if ! _koopa_is_installed R
     then
@@ -118,12 +122,11 @@ _koopa_r_javareconf() {                                                   # {{{1
     r_home="$(_koopa_r_home)"
     _koopa_set_permissions "$r_home"
     R --vanilla CMD javareconf "${java_flags[@]}"
-    # > if _koopa_is_shared_install
-    # > then
-    # >     _koopa_assert_has_sudo
-    # >     sudo R --vanilla CMD javareconf "${java_flags[@]}"
-    # > fi
-    Rscript -e 'install.packages("rJava")'
+    if ! _koopa_is_r_package_installed rJava
+    then
+        Rscript -e 'install.packages("rJava")'
+    fi
+    return 0
 }
 
 _koopa_script_name() {                                                    # {{{1
