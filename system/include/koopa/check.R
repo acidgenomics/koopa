@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
+## """
 ## Check installed program versions.
 ## Updated 2020-01-21.
+## """
 
 options(
     "error" = quote(quit(status = 1L)),
