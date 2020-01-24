@@ -12,6 +12,7 @@ _koopa_assert_is_installed sudo
 
 sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
+
 sudo yum -y install \
     bash \
     bzip2 \
@@ -25,45 +26,33 @@ sudo yum -y install \
     gcc \
     gcc-c++ \
     gcc-gfortran \
-    geos \
-    geos-devel \
     git \
     gnupg2 \
     gnutls \
     gnutls-devel \
     golang \
     gsl-devel \
-    java-latest-openjdk \
-    java-latest-openjdk-devel \
     libcurl-devel \
     libevent-devel \
     libffi-devel \
     libseccomp-devel \
-    libsodium-devel \
     libuuid-devel \
     libxml2-devel \
     llvm \
     llvm-devel \
     lua \
-    lua-devel \
-    lua-filesystem \
-    lua-posix \
     make \
     mariadb-devel \
     mpfr-devel \
     ncurses \
     openssl \
     openssl-devel \
-    parallel \
     pcre-devel \
     postgresql-devel \
-    proj \
-    proj-devel \
     qpdf \
     readline \
     readline-devel \
     squashfs-tools \
-    sshpass \
     systemd \
     texlive \
     texlive-bera \
