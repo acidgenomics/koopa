@@ -13,8 +13,6 @@ config_prefix="$(_koopa_config_prefix)"
 app_prefix="$(_koopa_app_prefix)"
 # /usr/local
 make_prefix="$(_koopa_make_prefix)"
-# /usr/local/cellar
-cellar_prefix="$(_koopa_cellar_prefix)"
 
 system=0
 
@@ -92,61 +90,17 @@ then
     then
         update-homebrew
         update-r-packages
-    fi
-    if _koopa_is_installed configure-vm
+    elif _koopa_is_installed configure-vm
     then
         configure-vm
-    else
-        update-conda
-        # > update-conda-envs
-        update-venv
-        update-rust
     fi
     # Update managed git repos.
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
     _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
-    if _koopa_is_linux && _koopa_is_shared_install
-    then
-        _koopa_remove_broken_symlinks "$make_prefix"
-        _koopa_remove_broken_symlinks "$app_prefix"
-        if _koopa_is_installed zsh
-        then
-            _koopa_h2 "Fixing Zsh permissions to pass compaudit checks."
-            zsh_exe="$(_koopa_which_realpath zsh)"
-            if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
-            then
-                sudo chmod -v g-w \
-                    "/usr/local/share/zsh" \
-                    "/usr/local/share/zsh/site-functions"
-            fi
-            if _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}"
-            then
-                sudo chmod -v g-w \
-                    "/usr/local/cellar/zsh/"*"/share/zsh" \
-                    "/usr/local/cellar/zsh/"*"/share/zsh/"* \
-                    "/usr/local/cellar/zsh/"*"/share/zsh/"*"/functions"
-            fi
-        fi
-        # Ensure Python pyenv shims have correct permissions.
-        pyenv_prefix="$(_koopa_pyenv_prefix)"
-        if [[ -d "${pyenv_prefix}/shims" ]]
-        then
-            _koopa_h2 "Fixing pyenv shim permissions."
-            sudo chmod -v 0777 "${pyenv_prefix}/shims"
-        fi
-    fi
 fi
 
-# Avoid compaudit warnings regarding group write access. Note that running
-# 'compinit-compaudit-fix' script will cause the shell session to exit, so don't
-# run here.
-if _koopa_is_shared_install
-then
-    sudo chmod -v g-w \
-        "${koopa_prefix}/shell/zsh" \
-        "${koopa_prefix}/shell/zsh/functions"
-fi
+_koopa_fix_zsh_permissions
 
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
