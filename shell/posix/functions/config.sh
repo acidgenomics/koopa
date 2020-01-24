@@ -207,6 +207,7 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     # Updated 2020-01-24.
     # """
     _koopa_is_linux || return 1
+    _koopa_is_root && return 0
     _koopa_has_sudo || return 1
     local group
     group="$(_koopa_group)"
