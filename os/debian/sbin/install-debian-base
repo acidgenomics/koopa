@@ -130,7 +130,8 @@ sudo DEBIAN_FRONTEND=noninteractive \
         emacs \
         firefox \
         fish \
-        gnupg2 \
+        gnupg \
+        gpg-agent \
         htop \
         pandoc \
         pandoc-citeproc \
