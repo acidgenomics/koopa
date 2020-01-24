@@ -25,6 +25,16 @@ source "${script_dir}/../include/header.sh"
 # - https://metacpan.org/pod/CPAN::FirstTime
 # - https://www.reddit.com/r/perl/comments/1xed7b/
 #       how_can_i_configure_cpan_as_much_as_possible/
+#
+#
+# Might want to update CPAN.pm:
+# New CPAN.pm version (v2.27) available.
+# [Currently running version is v2.22]
+# You might want to try
+#   install CPAN
+#   reload cpan
+# to both upgrade CPAN.pm and run the new version without leaving
+# the current session.
 # """
 
 name="perl"
