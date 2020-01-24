@@ -47,12 +47,12 @@ _koopa_activate_autojump() {                                              # {{{1
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
     [ -r "$script" ] || return 0
-    local is_nounset
-    is_nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
-    [ "$is_nounset" -eq 1 ] && set +u
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
-    [ "$is_nounset" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -80,6 +80,8 @@ _koopa_activate_bcbio() {                                                 # {{{1
 _koopa_activate_broot() {                                                 # {{{1
     # """
     # Activate broot directory tree utility.
+    # Updated 2020-01-24.
+    #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
     #
@@ -89,7 +91,6 @@ _koopa_activate_broot() {                                                 # {{{1
     # If installed as crate, it will use the same path as for Linux.
     #
     # https://github.com/Canop/broot
-    # Updated 2020-01-13.
     # """
     local config_dir
     if _koopa_is_macos
@@ -102,15 +103,19 @@ _koopa_activate_broot() {                                                 # {{{1
     local br_script
     br_script="${config_dir}/launcher/bash/br"
     [ -f "$br_script" ] || return 0
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$br_script"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
 _koopa_activate_conda() {                                                 # {{{1
     # """
     # Activate conda.
-    # Updated 2019-12-17.
+    # Updated 2020-01-24.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -127,7 +132,9 @@ _koopa_activate_conda() {                                                 # {{{1
     name="${2:-base}"
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
     # Ensure base environment gets deactivated by default.
@@ -136,7 +143,7 @@ _koopa_activate_conda() {                                                 # {{{1
         # Don't use the full conda path here; will return config error.
         conda deactivate
     fi
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -164,7 +171,7 @@ _koopa_activate_ensembl_perl_api() {                                      # {{{1
 _koopa_activate_fzf() {                                                   # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # Updated 2020-01-13.
+    # Updated 2020-01-24.
     #
     # See also:
     # https://github.com/junegunn/fzf
@@ -175,14 +182,16 @@ _koopa_activate_fzf() {                                                   # {{{1
     [ -d "$dir" ] || return 0
     local shell
     shell="$(_koopa_shell)"
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # Auto-completion.
     # shellcheck source=/dev/null
     . "${dir}/shell/completion.${shell}"
     # Key bindings.
     # shellcheck source=/dev/null
     . "${dir}/shell/key-bindings.${shell}"
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -218,7 +227,7 @@ _koopa_activate_llvm() {                                                  # {{{1
 _koopa_activate_perlbrew() {                                              # {{{1
     # """
     # Activate Perlbrew.
-    # Updated 2020-01-12.
+    # Updated 2020-01-24.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -235,11 +244,13 @@ _koopa_activate_perlbrew() {                                              # {{{1
     local script
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set +u
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
     . "$script"
-    [ "${KOOPA_TEST:-}" -eq 1 ] && set -u
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -282,7 +293,7 @@ _koopa_activate_pipx() {                                                  # {{{1
 _koopa_activate_pyenv() {                                                 # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # Updated 2020-01-12.
+    # Updated 2020-01-24.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -296,7 +307,11 @@ _koopa_activate_pyenv() {                                                 # {{{1
     [ -r "$script" ] || return 0
     export PYENV_ROOT="$prefix"
     _koopa_activate_prefix "$prefix"
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -326,14 +341,18 @@ _koopa_activate_rbenv() {                                                 # {{{1
     [ -r "$script" ] || return 0
     export RBENV_ROOT="$prefix"
     _koopa_activate_prefix "$prefix"
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
 _koopa_activate_rust() {                                                  # {{{1
     # """
     # Activate Rust programming language.
-    # Updated 2020-01-10.
+    # Updated 2020-01-24.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
@@ -361,8 +380,12 @@ _koopa_activate_rust() {                                                  # {{{1
     script="${cargo_prefix}/env"
     [ -r "$script" ] || return 0
     export CARGO_HOME="$cargo_prefix"
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
@@ -406,7 +429,7 @@ _koopa_activate_ssh_key() {                                               # {{{1
 _koopa_activate_venv() {                                                  # {{{1
     # """
     # Activate Python default virtual environment.
-    # Updated 2020-01-12.
+    # Updated 2020-01-24.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
@@ -430,7 +453,11 @@ _koopa_activate_venv() {                                                  # {{{1
     local script
     script="${prefix}/${name}/bin/activate"
     [ -r "$script" ] || return 0
+    local nounset
+    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
