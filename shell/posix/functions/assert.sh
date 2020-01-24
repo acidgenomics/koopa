@@ -88,6 +88,21 @@ _koopa_assert_is_conda_active() {                                         # {{{1
     return 0
 }
 
+_koopa_assert_is_current_version() {                                      # {{{1
+    # """
+    # Assert that programs are installed and current.
+    # Updated 2020-01-24.
+    # """
+    for arg
+    do
+        if ! _koopa_is_installed "$arg"
+        then
+            _koopa_stop "'${arg}' is not current."
+        fi
+    done
+    return 0
+}
+
 _koopa_assert_is_debian() {                                               # {{{1
     # """
     # Assert that platform is Debian.
@@ -361,21 +376,6 @@ _koopa_assert_is_not_symlink() {                                          # {{{1
         fi
     done
     return 0
-}
-
-_koopa_is_powerful() {                                                    # {{{1
-    # """
-    # Is the current machine powerful?
-    # Updated 2019-11-22.
-    # """
-    local cores
-    cores="$(_koopa_cpu_count)"
-    if [ "$cores" -ge 7 ]
-    then
-        return 0
-    else
-        return 1
-    fi
 }
 
 _koopa_assert_is_r_package_installed() {                                  # {{{1
@@ -790,6 +790,22 @@ _koopa_is_conda_active() {                                                # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
+_koopa_is_current_version() {                                             # {{{1
+    # """
+    # Is the installed program current?
+    # Updated 2020-01-26.
+    # """
+    local app
+    app="${1:?}"
+    local expected
+    expected="$(_koopa_variable "$app")"
+    echo "$expected"
+    local actual
+    actual="$(_koopa_current_version "$app")"
+    echo "$actual"
+    [ "$actual" == "$expected" ]
+}
+
 _koopa_is_debian() {                                                      # {{{1
     # """
     # Is the operating system Debian?
@@ -964,6 +980,21 @@ _koopa_is_matching_regex() {                                              # {{{1
     local pattern
     pattern="${2:?}"
     echo "$string" | grep -Eq "$pattern"
+}
+
+_koopa_is_powerful() {                                                    # {{{1
+    # """
+    # Is the current machine powerful?
+    # Updated 2019-11-22.
+    # """
+    local cores
+    cores="$(_koopa_cpu_count)"
+    if [ "$cores" -ge 7 ]
+    then
+        return 0
+    else
+        return 1
+    fi
 }
 
 _koopa_is_r_package_installed() {                                         # {{{1
