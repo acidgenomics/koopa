@@ -116,7 +116,6 @@ sudo DEBIAN_FRONTEND=noninteractive \
             libhdf5-dev \
             liblzma-dev \
             libmagick++-dev \
-            libmariadb-client-lgpl-dev \
             libmariadb-dev \
             libopenblas-base \
             libopenblas-dev \
