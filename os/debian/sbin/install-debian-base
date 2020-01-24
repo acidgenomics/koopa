@@ -136,9 +136,6 @@ sudo DEBIAN_FRONTEND=noninteractive \
             pandoc-citeproc \
             parallel \
             pkg-config \
-            python3 \
-            python3-pip \
-            python3-venv \
             software-properties-common \
             sudo \
             systemd \
