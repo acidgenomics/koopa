@@ -564,7 +564,13 @@ _koopa_os_string() {                                                      # {{{1
                 awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
                 | tr -d '"'
             )"
-            version="$(_koopa_major_version "$version")"
+            if [ -n "$version" ]
+            then
+                version="$(_koopa_major_version "$version")"
+            else
+                # This is the case for Arch Linux.
+                version="rolling"
+            fi
         else
             id="linux"
         fi
