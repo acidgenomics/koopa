@@ -2,7 +2,7 @@
 set -Eeu -o pipefail
 
 # Continuous integration (CI) tests.
-# Updated 2020-01-14.
+# Updated 2020-01-24.
 
 script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
     >/dev/null 2>&1 && pwd -P)"
@@ -10,4 +10,6 @@ script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
 tests_dir="${script_dir}/tests"
 
 "${tests_dir}/linter.sh"
-"${tests_dir}/help.sh"
+
+# Disabled until we switch to Dockerized unit tests.
+# > "${tests_dir}/help.sh"
