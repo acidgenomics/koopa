@@ -28,14 +28,26 @@ sudo yum -y install \
     fish \
     gdal \
     gdal-devel \
+    geos \
+    geos-devel \
     hdf5 \
     hdf5-devel \
+    java-latest-openjdk \
+    java-latest-openjdk-devel \
     leptonica-devel \
     libgit2-devel \
+    libsodium-devel \
     libssh2-devel \
+    lua-devel \
+    lua-filesystem \
+    lua-posix \
     neovim \
     pandoc \
     pandoc-citeproc \
+    parallel \
+    proj \
+    proj-devel \
+    sshpass \
     tesseract-devel \
     udunits2-devel \
     v8-devel
