@@ -10,6 +10,7 @@ source "${script_dir}/../include/header.sh"
 # https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
+_koopa_exit_if_installed R
 _koopa_assert_is_installed add-apt-repository
 
 release="$(_koopa_os_codename)"
