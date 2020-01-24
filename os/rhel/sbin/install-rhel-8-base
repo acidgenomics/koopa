@@ -4,7 +4,6 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
 
 # """
 # Is LLVM 8+ available yet?
@@ -21,6 +20,11 @@ _koopa_assert_has_no_args "$@"
 # - pandoc-citeproc
 # - poppler-cpp-devel
 # """
+
+_koopa_h2 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed sudo
 
 install-fedora-base
 sudo yum -y install \
