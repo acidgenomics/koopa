@@ -58,7 +58,6 @@ _koopa_mkdir() {                                                          # {{{1
     else
         mkdir -pv "$@"
     fi
-    _koopa_set_permissions "$@"
     return 0
 }
 
@@ -139,6 +138,7 @@ _koopa_prefix_mkdir() {                                                   # {{{1
     prefix="${1:?}"
     _koopa_assert_is_not_dir "$prefix"
     _koopa_mkdir "$prefix"
+    _koopa_set_permissions "$prefix"
     return 0
 }
 
