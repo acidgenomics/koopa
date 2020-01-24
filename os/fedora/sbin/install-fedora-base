@@ -5,6 +5,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# CentOS 8 conflict:
+# Problem: problem with installed package coreutils-single-8.30-6.el8.x86_64
+#   - package coreutils-8.30-6.el8.x86_64 conflicts with coreutils-single
+#     provided by coreutils-single-8.30-6.el8.x86_64
+#   - conflicting requests
+# """
+
 _koopa_h2 "Installing Fedora base system."
 
 _koopa_assert_has_no_args "$@"
@@ -14,12 +22,12 @@ sudo yum -y update
 sudo yum -y groupinstall "Development Tools"
 
 sudo yum -y install \
+    # coreutils \
     bash \
     bzip2 \
     bzip2-devel \
     cmake \
     convmv \
-    coreutils \
     cryptsetup \
     curl \
     emacs \
