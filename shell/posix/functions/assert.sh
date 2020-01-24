@@ -97,7 +97,9 @@ _koopa_assert_is_current_version() {                                      # {{{1
     do
         if ! _koopa_is_installed "$arg"
         then
-            _koopa_stop "'${arg}' is not current."
+            local expected
+            expected="$(_koopa_variable "$arg")"
+            _koopa_stop "'${arg}' is not current; expecting '${expected}'."
         fi
     done
     return 0
