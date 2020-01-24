@@ -6,7 +6,7 @@ _koopa_chgrp() {                                                          # {{{1
     # chgrp with dynamic sudo handling.
     # Updated 2020-01-24.
     # """
-    if _koopa_is_shared install
+    if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
         sudo chgrp "$@"
@@ -21,7 +21,7 @@ _koopa_chmod() {                                                          # {{{1
     # chmod with dynamic sudo handling.
     # Updated 2020-01-24.
     # """
-    if _koopa_is_shared install
+    if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
         sudo chmod "$@"
@@ -36,7 +36,7 @@ _koopa_chown() {                                                          # {{{1
     # chown with dynamic sudo handling.
     # Updated 2020-01-24.
     # """
-    if _koopa_is_shared install
+    if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
         sudo chown "$@"
@@ -51,7 +51,7 @@ _koopa_mkdir() {                                                          # {{{1
     # mkdir with dynamic sudo handling.
     # Updated 2020-01-24.
     # """
-    if _koopa_is_shared install
+    if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
         sudo mkdir -pv "$@"
@@ -225,26 +225,43 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     return 0
 }
 
+_koopa_fix_pyenv_permissions() {                                          # {{{1
+    # """
+    # Ensure Python pyenv shims have correct permissions.
+    # Updated 2020-01-24.
+    # """
+    _koopa_is_linux || return 1
+    local pyenv_prefix
+    pyenv_prefix="$(_koopa_pyenv_prefix)"
+    [ -d "${pyenv_prefix}/shims" ] || return 0
+    _koopa_h2 "Fixing Python pyenv shim permissions."
+    _koopa_chmod -v 0777 "${pyenv_prefix}/shims"
+    return 0
+}
+
+_koopa_fix_rbenv_permissions() {                                          # {{{1
+    # """
+    # Ensure Ruby rbenv shims have correct permissions.
+    # Updated 2020-01-24.
+    # """
+    _koopa_is_linux || return 1
+    local rbenv_prefix
+    rbenv_prefix="$(_koopa_rbenv_prefix)"
+    [ -d "${rbenv_prefix}/shims" ] || return 0
+    _koopa_h2 "Fixing Ruby rbenv shim permissions."
+    _koopa_chmod -v 0777 "${rbenv_prefix}/shims"
+    return 0
+}
+
 _koopa_fix_zsh_permissions() {                                            # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
     # Updated 2020-01-24.
-    #
-    # See also SC2086.
     # """
+    _koopa_h2 "Fixing Zsh permissions to pass 'compaudit' checks."
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
-    local chmod_exe
-    if _koopa_is_shared_install
-    then
-        _koopa_assert_has_sudo
-        chmod_exe="sudo chmod"
-    else
-        chmod_exe="chmod"
-    fi
-    # FIXME This approach doesn't work on ZSH, and is bad practice.
-    # FIXME Rework using an internal function for this...
-    $chmod_exe -v g-w \
+    _koopa_chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
     _koopa_is_installed zsh || return 1
@@ -255,11 +272,11 @@ _koopa_fix_zsh_permissions() {                                            # {{{1
     local zsh_exe
     zsh_exe="$(_koopa_which_realpath zsh)"
     _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}" || return 1
-    $chmod_exe -v g-w \
+    _koopa_chmod -v g-w \
         "${make_prefix}/share/zsh" \
         "${make_prefix}/share/zsh/site-functions"
     _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}" || return 1
-    $chmod_exe -v g-w \
+    _koopa_chmod -v g-w \
         "${cellar_prefix}/zsh/"*"/share/zsh" \
         "${cellar_prefix}/zsh/"*"/share/zsh/"* \
         "${cellar_prefix}/zsh/"*"/share/zsh/"*"/functions"
