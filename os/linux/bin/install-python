@@ -86,16 +86,18 @@ fi
 
 rm -fr "$tmp_dir"
 
+if [[ ! -f "${prefix}/bin/python" ]]
+then
+    _koopa_h2 "Symlinking 'python3' to 'python'."
+    ln -fnsv "${prefix}/bin/python3" "${prefix}/bin/python"
+fi
+
 _koopa_link_cellar "$name" "$version"
 
 _koopa_install_pip "$exe_file"
 _koopa_install_pipx "$exe_file"
 
 _koopa_link_cellar "$name" "$version"
-
-# > build_prefix="$(_koopa_make_prefix)"
-# > _koopa_h1 "Symlinking 'python3' to 'python' in '${build_prefix}'."
-# > ln -fnsv "${build_prefix}/bin/python3" "${build_prefix}/bin/python"
 
 _koopa_success "Installation of ${name} was successful."
 _koopa_note "Reinstall cellar vim, which depends on Python."
