@@ -41,6 +41,10 @@ sudo yum -y install \
     libxml2-devel \
     llvm \
     llvm-devel \
+    lua \
+    lua-devel \
+    lua-filesystem \
+    lua-posix
     make \
     mariadb-devel \
     mpfr-devel \
