@@ -28,10 +28,10 @@ source "${script_dir}/../include/header.sh"
 # Note that 'golang-go' is not officially supported.
 # """
 
+_koopa_h2 "Installing Debian base system."
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed sed sudo
-
-_koopa_h1 "Installing Debian base system."
 
 export DEBIAN_FRONTEND="noninteractive"
 
