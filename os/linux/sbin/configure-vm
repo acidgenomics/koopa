@@ -325,4 +325,6 @@ _koopa_remove_broken_symlinks "$app_prefix"
 _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
 
+rm -fr /root/.cache
+
 _koopa_success "Configuration completed successfully."
