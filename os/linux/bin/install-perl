@@ -62,7 +62,8 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         -des \
         -Dprefix="$prefix"
     make --jobs="$jobs"
-    # > make test
+    # The installer will warn if you skip this step.
+    make test
     make install
 )
 
