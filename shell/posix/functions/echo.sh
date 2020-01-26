@@ -191,13 +191,13 @@ _koopa_emoji() {                                                          # {{{1
 _koopa_h1() {                                                        # {{{1
     # """
     # Header level 1.
-    # Updated 2020-01-17.
+    # Updated 2020-01-26.
     #
     # Alternatives: ==> (Homebrew) / ⇨  / →
     # """
     local c1 c2 nc pre str
     pre="==>"
-    pre="$(_koopa_emoji) ${pre}  "
+    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "blue")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
@@ -212,7 +212,7 @@ _koopa_h2() {                                                        # {{{1
     # """
     local c1 c2 nc pre str
     pre="-->"
-    pre="$(_koopa_emoji) ${pre}  "
+    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "magenta")"
     c2="$(_koopa_ansi_escape_code "default")"
@@ -227,7 +227,7 @@ _koopa_info() {                                                           # {{{1
     # """
     local c1 c2 nc pre str
     pre="---"
-    pre="$(_koopa_emoji) ${pre}  "
+    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "default")"
     c2="$(_koopa_ansi_escape_code "default")"
@@ -242,7 +242,7 @@ _koopa_note() {                                                           # {{{1
     # """
     local c1 c2 nc pre str
     pre="***"
-    pre="$(_koopa_emoji) ${pre}  "
+    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default")"
@@ -272,8 +272,8 @@ _koopa_success() {                                                        # {{{1
     # Updated 2020-01-26.
     # """
     local c1 c2 nc pre str
-    pre="✔"
-    pre="$(_koopa_emoji)   ${pre}  "
+    pre="  ✔"
+    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "green")"
     c2="$(_koopa_ansi_escape_code "green-bold")"
@@ -284,7 +284,7 @@ _koopa_success() {                                                        # {{{1
 _koopa_warning() {                                                        # {{{1
     # """
     # Warning message.
-    # Updated 2020-01-17.
+    # Updated 2020-01-26.
     # """
     local c1 c2 nc pre str
     pre="!!"
