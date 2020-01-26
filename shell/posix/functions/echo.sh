@@ -272,7 +272,7 @@ _koopa_success() {                                                        # {{{1
     # Updated 2020-01-26.
     # """
     local c1 c2 nc pre str
-    pre="  ✔"
+    pre=" ✔ "
     pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
     c1="$(_koopa_ansi_escape_code "green")"
