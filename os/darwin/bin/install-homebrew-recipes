@@ -5,6 +5,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_h1 "Installing Homebrew recipes."
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed brew
 
@@ -13,7 +15,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 # Taps                                                                      {{{1
 # ==============================================================================
 
-_koopa_h1 "Updating taps."
+_koopa_h2 "Updating taps."
 brew tap mongodb/brew
 brew tap osgeo/osgeo4mac
 
@@ -22,7 +24,7 @@ brew tap osgeo/osgeo4mac
 
 # Install XQuartz 2.7.9 manually instead of using xquartz cask.
 
-_koopa_h1 "Installing casks."
+_koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
 casks=(
@@ -123,7 +125,7 @@ done
 #
 # And be sure not to install 'rust' alongside 'rustup-init'.
 
-_koopa_h1 "Installing brews."
+_koopa_h2 "Installing brews."
 installed_brews="$(brew list)"
 brews=(
     # Priority
@@ -235,3 +237,5 @@ done
 
 brew unlink python
 brew unlink python@2
+
+_koopa_success "Installation of Homebrew recipes was successful."
