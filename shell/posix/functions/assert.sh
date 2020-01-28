@@ -637,22 +637,6 @@ _koopa_check_user() {                                                     # {{{1
     return 0
 }
 
-_koopa_exit_if_installed() {                                              # {{{1
-    # """
-    # Exit with note if an app is installed.
-    # Updated 2020-01-22.
-    # """
-    for arg
-    do
-        if _koopa_is_installed "$arg"
-        then
-            _koopa_note "'${arg}' is already installed."
-            exit 0
-        fi
-    done
-    return 0
-}
-
 _koopa_exit_if_dir() {                                                    # {{{1
     # """
     # Exit with note if directory exists.
@@ -679,6 +663,38 @@ _koopa_exit_if_docker() {                                                 # {{{1
         _koopa_note "Not supported when running inside Docker."
         exit 0
     fi
+    return 0
+}
+
+_koopa_exit_if_exists() {                                                 # {{{1
+    # """
+    # Exit with note if any file type exists.
+    # Updated 2020-01-28.
+    # """
+    for arg
+    do
+        if [ -e "$arg" ]
+        then
+            _koopa_note "Exists: '${arg}'."
+            exit 0
+        fi
+    done
+    return 0
+}
+
+_koopa_exit_if_installed() {                                              # {{{1
+    # """
+    # Exit with note if an app is installed.
+    # Updated 2020-01-22.
+    # """
+    for arg
+    do
+        if _koopa_is_installed "$arg"
+        then
+            _koopa_note "'${arg}' is already installed."
+            exit 0
+        fi
+    done
     return 0
 }
 
