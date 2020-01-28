@@ -111,19 +111,3 @@ install_github("acidgenomics/pointillism")
 
 install_github("acidgenomics/lintr")
 install_github("acidgenomics/bb8")
-
-
-
-## CPI internal ====
-
-# Install from a private GitLab repo.
-# > cred <- git2r::cred_user_pass(
-# >     rstudioapi::askForPassword("username"),
-# >     rstudioapi::askForPassword("Password")
-# > )
-# > remotes::install_git(
-# >    url = "git@gitlab.com:cpi-bioinfo/packages/cpichipseq.git",
-# >    credentials = cred
-# > )
-
-## > remotes::install_gitlab("cpi-bioinfo/packages/cpichipseq")
