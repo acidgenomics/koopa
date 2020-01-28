@@ -70,6 +70,7 @@ rm -frv \
     "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
+generate-ssh-key
 
 # Prepare make prefix (e.g. '/usr/local') for write access.
 _koopa_mkdir "$make_prefix"
