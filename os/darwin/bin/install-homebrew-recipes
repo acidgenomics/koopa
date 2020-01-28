@@ -5,6 +5,23 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Install XQuartz 2.7.9 manually instead of using xquartz cask.
+#
+# LLVM takes up 4 GB of disk space but is required for some Python packages.
+# In particular, if we want to install umap-learn, this is now required.
+
+# Use osgeo-gdal instead of regular gdal.
+# This gets updated more regularly.
+
+# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
+#
+# I hit some permissions issues with the 'rustup' cellar symlink installed at
+# '/usr/local/bin/rustup' that doesn't occur when running the official script.
+#
+# And be sure not to install 'rust' alongside 'rustup-init'.
+# """
+
 _koopa_h1 "Installing Homebrew recipes."
 
 _koopa_assert_has_no_args "$@"
@@ -22,12 +39,11 @@ brew tap osgeo/osgeo4mac
 # Casks                                                                     {{{1
 # ==============================================================================
 
-# Install XQuartz 2.7.9 manually instead of using xquartz cask.
-
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
 casks=(
+    adoptopenjdk
     alacritty
     calibre
     carbon-copy-cloner
@@ -111,19 +127,6 @@ done
 
 # Brews                                                                     {{{1
 # ==============================================================================
-
-# LLVM takes up 4 GB of disk space but is required for some Python packages.
-# In particular, if we want to install umap-learn, this is now required.
-
-# Use osgeo-gdal instead of regular gdal.
-# This gets updated more regularly.
-
-# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
-#
-# I hit some permissions issues with the 'rustup' cellar symlink installed at
-# '/usr/local/bin/rustup' that doesn't occur when running the official script.
-#
-# And be sure not to install 'rust' alongside 'rustup-init'.
 
 _koopa_h2 "Installing brews."
 installed_brews="$(brew list)"
