@@ -43,7 +43,7 @@ _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
 casks=(
-    adoptopenjdk
+    adoptopenjdk  # igv
     alacritty
     calibre
     carbon-copy-cloner
@@ -67,7 +67,6 @@ done
 
 casks=(
     1password
-    adoptopenjdk  # igv
     alfred
     aspera-connect
     authy
@@ -238,7 +237,20 @@ do
     brew install "$brew"
 done
 
+brew unlink osgeo-gdal
+brew unlink osgeo-hdf4
+brew unlink osgeo-libgeotiff
+brew unlink osgeo-libkml
+brew unlink osgeo-libspatialite
+brew unlink osgeo-netcdf
+brew unlink osgeo-postgresql
+brew unlink osgeo-proj
+
 brew unlink python
 brew unlink python@2
+
+brew install gdal proj
+brew link gdal
+brew link proj
 
 _koopa_success "Installation of Homebrew recipes was successful."
