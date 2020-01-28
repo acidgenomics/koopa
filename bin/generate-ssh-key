@@ -8,7 +8,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_is_installed ssh-keygen
 
-comment="$HOSTNAME"
+comment="${USER}@${HOSTNAME}"
 key_name="id_rsa"
 
 while (("$#"))
@@ -47,4 +47,4 @@ ssh-keygen \
     -q \
     -t rsa
 
-_koopa_success "Generated SSH key at '${file}'.
+_koopa_success "Generated SSH key at '${file}'."
