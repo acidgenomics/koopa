@@ -9,6 +9,24 @@ source "${script_dir}/../include/header.sh"
 # Note that osgeo-gdal (GDAL 3) Homebrew recipe doesn't work.
 # Fall back to using gdal (GDAL 2) recipe instead.
 #
+#
+# Seeing this error with osgeo-gdal linked still:
+#
+# checking GDAL: checking whether PROJ is available for linking:... no
+# Undefined symbols for architecture x86_64:
+#  "OGRCreateCoordinateTransformation(OGRSpatialReference const*,
+#  OGRSpatialReference const*)", referenced from:
+#      _main in gdal_proj-565155.o
+# ld: symbol(s) not found for architecture x86_64
+# clang-7: error: linker command failed with exit code 1
+#   (use -v to see invocation)
+# configure: Install failure: compilation and/or linkage problems.
+# configure: error: cannot link projection code
+# ERROR: configuration failed for package ‘sf’
+#
+# See also:
+# https://github.com/r-spatial/sf/issues/1207
+#
 # Alternatively, this works:
 # > brew unlink osgeo-gdal
 # > brew unlink osgeo-hdf4
