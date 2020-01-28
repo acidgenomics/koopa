@@ -65,6 +65,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
         --no-install-recommends \
+        --quiet \
         --yes \
         dist-upgrade
 
@@ -73,6 +74,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
         --no-install-recommends \
+        --quiet \
         --yes \
         install \
             alien \
@@ -150,6 +152,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
         --no-install-recommends \
+        --quiet \
         --yes \
         install \
             firefox \
@@ -167,22 +170,31 @@ then
     sudo apt-get update
     # Including 'bash' here will remove 'r-base'.
     sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get --no-install-recommends --yes build-dep \
-            coreutils \
-            git \
-            htop \
-            perl \
-            tmux \
-            vim \
-            zsh
-    ! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get --no-install-recommends --yes build-dep \
-            emacs-defaults \
-            fish \
-            neovim
+        apt-get \
+            --no-install-recommends \
+            --quiet \
+            --yes \
+            build-dep \
+                coreutils \
+                git \
+                htop \
+                perl \
+                tmux \
+                vim \
+                zsh
+    ! _koopa_is_docker && \
+        sudo DEBIAN_FRONTEND=noninteractive \
+            apt-get \
+                --no-install-recommends \
+                --quiet \
+                --yes \
+                build-dep \
+                    emacs-defaults \
+                    fish \
+                    neovim
 fi
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
-sudo apt-get -y autoremove
+sudo apt-get --yes autoremove
 
 sudo rm -fr /var/lib/apt/lists/*
