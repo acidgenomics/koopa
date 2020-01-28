@@ -46,3 +46,5 @@ ssh-keygen \
     -f "$file" \
     -q \
     -t rsa
+
+_koopa_success "Generated SSH key at '${file}'.
