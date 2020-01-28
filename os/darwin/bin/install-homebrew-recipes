@@ -41,6 +41,8 @@ brew tap osgeo/osgeo4mac
 
 _koopa_h2 "Installing casks."
 
+brew cask remove --force safari-technology-preview 
+
 installed_casks="$(brew cask list)"
 
 casks=(
@@ -98,7 +100,6 @@ casks=(
     onyx
     photosweeper-x
     r
-    safari-technology-preview
     scrivener
     skype
     spillo
