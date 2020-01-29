@@ -5,22 +5,25 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# https://openjdk.java.net/
-# https://jdk.java.net/13/
+# """
+# Don't early return if directory exists here.
+# We need to ensure alternatives code runs (see below).
+#
+# See also:
+# - https://openjdk.java.net/
+# - https://jdk.java.net/13/
+# """
 
 version="$(_koopa_variable "java")"
 jdk_dir="$(_koopa_app_prefix)/java/openjdk"
 prefix="${jdk_dir}/${version}"
-
-# Don't early return if directory exists here.
-# We need to ensure alternatives code runs (see below).
 
 _koopa_h1 "Installing OpenJDK ${version} at '${prefix}'."
 
 # Download and extract the JDK, if necessary.
 if [[ ! -d "$prefix" ]]
 then
-    _koopa_mkdir "$jdk_dir"
+    _koopa_prefix_mkdir "$jdk_dir"
     (
         cd "${jdk_dir}" || exit 1
         file="openjdk-${version}_linux-x64_bin.tar.gz"
