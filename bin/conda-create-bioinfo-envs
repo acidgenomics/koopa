@@ -69,6 +69,9 @@ then
     conda-create-env picard                 # qc                        # 0.923G
     conda-create-env qualimap               # qc                        # 1.200G
 
+    conda-create-env atropos                # trimming
+    conda-create-env trimmomatic            # trimming
+
     conda-create-env bowtie2                # aligners                  # 0.319G
     conda-create-env hisat2                 # aligners                  # 0.260G
     conda-create-env minimap2               # aligners                  # 0.045G

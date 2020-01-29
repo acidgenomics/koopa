@@ -23,6 +23,6 @@ _koopa_h1 "Updating Conda at '${prefix}'."
 
 "$conda_exe" update --yes --name=base --channel=defaults conda
 "$conda_exe" update --yes --name=base --channel=defaults --all
-"$conda_exe" clean --yes --packages
+# > "$conda_exe" clean --yes --tarballs
 
 _koopa_set_permissions "$prefix"
