@@ -85,9 +85,9 @@ mkdir -pv "$log_dir"
 # > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
 # Clean up conda packages.
-conda_exe="${install_dir}/anaconda/bin/conda"
+# > conda_exe="${install_dir}/anaconda/bin/conda"
 # > conda_exe="${tools_dir}/bin/bcbio_conda"
-"$conda_exe" clean --yes --packages
+# > "$conda_exe" clean --yes --tarballs
 
 # Keep install owned by current user, so we can install genomes easily.
 # > _koopa_chgrp "$prefix"
