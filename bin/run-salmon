@@ -134,12 +134,15 @@ then
 else
     _koopa_assert_is_file "$fasta_file"
     index_file="${output_dir}/salmon.idx"
-    salmon index \
-        -k 31 \
-        -p "$threads" \
-        -i "$index_file" \
-        -t "$fasta_file" \
-        2>&1 | tee "${output_dir}/salmon-index.log"
+    if [[ ! -f "$index_file" ]]
+    then
+        salmon index \
+            -k 31 \
+            -p "$threads" \
+            -i "$index_file" \
+            -t "$fasta_file" \
+            2>&1 | tee "${output_dir}/salmon-index.log"
+    fi
 fi
 
 # Quantify                                                                  {{{1
