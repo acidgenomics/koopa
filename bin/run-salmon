@@ -96,7 +96,7 @@ _koopa_activate_conda_env salmon
 _koopa_info "salmon: $(_koopa_which_realpath salmon)"
 
 _koopa_assert_is_dir "$fastq_dir"
-_koopa_assert_is_not_dir "$output_dir"
+# > _koopa_assert_is_not_dir "$output_dir"
 
 # Sample array from FASTQ files                                             {{{1
 # ==============================================================================
