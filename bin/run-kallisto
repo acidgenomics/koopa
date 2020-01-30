@@ -110,7 +110,7 @@ do
     x="$(basename "$x")"
     x="${x/${r1_tail}/}"
     array+=("$x")
-done < <(find "$fastq_dir" -name "*${r1_tail}" -print0)
+done < <(find "$fastq_dir" -name "*${r1_tail}" -print0 | sort)
 
 # Error on FASTQ match failure.
 if [[ "${#array[@]}" -eq 0 ]]
