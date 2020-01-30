@@ -76,7 +76,7 @@ _koopa_info "bowtie2: $(_koopa_which_realpath bowtie2)"
 
 _koopa_assert_is_dir "$fastq_dir"
 _koopa_assert_is_dir "$index_dir"
-_koopa_assert_is_not_dir "$output_dir"
+# > _koopa_assert_is_not_dir "$output_dir"
 
 fastq_dir="$(realpath "$fastq_dir")"
 index_dir="$(realpath "$index_dir")"
