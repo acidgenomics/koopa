@@ -76,7 +76,7 @@ _koopa_info "bowtie2: $(_koopa_which_realpath bowtie2)"
 
 _koopa_assert_is_dir "$fastq_dir"
 _koopa_assert_is_dir "$index_dir"
-_koopa_assert_is_not_dir "$output_dir"
+# > _koopa_assert_is_not_dir "$output_dir"
 
 fastq_dir="$(realpath "$fastq_dir")"
 index_dir="$(realpath "$index_dir")"
@@ -98,7 +98,7 @@ do
     x="$(basename "$x")"
     x="${x/${r1_tail}/}"
     array+=("$x")
-done < <(find "$fastq_dir" -name "*${r1_tail}" -print0)
+done < <(find "$fastq_dir" -name "*${r1_tail}" -print0 | sort -z)
 
 # Error on FASTQ match failure.
 if [[ "${#array[@]}" -eq 0 ]]
@@ -118,7 +118,7 @@ for id in "${array[@]}"
 do
     _koopa_info "Aligning '${id}'."
     sample_output_dir="${output_dir}/${id}"
-    rm -frv "$sample_output_dir"
+    [ -d "$sample_output_dir" ] && continue
     mkdir -pv "$sample_output_dir"
     fastq_r1="${fastq_dir}/${id}${r1_tail}"
     fastq_r2="${fastq_dir}/${id}${r2_tail}"
