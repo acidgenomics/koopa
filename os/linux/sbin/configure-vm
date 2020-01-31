@@ -70,7 +70,6 @@ rm -frv \
     "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
-generate-ssh-key
 
 # Prepare make prefix (e.g. '/usr/local') for write access.
 _koopa_mkdir "$make_prefix"
@@ -313,6 +312,8 @@ fi
 # > update-conda
 # > update-conda-envs
 # > update-venv
+
+generate-ssh-key
 
 _koopa_h2 "Setting permissions on '${make_prefix}'."
 _koopa_set_permissions "$make_prefix"
