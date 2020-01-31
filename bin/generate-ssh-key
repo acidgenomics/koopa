@@ -6,7 +6,9 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_is_installed ssh-keygen
+# This script is called inside 'configure-vm', so relax check here.
+# > _koopa_assert_is_installed ssh-keygen
+_koopa_exit_if_not_installed ssh-keygen
 
 comment="${USER}@${HOSTNAME}"
 key_name="id_rsa"
