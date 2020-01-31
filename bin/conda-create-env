@@ -45,25 +45,34 @@ set -- "${POSITIONAL[@]}"
 
 name="$1"
 
-prefix="$(_koopa_conda_default_envs_prefix)/${name}"
+if [[ -n "${version:-}" ]]
+then
+    env_name="${name}@${version}"
+else
+    env_name="$name"
+fi
+
+prefix="$(_koopa_conda_default_envs_prefix)/${env_name}"
 
 if [[ "$force" -eq 1 ]]
 then
-    conda remove --name "$name" --all
+    conda remove --name "$env_name" --all
 else
     _koopa_exit_if_dir "$prefix"
 fi
 
-_koopa_info "Creating '${name}' conda environment."
+_koopa_info "Creating '${env_name}' conda environment."
 
-flags=("--quiet" "--yes")
+flags=(
+    "--name=${env_name}"
+    "--quiet"
+    "--yes"
+)
 
 if [[ -n "${version:-}" ]]
 then
-    flags+=("--name=${name}@${version}")
     flags+=("${name}=${version}")
 else
-    flags+=("--name=${name}")
     flags+=("$name")
 fi
 
