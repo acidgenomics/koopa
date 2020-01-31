@@ -96,6 +96,7 @@ then
     fi
     if [[ -z "${KOOPA_UPDATE_RSYNC:-}" ]]
     then
+        update-pip
         update-conda
         update-rust
         install-rust-crates
