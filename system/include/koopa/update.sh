@@ -86,7 +86,6 @@ done
 if [[ "$system" -eq 1 ]]
 then
     _koopa_h1 "Updating system configuration."
-    update-conda
     if _koopa_is_macos
     then
         update-homebrew
@@ -95,6 +94,9 @@ then
     then
         configure-vm
     fi
+    update-conda
+    update-rust
+    install-rust-crates
     # Update managed git repos.
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"

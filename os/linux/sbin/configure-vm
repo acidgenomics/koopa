@@ -308,11 +308,6 @@ else
     _koopa_update_lmod_config
 fi
 
-# > update-rust
-# > update-conda
-# > update-conda-envs
-# > update-venv
-
 generate-ssh-key
 
 _koopa_h2 "Setting permissions on '${make_prefix}'."
