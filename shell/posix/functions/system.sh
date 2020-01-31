@@ -39,6 +39,15 @@ _koopa_apt_space_used_by() {                                              # {{{1
         | cut -d ' ' -f 4-5
 }
 
+_koopa_apt_space_used_by2() {                                             # {{{1
+    # """
+    # Check installed apt package size, with dependencies (alternate).
+    # Updated 2020-01-31.
+    #
+    # Alternate approach that doesn't attempt to grep match.
+    sudo apt-get --assume-no autoremove "$@"
+}
+
 _koopa_cd_tmp_dir() {                                                     # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
