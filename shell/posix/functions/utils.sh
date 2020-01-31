@@ -33,7 +33,7 @@ _koopa_bcbio_version() {                                                  # {{{1
 _koopa_cpu_count() {                                                      # {{{1
     # """
     # Get the number of cores (CPUs) available.
-    # Updated 2020-01-13.
+    # Updated 2020-01-31.
     # """
     local n
     if _koopa_is_macos
@@ -46,11 +46,10 @@ _koopa_cpu_count() {                                                      # {{{1
         # Otherwise assume single threaded.
         n=1
     fi
-    # Set to n-1 cores, if applicable.
-    # We're leaving a core free to monitor remote sessions.
-    if [ "$n" -gt 1 ]
+    # Set to n-2 cores, if applicable.
+    if [ "$n" -gt 2 ]
     then
-        n=$((n - 1))
+        n=$((n - 2))
     fi
     echo "$n"
 }
