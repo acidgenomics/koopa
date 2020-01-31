@@ -698,6 +698,22 @@ _koopa_exit_if_installed() {                                              # {{{1
     return 0
 }
 
+_koopa_exit_if_not_installed() {                                          # {{{1
+    # """
+    # Exit with note if an app is not installed.
+    # Updated 2020-01-31.
+    # """
+    for arg
+    do
+        if ! _koopa_is_installed "$arg"
+        then
+            _koopa_note "'${arg}' is not installed."
+            exit 0
+        fi
+    done
+    return 0
+}
+
 _koopa_has_file_ext() {                                                   # {{{1
     # """
     # Does the input contain a file extension?
