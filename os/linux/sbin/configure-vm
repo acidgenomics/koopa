@@ -212,7 +212,7 @@ then
     if ! _koopa_is_docker
     then
         install-coreutils                                               # 0.038G
-        # FIXME install-findutils
+        install-findutils
     fi
 
     # Shells.
