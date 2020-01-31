@@ -9,7 +9,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 # https://doc.rust-lang.org/cargo/
 
 _koopa_assert_has_no_envs
-_koopa_assert_is_installed cargo rustc rustup
+_koopa_exit_if_not_installed cargo rustc rustup
 
 if [[ $# -eq 0 ]]
 then
