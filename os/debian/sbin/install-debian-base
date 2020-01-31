@@ -74,68 +74,68 @@ sudo DEBIAN_FRONTEND=noninteractive \
 
 _koopa_h2 "Installing recommending packages."
 pkgs=(
-    autoconf                                                           # 1913 kB
-    automake                                                           # 1827 kB
-    bc                                                                  # 239 kB
-    ca-certificates                                                     # 393 kB
-    cmake                                                              # 18.0 MB
-    coreutils                                                          # 16.1 MB
-    curl                                                                # 410 kB
-    dirmngr                                                            # 1271 kB
-    findutils                                                          # 1985 kB
-    gcc                                                                # 46.1 kB
-    emacs                                                              # 76.8 kB
-    gdb                                                                # 9205 kB
-    gdebi-core                                                          # 913 kB
-    gfortran                                                           # 16.4 kB
-    git                                                                # 36.1 MB
-    gnupg                                                               # 741 kB
-    gnutls-bin                                                         # 1625 kB
-    gpg-agent                                                          # 1263 kB
-    gtk-doc-tools                                                      # 2930 kB
-    htop                                                                # 221 kB
-    less                                                                # 288 kB
-    libacl1
-    libacl1-dev
-    libbz2-dev
-    libcairo2-dev
-    libcurl4-openssl-dev
-    libevent-dev
-    libffi-dev
-    libfreetype6-dev
-    libgdal-dev
-    libgif-dev
-    libglu1-mesa-dev
-    libgnutls28-dev
-    libgsl-dev
-    libharfbuzz-dev
-    libhdf5-dev
-    liblzma-dev
-    libmagick++-dev
-    libmariadb-dev
-    libncurses-dev
-    libopenblas-base
-    libopenblas-dev
-    libpng-dev
-    libssh2-1-dev
-    libssl-dev
-    libtool
-    libtool-bin
-    libudunits2-dev
-    libv8-dev
-    libx11-dev
-    libxml2-dev
+    autoconf                                                        #    22.6 MB
+    automake                                                        #    20.7 MB
+    bc                                                              # 
+    ca-certificates                                                 # 
+    cmake                                                           # 
+    coreutils                                                       # 
+    curl                                                            #
+    dirmngr                                                         # 
+    findutils                                                       # 
+    gcc                                                             # 
+    emacs                                                           # 
+    gdb                                                             # 
+    gdebi-core                                                      # 
+    gfortran                                                        # 
+    git                                                             # 
+    gnupg                                                           #
+    gnutls-bin                                                      # 
+    gpg-agent                                                       # 
+    gtk-doc-tools                                                   # 
+    htop                                                            # 
+    less                                                            # 
+    libacl1                                                         #
+    libacl1-dev                                                     #
+    libbz2-dev                                                      #
+    libcairo2-dev                                                   #
+    libcurl4-openssl-dev                                            #
+    libevent-dev                                                    #
+    libffi-dev                                                      #
+    libfreetype6-dev                                                #
+    libgdal-dev                                                     #
+    libgif-dev                                                      #
+    libglu1-mesa-dev                                                #
+    libgnutls28-dev                                                 #
+    libgsl-dev                                                      #
+    libharfbuzz-dev                                                 #
+    libhdf5-dev                                                     #
+    liblzma-dev                                                     #
+    libmagick++-dev                                                 #
+    libmariadb-dev                                                  #
+    libncurses-dev                                                  #
+    libopenblas-base                                                #
+    libopenblas-dev                                                 #
+    libpng-dev                                                      #
+    libssh2-1-dev                                                   #
+    libssl-dev                                                      #
+    libtool                                                         #
+    libtool-bin                                                     #
+    libudunits2-dev                                                 #
+    libv8-dev                                                       #
+    libx11-dev                                                      #
+    libxml2-dev                                                     #
     libz-dev
-    lsb-release                                                        # 63.5 kB
-    nano                                                               # 2269 kB
-    parallel                                                           # 1018 kB
-    pkg-config                                                          # 208 kB
-    software-properties-common                                          # 468 kB
-    sudo                                                               # 3878 kB
-    tree                                                                # 117 kB
-    tzdata                                                             # 3107 kB
-    wget                                                               # 3335 kB
-    xorg                                                               # 53.2 kB
+    lsb-release                                                     #
+    nano                                                            #
+    parallel                                                        #
+    pkg-config                                                      #
+    software-properties-common                                      #
+    sudo                                                            #
+    tree                                                            #
+    tzdata                                                          #
+    wget                                                            #
+    xorg                                                            #
 )
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
@@ -146,25 +146,22 @@ sudo DEBIAN_FRONTEND=noninteractive \
         install "${pkgs[@]}"
 
 pkgs=(
-    alien                                                               # 170 kB
-    apt-listchanges                                                     # 409 kB
-    apt-utils                                                          # 1154 kB
-    cargo                                                              # 9782 kB
-    firefox                                                             # 202 MB
-    fish                                                               # 3824 kB
-    keyboard-configuration                                             # 2636 kB
-    pandoc                                                              # 116 MB
-    pandoc-citeproc                                                    # 97.3 MB
-    perl                                                                # 582 kB
-    sqlite3                                                            # 2481 kB
-    systemd                                                            # 13.8 MB
-    texlive                                                            # 70.7 kB
-    tmux
-    unattended-upgrades                                                 # 306 kB
-
-
-
-    vim                                                                # 32.0 MB
+    alien                                                           #
+    apt-listchanges                                                 #
+    apt-utils                                                       #
+    cargo                                                           # 9782 kB
+    firefox                                                         # 202 MB
+    fish                                                            # 3824 kB
+    keyboard-configuration                                          # 2636 kB
+    pandoc                                                          # 116 MB
+    pandoc-citeproc                                                 # 97.3 MB
+    perl                                                            # 582 kB
+    sqlite3                                                         # 2481 kB
+    systemd                                                         # 13.8 MB
+    texlive                                                         # 70.7 kB
+    tmux                                                            #
+    unattended-upgrades                                             # 306 kB
+    vim                                                             #    32.0 MB
     zsh
 )
 ! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
