@@ -74,33 +74,32 @@ sudo DEBIAN_FRONTEND=noninteractive \
 
 _koopa_h2 "Installing recommending packages."
 pkgs=(
-    autoconf                                                        #    22.6 MB
-    automake                                                        #    20.7 MB
-    bc                                                              #    25.6 MB
+    autoconf                                                        #      23 MB
+    automake                                                        #      21 MB
+    bc                                                              #      26 MB
     ca-certificates                                                 #     249 MB
-    cmake                                                           #    24.6 MB
+    cmake                                                           #      25 MB
     coreutils                                                       #         NA
-    curl                                                            #     449 kB
-    dirmngr                                                         #    3517 kB
+    curl                                                            #     < 1 MB
+    dirmngr                                                         #       4 MB
     findutils                                                       #         NA
     gcc                                                             #     333 MB
-    gdb                                                             #    51.1 MB
-    gdebi-core                                                      #     950 kB
-    gfortran                                                        #     105 kB
-    git                                                             #    34.0 MB
-    gnupg                                                           #    2463 kB
-    gnutls-bin                                                      #    1419 kB
-    gpg-agent                                                       #    3737 kB
-    htop                                                            #     344 kB
-    less                                                            # 
-    libacl1                                                         #
-    libacl1-dev                                                     #
-    libbz2-dev                                                      #
-    libcairo2-dev                                                   #
-    libcurl4-openssl-dev                                            #
-    libevent-dev                                                    #
-    libffi-dev                                                      #
-    libfreetype6-dev                                                #
+    gdb                                                             #      51 MB
+    gdebi-core                                                      #     < 1 MB
+    gfortran                                                        #     < 1 MB
+    git                                                             #      34 MB
+    gnupg                                                           #       2 MB
+    gnutls-bin                                                      #       1 MB
+    gpg-agent                                                       #       4 MB
+    htop                                                            #     < 1 MB
+    less                                                            #     < 1 MB
+    libacl1-dev                                                     #     < 1 MB
+    libbz2-dev                                                      #      36 MB
+    libcairo2-dev                                                   #      94 MB
+    libcurl4-openssl-dev                                            #     < 1 MB
+    libevent-dev                                                    #       2 MB
+    libffi-dev                                                      #     188 MB
+    libfreetype6-dev                                                #      98 MB
     libgdal-dev                                                     #
     libgif-dev                                                      #
     libglu1-mesa-dev                                                #
