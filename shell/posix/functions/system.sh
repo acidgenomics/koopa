@@ -35,9 +35,6 @@ _koopa_apt_space_used_by_grep() {                                         # {{{1
     # Check installed apt package size, with dependencies.
     # Updated 2020-01-31.
     #
-    # Alternate method, that doesn't check dependencies:
-    # > apt show "$app" | grep 'Size'
-    #
     # See also:
     # https://askubuntu.com/questions/490945
     # """
@@ -46,6 +43,14 @@ _koopa_apt_space_used_by_grep() {                                         # {{{1
     sudo apt-get --assume-no autoremove "$@" \
         | grep freed \
         | cut -d ' ' -f 4-5
+}
+
+_koopa_apt_space_used_by_no_deps() {                                      # {{{1
+    # """
+    # Check install apt package size, without dependencies.
+    # Updated 2020-01-31.
+    # """
+    sudo apt show "$@" | grep 'Size'
 }
 
 _koopa_cd_tmp_dir() {                                                     # {{{1
