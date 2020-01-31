@@ -58,7 +58,7 @@ flags=(
 
 if [[ "$bash" -eq 1 ]]
 then
-    flags+=("bash")
+    flags+=("bash" "-il")
 fi
 
 docker run "${flags[@]}"
