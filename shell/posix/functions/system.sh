@@ -21,6 +21,24 @@ _koopa_add_config_link() {                                                # {{{1
     return 0
 }
 
+_koopa_apt_space_used_by() {                                              # {{{1
+    # """
+    # Check installed apt package size, with dependencies.
+    # Updated 2020-01-31.
+    #
+    # Alternate method, that doesn't check dependencies:
+    # > apt show "$app" | grep 'Size'
+    #
+    # See also:
+    # https://askubuntu.com/questions/490945
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    sudo apt-get --assume-no autoremove "$@" \
+        | grep freed \
+        | cut -d ' ' -f 4-5
+}
+
 _koopa_cd_tmp_dir() {                                                     # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
