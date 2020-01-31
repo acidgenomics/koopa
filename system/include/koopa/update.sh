@@ -94,9 +94,12 @@ then
     then
         configure-vm
     fi
-    update-conda
-    update-rust
-    install-rust-crates
+    if [[ -z "${KOOPA_UPDATE_RSYNC:-}" ]]
+    then
+        update-conda
+        update-rust
+        install-rust-crates
+    fi
     # Update managed git repos.
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
     _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"

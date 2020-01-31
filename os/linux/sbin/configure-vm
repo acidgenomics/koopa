@@ -184,6 +184,7 @@ then
         _koopa_note "Skipping rsync because '${host_ip}' is source machine."
         rsync=0
     else
+        export KOOPA_UPDATE_RSYNC=1
         rsync=1
         rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
     fi
