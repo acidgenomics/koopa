@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-01-28"
+koopa_date="2020-01-31"
 
 
 
@@ -33,12 +33,9 @@ bcbio-nextgen="1.1.9a"
 #     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
 
-# http://bioconductor.org/
-bioconductor="3.10"
-
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.12.0"
+broot="0.12.2"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
