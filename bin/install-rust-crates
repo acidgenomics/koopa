@@ -6,7 +6,15 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+# """
+# Cargo documentation:
 # https://doc.rust-lang.org/cargo/
+#
+# install-update now supported:
+# - https://stackoverflow.com/questions/34484361
+# - https://github.com/rust-lang/cargo/pull/6798
+# - https://github.com/rust-lang/cargo/pull/7560
+# """
 
 _koopa_assert_has_no_envs
 _koopa_exit_if_not_installed cargo rustc rustup
@@ -38,7 +46,7 @@ _koopa_prefix_chown_user "$CARGO_HOME"
 
 for crate in "${crates[@]}"
 do
-    cargo install --force "$crate"
+    cargo install "$crate"
 done
 
 _koopa_set_permissions "$CARGO_HOME"
