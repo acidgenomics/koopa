@@ -209,20 +209,24 @@ then
     fi
 
     # Core.
-    install-coreutils                                                   # 0.038G
-
-    # Shells.
-    install-bash                                                        # 0.014G
-    install-zsh                                                         # 0.011G
     if ! _koopa_is_docker
     then
+        install-coreutils                                               # 0.038G
+        # FIXME install-findutils
+    fi
+
+    # Shells.
+    if ! _koopa_is_docker
+    then
+        install-bash                                                    # 0.014G
+        install-zsh                                                     # 0.011G
         install-fish                                                    # 0.082G
     fi
 
     # General tools.
-    install-git                                                         # 0.158G
     if ! _koopa_is_docker
     then
+        install-git                                                     # 0.177G
         install-gnupg                                                   # 0.038G
         install-lua                                                     # 0.001G
         install-luarocks                                                # 0.002G
@@ -246,15 +250,15 @@ then
     fi
 
     # Shell tools.
-    install-autojump                                                    # 0.000G
     install-htop                                                        # 0.001G
-    install-shellcheck                                                  # 0.008G
-    install-the-silver-searcher                                         # 0.000G
     install-tmux                                                        # 0.001G
     if ! _koopa_is_docker
     then
+        install-autojump                                                # 0.000G
         install-fzf                 # requires go                       # 0.003G
         install-neofetch                                                # 0.003G
+        install-shellcheck                                              # 0.008G
+        install-the-silver-searcher                                     # 0.000G
     fi
 
     # Text editors.
@@ -265,30 +269,24 @@ then
         install-neovim                                                  # 0.029G
     fi
 
-    # Bioinformatics apps.
-    if ! _koopa_is_docker
-    then
-        install-genrich                                                 # 0.000G
-    fi
-
     # Environment managers.
     install-conda                                                       # 0.493G
-    install-perlbrew                                                    # 0.003G
-    install-pyenv                                                       # 0.009G
     if ! _koopa_is_docker
     then
         _koopa_is_installed install-docker && install-docker
+        install-perlbrew                                                # 0.003G
+        install-pyenv                                                   # 0.009G
         install-rbenv                                                   # 0.006G
         install-lmod                                                    # 0.002G
 
         # > _koopa_activate_pipx
-        #(pipx-install-envs)
+        # > pipx-install-envs
 
         # > _koopa_activate_rustup
-        #(install-rust-crates)
+        # > install-rust-crates
 
         # > _koopa_activate_conda
-        #(conda-create-bioinfo-envs)
+        # > conda-create-bioinfo-envs
 
         # Consider adding an R package recipe here.
         # Can use the Bioconductor Docker image as a reference.
@@ -309,7 +307,10 @@ else
     _koopa_update_lmod_config
 fi
 
-generate-ssh-key
+if ! _koopa_is_docker
+then
+    generate-ssh-key
+fi
 
 _koopa_h2 "Setting permissions on '${make_prefix}'."
 _koopa_set_permissions "$make_prefix"
