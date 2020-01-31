@@ -86,6 +86,7 @@ done
 if [[ "$system" -eq 1 ]]
 then
     _koopa_h1 "Updating system configuration."
+    update-conda
     if _koopa_is_macos
     then
         update-homebrew
