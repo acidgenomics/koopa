@@ -120,6 +120,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
             liblzma-dev \
             libmagick++-dev \
             libmariadb-dev \
+            libncurses-dev \
             libopenblas-base \
             libopenblas-dev \
             libpng-dev \
