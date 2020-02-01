@@ -3,13 +3,12 @@ set -Eeu -o pipefail
 
 # """
 # Check that scripts do not contain lints.
-# Updated 2020-01-14.
+# Updated 2020-02-01.
 # """
 
 script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
     >/dev/null 2>&1 && pwd -P)"
-
-KOOPA_PREFIX="$(cd "${script_dir}/../.." >/dev/null 2>&1 && pwd -P)"
+KOOPA_PREFIX="$(cd "${script_dir}/.." >/dev/null 2>&1 && pwd -P)"
 export KOOPA_PREFIX
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"

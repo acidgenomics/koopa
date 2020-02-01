@@ -4,6 +4,9 @@ branches:
   only:
     - master
 
+before_script:
+    - curl -L "https://github.com/kward/shunit2/archive/v2.1.7.tar.gz" | tar xz
+
 jobs:
   include:
     - stage: test
@@ -17,14 +20,14 @@ jobs:
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './tests'
+        - bash -c './tests/travis.sh'
     - stage: test
       name: "macos"
       os: osx
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './tests'
+        - bash -c './tests/travis.sh'
 
 notifications:
   email:
