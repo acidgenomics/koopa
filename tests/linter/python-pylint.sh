@@ -3,7 +3,7 @@ set -Eeu -o pipefail
 
 # """
 # Recursively run pylint on all Python scripts in a directory.
-# Updated 2020-01-16.
+# Updated 2020-02-01.
 # """
 
 # shellcheck source=/dev/null
@@ -33,6 +33,7 @@ done < <( \
         -iname "*.py" \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
 )
 
@@ -43,6 +44,7 @@ mapfile -t shebang_files < <( \
         -type f \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
     | xargs -0 -I {} \
     grep -El \

@@ -24,8 +24,9 @@ done < <( \
         -mindepth 1 \
         -type d \
         -name "man" \
-        -not -path "*/cellar/*" \
-        -not -path "*/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/.git/*" \
+        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
     | sort -z \
 )
@@ -47,6 +48,7 @@ done < <( \
         \( -name "bin" -o -name "sbin" \) \
         -not -path "*/cellar/*" \
         -not -path "*/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
     | sort -z \
 )
