@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # Find lines containing more than 80 characters.
@@ -10,7 +9,7 @@ set -Eeu -o pipefail
 # """
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 prefix="${1:-$KOOPA_PREFIX}"
 
