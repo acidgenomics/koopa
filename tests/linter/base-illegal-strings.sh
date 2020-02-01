@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # Find illegal strings, such as FIXME, TODO, and messed up git merges.

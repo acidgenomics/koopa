@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # Recursively run pylint on all Python scripts in a directory.
@@ -7,7 +6,7 @@ set -Eeu -o pipefail
 # """
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 name="$(_koopa_basename_sans_ext "$0")"
 

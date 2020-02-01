@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eu -o pipefail
 
 # """
 # shUnit2
@@ -117,6 +116,8 @@ testEquality() {
 # >     year="$(date "+%Y")"
 # >     assertEquals "It's not 1999 :-(" "1999" "$year"
 # > }
+
+set +e
 
 # Load shUnit2.
 # shellcheck disable=SC1091
