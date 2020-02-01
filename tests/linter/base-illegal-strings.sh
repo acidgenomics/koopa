@@ -3,7 +3,7 @@ set -Eeu -o pipefail
 
 # """
 # Find illegal strings, such as FIXME, TODO, and messed up git merges.
-# Updated 2020-01-16.
+# Updated 2020-02-01.
 #
 # Use find first, pass to array, and then call grep.
 # This is better supported across platforms.
@@ -42,8 +42,9 @@ done < <( \
         -not -name ".pylintrc" \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
-    | sort
+    | sort -z
 )
 
 failures="$( \

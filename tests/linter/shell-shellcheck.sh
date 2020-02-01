@@ -3,7 +3,7 @@ set -Eeu -o pipefail
 
 # """
 # Recursively run shellcheck on all scripts in a directory.
-# Updated 2019-10-07.
+# Updated 2020-02-01.
 #
 # Use find first, pass to array, and then call grep.
 # This is better supported across platforms.
@@ -32,6 +32,7 @@ mapfile -t shebang_files < <( \
         -type f \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
     | xargs -0 -I {} \
     grep -El \
