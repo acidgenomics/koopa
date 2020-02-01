@@ -30,6 +30,7 @@ jobs:
       addons:
         homebrew:
           packages:
+            - bash
             - r
             - shellcheck
             - shunit2
