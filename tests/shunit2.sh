@@ -101,6 +101,14 @@ set -Eu -o pipefail
 # tearDown()
 # """
 
+KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+export KOOPA_PREFIX
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_h1 "Running unit tests with shUnit2."
+
 testEquality() {
     assertEquals 1 1
 }
