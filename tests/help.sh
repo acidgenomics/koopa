@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# """
 # Check that all scripts support '--help' flag.
-# Updated 2020-01-16.
+# Updated 2020-02-01.
+# """
 
-KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
+KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." \
     >/dev/null 2>&1 && pwd -P)"
 export KOOPA_PREFIX
 # shellcheck source=/dev/null

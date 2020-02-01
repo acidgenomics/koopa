@@ -2,13 +2,12 @@
 
 ## """
 ## Install Bioconductor packages.
-## Updated 2020-01-24.
-# """
+## Updated 2020-02-01.
+## """
 
-options(
-    "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L))
-)
+source(file.path(
+    Sys.getenv("KOOPA_PREFIX"), "lang", "r", "include", "header.R"
+))
 
 install.packages("BiocManager")
 library("BiocManager")
