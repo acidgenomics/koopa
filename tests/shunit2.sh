@@ -102,13 +102,14 @@ set -Eu -o pipefail
 # """
 
 testEquality() {
-  assertEquals 1 1
+    assertEquals 1 1
 }
 
-testPartyLikeItIs1999() {
-  year=`date '+%Y'`
-  assertEquals "It's not 1999 :-(" '1999' "${year}"
-}
+# > testPartyLikeItIs1999() {
+# >     year="$(date "+%Y")"
+# >     assertEquals "It's not 1999 :-(" "1999" "$year"
+# > }
 
 # Load shUnit2.
+# shellcheck disable=SC1091
 . shunit2
