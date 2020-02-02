@@ -1,6 +1,9 @@
 #!/usr/bin/env Rscript
 
-stopifnot(packageVersion("base") >= "3.4")
+# Skip this check on Travis CI, which has an ancient version of R.
+if (!isTRUE(nzchar(Sys.getenv("TRAVIS")))) {
+    stopifnot(packageVersion("base") >= "3.6")
+}
 
 options(
     "error" = quote(quit(status = 1L)),
