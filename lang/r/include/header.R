@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+stopifnot(packageVersion("base") >= "3.6")
+
 options(
     "error" = quote(quit(status = 1L)),
     "warning" = quote(quit(status = 1L))
