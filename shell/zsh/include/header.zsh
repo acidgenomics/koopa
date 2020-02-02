@@ -1,14 +1,22 @@
 #!/usr/bin/env zsh
-set -eu -o pipefail
 
 # """
 # Zsh shared header script.
 # Updated 2020-02-02.
+#
+# See also:
+# - https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
 # """
+
+# > setopt
+
+setopt errexit
+setopt nounset
+setopt pipefail
 
 # Requiring Zsh >= 5 for exported scripts.
 major_version="$(echo "${ZSH_VERSION}" | cut -d '.' -f 1)"
-if [ ! "$major_version" -ge 5 ]
+if [[ ! "$major_version" -ge 5 ]]
 then
     echo "Zsh >= 5 is required."
     exit 1
