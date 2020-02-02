@@ -6,11 +6,11 @@ set -Eeu -o pipefail
 # Updated 2020-02-02.
 # """
 
-# Requiring Bash >= 5 for exported scripts.
+# Requiring Bash >= 4 for exported scripts.
 major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
-if [ ! "$major_version" -ge 5 ]
+if [ ! "$major_version" -ge 4 ]
 then
-    echo "Bash >= 5 is required."
+    echo "Bash >= 4 is required."
     exit 1
 fi
 
