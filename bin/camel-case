@@ -1,5 +1,10 @@
 #!/usr/bin/env Rscript
 
+options(
+    "error" = quote(quit(status = 1L)),
+    "warning" = quote(quit(status = 1L))
+)
+
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
@@ -13,7 +18,10 @@ prefix <- FALSE
 recursive <- FALSE
 strict <- FALSE
 
-args <- parseArgs(validFlags = c("prefix", "recursive", "strict"))
+args <- parseArgs(
+    positional = TRUE,
+    validFlags = c("prefix", "recursive", "strict")
+)
 
 if ("--prefix" %in% args) {
     prefix <- TRUE
@@ -26,7 +34,7 @@ if ("--strict" %in% args) {
 }
 
 syntactic::camelCase(
-    object = commandArgs(trailingOnly = TRUE),
+    object = positionalArgs(),
     rename = TRUE,
     recursive = recursive,
     strict = strict,
