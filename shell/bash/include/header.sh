@@ -1,16 +1,33 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # Bash shared header script.
 # Updated 2020-02-02.
 # """
 
+# > set --help
+# > shopt
+
+# > set -o noglob       # -f
+# > set -o xtrace       # -x
+set -o errexit          # -e
+set -o errtrace         # -E
+set -o nounset          # -u
+set -o pipefail
+
 # Requiring Bash >= 4 for exported scripts.
 major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
-if [ ! "$major_version" -ge 4 ]
+if [[ ! "$major_version" -ge 4 ]]
 then
     echo "Bash >= 4 is required."
+    exit 1
+fi
+
+# Check that user's Bash has mapfile builtin defined.
+# We use this a lot to handle arrays.
+if [[ $(type -t mapfile) != "builtin" ]]
+then
+    echo "Bash is missing 'mapfile' builtin."
     exit 1
 fi
 
