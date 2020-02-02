@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
+# """
 # Bash shared header script.
-# Updated 2019-11-11.
+# Updated 2020-02-02.
+# """
+
+# Requiring Bash >= 5 for exported scripts.
+major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
+if [ ! "$major_version" -ge 5 ]
+then
+    echo "Bash >= 5 is required."
+    exit 1
+fi
 
 KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"
