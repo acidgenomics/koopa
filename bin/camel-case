@@ -1,56 +1,34 @@
-#!/usr/bin/env bash
-set -Eeu -o pipefail
+#!/usr/bin/env Rscript
 
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
-# shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(file.path(file, "..", ".."))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-_koopa_assert_has_args "$@"
-_koopa_assert_is_r_package_installed "syntactic"
+stopifnot(requireNamespace("syntactic", quietly = TRUE))
 
-prefix="FALSE"
-recursive="FALSE"
-strict="FALSE"
+prefix <- FALSE
+recursive <- FALSE
+strict <- FALSE
 
-POSITIONAL=()
-while (("$#"))
-do
-    case "$1" in
-        --prefix)
-            prefix="TRUE"
-            shift 1
-            ;;
-        --recursive)
-            recursive="TRUE"
-            shift 1
-            ;;
-        --strict)
-            strict="TRUE"
-            shift 1
-            ;;
-        --)
-            shift 1
-            break
-            ;;
-        --*|-*)
-            _koopa_invalid_arg "$1"
-            ;;
-        *)
-            POSITIONAL+=("$1")
-            shift 1
-            ;;
-    esac
-done
-set -- "${POSITIONAL[@]}"
+args <- parseArgs(validFlags = c("prefix", "recursive", "strict"))
 
-object="$(_koopa_array_to_r_vector "$@")"
-Rscript -e " \
-    syntactic::camelCase(
-        object = ${object},
-        rename = TRUE,
-        recursive = ${recursive},
-        strict = ${strict},
-        prefix = ${prefix}
-    ) \
-"
+if ("--prefix" %in% args) {
+    prefix <- TRUE
+}
+if ("--recursive" %in% args) {
+    recursive <- TRUE
+}
+if ("--strict" %in% args) {
+    strict <- TRUE
+}
+
+syntactic::camelCase(
+    object = commandArgs(trailingOnly = TRUE),
+    rename = TRUE,
+    recursive = recursive,
+    strict = strict,
+    prefix = prefix
+)
