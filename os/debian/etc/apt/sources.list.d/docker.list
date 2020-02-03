@@ -1,0 +1,2 @@
+deb http://deb.debian.org/debian buster-updates main
+# deb-src [arch=amd64] https://download.docker.com/linux/debian stable
