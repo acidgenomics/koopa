@@ -1,21 +1,20 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
-# Recursively run pylint on all Python scripts in a directory.
-# Updated 2020-01-16.
+# Recursively run lintr on all R scripts in a directory.
+# Updated 2020-02-01.
 # """
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 name="$(_koopa_basename_sans_ext "$0")"
 
-# Skip test if pylint is not installed.
-if ! _koopa_is_installed pylint
+# Skip test if R is not installed.
+if ! _koopa_is_installed R
 then
     printf "NOTE | %s\n" "$name"
-    printf "     |   pylint missing.\n"
+    printf "     |   R missing.\n"
     exit 0
 fi
 
@@ -30,9 +29,10 @@ done < <( \
     find "$prefix" \
         -mindepth 1 \
         -type f \
-        -iname "*.py" \
+        -iname "*.R" \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
 )
 
@@ -43,11 +43,12 @@ mapfile -t shebang_files < <( \
         -type f \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
     | xargs -0 -I {} \
     grep -El \
         --binary-files="without-match" \
-        '^#!/.*\bpython(3)?\b$' \
+        '^#!/.*\bRscript\b$' \
         {} \
 )
 
@@ -55,7 +56,10 @@ merge=("${ext_files[@]}" "${shebang_files[@]}")
 files="$(printf "%q\n" "${merge[@]}" | sort -u)"
 mapfile -t files <<< "$files"
 
-# Note that setting '--jobs=0' flag here enables multicore.
-pylint --jobs=0 --score=n "${files[@]}"
+# Loop across the files and run lintr.
+for file in "${files[@]}"
+do
+    Rscript -e "lintr::lint(file = \"${file}\")"
+done
 
 _koopa_status_ok "$name"
