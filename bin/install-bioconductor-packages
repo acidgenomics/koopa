@@ -23,6 +23,12 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 ## > remove.packages("brio")
 ## > remove.packages("wormbase")
 
+## Tricky packages:
+## - Rcpp
+## - RcppArmadillo
+## - sf
+## - XML
+
 install.packages("BiocManager")
 library("BiocManager")
 ## > install(
