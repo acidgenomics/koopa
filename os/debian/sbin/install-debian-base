@@ -126,6 +126,7 @@ then
         libacl1-dev                                # |            |     < 1 MB |
         libbz2-dev                                 # |            |      36 MB |
         libcairo2-dev                              # |            |      94 MB |
+        libcurl4                                   # |            |            |
         libcurl4-openssl-dev                       # |            |     < 1 MB |
         libevent-dev                               # |            |       2 MB |
         libffi-dev                                 # |            |     188 MB |
