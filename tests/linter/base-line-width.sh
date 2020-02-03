@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
 # Find lines containing more than 80 characters.
-# Updated 2020-01-16.
+# Updated 2020-02-01.
 #
 # Use find first, pass to array, and then call grep.
 # This is better supported across platforms.
 # """
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 prefix="${1:-$KOOPA_PREFIX}"
 
@@ -27,8 +26,9 @@ done < <( \
         -not -name "*.md" \
         -not -path "${KOOPA_PREFIX}/.git/*" \
         -not -path "${KOOPA_PREFIX}/dotfiles/*" \
+        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print0 \
-    | sort
+    | sort -z
 )
 
 failures="$( \

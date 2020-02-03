@@ -1,14 +1,16 @@
 #!/usr/bin/env Rscript
 
-## """
-## Install Bioconductor packages.
-## Updated 2020-01-24.
-# """
-
 options(
     "error" = quote(quit(status = 1L)),
     "warning" = quote(quit(status = 1L))
 )
+
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(dirname(dirname(file)))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 install.packages("BiocManager")
 library("BiocManager")

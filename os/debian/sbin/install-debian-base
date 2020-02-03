@@ -9,10 +9,12 @@ source "${script_dir}/../include/header.sh"
 # Install R using 'install-r' script instead, which sets up apt to support
 # newer official release from CRAN.
 #
+#
 # Clean up previous:
 # - openjdk-12-jdk
 # - openjdk-12-jre
 # - python
+#
 #
 # Bioconductor AMI is missing these dependencies:
 # > apt-cache search 'libgnutls.*-dev'
@@ -24,6 +26,7 @@ source "${script_dir}/../include/header.sh"
 # Conflicts:
 # libcurl4-gnutls-dev
 # libcurl4-openssl-dev
+#
 #
 # Note that 'golang-go' is not officially supported.
 # """
@@ -70,131 +73,133 @@ sudo DEBIAN_FRONTEND=noninteractive \
         dist-upgrade
 
 _koopa_h2 "Installing recommending packages."
+                                                   # |   w/o deps |    w/ deps |
+pkgs=(                                             # | ---------- | ---------- |
+    apt-listchanges                                # |            |     < 1 MB |
+    apt-utils                                      # |            |     < 1 MB |
+    autoconf                                       # |       1 MB |      23 MB |
+    automake                                       # |            |      21 MB |
+    bc                                             # |            |      26 MB |
+    ca-certificates                                # |            |         NA |
+    cmake                                          # |            |      25 MB |
+    coreutils                                      # |            |         NA |
+    curl                                           # |            |     < 1 MB |
+    dirmngr                                        # |            |       4 MB |
+    findutils                                      # |            |         NA |
+    gcc                                            # |         NA |         NA |
+    gdb                                            # |       9 MB |      51 MB |
+    gdebi-core                                     # |            |     < 1 MB |
+    gfortran                                       # |            |     < 1 MB |
+    git                                            # |      32 MB |      34 MB |
+    gnupg                                          # |            |       2 MB |
+    gnutls-bin                                     # |            |       1 MB |
+    gpg-agent                                      # |            |       4 MB |
+    htop                                           # |            |     < 1 MB |
+    less                                           # |            |     < 1 MB |
+    lsb-release                                    # |            |         NA |
+    nano                                           # |            |     < 1 MB |
+    parallel                                       # |            |       2 MB |
+    pkg-config                                     # |            |         NA |
+    sudo                                           # |            |         NA |
+    tmux                                           # |            |       1 MB |
+    tree                                           # |            |     < 1 MB |
+    tzdata                                         # |            |         NA |
+    vim                                            # |       3 MB |      32 MB |
+    wget                                           # |            |       1 MB |
+)
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
         --no-install-recommends \
         --quiet \
         --yes \
-        install \
-            alien \
-            apt-listchanges \
-            apt-utils \
-            autoconf \
-            automake \
-            bc \
-            ca-certificates \
-            cargo \
-            cmake \
-            coreutils \
-            curl \
-            dirmngr \
-            emacs \
-            findutils \
-            gcc \
-            gdb \
-            gdebi-core \
-            gfortran \
-            git \
-            gnupg \
-            gnutls-bin \
-            gpg-agent \
-            gtk-doc-tools \
-            keyboard-configuration \
-            less \
-            libacl1 \
-            libacl1-dev \
-            libbz2-dev \
-            libcairo2-dev \
-            libcurl4-openssl-dev \
-            libevent-dev \
-            libffi-dev \
-            libfreetype6-dev \
-            libgdal-dev \
-            libgif-dev \
-            libglu1-mesa-dev \
-            libgnutls28-dev \
-            libgsl-dev \
-            libharfbuzz-dev \
-            libhdf5-dev \
-            liblzma-dev \
-            libmagick++-dev \
-            libmariadb-dev \
-            libopenblas-base \
-            libopenblas-dev \
-            libpng-dev \
-            libssh2-1-dev \
-            libssl-dev \
-            libtool \
-            libtool-bin \
-            libudunits2-dev \
-            libv8-dev \
-            libx11-dev \
-            libxml2-dev \
-            libz-dev \
-            lsb-release \
-            nano \
-            pandoc \
-            pandoc-citeproc \
-            parallel \
-            pkg-config \
-            software-properties-common \
-            sudo \
-            systemd \
-            texlive \
-            tree \
-            tzdata \
-            unattended-upgrades \
-            vim \
-            wget \
-            xorg
+        install "${pkgs[@]}"
+                                                   # |   w/o deps |    w/ deps |
+pkgs=(                                             # | ---------- | ---------- |
+    # cargo                                        # |      12 MB |     308 MB |
+    alien                                          # |            |       2 MB |
+    emacs                                          # |       8 MB |     112 MB |
+    firefox                                        # |            |     203 MB |
+    fish                                           # |            |      10 MB |
+    gtk-doc-tools                                  # |            |       9 MB |
+    keyboard-configuration                         # |            |      35 MB |
+    libacl1-dev                                    # |            |     < 1 MB |
+    libbz2-dev                                     # |            |      36 MB |
+    libcairo2-dev                                  # |            |      94 MB |
+    libcurl4-openssl-dev                           # |            |     < 1 MB |
+    libevent-dev                                   # |            |       2 MB |
+    libffi-dev                                     # |            |     188 MB |
+    libfreetype6-dev                               # |            |      98 MB |
+    libgdal-dev                                    # |            |     298 MB |
+    libgif-dev                                     # |            |     289 MB |
+    libglu1-mesa-dev                               # |            |       1 MB |
+    libgnutls28-dev                                # |            |       8 MB |
+    libgsl-dev                                     # |            |       9 MB |
+    libharfbuzz-dev                                # |            |     436 MB |
+    libhdf5-dev                                    # |            |     306 MB |
+    liblzma-dev                                    # |            |     340 MB |
+    libmagick++-dev                                # |            |    35.9 MB |
+    libmariadb-dev                                 # |            |       1 MB |
+    libncurses-dev                                 # |            |       1 MB |
+    libopenblas-base                               # |            |    94.8 MB |
+    libopenblas-dev                                # |            |    53.4 MB |
+    libpng-dev                                     # |            |     402 MB |
+    libssh2-1-dev                                  # |            |       3 MB |
+    libssl-dev                                     # |            |     297 MB |
+    libtool                                        # |            |      21 MB |
+    libtool-bin                                    # |            |     < 1 MB |
+    libudunits2-dev                                # |            |       1 MB |
+    libv8-dev                                      # |            |       5 MB |
+    libx11-dev                                     # |            |     109 MB |
+    libxml2-dev                                    # |            |     330 MB |
+    libz-dev                                       # |            |         NA |
+    pandoc                                         # |            |      53 MB |
+    pandoc-citeproc                                # |            |      47 MB |
+    perl                                           # |            |     987 MB |
+    software-properties-common                     # |            |     < 1 MB |
+    sqlite3                                        # |            |       2 MB |
+    systemd                                        # |            |         NA |
+    texlive                                        # |            |     < 1 MB |
+    unattended-upgrades                            # |            |     < 1 MB |
+    xorg                                           # |            |      30 MB |
+    zsh                                            # |            |      15 MB |
+)
 ! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
         --no-install-recommends \
         --quiet \
         --yes \
-        install \
-            firefox \
-            fish \
-            htop \
-            perl \
-            sqlite3 \
-            texlive \
-            tmux \
-            zsh
+        install "${pkgs[@]}"
 
-if grep -Eq '^# deb-src ' /etc/apt/sources.list
+if ! _koopa_is_docker && \
+    grep -Eq '^deb-src ' /etc/apt/sources.list
 then
     _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
     sudo apt-get update
     # Including 'bash' here will remove 'r-base'.
+    deps=(
+        coreutils
+        emacs-defaults
+        fish
+        git
+        htop
+        neovim
+        perl
+        tmux
+        vim
+        zsh
+    )
     sudo DEBIAN_FRONTEND=noninteractive \
         apt-get \
             --no-install-recommends \
             --quiet \
             --yes \
-            build-dep \
-                coreutils \
-                git \
-                htop \
-                perl \
-                tmux \
-                vim \
-                zsh
-    ! _koopa_is_docker && \
-        sudo DEBIAN_FRONTEND=noninteractive \
-            apt-get \
-                --no-install-recommends \
-                --quiet \
-                --yes \
-                build-dep \
-                    emacs-defaults \
-                    fish \
-                    neovim
+            build-dep "${deps[@]}"
 fi
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get --yes autoremove
 
+sudo rm -fr /root/.cache/*
 sudo rm -fr /var/lib/apt/lists/*
