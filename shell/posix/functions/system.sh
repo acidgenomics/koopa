@@ -21,12 +21,86 @@ _koopa_add_config_link() {                                                # {{{1
     return 0
 }
 
+_koopa_apt_disable_deb_src() {                                            # {{{1
+    # """
+    # Enable 'deb-src' source packages.
+    # Updated 2020-02-03.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local file
+    file="${1:-/etc/apt/sources.list}"
+    _koopa_h2 "Disabling Debian sources in '${file}'."
+    if ! grep -Eq '^deb-src ' "$file"
+    then
+        _koopa_note "No 'deb-src' lines to comment in '${file}'."
+        return 1
+    fi
+    # > _koopa_info "Backing up '${file}' to '${file}~'."
+    # > sudo cp -f "$file" "${file}~"
+    sudo sed -Ei 's/^deb-src /# deb-src /' "$file"
+    sudo apt-get update
+    return 0
+}
+
+_koopa_apt_enable_deb_src() {                                             # {{{1
+    # """
+    # Enable 'deb-src' source packages.
+    # Updated 2020-02-03.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local file
+    file="${1:-/etc/apt/sources.list}"
+    _koopa_h2 "Enabling Debian sources in '${file}'."
+    if ! grep -Eq '^# deb-src ' "$file"
+    then
+        _koopa_note "No '# deb-src' lines to uncomment in '${file}'."
+        return 1
+    fi
+    _koopa_info "Backing up '${file}' to '${file}~'."
+    sudo cp -f "$file" "${file}~"
+    sudo sed -Ei 's/^# deb-src /deb-src /' "$file"
+    sudo apt-get update
+    return 0
+}
+
+_koopa_apt_link_sources() {                                               # {{{1
+    # """
+    # Symlink 'sources.list' files in '/etc/apt'.
+    # Updated 2020-02-03.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local prefix
+    prefix="$(_koopa_prefix)"
+    local os_id
+    os_id="$(_koopa_os_id)"
+    local source_dir
+    source_dir="${prefix}/os/${os_id}/etc/apt"
+    _koopa_assert_is_dir "$source_dir"
+    local target_dir
+    target_dir="/etc/apt"
+    _koopa_assert_is_dir "$target_dir"
+    _koopa_h2 "Linking Debian sources in '${target_dir}'."
+    sudo ln -fnsv \
+        "${source_dir}/sources.list" \
+        "${target_dir}/sources.list"
+    sudo rm -frv "${target_dir}/sources.list.d"
+    sudo ln -fnsv \
+        "${source_dir}/sources.list.d" \
+        "${target_dir}/sources.list.d"
+    sudo apt-get update
+    return 0
+}
+
 _koopa_apt_space_used_by() {                                              # {{{1
     # """
     # Check installed apt package size, with dependencies.
     # Updated 2020-01-31.
     #
     # Alternate approach that doesn't attempt to grep match.
+    _koopa_assert_is_debian
     sudo apt-get --assume-no autoremove "$@"
 }
 

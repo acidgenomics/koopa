@@ -14,6 +14,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_h1 "Running manual file '--help' flag checks."
 
 # Put all 'man/' dirs into an array and loop.
+# Pipe GNU find into array.
 man_dirs=()
 while IFS= read -r -d $'\0'
 do
