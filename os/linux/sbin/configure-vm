@@ -94,24 +94,14 @@ _koopa_h2 "Installing base system."
 
 if _koopa_is_debian
 then
-    # Also applies to Ubuntu.
     install-debian-base --all
-elif _koopa_is_amzn
-then
-    # Layers on top of RHEL 7.
-    install-amzn-base
-elif _koopa_is_rhel_8
-then
-    # Also applies to CentOS 8.
-    install-rhel-8-base
-elif _koopa_is_rhel_7
-then
-    # Also applies to CentOS 7.
-    install-rhel-7-base
 elif _koopa_is_fedora
 then
-    install-fedora-base
+    install-fedora-base --all
 fi
+
+_koopa_is_rhel_7 && install-rhel-7-base
+_koopa_is_rhel_8 && install-rhel-8-base
 
 if [[ "$config" == "constellation-aws" ]]
 then
