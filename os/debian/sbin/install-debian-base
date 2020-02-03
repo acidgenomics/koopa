@@ -54,13 +54,6 @@ fi
 #
 # https://askubuntu.com/questions/496549
 
-if grep -Eq '^# deb-src ' /etc/apt/sources.list
-then
-    _koopa_h2 "Enabling Debian sources for 'build-dep'."
-    sudo cp -fv /etc/apt/sources.list /etc/apt/sources.list~
-    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
-fi
-
 sudo apt-get update
 
 _koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
@@ -173,10 +166,10 @@ pkgs=(                                             # | ---------- | ---------- |
         --yes \
         install "${pkgs[@]}"
 
-if ! _koopa_is_docker && \
-    grep -Eq '^deb-src ' /etc/apt/sources.list
+if ! _koopa_is_docker
 then
     _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
+    _koopa_apt_enable_deb_src
     sudo apt-get update
     # Including 'bash' here will remove 'r-base'.
     deps=(
@@ -197,6 +190,7 @@ then
             --quiet \
             --yes \
             build-dep "${deps[@]}"
+    _koopa_apt_disable_deb_src
 fi
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
