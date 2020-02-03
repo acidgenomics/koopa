@@ -132,14 +132,23 @@ done
 _koopa_h2 "Installing brews."
 
 # This is needed currently to install R sf package from source.
-brew remove --force osgeo-gdal
-brew remove --force osgeo-hdf4
-brew remove --force osgeo-libgeotiff
-brew remove --force osgeo-libkml
-brew remove --force osgeo-libspatialite
-brew remove --force osgeo-netcdf
-brew remove --force osgeo-postgresql
-brew remove --force osgeo-proj
+brew remove --force \
+    osgeo-gdal \
+    osgeo-hdf4 \
+    osgeo-libgeotiff \
+    osgeo-libkml \
+    osgeo-libspatialite \
+    osgeo-netcdf \
+    osgeo-postgresql \
+    osgeo-proj
+
+# Use rustup / cargo to manage these Rust packages instead:
+brew remove --force \
+    broot \
+    exa \
+    fd \
+    ripgrep \
+    xsv
 
 installed_brews="$(brew list)"
 brews=(
@@ -158,18 +167,16 @@ brews=(
     autojump
     automake
     awscli
+    azure-cli
     bash-completion
     bfg
-    broot
     ccache
     circleci
     cmake
     convmv
     coreutils
     curl
-    exa
     exiftool
-    fd
     ffmpeg
     findutils
     flac
@@ -217,7 +224,6 @@ brews=(
     python
     python@2
     rbenv
-    ripgrep
     rsync
     ruby-build
     screen
