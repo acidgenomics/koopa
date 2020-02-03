@@ -46,12 +46,20 @@ done
 source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
 target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
 
-# Put unique samples into an array and loop.
+# Pipe GNU find into array.
 array=()
 while IFS= read -r -d $'\0'
 do
     array+=("$REPLY")
-done < <(find "$source_dir" -maxdepth 1 -name "*_L001_*.fastq*" -print0)
+done < <( \
+    find "$source_dir" \
+        -maxdepth 1 \
+        -mindepth 1 \
+        -type f \
+        -iname "*_L001_*.fastq*" \
+        -print0 \
+    | sort -z \
+)
 
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]

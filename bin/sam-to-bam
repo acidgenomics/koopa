@@ -27,6 +27,7 @@ dir="${1:-.}"
 _koopa_assert_is_dir "$dir"
 dir="$(realpath "$dir")"
 
+# Pipe GNU find into array.
 sam_files=()
 while IFS= read -r -d $'\0'
 do
@@ -38,11 +39,14 @@ done < <( \
         -type f \
         -iname "*.sam" \
         -print0 \
-    | sort -z
+    | sort -z \
 )
 
-# FIXME Check for no files and error if empty.
-# FIXME Convert this check to a function.
+# Error if file array is empty.
+if [[ "${#sam_files[@]}" -eq 0 ]]
+then
+    _koopa_stop "No SAM files detected."
+fi
 
 _koopa_h1 "Converting SAM files in '${dir}' to BAM format."
 
@@ -59,5 +63,5 @@ do
         -b \
         -o "$bam_file" \
         "$sam_file"
-    # FIXME Add a delete step here.
+    rm -v "$sam_file"
 done
