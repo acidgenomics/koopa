@@ -69,7 +69,6 @@ do
 done
 
 casks=(
-    # > google-cloud-sdk
     1password
     alfred
     aspera-connect
@@ -85,6 +84,7 @@ casks=(
     firefox
     github
     google-chrome
+    google-cloud-sdk
     google-drive-file-stream
     gpg-suite
     hazel
