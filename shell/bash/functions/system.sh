@@ -23,7 +23,17 @@ _koopa_add_local_bins_to_path() {                                         # {{{1
 _koopa_find_local_bin_dirs() {                                            # {{{1
     # """
     # Find local bin directories.
-    # Updated 2020-01-16.
+    # Updated 2020-02-02.
+    #
+    # Alternate array sorting methods:
+    # > readarray -t array < <( \
+    # >     printf '%s\0' "${array[@]}" \
+    # >     | sort -z \
+    # >     | xargs -0n1 \
+    # > )
+    #
+    # > IFS=$'\n' array=($(sort <<<"${array[*]}"))
+    # > unset IFS
     #
     # See also:
     # - https://stackoverflow.com/questions/23356779
@@ -31,29 +41,25 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
     # """
     local array
     array=()
-    local tmp_file
-    tmp_file="$(_koopa_tmp_dir)/find"
-    find "$(_koopa_make_prefix)" \
-        -mindepth 2 \
-        -maxdepth 3 \
-        -name "bin" \
-        ! -path "*/Caskroom/*" \
-        ! -path "*/Cellar/*" \
-        ! -path "*/Homebrew/*" \
-        ! -path "*/anaconda3/*" \
-        ! -path "*/bcbio/*" \
-        ! -path "*/lib/*" \
-        ! -path "*/miniconda3/*" \
-        -print0 > "$tmp_file"
     while IFS= read -r -d $'\0'
     do
         array+=("$REPLY")
-    done < "$tmp_file"
-    _koopa_quiet_rm "$tmp_file"
-    # Sort the array.
-    # > IFS=$'\n' array=($(sort <<<"${array[*]}"))
-    # > unset IFS
-    readarray -t array < <(printf '%s\0' "${array[@]}" | sort -z | xargs -0n1)
+    done < <( \
+        find "$(_koopa_make_prefix)" \
+            -mindepth 2 \
+            -maxdepth 3 \
+            -type d \
+            -name "bin" \
+            ! -path "*/Caskroom/*" \
+            ! -path "*/Cellar/*" \
+            ! -path "*/Homebrew/*" \
+            ! -path "*/anaconda3/*" \
+            ! -path "*/bcbio/*" \
+            ! -path "*/lib/*" \
+            ! -path "*/miniconda3/*" \
+            -print0 \
+        | sort -z
+    )
     printf "%s\n" "${array[@]}"
 }
 
