@@ -2,14 +2,16 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-01-21.
+## Updated 2020-02-03.
 ## """
 
 options(
     "error" = quote(quit(status = 1L)),
-    "mc.cores" = max(1L, parallel::detectCores() - 1L),
     "warning" = quote(quit(status = 1L))
 )
+if ("parallel" %in% rownames(installed.packages())) {
+    options("mc.cores" = max(1L, parallel::detectCores() - 1L))
+}
 
 library("methods")
 
@@ -701,6 +703,12 @@ checkVersion(
     whichName = "gdalinfo",
     current = currentVersion("gdal"),
     expected = expectedVersion("gdal")
+)
+checkVersion(
+    name = "GEOS",
+    whichName = "geos-config",
+    current = currentVersion("geos"),
+    expected = expectedVersion("geos")
 )
 checkVersion(
     name = "GSL",

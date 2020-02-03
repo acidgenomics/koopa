@@ -131,6 +131,7 @@ pkgs=(                                             # | ---------- | ---------- |
     libffi-dev                                     # |            |     188 MB |
     libfreetype6-dev                               # |            |      98 MB |
     libgdal-dev                                    # |            |     298 MB |
+    libgeos-dev
     libgif-dev                                     # |            |     289 MB |
     libglu1-mesa-dev                               # |            |       1 MB |
     libgnutls28-dev                                # |            |       8 MB |
