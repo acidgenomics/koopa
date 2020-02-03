@@ -106,6 +106,8 @@ export KOOPA_PREFIX
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+_koopa_exit_if_not_installed shunit2
+
 _koopa_h1 "Running unit tests with shUnit2."
 
 testEquality() {

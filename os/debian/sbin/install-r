@@ -7,28 +7,37 @@ source "${script_dir}/../include/header.sh"
 
 # """
 # Install latest version of R.
-# https://cran.r-project.org/bin/linux/debian/
+# - https://cran.r-project.org/bin/linux/debian/
+# - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
 _koopa_exit_if_installed R
-_koopa_assert_is_installed add-apt-repository
+_koopa_assert_is_file "/etc/apt/sources.list.d/r.list"
 
-release="$(_koopa_os_codename)"
-
-# Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
+# Import key used to sign R release.
 # Refer to 'Secure apt' section for details.
-sudo apt-key adv \
-    --keyserver keys.gnupg.net \
-    --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
-
-# Modify '/etc/apt/sources.list' file.
-sudo add-apt-repository \
-    "deb https://cloud.r-project.org/bin/linux/debian ${release}-cran35/"
+if _koopa_is_ubuntu
+then
+    # Release is signed by Michael Rutter <marutter@gmail.com>.
+    sudo apt-key adv \
+        --keyserver keyserver.ubuntu.com \
+        --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+else
+    # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
+    sudo apt-key adv \
+        --keyserver keys.gnupg.net \
+        --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
+fi
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get --no-install-recommends --yes install \
-        r-base r-base-dev
+    apt-get \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install \
+            r-base \
+            r-base-dev
 
 _koopa_link_r_etc
 _koopa_link_r_site_library
