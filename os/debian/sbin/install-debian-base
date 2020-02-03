@@ -84,7 +84,7 @@ then
     extra=1
 fi
 
-_koopa_h2 "Installing Debian base system."
+_koopa_h1 "Installing Debian base system."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed sed sudo
@@ -169,41 +169,6 @@ sudo DEBIAN_FRONTEND=noninteractive \
         --yes \
         install "${pkgs[@]}"
 
-# extra                                                                     {{{1
-# ==============================================================================
-
-if [[ "$extra" -eq 1 ]]
-then
-    _koopa_h2 "Installing extra recommended packages."
-                                          # |   w/o deps |    w/ deps | # deps |
-    pkgs=(                                # | ---------- | ---------- | ------ |
-        # cargo                           # |      12 MB |     308 MB |      5 |
-        alien                             # |     < 1 MB |       2 MB |      9 |
-        emacs                             # |       8 MB |     112 MB |     11 |
-        firefox                           # |     202 MB |     203 MB |      9 |
-        fish                              # |       4 MB |      10 MB |      3 |
-        gtk-doc-tools                     # |       3 MB |       9 MB |      8 |
-        keyboard-configuration            # |       3 MB |      35 MB |     44 |
-        pandoc                            # |      52 MB |      53 MB |      2 |
-        pandoc-citeproc                   # |      45 MB |      47 MB |      3 |
-        perl                              # |     < 1 MB |     987 MB |    281 |
-        software-properties-common        # |     < 1 MB |     < 1 MB |      3 |
-        sqlite3                           # |       2 MB |       2 MB |      1 |
-        systemd                           # |         NA |         NA |     NA |
-        texlive                           # |     < 1 MB |     < 1 MB |      1 |
-        unattended-upgrades               # |     < 1 MB |     < 1 MB |      1 |
-        xorg                              # |     < 1 MB |      30 MB |     39 |
-        zsh                               # |       2 MB |      15 MB |      2 |
-    )
-    sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get \
-            --fix-missing \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            install "${pkgs[@]}"
-fi
-
 # developer                                                                 {{{1
 # ==============================================================================
 
@@ -246,6 +211,41 @@ then
         libxml2-dev                       # |       4 MB |     330 MB |     93 |
         libz-dev # zlib1g-dev             # |     < 1 MB |         NA |    174 |
 
+    )
+    sudo DEBIAN_FRONTEND=noninteractive \
+        apt-get \
+            --fix-missing \
+            --no-install-recommends \
+            --quiet \
+            --yes \
+            install "${pkgs[@]}"
+fi
+
+# extra                                                                     {{{1
+# ==============================================================================
+
+if [[ "$extra" -eq 1 ]]
+then
+    _koopa_h2 "Installing extra recommended packages."
+                                          # |   w/o deps |    w/ deps | # deps |
+    pkgs=(                                # | ---------- | ---------- | ------ |
+        # cargo                           # |      12 MB |     308 MB |      5 |
+        alien                             # |     < 1 MB |       2 MB |      9 |
+        emacs                             # |       8 MB |     112 MB |     11 |
+        firefox                           # |     202 MB |     203 MB |      9 |
+        fish                              # |       4 MB |      10 MB |      3 |
+        gtk-doc-tools                     # |       3 MB |       9 MB |      8 |
+        keyboard-configuration            # |       3 MB |      35 MB |     44 |
+        pandoc                            # |      52 MB |      53 MB |      2 |
+        pandoc-citeproc                   # |      45 MB |      47 MB |      3 |
+        perl                              # |     < 1 MB |     987 MB |    281 |
+        software-properties-common        # |     < 1 MB |     < 1 MB |      3 |
+        sqlite3                           # |       2 MB |       2 MB |      1 |
+        systemd                           # |         NA |         NA |     NA |
+        texlive                           # |     < 1 MB |     < 1 MB |      1 |
+        unattended-upgrades               # |     < 1 MB |     < 1 MB |      1 |
+        xorg                              # |     < 1 MB |      30 MB |     39 |
+        zsh                               # |       2 MB |      15 MB |      2 |
     )
     sudo DEBIAN_FRONTEND=noninteractive \
         apt-get \
