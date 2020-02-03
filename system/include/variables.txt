@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-02-02"
+koopa_date="2020-02-03"
 
 
 
@@ -80,6 +80,9 @@ gdal="3.0.2"
 
 # https://github.com/jsh58/Genrich/releases
 genrich="0.6"
+
+# https://github.com/libgeos/geos/releases
+geos="3.8.0"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
