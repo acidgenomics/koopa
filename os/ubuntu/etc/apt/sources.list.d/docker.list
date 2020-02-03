@@ -1,0 +1,2 @@
+deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+# deb-src [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
