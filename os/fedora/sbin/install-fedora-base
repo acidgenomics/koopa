@@ -25,11 +25,15 @@ do
             all=1
             shift 1
             ;;
+        --build-dep)
+            # Passthrough from 'install-rhel-*-base' script.
+            shift 1
+            ;;
         --dev)
             dev=1
             shift 1
             ;;
-        --dist_upgrade)
+        --dist-upgrade)
             dist_upgrade=1
             shift 1
             ;;
@@ -67,7 +71,6 @@ fi
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
-
 pkgs=(
     bash
     bzip2
@@ -99,7 +102,6 @@ pkgs=(
     yum-utils
     zip
 )
-
 sudo yum -y install "${pkgs[@]}"
 
 # developer                                                                 {{{1
@@ -107,6 +109,7 @@ sudo yum -y install "${pkgs[@]}"
 
 if [[ "$dev" -eq 1 ]]
 then
+    _koopa_h2 "Installing developer libraries."
     sudo yum -y groupinstall "Development Tools"
     pkgs=(
         bzip2-devel
@@ -136,6 +139,7 @@ fi
 
 if [[ "$extra" -eq 1 ]]
 then
+    _koopa_h2 "Installing extra recommended packages."
     pkgs=(
         emacs
         golang
