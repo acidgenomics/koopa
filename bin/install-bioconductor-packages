@@ -12,6 +12,11 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+## Rcpp
+## RcppArmadillo
+## sf
+## XML
+
 install.packages("BiocManager")
 library("BiocManager")
 ## > install(
