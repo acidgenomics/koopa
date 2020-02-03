@@ -141,6 +141,13 @@ brew remove --force osgeo-netcdf
 brew remove --force osgeo-postgresql
 brew remove --force osgeo-proj
 
+# Use rustup / cargo to manage these Rust packages instead:
+brew remove --force broot
+brew remove --force exa
+brew remove --force fd
+brew remove --force ripgrep
+brew remove --force xsv
+
 installed_brews="$(brew list)"
 brews=(
     # Priority
