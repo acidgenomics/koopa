@@ -21,6 +21,44 @@ _koopa_add_config_link() {                                                # {{{1
     return 0
 }
 
+_koopa_apt_disable_deb_src() {                                            # {{{1
+    # """
+    # Enable 'deb-src' source packages.
+    # Updated 2020-02-03.
+    # """
+    local file
+    file="${1:-/etc/apt/sources.list}"
+    _koopa_h2 "Disabling Debian sources in '${file}'."
+    if ! grep -Eq '^deb-src ' "$file"
+    then
+        _koopa_note "No 'deb-src' lines to comment in '${file}'."
+        return 1
+    fi
+    # > _koopa_info "Backing up '${file}' to '${file}~'."
+    # > sudo cp -f "$file" "${file}~"
+    sudo sed -Ei 's/^deb-src /# deb-src /' "$file"
+    return 0
+}
+
+_koopa_apt_enable_deb_src() {                                             # {{{1
+    # """
+    # Enable 'deb-src' source packages.
+    # Updated 2020-02-03.
+    # """
+    local file
+    file="${1:-/etc/apt/sources.list}"
+    _koopa_h2 "Enabling Debian sources in '${file}'."
+    if ! grep -Eq '^# deb-src ' "$file"
+    then
+        _koopa_note "No '# deb-src' lines to uncomment in '${file}'."
+        return 1
+    fi
+    _koopa_info "Backing up '${file}' to '${file}~'."
+    sudo cp -f "$file" "${file}~"
+    sudo sed -Ei 's/^# deb-src /deb-src /' "$file"
+    return 0
+}
+
 _koopa_apt_space_used_by() {                                              # {{{1
     # """
     # Check installed apt package size, with dependencies.
