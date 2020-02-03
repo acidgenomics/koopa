@@ -95,7 +95,7 @@ _koopa_h2 "Installing base system."
 if _koopa_is_debian
 then
     # Also applies to Ubuntu.
-    install-debian-base
+    install-debian-base --all
 elif _koopa_is_amzn
 then
     # Layers on top of RHEL 7.
