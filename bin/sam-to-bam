@@ -20,9 +20,6 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 # -u                    uncompressed BAM output (implies -b)
 # """
 
-_koopa_assert_has_args "$@"
-
-
 dir="${1:-.}"
 _koopa_assert_is_dir "$dir"
 dir="$(realpath "$dir")"
