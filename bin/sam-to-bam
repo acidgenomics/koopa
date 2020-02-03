@@ -48,6 +48,7 @@ fi
 _koopa_h1 "Converting SAM files in '${dir}' to BAM format."
 
 _koopa_activate_conda_env samtools
+_koopa_info "samtools: '$(_koopa_which_realpath samtools)'."
 
 threads="$(_koopa_cpu_count)"
 
