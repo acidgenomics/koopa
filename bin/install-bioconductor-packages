@@ -12,6 +12,17 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+## CRAN removals.
+## > remove.packages("Matrix.utils")
+## > remove.packages("ashr")
+## > remove.packages("rgexf")
+## > remove.packages("trimcluster")
+
+## GitHub removals / renames.
+## > remove.packages("bioverbs")
+## > remove.packages("brio")
+## > remove.packages("wormbase")
+
 install.packages("BiocManager")
 library("BiocManager")
 ## > install(
