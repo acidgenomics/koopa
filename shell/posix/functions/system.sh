@@ -27,6 +27,7 @@ _koopa_apt_disable_deb_src() {                                            # {{{1
     # Updated 2020-02-03.
     # """
     _koopa_assert_is_debian
+    _koopa_assert_has_sudo
     local file
     file="${1:-/etc/apt/sources.list}"
     _koopa_h2 "Disabling Debian sources in '${file}'."
@@ -38,6 +39,7 @@ _koopa_apt_disable_deb_src() {                                            # {{{1
     # > _koopa_info "Backing up '${file}' to '${file}~'."
     # > sudo cp -f "$file" "${file}~"
     sudo sed -Ei 's/^deb-src /# deb-src /' "$file"
+    sudo apt-get update
     return 0
 }
 
@@ -47,6 +49,7 @@ _koopa_apt_enable_deb_src() {                                             # {{{1
     # Updated 2020-02-03.
     # """
     _koopa_assert_is_debian
+    _koopa_assert_has_sudo
     local file
     file="${1:-/etc/apt/sources.list}"
     _koopa_h2 "Enabling Debian sources in '${file}'."
@@ -58,6 +61,7 @@ _koopa_apt_enable_deb_src() {                                             # {{{1
     _koopa_info "Backing up '${file}' to '${file}~'."
     sudo cp -f "$file" "${file}~"
     sudo sed -Ei 's/^# deb-src /deb-src /' "$file"
+    sudo apt-get update
     return 0
 }
 
@@ -86,6 +90,7 @@ _koopa_apt_link_sources() {                                               # {{{1
     sudo ln -fnsv \
         "${source_dir}/sources.list.d" \
         "${target_dir}/sources.list.d"
+    sudo apt-get update
     return 0
 }
 
