@@ -6,14 +6,11 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-threads="$(_koopa_cpu_count)"
-
-r1_tail="_R1_001.fastq.gz"
-r2_tail="_R2_001.fastq.gz"
-
 fastq_dir="fastq"
 index_dir="bowtie2-index"
 output_dir="bowtie2"
+r1_tail="_R1_001.fastq.gz"
+r2_tail="_R2_001.fastq.gz"
 
 while (("$#"))
 do
@@ -76,7 +73,6 @@ _koopa_info "bowtie2: $(_koopa_which_realpath bowtie2)"
 
 _koopa_assert_is_dir "$fastq_dir"
 _koopa_assert_is_dir "$index_dir"
-# > _koopa_assert_is_not_dir "$output_dir"
 
 fastq_dir="$(realpath "$fastq_dir")"
 index_dir="$(realpath "$index_dir")"
@@ -92,13 +88,10 @@ fastq_dir="$(realpath "$fastq_dir")"
 
 # Create a per-sample array from the R1 FASTQ files.
 # Pipe GNU find into array.
-array=()
+fastq_r1_files=()
 while IFS= read -r -d $'\0'
 do
-    x="$REPLY"
-    x="$(basename "$x")"
-    x="${x/${r1_tail}/}"
-    array+=("$x")
+    fastq_r1_files+=("$REPLY")
 done < <( \
     find "$fastq_dir" \
         -maxdepth 1 \
@@ -110,42 +103,26 @@ done < <( \
 )
 
 # Error on FASTQ match failure.
-if [[ "${#array[@]}" -eq 0 ]]
+if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
 then
     _koopa_stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
 fi
 
-_koopa_info "${#array[@]} samples detected."
+_koopa_info "${#fastq_r1_files[@]} samples detected."
 
 # Alignment                                                                 {{{1
 # ==============================================================================
 
-index_prefix="${index_dir}/bowtie2"
-
 # Loop across the per-sample array and align.
-for id in "${array[@]}"
+for fastq_r1 in "${fastq_r1_files[@]}"
 do
-    _koopa_info "Aligning '${id}'."
-    sample_output_dir="${output_dir}/${id}"
-    [ -d "$sample_output_dir" ] && continue
-    mkdir -pv "$sample_output_dir"
-    fastq_r1="${fastq_dir}/${id}${r1_tail}"
-    fastq_r2="${fastq_dir}/${id}${r2_tail}"
-    sam_file="${sample_output_dir}/${id}.sam"
-    log_file="${sample_output_dir}/bowtie2.log"
-    bowtie2 \
-        --local \
-        --rg "PL:illumina" \
-        --rg "PU:${id}" \
-        --rg "SM:${id}" \
-        --rg-id "$id" \
-        --sensitive-local \
-        -1 "$fastq_r1" \
-        -2 "$fastq_r2" \
-        -S "$sam_file" \
-        -X 2000 \
-        -p "$threads" \
-        -q \
-        -x "$index_prefix" \
-        2>&1 | tee "$log_file"
+    fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
+    index_prefix="${index_dir}/bowtie2"
+    _koopa_bowtie2 \
+        --fastq-r1="$fastq_r1" \
+        --fastq-r2="$fastq_r2" \
+        --index-prefix="$index_prefix" \
+        --output-dir="$output_dir" \
+        --r1-tail="$r1_tail" \
+        --r2-tail="$r2_tail"
 done
