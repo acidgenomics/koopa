@@ -64,9 +64,9 @@ _koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
 
 if [[ "$delete_unsorted" -eq 1 ]]
 then
-    _koopa note "Unsorted BAM files will be deleted."
+    _koopa_note "Unsorted BAM files will be deleted."
 else
-    _koopa info "Unsorted BAM files will be preserved."
+    _koopa_info "Unsorted BAM files will be preserved."
 fi
 
 threads="$(_koopa_cpu_count)"
