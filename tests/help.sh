@@ -42,8 +42,6 @@ done
 # man file formatting                                                       {{{1
 # ==============================================================================
 
-# FIXME
-
 _koopa_h2 "Checking troff man file formatting."
 
 for dir in "${man_dirs[@]}"
