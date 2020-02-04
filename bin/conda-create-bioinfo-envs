@@ -30,6 +30,7 @@ conda-create-env bedtools                   # base                      # 0.082G
 conda-create-env bioawk                     # base                      # 0.027G
 conda-create-env biobambam                  # base                      # 0.065G
 conda-create-env htslib                     # base                      # 0.082G
+conda-create-env sambamba                   # base
 conda-create-env samblaster                 # base                      # 0.039G
 conda-create-env samtools                   # base                      # 0.083G
 conda-create-env seqtk                      # base                      # 0.027G
