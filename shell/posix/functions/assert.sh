@@ -1,6 +1,30 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_assert_are_identical() {                                           # {{{1
+    # """
+    # Assert that two strings are identical.
+    # Updated 2020-02-04.
+    # """
+    if [ "${1:?}" != "${2:?}" ]
+    then
+        _koopa_stop "'${1}' is not identical to '${2}'."
+    fi
+    return 0
+}
+
+_koopa_assert_are_not_identical() {                                       # {{{1
+    # """
+    # Assert that two strings are not identical.
+    # Updated 2020-02-04.
+    # """
+    if [ "${1:?}" = "${2:?}" ]
+    then
+        _koopa_stop "'${1}' is identical to '${2}'."
+    fi
+    return 0
+}
+
 _koopa_assert_has_args() {                                                # {{{1
     # """
     # Assert that the user has passed required arguments to a script.
