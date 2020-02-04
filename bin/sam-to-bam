@@ -20,6 +20,31 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 # -u                    uncompressed BAM output (implies -b)
 # """
 
+delete_sam=0
+
+POSITIONAL=()
+while (("$#"))
+do
+    case "$1" in
+        --delete-sam)
+            delete_sam=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}"
+
 dir="${1:-.}"
 _koopa_assert_is_dir "$dir"
 dir="$(realpath "$dir")"
@@ -42,7 +67,7 @@ done < <( \
 # Error if file array is empty.
 if [[ "${#sam_files[@]}" -eq 0 ]]
 then
-    _koopa_stop "No SAM files detected."
+    _koopa_stop "No SAM files detected in '${dir}'."
 fi
 
 _koopa_h1 "Converting SAM files in '${dir}' to BAM format."
@@ -54,13 +79,18 @@ threads="$(_koopa_cpu_count)"
 
 for sam_file in "${sam_files[@]}"
 do
-    _koopa_info "Converting '$(basename "$sam_file")'."
     bam_file="${sam_file%.sam}.bam"
+    bn1="$(basename "$sam_file")"
+    bn2="$(basename "$bam_file")"
+    _koopa_info "Converting '${bn1}' to '${bn2}'."
     samtools view \
         -@ "$threads" \
         -b \
         -h \
         -o "$bam_file" \
         "$sam_file"
-    rm -v "$sam_file"
+    if [[ "$delete_sam" -eq 1 ]]
+    then
+        rm -v "$sam_file"
+    fi
 done
