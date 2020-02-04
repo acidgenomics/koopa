@@ -59,6 +59,7 @@ do
     samtools view \
         -@ "$threads" \
         -b \
+        -h \
         -o "$bam_file" \
         "$sam_file"
     rm -v "$sam_file"
