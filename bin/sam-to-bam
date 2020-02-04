@@ -79,13 +79,14 @@ if [[ "$delete_sam" -eq 1 ]]
 then
     _koopa_note "SAM files will be deleted."
 else
-    _koopa_info "SAM files will be preserved."
+    _koopa_note "SAM files will be preserved."
 fi
 
 threads="$(_koopa_cpu_count)"
 
 for sam_file in "${sam_files[@]}"
 do
+    # FIXME Convert to function.
     bam_file="${sam_file%.sam}.bam"
     sam_bn="$(basename "$sam_file")"
     bam_bn="$(basename "$bam_file")"
