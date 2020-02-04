@@ -4,8 +4,15 @@ _koopa_bam_filter() {
     # """
     # Perform filtering on a BAM file.
     # Updated 2020-02-04.
+    #
+    # See also:
+    # https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
+    #     sessionV/lessons/03_align_and_filtering.html
     # """
     _koopa_assert_is_installed sambamba
+
+    local filter
+    filter="[XS] == null and not unmapped and not duplicate"
 
     while (("$#"))
     do
@@ -30,6 +37,20 @@ _koopa_bam_filter() {
 
     _koopa_assert_is_set filter input_bam output_bam
     _koopa_assert_are_not_identical "$input_bam" "$output_bam"
+
+    local input_bam_bn
+    input_bam_bn="$(basename "$input_bam")"
+    local output_bam_bn
+    output_bam_bn="$(basename "$output_bam")"
+
+    if [[ -f "$output_bam" ]]
+    then
+        _koopa_note "Skipping '${output_bam_bn}'."
+        return 0
+    fi
+
+    _koopa_note "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
+    _koopa_info "Filter params: '${filter}'."
 
     local threads
     threads="$(_koopa_cpu_count)"
