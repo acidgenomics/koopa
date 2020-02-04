@@ -5,20 +5,31 @@ _koopa_bam_filter() {
     # Perform filtering on a BAM file.
     # Updated 2020-02-04.
     # """
-
-    # FIXME Use a tmpfile approach here.
-    # FIXME Need to be able to handle '--filter' flag here.
-
     _koopa_assert_is_installed sambamba
 
-    local input_file
-    input_file="${1:?}"
+    while (("$#"))
+    do
+        case "$1" in
+            --filter=*)
+                local filter="${1#*=}"
+                shift 1
+                ;;
+            --input-bam=*)
+                local input_bam="${1#*=}"
+                shift 1
+                ;;
+            --output-bam=*)
+                local output_bam="${1#*=}"
+                shift 1
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
 
-    local output_file
-    output_file="${2:?}"
-
-    local filter
-    filter="${3:?}"
+    _koopa_assert_is_set filter input_bam output_bam
+    _koopa_assert_are_not_identical "$input_bam" "$output_bam"
 
     local threads
     threads="$(_koopa_cpu_count)"
@@ -28,7 +39,7 @@ _koopa_bam_filter() {
         -f bam \
         -h \
         -t "$threads" \
-        "$input_file" > "$output_file"
+        "$input_bam" > "$output_bam"
 
     return 0
 }
@@ -60,7 +71,48 @@ _koopa_bam_filter_multimappers() {                                        # {{{1
 }
 
 _koopa_bam_filter_unmapped() {
+    # """
+    # Filter unmapped reads from BAM file.
+    # Updated 2020-02-04.
+    # """
     _koopa_bam_filter --filter="not unmapped" "$@"
+    return 0
+}
+
+_koopa_bam_sort() {                                                       # {{{1
+    # """
+    # Sort BAM file by genomic coordinates.
+    # Updated 2020-02-04.
+    # """
+    _koopa_assert_is_installed sambamba
+
+    local unsorted_bam
+    unsorted_bam="${1:?}"
+    local sorted_bam
+    sorted_bam="${unsorted_bam%.bam}.sorted.bam"
+
+    local unsorted_bam_bn
+    unsorted_bam_bn="$(basename "$unsorted_bam")"
+
+    local sorted_bam_bn
+    sorted_bam_bn="$(basename "$sorted_bam")"
+
+    if [[ -f "$sorted_bam" ]]
+    then
+        _koopa_note "Skipping '${sorted_bam_bn}'."
+        return 0
+    else
+        _koopa_info "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
+    fi
+
+    # This is noisy and spits out program version information, so hiding
+    # stdout here.
+    sambamba sort \
+        -t "$threads" \
+        -o "$sorted_bam" \
+        "$unsorted_bam" \
+        > /dev/null
+
     return 0
 }
 
