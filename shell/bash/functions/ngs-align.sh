@@ -10,20 +10,26 @@ _koopa_bam_filter() {
     # FIXME Need to be able to handle '--filter' flag here.
 
     _koopa_assert_is_installed sambamba
+
     local input_file
     input_file="${1:?}"
+
     local output_file
     output_file="${2:?}"
+
     local filter
     filter="${3:?}"
+
     local threads
     threads="$(_koopa_cpu_count)"
+
     sambamba view \
         -F "$filter" \
         -f bam \
         -h \
         -t "$threads" \
         "$input_file" > "$output_file"
+
     return 0
 }
 
@@ -64,6 +70,7 @@ _koopa_bowtie2() {                                                        # {{{1
     # Updated 2020-02-04.
     # """
     _koopa_assert_is_installed bowtie2
+
     while (("$#"))
     do
         case "$1" in
@@ -97,21 +104,25 @@ _koopa_bowtie2() {                                                        # {{{1
         esac
     done
 
-    # FIXME
-    _koopa_assert_is_set \
-        "$fastq_r1" \
-        "$fastq_r2" \
-        "$index_prefix" \
-        "$output_dir" \
-        "$r1_tail" \
-        "$r2_tail"
+    _koopa_assert_is_set fastq_r1 fastq_r2 index_prefix output_dir \
+        r1_tail r2_tail
+    _koopa_assert_is_file "$fastq_r1" "$fastq_r2"
 
-    # FIXME _koopa_assert_is_set "XXX"
+    local threads
+    threads="$(_koopa_cpu_count)"
+
+    local fastq_r1_bn
+    fastq_r1_bn="$(basename "$fastq_r1")"
+    fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
+
+    local fastq_r2_bn
+    fastq_r2_bn="$(basename "$fastq_r2")"
+    fastq_r2_bn="${fastq_r2_bn/${r2_tail}/}"
+
+    _koopa_assert_are_identical "$fastq_r1_bn" "$fastq_r2_bn"
 
     local id
-    id="$(basename "$fastq_r1")"
-    id="${id/${r1_tail}/}"
-
+    id="$fastq_r1_bn"
     _koopa_info "Aligning '${id}'."
 
     local sample_output_dir
@@ -119,19 +130,19 @@ _koopa_bowtie2() {                                                        # {{{1
     [ -d "$sample_output_dir" ] && return 1
     mkdir -pv "$sample_output_dir"
 
-    fastq_r1="${fastq_dir}/${id}${r1_tail}"
-    fastq_r2="${fastq_dir}/${id}${r2_tail}"
-
+    local sam_file
     sam_file="${sample_output_dir}/${id}.sam"
+
+    local log_file
     log_file="${sample_output_dir}/bowtie2.log"
 
     bowtie2 \
         --local \
+        --sensitive-local \
+        --rg-id "$id" \
         --rg "PL:illumina" \
         --rg "PU:${id}" \
         --rg "SM:${id}" \
-        --rg-id "$id" \
-        --sensitive-local \
         -1 "$fastq_r1" \
         -2 "$fastq_r2" \
         -S "$sam_file" \
@@ -140,5 +151,6 @@ _koopa_bowtie2() {                                                        # {{{1
         -q \
         -x "$index_prefix" \
         2>&1 | tee "$log_file"
+
     return 0
 }
