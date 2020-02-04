@@ -83,10 +83,13 @@ do
     else
         _koopa_info "Sorting '${unsorted_bn}' to '${sorted_bn}'."
     fi
+    # This is noisy and spits out program version information, so hiding
+    # stdout here.
     sambamba sort \
         -t "$threads" \
         -o "$sorted_bam_file" \
-        "$unsorted_bam_file"
+        "$unsorted_bam_file" \
+        > /dev/null
     if [[ "$delete_unsorted" -eq 1 ]]
     then
         rm -v "$unsorted_bam_file"
