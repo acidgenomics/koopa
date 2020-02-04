@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+delete_unsorted=0
+
+POSITIONAL=()
+while (("$#"))
+do
+    case "$1" in
+        --delete-unsorted)
+            delete_unsorted=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            POSITIONAL+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${POSITIONAL[@]}"
+
+dir="${1:-.}"
+_koopa_assert_is_dir "$dir"
+dir="$(realpath "$dir")"
+
+# Pipe GNU find into array.
+unsorted_bam_files=()
+while IFS= read -r -d $'\0'
+do
+    unsorted_bam_files+=("$REPLY")
+done < <( \
+    find "$dir" \
+        -maxdepth 3 \
+        -mindepth 1 \
+        -type f \
+        -iname "*.bam" \
+        -not -iname "*.sorted.bam" \
+        -print0 \
+    | sort -z \
+)
+
+# Error if file array is empty.
+if [[ "${#unsorted_bam_files[@]}" -eq 0 ]]
+then
+    _koopa_stop "No BAM files detected in '${dir}'."
+fi
+
+_koopa_h1 "Sorting BAM files in '${dir}'."
+
+_koopa_activate_conda_env sambamba
+_koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
+_koopa_note "Unsorted BAM files will be preserved."
+
+threads="$(_koopa_cpu_count)"
+
+for unsorted_bam_file in "${unsorted_bam_files[@]}"
+do
+    sorted_bam_file="${unsorted_bam_file%.bam}.sorted.bam"
+    bn1="$(basename "$unsorted_bam_file")"
+    bn2="$(basename "$sorted_bam_file")"
+    _koopa_info "Sorting '${bn1}' to '${bn2}'."
+    sambamba sort \
+        -t "$threads" \
+        -o "$sorted_bam_file" \
+        "$unsorted_bam_file"
+    if [[ "$delete_unsorted" -eq 1 ]]
+    then
+        rm -v "$unsorted_bam_file"
+    fi
+done
