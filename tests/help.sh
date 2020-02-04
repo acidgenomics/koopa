@@ -13,6 +13,9 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_h1 "Running manual file '--help' flag checks."
 
+# man dirs                                                                  {{{1
+# ==============================================================================
+
 # Put all 'man/' dirs into an array and loop.
 # Pipe GNU find into array.
 man_dirs=()
@@ -35,6 +38,43 @@ for dir in "${man_dirs[@]}"
 do
     _koopa_add_to_manpath_start "$dir"
 done
+
+# man file formatting                                                       {{{1
+# ==============================================================================
+
+# FIXME
+
+_koopa_h2 "Checking troff man file formatting."
+
+for dir in "${man_dirs[@]}"
+do
+    files=()
+    while IFS= read -r -d $'\0'
+    do
+        files+=("$REPLY")
+    done < <( \
+        find "$dir" \
+            -mindepth 2 \
+            -maxdepth 2 \
+            -type f \
+            -print0 \
+        | sort -z \
+    )
+    for file in "${files[@]}"
+    do
+        _koopa_info "$file"
+        head -n 1 "$file" \
+            | grep -Eq "^\.TH " \
+            || _koopa_stop "Invalid man file: '${file}'"
+    done
+done
+
+exit 0
+
+# '--help' flag support                                                     {{{1
+# ==============================================================================
+
+_koopa_h2 "Running exported script '--help' flag checks."
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 bin_dirs=()
