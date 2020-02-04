@@ -77,9 +77,9 @@ _koopa_info "samtools: '$(_koopa_which_realpath samtools)'."
 
 if [[ "$delete_sam" -eq 1 ]]
 then
-    _koopa note "SAM files will be deleted."
+    _koopa_note "SAM files will be deleted."
 else
-    _koopa info "SAM files will be preserved."
+    _koopa_info "SAM files will be preserved."
 fi
 
 threads="$(_koopa_cpu_count)"
