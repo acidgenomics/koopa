@@ -804,24 +804,33 @@ _koopa_today_bucket() {                                                   # {{{1
 _koopa_tmp_dir() {                                                        # {{{1
     # """
     # Create temporary directory.
-    # Updated 2019-10-17.
+    # Updated 2020-02-04.
+    #
+    # Traditionally, many shell scripts take the name of the program with the
+    # pid as a suffix and use that as a temporary file name. This kind of
+    # naming scheme is predictable and the race condition it creates is easy for
+    # an attacker to win. A safer, though still inferior, approach is to make a
+    # temporary directory using the same naming scheme. While this does allow
+    # one to guarantee that a temporary file will not be subverted, it still
+    # allows a simple denial of service attack. For these reasons it is
+    # suggested that mktemp be used instead.
     #
     # See also:
     # - https://stackoverflow.com/questions/4632028
+    # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
-    #
-    # Note: macOS requires 'env LC_CTYPE=C'.
-    # Otherwise, you'll see this error: 'tr: Illegal byte sequence'.
-    # This doesn't seem to work reliably, so using timestamp instead.
-    #
-    # Alternate approach:
-    # > local unique
-    # > local dir
-    # > unique="$(date "+%Y%m%d-%H%M%S")"
-    # > dir="/tmp/koopa-$(id -u)-${unique}"
-    # > echo "$dir"
     # """
+    _koopa_assert_is_installed mktemp
     mktemp -d
+}
+
+_koopa_tmp_file() {                                                       # {{{1
+    # """
+    # Create temporary file.
+    # Updated 2020-02-04.
+    # """
+    _koopa_assert_is_installed mktemp
+    mktemp
 }
 
 _koopa_variable() {                                                       # {{{1
