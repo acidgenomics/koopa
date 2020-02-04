@@ -61,16 +61,28 @@ _koopa_h1 "Sorting BAM files in '${dir}'."
 
 _koopa_activate_conda_env sambamba
 _koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
-_koopa_note "Unsorted BAM files will be preserved."
+
+if [[ "$delete_unsorted" -eq 1 ]]
+then
+    _koopa note "Unsorted BAM files will be deleted."
+else
+    _koopa info "Unsorted BAM files will be preserved."
+fi
 
 threads="$(_koopa_cpu_count)"
 
 for unsorted_bam_file in "${unsorted_bam_files[@]}"
 do
     sorted_bam_file="${unsorted_bam_file%.bam}.sorted.bam"
-    bn1="$(basename "$unsorted_bam_file")"
-    bn2="$(basename "$sorted_bam_file")"
-    _koopa_info "Sorting '${bn1}' to '${bn2}'."
+    unsorted_bn="$(basename "$unsorted_bam_file")"
+    sorted_bn="$(basename "$sorted_bam_file")"
+    if [[ -f "$sorted_bam_file" ]]
+    then
+        _koopa_note "Skipping '${sorted_bn}'."
+        continue
+    else
+        _koopa_info "Sorting '${unsorted_bn}' to '${sorted_bn}'."
+    fi
     sambamba sort \
         -t "$threads" \
         -o "$sorted_bam_file" \

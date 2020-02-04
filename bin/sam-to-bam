@@ -75,14 +75,27 @@ _koopa_h1 "Converting SAM files in '${dir}' to BAM format."
 _koopa_activate_conda_env samtools
 _koopa_info "samtools: '$(_koopa_which_realpath samtools)'."
 
+if [[ "$delete_sam" -eq 1 ]]
+then
+    _koopa note "SAM files will be deleted."
+else
+    _koopa info "SAM files will be preserved."
+fi
+
 threads="$(_koopa_cpu_count)"
 
 for sam_file in "${sam_files[@]}"
 do
     bam_file="${sam_file%.sam}.bam"
-    bn1="$(basename "$sam_file")"
-    bn2="$(basename "$bam_file")"
-    _koopa_info "Converting '${bn1}' to '${bn2}'."
+    sam_bn="$(basename "$sam_file")"
+    bam_bn="$(basename "$bam_file")"
+    if [[ -f "$bam_file" ]]
+    then
+        _koopa_note "Skipping '${bam_bn}'."
+        continue
+    else
+        _koopa_info "Converting '${sam_bn}' to '${bam_bn}'."
+    fi
     samtools view \
         -@ "$threads" \
         -b \
