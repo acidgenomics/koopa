@@ -7,7 +7,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 fastq_dir="fastq"
-index_dir="bowtie2-index"
 output_dir="bowtie2"
 r1_tail="_R1_001.fastq.gz"
 r2_tail="_R2_001.fastq.gz"
@@ -15,6 +14,14 @@ r2_tail="_R2_001.fastq.gz"
 while (("$#"))
 do
     case "$1" in
+        --fasta-file=*)
+            fasta_file="${1#*=}"
+            shift 1
+            ;;
+        --fasta-file)
+            fasta_file="$2"
+            shift 2
+            ;;
         --fastq-dir=*)
             fastq_dir="${1#*=}"
             shift 1
@@ -61,8 +68,18 @@ do
     esac
 done
 
+if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
+then
+    _koopa_stop "Specify 'fasta-file' or 'index-dir'."
+elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
+then
+    _koopa_stop "Specify 'fasta-file' or 'index-dir', but not both."
+elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
+then
+    _koopa_missing_arg
+fi
+
 fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
-index_dir="$(_koopa_strip_trailing_slash "$index_dir")"
 output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 
 _koopa_h1 "Running bowtie2."
@@ -71,10 +88,7 @@ _koopa_activate_conda_env bowtie2
 _koopa_dl "bowtie2" "$(_koopa_which_realpath bowtie2)"
 
 fastq_dir="$(realpath "$fastq_dir")"
-index_dir="$(realpath "$index_dir")"
-
 _koopa_dl "fastq dir" "$fastq_dir"
-_koopa_dl "index dir" "$index_dir"
 
 # Sample array from FASTQ files                                             {{{1
 # ==============================================================================
@@ -102,6 +116,22 @@ then
 fi
 
 _koopa_info "${#fastq_r1_files[@]} samples detected."
+
+# Index                                                                     {{{1
+# ==============================================================================
+
+# Generate the genome index on the fly, if necessary.
+if [[ -n "${index_dir:-}" ]]
+then
+    index_dir="$(realpath "$index_dir")"
+else
+    index_dir="${output_dir}/bowtie2.idx"
+    _koopa_bowtie2_index \
+        --fasta-file="$fasta_file" \
+        --index-dir="$index_dir"
+fi
+
+_koopa_dl "index" "$index_dir"
 
 # Alignment                                                                 {{{1
 # ==============================================================================
