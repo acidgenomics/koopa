@@ -760,23 +760,21 @@ _koopa_has_no_environments() {                                            # {{{1
     return 0
 }
 
+# Also defined in koopa installer.
 _koopa_has_passwordless_sudo() {                                          # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
-    # Updated 2020-01-24.
+    # Updated 2020-02-05.
     #
     # See also:
     # https://askubuntu.com/questions/357220
     # """
     _koopa_is_installed sudo || return 1
-    if sudo -n true 2>/dev/null
-    then
-        return 0
-    else
-        return 1
-    fi
+    sudo -n true 2>/dev/null && return 0
+    return 1
 }
 
+# Also defined in koopa installer.
 _koopa_has_sudo() {                                                       # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
@@ -809,7 +807,7 @@ _koopa_has_sudo() {                                                       # {{{1
     # Return false if 'sudo' program is not installed.
     _koopa_is_installed sudo || return 1
     # Early return true if user has passwordless sudo enabled.
-    sudo -n true 2>/dev/null && return 0
+    _koopa_has_passwordless_sudo && return 0
     # This step is slow for Active Directory domain user accounts on Ubuntu.
     _koopa_assert_is_installed grep groups
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
@@ -978,13 +976,16 @@ _koopa_is_interactive() {                                                 # {{{1
     echo "$-" | grep -q "i"
 }
 
+# Also defined in koopa installer.
 _koopa_is_linux() {                                                       # {{{1
     # """
-    # Updated 2019-06-21.
+    # Is the current operating system Linux?
+    # Updated 2020-02-05.
     # """
     [ "$(uname -s)" = "Linux" ]
 }
 
+# Also defined in koopa installer.
 _koopa_is_local_install() {                                               # {{{1
     # """
     # Is koopa installed only for the current user?
@@ -1124,6 +1125,7 @@ _koopa_is_root() {                                                        # {{{1
     [ "$(id -u)" -eq 0 ]
 }
 
+# Also defined in koopa installer.
 _koopa_is_shared_install() {                                              # {{{1
     # """
     # Is koopa installed for all users (shared)?
