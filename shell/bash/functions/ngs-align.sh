@@ -215,6 +215,7 @@ _koopa_bowtie2() {                                                        # {{{1
 
     local sam_file
     sam_file="${sample_output_dir}/${id}.sam"
+
     local log_file
     log_file="${sample_output_dir}/bowtie2.log"
 
