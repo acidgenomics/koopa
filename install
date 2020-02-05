@@ -120,6 +120,15 @@ _koopa_has_sudo() {                                                       # {{{1
 }
 
 # shell/posix/functions/assert.sh
+_koopa_is_installed() {                                                   # {{{1
+    # """
+    # Is the requested program name installed?
+    # Updated 2019-10-02.
+    # """
+    command -v "$1" >/dev/null
+}
+
+# shell/posix/functions/assert.sh
 _koopa_is_linux() {                                                       # {{{1
     # """
     # Is the current operating system Linux?
