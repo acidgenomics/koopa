@@ -24,6 +24,9 @@ if (any(legacyPkgs %in% installedPkgs)) {
     message("Removing packages: ", toString(legacyPkgs))
     tryCatch(
         expr = remove.packages(legacyPkgs),
+        warning = function(w) {
+            invisible()
+        },
         error = function(e) {
             invisible()
         }
