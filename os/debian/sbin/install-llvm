@@ -9,9 +9,11 @@ source "${script_dir}/../include/header.sh"
 # LLVM (clang)
 # https://apt.llvm.org/
 #
-# Note that regular llvm recipe currently installs version 6.
-#
+# Automatic script:
+# https://apt.llvm.org/llvm.sh
 # The 'llvm.sh' install script contains the GPG signing keys.
+#
+# Note that default llvm recipe currently installs version 6.
 # """
 
 if [[ -n "${LLVM_CONFIG:-}" ]]
@@ -28,17 +30,6 @@ _koopa_assert_has_no_envs
 name="llvm"
 version="$(_koopa_variable "$name")"
 major_version="$(_koopa_major_version "$version")"
-
-# The following packages have unmet dependencies:
-# clang-9 : Depends: libclang-cpp9 (= 1:9~+20191211102125+c1a0a213378-1~exp1~20191211212701.104) but it is not going to be installed
-#           Depends: libclang-common-9-dev (= 1:9~+20191211102125+c1a0a213378-1~exp1~20191211212701.104) but it is not going to be installed
-# clangd-9 : Depends: libclang-common-9-dev (= 1:9~+20191211102125+c1a0a213378-1~exp1~20191211212701.104) but it is not going to be installed
-# lld-9 : Depends: libllvm9 (= 1:9~+20191211102125+c1a0a213378-1~exp1~20191211212701.104) but 1:9-2~ubuntu18.04.1 is to be installed
-# lldb-9 : Depends: liblldb-9 (>= 1:9~svn298832-1~) but it is not going to be installed
-#          Depends: libllvm9 (= 1:9~+20191211102125+c1a0a213378-1~exp1~20191211212701.104) but 1:9-2~ubuntu18.04.1 is to be installed
-#          Depends: llvm-9-dev but it is not going to be installed
-#          Depends: python-lldb-9 but it is not going to be installed
-
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
