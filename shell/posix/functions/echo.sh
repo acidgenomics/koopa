@@ -180,6 +180,14 @@ _koopa_echo_white_bold() {                                                # {{{1
 
 
 
+_koopa_dl() {
+    # """
+    # Koopa definition list.
+    # Updated 2020-02-04.
+    # """
+    _koopa_info "${1:?}: ${2:?}"
+}
+
 _koopa_emoji() {                                                          # {{{1
     # """
     # Koopa turtle emoji.
