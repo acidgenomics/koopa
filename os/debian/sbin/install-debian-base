@@ -33,9 +33,12 @@ source "${script_dir}/../include/header.sh"
 # > apt-cache search libgif
 #
 #
-# Conflicts:
-# libcurl4-gnutls-dev
-# libcurl4-openssl-dev
+# libcurl4-dev madness:
+# Package libcurl-dev is a virtual package provided by:
+#   libcurl4-openssl-dev 7.58.0-2ubuntu3.8
+#   libcurl4-nss-dev 7.58.0-2ubuntu3.8
+#   libcurl4-gnutls-dev 7.58.0-2ubuntu3.8
+# You should explicitly select one to install.
 #
 #
 # Note that 'golang-go' is not officially supported.
@@ -121,10 +124,13 @@ fi
 _koopa_h2 "Installing default packages."
 
 # Clean up previous installs first, if applicable.
-remove_pkgs=(
-    cargo
-)
-sudo apt-get --yes remove "${remove_pkgs[@]}"
+apt_installed="$(sudo apt list --installed)"
+legacy_pkgs=(cargo)
+for pkg in "${legacy_pkgs[@]}"
+do
+    echo "$apt_installed" | grep -Eq "^${pkg}/" || continue
+    sudo apt-get --yes remove "${pkg[@]}"
+done
 
                                           # |   w/o deps |    w/ deps | # deps |
 pkgs=(                                    # | ---------- | ---------- | ------ |
@@ -180,8 +186,6 @@ then
         libacl1-dev                       # |     < 1 MB |     < 1 MB |      1 |
         libbz2-dev                        # |     < 1 MB |      36 MB |     22 |
         libcairo2-dev                     # |       3 MB |      94 MB |     61 |
-        libcurl4                          # |     < 1 MB |     407 MB |    103 |
-        libcurl4-openssl-dev              # |       2 MB |     288 MB |     69 |
         libevent-dev                      # |       2 MB |       2 MB |      5 |
         libffi-dev                        # |     < 1 MB |     227 MB |     10 |
         libfreetype6-dev                  # |       7 MB |      97 MB |     62 |
@@ -228,7 +232,6 @@ then
     _koopa_h2 "Installing extra recommended packages."
                                           # |   w/o deps |    w/ deps | # deps |
     pkgs=(                                # | ---------- | ---------- | ------ |
-        # cargo                           # |      12 MB |     308 MB |      5 |
         alien                             # |     < 1 MB |       2 MB |      9 |
         emacs                             # |       8 MB |     112 MB |     11 |
         firefox                           # |     202 MB |     203 MB |      9 |
