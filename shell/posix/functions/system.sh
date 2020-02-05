@@ -247,6 +247,7 @@ _koopa_git_branch() {                                                     # {{{1
     git symbolic-ref --short -q HEAD
 }
 
+# Also defined in koopa installer.
 _koopa_group() {                                                          # {{{1
     # """
     # Return the approach group to use with koopa installation.
