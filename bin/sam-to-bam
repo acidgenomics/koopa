@@ -87,7 +87,7 @@ do
     bam_file="${sam_file%.sam}.bam"
     _koopa_sam_to_bam \
         --input-sam="$sam_file" \
-        --input-bam="$bam_file"
+        --output-bam="$bam_file"
     if [[ "$delete_sam" -eq 1 ]]
     then
         rm -v "$sam_file"
