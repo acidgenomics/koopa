@@ -103,6 +103,16 @@ _koopa_apt_import_keys() {                                                # {{{1
     # Get list of enabled apt repositories:
     # https://stackoverflow.com/questions/8647454
     #
+    # Can use 'wget -O' instead of curl call below.
+    #
+    # Variables that may be useful:
+    # > local distro
+    # > distro="$(lsb_release -is)"
+    # > local version
+    # > version="$(lsb_release -sr)"
+    # > local dist_version
+    # > dist_version="${distro}_${version}"
+    #
     # See also:
     # - install-docker
     # - install-llvm
@@ -131,15 +141,17 @@ _koopa_apt_import_keys() {                                                # {{{1
         _koopa_h2 "Adding official Docker release GPG key."
         _koopa_assert_is_file "/etc/apt/sources.list.d/docker.list"
         curl -fsSL "https://download.docker.com/linux/${os_id}/gpg" \
-            | sudo apt-key add -
-        # > sudo apt-key fingerprint 0EBFCD88
+            | sudo apt-key add - \
+            > /dev/null 2>&1
     fi
 
     # LLVM
     if _koopa_is_matching_fixed "$apt_repos" "apt.llvm.org"
     then
         _koopa_h2 "Adding official LLVM release GPG key."
-        # FIXME
+        curl -fsSL "https://apt.llvm.org/llvm-snapshot.gpg.key" \
+            | sudo apt-key add - \
+            > /dev/null 2>&1
     fi
 
     # R
@@ -152,12 +164,14 @@ _koopa_apt_import_keys() {                                                # {{{1
             # Release is signed by Michael Rutter <marutter@gmail.com>.
             sudo apt-key adv \
                 --keyserver keyserver.ubuntu.com \
-                --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+                --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
+                > /dev/null 2>&1
         else
             # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
             sudo apt-key adv \
                 --keyserver keys.gnupg.net \
-                --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
+                --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF \
+                > /dev/null 2>&1
         fi
     fi
 
