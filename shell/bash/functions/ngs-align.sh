@@ -276,6 +276,59 @@ _koopa_bowtie2() {                                                        # {{{1
     return 0
 }
 
+
+_koopa_bowtie2_index() {                                                  # {{{1
+    # """
+    # Generate bowtie2 index.
+    # Updated 2020-02-05.
+    # """
+    _koopa_assert_is_installed bowtie2-build
+
+    while (("$#"))
+    do
+        case "$1" in
+            --fasta-file=*)
+                local fasta_file="${1#*=}"
+                shift 1
+                ;;
+            --index-dir=*)
+                local index_dir="${1#*=}"
+                shift 1
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+
+    _koopa_assert_is_set fasta_file index_dir
+    _koopa_assert_is_file "$fasta_file"
+
+    if [[ -d "$index_dir" ]]
+    then
+        _koopa_note "Index exists at '${index_dir}'. Skipping."
+        return 0
+    fi
+
+    _koopa_h2 "Generating bowtie2 index at '${index_dir}'."
+
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
+
+    # Note that this step adds 'bowtie2.*' to the file names created in the
+    # index directory.
+    local index_prefix
+    index_prefix="${index_dir}/bowtie2"
+
+    bowtie2-build \
+        --threads="$threads" \
+        "$fasta_file" \
+        "$index_prefix"
+
+    return 0
+}
+
 _koopa_sam_to_bam() {                                                     # {{{1
     # """
     # Convert SAM file to BAM.
