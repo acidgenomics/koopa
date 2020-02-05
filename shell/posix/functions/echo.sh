@@ -247,7 +247,7 @@ _koopa_note() {                                                           # {{{1
     # """
     local c1 c2 nc pre str
     str="${1:?}"
-    pre="$(_koopa_emoji) -- "
+    pre="$(_koopa_emoji) ** "
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -261,7 +261,7 @@ _koopa_stop() {                                                           # {{{1
     # """
     local c1 c2 nc pre str
     str="${1:?}"
-    pre="$(_koopa_emoji) ** ERROR: "
+    pre="$(_koopa_emoji) !! ERROR: "
     c1="$(_koopa_ansi_escape_code "red")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -290,7 +290,7 @@ _koopa_warning() {                                                        # {{{1
     # """
     local c1 c2 nc pre str
     str="${1:?}"
-    pre="$(_koopa_emoji) ** WARNING: "
+    pre="$(_koopa_emoji) !! WARNING: "
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
