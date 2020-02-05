@@ -21,9 +21,9 @@ legacyPkgs <- c(
 )
 installedPkgs <- rownames(installed.packages())
 if (any(legacyPkgs %in% installedPkgs)) {
-    message("Removing packages: ", toString(pkgs))
+    message("Removing packages: ", toString(legacyPkgs))
     tryCatch(
-        expr = remove.packages(pkgs),
+        expr = remove.packages(legacyPkgs),
         error = function(e) {
             invisible()
         }
