@@ -809,7 +809,7 @@ _koopa_has_sudo() {                                                       # {{{1
     # Return false if 'sudo' program is not installed.
     _koopa_is_installed sudo || return 1
     # Early return true if user has passwordless sudo enabled.
-    sudo -n true && return 0
+    sudo -n true 2>/dev/null && return 0
     # This step is slow for Active Directory domain user accounts on Ubuntu.
     _koopa_assert_is_installed grep groups
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
