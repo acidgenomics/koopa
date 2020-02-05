@@ -125,7 +125,14 @@ _koopa_h2 "Installing default packages."
 
 # Clean up previous installs first, if applicable.
 apt_installed="$(sudo apt list --installed)"
-legacy_pkgs=(cargo)
+legacy_pkgs=(
+    cargo               # Rust
+    containerd          # Docker
+    docker              # Docker
+    docker-engine       # Docker
+    docker.io           # Docker
+    runc                # Docker
+)
 for pkg in "${legacy_pkgs[@]}"
 do
     echo "$apt_installed" | grep -Eq "^${pkg}/" || continue

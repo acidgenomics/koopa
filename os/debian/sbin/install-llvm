@@ -8,7 +8,10 @@ source "${script_dir}/../include/header.sh"
 # """
 # LLVM (clang)
 # https://apt.llvm.org/
+#
 # Note that regular llvm recipe currently installs version 6.
+#
+# The 'llvm.sh' install script contains the GPG signing keys.
 # """
 
 if [[ -n "${LLVM_CONFIG:-}" ]]
@@ -17,10 +20,11 @@ then
     exit 0
 fi
 
-_koopa_h1 "Installing LLVM via apt.llvm.org."
+_koopa_h1 "Installing LLVM via 'apt.llvm.org'."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
+# Note that the 'llvm.sh' script will fail unless wget is installed.
 _koopa_assert_is_installed wget
 
 name="llvm"
@@ -29,6 +33,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 version="$(_koopa_variable "$name")"
 major_version="$(_koopa_major_version "$version")"
 
+# FIXME Download this script and break out the essential parts.
 (
     _koopa_cd_tmp_dir "$tmp_dir"
     file="llvm.sh"

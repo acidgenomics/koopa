@@ -93,6 +93,77 @@ _koopa_apt_link_sources() {                                               # {{{1
     return 0
 }
 
+_koopa_apt_import_keys() {                                                # {{{1
+    # """
+    # Import GPG keys used to sign apt repositories.
+    # Updated 2020-02-05.
+    #
+    # Refer to 'Secure apt' section for details.
+    #
+    # Get list of enabled apt repositories:
+    # https://stackoverflow.com/questions/8647454
+    #
+    # See also:
+    # - install-docker
+    # - install-llvm
+    # - install-r
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    _koopa_assert_is_installed curl
+
+    _koopa_h1 "Importing signatures for GPG-signed apt repositories."
+
+    local apt_repos
+    apt_repos="$( \
+        grep -h '^deb' \
+            /etc/apt/sources.list \
+            /etc/apt/sources.list.d/* \
+    )"
+
+    # Expecting "debian" or "ubuntu" here.
+    local os_id
+    os_id="$(_koopa_os_id)"
+
+    # Docker
+    if _koopa_is_matching_fixed "$apt_repos" "download.docker.com"
+    then
+        _koopa_h2 "Adding official Docker release GPG key."
+        _koopa_assert_is_file "/etc/apt/sources.list.d/docker.list"
+        curl -fsSL "https://download.docker.com/linux/${os_id}/gpg" \
+            | sudo apt-key add -
+        # > sudo apt-key fingerprint 0EBFCD88
+    fi
+
+    # LLVM
+    if _koopa_is_matching_fixed "$apt_repos" "apt.llvm.org"
+    then
+        _koopa_h2 "Adding official LLVM release GPG key."
+        # FIXME
+    fi
+
+    # R
+    if _koopa_is_matching_fixed "$apt_repos" "cloud.r-project.org"
+    then
+        _koopa_h2 "Adding official R release GPG key."
+        _koopa_assert_is_file "/etc/apt/sources.list.d/r.list"
+        if _koopa_is_ubuntu
+        then
+            # Release is signed by Michael Rutter <marutter@gmail.com>.
+            sudo apt-key adv \
+                --keyserver keyserver.ubuntu.com \
+                --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+        else
+            # Release is signed by Johannes Ranke <jranke@uni-bremen.de>.
+            sudo apt-key adv \
+                --keyserver keys.gnupg.net \
+                --recv-key E19F5F87128899B192B1A2C2AD5F960A256A04AF
+        fi
+    fi
+
+    return 0
+}
+
 _koopa_apt_space_used_by() {                                              # {{{1
     # """
     # Check installed apt package size, with dependencies.
@@ -100,6 +171,7 @@ _koopa_apt_space_used_by() {                                              # {{{1
     #
     # Alternate approach that doesn't attempt to grep match.
     _koopa_assert_is_debian
+    _koopa_assert_has_sudo
     sudo apt-get --assume-no autoremove "$@"
 }
 
