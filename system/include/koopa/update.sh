@@ -94,7 +94,7 @@ then
     then
         configure-vm
     fi
-    if [[ -z "${KOOPA_UPDATE_RSYNC:-}" ]]
+    if [[ ! -f "${config_prefix}/rsync" ]]
     then
         update-pip
         update-conda
