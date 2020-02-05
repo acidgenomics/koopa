@@ -218,7 +218,7 @@ _koopa_pyenv_prefix() {                                                   # {{{1
 
 _koopa_r_home() {                                                         # {{{1
     # """
-    # Get 'R_HOME', rather than exporting as global variable.
+    # R home (prefix).
     # Updated 2020-01-21.
     # """
     if ! _koopa_is_installed R
@@ -229,6 +229,26 @@ _koopa_r_home() {                                                         # {{{1
     local home
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
     echo "$home"
+}
+
+_koopa_r_library_prefix() {                                               # {{{1
+    # """
+    # R default library prefix.
+    # Updated 2020-02-05.
+    # """
+    local prefix
+    prefix="$(Rscript -e '.libPaths()[[1L]]')"
+    echo "$prefix"
+}
+
+_koopa_r_system_library_prefix() {                                        # {{{1
+    # """
+    # R system library prefix.
+    # Updated 2020-02-05.
+    # """
+    local prefix
+    prefix="$(Rscript --vanilla -e 'tail(.libPaths(), n = 1L)')"
+    echo "$prefix"
 }
 
 _koopa_rbenv_prefix() {                                                   # {{{1
