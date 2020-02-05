@@ -23,11 +23,11 @@ deb http://security.ubuntu.com/ubuntu/ bionic-security main restricted
 ## team. Also, please note that software in universe WILL NOT receive any
 ## review or updates from the Ubuntu security team.
 
-# deb http://archive.ubuntu.com/ubuntu/ bionic universe
+deb http://archive.ubuntu.com/ubuntu/ bionic universe
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic universe
-# deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic-updates universe
-# deb http://security.ubuntu.com/ubuntu/ bionic-security universe
+deb http://security.ubuntu.com/ubuntu/ bionic-security universe
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security universe
 
 ## Multiverse                                                               {{{1
