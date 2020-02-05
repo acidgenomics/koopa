@@ -68,23 +68,16 @@ output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 _koopa_h1 "Running bowtie2."
 
 _koopa_activate_conda_env bowtie2
-
-_koopa_info "bowtie2: $(_koopa_which_realpath bowtie2)"
-
-_koopa_assert_is_dir "$fastq_dir"
-_koopa_assert_is_dir "$index_dir"
+_koopa_dl "bowtie2" "$(_koopa_which_realpath bowtie2)"
 
 fastq_dir="$(realpath "$fastq_dir")"
 index_dir="$(realpath "$index_dir")"
 
-_koopa_info "fastq: ${fastq_dir}"
-_koopa_info "index: ${index_dir}"
+_koopa_dl "fastq dir" "$fastq_dir"
+_koopa_dl "index dir" "$index_dir"
 
 # Sample array from FASTQ files                                             {{{1
 # ==============================================================================
-
-# Resolve FASTQ directory symlink, if necessary.
-fastq_dir="$(realpath "$fastq_dir")"
 
 # Create a per-sample array from the R1 FASTQ files.
 # Pipe GNU find into array.
