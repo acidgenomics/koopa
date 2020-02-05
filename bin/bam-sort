@@ -21,7 +21,8 @@ done < <( \
         -mindepth 1 \
         -type f \
         -iname "*.bam" \
-        -not -iname "*.sorted.bam" \
+        -not -iname "*.filtered.*" \
+        -not -iname "*.sorted.*" \
         -print0 \
     | sort -z \
 )
