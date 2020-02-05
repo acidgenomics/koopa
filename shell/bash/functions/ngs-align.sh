@@ -131,12 +131,13 @@ _koopa_bam_sort() {                                                       # {{{1
     threads="$(_koopa_cpu_count)"
     _koopa_dl "Threads" "${threads}"
 
-    # This is noisy and spits out program version information, so hiding stdout.
+    # This is noisy and spits out program version information, so hiding stdout
+    # and stderr. Note that simply using '> /dev/null' doesn't work here.
     sambamba sort \
         -t "$threads" \
         -o "$sorted_bam" \
         "$unsorted_bam" \
-        > /dev/null
+         > /dev/null 2>&1
 
     return 0
 }
