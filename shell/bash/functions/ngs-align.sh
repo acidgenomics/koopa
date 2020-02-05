@@ -6,13 +6,13 @@ _koopa_bam_filter() {                                                     # {{{1
     # Updated 2020-02-05.
     #
     # See also:
-    # https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
-    #     sessionV/lessons/03_align_and_filtering.html
+    # - https://lomereiter.github.io/sambamba/docs/sambamba-view.html
+    # - https://github.com/lomereiter/sambamba/wiki/
+    #       %5Bsambamba-view%5D-Filter-expression-syntax
+    # - https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
+    #       sessionV/lessons/03_align_and_filtering.html
     # """
     _koopa_assert_is_installed sambamba
-
-    local filter
-    filter="[XS] == null and not unmapped and not duplicate"
 
     while (("$#"))
     do
@@ -51,18 +51,21 @@ _koopa_bam_filter() {                                                     # {{{1
 
     _koopa_h2 "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
     _koopa_assert_is_file "$input_bam"
-    _koopa_dl "Filter" "$filter"
+    _koopa_dl "Filter" "'$filter'"
 
     local threads
     threads="$(_koopa_cpu_count)"
     _koopa_dl "Threads" "$threads"
 
+    # Note that sambamba prints version information into stderr.
     sambamba view \
-        -F "$filter" \
-        -f bam \
-        -h \
-        -t "$threads" \
-        "$input_bam" > "$output_bam"
+        --filter="$filter" \
+        --format="bam" \
+        --nthreads="$threads" \
+        --output-filename="$output_bam" \
+        --show-progress \
+        --with-header \
+        "$input_bam"
 
     return 0
 }
@@ -102,10 +105,41 @@ _koopa_bam_filter_unmapped() {                                            # {{{1
     return 0
 }
 
+_koopa_bam_index() {                                                      # {{{1
+    # """
+    # Index BAM file.
+    # Updated 2020-02-05.
+    # """
+    _koopa_assert_is_installed samtools
+
+    local bam_file
+    bam_file="${1:?}"
+
+    _koopa_h2 "Indexing '${bam_file}'."
+    _koopa_assert_is_file "$bam_file"
+
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
+
+    sambamba index \
+        --nthreads="$threads" \
+        --show-progress \
+        "$bam_file"
+
+    return 0
+}
+
 _koopa_bam_sort() {                                                       # {{{1
     # """
     # Sort BAM file by genomic coordinates.
     # Updated 2020-02-05.
+    #
+    # Sorts by genomic coordinates by default.
+    # Use '-n' flag to sort by read name instead.
+    #
+    # See also:
+    # https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
     # """
     _koopa_assert_is_installed sambamba
 
@@ -134,10 +168,11 @@ _koopa_bam_sort() {                                                       # {{{1
     # This is noisy and spits out program version information, so hiding stdout
     # and stderr. Note that simply using '> /dev/null' doesn't work here.
     sambamba sort \
-        -t "$threads" \
-        -o "$sorted_bam" \
-        "$unsorted_bam" \
-         > /dev/null 2>&1
+        --memory-limit="2GB" \
+        --nthreads="$threads" \
+        --out="$sorted_bam" \
+        --show-progress \
+        "$unsorted_bam"
 
     return 0
 }
