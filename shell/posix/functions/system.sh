@@ -426,6 +426,8 @@ _koopa_host_id() {                                                        # {{{1
     # - HPCs: "harvard-o2", "harvard-odyssey".
     #
     # Returns empty for local machines and/or unsupported types.
+    #
+    # Alternatively, can use 'hostname -d' for reverse lookups.
     # """
     local id
     if [ -r /etc/hostname ]
