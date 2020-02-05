@@ -960,6 +960,7 @@ _koopa_is_git_clean() {                                                   # {{{1
     return 0
 }
 
+# Also defined in koopa installer.
 _koopa_is_installed() {                                                   # {{{1
     # """
     # Is the requested program name installed?
