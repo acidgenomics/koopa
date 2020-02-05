@@ -247,7 +247,7 @@ _koopa_note() {                                                           # {{{1
     # """
     local c1 c2 nc pre str
     str="${1:?}"
-    pre="$(_koopa_emoji) ** "
+    pre="$(_koopa_emoji) -- "
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
