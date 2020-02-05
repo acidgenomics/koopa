@@ -49,7 +49,7 @@ _koopa_bam_filter() {                                                     # {{{1
         return 0
     fi
 
-    _koopa_info "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
+    _koopa_h2 "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
     _koopa_assert_is_file "$input_bam"
     _koopa_dl "Filter" "$filter"
 
@@ -124,7 +124,7 @@ _koopa_bam_sort() {                                                       # {{{1
         return 1
     fi
 
-    _koopa_info "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
+    _koopa_h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
     _koopa_assert_is_file "$unsorted_bam"
 
     local threads
@@ -207,7 +207,7 @@ _koopa_bowtie2() {                                                        # {{{1
         return 1
     fi
 
-    _koopa_info "Aligning '${id}'."
+    _koopa_h2 "Aligning '${id}'."
 
     local threads
     threads="$(_koopa_cpu_count)"
@@ -277,7 +277,7 @@ _koopa_sam_to_bam() {                                                     # {{{1
         return 1
     fi
 
-    _koopa_info "Converting '${sam_bn}' to '${bam_bn}'."
+    _koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
     _koopa_assert_is_file "$input_sam"
 
     local threads

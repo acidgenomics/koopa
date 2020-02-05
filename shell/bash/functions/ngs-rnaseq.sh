@@ -33,6 +33,8 @@ _koopa_kallisto_index() {                                                 # {{{1
         return 1
     fi
 
+    _koopa_h2 "Generating kallisto index at '${index_file}'."
+
     local log_file
     log_file="$(basename "$index_file")/kallisto-index.log"
 
@@ -109,7 +111,7 @@ _koopa_kallisto_quant() {                                                 # {{{1
         return 1
     fi
 
-    _koopa_info "Quantifying '${id}'."
+    _koopa_h2 "Quantifying '${id}' into '${sample_output_dir}'."
 
     local bootstraps
     bootstraps=30
@@ -150,8 +152,8 @@ _koopa_salmon_index() {                                                   # {{{1
                 local fasta_file="${1#*=}"
                 shift 1
                 ;;
-            --index-file=*)
-                local index_file="${1#*=}"
+            --index-dir=*)
+                local index_dir="${1#*=}"
                 shift 1
                 ;;
             *)
@@ -160,17 +162,19 @@ _koopa_salmon_index() {                                                   # {{{1
         esac
     done
 
-    _koopa_assert_is_set fasta_file index_file
+    _koopa_assert_is_set fasta_file index_dir
     _koopa_assert_is_file "$fasta_file"
 
-    if [[ -f "$index_file" ]]
+    if [[ -d "$index_dir" ]]
     then
-        _koopa_note "Index exists at '${index_file}'."
+        _koopa_note "Index exists at '${index_dir}'."
         return 1
     fi
 
+    _koopa_h2 "Generating salmon index at '${index_dir}'."
+
     local log_file
-    log_file="$(basename "$index_file")/kallisto-index.log"
+    log_file="$(basename "$index_dir")/kallisto-index.log"
 
     salmon index \
             -k 31 \
@@ -247,7 +251,7 @@ _koopa_salmon_quant() {                                                   # {{{1
         return 1
     fi
 
-    _koopa_info "Quantifying '${id}'."
+    _koopa_h2 "Quantifying '${id}' into '${sample_output_dir}'."
     
     local bootstraps
     bootstraps=30
