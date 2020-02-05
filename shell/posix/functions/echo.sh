@@ -199,14 +199,13 @@ _koopa_emoji() {                                                          # {{{1
 _koopa_h1() {                                                        # {{{1
     # """
     # Header level 1.
-    # Updated 2020-01-31.
+    # Updated 2020-02-05.
     #
     # Alternatives: ==> (Homebrew) / ⇨  / →
     # """
     local c1 c2 nc pre str
-    pre="=>"
-    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
+    pre="$(_koopa_emoji) => "
     c1="$(_koopa_ansi_escape_code "blue")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -216,12 +215,11 @@ _koopa_h1() {                                                        # {{{1
 _koopa_h2() {                                                        # {{{1
     # """
     # Header level 2.
-    # Updated 2020-01-31.
+    # Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
-    pre="->"
-    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
+    pre="$(_koopa_emoji) -> "
     c1="$(_koopa_ansi_escape_code "magenta")"
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -231,12 +229,11 @@ _koopa_h2() {                                                        # {{{1
 _koopa_info() {                                                           # {{{1
     # """
     # General info.
-    # Updated 2020-01-31.
+    # Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
-    pre="--"
-    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
+    pre="$(_koopa_emoji) -- "
     c1="$(_koopa_ansi_escape_code "default")"
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -246,12 +243,11 @@ _koopa_info() {                                                           # {{{1
 _koopa_note() {                                                           # {{{1
     # """
     # General note.
-    # Updated 2020-01-31.
+    # Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
-    pre="**"
-    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
+    pre="$(_koopa_emoji) ** "
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -261,12 +257,11 @@ _koopa_note() {                                                           # {{{1
 _koopa_stop() {                                                           # {{{1
     # """
     # Stop with an error message, and exit.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
-    pre="XX"
-    pre="$(_koopa_emoji) ${pre} "
-    str="ERROR: ${1:?}"
+    str="${1:?}"
+    pre="$(_koopa_emoji) ** ERROR: "
     c1="$(_koopa_ansi_escape_code "red")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -277,12 +272,11 @@ _koopa_stop() {                                                           # {{{1
 _koopa_success() {                                                        # {{{1
     # """
     # Success message.
-    # Updated 2020-01-31.
+    # Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
-    pre="OK"
-    pre="$(_koopa_emoji) ${pre} "
     str="${1:?}"
+    pre="$(_koopa_emoji) OK "
     c1="$(_koopa_ansi_escape_code "green")"
     c2="$(_koopa_ansi_escape_code "green-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
@@ -292,12 +286,11 @@ _koopa_success() {                                                        # {{{1
 _koopa_warning() {                                                        # {{{1
     # """
     # Warning message.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
-    pre="!!"
-    pre="$(_koopa_emoji) ${pre} "
-    str="WARNING: ${1:?}"
+    str="${1:?}"
+    pre="$(_koopa_emoji) ** WARNING: "
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
