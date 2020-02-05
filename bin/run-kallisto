@@ -119,21 +119,23 @@ then
 fi
 
 _koopa_info "${#fastq_r1_files[@]} samples detected."
+mkdir -pv "$output_dir"
 
 # Index                                                                     {{{1
 # ==============================================================================
-
-mkdir -pv "$output_dir"
 
 # Generate the genome index on the fly, if necessary.
 if [[ -n "${index_file:-}" ]]
 then
     index_file="$(realpath "$index_file")"
 else
+    index_file="${output_dir}/kallisto.idx"
     _koopa_kallisto_index \
         --fasta-file="$fasta_file" \
-        --output-dir="$output_dir"
+        --index-file="$index_file"
 fi
+
+_koopa_dl "index" "$index_file"
 
 # Quantify                                                                  {{{1
 # ==============================================================================
