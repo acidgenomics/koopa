@@ -82,27 +82,12 @@ else
     _koopa_note "SAM files will be preserved."
 fi
 
-threads="$(_koopa_cpu_count)"
-
 for sam_file in "${sam_files[@]}"
 do
-    # FIXME Convert to function.
     bam_file="${sam_file%.sam}.bam"
-    sam_bn="$(basename "$sam_file")"
-    bam_bn="$(basename "$bam_file")"
-    if [[ -f "$bam_file" ]]
-    then
-        _koopa_note "Skipping '${bam_bn}'."
-        continue
-    else
-        _koopa_info "Converting '${sam_bn}' to '${bam_bn}'."
-    fi
-    samtools view \
-        -@ "$threads" \
-        -b \
-        -h \
-        -o "$bam_file" \
-        "$sam_file"
+    _koopa_sam_to_bam \
+        --input-sam="$sam_file" \
+        --input-bam="$bam_file"
     if [[ "$delete_sam" -eq 1 ]]
     then
         rm -v "$sam_file"

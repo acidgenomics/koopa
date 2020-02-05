@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_bam_filter() {
+_koopa_bam_filter() {                                                     # {{{1
     # """
     # Perform filtering on a BAM file.
     # Updated 2020-02-04.
@@ -49,11 +49,13 @@ _koopa_bam_filter() {
         return 0
     fi
 
-    _koopa_note "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
-    _koopa_info "Filter params: '${filter}'."
+    _koopa_info "Filtering '${input_bam_bn}' to '${output_bam_bn}'."
+    _koopa_assert_is_file "$input_bam"
+    _koopa_dl "Filter" "$filter"
 
     local threads
     threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
 
     sambamba view \
         -F "$filter" \
@@ -91,7 +93,7 @@ _koopa_bam_filter_multimappers() {                                        # {{{1
     return 0
 }
 
-_koopa_bam_filter_unmapped() {
+_koopa_bam_filter_unmapped() {                                            # {{{1
     # """
     # Filter unmapped reads from BAM file.
     # Updated 2020-02-04.
@@ -111,23 +113,25 @@ _koopa_bam_sort() {                                                       # {{{1
     unsorted_bam="${1:?}"
     local sorted_bam
     sorted_bam="${unsorted_bam%.bam}.sorted.bam"
-
     local unsorted_bam_bn
     unsorted_bam_bn="$(basename "$unsorted_bam")"
-
     local sorted_bam_bn
     sorted_bam_bn="$(basename "$sorted_bam")"
 
     if [[ -f "$sorted_bam" ]]
     then
         _koopa_note "Skipping '${sorted_bam_bn}'."
-        return 0
-    else
-        _koopa_info "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
+        return 1
     fi
 
-    # This is noisy and spits out program version information, so hiding
-    # stdout here.
+    _koopa_info "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
+    _koopa_assert_is_file "$unsorted_bam"
+
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "${threads}"
+
+    # This is noisy and spits out program version information, so hiding stdout.
     sambamba sort \
         -t "$threads" \
         -o "$sorted_bam" \
@@ -181,9 +185,6 @@ _koopa_bowtie2() {                                                        # {{{1
         r1_tail r2_tail
     _koopa_assert_is_file "$fastq_r1" "$fastq_r2"
 
-    local threads
-    threads="$(_koopa_cpu_count)"
-
     local fastq_r1_bn
     fastq_r1_bn="$(basename "$fastq_r1")"
     fastq_r1_bn="${fastq_r1_bn/${r1_tail}/}"
@@ -207,13 +208,17 @@ _koopa_bowtie2() {                                                        # {{{1
     fi
 
     _koopa_info "Aligning '${id}'."
-    mkdir -pv "$sample_output_dir"
+
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
 
     local sam_file
     sam_file="${sample_output_dir}/${id}.sam"
-
     local log_file
     log_file="${sample_output_dir}/bowtie2.log"
+
+    mkdir -pv "$sample_output_dir"
 
     bowtie2 \
         --local \
@@ -230,6 +235,60 @@ _koopa_bowtie2() {                                                        # {{{1
         -q \
         -x "$index_prefix" \
         2>&1 | tee "$log_file"
+
+    return 0
+}
+
+_koopa_sam_to_bam() {                                                     # {{{1
+    # """
+    # Convert SAM file to BAM.
+    # Updated 2020-02-04.
+    # """
+    _koopa_assert_is_installed samtools
+
+    while (("$#"))
+    do
+        case "$1" in
+            --input-sam=*)
+                local input_sam="${1#*=}"
+                shift 1
+                ;;
+            --output-bam=*)
+                local output_bam="${1#*=}"
+                shift 1
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+
+    _koopa_assert_is_set input_sam output_bam
+
+    local sam_bn
+    sam_bn="$(basename "$input_sam")"
+    local bam_bn
+    bam_bn="$(basename "$output_bam")"
+
+    if [[ -f "$output_bam" ]]
+    then
+        _koopa_note "Skipping '${bam_bn}'."
+        return 1
+    fi
+
+    _koopa_info "Converting '${sam_bn}' to '${bam_bn}'."
+    _koopa_assert_is_file "$input_sam"
+
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
+
+    samtools view \
+        -@ "$threads" \
+        -b \
+        -h \
+        -o "$output_bam" \
+        "$input_sam"
 
     return 0
 }
