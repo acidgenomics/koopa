@@ -196,11 +196,17 @@ _koopa_bowtie2() {                                                        # {{{1
 
     local id
     id="$fastq_r1_bn"
-    _koopa_info "Aligning '${id}'."
 
     local sample_output_dir
     sample_output_dir="${output_dir}/${id}"
-    [ -d "$sample_output_dir" ] && return 1
+
+    if [[ -d "$sample_output_dir" ]]
+    then
+        _koopa_note "Skipping '${id}'."
+        return 1
+    fi
+
+    _koopa_info "Aligning '${id}'."
     mkdir -pv "$sample_output_dir"
 
     local sam_file
