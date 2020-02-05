@@ -3,7 +3,7 @@
 _koopa_bam_filter() {                                                     # {{{1
     # """
     # Perform filtering on a BAM file.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     #
     # See also:
     # https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
@@ -105,7 +105,7 @@ _koopa_bam_filter_unmapped() {                                            # {{{1
 _koopa_bam_sort() {                                                       # {{{1
     # """
     # Sort BAM file by genomic coordinates.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed sambamba
 
@@ -121,7 +121,7 @@ _koopa_bam_sort() {                                                       # {{{1
     if [[ -f "$sorted_bam" ]]
     then
         _koopa_note "Skipping '${sorted_bam_bn}'."
-        return 1
+        return 0
     fi
 
     _koopa_h2 "Sorting '${unsorted_bam_bn}' to '${sorted_bam_bn}'."
@@ -144,7 +144,7 @@ _koopa_bam_sort() {                                                       # {{{1
 _koopa_bowtie2() {                                                        # {{{1
     # """
     # Run bowtie2 on paired-end FASTQ files.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed bowtie2
 
@@ -204,10 +204,10 @@ _koopa_bowtie2() {                                                        # {{{1
     if [[ -d "$sample_output_dir" ]]
     then
         _koopa_note "Skipping '${id}'."
-        return 1
+        return 0
     fi
 
-    _koopa_h2 "Aligning '${id}'."
+    _koopa_h2 "Aligning '${id}' into '${sample_output_dir}'."
 
     local threads
     threads="$(_koopa_cpu_count)"
@@ -243,7 +243,7 @@ _koopa_bowtie2() {                                                        # {{{1
 _koopa_sam_to_bam() {                                                     # {{{1
     # """
     # Convert SAM file to BAM.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed samtools
 
@@ -274,7 +274,7 @@ _koopa_sam_to_bam() {                                                     # {{{1
     if [[ -f "$output_bam" ]]
     then
         _koopa_note "Skipping '${bam_bn}'."
-        return 1
+        return 0
     fi
 
     _koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."

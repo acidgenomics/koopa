@@ -3,7 +3,7 @@
 _koopa_kallisto_index() {                                                 # {{{1
     # """
     # Generate kallisto index.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed kallisto
 
@@ -29,8 +29,8 @@ _koopa_kallisto_index() {                                                 # {{{1
 
     if [[ -f "$index_file" ]]
     then
-        _koopa_note "Index exists at '${index_file}'."
-        return 1
+        _koopa_note "Index exists at '${index_file}'. Skipping."
+        return 0
     fi
 
     _koopa_h2 "Generating kallisto index at '${index_file}'."
@@ -49,7 +49,7 @@ _koopa_kallisto_index() {                                                 # {{{1
 _koopa_kallisto_quant() {                                                 # {{{1
     # """
     # Run kallisto quant.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed kallisto
 
@@ -108,7 +108,7 @@ _koopa_kallisto_quant() {                                                 # {{{1
     if [[ -d "$sample_output_dir" ]]
     then
         _koopa_note "Skipping '${id}'."
-        return 1
+        return 0
     fi
 
     _koopa_h2 "Quantifying '${id}' into '${sample_output_dir}'."
@@ -141,7 +141,7 @@ _koopa_kallisto_quant() {                                                 # {{{1
 _koopa_salmon_index() {                                                   # {{{1
     # """
     # Generate salmon index.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed salmon
 
@@ -167,8 +167,8 @@ _koopa_salmon_index() {                                                   # {{{1
 
     if [[ -d "$index_dir" ]]
     then
-        _koopa_note "Index exists at '${index_dir}'."
-        return 1
+        _koopa_note "Index exists at '${index_dir}'. Skipping."
+        return 0
     fi
 
     _koopa_h2 "Generating salmon index at '${index_dir}'."
@@ -189,7 +189,7 @@ _koopa_salmon_index() {                                                   # {{{1
 _koopa_salmon_quant() {                                                   # {{{1
     # """
     # Run salmon quant.
-    # Updated 2020-02-04.
+    # Updated 2020-02-05.
     # """
     _koopa_assert_is_installed salmon
 
@@ -248,7 +248,7 @@ _koopa_salmon_quant() {                                                   # {{{1
     if [[ -d "$sample_output_dir" ]]
     then
         _koopa_note "Skipping '${id}'."
-        return 1
+        return 0
     fi
 
     _koopa_h2 "Quantifying '${id}' into '${sample_output_dir}'."
