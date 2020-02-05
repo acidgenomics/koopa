@@ -43,4 +43,3 @@ do
         --input-file="$bam_file" \
         --output-file="$filtered_bam_file"
 done
-
