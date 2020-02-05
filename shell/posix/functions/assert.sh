@@ -780,7 +780,7 @@ _koopa_has_passwordless_sudo() {                                          # {{{1
 _koopa_has_sudo() {                                                       # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
-    # Updated 2019-12-06.
+    # Updated 2020-02-05.
     #
     # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
     # 'groups' taking a long time to return for domain users.
@@ -799,9 +799,18 @@ _koopa_has_sudo() {                                                       # {{{1
     # - macOS: admin
     # - Debian: sudo
     # - Fedora: wheel
+    #
+    # See also:
+    # - https://serverfault.com/questions/364334
+    # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
     # """
+    # Always return true for root user.
     [ "$(id -u)" -eq 0 ] && return 0
+    # Return false if 'sudo' program is not installed.
     _koopa_is_installed sudo || return 1
+    # Early return true if user has passwordless sudo enabled.
+    sudo -n true || return 0
+    # This step is slow for Active Directory domain user accounts on Ubuntu.
     _koopa_assert_is_installed grep groups
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
