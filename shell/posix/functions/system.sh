@@ -442,10 +442,10 @@ _koopa_host_id() {                                                        # {{{1
         *.ec2.internal)
             id="aws"
             ;;
-        awslabapp*)
+        awslab*)
             id="aws"
             ;;
-        azlabapp*)
+        azlab*)
             id="azure"
             ;;
         # HPCs
