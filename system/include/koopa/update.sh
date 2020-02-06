@@ -97,7 +97,8 @@ then
     if [[ ! -f "${config_prefix}/rsync" ]]
     then
         update-pip
-        update-conda
+        # This currently can break environments, so disabled.
+        # > update-conda
         update-rust
         install-rust-crates
     fi
