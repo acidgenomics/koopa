@@ -6,13 +6,15 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-
 prefix="$(_koopa_app_prefix)/ensembl"
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing Ensembl Perl API at '${prefix}'."
 
+_koopa_assert_has_no_args "$@"
+
 (
+    set -o xtrace
     _koopa_prefix_mkdir "$prefix"
     cd "$prefix" || exit 1
     # Install BioPerl.
@@ -24,9 +26,9 @@ _koopa_h1 "Installing Ensembl Perl API at '${prefix}'."
     git clone "https://github.com/Ensembl/ensembl-funcgen.git"
     git clone "https://github.com/Ensembl/ensembl-compara.git"
     git clone "https://github.com/Ensembl/ensembl-io.git"
-)
+) &> "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 
-_koopa_h1 "Ensembl API installed correctly."
-_koopa_note "Reload the current shell."
+_koopa_success "Installation of Ensembl Pelr API was successful."
+_koopa_note "Reload the current shell to complete activation."
