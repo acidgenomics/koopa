@@ -74,7 +74,13 @@ _koopa_delete_dotfile() {                                                 # {{{1
 _koopa_download() {                                                       # {{{1
     # """
     # Download a file.
-    # Updated 2020-01-23.
+    # Updated 2020-02-06.
+    #
+    # Potentially useful curl flags:
+    # * --connect-timeout <seconds>
+    # * --progress-bar
+    # * --stderr
+    # * --verbose
     #
     # Alternatively, can use wget instead of curl:
     # > wget -O file url
@@ -95,7 +101,16 @@ _koopa_download() {                                                       # {{{1
         file="${wd}/${bn}"
     fi
     _koopa_info "Downloading '${url}' to '${file}'."
-    curl -L -o "$file" "$url"
+    curl \
+        --create-dirs \
+        --fail \
+        --fail-early \
+        --location \
+        --output "$file" \
+        --retry 1 \
+        --show-error \
+        --silent \
+        "$url"
     return 0
 }
 

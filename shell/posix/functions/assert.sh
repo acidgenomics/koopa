@@ -709,13 +709,16 @@ _koopa_exit_if_exists() {                                                 # {{{1
 _koopa_exit_if_installed() {                                              # {{{1
     # """
     # Exit with note if an app is installed.
-    # Updated 2020-01-22.
+    # Updated 2020-02-06.
     # """
     for arg
     do
         if _koopa_is_installed "$arg"
         then
-            _koopa_note "'${arg}' is already installed."
+            local where
+            # FIXME Need to improve this to handle aliases.
+            where="$(_koopa_which_realpath "$arg")"
+            _koopa_note "'${arg}' is already installed at '${where}'."
             exit 0
         fi
     done
@@ -821,6 +824,32 @@ _koopa_invalid_arg() {                                                    # {{{1
     local arg
     arg="${1:?}"
     _koopa_stop "Invalid argument: '${arg}'."
+}
+
+_koopa_is_alias() {                                                       # {{{1
+    # """
+    # Is the specified argument an alias?
+    # Updated 2020-02-06.
+    #
+    # @example
+    # _koopa_is_alias R
+    # """
+    local cmd
+    cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
+    local str
+    str="$(type "$cmd")"
+    local shell
+    shell="$(_koopa_shell)"
+    case "$shell" in
+        bash)
+            pattern="is aliased to"
+            ;;
+        zsh)
+            pattern="is an alias for"
+            ;;
+    esac
+    _koopa_is_matching_fixed "$str" "$pattern"
 }
 
 _koopa_is_aws() {                                                         # {{{1

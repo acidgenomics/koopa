@@ -49,14 +49,14 @@ _koopa_chown() {                                                          # {{{1
 _koopa_mkdir() {                                                          # {{{1
     # """
     # mkdir with dynamic sudo handling.
-    # Updated 2020-01-24.
+    # Updated 2020-02-06.
     # """
     if _koopa_is_shared_install
     then
         _koopa_assert_has_sudo
-        sudo mkdir -pv "$@"
+        sudo mkdir -p "$@"
     else
-        mkdir -pv "$@"
+        mkdir -p "$@"
     fi
     return 0
 }
