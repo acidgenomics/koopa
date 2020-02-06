@@ -36,7 +36,7 @@ exe_file="${prefix}/bin/ascp"
     if [[ "$prefix" != "$script_target" ]]
     then
         _koopa_prefix_mkdir "$prefix"
-        mv -v "${script_target}"/* "${prefix}/."
+        cp -rv "${script_target}"/* "${prefix}/."
         rm -frv "$script_target"
     fi
     _koopa_assert_is_file "${prefix}/bin/asperaconnect"
