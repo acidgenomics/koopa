@@ -41,4 +41,5 @@ _koopa_h2 "Installing 'ruby-build'."
 
 _koopa_set_permissions "$prefix"
 
+_koopa_success "Installation of rbenv was successful."
 _koopa_note "Restart the shell to complete installation of rbenv."
