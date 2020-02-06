@@ -19,12 +19,13 @@ _koopa_prefix_mkdir "$prefix"
 rm -frv "${HOME}/.perlbrew"
 
 (
+    set -o xtrace
     # Ensure existing preferences are removed.
     export PERLBREW_HOME="${PERLBREW_HOME:-${HOME}/.perlbrew}"
     rm -rf "$PERLBREW_HOME"
     export PERLBREW_ROOT="$prefix"
     curl -L https://install.perlbrew.pl | bash
-)
+) &> "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 
