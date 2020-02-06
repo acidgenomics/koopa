@@ -14,14 +14,16 @@ tmp_dir="$(_koopa_tmp_dir)"
 _koopa_h1 "Installing ChromHMM at '${prefix}'."
 
 (
+    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="ChromHMM.zip"
     _koopa_download "http://compbio.mit.edu/ChromHMM/${file}"
     _koopa_extract "$file"
     mv -v "ChromHMM" "$prefix"
-    rm -fr "$tmp_dir"
-)
+) &> "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
 
 _koopa_set_permissions "$prefix"
 
-_koopa_h1 "Path: '${prefix}/ChromHMM.jar'"
+_koopa_success "Installation of ChromHMM was successful."

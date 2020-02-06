@@ -12,17 +12,27 @@ _koopa_assert_is_installed "rbenv"
 
 version="$(_koopa_variable ruby)"
 
+
+# FIXME Add a check if it's already installed here.
+# > rbenv versions
+
+_koopa_h1 "Installing Ruby ${version} via rbenv."
+
 # Ensure ruby-build is current.
 ruby_build_dir="$(rbenv root)/plugins/ruby-build"
 if [[ -d "$ruby_build_dir" ]]
 then
-    _koopa_h1 "Updating ruby-build plugin: '${ruby_build_dir}'."
+    _koopa_h2 "Updating ruby-build plugin: '${ruby_build_dir}'."
     (
         cd "$ruby_build_dir" || exit 1
         git pull
     )
 fi
 
-rbenv install "$version"
-rbenv global "$version"
-rbenv versions
+(
+    set -o xtrace
+    rbenv install "$version"
+    rbenv global "$version"
+) &> "$(_koopa_tmp_log_file)"
+
+_koopa_success "Installation of Ruby was successful."
