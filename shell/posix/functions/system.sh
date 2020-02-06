@@ -700,6 +700,31 @@ _koopa_macos_app_version() {                                              # {{{1
         | tr -d '"'
 }
 
+_koopa_mktemp() {                                                         # {{{1
+    # """
+    # Wrapper function for system 'mktemp'.
+    # Updated 2020-02-06.
+    #
+    # Traditionally, many shell scripts take the name of the program with the
+    # pid as a suffix and use that as a temporary file name. This kind of
+    # naming scheme is predictable and the race condition it creates is easy for
+    # an attacker to win. A safer, though still inferior, approach is to make a
+    # temporary directory using the same naming scheme. While this does allow
+    # one to guarantee that a temporary file will not be subverted, it still
+    # allows a simple denial of service attack. For these reasons it is
+    # suggested that mktemp be used instead.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/4632028
+    # - https://stackoverflow.com/a/10983009/3911732
+    # - https://gist.github.com/earthgecko/3089509
+    # """
+    _koopa_assert_is_installed mktemp
+    local template
+    template="koopa-$(id -u)-$(date "+%Y%m%d%H%M%S")-XXXXXXXXXX"
+    mktemp "$@" --tmpdir "$template"
+}
+
 _koopa_os_codename() {                                                    # {{{1
     # """
     # Operating system code name.
@@ -848,6 +873,22 @@ EOF
     echo "$shell"
 }
 
+_koopa_tmp_dir() {                                                        # {{{1
+    # """
+    # Create temporary directory.
+    # Updated 2020-02-06.
+    # """
+    _koopa_mktemp -d
+}
+
+_koopa_tmp_file() {                                                       # {{{1
+    # """
+    # Create temporary file.
+    # Updated 2020-02-06.
+    # """
+    _koopa_mktemp
+}
+
 _koopa_today_bucket() {                                                   # {{{1
     # """
     # Create a dated file today bucket.
@@ -887,38 +928,6 @@ _koopa_today_bucket() {                                                   # {{{1
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
-}
-
-_koopa_tmp_dir() {                                                        # {{{1
-    # """
-    # Create temporary directory.
-    # Updated 2020-02-04.
-    #
-    # Traditionally, many shell scripts take the name of the program with the
-    # pid as a suffix and use that as a temporary file name. This kind of
-    # naming scheme is predictable and the race condition it creates is easy for
-    # an attacker to win. A safer, though still inferior, approach is to make a
-    # temporary directory using the same naming scheme. While this does allow
-    # one to guarantee that a temporary file will not be subverted, it still
-    # allows a simple denial of service attack. For these reasons it is
-    # suggested that mktemp be used instead.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/4632028
-    # - https://stackoverflow.com/a/10983009/3911732
-    # - https://gist.github.com/earthgecko/3089509
-    # """
-    _koopa_assert_is_installed mktemp
-    mktemp -d
-}
-
-_koopa_tmp_file() {                                                       # {{{1
-    # """
-    # Create temporary file.
-    # Updated 2020-02-04.
-    # """
-    _koopa_assert_is_installed mktemp
-    mktemp
 }
 
 _koopa_variable() {                                                       # {{{1

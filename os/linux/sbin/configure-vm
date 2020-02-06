@@ -196,6 +196,9 @@ then
     # Compilers.
     if ! _koopa_is_docker
     then
+        # FIXME Convert to '_koopa_run_if_installed install-llvm'
+        # FIXME Look for this and replace in scripts.
+        # FIXME Also look for _koopa_info / _note with ':' and use _koopa_dl
         # /usr/lib/llvm-9                                               # 0.285G
         _koopa_is_installed install-llvm && install-llvm
     fi
@@ -219,11 +222,6 @@ then
         install-gnupg                                                   # 0.038G
         install-lua                                                     # 0.001G
         install-luarocks                                                # 0.002G
-        install-sqlite                                                  # 0.026G
-        install-proj                                                    # 0.132G
-        install-gdal                # requires proj                     # 0.611G
-        install-hdf5                # requires gdal                     # 0.022G
-        install-gsl                                                     # 0.043G
     fi
 
     # Languages.
@@ -236,6 +234,16 @@ then
         install-julia                                                   # 0.339G
         install-ruby                                                    # 0.178G
         install-rust                                                    # 0.724G
+    fi
+
+    # Heavy libraries.
+    if ! _koopa_is_docker
+    then
+        install-sqlite                                                  # 0.026G
+        install-proj                # install after sqlite              # 0.132G
+        install-gdal                # requires proj, python; slow       # 0.611G
+        install-hdf5                # requires gdal                     # 0.022G
+        install-gsl                                                     # 0.043G
     fi
 
     # Shell tools.
