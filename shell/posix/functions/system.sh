@@ -228,6 +228,7 @@ _koopa_cd_tmp_dir() {                                                     # {{{1
     return 0
 }
 
+# FIXME Rework this to call the new internal functions instead.
 _koopa_current_version() {                                                # {{{1
     # """
     # Get the current version of a supported program.
