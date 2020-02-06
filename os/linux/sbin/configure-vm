@@ -11,6 +11,13 @@ koopa_prefix="$(_koopa_prefix)"
 make_prefix="$(_koopa_make_prefix)"
 app_prefix="$(_koopa_app_prefix)"
 
+if _koopa_is_docker
+then
+    docker=1
+else
+    docker=0
+fi
+
 config="${KOOPA_CONFIG:-}"
 data_disk=
 source_ip=
@@ -194,13 +201,10 @@ install-openjdk                                                         # 0.316G
 if [[ "$rsync" -eq 0 ]]
 then
     # Compilers.
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
-        # FIXME Convert to '_koopa_run_if_installed install-llvm'
-        # FIXME Look for this and replace in scripts.
-        # FIXME Also look for _koopa_info / _note with ':' and use _koopa_dl
         # /usr/lib/llvm-9                                               # 0.285G
-        _koopa_is_installed install-llvm && install-llvm
+        _koopa_run_if_installed install-llvm
     fi
 
     # Core.
@@ -209,14 +213,14 @@ then
 
     # Shells.
     install-bash                                                        # 0.014G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-zsh                                                     # 0.011G
         install-fish                                                    # 0.082G
     fi
 
     # General tools.
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-git                                                     # 0.177G
         install-gnupg                                                   # 0.038G
@@ -228,7 +232,7 @@ then
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
     install-perl                                                        # 0.081G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
@@ -237,7 +241,7 @@ then
     fi
 
     # Heavy libraries.
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-sqlite                                                  # 0.026G
         install-proj                # install after sqlite              # 0.132G
@@ -249,7 +253,7 @@ then
     # Shell tools.
     install-htop                                                        # 0.001G
     install-tmux                                                        # 0.001G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-autojump                                                # 0.000G
         install-fzf                 # requires go                       # 0.003G
@@ -260,15 +264,21 @@ then
 
     # Text editors.
     install-vim
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-emacs               # can't build on docker             #     NA
         install-neovim                                                  # 0.029G
     fi
 
+    # Bioinformatics tools.
+    if [[ "$docker" -eq 0 ]]
+    then
+        install-aspera-connect                                          # 0.090G
+    fi
+
     # Environment managers.
     install-conda                                                       # 0.493G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         _koopa_is_installed install-docker && install-docker
         install-perlbrew                                                # 0.003G
@@ -283,7 +293,7 @@ then
         # > install-rust-crates
 
         # > _koopa_activate_conda
-        # > conda-create-bioinfo-envs
+        # > conda-create-bioinfo-envs --all
 
         # Consider adding an R package recipe here.
         # Can use the Bioconductor Docker image as a reference.
@@ -292,7 +302,7 @@ fi
 
 _koopa_r_javareconf
 
-if _koopa_is_docker
+if [[ "$docker" -eq 0 ]]
 then
     if _koopa_is_debian
     then
@@ -304,7 +314,7 @@ else
     _koopa_update_lmod_config
 fi
 
-if ! _koopa_is_docker
+if [[ "$docker" -eq 0 ]]
 then
     generate-ssh-key
 fi
