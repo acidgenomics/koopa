@@ -256,7 +256,7 @@ _koopa_remove_from_path() {                                               # {{{1
 _koopa_which() {                                                          # {{{1
     # """
     # Locate which program.
-    # Updated 2020-01-16.
+    # Updated 2020-02-06.
     #
     # Note that this intentionally doesn't resolve symlinks.
     # Use 'koopa_realpath' for that output instead.
@@ -267,11 +267,13 @@ _koopa_which() {                                                          # {{{1
     # """
     local cmd
     cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
     local app_path
-    app_path="$(command -v "$cmd")"
-    if [ -z "$app_path" ]
+    if _koopa_is_alias "$cmd"
     then
-        _koopa_stop "'${cmd}' is not installed."
+        app_path="$(unalias "$cmd"; command -v "$cmd")"
+    else
+        app_path="$(command -v "$cmd")"
     fi
     echo "$app_path"
 }
@@ -279,23 +281,24 @@ _koopa_which() {                                                          # {{{1
 _koopa_which_realpath() {                                                 # {{{1
     # """
     # Locate the realpath of a program.
-    # Updated 2020-01-16.
+    # Updated 2020-02-06.
     #
     # This resolves symlinks automatically.
     # For 'which' style return, use '_koopa_which' instead.
     #
-    # See also:
+    # @seealso
     # - https://stackoverflow.com/questions/7665
     # - https://unix.stackexchange.com/questions/85249
     # - https://stackoverflow.com/questions/7522712
     # - https://thoughtbot.com/blog/input-output-redirection-in-the-shell
     #
-    # Examples:
+    # @examples
     # _koopa_which_realpath bash
     # ## /usr/local/Cellar/bash/5.0.11/bin/bash
     # """
     local cmd
     cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
     local app_path
     app_path="$(_koopa_which "$cmd")"
     realpath "$app_path"
