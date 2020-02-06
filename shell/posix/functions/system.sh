@@ -889,6 +889,16 @@ _koopa_tmp_file() {                                                       # {{{1
     _koopa_mktemp
 }
 
+_koopa_tmp_log_file() {                                                       # {{{1
+    # """
+    # Create temporary log file.
+    # Updated 2020-02-06.
+    #
+    # Used primarily for debugging cellar make install scripts.
+    # """
+    _koopa_mktemp --suffix=".log"
+}
+
 _koopa_today_bucket() {                                                   # {{{1
     # """
     # Create a dated file today bucket.
