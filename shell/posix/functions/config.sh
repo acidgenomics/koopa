@@ -61,6 +61,21 @@ _koopa_mkdir() {                                                          # {{{1
     return 0
 }
 
+_koopa_rm() {                                                             # {{{1
+    # """
+    # Remove files/directories without dealing with permissions.
+    # Updated 2020-02-06.
+    # """
+    if _koopa_is_shared_install
+    then
+        _koopa_assert_has_sudo
+        sudo rm -fr "$@"
+    else
+        rm -fr "$@"
+    fi
+    return 0
+}
+
 
 
 _koopa_prefix_chgrp() {                                                   # {{{1
