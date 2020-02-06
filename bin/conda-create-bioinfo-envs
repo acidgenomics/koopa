@@ -8,13 +8,13 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_is_installed "conda"
 
-full=0
+all=0
 
 while (("$#"))
 do
     case "$1" in
-        --full)
-            full=1
+        --all)
+            all=1
             shift 1
             ;;
         *)
@@ -42,7 +42,7 @@ conda-create-env rapmap                     # aligners                  # 0.088G
 conda-create-env salmon                     # aligners                  # 0.192G
 conda-create-env star                       # aligners                  # 0.009G
 
-if [[ "$full" -eq 1 ]]
+if [[ "$all" -eq 1 ]]
 then
     conda-create-env cromwell               # workflows                 # 0.724G
     conda-create-env fgbio                  # workflows                 # 0.628G
