@@ -716,9 +716,8 @@ _koopa_exit_if_installed() {                                              # {{{1
         if _koopa_is_installed "$arg"
         then
             local where
-            # FIXME Need to improve this to handle aliases.
             where="$(_koopa_which_realpath "$arg")"
-            _koopa_note "'${arg}' is already installed at '${where}'."
+            _koopa_note "'${arg}' is installed at '${where}'."
             exit 0
         fi
     done
@@ -1227,6 +1226,25 @@ _koopa_missing_arg() {                                                    # {{{1
     # Updated 2019-10-23.
     # """
     _koopa_stop "Missing required argument."
+}
+
+_koopa_run_if_installed() {                                               # {{{1
+    # """
+    # Run program(s) if installed.
+    # Updated 2020-02-06.
+    # """
+    for arg
+    do
+        if ! _koopa_is_installed "$arg"
+        then
+            _koopa_note "'${arg}' is not installed."
+            continue
+        fi
+        local exe
+        exe="$(_koopa_which_realpath "$arg")"
+        "$exe"
+    done
+    return 0
 }
 
 _koopa_warn_if_export() {                                                 # {{{1
