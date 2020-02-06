@@ -29,5 +29,5 @@ rm -frv "${HOME}/.perlbrew"
 
 _koopa_set_permissions "$prefix"
 
-_koopa_success "Perlbrew installed successfully."
+_koopa_success "Installation of Perlbrew was successful."
 _koopa_note "Restart the shell to complete activation."
