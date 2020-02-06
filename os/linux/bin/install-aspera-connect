@@ -10,8 +10,8 @@ _koopa_assert_has_no_envs
 
 name="aspera"
 version="$(_koopa_variable "$name")"
-prefix="${HOME}/.aspera/connect"
-_koopa_is_dir "$prefix" && exit 0
+prefix="$(_koopa_aspera_prefix)"
+_koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing Aspera Connect to '${prefix}'."
 
@@ -29,7 +29,17 @@ exe_file="${prefix}/bin/ascp"
     _koopa_extract "$file"
     script="${file//.tar.gz/.sh}"
     "./${script}"
-)
+    # Target is currently hard-coded in IBM Aspera install script.
+    script_target="${HOME}/.aspera/connect"
+    _koopa_assert_is_dir "$script_target"
+    # Move and enable for all users on Linux.
+    if [[ "$prefix" != "$script_target" ]]
+    then
+        _koopa_prefix_mkdir "$prefix"
+        mv -v "${script_target}"/* "${prefix}/."
+        rm -frv "$script_target"
+    fi
+    _koopa_assert_is_file "${prefix}/bin/asperaconnect"
+) &> $(_koopa_tmp_log_file)
 
-command -v "$exe_file"
-"$exe_file" --version
+_koopa_success "Installation of ${name} was successful."
