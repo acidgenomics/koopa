@@ -22,11 +22,16 @@ envs=(
     pytest
 )
 
-# Can pass '--force' flag here to force reinstall.
-for env in "${envs[@]}"
-do
-    pipx install --force "$env"
-done
+_koopa_dl "Environments" "${envs[@]}"
+
+(
+    set -o xtrace
+    # Can pass '--force' flag here to force reinstall.
+    for env in "${envs[@]}"
+    do
+        pipx install --force "$env"
+    done
+) &> "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$PIPX_HOME"
 

@@ -119,6 +119,7 @@ jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
+    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="emacs-${version}.tar.xz"
     url="http://ftp.gnu.org/gnu/emacs/${file}"
@@ -132,7 +133,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --with-xpm="no"
     make --jobs="$jobs"
     make install
-)
+) &> "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

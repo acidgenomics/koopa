@@ -46,7 +46,10 @@ mkdir -p "$tmp_dir"
 # ngs                                                                       {{{1
 # ==============================================================================
 
+_koopa_h2 "Installing 'ngs'."
+
 (
+    set -o xtrace
     cd "$tmp_dir" || exit 1
     file="ngs.tar.gz"
     url="https://github.com/ncbi/ngs/archive/${version}.tar.gz"
@@ -65,14 +68,17 @@ mkdir -p "$tmp_dir"
     make -C ngs-sdk install
     make -C ngs-java install
     make -C ngs-python install
-)
+) &> "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
 # ncbi-vdb                                                                  {{{1
 # ==============================================================================
 
+_koopa_h2 "Installing 'ncbi-vdb'."
+
 (
+    set -o xtrace
     cd "$tmp_dir" || exit 1
     file="ncbi-vdb.tar.gz"
     url="https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
@@ -85,14 +91,17 @@ _koopa_link_cellar "$name" "$version"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-)
+) &> "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
 # sra-tools                                                                 {{{1
 # ==============================================================================
 
+_koopa_h2 "Installing 'sra-tools'."
+
 (
+    set -o xtrace
     cd "$tmp_dir" || exit 1
     file="sra-tools.tar.gz"
     url="https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
@@ -105,7 +114,7 @@ _koopa_link_cellar "$name" "$version"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-)
+) &> "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
