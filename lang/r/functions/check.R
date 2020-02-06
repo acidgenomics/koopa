@@ -103,6 +103,7 @@ currentMinorVersion <- function(name) {
 
 
 
+## FIXME Rework to use new function approach.
 ## Updated 2020-02-06.
 currentVersion <- function(name) {
     script <- file.path(
