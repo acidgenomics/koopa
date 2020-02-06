@@ -321,6 +321,8 @@ _koopa_bowtie2_index() {                                                  # {{{1
     local index_prefix
     index_prefix="${index_dir}/bowtie2"
 
+    mkdir -pv "$index_dir"
+
     bowtie2-build \
         --threads="$threads" \
         "$fasta_file" \
