@@ -87,9 +87,16 @@ _koopa_make_prefix() {                                                    # {{{1
 _koopa_aspera_prefix() {                                                  # {{{1
     # """
     # Aspera Connect prefix.
-    # Updated 2020-01-12.
+    # Updated 2020-02-06.
     # """
-    echo "${HOME:?}/.aspera/connect"
+    local prefix
+    if _koopa_is_shared_install && _koopa_has_sudo && _koopa_is_linux
+    then
+        prefix="$(_koopa_app_prefix)/aspera-connect"
+    else
+        prefix="${HOME:?}/.aspera/connect"
+    fi
+    echo "$prefix"
 }
 
 _koopa_autojump_prefix() {                                                # {{{1
