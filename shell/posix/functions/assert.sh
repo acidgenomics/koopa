@@ -1237,7 +1237,7 @@ _koopa_run_if_installed() {                                               # {{{1
     do
         if ! _koopa_is_installed "$arg"
         then
-            _koopa_note "'${arg}' is not installed."
+            _koopa_note "Skipping '${arg}'."
             continue
         fi
         local exe
