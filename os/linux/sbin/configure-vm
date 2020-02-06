@@ -201,16 +201,13 @@ then
     fi
 
     # Core.
-    if ! _koopa_is_docker
-    then
-        install-coreutils                                               # 0.038G
-        install-findutils
-    fi
+    install-coreutils                                                   # 0.038G
+    install-findutils                                                   # 0.005G
 
     # Shells.
+    install-bash                                                        # 0.014G
     if ! _koopa_is_docker
     then
-        install-bash                                                    # 0.014G
         install-zsh                                                     # 0.011G
         install-fish                                                    # 0.082G
     fi
