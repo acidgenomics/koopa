@@ -37,16 +37,17 @@ else
     crates=("$@")
 fi
 
-_koopa_h1 "Installing Rust crates into '${CARGO_HOME}'."
+_koopa_h1 "Installing Rust cargo crates into '${CARGO_HOME}'."
+_koopa_dl "Crates" "$(_koopa_to_string "${crates[@]}")"
 
-names="$(_koopa_to_string "${crates[@]}")"
-_koopa_info "Crates: ${names}."
+(
+    set -o xtrace
+    _koopa_prefix_chown_user "$CARGO_HOME"
+    for crate in "${crates[@]}"
+    do
+        cargo install "$crate"
+    done
+    _koopa_set_permissions "$CARGO_HOME"
+) &> "$(_koopa_tmp_log_file)"
 
-_koopa_prefix_chown_user "$CARGO_HOME"
-
-for crate in "${crates[@]}"
-do
-    cargo install "$crate"
-done
-
-_koopa_set_permissions "$CARGO_HOME"
+_koopa_success "Installation of Rust cargo crates was successful."
