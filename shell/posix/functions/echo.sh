@@ -180,6 +180,15 @@ _koopa_echo_white_bold() {                                                # {{{1
 
 
 
+_koopa_coffee_time() {                                                    # {{{1
+    # """
+    # Coffee time.
+    # Updated 2020-02-06.
+    # """
+    _koopa_note "This script takes a while. Time for a coffee! ☕☕"
+    return 0
+}
+
 _koopa_dl() {
     # """
     # Koopa definition list.

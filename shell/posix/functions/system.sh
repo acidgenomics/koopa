@@ -959,3 +959,26 @@ _koopa_variable() {                                                       # {{{1
         | head -n 1 \
         | cut -d "\"" -f 2
 }
+
+_koopa_view_latest_tmp_log_file() {                                       # {{{1
+    # """
+    # View the latest temporary log file.
+    # Updated 2020-02-06.
+    # """
+    local dir
+    dir="${TMPDIR:-/tmp}"
+    local log_file
+    log_file="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type f \
+            -name "koopa-$(id -u)-*" \
+            | sort \
+            | tail -n 1 \
+    )"
+    [ -f "$log_file" ] || return 1
+    _koopa_h1 "Viewing '${log_file}'."
+    less "$log_file"
+    return 0
+}
