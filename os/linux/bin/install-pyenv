@@ -23,4 +23,5 @@ _koopa_prefix_mkdir "$prefix"
 
 _koopa_set_permissions "$prefix"
 
+_koopa_success "Installation of pyenv was successful."
 _koopa_note "Restart the shell to complete installation of pyenv."
