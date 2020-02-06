@@ -34,7 +34,8 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     # This is now erroring on RHEL 7.7:
     # > make --jobs="$jobs" all doc info
     # > make install install-doc install-html install-info
-    make --jobs="$jobs"
+    # NO_GETTEXT=YesPlease
+    make --jobs="$jobs" V=1
     make install
 )
 
