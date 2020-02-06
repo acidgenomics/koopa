@@ -32,13 +32,14 @@ _koopa_prefix_mkdir "$app_prefix"
 _koopa_prefix_mkdir "$cellar_prefix"
 
 (
+    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
     _koopa_download "https://github.com/junegunn/fzf/archive/${file}"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     make --jobs="$jobs"
-    make test
+    # > make test
     # This will copy fzf binary from 'target/' to 'bin/' inside tmp dir.
     # Note that this step does not copy to '/usr/bin/'.
     make install
@@ -47,7 +48,7 @@ _koopa_prefix_mkdir "$cellar_prefix"
     # Following approach used in Homebrew recipe here.
     rm -fr .[[:alnum:]]* src target
     cp -rv . "$app_prefix"
-) &> $(_koopa_tmp_log_file)
+) &> "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

@@ -9,7 +9,14 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed pip3 pipx python3
 
+_koopa_h1 "Updating pipx."
+
 update-pip
 
-# The '--upgrade' flag is no longer needed when using '--force-reinstall'.
-python3 -m pip install --force-reinstall pipx
+(
+    set -o xtrace
+    # The '--upgrade' flag is no longer needed when using '--force-reinstall'.
+    python3 -m pip install --force-reinstall pipx
+) &> "$(_koopa_tmp_log_file)"
+
+_koopa_success "Update of pipx was successful."
