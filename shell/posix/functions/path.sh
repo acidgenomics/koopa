@@ -178,19 +178,39 @@ _koopa_list_path_priority() {                                             # {{{1
     # Split PATH string by ':' delim into lines.
     # Updated 2019-10-27.
     #
-    # Bash parameter expansion:
-    # > echo "${PATH//:/$'\n'}"
+    # Note that we're using awk approach here because it is shell agnostic.
     #
-    # Can generate a unique PATH string with:
-    # > _koopa_list_path_priority \
-    # >     | tac \
-    # >     | awk '!a[$0]++' \
-    # >     | tac
+    # Bash here string parsing approach (non-POSIX):
+    # Refer to heredoc format in 'man bash' for details.
+    # > tr ':' '\n' <<< "$str"
+    #
+    # Bash parameter expansion approach:
+    # > echo "${PATH//:/$'\n'}"
     #
     # see also:
     # - https://askubuntu.com/questions/600018
+    # - https://stackoverflow.com/questions/26849247
+    # - https://www.gnu.org/software/gawk/manual/html_node/String-Functions.html
+    # - https://www.unix.com/shell-programming-and-scripting/
+    #       77199-splitting-string-awk.html
     # """
-    tr ':' '\n' <<< "${1:-$PATH}"
+    _koopa_assert_is_installed awk
+    local str
+    str="${1:-$PATH}"
+    echo "$str"| \
+        awk '{split($0,array,":")} END { for (i in array) print array[i] }'
+}
+
+_koopa_list_path_priority_unique() {                                      # {{{1
+    # """
+    # Split PATH string by ':' delim into lines but only return uniques.
+    # Updated 2020-02-06.
+    # """
+    _koopa_assert_is_installed awk tac
+    _koopa_list_path_priority "$@" \
+        | tac \
+        | awk '!a[$0]++' \
+        | tac
 }
 
 _koopa_remove_from_fpath() {                                              # {{{1
