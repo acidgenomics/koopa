@@ -22,19 +22,20 @@ _koopa_prefix_mkdir "$cellar_prefix"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
+    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="go${version}.linux-amd64.tar.gz"
     url="https://dl.google.com/go/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cp -rv go/* "${app_prefix}/."
-)
+) &> "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
 _koopa_set_permissions "$app_prefix"
 
-_koopa_h1 "Linking from '${app_prefix}' into '${cellar_prefix}'."
+_koopa_h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
 cp -frsv \
     "${app_prefix}/bin" \
     "${cellar_prefix}/."
@@ -44,7 +45,7 @@ _koopa_link_cellar "$name" "$version"
 # Need to create directory expected by GOROOT environment variable.
 # If this doesn't exist, Go will currently error.
 goroot="/usr/local/go"
-_koopa_h1 "Linking GOROOT directory at '${goroot}'."
+_koopa_h2 "Linking GOROOT directory at '${goroot}'."
 ln -fnsv "$app_prefix" "$goroot"
 
 # > go env GOROOT

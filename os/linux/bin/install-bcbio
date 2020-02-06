@@ -63,6 +63,7 @@ _koopa_h2 "Saving install log at '${log_file}'."
 mkdir -pv "$log_dir"
 
 (
+    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
@@ -78,7 +79,7 @@ mkdir -pv "$log_dir"
         --nodata \
         --isolate \
         2>&1 | tee "$log_file"
-)
+) &> "$(_koopa_tmp_log_file)"
 
 # > _koopa_h1 "Fixing MACS2/numpy issue."
 # > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
@@ -93,3 +94,5 @@ mkdir -pv "$log_dir"
 # > _koopa_chgrp "$prefix"
 
 _koopa_set_permissions "$prefix"
+
+_koopa_success "Installation of bcbio-nextgen was successful."
