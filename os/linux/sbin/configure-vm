@@ -280,7 +280,7 @@ then
     install-conda                                                       # 0.493G
     if [[ "$docker" -eq 0 ]]
     then
-        _koopa_is_installed install-docker && install-docker
+        _koopa_run_if_installed install-docker
         install-perlbrew                                                # 0.003G
         install-pyenv                                                   # 0.009G
         install-rbenv                                                   # 0.006G

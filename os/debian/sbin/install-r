@@ -13,6 +13,8 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_exit_if_installed R
 
+_koopa_h1 "Installing R."
+
 # Import GPG signing keys for apt repositories.
 # > _koopa_apt_import_keys
 
