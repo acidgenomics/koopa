@@ -63,6 +63,17 @@ _koopa_apt_enable_deb_src() {                                             # {{{1
     return 0
 }
 
+_koopa_apt_enabled_repos() {                                              # {{{1
+    # """
+    # Get a list of enabled default apt repos.
+    # Updated 2020-02-07.
+    # """
+    grep -E '^deb ' /etc/apt/sources.list \
+        | cut -d ' ' -f 4 \
+        | awk '!a[$0]++' \
+        | sort
+}
+
 _koopa_apt_link_sources() {                                               # {{{1
     # """
     # Symlink 'sources.list' files in '/etc/apt'.
