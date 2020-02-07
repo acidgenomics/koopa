@@ -101,6 +101,12 @@ then
         # > update-conda
         update-rust
         install-rust-crates
+        update-perlbrew
+        if _koopa_is_linux
+        then
+            update-pyenv
+            update-rbenv
+        fi
     fi
     # Update managed git repos.
     _koopa_update_git_repo "${HOME}/.emacs.d-doom"
