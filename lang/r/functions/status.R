@@ -1,3 +1,32 @@
+#' Can we output color to the console?
+#' @note Updated 2020-02-07.
+hasColor <- function() {
+    isPackage("crayon")
+}
+
+
+
+#' Return status labels, with optional color support
+#' @note Updated 2020-02-07.
+status <- function() {
+    x <- list(
+        fail = "FAIL",
+        note = "NOTE",
+        ok   = "  OK"
+    )
+    if (isTRUE(hasColor())) {
+        stopifnot(requireNamespace("crayon", quietly = TRUE))
+        x[["fail"]] <- crayon::red(x[["fail"]])
+        x[["note"]] <- crayon::yellow(x[["note"]])
+        x[["ok"]] <- crayon::green(x[["ok"]])
+    }
+    x
+}
+
+
+
+## FIXME REWORK STATUS LABEL HANDLING
+
 #' Check version
 #' @note Updated 2020-02-06.
 checkVersion <- function(
@@ -26,10 +55,17 @@ checkVersion <- function(
         isFlag(required)
     )
     eval <- match.arg(eval)
+    hasColor <- hasColor()
     if (isTRUE(required)) {
         fail <- "FAIL"
+        if (isTRUE(hasColor)) {
+            fail <- crayon::red(fail)
+        }
     } else {
         fail <- "NOTE"
+        if (isTRUE(hasColor)) {
+            fail <- crayon::red(fail)
+        }
     }
     ## Check to see if program is installed.
     if (is.na(current)) {
@@ -65,6 +101,9 @@ checkVersion <- function(
     }
     if (isTRUE(ok)) {
         status <- "  OK"
+        if (isTRUE(hasColor)) {
+            status <- crayon::green(status)
+        }
     } else {
         status <- fail
     }
@@ -84,96 +123,13 @@ checkVersion <- function(
 
 
 
-#' Current major version
-#' @note Updated 2020-02-06.
-currentMajorVersion <- function(name) {
-    x <- currentVersion(name)
-    if (!isTRUE(nzchar(x))) return(character())
-    x <- majorVersion(x)
-    x
-}
-
-
-#' Current minor version
-#' @note Updated 2020-02-06.
-currentMinorVersion <- function(name) {
-    x <- currentVersion(name)
-    if (!isTRUE(nzchar(x))) return(character())
-    x <- minorVersion(x)
-    x
-}
-
-
-
-#' Current version of installed program
-#' @note Updated 2020-02-07.
-#'
-#' Be aware that current 'Renviron.site' configuration restricts PATH so that
-#' koopa installation is not visible in R.
-#'
-#' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
-currentVersion <- function(name) {
-    stopifnot(isInstalled("koopa"))
-    tryCatch(
-        expr = system2(
-            command = "koopa",
-            args = c("get-version", name),
-            stdout = TRUE,
-            stderr = FALSE
-        ),
-        warning = function(w) {
-            character()
-        },
-        error = function(e) {
-            character()
-        }
-    )
-}
-
-
-
-#' Expected major version
-#' @note Updated 2020-02-06.
-expectedMajorVersion <- function(x) {
-    x <- expectedVersion(x)
-    x <- majorVersion(x)
-    x
-}
-
-
-
-#' Expected minor version
-#' @note Updated 2020-02-06.
-expectedMinorVersion <- function(x) {
-    x <- expectedVersion(x)
-    stopifnot(isTRUE(grepl("\\.", x)))
-    x <- minorVersion(x)
-    x
-}
-
-
-
-#' Expected version
-#' @note Updated 2020-02-06.
-expectedVersion <- function(x) {
-    keep <- grepl(pattern = paste0("^", x, "="), x = variables)
-    stopifnot(sum(keep, na.rm = TRUE) == 1L)
-    x <- variables[keep]
-    stopifnot(isTRUE(nzchar(x)))
-    x <- sub(
-        pattern = "^(.+)=\"(.+)\"$",
-        replacement = "\\2",
-        x = x
-    )
-    x
-}
-
-
+## FIXME REWORK STATUS LABEL HANDLING
 
 #' Does the system have GNU coreutils installed?
 #' @note Updated 2020-02-06.
-hasGNUCoreutils <- function(command = "env") {
-    status <- "FAIL"
+checkGNUCoreutils <- function(command = "env") {
+    stopifnot(isCommand(command))
+    hasColor <- hasColor()
     x <- tryCatch(
         expr = system2(
             command = command,
@@ -185,11 +141,18 @@ hasGNUCoreutils <- function(command = "env") {
             NULL
         }
     )
+    status <- "FAIL"
+    if (isTRUE(hasColor)) {
+        status <- crayon::red(status)
+    }
     if (!is.null(x)) {
         x <- head(x, n = 1L)
-        x <- grepl("GNU", x)
+        x <- grepl(pattern = "GNU", x = x)
         if (isTRUE(x)) {
             status <- "  OK"
+            if (isTRUE(hasColor)) {
+                status <- crayon::green(status)
+            }
         }
     }
     message(sprintf(
@@ -204,6 +167,8 @@ hasGNUCoreutils <- function(command = "env") {
 
 
 
+## FIXME REWORK STATUS LABEL HANDLING
+
 #' Program installation status
 #' @note Updated 2020-02-06.
 installed <- function(which, required = TRUE, path = TRUE) {
@@ -212,11 +177,25 @@ installed <- function(which, required = TRUE, path = TRUE) {
         isFlag(required),
         isFlag(path)
     )
-    if (isTRUE(required)) {
-        fail <- "FAIL"
-    } else {
-        fail <- "NOTE"
+    hasColor <- hasColor()
+
+    ## FIXME Convert this to a function...put into a list.
+    statusOK <- "  OK"
+    if (isTRUE(hasColor)) {
+        statusOK <- crayon::green(statusOK)
     }
+    if (isTRUE(required)) {
+        statusFail <- "FAIL"
+        if (isTRUE(hasColor)) {
+            statusFail <- crayon::red(statusFail)
+        }
+    } else {
+        statusNote <- "NOTE"
+        if (isTRUE(hasColor)) {
+            fail <- crayon::yellow(fail)
+        }
+    }
+
     invisible(vapply(
         X = which,
         FUN = function(which) {
@@ -240,54 +219,4 @@ installed <- function(which, required = TRUE, path = TRUE) {
         },
         FUN.VALUE = logical(1L)
     ))
-}
-
-
-
-#' Is a program installed?
-#' @note Updated 2020-02-06.
-isInstalled <- function(which) {
-    nzchar(Sys.which(which))
-}
-
-
-
-#' Major version
-#' @note Updated 2020-02-06.
-majorVersion <- function(x) {
-    strsplit(x, split = "\\.")[[1L]][[1L]]
-}
-
-
-
-#' Minor version
-#' @note Updated 2020-02-06.
-minorVersion <- function(x) {
-    x <- strsplit(x, split = "\\.")[[1L]]
-    x <- paste(x[seq_len(2L)], collapse = ".")
-    x
-}
-
-
-
-#' Sanitize program version
-#' @note Updated 2020-02-07.
-#'
-#' Sanitize complicated verions:
-#' - 2.7.15rc1 to 2.7.15
-#' - 1.10.0-patch1 to 1.10.0
-#' - 1.0.2k-fips to 1.0.2
-sanitizeVersion <- function(x) {
-    ## Strip trailing "+" (e.g. "Python 2.7.15+").
-    x <- sub("\\+$", "", x)
-    ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
-    x <- gsub("\"", "", x)
-    ## Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
-    x <- sub("(-|_).+$", "", x)
-    x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
-    ## Strip leading letter.
-    x <- sub("^[a-z]+", "", x)
-    ## Strip trailing letter.
-    x <- sub("[a-z]+$", "", x)
-    x
 }
