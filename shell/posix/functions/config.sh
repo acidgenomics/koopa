@@ -371,7 +371,7 @@ _koopa_link_r_site_library() {                                            # {{{1
     local r_home
     r_home="$(_koopa_r_home)"
     local version
-    version="$(_koopa_current_version r)"
+    version="$(_koopa_r_version)"
     local minor_version
     minor_version="$(_koopa_minor_version "$version")"
     local app_prefix
