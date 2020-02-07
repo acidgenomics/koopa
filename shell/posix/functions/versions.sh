@@ -24,9 +24,9 @@ _koopa_os_version() {                                                     # {{{1
     # """
     if _koopa_is_macos
     then
-        _koopa_current_version macos
+        _koopa_macos_version
     else
-        uname -r
+        _koopa_linux_version
     fi
 }
 
@@ -62,10 +62,11 @@ _koopa_get_macos_app_version() {                                          # {{{1
 _koopa_github_latest_release() {                                          # {{{1
     # """
     # Get the latest release version from GitHub.
-    # Updated 2020-01-12.
+    # Updated 2020-02-07.
     #
     # Example: _koopa_github_latest_release "acidgenomics/koopa"
     # """
+    _koopa_assert_is_installed curl
     local repo
     repo="${1:?}"
     curl -s "https://github.com/${repo}/releases/latest" 2>&1 \
@@ -148,6 +149,7 @@ _koopa_bcbio_nextgen_current_version() {                                  # {{{1
     # Alternate approach:
     # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
     # """
+    _koopa_assert_is_installed curl
     local url
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
 /master/requirements-conda.txt"
@@ -156,8 +158,9 @@ _koopa_bcbio_nextgen_current_version() {                                  # {{{1
         | cut -d '=' -f 2
 }
 
-_koopa_version_bcl2fastq() {
+_koopa_bcl2fastq_version() {                                              # {{{1
     # """
+    # bcl2fastq version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed bcl2fastq || return 1
@@ -167,16 +170,18 @@ _koopa_version_bcl2fastq() {
         | sed 's/^v//'
 }
 
-_koopa_version_bioconductor() {
+_koopa_bioconductor_version() {                                           # {{{1
     # """
+    # Bioconductor version.
     # @note Updated 2020-02-07.
     # """
-    _koopa_is_installed Rscript || return 1
+    _koopa_is_r_package_installed BiocVersion || return 1
     Rscript -e 'cat(as.character(packageVersion("BiocVersion")), "\n")'
 }
 
-_koopa_version_broot() {
+_koopa_broot_version() {                                                  # {{{1
     # """
+    # Broot version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed broot || return 1
@@ -185,8 +190,9 @@ _koopa_version_broot() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_cargo() {
+_koopa_cargo_version() {                                                  # {{{1
     # """
+    # Cargo version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed cargo || return 1
@@ -195,8 +201,9 @@ _koopa_version_cargo() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_clang() {
+_koopa_clang_version() {                                                  # {{{1
     # """
+    # Clang compiler version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed clang || return 1
@@ -205,8 +212,9 @@ _koopa_version_clang() {
         | cut -d ' ' -f 4
 }
 
-_koopa_version_conda() {
+_koopa_conda_version() {                                                  # {{{1
     # """
+    # Conda version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed conda || return 1
@@ -215,8 +223,9 @@ _koopa_version_conda() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_coreutils() {
+_koopa_coreutils_version() {                                              # {{{1
     # """
+    # GNU coreutils version.
     # @note Updated 2020-02-07.
     # """
     env --version \
@@ -225,8 +234,9 @@ _koopa_version_coreutils() {
         | cut -d '(' -f 1
 }
 
-_koopa_version_docker() {
+_koopa_docker_version() {                                                 # {{{1
     # """
+    # Docker version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed docker || return 1
@@ -236,8 +246,9 @@ _koopa_version_docker() {
         | cut -d ',' -f 1
 }
 
-_koopa_version_emacs() {
+_koopa_emacs_version() {                                                  # {{{1
     # """
+    # Emacs version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed emacs || return 1
@@ -246,8 +257,9 @@ _koopa_version_emacs() {
         | cut -d ' ' -f 3
 }
 
-_koopa_version_exa() {
+_koopa_exa_version() {                                                    # {{{1
     # """
+    # Exa version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed exa || return 1
@@ -422,6 +434,15 @@ _koopa_version_julia() {
         | cut -d ' ' -f 3
 }
 
+_koopa_linux_version() {                                                  # {{{1
+    # """
+    # Linux version.
+    # @note Updated 2020-02-07.
+    # """
+    _koopa_is_linux || return 1
+    uname -r
+}
+
 _koopa_version_llvm() {
     # """
     # @note Updated 2020-02-07.
@@ -465,8 +486,9 @@ _koopa_version_luarocks() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_macos() {
+_koopa_macos_version() {                                                  # {{{1
     # """
+    # macOS version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_macos || return 1
