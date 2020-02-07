@@ -754,7 +754,7 @@ _koopa_os_string() {                                                      # {{{1
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
         id="macos"
-        version="$(_koopa_current_version "$id")"
+        version="$(_koopa_get_version "$id")"
         version="$(_koopa_minor_version "$version")"
     elif _koopa_is_linux
     then

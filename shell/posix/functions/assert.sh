@@ -925,7 +925,7 @@ _koopa_is_conda_active() {                                                # {{{1
 _koopa_is_current_version() {                                             # {{{1
     # """
     # Is the installed program current?
-    # Updated 2020-01-26.
+    # Updated 2020-02-07.
     # """
     local app
     app="${1:?}"
@@ -933,7 +933,7 @@ _koopa_is_current_version() {                                             # {{{1
     expected="$(_koopa_variable "$app")"
     echo "$expected"
     local actual
-    actual="$(_koopa_current_version "$app")"
+    actual="$(_koopa_get_version "$app")"
     echo "$actual"
     [ "$actual" == "$expected" ]
 }
