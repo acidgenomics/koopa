@@ -11,6 +11,21 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 # > perlbrew available
 # """
 
+all=0
+
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
 prefix="$(_koopa_perlbrew_prefix)"
 _koopa_exit_if_dir "$prefix"
 
@@ -64,19 +79,22 @@ fi
 # Install latest Perl                                                       {{{1
 # ==============================================================================
 
-perls=(
-    "perl-$(_koopa_variable ensembl-perl)"
-    "perl-$(_koopa_variable perl)"
-)
-installed="$(perlbrew list)"
-for perl in "${perls[@]}"
-do
-    _koopa_is_matching_fixed "$installed" "$perl" && continue
-    _koopa_h2 "Installing '${perl}'."
-    _koopa_coffee_time
-    perlbrew install "$perl"
-    _koopa_success "Installation of '${perl}' was successful."
-done
+if [[ "$all" -eq 1 ]]
+then
+    perls=(
+        "perl-$(_koopa_variable ensembl-perl)"
+        "perl-$(_koopa_variable perl)"
+    )
+    installed="$(perlbrew list)"
+    for perl in "${perls[@]}"
+    do
+        _koopa_is_matching_fixed "$installed" "$perl" && continue
+        _koopa_h2 "Installing '${perl}'."
+        _koopa_coffee_time
+        perlbrew install "$perl"
+        _koopa_success "Installation of '${perl}' was successful."
+    done
+fi
 
 _koopa_success "Installation of Perlbrew was successful."
 _koopa_note "Restart the shell to complete activation."
