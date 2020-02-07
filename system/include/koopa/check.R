@@ -308,7 +308,7 @@ if (isTRUE(extra)) {
 
 ## Basic dependencies ==========================================================
 message("\nBasic dependencies:")
-hasGNUCoreutils()
+checkGNUCoreutils()
 installed(
     which = c(
         ## "[",

@@ -70,7 +70,7 @@ _koopa_github_latest_release() {                                          # {{{1
     local repo
     repo="${1:?}"
     curl -s "https://github.com/${repo}/releases/latest" 2>&1 \
-        | grep -Eo '/tag/[.0-9v]+' \
+        | grep -Eo '/tag/[-_.A-Za-z0-9]+' \
         | cut -d '/' -f 3 \
         | sed 's/^v//'
 }
@@ -269,8 +269,9 @@ _koopa_exa_version() {                                                    # {{{1
         | sed 's/^v//'
 }
 
-_koopa_version_fd() {
+_koopa_fd_version() {                                                     # {{{1
     # """
+    # fd version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed fd || return 1
@@ -279,8 +280,9 @@ _koopa_version_fd() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_fish() {
+_koopa_version_fish() {                                                   # {{{1
     # """
+    # Fish version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed fish | return 1
@@ -289,8 +291,9 @@ _koopa_version_fish() {
         | cut -d ' ' -f 3
 }
 
-_koopa_version_fzf() {
+_koopa_version_fzf() {                                                    # {{{1
     # """
+    # fzf version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed fzf || return 1
@@ -299,9 +302,15 @@ _koopa_version_fzf() {
         | cut -d ' ' -f 1
 }
 
-_koopa_version_gcc() {
+_koopa_gcc_version() {                                                    # {{{1
     # """
+    # GCC version.
     # @note Updated 2020-02-07.
+    #
+    # Old macOS-specific approach:
+    # > gcc --version 2>&1 \
+    # >     | sed -n '2p' \
+    # >     | cut -d ' ' -f 4
     # """
     _koopa_is_installed gcc || return 1
     gcc --version \
@@ -310,20 +319,9 @@ _koopa_version_gcc() {
         | head -n 1
 }
 
-# FIXME Previously labeled with darwin.
-_koopa_version_gcc_macos() {
+_koopa_gdal_version() {                                                   # {{{1
     # """
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_is_macos || return 1
-    _koopa_is_installed gcc || return 1
-    gcc --version 2>&1 \
-        | sed -n '2p' \
-        | cut -d ' ' -f 4
-}
-
-_koopa_version_gdal() {
-    # """
+    # GDAL version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed gdalinfo || return 1
@@ -333,16 +331,18 @@ _koopa_version_gdal() {
         | tr -d ','
 }
 
-_koopa_version_geos() {
+_koopa_geos_version() {                                                   # {{{1
     # """
+    # GEOS version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed geos-config || return 1
     geos-config --version
 }
 
-_koopa_version_git() {
+_koopa_git_version() {                                                    # {{{1
     # """
+    # Git version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed git || return 1
@@ -351,8 +351,9 @@ _koopa_version_git() {
         | cut -d ' ' -f 3
 }
 
-_koopa_version_gnupg() {
+_koopa_gnupg_version() {                                                  # {{{1
     # """
+    # GnuPG version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed gpg || return 1
@@ -361,8 +362,9 @@ _koopa_version_gnupg() {
         | cut -d ' ' -f 3
 }
 
-_koopa_version_go() {
+_koopa_go_version() {                                                     # {{{1
     # """
+    # Go version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed go || return 1
@@ -371,8 +373,9 @@ _koopa_version_go() {
         | cut -c 3-
 }
 
-_koopa_version_gsl() {
+_koopa_gsl_version() {                                                    # {{{1
     # """
+    # GSL version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed gsl-config || return 1
@@ -380,8 +383,9 @@ _koopa_version_gsl() {
         | head -n 1
 }
 
-_koopa_version_hdf5() {
+_koopa_version_hdf5() {                                                   # {{{1
     # """
+    # HDF5 version.
     # @note Updated 2020-02-07.
     #
     # Debian: 'dpkg -s libhdf5-dev'
@@ -392,8 +396,9 @@ _koopa_version_hdf5() {
         | sed -E 's/^(.+): //'
 }
 
-_koopa_version_homebrew() {
+_koopa_homebrew_version() {                                               # {{{1
     # """
+    # Homebrew version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed homebrew || return 1
@@ -403,8 +408,9 @@ _koopa_version_homebrew() {
         | cut -d '-' -f 1
 }
 
-_koopa_version_htop() {
+_koopa_htop_version() {                                                   # {{{1
     # """
+    # htop version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed htop || return 1
@@ -413,8 +419,9 @@ _koopa_version_htop() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_java() {
+_koopa_java_version() {                                                   # {{{1
     # """
+    # Java version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed java || return 1
@@ -424,8 +431,9 @@ _koopa_version_java() {
         | sed -e 's/\"//g'
 }
 
-_koopa_version_julia() {
+_koopa_julia_version() {                                                  # {{{1
     # """
+    # Julia version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed julia || return 1
@@ -443,8 +451,9 @@ _koopa_linux_version() {                                                  # {{{1
     uname -r
 }
 
-_koopa_version_llvm() {
+_koopa_llvm_version() {                                                   # {{{1
     # """
+    # LLVM version.
     # @note Updated 2020-02-07.
     #
     # Note that 'llvm-config' is versioned on most systems.
@@ -453,8 +462,9 @@ _koopa_version_llvm() {
     "$LLVM_CONFIG" --version
 }
 
-_koopa_lmod_version() {
+_koopa_lmod_version() {                                                   # {{{1
     # """
+    # Lmod version.
     # @note Updated 2020-02-07.
     #
     # Alterate approach:
@@ -466,8 +476,9 @@ _koopa_lmod_version() {
     echo "$LMOD_VERSION"
 }
 
-_koopa_version_lua() {
+_koopa_lua_version() {                                                    # {{{1
     # """
+    # Lua version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed lua || return 1
@@ -476,8 +487,9 @@ _koopa_version_lua() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_luarocks() {
+_koopa_luarocks_version() {                                               # {{{1
     # """
+    # Luarocks version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed luarocks || return 1
@@ -495,8 +507,9 @@ _koopa_macos_version() {                                                  # {{{1
     sw_vers -productVersion
 }
 
-_koopa_version_neofetch() {
+_koopa_neofetch_version() {                                               # {{{1
     # """
+    # Neofetch version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed neofetch || return 1
@@ -505,8 +518,9 @@ _koopa_version_neofetch() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_neovim() {
+_koopa_neovim_version() {                                                 # {{{1
     # """
+    # Neovim version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed nvim || return 1
@@ -516,8 +530,9 @@ _koopa_version_neovim() {
         | sed 's/^v//'
 }
 
-_koopa_version_openssl() {
+_koopa_openssl_version() {                                                # {{{1
     # """
+    # OpenSSL version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed openssl || return 1
@@ -527,8 +542,9 @@ _koopa_version_openssl() {
         | cut -d '-' -f 1
 }
 
-_koopa_version_oracle_instantclient() {
+_koopa_oracle_instantclient_version() {                                   # {{{1
     # """
+    # Oracle InstantClient version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed sqlplus || return 1
@@ -538,8 +554,9 @@ _koopa_version_oracle_instantclient() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_pandoc() {
+_koopa_pandoc_version() {                                                 # {{{1
     # """
+    # Pandoc version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed pandoc || return 1
@@ -548,8 +565,9 @@ _koopa_version_pandoc() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_perl_file_rename() {
+_koopa_perl_file_rename_version() {                                       # {{{1
     # """
+    # Perl File::Rename version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed rename || return 1
@@ -559,8 +577,9 @@ _koopa_version_perl_file_rename() {
     echo "$x" | cut -d ' ' -f 5
 }
 
-_koopa_version_perl() {
+_koopa_perl_version() {                                                   # {{{1
     # """
+    # Perl version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed perl || return 1
@@ -570,8 +589,9 @@ _koopa_version_perl() {
         | sed 's/^v//'
 }
 
-_koopa_version_perlbrew() {
+_koopa_perlbrew_version() {                                               # {{{1
     # """
+    # Perlbrew version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed perlbrew || return 1
@@ -581,8 +601,9 @@ _koopa_version_perlbrew() {
         | cut -d '/' -f 2
 }
 
-_koopa_version_pip() {
+_koopa_pip_version() {                                                    # {{{1
     # """
+    # pip version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed pip3 || return 1
@@ -591,8 +612,9 @@ _koopa_version_pip() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_pipx() {
+_koopa_pipx_version() {                                                   # {{{1
     # """
+    # pipx version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed pipx || return 1
@@ -600,8 +622,9 @@ _koopa_version_pipx() {
         | head -n 1
 }
 
-_koopa_version_proj() {
+_koopa_proj_version() {                                                   # {{{1
     # """
+    # PROJ version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed proj || return 1
@@ -611,8 +634,9 @@ _koopa_version_proj() {
         | tr -d ','
 }
 
-_koopa_version_pyenv() {
+_koopa_pyenv_version() {                                                  # {{{1
     # """
+    # pyenv version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed pyenv || return 1
@@ -622,8 +646,9 @@ _koopa_version_pyenv() {
         | cut -d '-' -f 1
 }
 
-_koopa_version_python() {
+_koopa_python_version() {                                                 # {{{1
     # """
+    # Python version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed python3 || return 1
@@ -632,8 +657,9 @@ _koopa_version_python() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_r() {
+_koopa_r_version() {                                                      # {{{1
     # """
+    # R version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed R || return 1
@@ -642,16 +668,18 @@ _koopa_version_r() {
         | cut -d ' ' -f 3
 }
 
-_koopa_version_r_basejump() {
+_koopa_r_basejump_version() {                                             # {{{1
     # """
+    # basejump version.
     # @note Updated 2020-02-07.
     # """
-    _koopa_is_installed Rscript || return 1
+    _koopa_is_r_package_installed basejump || return 1
     Rscript -e 'cat(as.character(packageVersion("basejump")), "\n")'
 }
 
-_koopa_version_rbenv() {
+_koopa_rbenv_version() {                                                  # {{{1
     # """
+    # rbenv version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed rbenv || return 1
@@ -661,8 +689,9 @@ _koopa_version_rbenv() {
         | cut -d '-' -f 1
 }
 
-_koopa_version_ripgrep() {
+_koopa_ripgrep_version() {                                                # {{{1
     # """
+    # ripgrep version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed rg || return 1
@@ -671,8 +700,9 @@ _koopa_version_ripgrep() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_rmate() {
+_koopa_rmate_version() {                                                  # {{{1
     # """
+    # rmate version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed rmate || return 1
@@ -681,8 +711,9 @@ _koopa_version_rmate() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_rstudio_server() {
+_koopa_rstudio_server_version() {                                         # {{{1
     # """
+    # RStudio Server version.
     # @note Updated 2020-02-07.
     #
     # Note that final step removes '-N' patch, which only applies to
@@ -695,8 +726,9 @@ _koopa_version_rstudio_server() {
         | cut -d '-' -f 1
 }
 
-_koopa_version_ruby() {
+_koopa_ruby_version() {                                                   # {{{1
     # """
+    # Ruby version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed ruby || return 1
@@ -706,8 +738,9 @@ _koopa_version_ruby() {
         | cut -d 'p' -f 1
 }
 
-_koopa_version_rust() {
+_koopa_rust_version() {                                                   # {{{1
     # """
+    # Rust version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed rustc || return 1
@@ -716,8 +749,9 @@ _koopa_version_rust() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_rustup() {
+_koopa_rustup_version() {                                                 # {{{1
     # """
+    # rustup version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed rustup || return 1
@@ -726,8 +760,9 @@ _koopa_version_rustup() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_shellcheck() {
+_koopa_shellcheck_version() {                                             # {{{1
     # """
+    # ShellCheck version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed shellcheck || return 1
@@ -736,8 +771,9 @@ _koopa_version_shellcheck() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_shiny_server() {
+_koopa_shiny_server_version() {                                           # {{{1
     # """
+    # Shiny Server version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed shiny-server || return 1
@@ -747,16 +783,18 @@ _koopa_version_shiny_server() {
         | sed 's/^v//'
 }
 
-_koopa_version_singularity() {
+_koopa_singularity_version() {                                            # {{{1
     # """
+    # Singularity version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed singularity || return 1
     singularity version
 }
 
-_koopa_version_sqlite() {
+_koopa_sqlite_version() {                                                 # {{{1
     # """
+    # SQLite version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed sqlite3 || return 1
@@ -765,8 +803,9 @@ _koopa_version_sqlite() {
         | cut -d ' ' -f 1
 }
 
-_koopa_version_tex() {
+_koopa_tex_version() {                                                    # {{{1
     # """
+    # TeX version.
     # @note Updated 2020-02-07.
     #
     # We're checking the TeX Live release year here.
@@ -782,8 +821,9 @@ _koopa_version_tex() {
         | cut -d '/' -f 1
 }
 
-_koopa_version_the_silver_searcher() {
+_koopa_the_silver_searcher_version() {                                    # {{{1
     # """
+    # The Silver Searcher (Ag) version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed ag || return 1
@@ -792,8 +832,9 @@ _koopa_version_the_silver_searcher() {
         | cut -d ' ' -f 3
 }
 
-_koopa_version_tmux() {
+_koopa_tmux_version() {                                                   # {{{1
     # """
+    # Tmux version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed tmux || return 1
@@ -802,8 +843,9 @@ _koopa_version_tmux() {
         | cut -d ' ' -f 2
 }
 
-_koopa_version_vim() {
+_koopa_vim_version() {                                                    # {{{1
     # """
+    # Vim version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed vim || return 1
@@ -829,8 +871,9 @@ _koopa_version_vim() {
     echo "$version"
 }
 
-_koopa_version_zsh() {
+_koopa_zsh_version() {                                                    # {{{1
     # """
+    # Zsh version.
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed zsh || return 1
