@@ -149,7 +149,7 @@ pandoc="2.7.3"
 perl="5.30.1"
 
 # https://perlbrew.pl/
-perlbrew="0.87"
+perlbrew="0.88"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
