@@ -158,7 +158,6 @@ done
                                           # |   w/o deps |    w/ deps | n deps |
 pkgs=(                                    # | ---------- | ---------- | ------ |
     apt-listchanges                       # |         NA |         NA |     NA |
-    apt-transport-https                   # |         NA |         NA |     NA |
     apt-utils                             # |         NA |         NA |     NA |
     autoconf                              # |         NA |         NA |     NA |
     automake                              # |         NA |         NA |     NA |
@@ -188,23 +187,15 @@ pkgs=(                                    # | ---------- | ---------- | ------ |
     wget                                  # |     < 1 MB |       1 MB |      3 |
 )
 
-
 if _koopa_is_matching_fixed "universe" "$enabled_repos"
 then
     pkgs+=(
+        apt-transport-https
         gdebi-core
         parallel
         tree
     )
 fi
-
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-missing \
-        --no-install-recommends \
-        --quiet \
-        --yes \
-        install "${pkgs[@]}"
 
 # developer                                                                 {{{1
 # ==============================================================================
@@ -214,7 +205,7 @@ if [[ "$dev" -eq 1 ]]
 then
     _koopa_h2 "Installing developer libraries."
                                           # |   w/o deps |    w/ deps | n deps |
-    pkgs=(                                # | ---------- | ---------- | ------ |
+    pkgs+=(                               # | ---------- | ---------- | ------ |
         gettext
         libacl1-dev                       # |     < 1 MB |     < 1 MB |      1 |
         libbz2-dev                        # |     < 1 MB |      36 MB |     22 |
@@ -237,15 +228,14 @@ then
         libx11-dev                        # |       2 MB |     109 MB |    107 |
         libxml2-dev                       # |       4 MB |     330 MB |     93 |
         libz-dev # zlib1g-dev             # |     < 1 MB |         NA |    174 |
-        tcl-dev
     )
-    sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get \
-            --fix-missing \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            install "${pkgs[@]}"
+
+    if _koopa_is_matching_fixed "universe" "$enabled_repos"
+    then
+        pkgs+=(
+            tcl-dev
+        )
+    fi
 fi
 
 # extra                                                                     {{{1
@@ -255,7 +245,7 @@ if [[ "$extra" -eq 1 ]]
 then
     _koopa_h2 "Installing extra recommended packages."
                                           # |   w/o deps |    w/ deps | n deps |
-    pkgs=(                                # | ---------- | ---------- | ------ |
+    pkgs+=(                               # | ---------- | ---------- | ------ |
         emacs                             # |       8 MB |     112 MB |     11 |
         firefox                           # |     202 MB |     203 MB |      9 |
         keyboard-configuration            # |       3 MB |      35 MB |     44 |
@@ -284,15 +274,15 @@ then
             texlive
         )
     fi
-
-    sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get \
-            --fix-missing \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            install "${pkgs[@]}"
 fi
+
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get \
+        --fix-missing \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install "${pkgs[@]}"
 
 # clean up                                                                  {{{1
 # ==============================================================================

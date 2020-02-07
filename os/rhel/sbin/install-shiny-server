@@ -25,7 +25,8 @@ _koopa_h1 "Installing ${name} ${version}."
     url="https://download3.rstudio.org/centos6.3/x86_64/${file}"
     _koopa_download "$url"
     sudo yum install -y --nogpgcheck "$file"
-    rm -fr "$tmp_dir"
 )
+
+rm -fr "$tmp_dir"
 
 _koopa_success "Installation of $name was successful."
