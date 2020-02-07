@@ -267,7 +267,7 @@ sra-tools="2.10.0"
 
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl_perl="5.26.3"
+ensembl-perl="5.26.3"
 
 
 
