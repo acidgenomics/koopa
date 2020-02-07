@@ -280,7 +280,7 @@ _koopa_fd_version() {                                                     # {{{1
         | cut -d ' ' -f 2
 }
 
-_koopa_version_fish() {                                                   # {{{1
+_koopa_fish_version() {                                                   # {{{1
     # """
     # Fish version.
     # @note Updated 2020-02-07.
@@ -291,7 +291,7 @@ _koopa_version_fish() {                                                   # {{{1
         | cut -d ' ' -f 3
 }
 
-_koopa_version_fzf() {                                                    # {{{1
+_koopa_fzf_version() {                                                    # {{{1
     # """
     # fzf version.
     # @note Updated 2020-02-07.
@@ -383,7 +383,7 @@ _koopa_gsl_version() {                                                    # {{{1
         | head -n 1
 }
 
-_koopa_version_hdf5() {                                                   # {{{1
+_koopa_hdf5_version() {                                                   # {{{1
     # """
     # HDF5 version.
     # @note Updated 2020-02-07.
