@@ -1,4 +1,5 @@
-## Updated 2020-02-06.
+#' Check version
+#' @note Updated 2020-02-06.
 checkVersion <- function(
     name,
     whichName,
@@ -83,7 +84,8 @@ checkVersion <- function(
 
 
 
-## Updated 2020-02-06.
+#' Current major version
+#' @note Updated 2020-02-06.
 currentMajorVersion <- function(name) {
     x <- currentVersion(name)
     if (!isTRUE(nzchar(x))) return(character())
@@ -92,8 +94,8 @@ currentMajorVersion <- function(name) {
 }
 
 
-
-## Updated 2020-02-06.
+#' Current minor version
+#' @note Updated 2020-02-06.
 currentMinorVersion <- function(name) {
     x <- currentVersion(name)
     if (!isTRUE(nzchar(x))) return(character())
@@ -103,19 +105,22 @@ currentMinorVersion <- function(name) {
 
 
 
-## FIXME Rework to use new function approach.
-## Updated 2020-02-06.
+#' Current version of installed program
+#' @note Updated 2020-02-07.
+#'
+#' Be aware that current 'Renviron.site' configuration restricts PATH so that
+#' koopa installation is not visible in R.
+#'
+#' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
 currentVersion <- function(name) {
-    script <- file.path(
-        Sys.getenv("KOOPA_PREFIX"),
-        "system",
-        "include",
-        "version",
-        paste0(name, ".sh")
-    )
-    stopifnot(isTRUE(file.exists(script)))
+    stopifnot(isInstalled("koopa"))
     tryCatch(
-        expr = system2(command = script, stdout = TRUE, stderr = FALSE),
+        expr = system2(
+            command = "koopa",
+            args = c("get-version", name),
+            stdout = TRUE,
+            stderr = FALSE
+        ),
         warning = function(w) {
             character()
         },
@@ -127,7 +132,8 @@ currentVersion <- function(name) {
 
 
 
-## Updated 2020-02-06.
+#' Expected major version
+#' @note Updated 2020-02-06.
 expectedMajorVersion <- function(x) {
     x <- expectedVersion(x)
     x <- majorVersion(x)
@@ -136,7 +142,8 @@ expectedMajorVersion <- function(x) {
 
 
 
-## Updated 2020-02-06.
+#' Expected minor version
+#' @note Updated 2020-02-06.
 expectedMinorVersion <- function(x) {
     x <- expectedVersion(x)
     stopifnot(isTRUE(grepl("\\.", x)))
@@ -146,7 +153,8 @@ expectedMinorVersion <- function(x) {
 
 
 
-## Updated 2020-02-06.
+#' Expected version
+#' @note Updated 2020-02-06.
 expectedVersion <- function(x) {
     keep <- grepl(pattern = paste0("^", x, "="), x = variables)
     stopifnot(sum(keep, na.rm = TRUE) == 1L)
@@ -162,7 +170,8 @@ expectedVersion <- function(x) {
 
 
 
-## Updated 2020-02-06.
+#' Does the system have GNU coreutils installed?
+#' @note Updated 2020-02-06.
 hasGNUCoreutils <- function(command = "env") {
     status <- "FAIL"
     x <- tryCatch(
@@ -195,7 +204,8 @@ hasGNUCoreutils <- function(command = "env") {
 
 
 
-## Updated 2020-02-06.
+#' Program installation status
+#' @note Updated 2020-02-06.
 installed <- function(which, required = TRUE, path = TRUE) {
     stopifnot(
         is.character(which) && !any(is.na(which)),
@@ -234,23 +244,24 @@ installed <- function(which, required = TRUE, path = TRUE) {
 
 
 
-## Updated 2020-02-06.
+#' Is a program installed?
+#' @note Updated 2020-02-06.
 isInstalled <- function(which) {
     nzchar(Sys.which(which))
 }
 
 
 
-## e.g. vim 8
-## Updated 2020-02-06.
+#' Major version
+#' @note Updated 2020-02-06.
 majorVersion <- function(x) {
     strsplit(x, split = "\\.")[[1L]][[1L]]
 }
 
 
 
-## e.g. vim 8.1
-## Updated 2020-02-06.
+#' Minor version
+#' @note Updated 2020-02-06.
 minorVersion <- function(x) {
     x <- strsplit(x, split = "\\.")[[1L]]
     x <- paste(x[seq_len(2L)], collapse = ".")
@@ -259,11 +270,13 @@ minorVersion <- function(x) {
 
 
 
-## Sanitize complicated verions:
-## - 2.7.15rc1 to 2.7.15
-## - 1.10.0-patch1 to 1.10.0
-## - 1.0.2k-fips to 1.0.2
-## Updated 2020-02-06.
+#' Sanitize program version
+#' @note Updated 2020-02-07.
+#'
+#' Sanitize complicated verions:
+#' - 2.7.15rc1 to 2.7.15
+#' - 1.10.0-patch1 to 1.10.0
+#' - 1.0.2k-fips to 1.0.2
 sanitizeVersion <- function(x) {
     ## Strip trailing "+" (e.g. "Python 2.7.15+").
     x <- sub("\\+$", "", x)
