@@ -8,15 +8,6 @@
 #' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
 currentVersion <- function(name) {
     stopifnot(isCommand("koopa"))
-    ## FIXME neofetch version check isn't working.
-    system2(
-        command = "koopa",
-        args = c("get-version", name),
-        stdout = TRUE
-    )
-    return(invisible())
-
-
     tryCatch(
         expr = system2(
             command = "koopa",
@@ -25,11 +16,9 @@ currentVersion <- function(name) {
             stderr = FALSE
         ),
         warning = function(w) {
-            print(w)
             character()
         },
         error = function(e) {
-            print(e)
             character()
         }
     )
