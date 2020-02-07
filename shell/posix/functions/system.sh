@@ -619,7 +619,7 @@ _koopa_install_pipx() {
 _koopa_link_cellar() {                                                    # {{{1
     # """
     # Symlink cellar into build directory.
-    # Updated 2020-01-23.
+    # @note Updated 2020-02-07.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -630,7 +630,13 @@ _koopa_link_cellar() {                                                    # {{{1
     # This is currently corrected in 'install-debian-base', but top-level
     # symlink checks may need to be added here in a future update.
     #
-    # Example: _koopa_link_cellar emacs 26.3
+    # @section cp flags:
+    # * -f, --force
+    # * -R, -r, --recursive
+    # * -s, --symbolic-link
+    #
+    # @examples
+    # _koopa_link_cellar emacs 26.3
     # """
     local name
     name="${1:?}"
