@@ -228,22 +228,38 @@ _koopa_cd_tmp_dir() {                                                     # {{{1
     return 0
 }
 
+
+
+
+_koopa_is_function() {
+    #' """
+    #' Check if variable is a function.
+    #' @note Updated 2020-02-07.
+    #'
+    #' @seealso
+    #' https://stackoverflow.com/questions/85880
+    #' """
+    [ "$(type -t "${1:?}")" == "function" ]
+}
+
+
+
+
 # FIXME Rework this to call the new internal functions instead.
 _koopa_current_version() {                                                # {{{1
     # """
     # Get the current version of a supported program.
     # Updated 2020-01-12.
     # """
-    local name
-    name="${1:?}"
-    local script
-    script="$(_koopa_prefix)/system/include/version/${name}.sh"
-    if [ ! -x "$script" ]
-    then
-        _koopa_stop "'${name}' is not supported."
-    fi
-    # shellcheck source=/dev/null
-    . "$script"
+    local app
+    app="${1:?}"
+
+    # FIXME Need to convert '-' and '.' to '_'.
+    local fun
+    fun="_koopa_${app}_version"
+
+    # FIXME Check if function is defined.
+    "$fun"
 }
 
 _koopa_disk_check() {                                                     # {{{1

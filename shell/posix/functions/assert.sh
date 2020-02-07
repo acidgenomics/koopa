@@ -446,6 +446,30 @@ _koopa_assert_is_root() {                                                 # {{{1
     return 0
 }
 
+_koopa_assert_is_set() {
+    # """
+    # Assert that variables are set (and not unbound).
+    # Updated 2020-02-04.
+    #
+    # Intended to use inside of functions, where we can't be sure that 'set -u'
+    # mode is set, which otherwise catches unbound variables.
+    #
+    # How to return bash variable name:
+    # - https://unix.stackexchange.com/questions/129084
+    #
+    # Example:
+    # _koopa_assert_is_set PATH MANPATH xxx
+    # """
+    for arg
+    do
+        if ! _koopa_is_set arg
+        then
+            _koopa_stop "'${arg}' is unset."
+        fi
+    done
+    return 0
+}
+
 _koopa_assert_is_symlink() {                                              # {{{1
     # """
     # Assert that input is a symbolic link.
@@ -1163,7 +1187,18 @@ _koopa_is_shared_install() {                                              # {{{1
     ! _koopa_is_local_install
 }
 
-_koopa_is_set_nounset() {                                                 # {{{1
+_koopa_is_set() {                                                         # {{{1
+    # """
+    # Is the variable set?
+    # @note Updated 2020-02-07.
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/3601515
+    # """
+    [ -n "${1+x}" ]
+}
+
+_koopa_is_setopt_nounset() {                                              # {{{1
     # """
     # Is shell running in 'nounset' variable mode?
     # Updated 2020-01-24.
