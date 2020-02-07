@@ -1,3 +1,11 @@
+#' Can we output color to the console?
+#' @note Updated 2020-02-07.
+hasColor <- function() {
+    isPackage("crayon")
+}
+
+
+
 #' Is a system command installed?
 #' @note Updated 2020-02-06.
 isCommand <- function(which) {
