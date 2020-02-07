@@ -230,6 +230,21 @@ _koopa_assert_is_file_type() {                                            # {{{1
     _koopa_assert_is_matching_regex "$file" "\.${ext}\$"
 }
 
+_koopa_assert_is_function() {                                             # {{{1
+    # """
+    # Assert that variable is a function.
+    # @note Updated 2020-02-07.
+    # """
+    for arg
+    do
+        if ! _koopa_is_function "$arg"
+        then
+            _koopa_stop "Not function: '${arg}'."
+        fi
+    done
+    return 0
+}
+
 _koopa_assert_is_git() {                                                  # {{{1
     # """
     # Assert that current directory is a git repo.
@@ -974,6 +989,17 @@ _koopa_is_file_system_case_sensitive() {                                  # {{{1
     fi
 }
 
+_koopa_is_function() {                                                    # {{{1
+    # """
+    # Check if variable is a function.
+    # @note Updated 2020-02-07.
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/85880
+    # """
+    [ "$(type -t "${1:?}")" == "function" ]
+}
+
 _koopa_is_git() {                                                         # {{{1
     # """
     # Is the current working directory a git repository?
@@ -1189,13 +1215,15 @@ _koopa_is_shared_install() {                                              # {{{1
 
 _koopa_is_set() {                                                         # {{{1
     # """
-    # Is the variable set?
+    # Is the variable set and non-empty?
     # @note Updated 2020-02-07.
+    #
+    # Passthrough of empty strings is bad practice in shell scripting.
     #
     # @seealso
     # https://stackoverflow.com/questions/3601515
     # """
-    [ -n "${1+x}" ]
+    [ -n "${1:-}" ]
 }
 
 _koopa_is_setopt_nounset() {                                              # {{{1
