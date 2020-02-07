@@ -1,3 +1,38 @@
+#' Header 1
+#' @note Updated 2020-02-07.
+h1 <- function(x) {
+    if (isTRUE(hasCli())) {
+        stopifnot(requireNamespace("cli", quietly = TRUE))
+        cli::cli_h1(x)
+    } else {
+        message(paste0("\n", x, "\n"))
+    }
+}
+
+
+
+#' Header 2
+#' @note Updated 2020-02-07.
+h2 <- function(x) {
+    if (isTRUE(hasCli())) {
+        stopifnot(requireNamespace("cli", quietly = TRUE))
+        cli::cat_line()
+        cli::cli_h2(x)
+    } else {
+        message(paste0("\n", x, ":"))
+    }
+}
+
+
+
+#' Can we use cli methods?
+#' @note Updated 2020-02-07.
+hasCli <- function() {
+    isPackage("cli")
+}
+
+
+
 #' Can we output color to the console?
 #' @note Updated 2020-02-07.
 hasColor <- function() {

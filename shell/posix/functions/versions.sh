@@ -285,8 +285,8 @@ _koopa_fish_version() {                                                   # {{{1
     # Fish version.
     # @note Updated 2020-02-07.
     # """
-    _koopa_is_installed fish | return 1
-    fish --version \
+    _koopa_is_installed fish || return 1
+    fish --version 2>&1 \
         | head -n 1 \
         | cut -d ' ' -f 3
 }
@@ -849,24 +849,26 @@ _koopa_vim_version() {                                                    # {{{1
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed vim || return 1
+    local x
+    x="$(vim --version)"
     local major
     major="$( \
-        vim --version \
+        echo "$x" \
         | head -n 1 \
         | cut -d ' ' -f 5 \
     )"
-    local patch
-    patch="$( \
-        vim --version \
-        | grep 'Included patches:' \
-        | cut -d '-' -f 2 \
-    )"
     local version
-    if [ -n "$patch" ]
+    if _koopa_is_matching_fixed "$x" "Included patches:"
     then
+        local patch
+        patch="$( \
+            echo "$x" \
+            | grep 'Included patches:' \
+            | cut -d '-' -f 2 \
+        )"
         version="${major}.${patch}"
     else
-        version="${major}"
+        version="$major"
     fi
     echo "$version"
 }
