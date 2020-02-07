@@ -291,21 +291,6 @@ _koopa_find_text() {                                                      # {{{1
     find . -name "$file_name" -exec grep -il "$pattern" {} \;;
 }
 
-_koopa_github_latest_release() {                                          # {{{1
-    # """
-    # Get the latest release version from GitHub.
-    # Updated 2020-01-12.
-    #
-    # Example: _koopa_github_latest_release "acidgenomics/koopa"
-    # """
-    local repo
-    repo="${1:?}"
-    curl -s "https://github.com/${repo}/releases/latest" 2>&1 \
-        | grep -Eo '/tag/[.0-9v]+' \
-        | cut -d '/' -f 3 \
-        | sed 's/^v//'
-}
-
 _koopa_line_count() {                                                     # {{{1
     # """
     # Return the number of lines in a file.
