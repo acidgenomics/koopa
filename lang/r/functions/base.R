@@ -59,6 +59,14 @@ isFlag <- function(x) {
 
 
 
+#' Is macOS?
+#' @note Updated 2020-02-07.
+isMacOS <- function() {
+    grepl(pattern = "darwin", x = R.Version()[["os"]])
+}
+
+
+
 #' Is string?
 #' @note Updated 2020-02-06.
 isString <- function(x) {
