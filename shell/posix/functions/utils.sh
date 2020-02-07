@@ -14,22 +14,6 @@ _koopa_array_to_r_vector() {                                              # {{{1
     printf "c(%s)\n" "$x"
 }
 
-_koopa_bcbio_version() {                                                  # {{{1
-    # """
-    # Get current bcbio-nextgen stable release version.
-    # Updated 2020-01-12.
-    #
-    # Alternate approach:
-    # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
-    # """
-    local url
-    url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
-/master/requirements-conda.txt"
-    curl --silent "$url" \
-        | grep 'bcbio-nextgen=' \
-        | cut -d '=' -f 2
-}
-
 _koopa_cpu_count() {                                                      # {{{1
     # """
     # Get the number of cores (CPUs) available.
