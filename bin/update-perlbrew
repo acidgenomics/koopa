@@ -10,4 +10,6 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed perlbrew
 
+_koopa_h1 "Updating Perlbrew."
+
 perlbrew self-upgrade
