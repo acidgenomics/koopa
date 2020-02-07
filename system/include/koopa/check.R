@@ -2,19 +2,14 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-06.
+## Updated 2020-02-07.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
 ##
-##
-## Semantic versioning:
-## https://semver.org/
-## MAJOR.MINOR.PATCH
-##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
-## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
-## ## Try: gem pristine commonmarker --version 0.17.13
+## # Ignoring commonmarker-0.17.13 because its extensions are not built.
+## # Try: gem pristine commonmarker --version 0.17.13
 ## """
 
 options(
