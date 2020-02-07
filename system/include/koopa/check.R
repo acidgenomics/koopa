@@ -23,19 +23,11 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 library(methods)
 
-h1("Checking koopa installation")
-
-
-
-## Variables ===================================================================
 koopa <- file.path(koopaPrefix, "bin", "koopa")
 stopifnot(file.exists(koopa))
 
-if (Sys.getenv("KOOPA_EXTRA") == 1L) {
-    extra <- TRUE
-} else {
-    extra <- FALSE
-}
+shell <- Sys.getenv("KOOPA_SHELL")
+stopifnot(isTRUE(nzchar(shell)))
 
 host <- system2(command = koopa, args = "host-id", stdout = TRUE)
 stopifnot(isTRUE(nzchar(host)))
@@ -43,24 +35,20 @@ stopifnot(isTRUE(nzchar(host)))
 os <- system2(command = koopa, args = "os-string", stdout = TRUE)
 stopifnot(isTRUE(nzchar(os)))
 
-shell <- Sys.getenv("KOOPA_SHELL")
-stopifnot(isTRUE(nzchar(shell)))
-
-## Determine if we're on Linux or not (i.e. macOS).
-rOSString <- R.Version()[["os"]]
-if (grepl("darwin", rOSString)) {
+macos <- isMacOS()
+if (isTRUE(macos)) {
     linux <- FALSE
 } else {
     linux <- TRUE
 }
 
-variablesFile <- file.path(
-    koopaPrefix,
-    "system",
-    "include",
-    "variables.txt"
-)
-variables <- readLines(variablesFile)
+if (Sys.getenv("KOOPA_EXTRA") == 1L) {
+    extra <- TRUE
+} else {
+    extra <- FALSE
+}
+
+h1("Checking koopa installation")
 
 
 
@@ -244,6 +232,7 @@ checkVersion(
     current = currentVersion("htop"),
     expected = expectedVersion("htop")
 )
+## FIXME This check is failing on awslabapp33...
 checkVersion(
     name = "Neofetch",
     whichName = "neofetch",
@@ -566,7 +555,7 @@ if (isTRUE(linux)) {
     ## >     current = currentVersion("perl-file-rename"),
     ## >     expected = expectedVersion("perl-file-rename")
     ## > )
-} else if (identical(os, "darwin")) {
+} else if (isTRUE(macos)) {
     h2("macOS specific")
     checkVersion(
         name = "Homebrew",

@@ -8,6 +8,15 @@
 #' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
 currentVersion <- function(name) {
     stopifnot(isCommand("koopa"))
+    ## FIXME neofetch version check isn't working.
+    system2(
+        command = "koopa",
+        args = c("get-version", name),
+        stdout = TRUE
+    )
+    return(invisible())
+
+
     tryCatch(
         expr = system2(
             command = "koopa",
@@ -16,9 +25,11 @@ currentVersion <- function(name) {
             stderr = FALSE
         ),
         warning = function(w) {
+            print(w)
             character()
         },
         error = function(e) {
+            print(e)
             character()
         }
     )
@@ -50,8 +61,15 @@ currentMinorVersion <- function(name) {
 
 ## Expected ====================================================================
 #' Expected version
-#' @note Updated 2020-02-06.
+#' @note Updated 2020-02-07.
 expectedVersion <- function(x) {
+    variablesFile <- file.path(
+        Sys.getenv("KOOPA_PREFIX"),
+        "system",
+        "include",
+        "variables.txt"
+    )
+    variables <- readLines(variablesFile)
     keep <- grepl(pattern = paste0("^", x, "="), x = variables)
     stopifnot(sum(keep, na.rm = TRUE) == 1L)
     x <- variables[keep]

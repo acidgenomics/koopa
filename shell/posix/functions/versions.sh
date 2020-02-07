@@ -511,9 +511,16 @@ _koopa_neofetch_version() {                                               # {{{1
     # """
     # Neofetch version.
     # @note Updated 2020-02-07.
+    #
+    # Neofetch currently exits with an error code, which is weird.
+    # - https://github.com/dylanaraps/neofetch/blob/master/neofetch#L5071
+    # - https://stackoverflow.com/questions/11231937/
+    #       bash-ignoring-error-for-a-particular-command
     # """
     _koopa_is_installed neofetch || return 1
-    neofetch --version \
+    local x
+    x="$(neofetch --version || true)"
+    echo "$x" \
         | head -n 1 \
         | cut -d ' ' -f 2
 }
