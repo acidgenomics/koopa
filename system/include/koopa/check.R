@@ -583,7 +583,7 @@ if (isTRUE(linux)) {
     checkVersion(
         name = "GCC",
         whichName = "gcc",
-        current = currentVersion("gcc-darwin"),
+        current = currentVersion("gcc"),
         expected = expectedVersion("clang")
     )
 }
