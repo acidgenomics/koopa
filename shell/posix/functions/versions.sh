@@ -5,7 +5,7 @@
 # FIXME Need to convert '-' to '_', maybe '.' for names.
 # FIXME Work on this in the internal koopa version functions.
 
-_koopa_version_autojump() {
+_koopa_autojump_version() {
     _koopa_is_installed autojump || return 1
     autojump --version 2>&1 \
         | head -n 1 \
@@ -13,14 +13,14 @@ _koopa_version_autojump() {
         | sed 's/^v//'
 }
 
-_koopa_version_azure_cli() {
+_koopa_azure_cli_version() {
     _koopa_is_installed az || return 1
     az --version \
         | head -n 1 \
         | grep -Eo '[0-9]\.[0-9]\.[0-9]'
 }
 
-_koopa_version_bash() {
+_koopa_bash_version() {
     _koopa_is_installed bash || return 1
     bash --version \
         | head -n 1 \
