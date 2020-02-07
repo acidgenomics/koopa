@@ -21,7 +21,9 @@ koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(isTRUE(nzchar(koopaPrefix)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-library("methods")
+library(methods)
+
+h1("Checking koopa installation")
 
 
 
@@ -63,7 +65,7 @@ variables <- readLines(variablesFile)
 
 
 ## Shells ======================================================================
-message("\nShells:")
+h2("Shells")
 checkVersion(
     name = "Bash",
     whichName = "bash",
@@ -86,7 +88,7 @@ checkVersion(
 
 
 ## Editors =====================================================================
-message("\nEditors:")
+h2("Editors")
 checkVersion(
     name = "Emacs",
     whichName = "emacs",
@@ -115,7 +117,7 @@ checkVersion(
 
 
 ## Languages ===================================================================
-message("\nPrimary languages:")
+h2("Primary languages")
 checkVersion(
     name = "Python",
     whichName = "python3",
@@ -130,7 +132,7 @@ checkVersion(
     expected = expectedVersion("r")
 )
 
-message("\nSecondary languages:")
+h2("Secondary languages")
 checkVersion(
     name = "Go",
     whichName = "go",
@@ -171,7 +173,7 @@ checkVersion(
 
 
 ## Version managers ============================================================
-message("\nVersion managers:")
+h2("Version managers")
 checkVersion(
     name = "Conda",
     whichName = "conda",
@@ -224,7 +226,7 @@ checkVersion(
 
 
 ## Tools =======================================================================
-message("\nTools:")
+h2("Tools")
 checkVersion(
     name = "Git",
     whichName = "git",
@@ -258,7 +260,7 @@ checkVersion(
 
 
 ## Shell tools =================================================================
-message("\nShell tools:")
+h2("Shell tools")
 checkVersion(
     name = "The Silver Searcher (Ag)",
     whichName = "ag",
@@ -307,7 +309,7 @@ if (isTRUE(extra)) {
 
 
 ## Basic dependencies ==========================================================
-message("\nBasic dependencies:")
+h2("Basic dependencies")
 checkGNUCoreutils()
 installed(
     which = c(
@@ -441,7 +443,7 @@ installed(
 
 
 ## Heavy dependencies ==========================================================
-message("\nHeavy dependencies:")
+h2("Heavy dependencies")
 checkVersion(
     name = "PROJ",
     whichName = "proj",
@@ -529,7 +531,7 @@ installed(
 
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
-    message("\nLinux specific:")
+    h2("Linux specific")
     ## https://gcc.gnu.org/releases.html
     checkVersion(
         name = "GCC",
@@ -565,7 +567,7 @@ if (isTRUE(linux)) {
     ## >     expected = expectedVersion("perl-file-rename")
     ## > )
 } else if (identical(os, "darwin")) {
-    message("\nmacOS specific:")
+    h2("macOS specific")
     checkVersion(
         name = "Homebrew",
         whichName = "brew",
@@ -595,7 +597,7 @@ if (
     isTRUE(linux) &&
     isTRUE(getOption("mc.cores") >= 3L)
 ) {
-    message("\nHigh performance (HPC/VM):")
+    h2("High performance")
     checkVersion(
         name = "Docker",
         whichName = "docker",
@@ -654,7 +656,7 @@ if (
 
 
 ## Python packages =============================================================
-message("\nPython pipx packages:")
+h2("Python pipx packages")
 installed(
     which = c(
         "black",
