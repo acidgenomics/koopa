@@ -57,8 +57,8 @@ case "$1" in
         _koopa_config_prefix
         exit 0
         ;;
-    current-version)
-        _koopa_current_version "${2:?}"
+    get-version)
+        _koopa_get_version "${2:?}"
         exit 0
         ;;
     header)
