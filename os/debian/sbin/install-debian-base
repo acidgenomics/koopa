@@ -160,10 +160,10 @@ legacy_pkgs=(
     libv8-dev           # unofficial
     pandoc              # unofficial
     pandoc-citeproc     # unofficial
-    parallel            # unofficial
+    parallel            # universe
     runc                # Docker legacy
     texlive             # unofficial
-    tree                # unofficial
+    tree                # universe
 )
 for pkg in "${legacy_pkgs[@]}"
 do
