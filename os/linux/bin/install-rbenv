@@ -41,5 +41,27 @@ _koopa_h2 "Installing 'ruby-build'."
 
 _koopa_set_permissions "$prefix"
 
+# Install latest Ruby                                                       {{{1
+# ==============================================================================
+
+_koopa_activate_rbenv
+
+versions=(
+    "$(_koopa_variable ruby)"
+)
+installed="$(rbenv versions)"
+
+for version in "${versions[@]}"
+do
+    _koopa_is_matching_fixed "$installed" "$version" && continue
+    _koopa_h2 "Installing Ruby ${version} via rbenv."
+    (
+        set -o xtrace
+        rbenv install "$version"
+        rbenv global "$version"
+    ) &> "$(_koopa_tmp_log_file)"
+    _koopa_success "Installation of Ruby ${version} was successful."
+done
+
 _koopa_success "Installation of rbenv was successful."
 _koopa_note "Restart the shell to complete installation of rbenv."
