@@ -15,24 +15,21 @@ _koopa_gsub() {                                                           # {{{1
     echo "$string" | sed -E "s/${pattern}/${replacement}/g"
 }
 
-_koopa_major_version() {                                                  # {{{1
+_koopa_snake_case() {                                                     # {{{1
     # """
-    # Get the major program version.
-    # Updated 2020-01-12.
+    # Simple snake case function.
+    # @note Updated 2020-02-07.
+    #
+    # @seealso Exported 'snake-case' that uses R syntactic internally.
+    #
+    # @examples
+    # _koopa_snake_case "hello world"
+    # ## hello_world
+    #
+    # _koopa_snake_case "bcbio-nextgen.py"
+    # ## bcbio_nextgen_py
     # """
-    local version
-    version="${1:?}"
-    echo "$version" | cut -d '.' -f 1
-}
-
-_koopa_minor_version() {                                                  # {{{1
-    # """
-    # Get the major program version.
-    # Updated 2020-01-12.
-    # """
-    local version
-    version="${1:?}"
-    echo "$version" | cut -d '.' -f 1-2
+    _koopa_gsub "${1:?}" "[^A-Za-z0-9_]" "_"
 }
 
 _koopa_strip_left() {                                                     # {{{1
