@@ -6,7 +6,7 @@ Genome utilities.
 import os
 import subprocess
 
-from pykoopa.sys import arg_string
+from koopa.sys import arg_string
 
 
 def _genome_version(name, *args):

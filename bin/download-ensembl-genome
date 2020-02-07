@@ -13,10 +13,15 @@ from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-sys.path.insert(0, os.getenv("KOOPA_PREFIX"))
-from pykoopa.genome import ensembl_version, tx2gene_from_fasta  # noqa
-from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import download, eprint, paste_url  # noqa
+KOOPA_PREFIX = realpath(os.path.join(__file__, "..", ".."))
+PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
+sys.path.insert(0, PYTHON_PREFIX)
+
+# FIXME Move these to separate ensembl functions file.
+
+from koopa.genome import ensembl_version, tx2gene_from_fasta  # noqa
+from koopa.syntactic import kebab_case  # noqa
+from koopa.sys import download, eprint, paste_url  # noqa
 
 # pylint: enable=wrong-import-position
 
