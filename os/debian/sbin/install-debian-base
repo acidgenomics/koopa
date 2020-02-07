@@ -145,7 +145,6 @@ legacy_pkgs=(
     docker-engine       # Docker legacy
     docker.io           # Docker legacy
     fish                # unofficial
-    gdebi-core          # unofficial
     gnutls-bin          # unofficial
     gtk-doc-tools       # unofficial
     libgdal-dev         # unofficial
@@ -160,10 +159,8 @@ legacy_pkgs=(
     libv8-dev           # unofficial
     pandoc              # unofficial
     pandoc-citeproc     # unofficial
-    parallel            # universe
     runc                # Docker legacy
     texlive             # unofficial
-    tree                # universe
 )
 for pkg in "${legacy_pkgs[@]}"
 do
@@ -187,6 +184,7 @@ pkgs=(                                    # | ---------- | ---------- | ------ |
     findutils                             # |         NA |         NA |     NA |
     gcc                                   # |         NA |         NA |     NA |
     gdb                                   # |       9 MB |      51 MB |      5 |
+    gdebi-core                            # universe
     gfortran                              # |     < 1 MB |     < 1 MB |      2 |
     git                                   # |      32 MB |      34 MB |      3 |
     gnupg                                 # |     < 1 MB |       2 MB |      8 |
@@ -195,10 +193,12 @@ pkgs=(                                    # | ---------- | ---------- | ------ |
     less                                  # |     < 1 MB |     < 1 MB |      2 |
     lsb-release                           # |         NA |         NA |     NA |
     nano                                  # |     < 1 MB |     < 1 MB |      1 |
+    parallel                              # universe
     pkg-config                            # |         NA |         NA |     NA |
     software-properties-common            # |         NA |         NA |     NA |
     sudo                                  # |         NA |         NA |     NA |
     tmux                                  # |     < 1 MB |       2 MB |      6 |
+    tree                                  # universe
     tzdata                                # |         NA |         NA |     NA |
     vim                                   # |       3 MB |      32 MB |      3 |
     wget                                  # |     < 1 MB |       1 MB |      3 |
