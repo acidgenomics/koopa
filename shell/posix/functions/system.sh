@@ -228,40 +228,6 @@ _koopa_cd_tmp_dir() {                                                     # {{{1
     return 0
 }
 
-
-
-
-_koopa_is_function() {
-    #' """
-    #' Check if variable is a function.
-    #' @note Updated 2020-02-07.
-    #'
-    #' @seealso
-    #' https://stackoverflow.com/questions/85880
-    #' """
-    [ "$(type -t "${1:?}")" == "function" ]
-}
-
-
-
-
-# FIXME Rework this to call the new internal functions instead.
-_koopa_current_version() {                                                # {{{1
-    # """
-    # Get the current version of a supported program.
-    # Updated 2020-01-12.
-    # """
-    local app
-    app="${1:?}"
-
-    # FIXME Need to convert '-' and '.' to '_'.
-    local fun
-    fun="_koopa_${app}_version"
-
-    # FIXME Check if function is defined.
-    "$fun"
-}
-
 _koopa_disk_check() {                                                     # {{{1
     # """
     # Check that disk has enough free space.
@@ -703,20 +669,6 @@ _koopa_link_cellar() {                                                    # {{{1
     return 0
 }
 
-_koopa_macos_app_version() {                                              # {{{1
-    # """
-    # Extract the version of a macOS application.
-    # Updated 2020-01-12.
-    # """
-    _koopa_assert_is_macos
-    local name
-    name="${1:?}"
-    plutil -p "/Applications/${name}.app/Contents/Info.plist" \
-        | grep CFBundleShortVersionString \
-        | awk -F ' => ' '{print $2}' \
-        | tr -d '"'
-}
-
 _koopa_mktemp() {                                                         # {{{1
     # """
     # Wrapper function for system 'mktemp'.
@@ -821,21 +773,6 @@ _koopa_os_string() {                                                      # {{{1
         string="${string}-${version}"
     fi
     echo "$string"
-}
-
-_koopa_os_version() {                                                     # {{{1
-    # """
-    # Operating system version.
-    # Updated 2020-01-13.
-    #
-    # Note that uname returns Darwin kernel version for macOS.
-    # """
-    if _koopa_is_macos
-    then
-        _koopa_current_version macos
-    else
-        uname -r
-    fi
 }
 
 _koopa_relink() {                                                         # {{{1
