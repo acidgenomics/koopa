@@ -243,6 +243,7 @@ then
     # Heavy libraries.
     if [[ "$docker" -eq 0 ]]
     then
+        install-geos
         install-sqlite                                                  # 0.026G
         install-proj                # install after sqlite              # 0.132G
         install-gdal                # requires proj, python; slow       # 0.611G
