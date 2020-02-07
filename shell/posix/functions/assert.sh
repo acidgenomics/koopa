@@ -997,7 +997,16 @@ _koopa_is_function() {                                                    # {{{1
     # @seealso
     # https://stackoverflow.com/questions/85880
     # """
-    [ "$(type -t "${1:?}")" == "function" ]
+    local fun
+    fun="${1:?}"
+    case "$(_koopa_shell)" in
+        bash)
+            [ "$(type -t "$fun")" == "function" ]
+            ;;
+        zsh)
+            _koopa_is_matching_fixed "$(type "$fun")" "is a shell function"
+            ;;
+    esac
 }
 
 _koopa_is_git() {                                                         # {{{1
