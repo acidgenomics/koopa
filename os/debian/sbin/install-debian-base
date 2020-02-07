@@ -6,6 +6,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
+# Check package source:
+# https://packages.ubuntu.com/
+#
+#
 # How to replicate installed packages across machines:
 # https://serverfault.com/questions/56848
 #
@@ -57,7 +61,6 @@ source "${script_dir}/../include/header.sh"
 # """
 
 all=0
-build_dep=0
 dev=0
 dist_upgrade=0
 extra=0
@@ -67,10 +70,6 @@ do
     case "$1" in
         --all)
             all=1
-            shift 1
-            ;;
-        --build-dep)
-            build_dep=1
             shift 1
             ;;
         --dev)
@@ -93,7 +92,6 @@ done
 
 if [[ "$all" -eq 1 ]]
 then
-    build_dep=1
     dev=1
     dist_upgrade=1
     extra=1
@@ -114,6 +112,7 @@ fi
 
 # Note that this function calls 'apt-get update'.
 _koopa_apt_link_sources
+enabled_repos="$(_koopa_apt_enabled_repos)"
 
 # dist-upgrade                                                           #  {{{1
 # ==============================================================================
@@ -138,29 +137,17 @@ _koopa_h2 "Installing default packages."
 # Clean up previous installs first, if applicable.
 apt_installed="$(sudo apt list --installed 2> /dev/null)"
 legacy_pkgs=(
-    alien               # unofficial
-    cargo               # Rust
-    containerd          # Docker legacy
-    docker              # Docker legacy
-    docker-engine       # Docker legacy
-    docker.io           # Docker legacy
-    fish                # unofficial
-    gnutls-bin          # unofficial
-    gtk-doc-tools       # unofficial
-    libgdal-dev         # unofficial
-    libgeos-dev         # unofficial
-    libgsl-dev          # unofficial
-    libhdf5-dev         # unofficial
-    libmariadb-dev      # unofficial
-    libopenblas-base    # unofficial
-    libopenblas-dev     # unofficial
-    libssh2-1-dev       # unofficial
-    libudunits2-dev     # unofficial
-    libv8-dev           # unofficial
-    pandoc              # unofficial
-    pandoc-citeproc     # unofficial
-    runc                # Docker legacy
-    texlive             # unofficial
+    containerd          # docker-legacy
+    docker              # docker-legacy
+    docker-engine       # docker-legacy
+    docker.io           # docker-legacy
+    runc                # docker-legacy
+    cargo               # universe; use 'install-rust'
+    fish                # universe; use 'install-fish'
+    libgdal-dev         # universe; use 'install-gdal'
+    libgeos-dev         # universe; use 'install-geos'
+    libgsl-dev          # universe; use 'install-gsl'
+    libhdf5-dev         # universe; use 'install-hdf5'
 )
 for pkg in "${legacy_pkgs[@]}"
 do
@@ -184,7 +171,6 @@ pkgs=(                                    # | ---------- | ---------- | ------ |
     findutils                             # |         NA |         NA |     NA |
     gcc                                   # |         NA |         NA |     NA |
     gdb                                   # |       9 MB |      51 MB |      5 |
-    gdebi-core                            # universe
     gfortran                              # |     < 1 MB |     < 1 MB |      2 |
     git                                   # |      32 MB |      34 MB |      3 |
     gnupg                                 # |     < 1 MB |       2 MB |      8 |
@@ -193,16 +179,25 @@ pkgs=(                                    # | ---------- | ---------- | ------ |
     less                                  # |     < 1 MB |     < 1 MB |      2 |
     lsb-release                           # |         NA |         NA |     NA |
     nano                                  # |     < 1 MB |     < 1 MB |      1 |
-    parallel                              # universe
     pkg-config                            # |         NA |         NA |     NA |
     software-properties-common            # |         NA |         NA |     NA |
     sudo                                  # |         NA |         NA |     NA |
     tmux                                  # |     < 1 MB |       2 MB |      6 |
-    tree                                  # universe
     tzdata                                # |         NA |         NA |     NA |
     vim                                   # |       3 MB |      32 MB |      3 |
     wget                                  # |     < 1 MB |       1 MB |      3 |
 )
+
+
+if _koopa_is_matching_fixed "universe" "$enabled_repos"
+then
+    pkgs+=(
+        gdebi-core
+        parallel
+        tree
+    )
+fi
+
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
@@ -271,6 +266,25 @@ then
         xorg                              # |     < 1 MB |      30 MB |     39 |
         zsh                               # |       2 MB |      15 MB |      2 |
     )
+
+    if _koopa_is_matching_fixed "universe" "$enabled_repos"
+    then
+        pkgs+=(
+            alien
+            gnutls-bin
+            gtk-doc-tools
+            libmariadb-dev
+            libopenblas-base
+            libopenblas-dev
+            libssh2-1-dev
+            libudunits2-dev
+            libv8-dev
+            pandoc
+            pandoc-citeproc
+            texlive
+        )
+    fi
+
     sudo DEBIAN_FRONTEND=noninteractive \
         apt-get \
             --fix-missing \
@@ -280,46 +294,8 @@ then
             install "${pkgs[@]}"
 fi
 
-# build-dep                                                                 {{{1
+# clean up                                                                  {{{1
 # ==============================================================================
-
-# Disabled
-build_dep=0
-if [[ "$build_dep" -eq 1 ]]
-then
-    _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
-    _koopa_apt_enable_deb_src
-    # Note that including 'bash' here will remove 'r-base'.
-    deps=(
-        # itexinfo, groff, gperf
-        coreutils
-        emacs-defaults
-        # expect, libpcre2-dev, locales-all, quilt
-        fish
-        # subversion, libsvn-perl, tcl, cvs, cvsps, libdbd-sqlite3-perl,
-        # asciidoc,. xmlto, docbook-xsl
-        git
-        htop
-        # gperf, libjemalloc-dev, libluajit-5.1-dev or liblua5.1-dev,
-        # libmsgpack-dev, libnss-wrapper, libtermkey-dev, libunibilium-dev,
-        # libvterm-dev, lua-bitop, lua-busted, lua-lpeg, lua-mpack, lua-vim,
-        # lua-jit, ninja-build
-        neovim
-        # dist
-        perl
-        tmux
-        vim
-        # cm-super-minimal, groff, texinfo, texlive-fonts-recommended, yodl
-        zsh
-    )
-    sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            build-dep "${deps[@]}"
-    _koopa_apt_disable_deb_src
-fi
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get --yes autoremove
