@@ -9,7 +9,8 @@ _koopa_assert_has_no_envs
 _koopa_assert_is_installed pipx python3
 
 _koopa_h1 "Installing pipx virtual environments."
-_koopa_note "PIPX_BIN_DIR: ${PIPX_BIN_DIR}"
+_koopa_dl "PIPX_HOME" "$PIPX_HOME"
+_koopa_dl "PIPX_BIN_DIR" "$PIPX_BIN_DIR"
 
 mkdir -pv "$PIPX_BIN_DIR"
 _koopa_add_to_path_start "$PIPX_BIN_DIR"
@@ -22,16 +23,18 @@ envs=(
     pytest
 )
 
-_koopa_dl "Environments" "${envs[@]}"
+_koopa_dl "Environments" "$(_koopa_to_string "${envs[@]}")"
 
-(
-    set -o xtrace
-    # Can pass '--force' flag here to force reinstall.
-    for env in "${envs[@]}"
-    do
+# Can pass '--force' flag here to force reinstall.
+for env in "${envs[@]}"
+do
+    _koopa_h2 "Installing '${env}'."
+    rm -fr "${PIPX_HOME}/venvs/${env}"
+    (
+        set -o xtrace
         pipx install --force "$env"
-    done
-) &> "$(_koopa_tmp_log_file)"
+    ) &> "$(_koopa_tmp_log_file)"
+done
 
 _koopa_set_permissions "$PIPX_HOME"
 
