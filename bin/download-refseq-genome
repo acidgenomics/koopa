@@ -9,14 +9,20 @@ import argparse
 import os
 import sys
 
+from os.path import realpath
 from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-sys.path.insert(0, os.getenv("KOOPA_PREFIX"))
-from pykoopa.genome import refseq_version  # noqa
-from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import download, paste_url  # noqa
+KOOPA_PREFIX = realpath(os.path.join(__file__, "..", ".."))
+PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
+sys.path.insert(0, PYTHON_PREFIX)
+
+# FIXME Move these to separate refseq functions file.
+
+from koopa.genome import refseq_version  # noqa
+from koopa.syntactic import kebab_case  # noqa
+from koopa.sys import download, paste_url  # noqa
 
 # pylint: enable=wrong-import-position
 
