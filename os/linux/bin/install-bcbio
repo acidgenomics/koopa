@@ -38,7 +38,7 @@ prefix="$(_koopa_strip_trailing_slash "$prefix")"
 
 if [[ "$version" == "stable" ]]
 then
-    current="$(_koopa_bcbio_nextgen_latest_version)"
+    current="$(_koopa_bcbio_nextgen_current_version)"
     prefix="${prefix}/${current}"
 else
     prefix="${prefix}/${version}"
