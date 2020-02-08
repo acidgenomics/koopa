@@ -305,18 +305,20 @@ _koopa_fzf_version() {                                                    # {{{1
 _koopa_gcc_version() {                                                    # {{{1
     # """
     # GCC version.
-    # @note Updated 2020-02-07.
-    #
-    # Old macOS-specific approach:
-    # > gcc --version 2>&1 \
-    # >     | sed -n '2p' \
-    # >     | cut -d ' ' -f 4
+    # @note Updated 2020-02-08.
     # """
     _koopa_is_installed gcc || return 1
-    gcc --version \
-        | head -n 1 \
-        | grep -Eo '[0-9]\.[0-9]\.[0-9]' \
-        | head -n 1
+    if _koopa_is_macos
+    then
+        gcc --version 2>&1 \
+            | sed -n '2p' \
+            | cut -d ' ' -f 4
+    else
+        gcc --version \
+            | head -n 1 \
+            | grep -Eo '[0-9]\.[0-9]\.[0-9]' \
+            | head -n 1
+    fi
 }
 
 _koopa_gdal_version() {                                                   # {{{1
@@ -403,7 +405,8 @@ _koopa_homebrew_version() {                                               # {{{1
     # """
     _koopa_is_installed brew || return 1
     local x
-    brew --version 2>&1 \
+    x="$(brew --version 2>&1 || true)"
+    echo "$x" \
         | head -n 1 \
         | cut -d ' ' -f 2 \
         | cut -d '-' -f 1
