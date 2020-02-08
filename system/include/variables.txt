@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-02-05"
+koopa_date="2020-02-08"
 
 
 
@@ -99,7 +99,7 @@ gsl="2.6"
 hdf5="1.10.6"
 
 # https://brew.sh/
-homebrew="2.1.16"
+homebrew="2.2.5"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
