@@ -39,13 +39,20 @@ _koopa_app_prefix() {                                                     # {{{1
 _koopa_cellar_prefix() {                                                  # {{{1
     # """
     # Cellar prefix.
-    # Updated 2019-11-14.
+    # Updated 2020-02-08.
     #
     # Ensure this points to a local mount (e.g. '/usr/local') instead of our
     # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
     # issues on some virtual machines.
     # """
-    echo "$(_koopa_make_prefix)/cellar"
+    local prefix
+    if _koopa_is_installed brew
+    then
+        prefix="$(_koopa_make_prefix)/koopa-cellar"
+    else
+        prefix="$(_koopa_make_prefix)/cellar"
+    fi
+    echo "$prefix"
 }
 
 _koopa_config_prefix() {                                                  # {{{1
