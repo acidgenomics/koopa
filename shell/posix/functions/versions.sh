@@ -18,16 +18,18 @@ _koopa_version() {                                                        # {{{1
 _koopa_os_version() {                                                     # {{{1
     # """
     # Operating system version.
-    # Updated 2020-01-13.
+    # Updated 2020-02-08.
     #
     # Note that uname returns Darwin kernel version for macOS.
     # """
+    local version
     if _koopa_is_macos
     then
-        _koopa_macos_version
+        version="$(_koopa_macos_version)"
     else
-        _koopa_linux_version
+        version="$(_koopa_linux_version)"
     fi
+    echo "$version"
 }
 
 
@@ -51,10 +53,16 @@ _koopa_get_macos_app_version() {                                          # {{{1
     # Updated 2020-01-12.
     # """
     _koopa_assert_is_macos
-    local name
-    name="${1:?}"
-    plutil -p "/Applications/${name}.app/Contents/Info.plist" \
-        | grep CFBundleShortVersionString \
+    local app
+    app="${1:?}"
+    local plist
+    plist="/Applications/${app}.app/Contents/Info.plist"
+    if [ ! -f "$plist" ]
+    then
+        _koopa_stop "'${app}' is not installed."
+    fi
+    plutil -p "$plist" \
+        | grep 'CFBundleShortVersionString' \
         | awk -F ' => ' '{print $2}' \
         | tr -d '"'
 }
@@ -62,15 +70,25 @@ _koopa_get_macos_app_version() {                                          # {{{1
 _koopa_github_latest_release() {                                          # {{{1
     # """
     # Get the latest release version from GitHub.
-    # Updated 2020-02-07.
+    # @note Updated 2020-02-07.
     #
-    # Example: _koopa_github_latest_release "acidgenomics/koopa"
+    # @examples
+    # _koopa_github_latest_release "acidgenomics/koopa"
+    #
+    # Expected failure:
+    # _koopa_github_latest_release "acidgenomics/acidgenomics.github.io"
     # """
     _koopa_assert_is_installed curl
     local repo
     repo="${1:?}"
-    curl -s "https://github.com/${repo}/releases/latest" 2>&1 \
-        | grep -Eo '/tag/[-_.A-Za-z0-9]+' \
+    local x
+    x="$(curl -s "https://github.com/${repo}/releases/latest" 2>&1)"
+    x="$(echo "$x" | grep -Eo '/tag/[-_.A-Za-z0-9]+')"
+    if [ -z "$x" ]
+    then
+        _koopa_stop "'${repo}' does not contain latest release tag."
+    fi
+    echo "$x" \
         | cut -d '/' -f 3 \
         | sed 's/^v//'
 }
@@ -105,10 +123,16 @@ _koopa_autojump_version() {                                               # {{{1
     # @note Updated 2020-02-07.
     # """
     _koopa_is_installed autojump || return 1
-    autojump --version 2>&1 \
-        | head -n 1 \
-        | cut -d ' ' -f 2 \
-        | sed 's/^v//'
+    local x
+    x="$(autojump --version 2>&1 || true)"
+    x="$( \
+        echo "$x" \
+            | head -n 1 \
+            | cut -d ' ' -f 2 \
+            | sed 's/^v//' \
+            | grep -Eo '[0-9]\.[0-9]\.[0-9]' \
+    )"
+    echo "$x"
 }
 
 _koopa_azure_cli_version() {                                              # {{{1
