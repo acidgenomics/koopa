@@ -399,9 +399,10 @@ _koopa_hdf5_version() {                                                   # {{{1
 _koopa_homebrew_version() {                                               # {{{1
     # """
     # Homebrew version.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-08.
     # """
-    _koopa_is_installed homebrew || return 1
+    _koopa_is_installed brew || return 1
+    local x
     brew --version 2>&1 \
         | head -n 1 \
         | cut -d ' ' -f 2 \
