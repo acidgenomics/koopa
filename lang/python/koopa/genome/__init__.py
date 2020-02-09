@@ -23,47 +23,14 @@ def _genome_version(name, *args):
     return out
 
 
-def flybase_dmel_version():
-    """
-    Current Drosophila melanogaster genome version on FlyBase.
-    Updated 2019-10-07.
-    """
-    return _genome_version("flybase", "--dmel")
-
-
-def flybase_version():
-    """
-    Current FlyBase release version.
-    Updated 2019-10-07.
-    """
-    return _genome_version("flybase")
-
-
-def gencode_version(organism):
-    """
-    Current GENCODE release version.
-    Updated 2019-10-07.
-    """
-    return _genome_version("gencode", ('"' + organism + '"'))
-
-
-def refseq_version():
-    """
-    Current RefSeq release version.
-    Updated 2019-10-07.
-    """
-    return _genome_version("refseq")
-
-
 def tx2gene_from_fasta(source_name, output_dir):
     """
     Generate tx2gene.csv mapping file from transcriptome FASTA.
+    Updated 2019-10-24.
 
     Note that this function is currently called by genome download scripts, and
     assumes that output_dir has a specific structure, containing a
     "transcriptome" subdirectory with the FASTA.
-
-    Updated 2019-10-24.
     """
     cmd = "tx2gene-from-" + source_name + "-fasta"
     transcriptome_dir = os.path.join(output_dir, "transcriptome")
@@ -74,11 +41,3 @@ def tx2gene_from_fasta(source_name, output_dir):
         return output_file
     os.system(cmd + " " + input_file + " " + output_file)
     return output_file
-
-
-def wormbase_version():
-    """
-    Current WormBase release version.
-    Updated 2019-10-07.
-    """
-    return _genome_version("wormbase")
