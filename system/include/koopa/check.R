@@ -232,7 +232,6 @@ checkVersion(
     current = currentVersion("htop"),
     expected = expectedVersion("htop")
 )
-## FIXME This check is failing on awslabapp33...
 checkVersion(
     name = "Neofetch",
     whichName = "neofetch",

@@ -68,10 +68,10 @@ isMacOS <- function() {
 
 
 #' Is string?
-#' @note Updated 2020-02-06.
+#' @note Updated 2020-02-09.
 isString <- function(x) {
-    is.character(x) && 
-        !any(is.na(x)) && 
+    is.character(x) &&
+        !any(is.na(x)) &&
         identical(length(x), 1L) &&
         isTRUE(nzchar(x))
 }
