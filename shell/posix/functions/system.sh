@@ -860,7 +860,7 @@ _koopa_tmp_file() {                                                       # {{{1
     _koopa_mktemp
 }
 
-_koopa_tmp_log_file() {                                                       # {{{1
+_koopa_tmp_log_file() {                                                   # {{{1
     # """
     # Create temporary log file.
     # Updated 2020-02-06.
