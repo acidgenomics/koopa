@@ -12,25 +12,18 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-## Remove legacy packages, if necessary.
-legacyPkgs <- c(
-    "Matrix.utils",
-    "ashr",
-    "bioverbs",
-    "brio"
+removePkgs <- intersect(
+    x = c(
+        "Matrix.utils",
+        "bioverbs",
+        "brio"
+    ),
+    y = rownames(installed.packages())
 )
-installedPkgs <- rownames(installed.packages())
-if (any(legacyPkgs %in% installedPkgs)) {
-    message("Removing packages: ", toString(legacyPkgs))
-    tryCatch(
-        expr = remove.packages(legacyPkgs),
-        warning = function(w) {
-            invisible()
-        },
-        error = function(e) {
-            invisible()
-        }
-    )
+
+if (length(removePkgs) > 0L) {
+    message("Removing packages: ", toString(removePkgs))
+    remove.packages(pkgs = removePkgs)
 }
 
 stopifnot(requireNamespace("bb8", quietly = TRUE))
