@@ -14,12 +14,6 @@ optional arguments:
     --shared
         Enable shared user configuration via '/etc/profile.d/zzz-koopa.sh' file.
         Linux only. Not supported on macOS.
-    --dotfiles
-        Clone the dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
-        and automatically symlink recommended default configuration files.
-    --mike
-        Install Mike-specific configuration.
-        This flag automatically enables '--dotfiles'.
     --non-interactive
         Don't prompt about configuration variables.
         Note that when '--shared' or '--test' are declared, this is set
@@ -30,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-05.
+    Updated 2020-02-09.
 EOF
 }
 
@@ -170,8 +164,6 @@ else
     fi
 fi
 
-dotfiles=
-mike=0
 passwordless=0
 prompt=1
 shared=0
@@ -183,14 +175,6 @@ do
         --help|-h)
             usage
             exit 0
-            ;;
-        --dotfiles)
-            dotfiles=1
-            shift 1
-            ;;
-        --mike)
-            mike=1
-            shift 1
             ;;
         --non-interactive)
             prompt=0
@@ -218,11 +202,6 @@ done
 if [[ "$shared" -eq 1 ]] || [[ "$test" -eq 1 ]]
 then
     prompt=0
-fi
-
-if [[ "$mike" -eq 1 ]]
-then
-    dotfiles=1
 fi
 
 if [[ "$piped" -eq 1 ]]
@@ -333,43 +312,6 @@ then
     fi
 
     _koopa_update_profile
-fi
-
-# Don't prompt if dotfiles are already cloned into koopa install.
-if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
-then
-    dotfiles=0
-fi
-
-if [[ -z "${dotfiles:-}" ]]
-then
-    if [[ "$prompt" -eq 1 ]]
-    then
-        read -r -n 1 -p "Install dotfiles (y/n)? " choice
-        case "$choice" in
-            y|Y)
-                dotfiles=1
-                ;;
-            n|N)
-                dotfiles=0
-                ;;
-            *)
-                >&2 echo "Error: Invalid input."
-                exit 1
-                ;;
-        esac
-        echo
-    else
-        dotfiles=0
-    fi
-fi
-
-if [[ "$mike" -eq 1 ]]
-then
-    _koopa_install_mike
-elif [[ "$dotfiles" -eq 1 ]]
-then
-    install-dotfiles
 fi
 
 _koopa_fix_zsh_permissions
