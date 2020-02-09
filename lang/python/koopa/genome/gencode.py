@@ -21,7 +21,9 @@ def download_gencode_genome(genome_fasta_url, output_dir, decompress):
     )
 
 
-def download_gencode_transcriptome(transcriptome_fasta_url, output_dir, decompress):
+def download_gencode_transcriptome(
+    transcriptome_fasta_url, output_dir, decompress
+):
     """
     Download GENCODE transcriptome FASTA.
     Updated 2020-02-09.
