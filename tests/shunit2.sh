@@ -132,6 +132,21 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_exit_if_not_installed shunit2
 
+extra=0
+
+while (("$#"))
+do
+    case "$1" in
+        --extra)
+            extra=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
 _koopa_h1 "Running unit tests with shUnit2."
 
 # Don't exit on errors, which are handled by shunit2.
@@ -145,12 +160,23 @@ suite() {
         # shellcheck disable=SC1090
         . "$file"
     done
+
+    if [[ "$extra" -eq 1 ]]
+    then
+        for file in "${shunit2_dir}/extra/"*".sh"
+        do
+            # shellcheck disable=SC1090
+            . "$file"
+        done
+    fi
+
     mapfile -t tests < <( \
         declare -F \
             | cut -d ' ' -f 3 \
             | grep -E '^test_' \
             | sort
     )
+
     for test in "${tests[@]}"
     do
         suite_addTest "$test"

@@ -4,6 +4,9 @@ Provenance for running external commands, with logging.
 
 Using recommended subprocess method from bcbio-nextgen.
 
+String sanitization:
+cmd.format(**locals())
+
 See also:
 - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/provenance/do.py
 """
@@ -48,10 +51,12 @@ def find_cmd(cmd):
         return None
 
 
-def run(cmd, checks, log_stdout=False, env=None):
+def run(cmd, log_stdout=False, env=None):
     """
     Perform running and check results, raising errors for issues.
     Updated 2020-02-09.
+
+    https://docs.python.org/3/library/subprocess.html
     """
     cmd, shell_arg, executable_arg = _normalize_cmd_args(cmd)
     sub = subprocess.Popen(
@@ -90,11 +95,6 @@ def run(cmd, checks, log_stdout=False, env=None):
             break
     sub.communicate()
     sub.stdout.close()
-    # Check for problems not identified by shell return codes.
-    if checks:
-        for check in checks:
-            if not check():
-                raise IOError("External command failed")
 
 
 def _normalize_cmd_args(cmd):
