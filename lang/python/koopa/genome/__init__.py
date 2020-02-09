@@ -6,6 +6,7 @@ Genome utilities.
 import os
 import subprocess
 
+from koopa.shell import run
 from koopa.sys import arg_string
 
 
@@ -26,7 +27,7 @@ def _genome_version(name, *args):
 def tx2gene_from_fasta(source_name, output_dir):
     """
     Generate tx2gene.csv mapping file from transcriptome FASTA.
-    Updated 2019-10-24.
+    Updated 2020-02-09.
 
     Note that this function is currently called by genome download scripts, and
     assumes that output_dir has a specific structure, containing a
@@ -39,5 +40,5 @@ def tx2gene_from_fasta(source_name, output_dir):
     if os.path.isfile(output_file):
         print("File exists: '" + output_file + "'.")
         return output_file
-    os.system(cmd + " " + input_file + " " + output_file)
+    run(cmd + " " + input_file + " " + output_file)
     return output_file
