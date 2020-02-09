@@ -1,6 +1,8 @@
 [MASTER]
 
-init-hook='import sys; sys.path.insert(0, os.getenv("KOOPA_PREFIX"))'
+# Python code to execute, usually for sys.path manipulation such as
+# pygtk.require().
+init-hook='import sys; KOOPA_PREFIX = os.getenv("KOOPA_PREFIX"); PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python"); sys.path.insert(0, PYTHON_PREFIX)'
 
 # A comma-separated list of package or module names from where C extensions may
 # be loaded. Extensions are loading into the active Python interpreter and may
@@ -140,7 +142,8 @@ disable=print-statement,
         xreadlines-attribute,
         deprecated-sys-function,
         exception-escape,
-        comprehension-escape
+        comprehension-escape,
+        bad-continuation
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
@@ -311,7 +314,7 @@ indent-after-paren=4
 indent-string='    '
 
 # Maximum number of characters on a single line.
-max-line-length=79
+max-line-length=100
 
 # Maximum number of lines in a module.
 max-module-lines=1000
@@ -505,7 +508,7 @@ valid-metaclass-classmethod-first-arg=cls
 [DESIGN]
 
 # Maximum number of arguments for function / method.
-max-args=5
+max-args=10
 
 # Maximum number of attributes for a class (see R0902).
 max-attributes=7
