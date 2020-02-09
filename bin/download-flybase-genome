@@ -17,6 +17,7 @@ KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
+from koopa.argparse import dir_path  # noqa:E402
 from koopa.genome import tx2gene_from_fasta  # noqa:E402
 from koopa.genome.flybase import (
     download_flybase_genome,
@@ -97,6 +98,9 @@ parser.add_argument(
     help="drosophila melanogaster release version (e.g. 'r6.29')",
 )
 parser.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+parser.add_argument(
     "--decompress",
     action="store_true",
     help="decompress, but keep the compressed file",
@@ -106,6 +110,7 @@ args = parser.parse_args()
 annotation = args.annotation
 decompress = args.decompress
 dmel = args.dmel
+output_dir = args.output_dir
 release = args.release
 type = args.type
 
@@ -122,12 +127,11 @@ if dmel is None:
 
 base_url = "ftp://ftp.flybase.net"
 release_url = paste_url(base_url, "releases", release, "dmel_" + dmel)
-output_dir = kebab_case(
+
+output_basename = kebab_case(
     organism + " " + build + " " + "flybase" + " " + release
 )
-
-# pylint: enable=invalid-name,protected-access,redefined-builtin
-
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 if type == "genome":
     download_flybase_genome(
