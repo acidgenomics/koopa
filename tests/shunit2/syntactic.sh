@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 ## shellcheck disable=SC2016
 
-_koopa_is_r_package_installed syntactic || return 0
+if ! _koopa_is_r_package_installed syntactic
+then
+    _koopa_note "'syntactic' R package is not installed. Skipping checks."
+    return 0
+fi
 
 test_camel_case_bin() {
     MOCK_INPUT="${SHUNIT_TMPDIR}/foo bar"
