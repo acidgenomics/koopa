@@ -23,14 +23,6 @@ def _genome_version(name, *args):
     return out
 
 
-def ensembl_version():
-    """
-    Current Ensembl release version.
-    Updated 2019-10-07.
-    """
-    return _genome_version("ensembl")
-
-
 def flybase_dmel_version():
     """
     Current Drosophila melanogaster genome version on FlyBase.
