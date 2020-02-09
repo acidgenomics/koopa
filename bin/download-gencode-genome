@@ -17,6 +17,7 @@ KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
+from koopa.argparse import dir_path  # noqa:E402
 from koopa.genome import tx2gene_from_fasta  # noqa:E402
 from koopa.genome.gencode import (
     download_gencode_genome,
@@ -99,20 +100,21 @@ optional.add_argument(
     "--release", type=str, help="release version (e.g. '32')"
 )
 optional.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+optional.add_argument(
     "--decompress",
     action="store_true",
     help="decompress, but keep the compressed file",
 )
 parser._action_groups.append(optional)
-if len(sys.argv) == 1:
-    parser.print_help(sys.stderr)
-    sys.exit(1)
 args = parser.parse_args()
 
 annotation = args.annotation
 build = args.build
 decompress = args.decompress
 organism = args.organism
+output_dir = args.output_dir
 release = args.release
 type = args.type
 
@@ -140,9 +142,10 @@ base_url = paste_url(
     "Gencode_" + organism_short,
     "release_" + release,
 )
-output_dir = kebab_case(
+output_basename = kebab_case(
     organism + " " + build + " " + "gencode" + " " + release
 )
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 if build == "GRCh37":
     base_url = paste_url(base_url, "GRCh37_mapping")
@@ -170,9 +173,6 @@ genome_fasta_url = paste_url(
     base_url, build + ".primary_assembly.genome.fa.gz"
 )
 md5sums_url = paste_url(base_url, "MD5SUMS")
-
-# pylint: enable=invalid-name,protected-access,redefined-builtin
-
 
 download(url=readme_url, output_dir=output_dir)
 download(url=md5sums_url, output_dir=output_dir)

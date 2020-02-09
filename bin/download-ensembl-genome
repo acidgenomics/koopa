@@ -17,6 +17,7 @@ KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
+from koopa.argparse import dir_path  # noqa:E402
 from koopa.genome import tx2gene_from_fasta  # noqa:E402
 from koopa.genome.ensembl import (
     download_ensembl_genome,
@@ -142,20 +143,21 @@ optional.add_argument(
     "--release", type=str, help="release version (e.g. '97')"
 )
 optional.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+optional.add_argument(
     "--decompress",
     action="store_true",
     help="decompress, but keep the compressed file",
 )
 parser._action_groups.append(optional)
-if len(sys.argv) == 1:
-    parser.print_help(sys.stderr)
-    sys.exit(1)
 args = parser.parse_args()
 
 annotation = args.annotation
 build = args.build
 decompress = args.decompress
 organism = args.organism
+output_dir = args.output_dir
 release = args.release
 type = args.type
 
@@ -175,9 +177,11 @@ if release is None:
     release = ensembl_version()
 
 release_url = paste_url(base_url, "release-" + release)
-output_dir = kebab_case(
+
+output_basename = kebab_case(
     organism + " " + build + " " + "ensembl" + " " + release
 )
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 if type == "genome":
     download_ensembl_genome(

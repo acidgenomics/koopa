@@ -17,6 +17,7 @@ KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
+from koopa.argparse import dir_path  # noqa:E402
 from koopa.genome.refseq import (
     download_refseq_genome,
     download_refseq_gff,
@@ -118,6 +119,9 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+parser.add_argument(
     "--decompress",
     action="store_true",
     help="decompress (but keep) the original file",
@@ -127,6 +131,7 @@ args = parser.parse_args()
 annotation = args.annotation
 build = args.build
 decompress = args.decompress
+output_dir = args.output_dir
 type = args.type
 
 organism = "Homo sapiens"
@@ -141,12 +146,11 @@ release_url = paste_url(
     build + "_latest",
     "refseq_identifiers",
 )
-output_dir = kebab_case(
+
+output_basename = kebab_case(
     organism + " " + build + " " + "refseq" + " " + release
 )
-
-# pylint: enable=invalid-name,protected-access,redefined-builtin
-
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 download(url=paste_url(release_url, "README.txt"), output_dir=output_dir)
 download(
