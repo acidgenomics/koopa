@@ -14,6 +14,10 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_h1 "Running linter checks."
 
+# Check that linter config files are linked correctly.
+# This step can error if dotfiles submodule hasn't cloned.
+_koopa_assert_is_symlink "${KOOPA_PREFIX}/."{lintr,pylintrc}
+
 linter_dir="${script_dir}/linter"
 for file in "${linter_dir}/"*".sh"
 do

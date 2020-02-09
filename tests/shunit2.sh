@@ -98,10 +98,34 @@
 #
 # setUp()
 # tearDown()
+#
+#
+# Suite approach
+# ==============================================================================
+#
+# In this script:
+# > suite() {
+# >     . ./tests/test1
+# > }
+# > . shunit2
+#
+# In the test files:
+# > example1_test() {
+# >     ... # test body here
+# > }
+# > example2_test() {
+# >     ... # test body here
+# > }
+# > suite_addTest example1_test
+# > suite_addTest example2_test
+#
+# See also:
+# https://github.com/kward/shunit2/issues/52#issuecomment-358536886
 # """
 
-KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." \
+script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
     >/dev/null 2>&1 && pwd -P)"
+KOOPA_PREFIX="$(cd "${script_dir}/.." >/dev/null 2>&1 && pwd -P)"
 export KOOPA_PREFIX
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
@@ -110,17 +134,28 @@ _koopa_exit_if_not_installed shunit2
 
 _koopa_h1 "Running unit tests with shUnit2."
 
-testEquality() {
-    assertEquals 1 1
+# Don't exit on errors, which are handled by shunit2.
+set +o errexit
+
+shunit2_dir="${script_dir}/shunit2"
+
+suite() {
+    for file in "${shunit2_dir}/"*".sh"
+    do
+        # shellcheck disable=SC1090
+        . "$file"
+    done
+    mapfile -t tests < <( \
+        declare -F \
+            | cut -d ' ' -f 3 \
+            | grep -E '^test_' \
+            | sort
+    )
+    for test in "${tests[@]}"
+    do
+        suite_addTest "$test"
+    done
 }
 
-# > testPartyLikeItIs1999() {
-# >     year="$(date "+%Y")"
-# >     assertEquals "It's not 1999 :-(" "1999" "$year"
-# > }
-
-set +e
-
-# Load shUnit2.
 # shellcheck disable=SC1091
 . shunit2
