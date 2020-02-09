@@ -2,7 +2,7 @@
 
 # """
 # Find illegal strings, such as FIXME, TODO, and messed up git merges.
-# Updated 2020-02-01.
+# Updated 2020-02-09.
 #
 # Use find first, pass to array, and then call grep.
 # This is better supported across platforms.
@@ -26,6 +26,7 @@ illegal_strings=(
     '\bFIXME\b'
     '\bTODO\b'
     '^path='
+    'os.system'
 )
 grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
 
