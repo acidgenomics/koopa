@@ -12,9 +12,9 @@ from koopa.sys import arg_string
 def _genome_version(name, *args):
     """
     Internal shared genome version fetcher.
-    Updated 2019-10-07.
+    Updated 2020-02-09.
     """
-    cmd = name + "-version"
+    cmd = "current-" + name + "-version"
     args = arg_string(*args)
     if args is not None:
         cmd = cmd + args
