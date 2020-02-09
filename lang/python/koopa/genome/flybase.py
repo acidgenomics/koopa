@@ -5,7 +5,12 @@ FlyBase genome utilities.
 
 import os
 
-from koopa.sys import decompress_but_keep_original, download, paste_url, _genome_version
+from koopa.genome import _genome_version
+from koopa.sys import (
+    decompress_but_keep_original,
+    download,
+    paste_url,
+)
 
 
 def download_flybase_genome(release_url, output_dir, decompress, dmel):
