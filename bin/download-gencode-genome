@@ -13,15 +13,20 @@ from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-KOOPA_PREFIX = realpath(os.path.join(__file__, "..", ".."))
+KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
-# FIXME Move these to separate gencode functions file.
-
-from koopa.genome import gencode_version, tx2gene_from_fasta  # noqa
-from koopa.syntactic import kebab_case  # noqa
-from koopa.sys import download, eprint, paste_url  # noqa
+from koopa.genome import tx2gene_from_fasta  # noqa:E402
+from koopa.genome.gencode import (
+    download_gencode_genome,
+    download_gencode_gff,
+    download_gencode_gtf,
+    download_gencode_transcriptome,
+    gencode_version,
+)  # noqa:E402
+from koopa.syntactic import kebab_case  # noqa:E402
+from koopa.sys import download, eprint, paste_url  # noqa:E402
 
 # pylint: enable=wrong-import-position
 
@@ -41,7 +46,7 @@ details:
 
 note:
     Python script.
-    Updated 2019-10-11.
+    Updated 2020-02-09.
 """
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
@@ -169,84 +174,48 @@ md5sums_url = paste_url(base_url, "MD5SUMS")
 # pylint: enable=invalid-name,protected-access,redefined-builtin
 
 
-def download_genome(genome_fasta_url, output_dir, decompress):
-    """
-    Download genome FASTA.
-    """
-    download(
-        url=genome_fasta_url,
-        output_dir=os.path.join(output_dir, "genome"),
-        decompress=decompress,
-    )
-
-
-def download_transcriptome(transcriptome_fasta_url, output_dir, decompress):
-    """
-    Download transcriptome FASTA.
-    """
-    download(
-        url=transcriptome_fasta_url,
-        output_dir=os.path.join(output_dir, "transcriptome"),
-        decompress=decompress,
-    )
-
-
-def download_gtf(gtf_url, output_dir, decompress):
-    """
-    Download GTF file.
-    """
-    download(
-        url=gtf_url,
-        output_dir=os.path.join(output_dir, "gtf"),
-        decompress=decompress,
-    )
-
-
-def download_gff(gff_url, output_dir, decompress):
-    """
-    Download GFF3 file.
-    """
-    download(
-        url=gff_url,
-        output_dir=os.path.join(output_dir, "gff"),
-        decompress=decompress,
-    )
-
-
 download(url=readme_url, output_dir=output_dir)
 download(url=md5sums_url, output_dir=output_dir)
 
 if type == "genome":
-    download_genome(
+    download_gencode_genome(
         genome_fasta_url=genome_fasta_url,
         output_dir=output_dir,
         decompress=decompress,
     )
 elif type == "transcriptome":
-    download_transcriptome(
+    download_gencode_transcriptome(
         transcriptome_fasta_url=transcriptome_fasta_url,
         output_dir=output_dir,
         decompress=decompress,
     )
 elif type == "all":
-    download_genome(
+    download_gencode_genome(
         genome_fasta_url=genome_fasta_url,
         output_dir=output_dir,
         decompress=decompress,
     )
-    download_transcriptome(
+    download_gencode_transcriptome(
         transcriptome_fasta_url=transcriptome_fasta_url,
         output_dir=output_dir,
         decompress=decompress,
     )
 
 if annotation == "gtf":
-    download_gtf(gtf_url=gtf_url, output_dir=output_dir, decompress=decompress)
+    download_gencode_gtf(
+        gtf_url=gtf_url, output_dir=output_dir, decompress=decompress
+    )
 elif annotation == "gff":
-    download_gff(gff_url=gff_url, output_dir=output_dir, decompress=decompress)
+    download_gencode_gff(
+        gff_url=gff_url, output_dir=output_dir, decompress=decompress
+    )
 elif annotation == "all":
-    download_gtf(gtf_url=gtf_url, output_dir=output_dir, decompress=decompress)
-    download_gff(gff_url=gff_url, output_dir=output_dir, decompress=decompress)
+    download_gencode_gtf(
+        gtf_url=gtf_url, output_dir=output_dir, decompress=decompress
+    )
+    download_gencode_gff(
+        gff_url=gff_url, output_dir=output_dir, decompress=decompress
+    )
 
 if type != "genome":
     tx2gene_from_fasta(source_name="gencode", output_dir=output_dir)
