@@ -193,6 +193,9 @@ _koopa_add_to_manpath_end "/usr/local/share/man"
 _koopa_add_to_manpath_end "/usr/share/man"
 _koopa_add_to_manpath_start "${HOME}/.local/share/man"
 
+# Ruby gems.
+_koopa_add_to_path_start "${HOME}/.gem/bin"
+
 # Koopa paths                                                               {{{2
 # ------------------------------------------------------------------------------
 
