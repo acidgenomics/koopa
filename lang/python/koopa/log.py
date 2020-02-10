@@ -5,8 +5,8 @@ Logging utilites.
 
 import logbook
 
-LOG_NAME = "bcbio-nextgen"
-DEFAULT_LOG_DIR = 'log'
+LOG_NAME = "koopa"
+DEFAULT_LOG_DIR = "log"
 
 # pylint: disable=invalid-name
 logger = logbook.Logger(LOG_NAME)
