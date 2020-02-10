@@ -52,16 +52,7 @@ _koopa_h2 "Cleaning and resetting git repo."
     cd "$koopa_prefix" || exit 1
     _koopa_git_reset
     _koopa_set_permissions "$koopa_prefix"
-)
-
-# Ensure accidental swap files created by vim get nuked.
-#find "$koopa_prefix" -type f -name "*.swp" -delete
-
-# Ensure invisible files get nuked on macOS.
-#if _koopa_is_macos
-#then
-#    find "$koopa_prefix" -type f -name ".DS_Store" -delete
-#fi
+) > /dev/null
 
 _koopa_update_xdg_config
 _koopa_update_ldconfig
