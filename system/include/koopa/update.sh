@@ -35,9 +35,9 @@ if _koopa_is_shared_install
 then
     if [[ "$system" -eq 1 ]]
     then
-        _koopa_info "config prefix: ${config_prefix}"
-        _koopa_info "make prefix: ${make_prefix}"
-        _koopa_info "app prefix: ${app_prefix}"
+        _koopa_dl "config prefix" "${config_prefix}"
+        _koopa_dl "make prefix" "${make_prefix}"
+        _koopa_dl "app prefix" "${app_prefix}"
         echo
     fi
     _koopa_note "Shared installation detected."
@@ -45,16 +45,24 @@ then
     _koopa_assert_has_sudo
 fi
 
+_koopa_h2 "Cleaning and resetting git repo."
+
+(
+    _koopa_set_permissions "$koopa_prefix"
+    cd "$koopa_prefix" || exit 1
+    _koopa_git_reset
+    _koopa_set_permissions "$koopa_prefix"
+)
+
 # Ensure accidental swap files created by vim get nuked.
-find "$koopa_prefix" -type f -name "*.swp" -delete
+#find "$koopa_prefix" -type f -name "*.swp" -delete
 
 # Ensure invisible files get nuked on macOS.
-if _koopa_is_macos
-then
-    find "$koopa_prefix" -type f -name ".DS_Store" -delete
-fi
+#if _koopa_is_macos
+#then
+#    find "$koopa_prefix" -type f -name ".DS_Store" -delete
+#fi
 
-_koopa_set_permissions "$koopa_prefix"
 _koopa_update_xdg_config
 _koopa_update_ldconfig
 _koopa_update_profile
