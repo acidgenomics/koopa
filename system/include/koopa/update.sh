@@ -93,7 +93,7 @@ then
         # This currently can break environments, so disabled.
         # > update-conda
         update-rust
-        install-rust-crates
+        update-rust-packages
         update-perlbrew
         if _koopa_is_linux
         then
