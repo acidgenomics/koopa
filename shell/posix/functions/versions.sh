@@ -18,9 +18,9 @@ _koopa_version() {                                                        # {{{1
 _koopa_os_version() {                                                     # {{{1
     # """
     # Operating system version.
-    # Updated 2020-02-08.
+    # @note Updated 2020-02-08.
     #
-    # Note that uname returns Darwin kernel version for macOS.
+    # 'uname' returns Darwin kernel version for macOS.
     # """
     local version
     if _koopa_is_macos
@@ -37,7 +37,7 @@ _koopa_os_version() {                                                     # {{{1
 _koopa_get_version() {                                                    # {{{1
     # """
     # Get the version of an installed program.
-    # Updated 2020-02-07.
+    # @note Updated 2020-02-07.
     # """
     local app
     app="${1:?}"
@@ -50,7 +50,7 @@ _koopa_get_version() {                                                    # {{{1
 _koopa_get_macos_app_version() {                                          # {{{1
     # """
     # Extract the version of a macOS application.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     _koopa_assert_is_macos
     local app
@@ -74,8 +74,7 @@ _koopa_github_latest_release() {                                          # {{{1
     #
     # @examples
     # _koopa_github_latest_release "acidgenomics/koopa"
-    #
-    # Expected failure:
+    # # Expected failure:
     # _koopa_github_latest_release "acidgenomics/acidgenomics.github.io"
     # """
     _koopa_assert_is_installed curl
@@ -93,12 +92,40 @@ _koopa_github_latest_release() {                                          # {{{1
         | sed 's/^v//'
 }
 
+_koopa_r_package_version() {
+    # """
+    # R package version.
+    # Updated 2020-02-10.
+    # """
+    local pkg
+    pkg="${1:?}"
+    _koopa_is_r_package_installed "$pkg" || return 1
+    local x
+    x="$(Rscript -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")")"
+    echo "$x"
+}
 
+
+
+_koopa_extract_version() {                                                # {{{1
+    # """
+    # Extract version number.
+    # @note Updated 2020-02-10.
+    # """
+    local x
+    x="${1:?}"
+    x="$( \
+        echo "$x" \
+            | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' \
+            | head -n 1 \
+    )"
+    echo "$x"
+}
 
 _koopa_major_version() {                                                  # {{{1
     # """
     # Get the major program version.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local version
     version="${1:?}"
@@ -108,7 +135,7 @@ _koopa_major_version() {                                                  # {{{1
 _koopa_minor_version() {                                                  # {{{1
     # """
     # Get the major program version.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local version
     version="${1:?}"
@@ -120,55 +147,43 @@ _koopa_minor_version() {                                                  # {{{1
 _koopa_autojump_version() {                                               # {{{1
     # """
     # Autojump version.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed autojump || return 1
-    local x
-    x="$(autojump --version 2>&1 || true)"
-    x="$( \
-        echo "$x" \
-            | head -n 1 \
-            | cut -d ' ' -f 2 \
-            | sed 's/^v//' \
-            | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' \
-    )"
-    echo "$x"
+    _koopa_extract_version "$(autojump --version 2>&1 || true)"
 }
 
 _koopa_azure_cli_version() {                                              # {{{1
     # """
     # Azure CLI version.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed az || return 1
-    az --version \
-        | head -n 1 \
-        | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+'
+    _koopa_extract_version "$(az --version 2>&1 || true)"
 }
 
 _koopa_bash_version() {                                                   # {{{1
     # """
-    # @note Updated 2020-02-07.
+    # Bash version.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed bash || return 1
-    bash --version \
-        | head -n 1 \
-        | cut -d ' ' -f 4 \
-        | cut -d '(' -f 1
+    _koopa_extract_version "$(bash --version 2>&1 || true)"
 }
 
 _koopa_bcbio_nextgen_version() {                                          # {{{1
     # """
-    # @note Updated 2020-02-07.
+    # bcbio-nextgen version.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed bcbio_nextgen.py || return 1
-    bcbio_nextgen.py --version
+    _koopa_extract_version "$(bcbio_nextgen.py --version 2>&1 || true)"
 }
 
 _koopa_bcbio_nextgen_current_version() {                                  # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-10.
     #
     # Alternate approach:
     # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
@@ -177,21 +192,22 @@ _koopa_bcbio_nextgen_current_version() {                                  # {{{1
     local url
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
 /master/requirements-conda.txt"
-    curl --silent "$url" \
-        | grep 'bcbio-nextgen=' \
-        | cut -d '=' -f 2
+    local x
+    x="$( \
+        curl --silent "$url" \
+            | grep 'bcbio-nextgen=' \
+            | cut -d '=' -f 2 \
+    )"
+    echo "$x"
 }
 
 _koopa_bcl2fastq_version() {                                              # {{{1
     # """
     # bcl2fastq version.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed bcl2fastq || return 1
-    bcl2fastq --version 2>&1 \
-        | sed -n '2p' \
-        | cut -d ' ' -f 2 \
-        | sed 's/^v//'
+    _koopa_extract_version "$(bcl2fastq --version 2>&1 || true)"
 }
 
 _koopa_bioconductor_version() {                                           # {{{1
@@ -199,8 +215,7 @@ _koopa_bioconductor_version() {                                           # {{{1
     # Bioconductor version.
     # @note Updated 2020-02-07.
     # """
-    _koopa_is_r_package_installed BiocVersion || return 1
-    Rscript -e 'cat(as.character(packageVersion("BiocVersion")), "\n")'
+    _koopa_r_package_version "BiocVersion"
 }
 
 _koopa_broot_version() {                                                  # {{{1
@@ -208,10 +223,7 @@ _koopa_broot_version() {                                                  # {{{1
     # Broot version.
     # @note Updated 2020-02-07.
     # """
-    _koopa_is_installed broot || return 1
-    broot --version \
-        | head -n 1 \
-        | cut -d ' ' -f 2
+    _koopa_extract_version "$(broot --version 2>&1 || true)"
 }
 
 _koopa_cargo_version() {                                                  # {{{1
