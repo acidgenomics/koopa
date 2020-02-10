@@ -1019,7 +1019,7 @@ _koopa_is_git() {                                                         # {{{1
     # """
     _koopa_assert_is_installed git
     local dir
-    dir="$(realpath "${1:-}")"
+    dir="$(realpath "${1:-.}")"
     [ -d "${dir}/.git" ] || return 1
     (
         cd "$dir" || return 1
@@ -1042,7 +1042,8 @@ _koopa_is_git_clean() {                                                   # {{{1
     # - https://stackoverflow.com/questions/3258243
     # """
     _koopa_assert_is_installed git
-    dir="$(realpath "${1:-}")"
+    dir="$(realpath "${1:-.}")"
+    _koopa_is_git "$dir" || return 1
     (
         cd "$dir" || return 1
         # Are there unstaged changes?
