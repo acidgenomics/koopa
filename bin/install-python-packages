@@ -9,19 +9,31 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed python3
 
-# pip                                                                     # {{{1
-# ==============================================================================
-
 if ! _koopa_is_installed pip3
 then
     _koopa_install_pip
 fi
 
+if ! _koopa_is_installed pipx
+then
+    _koopa_install_pipx
+fi
+
+# pip                                                                     # {{{1
+# ==============================================================================
+
 _koopa_h1 "Installing pip packages."
 _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
 
 pkgs=(
+    black
+    flake8
     logbook
+    numpy
+    pandas
+    pyflakes
+    pylint
+    pytest
     six
 )
 
@@ -35,46 +47,3 @@ if _koopa_is_cellar python3
 then
     _koopa_link_cellar python
 fi
-
-# pipx                                                                    # {{{1
-# ==============================================================================
-
-if ! _koopa_is_installed pipx
-then
-    _koopa_install_pipx
-fi
-
-_koopa_h1 "Installing pipx virtual environments."
-
-_koopa_dl "PIPX_HOME" "$PIPX_HOME"
-_koopa_dl "PIPX_BIN_DIR" "$PIPX_BIN_DIR"
-
-envs=(
-    black
-    flake8
-    numpy
-    pandas
-    pyflakes
-    pylint
-    pytest
-)
-
-_koopa_dl "Environments" "$(_koopa_to_string "${envs[@]}")"
-
-mkdir -pv "$PIPX_BIN_DIR"
-_koopa_add_to_path_start "$PIPX_BIN_DIR"
-
-for env in "${envs[@]}"
-do
-    _koopa_h2 "Installing '${env}'."
-    (
-        set -o xtrace
-        rm -frv "${PIPX_HOME}/venvs/${env}"
-        pipx install --force "$env"
-    ) &> "$(_koopa_tmp_log_file)"
-done
-
-_koopa_set_permissions "$PIPX_HOME"
-
-_koopa_success "pipx environments installed successfully."
-_koopa_note "Restart the shell to ensure programs are available in PATH."
