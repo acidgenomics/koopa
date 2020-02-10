@@ -63,6 +63,81 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
     printf "%s\n" "${array[@]}"
 }
 
+_koopa_git_submodule_init() {
+    # """
+    # Initialize git submodules.
+    # Updated 2020-02-10.
+    # """
+    local dir
+    dir="$(realpath "${1:-.}")"
+    [[ -f "${dir}/.gitmodules" ]] || return 0
+    _koopa_assert_is_installed git
+    (
+        cd "$dir" || exit 1
+        _koopa_assert_is_git
+        _koopa_h2 "Initializing submodules at '${dir}'."
+        local array string target target_key url url_key
+        git submodule init
+        mapfile -t array \
+            < <( \
+                git config \
+                    -f ".gitmodules" \
+                    --get-regexp '^submodule\..*\.path$' \
+            )
+        echo "${#array[@]} submodules detected."
+        for string in "${array[@]}"
+        do
+            target_key="$(echo "$string" | cut -d ' ' -f 1)"
+            target="$(echo "$string" | cut -d ' ' -f 2)"
+            url_key="${target_key//\.path/.url}"
+            url="$(git config -f ".gitmodules" --get "$url_key")"
+            _koopa_dl "URL" "$url"
+            _koopa_dl "Target" "$target"
+            git submodule add --force "$url" "$target"
+        done
+    )  # > /dev/null
+    return 0
+}
+
+_koopa_git_reset() {                                                      # {{{1
+    # """
+    # Clean and reset a git repo and its submodules.
+    # Updated 2020-02-10.
+    #
+    # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
+    # directories better.
+    #
+    # Additional steps:
+    # # Ensure accidental swap files created by vim get nuked.
+    # > find . -type f -name "*.swp" -delete
+    # # Ensure invisible files get nuked on macOS.
+    # > if _koopa_is_macos
+    # > then
+    # >     find . -type f -name ".DS_Store" -delete
+    # > fi
+    #
+    # See also:
+    # https://gist.github.com/nicktoumpelis/11214362
+    # """
+    _koopa_assert_is_installed git
+    local dir
+    dir="$(realpath "${1:-.}")"
+    (
+        cd "$dir" || exit 1
+        _koopa_assert_is_git
+        _koopa_h2 "Cleaning git repository at '${dir}'."
+        git clean -dffx
+        git submodule foreach --recursive git clean -dffx
+        git reset --hard
+        git submodule foreach --recursive git reset --hard
+        git submodule update --init --recursive
+        git fetch --all
+        git pull
+    )  # > /dev/null
+    _koopa_git_submodule_init "$dir"
+    return 0
+}
+
 _koopa_is_array_non_empty() {                                             # {{{1
     # """
     # Is the array non-empty?

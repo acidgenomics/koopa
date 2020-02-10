@@ -328,32 +328,6 @@ _koopa_git_branch() {                                                     # {{{1
     git symbolic-ref --short -q HEAD
 }
 
-_koopa_git_reset() {                                                      # {{{1
-    # """
-    # Clean and reset a git repo and its submodules.
-    # Updated 2020-02-09.
-    #
-    # Additional steps:
-    # # Ensure accidental swap files created by vim get nuked.
-    # > find . -type f -name "*.swp" -delete
-    # # Ensure invisible files get nuked on macOS.
-    # > if _koopa_is_macos
-    # > then
-    # >     find . -type f -name ".DS_Store" -delete
-    # > fi
-    #
-    # See also:
-    # https://gist.github.com/nicktoumpelis/11214362
-    # """
-    _koopa_is_git || return 1
-    git clean -xfdf
-    git submodule foreach --recursive git clean -xfdf
-    git reset --hard
-    git submodule foreach --recursive git reset --hard
-    git submodule update --init --recursive
-    return 0
-}
-
 # Also defined in koopa installer.
 _koopa_group() {                                                          # {{{1
     # """
