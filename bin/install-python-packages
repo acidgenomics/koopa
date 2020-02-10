@@ -7,10 +7,15 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_envs
-_koopa_assert_is_installed pip3 pipx python3
+_koopa_assert_is_installed python3
 
 # pip                                                                     # {{{1
 # ==============================================================================
+
+if ! _koopa_is_installed pip3
+then
+    _koopa_install_pip
+fi
 
 _koopa_h1 "Installing pip packages."
 _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
@@ -36,6 +41,11 @@ fi
 
 # pipx                                                                    # {{{1
 # ==============================================================================
+
+if ! _koopa_is_installed pipx
+then
+    _koopa_install_pipx
+fi
 
 _koopa_h1 "Installing pipx virtual environments."
 _koopa_dl "PIPX_HOME" "$PIPX_HOME"
