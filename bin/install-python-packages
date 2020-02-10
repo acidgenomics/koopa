@@ -29,7 +29,10 @@ do
         "$pkg"
 done
 
-_koopa_link_cellar python
+if _koopa_is_cellar python3
+then
+    _koopa_link_cellar python
+fi
 
 # pipx                                                                    # {{{1
 # ==============================================================================
