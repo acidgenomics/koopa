@@ -34,6 +34,44 @@ _koopa_os_version() {                                                     # {{{1
 
 
 
+_koopa_major_version() {                                                  # {{{1
+    # """
+    # Get the major program version.
+    # @note Updated 2020-01-12.
+    # """
+    local version
+    version="${1:?}"
+    echo "$version" | cut -d '.' -f 1
+}
+
+_koopa_minor_version() {                                                  # {{{1
+    # """
+    # Get the major program version.
+    # @note Updated 2020-01-12.
+    # """
+    local version
+    version="${1:?}"
+    echo "$version" | cut -d '.' -f 1-2
+}
+
+_koopa_extract_version() {                                                # {{{1
+    # """
+    # Extract version number.
+    # @note Updated 2020-02-10.
+    # """
+    local x
+    x="${1:?}"
+    x="$( \
+        echo "$x" \
+            | grep -Eo '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?' \
+            | head -n 1 \
+    )"
+    [ -n "$x" ] || return 1
+    echo "$x"
+}
+
+
+
 _koopa_get_version() {                                                    # {{{1
     # """
     # Get the version of an installed program.
@@ -42,7 +80,7 @@ _koopa_get_version() {                                                    # {{{1
     local cmd
     cmd="${1:?}"
     local fun
-    fun="$(_koopa_snake_case "_koopa_${cmd}_version")"
+    fun="_koopa_$(_koopa_snake_case "$cmd")_version"
     if _koopa_is_function "$fun"
     then
         "$fun"
@@ -50,6 +88,85 @@ _koopa_get_version() {                                                    # {{{1
         _koopa_return_version "$cmd"
     fi
 }
+
+_koopa_return_version() {                                                 # {{{1
+    # """
+    # Return version (via extraction).
+    # @note Updated 2020-02-10.
+    # """
+    local cmd
+    cmd="${1:?}"
+    case "$cmd" in
+        azure)
+            cmd="az"
+            ;;
+        bcbio-nextgen)
+            cmd="bcbio_nextgen.py"
+            ;;
+        coreutils)
+            cmd="env"
+            ;;
+        gdal)
+            cmd="gdalinfo"
+            ;;
+        geos)
+            cmd="geos-config"
+            ;;
+        gnupg)
+            cmd="gpg"
+            ;;
+        gsl)
+            cmd="gsl-config"
+            ;;
+        homebrew)
+            cmd="brew"
+            ;;
+        neovim)
+            cmd="nvim"
+            ;;
+        pip)
+            cmd="pip3"
+            ;;
+        python)
+            cmd="python3"
+            ;;
+        ripgrep)
+            cmd="rg"
+            ;;
+        rust)
+            cmd="rustc"
+            ;;
+        sqlite)
+            cmd="sqlite3"
+            ;;
+        the-silver-searcher)
+            cmd="ag"
+            ;;
+    esac
+    local flag
+    flag="${2:-}"
+    if [ -z "${flag:-}" ]
+    then
+        case "$cmd" in
+            go|openssl|rstudio-server|singularity)
+                flag="version"
+                ;;
+            lua)
+                flag="-v"
+                ;;
+            tmux)
+                flag="-V"
+                ;;
+            *)
+                flag="--version"
+                ;;
+        esac
+    fi
+    _koopa_is_installed "$cmd" || return 1
+    _koopa_extract_version "$("$cmd" "$flag" 2>&1 || true)"
+}
+
+
 
 _koopa_get_macos_app_version() {                                          # {{{1
     # """
@@ -96,7 +213,7 @@ _koopa_github_latest_release() {                                          # {{{1
         | sed 's/^v//'
 }
 
-_koopa_r_package_version() {
+_koopa_r_package_version() {                                              # {{{1
     # """
     # R package version.
     # Updated 2020-02-10.
@@ -110,75 +227,6 @@ _koopa_r_package_version() {
 }
 
 
-
-_koopa_major_version() {                                                  # {{{1
-    # """
-    # Get the major program version.
-    # @note Updated 2020-01-12.
-    # """
-    local version
-    version="${1:?}"
-    echo "$version" | cut -d '.' -f 1
-}
-
-_koopa_minor_version() {                                                  # {{{1
-    # """
-    # Get the major program version.
-    # @note Updated 2020-01-12.
-    # """
-    local version
-    version="${1:?}"
-    echo "$version" | cut -d '.' -f 1-2
-}
-
-_koopa_extract_version() {                                                # {{{1
-    # """
-    # Extract version number.
-    # @note Updated 2020-02-10.
-    # """
-    local x
-    x="${1:?}"
-    x="$( \
-        echo "$x" \
-            | grep -Eo '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?' \
-            | head -n 1 \
-    )"
-    [ -n "$x" ] || return 1
-    echo "$x"
-}
-
-_koopa_return_version() {
-    # """
-    # Return version (via extraction).
-    # @note Updated 2020-02-10.
-    # """
-    local cmd
-    cmd="${1:?}"
-    local flag
-    flag="${2:-"--version"}"
-    _koopa_is_installed "$cmd" || return 1
-    _koopa_extract_version "$("$cmd" "$flag" 2>&1 || true)"
-}
-
-
-
-# FIXME Rename in check.
-_koopa_azure_cli_version() {                                              # {{{1
-    # """
-    # Azure CLI version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "az"
-}
-
-# FIXME Rename in check.
-_koopa_bcbio_nextgen_version() {                                          # {{{1
-    # """
-    # bcbio-nextgen version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "bcbio_nextgen.py"
-}
 
 _koopa_bcbio_nextgen_current_version() {                                  # {{{1
     # """
@@ -210,16 +258,6 @@ _koopa_bioconductor_version() {                                           # {{{1
     _koopa_r_package_version "BiocVersion"
 }
 
-# FIXME Rename check.
-_koopa_coreutils_version() {                                              # {{{1
-    # """
-    # GNU coreutils version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "env"
-}
-
-# FIXME Can we simplify?
 _koopa_gcc_version() {                                                    # {{{1
     # """
     # GCC version.
@@ -234,42 +272,6 @@ _koopa_gcc_version() {                                                    # {{{1
     else
         _koopa_return_version "gcc"
     fi
-}
-
-# FIXME Rename the internal check
-_koopa_gdal_version() {                                                   # {{{1
-    # """
-    # GDAL version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "gdalinfo"
-}
-
-# FIXME Rename the check.
-_koopa_geos_version() {                                                   # {{{1
-    # """
-    # GEOS version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_return_version "geos-config"
-}
-
-# FIXME Rename the check.
-_koopa_gnupg_version() {                                                  # {{{1
-    # """
-    # GnuPG version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_return_version "gpg"
-}
-
-# FIXME Rename the check.
-_koopa_gsl_version() {                                                    # {{{1
-    # """
-    # GSL version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_return_version "gsl-config"
 }
 
 _koopa_hdf5_version() {                                                   # {{{1
@@ -288,15 +290,6 @@ _koopa_hdf5_version() {                                                   # {{{1
     )"
     [ -n "$x" ] || return 1
     echo "$x"
-}
-
-# FIXME Rename the check.
-_koopa_homebrew_version() {                                               # {{{1
-    # """
-    # Homebrew version.
-    # @note Updated 2020-02-08.
-    # """
-    _koopa_return_version "brew"
 }
 
 _koopa_linux_version() {                                                  # {{{1
@@ -342,23 +335,6 @@ _koopa_macos_version() {                                                  # {{{1
     sw_vers -productVersion
 }
 
-# FIXME Rename the check.
-_koopa_neovim_version() {                                                 # {{{1
-    # """
-    # Neovim version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_return_version "nvim"
-}
-
-_koopa_openssl_version() {                                                # {{{1
-    # """
-    # OpenSSL version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "openssl" "version"
-}
-
 _koopa_oracle_instantclient_version() {                                   # {{{1
     # """
     # Oracle InstantClient version.
@@ -382,24 +358,6 @@ _koopa_perl_file_rename_version() {                                       # {{{1
     _koopa_extract_version "$x"
 }
 
-# FIXME Rename this check.
-_koopa_pip_version() {                                                    # {{{1
-    # """
-    # pip version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "pip3"
-}
-
-# FIXME Rename this check.
-_koopa_python_version() {                                                 # {{{1
-    # """
-    # Python version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "python3"
-}
-
 _koopa_r_version() {                                                      # {{{1
     # """
     # R version.
@@ -409,51 +367,6 @@ _koopa_r_version() {                                                      # {{{1
     local x
     x="$(R --version | grep 'R version')"
     _koopa_extract_version "$x"
-}
-
-_koopa_r_basejump_version() {                                             # {{{1
-    # """
-    # basejump version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_r_package_version "basejump"
-}
-
-_koopa_rstudio_server_version() {                                         # {{{1
-    # """
-    # RStudio Server version.
-    # @note Updated 2020-02-10.
-    #
-    # Note that final step removes '-N' patch, which only applies to
-    # RStudio Server Pro release version.
-    # """
-    _koopa_return_version "rstudio-server" "version"
-}
-
-# FIXME Rename check.
-_koopa_rust_version() {                                                   # {{{1
-    # """
-    # Rust version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_return_version "rustc"
-}
-
-_koopa_singularity_version() {                                            # {{{1
-    # """
-    # Singularity version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "singularity" "version"
-}
-
-# FIXME Rename this check.
-_koopa_sqlite_version() {                                                 # {{{1
-    # """
-    # SQLite version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "sqlite3"
 }
 
 _koopa_tex_version() {                                                    # {{{1
@@ -477,23 +390,6 @@ _koopa_tex_version() {                                                    # {{{1
     )"
     [ -n "$x" ] || return 1
     echo "$x"
-}
-
-# FIXME Rename this check.
-_koopa_the_silver_searcher_version() {                                    # {{{1
-    # """
-    # The Silver Searcher (Ag) version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_return_version "ag"
-}
-
-_koopa_tmux_version() {                                                   # {{{1
-    # """
-    # Tmux version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_return_version "tmux" "-V"
 }
 
 _koopa_vim_version() {                                                    # {{{1

@@ -196,7 +196,7 @@ rstudio-server="1.2.5019"
 rstudio-server-pro="1.2.5019-6"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="2.6.5"
+ruby="2.6.5p"
 
 # https://www.rust-lang.org/
 rust="1.41.0"
