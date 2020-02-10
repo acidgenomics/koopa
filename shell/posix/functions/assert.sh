@@ -100,6 +100,21 @@ _koopa_assert_has_sudo() {                                                # {{{1
     return 0
 }
 
+_koopa_assert_is_cellar() {                                               # {{{1
+    # """
+    # Assert that input is a cellarized program.
+    # Updated 2020-02-10.
+    # """
+    for arg
+    do
+        if ! _koopa_is_cellar "$arg"
+        then
+            _koopa_stop "Not in cellar: '${arg}'."
+        fi
+    done
+    return 0
+}
+
 _koopa_assert_is_conda_active() {                                         # {{{1
     # """
     # Assert that a Conda environment is active.
@@ -912,6 +927,20 @@ _koopa_is_azure() {                                                       # {{{1
     # Updated 2019-11-25.
     # """
     [ "$(_koopa_host_id)" = "azure" ]
+}
+
+_koopa_is_cellar() {                                                      # {{{1
+    # """
+    # Is a specific command cellarized?
+    # @note Updated 2020-02-10.
+    # """
+    local cmd
+    cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
+    cmd="$(_koopa_which_realpath "$cmd")"
+    local cellar_prefix
+    cellar_prefix="$(_koopa_cellar_prefix)"
+    _koopa_is_matching_regex "$cmd" "^${cellar_prefix}"
 }
 
 _koopa_is_conda_active() {                                                # {{{1
