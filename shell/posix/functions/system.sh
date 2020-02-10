@@ -589,10 +589,31 @@ _koopa_install_mike() {                                                   # {{{1
     return 0
 }
 
+
+
+
+_koopa_is_python_module_installed() {                                     # {{{1
+    # """
+    # Check if Python module is installed.
+    # Updated 2020-02-10.
+    # """
+    local cmd
+    cmd="${1:?}"
+    local python
+    python="${2:-python3}"
+    _koopa_is_installed "$python" || return 1
+    local x
+    x="$(python3 -c "import sys; print('${cmd}' in sys.modules)")"
+    echo "$x"
+}
+
+
+
+# FIXME Early return if installed.
 _koopa_install_pip() {                                                    # {{{1
     # """
     # Install pip for Python.
-    # Updated 2020-01-03.
+    # Updated 2020-02-10.
     # """
     local python
     python="${1:-python3}"
@@ -605,10 +626,11 @@ _koopa_install_pip() {                                                    # {{{1
     return 0
 }
 
+# FIXME Early return if installed.
 _koopa_install_pipx() {
     # """
     # Install pipx for Python.
-    # Updated 2020-01-11.
+    # Updated 2020-02-10.
     #
     # Local user installation:
     # Use the '--user' flag with 'pip install' call.
@@ -622,7 +644,7 @@ _koopa_install_pipx() {
     "$python" -m pip install --no-warn-script-location pipx
     local prefix
     prefix="$(_koopa_app_prefix)/python/pipx"
-    _koopa_prefix_mkdir "$prefix"
+    _koopa_mkdir "$prefix"
     _koopa_h2 "pipx installed successfully."
     _koopa_note "Restart the shell to activate pipx."
     return 0
