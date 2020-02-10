@@ -1,3 +1,4 @@
 [submodule "dotfiles"]
 	path = dotfiles
-	url = https://github.com/mjsteinbaugh/dotfiles
+    url = https://github.com/mjsteinbaugh/dotfiles
+    branch = master
