@@ -230,6 +230,17 @@ _koopa_pyenv_prefix() {                                                   # {{{1
     echo "$prefix"
 }
 
+_koopa_python_site_packages_prefix() {
+    # """
+    # Python 'site-packages' library location.
+    # Updated 2020-02-10.
+    # """
+    _koopa_assert_is_installed python3
+    local x
+    x="$(python3 -c "import site; print(site.getsitepackages()[0])")"
+    echo "$x"
+}
+
 _koopa_r_home() {                                                         # {{{1
     # """
     # R home (prefix).
