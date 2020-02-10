@@ -9,21 +9,11 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed python3
 
-if ! _koopa_is_installed pip3
-then
-    _koopa_install_pip
-fi
-
-if ! _koopa_is_installed pipx
-then
-    _koopa_install_pipx
-fi
-
-# pip                                                                     # {{{1
-# ==============================================================================
-
-_koopa_h1 "Installing pip packages."
+_koopa_h1 "Installing Python packages."
 _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
+
+_koopa_install_pip
+_koopa_install_pipx
 
 pkgs=(
     black
