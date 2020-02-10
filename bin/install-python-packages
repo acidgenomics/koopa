@@ -1,12 +1,32 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed pip3 pipx python3
+
+# pip                                                                     # {{{1
+# ==============================================================================
+
+_koopa_h1 "Installing pip packages."
+_koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
+
+pkgs=(
+    logbook
+    pandas
+)
+
+for pkg in "${pkgs[@]}"
+do
+    _koopa_h2 "Installing '${pkg}'."
+    python3 -m pip install \
+        --no-warn-script-location \
+        "$pkg"
+done
 
 # pipx                                                                    # {{{1
 # ==============================================================================
@@ -43,18 +63,3 @@ _koopa_set_permissions "$PIPX_HOME"
 
 _koopa_success "pipx environments installed successfully."
 _koopa_note "Restart the shell to ensure programs are available in PATH."
-
-# pip                                                                     # {{{1
-# ==============================================================================
-
-_koopa_h1 "Installing pip packages."
-
-pkgs=(
-    logbook
-)
-
-for pkg in "${pkgs[@]}"
-do
-    _koopa_h2 "Installing '${pkg}'."
-    python3 -m pip install "$pkg"
-done
