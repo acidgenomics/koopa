@@ -35,7 +35,7 @@ bcl2fastq="2.20.0.422"
 
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.13.0"
+broot="0.13.1"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
