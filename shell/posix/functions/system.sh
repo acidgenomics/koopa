@@ -333,6 +333,15 @@ _koopa_git_reset() {                                                      # {{{1
     # Clean and reset a git repo and its submodules.
     # Updated 2020-02-09.
     #
+    # Additional steps:
+    # # Ensure accidental swap files created by vim get nuked.
+    # > find . -type f -name "*.swp" -delete
+    # # Ensure invisible files get nuked on macOS.
+    # > if _koopa_is_macos
+    # > then
+    # >     find . -type f -name ".DS_Store" -delete
+    # > fi
+    #
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
@@ -342,6 +351,7 @@ _koopa_git_reset() {                                                      # {{{1
     git reset --hard
     git submodule foreach --recursive git reset --hard
     git submodule update --init --recursive
+    return 0
 }
 
 # Also defined in koopa installer.
