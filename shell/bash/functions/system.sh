@@ -70,12 +70,11 @@ _koopa_git_submodule_init() {
     # """
     local dir
     dir="$(realpath "${1:-.}")"
-    [[ -f "${dir}/.gitmodules" ]] || return 0
+    [[ -f "${dir}/.gitmodules" ]] || return 1
+    _koopa_h2 "Initializing submodules at '${dir}'."
     _koopa_assert_is_installed git
     (
         cd "$dir" || exit 1
-        _koopa_assert_is_git
-        _koopa_h2 "Initializing submodules at '${dir}'."
         local array string target target_key url url_key
         git submodule init
         mapfile -t array \
@@ -91,11 +90,10 @@ _koopa_git_submodule_init() {
             target="$(echo "$string" | cut -d ' ' -f 2)"
             url_key="${target_key//\.path/.url}"
             url="$(git config -f ".gitmodules" --get "$url_key")"
-            _koopa_dl "URL" "$url"
-            _koopa_dl "Target" "$target"
-            git submodule add --force "$url" "$target"
+            _koopa_dl "$target" "$url"
+            git submodule add --force "$url" "$target" > /dev/null
         done
-    )  # > /dev/null
+    )
     return 0
 }
 
@@ -119,13 +117,13 @@ _koopa_git_reset() {                                                      # {{{1
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
-    _koopa_assert_is_installed git
     local dir
     dir="$(realpath "${1:-.}")"
+    _koopa_assert_is_git "$dir"
+    _koopa_h2 "Cleaning git repository at '${dir}'."
+    _koopa_assert_is_installed git
     (
         cd "$dir" || exit 1
-        _koopa_assert_is_git
-        _koopa_h2 "Cleaning git repository at '${dir}'."
         git clean -dffx
         git submodule foreach --recursive git clean -dffx
         git reset --hard
@@ -133,7 +131,7 @@ _koopa_git_reset() {                                                      # {{{1
         git submodule update --init --recursive
         git fetch --all
         git pull
-    )  # > /dev/null
+    ) > /dev/null
     _koopa_git_submodule_init "$dir"
     return 0
 }
