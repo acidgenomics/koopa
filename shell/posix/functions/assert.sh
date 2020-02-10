@@ -1199,14 +1199,49 @@ _koopa_is_powerful() {                                                    # {{{1
     fi
 }
 
+_koopa_is_python_package_installed() {                                    # {{{1
+    # """
+    # Check if Python package is installed.
+    # Updated 2020-02-10.
+    #
+    # Fast mode: checking the 'site-packages' directory.
+    #
+    # Alternate, slow mode:
+    # > local freeze
+    # > freeze="$("$python" -m pip freeze)"
+    # > _koopa_is_matching_regex "$freeze" "^${pkg}=="
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/1051254
+    # - https://askubuntu.com/questions/588390
+    # """
+    local pkg
+    pkg="${1:?}"
+    local python
+    python="${2:-python3}"
+    _koopa_is_installed "$python" || return 1
+    local prefix
+    prefix="$(_koopa_python_site_packages_prefix "$python")"
+    [ -d "${prefix}/${pkg}" ]
+}
+
 _koopa_is_r_package_installed() {                                         # {{{1
     # """
     # Is the requested R package installed?
-    # Updated 2019-10-20.
+    # Updated 2020-02-10.
+    #
+    # Fast mode: checking the 'site-library' directory.
+    #
+    # Alternate, slow mode:
+    # > Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
+    # >     | grep -q "TRUE"
     # """
+    local pkg
+    pkg="${1:?}"
     _koopa_is_installed R || return 1
-    Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
-        | grep -q "TRUE"
+    local prefix
+    prefix="$(_koopa_r_library_prefix)"
+    [ -d "${prefix}/${pkg}" ]
 }
 
 _koopa_is_rhel() {                                                        # {{{1
