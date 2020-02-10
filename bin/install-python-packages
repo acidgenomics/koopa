@@ -22,17 +22,14 @@ _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
 
 pkgs=(
     logbook
-    numpy
-    pandas
+    six
 )
 
-for pkg in "${pkgs[@]}"
-do
-    _koopa_h2 "Installing '${pkg}'."
-    python3 -m pip install \
-        --no-warn-script-location \
-        "$pkg"
-done
+_koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
+
+python3 -m pip install \
+    --no-warn-script-location \
+    "${pkgs[@]}"
 
 if _koopa_is_cellar python3
 then
@@ -48,21 +45,24 @@ then
 fi
 
 _koopa_h1 "Installing pipx virtual environments."
+
 _koopa_dl "PIPX_HOME" "$PIPX_HOME"
 _koopa_dl "PIPX_BIN_DIR" "$PIPX_BIN_DIR"
-
-mkdir -pv "$PIPX_BIN_DIR"
-_koopa_add_to_path_start "$PIPX_BIN_DIR"
 
 envs=(
     black
     flake8
+    numpy
+    pandas
     pyflakes
     pylint
     pytest
 )
 
 _koopa_dl "Environments" "$(_koopa_to_string "${envs[@]}")"
+
+mkdir -pv "$PIPX_BIN_DIR"
+_koopa_add_to_path_start "$PIPX_BIN_DIR"
 
 for env in "${envs[@]}"
 do
