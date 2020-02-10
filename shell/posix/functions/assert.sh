@@ -248,9 +248,9 @@ _koopa_assert_is_function() {                                             # {{{1
 _koopa_assert_is_git() {                                                  # {{{1
     # """
     # Assert that current directory is a git repo.
-    # Updated 2019-10-23.
+    # Updated 2020-02-10.
     # """
-    if ! _koopa_is_git
+    if ! _koopa_is_git "$@"
     then
         _koopa_stop "Not a git repo."
     fi
@@ -1011,39 +1011,51 @@ _koopa_is_function() {                                                    # {{{1
 
 _koopa_is_git() {                                                         # {{{1
     # """
-    # Is the current working directory a git repository?
-    # Updated 2019-10-14.
+    # Is the directory a git repository?
+    # Updated 2020-02-10.
     #
     # See also:
     # - https://stackoverflow.com/questions/2180270
     # """
-    if git rev-parse --git-dir > /dev/null 2>&1
-    then
-        return 0
-    else
-        return 1
-    fi
+    _koopa_assert_is_installed git
+    local dir
+    dir="$(realpath "${1:-}")"
+    [ -d "${dir}/.git" ] || return 1
+    (
+        cd "$dir" || return 1
+        if git rev-parse --git-dir > /dev/null 2>&1
+        then
+            return 0
+        else
+            return 1
+        fi
+    )
 }
 
 _koopa_is_git_clean() {                                                   # {{{1
     # """
-    # Is the current git repo clean, or does it have unstaged changes?
-    # Updated 2019-10-14.
+    # Is the git repo clean, or does it have unstaged changes?
+    # Updated 2020-02-10.
     #
     # See also:
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
-    # Are there unstaged changes?
-    if ! git diff-index --quiet HEAD --
-    then
-        return 1
-    fi
-    # In need of a pull or push?
-    if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
-    then
-        return 1
-    fi
+    _koopa_assert_is_installed git
+    dir="$(realpath "${1:-}")"
+    (
+        cd "$dir" || return 1
+        # Are there unstaged changes?
+        if ! git diff-index --quiet HEAD --
+        then
+            return 1
+        fi
+        # In need of a pull or push?
+        if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
+        then
+            return 1
+        fi
+    )
     return 0
 }
 
