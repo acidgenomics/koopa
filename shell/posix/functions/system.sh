@@ -589,27 +589,6 @@ _koopa_install_mike() {                                                   # {{{1
     return 0
 }
 
-
-
-
-_koopa_is_python_module_installed() {                                     # {{{1
-    # """
-    # Check if Python module is installed.
-    # Updated 2020-02-10.
-    # """
-    local cmd
-    cmd="${1:?}"
-    local python
-    python="${2:-python3}"
-    _koopa_is_installed "$python" || return 1
-    local x
-    x="$(python3 -c "import sys; print('${cmd}' in sys.modules)")"
-    echo "$x"
-}
-
-
-
-# FIXME Early return if installed.
 _koopa_install_pip() {                                                    # {{{1
     # """
     # Install pip for Python.
@@ -617,16 +596,27 @@ _koopa_install_pip() {                                                    # {{{1
     # """
     local python
     python="${1:-python3}"
+    if ! _koopa_is_installed "$python"
+    then
+        _koopa_warning "Python ('${python}') is not installed."
+        return 1
+    fi
+    if _koopa_is_python_package_installed "pip" "$python"
+    then
+        _koopa_note "pip is already installed."
+        return 0
+    fi
     _koopa_h2 "Installing pip for Python '${python}'."
     local file
     file="get-pip.py"
     _koopa_download "https://bootstrap.pypa.io/${file}"
     "$python" "$file" --no-warn-script-location
     rm "$file"
+    _koopa_success "Installation of pip was successful."
+    _koopa_note "Restart the shell to complete activation."
     return 0
 }
 
-# FIXME Early return if installed.
 _koopa_install_pipx() {
     # """
     # Install pipx for Python.
@@ -640,13 +630,23 @@ _koopa_install_pipx() {
     # """
     local python
     python="${1:-python3}"
+    if ! _koopa_is_installed "$python"
+    then
+        _koopa_warning "Python ('${python}') is not installed."
+        return 1
+    fi
+    if _koopa_is_python_package_installed "pipx" "$python"
+    then
+        _koopa_note "pipx is already installed."
+        return 0
+    fi
     _koopa_h2 "Installing pipx for Python '${python}'."
     "$python" -m pip install --no-warn-script-location pipx
     local prefix
     prefix="$(_koopa_app_prefix)/python/pipx"
     _koopa_mkdir "$prefix"
-    _koopa_h2 "pipx installed successfully."
-    _koopa_note "Restart the shell to activate pipx."
+    _koopa_success "Installation of pipx was successful."
+    _koopa_note "Restart the shell to complete activation."
     return 0
 }
 
