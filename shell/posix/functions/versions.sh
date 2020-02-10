@@ -266,9 +266,9 @@ _koopa_gcc_version() {                                                    # {{{1
     _koopa_is_installed gcc || return 1
     if _koopa_is_macos
     then
-        gcc --version 2>&1 \
-            | sed -n '2p' \
-            | cut -d ' ' -f 4
+        local x
+        x="$(gcc --version 2>&1 | sed -n '2p')"
+        _koopa_extract_version "$x"
     else
         _koopa_return_version "gcc"
     fi
