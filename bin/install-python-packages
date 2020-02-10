@@ -17,6 +17,7 @@ _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
 
 pkgs=(
     logbook
+    numpy
     pandas
 )
 
@@ -27,6 +28,8 @@ do
         --no-warn-script-location \
         "$pkg"
 done
+
+_koopa_link_cellar python
 
 # pipx                                                                    # {{{1
 # ==============================================================================
@@ -48,13 +51,12 @@ envs=(
 
 _koopa_dl "Environments" "$(_koopa_to_string "${envs[@]}")"
 
-# Can pass '--force' flag here to force reinstall.
 for env in "${envs[@]}"
 do
     _koopa_h2 "Installing '${env}'."
-    rm -fr "${PIPX_HOME}/venvs/${env}"
     (
         set -o xtrace
+        rm -frv "${PIPX_HOME}/venvs/${env}"
         pipx install --force "$env"
     ) &> "$(_koopa_tmp_log_file)"
 done
