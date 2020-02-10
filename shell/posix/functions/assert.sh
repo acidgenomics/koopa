@@ -434,6 +434,21 @@ _koopa_assert_is_not_symlink() {                                          # {{{1
     return 0
 }
 
+_koopa_assert_is_python_package_installed() {                             # {{{1
+    # """
+    # Assert that specific Python packages are installed.
+    # Updated 2020-02-10.
+    # """
+    for arg
+    do
+        if ! _koopa_is_python_package_installed "${arg}"
+        then
+            _koopa_stop "'${arg}' Python package is not installed."
+        fi
+    done
+    return 0
+}
+
 _koopa_assert_is_r_package_installed() {                                  # {{{1
     # """
     # Assert that specific R packages are installed.
