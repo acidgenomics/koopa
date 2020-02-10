@@ -47,12 +47,9 @@ fi
 
 _koopa_h2 "Cleaning and resetting git repo."
 
-(
-    _koopa_set_permissions "$koopa_prefix"
-    cd "$koopa_prefix" || exit 1
-    _koopa_git_reset
-    _koopa_set_permissions "$koopa_prefix"
-) > /dev/null
+_koopa_set_permissions "$koopa_prefix"
+_koopa_git_reset "$koopa_prefix"
+_koopa_set_permissions "$koopa_prefix"
 
 _koopa_update_xdg_config
 _koopa_update_ldconfig
@@ -65,7 +62,6 @@ rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
 
 repos=(
     docker
-    dotfiles
     dotfiles-private
     scripts-private
 )
