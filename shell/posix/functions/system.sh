@@ -324,7 +324,24 @@ _koopa_git_branch() {                                                     # {{{1
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
+    _koopa_is_git || return 1
     git symbolic-ref --short -q HEAD
+}
+
+_koopa_git_reset() {                                                      # {{{1
+    # """
+    # Clean and reset a git repo and its submodules.
+    # Updated 2020-02-09.
+    #
+    # See also:
+    # https://gist.github.com/nicktoumpelis/11214362
+    # """
+    _koopa_is_git || return 1
+    git clean -xfdf
+    git submodule foreach --recursive git clean -xfdf
+    git reset --hard
+    git submodule foreach --recursive git reset --hard
+    git submodule update --init --recursive
 }
 
 # Also defined in koopa installer.
