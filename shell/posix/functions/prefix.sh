@@ -235,9 +235,11 @@ _koopa_python_site_packages_prefix() {
     # Python 'site-packages' library location.
     # Updated 2020-02-10.
     # """
-    _koopa_assert_is_installed python3
+    local python
+    python="${1:-python3}"
+    _koopa_assert_is_installed "$python"
     local x
-    x="$(python3 -c "import site; print(site.getsitepackages()[0])")"
+    x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
     echo "$x"
 }
 
@@ -253,26 +255,31 @@ _koopa_r_home() {                                                         # {{{1
     fi
     local home
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
+    [ -d "$home" ] || return 1
     echo "$home"
 }
 
 _koopa_r_library_prefix() {                                               # {{{1
     # """
     # R default library prefix.
-    # Updated 2020-02-05.
+    # Updated 2020-02-10.
     # """
+    _koopa_is_installed Rscript || return 1
     local prefix
-    prefix="$(Rscript -e '.libPaths()[[1L]]')"
+    prefix="$(Rscript -e 'cat(.libPaths()[[1L]])')"
+    [ -d "$prefix" ] || return 1
     echo "$prefix"
 }
 
 _koopa_r_system_library_prefix() {                                        # {{{1
     # """
     # R system library prefix.
-    # Updated 2020-02-05.
+    # Updated 2020-02-10.
     # """
+    _koopa_is_installed Rscript || return 1
     local prefix
-    prefix="$(Rscript --vanilla -e 'tail(.libPaths(), n = 1L)')"
+    prefix="$(Rscript --vanilla -e 'cat(tail(.libPaths(), n = 1L))')"
+    [ -d "$prefix" ] || return 1
     echo "$prefix"
 }
 
