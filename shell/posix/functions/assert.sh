@@ -1011,52 +1011,56 @@ _koopa_is_function() {                                                    # {{{1
 
 _koopa_is_git() {                                                         # {{{1
     # """
-    # Is the directory a git repository?
+    # Is directory a git repository?
     # Updated 2020-02-10.
+    #
+    # Fast check that we can use for command prompt.
+    # """
+    local dir
+    dir="${1:-.}"
+    [ -d "${dir}/.git" ]
+}
+
+_koopa_is_git2() {
+    # """
+    # Is the working directory a git repository?
+    # Updated 2020-02-10.
+    #
+    # Slower and more thorough check.
     #
     # See also:
     # - https://stackoverflow.com/questions/2180270
     # """
     _koopa_assert_is_installed git
-    local dir
-    dir="$(realpath "${1:-.}")"
-    [ -d "${dir}/.git" ] || return 1
-    (
-        cd "$dir" || return 1
-        if git rev-parse --git-dir > /dev/null 2>&1
-        then
-            return 0
-        else
-            return 1
-        fi
-    )
+    if git rev-parse --git-dir > /dev/null 2>&1
+    then
+        return 0
+    else
+        return 1
+    fi
 }
 
 _koopa_is_git_clean() {                                                   # {{{1
     # """
-    # Is the git repo clean, or does it have unstaged changes?
+    # Is the working directory git repo clean, or does it have unstaged changes?
     # Updated 2020-02-10.
     #
     # See also:
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
+    _koopa_is_git || return 1
     _koopa_assert_is_installed git
-    dir="$(realpath "${1:-.}")"
-    _koopa_is_git "$dir" || return 1
-    (
-        cd "$dir" || return 1
-        # Are there unstaged changes?
-        if ! git diff-index --quiet HEAD --
-        then
-            return 1
-        fi
-        # In need of a pull or push?
-        if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
-        then
-            return 1
-        fi
-    )
+    # Are there unstaged changes?
+    if ! git diff-index --quiet HEAD --
+    then
+        return 1
+    fi
+    # In need of a pull or push?
+    if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
+    then
+        return 1
+    fi
     return 0
 }
 
