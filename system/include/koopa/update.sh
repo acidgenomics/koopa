@@ -45,8 +45,6 @@ then
     _koopa_assert_has_sudo
 fi
 
-_koopa_h2 "Cleaning and resetting git repo."
-
 _koopa_set_permissions "$koopa_prefix"
 _koopa_git_reset "$koopa_prefix"
 _koopa_set_permissions "$koopa_prefix"
