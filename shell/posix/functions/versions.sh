@@ -130,7 +130,7 @@ _koopa_autojump_version() {                                               # {{{1
             | head -n 1 \
             | cut -d ' ' -f 2 \
             | sed 's/^v//' \
-            | grep -Eo '[0-9]\.[0-9]\.[0-9]' \
+            | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' \
     )"
     echo "$x"
 }
@@ -143,7 +143,7 @@ _koopa_azure_cli_version() {                                              # {{{1
     _koopa_is_installed az || return 1
     az --version \
         | head -n 1 \
-        | grep -Eo '[0-9]\.[0-9]\.[0-9]'
+        | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+'
 }
 
 _koopa_bash_version() {                                                   # {{{1
@@ -340,7 +340,7 @@ _koopa_gcc_version() {                                                    # {{{1
     else
         gcc --version \
             | head -n 1 \
-            | grep -Eo '[0-9]\.[0-9]\.[0-9]' \
+            | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+' \
             | head -n 1
     fi
 }
