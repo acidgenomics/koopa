@@ -83,7 +83,6 @@ _koopa_git_submodule_init() {
                     -f ".gitmodules" \
                     --get-regexp '^submodule\..*\.path$' \
             )
-        echo "${#array[@]} submodules detected."
         for string in "${array[@]}"
         do
             target_key="$(echo "$string" | cut -d ' ' -f 1)"
