@@ -291,7 +291,7 @@ then
         # > pipx-install-envs
 
         # > _koopa_activate_rustup
-        # > install-rust-crates
+        # > install-rust-packages
 
         # > _koopa_activate_conda
         # > conda-create-bioinfo-envs --all
