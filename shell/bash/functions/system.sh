@@ -74,7 +74,7 @@ _koopa_git_submodule_init() {
     _koopa_h2 "Initializing submodules at '${dir}'."
     _koopa_assert_is_installed git
     (
-        cd "$dir" || exit 1
+        cd "$dir" || return 1
         local array string target target_key url url_key
         git submodule init
         mapfile -t array \
@@ -123,7 +123,7 @@ _koopa_git_reset() {                                                      # {{{1
     _koopa_h2 "Cleaning git repository at '${dir}'."
     _koopa_assert_is_installed git
     (
-        cd "$dir" || exit 1
+        cd "$dir" || return 1
         git clean -dffx
         git submodule foreach --recursive git clean -dffx
         git reset --hard
