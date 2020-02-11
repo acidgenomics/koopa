@@ -102,7 +102,7 @@ git="2.25.0"
 go="1.13.4"
 
 # https://cloud.google.com/sdk/install
-google-cloud-sdk="214.0.0"
+google-cloud-sdk="280.0.0"
 
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
