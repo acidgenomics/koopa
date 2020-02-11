@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt
+#
+# Automated script:
+# > curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+# """
+
+_koopa_exit_if_installed az
+
+# Required packages:
+# - apt-transport-https
+# - ca-certificates
+# - curl
+# - gnupg
+# - lsb-release
+
+# Download and install the Microsoft signing key.
+curl -sL https://packages.microsoft.com/keys/microsoft.asc \
+    | gpg --dearmor \
+    | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+
+# Add the Azure CLI software repository.
+AZ_REPO="$(lsb_release -cs)"
+echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
+${AZ_REPO} main" \
+    | sudo tee /etc/apt/sources.list.d/azure-cli.list
+
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get \
+        --fix-missing \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install azure-cli
+
+# > az login
