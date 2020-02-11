@@ -16,12 +16,13 @@ _koopa_install_pip
 _koopa_install_pipx
 
 # awscli (v1.17)
+# numpy
+# pandas
+
 pkgs=(
     black
     flake8
     logbook
-    numpy
-    pandas
     pyflakes
     pylint
     pytest
