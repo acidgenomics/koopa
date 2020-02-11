@@ -573,13 +573,15 @@ _koopa_install_mike() {                                                   # {{{1
     # """
     # Install additional Mike-specific config files.
     # Updated 2020-01-14.
+    #
+    # Note that these repos require SSH key to be set on GitHub.
     # """
-    # > _koopa_h2 "Setting koopa remote to Git (SSH) instead of HTTPS."
-    # > (
-    # >     cd "${KOOPA_PREFIX:?}" || exit 1
-    # >     git remote set-url origin "git@github.com:acidgenomics/koopa.git"
-    # > )
-    install-dotfiles --mike
+    if ! _koopa_is_github_ssh_enabled
+    then
+        _koopa_stop "GitHub SSH key is not configured."
+    fi
+    # dotfiles
+    "${DOTFILES}/INSTALL.sh" --private
     # docker
     source_repo="git@github.com:acidgenomics/docker.git"
     target_dir="$(_koopa_config_prefix)/docker"
