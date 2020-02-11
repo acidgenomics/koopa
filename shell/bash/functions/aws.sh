@@ -14,34 +14,37 @@ _koopa_aws_s3_ls() {
     # """
     _koopa_is_installed aws || return 1
 
-    local recursive
-    recursive=0
+    local flags
+    flags=()
 
+    local pos
+    pos=()
     while (("$#"))
     do
         case "$1" in
             --recursive)
-                recursive=1
+                flags+=("--recursive")
                 shift 1
                 ;;
-            *)
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
                 _koopa_invalid_arg "$1"
+                ;;
+            *)
+                POSITIONAL+=("$1")
+                shift 1
                 ;;
         esac
     done
+    set -- "${pos[@]}"
 
     local prefix
     prefix="${1:?}"
     prefix="$(_strip_trailing_slash "$prefix")"
     prefix="${prefix}/"
-
-    local flags
-    flags=()
-
-    if [[ "$recursive" -eq 1 ]]
-    then
-        flags+=("--recursive")
-    fi
 
     local x
     x="$(aws s3 ls "${flags[@]}" "$prefix")"
