@@ -111,7 +111,10 @@ _koopa_return_version() {                                                 # {{{1
     local cmd
     cmd="${1:?}"
     case "$cmd" in
-        azure)
+        aws-cli)
+            cmd="aws"
+            ;;
+        azure-cli)
             cmd="az"
             ;;
         bcbio-nextgen)
