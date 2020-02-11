@@ -82,15 +82,15 @@ then
     if _koopa_is_macos
     then
         update-homebrew
-        update-r-packages
     elif _koopa_is_installed configure-vm
     then
         configure-vm
     fi
     if [[ ! -f "${config_prefix}/rsync" ]]
     then
+        update-r-packages
         update-conda
-        update-pip
+        update-python-packages
         update-rust
         update-rust-packages
         update-perlbrew
