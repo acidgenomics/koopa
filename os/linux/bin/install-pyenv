@@ -19,7 +19,7 @@ _koopa_prefix_mkdir "$prefix"
     git clone \
         https://github.com/pyenv/pyenv.git \
         "$prefix"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 

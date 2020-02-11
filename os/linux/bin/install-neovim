@@ -32,7 +32,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         CMAKE_BUILD_TYPE=Release \
         CMAKE_INSTALL_PREFIX="$prefix"
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

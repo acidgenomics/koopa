@@ -17,6 +17,6 @@ _koopa_h1 "Installing Haskell stack for current user."
     mkdir -pv "$xdg_bin_dir"
     _koopa_add_to_path_start "$xdg_bin_dir"
     curl -sSL "https://get.haskellstack.org/" | bash
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_success "Installation of Haskell stack was successful."

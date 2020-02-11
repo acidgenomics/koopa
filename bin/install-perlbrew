@@ -46,7 +46,7 @@ rm -frv "${HOME}/.perlbrew"
 (
     set -o xtrace
     curl -L https://install.perlbrew.pl | bash
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 _koopa_activate_perlbrew

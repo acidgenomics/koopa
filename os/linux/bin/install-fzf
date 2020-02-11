@@ -48,7 +48,7 @@ _koopa_prefix_mkdir "$cellar_prefix"
     # Following approach used in Homebrew recipe here.
     rm -fr .[[:alnum:]]* src target
     cp -rv . "$app_prefix"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
