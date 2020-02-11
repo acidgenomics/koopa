@@ -44,7 +44,7 @@ _koopa_h1 "Installing ${name} ${version}."
     _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
     rm -fr "$tmp_dir"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 # > sudo "$name" stop
 # > sudo "$name" verify-installation

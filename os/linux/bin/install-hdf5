@@ -39,7 +39,7 @@ hdf5-${version}/src/${file}"
     make --jobs="$jobs"
     # > make check
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

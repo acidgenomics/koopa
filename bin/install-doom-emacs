@@ -25,6 +25,6 @@ _koopa_assert_has_no_args "$@"
     "${exe_file}" quickstart
     "${exe_file}" refresh
     "${exe_file}" doctor
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_success "Installation of ${name} was successful."

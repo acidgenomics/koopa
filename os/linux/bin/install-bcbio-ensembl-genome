@@ -112,6 +112,6 @@ cores="$(_koopa_cpu_count)"
         --indexes "${indexes[@]}" \
         2>&1 | tee "$log_file"
     rm -fr "$tmp_dir"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_success "Installation of bcbio genome was successful."

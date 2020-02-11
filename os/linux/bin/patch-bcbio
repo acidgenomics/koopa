@@ -95,6 +95,6 @@ rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
     rm -fr tests/test_automated_output
     _koopa_h2 "Patching installation via 'setup.py' script."
     "$bcbio_python" setup.py install 2>&1 | tee "$log_file"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_success "Patching of bcbio-nextgen was successful."

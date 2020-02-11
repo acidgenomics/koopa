@@ -42,7 +42,7 @@ _koopa_h1 "Installing ${name} ${version} (${os_id})."
     url="https://download2.rstudio.org/server/${os_id}/x86_64/${file}"
     _koopa_download "$url"
     sudo yum -y install "$file"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

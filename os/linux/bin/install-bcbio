@@ -80,7 +80,7 @@ mkdir -pv "$log_dir"
         --nodata \
         --isolate \
         2>&1 | tee "$log_file"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 # > _koopa_h1 "Fixing MACS2/numpy issue."
 # > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"

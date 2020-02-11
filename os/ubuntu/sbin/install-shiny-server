@@ -26,7 +26,7 @@ then
     (
         set -o xtrace
         Rscript -e 'install.packages("shiny")'
-    ) &> "$(_koopa_tmp_log_file)"
+    ) > "$(_koopa_tmp_log_file)"
 fi
 
 (
@@ -36,7 +36,7 @@ fi
     url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
     _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

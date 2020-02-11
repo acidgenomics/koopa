@@ -20,7 +20,7 @@ _koopa_h1 "Installing ChromHMM at '${prefix}'."
     _koopa_download "http://compbio.mit.edu/ChromHMM/${file}"
     _koopa_extract "$file"
     mv -v "ChromHMM" "$prefix"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
