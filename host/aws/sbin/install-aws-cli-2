@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="awscli"
+name="aws-cli"
 install_dir="$(_koopa_cellar_prefix)/${name}"
 bin_dir="$(_koopa_make_prefix)/bin"
 
