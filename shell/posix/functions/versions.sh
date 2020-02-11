@@ -132,6 +132,9 @@ _koopa_return_version() {                                                 # {{{1
         gnupg)
             cmd="gpg"
             ;;
+        google-cloud-sdk)
+            cmd="gcloud"
+            ;;
         gsl)
             cmd="gsl-config"
             ;;
