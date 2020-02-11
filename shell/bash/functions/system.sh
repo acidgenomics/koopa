@@ -98,16 +98,15 @@ _koopa_git_pull() {
     # """
     _koopa_assert_is_git
     _koopa_assert_is_installed git
-    git fetch --all
-    git pull
+    git fetch --all --quiet
+    git pull --quiet
     if [[ -f ".gitmodules" ]]
     then
-        git submodule update --init --recursive
-        git submodule foreach -q --recursive git checkout master
-        git submodule foreach git pull
-        git submodule status
+        git submodule --quiet update --init --recursive
+        git submodule --quiet foreach -q --recursive git checkout --quiet master
+        git submodule --quiet foreach git pull --quiet
     fi
-    git status
+    return 0
 }
 
 _koopa_git_reset() {                                                      # {{{1
