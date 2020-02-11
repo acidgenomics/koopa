@@ -572,13 +572,21 @@ _koopa_info_box() {                                                       # {{{1
 _koopa_install_mike() {                                                   # {{{1
     # """
     # Install additional Mike-specific config files.
-    # Updated 2020-01-14.
+    # Updated 2020-02-11.
     #
     # Note that these repos require SSH key to be set on GitHub.
     # """
     _koopa_assert_is_github_ssh_enabled
     # dotfiles
-    "${DOTFILES}/INSTALL.sh" --private
+    "${DOTFILES}/INSTALL.sh"
+    # dotfiles-private
+    source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
+    target_dir="$(_koopa_config_prefix)/dotfiles-private"
+    if [[ ! -d "$target_dir" ]]
+    then
+        git clone --recursive "$source_repo" "$target_dir"
+    fi
+    "${target_dir}/INSTALL.sh"
     # docker
     source_repo="git@github.com:acidgenomics/docker.git"
     target_dir="$(_koopa_config_prefix)/docker"
