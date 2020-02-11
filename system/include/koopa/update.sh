@@ -54,7 +54,7 @@ _koopa_set_permissions "$koopa_prefix"
     cd "$koopa_prefix" || exit 1
     _koopa_git_reset
     _koopa_git_pull
-)
+) > /dev/null
 
 _koopa_set_permissions "$koopa_prefix"
 
