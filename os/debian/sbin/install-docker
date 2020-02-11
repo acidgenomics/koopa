@@ -40,6 +40,9 @@ sudo DEBIAN_FRONTEND=noninteractive \
 # Ensure current user is added to Docker group.
 sudo usermod -aG docker "$USER"
 
+# Move '/var/lib/docker' to '/n/var/lib/docker'.
 _koopa_link_docker
 
 _koopa_success "Installation of Docker was successful."
+_koopa_note "Shell must be reloaded for '${USER}' to be added to the \
+'docker' group."
