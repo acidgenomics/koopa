@@ -137,8 +137,8 @@ _koopa_git_reset() {                                                      # {{{1
     then
         _koopa_git_submodule_init
         git submodule foreach --recursive git clean -dffx
-        git reset --hard
-        git submodule foreach --recursive git reset --hard
+        git reset --hard > /dev/null
+        git submodule foreach --recursive git reset --hard > /dev/null
     fi
     return 0
 }
