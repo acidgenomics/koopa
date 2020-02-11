@@ -98,7 +98,7 @@ EOL
         # > make test
         make install
     fi
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

@@ -31,6 +31,6 @@ _koopa_info "Saving install log at '${log_file}'."
         --data \
         --cores="$cores" \
         2>&1 | tee "$log_file"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_success "Update of bcbio-nextgen was successful."

@@ -43,7 +43,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --with-python="python3"
     make --jobs="$jobs"
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

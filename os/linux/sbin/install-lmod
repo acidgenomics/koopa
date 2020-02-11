@@ -37,7 +37,7 @@ eval "$(luarocks path)"
         --with-updateSystemFn="${data_dir}/system.txt"
     sudo make install
     rm -fr "$tmp_dir"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_update_lmod_config
 

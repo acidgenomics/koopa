@@ -39,7 +39,7 @@ _koopa_h1 "Installing ${name} ${version}."
     url="https://download2.rstudio.org/server/bionic/amd64/${file}"
     _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

@@ -69,7 +69,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     # The installer will warn when you skip this step.
     # > make test
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
@@ -85,7 +85,7 @@ _koopa_h2 "Installing CPAN Minus."
 (
     set -o xtrace
     "${prefix}/bin/cpan" -i "App::cpanminus"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
@@ -94,7 +94,7 @@ _koopa_h2 "Installing 'File::Rename' module."
 (
     set -o xtrace
     "${prefix}/bin/cpanm" "File::Rename"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 

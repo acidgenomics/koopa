@@ -29,7 +29,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     chmod a+x rmate
     mkdir -p "${prefix}/bin"
     cp rmate "${prefix}/bin"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

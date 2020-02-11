@@ -26,7 +26,7 @@ _koopa_assert_has_no_args "$@"
     git clone "https://github.com/Ensembl/ensembl-funcgen.git"
     git clone "https://github.com/Ensembl/ensembl-compara.git"
     git clone "https://github.com/Ensembl/ensembl-io.git"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 

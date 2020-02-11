@@ -45,7 +45,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --with-openssl="/bin/openssl"
     make --jobs="$jobs" V=1
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

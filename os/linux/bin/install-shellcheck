@@ -27,7 +27,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     _koopa_extract "$file"
     mkdir -pv "${prefix}/bin"
     cp "shellcheck-v${version}/shellcheck" "${prefix}/bin"
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

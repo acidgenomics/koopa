@@ -54,7 +54,7 @@ export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

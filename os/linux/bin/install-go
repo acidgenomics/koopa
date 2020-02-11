@@ -29,7 +29,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cp -rv go/* "${app_prefix}/."
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

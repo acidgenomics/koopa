@@ -68,7 +68,7 @@ _koopa_h2 "Installing 'ngs'."
     make -C ngs-sdk install
     make -C ngs-java install
     make -C ngs-python install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
@@ -91,7 +91,7 @@ _koopa_h2 "Installing 'ncbi-vdb'."
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
@@ -114,7 +114,7 @@ _koopa_h2 "Installing 'sra-tools'."
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-) &> "$(_koopa_tmp_log_file)"
+) > "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
