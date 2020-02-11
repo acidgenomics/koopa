@@ -545,26 +545,27 @@ _koopa_update_r_config_macos() {                                          # {{{1
     return 0
 }
 
-_koopa_update_shells() {                                                  # {{{1
+# FIXME Rename this.
+# FIXME Renamed from _koopa_update_shells
+_koopa_enable_shell() {                                                  # {{{1
     # """
-    # Update shell configuration.
-    # Updated 2020-01-21.
+    # Enable shell.
+    # Updated 2020-02-11.
     # """
     _koopa_assert_has_sudo
-    local shell_name
-    shell_name="${1:?}"
-    local shell_exe
-    shell_exe="$(_koopa_make_prefix)/bin/${shell_name}"
-    local shell_etc_file
-    shell_etc_file="/etc/shells"
-    if ! grep -q "$shell_exe" "$shell_etc_file"
+    local cmd
+    cmd="${1:?}"
+    cmd="$(_koopa_which "$cmd")"
+    local etc_file
+    etc_file="/etc/shells"
+    _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
+    if ! grep -q "$cmd" "$etc_file"
     then
-        _koopa_h2 "Updating '${shell_etc_file}' to include '${shell_exe}'."
-        sudo sh -c "echo ${shell_exe} >> ${shell_etc_file}"
+        sudo sh -c "echo ${cmd} >> ${etc_file}"
     else
-        _koopa_success "'${shell_exe}' already defined in '${shell_etc_file}'."
+        _koopa_success "'${cmd}' already defined in '${etc_file}'."
     fi
-    _koopa_note "Run 'chsh -s ${shell_exe} ${USER}' to change default shell."
+    _koopa_note "Run 'chsh -s ${cmd} ${USER}' to change default shell."
     return 0
 }
 
