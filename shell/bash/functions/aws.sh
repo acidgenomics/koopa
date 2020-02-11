@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
-_koopa_aws_s3_ls() {
+_koopa_aws_s3_ls() {                                                      # {{{1
     # """
     # List AWS S3 bucket.
     # @note Updated 2020-02-10.
