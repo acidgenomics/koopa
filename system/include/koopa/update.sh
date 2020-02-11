@@ -49,8 +49,8 @@ _koopa_set_permissions "$koopa_prefix"
 
 (
     cd "$DOTFILES" || exit 1
-    _koopa_get_reset
-    _koopa_get_pull
+    _koopa_git_reset
+    _koopa_git_pull
     cd "$koopa_prefix" || exit 1
     _koopa_git_reset
     _koopa_git_pull
