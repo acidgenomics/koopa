@@ -24,26 +24,27 @@ patches="$(echo "$version" | cut -d '.' -f 3)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="bash-${minor_version}.tar.gz"
     url="${gnu_mirror}/bash/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "bash-${minor_version}" || exit 1
-    # Apply patches. Can pipe curl call directly to 'patch -p0' instead.
+    # Apply patches. 
     (
         mkdir -pv patches
         cd patches || exit 1
-        base_url="${gnu_mirror}/bash/bash-${minor_version}-patches"
+        # Note that GNU mirror doesn't seem to work correctly here.
+        base_url="https://ftp.gnu.org/gnu/bash/bash-${minor_version}-patches"
         mv_tr="$(echo "$minor_version" | tr -d '.')"
         range="$(printf "%03d-%03d" "1" "$patches")"
         request="${base_url}/bash${mv_tr}-[${range}]"
-        # > _koopa_download "$request"
         curl "$request" -O
         cd .. || exit 1
         for file in patches/*
         do
+            _koopa_info "Applying patch '${file}'."
+            # Alternatively, can pipe curl call directly to 'patch -p0'.
             # https://stackoverflow.com/questions/14282617
             patch -p0 --ignore-whitespace --input="$file"
         done
@@ -54,7 +55,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     make --jobs="$jobs"
     # > make test
     make install
-) | tee "$(_koopa_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
