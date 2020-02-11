@@ -18,13 +18,16 @@ _koopa_exit_if_not_installed pip3 python3
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-x="$( \
-    python3 -m pip list --outdated --format=freeze \
-        | grep -v '^\-e' \
-)"
-[[ -n "$x" ]] || exit 0
-
 _koopa_h1 "Updating Python packages."
+
+x="$(python3 -m pip list --outdated --format=freeze)"
+x="$(echo "$x" | grep -v '^\-e')"
+
+if [[ -z "$x" ]]
+then
+    _koopa_success "All Python packages are current."
+    exit 0
+fi
 
 mapfile -t pkgs < <(echo "$x" | cut -d '=' -f 1)
 _koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
