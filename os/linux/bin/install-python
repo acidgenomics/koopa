@@ -61,7 +61,6 @@ make_prefix="$(_koopa_make_prefix)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="Python-${version}.tar.xz"
     url="https://www.python.org/ftp/python/${version}/${file}"
@@ -77,7 +76,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     make --jobs="$jobs"
     # > make test
     make install
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

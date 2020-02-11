@@ -19,10 +19,9 @@ if [[ ! -d "$target_dir" ]]
 then
     _koopa_h2 "Downloading Rcheck."
     (
-        set -o xtrace
         mkdir -pv "$target_dir"
         git clone "$source_repo" "$target_dir"
-    ) > "$(_koopa_tmp_log_file)"
+    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
 
 # Add symlink in current working directory.

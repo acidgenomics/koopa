@@ -28,9 +28,8 @@ _koopa_prefix_mkdir "$CARGO_HOME"
 _koopa_prefix_mkdir "$RUSTUP_HOME"
 
 (
-    set -o xtrace
     curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$CARGO_HOME"
 _koopa_set_permissions "$RUSTUP_HOME"

@@ -54,17 +54,9 @@ _koopa_assert_has_no_envs
 _koopa_prefix_mkdir "$prefix"
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
-
 tmp_dir="$(_koopa_tmp_dir)/${name}"
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_dir="${HOME}/logs/${HOSTNAME}/${name}"
-log_file="${log_dir}/${timestamp}-install-${name}.log"
-
-_koopa_h2 "Saving install log at '${log_file}'."
-mkdir -pv "$log_dir"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
@@ -78,9 +70,8 @@ mkdir -pv "$log_dir"
         --datatarget="rnaseq" \
         --datatarget="variation" \
         --nodata \
-        --isolate \
-        2>&1 | tee "$log_file"
-) > "$(_koopa_tmp_log_file)"
+        --isolate
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 # > _koopa_h1 "Fixing MACS2/numpy issue."
 # > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
