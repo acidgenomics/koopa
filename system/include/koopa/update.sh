@@ -45,8 +45,6 @@ then
     _koopa_assert_has_sudo
 fi
 
-rm -frv "${config_prefix}/dotfiles"
-
 _koopa_set_permissions "$koopa_prefix"
 
 (
