@@ -35,6 +35,10 @@ case "$1" in
         "${include_dir}/develop.sh"
         exit 0
         ;;
+    edit-variables)
+        vim "${KOOPA_PREFIX}/system/include/variables.txt"
+        exit 0
+        ;;
     info)
         "${include_dir}/info.sh"
         exit 0
