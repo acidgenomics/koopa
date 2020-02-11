@@ -241,6 +241,41 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     return 0
 }
 
+
+
+_koopa_add_user_to_group() {                                              # {{{1
+    # """
+    # Add user to group.
+    # @note Updated 2020-02-11.
+    #
+    # Alternate approach:
+    # > usermod -a -G group user
+    # """
+    _koopa_assert_is_installed gpasswd
+    local user
+    user="${1:?}"
+    local group
+    group="${2:?}"
+    gpasswd -a "$user" "$group"
+}
+
+_koopa_remove_user_from_group() {                                         # {{{1
+    # """
+    # Remove user from group.
+    # @note Updated 2020-02-11.
+    # """
+    _koopa_assert_is_installed gpasswd
+    local user
+    local group
+    local user
+    user="${1:?}"
+    local group
+    group="${2:?}"
+    gpasswd -d "$user" "$group"
+}
+
+
+
 _koopa_fix_pyenv_permissions() {                                          # {{{1
     # """
     # Ensure Python pyenv shims have correct permissions.
