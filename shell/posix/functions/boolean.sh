@@ -290,28 +290,6 @@ _koopa_is_git_clean() {                                                   # {{{1
     return 0
 }
 
-_koopa_is_ssh_enabled() {                                                 # {{{1
-    # """
-    # Is SSH key enabled?
-    # @note Updated 2020-02-11.
-    #
-    # @seealso
-    # - https://help.github.com/en/github/authenticating-to-github/
-    #       testing-your-ssh-connection
-    # """
-    local url
-    url="${1:?}"
-    _koopa_is_installed ssh || return 1
-    local x
-    x="$( \
-        ssh -T \
-            -o StrictHostKeyChecking=no \
-            "$url" 2>&1 \
-    )"
-    [ -n "$x" ] || return 1
-    _koopa_is_matching_fixed "$x" "successfully authenticated"
-}
-
 _koopa_is_github_ssh_enabled() {                                          # {{{1
     # """
     # Is SSH key enabled for GitHub access?
@@ -327,10 +305,6 @@ _koopa_is_gitlab_ssh_enabled() {                                          # {{{1
     # """
     _koopa_is_ssh_enabled "git@gitlab.com"
 }
-
-
-
-
 
 # Also defined in koopa installer.
 _koopa_is_installed() {                                                   # {{{1
@@ -592,6 +566,28 @@ _koopa_is_setopt_nounset() {                                              # {{{1
             _koopa_stop "Unknown error."
             ;;
     esac
+}
+
+_koopa_is_ssh_enabled() {                                                 # {{{1
+    # """
+    # Is SSH key enabled?
+    # @note Updated 2020-02-11.
+    #
+    # @seealso
+    # - https://help.github.com/en/github/authenticating-to-github/
+    #       testing-your-ssh-connection
+    # """
+    local url
+    url="${1:?}"
+    _koopa_is_installed ssh || return 1
+    local x
+    x="$( \
+        ssh -T \
+            -o StrictHostKeyChecking=no \
+            "$url" 2>&1 \
+    )"
+    [ -n "$x" ] || return 1
+    _koopa_is_matching_fixed "$x" "successfully authenticated"
 }
 
 _koopa_is_ubuntu() {                                                      # {{{1
