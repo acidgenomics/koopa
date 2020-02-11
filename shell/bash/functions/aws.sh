@@ -19,6 +19,7 @@ _koopa_aws_s3_ls() {
 
     local pos
     pos=()
+
     while (("$#"))
     do
         case "$1" in
@@ -34,7 +35,7 @@ _koopa_aws_s3_ls() {
                 _koopa_invalid_arg "$1"
                 ;;
             *)
-                POSITIONAL+=("$1")
+                pos+=("$1")
                 shift 1
                 ;;
         esac
@@ -43,13 +44,13 @@ _koopa_aws_s3_ls() {
 
     local prefix
     prefix="${1:?}"
-    prefix="$(_strip_trailing_slash "$prefix")"
+    prefix="$(_koopa_strip_trailing_slash "$prefix")"
     prefix="${prefix}/"
 
     local x
     x="$(aws s3 ls "${flags[@]}" "$prefix")"
 
-    dirs="$(echo "$x" | grep -Eo '  PRE .+$')"
+    dirs="$(echo "$x" | grep -Eo '  PRE .+$' || true)"
     if [[ -n "$dirs" ]]
     then
         dirs="$( \
@@ -60,7 +61,7 @@ _koopa_aws_s3_ls() {
         echo "$dirs"
     fi
 
-    files="$(echo "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}')"
+    files="$(echo "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
     if [[ -n "$files" ]]
     then
         files="$( \
