@@ -70,6 +70,20 @@ _koopa_extract_version() {                                                # {{{1
     echo "$x"
 }
 
+_koopa_sanitize_version() {                                               # {{{1
+    # """
+    # Sanitize version.
+    # @note Updated 2020-02-11.
+    # """
+    local x
+    x="${1:?}"
+    local pattern
+    pattern="[.0-9]+"
+    _koopa_is_matching_regex "$x" "$pattern" || return 1
+    x="$(echo "$x" | grep -Eo "$pattern")"
+    echo "$x"
+}
+
 
 
 _koopa_get_version() {                                                    # {{{1
