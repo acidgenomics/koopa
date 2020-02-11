@@ -6,30 +6,48 @@ _koopa_aws_s3_find() {                                                    # {{{1
     # Find files in AWS S3 bucket.
     # @note Updated 2020-02-11.
     #
+    # @seealso
+    # https://docs.aws.amazon.com/cli/latest/reference/s3/
+    #
     # @examples
-    # aws-s3-find --pattern="/SL.*\.bw$" s3://cpi-bioinfo01/igv/
+    # aws-s3-find \
+    #     --include="*.bw$" \
+    #     --exclude="antisense" \
+    #     s3://cpi-bioinfo01/igv/
     # """
     _koopa_is_installed aws || return 1
 
-    local pattern
-    pattern="^.*$"
+    local exclude include
+    exclude=
+    include=
 
     local pos
     pos=()
     while (("$#"))
     do
         case "$1" in
-            --pattern=*)
-                pattern="${1#*=}"
+            --exclude=*)
+                exclude="${1#*=}"
                 shift 1
                 ;;
-            --pattern)
-                pattern="$2"
+            --exclude)
+                exclude="$2"
+                shift 2
+                ;;
+            --include=*)
+                include="${1#*=}"
+                shift 1
+                ;;
+            --include)
+                include="$2"
                 shift 2
                 ;;
             --)
                 shift 1
                 break
+                ;;
+            --*|-*)
+                _koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -42,10 +60,22 @@ _koopa_aws_s3_find() {                                                    # {{{1
     local x
     x="$(_koopa_aws_s3_ls --recursive "$@")"
     [[ -n "$x" ]] || return 1
-    x="$(echo "$x" | grep -E "$pattern" | sort)"
-    [[ -n "$x" ]] || return 1
-    echo "$x"
 
+    # Exclude pattern.
+    if [[ -n "${exclude:-}" ]]
+    then
+        x="$(echo "$x" | grep -Ev "$exclude")"
+        [[ -n "$x" ]] || return 1
+    fi
+
+    # Include pattern.
+    if [[ -n "${include:-}" ]]
+    then
+        x="$(echo "$x" | grep -E "$include")"
+        [[ -n "$x" ]] || return 1
+    fi
+
+    echo "$x"
     return 0
 }
 
