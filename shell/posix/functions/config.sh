@@ -219,7 +219,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
 _koopa_enable_passwordless_sudo() {                                       # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # Updated 2020-01-24.
+    # Updated 2020-02-11.
     # """
     _koopa_is_linux || return 1
     _koopa_is_root && return 0
@@ -231,13 +231,13 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     sudo touch "$sudo_file"
     if sudo grep -q "$group" "$sudo_file"
     then
-        _koopa_success "Passwordless sudo already enabled for '${group}'."
+        _koopa_success "Passwordless sudo already enabled for '${group}' group."
         return 0
     fi
     _koopa_h2 "Updating '${sudo_file}' to include '${group}'."
     sudo sh -c "echo '%${group} ALL=(ALL) NOPASSWD: ALL' >> ${sudo_file}"
     sudo chmod -v 0440 "$sudo_file"
-    _koopa_success "Passwordless sudo enabled for '${group}'."
+    _koopa_success "Passwordless sudo enabled for '${group}' group."
     return 0
 }
 
