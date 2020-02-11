@@ -29,3 +29,10 @@ _koopa_is_darwin() {
     # """
     _koopa_defunct "_koopa_is_macos"
 }
+
+_koopa_update_shells() {
+    # """
+    # Updated 2020-02-11.
+    # """
+    _koopa_defunct "_koopa_enable_shell"
+}
