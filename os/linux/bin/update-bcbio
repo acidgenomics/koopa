@@ -12,14 +12,8 @@ _koopa_assert_is_installed bcbio_nextgen.py
 tmp_dir="$(_koopa_tmp_dir)/bcbio"
 cores="$(_koopa_cpu_count)"
 
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-log_file="${log_dir}/${timestamp}-update-bcbio.log"
-
 _koopa_h1 "Updating bcbio-nextgen installation."
 _koopa_dl "bcbio_nextgen.py" "$(_koopa_which_realpath "bcbio_nextgen.py")"
-
-_koopa_info "Saving install log at '${log_file}'."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -28,8 +22,7 @@ _koopa_info "Saving install log at '${log_file}'."
         --upgrade="stable" \
         --tools \
         --data \
-        --cores="$cores" \
-        2>&1 | tee "$log_file"
+        --cores="$cores"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_success "Update of bcbio-nextgen was successful."
