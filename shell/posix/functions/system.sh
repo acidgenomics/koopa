@@ -576,10 +576,7 @@ _koopa_install_mike() {                                                   # {{{1
     #
     # Note that these repos require SSH key to be set on GitHub.
     # """
-    if ! _koopa_is_github_ssh_enabled
-    then
-        _koopa_stop "GitHub SSH key is not configured."
-    fi
+    _koopa_assert_is_github_ssh_enabled
     # dotfiles
     "${DOTFILES}/INSTALL.sh" --private
     # docker
