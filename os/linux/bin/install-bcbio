@@ -91,6 +91,6 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 # Keep install owned by current user, so we can install genomes easily.
 # > _koopa_chgrp "$prefix"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions "$app_prefix"
 
 _koopa_success "Installation of bcbio-nextgen was successful."
