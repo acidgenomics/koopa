@@ -114,7 +114,7 @@ _koopa_git_reset() {                                                      # {{{1
     local dir
     dir="$(realpath "${1:-.}")"
     _koopa_assert_is_git "$dir"
-    _koopa_h2 "Cleaning git repository at '${dir}'."
+    _koopa_h1 "Cleaning git repository at '${dir}'."
     _koopa_assert_is_installed git
     (
         cd "$dir" || return 1
