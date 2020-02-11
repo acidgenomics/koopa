@@ -7,7 +7,7 @@ source "${script_dir}/../include/header.sh"
 
 name="bcbio"
 version="stable"
-prefix="$(_koopa_app_prefix)/${name}"
+app_prefix="$(_koopa_app_prefix)/${name}"
 
 while (("$#"))
 do
@@ -34,14 +34,14 @@ do
     esac
 done
 
-prefix="$(_koopa_strip_trailing_slash "$prefix")"
+app_prefix="$(_koopa_strip_trailing_slash "$app_prefix")"
 
 if [[ "$version" == "stable" ]]
 then
-    current="$(_koopa_bcbio_nextgen_current_version)"
-    prefix="${prefix}/${current}"
+    current_version="$(_koopa_bcbio_nextgen_current_version)"
+    prefix="${app_prefix}/${current_version}"
 else
-    prefix="${prefix}/${version}"
+    prefix="${app_prefix}/${version}"
 fi
 
 _koopa_exit_if_dir "$prefix"
@@ -52,6 +52,12 @@ _koopa_coffee_time
 _koopa_assert_has_no_envs
 
 _koopa_prefix_mkdir "$prefix"
+
+if [[ "$version" == "stable" ]]
+then
+    ln -fnsv "${app_prefix}/${current_version}" "${app_prefix}/stable"
+fi
+
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
