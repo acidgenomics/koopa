@@ -244,9 +244,8 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
 _koopa_fix_pyenv_permissions() {                                          # {{{1
     # """
     # Ensure Python pyenv shims have correct permissions.
-    # Updated 2020-01-24.
+    # Updated 2020-02-11.
     # """
-    _koopa_is_linux || return 1
     local pyenv_prefix
     pyenv_prefix="$(_koopa_pyenv_prefix)"
     [ -d "${pyenv_prefix}/shims" ] || return 0
@@ -258,9 +257,8 @@ _koopa_fix_pyenv_permissions() {                                          # {{{1
 _koopa_fix_rbenv_permissions() {                                          # {{{1
     # """
     # Ensure Ruby rbenv shims have correct permissions.
-    # Updated 2020-01-24.
+    # Updated 2020-02-11.
     # """
-    _koopa_is_linux || return 1
     local rbenv_prefix
     rbenv_prefix="$(_koopa_rbenv_prefix)"
     [ -d "${rbenv_prefix}/shims" ] || return 0
@@ -272,7 +270,7 @@ _koopa_fix_rbenv_permissions() {                                          # {{{1
 _koopa_fix_zsh_permissions() {                                            # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # Updated 2020-01-24.
+    # Updated 2020-02-11.
     # """
     _koopa_h2 "Fixing Zsh permissions to pass 'compaudit' checks."
     local koopa_prefix
@@ -280,22 +278,26 @@ _koopa_fix_zsh_permissions() {                                            # {{{1
     _koopa_chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
-    _koopa_is_installed zsh || return 1
+    _koopa_is_installed zsh || return 0
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
     local zsh_exe
     zsh_exe="$(_koopa_which_realpath zsh)"
-    _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}" || return 1
-    _koopa_chmod -v g-w \
-        "${make_prefix}/share/zsh" \
-        "${make_prefix}/share/zsh/site-functions"
-    _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}" || return 1
-    _koopa_chmod -v g-w \
-        "${cellar_prefix}/zsh/"*"/share/zsh" \
-        "${cellar_prefix}/zsh/"*"/share/zsh/"* \
-        "${cellar_prefix}/zsh/"*"/share/zsh/"*"/functions"
+    if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
+    then
+        _koopa_chmod -v g-w \
+            "${make_prefix}/share/zsh" \
+            "${make_prefix}/share/zsh/site-functions"
+    fi
+    if _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}"
+    then
+        _koopa_chmod -v g-w \
+            "${cellar_prefix}/zsh/"*"/share/zsh" \
+            "${cellar_prefix}/zsh/"*"/share/zsh/"* \
+            "${cellar_prefix}/zsh/"*"/share/zsh/"*"/functions"
+    fi
     return 0
 }
 
