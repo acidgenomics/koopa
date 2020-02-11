@@ -38,7 +38,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
             docker-ce-cli
 
 # Ensure current user is added to Docker group.
-sudo usermod -aG docker "$USER"
+_koopa_add_user_to_group "docker"
 
 # Move '/var/lib/docker' to '/n/var/lib/docker'.
 _koopa_link_docker
