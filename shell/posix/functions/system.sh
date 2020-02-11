@@ -360,6 +360,14 @@ _koopa_group() {                                                          # {{{1
     echo "$group"
 }
 
+_koopa_gnu_mirror() {                                                     # {{{1
+    # """
+    # Get GNU FTP mirror URL.
+    # Updated 2020-02-11.
+    # """
+    _koopa_variable "gnu-mirror"
+}
+
 _koopa_header() {                                                         # {{{1
     # """
     # Source script header.

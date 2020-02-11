@@ -17,6 +17,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 build="$(_koopa_make_build_string)"
+gnu_mirror="$(_koopa_gnu_mirror)"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
@@ -24,7 +25,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${name}-${version}.tar.xz"
-    url="https://ftp.gnu.org/gnu/${name}/${file}"
+    url="${gnu_mirror}/${name}/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
