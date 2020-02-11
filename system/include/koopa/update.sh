@@ -89,9 +89,8 @@ then
     fi
     if [[ ! -f "${config_prefix}/rsync" ]]
     then
+        update-conda
         update-pip
-        # This currently can break environments, so disabled.
-        # > update-conda
         update-rust
         update-rust-packages
         update-perlbrew
