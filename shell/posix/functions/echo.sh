@@ -249,6 +249,24 @@ _koopa_info() {                                                           # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
+_koopa_invalid_arg() {                                                    # {{{1
+    # """
+    # Error on invalid argument.
+    # Updated 2019-10-23.
+    # """
+    local arg
+    arg="${1:?}"
+    _koopa_stop "Invalid argument: '${arg}'."
+}
+
+_koopa_missing_arg() {                                                    # {{{1
+    # """
+    # Error on a missing argument.
+    # Updated 2019-10-23.
+    # """
+    _koopa_stop "Missing required argument."
+}
+
 _koopa_note() {                                                           # {{{1
     # """
     # General note.
