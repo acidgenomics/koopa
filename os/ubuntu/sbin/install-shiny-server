@@ -24,19 +24,17 @@ if ! _koopa_is_r_package_installed shiny
 then
     _koopa_h2 "Installing 'shiny' R package."
     (
-        set -o xtrace
         Rscript -e 'install.packages("shiny")'
-    ) > "$(_koopa_tmp_log_file)"
+    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="shiny-server-${version}-amd64.deb"
     url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
     _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

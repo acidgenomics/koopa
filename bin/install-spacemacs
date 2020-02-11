@@ -17,11 +17,10 @@ _koopa_h1 "Installing ${name} at '${install_dir}."
 _koopa_assert_has_no_args "$@"
 
 (
-    set -o xtrace
     repo="https://github.com/syl20bnr/spacemacs.git"
     git clone "$repo" "$install_dir"
     link-emacs "$name"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_success "Installation of ${name} was successful."
 

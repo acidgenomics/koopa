@@ -82,16 +82,10 @@ bcbio_species_dir="$( \
     | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g" \
 )"
 
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
-mkdir -pv "$log_dir"
-
 tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
 cores="$(_koopa_cpu_count)"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
     ensembl-fasta --organism "$organism" --build "$build" --type "dna"
@@ -109,9 +103,9 @@ cores="$(_koopa_cpu_count)"
         --cores "$cores" \
         --fasta "$fasta" \
         --gtf "$gtf" \
-        --indexes "${indexes[@]}" \
-        2>&1 | tee "$log_file"
-    rm -fr "$tmp_dir"
-) > "$(_koopa_tmp_log_file)"
+        --indexes "${indexes[@]}"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
 
 _koopa_success "Installation of bcbio genome was successful."

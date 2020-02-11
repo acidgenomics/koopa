@@ -22,7 +22,6 @@ _koopa_dl "bcbio_nextgen.py" "$(_koopa_which_realpath "bcbio_nextgen.py")"
 _koopa_info "Saving install log at '${log_file}'."
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     mkdir -pv "$log_dir"
     bcbio_nextgen.py upgrade \
@@ -31,6 +30,6 @@ _koopa_info "Saving install log at '${log_file}'."
         --data \
         --cores="$cores" \
         2>&1 | tee "$log_file"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_success "Update of bcbio-nextgen was successful."

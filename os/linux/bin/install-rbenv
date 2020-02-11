@@ -34,11 +34,10 @@ _koopa_prefix_mkdir "$prefix"
 _koopa_h2 "Installing 'rbenv'."
 
 (
-    set -o xtrace
     git clone \
         https://github.com/sstephenson/rbenv.git \
         "$prefix"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_activate_rbenv
 
@@ -48,12 +47,11 @@ _koopa_activate_rbenv
 _koopa_h2 "Installing 'ruby-build'."
 
 (
-    set -o xtrace
     mkdir -pv "${prefix}/plugins"
     git clone \
         https://github.com/sstephenson/ruby-build.git \
         "${prefix}/plugins/ruby-build"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 
@@ -71,10 +69,9 @@ then
         _koopa_is_matching_fixed "$installed" "$version" && continue
         _koopa_h2 "Installing Ruby ${version} via rbenv."
         (
-            set -o xtrace
             rbenv install "$version"
             rbenv global "$version"
-        ) > "$(_koopa_tmp_log_file)"
+        ) 2>&1 | tee "$(_koopa_tmp_log_file)"
         _koopa_success "Installation of Ruby ${version} was successful."
     done
 fi

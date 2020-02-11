@@ -11,12 +11,11 @@ _koopa_assert_has_no_envs
 _koopa_h1 "Installing Haskell stack for current user."
 
 (
-    set -o xtrace
     # Installer will warn if this local directory doesn't exist.
     xdg_bin_dir="${HOME}/.local/bin"
     mkdir -pv "$xdg_bin_dir"
     _koopa_add_to_path_start "$xdg_bin_dir"
     curl -sSL "https://get.haskellstack.org/" | bash
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_success "Installation of Haskell stack was successful."

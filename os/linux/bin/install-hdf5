@@ -23,7 +23,6 @@ minor_version="$(_koopa_minor_version "$version")"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="hdf5-${version}.tar.gz"
     url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${minor_version}/\
@@ -39,7 +38,7 @@ hdf5-${version}/src/${file}"
     make --jobs="$jobs"
     # > make check
     make install
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

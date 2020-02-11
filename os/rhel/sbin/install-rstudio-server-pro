@@ -32,13 +32,12 @@ _koopa_h1 "Installing ${name} ${version} (${os_id})."
 # > sudo rm -frv /etc/rstudio
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="rstudio-server-rhel-pro-${version}-x86_64.rpm"
     url="https://download2.rstudio.org/server/${os_id}/x86_64/${file}"
     _koopa_download "$url"
     sudo yum -y install "$file"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

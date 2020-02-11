@@ -15,12 +15,11 @@ _koopa_assert_has_no_args "$@"
 _koopa_exit_if_not_installed conda
 
 (
-    set -o xtrace
     conda="${prefix}/condabin/conda"
     # > conda="${prefix}/bin/conda"
     "$conda" update --yes --name=base --channel=defaults conda
     "$conda" update --yes --name=base --channel=defaults --all
     # > "$conda" clean --yes --tarballs
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"

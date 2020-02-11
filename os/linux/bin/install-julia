@@ -59,7 +59,6 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 jobs="$(_koopa_cpu_count)"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     # Binary
     if [[ "$install" == "binary" ]]
@@ -98,7 +97,7 @@ EOL
         # > make test
         make install
     fi
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

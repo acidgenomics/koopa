@@ -10,6 +10,5 @@ _koopa_exit_if_dir "$dir"
 
 # Using our forked repo, to control for unexpected upstream changes.
 (
-    set -o xtrace
     git clone "https://github.com/acidgenomics/cloudbiolinux.git" "$dir"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"

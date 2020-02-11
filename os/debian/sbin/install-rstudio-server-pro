@@ -37,14 +37,13 @@ _koopa_h1 "Installing ${name} ${version}."
 # > sudo rm -frv /etc/rstudio
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="rstudio-server-pro-${version}-amd64.deb"
     url="https://download2.rstudio.org/server/${os_codename}/amd64/${file}"
     _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
     rm -fr "$tmp_dir"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 # > sudo "$name" stop
 # > sudo "$name" verify-installation
