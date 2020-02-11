@@ -46,7 +46,13 @@ then
 fi
 
 _koopa_set_permissions "$koopa_prefix"
-_koopa_git_reset "$koopa_prefix"
+
+(
+    cd "$koopa_prefix" || exit 1
+    _koopa_git_reset
+    _koopa_git_pull
+)
+
 _koopa_set_permissions "$koopa_prefix"
 
 _koopa_update_xdg_config
