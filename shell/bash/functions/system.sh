@@ -66,40 +66,35 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # Updated 2020-02-10.
+    # Updated 2020-02-11.
     # """
-    local dir
-    dir="$(realpath "${1:-.}")"
-    [[ -f "${dir}/.gitmodules" ]] || return 1
-    _koopa_h2 "Initializing submodules at '${dir}'."
+    [[ -f ".gitmodules" ]] || return 1
+    _koopa_h2 "Initializing submodules."
     _koopa_assert_is_installed git
-    (
-        cd "$dir" || return 1
-        local array string target target_key url url_key
-        git submodule init
-        mapfile -t array \
-            < <( \
-                git config \
-                    -f ".gitmodules" \
-                    --get-regexp '^submodule\..*\.path$' \
-            )
-        for string in "${array[@]}"
-        do
-            target_key="$(echo "$string" | cut -d ' ' -f 1)"
-            target="$(echo "$string" | cut -d ' ' -f 2)"
-            url_key="${target_key//\.path/.url}"
-            url="$(git config -f ".gitmodules" --get "$url_key")"
-            _koopa_dl "$target" "$url"
-            git submodule add --force "$url" "$target" > /dev/null
-        done
-    )
+    local array string target target_key url url_key
+    git submodule init
+    mapfile -t array \
+        < <( \
+            git config \
+                -f ".gitmodules" \
+                --get-regexp '^submodule\..*\.path$' \
+        )
+    for string in "${array[@]}"
+    do
+        target_key="$(echo "$string" | cut -d ' ' -f 1)"
+        target="$(echo "$string" | cut -d ' ' -f 2)"
+        url_key="${target_key//\.path/.url}"
+        url="$(git config -f ".gitmodules" --get "$url_key")"
+        _koopa_dl "$target" "$url"
+        git submodule add --force "$url" "$target" > /dev/null
+    done
     return 0
 }
 
 _koopa_git_reset() {                                                      # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # Updated 2020-02-10.
+    # Updated 2020-02-11.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -124,14 +119,17 @@ _koopa_git_reset() {                                                      # {{{1
     (
         cd "$dir" || return 1
         git clean -dffx
+        _koopa_git_submodule_init
         git submodule foreach --recursive git clean -dffx
         git reset --hard
         git submodule foreach --recursive git reset --hard
         git submodule update --init --recursive
         git fetch --all
         git pull
-    ) > /dev/null
-    _koopa_git_submodule_init "$dir"
+        git submodule foreach git pull
+        # > git submodule status
+        # > git status
+    )
     return 0
 }
 
