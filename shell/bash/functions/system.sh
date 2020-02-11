@@ -69,7 +69,7 @@ _koopa_git_submodule_init() {
     # Updated 2020-02-11.
     # """
     [[ -f ".gitmodules" ]] || return 1
-    _koopa_h2 "Initializing submodules."
+    _koopa_h2 "Initializing submodules in '${PWD}'."
     _koopa_assert_is_installed git
     local array string target target_key url url_key
     git submodule init
