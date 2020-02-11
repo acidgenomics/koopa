@@ -16,16 +16,11 @@ genomes_dir="${bcbio_dir}/genomes"
 genomes="${1:-"BDGP6,canFam3,hg38,mm10,rn6"}"
 IFS=', ' read -r -a genomes <<< "$genomes"
 
-_koopa_h1 "Installing bcbio genomes '${genomes[*]}' into '${genomes_dir}'."
+_koopa_h1 "Installing bcbio-nextgen genomes into '${genomes_dir}'."
+_koopa_dl "Genomes" "$(_koopa_to_string "${genomes[@]}")"
 
 cores="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/bcbio"
-
-timestamp="$(date "+%Y%m%d_%H%M%S")"
-version="$(bcbio_nextgen.py --version)"
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-log_file="${log_dir}/${timestamp}-install-bcbio-genomes-${version}.log"
-mkdir -pv "$log_dir"
 
 genome_flags=()
 for genome in "${genomes[@]}"
@@ -43,9 +38,9 @@ _koopa_dl "Flags" "${flags[@]}"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
-    bcbio_nextgen.py upgrade "${flags[@]}" 2>&1 | tee "$log_file"
+    bcbio_nextgen.py upgrade "${flags[@]}"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of bcbio genomes was successful."
+_koopa_success "Installation of bcbio-nextgen genomes was successful."
