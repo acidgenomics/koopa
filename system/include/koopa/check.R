@@ -213,6 +213,29 @@ checkVersion(
 
 
 
+## Cloud APIs ==================================================================
+h2("Cloud APIs")
+checkVersion(
+    name = "Amazon Web Services",
+    whichName = "aws",
+    current = currentVersion("aws-cli"),
+    expected = expectedVersion("aws-cli")
+)
+checkVersion(
+    name = "Microsoft Azure",
+    whichName = "az",
+    current = currentVersion("azure-cli"),
+    expected = expectedVersion("azure-cli")
+)
+checkVersion(
+    name = "Google Cloud",
+    whichName = "gcloud",
+    current = currentVersion("google-cloud-sdk"),
+    expected = expectedVersion("google-cloud-sdk")
+)
+
+
+
 ## Tools =======================================================================
 h2("Tools")
 checkVersion(
