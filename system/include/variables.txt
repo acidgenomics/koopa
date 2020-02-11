@@ -5,6 +5,13 @@ koopa_date="2020-02-11"
 
 
 
+# Globals                                                                   {{{1
+# ==============================================================================
+
+gnu-mirror="https://ftpmirror.gnu.org"
+
+
+
 # Program versions                                                          {{{1
 # ==============================================================================
 
@@ -20,9 +27,8 @@ autojump="22.5.3"
 aspera="3.9.7"
 
 # https://www.gnu.org/software/bash/
-# https://ftp.gnu.org/gnu/bash/
-# Note that this requires patches.
-bash="5.0.11"
+# Note that minor version represents patches.
+bash="5.0.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
@@ -48,7 +54,6 @@ clang="11.0.0"
 conda="4.8.2"
 
 # https://www.gnu.org/software/coreutils/
-# https://ftp.gnu.org/gnu/coreutils/
 coreutils="8.31"
 
 # https://docs.docker.com/install/
@@ -67,7 +72,6 @@ fd="7.4.0"
 fzf="0.20.0"
 
 # https://www.gnu.org/software/findutils/
-# https://ftp.gnu.org/gnu/findutils/
 findutils="4.7.0"
 
 # https://fishshell.com/
@@ -92,7 +96,6 @@ git="2.25.0"
 go="1.13.4"
 
 # https://www.gnu.org/software/gsl/
-# http://mirrors.syringanetworks.net/gnu/gsl/
 gsl="2.6"
 
 # https://www.hdfgroup.org/downloads/hdf5
@@ -203,6 +206,9 @@ rust="1.41.0"
 
 # https://rustup.rs/
 rustup="1.21.1"
+
+# https://www.gnu.org/software/screen/
+screen="4.8.0"
 
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.7.0"
