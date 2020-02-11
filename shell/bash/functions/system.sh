@@ -135,9 +135,9 @@ _koopa_git_reset() {                                                      # {{{1
     if [[ -f ".gitmodules" ]]
     then
         _koopa_git_submodule_init
-        git submodule foreach --recursive git clean -dffx
+        git submodule --quiet foreach --recursive git clean -dffx
         git reset --hard --quiet
-        git submodule foreach --recursive git reset --hard --quiet
+        git submodule --quiet foreach --recursive git reset --hard --quiet
     fi
     return 0
 }
