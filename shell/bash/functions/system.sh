@@ -91,6 +91,25 @@ _koopa_git_submodule_init() {
     return 0
 }
 
+_koopa_git_pull() {
+    # """
+    # Pull (update) a git repository.
+    # Updated 2020-02-11.
+    # """
+    _koopa_assert_is_git
+    _koopa_assert_is_installed git
+    git fetch --all
+    git pull
+    if [[ -f ".gitmodules" ]]
+    then
+        git submodule update --init --recursive
+        git submodule foreach -q --recursive git checkout master
+        git submodule foreach git pull
+        git submodule status
+    fi
+    git status
+}
+
 _koopa_git_reset() {                                                      # {{{1
     # """
     # Clean and reset a git repo and its submodules.
@@ -111,25 +130,16 @@ _koopa_git_reset() {                                                      # {{{1
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
-    local dir
-    dir="$(realpath "${1:-.}")"
-    _koopa_assert_is_git "$dir"
-    _koopa_h1 "Cleaning git repository at '${dir}'."
+    _koopa_assert_is_git
     _koopa_assert_is_installed git
-    (
-        cd "$dir" || return 1
-        git clean -dffx
+    git clean -dffx
+    if [[ -f ".gitmodules" ]]
+    then
         _koopa_git_submodule_init
         git submodule foreach --recursive git clean -dffx
         git reset --hard
         git submodule foreach --recursive git reset --hard
-        git submodule update --init --recursive
-        git fetch --all
-        git pull
-        git submodule foreach git pull
-        # > git submodule status
-        # > git status
-    )
+    fi
     return 0
 }
 
