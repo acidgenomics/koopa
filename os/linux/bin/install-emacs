@@ -115,6 +115,7 @@ _koopa_assert_has_no_envs
 _koopa_assert_is_installed tee
 
 build="$(_koopa_make_build_string)"
+gnu_mirror="$(_koopa_gnu_mirror)"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
@@ -122,7 +123,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="emacs-${version}.tar.xz"
-    url="http://ftp.gnu.org/gnu/emacs/${file}"
+    url="${gnu_mirror}/emacs/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "emacs-${version}" || exit 1
