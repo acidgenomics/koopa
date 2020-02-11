@@ -295,7 +295,7 @@ _koopa_is_github_ssh_enabled() {                                          # {{{1
     # Is SSH key enabled for GitHub access?
     # Updated 2020-02-11.
     # """
-    _koopa_is_ssh_enabled "git@github.com"
+    _koopa_is_ssh_enabled "git@github.com" "successfully authenticated"
 }
 
 _koopa_is_gitlab_ssh_enabled() {                                          # {{{1
@@ -303,7 +303,7 @@ _koopa_is_gitlab_ssh_enabled() {                                          # {{{1
     # Is SSH key enabled for GitLab access?
     # Updated 2020-02-11.
     # """
-    _koopa_is_ssh_enabled "git@gitlab.com"
+    _koopa_is_ssh_enabled "git@gitlab.com" "Welcome to GitLab"
 }
 
 # Also defined in koopa installer.
@@ -570,7 +570,7 @@ _koopa_is_setopt_nounset() {                                              # {{{1
 
 _koopa_is_ssh_enabled() {                                                 # {{{1
     # """
-    # Is SSH key enabled?
+    # Is SSH key enabled (e.g. for git)?
     # @note Updated 2020-02-11.
     #
     # @seealso
@@ -579,6 +579,8 @@ _koopa_is_ssh_enabled() {                                                 # {{{1
     # """
     local url
     url="${1:?}"
+    local pattern
+    pattern="${2:?}"
     _koopa_is_installed ssh || return 1
     local x
     x="$( \
@@ -587,7 +589,7 @@ _koopa_is_ssh_enabled() {                                                 # {{{1
             "$url" 2>&1 \
     )"
     [ -n "$x" ] || return 1
-    _koopa_is_matching_fixed "$x" "successfully authenticated"
+    _koopa_is_matching_fixed "$x" "$pattern"
 }
 
 _koopa_is_ubuntu() {                                                      # {{{1
