@@ -16,6 +16,7 @@ _koopa_install_pip
 _koopa_install_pipx
 
 pkgs=(
+    awscli
     black
     flake8
     logbook
