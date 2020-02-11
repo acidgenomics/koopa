@@ -42,7 +42,6 @@ export SQLITE3_CFLAGS="-I${make_prefix}/include"
 export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${name}-${version}.tar.gz"
     url="https://github.com/OSGeo/PROJ/releases/download/${version}/${file}"
@@ -54,7 +53,7 @@ export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

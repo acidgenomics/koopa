@@ -20,7 +20,6 @@ jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="v${version}.tar.gz"
     url="https://github.com/${name}/${name}/archive/${file}"
@@ -32,7 +31,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         CMAKE_BUILD_TYPE=Release \
         CMAKE_INSTALL_PREFIX="$prefix"
     make install
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

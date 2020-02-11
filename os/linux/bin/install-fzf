@@ -32,7 +32,6 @@ _koopa_prefix_mkdir "$app_prefix"
 _koopa_prefix_mkdir "$cellar_prefix"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
     _koopa_download "https://github.com/junegunn/fzf/archive/${file}"
@@ -48,7 +47,7 @@ _koopa_prefix_mkdir "$cellar_prefix"
     # Following approach used in Homebrew recipe here.
     rm -fr .[[:alnum:]]* src target
     cp -rv . "$app_prefix"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

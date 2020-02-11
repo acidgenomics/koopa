@@ -102,7 +102,7 @@ _koopa_download() {                                                       # {{{1
     fi
     _koopa_info "Downloading '${url}' to '${file}'."
     # Note that '--fail-early' flag is useful, but not supported on old versions
-    # of curl (e.g. RHEL 7).
+    # of curl (e.g. 7.29.0; RHEL 7).
     curl \
         --create-dirs \
         --fail \

@@ -30,7 +30,6 @@ _koopa_assert_is_file "$python3_config_exe"
 python3_config_dir="$("$python3_config_exe" --configdir)"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     _koopa_download "https://github.com/vim/vim/archive/v${version}.tar.gz"
     _koopa_extract "v${version}.tar.gz"
@@ -45,7 +44,7 @@ python3_config_dir="$("$python3_config_exe" --configdir)"
     make --jobs="$jobs"
     # > make test
     make install
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

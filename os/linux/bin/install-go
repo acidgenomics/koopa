@@ -22,14 +22,13 @@ _koopa_prefix_mkdir "$cellar_prefix"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="go${version}.linux-amd64.tar.gz"
     url="https://dl.google.com/go/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cp -rv go/* "${app_prefix}/."
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

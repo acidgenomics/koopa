@@ -28,7 +28,6 @@ else
     _koopa_h2 "Installing OpenJDK."
     _koopa_prefix_mkdir "$jdk_dir"
     (
-        set -o xtrace
         cd "${jdk_dir}" || exit 1
         file="openjdk-${version}_linux-x64_bin.tar.gz"
         case "$version" in
@@ -49,7 +48,7 @@ else
         _koopa_extract "$file"
         _koopa_is_docker && rm -v "$file"
         mv -v "jdk-${version}" "$version"
-    ) > "$(_koopa_tmp_log_file)"
+    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
 
 _koopa_set_permissions "$jdk_dir"
@@ -57,7 +56,6 @@ _koopa_set_permissions "$jdk_dir"
 _koopa_h2 "Updating system alternatives."
 
 (
-    set -o xtrace
     priority="100"
 
     sudo rm -fv /var/lib/alternatives/java
@@ -93,7 +91,7 @@ _koopa_h2 "Updating system alternatives."
     update-alternatives --display java
     update-alternatives --display javac
     update-alternatives --display jar
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 # Update rJava configuration.
 # > if _koopa_is_installed R

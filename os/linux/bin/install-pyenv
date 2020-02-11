@@ -15,11 +15,10 @@ _koopa_assert_has_no_args "$@"
 _koopa_prefix_mkdir "$prefix"
 
 (
-    set -o xtrace
     git clone \
         https://github.com/pyenv/pyenv.git \
         "$prefix"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 

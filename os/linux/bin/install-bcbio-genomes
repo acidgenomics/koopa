@@ -42,10 +42,9 @@ flags=(
 _koopa_dl "Flags" "${flags[@]}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     bcbio_nextgen.py upgrade "${flags[@]}" 2>&1 | tee "$log_file"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

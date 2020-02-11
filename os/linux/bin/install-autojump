@@ -46,7 +46,6 @@ _koopa_assert_is_not_dir "${HOME}/.autojump"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
-    set -o xtrace
     _koopa_cd_tmp_dir "$tmp_dir"
     file="release-v${version}.tar.gz"
     url="https://github.com/wting/autojump/archive/${file}"
@@ -57,7 +56,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --destdir "$prefix" \
         --prefix="" \
         --zshshare "share/zsh/site-functions"
-) > "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
