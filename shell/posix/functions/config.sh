@@ -250,28 +250,34 @@ _koopa_add_user_to_group() {                                              # {{{1
     #
     # Alternate approach:
     # > usermod -a -G group user
+    #
+    # @examples
+    # _koopa_add_user_to_group "docker"
     # """
+    _koopa_assert_has_sudo
     _koopa_assert_is_installed gpasswd
-    local user
-    user="${1:?}"
     local group
-    group="${2:?}"
-    gpasswd -a "$user" "$group"
+    group="${1:?}"
+    local user
+    user="${2:-${USER}}"
+    sudo gpasswd --add "$user" "$group"
 }
 
 _koopa_remove_user_from_group() {                                         # {{{1
     # """
     # Remove user from group.
     # @note Updated 2020-02-11.
+    #
+    # @examples
+    # _koopa_remove_user_from_group "docker"
     # """
+    _koopa_assert_has_sudo
     _koopa_assert_is_installed gpasswd
-    local user
     local group
+    group="${1:?}"
     local user
-    user="${1:?}"
-    local group
-    group="${2:?}"
-    gpasswd -d "$user" "$group"
+    user="${2:-${USER}}"
+    sudo gpasswd --delete "$user" "$group"
 }
 
 
