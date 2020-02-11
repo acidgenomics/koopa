@@ -18,16 +18,19 @@ gnu-mirror="https://ftpmirror.gnu.org"
 # https://repo.continuum.io/archive/
 anaconda3="2019.10"
 
-# https://github.com/wting/autojump/releases
-autojump="22.5.3"
-
-# https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
-awscli="2.0.0"
-
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
 aspera="3.9.7"
+
+# https://github.com/wting/autojump/releases
+autojump="22.5.3"
+
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
+aws-cli="2.0.0"
+
+# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+azure-cli="2.0.81"
 
 # https://www.gnu.org/software/bash/
 # Note that minor version represents patches.
@@ -97,6 +100,9 @@ git="2.25.0"
 
 # https://golang.org/dl/
 go="1.13.4"
+
+# https://cloud.google.com/sdk/install
+google-cloud-sdk="214.0.0"
 
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
