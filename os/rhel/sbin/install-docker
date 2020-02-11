@@ -39,6 +39,9 @@ sudo gpasswd -a "$USER" docker
 # Ready to start Docker.
 sudo systemctl start docker
 
+# Move '/var/lib/docker' to '/n/var/lib/docker'.
 _koopa_link_docker
 
 _koopa_success "Installation of Docker was successful."
+_koopa_note "Shell must be reloaded for '${USER}' to be added to the \
+'docker' group."
