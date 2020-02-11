@@ -83,8 +83,8 @@ then
 
     conda-create-env bismark                # methylation               # 0.406G
 
-    conda-create-env r-bcbiornaseq          # rna-seq                   # 2.200G
-    conda-create-env r-deseqanalysis        # rna-seq                   # 0.437G
+    # > conda-create-env r-bcbiornaseq      # rna-seq                   # 2.200G
+    # > conda-create-env r-deseqanalysis    # rna-seq                   # 0.437G
 
     conda-create-env arriba                 # rna-seq variation         # 0.987G
     conda-create-env ericscript             # rna-seq variation         # 0.728G
@@ -94,10 +94,10 @@ then
     conda-create-env star-fusion            # rna-seq variation         # 1.600G
     conda-create-env vardict                # rna-seq variation         # 0.396G
 
-    conda-create-env r-bcbiosinglecell      # single-cell               # 0.438G
-    conda-create-env r-monocle3             # single-cell               # 0.874G
-    conda-create-env r-seurat               # single-cell               # 0.154G
-    conda-create-env stream                 # single-cell               # 0.998G
+    # > conda-create-env r-bcbiosinglecell  # single-cell               # 0.438G
+    # > conda-create-env r-monocle3         # single-cell               # 0.874G
+    # > conda-create-env r-seurat           # single-cell               # 0.154G
+    # > conda-create-env stream             # single-cell               # 0.998G
 fi
 
 _koopa_set_permissions "$(_koopa_conda_prefix)"
