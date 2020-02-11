@@ -60,7 +60,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
 rm -fr "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
-_koopa_update_shells "$name"
+_koopa_enable_shell "$name"
 
 _koopa_success "Installation of ${name} was successful."
 _koopa_note "Reload the shell to complete activation."
