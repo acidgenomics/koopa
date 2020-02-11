@@ -76,10 +76,12 @@ do
 done
 
 (
+    cd "$DOTFILES" || exit 1
+    git-reset
+    git-pull
     cd "$koopa_prefix" || exit 1
-    git fetch --all
-    # > git checkout master
-    git pull
+    git-reset
+    git-pull
 )
 
 if [[ "$system" -eq 1 ]]
