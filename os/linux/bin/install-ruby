@@ -9,6 +9,8 @@ source "${script_dir}/../include/header.sh"
 
 name="ruby"
 version="$(_koopa_variable "$name")"
+# Ensure '2.6.5p' becomes '2.6.5', for example.
+version="$(_koopa_sanitize_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
 _koopa_exit_if_dir "$prefix"
