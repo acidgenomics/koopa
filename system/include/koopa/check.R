@@ -216,19 +216,19 @@ checkVersion(
 ## Cloud APIs ==================================================================
 h2("Cloud APIs")
 checkVersion(
-    name = "Amazon Web Services",
+    name = "Amazon Web Services (AWS) CLI",
     whichName = "aws",
     current = currentVersion("aws-cli"),
     expected = expectedVersion("aws-cli")
 )
 checkVersion(
-    name = "Microsoft Azure",
+    name = "Microsoft Azure CLI",
     whichName = "az",
     current = currentVersion("azure-cli"),
     expected = expectedVersion("azure-cli")
 )
 checkVersion(
-    name = "Google Cloud",
+    name = "Google Cloud SDK",
     whichName = "gcloud",
     current = currentVersion("google-cloud-sdk"),
     expected = expectedVersion("google-cloud-sdk")
