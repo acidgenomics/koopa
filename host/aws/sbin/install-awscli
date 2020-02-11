@@ -9,6 +9,8 @@ name="awscli"
 install_dir="$(_koopa_cellar_prefix)/${name}"
 bin_dir="$(_koopa_make_prefix)/bin"
 
+_koopa_exit_if_dir "$install_dir"
+
 _koopa_h1 "Installing AWS CLI 2."
 
 _koopa_dl "install_dir" "$install_dir"
