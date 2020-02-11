@@ -303,7 +303,7 @@ _koopa_is_ssh_enabled() {                                                 # {{{1
     url="${1:?}"
     _koopa_is_installed ssh || return 1
     local x
-    x="$(ssh -T "$url")"
+    x="$(ssh -T "$url" 2>&1)"
     [ -n "$x" ] || return 1
     _koopa_is_matching_fixed "$x" "successfully authenticated"
 }
