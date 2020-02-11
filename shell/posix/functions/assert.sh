@@ -272,6 +272,30 @@ _koopa_assert_is_git() {                                                  # {{{1
     return 0
 }
 
+_koopa_assert_is_github_ssh_enabled() {                                   # {{{1
+    # """
+    # Assert that current user has SSH key access to GitHub.
+    # Updated 2020-02-11.
+    # """
+    if ! _koopa_is_github_ssh_enabled
+    then
+        _koopa_stop "GitHub SSH access is not configured correctly."
+    fi
+    return 0
+}
+
+_koopa_assert_is_gitlab_ssh_enabled() {                                   # {{{1
+    # """
+    # Assert that current user has SSH key access to GitLab.
+    # Updated 2020-02-11.
+    # """
+    if ! _koopa_is_gitlab_ssh_enabled
+    then
+        _koopa_stop "GitLab SSH access is not configured correctly."
+    fi
+    return 0
+}
+
 _koopa_assert_is_installed() {                                            # {{{1
     # """
     # Assert that programs are installed.
