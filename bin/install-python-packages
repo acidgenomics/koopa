@@ -24,7 +24,9 @@ pkgs=(
     pyflakes
     pylint
     pytest
+    setuptools
     six
+    wheel
 )
 
 _koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
