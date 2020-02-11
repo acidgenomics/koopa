@@ -5,6 +5,9 @@ _koopa_aws_s3_find() {                                                    # {{{1
     # """
     # Find files in AWS S3 bucket.
     # @note Updated 2020-02-11.
+    #
+    # @examples
+    # aws-s3-find --pattern="/SL.*\.bw$" s3://cpi-bioinfo01/igv/
     # """
     _koopa_is_installed aws || return 1
 
