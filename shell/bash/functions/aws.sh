@@ -1,10 +1,55 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
+_koopa_aws_s3_find() {                                                    # {{{1
+    # """
+    # Find files in AWS S3 bucket.
+    # @note Updated 2020-02-11.
+    # """
+    _koopa_is_installed aws || return 1
+
+    local pattern
+    pattern="^.*$"
+
+    local pos
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --pattern=*)
+                pattern="${1#*=}"
+                shift 1
+                ;;
+            --pattern)
+                pattern="$2"
+                shift 2
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    set -- "${pos[@]}"
+
+    local x
+    x="$(_koopa_aws_s3_ls --recursive "$@")"
+    [[ -n "$x" ]] || return 1
+    x="$(echo "$x" | grep -E "$pattern" | sort)"
+    [[ -n "$x" ]] || return 1
+    echo "$x"
+
+    return 0
+}
+
 _koopa_aws_s3_ls() {                                                      # {{{1
     # """
     # List AWS S3 bucket.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-02-11.
     #
     # @seealso aws s3 ls help
     #
@@ -20,12 +65,11 @@ _koopa_aws_s3_ls() {                                                      # {{{1
     local flags
     flags=()
 
-    local pos
-    pos=()
-
     local type
     type=
 
+    local pos
+    pos=()
     while (("$#"))
     do
         case "$1" in
