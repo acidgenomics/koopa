@@ -15,8 +15,8 @@ _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
 _koopa_install_pip
 _koopa_install_pipx
 
+# awscli (v1.17)
 pkgs=(
-    awscli
     black
     flake8
     logbook
