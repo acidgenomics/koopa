@@ -226,12 +226,12 @@ _koopa_apt_space_used_by_no_deps() {                                      # {{{1
 _koopa_cd_tmp_dir() {                                                     # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
-    # Updated 2020-01-12.
+    # Updated 2020-02-11.
     #
     # Used primarily for cellar build scripts.
     # """
     local dir
-    dir="${1:?}"
+    dir="${1:-$(_koopa_tmp_dir)}"
     rm -fr "$dir"
     mkdir -p "$dir"
     # Note that we don't want to run this inside a subshell here.
