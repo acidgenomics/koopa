@@ -8,6 +8,8 @@
 #' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
 currentVersion <- function(name, fun = "get-version") {
     stopifnot(isCommand("koopa"))
+    # Ensure spaces are escaped.
+    name <- paste0("'", name, "'")
     tryCatch(
         expr = system2(
             command = "koopa",
@@ -33,10 +35,6 @@ currentHomebrewCaskVersion <- function(name) {
 }
 
 
-
-# FIXME This doesn't handle spaces correctly.
-# FIXME currentMacOSAppVersion("Visual Studio Code")
-# FIXME Error 'visual-studio-code' is not installed.
 
 #' Current macOS app version
 #' @note Updated 2020-02-12.
