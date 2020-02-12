@@ -23,7 +23,7 @@ _koopa_exit_if_installed az
 
 _koopa_h1 "Installing Microsoft Azure CLI."
 
-_koopa_import_azure_cli_key
+_koopa_apt_import_azure_cli_key
 _koopa_apt_add_azure_cli_repo
 
 sudo apt-get update
