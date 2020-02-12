@@ -130,17 +130,22 @@ checkVersion <- function(
     } else {
         status <- fail
     }
-    message(
-        sprintf(
-            fmt = paste0(
-                "  %s | %s (%s %s %s)\n",
-                "       |   %.69s"
-            ),
-            status, name,
-            current, eval, expected,
-            which
-        )
+    msg <- sprintf(
+        fmt = "  %s | %s (%s %s %s)",
+        status, name,
+        current, eval, expected
     )
+    if (!is.na(which)) {
+        msg <- paste(
+            msg,
+            sprintf(
+                fmt = "       |   %.69s",
+                which
+            ),
+            sep = "\n"
+        )
+    }
+    message(msg)
     invisible(ok)
 }
 
