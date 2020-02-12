@@ -181,27 +181,43 @@ checkGNUCoreutils <- function(command = "env") {
 }
 
 
-# FIXME Not working yet.
-# currentHomebrewCaskVersion("gpg-suite")
-# zsh: missing delimiter for 'g' glob qualifier
 
-# FIXME Make this parameterized.
+#' Check Homebrew Cask version
+#' @note Updated 2020-02-12.
+#'
+#' @examples
+#' currentHomebrewCaskVersion("gpg-suite")
 checkHomebrewCaskVersion <- function(name) {
-    checkVersion(
-        name = name,
-        current = currentHomebrewCaskVersion(name),
-        expected = expectedVersion(name)
+    vapply(
+        X = name,
+        FUN = function(name) {
+            checkVersion(
+                name = name,
+                current = currentHomebrewCaskVersion(name),
+                expected = expectedVersion(name)
+            )
+        },
+        FUN.VALUE = character(1L)
     )
 }
 
 
-# FIXME expectedVersion("BBEdit") doesn't work
 
-# FIXME Make this parameterized.
+#' Check macOS app version
+#' @note Updated 2020-02-12.
+#'
+#' @examples
+#' currentMacOSAppVersion(c("BBEdit", "iTerm"))
 checkMacOSAppVersion <- function(name) {
-    checkMacOSAppVersion(
-        name = name,
-        current = currentMacOSAppVersion(name),
-        expected = expectedVersion(name)
+    vapply(
+        X = name,
+        FUN = function(name) {
+            checkMacOSAppVersion(
+                name = name,
+                current = currentMacOSAppVersion(name),
+                expected = expectedVersion(name)
+            )
+        },
+        FUN.VALUE = character(1L)
     )
 }
