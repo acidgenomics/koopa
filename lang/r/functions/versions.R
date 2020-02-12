@@ -39,7 +39,11 @@ currentHomebrewCaskVersion <- function(name) {
 #' Current macOS app version
 #' @note Updated 2020-02-12.
 currentMacOSAppVersion <- function(name) {
-    currentVersion(name = name, fun = "get-macos-app-version")
+    x <- currentVersion(name = name, fun = "get-macos-app-version")
+    ## Ensure build information gets stripped.
+    ## e.g. Tunnelblick: (build 5400).
+    x <- sanitizeVersion(x)
+    x
 }
 
 

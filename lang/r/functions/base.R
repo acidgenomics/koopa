@@ -120,13 +120,15 @@ minorVersion <- function(x) {
 
 
 #' Sanitize program version
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-12.
 #'
 #' Sanitize complicated verions:
 #' - 2.7.15rc1 to 2.7.15
 #' - 1.10.0-patch1 to 1.10.0
 #' - 1.0.2k-fips to 1.0.2
 sanitizeVersion <- function(x) {
+    ## Strip anything following a space.
+    x <- sub("[[:space:]].+$", "", x)
     ## Strip trailing "+" (e.g. "Python 2.7.15+").
     x <- sub("\\+$", "", x)
     ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
