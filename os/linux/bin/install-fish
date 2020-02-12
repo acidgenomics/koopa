@@ -18,21 +18,18 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)/${name}"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
-    file="fish-3.0.2.tar.gz"
+    file="fish-${version}.tar.gz"
     url="https://github.com/fish-shell/fish-shell/releases/download/\
 ${version}/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "fish-${version}" || exit 1
-    ./configure \
-        --build="$build" \
-        --prefix="$prefix"
+    cmake -DCMAKE_INSTALL_PREFIX="$prefix"
     make --jobs="$jobs"
     # > make test
     make install
