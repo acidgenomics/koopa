@@ -190,3 +190,11 @@ _koopa_aws_s3_ls() {                                                      # {{{1
 
     return 0
 }
+
+_koopa_aws_s3_mv_to_parent() {                                            # {{{1
+    # """
+    # Move objects in S3 directory to parent.
+    # @note Updated 2020-02-11.
+    # """
+    _koopa_is_installed aws || return 1
+}
