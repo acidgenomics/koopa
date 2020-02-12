@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
+# Better programmatic access:
+# > aws s3api list-buckets --output json
+# > aws s3api list-objects \
+# >     --output json \
+# >     --bucket tests.acidgenomics.com
+
 _koopa_aws_s3_find() {                                                    # {{{1
     # """
     # Find files in AWS S3 bucket.
@@ -98,6 +104,9 @@ _koopa_aws_s3_ls() {                                                      # {{{1
     local flags
     flags=()
 
+    local recursive
+    recursive=0
+
     local type
     type=
 
@@ -107,6 +116,7 @@ _koopa_aws_s3_ls() {                                                      # {{{1
     do
         case "$1" in
             --recursive)
+                recursive=1
                 flags+=("--recursive")
                 shift 1
                 ;;
@@ -133,6 +143,12 @@ _koopa_aws_s3_ls() {                                                      # {{{1
     done
     set -- "${pos[@]}"
 
+    # Don't allow '--type' argument when '--recursive' flag is set.
+    if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
+    then
+        _koopa_stop "'--type' argument isn't supported for '--recursive' mode."
+    fi
+
     local dirs files
     case "${type:-}" in
         d)
@@ -154,8 +170,33 @@ _koopa_aws_s3_ls() {                                                      # {{{1
     prefix="$(_koopa_strip_trailing_slash "$prefix")"
     prefix="${prefix}/"
 
+    # Automatically add 's3://' if missing.
+    if ! _koopa_is_matching_regex "$prefix" "^s3://"
+    then
+        prefix="s3://${prefix}"
+    fi
+
     local x
     x="$(aws s3 ls "${flags[@]}" "$prefix")"
+
+    # Recursive mode.
+    # Note that in '--recursive' mode, 'aws s3 ls' returns the full path after
+    # the bucket name.
+    if [[ "$recursive" -eq 1 ]]
+    then
+        local bucket_prefix
+        bucket_prefix="$(echo "$prefix" | grep -Eo '^s3://[^/]+')"
+        files="$(echo "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
+        [[ -n "$files" ]] || return 0
+        files="$( \
+            echo "$files" \
+                | grep -Eo '  [0-9]+ .+$' \
+                | sed 's/^  [0-9]* //g' \
+                | sed "s|^|${bucket_prefix}/|g" \
+        )"
+        echo "$files"
+        return 0
+    fi
 
     # Directories.
     if [[ "$dirs" -eq 1 ]]

@@ -284,13 +284,13 @@ _koopa_note() {                                                           # {{{1
 _koopa_stop() {                                                           # {{{1
     # """
     # Stop with an error message, and exit.
-    # Updated 2020-02-05.
+    # Updated 2020-02-11.
     # """
     local c1 c2 nc pre str
-    str="${1:?}"
-    pre="$(_koopa_emoji) !! ERROR: "
+    str="ERROR: ${1:?}"
+    pre="$(_koopa_emoji) !! "
     c1="$(_koopa_ansi_escape_code "red")"
-    c2="$(_koopa_ansi_escape_code "default-bold")"
+    c2="$(_koopa_ansi_escape_code "red-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
     exit 1
@@ -313,11 +313,11 @@ _koopa_success() {                                                        # {{{1
 _koopa_warning() {                                                        # {{{1
     # """
     # Warning message.
-    # Updated 2020-02-05.
+    # Updated 2020-02-11.
     # """
     local c1 c2 nc pre str
-    str="${1:?}"
-    pre="$(_koopa_emoji) !! WARNING: "
+    str="WARNING: ${1:?}"
+    pre="$(_koopa_emoji) !! "
     c1="$(_koopa_ansi_escape_code "yellow")"
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
