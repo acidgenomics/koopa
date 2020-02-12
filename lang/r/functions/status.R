@@ -179,3 +179,29 @@ checkGNUCoreutils <- function(command = "env") {
         dirname(Sys.which("env"))
     ))
 }
+
+
+# FIXME Not working yet.
+# currentHomebrewCaskVersion("gpg-suite")
+# zsh: missing delimiter for 'g' glob qualifier
+
+# FIXME Make this parameterized.
+checkHomebrewCaskVersion <- function(name) {
+    checkVersion(
+        name = name,
+        current = currentHomebrewCaskVersion(name),
+        expected = expectedVersion(name)
+    )
+}
+
+
+# FIXME expectedVersion("BBEdit") doesn't work
+
+# FIXME Make this parameterized.
+checkMacOSAppVersion <- function(name) {
+    checkMacOSAppVersion(
+        name = name,
+        current = currentMacOSAppVersion(name),
+        expected = expectedVersion(name)
+    )
+}
