@@ -1,17 +1,17 @@
 ## Current ====================================================================
 #' Current version of installed program
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-12.
 #'
 #' Be aware that current 'Renviron.site' configuration restricts PATH so that
 #' koopa installation is not visible in R.
 #'
 #' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
-currentVersion <- function(name) {
+currentVersion <- function(name, fun = "get-version") {
     stopifnot(isCommand("koopa"))
     tryCatch(
         expr = system2(
             command = "koopa",
-            args = c("get-version", name),
+            args = c(fun, kebabCase(name)),
             stdout = TRUE,
             stderr = FALSE
         ),
@@ -22,6 +22,22 @@ currentVersion <- function(name) {
             character()
         }
     )
+}
+
+
+
+#' Current Homebrew Cask version
+#' @note Updated 2020-02-12.
+currentHomebrewCaskVersion <- function(name) {
+    currentVersion(name = name, fun = "get-homebrew-cask-version")
+}
+
+
+
+#' Current macOS app version
+#' @note Updated 2020-02-12.
+currentMacOSAppVersion <- function(name) {
+    currentVersion(name = name, fun = "get-macos-app-version")
 }
 
 
@@ -50,8 +66,9 @@ currentMinorVersion <- function(name) {
 
 ## Expected ====================================================================
 #' Expected version
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-11.
 expectedVersion <- function(x) {
+    x <- kebabCase(x)
     variablesFile <- file.path(
         Sys.getenv("KOOPA_PREFIX"),
         "system",
@@ -69,6 +86,22 @@ expectedVersion <- function(x) {
         x = x
     )
     x
+}
+
+
+
+#' Expected Homebrew Cask version
+#' @note Updated 2020-02-12.
+expectedHomebrewCaskVersion <- function(x) {
+    expectedVersion(paste0("homebrew-cask-", x))
+}
+
+
+
+#' Expected macOS app version
+#' @note Updated 2020-02-12.
+expectedMacOSAppVersion <- function(x) {
+    expectedVersion(paste0("macos-app-", x))
 }
 
 
