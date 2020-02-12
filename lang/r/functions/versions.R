@@ -11,7 +11,7 @@ currentVersion <- function(name, fun = "get-version") {
     tryCatch(
         expr = system2(
             command = "koopa",
-            args = c(fun, kebabCase(name)),
+            args = c(fun, name),
             stdout = TRUE,
             stderr = FALSE
         ),
@@ -33,6 +33,10 @@ currentHomebrewCaskVersion <- function(name) {
 }
 
 
+
+# FIXME This doesn't handle spaces correctly.
+# FIXME currentMacOSAppVersion("Visual Studio Code")
+# FIXME Error 'visual-studio-code' is not installed.
 
 #' Current macOS app version
 #' @note Updated 2020-02-12.

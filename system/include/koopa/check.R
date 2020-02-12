@@ -601,7 +601,7 @@ if (isTRUE(linux)) {
     )
     checkMacOSAppVersion(c(
         "Alacritty",
-        "Aspera Connect"
+        "Aspera Connect",
         "BBEdit",
         "BibDesk",
         "Docker",

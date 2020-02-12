@@ -188,17 +188,18 @@ checkGNUCoreutils <- function(command = "env") {
 #' @examples
 #' currentHomebrewCaskVersion("gpg-suite")
 checkHomebrewCaskVersion <- function(name) {
-    vapply(
+    invisible(vapply(
         X = name,
         FUN = function(name) {
             checkVersion(
                 name = name,
+                whichName = NA,
                 current = currentHomebrewCaskVersion(name),
-                expected = expectedVersion(name)
+                expected = expectedHomebrewCaskVersion(name)
             )
         },
-        FUN.VALUE = character(1L)
-    )
+        FUN.VALUE = logical(1L)
+    ))
 }
 
 
@@ -209,15 +210,16 @@ checkHomebrewCaskVersion <- function(name) {
 #' @examples
 #' currentMacOSAppVersion(c("BBEdit", "iTerm"))
 checkMacOSAppVersion <- function(name) {
-    vapply(
+    invisible(vapply(
         X = name,
         FUN = function(name) {
-            checkMacOSAppVersion(
+            checkVersion(
                 name = name,
+                whichName = NA,
                 current = currentMacOSAppVersion(name),
-                expected = expectedVersion(name)
+                expected = expectedMacOSAppVersion(name)
             )
         },
-        FUN.VALUE = character(1L)
-    )
+        FUN.VALUE = logical(1L)
+    ))
 }
