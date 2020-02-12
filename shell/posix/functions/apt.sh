@@ -11,11 +11,84 @@ _koopa_apt_add_azure_cli_repo() {
     local sources_list
     sources_list="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$sources_list" ] && return 0
-    local AZ_REPO
-    AZ_REPO="$(lsb_release -cs)"
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
-    ${AZ_REPO} main" | sudo tee "$sources_list"
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ ${os_codename} main" \
+        | sudo tee "$sources_list"
+    return 0
 }
+
+_koopa_apt_add_docker_repo() {
+    # """
+    # Add Docker apt repo.
+    # @note Updated 2020-02-12.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local sources_list
+    sources_list="/etc/apt/sources.list.d/docker.list"
+    [ -f "$sources_list" ] && return 0
+    local os_id
+    os_id="$(_koopa_os_id)"
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
+    echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} ${os_codename} stable" \
+        | sudo tee "$sources_list"
+    return 0
+}
+
+_koopa_apt_add_google_cloud_sdk_repo() {
+    # """
+    # Add Google Cloud SDK apt repo.
+    # @note Updated 2020-02-12.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local sources_list
+    sources_list="/etc/apt/sources.list.d/google-cloud-sdk.list"
+    [ -f "$sources_list" ] && return 0
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+        | sudo tee "$sources_list"
+    return 0
+}
+
+_koopa_apt_add_llvm_repo() {
+    # """
+    # Add LLVM apt repo.
+    # @note Updated 2020-02-12.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local sources_list
+    sources_list="/etc/apt/sources.list.d/llvm.list"
+    [ -f "$sources_list" ] && return 0
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
+    echo "deb http://apt.llvm.org/${os_codename}/ llvm-toolchain-${os_codename}-9 main" \
+        | sudo tee "$sources_list"
+    return 0
+}
+
+_koopa_apt_add_r_repo() {
+    # """
+    # Add R apt repo.
+    # @note Updated 2020-02-12.
+    # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
+    local sources_list
+    sources_list="/etc/apt/sources.list.d/llvm.list"
+    [ -f "$sources_list" ] && return 0
+    local os_id
+    os_id="$(_koopa_os_id)"
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
+    echo "deb https://cloud.r-project.org/bin/linux/${os_id} ${os_codename}-cran35/" \
+        | sudo tee "$sources_list"
+    return 0
+}
+
+
 
 _koopa_apt_disable_deb_src() {                                            # {{{1
     # """
@@ -70,6 +143,8 @@ _koopa_apt_enabled_repos() {                                              # {{{1
         | sort
 }
 
+
+
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # """
     # Import the Microsoft Azure CLI public key.
@@ -77,7 +152,6 @@ _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # """
     _koopa_assert_has_sudo
     _koopa_assert_is_installed curl gpg
-    # > _koopa_assert_is_file "/etc/apt/sources.list.d/azure-cli.list"
     _koopa_h2 "Adding official Microsoft public key."
     curl -sL https://packages.microsoft.com/keys/microsoft.asc \
         | gpg --dearmor \
@@ -92,7 +166,6 @@ _koopa_apt_import_docker_key() {                                          # {{{1
     # """
     _koopa_assert_has_sudo
     _koopa_assert_is_installed curl
-    # > _koopa_assert_is_file "/etc/apt/sources.list.d/docker.list"
     _koopa_h2 "Adding official Docker public key."
     # Expecting "debian" or "ubuntu" here.
     local os_id
@@ -110,7 +183,6 @@ _koopa_apt_import_google_cloud_key() {                                    # {{{1
     # """
     _koopa_assert_has_sudo
     _koopa_assert_is_installed curl
-    # > _koopa_assert_is_file "/etc/apt/sources.list.d/google-cloud-sdk.list"
     _koopa_h2 "Adding official Google Cloud SDK public key."
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
         | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
@@ -124,7 +196,6 @@ _koopa_apt_import_llvm_key() {                                            # {{{1
     # """
     _koopa_assert_has_sudo
     _koopa_assert_is_installed curl
-    # > _koopa_assert_is_file "/etc/apt/sources.list.d/llvm.list"
     _koopa_h2 "Adding official LLVM public key."
     curl -fsSL "https://apt.llvm.org/llvm-snapshot.gpg.key" \
         | sudo apt-key add - \
@@ -139,7 +210,6 @@ _koopa_apt_import_r_key() {                                               # {{{1
     # """
     _koopa_assert_has_sudo
     _koopa_h2 "Adding official R public key."
-    # > _koopa_assert_is_file "/etc/apt/sources.list.d/r.list"
     if _koopa_is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
@@ -178,49 +248,24 @@ _koopa_apt_import_keys() {                                                # {{{1
     # > dist_version="${distro}_${version}"
     #
     # See also:
+    # - install-azure-cli
     # - install-docker
+    # - install-google-cloud-sdk
     # - install-llvm
     # - install-r
     # """
     _koopa_assert_is_debian
     _koopa_assert_has_sudo
-    _koopa_assert_is_installed curl
-
-    _koopa_h1 "Importing signatures for GPG-signed apt repositories."
-
-    local apt_repos
-    apt_repos="$( \
-        grep -h '^deb' \
-            /etc/apt/sources.list \
-            /etc/apt/sources.list.d/* \
-    )"
-
-    # Docker.
-    if _koopa_is_matching_fixed "$apt_repos" "download.docker.com"
-    then
-        _koopa_apt_import_docker_key
-    fi
-
-    # Google Cloud SDK.
-    if _koopa_is_matching_fixed "$apt_repos" "cloud.google.com"
-    then
-        _koopa_apt_import_google_cloud_key
-    fi
-
-    # LLVM.
-    if _koopa_is_matching_fixed "$apt_repos" "apt.llvm.org"
-    then
-        _koopa_apt_import_llvm_key
-    fi
-
-    # R.
-    if _koopa_is_matching_fixed "$apt_repos" "cloud.r-project.org"
-    then
-        _koopa_apt_import_r_key
-    fi
-
+    _koopa_h1 "Importing signatures for signed apt repositories."
+    _koopa_apt_import_azure_cli_key
+    _koopa_apt_import_docker_key
+    _koopa_apt_import_google_cloud_key
+    _koopa_apt_import_llvm_key
+    _koopa_apt_import_r_key
     return 0
 }
+
+
 
 _koopa_apt_link_sources() {                                               # {{{1
     # """
@@ -251,6 +296,7 @@ _koopa_apt_link_sources() {                                               # {{{1
     sudo apt-get update
     return 0
 }
+
 
 
 _koopa_apt_space_used_by() {                                              # {{{1

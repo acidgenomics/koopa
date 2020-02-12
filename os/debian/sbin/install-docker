@@ -18,12 +18,12 @@ source "${script_dir}/../include/header.sh"
 _koopa_exit_if_docker
 _koopa_exit_if_installed docker
 
-_koopa_h1 "Installing Docker CE."
+_koopa_h1 "Installing Docker."
 
 _koopa_assert_has_no_args "$@"
 
-# Import GPG signing key for apt repository.
-# > _koopa_apt_import_keys
+_koopa_apt_import_docker_key
+_koopa_apt_add_docker_repo
 
 # Ready to install Docker.
 sudo apt-get update

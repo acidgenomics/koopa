@@ -15,8 +15,8 @@ _koopa_exit_if_installed R
 
 _koopa_h1 "Installing R."
 
-# Import GPG signing keys for apt repositories.
-# > _koopa_apt_import_keys
+_koopa_apt_import_r_key
+_koopa_apt_add_r_repo
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
