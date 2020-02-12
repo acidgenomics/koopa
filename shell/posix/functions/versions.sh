@@ -188,6 +188,21 @@ _koopa_return_version() {                                                 # {{{1
 
 
 
+_koopa_get_homebrew_cask_version() {                                      # {{{1
+    # """
+    # Get Homebrew Cask version.
+    # @note Updated 2020-02-12.
+    #
+    # @examples _koopa_get_homebrew_cask_version gpg-suite
+    # # 2019.2
+    # """
+    local cask
+    cask="${1:?}"
+    local x
+    x="$(brew cask info "$cask")"
+    _koopa_extract_version "$x"
+}
+
 _koopa_get_macos_app_version() {                                          # {{{1
     # """
     # Extract the version of a macOS application.

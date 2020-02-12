@@ -61,6 +61,14 @@ case "$1" in
         _koopa_config_prefix
         exit 0
         ;;
+    get-homebrew-cask-version)
+        _koopa_get_homebrew_cask_version "${2:?}"
+        exit 0
+        ;;
+    get-macos-app-version)
+        _koopa_get_macos_app_version "${2:?}"
+        exit 0
+        ;;
     get-version)
         _koopa_get_version "${2:?}"
         exit 0

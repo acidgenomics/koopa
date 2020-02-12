@@ -238,13 +238,15 @@ _koopa_is_function() {                                                    # {{{1
 _koopa_is_git() {                                                         # {{{1
     # """
     # Is directory a git repository?
-    # Updated 2020-02-10.
+    # @note Updated 2020-02-11.
     #
     # Fast check that we can use for command prompt.
+    #
+    # Be aware that '.git' is not always a directory.
     # """
     local dir
     dir="${1:-.}"
-    [ -d "${dir}/.git" ]
+    [ -e "${dir}/.git" ]
 }
 
 _koopa_is_git2() {                                                        # {{{1

@@ -1,3 +1,17 @@
+snakeCase <- function(x) {
+    gsub(pattern = "\\.", replacement = "_", x = make.names(tolower(x)))
+}
+
+
+
+#' Kebab case
+#' @note Updated 2020-02-12.
+kebabCase <- function(x) {
+    gsub(pattern = "\\.", replacement = "-", x = make.names(tolower(x)))
+}
+
+
+
 #' Header 1
 #' @note Updated 2020-02-07.
 h1 <- function(x) {

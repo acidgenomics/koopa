@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-08.
+## Updated 2020-02-12.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -599,6 +599,22 @@ if (isTRUE(linux)) {
         current = currentVersion("gcc"),
         expected = expectedVersion("clang")
     )
+    checkMacOSAppVersion(c(
+        "Alacritty",
+        "Aspera Connect",
+        "BBEdit",
+        "BibDesk",
+        "Docker",
+        "LibreOffice",
+        "Microsoft Excel",
+        "Numbers",
+        "RStudio",
+        "Tunnelblick",
+        "Visual Studio Code",
+        "Xcode",
+        "iTerm"
+    ))
+    checkHomebrewCaskVersion("gpg-suite")
 }
 
 

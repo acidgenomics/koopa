@@ -241,6 +241,28 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     return 0
 }
 
+_koopa_enable_shell() {                                                  # {{{1
+    # """
+    # Enable shell.
+    # Updated 2020-02-11.
+    # """
+    _koopa_assert_has_sudo
+    local cmd
+    cmd="${1:?}"
+    cmd="$(_koopa_which "$cmd")"
+    local etc_file
+    etc_file="/etc/shells"
+    _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
+    if ! grep -q "$cmd" "$etc_file"
+    then
+        sudo sh -c "echo ${cmd} >> ${etc_file}"
+    else
+        _koopa_success "'${cmd}' already defined in '${etc_file}'."
+    fi
+    _koopa_note "Run 'chsh -s ${cmd} ${USER}' to change default shell."
+    return 0
+}
+
 
 
 _koopa_add_user_to_group() {                                              # {{{1
@@ -583,30 +605,6 @@ _koopa_update_r_config_macos() {                                          # {{{1
     # """
     mkdir -pv "${HOME}/.R"
     ln -fnsv "/usr/local/koopa/os/macos/etc/R/Makevars" "${HOME}/.R/."
-    return 0
-}
-
-# FIXME Rename this.
-# FIXME Renamed from _koopa_update_shells
-_koopa_enable_shell() {                                                  # {{{1
-    # """
-    # Enable shell.
-    # Updated 2020-02-11.
-    # """
-    _koopa_assert_has_sudo
-    local cmd
-    cmd="${1:?}"
-    cmd="$(_koopa_which "$cmd")"
-    local etc_file
-    etc_file="/etc/shells"
-    _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
-    if ! grep -q "$cmd" "$etc_file"
-    then
-        sudo sh -c "echo ${cmd} >> ${etc_file}"
-    else
-        _koopa_success "'${cmd}' already defined in '${etc_file}'."
-    fi
-    _koopa_note "Run 'chsh -s ${cmd} ${USER}' to change default shell."
     return 0
 }
 

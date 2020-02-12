@@ -69,7 +69,7 @@ _koopa_git_submodule_init() {
     # Updated 2020-02-11.
     # """
     [[ -f ".gitmodules" ]] || return 1
-    _koopa_h2 "Initializing submodules."
+    _koopa_h2 "Initializing submodules in '${PWD}'."
     _koopa_assert_is_installed git
     local array string target target_key url url_key
     git submodule init
@@ -98,16 +98,15 @@ _koopa_git_pull() {
     # """
     _koopa_assert_is_git
     _koopa_assert_is_installed git
-    git fetch --all
-    git pull
+    git fetch --all --quiet
+    git pull --quiet
     if [[ -f ".gitmodules" ]]
     then
-        git submodule update --init --recursive
-        git submodule foreach -q --recursive git checkout master
-        git submodule foreach git pull
-        git submodule status
+        git submodule --quiet update --init --recursive
+        git submodule --quiet foreach -q --recursive git checkout --quiet master
+        git submodule --quiet foreach git pull --quiet
     fi
-    git status
+    return 0
 }
 
 _koopa_git_reset() {                                                      # {{{1
@@ -136,9 +135,9 @@ _koopa_git_reset() {                                                      # {{{1
     if [[ -f ".gitmodules" ]]
     then
         _koopa_git_submodule_init
-        git submodule foreach --recursive git clean -dffx
-        git reset --hard
-        git submodule foreach --recursive git reset --hard
+        git submodule --quiet foreach --recursive git clean -dffx
+        git reset --hard --quiet
+        git submodule --quiet foreach --recursive git reset --hard --quiet
     fi
     return 0
 }
