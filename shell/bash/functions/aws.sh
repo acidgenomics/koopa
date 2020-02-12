@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
+# Better programmatic access:
+# > aws s3api list-buckets --output json
+# > aws s3api list-objects \
+# >     --output json \
+# >     --bucket tests.acidgenomics.com
+
 _koopa_aws_s3_find() {                                                    # {{{1
     # """
     # Find files in AWS S3 bucket.
@@ -78,6 +84,11 @@ _koopa_aws_s3_find() {                                                    # {{{1
     echo "$x"
     return 0
 }
+
+# Note that in '--recursive' mode, sometimes AWS will list the parent directory,
+# which we don't want here.
+# > aws s3 ls --recursive s3://tests.acidgenomics.com/koopa/s3
+# ## koopa/s3/...
 
 _koopa_aws_s3_ls() {                                                      # {{{1
     # """
