@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 # shellcheck disable=SC2039
 
 _koopa_add_config_link() {                                                # {{{1
