@@ -22,10 +22,13 @@ then
     exit 0
 fi
 
-_koopa_h1 "Installing LLVM via 'apt.llvm.org'."
+_koopa_h1 "Installing LLVM."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
+
+_koopa_apt_import_llvm_key
+_koopa_apt_add_llvm_repo
 
 name="llvm"
 version="$(_koopa_variable "$name")"

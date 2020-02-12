@@ -18,16 +18,9 @@ _koopa_exit_if_installed gcloud
 
 _koopa_h1 "Installing Google Cloud SDK via apt."
 
-# Add the Cloud SDK distribution URI as a package source.
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
-https://packages.cloud.google.com/apt cloud-sdk main" \
-    | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+_koopa_apt_import_google_cloud_key
+_koopa_apt_add_google_cloud_sdk_repo
 
-# Import the Google Cloud public key.
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
-    | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-
-# Install Google Cloud SDK.
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
