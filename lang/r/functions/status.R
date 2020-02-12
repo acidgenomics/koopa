@@ -179,3 +179,47 @@ checkGNUCoreutils <- function(command = "env") {
         dirname(Sys.which("env"))
     ))
 }
+
+
+
+#' Check Homebrew Cask version
+#' @note Updated 2020-02-12.
+#'
+#' @examples
+#' currentHomebrewCaskVersion("gpg-suite")
+checkHomebrewCaskVersion <- function(name) {
+    invisible(vapply(
+        X = name,
+        FUN = function(name) {
+            checkVersion(
+                name = name,
+                whichName = NA,
+                current = currentHomebrewCaskVersion(name),
+                expected = expectedHomebrewCaskVersion(name)
+            )
+        },
+        FUN.VALUE = logical(1L)
+    ))
+}
+
+
+
+#' Check macOS app version
+#' @note Updated 2020-02-12.
+#'
+#' @examples
+#' currentMacOSAppVersion(c("BBEdit", "iTerm"))
+checkMacOSAppVersion <- function(name) {
+    invisible(vapply(
+        X = name,
+        FUN = function(name) {
+            checkVersion(
+                name = name,
+                whichName = NA,
+                current = currentMacOSAppVersion(name),
+                expected = expectedMacOSAppVersion(name)
+            )
+        },
+        FUN.VALUE = logical(1L)
+    ))
+}
