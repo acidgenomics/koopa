@@ -189,10 +189,17 @@ then
     fi
 fi
 
-if _koopa_is_azure
+# Cloud APIs.
+_koopa_run_if_installed \
+    install-aws-cli-2 \
+    install-azure-cli \
+    install-google-cloud-sdk
+
+# Compilers.
+if [[ "$docker" -eq 0 ]]
 then
-    _koopa_h2 "Installing Azure-specific apps."
-    install-azure-cli
+    # /usr/lib/llvm-9                                                   # 0.285G
+    _koopa_run_if_installed install-llvm
 fi
 
 # Always run this because it must configure java alternatives.
@@ -200,13 +207,6 @@ install-openjdk                                                         # 0.316G
 
 if [[ "$rsync" -eq 0 ]]
 then
-    # Compilers.
-    if [[ "$docker" -eq 0 ]]
-    then
-        # /usr/lib/llvm-9                                               # 0.285G
-        _koopa_run_if_installed install-llvm
-    fi
-
     # Core.
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
@@ -286,32 +286,22 @@ then
         install-pyenv                                                   # 0.009G
         install-rbenv                                                   # 0.006G
         install-lmod                                                    # 0.002G
-
-        # > _koopa_activate_pipx
-        # > pipx-install-envs
-
-        # > _koopa_activate_rustup
-        # > install-rust-packages
-
-        # > _koopa_activate_conda
-        # > conda-create-bioinfo-envs --all
-
-        # Consider adding an R package recipe here.
-        # Can use the Bioconductor Docker image as a reference.
     fi
+
+    # Software packages.
+    # > conda-create-bioinfo-envs
+    # > install-python-packages
+    # > install-r-packages
+    # > install-rust-packages
 fi
 
 _koopa_r_javareconf
 
 if [[ "$docker" -eq 0 ]]
 then
-    if _koopa_is_debian
-    then
-        sudo rm -rf /var/lib/apt/lists/*
-    fi
-else
-    _koopa_is_installed install-rstudio-server && install-rstudio-server
-    _koopa_is_installed install-shiny-server && install-shiny-server
+    _koopa_run_if_installed \
+        install-rstudio-server \
+        install-shiny-server
     _koopa_update_lmod_config
 fi
 
@@ -331,6 +321,11 @@ _koopa_remove_broken_symlinks "$app_prefix"
 
 _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
+
+if _koopa_is_debian
+then
+    sudo rm -rf /var/lib/apt/lists/*
+fi
 
 sudo rm -frv /root/.cache
 
