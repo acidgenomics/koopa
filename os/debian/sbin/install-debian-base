@@ -266,6 +266,10 @@ then
             alien
             gnutls-bin
             gtk-doc-tools
+            libgtk-3-0
+            libgtk-3-dev
+            libgtk2.0-0
+            libgtk2.0-dev
             libmariadb-dev
             libopenblas-base
             libopenblas-dev
