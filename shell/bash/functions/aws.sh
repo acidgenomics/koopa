@@ -236,6 +236,9 @@ _koopa_aws_s3_mv_to_parent() {                                            # {{{1
     # """
     # Move objects in S3 directory to parent directory.
     # @note Updated 2020-02-12.
+    #
+    # Empty directory will be removed automatically, since S3 uses object
+    # storage.
     # """
     _koopa_is_installed aws || return 1
     local prefix
@@ -254,7 +257,5 @@ _koopa_aws_s3_mv_to_parent() {                                            # {{{1
         target="${dn2}/${bn}"
         aws s3 mv "$file" "$target"
     done
-    # Remove the now empty input directory.
-    # > aws s3 rm "$prefix"
     return 0
 }
