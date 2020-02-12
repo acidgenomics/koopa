@@ -234,8 +234,27 @@ _koopa_aws_s3_ls() {                                                      # {{{1
 
 _koopa_aws_s3_mv_to_parent() {                                            # {{{1
     # """
-    # Move objects in S3 directory to parent.
-    # @note Updated 2020-02-11.
+    # Move objects in S3 directory to parent directory.
+    # @note Updated 2020-02-12.
     # """
     _koopa_is_installed aws || return 1
+    local prefix
+    prefix="${1:?}"
+    local x
+    x="$(aws-s3-ls "$prefix")"
+    [[ -n "$x" ]] || return 0
+    local files
+    mapfile -t files <<< "$x"
+    for file in "${files[@]}"
+    do
+        local bn dn1 dn2 target
+        bn="$(basename "$file")"
+        dn1="$(dirname "$file")"
+        dn2="$(dirname "$dn1")"
+        target="${dn2}/${bn}"
+        aws s3 mv "$file" "$target"
+    done
+    # Remove the now empty input directory.
+    # > aws s3 rm "$prefix"
+    return 0
 }
