@@ -267,6 +267,7 @@ checkVersion(
     current = currentVersion("shellcheck"),
     expected = expectedVersion("shellcheck")
 )
+installed("shunit2")
 
 
 
