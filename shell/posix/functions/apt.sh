@@ -137,6 +137,7 @@ _koopa_apt_enabled_repos() {                                              # {{{1
     # Get a list of enabled default apt repos.
     # Updated 2020-02-07.
     # """
+    _koopa_assert_is_debian
     grep -E '^deb ' /etc/apt/sources.list \
         | cut -d ' ' -f 4 \
         | awk '!a[$0]++' \
@@ -145,12 +146,25 @@ _koopa_apt_enabled_repos() {                                              # {{{1
 
 
 
+_koopa_apt_is_key_imported() {                                            # {{{1
+    # """
+    # Is a GPG key imported for apt?
+    # @note Updated 2020-02-12.
+    # """
+    _koopa_assert_is_debian
+    local key
+    key="${1:?}"
+    apt-key list 2>&1 | grep -q "$key"
+}
+
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # """
     # Import the Microsoft Azure CLI public key.
     # @note Updated 2020-02-12.
     # """
+    _koopa_assert_is_debian
     _koopa_assert_has_sudo
+    [ -e "/etc/apt/trusted.gpg.d/microsoft.asc.gpg" ] && return 0
     _koopa_assert_is_installed curl gpg
     _koopa_h2 "Adding official Microsoft public key."
     curl -sL https://packages.microsoft.com/keys/microsoft.asc \
@@ -164,7 +178,11 @@ _koopa_apt_import_docker_key() {                                          # {{{1
     # Import the Docker public key.
     # @note Updated 2020-02-12.
     # """
+    _koopa_assert_is_debian
     _koopa_assert_has_sudo
+    local key
+    key="9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88"
+    _koopa_apt_is_key_imported "$key" && return 0
     _koopa_assert_is_installed curl
     _koopa_h2 "Adding official Docker public key."
     # Expecting "debian" or "ubuntu" here.
@@ -181,7 +199,9 @@ _koopa_apt_import_google_cloud_key() {                                    # {{{1
     # Import the Google Cloud public key.
     # @note Updated 2020-02-12.
     # """
+    _koopa_assert_is_debian
     _koopa_assert_has_sudo
+    [ -e "/usr/share/keyrings/cloud.google.gpg" ] && return 0
     _koopa_assert_is_installed curl
     _koopa_h2 "Adding official Google Cloud SDK public key."
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
@@ -194,7 +214,10 @@ _koopa_apt_import_llvm_key() {                                            # {{{1
     # Import the LLVM public key.
     # @note Updated 2020-02-12.
     # """
+    _koopa_assert_is_debian
     _koopa_assert_has_sudo
+    key="6084 F3CF 814B 57C1 CF12  EFD5 15CF 4D18 AF4F 7421"
+    _koopa_apt_is_key_imported "$key" && return 0
     _koopa_assert_is_installed curl
     _koopa_h2 "Adding official LLVM public key."
     curl -fsSL "https://apt.llvm.org/llvm-snapshot.gpg.key" \
@@ -208,7 +231,15 @@ _koopa_apt_import_r_key() {                                               # {{{1
     # Import the R public key.
     # @note Updated 2020-02-12.
     # """
+    _koopa_assert_is_debian
     _koopa_assert_has_sudo
+    if _koopa_is_ubuntu
+    then
+        key="E298 A3A8 25C0 D65D FD57  CBB6 5171 6619 E084 DAB9"
+    else
+        key="E19F 5F87 1288 99B1 92B1  A2C2 AD5F 960A 256A 04AF"
+    fi
+    _koopa_apt_is_key_imported "$key" && return 0
     _koopa_h2 "Adding official R public key."
     if _koopa_is_ubuntu
     then
@@ -330,5 +361,7 @@ _koopa_apt_space_used_by_no_deps() {                                      # {{{1
     # Check install apt package size, without dependencies.
     # Updated 2020-01-31.
     # """
+    _koopa_assert_is_debian
+    _koopa_assert_has_sudo
     sudo apt show "$@" | grep 'Size'
 }
