@@ -17,9 +17,7 @@ case "$(uname -s)" in
     Linux)
         ;;
     *)
-        >&2 printf "Error: Unsupported operating system.\n"
-        return 1
-        ;;
+        _koopa_stop "Unsupported operating system."
 esac
 
 # Bad settings                                                              {{{2
@@ -30,70 +28,6 @@ if [ -z "${RSTUDIO:-}" ]
 then
     _koopa_warn_if_export JAVA_HOME LD_LIBRARY_PATH PYTHONHOME R_HOME
 fi
-
-
-
-# XDG base directory specification                                          {{{1
-# ==============================================================================
-
-# XDG_RUNTIME_DIR:
-# - Can only exist for the duration of the user's login.
-# - Updated every 6 hours or set sticky bit if persistence is desired.
-# - Should not store large files as it may be mounted as a tmpfs.
-
-# > if [ ! -d "$XDG_RUNTIME_DIR" ]
-# > then
-# >     mkdir -pv "$XDG_RUNTIME_DIR"
-# >     chown "$USER" "$XDG_RUNTIME_DIR"
-# >     chmod 0700 "$XDG_RUNTIME_DIR"
-# > fi
-
-# See also:
-# - https://developer.gnome.org/basedir-spec/
-# - https://wiki.archlinux.org/index.php/XDG_Base_Directory
-
-if [ -z "${XDG_CACHE_HOME:-}" ]
-then
-    XDG_CACHE_HOME="${HOME}/.cache"
-fi
-
-if [ -z "${XDG_CONFIG_HOME:-}" ]
-then
-    XDG_CONFIG_HOME="${HOME}/.config"
-fi
-
-if [ -z "${XDG_DATA_HOME:-}" ]
-then
-    XDG_DATA_HOME="${HOME}/.local/share"
-fi
-
-if [ -z "${XDG_RUNTIME_DIR:-}" ]
-then
-    XDG_RUNTIME_DIR="/run/user/$(id -u)"
-    if _koopa_is_macos
-    then
-        XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
-    fi
-fi
-
-if [ -z "${XDG_DATA_DIRS:-}" ]
-then
-    XDG_DATA_DIRS="/usr/local/share:/usr/share"
-fi
-
-if [ -z "${XDG_CONFIG_DIRS:-}" ]
-then
-    XDG_CONFIG_DIRS="/etc/xdg"
-fi
-
-export XDG_CACHE_HOME
-export XDG_CONFIG_DIRS
-export XDG_CONFIG_HOME
-export XDG_DATA_DIRS
-export XDG_DATA_HOME
-export XDG_RUNTIME_DIR
-
-mkdir -p "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME"
 
 
 
@@ -151,10 +85,8 @@ then
     export USER
 fi
 
-
-
-# CPU count                                                                 {{{1
-# ==============================================================================
+# CPU count                                                                 {{{2
+# ------------------------------------------------------------------------------
 
 if [ -z "${CPU_COUNT:-}" ]
 then
@@ -162,74 +94,61 @@ then
     export CPU_COUNT
 fi
 
-
-
-# Path prefixes                                                             {{{1
-# ==============================================================================
-
-# Note that here we're making sure local binaries are included.
-# Inspect '/etc/profile' if system PATH appears misconfigured.
-
-# See also:
-# - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-
-# Standard Unix paths                                                       {{{2
+# History                                                                   {{{2
 # ------------------------------------------------------------------------------
 
-_koopa_add_to_path_end "/usr/local/bin"
-_koopa_add_to_path_end "/usr/bin"
-_koopa_add_to_path_end "/bin"
-_koopa_add_to_path_end "/usr/local/sbin"
-_koopa_add_to_path_end "/usr/sbin"
+# See bash(1) for more options.
+# For setting history length, see HISTSIZE and HISTFILESIZE.
 
-# > _koopa_add_to_path_start "${HOME}/bin"
-# > _koopa_add_to_path_start "${HOME}/local/bin"
-
-# I think if XDG is configured correctly this gets added automatically.
-_koopa_add_to_path_start "${HOME}/.local/bin"
-
-_koopa_add_to_manpath_end "/usr/local/share/man"
-_koopa_add_to_manpath_end "/usr/share/man"
-_koopa_add_to_manpath_start "${HOME}/.local/share/man"
-
-# Ruby gems.
-_koopa_add_to_path_start "${HOME}/.gem/bin"
-
-# Koopa paths                                                               {{{2
-# ------------------------------------------------------------------------------
-
-_koopa_activate_prefix "$KOOPA_PREFIX"
-_koopa_activate_prefix "${KOOPA_PREFIX}/shell/${KOOPA_SHELL}"
-
-if _koopa_is_linux
+# Don't keep duplicate lines in the history.
+# Alternatively, set "ignoreboth" to also ignore lines starting with space.
+if [ -z "${HISTCONTROL:-}" ]
 then
-    _koopa_activate_prefix "${KOOPA_PREFIX}/os/linux"
-    if _koopa_is_debian
-    then
-        _koopa_activate_prefix "${KOOPA_PREFIX}/os/debian"
-    elif _koopa_is_fedora
-    then
-        _koopa_activate_prefix "${KOOPA_PREFIX}/os/fedora"
-    fi
-
-    if _koopa_is_rhel
-    then
-        _koopa_activate_prefix "${KOOPA_PREFIX}/os/rhel"
-    fi
+    export HISTCONTROL="ignoredups"
 fi
 
-_koopa_activate_prefix "${KOOPA_PREFIX}/os/$(_koopa_os_id)"
-_koopa_activate_prefix "${KOOPA_PREFIX}/host/$(_koopa_host_id)"
+# Standardize the history file name across shells.
+if [ -z "${HISTFILE:-}" ]
+then
+    HISTFILE="${HOME}/.$(_koopa_shell)-history"
+    export HISTFILE
+fi
 
-# Private scripts                                                           {{{2
-# ------------------------------------------------------------------------------
+if [ -z "${HISTSIZE:-}" ]
+then
+    export HISTSIZE=100000
+fi
 
-_koopa_activate_prefix "$(_koopa_config_prefix)/docker"
-_koopa_activate_prefix "$(_koopa_config_prefix)/scripts-private"
+if [ -z "${SAVEHIST:-}" ]
+then
+    export SAVEHIST=100000
+fi
+
+if [ -z "${HISTIGNORE:-}" ]
+then
+    export HISTIGNORE="&:ls:[bf]g:exit"
+fi
+
+# Add the date/time to 'history' command output.
+# Note that on macOS bash will fail if 'set -e' is set and this isn't exported.
+if [ -z "${HISTTIMEFORMAT:-}" ]
+then
+    export HISTTIMEFORMAT="%Y%m%d %T  "
+fi
 
 
 
 # Activation functions                                                      {{{1
 # ==============================================================================
 
+_koopa_activate_xdg
+_koopa_activate_standard_paths
+_koopa_activate_koopa_paths
+
+_koopa_activate_dircolors
+_koopa_activate_dotfiles
+_koopa_activate_emacs
+_koopa_activate_gcc_colors
+_koopa_activate_go
 _koopa_activate_pipx
+_koopa_activate_ruby
