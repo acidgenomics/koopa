@@ -21,6 +21,30 @@ _koopa_add_config_link() {                                                # {{{1
     return 0
 }
 
+# Also defined in koopa installer.
+_koopa_admin_group() {                                                    # {{{1
+    # """
+    # Return the administrator group.
+    # @note Updated 2020-02-13.
+    # """
+    local group
+    local groups
+    groups="$(groups)"
+    if echo "$groups" | grep -Eq "\b(admin)\b"
+    then
+        group="admin"
+    elif echo "$groups" | grep -Eq "\b(sudo)\b"
+    then
+        group="sudo"
+    elif echo "$groups" | grep -Eq "\b(wheel)\b"
+    then
+        group="wheel"
+    else
+        group="$(whoami)"
+    fi
+    return 0
+}
+
 _koopa_cd_tmp_dir() {                                                     # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
@@ -56,16 +80,21 @@ _koopa_disk_check() {                                                     # {{{1
 _koopa_disk_pct_used() {                                                  # {{{1
     # """
     # Check disk usage on main drive.
-    # Updated 2019-08-17.
+    # Updated 2020-02-13.
     # """
     local disk
     disk="${1:-"/"}"
-    df "$disk" \
-        | head -n 2 \
-        | sed -n '2p' \
-        | grep -Eo "([.0-9]+%)" \
-        | head -n 1 \
-        | sed 's/%$//'
+    local x
+    x="$( \
+        df "$disk" \
+            | head -n 2 \
+            | sed -n '2p' \
+            | grep -Eo "([.0-9]+%)" \
+            | head -n 1 \
+            | sed 's/%$//' \
+    )"
+    echo "$x"
+    return 0
 }
 
 _koopa_dotfiles_config_link() {                                           # {{{1
@@ -77,6 +106,7 @@ _koopa_dotfiles_config_link() {                                           # {{{1
     # 'link-dotfile' script automatically instead.
     # """
     echo "$(_koopa_config_prefix)/dotfiles"
+    return 0
 }
 
 _koopa_dotfiles_private_config_link() {                                   # {{{1
@@ -85,6 +115,7 @@ _koopa_dotfiles_private_config_link() {                                   # {{{1
     # Updated 2019-11-04.
     # """
     echo "$(_koopa_dotfiles_config_link)-private"
+    return 0
 }
 
 _koopa_dotfiles_source_repo() {                                           # {{{1
@@ -104,6 +135,7 @@ _koopa_dotfiles_source_repo() {                                           # {{{1
         _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
     fi
     echo "$dotfiles"
+    return 0
 }
 
 _koopa_git_branch() {                                                     # {{{1
@@ -123,14 +155,16 @@ _koopa_git_branch() {                                                     # {{{1
     #       git-completion.bash?id=HEAD
     # """
     _koopa_is_git || return 1
-    git symbolic-ref --short -q HEAD
+    local branch
+    branch="$(git symbolic-ref --short -q HEAD)"
+    echo "$branch"
+    return 0
 }
 
-# Also defined in koopa installer.
 _koopa_group() {                                                          # {{{1
     # """
-    # Return the approach group to use with koopa installation.
-    # Updated 2019-10-22.
+    # Return the appropriate group to use with koopa installation.
+    # Updated 2020-02-13.
     #
     # Returns current user for local install.
     # Dynamically returns the admin group for shared install.
@@ -138,24 +172,14 @@ _koopa_group() {                                                          # {{{1
     # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
     # """
     local group
-    if _koopa_is_shared_install && _koopa_has_sudo
+    if _koopa_is_shared_install
     then
-        if groups | grep -Eq "\b(admin)\b"
-        then
-            group="admin"
-        elif groups | grep -Eq "\b(sudo)\b"
-        then
-            group="sudo"
-        elif groups | grep -Eq "\b(wheel)\b"
-        then
-            group="wheel"
-        else
-            group="$(whoami)"
-        fi
+        group="$(_koopa_admin_group)"
     else
         group="$(whoami)"
     fi
     echo "$group"
+    return 0
 }
 
 _koopa_gnu_mirror() {                                                     # {{{1
@@ -164,6 +188,7 @@ _koopa_gnu_mirror() {                                                     # {{{1
     # Updated 2020-02-11.
     # """
     _koopa_variable "gnu-mirror"
+    return 0
 }
 
 _koopa_header() {                                                         # {{{1
@@ -226,6 +251,7 @@ _koopa_header() {                                                         # {{{1
             ;;
     esac
     echo "$file"
+    return 0
 }
 
 _koopa_help() {                                                           # {{{1
@@ -344,6 +370,7 @@ _koopa_host_id() {                                                        # {{{1
             ;;
     esac
     echo "$id"
+    return 0
 }
 
 _koopa_info_box() {                                                       # {{{1
@@ -545,12 +572,13 @@ _koopa_mktemp() {                                                         # {{{1
     local template
     template="koopa-$(id -u)-$(date "+%Y%m%d%H%M%S")-XXXXXXXXXX"
     mktemp "$@" --tmpdir "$template"
+    return 0
 }
 
 _koopa_os_codename() {                                                    # {{{1
     # """
     # Operating system code name.
-    # Updated 2019-12-09.
+    # Updated 2020-02-13.
     #
     # Alternate approach:
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
@@ -558,17 +586,23 @@ _koopa_os_codename() {                                                    # {{{1
     # """
     _koopa_assert_is_debian
     _koopa_assert_is_installed lsb_release
-    lsb_release -cs
+    local os_codename
+    os_codename="$(lsb_release -cs)"
+    echo "$os_codename"
+    return 0
 }
 
 _koopa_os_id() {                                                          # {{{1
     # """
     # Operating system ID.
-    # Updated 2019-11-25.
+    # Updated 2020-02-13.
     #
     # Just return the OS platform ID (e.g. "debian").
     # """
-    _koopa_os_string | cut -d '-' -f 1
+    local os_id
+    os_id="$(_koopa_os_string | cut -d '-' -f 1)"
+    echo "$os_id"
+    return 0
 }
 
 _koopa_os_string() {                                                      # {{{1
@@ -626,6 +660,7 @@ _koopa_os_string() {                                                      # {{{1
         string="${string}-${version}"
     fi
     echo "$string"
+    return 0
 }
 
 _koopa_relink() {                                                         # {{{1
@@ -678,6 +713,7 @@ EOF
         return 1
     fi
     echo "$shell"
+    return 0
 }
 
 _koopa_tmp_dir() {                                                        # {{{1
@@ -686,6 +722,7 @@ _koopa_tmp_dir() {                                                        # {{{1
     # Updated 2020-02-06.
     # """
     _koopa_mktemp -d
+    return 0
 }
 
 _koopa_tmp_file() {                                                       # {{{1
@@ -694,6 +731,7 @@ _koopa_tmp_file() {                                                       # {{{1
     # Updated 2020-02-06.
     # """
     _koopa_mktemp
+    return 0
 }
 
 _koopa_tmp_log_file() {                                                   # {{{1
@@ -704,6 +742,7 @@ _koopa_tmp_log_file() {                                                   # {{{1
     # Used primarily for debugging cellar make install scripts.
     # """
     _koopa_mktemp --suffix=".log"
+    return 0
 }
 
 _koopa_today_bucket() {                                                   # {{{1
@@ -745,12 +784,13 @@ _koopa_today_bucket() {                                                   # {{{1
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
+    return 0
 }
 
 _koopa_variable() {                                                       # {{{1
     # """
     # Get version stored internally in versions.txt file.
-    # Updated 2020-01-12.
+    # Updated 2020-02-13.
     # """
     local file
     file="$(_koopa_prefix)/system/include/variables.txt"
@@ -762,9 +802,13 @@ _koopa_variable() {                                                       # {{{1
         grep -Eo "^${key}=\"[^\"]+\"" "$file" \
         || _koopa_stop "'${key}' not defined in '${file}'." \
     )"
-    echo "$value" \
-        | head -n 1 \
-        | cut -d "\"" -f 2
+    value="$( \
+        echo "$value" \
+            | head -n 1 \
+            | cut -d "\"" -f 2
+    )"
+    echo "$value"
+    return 0
 }
 
 _koopa_view_latest_tmp_log_file() {                                       # {{{1

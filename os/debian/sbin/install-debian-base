@@ -117,7 +117,7 @@ _koopa_apt_import_keys
 _koopa_apt_link_sources
 enabled_repos="$(_koopa_apt_enabled_repos)"
 
-# dist-upgrade                                                           #  {{{1
+# Upgrade distribution                                                   #  {{{1
 # ==============================================================================
 
 if [[ "$dist_upgrade" -eq 1 ]]
@@ -132,7 +132,7 @@ then
             dist-upgrade
 fi
 
-# default                                                                 # {{{1
+# Default                                                                 # {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
@@ -158,36 +158,40 @@ do
     sudo apt-get --yes remove "${pkg[@]}"
 done
 
-                                          # |   w/o deps |    w/ deps | n deps |
-pkgs=(                                    # | ---------- | ---------- | ------ |
-    apt-listchanges                       # |         NA |         NA |     NA |
-    apt-utils                             # |         NA |         NA |     NA |
-    autoconf                              # |         NA |         NA |     NA |
-    automake                              # |         NA |         NA |     NA |
-    bc                                    # |         NA |         NA |     NA |
-    ca-certificates                       # |         NA |         NA |     NA |
-    cmake                                 # |         NA |         NA |     NA |
-    coreutils                             # |         NA |         NA |     NA |
-    curl                                  # |     < 1 MB |     < 1 MB |      3 |
-    dirmngr                               # |     < 1 MB |       4 MB |     10 |
-    findutils                             # |         NA |         NA |     NA |
-    gcc                                   # |         NA |         NA |     NA |
-    gdb                                   # |       9 MB |      51 MB |      5 |
-    gfortran                              # |     < 1 MB |     < 1 MB |      2 |
-    git                                   # |      32 MB |      34 MB |      3 |
-    gnupg                                 # |     < 1 MB |       2 MB |      8 |
-    gpg-agent                             # |     < 1 MB |       4 MB |     12 |
-    htop                                  # |     < 1 MB |     < 1 MB |      2 |
-    less                                  # |     < 1 MB |     < 1 MB |      2 |
-    lsb-release                           # |         NA |         NA |     NA |
-    nano                                  # |     < 1 MB |     < 1 MB |      1 |
-    pkg-config                            # |         NA |         NA |     NA |
-    software-properties-common            # |         NA |         NA |     NA |
-    sudo                                  # |         NA |         NA |     NA |
-    tmux                                  # |     < 1 MB |       2 MB |      6 |
-    tzdata                                # |         NA |         NA |     NA |
-    vim                                   # |       3 MB |      32 MB |      3 |
-    wget                                  # |     < 1 MB |       1 MB |      3 |
+pkgs=(
+    apt-listchanges
+    apt-utils
+    autoconf
+    automake
+    bc
+    build-essential
+    bzip2
+    ca-certificates
+    cmake
+    coreutils
+    curl
+    dirmngr
+    findutils
+    gcc
+    gdb
+    gfortran
+    git
+    gnupg
+    gpg-agent
+    htop
+    less
+    lsb-release
+    make
+    nano
+    pkg-config
+    software-properties-common
+    sudo
+    tmux
+    tzdata
+    unzip
+    vim
+    wget
+    xz-utils
 )
 
 if _koopa_is_matching_fixed "universe" "$enabled_repos"
@@ -200,7 +204,7 @@ then
     )
 fi
 
-# developer                                                                 {{{1
+# Developer                                                                 {{{1
 # ==============================================================================
 
 # Note that we want these on our Bioconductor Docker images.
@@ -241,7 +245,7 @@ then
     fi
 fi
 
-# extra                                                                     {{{1
+# Extra                                                                     {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
@@ -250,7 +254,6 @@ then
                                           # |   w/o deps |    w/ deps | n deps |
     pkgs+=(                               # | ---------- | ---------- | ------ |
         emacs                             # |       8 MB |     112 MB |     11 |
-        firefox                           # |     202 MB |     203 MB |      9 |
         keyboard-configuration            # |       3 MB |      35 MB |     44 |
         perl                              # |     < 1 MB |     987 MB |    281 |
         sqlite3                           # |       2 MB |       2 MB |      1 |
@@ -259,6 +262,15 @@ then
         xorg                              # |     < 1 MB |      30 MB |     39 |
         zsh                               # |       2 MB |      15 MB |      2 |
     )
+
+    if _koopa_is_ubuntu
+    then
+        _koopa_info "Installing Ubuntu-specific packages."
+                                          # |   w/o deps |    w/ deps | n deps |
+        pkgs+=(                           # | ---------- | ---------- | ------ |
+            firefox                       # |     202 MB |     203 MB |      9 |
+        )
+    fi
 
     if _koopa_is_matching_fixed "universe" "$enabled_repos"
     then
@@ -292,7 +304,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         --yes \
         install "${pkgs[@]}"
 
-# clean up                                                                  {{{1
+# Clean up                                                                  {{{1
 # ==============================================================================
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
@@ -301,3 +313,5 @@ sudo apt-get --yes autoremove
 _koopa_h2 "Removing caches."
 sudo rm -fr /root/.cache/*
 sudo rm -fr /var/lib/apt/lists/*
+
+_koopa_success "Installation of Debian base was successful."

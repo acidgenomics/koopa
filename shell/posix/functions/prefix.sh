@@ -7,6 +7,7 @@ _koopa_prefix() {                                                         # {{{1
     # Updated 2020-01-12.
     # """
     echo "${KOOPA_PREFIX:?}"
+    return 0
 }
 
 _koopa_app_prefix() {                                                     # {{{1
@@ -34,6 +35,7 @@ _koopa_app_prefix() {                                                     # {{{1
         prefix="$(_koopa_local_app_prefix)"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_cellar_prefix() {                                                  # {{{1
@@ -53,6 +55,7 @@ _koopa_cellar_prefix() {                                                  # {{{1
         prefix="$(_koopa_make_prefix)/cellar"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_config_prefix() {                                                  # {{{1
@@ -61,6 +64,7 @@ _koopa_config_prefix() {                                                  # {{{1
     # Updated 2020-01-13.
     # """
     echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
+    return 0
 }
 
 _koopa_local_app_prefix() {                                               # {{{1
@@ -71,6 +75,7 @@ _koopa_local_app_prefix() {                                               # {{{1
     # This is the default app path when koopa is installed per user.
     # """
     echo "${XDG_DATA_HOME:?}"
+    return 0
 }
 
 _koopa_make_prefix() {                                                    # {{{1
@@ -87,6 +92,7 @@ _koopa_make_prefix() {                                                    # {{{1
         prefix="${HOME:?}/.local"
     fi
     echo "$prefix"
+    return 0
 }
 
 
@@ -104,6 +110,7 @@ _koopa_aspera_prefix() {                                                  # {{{1
         prefix="${HOME:?}/.aspera/connect"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_autojump_prefix() {                                                # {{{1
@@ -128,6 +135,7 @@ _koopa_autojump_prefix() {                                                # {{{1
         prefix="${HOME:?}/.autojump"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_bcbio_prefix() {                                                   # {{{1
@@ -148,6 +156,7 @@ _koopa_bcbio_prefix() {                                                   # {{{1
         prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_conda_prefix() {                                                   # {{{1
@@ -163,6 +172,7 @@ _koopa_conda_prefix() {                                                   # {{{1
         prefix="$(_koopa_app_prefix)/conda"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_dotfiles_prefix() {                                                # {{{1
@@ -183,20 +193,32 @@ _koopa_ensembl_perl_api_prefix() {                                        # {{{1
     local prefix
     prefix="$(_koopa_app_prefix)/ensembl"
     echo "$prefix"
+    return 0
 }
 
 _koopa_go_gopath() {                                                      # {{{1
     # """
     # Go GOPATH, for building from source.
     # @note Updated 2020-02-13.
+    #
+    # This must be different from go root, e.g. '/n/app/go/1.13.4'.
+    #
+    # @seealso
+    # - go help gopath
+    # - go env GOPATH
+    # - go env GOROOT
+    # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
+
     # """
-    [ -n "${GOPATH:-}" ] && return 0
-    local version
-    version="$(_koopa_get_version "go")"
     local prefix
-    prefix="$(_koopa_app_prefix)/go/${version}"
-    [ -d "$prefix" ] || return 0
+    if [ -n "${GOPATH:-}" ]
+    then
+        prefix="$GOPATH"
+    else
+        prefix="$(_koopa_app_prefix)/go/gopath"
+    fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_java_home() {                                                      # {{{1
@@ -226,6 +248,7 @@ _koopa_java_home() {                                                      # {{{1
         home="$(dirname "$(dirname "${java_exe}")")"
     fi
     echo "$home"
+    return 0
 }
 
 _koopa_perlbrew_prefix() {                                                # {{{1
@@ -241,6 +264,7 @@ _koopa_perlbrew_prefix() {                                                # {{{1
         prefix="$(_koopa_app_prefix)/perl/perlbrew"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_pyenv_prefix() {                                                   # {{{1
@@ -253,6 +277,7 @@ _koopa_pyenv_prefix() {                                                   # {{{1
     local prefix
     prefix="$(_koopa_app_prefix)/python/pyenv"
     echo "$prefix"
+    return 0
 }
 
 _koopa_python_site_packages_prefix() {
@@ -266,6 +291,7 @@ _koopa_python_site_packages_prefix() {
     local x
     x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
     echo "$x"
+    return 0
 }
 
 _koopa_r_home() {                                                         # {{{1
@@ -282,6 +308,7 @@ _koopa_r_home() {                                                         # {{{1
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
     [ -d "$home" ] || return 1
     echo "$home"
+    return 0
 }
 
 _koopa_r_library_prefix() {                                               # {{{1
@@ -294,6 +321,7 @@ _koopa_r_library_prefix() {                                               # {{{1
     prefix="$(Rscript -e 'cat(.libPaths()[[1L]])')"
     [ -d "$prefix" ] || return 1
     echo "$prefix"
+    return 0
 }
 
 _koopa_r_system_library_prefix() {                                        # {{{1
@@ -306,6 +334,7 @@ _koopa_r_system_library_prefix() {                                        # {{{1
     prefix="$(Rscript --vanilla -e 'cat(tail(.libPaths(), n = 1L))')"
     [ -d "$prefix" ] || return 1
     echo "$prefix"
+    return 0
 }
 
 _koopa_rbenv_prefix() {                                                   # {{{1
@@ -320,6 +349,7 @@ _koopa_rbenv_prefix() {                                                   # {{{1
     local prefix
     prefix="$(_koopa_app_prefix)/ruby/rbenv"
     echo "$prefix"
+    return 0
 }
 
 _koopa_rust_cargo_prefix() {                                              # {{{1
@@ -340,6 +370,7 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
         prefix="${HOME:?}/.cargo"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_rust_rustup_prefix() {                                             # {{{1
@@ -355,6 +386,7 @@ _koopa_rust_rustup_prefix() {                                             # {{{1
         prefix="${HOME:?}/.rustup"
     fi
     echo "$prefix"
+    return 0
 }
 
 _koopa_venv_prefix() {                                                    # {{{1
@@ -365,4 +397,5 @@ _koopa_venv_prefix() {                                                    # {{{1
     local prefix
     prefix="$(_koopa_app_prefix)/python/virtualenvs"
     echo "$prefix"
+    return 0
 }

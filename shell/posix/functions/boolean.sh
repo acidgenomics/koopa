@@ -338,9 +338,11 @@ _koopa_is_linux() {                                                       # {{{1
 _koopa_is_local_install() {                                               # {{{1
     # """
     # Is koopa installed only for the current user?
-    # Updated 2019-06-25.
+    # Updated 2020-02-13.
     # """
-    echo "$KOOPA_PREFIX" | grep -Eq "^${HOME}"
+    local prefix
+    prefix="$(_koopa_prefix)"
+    echo "$prefix" | grep -Eq "^${HOME}"
 }
 
 _koopa_is_login() {                                                       # {{{1
