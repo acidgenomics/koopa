@@ -13,7 +13,8 @@ _koopa_apt_add_azure_cli_repo() {
     [ -f "$sources_list" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ ${os_codename} main" \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
+${os_codename} main" \
         | sudo tee "$sources_list"
     return 0
 }
@@ -32,7 +33,8 @@ _koopa_apt_add_docker_repo() {
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} ${os_codename} stable" \
+    echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} \
+${os_codename} stable" \
         | sudo tee "$sources_list"
     return 0
 }
@@ -47,7 +49,8 @@ _koopa_apt_add_google_cloud_sdk_repo() {
     local sources_list
     sources_list="/etc/apt/sources.list.d/google-cloud-sdk.list"
     [ -f "$sources_list" ] && return 0
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
+https://packages.cloud.google.com/apt cloud-sdk main" \
         | sudo tee "$sources_list"
     return 0
 }
@@ -64,7 +67,8 @@ _koopa_apt_add_llvm_repo() {
     [ -f "$sources_list" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb http://apt.llvm.org/${os_codename}/ llvm-toolchain-${os_codename}-9 main" \
+    echo "deb http://apt.llvm.org/${os_codename}/ \
+llvm-toolchain-${os_codename}-9 main" \
         | sudo tee "$sources_list"
     return 0
 }
@@ -83,7 +87,8 @@ _koopa_apt_add_r_repo() {
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb https://cloud.r-project.org/bin/linux/${os_id} ${os_codename}-cran35/" \
+    echo "deb https://cloud.r-project.org/bin/linux/${os_id} \
+${os_codename}-cran35/" \
         | sudo tee "$sources_list"
     return 0
 }
