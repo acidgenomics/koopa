@@ -4,11 +4,11 @@
 _koopa_activate_prefix() {                                                # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # Updated 2020-01-12.
+    # Updated 2020-02-13.
     # """
     local prefix
     prefix="${1:?}"
-    _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
+    _koopa_add_to_path_start "${prefix}/sbin"
     _koopa_add_to_path_start "${prefix}/bin"
     _koopa_add_to_manpath_start "${prefix}/man"
     _koopa_add_to_manpath_start "${prefix}/share/man"
