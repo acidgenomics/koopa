@@ -179,9 +179,8 @@ fi
 _koopa_add_to_path_end "/usr/local/bin"
 _koopa_add_to_path_end "/usr/bin"
 _koopa_add_to_path_end "/bin"
-
-_koopa_has_sudo && _koopa_add_to_path_end "/usr/local/sbin"
-_koopa_has_sudo && _koopa_add_to_path_end "/usr/sbin"
+_koopa_add_to_path_end "/usr/local/sbin"
+_koopa_add_to_path_end "/usr/sbin"
 
 # > _koopa_add_to_path_start "${HOME}/bin"
 # > _koopa_add_to_path_start "${HOME}/local/bin"
