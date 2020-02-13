@@ -137,7 +137,7 @@ _koopa_ensure_newline_at_end_of_file() {                                  # {{{1
 _koopa_extract() {                                                        # {{{1
     # """
     # Extract compressed files automatically.
-    # Updated 2020-01-21.
+    # Updated 2020-02-13.
     #
     # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
     #
@@ -162,12 +162,14 @@ _koopa_extract() {                                                        # {{{1
             tar -xJvf "$file"
             ;;
         *.bz2)
+            _koopa_assert_is_installed bunzip2
             bunzip2 "$file"
             ;;
         *.gz)
             gunzip "$file"
             ;;
         *.rar)
+            _koopa_assert_is_installed unrar
             unrar -x "$file"
             ;;
         *.tar)
@@ -179,13 +181,19 @@ _koopa_extract() {                                                        # {{{1
         *.tgz)
             tar -xzvf "$file"
             ;;
+        *.xz)
+            _koopa_assert_is_installed xz
+            xz --decompress "$file"
+            ;;
         *.zip)
+            _koopa_assert_is_installed unzip
             unzip "$file"
             ;;
         *.Z)
             uncompress "$file"
             ;;
         *.7z)
+            _koopa_assert_is_installed 7z
             7z -x "$file"
             ;;
         *)
