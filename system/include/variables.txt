@@ -65,6 +65,9 @@ coreutils="8.31"
 # https://docs.docker.com/install/
 docker="19.03.5"
 
+# https://github.com/docker/docker-credential-helpers/releases
+docker-credential-pass="0.6.3"
+
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
 
@@ -156,6 +159,9 @@ oracle-instantclient="19.5.0.0.0-1"
 
 # https://pandoc.org/releases.html
 pandoc="2.7.3"
+
+# https://www.passwordstore.org/
+pass="1.7.3"
 
 # https://www.perl.org/get.html
 perl="5.30.1"
