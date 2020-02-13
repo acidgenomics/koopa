@@ -15,23 +15,6 @@ set -o errtrace         # -E
 set -o nounset          # -u
 set -o pipefail
 
-# Requiring Bash >= 4 for exported scripts.
-# macOS ships with an ancient version of Bash, due to licensing.
-major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
-if [[ ! "$major_version" -ge 4 ]]
-then
-    echo "Bash >= 4 is required."
-    exit 1
-fi
-
-# Check that user's Bash has mapfile builtin defined.
-# We use this a lot to handle arrays.
-if [[ $(type -t mapfile) != "builtin" ]]
-then
-    echo "Bash is missing 'mapfile' builtin."
-    exit 1
-fi
-
 KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"
 
@@ -44,6 +27,25 @@ source "${KOOPA_BASH_INC}/../../posix/include/functions.sh"
 source "${KOOPA_BASH_INC}/functions.sh"
 
 _koopa_help "$@"
+
+# Requiring Bash >= 4 for exported scripts.
+# macOS ships with an ancient version of Bash, due to licensing.
+if ! _koopa_is_macos
+then
+    major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
+    if [[ ! "$major_version" -ge 4 ]]
+    then
+        echo "Bash >= 4 is required."
+        exit 1
+    fi
+    # Check that user's Bash has mapfile builtin defined.
+    # We use this a lot to handle arrays.
+    if [[ $(type -t mapfile) != "builtin" ]]
+    then
+        echo "Bash is missing 'mapfile' builtin."
+        exit 1
+    fi
+fi
 
 # Require sudo permission to run 'sbin/' scripts.
 if echo "$0" | grep -q "/sbin/"
