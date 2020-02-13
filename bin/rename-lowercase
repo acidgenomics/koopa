@@ -37,14 +37,24 @@ set -- "${POSITIONAL[@]}"
 if [[ "$recursive" -eq 1 ]]
 then
     dir="${1:-.}"
+    # Rename files.
     find "$dir" \
         -mindepth 1 \
+        -type f \
         -name "*[A-Z]*" \
         -not -name ".*" \
         -print0 \
-        | xargs -0 -I {} \
-            rename --force --verbose 'y/A-Z/a-z/' {}
-
+        | sort --zero-terminated \
+        | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
+    # Rename directories.
+    find "$dir" \
+        -mindepth 1 \
+        -type d \
+        -name "*[A-Z]*" \
+        -not -name ".*" \
+        -print0 \
+        | sort --reverse --zero-terminated \
+        | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
 else
     rename --force --verbose 'y/A-Z/a-z/' "$@"
 fi
