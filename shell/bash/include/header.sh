@@ -20,14 +20,14 @@ set -o pipefail
 major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
 if [[ ! "$major_version" -ge 4 ]]
 then
-    echo "Bash >= 4 is required."
+    echo "ERROR: Bash >= 4 is required."
     exit 1
 fi
 # Check that user's Bash has mapfile builtin defined.
 # We use this a lot to handle arrays.
 if [[ $(type -t mapfile) != "builtin" ]]
 then
-    echo "Bash is missing 'mapfile' builtin."
+    echo "ERROR: Bash is missing 'mapfile' builtin."
     exit 1
 fi
 
