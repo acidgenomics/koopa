@@ -42,6 +42,7 @@ _koopa_admin_group() {                                                    # {{{1
     else
         group="$(whoami)"
     fi
+    echo "$group"
     return 0
 }
 
