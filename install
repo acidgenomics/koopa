@@ -24,43 +24,35 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-09.
+    Updated 2020-02-13.
 EOF
 }
 
 # shell/posix/functions/system.sh
-_koopa_group() {                                                          # {{{1
+_koopa_admin_group() {                                                    # {{{1
     # """
-    # Return the approach group to use with koopa installation.
-    # Updated 2019-10-22.
-    #
-    # Returns current user for local install.
-    # Dynamically returns the admin group for shared install.
-    #
-    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
+    # Return the administrator group.
+    # @note Updated 2020-02-13.
     # """
     local group
-    if _koopa_is_shared_install && _koopa_has_sudo
+    local groups
+    groups="$(groups)"
+    if echo "$groups" | grep -Eq "\b(admin)\b"
     then
-        if groups | grep -Eq "\b(admin)\b"
-        then
-            group="admin"
-        elif groups | grep -Eq "\b(sudo)\b"
-        then
-            group="sudo"
-        elif groups | grep -Eq "\b(wheel)\b"
-        then
-            group="wheel"
-        else
-            group="$(whoami)"
-        fi
+        group="admin"
+    elif echo "$groups" | grep -Eq "\b(sudo)\b"
+    then
+        group="sudo"
+    elif echo "$groups" | grep -Eq "\b(wheel)\b"
+    then
+        group="wheel"
     else
         group="$(whoami)"
     fi
-    echo "$group"
+    return 0
 }
 
-# shell/posix/functions/assert.sh
+# shell/posix/functions/boolean.sh
 _koopa_has_passwordless_sudo() {                                          # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
@@ -74,7 +66,7 @@ _koopa_has_passwordless_sudo() {                                          # {{{1
     return 1
 }
 
-# shell/posix/functions/assert.sh
+# shell/posix/functions/boolean.sh
 _koopa_has_sudo() {                                                       # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
@@ -113,7 +105,7 @@ _koopa_has_sudo() {                                                       # {{{1
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
 
-# shell/posix/functions/assert.sh
+# shell/posix/functions/boolean.sh
 _koopa_is_installed() {                                                   # {{{1
     # """
     # Is the requested program name installed?
@@ -122,7 +114,7 @@ _koopa_is_installed() {                                                   # {{{1
     command -v "$1" >/dev/null
 }
 
-# shell/posix/functions/assert.sh
+# shell/posix/functions/boolean.sh
 _koopa_is_linux() {                                                       # {{{1
     # """
     # Is the current operating system Linux?
@@ -131,22 +123,13 @@ _koopa_is_linux() {                                                       # {{{1
     [ "$(uname -s)" = "Linux" ]
 }
 
-# shell/posix/functions/assert.sh
-_koopa_is_local_install() {                                               # {{{1
+_koopa_prefix() {                                                         # {{{1
     # """
-    # Is koopa installed only for the current user?
-    # Updated 2019-06-25.
+    # Koopa prefix (home).
+    # Updated 2020-01-12.
     # """
-    echo "$KOOPA_PREFIX" | grep -Eq "^${HOME}"
-}
-
-# shell/posix/functions/assert.sh
-_koopa_is_shared_install() {                                              # {{{1
-    # """
-    # Is koopa installed for all users (shared)?
-    # Updated 2019-06-25.
-    # """
-    ! _koopa_is_local_install
+    echo "${KOOPA_PREFIX:?}"
+    return 0
 }
 
 piped=0
@@ -255,7 +238,7 @@ then
             exit 1
         fi
         sudo mkdir -pv "$prefix"
-        group="$(_koopa_group)"
+        group="$(_koopa_admin_group)"
         sudo chgrp "$group" "$prefix"
         sudo chmod g+ws "$prefix"
     fi
