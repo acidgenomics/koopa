@@ -16,11 +16,15 @@ set -o nounset          # -u
 set -o pipefail
 
 # Requiring Bash >= 4 for exported scripts.
-major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
-if [[ ! "$major_version" -ge 4 ]]
+# macOS ships with an ancient version of Bash, due to licensing.
+if _koopa_is_linux
 then
-    echo "Bash >= 4 is required."
-    exit 1
+    major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
+    if [[ ! "$major_version" -ge 4 ]]
+    then
+        echo "Bash >= 4 is required."
+        exit 1
+    fi
 fi
 
 # Check that user's Bash has mapfile builtin defined.
