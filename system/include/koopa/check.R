@@ -565,6 +565,16 @@ if (isTRUE(linux)) {
         current = currentVersion("rstudio-server"),
         expected = expectedVersion("rstudio-server")
     )
+    checkVersion(
+        name = "pass",
+        current = currentVersion("pass"),
+        expected = expectedVersion("pass")
+    )
+    checkVersion(
+        name = "docker-credential-pass",
+        current = currentVersion("docker-credential-pass"),
+        expected = expectedVersion("docker-credential-pass")
+    )
     ## This is used for shebang. Version 8.30 marks support of `-S` flag.
     ## > checkVersion(
     ## >     name = "env (coreutils)",
