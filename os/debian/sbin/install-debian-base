@@ -117,7 +117,7 @@ _koopa_apt_import_keys
 _koopa_apt_link_sources
 enabled_repos="$(_koopa_apt_enabled_repos)"
 
-# dist-upgrade                                                           #  {{{1
+# Upgrade distribution                                                   #  {{{1
 # ==============================================================================
 
 if [[ "$dist_upgrade" -eq 1 ]]
@@ -132,7 +132,7 @@ then
             dist-upgrade
 fi
 
-# default                                                                 # {{{1
+# Default                                                                 # {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
@@ -200,7 +200,7 @@ then
     )
 fi
 
-# developer                                                                 {{{1
+# Developer                                                                 {{{1
 # ==============================================================================
 
 # Note that we want these on our Bioconductor Docker images.
@@ -241,7 +241,7 @@ then
     fi
 fi
 
-# extra                                                                     {{{1
+# Extra                                                                     {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
@@ -250,7 +250,6 @@ then
                                           # |   w/o deps |    w/ deps | n deps |
     pkgs+=(                               # | ---------- | ---------- | ------ |
         emacs                             # |       8 MB |     112 MB |     11 |
-        firefox                           # |     202 MB |     203 MB |      9 |
         keyboard-configuration            # |       3 MB |      35 MB |     44 |
         perl                              # |     < 1 MB |     987 MB |    281 |
         sqlite3                           # |       2 MB |       2 MB |      1 |
@@ -259,6 +258,15 @@ then
         xorg                              # |     < 1 MB |      30 MB |     39 |
         zsh                               # |       2 MB |      15 MB |      2 |
     )
+
+    if _koopa_is_ubuntu
+    then
+        _koopa_info "Installing Ubuntu-specific packages."
+                                          # |   w/o deps |    w/ deps | n deps |
+        pkgs+=(                           # | ---------- | ---------- | ------ |
+            firefox                       # |     202 MB |     203 MB |      9 |
+        )
+    fi
 
     if _koopa_is_matching_fixed "universe" "$enabled_repos"
     then
@@ -292,7 +300,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         --yes \
         install "${pkgs[@]}"
 
-# clean up                                                                  {{{1
+# Clean up                                                                  {{{1
 # ==============================================================================
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
