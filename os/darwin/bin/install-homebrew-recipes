@@ -216,6 +216,7 @@ brews=(
     pandoc-citeproc
     pandoc-crossref
     parallel
+    pass
     pkg-config
     podofo
     proj
@@ -229,6 +230,7 @@ brews=(
     screen
     shellcheck
     shellharden
+    shunit2
     sox
     sqlite
     sshfs
