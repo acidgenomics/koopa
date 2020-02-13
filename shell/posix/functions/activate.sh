@@ -15,6 +15,76 @@ _koopa_activate_prefix() {                                                # {{{1
     return 0
 }
 
+_koopa_activate_standard_paths() {                                        # {{{1
+    # """
+    # Activate standard paths.
+    # @note Updated 2020-02-13.
+    #
+    # Note that here we're making sure local binaries are included.
+    # Inspect '/etc/profile' if system PATH appears misconfigured.
+    #
+    # @seealso
+    # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+    # """
+    _koopa_add_to_path_end "/usr/local/bin"
+    _koopa_add_to_path_end "/usr/bin"
+    _koopa_add_to_path_end "/bin"
+    _koopa_add_to_path_end "/usr/local/sbin"
+    _koopa_add_to_path_end "/usr/sbin"
+    # > _koopa_add_to_path_start "${HOME}/bin"
+    # > _koopa_add_to_path_start "${HOME}/local/bin"
+    _koopa_add_to_manpath_end "/usr/local/share/man"
+    _koopa_add_to_manpath_end "/usr/share/man"
+    _koopa_add_to_path_start "${HOME}/.local/bin"
+    _koopa_add_to_manpath_start "${HOME}/.local/share/man"
+    return 0
+}
+
+_koopa_activate_koopa_paths() {                                           # {{{1
+    # """
+    # Automatically configure koopa PATH and MANPATH.
+    # @note Updated 2020-02-13.
+    # """
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    _koopa_activate_prefix "$koopa_prefix"
+
+    local koopa_shell
+    koopa_shell="$(_koopa_shell)"
+    _koopa_activate_prefix "${koopa_prefix}/shell/${koopa_shell}"
+
+    if _koopa_is_linux
+    then
+        _koopa_activate_prefix "${koopa_prefix}/os/linux"
+        if _koopa_is_debian
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/debian"
+        elif _koopa_is_fedora
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/fedora"
+        fi
+        if _koopa_is_rhel
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/rhel"
+        fi
+    fi
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+    _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
+
+    local host_id
+    host_id="$(_koopa_host_id)"
+    _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
+
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
+    _koopa_activate_prefix "${config_prefix}/docker"
+    _koopa_activate_prefix "${config_prefix}/scripts-private"
+
+    return 0
+}
+
 
 
 _koopa_activate_aspera() {                                                # {{{1
@@ -32,10 +102,14 @@ _koopa_activate_aspera() {                                                # {{{1
 _koopa_activate_autojump() {                                              # {{{1
     # """
     # Activate autojump.
-    # Updated 2020-01-24.
+    # @note Updated 2020-02-13.
     #
     # Purge install with 'j --purge'.
     # Location: ~/.local/share/autojump/autojump.txt
+    #
+    # For bash users, autojump keeps track of directories by modifying
+    # '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND' in this case.
+    # > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
     #
     # See also:
     # - https://github.com/wting/autojump
@@ -43,6 +117,10 @@ _koopa_activate_autojump() {                                              # {{{1
     local prefix
     prefix="$(_koopa_autojump_prefix)"
     [ -d "$prefix" ] || return 0
+    if [ -z "${PROMPT_COMMAND:-}" ]
+    then
+        export PROMPT_COMMAND="history -a"
+    fi
     _koopa_activate_prefix "$prefix"
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
@@ -147,6 +225,57 @@ _koopa_activate_conda() {                                                 # {{{1
     return 0
 }
 
+_koopa_activate_dircolors() {                                             # {{{1
+    # """
+    # Activate directory colors.
+    # @note Updated 2020-02-13.
+    # """
+    _koopa_is_installed dircolors || return 0
+    local dotfiles_prefix
+    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+    # This will set the 'LD_COLORS' environment variable.
+    dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
+    if [ -f "$dircolors_file" ]
+    then
+        eval "$(dircolors "$dircolors_file")"
+    else
+        eval "$(dircolors -b)"
+    fi
+    unset -v dircolors_file
+    alias dir='dir --color=auto'
+    alias egrep='egrep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias grep='grep --color=auto'
+    alias ls='ls --color=auto'
+    alias vdir='vdir --color=auto'
+    return 0
+}
+
+_koopa_activate_dotfiles() {                                              # {{{1
+    # """
+    # Activate dotfiles repo.
+    # @note Updated 2020-02-13.
+    # """
+    local dotfiles
+    dotfiles="$(_koopa_config_prefix)/dotfiles"
+    if [ ! -d "$dotfiles" ]
+    then
+        dotfiles="$(_koopa_dotfiles_prefix)"
+    fi
+    export DOTFILES="$dotfiles"
+    return 0
+}
+
+_koopa_activate_emacs() {                                                 # {{{1
+    # """
+    # Activate Emacs.
+    # @note Updated 2020-02-13.
+    # """
+    _koopa_is_installed emacs || return 0
+    _koopa_add_to_path_start "${HOME}/.emacs.d/bin"
+    return 0
+}
+
 _koopa_activate_ensembl_perl_api() {                                      # {{{1
     # """
     # Activate Ensembl Perl API.
@@ -192,6 +321,33 @@ _koopa_activate_fzf() {                                                   # {{{1
     # shellcheck source=/dev/null
     . "${dir}/shell/key-bindings.${shell}"
     [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
+
+_koopa_activate_gcc_colors() {                                            # {{{1
+    # """
+    # Activate GCC colors.
+    # @note Updated 2020-02-13.
+    # """
+    # Colored GCC warnings and errors.
+    [ -n "${GCC_COLORS:-}" ] && return 0
+    export GCC_COLORS='caret=01;32:' \
+                      'error=01;31:' \
+                      'locus=01:' \
+                      'note=01;36:' \
+                      'quote=01' \
+                      'warning=01;35:'
+    return 0
+}
+
+_koopa_activate_go() {                                                    # {{{1
+    # """
+    # Activate Go.
+    # @note Updated 2020-02-13.
+    # """
+    [ -n "${GOPATH:-}" ] && return 0
+    GOPATH="$(_koopa_go_gopath)"
+    export GOPATH
     return 0
 }
 
@@ -349,6 +505,22 @@ _koopa_activate_rbenv() {                                                 # {{{1
     return 0
 }
 
+_koopa_activate_ruby() {                                                  # {{{1
+    # """
+    # Activate Ruby gems.
+    # @note Updated 2020-02-13.
+    # """
+    [ -n "${GEM_HOME:-}" ] && return 0
+    local gem_home
+    gem_home="${HOME}/.gem"
+    if [ -d "$gem_home" ]
+    then
+        _koopa_add_to_path_start "$gem_home"
+        export GEM_HOME="$gem_home"
+    fi
+    return 0
+}
+
 _koopa_activate_rust() {                                                  # {{{1
     # """
     # Activate Rust programming language.
@@ -459,5 +631,63 @@ _koopa_activate_venv() {                                                  # {{{1
     # shellcheck source=/dev/null
     . "$script"
     [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
+
+_koopa_activate_xdg() {                                                   # {{{1
+    # """
+    # Activate XDG base directory specification
+    # @note Updated 2020-02-13.
+    #
+    # XDG_RUNTIME_DIR:
+    # - Can only exist for the duration of the user's login.
+    # - Updated every 6 hours or set sticky bit if persistence is desired.
+    # - Should not store large files as it may be mounted as a tmpfs.
+    #
+    # > if [ ! -d "$XDG_RUNTIME_DIR" ]
+    # > then
+    # >     mkdir -pv "$XDG_RUNTIME_DIR"
+    # >     chown "$USER" "$XDG_RUNTIME_DIR"
+    # >     chmod 0700 "$XDG_RUNTIME_DIR"
+    # > fi
+    #
+    # @seealso
+    # - https://developer.gnome.org/basedir-spec/
+    # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
+    # """
+    if [ -z "${XDG_CACHE_HOME:-}" ]
+    then
+        XDG_CACHE_HOME="${HOME}/.cache"
+    fi
+    if [ -z "${XDG_CONFIG_HOME:-}" ]
+    then
+        XDG_CONFIG_HOME="${HOME}/.config"
+    fi
+    if [ -z "${XDG_DATA_HOME:-}" ]
+    then
+        XDG_DATA_HOME="${HOME}/.local/share"
+    fi
+    if [ -z "${XDG_RUNTIME_DIR:-}" ]
+    then
+        XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        if _koopa_is_macos
+        then
+            XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
+        fi
+    fi
+    if [ -z "${XDG_DATA_DIRS:-}" ]
+    then
+        XDG_DATA_DIRS="/usr/local/share:/usr/share"
+    fi
+    if [ -z "${XDG_CONFIG_DIRS:-}" ]
+    then
+        XDG_CONFIG_DIRS="/etc/xdg"
+    fi
+    export XDG_CACHE_HOME
+    export XDG_CONFIG_DIRS
+    export XDG_CONFIG_HOME
+    export XDG_DATA_DIRS
+    export XDG_DATA_HOME
+    export XDG_RUNTIME_DIR
     return 0
 }
