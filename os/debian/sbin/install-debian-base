@@ -164,6 +164,7 @@ pkgs=(
     autoconf
     automake
     bc
+    build-essential
     bzip2
     ca-certificates
     cmake
@@ -180,6 +181,7 @@ pkgs=(
     htop
     less
     lsb-release
+    make
     nano
     pkg-config
     software-properties-common
