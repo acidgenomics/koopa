@@ -89,14 +89,17 @@ fi
 # This is causing install to error out on minimal Docker images.
 # Disabled until I can figure out how to handle this.
 
-# > # Enable passphrase prompting in terminal.
-# > if [ -z "${GPG_TTY:-}" ] &&
-# >     [ -z "${KOOPA_PIPED_INSTALL:-}" ] &&
-# >     _koopa_is_installed tty
-# > then
-# >     GPG_TTY="$(tty)"
-# >     export GPG_TTY
-# > fi
+# Useful for getting Docker credential store to work.
+# https://github.com/docker/docker-credential-helpers/issues/118
+
+# Enable passphrase prompting in terminal.
+if [ -z "${GPG_TTY:-}" ] &&
+    [ -z "${KOOPA_PIPED_INSTALL:-}" ] &&
+    _koopa_is_installed tty
+then
+    GPG_TTY="$(tty)"
+    export GPG_TTY
+fi
 
 
 
