@@ -278,6 +278,7 @@ then
             libv8-dev
             pandoc
             pandoc-citeproc
+            pass
             texlive
         )
     fi
