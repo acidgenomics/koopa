@@ -228,6 +228,13 @@ then
         install-luarocks                                                # 0.002G
     fi
 
+    # Password management.
+    if [[ "$docker" -eq 0 ]]
+    then
+        install-pass
+        install-docker-credential-pass
+    fi
+
     # Languages.
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
