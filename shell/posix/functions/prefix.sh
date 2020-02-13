@@ -185,23 +185,17 @@ _koopa_ensembl_perl_api_prefix() {                                        # {{{1
     echo "$prefix"
 }
 
-_koopa_go_prefix() {                                                      # {{{1
-    # """
-    # Go prefix.
-    # @note Updated 2020-02-13.
-    # """
-    local prefix
-    prefix="$(_koopa_app_prefix)/go"
-    echo "$prefix"
-}
-
 _koopa_go_gopath() {                                                      # {{{1
     # """
     # Go GOPATH, for building from source.
     # @note Updated 2020-02-13.
     # """
+    [ -n "${GOPATH:-}" ] && return 0
+    local version
+    version="$(_koopa_get_version "go")"
     local prefix
-    prefix="$(_koopa_go_prefix)/path"
+    prefix="$(_koopa_app_prefix)/go/${version}"
+    [ -d "$prefix" ] || return 0
     echo "$prefix"
 }
 
