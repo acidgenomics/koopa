@@ -93,11 +93,9 @@ fi
 # https://github.com/docker/docker-credential-helpers/issues/118
 
 # Enable passphrase prompting in terminal.
-if [ -z "${GPG_TTY:-}" ] &&
-    [ -z "${KOOPA_PIPED_INSTALL:-}" ] &&
-    _koopa_is_installed tty
+if [ -z "${GPG_TTY:-}" ]
 then
-    GPG_TTY="$(tty)"
+    GPG_TTY="$(tty || true)"
     export GPG_TTY
 fi
 
