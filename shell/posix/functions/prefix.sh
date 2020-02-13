@@ -165,12 +165,43 @@ _koopa_conda_prefix() {                                                   # {{{1
     echo "$prefix"
 }
 
+_koopa_dotfiles_prefix() {                                                # {{{1
+    # """
+    # Koopa system dotfiles prefix.
+    # @note Updated 2020-02-13.
+    # """
+    local prefix
+    prefix="$(_koopa_prefix)/dotfiles"
+    echo "$prefix"
+    return 0
+}
+
 _koopa_ensembl_perl_api_prefix() {                                        # {{{1
     # """
     # Ensembl Perl API prefix.
     # Updated 2019-11-15.
     local prefix
     prefix="$(_koopa_app_prefix)/ensembl"
+    echo "$prefix"
+}
+
+_koopa_go_prefix() {                                                      # {{{1
+    # """
+    # Go prefix.
+    # @note Updated 2020-02-13.
+    # """
+    local prefix
+    prefix="$(_koopa_app_prefix)/go"
+    echo "$prefix"
+}
+
+_koopa_go_gopath() {                                                      # {{{1
+    # """
+    # Go GOPATH, for building from source.
+    # @note Updated 2020-02-13.
+    # """
+    local prefix
+    prefix="$(_koopa_go_prefix)/path"
     echo "$prefix"
 }
 
