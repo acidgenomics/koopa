@@ -168,11 +168,23 @@ _koopa_return_version() {                                                 # {{{1
     if [ -z "${flag:-}" ]
     then
         case "$cmd" in
-            go|openssl|rstudio-server|singularity)
+            docker-credential-pass)
+                flag="version"
+                ;;
+            go)
                 flag="version"
                 ;;
             lua)
                 flag="-v"
+                ;;
+            openssl)
+                flag="version"
+                ;;
+            rstudio-server)
+                flag="version"
+                ;;
+            singularity)
+                flag="version"
                 ;;
             tmux)
                 flag="-V"
