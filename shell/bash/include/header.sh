@@ -67,10 +67,13 @@ source "${KOOPA_BASH_INC}/functions.sh"
 
 _koopa_help "$@"
 
-# Require sudo permission to run 'sbin/' scripts.
-if echo "$0" | grep -q "/sbin/"
+if [[ "$checks" -eq 1 ]]
 then
-    _koopa_assert_has_sudo
+    # Require sudo permission to run 'sbin/' scripts.
+    if echo "$0" | grep -q "/sbin/"
+    then
+        _koopa_assert_has_sudo
+    fi
 fi
 
 unset -v KOOPA_BASH_INC
