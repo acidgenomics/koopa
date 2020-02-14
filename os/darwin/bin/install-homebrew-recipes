@@ -3,7 +3,7 @@ set -Eeu -o pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
+source "${script_dir}/../include/header.sh" --no-header-checks
 
 # """
 # Install XQuartz 2.7.9 manually instead of using xquartz cask.
@@ -41,7 +41,7 @@ brew tap osgeo/osgeo4mac
 
 _koopa_h2 "Installing casks."
 
-brew cask remove --force safari-technology-preview 
+# > brew cask remove --force safari-technology-preview
 
 installed_casks="$(brew cask list)"
 
