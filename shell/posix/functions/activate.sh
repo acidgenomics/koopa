@@ -228,7 +228,7 @@ _koopa_activate_conda() {                                                 # {{{1
 _koopa_activate_dircolors() {                                             # {{{1
     # """
     # Activate directory colors.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-14.
     # """
     _koopa_is_installed dircolors || return 0
     local dotfiles_prefix
@@ -351,6 +351,94 @@ _koopa_activate_go() {                                                    # {{{1
     return 0
 }
 
+_koopa_activate_homebrew() {                                              # {{{1
+    # """
+    # Activate Homebrew.
+    # @note Updated 2020-02-14.
+    #
+    # @seealso
+    # _koopa_activate_local_etc_profile
+    # """
+    _koopa_is_installed brew || return 0
+    HOMEBREW_PREFIX="$(brew --prefix)"
+    export HOMEBREW_PREFIX
+    HOMEBREW_REPOSITORY="$(brew --repo)"
+    export HOMEBREW_REPOSITORY
+    export HOMEBREW_INSTALL_CLEANUP=1
+    export HOMEBREW_NO_ANALYTICS=1
+    _koopa_activate_homebrew_gnu_utils
+    # > _koopa_activate_homebrew_python
+    _koopa_activate_homebrew_google_cloud_sdk
+    return 0
+}
+
+_koopa_activate_homebrew_gnu_utils() {
+    # """
+    # Activate Homebrew GNU utils.
+    # @note Updated 2020-02-14.
+    #
+    # Linked using "g*" prefix by default.
+    #
+    # @seealso:
+    # - brew info coreutils
+    # - brew info findutils
+    # """
+    local prefix
+    prefix="/usr/local/opt/coreutils/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+    prefix="/usr/local/opt/findutils/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+    return 0
+}
+
+_koopa_activate_homebrew_google_cloud_sdk() {
+    # """
+    # Activate Homebrew Google Cloud SDK.
+    # @note Updated 2020-02-14.
+    # """
+    local prefix
+    prefix="${HOMEBREW_PREFIX:?}"
+    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    [ -d "$prefix" ] || return 0
+    local shell
+    shell="$(_koopa_shell)"
+    # shellcheck source=/dev/null
+    . "${prefix}/path.${shell}.inc"
+    # shellcheck source=/dev/null
+    . "${prefix}/completion.${shell}.inc"
+}
+
+_koopa_activate_homebrew_python() {
+    # """
+    # Activate Homebrew Python.
+    # @note Updated 2020-02-14.
+    #
+    # Use official installer in '/Library/Frameworks' instead.
+    #
+    # Homebrew is lagging on new Python releases, so install manually instead.
+    # See 'python.sh' script for activation.
+    #
+    # Don't add to PATH if a virtual environment is active.
+    #
+    # @seealso
+    # - /usr/local/opt/python/bin
+    # - https://docs.brew.sh/Homebrew-and-Python
+    # - brew info python
+    # """
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
+    _koopa_add_to_manpath_start "/usr/local/opt/python/share/man"
+    return 0
+}
+
 _koopa_activate_llvm() {                                                  # {{{1
     # """
     # Activate LLVM config.
@@ -377,6 +465,25 @@ _koopa_activate_llvm() {                                                  # {{{1
         config="$(find /usr/bin -name "llvm-config-*" | sort | tail -n 1)"
     fi
     [ -x "$config" ] && export LLVM_CONFIG="$config"
+    return 0
+}
+
+_koopa_activate_local_etc_profile() {                                     # {{{1
+    # """
+    # Source 'profile.d' scripts in '/usr/local/etc'.
+    # @note Updated 2020-02-14.
+    local prefix
+    prefix="$(_koopa_make_prefix)/etc/profile.d"
+    [ -d /usr/local/etc/profile.d ] || return 0
+    local script
+    for script in /usr/local/etc/profile.d/*.sh
+    do
+        if [ -r "$script" ]
+        then
+            # shellcheck source=/dev/null
+            . "$script"
+        fi
+    done
     return 0
 }
 
