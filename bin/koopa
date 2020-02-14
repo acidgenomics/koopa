@@ -22,7 +22,7 @@ case "$1" in
         ;;
     --version|-V|version)
         version="$(_koopa_variable koopa)"
-        date="$(_koopa_variable koopa_date)"
+        date="$(_koopa_variable koopa-date)"
         echo "koopa ${version} (${date})"
         exit 0
         ;;
