@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2020-01-23.
+    Updated 2020-02-14.
 EOF
 }
 
@@ -177,11 +177,10 @@ then
             export KOOPA_ZSHRC=1
             ;;
     esac
-
     KOOPA_SOURCE="${(%):-%N}"
 else
     >&2 cat << EOF
-Error: Failed to detect supported shell.
+ERROR: Unsupported shell.
 Supported: bash, zsh.
 
   SHELL: '${SHELL}'
