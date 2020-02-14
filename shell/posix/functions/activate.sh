@@ -487,6 +487,22 @@ _koopa_activate_local_etc_profile() {                                     # {{{1
     return 0
 }
 
+_koopa_activate_macos_python() {
+    # """
+    # Activate macOS Python install.
+    # @note Updated 2020-02-14.
+    # """
+    _koopa_is_macos || return 1
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    local version
+    version="$(_koopa_variable "python")"
+    local minor_version
+    minor_version="$(_koopa_minor_version "$version")"
+    _koopa_add_to_path_start "/Library/Frameworks/Python.framework/\
+Versions/${minor_version}/bin"
+    return 0
+}
+
 _koopa_activate_perlbrew() {                                              # {{{1
     # """
     # Activate Perlbrew.
