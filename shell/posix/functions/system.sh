@@ -553,7 +553,7 @@ _koopa_link_cellar() {                                                    # {{{1
 _koopa_mktemp() {                                                         # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # Updated 2020-02-06.
+    # Updated 2020-02-13.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -564,6 +564,9 @@ _koopa_mktemp() {                                                         # {{{1
     # allows a simple denial of service attack. For these reasons it is
     # suggested that mktemp be used instead.
     #
+    # Note that old version of mktemp (e.g. macOS) only supports '-t' instead of
+    # '--tmpdir' flag for prefix.
+    #
     # See also:
     # - https://stackoverflow.com/questions/4632028
     # - https://stackoverflow.com/a/10983009/3911732
@@ -572,7 +575,7 @@ _koopa_mktemp() {                                                         # {{{1
     _koopa_assert_is_installed mktemp
     local template
     template="koopa-$(id -u)-$(date "+%Y%m%d%H%M%S")-XXXXXXXXXX"
-    mktemp "$@" --tmpdir "$template"
+    mktemp "$@" -t "$template"
     return 0
 }
 
@@ -738,11 +741,18 @@ _koopa_tmp_file() {                                                       # {{{1
 _koopa_tmp_log_file() {                                                   # {{{1
     # """
     # Create temporary log file.
-    # Updated 2020-02-06.
+    # Updated 2020-02-13.
+    #
+    # Note that old version on macOS doesn't support '--suffix' flag.
     #
     # Used primarily for debugging cellar make install scripts.
     # """
-    _koopa_mktemp --suffix=".log"
+    if _koopa_is_macos
+    then
+        _koopa_mktemp
+    else
+        _koopa_mktemp --suffix=".log"
+    fi
     return 0
 }
 
