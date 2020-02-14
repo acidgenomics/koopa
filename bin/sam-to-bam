@@ -22,7 +22,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 keep_sam=0
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -38,12 +38,12 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 
 dir="${1:-.}"
 _koopa_assert_is_dir "$dir"
