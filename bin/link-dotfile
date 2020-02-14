@@ -99,4 +99,12 @@ then
 fi
 
 _koopa_info "Symlinking '$(basename "$symlink_path")'."
+
+# Note that 'ln -fnsv' fails to create subdirectories automatically.
+symlink_dn="$(dirname "$symlink_path")"
+if [[ "$symlink_dn" != "$HOME" ]]
+then
+    mkdir -pv "$symlink_dn"
+fi
+
 ln -fnsv "$source_path" "$symlink_path"
