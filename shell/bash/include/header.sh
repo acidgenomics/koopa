@@ -33,7 +33,10 @@ then
                 ;;
         esac
     done
-    set -- "${POSITIONAL[@]}"
+    if [[ "${#POSITIONAL[@]}" -gt 0 ]]
+    then
+        set -- "${POSITIONAL[@]}"
+    fi
 fi
 
 # Requiring Bash >= 4 for exported scripts.
