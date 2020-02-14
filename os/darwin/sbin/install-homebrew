@@ -11,15 +11,15 @@ _koopa_exit_if_installed brew
 _koopa_h1 "Installing Homebrew."
 
 _koopa_h2 "Installing Xcode command line tools (CLT)."
-xcode-select --install
+xcode-select --install || true
 
 tmp_dir="$(_koopa_tmp_dir)/homebrew"
 
 (
-    _koopa_cd_tmp_dir "$tmp-dir"
+    _koopa_cd_tmp_dir "$tmp_dir"
     file="install"
     url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
-    _koopa_download "$file"
+    _koopa_download "$url"
     export HOMEBREW_PREFIX="/usr/local/homebrew"
     /usr/bin/ruby "$file"
 )
