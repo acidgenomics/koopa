@@ -18,6 +18,9 @@ _koopa_h1 "Uninstalling Homebrew."
 _koopa_h2 "Changing default shell to system Zsh."
 chsh -s /bin/zsh "$USER"
 
+_koopa_h2 "Resetting permissions in '/usr/local'."
+sudo chown -Rh --verbose "$USER" "/usr/local/"*
+
 url="https://raw.githubusercontent.com/Homebrew/install/master/uninstall"
 /usr/bin/ruby -e "$(curl -fsSL "$url")"
 
