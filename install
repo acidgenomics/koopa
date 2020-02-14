@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-13.
+    Updated 2020-02-14.
 EOF
 }
 
@@ -177,7 +177,7 @@ do
             break
             ;;
         --*|-*)
-            >&2 echo "Error: Invalid argument: '${1}'."
+            >&2 echo "ERROR: Invalid argument: '${1}'."
             exit 1
             ;;
     esac
