@@ -82,7 +82,7 @@ bcbio_species_dir="$( \
     | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g" \
 )"
 
-tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
+tmp_dir="$(_koopa_tmp_dir)"
 cores="$(_koopa_cpu_count)"
 
 (

@@ -24,7 +24,7 @@ _koopa_assert_is_installed go
 
 app_prefix="$(_koopa_app_prefix)/${name}/${version}"
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 goroot="$(go env GOROOT)"
 _koopa_info "Go is installed at '${goroot}'."

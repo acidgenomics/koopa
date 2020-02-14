@@ -20,7 +20,7 @@ _koopa_h1 "Installing bcbio-nextgen genomes into '${genomes_dir}'."
 _koopa_dl "Genomes" "$(_koopa_to_string "${genomes[@]}")"
 
 cores="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/bcbio"
+tmp_dir="$(_koopa_tmp_dir)"
 
 genome_flags=()
 for genome in "${genomes[@]}"

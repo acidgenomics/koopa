@@ -19,7 +19,7 @@ _koopa_assert_is_installed lua luarocks
 
 apps_dir="${prefix}/apps"
 data_dir="${prefix}/moduleData"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 eval "$(luarocks path)"
 
