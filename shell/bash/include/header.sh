@@ -19,7 +19,7 @@ checks=1
 
 if [[ "$#" -gt 0 ]]
 then
-    POSITIONAL=()
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -28,14 +28,14 @@ then
                 shift 1
                 ;;
             *)
-                POSITIONAL+=("$1")
+                pos+=("$1")
                 shift 1
                 ;;
         esac
     done
-    if [[ "${#POSITIONAL[@]}" -gt 0 ]]
+    if [[ "${#pos[@]}" -gt 0 ]]
     then
-        set -- "${POSITIONAL[@]}"
+        set -- "${pos[@]}"
     fi
 fi
 
