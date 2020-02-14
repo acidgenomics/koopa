@@ -349,7 +349,6 @@ KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 # ==============================================================================
 
 . "${KOOPA_ACTIVATE_DIR}/minimal.sh"
-_koopa_update_xdg_config
 
 
 
@@ -360,7 +359,7 @@ if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
     if _koopa_is_macos
     then
-        . "${KOOPA_ACTIVATE_DIR}/os/darwin/programs/homebrew.sh"
+        # FIXME Convert this to function.
         . "${KOOPA_ACTIVATE_DIR}/os/darwin/programs/python.sh"
     fi
     _koopa_activate_llvm
