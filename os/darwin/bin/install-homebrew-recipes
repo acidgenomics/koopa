@@ -27,6 +27,8 @@ _koopa_h1 "Installing Homebrew recipes."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed brew
 
+log_file="$(_koopa_tmp_log_file)"
+
 export HOMEBREW_FORCE_BOTTLE=1
 
 # Taps                                                                      {{{1
@@ -69,7 +71,7 @@ casks=(
         fi
         brew cask install --force --no-quarantine "$cask"
     done
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee -a "$log_file"
 
 casks=(
     1password
@@ -130,7 +132,7 @@ casks=(
         fi
         brew cask install --force "$cask"
     done
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee -a "$log_file"
 
 # Brews                                                                     {{{1
 # ==============================================================================
@@ -266,7 +268,7 @@ brews=(
         fi
         brew install "$brew"
     done
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee -a "$log_file"
 
 brew unlink python
 brew unlink python@2
