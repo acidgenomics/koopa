@@ -670,23 +670,16 @@ _koopa_os_string() {                                                      # {{{1
 _koopa_relink() {                                                         # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # Updated 2020-01-12.
+    # Updated 2020-02-14.
     # """
     local source_file
     source_file="${1:?}"
     local dest_file
     dest_file="${2:?}"
-    if [ ! -e "$dest_file" ]
-    then
-        if [ ! -e "$source_file" ]
-        then
-            _koopa_warning "Source file missing: '${source_file}'."
-            return 1
-        fi
-        # > _koopa_h2 "Updating XDG config in '${config_dir}'."
-        rm -f "$dest_file"
-        ln -fns "$source_file" "$dest_file"
-    fi
+    [ -L "$dest_file" ] && return 0
+    [ -e "$source_file" ] || return 1
+    # > rm -f "$dest_file"
+    ln -fns "$source_file" "$dest_file"
     return 0
 }
 
