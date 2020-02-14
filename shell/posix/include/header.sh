@@ -7,15 +7,8 @@ elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_POSIX_SOURCE="${(%):-%N}"
 else
-    >&2 cat << EOF
-ERROR: Unsupported shell.
-Supported: bash, zsh.
-
-  SHELL: '${SHELL}'
-      0: '${0}'
-      -: '${-}'
-EOF
-    return 1
+    >&2 echo "ERROR: Unsupported shell."
+    exit 1
 fi
 
 KOOPA_POSIX_INC="$(cd "$(dirname "$KOOPA_POSIX_SOURCE")" \
