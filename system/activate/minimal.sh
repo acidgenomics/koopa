@@ -147,13 +147,15 @@ fi
 # ==============================================================================
 
 _koopa_activate_xdg
+_koopa_update_xdg_config
 _koopa_activate_standard_paths
 _koopa_activate_koopa_paths
-
+_koopa_activate_homebrew
+_koopa_activate_local_etc_profile
 _koopa_activate_dircolors
+_koopa_activate_gcc_colors
 _koopa_activate_dotfiles
 _koopa_activate_emacs
-_koopa_activate_gcc_colors
 _koopa_activate_go
 _koopa_activate_pipx
 _koopa_activate_ruby
