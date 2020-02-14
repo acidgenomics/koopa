@@ -3,8 +3,12 @@ set -Eeu -o pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
+source "${script_dir}/../include/header.sh" --no-checks
 _koopa_assert_has_no_args "$@"
+
+_koopa_exit_if_installed brew
+
+_koopa_h1 "Installing Homebrew."
 
 # Install Xcode CLT.
 xcode-select --install
@@ -12,3 +16,5 @@ xcode-select --install
 # Install Homebrew.
 url="https://raw.githubusercontent.com/Homebrew/install/master/install"
 /usr/bin/ruby -e "$(curl -fsSL "$url")"
+
+_koopa_success "Installation of Homebrew was successful."
