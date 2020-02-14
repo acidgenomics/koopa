@@ -58,15 +58,18 @@ casks=(
     osxfuse
     rstudio
 )
-for cask in "${casks[@]}"
-do
-    if echo "$installed_casks" | grep -Eq "^${cask}$"
-    then
-        _koopa_note "'${cask}' is already installed."
-        continue
-    fi
-    brew cask install --force --no-quarantine "$cask"
-done
+
+(
+    for cask in "${casks[@]}"
+    do
+        if echo "$installed_casks" | grep -Eq "^${cask}$"
+        then
+            _koopa_note "'${cask}' is already installed."
+            continue
+        fi
+        brew cask install --force --no-quarantine "$cask"
+    done
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 casks=(
     1password
@@ -116,15 +119,18 @@ casks=(
     wine-stable
     xld
 )
-for cask in "${casks[@]}"
-do
-    if echo "$installed_casks" | grep -Eq "^${cask}$"
-    then
-        _koopa_note "'${cask}' is already installed."
-        continue
-    fi
-    brew cask install --force "$cask"
-done
+
+(
+    for cask in "${casks[@]}"
+    do
+        if echo "$installed_casks" | grep -Eq "^${cask}$"
+        then
+            _koopa_note "'${cask}' is already installed."
+            continue
+        fi
+        brew cask install --force "$cask"
+    done
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 # Brews                                                                     {{{1
 # ==============================================================================
@@ -248,21 +254,24 @@ brews=(
     # External
     vitorgalvao/tiny-scripts/cask-repair
 )
-for brew in "${brews[@]}"
-do
-    name="$(basename "$brew")"
-    if echo "$installed_brews" | grep -Eq "^${name}$"
-    then
-        _koopa_note "'${name}' is already installed."
-        continue
-    fi
-    brew install "$brew"
-done
 
-brew link gdal
-brew link proj
+(
+    for brew in "${brews[@]}"
+    do
+        name="$(basename "$brew")"
+        if echo "$installed_brews" | grep -Eq "^${name}$"
+        then
+            _koopa_note "'${name}' is already installed."
+            continue
+        fi
+        brew install "$brew"
+    done
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 brew unlink python
 brew unlink python@2
+
+# > brew link gdal
+# > brew link proj
 
 _koopa_success "Installation of Homebrew recipes was successful."
