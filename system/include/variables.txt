@@ -63,7 +63,7 @@ conda="4.8.2"
 coreutils="8.31"
 
 # https://docs.docker.com/install/
-docker="19.03.5"
+docker="19.03.6"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.3"
