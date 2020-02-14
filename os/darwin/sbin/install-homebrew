@@ -4,11 +4,16 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh" --no-header-checks
-_koopa_assert_has_no_args "$@"
+
+# """
+# https://docs.brew.sh/Installation
+# """
 
 _koopa_exit_if_installed brew
 
 _koopa_h1 "Installing Homebrew."
+
+_koopa_assert_has_no_args "$@"
 
 _koopa_h2 "Installing Xcode command line tools (CLT)."
 xcode-select --install || true

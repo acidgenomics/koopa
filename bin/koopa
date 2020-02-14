@@ -105,6 +105,11 @@ case "$1" in
         _koopa_variable "${2:?}"
         exit 0
         ;;
+    # Developer tools ----------------------------------------------------------
+    log)
+        _koopa_view_latest_tmp_log_file
+        exit 0
+        ;;
     # Deprecated args / error catching -----------------------------------------
     home)
         _koopa_stop "Defunct: Use 'prefix' instead of 'home'."

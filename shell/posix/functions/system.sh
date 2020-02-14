@@ -841,6 +841,7 @@ _koopa_view_latest_tmp_log_file() {                                       # {{{1
     )"
     [ -f "$log_file" ] || return 1
     _koopa_h1 "Viewing '${log_file}'."
-    less "$log_file"
+    # Note that this will skip to the end automatically.
+    less +G "$log_file"
     return 0
 }
