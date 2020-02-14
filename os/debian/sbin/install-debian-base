@@ -117,6 +117,14 @@ _koopa_apt_import_keys
 _koopa_apt_link_sources
 enabled_repos="$(_koopa_apt_enabled_repos)"
 
+# Requiring universe repo to be enabled on Ubuntu.
+if _koopa_is_ubuntu && \
+    ! _koopa_is_matching_fixed "universe" "$enabled_repos"
+then
+    _koopa_stop "The Ubuntu 'universe' repo is disabled.\
+Check '/etc/apt/sources.list'."
+fi
+
 # Upgrade distribution                                                   #  {{{1
 # ==============================================================================
 
@@ -145,12 +153,12 @@ legacy_pkgs=(
     docker-engine       # docker-legacy
     docker.io           # docker-legacy
     runc                # docker-legacy
-    cargo               # universe; use 'install-rust'
-    fish                # universe; use 'install-fish'
-    libgdal-dev         # universe; use 'install-gdal'
-    libgeos-dev         # universe; use 'install-geos'
-    libgsl-dev          # universe; use 'install-gsl'
-    libhdf5-dev         # universe; use 'install-hdf5'
+    cargo               # use 'install-rust'
+    fish                # use 'install-fish'
+    libgdal-dev         # use 'install-gdal'
+    libgeos-dev         # use 'install-geos'
+    libgsl-dev          # use 'install-gsl'
+    libhdf5-dev         # use 'install-hdf5'
 )
 for pkg in "${legacy_pkgs[@]}"
 do
@@ -160,6 +168,7 @@ done
 
 pkgs=(
     apt-listchanges
+    apt-transport-https
     apt-utils
     autoconf
     automake
@@ -174,6 +183,7 @@ pkgs=(
     findutils
     gcc
     gdb
+    gdebi-core
     gfortran
     git
     gnupg
@@ -183,26 +193,18 @@ pkgs=(
     lsb-release
     make
     nano
+    parallel
     pkg-config
     software-properties-common
     sudo
     tmux
+    tree
     tzdata
     unzip
     vim
     wget
     xz-utils
 )
-
-if _koopa_is_matching_fixed "universe" "$enabled_repos"
-then
-    pkgs+=(
-        apt-transport-https
-        gdebi-core
-        parallel
-        tree
-    )
-fi
 
 # Developer                                                                 {{{1
 # ==============================================================================
@@ -213,11 +215,11 @@ then
     _koopa_h2 "Installing developer libraries."
                                           # |   w/o deps |    w/ deps | n deps |
     pkgs+=(                               # | ---------- | ---------- | ------ |
-        gettext
+        gettext                           # |            |            |        |
         libacl1-dev                       # |     < 1 MB |     < 1 MB |      1 |
         libbz2-dev                        # |     < 1 MB |      36 MB |     22 |
         libcairo2-dev                     # |       3 MB |      94 MB |     61 |
-        libcurl4-gnutls-dev
+        libcurl4-gnutls-dev               # |            |            |        |
         libevent-dev                      # |       2 MB |       2 MB |      5 |
         libffi-dev                        # |     < 1 MB |     227 MB |     10 |
         libfreetype6-dev                  # |       7 MB |      97 MB |     62 |
@@ -235,14 +237,8 @@ then
         libx11-dev                        # |       2 MB |     109 MB |    107 |
         libxml2-dev                       # |       4 MB |     330 MB |     93 |
         libz-dev # zlib1g-dev             # |     < 1 MB |         NA |    174 |
+        tcl-dev
     )
-
-    if _koopa_is_matching_fixed "universe" "$enabled_repos"
-    then
-        pkgs+=(
-            tcl-dev
-        )
-    fi
 fi
 
 # Extra                                                                     {{{1
@@ -253,11 +249,28 @@ then
     _koopa_h2 "Installing extra recommended packages."
                                           # |   w/o deps |    w/ deps | n deps |
     pkgs+=(                               # | ---------- | ---------- | ------ |
+        alien                             # |            |            |        |
         emacs                             # |       8 MB |     112 MB |     11 |
+        gnutls-bin                        # |            |            |        |
+        gtk-doc-tools                     # |            |            |        |
         keyboard-configuration            # |       3 MB |      35 MB |     44 |
+        libgtk-3-0                        # |            |            |        |
+        libgtk-3-dev                      # |            |            |        |
+        libgtk2.0-0                       # |            |            |        |
+        libgtk2.0-dev                     # |            |            |        |
+        libmariadb-dev                    # |            |            |        |
+        libopenblas-base                  # |            |            |        |
+        libopenblas-dev                   # |            |            |        |
+        libssh2-1-dev                     # |            |            |        |
+        libudunits2-dev                   # |            |            |        |
+        libv8-dev                         # |            |            |        |
+        pandoc                            # |            |            |        |
+        pandoc-citeproc                   # |            |            |        |
+        pass                              # |            |            |        |
         perl                              # |     < 1 MB |     987 MB |    281 |
         sqlite3                           # |       2 MB |       2 MB |      1 |
         systemd                           # |         NA |         NA |     NA |
+        texlive                           # |            |            |        |
         unattended-upgrades               # |     < 1 MB |     < 1 MB |      1 |
         xorg                              # |     < 1 MB |      30 MB |     39 |
         zsh                               # |       2 MB |      15 MB |      2 |
@@ -269,29 +282,6 @@ then
                                           # |   w/o deps |    w/ deps | n deps |
         pkgs+=(                           # | ---------- | ---------- | ------ |
             firefox                       # |     202 MB |     203 MB |      9 |
-        )
-    fi
-
-    if _koopa_is_matching_fixed "universe" "$enabled_repos"
-    then
-        pkgs+=(
-            alien
-            gnutls-bin
-            gtk-doc-tools
-            libgtk-3-0
-            libgtk-3-dev
-            libgtk2.0-0
-            libgtk2.0-dev
-            libmariadb-dev
-            libopenblas-base
-            libopenblas-dev
-            libssh2-1-dev
-            libudunits2-dev
-            libv8-dev
-            pandoc
-            pandoc-citeproc
-            pass
-            texlive
         )
     fi
 fi
@@ -309,9 +299,5 @@ sudo DEBIAN_FRONTEND=noninteractive \
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get --yes autoremove
-
-_koopa_h2 "Removing caches."
-sudo rm -fr /root/.cache/*
-sudo rm -fr /var/lib/apt/lists/*
 
 _koopa_success "Installation of Debian base was successful."
