@@ -100,6 +100,14 @@ fi
 # See bash(1) for more options.
 # For setting history length, see HISTSIZE and HISTFILESIZE.
 
+# Standardize the history file name across shells.
+if [ -z "${HISTFILE:-}" ]
+then
+    HISTFILE="${HOME}/.$(_koopa_shell)-history"
+    export HISTFILE
+    [ ! -f "$HISTFILE" ] && touch "$HISTFILE"
+fi
+
 # Don't keep duplicate lines in the history.
 # Alternatively, set "ignoreboth" to also ignore lines starting with space.
 if [ -z "${HISTCONTROL:-}" ]
@@ -107,26 +115,23 @@ then
     export HISTCONTROL="ignoredups"
 fi
 
-# Standardize the history file name across shells.
-if [ -z "${HISTFILE:-}" ]
-then
-    HISTFILE="${HOME}/.$(_koopa_shell)-history"
-    export HISTFILE
-fi
-
-if [ -z "${HISTSIZE:-}" ]
-then
-    export HISTSIZE=100000
-fi
-
-if [ -z "${SAVEHIST:-}" ]
-then
-    export SAVEHIST=100000
-fi
-
 if [ -z "${HISTIGNORE:-}" ]
 then
     export HISTIGNORE="&:ls:[bf]g:exit"
+fi
+
+# Set the default history size.
+if [ -z "${HISTSIZE:-}" ] || [ "${HISTSIZE:-}" -eq 0 ]
+then
+    export HISTSIZE=1000
+fi
+if [ -z "${SAVEHIST:-}" ] || [ "${SAVEHIST:-}" -eq 0 ]
+then
+    export SAVEHIST=1000
+fi
+if [ "${HISTSIZE:-}" -ne "${SAVEHIST:-}" ]
+then
+    SAVEHIST="$HISTSIZE"
 fi
 
 # Add the date/time to 'history' command output.
