@@ -193,7 +193,7 @@ _koopa_set_sticky_group() {                                               # {{{1
 _koopa_add_user_to_etc_passwd() {                                         # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # Updated 2020-01-21.
+    # Updated 2020-02-14.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
@@ -207,6 +207,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
     local user_string
     user_string="$(getent passwd "$user")"
     _koopa_h2 "Updating '${passwd_file}' to include '${user}'."
+    _koopa_assert_has_sudo
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "echo '${user_string}' >> ${passwd_file}"
@@ -244,15 +245,15 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
 _koopa_enable_shell() {                                                  # {{{1
     # """
     # Enable shell.
-    # Updated 2020-02-11.
+    # Updated 2020-02-14.
     # """
-    _koopa_assert_has_sudo
     local cmd
     cmd="${1:?}"
     cmd="$(_koopa_which "$cmd")"
     local etc_file
     etc_file="/etc/shells"
     _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
+    _koopa_assert_has_sudo
     if ! grep -q "$cmd" "$etc_file"
     then
         sudo sh -c "echo ${cmd} >> ${etc_file}"
@@ -372,8 +373,8 @@ _koopa_link_docker() {                                                    # {{{1
     _koopa_is_installed docker || return 0
     _koopa_assert_is_installed systemctl
     [ -d "/n" ] || return 0
-    _koopa_assert_has_sudo
     _koopa_assert_is_linux
+    _koopa_assert_has_sudo
     _koopa_h2 "Updating Docker configuration."
     _koopa_note "Stopping Docker."
     sudo systemctl stop docker
@@ -534,13 +535,10 @@ _koopa_update_lmod_config() {                                             # {{{1
     # """
     _koopa_is_linux || return 0
     _koopa_has_sudo || return 0
-
     _koopa_h2 "Updating Lmod init configuration."
-
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
     [ -d "$init_dir" ] || return 0
-
     local etc_dir
     etc_dir="/etc/profile.d"
     sudo mkdir -pv "$etc_dir"
@@ -548,7 +546,6 @@ _koopa_update_lmod_config() {                                             # {{{1
     sudo ln -fnsv "${init_dir}/profile" "${etc_dir}/z00_lmod.sh"
     # csh, tcsh:
     sudo ln -fnsv "${init_dir}/cshrc" "${etc_dir}/z00_lmod.csh"
-
     # fish:
     if _koopa_is_installed fish
     then
@@ -556,7 +553,6 @@ _koopa_update_lmod_config() {                                             # {{{1
         sudo mkdir -pv "$etc_dir"
         sudo ln -fnsv "${init_dir}/profile.fish" "${etc_dir}/z00_lmod.fish"
     fi
-
     return 0
 }
 
@@ -611,23 +607,24 @@ _koopa_update_r_config_macos() {                                          # {{{1
 _koopa_update_xdg_config() {                                              # {{{1
     # """
     # Update XDG configuration.
-    # Updated 2020-01-09.
+    # Updated 2020-02-14.
     #
     # Path: '~/.config/koopa'.
     # """
     _koopa_is_root && return 0
-    local config_dir
-    config_dir="$(_koopa_config_prefix)"
-    local prefix_dir
-    prefix_dir="$(_koopa_prefix)"
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
     local os_id
     os_id="$(_koopa_os_id)"
-    mkdir -p "$config_dir"
-    _koopa_relink "${prefix_dir}" "${config_dir}/home"
-    _koopa_relink "${prefix_dir}/activate" "${config_dir}/activate"
-    if [ -d "${prefix_dir}/os/${os_id}" ]
+    mkdir -p "$config_prefix"
+    _koopa_relink "${koopa_prefix}" "${config_prefix}/home"
+    _koopa_relink "${koopa_prefix}/activate" "${config_prefix}/activate"
+    _koopa_relink "${koopa_prefix}/dotfiles" "${config_prefix}/dotfiles"
+    if [ -d "${koopa_prefix}/os/${os_id}" ]
     then
-        _koopa_relink "${prefix_dir}/os/${os_id}/etc/R" "${config_dir}/R"
+        _koopa_relink "${koopa_prefix}/os/${os_id}/etc/R" "${config_prefix}/R"
     fi
     return 0
 }
