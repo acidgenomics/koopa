@@ -11,7 +11,7 @@ _koopa_assert_has_args "$@"
 prefix="sample"
 padwidth=2
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -39,12 +39,12 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 files=("$@")
 
 for file in "${files[@]}"

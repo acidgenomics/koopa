@@ -12,7 +12,7 @@ _koopa_assert_is_installed "docker"
 bash=0
 workdir="/mnt/work"
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -36,12 +36,12 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 
 image="$1"
 workdir="$(_koopa_strip_trailing_slash "$workdir")"

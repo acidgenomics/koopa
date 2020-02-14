@@ -11,7 +11,7 @@ _koopa_assert_is_installed rename
 
 recursive=0
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -27,12 +27,12 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 
 if [[ "$recursive" -eq 1 ]]
 then
