@@ -332,11 +332,14 @@ _koopa_remove_broken_symlinks "$app_prefix"
 _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
 
-if _koopa_is_debian
+if [[ "$docker" -eq 1 ]]
 then
-    sudo rm -rf /var/lib/apt/lists/*
+    _koopa_h2 "Performing cleanup for Docker image."
+    if _koopa_is_debian
+    then
+        sudo rm -rf /var/lib/apt/lists/*
+    fi
+    sudo rm -frv /root/.cache
 fi
-
-sudo rm -frv /root/.cache
 
 _koopa_success "Configuration completed successfully."
