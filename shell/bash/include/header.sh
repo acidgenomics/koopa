@@ -24,9 +24,6 @@ do
             checks=0
             shift 1
             ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
     esac
 done
 
