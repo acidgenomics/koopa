@@ -12,7 +12,7 @@ config=0
 force=0
 private=0
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -36,12 +36,12 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 
 source_name="$1"
 symlink_name="${2:-}"
