@@ -2,7 +2,7 @@
 
 # """
 # Bash shared header script.
-# Updated 2020-02-13.
+# Updated 2020-02-14.
 # """
 
 # > set --help
@@ -60,13 +60,15 @@ fi
 KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"
 
-# Source POSIX functions.
+# Source POSIX header.
 # shellcheck source=/dev/null
-source "${KOOPA_BASH_INC}/../../posix/include/functions.sh"
+source "${KOOPA_BASH_INC}/../../posix/include/header.sh"
 
 # Source Bash functions.
 # shellcheck source=/dev/null
 source "${KOOPA_BASH_INC}/functions.sh"
+
+unset -v KOOPA_BASH_INC
 
 _koopa_help "$@"
 
@@ -78,5 +80,3 @@ then
         _koopa_assert_has_sudo
     fi
 fi
-
-unset -v KOOPA_BASH_INC
