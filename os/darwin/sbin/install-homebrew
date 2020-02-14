@@ -13,7 +13,15 @@ _koopa_h1 "Installing Homebrew."
 _koopa_h2 "Installing Xcode command line tools (CLT)."
 xcode-select --install
 
-url="https://raw.githubusercontent.com/Homebrew/install/master/install"
-/usr/bin/ruby -e "$(curl -fsSL "$url")"
+tmp_dir="$(_koopa_tmp_dir)/homebrew"
+
+(
+    _koopa_cd_tmp_dir "$tmp-dir"
+    file="install"
+    url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
+    _koopa_download "$file"
+    export HOMEBREW_PREFIX="/usr/local/homebrew"
+    /usr/bin/ruby "$file"
+)
 
 _koopa_success "Installation of Homebrew was successful."
