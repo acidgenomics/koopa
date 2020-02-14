@@ -17,7 +17,6 @@ set -o pipefail
 
 checks=1
 
-POSITIONAL=()
 while (("$#"))
 do
     case "$1" in
@@ -26,12 +25,10 @@ do
             shift 1
             ;;
         *)
-            POSITIONAL+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
 
 # Requiring Bash >= 4 for exported scripts.
 # macOS ships with an ancient version of Bash, due to licensing.
