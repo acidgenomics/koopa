@@ -9,7 +9,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed bcbio_nextgen.py
 
-tmp_dir="$(_koopa_tmp_dir)/bcbio"
+tmp_dir="$(_koopa_tmp_dir)"
 cores="$(_koopa_cpu_count)"
 
 _koopa_h1 "Updating bcbio-nextgen installation."

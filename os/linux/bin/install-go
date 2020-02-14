@@ -19,7 +19,7 @@ _koopa_assert_has_no_envs
 app_prefix="$(_koopa_app_prefix)/${name}/${version}"
 _koopa_prefix_mkdir "$app_prefix"
 _koopa_prefix_mkdir "$cellar_prefix"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

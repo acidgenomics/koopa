@@ -34,7 +34,7 @@ _koopa_assert_has_no_envs
 build="$(_koopa_make_build_string)"
 file_version="$(_koopa_variable "${name}-file-version")"  # e.g. 3300100
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 year="$(_koopa_variable "${name}-year")"
 
 (

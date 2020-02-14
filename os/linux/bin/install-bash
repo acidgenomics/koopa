@@ -21,7 +21,7 @@ gnu_mirror="$(_koopa_gnu_mirror)"
 jobs="$(_koopa_cpu_count)"
 minor_version="$(_koopa_minor_version "$version")"
 patches="$(echo "$version" | cut -d '.' -f 3)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
