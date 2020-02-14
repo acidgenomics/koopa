@@ -195,6 +195,7 @@ brews=(
     go
     gsl
     hdf5
+    htop
     hub
     igraph
     imagemagick
