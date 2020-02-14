@@ -2,7 +2,7 @@
 
 # """
 # Zsh shared header script.
-# Updated 2020-02-02.
+# Updated 2020-02-14.
 #
 # See also:
 # - https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
@@ -24,13 +24,15 @@ fi
 
 KOOPA_ZSH_INC="$(cd "$(dirname "${(%):-%N}")" >/dev/null 2>&1 && pwd -P)"
 
-# Source POSIX functions.
+# Source POSIX header.
 # shellcheck source=/dev/null
-source "${KOOPA_ZSH_INC}/../../posix/include/functions.sh"
+source "${KOOPA_ZSH_INC}/../../posix/include/header.sh"
 
 # Source ZSH functions.
 # shellcheck source=/dev/null
 # > source "${KOOPA_ZSH_INC}/functions.sh"
+
+unset -v KOOPA_ZSH_INC
 
 _koopa_help "$@"
 
@@ -39,5 +41,3 @@ if echo "$0" | grep -q "/sbin/"
 then
     _koopa_assert_has_sudo
 fi
-
-unset -v KOOPA_ZSH_INC
