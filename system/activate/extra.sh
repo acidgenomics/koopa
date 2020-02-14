@@ -165,22 +165,22 @@ alias less='less --ignore-case --raw-control-chars'
 
 make_prefix="$(_koopa_make_prefix)"
 
-if _koopa_is_installed "${make_prefix}/bin/cp"
+if _koopa_is_matching_fixed "$(_koopa_which_realpath cp)" "$make_prefix"
 then
     alias cp='cp --archive --interactive --verbose'
 fi
 
-if _koopa_is_installed "${make_prefix}/bin/mkdir"
+if _koopa_is_matching_fixed "$(_koopa_which_realpath mkdir)" "$make_prefix"
 then
     alias mkdir='mkdir --parents --verbose'
 fi
 
-if _koopa_is_installed "${make_prefix}/bin/mv"
+if _koopa_is_matching_fixed "$(_koopa_which_realpath mv)" "$make_prefix"
 then
     alias mv="mv --interactive --verbose"
 fi
 
-if _koopa_is_installed "${make_prefix}/bin/rm"
+if _koopa_is_matching_fixed "$(_koopa_which_realpath rm)" "$make_prefix"
 then
     alias rm='rm --dir --interactive="once" --preserve-root --verbose'
 fi
