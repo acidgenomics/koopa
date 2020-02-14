@@ -76,12 +76,12 @@ llvm-toolchain-${os_codename}-9 main" \
 _koopa_apt_add_r_repo() {
     # """
     # Add R apt repo.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-02-14.
     # """
     _koopa_assert_is_debian
     _koopa_assert_has_sudo
     local sources_list
-    sources_list="/etc/apt/sources.list.d/llvm.list"
+    sources_list="/etc/apt/sources.list.d/r.list"
     [ -f "$sources_list" ] && return 0
     local os_id
     os_id="$(_koopa_os_id)"
