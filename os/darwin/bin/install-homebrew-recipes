@@ -187,7 +187,6 @@ brews=(
     exiftool
     ffmpeg
     findutils
-    flac
     fzf
     gcc
     gdal
@@ -212,6 +211,8 @@ brews=(
     libxml2
     libxslt
     llvm
+    lua
+    luarocks
     mariadb-connector-c
     mas
     mongodb-community
@@ -232,6 +233,7 @@ brews=(
     pyenv
     python
     rbenv
+    ruby
     rsync
     ruby-build
     screen
