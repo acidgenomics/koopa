@@ -83,19 +83,22 @@ _koopa_mkdir "$make_prefix"
 _koopa_set_permissions "$make_prefix"
 
 # Prepare app prefix (e.g. '/n/app') for write access.
-if [[ -d "$data_disk" ]]
+if [[ ! -d "$app_prefix" ]]
 then
-    _koopa_h2 "Symlinking '${app_prefix}' on '${data_disk}'."
-    # e.g. '/mnt/data01/n/app'.
-    app_prefix_real="${data_disk}${app_prefix}"
-    # e.g. '/n'.
-    n_prefix_link="$(dirname "$app_prefix")"
-    # e.g. '/mnt/data01/n'.
-    n_prefix_real="$(dirname "$app_prefix_real")"
-    sudo mkdir -pv "$app_prefix_real"
-    sudo ln -fnsv "$n_prefix_real" "$n_prefix_link"
-else
-    _koopa_mkdir "$app_prefix"
+    if [[ -d "$data_disk" ]]
+    then
+        _koopa_h2 "Symlinking '${app_prefix}' on '${data_disk}'."
+        # e.g. '/mnt/data01/n/app'.
+        app_prefix_real="${data_disk}${app_prefix}"
+        # e.g. '/n'.
+        n_prefix_link="$(dirname "$app_prefix")"
+        # e.g. '/mnt/data01/n'.
+        n_prefix_real="$(dirname "$app_prefix_real")"
+        sudo mkdir -pv "$app_prefix_real"
+        sudo ln -fnsv "$n_prefix_real" "$n_prefix_link"
+    else
+        _koopa_mkdir "$app_prefix"
+    fi
 fi
 
 _koopa_h2 "Installing base system."
