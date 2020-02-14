@@ -14,6 +14,10 @@ _koopa_exit_if_not_installed brew
 
 _koopa_h1 "Uninstalling Homebrew."
 
+# Note that macOS Catalina now uses Zsh instead of Bash by default.
+_koopa_h2 "Changing default shell to system Zsh."
+chsh -s /bin/zsh "$USER"
+
 url="https://raw.githubusercontent.com/Homebrew/install/master/uninstall"
 /usr/bin/ruby -e "$(curl -fsSL "$url")"
 
