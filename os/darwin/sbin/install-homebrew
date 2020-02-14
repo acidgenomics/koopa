@@ -21,7 +21,7 @@ tmp_dir="$(_koopa_tmp_dir)/homebrew"
     url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
     _koopa_download "$url"
     /usr/bin/ruby "$file"
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_success "Installation of Homebrew was successful."
 _koopa_note "Restart the shell to complete installation."
