@@ -231,7 +231,6 @@ brews=(
     protobuf
     pyenv
     python
-    python@2
     rbenv
     rsync
     ruby-build
@@ -271,7 +270,6 @@ brews=(
 ) 2>&1 | tee -a "$log_file"
 
 brew unlink python
-brew unlink python@2
 
 # > brew link gdal
 # > brew link proj
