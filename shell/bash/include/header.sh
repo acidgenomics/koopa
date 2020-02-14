@@ -17,18 +17,24 @@ set -o pipefail
 
 checks=1
 
-while (("$#"))
-do
-    case "$1" in
-        --no-header-checks)
-            checks=0
-            shift 1
-            ;;
-        *)
-            shift 1
-            ;;
-    esac
-done
+if [[ "$#" -gt 0 ]]
+then
+    POSITIONAL=()
+    while (("$#"))
+    do
+        case "$1" in
+            --no-header-checks)
+                checks=0
+                shift 1
+                ;;
+            *)
+                POSITIONAL+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    set -- "${POSITIONAL[@]}"
+fi
 
 # Requiring Bash >= 4 for exported scripts.
 # macOS ships with an ancient version of Bash, due to licensing.
