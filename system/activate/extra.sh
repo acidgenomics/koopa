@@ -159,13 +159,33 @@ _koopa_activate_fzf
 # Note that macOS ships with a very old version of GNU coreutils.
 # Update these using Homebrew.
 
-alias cp='cp --archive --interactive --verbose'
 alias df='df -H'
 alias du='du -sh'
 alias less='less --ignore-case --raw-control-chars'
-alias mkdir='mkdir --parents --verbose'
-alias mv="mv --interactive --verbose"
-alias rm='rm --dir --interactive="once" --preserve-root --verbose'
+
+make_prefix="$(_koopa_make_prefix)"
+
+if _koopa_is_installed "${make_prefix}/bin/cp"
+then
+    alias cp='cp --archive --interactive --verbose'
+fi
+
+if _koopa_is_installed "${make_prefix}/bin/mkdir"
+then
+    alias mkdir='mkdir --parents --verbose'
+fi
+
+if _koopa_is_installed "${make_prefix}/bin/mv"
+then
+    alias mv="mv --interactive --verbose"
+fi
+
+if _koopa_is_installed "${make_prefix}/bin/rm"
+then
+    alias rm='rm --dir --interactive="once" --preserve-root --verbose'
+fi
+
+unset -v make_prefix
 
 # Shortcuts                                                               # {{{2
 # ------------------------------------------------------------------------------
