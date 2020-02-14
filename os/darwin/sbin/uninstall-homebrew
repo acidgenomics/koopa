@@ -4,7 +4,6 @@ set -Eeu -o pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh" --no-header-checks
-_koopa_assert_has_no_args "$@"
 
 # """
 # https://docs.brew.sh/FAQ
@@ -13,6 +12,8 @@ _koopa_assert_has_no_args "$@"
 _koopa_exit_if_not_installed brew
 
 _koopa_h1 "Uninstalling Homebrew."
+
+_koopa_assert_has_no_args "$@"
 
 # Note that macOS Catalina now uses Zsh instead of Bash by default.
 _koopa_h2 "Changing default shell to system Zsh."
