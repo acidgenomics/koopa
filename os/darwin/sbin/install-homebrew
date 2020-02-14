@@ -20,7 +20,6 @@ tmp_dir="$(_koopa_tmp_dir)/homebrew"
     file="install"
     url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
     _koopa_download "$url"
-    export HOMEBREW_PREFIX="/usr/local/homebrew"
     /usr/bin/ruby "$file"
 )
 
