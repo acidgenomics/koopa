@@ -825,7 +825,7 @@ _koopa_variable() {                                                       # {{{1
 _koopa_view_latest_tmp_log_file() {                                       # {{{1
     # """
     # View the latest temporary log file.
-    # Updated 2020-02-06.
+    # Updated 2020-02-13.
     # """
     local dir
     dir="${TMPDIR:-/tmp}"
