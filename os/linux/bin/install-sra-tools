@@ -29,7 +29,7 @@ _koopa_assert_is_installed jar
 
 jobs="$(_koopa_cpu_count)"
 ngs_libdir="$(_koopa_make_prefix)/lib64"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 build_prefix="${tmp_dir}/ncbi-outdir"
 
 # Ensure current jar binary is in path, otherwise install will fail.

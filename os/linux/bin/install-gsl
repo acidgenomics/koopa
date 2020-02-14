@@ -18,7 +18,7 @@ _koopa_assert_has_no_envs
 
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

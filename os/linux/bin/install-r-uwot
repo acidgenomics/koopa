@@ -14,7 +14,7 @@ r_home="$(_koopa_r_home)"
 install_exe="${r_home}/bin/INSTALL"
 _koopa_assert_is_executable "$install_exe"
 
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
