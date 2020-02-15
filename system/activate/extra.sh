@@ -86,14 +86,10 @@ fi
 # GnuPGP  {{{1
 # ==============================================================================
 
-# This is causing install to error out on minimal Docker images.
-# Disabled until I can figure out how to handle this.
-
+# Enable passphrase prompting in terminal.
 # Useful for getting Docker credential store to work.
 # https://github.com/docker/docker-credential-helpers/issues/118
-
-# Enable passphrase prompting in terminal.
-if [ -z "${GPG_TTY:-}" ]
+if [ -z "${GPG_TTY:-}" ] && _koopa_is_tty
 then
     GPG_TTY="$(tty || true)"
     export GPG_TTY
