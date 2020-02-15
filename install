@@ -81,8 +81,10 @@ source "${script_dir}/shell/bash/include/header.sh"
 
 
 
-# Interactive  {{{1
+# Pre-flight checks  {{{1
 # ==============================================================================
+
+_koopa_git_submodule_init
 
 # > ! _koopa_is_interactive && interactive=0
 # > ! _koopa_is_tty && interactive=0
