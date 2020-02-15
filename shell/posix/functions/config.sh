@@ -586,11 +586,12 @@ _koopa_update_r_config_macos() {  # {{{1
 _koopa_update_xdg_config() {  # {{{1
     # """
     # Update XDG configuration.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-02-15.
     #
     # Path: '~/.config/koopa'.
     # """
-    _koopa_is_root && return 0
+    # Allowing this, for Docker images.
+    # > _koopa_is_root && return 0
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
     local config_prefix
