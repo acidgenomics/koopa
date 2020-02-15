@@ -181,7 +181,7 @@ else
     cp -af "$script_dir" "$koopa_prefix"
 fi
 
-unset -v "$script_dir"
+unset -v script_dir
 
 
 
