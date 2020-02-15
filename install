@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
-set -Eeu -o pipefail
+set -Eeux -o pipefail
 
 
 
@@ -28,33 +28,6 @@ note:
 EOF
 }
 
-while (("$#"))
-do
-    case "$1" in
-        --help|-h)
-            usage
-            exit 0
-            ;;
-    esac
-done
-
-
-
-# Source functions  {{{1
-# ==============================================================================
-
-# Before we proceed, ensure that koopa isn't already installed.
-if [[ -n "${KOOPA_PREFIX:-}" ]]
-then
-    >&2 echo "ERROR: koopa is installed: '${KOOPA_PREFIX}'."
-    exit 1
-fi
-
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
-    >/dev/null 2>&1 && pwd -P)"
-
-source "${script_dir}/shell/bash/include/header.sh"
-
 
 
 # Argument parsing  {{{1
@@ -66,6 +39,10 @@ test=0
 while (("$#"))
 do
     case "$1" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
         --non-interactive)
             interactive=0
             shift 1
@@ -79,7 +56,8 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            >&2 echo "ERROR: Invalid arg: '${1}'."
+            exit 1
             ;;
     esac
 done
@@ -88,6 +66,18 @@ done
 
 # Pre-flight  {{{1
 # ==============================================================================
+
+# Before we proceed, ensure that koopa isn't already installed.
+if [[ -n "${KOOPA_PREFIX:-}" ]]
+then
+    >&2 echo "ERROR: koopa is installed: '${KOOPA_PREFIX}'."
+    exit 1
+fi
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+    >/dev/null 2>&1 && pwd -P)"
+
+source "${script_dir}/shell/bash/include/header.sh"
 
 # Ensure existing user configuration gets removed.
 rm -fr "$(_koopa_config_prefix)"
