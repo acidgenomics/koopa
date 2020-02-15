@@ -153,7 +153,7 @@ _koopa_github_latest_release() {  # {{{1
     tag="$( \
         echo "$json" \
             | grep '"tag_name":' \
-            | cut -d '\"' -f 4 \
+            | cut -d '"' -f 4 \
             | sed 's/^v//' \
     )"
     [ -n "$tag" ] || return 1
