@@ -232,7 +232,7 @@ fi
 # Dot files  {{{1
 # ==============================================================================
 
-dotfiles=1
+dotfiles=0
 
 # Prompt the user if we want to link dot files.
 if [[ "$interactive" -eq 1 ]]
