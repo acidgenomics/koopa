@@ -181,6 +181,8 @@ else
     cp -af "$script_dir" "$koopa_prefix"
 fi
 
+unset -v "$script_dir"
+
 
 
 # Activate  {{{1
@@ -305,7 +307,7 @@ fi
 # Final steps and return  {{{1
 # ==============================================================================
 
-_koopa_remove_broken_symlinks "$script_dir"
+_koopa_remove_broken_symlinks "$koopa_prefix"
 _koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
 
