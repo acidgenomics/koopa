@@ -223,6 +223,47 @@ _koopa_git_branch() {  # {{{1
     return 0
 }
 
+_koopa_git_clone() {  # {{{1
+    # """
+    # Quietly clone a git repository.
+    # @note Updated 2020-02-15.
+    # """
+    local repo
+    repo="${1:?}"
+    local target
+    target="${2:?}"
+    _koopa_assert_is_non_existing "$target"
+    git clone --quiet --recursive "$repo" "$target"
+    return 0
+}
+
+_koopa_git_update() {  # {{{1
+    # """
+    # Update a git repository.
+    # @note Updated 2020-02-15.
+    #
+    # @seealso _koopa_git_pull
+    # """
+    local repo
+    repo="${1:?}"
+    [ -d "${repo}" ] || return 0
+    [ -x "${repo}/.git" ] || return 0
+    _koopa_h2 "Updating '${repo}'."
+    (
+        cd "$repo" || exit 1
+        # Run updater script, if defined.
+        # Otherwise pull the git repo.
+        if [[ -x "UPDATE.sh" ]]
+        then
+            ./UPDATE.sh
+        else
+            git fetch --all --quiet
+            git pull --quiet
+        fi
+    )
+    return 0
+}
+
 _koopa_group() {  # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
@@ -453,102 +494,6 @@ _koopa_info_box() {  # {{{1
         printf "  ┃ %-68s ┃  \n" "${i::68}"
     done
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
-    return 0
-}
-
-_koopa_install_mike() {  # {{{1
-    # """
-    # Install additional Mike-specific config files.
-    # @note Updated 2020-02-11.
-    #
-    # Note that these repos require SSH key to be set on GitHub.
-    # """
-    _koopa_assert_is_github_ssh_enabled
-    # dotfiles
-    "${DOTFILES}/INSTALL.sh"
-    # dotfiles-private
-    source_repo="git@github.com:mjsteinbaugh/dotfiles-private.git"
-    target_dir="$(_koopa_config_prefix)/dotfiles-private"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo" "$target_dir"
-    fi
-    "${target_dir}/INSTALL.sh"
-    # docker
-    source_repo="git@github.com:acidgenomics/docker.git"
-    target_dir="$(_koopa_config_prefix)/docker"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo" "$target_dir"
-    fi
-    # scripts-private
-    source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
-    target_dir="$(_koopa_config_prefix)/scripts-private"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo"  "$target_dir"
-    fi
-    return 0
-}
-
-_koopa_install_pip() {  # {{{1
-    # """
-    # Install pip for Python.
-    # @note Updated 2020-02-10.
-    # """
-    local python
-    python="${1:-python3}"
-    if ! _koopa_is_installed "$python"
-    then
-        _koopa_warning "Python ('${python}') is not installed."
-        return 1
-    fi
-    if _koopa_is_python_package_installed "pip" "$python"
-    then
-        _koopa_note "pip is already installed."
-        return 0
-    fi
-    _koopa_h2 "Installing pip for Python '${python}'."
-    local file
-    file="get-pip.py"
-    _koopa_download "https://bootstrap.pypa.io/${file}"
-    "$python" "$file" --no-warn-script-location
-    rm "$file"
-    _koopa_success "Installation of pip was successful."
-    _koopa_note "Restart the shell to complete activation."
-    return 0
-}
-
-_koopa_install_pipx() {
-    # """
-    # Install pipx for Python.
-    # @note Updated 2020-02-10.
-    #
-    # Local user installation:
-    # Use the '--user' flag with 'pip install' call.
-    #
-    # This recommended step will modify shell RC file, which we don't want.
-    # > "$python" -m pipx ensurepath
-    # """
-    local python
-    python="${1:-python3}"
-    if ! _koopa_is_installed "$python"
-    then
-        _koopa_warning "Python ('${python}') is not installed."
-        return 1
-    fi
-    if _koopa_is_python_package_installed "pipx" "$python"
-    then
-        _koopa_note "pipx is already installed."
-        return 0
-    fi
-    _koopa_h2 "Installing pipx for Python '${python}'."
-    "$python" -m pip install --no-warn-script-location pipx
-    local prefix
-    prefix="$(_koopa_app_prefix)/python/pipx"
-    _koopa_mkdir "$prefix"
-    _koopa_success "Installation of pipx was successful."
-    _koopa_note "Restart the shell to complete activation."
     return 0
 }
 
@@ -1054,33 +999,6 @@ _koopa_today_bucket() {  # {{{1
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
-    return 0
-}
-
-_koopa_update_git_repo() {  # {{{1
-    # """
-    # Update a git repository.
-    # @note Updated 2020-02-15.
-    #
-    # @seealso _koopa_git_pull
-    # """
-    local repo
-    repo="${1:?}"
-    [ -d "${repo}" ] || return 0
-    [ -x "${repo}/.git" ] || return 0
-    _koopa_h2 "Updating '${repo}'."
-    (
-        cd "$repo" || exit 1
-        # Run updater script, if defined.
-        # Otherwise pull the git repo.
-        if [[ -x "UPDATE.sh" ]]
-        then
-            ./UPDATE.sh
-        else
-            git fetch --all --quiet
-            git pull --quiet
-        fi
-    )
     return 0
 }
 
