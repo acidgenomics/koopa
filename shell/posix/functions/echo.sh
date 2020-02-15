@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_ansi_escape_code() {                                               # {{{1
+_koopa_ansi_escape_code() {  # {{{1
     local escape
     escape="${1:?}"
     case "$escape" in
@@ -71,7 +71,7 @@ _koopa_ansi_escape_code() {                                               # {{{1
     echo -e "\033[${escape}m"
 }
 
-_koopa_ansi_echo() {                                                      # {{{1
+_koopa_ansi_echo() {  # {{{1
     # """
     # Echo a colored line in console.
     # Updated 2020-01-17.
@@ -106,81 +106,81 @@ _koopa_ansi_echo() {                                                      # {{{1
 
 
 
-_koopa_echo_default() {                                                   # {{{1
+_koopa_echo_default() {  # {{{1
     _koopa_ansi_echo "default" "${1:?}"
 }
 
-_koopa_echo_default_bold() {                                              # {{{1
+_koopa_echo_default_bold() {  # {{{1
     _koopa_ansi_echo "default-bold" "${1:?}"
 }
 
-_koopa_echo_black() {                                                     # {{{1
+_koopa_echo_black() {  # {{{1
     _koopa_ansi_echo "black" "${1:?}"
 }
 
-_koopa_echo_black_bold() {                                                # {{{1
+_koopa_echo_black_bold() {  # {{{1
     _koopa_ansi_echo "black-bold" "${1:?}"
 }
 
-_koopa_echo_blue() {                                                      # {{{1
+_koopa_echo_blue() {  # {{{1
     _koopa_ansi_echo "blue" "${1:?}"
 }
 
-_koopa_echo_blue_bold() {                                                 # {{{1
+_koopa_echo_blue_bold() {  # {{{1
     _koopa_ansi_echo "blue-bold" "${1:?}"
 }
 
-_koopa_echo_cyan() {                                                      # {{{1
+_koopa_echo_cyan() {  # {{{1
     _koopa_ansi_echo "cyan" "${1:?}"
 }
 
-_koopa_echo_cyan_bold() {                                                 # {{{1
+_koopa_echo_cyan_bold() {  # {{{1
     _koopa_ansi_echo "cyan-bold" "${1:?}"
 }
 
-_koopa_echo_green() {                                                     # {{{1
+_koopa_echo_green() {  # {{{1
     _koopa_ansi_echo "green" "${1:?}"
 }
 
-_koopa_echo_green_bold() {                                                # {{{1
+_koopa_echo_green_bold() {  # {{{1
     _koopa_ansi_echo "green-bold" "${1:?}"
 }
 
-_koopa_echo_magenta() {                                                   # {{{1
+_koopa_echo_magenta() {  # {{{1
     _koopa_ansi_echo "magenta" "${1:?}"
 }
 
-_koopa_echo_magenta_bold() {                                              # {{{1
+_koopa_echo_magenta_bold() {  # {{{1
     _koopa_ansi_echo "magenta-bold" "${1:?}"
 }
 
-_koopa_echo_red() {                                                       # {{{1
+_koopa_echo_red() {  # {{{1
     _koopa_ansi_echo "red" "${1:?}"
 }
 
-_koopa_echo_red_bold() {                                                  # {{{1
+_koopa_echo_red_bold() {  # {{{1
     _koopa_ansi_echo "red-bold" "${1:?}"
 }
 
-_koopa_echo_yellow() {                                                    # {{{1
+_koopa_echo_yellow() {  # {{{1
     _koopa_ansi_echo "yellow" "${1:?}"
 }
 
-_koopa_echo_yellow_bold() {                                               # {{{1
+_koopa_echo_yellow_bold() {  # {{{1
     _koopa_ansi_echo "yellow-bold" "${1:?}"
 }
 
-_koopa_echo_white() {                                                     # {{{1
+_koopa_echo_white() {  # {{{1
     _koopa_ansi_echo "white" "${1:?}"
 }
 
-_koopa_echo_white_bold() {                                                # {{{1
+_koopa_echo_white_bold() {  # {{{1
     _koopa_ansi_echo "white-bold" "${1:?}"
 }
 
 
 
-_koopa_coffee_time() {                                                    # {{{1
+_koopa_coffee_time() {  # {{{1
     # """
     # Coffee time.
     # Updated 2020-02-06.
@@ -197,7 +197,7 @@ _koopa_dl() {
     _koopa_info "${1:?}: ${2:?}"
 }
 
-_koopa_emoji() {                                                          # {{{1
+_koopa_emoji() {  # {{{1
     # """
     # Koopa turtle emoji.
     # Updated 2020-01-17.
@@ -205,7 +205,7 @@ _koopa_emoji() {                                                          # {{{1
     echo "🐢"
 }
 
-_koopa_h1() {                                                        # {{{1
+_koopa_h1() {  # {{{1
     # """
     # Header level 1.
     # Updated 2020-02-05.
@@ -221,7 +221,7 @@ _koopa_h1() {                                                        # {{{1
     echo -e "\n${c1}${pre}${c2}${str}${nc}"
 }
 
-_koopa_h2() {                                                        # {{{1
+_koopa_h2() {  # {{{1
     # """
     # Header level 2.
     # Updated 2020-02-05.
@@ -235,7 +235,7 @@ _koopa_h2() {                                                        # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
-_koopa_info() {                                                           # {{{1
+_koopa_info() {  # {{{1
     # """
     # General info.
     # Updated 2020-02-05.
@@ -249,7 +249,7 @@ _koopa_info() {                                                           # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
-_koopa_invalid_arg() {                                                    # {{{1
+_koopa_invalid_arg() {  # {{{1
     # """
     # Error on invalid argument.
     # Updated 2019-10-23.
@@ -259,7 +259,7 @@ _koopa_invalid_arg() {                                                    # {{{1
     _koopa_stop "Invalid argument: '${arg}'."
 }
 
-_koopa_missing_arg() {                                                    # {{{1
+_koopa_missing_arg() {  # {{{1
     # """
     # Error on a missing argument.
     # Updated 2019-10-23.
@@ -267,7 +267,7 @@ _koopa_missing_arg() {                                                    # {{{1
     _koopa_stop "Missing required argument."
 }
 
-_koopa_note() {                                                           # {{{1
+_koopa_note() {  # {{{1
     # """
     # General note.
     # Updated 2020-02-05.
@@ -281,7 +281,7 @@ _koopa_note() {                                                           # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
-_koopa_stop() {                                                           # {{{1
+_koopa_stop() {  # {{{1
     # """
     # Stop with an error message, and exit.
     # Updated 2020-02-11.
@@ -296,7 +296,7 @@ _koopa_stop() {                                                           # {{{1
     exit 1
 }
 
-_koopa_success() {                                                        # {{{1
+_koopa_success() {  # {{{1
     # """
     # Success message.
     # Updated 2020-02-05.
@@ -310,7 +310,7 @@ _koopa_success() {                                                        # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
-_koopa_warning() {                                                        # {{{1
+_koopa_warning() {  # {{{1
     # """
     # Warning message.
     # Updated 2020-02-11.
@@ -326,7 +326,7 @@ _koopa_warning() {                                                        # {{{1
 
 
 
-_koopa_status_fail() {                                                    # {{{1
+_koopa_status_fail() {  # {{{1
     # """
     # Status FAIL.
     # Updated 2020-02-04.
@@ -339,7 +339,7 @@ _koopa_status_fail() {                                                    # {{{1
     >&2 echo -e "${c1}${pre}${nc} | ${str}"
 }
 
-_koopa_status_note() {                                                    # {{{1
+_koopa_status_note() {  # {{{1
     # """
     # Status NOTE.
     # Updated 2020-02-04.
@@ -352,7 +352,7 @@ _koopa_status_note() {                                                    # {{{1
     >&2 echo -e "${c1}${pre}${nc} | ${str}"
 }
 
-_koopa_status_ok() {                                                      # {{{1
+_koopa_status_ok() {  # {{{1
     # """
     # Status OK.
     # Updated 2020-02-04.

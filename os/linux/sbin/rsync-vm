@@ -54,7 +54,7 @@ mapfile -t flags < <(_koopa_rsync_flags)
 # > flags+=("--omit-dir-times")
 flags_bak=("${flags[@]}")
 
-# /n/app                                                                    {{{1
+# /n/app  {{{1
 # ==============================================================================
 
 # Create the '/n' symlink, if necessary.
@@ -92,7 +92,7 @@ rsync ${flags[@]} \
 _koopa_h2 "Setting permissions on '${dir}'."
 _koopa_set_permissions "$dir"
 
-# /usr/local                                                              # {{{1
+# /usr/local  {{{1
 # ==============================================================================
 
 dir="/usr/local"

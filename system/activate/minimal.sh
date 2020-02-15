@@ -2,10 +2,10 @@
 
 
 
-# Pre-flight checks                                                         {{{1
+# Pre-flight checks  {{{1
 # ==============================================================================
 
-# Operating system                                                          {{{2
+# Operating system  {{{2
 # ------------------------------------------------------------------------------
 
 # Bash sets the shell variable OSTYPE (e.g. linux-gnu).
@@ -20,7 +20,7 @@ case "$(uname -s)" in
         _koopa_stop "Unsupported operating system."
 esac
 
-# Bad settings                                                              {{{2
+# Bad settings  {{{2
 # ------------------------------------------------------------------------------
 
 # Note that we're skipping this checks inside RStudio shell.
@@ -31,7 +31,7 @@ fi
 
 
 
-# Standard globals                                                          {{{1
+# Standard globals  {{{1
 # ==============================================================================
 
 # This variables are used by some koopa scripts, so ensure they're always
@@ -85,7 +85,7 @@ then
     export USER
 fi
 
-# CPU count                                                                 {{{2
+# CPU count  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${CPU_COUNT:-}" ]
@@ -94,7 +94,7 @@ then
     export CPU_COUNT
 fi
 
-# History                                                                   {{{2
+# History  {{{2
 # ------------------------------------------------------------------------------
 
 # See bash(1) for more options.
@@ -143,7 +143,7 @@ fi
 
 
 
-# Activation functions                                                      {{{1
+# Activation functions  {{{1
 # ==============================================================================
 
 _koopa_activate_xdg

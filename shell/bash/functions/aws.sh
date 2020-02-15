@@ -7,7 +7,7 @@
 # >     --output json \
 # >     --bucket tests.acidgenomics.com
 
-_koopa_aws_s3_find() {                                                    # {{{1
+_koopa_aws_s3_find() {  # {{{1
     # """
     # Find files in AWS S3 bucket.
     # @note Updated 2020-02-11.
@@ -85,7 +85,7 @@ _koopa_aws_s3_find() {                                                    # {{{1
     return 0
 }
 
-_koopa_aws_s3_ls() {                                                      # {{{1
+_koopa_aws_s3_ls() {  # {{{1
     # """
     # List AWS S3 bucket.
     # @note Updated 2020-02-11.
@@ -232,7 +232,7 @@ _koopa_aws_s3_ls() {                                                      # {{{1
     return 0
 }
 
-_koopa_aws_s3_mv_to_parent() {                                            # {{{1
+_koopa_aws_s3_mv_to_parent() {  # {{{1
     # """
     # Move objects in S3 directory to parent directory.
     # @note Updated 2020-02-12.
@@ -260,7 +260,7 @@ _koopa_aws_s3_mv_to_parent() {                                            # {{{1
     return 0
 }
 
-_koopa_aws_s3_sync() {                                                    # {{{1
+_koopa_aws_s3_sync() {  # {{{1
     # """
     # Sync S3 bucket, but ignore some files automatically.
     # @note Updated 2020-02-13.

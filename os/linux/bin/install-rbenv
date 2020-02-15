@@ -28,7 +28,7 @@ _koopa_h1 "Installing rbenv at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_prefix_mkdir "$prefix"
 
-# rbenv                                                                     {{{1
+# rbenv  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'rbenv'."
@@ -41,7 +41,7 @@ _koopa_h2 "Installing 'rbenv'."
 
 _koopa_activate_rbenv
 
-# ruby-build                                                                {{{1
+# ruby-build  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'ruby-build'."
@@ -55,7 +55,7 @@ _koopa_h2 "Installing 'ruby-build'."
 
 _koopa_set_permissions "$prefix"
 
-# Install latest Ruby                                                       {{{1
+# Install latest Ruby  {{{1
 # ==============================================================================
 
 if [[ "$all" -eq 1 ]]

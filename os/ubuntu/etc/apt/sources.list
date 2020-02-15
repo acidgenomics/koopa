@@ -16,7 +16,7 @@
 ## Details: https://itsfoss.com/ubuntu-repositories/
 ## """
 
-## Main / Restricted (default)                                              {{{1
+## Main / Restricted (default)  {{{1
 ## =============================================================================
 
 ## Main:
@@ -38,7 +38,7 @@ deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted
 deb http://security.ubuntu.com/ubuntu/ bionic-security main restricted
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security main restricted
 
-## Universe                                                                 {{{1
+## Universe  {{{1
 ## =============================================================================
 
 ## This repository also consists free and open source software but Ubuntu
@@ -59,7 +59,7 @@ deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe
 deb http://security.ubuntu.com/ubuntu/ bionic-security universe
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security universe
 
-## Multiverse                                                               {{{1
+## Multiverse  {{{1
 ## =============================================================================
 
 ## Multiverse contains the software that are not FOSS. Due to licensing and
@@ -79,7 +79,7 @@ deb http://security.ubuntu.com/ubuntu/ bionic-security universe
 # deb http://security.ubuntu.com/ubuntu/ bionic-security multiverse
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security multiverse
 
-## Partner                                                                  {{{1
+## Partner  {{{1
 ## =============================================================================
 
 ## This repository consist of proprietary software packaged by Ubuntu for their
@@ -91,7 +91,7 @@ deb http://security.ubuntu.com/ubuntu/ bionic-security universe
 # deb http://archive.canonical.com/ubuntu bionic partner
 # deb-src http://archive.canonical.com/ubuntu bionic partner
 
-## Backports                                                                {{{1
+## Backports  {{{1
 ## =============================================================================
 
 ## N.B. Software from this repository may not have been tested as extensively

@@ -125,7 +125,7 @@ then
 Check '/etc/apt/sources.list'."
 fi
 
-# Upgrade distribution                                                   #  {{{1
+# Upgrade distribution  {{{1
 # ==============================================================================
 
 if [[ "$dist_upgrade" -eq 1 ]]
@@ -140,7 +140,7 @@ then
             dist-upgrade
 fi
 
-# Default                                                                 # {{{1
+# Default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
@@ -206,7 +206,7 @@ pkgs=(
     xz-utils
 )
 
-# Developer                                                                 {{{1
+# Developer  {{{1
 # ==============================================================================
 
 # Note that we want these on our Bioconductor Docker images.
@@ -241,7 +241,7 @@ then
     )
 fi
 
-# Extra                                                                     {{{1
+# Extra  {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
@@ -294,7 +294,7 @@ sudo DEBIAN_FRONTEND=noninteractive \
         --yes \
         install "${pkgs[@]}"
 
-# Clean up                                                                  {{{1
+# Clean up  {{{1
 # ==============================================================================
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."

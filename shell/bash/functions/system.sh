@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_add_local_bins_to_path() {                                         # {{{1
+_koopa_add_local_bins_to_path() {  # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
     # Updated 2019-10-22.
@@ -20,7 +20,7 @@ _koopa_add_local_bins_to_path() {                                         # {{{1
     return 0
 }
 
-_koopa_find_local_bin_dirs() {                                            # {{{1
+_koopa_find_local_bin_dirs() {  # {{{1
     # """
     # Find local bin directories.
     # Updated 2020-02-02.
@@ -109,7 +109,7 @@ _koopa_git_pull() {
     return 0
 }
 
-_koopa_git_reset() {                                                      # {{{1
+_koopa_git_reset() {  # {{{1
     # """
     # Clean and reset a git repo and its submodules.
     # Updated 2020-02-11.
@@ -142,7 +142,7 @@ _koopa_git_reset() {                                                      # {{{1
     return 0
 }
 
-_koopa_is_array_non_empty() {                                             # {{{1
+_koopa_is_array_non_empty() {  # {{{1
     # """
     # Is the array non-empty?
     # Updated 2019-10-22.
@@ -157,7 +157,7 @@ _koopa_is_array_non_empty() {                                             # {{{1
     return 0
 }
 
-_koopa_r_javareconf() {                                                   # {{{1
+_koopa_r_javareconf() {  # {{{1
     # """
     # Update R Java configuration.
     # Updated 2020-01-24.
@@ -214,7 +214,7 @@ _koopa_r_javareconf() {                                                   # {{{1
     return 0
 }
 
-_koopa_script_name() {                                                    # {{{1
+_koopa_script_name() {  # {{{1
     # """
     # Get the calling script name.
     # Updated 2019-10-22.

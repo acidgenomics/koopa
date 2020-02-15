@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_prefix() {                                                         # {{{1
+_koopa_prefix() {  # {{{1
     # """
     # Koopa prefix (home).
     # Updated 2020-01-12.
@@ -10,7 +10,7 @@ _koopa_prefix() {                                                         # {{{1
     return 0
 }
 
-_koopa_app_prefix() {                                                     # {{{1
+_koopa_app_prefix() {  # {{{1
     # """
     # Custom application install prefix.
     # Updated 2020-01-12.
@@ -38,7 +38,7 @@ _koopa_app_prefix() {                                                     # {{{1
     return 0
 }
 
-_koopa_cellar_prefix() {                                                  # {{{1
+_koopa_cellar_prefix() {  # {{{1
     # """
     # Cellar prefix.
     # Updated 2020-02-08.
@@ -58,7 +58,7 @@ _koopa_cellar_prefix() {                                                  # {{{1
     return 0
 }
 
-_koopa_config_prefix() {                                                  # {{{1
+_koopa_config_prefix() {  # {{{1
     # """
     # Local koopa config directory.
     # Updated 2020-01-13.
@@ -67,7 +67,7 @@ _koopa_config_prefix() {                                                  # {{{1
     return 0
 }
 
-_koopa_local_app_prefix() {                                               # {{{1
+_koopa_local_app_prefix() {  # {{{1
     # """
     # Local user application install prefix.
     # Updated 2020-01-12.
@@ -78,7 +78,7 @@ _koopa_local_app_prefix() {                                               # {{{1
     return 0
 }
 
-_koopa_make_prefix() {                                                    # {{{1
+_koopa_make_prefix() {  # {{{1
     # """
     # Return the installation prefix to use.
     # Updated 2020-01-12.
@@ -97,7 +97,7 @@ _koopa_make_prefix() {                                                    # {{{1
 
 
 
-_koopa_aspera_prefix() {                                                  # {{{1
+_koopa_aspera_prefix() {  # {{{1
     # """
     # Aspera Connect prefix.
     # Updated 2020-02-06.
@@ -113,7 +113,7 @@ _koopa_aspera_prefix() {                                                  # {{{1
     return 0
 }
 
-_koopa_autojump_prefix() {                                                # {{{1
+_koopa_autojump_prefix() {  # {{{1
     # """
     # autojump prefix.
     # Updated 2020-01-12.
@@ -138,7 +138,7 @@ _koopa_autojump_prefix() {                                                # {{{1
     return 0
 }
 
-_koopa_bcbio_prefix() {                                                   # {{{1
+_koopa_bcbio_prefix() {  # {{{1
     # """
     # bcbio-nextgen prefix.
     # Updated 2020-01-12.
@@ -159,7 +159,7 @@ _koopa_bcbio_prefix() {                                                   # {{{1
     return 0
 }
 
-_koopa_conda_prefix() {                                                   # {{{1
+_koopa_conda_prefix() {  # {{{1
     # """
     # Conda prefix
     # Updated 2020-01-12.
@@ -175,7 +175,7 @@ _koopa_conda_prefix() {                                                   # {{{1
     return 0
 }
 
-_koopa_dotfiles_prefix() {                                                # {{{1
+_koopa_dotfiles_prefix() {  # {{{1
     # """
     # Koopa system dotfiles prefix.
     # @note Updated 2020-02-13.
@@ -186,7 +186,7 @@ _koopa_dotfiles_prefix() {                                                # {{{1
     return 0
 }
 
-_koopa_ensembl_perl_api_prefix() {                                        # {{{1
+_koopa_ensembl_perl_api_prefix() {  # {{{1
     # """
     # Ensembl Perl API prefix.
     # Updated 2019-11-15.
@@ -196,7 +196,7 @@ _koopa_ensembl_perl_api_prefix() {                                        # {{{1
     return 0
 }
 
-_koopa_go_gopath() {                                                      # {{{1
+_koopa_go_gopath() {  # {{{1
     # """
     # Go GOPATH, for building from source.
     # @note Updated 2020-02-13.
@@ -221,7 +221,7 @@ _koopa_go_gopath() {                                                      # {{{1
     return 0
 }
 
-_koopa_java_home() {                                                      # {{{1
+_koopa_java_home() {  # {{{1
     # """
     # Java home.
     # Updated 2019-11-16.
@@ -251,7 +251,7 @@ _koopa_java_home() {                                                      # {{{1
     return 0
 }
 
-_koopa_perlbrew_prefix() {                                                # {{{1
+_koopa_perlbrew_prefix() {  # {{{1
     # """
     # Perlbrew prefix.
     # Updated 2020-01-12.
@@ -267,7 +267,7 @@ _koopa_perlbrew_prefix() {                                                # {{{1
     return 0
 }
 
-_koopa_pyenv_prefix() {                                                   # {{{1
+_koopa_pyenv_prefix() {  # {{{1
     # """
     # Python pyenv prefix.
     # Updated 2020-01-12.
@@ -294,7 +294,7 @@ _koopa_python_site_packages_prefix() {
     return 0
 }
 
-_koopa_r_home() {                                                         # {{{1
+_koopa_r_home() {  # {{{1
     # """
     # R home (prefix).
     # Updated 2020-01-21.
@@ -311,7 +311,7 @@ _koopa_r_home() {                                                         # {{{1
     return 0
 }
 
-_koopa_r_library_prefix() {                                               # {{{1
+_koopa_r_library_prefix() {  # {{{1
     # """
     # R default library prefix.
     # Updated 2020-02-10.
@@ -324,7 +324,7 @@ _koopa_r_library_prefix() {                                               # {{{1
     return 0
 }
 
-_koopa_r_system_library_prefix() {                                        # {{{1
+_koopa_r_system_library_prefix() {  # {{{1
     # """
     # R system library prefix.
     # Updated 2020-02-10.
@@ -337,7 +337,7 @@ _koopa_r_system_library_prefix() {                                        # {{{1
     return 0
 }
 
-_koopa_rbenv_prefix() {                                                   # {{{1
+_koopa_rbenv_prefix() {  # {{{1
     # """
     # Ruby rbenv prefix.
     # Updated 2020-01-12.
@@ -352,7 +352,7 @@ _koopa_rbenv_prefix() {                                                   # {{{1
     return 0
 }
 
-_koopa_rust_cargo_prefix() {                                              # {{{1
+_koopa_rust_cargo_prefix() {  # {{{1
     # """
     # Rust cargo install prefix.
     # Updated 2020-01-12.
@@ -373,7 +373,7 @@ _koopa_rust_cargo_prefix() {                                              # {{{1
     return 0
 }
 
-_koopa_rust_rustup_prefix() {                                             # {{{1
+_koopa_rust_rustup_prefix() {  # {{{1
     # """
     # Rust rustup install prefix.
     # Updated 2020-01-13.
@@ -389,7 +389,7 @@ _koopa_rust_rustup_prefix() {                                             # {{{1
     return 0
 }
 
-_koopa_venv_prefix() {                                                    # {{{1
+_koopa_venv_prefix() {  # {{{1
     # """
     # Python venv prefix.
     # Updated 2020-01-12.

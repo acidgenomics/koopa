@@ -2,7 +2,7 @@
 
 
 
-# Notes                                                                     {{{1
+# Notes  {{{1
 # ==============================================================================
 
 # Run 'alias' in terminal to list current definitions.
@@ -13,7 +13,7 @@
 
 
 
-# umask                                                                     {{{1
+# umask  {{{1
 # ==============================================================================
 
 # Set default file permissions.
@@ -45,7 +45,7 @@
 
 
 
-# Default text editor                                                       {{{1
+# Default text editor  {{{1
 # ==============================================================================
 
 # Set text editor, if unset.
@@ -63,7 +63,7 @@ fi
 
 
 
-# Default pager                                                             {{{1
+# Default pager  {{{1
 # ==============================================================================
 
 if [ -z "${PAGER:-}" ]
@@ -73,7 +73,7 @@ fi
 
 
 
-# Git                                                                       {{{1
+# Git  {{{1
 # ==============================================================================
 
 if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
@@ -83,7 +83,7 @@ fi
 
 
 
-# GnuPGP                                                                    {{{1
+# GnuPGP  {{{1
 # ==============================================================================
 
 # This is causing install to error out on minimal Docker images.
@@ -101,7 +101,7 @@ fi
 
 
 
-# lesspipe                                                                  {{{1
+# lesspipe  {{{1
 # ==============================================================================
 
 # Preconfigured on some Linux systems at '/etc/profile.d/less.sh'.
@@ -119,7 +119,7 @@ fi
 
 
 
-# Python                                                                    {{{1
+# Python  {{{1
 # ==============================================================================
 
 # Don't allow Python to change the prompt string by default.
@@ -130,7 +130,7 @@ fi
 
 
 
-# rsync                                                                     {{{1
+# rsync  {{{1
 # ==============================================================================
 
 if [ -z "${RSYNC_FLAGS:-}" ]
@@ -141,7 +141,7 @@ fi
 
 
 
-# Activation functions                                                      {{{1
+# Activation functions  {{{1
 # ==============================================================================
 
 _koopa_activate_autojump
@@ -150,10 +150,10 @@ _koopa_activate_fzf
 
 
 
-# Aliases                                                                   {{{1
+# Aliases  {{{1
 # ==============================================================================
 
-# Improve defaults                                                        # {{{2
+# Improve defaults  {{{2
 # ------------------------------------------------------------------------------
 
 # Note that macOS ships with a very old version of GNU coreutils.
@@ -187,7 +187,7 @@ fi
 
 unset -v make_prefix
 
-# Shortcuts                                                               # {{{2
+# Shortcuts  {{{2
 # ------------------------------------------------------------------------------
 
 alias k='cd $KOOPA_PREFIX'
@@ -231,7 +231,7 @@ alias tarup='tar -czvf'
 # > alias .....='cd ../../../../'
 # > alias ......='cd ../../../../../'
 
-# Non-standard programs                                                   # {{{2
+# Non-standard programs  {{{2
 # ------------------------------------------------------------------------------
 
 if _koopa_is_installed R

@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_add_config_link() {                                                # {{{1
+_koopa_add_config_link() {  # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
     # Updated 2020-01-12.
@@ -22,7 +22,7 @@ _koopa_add_config_link() {                                                # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_admin_group() {                                                    # {{{1
+_koopa_admin_group() {  # {{{1
     # """
     # Return the administrator group.
     # @note Updated 2020-02-13.
@@ -46,7 +46,7 @@ _koopa_admin_group() {                                                    # {{{1
     return 0
 }
 
-_koopa_cd_tmp_dir() {                                                     # {{{1
+_koopa_cd_tmp_dir() {  # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
     # Updated 2020-02-11.
@@ -62,7 +62,7 @@ _koopa_cd_tmp_dir() {                                                     # {{{1
     return 0
 }
 
-_koopa_disk_check() {                                                     # {{{1
+_koopa_disk_check() {  # {{{1
     # """
     # Check that disk has enough free space.
     # Updated 2019-10-27.
@@ -78,7 +78,7 @@ _koopa_disk_check() {                                                     # {{{1
     return 0
 }
 
-_koopa_disk_pct_used() {                                                  # {{{1
+_koopa_disk_pct_used() {  # {{{1
     # """
     # Check disk usage on main drive.
     # Updated 2020-02-13.
@@ -98,7 +98,7 @@ _koopa_disk_pct_used() {                                                  # {{{1
     return 0
 }
 
-_koopa_dotfiles_config_link() {                                           # {{{1
+_koopa_dotfiles_config_link() {  # {{{1
     # """
     # Dotfiles directory.
     # Updated 2019-11-04.
@@ -110,7 +110,7 @@ _koopa_dotfiles_config_link() {                                           # {{{1
     return 0
 }
 
-_koopa_dotfiles_private_config_link() {                                   # {{{1
+_koopa_dotfiles_private_config_link() {  # {{{1
     # """
     # Private dotfiles directory.
     # Updated 2019-11-04.
@@ -119,7 +119,7 @@ _koopa_dotfiles_private_config_link() {                                   # {{{1
     return 0
 }
 
-_koopa_dotfiles_source_repo() {                                           # {{{1
+_koopa_dotfiles_source_repo() {  # {{{1
     # """
     # Dotfiles source repository.
     # Updated 2019-11-04.
@@ -139,7 +139,7 @@ _koopa_dotfiles_source_repo() {                                           # {{{1
     return 0
 }
 
-_koopa_git_branch() {                                                     # {{{1
+_koopa_git_branch() {  # {{{1
     # """
     # Current git branch name.
     # Updated 2019-10-13.
@@ -162,7 +162,7 @@ _koopa_git_branch() {                                                     # {{{1
     return 0
 }
 
-_koopa_group() {                                                          # {{{1
+_koopa_group() {  # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
     # Updated 2020-02-13.
@@ -183,7 +183,7 @@ _koopa_group() {                                                          # {{{1
     return 0
 }
 
-_koopa_gnu_mirror() {                                                     # {{{1
+_koopa_gnu_mirror() {  # {{{1
     # """
     # Get GNU FTP mirror URL.
     # Updated 2020-02-11.
@@ -192,7 +192,7 @@ _koopa_gnu_mirror() {                                                     # {{{1
     return 0
 }
 
-_koopa_header() {                                                         # {{{1
+_koopa_header() {  # {{{1
     # """
     # Source script header.
     # Updated 2020-01-16.
@@ -255,7 +255,7 @@ _koopa_header() {                                                         # {{{1
     return 0
 }
 
-_koopa_help() {                                                           # {{{1
+_koopa_help() {  # {{{1
     # """
     # Show usage via '--help' flag.
     # Updated 2020-01-21.
@@ -328,7 +328,7 @@ _koopa_help() {                                                           # {{{1
     return 0
 }
 
-_koopa_host_id() {                                                        # {{{1
+_koopa_host_id() {  # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
     # Updated 2019-12-06.
@@ -374,7 +374,7 @@ _koopa_host_id() {                                                        # {{{1
     return 0
 }
 
-_koopa_info_box() {                                                       # {{{1
+_koopa_info_box() {  # {{{1
     # """
     # Info box.
     # Updated 2019-10-14.
@@ -395,7 +395,7 @@ _koopa_info_box() {                                                       # {{{1
     return 0
 }
 
-_koopa_install_mike() {                                                   # {{{1
+_koopa_install_mike() {  # {{{1
     # """
     # Install additional Mike-specific config files.
     # Updated 2020-02-11.
@@ -430,7 +430,7 @@ _koopa_install_mike() {                                                   # {{{1
     return 0
 }
 
-_koopa_install_pip() {                                                    # {{{1
+_koopa_install_pip() {  # {{{1
     # """
     # Install pip for Python.
     # Updated 2020-02-10.
@@ -491,7 +491,7 @@ _koopa_install_pipx() {
     return 0
 }
 
-_koopa_link_cellar() {                                                    # {{{1
+_koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
     # @note Updated 2020-02-07.
@@ -550,7 +550,7 @@ _koopa_link_cellar() {                                                    # {{{1
     return 0
 }
 
-_koopa_mktemp() {                                                         # {{{1
+_koopa_mktemp() {  # {{{1
     # """
     # Wrapper function for system 'mktemp'.
     # Updated 2020-02-13.
@@ -579,7 +579,7 @@ _koopa_mktemp() {                                                         # {{{1
     return 0
 }
 
-_koopa_os_codename() {                                                    # {{{1
+_koopa_os_codename() {  # {{{1
     # """
     # Operating system code name.
     # Updated 2020-02-13.
@@ -596,7 +596,7 @@ _koopa_os_codename() {                                                    # {{{1
     return 0
 }
 
-_koopa_os_id() {                                                          # {{{1
+_koopa_os_id() {  # {{{1
     # """
     # Operating system ID.
     # Updated 2020-02-13.
@@ -609,7 +609,7 @@ _koopa_os_id() {                                                          # {{{1
     return 0
 }
 
-_koopa_os_string() {                                                      # {{{1
+_koopa_os_string() {  # {{{1
     # """
     # Operating system string.
     # Updated 2020-01-13.
@@ -667,7 +667,7 @@ _koopa_os_string() {                                                      # {{{1
     return 0
 }
 
-_koopa_relink() {                                                         # {{{1
+_koopa_relink() {  # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
     # Updated 2020-02-14.
@@ -683,7 +683,7 @@ _koopa_relink() {                                                         # {{{1
     return 0
 }
 
-_koopa_shell() {                                                          # {{{1
+_koopa_shell() {  # {{{1
     # """
     # Note that this isn't necessarily the default shell ('$SHELL').
     # Updated 2019-06-27.
@@ -713,7 +713,7 @@ EOF
     return 0
 }
 
-_koopa_tmp_dir() {                                                        # {{{1
+_koopa_tmp_dir() {  # {{{1
     # """
     # Create temporary directory.
     # Updated 2020-02-06.
@@ -722,7 +722,7 @@ _koopa_tmp_dir() {                                                        # {{{1
     return 0
 }
 
-_koopa_tmp_file() {                                                       # {{{1
+_koopa_tmp_file() {  # {{{1
     # """
     # Create temporary file.
     # Updated 2020-02-06.
@@ -731,7 +731,7 @@ _koopa_tmp_file() {                                                       # {{{1
     return 0
 }
 
-_koopa_tmp_log_file() {                                                   # {{{1
+_koopa_tmp_log_file() {  # {{{1
     # """
     # Create temporary log file.
     # Updated 2020-02-13.
@@ -749,7 +749,7 @@ _koopa_tmp_log_file() {                                                   # {{{1
     return 0
 }
 
-_koopa_today_bucket() {                                                   # {{{1
+_koopa_today_bucket() {  # {{{1
     # """
     # Create a dated file today bucket.
     # Updated 2019-11-10.
@@ -791,7 +791,7 @@ _koopa_today_bucket() {                                                   # {{{1
     return 0
 }
 
-_koopa_variable() {                                                       # {{{1
+_koopa_variable() {  # {{{1
     # """
     # Get version stored internally in versions.txt file.
     # Updated 2020-02-13.
@@ -815,7 +815,7 @@ _koopa_variable() {                                                       # {{{1
     return 0
 }
 
-_koopa_view_latest_tmp_log_file() {                                       # {{{1
+_koopa_view_latest_tmp_log_file() {  # {{{1
     # """
     # View the latest temporary log file.
     # Updated 2020-02-13.

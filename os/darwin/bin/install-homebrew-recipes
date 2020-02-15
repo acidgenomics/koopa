@@ -31,14 +31,14 @@ log_file="$(_koopa_tmp_log_file)"
 
 export HOMEBREW_FORCE_BOTTLE=1
 
-# Taps                                                                      {{{1
+# Taps  {{{1
 # ==============================================================================
 
 _koopa_h2 "Updating taps."
 brew tap mongodb/brew
 brew tap osgeo/osgeo4mac
 
-# Casks                                                                     {{{1
+# Casks  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing casks."
@@ -134,7 +134,7 @@ casks=(
     done
 ) 2>&1 | tee -a "$log_file"
 
-# Brews                                                                     {{{1
+# Brews  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing brews."

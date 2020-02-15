@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_chgrp() {                                                          # {{{1
+_koopa_chgrp() {  # {{{1
     # """
     # chgrp with dynamic sudo handling.
     # Updated 2020-01-24.
@@ -16,7 +16,7 @@ _koopa_chgrp() {                                                          # {{{1
     return 0
 }
 
-_koopa_chmod() {                                                          # {{{1
+_koopa_chmod() {  # {{{1
     # """
     # chmod with dynamic sudo handling.
     # Updated 2020-01-24.
@@ -31,7 +31,7 @@ _koopa_chmod() {                                                          # {{{1
     return 0
 }
 
-_koopa_chown() {                                                          # {{{1
+_koopa_chown() {  # {{{1
     # """
     # chown with dynamic sudo handling.
     # Updated 2020-01-24.
@@ -46,7 +46,7 @@ _koopa_chown() {                                                          # {{{1
     return 0
 }
 
-_koopa_mkdir() {                                                          # {{{1
+_koopa_mkdir() {  # {{{1
     # """
     # mkdir with dynamic sudo handling.
     # Updated 2020-02-06.
@@ -61,7 +61,7 @@ _koopa_mkdir() {                                                          # {{{1
     return 0
 }
 
-_koopa_rm() {                                                             # {{{1
+_koopa_rm() {  # {{{1
     # """
     # Remove files/directories without dealing with permissions.
     # Updated 2020-02-06.
@@ -78,7 +78,7 @@ _koopa_rm() {                                                             # {{{1
 
 
 
-_koopa_prefix_chgrp() {                                                   # {{{1
+_koopa_prefix_chgrp() {  # {{{1
     # """
     # Set group for target prefix(es).
     # Updated 2020-01-24.
@@ -87,7 +87,7 @@ _koopa_prefix_chgrp() {                                                   # {{{1
     return 0
 }
 
-_koopa_prefix_chmod() {                                                   # {{{1
+_koopa_prefix_chmod() {  # {{{1
     # """
     # Set file permissions for target prefix(es).
     # Updated 2020-01-24.
@@ -105,7 +105,7 @@ _koopa_prefix_chmod() {                                                   # {{{1
     return 0
 }
 
-_koopa_prefix_chown() {                                                   # {{{1
+_koopa_prefix_chown() {  # {{{1
     # """
     # Set ownership (user and group) for target prefix(es).
     # Updated 2020-01-24.
@@ -122,7 +122,7 @@ _koopa_prefix_chown() {                                                   # {{{1
     return 0
 }
 
-_koopa_prefix_chown_user() {                                              # {{{1
+_koopa_prefix_chown_user() {  # {{{1
     # """
     # Set ownership to current user for target prefix(es).
     # Updated 2020-01-17.
@@ -141,7 +141,7 @@ _koopa_prefix_chown_user() {                                              # {{{1
     return 0
 }
 
-_koopa_prefix_mkdir() {                                                   # {{{1
+_koopa_prefix_mkdir() {  # {{{1
     # """
     # Make directory at target prefix, only if it doesn't exist.
     # Updated 2020-01-24.
@@ -159,7 +159,7 @@ _koopa_prefix_mkdir() {                                                   # {{{1
 
 
 
-_koopa_set_permissions() {                                                # {{{1
+_koopa_set_permissions() {  # {{{1
     # """
     # Set permissions on target prefix(es).
     # Updated 2020-01-24.
@@ -169,7 +169,7 @@ _koopa_set_permissions() {                                                # {{{1
     return 0
 }
 
-_koopa_set_permissions_user() {                                           # {{{1
+_koopa_set_permissions_user() {  # {{{1
     # """
     # Set permissions on target prefix(es) to current user.
     # Updated 2020-01-24.
@@ -179,7 +179,7 @@ _koopa_set_permissions_user() {                                           # {{{1
     return 0
 }
 
-_koopa_set_sticky_group() {                                               # {{{1
+_koopa_set_sticky_group() {  # {{{1
     # """
     # Set sticky group bit for target prefix(es).
     # Updated 2020-01-24.
@@ -190,7 +190,7 @@ _koopa_set_sticky_group() {                                               # {{{1
 
 
 
-_koopa_add_user_to_etc_passwd() {                                         # {{{1
+_koopa_add_user_to_etc_passwd() {  # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
     # Updated 2020-02-14.
@@ -217,7 +217,7 @@ _koopa_add_user_to_etc_passwd() {                                         # {{{1
     return 0
 }
 
-_koopa_enable_passwordless_sudo() {                                       # {{{1
+_koopa_enable_passwordless_sudo() {  # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
     # Updated 2020-02-11.
@@ -242,7 +242,7 @@ _koopa_enable_passwordless_sudo() {                                       # {{{1
     return 0
 }
 
-_koopa_enable_shell() {                                                  # {{{1
+_koopa_enable_shell() {  # {{{1
     # """
     # Enable shell.
     # Updated 2020-02-14.
@@ -266,7 +266,7 @@ _koopa_enable_shell() {                                                  # {{{1
 
 
 
-_koopa_add_user_to_group() {                                              # {{{1
+_koopa_add_user_to_group() {  # {{{1
     # """
     # Add user to group.
     # @note Updated 2020-02-11.
@@ -286,7 +286,7 @@ _koopa_add_user_to_group() {                                              # {{{1
     sudo gpasswd --add "$user" "$group"
 }
 
-_koopa_remove_user_from_group() {                                         # {{{1
+_koopa_remove_user_from_group() {  # {{{1
     # """
     # Remove user from group.
     # @note Updated 2020-02-11.
@@ -305,7 +305,7 @@ _koopa_remove_user_from_group() {                                         # {{{1
 
 
 
-_koopa_fix_pyenv_permissions() {                                          # {{{1
+_koopa_fix_pyenv_permissions() {  # {{{1
     # """
     # Ensure Python pyenv shims have correct permissions.
     # Updated 2020-02-11.
@@ -318,7 +318,7 @@ _koopa_fix_pyenv_permissions() {                                          # {{{1
     return 0
 }
 
-_koopa_fix_rbenv_permissions() {                                          # {{{1
+_koopa_fix_rbenv_permissions() {  # {{{1
     # """
     # Ensure Ruby rbenv shims have correct permissions.
     # Updated 2020-02-11.
@@ -331,7 +331,7 @@ _koopa_fix_rbenv_permissions() {                                          # {{{1
     return 0
 }
 
-_koopa_fix_zsh_permissions() {                                            # {{{1
+_koopa_fix_zsh_permissions() {  # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
     # Updated 2020-02-11.
@@ -365,7 +365,7 @@ _koopa_fix_zsh_permissions() {                                            # {{{1
     return 0
 }
 
-_koopa_link_docker() {                                                    # {{{1
+_koopa_link_docker() {  # {{{1
     # """
     # Link Docker library onto data disk for VM.
     # Updated 2020-01-22.
@@ -401,7 +401,7 @@ _koopa_link_docker() {                                                    # {{{1
     return 0
 }
 
-_koopa_link_r_etc() {                                                     # {{{1
+_koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
     # Updated 2020-01-21.
@@ -428,7 +428,7 @@ _koopa_link_r_etc() {                                                     # {{{1
     return 0
 }
 
-_koopa_link_r_site_library() {                                            # {{{1
+_koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
     # Updated 2020-01-14.
@@ -458,7 +458,7 @@ _koopa_link_r_site_library() {                                            # {{{1
     return 0
 }
 
-_koopa_make_build_string() {                                              # {{{1
+_koopa_make_build_string() {  # {{{1
     # """
     # OS build string for 'make' configuration.
     # Updated 2020-01-13.
@@ -493,7 +493,7 @@ _koopa_make_build_string() {                                              # {{{1
     echo "$string"
 }
 
-_koopa_update_ldconfig() {                                                # {{{1
+_koopa_update_ldconfig() {  # {{{1
     # """
     # Update dynamic linker (LD) configuration.
     # Updated 2020-01-23.
@@ -524,7 +524,7 @@ _koopa_update_ldconfig() {                                                # {{{1
     return 0
 }
 
-_koopa_update_lmod_config() {                                             # {{{1
+_koopa_update_lmod_config() {  # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
     # @note Updated 2020-02-07.
@@ -556,7 +556,7 @@ _koopa_update_lmod_config() {                                             # {{{1
     return 0
 }
 
-_koopa_update_profile() {                                                 # {{{1
+_koopa_update_profile() {  # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # Updated 2020-01-21.
@@ -576,7 +576,7 @@ _koopa_update_profile() {                                                 # {{{1
     return 0
 }
 
-_koopa_update_r_config() {                                                # {{{1
+_koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # Updated 2019-12-16.
@@ -592,7 +592,7 @@ _koopa_update_r_config() {                                                # {{{1
     return 0
 }
 
-_koopa_update_r_config_macos() {                                          # {{{1
+_koopa_update_r_config_macos() {  # {{{1
     # """
     # Update R config on macOS.
     # Updated 2019-10-31.
@@ -604,7 +604,7 @@ _koopa_update_r_config_macos() {                                          # {{{1
     return 0
 }
 
-_koopa_update_xdg_config() {                                              # {{{1
+_koopa_update_xdg_config() {  # {{{1
     # """
     # Update XDG configuration.
     # Updated 2020-02-14.
