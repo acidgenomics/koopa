@@ -4,7 +4,7 @@
 _koopa_prompt() {  # {{{1
     # """
     # Prompt string.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
     #
@@ -104,7 +104,7 @@ _koopa_prompt() {  # {{{1
 _koopa_prompt_conda() {  # {{{1
     # """
     # Get conda environment name for prompt string.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local env
     env="$(_koopa_conda_env)"
@@ -115,7 +115,7 @@ _koopa_prompt_conda() {  # {{{1
 _koopa_prompt_disk_used() {  # {{{1
     # """
     # Get current disk usage on primary drive.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local used
     used="$(_koopa_disk_pct_used)"
@@ -134,7 +134,7 @@ _koopa_prompt_disk_used() {  # {{{1
 _koopa_prompt_git() {  # {{{1
     # """
     # Return the current git branch, if applicable.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # """
@@ -154,7 +154,7 @@ _koopa_prompt_git() {  # {{{1
 _koopa_prompt_venv() {  # {{{1
     # """
     # Get Python virtual environment name for prompt string.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """

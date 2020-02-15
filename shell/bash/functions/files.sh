@@ -3,7 +3,7 @@
 _koopa_remove_broken_symlinks() {  # {{{1
     # """
     # Remove broken symlinks.
-    # Updated 2020-01-21.
+    # @note Updated 2020-01-21.
     # """
     dir="${1:-"."}"
     _koopa_assert_is_dir "$dir"

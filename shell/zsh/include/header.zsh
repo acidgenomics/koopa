@@ -2,7 +2,7 @@
 
 # """
 # Zsh shared header script.
-# Updated 2020-02-14.
+# @note Updated 2020-02-14.
 #
 # See also:
 # - https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/

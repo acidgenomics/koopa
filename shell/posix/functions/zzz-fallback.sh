@@ -6,7 +6,7 @@ then
     realpath() {  # {{{1
         # """
         # Real path to file/directory on disk.
-        # Updated 2020-01-13.
+        # @note Updated 2020-01-13.
         #
         # Note that 'readlink -f' doesn't work on macOS.
         #

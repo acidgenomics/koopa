@@ -4,7 +4,7 @@
 _koopa_prefix() {  # {{{1
     # """
     # Koopa prefix (home).
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     echo "${KOOPA_PREFIX:?}"
     return 0
@@ -13,7 +13,7 @@ _koopa_prefix() {  # {{{1
 _koopa_app_prefix() {  # {{{1
     # """
     # Custom application install prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # Inspired by HMS RC devops approach on O2 cluster.
     #
@@ -41,7 +41,7 @@ _koopa_app_prefix() {  # {{{1
 _koopa_cellar_prefix() {  # {{{1
     # """
     # Cellar prefix.
-    # Updated 2020-02-08.
+    # @note Updated 2020-02-08.
     #
     # Ensure this points to a local mount (e.g. '/usr/local') instead of our
     # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
@@ -61,7 +61,7 @@ _koopa_cellar_prefix() {  # {{{1
 _koopa_config_prefix() {  # {{{1
     # """
     # Local koopa config directory.
-    # Updated 2020-01-13.
+    # @note Updated 2020-01-13.
     # """
     echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
     return 0
@@ -70,7 +70,7 @@ _koopa_config_prefix() {  # {{{1
 _koopa_local_app_prefix() {  # {{{1
     # """
     # Local user application install prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # This is the default app path when koopa is installed per user.
     # """
@@ -81,7 +81,7 @@ _koopa_local_app_prefix() {  # {{{1
 _koopa_make_prefix() {  # {{{1
     # """
     # Return the installation prefix to use.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     if _koopa_is_shared_install && _koopa_has_sudo
@@ -100,7 +100,7 @@ _koopa_make_prefix() {  # {{{1
 _koopa_aspera_prefix() {  # {{{1
     # """
     # Aspera Connect prefix.
-    # Updated 2020-02-06.
+    # @note Updated 2020-02-06.
     # """
     local prefix
     if _koopa_is_shared_install && _koopa_has_sudo && _koopa_is_linux
@@ -116,7 +116,7 @@ _koopa_aspera_prefix() {  # {{{1
 _koopa_autojump_prefix() {  # {{{1
     # """
     # autojump prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     local make_prefix
@@ -141,7 +141,7 @@ _koopa_autojump_prefix() {  # {{{1
 _koopa_bcbio_prefix() {  # {{{1
     # """
     # bcbio-nextgen prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     _koopa_assert_is_linux
     local prefix
     local host_id
@@ -162,7 +162,7 @@ _koopa_bcbio_prefix() {  # {{{1
 _koopa_conda_prefix() {  # {{{1
     # """
     # Conda prefix
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     if _koopa_is_installed conda
@@ -189,7 +189,7 @@ _koopa_dotfiles_prefix() {  # {{{1
 _koopa_ensembl_perl_api_prefix() {  # {{{1
     # """
     # Ensembl Perl API prefix.
-    # Updated 2019-11-15.
+    # @note Updated 2019-11-15.
     local prefix
     prefix="$(_koopa_app_prefix)/ensembl"
     echo "$prefix"
@@ -224,7 +224,7 @@ _koopa_go_gopath() {  # {{{1
 _koopa_java_home() {  # {{{1
     # """
     # Java home.
-    # Updated 2019-11-16.
+    # @note Updated 2019-11-16.
     #
     # See also:
     # - https://www.mkyong.com/java/
@@ -254,7 +254,7 @@ _koopa_java_home() {  # {{{1
 _koopa_perlbrew_prefix() {  # {{{1
     # """
     # Perlbrew prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     if [ -n "${PERLBREW_ROOT:-}" ]
@@ -270,7 +270,7 @@ _koopa_perlbrew_prefix() {  # {{{1
 _koopa_pyenv_prefix() {  # {{{1
     # """
     # Python pyenv prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # See also approach used for rbenv.
     # """
@@ -283,7 +283,7 @@ _koopa_pyenv_prefix() {  # {{{1
 _koopa_python_site_packages_prefix() {
     # """
     # Python 'site-packages' library location.
-    # Updated 2020-02-10.
+    # @note Updated 2020-02-10.
     # """
     local python
     python="${1:-python3}"
@@ -297,7 +297,7 @@ _koopa_python_site_packages_prefix() {
 _koopa_r_home() {  # {{{1
     # """
     # R home (prefix).
-    # Updated 2020-01-21.
+    # @note Updated 2020-01-21.
     # """
     if ! _koopa_is_installed R
     then
@@ -314,7 +314,7 @@ _koopa_r_home() {  # {{{1
 _koopa_r_library_prefix() {  # {{{1
     # """
     # R default library prefix.
-    # Updated 2020-02-10.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed Rscript || return 1
     local prefix
@@ -327,7 +327,7 @@ _koopa_r_library_prefix() {  # {{{1
 _koopa_r_system_library_prefix() {  # {{{1
     # """
     # R system library prefix.
-    # Updated 2020-02-10.
+    # @note Updated 2020-02-10.
     # """
     _koopa_is_installed Rscript || return 1
     local prefix
@@ -340,7 +340,7 @@ _koopa_r_system_library_prefix() {  # {{{1
 _koopa_rbenv_prefix() {  # {{{1
     # """
     # Ruby rbenv prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # See also:
     # - RBENV_ROOT
@@ -355,7 +355,7 @@ _koopa_rbenv_prefix() {  # {{{1
 _koopa_rust_cargo_prefix() {  # {{{1
     # """
     # Rust cargo install prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # See also:
     # - https://github.com/rust-lang/rustup#environment-variables
@@ -376,7 +376,7 @@ _koopa_rust_cargo_prefix() {  # {{{1
 _koopa_rust_rustup_prefix() {  # {{{1
     # """
     # Rust rustup install prefix.
-    # Updated 2020-01-13.
+    # @note Updated 2020-01-13.
     # """
     local prefix
     if _koopa_is_shared_install
@@ -392,7 +392,7 @@ _koopa_rust_rustup_prefix() {  # {{{1
 _koopa_venv_prefix() {  # {{{1
     # """
     # Python venv prefix.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     prefix="$(_koopa_app_prefix)/python/virtualenvs"

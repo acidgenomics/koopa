@@ -3,7 +3,7 @@
 _koopa_add_local_bins_to_path() {  # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
-    # Updated 2019-10-22.
+    # @note Updated 2019-10-22.
     #
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read '-a' flag doesn't work on macOS. zsh related?
@@ -23,7 +23,7 @@ _koopa_add_local_bins_to_path() {  # {{{1
 _koopa_find_local_bin_dirs() {  # {{{1
     # """
     # Find local bin directories.
-    # Updated 2020-02-02.
+    # @note Updated 2020-02-02.
     #
     # Alternate array sorting methods:
     # > readarray -t array < <( \
@@ -66,7 +66,7 @@ _koopa_find_local_bin_dirs() {  # {{{1
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # Updated 2020-02-11.
+    # @note Updated 2020-02-11.
     # """
     [[ -f ".gitmodules" ]] || return 1
     _koopa_h2 "Initializing submodules in '${PWD}'."
@@ -94,7 +94,7 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # Updated 2020-02-11.
+    # @note Updated 2020-02-11.
     # """
     _koopa_assert_is_git
     _koopa_assert_is_installed git
@@ -112,7 +112,7 @@ _koopa_git_pull() {
 _koopa_git_reset() {  # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # Updated 2020-02-11.
+    # @note Updated 2020-02-11.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -145,7 +145,7 @@ _koopa_git_reset() {  # {{{1
 _koopa_is_array_non_empty() {  # {{{1
     # """
     # Is the array non-empty?
-    # Updated 2019-10-22.
+    # @note Updated 2019-10-22.
     #
     # Particularly useful for checking against mapfile return, which currently
     # returns a length of 1 for empty input, due to newlines line break.
@@ -160,7 +160,7 @@ _koopa_is_array_non_empty() {  # {{{1
 _koopa_r_javareconf() {  # {{{1
     # """
     # Update R Java configuration.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # The default Java path differs depending on the system.
     #
@@ -217,7 +217,7 @@ _koopa_r_javareconf() {  # {{{1
 _koopa_script_name() {  # {{{1
     # """
     # Get the calling script name.
-    # Updated 2019-10-22.
+    # @note Updated 2019-10-22.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """

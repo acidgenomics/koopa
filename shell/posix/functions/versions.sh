@@ -297,7 +297,7 @@ _koopa_perl_file_rename_version() {  # {{{1
 _koopa_r_package_version() {  # {{{1
     # """
     # R package version.
-    # Updated 2020-02-10.
+    # @note Updated 2020-02-10.
     # """
     local pkg
     pkg="${1:?}"

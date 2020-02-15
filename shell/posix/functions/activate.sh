@@ -1,96 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_activate_prefix() {  # {{{1
-    # """
-    # Automatically configure PATH and MANPATH for a specified prefix.
-    # Updated 2020-02-13.
-    # """
-    local prefix
-    prefix="${1:?}"
-    _koopa_add_to_path_start "${prefix}/sbin"
-    _koopa_add_to_path_start "${prefix}/bin"
-    _koopa_add_to_manpath_start "${prefix}/man"
-    _koopa_add_to_manpath_start "${prefix}/share/man"
-    return 0
-}
-
-_koopa_activate_standard_paths() {  # {{{1
-    # """
-    # Activate standard paths.
-    # @note Updated 2020-02-13.
-    #
-    # Note that here we're making sure local binaries are included.
-    # Inspect '/etc/profile' if system PATH appears misconfigured.
-    #
-    # @seealso
-    # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-    # """
-    _koopa_add_to_path_end "/usr/local/bin"
-    _koopa_add_to_path_end "/usr/bin"
-    _koopa_add_to_path_end "/bin"
-    _koopa_add_to_path_end "/usr/local/sbin"
-    _koopa_add_to_path_end "/usr/sbin"
-    # > _koopa_add_to_path_start "${HOME}/bin"
-    # > _koopa_add_to_path_start "${HOME}/local/bin"
-    _koopa_add_to_manpath_end "/usr/local/share/man"
-    _koopa_add_to_manpath_end "/usr/share/man"
-    _koopa_add_to_path_start "${HOME}/.local/bin"
-    _koopa_add_to_manpath_start "${HOME}/.local/share/man"
-    return 0
-}
-
-_koopa_activate_koopa_paths() {  # {{{1
-    # """
-    # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-02-13.
-    # """
-    local koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
-    _koopa_activate_prefix "$koopa_prefix"
-
-    local koopa_shell
-    koopa_shell="$(_koopa_shell)"
-    _koopa_activate_prefix "${koopa_prefix}/shell/${koopa_shell}"
-
-    if _koopa_is_linux
-    then
-        _koopa_activate_prefix "${koopa_prefix}/os/linux"
-        if _koopa_is_debian
-        then
-            _koopa_activate_prefix "${koopa_prefix}/os/debian"
-        elif _koopa_is_fedora
-        then
-            _koopa_activate_prefix "${koopa_prefix}/os/fedora"
-        fi
-        if _koopa_is_rhel
-        then
-            _koopa_activate_prefix "${koopa_prefix}/os/rhel"
-        fi
-    fi
-
-    local os_id
-    os_id="$(_koopa_os_id)"
-    _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
-
-    local host_id
-    host_id="$(_koopa_host_id)"
-    _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
-
-    local config_prefix
-    config_prefix="$(_koopa_config_prefix)"
-    _koopa_activate_prefix "${config_prefix}/docker"
-    _koopa_activate_prefix "${config_prefix}/scripts-private"
-
-    return 0
-}
-
-
-
 _koopa_activate_aspera() {  # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     prefix="$(_koopa_aspera_prefix)"
@@ -137,7 +51,7 @@ _koopa_activate_autojump() {  # {{{1
 _koopa_activate_bcbio() {  # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # Updated 2019-11-15.
+    # @note Updated 2019-11-15.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -158,7 +72,7 @@ _koopa_activate_bcbio() {  # {{{1
 _koopa_activate_broot() {  # {{{1
     # """
     # Activate broot directory tree utility.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -193,7 +107,7 @@ _koopa_activate_broot() {  # {{{1
 _koopa_activate_conda() {  # {{{1
     # """
     # Activate conda.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -279,7 +193,7 @@ _koopa_activate_emacs() {  # {{{1
 _koopa_activate_ensembl_perl_api() {  # {{{1
     # """
     # Activate Ensembl Perl API.
-    # Updated 2019-11-14.
+    # @note Updated 2019-11-14.
     #
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
@@ -300,7 +214,7 @@ _koopa_activate_ensembl_perl_api() {  # {{{1
 _koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # See also:
     # https://github.com/junegunn/fzf
@@ -439,10 +353,55 @@ _koopa_activate_homebrew_python() {
     return 0
 }
 
+_koopa_activate_koopa_paths() {  # {{{1
+    # """
+    # Automatically configure koopa PATH and MANPATH.
+    # @note Updated 2020-02-13.
+    # """
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    _koopa_activate_prefix "$koopa_prefix"
+
+    local koopa_shell
+    koopa_shell="$(_koopa_shell)"
+    _koopa_activate_prefix "${koopa_prefix}/shell/${koopa_shell}"
+
+    if _koopa_is_linux
+    then
+        _koopa_activate_prefix "${koopa_prefix}/os/linux"
+        if _koopa_is_debian
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/debian"
+        elif _koopa_is_fedora
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/fedora"
+        fi
+        if _koopa_is_rhel
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/rhel"
+        fi
+    fi
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+    _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
+
+    local host_id
+    host_id="$(_koopa_host_id)"
+    _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
+
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
+    _koopa_activate_prefix "${config_prefix}/docker"
+    _koopa_activate_prefix "${config_prefix}/scripts-private"
+
+    return 0
+}
+
 _koopa_activate_llvm() {  # {{{1
     # """
     # Activate LLVM config.
-    # Updated 2020-01-22.
+    # @note Updated 2020-01-22.
     #
     # Note that LLVM 7 specifically is now required to install umap-learn.
     # Current version LLVM 9 isn't supported by numba > llvmlite yet.
@@ -506,7 +465,7 @@ Versions/${minor_version}/bin"
 _koopa_activate_perlbrew() {  # {{{1
     # """
     # Activate Perlbrew.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -536,7 +495,7 @@ _koopa_activate_perlbrew() {  # {{{1
 _koopa_activate_pipx() {  # {{{1
     # """
     # Activate pipx for Python.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -569,10 +528,24 @@ _koopa_activate_pipx() {  # {{{1
     return 0
 }
 
+_koopa_activate_prefix() {  # {{{1
+    # """
+    # Automatically configure PATH and MANPATH for a specified prefix.
+    # @note Updated 2020-02-13.
+    # """
+    local prefix
+    prefix="${1:?}"
+    _koopa_add_to_path_start "${prefix}/sbin"
+    _koopa_add_to_path_start "${prefix}/bin"
+    _koopa_add_to_manpath_start "${prefix}/man"
+    _koopa_add_to_manpath_start "${prefix}/share/man"
+    return 0
+}
+
 _koopa_activate_pyenv() {  # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -597,7 +570,7 @@ _koopa_activate_pyenv() {  # {{{1
 _koopa_activate_rbenv() {  # {{{1
     # """
     # Activate Ruby version manager (rbenv).
-    # Updated 2019-11-15.
+    # @note Updated 2019-11-15.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -647,7 +620,7 @@ _koopa_activate_ruby() {  # {{{1
 _koopa_activate_rust() {  # {{{1
     # """
     # Activate Rust programming language.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
@@ -687,7 +660,7 @@ _koopa_activate_rust() {  # {{{1
 _koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local file
     file="${1:-"${HOME}/.secrets"}"
@@ -700,7 +673,7 @@ _koopa_activate_secrets() {  # {{{1
 _koopa_activate_ssh_key() {  # {{{1
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
-    # Updated 2019-10-29.
+    # @note Updated 2019-10-29.
     #
     # NOTE: SCP will fail unless this is interactive only.
     # ssh-agent will prompt for password if there's one set.
@@ -721,10 +694,35 @@ _koopa_activate_ssh_key() {  # {{{1
     return 0
 }
 
+_koopa_activate_standard_paths() {  # {{{1
+    # """
+    # Activate standard paths.
+    # @note Updated 2020-02-13.
+    #
+    # Note that here we're making sure local binaries are included.
+    # Inspect '/etc/profile' if system PATH appears misconfigured.
+    #
+    # @seealso
+    # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+    # """
+    _koopa_add_to_path_end "/usr/local/bin"
+    _koopa_add_to_path_end "/usr/bin"
+    _koopa_add_to_path_end "/bin"
+    _koopa_add_to_path_end "/usr/local/sbin"
+    _koopa_add_to_path_end "/usr/sbin"
+    # > _koopa_add_to_path_start "${HOME}/bin"
+    # > _koopa_add_to_path_start "${HOME}/local/bin"
+    _koopa_add_to_manpath_end "/usr/local/share/man"
+    _koopa_add_to_manpath_end "/usr/share/man"
+    _koopa_add_to_path_start "${HOME}/.local/bin"
+    _koopa_add_to_manpath_start "${HOME}/.local/share/man"
+    return 0
+}
+
 _koopa_activate_venv() {  # {{{1
     # """
     # Activate Python default virtual environment.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
