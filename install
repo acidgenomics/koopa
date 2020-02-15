@@ -86,7 +86,9 @@ source "${script_dir}/shell/bash/include/header.sh"
 
 # Initialize submodules (e.g. dotfiles).
 (
+    echo "AAA"
     cd "$script_dir" || exit 1
+    echo "BBB"
     _koopa_git_submodule_init
 )
 
