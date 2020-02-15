@@ -220,7 +220,7 @@ if _koopa_is_linux && \
     [[ "$interactive" -eq 1 ]] && \
     [[ "$shared" -eq 1 ]]
 then
-    prompt="Enable passwordless sudo? [${yes}/{$no_default}]: "
+    prompt="Enable passwordless sudo? [${yes}/${no_default}]: "
     read \
         -e \
         -i "no" \
