@@ -1,16 +1,20 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# FIXME KOOPA_APP_PREFIX
 _koopa_app_prefix() {  # {{{1
     # """
     # Custom application install prefix.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-15.
     #
     # Inspired by HMS RC devops approach on O2 cluster.
     #
     # Alternatively, can consider using '/n/opt' instead of '/n/app' here.
     # """
+    if [ -n "${KOOPA_APP_PREFIX:-}" ]
+    then
+        echo "$KOOPA_APP_PREFIX"
+        return 0
+    fi
     local prefix
     if _koopa_is_shared_install
     then
@@ -92,16 +96,20 @@ _koopa_bcbio_prefix() {  # {{{1
     return 0
 }
 
-# FIXME KOOPA_CELLAR_PREFIX
 _koopa_cellar_prefix() {  # {{{1
     # """
     # Cellar prefix.
-    # @note Updated 2020-02-08.
+    # @note Updated 2020-02-15.
     #
     # Ensure this points to a local mount (e.g. '/usr/local') instead of our
     # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
     # issues on some virtual machines.
     # """
+    if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
+    then
+        echo "$KOOPA_CELLAR_PREFIX"
+        return 0
+    fi
     local prefix
     if _koopa_is_installed brew
     then
@@ -225,12 +233,16 @@ _koopa_local_app_prefix() {  # {{{1
     return 0
 }
 
-# FIXME KOOPA_MAKE_PREFIX
 _koopa_make_prefix() {  # {{{1
     # """
     # Return the installation prefix to use.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-15.
     # """
+    if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
+    then
+        echo "$KOOPA_MAKE_PREFIX"
+        return 0
+    fi
     local prefix
     if _koopa_is_shared_install && _koopa_has_sudo
     then
