@@ -115,7 +115,7 @@ _koopa_enable_shell() {  # {{{1
     return 0
 }
 
-_koopa_find_shell_profile() {  # {{{1
+_koopa_find_user_profile() {  # {{{1
     # """
     # Find current user's shell profile configuration file.
     # @note Updated 2020-02-15.
