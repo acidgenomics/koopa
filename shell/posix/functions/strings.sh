@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_gsub() {                                                           # {{{1
+_koopa_gsub() {  # {{{1
     # """
     # Global substitution.
     # @note Updated 2020-01-12.
@@ -15,7 +15,7 @@ _koopa_gsub() {                                                           # {{{1
     echo "$string" | sed -E "s/${pattern}/${replacement}/g"
 }
 
-_koopa_snake_case() {                                                     # {{{1
+_koopa_snake_case() {  # {{{1
     # """
     # Simple snake case function.
     # @note Updated 2020-02-07.
@@ -32,7 +32,7 @@ _koopa_snake_case() {                                                     # {{{1
     _koopa_gsub "${1:?}" "[^A-Za-z0-9_]" "_"
 }
 
-_koopa_strip_left() {                                                     # {{{1
+_koopa_strip_left() {  # {{{1
     # """
     # Strip pattern from left side (start) of string.
     # @note Updated 2019-09-22.
@@ -49,7 +49,7 @@ _koopa_strip_left() {                                                     # {{{1
     printf '%s\n' "${string##$pattern}"
 }
 
-_koopa_strip_right() {                                                    # {{{1
+_koopa_strip_right() {  # {{{1
     # """
     # Strip pattern from right side (end) of string.
     # @note Updated 2020-01-12.
@@ -66,7 +66,7 @@ _koopa_strip_right() {                                                    # {{{1
     printf '%s\n' "${string%%$pattern}"
 }
 
-_koopa_strip_trailing_slash() {                                           # {{{1
+_koopa_strip_trailing_slash() {  # {{{1
     # """
     # Strip trailing slash in file path string.
     # @note Updated 2020-01-12.
@@ -82,7 +82,7 @@ _koopa_strip_trailing_slash() {                                           # {{{1
     _koopa_strip_right "$file" "/"
 }
 
-_koopa_sub() {                                                            # {{{1
+_koopa_sub() {  # {{{1
     # """
     # Substitution.
     # @note Updated 2020-01-12.
@@ -97,7 +97,7 @@ _koopa_sub() {                                                            # {{{1
     echo "$string" | sed -E "s/${pattern}/${replacement}/"
 }
 
-_koopa_trim_ws() {                                                        # {{{1
+_koopa_trim_ws() {  # {{{1
     # """
     # Trim leading and trailing white-space from string.
     # @note Updated 2020-01-12.

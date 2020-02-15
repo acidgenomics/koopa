@@ -55,14 +55,14 @@ _koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 7 base system."
 
 install-fedora-base "$@"
 
-# default                                                                   {{{1
+# default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
 enable-epel-7
 install-yum-cron
 
-# developer                                                                 {{{1
+# developer  {{{1
 # ==============================================================================
 
 if [[ "$dev" -eq 1 ]]
@@ -91,7 +91,7 @@ then
     sudo yum -y install "${pkgs[@]}"
 fi
 
-# extra                                                                     {{{1
+# extra  {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
@@ -114,7 +114,7 @@ then
     sudo yum -y install "${pkgs[@]}"
 fi
 
-# build-dep                                                                 {{{1
+# build-dep  {{{1
 # ==============================================================================
 
 if [[ "$build_dep" -eq 1 ]]
@@ -141,7 +141,7 @@ then
     sudo yum-builddep -y "${pkgs[@]}"
 fi
 
-# Clean up and fixes                                                        {{{1
+# Clean up and fixes  {{{1
 # ==============================================================================
 
 # Git: docbook2x-texi is required for 'make doc' to run cleanly.

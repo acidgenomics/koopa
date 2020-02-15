@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_prompt() {                                                         # {{{1
+_koopa_prompt() {  # {{{1
     # """
     # Prompt string.
     # Updated 2020-01-24.
@@ -101,7 +101,7 @@ _koopa_prompt() {                                                         # {{{1
         "$prompt"
 }
 
-_koopa_prompt_conda() {                                                   # {{{1
+_koopa_prompt_conda() {  # {{{1
     # """
     # Get conda environment name for prompt string.
     # Updated 2020-01-12.
@@ -112,7 +112,7 @@ _koopa_prompt_conda() {                                                   # {{{1
     printf " conda:%s\n" "${env}"
 }
 
-_koopa_prompt_disk_used() {                                               # {{{1
+_koopa_prompt_disk_used() {  # {{{1
     # """
     # Get current disk usage on primary drive.
     # Updated 2020-01-12.
@@ -131,7 +131,7 @@ _koopa_prompt_disk_used() {                                               # {{{1
     printf " disk:%d%s\n" "$used" "$pct"
 }
 
-_koopa_prompt_git() {                                                     # {{{1
+_koopa_prompt_git() {  # {{{1
     # """
     # Return the current git branch, if applicable.
     # Updated 2020-01-12.
@@ -151,7 +151,7 @@ _koopa_prompt_git() {                                                     # {{{1
     printf " %s%s\n" "$git_branch" "$git_status"
 }
 
-_koopa_prompt_venv() {                                                    # {{{1
+_koopa_prompt_venv() {  # {{{1
     # """
     # Get Python virtual environment name for prompt string.
     # Updated 2020-01-12.

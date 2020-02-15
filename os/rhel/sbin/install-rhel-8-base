@@ -64,13 +64,13 @@ _koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
 
 install-fedora-base "$@"
 
-# default                                                                   {{{1
+# default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
 sudo yum -y install util-linux-user
 
-# developer                                                                 {{{1
+# developer  {{{1
 # ==============================================================================
 
 if [[ "$dev" -eq 1 ]]
@@ -83,7 +83,7 @@ then
     sudo yum -y install "${pkgs[@]}"
 fi
 
-# extra                                                                     {{{1
+# extra  {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]

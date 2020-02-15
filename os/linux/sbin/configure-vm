@@ -116,7 +116,7 @@ _koopa_is_rhel_8 && install-rhel-8-base
 
 if [[ "$config" == "constellation-aws" ]]
 then
-    # Constellation AWS                                                   # {{{1
+    # Constellation AWS  {{{1
     # --------------------------------------------------------------------------
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
@@ -131,7 +131,7 @@ then
     fi
 elif [[ "$config" == "constellation-azure" ]]
 then
-    # Constellation Azure                                                 # {{{1
+    # Constellation Azure  {{{1
     # --------------------------------------------------------------------------
     # Don't attempt to patch system env to support '-S' flag.
     # Should no longer be an issue on VMs, as of 2020.

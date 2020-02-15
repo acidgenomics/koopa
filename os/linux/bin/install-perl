@@ -48,7 +48,7 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-# Perl                                                                      {{{1
+# Perl  {{{1
 # ==============================================================================
 
 jobs="$(_koopa_cpu_count)"
@@ -76,7 +76,7 @@ _koopa_link_cellar "$name" "$version"
 
 export PERL_MM_USE_DEFAULT=1
 
-# CPAN Minus                                                                {{{1
+# CPAN Minus  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing CPAN Minus."

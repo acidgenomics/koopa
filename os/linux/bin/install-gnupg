@@ -31,7 +31,7 @@ then
                     8A861B1C7EFD60D9
 fi
 
-# libgpg-error                                                              {{{1
+# libgpg-error  {{{1
 # ==============================================================================
 
 pkg="libgpg-error"
@@ -56,7 +56,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgcrypt                                                              {{{1
+# libgcrypt  {{{1
 # ==============================================================================
 
 pkg="libgcrypt"
@@ -81,7 +81,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error                                                              {{{1
+# libgpg-error  {{{1
 # ==============================================================================
 
 pkg="libassuan"
@@ -106,7 +106,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error                                                              {{{1
+# libgpg-error  {{{1
 # ==============================================================================
 
 pkg="libksba"
@@ -131,7 +131,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error                                                              {{{1
+# libgpg-error  {{{1
 # ==============================================================================
 
 pkg="npth"
@@ -156,7 +156,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error                                                              {{{1
+# libgpg-error  {{{1
 # ==============================================================================
 
 pkg="pinentry"
@@ -181,7 +181,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# gnupg                                                                     {{{1
+# gnupg  {{{1
 # ==============================================================================
 
 pkg="gnupg"
@@ -207,7 +207,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# Final steps                                                               {{{1
+# Final steps  {{{1
 # ==============================================================================
 
 rm -rf "$tmp_dir"

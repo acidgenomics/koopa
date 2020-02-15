@@ -5,7 +5,7 @@
 
 
 
-# Notes                                                                     {{{1
+# Notes  {{{1
 # ==============================================================================
 
 # Dropped support for ksh because it doesn't support 'local' variables scoped
@@ -32,7 +32,7 @@
 
 
 
-# Usage                                                                     {{{1
+# Usage  {{{1
 # ==============================================================================
 
 usage() {
@@ -96,10 +96,10 @@ unset -f usage
 
 
 
-# Pre-flight checks                                                         {{{1
+# Pre-flight checks  {{{1
 # ==============================================================================
 
-# Force mode                                                                {{{2
+# Force mode  {{{2
 # ------------------------------------------------------------------------------
 
 # This is currently used by the koopa installer.
@@ -122,7 +122,7 @@ fi
 unset -v force
 export KOOPA_FORCE
 
-# User-specific configuration                                               {{{2
+# User-specific configuration  {{{2
 # ------------------------------------------------------------------------------
 
 if [ "$KOOPA_FORCE" -ne 1 ]
@@ -145,7 +145,7 @@ fi
 
 
 
-# Variables                                                                 {{{1
+# Variables  {{{1
 # ==============================================================================
 
 if [ -n "${BASH_VERSION:-}" ]
@@ -196,7 +196,7 @@ fi
 export KOOPA_SHELL
 export KOOPA_SUBSHELL
 
-# Extra mode                                                                {{{2
+# Extra mode  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_EXTRA:-}" ]
@@ -225,7 +225,7 @@ then
     fi
 fi
 
-# Minimal mode                                                              {{{2
+# Minimal mode  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_MINIMAL:-}" ]
@@ -259,7 +259,7 @@ then
     KOOPA_EXTRA=0
 fi
 
-# Test mode                                                                 {{{2
+# Test mode  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_TEST:-}" ]
@@ -301,7 +301,7 @@ unset -v extra minimal
 
 
 
-# Locate home and source functions                                          {{{1
+# Locate home and source functions  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -345,14 +345,14 @@ KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 
 
 
-# Minimal configuration                                                     {{{1
+# Minimal configuration  {{{1
 # ==============================================================================
 
 . "${KOOPA_ACTIVATE_DIR}/minimal.sh"
 
 
 
-# Program configuration                                                     {{{1
+# Program configuration  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
@@ -375,7 +375,7 @@ fi
 
 
 
-# Extra shell configuration                                                 {{{1
+# Extra shell configuration  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_EXTRA" -eq 1 ]
@@ -405,7 +405,7 @@ fi
 
 
 
-# Post-flight                                                               {{{1
+# Post-flight  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]

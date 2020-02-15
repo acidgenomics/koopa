@@ -95,7 +95,7 @@ ${os_codename}-cran35/" \
 
 
 
-_koopa_apt_disable_deb_src() {                                            # {{{1
+_koopa_apt_disable_deb_src() {  # {{{1
     # """
     # Enable 'deb-src' source packages.
     # Updated 2020-02-05.
@@ -116,7 +116,7 @@ _koopa_apt_disable_deb_src() {                                            # {{{1
     return 0
 }
 
-_koopa_apt_enable_deb_src() {                                             # {{{1
+_koopa_apt_enable_deb_src() {  # {{{1
     # """
     # Enable 'deb-src' source packages.
     # Updated 2020-02-05.
@@ -137,7 +137,7 @@ _koopa_apt_enable_deb_src() {                                             # {{{1
     return 0
 }
 
-_koopa_apt_enabled_repos() {                                              # {{{1
+_koopa_apt_enabled_repos() {  # {{{1
     # """
     # Get a list of enabled default apt repos.
     # Updated 2020-02-07.
@@ -151,7 +151,7 @@ _koopa_apt_enabled_repos() {                                              # {{{1
 
 
 
-_koopa_apt_is_key_imported() {                                            # {{{1
+_koopa_apt_is_key_imported() {  # {{{1
     # """
     # Is a GPG key imported for apt?
     # @note Updated 2020-02-12.
@@ -178,7 +178,7 @@ _koopa_apt_import_azure_cli_key() {                                        #{{{1
     return 0
 }
 
-_koopa_apt_import_docker_key() {                                          # {{{1
+_koopa_apt_import_docker_key() {  # {{{1
     # """
     # Import the Docker public key.
     # @note Updated 2020-02-12.
@@ -199,7 +199,7 @@ _koopa_apt_import_docker_key() {                                          # {{{1
     return 0
 }
 
-_koopa_apt_import_google_cloud_key() {                                    # {{{1
+_koopa_apt_import_google_cloud_key() {  # {{{1
     # """
     # Import the Google Cloud public key.
     # @note Updated 2020-02-12.
@@ -214,7 +214,7 @@ _koopa_apt_import_google_cloud_key() {                                    # {{{1
     return 0
 }
 
-_koopa_apt_import_llvm_key() {                                            # {{{1
+_koopa_apt_import_llvm_key() {  # {{{1
     # """
     # Import the LLVM public key.
     # @note Updated 2020-02-12.
@@ -231,7 +231,7 @@ _koopa_apt_import_llvm_key() {                                            # {{{1
     return 0
 }
 
-_koopa_apt_import_r_key() {                                               # {{{1
+_koopa_apt_import_r_key() {  # {{{1
     # """
     # Import the R public key.
     # @note Updated 2020-02-12.
@@ -263,7 +263,7 @@ _koopa_apt_import_r_key() {                                               # {{{1
     return 0
 }
 
-_koopa_apt_import_keys() {                                                # {{{1
+_koopa_apt_import_keys() {  # {{{1
     # """
     # Import GPG keys used to sign apt repositories.
     # Updated 2020-02-12.
@@ -303,7 +303,7 @@ _koopa_apt_import_keys() {                                                # {{{1
 
 
 
-_koopa_apt_link_sources() {                                               # {{{1
+_koopa_apt_link_sources() {  # {{{1
     # """
     # Symlink 'sources.list' files in '/etc/apt'.
     # Updated 2020-02-05.
@@ -335,7 +335,7 @@ _koopa_apt_link_sources() {                                               # {{{1
 
 
 
-_koopa_apt_space_used_by() {                                              # {{{1
+_koopa_apt_space_used_by() {  # {{{1
     # """
     # Check installed apt package size, with dependencies.
     # Updated 2020-01-31.
@@ -346,7 +346,7 @@ _koopa_apt_space_used_by() {                                              # {{{1
     sudo apt-get --assume-no autoremove "$@"
 }
 
-_koopa_apt_space_used_by_grep() {                                         # {{{1
+_koopa_apt_space_used_by_grep() {  # {{{1
     # """
     # Check installed apt package size, with dependencies.
     # Updated 2020-01-31.
@@ -361,7 +361,7 @@ _koopa_apt_space_used_by_grep() {                                         # {{{1
         | cut -d ' ' -f 4-5
 }
 
-_koopa_apt_space_used_by_no_deps() {                                      # {{{1
+_koopa_apt_space_used_by_no_deps() {  # {{{1
     # """
     # Check install apt package size, without dependencies.
     # Updated 2020-01-31.
