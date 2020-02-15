@@ -601,6 +601,15 @@ _koopa_is_ssh_enabled() {  # {{{1
     _koopa_is_matching_fixed "$x" "$pattern"
 }
 
+_koopa_is_tty() {  # {{{1
+    # """
+    # Is current shell a teletypewriter?
+    # @note Updated 2020-02-15.
+    # """
+    _koopa_is_installed tty || return 1
+    tty > /dev/null 2>&1
+}
+
 _koopa_is_ubuntu() {  # {{{1
     # """
     # Is the operating system Ubuntu?

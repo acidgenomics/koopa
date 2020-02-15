@@ -21,6 +21,22 @@ _koopa_add_config_link() {  # {{{1
     return 0
 }
 
+_koopa_add_to_user_profile() {  # {{{1
+    # """
+    # Add koopa configuration to user profile.
+    # @note Updated 2020-02-15.
+    # """
+    local target_file
+    target_file="$(_koopa_find_user_profile)"
+    local source_file
+    source_file="$(_koopa_prefix)/system/activate/user-profile.sh"
+    _koopa_assert_is_file "$source_file"
+    _koopa_h1 "Adding koopa activation to '${target_file}'."
+    touch "$target_file"
+    cat "$source_file" >> "$target_file"
+    return 0
+}
+
 _koopa_add_user_to_etc_passwd() {  # {{{1
     # """
     # Any any type of user, including domain user to passwd file.

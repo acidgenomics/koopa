@@ -2,155 +2,38 @@
 # shellcheck disable=SC1090,SC1091
 set -Eeu -o pipefail
 
+
+
+# Usage  {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install [--help|-h] [--shared] [--test] [--dotfiles] [--mike]
+usage: install [--help|-h] [--dotfiles] [--non-interactive] [--shared] [--test]
 
 Install koopa.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
-    --shared
-        Enable shared user configuration via '/etc/profile.d/zzz-koopa.sh' file.
-        Linux only. Not supported on macOS.
     --non-interactive
         Don't prompt about configuration variables.
-        Note that when '--shared' or '--test' are declared, this is set
-        automatically internally.
     --test
         Enable verbose test mode.
-        Useful for Travis CI and building Docker images.
+        Used for Travis CI checks and building Docker images.
 
 note:
     Bash script.
-    Updated 2020-02-14.
+    Updated 2020-02-15.
 EOF
 }
 
-# shell/posix/functions/system.sh
-_koopa_admin_group() {                                                    # {{{1
-    # """
-    # Return the administrator group.
-    # @note Updated 2020-02-13.
-    # """
-    local group
-    local groups
-    groups="$(groups)"
-    if echo "$groups" | grep -Eq "\b(admin)\b"
-    then
-        group="admin"
-    elif echo "$groups" | grep -Eq "\b(sudo)\b"
-    then
-        group="sudo"
-    elif echo "$groups" | grep -Eq "\b(wheel)\b"
-    then
-        group="wheel"
-    else
-        group="$(whoami)"
-    fi
-    echo "$group"
-    return 0
-}
 
-# shell/posix/functions/boolean.sh
-_koopa_has_passwordless_sudo() {                                          # {{{1
-    # """
-    # Check if sudo is active or doesn't require a password.
-    # Updated 2020-02-05.
-    #
-    # See also:
-    # https://askubuntu.com/questions/357220
-    # """
-    _koopa_is_installed sudo || return 1
-    sudo -n true 2>/dev/null && return 0
-    return 1
-}
 
-# shell/posix/functions/boolean.sh
-_koopa_has_sudo() {                                                       # {{{1
-    # """
-    # Check that current user has administrator (sudo) permission.
-    # Updated 2020-02-05.
-    #
-    # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
-    # 'groups' taking a long time to return for domain users.
-    #
-    # Avoid prompting with '-n, --non-interactive', but note that this isn't
-    # supported on all systems.
-    #
-    # Note that use of 'sudo -v' does not work consistently across platforms.
-    #
-    # Alternate approach:
-    # > sudo -l
-    #
-    # List all users with sudo access:
-    # > getent group sudo
-    #
-    # - macOS: admin
-    # - Debian: sudo
-    # - Fedora: wheel
-    #
-    # See also:
-    # - https://serverfault.com/questions/364334
-    # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
-    # """
-    # Always return true for root user.
-    [ "$(id -u)" -eq 0 ] && return 0
-    # Return false if 'sudo' program is not installed.
-    _koopa_is_installed sudo || return 1
-    # Early return true if user has passwordless sudo enabled.
-    _koopa_has_passwordless_sudo && return 0
-    # This step is slow for Active Directory domain user accounts on Ubuntu.
-    _koopa_assert_is_installed grep groups
-    groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
-}
+# Argument parsing  {{{1
+# ==============================================================================
 
-# shell/posix/functions/boolean.sh
-_koopa_is_installed() {                                                   # {{{1
-    # """
-    # Is the requested program name installed?
-    # Updated 2019-10-02.
-    # """
-    command -v "$1" >/dev/null
-}
-
-# shell/posix/functions/boolean.sh
-_koopa_is_linux() {                                                       # {{{1
-    # """
-    # Is the current operating system Linux?
-    # Updated 2020-02-05.
-    # """
-    [ "$(uname -s)" = "Linux" ]
-}
-
-_koopa_prefix() {                                                         # {{{1
-    # """
-    # Koopa prefix (home).
-    # Updated 2020-01-12.
-    # """
-    echo "${KOOPA_PREFIX:?}"
-    return 0
-}
-
-piped=0
-
-# Detect if we're running from a piped install (e.g. koopa.acidgenomics.com).
-if [[ -z "${BASH_SOURCE[0]:-}" ]]
-then
-    piped=1
-else
-    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
-        >/dev/null 2>&1 && pwd -P)"
-    if [[ ! -x "${script_dir}/activate" ]]
-    then
-        piped=1
-    fi
-fi
-
-passwordless=0
-prompt=1
-shared=0
+interactive=1
 test=0
 
 while (("$#"))
@@ -161,11 +44,7 @@ do
             exit 0
             ;;
         --non-interactive)
-            prompt=0
-            shift 1
-            ;;
-        --shared)
-            shared=1
+            interactive=0
             shift 1
             ;;
         --test)
@@ -183,121 +62,238 @@ do
     esac
 done
 
-if [[ "$shared" -eq 1 ]] || [[ "$test" -eq 1 ]]
+
+
+# Source functions  {{{1
+# ==============================================================================
+
+# Before we proceed, ensure that koopa isn't already installed.
+if [[ -n "${KOOPA_PREFIX:-}" ]]
 then
-    prompt=0
+    >&2 echo "ERROR: koopa is installed: '${KOOPA_PREFIX}'."
+    exit 1
 fi
 
-if [[ "$piped" -eq 1 ]]
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+    >/dev/null 2>&1 && pwd -P)"
+
+source "${script_dir}/shell/bash/include/header.sh"
+
+
+
+# Interactive  {{{1
+# ==============================================================================
+
+! _koopa_is_interactive && interactive=0
+! _koopa_is_tty && interactive=0
+
+
+
+# Prefix  {{{1
+# ==============================================================================
+
+shared=0
+
+# Prompt whether to install for all users.
+if [[ "$interactive" -eq 1 ]] && _koopa_has_sudo
 then
-    # This is used by activation scripts (see 'extra.sh').
-    export KOOPA_PIPED_INSTALL=1
-    if [[ "$prompt" -eq 1 ]] && _koopa_has_sudo
-    then
-        read -r -n 1 -p "Install for all users (y/n)? " choice
-        case "$choice" in
-            y|Y)
-                shared=1
-                ;;
-            n|N)
-                shared=0
-                ;;
-            *)
-                >&2 echo "Error: Invalid input."
-                exit 1
-                ;;
-        esac
-        echo ""
-    fi
+    # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
+    read \
+        -e \
+        -i "yes" \
+        -p "Install for all users? [YES/no]: " \
+        -r \
+        choice
+    echo ""
+    case "$choice" in
+        Y|YES|y|yes)
+            shared=1
+            ;;
+        N|NO|n|no)
+            shared=0
+            ;;
+        *)
+            _koopa_invalid_arg
+            ;;
+    esac
+fi
 
-    if [[ "$shared" -eq 1 ]]
-    then
-        prefix="/usr/local"
-    else
-        XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-        prefix="$XDG_DATA_HOME"
-    fi
-    prefix="${prefix}/koopa"
-
-    if [[ "$prompt" -eq 1 ]]
-    then
-        read -e -r -p "Install prefix: " -i "${prefix}" prefix
-    fi
-
-    if [[ -d "$prefix" ]]
-    then
-        >&2 echo "Error: Directory exists: '${prefix}'."
-        exit 1
-    fi
-
-    # Set correct admin permissions, if applicable.
-    if [[ "$shared" -eq 1 ]]
-    then
-        if ! _koopa_has_sudo
-        then
-            >&2 echo "Error: sudo is required for shared installation."
-            exit 1
-        fi
-        sudo mkdir -pv "$prefix"
-        group="$(_koopa_admin_group)"
-        sudo chgrp "$group" "$prefix"
-        sudo chmod g+ws "$prefix"
-    fi
-
-    echo "Downloading koopa."
-    source_repo="https://github.com/acidgenomics/koopa.git"
-    git clone --recursive "$source_repo" "$prefix"
-    KOOPA_PREFIX="$prefix"
+# Set the default install prefix.
+if [[ "$shared" -eq 1 ]]
+then
+    prefix="/usr/local"
 else
-    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
-        >/dev/null 2>&1 && pwd -P)"
+    XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+    prefix="$XDG_DATA_HOME"
 fi
-export KOOPA_PREFIX
-echo "Installing koopa at '$KOOPA_PREFIX'."
 
-if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
+koopa_prefix="${prefix}/koopa"
+
+# Prompt the user where they want to install.
+if [[ "$interactive" -eq 1 ]]
 then
-    echo "Shared installation detected."
+    read \
+        -e \
+        -i "${koopa_prefix}" \
+        -p "Install prefix: " \
+        -r \
+        koopa_prefix
+    echo ""
+fi
+
+
+
+# Install (copy repo)  {{{1
+# ==============================================================================
+
+_koopa_assert_is_non_existing "$koopa_prefix"
+
+_koopa_h1 "Installing koopa at '${koopa_prefix}'."
+
+# Catch if the user is attempting to install into a shared space.
+if [[ "$shared" -eq 0 ]] && \
+    echo "$koopa_prefix" | grep -Eqv "^${HOME}"
+then
+    _koopa_info "Shared installation detected."
     shared=1
 fi
 
-rm -frv "${KOOPA_PREFIX}/"{config,include}
-rm -frv "${KOOPA_PREFIX}/bin/"{host,os,sudo}
-
-echo "Activating koopa."
-set +u
-force=1 test="$test" source "${KOOPA_PREFIX}/activate"
-set -u
-
 if [[ "$shared" -eq 1 ]]
 then
-    # Prompt if the user wants to enable passwordless sudo.
-    if [[ "$prompt" -eq 1 ]]
-    then
-        read -r -n 1 -p "Enable passwordless sudo (y/n)? " choice
-        case "$choice" in
-            y|Y)
-                passwordless=1
-                ;;
-            n|N)
-                passwordless=0
-                ;;
-            *)
-                >&2 echo "Error: Invalid input."
-                exit 1
-                ;;
-        esac
-        echo ""
-    fi
-
-    if [[ "$passwordless" -eq 1 ]]
-    then
-        _koopa_enable_passwordless_sudo
-    fi
-
-    _koopa_update_profile
+    _koopa_assert_has_sudo
+    sudo mkdir -p "$koopa_prefix"
+    sudo cp -fr "$script_dir" "$koopa_prefix"
+    admin_group="$(_koopa_admin_group)"
+    sudo chgrp "$admin_group" "$koopa_prefix"
+    sudo chmod g+ws "$koopa_prefix"
+else
+    mkdir -p "$koopa_prefix"
+    cp -fr "$script_dir" "$koopa_prefix"
 fi
 
+
+
+# Activate  {{{1
+# ==============================================================================
+
+_koopa_h2 "Activating koopa."
+set +u
+force=1 test="$test" source "${koopa_prefix}/activate"
+set -u
+
+
+
+# Passwordless sudo  {{{1
+# ==============================================================================
+
+passwordless=0
+
+# Prompt if the user wants to enable passwordless sudo.
+if [[ "$interactive" -eq 1 ]] && [[ "$shared" -eq 1 ]]
+then
+    read \
+        -e \
+        -i "no" \
+        -p "Enable passwordless sudo? [yes/NO]: " \
+        -r \
+        choice
+    echo ""
+    case "$choice" in
+        Y|YES|y|yes)
+            passwordless=1
+            ;;
+        N|NO|n|no)
+            passwordless=0
+            ;;
+        *)
+            _koopa_invalid_arg
+            ;;
+    esac
+fi
+
+[[ "$passwordless" -eq 1 ]] && _koopa_enable_passwordless_sudo
+
+
+
+# Dot files  {{{1
+# ==============================================================================
+
+dotfiles=1
+
+# Prompt the user if we want to link dot files.
+if [[ "$interactive" -eq 1 ]]
+then
+    read \
+        -e \
+        -i "yes" \
+        -p "Link dot files? [YES/no]: " \
+        -r \
+        choice
+    echo ""
+    case "$choice" in
+        Y|YES|y|yes)
+            dotfiles=1
+            ;;
+        N|NO|n|no)
+            dotfiles=0
+            ;;
+        *)
+            _koopa_invalid_arg
+            ;;
+    esac
+fi
+
+[[ "$dotfiles" -eq 1 ]] && _koopa_link_dotfiles
+
+
+
+# User profile {{{1
+# ==============================================================================
+
+if _koopa_is_defined_in_user_profile
+then
+    profile=0
+else
+    if [[ "$interactive" -eq 1 ]]
+    then
+        file="$(_koopa_find_user_profile)"
+        read \
+            -e \
+            -i "yes" \
+            -p "Modify '${file}'? [YES/no]: " \
+            -r \
+            choice
+        echo ""
+        case "$choice" in
+            Y|YES|y|yes)
+                profile=1
+                ;;
+            N|NO|n|no)
+                profile=0
+                ;;
+            *)
+                _koopa_invalid_arg
+                ;;
+        esac
+        if [[ "$profile" -eq 0 ]]
+        then
+            url="https://koopa.acidgenomics.com/"
+            _koopa_note "Refer to '${url}' for instructions \
+on how to modify '${file}' manually."
+        fi
+    else
+        profile=1
+    fi
+fi
+
+[[ "$profile" -eq 1 ]] && _koopa_add_to_user_profile
+
+
+
+# Final steps and return  {{{1
+# ==============================================================================
+
+_koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
 
 _koopa_success "Installation of koopa was successful."
