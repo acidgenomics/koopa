@@ -837,14 +837,15 @@ _koopa_quiet_rm() {  # {{{1
 _koopa_relink() {  # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-02-15.
     # """
     local source_file
     source_file="${1:?}"
     local dest_file
     dest_file="${2:?}"
     [ -L "$dest_file" ] && return 0
-    [ -e "$source_file" ] || return 1
+    # Relaxing this check here, in case dotfiles aren't cloned.
+    [ -e "$source_file" ] || return 0
     # > rm -f "$dest_file"
     ln -fns "$source_file" "$dest_file"
     return 0
