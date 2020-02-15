@@ -232,7 +232,11 @@ _koopa_git_clone() {  # {{{1
     repo="${1:?}"
     local target
     target="${2:?}"
-    _koopa_assert_is_non_existing "$target"
+    if [ -d "$target" ]
+    then
+        _koopa_note "Cloned: '${target}'."
+        return 0
+    fi
     git clone --quiet --recursive "$repo" "$target"
     return 0
 }

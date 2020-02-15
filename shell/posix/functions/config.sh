@@ -260,7 +260,7 @@ _koopa_git_clone_scripts_private() {
 _koopa_install_mike() {  # {{{1
     # """
     # Install additional Mike-specific config files.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-02-15.
     #
     # Note that these repos require SSH key to be set on GitHub.
     # """
