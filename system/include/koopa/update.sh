@@ -85,6 +85,7 @@ repos=(
 for repo in "${repos[@]}"
 do
     repo="${config_prefix}/${repo}"
+    [ -d "$repo" ] || continue
     _koopa_git_pull "$repo"
 done
 
