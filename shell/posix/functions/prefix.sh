@@ -146,6 +146,15 @@ _koopa_config_prefix() {  # {{{1
     return 0
 }
 
+_koopa_docker_prefix() {  # {{{1
+    # """
+    # Docker prefix.
+    # @note Updated 2020-02-15.
+    # """
+    echo "$(_koopa_config_prefix)/docker"
+    return 0
+}
+
 _koopa_dotfiles_prefix() {  # {{{1
     # """
     # Koopa system dotfiles prefix.
@@ -154,6 +163,15 @@ _koopa_dotfiles_prefix() {  # {{{1
     local prefix
     prefix="$(_koopa_prefix)/dotfiles"
     echo "$prefix"
+    return 0
+}
+
+_koopa_dotfiles_private_prefix() {  # {{{1
+    # """
+    # Private user dotfiles prefix.
+    # @note Updated 2020-02-15.
+    # """
+    echo "$(_koopa_config_prefix)/dotfiles-private"
     return 0
 }
 
@@ -399,6 +417,15 @@ _koopa_rust_rustup_prefix() {  # {{{1
         prefix="${HOME:?}/.rustup"
     fi
     echo "$prefix"
+    return 0
+}
+
+_koopa_scripts_private_prefix() {  # {{{1
+    # """
+    # Private scripts prefix.
+    # @note Updated 2020-02-15.
+    # """
+    echo "$(_koopa_config_prefix)/scripts-private"
     return 0
 }
 
