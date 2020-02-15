@@ -84,11 +84,6 @@ do
     esac
 done
 
-if [[ "$interactive" -eq 1 ]] && ! _koopa_is_interactive
-then
-    interactive=0
-fi
-
 
 
 # Pre-flight  {{{1
