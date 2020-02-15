@@ -401,6 +401,34 @@ _koopa_link_docker() {  # {{{1
     return 0
 }
 
+_koopa_link_dotfiles() {  # {{{1
+    # """
+    # Link dotfiles.
+    # @note Updated 2020-02-15.
+    # """
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local script
+    script="${koopa_prefix}/dotfiles/INSTALL.sh"
+    _koopa_assert_is_file "$script"
+    "$script"
+    return 0
+}
+
+_koopa_link_dotfiles_private() {  # {{{1
+    # """
+    # Link private dotfiles.
+    # @note Updated 2020-02-15.
+    # """
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
+    local script
+    script="${config_prefix}/dotfiles-private/INSTALL.sh"
+    _koopa_assert_is_file "$script"
+    "$script"
+    return 0
+}
+
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
