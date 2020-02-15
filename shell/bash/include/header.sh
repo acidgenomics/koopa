@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 # """
-# koopa piped install script.
-# Updated 2020-02-15.
-#
-# This downloads a copy of the latest stable release into a temporary directory.
+# Bash shared header script.
+# @note Updated 2020-02-14.
 # """
 
-release="latest"
+# > set --help
+# > shopt
+
+# > set -o noglob       # -f
+# > set -o xtrace       # -x
+set -o errexit          # -e
+set -o errtrace         # -E
+set -o nounset          # -u
+set -o pipefail
+
+checks=1
 
 if [[ "$#" -gt 0 ]]
 then
@@ -16,18 +23,14 @@ then
     while (("$#"))
     do
         case "$1" in
-        --release=*)
-            release="${1#*=}"
-            shift 1
-            ;;
-        --release)
-            release="$2"
-            shift 2
-            ;;
-        *)
-            pos+=("$1")
-            shift 1
-            ;;
+            --no-header-checks)
+                checks=0
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
         esac
     done
     if [[ "${#pos[@]}" -gt 0 ]]
@@ -36,33 +39,47 @@ then
     fi
 fi
 
-# Note that use of 'api.github.com' here returns JSON instead of HTML.
-url="https://api.github.com/repos/acidgenomics/koopa/releases/${release}"
-json="$(curl -s "$url")"
+# Requiring Bash >= 4 for exported scripts.
+# macOS ships with an ancient version of Bash, due to licensing.
+# If we're performing a clean install and loading up Homebrew, this step will
+# fail unless we skip checks.
+if [[ "$checks" -eq 1 ]]
+then
+    major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
+    if [[ ! "$major_version" -ge 4 ]]
+    then
+        echo "ERROR: Bash >= 4 is required."
+        exit 1
+    fi
+    # Check that user's Bash has mapfile builtin defined.
+    # We use this a lot to handle arrays.
+    if [[ $(type -t mapfile) != "builtin" ]]
+    then
+        echo "ERROR: Bash is missing 'mapfile' builtin."
+        exit 1
+    fi
+fi
 
-tarball_url="$( \
-    echo "$json" \
-        | grep '"tarball_url":' \
-        | cut -d '\"' -f 4 \
-)"
+KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+    >/dev/null 2>&1 && pwd -P)"
 
-tag_name="$( \
-    echo "$json" \
-        | grep '"tag_name":' \
-        | cut -d '\"' -f 4 \
-)"
+# Source POSIX header.
+# shellcheck source=/dev/null
+source "${KOOPA_BASH_INC}/../../posix/include/header.sh"
 
-echo "Installing koopa ${tag_name}."
+# Source Bash functions.
+# shellcheck source=/dev/null
+source "${KOOPA_BASH_INC}/functions.sh"
 
-tmp_dir="$(mktemp -d)"
+unset -v KOOPA_BASH_INC
 
-(
-    cd "$tmp_dir" || exit 1
-    file="koopa.tar.gz"
-    curl --location -o "$file" "$tarball_url"
-    tar -xzf "$file"
-    cd "acidgenomics-koopa-"* || exit 1
-    ./install "$@"
-)
+_koopa_help "$@"
 
-rm -fr "$tmp_dir"
+if [[ "$checks" -eq 1 ]]
+then
+    # Require sudo permission to run 'sbin/' scripts.
+    if echo "$0" | grep -q "/sbin/"
+    then
+        _koopa_assert_has_sudo
+    fi
+fi
