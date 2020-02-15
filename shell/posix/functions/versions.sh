@@ -108,7 +108,7 @@ _koopa_get_macos_app_version() {  # {{{1
         plutil -p "$plist" \
             | grep 'CFBundleShortVersionString' \
             | awk -F ' => ' '{print $2}' \
-            | tr -d '"' \
+            | tr -d '\"' \
     )"
     echo "$x"
     return 0
@@ -153,7 +153,7 @@ _koopa_github_latest_release() {  # {{{1
     tag="$( \
         echo "$json" \
             | grep '"tag_name":' \
-            | cut -d '"' -f 4 \
+            | cut -d '\"' -f 4 \
             | sed 's/^v//' \
     )"
     [ -n "$tag" ] || return 1
