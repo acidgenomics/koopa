@@ -9,7 +9,7 @@ set -Eeu -o pipefail
 
 usage() {
 cat << EOF
-usage: install [--help|-h] [--dotfiles] [--non-interactive] [--shared] [--test]
+usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
 
@@ -103,27 +103,32 @@ source "${script_dir}/shell/bash/include/header.sh"
 shared=0
 
 # Prompt whether to install for all users.
-if [[ "$interactive" -eq 1 ]] && _koopa_has_sudo
+if _koopa_has_sudo
 then
-    # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
-    read \
-        -e \
-        -i "yes" \
-        -p "Install for all users? [YES/no]: " \
-        -r \
-        choice
-    echo ""
-    case "$choice" in
-        Y|YES|y|yes)
-            shared=1
-            ;;
-        N|NO|n|no)
-            shared=0
-            ;;
-        *)
-            _koopa_invalid_arg
-            ;;
-    esac
+    if [[ "$interactive" -eq 1 ]]
+    then
+        # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
+        read \
+            -e \
+            -i "yes" \
+            -p "Install for all users? [YES/no]: " \
+            -r \
+            choice
+        echo ""
+        case "$choice" in
+            Y|YES|y|yes)
+                shared=1
+                ;;
+            N|NO|n|no)
+                shared=0
+                ;;
+            *)
+                _koopa_invalid_arg
+                ;;
+        esac
+    else
+        shared=1
+    fi
 fi
 
 # Set the default install prefix.
@@ -202,7 +207,9 @@ set -u
 passwordless=0
 
 # Prompt if the user wants to enable passwordless sudo.
-if [[ "$interactive" -eq 1 ]] && [[ "$shared" -eq 1 ]]
+if _koopa_is_linux && \
+    [[ "$interactive" -eq 1 ]] && \
+    [[ "$shared" -eq 1 ]]
 then
     read \
         -e \
