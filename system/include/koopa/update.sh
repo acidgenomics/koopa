@@ -60,7 +60,7 @@ _koopa_set_permissions "$koopa_prefix"
 
 _koopa_update_xdg_config
 _koopa_update_ldconfig
-_koopa_update_profile
+_koopa_update_etc_profile_d
 
 # Loop across config directories and update git repos.
 # Consider nesting these under 'app' directory.
