@@ -2,7 +2,6 @@
 # shellcheck disable=SC1090,SC1091
 set -Eeu -o pipefail
 
-set -x
 
 
 # Usage  {{{1
@@ -88,7 +87,7 @@ source "${script_dir}/shell/bash/include/header.sh"
 # Ensure existing user configuration gets removed.
 rm -fr "$(_koopa_config_prefix)"
 
-# > ! _koopa_is_interactive && interactive=0
+! _koopa_is_interactive && interactive=0
 # > ! _koopa_is_tty && interactive=0
 
 
