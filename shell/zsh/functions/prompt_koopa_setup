@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Koopa ZSH prompt.
-# Updated 2019-10-31.
+# @note Updated 2019-10-31.
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure

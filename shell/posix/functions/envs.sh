@@ -4,7 +4,7 @@
 _koopa_activate_conda_env() {  # {{{1
     # """
     # Activate a conda environment.
-    # Updated 2020-01-21.
+    # @note Updated 2020-01-21.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -45,7 +45,7 @@ _koopa_activate_conda_env() {  # {{{1
 _koopa_conda_default_envs_prefix() {  # {{{1
     # """
     # Locate the directory where conda environments are installed by default.
-    # Updated 2019-10-26.
+    # @note Updated 2019-10-26.
     # """
     _koopa_assert_is_installed conda
     conda info \
@@ -57,7 +57,7 @@ _koopa_conda_default_envs_prefix() {  # {{{1
 _koopa_conda_env() {  # {{{1
     # """
     # Conda environment name.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # Alternate approach:
     # > CONDA_PROMPT_MODIFIER="($(basename "$CONDA_PREFIX"))"
@@ -73,7 +73,7 @@ _koopa_conda_env() {  # {{{1
 _koopa_conda_env_list() {  # {{{1
     # """
     # Return a list of conda environments in JSON format.
-    # Updated 2019-06-27.
+    # @note Updated 2019-06-27.
     # """
     _koopa_is_installed conda || return 1
     conda env list --json
@@ -82,7 +82,7 @@ _koopa_conda_env_list() {  # {{{1
 _koopa_conda_env_prefix() {  # {{{1
     # """
     # Return prefix for a specified conda environment.
-    # Updated 2020-01-16.
+    # @note Updated 2020-01-16.
     #
     # Note that we're allowing env_list passthrough as second positional
     # variable, to speed up loading upon activation.
@@ -112,7 +112,7 @@ _koopa_conda_env_prefix() {  # {{{1
 _koopa_deactivate_conda() {  # {{{1
     # """
     # Deactivate Conda environment.
-    # Updated 2019-10-25.
+    # @note Updated 2019-10-25.
     # """
     if [ -n "${CONDA_DEFAULT_ENV:-}" ]
     then
@@ -124,7 +124,7 @@ _koopa_deactivate_conda() {  # {{{1
 _koopa_deactivate_envs() {  # {{{1
     # """
     # Deactivate Conda and Python environments.
-    # Updated 2019-10-25.
+    # @note Updated 2019-10-25.
     # """
     _koopa_deactivate_venv
     _koopa_deactivate_conda
@@ -133,7 +133,7 @@ _koopa_deactivate_envs() {  # {{{1
 _koopa_deactivate_venv() {  # {{{1
     # """
     # Deactivate Python virtual environment.
-    # Updated 2019-10-25.
+    # @note Updated 2019-10-25.
     #
     # The standard approach currently messes up autojump path:
     # # shellcheck disable=SC1090
@@ -151,7 +151,7 @@ _koopa_deactivate_venv() {  # {{{1
 _koopa_venv() {  # {{{1
     # """
     # Python virtual environment name.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local env
     env="${VIRTUAL_ENV:-}"

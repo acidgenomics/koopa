@@ -2,7 +2,7 @@
 
 # """
 # Bash shared header script.
-# Updated 2020-02-14.
+# @note Updated 2020-02-14.
 # """
 
 # > set --help
