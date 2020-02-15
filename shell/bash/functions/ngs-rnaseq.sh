@@ -3,7 +3,7 @@
 _koopa_kallisto_index() {  # {{{1
     # """
     # Generate kallisto index.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     _koopa_assert_is_installed kallisto
 
@@ -49,7 +49,7 @@ _koopa_kallisto_index() {  # {{{1
 _koopa_kallisto_quant() {  # {{{1
     # """
     # Run kallisto quant.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     _koopa_assert_is_installed kallisto
 
@@ -141,7 +141,7 @@ _koopa_kallisto_quant() {  # {{{1
 _koopa_salmon_index() {  # {{{1
     # """
     # Generate salmon index.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     _koopa_assert_is_installed salmon
 
@@ -189,7 +189,7 @@ _koopa_salmon_index() {  # {{{1
 _koopa_salmon_quant() {  # {{{1
     # """
     # Run salmon quant.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     _koopa_assert_is_installed salmon
 

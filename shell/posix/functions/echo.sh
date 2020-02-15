@@ -74,7 +74,7 @@ _koopa_ansi_escape_code() {  # {{{1
 _koopa_ansi_echo() {  # {{{1
     # """
     # Echo a colored line in console.
-    # Updated 2020-01-17.
+    # @note Updated 2020-01-17.
     #
     # Currently using ANSI escape codes.
     # This is the classic 8 color terminal approach.
@@ -183,7 +183,7 @@ _koopa_echo_white_bold() {  # {{{1
 _koopa_coffee_time() {  # {{{1
     # """
     # Coffee time.
-    # Updated 2020-02-06.
+    # @note Updated 2020-02-06.
     # """
     _koopa_note "This script takes a while. Time for a coffee! ☕☕"
     return 0
@@ -192,7 +192,7 @@ _koopa_coffee_time() {  # {{{1
 _koopa_dl() {
     # """
     # Koopa definition list.
-    # Updated 2020-02-04.
+    # @note Updated 2020-02-04.
     # """
     _koopa_info "${1:?}: ${2:?}"
 }
@@ -200,7 +200,7 @@ _koopa_dl() {
 _koopa_emoji() {  # {{{1
     # """
     # Koopa turtle emoji.
-    # Updated 2020-01-17.
+    # @note Updated 2020-01-17.
     # """
     echo "🐢"
 }
@@ -208,7 +208,7 @@ _koopa_emoji() {  # {{{1
 _koopa_h1() {  # {{{1
     # """
     # Header level 1.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     #
     # Alternatives: ==> (Homebrew) / ⇨  / →
     # """
@@ -224,7 +224,7 @@ _koopa_h1() {  # {{{1
 _koopa_h2() {  # {{{1
     # """
     # Header level 2.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
     str="${1:?}"
@@ -238,7 +238,7 @@ _koopa_h2() {  # {{{1
 _koopa_info() {  # {{{1
     # """
     # General info.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
     str="${1:?}"
@@ -252,7 +252,7 @@ _koopa_info() {  # {{{1
 _koopa_invalid_arg() {  # {{{1
     # """
     # Error on invalid argument.
-    # Updated 2019-10-23.
+    # @note Updated 2019-10-23.
     # """
     local arg
     arg="${1:?}"
@@ -262,7 +262,7 @@ _koopa_invalid_arg() {  # {{{1
 _koopa_missing_arg() {  # {{{1
     # """
     # Error on a missing argument.
-    # Updated 2019-10-23.
+    # @note Updated 2019-10-23.
     # """
     _koopa_stop "Missing required argument."
 }
@@ -270,7 +270,7 @@ _koopa_missing_arg() {  # {{{1
 _koopa_note() {  # {{{1
     # """
     # General note.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
     str="${1:?}"
@@ -284,7 +284,7 @@ _koopa_note() {  # {{{1
 _koopa_stop() {  # {{{1
     # """
     # Stop with an error message, and exit.
-    # Updated 2020-02-11.
+    # @note Updated 2020-02-11.
     # """
     local c1 c2 nc pre str
     str="ERROR: ${1:?}"
@@ -299,7 +299,7 @@ _koopa_stop() {  # {{{1
 _koopa_success() {  # {{{1
     # """
     # Success message.
-    # Updated 2020-02-05.
+    # @note Updated 2020-02-05.
     # """
     local c1 c2 nc pre str
     str="${1:?}"
@@ -313,7 +313,7 @@ _koopa_success() {  # {{{1
 _koopa_warning() {  # {{{1
     # """
     # Warning message.
-    # Updated 2020-02-11.
+    # @note Updated 2020-02-11.
     # """
     local c1 c2 nc pre str
     str="WARNING: ${1:?}"
@@ -329,7 +329,7 @@ _koopa_warning() {  # {{{1
 _koopa_status_fail() {  # {{{1
     # """
     # Status FAIL.
-    # Updated 2020-02-04.
+    # @note Updated 2020-02-04.
     # """
     local c1 nc pre str
     pre="      FAIL"
@@ -342,7 +342,7 @@ _koopa_status_fail() {  # {{{1
 _koopa_status_note() {  # {{{1
     # """
     # Status NOTE.
-    # Updated 2020-02-04.
+    # @note Updated 2020-02-04.
     # """
     local c1 nc pre str
     pre="      NOTE"
@@ -355,7 +355,7 @@ _koopa_status_note() {  # {{{1
 _koopa_status_ok() {  # {{{1
     # """
     # Status OK.
-    # Updated 2020-02-04.
+    # @note Updated 2020-02-04.
     # """
     local c1 nc pre str
     pre="        OK"
