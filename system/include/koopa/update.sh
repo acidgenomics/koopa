@@ -75,7 +75,7 @@ repos=(
 for repo in "${repos[@]}"
 do
     repo="${config_prefix}/${repo}"
-    _koopa_update_git_repo "$repo"
+    _koopa_git_pull "$repo"
 done
 
 if [[ "$system" -eq 1 ]]
@@ -103,9 +103,9 @@ then
         fi
     fi
     # Update managed git repos.
-    _koopa_update_git_repo "${HOME}/.emacs.d-doom"
-    _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
-    _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
+    _koopa_git_pull "${HOME}/.emacs.d-doom"
+    _koopa_git_pull "${HOME}/.emacs.d-spacemacs"
+    _koopa_git_pull "${XDG_DATA_HOME}/Rcheck"
 fi
 
 _koopa_fix_zsh_permissions
