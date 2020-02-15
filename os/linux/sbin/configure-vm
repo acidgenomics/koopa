@@ -77,6 +77,7 @@ rm -frv \
     "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
+_koopa_update_etc_profile_d
 
 # Prepare make prefix (e.g. '/usr/local') for group write access.
 _koopa_mkdir "$make_prefix"
@@ -120,7 +121,6 @@ then
     # --------------------------------------------------------------------------
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
-    _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
@@ -144,7 +144,6 @@ then
     sudo rm -frv "/opt/jdk"
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
-    _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/azure/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."

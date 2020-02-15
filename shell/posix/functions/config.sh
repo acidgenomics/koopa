@@ -556,10 +556,10 @@ _koopa_update_lmod_config() {  # {{{1
     return 0
 }
 
-_koopa_update_profile() {  # {{{1
+_koopa_update_etc_profile_d() {  # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # Updated 2020-01-21.
+    # Updated 2020-02-15.
     # """
     _koopa_is_shared_install || return 0
     _koopa_is_linux || return 0
