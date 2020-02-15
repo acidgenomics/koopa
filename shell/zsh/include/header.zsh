@@ -28,10 +28,6 @@ KOOPA_ZSH_INC="$(cd "$(dirname "${(%):-%N}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_ZSH_INC}/../../posix/include/header.sh"
 
-# Source ZSH functions.
-# shellcheck source=/dev/null
-# > source "${KOOPA_ZSH_INC}/functions.sh"
-
 unset -v KOOPA_ZSH_INC
 
 _koopa_help "$@"
