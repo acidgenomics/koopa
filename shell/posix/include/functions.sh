@@ -15,7 +15,7 @@ KOOPA_POSIX_INC="$(cd "$(dirname "$KOOPA_POSIX_SOURCE")" \
     >/dev/null 2>&1 && pwd -P)"
 
 # Use shell globbing instead of 'find', which doesn't support source.
-for file in "${KOOPA_POSIX_INC}/functions/"*".sh"
+for file in "${KOOPA_POSIX_INC}/../functions/"*".sh"
 do
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
