@@ -1,15 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_prefix() {  # {{{1
-    # """
-    # Koopa prefix (home).
-    # @note Updated 2020-01-12.
-    # """
-    echo "${KOOPA_PREFIX:?}"
-    return 0
-}
-
+# FIXME KOOPA_APP_PREFIX
 _koopa_app_prefix() {  # {{{1
     # """
     # Custom application install prefix.
@@ -37,65 +29,6 @@ _koopa_app_prefix() {  # {{{1
     echo "$prefix"
     return 0
 }
-
-_koopa_cellar_prefix() {  # {{{1
-    # """
-    # Cellar prefix.
-    # @note Updated 2020-02-08.
-    #
-    # Ensure this points to a local mount (e.g. '/usr/local') instead of our
-    # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
-    # issues on some virtual machines.
-    # """
-    local prefix
-    if _koopa_is_installed brew
-    then
-        prefix="$(_koopa_make_prefix)/koopa-cellar"
-    else
-        prefix="$(_koopa_make_prefix)/cellar"
-    fi
-    echo "$prefix"
-    return 0
-}
-
-_koopa_config_prefix() {  # {{{1
-    # """
-    # Local koopa config directory.
-    # @note Updated 2020-01-13.
-    # """
-    echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
-    return 0
-}
-
-_koopa_local_app_prefix() {  # {{{1
-    # """
-    # Local user application install prefix.
-    # @note Updated 2020-01-12.
-    #
-    # This is the default app path when koopa is installed per user.
-    # """
-    echo "${XDG_DATA_HOME:?}"
-    return 0
-}
-
-_koopa_make_prefix() {  # {{{1
-    # """
-    # Return the installation prefix to use.
-    # @note Updated 2020-01-12.
-    # """
-    local prefix
-    if _koopa_is_shared_install && _koopa_has_sudo
-    then
-        prefix="/usr/local"
-    else
-        # This is the top-level directory of XDG_DATA_HOME.
-        prefix="${HOME:?}/.local"
-    fi
-    echo "$prefix"
-    return 0
-}
-
-
 
 _koopa_aspera_prefix() {  # {{{1
     # """
@@ -159,6 +92,27 @@ _koopa_bcbio_prefix() {  # {{{1
     return 0
 }
 
+# FIXME KOOPA_CELLAR_PREFIX
+_koopa_cellar_prefix() {  # {{{1
+    # """
+    # Cellar prefix.
+    # @note Updated 2020-02-08.
+    #
+    # Ensure this points to a local mount (e.g. '/usr/local') instead of our
+    # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
+    # issues on some virtual machines.
+    # """
+    local prefix
+    if _koopa_is_installed brew
+    then
+        prefix="$(_koopa_make_prefix)/koopa-cellar"
+    else
+        prefix="$(_koopa_make_prefix)/cellar"
+    fi
+    echo "$prefix"
+    return 0
+}
+
 _koopa_conda_prefix() {  # {{{1
     # """
     # Conda prefix
@@ -172,6 +126,15 @@ _koopa_conda_prefix() {  # {{{1
         prefix="$(_koopa_app_prefix)/conda"
     fi
     echo "$prefix"
+    return 0
+}
+
+_koopa_config_prefix() {  # {{{1
+    # """
+    # Local koopa config directory.
+    # @note Updated 2020-01-13.
+    # """
+    echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
     return 0
 }
 
@@ -251,6 +214,35 @@ _koopa_java_home() {  # {{{1
     return 0
 }
 
+_koopa_local_app_prefix() {  # {{{1
+    # """
+    # Local user application install prefix.
+    # @note Updated 2020-01-12.
+    #
+    # This is the default app path when koopa is installed per user.
+    # """
+    echo "${XDG_DATA_HOME:?}"
+    return 0
+}
+
+# FIXME KOOPA_MAKE_PREFIX
+_koopa_make_prefix() {  # {{{1
+    # """
+    # Return the installation prefix to use.
+    # @note Updated 2020-01-12.
+    # """
+    local prefix
+    if _koopa_is_shared_install && _koopa_has_sudo
+    then
+        prefix="/usr/local"
+    else
+        # This is the top-level directory of XDG_DATA_HOME.
+        prefix="${HOME:?}/.local"
+    fi
+    echo "$prefix"
+    return 0
+}
+
 _koopa_perlbrew_prefix() {  # {{{1
     # """
     # Perlbrew prefix.
@@ -264,6 +256,15 @@ _koopa_perlbrew_prefix() {  # {{{1
         prefix="$(_koopa_app_prefix)/perl/perlbrew"
     fi
     echo "$prefix"
+    return 0
+}
+
+_koopa_prefix() {  # {{{1
+    # """
+    # Koopa prefix (home).
+    # @note Updated 2020-01-12.
+    # """
+    echo "${KOOPA_PREFIX:?}"
     return 0
 }
 

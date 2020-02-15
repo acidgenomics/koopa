@@ -21,7 +21,7 @@ _koopa_ansi_escape_code() {  # {{{1
             escape="1;30"
             ;;
         blue)
-            # This looks purple in Dracula config.
+            # This looks purple with Dracula.
             escape="0;34"
             ;;
         blue-bold)
@@ -104,7 +104,22 @@ _koopa_ansi_echo() {  # {{{1
     echo -e "${color}${string}${nocolor}"
 }
 
+_koopa_coffee_time() {  # {{{1
+    # """
+    # Coffee time.
+    # @note Updated 2020-02-06.
+    # """
+    _koopa_note "This script takes a while. Time for a coffee! ☕☕"
+    return 0
+}
 
+_koopa_dl() {
+    # """
+    # Koopa definition list.
+    # @note Updated 2020-02-04.
+    # """
+    _koopa_info "${1:?}: ${2:?}"
+}
 
 _koopa_echo_default() {  # {{{1
     _koopa_ansi_echo "default" "${1:?}"
@@ -178,25 +193,6 @@ _koopa_echo_white_bold() {  # {{{1
     _koopa_ansi_echo "white-bold" "${1:?}"
 }
 
-
-
-_koopa_coffee_time() {  # {{{1
-    # """
-    # Coffee time.
-    # @note Updated 2020-02-06.
-    # """
-    _koopa_note "This script takes a while. Time for a coffee! ☕☕"
-    return 0
-}
-
-_koopa_dl() {
-    # """
-    # Koopa definition list.
-    # @note Updated 2020-02-04.
-    # """
-    _koopa_info "${1:?}: ${2:?}"
-}
-
 _koopa_emoji() {  # {{{1
     # """
     # Koopa turtle emoji.
@@ -233,6 +229,36 @@ _koopa_h2() {  # {{{1
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
+}
+
+_koopa_h3() {  # {{{1
+    # """
+    # Header level 3.
+    # @note Updated 2020-02-05.
+    # """
+    local c1 c2 nc pre str
+    str="${1:?}"
+    pre="$(_koopa_emoji) -> "
+    c1="$(_koopa_ansi_escape_code "default")"
+    c2="$(_koopa_ansi_escape_code "default")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    echo -e "${c1}${pre}${c2}${str}${nc}"
+}
+
+_koopa_h4() {  # {{{1
+    _koopa_h3 "$@"
+}
+
+_koopa_h5() {  # {{{1
+    _koopa_h3 "$@"
+}
+
+_koopa_h6() {  # {{{1
+    _koopa_h3 "$@"
+}
+
+_koopa_h7() {  # {{{1
+    _koopa_h3 "$@"
 }
 
 _koopa_info() {  # {{{1
@@ -281,6 +307,45 @@ _koopa_note() {  # {{{1
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
 
+_koopa_status_fail() {  # {{{1
+    # """
+    # Status FAIL.
+    # @note Updated 2020-02-04.
+    # """
+    local c1 nc pre str
+    pre="      FAIL"
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "red-bold")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    >&2 echo -e "${c1}${pre}${nc} | ${str}"
+}
+
+_koopa_status_note() {  # {{{1
+    # """
+    # Status NOTE.
+    # @note Updated 2020-02-04.
+    # """
+    local c1 nc pre str
+    pre="      NOTE"
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "magenta")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    >&2 echo -e "${c1}${pre}${nc} | ${str}"
+}
+
+_koopa_status_ok() {  # {{{1
+    # """
+    # Status OK.
+    # @note Updated 2020-02-04.
+    # """
+    local c1 nc pre str
+    pre="        OK"
+    str="${1:?}"
+    c1="$(_koopa_ansi_escape_code "green")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    echo -e "${c1}${pre}${nc} | ${str}"
+}
+
 _koopa_stop() {  # {{{1
     # """
     # Stop with an error message, and exit.
@@ -322,45 +387,4 @@ _koopa_warning() {  # {{{1
     c2="$(_koopa_ansi_escape_code "default-bold")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
-}
-
-
-
-_koopa_status_fail() {  # {{{1
-    # """
-    # Status FAIL.
-    # @note Updated 2020-02-04.
-    # """
-    local c1 nc pre str
-    pre="      FAIL"
-    str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "red-bold")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    >&2 echo -e "${c1}${pre}${nc} | ${str}"
-}
-
-_koopa_status_note() {  # {{{1
-    # """
-    # Status NOTE.
-    # @note Updated 2020-02-04.
-    # """
-    local c1 nc pre str
-    pre="      NOTE"
-    str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "magenta")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    >&2 echo -e "${c1}${pre}${nc} | ${str}"
-}
-
-_koopa_status_ok() {  # {{{1
-    # """
-    # Status OK.
-    # @note Updated 2020-02-04.
-    # """
-    local c1 nc pre str
-    pre="        OK"
-    str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "green")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    echo -e "${c1}${pre}${nc} | ${str}"
 }
