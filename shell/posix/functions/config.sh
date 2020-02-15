@@ -211,6 +211,127 @@ _koopa_fix_zsh_permissions() {  # {{{1
     return 0
 }
 
+_koopa_git_clone_docker() {
+    # """
+    # Clone docker repo.
+    # @note Updated 2020-02-15.
+    # """
+    _koopa_assert_is_github_ssh_enabled
+    _koopa_git_clone \
+        "git@github.com:acidgenomics/docker.git" \
+        "$(_koopa_docker_prefix)"
+    return 0
+}
+
+_koopa_git_clone_dotfiles() {  # {{{1
+    # """
+    # Clone dotfiles repo.
+    # @note Updated 2020-02-15.
+    # """
+    _koopa_git_clone \
+        "https://github.com/mjsteinbaugh/dotfiles.git" \
+        "$(_koopa_dotfiles_prefix)"
+    return 0
+}
+
+_koopa_git_clone_dotfiles_private() {  # {{{1
+    # """
+    # Clone dotfiles-private repo.
+    # @note Updated 2020-02-15.
+    # """
+    _koopa_assert_is_github_ssh_enabled
+    _koopa_git_clone \
+        "git@github.com:mjsteinbaugh/dotfiles-private.git" \
+        "$(_koopa_dotfiles_private_prefix)"
+    return 0
+}
+
+_koopa_git_clone_scripts_private() {
+    # """
+    # Clone private scripts.
+    # @note Updated 2020-02-15.
+    # """
+    _koopa_git_clone \
+        "git@github.com:mjsteinbaugh/scripts-private.git" \
+        "$(_koopa_scripts_private_prefix)"  
+    return 0
+}
+
+_koopa_install_mike() {  # {{{1
+    # """
+    # Install additional Mike-specific config files.
+    # @note Updated 2020-02-11.
+    #
+    # Note that these repos require SSH key to be set on GitHub.
+    # """
+    _koopa_link_dotfiles
+    _koopa_link_dotfiles_private
+    _koopa_git_clone_docker
+    _koopa_git_clone_scripts_private
+    return 0
+}
+
+_koopa_install_pip() {  # {{{1
+    # """
+    # Install pip for Python.
+    # @note Updated 2020-02-10.
+    # """
+    local python
+    python="${1:-python3}"
+    if ! _koopa_is_installed "$python"
+    then
+        _koopa_warning "Python ('${python}') is not installed."
+        return 1
+    fi
+    if _koopa_is_python_package_installed "pip" "$python"
+    then
+        _koopa_note "pip is already installed."
+        return 0
+    fi
+    _koopa_h2 "Installing pip for Python '${python}'."
+    local file
+    file="get-pip.py"
+    _koopa_download "https://bootstrap.pypa.io/${file}"
+    "$python" "$file" --no-warn-script-location
+    rm "$file"
+    _koopa_success "Installation of pip was successful."
+    _koopa_note "Restart the shell to complete activation."
+    return 0
+}
+
+_koopa_install_pipx() {
+    # """
+    # Install pipx for Python.
+    # @note Updated 2020-02-10.
+    #
+    # Local user installation:
+    # Use the '--user' flag with 'pip install' call.
+    #
+    # This recommended step will modify shell RC file, which we don't want.
+    # > "$python" -m pipx ensurepath
+    # """
+    local python
+    python="${1:-python3}"
+    if ! _koopa_is_installed "$python"
+    then
+        _koopa_warning "Python ('${python}') is not installed."
+        return 1
+    fi
+    if _koopa_is_python_package_installed "pipx" "$python"
+    then
+        _koopa_note "pipx is already installed."
+        return 0
+    fi
+    _koopa_h2 "Installing pipx for Python '${python}'."
+    "$python" -m pip install --no-warn-script-location pipx
+    local prefix
+    prefix="$(_koopa_app_prefix)/python/pipx"
+    _koopa_mkdir "$prefix"
+    _koopa_success "Installation of pipx was successful."
+    _koopa_note "Restart the shell to complete activation."
+    return 0
+}
+
 _koopa_link_docker() {  # {{{1
     # """
     # Link Docker library onto data disk for VM.
@@ -252,10 +373,11 @@ _koopa_link_dotfiles() {  # {{{1
     # Link dotfiles.
     # @note Updated 2020-02-15.
     # """
-    local koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
+    _koopa_git_clone_dotfiles
+    local prefix
+    prefix="$(_koopa_dotfiles_prefix)"
     local script
-    script="${koopa_prefix}/dotfiles/INSTALL.sh"
+    script="${prefix}/INSTALL.sh"
     _koopa_assert_is_file "$script"
     "$script"
     return 0
@@ -266,10 +388,11 @@ _koopa_link_dotfiles_private() {  # {{{1
     # Link private dotfiles.
     # @note Updated 2020-02-15.
     # """
-    local config_prefix
-    config_prefix="$(_koopa_config_prefix)"
+    _koopa_git_clone_dotfiles_private
+    local prefix
+    prefix="$(_koopa_dotfiles_private_prefix)"
     local script
-    script="${config_prefix}/dotfiles-private/INSTALL.sh"
+    script="${prefix}/INSTALL.sh"
     _koopa_assert_is_file "$script"
     "$script"
     return 0
