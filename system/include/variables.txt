@@ -5,14 +5,14 @@ koopa-date="2020-02-14"
 
 
 
-# Globals                                                                   {{{1
+# Globals  {{{1
 # ==============================================================================
 
 gnu-mirror="https://ftpmirror.gnu.org"
 
 
 
-# Program versions                                                          {{{1
+# Program versions  {{{1
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
@@ -264,10 +264,10 @@ zsh="5.7.1"
 
 
 
-# Bundle versions                                                           {{{1
+# Bundle versions  {{{1
 # ==============================================================================
 
-# GnuPG                                                                     {{{2
+# GnuPG  {{{2
 # https://gnupg.org/download/index.html
 # 2019-12-07
 gpg="2.2.19"
@@ -286,7 +286,7 @@ sra-tools="2.10.0"
 
 
 
-# Legacy pinnings                                                           {{{1
+# Legacy pinnings  {{{1
 # ==============================================================================
 
 # Latest version compatible with Ensembl Perl API.
@@ -295,7 +295,7 @@ ensembl-perl="5.26.3"
 
 
 
-# macOS app versions                                                        {{{1
+# macOS app versions  {{{1
 # ==============================================================================
 
 # > koopa get-macos-app-version "XXX"
@@ -316,7 +316,7 @@ macos-app-xcode="11.3.1"
 
 
 
-# Homebrew cask versions                                                    {{{1
+# Homebrew cask versions  {{{1
 # ==============================================================================
 
 # > koopa get-homebrew-cask-version "XXX"

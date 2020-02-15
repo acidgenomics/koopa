@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_has_file_ext() {                                                   # {{{1
+_koopa_has_file_ext() {  # {{{1
     # """
     # Does the input contain a file extension?
     # Updated 2020-01-12.
@@ -13,7 +13,7 @@ _koopa_has_file_ext() {                                                   # {{{1
     echo "$file" | grep -q "\."
 }
 
-_koopa_has_no_environments() {                                            # {{{1
+_koopa_has_no_environments() {  # {{{1
     # """
     # Detect activation of virtual environments.
     # Updated 2019-10-20.
@@ -24,7 +24,7 @@ _koopa_has_no_environments() {                                            # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_has_passwordless_sudo() {                                          # {{{1
+_koopa_has_passwordless_sudo() {  # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
     # Updated 2020-02-05.
@@ -38,7 +38,7 @@ _koopa_has_passwordless_sudo() {                                          # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_has_sudo() {                                                       # {{{1
+_koopa_has_sudo() {  # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
     # Updated 2020-02-05.
@@ -76,7 +76,7 @@ _koopa_has_sudo() {                                                       # {{{1
     groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
 }
 
-_koopa_is_alias() {                                                       # {{{1
+_koopa_is_alias() {  # {{{1
     # """
     # Is the specified argument an alias?
     # Updated 2020-02-06.
@@ -102,7 +102,7 @@ _koopa_is_alias() {                                                       # {{{1
     _koopa_is_matching_fixed "$str" "$pattern"
 }
 
-_koopa_is_aws() {                                                         # {{{1
+_koopa_is_aws() {  # {{{1
     # """
     # Is the current session running on AWS?
     # Updated 2019-11-25.
@@ -110,7 +110,7 @@ _koopa_is_aws() {                                                         # {{{1
     [ "$(_koopa_host_id)" = "aws" ]
 }
 
-_koopa_is_amzn() {                                                        # {{{1
+_koopa_is_amzn() {  # {{{1
     # """
     # Is the operating system Amazon Linux?
     # Updated 2020-01-21.
@@ -118,7 +118,7 @@ _koopa_is_amzn() {                                                        # {{{1
     [ "$(_koopa_os_id)" = "amzn" ]
 }
 
-_koopa_is_azure() {                                                       # {{{1
+_koopa_is_azure() {  # {{{1
     # """
     # Is the current session running on Microsoft Azure?
     # Updated 2019-11-25.
@@ -126,7 +126,7 @@ _koopa_is_azure() {                                                       # {{{1
     [ "$(_koopa_host_id)" = "azure" ]
 }
 
-_koopa_is_cellar() {                                                      # {{{1
+_koopa_is_cellar() {  # {{{1
     # """
     # Is a specific command cellarized?
     # @note Updated 2020-02-10.
@@ -140,7 +140,7 @@ _koopa_is_cellar() {                                                      # {{{1
     _koopa_is_matching_regex "$cmd" "^${cellar_prefix}"
 }
 
-_koopa_is_conda_active() {                                                # {{{1
+_koopa_is_conda_active() {  # {{{1
     # """
     # Is there a Conda environment active?
     # Updated 2019-10-20.
@@ -148,7 +148,7 @@ _koopa_is_conda_active() {                                                # {{{1
     [ -n "${CONDA_DEFAULT_ENV:-}" ]
 }
 
-_koopa_is_current_version() {                                             # {{{1
+_koopa_is_current_version() {  # {{{1
     # """
     # Is the installed program current?
     # Updated 2020-02-07.
@@ -164,7 +164,7 @@ _koopa_is_current_version() {                                             # {{{1
     [ "$actual" == "$expected" ]
 }
 
-_koopa_is_debian() {                                                      # {{{1
+_koopa_is_debian() {  # {{{1
     # """
     # Is the operating system Debian?
     # Updated 2019-10-25.
@@ -174,7 +174,7 @@ _koopa_is_debian() {                                                      # {{{1
         grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
-_koopa_is_docker() {                                                      # {{{1
+_koopa_is_docker() {  # {{{1
     # """
     # Is the current shell running inside Docker?
     # Updated 2020-01-22.
@@ -187,7 +187,7 @@ _koopa_is_docker() {                                                      # {{{1
     grep -q ':/docker/' "$file"
 }
 
-_koopa_is_fedora() {                                                      # {{{1
+_koopa_is_fedora() {  # {{{1
     # """
     # Is the operating system Fedora?
     # Updated 2019-10-25.
@@ -197,7 +197,7 @@ _koopa_is_fedora() {                                                      # {{{1
         grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
 }
 
-_koopa_is_file_system_case_sensitive() {                                  # {{{1
+_koopa_is_file_system_case_sensitive() {  # {{{1
     # """
     # Is the file system case sensitive?
     # Updated 2019-10-21.
@@ -215,7 +215,7 @@ _koopa_is_file_system_case_sensitive() {                                  # {{{1
     fi
 }
 
-_koopa_is_function() {                                                    # {{{1
+_koopa_is_function() {  # {{{1
     # """
     # Check if variable is a function.
     # @note Updated 2020-02-07.
@@ -235,7 +235,7 @@ _koopa_is_function() {                                                    # {{{1
     esac
 }
 
-_koopa_is_git() {                                                         # {{{1
+_koopa_is_git() {  # {{{1
     # """
     # Is directory a git repository?
     # @note Updated 2020-02-11.
@@ -249,7 +249,7 @@ _koopa_is_git() {                                                         # {{{1
     [ -e "${dir}/.git" ]
 }
 
-_koopa_is_git2() {                                                        # {{{1
+_koopa_is_git2() {  # {{{1
     # """
     # Is the working directory a git repository?
     # Updated 2020-02-10.
@@ -268,7 +268,7 @@ _koopa_is_git2() {                                                        # {{{1
     fi
 }
 
-_koopa_is_git_clean() {                                                   # {{{1
+_koopa_is_git_clean() {  # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
     # Updated 2020-02-11.
@@ -292,7 +292,7 @@ _koopa_is_git_clean() {                                                   # {{{1
     return 0
 }
 
-_koopa_is_github_ssh_enabled() {                                          # {{{1
+_koopa_is_github_ssh_enabled() {  # {{{1
     # """
     # Is SSH key enabled for GitHub access?
     # Updated 2020-02-11.
@@ -300,7 +300,7 @@ _koopa_is_github_ssh_enabled() {                                          # {{{1
     _koopa_is_ssh_enabled "git@github.com" "successfully authenticated"
 }
 
-_koopa_is_gitlab_ssh_enabled() {                                          # {{{1
+_koopa_is_gitlab_ssh_enabled() {  # {{{1
     # """
     # Is SSH key enabled for GitLab access?
     # Updated 2020-02-11.
@@ -309,7 +309,7 @@ _koopa_is_gitlab_ssh_enabled() {                                          # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_is_installed() {                                                   # {{{1
+_koopa_is_installed() {  # {{{1
     # """
     # Is the requested program name installed?
     # Updated 2019-10-02.
@@ -317,7 +317,7 @@ _koopa_is_installed() {                                                   # {{{1
     command -v "$1" >/dev/null
 }
 
-_koopa_is_interactive() {                                                 # {{{1
+_koopa_is_interactive() {  # {{{1
     # """
     # Is the current shell interactive?
     # Updated 2019-06-21.
@@ -326,7 +326,7 @@ _koopa_is_interactive() {                                                 # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_is_linux() {                                                       # {{{1
+_koopa_is_linux() {  # {{{1
     # """
     # Is the current operating system Linux?
     # Updated 2020-02-05.
@@ -335,7 +335,7 @@ _koopa_is_linux() {                                                       # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_is_local_install() {                                               # {{{1
+_koopa_is_local_install() {  # {{{1
     # """
     # Is koopa installed only for the current user?
     # Updated 2020-02-13.
@@ -345,7 +345,7 @@ _koopa_is_local_install() {                                               # {{{1
     echo "$prefix" | grep -Eq "^${HOME}"
 }
 
-_koopa_is_login() {                                                       # {{{1
+_koopa_is_login() {  # {{{1
     # """
     # Is the current shell a login shell?
     # Updated 2019-08-14.
@@ -353,7 +353,7 @@ _koopa_is_login() {                                                       # {{{1
     echo "$0" | grep -Eq "^-"
 }
 
-_koopa_is_login_bash() {                                                  # {{{1
+_koopa_is_login_bash() {  # {{{1
     # """
     # Is the current shell a login bash shell?
     # Updated 2019-06-21.
@@ -361,7 +361,7 @@ _koopa_is_login_bash() {                                                  # {{{1
     [ "$0" = "-bash" ]
 }
 
-_koopa_is_login_zsh() {                                                   # {{{1
+_koopa_is_login_zsh() {  # {{{1
     # """
     # Is the current shell a login zsh shell?
     # Updated 2019-06-21.
@@ -369,7 +369,7 @@ _koopa_is_login_zsh() {                                                   # {{{1
     [ "$0" = "-zsh" ]
 }
 
-_koopa_is_macos() {                                                       # {{{1
+_koopa_is_macos() {  # {{{1
     # """
     # Is the operating system macOS (Darwin)?
     # Updated 2020-01-13.
@@ -377,7 +377,7 @@ _koopa_is_macos() {                                                       # {{{1
     [ "$(uname -s)" = "Darwin" ]
 }
 
-_koopa_is_matching_fixed() {                                              # {{{1
+_koopa_is_matching_fixed() {  # {{{1
     # """
     # Does the input match a fixed string?
     # Updated 2020-01-12.
@@ -389,7 +389,7 @@ _koopa_is_matching_fixed() {                                              # {{{1
     echo "$string" | grep -Fq "$pattern"
 }
 
-_koopa_is_matching_regex() {                                              # {{{1
+_koopa_is_matching_regex() {  # {{{1
     # """
     # Does the input match a regular expression?
     # Updated 2020-01-12.
@@ -401,7 +401,7 @@ _koopa_is_matching_regex() {                                              # {{{1
     echo "$string" | grep -Eq "$pattern"
 }
 
-_koopa_is_powerful() {                                                    # {{{1
+_koopa_is_powerful() {  # {{{1
     # """
     # Is the current machine powerful?
     # Updated 2019-11-22.
@@ -416,7 +416,7 @@ _koopa_is_powerful() {                                                    # {{{1
     fi
 }
 
-_koopa_is_python_package_installed() {                                    # {{{1
+_koopa_is_python_package_installed() {  # {{{1
     # """
     # Check if Python package is installed.
     # Updated 2020-02-10.
@@ -442,7 +442,7 @@ _koopa_is_python_package_installed() {                                    # {{{1
     [ -d "${prefix}/${pkg}" ]
 }
 
-_koopa_is_r_package_installed() {                                         # {{{1
+_koopa_is_r_package_installed() {  # {{{1
     # """
     # Is the requested R package installed?
     # Updated 2020-02-10.
@@ -461,7 +461,7 @@ _koopa_is_r_package_installed() {                                         # {{{1
     [ -d "${prefix}/${pkg}" ]
 }
 
-_koopa_is_rhel() {                                                        # {{{1
+_koopa_is_rhel() {  # {{{1
     # """
     # Is the operating system RHEL?
     # Updated 2019-12-09.
@@ -473,7 +473,7 @@ _koopa_is_rhel() {                                                        # {{{1
     return 1
 }
 
-_koopa_is_rhel_7() {                                                      # {{{1
+_koopa_is_rhel_7() {  # {{{1
     # """
     # Is the operating system RHEL 7?
     # Updated 2019-11-25.
@@ -484,7 +484,7 @@ _koopa_is_rhel_7() {                                                      # {{{1
     return 0
 }
 
-_koopa_is_rhel_8() {                                                      # {{{1
+_koopa_is_rhel_8() {  # {{{1
     # """
     # Is the operating system RHEL 8?
     # Updated 2019-11-25.
@@ -495,7 +495,7 @@ _koopa_is_rhel_8() {                                                      # {{{1
     return 0
 }
 
-_koopa_is_remote() {                                                      # {{{1
+_koopa_is_remote() {  # {{{1
     # """
     # Is the current shell session a remote connection over SSH?
     # Updated 2019-06-25.
@@ -503,7 +503,7 @@ _koopa_is_remote() {                                                      # {{{1
     [ -n "${SSH_CONNECTION:-}" ]
 }
 
-_koopa_is_root() {                                                        # {{{1
+_koopa_is_root() {  # {{{1
     # """
     # Is the current user root?
     # Updated 2019-12-17
@@ -512,7 +512,7 @@ _koopa_is_root() {                                                        # {{{1
 }
 
 # Also defined in koopa installer.
-_koopa_is_shared_install() {                                              # {{{1
+_koopa_is_shared_install() {  # {{{1
     # """
     # Is koopa installed for all users (shared)?
     # Updated 2019-06-25.
@@ -520,7 +520,7 @@ _koopa_is_shared_install() {                                              # {{{1
     ! _koopa_is_local_install
 }
 
-_koopa_is_set() {                                                         # {{{1
+_koopa_is_set() {  # {{{1
     # """
     # Is the variable set and non-empty?
     # @note Updated 2020-02-07.
@@ -533,7 +533,7 @@ _koopa_is_set() {                                                         # {{{1
     [ -n "${1:-}" ]
 }
 
-_koopa_is_setopt_nounset() {                                              # {{{1
+_koopa_is_setopt_nounset() {  # {{{1
     # """
     # Is shell running in 'nounset' variable mode?
     # Updated 2020-01-24.
@@ -572,7 +572,7 @@ _koopa_is_setopt_nounset() {                                              # {{{1
     esac
 }
 
-_koopa_is_ssh_enabled() {                                                 # {{{1
+_koopa_is_ssh_enabled() {  # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
     # @note Updated 2020-02-11.
@@ -596,7 +596,7 @@ _koopa_is_ssh_enabled() {                                                 # {{{1
     _koopa_is_matching_fixed "$x" "$pattern"
 }
 
-_koopa_is_ubuntu() {                                                      # {{{1
+_koopa_is_ubuntu() {  # {{{1
     # """
     # Is the operating system Ubuntu?
     # Updated 2020-01-14.
@@ -606,7 +606,7 @@ _koopa_is_ubuntu() {                                                      # {{{1
         grep "ID_LIKE=" /etc/os-release | grep -q "ubuntu"
 }
 
-_koopa_is_venv_active() {                                                 # {{{1
+_koopa_is_venv_active() {  # {{{1
     # """
     # Is there a Python virtual environment active?
     # Updated 2019-10-20.
