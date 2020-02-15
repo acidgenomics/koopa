@@ -172,13 +172,13 @@ _koopa_is_debian() {  # {{{1
         grep "ID_LIKE=" /etc/os-release | grep -q "debian"
 }
 
-_koopa_is_defined_in_shell_profile() {  # {{{1
+_koopa_is_defined_in_user_profile() {  # {{{1
     # """
     # Is koopa defined in current user's shell profile configuration file?
     # @note Updated 2020-02-15
     # """
     local file
-    file="$(_koopa_find_shell_profile)"
+    file="$(_koopa_find_user_profile)"
     [ -r "$file" ] || return 1
     grep -q "koopa" "$file"
 }
