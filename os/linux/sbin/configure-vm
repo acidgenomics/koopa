@@ -7,8 +7,12 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_envs
 
+# e.g. '/usr/local/koopa'.
 koopa_prefix="$(_koopa_prefix)"
+# e.g. '/usr/local'.
 make_prefix="$(_koopa_make_prefix)"
+# e.g. '/usr/local/opt'.
+# For data disk, linked to '/mnt/data01/n/opt' (see below).
 app_prefix="$(_koopa_app_prefix)"
 
 if _koopa_is_docker
@@ -78,28 +82,27 @@ rm -frv \
 
 _koopa_enable_passwordless_sudo
 _koopa_update_etc_profile_d
-
-# Prepare make prefix (e.g. '/usr/local') for group write access.
 _koopa_mkdir "$make_prefix"
-_koopa_set_permissions "$make_prefix"
 
-# Prepare app prefix (e.g. '/n/app') for write access.
-if [[ ! -d "$app_prefix" ]]
+# Prepare app prefix on external disk for write access.
+# e.g. '/n'.
+dd_link="$(_koopa_data_disk_link_prefix)"
+if [[ -d "$data_disk" ]] && [[ ! -L "$dd_link" ]]
 then
-    if [[ -d "$data_disk" ]]
-    then
-        _koopa_h2 "Symlinking '${app_prefix}' on '${data_disk}'."
-        # e.g. '/mnt/data01/n/app'.
-        app_prefix_real="${data_disk}${app_prefix}"
-        # e.g. '/n'.
-        n_prefix_link="$(dirname "$app_prefix")"
-        # e.g. '/mnt/data01/n'.
-        n_prefix_real="$(dirname "$app_prefix_real")"
-        sudo mkdir -pv "$app_prefix_real"
-        sudo ln -fnsv "$n_prefix_real" "$n_prefix_link"
-    else
-        _koopa_mkdir "$app_prefix"
-    fi
+    _koopa_h2 "Symlinking '${dd_link}' on '${data_disk}'."
+    _koopa_rm "$dd_link"
+    # e.g. '/mnt/data01/n'.
+    dd_real="${data_disk}${dd_link}"
+    _koopa_ln "$dd_real" "$dd_link"
+    # e.g. 'opt'.
+    app_prefix_bn="$(basename "$app_prefix")"
+    # e.g. '/mnt/data01/n/opt'
+    app_prefix_real="${dd_real}/${app_prefix_bn}"
+    _koopa_mkdir "$app_prefix_real"
+    # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
+    _koopa_ln "$app_prefix_real" "$app_prefix"
+else
+    _koopa_mkdir "$app_prefix"
 fi
 
 _koopa_h2 "Installing base system."

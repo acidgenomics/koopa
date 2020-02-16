@@ -10,8 +10,14 @@ _koopa_defunct() {  # {{{1
     # @note Updated 2020-01-16.
     # """
     local new
-    new="${1:?}"
-    _koopa_stop "Function is defunct. Use '${new}' instead."
+    new="${1:-}"
+    local msg
+    msg="Function is defunct."
+    if [ -n "$new" ]
+    then
+        msg="${msg} Use '${new}' instead."
+    fi
+    _koopa_stop "${msg}"
 }
 
 
@@ -28,6 +34,27 @@ _koopa_is_darwin() {  # {{{1
     # @note Updated 2020-01-14.
     # """
     _koopa_defunct "_koopa_is_macos"
+}
+
+_koopa_quiet_cd() {  # {{{1
+    # """
+    # @note Updated 2020-02-16.
+    # """
+    _koopa_defunct "_koopa_cd"
+}
+
+_koopa_quiet_expr() {  # {{{1
+    # """
+    # @note Updated 2020-02-16.
+    # """
+    _koopa_defunct "_koopa_expr"
+}
+
+_koopa_quiet_rm() {  # {{{1
+    # """
+    # @note Updated 2020-02-16.
+    # """
+    _koopa_defunct "_koopa_rm"
 }
 
 _koopa_update_profile() {  # {{{1
