@@ -5,25 +5,26 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="python"
-version="$(_koopa_variable "$name")"
-framework_dir="/Library/Frameworks/Python.framework"
+name="clang"
+version="8.0.0"
+major_version="$(_koopa_major_version "$version")"
 
-_koopa_exit_if_dir "$framework_dir"
+clang_dir="/usr/local/${name}${major_version}"
 
-_koopa_h1 "Installing Python ${version} to '${framework_dir}'."
+_koopa_exit_if_dir "$clang_dir"
+
+_koopa_h1 "Installing ${name} ${version} to '${clang_dir}'."
 
 tmp_dir="$(_koopa_tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
-    file="python-${version}-macosx10.9.pkg"
-    url="https://www.python.org/ftp/python/${version}/${file}"
+    file="${name}-${version}.pkg"
+    url="https://cran.r-project.org/bin/macosx/tools/${file}"
     _koopa_download "$url"
     sudo installer -pkg "$file" -target /
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of Python was successful."
+_koopa_success "Installation of Clang was successful."
 _koopa_note "Restart the shell to complete installation."
