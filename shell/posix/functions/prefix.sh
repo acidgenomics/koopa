@@ -90,9 +90,7 @@ _koopa_cellar_prefix() {  # {{{1
     # Cellar prefix.
     # @note Updated 2020-02-16.
     #
-    # Ensure this points to a local mount (e.g. '/usr/local') instead of our
-    # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
-    # issues on some virtual machines.
+    # Ensure this points to a local mount (e.g. '/usr/local').
     # """
     local prefix
     if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
@@ -187,7 +185,7 @@ _koopa_go_gopath() {  # {{{1
     # Go GOPATH, for building from source.
     # @note Updated 2020-02-13.
     #
-    # This must be different from go root, e.g. '/n/app/go/1.13.4'.
+    # This must be different from go root.
     #
     # @seealso
     # - go help gopath
