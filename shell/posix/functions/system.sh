@@ -1037,8 +1037,12 @@ _koopa_set_permissions() {  # {{{1
     #
     # This always works recursively.
     # """
-    _koopa_prefix_chown "$@"
-    _koopa_prefix_chmod "$@"
+    [ "$#" -eq 1 ] || return 1
+    local prefix
+    prefix="${1:?}"
+    _koopa_h2 "Setting permissions on '${prefix}'."
+    _koopa_prefix_chown "$prefix"
+    _koopa_prefix_chmod "$prefix"
     return 0
 }
 
@@ -1049,8 +1053,12 @@ _koopa_set_permissions_user() {  # {{{1
     #
     # This always works recursively.
     # """
-    _koopa_prefix_chown_user "$@"
-    _koopa_prefix_chmod "$@"
+    [ "$#" -eq 1 ] || return 1
+    local prefix
+    prefix="${1:?}"
+    _koopa_h2 "Resetting permissions on '${prefix}'."
+    _koopa_prefix_chown_user "$prefix"
+    _koopa_prefix_chmod "$prefix"
     return 0
 }
 
