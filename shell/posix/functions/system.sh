@@ -898,7 +898,11 @@ _koopa_prefix_chgrp() {  # {{{1
     # Set group for target prefix(es).
     # @note Updated 2020-01-24.
     # """
-    _koopa_chgrp -R "$(_koopa_group)" "$@"
+    _koopa_chgrp \
+        --dereference \
+        --recursive \
+        "$(_koopa_group)" \
+        "$@"
     return 0
 }
 
@@ -919,7 +923,11 @@ _koopa_prefix_chown() {  # {{{1
     # Set ownership (user and group) for target prefix(es).
     # @note Updated 2020-02-16.
     # """
-    _koopa_chown -Rh "$(_koopa_user):$(_koopa_group)" "$@"
+    _koopa_chown \
+        --dereference \
+        --recursive \
+        "$(_koopa_user):$(_koopa_group)" \
+        "$@"
     return 0
 }
 
