@@ -310,6 +310,8 @@ then
         conda-create-bioinfo-envs --all
         install-bcbio
     fi
+else
+    _koopa_link_r_site_library
 fi
 
 _koopa_r_javareconf
