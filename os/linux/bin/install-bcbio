@@ -53,11 +53,6 @@ _koopa_assert_has_no_envs
 
 _koopa_prefix_mkdir "$prefix"
 
-if [[ "$version" == "stable" ]]
-then
-    ln -fnsv "${app_prefix}/${current_version}" "${app_prefix}/stable"
-fi
-
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -88,8 +83,10 @@ tmp_dir="$(_koopa_tmp_dir)"
 # > conda_exe="${tools_dir}/bin/bcbio_conda"
 # > "$conda_exe" clean --yes --tarballs
 
-# Keep install owned by current user, so we can install genomes easily.
-# > _koopa_chgrp "$prefix"
+if [[ "$version" == "stable" ]]
+then
+    ln -fnsv "${app_prefix}/${current_version}" "${app_prefix}/stable"
+fi
 
 _koopa_set_permissions "$app_prefix"
 
