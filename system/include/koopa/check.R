@@ -245,12 +245,6 @@ checkVersion(
     expected = expectedVersion("git")
 )
 checkVersion(
-    name = "GnuPG",
-    whichName = "gpg",
-    current = currentVersion("gnupg"),
-    expected = expectedVersion("gpg")
-)
-checkVersion(
     name = "htop",
     current = currentVersion("htop"),
     expected = expectedVersion("htop")
@@ -558,6 +552,12 @@ if (isTRUE(linux)) {
             `ubuntu-18` = "7.4.0",
             NA
         )
+    )
+    checkVersion(
+        name = "GnuPG",
+        whichName = "gpg",
+        current = currentVersion("gnupg"),
+        expected = expectedVersion("gpg")
     )
     checkVersion(
         name = "RStudio Server",
