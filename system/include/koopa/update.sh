@@ -72,19 +72,18 @@ _koopa_update_xdg_config
 _koopa_update_ldconfig
 _koopa_update_etc_profile_d
 
-# Loop across config directories and update git repos.
-# Consider nesting these under 'app' directory.
-_koopa_h1 "Updating user config at '${config_prefix}'."
+# Update additional git repos.
 rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
-
 repos=(
-    docker
-    dotfiles-private
-    scripts-private
+    "${config_prefix}/docker"
+    "${config_prefix}/dotfiles-private"
+    "${config_prefix}/scripts-private"
+    "${XDG_DATA_HOME}/Rcheck"
+    "${HOME}/.emacs.d-doom"
+    "${HOME}/.emacs.d-spacemacs"
 )
 for repo in "${repos[@]}"
 do
-    repo="${config_prefix}/${repo}"
     [ -d "$repo" ] || continue
     (
         _koopa_cd "$repo"
@@ -116,10 +115,6 @@ then
             update-rbenv
         fi
     fi
-    # Update managed git repos.
-    _koopa_git_pull "${HOME}/.emacs.d-doom"
-    _koopa_git_pull "${HOME}/.emacs.d-spacemacs"
-    _koopa_git_pull "${XDG_DATA_HOME}/Rcheck"
 fi
 
 _koopa_fix_zsh_permissions
