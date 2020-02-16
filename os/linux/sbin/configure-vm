@@ -329,13 +329,10 @@ then
     generate-ssh-key
 fi
 
-_koopa_h2 "Setting permissions on '${make_prefix}'."
 _koopa_set_permissions "$make_prefix"
-
-_koopa_h2 "Setting permissions on '${app_prefix}'."
-_koopa_set_permissions "$app_prefix"
-
 _koopa_remove_broken_symlinks "$make_prefix"
+
+_koopa_set_permissions "$app_prefix"
 _koopa_remove_broken_symlinks "$app_prefix"
 
 _koopa_fix_pyenv_permissions
