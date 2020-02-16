@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeu -o pipefail
 
-set -x
-
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
@@ -89,6 +87,7 @@ do
     repo="${config_prefix}/${repo}"
     [ -d "$repo" ] || continue
     (
+        _koopa_h2 "Updating git repo at '${repo}'."
         _koopa_cd "$repo"
         _koopa_git_pull
     )
