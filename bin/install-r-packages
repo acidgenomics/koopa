@@ -29,13 +29,31 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 ## - sf
 ## - XML
 
-install.packages("BiocManager")
-library("BiocManager")
+## Install BiocManager first, if necessary.
+if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
+    stopifnot(requireNamespace("utils"), quietly = TRUE)
+    utils::install.packages("BiocManager")
+}
+
+## Wrapper for `BiocManager::install()` that skips installed packages.
+install <- function(pkgs, ...) {
+    invisible(lapply(
+        X = pkgs,
+        FUN = function(pkg) {
+            if (isTRUE(isInstalled(pkg))) return(TRUE)
+            stopifnot(requireNamespace("BiocManager", quietly = TRUE))
+            BiocManager::install(pkg, ...)
+        }
+    ))
+}
+
+## Upgrade Bioconductor first, if desired.
 ## > install(
 ## >     update = TRUE,
 ## >     ask = FALSE,
 ## >     version = Sys.getenv("BIOC_VERSION")
 ## > )
+
 install(
     pkgs = c(
         "AnnotationDbi",
