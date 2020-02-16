@@ -1,4 +1,3 @@
-## Current ====================================================================
 #' Current version of installed program
 #' @note Updated 2020-02-12.
 #'
@@ -70,7 +69,6 @@ currentMinorVersion <- function(name) {
 
 
 
-## Expected ====================================================================
 #' Expected version
 #' @note Updated 2020-02-11.
 expectedVersion <- function(x) {
@@ -128,5 +126,49 @@ expectedMinorVersion <- function(x) {
     x <- expectedVersion(x)
     stopifnot(isTRUE(grepl("\\.", x)))
     x <- minorVersion(x)
+    x
+}
+
+
+
+#' Major version
+#' @note Updated 2020-02-06.
+majorVersion <- function(x) {
+    strsplit(x, split = "\\.")[[1L]][[1L]]
+}
+
+
+
+#' Minor version
+#' @note Updated 2020-02-06.
+minorVersion <- function(x) {
+    x <- strsplit(x, split = "\\.")[[1L]]
+    x <- paste(x[seq_len(2L)], collapse = ".")
+    x
+}
+
+
+
+#' Sanitize program version
+#' @note Updated 2020-02-12.
+#'
+#' Sanitize complicated verions:
+#' - 2.7.15rc1 to 2.7.15
+#' - 1.10.0-patch1 to 1.10.0
+#' - 1.0.2k-fips to 1.0.2
+sanitizeVersion <- function(x) {
+    ## Strip anything following a space.
+    x <- sub("[[:space:]].+$", "", x)
+    ## Strip trailing "+" (e.g. "Python 2.7.15+").
+    x <- sub("\\+$", "", x)
+    ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
+    x <- gsub("\"", "", x)
+    ## Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
+    x <- sub("(-|_).+$", "", x)
+    x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
+    ## Strip leading letter.
+    x <- sub("^[a-z]+", "", x)
+    ## Strip trailing letter.
+    x <- sub("[a-z]+$", "", x)
     x
 }
