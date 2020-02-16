@@ -260,8 +260,8 @@ fi
 
 if _koopa_is_installed gpg
 then
-    gpg-reload='gpg-connect-agent reloadagent /bye'
-    gpg-restart='gpgconf --kill gpg-agent'
+    alias gpg-reload='gpg-connect-agent reloadagent /bye'
+    alias gpg-restart='gpgconf --kill gpg-agent'
 fi
 
 if _koopa_is_installed nvim
