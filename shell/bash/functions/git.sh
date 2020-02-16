@@ -6,6 +6,7 @@ _koopa_git_submodule_init() {
     # @note Updated 2020-02-16.
     # """
     _koopa_h2 "Initializing submodules in '${PWD:?}'."
+    [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_file ".gitmodules"
     _koopa_assert_is_installed git
@@ -35,6 +36,7 @@ _koopa_git_pull() {
     # @note Updated 2020-02-16.
     # """
     _koopa_h2 "Pulling git repo at '${PWD:?}'."
+    [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
     git fetch --all --quiet
@@ -70,6 +72,7 @@ _koopa_git_reset() {  # {{{1
     # https://gist.github.com/nicktoumpelis/11214362
     # """
     _koopa_h2 "Resetting git repo at '${PWD:?}'."
+    [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
     git clean -dffx
