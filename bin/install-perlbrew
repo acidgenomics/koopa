@@ -72,7 +72,7 @@ then
         mkdir -pv system
         ln -fnsv "$bin_dir" "system/bin"
     )
-    _koopa_system "Addition of system Perl to perlbrew was successful."
+    _koopa_success "Addition of system Perl to perlbrew was successful."
 fi
 
 # Install latest Perl  {{{1
