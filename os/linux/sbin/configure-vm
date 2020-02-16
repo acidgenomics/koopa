@@ -305,13 +305,13 @@ then
     if [[ "$docker" -eq 0 ]]
     then
         install-python-packages
+        _koopa_link_r_site_library
         install-r-packages
         conda-create-bioinfo-envs --all
         install-bcbio
     fi
 fi
 
-_koopa_link_r_site_library
 _koopa_r_javareconf
 
 if [[ "$docker" -eq 0 ]]
