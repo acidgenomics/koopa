@@ -6,7 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 name="clang"
-version="8.0.0"
+version="7.0.0"
 major_version="$(_koopa_major_version "$version")"
 prefix="/usr/local/${name}${major_version}"
 
