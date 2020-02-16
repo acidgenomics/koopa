@@ -25,19 +25,6 @@ _koopa_admin_group() {  # {{{1
     return 0
 }
 
-_koopa_array_to_r_vector() {  # {{{1
-    # """
-    # Convert a bash array to an R vector string.
-    # @note Updated 2019-09-25.
-    #
-    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
-    # """
-    local x
-    x="$(printf '"%s", ' "$@")"
-    x="$(_koopa_strip_right "$x" ", ")"
-    printf "c(%s)\n" "$x"
-}
-
 _koopa_cd() {  # {{{1
     # """
     # Change directory quietly.
@@ -221,6 +208,51 @@ _koopa_dotfiles_source_repo() {  # {{{1
     return 0
 }
 
+_koopa_download() {  # {{{1
+    # """
+    # Download a file.
+    # @note Updated 2020-02-16.
+    #
+    # Potentially useful curl flags:
+    # * --connect-timeout <seconds>
+    # * --silent
+    # * --stderr
+    # * --verbose
+    #
+    # Note that '--fail-early' flag is useful, but not supported on old versions
+    # of curl (e.g. 7.29.0; RHEL 7).
+    #
+    # Alternatively, can use wget instead of curl:
+    # > wget -O file url
+    # > wget -q -O - url (piped to stdout)
+    # > wget -qO-
+    # """
+    _koopa_assert_is_installed curl
+    local url
+    url="${1:?}"
+    local file
+    file="${2:-}"
+    if [ -z "$file" ]
+    then
+        local wd
+        wd="$(pwd)"
+        local bn
+        bn="$(basename "$url")"
+        file="${wd}/${bn}"
+    fi
+    _koopa_info "Downloading '${url}' to '${file}'."
+    curl \
+        --create-dirs \
+        --fail \
+        --location \
+        --output "$file" \
+        --progress-bar \
+        --retry 1 \
+        --show-error \
+        "$url"
+    return 0
+}
+
 _koopa_expr() {  # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
@@ -233,6 +265,75 @@ _koopa_expr() {  # {{{1
     # - https://stackoverflow.com/questions/21115121
     # """
     expr "${1:?}" : "${2:?}" 1>/dev/null
+}
+
+_koopa_extract() {  # {{{1
+    # """
+    # Extract compressed files automatically.
+    # @note Updated 2020-02-13.
+    #
+    # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
+    #
+    # See also:
+    # - https://github.com/stephenturner/oneliners
+    # """
+    local file
+    file="${1:?}"
+    if [ ! -f "$file" ]
+    then
+        _koopa_stop "Invalid file: '${file}'."
+    fi
+    _koopa_h2 "Extracting '${file}'."
+    case "$file" in
+        *.tar.bz2)
+            tar -xjvf "$file"
+            ;;
+        *.tar.gz)
+            tar -xzvf "$file"
+            ;;
+        *.tar.xz)
+            tar -xJvf "$file"
+            ;;
+        *.bz2)
+            _koopa_assert_is_installed bunzip2
+            bunzip2 "$file"
+            ;;
+        *.gz)
+            gunzip "$file"
+            ;;
+        *.rar)
+            _koopa_assert_is_installed unrar
+            unrar -x "$file"
+            ;;
+        *.tar)
+            tar -xvf "$file"
+            ;;
+        *.tbz2)
+            tar -xjvf "$file"
+            ;;
+        *.tgz)
+            tar -xzvf "$file"
+            ;;
+        *.xz)
+            _koopa_assert_is_installed xz
+            xz --decompress "$file"
+            ;;
+        *.zip)
+            _koopa_assert_is_installed unzip
+            unzip "$file"
+            ;;
+        *.Z)
+            uncompress "$file"
+            ;;
+        *.7z)
+            _koopa_assert_is_installed 7z
+            7z -x "$file"
+            ;;
+        *)
+            _koopa_stop "Unsupported extension: '${file}'."
+            ;;
+   esac
+   return 0
 }
 
 _koopa_git_branch() {  # {{{1
@@ -871,6 +972,41 @@ _koopa_rm() {  # {{{1
     else
         rm -fr "$@" > /dev/null 2>&1
     fi
+    return 0
+}
+
+_koopa_rsync_flags() {  # {{{1
+    # """
+    # rsync flags.
+    # @note Updated 2019-10-28.
+    #
+    #     --delete-before         receiver deletes before xfer, not during
+    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
+    #     --numeric-ids           don't map uid/gid values by user/group name
+    #     --partial               keep partially transferred files
+    #     --progress              show progress during transfer
+    # -A, --acls                  preserve ACLs (implies -p)
+    # -H, --hard-links            preserve hard links
+    # -L, --copy-links            transform symlink into referent file/dir
+    # -O, --omit-dir-times        omit directories from --times
+    # -P                          same as --partial --progress
+    # -S, --sparse                handle sparse files efficiently
+    # -X, --xattrs                preserve extended attributes
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -g, --group                 preserve group
+    # -h, --human-readable        output numbers in a human-readable format
+    # -n, --dry-run               perform a trial run with no changes made
+    # -o, --owner                 preserve owner (super-user only)
+    # -r, --recursive             recurse into directories
+    # -x, --one-file-system       don't cross filesystem boundaries    
+    # -z, --compress              compress file data during the transfer
+    #
+    # Use '--rsync-path="sudo rsync"' to sync across machines with sudo.
+    #
+    # See also:
+    # - https://unix.stackexchange.com/questions/165423
+    # """
+    echo "--archive --delete-before --human-readable --progress"
     return 0
 }
 
