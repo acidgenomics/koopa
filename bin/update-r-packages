@@ -12,19 +12,17 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-removePkgs <- intersect(
-    x = c(
+if (!requireNamespace("bb8", quietly = TRUE)) {
+    message("bb8 package is required but not installed. Skipping.")
+    quit()
+}
+
+remove(
+    pkgs = c(
         "Matrix.utils",
         "bioverbs",
         "brio"
-    ),
-    y = rownames(installed.packages())
+    )
 )
 
-if (length(removePkgs) > 0L) {
-    message("Removing packages: ", toString(removePkgs))
-    remove.packages(pkgs = removePkgs)
-}
-
-stopifnot(requireNamespace("bb8", quietly = TRUE))
 bb8::updatePackages()

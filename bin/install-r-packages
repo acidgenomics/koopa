@@ -5,6 +5,25 @@ options(
     "warning" = quote(quit(status = 1L))
 )
 
+## """
+## CRAN removals:
+## > remove.packages("Matrix.utils")
+## > remove.packages("ashr")
+## > remove.packages("rgexf")
+## > remove.packages("trimcluster")
+##
+## GitHub removals / renames:
+## > remove.packages("bioverbs")
+## > remove.packages("brio")
+## > remove.packages("wormbase")
+##
+## Tricky packages:
+## - Rcpp
+## - RcppArmadillo
+## - sf
+## - XML
+## """
+
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
@@ -12,40 +31,13 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-## CRAN removals.
-## > remove.packages("Matrix.utils")
-## > remove.packages("ashr")
-## > remove.packages("rgexf")
-## > remove.packages("trimcluster")
-
-## GitHub removals / renames.
-## > remove.packages("bioverbs")
-## > remove.packages("brio")
-## > remove.packages("wormbase")
-
-## Tricky packages:
-## - Rcpp
-## - RcppArmadillo
-## - sf
-## - XML
-
 ## Install BiocManager first, if necessary.
 if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
     stopifnot(requireNamespace("utils"), quietly = TRUE)
     utils::install.packages("BiocManager")
 }
 
-## Wrapper for `BiocManager::install()` that skips installed packages.
-install <- function(pkgs, ...) {
-    invisible(lapply(
-        X = pkgs,
-        FUN = function(pkg) {
-            if (isTRUE(isInstalled(pkg))) return(TRUE)
-            stopifnot(requireNamespace("BiocManager", quietly = TRUE))
-            BiocManager::install(pkg, ...)
-        }
-    ))
-}
+h1("Installing R packages")
 
 ## Upgrade Bioconductor first, if desired.
 ## > install(
@@ -54,37 +46,17 @@ install <- function(pkgs, ...) {
 ## >     version = Sys.getenv("BIOC_VERSION")
 ## > )
 
+h2("CRAN")
 install(
     pkgs = c(
-        "AnnotationDbi",
-        "AnnotationHub",
-        "Biobase",
-        "BiocCheck",
-        "BiocGenerics",
-        "BiocParallel",
-        "BiocStyle",
-        "Biostrings",
         "DT",
-        "DelayedArray",
-        "DropletUtils",
-        "GSEABase",
-        "GenomeInfoDb",
-        "GenomeInfoDbData",
-        "GenomicAlignments",
-        "GenomicFeatures",
-        "GenomicRanges",
-        "IRanges",
         "Matrix",
         "R.utils",
-        "S4Vectors",
-        "SingleCellExperiment",
-        "SummarizedExperiment",
         "backports",
         "covr",
         "cowplot",
         "curl",
         "devtools",
-        "ensembldb",
         "ggrepel",
         "knitr",
         "lintr",
@@ -97,7 +69,6 @@ install(
         "rlang",
         "rmarkdown",
         "roxygen2",
-        "rtracklayer",
         "sessioninfo",
         "testthat",
         "tidyverse",
@@ -107,3 +78,46 @@ install(
     update = TRUE,
     ask = FALSE
 )
+
+h2("Bioconductor")
+install(
+    pkgs = c(
+        "AnnotationDbi",
+        "AnnotationHub",
+        "Biobase",
+        "BiocCheck",
+        "BiocGenerics",
+        "BiocParallel",
+        "BiocStyle",
+        "Biostrings",
+        "DelayedArray",
+        "DropletUtils",
+        "GSEABase",
+        "GenomeInfoDb",
+        "GenomeInfoDbData",
+        "GenomicAlignments",
+        "GenomicFeatures",
+        "GenomicRanges",
+        "IRanges",
+        "S4Vectors",
+        "SingleCellExperiment",
+        "SummarizedExperiment",
+        "ensembldb",
+        "rtracklayer"
+    ),
+    update = TRUE,
+    ask = FALSE
+)
+
+# GitHub packages.
+h2("GitHub")
+if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
+    install(
+        pkgs = c(
+            "acidgenomics/basejump",
+            "acidgenomics/bb8"
+        )
+    )
+} else {
+    message("No 'GITHUB_PAT' key detected. Skipping.")
+}
