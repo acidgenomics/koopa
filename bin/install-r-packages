@@ -75,7 +75,6 @@ install(
         "GenomicRanges",
         "IRanges",
         "Matrix",
-        "Matrix.utils",
         "R.utils",
         "S4Vectors",
         "SingleCellExperiment",
