@@ -301,10 +301,11 @@ then
     fi
 
     # Software packages.
-    # > conda-create-bioinfo-envs
+    # > conda-create-bioinfo-envs --all
     # > install-python-packages
     # > install-r-packages
     # > install-rust-packages
+    # > install-bcbio
 fi
 
 _koopa_r_javareconf
