@@ -88,6 +88,8 @@ for repo in "${repos[@]}"
 do
     repo="${config_prefix}/${repo}"
     [ -d "$repo" ] || continue
+    echo "$repo"
+    # FIXME We need to switch to subshell here right?
     _koopa_git_pull "$repo"
 done
 
