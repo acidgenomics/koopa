@@ -40,17 +40,17 @@ h2 <- function(x) {
 
 
 #' Can we use cli methods?
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-16.
 hasCli <- function() {
-    isPackage("cli")
+    isInstalled("cli")
 }
 
 
 
 #' Can we output color to the console?
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-16.
 hasColor <- function() {
-    isPackage("crayon")
+    isInstalled("crayon")
 }
 
 
@@ -94,7 +94,7 @@ isString <- function(x) {
 
 #' Is an R package installed?
 #' @note Updated 2020-02-07.
-isPackage <- function(pkgs) {
+isInstalled <- function(pkgs) {
     stopifnot(requireNamespace("utils", quietly = TRUE))
     pkgs %in% rownames(installed.packages())
 }
