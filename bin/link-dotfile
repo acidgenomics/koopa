@@ -91,7 +91,7 @@ fi
 if [[ "$force" -eq 1 ]] ||
     { [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]; }
 then
-    rm -fv "$symlink_path"
+    rm -frv "$symlink_path"
 elif [[ -e "$symlink_path" ]]
 then
     _koopa_stop "Existing dotfile: '${symlink_path}'."
