@@ -37,15 +37,11 @@ then
     _koopa_missing_arg
 fi
 
-# make prefix  {{{1
-# ==============================================================================
-
-_koopa_rsync_vm \
-    --prefix="$(_koopa_make_prefix)" \
-    --source-ip="$source_ip"
-
 # app prefix  {{{1
 # ==============================================================================
+
+# Need to sync this before make prefix, otherwise some symlinks won't resolve
+# as expected and chmod will error.
 
 app_prefix="$(_koopa_app_prefix)"
 
@@ -72,4 +68,11 @@ fi
 _koopa_rsync_vm \
     --flags="${app_flags[*]}" \
     --prefix="$app_prefix" \
+    --source-ip="$source_ip"
+
+# make prefix  {{{1
+# ==============================================================================
+
+_koopa_rsync_vm \
+    --prefix="$(_koopa_make_prefix)" \
     --source-ip="$source_ip"
