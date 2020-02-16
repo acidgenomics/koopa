@@ -7,7 +7,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_envs
-_koopa_activate_python
 _koopa_assert_is_installed python3
 
 _koopa_h1 "Installing Python packages."
