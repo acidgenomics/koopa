@@ -82,7 +82,7 @@ rm -fr "$tmp_dir"
 ln -fnsv "$(_koopa_prefix)/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
-_remove_broken_symlinks "$prefix"
+_koopa_remove_broken_symlinks "$prefix"
 _koopa_set_permissions "$prefix"
 
 set +u
