@@ -298,11 +298,12 @@ if (isTRUE(extra)) {
         current = currentVersion("autojump"),
         expected = expectedVersion("autojump")
     )
+    ## This updates frequently, so be less strict about check.
     checkVersion(
         name = "broot",
         whichName = "broot",
-        current = currentVersion("broot"),
-        expected = expectedVersion("broot")
+        current = currentMinorVersion("broot"),
+        expected = expectedMinorVersion("broot")
     )
     checkVersion(
         name = "fzf",
