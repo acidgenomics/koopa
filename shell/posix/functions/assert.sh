@@ -276,9 +276,10 @@ _koopa_assert_is_git() {  # {{{1
     [ "$#" -ne 0 ] || return 1
     for arg
     do
+        arg="$(realpath "$arg")"
         if ! _koopa_is_git "$arg"
         then
-            _koopa_stop "Not a git repo: '${arg}'."
+            _koopa_stop "Not a git repo: '$arg'."
         fi
     done
     return 0

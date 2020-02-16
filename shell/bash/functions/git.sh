@@ -3,10 +3,11 @@
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-02-16.
     # """
-    [[ -f ".gitmodules" ]] || return 1
-    _koopa_h2 "Initializing submodules in '${PWD}'."
+    _koopa_h2 "Initializing submodules in '${PWD:?}'."
+    _koopa_assert_is_git "$PWD"
+    _koopa_assert_is_file ".gitmodules"
     _koopa_assert_is_installed git
     local array string target target_key url url_key
     git submodule init
@@ -31,14 +32,16 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-02-16.
     # """
-    _koopa_assert_is_git
+    _koopa_h2 "Pulling git repo at '${PWD:?}'."
+    _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
     git fetch --all --quiet
     git pull --quiet
     if [[ -f ".gitmodules" ]]
     then
+        _koopa_git_submodule_init
         git submodule --quiet update --init --recursive
         git submodule --quiet foreach -q --recursive git checkout --quiet master
         git submodule --quiet foreach git pull --quiet
@@ -49,7 +52,7 @@ _koopa_git_pull() {
 _koopa_git_reset() {  # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-02-16.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -66,7 +69,8 @@ _koopa_git_reset() {  # {{{1
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
-    _koopa_assert_is_git
+    _koopa_h2 "Resetting git repo at '${PWD:?}'."
+    _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
     git clean -dffx
     if [[ -f ".gitmodules" ]]
