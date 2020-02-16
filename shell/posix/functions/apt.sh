@@ -6,8 +6,6 @@ _koopa_apt_add_azure_cli_repo() {  # {{{1
     # Add Microsoft Azure CLI apt repo.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local sources_list
     sources_list="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$sources_list" ] && return 0
@@ -24,8 +22,6 @@ _koopa_apt_add_docker_repo() {  # {{{1
     # Add Docker apt repo.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local sources_list
     sources_list="/etc/apt/sources.list.d/docker.list"
     [ -f "$sources_list" ] && return 0
@@ -44,8 +40,6 @@ _koopa_apt_add_google_cloud_sdk_repo() {  # {{{1
     # Add Google Cloud SDK apt repo.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local sources_list
     sources_list="/etc/apt/sources.list.d/google-cloud-sdk.list"
     [ -f "$sources_list" ] && return 0
@@ -60,8 +54,6 @@ _koopa_apt_add_llvm_repo() {  # {{{1
     # Add LLVM apt repo.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local sources_list
     sources_list="/etc/apt/sources.list.d/llvm.list"
     [ -f "$sources_list" ] && return 0
@@ -78,8 +70,6 @@ _koopa_apt_add_r_repo() {  # {{{1
     # Add R apt repo.
     # @note Updated 2020-02-14.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local sources_list
     sources_list="/etc/apt/sources.list.d/r.list"
     [ -f "$sources_list" ] && return 0
@@ -98,8 +88,6 @@ _koopa_apt_disable_deb_src() {  # {{{1
     # Enable 'deb-src' source packages.
     # @note Updated 2020-02-05.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local file
     file="${1:-/etc/apt/sources.list}"
     file="$(realpath "$file")"
@@ -119,8 +107,6 @@ _koopa_apt_enable_deb_src() {  # {{{1
     # Enable 'deb-src' source packages.
     # @note Updated 2020-02-05.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local file
     file="${1:-/etc/apt/sources.list}"
     file="$(realpath "$file")"
@@ -138,13 +124,17 @@ _koopa_apt_enable_deb_src() {  # {{{1
 _koopa_apt_enabled_repos() {  # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-18.
     # """
-    _koopa_assert_is_debian
-    grep -E '^deb ' /etc/apt/sources.list \
-        | cut -d ' ' -f 4 \
-        | awk '!a[$0]++' \
-        | sort
+    local x
+    x="$( \
+        grep -E '^deb ' /etc/apt/sources.list \
+            | cut -d ' ' -f 4 \
+            | awk '!a[$0]++' \
+            | sort \
+    )"
+    echo "$x"
+    return 0
 }
 
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
@@ -152,8 +142,6 @@ _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # Import the Microsoft Azure CLI public key.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     [ -e "/etc/apt/trusted.gpg.d/microsoft.asc.gpg" ] && return 0
     _koopa_assert_is_installed curl gpg
     _koopa_h2 "Adding official Microsoft public key."
@@ -168,8 +156,6 @@ _koopa_apt_import_docker_key() {  # {{{1
     # Import the Docker public key.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local key
     key="9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88"
     _koopa_apt_is_key_imported "$key" && return 0
@@ -189,8 +175,6 @@ _koopa_apt_import_google_cloud_key() {  # {{{1
     # Import the Google Cloud public key.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     [ -e "/usr/share/keyrings/cloud.google.gpg" ] && return 0
     _koopa_assert_is_installed curl
     _koopa_h2 "Adding official Google Cloud SDK public key."
@@ -204,8 +188,6 @@ _koopa_apt_import_llvm_key() {  # {{{1
     # Import the LLVM public key.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     key="6084 F3CF 814B 57C1 CF12  EFD5 15CF 4D18 AF4F 7421"
     _koopa_apt_is_key_imported "$key" && return 0
     _koopa_assert_is_installed curl
@@ -243,8 +225,6 @@ _koopa_apt_import_keys() {  # {{{1
     # - install-llvm
     # - install-r
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     _koopa_h1 "Importing signatures for signed apt repositories."
     _koopa_apt_import_azure_cli_key
     _koopa_apt_import_docker_key
@@ -259,8 +239,6 @@ _koopa_apt_import_r_key() {  # {{{1
     # Import the R public key.
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     if _koopa_is_ubuntu
     then
         key="E298 A3A8 25C0 D65D FD57  CBB6 5171 6619 E084 DAB9"
@@ -291,7 +269,6 @@ _koopa_apt_is_key_imported() {  # {{{1
     # Is a GPG key imported for apt?
     # @note Updated 2020-02-12.
     # """
-    _koopa_assert_is_debian
     local key
     key="${1:?}"
     apt-key list 2>&1 | grep -q "$key"
@@ -302,8 +279,6 @@ _koopa_apt_link_sources() {  # {{{1
     # Symlink 'sources.list' files in '/etc/apt'.
     # @note Updated 2020-02-05.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     local prefix
     prefix="$(_koopa_prefix)"
     local os_id
@@ -333,8 +308,6 @@ _koopa_apt_space_used_by() {  # {{{1
     # @note Updated 2020-01-31.
     #
     # Alternate approach that doesn't attempt to grep match.
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     sudo apt-get --assume-no autoremove "$@"
     return 0
 }
@@ -342,16 +315,18 @@ _koopa_apt_space_used_by() {  # {{{1
 _koopa_apt_space_used_by_grep() {  # {{{1
     # """
     # Check installed apt package size, with dependencies.
-    # @note Updated 2020-01-31.
+    # @note Updated 2020-02-16.
     #
     # See also:
     # https://askubuntu.com/questions/490945
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
-    sudo apt-get --assume-no autoremove "$@" \
-        | grep freed \
-        | cut -d ' ' -f 4-5
+    local x
+    x="$( \
+        sudo apt-get --assume-no autoremove "$@" \
+            | grep freed \
+            | cut -d ' ' -f 4-5 \
+    )"
+    echo "$x"
     return 0
 }
 
@@ -360,8 +335,6 @@ _koopa_apt_space_used_by_no_deps() {  # {{{1
     # Check install apt package size, without dependencies.
     # @note Updated 2020-01-31.
     # """
-    _koopa_assert_is_debian
-    _koopa_assert_has_sudo
     sudo apt show "$@" | grep 'Size'
     return 0
 }

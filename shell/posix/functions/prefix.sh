@@ -6,20 +6,16 @@ _koopa_app_prefix() {  # {{{1
     # Custom application install prefix.
     # @note Updated 2020-02-16.
     # """
+    local prefix
     if [ -n "${KOOPA_APP_PREFIX:-}" ]
     then
-        echo "$KOOPA_APP_PREFIX"
-        return 0
-    fi
-    local prefix
-    if _koopa_is_shared_install
+        prefix="$KOOPA_APP_PREFIX"
+    elif _koopa_is_shared_install && _koopa_is_installed brew
     then
-        if _koopa_is_macos
-        then
-            prefix="$(_koopa_make_prefix)"
-        else
-            prefix="$(_koopa_make_prefix)/opt"
-        fi
+        prefix="$(_koopa_prefix)/opt"
+    elif _koopa_is_shared_install
+    then
+        prefix="$(_koopa_make_prefix)/opt"
     else
         prefix="$(_koopa_local_app_prefix)"
     fi
@@ -30,10 +26,10 @@ _koopa_app_prefix() {  # {{{1
 _koopa_aspera_prefix() {  # {{{1
     # """
     # Aspera Connect prefix.
-    # @note Updated 2020-02-06.
+    # @note Updated 2020-02-16.
     # """
     local prefix
-    if _koopa_is_shared_install && _koopa_has_sudo && _koopa_is_linux
+    if _koopa_is_shared_install
     then
         prefix="$(_koopa_app_prefix)/aspera-connect"
     else
@@ -92,21 +88,19 @@ _koopa_bcbio_prefix() {  # {{{1
 _koopa_cellar_prefix() {  # {{{1
     # """
     # Cellar prefix.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-16.
     #
     # Ensure this points to a local mount (e.g. '/usr/local') instead of our
     # app dir (e.g. '/n/app'), otherwise you can run into login shell activation
     # issues on some virtual machines.
     # """
+    local prefix
     if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
     then
-        echo "$KOOPA_CELLAR_PREFIX"
-        return 0
-    fi
-    local prefix
-    if _koopa_is_installed brew
+        prefix="$KOOPA_CELLAR_PREFIX"
+    elif _koopa_is_shared_install && _koopa_is_installed brew
     then
-        prefix="$(_koopa_make_prefix)/koopa-cellar"
+        prefix="$(_koopa_prefix)/cellar"
     else
         prefix="$(_koopa_make_prefix)/cellar"
     fi
@@ -257,20 +251,17 @@ _koopa_local_app_prefix() {  # {{{1
 _koopa_make_prefix() {  # {{{1
     # """
     # Return the installation prefix to use.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-16.
     # """
+    local prefix
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
     then
-        echo "$KOOPA_MAKE_PREFIX"
-        return 0
-    fi
-    local prefix
-    if _koopa_is_shared_install && _koopa_has_sudo
+        prefix="$KOOPA_MAKE_PREFIX"
+    elif _koopa_is_shared_install
     then
         prefix="/usr/local"
     else
-        # This is the top-level directory of XDG_DATA_HOME.
-        prefix="${HOME:?}/.local"
+        prefix="$(dirname "${XDG_DATA_HOME:?}")"
     fi
     echo "$prefix"
     return 0
