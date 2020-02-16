@@ -56,9 +56,8 @@ _koopa_rsync_vm() {
     _koopa_h1 "Syncing '${prefix}' from '${source_ip}'."
     _koopa_dl "Flags" "$flags"
 
-    sudo mkdir -pv "$prefix"
-    sudo chown -Rh "$user" "$prefix"
-    _koopa_set_permissions "$prefix"
+    _koopa_mkdir "$prefix"
+    _koopa_set_permissions_user "$prefix"
 
     # Note that this step won't work unless we leave 'flags' unquoted here.
     # shellcheck disable=SC2086
