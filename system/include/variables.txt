@@ -164,7 +164,7 @@ pandoc="2.7.3"
 pass="1.7.3"
 
 # https://www.perl.org/get.html
-perl="5.30.1"
+perl="5.30.0"
 
 # https://perlbrew.pl/
 perlbrew="0.88"
