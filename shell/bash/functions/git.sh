@@ -46,7 +46,7 @@ _koopa_git_pull() {
         _koopa_git_submodule_init
         git submodule --quiet update --init --recursive
         git submodule --quiet foreach -q --recursive git checkout --quiet master
-        git submodule --quiet foreach git pull  # --quiet
+        git submodule --quiet foreach git pull --quiet
     fi
     return 0
 }
