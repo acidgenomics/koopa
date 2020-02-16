@@ -53,45 +53,45 @@ _koopa_prompt() {  # {{{1
             wd='%~'
             ;;
     esac
-    # Enable colorful prompt, when possible.
-    if _koopa_is_matching_fixed "${TERM:-}" "256color"
-    then
-        local conda_color git_color prompt_color user_color venv_color wd_color
-        case "$shell" in
-            bash)
-                conda_color="33"
-                git_color="32"
-                prompt_color="35"
-                user_color="36"
-                venv_color="33"
-                wd_color="34"
-                # Colorize the variable strings.
-                conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
-                git="\[\033[${git_color}m\]${git}\[\033[00m\]"
-                prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
-                user="\[\033[${user_color}m\]${user}\[\033[00m\]"
-                venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
-                wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
-                ;;
-            zsh)
-                # SC2154: fg is referenced but not assigned.
-                # shellcheck disable=SC2154
-                conda_color="${fg[yellow]}"
-                git_color="${fg[green]}"
-                prompt_color="${fg[magenta]}"
-                user_color="${fg[cyan]}"
-                venv_color="${fg[yellow]}"
-                wd_color="${fg[blue]}"
-                # Colorize the variable strings.
-                conda="%F%{${conda_color}%}${conda}%f"
-                git="%F%{${git_color}%}${git}%f"
-                prompt="%F%{${prompt_color}%}${prompt}%f"
-                user="%F%{${user_color}%}${user}%f"
-                venv="%F%{${venv_color}%}${venv}%f"
-                wd="%F%{${wd_color}%}${wd}%f"
-                ;;
-        esac
-    fi
+    # Enable colorful prompt.
+    # Note that vim can set TERM as 'xterm' instead of 'xterm-256color' inside
+    # of tmux, so disable this check:
+    # > if _koopa_is_matching_fixed "${TERM:-}" "256color"
+    local conda_color git_color prompt_color user_color venv_color wd_color
+    case "$shell" in
+        bash)
+            conda_color="33"
+            git_color="32"
+            prompt_color="35"
+            user_color="36"
+            venv_color="33"
+            wd_color="34"
+            # Colorize the variable strings.
+            conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
+            git="\[\033[${git_color}m\]${git}\[\033[00m\]"
+            prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
+            user="\[\033[${user_color}m\]${user}\[\033[00m\]"
+            venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
+            wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
+            ;;
+        zsh)
+            # SC2154: fg is referenced but not assigned.
+            # shellcheck disable=SC2154
+            conda_color="${fg[yellow]}"
+            git_color="${fg[green]}"
+            prompt_color="${fg[magenta]}"
+            user_color="${fg[cyan]}"
+            venv_color="${fg[yellow]}"
+            wd_color="${fg[blue]}"
+            # Colorize the variable strings.
+            conda="%F%{${conda_color}%}${conda}%f"
+            git="%F%{${git_color}%}${git}%f"
+            prompt="%F%{${prompt_color}%}${prompt}%f"
+            user="%F%{${user_color}%}${user}%f"
+            venv="%F%{${venv_color}%}${venv}%f"
+            wd="%F%{${wd_color}%}${wd}%f"
+            ;;
+    esac
     printf "%s%s%s%s%s%s%s%s%s " \
         "$newline" \
         "$user" "$conda" "$venv" \
