@@ -22,4 +22,5 @@ _koopa_exit_if_not_installed conda
     # > "$conda" clean --yes --tarballs
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
+_koopa_remove_broken_symlinks "$prefix"
 _koopa_set_permissions "$prefix"
