@@ -56,8 +56,9 @@ Run with '--help' flag for usage details."
 _koopa_assert_has_file_ext() {  # {{{1
     # """
     # Assert that input contains a file extension.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_has_file_ext "$arg"
@@ -103,8 +104,9 @@ _koopa_assert_has_sudo() {  # {{{1
 _koopa_assert_is_cellar() {  # {{{1
     # """
     # Assert that input is a cellarized program.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_cellar "$arg"
@@ -130,8 +132,9 @@ _koopa_assert_is_conda_active() {  # {{{1
 _koopa_assert_is_current_version() {  # {{{1
     # """
     # Assert that programs are installed and current.
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_installed "$arg"
@@ -159,8 +162,9 @@ _koopa_assert_is_debian() {  # {{{1
 _koopa_assert_is_dir() {  # {{{1
     # """
     # Assert that input is a directory.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -d "$arg" ]
@@ -174,8 +178,9 @@ _koopa_assert_is_dir() {  # {{{1
 _koopa_assert_is_executable() {  # {{{1
     # """
     # Assert that input is executable.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -x "$arg" ]
@@ -189,10 +194,11 @@ _koopa_assert_is_executable() {  # {{{1
 _koopa_assert_is_existing() {  # {{{1
     # """
     # Assert that input exists on disk.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     #
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -e "$arg" ]
@@ -218,8 +224,9 @@ _koopa_assert_is_fedora() {  # {{{1
 _koopa_assert_is_file() {  # {{{1
     # """
     # Assert that input is a file.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -f "$arg" ]
@@ -248,8 +255,9 @@ _koopa_assert_is_file_type() {  # {{{1
 _koopa_assert_is_function() {  # {{{1
     # """
     # Assert that variable is a function.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_function "$arg"
@@ -265,6 +273,7 @@ _koopa_assert_is_git() {  # {{{1
     # Assert that current directory is a git repo.
     # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_git "$arg"
@@ -302,8 +311,9 @@ _koopa_assert_is_gitlab_ssh_enabled() {  # {{{1
 _koopa_assert_is_installed() {  # {{{1
     # """
     # Assert that programs are installed.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_installed "$arg"
@@ -341,8 +351,9 @@ _koopa_assert_is_macos() {  # {{{1
 _koopa_assert_is_non_existing() {  # {{{1
     # """
     # Assert that input does not exist on disk.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ -e "$arg" ]
@@ -356,8 +367,9 @@ _koopa_assert_is_non_existing() {  # {{{1
 _koopa_assert_is_not_dir() {  # {{{1
     # """
     # Assert that input is not a directory.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ -d "$arg" ]
@@ -371,8 +383,9 @@ _koopa_assert_is_not_dir() {  # {{{1
 _koopa_assert_is_not_file() {  # {{{1
     # """
     # Assert that input is not a file.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ -f "$arg" ]
@@ -386,8 +399,9 @@ _koopa_assert_is_not_file() {  # {{{1
 _koopa_assert_is_not_installed() {  # {{{1
     # """
     # Assert that programs are not installed.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if _koopa_is_installed "$arg"
@@ -449,8 +463,9 @@ _koopa_assert_is_not_root() {  # {{{1
 _koopa_assert_is_not_symlink() {  # {{{1
     # """
     # Assert that input is not a symbolic link.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ -L "$arg" ]
@@ -464,8 +479,9 @@ _koopa_assert_is_not_symlink() {  # {{{1
 _koopa_assert_is_python_package_installed() {  # {{{1
     # """
     # Assert that specific Python packages are installed.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_python_package_installed "${arg}"
@@ -479,8 +495,9 @@ _koopa_assert_is_python_package_installed() {  # {{{1
 _koopa_assert_is_r_package_installed() {  # {{{1
     # """
     # Assert that specific R packages are installed.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_r_package_installed "${arg}"
@@ -494,8 +511,9 @@ _koopa_assert_is_r_package_installed() {  # {{{1
 _koopa_assert_is_readable() {  # {{{1
     # """
     # Assert that input is readable.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -r "$arg" ]
@@ -521,7 +539,7 @@ _koopa_assert_is_root() {  # {{{1
 _koopa_assert_is_set() {
     # """
     # Assert that variables are set (and not unbound).
-    # @note Updated 2020-02-04.
+    # @note Updated 2020-02-016.
     #
     # Intended to use inside of functions, where we can't be sure that 'set -u'
     # mode is set, which otherwise catches unbound variables.
@@ -532,6 +550,7 @@ _koopa_assert_is_set() {
     # Example:
     # _koopa_assert_is_set PATH MANPATH xxx
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if ! _koopa_is_set arg
@@ -545,8 +564,9 @@ _koopa_assert_is_set() {
 _koopa_assert_is_symlink() {  # {{{1
     # """
     # Assert that input is a symbolic link.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -L "$arg" ]
@@ -573,8 +593,9 @@ _koopa_assert_is_venv_active() {  # {{{1
 _koopa_assert_is_writable() {  # {{{1
     # """
     # Assert that input is writable.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-02-16.
     # """
+    [ "$#" -ne 0 ] || return 1
     for arg
     do
         if [ ! -r "$arg" ]
