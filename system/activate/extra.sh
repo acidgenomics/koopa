@@ -258,6 +258,12 @@ then
     alias emacs24='TERM=xterm-24bit emacs --no-window-system'
 fi
 
+if _koopa_is_installed gpg
+then
+    gpg-reload='gpg-connect-agent reloadagent /bye'
+    gpg-restart='gpgconf --kill gpg-agent'
+fi
+
 if _koopa_is_installed nvim
 then
     # Default mode that doesn't load user config.
