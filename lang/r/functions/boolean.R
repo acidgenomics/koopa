@@ -33,10 +33,11 @@ isFlag <- function(x) {
 
 
 #' Is an R package installed?
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-16.
 isInstalled <- function(pkgs) {
     stopifnot(requireNamespace("utils", quietly = TRUE))
-    pkgs %in% rownames(installed.packages())
+    # Note that GitHub packages are "user/repo", so use basename.
+    basename(pkgs) %in% rownames(installed.packages())
 }
 
 
