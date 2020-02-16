@@ -263,12 +263,15 @@ _koopa_assert_is_function() {  # {{{1
 _koopa_assert_is_git() {  # {{{1
     # """
     # Assert that current directory is a git repo.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-02-16.
     # """
-    if ! _koopa_is_git "$@"
-    then
-        _koopa_stop "Not a git repo."
-    fi
+    for arg
+    do
+        if ! _koopa_is_git "$arg"
+        then
+            _koopa_stop "Not a git repo: '${arg}'."
+        fi
+    done
     return 0
 }
 
