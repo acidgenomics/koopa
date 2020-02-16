@@ -301,9 +301,9 @@ then
     fi
 
     # Software packages.
-    install-rust-packages
     if [[ "$docker" -eq 0 ]]
     then
+        install-rust-packages
         install-python-packages
         _koopa_link_r_site_library
         install-r-packages
