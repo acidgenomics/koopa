@@ -143,7 +143,6 @@ then
         sudo rm -v "/bin/env"
         sudo mv -v "/bin/env.bak" "/bin/env"
     fi
-    # OpenJDK moved to '/n/app'.
     sudo rm -frv "/opt/jdk"
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
