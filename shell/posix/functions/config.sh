@@ -441,37 +441,44 @@ _koopa_link_r_etc() {  # {{{1
         return 0
     fi
     _koopa_h2 "Updating '${r_home}'."
-    sudo ln -fnsv "${r_etc_source}/"*".site" "${r_home}/etc/."
+    _koopa_ln "${r_etc_source}/"*".site" "${r_home}/etc/."
     return 0
 }
 
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-01-14.
+    # @note Updated 2020-02-15.
     # """
-    _koopa_assert_has_sudo
     local r_home
     r_home="$(_koopa_r_home)"
+
     local version
     version="$(_koopa_r_version)"
+
     local minor_version
     minor_version="$(_koopa_minor_version "$version")"
+
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
-    _koopa_h2 "Creating site library at '${r_home}'."
+
     local lib_source
     lib_source="${app_prefix}/r/${minor_version}/site-library"
+
     local lib_target
     lib_target="${r_home}/site-library"
-    sudo rm -frv "$lib_target"
-    sudo mkdir -pv "$lib_source"
-    sudo ln -fnsv "$lib_source" "$lib_target"
+
+    _koopa_h2 "Creating site library at '${r_home}'."
+
+    _koopa_mkdir "$lib_source"
+    _koopa_ln "$lib_source" "$lib_target"
+
     if _koopa_is_debian
     then
         # Link the site-library in '/usr/lib/R' instead.
-        sudo rm -frv /usr/local/lib/R
+        _koopa_rm /usr/local/lib/R
     fi
+
     return 0
 }
 
