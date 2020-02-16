@@ -84,6 +84,26 @@ _koopa_add_user_to_group() {  # {{{1
     sudo gpasswd --add "$user" "$group"
 }
 
+_koopa_delete_dotfile() {  # {{{1
+    # """
+    # Delete a dot file.
+    # @note Updated 2020-01-21.
+    # """
+    local name
+    name="${1:?}"
+    local filepath
+    filepath="${HOME}/.${name}"
+    if [ -L "$filepath" ]
+    then
+        _koopa_h2 "Removing '${filepath}'."
+        rm -f "$filepath"
+    elif [ -f "$filepath" ] || [ -d "$filepath" ]
+    then
+        _koopa_warning "Not a symlink: '${filepath}'."
+    fi
+    return 0
+}
+
 _koopa_enable_passwordless_sudo() {  # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
