@@ -212,6 +212,17 @@ install-openjdk                                                         # 0.316G
 
 if [[ "$rsync" -eq 0 ]]
 then
+    # Environment managers.
+    install-conda                                                       # 0.493G
+    if [[ "$docker" -eq 0 ]]
+    then
+        _koopa_run_if_installed install-docker
+        install-perlbrew                                                # 0.003G
+        install-pyenv                                                   # 0.009G
+        install-rbenv                                                   # 0.006G
+        install-lmod                                                    # 0.002G
+    fi
+
     # Core.
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
@@ -287,17 +298,6 @@ then
     if [[ "$docker" -eq 0 ]]
     then
         install-aspera-connect                                          # 0.090G
-    fi
-
-    # Environment managers.
-    install-conda                                                       # 0.493G
-    if [[ "$docker" -eq 0 ]]
-    then
-        _koopa_run_if_installed install-docker
-        install-perlbrew                                                # 0.003G
-        install-pyenv                                                   # 0.009G
-        install-rbenv                                                   # 0.006G
-        install-lmod                                                    # 0.002G
     fi
 
     # Software packages.
