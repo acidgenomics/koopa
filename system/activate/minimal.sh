@@ -57,14 +57,6 @@ fi
 SHELL="$(_koopa_which_realpath "$KOOPA_SHELL")"
 export SHELL
 
-# TERM
-# Terminal color mode.
-# This should normally be set by the terminal client.
-if [ -z "${TERM:-}" ]
-then
-    export TERM="xterm-256color"
-fi
-
 # TMPDIR
 if [ -z "${TMPDIR:-}" ]
 then
