@@ -88,9 +88,10 @@ for repo in "${repos[@]}"
 do
     repo="${config_prefix}/${repo}"
     [ -d "$repo" ] || continue
-    echo "$repo"
-    # FIXME We need to switch to subshell here right?
-    _koopa_git_pull "$repo"
+    (
+        _koopa_cd "$repo"
+        _koopa_git_pull
+    )
 done
 
 if [[ "$system" -eq 1 ]]
