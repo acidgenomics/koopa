@@ -91,7 +91,7 @@ if [[ -d "$data_disk" ]] && \
     { [[ ! -L "$dd_link" ]] || [[ ! -L "$app_prefix" ]]; }
 then
     _koopa_h2 "Symlinking '${dd_link}' on '${data_disk}'."
-    _koopa_rm "$dd_link"
+    _koopa_rm "$dd_link" "$app_prefix"
     # e.g. '/mnt/data01/n'.
     dd_real="${data_disk}${dd_link}"
     _koopa_ln "$dd_real" "$dd_link"
