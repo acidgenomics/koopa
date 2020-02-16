@@ -87,7 +87,6 @@ do
     repo="${config_prefix}/${repo}"
     [ -d "$repo" ] || continue
     (
-        _koopa_h2 "Updating git repo at '${repo}'."
         _koopa_cd "$repo"
         _koopa_git_pull
     )
