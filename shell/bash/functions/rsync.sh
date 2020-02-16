@@ -58,6 +58,7 @@ _koopa_rsync_vm() {
 
     _koopa_mkdir "$prefix"
     _koopa_set_permissions_user "$prefix"
+    _koopa_remove_broken_symlinks "$prefix"
 
     # Note that this step won't work unless we leave 'flags' unquoted here.
     # shellcheck disable=SC2086
