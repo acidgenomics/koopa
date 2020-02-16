@@ -164,6 +164,8 @@ pandoc="2.7.3"
 pass="1.7.3"
 
 # https://www.perl.org/get.html
+# Note that 5.30.1 is currently failing with Perlbrew on macOS.
+# https://www.reddit.com/r/perl/comments/duddcn/perl_5301_released/
 perl="5.30.0"
 
 # https://perlbrew.pl/
