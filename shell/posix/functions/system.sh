@@ -539,7 +539,7 @@ _koopa_info_box() {  # {{{1
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-16.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -560,14 +560,19 @@ _koopa_link_cellar() {  # {{{1
     # """
     local name
     name="${1:?}"
+
     local version
     version="${2:-}"
+
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     _koopa_assert_is_dir "$make_prefix"
+
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)/${name}"
     _koopa_assert_is_dir "$cellar_prefix"
+
+    # Detect the version automatically, if not specified.
     if [ -n "$version" ]
     then
         cellar_prefix="${cellar_prefix}/${version}"
@@ -582,8 +587,18 @@ _koopa_link_cellar() {  # {{{1
         )"
     fi
     _koopa_assert_is_dir "$cellar_prefix"
+
     _koopa_h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
+
+    # Early return cellar-only if Homebrew is installed.
+    if _koopa_is_installed brew
+    then
+        _koopa_note "Homebrew installation detected."
+        _koopa_note "Skipping linkage into '${make_prefix}'."
+        return 0
+    fi
+
     if _koopa_is_shared_install
     then
         sudo cp -frs "$cellar_prefix/"* "$make_prefix/".
@@ -591,6 +606,7 @@ _koopa_link_cellar() {  # {{{1
     else
         cp -frs "$cellar_prefix/"* "$make_prefix/".
     fi
+
     return 0
 }
 
