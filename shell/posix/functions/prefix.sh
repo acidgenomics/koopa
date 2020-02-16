@@ -4,11 +4,7 @@
 _koopa_app_prefix() {  # {{{1
     # """
     # Custom application install prefix.
-    # @note Updated 2020-02-15.
-    #
-    # Inspired by HMS RC devops approach on O2 cluster.
-    #
-    # Alternatively, can consider using '/n/opt' instead of '/n/app' here.
+    # @note Updated 2020-02-16.
     # """
     if [ -n "${KOOPA_APP_PREFIX:-}" ]
     then
@@ -20,12 +16,9 @@ _koopa_app_prefix() {  # {{{1
     then
         if _koopa_is_macos
         then
-            # Catalina doesn't allow directory creation at volume root.
             prefix="$(_koopa_make_prefix)"
         else
-            # This approach allows us to save apps on a network share.
-            # Particularly useful for AWS, Azure, and GCP VMs.
-            prefix="/n/app"
+            prefix="$(_koopa_make_prefix)/opt"
         fi
     else
         prefix="$(_koopa_local_app_prefix)"
@@ -143,6 +136,16 @@ _koopa_config_prefix() {  # {{{1
     # @note Updated 2020-01-13.
     # """
     echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
+    return 0
+}
+
+_koopa_data_disk_link_prefix() {  # {{{1
+    # """
+    # Data disk symlink prefix.
+    # @note Updated 2020-02-16.
+    # """
+    _koopa_is_linux || return 1
+    echo "/n"
     return 0
 }
 

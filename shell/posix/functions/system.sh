@@ -38,10 +38,19 @@ _koopa_array_to_r_vector() {  # {{{1
     printf "c(%s)\n" "$x"
 }
 
+_koopa_cd() {  # {{{1
+    # """
+    # Change directory quietly.
+    # @note Updated 2019-10-29.
+    # """
+    cd "$@" > /dev/null || return 1
+    return 0
+}
+
 _koopa_cd_tmp_dir() {  # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-02-16.
     #
     # Used primarily for cellar build scripts.
     # """
@@ -49,19 +58,31 @@ _koopa_cd_tmp_dir() {  # {{{1
     dir="${1:-$(_koopa_tmp_dir)}"
     rm -fr "$dir"
     mkdir -p "$dir"
-    # Note that we don't want to run this inside a subshell here.
-    cd "$dir" || exit 1
+    _koopa_cd "$dir"
+    return 0
+}
+
+_koopa_chgrp() {  # {{{1
+    # """
+    # chgrp with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo chgrp "$@"
+    else
+        chgrp "$@"
+    fi
     return 0
 }
 
 _koopa_chmod() {  # {{{1
     # """
     # chmod with dynamic sudo handling.
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-02-16.
     # """
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
         sudo chmod "$@"
     else
         chmod "$@"
@@ -69,32 +90,32 @@ _koopa_chmod() {  # {{{1
     return 0
 }
 
-_koopa_chown() {  # {{{1
+_koopa_chmod_flags() {
     # """
-    # chown with dynamic sudo handling.
-    # @note Updated 2020-01-24.
+    # Default recommended flags for chmod.
+    # @note Updated 2020-02-16.
     # """
+    local flags
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
-        sudo chown "$@"
+        flags="u+rw,g+rw"
     else
-        chown "$@"
+        flags="u+rw,g+r,g-w"
     fi
+    echo "$flags"
     return 0
 }
 
-_koopa_chgrp() {  # {{{1
+_koopa_chown() {  # {{{1
     # """
-    # chgrp with dynamic sudo handling.
-    # @note Updated 2020-01-24.
+    # chown with dynamic sudo handling.
+    # @note Updated 2020-02-16.
     # """
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
-        sudo chgrp "$@"
+        sudo chown "$@"
     else
-        chgrp "$@"
+        chown "$@"
     fi
     return 0
 }
@@ -198,6 +219,20 @@ _koopa_dotfiles_source_repo() {  # {{{1
     fi
     echo "$dotfiles"
     return 0
+}
+
+_koopa_expr() {  # {{{1
+    # """
+    # Quiet regular expression matching that is POSIX compliant.
+    # @note Updated 2020-02-16.
+    #
+    # Avoid using '[[ =~ ]]' in sh config files.
+    # 'expr' is faster than using 'case'.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/21115121
+    # """
+    expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
 _koopa_git_branch() {  # {{{1
@@ -551,11 +586,24 @@ _koopa_link_cellar() {  # {{{1
     _koopa_set_permissions "$cellar_prefix"
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
         sudo cp -frs "$cellar_prefix/"* "$make_prefix/".
         _koopa_update_ldconfig
     else
         cp -frs "$cellar_prefix/"* "$make_prefix/".
+    fi
+    return 0
+}
+
+_koopa_ln() {  # {{{1
+    # """
+    # Create symlink quietly.
+    # @note Updated 2020-02-16.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo ln -fns "$@"
+    else
+        ln -fns "$@"
     fi
     return 0
 }
@@ -598,15 +646,16 @@ _koopa_make_build_string() {  # {{{1
 _koopa_mkdir() {  # {{{1
     # """
     # mkdir with dynamic sudo handling.
-    # @note Updated 2020-02-06.
+    # @note Updated 2020-02-16.
     # """
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
         sudo mkdir -p "$@"
     else
         mkdir -p "$@"
     fi
+    _koopa_chmod "$(_koopa_chmod_flags)" "$@"
+    _koopa_chgrp "$(_koopa_group)" "$@"
     return 0
 }
 
@@ -739,35 +788,21 @@ _koopa_prefix_chgrp() {  # {{{1
 _koopa_prefix_chmod() {  # {{{1
     # """
     # Set file permissions for target prefix(es).
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-02-16.
     #
     # This sets group write access by default for shared install, which is
     # useful so we don't have to constantly switch to root for admin.
     # """
-    if _koopa_is_shared_install
-    then
-        _koopa_assert_has_sudo
-        sudo chmod -R u+rw,g+rw "$@"
-    else
-        chmod -R u+rw,g+r,g-w "$@"
-    fi
+    _koopa_chmod -R "$(_koopa_chmod_flags)" "$@"
     return 0
 }
 
 _koopa_prefix_chown() {  # {{{1
     # """
     # Set ownership (user and group) for target prefix(es).
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-02-16.
     # """
-    local group
-    group="$(_koopa_group)"
-    if _koopa_is_shared_install
-    then
-        _koopa_assert_has_sudo
-        sudo chown -Rh "root:${group}" "$@"
-    else
-        chown -Rh "${USER:?}:${group}" "$@"
-    fi
+    _koopa_chown -Rh "$(_koopa_user):$(_koopa_group)" "$@"
     return 0
 }
 
@@ -776,81 +811,35 @@ _koopa_prefix_chown_user() {  # {{{1
     # Set ownership to current user for target prefix(es).
     # @note Updated 2020-01-17.
     # """
-    local user
-    user="${USER:?}"
-    local group
-    group="$(_koopa_group)"
-    if _koopa_is_shared_install
-    then
-        _koopa_assert_has_sudo
-        sudo chown -Rh "${user}:${group}" "$@"
-    else
-        chown -Rh "${user}:${group}" "$@"
-    fi
+    _koopa_chown -Rh "${USER:?}:$(_koopa_group)" "$@"
     return 0
 }
 
 _koopa_prefix_mkdir() {  # {{{1
     # """
     # Make directory at target prefix, only if it doesn't exist.
-    # @note Updated 2020-01-24.
-    #
-    # Note that the main difference with '_koopa_mkdir' is the extra assert
-    # check to look if directory already exists here.
+    # @note Updated 2020-02-16.
     # """
     local prefix
     prefix="${1:?}"
     _koopa_assert_is_not_dir "$prefix"
     _koopa_mkdir "$prefix"
-    _koopa_set_permissions "$prefix"
-    return 0
-}
-
-_koopa_quiet_cd() {  # {{{1
-    # """
-    # Change directory quietly
-    # @note Updated 2019-10-29.
-    # """
-    cd "$@" > /dev/null || return 1
-    return 0
-}
-
-_koopa_quiet_expr() {  # {{{1
-    # """
-    # Quiet regular expression matching that is POSIX compliant.
-    # @note Updated 2020-01-12.
-    #
-    # Avoid using '[[ =~ ]]' in sh config files.
-    # 'expr' is faster than using 'case'.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/21115121
-    # """
-    expr "${1:?}" : "${2:?}" 1>/dev/null
-}
-
-_koopa_quiet_rm() {  # {{{1
-    # """
-    # Remove quietly.
-    # @note Updated 2019-10-29.
-    # """
-    rm -fr "$@" > /dev/null 2>&1
     return 0
 }
 
 _koopa_relink() {  # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-16.
     # """
     local source_file
     source_file="${1:?}"
     local dest_file
     dest_file="${2:?}"
-    [ -L "$dest_file" ] && return 0
-    # Relaxing this check here, in case dotfiles aren't cloned.
+    # Relaxing this check, in case dotfiles haven't been cloned.
     [ -e "$source_file" ] || return 0
-    # > rm -f "$dest_file"
+    [ -L "$dest_file" ] && return 0
+    _koopa_rm "$dest_file"
     ln -fns "$source_file" "$dest_file"
     return 0
 }
@@ -858,14 +847,13 @@ _koopa_relink() {  # {{{1
 _koopa_rm() {  # {{{1
     # """
     # Remove files/directories without dealing with permissions.
-    # @note Updated 2020-02-06.
+    # @note Updated 2020-02-16.
     # """
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
-        sudo rm -fr "$@"
+        sudo rm -fr "$@" > /dev/null 2>&1
     else
-        rm -fr "$@"
+        rm -fr "$@" > /dev/null 2>&1
     fi
     return 0
 }
@@ -874,6 +862,8 @@ _koopa_set_permissions() {  # {{{1
     # """
     # Set permissions on target prefix(es).
     # @note Updated 2020-01-24.
+    #
+    # This always works recursively.
     # """
     _koopa_prefix_chown "$@"
     _koopa_prefix_chmod "$@"
@@ -884,6 +874,8 @@ _koopa_set_permissions_user() {  # {{{1
     # """
     # Set permissions on target prefix(es) to current user.
     # @note Updated 2020-01-24.
+    #
+    # This always works recursively.
     # """
     _koopa_prefix_chown_user "$@"
     _koopa_prefix_chmod "$@"
@@ -894,6 +886,8 @@ _koopa_set_sticky_group() {  # {{{1
     # """
     # Set sticky group bit for target prefix(es).
     # @note Updated 2020-01-24.
+    #
+    # This never works recursively.
     # """
     _koopa_chmod g+s "$@"
     return 0
@@ -1028,6 +1022,22 @@ _koopa_today_bucket() {  # {{{1
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
+    return 0
+}
+
+_koopa_user() {  # {{{1
+    # """
+    # Set the default user.
+    # @note Updated 2020-02-16.
+    # """
+    local user
+    if _koopa_is_shared_install
+    then
+        user="root"
+    else
+        user="${USER:?}"
+    fi
+    echo "$user"
     return 0
 }
 
