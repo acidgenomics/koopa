@@ -117,19 +117,28 @@ _koopa_file_ext2() {  # {{{1
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-01-13.
+    # @note Updated 2020-02-16.
     # """
+    local dir
     dir="${1:-"."}"
+    local x
     if _koopa_is_macos
     then
-        find "$dir" -type l -print0 \
-        | xargs -0 file \
-        | grep broken \
-        | cut -d ':' -f 1
+        x="$( \
+            find "$dir" -type l -print0 2>&1 \
+                | grep -v "Permission denied" \
+                | xargs -0 file \
+                | grep broken \
+                | cut -d ':' -f 1 \
+        )"
     elif _koopa_is_linux
     then
-        find "$dir" -xtype l
+        x="$( \
+            find "$dir" -xtype l 2>&1 \
+                | grep -v "Permission denied" \
+        )"
     fi
+    echo "$x"
     return 0
 }
 
