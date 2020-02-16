@@ -5,13 +5,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
-# /usr/local/koopa
+# e.g. /usr/local/koopa
 koopa_prefix="$(_koopa_prefix)"
-# ~/.config/koopa
+# e.g. ~/.config/koopa
 config_prefix="$(_koopa_config_prefix)"
-# /n/app
+# e.g. /usr/local/opt
 app_prefix="$(_koopa_app_prefix)"
-# /usr/local
+# e.g. /usr/local
 make_prefix="$(_koopa_make_prefix)"
 
 system=0
