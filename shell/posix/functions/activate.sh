@@ -257,11 +257,12 @@ _koopa_activate_gcc_colors() {  # {{{1
 _koopa_activate_go() {  # {{{1
     # """
     # Activate Go.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-16.
     # """
     [ -n "${GOPATH:-}" ] && return 0
     GOPATH="$(_koopa_go_gopath)"
     export GOPATH
+    [ ! -d "$GOPATH" ] && _koopa_mkdir "$GOPATH"
     return 0
 }
 
