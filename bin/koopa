@@ -43,6 +43,10 @@ case "$1" in
         "${include_dir}/info.sh"
         exit 0
         ;;
+    install-mike)
+        _koopa_install_mike
+        exit 0
+        ;;
     list)
         "${include_dir}/list.sh"
         exit 0
