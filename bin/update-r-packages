@@ -20,6 +20,7 @@ if (!requireNamespace("bb8", quietly = TRUE)) {
 remove(
     pkgs = c(
         "Matrix.utils",
+        "SDMTools",
         "bioverbs",
         "brio"
     )
