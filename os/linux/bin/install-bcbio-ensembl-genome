@@ -74,18 +74,15 @@ organism="${organism// /_}"
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
 
+_koopa_h1 "Installing '${bcbio_genome_name}' bcbio genome."
+
 # e.g. "Hsapiens".
 bcbio_species_dir="$( \
     echo "$organism" \
     | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g" \
 )"
 
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio"
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="${log_dir}/genome-${bcbio_genome_name}-${timestamp}.log"
-mkdir -pv "$log_dir"
-
-tmp_dir="$(_koopa_tmp_dir)/${bcbio_genome_name}"
+tmp_dir="$(_koopa_tmp_dir)"
 cores="$(_koopa_cpu_count)"
 
 (
@@ -106,7 +103,9 @@ cores="$(_koopa_cpu_count)"
         --cores "$cores" \
         --fasta "$fasta" \
         --gtf "$gtf" \
-        --indexes "${indexes[@]}" \
-        2>&1 | tee "$log_file"
-    rm -fr "$tmp_dir"
-)
+        --indexes "${indexes[@]}"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_success "Installation of bcbio genome was successful."

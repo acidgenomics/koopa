@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+dir="${1:-.}"
+_koopa_assert_is_dir "$dir"
+dir="$(realpath "$dir")"
+
+# Pipe GNU find into array.
+bam_files=()
+while IFS= read -r -d $'\0'
+do
+    bam_files+=("$REPLY")
+done < <( \
+    find "$dir" \
+        -maxdepth 3 \
+        -mindepth 1 \
+        -type f \
+        -iname "*.sorted.bam" \
+        -print0 \
+    | sort -z \
+)
+
+# Error if file array is empty.
+if [[ "${#bam_files[@]}" -eq 0 ]]
+then
+    _koopa_stop "No BAM files detected in '${dir}'."
+fi
+
+_koopa_h1 "Filtering BAM files in '${dir}'."
+
+_koopa_activate_conda_env sambamba
+_koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
+
+# Performing filtering in multiple steps here.
+for bam_file in "${bam_files[@]}"
+do
+    final_output_tail="filtered"
+    final_output_bam="${bam_file%.bam}.${final_output_tail}.bam"
+    if [[ -f "$final_output_bam" ]]
+    then
+        _koopa_note "Skipping '$(basename "$final_output_bam")'."
+        continue
+    fi
+
+    # Filter duplicate reads.
+    input_bam="$bam_file"
+    output_tail="filtered-1-no-duplicates"
+    output_bam="${input_bam%.bam}.${output_tail}.bam"
+    _koopa_bam_filter_duplicates \
+        --input-bam="$input_bam" \
+        --output-bam="$output_bam"
+
+    # Filter unmapped reads.
+    input_tail="$output_tail"
+    input_bam="$output_bam"
+    output_tail="filtered-2-no-unmapped"
+    output_bam="${input_bam/${input_tail}/${output_tail}}"
+    _koopa_bam_filter_unmapped \
+        --input-bam="$input_bam" \
+        --output-bam="$output_bam"
+
+    # Filter multimapping reads.
+    # Note that this step can overfilter some samples with with large global
+    # changes in chromatin state.
+    input_tail="$output_tail"
+    input_bam="$output_bam"
+    output_tail="filtered-3-no-multimappers"
+    output_bam="${input_bam/${input_tail}/${output_tail}}"
+    _koopa_bam_filter_multimappers \
+        --input-bam="$input_bam" \
+        --output-bam="$output_bam"
+
+    # Copy the final result.
+    cp -v "$output_bam" "$final_output_bam"
+
+    # Index the final filtered BAM file.
+    _koopa_bam_index "$final_output_bam"
+done

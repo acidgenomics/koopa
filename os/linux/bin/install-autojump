@@ -43,7 +43,7 @@ _koopa_assert_is_current_version python
 _koopa_assert_is_not_installed autojump
 _koopa_assert_is_not_dir "${HOME}/.autojump"
 
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -56,7 +56,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --destdir "$prefix" \
         --prefix="" \
         --zshshare "share/zsh/site-functions"
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

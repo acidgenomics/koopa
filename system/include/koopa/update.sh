@@ -5,13 +5,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../../../shell/bash/include/header.sh"
 
-# /usr/local/koopa
+# e.g. /usr/local/koopa
 koopa_prefix="$(_koopa_prefix)"
-# ~/.config/koopa
+# e.g. ~/.config/koopa
 config_prefix="$(_koopa_config_prefix)"
-# /n/app
+# e.g. /usr/local/opt
 app_prefix="$(_koopa_app_prefix)"
-# /usr/local
+# e.g. /usr/local
 make_prefix="$(_koopa_make_prefix)"
 
 system=0
@@ -31,13 +31,24 @@ done
 
 _koopa_h1 "Updating koopa at '${koopa_prefix}'."
 
+# Note that stable releases are not git, and can't be updated.
+if ! _koopa_is_git "$koopa_prefix"
+then
+    version="$(_koopa_version)"
+    url="https://koopa.acidgenomics.com"
+    _koopa_note "Stable release of koopa ${version} detected."
+    _koopa_note "To update, first run the 'uninstall' script."
+    _koopa_note "Then run the default install command at '${url}'."
+    exit 1
+fi
+
 if _koopa_is_shared_install
 then
     if [[ "$system" -eq 1 ]]
     then
-        _koopa_info "config prefix: ${config_prefix}"
-        _koopa_info "make prefix: ${make_prefix}"
-        _koopa_info "app prefix: ${app_prefix}"
+        _koopa_dl "config prefix" "${config_prefix}"
+        _koopa_dl "make prefix" "${make_prefix}"
+        _koopa_dl "app prefix" "${app_prefix}"
         echo
     fi
     _koopa_note "Shared installation detected."
@@ -45,43 +56,40 @@ then
     _koopa_assert_has_sudo
 fi
 
-# Ensure accidental swap files created by vim get nuked.
-find "$koopa_prefix" -type f -name "*.swp" -delete
-
-# Ensure invisible files get nuked on macOS.
-if _koopa_is_macos
-then
-    find "$koopa_prefix" -type f -name ".DS_Store" -delete
-fi
-
 _koopa_set_permissions "$koopa_prefix"
-_koopa_update_xdg_config
-_koopa_update_ldconfig
-_koopa_update_profile
-
-# Loop across config directories and update git repos.
-# Consider nesting these under 'app' directory.
-_koopa_h1 "Updating user config at '${config_prefix}'."
-rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
-
-repos=(
-    docker
-    dotfiles
-    dotfiles-private
-    scripts-private
-)
-for repo in "${repos[@]}"
-do
-    repo="${config_prefix}/${repo}"
-    _koopa_update_git_repo "$repo"
-done
 
 (
     cd "$koopa_prefix" || exit 1
-    git fetch --all
-    # > git checkout master
-    git pull
+    _koopa_git_pull
+    cd "${koopa_prefix}/dotfiles" || exit 1
+    _koopa_git_reset
+    _koopa_git_pull
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_set_permissions "$koopa_prefix"
+
+_koopa_update_xdg_config
+_koopa_update_ldconfig
+_koopa_update_etc_profile_d
+
+# Update additional git repos.
+rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
+repos=(
+    "${config_prefix}/docker"
+    "${config_prefix}/dotfiles-private"
+    "${config_prefix}/scripts-private"
+    "${XDG_DATA_HOME}/Rcheck"
+    "${HOME}/.emacs.d-doom"
+    "${HOME}/.emacs.d-spacemacs"
 )
+for repo in "${repos[@]}"
+do
+    [ -d "$repo" ] || continue
+    (
+        _koopa_cd "$repo"
+        _koopa_git_pull
+    )
+done
 
 if [[ "$system" -eq 1 ]]
 then
@@ -89,15 +97,24 @@ then
     if _koopa_is_macos
     then
         update-homebrew
-        update-r-packages
     elif _koopa_is_installed configure-vm
     then
         configure-vm
     fi
-    # Update managed git repos.
-    _koopa_update_git_repo "${HOME}/.emacs.d-doom"
-    _koopa_update_git_repo "${HOME}/.emacs.d-spacemacs"
-    _koopa_update_git_repo "${XDG_DATA_HOME}/Rcheck"
+    if [[ ! -f "${config_prefix}/rsync" ]]
+    then
+        update-r-packages
+        update-conda
+        update-python-packages
+        update-rust
+        update-rust-packages
+        update-perlbrew
+        if _koopa_is_linux
+        then
+            update-pyenv
+            update-rbenv
+        fi
+    fi
 fi
 
 _koopa_fix_zsh_permissions

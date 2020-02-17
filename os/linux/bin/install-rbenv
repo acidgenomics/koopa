@@ -5,8 +5,22 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-prefix="$(_koopa_app_prefix)/ruby/rbenv"
+all=0
 
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+prefix="$(_koopa_app_prefix)/ruby/rbenv"
 _koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Installing rbenv at '${prefix}'."
@@ -14,17 +28,53 @@ _koopa_h1 "Installing rbenv at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_prefix_mkdir "$prefix"
 
-# Install rbenv.
-git clone \
-    https://github.com/sstephenson/rbenv.git \
-    "$prefix"
+# rbenv  {{{1
+# ==============================================================================
 
-# Install ruby-build.
-mkdir -pv "${prefix}/plugins"
-git clone \
-    https://github.com/sstephenson/ruby-build.git \
-    "${prefix}/plugins/ruby-build"
+_koopa_h2 "Installing 'rbenv'."
+
+(
+    git clone \
+        https://github.com/sstephenson/rbenv.git \
+        "$prefix"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_activate_rbenv
+
+# ruby-build  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing 'ruby-build'."
+
+(
+    mkdir -pv "${prefix}/plugins"
+    git clone \
+        https://github.com/sstephenson/ruby-build.git \
+        "${prefix}/plugins/ruby-build"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$prefix"
 
+# Install latest Ruby  {{{1
+# ==============================================================================
+
+if [[ "$all" -eq 1 ]]
+then
+    versions=(
+        "$(_koopa_variable ruby)"
+    )
+    installed="$(rbenv versions)"
+    for version in "${versions[@]}"
+    do
+        _koopa_is_matching_fixed "$installed" "$version" && continue
+        _koopa_h2 "Installing Ruby ${version} via rbenv."
+        (
+            rbenv install "$version"
+            rbenv global "$version"
+        ) 2>&1 | tee "$(_koopa_tmp_log_file)"
+        _koopa_success "Installation of Ruby ${version} was successful."
+    done
+fi
+
+_koopa_success "Installation of rbenv was successful."
 _koopa_note "Restart the shell to complete installation of rbenv."

@@ -32,7 +32,7 @@ _koopa_assert_has_no_envs
 build="$(_koopa_make_build_string)"
 etc_dir="${prefix}/etc/zsh"
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -53,7 +53,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     # > make check
     # > make test
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
@@ -67,7 +67,7 @@ then
 fi
 
 _koopa_link_cellar "$name" "$version"
-_koopa_update_shells "$name"
+_koopa_enable_shell "$name"
 
 _koopa_success "Installation of ${name} was successful."
 _koopa_note "Reload the shell to complete activation."

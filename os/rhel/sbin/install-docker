@@ -33,12 +33,15 @@ sudo yum repolist
 sudo yum -y install containerd.io
 sudo yum -y install docker-ce docker-ce-cli
 
-# Note that the docker group is created automatically.
-sudo gpasswd -a "$USER" docker
+# Ensure current user is added to Docker group.
+_koopa_add_user_to_group "docker"
+
+# Move '/var/lib/docker' to '/n/var/lib/docker'.
+_koopa_link_docker
 
 # Ready to start Docker.
 sudo systemctl start docker
 
-_koopa_link_docker
-
 _koopa_success "Installation of Docker was successful."
+_koopa_note "Shell must be reloaded for '${USER}' to be added to the \
+'docker' group."

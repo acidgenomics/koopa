@@ -6,21 +6,15 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-# """
-# Missing recipes:
-# - genrich
-# - r-pfgsea
-# """
-
 _koopa_assert_is_installed "conda"
 
-full=0
+all=0
 
 while (("$#"))
 do
     case "$1" in
-        --full)
-            full=1
+        --all)
+            all=1
             shift 1
             ;;
         *)
@@ -36,24 +30,24 @@ conda-create-env bedtools                   # base                      # 0.082G
 conda-create-env bioawk                     # base                      # 0.027G
 conda-create-env biobambam                  # base                      # 0.065G
 conda-create-env htslib                     # base                      # 0.082G
+conda-create-env sambamba                   # base
 conda-create-env samblaster                 # base                      # 0.039G
 conda-create-env samtools                   # base                      # 0.083G
 conda-create-env seqtk                      # base                      # 0.027G
 
-conda-create-env jupyterlab                 # workflows                 # 0.410G
 conda-create-env nextflow                   # workflows                 # 0.518G
 
-conda-create-env bwa                        # aligners                  # 0.105G
 conda-create-env kallisto                   # aligners                  # 0.054G
 conda-create-env rapmap                     # aligners                  # 0.088G
 conda-create-env salmon                     # aligners                  # 0.192G
 conda-create-env star                       # aligners                  # 0.009G
 
-if [[ "$full" -eq 1 ]]
+if [[ "$all" -eq 1 ]]
 then
     conda-create-env cromwell               # workflows                 # 0.724G
     conda-create-env fgbio                  # workflows                 # 0.628G
     conda-create-env gatk4                  # workflows                 # 0.658G
+    conda-create-env jupyterlab             # workflows                 # 0.410G
     conda-create-env snakemake              # workflows                 # 0.788G
 
     conda-create-env entrez-direct          # tools                     # 0.154G
@@ -69,7 +63,11 @@ then
     conda-create-env picard                 # qc                        # 0.923G
     conda-create-env qualimap               # qc                        # 1.200G
 
+    conda-create-env atropos                # trimming                  # 0.152G
+    conda-create-env trimmomatic            # trimming                  # 0.095G
+
     conda-create-env bowtie2                # aligners                  # 0.319G
+    conda-create-env bwa                    # aligners                  # 0.105G
     conda-create-env hisat2                 # aligners                  # 0.260G
     conda-create-env minimap2               # aligners                  # 0.045G
     conda-create-env novoalign              # aligners                  # 0.092G
@@ -77,6 +75,7 @@ then
 
     conda-create-env chromhmm               # chip-seq                  # 0.428G
     conda-create-env deeptools              # chip-seq                  # 1.200G
+    conda-create-env genrich                # chip-seq                  # 0.000G
     conda-create-env homer                  # chip-seq                  # 0.263G
     conda-create-env macs2                  # chip-seq                  # 0.748G
 
@@ -84,8 +83,8 @@ then
 
     conda-create-env bismark                # methylation               # 0.406G
 
-    conda-create-env r-bcbiornaseq          # rna-seq                   # 2.200G
-    conda-create-env r-deseqanalysis        # rna-seq                   # 0.437G
+    # > conda-create-env r-bcbiornaseq      # rna-seq                   # 2.200G
+    # > conda-create-env r-deseqanalysis    # rna-seq                   # 0.437G
 
     conda-create-env arriba                 # rna-seq variation         # 0.987G
     conda-create-env ericscript             # rna-seq variation         # 0.728G
@@ -95,10 +94,12 @@ then
     conda-create-env star-fusion            # rna-seq variation         # 1.600G
     conda-create-env vardict                # rna-seq variation         # 0.396G
 
-    conda-create-env r-bcbiosinglecell      # single-cell               # 0.438G
-    conda-create-env r-monocle3             # single-cell               # 0.874G
-    conda-create-env r-seurat               # single-cell               # 0.154G
-    conda-create-env stream                 # single-cell               # 0.998G
+    # > conda-create-env r-bcbiosinglecell  # single-cell               # 0.438G
+    # > conda-create-env r-monocle3         # single-cell               # 0.874G
+    # > conda-create-env r-seurat           # single-cell               # 0.154G
+    # > conda-create-env stream             # single-cell               # 0.998G
 fi
+
+_koopa_set_permissions "$(_koopa_conda_prefix)"
 
 conda env list

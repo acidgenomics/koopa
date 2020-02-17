@@ -61,7 +61,7 @@ then
 fi
 _koopa_assert_is_dir "$install_dir"
 
-_koopa_h1 "Patching bcbio installation."
+_koopa_h1 "Patching bcbio-nextgen installation."
 
 cat << EOF
 git_dir:
@@ -72,25 +72,22 @@ install_dir:
   ${install_dir}
 EOF
 
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_dir="${HOME}/logs/${HOSTNAME}/bcbio/"
-log_file="${log_dir}/${timestamp}-patch-bcbio.log"
-_koopa_h1 "Saving log to '${log_file}'."
-mkdir -pv "$log_dir"
+_koopa_h2 "Removing Python cache and compiled pyc files in Git repo."
 
-_koopa_h1 "Removing Python cache and compiled pyc files in Git repo."
 find "$git_dir" -name "*.pyc" -delete
 find "$git_dir" -name "__pycache__" -type d -exec rm -rv {} \;
 
-_koopa_h1 "Removing Python installer cruft inside 'anaconda/lib/'."
+_koopa_h2 "Removing Python installer cruft inside 'anaconda/lib/'."
+
 rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
 
 # Install command must be run relative to our forked git repo.
 # Note the use of absolute path to bcbio_python here.
 (
     cd "$git_dir" || exit 1
-    _koopa_h1 "Removing any existing unit test output."
-    rm -frv tests/test_automated_output
-    _koopa_h1 "Patching installation via 'setup.py' script."
-    "$bcbio_python" setup.py install 2>&1 | tee "$log_file"
-)
+    rm -fr tests/test_automated_output
+    _koopa_h2 "Patching installation via 'setup.py' script."
+    "$bcbio_python" setup.py install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_success "Patching of bcbio-nextgen was successful."

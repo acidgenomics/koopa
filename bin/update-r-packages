@@ -1,18 +1,29 @@
-#!/usr/bin/env bash
-set -Eeu -o pipefail
+#!/usr/bin/env Rscript
 
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
-# shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+options(
+    "error" = quote(quit(status = 1L)),
+    "warning" = quote(quit(status = 1L))
+)
 
-_koopa_assert_has_no_args "$@"
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(dirname(dirname(file)))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-if ! _koopa_is_r_package_installed bb8
-then
-    _koopa_warning "bb8 R package is not installed."
-    exit 0
-fi
+if (!requireNamespace("bb8", quietly = TRUE)) {
+    message("bb8 package is required but not installed. Skipping.")
+    quit()
+}
 
-_koopa_h1 "Updating R package library."
-Rscript -e 'bb8::updatePackages()'
+remove(
+    pkgs = c(
+        "Matrix.utils",
+        "SDMTools",
+        "bioverbs",
+        "brio"
+    )
+)
+
+bb8::updatePackages()

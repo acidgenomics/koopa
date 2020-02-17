@@ -6,11 +6,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
-r_version="3.6-branch"
+r_version="devel"
 macos_version="el-capitan"
-tmp_dir="$(_koopa_tmp_dir)/r-devel"
+tmp_dir="$(_koopa_tmp_dir)"
 
-_koopa_h1 "Installing r-devel ${r_version} for ${macos_version}."
+_koopa_h1 "Installing R-${r_version} for ${macos_version}."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -18,7 +18,8 @@ _koopa_h1 "Installing r-devel ${r_version} for ${macos_version}."
     url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
     _koopa_download "$url"
     # Back up, if necessary.
-    if [[ -d "/Library/Frameworks/R.framework" ]]
+    if [[ -d "/Library/Frameworks/R.framework" ]] &&
+        [[ ! -L "/Library/Frameworks/R.framework" ]]
     then
         _koopa_note "Backing up existing 'R.framework'."
         sudo mv "/Library/Frameworks/R.framework" \
@@ -26,8 +27,9 @@ _koopa_h1 "Installing r-devel ${r_version} for ${macos_version}."
     fi
     # Now we're ready to install.
     sudo tar -xzvf "$file" -C /
-    rm -fr "$tmp_dir"
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
 
 # Create versioned symlinks.
 sudo mv "/Library/Frameworks/R.framework" \
@@ -35,5 +37,5 @@ sudo mv "/Library/Frameworks/R.framework" \
 sudo ln -fnsv "/Library/Frameworks/R-${r_version}.framework" \
     "/Library/Frameworks/R.framework"
 
-_koopa_h1 "R-${r_version} installed correctly."
-_koopa_h1 "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
+_koopa_success "R-${r_version} installed correctly."
+_koopa_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."

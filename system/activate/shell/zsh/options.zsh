@@ -2,7 +2,7 @@
 
 # """
 # ZSH shell options.
-# Updated 2019-11-25.
+# Updated 2020-02-14.
 #
 # Debug with:
 # - bindkey
@@ -31,20 +31,35 @@ esac
 # Fix the delete key.
 bindkey "\e[3~" delete-char
 
-setopt \
-    alwaystoend \
-    autocd \
-    autopushd \
-    completeinword \
-    extendedhistory \
-    histexpiredupsfirst \
-    histignoredups \
-    histignorespace \
-    histverify \
-    incappendhistory \
-    interactivecomments \
-    longlistjobs \
-    noflowcontrol \
-    pushdignoredups \
-    pushdminus \
-    sharehistory
+setopt_array=(
+    # auto_menu                 # completion
+    # auto_name_dirs            # dirs
+    # complete_aliases          # completion
+    # extended_glob             # glob
+    always_to_end               # completion
+    append_history              # history
+    auto_cd                     # dirs
+    auto_pushd                  # dirs
+    complete_in_word            # completion
+    extended_history            # history
+    hist_expire_dups_first      # history
+    hist_ignore_dups            # history
+    hist_ignore_space           # history
+    hist_verify                 # history
+    inc_append_history          # history
+    interactive_comments        # misc
+    long_list_jobs              # jobs
+    pushd_ignore_dups           # dirs
+    pushd_minus                 # dirs
+    share_history               # history
+)
+setopt "${setopt_array[@]}"
+
+unsetopt_array=(
+    bang_hist
+    flow_control
+)
+unsetopt "${unsetopt_array[@]}"
+
+unset -v setopt_array unsetopt_array
+

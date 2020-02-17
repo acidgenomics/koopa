@@ -17,7 +17,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -37,9 +37,9 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
             shared
     fi
     make --jobs="$jobs"
-    make test
+    # > make test
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

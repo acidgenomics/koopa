@@ -1,26 +1,85 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
+# """
 # Bash shared header script.
-# Updated 2019-11-11.
+# @note Updated 2020-02-14.
+# """
+
+# > set --help
+# > shopt
+
+# > set -o noglob       # -f
+# > set -o xtrace       # -x
+set -o errexit          # -e
+set -o errtrace         # -E
+set -o nounset          # -u
+set -o pipefail
+
+checks=1
+
+if [[ "$#" -gt 0 ]]
+then
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --no-header-checks)
+                checks=0
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+    fi
+fi
+
+# Requiring Bash >= 4 for exported scripts.
+# macOS ships with an ancient version of Bash, due to licensing.
+# If we're performing a clean install and loading up Homebrew, this step will
+# fail unless we skip checks.
+if [[ "$checks" -eq 1 ]]
+then
+    major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
+    if [[ ! "$major_version" -ge 4 ]]
+    then
+        echo "ERROR: Bash >= 4 is required."
+        exit 1
+    fi
+    # Check that user's Bash has mapfile builtin defined.
+    # We use this a lot to handle arrays.
+    if [[ $(type -t mapfile) != "builtin" ]]
+    then
+        echo "ERROR: Bash is missing 'mapfile' builtin."
+        exit 1
+    fi
+fi
 
 KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"
 
-# Source POSIX functions.
+# Source POSIX header.
 # shellcheck source=/dev/null
-source "${KOOPA_BASH_INC}/../../posix/include/functions.sh"
+source "${KOOPA_BASH_INC}/../../posix/include/header.sh"
 
 # Source Bash functions.
 # shellcheck source=/dev/null
 source "${KOOPA_BASH_INC}/functions.sh"
 
+unset -v KOOPA_BASH_INC
+
 _koopa_help "$@"
 
-# Require sudo permission to run 'sbin/' scripts.
-if echo "$0" | grep -q "/sbin/"
+if [[ "$checks" -eq 1 ]]
 then
-    _koopa_assert_has_sudo
+    # Require sudo permission to run 'sbin/' scripts.
+    if echo "$0" | grep -q "/sbin/"
+    then
+        _koopa_assert_has_sudo
+    fi
 fi
-
-unset -v KOOPA_BASH_INC

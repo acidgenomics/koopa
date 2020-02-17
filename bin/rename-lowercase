@@ -9,4 +9,54 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed rename
 
-rename -f 'y/A-Z/a-z/' "$@"
+recursive=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --recursive)
+            recursive=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+if [[ "$recursive" -eq 1 ]]
+then
+    dir="${1:-.}"
+    # Rename files.
+    find "$dir" \
+        -mindepth 1 \
+        -type f \
+        -name "*[A-Z]*" \
+        -not -name ".*" \
+        -print0 \
+        | sort --zero-terminated \
+        | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
+    # Rename directories.
+    find "$dir" \
+        -mindepth 1 \
+        -type d \
+        -name "*[A-Z]*" \
+        -not -name ".*" \
+        -print0 \
+        | sort --reverse --zero-terminated \
+        | xargs -0 -I {} rename --force --verbose 'y/A-Z/a-z/' {}
+else
+    rename --force --verbose 'y/A-Z/a-z/' "$@"
+fi
+
+exit 0

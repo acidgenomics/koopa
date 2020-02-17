@@ -29,7 +29,7 @@ _koopa_assert_is_installed jar
 
 jobs="$(_koopa_cpu_count)"
 ngs_libdir="$(_koopa_make_prefix)/lib64"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 build_prefix="${tmp_dir}/ncbi-outdir"
 
 # Ensure current jar binary is in path, otherwise install will fail.
@@ -43,8 +43,10 @@ export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
 rm -fr "$tmp_dir"
 mkdir -p "$tmp_dir"
 
-# ngs                                                                       {{{1
+# ngs  {{{1
 # ==============================================================================
+
+_koopa_h2 "Installing 'ngs'."
 
 (
     cd "$tmp_dir" || exit 1
@@ -65,12 +67,14 @@ mkdir -p "$tmp_dir"
     make -C ngs-sdk install
     make -C ngs-java install
     make -C ngs-python install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
-# ncbi-vdb                                                                  {{{1
+# ncbi-vdb  {{{1
 # ==============================================================================
+
+_koopa_h2 "Installing 'ncbi-vdb'."
 
 (
     cd "$tmp_dir" || exit 1
@@ -85,12 +89,14 @@ _koopa_link_cellar "$name" "$version"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 
-# sra-tools                                                                 {{{1
+# sra-tools  {{{1
 # ==============================================================================
+
+_koopa_h2 "Installing 'sra-tools'."
 
 (
     cd "$tmp_dir" || exit 1
@@ -105,7 +111,7 @@ _koopa_link_cellar "$name" "$version"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_link_cellar "$name" "$version"
 

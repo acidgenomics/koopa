@@ -1,63 +1,146 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_add_config_link() {                                                # {{{1
+_koopa_admin_group() {  # {{{1
     # """
-    # Add a symlink into the koopa configuration directory.
-    # Updated 2020-01-12.
+    # Return the administrator group.
+    # @note Updated 2020-02-16.
     # """
-    local config_dir
-    config_dir="$(_koopa_config_prefix)"
-    local source_file
-    source_file="${1:?}"
-    _koopa_assert_is_existing "$source_file"
-    source_file="$(realpath "$source_file")"
-    local dest_name
-    dest_name="${2:?}"
-    local dest_file
-    dest_file="${config_dir}/${dest_name}"
-    rm -f "$dest_file"
-    ln -fnsv "$source_file" "$dest_file"
+    local group
+    if _koopa_is_root
+    then
+        group="$(id -gn)"
+        echo "$group"
+        return 0
+    fi
+    local groups
+    groups="$(groups)"
+    if echo "$groups" | grep -Eq "\b(admin)\b"
+    then
+        group="admin"
+    elif echo "$groups" | grep -Eq "\b(sudo)\b"
+    then
+        group="sudo"
+    elif echo "$groups" | grep -Eq "\b(wheel)\b"
+    then
+        group="wheel"
+    else
+        _koopa_stop "Failed to detect admin group."
+    fi
+    echo "$group"
     return 0
 }
 
-_koopa_cd_tmp_dir() {                                                     # {{{1
+_koopa_cd() {  # {{{1
+    # """
+    # Change directory quietly.
+    # @note Updated 2019-10-29.
+    # """
+    cd "$@" > /dev/null || return 1
+    return 0
+}
+
+_koopa_cd_tmp_dir() {  # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
-    # Updated 2020-01-12.
+    # @note Updated 2020-02-16.
     #
     # Used primarily for cellar build scripts.
     # """
     local dir
-    dir="${1:?}"
+    dir="${1:-$(_koopa_tmp_dir)}"
     rm -fr "$dir"
     mkdir -p "$dir"
-    # Note that we don't want to run this inside a subshell here.
-    cd "$dir" || exit 1
+    _koopa_cd "$dir"
     return 0
 }
 
-_koopa_current_version() {                                                # {{{1
+_koopa_chgrp() {  # {{{1
     # """
-    # Get the current version of a supported program.
-    # Updated 2020-01-12.
+    # chgrp with dynamic sudo handling.
+    # @note Updated 2020-02-16.
     # """
-    local name
-    name="${1:?}"
-    local script
-    script="$(_koopa_prefix)/system/include/version/${name}.sh"
-    if [ ! -x "$script" ]
+    if _koopa_is_shared_install
     then
-        _koopa_stop "'${name}' is not supported."
+        sudo chgrp "$@"
+    else
+        chgrp "$@"
     fi
-    # shellcheck source=/dev/null
-    . "$script"
+    return 0
 }
 
-_koopa_disk_check() {                                                     # {{{1
+_koopa_chmod() {  # {{{1
+    # """
+    # chmod with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo chmod "$@"
+    else
+        chmod "$@"
+    fi
+    return 0
+}
+
+_koopa_chmod_flags() {
+    # """
+    # Default recommended flags for chmod.
+    # @note Updated 2020-02-16.
+    # """
+    local flags
+    if _koopa_is_shared_install
+    then
+        flags="u+rw,g+rw"
+    else
+        flags="u+rw,g+r,g-w"
+    fi
+    echo "$flags"
+    return 0
+}
+
+_koopa_chown() {  # {{{1
+    # """
+    # chown with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo chown "$@"
+    else
+        chown "$@"
+    fi
+    return 0
+}
+
+_koopa_cpu_count() {  # {{{1
+    # """
+    # Get the number of cores (CPUs) available.
+    # @note Updated 2020-01-31.
+    # """
+    local n
+    if _koopa_is_macos
+    then
+        n="$(sysctl -n hw.ncpu)"
+    elif _koopa_is_linux
+    then
+        n="$(getconf _NPROCESSORS_ONLN)"
+    else
+        # Otherwise assume single threaded.
+        n=1
+    fi
+    # Set to n-2 cores, if applicable.
+    if [ "$n" -gt 2 ]
+    then
+        n=$((n - 2))
+    fi
+    echo "$n"
+}
+
+_koopa_disk_check() {  # {{{1
     # """
     # Check that disk has enough free space.
-    # Updated 2019-10-27.
+    # @note Updated 2019-10-27.
     # """
     local used
     local limit
@@ -70,44 +153,51 @@ _koopa_disk_check() {                                                     # {{{1
     return 0
 }
 
-_koopa_disk_pct_used() {                                                  # {{{1
+_koopa_disk_pct_used() {  # {{{1
     # """
     # Check disk usage on main drive.
-    # Updated 2019-08-17.
+    # @note Updated 2020-02-13.
     # """
     local disk
     disk="${1:-"/"}"
-    df "$disk" \
-        | head -n 2 \
-        | sed -n '2p' \
-        | grep -Eo "([.0-9]+%)" \
-        | head -n 1 \
-        | sed 's/%$//'
+    local x
+    x="$( \
+        df "$disk" \
+            | head -n 2 \
+            | sed -n '2p' \
+            | grep -Eo "([.0-9]+%)" \
+            | head -n 1 \
+            | sed 's/%$//' \
+    )"
+    echo "$x"
+    return 0
 }
 
-_koopa_dotfiles_config_link() {                                           # {{{1
+_koopa_dotfiles_config_link() {  # {{{1
     # """
     # Dotfiles directory.
-    # Updated 2019-11-04.
+    # @note Updated 2019-11-04.
     #
     # Note that we're not checking for existence here, which is handled inside
     # 'link-dotfile' script automatically instead.
     # """
     echo "$(_koopa_config_prefix)/dotfiles"
+    return 0
 }
 
-_koopa_dotfiles_private_config_link() {                                   # {{{1
+_koopa_dotfiles_private_config_link() {  # {{{1
     # """
     # Private dotfiles directory.
-    # Updated 2019-11-04.
+    # @note Updated 2019-11-04.
     # """
     echo "$(_koopa_dotfiles_config_link)-private"
+    return 0
 }
 
-_koopa_dotfiles_source_repo() {                                           # {{{1
+_koopa_dotfiles_source_repo() {  # {{{1
     # """
     # Dotfiles source repository.
-    # Updated 2019-11-04.
+    # @note Updated 2019-11-04.
     # """
     if [ -d "${DOTFILES:-}" ]
     then
@@ -121,12 +211,141 @@ _koopa_dotfiles_source_repo() {                                           # {{{1
         _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
     fi
     echo "$dotfiles"
+    return 0
 }
 
-_koopa_git_branch() {                                                     # {{{1
+_koopa_download() {  # {{{1
+    # """
+    # Download a file.
+    # @note Updated 2020-02-16.
+    #
+    # Potentially useful curl flags:
+    # * --connect-timeout <seconds>
+    # * --silent
+    # * --stderr
+    # * --verbose
+    #
+    # Note that '--fail-early' flag is useful, but not supported on old versions
+    # of curl (e.g. 7.29.0; RHEL 7).
+    #
+    # Alternatively, can use wget instead of curl:
+    # > wget -O file url
+    # > wget -q -O - url (piped to stdout)
+    # > wget -qO-
+    # """
+    _koopa_assert_is_installed curl
+    local url
+    url="${1:?}"
+    local file
+    file="${2:-}"
+    if [ -z "$file" ]
+    then
+        local wd
+        wd="$(pwd)"
+        local bn
+        bn="$(basename "$url")"
+        file="${wd}/${bn}"
+    fi
+    _koopa_info "Downloading '${url}' to '${file}'."
+    curl \
+        --create-dirs \
+        --fail \
+        --location \
+        --output "$file" \
+        --progress-bar \
+        --retry 1 \
+        --show-error \
+        "$url"
+    return 0
+}
+
+_koopa_expr() {  # {{{1
+    # """
+    # Quiet regular expression matching that is POSIX compliant.
+    # @note Updated 2020-02-16.
+    #
+    # Avoid using '[[ =~ ]]' in sh config files.
+    # 'expr' is faster than using 'case'.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/21115121
+    # """
+    expr "${1:?}" : "${2:?}" 1>/dev/null
+}
+
+_koopa_extract() {  # {{{1
+    # """
+    # Extract compressed files automatically.
+    # @note Updated 2020-02-13.
+    #
+    # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
+    #
+    # See also:
+    # - https://github.com/stephenturner/oneliners
+    # """
+    local file
+    file="${1:?}"
+    if [ ! -f "$file" ]
+    then
+        _koopa_stop "Invalid file: '${file}'."
+    fi
+    _koopa_h2 "Extracting '${file}'."
+    case "$file" in
+        *.tar.bz2)
+            tar -xjvf "$file"
+            ;;
+        *.tar.gz)
+            tar -xzvf "$file"
+            ;;
+        *.tar.xz)
+            tar -xJvf "$file"
+            ;;
+        *.bz2)
+            _koopa_assert_is_installed bunzip2
+            bunzip2 "$file"
+            ;;
+        *.gz)
+            gunzip "$file"
+            ;;
+        *.rar)
+            _koopa_assert_is_installed unrar
+            unrar -x "$file"
+            ;;
+        *.tar)
+            tar -xvf "$file"
+            ;;
+        *.tbz2)
+            tar -xjvf "$file"
+            ;;
+        *.tgz)
+            tar -xzvf "$file"
+            ;;
+        *.xz)
+            _koopa_assert_is_installed xz
+            xz --decompress "$file"
+            ;;
+        *.zip)
+            _koopa_assert_is_installed unzip
+            unzip "$file"
+            ;;
+        *.Z)
+            uncompress "$file"
+            ;;
+        *.7z)
+            _koopa_assert_is_installed 7z
+            7z -x "$file"
+            ;;
+        *)
+            _koopa_stop "Unsupported extension: '${file}'."
+            ;;
+   esac
+   return 0
+}
+
+_koopa_git_branch() {  # {{{1
     # """
     # Current git branch name.
-    # Updated 2019-10-13.
+    # @note Updated 2019-10-13.
     #
     # Handles detached HEAD state.
     #
@@ -139,13 +358,62 @@ _koopa_git_branch() {                                                     # {{{1
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    git symbolic-ref --short -q HEAD
+    _koopa_is_git || return 1
+    local branch
+    branch="$(git symbolic-ref --short -q HEAD)"
+    echo "$branch"
+    return 0
 }
 
-_koopa_group() {                                                          # {{{1
+_koopa_git_clone() {  # {{{1
     # """
-    # Return the approach group to use with koopa installation.
-    # Updated 2019-10-22.
+    # Quietly clone a git repository.
+    # @note Updated 2020-02-15.
+    # """
+    local repo
+    repo="${1:?}"
+    local target
+    target="${2:?}"
+    if [ -d "$target" ]
+    then
+        _koopa_note "Cloned: '${target}'."
+        return 0
+    fi
+    git clone --quiet --recursive "$repo" "$target"
+    return 0
+}
+
+_koopa_git_update() {  # {{{1
+    # """
+    # Update a git repository.
+    # @note Updated 2020-02-15.
+    #
+    # @seealso _koopa_git_pull
+    # """
+    local repo
+    repo="${1:?}"
+    [ -d "${repo}" ] || return 0
+    [ -x "${repo}/.git" ] || return 0
+    _koopa_h2 "Updating '${repo}'."
+    (
+        cd "$repo" || exit 1
+        # Run updater script, if defined.
+        # Otherwise pull the git repo.
+        if [[ -x "UPDATE.sh" ]]
+        then
+            ./UPDATE.sh
+        else
+            git fetch --all --quiet
+            git pull --quiet
+        fi
+    )
+    return 0
+}
+
+_koopa_group() {  # {{{1
+    # """
+    # Return the appropriate group to use with koopa installation.
+    # @note Updated 2020-02-16.
     #
     # Returns current user for local install.
     # Dynamically returns the admin group for shared install.
@@ -153,30 +421,29 @@ _koopa_group() {                                                          # {{{1
     # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
     # """
     local group
-    if _koopa_is_shared_install && _koopa_has_sudo
+    if _koopa_is_shared_install
     then
-        if groups | grep -Eq "\b(admin)\b"
-        then
-            group="admin"
-        elif groups | grep -Eq "\b(sudo)\b"
-        then
-            group="sudo"
-        elif groups | grep -Eq "\b(wheel)\b"
-        then
-            group="wheel"
-        else
-            group="$(whoami)"
-        fi
+        group="$(_koopa_admin_group)"
     else
-        group="$(whoami)"
+        group="$(id -gn)"
     fi
     echo "$group"
+    return 0
 }
 
-_koopa_header() {                                                         # {{{1
+_koopa_gnu_mirror() {  # {{{1
+    # """
+    # Get GNU FTP mirror URL.
+    # @note Updated 2020-02-11.
+    # """
+    _koopa_variable "gnu-mirror"
+    return 0
+}
+
+_koopa_header() {  # {{{1
     # """
     # Source script header.
-    # Updated 2020-01-16.
+    # @note Updated 2020-01-16.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
@@ -233,12 +500,13 @@ _koopa_header() {                                                         # {{{1
             ;;
     esac
     echo "$file"
+    return 0
 }
 
-_koopa_help() {                                                           # {{{1
+_koopa_help() {  # {{{1
     # """
     # Show usage via '--help' flag.
-    # Updated 2020-01-21.
+    # @note Updated 2020-01-21.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -308,10 +576,10 @@ _koopa_help() {                                                           # {{{1
     return 0
 }
 
-_koopa_host_id() {                                                        # {{{1
+_koopa_host_id() {  # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
-    # Updated 2019-12-06.
+    # @note Updated 2019-12-06.
     #
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
@@ -320,6 +588,8 @@ _koopa_host_id() {                                                        # {{{1
     # - HPCs: "harvard-o2", "harvard-odyssey".
     #
     # Returns empty for local machines and/or unsupported types.
+    #
+    # Alternatively, can use 'hostname -d' for reverse lookups.
     # """
     local id
     if [ -r /etc/hostname ]
@@ -334,10 +604,10 @@ _koopa_host_id() {                                                        # {{{1
         *.ec2.internal)
             id="aws"
             ;;
-        awslabapp*)
+        awslab*)
             id="aws"
             ;;
-        azlabapp*)
+        azlab*)
             id="azure"
             ;;
         # HPCs
@@ -349,12 +619,13 @@ _koopa_host_id() {                                                        # {{{1
             ;;
     esac
     echo "$id"
+    return 0
 }
 
-_koopa_info_box() {                                                       # {{{1
+_koopa_info_box() {  # {{{1
     # """
     # Info box.
-    # Updated 2019-10-14.
+    # @note Updated 2019-10-14.
     #
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
@@ -372,77 +643,10 @@ _koopa_info_box() {                                                       # {{{1
     return 0
 }
 
-_koopa_install_mike() {                                                   # {{{1
-    # """
-    # Install additional Mike-specific config files.
-    # Updated 2020-01-14.
-    # """
-    # > _koopa_h2 "Setting koopa remote to Git (SSH) instead of HTTPS."
-    # > (
-    # >     cd "${KOOPA_PREFIX:?}" || exit 1
-    # >     git remote set-url origin "git@github.com:acidgenomics/koopa.git"
-    # > )
-    install-dotfiles --mike
-    # docker
-    source_repo="git@github.com:acidgenomics/docker.git"
-    target_dir="$(_koopa_config_prefix)/docker"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo" "$target_dir"
-    fi
-    # scripts-private
-    source_repo="git@github.com:mjsteinbaugh/scripts-private.git"
-    target_dir="$(_koopa_config_prefix)/scripts-private"
-    if [[ ! -d "$target_dir" ]]
-    then
-        git clone --recursive "$source_repo"  "$target_dir"
-    fi
-    return 0
-}
-
-_koopa_install_pip() {                                                    # {{{1
-    # """
-    # Install pip for Python.
-    # Updated 2020-01-03.
-    # """
-    local python
-    python="${1:-python3}"
-    _koopa_h2 "Installing pip for Python '${python}'."
-    local file
-    file="get-pip.py"
-    _koopa_download "https://bootstrap.pypa.io/${file}"
-    "$python" "$file" --no-warn-script-location
-    rm "$file"
-    return 0
-}
-
-_koopa_install_pipx() {
-    # """
-    # Install pipx for Python.
-    # Updated 2020-01-11.
-    #
-    # Local user installation:
-    # Use the '--user' flag with 'pip install' call.
-    #
-    # This recommended step will modify shell RC file, which we don't want.
-    # > "$python" -m pipx ensurepath
-    # """
-    local python
-    python="${1:-python3}"
-    _koopa_h2 "Installing pipx for Python '${python}'."
-    "$python" -m pip install --no-warn-script-location pipx
-    local prefix
-    prefix="$(_koopa_app_prefix)/python/pipx"
-    _koopa_prefix_mkdir "$prefix"
-    _koopa_h2 "pipx installed successfully."
-    _koopa_note "Restart the shell to activate pipx."
-    return 0
-}
-
-_koopa_link_cellar() {                                                    # {{{1
+_koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
-    # Updated 2020-01-23.
+    # @note Updated 2020-02-16.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -453,18 +657,29 @@ _koopa_link_cellar() {                                                    # {{{1
     # This is currently corrected in 'install-debian-base', but top-level
     # symlink checks may need to be added here in a future update.
     #
-    # Example: _koopa_link_cellar emacs 26.3
+    # @section cp flags:
+    # * -f, --force
+    # * -R, -r, --recursive
+    # * -s, --symbolic-link
+    #
+    # @examples
+    # _koopa_link_cellar emacs 26.3
     # """
     local name
     name="${1:?}"
+
     local version
     version="${2:-}"
+
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     _koopa_assert_is_dir "$make_prefix"
+
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)/${name}"
     _koopa_assert_is_dir "$cellar_prefix"
+
+    # Detect the version automatically, if not specified.
     if [ -n "$version" ]
     then
         cellar_prefix="${cellar_prefix}/${version}"
@@ -479,37 +694,127 @@ _koopa_link_cellar() {                                                    # {{{1
         )"
     fi
     _koopa_assert_is_dir "$cellar_prefix"
+
     _koopa_h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions "$cellar_prefix"
+
+    # Early return cellar-only if Homebrew is installed.
+    if _koopa_is_installed brew
+    then
+        _koopa_note "Homebrew installation detected."
+        _koopa_note "Skipping linkage into '${make_prefix}'."
+        return 0
+    fi
+
     if _koopa_is_shared_install
     then
-        _koopa_assert_has_sudo
         sudo cp -frs "$cellar_prefix/"* "$make_prefix/".
         _koopa_update_ldconfig
     else
         cp -frs "$cellar_prefix/"* "$make_prefix/".
     fi
+
     return 0
 }
 
-_koopa_macos_app_version() {                                              # {{{1
+_koopa_ln() {  # {{{1
     # """
-    # Extract the version of a macOS application.
-    # Updated 2020-01-12.
+    # Create symlink quietly.
+    # @note Updated 2020-02-16.
     # """
-    _koopa_assert_is_macos
-    local name
-    name="${1:?}"
-    plutil -p "/Applications/${name}.app/Contents/Info.plist" \
-        | grep CFBundleShortVersionString \
-        | awk -F ' => ' '{print $2}' \
-        | tr -d '"'
+    if _koopa_is_shared_install
+    then
+        sudo ln -fns "$@"
+    else
+        ln -fns "$@"
+    fi
+    return 0
 }
 
-_koopa_os_codename() {                                                    # {{{1
+_koopa_make_build_string() {  # {{{1
+    # """
+    # OS build string for 'make' configuration.
+    # @note Updated 2020-01-13.
+    #
+    # Use this for 'configure --build' flag.
+    #
+    # This function will distinguish between RedHat, Amazon, and other distros
+    # instead of just returning "linux". Note that we're substituting "redhat"
+    # instead of "rhel" here, when applicable.
+    #
+    # - AWS:    x86_64-amzn-linux-gnu
+    # - macOS: x86_64-darwin15.6.0
+    # - RedHat: x86_64-redhat-linux-gnu
+    # """
+    local mach
+    mach="$(uname -m)"
+    local os_type
+    os_type="${OSTYPE:?}"
+    local os_id
+    local string
+    if _koopa_is_macos
+    then
+        string="${mach}-${os_type}"
+    else
+        os_id="$(_koopa_os_id)"
+        if echo "$os_id" | grep -q "rhel"
+        then
+            os_id="redhat"
+        fi
+        string="${mach}-${os_id}-${os_type}"
+    fi
+    echo "$string"
+}
+
+_koopa_mkdir() {  # {{{1
+    # """
+    # mkdir with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo mkdir -p "$@"
+    else
+        mkdir -p "$@"
+    fi
+    _koopa_chmod "$(_koopa_chmod_flags)" "$@"
+    _koopa_chgrp "$(_koopa_group)" "$@"
+    return 0
+}
+
+_koopa_mktemp() {  # {{{1
+    # """
+    # Wrapper function for system 'mktemp'.
+    # @note Updated 2020-02-13.
+    #
+    # Traditionally, many shell scripts take the name of the program with the
+    # pid as a suffix and use that as a temporary file name. This kind of
+    # naming scheme is predictable and the race condition it creates is easy for
+    # an attacker to win. A safer, though still inferior, approach is to make a
+    # temporary directory using the same naming scheme. While this does allow
+    # one to guarantee that a temporary file will not be subverted, it still
+    # allows a simple denial of service attack. For these reasons it is
+    # suggested that mktemp be used instead.
+    #
+    # Note that old version of mktemp (e.g. macOS) only supports '-t' instead of
+    # '--tmpdir' flag for prefix.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/4632028
+    # - https://stackoverflow.com/a/10983009/3911732
+    # - https://gist.github.com/earthgecko/3089509
+    # """
+    _koopa_assert_is_installed mktemp
+    local template
+    template="koopa-$(id -u)-$(date "+%Y%m%d%H%M%S")-XXXXXXXXXX"
+    mktemp "$@" -t "$template"
+    return 0
+}
+
+_koopa_os_codename() {  # {{{1
     # """
     # Operating system code name.
-    # Updated 2019-12-09.
+    # @note Updated 2020-02-13.
     #
     # Alternate approach:
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
@@ -517,23 +822,29 @@ _koopa_os_codename() {                                                    # {{{1
     # """
     _koopa_assert_is_debian
     _koopa_assert_is_installed lsb_release
-    lsb_release -cs
+    local os_codename
+    os_codename="$(lsb_release -cs)"
+    echo "$os_codename"
+    return 0
 }
 
-_koopa_os_id() {                                                          # {{{1
+_koopa_os_id() {  # {{{1
     # """
     # Operating system ID.
-    # Updated 2019-11-25.
+    # @note Updated 2020-02-13.
     #
     # Just return the OS platform ID (e.g. "debian").
     # """
-    _koopa_os_string | cut -d '-' -f 1
+    local os_id
+    os_id="$(_koopa_os_string | cut -d '-' -f 1)"
+    echo "$os_id"
+    return 0
 }
 
-_koopa_os_string() {                                                      # {{{1
+_koopa_os_string() {  # {{{1
     # """
     # Operating system string.
-    # Updated 2020-01-13.
+    # @note Updated 2020-01-13.
     #
     # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
@@ -549,7 +860,7 @@ _koopa_os_string() {                                                      # {{{1
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
         id="macos"
-        version="$(_koopa_current_version "$id")"
+        version="$(_koopa_get_version "$id")"
         version="$(_koopa_minor_version "$version")"
     elif _koopa_is_linux
     then
@@ -585,50 +896,193 @@ _koopa_os_string() {                                                      # {{{1
         string="${string}-${version}"
     fi
     echo "$string"
+    return 0
 }
 
-_koopa_os_version() {                                                     # {{{1
+_koopa_prefix_chgrp() {  # {{{1
     # """
-    # Operating system version.
-    # Updated 2020-01-13.
+    # Set group for target prefix(es).
+    # @note Updated 2020-01-24.
+    # """
+    _koopa_chgrp \
+        -L \
+        --dereference \
+        --recursive \
+        "$(_koopa_group)" \
+        "$@"
+    return 0
+}
+
+_koopa_prefix_chmod() {  # {{{1
+    # """
+    # Set file permissions for target prefix(es).
+    # @note Updated 2020-02-16.
     #
-    # Note that uname returns Darwin kernel version for macOS.
+    # This sets group write access by default for shared install, which is
+    # useful so we don't have to constantly switch to root for admin.
     # """
-    if _koopa_is_macos
-    then
-        _koopa_current_version macos
-    else
-        uname -r
-    fi
+    _koopa_chmod \
+        --recursive \
+        "$(_koopa_chmod_flags)" \
+        "$@"
+    return 0
 }
 
-_koopa_relink() {                                                         # {{{1
+_koopa_prefix_chown() {  # {{{1
+    # """
+    # Set ownership (user and group) for target prefix(es).
+    # @note Updated 2020-02-16.
+    #
+    # Note that '--dereference' requires '-H' or '-L'.
+    # """
+    _koopa_chown \
+        -L \
+        --dereference \
+        --recursive \
+        "$(_koopa_user):$(_koopa_group)" \
+        "$@"
+    return 0
+}
+
+_koopa_prefix_chown_user() {  # {{{1
+    # """
+    # Set ownership to current user for target prefix(es).
+    # @note Updated 2020-01-17.
+    # """
+    _koopa_chown \
+        -L \
+        --dereference \
+        --recursive \
+        "${USER:?}:$(_koopa_group)" \
+        "$@"
+    return 0
+}
+
+_koopa_prefix_mkdir() {  # {{{1
+    # """
+    # Make directory at target prefix, only if it doesn't exist.
+    # @note Updated 2020-02-16.
+    # """
+    local prefix
+    prefix="${1:?}"
+    _koopa_assert_is_not_dir "$prefix"
+    _koopa_mkdir "$prefix"
+    return 0
+}
+
+_koopa_relink() {  # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # Updated 2020-01-12.
+    # @note Updated 2020-02-16.
     # """
     local source_file
     source_file="${1:?}"
     local dest_file
     dest_file="${2:?}"
-    if [ ! -e "$dest_file" ]
+    # Relaxing this check, in case dotfiles haven't been cloned.
+    [ -e "$source_file" ] || return 0
+    [ -L "$dest_file" ] && return 0
+    _koopa_rm "$dest_file"
+    ln -fns "$source_file" "$dest_file"
+    return 0
+}
+
+_koopa_rm() {  # {{{1
+    # """
+    # Remove files/directories without dealing with permissions.
+    # @note Updated 2020-02-16.
+    # """
+    if _koopa_is_shared_install
     then
-        if [ ! -e "$source_file" ]
-        then
-            _koopa_warning "Source file missing: '${source_file}'."
-            return 1
-        fi
-        # > _koopa_h2 "Updating XDG config in '${config_dir}'."
-        rm -f "$dest_file"
-        ln -fns "$source_file" "$dest_file"
+        sudo rm -fr "$@" > /dev/null 2>&1
+    else
+        rm -fr "$@" > /dev/null 2>&1
     fi
     return 0
 }
 
-_koopa_shell() {                                                          # {{{1
+_koopa_rsync_flags() {  # {{{1
+    # """
+    # rsync flags.
+    # @note Updated 2019-10-28.
+    #
+    #     --delete-before         receiver deletes before xfer, not during
+    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
+    #     --numeric-ids           don't map uid/gid values by user/group name
+    #     --partial               keep partially transferred files
+    #     --progress              show progress during transfer
+    # -A, --acls                  preserve ACLs (implies -p)
+    # -H, --hard-links            preserve hard links
+    # -L, --copy-links            transform symlink into referent file/dir
+    # -O, --omit-dir-times        omit directories from --times
+    # -P                          same as --partial --progress
+    # -S, --sparse                handle sparse files efficiently
+    # -X, --xattrs                preserve extended attributes
+    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
+    # -g, --group                 preserve group
+    # -h, --human-readable        output numbers in a human-readable format
+    # -n, --dry-run               perform a trial run with no changes made
+    # -o, --owner                 preserve owner (super-user only)
+    # -r, --recursive             recurse into directories
+    # -x, --one-file-system       don't cross filesystem boundaries    
+    # -z, --compress              compress file data during the transfer
+    #
+    # Use '--rsync-path="sudo rsync"' to sync across machines with sudo.
+    #
+    # See also:
+    # - https://unix.stackexchange.com/questions/165423
+    # """
+    echo "--archive --delete-before --human-readable --progress"
+    return 0
+}
+
+_koopa_set_permissions() {  # {{{1
+    # """
+    # Set permissions on target prefix(es).
+    # @note Updated 2020-01-24.
+    #
+    # This always works recursively.
+    # """
+    [ "$#" -eq 1 ] || return 1
+    local prefix
+    prefix="${1:?}"
+    _koopa_h2 "Setting permissions on '${prefix}'."
+    _koopa_prefix_chown "$prefix"
+    _koopa_prefix_chmod "$prefix"
+    return 0
+}
+
+_koopa_set_permissions_user() {  # {{{1
+    # """
+    # Set permissions on target prefix(es) to current user.
+    # @note Updated 2020-01-24.
+    #
+    # This always works recursively.
+    # """
+    [ "$#" -eq 1 ] || return 1
+    local prefix
+    prefix="${1:?}"
+    _koopa_h2 "Resetting permissions on '${prefix}'."
+    _koopa_prefix_chown_user "$prefix"
+    _koopa_prefix_chmod "$prefix"
+    return 0
+}
+
+_koopa_set_sticky_group() {  # {{{1
+    # """
+    # Set sticky group bit for target prefix(es).
+    # @note Updated 2020-01-24.
+    #
+    # This never works recursively.
+    # """
+    _koopa_chmod g+s "$@"
+    return 0
+}
+
+_koopa_shell() {  # {{{1
     # """
     # Note that this isn't necessarily the default shell ('$SHELL').
-    # Updated 2019-06-27.
+    # @note Updated 2019-06-27.
     # """
     local shell
     if [ -n "${BASH_VERSION:-}" ]
@@ -652,12 +1106,73 @@ EOF
         return 1
     fi
     echo "$shell"
+    return 0
 }
 
-_koopa_today_bucket() {                                                   # {{{1
+_koopa_test_true_color() {  # {{{1
+    # """
+    # Test 24-bit true color support.
+    # @note Updated 2020-02-15.
+    #
+    # @seealso
+    # https://jdhao.github.io/2018/10/19/tmux_nvim_true_color/
+    # """
+    awk 'BEGIN{
+        s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
+        for (colnum = 0; colnum<77; colnum++) {
+            r = 255-(colnum*255/76);
+            g = (colnum*510/76);
+            b = (colnum*255/76);
+            if (g>255) g = 510-g;
+            printf "\033[48;2;%d;%d;%dm", r,g,b;
+            printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+            printf "%s\033[0m", substr(s,colnum+1,1);
+        }
+        printf "\n";
+    }'
+    return 0
+}
+
+_koopa_tmp_dir() {  # {{{1
+    # """
+    # Create temporary directory.
+    # @note Updated 2020-02-06.
+    # """
+    _koopa_mktemp -d
+    return 0
+}
+
+_koopa_tmp_file() {  # {{{1
+    # """
+    # Create temporary file.
+    # @note Updated 2020-02-06.
+    # """
+    _koopa_mktemp
+    return 0
+}
+
+_koopa_tmp_log_file() {  # {{{1
+    # """
+    # Create temporary log file.
+    # @note Updated 2020-02-13.
+    #
+    # Note that old version on macOS doesn't support '--suffix' flag.
+    #
+    # Used primarily for debugging cellar make install scripts.
+    # """
+    if _koopa_is_macos
+    then
+        _koopa_mktemp
+    else
+        _koopa_mktemp --suffix=".log"
+    fi
+    return 0
+}
+
+_koopa_today_bucket() {  # {{{1
     # """
     # Create a dated file today bucket.
-    # Updated 2019-11-10.
+    # @note Updated 2019-11-10.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -693,35 +1208,29 @@ _koopa_today_bucket() {                                                   # {{{1
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
+    return 0
 }
 
-_koopa_tmp_dir() {                                                        # {{{1
+_koopa_user() {  # {{{1
     # """
-    # Create temporary directory.
-    # Updated 2019-10-17.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/4632028
-    # - https://gist.github.com/earthgecko/3089509
-    #
-    # Note: macOS requires 'env LC_CTYPE=C'.
-    # Otherwise, you'll see this error: 'tr: Illegal byte sequence'.
-    # This doesn't seem to work reliably, so using timestamp instead.
-    #
-    # Alternate approach:
-    # > local unique
-    # > local dir
-    # > unique="$(date "+%Y%m%d-%H%M%S")"
-    # > dir="/tmp/koopa-$(id -u)-${unique}"
-    # > echo "$dir"
+    # Set the default user.
+    # @note Updated 2020-02-16.
     # """
-    mktemp -d
+    local user
+    if _koopa_is_shared_install
+    then
+        user="root"
+    else
+        user="${USER:?}"
+    fi
+    echo "$user"
+    return 0
 }
 
-_koopa_variable() {                                                       # {{{1
+_koopa_variable() {  # {{{1
     # """
     # Get version stored internally in versions.txt file.
-    # Updated 2020-01-12.
+    # @note Updated 2020-02-13.
     # """
     local file
     file="$(_koopa_prefix)/system/include/variables.txt"
@@ -733,7 +1242,35 @@ _koopa_variable() {                                                       # {{{1
         grep -Eo "^${key}=\"[^\"]+\"" "$file" \
         || _koopa_stop "'${key}' not defined in '${file}'." \
     )"
-    echo "$value" \
-        | head -n 1 \
-        | cut -d "\"" -f 2
+    value="$( \
+        echo "$value" \
+            | head -n 1 \
+            | cut -d "\"" -f 2
+    )"
+    echo "$value"
+    return 0
+}
+
+_koopa_view_latest_tmp_log_file() {  # {{{1
+    # """
+    # View the latest temporary log file.
+    # @note Updated 2020-02-13.
+    # """
+    local dir
+    dir="${TMPDIR:-/tmp}"
+    local log_file
+    log_file="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type f \
+            -name "koopa-$(id -u)-*" \
+            | sort \
+            | tail -n 1 \
+    )"
+    [ -f "$log_file" ] || return 1
+    _koopa_h1 "Viewing '${log_file}'."
+    # Note that this will skip to the end automatically.
+    less +G "$log_file"
+    return 0
 }

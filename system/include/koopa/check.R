@@ -2,39 +2,45 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-01-21.
+## Updated 2020-02-12.
+##
+## Need to set this to run inside R without '--vanilla' flag (for testing).
+## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
+##
+## If you see this error, reinstall ruby, rbenv, and emacs:
+## # Ignoring commonmarker-0.17.13 because its extensions are not built.
+## # Try: gem pristine commonmarker --version 0.17.13
 ## """
 
 options(
     "error" = quote(quit(status = 1L)),
-    "mc.cores" = max(1L, parallel::detectCores() - 1L),
     "warning" = quote(quit(status = 1L))
 )
 
-library("methods")
+koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
+stopifnot(isTRUE(nzchar(koopaPrefix)))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+library(methods)
 
+koopa <- file.path(koopaPrefix, "bin", "koopa")
+stopifnot(file.exists(koopa))
 
-## Notes =======================================================================
-## Semantic versioning
-## https://semver.org/
-## MAJOR.MINOR.PATCH
+shell <- Sys.getenv("KOOPA_SHELL")
+stopifnot(isTRUE(nzchar(shell)))
 
-## If you see this error, reinstall ruby, rbenv, and emacs:
-## ## Ignoring commonmarker-0.17.13 because its extensions are not built.
-## ## Try: gem pristine commonmarker --version 0.17.13
+host <- system2(command = koopa, args = "host-id", stdout = TRUE)
+stopifnot(isTRUE(nzchar(host)))
 
+os <- system2(command = koopa, args = "os-string", stdout = TRUE)
+stopifnot(isTRUE(nzchar(os)))
 
-
-## Variables ===================================================================
-## Need to set this to run inside R without '--vanilla' flag (for testing).
-## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
-
-koopaHome <- Sys.getenv("KOOPA_PREFIX")
-stopifnot(isTRUE(nzchar(koopaHome)))
-
-koopaEXE <- file.path(koopaHome, "bin", "koopa")
-stopifnot(file.exists(koopaEXE))
+macos <- isMacOS()
+if (isTRUE(macos)) {
+    linux <- FALSE
+} else {
+    linux <- TRUE
+}
 
 if (Sys.getenv("KOOPA_EXTRA") == 1L) {
     extra <- TRUE
@@ -42,276 +48,12 @@ if (Sys.getenv("KOOPA_EXTRA") == 1L) {
     extra <- FALSE
 }
 
-host <- system2(command = koopaEXE, args = "host-id", stdout = TRUE)
-os <- system2(command = koopaEXE, args = "os-string", stdout = TRUE)
-shell <- Sys.getenv("KOOPA_SHELL")
-
-## Determine if we're on Linux or not (i.e. macOS).
-rOSString <- R.Version()[["os"]]
-if (grepl("darwin", rOSString)) {
-    linux <- FALSE
-} else {
-    linux <- TRUE
-}
-
-variablesFile <- file.path(
-    Sys.getenv("KOOPA_PREFIX"),
-    "system",
-    "include",
-    "variables.txt"
-)
-variables <- readLines(variablesFile)
-
-
-
-## Functions ===================================================================
-checkVersion <- function(
-    name,
-    whichName,
-    current,
-    expected,
-    eval = c("==", ">="),
-    required = TRUE
-) {
-    if (missing(whichName)) {
-        whichName <- name
-    }
-    if (identical(current, character())) {
-        current <- NA_character_
-    }
-    stopifnot(
-        is.character(name) && identical(length(name), 1L),
-        (is.character(whichName) && identical(length(whichName), 1L)) ||
-            is.null(whichName),
-        is(current, "package_version") ||
-            (is.character(current) && identical(length(current), 1L)) ||
-            is.null(current),
-        is(expected, "package_version") ||
-            (is.character(expected) && identical(length(expected), 1L)) ||
-            is.null(expected),
-        is.logical(required) && identical(length(required), 1L)
-    )
-    eval <- match.arg(eval)
-    if (is.null(expected)) {
-        return(invisible())
-    }
-    if (isTRUE(required)) {
-        fail <- "FAIL"
-    } else {
-        fail <- "NOTE"
-    }
-    ## Check to see if program is installed.
-    if (!is.null(whichName)) {
-        which <- unname(Sys.which(whichName))
-        if (identical(which, "")) {
-            message(sprintf(
-                fmt = "  %s | %s is not installed.",
-                fail, name
-            ))
-            return(invisible(FALSE))
-        }
-        which <- normalizePath(which)
-    } else {
-        which <- NA
-    }
-    ## Sanitize the version for non-identical (e.g. GTE) comparisons.
-    if (!identical(eval, "==")) {
-        if (grepl("\\.", current)) {
-            current <- sanitizeVersion(current)
-            current <- package_version(current)
-        }
-        if (grepl("\\.", expected)) {
-            expected <- sanitizeVersion(expected)
-            expected <- package_version(expected)
-        }
-    }
-    ## Compare current to expected version.
-    if (eval == ">=") {
-        ok <- current >= expected
-    } else if (eval == "==") {
-        ok <- current == expected
-    }
-    if (isTRUE(ok)) {
-        status <- "  OK"
-    } else {
-        status <- fail
-    }
-    message(
-        sprintf(
-            fmt = paste0(
-                "  %s | %s (%s %s %s)\n",
-                "       |   %.69s"
-            ),
-            status, name,
-            current, eval, expected,
-            which
-        )
-    )
-    invisible(ok)
-}
-
-currentMajorVersion <- function(name) {
-    x <- currentVersion(name)
-    if (!isTRUE(nzchar(x))) return(NULL)
-    x <- majorVersion(x)
-    x
-}
-
-currentMinorVersion <- function(name) {
-    x <- currentVersion(name)
-    if (!isTRUE(nzchar(x))) return(NULL)
-    x <- minorVersion(x)
-    x
-}
-
-currentVersion <- function(name) {
-    script <- file.path(
-        Sys.getenv("KOOPA_PREFIX"),
-        "system",
-        "include",
-        "version",
-        paste0(name, ".sh")
-    )
-    stopifnot(isTRUE(file.exists(script)))
-    tryCatch(
-        expr = system2(command = script, stdout = TRUE, stderr = FALSE),
-        error = function(e) {
-            character()
-        }
-    )
-}
-
-expectedMajorVersion <- function(x) {
-    x <- expectedVersion(x)
-    x <- majorVersion(x)
-    x
-}
-
-expectedMinorVersion <- function(x) {
-    x <- expectedVersion(x)
-    stopifnot(isTRUE(grepl("\\.", x)))
-    x <- minorVersion(x)
-    x
-}
-
-expectedVersion <- function(x) {
-    keep <- grepl(pattern = paste0("^", x, "="), x = variables)
-    stopifnot(sum(keep, na.rm = TRUE) == 1L)
-    x <- variables[keep]
-    stopifnot(isTRUE(nzchar(x)))
-    x <- sub(
-        pattern = "^(.+)=\"(.+)\"$",
-        replacement = "\\2",
-        x = x
-    )
-    x
-}
-
-hasGNUCoreutils <- function(command = "env") {
-    status <- "FAIL"
-    x <- tryCatch(
-        expr = system2(
-            command = command,
-            args = "--version",
-            stdout = TRUE,
-            stderr = FALSE
-        ),
-        error = function(e) {
-            NULL
-        }
-    )
-    if (!is.null(x)) {
-        x <- head(x, n = 1L)
-        x <- grepl("GNU", x)
-        if (isTRUE(x)) {
-            status <- "  OK"
-        }
-    }
-    message(sprintf(
-        fmt = paste0(
-            "  %s | GNU Coreutils\n",
-            "       |   %.69s"
-        ),
-        status,
-        dirname(Sys.which("env"))
-    ))
-}
-
-installed <- function(which, required = TRUE, path = TRUE) {
-    stopifnot(
-        is.character(which) && length(which) >= 1L,
-        is.logical(required) && length(required) == 1L,
-        is.logical(path) && length(path) == 1L
-    )
-    if (isTRUE(required)) {
-        fail <- "FAIL"
-    } else {
-        fail <- "NOTE"
-    }
-    invisible(vapply(
-        X = which,
-        FUN = function(which) {
-            ok <- nzchar(Sys.which(which))
-            if (!isTRUE(ok)) {
-                message(sprintf(
-                    fmt = "  %s | %s missing.",
-                    fail, which
-                ))
-            } else {
-                msg <- sprintf("    OK | %s", which)
-                if (isTRUE(path)) {
-                    msg <- paste0(
-                        msg, "\n",
-                        sprintf("       |   %.69s", Sys.which(which))
-                    )
-                }
-                message(msg)
-            }
-            invisible(ok)
-        },
-        FUN.VALUE = logical(1L)
-    ))
-}
-
-isInstalled <- function(which) {
-    nzchar(Sys.which(which))
-}
-
-## e.g. vim 8
-majorVersion <- function(x) {
-    strsplit(x, split = "\\.")[[1L]][[1L]]
-}
-
-## e.g. vim 8.1
-minorVersion <- function(x) {
-    x <- strsplit(x, split = "\\.")[[1L]]
-    x <- paste(x[seq_len(2L)], collapse = ".")
-    x
-}
-
-## Sanitize complicated verions:
-## - 2.7.15rc1 to 2.7.15
-## - 1.10.0-patch1 to 1.10.0
-## - 1.0.2k-fips to 1.0.2
-sanitizeVersion <- function(x) {
-    ## Strip trailing "+" (e.g. "Python 2.7.15+").
-    x <- sub("\\+$", "", x)
-    ## Strip quotes (e.g. `java -version` returns '"12.0.1"').
-    x <- gsub("\"", "", x)
-    ## Strip hyphenated terminator.(e.g. `java -version` returns "1.8.0_212").
-    x <- sub("(-|_).+$", "", x)
-    x <- sub("\\.([0-9]+)[-a-z]+[0-9]+?$", ".\\1", x)
-    ## Strip leading letter.
-    x <- sub("^[a-z]+", "", x)
-    ## Strip trailing letter.
-    x <- sub("[a-z]+$", "", x)
-    x
-}
+h1("Checking koopa installation")
 
 
 
 ## Shells ======================================================================
-message("\nShells:")
+h2("Shells")
 checkVersion(
     name = "Bash",
     whichName = "bash",
@@ -334,7 +76,7 @@ checkVersion(
 
 
 ## Editors =====================================================================
-message("\nEditors:")
+h2("Editors")
 checkVersion(
     name = "Emacs",
     whichName = "emacs",
@@ -363,7 +105,7 @@ checkVersion(
 
 
 ## Languages ===================================================================
-message("\nPrimary languages:")
+h2("Primary languages")
 checkVersion(
     name = "Python",
     whichName = "python3",
@@ -378,7 +120,7 @@ checkVersion(
     expected = expectedVersion("r")
 )
 
-message("\nSecondary languages:")
+h2("Secondary languages")
 checkVersion(
     name = "Go",
     whichName = "go",
@@ -419,7 +161,7 @@ checkVersion(
 
 
 ## Version managers ============================================================
-message("\nVersion managers:")
+h2("Version managers")
 checkVersion(
     name = "Conda",
     whichName = "conda",
@@ -471,19 +213,36 @@ checkVersion(
 
 
 
+## Cloud APIs ==================================================================
+h2("Cloud APIs")
+checkVersion(
+    name = "Amazon Web Services (AWS) CLI",
+    whichName = "aws",
+    current = currentVersion("aws-cli"),
+    expected = expectedVersion("aws-cli")
+)
+checkVersion(
+    name = "Microsoft Azure CLI",
+    whichName = "az",
+    current = currentVersion("azure-cli"),
+    expected = expectedVersion("azure-cli")
+)
+checkVersion(
+    name = "Google Cloud SDK",
+    whichName = "gcloud",
+    current = currentVersion("google-cloud-sdk"),
+    expected = expectedVersion("google-cloud-sdk")
+)
+
+
+
 ## Tools =======================================================================
-message("\nTools:")
+h2("Tools")
 checkVersion(
     name = "Git",
     whichName = "git",
     current = currentVersion("git"),
     expected = expectedVersion("git")
-)
-checkVersion(
-    name = "GnuPG",
-    whichName = "gpg",
-    current = currentVersion("gnupg"),
-    expected = expectedVersion("gpg")
 )
 checkVersion(
     name = "htop",
@@ -502,11 +261,12 @@ checkVersion(
     current = currentVersion("shellcheck"),
     expected = expectedVersion("shellcheck")
 )
+installed("shunit2")
 
 
 
 ## Shell tools =================================================================
-message("\nShell tools:")
+h2("Shell tools")
 checkVersion(
     name = "The Silver Searcher (Ag)",
     whichName = "ag",
@@ -538,11 +298,12 @@ if (isTRUE(extra)) {
         current = currentVersion("autojump"),
         expected = expectedVersion("autojump")
     )
+    ## This updates frequently, so be less strict about check.
     checkVersion(
         name = "broot",
         whichName = "broot",
-        current = currentVersion("broot"),
-        expected = expectedVersion("broot")
+        current = currentMinorVersion("broot"),
+        expected = expectedMinorVersion("broot")
     )
     checkVersion(
         name = "fzf",
@@ -555,8 +316,8 @@ if (isTRUE(extra)) {
 
 
 ## Basic dependencies ==========================================================
-message("\nBasic dependencies:")
-hasGNUCoreutils()
+h2("Basic dependencies")
+checkGNUCoreutils()
 installed(
     which = c(
         ## "[",
@@ -689,7 +450,7 @@ installed(
 
 
 ## Heavy dependencies ==========================================================
-message("\nHeavy dependencies:")
+h2("Heavy dependencies")
 checkVersion(
     name = "PROJ",
     whichName = "proj",
@@ -701,6 +462,12 @@ checkVersion(
     whichName = "gdalinfo",
     current = currentVersion("gdal"),
     expected = expectedVersion("gdal")
+)
+checkVersion(
+    name = "GEOS",
+    whichName = "geos-config",
+    current = currentVersion("geos"),
+    expected = expectedVersion("geos")
 )
 checkVersion(
     name = "GSL",
@@ -717,7 +484,7 @@ checkVersion(
 checkVersion(
     name = "LLVM",
     ## > whichName = "llvm-config",
-    whichName = NULL,
+    whichName = NA,
     current = currentMajorVersion("llvm"),
     expected = switch(
         EXPR = os,
@@ -771,7 +538,7 @@ installed(
 
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
-    message("\nLinux specific:")
+    h2("Linux specific")
     ## https://gcc.gnu.org/releases.html
     checkVersion(
         name = "GCC",
@@ -784,14 +551,30 @@ if (isTRUE(linux)) {
             `rhel-7` = "4.8.5",
             `rhel-8` = "8.2.1",
             `ubuntu-18` = "7.4.0",
-            NULL
+            NA
         )
+    )
+    checkVersion(
+        name = "GnuPG",
+        whichName = "gpg",
+        current = currentVersion("gnupg"),
+        expected = expectedVersion("gpg")
     )
     checkVersion(
         name = "RStudio Server",
         whichName = "rstudio-server",
         current = currentVersion("rstudio-server"),
         expected = expectedVersion("rstudio-server")
+    )
+    checkVersion(
+        name = "pass",
+        current = currentVersion("pass"),
+        expected = expectedVersion("pass")
+    )
+    checkVersion(
+        name = "docker-credential-pass",
+        current = currentVersion("docker-credential-pass"),
+        expected = expectedVersion("docker-credential-pass")
     )
     ## This is used for shebang. Version 8.30 marks support of `-S` flag.
     ## > checkVersion(
@@ -806,8 +589,8 @@ if (isTRUE(linux)) {
     ## >     current = currentVersion("perl-file-rename"),
     ## >     expected = expectedVersion("perl-file-rename")
     ## > )
-} else if (identical(os, "darwin")) {
-    message("\nmacOS specific:")
+} else if (isTRUE(macos)) {
+    h2("macOS specific")
     checkVersion(
         name = "Homebrew",
         whichName = "brew",
@@ -825,9 +608,25 @@ if (isTRUE(linux)) {
     checkVersion(
         name = "GCC",
         whichName = "gcc",
-        current = currentVersion("gcc-darwin"),
+        current = currentVersion("gcc"),
         expected = expectedVersion("clang")
     )
+    checkMacOSAppVersion(c(
+        "Alacritty",
+        "Aspera Connect",
+        "BBEdit",
+        "BibDesk",
+        "Docker",
+        "LibreOffice",
+        "Microsoft Excel",
+        "Numbers",
+        "RStudio",
+        "Tunnelblick",
+        "Visual Studio Code",
+        "Xcode",
+        "iTerm"
+    ))
+    checkHomebrewCaskVersion("gpg-suite")
 }
 
 
@@ -837,7 +636,7 @@ if (
     isTRUE(linux) &&
     isTRUE(getOption("mc.cores") >= 3L)
 ) {
-    message("\nHigh performance (HPC/VM):")
+    h2("High performance")
     checkVersion(
         name = "Docker",
         whichName = "docker",
@@ -865,7 +664,7 @@ if (
     ## > )
     checkVersion(
         name = "Lmod",
-        whichName = NULL,
+        whichName = NA,
         current = currentVersion("lmod"),
         expected = expectedVersion("lmod"),
         required = FALSE
@@ -896,7 +695,7 @@ if (
 
 
 ## Python packages =============================================================
-message("\nPython pipx packages:")
+h2("Python pipx packages")
 installed(
     which = c(
         "black",

@@ -2,83 +2,38 @@
 # shellcheck disable=SC1090,SC1091
 set -Eeu -o pipefail
 
+
+
+# Usage  {{{1
+# ==============================================================================
+
 usage() {
 cat << EOF
-usage: install [--help|-h] [--shared] [--test] [--dotfiles] [--mike]
+usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
 
 optional arguments:
     --help, -h
         Show this help message and exit.
-    --shared
-        Enable shared user configuration via '/etc/profile.d/zzz-koopa.sh' file.
-        Linux only. Not supported on macOS.
-    --dotfiles
-        Clone the dotfiles repo (https://github.com/mjsteinbaugh/dotfiles)
-        and automatically symlink recommended default configuration files.
-    --mike
-        Install Mike-specific configuration.
-        This flag automatically enables '--dotfiles'.
     --non-interactive
         Don't prompt about configuration variables.
-        Note that when '--shared' or '--test' are declared, this is set
-        automatically internally.
     --test
         Enable verbose test mode.
-        Useful for Travis CI and building Docker images.
+        Used for Travis CI checks and building Docker images.
 
 note:
     Bash script.
-    Updated 2020-01-21.
+    Updated 2020-02-15.
 EOF
 }
 
-_koopa_group() {
-    local group
-    if groups | grep -Eq "\b(admin)\b"
-    then
-        group="admin"
-    elif groups | grep -Eq "\b(sudo)\b"
-    then
-        group="sudo"
-    elif groups | grep -Eq "\b(wheel)\b"
-    then
-        group="wheel"
-    else
-        group="$(whoami)"
-    fi
-    echo "$group"
-}
 
-_koopa_has_sudo() {
-    [[ "$(id -u)" -eq 0 ]] && return 0
-    groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
-}
 
-_koopa_is_linux() {
-    [[ "$(uname -s)" == "Linux" ]]
-}
+# Argument parsing  {{{1
+# ==============================================================================
 
-piped=0
-
-# Detect if we're running from a piped install (e.g. koopa.acidgenomics.com).
-if [[ -z "${BASH_SOURCE[0]:-}" ]]
-then
-    piped=1
-else
-    script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
-        >/dev/null 2>&1 && pwd -P)"
-    if [[ ! -x "${script_dir}/activate" ]]
-    then
-        piped=1
-    fi
-fi
-
-dotfiles=
-mike=0
-prompt=1
-shared=0
+interactive=1
 test=0
 
 while (("$#"))
@@ -88,20 +43,8 @@ do
             usage
             exit 0
             ;;
-        --dotfiles)
-            dotfiles=1
-            shift 1
-            ;;
-        --mike)
-            mike=1
-            shift 1
-            ;;
         --non-interactive)
-            prompt=0
-            shift 1
-            ;;
-        --shared)
-            shared=1
+            interactive=0
             shift 1
             ;;
         --test)
@@ -113,144 +56,278 @@ do
             break
             ;;
         --*|-*)
-            >&2 echo "Error: Invalid argument: '${1}'."
+            >&2 echo "ERROR: Invalid arg: '${1}'."
             exit 1
             ;;
     esac
 done
 
-if [[ "$shared" -eq 1 ]] || [[ "$test" -eq 1 ]]
+
+
+# Pre-flight  {{{1
+# ==============================================================================
+
+# Before we proceed, ensure that koopa isn't already installed.
+if [[ -n "${KOOPA_PREFIX:-}" ]]
 then
-    prompt=0
+    >&2 echo "ERROR: koopa is installed: '${KOOPA_PREFIX}'."
+    exit 1
 fi
 
-if [[ "$mike" -eq 1 ]]
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+    >/dev/null 2>&1 && pwd -P)"
+
+source "${script_dir}/shell/bash/include/header.sh"
+
+# Ensure existing user configuration gets removed.
+rm -fr "$(_koopa_config_prefix)"
+
+if [[ "$interactive" -eq 1 ]]
 then
-    dotfiles=1
+    no="$(_koopa_echo_red "no")"
+    no_default="$(_koopa_echo_red_bold "NO")"
+    yes="$(_koopa_echo_green "yes")"
+    yes_default="$(_koopa_echo_green_bold "YES")"
 fi
 
-if [[ "$piped" -eq 1 ]]
+
+
+# Prefix  {{{1
+# ==============================================================================
+
+shared=0
+
+# Prompt whether to install for all users.
+if _koopa_has_sudo
 then
-    # This is used by activation scripts (see 'extra.sh').
-    export KOOPA_PIPED_INSTALL=1
-    if [[ "$prompt" -eq 1 ]] && _koopa_has_sudo
+    shared=1
+    if [[ "$interactive" -eq 1 ]]
     then
-        read -r -n 1 -p "Install for all users (y/n)? " choice
+        prompt="Install for all users? [${yes_default}/${no}]: "
+        # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
+        read \
+            -e \
+            -i "yes" \
+            -p "$prompt" \
+            -r \
+            choice
+        echo ""
         case "$choice" in
-            y|Y)
+            Y|YES|y|yes)
                 shared=1
                 ;;
-            n|N)
+            N|NO|n|no)
                 shared=0
                 ;;
             *)
-                >&2 echo "Error: Invalid input."
-                exit 1
+                _koopa_invalid_arg "$1"
                 ;;
         esac
-        echo ""
     fi
-
-    if [[ "$shared" -eq 1 ]]
-    then
-        prefix="/usr/local"
-    else
-        XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-        prefix="$XDG_DATA_HOME"
-    fi
-    prefix="${prefix}/koopa"
-
-    if [[ "$prompt" -eq 1 ]]
-    then
-        read -e -r -p "Install prefix: " -i "${prefix}" prefix
-    fi
-
-    if [[ -d "$prefix" ]]
-    then
-        >&2 echo "Error: Directory exists: '${prefix}'."
-        exit 1
-    fi
-
-    # Set correct admin permissions, if applicable.
-    if [[ "$shared" -eq 1 ]]
-    then
-        if ! _koopa_has_sudo
-        then
-            >&2 echo "Error: sudo is required for shared installation."
-            exit 1
-        fi
-        sudo mkdir -pv "$prefix"
-        group="$(_koopa_group)"
-        sudo chgrp "$group" "$prefix"
-        sudo chmod g+ws "$prefix"
-    fi
-    echo "Downloading koopa."
-    source_repo="https://github.com/acidgenomics/koopa.git"
-    git clone --recursive "$source_repo" "$prefix"
-    KOOPA_PREFIX="$prefix"
-else
-    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
-        >/dev/null 2>&1 && pwd -P)"
 fi
-export KOOPA_PREFIX
-echo "Installing koopa at '$KOOPA_PREFIX'."
 
-if [[ "$shared" -eq 0 ]] && echo "$KOOPA_PREFIX" | grep -qE "^/(opt|usr)/"
+# Set the default install prefix.
+if [[ "$shared" -eq 1 ]]
 then
-    echo "Shared installation detected."
+    prefix="/usr/local"
+else
+    XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+    prefix="$XDG_DATA_HOME"
+fi
+
+koopa_prefix="${prefix}/koopa"
+
+# Prompt the user where they want to install.
+if [[ "$interactive" -eq 1 ]]
+then
+    prompt="Install prefix: "
+    read \
+        -e \
+        -i "${koopa_prefix}" \
+        -p "$prompt" \
+        -r \
+        koopa_prefix
+    echo ""
+fi
+
+# Catch if the user is attempting to install into a shared space.
+if [[ "$shared" -eq 0 ]] && \
+    echo "$koopa_prefix" | grep -Eqv "^${HOME}"
+then
     shared=1
 fi
 
-rm -frv "${KOOPA_PREFIX}/"{config,include}
-rm -frv "${KOOPA_PREFIX}/bin/"{host,os,sudo}
 
-echo "Activating koopa."
-set +u
-force=1 test="$test" source "${KOOPA_PREFIX}/activate"
-set -u
 
+# Install (copy repo)  {{{1
+# ==============================================================================
+
+_koopa_h1 "Installing koopa at '${koopa_prefix}'."
+
+_koopa_assert_is_non_existing "$koopa_prefix"
+
+# Note that we can use 'cp -T' on Linux to avoid subdirectory creation, but
+# this doesn't work on macOS because the coreutils are ancient. So instead,
+# we're removing the directory right before creation.
 if [[ "$shared" -eq 1 ]]
 then
-    _koopa_update_profile
+    _koopa_info "Shared installation detected."
+    _koopa_note "sudo permissions are required."
+    _koopa_assert_has_sudo
+    sudo mkdir -p "$koopa_prefix"
+    sudo rm -fr "$koopa_prefix"
+    sudo cp -af "$script_dir" "$koopa_prefix"
+    admin_group="$(_koopa_admin_group)"
+    sudo chgrp "$admin_group" "$koopa_prefix"
+    sudo chmod g+ws "$koopa_prefix"
+else
+    mkdir -p "$koopa_prefix"
+    rm -fr "$koopa_prefix"
+    cp -af "$script_dir" "$koopa_prefix"
 fi
 
-# Don't prompt if dotfiles are already cloned into koopa install.
-if [[ -d "${KOOPA_PREFIX}/dotfiles" ]]
+unset -v script_dir
+
+
+
+# Activate  {{{1
+# ==============================================================================
+
+_koopa_h2 "Activating koopa."
+set +u
+force=1 test="$test" source "${koopa_prefix}/activate"
+set -u
+
+
+
+# Passwordless sudo  {{{1
+# ==============================================================================
+
+passwordless=0
+
+# Prompt if the user wants to enable passwordless sudo.
+if _koopa_is_linux && \
+    [[ "$interactive" -eq 1 ]] && \
+    [[ "$shared" -eq 1 ]]
 then
-    dotfiles=0
+    prompt="Enable passwordless sudo? [${yes}/${no_default}]: "
+    read \
+        -e \
+        -i "no" \
+        -p "$prompt" \
+        -r \
+        choice
+    echo ""
+    case "$choice" in
+        Y|YES|y|yes)
+            passwordless=1
+            ;;
+        N|NO|n|no)
+            passwordless=0
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
 fi
 
-if [[ -z "${dotfiles:-}" ]]
+[[ "$passwordless" -eq 1 ]] && _koopa_enable_passwordless_sudo
+
+
+
+# Dot files  {{{1
+# ==============================================================================
+
+dotfiles=1
+
+# Prompt the user if we want to link dot files.
+if [[ "$interactive" -eq 1 ]]
 then
-    if [[ "$prompt" -eq 1 ]]
+    # Check if a user profile exists, and warn.
+    file="$(_koopa_find_user_profile)"
+    if [[ -e "$file" ]]
     then
-        read -r -n 1 -p "Install dotfiles (y/n)? " choice
+        _koopa_note "User profile exists: '${file}'."
+        _koopa_note "This will be overwritten if dot files are linked."
+    fi
+    prompt="Link dot files? [${yes_default}/${no}]: "
+    read \
+        -e \
+        -i "yes" \
+        -p "$prompt" \
+        -r \
+        choice
+    echo ""
+    case "$choice" in
+        Y|YES|y|yes)
+            dotfiles=1
+            ;;
+        N|NO|n|no)
+            dotfiles=0
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+fi
+
+[[ "$dotfiles" -eq 1 ]] && _koopa_link_dotfiles
+
+
+
+# User profile  {{{1
+# ==============================================================================
+
+profile=0
+
+if ! _koopa_is_defined_in_user_profile
+then
+    if [[ "$interactive" -eq 1 ]]
+    then
+        file="$(_koopa_find_user_profile)"
+        _koopa_note "Koopa activation code needs to be added to '${file}'."
+        prompt="Modify '${file}'? [${yes_default}/${no}]: "
+        read \
+            -e \
+            -i "yes" \
+            -p "$prompt" \
+            -r \
+            choice
+        echo ""
         case "$choice" in
-            y|Y)
-                dotfiles=1
+            Y|YES|y|yes)
+                profile=1
                 ;;
-            n|N)
-                dotfiles=0
+            N|NO|n|no)
+                profile=0
                 ;;
             *)
-                >&2 echo "Error: Invalid input."
-                exit 1
+                _koopa_invalid_arg "$1"
                 ;;
         esac
-        echo
+        if [[ "$profile" -eq 0 ]]
+        then
+            url="https://koopa.acidgenomics.com/"
+            _koopa_note "Skipping profile modification."
+            _koopa_note "Refer to '${url}' for manual instructions."
+        fi
     else
-        dotfiles=0
+        profile=1
     fi
 fi
 
-if [[ "$mike" -eq 1 ]]
-then
-    _koopa_install_mike
-elif [[ "$dotfiles" -eq 1 ]]
-then
-    install-dotfiles
-fi
+[[ "$profile" -eq 1 ]] && _koopa_add_to_user_profile
 
+
+
+# Final steps and return  {{{1
+# ==============================================================================
+
+# Some config files, such as '.lintr' and '.pylintrc' will be missing unless
+# we clone the dotfiles repo (see above).
+_koopa_remove_broken_symlinks "$koopa_prefix"
+
+_koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
 
 _koopa_success "Installation of koopa was successful."

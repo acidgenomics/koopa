@@ -5,22 +5,28 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# https://openjdk.java.net/
-# https://jdk.java.net/13/
+# """
+# Don't early return if directory exists here.
+# We need to ensure alternatives code runs (see below).
+#
+# See also:
+# - https://openjdk.java.net/
+# - https://jdk.java.net/13/
+# """
 
 version="$(_koopa_variable "java")"
 jdk_dir="$(_koopa_app_prefix)/java/openjdk"
 prefix="${jdk_dir}/${version}"
 
-# Don't early return if directory exists here.
-# We need to ensure alternatives code runs (see below).
-
 _koopa_h1 "Installing OpenJDK ${version} at '${prefix}'."
 
 # Download and extract the JDK, if necessary.
-if [[ ! -d "$prefix" ]]
+if [[ -d "$prefix" ]]
 then
-    _koopa_mkdir "$jdk_dir"
+    _koopa_note "OpenJDK already installed."
+else
+    _koopa_h2 "Installing OpenJDK."
+    _koopa_prefix_mkdir "$jdk_dir"
     (
         cd "${jdk_dir}" || exit 1
         file="openjdk-${version}_linux-x64_bin.tar.gz"
@@ -42,46 +48,50 @@ then
         _koopa_extract "$file"
         _koopa_is_docker && rm -v "$file"
         mv -v "jdk-${version}" "$version"
-    )
+    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
 
 _koopa_set_permissions "$jdk_dir"
 
-priority="100"
+_koopa_h2 "Updating system alternatives."
 
-sudo rm -fv /var/lib/alternatives/java
-sudo update-alternatives --install \
-    "/usr/bin/java" \
-    "java" \
-    "${prefix}/bin/java" \
-    "$priority"
-sudo update-alternatives --set \
-    "java" \
-    "${prefix}/bin/java"
+(
+    priority="100"
 
-sudo rm -fv /var/lib/alternatives/javac
-sudo update-alternatives --install \
-    "/usr/bin/javac" \
-    "javac" \
-    "${prefix}/bin/javac" \
-    "$priority"
-sudo update-alternatives --set \
-    "javac" \
-    "${prefix}/bin/javac"
+    sudo rm -fv /var/lib/alternatives/java
+    sudo update-alternatives --install \
+        "/usr/bin/java" \
+        "java" \
+        "${prefix}/bin/java" \
+        "$priority"
+    sudo update-alternatives --set \
+        "java" \
+        "${prefix}/bin/java"
 
-sudo rm -fv /var/lib/alternatives/jar
-sudo update-alternatives --install \
-    "/usr/bin/jar" \
-    "jar" \
-    "${prefix}/bin/jar" \
-    "$priority"
-sudo update-alternatives --set \
-    "jar" \
-    "${prefix}/bin/jar"
+    sudo rm -fv /var/lib/alternatives/javac
+    sudo update-alternatives --install \
+        "/usr/bin/javac" \
+        "javac" \
+        "${prefix}/bin/javac" \
+        "$priority"
+    sudo update-alternatives --set \
+        "javac" \
+        "${prefix}/bin/javac"
 
-update-alternatives --display java
-update-alternatives --display javac
-update-alternatives --display jar
+    sudo rm -fv /var/lib/alternatives/jar
+    sudo update-alternatives --install \
+        "/usr/bin/jar" \
+        "jar" \
+        "${prefix}/bin/jar" \
+        "$priority"
+    sudo update-alternatives --set \
+        "jar" \
+        "${prefix}/bin/jar"
+
+    update-alternatives --display java
+    update-alternatives --display javac
+    update-alternatives --display jar
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 # Update rJava configuration.
 # > if _koopa_is_installed R
