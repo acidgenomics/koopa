@@ -4,9 +4,15 @@
 _koopa_admin_group() {  # {{{1
     # """
     # Return the administrator group.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-16.
     # """
     local group
+    if _koopa_is_root
+    then
+        group="$(id -gn)"
+        echo "$group"
+        return 0
+    fi
     local groups
     groups="$(groups)"
     if echo "$groups" | grep -Eq "\b(admin)\b"
@@ -19,7 +25,7 @@ _koopa_admin_group() {  # {{{1
     then
         group="wheel"
     else
-        group="$(whoami)"
+        _koopa_stop "Failed to detect admin group."
     fi
     echo "$group"
     return 0
@@ -407,7 +413,7 @@ _koopa_git_update() {  # {{{1
 _koopa_group() {  # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-16.
     #
     # Returns current user for local install.
     # Dynamically returns the admin group for shared install.
@@ -419,7 +425,7 @@ _koopa_group() {  # {{{1
     then
         group="$(_koopa_admin_group)"
     else
-        group="$(whoami)"
+        group="$(id -gn)"
     fi
     echo "$group"
     return 0
