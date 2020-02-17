@@ -6,7 +6,7 @@
 # """
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 grep_pattern="^[^\n]{81}"
 
