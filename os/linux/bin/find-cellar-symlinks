@@ -24,16 +24,20 @@ else
     )"
 fi
 
+# > _koopa_h1 "Finding symlinks for '${cellar_prefix}' in '${build_prefix}'."
+
+# Pipe GNU find into array.
 links=()
 while IFS= read -r -d $'\0'
 do
     links+=("$REPLY")
 done < <( \
     find -L "$build_prefix" \
-    -type f \
-    -path "${cellar_prefix}/*" \
-    ! -path "${build_prefix}/koopa" \
-    -print0
+        -type f \
+        -path "${cellar_prefix}/*" \
+        ! -path "${build_prefix}/koopa" \
+        -print0 \
+    | sort -z \
 )
 
 # Sort the array.

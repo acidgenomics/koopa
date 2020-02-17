@@ -9,14 +9,10 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 _koopa_assert_is_installed salmon
 
-bootstraps=30
-threads="$(_koopa_cpu_count)"
-
-r1_tail="_R1_001.fastq.gz"
-r2_tail="_R2_001.fastq.gz"
-
 fastq_dir="fastq"
 output_dir="salmon"
+r1_tail="_R1_001.fastq.gz"
+r2_tail="_R2_001.fastq.gz"
 
 while (("$#"))
 do
@@ -37,12 +33,12 @@ do
             fastq_dir="$2"
             shift 2
             ;;
-        --index-file=*)
-            index_file="${1#*=}"
+        --index-dir=*)
+            index_dir="${1#*=}"
             shift 1
             ;;
-        --index-file)
-            index_file="$2"
+        --index-dir)
+            index_dir="$2"
             shift 2
             ;;
         --output-dir=*)
@@ -75,12 +71,12 @@ do
     esac
 done
 
-if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_file:-}" ]]
+if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
 then
-    _koopa_stop "Specify 'fasta-file' or 'index-file'."
-elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_file:-}" ]]
+    _koopa_stop "Specify 'fasta-file' or 'index-dir'."
+elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
 then
-    _koopa_stop "Specify 'fasta-file' or 'index-file', but not both."
+    _koopa_stop "Specify 'fasta-file' or 'index-dir', but not both."
 elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
 then
     _koopa_missing_arg
@@ -89,80 +85,70 @@ fi
 fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
 output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
 
-_koopa_assert_is_dir "$fastq_dir"
-_koopa_assert_is_not_dir "$output_dir"
+_koopa_h1 "Running salmon."
 
-salmon --version
+_koopa_activate_conda_env salmon
+_koopa_dl "salmon" "$(_koopa_which_realpath salmon)"
 
+fastq_dir="$(realpath "$fastq_dir")"
+_koopa_dl "fastq dir" "$fastq_dir"
 
-
-# Sample array from FASTQ files                                             {{{1
+# Sample array from FASTQ files  {{{1
 # ==============================================================================
 
-# Resolve FASTQ directory symlink, if necessary.
-fastq_dir="$(realpath "$fastq_dir")"
-
 # Create a per-sample array from the R1 FASTQ files.
-array=()
+# Pipe GNU find into array.
+fastq_r1_files=()
 while IFS= read -r -d $'\0'
 do
-    x="$REPLY"
-    x="$(basename "$x")"
-    x="${x/${r1_tail}/}"
-    array+=("$x")
-done < <(find "$fastq_dir" -name "*${r1_tail}" -print0)
+    fastq_r1_files+=("$REPLY")
+done < <( \
+    find "$fastq_dir" \
+        -maxdepth 1 \
+        -mindepth 1 \
+        -type f \
+        -name "*${r1_tail}" \
+        -print0 \
+    | sort -z \
+)
 
 # Error on FASTQ match failure.
-if [[ "${#array[@]}" -eq 0 ]]
+if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
 then
     _koopa_stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
 fi
 
-_koopa_h1 "${#array[@]} samples detected."
-
-
-
-# Index                                                                     {{{1
-# ==============================================================================
-
+_koopa_info "${#fastq_r1_files[@]} samples detected."
 mkdir -pv "$output_dir"
 
+# Index  {{{1
+# ==============================================================================
+
 # Generate the genome index on the fly, if necessary.
-if [[ -z "${index_file:-}" ]]
+if [[ -n "${index_dir:-}" ]]
 then
-    _koopa_assert_is_file "$fasta_file"
-    index_file="${output_dir}/salmon.idx"
-    salmon index \
-        -k 31 \
-        -p "$threads" \
-        -i "$index_file" \
-        -t "$fasta_file" \
-        2>&1 | tee "${output_dir}/salmon-index.log"
+    index_dir="$(realpath "$index_dir")"
+else
+    index_dir="${output_dir}/salmon.idx"
+    _koopa_salmon_index \
+        --fasta-file="$fasta_file" \
+        --index-dir="$index_dir"
 fi
 
+_koopa_dl "index" "$index_dir"
 
-
-# Quantify                                                                  {{{1
+# Quantify  {{{1
 # ==============================================================================
 
 # Loop across the per-sample array and quantify with kallisto.
-for x in "${array[@]}"
+for fastq_r1 in "${fastq_r1_files[@]}"
 do
-    _koopa_h1 "salmon quant: ${x}"
-    sample_output_dir="${output_dir}/${x}"
-    rm -frv "$sample_output_dir"
-    mkdir -pv "$sample_output_dir"
-    fastq_r1="${fastq_dir}/${x}${r1_tail}"
-    fastq_r2="${fastq_dir}/${x}${r2_tail}"
-    salmon quant \
-        --gcBias \
-        --index="$index_file" \
-        --libType="A" \
-        --mates1="$fastq_r1" \
-        --mates2="$fastq_r2" \
-        --numBootstraps="$bootstraps" \
-        --output="$sample_output_dir" \
-        --seqBias \
-        --threads="$threads" \
-        2>&1 | tee "${sample_output_dir}/salmon-quant.log"
+    fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
+    _koopa_salmon_quant \
+        --fastq-r1="$fastq_r1" \
+        --fastq-r2="$fastq_r2" \
+        --index-dir="$index_dir" \
+        --output-dir="$output_dir" \
+        --r1-tail="$r1_tail" \
+        --r2-tail="$r2_tail"
 done

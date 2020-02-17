@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://cloud.google.com/sdk/docs/downloads-apt-get
+#
+# Required packages:
+# - apt-transport-https
+# - ca-certificates
+# - curl
+# """
+
+_koopa_exit_if_installed gcloud
+
+_koopa_h1 "Installing Google Cloud SDK via apt."
+
+_koopa_apt_import_google_cloud_key
+_koopa_apt_add_google_cloud_sdk_repo
+
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get \
+        --fix-missing \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install google-cloud-sdk
+
+_koopa_success "Installation of Google Cloud SDK was successful."

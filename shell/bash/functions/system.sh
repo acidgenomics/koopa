@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-_koopa_add_local_bins_to_path() {                                         # {{{1
+_koopa_add_local_bins_to_path() {  # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
-    # Updated 2019-10-22.
+    # @note Updated 2019-10-22.
     #
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read '-a' flag doesn't work on macOS. zsh related?
@@ -20,10 +20,20 @@ _koopa_add_local_bins_to_path() {                                         # {{{1
     return 0
 }
 
-_koopa_find_local_bin_dirs() {                                            # {{{1
+_koopa_find_local_bin_dirs() {  # {{{1
     # """
     # Find local bin directories.
-    # Updated 2020-01-16.
+    # @note Updated 2020-02-02.
+    #
+    # Alternate array sorting methods:
+    # > readarray -t array < <( \
+    # >     printf '%s\0' "${array[@]}" \
+    # >     | sort -z \
+    # >     | xargs -0n1 \
+    # > )
+    #
+    # > IFS=$'\n' array=($(sort <<<"${array[*]}"))
+    # > unset IFS
     #
     # See also:
     # - https://stackoverflow.com/questions/23356779
@@ -31,36 +41,32 @@ _koopa_find_local_bin_dirs() {                                            # {{{1
     # """
     local array
     array=()
-    local tmp_file
-    tmp_file="$(_koopa_tmp_dir)/find"
-    find "$(_koopa_make_prefix)" \
-        -mindepth 2 \
-        -maxdepth 3 \
-        -name "bin" \
-        ! -path "*/Caskroom/*" \
-        ! -path "*/Cellar/*" \
-        ! -path "*/Homebrew/*" \
-        ! -path "*/anaconda3/*" \
-        ! -path "*/bcbio/*" \
-        ! -path "*/lib/*" \
-        ! -path "*/miniconda3/*" \
-        -print0 > "$tmp_file"
     while IFS= read -r -d $'\0'
     do
         array+=("$REPLY")
-    done < "$tmp_file"
-    _koopa_quiet_rm "$tmp_file"
-    # Sort the array.
-    # > IFS=$'\n' array=($(sort <<<"${array[*]}"))
-    # > unset IFS
-    readarray -t array < <(printf '%s\0' "${array[@]}" | sort -z | xargs -0n1)
+    done < <( \
+        find "$(_koopa_make_prefix)" \
+            -mindepth 2 \
+            -maxdepth 3 \
+            -type d \
+            -name "bin" \
+            ! -path "*/Caskroom/*" \
+            ! -path "*/Cellar/*" \
+            ! -path "*/Homebrew/*" \
+            ! -path "*/anaconda3/*" \
+            ! -path "*/bcbio/*" \
+            ! -path "*/lib/*" \
+            ! -path "*/miniconda3/*" \
+            -print0 \
+        | sort -z
+    )
     printf "%s\n" "${array[@]}"
 }
 
-_koopa_is_array_non_empty() {                                             # {{{1
+_koopa_is_array_non_empty() {  # {{{1
     # """
     # Is the array non-empty?
-    # Updated 2019-10-22.
+    # @note Updated 2019-10-22.
     #
     # Particularly useful for checking against mapfile return, which currently
     # returns a length of 1 for empty input, due to newlines line break.
@@ -72,67 +78,10 @@ _koopa_is_array_non_empty() {                                             # {{{1
     return 0
 }
 
-_koopa_r_javareconf() {                                                   # {{{1
-    # """
-    # Update R Java configuration.
-    # Updated 2020-01-24.
-    #
-    # The default Java path differs depending on the system.
-    #
-    # > R CMD javareconf -h
-    #
-    # Environment variables that can be used to influence the detection:
-    #   JAVA           path to a Java interpreter executable
-    #                  By default first 'java' command found on the PATH
-    #                  is taken (unless JAVA_HOME is also specified).
-    #   JAVA_HOME      home of the Java environment. If not specified,
-    #                  it will be detected automatically from the Java
-    #                  interpreter.
-    #   JAVAC          path to a Java compiler
-    #   JAVAH          path to a Java header/stub generator
-    #   JAR            path to a Java archive tool
-    #
-    # How to check that rJava works:
-    # > library(rJava)
-    # > .jinit()
-    # """
-    if ! _koopa_is_installed R
-    then
-        _koopa_warning "R is not installed."
-        return 1
-    fi
-    if ! _koopa_is_installed java
-    then
-        _koopa_warning "java is not installed."
-        return 1
-    fi
-    local java_home
-    local java_flags
-    local r_home
-    java_home="$(_koopa_java_home)"
-    [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
-    _koopa_h2 "Updating R Java configuration."
-    java_flags=(
-        "JAVA_HOME=${java_home}"
-        "JAVA=${java_home}/bin/java"
-        "JAVAC=${java_home}/bin/javac"
-        "JAVAH=${java_home}/bin/javah"
-        "JAR=${java_home}/bin/jar"
-    )
-    r_home="$(_koopa_r_home)"
-    _koopa_set_permissions "$r_home"
-    R --vanilla CMD javareconf "${java_flags[@]}"
-    if ! _koopa_is_r_package_installed rJava
-    then
-        Rscript -e 'install.packages("rJava")'
-    fi
-    return 0
-}
-
-_koopa_script_name() {                                                    # {{{1
+_koopa_script_name() {  # {{{1
     # """
     # Get the calling script name.
-    # Updated 2019-10-22.
+    # @note Updated 2019-10-22.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """

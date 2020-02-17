@@ -9,7 +9,7 @@
 
 
 
-## System path                                                              {{{1
+## System path  {{{1
 ## =============================================================================
 
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
@@ -41,7 +41,7 @@ PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 
 
-## Package library path                                                     {{{1
+## Package library path  {{{1
 ## =============================================================================
 
 R_LIBS_SITE="${R_HOME}/site-library"
@@ -49,7 +49,7 @@ R_LIBS_USER="~/Library/R/%v/library"
 
 
 
-## Package configuration                                                    {{{1
+## Package configuration  {{{1
 ## =============================================================================
 
 ## LAPACK
@@ -63,7 +63,7 @@ PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 
 
-## XML configuration                                                    {{{1
+## XML configuration  {{{1
 ## =============================================================================
 
 ## libxml2
@@ -71,7 +71,7 @@ XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
 
 
 
-## GitHub remote installs                                                   {{{1
+## GitHub remote installs  {{{1
 ## =============================================================================
 
 ## Always upgrade GitHub R packages, without prompting.
@@ -80,7 +80,7 @@ R_REMOTES_UPGRADE="always"
 
 
 
-## Reticulate                                                               {{{1
+## Reticulate  {{{1
 ## =============================================================================
 
 ## Reticulate allows you to run Python code inside of R.
@@ -97,7 +97,7 @@ WORKON_HOME="/usr/local/python/virtualenvs"
 
 
 
-## Miscellaneous useful defaults                                            {{{1
+## Miscellaneous useful defaults  {{{1
 ## =============================================================================
 
 ## Increase this for large single-cell RNA-seq projects.

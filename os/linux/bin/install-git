@@ -5,6 +5,17 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# This is now erroring on RHEL 7.7:
+# > make --jobs="$jobs" all doc info
+# > make install install-doc install-html install-info
+#
+#
+# If system doesn't have gettext (msgfmt) installed:
+# Note that this doesn't work on Ubuntu 18 LTS.
+# NO_GETTEXT=YesPlease
+# """
+
 name="git"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -18,7 +29,7 @@ _koopa_assert_has_no_envs
 
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -31,12 +42,9 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
         --build="$build" \
         --prefix="$prefix" \
         --with-openssl="/bin/openssl"
-    # This is now erroring on RHEL 7.7:
-    # > make --jobs="$jobs" all doc info
-    # > make install install-doc install-html install-info
-    make --jobs="$jobs"
+    make --jobs="$jobs" V=1
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

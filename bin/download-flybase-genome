@@ -13,19 +13,25 @@ from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-sys.path.insert(0, os.getenv("KOOPA_PREFIX"))
-from pykoopa.genome import (  # noqa
+KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
+PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
+sys.path.insert(0, PYTHON_PREFIX)
+
+from koopa.argparse import dir_path  # noqa:E402
+from koopa.genome import tx2gene_from_fasta  # noqa:E402
+from koopa.genome.flybase import (
+    download_flybase_genome,
+    download_flybase_gff,
+    download_flybase_gtf,
+    download_flybase_transcriptome,
     flybase_dmel_version,
     flybase_version,
-    tx2gene_from_fasta,
-)
-from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import (
-    decompress_but_keep_original,
-    download,
+)  # noqa:E402
+from koopa.syntactic import kebab_case  # noqa:E402
+from koopa.sys import (
     eprint,
     paste_url,
-)  # noqa
+)  # noqa:E402
 
 # pylint: enable=wrong-import-position
 
@@ -43,7 +49,7 @@ see also:
 
 note:
     Python script.
-    Updated 2019-10-24.
+    Updated 2020-02-09.
 """
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
@@ -92,6 +98,9 @@ parser.add_argument(
     help="drosophila melanogaster release version (e.g. 'r6.29')",
 )
 parser.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+parser.add_argument(
     "--decompress",
     action="store_true",
     help="decompress, but keep the compressed file",
@@ -101,6 +110,7 @@ args = parser.parse_args()
 annotation = args.annotation
 decompress = args.decompress
 dmel = args.dmel
+output_dir = args.output_dir
 release = args.release
 type = args.type
 
@@ -117,120 +127,34 @@ if dmel is None:
 
 base_url = "ftp://ftp.flybase.net"
 release_url = paste_url(base_url, "releases", release, "dmel_" + dmel)
-output_dir = kebab_case(
+
+output_basename = kebab_case(
     organism + " " + build + " " + "flybase" + " " + release
 )
-
-# pylint: enable=invalid-name,protected-access,redefined-builtin
-
-
-def download_genome(release_url, output_dir, decompress, dmel):
-    """
-    Download genome FASTA.
-    """
-    output_dir = os.path.join(output_dir, "genome")
-    fasta_url = paste_url(release_url, "fasta")
-    download(url=paste_url(fasta_url, "md5sum.txt"), output_dir=output_dir)
-    download(
-        url=paste_url(fasta_url, "dmel-all-aligned-" + dmel + ".fasta.gz"),
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-
-
-def download_transcriptome(release_url, output_dir, decompress, dmel):
-    """
-    Download transcriptome FASTA.
-    """
-    output_dir = os.path.join(output_dir, "transcriptome")
-    cat_dir = os.path.join(output_dir, "cat")
-    output_fasta_file = os.path.join(
-        output_dir, "dmel-transcriptome-" + dmel + ".fasta.gz"
-    )
-    fasta_url = paste_url(release_url, "fasta")
-    download(url=paste_url(fasta_url, "md5sum.txt"), output_dir=cat_dir)
-    download(
-        url=paste_url(fasta_url, "dmel-all-transcript-" + dmel + ".fasta.gz"),
-        output_dir=cat_dir,
-    )
-    download(
-        url=paste_url(fasta_url, "dmel-all-miRNA-" + dmel + ".fasta.gz"),
-        output_dir=cat_dir,
-    )
-    download(
-        url=paste_url(fasta_url, "dmel-all-miscRNA-" + dmel + ".fasta.gz"),
-        output_dir=cat_dir,
-    )
-    download(
-        url=paste_url(fasta_url, "dmel-all-ncRNA-" + dmel + ".fasta.gz"),
-        output_dir=cat_dir,
-    )
-    download(
-        url=paste_url(fasta_url, "dmel-all-pseudogene-" + dmel + ".fasta.gz"),
-        output_dir=cat_dir,
-    )
-    download(
-        url=paste_url(fasta_url, "dmel-all-tRNA-" + dmel + ".fasta.gz"),
-        output_dir=cat_dir,
-    )
-    if not os.path.isfile(output_fasta_file):
-        print("Concatenating '" + output_fasta_file + "'.")
-        fasta_glob = os.path.join(cat_dir, "dmel-all-*.fasta.gz")
-        os.system("cat " + fasta_glob + " > " + output_fasta_file)
-        if decompress is True:
-            decompress_but_keep_original(output_fasta_file)
-
-
-def download_gtf(release_url, output_dir, decompress, dmel):
-    """
-    Download GTF file.
-    """
-    output_dir = os.path.join(output_dir, "gtf")
-    gtf_url = paste_url(release_url, "gtf")
-    download(url=paste_url(gtf_url, "md5sum.txt"), output_dir=output_dir)
-    download(
-        url=paste_url(gtf_url, "dmel-all-" + dmel + ".gtf.gz"),
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-
-
-def download_gff(release_url, output_dir, decompress, dmel):
-    """
-    Download GFF3 file.
-    """
-    output_dir = os.path.join(output_dir, "gff")
-    gff_url = paste_url(release_url, "gff")
-    download(url=paste_url(gff_url, "md5sum.txt"), output_dir=output_dir)
-    download(
-        url=paste_url(gff_url, "dmel-all-" + dmel + ".gff.gz"),
-        output_dir=output_dir,
-        decompress=decompress,
-    )
-
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 if type == "genome":
-    download_genome(
+    download_flybase_genome(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
         dmel=dmel,
     )
 elif type == "transcriptome":
-    download_transcriptome(
+    download_flybase_transcriptome(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
         dmel=dmel,
     )
 elif type == "all":
-    download_genome(
+    download_flybase_genome(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
         dmel=dmel,
     )
-    download_transcriptome(
+    download_flybase_transcriptome(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
@@ -238,27 +162,27 @@ elif type == "all":
     )
 
 if annotation == "gtf":
-    download_gtf(
+    download_flybase_gtf(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
         dmel=dmel,
     )
 elif annotation == "gff":
-    download_gff(
+    download_flybase_gff(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
         dmel=dmel,
     )
 elif annotation == "all":
-    download_gtf(
+    download_flybase_gtf(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,
         dmel=dmel,
     )
-    download_gff(
+    download_flybase_gff(
         release_url=release_url,
         output_dir=output_dir,
         decompress=decompress,

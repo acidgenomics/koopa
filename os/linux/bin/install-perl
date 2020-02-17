@@ -48,8 +48,11 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
+# Perl  {{{1
+# ==============================================================================
+
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -65,7 +68,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     # The installer will warn when you skip this step.
     # > make test
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
@@ -73,12 +76,23 @@ _koopa_link_cellar "$name" "$version"
 
 export PERL_MM_USE_DEFAULT=1
 
-_koopa_h1 "Installing CPAN Minus."
-"${prefix}/bin/cpan" -i App::cpanminus
+# CPAN Minus  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing CPAN Minus."
+
+(
+    "${prefix}/bin/cpan" -i "App::cpanminus"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
 _koopa_link_cellar "$name" "$version"
 
-_koopa_h1 "Installing 'File::Rename' module."
-"${prefix}/bin/cpanm" File::Rename
+_koopa_h2 "Installing 'File::Rename' module."
+
+(
+    "${prefix}/bin/cpanm" "File::Rename"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
 _koopa_link_cellar "$name" "$version"
 
 _koopa_success "Installation of ${name} was successful."

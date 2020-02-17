@@ -21,14 +21,73 @@ source "${script_dir}/../include/header.sh"
 # - poppler-cpp-devel
 # """
 
-_koopa_h2 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
+all=0
+dev=0
+extra=0
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed sudo
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        --build-dep)
+            # Passthrough to 'install-fedora-base'.
+            shift 1
+            ;;
+        --dev)
+            dev=1
+            shift 1
+            ;;
+        --dist-upgrade)
+            # Passthrough to 'install-fedora-base'.
+            shift 1
+            ;;
+        --extra)
+            extra=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
 
-install-fedora-base
-sudo yum -y install \
-    libgit2 \
-    libssh2 \
-    python3 \
-    util-linux-user
+if [[ "$all" -eq 1 ]]
+then
+    dev=1
+    extra=1
+fi
+
+_koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
+
+install-fedora-base "$@"
+
+# default  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing default packages."
+sudo yum -y install util-linux-user
+
+# developer  {{{1
+# ==============================================================================
+
+if [[ "$dev" -eq 1 ]]
+then
+    _koopa_h2 "Installing developer libraries."
+    pkgs=(
+        libgit2
+        libssh2
+    )
+    sudo yum -y install "${pkgs[@]}"
+fi
+
+# extra  {{{1
+# ==============================================================================
+
+if [[ "$extra" -eq 1 ]]
+then
+    _koopa_h2 "Installing extra recommended packages."
+    sudo yum -y install python3
+fi

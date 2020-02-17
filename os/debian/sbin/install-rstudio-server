@@ -13,7 +13,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
 
 version="$(_koopa_variable "$name")"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 os_codename="$(_koopa_os_codename)"
 
 if ! _koopa_is_ubuntu
@@ -38,7 +38,8 @@ _koopa_h1 "Installing ${name} ${version}."
     url="https://download2.rstudio.org/server/bionic/amd64/${file}"
     _koopa_download "$url"
     sudo gdebi --non-interactive "$file"
-    rm -rf "$tmp_dir"
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
 
 _koopa_success "Installation of $name was successful."

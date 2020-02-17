@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-_koopa_paste0() {                                                         # {{{1
+_koopa_paste0() {  # {{{1
     # """
     # Paste arguments (e.g. from an array) into a string separated by delimiter
     # defined in the first positional argument.
-    # Updated 2020-01-16.
+    # @note Updated 2020-01-16.
     #
     # Note that the 'paste0' name is a reference to the R function.
     #
@@ -29,10 +29,10 @@ _koopa_paste0() {                                                         # {{{1
     echo "${str:${#delim}}"
 }
 
-_koopa_to_string() {                                                      # {{{1
+_koopa_to_string() {  # {{{1
     # """
     # Paste arguments to a comma separated string.
-    # Updated 2020-01-21.
+    # @note Updated 2020-01-21.
     # """
     _koopa_paste0 ", " "$@"
 }

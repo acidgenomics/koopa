@@ -12,19 +12,29 @@ jobs:
       addons:
         apt:
           packages:
-            - ksh
+            - r-base
+            - shellcheck
+            - shunit2
             - zsh
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './tests'
+        - bash -c './tests/travis.sh'
     - stage: test
       name: "macos"
       os: osx
+      addons:
+        homebrew:
+          packages:
+            - bash
+            - r
+            - shellcheck
+            - shunit2
+            - zsh
       script:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './tests'
+        - bash -c './tests/travis.sh'
 
 notifications:
   email:

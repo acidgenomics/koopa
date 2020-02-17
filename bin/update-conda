@@ -6,23 +6,21 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-
-if ! _koopa_is_installed conda
-then
-    _koopa_note "Conda is not installed."
-    exit 0
-fi
-
 prefix="$(_koopa_conda_prefix)"
-
-conda_exe="${prefix}/condabin/conda"
-# > conda_exe="${prefix}/bin/conda"
+_koopa_assert_is_dir "$prefix"
 
 _koopa_h1 "Updating Conda at '${prefix}'."
 
-"$conda_exe" update --yes --name=base --channel=defaults conda
-"$conda_exe" update --yes --name=base --channel=defaults --all
-"$conda_exe" clean --yes --packages
+_koopa_assert_has_no_args "$@"
+_koopa_exit_if_not_installed conda
 
+(
+    conda="${prefix}/condabin/conda"
+    # > conda="${prefix}/bin/conda"
+    "$conda" update --yes --name=base --channel=defaults conda
+    "$conda" update --yes --name=base --channel=defaults --all
+    # > "$conda" clean --yes --tarballs
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_remove_broken_symlinks "$prefix"
 _koopa_set_permissions "$prefix"

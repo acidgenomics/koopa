@@ -1,3 +1,4 @@
-/cellar/
-/conda/
-/dotfiles/
+cellar/
+coverage/
+dotfiles/
+opt/

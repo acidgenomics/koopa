@@ -11,7 +11,7 @@
 
 
 
-## System path                                                              {{{1
+## System path  {{{1
 ## =============================================================================
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
@@ -19,7 +19,7 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 
 
 
-## Temporary files                                                          {{{1
+## Temporary files  {{{1
 ## =============================================================================
 
 ## RStudio doesn't inherit 'TMPDIR' from current shell session, so we need to
@@ -35,7 +35,7 @@ TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
 
 
 
-## Package configuration                                                    {{{1
+## Package configuration  {{{1
 ## =============================================================================
 
 ## This is necessary for rgdal, sf packages to install clean.
@@ -43,7 +43,7 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
 
 
 
-## Package library path                                                     {{{1
+## Package library path  {{{1
 ## =============================================================================
 
 ## General:
@@ -88,7 +88,7 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
 
 
 
-## Default packages                                                         {{{1
+## Default packages  {{{1
 ## =============================================================================
 
 ## Example of setting `R_DEFAULT_PACKAGES` (from `R CMD check`).
@@ -98,7 +98,7 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
 
 
 
-## GitHub remote installs                                                   {{{1
+## GitHub remote installs  {{{1
 ## =============================================================================
 
 ## Always upgrade GitHub R packages, without prompting.
@@ -107,7 +107,7 @@ R_REMOTES_UPGRADE="always"
 
 
 
-## Reticulate                                                               {{{1
+## Reticulate  {{{1
 ## =============================================================================
 
 ## Reticulate allows you to run Python code inside of R.
@@ -124,7 +124,7 @@ WORKON_HOME="/n/app/python/virtualenvs"
 
 
 
-## ROracle                                                                  {{{1
+## ROracle  {{{1
 ## =============================================================================
 
 ## This requires installation of the Oracle Database Instant Client.
@@ -168,7 +168,7 @@ PATH="${PATH}:${ORACLE_HOME}/bin"
 
 
 
-## Miscellaneous useful defaults                                            {{{1
+## Miscellaneous useful defaults  {{{1
 ## =============================================================================
 
 ## R can sometimes error due to time zone, unless this is set.
@@ -177,7 +177,7 @@ TZ="America/New_York"
 
 
 
-## Compiler flags                                                           {{{1
+## Compiler flags  {{{1
 ## =============================================================================
 
 ## Debian (and its derivatives) impose a set of compiler flags to prevent some
@@ -192,7 +192,7 @@ _R_CHECK_COMPILATION_FLAGS_KNOWN_='-Wformat -Werror=format-security -Wdate-time'
 
 
 
-## Logical coercion                                                         {{{1
+## Logical coercion  {{{1
 ## =============================================================================
 
 ## Verbose information on 'length(x) = n > 1' coercion to 'logical(1)' errors.

@@ -16,7 +16,7 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -28,7 +28,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     chmod a+x rmate
     mkdir -p "${prefix}/bin"
     cp rmate "${prefix}/bin"
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

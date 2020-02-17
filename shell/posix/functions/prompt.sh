@@ -1,10 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_prompt() {                                                         # {{{1
+_koopa_prompt() {  # {{{1
     # """
     # Prompt string.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
     #
@@ -53,45 +53,45 @@ _koopa_prompt() {                                                         # {{{1
             wd='%~'
             ;;
     esac
-    # Enable colorful prompt, when possible.
-    if _koopa_is_matching_fixed "${TERM:-}" "256color"
-    then
-        local conda_color git_color prompt_color user_color venv_color wd_color
-        case "$shell" in
-            bash)
-                conda_color="33"
-                git_color="32"
-                prompt_color="35"
-                user_color="36"
-                venv_color="33"
-                wd_color="34"
-                # Colorize the variable strings.
-                conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
-                git="\[\033[${git_color}m\]${git}\[\033[00m\]"
-                prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
-                user="\[\033[${user_color}m\]${user}\[\033[00m\]"
-                venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
-                wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
-                ;;
-            zsh)
-                # SC2154: fg is referenced but not assigned.
-                # shellcheck disable=SC2154
-                conda_color="${fg[yellow]}"
-                git_color="${fg[green]}"
-                prompt_color="${fg[magenta]}"
-                user_color="${fg[cyan]}"
-                venv_color="${fg[yellow]}"
-                wd_color="${fg[blue]}"
-                # Colorize the variable strings.
-                conda="%F%{${conda_color}%}${conda}%f"
-                git="%F%{${git_color}%}${git}%f"
-                prompt="%F%{${prompt_color}%}${prompt}%f"
-                user="%F%{${user_color}%}${user}%f"
-                venv="%F%{${venv_color}%}${venv}%f"
-                wd="%F%{${wd_color}%}${wd}%f"
-                ;;
-        esac
-    fi
+    # Enable colorful prompt.
+    # Note that vim can set TERM as 'xterm' instead of 'xterm-256color' inside
+    # of tmux, so disable this check:
+    # > if _koopa_is_matching_fixed "${TERM:-}" "256color"
+    local conda_color git_color prompt_color user_color venv_color wd_color
+    case "$shell" in
+        bash)
+            conda_color="33"
+            git_color="32"
+            prompt_color="35"
+            user_color="36"
+            venv_color="33"
+            wd_color="34"
+            # Colorize the variable strings.
+            conda="\[\033[${conda_color}m\]${conda}\[\033[00m\]"
+            git="\[\033[${git_color}m\]${git}\[\033[00m\]"
+            prompt="\[\033[${prompt_color}m\]${prompt}\[\033[00m\]"
+            user="\[\033[${user_color}m\]${user}\[\033[00m\]"
+            venv="\[\033[${venv_color}m\]${venv}\[\033[00m\]"
+            wd="\[\033[${wd_color}m\]${wd}\[\033[00m\]"
+            ;;
+        zsh)
+            # SC2154: fg is referenced but not assigned.
+            # shellcheck disable=SC2154
+            conda_color="${fg[yellow]}"
+            git_color="${fg[green]}"
+            prompt_color="${fg[magenta]}"
+            user_color="${fg[cyan]}"
+            venv_color="${fg[yellow]}"
+            wd_color="${fg[blue]}"
+            # Colorize the variable strings.
+            conda="%F%{${conda_color}%}${conda}%f"
+            git="%F%{${git_color}%}${git}%f"
+            prompt="%F%{${prompt_color}%}${prompt}%f"
+            user="%F%{${user_color}%}${user}%f"
+            venv="%F%{${venv_color}%}${venv}%f"
+            wd="%F%{${wd_color}%}${wd}%f"
+            ;;
+    esac
     printf "%s%s%s%s%s%s%s%s%s " \
         "$newline" \
         "$user" "$conda" "$venv" \
@@ -101,10 +101,10 @@ _koopa_prompt() {                                                         # {{{1
         "$prompt"
 }
 
-_koopa_prompt_conda() {                                                   # {{{1
+_koopa_prompt_conda() {  # {{{1
     # """
     # Get conda environment name for prompt string.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local env
     env="$(_koopa_conda_env)"
@@ -112,10 +112,10 @@ _koopa_prompt_conda() {                                                   # {{{1
     printf " conda:%s\n" "${env}"
 }
 
-_koopa_prompt_disk_used() {                                               # {{{1
+_koopa_prompt_disk_used() {  # {{{1
     # """
     # Get current disk usage on primary drive.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local used
     used="$(_koopa_disk_pct_used)"
@@ -131,10 +131,10 @@ _koopa_prompt_disk_used() {                                               # {{{1
     printf " disk:%d%s\n" "$used" "$pct"
 }
 
-_koopa_prompt_git() {                                                     # {{{1
+_koopa_prompt_git() {  # {{{1
     # """
     # Return the current git branch, if applicable.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # """
@@ -151,10 +151,10 @@ _koopa_prompt_git() {                                                     # {{{1
     printf " %s%s\n" "$git_branch" "$git_status"
 }
 
-_koopa_prompt_venv() {                                                    # {{{1
+_koopa_prompt_venv() {  # {{{1
     # """
     # Get Python virtual environment name for prompt string.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """

@@ -22,7 +22,7 @@ case "$1" in
         ;;
     --version|-V|version)
         version="$(_koopa_variable koopa)"
-        date="$(_koopa_variable koopa_date)"
+        date="$(_koopa_variable koopa-date)"
         echo "koopa ${version} (${date})"
         exit 0
         ;;
@@ -35,8 +35,16 @@ case "$1" in
         "${include_dir}/develop.sh"
         exit 0
         ;;
+    edit-variables)
+        vim "${KOOPA_PREFIX}/system/include/variables.txt"
+        exit 0
+        ;;
     info)
         "${include_dir}/info.sh"
+        exit 0
+        ;;
+    install-mike)
+        _koopa_install_mike
         exit 0
         ;;
     list)
@@ -55,6 +63,18 @@ case "$1" in
         ;;
     config-prefix)
         _koopa_config_prefix
+        exit 0
+        ;;
+    get-homebrew-cask-version)
+        _koopa_get_homebrew_cask_version "${2:?}"
+        exit 0
+        ;;
+    get-macos-app-version)
+        _koopa_get_macos_app_version "${2:?}"
+        exit 0
+        ;;
+    get-version)
+        _koopa_get_version "${2:?}"
         exit 0
         ;;
     header)
@@ -86,7 +106,12 @@ case "$1" in
         exit 0
         ;;
     variable)
-        _koopa_variable "$2"
+        _koopa_variable "${2:?}"
+        exit 0
+        ;;
+    # Developer tools ----------------------------------------------------------
+    log)
+        _koopa_view_latest_tmp_log_file
         exit 0
         ;;
     # Deprecated args / error catching -----------------------------------------

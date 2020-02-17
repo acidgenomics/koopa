@@ -52,7 +52,7 @@ else
         fi
     fi
     shell_name="$KOOPA_SHELL"
-    shell_version="$(_koopa_current_version "${shell_name}")"
+    shell_version="$(_koopa_get_version "${shell_name}")"
     shell="${shell_name} ${shell_version}"
     unset -v shell_name shell_version
     # > term="Terminal: ${TERM_PROGRAM:-} ${TERM_PROGRAM_VERSION:-}"

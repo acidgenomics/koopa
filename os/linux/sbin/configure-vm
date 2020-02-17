@@ -7,9 +7,20 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_envs
 
+# e.g. '/usr/local/koopa'.
 koopa_prefix="$(_koopa_prefix)"
+# e.g. '/usr/local'.
 make_prefix="$(_koopa_make_prefix)"
+# e.g. '/usr/local/opt'.
+# For data disk, linked to '/mnt/data01/n/opt' (see below).
 app_prefix="$(_koopa_app_prefix)"
+
+if _koopa_is_docker
+then
+    docker=1
+else
+    docker=0
+fi
 
 config="${KOOPA_CONFIG:-}"
 data_disk=
@@ -70,22 +81,27 @@ rm -frv \
     "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
-
-# Prepare make prefix (e.g. '/usr/local') for write access.
+_koopa_update_etc_profile_d
 _koopa_mkdir "$make_prefix"
 
-# Prepare app prefix (e.g. '/n/app') for write access.
-if [[ -d "$data_disk" ]]
+# Prepare app prefix on external disk for write access.
+# e.g. '/n'.
+dd_link="$(_koopa_data_disk_link_prefix)"
+if [[ -d "$data_disk" ]] && \
+    { [[ ! -L "$dd_link" ]] || [[ ! -L "$app_prefix" ]]; }
 then
-    _koopa_h2 "Symlinking '${app_prefix}' on '${data_disk}'."
-    # e.g. '/mnt/data01/n/app'.
-    app_prefix_real="${data_disk}${app_prefix}"
-    # e.g. '/n'.
-    n_prefix_link="$(dirname "$app_prefix")"
+    _koopa_h2 "Symlinking '${dd_link}' on '${data_disk}'."
+    _koopa_rm "$dd_link" "$app_prefix"
     # e.g. '/mnt/data01/n'.
-    n_prefix_real="$(dirname "$app_prefix_real")"
-    sudo mkdir -pv "$app_prefix_real"
-    sudo ln -fnsv "$n_prefix_real" "$n_prefix_link"
+    dd_real="${data_disk}${dd_link}"
+    _koopa_ln "$dd_real" "$dd_link"
+    # e.g. 'opt'.
+    app_prefix_bn="$(basename "$app_prefix")"
+    # e.g. '/mnt/data01/n/opt'
+    app_prefix_real="${dd_real}/${app_prefix_bn}"
+    _koopa_mkdir "$app_prefix_real"
+    # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
+    _koopa_ln "$app_prefix_real" "$app_prefix"
 else
     _koopa_mkdir "$app_prefix"
 fi
@@ -94,32 +110,21 @@ _koopa_h2 "Installing base system."
 
 if _koopa_is_debian
 then
-    # Also applies to Ubuntu.
-    install-debian-base
-elif _koopa_is_amzn
-then
-    # Layers on top of RHEL 7.
-    install-amzn-base
-elif _koopa_is_rhel_8
-then
-    # Also applies to CentOS 8.
-    install-rhel-8-base
-elif _koopa_is_rhel_7
-then
-    # Also applies to CentOS 7.
-    install-rhel-7-base
+    install-debian-base --all
 elif _koopa_is_fedora
 then
-    install-fedora-base
+    install-fedora-base --all
 fi
+
+_koopa_is_rhel_7 && install-rhel-7-base
+_koopa_is_rhel_8 && install-rhel-8-base
 
 if [[ "$config" == "constellation-aws" ]]
 then
-    # Constellation AWS                                                   # {{{1
+    # Constellation AWS  {{{1
     # --------------------------------------------------------------------------
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
-    _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
@@ -130,7 +135,7 @@ then
     fi
 elif [[ "$config" == "constellation-azure" ]]
 then
-    # Constellation Azure                                                 # {{{1
+    # Constellation Azure  {{{1
     # --------------------------------------------------------------------------
     # Don't attempt to patch system env to support '-S' flag.
     # Should no longer be an issue on VMs, as of 2020.
@@ -139,11 +144,9 @@ then
         sudo rm -v "/bin/env"
         sudo mv -v "/bin/env.bak" "/bin/env"
     fi
-    # OpenJDK moved to '/n/app'.
     sudo rm -frv "/opt/jdk"
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
-    _koopa_update_profile
     sudo ln -fnsv \
         "${koopa_prefix}/host/azure/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
@@ -186,13 +189,22 @@ then
     else
         rsync=1
         rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+        # We're detecting the presence of this file in 'koopa update' call.
+        touch "$(_koopa_config_prefix)/rsync"
     fi
 fi
 
-if _koopa_is_azure
+# Cloud APIs.
+_koopa_run_if_installed \
+    install-aws-cli-2 \
+    install-azure-cli \
+    install-google-cloud-sdk
+
+# Compilers.
+if [[ "$docker" -eq 0 ]]
 then
-    _koopa_h2 "Installing Azure-specific apps."
-    install-azure-cli
+    # /usr/lib/llvm-9                                                   # 0.285G
+    _koopa_run_if_installed install-llvm
 fi
 
 # Always run this because it must configure java alternatives.
@@ -200,43 +212,50 @@ install-openjdk                                                         # 0.316G
 
 if [[ "$rsync" -eq 0 ]]
 then
-    # Compilers.
-    if ! _koopa_is_docker
+    # Environment managers.
+    install-conda                                                       # 0.493G
+    if [[ "$docker" -eq 0 ]]
     then
-        # /usr/lib/llvm-9                                               # 0.285G
-        _koopa_is_installed install-llvm && install-llvm
+        _koopa_run_if_installed install-docker
+        install-perlbrew                                                # 0.003G
+        install-pyenv                                                   # 0.009G
+        install-rbenv                                                   # 0.006G
+        install-lmod                                                    # 0.002G
     fi
 
     # Core.
     install-coreutils                                                   # 0.038G
+    install-findutils                                                   # 0.005G
 
     # Shells.
     install-bash                                                        # 0.014G
-    install-zsh                                                         # 0.011G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
+        install-zsh                                                     # 0.011G
         install-fish                                                    # 0.082G
     fi
 
     # General tools.
-    install-git                                                         # 0.158G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
+        install-git                                                     # 0.177G
         install-gnupg                                                   # 0.038G
         install-lua                                                     # 0.001G
         install-luarocks                                                # 0.002G
-        install-sqlite                                                  # 0.026G
-        install-proj                                                    # 0.132G
-        install-gdal                # requires proj                     # 0.611G
-        install-hdf5                # requires gdal                     # 0.022G
-        install-gsl                                                     # 0.043G
+    fi
+
+    # Password management.
+    if [[ "$docker" -eq 0 ]]
+    then
+        install-pass
+        install-docker-credential-pass
     fi
 
     # Languages.
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
     install-perl                                                        # 0.081G
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
@@ -244,87 +263,89 @@ then
         install-rust                                                    # 0.724G
     fi
 
-    # Shell tools.
-    install-autojump                                                    # 0.000G
-    install-htop                                                        # 0.001G
-    install-shellcheck                                                  # 0.008G
-    install-the-silver-searcher                                         # 0.000G
-    install-tmux                                                        # 0.001G
-    if ! _koopa_is_docker
+    # Heavy libraries.
+    if [[ "$docker" -eq 0 ]]
     then
+        install-geos
+        install-sqlite                                                  # 0.026G
+        install-proj                # install after sqlite              # 0.132G
+        install-gdal                # requires proj, python; slow       # 0.611G
+        install-hdf5                # requires gdal                     # 0.022G
+        install-gsl                                                     # 0.043G
+    fi
+
+    # Shell tools.
+    install-htop                                                        # 0.001G
+    install-tmux                                                        # 0.001G
+    if [[ "$docker" -eq 0 ]]
+    then
+        install-autojump                                                # 0.000G
         install-fzf                 # requires go                       # 0.003G
         install-neofetch                                                # 0.003G
+        install-shellcheck                                              # 0.008G
+        install-the-silver-searcher                                     # 0.000G
     fi
 
     # Text editors.
     install-vim
-    if ! _koopa_is_docker
+    if [[ "$docker" -eq 0 ]]
     then
         install-emacs               # can't build on docker             #     NA
         install-neovim                                                  # 0.029G
     fi
 
-    # Bioinformatics apps.
-    if ! _koopa_is_docker
+    # Bioinformatics tools.
+    if [[ "$docker" -eq 0 ]]
     then
-        install-genrich                                                 # 0.000G
+        install-aspera-connect                                          # 0.090G
     fi
 
-    # Environment managers.
-    install-conda                                                       # 0.493G
-    install-perlbrew                                                    # 0.003G
-    install-pyenv                                                       # 0.009G
-    if ! _koopa_is_docker
+    # Software packages.
+    if [[ "$docker" -eq 0 ]]
     then
-        _koopa_is_installed install-docker && install-docker
-        install-rbenv                                                   # 0.006G
-        install-lmod                                                    # 0.002G
-
-        # > _koopa_activate_pipx
-        #(pipx-install-envs)
-
-        # > _koopa_activate_rustup
-        #(install-rust-crates)
-
-        # > _koopa_activate_conda
-        #(conda-create-bioinfo-envs)
-
-        # Consider adding an R package recipe here.
-        # Can use the Bioconductor Docker image as a reference.
+        install-rust-packages
+        install-python-packages
+        _koopa_link_r_site_library
+        install-r-packages
+        conda-create-bioinfo-envs --all
+        install-bcbio
     fi
+else
+    _koopa_link_r_site_library
 fi
 
 _koopa_r_javareconf
 
-if _koopa_is_docker
+if [[ "$docker" -eq 0 ]]
 then
-    if _koopa_is_debian
-    then
-        sudo rm -rf /var/lib/apt/lists/*
-    fi
-else
-    _koopa_is_installed install-rstudio-server && install-rstudio-server
-    _koopa_is_installed install-shiny-server && install-shiny-server
+    _koopa_run_if_installed \
+        install-rstudio-server \
+        install-shiny-server
     _koopa_update_lmod_config
 fi
 
-# > update-rust
-# > update-conda
-# > update-conda-envs
-# > update-venv
+if [[ "$docker" -eq 0 ]]
+then
+    generate-ssh-key
+fi
 
-_koopa_h2 "Setting permissions on '${make_prefix}'."
 _koopa_set_permissions "$make_prefix"
-
-_koopa_h2 "Setting permissions on '${app_prefix}'."
-_koopa_set_permissions "$app_prefix"
-
 _koopa_remove_broken_symlinks "$make_prefix"
+
+_koopa_set_permissions "$app_prefix"
 _koopa_remove_broken_symlinks "$app_prefix"
 
 _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
 
-rm -fr /root/.cache
+if [[ "$docker" -eq 1 ]]
+then
+    _koopa_h2 "Performing cleanup for Docker image."
+    sudo rm -frv /root/.cache
+    if _koopa_is_debian
+    then
+        sudo rm -rf /var/lib/apt/lists/*
+    fi
+fi
 
 _koopa_success "Configuration completed successfully."

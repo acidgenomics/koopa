@@ -6,31 +6,99 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
-# Install R using 'install-r' script instead, which sets up apt to support
+# Check package source:
+# https://packages.ubuntu.com/
+#
+#
+# How to replicate installed packages across machines:
+# https://serverfault.com/questions/56848
+#
+# To backup:
+# > sudo dpkg --get-selections > /tmp/dpkglist.txt
+#
+# To Restore:
+# > sudo dpkg --set-selections < /tmp/dpkglist.txt
+# > sudo apt-get -y update
+# > sudo apt-get dselect-upgrade
+#
+#
+# Installing R using 'install-r' script instead, which sets up apt to support
 # newer official release from CRAN.
 #
-# Clean up previous:
+#
+# Enable Debian sources.
+# To use 'build-dep', you must uncomment deb-src lines:
+# > sudo vim /etc/apt/sources.list
+#
+# Otherwise you'll hit this error:
+# You must put some 'source' URIs in your sources.list
+#
+# See also:
+# https://askubuntu.com/questions/496549
+#
+#
+# Clean up previous packages:
 # - openjdk-12-jdk
 # - openjdk-12-jre
 # - python
+#
 #
 # Bioconductor AMI is missing these dependencies:
 # > apt-cache search 'libgnutls.*-dev'
 # > apt-cache search gnutls
 # > apt-cache search libgif
 #
-# 'libcurl4-gnutls-dev' gets installed by 'git' above.
 #
-# Conflicts:
-# libcurl4-gnutls-dev
-# libcurl4-openssl-dev
+# libcurl4-dev madness:
+# Package libcurl-dev is a virtual package provided by:
+#   libcurl4-openssl-dev 7.58.0-2ubuntu3.8
+#   libcurl4-nss-dev 7.58.0-2ubuntu3.8
+#   libcurl4-gnutls-dev 7.58.0-2ubuntu3.8
+# You should explicitly select one to install.
+#
 #
 # Note that 'golang-go' is not officially supported.
 # """
 
-_koopa_h2 "Installing Debian base system."
+all=0
+dev=0
+dist_upgrade=0
+extra=0
 
-_koopa_assert_has_no_args "$@"
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        --dev)
+            dev=1
+            shift 1
+            ;;
+        --dist_upgrade)
+            dist_upgrade=1
+            shift 1
+            ;;
+        --extra)
+            extra=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+if [[ "$all" -eq 1 ]]
+then
+    dev=1
+    dist_upgrade=1
+    extra=1
+fi
+
+_koopa_h1 "Installing Debian base system."
+
 _koopa_assert_is_installed sed sudo
 
 export DEBIAN_FRONTEND="noninteractive"
@@ -42,147 +110,194 @@ then
     sudo rm -v /usr/local/man
 fi
 
-# Enable Debian sources.
-# To use 'build-dep', you must uncomment deb-src lines:
-# > sudo vim /etc/apt/sources.list
-#
-# Otherwise you'll hit this error:
-# You must put some 'source' URIs in your sources.list
-#
-# https://askubuntu.com/questions/496549
+# GPG keys are required for signed repos in '/etc/apt/sources.list.d'.
+_koopa_apt_import_keys
 
-if grep -Eq '^# deb-src ' /etc/apt/sources.list
+# Note that this function calls 'apt-get update'.
+_koopa_apt_link_sources
+enabled_repos="$(_koopa_apt_enabled_repos)"
+
+# Requiring universe repo to be enabled on Ubuntu.
+if _koopa_is_ubuntu && \
+    ! _koopa_is_matching_fixed "universe" "$enabled_repos"
 then
-    _koopa_h2 "Enabling Debian sources for 'build-dep'."
-    sudo cp -fv /etc/apt/sources.list /etc/apt/sources.list~
-    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+    _koopa_stop "The Ubuntu 'universe' repo is disabled.\
+Check '/etc/apt/sources.list'."
 fi
 
-sudo apt-get update
+# Upgrade distribution  {{{1
+# ==============================================================================
 
-_koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-missing \
-        --no-install-recommends \
-        --yes \
-        dist-upgrade
-
-_koopa_h2 "Installing recommending packages."
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-missing \
-        --no-install-recommends \
-        --yes \
-        install \
-            alien \
-            apt-listchanges \
-            apt-utils \
-            autoconf \
-            automake \
-            bc \
-            ca-certificates \
-            cargo \
-            cmake \
-            coreutils \
-            curl \
-            dirmngr \
-            emacs \
-            findutils \
-            gcc \
-            gdb \
-            gdebi-core \
-            gfortran \
-            git \
-            gnupg \
-            gnutls-bin \
-            gpg-agent \
-            gtk-doc-tools \
-            keyboard-configuration \
-            less \
-            libacl1 \
-            libacl1-dev \
-            libbz2-dev \
-            libcairo2-dev \
-            libcurl4-openssl-dev \
-            libevent-dev \
-            libffi-dev \
-            libfreetype6-dev \
-            libgdal-dev \
-            libgif-dev \
-            libglu1-mesa-dev \
-            libgnutls28-dev \
-            libgsl-dev \
-            libharfbuzz-dev \
-            libhdf5-dev \
-            liblzma-dev \
-            libmagick++-dev \
-            libmariadb-dev \
-            libopenblas-base \
-            libopenblas-dev \
-            libpng-dev \
-            libssh2-1-dev \
-            libssl-dev \
-            libtool \
-            libtool-bin \
-            libudunits2-dev \
-            libv8-dev \
-            libx11-dev \
-            libxml2-dev \
-            libz-dev \
-            lsb-release \
-            nano \
-            pandoc \
-            pandoc-citeproc \
-            parallel \
-            pkg-config \
-            software-properties-common \
-            sudo \
-            systemd \
-            texlive \
-            tree \
-            tzdata \
-            unattended-upgrades \
-            vim \
-            wget \
-            xorg
-! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-missing \
-        --no-install-recommends \
-        --yes \
-        install \
-            firefox \
-            fish \
-            htop \
-            perl \
-            sqlite3 \
-            texlive \
-            tmux \
-            zsh
-
-if grep -Eq '^# deb-src ' /etc/apt/sources.list
+if [[ "$dist_upgrade" -eq 1 ]]
 then
-    _koopa_h2 "Installing recommended dependencies via 'apt-get build-dep'."
-    sudo apt-get update
-    # Including 'bash' here will remove 'r-base'.
+    _koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
     sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get --no-install-recommends --yes build-dep \
-            coreutils \
-            git \
-            htop \
-            perl \
-            tmux \
-            vim \
-            zsh
-    ! _koopa_is_docker && sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get --no-install-recommends --yes build-dep \
-            emacs-defaults \
-            fish \
-            neovim
+        apt-get \
+            --fix-missing \
+            --no-install-recommends \
+            --quiet \
+            --yes \
+            dist-upgrade
 fi
+
+# Default  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing default packages."
+
+# Clean up previous installs first, if applicable.
+apt_installed="$(sudo apt list --installed 2> /dev/null)"
+legacy_pkgs=(
+    containerd          # docker-legacy
+    docker              # docker-legacy
+    docker-engine       # docker-legacy
+    docker.io           # docker-legacy
+    runc                # docker-legacy
+    cargo               # use 'install-rust'
+    fish                # use 'install-fish'
+    libgdal-dev         # use 'install-gdal'
+    libgeos-dev         # use 'install-geos'
+    libgsl-dev          # use 'install-gsl'
+    libhdf5-dev         # use 'install-hdf5'
+)
+for pkg in "${legacy_pkgs[@]}"
+do
+    echo "$apt_installed" | grep -Eq "^${pkg}/" || continue
+    sudo apt-get --yes remove "${pkg[@]}"
+done
+
+pkgs=(
+    apt-listchanges
+    apt-transport-https
+    apt-utils
+    autoconf
+    automake
+    bc
+    build-essential
+    bzip2
+    ca-certificates
+    cmake
+    coreutils
+    curl
+    dirmngr
+    findutils
+    gcc
+    gdb
+    gdebi-core
+    gfortran
+    git
+    gnupg
+    gpg-agent
+    htop
+    less
+    lsb-release
+    make
+    nano
+    parallel
+    pkg-config
+    software-properties-common
+    sudo
+    tmux
+    tree
+    tzdata
+    unzip
+    vim
+    wget
+    xz-utils
+)
+
+# Developer  {{{1
+# ==============================================================================
+
+# Note that we want these on our Bioconductor Docker images.
+if [[ "$dev" -eq 1 ]]
+then
+    _koopa_h2 "Installing developer libraries."
+                                          # |   w/o deps |    w/ deps | n deps |
+    pkgs+=(                               # | ---------- | ---------- | ------ |
+        gettext                           # |            |            |        |
+        libacl1-dev                       # |     < 1 MB |     < 1 MB |      1 |
+        libbz2-dev                        # |     < 1 MB |      36 MB |     22 |
+        libcairo2-dev                     # |       3 MB |      94 MB |     61 |
+        libcurl4-gnutls-dev               # |            |            |        |
+        libevent-dev                      # |       2 MB |       2 MB |      5 |
+        libffi-dev                        # |     < 1 MB |     227 MB |     10 |
+        libfreetype6-dev                  # |       7 MB |      97 MB |     62 |
+        libgif-dev                        # |     < 1 MB |     287 MB |     69 |
+        libglu1-mesa-dev                  # |     < 1 MB |       1 MB |      2 |
+        libgnutls28-dev                   # |       4 MB |       8 MB |      9 |
+        libharfbuzz-dev                   # |       2 MB |     436 MB |    140 |
+        liblzma-dev                       # |     < 1 MB |     337 MB |     96 |
+        libmagick++-dev                   # |     < 1 MB |      36 MB |     20 |
+        libncurses-dev # libncurses5-dev  # |       1 MB |       1 MB |      2 |
+        libpng-dev                        # |     < 1 MB |     400 MB |    138 |
+        libssl-dev                        # |       8 MB |     294 MB |     69 |
+        libtool                           # |       1 MB |      21 MB |     22 |
+        libtool-bin                       # |     < 1 MB |     < 1 MB |      1 |
+        libx11-dev                        # |       2 MB |     109 MB |    107 |
+        libxml2-dev                       # |       4 MB |     330 MB |     93 |
+        libz-dev # zlib1g-dev             # |     < 1 MB |         NA |    174 |
+        tcl-dev
+    )
+fi
+
+# Extra  {{{1
+# ==============================================================================
+
+if [[ "$extra" -eq 1 ]]
+then
+    _koopa_h2 "Installing extra recommended packages."
+                                          # |   w/o deps |    w/ deps | n deps |
+    pkgs+=(                               # | ---------- | ---------- | ------ |
+        alien                             # |            |            |        |
+        emacs                             # |       8 MB |     112 MB |     11 |
+        gnutls-bin                        # |            |            |        |
+        gtk-doc-tools                     # |            |            |        |
+        keyboard-configuration            # |       3 MB |      35 MB |     44 |
+        libgtk-3-0                        # |            |            |        |
+        libgtk-3-dev                      # |            |            |        |
+        libgtk2.0-0                       # |            |            |        |
+        libgtk2.0-dev                     # |            |            |        |
+        libmariadb-dev                    # |            |            |        |
+        libopenblas-base                  # |            |            |        |
+        libopenblas-dev                   # |            |            |        |
+        libssh2-1-dev                     # |            |            |        |
+        libudunits2-dev                   # |            |            |        |
+        libv8-dev                         # |            |            |        |
+        pandoc                            # |            |            |        |
+        pandoc-citeproc                   # |            |            |        |
+        pass                              # |            |            |        |
+        perl                              # |     < 1 MB |     987 MB |    281 |
+        sqlite3                           # |       2 MB |       2 MB |      1 |
+        systemd                           # |         NA |         NA |     NA |
+        texlive                           # |            |            |        |
+        unattended-upgrades               # |     < 1 MB |     < 1 MB |      1 |
+        xorg                              # |     < 1 MB |      30 MB |     39 |
+        zsh                               # |       2 MB |      15 MB |      2 |
+    )
+
+    if _koopa_is_ubuntu
+    then
+        _koopa_info "Installing Ubuntu-specific packages."
+                                          # |   w/o deps |    w/ deps | n deps |
+        pkgs+=(                           # | ---------- | ---------- | ------ |
+            firefox                       # |     202 MB |     203 MB |      9 |
+        )
+    fi
+fi
+
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get \
+        --fix-missing \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install "${pkgs[@]}"
+
+# Clean up  {{{1
+# ==============================================================================
 
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
-sudo apt-get -y autoremove
+sudo apt-get --yes autoremove
 
-sudo rm -fr /var/lib/apt/lists/*
+_koopa_success "Installation of Debian base was successful."

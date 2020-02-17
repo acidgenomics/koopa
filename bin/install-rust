@@ -8,27 +8,28 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 CARGO_HOME="$(_koopa_rust_cargo_prefix)"
 _koopa_exit_if_dir "$CARGO_HOME"
-export CARGO_HOME
-
 RUSTUP_HOME="$(_koopa_rust_rustup_prefix)"
 _koopa_exit_if_dir "$RUSTUP_HOME"
-export RUSTUP_HOME
 
 _koopa_h1 "Installing Rust via rustup script (http://sh.rustup.rs)."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-
 # rustup-init may be installed by Homebrew on macOS.
 _koopa_assert_is_not_installed rustup-init
 
-_koopa_info "CARGO_HOME: '${CARGO_HOME}'."
-_koopa_info "RUSTUP_HOME: '${RUSTUP_HOME}'."
+export CARGO_HOME
+export RUSTUP_HOME
+
+_koopa_dl "CARGO_HOME" "$CARGO_HOME"
+_koopa_dl "RUSTUP_HOME" "$RUSTUP_HOME"
 
 _koopa_prefix_mkdir "$CARGO_HOME"
 _koopa_prefix_mkdir "$RUSTUP_HOME"
 
-curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
+(
+    curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions "$CARGO_HOME"
 _koopa_set_permissions "$RUSTUP_HOME"

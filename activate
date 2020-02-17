@@ -5,7 +5,7 @@
 
 
 
-# Notes                                                                     {{{1
+# Notes  {{{1
 # ==============================================================================
 
 # Dropped support for ksh because it doesn't support 'local' variables scoped
@@ -32,7 +32,7 @@
 
 
 
-# Usage                                                                     {{{1
+# Usage  {{{1
 # ==============================================================================
 
 usage() {
@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2020-01-23.
+    Updated 2020-02-14.
 EOF
 }
 
@@ -96,10 +96,10 @@ unset -f usage
 
 
 
-# Pre-flight checks                                                         {{{1
+# Pre-flight checks  {{{1
 # ==============================================================================
 
-# Force mode                                                                {{{2
+# Force mode  {{{2
 # ------------------------------------------------------------------------------
 
 # This is currently used by the koopa installer.
@@ -122,7 +122,7 @@ fi
 unset -v force
 export KOOPA_FORCE
 
-# User-specific configuration                                               {{{2
+# User-specific configuration  {{{2
 # ------------------------------------------------------------------------------
 
 if [ "$KOOPA_FORCE" -ne 1 ]
@@ -145,7 +145,7 @@ fi
 
 
 
-# Variables                                                                 {{{1
+# Variables  {{{1
 # ==============================================================================
 
 if [ -n "${BASH_VERSION:-}" ]
@@ -177,11 +177,10 @@ then
             export KOOPA_ZSHRC=1
             ;;
     esac
-
     KOOPA_SOURCE="${(%):-%N}"
 else
     >&2 cat << EOF
-Error: Failed to detect supported shell.
+ERROR: Unsupported shell.
 Supported: bash, zsh.
 
   SHELL: '${SHELL}'
@@ -197,7 +196,7 @@ fi
 export KOOPA_SHELL
 export KOOPA_SUBSHELL
 
-# Extra mode                                                                {{{2
+# Extra mode  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_EXTRA:-}" ]
@@ -226,7 +225,7 @@ then
     fi
 fi
 
-# Minimal mode                                                              {{{2
+# Minimal mode  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_MINIMAL:-}" ]
@@ -260,7 +259,7 @@ then
     KOOPA_EXTRA=0
 fi
 
-# Test mode                                                                 {{{2
+# Test mode  {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_TEST:-}" ]
@@ -302,7 +301,7 @@ unset -v extra minimal
 
 
 
-# Locate home and source functions                                          {{{1
+# Locate home and source functions  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -346,23 +345,21 @@ KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 
 
 
-# Minimal configuration                                                     {{{1
+# Minimal configuration  {{{1
 # ==============================================================================
 
 . "${KOOPA_ACTIVATE_DIR}/minimal.sh"
-_koopa_update_xdg_config
 
 
 
-# Program configuration                                                     {{{1
+# Program configuration  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
     if _koopa_is_macos
     then
-        . "${KOOPA_ACTIVATE_DIR}/os/darwin/programs/homebrew.sh"
-        . "${KOOPA_ACTIVATE_DIR}/os/darwin/programs/python.sh"
+        _koopa_activate_macos_python
     fi
     _koopa_activate_llvm
     _koopa_activate_aspera
@@ -378,7 +375,7 @@ fi
 
 
 
-# Extra shell configuration                                                 {{{1
+# Extra shell configuration  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_EXTRA" -eq 1 ]
@@ -408,7 +405,7 @@ fi
 
 
 
-# Post-flight                                                               {{{1
+# Post-flight  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -423,21 +420,40 @@ then
     # Note that bc isn't installed on all Docker images, and can error out.
     if _koopa_is_installed bc
     then
-        KOOPA_DURATION="$(bc <<<"$KOOPA_DURATION_STOP-$KOOPA_DURATION_START")"
+        KOOPA_DURATION="$( \
+            echo "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" | bc \
+        )"
         export KOOPA_DURATION
-        echo "Activation was successful (${KOOPA_DURATION} ms)."
-    else
-        echo "Activation was successful."
     fi
     unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
+
     set +o errexit
     set +o nounset
     set +o xtrace
-    if [ -n "${BASH_VERSION:-}" ]
+
+    # Turn off Bash-specific shell options.
+    if [ "$KOOPA_SHELL" = "bash" ]
     then
         set +o errtrace
         set +o pipefail
         set +o posix
+    fi
+
+    _koopa_h2 "Checking shell options."
+    case "$KOOPA_SHELL" in
+        bash)
+            shopt
+            ;;
+        zsh)
+            setopt
+            ;;
+    esac
+
+    if [ -n "${KOOPA_DURATION:-}" ]
+    then
+        _koopa_success "Activation was successful (${KOOPA_DURATION} ms)."
+    else
+        _koopa_success "Activation was successful."
     fi
 fi
 

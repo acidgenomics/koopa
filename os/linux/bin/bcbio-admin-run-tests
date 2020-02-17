@@ -60,3 +60,5 @@ _koopa_assert_is_dir "$tests_dir"
     ./run_tests.sh scrnaseq
     rm -frv test_automated_output
 )
+
+_koopa_success "All unit tests passed."

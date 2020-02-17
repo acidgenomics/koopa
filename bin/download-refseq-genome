@@ -13,10 +13,20 @@ from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-sys.path.insert(0, os.getenv("KOOPA_PREFIX"))
-from pykoopa.genome import refseq_version  # noqa
-from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import download, paste_url  # noqa
+KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
+PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
+sys.path.insert(0, PYTHON_PREFIX)
+
+from koopa.argparse import dir_path  # noqa:E402
+from koopa.genome.refseq import (
+    download_refseq_genome,
+    download_refseq_gff,
+    download_refseq_gtf,
+    download_refseq_transcriptome,
+    refseq_version,
+)  # noqa:E402
+from koopa.syntactic import kebab_case  # noqa:E402
+from koopa.sys import download, paste_url  # noqa:E402
 
 # pylint: enable=wrong-import-position
 
@@ -60,7 +70,7 @@ details:
 
 note:
     Python script.
-    Updated 2019-10-07.
+    Updated 2020-02-09.
 """
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
@@ -109,6 +119,9 @@ parser.add_argument(
     ),
 )
 parser.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+parser.add_argument(
     "--decompress",
     action="store_true",
     help="decompress (but keep) the original file",
@@ -118,6 +131,7 @@ args = parser.parse_args()
 annotation = args.annotation
 build = args.build
 decompress = args.decompress
+output_dir = args.output_dir
 type = args.type
 
 organism = "Homo sapiens"
@@ -132,56 +146,11 @@ release_url = paste_url(
     build + "_latest",
     "refseq_identifiers",
 )
-output_dir = kebab_case(
+
+output_basename = kebab_case(
     organism + " " + build + " " + "refseq" + " " + release
 )
-
-# pylint: enable=invalid-name,protected-access,redefined-builtin
-
-
-def download_genome(release_url, output_dir, decompress):
-    """
-    Download genome FASTA.
-    """
-    download(
-        url=paste_url(release_url, build + "_latest_genomic.fna.gz"),
-        output_dir=os.path.join(output_dir, "genome"),
-        decompress=decompress,
-    )
-
-
-def download_transcriptome(release_url, output_dir, decompress):
-    """
-    Download transcriptome FASTA.
-    """
-    download(
-        url=paste_url(release_url, build + "_latest_rna.fna.gz"),
-        output_dir=os.path.join(output_dir, "transcriptome"),
-        decompress=decompress,
-    )
-
-
-def download_gtf(release_url, output_dir, decompress):
-    """
-    Download GTF file.
-    """
-    download(
-        url=paste_url(release_url, build + "_latest_genomic.gtf.gz"),
-        output_dir=os.path.join(output_dir, "gtf"),
-        decompress=decompress,
-    )
-
-
-def download_gff(release_url, output_dir, decompress):
-    """
-    Download GFF3 file.
-    """
-    download(
-        url=paste_url(release_url, build + "_latest_genomic.gff.gz"),
-        output_dir=os.path.join(output_dir, "gff"),
-        decompress=decompress,
-    )
-
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 download(url=paste_url(release_url, "README.txt"), output_dir=output_dir)
 download(
@@ -190,35 +159,59 @@ download(
 )
 
 if type == "genome":
-    download_genome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_genome(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif type == "transcriptome":
-    download_transcriptome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_transcriptome(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif type == "all":
-    download_genome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_genome(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
-    download_transcriptome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_transcriptome(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 
 if annotation == "gtf":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_gtf(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif annotation == "gff":
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_gff(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif annotation == "all":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_gtf(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_refseq_gff(
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 
 print("Genome downloaded successfully to '" + output_dir + "'.")

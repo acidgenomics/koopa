@@ -1,26 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_activate_prefix() {                                                # {{{1
-    # """
-    # Automatically configure PATH and MANPATH for a specified prefix.
-    # Updated 2020-01-12.
-    # """
-    local prefix
-    prefix="${1:?}"
-    _koopa_has_sudo && _koopa_add_to_path_start "${prefix}/sbin"
-    _koopa_add_to_path_start "${prefix}/bin"
-    _koopa_add_to_manpath_start "${prefix}/man"
-    _koopa_add_to_manpath_start "${prefix}/share/man"
-    return 0
-}
-
-
-
-_koopa_activate_aspera() {                                                # {{{1
+_koopa_activate_aspera() {  # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local prefix
     prefix="$(_koopa_aspera_prefix)"
@@ -29,13 +13,17 @@ _koopa_activate_aspera() {                                                # {{{1
     return 0
 }
 
-_koopa_activate_autojump() {                                              # {{{1
+_koopa_activate_autojump() {  # {{{1
     # """
     # Activate autojump.
-    # Updated 2020-01-24.
+    # @note Updated 2020-02-13.
     #
     # Purge install with 'j --purge'.
     # Location: ~/.local/share/autojump/autojump.txt
+    #
+    # For bash users, autojump keeps track of directories by modifying
+    # '$PROMPT_COMMAND'. Do not overwrite '$PROMPT_COMMAND' in this case.
+    # > export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND ;} history -a"
     #
     # See also:
     # - https://github.com/wting/autojump
@@ -43,12 +31,16 @@ _koopa_activate_autojump() {                                              # {{{1
     local prefix
     prefix="$(_koopa_autojump_prefix)"
     [ -d "$prefix" ] || return 0
+    if [ -z "${PROMPT_COMMAND:-}" ]
+    then
+        export PROMPT_COMMAND="history -a"
+    fi
     _koopa_activate_prefix "$prefix"
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -56,10 +48,10 @@ _koopa_activate_autojump() {                                              # {{{1
     return 0
 }
 
-_koopa_activate_bcbio() {                                                 # {{{1
+_koopa_activate_bcbio() {  # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
-    # Updated 2019-11-15.
+    # @note Updated 2019-11-15.
     #
     # Attempt to locate bcbio installation automatically on supported platforms.
     #
@@ -77,10 +69,10 @@ _koopa_activate_bcbio() {                                                 # {{{1
     return 0
 }
 
-_koopa_activate_broot() {                                                 # {{{1
+_koopa_activate_broot() {  # {{{1
     # """
     # Activate broot directory tree utility.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -104,7 +96,7 @@ _koopa_activate_broot() {                                                 # {{{1
     br_script="${config_dir}/launcher/bash/br"
     [ -f "$br_script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$br_script"
@@ -112,10 +104,10 @@ _koopa_activate_broot() {                                                 # {{{1
     return 0
 }
 
-_koopa_activate_conda() {                                                 # {{{1
+_koopa_activate_conda() {  # {{{1
     # """
     # Activate conda.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # It's no longer recommended to directly export conda in '$PATH'.
     # Instead source the 'activate' script.
@@ -133,7 +125,7 @@ _koopa_activate_conda() {                                                 # {{{1
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -147,10 +139,61 @@ _koopa_activate_conda() {                                                 # {{{1
     return 0
 }
 
-_koopa_activate_ensembl_perl_api() {                                      # {{{1
+_koopa_activate_dircolors() {  # {{{1
+    # """
+    # Activate directory colors.
+    # @note Updated 2020-02-14.
+    # """
+    _koopa_is_installed dircolors || return 0
+    local dotfiles_prefix
+    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+    # This will set the 'LD_COLORS' environment variable.
+    dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
+    if [ -f "$dircolors_file" ]
+    then
+        eval "$(dircolors "$dircolors_file")"
+    else
+        eval "$(dircolors -b)"
+    fi
+    unset -v dircolors_file
+    alias dir='dir --color=auto'
+    alias egrep='egrep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias grep='grep --color=auto'
+    alias ls='ls --color=auto'
+    alias vdir='vdir --color=auto'
+    return 0
+}
+
+_koopa_activate_dotfiles() {  # {{{1
+    # """
+    # Activate dotfiles repo.
+    # @note Updated 2020-02-13.
+    # """
+    local dotfiles
+    dotfiles="$(_koopa_config_prefix)/dotfiles"
+    if [ ! -d "$dotfiles" ]
+    then
+        dotfiles="$(_koopa_dotfiles_prefix)"
+    fi
+    export DOTFILES="$dotfiles"
+    return 0
+}
+
+_koopa_activate_emacs() {  # {{{1
+    # """
+    # Activate Emacs.
+    # @note Updated 2020-02-13.
+    # """
+    _koopa_is_installed emacs || return 0
+    _koopa_add_to_path_start "${HOME}/.emacs.d/bin"
+    return 0
+}
+
+_koopa_activate_ensembl_perl_api() {  # {{{1
     # """
     # Activate Ensembl Perl API.
-    # Updated 2019-11-14.
+    # @note Updated 2019-11-14.
     #
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
@@ -168,10 +211,10 @@ _koopa_activate_ensembl_perl_api() {                                      # {{{1
     return 0
 }
 
-_koopa_activate_fzf() {                                                   # {{{1
+_koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # See also:
     # https://github.com/junegunn/fzf
@@ -183,7 +226,7 @@ _koopa_activate_fzf() {                                                   # {{{1
     local shell
     shell="$(_koopa_shell)"
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # Auto-completion.
     # shellcheck source=/dev/null
@@ -195,10 +238,171 @@ _koopa_activate_fzf() {                                                   # {{{1
     return 0
 }
 
-_koopa_activate_llvm() {                                                  # {{{1
+_koopa_activate_gcc_colors() {  # {{{1
+    # """
+    # Activate GCC colors.
+    # @note Updated 2020-02-13.
+    # """
+    # Colored GCC warnings and errors.
+    [ -n "${GCC_COLORS:-}" ] && return 0
+    export GCC_COLORS='caret=01;32:' \
+                      'error=01;31:' \
+                      'locus=01:' \
+                      'note=01;36:' \
+                      'quote=01' \
+                      'warning=01;35:'
+    return 0
+}
+
+_koopa_activate_go() {  # {{{1
+    # """
+    # Activate Go.
+    # @note Updated 2020-02-16.
+    # """
+    [ -n "${GOPATH:-}" ] && return 0
+    GOPATH="$(_koopa_go_gopath)"
+    export GOPATH
+    [ ! -d "$GOPATH" ] && _koopa_mkdir "$GOPATH"
+    return 0
+}
+
+_koopa_activate_homebrew() {  # {{{1
+    # """
+    # Activate Homebrew.
+    # @note Updated 2020-02-14.
+    #
+    # @seealso
+    # _koopa_activate_local_etc_profile
+    # """
+    _koopa_is_installed brew || return 0
+    HOMEBREW_PREFIX="$(brew --prefix)"
+    export HOMEBREW_PREFIX
+    HOMEBREW_REPOSITORY="$(brew --repo)"
+    export HOMEBREW_REPOSITORY
+    export HOMEBREW_INSTALL_CLEANUP=1
+    export HOMEBREW_NO_ANALYTICS=1
+    _koopa_activate_homebrew_gnu_utils
+    # > _koopa_activate_homebrew_python
+    _koopa_activate_homebrew_google_cloud_sdk
+    return 0
+}
+
+_koopa_activate_homebrew_gnu_utils() {
+    # """
+    # Activate Homebrew GNU utils.
+    # @note Updated 2020-02-14.
+    #
+    # Linked using "g*" prefix by default.
+    #
+    # @seealso:
+    # - brew info coreutils
+    # - brew info findutils
+    # """
+    local prefix
+    prefix="/usr/local/opt/coreutils/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+    prefix="/usr/local/opt/findutils/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+    return 0
+}
+
+_koopa_activate_homebrew_google_cloud_sdk() {
+    # """
+    # Activate Homebrew Google Cloud SDK.
+    # @note Updated 2020-02-14.
+    # """
+    local prefix
+    prefix="${HOMEBREW_PREFIX:?}"
+    prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
+    [ -d "$prefix" ] || return 0
+    local shell
+    shell="$(_koopa_shell)"
+    # shellcheck source=/dev/null
+    . "${prefix}/path.${shell}.inc"
+    # shellcheck source=/dev/null
+    . "${prefix}/completion.${shell}.inc"
+}
+
+_koopa_activate_homebrew_python() {
+    # """
+    # Activate Homebrew Python.
+    # @note Updated 2020-02-14.
+    #
+    # Use official installer in '/Library/Frameworks' instead.
+    #
+    # Homebrew is lagging on new Python releases, so install manually instead.
+    # See 'python.sh' script for activation.
+    #
+    # Don't add to PATH if a virtual environment is active.
+    #
+    # @seealso
+    # - /usr/local/opt/python/bin
+    # - https://docs.brew.sh/Homebrew-and-Python
+    # - brew info python
+    # """
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
+    _koopa_add_to_manpath_start "/usr/local/opt/python/share/man"
+    return 0
+}
+
+_koopa_activate_koopa_paths() {  # {{{1
+    # """
+    # Automatically configure koopa PATH and MANPATH.
+    # @note Updated 2020-02-13.
+    # """
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    _koopa_activate_prefix "$koopa_prefix"
+
+    local koopa_shell
+    koopa_shell="$(_koopa_shell)"
+    _koopa_activate_prefix "${koopa_prefix}/shell/${koopa_shell}"
+
+    if _koopa_is_linux
+    then
+        _koopa_activate_prefix "${koopa_prefix}/os/linux"
+        if _koopa_is_debian
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/debian"
+        elif _koopa_is_fedora
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/fedora"
+        fi
+        if _koopa_is_rhel
+        then
+            _koopa_activate_prefix "${koopa_prefix}/os/rhel"
+        fi
+    fi
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+    _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
+
+    local host_id
+    host_id="$(_koopa_host_id)"
+    _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
+
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
+    _koopa_activate_prefix "${config_prefix}/docker"
+    _koopa_activate_prefix "${config_prefix}/scripts-private"
+
+    return 0
+}
+
+_koopa_activate_llvm() {  # {{{1
     # """
     # Activate LLVM config.
-    # Updated 2020-01-22.
+    # @note Updated 2020-01-22.
     #
     # Note that LLVM 7 specifically is now required to install umap-learn.
     # Current version LLVM 9 isn't supported by numba > llvmlite yet.
@@ -224,10 +428,45 @@ _koopa_activate_llvm() {                                                  # {{{1
     return 0
 }
 
-_koopa_activate_perlbrew() {                                              # {{{1
+_koopa_activate_local_etc_profile() {  # {{{1
+    # """
+    # Source 'profile.d' scripts in '/usr/local/etc'.
+    # @note Updated 2020-02-14.
+    local prefix
+    prefix="$(_koopa_make_prefix)/etc/profile.d"
+    [ -d /usr/local/etc/profile.d ] || return 0
+    local script
+    for script in /usr/local/etc/profile.d/*.sh
+    do
+        if [ -r "$script" ]
+        then
+            # shellcheck source=/dev/null
+            . "$script"
+        fi
+    done
+    return 0
+}
+
+_koopa_activate_macos_python() {
+    # """
+    # Activate macOS Python install.
+    # @note Updated 2020-02-14.
+    # """
+    _koopa_is_macos || return 1
+    [ -z "${VIRTUAL_ENV:-}" ] || return 0
+    local version
+    version="$(_koopa_variable "python")"
+    local minor_version
+    minor_version="$(_koopa_minor_version "$version")"
+    _koopa_add_to_path_start "/Library/Frameworks/Python.framework/\
+Versions/${minor_version}/bin"
+    return 0
+}
+
+_koopa_activate_perlbrew() {  # {{{1
     # """
     # Activate Perlbrew.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Only attempt to autoload for bash or zsh.
     # Delete '~/.perlbrew' directory if you see errors at login.
@@ -245,7 +484,7 @@ _koopa_activate_perlbrew() {                                              # {{{1
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
@@ -254,10 +493,10 @@ _koopa_activate_perlbrew() {                                              # {{{1
     return 0
 }
 
-_koopa_activate_pipx() {                                                  # {{{1
+_koopa_activate_pipx() {  # {{{1
     # """
     # Activate pipx for Python.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     #
     # Customize pipx location with environment variables.
     # https://pipxproject.github.io/pipx/installation/
@@ -290,10 +529,24 @@ _koopa_activate_pipx() {                                                  # {{{1
     return 0
 }
 
-_koopa_activate_pyenv() {                                                 # {{{1
+_koopa_activate_prefix() {  # {{{1
+    # """
+    # Automatically configure PATH and MANPATH for a specified prefix.
+    # @note Updated 2020-02-13.
+    # """
+    local prefix
+    prefix="${1:?}"
+    _koopa_add_to_path_start "${prefix}/sbin"
+    _koopa_add_to_path_start "${prefix}/bin"
+    _koopa_add_to_manpath_start "${prefix}/man"
+    _koopa_add_to_manpath_start "${prefix}/share/man"
+    return 0
+}
+
+_koopa_activate_pyenv() {  # {{{1
     # """
     # Activate Python version manager (pyenv).
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
@@ -308,17 +561,17 @@ _koopa_activate_pyenv() {                                                 # {{{1
     export PYENV_ROOT="$prefix"
     _koopa_activate_prefix "$prefix"
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
-_koopa_activate_rbenv() {                                                 # {{{1
+_koopa_activate_rbenv() {  # {{{1
     # """
     # Activate Ruby version manager (rbenv).
-    # Updated 2019-11-15.
+    # @note Updated 2019-11-15.
     #
     # See also:
     # - https://github.com/rbenv/rbenv
@@ -342,17 +595,33 @@ _koopa_activate_rbenv() {                                                 # {{{1
     export RBENV_ROOT="$prefix"
     _koopa_activate_prefix "$prefix"
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
-_koopa_activate_rust() {                                                  # {{{1
+_koopa_activate_ruby() {  # {{{1
+    # """
+    # Activate Ruby gems.
+    # @note Updated 2020-02-13.
+    # """
+    [ -n "${GEM_HOME:-}" ] && return 0
+    local gem_home
+    gem_home="${HOME}/.gem"
+    if [ -d "$gem_home" ]
+    then
+        _koopa_add_to_path_start "$gem_home"
+        export GEM_HOME="$gem_home"
+    fi
+    return 0
+}
+
+_koopa_activate_rust() {  # {{{1
     # """
     # Activate Rust programming language.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Attempt to locate cargo home and source the env script.
     # This will put the rust cargo programs defined in 'bin/' in the PATH.
@@ -381,7 +650,7 @@ _koopa_activate_rust() {                                                  # {{{1
     [ -r "$script" ] || return 0
     export CARGO_HOME="$cargo_prefix"
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -389,10 +658,10 @@ _koopa_activate_rust() {                                                  # {{{1
     return 0
 }
 
-_koopa_activate_secrets() {                                               # {{{1
+_koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
-    # Updated 2020-01-12.
+    # @note Updated 2020-01-12.
     # """
     local file
     file="${1:-"${HOME}/.secrets"}"
@@ -402,10 +671,10 @@ _koopa_activate_secrets() {                                               # {{{1
     return 0
 }
 
-_koopa_activate_ssh_key() {                                               # {{{1
+_koopa_activate_ssh_key() {  # {{{1
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
-    # Updated 2019-10-29.
+    # @note Updated 2019-10-29.
     #
     # NOTE: SCP will fail unless this is interactive only.
     # ssh-agent will prompt for password if there's one set.
@@ -426,10 +695,35 @@ _koopa_activate_ssh_key() {                                               # {{{1
     return 0
 }
 
-_koopa_activate_venv() {                                                  # {{{1
+_koopa_activate_standard_paths() {  # {{{1
+    # """
+    # Activate standard paths.
+    # @note Updated 2020-02-13.
+    #
+    # Note that here we're making sure local binaries are included.
+    # Inspect '/etc/profile' if system PATH appears misconfigured.
+    #
+    # @seealso
+    # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
+    # """
+    _koopa_add_to_path_end "/usr/local/bin"
+    _koopa_add_to_path_end "/usr/bin"
+    _koopa_add_to_path_end "/bin"
+    _koopa_add_to_path_end "/usr/local/sbin"
+    _koopa_add_to_path_end "/usr/sbin"
+    # > _koopa_add_to_path_start "${HOME}/bin"
+    # > _koopa_add_to_path_start "${HOME}/local/bin"
+    _koopa_add_to_manpath_end "/usr/local/share/man"
+    _koopa_add_to_manpath_end "/usr/share/man"
+    _koopa_add_to_path_start "${HOME}/.local/bin"
+    _koopa_add_to_manpath_start "${HOME}/.local/share/man"
+    return 0
+}
+
+_koopa_activate_venv() {  # {{{1
     # """
     # Activate Python default virtual environment.
-    # Updated 2020-01-24.
+    # @note Updated 2020-01-24.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
@@ -454,10 +748,68 @@ _koopa_activate_venv() {                                                  # {{{1
     script="${prefix}/${name}/bin/activate"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_set_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
     [ "$nounset" -eq 1 ] && set -u
+    return 0
+}
+
+_koopa_activate_xdg() {  # {{{1
+    # """
+    # Activate XDG base directory specification
+    # @note Updated 2020-02-13.
+    #
+    # XDG_RUNTIME_DIR:
+    # - Can only exist for the duration of the user's login.
+    # - Updated every 6 hours or set sticky bit if persistence is desired.
+    # - Should not store large files as it may be mounted as a tmpfs.
+    #
+    # > if [ ! -d "$XDG_RUNTIME_DIR" ]
+    # > then
+    # >     mkdir -pv "$XDG_RUNTIME_DIR"
+    # >     chown "$USER" "$XDG_RUNTIME_DIR"
+    # >     chmod 0700 "$XDG_RUNTIME_DIR"
+    # > fi
+    #
+    # @seealso
+    # - https://developer.gnome.org/basedir-spec/
+    # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
+    # """
+    if [ -z "${XDG_CACHE_HOME:-}" ]
+    then
+        XDG_CACHE_HOME="${HOME}/.cache"
+    fi
+    if [ -z "${XDG_CONFIG_HOME:-}" ]
+    then
+        XDG_CONFIG_HOME="${HOME}/.config"
+    fi
+    if [ -z "${XDG_DATA_HOME:-}" ]
+    then
+        XDG_DATA_HOME="${HOME}/.local/share"
+    fi
+    if [ -z "${XDG_RUNTIME_DIR:-}" ]
+    then
+        XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        if _koopa_is_macos
+        then
+            XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
+        fi
+    fi
+    if [ -z "${XDG_DATA_DIRS:-}" ]
+    then
+        XDG_DATA_DIRS="/usr/local/share:/usr/share"
+    fi
+    if [ -z "${XDG_CONFIG_DIRS:-}" ]
+    then
+        XDG_CONFIG_DIRS="/etc/xdg"
+    fi
+    export XDG_CACHE_HOME
+    export XDG_CONFIG_DIRS
+    export XDG_CONFIG_HOME
+    export XDG_DATA_DIRS
+    export XDG_DATA_HOME
+    export XDG_RUNTIME_DIR
     return 0
 }

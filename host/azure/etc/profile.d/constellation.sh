@@ -1,11 +1,13 @@
 #!/bin/sh
 
+# """
 # Constellation Pharma Azure VM shared shell configuration.
 # Updated 2020-01-15 by Michael Steinbaugh.
+# """
 
 
 
-# Notes                                                                     {{{1
+# Notes  {{{1
 # ==============================================================================
 
 # Do not set 'LD_LIBRARY_PATH'.
@@ -16,16 +18,17 @@
 
 
 
-# Koopa                                                                     {{{1
+# Koopa  {{{1
 # ==============================================================================
 
+export KOOPA_APP_PREFIX="/n/app"
 export KOOPA_CONFIG="constellation-azure"
 export KOOPA_USERS_NO_EXTRA="bioinfo barbara.bryant"
 export KOOPA_USERS_SKIP="phil.drapeau"
 
 
 
-# Temporary SSD                                                             {{{1
+# Temporary SSD  {{{1
 # ==============================================================================
 
 if [ -e "/mnt/resource" ]
@@ -35,7 +38,7 @@ fi
 
 
 
-# Azure Files                                                               {{{1
+# Azure Files  {{{1
 # ==============================================================================
 
 export D1="/mnt/azbioinfoseq01"
@@ -46,18 +49,18 @@ export D5="/mnt/azbioinfoseq05"
 
 
 
-# Cell Ranger                                                               {{{1
+# Cell Ranger  {{{1
 # ==============================================================================
 
-# > PATH="${PATH}:/n/app/cellranger/2.1.0"
-# > PATH="${PATH}:/n/app/cellranger/3.0.0"
-# > PATH="${PATH}:/n/app/cellranger/3.0.2"
-PATH="${PATH}:/n/app/cellranger/3.1.0"
-PATH="${PATH}:/n/app/cellranger-atac/1.1.0"
+# > PATH="${PATH}:${KOOPA_APP_PREFIX}/cellranger/2.1.0"
+# > PATH="${PATH}:${KOOPA_APP_PREFIX}/cellranger/3.0.0"
+# > PATH="${PATH}:${KOOPA_APP_PREFIX}/cellranger/3.0.2"
+PATH="${PATH}:${KOOPA_APP_PREFIX}/cellranger/3.1.0"
+PATH="${PATH}:${KOOPA_APP_PREFIX}/cellranger-atac/1.1.0"
 
 
 
-# Oracle                                                                    {{{1
+# Oracle  {{{1
 # ==============================================================================
 
 # Configuration moved to '/usr/local/lib64/R/etc/Renviron.site' file.
@@ -65,19 +68,15 @@ PATH="${PATH}:/n/app/cellranger-atac/1.1.0"
 
 
 
-# Shiny                                                                     {{{1
+# Shiny  {{{1
 # ==============================================================================
 
 # Consider setting this in 'Renviron.site' instead.
 export SHINYAPPDATA="/mnt/azbioifnoseq05/appdata"
 
-alias shinyrestart="sudo systemctl restart shiny-server"
-alias shinystart="sudo systemctl start shiny-server"
-alias shinystatus="sudo systemctl status shiny-server"
 
 
-
-# Custom programs                                                           {{{1
+# Custom programs  {{{1
 # ==============================================================================
 
 PATH="${PATH}:/mnt/azbioinfoseq01/projects/checksum"

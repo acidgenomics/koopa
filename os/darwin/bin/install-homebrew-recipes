@@ -3,31 +3,52 @@ set -Eeu -o pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh"
+source "${script_dir}/../include/header.sh" --no-header-checks
+
+# """
+# Install XQuartz 2.7.9 manually instead of using xquartz cask.
+#
+# LLVM takes up 4 GB of disk space but is required for some Python packages.
+# In particular, if we want to install umap-learn, this is now required.
+
+# Use osgeo-gdal instead of regular gdal.
+# This gets updated more regularly.
+
+# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
+#
+# I hit some permissions issues with the 'rustup' cellar symlink installed at
+# '/usr/local/bin/rustup' that doesn't occur when running the official script.
+#
+# And be sure not to install 'rust' alongside 'rustup-init'.
+# """
 
 _koopa_h1 "Installing Homebrew recipes."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed brew
 
+log_file="$(_koopa_tmp_log_file)"
+
 export HOMEBREW_FORCE_BOTTLE=1
 
-# Taps                                                                      {{{1
+# Taps  {{{1
 # ==============================================================================
 
 _koopa_h2 "Updating taps."
 brew tap mongodb/brew
 brew tap osgeo/osgeo4mac
 
-# Casks                                                                     {{{1
+# Casks  {{{1
 # ==============================================================================
 
-# Install XQuartz 2.7.9 manually instead of using xquartz cask.
-
 _koopa_h2 "Installing casks."
+
+# > brew cask remove --force safari-technology-preview
+
 installed_casks="$(brew cask list)"
 
 casks=(
+    adoptopenjdk  # igv
     alacritty
     calibre
     carbon-copy-cloner
@@ -39,19 +60,21 @@ casks=(
     osxfuse
     rstudio
 )
-for cask in "${casks[@]}"
-do
-    if echo "$installed_casks" | grep -Eq "^${cask}$"
-    then
-        _koopa_note "'${cask}' is already installed."
-        continue
-    fi
-    brew cask install "$cask" --no-quarantine
-done
+
+(
+    for cask in "${casks[@]}"
+    do
+        if echo "$installed_casks" | grep -Eq "^${cask}$"
+        then
+            _koopa_note "'${cask}' is already installed."
+            continue
+        fi
+        brew cask install --force --no-quarantine "$cask"
+    done
+) 2>&1 | tee -a "$log_file"
 
 casks=(
     1password
-    adoptopenjdk  # igv
     alfred
     aspera-connect
     authy
@@ -82,7 +105,6 @@ casks=(
     onyx
     photosweeper-x
     r
-    safari-technology-preview
     scrivener
     skype
     spillo
@@ -90,7 +112,7 @@ casks=(
     superduper
     textmate
     tiny-player
-    torbrowser
+    tor-browser
     tower
     transmit
     tunnelblick
@@ -99,33 +121,43 @@ casks=(
     wine-stable
     xld
 )
-for cask in "${casks[@]}"
-do
-    if echo "$installed_casks" | grep -Eq "^${cask}$"
-    then
-        _koopa_note "'${cask}' is already installed."
-        continue
-    fi
-    brew cask install "$cask"
-done
 
-# Brews                                                                     {{{1
+(
+    for cask in "${casks[@]}"
+    do
+        if echo "$installed_casks" | grep -Eq "^${cask}$"
+        then
+            _koopa_note "'${cask}' is already installed."
+            continue
+        fi
+        brew cask install --force "$cask"
+    done
+) 2>&1 | tee -a "$log_file"
+
+# Brews  {{{1
 # ==============================================================================
 
-# LLVM takes up 4 GB of disk space but is required for some Python packages.
-# In particular, if we want to install umap-learn, this is now required.
-
-# Use osgeo-gdal instead of regular gdal.
-# This gets updated more regularly.
-
-# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
-#
-# I hit some permissions issues with the 'rustup' cellar symlink installed at
-# '/usr/local/bin/rustup' that doesn't occur when running the official script.
-#
-# And be sure not to install 'rust' alongside 'rustup-init'.
-
 _koopa_h2 "Installing brews."
+
+# This is needed currently to install R sf package from source.
+brew remove --force \
+    osgeo-gdal \
+    osgeo-hdf4 \
+    osgeo-libgeotiff \
+    osgeo-libkml \
+    osgeo-libspatialite \
+    osgeo-netcdf \
+    osgeo-postgresql \
+    osgeo-proj
+
+# Use rustup / cargo to manage these Rust packages instead:
+brew remove --force \
+    broot \
+    exa \
+    fd \
+    ripgrep \
+    xsv
+
 installed_brews="$(brew list)"
 brews=(
     # Priority
@@ -143,28 +175,27 @@ brews=(
     autojump
     automake
     awscli
+    azure-cli
     bash-completion
     bfg
-    broot
     ccache
     circleci
     cmake
     convmv
     coreutils
     curl
-    exa
     exiftool
-    fd
     ffmpeg
     findutils
-    flac
     fzf
     gcc
+    gdal
     git
     git-lfs
     go
     gsl
     hdf5
+    htop
     hub
     igraph
     imagemagick
@@ -181,6 +212,8 @@ brews=(
     libxml2
     libxslt
     llvm
+    lua
+    luarocks
     mariadb-connector-c
     mas
     mongodb-community
@@ -189,24 +222,25 @@ brews=(
     node
     open-mpi
     openblas
-    osgeo-gdal
     pandoc
     pandoc-citeproc
     pandoc-crossref
     parallel
+    pass
     pkg-config
     podofo
+    proj
     protobuf
     pyenv
     python
-    python@2
     rbenv
-    ripgrep
+    ruby
     rsync
     ruby-build
     screen
     shellcheck
     shellharden
+    shunit2
     sox
     sqlite
     sshfs
@@ -224,18 +258,23 @@ brews=(
     # External
     vitorgalvao/tiny-scripts/cask-repair
 )
-for brew in "${brews[@]}"
-do
-    name="$(basename "$brew")"
-    if echo "$installed_brews" | grep -Eq "^${name}$"
-    then
-        _koopa_note "'${name}' is already installed."
-        continue
-    fi
-    brew install "$brew"
-done
+
+(
+    for brew in "${brews[@]}"
+    do
+        name="$(basename "$brew")"
+        if echo "$installed_brews" | grep -Eq "^${name}$"
+        then
+            _koopa_note "'${name}' is already installed."
+            continue
+        fi
+        brew install "$brew"
+    done
+) 2>&1 | tee -a "$log_file"
 
 brew unlink python
-brew unlink python@2
+
+# > brew link gdal
+# > brew link proj
 
 _koopa_success "Installation of Homebrew recipes was successful."

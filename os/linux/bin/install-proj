@@ -20,7 +20,7 @@ _koopa_assert_is_installed sqlite3
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 make_prefix="$(_koopa_make_prefix)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 # pkg-config doesn't detect sqlite3 library correctly
 #
@@ -53,7 +53,7 @@ export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
         --prefix="$prefix"
     make --jobs="$jobs"
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Useful flags:
+# samtools view --help
+#
+# -1                    use fast BAM compression (implies -b)
+# -@, --threads         number of threads
+# -C                    output CRAM (requires -T)
+# -O, --output-fmt      specify output format (SAM, BAM, CRAM)
+# -T, --reference       reference sequence FASTA file
+# -b                    output BAM
+# -o FILE               output file name [stdout]
+# -u                    uncompressed BAM output (implies -b)
+# """
+
+keep_sam=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --keep-sam)
+            keep_sam=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+dir="${1:-.}"
+_koopa_assert_is_dir "$dir"
+dir="$(realpath "$dir")"
+
+# Pipe GNU find into array.
+sam_files=()
+while IFS= read -r -d $'\0'
+do
+    sam_files+=("$REPLY")
+done < <( \
+    find "$dir" \
+        -maxdepth 3 \
+        -mindepth 1 \
+        -type f \
+        -iname "*.sam" \
+        -print0 \
+    | sort -z \
+)
+
+# Error if file array is empty.
+if [[ "${#sam_files[@]}" -eq 0 ]]
+then
+    _koopa_stop "No SAM files detected in '${dir}'."
+fi
+
+_koopa_h1 "Converting SAM files in '${dir}' to BAM format."
+
+_koopa_activate_conda_env samtools
+_koopa_info "samtools: '$(_koopa_which_realpath samtools)'."
+
+case "$keep_sam" in
+    0)
+        _koopa_note "SAM files will be deleted."
+        ;;
+    1)
+        _koopa_note "SAM files will be preserved."
+        ;;
+esac
+
+for sam_file in "${sam_files[@]}"
+do
+    bam_file="${sam_file%.sam}.bam"
+    _koopa_sam_to_bam \
+        --input-sam="$sam_file" \
+        --output-bam="$bam_file"
+    if [[ "$keep_sam" -eq 0 ]]
+    then
+        rm -v "$sam_file"
+    fi
+done

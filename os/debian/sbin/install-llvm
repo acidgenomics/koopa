@@ -8,7 +8,12 @@ source "${script_dir}/../include/header.sh"
 # """
 # LLVM (clang)
 # https://apt.llvm.org/
-# Note that regular llvm recipe currently installs version 6.
+#
+# Automatic script:
+# https://apt.llvm.org/llvm.sh
+# The 'llvm.sh' install script contains the GPG signing keys.
+#
+# Note that default llvm recipe currently installs version 6.
 # """
 
 if [[ -n "${LLVM_CONFIG:-}" ]]
@@ -17,27 +22,29 @@ then
     exit 0
 fi
 
-_koopa_h1 "Installing LLVM via apt.llvm.org."
+_koopa_h1 "Installing LLVM."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-_koopa_assert_is_installed wget
+
+_koopa_apt_import_llvm_key
+_koopa_apt_add_llvm_repo
 
 name="llvm"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
-
 version="$(_koopa_variable "$name")"
 major_version="$(_koopa_major_version "$version")"
 
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    file="llvm.sh"
-    url="https://apt.llvm.org/${file}"
-    _koopa_download "$url"
-    chmod +x "$file"
-    sudo "./${file}" "$major_version"
-)
-
-rm -fr "$tmp_dir"
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get \
+        --fix-missing \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install \
+            "clang-${major_version}" \
+            "clangd-${major_version}" \
+            "lld-${major_version}" \
+            "lldb-${major_version}"
 
 _koopa_success "Installation of ${name} ${version} was successful."

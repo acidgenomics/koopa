@@ -29,7 +29,7 @@ _koopa_assert_is_installed java javac tex
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 major_version="$(_koopa_major_version "$version")"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -60,7 +60,7 @@ tmp_dir="$(_koopa_tmp_dir)/${name}"
     make --jobs="$jobs"
     # > make check
     make install
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 

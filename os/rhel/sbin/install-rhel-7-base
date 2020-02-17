@@ -10,65 +10,139 @@ source "${script_dir}/../include/header.sh"
 # LLVM 8+ releases aren't currently available through yum.
 # """
 
-_koopa_h2 "Installing Red Hat Enterprise Linux (RHEL) 7 base system."
+all=0
+build_dep=0
+dev=0
+extra=0
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed sudo
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        --build-dep)
+            build_dep=1
+            shift 1
+            ;;
+        --dev)
+            dev=1
+            shift 1
+            ;;
+        --dist-upgrade)
+            # Passthrough to 'install-fedora-base'.
+            shift 1
+            ;;
+        --extra)
+            extra=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
 
+if [[ "$all" -eq 1 ]]
+then
+    build_dep=1
+    dev=1
+    extra=1
+fi
+
+_koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 7 base system."
+
+install-fedora-base "$@"
+
+# default  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing default packages."
 enable-epel-7
-install-fedora-base
 install-yum-cron
 
-sudo yum -y install \
-    'llvm7*' \
-    ImageMagick-c++-devel \
-    R \
-    docbook2X \
-    file-devel \
-    fish \
-    gdal \
-    gdal-devel \
-    geos \
-    geos-devel \
-    hdf5 \
-    hdf5-devel \
-    java-latest-openjdk \
-    java-latest-openjdk-devel \
-    leptonica-devel \
-    libgit2-devel \
-    libsodium-devel \
-    libssh2-devel \
-    lua-devel \
-    lua-filesystem \
-    lua-posix \
-    neovim \
-    pandoc \
-    pandoc-citeproc \
-    parallel \
-    proj \
-    proj-devel \
-    sshpass \
-    tesseract-devel \
-    udunits2-devel \
-    v8-devel
+# developer  {{{1
+# ==============================================================================
 
-# > sudo yum-builddep -y \
-# >     R \
-# >     bash \
-# >     coreutils \
-# >     emacs \
-# >     fish \
-# >     gdal \
-# >     git \
-# >     gnupg2 \
-# >     gsl-devel \
-# >     neovim \
-# >     openssl \
-# >     proj \
-# >     python \
-# >     tmux \
-# >     vim \
-# >     zsh
+if [[ "$dev" -eq 1 ]]
+then
+    _koopa_h2 "Installing developer libraries."
+    pkgs=(
+        'llvm7*'
+        ImageMagick-c++-devel
+        file-devel
+        gdal-devel
+        geos-devel
+        hdf5-devel
+        java-latest-openjdk-devel
+        leptonica-devel
+        libgit2-devel
+        libsodium-devel
+        libssh2-devel
+        lua-devel
+        lua-filesystem
+        lua-posix
+        proj-devel
+        tesseract-devel
+        udunits2-devel
+        v8-devel
+    )
+    sudo yum -y install "${pkgs[@]}"
+fi
+
+# extra  {{{1
+# ==============================================================================
+
+if [[ "$extra" -eq 1 ]]
+then
+    _koopa_h2 "Installing extra recommended packages."
+    pkgs=(
+        R
+        docbook2X
+        fish
+        gdal
+        geos
+        hdf5
+        neovim
+        pandoc
+        pandoc-citeproc
+        parallel
+        proj
+        sshpass
+    )
+    sudo yum -y install "${pkgs[@]}"
+fi
+
+# build-dep  {{{1
+# ==============================================================================
+
+if [[ "$build_dep" -eq 1 ]]
+then
+    _koopa_h2 "Installing build dependencies with 'yum-builddep'."
+    pkgs=(
+        R
+        bash
+        coreutils
+        emacs
+        fish
+        gdal
+        git
+        gnupg2
+        gsl-devel
+        neovim
+        openssl
+        proj
+        python
+        tmux
+        vim
+        zsh
+    )
+    sudo yum-builddep -y "${pkgs[@]}"
+fi
+
+# Clean up and fixes  {{{1
+# ==============================================================================
 
 # Git: docbook2x-texi is required for 'make doc' to run cleanly.
 #

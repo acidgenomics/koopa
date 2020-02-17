@@ -20,11 +20,12 @@ _koopa_h1 "Installing ${name} ${version} at '${cellar_prefix}'."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
+_koopa_activate_go
 _koopa_assert_is_installed go
 
 app_prefix="$(_koopa_app_prefix)/${name}/${version}"
 jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)/${name}"
+tmp_dir="$(_koopa_tmp_dir)"
 
 goroot="$(go env GOROOT)"
 _koopa_info "Go is installed at '${goroot}'."
@@ -38,7 +39,7 @@ _koopa_prefix_mkdir "$cellar_prefix"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     make --jobs="$jobs"
-    make test
+    # > make test
     # This will copy fzf binary from 'target/' to 'bin/' inside tmp dir.
     # Note that this step does not copy to '/usr/bin/'.
     make install
@@ -47,7 +48,7 @@ _koopa_prefix_mkdir "$cellar_prefix"
     # Following approach used in Homebrew recipe here.
     rm -fr .[[:alnum:]]* src target
     cp -rv . "$app_prefix"
-)
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
@@ -65,6 +66,9 @@ ln -fnsv \
     "${app_prefix_dn}/."
 
 _koopa_link_cellar "$name" "$version"
+
+# Clean up after fzf/go, which creates files in user home.
+_koopa_rm "${HOME}/go"
 
 _koopa_success "Installation of ${name} was successful."
 _koopa_note "Reload the shell to complete activation."

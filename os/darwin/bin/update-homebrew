@@ -31,6 +31,20 @@ then
     brew cask outdated | xargs brew cask reinstall
 fi
 
+# Unversioned casks that don't auto-update correctly:
+# - google-cloud-sdk
+#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/
+#       google-cloud-sdk.rb
+#
+# Keep an eye on:
+# - bbedit
+#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/bbedit.rb
+# - gpg-suite
+#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/gpg-suite.rb
+#   https://gpgtools.org/
+# - vlc
+#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/vlc.rb
+
 _koopa_h2 "Running cleanup."
 
 brew cleanup -s

@@ -1,25 +1,26 @@
+# """
 # R for macOS Makevars configuration.
 # Necessary for building packages from source.
-# Updated 2019-11-20.
+# Updated 2020-01-28.
 #
 # See also:
 # - https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos/
 # - https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-FAQ.pdf
 # - https://github.com/rmacoslib/r-macos-rtools/blob/master/scripts/postinstall
-
+#
+# Test installation:
+# > install.packages("Rcpp", type = "source")
+# > install.packages("RcppArmadillo", type = "source")
+#
 # Mojave CPP headers fix.
+# Note that this isn't necessary (and won't work) for Catalina.
 # > softwareupdate --list
 # > softwareupdate --install -a
 # > sudo rm -rf /Library/Developer/CommandLineTools
 # > xcode-select --install
 # > sudo xcodebuild -license accept
 # > sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-
-# > CCFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
-# > CFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
-# > CPPFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include $(CXX_TYPE)"
-# > CXXFLAGS="-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
-# > SHLIB_CXXLDFLAGS+="-Wl,-rpath,${R_HOME}/lib ${R_HOME}/lib/libc++abi.1.dylib"
+# """
 
 CC=/usr/local/clang7/bin/clang
 CXX11=/usr/local/clang7/bin/clang++
@@ -29,3 +30,11 @@ CXX1X=/usr/local/clang7/bin/clang++
 CXX98=/usr/local/clang7/bin/clang++
 CXX=/usr/local/clang7/bin/clang++
 LDFLAGS=-L/usr/local/clang7/lib
+
+CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
+
+SHLIB_CXXLDFLAGS+=-Wl,-rpath,\${R_HOME}/lib \${R_HOME}/lib/libc++abi.1.dylib
+SHLIB_CXX14LDFLAGS+=-Wl,-rpath,\${R_HOME}/lib \${R_HOME}/lib/libc++abi.1.dylib

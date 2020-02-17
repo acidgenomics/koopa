@@ -6,20 +6,24 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+name="doom"
+emacs_home="${HOME}/.emacs.d"
+install_dir="${emacs_home}-${name}"
+
+_koopa_exit_if_dir "$install_dir"
+
+_koopa_h1 "Installing ${name} at '${install_dir}."
+
 _koopa_assert_has_no_args "$@"
 
-name="doom"
-repo="https://github.com/hlissner/doom-emacs"
-emacs_home="${HOME}/.emacs.d"
+(
+    repo="https://github.com/hlissner/doom-emacs"
+    git clone "$repo" "$install_dir"
+    link-emacs "$name"
+    exe_file="${install_dir}/bin/doom"
+    "${exe_file}" quickstart
+    "${exe_file}" refresh
+    "${exe_file}" doctor
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-install_dir="${emacs_home}-${name}"
-_koopa_assert_is_not_dir "$install_dir"
-
-exe_file="${install_dir}/bin/doom"
-
-git clone "$repo" "$install_dir"
-link-emacs "$name"
-
-"${exe_file}" quickstart
-"${exe_file}" refresh
-"${exe_file}" doctor
+_koopa_success "Installation of ${name} was successful."
