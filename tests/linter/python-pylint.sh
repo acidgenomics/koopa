@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# shellcheck source=/dev/null
-source "$(koopa header bash)"
-
 # """
 # Run pylint on all Python scripts.
 # Updated 2020-02-16.
 # """
+
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 _koopa_exit_if_not_installed pylint
 

@@ -6,7 +6,7 @@
 # """
 
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 # shellcheck disable=SC2016
 illegal_strings=(
