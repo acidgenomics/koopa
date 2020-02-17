@@ -2,7 +2,7 @@
 
 # """
 # Find illegal strings, such as FIXME, TODO, and messed up git merges.
-# Updated 2020-02-09.
+# Updated 2020-02-16.
 #
 # Use find first, pass to array, and then call grep.
 # This is better supported across platforms.
