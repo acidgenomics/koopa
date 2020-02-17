@@ -9,6 +9,7 @@
 source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 _koopa_exit_if_not_installed R
+_koopa_exif_if_r_package_not_installed lintr
 
 # Find scripts by file extension.
 ext="R"
