@@ -12,7 +12,7 @@ config=0
 force=0
 private=0
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -36,12 +36,12 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 
 source_name="$1"
 symlink_name="${2:-}"
@@ -86,25 +86,25 @@ else
 fi
 
 # Inform the user when nuking a broken symlink.
-if [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]
+# SC2235: Use { ..; } instead of (..) to avoid subshell overhead.
+# This is the recommended approach for grouping multiple test commands.
+if [[ "$force" -eq 1 ]] ||
+    { [[ -L "$symlink_path" ]] && [[ ! -e "$symlink_path" ]]; }
 then
-    _koopa_h1 "Overwriting broken link: '${symlink_path}'."
-    rm -fv "$symlink_path"
-fi
-
-# We're allowing force overwrite of existing symlinks only.
-if [[ -L "$symlink_path" ]] &&
-    [[ -f "$symlink_path" || -d "$symlink_path" ]] &&
-    [[ "$force" -eq 0 ]]
+    rm -frv "$symlink_path"
+elif [[ -e "$symlink_path" ]]
 then
-    _koopa_stop "Existing symlink: '${symlink_path}'."
-    exit 1
-elif [[ ! -L "$symlink_path" ]] && [[ -e "$symlink_path" ]]
-then
-    _koopa_stop "Existing file: '${symlink_path}'."
+    _koopa_stop "Existing dotfile: '${symlink_path}'."
     exit 1
 fi
 
-_koopa_h1 "Symlinking '$(basename "$symlink_path")'."
-rm -fv "$symlink_path"
+_koopa_info "Symlinking '$(basename "$symlink_path")'."
+
+# Note that 'ln -fnsv' fails to create subdirectories automatically.
+symlink_dn="$(dirname "$symlink_path")"
+if [[ "$symlink_dn" != "$HOME" ]]
+then
+    mkdir -pv "$symlink_dn"
+fi
+
 ln -fnsv "$source_path" "$symlink_path"

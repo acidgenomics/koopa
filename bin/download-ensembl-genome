@@ -13,10 +13,21 @@ from textwrap import dedent
 
 # pylint: disable=wrong-import-position
 
-sys.path.insert(0, os.getenv("KOOPA_PREFIX"))
-from pykoopa.genome import ensembl_version, tx2gene_from_fasta  # noqa
-from pykoopa.syntactic import kebab_case  # noqa
-from pykoopa.sys import download, eprint, paste_url  # noqa
+KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
+PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
+sys.path.insert(0, PYTHON_PREFIX)
+
+from koopa.argparse import dir_path  # noqa:E402
+from koopa.genome import tx2gene_from_fasta  # noqa:E402
+from koopa.genome.ensembl import (
+    download_ensembl_genome,
+    download_ensembl_gff,
+    download_ensembl_gtf,
+    download_ensembl_transcriptome,
+    ensembl_version,
+)  # noqa:E402
+from koopa.syntactic import kebab_case  # noqa:E402
+from koopa.sys import eprint, paste_url  # noqa:E402
 
 # pylint: enable=wrong-import-position
 
@@ -77,7 +88,7 @@ see also:
 
 note:
     Python script.
-    Updated 2019-10-11.
+    Updated 2020-02-09.
 """
 
 # pylint: disable=invalid-name,protected-access,redefined-builtin
@@ -132,20 +143,21 @@ optional.add_argument(
     "--release", type=str, help="release version (e.g. '97')"
 )
 optional.add_argument(
+    "--output-dir", type=dir_path, default=".", help="output directory"
+)
+optional.add_argument(
     "--decompress",
     action="store_true",
     help="decompress, but keep the compressed file",
 )
 parser._action_groups.append(optional)
-if len(sys.argv) == 1:
-    parser.print_help(sys.stderr)
-    sys.exit(1)
 args = parser.parse_args()
 
 annotation = args.annotation
 build = args.build
 decompress = args.decompress
 organism = args.organism
+output_dir = args.output_dir
 release = args.release
 type = args.type
 
@@ -165,135 +177,78 @@ if release is None:
     release = ensembl_version()
 
 release_url = paste_url(base_url, "release-" + release)
-output_dir = kebab_case(
+
+output_basename = kebab_case(
     organism + " " + build + " " + "ensembl" + " " + release
 )
-
-# pylint: enable=invalid-name,protected-access,redefined-builtin
-
-
-def download_genome(release_url, output_dir, decompress):
-    """
-    Download genome FASTA.
-    """
-    output_dir = os.path.join(output_dir, "genome")
-    base_url = paste_url(release_url, "fasta", organism.lower(), "dna")
-    readme_url = paste_url(base_url, "README")
-    checksums_url = paste_url(base_url, "CHECKSUMS")
-    if organism in ("Homo_sapiens", "Mus_musculus"):
-        assembly = "primary_assembly"
-    else:
-        assembly = "toplevel"
-    fasta_url = paste_url(
-        base_url, organism + "." + build + ".dna." + assembly + ".fa.gz"
-    )
-    download(url=readme_url, output_dir=output_dir)
-    download(url=checksums_url, output_dir=output_dir)
-    download(url=fasta_url, output_dir=output_dir, decompress=decompress)
-
-
-def download_transcriptome(release_url, output_dir, decompress):
-    """
-    Download transcriptome FASTA.
-    """
-    output_dir = os.path.join(output_dir, "transcriptome")
-    base_url = paste_url(release_url, "fasta", organism.lower(), "cdna")
-    readme_url = paste_url(base_url, "README")
-    checksums_url = paste_url(base_url, "CHECKSUMS")
-    fasta_url = paste_url(base_url, organism + "." + build + ".cdna.all.fa.gz")
-    download(url=readme_url, output_dir=output_dir)
-    download(url=checksums_url, output_dir=output_dir)
-    download(url=fasta_url, output_dir=output_dir, decompress=decompress)
-
-
-def download_gtf(release_url, output_dir, decompress):
-    """
-    Download GTF file.
-    """
-    output_dir = os.path.join(output_dir, "gtf")
-    base_url = paste_url(release_url, "gtf", organism.lower())
-    readme_url = paste_url(base_url, "README")
-    checksums_url = paste_url(base_url, "CHECKSUMS")
-    gtf_url = paste_url(
-        base_url, organism + "." + build + "." + release + ".gtf.gz"
-    )
-    download(url=readme_url, output_dir=output_dir)
-    download(url=checksums_url, output_dir=output_dir)
-    download(url=gtf_url, output_dir=output_dir, decompress=decompress)
-    if organism in ("Homo_sapiens", "Mus_musculus"):
-        gtf_patch_url = paste_url(
-            base_url,
-            organism
-            + "."
-            + build
-            + "."
-            + release
-            + ".chr_patch_hapl_scaff.gtf.gz",
-        )
-        download(
-            url=gtf_patch_url, output_dir=output_dir, decompress=decompress
-        )
-
-
-def download_gff(release_url, output_dir, decompress):
-    """
-    Download GFF3 file.
-    """
-    output_dir = os.path.join(output_dir, "gff")
-    base_url = paste_url(release_url, "gff3", organism.lower())
-    readme_url = paste_url(base_url, "README")
-    checksums_url = paste_url(base_url, "CHECKSUMS")
-    gff_url = paste_url(
-        base_url, organism + "." + build + "." + release + ".gff3.gz"
-    )
-    download(url=readme_url, output_dir=output_dir)
-    download(url=checksums_url, output_dir=output_dir)
-    download(url=gff_url, output_dir=output_dir, decompress=decompress)
-    if organism in ("Homo sapiens", "Mus musculus"):
-        gtf_patch_url = paste_url(
-            base_url,
-            organism
-            + "."
-            + build
-            + "."
-            + release
-            + ".chr_patch_hapl_scaff.gff3.gz",
-        )
-        download(
-            url=gtf_patch_url, output_dir=output_dir, decompress=decompress
-        )
-
+output_dir = os.path.join(os.path.realpath(output_dir), output_basename)
 
 if type == "genome":
-    download_genome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_genome(
+        organism=organism,
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif type == "transcriptome":
-    download_transcriptome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_transcriptome(
+        organism=organism,
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif type == "all":
-    download_genome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_genome(
+        organism=organism,
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
-    download_transcriptome(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_transcriptome(
+        organism=organism,
+        build=build,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 
 if annotation == "gtf":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_gtf(
+        organism=organism,
+        build=build,
+        release=release,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif annotation == "gff":
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_gff(
+        organism=organism,
+        build=build,
+        release=release,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 elif annotation == "all":
-    download_gtf(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_gtf(
+        organism=organism,
+        build=build,
+        release=release,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
-    download_gff(
-        release_url=release_url, output_dir=output_dir, decompress=decompress
+    download_ensembl_gff(
+        organism=organism,
+        build=build,
+        release=release,
+        release_url=release_url,
+        output_dir=output_dir,
+        decompress=decompress,
     )
 
 if type != "genome":

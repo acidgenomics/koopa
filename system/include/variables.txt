@@ -1,44 +1,53 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa_date="2020-01-27"
+koopa-date="2020-02-16"
 
 
 
-# Program versions                                                          {{{1
+# Globals  {{{1
+# ==============================================================================
+
+gnu-mirror="https://ftpmirror.gnu.org"
+
+
+
+# Program versions  {{{1
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
 anaconda3="2019.10"
-
-# https://github.com/wting/autojump/releases
-autojump="22.5.3"
 
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
 aspera="3.9.7"
 
+# https://github.com/wting/autojump/releases
+autojump="22.5.3"
+
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
+aws-cli="2.0.0"
+
+# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+azure-cli="2.0.81"
+
 # https://www.gnu.org/software/bash/
-# https://ftp.gnu.org/gnu/bash/
-# Note that this requires patches.
-bash="5.0.11"
+# Note that minor version represents patches.
+bash="5.0.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
 # Note that stable version currently still has alpha "a" tag in release.
-bcbio-nextgen="1.1.9a"
+bcbio-nextgen="1.2.0"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
 
-# http://bioconductor.org/
-bioconductor="3.10"
-
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.12.0"
+broot="0.13.2"
 
 # Apple Xcode version
 # https://developer.apple.com/xcode/
@@ -48,14 +57,16 @@ clang="11.0.0"
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
 # https://docs.conda.io/projects/conda/en/latest/user-guide/install/
-conda="4.8.1"
+conda="4.8.2"
 
 # https://www.gnu.org/software/coreutils/
-# https://ftp.gnu.org/gnu/coreutils/
 coreutils="8.31"
 
 # https://docs.docker.com/install/
-docker="19.03.5"
+docker="19.03.6"
+
+# https://github.com/docker/docker-credential-helpers/releases
+docker-credential-pass="0.6.3"
 
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
@@ -70,12 +81,11 @@ fd="7.4.0"
 fzf="0.20.0"
 
 # https://www.gnu.org/software/findutils/
-# https://ftp.gnu.org/gnu/findutils/
 findutils="4.7.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.0.2"
+fish="3.1.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
@@ -84,6 +94,9 @@ gdal="3.0.2"
 # https://github.com/jsh58/Genrich/releases
 genrich="0.6"
 
+# https://github.com/libgeos/geos/releases
+geos="3.8.0"
+
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.25.0"
@@ -91,15 +104,17 @@ git="2.25.0"
 # https://golang.org/dl/
 go="1.13.4"
 
+# https://cloud.google.com/sdk/install
+google-cloud-sdk="280.0.0"
+
 # https://www.gnu.org/software/gsl/
-# http://mirrors.syringanetworks.net/gnu/gsl/
 gsl="2.6"
 
 # https://www.hdfgroup.org/downloads/hdf5
 hdf5="1.10.6"
 
 # https://brew.sh/
-homebrew="2.1.16"
+homebrew="2.2.5"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -145,11 +160,14 @@ oracle-instantclient="19.5.0.0.0-1"
 # https://pandoc.org/releases.html
 pandoc="2.7.3"
 
+# https://www.passwordstore.org/
+pass="1.7.3"
+
 # https://www.perl.org/get.html
 perl="5.30.1"
 
 # https://perlbrew.pl/
-perlbrew="0.87"
+perlbrew="0.88"
 
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
@@ -158,13 +176,13 @@ perl-file-rename="1.10"
 picard="2.21.1"
 
 # https://pypi.org/project/pip/
-pip="20.0.1"
+pip="20.0.2"
 
 # https://pypi.org/project/pipx/
 pipx="0.15.1.3"
 
 # https://proj.org/
-proj="6.3.0"
+proj="6.3.1"
 
 # https://github.com/pyenv/pyenv
 pyenv="1.2.16"
@@ -196,19 +214,25 @@ rstudio-server="1.2.5019"
 rstudio-server-pro="1.2.5019-6"
 
 # https://www.ruby-lang.org/en/downloads/releases/
-ruby="2.6.5"
+ruby="2.6.5p"
 
 # https://www.rust-lang.org/
-rust="1.40.0"
+rust="1.41.0"
 
 # https://rustup.rs/
 rustup="1.21.1"
+
+# https://www.gnu.org/software/screen/
+screen="4.8.0"
 
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.7.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
 shiny-server="1.5.12.933"
+
+# https://github.com/kward/shunit2/releases
+shunit2="2.1.7"
 
 # https://github.com/sylabs/singularity/releases
 singularity="3.5.0"
@@ -240,10 +264,10 @@ zsh="5.7.1"
 
 
 
-# Bundle versions                                                           {{{1
+# Bundle versions  {{{1
 # ==============================================================================
 
-# GnuPG                                                                     {{{2
+# GnuPG  {{{2
 # https://gnupg.org/download/index.html
 # 2019-12-07
 gpg="2.2.19"
@@ -262,29 +286,39 @@ sra-tools="2.10.0"
 
 
 
-# Legacy pinnings                                                           {{{1
+# Legacy pinnings  {{{1
 # ==============================================================================
 
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl_perl="5.26.3"
+ensembl-perl="5.26.3"
 
 
 
-# macOS app versions                                                        {{{1
+# macOS app versions  {{{1
 # ==============================================================================
 
-"Alacritty"="0.3.3"
-"Aspera Connect"="3.9.6"
-"BBEdit"="12.6.7"
-"BibDesk"="1.6.16"
-"Docker"="2.1.0.1"
-"GPG Keychain"="1.5"
-"LibreOffice"="6.3.1002"
-"Microsoft Excel="16.28"
-"Numbers"="6.1"
-"RStudio"="1.2.5001"
-"Tunnelblick"="3.8.1"
-"Visual Studio Code"="1.36.1"
-"Xcode"="11.0"
-"iTerm"="3.2.7"
+# > koopa get-macos-app-version "XXX"
+
+macos-app-alacritty="0.4.1"
+macos-app-aspera-connect="3.9.8"
+macos-app-bbedit="13.0.4"
+macos-app-bibdesk="1.7.4"
+macos-app-docker="2.2.0.3"
+macos-app-iterm="3.3.9"
+macos-app-libreoffice="6.4.3"
+macos-app-microsoft-excel="16.34"
+macos-app-numbers="6.2.1"
+macos-app-rstudio="1.2.5033"
+macos-app-tunnelblick="3.8.1"
+macos-app-visual-studio-code="1.42.1"
+macos-app-xcode="11.3.1"
+
+
+
+# Homebrew cask versions  {{{1
+# ==============================================================================
+
+# > koopa get-homebrew-cask-version "XXX"
+
+homebrew-cask-gpg-suite="2019.2"

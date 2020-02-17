@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh" --no-header-checks
+
+# """
+# https://docs.brew.sh/FAQ
+# """
+
+_koopa_exit_if_not_installed brew
+
+_koopa_h1 "Uninstalling Homebrew."
+
+_koopa_assert_has_no_args "$@"
+
+# Note that macOS Catalina now uses Zsh instead of Bash by default.
+_koopa_h2 "Changing default shell to system Zsh."
+chsh -s /bin/zsh "$USER"
+
+_koopa_h2 "Resetting permissions in '/usr/local'."
+sudo chown -Rhv "$USER" "/usr/local/"*
+
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="uninstall"
+    url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
+    _koopa_download "$url"
+    /usr/bin/ruby "$file"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_success "Uninstallation of Homebrew was successful."
+_koopa_note "Restart the shell to complete uninstallation."

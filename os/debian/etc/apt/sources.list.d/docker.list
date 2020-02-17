@@ -1,0 +1,8 @@
+# Generated from:
+# > sudo add-apt-repository \
+# >     "deb [arch=amd64] https://download.docker.com/linux/debian \
+# >     $(lsb_release -cs) \
+# >     stable"
+
+deb [arch=amd64] https://download.docker.com/linux/debian buster stable
+# deb-src [arch=amd64] https://download.docker.com/linux/debian buster stable

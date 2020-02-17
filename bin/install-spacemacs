@@ -6,15 +6,22 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+name="spacemacs"
+emacs_home="${HOME}/.emacs.d"
+install_dir="${emacs_home}-${name}"
+
+_koopa_exit_if_dir "$install_dir"
+
+_koopa_h1 "Installing ${name} at '${install_dir}."
+
 _koopa_assert_has_no_args "$@"
 
-name="spacemacs"
-repo="https://github.com/syl20bnr/spacemacs.git"
-emacs_home="${HOME}/.emacs.d"
+(
+    repo="https://github.com/syl20bnr/spacemacs.git"
+    git clone "$repo" "$install_dir"
+    link-emacs "$name"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-install_dir="${emacs_home}-${name}"
-_koopa_assert_is_not_dir "$install_dir"
+_koopa_success "Installation of ${name} was successful."
 
-git clone "$repo" "$install_dir"
-link-emacs "$name"
-emacs --no-window-system
+# > emacs --no-window-system

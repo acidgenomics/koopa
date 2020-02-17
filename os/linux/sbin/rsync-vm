@@ -6,7 +6,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_args "$@"
-_koopa_assert_is_installed rsync
 
 while (("$#"))
 do
@@ -38,80 +37,42 @@ then
     _koopa_missing_arg
 fi
 
-source_user="$USER"
-host_ip="$(ip-address)"
-
-_koopa_h1 "Syncing configuration from '${source_ip}'."
-
-# Check for accidental sync from source machine.
-if [[ "$source_ip" == "$host_ip" ]]
-then
-    _koopa_note "On source machine: '${source_ip}'."
-    exit 0
-fi
-
-mapfile -t flags < <(_koopa_rsync_flags)
-# > flags+=("--omit-dir-times")
-flags_bak=("${flags[@]}")
-
-# /n/app                                                                    {{{1
+# app prefix  {{{1
 # ==============================================================================
 
-# Create the '/n' symlink, if necessary.
-n_source="${data_disk}/n"
-sudo mkdir -pv "${data_disk}/n"
-sudo chown root:root "$n_source"
-sudo chmod 0755 "$n_source"
-sudo ln -fnsfv "$n_source" /n
+# Need to sync this before make prefix, otherwise some symlinks won't resolve
+# as expected and chmod will error.
 
-dir="/n/app"
+app_prefix="$(_koopa_app_prefix)"
 
-_koopa_h2 "Updating '${dir}' from '${source_ip}'."
+# Check that data disk is configured correctly.
+if [[ ! -L "$app_prefix" ]]
+then
+    _koopa_stop "'${app_prefix}' is not configured correctly. \
+Run 'configure-vm' first to configure the virtual machine."
+fi
 
-sudo mkdir -pv "$dir"
-sudo chown -Rh "$USER" "$dir"
+# Put the rsync flag string into an array, so we can modify.
+mapfile -t app_flags < <(_koopa_rsync_flags)
 
-# Skip programs that are specific to powerful multi-core VMs.
+# Skipping programs that are specific to powerful multi-core VMs.
 if ! _koopa_is_powerful
 then
-    flags+=("--exclude=bcbio")
-    flags+=("--exclude=cellranger")
-    flags+=("--exclude=cellranger-atac")
-    flags+=("--exclude=omicsoft")
-    flags+=("--exclude=rnaeditingindexer")
+    app_flags+=("--exclude=bcbio")
+    app_flags+=("--exclude=cellranger")
+    app_flags+=("--exclude=cellranger-atac")
+    app_flags+=("--exclude=omicsoft")
+    app_flags+=("--exclude=rnaeditingindexer")
 fi
 
-_koopa_note "Using flags: ${flags[*]}"
+_koopa_rsync_vm \
+    --flags="${app_flags[*]}" \
+    --prefix="$app_prefix" \
+    --source-ip="$source_ip"
 
-# shellcheck disable=SC2068
-rsync ${flags[@]} \
-    --rsync-path="sudo /usr/bin/rsync" \
-    "${source_user}@${source_ip}:${dir}/" \
-    "${dir}/"
-
-_koopa_h2 "Setting permissions on '${dir}'."
-_koopa_set_permissions "$dir"
-
-# /usr/local                                                              # {{{1
+# make prefix  {{{1
 # ==============================================================================
 
-dir="/usr/local"
-
-_koopa_h2 "Updating '${dir}' from '${source_ip}'."
-
-sudo mkdir -pv "$dir"
-sudo chown -Rh "$USER" "$dir"
-
-flags=("${flags_bak[@]}")
-
-_koopa_note "Using flags: ${flags[*]}"
-
-# shellcheck disable=SC2068
-rsync ${flags[@]} \
-    --rsync-path="sudo /usr/bin/rsync" \
-    "${source_user}@${source_ip}:${dir}/" \
-    "${dir}/"
-
-_koopa_h2 "Setting permissions on '${dir}'."
-_koopa_set_permissions "$dir"
-
+_koopa_rsync_vm \
+    --prefix="$(_koopa_make_prefix)" \
+    --source-ip="$source_ip"

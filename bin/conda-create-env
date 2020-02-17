@@ -7,17 +7,27 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_args "$@"
-_koopa_assert_is_installed "conda"
+_koopa_activate_conda
+_koopa_assert_is_installed conda
 
 force=0
+version=
 
-POSITIONAL=()
+pos=()
 while (("$#"))
 do
     case "$1" in
         --force)
             force=1
             shift 1
+            ;;
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
             ;;
         --)
             shift 1
@@ -27,22 +37,46 @@ do
             _koopa_invalid_arg "$1"
             ;;
         *)
-            POSITIONAL+=("$1")
+            pos+=("$1")
             shift 1
             ;;
     esac
 done
-set -- "${POSITIONAL[@]}"
+set -- "${pos[@]}"
 
 name="$1"
 
-if [[ "$force" -eq 1 ]]
+if [[ -n "${version:-}" ]]
 then
-    conda remove --name "$name" --all
+    env_name="${name}@${version}"
 else
-    env_prefix="$(_koopa_conda_default_envs_prefix)"
-    _koopa_exit_if_dir "${env_prefix}/${name}"
+    env_name="$name"
 fi
 
-_koopa_info "Creating '${name}' conda environment."
-conda create -qy --name="$name" "$name"
+prefix="$(_koopa_conda_default_envs_prefix)/${env_name}"
+
+if [[ "$force" -eq 1 ]]
+then
+    conda remove --name "$env_name" --all
+else
+    _koopa_exit_if_dir "$prefix"
+fi
+
+_koopa_info "Creating '${env_name}' conda environment."
+
+flags=(
+    "--name=${env_name}"
+    "--quiet"
+    "--yes"
+)
+
+if [[ -n "${version:-}" ]]
+then
+    flags+=("${name}=${version}")
+else
+    flags+=("$name")
+fi
+
+conda create "${flags[@]}"
+
+_koopa_set_permissions "$prefix"

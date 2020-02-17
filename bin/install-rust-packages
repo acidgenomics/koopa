@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Cargo documentation:
+# https://doc.rust-lang.org/cargo/
+#
+# install-update now supported:
+# - https://stackoverflow.com/questions/34484361
+# - https://github.com/rust-lang/cargo/pull/6798
+# - https://github.com/rust-lang/cargo/pull/7560
+# """
+
+_koopa_assert_has_no_envs
+_koopa_activate_rust
+_koopa_exit_if_not_installed cargo rustc rustup
+
+if [[ $# -eq 0 ]]
+then
+    crates=(
+        # https://github.com/Canop/broot
+        broot
+        # https://github.com/ogham/exa
+        exa
+        # https://github.com/sharkdp/fd
+        fd-find
+        # https://github.com/BurntSushi/ripgrep
+        ripgrep
+        # https://github.com/BurntSushi/xsv
+        xsv
+    )
+else
+    crates=("$@")
+fi
+
+_koopa_h1 "Installing Rust cargo crates into '${CARGO_HOME}'."
+_koopa_dl "Crates" "$(_koopa_to_string "${crates[@]}")"
+
+(
+    _koopa_prefix_chown_user "$CARGO_HOME"
+    for crate in "${crates[@]}"
+    do
+        cargo install "$crate"
+    done
+    _koopa_set_permissions "$CARGO_HOME"
+)
+
+_koopa_success "Installation of Rust cargo crates was successful."

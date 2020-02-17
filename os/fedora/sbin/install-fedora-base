@@ -13,87 +13,162 @@ source "${script_dir}/../include/header.sh"
 #   - conflicting requests
 # """
 
-_koopa_h2 "Installing Fedora base system."
+all=0
+dev=0
+dist_upgrade=0
+extra=0
 
-_koopa_assert_has_no_args "$@"
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        --build-dep)
+            # Passthrough from 'install-rhel-*-base' script.
+            shift 1
+            ;;
+        --dev)
+            dev=1
+            shift 1
+            ;;
+        --dist-upgrade)
+            dist_upgrade=1
+            shift 1
+            ;;
+        --extra)
+            extra=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+if [[ "$all" -eq 1 ]]
+then
+    dev=1
+    dist_upgrade=1
+    extra=1
+fi
+
+_koopa_h1 "Installing Fedora base system."
+
 _koopa_assert_is_installed sudo
 
-sudo yum -y update
-sudo yum -y groupinstall "Development Tools"
+# dist-upgrade  {{{1
+# ==============================================================================
 
-sudo yum -y install \
-    bash \
-    bzip2 \
-    bzip2-devel \
-    cmake \
-    convmv \
-    cryptsetup \
-    curl \
-    emacs \
-    gcc \
-    gcc-c++ \
-    gcc-gfortran \
-    git \
-    gnupg2 \
-    gnutls \
-    gnutls-devel \
-    golang \
-    gsl-devel \
-    libcurl-devel \
-    libevent-devel \
-    libffi-devel \
-    libseccomp-devel \
-    libuuid-devel \
-    libxml2-devel \
-    llvm \
-    llvm-devel \
-    lua \
-    make \
-    mariadb-devel \
-    mpfr-devel \
-    ncurses \
-    openssl \
-    openssl-devel \
-    pcre-devel \
-    postgresql-devel \
-    qpdf \
-    readline \
-    readline-devel \
-    squashfs-tools \
-    systemd \
-    texlive \
-    texlive-bera \
-    texlive-caption \
-    texlive-changepage \
-    texlive-collection-fontsrecommended \
-    texlive-collection-latexrecommended \
-    texlive-enumitem \
-    texlive-etoolbox \
-    texlive-fancyhdr \
-    texlive-footmisc \
-    texlive-framed \
-    texlive-geometry \
-    texlive-hyperref \
-    texlive-latex-fonts \
-    texlive-natbib \
-    texlive-parskip \
-    texlive-pdftex \
-    texlive-placeins \
-    texlive-preprint \
-    texlive-sectsty \
-    texlive-soul \
-    texlive-titlesec \
-    texlive-titling \
-    texlive-xstring \
-    tmux \
-    tree \
-    unixODBC-devel \
-    util-linux \
-    vim \
-    wget \
-    xmlto \
-    xz \
-    xz-devel \
-    yum-utils \
-    zip \
-    zsh
+if [[ "$dist_upgrade" -eq 1 ]]
+then
+    _koopa_h2 "Upgrading install via 'yum update'."
+    sudo yum -y update
+fi
+
+# default  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing default packages."
+pkgs=(
+    bash
+    bzip2
+    cmake
+    convmv
+    cryptsetup
+    curl
+    gcc
+    gcc-c++
+    gcc-gfortran
+    git
+    gnupg2
+    gnutls
+    lua
+    make
+    ncurses
+    openssl
+    qpdf
+    readline
+    squashfs-tools
+    systemd
+    tmux
+    tree
+    util-linux
+    vim
+    wget
+    xmlto
+    xz
+    yum-utils
+    zip
+)
+sudo yum -y install "${pkgs[@]}"
+
+# developer  {{{1
+# ==============================================================================
+
+if [[ "$dev" -eq 1 ]]
+then
+    _koopa_h2 "Installing developer libraries."
+    sudo yum -y groupinstall "Development Tools"
+    pkgs=(
+        bzip2-devel
+        gnutls-devel
+        gsl-devel
+        libcurl-devel
+        libevent-devel
+        libffi-devel
+        libseccomp-devel
+        libuuid-devel
+        libxml2-devel
+        llvm-devel
+        mariadb-devel
+        mpfr-devel
+        openssl-devel
+        pcre-devel
+        postgresql-devel
+        readline-devel
+        unixODBC-devel
+        xz-devel
+    )
+    sudo yum -y install "${pkgs[@]}"
+fi
+
+# extra  {{{1
+# ==============================================================================
+
+if [[ "$extra" -eq 1 ]]
+then
+    _koopa_h2 "Installing extra recommended packages."
+    pkgs=(
+        emacs
+        golang
+        llvm
+        texlive
+        texlive-bera
+        texlive-caption
+        texlive-changepage
+        texlive-collection-fontsrecommended
+        texlive-collection-latexrecommended
+        texlive-enumitem
+        texlive-etoolbox
+        texlive-fancyhdr
+        texlive-footmisc
+        texlive-framed
+        texlive-geometry
+        texlive-hyperref
+        texlive-latex-fonts
+        texlive-natbib
+        texlive-parskip
+        texlive-pdftex
+        texlive-placeins
+        texlive-preprint
+        texlive-sectsty
+        texlive-soul
+        texlive-titlesec
+        texlive-titling
+        texlive-xstring
+        zsh
+    )
+    sudo yum -y install "${pkgs[@]}"
+fi

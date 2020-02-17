@@ -7,21 +7,23 @@ source "${script_dir}/../include/header.sh"
 
 name="python"
 version="$(_koopa_variable "$name")"
-minor_version="$(_koopa_minor_version "$version")"
+framework_dir="/Library/Frameworks/Python.framework"
 
-file="python-${version}-macosx10.9.pkg"
-url="https://www.python.org/ftp/python/${version}/${file}"
-_koopa_download "$url"
+_koopa_exit_if_dir "$framework_dir"
 
-sudo installer -pkg "$file" -target /
-rm "$file"
+_koopa_h1 "Installing Python ${version} to '${framework_dir}'."
 
-py_dir="/Library/Frameworks/Python.framework/Versions/${minor_version}/bin"
-py_exe="${py_dir}/python${minor_version}"
-pip_exe="${py_dir}/pip${minor_version}"
+tmp_dir="$(_koopa_tmp_dir)"
 
-command -v "$py_exe"
-"$py_exe" --version
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="python-${version}-macosx10.9.pkg"
+    url="https://www.python.org/ftp/python/${version}/${file}"
+    _koopa_download "$url"
+    sudo installer -pkg "$file" -target /
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-command -v "$pip_exe"
-"$pip_exe" --version
+rm -fr "$tmp_dir"
+
+_koopa_success "Installation of Python was successful."
+_koopa_note "Restart the shell to complete installation."
