@@ -9,9 +9,10 @@
 # """
 
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+source "$(koopa header bash)"
 
-prefix="${1:-$KOOPA_PREFIX}"
+koopa_prefix="$(_koopa_prefix)"
+prefix="${1:-${koopa_prefix}}"
 
 # shellcheck disable=SC2016
 illegal_strings=(
@@ -40,26 +41,34 @@ done < <( \
         -type f \
         -not -name "$(basename "$0")" \
         -not -name ".pylintrc" \
-        -not -path "${KOOPA_PREFIX}/.git/*" \
-        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
-        -not -path "${KOOPA_PREFIX}/shunit2-*" \
+        -not -path "${koopa_prefix}/.git/*" \
+        -not -path "${koopa_prefix}/cellar/*" \
+        -not -path "${koopa_prefix}/coverage/*" \
+        -not -path "${koopa_prefix}/dotfiles/*" \
+        -not -path "${koopa_prefix}/opt/*" \
         -print0 \
     | sort -z
 )
 
-failures="$( \
-    grep -En \
-        --binary-files="without-match" \
-        "$grep_pattern" \
-        "${files[@]}" \
-    || echo "" \
-)"
+failures=()
+for file in "${files[@]}"
+do
+    x="$(
+        grep -En \
+            --binary-files="without-match" \
+            "$grep_pattern" \
+            "$file" \
+        || true \
+    )"
+    [[ -n "$x" ]] && failures+=("$x")
+done
 
 name="$(_koopa_basename_sans_ext "$0")"
-if [[ -n "$failures" ]]
+
+if _koopa_is_array_non_empty "${failures[@]}"
 then
     _koopa_status_fail "$name"
-    echo "$failures"
+    echo "${failures[@]}"
     exit 1
 else
     _koopa_status_ok "$name"
