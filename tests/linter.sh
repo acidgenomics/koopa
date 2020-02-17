@@ -16,23 +16,12 @@ _koopa_h1 "Running linter checks."
 
 # Check that linter config files are linked correctly.
 # This step can error if dotfiles submodule hasn't cloned.
+_koopa_git_clone_dotfiles
 _koopa_assert_is_symlink "${KOOPA_PREFIX}/."{lintr,pylintrc}
 
 linter_dir="${script_dir}/linter"
 for file in "${linter_dir}/"*".sh"
 do
-    if [[ -n "${CI:-}" ]]
-    then
-        case "$(basename "$file")" in
-            python-*|r-*)
-                ;;
-            *)
-                # shellcheck source=/dev/null
-                [ -f "$file" ] && "$file"
-                ;;
-        esac
-    else
-        # shellcheck source=/dev/null
-        [ -f "$file" ] && "$file"
-    fi
+    # shellcheck source=/dev/null
+    [ -f "$file" ] && "$file"
 done
