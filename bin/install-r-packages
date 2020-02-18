@@ -31,13 +31,29 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+all <- FALSE
+
+args <- parseArgs(
+    positional = FALSE,
+    validFlags = "all"
+)
+
+if ("--all" %in% args) {
+    all <- TRUE
+}
+
+## Check for GitHub PAT, if necessary.
+if (isTRUE(all)) {
+    stopifnot(hasGitHubPAT)
+}
+
 ## Install BiocManager first, if necessary.
 if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
     stopifnot(requireNamespace("utils"), quietly = TRUE)
     utils::install.packages("BiocManager")
 }
 
-h1("Installing R packages")
+h1("Install R packages")
 
 ## Upgrade Bioconductor first, if desired.
 ## > install(
@@ -61,6 +77,7 @@ install(
         "knitr",
         "lintr",
         "magrittr",
+        "matrixStats",
         "patrick",
         "pbapply",
         "rcmdcheck",
@@ -86,8 +103,11 @@ install(
         "AnnotationHub",
         "Biobase",
         "BiocCheck",
+        "BiocFileCache",
         "BiocGenerics",
+        "BiocNeighbors",
         "BiocParallel",
+        "BiocSingular",
         "BiocStyle",
         "Biostrings",
         "DelayedArray",
@@ -99,6 +119,7 @@ install(
         "GenomicFeatures",
         "GenomicRanges",
         "IRanges",
+        "Rsamtools",
         "S4Vectors",
         "SingleCellExperiment",
         "SummarizedExperiment",
@@ -109,15 +130,151 @@ install(
     ask = FALSE
 )
 
-# GitHub packages.
-h2("GitHub")
-if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
-    install(
-        pkgs = c(
-            "acidgenomics/basejump",
-            "acidgenomics/bb8"
-        )
-    )
-} else {
-    message("No 'GITHUB_PAT' key detected. Skipping.")
+if (!isTRUE(all)) {
+    quit()
 }
+
+h2("Additional")
+install(
+    pkgs = c(
+        "BSgenome.Hsapiens.NCBI.GRCh38",
+        "BSgenome.Hsapiens.UCSC.hg19",
+        "BSgenome.Hsapiens.UCSC.hg38",
+        "BSgenome.Mmusculus.UCSC.mm10",
+        "ComplexHeatmap",
+        "ConsensusClusterPlus",
+        "DESeq2",
+        "DEXSeq",
+        "DOSE",
+        "DT",
+        "DelayedArray",
+        "DelayedMatrixStats",
+        "DiffBind",
+        "DropletUtils",
+        "EnsDb.Hsapiens.v75",
+        "EnsDb.Hsapiens.v86"
+        "ExperimentHub",
+        "GEOquery",
+        "HDF5Array",
+        "HSMMSingleCell",
+        "IHW",
+        "KEGG.db",
+        "KEGGREST",
+        "KEGGgraph",
+        "MAST",
+        "NMF",
+        "R.oo",
+        "R6",
+        "ReactomePA",
+        "Seurat",
+        "TxDb.Hsapiens.UCSC.hg19.knownGene",
+        "TxDb.Hsapiens.UCSC.hg38.knownGene",
+        "TxDb.Mmusculus.UCSC.mm10.knownGene",
+        "UpSetR",
+        "apeglm",
+        "ashr",
+        "batchelor",
+        "beachmat",
+        "bookdown",
+        "cli",
+        "clusterProfiler",
+        "covr",
+        "csaw",
+        "data.table",
+        "dbplyr",
+        "dendsort"
+        "desc",
+        "destiny",
+        "devtools",
+        "dplyr",
+        "dynamicTreeCut",
+        "edgeR",
+        "enrichplot",
+        "fastICA",
+        "fastcluster",
+        "fastmatch",
+        "fdrtool",
+        "fgsea",
+        "fishpond",
+        "fs",
+        "future",
+        "geneplotter"
+        "ggbio",
+        "ggdendro",
+        "ggrepel",
+        "ggridges",
+        "ggupset",
+        "glue",
+        "hexbin",
+        "httr",
+        "janitor",
+        "jsonlite",
+        "knitr",
+        "limma",
+        "lintr"
+        "memoise",
+        "openxlsx",
+        "org.Hs.eg.db",
+        "org.Mm.eg.db",
+        "packrat",
+        "pathview",
+        "patrick",
+        "pheatmap",
+        "pillar",
+        "pkgdown",
+        "plyr",
+        "pryr",
+        "purrr"
+        "rJava",
+        "rcmdcheck",
+        "rdrop2",
+        "reactome.db",
+        "readr",
+        "readxl",
+        "reprex",
+        "reshape2",
+        "reticulate",
+        "rhdf5",
+        "rio",
+        "rlang"
+        "roxygen2",
+        "scater",
+        "scran",
+        "sctransform",
+        "shiny",
+        "slam",
+        "snow",
+        "splatter",
+        "stringi"
+        "stringr",
+        "testthat",
+        "tximeta",
+        "tximport"
+        "usethis",
+        "uwot",
+        "vroom",
+        "vsn"
+    )
+)
+
+## GitHub packages.
+h2("GitHub")
+install(
+    pkgs = c(
+        "acidgenomics/bb8",                 # base
+        "acidgenomics/acidroxygen",         # base
+        "acidgenomics/acidtest",            # base
+        "acidgenomics/basejump",            # base
+        "acidgenomics/acidplots",           # base
+        "acidgenomics/EggNOG",              # database
+        "acidgenomics/PANTHER",             # database
+        "acidgenomics/WormBase",            # database
+        "acidgenomics/DESeqAnalysis",       # rna-seq
+        "acidgenomics/pfgsea",              # rna-seq
+        "acidgenomics/Chromium",            # single-cell
+        "acidgenomics/pointillism",         # single-cell
+        "hbc/bcbioRNASeq",                  # rna-seq
+        "hbc/bcbioSingleCell",              # single-cell
+        "cole-trapnell-lab/monocle3"        # single-cell
+    )
+)
