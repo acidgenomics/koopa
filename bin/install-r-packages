@@ -196,7 +196,6 @@ h2("Bioconductor")
 install(
     pkgs = c(
         "AnnotationFilter",
-        "BSgenome",
         "BSgenome.Hsapiens.NCBI.GRCh38",
         "BSgenome.Hsapiens.UCSC.hg19",
         "BSgenome.Hsapiens.UCSC.hg38",
@@ -239,7 +238,6 @@ install(
         "ShortRead",
         "STRINGdb",
         "TCGAbiolinks",
-        "TxDb",
         "TxDb.Hsapiens.UCSC.hg19.knownGene",
         "TxDb.Hsapiens.UCSC.hg38.knownGene",
         "TxDb.Mmusculus.UCSC.mm10.knownGene",
