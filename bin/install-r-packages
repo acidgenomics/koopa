@@ -207,7 +207,7 @@ install(
         "ConsensusClusterPlus",
         "DESeq2",
         "DEXSeq",
-        "DNACopy",
+        "DNAcopy",
         "DOSE",
         "DiffBind",
         "DropletUtils",
