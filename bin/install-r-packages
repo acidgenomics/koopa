@@ -55,9 +55,6 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
 
 h1("Install R packages")
 
-# version = Sys.getenv("BIOC_VERSION")
-install(update = TRUE, ask = FALSE)
-
 h2("CRAN")
 install(
     pkgs = c(
