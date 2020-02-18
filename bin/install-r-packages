@@ -55,12 +55,8 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
 
 h1("Install R packages")
 
-## Upgrade Bioconductor first, if desired.
-## > install(
-## >     update = TRUE,
-## >     ask = FALSE,
-## >     version = Sys.getenv("BIOC_VERSION")
-## > )
+# version = Sys.getenv("BIOC_VERSION")
+install(update = TRUE, ask = FALSE)
 
 h2("CRAN")
 install(
@@ -68,12 +64,20 @@ install(
         "DT",
         "Matrix",
         "R.utils",
+        "Rcpp",
+        "RcppArmadillo",
         "backports",
+        "caTools",
+        "cli",
         "covr",
         "cowplot",
         "curl",
+        "data.table",
+        "desc",
         "devtools",
         "ggrepel",
+        "git2r",
+        "httr",
         "knitr",
         "lintr",
         "magrittr",
@@ -81,16 +85,22 @@ install(
         "parallel",
         "patrick",
         "pbapply",
+        "pkgdown",
+        "rJava",
         "rcmdcheck",
         "remotes",
+        "reprex",
         "reticulate",
         "rlang",
         "rmarkdown",
         "roxygen2",
         "sessioninfo",
+        "stringi",
         "testthat",
         "tidyverse",
+        "usethis",
         "viridis",
+        "vroom",
         "xmlparsedata"
     ),
     update = TRUE,
@@ -112,6 +122,7 @@ install(
         "BiocVersion",
         "Biostrings",
         "DelayedArray",
+        "DelayedMatrixStats",
         "GenomeInfoDb",
         "GenomeInfoDbData",
         "GenomicAlignments",
@@ -139,7 +150,6 @@ h1("Install additional R packages ({.arg --all} mode)")
 h2("CRAN")
 install(
     pkgs = c(
-        "DT",
         "NMF",
         "R.oo",
         "R6",
@@ -147,14 +157,8 @@ install(
         "UpSetR",
         "ashr",
         "bookdown",
-        "cli",
-        "covr",
-        "data.table",
         "dbplyr",
         "dendsort",
-        "desc",
-        "devtools",
-        "dplyr",
         "dynamicTreeCut",
         "fastICA",
         "fastcluster",
@@ -166,44 +170,27 @@ install(
         "ggrepel",
         "ggridges",
         "ggupset",
-        "glue",
         "hexbin",
-        "httr",
         "janitor",
         "jsonlite",
-        "knitr",
-        "lintr",
         "memoise",
         "openxlsx",
         "packrat",
-        "patrick",
         "pheatmap",
         "pillar",
-        "pkgdown",
         "plyr",
         "pryr",
-        "purrr",
-        "rJava",
-        "rcmdcheck",
         "rdrop2",
-        "readr",
         "readxl",
-        "reprex",
         "reshape2",
-        "reticulate",
         "rio",
-        "rlang",
-        "roxygen2",
         "shiny",
         "slam",
         "snow",
-        "stringi",
-        "stringr",
-        "testthat",
-        "usethis",
-        "uwot",
-        "vroom"
-    )
+        "uwot"
+    ),
+    update = TRUE,
+    ask = FALSE
 )
 
 h2("Bioconductor")
@@ -224,8 +211,6 @@ install(
         "DEXSeq",
         "DNACopy",
         "DOSE",
-        "DelayedArray",
-        "DelayedMatrixStats",
         "DiffBind",
         "DropletUtils",
         "EDASeq",
@@ -293,7 +278,9 @@ install(
         "tximeta",
         "tximport",
         "vsn"
-    )
+    ),
+    update = TRUE,
+    ask = FALSE
 )
 
 ## GitHub packages.
