@@ -184,6 +184,7 @@ install(
         "rio",
         "shiny",
         "slam",
+        "snakecase",
         "snow",
         "uwot"
     ),
