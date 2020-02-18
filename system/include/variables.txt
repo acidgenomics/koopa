@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa-date="2020-02-16"
+koopa-date="2020-02-18"
 
 
 
@@ -30,7 +30,7 @@ autojump="22.5.3"
 aws-cli="2.0.0"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.0.81"
+azure-cli="2.1.0"
 
 # https://www.gnu.org/software/bash/
 # Note that minor version represents patches.
