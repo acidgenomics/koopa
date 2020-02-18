@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Build and push a docker image.
+# Updated 2020-02-18.
+#
+# Use '--no-cache' flag to disable build cache.
+#
+# Examples:
+# docker-build-image bioconductor release
+# docker-build fedora
+#
+# See also:
+# - docker build --help
+# - https://docs.docker.com/engine/reference/builder/#arg
+# """
+
+# e.g. ~/.config/koopa/docker
+docker_dir="$(_koopa_docker_prefix)"
+_koopa_assert_is_dir "$docker_dir"
+
+server="docker.io"
+tag="latest"
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --server=*)
+            server="${1#*=}"
+            shift 1
+            ;;
+        --server)
+            server="$2"
+            shift 2
+            ;;
+        --tag=*)
+            tag="${1#*=}"
+            shift 1
+            ;;
+        --tag)
+            tag="$2"
+            shift 2
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+# e.g. acidgenomics/debian
+image="${1:?}"
+source_image="${docker_dir}/${image}/${tag}"
+_koopa_assert_is_dir "$source_image"
+# e.g. acidgenomics/debian:latest
+tagged_image="${image}:${tag}"
+today=$(date "+%Y%m%d")
+# e.g. acidgenomics/debian:latest-20200101
+tagged_image_today="${tagged_image}-${today}"
+
+docker login "$server"
+
+# Force remove existing local images.
+# > docker image ls --help
+# > docker image rm --help
+mapfile -t image_ids < <( \
+    docker image ls \
+        --filter reference="$tagged_image" \
+        --quiet \
+)
+if _koopa_is_array_non_empty "${image_ids[@]}"
+then
+    _koopa_note "Existing local build detected. Removing."
+    docker image rm --force "${image_ids[@]}"
+fi
+
+# Build a local copy of the image.
+docker build \
+    --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}" \
+    --no-cache \
+    --tag="$tagged_image_today" \
+    "$source_image"
+
+docker tag "$tagged_image_today" "$tagged_image"
+
+docker push "${server}/${tagged_image_today}"
+docker push "${server}/${tagged_image}"
+
+docker image ls \
+    --filter reference="$tagged_image"
+
+_koopa_success "Build of '${tagged_image}' was successful."
