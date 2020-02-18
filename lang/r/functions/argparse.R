@@ -23,7 +23,7 @@ koopaHelp <- function() {
 
 #' Parse argument flags
 #'
-#' @note Updated 2020-02-02.
+#' @note Updated 2020-02-18.
 #' @noRd
 #'
 #' @return `character`.
