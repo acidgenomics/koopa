@@ -21,7 +21,6 @@ _koopa_ansi_escape_code() {  # {{{1
             escape="1;30"
             ;;
         blue)
-            # This looks purple with Dracula.
             escape="0;34"
             ;;
         blue-bold)
@@ -212,7 +211,7 @@ _koopa_h1() {  # {{{1
     str="${1:?}"
     pre="$(_koopa_emoji) => "
     c1="$(_koopa_ansi_escape_code "blue")"
-    c2="$(_koopa_ansi_escape_code "default-bold")"
+    c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "\n${c1}${pre}${c2}${str}${nc}"
 }
