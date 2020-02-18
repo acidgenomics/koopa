@@ -152,7 +152,7 @@ install(
         "DiffBind",
         "DropletUtils",
         "EnsDb.Hsapiens.v75",
-        "EnsDb.Hsapiens.v86"
+        "EnsDb.Hsapiens.v86",
         "ExperimentHub",
         "GEOquery",
         "HDF5Array",
@@ -182,7 +182,7 @@ install(
         "csaw",
         "data.table",
         "dbplyr",
-        "dendsort"
+        "dendsort",
         "desc",
         "destiny",
         "devtools",
@@ -198,7 +198,7 @@ install(
         "fishpond",
         "fs",
         "future",
-        "geneplotter"
+        "geneplotter",
         "ggbio",
         "ggdendro",
         "ggrepel",
@@ -211,7 +211,7 @@ install(
         "jsonlite",
         "knitr",
         "limma",
-        "lintr"
+        "lintr",
         "memoise",
         "openxlsx",
         "org.Hs.eg.db",
@@ -224,7 +224,7 @@ install(
         "pkgdown",
         "plyr",
         "pryr",
-        "purrr"
+        "purrr",
         "rJava",
         "rcmdcheck",
         "rdrop2",
@@ -236,7 +236,7 @@ install(
         "reticulate",
         "rhdf5",
         "rio",
-        "rlang"
+        "rlang",
         "roxygen2",
         "scater",
         "scran",
@@ -245,11 +245,11 @@ install(
         "slam",
         "snow",
         "splatter",
-        "stringi"
+        "stringi",
         "stringr",
         "testthat",
         "tximeta",
-        "tximport"
+        "tximport",
         "usethis",
         "uwot",
         "vroom",
