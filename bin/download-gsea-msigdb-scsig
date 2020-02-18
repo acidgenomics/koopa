@@ -8,10 +8,22 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_no_args "$@"
 
-base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
 version="1.0"
+prefix="$(_koopa_msigdb_prefix)/scsig/${version}"
+base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
 
-_koopa_download "${base_url}/scsig.all.v${version}.symbols.gmt"
-_koopa_download "${base_url}/scsig.all.v${version}.entrez.gmt"
-_koopa_download "${base_url}/scsig.v${version}.metadata.xls"
-_koopa_download "${base_url}/scsig.v${version}.metadata.txt"
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Downloading MSigDB SCSig $version."
+
+_koopa_prefix_mkdir "$prefix"
+
+(
+    _koopa_cd "$prefix"
+    _koopa_download "${base_url}/scsig.all.v${version}.symbols.gmt"
+    _koopa_download "${base_url}/scsig.all.v${version}.entrez.gmt"
+    _koopa_download "${base_url}/scsig.v${version}.metadata.xls"
+    _koopa_download "${base_url}/scsig.v${version}.metadata.txt"
+)
+
+_koopa_set_permissions "$prefix"
