@@ -186,11 +186,11 @@ unset -v make_prefix
 # Shortcuts  {{{2
 # ------------------------------------------------------------------------------
 
-alias k='cd $KOOPA_PREFIX'
-alias ku='koopa update'
-
+alias c='clear'
 alias e='exit'
 alias h='history'
+alias k='cd "${KOOPA_PREFIX:?}"'
+alias ku='koopa update'
 
 if _koopa_is_installed exa
 then
