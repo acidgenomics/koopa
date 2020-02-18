@@ -20,7 +20,7 @@ hasColor <- function() {
 #'
 #' @note Updated 2020-02-18.
 hasGitHubPAT <- function() {
-    isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))))
+    isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))
 }
 
 
