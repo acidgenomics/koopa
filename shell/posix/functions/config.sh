@@ -391,13 +391,13 @@ _koopa_link_docker() {  # {{{1
 _koopa_link_dotfiles() {  # {{{1
     # """
     # Link dotfiles.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-18.
     # """
     _koopa_git_clone_dotfiles
     local prefix
     prefix="$(_koopa_dotfiles_prefix)"
     local script
-    script="${prefix}/INSTALL.sh"
+    script="${prefix}/install"
     _koopa_assert_is_file "$script"
     "$script"
     return 0
@@ -406,13 +406,13 @@ _koopa_link_dotfiles() {  # {{{1
 _koopa_link_dotfiles_private() {  # {{{1
     # """
     # Link private dotfiles.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-18.
     # """
     _koopa_git_clone_dotfiles_private
     local prefix
     prefix="$(_koopa_dotfiles_private_prefix)"
     local script
-    script="${prefix}/INSTALL.sh"
+    script="${prefix}/install"
     _koopa_assert_is_file "$script"
     "$script"
     return 0

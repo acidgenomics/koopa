@@ -5,15 +5,19 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 . "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
 
+# Remove shared activation script.
 if _koopa_is_shared_install
 then
     rm -fv "/etc/profile.d/zzz-koopa.sh"
 fi
 
-if [[ -f "$(_koopa_dotfiles_config_link)/UNINSTALL.sh" ]]
-then
-    "$(_koopa_dotfiles_config_link)/UNINSTALL.sh"
-fi
+# Uninstall dotfiles.
+script="$(_koopa_dotfiles_prefix)/uninstall"
+[[ -x "$script" ]] && "$script"
+
+# Uninstall dotfiles-private.
+script="$(_koopa_dotfiles_private_prefix)/uninstall"
+[[ -x "$script" ]] && "$script"
 
 rm -frv "$(_koopa_config_prefix)"
 rm -frv "$KOOPA_PREFIX"
