@@ -28,7 +28,7 @@ _koopa_activate_conda_env() {  # {{{1
     name="${1:?}"
     local prefix
     prefix="$(_koopa_conda_prefix)"
-    _koopa_h1 "Activating '${name}' conda environment."
+    # > _koopa_h1 "Activating '${name}' conda environment."
     # > _koopa_dl "Prefix" "$prefix"
     local nounset
     nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
