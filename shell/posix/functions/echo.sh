@@ -368,7 +368,7 @@ _koopa_success() {  # {{{1
     local c1 c2 nc pre str
     str="${1:?}"
     pre="$(_koopa_emoji) OK "
-    c1="$(_koopa_ansi_escape_code "green")"
+    c1="$(_koopa_ansi_escape_code "green-bold")"
     c2="$(_koopa_ansi_escape_code "green")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
