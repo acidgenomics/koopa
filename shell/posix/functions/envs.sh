@@ -28,7 +28,8 @@ _koopa_activate_conda_env() {  # {{{1
     name="${1:?}"
     local prefix
     prefix="$(_koopa_conda_prefix)"
-    _koopa_h2 "Activating '${name}' conda environment at '${prefix}'."
+    _koopa_h1 "Activating '${name}' conda environment."
+    _koopa_dl "Prefix" "$prefix"
     # Note that this function should only be called inside executable scripts,
     # so safe to adjust unbound variable settings here.
     set +u
