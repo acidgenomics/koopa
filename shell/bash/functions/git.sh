@@ -3,7 +3,7 @@
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-02-18.
     # """
     _koopa_h2 "Initializing submodules in '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
@@ -25,7 +25,10 @@ _koopa_git_submodule_init() {
         url_key="${target_key//\.path/.url}"
         url="$(git config -f ".gitmodules" --get "$url_key")"
         _koopa_dl "$target" "$url"
-        git submodule add --force "$url" "$target" > /dev/null
+        if [[ ! -d "$target" ]]
+        then
+            git submodule add --force "$url" "$target" > /dev/null
+        fi
     done
     return 0
 }
@@ -33,7 +36,7 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-02-18.
     # """
     _koopa_h2 "Pulling git repo at '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
