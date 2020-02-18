@@ -73,6 +73,8 @@ today=$(date "+%Y%m%d")
 # e.g. acidgenomics/debian:latest-20200101
 tagged_image_today="${tagged_image}-${today}"
 
+_koopa_h1 "Building '${tagged_image}' Docker image."
+
 docker login "$server"
 
 # Force remove existing local images.
