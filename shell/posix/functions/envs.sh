@@ -4,7 +4,7 @@
 _koopa_activate_conda_env() {  # {{{1
     # """
     # Activate a conda environment.
-    # @note Updated 2020-01-21.
+    # @note Updated 2020-02-18.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -23,23 +23,23 @@ _koopa_activate_conda_env() {  # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    _koopa_assert_is_installed conda
+    _koopa_is_installed conda || return 1
     local name
     name="${1:?}"
     local prefix
     prefix="$(_koopa_conda_prefix)"
     _koopa_h1 "Activating '${name}' conda environment."
     _koopa_dl "Prefix" "$prefix"
-    # Note that this function should only be called inside executable scripts,
-    # so safe to adjust unbound variable settings here.
-    set +u
+    local nounset
+    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
+    [ "$nounset" -eq 1 ] && set +u
     if ! type conda | grep -q conda.sh
     then
         # shellcheck source=/dev/null
         . "${prefix}/etc/profile.d/conda.sh"
     fi
     conda activate "$name"
-    set -u
+    [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
