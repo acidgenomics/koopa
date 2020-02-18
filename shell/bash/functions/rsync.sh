@@ -3,7 +3,7 @@
 _koopa_rsync_vm() {
     # """
     # rsync a desired prefix across virtual machines.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-02-18.
     #
     # Potentially useful flags:
     # * --omit-dir-times
@@ -57,8 +57,8 @@ _koopa_rsync_vm() {
     _koopa_dl "Flags" "$flags"
 
     _koopa_mkdir "$prefix"
-    _koopa_set_permissions_user "$prefix"
     _koopa_remove_broken_symlinks "$prefix"
+    _koopa_set_permissions_user "$prefix"
 
     # Note that this step won't work unless we leave 'flags' unquoted here.
     # shellcheck disable=SC2086
@@ -67,6 +67,7 @@ _koopa_rsync_vm() {
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"
 
+    _koopa_remove_broken_symlinks "$prefix"
     _koopa_set_permissions "$prefix"
     return 0
 }
