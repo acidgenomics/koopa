@@ -55,25 +55,26 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
 
 h1("Install R packages")
 
-## Upgrade Bioconductor first, if desired.
-## > install(
-## >     update = TRUE,
-## >     ask = FALSE,
-## >     version = Sys.getenv("BIOC_VERSION")
-## > )
-
 h2("CRAN")
 install(
     pkgs = c(
         "DT",
         "Matrix",
         "R.utils",
+        "Rcpp",
+        "RcppArmadillo",
         "backports",
+        "caTools",
+        "cli",
         "covr",
         "cowplot",
         "curl",
+        "data.table",
+        "desc",
         "devtools",
         "ggrepel",
+        "git2r",
+        "httr",
         "knitr",
         "lintr",
         "magrittr",
@@ -81,16 +82,22 @@ install(
         "parallel",
         "patrick",
         "pbapply",
+        "pkgdown",
+        "rJava",
         "rcmdcheck",
         "remotes",
+        "reprex",
         "reticulate",
         "rlang",
         "rmarkdown",
         "roxygen2",
         "sessioninfo",
+        "stringi",
         "testthat",
         "tidyverse",
+        "usethis",
         "viridis",
+        "vroom",
         "xmlparsedata"
     ),
     update = TRUE,
@@ -112,6 +119,7 @@ install(
         "BiocVersion",
         "Biostrings",
         "DelayedArray",
+        "DelayedMatrixStats",
         "GenomeInfoDb",
         "GenomeInfoDbData",
         "GenomicAlignments",
@@ -139,22 +147,16 @@ h1("Install additional R packages ({.arg --all} mode)")
 h2("CRAN")
 install(
     pkgs = c(
-        "DT",
         "NMF",
         "R.oo",
         "R6",
         "Seurat",
         "UpSetR",
+        "WGCNA",
         "ashr",
         "bookdown",
-        "cli",
-        "covr",
-        "data.table",
         "dbplyr",
         "dendsort",
-        "desc",
-        "devtools",
-        "dplyr",
         "dynamicTreeCut",
         "fastICA",
         "fastcluster",
@@ -166,51 +168,34 @@ install(
         "ggrepel",
         "ggridges",
         "ggupset",
-        "glue",
         "hexbin",
-        "httr",
         "janitor",
         "jsonlite",
-        "knitr",
-        "lintr",
         "memoise",
         "openxlsx",
         "packrat",
-        "patrick",
         "pheatmap",
         "pillar",
-        "pkgdown",
         "plyr",
         "pryr",
-        "purrr",
-        "rJava",
-        "rcmdcheck",
         "rdrop2",
-        "readr",
         "readxl",
-        "reprex",
         "reshape2",
-        "reticulate",
         "rio",
-        "rlang",
-        "roxygen2",
         "shiny",
         "slam",
+        "snakecase",
         "snow",
-        "stringi",
-        "stringr",
-        "testthat",
-        "usethis",
-        "uwot",
-        "vroom"
-    )
+        "uwot"
+    ),
+    update = TRUE,
+    ask = FALSE
 )
 
 h2("Bioconductor")
 install(
     pkgs = c(
         "AnnotationFilter",
-        "BSgenome",
         "BSgenome.Hsapiens.NCBI.GRCh38",
         "BSgenome.Hsapiens.UCSC.hg19",
         "BSgenome.Hsapiens.UCSC.hg38",
@@ -222,10 +207,8 @@ install(
         "ConsensusClusterPlus",
         "DESeq2",
         "DEXSeq",
-        "DNACopy",
+        "DNAcopy",
         "DOSE",
-        "DelayedArray",
-        "DelayedMatrixStats",
         "DiffBind",
         "DropletUtils",
         "EDASeq",
@@ -251,10 +234,10 @@ install(
         "Rhtslib",
         "Rsamtools",
         "Rsubread",
+        "SC3",
         "ShortRead",
         "STRINGdb",
         "TCGAbiolinks",
-        "TxDb",
         "TxDb.Hsapiens.UCSC.hg19.knownGene",
         "TxDb.Hsapiens.UCSC.hg38.knownGene",
         "TxDb.Mmusculus.UCSC.mm10.knownGene",
@@ -287,13 +270,17 @@ install(
         "reactome.db",
         "rhdf5",
         "scater",
+        "scone",
         "scran",
         "sctransform",
+        "slalom",
         "splatter",
         "tximeta",
         "tximport",
         "vsn"
-    )
+    ),
+    update = TRUE,
+    ask = FALSE
 )
 
 ## GitHub packages.
@@ -314,6 +301,6 @@ install(
         "acidgenomics/pointillism",         # single-cell
         "hbc/bcbioRNASeq",                  # rna-seq
         "hbc/bcbioSingleCell",              # single-cell
-        "cole-trapnell-lab/monocle3"        # single-cell
+        # "cole-trapnell-lab/monocle3"        # single-cell
     )
 )
