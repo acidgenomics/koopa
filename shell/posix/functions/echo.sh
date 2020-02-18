@@ -117,9 +117,16 @@ _koopa_coffee_time() {  # {{{1
 _koopa_dl() {
     # """
     # Koopa definition list.
-    # @note Updated 2020-02-04.
+    # @note Updated 2020-02-18.
     # """
-    _koopa_info "${1:?}: ${2:?}"
+    local c1 c2 emoji key value
+    key="${1:?}"
+    value="${2:?}"
+    emoji="$(_koopa_emoji)"
+    c1="$(_koopa_ansi_escape_code "default")"
+    c2="$(_koopa_ansi_escape_code "default")"
+    nc="$(_koopa_ansi_escape_code "nocolor")"
+    echo -e "${emoji} ${c1}${key}:${nc} ${c2}${value}${nc}"
     return 0
 }
 
