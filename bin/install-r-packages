@@ -44,7 +44,7 @@ if ("--all" %in% args) {
 
 ## Check for GitHub PAT, if necessary.
 if (isTRUE(all)) {
-    stopifnot(hasGitHubPAT)
+    stopifnot(hasGitHubPAT())
 }
 
 ## Install BiocManager first, if necessary.
