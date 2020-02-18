@@ -314,7 +314,7 @@ _koopa_status_fail() {  # {{{1
     local c1 nc pre str
     pre="      FAIL"
     str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "red-bold")"
+    c1="$(_koopa_ansi_escape_code "red")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${nc} | ${str}"
 }
@@ -354,7 +354,7 @@ _koopa_stop() {  # {{{1
     str="ERROR: ${1:?}"
     pre="$(_koopa_emoji) !! "
     c1="$(_koopa_ansi_escape_code "red")"
-    c2="$(_koopa_ansi_escape_code "red-bold")"
+    c2="$(_koopa_ansi_escape_code "red")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
     exit 1
@@ -369,7 +369,7 @@ _koopa_success() {  # {{{1
     str="${1:?}"
     pre="$(_koopa_emoji) OK "
     c1="$(_koopa_ansi_escape_code "green")"
-    c2="$(_koopa_ansi_escape_code "green-bold")"
+    c2="$(_koopa_ansi_escape_code "green")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${c1}${pre}${c2}${str}${nc}"
 }
@@ -383,7 +383,7 @@ _koopa_warning() {  # {{{1
     str="WARNING: ${1:?}"
     pre="$(_koopa_emoji) !! "
     c1="$(_koopa_ansi_escape_code "yellow")"
-    c2="$(_koopa_ansi_escape_code "default-bold")"
+    c2="$(_koopa_ansi_escape_code "yellow")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     >&2 echo -e "${c1}${pre}${c2}${str}${nc}"
 }
