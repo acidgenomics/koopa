@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Build all Acid Genomics images.
+# Updated 2020-02-18.
+# """
+
+_koopa_h1 "Building all Docker images."
+
+images=(
+    # Lightweight Linux images.
+    acidgenomics/alpine
+    acidgenomics/amzn
+    acidgenomics/arch
+    acidgenomics/biocontainers
+    acidgenomics/kali
+    acidgenomics/miniconda3
+    acidgenomics/opensuse
+    # Full Linux images.
+    acidgenomics/debian
+    acidgenomics/ubuntu
+    acidgenomics/fedora
+    acidgenomics/centos
+    # R images.
+    acidgenomics/bioconductor
+    acidgenomics/basejump
+    acidgenomics/bcbiornaseq
+    acidgenomics/bcbiosinglecell
+    acidgenomics/rnaseq
+    # > acidgenomics/singlecell
+    # Bioinformatics software.
+    # > acidgenomics/rnaeditingindexer
+    # > acidgenomics/maestro
+)
+
+docker system prune --all --force
+
+for image in "${images[@]}"
+do
+    docker-build "$image"
+done
+
+docker system prune --all --force
+
+_koopa_success "All Docker images built successfully."
