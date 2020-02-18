@@ -14,6 +14,17 @@ hasColor <- function() {
 
 
 
+#' Does the current session have a GitHUB personal access token?
+#'
+#' Required for package installs from GitHub, otherwise will hit rate limit.
+#'
+#' @note Updated 2020-02-18.
+hasGitHubPAT <- function() {
+    isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))))
+}
+
+
+
 #' Is a system command installed?
 #' @note Updated 2020-02-06.
 isCommand <- function(which) {
