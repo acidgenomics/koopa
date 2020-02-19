@@ -10,14 +10,6 @@ _koopa_assert_has_args "$@"
 while (("$#"))
 do
     case "$1" in
-        --data-disk=*)
-            data_disk="${1#*=}"
-            shift 1
-            ;;
-        --data-disk)
-            data_disk="$2"
-            shift 2
-            ;;
         --source-ip=*)
             source_ip="${1#*=}"
             shift 1
@@ -32,7 +24,7 @@ do
     esac
 done
 
-if [[ -z "${data_disk:-}" ]] || [[ -z "${source_ip:-}" ]]
+if [[ -z "${source_ip:-}" ]]
 then
     _koopa_missing_arg
 fi
@@ -40,39 +32,50 @@ fi
 # app prefix  {{{1
 # ==============================================================================
 
-# Need to sync this before make prefix, otherwise some symlinks won't resolve
-# as expected and chmod will error.
+# Need to sync this before make prefix step, otherwise some symlinks won't
+# resolve as expected, and chmod will error.
 
 app_prefix="$(_koopa_app_prefix)"
 
-# Check that data disk is configured correctly.
-if [[ ! -L "$app_prefix" ]]
+if [[ -d "$app_prefix" ]]
 then
-    _koopa_stop "'${app_prefix}' is not configured correctly. \
-Run 'configure-vm' first to configure the virtual machine."
+    # Here's how to optionally skip some big apps on lower-powered VMs:
+    # # Put the rsync flag string into an array, so we can modify.
+    # mapfile -t app_flags < <(_koopa_rsync_flags)
+    #
+    # # Skipping programs that are specific to powerful multi-core VMs.
+    # if ! _koopa_is_powerful
+    # then
+    #     app_flags+=(
+    #         "--exclude='bcbio'"
+    #         "--exclude='cellranger'"
+    #         "--exclude='cellranger-atac'"
+    #         "--exclude='omicsoft'"
+    #     )
+    # fi
+    #
+    # --flags="${app_flags[*]}"
+    _koopa_rsync_vm \
+        --prefix="$app_prefix" \
+        --source-ip="$source_ip"
 fi
-
-# Put the rsync flag string into an array, so we can modify.
-mapfile -t app_flags < <(_koopa_rsync_flags)
-
-# Skipping programs that are specific to powerful multi-core VMs.
-if ! _koopa_is_powerful
-then
-    app_flags+=("--exclude=bcbio")
-    app_flags+=("--exclude=cellranger")
-    app_flags+=("--exclude=cellranger-atac")
-    app_flags+=("--exclude=omicsoft")
-    app_flags+=("--exclude=rnaeditingindexer")
-fi
-
-_koopa_rsync_vm \
-    --flags="${app_flags[*]}" \
-    --prefix="$app_prefix" \
-    --source-ip="$source_ip"
 
 # make prefix  {{{1
 # ==============================================================================
 
+make_prefix="$(_koopa_make_prefix)"
 _koopa_rsync_vm \
-    --prefix="$(_koopa_make_prefix)" \
+    --prefix="$make_prefix" \
     --source-ip="$source_ip"
+
+# refdata prefix {{{1
+# ==============================================================================
+
+refdata_prefix="$(_koopa_refdata_prefix)"
+
+if [[ -d "$refdata_prefix" ]]
+then
+    _koopa_rsync_vm \
+        --prefix="$refdata_prefix" \
+        --source-ip="$source_ip"
+fi
