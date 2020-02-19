@@ -26,7 +26,7 @@ then
     _koopa_note "OpenJDK already installed."
 else
     _koopa_h2 "Installing OpenJDK."
-    _koopa_prefix_mkdir "$jdk_dir"
+    _koopa_mkdir "$jdk_dir"
     (
         cd "${jdk_dir}" || exit 1
         file="openjdk-${version}_linux-x64_bin.tar.gz"
