@@ -17,9 +17,6 @@ _koopa_h1 "Building all Docker images."
 
 docker login
 
-# Nuclear reset option.
-docker system prune --all --force
-
 images=(
     # Lightweight Linux images.
     acidgenomics/alpine
@@ -48,9 +45,11 @@ images=(
 
 for image in "${images[@]}"
 do
-    docker pull "$image"
+    # Nuclear reset option.
+    docker system prune --all --force
 
     # Skip image if pushed already today.
+    docker pull "$image"
     json="$( \
         docker inspect \
         --format='{{json .Created}}' \
@@ -67,6 +66,7 @@ do
         continue
     fi
 
+    # Build outdated images automatically.
     docker-build "$image"
 done
 
