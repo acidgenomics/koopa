@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-02-18.
+## Updated 2020-02-19.
 ## """
 
 options(
@@ -45,7 +45,11 @@ mapply(
     MoreArgs = list(image = image),
     FUN = function(image, tag) {
         system2(
-            command = file.path(scriptDir, "docker-build"),
+            command = file.path(
+                koopaPrefix,
+                "bin",
+                "docker-build"
+            ),
             args = c(
                 paste0("--tag=", tag),
                 image
@@ -65,7 +69,11 @@ if (identical(length(sourceTag), 1L)) {
         image, sourceTag, destTag
     ))
     system2(
-        command = file.path(scriptDir, "docker-tag"),
+        command = file.path(
+            koopaPrefix,
+            "bin",
+            "docker-tag"
+        ),
         args = c(image, sourceTag, destTag)
     )
 }
