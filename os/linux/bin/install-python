@@ -79,6 +79,9 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
+# Remove '__pycache__' directories, which can cause rsync issues.
+_koopa_python_remove_pycache "$prefix"
+
 # Symlink 'python3' to 'python'.
 if [[ ! -f "${prefix}/bin/python" ]]
 then
