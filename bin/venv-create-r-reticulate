@@ -71,4 +71,4 @@ py_exe="${prefix}/bin/python3"
 "$py_exe" -m pip install louvain umap-learn
 "$py_exe" -m pip list
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"

@@ -609,7 +609,7 @@ _koopa_update_r_config() {  # {{{1
     r_home="$(_koopa_r_home)"
     _koopa_link_r_etc
     _koopa_link_r_site_library
-    _koopa_set_permissions "$r_home"
+    _koopa_set_permissions --recursive "$r_home"
     _koopa_r_javareconf
     return 0
 }

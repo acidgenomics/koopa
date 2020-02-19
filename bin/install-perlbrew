@@ -47,7 +47,7 @@ _koopa_rm "${HOME}/.perlbrew"
     curl -L https://install.perlbrew.pl | bash
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"
 _koopa_activate_perlbrew
 
 # Add system Perl  {{{1

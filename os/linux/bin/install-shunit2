@@ -26,7 +26,7 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "shunit2-${version}" || exit 1
-    _koopa_set_permissions "$prefix"
+    _koopa_set_permissions --recursive "$prefix"
     cp --archive shunit2 "${prefix}/bin/."
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
