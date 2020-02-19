@@ -67,7 +67,7 @@ do
     fi
 
     # Build outdated images automatically.
-    docker-build "$image"
+    docker-build-all-tags "$image"
 done
 
 _koopa_success "All Docker images built successfully."
