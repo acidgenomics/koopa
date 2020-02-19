@@ -721,6 +721,32 @@ _koopa_link_cellar() {  # {{{1
     return 0
 }
 
+_koopa_list_internal_functions() {  # {{{1
+    # """
+    # List all functions defined by koopa.
+    # @note Updated 2020-02-19.
+    # """
+    local x
+    case "$(_koopa_shell)" in
+        bash)
+            x="$( \
+                declare -F \
+                | sed "s/^declare -f //g" \
+            )"
+            ;;
+        zsh)
+            # shellcheck disable=SC2086
+            x="$(print -l ${(ok)functions})"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    x="$(echo "$x" | grep -E "^_koopa_")"
+    echo "$x"
+    return 0
+}
+
 _koopa_ln() {  # {{{1
     # """
     # Create symlink quietly.
@@ -1140,6 +1166,32 @@ _koopa_today_bucket() {  # {{{1
     bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
     mkdir -p "${bucket_dir}/${bucket_today}"
     ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
+    return 0
+}
+
+_koopa_unset_internal_functions() {  # {{{1
+    # """
+    # Unset all of koopa's internal functions.
+    # @note Updated 2020-02-19.
+    #
+    # Potentially useful as a final clean-up step for activation.
+    # Note that this will nuke functions currently required for interactive
+    # prompt, so don't do this yet.
+    # """
+    local funs
+    # Convert the '\n' delimited list into an array.
+    case "$(_koopa_shell)" in
+        bash)
+            mapfile -t funs < <(_koopa_list_internal_functions)
+            ;;
+        zsh)
+            funs=("${(@f)$(_koopa_list_internal_functions)}")
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    unset -f "${funs[@]}"
     return 0
 }
 
