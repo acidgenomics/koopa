@@ -905,11 +905,10 @@ _koopa_os_string() {  # {{{1
 _koopa_prefix_chgrp() {  # {{{1
     # """
     # Set group for target prefix(es).
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-02-19.
     # """
     _koopa_chgrp \
-        -L \
-        --dereference \
+        --no-dereference \
         --recursive \
         "$(_koopa_group)" \
         "$@"
@@ -934,13 +933,10 @@ _koopa_prefix_chmod() {  # {{{1
 _koopa_prefix_chown() {  # {{{1
     # """
     # Set ownership (user and group) for target prefix(es).
-    # @note Updated 2020-02-16.
-    #
-    # Note that '--dereference' requires '-H' or '-L'.
+    # @note Updated 2020-02-19.
     # """
     _koopa_chown \
-        -L \
-        --dereference \
+        --no-dereference \
         --recursive \
         "$(_koopa_user):$(_koopa_group)" \
         "$@"
@@ -950,11 +946,10 @@ _koopa_prefix_chown() {  # {{{1
 _koopa_prefix_chown_user() {  # {{{1
     # """
     # Set ownership to current user for target prefix(es).
-    # @note Updated 2020-01-17.
+    # @note Updated 2020-02-19.
     # """
     _koopa_chown \
-        -L \
-        --dereference \
+        --no-dereference \
         --recursive \
         "${USER:?}:$(_koopa_group)" \
         "$@"
