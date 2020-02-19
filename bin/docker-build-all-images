@@ -18,7 +18,7 @@ _koopa_h1 "Building all Docker images."
 docker login
 
 # Nuclear reset option.
-# > docker system prune --all --force
+docker system prune --all --force
 
 images=(
     # Lightweight Linux images.
@@ -48,21 +48,9 @@ images=(
 
 for image in "${images[@]}"
 do
-    # Force remove existing local image(s).  {{{2
-    mapfile -t image_ids < <( \
-        docker image ls \
-            --filter reference="$image" \
-            --quiet \
-    )
-    if _koopa_is_array_non_empty "${image_ids[@]}"
-    then
-        _koopa_note "Existing local copy of '${image}' detected. Removing."
-        docker image rm --force "${image_ids[@]}"
-    fi
-
     docker pull "$image"
 
-    # Skip image if built today.  {{{2
+    # Skip image if pushed already today.
     json="$( \
         docker inspect \
         --format='{{json .Created}}' \
@@ -75,7 +63,7 @@ do
     today=$(date "+%Y-%m-%d")
     if [[ "$timestamp" == "$today" ]]
     then
-        _koopa_note "'${image}' image already built today."
+        _koopa_note "'${image}' image already pushed today."
         continue
     fi
 

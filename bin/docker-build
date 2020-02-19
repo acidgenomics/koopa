@@ -77,6 +77,17 @@ _koopa_h1 "Building '${tagged_image}' Docker image."
 
 docker login "$server"
 
+# Force remove any existing local tagged images.
+mapfile -t image_ids < <( \
+    docker image ls \
+        --filter reference="$tagged_image" \
+        --quiet \
+)
+if _koopa_is_array_non_empty "${image_ids[@]}"
+then
+    docker image rm --force "${image_ids[@]}"
+fi
+
 # Build a local copy of the image.
 docker build \
     --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}" \
