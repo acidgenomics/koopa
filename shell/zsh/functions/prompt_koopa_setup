@@ -20,7 +20,7 @@
 # - %(?..) : prompt conditional - %(condition.true.false)
 
 _koopa_prompt_setup() {
-    PROMPT="$(koopa_prompt)"
+    PROMPT="$(_koopa_prompt)"
 }
 
 _koopa_prompt_setup "$@"
