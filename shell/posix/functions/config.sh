@@ -304,7 +304,7 @@ _koopa_install_dotfiles_private() {  # {{{1
     # > _koopa_git_clone_dotfiles_private
     local prefix
     prefix="$(_koopa_dotfiles_private_prefix)"
-    if [ -d "$prefix" ]
+    if [ ! -d "$prefix" ]
     then
         _koopa_note "No private dotfiles at '${prefix}'."
         return 0
@@ -517,7 +517,7 @@ _koopa_uninstall_dotfiles() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_dotfiles_prefix)"
-    if [ -d "$prefix" ]
+    if [ ! -d "$prefix" ]
     then
         _koopa_note "No dotfiles at '${prefix}'."
         return 0
@@ -536,7 +536,7 @@ _koopa_uninstall_dotfiles_private() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_dotfiles_private_prefix)"
-    if [ -d "$prefix" ]
+    if [ ! -d "$prefix" ]
     then
         _koopa_note "No private dotfiles at '${prefix}'."
         return 0
