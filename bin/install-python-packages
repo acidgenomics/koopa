@@ -6,13 +6,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-# """
-# Potential defaults:
-# - awscli (v1.17)
-# - numpy
-# - pandas
-# """
-
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed python3
 
@@ -21,6 +14,7 @@ _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
 
 _koopa_install_pip
 
+# These are used internally by koopa.
 pkgs=(
     black
     flake8
