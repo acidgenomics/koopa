@@ -51,7 +51,7 @@ else
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
 
-_koopa_set_permissions "$jdk_dir"
+_koopa_set_permissions --recursive "$jdk_dir"
 
 _koopa_h2 "Updating system alternatives."
 

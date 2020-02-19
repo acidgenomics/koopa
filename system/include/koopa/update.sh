@@ -56,7 +56,7 @@ then
     _koopa_assert_has_sudo
 fi
 
-_koopa_set_permissions "$koopa_prefix"
+_koopa_set_permissions --recursive "$koopa_prefix"
 
 (
     cd "$koopa_prefix" || exit 1
@@ -66,7 +66,7 @@ _koopa_set_permissions "$koopa_prefix"
     _koopa_git_pull
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_set_permissions "$koopa_prefix"
+_koopa_set_permissions --recursive "$koopa_prefix"
 
 _koopa_update_xdg_config
 _koopa_update_ldconfig

@@ -100,6 +100,6 @@ then
     # > conda-create-env stream             # single-cell               # 0.998G
 fi
 
-_koopa_set_permissions "$(_koopa_conda_prefix)"
+_koopa_set_permissions --recursive "$(_koopa_conda_prefix)"
 
 conda env list

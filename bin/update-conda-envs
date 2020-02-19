@@ -32,4 +32,4 @@ done < <( \
 )
 
 # > "$conda_exe" clean --yes --tarballs
-_koopa_set_permissions "$conda_prefix"
+_koopa_set_permissions --recursive "$conda_prefix"

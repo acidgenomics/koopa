@@ -23,6 +23,6 @@ _koopa_h1 "Installing ChromHMM at '${prefix}'."
 
 rm -fr "$tmp_dir"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"
 
 _koopa_success "Installation of ChromHMM was successful."

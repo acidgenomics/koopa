@@ -41,13 +41,13 @@ fi
 _koopa_h1 "Installing Rust cargo crates into '${CARGO_HOME}'."
 _koopa_dl "Crates" "$(_koopa_to_string "${crates[@]}")"
 
-_koopa_set_permissions_user "$CARGO_HOME"
+_koopa_set_permissions  --recursive --user "$CARGO_HOME"
 
 for crate in "${crates[@]}"
 do
     cargo install "$crate"
 done
 
-_koopa_set_permissions "$CARGO_HOME"
+_koopa_set_permissions --recursive "$CARGO_HOME"
 
 _koopa_success "Installation of Rust cargo crates was successful."

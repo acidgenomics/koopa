@@ -24,15 +24,13 @@ export RUSTUP_HOME
 _koopa_dl "CARGO_HOME" "$CARGO_HOME"
 _koopa_dl "RUSTUP_HOME" "$RUSTUP_HOME"
 
-_koopa_mkdir "$CARGO_HOME"
-_koopa_mkdir "$RUSTUP_HOME"
+_koopa_mkdir "$CARGO_HOME" "$RUSTUP_HOME"
 
 (
     curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_set_permissions "$CARGO_HOME"
-_koopa_set_permissions "$RUSTUP_HOME"
+_koopa_set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
 
 _koopa_success "Installation of Rust was successful."
 _koopa_note "Restart the shell to finish activation."

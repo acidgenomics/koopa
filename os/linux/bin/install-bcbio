@@ -88,6 +88,6 @@ then
     _koopa_ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
 fi
 
-_koopa_set_permissions "$app_prefix"
+_koopa_set_permissions --recursive "$app_prefix"
 
 _koopa_success "Installation of bcbio-nextgen was successful."
