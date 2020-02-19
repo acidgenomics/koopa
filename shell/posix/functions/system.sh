@@ -4,26 +4,27 @@
 _koopa_admin_group() {  # {{{1
     # """
     # Return the administrator group.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-02-19.
+    #
+    # Usage of 'groups' here is terribly slow for domain users.
+    # Currently seeing this with CPI AWS Ubuntu config.
+    # Instead of grep matching against 'groups' return, just set the
+    # expected default per Linux distro. In the event that we're unsure,
+    # the function will intentionally error.
     # """
     local group
     if _koopa_is_root
     then
-        group="$(id -gn)"
-        echo "$group"
-        return 0
-    fi
-    local groups
-    groups="$(groups)"
-    if echo "$groups" | grep -Eq "\b(admin)\b"
-    then
-        group="admin"
-    elif echo "$groups" | grep -Eq "\b(sudo)\b"
+        group="root"
+    elif _koopa_is_debian
     then
         group="sudo"
-    elif echo "$groups" | grep -Eq "\b(wheel)\b"
+    elif _koopa_is_fedora
     then
         group="wheel"
+    elif _koopa_is_macos
+    then
+        group="admin"
     else
         _koopa_stop "Failed to detect admin group."
     fi

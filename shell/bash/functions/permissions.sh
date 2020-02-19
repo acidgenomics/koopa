@@ -1,19 +1,24 @@
-#!/bin/sh
-# shellcheck disable=SC2039
+#!/usr/bin/env bash
 
-# FIXME Add '--recursive' flag support.
-# FIXME Add '--user' flag support.
 _koopa_set_permissions() {  # {{{1
     # """
     # Set permissions on target prefix(es).
     # @note Updated 2020-02-19.
+    #
+    # @param --recursive
+    #   Change permissions recursively.
+    # @param --user
+    #   Change ownership to current user, rather than koopa default, which is
+    #   root for shared installs.
     # """
-
     local recursive
     recursive=0
 
     local user
     user=0
+
+    local verbose
+    verbose=0
 
     pos=()
     while (("$#"))
@@ -25,6 +30,10 @@ _koopa_set_permissions() {  # {{{1
                 ;;
             --user)
                 user=1
+                shift 1
+                ;;
+            --verbose)
+                verbose=1
                 shift 1
                 ;;
             --)
@@ -42,42 +51,51 @@ _koopa_set_permissions() {  # {{{1
     done
     set -- "${pos[@]}"
 
-    # Error if the user hasn't requested any files.
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -ne 0 ] || return 1
 
-    # FIXME Put these steps into a for loop.
+    # chmod flags.
+    local chmod_flags
+    mapfile -t chmod_flags < <(_koopa_chmod_flags)
+    if [[ "$recursive" -eq 1 ]]
+    then
+        chmod_flags+=("--recursive")  # '-R'
+    fi
+    if [[ "$verbose" -eq 1 ]]
+    then
+        chmod_flags+=("--verbose")  # '-v'
+    fi
 
-
-
-    # chmod  {{{2
-    # --------------------------------------------------
-
-    _koopa_chmod \
-        --recursive \
-        "$(_koopa_chmod_flags)" \
-        "$@"
-
-    # chown  {{2
-    # --------------------------------------------------
-
+    # chown flags.
+    local chown_flags
+    chown_flags=("--no-dereference")  # '-h'
+    if [[ "$recursive" -eq 1 ]]
+    then
+        chown_flags+=("--recursive")  # '-R'
+    fi
+    if [[ "$verbose" -eq 1 ]]
+    then
+        chown_flags+=("--verbose")  # '-v'
+    fi
     local group
     group="$(_koopa_group)"
-
+    local who
     case "$user" in
         0)
-            user="$(_koopa_user)"
+            who="$(_koopa_user)"
             ;;
         1)
-            user="${USER:?}" \
+            who="${USER:?}" \
             ;;
     esac
+    chown_flags+=("${who}:${group}")
 
-    # FIXME Need to add recursive support here.
-    _koopa_chown \
-        --no-dereference \
-        --recursive \
-        "${user}:${group}" \
-        "$@"
+    # Loop across input and set permissions.
+    for arg
+    do
+        echo "$arg"
+        _koopa_chmod "${chmod_flags[@]}" "$arg"
+        _koopa_chown "${chown_flags[@]}" "$arg"
+    done
 
     return 0
 }

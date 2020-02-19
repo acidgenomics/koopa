@@ -39,10 +39,11 @@ _koopa_has_passwordless_sudo() {  # {{{1
 _koopa_has_sudo() {  # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
-    # @note Updated 2020-02-05.
+    # @note Updated 2020-02-19.
     #
     # This check is hanging on an CPI AWS Ubuntu EC2 instance, I think due to
-    # 'groups' taking a long time to return for domain users.
+    # 'groups' can lag on systems for domain user accounts.
+    # Currently seeing on CPI AWS Ubuntu config.
     #
     # Avoid prompting with '-n, --non-interactive', but note that this isn't
     # supported on all systems.
