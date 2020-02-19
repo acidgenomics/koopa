@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-15.
+    Updated 2020-02-19.
 EOF
 }
 
@@ -271,7 +271,9 @@ then
     esac
 fi
 
-[[ "$dotfiles" -eq 1 ]] && _koopa_link_dotfiles
+[[ "$dotfiles" -eq 1 ]] && \
+    _koopa_git_clone_dotfiles && \
+    _koopa_install_dotfiles
 
 
 
