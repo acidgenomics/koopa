@@ -30,16 +30,16 @@ images=(
     acidgenomics/miniconda3
     acidgenomics/opensuse
     # Full Linux images.
-    #acidgenomics/debian
-    #acidgenomics/ubuntu
-    #acidgenomics/fedora
-    #acidgenomics/centos
+    acidgenomics/debian
+    acidgenomics/ubuntu
+    acidgenomics/fedora
+    acidgenomics/centos
     # R images.
-    #acidgenomics/bioconductor
-    #acidgenomics/basejump
-    #acidgenomics/bcbiornaseq
-    #acidgenomics/bcbiosinglecell
-    #acidgenomics/rnaseq
+    acidgenomics/bioconductor
+    acidgenomics/basejump
+    acidgenomics/bcbiornaseq
+    acidgenomics/bcbiosinglecell
+    acidgenomics/rnaseq
     # > acidgenomics/singlecell
     # Bioinformatics software.
     # > acidgenomics/rnaeditingindexer
