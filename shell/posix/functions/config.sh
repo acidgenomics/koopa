@@ -234,11 +234,10 @@ _koopa_fix_zsh_permissions() {  # {{{1
 _koopa_git_clone_docker() {
     # """
     # Clone docker repo.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-19.
     # """
-    _koopa_assert_is_github_ssh_enabled
     _koopa_git_clone \
-        "git@github.com:acidgenomics/docker.git" \
+        "https://github.com/acidgenomics/docker.git" \
         "$(_koopa_docker_prefix)"
     return 0
 }
@@ -246,7 +245,7 @@ _koopa_git_clone_docker() {
 _koopa_git_clone_dotfiles() {  # {{{1
     # """
     # Clone dotfiles repo.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-19.
     # """
     _koopa_git_clone \
         "https://github.com/mjsteinbaugh/dotfiles.git" \
@@ -257,7 +256,7 @@ _koopa_git_clone_dotfiles() {  # {{{1
 _koopa_git_clone_dotfiles_private() {  # {{{1
     # """
     # Clone dotfiles-private repo.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-19.
     # """
     _koopa_assert_is_github_ssh_enabled
     _koopa_git_clone \
@@ -269,25 +268,67 @@ _koopa_git_clone_dotfiles_private() {  # {{{1
 _koopa_git_clone_scripts_private() {
     # """
     # Clone private scripts.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-19.
     # """
+    _koopa_assert_is_github_ssh_enabled
     _koopa_git_clone \
         "git@github.com:mjsteinbaugh/scripts-private.git" \
         "$(_koopa_scripts_private_prefix)"  
     return 0
 }
 
+_koopa_install_dotfiles() {  # {{{1
+    # """
+    # Install dot files.
+    # @note Updated 2020-02-19.
+    # """
+    local prefix
+    prefix="$(_koopa_dotfiles_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_note "No dotfiles at '${prefix}'."
+        return 0
+    fi
+    local script
+    script="${prefix}/install"
+    _koopa_assert_is_file "$script"
+    "$script"
+    return 0
+}
+
+_koopa_install_dotfiles_private() {  # {{{1
+    # """
+    # Install private dot files.
+    # @note Updated 2020-02-19.
+    # """
+    # > _koopa_git_clone_dotfiles_private
+    local prefix
+    prefix="$(_koopa_dotfiles_private_prefix)"
+    if [ -d "$prefix" ]
+    then
+        _koopa_note "No private dotfiles at '${prefix}'."
+        return 0
+    fi
+    local script
+    script="${prefix}/install"
+    _koopa_assert_is_file "$script"
+    "$script"
+    return 0
+}
+
 _koopa_install_mike() {  # {{{1
     # """
     # Install additional Mike-specific config files.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-02-19.
     #
     # Note that these repos require SSH key to be set on GitHub.
     # """
-    _koopa_link_dotfiles
-    _koopa_link_dotfiles_private
     _koopa_git_clone_docker
+    _koopa_git_clone_dotfiles
+    _koopa_git_clone_dotfiles_private
     _koopa_git_clone_scripts_private
+    _koopa_install_dotfiles
+    _koopa_install_dotfiles_private
     return 0
 }
 
@@ -388,36 +429,6 @@ _koopa_link_docker() {  # {{{1
     return 0
 }
 
-_koopa_link_dotfiles() {  # {{{1
-    # """
-    # Link dotfiles.
-    # @note Updated 2020-02-18.
-    # """
-    _koopa_git_clone_dotfiles
-    local prefix
-    prefix="$(_koopa_dotfiles_prefix)"
-    local script
-    script="${prefix}/install"
-    _koopa_assert_is_file "$script"
-    "$script"
-    return 0
-}
-
-_koopa_link_dotfiles_private() {  # {{{1
-    # """
-    # Link private dotfiles.
-    # @note Updated 2020-02-18.
-    # """
-    _koopa_git_clone_dotfiles_private
-    local prefix
-    prefix="$(_koopa_dotfiles_private_prefix)"
-    local script
-    script="${prefix}/install"
-    _koopa_assert_is_file "$script"
-    "$script"
-    return 0
-}
-
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
@@ -497,6 +508,44 @@ _koopa_remove_user_from_group() {  # {{{1
     local user
     user="${2:-${USER}}"
     sudo gpasswd --delete "$user" "$group"
+}
+
+_koopa_uninstall_dotfiles() {  # {{{1
+    # """
+    # Uninstall dot files.
+    # @note Updated 2020-02-19.
+    # """
+    local prefix
+    prefix="$(_koopa_dotfiles_prefix)"
+    if [ -d "$prefix" ]
+    then
+        _koopa_note "No dotfiles at '${prefix}'."
+        return 0
+    fi
+    local script
+    script="${prefix}/uninstall"
+    _koopa_assert_is_file "$script"
+    "$script"
+    return 0
+}
+
+_koopa_uninstall_dotfiles_private() {  # {{{1
+    # """
+    # Uninstall private dot files.
+    # @note Updated 2020-02-19.
+    # """
+    local prefix
+    prefix="$(_koopa_dotfiles_private_prefix)"
+    if [ -d "$prefix" ]
+    then
+        _koopa_note "No private dotfiles at '${prefix}'."
+        return 0
+    fi
+    local script
+    script="${prefix}/uninstall"
+    _koopa_assert_is_file "$script"
+    "$script"
+    return 0
 }
 
 _koopa_update_etc_profile_d() {  # {{{1
