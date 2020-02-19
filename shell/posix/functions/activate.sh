@@ -357,7 +357,7 @@ _koopa_activate_homebrew_python() {
 _koopa_activate_koopa_paths() {  # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-18.
     # """
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
@@ -395,6 +395,9 @@ _koopa_activate_koopa_paths() {  # {{{1
     config_prefix="$(_koopa_config_prefix)"
     _koopa_activate_prefix "${config_prefix}/docker"
     _koopa_activate_prefix "${config_prefix}/scripts-private"
+
+    # Defunct scripts.
+    _koopa_add_to_path_end "${koopa_prefix}/system/defunct/bin"
 
     return 0
 }

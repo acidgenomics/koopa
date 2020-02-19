@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# """
+# Push a local build.
+# Updated 2020-02-18.
+#
+# Useful if GPG agent causes push failure.
+#
+# @seealso
+# - https://docs.docker.com/config/formatting/
+#
+# @examples
+# docker-push acidgenomics/debian:latest
+# """
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+image="${1:?}"
+server="docker.io"
+
+_koopa_h1 "Pushing images matching '${image}'."
+
+_koopa_assert_is_matching_regex "$image" '^.+/.+$'
+
+json="$( \
+    docker inspect \
+    --format='{{json .RepoTags}}' \
+    "$image" \
+)"
+
+# Convert JSON to lines.
+# shellcheck disable=SC2001
+mapfile -t images < <( \
+    echo "$json" \
+        | tr ',' '\n' \
+        | sed 's/^\[//' \
+        | sed 's/\]$//' \
+        | sed 's/^\"//g' \
+        | sed 's/\"$//g' \
+        | sort
+)
+
+if ! _koopa_is_array_non_empty "${images[@]}"
+then
+    docker image ls
+    _koopa_stop "'${image}' failed to match any images."
+fi
+
+for image in "${images[@]}"
+do
+    _koopa_h2 "Pushing '${image}'."
+    docker push "${server}/${image}"
+done
