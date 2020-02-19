@@ -11,13 +11,8 @@ then
     rm -fv "/etc/profile.d/zzz-koopa.sh"
 fi
 
-# Uninstall dotfiles.
-script="$(_koopa_dotfiles_prefix)/uninstall"
-[[ -x "$script" ]] && "$script"
-
-# Uninstall dotfiles-private.
-script="$(_koopa_dotfiles_private_prefix)/uninstall"
-[[ -x "$script" ]] && "$script"
+_koopa_uninstall_dotfiles
+_koopa_uninstall_dotfiles_private
 
 rm -frv "$(_koopa_config_prefix)"
 rm -frv "$KOOPA_PREFIX"
