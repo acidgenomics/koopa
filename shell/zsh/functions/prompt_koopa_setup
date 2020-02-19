@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 # Koopa ZSH prompt.
-# @note Updated 2019-10-31.
+# @note Updated 2020-02-19.
 
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
@@ -20,7 +20,7 @@
 # - %(?..) : prompt conditional - %(condition.true.false)
 
 _koopa_prompt_setup() {
-    PROMPT="$(_koopa_prompt)"
+    PROMPT="$(koopa_prompt)"
 }
 
 _koopa_prompt_setup "$@"
