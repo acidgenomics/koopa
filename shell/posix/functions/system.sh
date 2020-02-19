@@ -912,13 +912,19 @@ _koopa_python_remove_pycache() {  # {{{1
     # installation across multiple VMs.
     # """
     local prefix
-    prefix="${1:-"$(_koopa_python_site_packages_prefix)"}"
+    prefix="${1:-}"
+    if [ -z "$prefix" ]
+    then
+        # e.g. /usr/local/cellar/python/3.8.1
+        local python
+        python="$(_koopa_which_realpath "python3")"
+        prefix="$(realpath "$(dirname "$python")/..")"
+    fi
     _koopa_h2 "Removing pycache in '${prefix}'."
     find "$prefix" \
         -type d \
         -name "__pycache__" \
-        -print0 \
-        | xargs -0 -I {} rm -fr {}
+        -exec rm -frv {} \;
     return 0
 }
 
