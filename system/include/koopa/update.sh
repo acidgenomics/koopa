@@ -119,5 +119,8 @@ fi
 
 _koopa_fix_zsh_permissions
 
+_koopa_install_dotfiles
+_koopa_install_dotfiles_private
+
 _koopa_success "koopa update was successful."
 _koopa_note "Shell must be reloaded for changes to take effect."
