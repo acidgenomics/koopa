@@ -987,6 +987,17 @@ _koopa_rsync_flags() {  # {{{1
     return 0
 }
 
+_koopa_set_sticky_group() {  # {{{1
+    # """
+    # Set sticky group bit for target prefix(es).
+    # @note Updated 2020-01-24.
+    #
+    # This never works recursively.
+    # """
+    _koopa_chmod g+s "$@"
+    return 0
+}
+
 _koopa_shell() {  # {{{1
     # """
     # Note that this isn't necessarily the default shell ('$SHELL').
