@@ -69,7 +69,7 @@ jobs="$(_koopa_cpu_count)"
         _koopa_extract "$file"
         cd "julia-${version}" || exit 1
         rm LICENSE.md
-        _koopa_prefix_mkdir "$prefix"
+        _koopa_mkdir "$prefix"
         cp -rv . "$prefix"
     elif [[ "$install" == "source" ]]
     then
