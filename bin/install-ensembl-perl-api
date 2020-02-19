@@ -14,7 +14,7 @@ _koopa_h1 "Installing Ensembl Perl API at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 
 (
-    _koopa_prefix_mkdir "$prefix"
+    _koopa_mkdir "$prefix"
     cd "$prefix" || exit 1
     # Install BioPerl.
     git clone -b release-1-6-924 --depth 1 \

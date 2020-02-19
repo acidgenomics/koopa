@@ -61,7 +61,7 @@ else
     _koopa_note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
 fi
 
-_koopa_prefix_mkdir "$prefix"
+_koopa_mkdir "$prefix"
 
 python3 -m venv "$prefix"
 py_exe="${prefix}/bin/python3"

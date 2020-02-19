@@ -24,8 +24,8 @@ export RUSTUP_HOME
 _koopa_dl "CARGO_HOME" "$CARGO_HOME"
 _koopa_dl "RUSTUP_HOME" "$RUSTUP_HOME"
 
-_koopa_prefix_mkdir "$CARGO_HOME"
-_koopa_prefix_mkdir "$RUSTUP_HOME"
+_koopa_mkdir "$CARGO_HOME"
+_koopa_mkdir "$RUSTUP_HOME"
 
 (
     curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
