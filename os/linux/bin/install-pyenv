@@ -20,7 +20,7 @@ _koopa_mkdir "$prefix"
         "$prefix"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"
 
 _koopa_success "Installation of pyenv was successful."
 _koopa_note "Restart the shell to complete installation of pyenv."

@@ -55,7 +55,7 @@ _koopa_mkdir "$app_prefix" "$cellar_prefix"
 rm -fr "$tmp_dir"
 
 app_prefix_dn="$(dirname "$app_prefix")"
-_koopa_set_permissions "$app_prefix_dn"
+_koopa_set_permissions --recursive "$app_prefix_dn"
 
 _koopa_h1 "Linking from '${app_prefix}' into '${cellar_prefix}'."
 cp -frsv \

@@ -61,7 +61,7 @@ _koopa_r_javareconf() {  # {{{1
         "JAR=${java_home}/bin/jar"
     )
     r_home="$(_koopa_r_home)"
-    _koopa_set_permissions "$r_home"
+    _koopa_set_permissions --recursive "$r_home"
     R --vanilla CMD javareconf "${java_flags[@]}"
     if ! _koopa_is_r_package_installed rJava
     then

@@ -53,7 +53,7 @@ _koopa_h2 "Installing 'ruby-build'."
         "${prefix}/plugins/ruby-build"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"
 
 # Install latest Ruby  {{{1
 # ==============================================================================

@@ -80,4 +80,4 @@ fi
 
 conda create "${flags[@]}"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"

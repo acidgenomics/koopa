@@ -27,7 +27,7 @@ _koopa_assert_has_no_args "$@"
     git clone "https://github.com/Ensembl/ensembl-io.git"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_set_permissions "$prefix"
+_koopa_set_permissions --recursive "$prefix"
 
 _koopa_success "Installation of Ensembl Pelr API was successful."
 _koopa_note "Reload the current shell to complete activation."
