@@ -188,7 +188,7 @@ then
         rsync=0
     else
         rsync=1
-        rsync-vm --data-disk="$data_disk" --source-ip="$source_ip"
+        rsync-vm --source-ip="$source_ip"
         # We're detecting the presence of this file in 'koopa update' call.
         touch "$(_koopa_config_prefix)/rsync"
     fi
