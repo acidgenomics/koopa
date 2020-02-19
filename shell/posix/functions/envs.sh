@@ -43,18 +43,6 @@ _koopa_activate_conda_env() {  # {{{1
     return 0
 }
 
-_koopa_conda_default_envs_prefix() {  # {{{1
-    # """
-    # Locate the directory where conda environments are installed by default.
-    # @note Updated 2019-10-26.
-    # """
-    _koopa_assert_is_installed conda
-    conda info \
-        | grep "envs directories" \
-        | cut -d ':' -f 2 \
-        | tr -d ' '
-}
-
 _koopa_conda_env() {  # {{{1
     # """
     # Conda environment name.
