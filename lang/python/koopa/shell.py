@@ -51,11 +51,14 @@ def find_cmd(cmd):
         return None
 
 
-def run(cmd, log_stdout=False, env=None):
+def shell(cmd, log_stdout=False, env=None):
     """
-    Perform running and check results, raising errors for issues.
+    Run shell command in subprocess.
     Updated 2020-02-09.
 
+    Perform running and check results, raising errors for issues.
+
+    See also:
     https://docs.python.org/3/library/subprocess.html
     """
     cmd, shell_arg, executable_arg = _normalize_cmd_args(cmd)
