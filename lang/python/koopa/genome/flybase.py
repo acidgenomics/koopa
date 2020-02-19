@@ -6,7 +6,7 @@ FlyBase genome utilities.
 import os
 
 from koopa.genome import _genome_version
-from koopa.shell import run
+from koopa.shell import shell
 from koopa.sys import (
     decompress_but_keep_original,
     download,
@@ -68,7 +68,7 @@ def download_flybase_transcriptome(release_url, output_dir, decompress, dmel):
     if not os.path.isfile(output_fasta_file):
         print("Concatenating '" + output_fasta_file + "'.")
         fasta_glob = os.path.join(cat_dir, "dmel-all-*.fasta.gz")
-        run("cat " + fasta_glob + " > " + output_fasta_file)
+        shell("cat " + fasta_glob + " > " + output_fasta_file)
         if decompress is True:
             decompress_but_keep_original(output_fasta_file)
 
