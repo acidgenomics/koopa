@@ -7,8 +7,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_assert_has_args "$@"
-_koopa_activate_conda
-_koopa_assert_is_installed conda
 
 force=0
 version=
@@ -63,6 +61,9 @@ else
 fi
 
 _koopa_info "Creating '${env_name}' conda environment."
+
+_koopa_activate_conda
+_koopa_assert_is_installed conda
 
 flags=(
     "--name=${env_name}"
