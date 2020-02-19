@@ -40,7 +40,6 @@ python3 -m pip install \
     --upgrade \
     "${pkgs[@]}"
 
-# > _koopa_python_remove_pycache
 _koopa_is_cellar python3 && _koopa_link_cellar python
 
 _koopa_success "Update of Python packages was successful."
