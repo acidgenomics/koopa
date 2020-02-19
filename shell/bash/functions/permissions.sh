@@ -92,7 +92,8 @@ _koopa_set_permissions() {  # {{{1
     # Loop across input and set permissions.
     for arg
     do
-        echo "$arg"
+        # Ensure we resolve symlinks here.
+        arg="$(realpath "$arg")"
         _koopa_chmod "${chmod_flags[@]}" "$arg"
         _koopa_chown "${chown_flags[@]}" "$arg"
     done
