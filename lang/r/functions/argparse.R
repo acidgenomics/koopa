@@ -23,7 +23,7 @@ koopaHelp <- function() {
 
 #' Parse argument flags
 #'
-#' @note Updated 2020-02-02.
+#' @note Updated 2020-02-18.
 #' @noRd
 #'
 #' @return `character`.
@@ -42,7 +42,16 @@ parseArgs <- function(
     args <- commandArgs(trailingOnly = FALSE)
     keep <- grepl(pattern = "^--", x = args)
     x <- args[keep]
-    x <- setdiff(x = x, y = c("--args", "--no-restore", "--slave"))
+    x <- setdiff(
+        x = x,
+        y = c(
+            "--args",
+            "--no-echo",
+            "--no-restore",
+            "--no-save",
+            "--slave"
+        )
+    )
     ## Always drop the file argument in this parser.
     keep <- !grepl(pattern = "^--file=", x = x)
     x <- x[keep]

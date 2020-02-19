@@ -265,6 +265,17 @@ _koopa_make_prefix() {  # {{{1
     return 0
 }
 
+_koopa_msigdb_prefix() {  # {{{1
+    # """
+    # MSigDB prefix.
+    # @note Updated 2020-02-18.
+    # """
+    local prefix
+    prefix="$(_koopa_refdata_prefix)/msigdb"
+    echo "$prefix"
+    return 0
+}
+
 _koopa_perlbrew_prefix() {  # {{{1
     # """
     # Perlbrew prefix.
@@ -371,6 +382,17 @@ _koopa_rbenv_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_app_prefix)/ruby/rbenv"
+    echo "$prefix"
+    return 0
+}
+
+_koopa_refdata_prefix() {  # {{{1
+    # """
+    # Reference data prefix.
+    # @note Updated 2020-02-18.
+    # """
+    local prefix
+    prefix="$(_koopa_data_disk_link_prefix)/refdata"
     echo "$prefix"
     return 0
 }

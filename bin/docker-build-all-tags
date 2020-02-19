@@ -1,0 +1,71 @@
+#!/usr/bin/env Rscript
+
+## """
+## Build all tags for a specific image.
+## Updated 2020-02-18.
+## """
+
+options(
+    "error" = quote(quit(status = 1L)),
+    "warning" = quote(quit(status = 1L)),
+    "verbose" = TRUE
+)
+
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(dirname(dirname(file)))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+## This will return only the positional arguments.
+posArgs <- commandArgs(trailingOnly = TRUE)
+
+dockerDir <- file.path("~", ".config", "koopa", "docker")
+stopifnot(isTRUE(dir.exists(dockerDir)))
+
+## Specify the image name as a positional argument.
+image <- posArgs[[1L]]
+imageDir <- file.path(dockerDir, image)
+stopifnot(
+    is.character(image),
+    dir.exists(imageDir)
+)
+tags <- sort(list.dirs(path = imageDir, full.names = FALSE, recursive = FALSE))
+stopifnot(length(tags) > 0L)
+
+## Enable parallelization if possible.
+if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
+    mapply <- BiocParallel::bpmapply
+}
+
+## Build the versioned images, defined by `Dockerfile` in the subdirectories.
+mapply(
+    tag = tags,
+    MoreArgs = list(image = image),
+    FUN = function(image, tag) {
+        system2(
+            command = file.path(scriptDir, "docker-build"),
+            args = c(
+                paste0("--tag=", tag),
+                image
+            )
+        )
+    },
+    USE.NAMES = FALSE,
+    SIMPLIFY = FALSE
+)
+
+## Automatically tag Bioconductor release as "latest".
+sourceTag <- grep(pattern = "release", x = tags, value = TRUE)
+if (identical(length(sourceTag), 1L)) {
+    destTag <- "latest"
+    print(sprintf(
+        "Tagging %s '%s' as '%s'.",
+        image, sourceTag, destTag
+    ))
+    system2(
+        command = file.path(scriptDir, "docker-tag"),
+        args = c(image, sourceTag, destTag)
+    )
+}

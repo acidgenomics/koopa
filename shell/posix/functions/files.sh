@@ -226,6 +226,41 @@ _koopa_stat_group() {  # {{{1
     return 0
 }
 
+_koopa_stat_modified() {
+    # """
+    # Get file modification time.
+    # @note Updated 2020-02-17.
+    #
+    # Linux uses GNU coreutils variant.
+    # macOS uses BSD variant.
+    #
+    # Both approaches return seconds since Unix epoch with 'stat' and then
+    # pass to 'date' with flags for expected epoch seconds input. Note that
+    # '@' usage in date for Linux requires coreutils 5.3.0+.
+    #
+    # _koopa_stat_modified 'file.pdf' '%Y-%m-%d'
+    # """
+    local file
+    file="${1:?}"
+    local format
+    format="${2:?}"
+    local x
+    if _koopa_is_macos
+    then
+        x="$(/usr/bin/stat -f '%m' "$file")"
+        # Convert seconds since Epoch into a useful format.
+        x="$(/bin/date -j -f '%s' "$x" +"$format")"
+    else
+        x="$(stat -c '%Y' "$file")"
+        # Convert seconds since Epoch into a useful format.
+        # https://www.gnu.org/software/coreutils/manual/html_node/
+        #     Examples-of-date.html
+        x="$(date -d "@${x}" +"$format")"
+    fi
+    echo "$x"
+    return 0
+}
+
 _koopa_stat_user() {  # {{{1
     # """
     # Get the current user (owner) of a file or directory.
