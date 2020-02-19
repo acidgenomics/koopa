@@ -902,72 +902,6 @@ _koopa_os_string() {  # {{{1
     return 0
 }
 
-_koopa_prefix_chgrp() {  # {{{1
-    # """
-    # Set group for target prefix(es).
-    # @note Updated 2020-02-19.
-    # """
-    _koopa_chgrp \
-        --no-dereference \
-        --recursive \
-        "$(_koopa_group)" \
-        "$@"
-    return 0
-}
-
-_koopa_prefix_chmod() {  # {{{1
-    # """
-    # Set file permissions for target prefix(es).
-    # @note Updated 2020-02-16.
-    #
-    # This sets group write access by default for shared install, which is
-    # useful so we don't have to constantly switch to root for admin.
-    # """
-    _koopa_chmod \
-        --recursive \
-        "$(_koopa_chmod_flags)" \
-        "$@"
-    return 0
-}
-
-_koopa_prefix_chown() {  # {{{1
-    # """
-    # Set ownership (user and group) for target prefix(es).
-    # @note Updated 2020-02-19.
-    # """
-    _koopa_chown \
-        --no-dereference \
-        --recursive \
-        "$(_koopa_user):$(_koopa_group)" \
-        "$@"
-    return 0
-}
-
-_koopa_prefix_chown_user() {  # {{{1
-    # """
-    # Set ownership to current user for target prefix(es).
-    # @note Updated 2020-02-19.
-    # """
-    _koopa_chown \
-        --no-dereference \
-        --recursive \
-        "${USER:?}:$(_koopa_group)" \
-        "$@"
-    return 0
-}
-
-_koopa_prefix_mkdir() {  # {{{1
-    # """
-    # Make directory at target prefix, only if it doesn't exist.
-    # @note Updated 2020-02-16.
-    # """
-    local prefix
-    prefix="${1:?}"
-    _koopa_assert_is_not_dir "$prefix"
-    _koopa_mkdir "$prefix"
-    return 0
-}
-
 _koopa_python_remove_pycache() {  # {{{1
     # """
     # Remove Python '__pycache__/' from site packages.
@@ -1050,49 +984,6 @@ _koopa_rsync_flags() {  # {{{1
     # - https://unix.stackexchange.com/questions/165423
     # """
     echo "--archive --delete-before --human-readable --progress"
-    return 0
-}
-
-_koopa_set_permissions() {  # {{{1
-    # """
-    # Set permissions on target prefix(es).
-    # @note Updated 2020-01-24.
-    #
-    # This always works recursively.
-    # """
-    [ "$#" -eq 1 ] || return 1
-    local prefix
-    prefix="${1:?}"
-    _koopa_h2 "Setting permissions on '${prefix}'."
-    _koopa_prefix_chown "$prefix"
-    _koopa_prefix_chmod "$prefix"
-    return 0
-}
-
-_koopa_set_permissions_user() {  # {{{1
-    # """
-    # Set permissions on target prefix(es) to current user.
-    # @note Updated 2020-01-24.
-    #
-    # This always works recursively.
-    # """
-    [ "$#" -eq 1 ] || return 1
-    local prefix
-    prefix="${1:?}"
-    _koopa_h2 "Resetting permissions on '${prefix}'."
-    _koopa_prefix_chown_user "$prefix"
-    _koopa_prefix_chmod "$prefix"
-    return 0
-}
-
-_koopa_set_sticky_group() {  # {{{1
-    # """
-    # Set sticky group bit for target prefix(es).
-    # @note Updated 2020-01-24.
-    #
-    # This never works recursively.
-    # """
-    _koopa_chmod g+s "$@"
     return 0
 }
 
