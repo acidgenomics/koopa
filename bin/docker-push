@@ -3,9 +3,12 @@ set -Eeu -o pipefail
 
 # """
 # Push a local build.
-# Updated 2020-02-16.
+# Updated 2020-02-18.
 #
 # Useful if GPG agent causes push failure.
+#
+# @seealso
+# - https://docs.docker.com/config/formatting/
 #
 # @examples
 # docker-push acidgenomics/debian:latest
@@ -23,56 +26,32 @@ _koopa_h1 "Pushing images matching '${image}'."
 
 _koopa_assert_is_matching_regex "$image" '^.+/.+$'
 
-
-# https://docs.docker.com/config/formatting/
-
-# > docker image inspect "${image}"
-# > docker image inspect --format '{{json .RepoTags}}' "$image"
-# docker image inspect acidgenomics/alpine
-
 json="$( \
     docker inspect \
     --format='{{json .RepoTags}}' \
     "$image" \
 )"
 
-echo "$json"
-
-awk 'BEGIN{FS=",";OFS=","}{$1=""; print}' file_name
-
-
-exit 0
-
-# > docker inspect \
-# >     --format='{{println .RepoTags}}' \
-# >     "$image"
-
-
-exit 0
-
-# FIXME Can we just use cut here?
-mapfile -t strings < <( \
-    docker image ls \
-        --filter reference="$image" \
+# Convert JSON to lines.
+# shellcheck disable=SC2001
+mapfile -t images < <( \
+    echo "$json" \
+        | tr ',' '\n' \
+        | sed 's/^\[//' \
+        | sed 's/\]$//' \
+        | sed 's/^\"//g' \
+        | sed 's/\"$//g' \
+        | sort
 )
 
-
-if ! _koopa_is_array_non_empty "${strings[@]}"
+if ! _koopa_is_array_non_empty "${images[@]}"
 then
     docker image ls
     _koopa_stop "'${image}' failed to match any images."
 fi
 
-echo "${strings[@]}"
-exit 0
-
-# FIXME Get the name from the ID.
-
-for string in "${strings[@]}"
+for image in "${images[@]}"
 do
-    echo "$string"
-    image="$string"
-    continue
-    # FIXME
+    _koopa_h2 "Pushing '${image}'."
     docker push "${server}/${image}"
 done
