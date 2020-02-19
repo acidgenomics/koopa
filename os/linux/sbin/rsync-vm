@@ -44,10 +44,10 @@ then
     if ! _koopa_is_powerful
     then
         app_flags+=(
-            # "--exclude='bcbio'"
-            "--exclude='cellranger'"
-            "--exclude='cellranger-atac'"
-            "--exclude='omicsoft'"
+            # "--exclude=bcbio"
+            "--exclude=cellranger"
+            "--exclude=cellranger-atac"
+            "--exclude=omicsoft"
         )
     fi
     _koopa_rsync_vm \
@@ -78,10 +78,10 @@ then
     if ! _koopa_is_powerful
     then
         refdata_flags+=(
-            "--exclude='bcbio'"
-            "--exclude='cellranger'"
-            "--exclude='cellranger-atac'"
-            "--exclude='gtex'"
+            "--exclude=bcbio"
+            "--exclude=cellranger"
+            "--exclude=cellranger-atac"
+            "--exclude=gtex"
         )
     fi
     _koopa_rsync_vm \
