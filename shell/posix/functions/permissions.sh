@@ -1,11 +1,4 @@
-# FIXME Need to think of a better non-recursive name here.
-# FIXME Alternatively, rename '_koopa_set_permissions'? This seems confusing.
-_koopa_set_permissions_FIXME() {  # {{{1
-    # """
-    # Set permissions on a single file or directory only.
-    echo "FIXME"
-}
-
+#!/bin/sh
 
 
 # FIXME Rename this.
@@ -96,6 +89,15 @@ _koopa_set_permissions_user() {  # {{{1
     _koopa_prefix_chown_user "$prefix"
     _koopa_prefix_chmod "$prefix"
     return 0
+}
+
+# FIXME Need to define recursive, non-recursive options here.
+# FIXME Need to think of a better non-recursive name here.
+# FIXME Alternatively, rename '_koopa_set_permissions'? This seems confusing.
+_koopa_set_permissions_FIXME() {  # {{{1
+    # """
+    # Set permissions on a single file or directory only.
+    echo "FIXME"
 }
 
 _koopa_set_sticky_group() {  # {{{1
