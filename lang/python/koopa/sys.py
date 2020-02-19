@@ -9,7 +9,7 @@ import os
 import subprocess
 import sys
 
-from koopa.shell import run
+from koopa.shell import shell
 
 
 def arg_string(*args):
@@ -46,12 +46,12 @@ def assert_is_file(path):
 def decompress_but_keep_original(file):
     """
     Decompress but keep original compressed file.
-    Updated 2019-10-06.
+    Updated 2020-02-19.
     """
     assert_is_file(file)
     print("Decompressing '" + file + "'.")
     unzip_file = os.path.splitext(file)[0]
-    run("gunzip -c " + file + " > " + unzip_file)
+    shell("gunzip -c " + file + " > " + unzip_file)
     return unzip_file
 
 
