@@ -7,8 +7,7 @@
 
 options(
     "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L)),
-    "verbose" = TRUE
+    "warning" = quote(quit(status = 1L))
 )
 
 args <- commandArgs(trailingOnly = FALSE)
