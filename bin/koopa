@@ -31,24 +31,17 @@ case "$1" in
         "${include_dir}/check.sh"
         exit 0
         ;;
-    develop)
-        "${include_dir}/develop.sh"
-        exit 0
-        ;;
-    edit-variables)
-        vim "${KOOPA_PREFIX}/system/include/variables.txt"
-        exit 0
-        ;;
     info)
         "${include_dir}/info.sh"
         exit 0
         ;;
-    install-mike)
-        _koopa_install_mike
-        exit 0
-        ;;
     list)
         "${include_dir}/list.sh"
+        exit 0
+        ;;
+    set-permissions)
+        shift 1
+        _koopa_set_permissions "$@"
         exit 0
         ;;
     update)
@@ -105,13 +98,21 @@ case "$1" in
         _koopa_r_home
         exit 0
         ;;
+    # Developer tools ----------------------------------------------------------
+    install-mike)
+        _koopa_install_mike
+        exit 0
+        ;;
+    log)
+        _koopa_view_latest_tmp_log_file
+        exit 0
+        ;;
     variable)
         _koopa_variable "${2:?}"
         exit 0
         ;;
-    # Developer tools ----------------------------------------------------------
-    log)
-        _koopa_view_latest_tmp_log_file
+    variables)
+        vim "${KOOPA_PREFIX}/system/include/variables.txt"
         exit 0
         ;;
     # Deprecated args / error catching -----------------------------------------
