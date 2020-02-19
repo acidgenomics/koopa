@@ -301,6 +301,6 @@ install(
         "acidgenomics/pointillism",         # single-cell
         "hbc/bcbioRNASeq",                  # rna-seq
         "hbc/bcbioSingleCell"               # single-cell
-        # "cole-trapnell-lab/monocle3"      # single-cell
+        ## > "cole-trapnell-lab/monocle3"   # single-cell
     )
 )
