@@ -6,6 +6,13 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+# """
+# Potential defaults:
+# - awscli (v1.17)
+# - numpy
+# - pandas
+# """
+
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed python3
 
@@ -13,16 +20,12 @@ _koopa_h1 "Installing Python packages."
 _koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
 
 _koopa_install_pip
-_koopa_install_pipx
-
-# awscli (v1.17)
-# numpy
-# pandas
 
 pkgs=(
     black
     flake8
     logbook
+    pipx
     pyflakes
     pylint
     pytest
@@ -37,7 +40,5 @@ python3 -m pip install \
     --no-warn-script-location \
     "${pkgs[@]}"
 
-if _koopa_is_cellar python3
-then
-    _koopa_link_cellar python
-fi
+_koopa_python_remove_pycache
+_koopa_is_cellar python3 && _koopa_link_cellar python

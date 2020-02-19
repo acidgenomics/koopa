@@ -360,39 +360,6 @@ _koopa_install_pip() {  # {{{1
     return 0
 }
 
-_koopa_install_pipx() {
-    # """
-    # Install pipx for Python.
-    # @note Updated 2020-02-10.
-    #
-    # Local user installation:
-    # Use the '--user' flag with 'pip install' call.
-    #
-    # This recommended step will modify shell RC file, which we don't want.
-    # > "$python" -m pipx ensurepath
-    # """
-    local python
-    python="${1:-python3}"
-    if ! _koopa_is_installed "$python"
-    then
-        _koopa_warning "Python ('${python}') is not installed."
-        return 1
-    fi
-    if _koopa_is_python_package_installed "pipx" "$python"
-    then
-        _koopa_note "pipx is already installed."
-        return 0
-    fi
-    _koopa_h2 "Installing pipx for Python '${python}'."
-    "$python" -m pip install --no-warn-script-location pipx
-    local prefix
-    prefix="$(_koopa_app_prefix)/python/pipx"
-    _koopa_mkdir "$prefix"
-    _koopa_success "Installation of pipx was successful."
-    _koopa_note "Restart the shell to complete activation."
-    return 0
-}
-
 _koopa_link_docker() {  # {{{1
     # """
     # Link Docker library onto data disk for VM.
