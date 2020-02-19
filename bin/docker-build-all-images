@@ -9,6 +9,8 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 # """
 # Build all Acid Genomics images.
 # Updated 2020-02-18.
+#
+# Skipping any image that has been built today.
 # """
 
 _koopa_h1 "Building all Docker images."
@@ -16,36 +18,49 @@ _koopa_h1 "Building all Docker images."
 images=(
     # Lightweight Linux images.
     acidgenomics/alpine
-    acidgenomics/amzn
-    acidgenomics/arch
-    acidgenomics/biocontainers
-    acidgenomics/kali
-    acidgenomics/miniconda3
-    acidgenomics/opensuse
+    #acidgenomics/amzn
+    #acidgenomics/arch
+    #acidgenomics/biocontainers
+    #acidgenomics/kali
+    #acidgenomics/miniconda3
+    #acidgenomics/opensuse
     # Full Linux images.
-    acidgenomics/debian
-    acidgenomics/ubuntu
-    acidgenomics/fedora
-    acidgenomics/centos
+    #acidgenomics/debian
+    #acidgenomics/ubuntu
+    #acidgenomics/fedora
+    #acidgenomics/centos
     # R images.
-    acidgenomics/bioconductor
-    acidgenomics/basejump
-    acidgenomics/bcbiornaseq
-    acidgenomics/bcbiosinglecell
-    acidgenomics/rnaseq
+    #acidgenomics/bioconductor
+    #acidgenomics/basejump
+    #acidgenomics/bcbiornaseq
+    #acidgenomics/bcbiosinglecell
+    #acidgenomics/rnaseq
     # > acidgenomics/singlecell
     # Bioinformatics software.
     # > acidgenomics/rnaeditingindexer
     # > acidgenomics/maestro
 )
 
-docker system prune --all --force
-
 for image in "${images[@]}"
 do
+    # > docker system prune --all --force
+    docker pull "$image"
+    json="$( \
+        docker inspect \
+        --format='{{json .Created}}' \
+        "$image" \
+    )"
+    timestamp="$( \
+        echo "$json" \
+            | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+    )"
+    today=$(date "+%Y-%m-%d")
+    if [[ "$timestamp" == "$today" ]]
+    then
+        _koopa_note "'${image}' image already built today."
+        continue
+    fi
     docker-build "$image"
 done
-
-docker system prune --all --force
 
 _koopa_success "All Docker images built successfully."
