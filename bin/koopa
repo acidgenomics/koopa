@@ -39,6 +39,10 @@ case "$1" in
         "${include_dir}/list.sh"
         exit 0
         ;;
+    list-internal-functions)
+        _koopa_list_internal_functions
+        exit 0
+        ;;
     set-permissions)
         shift 1
         _koopa_set_permissions "$@"
