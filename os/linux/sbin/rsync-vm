@@ -58,6 +58,8 @@ then
     _koopa_rsync_vm \
         --prefix="$app_prefix" \
         --source-ip="$source_ip"
+else
+    _koopa_note "Skipping '${app_prefix}'."
 fi
 
 # make prefix  {{{1
@@ -78,4 +80,6 @@ then
     _koopa_rsync_vm \
         --prefix="$refdata_prefix" \
         --source-ip="$source_ip"
+else
+    _koopa_note "Skipping '${refdata_prefix}'."
 fi
