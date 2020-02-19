@@ -921,10 +921,16 @@ _koopa_python_remove_pycache() {  # {{{1
         prefix="$(realpath "$(dirname "$python")/..")"
     fi
     _koopa_h2 "Removing pycache in '${prefix}'."
+    # > find "$prefix" \
+    # >     -type d \
+    # >     -name "__pycache__" \
+    # >     -print0 \
+    # >     -exec rm -frv "{}" \;
     find "$prefix" \
         -type d \
         -name "__pycache__" \
-        -exec rm -frv {} \;
+        -print0 \
+        | xargs -0 -I {} rm -frv "{}"
     return 0
 }
 
