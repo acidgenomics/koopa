@@ -44,6 +44,13 @@ _koopa_is_darwin() {  # {{{1
     _koopa_defunct "_koopa_is_macos"
 }
 
+_koopa_prefix_mkdir() {  # {{{1
+    # """
+    # @note Updated 2020-02-19.
+    # """
+    _koopa_defunct "_koopa_mkdir"
+}
+
 _koopa_quiet_cd() {  # {{{1
     # """
     # @note Updated 2020-02-16.
