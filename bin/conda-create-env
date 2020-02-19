@@ -53,7 +53,7 @@ else
     env_name="$name"
 fi
 
-prefix="$(_koopa_conda_default_envs_prefix)/${env_name}"
+prefix="$(_koopa_conda_prefix)/envs/${env_name}"
 
 if [[ "$force" -eq 1 ]]
 then

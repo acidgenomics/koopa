@@ -27,6 +27,14 @@ _koopa_assert_is_darwin() {  # {{{1
     # @note Updated 2020-01-14.
     # """
     _koopa_defunct "_koopa_assert_is_macos"
+
+}
+
+_koopa_conda_default_envs_prefix() {  # {{{1
+    # """
+    # @note Updated 2020-02-19.
+    # """
+    _koopa_defunct "_koopa_conda_prefix"
 }
 
 _koopa_is_darwin() {  # {{{1
