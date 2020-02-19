@@ -983,8 +983,7 @@ _koopa_python_remove_pycache() {  # {{{1
     # """
     local prefix
     prefix="${1:-"$(_koopa_python_site_packages_prefix)"}"
-    _koopa_h2 "Removing '__pycache__' directories."
-    _koopa_dl "Prefix" "$prefix"
+    _koopa_h2 "Removing pycache in '${prefix}'."
     find "$prefix" \
         -type d \
         -name "__pycache__" \
