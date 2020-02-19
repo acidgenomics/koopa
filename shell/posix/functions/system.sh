@@ -970,6 +970,26 @@ _koopa_prefix_mkdir() {  # {{{1
     return 0
 }
 
+_koopa_python_remove_pycache() {  # {{{1
+    # """
+    # Remove Python '__pycache__/' from site packages.
+    # @note Updated 2020-02-19.
+    #
+    # These directories can create permission issues when attempting to rsync
+    # installation across multiple VMs.
+    # """
+    local prefix
+    prefix="${1:-"$(_koopa_python_site_packages_prefix)"}"
+    _koopa_h2 "Removing '__pycache__' directories."
+    _koopa_dl "Prefix" "$prefix"
+    find "$prefix" \
+        -type d \
+        -name "__pycache__" \
+        -print0 \
+        | xargs -0 -I {} rm -fr {}
+    return 0
+}
+
 _koopa_relink() {  # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
