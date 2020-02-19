@@ -37,7 +37,7 @@ tmp_dir="$(_koopa_tmp_dir)"
     # Move and enable for all users on Linux.
     if [[ "$prefix" != "$script_target" ]]
     then
-        _koopa_prefix_mkdir "$prefix"
+        _koopa_mkdir "$prefix"
         cp -rv "${script_target}"/* "${prefix}/."
         rm -frv "$script_target"
         rm -frv "$aspera_user"
