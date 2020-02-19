@@ -4,7 +4,7 @@
 _koopa_prompt() {  # {{{1
     # """
     # Prompt string.
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-01-19.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
     #
