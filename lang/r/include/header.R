@@ -1,4 +1,5 @@
 options(
+    ## "verbose" = TRUE,
     "error" = quote(quit(status = 1L)),
     "warning" = quote(quit(status = 1L))
 )
