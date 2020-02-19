@@ -16,7 +16,7 @@ _koopa_exit_if_dir "$prefix"
 
 _koopa_h1 "Downloading MSigDB SCSig $version."
 
-_koopa_prefix_mkdir "$prefix"
+_koopa_mkdir "$prefix"
 
 (
     _koopa_cd "$prefix"

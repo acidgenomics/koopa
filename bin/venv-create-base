@@ -16,7 +16,7 @@ _koopa_assert_has_no_envs
 _koopa_assert_is_current_version python
 _koopa_assert_is_installed python3
 
-_koopa_prefix_mkdir "$prefix"
+_koopa_mkdir "$prefix"
 
 python3 -m venv "$prefix"
 py_exe="${prefix}/bin/python3"
