@@ -51,7 +51,7 @@ _koopa_coffee_time
 
 _koopa_assert_has_no_envs
 
-_koopa_prefix_mkdir "$prefix"
+_koopa_mkdir "$prefix"
 
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"

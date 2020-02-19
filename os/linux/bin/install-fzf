@@ -12,25 +12,27 @@ source "${script_dir}/../include/header.sh"
 
 name="fzf"
 version="$(_koopa_variable "$name")"
+
+app_prefix="$(_koopa_app_prefix)/${name}/${version}"
 cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
-_koopa_exit_if_dir "$cellar_prefix"
+_koopa_exit_if_dir "$app_prefix" "$cellar_prefix"
 
-_koopa_h1 "Installing ${name} ${version} at '${cellar_prefix}'."
+_koopa_h1 "Installing ${name} ${version} at \
+'${cellar_prefix}' and '${app_prefix}'."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_activate_go
 _koopa_assert_is_installed go
 
-app_prefix="$(_koopa_app_prefix)/${name}/${version}"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)"
 
 goroot="$(go env GOROOT)"
 _koopa_info "Go is installed at '${goroot}'."
-_koopa_prefix_mkdir "$app_prefix"
-_koopa_prefix_mkdir "$cellar_prefix"
+
+_koopa_mkdir "$app_prefix" "$cellar_prefix"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"

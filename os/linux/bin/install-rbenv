@@ -26,7 +26,7 @@ _koopa_exit_if_dir "$prefix"
 _koopa_h1 "Installing rbenv at '${prefix}'."
 
 _koopa_assert_has_no_args "$@"
-_koopa_prefix_mkdir "$prefix"
+_koopa_mkdir "$prefix"
 
 # rbenv  {{{1
 # ==============================================================================
