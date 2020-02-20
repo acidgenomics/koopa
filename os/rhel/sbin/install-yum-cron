@@ -8,11 +8,15 @@ source "${script_dir}/../include/header.sh"
 _koopa_exit_if_installed yum-cron
 _koopa_assert_is_installed systemctl
 
+name="yum-cron"
+service_name="${name}.service"
+
+_koopa_install_start "$name"
+
 # Note that this requires EPEL to be enabled.
-sudo yum -y install yum-cron
+sudo yum -y install "$name"
 
-sudo systemctl enable yum-cron.service
-sudo systemctl start yum-cron.service
-# > sudo systemctl status yum-cron.service
+sudo systemctl enable "$service_name"
+sudo systemctl start "$service_name"
 
-_koopa_success "Installation of yum-cron was successful."
+_koopa_install_success "$name"

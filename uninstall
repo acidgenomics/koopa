@@ -18,4 +18,4 @@ rm -frv "$(_koopa_config_prefix)"
 rm -frv "$KOOPA_PREFIX"
 
 echo "Uninstallation of koopa was successful."
-echo "Restart the shell to complete deactivation."
+echo "Restart the shell."

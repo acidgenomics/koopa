@@ -51,4 +51,4 @@ _koopa_link_cellar "$name" "$version"
 
 # > lua -e 'print(package.path)'
 
-_koopa_success "Installation of ${name} was successful."
+_koopa_install_success "$name"

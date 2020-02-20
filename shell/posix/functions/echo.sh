@@ -342,15 +342,6 @@ _koopa_install_start() {  # {{{1
     return 0
 }
 
-_koopa_install_restart() {  # {{{1
-    # """
-    # Inform the user that they should restart shell.
-    # @note Updated 2020-02-20.
-    # """
-    _koopa_note "Restart the shell to complete installation."
-    return 0
-}
-
 _koopa_install_success() {  # {{{1
     # """
     # Installation success message.
@@ -395,6 +386,15 @@ _koopa_note() {  # {{{1
     c2="$(_koopa_ansi_escape_code "default")"
     nc="$(_koopa_ansi_escape_code "nocolor")"
     echo -e "${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
+    return 0
+}
+
+_koopa_restart() {  # {{{1
+    # """
+    # Inform the user that they should restart shell.
+    # @note Updated 2020-02-20.
+    # """
+    _koopa_note "Restart the shell."
     return 0
 }
 
