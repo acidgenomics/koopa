@@ -322,6 +322,17 @@ _koopa_info() {  # {{{1
     return 0
 }
 
+_koopa_install_success() {  # {{{1
+    # """
+    # Installation success message.
+    # @note Updated 2020-02-20.
+    # """
+    local arg
+    arg="${1:?}"
+    _koopa_success "Installation of '${arg}' was successful."
+    return 0
+}
+
 _koopa_invalid_arg() {  # {{{1
     # """
     # Error on invalid argument.
