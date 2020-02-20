@@ -197,6 +197,16 @@ _koopa_is_docker() {  # {{{1
     grep -q ':/docker/' "$file"
 }
 
+_koopa_is_export() {  # {{{1
+    # """
+    # Is a variable exported in the current shell session?
+    # @note Updated 2020-02-20.
+    # """
+    local arg
+    arg="${1:?}"
+    declare -x | grep -Eq "\b${arg}\b="
+}
+
 _koopa_is_fedora() {  # {{{1
     # """
     # Is the operating system Fedora?
