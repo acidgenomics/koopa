@@ -13,12 +13,30 @@ _koopa_gsub() {  # {{{1
     local replacement
     replacement="${3:?}"
     echo "$string" | sed -E "s/${pattern}/${replacement}/g"
+    return 0
+}
+
+_koopa_lowercase() {  # {{{1
+    # """
+    # Transform string to lowercase.
+    # @note Updated 2020-02-20.
+    #
+    # awk alternative:
+    # echo "$string" | awk '{print tolower($0)}'
+    #
+    # @seealso
+    # https://stackoverflow.com/questions/2264428
+    # """
+    local string
+    string="${1:?}"
+    echo "$string" | tr '[:upper:]' '[:lower:]'
+    return 0
 }
 
 _koopa_snake_case() {  # {{{1
     # """
     # Simple snake case function.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-20.
     #
     # @seealso Exported 'snake-case' that uses R syntactic internally.
     #
@@ -29,7 +47,10 @@ _koopa_snake_case() {  # {{{1
     # _koopa_snake_case "bcbio-nextgen.py"
     # ## bcbio_nextgen_py
     # """
-    _koopa_gsub "${1:?}" "[^A-Za-z0-9_]" "_"
+    local string
+    string="${1:?}"
+    _koopa_gsub "$string" '[^A-Za-z0-9_]' '_'
+    return 0
 }
 
 _koopa_strip_left() {  # {{{1
@@ -47,6 +68,7 @@ _koopa_strip_left() {  # {{{1
     local pattern
     pattern="${2:?}"
     printf '%s\n' "${string##$pattern}"
+    return 0
 }
 
 _koopa_strip_right() {  # {{{1
@@ -64,12 +86,13 @@ _koopa_strip_right() {  # {{{1
     local pattern
     pattern="${2:?}"
     printf '%s\n' "${string%%$pattern}"
+    return 0
 }
 
 _koopa_strip_trailing_slash() {  # {{{1
     # """
     # Strip trailing slash in file path string.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-20.
     #
     # Alternate approach using sed:
     # > sed 's/\/$//' <<< "$1"
@@ -77,9 +100,10 @@ _koopa_strip_trailing_slash() {  # {{{1
     # @examples
     # _koopa_strip_trailing_slash "dir/"
     # """
-    local file
-    file="${1:?}"
-    _koopa_strip_right "$file" "/"
+    local string
+    string="${1:?}"
+    _koopa_strip_right "$string" '/'
+    return 0
 }
 
 _koopa_sub() {  # {{{1
@@ -95,6 +119,7 @@ _koopa_sub() {  # {{{1
     local replacement
     replacement="${3:?}"
     echo "$string" | sed -E "s/${pattern}/${replacement}/"
+    return 0
 }
 
 _koopa_trim_ws() {  # {{{1
@@ -114,4 +139,5 @@ _koopa_trim_ws() {  # {{{1
     string="${string#${string%%[![:space:]]*}}"
     string="${string%${string##*[![:space:]]}}"
     printf '%s\n' "$string"
+    return 0
 }
