@@ -11,7 +11,9 @@ source "${script_dir}/../include/header.sh" --no-header-checks
 
 _koopa_exit_if_not_installed brew
 
-_koopa_h1 "Uninstalling Homebrew."
+name_fancy="Homebrew"
+
+_koopa_uninstall_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 
@@ -34,5 +36,5 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Uninstallation of Homebrew was successful."
-_koopa_note "Restart the shell to complete uninstallation."
+_koopa_uninstall_success "$name_fancy"
+_koopa_restart

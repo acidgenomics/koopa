@@ -11,7 +11,8 @@ prefix="$(_koopa_app_prefix)/${name}"
 
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+name_fancy="Lmod ${version}"
+_koopa_install_start "$name_fancy" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -40,4 +41,4 @@ eval "$(luarocks path)"
 
 _koopa_update_lmod_config
 
-_koopa_success "Installation of Lmod was successful."
+_koopa_install_success "$name_success"

@@ -13,7 +13,9 @@ version="$(_koopa_variable "$name")"
 prefix="$(_koopa_aspera_prefix)"
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing Aspera Connect to '${prefix}'."
+name_fancy="Aspera Connect"
+
+_koopa_install_start "$name_fancy" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -47,4 +49,4 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of Aspera Connect was successful."
+_koopa_install_success "$name_fancy"

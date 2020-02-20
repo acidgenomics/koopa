@@ -46,7 +46,9 @@ fi
 
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing bcbio-nextgen into '${prefix}'."
+name_fancy="bcbio-nextgen"
+
+_koopa_install_start "$name_fancy" "$prefix"
 _koopa_coffee_time
 
 _koopa_assert_has_no_envs
@@ -90,4 +92,4 @@ fi
 
 _koopa_set_permissions --recursive "$app_prefix"
 
-_koopa_success "Installation of bcbio-nextgen was successful."
+_koopa_install_success "$name_fancy"

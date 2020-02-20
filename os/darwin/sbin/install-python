@@ -5,13 +5,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+name_fancy="Python"
 name="python"
 version="$(_koopa_variable "$name")"
 framework_dir="/Library/Frameworks/Python.framework"
 
 _koopa_exit_if_dir "$framework_dir"
 
-_koopa_h1 "Installing Python ${version} to '${framework_dir}'."
+_koopa_install_start "$name_fancy" "$framework_dir"
 
 tmp_dir="$(_koopa_tmp_dir)"
 
@@ -25,5 +26,5 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of Python was successful."
-_koopa_note "Restart the shell to complete installation."
+_koopa_install_success "$name_fancy"
+_koopa_restart
