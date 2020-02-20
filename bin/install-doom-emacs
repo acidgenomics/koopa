@@ -26,4 +26,4 @@ _koopa_assert_has_no_args "$@"
     "${exe_file}" doctor
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_success "Installation of ${name} was successful."
+_koopa_install_success "$name"
