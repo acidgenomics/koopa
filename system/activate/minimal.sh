@@ -100,7 +100,7 @@ fi
 export HISTTIMEFORMAT
 
 # Ensure that HISTSIZE and SAVEHIST values match.
-[ "${HISTSIZE:-}" -ne "${SAVEHIST:-}" ] && SAVEHIST="$HISTSIZE"
+[ "${HISTSIZE:-}" != "${SAVEHIST:-}" ] && SAVEHIST="$HISTSIZE"
 export SAVEHIST
 
 # CPU count  {{{2
