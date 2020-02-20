@@ -919,7 +919,7 @@ _koopa_run_if_installed() {  # {{{1
 _koopa_warn_if_export() {  # {{{1
     # """
     # Warn if variable is exported in current shell session.
-    # @note Updated 2019-10-27.
+    # @note Updated 2020-02-20.
     #
     # Useful for checking against unwanted compiler settings.
     # In particular, useful to check for 'LD_LIBRARY_PATH'.
@@ -927,7 +927,7 @@ _koopa_warn_if_export() {  # {{{1
     [ "$#" -ne 0 ] || return 1
     for arg in "$@"
     do
-        if declare -x | grep -Eq "\b${arg}\b="
+        if _koopa_is_export "$arg"
         then
             _koopa_warning "'${arg}' is exported."
         fi
