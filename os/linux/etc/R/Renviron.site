@@ -1,5 +1,5 @@
 ## Shared R environment configuration for Linux.
-## Updated 2020-01-18 by Michael Steinbaugh.
+## Updated 2020-02-20 by Michael Steinbaugh.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -120,7 +120,7 @@ R_REMOTES_UPGRADE="always"
 ## If left unset, defaults to `~/.virtualenvs`.
 ## Check with `virtualenv_list()`.
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-WORKON_HOME="/n/app/python/virtualenvs"
+WORKON_HOME="/usr/local/opt/python/virtualenvs"
 
 
 
