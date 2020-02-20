@@ -48,6 +48,10 @@ case "$1" in
         _koopa_set_permissions "$@"
         exit 0
         ;;
+    uninstall)
+        "${KOOPA_PREFIX}/uninstall"
+        exit 0
+        ;;
     update)
         shift 1
         "${include_dir}/update.sh" "$@"
