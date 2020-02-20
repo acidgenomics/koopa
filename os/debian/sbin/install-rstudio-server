@@ -42,4 +42,4 @@ _koopa_h1 "Installing ${name} ${version}."
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of $name was successful."
+_koopa_install_success "$name"

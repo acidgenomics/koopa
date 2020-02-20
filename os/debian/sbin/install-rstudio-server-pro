@@ -51,7 +51,7 @@ _koopa_h1 "Installing ${name} ${version}."
 # > sudo "$name" status
 # > sudo "$name" license-manager status
 
-_koopa_success "Installation of $name was successful."
+_koopa_install_success "$name"
 
 cat << EOF
 Activate product license key (if necessary):

@@ -91,5 +91,5 @@ set -u
 
 update-conda
 
-_koopa_success "Installation of conda was successful."
-_koopa_note "Restart the shell to complete activation."
+_koopa_install_success "conda"
+_koopa_install_restart

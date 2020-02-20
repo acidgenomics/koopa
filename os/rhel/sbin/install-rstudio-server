@@ -50,4 +50,4 @@ rm -fr "$tmp_dir"
 # > sudo "$name" start
 # > sudo "$name" status
 
-_koopa_success "Installation of $name was successful."
+_koopa_install_success "$name"
