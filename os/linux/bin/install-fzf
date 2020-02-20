@@ -72,5 +72,5 @@ _koopa_link_cellar "$name" "$version"
 # Clean up after fzf/go, which creates files in user home.
 _koopa_rm "${HOME}/go"
 
-_koopa_success "Installation of ${name} was successful."
+_koopa_install_success "$name"
 _koopa_note "Reload the shell to complete activation."

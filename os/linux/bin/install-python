@@ -91,5 +91,5 @@ fi
 
 _koopa_link_cellar "$name" "$version"
 
-_koopa_success "Installation of ${name} was successful."
+_koopa_install_success "$name"
 _koopa_note "Reinstall cellar vim, which depends on Python."
