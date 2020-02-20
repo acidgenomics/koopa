@@ -241,16 +241,12 @@ _koopa_activate_fzf() {  # {{{1
 _koopa_activate_gcc_colors() {  # {{{1
     # """
     # Activate GCC colors.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-20.
     # """
     # Colored GCC warnings and errors.
     [ -n "${GCC_COLORS:-}" ] && return 0
-    export GCC_COLORS='caret=01;32:' \
-                      'error=01;31:' \
-                      'locus=01:' \
-                      'note=01;36:' \
-                      'quote=01' \
-                      'warning=01;35:'
+    export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
+quote=01:warning=01;35"
     return 0
 }
 
