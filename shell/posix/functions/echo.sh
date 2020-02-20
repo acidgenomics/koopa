@@ -322,6 +322,15 @@ _koopa_info() {  # {{{1
     return 0
 }
 
+_koopa_install_restart() {  # {{{1
+    # """
+    # Inform the user that they should restart shell.
+    # @note Updated 2020-02-20.
+    # """
+    _koopa_note "Restart the shell to complete installation."
+    return 0
+}
+
 _koopa_install_success() {  # {{{1
     # """
     # Installation success message.
@@ -329,7 +338,7 @@ _koopa_install_success() {  # {{{1
     # """
     local arg
     arg="${1:?}"
-    _koopa_success "Installation of '${arg}' was successful."
+    _koopa_success "Installation of ${arg} was successful."
     return 0
 }
 

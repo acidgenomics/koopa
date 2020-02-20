@@ -355,7 +355,7 @@ _koopa_install_pip() {  # {{{1
     _koopa_download "https://bootstrap.pypa.io/${file}"
     "$python" "$file" --no-warn-script-location
     rm "$file"
-    _koopa_success "Installation of pip was successful."
+    _koopa_install_success "pip"
     _koopa_note "Restart the shell to complete activation."
     return 0
 }
