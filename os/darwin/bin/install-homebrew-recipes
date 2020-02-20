@@ -42,48 +42,23 @@ brew tap osgeo/osgeo4mac
 # ==============================================================================
 
 _koopa_h2 "Installing casks."
-
-# > brew cask remove --force safari-technology-preview
-
 installed_casks="$(brew cask list)"
-
-casks=(
-    adoptopenjdk  # igv
-    alacritty
-    calibre
-    carbon-copy-cloner
-    docker
-    java
-    julia
-    little-snitch
-    omnidisksweeper
-    osxfuse
-    rstudio
-)
-
-(
-    for cask in "${casks[@]}"
-    do
-        if echo "$installed_casks" | grep -Eq "^${cask}$"
-        then
-            _koopa_note "'${cask}' is already installed."
-            continue
-        fi
-        brew cask install --force --no-quarantine "$cask"
-    done
-) 2>&1 | tee -a "$log_file"
-
 casks=(
     1password
+    adoptopenjdk  # igv
+    alacritty
     alfred
     aspera-connect
     authy
     basictex
     bbedit
     bibdesk
+    calibre
+    carbon-copy-cloner
     coconutbattery
     coda
     deluge
+    docker
     emacs
     fiji
     firefox
@@ -95,17 +70,23 @@ casks=(
     hazel
     igv
     iterm2
+    java
+    julia
     keka
     kid3
     kitty
     libreoffice
+    little-snitch
     makemkv
     museeks
     netnewswire
+    omnidisksweeper
     onyx
+    osxfuse
     photosweeper-x
     pycharm-ce
     r
+    rstudio
     scrivener
     skype
     spillo
@@ -131,7 +112,7 @@ casks=(
             _koopa_note "'${cask}' is already installed."
             continue
         fi
-        brew cask install --force "$cask"
+        brew cask install --force --no-quarantine "$cask"
     done
 ) 2>&1 | tee -a "$log_file"
 
