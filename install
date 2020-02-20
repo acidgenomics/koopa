@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-19.
+    Updated 2020-02-20.
 EOF
 }
 
@@ -332,5 +332,5 @@ _koopa_remove_broken_symlinks "$koopa_prefix"
 _koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
 
-_koopa_success "Installation of koopa was successful."
-_koopa_note "Shell must be reloaded for changes to take effect."
+_koopa_install_success "koopa" "$koopa_prefix"
+_koopa_restart

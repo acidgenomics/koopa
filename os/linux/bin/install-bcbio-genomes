@@ -16,7 +16,9 @@ genomes_dir="${bcbio_dir}/genomes"
 genomes="${1:-"BDGP6,canFam3,hg38,mm10,rn6"}"
 IFS=', ' read -r -a genomes <<< "$genomes"
 
-_koopa_h1 "Installing bcbio-nextgen genomes into '${genomes_dir}'."
+name_fancy="bcbio-nextgen genomes"
+
+_koopa_install_start "$name_fancy" "$genomes_dir"
 _koopa_dl "Genomes" "$(_koopa_to_string "${genomes[@]}")"
 
 cores="$(_koopa_cpu_count)"
@@ -43,4 +45,4 @@ _koopa_dl "Flags" "${flags[@]}"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of bcbio-nextgen genomes was successful."
+_koopa_install_success "$name_fancy"

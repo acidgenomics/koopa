@@ -21,7 +21,9 @@ source "${script_dir}/../include/header.sh" --no-header-checks
 
 _koopa_exit_if_installed brew
 
-_koopa_h1 "Installing Homebrew."
+name_fancy="Homebrew"
+
+_koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 
@@ -40,5 +42,5 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of Homebrew was successful."
-_koopa_note "Restart the shell to complete installation."
+_koopa_install_success "$name_fancy"
+_koopa_restart

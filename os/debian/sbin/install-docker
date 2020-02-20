@@ -18,7 +18,9 @@ source "${script_dir}/../include/header.sh"
 _koopa_exit_if_docker
 _koopa_exit_if_installed docker
 
-_koopa_h1 "Installing Docker."
+name_fancy="Docker"
+
+_koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 
@@ -43,6 +45,5 @@ _koopa_add_user_to_group "docker"
 # Move '/var/lib/docker' to '/n/var/lib/docker'.
 _koopa_link_docker
 
-_koopa_success "Installation of Docker was successful."
-_koopa_note "Shell must be reloaded for '${USER}' to be added to the \
-'docker' group."
+_koopa_install_success "$name_fancy"
+_koopa_restart

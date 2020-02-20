@@ -11,8 +11,9 @@ bin_dir="$(_koopa_make_prefix)/bin"
 
 _koopa_exit_if_dir "$install_dir"
 
-_koopa_h1 "Installing AWS CLI 2."
+name_fancy="AWS CLI 2"
 
+_koopa_install_start "$name_fancy"
 _koopa_dl "install_dir" "$install_dir"
 _koopa_dl "bin_dir" "$bin_dir"
 
@@ -31,4 +32,4 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of AWS CLI was successful."
+_koopa_install_success "$name_fancy"

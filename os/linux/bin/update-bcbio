@@ -12,7 +12,9 @@ _koopa_assert_is_installed bcbio_nextgen.py
 tmp_dir="$(_koopa_tmp_dir)"
 cores="$(_koopa_cpu_count)"
 
-_koopa_h1 "Updating bcbio-nextgen installation."
+name_fancy="bcbio-nextgen"
+
+_koopa_update_start "$name_fancy"
 _koopa_dl "bcbio_nextgen.py" "$(_koopa_which_realpath "bcbio_nextgen.py")"
 
 (
@@ -24,4 +26,4 @@ _koopa_dl "bcbio_nextgen.py" "$(_koopa_which_realpath "bcbio_nextgen.py")"
         --cores="$cores"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_success "Update of bcbio-nextgen was successful."
+_koopa_update_success "$name_fancy"

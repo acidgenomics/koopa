@@ -18,7 +18,9 @@ version="$(_koopa_variable "java")"
 jdk_dir="$(_koopa_app_prefix)/java/openjdk"
 prefix="${jdk_dir}/${version}"
 
-_koopa_h1 "Installing OpenJDK ${version} at '${prefix}'."
+name_fancy="OpenJDK ${version}"
+
+_koopa_install_start "$name_fancy" "$prefix"
 
 # Download and extract the JDK, if necessary.
 if [[ -d "$prefix" ]]
@@ -99,4 +101,4 @@ _koopa_h2 "Updating system alternatives."
 # >     r-javareconf
 # > fi
 
-_koopa_success "Installation of OpenJDK was successful."
+_koopa_install_success "$name_fancy"

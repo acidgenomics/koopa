@@ -8,7 +8,9 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-_koopa_h1 "Installing Haskell stack for current user."
+name_fancy="Haskell stack"
+
+_koopa_install_start "$name_fancy"
 
 (
     # Installer will warn if this local directory doesn't exist.
@@ -18,4 +20,4 @@ _koopa_h1 "Installing Haskell stack for current user."
     curl -sSL "https://get.haskellstack.org/" | bash
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_success "Installation of Haskell stack was successful."
+_koopa_install_success "$name_fancy"

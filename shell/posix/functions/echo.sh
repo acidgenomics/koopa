@@ -472,6 +472,68 @@ _koopa_success() {  # {{{1
     return 0
 }
 
+_koopa_uninstall_start() {  # {{{1
+    # """
+    # Inform the user about start of uninstall.
+    # @note Updated 2020-02-20.
+    # """
+    local name
+    name="${1:?}"
+    local prefix
+    prefix="${2:-}"
+    local msg
+    if [ -n "$prefix" ]
+    then
+        msg="Uninstalling ${name} at '${prefix}'."
+    else
+        msg="Uninstalling ${name}."
+    fi
+    _koopa_h1 "$msg"
+    return 0
+}
+
+_koopa_uninstall_success() {  # {{{1
+    # """
+    # Uninstall success message.
+    # @note Updated 2020-02-20.
+    # """
+    local arg
+    arg="${1:?}"
+    _koopa_success "Uninstallation of ${arg} was successful."
+    return 0
+}
+
+_koopa_update_start() {  # {{{1
+    # """
+    # Inform the user about start of update.
+    # @note Updated 2020-02-20.
+    # """
+    local name
+    name="${1:?}"
+    local prefix
+    prefix="${2:-}"
+    local msg
+    if [ -n "$prefix" ]
+    then
+        msg="Updating ${name} at '${prefix}'."
+    else
+        msg="Updating ${name}."
+    fi
+    _koopa_h1 "$msg"
+    return 0
+}
+
+_koopa_update_success() {  # {{{1
+    # """
+    # Update success message.
+    # @note Updated 2020-02-20.
+    # """
+    local arg
+    arg="${1:?}"
+    _koopa_success "Update of ${arg} was successful."
+    return 0
+}
+
 _koopa_warning() {  # {{{1
     # """
     # Warning message.

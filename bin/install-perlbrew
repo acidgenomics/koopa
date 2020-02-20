@@ -26,10 +26,11 @@ do
     esac
 done
 
+name_fancy="Perlbrew"
 prefix="$(_koopa_perlbrew_prefix)"
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing Perlbrew at '${prefix}'."
+_koopa_install_start "$name_fancy" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -72,7 +73,6 @@ then
         mkdir -pv system
         ln -fnsv "$bin_dir" "system/bin"
     )
-    _koopa_success "Addition of system Perl to perlbrew was successful."
 fi
 
 # Install latest Perl  {{{1
@@ -91,9 +91,9 @@ then
         _koopa_h2 "Installing '${perl}'."
         _koopa_coffee_time
         perlbrew install "$perl"
-        _koopa_success "Installation of '${perl}' was successful."
+        _koopa_install_success "$perl"
     done
 fi
 
-_koopa_success "Installation of Perlbrew was successful."
-_koopa_note "Restart the shell to complete activation."
+_koopa_install_success "$name_fancy"
+_koopa_restart

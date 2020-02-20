@@ -11,7 +11,9 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+name_fancy="GnuPG"
+
+_koopa_install_start "$name_fancy" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -220,4 +222,4 @@ then
     gpgconf --kill gpg-agent
 fi
 
-_koopa_success "Installation of GnuPG was successful."
+_koopa_install_success "$name_fancy"

@@ -20,10 +20,11 @@ do
     esac
 done
 
-prefix="$(_koopa_app_prefix)/ruby/rbenv"
+name="rbenv"
+prefix="$(_koopa_app_prefix)/ruby/${name}"
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing rbenv at '${prefix}'."
+_koopa_install_start "$name" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_mkdir "$prefix"
@@ -55,26 +56,5 @@ _koopa_h2 "Installing 'ruby-build'."
 
 _koopa_set_permissions --recursive "$prefix"
 
-# Install latest Ruby  {{{1
-# ==============================================================================
-
-if [[ "$all" -eq 1 ]]
-then
-    versions=(
-        "$(_koopa_variable ruby)"
-    )
-    installed="$(rbenv versions)"
-    for version in "${versions[@]}"
-    do
-        _koopa_is_matching_fixed "$installed" "$version" && continue
-        _koopa_h2 "Installing Ruby ${version} via rbenv."
-        (
-            rbenv install "$version"
-            rbenv global "$version"
-        ) 2>&1 | tee "$(_koopa_tmp_log_file)"
-        _koopa_success "Installation of Ruby ${version} was successful."
-    done
-fi
-
-_koopa_success "Installation of rbenv was successful."
-_koopa_note "Restart the shell to complete installation of rbenv."
+_koopa_install_success "$name"
+_koopa_restart

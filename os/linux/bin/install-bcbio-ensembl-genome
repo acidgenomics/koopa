@@ -74,7 +74,7 @@ organism="${organism// /_}"
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
 
-_koopa_h1 "Installing '${bcbio_genome_name}' bcbio genome."
+_koopa_install_start "$bcbio_genome_name"
 
 # e.g. "Hsapiens".
 bcbio_species_dir="$( \
@@ -108,4 +108,4 @@ cores="$(_koopa_cpu_count)"
 
 rm -fr "$tmp_dir"
 
-_koopa_success "Installation of bcbio genome was successful."
+_koopa_install_success "$bcbio_genome_name"

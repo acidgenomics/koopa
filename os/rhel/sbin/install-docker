@@ -7,6 +7,11 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_exit_if_docker
 _koopa_exit_if_installed docker
+
+name_fancy="Docker"
+
+_koopa_install_start "$name_fancy"
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed systemctl
 
@@ -42,6 +47,5 @@ _koopa_link_docker
 # Ready to start Docker.
 sudo systemctl start docker
 
-_koopa_success "Installation of Docker was successful."
-_koopa_note "Shell must be reloaded for '${USER}' to be added to the \
-'docker' group."
+_koopa_install_success "$name_fancy"
+_koopa_restart

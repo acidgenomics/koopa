@@ -97,7 +97,9 @@ then
     extra=1
 fi
 
-_koopa_h1 "Installing Debian base system."
+name_fancy="Debian base system"
+
+_koopa_install_start "$name_fancy"
 
 _koopa_assert_is_installed sed sudo
 
@@ -300,4 +302,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
 _koopa_h2 "Removing unused packages via 'apt-get autoremove'."
 sudo apt-get --yes autoremove
 
-_koopa_success "Installation of Debian base was successful."
+_koopa_install_success "$name_fancy"

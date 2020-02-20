@@ -356,7 +356,7 @@ _koopa_install_pip() {  # {{{1
     "$python" "$file" --no-warn-script-location
     rm "$file"
     _koopa_install_success "pip"
-    _koopa_note "Restart the shell to complete activation."
+    _koopa_restart
     return 0
 }
 
