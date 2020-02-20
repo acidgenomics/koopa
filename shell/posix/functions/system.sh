@@ -116,8 +116,10 @@ _koopa_chown() {  # {{{1
 
 _koopa_cpu_count() {  # {{{1
     # """
-    # Get the number of cores (CPUs) available.
-    # @note Updated 2020-01-31.
+    # Return a usable number of CPU cores.
+    # @note Updated 2020-02-20.
+    #
+    # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
     local n
     if _koopa_is_macos
@@ -130,12 +132,18 @@ _koopa_cpu_count() {  # {{{1
         # Otherwise assume single threaded.
         n=1
     fi
-    # Set to n-2 cores, if applicable.
-    if [ "$n" -gt 2 ]
+    # Subtract some cores for login use on powerful machines.
+    if [ "$n" -gt 4 ]
     then
+        # For 5+ cores, use 'n-2'.
         n=$((n - 2))
+    elif [ "$n" -ge 3 ] && [ "$n" -le 4 ]
+    then
+        # For 3-4 cores, use 'n-1'.
+        n=$((n - 1))
     fi
     echo "$n"
+    return 0
 }
 
 _koopa_disk_check() {  # {{{1
