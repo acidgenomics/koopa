@@ -92,4 +92,4 @@ set -u
 update-conda
 
 _koopa_install_success "conda"
-_koopa_install_restart
+_koopa_restart

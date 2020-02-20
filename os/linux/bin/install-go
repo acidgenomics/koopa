@@ -51,4 +51,4 @@ ln -fnsv "$app_prefix" "$goroot"
 
 # > go env GOROOT
 
-_koopa_success "Installation of ${name} was successful."
+_koopa_install_success "$name"

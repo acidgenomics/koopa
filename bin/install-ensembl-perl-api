@@ -31,4 +31,4 @@ _koopa_assert_has_no_args "$@"
 _koopa_set_permissions --recursive "$prefix"
 
 _koopa_install_success "$name_fancy"
-_koopa_install_restart
+_koopa_restart
