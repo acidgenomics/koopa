@@ -61,7 +61,9 @@ then
 fi
 _koopa_assert_is_dir "$install_dir"
 
-_koopa_h1 "Patching bcbio-nextgen installation."
+name_fancy="bcbio-nextgen"
+
+_koopa_h1 "Patching ${name_fancy} installation."
 
 cat << EOF
 git_dir:
@@ -90,4 +92,4 @@ rm -frv "${install_dir}/anaconda/lib/python"*"/site-packages/bcbio"*
     "$bcbio_python" setup.py install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_success "Patching of bcbio-nextgen was successful."
+_koopa_success "Patching of ${name_fancy} was successful."

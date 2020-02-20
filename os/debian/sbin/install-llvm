@@ -22,17 +22,19 @@ then
     exit 0
 fi
 
-_koopa_h1 "Installing LLVM."
+name="llvm"
+version="$(_koopa_variable "$name")"
+major_version="$(_koopa_major_version "$version")"
+
+name_fancy="LLVM ${major_version}"
+
+_koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 _koopa_apt_import_llvm_key
 _koopa_apt_add_llvm_repo
-
-name="llvm"
-version="$(_koopa_variable "$name")"
-major_version="$(_koopa_major_version "$version")"
 
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
@@ -47,4 +49,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
             "lld-${major_version}" \
             "lldb-${major_version}"
 
-_koopa_success "Installation of ${name} ${version} was successful."
+_koopa_install_success "$name_fancy"

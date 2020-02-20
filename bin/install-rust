@@ -6,12 +6,14 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+name_fancy="Rust"
+
 CARGO_HOME="$(_koopa_rust_cargo_prefix)"
 _koopa_exit_if_dir "$CARGO_HOME"
 RUSTUP_HOME="$(_koopa_rust_rustup_prefix)"
 _koopa_exit_if_dir "$RUSTUP_HOME"
 
-_koopa_h1 "Installing Rust via rustup script (http://sh.rustup.rs)."
+_koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -32,5 +34,5 @@ _koopa_mkdir "$CARGO_HOME" "$RUSTUP_HOME"
 
 _koopa_set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
 
-_koopa_success "Installation of Rust was successful."
-_koopa_note "Restart the shell to finish activation."
+_koopa_install_success "$name_fancy"
+_koopa_restart

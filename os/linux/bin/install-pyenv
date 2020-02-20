@@ -5,11 +5,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-prefix="$(_koopa_app_prefix)/python/pyenv"
+name="pyenv"
+prefix="$(_koopa_app_prefix)/python/${name}"
 
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing pyenv at '${prefix}'."
+_koopa_install_start "$name" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_mkdir "$prefix"
@@ -22,5 +23,5 @@ _koopa_mkdir "$prefix"
 
 _koopa_set_permissions --recursive "$prefix"
 
-_koopa_success "Installation of pyenv was successful."
-_koopa_note "Restart the shell to complete installation of pyenv."
+_koopa_install_success "$name"
+_koopa_restart

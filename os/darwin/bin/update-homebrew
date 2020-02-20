@@ -6,14 +6,11 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_args "$@"
+_koopa_exit_if_not_installed brew
 
-if ! _koopa_is_installed brew
-then
-    _koopa_warning "Homebrew is not installed."
-    exit 0
-fi
+name_fancy="Homebrew"
 
-_koopa_h1 "Updating Homebrew."
+_koopa_update_start "$name_fancy"
 
 brew analytics off
 brew update
@@ -50,4 +47,4 @@ _koopa_h2 "Running cleanup."
 brew cleanup -s
 rm -frv "$(brew --cache)"
 
-_koopa_success "Homebrew updated successfully."
+_koopa_update_success "$name_fancy"

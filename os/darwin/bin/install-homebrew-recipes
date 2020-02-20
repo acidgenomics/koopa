@@ -22,7 +22,9 @@ source "${script_dir}/../include/header.sh" --no-header-checks
 # And be sure not to install 'rust' alongside 'rustup-init'.
 # """
 
-_koopa_h1 "Installing Homebrew recipes."
+name_fancy="Homebrew recipes"
+
+_koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed brew
@@ -259,4 +261,4 @@ brew unlink python
 # > brew link gdal
 # > brew link proj
 
-_koopa_success "Installation of Homebrew recipes was successful."
+_koopa_install_success "$name_fancy"
