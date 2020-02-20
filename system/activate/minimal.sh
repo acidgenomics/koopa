@@ -38,19 +38,13 @@ fi
 # consistently exported across platforms.
 
 # HOSTNAME
-if [ -z "${HOSTNAME:-}" ]
-then
-    HOSTNAME="$(uname -n)"
-    export HOSTNAME
-fi
+[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)"
+export HOSTNAME
 
 # OSTYPE
 # Automatically set by bash and zsh.
-if [ -z "${OSTYPE:-}" ]
-then
-    OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
-    export OSTYPE
-fi
+[ -z "${OSTYPE:-}" ] && OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
+export OSTYPE
 
 # SHELL
 # Note that this doesn't currently get set by RStudio terminal.
@@ -58,34 +52,17 @@ SHELL="$(_koopa_which_realpath "$KOOPA_SHELL")"
 export SHELL
 
 # TMPDIR
-if [ -z "${TMPDIR:-}" ]
-then
-    export TMPDIR="/tmp"
-fi
+[ -z "${TMPDIR:-}" ] && TMPDIR="/tmp"
+export TMPDIR
 
 # TODAY
 # Current date. Alternatively, can use '%F' shorthand.
-if [ -z "${TODAY:-}" ]
-then
-    TODAY="$(date +%Y-%m-%d)"
-    export TODAY
-fi
+[ -z "${TODAY:-}" ] && TODAY="$(date +%Y-%m-%d)"
+export TODAY
 
 # USER
-if [ -z "${USER:-}" ]
-then
-    USER="$(whoami)"
-    export USER
-fi
-
-# CPU count  {{{2
-# ------------------------------------------------------------------------------
-
-if [ -z "${CPU_COUNT:-}" ]
-then
-    CPU_COUNT="$(_koopa_cpu_count)"
-    export CPU_COUNT
-fi
+[ -z "${USER:-}" ] && USER="$(whoami)"
+export USER
 
 # History  {{{2
 # ------------------------------------------------------------------------------
@@ -94,47 +71,43 @@ fi
 # For setting history length, see HISTSIZE and HISTFILESIZE.
 
 # Standardize the history file name across shells.
-if [ -z "${HISTFILE:-}" ]
-then
-    HISTFILE="${HOME}/.$(_koopa_shell)-history"
-    export HISTFILE
-    [ ! -f "$HISTFILE" ] && touch "$HISTFILE"
-fi
+# Note that snake case is commonly used here across platforms.
+[ -z "${HISTFILE:-}" ] && HISTFILE="${HOME}/.$(_koopa_shell)_history"
+export HISTFILE
+[ ! -f "$HISTFILE" ] && touch "$HISTFILE"
 
 # Don't keep duplicate lines in the history.
 # Alternatively, set "ignoreboth" to also ignore lines starting with space.
-if [ -z "${HISTCONTROL:-}" ]
-then
-    export HISTCONTROL="ignoredups"
-fi
+[ -z "${HISTCONTROL:-}" ] && HISTCONTROL="ignoredups"
+export HISTCONTROL
 
-if [ -z "${HISTIGNORE:-}" ]
-then
-    export HISTIGNORE="&:ls:[bf]g:exit"
-fi
+[ -z "${HISTIGNORE:-}" ] && HISTIGNORE="&:ls:[bf]g:exit"
+export HISTIGNORE
 
 # Set the default history size.
 if [ -z "${HISTSIZE:-}" ] || [ "${HISTSIZE:-}" -eq 0 ]
 then
-    export HISTSIZE=1000
+    HISTSIZE=1000
 fi
-if [ -z "${SAVEHIST:-}" ] || [ "${SAVEHIST:-}" -eq 0 ]
-then
-    export SAVEHIST=1000
-fi
-if [ "${HISTSIZE:-}" -ne "${SAVEHIST:-}" ]
-then
-    SAVEHIST="$HISTSIZE"
-fi
+export HISTSIZE
 
 # Add the date/time to 'history' command output.
 # Note that on macOS bash will fail if 'set -e' is set and this isn't exported.
 if [ -z "${HISTTIMEFORMAT:-}" ]
 then
-    export HISTTIMEFORMAT="%Y%m%d %T  "
+    HISTTIMEFORMAT="%Y%m%d %T  "
 fi
+export HISTTIMEFORMAT
 
+# Ensure that HISTSIZE and SAVEHIST values match.
+[ "${HISTSIZE:-}" -ne "${SAVEHIST:-}" ] && SAVEHIST="$HISTSIZE"
+export SAVEHIST
 
+# CPU count  {{{2
+# ------------------------------------------------------------------------------
+
+[ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(_koopa_cpu_count)"
+export CPU_COUNT
 
 # Activation functions  {{{1
 # ==============================================================================
