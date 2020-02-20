@@ -6,10 +6,11 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+name_fancy="Ensembl Perl API"
 prefix="$(_koopa_app_prefix)/ensembl"
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing Ensembl Perl API at '${prefix}'."
+_koopa_install_start "$name_fancy" "prefix"
 
 _koopa_assert_has_no_args "$@"
 
@@ -29,5 +30,5 @@ _koopa_assert_has_no_args "$@"
 
 _koopa_set_permissions --recursive "$prefix"
 
-_koopa_success "Installation of Ensembl Pelr API was successful."
-_koopa_note "Reload the current shell to complete activation."
+_koopa_install_success "$name_fancy"
+_koopa_install_restart

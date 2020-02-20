@@ -322,6 +322,26 @@ _koopa_info() {  # {{{1
     return 0
 }
 
+_koopa_install_start() {  # {{{1
+    # """
+    # Inform the user about start of installation.
+    # @note Updated 2020-02-20.
+    # """
+    local name
+    name="${1:?}"
+    local prefix
+    prefix="${2:-}"
+    local msg
+    if [ -n "$prefix" ]
+    then
+        msg="Installing ${name} at '${prefix}'."
+    else
+        msg="Installing ${name}."
+    fi
+    _koopa_h1 "$msg"
+    return 0
+}
+
 _koopa_install_restart() {  # {{{1
     # """
     # Inform the user that they should restart shell.
