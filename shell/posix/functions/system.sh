@@ -735,7 +735,7 @@ _koopa_list_internal_functions() {  # {{{1
             )"
             ;;
         zsh)
-            # shellcheck disable=SC2086
+            # shellcheck disable=SC2086,SC2154
             x="$(print -l ${(ok)functions})"
             ;;
         *)
