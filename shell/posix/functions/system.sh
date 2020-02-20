@@ -133,13 +133,13 @@ _koopa_cpu_count() {  # {{{1
         n=1
     fi
     # Subtract some cores for login use on powerful machines.
-    if [ "$n" -gt 4 ]
+    if [ "$n" -ge 17 ]
     then
-        # For 5+ cores, use 'n-2'.
+        # For 17+ cores, use 'n-2'.
         n=$((n - 2))
-    elif [ "$n" -ge 3 ] && [ "$n" -le 4 ]
+    elif [ "$n" -ge 5 ] && [ "$n" -le 16 ]
     then
-        # For 3-4 cores, use 'n-1'.
+        # For 5-16 cores, use 'n-1'.
         n=$((n - 1))
     fi
     echo "$n"
