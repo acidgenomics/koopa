@@ -1,7 +1,9 @@
+## """
 ## Shared R profile configuration.
-## Updated 2020-01-07 by Michael Steinbaugh.
-
+## Updated 2020-02-20 by Michael Steinbaugh.
+##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
+## """
 
 
 
@@ -236,19 +238,6 @@ if (.isInstalled("httr")) {
     )
 }
 
-if (.isInstalled("parallel")) {
-    ## Improve the default multi-core settings.
-    ## Minimum of 1 core, maximum of n - 1 cores.
-    ## `BiocParallel::MulticoreParam()` should inherit this setting.
-    options(
-        "mc.cores" = max(1L, parallel::detectCores() - 1L)
-    )
-    ## `install.packages()` looks for "Ncpus" global.
-    options(
-        "Ncpus" = getOption("mc.cores")
-    )
-}
-
 if (.isInstalled("readr")) {
     options(
         "readr.num_columns" = 0L,
@@ -442,6 +431,38 @@ if (.isInstalled("readr")) {
     ## >         )
     ## >     }
     ## > }
+
+    ## Parallelization  {{{2
+    ## -------------------------------------------------------------------------
+
+    if (.isInstalled("parallel")) {
+        ## Improve the default multi-core settings.
+        ## `BiocParallel::MulticoreParam()` should inherit this setting.
+        cores <- Sys.getenv("CPU_COUNT")
+        if (!isTRUE(nzchar(cores))) {
+            cores <- max(1L, parallel::detectCores() - 1L)
+        }
+        cores <- as.integer(cores)
+        ## `install.packages()` looks for "Ncpus" global.
+        options(
+            "Ncpus" = cores,
+            "mc.cores" = cores
+        )
+        rm(cores)
+    }
+
+    if (.isInstalled("future")) {
+        ## If we have a large dataset, then we might need to adjust the limit
+        ## for allowable object sizes within R.
+        ##
+        ## (Default is 500 * 1024 ^ 2 = 500 Mb)
+        ##
+        ## https://hbctraining.github.io/scRNA-seq/lessons/
+        ##     06_SC_SCT_and_integration.html
+        ##
+        ## Increase default limit to 4 GB.
+        options("future.globals.maxSize" = 4000 * 1024^2)
+    }
 
     ## Minimal session info  {{{2
     ## -------------------------------------------------------------------------
