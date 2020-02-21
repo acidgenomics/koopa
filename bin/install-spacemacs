@@ -63,7 +63,9 @@ _koopa_assert_has_no_args "$@"
     repo="https://github.com/syl20bnr/spacemacs.git"
     git clone "$repo" "$install_dir"
     _koopa_cd "$install_dir"
+    git fetch --all
     git checkout -b develop origin/develop
+    git pull
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 link-emacs "$name"
