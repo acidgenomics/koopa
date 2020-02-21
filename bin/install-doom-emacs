@@ -19,11 +19,12 @@ _koopa_assert_has_no_args "$@"
 (
     repo="https://github.com/hlissner/doom-emacs"
     git clone "$repo" "$install_dir"
-    link-emacs "$name"
     exe_file="${install_dir}/bin/doom"
     "${exe_file}" quickstart
     "${exe_file}" refresh
     "${exe_file}" doctor
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+link-emacs "$name"
 
 _koopa_install_success "$name"
