@@ -33,15 +33,10 @@ log_file="$(_koopa_tmp_log_file)"
 
 export HOMEBREW_FORCE_BOTTLE=1
 
-# Taps  {{{1
-# ==============================================================================
-
-_koopa_h2 "Updating taps."
-brew tap mongodb/brew
-brew tap osgeo/osgeo4mac
-
 # Casks  {{{1
 # ==============================================================================
+
+# Note that 'foobar2000' cask was removed due to url protection.
 
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
@@ -59,6 +54,7 @@ casks=(
     carbon-copy-cloner
     coconutbattery
     coda
+    darktable
     deluge
     docker
     emacs
@@ -104,6 +100,8 @@ casks=(
     vlc
     wine-stable
     xld
+    # External taps.
+    homebrew/cask-versions/deadbeef-devel
 )
 
 (
@@ -123,6 +121,7 @@ casks=(
 
 _koopa_h2 "Installing brews."
 
+# Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.
 # This is needed currently to install R sf package from source.
 brew remove --force \
     osgeo-gdal \
@@ -200,7 +199,6 @@ brews=(
     luarocks
     mariadb-connector-c
     mas
-    mongodb-community
     neofetch
     neovim
     node
@@ -218,6 +216,7 @@ brews=(
     pyenv
     python
     rbenv
+    rename
     ruby
     rsync
     ruby-build
@@ -239,7 +238,8 @@ brews=(
     wget
     youtube-dl
     zlib
-    # External
+    # External taps.
+    mongodb/brew/mongodb-community
     vitorgalvao/tiny-scripts/cask-repair
 )
 
