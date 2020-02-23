@@ -664,10 +664,6 @@ _koopa_activate_secrets() {  # {{{1
     # """
     local file
     file="${1:-"${HOME}/.secrets"}"
-
-    echo "HELLO THERE"
-    echo "$file"
-
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"

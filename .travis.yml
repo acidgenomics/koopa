@@ -35,6 +35,9 @@ jobs:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './tests/travis.sh'
+  allow_failures:
+    - name: "macos"
+  fast_finish: true
 
 notifications:
   email:
