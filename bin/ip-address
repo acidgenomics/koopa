@@ -6,15 +6,30 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+type="public"
 
-if _koopa_is_macos
-then
-    ifconfig \
-    | grep "inet " \
-    | grep "broadcast" \
-    | awk '{print $2}' \
-    | sort
-else
-    hostname -I | awk '{print $1}'
-fi
+while (("$#"))
+do
+    case "$1" in
+        --local)
+            type="local"
+            shift 1
+            ;;
+        --public)
+            type="public"
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+case "$type" in
+    local)
+        _koopa_local_ip_address
+        ;;
+    public)
+        _koopa_public_ip_address
+        ;;
+esac
