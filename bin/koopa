@@ -67,19 +67,23 @@ case "$1" in
         exit 0
         ;;
     get-homebrew-cask-version)
-        _koopa_get_homebrew_cask_version "${2:?}"
+        shift 1
+        _koopa_get_homebrew_cask_version "$@"
         exit 0
         ;;
     get-macos-app-version)
-        _koopa_get_macos_app_version "${2:?}"
+        shift 1
+        _koopa_get_macos_app_version "$@"
         exit 0
         ;;
     get-version)
-        _koopa_get_version "${2:?}"
+        shift 1
+        _koopa_get_version "$@"
         exit 0
         ;;
     header)
-        _koopa_header "${2:-}"
+        shift 1
+        _koopa_header "$@"
         exit 0
         ;;
     host-id)
@@ -106,6 +110,11 @@ case "$1" in
         _koopa_r_home
         exit 0
         ;;
+    which-realpath)
+        shift 1
+        _koopa_which_realpath "$@"
+        exit 0
+        ;;
     # Developer tools ----------------------------------------------------------
     install-mike)
         _koopa_install_mike
@@ -116,7 +125,8 @@ case "$1" in
         exit 0
         ;;
     variable)
-        _koopa_variable "${2:?}"
+        shift 1
+        _koopa_variable "$@"
         exit 0
         ;;
     variables)
@@ -125,10 +135,10 @@ case "$1" in
         ;;
     # Deprecated args / error catching -----------------------------------------
     home)
-        _koopa_stop "Defunct: Use 'prefix' instead of 'home'."
+        _koopa_defunct "prefix"
         ;;
     upgrade)
-        _koopa_stop "Defunct: Use 'update' instead of 'upgrade'."
+        _koopa_defunct "update"
         ;;
     *)
         _koopa_invalid_arg "$1"
