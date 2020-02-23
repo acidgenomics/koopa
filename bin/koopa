@@ -135,10 +135,10 @@ case "$1" in
         ;;
     # Deprecated args / error catching -----------------------------------------
     home)
-        _koopa_defunct "prefix"
+        _koopa_defunct "koopa prefix"
         ;;
     upgrade)
-        _koopa_defunct "update"
+        _koopa_defunct "koopa update"
         ;;
     *)
         _koopa_invalid_arg "$1"
