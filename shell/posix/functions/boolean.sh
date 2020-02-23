@@ -134,9 +134,18 @@ _koopa_is_cellar() {  # {{{1
     cmd="${1:?}"
     _koopa_is_installed "$cmd" || return 1
     cmd="$(_koopa_which_realpath "$cmd")"
+    # Check koopa cellar.
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
-    _koopa_is_matching_regex "$cmd" "^${cellar_prefix}"
+    _koopa_is_matching_regex "$cmd" "^${cellar_prefix}" && return 0
+    # Check Homebrew cellar.
+    if _koopa_is_installed brew
+    then
+        local homebrew_cellar_prefix
+        homebrew_cellar_prefix="$(_koopa_homebrew_cellar_prefix)"
+        _koopa_is_matching_regex "$cmd" "^${homebrew_cellar_prefix}" && return 0
+    fi
+    return 1
 }
 
 _koopa_is_conda_active() {  # {{{1
