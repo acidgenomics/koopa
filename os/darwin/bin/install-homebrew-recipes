@@ -6,19 +6,26 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh" --no-header-checks
 
 # """
-# Install XQuartz 2.7.9 manually instead of using xquartz cask.
+# XQuartz:
+# Install XQuartz 2.7.9 manually instead of using 'xquartz' cask.
 #
+# Little Snitch:
+# 'little-snitch' cask currently requires manual follow-up installation:
+# /usr/local/Caskroom/little-snitch/*/LittleSnitch-*.dmg
+#
+# LLVM:
 # LLVM takes up 4 GB of disk space but is required for some Python packages.
 # In particular, if we want to install umap-learn, this is now required.
-
-# Use osgeo-gdal instead of regular gdal.
-# This gets updated more regularly.
-
-# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
 #
+# PROJ/GDAL:
+# Consider using 'osgeo-gdal' instead of regular 'gdal' brew. This one gets
+# updated more regularly. However, I've found that the newer version can cause
+# some R packages to fail to build from source.
+#
+# Rust:
+# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
 # I hit some permissions issues with the 'rustup' cellar symlink installed at
 # '/usr/local/bin/rustup' that doesn't occur when running the official script.
-#
 # And be sure not to install 'rust' alongside 'rustup-init'.
 # """
 
