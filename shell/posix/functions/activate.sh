@@ -660,10 +660,14 @@ _koopa_activate_rust() {  # {{{1
 _koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-23.
     # """
     local file
     file="${1:-"${HOME}/.secrets"}"
+
+    echo "HELLO THERE"
+    echo "$file"
+
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"
