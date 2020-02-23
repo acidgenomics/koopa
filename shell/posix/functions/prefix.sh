@@ -205,6 +205,28 @@ _koopa_go_gopath() {  # {{{1
     return 0
 }
 
+_koopa_homebrew_cellar_prefix() {  # {{{1
+    _koopa_is_installed brew || return 1
+    local x
+    x="$(_koopa_homebrew_prefix)/Cellar"
+    [ -d "$x" ] || return 1
+    echo "$x"
+    return 0
+}
+
+_koopa_homebrew_prefix() {  # {{{1
+    # """
+    # Homebrew prefix.
+    # @note Updated 2020-02-23.
+    # """
+    _koopa_is_installed brew || return 1
+    local x
+    x="${HOMEBREW_PREFIX:?}"
+    [ -d "$x" ] || return 1
+    echo "$x"
+    return 0
+}
+
 _koopa_java_home() {  # {{{1
     # """
     # Java home.
