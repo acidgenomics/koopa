@@ -5,23 +5,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-all=0
-
-while (("$#"))
-do
-    case "$1" in
-        --all)
-            all=1
-            shift 1
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-done
-
 name="rbenv"
 prefix="$(_koopa_app_prefix)/ruby/${name}"
+
 _koopa_exit_if_dir "$prefix"
 
 _koopa_install_start "$name" "$prefix"
