@@ -769,6 +769,34 @@ _koopa_ln() {  # {{{1
     return 0
 }
 
+_koopa_local_ip_address() {  # {{{1
+    # """
+    # Local IP address.
+    # @note Updated 2020-02-23.
+    #
+    # Some systems (e.g. macOS) will return multiple IP address matches for
+    # Ethernet and WiFi. Here we're simplying returning the first match, which
+    # corresponds to the default on macOS.
+    # """
+    local x
+    if _koopa_is_macos
+    then
+        x="$( \
+            ifconfig \
+            | grep "inet " \
+            | grep "broadcast" \
+            | awk '{print $2}' \
+        )"
+    else
+        x="$( \
+            hostname -I \
+            | awk '{print $1}' \
+        )"
+    fi
+    echo "$x" | head -n 1
+    return 0
+}
+
 _koopa_make_build_string() {  # {{{1
     # """
     # OS build string for 'make' configuration.
@@ -934,6 +962,22 @@ _koopa_os_string() {  # {{{1
         string="${string}-${version}"
     fi
     echo "$string"
+    return 0
+}
+
+_koopa_public_ip_address() {  # {{{1
+    # """
+    # Public (remote) IP address.
+    # @note Updated 2020-02-23.
+    #
+    # @seealso
+    # https://www.cyberciti.biz/faq/
+    #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
+    # """
+    _koopa_is_installed dig || return 1
+    local x
+    x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    echo "$x"
     return 0
 }
 
