@@ -698,14 +698,12 @@ if (
 
 
 ## Python packages =============================================================
-if (!isTRUE(docker)) {
-    h2("Python pipx packages")
-    installed(
-        which = c(
-            "black",
-            "flake8",
-            "pylint",
-            "pytest"
-        )
+h2("Python packages")
+installed(
+    which = c(
+        "black",
+        "flake8",
+        "pylint",
+        "pytest"
     )
-}
+)
