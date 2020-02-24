@@ -183,6 +183,7 @@ install(
         "reshape2",
         "rio",
         "shiny",
+        "shinydashboard",
         "slam",
         "snakecase",
         "snow",
