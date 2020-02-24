@@ -48,6 +48,8 @@ if (Sys.getenv("KOOPA_EXTRA") == 1L) {
     extra <- FALSE
 }
 
+docker <- isDocker()
+
 h1("Checking koopa installation")
 
 
@@ -66,29 +68,33 @@ checkVersion(
     current = currentVersion("zsh"),
     expected = expectedVersion("zsh")
 )
-checkVersion(
-    name = "Fish",
-    whichName = "fish",
-    current = currentVersion("fish"),
-    expected = expectedVersion("fish")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Fish",
+        whichName = "fish",
+        current = currentVersion("fish"),
+        expected = expectedVersion("fish")
+    )
+}
 
 
 
 ## Editors =====================================================================
 h2("Editors")
-checkVersion(
-    name = "Emacs",
-    whichName = "emacs",
-    current = currentVersion("emacs"),
-    expected = expectedVersion("emacs")
-)
-checkVersion(
-    name = "Neovim",
-    whichName = "nvim",
-    current = currentVersion("neovim"),
-    expected = expectedVersion("neovim")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Emacs",
+        whichName = "emacs",
+        current = currentVersion("emacs"),
+        expected = expectedVersion("emacs")
+    )
+    checkVersion(
+        name = "Neovim",
+        whichName = "nvim",
+        current = currentVersion("neovim"),
+        expected = expectedVersion("neovim")
+    )
+}
 checkVersion(
     name = "Tmux",
     whichName = "tmux",
@@ -121,42 +127,48 @@ checkVersion(
 )
 
 h2("Secondary languages")
-checkVersion(
-    name = "Go",
-    whichName = "go",
-    current = currentMinorVersion("go"),
-    expected = expectedMinorVersion("go")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Go",
+        whichName = "go",
+        current = currentMinorVersion("go"),
+        expected = expectedMinorVersion("go")
+    )
+}
 checkVersion(
     name = "Java",
     whichName = "java",
     current = currentVersion("java"),
     expected = expectedVersion("java")
 )
-checkVersion(
-    name = "Julia",
-    whichName = "julia",
-    current = currentVersion("julia"),
-    expected = expectedVersion("julia")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Julia",
+        whichName = "julia",
+        current = currentVersion("julia"),
+        expected = expectedVersion("julia")
+    )
+}
 checkVersion(
     name = "Perl",
     whichName = "perl",
     current = currentMinorVersion("perl"),
     expected = expectedMinorVersion("perl")
 )
-checkVersion(
-    name = "Ruby",
-    whichName = "ruby",
-    current = currentVersion("ruby"),
-    expected = expectedVersion("ruby")
-)
-checkVersion(
-    name = "Rust",
-    whichName = "rustc",
-    current = currentVersion("rust"),
-    expected = expectedVersion("rust")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Ruby",
+        whichName = "ruby",
+        current = currentVersion("ruby"),
+        expected = expectedVersion("ruby")
+    )
+    checkVersion(
+        name = "Rust",
+        whichName = "rustc",
+        current = currentVersion("rust"),
+        expected = expectedVersion("rust")
+    )
+}
 
 
 
@@ -168,12 +180,14 @@ checkVersion(
     current = currentVersion("conda"),
     expected = expectedVersion("conda")
 )
-checkVersion(
-    name = "Perl : Perlbrew",
-    whichName = "perlbrew",
-    current = currentVersion("perlbrew"),
-    expected = expectedVersion("perlbrew")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Perl : Perlbrew",
+        whichName = "perlbrew",
+        current = currentVersion("perlbrew"),
+        expected = expectedVersion("perlbrew")
+    )
+}
 checkVersion(
     name = "Python : pip",
     whichName = "pip3",
@@ -186,30 +200,32 @@ checkVersion(
     current = currentVersion("pipx"),
     expected = expectedVersion("pipx")
 )
-checkVersion(
-    name = "Python : pyenv",
-    whichName = "pyenv",
-    current = currentVersion("pyenv"),
-    expected = expectedVersion("pyenv")
-)
-checkVersion(
-    name = "Ruby : rbenv",
-    whichName = "rbenv",
-    current = currentVersion("rbenv"),
-    expected = expectedVersion("rbenv")
-)
-checkVersion(
-    name = "Rust : cargo",
-    whichName = "cargo",
-    current = currentVersion("cargo"),
-    expected = expectedVersion("rust")
-)
-checkVersion(
-    name = "Rust : rustup",
-    whichName = "rustup",
-    current = currentVersion("rustup"),
-    expected = expectedVersion("rustup")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "Python : pyenv",
+        whichName = "pyenv",
+        current = currentVersion("pyenv"),
+        expected = expectedVersion("pyenv")
+    )
+    checkVersion(
+        name = "Ruby : rbenv",
+        whichName = "rbenv",
+        current = currentVersion("rbenv"),
+        expected = expectedVersion("rbenv")
+    )
+    checkVersion(
+        name = "Rust : cargo",
+        whichName = "cargo",
+        current = currentVersion("cargo"),
+        expected = expectedVersion("rust")
+    )
+    checkVersion(
+        name = "Rust : rustup",
+        whichName = "rustup",
+        current = currentVersion("rustup"),
+        expected = expectedVersion("rustup")
+    )
+}
 
 
 
@@ -255,43 +271,47 @@ checkVersion(
     current = currentVersion("neofetch"),
     expected = expectedVersion("neofetch")
 )
-checkVersion(
-    name = "ShellCheck",
-    whichName = "shellcheck",
-    current = currentVersion("shellcheck"),
-    expected = expectedVersion("shellcheck")
-)
-installed("shunit2")
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "ShellCheck",
+        whichName = "shellcheck",
+        current = currentVersion("shellcheck"),
+        expected = expectedVersion("shellcheck")
+    )
+    installed("shunit2")
+}
 
 
 
 ## Shell tools =================================================================
 h2("Shell tools")
-checkVersion(
-    name = "The Silver Searcher (Ag)",
-    whichName = "ag",
-    current = currentVersion("the-silver-searcher"),
-    expected = expectedVersion("the-silver-searcher")
-)
-checkVersion(
-    name = "exa",
-    whichName = "exa",
-    current = currentVersion("exa"),
-    expected = expectedVersion("exa")
-)
-checkVersion(
-    name = "fd",
-    whichName = "fd",
-    current = currentVersion("fd"),
-    expected = expectedVersion("fd")
-)
-checkVersion(
-    name = "ripgrep",
-    whichName = "rg",
-    current = currentVersion("ripgrep"),
-    expected = expectedVersion("ripgrep")
-)
-if (isTRUE(extra)) {
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "The Silver Searcher (Ag)",
+        whichName = "ag",
+        current = currentVersion("the-silver-searcher"),
+        expected = expectedVersion("the-silver-searcher")
+    )
+    checkVersion(
+        name = "exa",
+        whichName = "exa",
+        current = currentVersion("exa"),
+        expected = expectedVersion("exa")
+    )
+    checkVersion(
+        name = "fd",
+        whichName = "fd",
+        current = currentVersion("fd"),
+        expected = expectedVersion("fd")
+    )
+    checkVersion(
+        name = "ripgrep",
+        whichName = "rg",
+        current = currentVersion("ripgrep"),
+        expected = expectedVersion("ripgrep")
+    )
+}
+if (isTRUE(extra) && !isTRUE(docker)) {
     checkVersion(
         name = "autojump",
         whichName = "autojump",
@@ -451,79 +471,60 @@ installed(
 
 ## Heavy dependencies ==========================================================
 h2("Heavy dependencies")
-checkVersion(
-    name = "PROJ",
-    whichName = "proj",
-    current = currentVersion("proj"),
-    expected = expectedVersion("proj")
-)
-checkVersion(
-    name = "GDAL",
-    whichName = "gdalinfo",
-    current = currentVersion("gdal"),
-    expected = expectedVersion("gdal")
-)
-checkVersion(
-    name = "GEOS",
-    whichName = "geos-config",
-    current = currentVersion("geos"),
-    expected = expectedVersion("geos")
-)
-checkVersion(
-    name = "GSL",
-    whichName = "gsl-config",
-    current = currentVersion("gsl"),
-    expected = expectedVersion("gsl")
-)
-checkVersion(
-    name = "HDF5",
-    whichName = "h5cc",
-    current = currentVersion("hdf5"),
-    expected = expectedVersion("hdf5")
-)
-checkVersion(
-    name = "LLVM",
-    ## > whichName = "llvm-config",
-    whichName = NA,
-    current = currentMajorVersion("llvm"),
-    expected = switch(
-        EXPR = os,
-        `rhel-7` = "7",
-        expectedMajorVersion("llvm")
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "PROJ",
+        whichName = "proj",
+        current = currentVersion("proj"),
+        expected = expectedVersion("proj")
     )
-)
-checkVersion(
-    name = "SQLite",
-    whichName = "sqlite3",
-    current = currentVersion("sqlite"),
-    expected = switch(
-        EXPR = os,
-        `macos-10.14` = "3.24.0",
-        `macos-10.15` = "3.28.0",
-        expectedVersion("sqlite")
+    checkVersion(
+        name = "GDAL",
+        whichName = "gdalinfo",
+        current = currentVersion("gdal"),
+        expected = expectedVersion("gdal")
     )
-)
-
-## Note that macOS switched to LibreSSL in 2018.
-## > checkVersion(
-## >     name = "OpenSSL",
-## >     whichName = "openssl",
-## >     current = currentVersion("openssl"),
-## >     expected = expectedVersion("openssl")
-## > )
-## > checkVersion(
-## >     name = "Pandoc",
-## >     whichName = "pandoc",
-## >     current = currentVersion("pandoc"),
-## >     expected = expectedVersion("pandoc")
-## > )
-## > checkVersion(
-## >     name = "TeX Live",
-## >     whichName = "tex",
-## >     current = currentVersion("tex"),
-## >     expected = expectedVersion("tex")
-## > )
-
+    checkVersion(
+        name = "GEOS",
+        whichName = "geos-config",
+        current = currentVersion("geos"),
+        expected = expectedVersion("geos")
+    )
+    checkVersion(
+        name = "GSL",
+        whichName = "gsl-config",
+        current = currentVersion("gsl"),
+        expected = expectedVersion("gsl")
+    )
+    checkVersion(
+        name = "HDF5",
+        whichName = "h5cc",
+        current = currentVersion("hdf5"),
+        expected = expectedVersion("hdf5")
+    )
+    checkVersion(
+        name = "LLVM",
+        ## > whichName = "llvm-config",
+        whichName = NA,
+        current = currentMajorVersion("llvm"),
+        expected = switch(
+            EXPR = os,
+            `rhel-7` = "7",
+            expectedMajorVersion("llvm")
+        )
+    )
+    checkVersion(
+        name = "SQLite",
+        whichName = "sqlite3",
+        current = currentVersion("sqlite"),
+        expected = switch(
+            EXPR = os,
+            `macos-10.14` = "3.24.0",
+            `macos-10.15` = "3.28.0",
+            expectedVersion("sqlite")
+        )
+    )
+}
 installed(
     which = c(
         "openssl",
@@ -547,6 +548,7 @@ if (isTRUE(linux)) {
         expected = switch(
             EXPR = os,
             `amzn-2` = "7.3.1",
+            `debian-10` = "8.3.0",
             `fedora-31` = "9.2.1",
             `rhel-7` = "4.8.5",
             `rhel-8` = "8.2.1",
@@ -554,28 +556,30 @@ if (isTRUE(linux)) {
             NA
         )
     )
-    checkVersion(
-        name = "GnuPG",
-        whichName = "gpg",
-        current = currentVersion("gnupg"),
-        expected = expectedVersion("gpg")
-    )
-    checkVersion(
-        name = "RStudio Server",
-        whichName = "rstudio-server",
-        current = currentVersion("rstudio-server"),
-        expected = expectedVersion("rstudio-server")
-    )
-    checkVersion(
-        name = "pass",
-        current = currentVersion("pass"),
-        expected = expectedVersion("pass")
-    )
-    checkVersion(
-        name = "docker-credential-pass",
-        current = currentVersion("docker-credential-pass"),
-        expected = expectedVersion("docker-credential-pass")
-    )
+    if (!isTRUE(docker)) {
+        checkVersion(
+            name = "GnuPG",
+            whichName = "gpg",
+            current = currentVersion("gnupg"),
+            expected = expectedVersion("gpg")
+        )
+        checkVersion(
+            name = "RStudio Server",
+            whichName = "rstudio-server",
+            current = currentVersion("rstudio-server"),
+            expected = expectedVersion("rstudio-server")
+        )
+        checkVersion(
+            name = "pass",
+            current = currentVersion("pass"),
+            expected = expectedVersion("pass")
+        )
+        checkVersion(
+            name = "docker-credential-pass",
+            current = currentVersion("docker-credential-pass"),
+            expected = expectedVersion("docker-credential-pass")
+        )
+    }
     ## This is used for shebang. Version 8.30 marks support of `-S` flag.
     ## > checkVersion(
     ## >     name = "env (coreutils)",
@@ -634,7 +638,8 @@ if (isTRUE(linux)) {
 ## High performance ============================================================
 if (
     isTRUE(linux) &&
-    isTRUE(getOption("mc.cores") >= 3L)
+    isTRUE(getOption("mc.cores") >= 3L) &&
+    !isTRUE(docker)
 ) {
     h2("High performance")
     checkVersion(
@@ -695,12 +700,14 @@ if (
 
 
 ## Python packages =============================================================
-h2("Python pipx packages")
-installed(
-    which = c(
-        "black",
-        "flake8",
-        "pylint",
-        "pytest"
+if (!isTRUE(docker)) {
+    h2("Python pipx packages")
+    installed(
+        which = c(
+            "black",
+            "flake8",
+            "pylint",
+            "pytest"
+        )
     )
-)
+}
