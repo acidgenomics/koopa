@@ -67,6 +67,7 @@ then
 fi
 
 _koopa_link_cellar "$name" "$version"
+_koopa_fix_zsh_permissions
 _koopa_enable_shell "$name"
 
 _koopa_install_success "$name"
