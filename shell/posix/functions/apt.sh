@@ -4,82 +4,87 @@
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-02-24.
     # """
-    local sources_list
-    sources_list="/etc/apt/sources.list.d/azure-cli.list"
-    [ -f "$sources_list" ] && return 0
+    local file
+    file="/etc/apt/sources.list.d/azure-cli.list"
+    [ -f "$file" ] && return 0
+    _koopa_h2 "Enabling Azure CLI at '${file}'."
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
 ${os_codename} main" \
-        | sudo tee "$sources_list"
+        | sudo tee "$file" > /dev/null
     return 0
 }
 
 _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-02-24.
     # """
-    local sources_list
-    sources_list="/etc/apt/sources.list.d/docker.list"
-    [ -f "$sources_list" ] && return 0
+    local file
+    file="/etc/apt/sources.list.d/docker.list"
+    [ -f "$file" ] && return 0
+    _koopa_h2 "Enabling Docker at '${file}'."
     local os_id
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} \
 ${os_codename} stable" \
-        | sudo tee "$sources_list"
+        | sudo tee "$file" > /dev/null
     return 0
 }
 
 _koopa_apt_add_google_cloud_sdk_repo() {  # {{{1
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-02-24.
     # """
-    local sources_list
-    sources_list="/etc/apt/sources.list.d/google-cloud-sdk.list"
-    [ -f "$sources_list" ] && return 0
+    local file
+    file="/etc/apt/sources.list.d/google-cloud-sdk.list"
+    [ -f "$file" ] && return 0
+    _koopa_h2 "Enabling Google Cloud SDK at '${file}'."
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
 https://packages.cloud.google.com/apt cloud-sdk main" \
-        | sudo tee "$sources_list"
+        | sudo tee "$file" > /dev/null
     return 0
 }
 
 _koopa_apt_add_llvm_repo() {  # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-02-24.
     # """
-    local sources_list
-    sources_list="/etc/apt/sources.list.d/llvm.list"
-    [ -f "$sources_list" ] && return 0
+    local file
+    file="/etc/apt/sources.list.d/llvm.list"
+    [ -f "$file" ] && return 0
+    _koopa_h2 "Enabling LLVM at '${file}'."
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb http://apt.llvm.org/${os_codename}/ \
 llvm-toolchain-${os_codename}-9 main" \
-        | sudo tee "$sources_list"
+        | sudo tee "$file" > /dev/null
     return 0
 }
 
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-02-24.
     # """
-    local sources_list
-    sources_list="/etc/apt/sources.list.d/r.list"
-    [ -f "$sources_list" ] && return 0
+    local file
+    file="/etc/apt/sources.list.d/r.list"
+    [ -f "$file" ] && return 0
+    _koopa_h2 "Enabling R at '${file}'."
     local os_id
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-cran35/" \
-        | sudo tee "$sources_list"
+        | sudo tee "$file" > /dev/null
     return 0
 }
 

@@ -11,7 +11,11 @@ _koopa_yum_add_azure_cli_repo() {  # {{{1
     #
     # Note that 'echo -e' supports escape sequence but isn't POSIX.
     # https://unix.stackexchange.com/questions/189787/
-    sudo tee /etc/yum.repos.d/azure-cli.repo << EOF
+    local file
+    file="/etc/yum.repos.d/azure-cli.repo"
+    [ -f "$file" ] && return 0
+    _koopa_h2 "Enabling Azure CLI at '${file}'."
+    sudo tee "$file" > /dev/null << EOF
 [azure-cli]
 name=Azure CLI
 baseurl=https://packages.microsoft.com/yumrepos/azure-cli
