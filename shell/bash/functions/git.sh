@@ -36,20 +36,21 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-02-24.
     # """
     _koopa_h2 "Pulling git repo at '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
-    git fetch --all --quiet
+    git fetch --all  # --quiet
     git pull  # --quiet
     if [[ -f ".gitmodules" ]]
     then
         _koopa_git_submodule_init
-        git submodule --quiet update --init --recursive
-        git submodule --quiet foreach -q --recursive git checkout --quiet master
-        git submodule --quiet foreach git pull --quiet
+        # Can quiet down with 'git submodule --quiet' here.
+        git submodule update --init --recursive
+        # > git submodule foreach -q --recursive git checkout master  # --quiet
+        git submodule foreach git pull  # --quiet
     fi
     return 0
 }
