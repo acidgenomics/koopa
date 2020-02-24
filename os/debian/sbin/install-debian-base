@@ -115,14 +115,12 @@ fi
 _koopa_apt_configure_sources
 _koopa_apt_import_keys
 
-sudo apt-get update
-
 # Requiring universe repo to be enabled on Ubuntu.
 enabled_repos="$(_koopa_apt_enabled_repos)"
 if _koopa_is_ubuntu && \
     ! _koopa_is_matching_fixed "universe" "$enabled_repos"
 then
-    _koopa_stop "The Ubuntu 'universe' repo is disabled.\
+    _koopa_stop "The Ubuntu 'universe' repo is disabled. \
 Check '/etc/apt/sources.list'."
 fi
 
@@ -132,6 +130,7 @@ fi
 if [[ "$dist_upgrade" -eq 1 ]]
 then
     _koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
+    sudo apt-get update
     sudo DEBIAN_FRONTEND=noninteractive \
         apt-get \
             --fix-missing \
@@ -287,6 +286,7 @@ then
     fi
 fi
 
+sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --fix-missing \
