@@ -1,3 +1,0 @@
-deb http://archive.ubuntu.com/ubuntu/ ${os_codename} main restricted universe
-deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates main restricted universe
-deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security main restricted universe
