@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
+# """
+
+_koopa_exit_if_installed az
+
+name_fancy="Azure CLI"
+
+_koopa_install_start "$name_fancy"
+
+_koopa_assert_is_installed python3
+
+sudo rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
+
+# Update to save this in koopa directly instead.
+sudo sh -c 'echo -e "[azure-cli]
+name=Azure CLI
+baseurl=https://packages.microsoft.com/yumrepos/azure-cli
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
+
+sudo yum --yes install azure-cli
+
+_koopa_install_success "$name_fancy"
