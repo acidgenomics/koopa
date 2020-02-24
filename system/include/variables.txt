@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa-date="2020-02-19"
+koopa-date="2020-02-24"
 
 
 
