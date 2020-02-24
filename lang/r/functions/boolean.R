@@ -43,6 +43,17 @@ isFlag <- function(x) {
 
 
 
+#' Is session running inside Docker?
+#' @note Updated 2020-02-24.
+isDocker <- function() {
+    ok <- file.exists("/proc/1/cgroup")
+    if (!ok) return(FALSE)
+    x <- readLines("/proc/1/cgroup")
+    any(grepl(pattern = ":/docker/", x = x))
+}
+
+
+
 #' Is an R package installed?
 #' @note Updated 2020-02-16.
 isInstalled <- function(pkgs) {
