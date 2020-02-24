@@ -64,7 +64,7 @@ _koopa_assert_has_no_args "$@"
     git clone "$repo" "$install_dir"
     _koopa_cd "$install_dir"
     git checkout -b develop origin/develop
-    _koopa_git_pull
+    git pull
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 link-emacs "$name"
