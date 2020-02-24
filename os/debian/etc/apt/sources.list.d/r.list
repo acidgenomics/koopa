@@ -1,7 +1,1 @@
-# Generated from:
-# > release="$(_koopa_os_codename)"
-# > sudo add-apt-repository \
-# >     "deb https://cloud.r-project.org/bin/linux/debian ${release}-cran35/"
-
-deb https://cloud.r-project.org/bin/linux/debian buster-cran35/
-# deb-src https://cloud.r-project.org/bin/linux/debian buster-cran35/
+deb https://cloud.r-project.org/bin/linux/debian ${os_codename}-cran35/
