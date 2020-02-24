@@ -7,6 +7,16 @@ source "${script_dir}/../include/header.sh"
 
 # """
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
+#
+# RHEL 7 workaround for missing system Python 3 may be needed:
+# > if _koopa_is_rhel_7
+# > then
+# >     sudo yum install yum-utils
+# >     yumdownloader azure-cli
+# >     sudo rpm -ivh --nodeps azure-cli-*.rpm
+# >     rm azure-cli-*.rpm
+# > else
+# > fi
 # """
 
 _koopa_exit_if_installed az
@@ -15,27 +25,9 @@ name_fancy="Azure CLI"
 
 _koopa_install_start "$name_fancy"
 
-_koopa_assert_is_installed python3
+_koopa_yum_import_azure_cli_key
+_koopa_yum_add_azure_cli_repo
 
-sudo rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
-
-# Update to save this in koopa directly instead.
-sudo sh -c 'echo -e "[azure-cli]
-name=Azure CLI
-baseurl=https://packages.microsoft.com/yumrepos/azure-cli
-enabled=1
-gpgcheck=1
-gpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
-
-# RHEL 7 doesn't support system Python 3, so need a work around here.
-if _koopa_is_rhel_7
-then
-    sudo yum install yum-utils
-    yumdownloader azure-cli
-    sudo rpm -ivh --nodeps azure-cli-*.rpm
-    sudo rm azure-cli-*.rpm
-else
-    sudo yum -y install azure-cli
-fi
+sudo yum -y install azure-cli
 
 _koopa_install_success "$name_fancy"
