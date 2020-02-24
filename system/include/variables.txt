@@ -114,7 +114,7 @@ gsl="2.6"
 hdf5="1.10.6"
 
 # https://brew.sh/
-homebrew="2.2.5"
+homebrew="2.2.6"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
