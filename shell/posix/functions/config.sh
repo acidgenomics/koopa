@@ -54,7 +54,6 @@ _koopa_add_user_to_etc_passwd() {  # {{{1
     local user_string
     user_string="$(getent passwd "$user")"
     _koopa_h2 "Updating '${passwd_file}' to include '${user}'."
-    _koopa_assert_has_sudo
     if ! sudo grep -q "$user" "$passwd_file"
     then
         sudo sh -c "echo '${user_string}' >> ${passwd_file}"
@@ -75,7 +74,6 @@ _koopa_add_user_to_group() {  # {{{1
     # @examples
     # _koopa_add_user_to_group "docker"
     # """
-    _koopa_assert_has_sudo
     _koopa_assert_is_installed gpasswd
     local group
     group="${1:?}"
@@ -111,7 +109,6 @@ _koopa_enable_passwordless_sudo() {  # {{{1
     # """
     _koopa_is_linux || return 1
     _koopa_is_root && return 0
-    _koopa_has_sudo || return 1
     local group
     group="$(_koopa_group)"
     local sudo_file
@@ -140,7 +137,6 @@ _koopa_enable_shell() {  # {{{1
     local etc_file
     etc_file="/etc/shells"
     _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
-    _koopa_assert_has_sudo
     if ! grep -q "$cmd" "$etc_file"
     then
         sudo sh -c "echo ${cmd} >> ${etc_file}"
@@ -369,7 +365,6 @@ _koopa_link_docker() {  # {{{1
     _koopa_assert_is_installed systemctl
     [ -d "/n" ] || return 0
     _koopa_assert_is_linux
-    _koopa_assert_has_sudo
     _koopa_h2 "Updating Docker configuration."
     _koopa_note "Stopping Docker."
     sudo systemctl stop docker
@@ -404,7 +399,6 @@ _koopa_link_r_etc() {  # {{{1
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
     # """
-    _koopa_assert_has_sudo
     local r_home
     r_home="$(_koopa_r_home)"
     local koopa_prefix
@@ -468,7 +462,6 @@ _koopa_remove_user_from_group() {  # {{{1
     # @examples
     # _koopa_remove_user_from_group "docker"
     # """
-    _koopa_assert_has_sudo
     _koopa_assert_is_installed gpasswd
     local group
     group="${1:?}"
@@ -522,7 +515,6 @@ _koopa_update_etc_profile_d() {  # {{{1
     # """
     _koopa_is_shared_install || return 0
     _koopa_is_linux || return 0
-    _koopa_has_sudo || return 0
     local symlink
     symlink="/etc/profile.d/zzz-koopa.sh"
     # Early return if link already exists.
@@ -541,7 +533,6 @@ _koopa_update_ldconfig() {  # {{{1
     # @note Updated 2020-01-23.
     # """
     _koopa_is_linux || return 0
-    _koopa_has_sudo || return 0
     [ -d /etc/ld.so.conf.d ] || return 0
     _koopa_assert_is_installed ldconfig
     local os_id
@@ -576,7 +567,6 @@ _koopa_update_lmod_config() {  # {{{1
     # No suchfile or directory
     # """
     _koopa_is_linux || return 0
-    _koopa_has_sudo || return 0
     _koopa_h2 "Updating Lmod init configuration."
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
@@ -603,7 +593,6 @@ _koopa_update_r_config() {  # {{{1
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # @note Updated 2019-12-16.
     # """
-    _koopa_has_sudo || return 0
     _koopa_is_installed R || return 0
     local r_home
     r_home="$(_koopa_r_home)"
