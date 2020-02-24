@@ -260,7 +260,7 @@ tmux="3.0a"
 vim="8.2.0"
 
 # http://zsh.sourceforge.net/Arc/source.html
-zsh="5.7.1"
+zsh="5.8"
 
 
 
