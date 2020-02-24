@@ -1,1 +1,1 @@
-deb [arch=amd64] https://download.docker.com/linux/debian ${os_codename} stable
+deb [arch=amd64] https://download.docker.com/linux/${os_id} ${os_codename} stable
