@@ -7,16 +7,6 @@ source "${script_dir}/../include/header.sh"
 
 # """
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
-#
-# RHEL 7 workaround for missing system Python 3 may be needed:
-# > if _koopa_is_rhel_7
-# > then
-# >     sudo yum install yum-utils
-# >     yumdownloader azure-cli
-# >     sudo rpm -ivh --nodeps azure-cli-*.rpm
-# >     rm azure-cli-*.rpm
-# > else
-# > fi
 # """
 
 _koopa_exit_if_installed az
