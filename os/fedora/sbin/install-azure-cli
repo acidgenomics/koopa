@@ -27,6 +27,15 @@ enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
 
-sudo yum -y install azure-cli
+# RHEL 7 doesn't support system Python 3, so need a work around here.
+if _koopa_is_rhel_7
+then
+    sudo yum install yum-utils
+    yumdownloader azure-cli
+    sudo rpm -ivh --nodeps azure-cli-*.rpm
+    sudo rm azure-cli-*.rpm
+else
+    sudo yum -y install azure-cli
+fi
 
 _koopa_install_success "$name_fancy"
