@@ -118,7 +118,7 @@ _koopa_apt_import_keys
 # Requiring universe repo to be enabled on Ubuntu.
 enabled_repos="$(_koopa_apt_enabled_repos)"
 if _koopa_is_ubuntu && \
-    ! _koopa_is_matching_fixed "universe" "$enabled_repos"
+    ! _koopa_is_matching_fixed "$enabled_repos" "universe"
 then
     _koopa_stop "The Ubuntu 'universe' repo is disabled. \
 Check '/etc/apt/sources.list'."
