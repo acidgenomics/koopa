@@ -87,54 +87,42 @@ _koopa_apt_configure_sources() {  # {{{1
     # """
     # Configure apt sources.
     # @note Updated 2020-02-24.
+    #
+    # Previously, we used a symlink approach until 2020-02-24.
     # """
-    local koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
+    local sources_list
+    sources_list="/etc/apt/sources.list"
+    if [ -L "$sources_list" ]
+    then
+        _koopa_rm "$sources_list"
+    fi
+
+    local sources_list_d
+    sources_list_d="/etc/apt/sources.list.d"
+    if [ -L "$sources_list_d" ]
+    then
+        _koopa_rm "$sources_list_d"
+    fi
+    sudo mkdir -p "$sources_list_d"
 
     local os_codename
     os_codename="$(_koopa_os_codename)"
 
-    local os_id
-    os_id="$(_koopa_os_id)"
-
-    local source_dir
-    source_dir="${koopa_prefix}/os/${os_id}/etc/apt"
-    _koopa_assert_is_dir "$source_dir"
-
-    local target_dir
-    target_dir="/etc/apt"
-    _koopa_assert_is_dir "$target_dir"
-
-    # Ensure backups get removed.
-    _koopa_rm "${target_dir}/sources.list.d~"
-    _koopa_rm "${target_dir}/sources.list~"
-
-    # Previously, we used a symlink approach until 2020-02-24.
-    if [ -L "${target_dir}/sources.list" ]
-    then
-        _koopa_rm "${target_dir}/sources.list"
-    fi
-    if [ -L "${target_dir}/sources.list.d" ]
-    then
-        _koopa_rm "${target_dir}/sources.list.d"
-    fi
-
     if _koopa_is_ubuntu
     then
-        sudo tee "${target_dir}/sources.list" > /dev/null << EOF
+        sudo tee "$sources_list" > /dev/null << EOF
 deb http://archive.ubuntu.com/ubuntu/ ${os_codename} main restricted universe
 deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates main restricted universe
 deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security main restricted universe
 EOF
     else
-        sudo tee "${target_dir}/sources.list" > /dev/null << EOF
+        sudo tee "$sources_list" > /dev/null << EOF
 deb http://deb.debian.org/debian ${os_codename} main
 deb http://deb.debian.org/debian ${os_codename}-updates main
 deb http://security.debian.org/debian-security ${os_codename}/updates main
 EOF
     fi
 
-    sudo mkdir -p "${target_dir}/sources.list.d"
     _koopa_apt_add_azure_cli_repo
     _koopa_apt_add_docker_repo
     _koopa_apt_add_google_cloud_sdk_repo
