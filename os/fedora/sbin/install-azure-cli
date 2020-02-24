@@ -27,6 +27,6 @@ enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
 
-sudo yum --yes install azure-cli
+sudo yum -y install azure-cli
 
 _koopa_install_success "$name_fancy"
