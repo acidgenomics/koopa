@@ -87,7 +87,7 @@ do
     [ -d "$repo" ] || continue
     (
         _koopa_cd "$repo"
-        _koopa_git_pull
+        git pull
     )
 done
 
