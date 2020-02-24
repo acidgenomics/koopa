@@ -284,8 +284,8 @@ if (!isTRUE(docker)) {
 
 
 ## Shell tools =================================================================
-h2("Shell tools")
 if (!isTRUE(docker)) {
+    h2("Shell tools")
     checkVersion(
         name = "The Silver Searcher (Ag)",
         whichName = "ag",
@@ -310,27 +310,27 @@ if (!isTRUE(docker)) {
         current = currentVersion("ripgrep"),
         expected = expectedVersion("ripgrep")
     )
-}
-if (isTRUE(extra) && !isTRUE(docker)) {
-    checkVersion(
-        name = "autojump",
-        whichName = "autojump",
-        current = currentVersion("autojump"),
-        expected = expectedVersion("autojump")
-    )
-    ## This updates frequently, so be less strict about check.
-    checkVersion(
-        name = "broot",
-        whichName = "broot",
-        current = currentMinorVersion("broot"),
-        expected = expectedMinorVersion("broot")
-    )
-    checkVersion(
-        name = "fzf",
-        whichName = "fzf",
-        current = currentVersion("fzf"),
-        expected = expectedVersion("fzf")
-    )
+    if (isTRUE(extra)) {
+        checkVersion(
+            name = "autojump",
+            whichName = "autojump",
+            current = currentVersion("autojump"),
+            expected = expectedVersion("autojump")
+        )
+        ## This updates frequently, so be less strict about check.
+        checkVersion(
+            name = "broot",
+            whichName = "broot",
+            current = currentMinorVersion("broot"),
+            expected = expectedMinorVersion("broot")
+        )
+        checkVersion(
+            name = "fzf",
+            whichName = "fzf",
+            current = currentVersion("fzf"),
+            expected = expectedVersion("fzf")
+        )
+    }
 }
 
 
