@@ -1182,7 +1182,7 @@ _koopa_tmp_log_file() {  # {{{1
 _koopa_today_bucket() {  # {{{1
     # """
     # Create a dated file today bucket.
-    # @note Updated 2019-11-10.
+    # @note Updated 2020-02-24.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -1201,23 +1201,18 @@ _koopa_today_bucket() {  # {{{1
     local bucket_dir
     bucket_dir="${HOME:?}/bucket"
     # Early return if there's no bucket directory on the system.
-    if [[ ! -d "$bucket_dir" ]]
-    then
-        return 0
-    fi
-    local today
-    today="$(date +%Y-%m-%d)"
-    local today_dir
-    today_dir="${HOME}/today"
+    [ -d "$bucket_dir" ] || return 0
+    local today_bucket
+    today_bucket="$(date +"%Y/%m/%d")"
+    local today_link
+    today_link="${HOME}/today"
     # Early return if we've already updated the symlink.
-    if readlink "$today_dir" | grep -q "$today"
+    if readlink "$today_link" | grep -q "$today_bucket"
     then
         return 0
     fi
-    local bucket_today
-    bucket_today="$(date +%Y)/$(date +%m)/$(date +%Y-%m-%d)"
-    mkdir -p "${bucket_dir}/${bucket_today}"
-    ln -fns "${bucket_dir}/${bucket_today}" "$today_dir"
+    mkdir -p "${bucket_dir}/${today_bucket}"
+    ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
 }
 
