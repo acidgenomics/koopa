@@ -230,9 +230,9 @@ then
     fi
 
     # General tools.
+    install-git                                                         # 0.177G
     if [[ "$docker" -eq 0 ]]
     then
-        install-git                                                     # 0.177G
         install-gnupg                                                   # 0.038G
         install-lua                                                     # 0.001G
         install-luarocks                                                # 0.002G
@@ -270,13 +270,14 @@ then
 
     # Shell tools.
     install-htop                                                        # 0.001G
+    install-neofetch                                                    # 0.003G
+    install-shellcheck                                                  # 0.008G
+    install-shunit2
     install-tmux                                                        # 0.001G
     if [[ "$docker" -eq 0 ]]
     then
         install-autojump                                                # 0.000G
         install-fzf                 # requires go                       # 0.003G
-        install-neofetch                                                # 0.003G
-        install-shellcheck                                              # 0.008G
         install-the-silver-searcher                                     # 0.000G
     fi
 
@@ -295,10 +296,10 @@ then
     fi
 
     # Software packages.
+    install-python-packages
     if [[ "$docker" -eq 0 ]]
     then
         install-rust-packages
-        install-python-packages
         _koopa_link_r_site_library
         install-r-packages
         conda-create-bioinfo-envs --all
