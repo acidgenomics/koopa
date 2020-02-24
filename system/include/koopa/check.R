@@ -271,19 +271,12 @@ checkVersion(
     current = currentVersion("neofetch"),
     expected = expectedVersion("neofetch")
 )
-checkVersion(
-    name = "ShellCheck",
-    whichName = "shellcheck",
-    current = currentVersion("shellcheck"),
-    expected = expectedVersion("shellcheck")
-)
-installed("shunit2")
 
 
 
 ## Shell tools =================================================================
+h2("Shell tools")
 if (!isTRUE(docker)) {
-    h2("Shell tools")
     checkVersion(
         name = "The Silver Searcher (Ag)",
         whichName = "ag",
@@ -330,6 +323,13 @@ if (!isTRUE(docker)) {
         )
     }
 }
+checkVersion(
+    name = "ShellCheck",
+    whichName = "shellcheck",
+    current = currentVersion("shellcheck"),
+    expected = expectedVersion("shellcheck")
+)
+installed("shunit2")
 
 
 
