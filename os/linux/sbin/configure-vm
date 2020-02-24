@@ -194,12 +194,6 @@ then
     fi
 fi
 
-# Cloud APIs.
-_koopa_run_if_installed \
-    install-aws-cli-2 \
-    install-azure-cli \
-    install-google-cloud-sdk
-
 # Compilers.
 if [[ "$docker" -eq 0 ]]
 then
@@ -323,6 +317,13 @@ then
         install-shiny-server
     _koopa_update_lmod_config
 fi
+
+# Cloud APIs.
+# Note that Azure CLI requires Python 3, so install at the end.
+_koopa_run_if_installed \
+    install-aws-cli-2 \
+    install-azure-cli \
+    install-google-cloud-sdk
 
 if [[ "$docker" -eq 0 ]]
 then
