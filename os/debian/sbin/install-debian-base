@@ -112,14 +112,13 @@ then
     sudo rm -v /usr/local/man
 fi
 
-# GPG keys are required for signed repos in '/etc/apt/sources.list.d'.
+_koopa_apt_configure_sources
 _koopa_apt_import_keys
 
-# Note that this function calls 'apt-get update'.
-_koopa_apt_link_sources
-enabled_repos="$(_koopa_apt_enabled_repos)"
+sudo apt-get update
 
 # Requiring universe repo to be enabled on Ubuntu.
+enabled_repos="$(_koopa_apt_enabled_repos)"
 if _koopa_is_ubuntu && \
     ! _koopa_is_matching_fixed "universe" "$enabled_repos"
 then
