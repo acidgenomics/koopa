@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-02-19.
+## Updated 2020-02-24.
 ## """
 
 options(
@@ -59,9 +59,11 @@ mapply(
     SIMPLIFY = FALSE
 )
 
-## Automatically tag Bioconductor release as "latest".
-sourceTag <- grep(pattern = "release", x = tags, value = TRUE)
-if (identical(length(sourceTag), 1L)) {
+## Update "latest" tag, if necessary.
+latestFile <- file.path(imageDir, "latest")
+if (file.exists(latestFile) && !dir.exists(latestFile)) {
+    sourceTag <- readLines(latestFile)
+    stopifnot(identical(length(sourceTag), 1L))
     destTag <- "latest"
     print(sprintf(
         "Tagging %s '%s' as '%s'.",
