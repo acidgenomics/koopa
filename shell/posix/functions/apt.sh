@@ -9,7 +9,6 @@ _koopa_apt_add_azure_cli_repo() {  # {{{1
     local file
     file="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$file" ] && return 0
-    _koopa_h2 "Enabling Azure CLI at '${file}'."
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
@@ -26,7 +25,6 @@ _koopa_apt_add_docker_repo() {  # {{{1
     local file
     file="/etc/apt/sources.list.d/docker.list"
     [ -f "$file" ] && return 0
-    _koopa_h2 "Enabling Docker at '${file}'."
     local os_id
     os_id="$(_koopa_os_id)"
     local os_codename
@@ -45,7 +43,6 @@ _koopa_apt_add_google_cloud_sdk_repo() {  # {{{1
     local file
     file="/etc/apt/sources.list.d/google-cloud-sdk.list"
     [ -f "$file" ] && return 0
-    _koopa_h2 "Enabling Google Cloud SDK at '${file}'."
     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
 https://packages.cloud.google.com/apt cloud-sdk main" \
         | sudo tee "$file" > /dev/null
@@ -60,7 +57,6 @@ _koopa_apt_add_llvm_repo() {  # {{{1
     local file
     file="/etc/apt/sources.list.d/llvm.list"
     [ -f "$file" ] && return 0
-    _koopa_h2 "Enabling LLVM at '${file}'."
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb http://apt.llvm.org/${os_codename}/ \
@@ -77,7 +73,6 @@ _koopa_apt_add_r_repo() {  # {{{1
     local file
     file="/etc/apt/sources.list.d/r.list"
     [ -f "$file" ] && return 0
-    _koopa_h2 "Enabling R at '${file}'."
     local os_id
     os_id="$(_koopa_os_id)"
     local os_codename
@@ -96,6 +91,9 @@ _koopa_apt_configure_sources() {  # {{{1
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
 
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
+
     local os_id
     os_id="$(_koopa_os_id)"
 
@@ -107,20 +105,36 @@ _koopa_apt_configure_sources() {  # {{{1
     target_dir="/etc/apt"
     _koopa_assert_is_dir "$target_dir"
 
-    _koopa_ln \
-        "${source_dir}/sources.list" \
-        "${target_dir}/sources.list"
-
-    # Previously, we used a symlink approach until 2020-02-24.
-    if [ -L "${target_dir}/sources.list.d" ]
-    then
-        _koopa_rm "${target_dir}/sources.list.d"
-        _koopa_mkdir "${target_dir}/sources.list.d"
-    fi
-
+    # Ensure backups get removed.
     _koopa_rm "${target_dir}/sources.list.d~"
     _koopa_rm "${target_dir}/sources.list~"
 
+    # Previously, we used a symlink approach until 2020-02-24.
+    if [ -L "${target_dir}/sources.list" ]
+    then
+        _koopa_rm "${target_dir}/sources.list"
+    fi
+    if [ -L "${target_dir}/sources.list.d" ]
+    then
+        _koopa_rm "${target_dir}/sources.list.d"
+    fi
+
+    if _koopa_is_ubuntu
+    then
+        sudo tee "${target_dir}/sources.list" > /dev/null << EOF
+deb http://archive.ubuntu.com/ubuntu/ ${os_codename} main restricted universe
+deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates main restricted universe
+deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security main restricted universe
+EOF
+    else
+        sudo tee "${target_dir}/sources.list" > /dev/null << EOF
+deb http://deb.debian.org/debian ${os_codename} main
+deb http://deb.debian.org/debian ${os_codename}-updates main
+deb http://security.debian.org/debian-security ${os_codename}/updates main
+EOF
+    fi
+
+    sudo mkdir -p "${target_dir}/sources.list.d"
     _koopa_apt_add_azure_cli_repo
     _koopa_apt_add_docker_repo
     _koopa_apt_add_google_cloud_sdk_repo
