@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-20.
+    Updated 2020-02-24.
 EOF
 }
 
@@ -33,7 +33,12 @@ EOF
 # Argument parsing  {{{1
 # ==============================================================================
 
+dotfiles=1
 interactive=1
+koopa_prefix=
+passwordless=0
+profile=1
+shared=0
 test=0
 
 while (("$#"))
@@ -43,9 +48,49 @@ do
             usage
             exit 0
             ;;
+        --dotfiles)
+            dotfiles=1
+            shift 1
+            ;;
+        --interactive)
+            interactive=1
+            shift 1
+            ;;
+        --no-dotfiles)
+            dotfiles=0
+            shift 1
+            ;;
+        --no-passwordless-sudo)
+            passwordless=0
+            shift 1
+            ;;
+        --no-profile)
+            profile=0
+            shift 1
+            ;;
+        --no-test)
+            test=0
+            shift 1
+            ;;
         --non-interactive)
             interactive=0
             shift 1
+            ;;
+        --passwordless-sudo)
+            passwordless=1
+            shift 1
+            ;;
+        --profile)
+            profile=1
+            shift 1
+            ;;
+        --prefix=*)
+            koopa_prefix="${1#*=}"
+            shift 1
+            ;;
+        --prefix)
+            koopa_prefix="$2"
+            shift 2
             ;;
         --test)
             test=1
@@ -95,47 +140,48 @@ fi
 # Prefix  {{{1
 # ==============================================================================
 
-shared=0
-
-# Prompt whether to install for all users.
-if _koopa_has_sudo
+if [[ -z "$koopa_prefix" ]]
 then
-    shared=1
-    if [[ "$interactive" -eq 1 ]]
+    # Prompt whether to install for all users.
+    if _koopa_has_sudo
     then
-        prompt="Install for all users? [${yes_default}/${no}]: "
-        # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
-        read \
-            -e \
-            -i "yes" \
-            -p "$prompt" \
-            -r \
-            choice
-        echo ""
-        case "$choice" in
-            Y|YES|y|yes)
-                shared=1
-                ;;
-            N|NO|n|no)
-                shared=0
-                ;;
-            *)
-                _koopa_invalid_arg "$1"
-                ;;
-        esac
+        shared=1
+        if [[ "$interactive" -eq 1 ]]
+        then
+            prompt="Install for all users? [${yes_default}/${no}]: "
+            # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
+            read \
+                -e \
+                -i "yes" \
+                -p "$prompt" \
+                -r \
+                choice
+            echo ""
+            case "$choice" in
+                Y|YES|y|yes)
+                    shared=1
+                    ;;
+                N|NO|n|no)
+                    shared=0
+                    ;;
+                *)
+                    _koopa_invalid_arg "$1"
+                    ;;
+            esac
+        fi
+    else
+        shared=0
     fi
+    # Set the default install prefix.
+    if [[ "$shared" -eq 1 ]]
+    then
+        prefix="/usr/local"
+    else
+        XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+        prefix="${XDG_DATA_HOME}"
+    fi
+    koopa_prefix="${prefix}/koopa"
 fi
-
-# Set the default install prefix.
-if [[ "$shared" -eq 1 ]]
-then
-    prefix="/usr/local"
-else
-    XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
-    prefix="$XDG_DATA_HOME"
-fi
-
-koopa_prefix="${prefix}/koopa"
 
 # Prompt the user where they want to install.
 if [[ "$interactive" -eq 1 ]]
@@ -203,8 +249,6 @@ set -u
 # Passwordless sudo  {{{1
 # ==============================================================================
 
-passwordless=0
-
 # Prompt if the user wants to enable passwordless sudo.
 if _koopa_is_linux && \
     [[ "$interactive" -eq 1 ]] && \
@@ -237,8 +281,6 @@ fi
 
 # Dot files  {{{1
 # ==============================================================================
-
-dotfiles=1
 
 # Prompt the user if we want to link dot files.
 if [[ "$interactive" -eq 1 ]]
@@ -279,8 +321,6 @@ fi
 
 # User profile  {{{1
 # ==============================================================================
-
-profile=0
 
 if ! _koopa_is_defined_in_user_profile
 then
