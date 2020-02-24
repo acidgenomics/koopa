@@ -502,10 +502,10 @@ _koopa_is_rhel() {  # {{{1
 _koopa_is_rhel_7() {  # {{{1
     # """
     # Is the operating system RHEL 7?
-    # @note Updated 2019-11-25.
+    # @note Updated 2020-02-24.
     # """
+    _koopa_is_rhel || return 1
     [ -f /etc/os-release ] || return 1
-    grep -q 'ID="rhel"' /etc/os-release || return 1
     grep -q 'VERSION_ID="7' /etc/os-release || return 1
     return 0
 }
@@ -513,10 +513,10 @@ _koopa_is_rhel_7() {  # {{{1
 _koopa_is_rhel_8() {  # {{{1
     # """
     # Is the operating system RHEL 8?
-    # @note Updated 2019-11-25.
+    # @note Updated 2020-02-24.
     # """
+    _koopa_is_rhel || return 1
     [ -f /etc/os-release ] || return 1
-    grep -q 'ID="rhel"' /etc/os-release || return 1
     grep -q 'VERSION_ID="8' /etc/os-release || return 1
     return 0
 }
