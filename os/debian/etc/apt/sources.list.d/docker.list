@@ -1,1 +1,0 @@
-deb [arch=amd64] https://download.docker.com/linux/${os_id} ${os_codename} stable
