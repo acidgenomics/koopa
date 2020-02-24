@@ -89,6 +89,7 @@ casks=(
     onyx
     osxfuse
     photosweeper-x
+    powershell
     pycharm-ce
     r
     rstudio
