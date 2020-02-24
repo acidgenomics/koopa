@@ -1,6 +1,9 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+## FIXME Need to reference this new function in Debian base script.
+## FIXME Standardize apt.sources file to work across platform.
+
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -274,34 +277,6 @@ _koopa_apt_is_key_imported() {  # {{{1
     apt-key list 2>&1 | grep -q "$key"
 }
 
-_koopa_apt_link_sources() {  # {{{1
-    # """
-    # Symlink 'sources.list' files in '/etc/apt'.
-    # @note Updated 2020-02-05.
-    # """
-    local prefix
-    prefix="$(_koopa_prefix)"
-    local os_id
-    os_id="$(_koopa_os_id)"
-    local source_dir
-    source_dir="${prefix}/os/${os_id}/etc/apt"
-    _koopa_assert_is_dir "$source_dir"
-    local target_dir
-    target_dir="/etc/apt"
-    _koopa_assert_is_dir "$target_dir"
-    _koopa_h2 "Linking Debian sources in '${target_dir}'."
-    sudo ln -fnsv \
-        "${source_dir}/sources.list" \
-        "${target_dir}/sources.list"
-    sudo rm -fv "${target_dir}/sources.list~"
-    sudo rm -frv "${target_dir}/sources.list.d"
-    sudo ln -fnsv \
-        "${source_dir}/sources.list.d" \
-        "${target_dir}/sources.list.d"
-    sudo apt-get update
-    return 0
-}
-
 _koopa_apt_space_used_by() {  # {{{1
     # """
     # Check installed apt package size, with dependencies.
@@ -336,5 +311,54 @@ _koopa_apt_space_used_by_no_deps() {  # {{{1
     # @note Updated 2020-01-31.
     # """
     sudo apt show "$@" | grep 'Size'
+    return 0
+}
+
+_koopa_apt_update() {  # {{{1
+    # """
+    # Prepare apt sources and then run update.
+    # @note Updated 2020-02-24.
+    # """
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+
+    local source_dir
+    source_dir="${koopa_prefix}/os/${os_id}/etc/apt"
+    _koopa_assert_is_dir "$source_dir"
+
+    local target_dir
+    target_dir="/etc/apt"
+    _koopa_assert_is_dir "$target_dir"
+
+    _koopa_ln \
+        "${source_dir}/sources.list" \
+        "${target_dir}/sources.list"
+
+    # Previously, we used a symlink approach until 2020-02-24.
+    if [ -L "${target_dir}/sources.list.d" ]
+    then
+        _koopa_rm "${target_dir}/sources.list.d"
+        _koopa_mkdir "${target_dir}/sources.list.d"
+    fi
+
+    _koopa_apt_add_azure_cli_repo
+    _koopa_apt_add_docker_repo
+    _koopa_apt_add_google_cloud_sdk_repo
+    _koopa_apt_add_llvm_repo
+    _koopa_apt_add_r_repo
+
+    _koopa_apt_import_azure_cli_key
+    _koopa_apt_import_docker_key
+    _koopa_apt_import_google_cloud_sdk_key
+    _koopa_apt_import_llvm_key
+    _koopa_apt_import_r_key
+
+    _koopa_rm "${target_dir}/sources.list.d~"
+    _koopa_rm "${target_dir}/sources.list~"
+
+    sudo apt-get update
     return 0
 }
