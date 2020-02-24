@@ -173,14 +173,14 @@ _koopa_apt_enable_deb_src() {  # {{{1
 _koopa_apt_enabled_repos() {  # {{{1
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-02-24.
     # """
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
     local x
     x="$( \
-        grep -E '^deb ' /etc/apt/sources.list \
-            | cut -d ' ' -f 4 \
-            | awk '!a[$0]++' \
-            | sort \
+        grep -E "^deb\s.+\s${os_codename}\s.+$" /etc/apt/sources.list \
+            | cut -d ' ' -f 4- \
     )"
     echo "$x"
     return 0
