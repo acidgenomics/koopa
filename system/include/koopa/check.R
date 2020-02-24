@@ -271,15 +271,13 @@ checkVersion(
     current = currentVersion("neofetch"),
     expected = expectedVersion("neofetch")
 )
-if (!isTRUE(docker)) {
-    checkVersion(
-        name = "ShellCheck",
-        whichName = "shellcheck",
-        current = currentVersion("shellcheck"),
-        expected = expectedVersion("shellcheck")
-    )
-    installed("shunit2")
-}
+checkVersion(
+    name = "ShellCheck",
+    whichName = "shellcheck",
+    current = currentVersion("shellcheck"),
+    expected = expectedVersion("shellcheck")
+)
+installed("shunit2")
 
 
 
