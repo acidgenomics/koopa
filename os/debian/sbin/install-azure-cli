@@ -37,6 +37,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
         --yes \
         install azure-cli
 
-# > az login
-
 _koopa_install_success "$name_fancy"
