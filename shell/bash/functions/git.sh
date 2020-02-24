@@ -40,19 +40,26 @@ _koopa_git_pull() {
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
+    #
+    # @seealso
+    # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
     _koopa_h2 "Pulling git repo at '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
     git fetch --all
-    git pull
+    git pull origin master
     if [[ -f ".gitmodules" ]]
     then
         _koopa_git_submodule_init
-        git submodule update --init --recursive
-        # > git submodule foreach -q --recursive git checkout master
-        git submodule foreach git pull
+        git submodule --quiet update --init --recursive
+        git submodule --quiet foreach --recursive \
+            git fetch --all --quiet
+        git submodule --quiet foreach --recursive \
+            git checkout master --quiet
+        git submodule --quiet foreach --recursive \
+            git pull origin master
     fi
     return 0
 }
