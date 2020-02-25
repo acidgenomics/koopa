@@ -223,9 +223,9 @@ then
 
     # Shells.
     install-bash                                                        # 0.014G
+    install-zsh                                                         # 0.011G
     if [[ "$docker" -eq 0 ]]
     then
-        install-zsh                                                     # 0.011G
         install-fish                                                    # 0.082G
     fi
 
