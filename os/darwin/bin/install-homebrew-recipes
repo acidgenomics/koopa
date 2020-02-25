@@ -43,7 +43,8 @@ export HOMEBREW_FORCE_BOTTLE=1
 # Casks  {{{1
 # ==============================================================================
 
-# Note that 'foobar2000' cask was removed due to url protection.
+# 'foobar2000' cask was removed due to url protection.
+# 'macvim' cask overwrites 'vim' binary, so install manually instead.
 
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
