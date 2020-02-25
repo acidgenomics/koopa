@@ -37,7 +37,7 @@ images=(
     acidgenomics/bcbiornaseq
     acidgenomics/bcbiosinglecell
     acidgenomics/rnaseq
-    # > acidgenomics/singlecell
+    acidgenomics/singlecell
     # Bioinformatics software.
     # > acidgenomics/rnaeditingindexer
     # > acidgenomics/maestro
