@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa="0.7.0a"
-koopa-date="2020-02-24"
+koopa-date="2020-02-25"
 
 
 
@@ -105,7 +105,7 @@ git="2.25.0"
 go="1.13.4"
 
 # https://cloud.google.com/sdk/install
-google-cloud-sdk="281.0.0"
+google-cloud-sdk="282.0.0"
 
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
