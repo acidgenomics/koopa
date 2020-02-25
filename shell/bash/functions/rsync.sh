@@ -50,7 +50,7 @@ _koopa_rsync_vm() {
     if [ "$source_ip" == "$host_ip" ]
     then
         _koopa_note "On source machine: '${source_ip}'."
-        return 1
+        return 0
     fi
 
     _koopa_h1 "Syncing '${prefix}' from '${source_ip}'."
