@@ -41,7 +41,7 @@ _koopa_rsync_vm() {
     _koopa_assert_is_set flags prefix source_ip
 
     local host_ip
-    host_ip="$(ip-address)"
+    host_ip="$(_koopa_local_ip_address)"
 
     local user
     user="${USER:?}"
