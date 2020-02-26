@@ -166,6 +166,43 @@ _koopa_find_dotfiles() {  # {{{1
     return 0
 }
 
+_koopa_find_large_directories() {  # {{{1
+    # """
+    # Find large directories.
+    # @note Updated 2020-02-26.
+    # """
+    local dir
+    dir="${1:-"."}"
+    du \
+        --max-depth=99 \
+        --threshold=100000000 \
+        "$dir" \
+        | sort -n \
+        | head -n 100
+    return 0
+}
+
+_koopa_find_large_files() {  # {{{1
+    # """
+    # Find large files.
+    # @note Updated 2020-02-26.
+    #
+    # @seealso
+    # https://unix.stackexchange.com/questions/140367/
+    # """
+    local dir
+    dir="${1:-"."}"
+    find "$dir" \
+        -xdev \
+        -type f \
+        -size +102400000c \
+        -print \
+        -exec du {} \; \
+        | sort -n \
+        | head -n 100
+    return 0
+}
+
 _koopa_find_text() {  # {{{1
     # """
     # Find text in any file.
