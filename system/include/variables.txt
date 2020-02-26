@@ -165,6 +165,9 @@ oracle-instantclient="19.5.0.0.0-1"
 # https://pandoc.org/releases.html
 pandoc="2.7.3"
 
+# https://www.gnu.org/software/parallel/
+parallel="20200122"
+
 # https://www.passwordstore.org/
 pass="1.7.3"
 
