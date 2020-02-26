@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="coreutils"
+name="parallel"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
@@ -23,7 +23,7 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
-    file="${name}-${version}.tar.xz"
+    file="${name}-${version}.tar.bz2"
     url="${gnu_mirror}/${name}/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
