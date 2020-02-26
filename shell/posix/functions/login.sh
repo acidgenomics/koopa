@@ -43,6 +43,7 @@ _koopa_tmux_sessions() {  # {{{1
     # @note Updated 2020-02-26.
     # """
     _koopa_is_installed tmux || return 0
+    _koopa_is_tmux && return 0
     local x
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
