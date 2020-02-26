@@ -127,6 +127,7 @@ _koopa_find_and_replace_in_files() {  # {{{1
 
     local dir
     dir="${3:-"."}"
+    dir="$(realpath "$dir")"
 
     # Check for unescaped slashes.
     if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
@@ -137,7 +138,7 @@ _koopa_find_and_replace_in_files() {  # {{{1
         _koopa_stop "Unescaped '/' detected: '${to}'."
     fi
 
-    find -L "$dir" \
+    find "$dir" \
         -xdev \
         -mindepth 1 \
         -maxdepth 1 \
@@ -154,10 +155,11 @@ _koopa_find_broken_symlinks() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+    dir="$(realpath "$dir")"
 
     local x
     x="$( \
-        find -L "$dir" \
+        find "$dir" \
             -xtype l \
             2>&1 \
             | grep --invert-match "Permission denied" \
@@ -210,10 +212,11 @@ _koopa_find_empty_dirs() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+    dir="$(realpath "$dir")"
 
     local x
     x="$( \
-        find -L "$dir" \
+        find "$dir" \
             -mindepth 1 \
             -type d \
             -not -path "*/.git/*" \
@@ -226,6 +229,7 @@ _koopa_find_empty_dirs() {  # {{{1
     return 0
 }
 
+
 _koopa_find_large_dirs() {  # {{{1
     # """
     # Find large directories.
@@ -233,6 +237,7 @@ _koopa_find_large_dirs() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+    dir="$(realpath "$dir")"
 
     local x
     x="$( \
@@ -240,6 +245,7 @@ _koopa_find_large_dirs() {  # {{{1
             --max-depth=99 \
             --threshold=100000000 \
             "$dir" \
+            2>/dev/null \
             | sort --numeric-sort \
             | head --lines=100 \
     )"
@@ -260,10 +266,11 @@ _koopa_find_large_files() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+    dir="$(realpath "$dir")"
 
     local x
     x="$( \
-        find -L "$dir" \
+        find "$dir" \
             -xdev \
             -mindepth 1 \
             -type f \
@@ -330,6 +337,7 @@ _koopa_find_text() {  # {{{1
 
     local dir
     dir="${3:-"."}"
+    dir="$(realpath "$dir")"
 
     local x
     x="$( \
@@ -372,10 +380,11 @@ _koopa_rm_empty_dirs() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+    dir="$(realpath "$dir")"
 
     local x
     x="$( \
-        find -L "$dir" \
+        find "$dir" \
             -mindepth 1 \
             -type d \
             -not -path "*/.git/*" \
