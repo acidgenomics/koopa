@@ -160,10 +160,12 @@ _koopa_find_broken_symlinks() {  # {{{1
     local x
     x="$( \
         find "$dir" \
+            -xdev \
+            -mindepth 1 \
             -xtype l \
             2>&1 \
             | grep --invert-match "Permission denied" \
-            | sort --zero-terminated
+            | sort \
     )"
 
     echo "$x"
@@ -173,7 +175,7 @@ _koopa_find_broken_symlinks() {  # {{{1
 _koopa_find_dotfiles() {  # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-26.
     #
     # This is used internally by 'list-dotfiles' script.
     #
@@ -185,8 +187,6 @@ _koopa_find_dotfiles() {  # {{{1
 
     local header
     header="${2:?}"
-
-    printf "\n%s:\n\n" "$header"
 
     local x
     x="$( \
@@ -200,8 +200,9 @@ _koopa_find_dotfiles() {  # {{{1
             | sort \
             | awk '{print "  ",$0}' \
     )"
-    echo "$x"
 
+    printf "\n%s:\n\n" "$header"
+    echo "$x"
     return 0
 }
 
@@ -219,7 +220,7 @@ _koopa_find_empty_dirs() {  # {{{1
         find "$dir" \
             -mindepth 1 \
             -type d \
-            -not -path "*/.git/*" \
+            -not -path "*/.*/*" \
             -empty \
             -print \
             | sort \
@@ -228,7 +229,6 @@ _koopa_find_empty_dirs() {  # {{{1
     echo "$x"
     return 0
 }
-
 
 _koopa_find_large_dirs() {  # {{{1
     # """
@@ -242,12 +242,13 @@ _koopa_find_large_dirs() {  # {{{1
     local x
     x="$( \
         du \
-            --max-depth=99 \
+            --max-depth=20 \
             --threshold=100000000 \
-            "$dir" \
+            "${dir}"/* \
             2>/dev/null \
-            | sort --numeric-sort \
-            | head --lines=100 \
+        | sort --numeric-sort \
+        | head --lines=100 \
+        || true \
     )"
 
     echo "$x"
@@ -274,7 +275,7 @@ _koopa_find_large_files() {  # {{{1
             -xdev \
             -mindepth 1 \
             -type f \
-            -size +102400000c \
+            -size +100000000c \
             -print0 \
             2>&1 \
             | grep \
@@ -282,7 +283,7 @@ _koopa_find_large_files() {  # {{{1
                 --invert-match "Permission denied" \
             | xargs -0 du \
             | sort --numeric-sort \
-            | head --lines=100 \
+            | tail --lines=100 \
     )"
 
     echo "$x"
@@ -366,7 +367,7 @@ _koopa_line_count() {  # {{{1
     x="$( \
         wc -l "$file" \
             | xargs \
-            | cut -d ' ' -f 1
+            | cut -d ' ' -f 1 \
     )"
 
     echo "$x"
@@ -387,7 +388,7 @@ _koopa_rm_empty_dirs() {  # {{{1
         find "$dir" \
             -mindepth 1 \
             -type d \
-            -not -path "*/.git/*" \
+            -not -path "*/.*/*" \
             -empty \
             -delete \
             -print \
