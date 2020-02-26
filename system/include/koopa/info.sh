@@ -1,17 +1,26 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
-# shellcheck source=/dev/null
-source "${script_dir}/../../../shell/bash/include/header.sh"
+# Get the latest commit.
+koopa_prefix="$(_koopa_prefix)"
+
+version="$(_koopa_version)"
+date="$(_koopa_variable "koopa-date")"
+commit="$( \
+    _koopa_cd "$koopa_prefix"; \
+    _koopa_git_last_commit_local \
+)"
+url="$(_koopa_variable "koopa-url")"
+dev_url="$(_koopa_variable "koopa-dev-url")"
 
 array=(
-    "$(koopa --version)"
-    "https://koopa.acidgenomics.com/"
+    "koopa ${version} (${date})"
+    "Commit: ${commit}"
+    "URL: ${url}"
+    "GitHub URL: ${dev_url}"
     ""
     "Configuration"
     "-------------"
-    "Koopa Prefix: $(_koopa_prefix)"
+    "Koopa Prefix: ${koopa_prefix}"
     "Config Prefix: $(_koopa_config_prefix)"
     "App Prefix: $(_koopa_app_prefix)"
     "Make Prefix: $(_koopa_make_prefix)"
@@ -55,7 +64,6 @@ else
     shell_version="$(_koopa_get_version "${shell_name}")"
     shell="${shell_name} ${shell_version}"
     unset -v shell_name shell_version
-    # > term="Terminal: ${TERM_PROGRAM:-} ${TERM_PROGRAM_VERSION:-}"
     array+=(
         "System information"
         "------------------"
@@ -67,5 +75,5 @@ fi
 
 array+=("Run 'koopa check' to verify installation.")
 
-cat "${KOOPA_PREFIX}/system/include/koopa/ascii-turtle.txt"
+cat "${koopa_prefix}/system/include/koopa/ascii-turtle.txt"
 _koopa_info_box "${array[@]}"
