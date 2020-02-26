@@ -400,11 +400,18 @@ then
 
     _koopa_activate_secrets
     _koopa_activate_ssh_key
-    _koopa_today_bucket
+
+    if ! _koopa_is_subshell
+    then
+        _koopa_today_bucket
+    fi
 fi
 
-_koopa_disk_check
-_koopa_tmux_sessions
+if ! _koopa_is_subshell
+then
+    _koopa_disk_check
+    _koopa_tmux_sessions
+fi
 
 
 
