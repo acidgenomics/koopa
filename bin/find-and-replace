@@ -6,18 +6,4 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
-
-from="$1"
-to="$2"
-
-# Check for unescaped slashes.
-if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
-then
-    _koopa_stop "Unescaped '/' detected: '${from}'."
-elif echo "$to" | grep -q "/" && echo "$to" | grep -Fqv "\\"
-then
-    _koopa_stop "Unescaped '/' detected: '${to}'."
-fi
-
-find . -maxdepth 1 -type f -exec sed -i "s/${from}/${to}/g" {} \;
+_koopa_find_and_replace_in_files "$@"
