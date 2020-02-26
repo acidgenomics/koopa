@@ -48,7 +48,7 @@ _koopa_extract_version() {  # {{{1
     x="${1:?}"
     x="$( \
         echo "$x" \
-            | grep -Eo '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?' \
+            | grep -Eo "$(_koopa_version_pattern)" \
             | head -n 1 \
     )"
     [ -n "$x" ] || return 1
@@ -461,6 +461,15 @@ _koopa_version() {  # {{{1
     # @note Updated 2020-02-26.
     # """
     _koopa_variable "koopa-version"
+    return 0
+}
+
+_koopa_version_pattern() {  # {{{1
+    # """
+    # Version pattern.
+    # @note Updated 2020-02-26.
+    # """
+    echo '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?'
     return 0
 }
 
