@@ -222,6 +222,7 @@ then
     # Core.
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
+    install-grep
 
     # Shells.
     install-bash                                                        # 0.014G
