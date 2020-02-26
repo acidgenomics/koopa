@@ -81,7 +81,7 @@ examples:
 
 note:
     POSIX script.
-    Updated 2020-02-14.
+    Updated 2020-02-26.
 EOF
 }
 
@@ -402,6 +402,8 @@ then
     _koopa_activate_ssh_key
     _koopa_today_bucket
 fi
+
+_koopa_tmux_sessions
 
 
 

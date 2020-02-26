@@ -1188,8 +1188,8 @@ _koopa_tmux_sessions() {  # {{{1
     local x
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
-    x="$(echo "$x" | cut -d ':' -f 1)"
-    echo "$x"
+    x="$(echo "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
+    _koopa_dl "tmux" "$x"
     return 0
 }
 
