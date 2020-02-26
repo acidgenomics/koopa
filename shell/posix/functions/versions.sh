@@ -458,9 +458,9 @@ _koopa_tex_version() {  # {{{1
 _koopa_version() {  # {{{1
     # """
     # Koopa version.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-26.
     # """
-    _koopa_variable "koopa"
+    _koopa_variable "koopa-version"
     return 0
 }
 
