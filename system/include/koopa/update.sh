@@ -30,7 +30,7 @@ _koopa_h1 "Updating koopa at '${koopa_prefix}'."
 if ! _koopa_is_git "$koopa_prefix"
 then
     version="$(_koopa_version)"
-    url="https://koopa.acidgenomics.com"
+    url="$(_koopa_url)"
     _koopa_note "Stable release of koopa ${version} detected."
     _koopa_note "To update, first run the 'uninstall' script."
     _koopa_note "Then run the default install command at '${url}'."
