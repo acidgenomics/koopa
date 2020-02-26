@@ -7,6 +7,7 @@ _koopa_git_last_commit_local() {  # {{{1
     # @note Updated 2020-02-26.
     #
     # Alternate:
+    # Can use '%h' for abbreviated commit ID.
     # > git log --format="%H" -n 1
     # """
     _koopa_is_git || return 1

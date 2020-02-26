@@ -21,22 +21,23 @@ case "$1" in
         exit 0
         ;;
     --version|-V|version)
-        version="$(_koopa_variable koopa)"
-        date="$(_koopa_variable koopa-date)"
-        echo "koopa ${version} (${date})"
+        _koopa_version
         exit 0
         ;;
     # System configuration -----------------------------------------------------
     check)
-        "${include_dir}/check.sh"
+        # shellcheck disable=SC1090
+        source "${include_dir}/check.sh"
         exit 0
         ;;
     info)
-        "${include_dir}/info.sh"
+        # shellcheck disable=SC1090
+        source "${include_dir}/info.sh"
         exit 0
         ;;
     list)
-        "${include_dir}/list.sh"
+        # shellcheck disable=SC1090
+        source "${include_dir}/list.sh"
         exit 0
         ;;
     list-internal-functions)
@@ -54,7 +55,8 @@ case "$1" in
         ;;
     update)
         shift 1
-        "${include_dir}/update.sh" "$@"
+        # shellcheck disable=SC1090
+        source "${include_dir}/update.sh" "$@"
         exit 0
         ;;
     # Character string return --------------------------------------------------
