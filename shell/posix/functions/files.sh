@@ -125,6 +125,9 @@ _koopa_find_and_replace_in_files() {  # {{{1
     local to
     to="${2:?}"
 
+    local dir
+    dir="${3:-"."}"
+
     # Check for unescaped slashes.
     if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
     then
@@ -134,7 +137,12 @@ _koopa_find_and_replace_in_files() {  # {{{1
         _koopa_stop "Unescaped '/' detected: '${to}'."
     fi
 
-    find . -maxdepth 1 -type f -exec sed -i "s/${from}/${to}/g" {} \;
+    find -L "$dir" \
+        -xdev \
+        -mindepth 1 \
+        -maxdepth 1 \
+        -type f \
+        -exec sed -i "s/${from}/${to}/g" {} \;
 
     return 0
 }
@@ -142,27 +150,20 @@ _koopa_find_and_replace_in_files() {  # {{{1
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-02-26.
     # """
     local dir
     dir="${1:-"."}"
+
     local x
-    if _koopa_is_macos
-    then
-        x="$( \
-            find "$dir" -type l -print0 2>&1 \
-                | grep -v "Permission denied" \
-                | xargs -0 file \
-                | grep broken \
-                | cut -d ':' -f 1 \
-        )"
-    elif _koopa_is_linux
-    then
-        x="$( \
-            find "$dir" -xtype l 2>&1 \
-                | grep -v "Permission denied" \
-        )"
-    fi
+    x="$( \
+        find -L "$dir" \
+            -xtype l \
+            2>&1 \
+            | grep --invert-match "Permission denied" \
+            | sort --zero-terminated
+    )"
+
     echo "$x"
     return 0
 }
@@ -172,22 +173,33 @@ _koopa_find_dotfiles() {  # {{{1
     # Find dotfiles by type.
     # @note Updated 2020-01-12.
     #
+    # This is used internally by 'list-dotfiles' script.
+    #
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
     local type
     type="${1:?}"
+
     local header
     header="${2:?}"
+
     printf "\n%s:\n\n" "$header"
-    find "$HOME" \
-        -maxdepth 1 \
-        -name ".*" \
-        -type "$type" \
-        -print0 \
-        | xargs -0 -n1 basename \
-        | sort \
-        | awk '{print "  ",$0}'
+
+    local x
+    x="$( \
+        find "$HOME" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -name ".*" \
+            -type "$type" \
+            -print0 \
+            | xargs -0 -n1 basename \
+            | sort \
+            | awk '{print "  ",$0}' \
+    )"
+    echo "$x"
+
     return 0
 }
 
@@ -198,9 +210,10 @@ _koopa_find_empty_dirs() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+
     local x
     x="$( \
-        find "$dir" \
+        find -L "$dir" \
             -mindepth 1 \
             -type d \
             -not -path "*/.git/*" \
@@ -208,6 +221,7 @@ _koopa_find_empty_dirs() {  # {{{1
             -print \
             | sort \
     )"
+
     echo "$x"
     return 0
 }
@@ -219,15 +233,17 @@ _koopa_find_large_dirs() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+
     local x
     x="$( \
         du \
             --max-depth=99 \
             --threshold=100000000 \
             "$dir" \
-            | sort -n \
-            | head -n 100 \
+            | sort --numeric-sort \
+            | head --lines=100 \
     )"
+
     echo "$x"
     return 0
 }
@@ -244,17 +260,24 @@ _koopa_find_large_files() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+
     local x
     x="$( \
-        find "$dir" \
+        find -L "$dir" \
             -xdev \
+            -mindepth 1 \
             -type f \
             -size +102400000c \
-            -print \
-            -exec du {} \; \
-            | sort -n \
-            | head -n 100 \
+            -print0 \
+            2>&1 \
+            | grep \
+                --null-data \
+                --invert-match "Permission denied" \
+            | xargs -0 du \
+            | sort --numeric-sort \
+            | head --lines=100 \
     )"
+
     echo "$x"
     return 0
 }
@@ -269,9 +292,12 @@ _koopa_find_non_cellar_make_files() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_make_prefix)"
+
     local x
     x="$( \
         find "$prefix" \
+            -xdev \
+            -mindepth 1 \
             -type f \
             -not -path "${prefix}/cellar/*" \
             -not -path "${prefix}/koopa/*" \
@@ -281,6 +307,7 @@ _koopa_find_non_cellar_make_files() {  # {{{1
             -not -path "${prefix}/share/zsh/site-functions/*" \
             | sort \
     )"
+
     echo "$x"
     return 0
 }
@@ -297,26 +324,44 @@ _koopa_find_text() {  # {{{1
     # """
     local pattern
     pattern="${1:?}"
+
     local file_name
     file_name="${2:?}"
+
     local dir
     dir="${3:-"."}"
-    find "$dir" -name "$file_name" -exec grep -il "$pattern" {} \;;
+
+    local x
+    x="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -type f \
+            -name "$file_name" \
+            -exec grep -il "$pattern" {} \;; \
+    )"
+
+    echo "$x"
     return 0
 }
 
 _koopa_line_count() {  # {{{1
     # """
     # Return the number of lines in a file.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-26.
     #
     # Example: _koopa_line_count tx2gene.csv
     # """
     local file
     file="${1:?}"
-    wc -l "$file" \
-        | xargs \
-        | cut -d ' ' -f 1
+
+    local x
+    x="$( \
+        wc -l "$file" \
+            | xargs \
+            | cut -d ' ' -f 1
+    )"
+
+    echo "$x"
     return 0
 }
 
@@ -327,9 +372,10 @@ _koopa_rm_empty_dirs() {  # {{{1
     # """
     local dir
     dir="${1:-"."}"
+
     local x
     x="$( \
-        find "$dir" \
+        find -L "$dir" \
             -mindepth 1 \
             -type d \
             -not -path "*/.git/*" \
@@ -337,6 +383,7 @@ _koopa_rm_empty_dirs() {  # {{{1
             -delete \
             -print \
     )"
+
     echo "$x"
     return 0
 }
@@ -371,7 +418,7 @@ _koopa_stat_group() {  # {{{1
 _koopa_stat_modified() {
     # """
     # Get file modification time.
-    # @note Updated 2020-02-17.
+    # @note Updated 2020-02-26.
     #
     # Linux uses GNU coreutils variant.
     # macOS uses BSD variant.
@@ -384,8 +431,10 @@ _koopa_stat_modified() {
     # """
     local file
     file="${1:?}"
+
     local format
     format="${2:?}"
+
     local x
     if _koopa_is_macos
     then
@@ -399,6 +448,7 @@ _koopa_stat_modified() {
         #     Examples-of-date.html
         x="$(date -d "@${x}" +"$format")"
     fi
+
     echo "$x"
     return 0
 }
