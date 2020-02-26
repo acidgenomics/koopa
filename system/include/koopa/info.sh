@@ -3,20 +3,11 @@
 # Get the latest commit.
 koopa_prefix="$(_koopa_prefix)"
 
-version="$(_koopa_version)"
-date="$(_koopa_variable "koopa-date")"
-commit="$( \
-    _koopa_cd "$koopa_prefix"; \
-    _koopa_git_last_commit_local \
-)"
-url="$(_koopa_variable "koopa-url")"
-dev_url="$(_koopa_variable "koopa-dev-url")"
-
 array=(
-    "koopa ${version} (${date})"
-    "Commit: ${commit}"
-    "URL: ${url}"
-    "GitHub URL: ${dev_url}"
+    "koopa $(_koopa_version) ($(_koopa_date))"
+    "Commit: $(_koopa_commit)"
+    "URL: $(_koopa_url)"
+    "GitHub URL: $(_koopa_github_url)"
     ""
     "Configuration"
     "-------------"
