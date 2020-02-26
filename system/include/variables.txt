@@ -109,6 +109,9 @@ go="1.13.4"
 # https://cloud.google.com/sdk/install
 google-cloud-sdk="282.0.0"
 
+# https://www.gnu.org/software/grep/
+grep="3.4"
+
 # https://www.gnu.org/software/gsl/
 gsl="2.6"
 
