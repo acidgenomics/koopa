@@ -1179,6 +1179,20 @@ _koopa_tmp_log_file() {  # {{{1
     return 0
 }
 
+_koopa_tmux_sessions() {  # {{{1
+    # """
+    # Show active tmux sessions.
+    # @note Updated 2020-02-26.
+    # """
+    _koopa_is_installed tmux || return 0
+    local x
+    x="$(tmux ls 2>/dev/null || true)"
+    [ -n "$x" ] || return 0
+    x="$(echo "$x" | cut -d ':' -f 1)"
+    echo "$x"
+    return 0
+}
+
 _koopa_today_bucket() {  # {{{1
     # """
     # Create a dated file today bucket.
