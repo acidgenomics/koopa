@@ -12,12 +12,6 @@ then
     export CLICOLOR=1
 fi
 
-# Colorize grep by default.
-if [ -z "${GREP_OPTIONS:-}" ]
-then
-    export GREP_OPTIONS="--color=auto"
-fi
-
 # Refer to 'man ls' for 'LSCOLORS' section on color designators.
 # Note that this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
 if [ -z "${LSCOLORS:-}" ]
