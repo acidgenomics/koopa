@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-12.
+## Updated 2020-02-26.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -54,6 +54,139 @@ h1("Checking koopa installation")
 
 
 
+## Basic dependencies ==========================================================
+h2("Basic dependencies")
+installed(
+    which = c(
+        ## "[",
+        ## "basenc",
+        ## "rename",
+        ## "top",
+        ## "uptime",
+        "b2sum",
+        "base32",
+        "base64",
+        "basename",
+        "bc",
+        "cat",
+        "chcon",
+        "chgrp",
+        "chmod",
+        "chown",
+        "chroot",
+        "chsh",
+        "cksum",
+        "comm",
+        "cp",
+        "csplit",
+        "curl",
+        "cut",
+        "date",
+        "dd",
+        "df",
+        "dir",
+        "dircolors",
+        "dirname",
+        "du",
+        "echo",
+        "env",
+        "expand",
+        "expr",
+        "factor",
+        "false",
+        "find",
+        "fmt",
+        "fold",
+        "grep",
+        "groups",
+        "head",
+        "hostid",
+        "id",
+        "install",
+        "join",
+        "kill",
+        "less",
+        "link",
+        "ln",
+        "logname",
+        "ls",
+        "man",
+        "md5sum",
+        "mkdir",
+        "mkfifo",
+        "mknod",
+        "mktemp",
+        "mv",
+        "nice",
+        "nl",
+        "nohup",
+        "nproc",
+        "numfmt",
+        "od",
+        "parallel",
+        "paste",
+        "pathchk",
+        "pinky",
+        "pr",
+        "printenv",
+        "printf",
+        "ptx",
+        "pwd",
+        "readlink",
+        "realpath",
+        "rm",
+        "rmdir",
+        "runcon",
+        "sed",
+        "seq",
+        "sh",
+        "sha1sum",
+        "sha224sum",
+        "sha256sum",
+        "sha384sum",
+        "sha512sum",
+        "shred",
+        "shuf",
+        "sleep",
+        "sort",
+        "split",
+        "stat",
+        "stdbuf",
+        "stty",
+        "sum",
+        "sync",
+        "tac",
+        "tail",
+        "tee",
+        "test",
+        "timeout",
+        "touch",
+        "tr",
+        "tree",
+        "true",
+        "truncate",
+        "tsort",
+        "tty",
+        "uname",
+        "unexpand",
+        "uniq",
+        "unlink",
+        "users",
+        "vdir",
+        "wc",
+        "wget",
+        "which",
+        "who",
+        "whoami",
+        "xargs",
+        "yes"
+    ),
+    required = TRUE,
+    path = FALSE
+)
+
+
+
 ## Shells ======================================================================
 h2("Shells")
 checkVersion(
@@ -76,6 +209,35 @@ if (!isTRUE(docker)) {
         expected = expectedVersion("fish")
     )
 }
+
+
+
+## GNU packages ================================================================
+h2("GNU packages")
+checkVersion(
+    name = "coreutils",
+    whichName = "env",
+    current = currentVersion("coreutils"),
+    expected = expectedVersion("coreutils")
+)
+checkVersion(
+    name = "findutils",
+    whichName = "find",
+    current = currentVersion("findutils"),
+    expected = expectedVersion("findutils")
+)
+checkVersion(
+    name = "grep",
+    whichName = "grep",
+    current = currentVersion("grep"),
+    expected = expectedVersion("grep")
+)
+checkVersion(
+    name = "parallel",
+    whichName = "parallel",
+    current = currentVersion("parallel"),
+    expected = expectedVersion("parallel")
+)
 
 
 
@@ -330,140 +492,6 @@ checkVersion(
     expected = expectedVersion("shellcheck")
 )
 installed("shunit2")
-
-
-
-## Basic dependencies ==========================================================
-h2("Basic dependencies")
-checkGNUCoreutils()
-installed(
-    which = c(
-        ## "[",
-        ## "basenc",
-        ## "rename",
-        ## "top",
-        ## "uptime",
-        "b2sum",
-        "base32",
-        "base64",
-        "basename",
-        "bc",
-        "cat",
-        "chcon",
-        "chgrp",
-        "chmod",
-        "chown",
-        "chroot",
-        "chsh",
-        "cksum",
-        "comm",
-        "cp",
-        "csplit",
-        "curl",
-        "cut",
-        "date",
-        "dd",
-        "df",
-        "dir",
-        "dircolors",
-        "dirname",
-        "du",
-        "echo",
-        "env",
-        "expand",
-        "expr",
-        "factor",
-        "false",
-        "find",
-        "fmt",
-        "fold",
-        "grep",
-        "groups",
-        "head",
-        "hostid",
-        "id",
-        "install",
-        "join",
-        "kill",
-        "less",
-        "link",
-        "ln",
-        "logname",
-        "ls",
-        "man",
-        "md5sum",
-        "mkdir",
-        "mkfifo",
-        "mknod",
-        "mktemp",
-        "mv",
-        "nice",
-        "nl",
-        "nohup",
-        "nproc",
-        "numfmt",
-        "od",
-        "parallel",
-        "paste",
-        "pathchk",
-        "pinky",
-        "pr",
-        "printenv",
-        "printf",
-        "ptx",
-        "pwd",
-        "readlink",
-        "realpath",
-        "rm",
-        "rmdir",
-        "runcon",
-        "sed",
-        "seq",
-        "sh",
-        "sha1sum",
-        "sha224sum",
-        "sha256sum",
-        "sha384sum",
-        "sha512sum",
-        "shred",
-        "shuf",
-        "sleep",
-        "sort",
-        "split",
-        "stat",
-        "stdbuf",
-        "stty",
-        "sum",
-        "sync",
-        "tac",
-        "tail",
-        "tee",
-        "test",
-        "timeout",
-        "touch",
-        "tr",
-        "tree",
-        "true",
-        "truncate",
-        "tsort",
-        "tty",
-        "uname",
-        "unexpand",
-        "uniq",
-        "unlink",
-        "users",
-        "vdir",
-        "wc",
-        "wget",
-        "which",
-        "who",
-        "whoami",
-        "xargs",
-        "yes"
-    ),
-    required = TRUE,
-    path = FALSE
-)
 
 
 

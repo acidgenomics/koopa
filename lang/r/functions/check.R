@@ -1,39 +1,3 @@
-#' Does the system have GNU coreutils installed?
-#' @note Updated 2020-02-07.
-checkGNUCoreutils <- function(command = "env") {
-    stopifnot(isCommand(command))
-    statusList <- status()
-    x <- tryCatch(
-        expr = system2(
-            command = command,
-            args = "--version",
-            stdout = TRUE,
-            stderr = FALSE
-        ),
-        error = function(e) {
-            NULL
-        }
-    )
-    status <- statusList[["fail"]]
-    if (!is.null(x)) {
-        x <- head(x, n = 1L)
-        x <- grepl(pattern = "GNU", x = x)
-        if (isTRUE(x)) {
-            status <- statusList[["ok"]]
-        }
-    }
-    message(sprintf(
-        fmt = paste0(
-            "  %s | GNU Coreutils\n",
-            "       |   %.69s"
-        ),
-        status,
-        dirname(Sys.which("env"))
-    ))
-}
-
-
-
 #' Check Homebrew Cask version
 #' @note Updated 2020-02-12.
 #'

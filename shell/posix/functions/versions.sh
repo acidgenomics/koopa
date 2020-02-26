@@ -281,6 +281,22 @@ _koopa_os_version() {  # {{{1
     return 0
 }
 
+_koopa_parallel_version() {  # {{{1
+    # """
+    # GNU parallel version.
+    # @note Updated 2020-02-26.
+    # """
+    _koopa_is_installed parallel || return 1
+    local x
+    x="$( \
+        parallel --version \
+            | head -n 1 \
+            | cut -d ' ' -f 3 \
+    )"
+    echo "$x"
+    return 0
+}
+
 _koopa_perl_file_rename_version() {  # {{{1
     # """
     # Perl File::Rename version.
@@ -339,6 +355,9 @@ _koopa_return_version() {  # {{{1
             ;;
         coreutils)
             cmd="env"
+            ;;
+        findutils)
+            cmd="find"
             ;;
         gdal)
             cmd="gdalinfo"
