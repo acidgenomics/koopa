@@ -621,6 +621,22 @@ _koopa_is_ssh_enabled() {  # {{{1
     _koopa_is_matching_fixed "$x" "$pattern"
 }
 
+_koopa_is_subshell() {  # {{{1
+    # """
+    # Is koopa running inside a subshell?
+    # @note Updated 2020-02-26.
+    # """
+    [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
+}
+
+_koopa_is_tmux() {  # {{{1
+    # """
+    # Is current session running inside tmux?
+    # @note Updated 2020-02-26.
+    # """
+    [ -n "${TMUX:-}" ]
+}
+
 _koopa_is_tty() {  # {{{1
     # """
     # Is current shell a teletypewriter?
