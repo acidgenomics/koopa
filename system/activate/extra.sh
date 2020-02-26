@@ -155,8 +155,6 @@ _koopa_activate_fzf
 # Note that macOS ships with a very old version of GNU coreutils.
 # Update these using Homebrew.
 
-alias df='df -H'
-alias du='du -sh'
 alias less='less --ignore-case --raw-control-chars'
 
 make_prefix="$(_koopa_make_prefix)"
