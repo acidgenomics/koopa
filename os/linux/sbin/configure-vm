@@ -128,6 +128,8 @@ then
     sudo ln -fnsv \
         "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
         "/etc/profile.d/."
+    # Using '/n/opt' instead of '/n/app'.
+    _koopa_rm /n/app
     # Install RStudio Server Pro, if applicable.
     if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
     then
