@@ -114,6 +114,31 @@ _koopa_file_ext2() {  # {{{1
     return 0
 }
 
+_koopa_find_and_replace_in_files() {  # {{{1
+    # """
+    # Find and replace inside files.
+    # @note Updated 2020-02-26.
+    # """
+    local from
+    from="${1:?}"
+
+    local to
+    to="${2:?}"
+
+    # Check for unescaped slashes.
+    if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
+    then
+        _koopa_stop "Unescaped '/' detected: '${from}'."
+    elif echo "$to" | grep -q "/" && echo "$to" | grep -Fqv "\\"
+    then
+        _koopa_stop "Unescaped '/' detected: '${to}'."
+    fi
+
+    find . -maxdepth 1 -type f -exec sed -i "s/${from}/${to}/g" {} \;
+
+    return 0
+}
+
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
@@ -166,19 +191,44 @@ _koopa_find_dotfiles() {  # {{{1
     return 0
 }
 
-_koopa_find_large_directories() {  # {{{1
+_koopa_find_empty_dirs() {  # {{{1
+    # """
+    # Find empty directories.
+    # @note Updated 2020-02-26.
+    # """
+    local dir
+    dir="${1:-"."}"
+    local x
+    x="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -type d \
+            -not -path "*/.git/*" \
+            -empty \
+            -print \
+            | sort \
+    )"
+    echo "$x"
+    return 0
+}
+
+_koopa_find_large_dirs() {  # {{{1
     # """
     # Find large directories.
     # @note Updated 2020-02-26.
     # """
     local dir
     dir="${1:-"."}"
-    du \
-        --max-depth=99 \
-        --threshold=100000000 \
-        "$dir" \
-        | sort -n \
-        | head -n 100
+    local x
+    x="$( \
+        du \
+            --max-depth=99 \
+            --threshold=100000000 \
+            "$dir" \
+            | sort -n \
+            | head -n 100 \
+    )"
+    echo "$x"
     return 0
 }
 
@@ -187,26 +237,58 @@ _koopa_find_large_files() {  # {{{1
     # Find large files.
     # @note Updated 2020-02-26.
     #
+    # Usage of '-size +100M' isn't POSIX.
+    #
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
     local dir
     dir="${1:-"."}"
-    find "$dir" \
-        -xdev \
-        -type f \
-        -size +102400000c \
-        -print \
-        -exec du {} \; \
-        | sort -n \
-        | head -n 100
+    local x
+    x="$( \
+        find "$dir" \
+            -xdev \
+            -type f \
+            -size +102400000c \
+            -print \
+            -exec du {} \; \
+            | sort -n \
+            | head -n 100 \
+    )"
+    echo "$x"
+    return 0
+}
+
+_koopa_find_non_cellar_make_files() {  # {{{1
+    # """
+    # Find non-cellar make files.
+    # @note Updated 2020-02-26.
+    #
+    # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
+    # share, src.
+    # """
+    local prefix
+    prefix="$(_koopa_make_prefix)"
+    local x
+    x="$( \
+        find "$prefix" \
+            -type f \
+            -not -path "${prefix}/cellar/*" \
+            -not -path "${prefix}/koopa/*" \
+            -not -path "${prefix}/opt/*" \
+            -not -path "${prefix}/share/applications/mimeinfo.cache" \
+            -not -path "${prefix}/share/emacs/site-lisp/*" \
+            -not -path "${prefix}/share/zsh/site-functions/*" \
+            | sort \
+    )"
+    echo "$x"
     return 0
 }
 
 _koopa_find_text() {  # {{{1
     # """
     # Find text in any file.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-02-26.
     #
     # See also: https://github.com/stephenturner/oneliners
     #
@@ -217,7 +299,9 @@ _koopa_find_text() {  # {{{1
     pattern="${1:?}"
     local file_name
     file_name="${2:?}"
-    find . -name "$file_name" -exec grep -il "$pattern" {} \;;
+    local dir
+    dir="${3:-"."}"
+    find "$dir" -name "$file_name" -exec grep -il "$pattern" {} \;;
     return 0
 }
 
@@ -233,6 +317,27 @@ _koopa_line_count() {  # {{{1
     wc -l "$file" \
         | xargs \
         | cut -d ' ' -f 1
+    return 0
+}
+
+_koopa_rm_empty_dirs() {  # {{{1
+    # """
+    # Remove empty directories.
+    # @note Updated 2020-02-26.
+    # """
+    local dir
+    dir="${1:-"."}"
+    local x
+    x="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -type d \
+            -not -path "*/.git/*" \
+            -empty \
+            -delete \
+            -print \
+    )"
+    echo "$x"
     return 0
 }
 
