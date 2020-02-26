@@ -6,12 +6,5 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-dir="${1:-"."}"
+_koopa_rm_empty_dirs "$@"
 
-find "$dir" \
-    -mindepth 1 \
-    -type d \
-    -not -path "*/.git/*" \
-    -empty \
-    -delete \
-    -print
