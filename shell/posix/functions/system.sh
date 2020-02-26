@@ -114,6 +114,20 @@ _koopa_chown() {  # {{{1
     return 0
 }
 
+_koopa_commit() {  # {{{1
+    # """
+    # Koopa commit ID.
+    # @note Updated 2020-02-26.
+    # """
+    local x
+    x="$( \
+        _koopa_cd "$koopa_prefix"; \
+        _koopa_git_last_commit_local \
+    )"
+    echo "$x"
+    return 0
+}
+
 _koopa_cpu_count() {  # {{{1
     # """
     # Return a usable number of CPU cores.
@@ -143,6 +157,15 @@ _koopa_cpu_count() {  # {{{1
         n=$((n - 1))
     fi
     echo "$n"
+    return 0
+}
+
+_koopa_date() {  # {{{1
+    # """
+    # Koopa date.
+    # @note Updated 2020-02-26.
+    # """
+    _koopa_variable "koopa-date"
     return 0
 }
 
@@ -351,71 +374,13 @@ _koopa_extract() {  # {{{1
    return 0
 }
 
-_koopa_git_branch() {  # {{{1
-    # """
-    # Current git branch name.
-    # @note Updated 2019-10-13.
-    #
-    # Handles detached HEAD state.
-    #
-    # Alternatives:
-    # > git name-rev --name-only HEAD
-    # > git rev-parse --abbrev-ref HEAD
-    #
-    # See also:
-    # - _koopa_assert_is_git
-    # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
-    #       git-completion.bash?id=HEAD
-    # """
-    _koopa_is_git || return 1
-    local branch
-    branch="$(git symbolic-ref --short -q HEAD)"
-    echo "$branch"
-    return 0
-}
 
-_koopa_git_clone() {  # {{{1
+_koopa_github_url() {  # {{{1
     # """
-    # Quietly clone a git repository.
-    # @note Updated 2020-02-15.
+    # Koopa GitHub URL.
+    # @note Updated 2020-02-26.
     # """
-    local repo
-    repo="${1:?}"
-    local target
-    target="${2:?}"
-    if [ -d "$target" ]
-    then
-        _koopa_note "Cloned: '${target}'."
-        return 0
-    fi
-    git clone --quiet --recursive "$repo" "$target"
-    return 0
-}
-
-_koopa_git_update() {  # {{{1
-    # """
-    # Update a git repository.
-    # @note Updated 2020-02-15.
-    #
-    # @seealso _koopa_git_pull
-    # """
-    local repo
-    repo="${1:?}"
-    [ -d "${repo}" ] || return 0
-    [ -x "${repo}/.git" ] || return 0
-    _koopa_h2 "Updating '${repo}'."
-    (
-        cd "$repo" || exit 1
-        # Run updater script, if defined.
-        # Otherwise pull the git repo.
-        if [[ -x "UPDATE.sh" ]]
-        then
-            ./UPDATE.sh
-        else
-            git fetch --all --quiet
-            git pull --quiet
-        fi
-    )
+    _koopa_variable "koopa-github-url"
     return 0
 }
 
@@ -1255,6 +1220,15 @@ _koopa_today_bucket() {  # {{{1
 #     unset -f "${funs[@]}"
 #     return 0
 # }
+
+_koopa_url() {  # {{{1
+    # """
+    # Koopa URL.
+    # @note Updated 2020-02-26.
+    # """
+    _koopa_variable "koopa-url"
+    return 0
+}
 
 _koopa_user() {  # {{{1
     # """
