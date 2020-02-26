@@ -403,6 +403,7 @@ then
     _koopa_today_bucket
 fi
 
+_koopa_disk_check
 _koopa_tmux_sessions
 
 
