@@ -16,7 +16,7 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_r_javareconf() {  # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-02-27.
     #
     # The default Java path differs depending on the system.
     #
@@ -42,6 +42,7 @@ _koopa_r_javareconf() {  # {{{1
         _koopa_warning "R is not installed."
         return 1
     fi
+    _koopa_activate_openjdk
     if ! _koopa_is_installed java
     then
         _koopa_warning "java is not installed."
