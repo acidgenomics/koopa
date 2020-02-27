@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Fix for bug in recent version of sudo, that can happen on Docker:
+# sudo: setrlimit(RLIMIT_CORE): Operation not permitted
+#
+# @seealso
+# - https://ask.fedoraproject.org/t/
+#       sudo-setrlimit-rlimit-core-operation-not-permitted/4223
+# - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
+# """
+
+_koopa_assert_has_no_args "$@"
+
+target_file="/etc/sudo.conf"
+_koopa_exit_if_exists "$target_file"
+source_file="$(_koopa_prefix)/os/linux/etc/sudo.conf"
+sudo cp -v "$source_file" "$target_file"
