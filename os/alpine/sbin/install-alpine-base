@@ -33,7 +33,6 @@ packages=(
     git
     libevent-dev
     libffi-dev
-    openjdk12
     sudo
     tcl
     texlive
