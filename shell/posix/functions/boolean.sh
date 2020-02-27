@@ -117,7 +117,7 @@ _koopa_is_amzn() {  # {{{1
     [ "$(_koopa_os_id)" = "amzn" ]
 }
 
-_koopa_is_alpine() {  # {{{1
+_koopa_is_arch() {  # {{{1
     # """
     # Is the operating system Arch Linux?
     # @note Updated 2020-02-27.
