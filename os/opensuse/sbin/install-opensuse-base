@@ -28,6 +28,7 @@ packages=(
     gnu_parallel
     gzip
     libbz2-devel
+    libcurl-devel
     lzma-devel
     make
     ncurses-devel
