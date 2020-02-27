@@ -34,6 +34,7 @@ packages=(
     wget
     which
     xz
+    zlib
     zsh
 )
 sudo zypper --non-interactive install "${packages[@]}"
