@@ -123,5 +123,6 @@ _koopa_activate_gcc_colors
 _koopa_activate_dotfiles
 _koopa_activate_emacs
 _koopa_activate_go
+_koopa_activate_openjdk
 _koopa_activate_pipx
 _koopa_activate_ruby
