@@ -19,6 +19,11 @@ source "${script_dir}/../include/header.sh"
 # Using modified approach from:
 # https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc/blob/
 #     master/Dockerfile
+#
+# Seeing this message pop up:
+# Executing glibc-bin-2.30-r0.trigger
+# /usr/glibc-compat/sbin/ldconfig: /usr/glibc-compat/lib/ld-linux-x86-64.so.2
+# is not a symbolic link
 # """
 
 name="glibc"
@@ -51,11 +56,13 @@ sudo apk add \
     "$apk_dev_file" \
     "$apk_i18n_file"
 
-# > /usr/glibc-compat/bin/localedef \
-# >     -f UTF-8 \
-# >     -i en_US \
-# >     en_US.UTF-8
+# Setting en_US.UTF-8 by default, as recommended by alpine-pkg-glibc repo.
+/usr/glibc-compat/bin/localedef \
+    -f UTF-8 \
+    -i en_US \
+    en_US.UTF-8
 
+# docker-alpine-glibc approach for setting C.UTF-8 locale as default.
 # > /usr/glibc-compat/bin/localedef \
 # >     --charmap UTF-8 "$LANG" \
 # >     --force \
