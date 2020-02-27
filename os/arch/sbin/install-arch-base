@@ -37,6 +37,7 @@ packages=(
     parallel
     r
     sudo
+    texlive-core
     tree
     wget
     which
