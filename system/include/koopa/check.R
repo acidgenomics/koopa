@@ -190,12 +190,16 @@ installed(
 
 ## Shells ======================================================================
 h2("Shells")
-checkVersion(
-    name = "Bash",
-    whichName = "bash",
-    current = currentVersion("bash"),
-    expected = expectedVersion("bash")
-)
+if (
+    !identical(os, "alpine-3")
+) {
+    checkVersion(
+        name = "Bash",
+        whichName = "bash",
+        current = currentVersion("bash"),
+        expected = expectedVersion("bash")
+    )
+}
 checkVersion(
     name = "Zsh",
     whichName = "zsh",
