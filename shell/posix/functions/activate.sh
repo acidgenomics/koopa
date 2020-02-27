@@ -474,6 +474,23 @@ Versions/${minor_version}/bin"
     return 0
 }
 
+_koopa_activate_openjdk() {  # {{{1
+    # """
+    # Activate OpenJDK.
+    # @note Updated 2020-02-27.
+    #
+    # Use Homebrew instead to manage on macOS.
+    #
+    # We're using a symlink approach here to manage versions.
+    # """
+    _koopa_is_linux || return 0
+    local prefix
+    prefix="$(_koopa_openjdk_prefix)/latest"
+    [ -d "$prefix" ] || return 0
+    _koopa_add_to_path_start "${prefix}/bin"
+    return 0
+}
+
 _koopa_activate_perlbrew() {  # {{{1
     # """
     # Activate Perlbrew.
