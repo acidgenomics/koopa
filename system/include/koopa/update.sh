@@ -10,12 +10,17 @@ app_prefix="$(_koopa_app_prefix)"
 make_prefix="$(_koopa_make_prefix)"
 
 system=0
+user=0
 
 while (("$#"))
 do
     case "$1" in
         --system)
             system=1
+            shift 1
+            ;;
+        --user)
+            user=1
             shift 1
             ;;
         *)
@@ -37,20 +42,6 @@ then
     exit 1
 fi
 
-if _koopa_is_shared_install
-then
-    if [[ "$system" -eq 1 ]]
-    then
-        _koopa_dl "config prefix" "${config_prefix}"
-        _koopa_dl "make prefix" "${make_prefix}"
-        _koopa_dl "app prefix" "${app_prefix}"
-        echo
-    fi
-    _koopa_note "Shared installation detected."
-    _koopa_note "sudo privileges are required."
-    _koopa_assert_has_sudo
-fi
-
 _koopa_set_permissions --recursive "$koopa_prefix"
 
 (
@@ -64,31 +55,22 @@ _koopa_set_permissions --recursive "$koopa_prefix"
 _koopa_set_permissions --recursive "$koopa_prefix"
 
 _koopa_update_xdg_config
-_koopa_update_ldconfig
-_koopa_update_etc_profile_d
-
-# Update additional git repos.
-rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
-repos=(
-    "${config_prefix}/docker"
-    "${config_prefix}/dotfiles-private"
-    "${config_prefix}/scripts-private"
-    "${XDG_DATA_HOME}/Rcheck"
-    "${HOME}/.emacs.d-doom"
-    "${HOME}/.emacs.d-spacemacs"
-)
-for repo in "${repos[@]}"
-do
-    [ -d "$repo" ] || continue
-    (
-        _koopa_cd "$repo"
-        git pull
-    )
-done
 
 if [[ "$system" -eq 1 ]]
 then
     _koopa_h1 "Updating system configuration."
+    _koopa_assert_has_sudo
+
+    _koopa_dl "app prefix" "${app_prefix}"
+    _koopa_dl "config prefix" "${config_prefix}"
+    _koopa_dl "make prefix" "${make_prefix}"
+
+    if _koopa_is_linux
+    then
+        _koopa_update_etc_profile_d
+        _koopa_update_ldconfig
+    fi
+
     if _koopa_is_macos
     then
         update-homebrew
@@ -96,6 +78,7 @@ then
     then
         configure-vm
     fi
+
     if [[ ! -f "${config_prefix}/rsync" ]]
     then
         update-r-packages
@@ -114,8 +97,34 @@ fi
 
 _koopa_fix_zsh_permissions
 
-_koopa_install_dotfiles
-_koopa_install_dotfiles_private
+if [[ "$user" -eq 1 ]]
+then
+    _koopa_h1 "Updating user configuration."
+
+    # Remove legacy directories from user config, if necessary.
+    rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
+
+    # Update git repos.
+    repos=(
+        "${config_prefix}/docker"
+        "${config_prefix}/dotfiles-private"
+        "${config_prefix}/scripts-private"
+        "${XDG_DATA_HOME}/Rcheck"
+        "${HOME}/.emacs.d-doom"
+        "${HOME}/.emacs.d-spacemacs"
+    )
+    for repo in "${repos[@]}"
+    do
+        [ -d "$repo" ] || continue
+        (
+            _koopa_cd "$repo"
+            git pull
+        )
+    done
+
+    _koopa_install_dotfiles
+    _koopa_install_dotfiles_private
+fi
 
 _koopa_success "koopa update was successful."
 _koopa_restart
