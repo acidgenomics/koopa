@@ -25,10 +25,13 @@ sudo pacman -Syyu --noconfirm
 sudo pacman-db-upgrade
 
 packages=(
+    # fish
+    # parallel
+    # zsh
     autoconf
     awk
     bash
-    fish
+    bc
     gcc
     gcc-fortran
     gettext
@@ -38,7 +41,8 @@ packages=(
     libffi
     make
     man
-    parallel
+    pandoc
+    pandoc-citeproc
     pkgconf
     r
     sudo
@@ -47,7 +51,6 @@ packages=(
     tree
     wget
     which
-    zsh
 )
 sudo pacman -S --noconfirm "${packages[@]}"
 
