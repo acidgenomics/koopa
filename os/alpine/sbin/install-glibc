@@ -27,15 +27,29 @@ name_fancy="${name} ${version}"
 
 _koopa_install_start "$name_fancy"
 
-apk_file="glibc-${version}.apk"
+# Add key required for signed apk releases.
 pub_key="sgerrand.rsa.pub"
-
 wget "https://alpine-pkgs.sgerrand.com/${pub_key}"
-wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/\
-${version}/${apk_file}"
-
 sudo cp -v "$pub_key" "/etc/apk/keys/${pub_key}"
-sudo apk add "$apk_file"
+
+apk_main_file="glibc-${version}.apk"
+apk_bin_file="glibc-bin-${version}.apk"
+apk_dev_file="glibc-dev-${version}.apk"
+apk_i18n_file="glibc-i18n-${version}.apk"
+
+base_url="https://github.com/sgerrand/alpine-pkg-glibc/\
+releases/download/${version}"
+
+wget "${base_url}/${apk_main_file}"
+wget "${base_url}/${apk_bin_file}"
+wget "${base_url}/${apk_dev_file}"
+wget "${base_url}/${apk_i18n_file}"
+
+sudo apk add \
+    "$apk_main_file" \
+    "$apk_bin_file" \
+    "$apk_dev_file" \
+    "$apk_i18n_file"
 
 [[ -z "${LANG:-}" ]] && LANG="C.UTF-8" && export LANG
 echo "export LANG=${LANG}" | sudo tee "/etc/profile.d/locale.sh"
@@ -46,10 +60,13 @@ echo "export LANG=${LANG}" | sudo tee "/etc/profile.d/locale.sh"
     --inputfile POSIX \
     || true
 
-sudo apk del glibc-i18n
-sudo apk del .build-dependencies
+# > sudo apk del glibc-i18n
+# > sudo apk del .build-dependencies
 
-rm "$apk_file" "$pub_key"
+rm \
+    "$apk_main_file" \
+    "$pub_key"
+
 # > sudo rm "/etc/apk/keys/sgerrand.rsa.pub"
 
 _koopa_install_success "$name_fancy"
