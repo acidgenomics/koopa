@@ -22,6 +22,7 @@ packages=(
     R
     R-dev
     R-doc
+    autoconf
     bash
     build-base
     ca-certificates
