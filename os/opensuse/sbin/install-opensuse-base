@@ -22,6 +22,7 @@ packages=(
     curl
     fish
     gcc
+    gcc-fortran
     gettext
     git
     gnu_parallel
