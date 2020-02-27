@@ -343,12 +343,17 @@ if (!isTRUE(docker)) {
 
 ## Version managers ============================================================
 h2("Version managers")
-checkVersion(
-    name = "Conda",
-    whichName = "conda",
-    current = currentVersion("conda"),
-    expected = expectedVersion("conda")
-)
+
+if (
+    !identical(os, "arch-rolling")
+) {
+    checkVersion(
+        name = "Conda",
+        whichName = "conda",
+        current = currentVersion("conda"),
+        expected = expectedVersion("conda")
+    )
+}
 if (!isTRUE(docker)) {
     checkVersion(
         name = "Perl : Perlbrew",
@@ -581,6 +586,7 @@ if (isTRUE(linux)) {
         expected = switch(
             EXPR = os,
             `amzn-2` = "7.3.1",
+            `arch-rolling` = "9.2.1",
             `debian-10` = "8.3.0",
             `fedora-31` = "9.2.1",
             `rhel-7` = "4.8.5",
