@@ -21,6 +21,7 @@ name_fancy="Arch base system"
 _koopa_install_start "$name_fancy"
 
 sudo pacman -Syyu --noconfirm
+
 sudo pacman-db-upgrade
 
 packages=(

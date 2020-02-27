@@ -45,7 +45,8 @@ else
             *)
                 _koopa_stop "Unsupported version: '${version}'."
         esac
-        url="https://download.java.net/java/GA/jdk${version}/${unique}/GPL/${file}"
+        url="https://download.java.net/java/GA/jdk${version}/\
+${unique}/GPL/${file}"
         _koopa_download "$url"
         _koopa_extract "$file"
         _koopa_is_docker && rm -v "$file"
@@ -55,45 +56,44 @@ fi
 
 _koopa_set_permissions --recursive "$jdk_dir"
 
-_koopa_h2 "Updating system alternatives."
-
-(
-    priority="100"
-
-    sudo rm -fv /var/lib/alternatives/java
-    sudo update-alternatives --install \
-        "/usr/bin/java" \
-        "java" \
-        "${prefix}/bin/java" \
-        "$priority"
-    sudo update-alternatives --set \
-        "java" \
-        "${prefix}/bin/java"
-
-    sudo rm -fv /var/lib/alternatives/javac
-    sudo update-alternatives --install \
-        "/usr/bin/javac" \
-        "javac" \
-        "${prefix}/bin/javac" \
-        "$priority"
-    sudo update-alternatives --set \
-        "javac" \
-        "${prefix}/bin/javac"
-
-    sudo rm -fv /var/lib/alternatives/jar
-    sudo update-alternatives --install \
-        "/usr/bin/jar" \
-        "jar" \
-        "${prefix}/bin/jar" \
-        "$priority"
-    sudo update-alternatives --set \
-        "jar" \
-        "${prefix}/bin/jar"
-
-    update-alternatives --display java
-    update-alternatives --display javac
-    update-alternatives --display jar
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+# Note that this is not supported on some systems, such as Arch.
+if _koopa_is_installed update-alternatives
+then
+    _koopa_h2 "Updating system alternatives."
+    (
+        priority="100"
+        sudo rm -fv /var/lib/alternatives/java
+        sudo update-alternatives --install \
+            "/usr/bin/java" \
+            "java" \
+            "${prefix}/bin/java" \
+            "$priority"
+        sudo update-alternatives --set \
+            "java" \
+            "${prefix}/bin/java"
+        sudo rm -fv /var/lib/alternatives/javac
+        sudo update-alternatives --install \
+            "/usr/bin/javac" \
+            "javac" \
+            "${prefix}/bin/javac" \
+            "$priority"
+        sudo update-alternatives --set \
+            "javac" \
+            "${prefix}/bin/javac"
+        sudo rm -fv /var/lib/alternatives/jar
+        sudo update-alternatives --install \
+            "/usr/bin/jar" \
+            "jar" \
+            "${prefix}/bin/jar" \
+            "$priority"
+        sudo update-alternatives --set \
+            "jar" \
+            "${prefix}/bin/jar"
+        update-alternatives --display java
+        update-alternatives --display javac
+        update-alternatives --display jar
+    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
+fi
 
 # Update rJava configuration.
 # > if _koopa_is_installed R
