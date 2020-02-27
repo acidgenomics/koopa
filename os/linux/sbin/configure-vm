@@ -218,7 +218,10 @@ then
 fi
 
 # Always run this because it must configure java alternatives.
-install-openjdk                                                         # 0.316G
+if ! _koopa_is_alpine
+then
+    install-openjdk                                                     # 0.316G
+fi
 
 if [[ "$rsync" -eq 0 ]]
 then
