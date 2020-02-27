@@ -123,6 +123,9 @@ then
 elif _koopa_is_fedora
 then
     install-fedora-base --all
+elif _koopa_is_opensuse
+then
+    install-opensuse-base
 fi
 
 _koopa_is_rhel_7 && install-rhel-7-base
