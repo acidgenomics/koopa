@@ -32,6 +32,7 @@ packages=(
     gzip
     libbz2-devel
     libcurl-devel
+    libevent-devel
     lzma-devel
     make
     ncurses-devel
