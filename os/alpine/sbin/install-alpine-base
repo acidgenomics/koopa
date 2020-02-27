@@ -29,7 +29,6 @@ packages=(
     fish
     git
     sudo
-    tee
     wget
     zsh
 )
