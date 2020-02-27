@@ -30,6 +30,7 @@ packages=(
     bash
     fish
     gcc
+    gcc-fortran
     gettext
     git
     grep

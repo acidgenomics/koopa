@@ -131,7 +131,17 @@ fi
 _koopa_is_rhel_7 && install-rhel-7-base
 _koopa_is_rhel_8 && install-rhel-8-base
 
-_koopa_assert_is_installed autoconf bzip2 gcc gzip make msgfmt tar tclsh xz
+_koopa_assert_is_installed \
+    autoconf \
+    bzip2 \
+    gcc \
+    gfortran \
+    gzip \
+    make \
+    msgfmt \
+    tar \
+    tclsh \
+    xz
 
 if [[ "$config" == "constellation-aws" ]]
 then
