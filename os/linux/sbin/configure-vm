@@ -131,6 +131,7 @@ fi
 _koopa_is_rhel_7 && install-rhel-7-base
 _koopa_is_rhel_8 && install-rhel-8-base
 
+# Maybe include: tclsh
 _koopa_assert_is_installed \
     autoconf \
     bc \
@@ -142,7 +143,6 @@ _koopa_assert_is_installed \
     make \
     msgfmt \
     tar \
-    tclsh \
     xz
 
 if [[ "$config" == "constellation-aws" ]]
