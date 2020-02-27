@@ -13,61 +13,26 @@ source "${script_dir}/../include/header.sh"
 #   - conflicting requests
 # """
 
-all=0
-dev=0
-dist_upgrade=0
-extra=0
+dev=1
+extra=1
+upgrade=1
 
-while (("$#"))
-do
-    case "$1" in
-        --all)
-            all=1
-            shift 1
-            ;;
-        --build-dep)
-            # Passthrough from 'install-rhel-*-base' script.
-            shift 1
-            ;;
-        --dev)
-            dev=1
-            shift 1
-            ;;
-        --dist-upgrade)
-            dist_upgrade=1
-            shift 1
-            ;;
-        --extra)
-            extra=1
-            shift 1
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-done
-
-if [[ "$all" -eq 1 ]]
-then
-    dev=1
-    dist_upgrade=1
-    extra=1
-fi
+_koopa_is_docker && extra=0
 
 _koopa_h1 "Installing Fedora base system."
 
 _koopa_assert_is_installed sudo
 
-# dist-upgrade  {{{1
+# Upgrade  {{{1
 # ==============================================================================
 
-if [[ "$dist_upgrade" -eq 1 ]]
+if [[ "$upgrade" -eq 1 ]]
 then
     _koopa_h2 "Upgrading install via 'yum update'."
     sudo yum -y update
 fi
 
-# default  {{{1
+# Default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
@@ -104,7 +69,7 @@ pkgs=(
 )
 sudo yum -y install "${pkgs[@]}"
 
-# developer  {{{1
+# Developer  {{{1
 # ==============================================================================
 
 if [[ "$dev" -eq 1 ]]
@@ -134,7 +99,7 @@ then
     sudo yum -y install "${pkgs[@]}"
 fi
 
-# extra  {{{1
+# Extra  {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
