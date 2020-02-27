@@ -236,6 +236,7 @@ then
     install-findutils                                                   # 0.005G
     install-grep
     install-parallel
+    install-patch
 
     # Shells.
     install-bash                                                        # 0.014G
