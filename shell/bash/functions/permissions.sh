@@ -58,23 +58,33 @@ _koopa_set_permissions() {  # {{{1
     mapfile -t chmod_flags < <(_koopa_chmod_flags)
     if [[ "$recursive" -eq 1 ]]
     then
-        chmod_flags+=("--recursive")  # '-R'
+        # Note that '-R' instead of '--recursive' has better cross-platform
+        # support on macOS and BusyBox.
+        chmod_flags+=("-R")
     fi
     if [[ "$verbose" -eq 1 ]]
     then
-        chmod_flags+=("--verbose")  # '-v'
+        # Note that '-v' instead of '--verbose' has better cross-platform
+        # support on macOS and BusyBox.
+        chmod_flags+=("-v")
     fi
 
     # chown flags.
     local chown_flags
-    chown_flags=("--no-dereference")  # '-h'
+    # Note that '-h' instead of '--no-dereference' has better cross-platform
+    # support on macOS and BusyBox.
+    chown_flags=("-h")
     if [[ "$recursive" -eq 1 ]]
     then
-        chown_flags+=("--recursive")  # '-R'
+        # Note that '-R' instead of '--recursive' has better cross-platform
+        # support on macOS and BusyBox.
+        chown_flags+=("-R")
     fi
     if [[ "$verbose" -eq 1 ]]
     then
-        chown_flags+=("--verbose")  # '-v'
+        # Note that '-v' instead of '--verbose' has better cross-platform
+        # support on macOS and BusyBox.
+        chown_flags+=("-v")
     fi
     local group
     group="$(_koopa_group)"
