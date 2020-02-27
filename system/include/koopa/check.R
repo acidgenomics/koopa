@@ -343,7 +343,6 @@ if (!isTRUE(docker)) {
 
 ## Version managers ============================================================
 h2("Version managers")
-
 if (
     !identical(os, "arch-rolling")
 ) {
@@ -404,25 +403,29 @@ if (!isTRUE(docker)) {
 
 
 ## Cloud APIs ==================================================================
-h2("Cloud APIs")
-checkVersion(
-    name = "Amazon Web Services (AWS) CLI",
-    whichName = "aws",
-    current = currentVersion("aws-cli"),
-    expected = expectedVersion("aws-cli")
-)
-checkVersion(
-    name = "Microsoft Azure CLI",
-    whichName = "az",
-    current = currentVersion("azure-cli"),
-    expected = expectedVersion("azure-cli")
-)
-checkVersion(
-    name = "Google Cloud SDK",
-    whichName = "gcloud",
-    current = currentVersion("google-cloud-sdk"),
-    expected = expectedVersion("google-cloud-sdk")
-)
+if (
+    !identical(os, "arch-rolling")
+) {
+    h2("Cloud APIs")
+    checkVersion(
+        name = "Amazon Web Services (AWS) CLI",
+        whichName = "aws",
+        current = currentVersion("aws-cli"),
+        expected = expectedVersion("aws-cli")
+    )
+    checkVersion(
+        name = "Microsoft Azure CLI",
+        whichName = "az",
+        current = currentVersion("azure-cli"),
+        expected = expectedVersion("azure-cli")
+    )
+    checkVersion(
+        name = "Google Cloud SDK",
+        whichName = "gcloud",
+        current = currentVersion("google-cloud-sdk"),
+        expected = expectedVersion("google-cloud-sdk")
+    )
+}
 
 
 
