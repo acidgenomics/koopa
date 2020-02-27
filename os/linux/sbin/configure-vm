@@ -108,7 +108,10 @@ fi
 
 _koopa_h2 "Installing base system."
 
-if _koopa_is_debian
+if _koopa_is_alpine
+then
+    install-alpine-base
+elif _koopa_is_debian
 then
     install-debian-base --all
 elif _koopa_is_fedora
