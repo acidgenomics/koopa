@@ -37,23 +37,17 @@ _koopa_r_javareconf() {  # {{{1
     # > library(rJava)
     # > .jinit()
     # """
-    if ! _koopa_is_installed R
-    then
-        _koopa_warning "R is not installed."
-        return 1
-    fi
+    _koopa_is_installed R || return 1
     _koopa_activate_openjdk
-    if ! _koopa_is_installed java
-    then
-        _koopa_warning "java is not installed."
-        return 1
-    fi
+    _koopa_is_installed java || return 1
+
     local java_home
-    local java_flags
-    local r_home
     java_home="$(_koopa_java_home)"
     [ -n "$java_home" ] && [ -d "$java_home" ] || return 1
+
     _koopa_h2 "Updating R Java configuration."
+
+    local java_flags
     java_flags=(
         "JAVA_HOME=${java_home}"
         "JAVA=${java_home}/bin/java"
@@ -61,12 +55,20 @@ _koopa_r_javareconf() {  # {{{1
         "JAVAH=${java_home}/bin/javah"
         "JAR=${java_home}/bin/jar"
     )
-    r_home="$(_koopa_r_home)"
-    _koopa_set_permissions --recursive "$r_home"
+
+    # > local r_home
+    # > r_home="$(_koopa_r_home)"
+    # > if _koopa_is_cellar R
+    # > then
+    # >     _koopa_set_permissions --recursive "$r_home"
+    # > fi
+
     R --vanilla CMD javareconf "${java_flags[@]}"
+
     if ! _koopa_is_r_package_installed rJava
     then
         Rscript -e 'install.packages("rJava")'
     fi
+
     return 0
 }
