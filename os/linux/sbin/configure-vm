@@ -45,6 +45,8 @@ else
     _koopa_h1 "Configuring virtual machine."
 fi
 
+fix-sudo-setrlimit-error
+
 # Remove default root configuration files.
 sudo rm -fv "/root/."\
 {bash_logout,bash_profile,bashrc,cshrc,profile,tcshrc,zshrc}
