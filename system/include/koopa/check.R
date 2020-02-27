@@ -123,6 +123,7 @@ installed(
         "nproc",
         "numfmt",
         "od",
+        "openssl",
         "parallel",
         "paste",
         "patch",
@@ -303,12 +304,16 @@ if (!isTRUE(docker)) {
         expected = expectedMinorVersion("go")
     )
 }
-checkVersion(
-    name = "Java",
-    whichName = "java",
-    current = currentVersion("java"),
-    expected = expectedVersion("java")
-)
+if (
+    !identical(os, "alpine-3")
+) {
+    checkVersion(
+        name = "Java",
+        whichName = "java",
+        current = currentVersion("java"),
+        expected = expectedVersion("java")
+    )
+}
 if (!isTRUE(docker)) {
     checkVersion(
         name = "Julia",
@@ -343,6 +348,7 @@ if (!isTRUE(docker)) {
 ## Version managers ============================================================
 h2("Version managers")
 if (
+    !identical(os, "alpine-3") &&
     !identical(os, "arch-rolling")
 ) {
     checkVersion(
@@ -403,6 +409,7 @@ if (!isTRUE(docker)) {
 
 ## Cloud APIs ==================================================================
 if (
+    !identical(os, "alpine-3") &&
     !identical(os, "arch-rolling")
 ) {
     h2("Cloud APIs")
@@ -565,7 +572,6 @@ if (!isTRUE(docker)) {
         )
     )
 }
-installed("openssl")
 if (!isTRUE(docker)) {
     installed(
         which = c(
@@ -588,6 +594,7 @@ if (isTRUE(linux)) {
         current = currentVersion("gcc"),
         expected = switch(
             EXPR = os,
+            `alpine-3` = "9.2.0",
             `amzn-2` = "7.3.1",
             `arch-rolling` = "9.2.1",
             `debian-10` = "8.3.0",
