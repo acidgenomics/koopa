@@ -355,3 +355,4 @@ then
 fi
 
 _koopa_success "Configuration completed successfully."
+koopa check
