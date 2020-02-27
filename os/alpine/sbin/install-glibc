@@ -6,7 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
-# glibc fix is required to install conda.
+# Custom glibc library is required to install conda.
 #
 # See also:
 # - https://github.com/sgerrand/alpine-pkg-glibc
@@ -15,6 +15,8 @@ source "${script_dir}/../include/header.sh"
 # - https://hub.docker.com/r/frolvlad/alpine-glibc/
 # - https://hub.docker.com/r/frolvlad/alpine-miniconda3/
 # - https://stackoverflow.com/questions/47177538/
+# - https://github.com/sgerrand/alpine-pkg-glibc/issues/75
+# - https://github.com/sgerrand/alpine-pkg-glibc/issues/97
 #
 # Using modified approach from:
 # https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc/blob/
@@ -24,6 +26,13 @@ source "${script_dir}/../include/header.sh"
 # Executing glibc-bin-2.30-r0.trigger
 # /usr/glibc-compat/sbin/ldconfig: /usr/glibc-compat/lib/ld-linux-x86-64.so.2
 # is not a symbolic link
+#
+# Check ldconfig:
+# > ldd /usr/glibc-compat/lib/libdl.so.2
+# > ldd /usr/glibc-compat/lib/ld-linux-x86-64.so.2
+#
+# Don't want to see:
+# Error relocating /usr/glibc-compat/lib/...
 # """
 
 name="glibc"
@@ -63,6 +72,7 @@ sudo apk add \
     en_US.UTF-8
 
 # docker-alpine-glibc approach for setting C.UTF-8 locale as default.
+# > [[ -n "${LANG:-}" ]] || LANG="C.UTF-8"
 # > /usr/glibc-compat/bin/localedef \
 # >     --charmap UTF-8 "$LANG" \
 # >     --force \
