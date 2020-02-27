@@ -27,7 +27,7 @@ packages=(
     gnu_parallel
     gzip
     make
-    ncurses
+    ncurses-devel
     sudo
     tar
     tree
