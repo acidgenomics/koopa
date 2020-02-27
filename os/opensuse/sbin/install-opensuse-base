@@ -21,6 +21,7 @@ packages=(
     curl
     fish
     gcc
+    gettext
     git
     gnu_parallel
     make
