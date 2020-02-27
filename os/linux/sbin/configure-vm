@@ -45,8 +45,6 @@ else
     _koopa_h1 "Configuring virtual machine."
 fi
 
-_koopa_assert_is_installed gcc make
-
 export FORCE_UNSAFE_CONFIGURE=1
 fix-sudo-setrlimit-error
 
@@ -129,6 +127,8 @@ fi
 
 _koopa_is_rhel_7 && install-rhel-7-base
 _koopa_is_rhel_8 && install-rhel-8-base
+
+_koopa_assert_is_installed gcc make
 
 if [[ "$config" == "constellation-aws" ]]
 then
