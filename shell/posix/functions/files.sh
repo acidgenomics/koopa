@@ -151,7 +151,10 @@ _koopa_find_and_replace_in_files() {  # {{{1
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-02-27.
+    #
+    # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
+    # 'grep --invert-match'.
     # """
     local dir
     dir="${1:-"."}"
@@ -164,7 +167,7 @@ _koopa_find_broken_symlinks() {  # {{{1
             -mindepth 1 \
             -xtype l \
             2>&1 \
-            | grep --invert-match "Permission denied" \
+            | grep -v "Permission denied" \
             | sort \
     )"
 
@@ -246,8 +249,8 @@ _koopa_find_large_dirs() {  # {{{1
             --threshold=100000000 \
             "${dir}"/* \
             2>/dev/null \
-        | sort --numeric-sort \
-        | head --lines=100 \
+        | sort -n \
+        | head -n =100 \
         || true \
     )"
 
@@ -255,10 +258,13 @@ _koopa_find_large_dirs() {  # {{{1
     return 0
 }
 
+# FIXME Add a GNU grep assert check here.
 _koopa_find_large_files() {  # {{{1
     # """
     # Find large files.
     # @note Updated 2020-02-26.
+    #
+    # Note that use of 'grep --null-data' requires GNU grep.
     #
     # Usage of '-size +100M' isn't POSIX.
     #
@@ -282,8 +288,8 @@ _koopa_find_large_files() {  # {{{1
                 --null-data \
                 --invert-match "Permission denied" \
             | xargs -0 du \
-            | sort --numeric-sort \
-            | tail --lines=100 \
+            | sort -n \
+            | tail -n 100 \
     )"
 
     echo "$x"
