@@ -30,6 +30,7 @@ packages=(
     ncurses-devel
     sudo
     tar
+    texlive
     tree
     wget
     which
