@@ -437,6 +437,18 @@ _koopa_assert_is_not_installed() {  # {{{1
     return 0
 }
 
+_koopa_assert_is_opensuse() {  # {{{1
+    # """
+    # Assert that platform is openSUSE.
+    # @note Updated 2020-02-27.
+    # """
+    if ! _koopa_is_opensuse
+    then
+        _koopa_stop "openSUSE is required."
+    fi
+    return 0
+}
+
 _koopa_assert_is_rhel() {  # {{{1
     # """
     # Assert that platform is RHEL.
