@@ -119,10 +119,10 @@ then
     install-arch-base
 elif _koopa_is_debian
 then
-    install-debian-base --all
+    install-debian-base
 elif _koopa_is_fedora
 then
-    install-fedora-base --all
+    install-fedora-base
 elif _koopa_is_opensuse
 then
     install-opensuse-base

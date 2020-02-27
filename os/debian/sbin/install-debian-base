@@ -60,42 +60,13 @@ source "${script_dir}/../include/header.sh"
 # Note that 'golang-go' is not officially supported.
 # """
 
-all=0
-dev=0
-dist_upgrade=0
-extra=0
+_koopa_assert_has_no_args "$@"
 
-while (("$#"))
-do
-    case "$1" in
-        --all)
-            all=1
-            shift 1
-            ;;
-        --dev)
-            dev=1
-            shift 1
-            ;;
-        --dist_upgrade)
-            dist_upgrade=1
-            shift 1
-            ;;
-        --extra)
-            extra=1
-            shift 1
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-done
+dev=1
+extra=1
+upgrade=1
 
-if [[ "$all" -eq 1 ]]
-then
-    dev=1
-    dist_upgrade=1
-    extra=1
-fi
+_koopa_is_docker && extra=0
 
 name_fancy="Debian base system"
 
@@ -124,10 +95,10 @@ then
 Check '/etc/apt/sources.list'."
 fi
 
-# Upgrade distribution  {{{1
+# Upgrade  {{{1
 # ==============================================================================
 
-if [[ "$dist_upgrade" -eq 1 ]]
+if [[ "$upgrade" -eq 1 ]]
 then
     _koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
     sudo apt-get update
