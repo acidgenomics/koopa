@@ -1093,46 +1093,43 @@ _koopa_tmp_file() {  # {{{1
 _koopa_tmp_log_file() {  # {{{1
     # """
     # Create temporary log file.
-    # @note Updated 2020-02-13.
-    #
-    # Note that old version on macOS doesn't support '--suffix' flag.
+    # @note Updated 2020-02-27.
     #
     # Used primarily for debugging cellar make install scripts.
+    #
+    # Note that mktemp on macOS and BusyBox doesn't support '--suffix' flag.
+    # Otherwise, we can use:
+    # > _koopa_mktemp --suffix=".log"
     # """
-    if _koopa_is_macos
-    then
-        _koopa_mktemp
-    else
-        _koopa_mktemp --suffix=".log"
-    fi
+    _koopa_tmp_file
     return 0
 }
 
-# _koopa_unset_internal_functions() {  # {{{1
-#     # """
-#     # Unset all of koopa's internal functions.
-#     # @note Updated 2020-02-19.
-#     #
-#     # Potentially useful as a final clean-up step for activation.
-#     # Note that this will nuke functions currently required for interactive
-#     # prompt, so don't do this yet.
-#     # """
-#     local funs
-#     # Convert the '\n' delimited list into an array.
-#     case "$(_koopa_shell)" in
-#         bash)
-#             mapfile -t funs < <(_koopa_list_internal_functions)
-#             ;;
-#         zsh)
-#             funs=("${(@f)$(_koopa_list_internal_functions)}")
-#             ;;
-#         *)
-#             return 1
-#             ;;
-#     esac
-#     unset -f "${funs[@]}"
-#     return 0
-# }
+# > _koopa_unset_internal_functions() {  # {{{1
+# >     # """
+# >     # Unset all of koopa's internal functions.
+# >     # @note Updated 2020-02-19.
+# >     #
+# >     # Potentially useful as a final clean-up step for activation.
+# >     # Note that this will nuke functions currently required for interactive
+# >     # prompt, so don't do this yet.
+# >     # """
+# >     local funs
+# >     # Convert the '\n' delimited list into an array.
+# >     case "$(_koopa_shell)" in
+# >         bash)
+# >             mapfile -t funs < <(_koopa_list_internal_functions)
+# >             ;;
+# >         zsh)
+# >             funs=("${(@f)$(_koopa_list_internal_functions)}")
+# >             ;;
+# >         *)
+# >             return 1
+# >             ;;
+# >     esac
+# >     unset -f "${funs[@]}"
+# >     return 0
+# > }
 
 _koopa_url() {  # {{{1
     # """
