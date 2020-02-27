@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# glibc fix is required to install conda.
+#
+# See also:
+# - https://github.com/sgerrand/alpine-pkg-glibc
+# - https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc
+# - https://github.com/Docker-Hub-frolvlad/docker-alpine-miniconda3
+# - https://hub.docker.com/r/frolvlad/alpine-glibc/
+# - https://hub.docker.com/r/frolvlad/alpine-miniconda3/
+# - https://stackoverflow.com/questions/47177538/
+#
+# Using modified approach from:
+# https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc/blob/
+#     master/Dockerfile
+# """
+
+name="glibc"
+version="2.30-r0"
+name_fancy="${name} ${version}"
+
+_koopa_install_start "$name_fancy"
+
+apk_file="glibc-${version}.apk"
+pub_key="sgerrand.rsa.pub"
+
+wget "https://alpine-pkgs.sgerrand.com/${pub_key}"
+wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/\
+${version}/${apk_file}"
+
+sudo cp -v "$pub_key" "/etc/apk/keys/${pub_key}"
+sudo apk add "$apk_file"
+
+/usr/glibc-compat/bin/localedef \
+    --charmap UTF-8 "$LANG" \
+    --force \
+    --inputfile POSIX \
+    || true
+
+echo "export LANG=$LANG" | sudo tee "/etc/profile.d/locale.sh"
+
+sudo apk del glibc-i18n
+sudo apk del .build-dependencies
+
+rm "$apk_file" "$pub_key"
+# > sudo rm "/etc/apk/keys/sgerrand.rsa.pub"
+
+_koopa_install_success "$name_fancy"
