@@ -30,6 +30,7 @@ packages=(
     dpkg
     fish
     git
+    libevent
     sudo
     texlive
     tcl
