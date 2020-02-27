@@ -359,22 +359,33 @@ _koopa_install_pip() {  # {{{1
 _koopa_link_docker() {  # {{{1
     # """
     # Link Docker library onto data disk for VM.
-    # @note Updated 2020-01-22.
+    # @note Updated 2020-02-27.
     # """
     _koopa_is_installed docker || return 0
-    _koopa_assert_is_installed systemctl
-    [ -d "/n" ] || return 0
-    _koopa_assert_is_linux
+
+    # e.g. '/mnt/data01/n' to '/n' for AWS.
+    local dd_link_prefix
+    dd_link_prefix="$(_koopa_data_disk_link_prefix)"
+    [ -d "$dd_link_prefix" ] || return 0
+
     _koopa_h2 "Updating Docker configuration."
+    _koopa_assert_is_linux
+    _koopa_assert_is_installed systemctl
+
     _koopa_note "Stopping Docker."
     sudo systemctl stop docker
+
     local lib_sys
     lib_sys="/var/lib/docker"
+
     local lib_n
-    lib_n="/n/var/lib/docker"
+    lib_n="${dd_link_prefix}/var/lib/docker"
+
     local os_id
     os_id="$(_koopa_os_id)"
+
     _koopa_note "Moving Docker lib from '${lib_sys}' to '${lib_n}'."
+
     local etc_source
     etc_source="$(_koopa_prefix)/os/${os_id}/etc/docker"
     if [ -d "$etc_source" ]
@@ -382,29 +393,35 @@ _koopa_link_docker() {  # {{{1
         sudo mkdir -pv "/etc/docker"
         sudo ln -fnsv "${etc_source}"* "/etc/docker/."
     fi
+
     sudo rm -frv "$lib_sys"
     sudo mkdir -pv "$lib_n"
     sudo ln -fnsv "$lib_n" "$lib_sys"
+
     _koopa_note "Restarting Docker."
     sudo systemctl enable docker
     sudo systemctl start docker
+
     return 0
 }
 
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-01-21.
+    # @note Updated 2020-02-27.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
     # """
     local r_home
     r_home="$(_koopa_r_home)"
+
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
+
     local os_id
     os_id="$(_koopa_os_id)"
+
     local r_etc_source
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     if [ ! -d "$r_etc_source" ]
@@ -412,8 +429,10 @@ _koopa_link_r_etc() {  # {{{1
         _koopa_note "Source files missing: '${r_etc_source}'."
         return 0
     fi
+
     _koopa_h2 "Updating '${r_home}'."
     _koopa_ln "${r_etc_source}/"*".site" "${r_home}/etc/."
+
     return 0
 }
 
