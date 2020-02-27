@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Optional dependencies for r
+#     tk: tcl/tk interface
+#     texlive-bin: latex sty files
+#     gcc-fortran: needed to compile some CRAN packages
+#     openblas: faster linear algebra
+#
+# Note that Arch is currently overwriting PS1 for root.
+# This is due to configuration in '/etc/profile'.
+# """
+
+name_fancy="Arch base system"
+
+_koopa_install_start "$name_fancy"
+
+sudo pacman -Syyu --noconfirm
+sudo pacman-db-upgrade
+
+packages=(
+    awk
+    bash
+    fish
+    git
+    grep
+    man
+    parallel
+    r
+    sudo
+    tree
+    wget
+    which
+    zsh
+)
+sudo pacman -S --noconfirm "${packages[@]}"
+
+_koopa_install_success "$name_fancy"

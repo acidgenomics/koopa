@@ -114,6 +114,9 @@ _koopa_h2 "Installing base system."
 if _koopa_is_alpine
 then
     install-alpine-base
+elif _koopa_is_arch
+then
+    install-arch-base
 elif _koopa_is_debian
 then
     install-debian-base --all
