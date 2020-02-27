@@ -14,7 +14,7 @@ source "${script_dir}/../include/header.sh"
 #     vignettes and package manuals will not be rendered optimally
 #"""
 
-if _koopa_is_alpine || _koopa_is_debian
+if _koopa_is_alpine || _koopa_is_arch || _koopa_is_debian
 then
     _koopa_note "Use system R package instead. Skipping."
     exit 0
