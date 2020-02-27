@@ -247,21 +247,27 @@ _koopa_is_file_system_case_sensitive() {  # {{{1
 _koopa_is_function() {  # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-02-27.
+    #
+    # Works in bash, ksh, zsh:
+    # > typeset -f foo
+    #
+    # Works in bash, zsh:
+    # > declare -f foo
+    #
+    # Works in bash:
+    # > [ "$(type -t "$fun")" == "function" ]
+    #
+    # Works in zsh:
+    # > _koopa_is_matching_fixed "$(type "$fun")" "is a shell function"
     #
     # @seealso
-    # https://stackoverflow.com/questions/85880
+    # - https://stackoverflow.com/questions/11478673/
+    # - https://stackoverflow.com/questions/85880/
     # """
     local fun
     fun="${1:?}"
-    case "$(_koopa_shell)" in
-        bash)
-            [ "$(type -t "$fun")" == "function" ]
-            ;;
-        zsh)
-            _koopa_is_matching_fixed "$(type "$fun")" "is a shell function"
-            ;;
-    esac
+    [ -n "$(typeset -f "$fun")" ]
 }
 
 _koopa_is_git() {  # {{{1

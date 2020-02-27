@@ -80,8 +80,8 @@ examples:
     minimal=1 . KOOPA_PREFIX/activate
 
 note:
-    POSIX script.
-    Updated 2020-02-26.
+    POSIX shell script.
+    Updated 2020-02-27.
 EOF
 }
 
@@ -122,7 +122,7 @@ fi
 unset -v force
 export KOOPA_FORCE
 
-# User-specific configuration  {{{2
+# Skip activation  {{{2
 # ------------------------------------------------------------------------------
 
 if [ "$KOOPA_FORCE" -ne 1 ]
@@ -141,6 +141,13 @@ then
     then
         echo "$KOOPA_USERS_SKIP" | grep -Eq "\b${USER}\b" && return 0
     fi
+
+    # Skip if koopa functions have already been sourced.
+    # This step helps avoid double activation in Bash for shared koopa installs,
+    # which will otherwise activate from both '/etc/profile.d/zzz-koopa.sh'
+    # and '~/.bashrc' (if defined).
+    # shellcheck disable=SC2034
+    [ -n "$(typeset -f _koopa_prefix)" ] && return 0
 fi
 
 
@@ -404,13 +411,9 @@ then
     if ! _koopa_is_subshell
     then
         _koopa_today_bucket
+        _koopa_disk_check
+        _koopa_tmux_sessions
     fi
-fi
-
-if ! _koopa_is_subshell
-then
-    _koopa_disk_check
-    _koopa_tmux_sessions
 fi
 
 
@@ -449,7 +452,7 @@ then
         set +o posix
     fi
 
-    _koopa_h2 "Checking shell options."
+    _koopa_h2 "Shell options"
     case "$KOOPA_SHELL" in
         bash)
             shopt
@@ -458,6 +461,11 @@ then
             setopt
             ;;
     esac
+
+    _koopa_h2 "Shell variables"
+    _koopa_dl "SHELL" "$SHELL"
+    _koopa_dl "0" "$0"
+    _koopa_dl "-" "$-"
 
     if [ -n "${KOOPA_DURATION:-}" ]
     then
