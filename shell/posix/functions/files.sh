@@ -258,7 +258,6 @@ _koopa_find_large_dirs() {  # {{{1
     return 0
 }
 
-# FIXME Add a GNU grep assert check here.
 _koopa_find_large_files() {  # {{{1
     # """
     # Find large files.
