@@ -28,6 +28,7 @@ packages=(
     awk
     bash
     fish
+    gcc
     git
     grep
     man
