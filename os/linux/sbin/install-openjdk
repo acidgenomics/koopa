@@ -54,7 +54,10 @@ ${unique}/GPL/${file}"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
 
-_koopa_ln "${jdk_dir}/${version}" "${jdk_dir}/latest"
+(
+    _koopa_cd "$jdk_dir"
+    _koopa_ln "$version" "latest"
+)
 
 _koopa_set_permissions --recursive "$jdk_dir"
 
