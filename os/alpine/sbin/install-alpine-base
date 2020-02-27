@@ -33,6 +33,7 @@ packages=(
     git
     libevent-dev
     libffi-dev
+    openssl
     sudo
     tcl
     texlive
