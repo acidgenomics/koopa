@@ -24,6 +24,7 @@ packages=(
     gettext
     git
     gnu_parallel
+    gzip
     make
     sudo
     tar
