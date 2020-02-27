@@ -155,7 +155,8 @@ _koopa_activate_fzf
 # Note that macOS ships with a very old version of GNU coreutils.
 # Update these using Homebrew.
 
-alias less='less --ignore-case --raw-control-chars'
+# Note that this doesn't work well on Alpine.
+# > alias less='less --ignore-case --raw-control-chars'
 
 make_prefix="$(_koopa_make_prefix)"
 
