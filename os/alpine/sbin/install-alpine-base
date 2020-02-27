@@ -28,32 +28,12 @@ packages=(
     fish
     git
     sudo
+    tee
     wget
     zsh
 )
 sudo apk add "${packages[@]}"
 
-# alpine-pkg-glibc  {{{1
-# ==============================================================================
-
-# glibc fix is required to install conda.
-#
-# See also:
-# - https://github.com/sgerrand/alpine-pkg-glibc
-# - https://hub.docker.com/r/frolvlad/alpine-glibc/
-# - https://stackoverflow.com/questions/47177538/i
-# - https://github.com/Docker-Hub-frolvlad/docker-alpine-miniconda3
-
-version="2.30-r0"
-apk_file="glibc-${version}.apk"
-pub_key="sgerrand.rsa.pub"
-
-wget "https://alpine-pkgs.sgerrand.com/${pub_key}"
-wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${version}/${apk_file}"
-
-sudo cp -v "$pub_key" "/etc/apk/keys/${pub_key}"
-sudo apk add "$apk_file"
-
-rm "$apk_file" "$pub_key"
+install-glibc
 
 _koopa_install_success "$name_fancy"
