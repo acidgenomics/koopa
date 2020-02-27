@@ -25,6 +25,7 @@ sudo pacman -Syyu --noconfirm
 sudo pacman-db-upgrade
 
 packages=(
+    autoconf
     awk
     bash
     fish
