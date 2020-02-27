@@ -29,6 +29,7 @@ packages=(
     R-doc
     autoconf
     bash
+    bash-completion
     build-base
     ca-certificates
     curl
@@ -37,7 +38,9 @@ packages=(
     git
     libevent-dev
     libffi-dev
+    mdocml
     openssl
+    shadow
     sudo
     tcl
     tree
