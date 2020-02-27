@@ -15,7 +15,7 @@ source "${script_dir}/../include/header.sh"
 # """
 
 version="$(_koopa_variable "java")"
-jdk_dir="$(_koopa_app_prefix)/java/openjdk"
+jdk_dir="$(_koopa_openjdk_prefix)"
 prefix="${jdk_dir}/${version}"
 
 name_fancy="OpenJDK ${version}"
@@ -53,6 +53,8 @@ ${unique}/GPL/${file}"
         mv -v "jdk-${version}" "$version"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 fi
+
+_koopa_ln "${jdk_dir}/${version}" "${jdk_dir}/latest"
 
 _koopa_set_permissions --recursive "$jdk_dir"
 

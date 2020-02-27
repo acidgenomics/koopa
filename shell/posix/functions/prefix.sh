@@ -298,6 +298,15 @@ _koopa_msigdb_prefix() {  # {{{1
     return 0
 }
 
+_koopa_openjdk_prefix() {  # {{{1
+    # """
+    # OpenJDK prefix.
+    # @note Updated 2020-02-27.
+    # """
+    echo "$(_koopa_app_prefix)/java/openjdk"
+    return 0
+}
+
 _koopa_perlbrew_prefix() {  # {{{1
     # """
     # Perlbrew prefix.
