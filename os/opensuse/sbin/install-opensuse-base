@@ -15,17 +15,20 @@ sudo zypper refresh
 sudo zypper --non-interactive update
 
 packages=(
+    # fish
+    # gnu_parallel
+    # texlive
+    # zsh
     R-base
     R-base-devel
     autoconf
     bzip2
     curl
-    fish
     gcc
+    gcc-c++
     gcc-fortran
     gettext
     git
-    gnu_parallel
     gzip
     libbz2-devel
     libcurl-devel
@@ -36,12 +39,10 @@ packages=(
     readline-devel
     sudo
     tar
-    texlive
     tree
     wget
     which
     xz
     zlib-devel
-    zsh
 )
 sudo zypper --non-interactive install "${packages[@]}"
