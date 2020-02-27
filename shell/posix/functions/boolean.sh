@@ -449,6 +449,14 @@ _koopa_is_matching_regex() {  # {{{1
     echo "$string" | grep -Eq "$pattern"
 }
 
+_koopa_is_opensuse() {  # {{{1
+    # """
+    # Is the operating system openSUSE?
+    # @note Updated 2020-02-27.
+    # """
+    [ "$(_koopa_os_id)" = "opensuse" ]
+}
+
 _koopa_is_powerful() {  # {{{1
     # """
     # Is the current machine powerful?

@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# openSUSE uses zypper package manager by default.
+# zypper cheat sheet:
+# https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
+# """
+
+sudo zypper refresh
+sudo zypper --non-interactive update
+
+packages=(
+    R-base
+    R-base-devel
+    curl
+    fish
+    git
+    gnu_parallel
+    sudo
+    tree
+    wget
+    which
+    zsh
+)
+sudo zypper --non-interactive install "${packages[@]}"
