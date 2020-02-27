@@ -29,6 +29,7 @@ packages=(
     curl
     dpkg
     fish
+    gettext
     git
     libevent
     sudo
