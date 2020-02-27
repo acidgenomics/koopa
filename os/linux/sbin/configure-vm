@@ -214,7 +214,10 @@ install-openjdk                                                         # 0.316G
 if [[ "$rsync" -eq 0 ]]
 then
     # Environment managers.
-    install-conda                                                       # 0.493G
+    if ! _koopa_is_alpine
+    then
+        install-conda                                                   # 0.493G
+    fi
     if [[ "$docker" -eq 0 ]]
     then
         _koopa_run_if_installed install-docker
