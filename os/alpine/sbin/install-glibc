@@ -37,14 +37,14 @@ ${version}/${apk_file}"
 sudo cp -v "$pub_key" "/etc/apk/keys/${pub_key}"
 sudo apk add "$apk_file"
 
+[[ -z "${LANG:-}" ]] && LANG="C.UTF-8" && export LANG
+echo "export LANG=${LANG}" | sudo tee "/etc/profile.d/locale.sh"
+
 /usr/glibc-compat/bin/localedef \
     --charmap UTF-8 "$LANG" \
     --force \
     --inputfile POSIX \
     || true
-
-[[ -z "${LANG:-}" ]] && LANG="C.UTF-8" && export LANG
-echo "export LANG=${LANG}" | sudo tee "/etc/profile.d/locale.sh"
 
 sudo apk del glibc-i18n
 sudo apk del .build-dependencies
