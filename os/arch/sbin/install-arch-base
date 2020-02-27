@@ -33,6 +33,7 @@ packages=(
     gettext
     git
     grep
+    libevent
     make
     man
     parallel
