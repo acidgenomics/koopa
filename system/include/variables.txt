@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa-version="0.7.0a"
-koopa-date="2020-02-26"
+koopa-date="2020-02-27"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 
