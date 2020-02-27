@@ -521,8 +521,8 @@ installed("shunit2")
 
 
 ## Heavy dependencies ==========================================================
-h2("Heavy dependencies")
 if (!isTRUE(docker)) {
+    h2("Heavy dependencies")
     checkVersion(
         name = "PROJ",
         whichName = "proj",
@@ -575,8 +575,6 @@ if (!isTRUE(docker)) {
             expectedVersion("sqlite")
         )
     )
-}
-if (!isTRUE(docker)) {
     installed(
         which = c(
             "pandoc",
