@@ -32,9 +32,10 @@ packages=(
     gettext
     git
     libevent-dev
+    libffi-dev
     sudo
-    texlive
     tcl
+    texlive
     wget
     zsh
 )
