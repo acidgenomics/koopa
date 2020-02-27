@@ -5,24 +5,55 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Potentially useful flags:
+# > apk add --no-cache --virtual .build-dependencies
+# """
+
 name_fancy="Alpine base system"
 
 _koopa_install_start "$name_fancy"
 
-apk update
-apk upgrade
+sudo apk update
+sudo apk upgrade
 
 packages=(
     R
     R-dev
+    R-doc
     bash
+    ca-certificates
     curl
     dpkg
     fish
     git
     sudo
+    wget
     zsh
 )
-apk add "${packages[@]}"
+sudo apk add "${packages[@]}"
+
+# alpine-pkg-glibc  {{{1
+# ==============================================================================
+
+# glibc fix is required to install conda.
+#
+# See also:
+# - https://github.com/sgerrand/alpine-pkg-glibc
+# - https://hub.docker.com/r/frolvlad/alpine-glibc/
+# - https://stackoverflow.com/questions/47177538/i
+# - https://github.com/Docker-Hub-frolvlad/docker-alpine-miniconda3
+
+version="2.30-r0"
+apk_file="glibc-${version}.apk"
+pub_key="sgerrand.rsa.pub"
+
+wget "https://alpine-pkgs.sgerrand.com/${pub_key}"
+wget "https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${version}/${apk_file}"
+
+sudo cp -v "$pub_key" "/etc/apk/keys/${pub_key}"
+sudo apk add "$apk_file"
+
+rm "$apk_file" "$pub_key"
 
 _koopa_install_success "$name_fancy"
