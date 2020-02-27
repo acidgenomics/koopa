@@ -38,6 +38,7 @@ packages=(
     make
     man
     parallel
+    pkgconf
     r
     sudo
     tcl
