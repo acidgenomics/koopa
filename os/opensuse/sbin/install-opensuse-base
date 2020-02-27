@@ -28,7 +28,7 @@ packages=(
     gnu_parallel
     gzip
     libbz2-devel
-    liblzma5
+    lzma-devel
     make
     ncurses-devel
     readline-devel
