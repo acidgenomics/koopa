@@ -125,6 +125,7 @@ installed(
         "od",
         "parallel",
         "paste",
+        "patch",
         "pathchk",
         "pinky",
         "pr",
@@ -237,6 +238,12 @@ checkVersion(
     whichName = "parallel",
     current = currentVersion("parallel"),
     expected = expectedVersion("parallel")
+)
+checkVersion(
+    name = "patch",
+    whichName = "patch",
+    current = currentVersion("patch"),
+    expected = expectedVersion("patch")
 )
 
 
