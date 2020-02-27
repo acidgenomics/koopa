@@ -30,6 +30,7 @@ packages=(
     bash
     fish
     gcc
+    gettext
     git
     grep
     make
