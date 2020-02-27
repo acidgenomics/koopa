@@ -18,6 +18,7 @@ packages=(
     R-base
     R-base-devel
     autoconf
+    bzip2
     curl
     fish
     gcc
