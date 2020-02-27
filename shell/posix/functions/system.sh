@@ -1162,7 +1162,7 @@ _koopa_user() {  # {{{1
 _koopa_variable() {  # {{{1
     # """
     # Get version stored internally in versions.txt file.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-27.
     # """
     local file
     file="$(_koopa_prefix)/system/include/variables.txt"

@@ -1,3 +1,13 @@
+#' Check failure
+#' @note Updated 2020-02-27.
+#'
+#' Set a system environment variable that we can detect in `koopa check`.
+checkFail <- function() {
+    Sys.setenv("KOOPA_CHECK_FAIL" = 1L)
+}
+
+
+
 #' Check Homebrew Cask version
 #' @note Updated 2020-02-12.
 #'
@@ -43,7 +53,7 @@ checkMacOSAppVersion <- function(name) {
 
 
 #' Check version
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-02-27.
 checkVersion <- function(
     name,
     whichName,
@@ -78,6 +88,9 @@ checkVersion <- function(
     }
     ## Check to see if program is installed.
     if (is.na(current)) {
+        if (isTRUE(required)) {
+            checkFail()
+        }
         message(sprintf(
             fmt = "  %s | %s is not installed.",
             fail, name
@@ -111,6 +124,9 @@ checkVersion <- function(
     if (isTRUE(ok)) {
         status <- statusList[["ok"]]
     } else {
+        if (isTRUE(required)) {
+            checkFail()
+        }
         status <- fail
     }
     msg <- sprintf(
@@ -135,8 +151,12 @@ checkVersion <- function(
 
 
 #' Program installation status
-#' @note Updated 2020-02-06.
-installed <- function(which, required = TRUE, path = TRUE) {
+#' @note Updated 2020-02-27.
+installed <- function(
+    which,
+    required = TRUE,
+    path = TRUE
+) {
     stopifnot(
         is.character(which) && !any(is.na(which)),
         isFlag(required),
@@ -149,6 +169,7 @@ installed <- function(which, required = TRUE, path = TRUE) {
             ok <- nzchar(Sys.which(which))
             if (!isTRUE(ok)) {
                 if (isTRUE(required)) {
+                    checkFail()
                     status <- statusList[["fail"]]
                 } else {
                     status <- statusList[["note"]]
