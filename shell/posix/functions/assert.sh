@@ -113,6 +113,18 @@ _koopa_assert_is_alpine() {  # {{{1
     return 0
 }
 
+_koopa_assert_is_arch() {  # {{{1
+    # """
+    # Assert that platform is Arch.
+    # @note Updated 2020-02-27.
+    # """
+    if ! _koopa_is_arch
+    then
+        _koopa_stop "Arch is required."
+    fi
+    return 0
+}
+
 _koopa_assert_is_cellar() {  # {{{1
     # """
     # Assert that input is a cellarized program.
