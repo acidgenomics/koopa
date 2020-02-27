@@ -37,9 +37,9 @@ _koopa_r_javareconf() {  # {{{1
     # > library(rJava)
     # > .jinit()
     # """
-    _koopa_is_installed R || return 1
+    _koopa_is_installed R || return 0
     _koopa_activate_openjdk
-    _koopa_is_installed java || return 1
+    _koopa_is_installed java || return 0
 
     local java_home
     java_home="$(_koopa_java_home)"
