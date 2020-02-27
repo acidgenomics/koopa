@@ -43,6 +43,7 @@ sudo apk add "$apk_file"
     --inputfile POSIX \
     || true
 
+[[ -z "${LANG:-}" ]] && LANG="C.UTF-8"
 echo "export LANG=$LANG" | sudo tee "/etc/profile.d/locale.sh"
 
 sudo apk del glibc-i18n
