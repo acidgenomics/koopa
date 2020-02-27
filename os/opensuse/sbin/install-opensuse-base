@@ -29,6 +29,7 @@ packages=(
     gzip
     make
     ncurses-devel
+    readline
     sudo
     tar
     texlive
