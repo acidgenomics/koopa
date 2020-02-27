@@ -223,7 +223,7 @@ install-openjdk                                                         # 0.316G
 if [[ "$rsync" -eq 0 ]]
 then
     # Environment managers.
-    if ! _koopa_is_alpine
+    if ! _koopa_is_alpine && ! _koopa_is_opensuse
     then
         install-conda                                                   # 0.493G
     fi
