@@ -391,4 +391,9 @@ then
 fi
 
 _koopa_success "Configuration completed successfully."
+
+export KOOPA_FORCE=1
+# shellcheck disable=SC1090
+source "${koopa_prefix}/activate"
+
 koopa check
