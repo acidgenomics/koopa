@@ -236,7 +236,7 @@ _koopa_find_empty_dirs() {  # {{{1
 _koopa_find_large_dirs() {  # {{{1
     # """
     # Find large directories.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-02-27.
     # """
     local dir
     dir="${1:-"."}"
@@ -250,7 +250,7 @@ _koopa_find_large_dirs() {  # {{{1
             "${dir}"/* \
             2>/dev/null \
         | sort -n \
-        | head -n =100 \
+        | head -n 100 \
         || true \
     )"
 
