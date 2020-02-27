@@ -18,6 +18,7 @@ sudo apk update
 sudo apk upgrade
 
 packages=(
+    .build-dependencies
     R
     R-dev
     R-doc
@@ -32,7 +33,10 @@ packages=(
     wget
     zsh
 )
-sudo apk add "${packages[@]}"
+sudo apk add \
+    --no-cache \
+    --virtual \
+    "${packages[@]}"
 
 install-glibc
 
