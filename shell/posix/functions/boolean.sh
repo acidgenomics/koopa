@@ -101,12 +101,16 @@ _koopa_is_alias() {  # {{{1
     _koopa_is_matching_fixed "$str" "$pattern"
 }
 
-_koopa_is_aws() {  # {{{1
+_koopa_is_alpine() {  # {{{1
     # """
-    # Is the current session running on AWS?
-    # @note Updated 2019-11-25.
+    # Is the operating system Alpine Linux?
+    # @note Updated 2020-02-27.
     # """
-    [ "$(_koopa_host_id)" = "aws" ]
+    _koopa_is_linux || return 1
+    [ -f /etc/os-release ] || return 1
+    grep "ID=" /etc/os-release | grep -q "alpine" && return 0
+    grep "ID_LIKE=" /etc/os-release | grep -q "alpine" && return 0
+    return 1
 }
 
 _koopa_is_amzn() {  # {{{1
@@ -115,6 +119,14 @@ _koopa_is_amzn() {  # {{{1
     # @note Updated 2020-01-21.
     # """
     [ "$(_koopa_os_id)" = "amzn" ]
+}
+
+_koopa_is_aws() {  # {{{1
+    # """
+    # Is the current session running on AWS?
+    # @note Updated 2019-11-25.
+    # """
+    [ "$(_koopa_host_id)" = "aws" ]
 }
 
 _koopa_is_azure() {  # {{{1
