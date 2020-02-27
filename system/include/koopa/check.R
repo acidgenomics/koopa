@@ -182,7 +182,6 @@ installed(
         "xargs",
         "yes"
     ),
-    required = TRUE,
     path = FALSE
 )
 
@@ -566,15 +565,16 @@ if (!isTRUE(docker)) {
         )
     )
 }
-installed(
-    which = c(
-        "openssl",
-        "pandoc",
-        "pandoc-citeproc",
-        "tex"
-    ),
-    required = TRUE
-)
+installed("openssl")
+if (!isTRUE(docker)) {
+    installed(
+        which = c(
+            "pandoc",
+            "pandoc-citeproc",
+            "tex"
+        )
+    )
+}
 
 
 
@@ -700,42 +700,38 @@ if (
         name = "bcbio-nextgen",
         whichName = "bcbio_nextgen.py",
         current = currentVersion("bcbio-nextgen"),
-        expected = expectedVersion("bcbio-nextgen"),
-        required = FALSE
+        expected = expectedVersion("bcbio-nextgen")
     )
     ## > installed("bcbio_vm.py", required = FALSE)
     ## > checkVersion(
     ## >     name = "bcl2fastq",
     ## >     current = currentVersion("bcl2fastq"),
-    ## >     expected = expectedVersion("bcl2fastq")
+    ## >     expected = expectedVersion("bcl2fastq"),
+    ## >     required = FALSE
     ## > )
     checkVersion(
         name = "Lmod",
         whichName = NA,
         current = currentVersion("lmod"),
-        expected = expectedVersion("lmod"),
-        required = FALSE
+        expected = expectedVersion("lmod")
     )
     checkVersion(
         name = "Lua",
         whichName = "lua",
         current = currentVersion("lua"),
-        expected = expectedVersion("lua"),
-        required = FALSE
+        expected = expectedVersion("lua")
     )
     checkVersion(
         name = "LuaRocks",
         whichName = "luarocks",
         current = currentVersion("luarocks"),
-        expected = expectedVersion("luarocks"),
-        required = FALSE
+        expected = expectedVersion("luarocks")
     )
     # > checkVersion(
     # >     name = "Singularity",
     # >     whichName = "singularity",
     # >     current = currentVersion("singularity"),
-    # >     expected = expectedVersion("singularity"),
-    # >     required = FALSE
+    # >     expected = expectedVersion("singularity")
     # > )
 }
 
