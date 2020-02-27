@@ -31,6 +31,7 @@ packages=(
     tree
     wget
     which
+    xz
     zsh
 )
 sudo zypper --non-interactive install "${packages[@]}"
