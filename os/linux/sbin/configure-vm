@@ -45,6 +45,7 @@ else
     _koopa_h1 "Configuring virtual machine."
 fi
 
+export FORCE_UNSAFE_CONFIGURE=1
 fix-sudo-setrlimit-error
 
 # Remove default root configuration files.
