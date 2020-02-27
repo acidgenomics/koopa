@@ -51,14 +51,16 @@ sudo apk add \
     "$apk_dev_file" \
     "$apk_i18n_file"
 
-[[ -z "${LANG:-}" ]] && LANG="C.UTF-8" && export LANG
-echo "export LANG=${LANG}" | sudo tee "/etc/profile.d/locale.sh"
+# > /usr/glibc-compat/bin/localedef \
+# >     -f UTF-8 \
+# >     -i en_US \
+# >     en_US.UTF-8
 
-/usr/glibc-compat/bin/localedef \
-    --charmap UTF-8 "$LANG" \
-    --force \
-    --inputfile POSIX \
-    || true
+# > /usr/glibc-compat/bin/localedef \
+# >     --charmap UTF-8 "$LANG" \
+# >     --force \
+# >     --inputfile POSIX \
+# >     || true
 
 # > sudo apk del glibc-i18n
 # > sudo apk del .build-dependencies
