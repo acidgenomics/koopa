@@ -101,6 +101,18 @@ _koopa_assert_has_sudo() {  # {{{1
     return 0
 }
 
+_koopa_assert_is_alpine() {  # {{{1
+    # """
+    # Assert that platform is Alpine.
+    # @note Updated 2020-02-27.
+    # """
+    if ! _koopa_is_alpine
+    then
+        _koopa_stop "Alpine is required."
+    fi
+    return 0
+}
+
 _koopa_assert_is_cellar() {  # {{{1
     # """
     # Assert that input is a cellarized program.

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name_fancy="Alpine base system"
+
+_koopa_install_start "$name_fancy"
+
+apk update
+apk upgrade
+apk add R bash curl fish git sudo zsh
+
+_koopa_install_success "$name_fancy"
