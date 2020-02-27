@@ -18,6 +18,11 @@ sudo apk update
 sudo apk upgrade
 
 packages=(
+    # pandoc
+    # pandoc-citeproc
+    # fish
+    # texlive
+    # zsh
     .build-dependencies
     R
     R-dev
@@ -28,7 +33,6 @@ packages=(
     ca-certificates
     curl
     dpkg
-    fish
     gettext
     git
     libevent-dev
@@ -36,14 +40,10 @@ packages=(
     openssl
     sudo
     tcl
-    texlive
+    tree
     wget
-    zsh
 )
-sudo apk add \
-    --no-cache \
-    --virtual \
-    "${packages[@]}"
+sudo apk add --no-cache --virtual "${packages[@]}"
 
 # This is required for conda, but v4.8+ errors out for 'linux-musl' anyway.
 # > install-glibc
