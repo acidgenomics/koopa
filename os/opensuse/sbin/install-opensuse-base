@@ -19,6 +19,7 @@ packages=(
     R-base-devel
     autoconf
     bzip2
+    bzip2-devel
     curl
     fish
     gcc
@@ -27,6 +28,7 @@ packages=(
     git
     gnu_parallel
     gzip
+    gzip-devel
     make
     ncurses-devel
     readline-devel
