@@ -62,13 +62,11 @@ sudo apk add \
 # >     --inputfile POSIX \
 # >     || true
 
-# > sudo apk del glibc-i18n
-# > sudo apk del .build-dependencies
-
 rm \
     "$apk_main_file" \
+    "$apk_bin_file" \
+    "$apk_dev_file" \
+    "$apk_i18n_file" \
     "$pub_key"
-
-# > sudo rm "/etc/apk/keys/sgerrand.rsa.pub"
 
 _koopa_install_success "$name_fancy"
