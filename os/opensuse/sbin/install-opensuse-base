@@ -17,10 +17,13 @@ sudo zypper --non-interactive update
 packages=(
     R-base
     R-base-devel
+    autoconf
     curl
     fish
+    gcc
     git
     gnu_parallel
+    make
     sudo
     tree
     wget
