@@ -23,6 +23,7 @@ packages=(
     R-dev
     R-doc
     bash
+    build-base
     ca-certificates
     curl
     dpkg
