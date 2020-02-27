@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-26.
+## Updated 2020-02-27.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -735,3 +735,9 @@ installed(
         "pytest"
     )
 )
+
+
+
+if (Sys.getenv("KOOPA_CHECK_FAIL") == 1L) {
+    stop("System failed checks.")
+}
