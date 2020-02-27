@@ -11,14 +11,18 @@ _koopa_install_start "$name_fancy"
 
 apk update
 apk upgrade
-apk add \
-    R \
-    R-dev \
-    bash \
-    curl \
-    fish \
-    git \
-    sudo \
+
+packages=(
+    R
+    R-dev
+    bash
+    curl
+    dpkg
+    fish
+    git
+    sudo
     zsh
+)
+apk add "${packages[@]}"
 
 _koopa_install_success "$name_fancy"
