@@ -33,10 +33,10 @@ packages=(
     libbz2-devel
     libcurl-devel
     libevent-devel
-    libssl-devel
     lzma-devel
     make
     ncurses-devel
+    openssl-devel
     pcre-devel
     readline-devel
     sudo
