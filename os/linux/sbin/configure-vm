@@ -11,6 +11,7 @@ _koopa_assert_has_no_envs
 
 export FORCE_UNSAFE_CONFIGURE=1
 export KOOPA_FORCE=1
+export PYTHONDONTWRITEBYTECODE=true
 
 _koopa_enable_passwordless_sudo
 fix-sudo-setrlimit-error
