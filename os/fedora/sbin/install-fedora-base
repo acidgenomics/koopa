@@ -51,6 +51,7 @@ pkgs=(
     gnutls
     lua
     make
+    man-db
     ncurses
     openssl
     qpdf
