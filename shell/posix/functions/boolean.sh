@@ -375,6 +375,14 @@ _koopa_is_interactive() {  # {{{1
     echo "$-" | grep -q "i"
 }
 
+_koopa_is_kali() {  # {{{1
+    # """
+    # Is the current platform Kali Linux?
+    # @note Updated 2020-02-27.
+    # """
+    _koopa_is_matching_fixed "$(_koopa_os_string)" "kali"
+}
+
 _koopa_is_linux() {  # {{{1
     # """
     # Is the current operating system Linux?

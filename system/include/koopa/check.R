@@ -351,17 +351,12 @@ if (!isTRUE(docker)) {
 
 ## Version managers ============================================================
 h2("Version managers")
-if (
-    !identical(os, "alpine-3") &&
-    !identical(os, "arch-rolling")
-) {
-    checkVersion(
-        name = "Conda",
-        whichName = "conda",
-        current = currentVersion("conda"),
-        expected = expectedVersion("conda")
-    )
-}
+checkVersion(
+    name = "Conda",
+    whichName = "conda",
+    current = currentVersion("conda"),
+    expected = expectedVersion("conda")
+)
 if (!isTRUE(docker)) {
     checkVersion(
         name = "Perl : Perlbrew",
@@ -414,7 +409,8 @@ if (!isTRUE(docker)) {
 ## Cloud APIs ==================================================================
 if (
     !identical(os, "alpine-3") &&
-    !identical(os, "arch-rolling")
+    !identical(os, "arch-rolling") &&
+    !identical(os, "opensuse-leap-15")
 ) {
     h2("Cloud APIs")
     checkVersion(
@@ -601,6 +597,7 @@ if (isTRUE(linux)) {
             `arch-rolling` = "9.2.1",
             `debian-10` = "8.3.0",
             `fedora-31` = "9.2.1",
+            `opensuse-leap-15` = "7.5.0",
             `rhel-7` = "4.8.5",
             `rhel-8` = "8.2.1",
             `ubuntu-18` = "7.4.0",
