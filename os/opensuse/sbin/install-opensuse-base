@@ -15,12 +15,12 @@ sudo zypper refresh
 sudo zypper --non-interactive update
 
 packages=(
+    # R-base
+    # R-base-devel
     # fish
     # gnu_parallel
     # texlive
     # zsh
-    R-base
-    R-base-devel
     autoconf
     bzip2
     curl
