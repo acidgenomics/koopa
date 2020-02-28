@@ -45,11 +45,11 @@ tmp_dir="$(_koopa_tmp_dir)"
     case "$name" in
         anaconda3)
             case "${OSTYPE:?}" in
-                linux-gnu)
-                    script="Anaconda3-${version}-Linux-x86_64.sh"
-                    ;;
                 darwin*)
                     script="Anaconda3-${version}-MacOSX-x86_64.sh"
+                    ;;
+                linux*)
+                    script="Anaconda3-${version}-Linux-x86_64.sh"
                     ;;
                 *)
                     _koopa_stop "'${OSTYPE}' is not supported."
@@ -60,11 +60,11 @@ tmp_dir="$(_koopa_tmp_dir)"
         miniconda3)
             # Note that versioned script for v4.8+ currently isn't available.
             case "${OSTYPE:?}" in
-                linux-gnu)
-                    script="Miniconda3-latest-Linux-x86_64.sh"
-                    ;;
                 darwin*)
                     script="Miniconda3-latest-MacOSX-x86_64.sh"
+                    ;;
+                linux*)
+                    script="Miniconda3-latest-Linux-x86_64.sh"
                     ;;
                 *)
                     _koopa_stop "'${OSTYPE}' is not supported."
