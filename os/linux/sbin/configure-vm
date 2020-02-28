@@ -5,7 +5,25 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+_koopa_h1 "Configuring virtual machine."
+
 _koopa_assert_has_no_envs
+
+export FORCE_UNSAFE_CONFIGURE=1
+export KOOPA_FORCE=1
+
+_koopa_enable_passwordless_sudo
+fix-sudo-setrlimit-error
+
+# Remove default configuration files.
+sudo rm -frv /etc/skel /root
+sudo mkdir -pv /root
+sudo chmod 0700 /root
+# > sudo mkdir -pv /etc/skel
+# > sudo chmod 0755 /etc/skel
+
+# shellcheck disable=SC1090
+source "${koopa_prefix}/activate"
 
 # e.g. '/usr/local/koopa'.
 koopa_prefix="$(_koopa_prefix)"
@@ -38,31 +56,8 @@ case "$config" in
         ;;
 esac
 
-if [[ -n "$config" ]]
-then
-    _koopa_h1 "Configuring '${config}' virtual machine."
-else
-    _koopa_h1 "Configuring virtual machine."
-fi
-
-export FORCE_UNSAFE_CONFIGURE=1
-export KOOPA_FORCE=1
-
-_koopa_enable_passwordless_sudo
-fix-sudo-setrlimit-error
-
-# Remove default configuration files.
-sudo rm -frv \
-    "/etc/skel/.?"* \
-    "/root/.?"* \
-    "/root/?"*
-
-# shellcheck disable=SC1090
-source "${koopa_prefix}/activate"
-
-_koopa_install_dotfiles
-
 _koopa_update_etc_profile_d
+_koopa_install_dotfiles
 _koopa_mkdir "$make_prefix"
 
 # Prepare app prefix on external disk for write access.
