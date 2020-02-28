@@ -1,17 +1,11 @@
 #' Current version of installed program
-#' @note Updated 2020-02-12.
-#'
-#' Be aware that current 'Renviron.site' configuration restricts PATH so that
-#' koopa installation is not visible in R.
-#'
-#' Our internal 'check.R' script runs with '--vanilla' flag to avoid this.
+#' @note Updated 2020-02-28.
 currentVersion <- function(name, fun = "get-version") {
-    stopifnot(isCommand("koopa"))
     # Ensure spaces are escaped.
     name <- paste0("'", name, "'")
     tryCatch(
         expr = shell(
-            command = "koopa",
+            command = koopa,
             args = c(fun, name),
             stdout = TRUE,
             stderr = FALSE
@@ -70,16 +64,10 @@ currentMinorVersion <- function(name) {
 
 
 #' Expected version
-#' @note Updated 2020-02-11.
+#' @note Updated 2020-02-28.
 expectedVersion <- function(x) {
     x <- kebabCase(x)
-    variablesFile <- file.path(
-        Sys.getenv("KOOPA_PREFIX"),
-        "system",
-        "include",
-        "variables.txt"
-    )
-    variables <- readLines(variablesFile)
+    variables <- readLines(.variablesFile)
     keep <- grepl(pattern = paste0("^", x, "="), x = variables)
     stopifnot(sum(keep, na.rm = TRUE) == 1L)
     x <- variables[keep]

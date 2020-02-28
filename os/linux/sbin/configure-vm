@@ -244,17 +244,17 @@ then
 
     # General tools.
     install-git                                                         # 0.177G
+    install-gnupg                                                       # 0.038G
     if [[ "$docker" -eq 0 ]]
     then
-        install-gnupg                                                   # 0.038G
         install-lua                                                     # 0.001G
         install-luarocks                                                # 0.002G
     fi
 
     # Password management.
+    install-pass
     if [[ "$docker" -eq 0 ]]
     then
-        install-pass
         install-docker-credential-pass
     fi
 
