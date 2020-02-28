@@ -48,7 +48,7 @@ packages=(
 )
 sudo apk add --no-cache --virtual "${packages[@]}"
 
-# This is required for conda, but v4.8+ errors out for 'linux-musl' anyway.
-# > install-glibc
+# Conda requires glibc, but alpine uses musl libc.
+install-glibc
 
 _koopa_install_success "$name_fancy"
