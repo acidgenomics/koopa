@@ -1,10 +1,5 @@
 #!/usr/bin/env Rscript
 
-options(
-    "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L))
-)
-
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]

@@ -540,8 +540,9 @@ _koopa_is_rhel() {  # {{{1
 _koopa_is_rhel_7() {  # {{{1
     # """
     # Is the operating system RHEL 7?
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-02-28.
     # """
+    _koopa_is_amzn && return 0
     _koopa_is_rhel || return 1
     [ -f /etc/os-release ] || return 1
     grep -q 'VERSION_ID="7' /etc/os-release || return 1

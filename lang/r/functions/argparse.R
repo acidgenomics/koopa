@@ -15,7 +15,7 @@ koopaHelp <- function() {
     file <- args[file]
     file <- sub(pattern = "^--file=", replacement = "", x = file)
     name <- basename(file)
-    system2(command = "man", args = name)
+    shell(command = "man", args = name)
     quit()
 }
 

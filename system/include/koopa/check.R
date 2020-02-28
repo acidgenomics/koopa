@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-27.
+## Updated 2020-02-28.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -12,47 +12,20 @@
 ## # Try: gem pristine commonmarker --version 0.17.13
 ## """
 
-options(
-    "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L))
-)
-
 koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(isTRUE(nzchar(koopaPrefix)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-library(methods)
-
-koopa <- file.path(koopaPrefix, "bin", "koopa")
-stopifnot(file.exists(koopa))
-
-shell <- Sys.getenv("KOOPA_SHELL")
-stopifnot(isTRUE(nzchar(shell)))
-
-host <- system2(command = koopa, args = "host-id", stdout = TRUE)
-stopifnot(isTRUE(nzchar(host)))
-
-os <- system2(command = koopa, args = "os-string", stdout = TRUE)
-stopifnot(isTRUE(nzchar(os)))
-
-macos <- isMacOS()
-if (isTRUE(macos)) {
-    linux <- FALSE
-} else {
-    linux <- TRUE
-}
-
-if (Sys.getenv("KOOPA_EXTRA") == 1L) {
-    extra <- TRUE
-} else {
-    extra <- FALSE
-}
-
-docker <- isDocker()
-
 h1("Checking koopa installation")
 
+macos <- isMacOS()
+linux <- !macos
 
+host <- shell(command = koopa, args = "host-id", stdout = TRUE)
+os <- shell(command = koopa, args = "os-string", stdout = TRUE)
+
+docker <- isDocker()
+extra <- if (Sys.getenv("KOOPA_EXTRA") == 1L) TRUE else FALSE
 
 ## Basic dependencies ==========================================================
 h2("Basic dependencies")
@@ -97,6 +70,8 @@ installed(
         "find",
         "fmt",
         "fold",
+        "g++",
+        "gcc",
         "grep",
         "groups",
         "head",
@@ -186,13 +161,9 @@ installed(
     path = FALSE
 )
 
-
-
 ## Shells ======================================================================
 h2("Shells")
-if (
-    !identical(os, "alpine-3")
-) {
+if (!identical(os, "alpine-3")) {
     checkVersion(
         name = "Bash",
         whichName = "bash",
@@ -214,8 +185,6 @@ if (!isTRUE(docker)) {
         expected = expectedVersion("fish")
     )
 }
-
-
 
 ## GNU packages ================================================================
 h2("GNU packages")
@@ -250,8 +219,6 @@ checkVersion(
     expected = expectedVersion("patch")
 )
 
-
-
 ## Editors =====================================================================
 h2("Editors")
 if (!isTRUE(docker)) {
@@ -281,8 +248,6 @@ checkVersion(
     expected = expectedMinorVersion("vim")
 )
 
-
-
 ## Languages ===================================================================
 h2("Primary languages")
 checkVersion(
@@ -291,8 +256,6 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-# Can use `packageVersion("base")` instead but it doesn't always return the
-# correct value for RStudio Server Pro.
 checkVersion(
     name = "R",
     current = currentVersion("r"),
@@ -308,9 +271,7 @@ if (!isTRUE(docker)) {
         expected = expectedMinorVersion("go")
     )
 }
-if (
-    !identical(os, "alpine-3")
-) {
+if (!identical(os, "alpine-3")) {
     checkVersion(
         name = "Java",
         whichName = "java",
@@ -346,8 +307,6 @@ if (!isTRUE(docker)) {
         expected = expectedVersion("rust")
     )
 }
-
-
 
 ## Version managers ============================================================
 h2("Version managers")
@@ -404,8 +363,6 @@ if (!isTRUE(docker)) {
     )
 }
 
-
-
 ## Cloud APIs ==================================================================
 if (
     !identical(os, "alpine-3") &&
@@ -433,8 +390,6 @@ if (
     )
 }
 
-
-
 ## Tools =======================================================================
 h2("Tools")
 checkVersion(
@@ -454,8 +409,6 @@ checkVersion(
     current = currentVersion("neofetch"),
     expected = expectedVersion("neofetch")
 )
-
-
 
 ## Shell tools =================================================================
 h2("Shell tools")
@@ -513,8 +466,6 @@ checkVersion(
     expected = expectedVersion("shellcheck")
 )
 installed("shunit2")
-
-
 
 ## Heavy dependencies ==========================================================
 if (!isTRUE(docker)) {
@@ -580,37 +531,21 @@ if (!isTRUE(docker)) {
     )
 }
 
-
-
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
     h2("Linux specific")
-    ## https://gcc.gnu.org/releases.html
     checkVersion(
-        name = "GCC",
-        whichName = "gcc",
-        current = currentVersion("gcc"),
-        expected = switch(
-            EXPR = os,
-            `alpine-3` = "9.2.0",
-            `amzn-2` = "7.3.1",
-            `arch-rolling` = "9.2.1",
-            `debian-10` = "8.3.0",
-            `fedora-31` = "9.2.1",
-            `opensuse-leap-15` = "7.5.0",
-            `rhel-7` = "4.8.5",
-            `rhel-8` = "8.2.1",
-            `ubuntu-18` = "7.4.0",
-            NA
-        )
+        name = "GnuPG",
+        whichName = "gpg",
+        current = currentVersion("gnupg"),
+        expected = expectedVersion("gpg")
+    )
+    checkVersion(
+        name = "pass",
+        current = currentVersion("pass"),
+        expected = expectedVersion("pass")
     )
     if (!isTRUE(docker)) {
-        checkVersion(
-            name = "GnuPG",
-            whichName = "gpg",
-            current = currentVersion("gnupg"),
-            expected = expectedVersion("gpg")
-        )
         checkVersion(
             name = "RStudio Server",
             whichName = "rstudio-server",
@@ -618,29 +553,17 @@ if (isTRUE(linux)) {
             expected = expectedVersion("rstudio-server")
         )
         checkVersion(
-            name = "pass",
-            current = currentVersion("pass"),
-            expected = expectedVersion("pass")
-        )
-        checkVersion(
             name = "docker-credential-pass",
             current = currentVersion("docker-credential-pass"),
             expected = expectedVersion("docker-credential-pass")
         )
+        checkVersion(
+            name = "rename (Perl File::Rename)",
+            whichName = "rename",
+            current = currentVersion("perl-file-rename"),
+            expected = expectedVersion("perl-file-rename")
+        )
     }
-    ## This is used for shebang. Version 8.30 marks support of `-S` flag.
-    ## > checkVersion(
-    ## >     name = "env (coreutils)",
-    ## >     whichName = "env",
-    ## >     current = currentVersion("env"),
-    ## >     expected = expectedVersion("coreutils")
-    ## > )
-    ## > checkVersion(
-    ## >     name = "rename (Perl File::Rename)",
-    ## >     whichName = "rename",
-    ## >     current = currentVersion("perl-file-rename"),
-    ## >     expected = expectedVersion("perl-file-rename")
-    ## > )
 } else if (isTRUE(macos)) {
     h2("macOS specific")
     checkVersion(
@@ -680,8 +603,6 @@ if (isTRUE(linux)) {
     ))
     checkHomebrewCaskVersion("gpg-suite")
 }
-
-
 
 ## High performance ============================================================
 if (
@@ -741,8 +662,6 @@ if (
     # > )
 }
 
-
-
 ## Python packages =============================================================
 h2("Python packages")
 installed(
@@ -753,8 +672,6 @@ installed(
         "pytest"
     )
 )
-
-
 
 if (Sys.getenv("KOOPA_CHECK_FAIL") == 1L) {
     stop("System failed checks.")
