@@ -10,7 +10,7 @@ currentVersion <- function(name, fun = "get-version") {
     # Ensure spaces are escaped.
     name <- paste0("'", name, "'")
     tryCatch(
-        expr = system2(
+        expr = shell(
             command = "koopa",
             args = c(fun, name),
             stdout = TRUE,
