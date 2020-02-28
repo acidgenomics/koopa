@@ -60,6 +60,7 @@ installed(
     which = c(
         ## "[",
         ## "basenc",
+        ## "chsh",  # lchsh on Fedora
         ## "rename",
         ## "top",
         ## "uptime",
@@ -74,7 +75,6 @@ installed(
         "chmod",
         "chown",
         "chroot",
-        "chsh",
         "cksum",
         "comm",
         "cp",
