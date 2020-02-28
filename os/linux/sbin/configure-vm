@@ -22,8 +22,8 @@ sudo chmod 0700 /root
 # > sudo mkdir -pv /etc/skel
 # > sudo chmod 0755 /etc/skel
 
-# shellcheck disable=SC1090
-source "${koopa_prefix}/activate"
+# shellcheck disable=SC1090,SC2153
+source "${KOOPA_PREFIX}/activate"
 
 # e.g. '/usr/local/koopa'.
 koopa_prefix="$(_koopa_prefix)"
