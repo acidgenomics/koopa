@@ -16,9 +16,6 @@ koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(isTRUE(nzchar(koopaPrefix)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-koopa <- file.path(koopaPrefix, "bin", "koopa")
-stopifnot(file.exists(koopa))
-
 h1("Checking koopa installation")
 
 macos <- isMacOS()
