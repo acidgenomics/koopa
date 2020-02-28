@@ -47,7 +47,7 @@ tmp_dir="$(_koopa_tmp_dir)"
 ${unique}/GPL/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
-    _koopa_mv "jdk-${version}" "$prefix"
+    mv "jdk-${version}" "$prefix"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
