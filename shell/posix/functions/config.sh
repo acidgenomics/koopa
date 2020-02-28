@@ -356,6 +356,50 @@ _koopa_install_pip() {  # {{{1
     return 0
 }
 
+_koopa_java_update_alternatives() {
+    # """
+    # Update Java alternatives.
+    # @note Updated 2020-02-28.
+    # """
+    _koopa_is_installed update-alternatives || return 0
+    local prefix
+    prefix="${1:?}"
+    prefix="$(realpath "$prefix")"
+    local priority
+    priority="100"
+    sudo rm -fv /var/lib/alternatives/java
+    sudo update-alternatives --install \
+        "/usr/bin/java" \
+        "java" \
+        "${prefix}/bin/java" \
+        "$priority"
+    sudo update-alternatives --set \
+        "java" \
+        "${prefix}/bin/java"
+    sudo rm -fv /var/lib/alternatives/javac
+    sudo update-alternatives --install \
+        "/usr/bin/javac" \
+        "javac" \
+        "${prefix}/bin/javac" \
+        "$priority"
+    sudo update-alternatives --set \
+        "javac" \
+        "${prefix}/bin/javac"
+    sudo rm -fv /var/lib/alternatives/jar
+    sudo update-alternatives --install \
+        "/usr/bin/jar" \
+        "jar" \
+        "${prefix}/bin/jar" \
+        "$priority"
+    sudo update-alternatives --set \
+        "jar" \
+        "${prefix}/bin/jar"
+    update-alternatives --display java
+    update-alternatives --display javac
+    update-alternatives --display jar
+    return 0
+}
+
 _koopa_link_docker() {  # {{{1
     # """
     # Link Docker library onto data disk for VM.
