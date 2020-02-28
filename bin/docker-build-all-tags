@@ -2,11 +2,12 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-02-24.
+## Updated 2020-02-27.
 ## """
 
 options(
     "error" = quote(quit(status = 1L)),
+    "warn" = 2L,
     "warning" = quote(quit(status = 1L))
 )
 
