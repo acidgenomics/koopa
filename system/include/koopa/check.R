@@ -73,6 +73,8 @@ installed(
         "find",
         "fmt",
         "fold",
+        "g++",
+        "gcc",
         "grep",
         "groups",
         "head",
@@ -533,64 +535,39 @@ if (!isTRUE(docker)) {
 }
 
 ## OS-specific =================================================================
-if (isTRUE(linux)) {
+if (
+    isTRUE(linux) &&
+    !isTRUE(docker)
+) {
     h2("Linux specific")
-    ## https://gcc.gnu.org/releases.html
     checkVersion(
-        name = "GCC",
-        whichName = "gcc",
-        current = currentVersion("gcc"),
-        expected = switch(
-            EXPR = os,
-            `alpine-3` = "9.2.0",
-            `amzn-2` = "7.3.1",
-            `arch-rolling` = "9.2.1",
-            `debian-10` = "8.3.0",
-            `fedora-31` = "9.2.1",
-            `opensuse-leap-15` = "7.5.0",
-            `rhel-7` = "4.8.5",
-            `rhel-8` = "8.2.1",
-            `ubuntu-18` = "7.4.0",
-            NA
-        )
+        name = "GnuPG",
+        whichName = "gpg",
+        current = currentVersion("gnupg"),
+        expected = expectedVersion("gpg")
     )
-    if (!isTRUE(docker)) {
-        checkVersion(
-            name = "GnuPG",
-            whichName = "gpg",
-            current = currentVersion("gnupg"),
-            expected = expectedVersion("gpg")
-        )
-        checkVersion(
-            name = "RStudio Server",
-            whichName = "rstudio-server",
-            current = currentVersion("rstudio-server"),
-            expected = expectedVersion("rstudio-server")
-        )
-        checkVersion(
-            name = "pass",
-            current = currentVersion("pass"),
-            expected = expectedVersion("pass")
-        )
-        checkVersion(
-            name = "docker-credential-pass",
-            current = currentVersion("docker-credential-pass"),
-            expected = expectedVersion("docker-credential-pass")
-        )
-    }
-    ## This is used for shebang. Version 8.30 marks support of `-S` flag.
-    ## > checkVersion(
-    ## >     name = "env (coreutils)",
-    ## >     whichName = "env",
-    ## >     current = currentVersion("env"),
-    ## >     expected = expectedVersion("coreutils")
-    ## > )
-    ## > checkVersion(
-    ## >     name = "rename (Perl File::Rename)",
-    ## >     whichName = "rename",
-    ## >     current = currentVersion("perl-file-rename"),
-    ## >     expected = expectedVersion("perl-file-rename")
-    ## > )
+    checkVersion(
+        name = "RStudio Server",
+        whichName = "rstudio-server",
+        current = currentVersion("rstudio-server"),
+        expected = expectedVersion("rstudio-server")
+    )
+    checkVersion(
+        name = "pass",
+        current = currentVersion("pass"),
+        expected = expectedVersion("pass")
+    )
+    checkVersion(
+        name = "docker-credential-pass",
+        current = currentVersion("docker-credential-pass"),
+        expected = expectedVersion("docker-credential-pass")
+    )
+    checkVersion(
+        name = "rename (Perl File::Rename)",
+        whichName = "rename",
+        current = currentVersion("perl-file-rename"),
+        expected = expectedVersion("perl-file-rename")
+    )
 } else if (isTRUE(macos)) {
     h2("macOS specific")
     checkVersion(
