@@ -28,23 +28,34 @@ EOF
 _koopa_yum_add_google_cloud_sdk_repo() {  # {{{1
     # """
     # Add Google Cloud SDK yum repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-02-28.
     #
     # Spacing is important in the 'gpgkey' section.
     #
     # @seealso
-    # https://cloud.google.com/sdk/docs/downloads-yum
+    # - https://cloud.google.com/sdk/docs/downloads-yum
+    #
+    # Installation on Amazon Linux 2:
+    # - https://github.com/kubernetes/kubernetes/issues/60134
+    # - https://github.com/GoogleCloudPlatform/google-fluentd/issues/136
     # """
     local file
     file="/etc/yum.repos.d/google-cloud-sdk.repo"
     [ -f "$file" ] && return 0
+    local repo_gpgcheck
+    if _koopa_is_amzn
+    then
+        repo_gpgcheck=0
+    else
+        repo_gpgcheck=1
+    fi
     sudo tee "$file" > /dev/null << EOF
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
 enabled=1
 gpgcheck=1
-repo_gpgcheck=1
+repo_gpgcheck=${repo_gpgcheck}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
