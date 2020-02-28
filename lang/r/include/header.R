@@ -1,3 +1,8 @@
+## """
+## Shared Rscript header.
+## @note Updated 2020-02-28.
+## """
+
 options(
     ## "verbose" = TRUE
     "error" = quote(quit(status = 1L)),
