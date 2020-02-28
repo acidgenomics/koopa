@@ -60,7 +60,9 @@ install-fedora-base "$@"
 
 _koopa_h2 "Installing default packages."
 enable-epel-7
-install-yum-cron
+
+# This doesn't work on Amazon Linux, so skipping.
+# > install-yum-cron
 
 # developer  {{{1
 # ==============================================================================
