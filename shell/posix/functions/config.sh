@@ -40,7 +40,7 @@ _koopa_add_to_user_profile() {  # {{{1
 _koopa_add_user_to_etc_passwd() {  # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-02-28.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
@@ -50,7 +50,7 @@ _koopa_add_user_to_etc_passwd() {  # {{{1
     passwd_file="/etc/passwd"
     [ -f "$passwd_file" ] || return 1
     local user
-    user="${USER:?}"
+    user="${1:-${USER:?}}"
     local user_string
     user_string="$(getent passwd "$user")"
     _koopa_h2 "Updating '${passwd_file}' to include '${user}'."
