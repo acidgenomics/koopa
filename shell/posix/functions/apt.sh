@@ -20,13 +20,18 @@ ${os_codename} main" \
 _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-02-27.
     # """
     local file
     file="/etc/apt/sources.list.d/docker.list"
     [ -f "$file" ] && return 0
     local os_id
-    os_id="$(_koopa_os_id)"
+    if _koopa_is_ubuntu
+    then
+        os_id="ubuntu"
+    else
+        os_id="debian"
+    fi
     local os_codename
     os_codename="$(_koopa_os_codename)"
     echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} \
