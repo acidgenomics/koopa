@@ -601,6 +601,7 @@ if (isTRUE(linux)) {
             `arch-rolling` = "9.2.1",
             `debian-10` = "8.3.0",
             `fedora-31` = "9.2.1",
+            `opensuse-leap-15` = "7.5.0",
             `rhel-7` = "4.8.5",
             `rhel-8` = "8.2.1",
             `ubuntu-18` = "7.4.0",
