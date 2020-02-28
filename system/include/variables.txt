@@ -29,7 +29,7 @@ aspera="3.9.7"
 autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
-aws-cli="2.0.0"
+aws-cli="2.0.1"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.1.0"
