@@ -831,7 +831,7 @@ _koopa_os_codename() {  # {{{1
 _koopa_os_id() {  # {{{1
     # """
     # Operating system ID.
-    # @note Updated 2020-02-27..
+    # @note Updated 2020-02-27.
     #
     # Just return the OS platform ID (e.g. "debian").
     # """
