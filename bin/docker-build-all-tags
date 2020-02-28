@@ -40,7 +40,7 @@ if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
 }
 
 ## Build the versioned images, defined by `Dockerfile` in the subdirectories.
-mapply(
+status <- mapply(
     tag = tags,
     MoreArgs = list(image = image),
     FUN = function(image, tag) {
@@ -57,8 +57,9 @@ mapply(
         )
     },
     USE.NAMES = FALSE,
-    SIMPLIFY = FALSE
+    SIMPLIFY = TRUE
 )
+stopifnot(all(status == 0L))
 
 ## Update "latest" tag, if necessary.
 latestFile <- file.path(imageDir, "latest")
