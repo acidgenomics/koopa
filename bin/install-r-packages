@@ -1,10 +1,5 @@
 #!/usr/bin/env Rscript
 
-options(
-    "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L))
-)
-
 ## """
 ## CRAN removals:
 ## > remove.packages("Matrix.utils")
@@ -55,6 +50,13 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
 
 h1("Install R packages")
 
+h2("Tricky packages")
+install(
+    pkgs = c(
+        "rJava"
+    )
+)
+
 h2("CRAN")
 install(
     pkgs = c(
@@ -83,7 +85,6 @@ install(
         "patrick",
         "pbapply",
         "pkgdown",
-        "rJava",
         "rcmdcheck",
         "remotes",
         "reprex",
