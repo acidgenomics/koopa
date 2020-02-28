@@ -1,12 +1,9 @@
 #!/usr/bin/env Rscript
 
+## """
 ## List user-accessible programs exported in PATH.
-## Updated 2019-11-26.
-
-options(
-    error = quote(quit(status = 1L)),
-    warning = quote(quit(status = 1L))
-)
+## Updated 2020-02-28.
+## """
 
 message("koopa programs exported in PATH.")
 
