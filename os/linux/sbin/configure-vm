@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+set -Eeux -o pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
@@ -24,7 +24,12 @@ sudo chmod 0700 /root
 # > sudo chmod 0755 /etc/skel
 
 # shellcheck disable=SC1090,SC2153
-source "${KOOPA_PREFIX}/activate"
+if [ "$(id -u)" -eq 0 ]
+then
+    set +u
+    source "${KOOPA_PREFIX}/activate"
+    set -u
+fi
 
 # e.g. '/usr/local/koopa'.
 koopa_prefix="$(_koopa_prefix)"
