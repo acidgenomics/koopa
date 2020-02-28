@@ -46,44 +46,17 @@ else
 fi
 
 export FORCE_UNSAFE_CONFIGURE=1
-fix-sudo-setrlimit-error
-
-# Remove default root configuration files.
-sudo rm -fv "/root/."\
-{bash_logout,bash_profile,bashrc,cshrc,profile,tcshrc,zshrc}
-
-# Remove default user shell configuration files.
-sudo rm -fv "/etc/skel/."\
-{bash_logout,bash_profile,bashrc,cshrc,emacs,profile,tcshrc,zshrc}
-
-# Remove local user install cruft.
-rm -frv \
-    "${HOME}/.local/bin/activate-global-python-argcomplete" \
-    "${HOME}/.local/bin/black" \
-    "${HOME}/.local/bin/blackd" \
-    "${HOME}/.local/bin/distro" \
-    "${HOME}/.local/bin/epylint" \
-    "${HOME}/.local/bin/flake8" \
-    "${HOME}/.local/bin/pipx" \
-    "${HOME}/.local/bin/py.test" \
-    "${HOME}/.local/bin/pyflakes" \
-    "${HOME}/.local/bin/pylint" \
-    "${HOME}/.local/bin/pyreverse" \
-    "${HOME}/.local/bin/pytest" \
-    "${HOME}/.local/bin/python-argcomplete-check-easy-install-script" \
-    "${HOME}/.local/bin/python-argcomplete-tcsh" \
-    "${HOME}/.local/bin/register-python-argcomplete" \
-    "${HOME}/.local/bin/symilar" \
-    "${HOME}/.local/bin/userpath" \
-    "${HOME}/.local/lib/python3.7" \
-    "${HOME}/.local/lib/python3.8" \
-    "${HOME}/.local/pipx" \
-    "${HOME}/.local/share/pyenv" \
-    "${HOME}/.local/share/rbenv" \
-    "${HOME}/.local/share/virtualenvs" \
-    "${HOME}/.virtualenvs"
 
 _koopa_enable_passwordless_sudo
+fix-sudo-setrlimit-error
+
+# Remove default configuration files.
+sudo rm -fv \
+    "/etc/skel/."* \
+    "/root/."*
+
+_koopa_install_dotfiles
+
 _koopa_update_etc_profile_d
 _koopa_mkdir "$make_prefix"
 
