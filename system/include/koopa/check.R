@@ -353,7 +353,7 @@ if (!isTRUE(docker)) {
         name = "Rust : cargo",
         whichName = "cargo",
         current = currentVersion("cargo"),
-        expected = expectedVersion("rust")
+        expected = expectedVersion("cargo")
     )
     checkVersion(
         name = "Rust : rustup",

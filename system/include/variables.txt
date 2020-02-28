@@ -51,6 +51,9 @@ bcl2fastq="2.20.0.422"
 # https://github.com/Canop/broot
 broot="0.13.2"
 
+# https://crates.io/
+cargo="1.41.0"
+
 # Apple Xcode version
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
