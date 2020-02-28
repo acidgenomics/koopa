@@ -532,10 +532,7 @@ if (!isTRUE(docker)) {
 }
 
 ## OS-specific =================================================================
-if (
-    isTRUE(linux) &&
-    !isTRUE(docker)
-) {
+if (isTRUE(linux)) {
     h2("Linux specific")
     checkVersion(
         name = "GnuPG",
@@ -544,27 +541,29 @@ if (
         expected = expectedVersion("gpg")
     )
     checkVersion(
-        name = "RStudio Server",
-        whichName = "rstudio-server",
-        current = currentVersion("rstudio-server"),
-        expected = expectedVersion("rstudio-server")
-    )
-    checkVersion(
         name = "pass",
         current = currentVersion("pass"),
         expected = expectedVersion("pass")
     )
-    checkVersion(
-        name = "docker-credential-pass",
-        current = currentVersion("docker-credential-pass"),
-        expected = expectedVersion("docker-credential-pass")
-    )
-    checkVersion(
-        name = "rename (Perl File::Rename)",
-        whichName = "rename",
-        current = currentVersion("perl-file-rename"),
-        expected = expectedVersion("perl-file-rename")
-    )
+    if (!isTRUE(docker)) {
+        checkVersion(
+            name = "RStudio Server",
+            whichName = "rstudio-server",
+            current = currentVersion("rstudio-server"),
+            expected = expectedVersion("rstudio-server")
+        )
+        checkVersion(
+            name = "docker-credential-pass",
+            current = currentVersion("docker-credential-pass"),
+            expected = expectedVersion("docker-credential-pass")
+        )
+        checkVersion(
+            name = "rename (Perl File::Rename)",
+            whichName = "rename",
+            current = currentVersion("perl-file-rename"),
+            expected = expectedVersion("perl-file-rename")
+        )
+    }
 } else if (isTRUE(macos)) {
     h2("macOS specific")
     checkVersion(
