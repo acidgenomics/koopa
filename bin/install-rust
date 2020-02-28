@@ -6,18 +6,48 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-name_fancy="Rust"
+force=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --force)
+            force=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
 
 CARGO_HOME="$(_koopa_rust_cargo_prefix)"
-_koopa_exit_if_dir "$CARGO_HOME"
 RUSTUP_HOME="$(_koopa_rust_rustup_prefix)"
+
+if [[ "$force" -eq 1 ]]
+then
+    _koopa_rm "$CARGO_HOME" "$RUSTUP_HOME"
+fi
+
+_koopa_exit_if_dir "$CARGO_HOME"
 _koopa_exit_if_dir "$RUSTUP_HOME"
+
+name_fancy="Rust"
 
 _koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-# rustup-init may be installed by Homebrew on macOS.
 _koopa_assert_is_not_installed rustup-init
 
 export CARGO_HOME
