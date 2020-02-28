@@ -20,7 +20,7 @@ ${os_codename} main" \
 _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-02-27.
     # """
     local file
     file="/etc/apt/sources.list.d/docker.list"

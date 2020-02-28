@@ -809,7 +809,7 @@ _koopa_mktemp() {  # {{{1
 _koopa_os_codename() {  # {{{1
     # """
     # Operating system code name.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-27.
     #
     # Alternate approach:
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
@@ -818,7 +818,12 @@ _koopa_os_codename() {  # {{{1
     _koopa_assert_is_debian
     _koopa_assert_is_installed lsb_release
     local os_codename
-    os_codename="$(lsb_release -cs)"
+    if _koopa_is_kali
+    then
+        os_codename="buster"
+    else
+        os_codename="$(lsb_release -cs)"
+    fi
     echo "$os_codename"
     return 0
 }
@@ -826,12 +831,17 @@ _koopa_os_codename() {  # {{{1
 _koopa_os_id() {  # {{{1
     # """
     # Operating system ID.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-02-27.
     #
     # Just return the OS platform ID (e.g. "debian").
     # """
     local os_id
-    os_id="$(_koopa_os_string | cut -d '-' -f 1)"
+    if _koopa_is_kali
+    then
+        os_id="debian"
+    else
+        os_id="$(_koopa_os_string | cut -d '-' -f 1)"
+    fi
     echo "$os_id"
     return 0
 }

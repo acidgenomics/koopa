@@ -152,6 +152,7 @@ pkgs=(
     curl
     dirmngr
     findutils
+    g++
     gcc
     gdb
     gdebi-core
@@ -190,6 +191,7 @@ then
         gettext                           # |            |            |        |
         libacl1-dev                       # |     < 1 MB |     < 1 MB |      1 |
         libbz2-dev                        # |     < 1 MB |      36 MB |     22 |
+        libc-dev
         libcairo2-dev                     # |       3 MB |      94 MB |     61 |
         libcurl4-gnutls-dev               # |            |            |        |
         libevent-dev                      # |       2 MB |       2 MB |      5 |
@@ -261,6 +263,7 @@ fi
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
+        --fix-broken \
         --fix-missing \
         --no-install-recommends \
         --quiet \

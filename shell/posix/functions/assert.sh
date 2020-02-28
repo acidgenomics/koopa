@@ -349,6 +349,18 @@ _koopa_assert_is_installed() {  # {{{1
     return 0
 }
 
+_koopa_assert_is_kali() {  # {{{1
+    # """
+    # Assert that platform is Kali Linux.
+    # @note Updated 2020-02-27.
+    # """
+    if ! _koopa_is_kali
+    then
+        _koopa_stop "Kali is required."
+    fi
+    return 0
+}
+
 _koopa_assert_is_linux() {  # {{{1
     # """
     # Assert that platform is Linux.
