@@ -128,6 +128,20 @@ _koopa_commit() {  # {{{1
     return 0
 }
 
+_koopa_cp() {  # {{{1
+    # """
+    # Koopa copy.
+    # @note Updated 2020-02-28.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo cp -an "$@"
+    else
+        cp -an "$@"
+    fi
+    return 0
+}
+
 _koopa_cpu_count() {  # {{{1
     # """
     # Return a usable number of CPU cores.
@@ -288,13 +302,13 @@ _koopa_extract() {  # {{{1
     _koopa_h2 "Extracting '${file}'."
     case "$file" in
         *.tar.bz2)
-            tar -xjvf "$file"
+            tar -xj -f "$file"
             ;;
         *.tar.gz)
-            tar -xzvf "$file"
+            tar -xz -f "$file"
             ;;
         *.tar.xz)
-            tar -xJvf "$file"
+            tar -xJ -f "$file"
             ;;
         *.bz2)
             _koopa_assert_is_installed bunzip2
@@ -308,13 +322,13 @@ _koopa_extract() {  # {{{1
             unrar -x "$file"
             ;;
         *.tar)
-            tar -xvf "$file"
+            tar -x -f "$file"
             ;;
         *.tbz2)
-            tar -xjvf "$file"
+            tar -xj -f "$file"
             ;;
         *.tgz)
-            tar -xzvf "$file"
+            tar -xz -f "$file"
             ;;
         *.xz)
             _koopa_assert_is_installed xz
@@ -803,6 +817,20 @@ _koopa_mktemp() {  # {{{1
     local template
     template="koopa-$(id -u)-$(date "+%Y%m%d%H%M%S")-XXXXXXXXXX"
     mktemp "$@" -t "$template"
+    return 0
+}
+
+_koopa_mv() {  # {{{1
+    # """
+    # Koopa move.
+    # @note Updated 2020-02-28.
+    # """
+    if _koopa_is_shared_install
+    then
+        sudo mv -Tf --strip-trailing-slashes "$@"
+    else
+        mv -Tf --strip-trailing-slashes "$@"
+    fi
     return 0
 }
 
