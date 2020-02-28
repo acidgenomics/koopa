@@ -133,12 +133,21 @@ _koopa_cp() {  # {{{1
     # Koopa copy.
     # @note Updated 2020-02-28.
     # """
+    local source_file
+    source_file="${1:?}"
+    _koopa_assert_is_existing "$source_file"
+
+    local target_file
+    target_file="${2:?}"
+    _koopa_mkdir "$(dirname "$target_file")"
+
     if _koopa_is_shared_install
     then
-        sudo cp -an "$@"
+        sudo cp -af "$source_file" "$target_file"
     else
-        cp -an "$@"
+        cp -af "$source_file" "$target_file"
     fi
+
     return 0
 }
 
