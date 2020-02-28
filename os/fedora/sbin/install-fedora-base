@@ -94,6 +94,7 @@ then
         pcre-devel
         postgresql-devel
         readline-devel
+        udunits2-devel
         unixODBC-devel
         xz-devel
     )
