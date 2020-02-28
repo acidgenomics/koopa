@@ -33,6 +33,7 @@ packages=(
     libbz2-devel
     libcurl-devel
     libevent-devel
+    libffi-devel
     lzma-devel
     make
     ncurses-devel
