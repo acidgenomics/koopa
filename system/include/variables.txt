@@ -104,7 +104,7 @@ geos="3.8.0"
 git="2.25.0"
 
 # https://golang.org/dl/
-go="1.13.4"
+go="1.14"
 
 # https://cloud.google.com/sdk/install
 google-cloud-sdk="282.0.0"
