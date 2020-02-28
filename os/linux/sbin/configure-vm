@@ -335,7 +335,7 @@ fi
 # Cloud APIs.
 # Note that Azure CLI requires Python 3, so install at the end.
 _koopa_run_if_installed \
-    install-aws-cli-2 \
+    install-aws-cli \
     install-azure-cli \
     install-google-cloud-sdk
 
