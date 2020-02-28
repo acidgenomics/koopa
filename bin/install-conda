@@ -27,11 +27,11 @@ done
 if [[ "$anaconda" -eq 1 ]]
 then
     name="anaconda3"
+    version="$(_koopa_variable "$name")"
 else
     name="miniconda3"
 fi
 
-version="$(_koopa_variable "$name")"
 prefix="$(_koopa_conda_prefix)"
 _koopa_exit_if_dir "$prefix"
 
