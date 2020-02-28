@@ -27,7 +27,6 @@ tmp_dir="$(_koopa_tmp_dir)"
         --install-dir "$tmp_install_dir" \
         --bin-dir "$tmp_bin_dir" \
         > /dev/null
-    _koopa_mkdir "$prefix"
     _koopa_cp "${tmp_install_dir}/v2/${version}" "$prefix"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
