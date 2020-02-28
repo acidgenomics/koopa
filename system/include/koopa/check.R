@@ -12,11 +12,6 @@
 ## # Try: gem pristine commonmarker --version 0.17.13
 ## """
 
-options(
-    "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L))
-)
-
 koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(isTRUE(nzchar(koopaPrefix)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))

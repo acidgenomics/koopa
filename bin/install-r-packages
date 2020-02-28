@@ -1,10 +1,5 @@
 #!/usr/bin/env Rscript
 
-options(
-    "error" = quote(quit(status = 1L)),
-    "warning" = quote(quit(status = 1L))
-)
-
 ## """
 ## CRAN removals:
 ## > remove.packages("Matrix.utils")
