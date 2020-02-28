@@ -36,6 +36,7 @@ packages=(
     libffi-devel
     lzma-devel
     make
+    man-db
     ncurses-devel
     openssl-devel
     pcre-devel
