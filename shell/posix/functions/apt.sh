@@ -26,19 +26,9 @@ _koopa_apt_add_docker_repo() {  # {{{1
     file="/etc/apt/sources.list.d/docker.list"
     [ -f "$file" ] && return 0
     local os_id
-    if _koopa_is_ubuntu
-    then
-        os_id="ubuntu"
-    else
-        os_id="debian"
-    fi
+    os_id="$(_koopa_os_id)"
     local os_codename
-    if _koopa_is_kali
-    then
-        os_codename="buster"
-    else
-        os_codename="$(_koopa_os_codename)"
-    fi
+    os_codename="$(_koopa_os_codename)"
     echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} \
 ${os_codename} stable" \
         | sudo tee "$file" > /dev/null
