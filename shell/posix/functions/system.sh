@@ -336,7 +336,7 @@ _koopa_extract() {  # {{{1
             ;;
         *.zip)
             _koopa_assert_is_installed unzip
-            unzip "$file"
+            unzip -qq "$file"
             ;;
         *.Z)
             uncompress "$file"
