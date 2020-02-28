@@ -39,8 +39,7 @@ then
     _koopa_rm "$CARGO_HOME" "$RUSTUP_HOME"
 fi
 
-_koopa_exit_if_dir "$CARGO_HOME"
-_koopa_exit_if_dir "$RUSTUP_HOME"
+_koopa_exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
 
 name_fancy="Rust"
 
