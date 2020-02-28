@@ -228,7 +228,7 @@ rstudio-server-pro="1.2.5019-6"
 ruby="2.6.5p"
 
 # https://www.rust-lang.org/
-rust="1.41.0"
+rust="1.41.1"
 
 # https://rustup.rs/
 rustup="1.21.1"
@@ -317,7 +317,7 @@ macos-app-bbedit="13.0.4"
 macos-app-bibdesk="1.7.4"
 macos-app-docker="2.2.0.3"
 macos-app-iterm="3.3.9"
-macos-app-libreoffice="6.4.3"
+macos-app-libreoffice="6.4.1002"
 macos-app-microsoft-excel="16.34"
 macos-app-numbers="6.2.1"
 macos-app-rstudio="1.2.5033"
