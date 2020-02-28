@@ -21,8 +21,12 @@ if (!isTRUE(nzchar(Sys.getenv("TRAVIS")))) {
     stopifnot(packageVersion("base") >= "3.6")
 }
 
-if ("parallel" %in% rownames(installed.packages())) {
-    options("mc.cores" = max(1L, parallel::detectCores() - 1L))
+# Set number of cores for parallelization, if necessary.
+if (
+    !isTRUE(nzchar(getOption("mc.cores"))) &&
+    isTRUE("parallel" %in% rownames(installed.packages()))
+) {
+    options("mc.cores" = parallel::detectCores())
 }
 
 koopaHelp()
