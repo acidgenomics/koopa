@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-27.
+## Updated 2020-02-28.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -16,38 +16,19 @@ koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(isTRUE(nzchar(koopaPrefix)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-library(methods)
-
 koopa <- file.path(koopaPrefix, "bin", "koopa")
 stopifnot(file.exists(koopa))
 
-shell <- Sys.getenv("KOOPA_SHELL")
-stopifnot(isTRUE(nzchar(shell)))
-
-host <- shell(command = koopa, args = "host-id", stdout = TRUE)
-stopifnot(isTRUE(nzchar(host)))
-
-os <- shell(command = koopa, args = "os-string", stdout = TRUE)
-stopifnot(isTRUE(nzchar(os)))
-
-macos <- isMacOS()
-if (isTRUE(macos)) {
-    linux <- FALSE
-} else {
-    linux <- TRUE
-}
-
-if (Sys.getenv("KOOPA_EXTRA") == 1L) {
-    extra <- TRUE
-} else {
-    extra <- FALSE
-}
-
-docker <- isDocker()
-
 h1("Checking koopa installation")
 
+macos <- isMacOS()
+linux <- !macos
 
+host <- shell(command = koopa, args = "host-id", stdout = TRUE)
+os <- shell(command = koopa, args = "os-string", stdout = TRUE)
+
+docker <- isDocker()
+extra <- if (Sys.getenv("KOOPA_EXTRA") == 1L) TRUE else FALSE
 
 ## Basic dependencies ==========================================================
 h2("Basic dependencies")
@@ -181,8 +162,6 @@ installed(
     path = FALSE
 )
 
-
-
 ## Shells ======================================================================
 h2("Shells")
 if (!identical(os, "alpine-3")) {
@@ -207,8 +186,6 @@ if (!isTRUE(docker)) {
         expected = expectedVersion("fish")
     )
 }
-
-
 
 ## GNU packages ================================================================
 h2("GNU packages")
@@ -243,8 +220,6 @@ checkVersion(
     expected = expectedVersion("patch")
 )
 
-
-
 ## Editors =====================================================================
 h2("Editors")
 if (!isTRUE(docker)) {
@@ -273,8 +248,6 @@ checkVersion(
     current = currentMinorVersion("vim"),
     expected = expectedMinorVersion("vim")
 )
-
-
 
 ## Languages ===================================================================
 h2("Primary languages")
@@ -336,8 +309,6 @@ if (!isTRUE(docker)) {
     )
 }
 
-
-
 ## Version managers ============================================================
 h2("Version managers")
 checkVersion(
@@ -393,8 +364,6 @@ if (!isTRUE(docker)) {
     )
 }
 
-
-
 ## Cloud APIs ==================================================================
 if (
     !identical(os, "alpine-3") &&
@@ -422,8 +391,6 @@ if (
     )
 }
 
-
-
 ## Tools =======================================================================
 h2("Tools")
 checkVersion(
@@ -443,8 +410,6 @@ checkVersion(
     current = currentVersion("neofetch"),
     expected = expectedVersion("neofetch")
 )
-
-
 
 ## Shell tools =================================================================
 h2("Shell tools")
@@ -502,8 +467,6 @@ checkVersion(
     expected = expectedVersion("shellcheck")
 )
 installed("shunit2")
-
-
 
 ## Heavy dependencies ==========================================================
 if (!isTRUE(docker)) {
@@ -568,8 +531,6 @@ if (!isTRUE(docker)) {
         )
     )
 }
-
-
 
 ## OS-specific =================================================================
 if (isTRUE(linux)) {
@@ -670,8 +631,6 @@ if (isTRUE(linux)) {
     checkHomebrewCaskVersion("gpg-suite")
 }
 
-
-
 ## High performance ============================================================
 if (
     isTRUE(linux) &&
@@ -730,8 +689,6 @@ if (
     # > )
 }
 
-
-
 ## Python packages =============================================================
 h2("Python packages")
 installed(
@@ -742,8 +699,6 @@ installed(
         "pytest"
     )
 )
-
-
 
 if (Sys.getenv("KOOPA_CHECK_FAIL") == 1L) {
     stop("System failed checks.")

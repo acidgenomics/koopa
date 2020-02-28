@@ -4,7 +4,7 @@
 ## """
 
 options(
-    ## "verbose" = TRUE
+    ## "verbose" = TRUE,
     "error" = quote(quit(status = 1L)),
     "warn" = 2L,
     "warning" = quote(quit(status = 1L))
