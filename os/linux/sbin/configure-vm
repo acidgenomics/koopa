@@ -252,9 +252,9 @@ then
     fi
 
     # Password management.
+    install-pass
     if [[ "$docker" -eq 0 ]]
     then
-        install-pass
         install-docker-credential-pass
     fi
 
