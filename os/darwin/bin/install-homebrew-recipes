@@ -185,6 +185,7 @@ brews=(
     git
     git-lfs
     go
+    gpatch
     grep
     gsl
     hdf5
