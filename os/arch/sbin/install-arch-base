@@ -26,7 +26,10 @@ sudo pacman-db-upgrade
 
 packages=(
     # fish
+    # pandoc
+    # pandoc-citeproc
     # parallel
+    # texlive-core
     # zsh
     autoconf
     awk
@@ -41,13 +44,10 @@ packages=(
     libffi
     make
     man
-    pandoc
-    pandoc-citeproc
     pkgconf
     r
     sudo
     tcl
-    texlive-core
     tree
     wget
     which
