@@ -44,7 +44,7 @@ status <- mapply(
     tag = tags,
     MoreArgs = list(image = image),
     FUN = function(image, tag) {
-        system2(
+        shell(
             command = file.path(
                 koopaPrefix,
                 "bin",
@@ -71,7 +71,7 @@ if (file.exists(latestFile) && !dir.exists(latestFile)) {
         "Tagging %s '%s' as '%s'.",
         image, sourceTag, destTag
     ))
-    system2(
+    shell(
         command = file.path(
             koopaPrefix,
             "bin",

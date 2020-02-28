@@ -29,10 +29,10 @@ stopifnot(file.exists(koopa))
 shell <- Sys.getenv("KOOPA_SHELL")
 stopifnot(isTRUE(nzchar(shell)))
 
-host <- system2(command = koopa, args = "host-id", stdout = TRUE)
+host <- shell(command = koopa, args = "host-id", stdout = TRUE)
 stopifnot(isTRUE(nzchar(host)))
 
-os <- system2(command = koopa, args = "os-string", stdout = TRUE)
+os <- shell(command = koopa, args = "os-string", stdout = TRUE)
 stopifnot(isTRUE(nzchar(os)))
 
 macos <- isMacOS()
