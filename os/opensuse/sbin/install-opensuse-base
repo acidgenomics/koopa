@@ -43,6 +43,7 @@ packages=(
     sudo
     tar
     tree
+    unzip
     wget
     which
     xz
