@@ -163,6 +163,7 @@ pkgs=(
     less
     lsb-release
     make
+    man-db
     nano
     parallel
     pkg-config
