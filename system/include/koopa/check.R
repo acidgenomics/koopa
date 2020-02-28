@@ -185,9 +185,7 @@ installed(
 
 ## Shells ======================================================================
 h2("Shells")
-if (
-    !identical(os, "alpine-3")
-) {
+if (!identical(os, "alpine-3")) {
     checkVersion(
         name = "Bash",
         whichName = "bash",
@@ -286,8 +284,6 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-# Can use `packageVersion("base")` instead but it doesn't always return the
-# correct value for RStudio Server Pro.
 checkVersion(
     name = "R",
     current = currentVersion("r"),
@@ -303,9 +299,7 @@ if (!isTRUE(docker)) {
         expected = expectedMinorVersion("go")
     )
 }
-if (
-    !identical(os, "alpine-3")
-) {
+if (!identical(os, "alpine-3")) {
     checkVersion(
         name = "Java",
         whichName = "java",
