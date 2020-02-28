@@ -54,7 +54,8 @@ fix-sudo-setrlimit-error
 # Remove default configuration files.
 sudo rm -frv \
     "/etc/skel/.?"* \
-    "/root/.?"*
+    "/root/.?"* \
+    "/root/?"*
 
 # shellcheck disable=SC1090
 source "${koopa_prefix}/activate"
