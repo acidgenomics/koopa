@@ -141,6 +141,7 @@ _koopa_assert_is_installed \
     gfortran \
     gzip \
     make \
+    man \
     msgfmt \
     tar \
     xz
