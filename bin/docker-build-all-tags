@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-02-28.
+## Updated 2020-02-29.
 ## """
 
 args <- commandArgs(trailingOnly = FALSE)
@@ -29,9 +29,9 @@ tags <- sort(list.dirs(path = imageDir, full.names = FALSE, recursive = FALSE))
 stopifnot(length(tags) > 0L)
 
 ## Enable parallelization if possible.
-if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
-    mapply <- BiocParallel::bpmapply
-}
+## > if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
+## >     mapply <- BiocParallel::bpmapply
+## > }
 
 ## Build the versioned images, defined by `Dockerfile` in the subdirectories.
 status <- mapply(
