@@ -25,6 +25,21 @@ hasGitHubPAT <- function() {
 
 
 
+#' Is a system command cellarized?
+#' @note Updated 2020-02-29.
+isCellar <- function(which) {
+    which <- Sys.which(which)
+    if (!all(nzchar(which))) return(FALSE)
+    which <- normalizePath(which)
+    grepl(
+        pattern = "/cellar/",
+        x = which,
+        ignore.case = TRUE
+    )
+}
+
+
+
 #' Is a system command installed?
 #' @note Updated 2020-02-06.
 isCommand <- function(which) {

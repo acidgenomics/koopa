@@ -206,7 +206,7 @@ python="3.8.1"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-3/
-r="3.6.2"
+r="3.6.3"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"

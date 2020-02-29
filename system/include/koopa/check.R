@@ -256,11 +256,15 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-checkVersion(
-    name = "R",
-    current = currentVersion("r"),
-    expected = expectedVersion("r")
-)
+if (isCellar("R")) {
+    checkVersion(
+        name = "R",
+        current = currentVersion("r"),
+        expected = expectedVersion("r")
+    )
+} else {
+    installed("R")
+}
 
 h2("Secondary languages")
 if (!isTRUE(docker)) {
