@@ -233,6 +233,7 @@ then
     # Core.
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
+    install-gawk
     install-grep
     install-parallel
     install-patch
