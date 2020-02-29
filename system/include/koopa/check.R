@@ -201,6 +201,12 @@ checkVersion(
     expected = expectedVersion("findutils")
 )
 checkVersion(
+    name = "gawk",
+    whichName = "gawk",
+    current = currentVersion("gawk"),
+    expected = expectedVersion("gawk")
+)
+checkVersion(
     name = "grep",
     whichName = "grep",
     current = currentVersion("grep"),
