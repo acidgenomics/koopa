@@ -483,7 +483,7 @@ _koopa_link_r_etc() {  # {{{1
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-03-01.
     # """
     local r_home
     r_home="$(_koopa_r_home)"
@@ -507,12 +507,6 @@ _koopa_link_r_site_library() {  # {{{1
 
     _koopa_mkdir "$lib_source"
     _koopa_ln "$lib_source" "$lib_target"
-
-    if _koopa_is_debian
-    then
-        # Link the site-library in '/usr/lib/R' instead.
-        _koopa_rm /usr/local/lib/R
-    fi
 
     return 0
 }
