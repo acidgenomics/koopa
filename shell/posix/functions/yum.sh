@@ -42,19 +42,24 @@ _koopa_yum_add_google_cloud_sdk_repo() {  # {{{1
     local file
     file="/etc/yum.repos.d/google-cloud-sdk.repo"
     [ -f "$file" ] && return 0
-    local repo_gpgcheck
-    if _koopa_is_amzn
-    then
-        repo_gpgcheck=0
-    else
-        repo_gpgcheck=1
-    fi
+    local gpgcheck
+    # Fix attempt for build error on CentOS 8 due to
+    # 141 error code.
+    gpgcheck=0
+    repo_gpgcheck=0
+    # > local repo_gpgcheck
+    # > if _koopa_is_amzn
+    # > then
+    # >     repo_gpgcheck=0
+    # > else
+    # >     repo_gpgcheck=1
+    # > fi
     sudo tee "$file" > /dev/null << EOF
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
 enabled=1
-gpgcheck=1
+gpgcheck=${gpgcheck}
 repo_gpgcheck=${repo_gpgcheck}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
