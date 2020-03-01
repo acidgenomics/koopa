@@ -377,6 +377,9 @@ _koopa_return_version() {  # {{{1
         homebrew)
             cmd="brew"
             ;;
+        ncurses)
+            cmd="ncurses6-config"
+            ;;
         neovim)
             cmd="nvim"
             ;;
