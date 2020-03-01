@@ -64,18 +64,18 @@ python3 -m venv "$prefix"
 py_exe="${prefix}/bin/python3"
 
 packages=(
-    pip
-    setuptools
-    wheel
     Cython
-    numpy
-    scipy
-    pandas
-    pyyaml
     cwltool
-    scikit-learn
     louvain
+    numpy
+    pandas
+    pip
+    pyyaml
+    scikit-learn
+    scipy
+    setuptools
     umap-learn
+    wheel
 )
 
 "$py_exe" -m pip install --upgrade "${packages[@]}"
