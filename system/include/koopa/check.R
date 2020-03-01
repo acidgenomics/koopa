@@ -213,6 +213,12 @@ checkVersion(
     expected = expectedVersion("grep")
 )
 checkVersion(
+    name = "ncurses",
+    whichName = "ncurses6-config",
+    current = currentMinorVersion("ncurses"),
+    expected = expectedVersion("ncurses")
+)
+checkVersion(
     name = "parallel",
     whichName = "parallel",
     current = currentVersion("parallel"),
