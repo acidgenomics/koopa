@@ -457,6 +457,8 @@ _koopa_link_r_etc() {  # {{{1
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
     # """
+    _koopa_is_installed R || return 0
+
     local r_home
     r_home="$(_koopa_r_home)"
     [ -d "$r_home" ] || return 1
@@ -494,8 +496,11 @@ _koopa_link_r_site_library() {  # {{{1
     # Link R site library.
     # @note Updated 2020-03-01.
     # """
+    _koopa_is_installed R || return 0
+
     local r_home
     r_home="$(_koopa_r_home)"
+    [ -d "$r_home" ] || return 1
 
     local version
     version="$(_koopa_r_version)"
