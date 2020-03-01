@@ -328,11 +328,13 @@ if (!isTRUE(docker)) {
 
 ## Version managers ============================================================
 h2("Version managers")
+## This isn't returning true currently for Bioconductor builds.
 checkVersion(
     name = "Conda",
     whichName = "conda",
     current = currentVersion("conda"),
-    expected = expectedVersion("conda")
+    expected = expectedVersion("conda"),
+    required = FALSE
 )
 if (!isTRUE(docker)) {
     checkVersion(

@@ -374,9 +374,4 @@ fi
 
 _koopa_success "Configuration completed successfully."
 
-set +u
-# shellcheck disable=SC1090
-source "${koopa_prefix}/activate"
-set -u
-
 koopa check
