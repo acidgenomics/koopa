@@ -1,24 +1,5 @@
 #!/usr/bin/env Rscript
 
-## """
-## CRAN removals:
-## > remove.packages("Matrix.utils")
-## > remove.packages("ashr")
-## > remove.packages("rgexf")
-## > remove.packages("trimcluster")
-##
-## GitHub removals / renames:
-## > remove.packages("bioverbs")
-## > remove.packages("brio")
-## > remove.packages("wormbase")
-##
-## Tricky packages:
-## - Rcpp
-## - RcppArmadillo
-## - sf
-## - XML
-## """
-
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
@@ -53,8 +34,29 @@ h1("Install R packages")
 h2("Tricky packages")
 install(
     pkgs = c(
-        "rJava"
+        "Rcpp",
+        "RcppArmadillo",
+        "XML",
+        "rJava",
+        "rgdal",
+        "sf"
     )
+)
+
+## Fix for BiocNeighbors.
+## https://github.com/LTLA/BiocNeighbors/issues/10
+install.packages(
+    pkgs = paste(
+        "https://cran.r-project.org",
+        "src",
+        "contrib",
+        "Archive",
+        "RcppAnnoy",
+        "RcppAnnoy_0.0.14.tar.gz",
+        sep = "/"
+    ),
+    repos = NULL,
+    type = "source"
 )
 
 h2("CRAN")
@@ -115,7 +117,9 @@ install(
         "BiocCheck",
         "BiocFileCache",
         "BiocGenerics",
+        "BiocNeighbors",
         "BiocParallel",
+        "BiocSingular",
         "BiocStyle",
         "BiocVersion",
         "Biostrings",
@@ -202,8 +206,6 @@ install(
         "BSgenome.Hsapiens.UCSC.hg19",
         "BSgenome.Hsapiens.UCSC.hg38",
         "BSgenome.Mmusculus.UCSC.mm10",
-        "BiocNeighbors",
-        "BiocSingular",
         "ChIPpeakAnno",
         "ComplexHeatmap",
         "ConsensusClusterPlus",
