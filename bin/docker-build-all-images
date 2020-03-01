@@ -6,12 +6,20 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-# """
-# Build all Acid Genomics images.
-# Updated 2020-03-01.
-#
-# Skipping any image that has been built today.
-# """
+force=0
+
+while (("$#"))
+do
+    case "$1" in
+        --force)
+            force=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
 
 _koopa_h1 "Building all Docker images."
 
@@ -48,25 +56,28 @@ do
     docker system prune --all --force
 
     # Skip image if pushed already today.
-    docker pull "$image"
-    json="$( \
-        docker inspect \
-        --format='{{json .Created}}' \
-        "$image" \
-    )"
-    # Note that we need to convert UTC to local time.
-    utc_timestamp="$( \
-        echo "$json" \
-            | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-            | sed 's/T/ /' \
-            | sed 's/$/ UTC/'
-    )"
-    timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
-    today=$(date '+%Y-%m-%d')
-    if [[ "$timestamp" == "$today" ]]
+    if [[ "$force" -ne 1 ]]
     then
-        _koopa_note "'${image}' image already pushed today."
-        continue
+        docker pull "$image"
+        json="$( \
+            docker inspect \
+            --format='{{json .Created}}' \
+            "$image" \
+        )"
+        # Note that we need to convert UTC to local time.
+        utc_timestamp="$( \
+            echo "$json" \
+                | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                | sed 's/T/ /' \
+                | sed 's/$/ UTC/'
+        )"
+        timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
+        today=$(date '+%Y-%m-%d')
+        if [[ "$timestamp" == "$today" ]]
+        then
+            _koopa_note "'${image}' image already pushed today."
+            continue
+        fi
     fi
 
     # Build outdated images automatically.
