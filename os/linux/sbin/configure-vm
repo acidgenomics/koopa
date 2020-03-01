@@ -221,6 +221,8 @@ if [[ "$rsync" -eq 0 ]]
 then
 
     # Core.
+    # Install ncurses before GnuPG.
+    install-ncurses
     install-gnupg                                                       # 0.038G
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G

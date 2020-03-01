@@ -155,6 +155,9 @@ lua="5.3.5"
 # https://github.com/luarocks/luarocks/releases
 luarocks="3.2.1"
 
+# https://ftp.gnu.org/pub/gnu/ncurses/
+ncurses="6.2"
+
 # https://github.com/dylanaraps/neofetch/releases
 neofetch="6.1.0"
 
