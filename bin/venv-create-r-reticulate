@@ -7,9 +7,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 # """
-# Depends on: numpy, scipy, joblib, scikit-learn, llvmlite, numba
-#
-#
 # Check that LLVM is configured correctly.
 # umap-learn > numba > llvmlite
 # Note that llvmlite currently requires LLVM 7+.
@@ -66,9 +63,22 @@ _koopa_mkdir "$prefix"
 python3 -m venv "$prefix"
 py_exe="${prefix}/bin/python3"
 
-"$py_exe" -m pip install --upgrade pip setuptools wheel
-# > "$py_exe" -m pip install Cython
-"$py_exe" -m pip install louvain umap-learn
+packages=(
+    pip
+    setuptools
+    wheel
+    Cython
+    numpy
+    scipy
+    pandas
+    pyyaml
+    cwltool
+    scikit-learn
+    louvain
+    umap-learn
+)
+
+"$py_exe" -m pip install --upgrade "${packages[@]}"
 "$py_exe" -m pip list
 
 _koopa_set_permissions --recursive "$prefix"
