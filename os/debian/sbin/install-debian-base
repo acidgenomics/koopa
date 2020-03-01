@@ -6,7 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
-# Check package source:
+# Check package source repo:
 # https://packages.ubuntu.com/
 #
 #
@@ -22,42 +22,12 @@ source "${script_dir}/../include/header.sh"
 # > sudo apt-get dselect-upgrade
 #
 #
-# Installing R using 'install-r' script instead, which sets up apt to support
-# newer official release from CRAN.
-#
-#
-# Enable Debian sources.
-# To use 'build-dep', you must uncomment deb-src lines:
-# > sudo vim /etc/apt/sources.list
-#
-# Otherwise you'll hit this error:
-# You must put some 'source' URIs in your sources.list
-#
-# See also:
-# https://askubuntu.com/questions/496549
-#
-#
-# Clean up previous packages:
-# - openjdk-12-jdk
-# - openjdk-12-jre
-# - python
-#
-#
-# Bioconductor AMI is missing these dependencies:
-# > apt-cache search 'libgnutls.*-dev'
-# > apt-cache search gnutls
-# > apt-cache search libgif
-#
-#
 # libcurl4-dev madness:
 # Package libcurl-dev is a virtual package provided by:
 #   libcurl4-openssl-dev 7.58.0-2ubuntu3.8
 #   libcurl4-nss-dev 7.58.0-2ubuntu3.8
 #   libcurl4-gnutls-dev 7.58.0-2ubuntu3.8
 # You should explicitly select one to install.
-#
-#
-# Note that 'golang-go' is not officially supported.
 # """
 
 _koopa_assert_has_no_args "$@"
@@ -76,12 +46,15 @@ _koopa_assert_is_installed sed sudo
 
 export DEBIAN_FRONTEND="noninteractive"
 
+# Nuke caches before installing packages.
+sudo rm -fr \
+    /var/cache/apt/* \
+    /var/lib/dpkg/available
+sudo dpkg --clear-avail
+
 # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default, which
 # is non-standard and can cause cellar link script to break.
-if [[ -L /usr/local/man ]]
-then
-    sudo rm -v /usr/local/man
-fi
+[[ -L /usr/local/man ]] && sudo rm -v /usr/local/man
 
 # Requiring universe repo to be enabled on Ubuntu.
 enabled_repos="$(_koopa_apt_enabled_repos)"
@@ -116,17 +89,17 @@ _koopa_h2 "Installing default packages."
 # Clean up previous installs first, if applicable.
 apt_installed="$(sudo apt list --installed 2> /dev/null)"
 legacy_pkgs=(
+    # libgdal-dev       # use 'install-gdal'
+    # libgeos-dev       # use 'install-geos'
+    # libgsl-dev        # use 'install-gsl'
+    # libhdf5-dev       # use 'install-hdf5'
+    cargo               # use 'install-rust'
     containerd          # docker-legacy
     docker              # docker-legacy
     docker-engine       # docker-legacy
     docker.io           # docker-legacy
-    runc                # docker-legacy
-    cargo               # use 'install-rust'
     fish                # use 'install-fish'
-    libgdal-dev         # use 'install-gdal'
-    libgeos-dev         # use 'install-geos'
-    libgsl-dev          # use 'install-gsl'
-    libhdf5-dev         # use 'install-hdf5'
+    runc                # docker-legacy
 )
 for pkg in "${legacy_pkgs[@]}"
 do
@@ -142,6 +115,7 @@ pkgs=(
     automake
     bc
     build-essential
+    byacc
     bzip2
     ca-certificates
     cmake
@@ -149,6 +123,7 @@ pkgs=(
     curl
     dirmngr
     findutils
+    fortran77-compiler
     g++
     gcc
     gdb
@@ -182,34 +157,73 @@ pkgs=(
 # Developer  {{{1
 # ==============================================================================
 
-# Note that we want these on our Bioconductor Docker images.
 if [[ "$dev" -eq 1 ]]
 then
-    _koopa_h2 "Installing developer libraries."
-                                          # |   w/o deps |    w/ deps | n deps |
-    pkgs+=(                               # | ---------- | ---------- | ------ |
-        libacl1-dev                       # |     < 1 MB |     < 1 MB |      1 |
-        libbz2-dev                        # |     < 1 MB |      36 MB |     22 |
+    _koopa_h2 "Installing developer packages."
+    pkgs+=(
+        # libmariadb-dev-compat
+        libacl1-dev
+        libapparmor-dev
+        libbz2-dev
         libc-dev
-        libcairo2-dev                     # |       3 MB |      94 MB |     61 |
-        libcurl4-gnutls-dev               # |            |            |        |
-        libevent-dev                      # |       2 MB |       2 MB |      5 |
-        libffi-dev                        # |     < 1 MB |     227 MB |     10 |
-        libfreetype6-dev                  # |       7 MB |      97 MB |     62 |
-        libgif-dev                        # |     < 1 MB |     287 MB |     69 |
-        libglu1-mesa-dev                  # |     < 1 MB |       1 MB |      2 |
-        libgnutls28-dev                   # |       4 MB |       8 MB |      9 |
-        libharfbuzz-dev                   # |       2 MB |     436 MB |    140 |
-        liblzma-dev                       # |     < 1 MB |     337 MB |     96 |
-        libmagick++-dev                   # |     < 1 MB |      36 MB |     20 |
-        libncurses-dev # libncurses5-dev  # |       1 MB |       1 MB |      2 |
-        libpng-dev                        # |     < 1 MB |     400 MB |    138 |
-        libssl-dev                        # |       8 MB |     294 MB |     69 |
+        libcairo2-dev
+        libcurl4-gnutls-dev
+        libevent-dev
+        libexempi8
+        libffi-dev
+        libfftw3-dev
+        libfreetype6-dev
+        libgdal-dev
+        libgeos-dev
+        libgif-dev
+        libgl1-mesa-dev
+        libglu1-mesa-dev
+        libgmp3-dev
+        libgnutls28-dev
+        libgsl0-dev
+        libgslcblas0
+        libgtk-3-0
+        libgtk-3-dev
+        libgtk2.0-0
+        libgtk2.0-dev
+        libgtkmm-2.4-dev
+        libharfbuzz-dev
+        libhdf5-dev
+        libhdf5-serial-dev
+        libjpeg62-turbo-dev
+        liblapack-dev
+        liblzma-dev
+        libmagick++-dev
+        libmariadb-dev
+        libmodule-build-perl
+        libmpfr-dev
+        libncurses-dev  # libncurses5-dev
+        libnetcdf-dev
+        libopenbabel-dev
+        libopenblas-base
+        libopenblas-dev
+        libopenmpi-dev
+        libperl-dev
+        libpng-dev
+        libpoppler-cpp-dev
+        libpq-dev
+        libprotobuf-dev
+        libprotoc-dev
+        librdf0-dev
+        libreadline-dev
+        libsasl2-dev
+        libssh2-1-dev
+        libssl-dev
+        libtiff5-dev
         libudunits2-dev
-        libx11-dev                        # |       2 MB |     109 MB |    107 |
-        libxml2-dev                       # |       4 MB |     330 MB |     93 |
-        libz-dev # zlib1g-dev             # |     < 1 MB |         NA |    174 |
+        libv8-dev
+        libx11-dev
+        libxml2-dev
+        libxpm-dev
+        libxt-dev
+        libz-dev  # zlib1g-dev
         tcl-dev
+        tk-dev
     )
 fi
 
@@ -219,41 +233,43 @@ fi
 if [[ "$extra" -eq 1 ]]
 then
     _koopa_h2 "Installing extra recommended packages."
-                                          # |   w/o deps |    w/ deps | n deps |
-    pkgs+=(                               # | ---------- | ---------- | ------ |
-        alien                             # |            |            |        |
-        emacs                             # |       8 MB |     112 MB |     11 |
-        gnutls-bin                        # |            |            |        |
-        gtk-doc-tools                     # |            |            |        |
-        keyboard-configuration            # |       3 MB |      35 MB |     44 |
-        libgtk-3-0                        # |            |            |        |
-        libgtk-3-dev                      # |            |            |        |
-        libgtk2.0-0                       # |            |            |        |
-        libgtk2.0-dev                     # |            |            |        |
-        libmariadb-dev                    # |            |            |        |
-        libopenblas-base                  # |            |            |        |
-        libopenblas-dev                   # |            |            |        |
-        libssh2-1-dev                     # |            |            |        |
-        libudunits2-dev                   # |            |            |        |
-        libv8-dev                         # |            |            |        |
-        pandoc                            # |            |            |        |
-        pandoc-citeproc                   # |            |            |        |
-        pass                              # |            |            |        |
-        perl                              # |     < 1 MB |     987 MB |    281 |
-        sqlite3                           # |       2 MB |       2 MB |      1 |
-        systemd                           # |         NA |         NA |     NA |
-        texlive                           # |            |            |        |
-        unattended-upgrades               # |     < 1 MB |     < 1 MB |      1 |
-        xorg                              # |     < 1 MB |      30 MB |     39 |
-        zsh                               # |       2 MB |      15 MB |      2 |
+    pkgs+=(
+        # default-jdk
+        # emacs
+        # perl
+        # sqlite
+        # zsh
+        alien
+        biber
+        ggobi
+        gnutls-bin
+        graphviz
+        gtk-doc-tools
+        imagemagick
+        jags
+        keyboard-configuration
+        mpi-default-bin
+        openmpi-bin
+        openmpi-common
+        openmpi-doc
+        pandoc
+        pandoc-citeproc
+        pass
+        protobuf-compiler
+        systemd
+        tabix
+        texlive
+        unattended-upgrades
+        xfonts-100dpi
+        xfonts-75dpi
+        xorg
     )
 
     if _koopa_is_ubuntu
     then
         _koopa_info "Installing Ubuntu-specific packages."
-                                          # |   w/o deps |    w/ deps | n deps |
-        pkgs+=(                           # | ---------- | ---------- | ------ |
-            firefox                       # |     202 MB |     203 MB |      9 |
+        pkgs+=(
+            firefox
         )
     fi
 fi
@@ -274,7 +290,8 @@ _koopa_apt_import_keys
 # Clean up  {{{1
 # ==============================================================================
 
-_koopa_h2 "Removing unused packages via 'apt-get autoremove'."
+_koopa_h2 "Removing unused packages."
+sudo apt-get --yes clean
 sudo apt-get --yes autoremove
 
 _koopa_install_success "$name_fancy"
