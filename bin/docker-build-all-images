@@ -43,11 +43,10 @@ images=(
     # > acidgenomics/maestro
 )
 
+docker system prune --all --force
+
 for image in "${images[@]}"
 do
-    # Nuclear reset option.
-    docker system prune --all --force
-
     # Skip image if pushed already today.
     docker pull "$image"
     json="$( \
@@ -72,6 +71,7 @@ do
 
     # Build outdated images automatically.
     docker-build-all-tags "$image"
+    docker system prune --all --force
 done
 
 _koopa_success "All Docker images built successfully."
