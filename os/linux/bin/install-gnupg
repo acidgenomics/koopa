@@ -83,7 +83,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error  {{{1
+# libassuan  {{{1
 # ==============================================================================
 
 pkg="libassuan"
@@ -108,7 +108,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error  {{{1
+# libksba  {{{1
 # ==============================================================================
 
 pkg="libksba"
@@ -133,7 +133,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error  {{{1
+# npth  {{{1
 # ==============================================================================
 
 pkg="npth"
@@ -158,7 +158,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
 
 _koopa_link_cellar "$name" "$version"
 
-# libgpg-error  {{{1
+# pinentry  {{{1
 # ==============================================================================
 
 pkg="pinentry"
@@ -176,7 +176,26 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     fi
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
-    ./configure --prefix="$prefix" --enable-pinentry-curses
+    # Customize build:
+    # https://github.com/gpg/pinentry/blob/master/README
+    #
+    # openSUSE is currently failing because of hard-wired path to ncursesw:
+    #
+    # In file included from /usr/include/ncursesw/curses.h:60:0,
+    # from pinentry-curses.c:25:
+    # /usr/include/ncursesw/curses.h:1457:21:
+    #   error: field '_nc_ttytype' declared as a function
+    if _koopa_is_opensuse
+    then
+        flags=(
+            "--disable-fallback-curses"
+            "--disable-pinentry-curses"
+            "--enable-pinentry-tty"
+        )
+    else
+        flags=("--enable-pinentry-curses")
+    fi
+    ./configure --prefix="$prefix" "${flags[@]}"
     make --jobs="$jobs"
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
