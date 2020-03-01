@@ -310,6 +310,15 @@ _koopa_perl_file_rename_version() {  # {{{1
     return 0
 }
 
+_koopa_r_version() {  # {{{1
+    # """
+    # R version.
+    # @note Updated 2020-03-01.
+    # """
+    _koopa_get_version R
+    return 0
+}
+
 _koopa_r_package_version() {  # {{{1
     # """
     # R package version.
@@ -321,18 +330,6 @@ _koopa_r_package_version() {  # {{{1
     local x
     x="$(Rscript -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")")"
     echo "$x"
-    return 0
-}
-
-_koopa_r_version() {  # {{{1
-    # """
-    # R version.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_is_installed R || return 1
-    local x
-    x="$(R --version | grep 'R version')"
-    _koopa_extract_version "$x"
     return 0
 }
 
