@@ -43,10 +43,6 @@ images=(
     # > acidgenomics/maestro
 )
 
-images=(acidgenomics/biocontainers)  # FIXME
-
-# FIXME This step isn't working.
-# FIXME The timezone is off because of UTC.
 for image in "${images[@]}"
 do
     # Nuclear reset option.
