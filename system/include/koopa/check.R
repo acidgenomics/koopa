@@ -212,12 +212,14 @@ checkVersion(
     current = currentVersion("grep"),
     expected = expectedVersion("grep")
 )
-checkVersion(
-    name = "ncurses",
-    whichName = "ncurses6-config",
-    current = currentMinorVersion("ncurses"),
-    expected = expectedVersion("ncurses")
-)
+if (isTRUE(linux)) {
+    checkVersion(
+        name = "ncurses",
+        whichName = "ncurses6-config",
+        current = currentMinorVersion("ncurses"),
+        expected = expectedVersion("ncurses")
+    )
+}
 checkVersion(
     name = "parallel",
     whichName = "parallel",
@@ -389,8 +391,8 @@ if (
     checkVersion(
         name = "Amazon Web Services (AWS) CLI",
         whichName = "aws",
-        current = currentVersion("aws-cli"),
-        expected = expectedVersion("aws-cli")
+        current = currentMinorVersion("aws-cli"),
+        expected = expectedMinorVersion("aws-cli")
     )
     checkVersion(
         name = "Microsoft Azure CLI",
@@ -486,18 +488,22 @@ installed("shunit2")
 ## Heavy dependencies ==========================================================
 if (!isTRUE(docker)) {
     h2("Heavy dependencies")
-    checkVersion(
-        name = "PROJ",
-        whichName = "proj",
-        current = currentVersion("proj"),
-        expected = expectedVersion("proj")
-    )
-    checkVersion(
-        name = "GDAL",
-        whichName = "gdalinfo",
-        current = currentVersion("gdal"),
-        expected = expectedVersion("gdal")
-    )
+    if (isTRUE(linux)) {
+        checkVersion(
+            name = "PROJ",
+            whichName = "proj",
+            current = currentVersion("proj"),
+            expected = expectedVersion("proj")
+        )
+        checkVersion(
+            name = "GDAL",
+            whichName = "gdalinfo",
+            current = currentVersion("gdal"),
+            expected = expectedVersion("gdal")
+        )
+    } else {
+        installed(c("proj", "gdalinfo"))
+    }
     checkVersion(
         name = "GEOS",
         whichName = "geos-config",
@@ -603,6 +609,7 @@ if (isTRUE(linux)) {
         expected = expectedVersion("clang")
     )
     checkMacOSAppVersion(c(
+        ## "Numbers",
         "Alacritty",
         "Aspera Connect",
         "BBEdit",
@@ -610,7 +617,6 @@ if (isTRUE(linux)) {
         "Docker",
         "LibreOffice",
         "Microsoft Excel",
-        "Numbers",
         "RStudio",
         "Tunnelblick",
         "Visual Studio Code",
