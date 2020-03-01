@@ -176,26 +176,27 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     fi
     _koopa_extract "${pkg}-${ver}.tar.bz2"
     cd "${pkg}-${ver}" || exit 1
-    # Customize build:
-    # https://github.com/gpg/pinentry/blob/master/README
-    #
-    # openSUSE is currently failing because of hard-wired path to ncursesw:
-    #
-    # In file included from /usr/include/ncursesw/curses.h:60:0,
-    # from pinentry-curses.c:25:
-    # /usr/include/ncursesw/curses.h:1457:21:
-    #   error: field '_nc_ttytype' declared as a function
+    flags=("--prefix=${prefix}")
     if _koopa_is_opensuse
     then
-        flags=(
+        # Build with ncurses is currently failing on openSUSE, due to
+        # hard-coded link to /usr/include/ncursesw that isn't easy to resolve:
+        #
+        # In file included from /usr/include/ncursesw/curses.h:60:0,
+        # from pinentry-curses.c:25:
+        #     /usr/include/ncursesw/curses.h:1457:21:
+        #     error: field '_nc_ttytype' declared as a function
+        #
+        # Falling back to using 'pinentry-tty' instead in this case.
+        flags+=(
             "--disable-fallback-curses"
             "--disable-pinentry-curses"
             "--enable-pinentry-tty"
         )
     else
-        flags=("--enable-pinentry-curses")
+        flags+=("--enable-pinentry-curses")
     fi
-    ./configure --prefix="$prefix" "${flags[@]}"
+    ./configure "${flags[@]}"
     make --jobs="$jobs"
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
