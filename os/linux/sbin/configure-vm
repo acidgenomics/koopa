@@ -9,8 +9,8 @@ _koopa_h1 "Configuring virtual machine."
 
 _koopa_assert_has_no_envs
 
+# > export GPG_TTY=/dev/null
 export FORCE_UNSAFE_CONFIGURE=1
-export GPG_TTY=/dev/null
 export KOOPA_FORCE=1
 export PYTHONDONTWRITEBYTECODE=true
 
@@ -219,18 +219,9 @@ fi
 
 if [[ "$rsync" -eq 0 ]]
 then
-    # Environment managers.
-    install-conda                                                       # 0.493G
-    if [[ "$docker" -eq 0 ]]
-    then
-        _koopa_run_if_installed install-docker
-        install-perlbrew                                                # 0.003G
-        install-pyenv                                                   # 0.009G
-        install-rbenv                                                   # 0.006G
-        install-lmod                                                    # 0.002G
-    fi
 
     # Core.
+    install-gnupg                                                       # 0.038G
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
     install-gawk
@@ -251,7 +242,6 @@ then
 
     # General tools.
     install-git                                                         # 0.177G
-    install-gnupg                                                       # 0.038G
     if [[ "$docker" -eq 0 ]]
     then
         install-lua                                                     # 0.001G
@@ -263,6 +253,17 @@ then
     if [[ "$docker" -eq 0 ]]
     then
         install-docker-credential-pass
+    fi
+
+    # Environment managers.
+    install-conda                                                       # 0.493G
+    if [[ "$docker" -eq 0 ]]
+    then
+        _koopa_run_if_installed install-docker
+        install-perlbrew                                                # 0.003G
+        install-pyenv                                                   # 0.009G
+        install-rbenv                                                   # 0.006G
+        install-lmod                                                    # 0.002G
     fi
 
     # Languages.
