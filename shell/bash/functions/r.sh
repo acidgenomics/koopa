@@ -16,7 +16,7 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_r_javareconf() {  # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-02-29.
     #
     # The default Java path differs depending on the system.
     #
@@ -65,10 +65,10 @@ _koopa_r_javareconf() {  # {{{1
 
     R --vanilla CMD javareconf "${java_flags[@]}"
 
-    if ! _koopa_is_r_package_installed rJava
-    then
-        Rscript -e 'install.packages("rJava")'
-    fi
+    # > if ! _koopa_is_r_package_installed rJava
+    # > then
+    # >     Rscript -e 'install.packages("rJava")'
+    # > fi
 
     return 0
 }
