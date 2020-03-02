@@ -205,10 +205,7 @@ then
 fi
 
 # Compilers.
-if [[ "$docker" -eq 0 ]]
-then
-    _koopa_run_if_installed install-llvm
-fi
+_koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
 if ! _koopa_is_alpine
@@ -234,18 +231,12 @@ then
         install-bash                                                    # 0.014G
     fi
     install-zsh                                                         # 0.011G
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-fish                                                    # 0.082G
-    fi
+    install-fish                                                        # 0.082G
 
     # General tools.
     install-git                                                         # 0.177G
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-lua                                                     # 0.001G
-        install-luarocks                                                # 0.002G
-    fi
+    install-lua                                                         # 0.001G
+    install-luarocks                                                    # 0.002G
 
     # Environment managers.
     install-conda                                                       # 0.493G
@@ -278,15 +269,12 @@ then
     fi
 
     # Heavy libraries.
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-geos
-        install-sqlite                                                  # 0.026G
-        install-proj                # install after sqlite              # 0.132G
-        install-gdal                # requires proj, python; slow       # 0.611G
-        install-hdf5                # requires gdal                     # 0.022G
-        install-gsl                                                     # 0.043G
-    fi
+    install-geos
+    install-sqlite                                                      # 0.026G
+    install-proj                    # install after sqlite              # 0.132G
+    install-gdal                    # requires proj, python; slow       # 0.611G
+    install-hdf5                    # requires gdal                     # 0.022G
+    install-gsl                                                         # 0.043G
 
     # Shell tools.
     install-htop                                                        # 0.001G
@@ -303,10 +291,10 @@ then
 
     # Text editors.
     install-vim
+    install-neovim                                                      # 0.029G
     if [[ "$docker" -eq 0 ]]
     then
         install-emacs               # can't build on docker             #     NA
-        install-neovim                                                  # 0.029G
     fi
 
     # Bioinformatics tools.
@@ -317,6 +305,10 @@ then
         install-bcbio
     fi
 fi
+
+_koopa_link_r_etc
+_koopa_link_r_site_library
+_koopa_r_javareconf
 
 _koopa_update_lmod_config
 
@@ -331,10 +323,6 @@ _koopa_run_if_installed \
     install-aws-cli \
     install-azure-cli \
     install-google-cloud-sdk
-
-_koopa_link_r_etc
-_koopa_link_r_site_library
-_koopa_r_javareconf
 
 # R, Python, Rust packages.
 if [[ "$rsync" -eq 0 ]]
