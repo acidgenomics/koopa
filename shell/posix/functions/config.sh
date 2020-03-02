@@ -522,6 +522,13 @@ _koopa_link_r_site_library() {  # {{{1
     _koopa_mkdir "$lib_source"
     _koopa_ln "$lib_source" "$lib_target"
 
+    # Debian R defaults to '/usr/local/lib/R/site-library' even though R_HOME
+    # is '/usr/lib/R'. Ensure we link here also.
+    if [[ -d "/usr/local/lib/R" ]]
+    then
+        _koopa_ln "$lib_source" "/usr/local/lib/R/site-library"
+    fi
+
     return 0
 }
 
