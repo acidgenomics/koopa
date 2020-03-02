@@ -191,7 +191,7 @@ fi
 
 if [[ -d "$data_disk" ]] && [[ -n "$source_ip" ]]
 then
-    host_ip="$(ip-address)"
+    host_ip="$(_koopa_local_ip_address)"
     if [[ "$source_ip" == "$host_ip" ]]
     then
         _koopa_note "Skipping rsync because '${host_ip}' is source machine."
