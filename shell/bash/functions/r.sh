@@ -16,7 +16,7 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_r_javareconf() {  # {{{1
     # """
     # Update R Java configuration.
-    # @note Updated 2020-02-29.
+    # @note Updated 2020-03-02.
     #
     # The default Java path differs depending on the system.
     #
@@ -56,19 +56,12 @@ _koopa_r_javareconf() {  # {{{1
         "JAR=${java_home}/bin/jar"
     )
 
-    # > local r_home
-    # > r_home="$(_koopa_r_home)"
-    # > if _koopa_is_cellar R
-    # > then
-    # >     _koopa_set_permissions --recursive "$r_home"
-    # > fi
-
-    R --vanilla CMD javareconf "${java_flags[@]}"
-
-    # > if ! _koopa_is_r_package_installed rJava
-    # > then
-    # >     Rscript -e 'install.packages("rJava")'
-    # > fi
+    if _koopa_is_cellar R
+    then
+        R --vanilla CMD javareconf "${java_flags[@]}"
+    else
+        sudo R --vanilla CMD javareconf "${java_flags[@]}"
+    fi
 
     return 0
 }

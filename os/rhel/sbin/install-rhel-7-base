@@ -87,7 +87,6 @@ then
         lua-posix
         proj-devel
         tesseract-devel
-        udunits2-devel
         v8-devel
     )
     sudo yum -y install "${pkgs[@]}"
