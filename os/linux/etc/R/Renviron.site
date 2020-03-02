@@ -140,6 +140,14 @@ R_REMOTES_UPGRADE="always"
 ## - `.Library`
 ## - `.Library.site`
 
+## Site library  {{{2
+## -----------------------------------------------------------------------------
+
+R_LIBS_SITE="${R_HOME}/site-library"
+
+## User library  {{{2
+## -----------------------------------------------------------------------------
+
 ## Linux default:
 ## R_LIBS_USER="~/R/%p-library/%v"
 ##
@@ -153,9 +161,6 @@ R_REMOTES_UPGRADE="always"
 ## `@MAJ_MIN_VERSION@` is likely something like '3.6'.
 ## Set this per-user via `%p` and `%v` for platform and version.
 ## > R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
-
-## > R_LIBS_SITE="${R_HOME}/site-library"
-## > R_LIBS_USER="~/R/%p-library/%v"
 
 ## Default packages  {{{2
 ## -----------------------------------------------------------------------------
