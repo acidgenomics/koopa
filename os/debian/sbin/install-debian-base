@@ -239,10 +239,6 @@ then
     _koopa_h2 "Installing extra recommended packages."
     pkgs+=(
         # default-jdk
-        # emacs
-        # perl
-        # sqlite
-        # zsh
         alien
         biber
         ggobi
