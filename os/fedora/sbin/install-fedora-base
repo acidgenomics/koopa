@@ -37,6 +37,7 @@ fi
 
 _koopa_h2 "Installing default packages."
 pkgs=(
+    autoconf
     bash
     bzip2
     cmake
@@ -49,6 +50,7 @@ pkgs=(
     git
     gnupg2
     gnutls
+    libtool
     lua
     make
     man-db
