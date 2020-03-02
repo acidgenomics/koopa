@@ -50,7 +50,9 @@ export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
     cd "${name}-${version}" || exit 1
     ./configure \
         --build="$build" \
-        --prefix="$prefix"
+        --prefix="$prefix" \
+        CFLAGS="-I${make_prefix}/include" \
+        LDFLAGS="-L${make_prefix}/lib"
     make --jobs="$jobs"
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
