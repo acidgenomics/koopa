@@ -6,8 +6,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
-# Currently returning 1 on succesful build, so ignore error.
-# https://bugs.archlinux.org/task/10443
+# See also:
+# - http://www.lua.org/manual/5.3/readme.html
+# - https://bugs.archlinux.org/task/10443
+# - https://ubuntuforums.org/showthread.php?t=1597945
 # """
 
 name="lua"
@@ -30,13 +32,9 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
-    # > if _koopa_is_macos
-    # > then
-    # >     make macosx test
-    # > else
-    # >     make linux test
-    # > fi
-    make install INSTALL_TOP="$prefix" || true
+    make linux
+    make test
+    make install INSTALL_TOP="$prefix"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
