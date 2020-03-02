@@ -33,13 +33,13 @@ tmp_dir="$(_koopa_tmp_dir)"
     # Use 'configure --help' for build options.
     # If you don't need python support you can suppress it at configure using
     # '--without-python'.
-    CPPFLAGS="-I${make_prefix}/include" \
-        LDFLAGS="-L${make_prefix}/lib" \
-        ./configure \
+    ./configure \
         --build="$build" \
         --prefix="$prefix" \
         --with-proj="$make_prefix" \
-        --with-python="python3"
+        --with-python="python3" \
+        CPPFLAGS="-I${make_prefix}/include" \
+        LDFLAGS="-L${make_prefix}/lib"
     make --jobs="$jobs"
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
