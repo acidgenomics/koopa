@@ -39,18 +39,21 @@ fi
 
 _koopa_h2 "Installing default packages."
 pkgs=(
+    autoconf
     bash
     bzip2
     cmake
     convmv
     cryptsetup
     curl
+    findutils
     gcc
     gcc-c++
     gcc-gfortran
     git
     gnupg2
     gnutls
+    libtool
     lua
     make
     man-db
@@ -87,6 +90,7 @@ then
         libevent-devel
         libffi-devel
         libseccomp-devel
+        libtiff-devel
         libuuid-devel
         libxml2-devel
         llvm-devel
@@ -96,6 +100,7 @@ then
         pcre-devel
         postgresql-devel
         readline-devel
+        udunits2-devel
         unixODBC-devel
         xz-devel
     )
@@ -109,8 +114,9 @@ if [[ "$extra" -eq 1 ]]
 then
     _koopa_h2 "Installing extra recommended packages."
     pkgs=(
-        emacs
-        golang
+        # emacs
+        # golang
+        # zsh
         llvm
         texlive
         texlive-bera
@@ -136,7 +142,6 @@ then
         texlive-titlesec
         texlive-titling
         texlive-xstring
-        zsh
     )
     sudo yum -y install "${pkgs[@]}"
 fi
