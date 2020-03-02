@@ -339,10 +339,10 @@ _koopa_r_javareconf
 # R, Python, Rust packages.
 if [[ "$rsync" -eq 0 ]]
 then
+    install-r-packages
     install-python-packages
     if [[ "$docker" -eq 0 ]]
     then
-        install-r-packages
         install-rust-packages
     fi
 fi
