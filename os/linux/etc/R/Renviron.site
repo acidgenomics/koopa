@@ -102,7 +102,8 @@ export _R_CHECK_S3_METHODS_NOT_REGISTERED_=true
 ## =============================================================================
 
 ## This is necessary for rgdal, sf packages to install clean.
-PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig"
+PKG_CONFIG_PATH="/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig"
+
 PROJ_LIB="/usr/local/share/proj"
 
 ## GitHub remote installs  {{{2
