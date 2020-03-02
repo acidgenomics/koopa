@@ -99,6 +99,7 @@ legacy_pkgs=(
     libgeos-dev         # use 'install-geos'
     libgsl-dev          # use 'install-gsl'
     libhdf5-dev         # use 'install-hdf5'
+    libnetcdf-dev
     runc                # docker-legacy
 )
 for pkg in "${legacy_pkgs[@]}"
