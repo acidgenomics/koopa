@@ -88,6 +88,7 @@ then
         libevent-devel
         libffi-devel
         libseccomp-devel
+        libtiff-devel
         libuuid-devel
         libxml2-devel
         llvm-devel
