@@ -27,11 +27,11 @@ docker login
 
 images=(
     # Lightweight Linux images.
+    acidgenomics/alpine
     acidgenomics/biocontainers
     acidgenomics/kali
     acidgenomics/miniconda3
     # Full Linux images.
-    acidgenomics/alpine
     acidgenomics/amzn
     acidgenomics/arch
     acidgenomics/centos
