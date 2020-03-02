@@ -89,18 +89,23 @@ _koopa_h2 "Installing default packages."
 # Clean up previous installs first, if applicable.
 apt_installed="$(sudo apt list --installed 2> /dev/null)"
 legacy_pkgs=(
-    cargo               # use 'install-rust'
-    containerd          # docker-legacy
-    docker              # docker-legacy
-    docker-engine       # docker-legacy
-    docker.io           # docker-legacy
-    fish                # use 'install-fish'
-    libgdal-dev         # use 'install-gdal'
-    libgeos-dev         # use 'install-geos'
-    libgsl-dev          # use 'install-gsl'
-    libhdf5-dev         # use 'install-hdf5'
+    containerd              # docker-legacy
+    docker                  # docker-legacy
+    docker-engine           # docker-legacy
+    docker.io               # docker-legacy
+    runc                    # docker-legacy
+    cargo                   # use 'install-rust'
+    emacs                   # use 'install-emacs'
+    emacs25                 # gets installed by zsh
+    fish                    # use 'install-fish'
+    libgdal-dev             # use 'install-gdal'
+    libgeos-dev             # use 'install-geos'
+    libgsl-dev              # use 'install-gsl'
+    libhdf5-dev             # use 'install-hdf5'
     libnetcdf-dev
-    runc                # docker-legacy
+    sqlite3                 # use 'install-sqlite'
+    zsh                     # use 'install-zsh'
+    zsh-common
 )
 for pkg in "${legacy_pkgs[@]}"
 do
