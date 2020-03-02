@@ -61,6 +61,6 @@ rm -fr "$tmp_dir"
 
 _koopa_link_cellar "$name" "$version"
 
-pkg-config --libs proj
+# > pkg-config --libs proj
 
 _koopa_install_success "$name"
