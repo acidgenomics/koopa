@@ -19,14 +19,14 @@ sudo apk upgrade
 
 packages=(
     # .build-dependencies
+    # R-dev
+    # R-doc
     # fish
     # pandoc
     # pandoc-citeproc
     # texlive
     # zsh
     R
-    R-dev
-    R-doc
     autoconf
     bash
     bash-completion
