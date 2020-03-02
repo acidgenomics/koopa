@@ -49,7 +49,4 @@ packages=(
 )
 sudo apk add --no-cache --virtual "${packages[@]}"
 
-# Conda requires glibc, but alpine uses musl libc.
-install-glibc
-
 _koopa_install_success "$name_fancy"
