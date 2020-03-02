@@ -306,6 +306,8 @@ then
     fi
 fi
 
+sudo ldconfig -v
+
 _koopa_update_lmod_config
 
 if _koopa_is_debian
