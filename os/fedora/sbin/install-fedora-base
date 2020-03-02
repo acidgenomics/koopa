@@ -44,6 +44,7 @@ pkgs=(
     convmv
     cryptsetup
     curl
+    findutils
     gcc
     gcc-c++
     gcc-gfortran
@@ -109,8 +110,9 @@ if [[ "$extra" -eq 1 ]]
 then
     _koopa_h2 "Installing extra recommended packages."
     pkgs=(
-        emacs
-        golang
+        # emacs
+        # golang
+        # zsh
         llvm
         texlive
         texlive-bera
@@ -136,7 +138,6 @@ then
         texlive-titlesec
         texlive-titling
         texlive-xstring
-        zsh
     )
     sudo yum -y install "${pkgs[@]}"
 fi
