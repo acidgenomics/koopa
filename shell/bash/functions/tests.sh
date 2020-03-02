@@ -12,6 +12,7 @@ _koopa_test_find_files() {  # {{{1
         -type f \
         -not -name "$(basename "$0")" \
         -not -name "*.md" \
+        -not -name "*.site" \
         -not -name ".pylintrc" \
         -not -path "${koopa_prefix}/.git/*" \
         -not -path "${koopa_prefix}/cellar/*" \
