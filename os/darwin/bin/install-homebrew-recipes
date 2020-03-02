@@ -180,6 +180,7 @@ brews=(
     ffmpeg
     findutils
     fzf
+    gawk
     gcc
     gdal
     git
