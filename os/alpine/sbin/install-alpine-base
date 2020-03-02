@@ -18,12 +18,12 @@ sudo apk update
 sudo apk upgrade
 
 packages=(
+    # .build-dependencies
+    # fish
     # pandoc
     # pandoc-citeproc
-    # fish
     # texlive
     # zsh
-    .build-dependencies
     R
     R-dev
     R-doc
@@ -38,6 +38,7 @@ packages=(
     git
     libevent-dev
     libffi-dev
+    libxml2-dev
     mdocml
     openssl
     shadow
