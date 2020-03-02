@@ -23,6 +23,8 @@ _koopa_h1 "Installing Fedora base system."
 
 _koopa_assert_is_installed sudo
 
+# > sudo dnf clean
+
 # Upgrade  {{{1
 # ==============================================================================
 
