@@ -306,11 +306,21 @@ then
     fi
 fi
 
+_koopa_update_lmod_config
+
+if _koopa_is_debian
+then
+    sudo chown -Rh root:root /usr/lib/R
+    sudo chmod -R g-w /usr/lib/R
+    sudo chown -Rh root:root /usr/share/R
+    sudo chmod -R g-w /usr/share/R
+    # Need to ensure group write so package index gets updated.
+    _koopa_set_permissions /usr/share/R/doc/html/packages.html
+fi
+
 _koopa_link_r_etc
 _koopa_link_r_site_library
 _koopa_r_javareconf
-
-_koopa_update_lmod_config
 
 # RStudio.
 _koopa_run_if_installed \
