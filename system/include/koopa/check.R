@@ -163,14 +163,12 @@ installed(
 
 ## Shells ======================================================================
 h2("Shells")
-if (!identical(os, "alpine-3")) {
-    checkVersion(
-        name = "Bash",
-        whichName = "bash",
-        current = currentVersion("bash"),
-        expected = expectedVersion("bash")
-    )
-}
+checkVersion(
+    name = "Bash",
+    whichName = "bash",
+    current = currentVersion("bash"),
+    expected = expectedVersion("bash")
+)
 checkVersion(
     name = "Zsh",
     whichName = "zsh",
@@ -289,14 +287,12 @@ if (!isTRUE(docker)) {
         expected = expectedMinorVersion("go")
     )
 }
-if (!identical(os, "alpine-3")) {
-    checkVersion(
-        name = "Java",
-        whichName = "java",
-        current = currentVersion("java"),
-        expected = expectedVersion("java")
-    )
-}
+checkVersion(
+    name = "Java",
+    whichName = "java",
+    current = currentVersion("java"),
+    expected = expectedVersion("java")
+)
 if (!isTRUE(docker)) {
     checkVersion(
         name = "Julia",
@@ -385,7 +381,6 @@ if (!isTRUE(docker)) {
 
 ## Cloud APIs ==================================================================
 if (
-    !identical(os, "alpine-3") &&
     !identical(os, "arch-rolling") &&
     !identical(os, "opensuse-leap-15")
 ) {
