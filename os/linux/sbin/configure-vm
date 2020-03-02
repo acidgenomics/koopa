@@ -318,7 +318,7 @@ then
     fi
 fi
 
-_update_lmod_config
+_koopa_update_lmod_config
 
 # RStudio.
 _koopa_run_if_installed \
