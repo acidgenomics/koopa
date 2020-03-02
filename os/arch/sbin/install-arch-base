@@ -32,7 +32,9 @@ packages=(
     # texlive-core
     # zsh
     autoconf
+    automake
     awk
+    base-devel
     bash
     bc
     cmake
