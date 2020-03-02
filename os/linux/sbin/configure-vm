@@ -313,25 +313,14 @@ then
     if [[ "$docker" -eq 0 ]]
     then
         install-aspera-connect                                          # 0.090G
-    fi
-
-    # Software packages.
-    install-python-packages
-    install-r-packages
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-rust-packages
         conda-create-bioinfo-envs --all
         install-bcbio
     fi
-else
-    # This is breaking on Bioconductor image, so skip.
-    _koopa_link_r_etc
-    _koopa_link_r_site_library
-    _koopa_r_javareconf
-    _update_lmod_config
 fi
 
+_update_lmod_config
+
+# RStudio.
 _koopa_run_if_installed \
     install-rstudio-server \
     install-shiny-server
@@ -342,6 +331,20 @@ _koopa_run_if_installed \
     install-aws-cli \
     install-azure-cli \
     install-google-cloud-sdk
+
+# R, Python, Rust packages.
+if [[ "$rsync" -eq 0 ]]
+then
+    _koopa_link_r_etc
+    _koopa_link_r_site_library
+    _koopa_r_javareconf
+    install-r-packages
+    install-python-packages
+    if [[ "$docker" -eq 0 ]]
+    then
+        install-rust-packages
+    fi
+fi
 
 if [[ "$docker" -eq 0 ]]
 then
