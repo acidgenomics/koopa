@@ -102,6 +102,9 @@ fi
 
 # Preconfigured on some Linux systems at '/etc/profile.d/less.sh'.
 #
+# On some older Linux distros:
+# > eval $(/usr/bin/lesspipe)
+#
 # See also:
 # - https://github.com/wofr06/lesspipe
 
