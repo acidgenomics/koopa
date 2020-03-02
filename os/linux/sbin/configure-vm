@@ -207,7 +207,6 @@ fi
 # Compilers.
 if [[ "$docker" -eq 0 ]]
 then
-    # /usr/lib/llvm-9                                                   # 0.285G
     _koopa_run_if_installed install-llvm
 fi
 
@@ -248,13 +247,6 @@ then
         install-luarocks                                                # 0.002G
     fi
 
-    # Password management.
-    install-pass
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-docker-credential-pass
-    fi
-
     # Environment managers.
     install-conda                                                       # 0.493G
     if [[ "$docker" -eq 0 ]]
@@ -264,6 +256,13 @@ then
         install-pyenv                                                   # 0.009G
         install-rbenv                                                   # 0.006G
         install-lmod                                                    # 0.002G
+    fi
+
+    # Password management.
+    install-pass
+    if [[ "$docker" -eq 0 ]]
+    then
+        install-docker-credential-pass
     fi
 
     # Languages.
@@ -318,28 +317,24 @@ then
 
     # Software packages.
     install-python-packages
+    install-r-packages
     if [[ "$docker" -eq 0 ]]
     then
         install-rust-packages
-        _koopa_link_r_site_library
-        install-r-packages
         conda-create-bioinfo-envs --all
         install-bcbio
     fi
+else
+    # This is breaking on Bioconductor image, so skip.
+    _koopa_link_r_etc
+    _koopa_link_r_site_library
+    _koopa_r_javareconf
+    _update_lmod_config
 fi
 
-# This is breaking on Bioconductor image, so skip.
-# _koopa_link_r_etc
-# _koopa_link_r_site_library
-# _koopa_r_javareconf
-
-if [[ "$docker" -eq 0 ]]
-then
-    _koopa_run_if_installed \
-        install-rstudio-server \
-        install-shiny-server
-    _koopa_update_lmod_config
-fi
+_koopa_run_if_installed \
+    install-rstudio-server \
+    install-shiny-server
 
 # Cloud APIs.
 # Note that Azure CLI requires Python 3, so install at the end.
