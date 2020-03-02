@@ -19,6 +19,7 @@ remove(
         "bioverbs",
         "brio",
         "freerange",
+        "nvimcom",
         "transformer"
     )
 )
