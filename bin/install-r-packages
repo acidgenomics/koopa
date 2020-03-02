@@ -39,8 +39,8 @@ install(
         "RcppArmadillo",
         "XML",
         "rJava",
-        "rgdal",
-        "sf"
+        "sf",
+        "rgdal"
     )
 )
 
