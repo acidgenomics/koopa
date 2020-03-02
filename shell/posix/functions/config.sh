@@ -452,7 +452,7 @@ _koopa_link_docker() {  # {{{1
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-03-01.
+    # @note Updated 2020-03-02.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -483,8 +483,6 @@ _koopa_link_r_etc() {  # {{{1
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     [ -d "$r_etc_source" ] || return 1
 
-    _koopa_h2 "Updating '${r_etc_target}' from '${r_etc_source}'."
-
     # Don't overwrite the Bioconductor Docker config.
     _koopa_ln "${r_etc_source}/"*".site" "${r_home}/etc/."
 
@@ -494,7 +492,7 @@ _koopa_link_r_etc() {  # {{{1
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-03-01.
+    # @note Updated 2020-03-02.
     # """
     _koopa_is_installed R || return 0
 
@@ -516,8 +514,6 @@ _koopa_link_r_site_library() {  # {{{1
 
     local lib_target
     lib_target="${r_home}/site-library"
-
-    _koopa_h2 "Creating site library at '${r_home}'."
 
     _koopa_mkdir "$lib_source"
     _koopa_ln "$lib_source" "$lib_target"
