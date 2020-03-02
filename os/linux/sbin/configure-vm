@@ -332,12 +332,13 @@ _koopa_run_if_installed \
     install-azure-cli \
     install-google-cloud-sdk
 
+_koopa_link_r_etc
+_koopa_link_r_site_library
+_koopa_r_javareconf
+
 # R, Python, Rust packages.
 if [[ "$rsync" -eq 0 ]]
 then
-    _koopa_link_r_etc
-    _koopa_link_r_site_library
-    _koopa_r_javareconf
     install-python-packages
     if [[ "$docker" -eq 0 ]]
     then
