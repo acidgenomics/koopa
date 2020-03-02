@@ -710,14 +710,22 @@ _koopa_list_internal_functions() {  # {{{1
 _koopa_ln() {  # {{{1
     # """
     # Create symlink quietly.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-02.
     # """
+    local source_file
+    source_file="${1:?}"
+
+    local target_file
+    target_file="${2:?}"
+    _koopa_rm "$target_file"
+
     if _koopa_is_shared_install
     then
-        sudo ln -fns "$@"
+        sudo ln -fns "$source_file" "$target_file"
     else
-        ln -fns "$@"
+        ln -fns "$source_file" "$target_file"
     fi
+
     return 0
 }
 
