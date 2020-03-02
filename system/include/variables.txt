@@ -153,7 +153,7 @@ lmod="8.3"
 lua="5.3.5"
 
 # https://github.com/luarocks/luarocks/releases
-luarocks="3.2.1"
+luarocks="3.3.1"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.2"
