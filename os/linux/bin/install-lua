@@ -8,8 +8,6 @@ source "${script_dir}/../include/header.sh"
 # """
 # See also:
 # - http://www.lua.org/manual/5.3/readme.html
-# - https://bugs.archlinux.org/task/10443
-# - https://ubuntuforums.org/showthread.php?t=1597945
 # """
 
 name="lua"
