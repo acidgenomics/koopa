@@ -338,10 +338,10 @@ then
     _koopa_link_r_etc
     _koopa_link_r_site_library
     _koopa_r_javareconf
-    install-r-packages
     install-python-packages
     if [[ "$docker" -eq 0 ]]
     then
+        install-r-packages
         install-rust-packages
     fi
 fi
