@@ -35,6 +35,7 @@ h2("Tricky packages")
 install(
     pkgs = c(
         "Rcpp",
+        "RcppAnnoy",
         "RcppArmadillo",
         "XML",
         "rJava",
@@ -45,19 +46,19 @@ install(
 
 ## Fix for BiocNeighbors.
 ## https://github.com/LTLA/BiocNeighbors/issues/10
-install.packages(
-    pkgs = paste(
-        "https://cran.r-project.org",
-        "src",
-        "contrib",
-        "Archive",
-        "RcppAnnoy",
-        "RcppAnnoy_0.0.14.tar.gz",
-        sep = "/"
-    ),
-    repos = NULL,
-    type = "source"
-)
+## > install.packages(
+## >     pkgs = paste(
+## >         "https://cran.r-project.org",
+## >         "src",
+## >         "contrib",
+## >         "Archive",
+## >         "RcppAnnoy",
+## >         "RcppAnnoy_0.0.14.tar.gz",
+## >         sep = "/"
+## >     ),
+## >     repos = NULL,
+## >     type = "source"
+## > )
 
 h2("CRAN")
 install(
