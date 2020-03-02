@@ -35,6 +35,7 @@ packages=(
     awk
     bash
     bc
+    cmake
     gcc
     gcc-fortran
     gettext
