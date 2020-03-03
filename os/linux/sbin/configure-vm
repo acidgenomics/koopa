@@ -124,6 +124,7 @@ _koopa_assert_is_installed \
     msgfmt \
     tar \
     unzip \
+    xml2-config \
     xz
 
 if [[ "$config" == "constellation-aws" ]]

@@ -36,6 +36,7 @@ packages=(
     libcurl-devel
     libevent-devel
     libffi-devel
+    libxml2-devel
     lzma-devel
     make
     man
