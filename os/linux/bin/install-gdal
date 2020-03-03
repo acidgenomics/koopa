@@ -16,7 +16,7 @@ _koopa_coffee_time
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-_koopa_assert_is_installed proj
+_koopa_assert_is_installed proj python3
 
 build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
