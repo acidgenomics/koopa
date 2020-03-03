@@ -30,15 +30,6 @@ _koopa_bcbio_nextgen_current_version() {  # {{{1
     return 0
 }
 
-_koopa_bioconductor_version() {  # {{{1
-    # """
-    # Bioconductor version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_r_package_version "BiocVersion"
-    return 0
-}
-
 _koopa_extract_version() {  # {{{1
     # """
     # Extract version number.
@@ -307,29 +298,6 @@ _koopa_perl_file_rename_version() {  # {{{1
     x="$(rename --version | head -n 1)"
     echo "$x" | grep -q 'File::Rename' || return 1
     _koopa_extract_version "$x"
-    return 0
-}
-
-_koopa_r_version() {  # {{{1
-    # """
-    # R version.
-    # @note Updated 2020-03-01.
-    # """
-    _koopa_get_version R
-    return 0
-}
-
-_koopa_r_package_version() {  # {{{1
-    # """
-    # R package version.
-    # @note Updated 2020-02-10.
-    # """
-    local pkg
-    pkg="${1:?}"
-    _koopa_is_r_package_installed "$pkg" || return 1
-    local x
-    x="$(Rscript -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")")"
-    echo "$x"
     return 0
 }
 
