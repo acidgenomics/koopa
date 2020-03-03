@@ -35,7 +35,8 @@ automake="1.16.1"
 autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
-aws-cli="2.0.1"
+# https://github.com/aws/aws-cli/releases
+aws-cli="2.0.2"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.1.0"
