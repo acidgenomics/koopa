@@ -203,7 +203,7 @@ then
     fi
 fi
 
-# Compilers.
+# LLVM.
 _koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
@@ -215,10 +215,13 @@ fi
 if [[ "$rsync" -eq 0 ]]
 then
     # Core.
+    [[ "$docker" -eq 0 ]] && install-gcc
+    install-make
     install-autoconf
     install-automake
     install-libtool
     install-cmake
+    install-binutils
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
     install-patch
@@ -227,14 +230,6 @@ then
     install-grep
     install-gawk
     install-parallel
-
-    # Libraries.
-    install-geos
-    install-sqlite                                                      # 0.026G
-    install-proj                    # install after sqlite              # 0.132G
-    install-gdal                    # requires proj, python; slow       # 0.611G
-    install-hdf5                    # requires gdal                     # 0.022G
-    install-gsl                                                         # 0.043G
 
     # Shells.
     if ! _koopa_is_alpine
@@ -278,6 +273,14 @@ then
         install-ruby                                                    # 0.178G
         install-rust                                                    # 0.724G
     fi
+
+    # Libraries.
+    install-geos
+    install-sqlite                                                      # 0.026G
+    install-proj                    # install after sqlite              # 0.132G
+    install-gdal                    # requires proj, python; slow       # 0.611G
+    install-hdf5                    # requires gdal                     # 0.022G
+    install-gsl                                                         # 0.043G
 
     # Shell tools.
     install-htop                                                        # 0.001G

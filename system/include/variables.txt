@@ -35,7 +35,8 @@ automake="1.16.1"
 autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
-aws-cli="2.0.1"
+# https://github.com/aws/aws-cli/releases
+aws-cli="2.0.2"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.1.0"
@@ -52,6 +53,9 @@ bcbio-nextgen="1.2.0"
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
+
+# https://ftp.gnu.org/gnu/binutils/
+binutils="2.34"
 
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
@@ -103,6 +107,9 @@ fish="3.1.0"
 
 # https://ftp.gnu.org/gnu/gawk/
 gawk="5.0.1"
+
+# https://ftp.gnu.org/gnu/gcc/
+gcc="9.2.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
@@ -166,6 +173,9 @@ lua="5.3.5"
 
 # https://github.com/luarocks/luarocks/releases
 luarocks="3.3.1"
+
+# https://ftp.gnu.org/gnu/make/
+make="4.3"
 
 # https://ftp.gnu.org/pub/gnu/ncurses/
 ncurses="6.2"

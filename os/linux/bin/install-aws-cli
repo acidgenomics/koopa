@@ -5,13 +5,27 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Note that the AWS bundled installer isn't versioned in the file name, so we
+# need to detect and place in the cellar dynamically instead.
+#
+# https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
+# https://github.com/aws/aws-cli
+#
+# Alternate approach, using source code on GitHub:
+# > file="${version}.tar.gz"
+# > url="https://github.com/aws/${name}/archive/${file}"
+# > [...]
+# > python3 setup.py install
+# """
+
 name="aws-cli"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 _koopa_exit_if_dir "$prefix"
 
 name_fancy="AWS CLI"
-_koopa_install_start "$name_fancy" "$prefix"
+_koopa_install_start "$name_fancy"
 tmp_dir="$(_koopa_tmp_dir)"
 
 (
@@ -21,15 +35,25 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_download "$url"
     _koopa_extract "$file"
     tmp_install_dir="tmp_install"
-    # This is a throw-away, we'll link ourselves below.
     tmp_bin_dir="tmp_bin"
     ./aws/install \
-        --install-dir "$tmp_install_dir" \
-        --bin-dir "$tmp_bin_dir" \
+        -i "$tmp_install_dir" \
+        -b "$tmp_bin_dir" \
         > /dev/null
-    _koopa_cp "${tmp_install_dir}/v2/${version}" "$prefix"
+    _koopa_cd "${tmp_install_dir}/v2"
+    version="$( \
+        find . \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type d \
+            -name "2.*" \
+    )"
+    version="$(basename "$version")"
+    prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+    _koopa_exit_if_dir "$prefix"
+    _koopa_cp "$version" "$prefix"
+    _koopa_link_cellar "$name" "$version"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_rm "$tmp_dir"
-_koopa_link_cellar "$name" "$version"
 _koopa_install_success "$name_fancy"

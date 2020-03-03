@@ -41,9 +41,12 @@ packages=(
     cmake
     gcc-fortran
     git
+    gmp
     libevent
     libffi
     man
+    mpc
+    mpfr
     r
     tcl
     tree

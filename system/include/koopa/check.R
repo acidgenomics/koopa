@@ -184,51 +184,87 @@ if (!isTRUE(docker)) {
     )
 }
 
-## GNU packages ================================================================
-h2("GNU packages")
+## Core packages ===============================================================
+h2("Core packages")
 checkVersion(
-    name = "coreutils",
+    name = "GNU autoconf",
+    whichName = "autoconf",
+    current = currentVersion("autoconf"),
+    expected = expectedVersion("autoconf")
+)
+checkVersion(
+    name = "GNU automake",
+    whichName = "automake",
+    current = currentVersion("automake"),
+    expected = expectedVersion("automake")
+)
+checkVersion(
+    name = "GNU binutils",
+    whichName = "ld",
+    current = currentVersion("binutils"),
+    expected = expectedVersion("binutils")
+)
+checkVersion(
+    name = "GNU coreutils",
     whichName = "env",
     current = currentVersion("coreutils"),
     expected = expectedVersion("coreutils")
 )
 checkVersion(
-    name = "findutils",
+    name = "GNU findutils",
     whichName = "find",
     current = currentVersion("findutils"),
     expected = expectedVersion("findutils")
 )
 checkVersion(
-    name = "gawk",
+    name = "GNU gawk",
     whichName = "gawk",
     current = currentVersion("gawk"),
     expected = expectedVersion("gawk")
 )
 checkVersion(
-    name = "grep",
+    name = "GNU grep",
     whichName = "grep",
     current = currentVersion("grep"),
     expected = expectedVersion("grep")
 )
+checkVersion(
+    name = "GNU libtool",
+    whichName = "libtool",
+    current = currentVersion("libtool"),
+    expected = expectedVersion("libtool")
+)
+checkVersion(
+    name = "GNU make",
+    whichName = "make",
+    current = currentVersion("make"),
+    expected = expectedVersion("make")
+)
 if (isTRUE(linux)) {
     checkVersion(
-        name = "ncurses",
+        name = "GNU ncurses",
         whichName = "ncurses6-config",
         current = currentMinorVersion("ncurses"),
         expected = expectedVersion("ncurses")
     )
 }
 checkVersion(
-    name = "parallel",
+    name = "GNU parallel",
     whichName = "parallel",
     current = currentVersion("parallel"),
     expected = expectedVersion("parallel")
 )
 checkVersion(
-    name = "patch",
+    name = "GNU patch",
     whichName = "patch",
     current = currentVersion("patch"),
     expected = expectedVersion("patch")
+)
+checkVersion(
+    name = "CMake",
+    whichName = "cmake",
+    current = currentVersion("cmake"),
+    expected = expectedVersion("cmake")
 )
 
 ## Editors =====================================================================
