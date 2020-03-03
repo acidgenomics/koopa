@@ -333,14 +333,17 @@ if (.isInstalled("readr")) {
             }
             rm(clang_bin_dir, clang_ver)
         } else if (Sys.info()[["sysname"]] == "Linux") {
+            ## Build GCC from source, to control version across platforms.
+            ## > usr_local_bin <- file.path("", "usr", "local", "bin")
             ## > stopifnot(identical(
             ## >     x = Sys.which(c("gcc", "g++", "gfortran")),
             ## >     y = c(
-            ## >         "gcc"      = file.path("", "usr", "bin", "gcc"),
-            ## >         "g++"      = file.path("", "usr", "bin", "g++"),
-            ## >         "gfortran" = file.path("", "usr", "bin", "gfortran")
+            ## >         "gcc"      = file.path(usr_local_bin, "gcc"),
+            ## >         "g++"      = file.path(usr_local_bin, "g++"),
+            ## >         "gfortran" = file.path(usr_local_bin, "gfortran")
             ## >     )
             ## > ))
+            ## > rm(usr_local_bin)
         } 
     }
 
