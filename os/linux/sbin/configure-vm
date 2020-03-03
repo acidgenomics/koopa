@@ -215,6 +215,7 @@ fi
 if [[ "$rsync" -eq 0 ]]
 then
     # Core.
+    install-make
     install-autoconf
     install-automake
     install-libtool
