@@ -261,6 +261,12 @@ checkVersion(
     expected = expectedVersion("patch")
 )
 checkVersion(
+    name = "GNU texinfo",
+    whichName = "makeinfo",
+    current = currentVersion("texinfo"),
+    expected = expectedVersion("texinfo")
+)
+checkVersion(
     name = "CMake",
     whichName = "cmake",
     current = currentVersion("cmake"),
