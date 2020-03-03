@@ -199,6 +199,12 @@ checkVersion(
     expected = expectedVersion("automake")
 )
 checkVersion(
+    name = "GNU binutils",
+    whichName = "ld",
+    current = currentVersion("binutils"),
+    expected = expectedVersion("binutils")
+)
+checkVersion(
     name = "GNU coreutils",
     whichName = "env",
     current = currentVersion("coreutils"),
