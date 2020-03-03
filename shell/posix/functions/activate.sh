@@ -286,39 +286,71 @@ _koopa_activate_homebrew() {  # {{{1
 _koopa_activate_homebrew_gnu_utils() {
     # """
     # Activate Homebrew GNU utils.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-03.
     #
-    # Linked using "g*" prefix by default.
+    # Linked using 'g' prefix by default.
     #
-    # 'grep' may result in this warning on macOS:
-    # warning: GREP_OPTIONS is deprecated
+    # Note that libtool is always prefixed with 'g', even in 'opt/'.
     #
     # @seealso:
+    # - brew info binutils
     # - brew info coreutils
     # - brew info findutils
     # - brew info grep
+    # - brew info libtool
+    # - brew info make
+    # - brew info texinfo
     # """
     local homebrew_prefix
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     local prefix
+
+    # binutils
+    # > prefix="${homebrew_prefix}/opt/binutils"
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     _koopa_force_add_to_path_start "${prefix}/bin"
+    # > fi
+
+    # coreutils
     prefix="${homebrew_prefix}/opt/coreutils/libexec"
     if [ -d "$prefix" ]
     then
         _koopa_force_add_to_path_start "${prefix}/gnubin"
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     fi
+
+    # findutils
     prefix="${homebrew_prefix}/opt/findutils/libexec"
     if [ -d "$prefix" ]
     then
         _koopa_force_add_to_path_start "${prefix}/gnubin"
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     fi
+
+    # grep
     prefix="${homebrew_prefix}/opt/grep/libexec"
     if [ -d "$prefix" ]
     then
         _koopa_force_add_to_path_start "${prefix}/gnubin"
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     fi
+
+    # make
+    prefix="${homebrew_prefix}/opt/make/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+
+    # texinfo
+    prefix="${homebrew_prefix}/opt/texinfo"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/bin"
+    fi
+
     return 0
 }
 
