@@ -198,12 +198,14 @@ checkVersion(
     current = currentVersion("automake"),
     expected = expectedVersion("automake")
 )
-checkVersion(
-    name = "GNU binutils",
-    whichName = "ld",
-    current = currentVersion("binutils"),
-    expected = expectedVersion("binutils")
-)
+if (isTRUE(linux)) {
+    checkVersion(
+        name = "GNU binutils",
+        whichName = "ld",
+        current = currentVersion("binutils"),
+        expected = expectedVersion("binutils")
+    )
+}
 checkVersion(
     name = "GNU coreutils",
     whichName = "env",
@@ -228,12 +230,14 @@ checkVersion(
     current = currentVersion("grep"),
     expected = expectedVersion("grep")
 )
-checkVersion(
-    name = "GNU libtool",
-    whichName = "libtool",
-    current = currentVersion("libtool"),
-    expected = expectedVersion("libtool")
-)
+if (isTRUE(linux)) {
+    checkVersion(
+        name = "GNU libtool",
+        whichName = "libtool",
+        current = currentVersion("libtool"),
+        expected = expectedVersion("libtool")
+    )
+}
 checkVersion(
     name = "GNU make",
     whichName = "make",

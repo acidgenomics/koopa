@@ -1,7 +1,7 @@
 # Koopa internal variables.
 
 koopa-version="0.7.0a"
-koopa-date="2020-03-02"
+koopa-date="2020-03-03"
 koopa-url="https://koopa.acidgenomics.com/"
 koopa-github-url="https://github.com/acidgenomics/koopa/"
 
@@ -141,7 +141,7 @@ gsl="2.6"
 hdf5="1.10.6"
 
 # https://brew.sh/
-homebrew="2.2.6"
+homebrew="2.2.7"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
