@@ -724,9 +724,9 @@ _koopa_ln() {  # {{{1
 
     if _koopa_is_shared_install
     then
-        sudo ln -fns "$source_file" "$target_file"
+        sudo ln -fnsv "$source_file" "$target_file"
     else
-        ln -fns "$source_file" "$target_file"
+        ln -fnsv "$source_file" "$target_file"
     fi
 
     return 0
