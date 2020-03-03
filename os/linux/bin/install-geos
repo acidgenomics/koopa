@@ -33,10 +33,7 @@ tmp_dir="$(_koopa_tmp_dir)"
     ./configure \
         --build="$build" \
         --prefix="$prefix"
-    # Attempt to avoid 'test-driver' error by not building in parallel?
-    # parallel-tests: installing './test-driver'
-    # > make --jobs="$jobs"
-    make
+    make --jobs="$jobs"
     # > make check
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
