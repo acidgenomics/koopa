@@ -8,10 +8,21 @@ source "${script_dir}/../include/header.sh"
 # """
 # Can build with autotools or cmake.
 # See 'INSTALL' file for details.
+#
 # - autotools:
 #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithAutotools
 # - cmake:
 #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithCMake
+#
+# Alternate autotools approach:
+# > build="$(_koopa_make_build_string)"
+# > cd "${name}-${version}" || exit 1
+# > ./autogen.sh
+# > ./configure \
+# >     --build="$build" \
+# >     --prefix="$prefix"
+# > make --jobs="$jobs"
+# > make check
 # """
 
 name="geos"
@@ -34,28 +45,13 @@ tmp_dir="$(_koopa_tmp_dir)"
     url="https://github.com/libgeos/${name}/archive/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
-
-    # autotools approach:
-    # > build="$(_koopa_make_build_string)"
-    # > cd "${name}-${version}" || exit 1
-    # > ./autogen.sh
-    # > ./configure \
-    # >     --build="$build" \
-    # >     --prefix="$prefix"
-    # > make --jobs="$jobs"
-    # > make check
-
-    # cmake approach:
-    # This seems to work more reliably in Docker builds.
-    # Highly recommended to build outside of source code dir.
     mkdir build
-    cd build || exit 1
+    _koopa_cd build
     cmake "../${name}-${version}" \
         -DCMAKE_INSTALL_PREFIX="$prefix" \
         -DGEOS_ENABLE_TESTS=OFF
     make --jobs="$jobs"
     # > make test
-
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
