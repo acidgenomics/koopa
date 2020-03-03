@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-02-20 by Michael Steinbaugh.
+## Updated 2020-03-03.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -303,29 +303,7 @@ if (.isInstalled("readr")) {
     ## https://cran.r-project.org/bin/macosx/tools/
 
     if (!isTRUE(conda)) {
-        if (Sys.getenv("HMS_CLUSTER") == "o2") {
-            ## > module load gcc/6.2.0
-            ## > module load R/3.6.1
-            ## > module load hdf5/1.10.1
-            gcc_bin_dir <- file.path("", "n", "app", "gcc", "6.2.0", "bin")
-            stopifnot(identical(
-                x = Sys.which(c("R", "gcc", "g++", "gfortran", "h5cc")),
-                y = c(
-                    "R"        = file.path(
-                                     "", "n", "app",
-                                     "R", r_ver_full, "bin", "R"
-                                 ),
-                    "gcc"      = file.path(gcc_bin_dir, "gcc"),
-                    "g++"      = file.path(gcc_bin_dir, "g++"),
-                    "gfortran" = file.path(gcc_bin_dir, "gfortran"),
-                    "h5cc"     = file.path(
-                                     "", "n", "app",
-                                     "hdf5", "1.10.1", "bin", "h5cc"
-                                 )
-                )
-            ))
-            rm(gcc_bin_dir)
-        } else if (Sys.info()[["sysname"]] == "Darwin") {
+        if (Sys.info()[["sysname"]] == "Darwin") {
             ## Use recommended CRAN compiler settings.
             if (r_ver_short == "3.5") {
                 clang_ver <- "6"
@@ -355,14 +333,14 @@ if (.isInstalled("readr")) {
             }
             rm(clang_bin_dir, clang_ver)
         } else if (Sys.info()[["sysname"]] == "Linux") {
-            stopifnot(identical(
-                x = Sys.which(c("gcc", "g++", "gfortran")),
-                y = c(
-                    "gcc"      = file.path("", "usr", "bin", "gcc"),
-                    "g++"      = file.path("", "usr", "bin", "g++"),
-                    "gfortran" = file.path("", "usr", "bin", "gfortran")
-                )
-            ))
+            ## > stopifnot(identical(
+            ## >     x = Sys.which(c("gcc", "g++", "gfortran")),
+            ## >     y = c(
+            ## >         "gcc"      = file.path("", "usr", "bin", "gcc"),
+            ## >         "g++"      = file.path("", "usr", "bin", "g++"),
+            ## >         "gfortran" = file.path("", "usr", "bin", "gfortran")
+            ## >     )
+            ## > ))
         } 
     }
 
