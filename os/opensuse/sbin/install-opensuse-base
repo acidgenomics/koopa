@@ -28,8 +28,9 @@ packages=(
     gcc
     gcc-c++
     gcc-fortran
-    gettext
+    gettext-devel
     git
+    gmp-devel
     gzip
     libbz2-devel
     libcurl-devel
@@ -38,12 +39,15 @@ packages=(
     lzma-devel
     make
     man
+    mpc-devel
+    mpfr-devel
     ncurses-devel
     openssl-devel
     pcre-devel
     readline-devel
     sudo
     tar
+    texinfo
     tree
     unzip
     wget
