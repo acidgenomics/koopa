@@ -49,8 +49,8 @@ tmp_dir="$(_koopa_tmp_dir)"
     mkdir build
     _koopa_cd build
     cmake "../${name}-${version}" \
-        -DCMAKE_INSTALL_PREFIX="$prefix" \
-        -DGEOS_ENABLE_TESTS=OFF
+        -DCMAKE_INSTALL_PREFIX="$prefix"
+        # -DGEOS_ENABLE_TESTS=OFF
     make --jobs="$jobs"
     # > make test
     make install
