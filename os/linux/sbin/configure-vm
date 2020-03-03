@@ -204,13 +204,10 @@ then
 fi
 
 # LLVM.
-_koopa_run_if_installed install-llvm
+[[ "$docker" -eq 0 ]] && _koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
-if ! _koopa_is_alpine
-then
-    install-openjdk                                                     # 0.316G
-fi
+install-openjdk                                                         # 0.316G
 
 if [[ "$rsync" -eq 0 ]]
 then
@@ -234,10 +231,7 @@ then
     install-parallel
 
     # Shells.
-    if ! _koopa_is_alpine
-    then
-        install-bash                                                    # 0.014G
-    fi
+    install-bash                                                        # 0.014G
     install-zsh                                                         # 0.011G
     install-fish                                                        # 0.082G
 
@@ -259,10 +253,7 @@ then
 
     # Password management.
     install-pass
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-docker-credential-pass
-    fi
+    [[ "$docker" -eq 0 ]] && install-docker-credential-pass
 
     # Languages.
     install-r                                                           # 0.182G
@@ -304,11 +295,8 @@ then
     # Text editors.
     install-vim
     install-neovim                                                      # 0.029G
-    if [[ "$docker" -eq 0 ]]
-    then
-        # Emacs currently doesn't build easily on Docker.
-        install-emacs
-    fi
+    # Emacs currently doesn't build easily on Docker.
+    [[ "$docker" -eq 0 ]] && install-emacs
 
     # Bioinformatics tools.
     if [[ "$docker" -eq 0 ]]
@@ -325,12 +313,18 @@ _koopa_update_lmod_config
 
 if _koopa_is_debian
 then
-    sudo chown -Rh root:root /usr/lib/R
-    sudo chmod -R g-w /usr/lib/R
-    sudo chown -Rh root:root /usr/share/R
-    sudo chmod -R g-w /usr/share/R
-    # Need to ensure group write so package index gets updated.
-    _koopa_set_permissions /usr/share/R/doc/html/packages.html
+    if [[ -d /usr/lib/R ]]
+    then
+        sudo chown -Rh root:root /usr/lib/R
+        sudo chmod -R g-w /usr/lib/R
+    fi
+    if [[ -d /usr/share/R ]]
+    then
+        sudo chown -Rh root:root /usr/share/R
+        sudo chmod -R g-w /usr/share/R
+        # Need to ensure group write so package index gets updated.
+        _koopa_set_permissions /usr/share/R/doc/html/packages.html
+    fi
 fi
 
 _koopa_link_r_etc
@@ -354,16 +348,10 @@ if [[ "$rsync" -eq 0 ]]
 then
     install-r-packages
     install-python-packages
-    if [[ "$docker" -eq 0 ]]
-    then
-        install-rust-packages
-    fi
+    [[ "$docker" -eq 0 ]] && install-rust-packages
 fi
 
-if [[ "$docker" -eq 0 ]]
-then
-    generate-ssh-key
-fi
+[[ "$docker" -eq 0 ]] && generate-ssh-key
 
 _koopa_set_permissions --recursive "$make_prefix"
 _koopa_remove_broken_symlinks "$make_prefix"
@@ -376,11 +364,11 @@ _koopa_fix_rbenv_permissions
 
 if [[ "$docker" -eq 1 ]]
 then
-    _koopa_h2 "Performing cleanup for Docker image."
+    _koopa_h2 "Performing cleanup for Docker."
     sudo rm -frv /root/.cache
     if _koopa_is_debian
     then
-        sudo rm -rf /var/lib/apt/lists/*
+        sudo rm -fr /var/lib/apt/lists/*
     fi
 fi
 
