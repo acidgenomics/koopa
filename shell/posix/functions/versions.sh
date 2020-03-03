@@ -336,7 +336,7 @@ _koopa_r_package_version() {  # {{{1
 _koopa_return_version() {  # {{{1
     # """
     # Return version (via extraction).
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-03-03.
     # """
     local cmd
     cmd="${1:?}"
@@ -349,6 +349,9 @@ _koopa_return_version() {  # {{{1
             ;;
         bcbio-nextgen)
             cmd="bcbio_nextgen.py"
+            ;;
+        binutils)
+            cmd="ld"
             ;;
         coreutils)
             cmd="env"
