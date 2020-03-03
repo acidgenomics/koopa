@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://github.com/Kitware/CMake
+# """
+
+name="cmake"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+jobs="$(_koopa_cpu_count)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="cmake-${version}.tar.gz"
+    url="https://github.com/Kitware/CMake/releases/download/v${version}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cd "${name}-${version}" || exit 1
+    # The 'configure' script also works here.
+    ./bootstrap --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_link_cellar "$name" "$version"
+
+_koopa_install_success "$name"
