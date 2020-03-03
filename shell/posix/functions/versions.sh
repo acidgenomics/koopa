@@ -398,6 +398,9 @@ _koopa_return_version() {  # {{{1
         sqlite)
             cmd="sqlite3"
             ;;
+        texinfo)
+            cmd="makeinfo"
+            ;;
         the-silver-searcher)
             cmd="ag"
             ;;

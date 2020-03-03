@@ -289,6 +289,9 @@ sqlite-year="2019"
 # https://www.latex-project.org/get/
 tex="2019"
 
+# https://ftp.gnu.org/gnu/texinfo/
+texinfo="6.7"
+
 # Ag
 # https://github.com/ggreer/the_silver_searcher
 the-silver-searcher="2.2.0"

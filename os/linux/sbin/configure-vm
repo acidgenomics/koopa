@@ -221,6 +221,8 @@ then
     install-automake
     install-libtool
     install-cmake
+    # Install texinfo before binutils, which requires makeinfo.
+    install-texinfo
     install-binutils
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
@@ -277,9 +279,12 @@ then
     # Libraries.
     install-geos
     install-sqlite                                                      # 0.026G
-    install-proj                    # install after sqlite              # 0.132G
-    install-gdal                    # requires proj, python; slow       # 0.611G
-    install-hdf5                    # requires gdal                     # 0.022G
+    # Install PROJ after SQLite.
+    install-proj                                                        # 0.132G
+    # Install GDAL after Python and PROJ.
+    install-gdal                                                        # 0.611G
+    # Install HDF5 after GDAL.
+    install-hdf5                                                        # 0.022G
     install-gsl                                                         # 0.043G
 
     # Shell tools.
@@ -291,7 +296,8 @@ then
     if [[ "$docker" -eq 0 ]]
     then
         install-autojump                                                # 0.000G
-        install-fzf                 # requires go                       # 0.003G
+        # FZF requires Go.
+        install-fzf                                                     # 0.003G
         install-the-silver-searcher                                     # 0.000G
     fi
 
@@ -300,7 +306,8 @@ then
     install-neovim                                                      # 0.029G
     if [[ "$docker" -eq 0 ]]
     then
-        install-emacs               # can't build on docker             #     NA
+        # Emacs currently doesn't build easily on Docker.
+        install-emacs
     fi
 
     # Bioinformatics tools.
