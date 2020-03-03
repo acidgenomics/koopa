@@ -484,7 +484,8 @@ _koopa_link_r_etc() {  # {{{1
     [ -d "$r_etc_source" ] || return 1
 
     # Don't overwrite the Bioconductor Docker config.
-    _koopa_ln "${r_etc_source}/"*".site" "${r_home}/etc/."
+    _koopa_ln "${r_etc_source}/Renviron.site" "${r_etc_target}/Renviron.site"
+    _koopa_ln "${r_etc_source}/Rprofile.site" "${r_etc_target}/Rprofile.site"
 
     return 0
 }
