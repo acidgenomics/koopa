@@ -25,6 +25,12 @@ anaconda3="2019.10"
 # https://downloads.asperasoft.com/en/downloads/8?list
 aspera="3.9.7"
 
+# https://ftp.gnu.org/gnu/autoconf/
+autoconf="2.69"
+
+# https://ftp.gnu.org/gnu/automake/
+automake="1.16.1"
+
 # https://github.com/wting/autojump/releases
 autojump="22.5.3"
 
@@ -58,6 +64,9 @@ cargo="1.41.0"
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
 clang="11.0.0"
+
+# https://cmake.org/download/
+cmake="3.16.4"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -136,6 +145,9 @@ julia="1.3.1"
 
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
 java="13.0.2"
+
+# https://ftp.gnu.org/gnu/libtool/
+libtool="2.4.6"
 
 # LLVM
 # Note that version 7 is currently required for umap-learn > numba > llvmlite.
