@@ -28,8 +28,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
             r-base \
             r-base-dev
 
-_koopa_link_r_etc
-_koopa_link_r_site_library
-
-# Avoid write failure to 'doc/' here upon package update.
-_koopa_set_permissions --recursive /usr/share/R
+_koopa_update_r_config
