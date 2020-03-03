@@ -62,12 +62,12 @@ fi
 
 _koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
 
-install-fedora-base "$@"
-
 # default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
+enable-epel-8
+install-fedora-base "$@"
 sudo yum -y install util-linux-user
 
 # developer  {{{1
