@@ -47,7 +47,7 @@ packages=(
     readline-devel
     sudo
     tar
-    texinfo
+    texinfo  # note that this will install texlive
     tree
     unzip
     wget
