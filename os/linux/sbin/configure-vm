@@ -203,8 +203,8 @@ then
     fi
 fi
 
-# Compilers.
-_koopa_run_if_installed install-llvm
+# LLVM.
+[[ "$docker" -eq 0 ]] && _koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
 if ! _koopa_is_alpine
@@ -215,6 +215,7 @@ fi
 if [[ "$rsync" -eq 0 ]]
 then
     # Core.
+    [[ "$docker" -eq 0 ]] && install-gcc
     install-make
     install-autoconf
     install-automake
