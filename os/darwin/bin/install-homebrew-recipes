@@ -170,6 +170,7 @@ brews=(
     azure-cli
     bash-completion
     bfg
+    binutils
     ccache
     circleci
     cmake
@@ -204,11 +205,13 @@ brews=(
     libressl
     librsvg
     libssh2
+    libtool
     libxml2
     libxslt
     llvm
     lua
     luarocks
+    make
     mariadb-connector-c
     mas
     neofetch
@@ -240,6 +243,7 @@ brews=(
     sqlite
     sshfs
     tesseract
+    texinfo
     the_silver_searcher  # ag
     tmux
     trash
