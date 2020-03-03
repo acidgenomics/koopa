@@ -1,19 +1,11 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_bioconductor_version() {  # {{{1
-    # """
-    # Bioconductor version.
-    # @note Updated 2020-02-07.
-    # """
-    _koopa_r_package_version "BiocVersion"
-    return 0
-}
-
+# FIXME Debian /etc/R/Renviron.site
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-03-02.
+    # @note Updated 2020-03-03.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -28,12 +20,6 @@ _koopa_link_r_etc() {  # {{{1
     r_etc_target="${r_home}/etc"
     [ -d "$r_etc_target" ] || return 1
 
-    # Don't overwrite existing site configuration files.
-    # This applies primarily to Bioconductor Docker images.
-    [ -f "${r_etc_target}/Renviron.site" ] &&
-        [ -f "${r_etc_target}/Rprofile.site" ] &&
-        return 0
-
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
 
@@ -44,7 +30,13 @@ _koopa_link_r_etc() {  # {{{1
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     [ -d "$r_etc_source" ] || return 1
 
-    # Don't overwrite the Bioconductor Docker config.
+    if _koopa_is_debian && ! _koopa_is_cellar R
+    then
+        [ -d /etc/R ] || return 1
+        _koopa_ln "${r_etc_source}/Renviron.site" "/etc/R/Renviron.site"
+        _koopa_ln "${r_etc_source}/Rprofile.site" "/etc/R/Rprofile.site"
+    fi
+
     _koopa_ln "${r_etc_source}/Renviron.site" "${r_etc_target}/Renviron.site"
     _koopa_ln "${r_etc_source}/Rprofile.site" "${r_etc_target}/Rprofile.site"
 
