@@ -5,6 +5,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Can build with autotools or cmake.
+# See 'INSTALL' file for details.
+# - autotools:
+#   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithAutotools
+# - cmake:
+#   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithCMake
+# """
+
 name="geos"
 version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -16,7 +25,6 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)"
 
@@ -26,15 +34,28 @@ tmp_dir="$(_koopa_tmp_dir)"
     url="https://github.com/libgeos/${name}/archive/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
-    cd "${name}-${version}" || exit 1
-    # See 'INSTALL' file for details.
-    # Alternatively, can use CMake to build here.
-    ./autogen.sh
-    ./configure \
-        --build="$build" \
-        --prefix="$prefix"
-    make --jobs="$jobs"
+
+    # autotools approach:
+    # > build="$(_koopa_make_build_string)"
+    # > cd "${name}-${version}" || exit 1
+    # > ./autogen.sh
+    # > ./configure \
+    # >     --build="$build" \
+    # >     --prefix="$prefix"
+    # > make --jobs="$jobs"
     # > make check
+
+    # cmake approach:
+    # This seems to work more reliably in Docker builds.
+    # Highly recommended to build outside of source code dir.
+    mkdir build
+    cd build || exit 1
+    cmake "../${name}-${version}" \
+        -DCMAKE_INSTALL_PREFIX="$prefix" \
+        -DGEOS_ENABLE_TESTS=OFF
+    make --jobs="$jobs"
+    # > make test
+
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
