@@ -23,6 +23,7 @@ packages=(
     # zsh
     autoconf
     bzip2
+    cmake
     curl
     gcc
     gcc-c++
