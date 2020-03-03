@@ -359,49 +359,6 @@ _koopa_python_site_packages_prefix() {
     return 0
 }
 
-_koopa_r_home() {  # {{{1
-    # """
-    # R home (prefix).
-    # @note Updated 2020-01-21.
-    # """
-    if ! _koopa_is_installed R
-    then
-        _koopa_warning "R is not installed."
-        return 1
-    fi
-    local home
-    home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
-    [ -d "$home" ] || return 1
-    echo "$home"
-    return 0
-}
-
-_koopa_r_library_prefix() {  # {{{1
-    # """
-    # R default library prefix.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_is_installed Rscript || return 1
-    local prefix
-    prefix="$(Rscript -e 'cat(.libPaths()[[1L]])')"
-    [ -d "$prefix" ] || return 1
-    echo "$prefix"
-    return 0
-}
-
-_koopa_r_system_library_prefix() {  # {{{1
-    # """
-    # R system library prefix.
-    # @note Updated 2020-02-10.
-    # """
-    _koopa_is_installed Rscript || return 1
-    local prefix
-    prefix="$(Rscript --vanilla -e 'cat(tail(.libPaths(), n = 1L))')"
-    [ -d "$prefix" ] || return 1
-    echo "$prefix"
-    return 0
-}
-
 _koopa_rbenv_prefix() {  # {{{1
     # """
     # Ruby rbenv prefix.

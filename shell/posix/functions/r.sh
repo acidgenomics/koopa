@@ -1,0 +1,184 @@
+#!/bin/sh
+# shellcheck disable=SC2039
+
+_koopa_bioconductor_version() {  # {{{1
+    # """
+    # Bioconductor version.
+    # @note Updated 2020-02-07.
+    # """
+    _koopa_r_package_version "BiocVersion"
+    return 0
+}
+
+_koopa_link_r_etc() {  # {{{1
+    # """
+    # Link R config files inside 'etc/'.
+    # @note Updated 2020-03-02.
+    #
+    # Applies to 'Renviron.site' and 'Rprofile.site' files.
+    # Note that on macOS, we don't want to copy the 'Makevars' file here.
+    # """
+    _koopa_is_installed R || return 0
+
+    local r_home
+    r_home="$(_koopa_r_home)"
+    [ -d "$r_home" ] || return 1
+
+    local r_etc_target
+    r_etc_target="${r_home}/etc"
+    [ -d "$r_etc_target" ] || return 1
+
+    # Don't overwrite existing site configuration files.
+    # This applies primarily to Bioconductor Docker images.
+    [ -f "${r_etc_target}/Renviron.site" ] &&
+        [ -f "${r_etc_target}/Rprofile.site" ] &&
+        return 0
+
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+
+    local r_etc_source
+    r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
+    [ -d "$r_etc_source" ] || return 1
+
+    # Don't overwrite the Bioconductor Docker config.
+    _koopa_ln "${r_etc_source}/Renviron.site" "${r_etc_target}/Renviron.site"
+    _koopa_ln "${r_etc_source}/Rprofile.site" "${r_etc_target}/Rprofile.site"
+
+    return 0
+}
+
+_koopa_link_r_site_library() {  # {{{1
+    # """
+    # Link R site library.
+    # @note Updated 2020-03-02.
+    # """
+    _koopa_is_installed R || return 0
+
+    local r_home
+    r_home="$(_koopa_r_home)"
+    [ -d "$r_home" ] || return 1
+
+    local version
+    version="$(_koopa_r_version)"
+
+    local minor_version
+    minor_version="$(_koopa_minor_version "$version")"
+
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
+
+    local lib_source
+    lib_source="${app_prefix}/r/${minor_version}/site-library"
+
+    local lib_target
+    lib_target="${r_home}/site-library"
+
+    _koopa_mkdir "$lib_source"
+    _koopa_ln "$lib_source" "$lib_target"
+
+    # Debian R defaults to '/usr/local/lib/R/site-library' even though R_HOME
+    # is '/usr/lib/R'. Ensure we link here also.
+    if [[ -d "/usr/local/lib/R" ]]
+    then
+        _koopa_ln "$lib_source" "/usr/local/lib/R/site-library"
+    fi
+
+    return 0
+}
+
+_koopa_r_home() {  # {{{1
+    # """
+    # R home (prefix).
+    # @note Updated 2020-01-21.
+    # """
+    if ! _koopa_is_installed R
+    then
+        _koopa_warning "R is not installed."
+        return 1
+    fi
+    local home
+    home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
+    [ -d "$home" ] || return 1
+    echo "$home"
+    return 0
+}
+
+_koopa_r_library_prefix() {  # {{{1
+    # """
+    # R default library prefix.
+    # @note Updated 2020-02-10.
+    # """
+    _koopa_is_installed Rscript || return 1
+    local prefix
+    prefix="$(Rscript -e 'cat(.libPaths()[[1L]])')"
+    [ -d "$prefix" ] || return 1
+    echo "$prefix"
+    return 0
+}
+
+_koopa_r_package_version() {  # {{{1
+    # """
+    # R package version.
+    # @note Updated 2020-02-10.
+    # """
+    local pkg
+    pkg="${1:?}"
+    _koopa_is_r_package_installed "$pkg" || return 1
+    local x
+    x="$(Rscript -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")")"
+    echo "$x"
+    return 0
+}
+
+_koopa_r_system_library_prefix() {  # {{{1
+    # """
+    # R system library prefix.
+    # @note Updated 2020-02-10.
+    # """
+    _koopa_is_installed Rscript || return 1
+    local prefix
+    prefix="$(Rscript --vanilla -e 'cat(tail(.libPaths(), n = 1L))')"
+    [ -d "$prefix" ] || return 1
+    echo "$prefix"
+    return 0
+}
+
+_koopa_r_version() {  # {{{1
+    # """
+    # R version.
+    # @note Updated 2020-03-01.
+    # """
+    _koopa_get_version R
+    return 0
+}
+
+_koopa_update_r_config() {  # {{{1
+    # """
+    # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    # @note Updated 2019-12-16.
+    # """
+    _koopa_is_installed R || return 0
+    local r_home
+    r_home="$(_koopa_r_home)"
+    _koopa_link_r_etc
+    _koopa_link_r_site_library
+    _koopa_set_permissions --recursive "$r_home"
+    _koopa_r_javareconf
+    return 0
+}
+
+_koopa_update_r_config_macos() {  # {{{1
+    # """
+    # Update R config on macOS.
+    # @note Updated 2019-10-31.
+    #
+    # Need to include Makevars to build packages from source.
+    # """
+    mkdir -pv "${HOME}/.R"
+    ln -fnsv "/usr/local/koopa/os/macos/etc/R/Makevars" "${HOME}/.R/."
+    return 0
+}
