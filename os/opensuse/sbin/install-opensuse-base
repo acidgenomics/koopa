@@ -28,7 +28,7 @@ packages=(
     gcc
     gcc-c++
     gcc-fortran
-    gettext
+    gettext-devel
     git
     gmp-devel
     gzip
