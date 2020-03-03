@@ -228,14 +228,6 @@ then
     install-gawk
     install-parallel
 
-    # Libraries.
-    install-geos
-    install-sqlite                                                      # 0.026G
-    install-proj                    # install after sqlite              # 0.132G
-    install-gdal                    # requires proj, python; slow       # 0.611G
-    install-hdf5                    # requires gdal                     # 0.022G
-    install-gsl                                                         # 0.043G
-
     # Shells.
     if ! _koopa_is_alpine
     then
@@ -278,6 +270,14 @@ then
         install-ruby                                                    # 0.178G
         install-rust                                                    # 0.724G
     fi
+
+    # Libraries.
+    install-geos
+    install-sqlite                                                      # 0.026G
+    install-proj                    # install after sqlite              # 0.132G
+    install-gdal                    # requires proj, python; slow       # 0.611G
+    install-hdf5                    # requires gdal                     # 0.022G
+    install-gsl                                                         # 0.043G
 
     # Shell tools.
     install-htop                                                        # 0.001G
