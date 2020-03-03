@@ -54,6 +54,9 @@ bcbio-nextgen="1.2.0"
 #     bcl2fastq-conversion-software.html
 bcl2fastq="2.20.0.422"
 
+# https://ftp.gnu.org/gnu/binutils/
+binutils="2.34"
+
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
 broot="0.13.2"

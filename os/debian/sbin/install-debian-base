@@ -151,6 +151,7 @@ pkgs=(
     pkg-config
     software-properties-common
     sudo
+    texinfo  # makeinfo
     tmux
     tree
     tzdata
