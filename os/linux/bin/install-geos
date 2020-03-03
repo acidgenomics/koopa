@@ -8,6 +8,7 @@ source "${script_dir}/../include/header.sh"
 # """
 # Can build with autotools or cmake.
 # See 'INSTALL' file for details.
+# The cmake approach seems to build more reliably inside Docker images.
 #
 # - autotools:
 #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithAutotools
