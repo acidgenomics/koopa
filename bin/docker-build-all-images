@@ -32,13 +32,13 @@ images=(
     acidgenomics/kali
     acidgenomics/miniconda3
     # Full Linux images.
+    acidgenomics/debian
+    acidgenomics/ubuntu
+    acidgenomics/fedora
+    acidgenomics/centos
     acidgenomics/amzn
     acidgenomics/arch
-    acidgenomics/centos
-    acidgenomics/debian
-    acidgenomics/fedora
     acidgenomics/opensuse
-    acidgenomics/ubuntu
     # R images.
     acidgenomics/bioconductor
     acidgenomics/basejump
