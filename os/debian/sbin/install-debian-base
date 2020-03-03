@@ -169,6 +169,7 @@ then
     pkgs+=(
         # libgdal-dev
         # libgeos-dev
+        # libgmp3-dev
         # libgsl-dev
         # libgslcblas0
         # libhdf5-dev
@@ -188,7 +189,7 @@ then
         libgif-dev
         libgl1-mesa-dev
         libglu1-mesa-dev
-        libgmp3-dev
+        libgmp-dev
         libgnutls28-dev
         libgtk-3-0
         libgtk-3-dev
@@ -201,6 +202,7 @@ then
         libmagick++-dev
         libmariadb-dev
         libmodule-build-perl
+        libmpc-dev
         libmpfr-dev
         libncurses-dev  # libncurses5-dev
         libopenbabel-dev
