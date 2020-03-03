@@ -47,7 +47,6 @@ packages=(
     tar
     texinfo  # note that this will install texlive
     tree
-    udunits2
     unzip
     wget
     which
