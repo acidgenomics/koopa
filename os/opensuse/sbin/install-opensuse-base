@@ -47,6 +47,7 @@ packages=(
     readline-devel
     sudo
     tar
+    texinfo
     tree
     unzip
     wget
