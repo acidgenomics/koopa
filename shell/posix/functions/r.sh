@@ -1,7 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# FIXME Debian /etc/R/Renviron.site
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
@@ -10,7 +9,7 @@ _koopa_link_r_etc() {  # {{{1
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
     # """
-    _koopa_is_installed R || return 0
+    _koopa_is_installed R || return 1
 
     local r_home
     r_home="$(_koopa_r_home)"
@@ -46,9 +45,9 @@ _koopa_link_r_etc() {  # {{{1
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-03-02.
+    # @note Updated 2020-03-03.
     # """
-    _koopa_is_installed R || return 0
+    _koopa_is_installed R || return 1
 
     local r_home
     r_home="$(_koopa_r_home)"
@@ -85,13 +84,9 @@ _koopa_link_r_site_library() {  # {{{1
 _koopa_r_home() {  # {{{1
     # """
     # R home (prefix).
-    # @note Updated 2020-01-21.
+    # @note Updated 2020-03-03.
     # """
-    if ! _koopa_is_installed R
-    then
-        _koopa_warning "R is not installed."
-        return 1
-    fi
+    _koopa_is_installed Rscript || return 1
     local home
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
     [ -d "$home" ] || return 1
@@ -115,8 +110,9 @@ _koopa_r_library_prefix() {  # {{{1
 _koopa_r_package_version() {  # {{{1
     # """
     # R package version.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-03-03.
     # """
+    _koopa_is_installed Rscript || return 1
     local pkg
     pkg="${1:?}"
     _koopa_is_r_package_installed "$pkg" || return 1
@@ -151,25 +147,46 @@ _koopa_r_version() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2019-12-16.
+    # @note Updated 2020-03-03.
     # """
-    _koopa_is_installed R || return 0
+    _koopa_is_installed R || return 1
+
     local r_home
     r_home="$(_koopa_r_home)"
+
+    if _koopa_is_cellar R
+    then
+        _koopa_set_permissions --recursive "$r_home"
+    else
+        if [[ -d /usr/lib/R ]]
+        then
+            sudo chown -Rh root:root /usr/lib/R
+            sudo chmod -R g-w /usr/lib/R
+        fi
+        if [[ -d /usr/share/R ]]
+        then
+            sudo chown -Rh root:root /usr/share/R
+            sudo chmod -R g-w /usr/share/R
+            # Need to ensure group write so package index gets updated.
+            _koopa_set_permissions /usr/share/R/doc/html/packages.html
+        fi
+    fi
+
     _koopa_link_r_etc
     _koopa_link_r_site_library
-    _koopa_set_permissions --recursive "$r_home"
     _koopa_r_javareconf
+
     return 0
 }
 
 _koopa_update_r_config_macos() {  # {{{1
     # """
     # Update R config on macOS.
-    # @note Updated 2019-10-31.
+    # @note Updated 2020-03-03.
     #
     # Need to include Makevars to build packages from source.
     # """
+    _koopa_is_installed R || return 1
     mkdir -pv "${HOME}/.R"
     ln -fnsv "/usr/local/koopa/os/macos/etc/R/Makevars" "${HOME}/.R/."
     return 0
