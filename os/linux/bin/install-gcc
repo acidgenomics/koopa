@@ -55,6 +55,7 @@ source "${script_dir}/../include/header.sh"
 #
 # See also:
 # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
+# - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
 # """
 
 name="gcc"
