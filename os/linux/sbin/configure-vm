@@ -91,10 +91,7 @@ fi
 
 _koopa_h2 "Installing base system."
 
-if _koopa_is_alpine
-then
-    install-alpine-base
-elif _koopa_is_arch
+if _koopa_is_arch
 then
     install-arch-base
 elif _koopa_is_debian
@@ -106,6 +103,8 @@ then
 elif _koopa_is_opensuse
 then
     install-opensuse-base
+else
+    _koopa_stop "Unsupported Linux distro."
 fi
 
 _koopa_is_rhel_7 && install-rhel-7-base
