@@ -53,16 +53,12 @@ fi
 
 _koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 7 base system."
 
-install-fedora-base "$@"
-
 # default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
 enable-epel-7
-
-# This doesn't work on Amazon Linux, so skipping.
-# > install-yum-cron
+install-fedora-base "$@"
 
 # developer  {{{1
 # ==============================================================================
