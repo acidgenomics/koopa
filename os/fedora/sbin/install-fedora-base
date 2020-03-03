@@ -84,11 +84,13 @@ then
     sudo yum -y groupinstall "Development Tools"
     pkgs=(
         bzip2-devel
+        gmp-devel
         gnutls-devel
         gsl-devel
         libcurl-devel
         libevent-devel
         libffi-devel
+        libmpc-devel
         libseccomp-devel
         libtiff-devel
         libuuid-devel
