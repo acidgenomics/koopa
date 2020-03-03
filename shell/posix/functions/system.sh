@@ -154,12 +154,15 @@ _koopa_cp() {  # {{{1
 _koopa_cpu_count() {  # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-03.
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
     local n
-    if _koopa_is_macos
+    if _koopa_is_installed nproc
+    then
+        n="$(nproc)"
+    elif _koopa_is_macos
     then
         n="$(sysctl -n hw.ncpu)"
     elif _koopa_is_linux
