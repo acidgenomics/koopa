@@ -218,6 +218,7 @@ then
     install-autoconf
     install-automake
     install-libtool
+    install-cmake
     install-coreutils                                                   # 0.038G
     install-findutils                                                   # 0.005G
     install-patch
