@@ -63,6 +63,7 @@ pkgs=(
     readline
     squashfs-tools
     systemd
+    texinfo
     tmux
     tree
     util-linux
