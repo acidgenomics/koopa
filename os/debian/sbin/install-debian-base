@@ -98,6 +98,9 @@ legacy_pkgs=(
     emacs                   # use 'install-emacs'
     emacs25                 # gets installed by zsh
     fish                    # use 'install-fish'
+    libgdal-dev             # use 'install-gdal'
+    libgeos-dev             # use 'install-geos'
+    libproj-dev             # use 'install-proj'
     zsh                     # use 'install-zsh'
     zsh-common
 )
@@ -176,8 +179,6 @@ then
         libffi-dev
         libfftw3-dev
         libfreetype6-dev
-        libgdal-dev
-        libgeos-dev
         libgif-dev
         libgl1-mesa-dev
         libglu1-mesa-dev
