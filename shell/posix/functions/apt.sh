@@ -189,11 +189,11 @@ _koopa_apt_enabled_repos() {  # {{{1
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # """
     # Import the Microsoft Azure CLI public key.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-03-04.
     # """
     [ -e "/etc/apt/trusted.gpg.d/microsoft.asc.gpg" ] && return 0
     _koopa_assert_is_installed curl gpg
-    _koopa_h2 "Adding official Microsoft public key."
+    _koopa_h2 "Importing Microsoft public key."
     curl -sL https://packages.microsoft.com/keys/microsoft.asc \
         | gpg --dearmor \
         | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
@@ -203,13 +203,13 @@ _koopa_apt_import_azure_cli_key() {                                        #{{{1
 _koopa_apt_import_docker_key() {  # {{{1
     # """
     # Import the Docker public key.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-03-04.
     # """
     local key
     key="9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88"
     _koopa_apt_is_key_imported "$key" && return 0
     _koopa_assert_is_installed curl
-    _koopa_h2 "Adding official Docker public key."
+    _koopa_h2 "Importing Docker public key."
     # Expecting "debian" or "ubuntu" here.
     local os_id
     os_id="$(_koopa_os_id)"
@@ -222,11 +222,11 @@ _koopa_apt_import_docker_key() {  # {{{1
 _koopa_apt_import_google_cloud_key() {  # {{{1
     # """
     # Import the Google Cloud public key.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-03-04.
     # """
     [ -e "/usr/share/keyrings/cloud.google.gpg" ] && return 0
     _koopa_assert_is_installed curl
-    _koopa_h2 "Adding official Google Cloud SDK public key."
+    _koopa_h2 "Importing Google Cloud SDK public key."
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
         | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
     return 0
@@ -235,12 +235,12 @@ _koopa_apt_import_google_cloud_key() {  # {{{1
 _koopa_apt_import_llvm_key() {  # {{{1
     # """
     # Import the LLVM public key.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-03-04.
     # """
     key="6084 F3CF 814B 57C1 CF12  EFD5 15CF 4D18 AF4F 7421"
     _koopa_apt_is_key_imported "$key" && return 0
     _koopa_assert_is_installed curl
-    _koopa_h2 "Adding official LLVM public key."
+    _koopa_h2 "Importing LLVM public key."
     curl -fsSL "https://apt.llvm.org/llvm-snapshot.gpg.key" \
         | sudo apt-key add - \
         > /dev/null 2>&1
@@ -286,7 +286,7 @@ _koopa_apt_import_keys() {  # {{{1
 _koopa_apt_import_r_key() {  # {{{1
     # """
     # Import the R public key.
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-03-04.
     # """
     if _koopa_is_ubuntu
     then
@@ -295,7 +295,7 @@ _koopa_apt_import_r_key() {  # {{{1
         key="E19F 5F87 1288 99B1 92B1  A2C2 AD5F 960A 256A 04AF"
     fi
     _koopa_apt_is_key_imported "$key" && return 0
-    _koopa_h2 "Adding official R public key."
+    _koopa_h2 "Importing R public key."
     if _koopa_is_ubuntu
     then
         # Release is signed by Michael Rutter <marutter@gmail.com>.
@@ -316,11 +316,13 @@ _koopa_apt_import_r_key() {  # {{{1
 _koopa_apt_is_key_imported() {  # {{{1
     # """
     # Is a GPG key imported for apt?
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-03-04.
     # """
     local key
     key="${1:?}"
-    apt-key list 2>&1 | grep -q "$key"
+    local x
+    x="$(apt-key list 2>&1 || true)"
+    _koopa_is_matching_fixed "$x" "$key"
 }
 
 _koopa_apt_space_used_by() {  # {{{1
