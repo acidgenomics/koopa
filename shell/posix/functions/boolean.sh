@@ -587,14 +587,40 @@ _koopa_is_shared_install() {  # {{{1
 _koopa_is_set() {  # {{{1
     # """
     # Is the variable set and non-empty?
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-03-04.
     #
     # Passthrough of empty strings is bad practice in shell scripting.
     #
     # @seealso
-    # https://stackoverflow.com/questions/3601515
+    # - https://stackoverflow.com/questions/3601515
+    # - https://unix.stackexchange.com/questions/504082
+    # - https://www.gnu.org/software/bash/manual/html_node/
+    #       Shell-Parameter-Expansion.html
     # """
-    [ -n "${1:-}" ]
+    local var
+    var="${1:?}"
+
+    # Check if variable is defined.
+    local x
+    x="$(declare -p "$var" 2>/dev/null || true)"
+    [ -n "$x" ] || return 1
+
+    # Check if variable contains non-empty value.
+    local value
+    case "$(_koopa_shell)" in
+        bash)
+            value="${!var}"
+            ;;
+        zsh)
+            value="${(P)var}"
+            ;;
+        *)
+            _koopa_stop "Unsupported shell."
+            ;;
+    esac
+    [ -n "$value" ] || return 1
+
+    return 0
 }
 
 _koopa_is_setopt_nounset() {  # {{{1
