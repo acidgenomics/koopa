@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# S3 bucket paths and remote URLs are supported.
+#
+# See also:
+# - https://github.com/FredHutch/url-fetch-and-run
+# - https://github.com/awslabs/aws-batch-helpers
+# """
+
+_koopa_assert_is_installed aws curl unzip
+
+url="${BATCH_FILE_URL:?}"
+file="$(_koopa_tmp_file)"
+
+case "$url" in
+    ftp|http*)
+        _koopa_download "$url" "$file"
+        ;;
+    s3*)
+        # > aws s3 cp "$url" - > "$file"
+        aws s3 cp "$url" "$file"
+        ;;
+    *)
+        _koopa_stop "Unsupported URL."
+        ;;
+esac
+
+chmod u+x "$file"
+exec "$file" "${@}"
