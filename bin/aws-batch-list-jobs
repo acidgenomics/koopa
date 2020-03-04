@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_is_set \
+    AWS_BATCH_ACCOUNT_ID \
+    AWS_BATCH_QUEUE \
+    AWS_BATCH_REGION
+
+job_queue="\
+arn:\
+aws:\
+batch:\
+${AWS_BATCH_REGION:?}:\
+${AWS_BATCH_ACCOUNT_ID:?}:\
+job-queue/${AWS_BATCH_QUEUE:?}"
+
+_koopa_h1 "Checking AWS Batch job status."
+
+status_array=(
+    "SUBMITTED"
+    "PENDING"
+    "RUNNABLE"
+    "STARTING"
+    "RUNNING"
+    "SUCCEEDED"
+    "FAILED"
+)
+
+for status in "${status_array[@]}"
+do
+    _koopa_h2 "$status"
+    aws batch list-jobs \
+        --job-queue "$job_queue"  \
+        --job-status "$status"
+done
