@@ -40,7 +40,7 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
-_koopa_assert_is_file /usr/local/bin/gcc /usr/local/bin/g++
+_koopa_assert_is_file /usr/bin/gcc /usr/bin/g++
 
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -53,8 +53,8 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
     # Note that the './configure' script is just a wrapper for './bootstrap'.
-    export CC="/usr/local/bin/gcc"
-    export CXX="/usr/local/bin/g++"
+    export CC="/usr/bin/gcc"
+    export CXX="/usr/bin/g++"
     # > ./bootstrap --help
     ./bootstrap \
         --parallel="$jobs" \
