@@ -120,7 +120,8 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_link_cellar "$name" "$version"
+# Keeping this cellar only for testing.
+# > _koopa_link_cellar "$name" "$version"
 
 _koopa_install_success "$name"
 
