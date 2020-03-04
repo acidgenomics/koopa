@@ -8,6 +8,8 @@ source "${script_dir}/../include/header.sh"
 # """
 # https://github.com/Kitware/CMake
 #
+# Note that we're enforcing system GCC here to avoid libstdc++ errors.
+#
 #
 # Error from GCC clobbering libstdc++:
 #
@@ -24,6 +26,8 @@ source "${script_dir}/../include/header.sh"
 # GCC 9.2.0: libstdc++.so.6.0.27
 #
 # GCC 9.2.0: version `GLIBCXX_3.4.26' not found
+#
+# Set CC and CXX globals to avoid this (see below).
 # """
 
 name="cmake"
@@ -36,6 +40,7 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
+_koopa_assert_is_file /usr/bin/gcc /usr/bin/g++
 
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -47,12 +52,9 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
-    # export CC=/usr/bin/gcc
-    # export CXX=/usr/bin/g++
-    # The 'configure' script also works here.
-    # --parallel flag
-    # --no-system-libs (default)
-    # --system-libs
+    # Note that the './configure' script is just a wrapper for './bootstrap'.
+    export CC="/usr/bin/gcc"
+    export CXX="/usr/bin/g++"
     # > ./bootstrap --help
     ./bootstrap \
         --parallel="$jobs" \
