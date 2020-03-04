@@ -222,7 +222,8 @@ then
     install-autoconf
     install-automake
     install-libtool
-    install-gcc
+    # Skipping this, as we can run into problems with CMake and Rcpp.
+    # > install-gcc
     # Install texinfo before binutils, which requires makeinfo.
     install-texinfo
     install-binutils
