@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_is_installed Rscript
+_koopa_exit_if_r_package_installed rgeos
 _koopa_assert_is_not_file /usr/bin/geos-config
 
 Rscript --vanilla -e "\
