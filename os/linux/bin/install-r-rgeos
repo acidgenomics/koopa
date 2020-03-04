@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_assert_is_installed Rscript
+_koopa_assert_is_not_file /usr/bin/geos-config
+
+Rscript --vanilla -e "\
+    install.packages(
+        pkgs = \"rgeos\",
+        type = \"source\",
+        repos = \"https://cran.rstudio.com\",
+        configure.args = paste(
+            \"--with-geos-config=/usr/local/bin/geos-config\"
+        )
+    )"
