@@ -215,6 +215,9 @@ then
         libffi-dev
         libfftw3-dev
         libfreetype6-dev
+        # The R nlme package requires this.
+        # Installs libgfortran and libgcc1-dgb.
+        libgfortran5-dbg
         libgif-dev
         libgl1-mesa-dev
         libglu1-mesa-dev
