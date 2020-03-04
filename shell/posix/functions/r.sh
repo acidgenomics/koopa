@@ -147,7 +147,7 @@ _koopa_r_version() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2020-03-03.
+    # @note Updated 2020-03-04.
     # """
     _koopa_is_installed R || return 1
 
@@ -158,9 +158,6 @@ _koopa_update_r_config() {  # {{{1
     then
         _koopa_set_permissions --recursive "$r_home"
     else
-        # Ensure system library is writable.
-        _koopa_set_permissions --recursive "${r_home}/library"
-
         if [[ -d /usr/lib/R ]]
         then
             sudo chown -Rh root:root /usr/lib/R
@@ -174,6 +171,9 @@ _koopa_update_r_config() {  # {{{1
             # Need to ensure group write so package index gets updated.
             _koopa_set_permissions /usr/share/R/doc/html/packages.html
         fi
+
+        # Ensure system package library is writable.
+        _koopa_set_permissions --recursive "${r_home}/library"
     fi
 
     _koopa_link_r_etc
