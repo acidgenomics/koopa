@@ -1,9 +1,17 @@
+# """
 # Koopa internal variables.
+# """
 
+
+
+# koopa  {{{1
+# ==============================================================================
+
+koopa-date="2020-03-04"
 koopa-version="0.7.0a"
-koopa-date="2020-03-03"
-koopa-url="https://koopa.acidgenomics.com/"
+
 koopa-github-url="https://github.com/acidgenomics/koopa/"
+koopa-url="https://koopa.acidgenomics.com/"
 
 
 
@@ -298,6 +306,10 @@ the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
 tmux="3.0a"
+
+# https://www.unidata.ucar.edu/downloads/udunits/
+# This is necessary for some single-cell R packages.
+udunits="2.2.26"
 
 # https://github.com/vim/vim/releases
 # Homebrew updates every '*.0000' patch release on on multiples of 50.
