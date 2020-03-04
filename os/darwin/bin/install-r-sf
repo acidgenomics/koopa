@@ -9,6 +9,11 @@ source "${script_dir}/../include/header.sh"
 # Note that osgeo-gdal (GDAL 3) Homebrew recipe doesn't work.
 # Fall back to using gdal (GDAL 2) recipe instead.
 #
+# Versions (2020-03-04):
+# - GDAL: 2.4.4
+# - GEOS: 3.8.0
+# - PROJ: 6.3.1
+#
 #
 # Seeing this error with osgeo-gdal linked still:
 #
