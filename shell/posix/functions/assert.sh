@@ -927,10 +927,27 @@ _koopa_exit_if_python_package_not_installed() {  # {{{1
     return 0
 }
 
+_koopa_exit_if_r_package_installed() {  # {{{1
+    # """
+    # Exit with note if a R package is installed.
+    # @note Updated 2020-03-04.
+    # """
+    [ "$#" -ne 0 ] || return 1
+    for arg
+    do
+        if _koopa_is_r_package_installed "$arg"
+        then
+            _koopa_note "'${arg}' R package is installed."
+            exit 0
+        fi
+    done
+    return 0
+}
+
 _koopa_exit_if_r_package_not_installed() {  # {{{1
     # """
-    # Exit with note if a Python package is not installed.
-    # @note Updated 2020-02-16.
+    # Exit with note if a R package is not installed.
+    # @note Updated 2020-03-04.
     # """
     [ "$#" -ne 0 ] || return 1
     for arg
