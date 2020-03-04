@@ -763,36 +763,25 @@ _koopa_local_ip_address() {  # {{{1
 _koopa_make_build_string() {  # {{{1
     # """
     # OS build string for 'make' configuration.
-    # @note Updated 2020-01-13.
+    # @note Updated 2020-03-04.
     #
     # Use this for 'configure --build' flag.
     #
-    # This function will distinguish between RedHat, Amazon, and other distros
-    # instead of just returning "linux". Note that we're substituting "redhat"
-    # instead of "rhel" here, when applicable.
-    #
-    # - AWS:    x86_64-amzn-linux-gnu
     # - macOS: x86_64-darwin15.6.0
-    # - RedHat: x86_64-redhat-linux-gnu
+    # - Linux: x86_64-linux-gnu
     # """
-    local mach
-    mach="$(uname -m)"
-    local os_type
-    os_type="${OSTYPE:?}"
-    local os_id
-    local string
     if _koopa_is_macos
     then
+        local mach
+        mach="$(uname -m)"
+        local os_type
+        os_type="${OSTYPE:?}"
         string="${mach}-${os_type}"
     else
-        os_id="$(_koopa_os_id)"
-        if echo "$os_id" | grep -q "rhel"
-        then
-            os_id="redhat"
-        fi
-        string="${mach}-${os_id}-${os_type}"
+        string="x86_64-linux-gnu"
     fi
     echo "$string"
+    return 0
 }
 
 _koopa_mkdir() {  # {{{1
