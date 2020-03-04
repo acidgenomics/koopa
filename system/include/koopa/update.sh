@@ -128,3 +128,4 @@ fi
 
 _koopa_success "koopa update was successful."
 _koopa_restart
+[[ "$system" -eq 1 ]] && koopa check
