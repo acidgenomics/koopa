@@ -217,12 +217,12 @@ install-openjdk                                                         # 0.316G
 if [[ "$rsync" -eq 0 ]]
 then
     # Core.
-    install-gcc
+    install-cmake
     install-make
     install-autoconf
     install-automake
     install-libtool
-    install-cmake
+    install-gcc
     # Install texinfo before binutils, which requires makeinfo.
     install-texinfo
     install-binutils
