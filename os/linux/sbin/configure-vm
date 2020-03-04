@@ -328,8 +328,9 @@ _koopa_run_if_installed \
 # R, Python, Rust packages.
 if [[ "$rsync" -eq 0 ]]
 then
-    # Disabled until we can fix GEOS / sf installs across platforms.
-    # > install-r-packages
+    install-r-rgeos
+    install-r-sf
+    install-r-packages
     install-python-packages
     [[ "$docker" -eq 0 ]] && install-rust-packages
 fi
