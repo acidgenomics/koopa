@@ -344,6 +344,7 @@ _koopa_remove_broken_symlinks "$app_prefix"
 
 _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
+_koopa_fix_zsh_permissions
 
 if [[ "$docker" -eq 1 ]]
 then
