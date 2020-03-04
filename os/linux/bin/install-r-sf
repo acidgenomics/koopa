@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Versions (2020-03-04):
+# - GDAL: 3.0.2
+# - GEOS: 3.8.0
+# - PROJ: 6.3.1
+#
+# Can check system libs with:
+#
+#
+# GDAL v3+ doesn't appear to be supported, so falling back to v2 release.
+#
+#
+# Build errors with GDAL 3.0.2:
+# checking GDAL: /usr/local/cellar/gdal/3.0.2/share/gdal/pcs.csv readable... no
+# checking PROJ: checking whether PROJ and sqlite3 are available for linking:... no
+# configure: error: libproj not found in standard or given locations.
+#
+#
+# Build errors with GDAL 2.4.4 and GEOS 3.8.0:
+# Error: package or namespace load failed for ‘sf’ in dyn.load(file, DLLpath = DLLpath, ...):
+#  unable to load shared object '/mnt/data01/n/opt/r/3.6/site-library/00LOCK-sf/00new/sf/libs/sf.so':
+#   /mnt/data01/n/opt/r/3.6/site-library/00LOCK-sf/00new/sf/libs/sf.so: undefined symbol: GEOSFrechetDistanceDensify_r
+#
+# https://github.com/r-spatial/sf/issues/844
+# https://github.com/r-spatial/sf/issues/314
+#
+# ldd sf.so
+# ldd: ./sf.so: No such file or directory
+#
+# rgeos issue?
+#
+# We see this with multiple geos libraries with rgeos:
+# Warning in fun(libname, pkgname) :
+#   rgeos: versions of GEOS runtime 3.6.2-CAPI-1.10.2
+# and GEOS at installation 3.8.0-CAPI-1.13.1differ
+# """
+
+_koopa_assert_is_installed Rscript
+
+# > install-gdal 2.4.4
+# > gdal_version="2.4.4"
+
+gdal_version="$(_koopa_variable "gdal")"
+geos_version="$(_koopa_variable "geos")"
+proj_version="$(_koopa_variable "proj")"
+
+_koopa_dl "gdal version" "$gdal_version"
+_koopa_dl "geos version" "$geos_version"
+_koopa_dl "proj version" "$proj_version"
+
+cellar_prefix="$(_koopa_cellar_prefix)"
+gdal_prefix="${cellar_prefix}/gdal/${gdal_version}"
+geos_prefix="${cellar_prefix}/geos/${geos_version}"
+proj_prefix="${cellar_prefix}/proj/${proj_version}"
+
+_koopa_dl "gdal prefix" "$gdal_prefix"
+_koopa_dl "geos prefix" "$geos_prefix"
+_koopa_dl "proj prefix" "$proj_prefix"
+
+_koopa_dl "gdal config" "$(pkg-config --libs gdal)"
+_koopa_dl "geos config" "$(geos-config --libs)"
+_koopa_dl "proj config" "$(pkg-config --libs proj)"
+
+export PKG_CONFIG_PATH="\
+${gdal_prefix}/lib/pkgconfig:\
+${proj_prefix}/lib/pkgconfig:\
+/usr/local/lib/pkgconfig"
+_koopa_dl PKG_CONFIG_PATH "$PKG_CONFIG_PATH"
+
+Rscript --vanilla -e "\
+    install.packages(
+        pkgs = \"sf\",
+        type = \"source\",
+        repos = \"https://cran.rstudio.com\",
+        configure.args = paste(
+            \"--with-gdal-config=${gdal_prefix}/bin/gdal-config\",
+            \"--with-geos-config=${geos_prefix}/bin/geos-config\",
+            \"--with-proj-data=${proj_prefix}/share/proj\",
+            \"--with-proj-include=${proj_prefix}/include\",
+            \"--with-proj-lib=${proj_prefix}/lib\",
+            \"--with-proj-share=${proj_prefix}/share\"
+        )
+    )"
