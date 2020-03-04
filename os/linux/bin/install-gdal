@@ -23,6 +23,7 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_coffee_time
 
 _koopa_assert_has_no_envs
+_koopa_assert_is_not_file /usr/bin/gdal-config
 _koopa_assert_is_installed proj python3
 
 build="$(_koopa_make_build_string)"
