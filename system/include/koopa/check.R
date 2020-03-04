@@ -144,6 +144,7 @@ installed(
         "truncate",
         "tsort",
         "tty",
+        "udunits2",
         "uname",
         "unexpand",
         "uniq",
@@ -223,6 +224,12 @@ checkVersion(
     whichName = "gawk",
     current = currentVersion("gawk"),
     expected = expectedVersion("gawk")
+)
+checkVersion(
+    name = "GNU gcc",
+    whichName = "gcc",
+    current = currentMajorVersion("gcc"),
+    expected = expectedMajorVersion("gcc")
 )
 checkVersion(
     name = "GNU grep",
