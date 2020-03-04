@@ -7,6 +7,23 @@ source "${script_dir}/../include/header.sh"
 
 # """
 # https://github.com/Kitware/CMake
+#
+#
+# Error from GCC clobbering libstdc++:
+#
+# libstdc++.so.6: version `GLIBCXX_3.4.XXX' not found
+# https://stackoverflow.com/questions/44773296
+#
+# GCC 4.9.0: libstdc++.so.6.0.20
+# GCC 5.1.0: libstdc++.so.6.0.21
+# GCC 6.1.0: libstdc++.so.6.0.22
+# GCC 7.1.0: libstdc++.so.6.0.23
+# GCC 7.2.0: libstdc++.so.6.0.24
+# GCC 8.0.0: libstdc++.so.6.0.25
+# [...]
+# GCC 9.2.0: libstdc++.so.6.0.27
+#
+# GCC 9.2.0: version `GLIBCXX_3.4.26' not found
 # """
 
 name="cmake"
@@ -30,8 +47,16 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1
+    # export CC=/usr/bin/gcc
+    # export CXX=/usr/bin/g++
     # The 'configure' script also works here.
-    ./bootstrap --prefix="$prefix"
+    # --parallel flag
+    # --no-system-libs (default)
+    # --system-libs
+    # > ./bootstrap --help
+    ./bootstrap \
+        --parallel="$jobs" \
+        --prefix="$prefix"
     make --jobs="$jobs"
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
