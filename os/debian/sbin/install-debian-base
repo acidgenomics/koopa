@@ -30,13 +30,39 @@ source "${script_dir}/../include/header.sh"
 # You should explicitly select one to install.
 # """
 
-_koopa_assert_has_no_args "$@"
-
+bioconductor=0
 dev=1
 extra=1
+remove=1
 upgrade=1
 
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --bioconductor)
+            bioconductor=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+_koopa_assert_has_no_args "$@"
+
 _koopa_is_docker && extra=0
+[[ "$bioconductor" -eq 1 ]] && remove=0
 
 name_fancy="Debian base system"
 
@@ -81,34 +107,40 @@ then
             dist-upgrade
 fi
 
+# Remove packages  {{{1
+# ==============================================================================
+
+if [[ "$remove" -eq 1 ]]
+then
+    _koopa_h2 "Removing legacy packages."
+    apt_installed="$(sudo apt list --installed 2> /dev/null)"
+    legacy_pkgs=(
+        containerd              # docker-legacy
+        docker                  # docker-legacy
+        docker-engine           # docker-legacy
+        docker.io               # docker-legacy
+        runc                    # docker-legacy
+        cargo                   # use 'install-rust'
+        emacs                   # use 'install-emacs'
+        emacs25                 # gets installed by zsh
+        fish                    # use 'install-fish'
+        libgdal-dev             # use 'install-gdal'
+        libgeos-dev             # use 'install-geos'
+        libproj-dev             # use 'install-proj'
+        zsh                     # use 'install-zsh'
+        zsh-common
+    )
+    for pkg in "${legacy_pkgs[@]}"
+    do
+        echo "$apt_installed" | grep -Eq "^${pkg}/" || continue
+        sudo apt-get --yes remove "${pkg[@]}"
+    done
+fi
+
 # Default  {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
-
-# Clean up previous installs first, if applicable.
-apt_installed="$(sudo apt list --installed 2> /dev/null)"
-legacy_pkgs=(
-    containerd              # docker-legacy
-    docker                  # docker-legacy
-    docker-engine           # docker-legacy
-    docker.io               # docker-legacy
-    runc                    # docker-legacy
-    cargo                   # use 'install-rust'
-    emacs                   # use 'install-emacs'
-    emacs25                 # gets installed by zsh
-    fish                    # use 'install-fish'
-    libgdal-dev             # use 'install-gdal'
-    libgeos-dev             # use 'install-geos'
-    libproj-dev             # use 'install-proj'
-    zsh                     # use 'install-zsh'
-    zsh-common
-)
-for pkg in "${legacy_pkgs[@]}"
-do
-    echo "$apt_installed" | grep -Eq "^${pkg}/" || continue
-    sudo apt-get --yes remove "${pkg[@]}"
-done
 
 pkgs=(
     apt-listchanges
@@ -164,11 +196,15 @@ pkgs=(
 if [[ "$dev" -eq 1 ]]
 then
     _koopa_h2 "Installing developer packages."
+    if [[ "$bioconductor" -eq 1 ]]
+    then
+        pkgs+=(
+            libgdal-dev
+            libgeos-dev
+            libproj-dev
+        )
+    fi
     pkgs+=(
-        # libgmp3-dev
-        # libgslcblas0
-        # libhdf5-serial-dev
-        # libmariadb-dev-compat
         libacl1-dev
         libapparmor-dev
         libbz2-dev
