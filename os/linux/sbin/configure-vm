@@ -278,7 +278,7 @@ then
     # Install HDF5 after GDAL.
     install-hdf5                                                        # 0.022G
     install-gsl                                                         # 0.043G
-    install-udunits2
+    install-udunits
 
     # Shell tools.
     install-htop                                                        # 0.001G
