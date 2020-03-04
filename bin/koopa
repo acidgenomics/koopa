@@ -126,6 +126,10 @@ case "$1" in
         _koopa_view_latest_tmp_log_file
         exit 0
         ;;
+    update-r-config)
+        _koopa_update_r_config
+        exit 0
+        ;;
     variable)
         shift 1
         _koopa_variable "$@"

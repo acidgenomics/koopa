@@ -158,11 +158,15 @@ _koopa_update_r_config() {  # {{{1
     then
         _koopa_set_permissions --recursive "$r_home"
     else
+        # Ensure system library is writable.
+        _koopa_set_permissions --recursive "${r_home}/library"
+
         if [[ -d /usr/lib/R ]]
         then
             sudo chown -Rh root:root /usr/lib/R
             sudo chmod -R g-w /usr/lib/R
         fi
+
         if [[ -d /usr/share/R ]]
         then
             sudo chown -Rh root:root /usr/share/R
