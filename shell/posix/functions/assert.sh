@@ -588,7 +588,7 @@ _koopa_assert_is_root() {  # {{{1
 _koopa_assert_is_set() {
     # """
     # Assert that variables are set (and not unbound).
-    # @note Updated 2020-02-016.
+    # @note Updated 2020-03-04.
     #
     # Intended to use inside of functions, where we can't be sure that 'set -u'
     # mode is set, which otherwise catches unbound variables.
@@ -602,7 +602,7 @@ _koopa_assert_is_set() {
     [ "$#" -ne 0 ] || return 1
     for arg
     do
-        if ! _koopa_is_set arg
+        if ! _koopa_is_set "$arg"
         then
             _koopa_stop "'${arg}' is unset."
         fi
