@@ -60,9 +60,25 @@ source "${script_dir}/../include/header.sh"
 
 name="gcc"
 version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 _koopa_exit_if_dir "$prefix"
+
+# Check if system GCC is recent enough that we can skip building from source.
+# Here we're requiring that that the major version always matches.
+# This speeds up Docker builds on Linux distros with relatively recent
+# configurations, such as Fedora.
+if _koopa_is_installed "$name"
+then
+    current="$(_koopa_get_version "$name")"
+    current="$(_koopa_major_version "$current")"
+    expected="$(_koopa_major_version "$version")"
+    if _koopa_check_version "$current" "$expected"
+    then
+        _koopa_note "${name} ${current} is installed. Skipping source build."
+        exit 0
+    fi
+fi
 
 _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 
