@@ -205,7 +205,7 @@ then
 fi
 
 # LLVM.
-[[ "$docker" -eq 0 ]] && _koopa_run_if_installed install-llvm
+_koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
 install-openjdk                                                         # 0.316G
@@ -213,7 +213,7 @@ install-openjdk                                                         # 0.316G
 if [[ "$rsync" -eq 0 ]]
 then
     # Core.
-    [[ "$docker" -eq 0 ]] && install-gcc
+    install-gcc
     install-make
     install-autoconf
     install-automake
