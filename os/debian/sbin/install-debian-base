@@ -255,6 +255,9 @@ then
         libsasl2-dev
         libssh2-1-dev
         libssl-dev
+        # CMake may error with this installed.
+        # libstdc++.so.6: version 'GLIBCXX_3.4.26' not found
+        libstdc++6
         libtiff5-dev
         libudunits2-dev
         libv8-dev
