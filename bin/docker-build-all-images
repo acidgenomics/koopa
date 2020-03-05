@@ -26,19 +26,13 @@ _koopa_h1 "Building all Docker images."
 docker login
 
 images=(
-    # Lightweight Linux images.
-    acidgenomics/alpine
-    acidgenomics/biocontainers
-    acidgenomics/kali
+    # Lightweight informatics images.
     acidgenomics/miniconda3
+    acidgenomics/biocontainers
     # Full Linux images.
     acidgenomics/debian
-    acidgenomics/ubuntu
     acidgenomics/fedora
-    acidgenomics/centos
-    acidgenomics/amzn
-    acidgenomics/arch
-    acidgenomics/opensuse
+    acidgenomics/ubuntu
     # R images.
     acidgenomics/bioconductor
     acidgenomics/basejump
@@ -46,7 +40,14 @@ images=(
     acidgenomics/bcbiosinglecell
     acidgenomics/rnaseq
     acidgenomics/singlecell
-    # Bioinformatics software.
+    # Lightweight Linux images.
+    acidgenomics/alpine
+    acidgenomics/amzn
+    acidgenomics/arch
+    acidgenomics/centos
+    acidgenomics/kali
+    acidgenomics/opensuse
+    # Full bioinformatics software.
     # > acidgenomics/rnaeditingindexer
     # > acidgenomics/maestro
 )
