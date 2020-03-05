@@ -16,14 +16,11 @@ name="rstudio-server-pro"
 tmp_dir="$(_koopa_tmp_dir)"
 version="$(_koopa_variable "$name")"
 
-if _koopa_is_rhel_7
-then
-    os_id="centos6"
-elif _koopa_is_rhel_8
+if _koopa_is_rhel_8
 then
     os_id="fedora28"
 else
-    _koopa_stop "RHEL 7 or 8 is required."
+    _koopa_stop "Unsupported RHEL version."
 fi
 
 _koopa_h1 "Installing ${name} ${version} (${os_id})."
@@ -36,16 +33,10 @@ _koopa_h1 "Installing ${name} ${version} (${os_id})."
     file="rstudio-server-rhel-pro-${version}-x86_64.rpm"
     url="https://download2.rstudio.org/server/${os_id}/x86_64/${file}"
     _koopa_download "$url"
-    sudo yum -y install "$file"
+    sudo dnf -y install "$file"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
-
-# > sudo "$name" stop
-# > sudo "$name" verify-installation
-# > sudo "$name" start
-# > sudo "$name" status
-# > sudo "$name" license-manager status
 
 _koopa_install_success "$name"
 
@@ -57,5 +48,3 @@ If you want to move your license of RStudio Server to another system you should
 first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
 EOF
-
-# > rstudio-server license-manager verify

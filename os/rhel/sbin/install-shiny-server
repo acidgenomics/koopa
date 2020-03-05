@@ -24,7 +24,7 @@ _koopa_h1 "Installing ${name} ${version}."
     file="shiny-server-${version}-x86_64.rpm"
     url="https://download3.rstudio.org/centos6.3/x86_64/${file}"
     _koopa_download "$url"
-    sudo yum install -y --nogpgcheck "$file"
+    sudo dnf install -y --nogpgcheck "$file"
 )
 
 rm -fr "$tmp_dir"
