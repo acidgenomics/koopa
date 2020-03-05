@@ -49,6 +49,8 @@ images=(
     # Bioinformatics software.
     # > acidgenomics/rnaeditingindexer
     # > acidgenomics/maestro
+    # AWS images.
+    acidgenomics/aws-batch
 )
 
 for image in "${images[@]}"
