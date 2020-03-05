@@ -72,6 +72,11 @@ broot="0.13.2"
 # https://crates.io/
 cargo="1.41.0"
 
+# 10X Genomics Cell Ranger
+# https://support.10xgenomics.com/single-cell-gene-expression/software/
+#     pipelines/latest/installation
+cellranger="3.1.0"
+
 # Apple Xcode version
 # https://developer.apple.com/xcode/
 # https://en.wikipedia.org/wiki/Xcode
