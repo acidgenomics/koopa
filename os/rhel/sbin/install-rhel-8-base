@@ -66,6 +66,7 @@ _koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
+sudo yum config-manager --set-enabled PowerTools
 enable-epel-8
 install-fedora-base "$@"
 sudo yum -y install util-linux-user
