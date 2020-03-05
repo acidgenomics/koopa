@@ -33,7 +33,6 @@ _koopa_assert_has_no_envs
 _koopa_activate_openjdk
 # > _koopa_assert_is_installed java javac tex
 
-build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 major_version="$(_koopa_major_version "$version")"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -51,7 +50,6 @@ tmp_dir="$(_koopa_tmp_dir)"
     # https://stackoverflow.com/questions/46413691
     export TZ="America/New_York"
     ./configure \
-        --build="$build" \
         --enable-BLAS-shlib \
         --enable-R-profiling \
         --enable-R-shlib \
