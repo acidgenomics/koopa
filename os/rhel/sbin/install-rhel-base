@@ -66,10 +66,10 @@ _koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
-sudo yum config-manager --set-enabled PowerTools
-enable-epel-8
+sudo dnf config-manager --set-enabled PowerTools
+enable-epel
 install-fedora-base "$@"
-sudo yum -y install util-linux-user
+sudo dnf -y install util-linux-user
 
 # developer  {{{1
 # ==============================================================================
@@ -81,7 +81,7 @@ then
         libgit2
         libssh2
     )
-    sudo yum -y install "${pkgs[@]}"
+    sudo dnf -y install "${pkgs[@]}"
 fi
 
 # extra  {{{1
@@ -90,5 +90,5 @@ fi
 if [[ "$extra" -eq 1 ]]
 then
     _koopa_h2 "Installing extra recommended packages."
-    sudo yum -y install python3
+    sudo dnf -y install python3
 fi
