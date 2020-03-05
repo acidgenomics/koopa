@@ -379,7 +379,7 @@ _koopa_line_count() {  # {{{1
     return 0
 }
 
-_koopa_rm_empty_dirs() {  # {{{1
+_koopa_remove_empty_dirs() {  # {{{1
     # """
     # Remove empty directories.
     # @note Updated 2020-03-05.

@@ -343,9 +343,11 @@ fi
 
 _koopa_set_permissions --recursive "$make_prefix"
 _koopa_remove_broken_symlinks "$make_prefix"
+_koopa_remove_empty_dirs "$make_prefix"
 
 _koopa_set_permissions --recursive "$app_prefix"
 _koopa_remove_broken_symlinks "$app_prefix"
+_koopa_remove_empty_dirs "$app_prefix"
 
 _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
