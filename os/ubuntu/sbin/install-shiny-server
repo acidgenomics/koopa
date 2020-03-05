@@ -9,14 +9,14 @@ source "${script_dir}/../include/header.sh"
 # https://rstudio.com/products/shiny/download-server/ubuntu/
 # """
 
-force=0
+reinstall=0
 
 pos=()
 while (("$#"))
 do
     case "$1" in
-        --force)
-            force=1
+        --reinstall)
+            reinstall=1
             shift 1
             ;;
         --)
@@ -37,7 +37,7 @@ set -- "${pos[@]}"
 name="shiny-server"
 
 # > _koopa_exit_if_docker
-[[ "$force" -eq 0 ]] && _koopa_exit_if_installed "$name"
+[[ "$reinstall" -eq 0 ]] && _koopa_exit_if_installed "$name"
 
 version="$(_koopa_variable "$name")"
 name_fancy="Shiny Server ${version}"
