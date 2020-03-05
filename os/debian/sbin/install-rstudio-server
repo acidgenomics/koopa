@@ -17,6 +17,10 @@ source "${script_dir}/../include/header.sh"
 # > sudo rstudio-server verify-installation
 # > sudo rstudio-server start
 # > sudo rstudio-server status
+#
+# Docker recipes:
+# - https://hub.docker.com/r/rocker/rstudio/dockerfile
+# - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
 # """
 
 name="rstudio-server"
