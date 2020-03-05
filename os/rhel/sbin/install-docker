@@ -16,7 +16,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed systemctl
 
 # Remove legacy versions, if necessary.
-sudo yum -y remove \
+sudo dnf -y remove \
     docker \
     docker-client \
     docker-client-latest \
@@ -26,17 +26,16 @@ sudo yum -y remove \
     docker-latest-logrotate \
     docker-logrotate
 
-sudo yum -y install \
+sudo dnf -y install \
     device-mapper-persistent-data \
     lvm2 \
     yum-utils
 
 sudo yum-config-manager \
     --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo yum repolist
 
-sudo yum -y install containerd.io
-sudo yum -y install docker-ce docker-ce-cli
+sudo dnf -y install containerd.io
+sudo dnf -y install docker-ce docker-ce-cli
 
 # Ensure current user is added to Docker group.
 _koopa_add_user_to_group "docker"
