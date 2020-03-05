@@ -75,7 +75,7 @@ _koopa_exit_if_dir "$prefix"
 # >     expected="$(_koopa_major_version "$version")"
 # >     if _koopa_check_version "$current" "$expected"
 # >     then
-# >         _koopa_note "${name} ${current} is installed. Skipping source build."
+# >         _koopa_note "${name} ${current} is installed."
 # >         exit 0
 # >     fi
 # > fi
@@ -85,8 +85,6 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-# default: x86_64-linux-gnu
-build="$(_koopa_make_build_string)"
 gnu_mirror="$(_koopa_gnu_mirror)"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -101,20 +99,13 @@ tmp_dir="$(_koopa_tmp_dir)"
     mkdir build
     _koopa_cd build
     flags=(
-        # "--enable-checking=release"
-        # "--enable-languages=c,c++,fortran"
-        # "--host=${build}"
-        # "--program-suffix=-$(_koopa_minor_version "$version")"
-        # "--target=${build}"
-        "--build=${build}"
         "--disable-multilib"
+        "--enable-languages=c,c++,fortran"
         "--prefix=${prefix}"
         "-v"
     )
     "../${name}-${version}/configure" "${flags[@]}"
     make --jobs="$jobs"
-    # > make check
-    # > make install-strip
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
