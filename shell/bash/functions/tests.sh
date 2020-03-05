@@ -3,7 +3,7 @@
 _koopa_test_find_files() {  # {{{1
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-05.
     # """
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
@@ -11,6 +11,7 @@ _koopa_test_find_files() {  # {{{1
         -mindepth 1 \
         -type f \
         -not -name "$(basename "$0")" \
+        -not -name "Makeconf" \
         -not -name "*.md" \
         -not -name "*.site" \
         -not -name ".pylintrc" \
