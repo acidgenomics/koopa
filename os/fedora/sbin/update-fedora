@@ -7,5 +7,5 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
 (
-    sudo yum update -y
+    sudo dnf update -y
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"

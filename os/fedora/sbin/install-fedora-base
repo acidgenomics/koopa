@@ -23,15 +23,13 @@ _koopa_h1 "Installing Fedora base system."
 
 _koopa_assert_is_installed sudo
 
-# > sudo dnf clean
-
 # Upgrade  {{{1
 # ==============================================================================
 
 if [[ "$upgrade" -eq 1 ]]
 then
-    _koopa_h2 "Upgrading install via 'yum update'."
-    sudo yum -y update
+    _koopa_h2 "Upgrading install via 'dnf update'."
+    sudo dnf -y update
 fi
 
 # Default  {{{1
@@ -64,7 +62,6 @@ pkgs=(
     readline
     squashfs-tools
     systemd
-    texinfo
     tmux
     tree
     util-linux
@@ -75,7 +72,11 @@ pkgs=(
     yum-utils
     zip
 )
-sudo yum -y install "${pkgs[@]}"
+
+if ! _koopa_is_rhel
+then
+    pkgs+=(texinfo)
+fi
 
 # Developer  {{{1
 # ==============================================================================
@@ -83,8 +84,8 @@ sudo yum -y install "${pkgs[@]}"
 if [[ "$dev" -eq 1 ]]
 then
     _koopa_h2 "Installing developer libraries."
-    sudo yum -y groupinstall "Development Tools"
-    pkgs=(
+    sudo dnf -y groupinstall "Development Tools"
+    pkgs+=(
         bison-devel
         bzip2-devel
         # Required to build udunits.
@@ -112,7 +113,6 @@ then
         unixODBC-devel
         xz-devel
     )
-    sudo yum -y install "${pkgs[@]}"
 fi
 
 # Extra  {{{1
@@ -121,7 +121,7 @@ fi
 if [[ "$extra" -eq 1 ]]
 then
     _koopa_h2 "Installing extra recommended packages."
-    pkgs=(
+    pkgs+=(
         # emacs
         # golang
         # zsh
@@ -151,5 +151,7 @@ then
         texlive-titling
         texlive-xstring
     )
-    sudo yum -y install "${pkgs[@]}"
 fi
+
+sudo dnf -y install "${pkgs[@]}"
+sudo dnf clean

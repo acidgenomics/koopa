@@ -107,8 +107,7 @@ else
     _koopa_stop "Unsupported Linux distro."
 fi
 
-_koopa_is_rhel_7 && install-rhel-7-base
-_koopa_is_rhel_8 && install-rhel-8-base
+_koopa_is_rhel && install-rhel-base
 
 # Maybe include: tclsh
 _koopa_assert_is_installed \

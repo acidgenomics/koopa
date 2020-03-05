@@ -32,7 +32,7 @@ then
     sudo rpm -ivh --nodeps "$file"
     rm "$file"
 else
-    sudo yum -y install azure-cli
+    sudo dnf -y install azure-cli
 fi
 
 _koopa_install_success "$name_fancy"
