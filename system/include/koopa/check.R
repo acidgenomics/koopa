@@ -225,12 +225,12 @@ checkVersion(
     current = currentVersion("gawk"),
     expected = expectedVersion("gawk")
 )
-checkVersion(
-    name = "GNU gcc",
-    whichName = "gcc",
-    current = currentMajorVersion("gcc"),
-    expected = expectedMajorVersion("gcc")
-)
+## > checkVersion(
+## >     name = "GNU gcc",
+## >     whichName = "gcc",
+## >     current = currentMajorVersion("gcc"),
+## >     expected = expectedMajorVersion("gcc")
+## > )
 checkVersion(
     name = "GNU grep",
     whichName = "grep",
