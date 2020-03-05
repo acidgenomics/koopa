@@ -382,24 +382,18 @@ _koopa_line_count() {  # {{{1
 _koopa_rm_empty_dirs() {  # {{{1
     # """
     # Remove empty directories.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-05.
     # """
     local dir
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
-
-    local x
-    x="$( \
-        find "$dir" \
-            -mindepth 1 \
-            -type d \
-            -not -path "*/.*/*" \
-            -empty \
-            -delete \
-            -print \
-    )"
-
-    echo "$x"
+    find "$dir" \
+        -mindepth 1 \
+        -type d \
+        -not -path "*/.*/*" \
+        -empty \
+        -delete \
+        > /dev/null 2>&1
     return 0
 }
 
