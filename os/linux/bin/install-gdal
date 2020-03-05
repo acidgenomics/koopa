@@ -47,7 +47,8 @@ tmp_dir="$(_koopa_tmp_dir)"
         CFLAGS="-I${make_prefix}/include" \
         CPPFLAGS="-I${make_prefix}/include" \
         LDFLAGS="-L${make_prefix}/lib"
-    make --jobs="$jobs"
+    # Enable more verbose debug mode, which is helpful for Fedora / CentOS.
+    make -d --jobs="$jobs"
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
