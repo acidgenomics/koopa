@@ -108,6 +108,7 @@ then
     # Update git repos.
     repos=(
         "${config_prefix}/docker"
+        "${config_prefix}/docker-private"
         "${config_prefix}/dotfiles-private"
         "${config_prefix}/scripts-private"
         "${XDG_DATA_HOME}/Rcheck"

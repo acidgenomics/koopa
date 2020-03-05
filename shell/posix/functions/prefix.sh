@@ -150,6 +150,15 @@ _koopa_docker_prefix() {  # {{{1
     return 0
 }
 
+_koopa_docker_private_prefix() {  # {{{1
+    # """
+    # Private Docker prefix.
+    # @note Updated 2020-03-05.
+    # """
+    echo "$(_koopa_config_prefix)/docker-private"
+    return 0
+}
+
 _koopa_dotfiles_prefix() {  # {{{1
     # """
     # Koopa system dotfiles prefix.
