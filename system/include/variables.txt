@@ -285,7 +285,7 @@ screen="4.8.0"
 shellcheck="0.7.0"
 
 # https://www.rstudio.com/products/shiny/download-server/
-shiny-server="1.5.12.933"
+shiny-server="1.5.13.944"
 
 # https://github.com/kward/shunit2/releases
 shunit2="2.1.7"
