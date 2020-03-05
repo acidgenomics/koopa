@@ -238,6 +238,18 @@ _koopa_git_clone_docker() {
     return 0
 }
 
+_koopa_git_clone_docker_private() {  # {{{1
+    # """
+    # Clone docker-private repo.
+    # @note Updated 2020-03-05.
+    # """
+    _koopa_assert_is_github_ssh_enabled
+    _koopa_git_clone \
+        "git@github.com:mjsteinbaugh/docker-private.git" \
+        "$(_koopa_docker_private_prefix)"
+    return 0
+}
+
 _koopa_git_clone_dotfiles() {  # {{{1
     # """
     # Clone dotfiles repo.
@@ -315,11 +327,12 @@ _koopa_install_dotfiles_private() {  # {{{1
 _koopa_install_mike() {  # {{{1
     # """
     # Install additional Mike-specific config files.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-03-05.
     #
     # Note that these repos require SSH key to be set on GitHub.
     # """
     _koopa_git_clone_docker
+    _koopa_git_clone_docker_private
     _koopa_git_clone_dotfiles
     _koopa_git_clone_dotfiles_private
     _koopa_git_clone_scripts_private
