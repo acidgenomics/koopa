@@ -178,6 +178,8 @@ pkgs=(
     nano
     parallel
     pkg-config
+    # This is needed for RStudio Server to install.
+    psmisc
     software-properties-common
     sudo
     texinfo  # makeinfo
