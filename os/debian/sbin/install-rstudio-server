@@ -25,7 +25,6 @@ source "${script_dir}/../include/header.sh"
 
 name="rstudio-server"
 
-# > _koopa_exit_if_docker
 _koopa_exit_if_installed "$name"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
