@@ -9,16 +9,18 @@ source "${script_dir}/../include/header.sh"
 
 name="shiny-server"
 
-_koopa_exit_if_docker
+# > _koopa_exit_if_docker
 _koopa_exit_if_installed "$name"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
 
-tmp_dir="$(_koopa_tmp_dir)"
 version="$(_koopa_variable "$name")"
 
-_koopa_h1 "Installing ${name} ${version}."
+name_fancy="Shiny Server"
 
+_koopa_install_start "$name_fancy"
+
+tmp_dir="$(_koopa_tmp_dir)"
 
 if ! _koopa_is_r_package_installed shiny
 then
@@ -38,4 +40,4 @@ fi
 
 rm -fr "$tmp_dir"
 
-_koopa_install_success "$name"
+_koopa_install_success "$name_fancy"
