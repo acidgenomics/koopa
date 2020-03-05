@@ -58,6 +58,7 @@ _koopa_exit_if_dir "$install_dir"
 _koopa_h1 "Installing ${name} at '${install_dir}."
 
 _koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed emacs
 
 (
     repo="https://github.com/syl20bnr/spacemacs.git"
@@ -69,6 +70,11 @@ _koopa_assert_has_no_args "$@"
 
 link-emacs "$name"
 
+# Install/update layers non-interactively.
+# --no-window-system
+emacs \
+    --batch -l ~/.emacs.d/init.el \
+    --eval="(configuration-layer/update-packages t)"
+
 _koopa_install_success "$name"
 
-# > emacs --no-window-system
