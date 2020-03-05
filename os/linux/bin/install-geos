@@ -16,12 +16,9 @@ source "${script_dir}/../include/header.sh"
 #   https://trac.osgeo.org/geos/wiki/BuildingOnUnixWithCMake
 #
 # Alternate autotools approach:
-# > build="$(_koopa_make_build_string)"
 # > cd "${name}-${version}" || exit 1
 # > ./autogen.sh
-# > ./configure \
-# >     --build="$build" \
-# >     --prefix="$prefix"
+# > ./configure --prefix="$prefix"
 # > make --jobs="$jobs"
 # > make check
 # """
