@@ -85,6 +85,8 @@ then
     sudo yum -y groupinstall "Development Tools"
     pkgs=(
         bzip2-devel
+        # Required to build udunits.
+        expat-devel
         gmp-devel
         gnutls-devel
         gsl-devel
