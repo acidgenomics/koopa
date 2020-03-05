@@ -25,10 +25,6 @@ gdal_prefix="$make_prefix"
 geos_prefix="$make_prefix"
 proj_prefix="$make_prefix"
 
-_koopa_dl "gdal prefix" "$gdal_prefix"
-_koopa_dl "geos prefix" "$geos_prefix"
-_koopa_dl "proj prefix" "$proj_prefix"
-
 export PKG_CONFIG_PATH="\
 ${gdal_prefix}/lib/pkgconfig:\
 ${proj_prefix}/lib/pkgconfig:\
