@@ -44,7 +44,6 @@ tmp_dir="$(_koopa_tmp_dir)"
         --prefix="$prefix" \
         --with-proj="$make_prefix" \
         --with-python="python3" \
-        --without-ogr \
         CFLAGS="-I${make_prefix}/include" \
         CPPFLAGS="-I${make_prefix}/include" \
         LDFLAGS="-L${make_prefix}/lib"
