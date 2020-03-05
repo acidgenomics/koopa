@@ -86,18 +86,15 @@ then
     _koopa_h2 "Installing developer libraries."
     sudo dnf -y groupinstall "Development Tools"
     pkgs+=(
-        bison-devel
         bzip2-devel
         # Required to build udunits.
         expat-devel
-        flex-devel
         gmp-devel
         gnutls-devel
         gsl-devel
         libcurl-devel
         libevent-devel
         libffi-devel
-        libmpc-devel
         libseccomp-devel
         libtiff-devel
         libuuid-devel
@@ -109,9 +106,18 @@ then
         pcre-devel
         postgresql-devel
         readline-devel
-        udunits2-devel
         unixODBC-devel
         xz-devel
+    )
+fi
+
+if ! _koopa_is_rhel
+then
+    pkgs+=(
+        bison-devel
+        flex-devel
+        libmpc-devel
+        udunits2-devel
     )
 fi
 
