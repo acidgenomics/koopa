@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 # e.g. /usr/local/koopa
 koopa_prefix="$(_koopa_prefix)"
@@ -127,9 +128,9 @@ then
 fi
 
 _koopa_success "koopa update was successful."
-_koopa_restart
+#_koopa_restart
 
-if [[ "$system" -eq 1 ]]
-then
-    koopa check
-fi
+#if [[ "$system" -eq 1 ]]
+#then
+#    koopa check
+#fi
