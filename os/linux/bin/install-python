@@ -54,7 +54,6 @@ _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
-build="$(_koopa_make_build_string)"
 jobs="$(_koopa_cpu_count)"
 make_prefix="$(_koopa_make_prefix)"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -67,7 +66,6 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_extract "$file"
     cd "Python-${version}" || exit 1
     ./configure \
-        --build="$build" \
         --prefix="$prefix" \
         --enable-shared \
         --without-ensurepip \

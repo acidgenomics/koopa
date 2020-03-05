@@ -114,7 +114,6 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_assert_is_installed tee
 
-build="$(_koopa_make_build_string)"
 gnu_mirror="$(_koopa_gnu_mirror)"
 jobs="$(_koopa_cpu_count)"
 tmp_dir="$(_koopa_tmp_dir)"
@@ -127,7 +126,6 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_extract "$file"
     cd "emacs-${version}" || exit 1
     ./configure \
-        --build="$build" \
         --prefix="$prefix" \
         --with-x-toolkit="no" \
         --with-xpm="no"
