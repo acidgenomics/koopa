@@ -5,7 +5,19 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# RStudio Server on Fedora / RHEL / CentOS
 # https://rstudio.com/products/rstudio/download-server/redhat-centos/
+#
+# System config:
+# /etc/rstudio
+#
+# Verify install:
+# > sudo rstudio-server stop
+# > sudo rstudio-server verify-installation
+# > sudo rstudio-server start
+# > sudo rstudio-server status
+# """
 
 name="rstudio-server"
 
@@ -14,23 +26,17 @@ _koopa_exit_if_installed "$name"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R
 
-tmp_dir="$(_koopa_tmp_dir)"
 version="$(_koopa_variable "$name")"
 
 if _koopa_is_rhel_7
 then
-    os_id="centos6"
-elif _koopa_is_rhel_8
-then
-    os_id="fedora28"
-else
-    _koopa_stop "RHEL 7 or 8 is required."
+    _koopa_stop "Fedora 28+ (RHEL/CentOS 8+) is required."
 fi
 
-_koopa_h1 "Installing ${name} ${version} (${os_id})."
+_koopa_h1 "Installing ${name} ${version})."
 
-# Remove existing config files.
-# > sudo rm -frv /etc/rstudio
+os_id="fedora28"
+tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -44,10 +50,5 @@ _koopa_h1 "Installing ${name} ${version} (${os_id})."
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 rm -fr "$tmp_dir"
-
-# > sudo "$name" stop
-# > sudo "$name" verify-installation
-# > sudo "$name" start
-# > sudo "$name" status
 
 _koopa_install_success "$name"
