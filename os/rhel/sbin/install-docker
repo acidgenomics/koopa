@@ -26,16 +26,10 @@ sudo dnf -y remove \
     docker-latest-logrotate \
     docker-logrotate
 
-sudo dnf -y install \
-    device-mapper-persistent-data \
-    lvm2 \
-    yum-utils
+sudo dnf config-manager \
+    --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 
-sudo yum-config-manager \
-    --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-
-sudo dnf -y install containerd.io
-sudo dnf -y install docker-ce docker-ce-cli
+sudo dnf -y install docker-ce --nobest
 
 # Ensure current user is added to Docker group.
 _koopa_add_user_to_group "docker"
