@@ -25,19 +25,15 @@ gdal_prefix="$make_prefix"
 geos_prefix="$make_prefix"
 proj_prefix="$make_prefix"
 
-_koopa_dl "gdal config" "$(pkg-config --libs gdal)"
-_koopa_dl "geos config" "$(geos-config --libs)"
-_koopa_dl "proj config" "$(pkg-config --libs proj)"
-
-_koopa_dl "gdal prefix" "$gdal_prefix"
-_koopa_dl "geos prefix" "$geos_prefix"
-_koopa_dl "proj prefix" "$proj_prefix"
-
 export PKG_CONFIG_PATH="\
 ${gdal_prefix}/lib/pkgconfig:\
 ${proj_prefix}/lib/pkgconfig:\
 /usr/local/lib/pkgconfig"
 _koopa_dl PKG_CONFIG_PATH "$PKG_CONFIG_PATH"
+
+_koopa_dl "gdal config" "$(pkg-config --libs gdal)"
+_koopa_dl "geos config" "$(geos-config --libs)"
+_koopa_dl "proj config" "$(pkg-config --libs proj)"
 
 Rscript --vanilla -e "\
     install.packages(
