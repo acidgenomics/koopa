@@ -41,6 +41,7 @@ _koopa_h2 "Installing default packages."
 pkgs=(
     autoconf
     bash
+    byacc
     bzip2
     cmake
     convmv
@@ -84,9 +85,11 @@ then
     _koopa_h2 "Installing developer libraries."
     sudo yum -y groupinstall "Development Tools"
     pkgs=(
+        bison-devel
         bzip2-devel
         # Required to build udunits.
         expat-devel
+        flex-devel
         gmp-devel
         gnutls-devel
         gsl-devel
