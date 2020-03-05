@@ -19,8 +19,7 @@ tmp_dir="$(_koopa_tmp_dir)"
 _koopa_install_start "$name_fancy"
 
 _koopa_note "Removing previous version, if applicable."
-sudo yum list installed | grep 'oracle-instantclient'
-sudo yum -y remove 'oracle-instantclient*'
+sudo dnf -y remove 'oracle-instantclient*'
 sudo rm -v /etc/ld.so.conf.d/oracle-instantclient.conf
 
 url_prefix="https://download.oracle.com/otn_software/linux/instantclient/195000"
@@ -35,7 +34,5 @@ stems=(basic devel sqlplus jdbc odbc)
         sudo rpm -i "$file"
     done
 )
-
-sudo yum list installed | grep 'oracle-instantclient'
 
 _koopa_install_success "$name_fancy"

@@ -16,6 +16,6 @@ name_fancy="Google Cloud SDK"
 _koopa_install_start "$name_fancy"
 
 _koopa_yum_add_google_cloud_sdk_repo
-sudo yum -y install google-cloud-sdk
+sudo dnf -y install google-cloud-sdk
 
 _koopa_install_success "$name_fancy"
