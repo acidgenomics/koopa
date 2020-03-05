@@ -832,14 +832,28 @@ _koopa_mktemp() {  # {{{1
 _koopa_mv() {  # {{{1
     # """
     # Koopa move.
-    # @note Updated 2020-02-28.
+    # @note Updated 2020-03-05.
+    #
+    # This function works on 1 file or directory at a time.
+    # It ensures that the target parent directory exists automatically.
     # """
+    local source_file
+    source_file="${1:?}"
+
+    local target_file
+    target_file="${2:?}"
+
+    local target_parent
+    target_parent="$(dirname "$target_file")"
+    _koopa_mkdir "$target_parent"
+
     if _koopa_is_shared_install
     then
         sudo mv -Tf --strip-trailing-slashes "$@"
     else
         mv -Tf --strip-trailing-slashes "$@"
     fi
+
     return 0
 }
 
