@@ -160,4 +160,3 @@ then
 fi
 
 sudo dnf -y install "${pkgs[@]}"
-sudo dnf clean
