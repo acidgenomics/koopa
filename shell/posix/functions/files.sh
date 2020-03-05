@@ -121,13 +121,9 @@ _koopa_find_and_replace_in_files() {  # {{{1
     # """
     local from
     from="${1:?}"
-
     local to
     to="${2:?}"
-
-    local dir
-    dir="${3:-"."}"
-    dir="$(realpath "$dir")"
+    shift 2
 
     # Check for unescaped slashes.
     if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
@@ -138,12 +134,13 @@ _koopa_find_and_replace_in_files() {  # {{{1
         _koopa_stop "Unescaped '/' detected: '${to}'."
     fi
 
-    find "$dir" \
-        -xdev \
-        -mindepth 1 \
-        -maxdepth 1 \
-        -type f \
-        -exec sed -i "s/${from}/${to}/g" {} \;
+    local file
+    for file in "$@"
+    do
+        [ -f "$file" ] || return 1
+        _koopa_info "$file"
+        sed -i "s/${from}/${to}/g" "$file"
+    done
 
     return 0
 }
