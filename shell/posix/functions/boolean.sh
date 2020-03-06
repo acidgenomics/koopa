@@ -630,6 +630,7 @@ _koopa_is_set() {  # {{{1
             value="${!var}"
             ;;
         zsh)
+            # shellcheck disable=SC2154
             value="${(P)var}"
             ;;
         *)
