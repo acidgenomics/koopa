@@ -1,6 +1,26 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_boolean_nounset() {  # {{{1
+    # """
+    # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
+    # @note Updated 2020-03-06.
+    #
+    # Intended for [ "$x" -eq 1 ] (true) checks.
+    #
+    # This approach is the opposite of POSIX shell status codes, where 0 is
+    # true and 1 is false.
+    # """
+    local bool
+    if _koopa_is_setopt_nounset
+    then
+        bool="1"
+    else
+        bool="0"
+    fi
+    _koopa_print "$bool"
+}
+
 _koopa_has_file_ext() {  # {{{1
     # """
     # Does the input contain a file extension?

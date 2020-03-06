@@ -40,7 +40,7 @@ _koopa_activate_autojump() {  # {{{1
     script="${prefix}/etc/profile.d/autojump.sh"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -96,7 +96,7 @@ _koopa_activate_broot() {  # {{{1
     br_script="${config_dir}/launcher/bash/br"
     [ -f "$br_script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$br_script"
@@ -125,7 +125,7 @@ _koopa_activate_conda() {  # {{{1
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -226,7 +226,7 @@ _koopa_activate_fzf() {  # {{{1
     local shell
     shell="$(_koopa_shell)"
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # Auto-completion.
     # shellcheck source=/dev/null
@@ -544,7 +544,7 @@ _koopa_activate_perlbrew() {  # {{{1
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
@@ -621,7 +621,7 @@ _koopa_activate_pyenv() {  # {{{1
     export PYENV_ROOT="$prefix"
     _koopa_activate_prefix "$prefix"
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
@@ -655,7 +655,7 @@ _koopa_activate_rbenv() {  # {{{1
     export RBENV_ROOT="$prefix"
     _koopa_activate_prefix "$prefix"
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
@@ -710,7 +710,7 @@ _koopa_activate_rust() {  # {{{1
     [ -r "$script" ] || return 0
     export CARGO_HOME="$cargo_prefix"
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -808,7 +808,7 @@ _koopa_activate_venv() {  # {{{1
     script="${prefix}/${name}/bin/activate"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
