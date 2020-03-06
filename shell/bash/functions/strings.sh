@@ -4,7 +4,7 @@ _koopa_paste0() {  # {{{1
     # """
     # Paste arguments (e.g. from an array) into a string separated by delimiter
     # defined in the first positional argument.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-03-06.
     #
     # Note that the 'paste0' name is a reference to the R function.
     #
@@ -26,7 +26,9 @@ _koopa_paste0() {  # {{{1
     # Expand arguments with prefixed delimiter (Empty IFS).
     str="${*/#/$delim}"
     # Print without the first delimiter.
-    _koopa_print "${str:${#delim}}"
+    str="${str:${#delim}}"
+    printf '%s\n' "$str"
+    return 0
 }
 
 _koopa_to_string() {  # {{{1

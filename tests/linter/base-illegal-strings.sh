@@ -2,7 +2,7 @@
 
 # """
 # Find illegal strings.
-# Updated 2020-02-16.
+# Updated 2020-03-06.
 # """
 
 # shellcheck source=/dev/null
@@ -23,6 +23,7 @@ illegal_strings=(
     '^path='
     'os.system'
 )
+
 grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
 
 _koopa_test_find_failures "$grep_pattern"
