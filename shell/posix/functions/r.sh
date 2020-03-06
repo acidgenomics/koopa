@@ -39,6 +39,12 @@ _koopa_link_r_etc() {  # {{{1
     _koopa_ln "${r_etc_source}/Renviron.site" "${r_etc_target}/Renviron.site"
     _koopa_ln "${r_etc_source}/Rprofile.site" "${r_etc_target}/Rprofile.site"
 
+    # Link Makeconf, if defined.
+    if [[ -f "${r_etc_source}/Makeconf" ]]
+    then
+        _koopa_ln "${r_etc_source}/Makeconf" "${r_etc_target}/Makeconf"
+    fi
+
     return 0
 }
 
