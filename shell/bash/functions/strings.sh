@@ -25,8 +25,8 @@ _koopa_paste0() {  # {{{1
     shift 1
     # Expand arguments with prefixed delimiter (Empty IFS).
     str="${*/#/$delim}"
-    # Echo without the first delimiter.
-    echo "${str:${#delim}}"
+    # Print without the first delimiter.
+    _koopa_print "${str:${#delim}}"
 }
 
 _koopa_to_string() {  # {{{1

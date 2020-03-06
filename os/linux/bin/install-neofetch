@@ -22,7 +22,6 @@ tmp_dir="$(_koopa_tmp_dir)"
     _koopa_cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
     url="https://github.com/dylanaraps/${name}/archive/${file}"
-    echo "$url"
     _koopa_download "$url"
     _koopa_extract "$file"
     cd "${name}-${version}" || exit 1

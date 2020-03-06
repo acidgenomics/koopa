@@ -14,4 +14,4 @@ version="$( \
     | sed -n 3p \
     | cut -d ' ' -f 3 \
 )"
-echo "$version"
+_koopa_print "$version"

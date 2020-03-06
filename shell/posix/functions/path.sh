@@ -16,7 +16,6 @@ _koopa_add_conda_env_to_path() {  # {{{1
     bin_dir="${CONDA_PREFIX}/envs/${name}/bin"
     [ -d "$bin_dir" ] || return 0
     _koopa_add_to_path_start "$bin_dir"
-    return 0
 }
 
 _koopa_add_to_fpath_end() {  # {{{1
@@ -29,7 +28,7 @@ _koopa_add_to_fpath_end() {  # {{{1
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
-    echo "${FPATH:-}" | grep -q "$dir" && return 0
+    _koopa_print "${FPATH:-}" | grep -q "$dir" && return 0
     export FPATH="${FPATH:-}:${dir}"
     return 0
 }
@@ -44,7 +43,7 @@ _koopa_add_to_fpath_start() {  # {{{1
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
-    echo "${FPATH:-}" | grep -q "$dir" && return 0
+    _koopa_print "${FPATH:-}" | grep -q "$dir" && return 0
     export FPATH="${dir}:${FPATH:-}"
     return 0
 }
@@ -57,7 +56,7 @@ _koopa_add_to_manpath_end() {  # {{{1
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
-    echo "${MANPATH:-}" | grep -q "$dir" && return 0
+    _koopa_print "${MANPATH:-}" | grep -q "$dir" && return 0
     export MANPATH="${MANPATH:-}:${dir}"
     return 0
 }
@@ -70,7 +69,7 @@ _koopa_add_to_manpath_start() {  # {{{1
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
-    echo "${MANPATH:-}" | grep -q "$dir" && return 0
+    _koopa_print "${MANPATH:-}" | grep -q "$dir" && return 0
     export MANPATH="${dir}:${MANPATH:-}"
     return 0
 }
@@ -83,7 +82,7 @@ _koopa_add_to_path_end() {  # {{{1
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
-    echo "${PATH:-}" | grep -q "$dir" && return 0
+    _koopa_print "${PATH:-}" | grep -q "$dir" && return 0
     export PATH="${PATH:-}:${dir}"
     return 0
 }
@@ -96,7 +95,7 @@ _koopa_add_to_path_start() {  # {{{1
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
-    echo "${PATH:-}" | grep -q "$dir" && return 0
+    _koopa_print "${PATH:-}" | grep -q "$dir" && return 0
     export PATH="${dir}:${PATH:-}"
     return 0
 }
@@ -110,7 +109,6 @@ _koopa_force_add_to_fpath_end() {  # {{{1
     dir="${1:?}"
     _koopa_remove_from_fpath "$dir"
     _koopa_add_to_fpath_end "$dir"
-    return 0
 }
 
 _koopa_force_add_to_fpath_start() {  # {{{1
@@ -122,7 +120,6 @@ _koopa_force_add_to_fpath_start() {  # {{{1
     dir="${1:?}"
     _koopa_remove_from_fpath "$dir"
     _koopa_add_to_fpath_start "$dir"
-    return 0
 }
 
 _koopa_force_add_to_manpath_end() {  # {{{1
@@ -134,7 +131,6 @@ _koopa_force_add_to_manpath_end() {  # {{{1
     dir="${1:?}"
     _koopa_remove_from_manpath "$dir"
     _koopa_add_to_manpath_end "$dir"
-    return 0
 }
 
 _koopa_force_add_to_manpath_start() {  # {{{1
@@ -146,7 +142,6 @@ _koopa_force_add_to_manpath_start() {  # {{{1
     dir="${1:?}"
     _koopa_remove_from_manpath "$dir"
     _koopa_add_to_manpath_start "$dir"
-    return 0
 }
 
 _koopa_force_add_to_path_end() {  # {{{1
@@ -158,7 +153,6 @@ _koopa_force_add_to_path_end() {  # {{{1
     dir="${1:?}"
     _koopa_remove_from_path "$dir"
     _koopa_add_to_path_end "$dir"
-    return 0
 }
 
 _koopa_force_add_to_path_start() {  # {{{1
@@ -170,7 +164,6 @@ _koopa_force_add_to_path_start() {  # {{{1
     dir="${1:?}"
     _koopa_remove_from_path "$dir"
     _koopa_add_to_path_start "$dir"
-    return 0
 }
 
 _koopa_list_path_priority() {  # {{{1
@@ -185,7 +178,7 @@ _koopa_list_path_priority() {  # {{{1
     # > tr ':' '\n' <<< "$str"
     #
     # Bash parameter expansion approach:
-    # > echo "${PATH//:/$'\n'}"
+    # > _koopa_print "${PATH//:/$'\n'}"
     #
     # see also:
     # - https://askubuntu.com/questions/600018
@@ -197,8 +190,9 @@ _koopa_list_path_priority() {  # {{{1
     _koopa_assert_is_installed awk
     local str
     str="${1:-$PATH}"
-    echo "$str"| \
+    _koopa_print "$str"| \
         awk '{split($0,array,":")} END { for (i in array) print array[i] }'
+    return 0
 }
 
 _koopa_list_path_priority_unique() {  # {{{1
@@ -211,6 +205,7 @@ _koopa_list_path_priority_unique() {  # {{{1
         | tac \
         | awk '!a[$0]++' \
         | tac
+    return 0
 }
 
 _koopa_remove_from_fpath() {  # {{{1
@@ -245,7 +240,7 @@ _koopa_remove_from_path() {  # {{{1
     # Note that this won't work on the first item in PATH.
     #
     # Alternate approach using sed:
-    # > echo "$PATH" | sed "s|:${dir}||g"
+    # > _koopa_print "$PATH" | sed "s|:${dir}||g"
     # """
     local dir
     dir="${1:?}"
@@ -275,7 +270,7 @@ _koopa_which() {  # {{{1
     else
         app_path="$(command -v "$cmd")"
     fi
-    echo "$app_path"
+    _koopa_print "$app_path"
 }
 
 _koopa_which_realpath() {  # {{{1
@@ -302,4 +297,5 @@ _koopa_which_realpath() {  # {{{1
     local app_path
     app_path="$(_koopa_which "$cmd")"
     realpath "$app_path"
+    return 0
 }

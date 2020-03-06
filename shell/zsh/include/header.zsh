@@ -2,7 +2,7 @@
 
 # """
 # Zsh shared header script.
-# @note Updated 2020-02-14.
+# @note Updated 2020-03-06.
 #
 # See also:
 # - https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
@@ -15,10 +15,10 @@ setopt nounset
 setopt pipefail
 
 # Requiring Zsh >= 5 for exported scripts.
-major_version="$(echo "${ZSH_VERSION}" | cut -d '.' -f 1)"
+major_version="$(printf '%s\n' "${ZSH_VERSION}" | cut -d '.' -f 1)"
 if [[ ! "$major_version" -ge 5 ]]
 then
-    echo "Zsh >= 5 is required."
+    >&2 printf '%s\n' 'Zsh >= 5 is required.'
     exit 1
 fi
 
@@ -33,7 +33,7 @@ unset -v KOOPA_ZSH_INC
 _koopa_help "$@"
 
 # Require sudo permission to run 'sbin/' scripts.
-if echo "$0" | grep -q "/sbin/"
+if printf '%s\n' "$0" | grep -q '/sbin/'
 then
     _koopa_assert_has_sudo
 fi

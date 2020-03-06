@@ -48,5 +48,5 @@ readarray -t links < <(printf '%s\0' "${links[@]}" | sort -z | xargs -0n1)
 # Replace the cellar prefix with our build prefix.
 for file in "${links[@]}"
 do
-    echo "${file//$cellar_prefix/$build_prefix}"
+    _koopa_print "${file//$cellar_prefix/$build_prefix}"
 done

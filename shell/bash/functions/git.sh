@@ -24,8 +24,8 @@ _koopa_git_submodule_init() {
     fi
     for string in "${array[@]}"
     do
-        target_key="$(echo "$string" | cut -d ' ' -f 1)"
-        target="$(echo "$string" | cut -d ' ' -f 2)"
+        target_key="$(_koopa_print "$string" | cut -d ' ' -f 1)"
+        target="$(_koopa_print "$string" | cut -d ' ' -f 2)"
         url_key="${target_key//\.path/.url}"
         url="$(git config -f ".gitmodules" --get "$url_key")"
         _koopa_dl "$target" "$url"

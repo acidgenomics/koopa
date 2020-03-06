@@ -23,6 +23,6 @@ mapfile -t array <<< "$lines"
 _koopa_is_array_non_empty "${array[@]}" || exit 0
 _koopa_h1 "${#array[@]} outdated packages detected."
 
-echo "$lines" \
+_koopa_print "$lines" \
     | cut -d '=' -f 1 \
     | xargs -n1 python -m pip install --upgrade
