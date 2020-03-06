@@ -23,7 +23,7 @@ _koopa_add_local_bins_to_path() {  # {{{1
 _koopa_find_local_bin_dirs() {  # {{{1
     # """
     # Find local bin directories.
-    # @note Updated 2020-02-02.
+    # @note Updated 2020-03-06.
     #
     # Alternate array sorting methods:
     # > readarray -t array < <( \
@@ -61,27 +61,13 @@ _koopa_find_local_bin_dirs() {  # {{{1
         | sort -z
     )
     printf "%s\n" "${array[@]}"
-}
-
-_koopa_is_array_non_empty() {  # {{{1
-    # """
-    # Is the array non-empty?
-    # @note Updated 2019-10-22.
-    #
-    # Particularly useful for checking against mapfile return, which currently
-    # returns a length of 1 for empty input, due to newlines line break.
-    # """
-    local arr
-    arr=("$@")
-    [[ "${#arr[@]}" -eq 0 ]] && return 1
-    [[ -z "${arr[0]}" ]] && return 1
     return 0
 }
 
 _koopa_script_name() {  # {{{1
     # """
     # Get the calling script name.
-    # @note Updated 2019-10-22.
+    # @note Updated 2020-03-06.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
@@ -92,4 +78,5 @@ _koopa_script_name() {  # {{{1
         | cut -d ' ' -f 2 \
     )"
     basename "$file"
+    return 0
 }
