@@ -61,20 +61,13 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed emacs
 
 (
-    repo="https://github.com/syl20bnr/spacemacs.git"
+    repo="https://github.com/syl20bnr/${name}.git"
     git clone "$repo" "$install_dir"
     _koopa_cd "$install_dir"
     git checkout -b develop origin/develop
-    git pull
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-link-emacs "$name"
-
-# Install/update layers non-interactively.
-# --no-window-system
-emacs \
-    --batch -l ~/.emacs.d/init.el \
-    --eval="(configuration-layer/update-packages t)"
+_koopa_link_emacs "$name"
+_koopa_update_spacemacs
 
 _koopa_install_success "$name"
-
