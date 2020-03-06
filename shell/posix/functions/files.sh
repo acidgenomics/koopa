@@ -148,7 +148,7 @@ _koopa_find_and_replace_in_files() {  # {{{1
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-03-06.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
@@ -163,6 +163,7 @@ _koopa_find_broken_symlinks() {  # {{{1
             -xdev \
             -mindepth 1 \
             -xtype l \
+            -print \
             2>&1 \
             | grep -v "Permission denied" \
             | sort \
@@ -175,7 +176,7 @@ _koopa_find_broken_symlinks() {  # {{{1
 _koopa_find_dotfiles() {  # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     #
     # This is used internally by 'list-dotfiles' script.
     #
@@ -201,15 +202,15 @@ _koopa_find_dotfiles() {  # {{{1
             | awk '{print "  ",$0}' \
     )"
 
-    printf "\n%s:\n\n" "$header"
-    echo "$x"
+    _koopa_print "\n%s:\n\n" "$header"
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_find_empty_dirs() {  # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     # """
     local dir
     dir="${1:-"."}"
@@ -218,22 +219,25 @@ _koopa_find_empty_dirs() {  # {{{1
     local x
     x="$( \
         find "$dir" \
+            -xdev \
             -mindepth 1 \
             -type d \
             -not -path "*/.*/*" \
             -empty \
             -print \
+            2>&1 \
+            | grep -v "Permission denied" \
             | sort \
     )"
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_find_large_dirs() {  # {{{1
     # """
     # Find large directories.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-03-06.
     # """
     local dir
     dir="${1:-"."}"
@@ -251,14 +255,14 @@ _koopa_find_large_dirs() {  # {{{1
         || true \
     )"
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_find_large_files() {  # {{{1
     # """
     # Find large files.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     #
     # Note that use of 'grep --null-data' requires GNU grep.
     #
@@ -288,14 +292,14 @@ _koopa_find_large_files() {  # {{{1
             | tail -n 100 \
     )"
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_find_non_cellar_make_files() {  # {{{1
     # """
     # Find non-cellar make files.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
@@ -318,14 +322,14 @@ _koopa_find_non_cellar_make_files() {  # {{{1
             | sort \
     )"
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_find_text() {  # {{{1
     # """
     # Find text in any file.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     #
     # See also: https://github.com/stephenturner/oneliners
     #
@@ -351,14 +355,14 @@ _koopa_find_text() {  # {{{1
             -exec grep -il "$pattern" {} \;; \
     )"
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_line_count() {  # {{{1
     # """
     # Return the number of lines in a file.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     #
     # Example: _koopa_line_count tx2gene.csv
     # """
@@ -372,25 +376,7 @@ _koopa_line_count() {  # {{{1
             | cut -d ' ' -f 1 \
     )"
 
-    echo "$x"
-    return 0
-}
-
-_koopa_remove_empty_dirs() {  # {{{1
-    # """
-    # Remove empty directories.
-    # @note Updated 2020-03-05.
-    # """
-    local dir
-    dir="${1:-"."}"
-    dir="$(realpath "$dir")"
-    find "$dir" \
-        -mindepth 1 \
-        -type d \
-        -not -path "*/.*/*" \
-        -empty \
-        -delete \
-        > /dev/null 2>&1
+    _koopa_print "$x"
     return 0
 }
 
@@ -424,7 +410,7 @@ _koopa_stat_group() {  # {{{1
 _koopa_stat_modified() {
     # """
     # Get file modification time.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-03-06.
     #
     # Linux uses GNU coreutils variant.
     # macOS uses BSD variant.
@@ -455,7 +441,7 @@ _koopa_stat_modified() {
         x="$(date -d "@${x}" +"$format")"
     fi
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
