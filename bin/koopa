@@ -36,6 +36,7 @@ case "$1" in
         exit 0
         ;;
     install-dotfiles)
+        _koopa_git_clone_dotfiles
         _koopa_install_dotfiles
         exit 0
         ;;
