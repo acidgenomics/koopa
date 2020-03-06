@@ -3,12 +3,12 @@
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-03-06.
     # """
     _koopa_h2 "Initializing submodules in '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git "$PWD"
-    _koopa_assert_is_file ".gitmodules"
+    _koopa_assert_is_nonzero_file ".gitmodules"
     _koopa_assert_is_installed git
     local array string target target_key url url_key
     git submodule init
@@ -18,6 +18,10 @@ _koopa_git_submodule_init() {
                 -f ".gitmodules" \
                 --get-regexp '^submodule\..*\.path$' \
         )
+    if ! _koopa_is_array_non_empty
+    then
+        _koopa_stop "Failed to detect submodules in '${PWD}'."
+    fi
     for string in "${array[@]}"
     do
         target_key="$(echo "$string" | cut -d ' ' -f 1)"
@@ -36,7 +40,7 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-03-06.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -50,7 +54,7 @@ _koopa_git_pull() {
     _koopa_assert_is_installed git
     git fetch --all
     git pull origin master
-    if [[ -f ".gitmodules" ]]
+    if [[ -s ".gitmodules" ]]
     then
         _koopa_git_submodule_init
         git submodule --quiet update --init --recursive
@@ -67,7 +71,7 @@ _koopa_git_pull() {
 _koopa_git_reset() {  # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-06.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -89,7 +93,7 @@ _koopa_git_reset() {  # {{{1
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_installed git
     git clean -dffx
-    if [[ -f ".gitmodules" ]]
+    if [[ -s ".gitmodules" ]]
     then
         _koopa_git_submodule_init
         git submodule --quiet foreach --recursive git clean -dffx
