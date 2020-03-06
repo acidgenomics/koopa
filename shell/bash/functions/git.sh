@@ -18,7 +18,7 @@ _koopa_git_submodule_init() {
                 -f ".gitmodules" \
                 --get-regexp '^submodule\..*\.path$' \
         )
-    if ! _koopa_is_array_non_empty
+    if ! _koopa_is_array_non_empty "${array[@]}"
     then
         _koopa_stop "Failed to detect submodules in '${PWD}'."
     fi

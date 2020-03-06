@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -x
 
 # e.g. /usr/local/koopa
 koopa_prefix="$(_koopa_prefix)"
