@@ -1,11 +1,9 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_ansi_escape() {  # {{{1
-    local color
-    color="${1:?}"
+__koopa_ansi_escape() {  # {{{1
     local escape
-    case "$color" in
+    case "${1:?}" in
         nocolor)
             escape='0'
             ;;
@@ -64,7 +62,7 @@ _koopa_ansi_escape() {  # {{{1
             escape='1;97'
             ;;
         *)
-            >&2 _koopa_print "Unsupported color: ${color}"
+            >&2 _koopa_print "WARNING: Unsupported color: '${1}'."
             escape='0'
             ;;
     esac
@@ -72,216 +70,79 @@ _koopa_ansi_escape() {  # {{{1
     return 0
 }
 
-_koopa_coffee_time() {  # {{{1
-    # """
-    # Coffee time.
-    # @note Updated 2020-02-06.
-    # """
-    _koopa_note "This script takes a while. Time for a coffee! ☕☕"
-    return 0
-}
-
-_koopa_dl() {
-    # """
-    # Koopa definition list.
-    # @note Updated 2020-03-05.
-    # """
-    local c1 c2 emoji key value
-    key="${1:?}"
-    value="${2:?}"
-    emoji="$(_koopa_emoji)"
-    c1="$(_koopa_ansi_escape 'default')"
-    c2="$(_koopa_ansi_escape 'default')"
-    nc="$(_koopa_ansi_escape 'nocolor')"
-    _koopa_print "${emoji} ${c1}${key}:${nc} ${c2}${value}${nc}"
-    return 0
-}
-
-_koopa_emoji() {  # {{{1
+__koopa_emoji() {  # {{{1
     # """
     # Koopa turtle emoji.
     # @note Updated 2020-03-05.
     # """
-    _koopa_print "🐢"
-    return 0
+    _koopa_print '🐢'
 }
 
-_koopa_h() {  # {{{1
+__koopa_h() {  # {{{1
     # """
     # Koopa header.
     # @note Updated 2020-03-05.
     # """
-    local c1 c2 emoji level nc pre str
+    local level prefix string
     level="${1:?}"
-    str="${2:?}"
+    string="${2:?}"
     case "$level" in
         1)
-            pre="=>"
+            prefix='=>'
+            _koopa_print
             ;;
         2)
-            pre="==>"
+            prefix='==>'
             ;;
         3)
-            pre="===>"
+            prefix='===>'
             ;;
         4)
-            pre="====>"
+            prefix='====>'
             ;;
         5)
-            pre="=====>"
+            prefix='=====>'
             ;;
         6)
-            pre="======>"
+            prefix='======>'
             ;;
         7)
-            pre="=======>"
+            prefix='=======>'
             ;;
         *)
             _koopa_invalid_arg "$1"
             ;;
     esac
-    emoji="$(_koopa_emoji)"
-    c1="$(_koopa_ansi_escape "magenta")"
-    c2="$(_koopa_ansi_escape "default")"
-    nc="$(_koopa_ansi_escape "nocolor")"
-    _koopa_print "\n${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
-    return 0
+    __koopa_msg "$string" "$prefix" 'magenta'
 }
 
-_koopa_h1() {  # {{{1
-    _koopa_h 1 "$@"
-    return 0
-}
-
-_koopa_h2() {  # {{{1
-    _koopa_h 2 "$@"
-    return 0
-}
-
-_koopa_h3() {  # {{{1
-    _koopa_h 3 "$@"
-    return 0
-}
-
-_koopa_h4() {  # {{{1
-    _koopa_h 4 "$@"
-    return 0
-}
-
-_koopa_h5() {  # {{{1
-    _koopa_h 5 "$@"
-    return 0
-}
-
-_koopa_h6() {  # {{{1
-    _koopa_h 6 "$@"
-    return 0
-}
-
-_koopa_h7() {  # {{{1
-    _koopa_h 7 "$@"
-    return 0
-}
-
-_koopa_info() {  # {{{1
+__koopa_msg() {
     # """
-    # General info.
+    # Koopa standard message.
     # @note Updated 2020-03-05.
     # """
-    local c1 c2 nc emoji pre str
-    str="${1:?}"
-    emoji="$(_koopa_emoji)"
-    pre="--"
-    c1="$(_koopa_ansi_escape_code "default")"
-    c2="$(_koopa_ansi_escape_code "default")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    _koopa_print "${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
-    return 0
-}
+    local color1 color2 emoji nocolor prefix string x
 
-_koopa_install_start() {  # {{{1
-    # """
-    # Inform the user about start of installation.
-    # @note Updated 2020-02-20.
-    # """
-    local name
-    name="${1:?}"
-    local prefix
+    string="${1:?}"
     prefix="${2:-}"
-    local msg
+    color1="${3:-default}"
+    color1="$(__koopa_ansi_escape "$color1")"
+    color2="${4:-default}"
+    color2="$(__koopa_ansi_escape "$color2")"
+    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    emoji="$(__koopa_emoji)"
+
+    x="${emoji}"
     if [ -n "$prefix" ]
     then
-        msg="Installing ${name} at '${prefix}'."
-    else
-        msg="Installing ${name}."
+        x="${x} ${color1}${prefix}${nocolor}"
     fi
-    _koopa_h1 "$msg"
-    return 0
+    x="${x} ${color2}${string}${nocolor}"
+
+    _koopa_print "$x"
 }
 
-_koopa_install_success() {  # {{{1
-    # """
-    # Installation success message.
-    # @note Updated 2020-02-20.
-    # """
-    local arg
-    arg="${1:?}"
-    _koopa_success "Installation of ${arg} was successful."
-    return 0
-}
-
-_koopa_invalid_arg() {  # {{{1
-    # """
-    # Error on invalid argument.
-    # @note Updated 2019-10-23.
-    # """
-    local arg
-    arg="${1:?}"
-    _koopa_stop "Invalid argument: '${arg}'."
-    return 1
-}
-
-_koopa_missing_arg() {  # {{{1
-    # """
-    # Error on a missing argument.
-    # @note Updated 2019-10-23.
-    # """
-    _koopa_stop "Missing required argument."
-    return 1
-}
-
-_koopa_note() {  # {{{1
-    # """
-    # General note.
-    # @note Updated 2020-03-05.
-    # """
-    local c1 c2 emoji nc pre str
-    str="${1:?}"
-    emoji="$(_koopa_emoji)"
-    pre="**"
-    c1="$(_koopa_ansi_escape_code "yellow")"
-    c2="$(_koopa_ansi_escape_code "default")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    _koopa_print "${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
-    return 0
-}
-
-_koopa_print() {  # {{{1
-    # """
-    # Print a string.
-    # @note Updated 2020-03-05.
-    #
-    # printf vs. echo
-    # - http://www.etalabs.net/sh_tricks.html
-    # - https://unix.stackexchange.com/questions/65803
-    # - https://www.freecodecamp.org/news/
-    #       how-print-newlines-command-line-output/
-    # """
-    printf '%b\n' "${1:-}"
-    return 0
-}
-
-_koopa_print_ansi() {  # {{{1
+__koopa_print_ansi() {  # {{{1
     # """
     # Print a colored line in console.
     # @note Updated 2020-03-05.
@@ -308,102 +169,218 @@ _koopa_print_ansi() {  # {{{1
     # """
     local color
     color="$(_koopa_ansi_escape "${1:?}")"
-    local nocolor
-    nocolor="$(_koopa_ansi_escape 'nocolor')"
     local string
     string="${2:?}"
+    local nocolor
+    nocolor="$(_koopa_ansi_escape 'nocolor')"
     printf '%s%b%s\n' "$color" "$string" "$nocolor"
     return 0
 }
 
-_koopa_print_ansi_default() {  # {{{1
-    _koopa_print_ansi 'default' "${1:?}"
+__koopa_status() {  # {{{1
+    # """
+    # Koopa status.
+    # @note Updated 2020-03-05.
+    # """
+    local color nocolor label string x
+    string="${1:?}"
+    label="$(printf '%10s\n' "${2:?}")"
+    color="$(__koopa_ansi_escape "${3:?}")"
+    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    x="${color}${label}${nocolor} | ${string}"
+    _koopa_print "$x"
+}
+
+
+
+_koopa_coffee_time() {  # {{{1
+    # """
+    # Coffee time.
+    # @note Updated 2020-03-05.
+    # """
+    _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
+}
+
+_koopa_dl() {
+    # """
+    # Koopa definition list.
+    # @note Updated 2020-03-05.
+    # """
+    __koopa_msg "${1:?}: ${2:?}"
+}
+
+_koopa_h1() {  # {{{1
+    __koopa_h 1 "$@"
+}
+
+_koopa_h2() {  # {{{1
+    __koopa_h 2 "$@"
+}
+
+_koopa_h3() {  # {{{1
+    __koopa_h 3 "$@"
+}
+
+_koopa_h4() {  # {{{1
+    __koopa_h 4 "$@"
+}
+
+_koopa_h5() {  # {{{1
+    __koopa_h 5 "$@"
+}
+
+_koopa_h6() {  # {{{1
+    __koopa_h 6 "$@"
+}
+
+_koopa_h7() {  # {{{1
+    __koopa_h 7 "$@"
+}
+
+_koopa_info() {  # {{{1
+    # """
+    # General info.
+    # @note Updated 2020-03-05.
+    # """
+    __koopa_msg "${1:-}" '--'
+}
+
+_koopa_install_start() {  # {{{1
+    # """
+    # Inform the user about start of installation.
+    # @note Updated 2020-02-20.
+    # """
+    local name
+    name="${1:?}"
+    local prefix
+    prefix="${2:-}"
+    local msg
+    if [ -n "$prefix" ]
+    then
+        msg="Installing ${name} at '${prefix}'."
+    else
+        msg="Installing ${name}."
+    fi
+    _koopa_h1 "$msg"
+}
+
+_koopa_install_success() {  # {{{1
+    # """
+    # Installation success message.
+    # @note Updated 2020-03-05.
+    # """
+    _koopa_success "Installation of ${1:?} was successful."
+}
+
+_koopa_invalid_arg() {  # {{{1
+    # """
+    # Error on invalid argument.
+    # @note Updated 2020-03-05.
+    # """
+    _koopa_stop "Invalid argument: '${1:?}'."
+}
+
+_koopa_missing_arg() {  # {{{1
+    # """
+    # Error on a missing argument.
+    # @note Updated 2020-03-05.
+    # """
+    _koopa_stop 'Missing required argument.'
+}
+
+_koopa_note() {  # {{{1
+    # """
+    # General note.
+    # @note Updated 2020-03-05.
+    # """
+    __koopa_msg "${1:?}" '**' 'yellow'
+}
+
+_koopa_print() {  # {{{1
+    # """
+    # Print a string.
+    # @note Updated 2020-03-05.
+    #
+    # printf vs. echo
+    # - http://www.etalabs.net/sh_tricks.html
+    # - https://unix.stackexchange.com/questions/65803
+    # - https://www.freecodecamp.org/news/
+    #       how-print-newlines-command-line-output/
+    # """
+    printf '%b\n' "${1:-}"
     return 0
 }
 
-_koopa_print_ansi_default_bold() {  # {{{1
-    _koopa_print_ansi 'default-bold' "${1:?}"
-    return 0
+_koopa_print_black() {  # {{{1
+    __koopa_print_ansi 'black' "${1:?}"
 }
 
-_koopa_print_ansi_black() {  # {{{1
-    _koopa_print_ansi 'black' "${1:?}"
-    return 0
+_koopa_print_black_bold() {  # {{{1
+    __koopa_print_ansi 'black-bold' "${1:?}"
 }
 
-_koopa_print_ansi_black_bold() {  # {{{1
-    _koopa_print_ansi 'black-bold' "${1:?}"
-    return 0
+_koopa_print_blue() {  # {{{1
+    __koopa_print_ansi 'blue' "${1:?}"
 }
 
-_koopa_print_ansi_blue() {  # {{{1
-    _koopa_print_ansi 'blue' "${1:?}"
-    return 0
+_koopa_print_blue_bold() {  # {{{1
+    __koopa_print_ansi 'blue-bold' "${1:?}"
 }
 
-_koopa_print_ansi_blue_bold() {  # {{{1
-    _koopa_print_ansi 'blue-bold' "${1:?}"
-    return 0
+_koopa_print_cyan() {  # {{{1
+    __koopa_print_ansi 'cyan' "${1:?}"
 }
 
-_koopa_print_ansi_cyan() {  # {{{1
-    _koopa_print_ansi 'cyan' "${1:?}"
-    return 0
+_koopa_print_cyan_bold() {  # {{{1
+    __koopa_print_ansi 'cyan-bold' "${1:?}"
 }
 
-_koopa_print_ansi_cyan_bold() {  # {{{1
-    _koopa_print_ansi 'cyan-bold' "${1:?}"
-    return 0
+_koopa_print_default() {  # {{{1
+    __koopa_print_ansi 'default' "${1:?}"
 }
 
-_koopa_print_ansi_green() {  # {{{1
-    _koopa_print_ansi 'green' "${1:?}"
-    return 0
+_koopa_print_default_bold() {  # {{{1
+    __koopa_print_ansi 'default-bold' "${1:?}"
 }
 
-_koopa_print_ansi_green_bold() {  # {{{1
-    _koopa_print_ansi 'green-bold' "${1:?}"
-    return 0
+_koopa_print_green() {  # {{{1
+    __koopa_print_ansi 'green' "${1:?}"
 }
 
-_koopa_print_ansi_magenta() {  # {{{1
-    _koopa_print_ansi 'magenta' "${1:?}"
-    return 0
+_koopa_print_green_bold() {  # {{{1
+    __koopa_print_ansi 'green-bold' "${1:?}"
+}
+
+_koopa_print_magenta() {  # {{{1
+    __koopa_print_ansi 'magenta' "${1:?}"
 }
 
 _koopa_print_magenta_bold() {  # {{{1
-    _koopa_print_ansi 'magenta-bold' "${1:?}"
-    return 0
+    __koopa_print_ansi 'magenta-bold' "${1:?}"
 }
 
-_koopa_print_ansi_red() {  # {{{1
-    _koopa_print_ansi 'red' "${1:?}"
-    return 0
+_koopa_print_red() {  # {{{1
+    __koopa_print_ansi 'red' "${1:?}"
 }
 
-_koopa_print_ansi_red_bold() {  # {{{1
-    _koopa_print_ansi 'red-bold' "${1:?}"
-    return 0
+_koopa_print_red_bold() {  # {{{1
+    __koopa_print_ansi 'red-bold' "${1:?}"
 }
 
-_koopa_print_ansi_yellow() {  # {{{1
-    _koopa_print_ansi 'yellow' "${1:?}"
-    return 0
+_koopa_print_yellow() {  # {{{1
+    __koopa_print_ansi 'yellow' "${1:?}"
 }
 
-_koopa_print_ansi_yellow_bold() {  # {{{1
-    _koopa_print_ansi 'yellow-bold' "${1:?}"
-    return 0
+_koopa_print_yellow_bold() {  # {{{1
+    __koopa_print_ansi 'yellow-bold' "${1:?}"
 }
 
-_koopa_print_ansi_white() {  # {{{1
-    _koopa_print_ansi 'white' "${1:?}"
-    return 0
+_koopa_print_white() {  # {{{1
+    __koopa_print_ansi 'white' "${1:?}"
 }
 
-_koopa_print_ansi_white_bold() {  # {{{1
-    _koopa_print_ansi 'white-bold' "${1:?}"
-    return 0
+_koopa_print_white_bold() {  # {{{1
+    __koopa_print_ansi 'white-bold' "${1:?}"
 }
 
 _koopa_restart() {  # {{{1
@@ -411,50 +388,19 @@ _koopa_restart() {  # {{{1
     # Inform the user that they should restart shell.
     # @note Updated 2020-02-20.
     # """
-    _koopa_note "Restart the shell."
-    return 0
+    _koopa_note 'Restart the shell.'
 }
 
 _koopa_status_fail() {  # {{{1
-    # """
-    # Status FAIL.
-    # @note Updated 2020-03-05.
-    # """
-    local c1 nc pre str
-    pre="      FAIL"
-    str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "red")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    >&2 _koopa_print "${c1}${pre}${nc} | ${str}"
-    return 0
+    >&2 __koopa_status "${1:?}" 'FAIL' 'red'
 }
 
 _koopa_status_note() {  # {{{1
-    # """
-    # Status NOTE.
-    # @note Updated 2020-03-05.
-    # """
-    local c1 nc pre str
-    pre="      NOTE"
-    str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "magenta")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    >&2 _koopa_print "${c1}${pre}${nc} | ${str}"
-    return 0
+    __koopa_status "${1:?}" 'NOTE' 'yellow'
 }
 
 _koopa_status_ok() {  # {{{1
-    # """
-    # Status OK.
-    # @note Updated 2020-03-05.
-    # """
-    local c1 nc pre str
-    pre="        OK"
-    str="${1:?}"
-    c1="$(_koopa_ansi_escape_code "green")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    _koopa_print "${c1}${pre}${nc} | ${str}"
-    return 0
+    __koopa_status "${1:?}" 'OK' 'green'
 }
 
 _koopa_stop() {  # {{{1
@@ -462,14 +408,7 @@ _koopa_stop() {  # {{{1
     # Stop with an error message, and exit.
     # @note Updated 2020-03-05.
     # """
-    local c1 c2 emoji nc pre str
-    str="ERROR: ${1:?}"
-    emoji="$(_koopa_emoji)"
-    pre="!!"
-    c1="$(_koopa_ansi_escape_code "red-bold")"
-    c2="$(_koopa_ansi_escape_code "red")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    >&2 _koopa_print "${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
+    >&2 __koopa_msg "${1:?}" '!! ERROR:' 'red-bold' 'red'
     exit 1
 }
 
@@ -478,21 +417,13 @@ _koopa_success() {  # {{{1
     # Success message.
     # @note Updated 2020-03-05.
     # """
-    local c1 c2 emoji nc pre str
-    str="${1:?}"
-    emoji="$(_koopa_emoji)"
-    pre="OK"
-    c1="$(_koopa_ansi_escape_code "green-bold")"
-    c2="$(_koopa_ansi_escape_code "green")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    _koopa_print "${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
-    return 0
+    __koopa_msg "${1:?}" 'OK' 'green-bold' 'green'
 }
 
 _koopa_uninstall_start() {  # {{{1
     # """
     # Inform the user about start of uninstall.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-05.
     # """
     local name
     name="${1:?}"
@@ -506,24 +437,20 @@ _koopa_uninstall_start() {  # {{{1
         msg="Uninstalling ${name}."
     fi
     _koopa_h1 "$msg"
-    return 0
 }
 
 _koopa_uninstall_success() {  # {{{1
     # """
     # Uninstall success message.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-05.
     # """
-    local arg
-    arg="${1:?}"
-    _koopa_success "Uninstallation of ${arg} was successful."
-    return 0
+    _koopa_success "Uninstallation of ${1:?} was successful."
 }
 
 _koopa_update_start() {  # {{{1
     # """
     # Inform the user about start of update.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-05.
     # """
     local name
     name="${1:?}"
@@ -537,18 +464,14 @@ _koopa_update_start() {  # {{{1
         msg="Updating ${name}."
     fi
     _koopa_h1 "$msg"
-    return 0
 }
 
 _koopa_update_success() {  # {{{1
     # """
     # Update success message.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-05.
     # """
-    local arg
-    arg="${1:?}"
-    _koopa_success "Update of ${arg} was successful."
-    return 0
+    _koopa_success "Update of ${1:?} was successful."
 }
 
 _koopa_warning() {  # {{{1
@@ -556,13 +479,5 @@ _koopa_warning() {  # {{{1
     # Warning message.
     # @note Updated 2020-03-05.
     # """
-    local c1 c2 emoji nc pre str
-    str="WARNING: ${1:?}"
-    emoji="$(_koopa_emoji)"
-    pre="!!"
-    c1="$(_koopa_ansi_escape_code "yellow-bold")"
-    c2="$(_koopa_ansi_escape_code "yellow")"
-    nc="$(_koopa_ansi_escape_code "nocolor")"
-    >&2 _koopa_print "${emoji} ${c1}${pre}${nc} ${c2}${str}${nc}"
-    return 0
+    >&2 __koopa_msg "${1:?}" '!! WARNING:' 'yellow-bold' 'yellow'
 }
