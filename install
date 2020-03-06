@@ -367,7 +367,7 @@ fi
 
 # Some config files, such as '.lintr' and '.pylintrc' will be missing unless
 # we clone the dotfiles repo (see above).
-# > _koopa_remove_broken_symlinks "$koopa_prefix"
+_koopa_remove_broken_symlinks "$koopa_prefix"
 
 _koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
