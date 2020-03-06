@@ -21,11 +21,11 @@ _koopa_basename_sans_ext() {  # {{{1
     bn="$(basename "$file")"
     if ! _koopa_has_file_ext "$file"
     then
-        echo "$bn"
+        _koopa_print "$bn"
         return 0
     fi
     bn="${bn%.*}"
-    echo "$bn"
+    _koopa_print "$bn"
     return 0
 }
 
@@ -46,10 +46,10 @@ _koopa_basename_sans_ext2() {  # {{{1
     bn="$(basename "$file")"
     if ! _koopa_has_file_ext "$file"
     then
-        echo "$bn"
+        _koopa_print "$bn"
         return 0
     fi
-    echo "$bn" | cut -d '.' -f 1
+    _koopa_print "$bn" | cut -d '.' -f 1
     return 0
 }
 
@@ -110,7 +110,7 @@ _koopa_file_ext2() {  # {{{1
     local file
     file="${1:?}"
     _koopa_has_file_ext "$file" || return 0
-    echo "$file" | cut -d '.' -f 2-
+    _koopa_print "$file" | cut -d '.' -f 2-
     return 0
 }
 
@@ -126,10 +126,10 @@ _koopa_find_and_replace_in_files() {  # {{{1
     shift 2
 
     # Check for unescaped slashes.
-    if echo "$from" | grep -q "/" && echo "$from" | grep -Fqv "\\"
+    if _koopa_print "$from" | grep -q "/" && _koopa_print "$from" | grep -Fqv "\\"
     then
         _koopa_stop "Unescaped '/' detected: '${from}'."
-    elif echo "$to" | grep -q "/" && echo "$to" | grep -Fqv "\\"
+    elif _koopa_print "$to" | grep -q "/" && _koopa_print "$to" | grep -Fqv "\\"
     then
         _koopa_stop "Unescaped '/' detected: '${to}'."
     fi
@@ -169,7 +169,7 @@ _koopa_find_broken_symlinks() {  # {{{1
             | sort \
     )"
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -451,5 +451,20 @@ _koopa_stat_user() {  # {{{1
     # @note Updated 2020-01-12.
     # """
     stat -c '%U' "${1:?}"
+    return 0
+}
+
+_koopa_sudo_write_string() {  # {{{1
+    # """
+    # Write a string to disk using root user.
+    # @note Updated 2020-03-06.
+    #
+    # Alternatively, 'tee -a' can be used to append file.
+    # """
+    local string
+    string="${1:?}"
+    local file
+    file="${2:?}"
+    _koopa_print "$string" | sudo tee "$file" > /dev/null
     return 0
 }

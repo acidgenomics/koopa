@@ -45,7 +45,7 @@ _koopa_test_find_files_by_ext() {  # {{{1
         printf '%s\n' "${files[@]}" \
         | grep -Ei "$pattern" \
     )"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 

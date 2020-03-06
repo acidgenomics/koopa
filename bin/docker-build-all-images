@@ -94,7 +94,7 @@ do
         )"
         # Note that we need to convert UTC to local time.
         utc_timestamp="$( \
-            echo "$json" \
+            _koopa_print "$json" \
                 | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
                 | sed 's/T/ /' \
                 | sed 's/$/ UTC/'

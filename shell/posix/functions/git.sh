@@ -20,8 +20,7 @@ _koopa_git_branch() {  # {{{1
     _koopa_is_git || return 1
     local branch
     branch="$(git symbolic-ref --short -q HEAD)"
-    echo "$branch"
-    return 0
+    _koopa_print "$branch"
 }
 
 _koopa_git_clone() {  # {{{1
@@ -54,8 +53,7 @@ _koopa_git_last_commit_local() {  # {{{1
     _koopa_is_git || return 1
     local x
     x="$(git rev-parse HEAD)"
-    echo "$x"
-    return 0
+    _koopa_print "$x"
 }
 
 _koopa_git_last_commit_remote() {  # {{{1
@@ -69,6 +67,5 @@ _koopa_git_last_commit_remote() {  # {{{1
     url="${1:?}"
     local x
     x="$(git ls-remote "$url" HEAD)"
-    echo "$x"
-    return 0
+    _koopa_print "$x"
 }

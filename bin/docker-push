@@ -35,7 +35,7 @@ json="$( \
 # Convert JSON to lines.
 # shellcheck disable=SC2001
 mapfile -t images < <( \
-    echo "$json" \
+    _koopa_print "$json" \
         | tr ',' '\n' \
         | sed 's/^\[//' \
         | sed 's/\]$//' \

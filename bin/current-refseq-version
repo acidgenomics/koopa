@@ -10,4 +10,4 @@ _koopa_assert_has_no_args "$@"
 
 url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
 version="$(curl --silent "$url")"
-echo "$version"
+_koopa_print "$version"
