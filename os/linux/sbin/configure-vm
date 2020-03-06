@@ -69,19 +69,19 @@ _koopa_mkdir "$make_prefix"
 
 # Prepare app prefix on external disk for write access.
 # e.g. '/n'.
-dd_link="$(_koopa_data_disk_link_prefix)"
+data_disk_link="$(_koopa_data_disk_link_prefix)"
 if [[ -d "$data_disk" ]] && \
-    { [[ ! -L "$dd_link" ]] || [[ ! -L "$app_prefix" ]]; }
+    { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
 then
-    _koopa_h2 "Symlinking '${dd_link}' on '${data_disk}'."
-    _koopa_rm "$dd_link" "$app_prefix"
+    _koopa_h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
+    _koopa_rm "$data_disk_link" "$app_prefix"
     # e.g. '/mnt/data01/n'.
-    dd_real="${data_disk}${dd_link}"
-    _koopa_ln "$dd_real" "$dd_link"
+    data_disk_real="${data_disk}${data_disk_link}"
+    _koopa_ln "$data_disk_real" "$data_disk_link"
     # e.g. 'opt'.
     app_prefix_bn="$(basename "$app_prefix")"
     # e.g. '/mnt/data01/n/opt'
-    app_prefix_real="${dd_real}/${app_prefix_bn}"
+    app_prefix_real="${data_disk_real}/${app_prefix_bn}"
     _koopa_mkdir "$app_prefix_real"
     # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
     _koopa_ln "$app_prefix_real" "$app_prefix"
@@ -192,7 +192,7 @@ docker,var}
     fi
 fi
 
-if [[ -d "$data_disk" ]] && [[ -n "$source_ip" ]]
+if [[ -e "$data_disk" ]] && [[ -n "$source_ip" ]]
 then
     host_ip="$(_koopa_local_ip_address)"
     if [[ "$source_ip" == "$host_ip" ]]
@@ -247,7 +247,7 @@ then
 
     # Environment managers.
     install-conda                                                       # 0.493G
-    if [[ "$docker" -eq 0 ]]
+    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
     then
         _koopa_run_if_installed install-docker
         install-perlbrew                                                # 0.003G
@@ -264,7 +264,7 @@ then
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
     install-perl                                                        # 0.081G
-    if [[ "$docker" -eq 0 ]]
+    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
     then
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
@@ -290,7 +290,7 @@ then
     install-shellcheck                                                  # 0.008G
     install-shunit2
     install-tmux                                                        # 0.001G
-    if [[ "$docker" -eq 0 ]]
+    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
     then
         install-autojump                                                # 0.000G
         # FZF requires Go.
@@ -305,7 +305,7 @@ then
     [[ "$docker" -eq 0 ]] && install-emacs
 
     # Bioinformatics tools.
-    if [[ "$docker" -eq 0 ]]
+    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
     then
         install-aspera-connect                                          # 0.090G
         conda-create-bioinfo-envs --all
