@@ -72,8 +72,9 @@ mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
 images=("${images[@]}" "${batch_arr[@]}")
 
 # Full bioinformatics software.
-# These aren't updated very often and should be built manually instead.
+# These don't need to be updated frequently and can be built manually instead.
 # > images+=(
+# >     acidgenomics/bcbio-nextgen
 # >     acidgenomics/rnaeditingindexer
 # >     acidgenomics/maestro
 # > )
