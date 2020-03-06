@@ -70,6 +70,7 @@ _koopa_mkdir "$make_prefix"
 # Attempt to attached data disk automatically.
 # This is the current standard configuration on AWS.
 [[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
+[[ -e "$data_disk" ]] && _koopa_info "Data disk detected at '${data_disk}'."
 
 # Prepare app prefix on external disk for write access.
 # e.g. '/n'.
@@ -94,11 +95,6 @@ else
 fi
 
 _koopa_h2 "Installing base system."
-
-if [[ -e "$data_disk" ]]
-then
-    _koopa_info "Data disk detected at '${data_disk}'."
-fi
 
 if _koopa_is_arch
 then
