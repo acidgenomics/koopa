@@ -239,7 +239,7 @@ _koopa_homebrew_prefix() {  # {{{1
 _koopa_java_home() {  # {{{1
     # """
     # Java home.
-    # @note Updated 2019-11-16.
+    # @note Updated 2020-03-05.
     #
     # See also:
     # - https://www.mkyong.com/java/
@@ -250,7 +250,7 @@ _koopa_java_home() {  # {{{1
     # Early return if environment variable is set.
     if [ -n "${JAVA_HOME:-}" ]
     then
-        echo "$JAVA_HOME"
+        _koopa_print "$JAVA_HOME"
         return 0
     fi
     local home
@@ -259,7 +259,7 @@ _koopa_java_home() {  # {{{1
         home="$(/usr/libexec/java_home)"
     else
         local java_exe
-        java_exe="$(_koopa_which_realpath "java")"
+        java_exe="$(_koopa_which "java")"
         home="$(dirname "$(dirname "${java_exe}")")"
     fi
     echo "$home"

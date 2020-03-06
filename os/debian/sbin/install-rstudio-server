@@ -17,11 +17,14 @@ source "${script_dir}/../include/header.sh"
 # > sudo rstudio-server verify-installation
 # > sudo rstudio-server start
 # > sudo rstudio-server status
+#
+# Docker recipes:
+# - https://hub.docker.com/r/rocker/rstudio/dockerfile
+# - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
 # """
 
 name="rstudio-server"
 
-# > _koopa_exit_if_docker
 _koopa_exit_if_installed "$name"
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
