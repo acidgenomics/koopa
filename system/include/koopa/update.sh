@@ -112,7 +112,6 @@ then
         "${config_prefix}/scripts-private"
         "${XDG_DATA_HOME}/Rcheck"
         "${HOME}/.emacs.d-doom"
-        "${HOME}/.emacs.d-spacemacs"
     )
     for repo in "${repos[@]}"
     do
@@ -125,6 +124,7 @@ then
 
     _koopa_install_dotfiles
     _koopa_install_dotfiles_private
+    _koopa_update_spacemacs
 fi
 
 _koopa_success "koopa update was successful."
