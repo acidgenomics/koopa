@@ -24,35 +24,60 @@ done
 _koopa_h1 "Building all Docker images."
 
 docker login
+images=()
 
-images=(
-    # Lightweight informatics images.
+# Lightweight informatics images.
+images+=(
     acidgenomics/miniconda3
     acidgenomics/biocontainers
-    # Full Linux images.
+)
+
+# Full Linux images.
+images+=(
     acidgenomics/debian
     acidgenomics/fedora
     acidgenomics/ubuntu
-    # R images.
-    acidgenomics/bioconductor
-    acidgenomics/basejump
-    acidgenomics/bcbiornaseq
-    acidgenomics/bcbiosinglecell
-    acidgenomics/rnaseq
-    acidgenomics/singlecell
-    # Lightweight Linux images.
+)
+
+# Lightweight Linux images.
+images+=(
     acidgenomics/alpine
     acidgenomics/amzn
     acidgenomics/arch
     acidgenomics/centos
     acidgenomics/kali
     acidgenomics/opensuse
-    # Full bioinformatics software.
-    # > acidgenomics/rnaeditingindexer
-    # > acidgenomics/maestro
-    # AWS images.
-    acidgenomics/aws-batch
 )
+
+# R images.
+images+=(
+    acidgenomics/bioconductor
+    acidgenomics/basejump
+    acidgenomics/bcbiornaseq
+    acidgenomics/bcbiosinglecell
+    acidgenomics/rnaseq
+    acidgenomics/singlecell
+)
+
+# AWS batch images.
+prefix="${HOME}/.config/koopa/docker"
+batch_dirs="$( \
+    find "$prefix" \
+        -name "aws-batch*" \
+        -type d \
+        | sort \
+)"
+batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
+mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
+images=("${images[@]}" "${batch_arr[@]}")
+
+# Full bioinformatics software.
+# These don't need to be updated frequently and can be built manually instead.
+# > images+=(
+# >     acidgenomics/bcbio-nextgen
+# >     acidgenomics/rnaeditingindexer
+# >     acidgenomics/maestro
+# > )
 
 for image in "${images[@]}"
 do

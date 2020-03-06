@@ -4,15 +4,17 @@
 _koopa_gsub() {  # {{{1
     # """
     # Global substitution.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-06.
+    #
+    # Instead of using '|' in sed here, we can also escape '/'.
     # """
     local string
     string="${1:?}"
     local pattern
     pattern="${2:?}"
     local replacement
-    replacement="${3:?}"
-    echo "$string" | sed -E "s/${pattern}/${replacement}/g"
+    replacement="${3:-}"
+    _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|g"
     return 0
 }
 
@@ -109,7 +111,10 @@ _koopa_strip_trailing_slash() {  # {{{1
 _koopa_sub() {  # {{{1
     # """
     # Substitution.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-06.
+    #
+    # Instead of using '|' in sed here, we can also escape '/'.
+    #
     # @seealso _koopa_gsub (for global matching).
     # """
     local string
@@ -117,8 +122,8 @@ _koopa_sub() {  # {{{1
     local pattern
     pattern="${2:?}"
     local replacement
-    replacement="${3:?}"
-    echo "$string" | sed -E "s/${pattern}/${replacement}/"
+    replacement="${3:-}"
+    _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|"
     return 0
 }
 
