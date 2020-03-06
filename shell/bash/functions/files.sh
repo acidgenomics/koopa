@@ -29,6 +29,5 @@ _koopa_remove_empty_dirs() {  # {{{1
         [[ -z "$dir" ]] && continue
         _koopa_rm "$dir"
     done
-    echo "OK"
     return 0
 }
