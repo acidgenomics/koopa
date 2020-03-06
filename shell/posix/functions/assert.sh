@@ -401,6 +401,22 @@ _koopa_assert_is_non_existing() {  # {{{1
     return 0
 }
 
+_koopa_assert_is_nonzero_file() {  # {{{1
+    # """
+    # Assert that input is a non-zero file.
+    # @note Updated 2020-03-06.
+    # """
+    [ "$#" -ne 0 ] || return 1
+    for arg
+    do
+        if [ ! -s "$arg" ]
+        then
+            _koopa_stop "Not non-zero file: '${arg}'."
+        fi
+    done
+    return 0
+}
+
 _koopa_assert_is_not_dir() {  # {{{1
     # """
     # Assert that input is not a directory.
