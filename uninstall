@@ -17,5 +17,5 @@ _koopa_uninstall_dotfiles_private
 rm -frv "$(_koopa_config_prefix)"
 rm -frv "$KOOPA_PREFIX"
 
-echo "Uninstallation of koopa was successful."
-echo "Restart the shell."
+printf "Uninstallation of koopa was successful.\n"
+printf "Restart the shell.\n"

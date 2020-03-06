@@ -277,7 +277,7 @@ _koopa_print() {  # {{{1
     # - https://www.freecodecamp.org/news/
     #       how-print-newlines-command-line-output/
     # """
-    printf '%b\n' "${1:?}"
+    printf '%b\n' "${1:-}"
     return 0
 }
 

@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-02-24.
+    Updated 2020-03-05.
 EOF
 }
 
@@ -101,7 +101,7 @@ do
             break
             ;;
         --*|-*)
-            >&2 echo "ERROR: Invalid arg: '${1}'."
+            >&2 printf "ERROR: Invalid arg: '%s'\n" "$1"
             exit 1
             ;;
     esac
@@ -115,7 +115,7 @@ done
 # Before we proceed, ensure that koopa isn't already installed.
 if [[ -n "${KOOPA_PREFIX:-}" ]]
 then
-    >&2 echo "ERROR: koopa is installed: '${KOOPA_PREFIX}'."
+    >&2 printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX"
     exit 1
 fi
 
@@ -129,10 +129,10 @@ rm -fr "$(_koopa_config_prefix)"
 
 if [[ "$interactive" -eq 1 ]]
 then
-    no="$(_koopa_echo_red "no")"
-    no_default="$(_koopa_echo_red_bold "NO")"
-    yes="$(_koopa_echo_green "yes")"
-    yes_default="$(_koopa_echo_green_bold "YES")"
+    no="$(_koopa_print_ansi_red "no")"
+    no_default="$(_koopa_print_ansi_red_bold "NO")"
+    yes="$(_koopa_print_ansi_green "yes")"
+    yes_default="$(_koopa_print_ansi_green_bold "YES")"
 fi
 
 
@@ -156,7 +156,7 @@ then
                 -p "$prompt" \
                 -r \
                 choice
-            echo ""
+            _koopa_print
             case "$choice" in
                 Y|YES|y|yes)
                     shared=1
@@ -193,12 +193,12 @@ then
         -p "$prompt" \
         -r \
         koopa_prefix
-    echo ""
+    _koopa_print
 fi
 
 # Catch if the user is attempting to install into a shared space.
 if [[ "$shared" -eq 0 ]] && \
-    echo "$koopa_prefix" | grep -Eqv "^${HOME}"
+    _koopa_print "$koopa_prefix" | grep -Eqv "^${HOME}"
 then
     shared=1
 fi
@@ -261,7 +261,7 @@ then
         -p "$prompt" \
         -r \
         choice
-    echo ""
+    _koopa_print
     case "$choice" in
         Y|YES|y|yes)
             passwordless=1
@@ -299,7 +299,7 @@ then
         -p "$prompt" \
         -r \
         choice
-    echo ""
+    _koopa_print
     case "$choice" in
         Y|YES|y|yes)
             dotfiles=1
@@ -335,7 +335,7 @@ then
             -p "$prompt" \
             -r \
             choice
-        echo ""
+        _koopa_print
         case "$choice" in
             Y|YES|y|yes)
                 profile=1
