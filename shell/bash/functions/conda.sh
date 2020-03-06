@@ -62,8 +62,12 @@ _koopa_conda_create_env() {
     if [[ "$force" -eq 1 ]]
     then
         conda remove --name "$env_name" --all
-    else
-        _koopa_exit_if_dir "$prefix"
+    fi
+
+    if [[ -d "$prefix" ]]
+    then
+        _koopa_note "'${env_name}' is installed."
+        return 0
     fi
 
     _koopa_info "Creating '${env_name}' conda environment."
