@@ -129,10 +129,10 @@ rm -fr "$(_koopa_config_prefix)"
 
 if [[ "$interactive" -eq 1 ]]
 then
-    no="$(_koopa_print_ansi_red "no")"
-    no_default="$(_koopa_print_ansi_red_bold "NO")"
-    yes="$(_koopa_print_ansi_green "yes")"
-    yes_default="$(_koopa_print_ansi_green_bold "YES")"
+    no="$(_koopa_print_red "no")"
+    no_default="$(_koopa_print_red_bold "NO")"
+    yes="$(_koopa_print_green "yes")"
+    yes_default="$(_koopa_print_green_bold "YES")"
 fi
 
 
