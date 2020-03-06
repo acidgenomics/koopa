@@ -35,6 +35,10 @@ case "$1" in
         source "${include_dir}/info.sh"
         exit 0
         ;;
+    install-dotfiles)
+        _koopa_install_dotfiles
+        exit 0
+        ;;
     list)
         # shellcheck disable=SC1090
         source "${include_dir}/list.sh"
