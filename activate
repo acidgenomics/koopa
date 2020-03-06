@@ -114,13 +114,6 @@ then
         printf '%s\n' "$KOOPA_USERS_SKIP" \
             | grep -Eq "\b${USER}\b" && return 0
     fi
-
-    # Skip if koopa functions have already been sourced.
-    # This step helps avoid double activation in Bash for shared koopa installs,
-    # which will otherwise activate from both '/etc/profile.d/zzz-koopa.sh'
-    # and '~/.bashrc' (if defined).
-    # shellcheck disable=SC2034
-    [ -n "$(typeset -f _koopa_prefix)" ] && return 0
 fi
 
 
@@ -160,15 +153,35 @@ then
     KOOPA_SOURCE="${(%):-%N}"
 else
     >&2 cat << EOF
-ERROR: Unsupported shell.
-Supported: bash, zsh.
+ERROR: koopa failed to activate in the current shell.
+
+Supported POSIX shells: bash, zsh.
 
   SHELL: '${SHELL}'
       0: '${0}'
       -: '${-}'
+
+Usage of /bin/sh as the default shell is discouraged.
+
+Consider switching to bash:
+chsh -s /bin/bash "$USER"
+
+or zsh:
+chsh -s /bin/zsh "$USER"
 EOF
     return 1
 fi
+
+# Skip activation if koopa functions have already been sourced.
+#
+# This step helps avoid double activation in Bash for shared koopa installs,
+# which will otherwise activate from both '/etc/profile.d/zzz-koopa.sh'
+# and '~/.bashrc' (if defined).
+#
+# Note that 'typeset' is not defined in all shells (e.g. '/bin/sh').
+#
+# shellcheck disable=SC2034
+[ -n "$(typeset -f _koopa_prefix)" ] && return 0
 
 # Alternatively, can attempt to compare SHLVL value.
 [ -n "${KOOPA_PREFIX:-}" ] && KOOPA_SUBSHELL=1 || KOOPA_SUBSHELL=0
