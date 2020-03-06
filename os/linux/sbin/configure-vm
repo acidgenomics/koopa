@@ -67,10 +67,14 @@ _koopa_update_etc_profile_d
 _koopa_install_dotfiles
 _koopa_mkdir "$make_prefix"
 
+# Attempt to attached data disk automatically.
+# This is the current standard configuration on AWS.
+[[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
+
 # Prepare app prefix on external disk for write access.
 # e.g. '/n'.
 data_disk_link="$(_koopa_data_disk_link_prefix)"
-if [[ -d "$data_disk" ]] && \
+if [[ -e "$data_disk" ]] && \
     { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
 then
     _koopa_h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
@@ -90,6 +94,11 @@ else
 fi
 
 _koopa_h2 "Installing base system."
+
+if [[ -e "$data_disk" ]]
+then
+    _koopa_info "Data disk detected at '${data_disk}'."
+fi
 
 if _koopa_is_arch
 then
