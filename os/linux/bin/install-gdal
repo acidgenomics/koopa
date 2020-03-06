@@ -19,6 +19,13 @@ prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
 _koopa_exit_if_dir "$prefix"
 
+# Skip building on CentOS inside Docker for the time being.
+if _koopa_is_centos && _koopa_is_docker
+then
+    _koopa_note "GDAL currently won't build on CentOS inside Docker."
+    exit 0
+fi
+
 _koopa_h1 "Installing ${name} ${version} at '${prefix}'."
 _koopa_coffee_time
 
