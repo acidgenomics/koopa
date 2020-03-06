@@ -168,11 +168,11 @@ __koopa_print_ansi() {  # {{{1
     # - https://bixense.com/clicolors/
     # """
     local color
-    color="$(_koopa_ansi_escape "${1:?}")"
+    color="$(__koopa_ansi_escape "${1:?}")"
     local string
     string="${2:?}"
     local nocolor
-    nocolor="$(_koopa_ansi_escape 'nocolor')"
+    nocolor="$(__koopa_ansi_escape 'nocolor')"
     printf '%s%b%s\n' "$color" "$string" "$nocolor"
     return 0
 }
