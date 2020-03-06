@@ -4,13 +4,8 @@
 _koopa_yum_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI yum repo.
-    # @note Updated 2020-02-24.
-    #
-    # Alternate approach:
-    # > sudo sh -c 'echo -e "xxx"'
-    #
-    # Note that 'echo -e' supports escape sequence but isn't POSIX.
-    # https://unix.stackexchange.com/questions/189787/
+    # @note Updated 2020-03-06.
+    # """
     local file
     file="/etc/yum.repos.d/azure-cli.repo"
     [ -f "$file" ] && return 0

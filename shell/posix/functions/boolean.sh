@@ -10,7 +10,7 @@ _koopa_has_file_ext() {  # {{{1
     # """
     local file
     file="${1:?}"
-    echo "$file" | grep -q "\."
+    _koopa_print "$file" | grep -q "\."
 }
 
 _koopa_has_no_environments() {  # {{{1
@@ -175,16 +175,14 @@ _koopa_is_conda_active() {  # {{{1
 _koopa_is_current_version() {  # {{{1
     # """
     # Is the installed program current?
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-03-06.
     # """
     local app
     app="${1:?}"
     local expected
     expected="$(_koopa_variable "$app")"
-    echo "$expected"
     local actual
     actual="$(_koopa_get_version "$app")"
-    echo "$actual"
     [ "$actual" == "$expected" ]
 }
 
@@ -372,7 +370,7 @@ _koopa_is_interactive() {  # {{{1
     # Is the current shell interactive?
     # @note Updated 2019-06-21.
     # """
-    echo "$-" | grep -q "i"
+    _koopa_print "$-" | grep -q "i"
 }
 
 _koopa_is_kali() {  # {{{1
@@ -398,7 +396,7 @@ _koopa_is_local_install() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_prefix)"
-    echo "$prefix" | grep -Eq "^${HOME}"
+    _koopa_print "$prefix" | grep -Eq "^${HOME}"
 }
 
 _koopa_is_login() {  # {{{1
@@ -406,7 +404,7 @@ _koopa_is_login() {  # {{{1
     # Is the current shell a login shell?
     # @note Updated 2019-08-14.
     # """
-    echo "$0" | grep -Eq "^-"
+    _koopa_print "$0" | grep -Eq "^-"
 }
 
 _koopa_is_login_bash() {  # {{{1
@@ -442,7 +440,7 @@ _koopa_is_matching_fixed() {  # {{{1
     string="${1:?}"
     local pattern
     pattern="${2:?}"
-    echo "$string" | grep -Fq "$pattern"
+    _koopa_print "$string" | grep -Fq "$pattern"
 }
 
 _koopa_is_matching_regex() {  # {{{1
@@ -454,7 +452,7 @@ _koopa_is_matching_regex() {  # {{{1
     string="${1:?}"
     local pattern
     pattern="${2:?}"
-    echo "$string" | grep -Eq "$pattern"
+    _koopa_print "$string" | grep -Eq "$pattern"
 }
 
 _koopa_is_opensuse() {  # {{{1

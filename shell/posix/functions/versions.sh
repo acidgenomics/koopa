@@ -26,7 +26,7 @@ _koopa_bcbio_nextgen_current_version() {  # {{{1
             | cut -d '=' -f 2 \
     )"
     [ -n "$x" ] || return 1
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -38,12 +38,12 @@ _koopa_extract_version() {  # {{{1
     local x
     x="${1:?}"
     x="$( \
-        echo "$x" \
+        _koopa_print "$x" \
             | grep -Eo "$(_koopa_version_pattern)" \
             | head -n 1 \
     )"
     [ -n "$x" ] || return 1
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -101,7 +101,7 @@ _koopa_get_macos_app_version() {  # {{{1
             | awk -F ' => ' '{print $2}' \
             | tr -d '\"' \
     )"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -142,13 +142,13 @@ _koopa_github_latest_release() {  # {{{1
     json="$(curl -s "$url" 2>&1 || true)"
     local tag
     tag="$( \
-        echo "$json" \
+        _koopa_print "$json" \
             | grep '"tag_name":' \
             | cut -d '"' -f 4 \
             | sed 's/^v//' \
     )"
     [ -n "$tag" ] || return 1
-    echo "$tag"
+    _koopa_print "$tag"
     return 0
 }
 
@@ -167,7 +167,7 @@ _koopa_hdf5_version() {  # {{{1
             | sed -E 's/^(.+): //' \
     )"
     [ -n "$x" ] || return 1
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -204,7 +204,7 @@ _koopa_lmod_version() {  # {{{1
     # >     | cut -d ' ' -f 2
     # """
     [ -n "${LMOD_VERSION:-}" ] || return 1
-    echo "$LMOD_VERSION"
+    _koopa_print "$LMOD_VERSION"
     return 0
 }
 
@@ -216,7 +216,7 @@ _koopa_macos_version() {  # {{{1
     _koopa_is_macos || return 1
     local x
     x="$(sw_vers -productVersion)"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -227,7 +227,7 @@ _koopa_major_version() {  # {{{1
     # """
     local version
     version="${1:?}"
-    echo "$version" | cut -d '.' -f 1
+    _koopa_print "$version" | cut -d '.' -f 1
     return 0
 }
 
@@ -238,7 +238,7 @@ _koopa_minor_version() {  # {{{1
     # """
     local version
     version="${1:?}"
-    echo "$version" | cut -d '.' -f 1-2
+    _koopa_print "$version" | cut -d '.' -f 1-2
     return 0
 }
 
@@ -268,7 +268,7 @@ _koopa_os_version() {  # {{{1
     else
         version="$(_koopa_linux_version)"
     fi
-    echo "$version"
+    _koopa_print "$version"
     return 0
 }
 
@@ -284,7 +284,7 @@ _koopa_parallel_version() {  # {{{1
             | head -n 1 \
             | cut -d ' ' -f 3 \
     )"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -296,7 +296,7 @@ _koopa_perl_file_rename_version() {  # {{{1
     _koopa_is_installed rename || return 1
     local x
     x="$(rename --version | head -n 1)"
-    echo "$x" | grep -q 'File::Rename' || return 1
+    _koopa_print "$x" | grep -q 'File::Rename' || return 1
     _koopa_extract_version "$x"
     return 0
 }
@@ -419,8 +419,8 @@ _koopa_sanitize_version() {  # {{{1
     local pattern
     pattern="[.0-9]+"
     _koopa_is_matching_regex "$x" "$pattern" || return 1
-    x="$(echo "$x" | grep -Eo "$pattern")"
-    echo "$x"
+    x="$(_koopa_print "$x" | grep -Eo "$pattern")"
+    _koopa_print "$x"
     return 0
 }
 
@@ -444,7 +444,7 @@ _koopa_tex_version() {  # {{{1
             | cut -d '/' -f 1 \
     )"
     [ -n "$x" ] || return 1
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -462,7 +462,7 @@ _koopa_version_pattern() {  # {{{1
     # Version pattern.
     # @note Updated 2020-02-26.
     # """
-    echo '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?'
+    _koopa_print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?'
     return 0
 }
 
@@ -476,23 +476,23 @@ _koopa_vim_version() {  # {{{1
     x="$(vim --version)"
     local major
     major="$( \
-        echo "$x" \
-        | head -n 1 \
-        | cut -d ' ' -f 5 \
+        _koopa_print "$x" \
+            | head -n 1 \
+            | cut -d ' ' -f 5 \
     )"
     local version
     if _koopa_is_matching_fixed "$x" "Included patches:"
     then
         local patch
         patch="$( \
-            echo "$x" \
-            | grep 'Included patches:' \
-            | cut -d '-' -f 2 \
+            _koopa_print "$x" \
+                | grep 'Included patches:' \
+                | cut -d '-' -f 2 \
         )"
         version="${major}.${patch}"
     else
         version="$major"
     fi
-    echo "$version"
+    _koopa_print "$version"
     return 0
 }

@@ -70,18 +70,18 @@ _koopa_aws_s3_find() {  # {{{1
     # Exclude pattern.
     if [[ -n "${exclude:-}" ]]
     then
-        x="$(echo "$x" | grep -Ev "$exclude")"
+        x="$(_koopa_print "$x" | grep -Ev "$exclude")"
         [[ -n "$x" ]] || return 1
     fi
 
     # Include pattern.
     if [[ -n "${include:-}" ]]
     then
-        x="$(echo "$x" | grep -E "$include")"
+        x="$(_koopa_print "$x" | grep -E "$include")"
         [[ -n "$x" ]] || return 1
     fi
 
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -185,47 +185,47 @@ _koopa_aws_s3_ls() {  # {{{1
     if [[ "$recursive" -eq 1 ]]
     then
         local bucket_prefix
-        bucket_prefix="$(echo "$prefix" | grep -Eo '^s3://[^/]+')"
-        files="$(echo "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
+        bucket_prefix="$(_koopa_print "$prefix" | grep -Eo '^s3://[^/]+')"
+        files="$(_koopa_print "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
         [[ -n "$files" ]] || return 0
         files="$( \
-            echo "$files" \
+            _koopa_print "$files" \
                 | grep -Eo '  [0-9]+ .+$' \
                 | sed 's/^  [0-9]* //g' \
                 | sed "s|^|${bucket_prefix}/|g" \
         )"
-        echo "$files"
+        _koopa_print "$files"
         return 0
     fi
 
     # Directories.
     if [[ "$dirs" -eq 1 ]]
     then
-        dirs="$(echo "$x" | grep -Eo '  PRE .+$' || true)"
+        dirs="$(_koopa_print "$x" | grep -Eo '  PRE .+$' || true)"
         if [[ -n "$dirs" ]]
         then
             dirs="$( \
-                echo "$dirs" \
+                _koopa_print "$dirs" \
                     | sed 's/^  PRE //g' \
                     | sed "s|^|${prefix}|g" \
             )"
-            echo "$dirs"
+            _koopa_print "$dirs"
         fi
     fi
 
     # Files.
     if [[ "$files" -eq 1 ]]
     then
-        files="$(echo "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
+        files="$(_koopa_print "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
         if [[ -n "$files" ]]
         then
             files="$( \
-                echo "$files" \
+                _koopa_print "$files" \
                     | grep -Eo '  [0-9]+ .+$' \
                     | sed 's/^  [0-9]* //g' \
                     | sed "s|^|${prefix}|g" \
             )"
-            echo "$files"
+            _koopa_print "$files"
         fi
     fi
 

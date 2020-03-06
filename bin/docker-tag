@@ -22,7 +22,7 @@ _koopa_assert_is_installed docker
 
 if [[ "$source_tag" == "$dest_tag" ]]
 then
-    echo "Source tag '${source_tag}' identical to dest tag '${dest_tag}'."
+    _koopa_print "Source tag identical to destination ('${source_tag}')."
     exit 0
 fi
 

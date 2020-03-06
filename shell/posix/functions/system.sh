@@ -28,7 +28,7 @@ _koopa_admin_group() {  # {{{1
     else
         _koopa_stop "Failed to detect admin group."
     fi
-    echo "$group"
+    _koopa_print "$group"
     return 0
 }
 
@@ -96,7 +96,7 @@ _koopa_chmod_flags() {
     else
         flags="u+rw,g+r,g-w"
     fi
-    echo "$flags"
+    _koopa_print "$flags"
     return 0
 }
 
@@ -124,7 +124,7 @@ _koopa_commit() {  # {{{1
         _koopa_cd "$koopa_prefix"; \
         _koopa_git_last_commit_local \
     )"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -182,7 +182,7 @@ _koopa_cpu_count() {  # {{{1
         # For 5-16 cores, use 'n-1'.
         n=$((n - 1))
     fi
-    echo "$n"
+    _koopa_print "$n"
     return 0
 }
 
@@ -203,7 +203,7 @@ _koopa_dotfiles_config_link() {  # {{{1
     # Note that we're not checking for existence here, which is handled inside
     # 'link-dotfile' script automatically instead.
     # """
-    echo "$(_koopa_config_prefix)/dotfiles"
+    _koopa_print "$(_koopa_config_prefix)/dotfiles"
     return 0
 }
 
@@ -212,7 +212,7 @@ _koopa_dotfiles_private_config_link() {  # {{{1
     # Private dotfiles directory.
     # @note Updated 2019-11-04.
     # """
-    echo "$(_koopa_dotfiles_config_link)-private"
+    _koopa_print "$(_koopa_dotfiles_config_link)-private"
     return 0
 }
 
@@ -223,7 +223,7 @@ _koopa_dotfiles_source_repo() {  # {{{1
     # """
     if [ -d "${DOTFILES:-}" ]
     then
-        echo "$DOTFILES"
+        _koopa_print "$DOTFILES"
         return 0
     fi
     local dotfiles
@@ -232,7 +232,7 @@ _koopa_dotfiles_source_repo() {  # {{{1
     then
         _koopa_stop "Dotfiles are not installed at '${dotfiles}'."
     fi
-    echo "$dotfiles"
+    _koopa_print "$dotfiles"
     return 0
 }
 
@@ -391,7 +391,7 @@ _koopa_group() {  # {{{1
     else
         group="$(id -gn)"
     fi
-    echo "$group"
+    _koopa_print "$group"
     return 0
 }
 
@@ -463,7 +463,7 @@ _koopa_header() {  # {{{1
             _koopa_invalid_arg "$1"
             ;;
     esac
-    echo "$file"
+    _koopa_print "$file"
     return 0
 }
 
@@ -582,7 +582,7 @@ _koopa_host_id() {  # {{{1
             id="harvard-odyssey"
             ;;
     esac
-    echo "$id"
+    _koopa_print "$id"
     return 0
 }
 
@@ -705,8 +705,8 @@ _koopa_list_internal_functions() {  # {{{1
             return 1
             ;;
     esac
-    x="$(echo "$x" | grep -E "^_koopa_")"
-    echo "$x"
+    x="$(_koopa_print "$x" | grep -E "^_koopa_")"
+    _koopa_print "$x"
     return 0
 }
 
@@ -756,7 +756,7 @@ _koopa_local_ip_address() {  # {{{1
             | awk '{print $1}' \
         )"
     fi
-    echo "$x" | head -n 1
+    _koopa_print "$x" | head -n 1
     return 0
 }
 
@@ -780,7 +780,7 @@ _koopa_make_build_string() {  # {{{1
     else
         string="x86_64-linux-gnu"
     fi
-    echo "$string"
+    _koopa_print "$string"
     return 0
 }
 
@@ -875,7 +875,7 @@ _koopa_os_codename() {  # {{{1
     else
         os_codename="$(lsb_release -cs)"
     fi
-    echo "$os_codename"
+    _koopa_print "$os_codename"
     return 0
 }
 
@@ -893,7 +893,7 @@ _koopa_os_id() {  # {{{1
     else
         os_id="$(_koopa_os_string | cut -d '-' -f 1)"
     fi
-    echo "$os_id"
+    _koopa_print "$os_id"
     return 0
 }
 
@@ -951,7 +951,7 @@ _koopa_os_string() {  # {{{1
     then
         string="${string}-${version}"
     fi
-    echo "$string"
+    _koopa_print "$string"
     return 0
 }
 
@@ -967,7 +967,7 @@ _koopa_public_ip_address() {  # {{{1
     _koopa_is_installed dig || return 1
     local x
     x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -1064,7 +1064,7 @@ _koopa_rsync_flags() {  # {{{1
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
-    echo "--archive --delete-before --human-readable --progress"
+    _koopa_print "--archive --delete-before --human-readable --progress"
     return 0
 }
 
@@ -1105,7 +1105,7 @@ Supported: bash, ksh, zsh.
 EOF
         return 1
     fi
-    echo "$shell"
+    _koopa_print "$shell"
     return 0
 }
 
@@ -1213,7 +1213,7 @@ _koopa_user() {  # {{{1
     else
         user="${USER:?}"
     fi
-    echo "$user"
+    _koopa_print "$user"
     return 0
 }
 
@@ -1233,11 +1233,11 @@ _koopa_variable() {  # {{{1
         || _koopa_stop "'${key}' not defined in '${file}'." \
     )"
     value="$( \
-        echo "$value" \
+        _koopa_print "$value" \
             | head -n 1 \
             | cut -d "\"" -f 2
     )"
-    echo "$value"
+    _koopa_print "$value"
     return 0
 }
 

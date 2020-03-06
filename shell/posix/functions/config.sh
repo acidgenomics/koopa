@@ -56,7 +56,7 @@ _koopa_add_user_to_etc_passwd() {  # {{{1
     _koopa_h2 "Updating '${passwd_file}' to include '${user}'."
     if ! sudo grep -q "$user" "$passwd_file"
     then
-        sudo sh -c "echo '${user_string}' >> ${passwd_file}"
+        sudo sh -c "printf '%s\n' '${user_string}' >> '${passwd_file}'"
     else
         _koopa_note "$user already defined in '${passwd_file}'."
     fi
@@ -105,7 +105,7 @@ _koopa_delete_dotfile() {  # {{{1
 _koopa_enable_passwordless_sudo() {  # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-03-06.
     # """
     _koopa_is_linux || return 1
     _koopa_is_root && return 0
@@ -120,7 +120,9 @@ _koopa_enable_passwordless_sudo() {  # {{{1
         return 0
     fi
     _koopa_h2 "Updating '${sudo_file}' to include '${group}'."
-    sudo sh -c "echo '%${group} ALL=(ALL) NOPASSWD: ALL' >> ${sudo_file}"
+    local string
+    string="%${group} ALL=(ALL) NOPASSWD: ALL"
+    sudo sh -c "printf '%s\n' '$string' >> '${sudo_file}'"
     sudo chmod -v 0440 "$sudo_file"
     _koopa_success "Passwordless sudo enabled for '${group}' group."
     return 0
@@ -139,7 +141,7 @@ _koopa_enable_shell() {  # {{{1
     _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
     if ! grep -q "$cmd" "$etc_file"
     then
-        sudo sh -c "echo ${cmd} >> ${etc_file}"
+        sudo sh -c "printf '%s\n' '${cmd}' >> '${etc_file}'"
     else
         _koopa_success "'${cmd}' already defined in '${etc_file}'."
     fi
@@ -163,7 +165,7 @@ _koopa_find_user_profile() {  # {{{1
             file="${HOME}/.zshrc"
             ;;
     esac
-    echo "$file"
+    _koopa_print "$file"
     return 0
 }
 

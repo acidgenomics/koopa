@@ -96,7 +96,7 @@ _koopa_r_home() {  # {{{1
     local home
     home="$(Rscript --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
     [ -d "$home" ] || return 1
-    echo "$home"
+    _koopa_print "$home"
     return 0
 }
 
@@ -109,7 +109,7 @@ _koopa_r_library_prefix() {  # {{{1
     local prefix
     prefix="$(Rscript -e 'cat(.libPaths()[[1L]])')"
     [ -d "$prefix" ] || return 1
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -124,7 +124,7 @@ _koopa_r_package_version() {  # {{{1
     _koopa_is_r_package_installed "$pkg" || return 1
     local x
     x="$(Rscript -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")")"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -137,7 +137,7 @@ _koopa_r_system_library_prefix() {  # {{{1
     local prefix
     prefix="$(Rscript --vanilla -e 'cat(tail(.libPaths(), n = 1L))')"
     [ -d "$prefix" ] || return 1
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 

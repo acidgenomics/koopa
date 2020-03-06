@@ -6,7 +6,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
-# Emacs is failing to compile on Docker Ubuntu 18 LTS.
+# Emacs currently fails to build from source reliably inside Docker images.
+#
+# For example:
 #
 # Finding pointers to doc strings...
 # Finding pointers to doc strings...done
@@ -64,28 +66,6 @@ source "${script_dir}/../include/header.sh"
 # 2908 Docker container with a security profile that allows 'personality' by
 # 2909 using Docker's --security-opt option with an appropriate profile; see
 # 2910 <https://docs.docker.com/engine/security/seccomp/>.
-# 2911 
-# 2912 To work around the ASLR problem in either an older or a newer kernel,
-# 2913 you can temporarily disable the feature while building Emacs.  On
-# 2914 GNU/Linux you can do so using the following command (as root).
-# 2915 
-# 2916     echo 0 > /proc/sys/kernel/randomize_va_space
-# 2917 
-# 2918 You can re-enable the feature when you are done, by echoing the
-# 2919 original value back to the file.
-#
-# Suggestion 1 (doesn't work):
-# CFLAGS="-no-pie"
-#
-# Suggestion 2 (doesn't work):
-# > aslr_file="/proc/sys/kernel/randomize_va_space"
-# > aslr_value="$(cat "$aslr_file")"
-# > echo 0 > /proc/sys/kernel/randomize_va_space
-# > [...]
-# > echo "$aslr_value" > "$aslr_file"
-#
-# Note that this doesn't work either, due to read only file system:
-# echo "0" | sudo tee -a "$aslr_file" > /dev/null
 #
 # See also:
 # - https://askubuntu.com/questions/837306

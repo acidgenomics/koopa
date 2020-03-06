@@ -45,17 +45,17 @@ fi
 # fail unless we skip checks.
 if [[ "$checks" -eq 1 ]]
 then
-    major_version="$(echo "${BASH_VERSION}" | cut -d '.' -f 1)"
+    major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
     if [[ ! "$major_version" -ge 4 ]]
     then
-        echo "ERROR: Bash >= 4 is required."
+        >&2 printf '%s\n' 'ERROR: Bash >= 4 is required.'
         exit 1
     fi
     # Check that user's Bash has mapfile builtin defined.
     # We use this a lot to handle arrays.
     if [[ $(type -t mapfile) != "builtin" ]]
     then
-        echo "ERROR: Bash is missing 'mapfile' builtin."
+        >&2 printf '%s\n' 'ERROR: Bash is missing mapfile.'
         exit 1
     fi
 fi
@@ -78,7 +78,7 @@ _koopa_help "$@"
 if [[ "$checks" -eq 1 ]]
 then
     # Require sudo permission to run 'sbin/' scripts.
-    if echo "$0" | grep -q "/sbin/"
+    if printf '%s\n' "$0" | grep -q "/sbin/"
     then
         _koopa_assert_has_sudo
     fi

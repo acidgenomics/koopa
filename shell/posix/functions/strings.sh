@@ -21,17 +21,17 @@ _koopa_gsub() {  # {{{1
 _koopa_lowercase() {  # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-06.
     #
     # awk alternative:
-    # echo "$string" | awk '{print tolower($0)}'
+    # _koopa_print "$string" | awk '{print tolower($0)}'
     #
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
     local string
     string="${1:?}"
-    echo "$string" | tr '[:upper:]' '[:lower:]'
+    _koopa_print "$string" | tr '[:upper:]' '[:lower:]'
     return 0
 }
 

@@ -116,7 +116,7 @@ casks=(
 (
     for cask in "${casks[@]}"
     do
-        if echo "$installed_casks" | grep -Eq "^${cask}$"
+        if _koopa_print "$installed_casks" | grep -Eq "^${cask}$"
         then
             _koopa_note "'${cask}' is already installed."
             continue
@@ -263,7 +263,7 @@ brews=(
     for brew in "${brews[@]}"
     do
         name="$(basename "$brew")"
-        if echo "$installed_brews" | grep -Eq "^${name}$"
+        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
         then
             _koopa_note "'${name}' is already installed."
             continue

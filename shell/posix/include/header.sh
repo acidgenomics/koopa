@@ -8,7 +8,7 @@ elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_POSIX_SOURCE="${(%):-%N}"
 else
-    >&2 echo "ERROR: Unsupported shell."
+    >&2 printf '%s\n' 'ERROR: Unsupported shell.'
     exit 1
 fi
 

@@ -19,7 +19,7 @@ _koopa_app_prefix() {  # {{{1
     else
         prefix="$(_koopa_local_app_prefix)"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -35,7 +35,7 @@ _koopa_aspera_prefix() {  # {{{1
     else
         prefix="${HOME:?}/.aspera/connect"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -60,7 +60,7 @@ _koopa_autojump_prefix() {  # {{{1
         # Local user installation (macOS).
         prefix="${HOME:?}/.autojump"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -81,7 +81,7 @@ _koopa_bcbio_prefix() {  # {{{1
     else
         prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -102,7 +102,7 @@ _koopa_cellar_prefix() {  # {{{1
     else
         prefix="$(_koopa_make_prefix)/cellar"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -118,7 +118,7 @@ _koopa_conda_prefix() {  # {{{1
     else
         prefix="$(_koopa_app_prefix)/conda"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -127,7 +127,7 @@ _koopa_config_prefix() {  # {{{1
     # Local koopa config directory.
     # @note Updated 2020-01-13.
     # """
-    echo "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
+    _koopa_print "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
     return 0
 }
 
@@ -137,7 +137,7 @@ _koopa_data_disk_link_prefix() {  # {{{1
     # @note Updated 2020-02-16.
     # """
     _koopa_is_linux || return 1
-    echo "/n"
+    _koopa_print "/n"
     return 0
 }
 
@@ -146,7 +146,7 @@ _koopa_docker_prefix() {  # {{{1
     # Docker prefix.
     # @note Updated 2020-02-15.
     # """
-    echo "$(_koopa_config_prefix)/docker"
+    _koopa_print "$(_koopa_config_prefix)/docker"
     return 0
 }
 
@@ -155,7 +155,7 @@ _koopa_docker_private_prefix() {  # {{{1
     # Private Docker prefix.
     # @note Updated 2020-03-05.
     # """
-    echo "$(_koopa_config_prefix)/docker-private"
+    _koopa_print "$(_koopa_config_prefix)/docker-private"
     return 0
 }
 
@@ -166,7 +166,7 @@ _koopa_dotfiles_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_prefix)/dotfiles"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -175,7 +175,7 @@ _koopa_dotfiles_private_prefix() {  # {{{1
     # Private user dotfiles prefix.
     # @note Updated 2020-02-15.
     # """
-    echo "$(_koopa_config_prefix)/dotfiles-private"
+    _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
     return 0
 }
 
@@ -185,7 +185,7 @@ _koopa_ensembl_perl_api_prefix() {  # {{{1
     # @note Updated 2019-11-15.
     local prefix
     prefix="$(_koopa_app_prefix)/ensembl"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -210,7 +210,7 @@ _koopa_go_gopath() {  # {{{1
     else
         prefix="$(_koopa_app_prefix)/go/gopath"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -219,7 +219,7 @@ _koopa_homebrew_cellar_prefix() {  # {{{1
     local x
     x="$(_koopa_homebrew_prefix)/Cellar"
     [ -d "$x" ] || return 1
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -232,7 +232,7 @@ _koopa_homebrew_prefix() {  # {{{1
     local x
     x="${HOMEBREW_PREFIX:?}"
     [ -d "$x" ] || return 1
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -262,7 +262,7 @@ _koopa_java_home() {  # {{{1
         java_exe="$(_koopa_which "java")"
         home="$(dirname "$(dirname "${java_exe}")")"
     fi
-    echo "$home"
+    _koopa_print "$home"
     return 0
 }
 
@@ -273,7 +273,7 @@ _koopa_local_app_prefix() {  # {{{1
     #
     # This is the default app path when koopa is installed per user.
     # """
-    echo "${XDG_DATA_HOME:?}"
+    _koopa_print "${XDG_DATA_HOME:?}"
     return 0
 }
 
@@ -292,7 +292,7 @@ _koopa_make_prefix() {  # {{{1
     else
         prefix="$(dirname "${XDG_DATA_HOME:?}")"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -303,7 +303,7 @@ _koopa_msigdb_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_refdata_prefix)/msigdb"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -312,7 +312,7 @@ _koopa_openjdk_prefix() {  # {{{1
     # OpenJDK prefix.
     # @note Updated 2020-02-27.
     # """
-    echo "$(_koopa_app_prefix)/java/openjdk"
+    _koopa_print "$(_koopa_app_prefix)/java/openjdk"
     return 0
 }
 
@@ -328,7 +328,7 @@ _koopa_perlbrew_prefix() {  # {{{1
     else
         prefix="$(_koopa_app_prefix)/perl/perlbrew"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -337,7 +337,7 @@ _koopa_prefix() {  # {{{1
     # Koopa prefix (home).
     # @note Updated 2020-01-12.
     # """
-    echo "${KOOPA_PREFIX:?}"
+    _koopa_print "${KOOPA_PREFIX:?}"
     return 0
 }
 
@@ -350,7 +350,7 @@ _koopa_pyenv_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_app_prefix)/python/pyenv"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -364,7 +364,7 @@ _koopa_python_site_packages_prefix() {
     _koopa_assert_is_installed "$python"
     local x
     x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
-    echo "$x"
+    _koopa_print "$x"
     return 0
 }
 
@@ -379,7 +379,7 @@ _koopa_rbenv_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_app_prefix)/ruby/rbenv"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -390,7 +390,7 @@ _koopa_refdata_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_data_disk_link_prefix)/refdata"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -411,7 +411,7 @@ _koopa_rust_cargo_prefix() {  # {{{1
     else
         prefix="${HOME:?}/.cargo"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -427,7 +427,7 @@ _koopa_rust_rustup_prefix() {  # {{{1
     else
         prefix="${HOME:?}/.rustup"
     fi
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }
 
@@ -436,7 +436,7 @@ _koopa_scripts_private_prefix() {  # {{{1
     # Private scripts prefix.
     # @note Updated 2020-02-15.
     # """
-    echo "$(_koopa_config_prefix)/scripts-private"
+    _koopa_print "$(_koopa_config_prefix)/scripts-private"
     return 0
 }
 
@@ -447,6 +447,6 @@ _koopa_venv_prefix() {  # {{{1
     # """
     local prefix
     prefix="$(_koopa_app_prefix)/python/virtualenvs"
-    echo "$prefix"
+    _koopa_print "$prefix"
     return 0
 }

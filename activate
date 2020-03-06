@@ -1,34 +1,5 @@
 #!/bin/sh
 # shellcheck disable=SC1090,SC1091,SC2039
-# SC2236: zsh doesn't handle '-n' flag in place of '! -z' correctly in POSIX
-# mode when using '[' instead of '[['.
-
-
-
-# Notes  {{{1
-# ==============================================================================
-
-# Dropped support for ksh because it doesn't support 'local' variables scoped
-# inside of functions.
-
-# Checking declared values in Bash:
-# - 'declare -F': Display function names.
-# - 'declare -p': Display the attributes and value of each name.
-# - 'declare -x': Display exported values.
-
-# Checking elapsed time:
-#
-# Bash has a built-in timer variable ('SECONDS').
-# > start="$SECONDS"
-# > # do stuff
-# > end="$SECONDS"
-# > duration="$((end - start))"
-# > echo "stuff took ${duration} seconds to complete"
-#
-# See also:
-# - https://www.gnu.org/savannah-checkouts/gnu/bash/manual/
-#       bash.html#index-SECONDS
-# - https://unix.stackexchange.com/questions/314365
 
 
 
@@ -81,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-02-27.
+    Updated 2020-03-06.
 EOF
 }
 
@@ -134,12 +105,14 @@ then
     [ -z "${USER:-}" ] && USER="$(whoami)" && export USER
 
     # Always skip on accounts containing "admin" in the name.
-    echo "$USER" | grep -Eq "\b(admin|shiny)\b" && return 0
+    printf '%s\n' "$USER" \
+        | grep -Eq "\b(admin|shiny)\b" && return 0
 
     # Allow optional skip for specific users.
     if [ -n "${KOOPA_USERS_SKIP:-}" ]
     then
-        echo "$KOOPA_USERS_SKIP" | grep -Eq "\b${USER}\b" && return 0
+        printf '%s\n' "$KOOPA_USERS_SKIP" \
+            | grep -Eq "\b${USER}\b" && return 0
     fi
 
     # Skip if koopa functions have already been sourced.
@@ -226,7 +199,7 @@ export KOOPA_EXTRA
 
 if [ -n "${KOOPA_USERS_NO_EXTRA:-}" ]
 then
-    if echo "$KOOPA_USERS_NO_EXTRA" | grep -Eq "\b${USER}\b"
+    if printf '%s\n' "$KOOPA_USERS_NO_EXTRA" | grep -Eq "\b${USER}\b"
     then
         KOOPA_EXTRA=0
     fi
@@ -255,7 +228,7 @@ export KOOPA_MINIMAL
 
 if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
 then
-    if echo "$KOOPA_USERS_MINIMAL" | grep -Eq "\b${USER}\b"
+    if printf '%s\n' "$KOOPA_USERS_MINIMAL" | grep -Eq "\b${USER}\b"
     then
         KOOPA_MINIMAL=1
     fi
@@ -289,8 +262,8 @@ export KOOPA_TEST
 
 if [ "$KOOPA_TEST" -eq 1 ]
 then
-    echo "Test mode enabled."
-    echo "Setting strict shell mode."
+    printf '%s\n' 'Test mode enabled.'
+    printf '%s\n' 'Setting strict shell mode.'
     set -o errexit
     set -o nounset
     set -o xtrace
@@ -323,7 +296,7 @@ fi
 
 if [ ! -f "$KOOPA_SOURCE" ]
 then
-    >&2 echo "Error: Failed to detect absolute path of activation script."
+    >&2 printf '%s\n' 'ERROR: Failed to detect activation script path.'
     return 1
 fi
 
@@ -434,7 +407,8 @@ then
     if _koopa_is_installed bc
     then
         KOOPA_DURATION="$( \
-            echo "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" | bc \
+            printf '%s\n' "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" \
+                | bc \
         )"
         export KOOPA_DURATION
     fi

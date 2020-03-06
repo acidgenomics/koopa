@@ -7,10 +7,10 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 all="$(_koopa_list_path_priority "$@")"
-mapfile -t all_arr < <(echo "$all")
+mapfile -t all_arr < <(_koopa_print "$all")
 
-unique="$(echo "$all" | awk '!a[$0]++')"
-mapfile -t unique_arr < <(echo "$unique")
+unique="$(_koopa_print "$all" | awk '!a[$0]++')"
+mapfile -t unique_arr < <(_koopa_print "$unique")
 
 n_all="${#all_arr[@]}"
 n_unique="${#unique_arr[@]}"
@@ -21,4 +21,4 @@ then
     _koopa_note "${n_dupes} duplicate(s) detected."
 fi
 
-echo "$all"
+_koopa_print "$all"

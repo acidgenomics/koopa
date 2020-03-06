@@ -132,7 +132,7 @@ then
     )
     for pkg in "${legacy_pkgs[@]}"
     do
-        echo "$apt_installed" | grep -Eq "^${pkg}/" || continue
+        _koopa_print "$apt_installed" | grep -Eq "^${pkg}/" || continue
         sudo apt-get --yes remove "${pkg[@]}"
     done
 fi

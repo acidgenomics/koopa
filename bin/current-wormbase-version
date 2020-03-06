@@ -14,4 +14,4 @@ version="$( \
     grep -Eo "letter.WS[0-9]+" | \
     cut -d '.' -f 2 \
 )"
-echo "$version"
+_koopa_print "$version"

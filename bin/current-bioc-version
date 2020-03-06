@@ -10,4 +10,4 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed "curl"
 
 version="$(curl --silent "https://bioconductor.org/bioc-version")"
-echo "$version"
+_koopa_print "$version"

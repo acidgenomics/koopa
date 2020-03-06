@@ -33,8 +33,7 @@ _koopa_disk_pct_used() {  # {{{1
             | head -n 1 \
             | sed 's/%$//' \
     )"
-    echo "$x"
-    return 0
+    _koopa_print "$x"
 }
 
 _koopa_tmux_sessions() {  # {{{1
@@ -47,7 +46,7 @@ _koopa_tmux_sessions() {  # {{{1
     local x
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
-    x="$(echo "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
+    x="$(_koopa_print "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
     _koopa_dl "tmux sessions" "$x"
     return 0
 }

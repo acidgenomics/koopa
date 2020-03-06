@@ -4,23 +4,23 @@
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-03-06.
     # """
     local file
     file="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$file" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
-${os_codename} main" \
-        | sudo tee "$file" > /dev/null
-    return 0
+    local string
+    string="deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
+${os_codename} main"
+    _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-03-06.
     # """
     local file
     file="/etc/apt/sources.list.d/docker.list"
@@ -29,46 +29,46 @@ _koopa_apt_add_docker_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb [arch=amd64] https://download.docker.com/linux/${os_id} \
-${os_codename} stable" \
-        | sudo tee "$file" > /dev/null
-    return 0
+    local string
+    string="deb [arch=amd64] https://download.docker.com/linux/${os_id} \
+${os_codename} stable"
+    _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_apt_add_google_cloud_sdk_repo() {  # {{{1
     # """
     # Add Google Cloud SDK apt repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-03-06.
     # """
     local file
     file="/etc/apt/sources.list.d/google-cloud-sdk.list"
     [ -f "$file" ] && return 0
-    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
-https://packages.cloud.google.com/apt cloud-sdk main" \
-        | sudo tee "$file" > /dev/null
-    return 0
+    local string
+    string="deb [signed-by=/usr/share/keyrings/cloud.google.gpg] \
+https://packages.cloud.google.com/apt cloud-sdk main"
+    _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_apt_add_llvm_repo() {  # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-03-06.
     # """
     local file
     file="/etc/apt/sources.list.d/llvm.list"
     [ -f "$file" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb http://apt.llvm.org/${os_codename}/ \
-llvm-toolchain-${os_codename}-9 main" \
-        | sudo tee "$file" > /dev/null
-    return 0
+    local string
+    string="deb http://apt.llvm.org/${os_codename}/ \
+llvm-toolchain-${os_codename}-9 main"
+    _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-03-06.
     # """
     local file
     file="/etc/apt/sources.list.d/r.list"
@@ -77,10 +77,10 @@ _koopa_apt_add_r_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    echo "deb https://cloud.r-project.org/bin/linux/${os_id} \
-${os_codename}-cran35/" \
-        | sudo tee "$file" > /dev/null
-    return 0
+    local string
+    string="deb https://cloud.r-project.org/bin/linux/${os_id} \
+${os_codename}-cran35/"
+    _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_apt_configure_sources() {  # {{{1
@@ -92,17 +92,11 @@ _koopa_apt_configure_sources() {  # {{{1
     # """
     local sources_list
     sources_list="/etc/apt/sources.list"
-    if [ -L "$sources_list" ]
-    then
-        _koopa_rm "$sources_list"
-    fi
+    [ -L "$sources_list" ] && _koopa_rm "$sources_list"
 
     local sources_list_d
     sources_list_d="/etc/apt/sources.list.d"
-    if [ -L "$sources_list_d" ]
-    then
-        _koopa_rm "$sources_list_d"
-    fi
+    [ -L "$sources_list_d" ] && _koopa_rm "$sources_list_d"
     sudo mkdir -p "$sources_list_d"
 
     local os_codename
@@ -182,8 +176,7 @@ _koopa_apt_enabled_repos() {  # {{{1
         grep -E "^deb\s.+\s${os_codename}\s.+$" /etc/apt/sources.list \
             | cut -d ' ' -f 4- \
     )"
-    echo "$x"
-    return 0
+    _koopa_print "$x"
 }
 
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
@@ -349,8 +342,7 @@ _koopa_apt_space_used_by_grep() {  # {{{1
             | grep freed \
             | cut -d ' ' -f 4-5 \
     )"
-    echo "$x"
-    return 0
+    _koopa_print "$x"
 }
 
 _koopa_apt_space_used_by_no_deps() {  # {{{1

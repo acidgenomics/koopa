@@ -262,7 +262,7 @@ fi
 
 if _koopa_is_installed gpg
 then
-    alias gpg-prompt='echo "" | gpg -s'
+    alias gpg-prompt='printf '' | gpg -s'
     alias gpg-reload='gpg-connect-agent reloadagent /bye'
     alias gpg-restart='gpgconf --kill gpg-agent'
 fi

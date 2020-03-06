@@ -23,7 +23,7 @@ name_fancy="Python packages"
 _koopa_install_start "$name_fancy"
 
 x="$(python3 -m pip list --outdated --format=freeze)"
-x="$(echo "$x" | grep -v '^\-e')"
+x="$(_koopa_print "$x" | grep -v '^\-e')"
 
 if [[ -z "$x" ]]
 then
@@ -33,7 +33,7 @@ fi
 
 prefix="$(_koopa_python_site_packages_prefix)"
 
-mapfile -t pkgs < <(echo "$x" | cut -d '=' -f 1)
+mapfile -t pkgs < <(_koopa_print "$x" | cut -d '=' -f 1)
 _koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
 _koopa_dl "Prefix" "$prefix"
 

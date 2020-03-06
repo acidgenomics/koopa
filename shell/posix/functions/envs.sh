@@ -31,7 +31,7 @@ _koopa_activate_conda_env() {  # {{{1
     # > _koopa_h1 "Activating '${name}' conda environment."
     # > _koopa_dl "Prefix" "$prefix"
     local nounset
-    nounset="$(_koopa_is_setopt_nounset && echo 1 || echo 0)"
+    nounset="$(_koopa_is_setopt_nounset && _koopa_print 1 || _koopa_print 0)"
     [ "$nounset" -eq 1 ] && set +u
     if ! type conda | grep -q conda.sh
     then
@@ -56,7 +56,7 @@ _koopa_conda_env() {  # {{{1
     # See also:
     # - https://stackoverflow.com/questions/42481726
     # """
-    echo "${CONDA_DEFAULT_ENV:-}"
+    _koopa_print "${CONDA_DEFAULT_ENV:-}"
 }
 
 _koopa_conda_env_list() {  # {{{1
@@ -84,18 +84,18 @@ _koopa_conda_env_prefix() {  # {{{1
     [ -n "$env_name" ] || return 1
     local env_list
     env_list="${2:-$(_koopa_conda_env_list)}"
-    env_list="$(echo "$env_list" | grep "$env_name")"
+    env_list="$(_koopa_print "$env_list" | grep "$env_name")"
     if [ -z "$env_list" ]
     then
         _koopa_stop "Failed to detect prefix for '${env_name}'."
     fi
     local env_dir
     env_dir="$( \
-        echo "$env_list" \
+        _koopa_print "$env_list" \
         | grep "/envs/${env_name}" \
         | head -n 1 \
     )"
-    echo "$env_dir" | sed -E 's/^.*"(.+)".*$/\1/'
+    _koopa_print "$env_dir" | sed -E 's/^.*"(.+)".*$/\1/'
 }
 
 _koopa_deactivate_conda() {  # {{{1
@@ -149,5 +149,5 @@ _koopa_venv() {  # {{{1
         # Strip out the path and just leave the env name.
         env="${env##*/}"
     fi
-    echo "$env"
+    _koopa_print "$env"
 }
