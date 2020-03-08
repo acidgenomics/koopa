@@ -8,11 +8,11 @@ branches:
 jobs:
   include:
     - stage: test
-      name: "docker: install (debian)"
+      name: "docker: install: debian"
       services: docker
       script: image="acidgenomics/debian" ./tests/docker/install.sh
     - stage: test
-      name: "docker: install (fedora)"
+      name: "docker: install: fedora"
       services: docker
       script: image="acidgenomics/fedora" ./tests/docker/install.sh
     - stage: test
