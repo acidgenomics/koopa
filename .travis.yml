@@ -1,8 +1,5 @@
 language: shell
 
-services:
-  - docker
-
 branches:
   only:
     - master
@@ -25,6 +22,8 @@ jobs:
         - bash -c './tests/travis.sh'
     - stage: test
       name: "linux: install"
+      services:
+        - docker
       script: ./tests/docker/install.sh
     - stage: test
       name: "macos: activate"
