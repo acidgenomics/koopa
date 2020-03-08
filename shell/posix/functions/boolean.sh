@@ -572,7 +572,7 @@ _koopa_is_rhel_8() {  # {{{1
     # """
     _koopa_is_rhel || return 1
     [ -f '/etc/os-release' ] || return 1
-    grep -q 'VERSION_ID="8' '/etc/os-release' && return 1
+    grep -q 'VERSION_ID="8' '/etc/os-release' && return 0
     return 1
 }
 
