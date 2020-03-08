@@ -232,7 +232,7 @@ then
 fi
 
 # LLVM.
-[[ "$compact" -eq 0 ]] && _koopa_run_if_installed install-llvm
+_koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
 install-openjdk                                                         # 0.316G
