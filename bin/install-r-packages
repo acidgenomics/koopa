@@ -7,6 +7,12 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+## These dependencies are required to install sf, etc.
+stopifnot(
+    isTRUE(nzchar(Sys.which("gdal-config"))),
+    isTRUE(nzchar(Sys.which("geos-config")))
+)
+
 all <- FALSE
 
 args <- parseArgs(
