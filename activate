@@ -70,6 +70,57 @@ unset -f usage
 # Pre-flight checks  {{{1
 # ==============================================================================
 
+if [ -n "${BASH_VERSION:-}" ]
+then
+    KOOPA_SHELL="bash"
+    # shellcheck disable=SC2039
+    # SC2039: In POSIX sh, array references are undefined.
+    KOOPA_SOURCE="${BASH_SOURCE[0]}"
+elif [ -n "${ZSH_VERSION:-}" ]
+then
+    KOOPA_SHELL="zsh"
+    # Zsh currently requires presence of '~/.zshrc' file for clean activation
+    # on some systems.
+    #
+    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
+    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
+    # this case instead returns '_src_etc_profile'.
+    #
+    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
+    #
+    # See also:
+    # https://stackoverflow.com/a/23259585/3911732
+    case "$0" in
+        _src_etc_profile*)
+            # Early return when inside '/etc/profile.d/zzz-koopa.sh' script.
+            return 0
+            ;;
+        *)
+            export KOOPA_ZSHRC=1
+            ;;
+    esac
+    KOOPA_SOURCE="${(%):-%N}"
+else
+    >&2 cat << EOF
+ERROR: koopa failed to activate in the current shell.
+
+Supported POSIX shells: bash, zsh.
+
+      -: '${-}'
+      0: '${0}'
+  SHELL: '${SHELL}'
+
+Usage of '/bin/sh' as the default shell is discouraged.
+
+Consider switching to bash:
+> chsh -s /bin/bash '${USER}'
+
+or zsh:
+> chsh -s /bin/zsh '${USER}'
+EOF
+    return 1
+fi
+
 # Force mode  {{{2
 # ------------------------------------------------------------------------------
 
@@ -114,74 +165,18 @@ then
         printf '%s\n' "$KOOPA_USERS_SKIP" \
             | grep -Eq "\b${USER}\b" && return 0
     fi
+
+    # Skip activation if koopa functions have already been sourced.
+    #
+    # This step helps avoid double activation in Bash for shared koopa installs,
+    # which will otherwise activate from both '/etc/profile.d/zzz-koopa.sh'
+    # and '~/.bashrc' (if defined).
+    #
+    # Note that 'typeset' is not defined in all shells (e.g. '/bin/sh').
+    #
+    # shellcheck disable=SC2034
+    [ -n "$(typeset -f _koopa_prefix)" ] && return 0
 fi
-
-
-
-# Variables  {{{1
-# ==============================================================================
-
-if [ -n "${BASH_VERSION:-}" ]
-then
-    KOOPA_SHELL="bash"
-    # shellcheck disable=SC2039
-    # SC2039: In POSIX sh, array references are undefined.
-    KOOPA_SOURCE="${BASH_SOURCE[0]}"
-elif [ -n "${ZSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="zsh"
-    # Zsh currently requires presence of '~/.zshrc' file for clean activation
-    # on some systems.
-    #
-    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
-    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
-    # this case instead returns '_src_etc_profile'.
-    #
-    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
-    #
-    # See also:
-    # https://stackoverflow.com/a/23259585/3911732
-    case "$0" in
-        _src_etc_profile*)
-            # Early return when inside '/etc/profile.d/zzz-koopa.sh' script.
-            return 0
-            ;;
-        *)
-            export KOOPA_ZSHRC=1
-            ;;
-    esac
-    KOOPA_SOURCE="${(%):-%N}"
-else
-    >&2 cat << EOF
-ERROR: koopa failed to activate in the current shell.
-
-Supported POSIX shells: bash, zsh.
-
-  SHELL: '${SHELL}'
-      0: '${0}'
-      -: '${-}'
-
-Usage of /bin/sh as the default shell is discouraged.
-
-Consider switching to bash:
-chsh -s /bin/bash "$USER"
-
-or zsh:
-chsh -s /bin/zsh "$USER"
-EOF
-    return 1
-fi
-
-# Skip activation if koopa functions have already been sourced.
-#
-# This step helps avoid double activation in Bash for shared koopa installs,
-# which will otherwise activate from both '/etc/profile.d/zzz-koopa.sh'
-# and '~/.bashrc' (if defined).
-#
-# Note that 'typeset' is not defined in all shells (e.g. '/bin/sh').
-#
-# shellcheck disable=SC2034
-[ -n "$(typeset -f _koopa_prefix)" ] && return 0
 
 # Alternatively, can attempt to compare SHLVL value.
 if [ -n "${KOOPA_PREFIX:-}" ]
