@@ -379,11 +379,6 @@ fi
 if [[ "$rsync" -eq 0 ]]
 then
     install-python-packages
-    if [[ "$compact" -eq 0 ]] || [[ "$docker" -eq 1 ]]
-    then
-        install-r-rgeos
-        install-r-sf
-    fi
     if [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]
     then
         install-r-packages
