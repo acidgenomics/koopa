@@ -24,6 +24,7 @@ sudo chmod 0700 /root
 # > sudo mkdir -pv /etc/skel
 # > sudo chmod 0755 /etc/skel
 
+# Reactivate koopa for root user, since we removed local config files above.
 # shellcheck disable=SC1090,SC2153
 if [ "$(id -u)" -eq 0 ]
 then
@@ -40,30 +41,27 @@ make_prefix="$(_koopa_make_prefix)"
 # For data disk, linked to '/mnt/data01/n/opt' (see below).
 app_prefix="$(_koopa_app_prefix)"
 
+# Disable compact mode by default.
+compact=0
+
 if _koopa_is_docker
 then
     docker=1
+    compact=1
 else
     docker=0
 fi
 
-compact=0
+_koopa_info "Checking available local disk space."
+df -h '/'
+gb_total="$(_koopa_disk_gb_total)"
+[ "$gb_total" -lt 10 ] && compact=1
+gb_free="$(_koopa_disk_gb_free)"
+[ "$gb_free" -lt 10 ] && compact=1
 
-if [[ "$docker" -eq 0 ]]
+if [[ "$compact" -eq 1 ]]
 then
-    _koopa_info "Checking available local disk space."
-
-    df -h '/'
-
-    gb_total="$(_koopa_disk_gb_total)"
-    [ "$gb_total" -lt 10 ] && compact=1
-    gb_free="$(_koopa_disk_gb_free)"
-    [ "$gb_free" -lt 10 ] && compact=1
-
-    if [[ "$compact" -eq 1 ]]
-    then
-        _koopa_note "Low disk space detected. Installing in compact mode."
-    fi
+    _koopa_note "Installing in compact mode."
 fi
 
 config="${KOOPA_CONFIG:-}"
@@ -88,8 +86,18 @@ _koopa_mkdir "$make_prefix"
 
 # Attempt to attached data disk automatically.
 # This is the current standard configuration on AWS.
-[[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
-[[ -e "$data_disk" ]] && _koopa_info "Data disk detected at '${data_disk}'."
+if [[ -z "$data_disk" ]]
+then
+    [[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
+fi
+
+if [[ -e "$data_disk" ]]
+then
+    _koopa_info "Data disk detected at '${data_disk}'."
+else
+    # Always assume compact mode if there is no data disk attached.
+    compact=1
+fi
 
 # Prepare app prefix on external disk for write access.
 # e.g. '/n'.
@@ -216,7 +224,7 @@ docker,var}
     fi
 fi
 
-if [[ -e "$data_disk" ]] && [[ -n "$source_ip" ]]
+if [[ -n "$source_ip" ]]
 then
     host_ip="$(_koopa_local_ip_address)"
     if [[ "$source_ip" == "$host_ip" ]]
@@ -232,9 +240,11 @@ then
 fi
 
 # LLVM.
+# Always run if available, as this works well for R and Python packages.
 _koopa_run_if_installed install-llvm
 
-# Always run this because it must configure java alternatives.
+# Always run this because it must configure alternatives for '/bin/ on Debian
+# systems or distros that support 'update-alternatives'.
 install-openjdk                                                         # 0.316G
 
 if [[ "$rsync" -eq 0 ]]
@@ -246,7 +256,7 @@ then
     install-automake
     install-libtool
     # Skipping this, as we can run into problems with CMake and Rcpp.
-    # > install-gcc
+    # > install-gcc  # cellar only
     # Install texinfo before binutils, which requires makeinfo.
     install-texinfo
     install-binutils
@@ -262,7 +272,7 @@ then
     # Shells.
     install-bash                                                        # 0.014G
     install-zsh                                                         # 0.011G
-    install-fish                                                        # 0.082G
+    [[ "$compact" -eq 0 ]] && install-fish                              # 0.082G
 
     # General tools.
     install-git                                                         # 0.177G
@@ -271,9 +281,7 @@ then
 
     # Environment managers.
     install-conda                                                       # 0.493G
-    if [[ "$compact" -eq 0 ]] && \
-        [[ "$docker" -eq 0 ]] && \
-        [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]]
     then
         _koopa_run_if_installed install-docker
         install-perlbrew                                                # 0.003G
@@ -290,9 +298,7 @@ then
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
     install-perl                                                        # 0.081G
-    if [[ "$compact" -eq 0 ]] && \
-        [[ "$docker" -eq 0 ]] && \
-        [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]]
     then
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
@@ -300,9 +306,9 @@ then
         install-rust                                                    # 0.724G
     fi
 
+    # Libraries.
     if [[ "$compact" -eq 0 ]]
     then
-        # Libraries.
         install-geos
         install-sqlite                                                  # 0.026G
         # Install PROJ after SQLite.
@@ -321,9 +327,7 @@ then
     install-shellcheck                                                  # 0.008G
     install-shunit2
     install-tmux                                                        # 0.001G
-    if [[ "$compact" -eq 0 ]] && \
-        [[ "$docker" -eq 0 ]] && \
-        [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]]
     then
         install-autojump                                                # 0.000G
         # FZF requires Go.
@@ -338,9 +342,7 @@ then
     [[ "$docker" -eq 0 ]] && install-emacs
 
     # Bioinformatics tools.
-    if [[ "$compact" -eq 0 ]] && \
-        [[ "$docker" -eq 0 ]] && \
-        [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]]
     then
         install-aspera-connect                                          # 0.090G
         conda-create-bioinfo-envs --all
@@ -371,7 +373,7 @@ then
     install-r-sf
     install-r-packages
     install-python-packages
-    [[ "$docker" -eq 0 ]] && install-rust-packages
+    [[ "$compact" -eq 0 ]] && install-rust-packages
 fi
 
 [[ "$docker" -eq 0 ]] && generate-ssh-key
@@ -388,10 +390,15 @@ _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
 _koopa_fix_zsh_permissions
 
-if [[ "$docker" -eq 1 ]]
+if [[ "$compact" -eq 1 ]]
 then
-    _koopa_h2 "Performing cleanup for Docker."
-    sudo rm -frv /root/.cache
+    _koopa_h2 "Removing caches, logs, and temporary files."
+    sudo rm -frv \
+        /root/.cache \
+        /tmp/* \
+        /var/backups/* \
+        /var/cache/* \
+        /var/log/*
     if _koopa_is_debian
     then
         sudo rm -fr /var/lib/apt/lists/*
