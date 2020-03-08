@@ -6,11 +6,16 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
+extra=0
 force=0
 
 while (("$#"))
 do
     case "$1" in
+        --extra)
+            extra=1
+            shift 1
+            ;;
         --force)
             force=1
             shift 1
@@ -21,32 +26,23 @@ do
     esac
 done
 
-_koopa_h1 "Building all Docker images."
+_koopa_h1 "Building Docker images."
 
 docker login
 images=()
 
-# Lightweight informatics images.
+# Minimal bioinformatics images.
 images+=(
     acidgenomics/miniconda3
     acidgenomics/biocontainers
 )
 
-# Full Linux images.
+# Recommended Linux images.
 images+=(
     acidgenomics/debian
-    acidgenomics/fedora
     acidgenomics/ubuntu
-)
-
-# Lightweight Linux images.
-images+=(
-    acidgenomics/alpine
-    acidgenomics/amzn
-    acidgenomics/arch
+    acidgenomics/fedora
     acidgenomics/centos
-    acidgenomics/kali
-    acidgenomics/opensuse
 )
 
 # R images.
@@ -57,6 +53,15 @@ images+=(
     acidgenomics/bcbiosinglecell
     acidgenomics/rnaseq
     acidgenomics/singlecell
+)
+
+# Extra Linux images.
+images+=(
+    acidgenomics/alpine
+    acidgenomics/amzn
+    acidgenomics/arch
+    acidgenomics/kali
+    acidgenomics/opensuse
 )
 
 # AWS batch images.
@@ -71,13 +76,16 @@ batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
 mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
 images=("${images[@]}" "${batch_arr[@]}")
 
-# Full bioinformatics software.
+# Large bioinformatics images.
 # These don't need to be updated frequently and can be built manually instead.
-# > images+=(
-# >     acidgenomics/bcbio-nextgen
-# >     acidgenomics/rnaeditingindexer
-# >     acidgenomics/maestro
-# > )
+if [[ "$extra" -eq 1 ]]
+then
+    images+=(
+        acidgenomics/bcbio-nextgen
+        acidgenomics/rnaeditingindexer
+        acidgenomics/maestro
+    )
+fi
 
 for image in "${images[@]}"
 do
