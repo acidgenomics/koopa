@@ -338,11 +338,13 @@ then
     [[ "$docker" -eq 0 ]] && install-emacs
 
     # Bioinformatics tools.
-    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]] && \
+        [[ "$docker" -eq 0 ]] && \
+        [[ -e "$data_disk" ]]
     then
         install-aspera-connect                                          # 0.090G
         conda-create-bioinfo-envs --all
-        install-bcbio
+        install-bcbio-nextgen
     fi
 fi
 
