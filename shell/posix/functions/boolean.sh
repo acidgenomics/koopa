@@ -226,8 +226,8 @@ _koopa_is_debian() {  # {{{1
     # @note Updated 2020-03-07.
     # """
     [ -f '/etc/os-release' ] || return 1
-    grep 'id=' '/etc/os-release' | grep -q 'debian' && return 0
-    grep 'id_like=' '/etc/os-release' | grep -q 'debian' && return 0
+    grep 'ID=' '/etc/os-release' | grep -q 'debian' && return 0
+    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'debian' && return 0
     return 1
 }
 
