@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-03-05.
+    Updated 2020-03-07.
 EOF
 }
 
@@ -123,6 +123,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"
 
 source "${script_dir}/shell/bash/include/header.sh"
+
+# Check that temporary activation was successful.
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    >&2 printf "ERROR: Installer failed to set temporary 'KOOPA_PREFIX'."
+    exit 1
+fi
 
 # Ensure existing user configuration gets removed.
 rm -fr "$(_koopa_config_prefix)"
@@ -244,6 +251,16 @@ set +u
 force=1 test="$test" source "${koopa_prefix}/activate"
 set -u
 
+# Check that forced re-activation was successful.
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'."
+    exit 1
+fi
+
+_koopa_assert_is_installed koopa
+echo "$KOOPA_PREFIX"  # FIXME
+
 
 
 # Passwordless sudo  {{{1
@@ -313,9 +330,11 @@ then
     esac
 fi
 
-[[ "$dotfiles" -eq 1 ]] && \
-    _koopa_git_clone_dotfiles && \
+if [[ "$dotfiles" -eq 1 ]]
+then
+    _koopa_git_clone_dotfiles
     _koopa_install_dotfiles
+fi
 
 
 
