@@ -359,17 +359,19 @@ sudo ldconfig -v
 _koopa_update_r_config
 _koopa_update_lmod_config
 
-# RStudio.
-_koopa_run_if_installed \
-    install-rstudio-server \
-    install-shiny-server
+# RStudio packages.
+_koopa_run_if_installed install-rstudio-server
+[[ "$compact" -eq 0 ]] && _koopa_run_if_installed install-shiny-server
 
 # Cloud APIs.
 # Note that Azure CLI requires Python 3, so install at the end.
-_koopa_run_if_installed \
-    install-aws-cli \
-    install-azure-cli \
-    install-google-cloud-sdk
+_koopa_run_if_installed install-aws-cli
+if [[ "$compact" -eq 0 ]]
+then
+    _koopa_run_if_installed \
+        install-azure-cli \
+        install-google-cloud-sdk
+fi
 
 # R, Python, Rust packages.
 if [[ "$rsync" -eq 0 ]]
