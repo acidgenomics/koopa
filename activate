@@ -450,9 +450,9 @@ then
     esac
 
     _koopa_h2 "Shell variables"
-    _koopa_dl "SHELL" "$SHELL"
-    _koopa_dl "0" "$0"
     _koopa_dl "-" "$-"
+    _koopa_dl "0" "$0"
+    _koopa_dl "SHELL" "$SHELL"
 
     if [ -n "${KOOPA_DURATION:-}" ]
     then
