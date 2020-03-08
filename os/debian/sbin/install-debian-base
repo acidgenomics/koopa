@@ -31,6 +31,8 @@ source "${script_dir}/../include/header.sh"
 # """
 
 bioconductor=0
+compact=0
+
 dev=1
 extra=1
 remove=1
@@ -42,6 +44,10 @@ do
     case "$1" in
         --bioconductor)
             bioconductor=1
+            shift 1
+            ;;
+        --compact)
+            compact=1
             shift 1
             ;;
         --)
@@ -62,7 +68,10 @@ set -- "${pos[@]}"
 _koopa_assert_has_no_args "$@"
 
 _koopa_is_docker && extra=0
+
+# Use system libraries for GDAL, etc. for these configs.
 [[ "$bioconductor" -eq 1 ]] && remove=0
+[[ "$compact" -eq 1 ]] && remove=0
 
 name_fancy="Debian base system"
 
