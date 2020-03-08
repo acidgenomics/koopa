@@ -7,6 +7,14 @@ branches:
 jobs:
   include:
     - stage: test
+      name: "docker: install (debian)"
+      services: docker
+      script: image="acidgenomics/debian" ./tests/docker/install.sh
+    - stage: test
+      name: "docker: install (fedora)"
+      services: docker
+      script: image="acidgenomics/fedora" ./tests/docker/install.sh
+    - stage: test
       name: "linux: activate"
       os: linux
       addons:
@@ -20,28 +28,6 @@ jobs:
         - bash -c 'set -x; test=1 . ./activate'
         - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './tests/travis.sh'
-    - stage: test
-      name: "linux: install"
-      services:
-        - docker
-      script: ./tests/docker/install.sh
-    - stage: test
-      name: "macos: activate"
-      os: osx
-      addons:
-        homebrew:
-          packages:
-            - bash
-            - r
-            - shellcheck
-            - shunit2
-            - zsh
-      script:
-        - bash -c 'set -x; test=1 . ./activate'
-        - zsh  -c 'set -x; test=1 . ./activate'
-        - bash -c './tests/travis.sh'
-  allow_failures:
-    - name: "macos"
   fast_finish: true
 
 notifications:
