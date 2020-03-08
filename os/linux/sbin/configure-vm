@@ -26,7 +26,7 @@ sudo chmod 0700 /root
 
 # Reactivate koopa for root user, since we removed local config files above.
 # shellcheck disable=SC1090,SC2153
-if [ "$(id -u)" -eq 0 ]
+if [[ "$(id -u)" -eq 0 ]]
 then
     set +u
     source "${KOOPA_PREFIX}/activate"
@@ -41,15 +41,47 @@ make_prefix="$(_koopa_make_prefix)"
 # For data disk, linked to '/mnt/data01/n/opt' (see below).
 app_prefix="$(_koopa_app_prefix)"
 
-# Disable compact mode by default.
+# Note that compact applies to a persistent VM with a small '/' mount.
+# This is not always the case for Docker images.
 compact=0
 
-if _koopa_is_docker
+docker=0
+_koopa_is_docker && docker=1
+if [[ "$docker" -eq 1 ]]
 then
-    docker=1
-    compact=1
-else
-    docker=0
+    _koopa_info "Configuring for Docker image."
+fi
+
+config="${KOOPA_CONFIG:-}"
+data_disk=
+source_ip=
+rsync=0
+
+# Set up data disk and rsync configuration for persistent VM.
+if [[ "$docker" -eq 0 ]]
+then
+    case "$config" in
+        constellation-aws)
+            data_disk="/mnt/data01"
+            source_ip="10.201.20.32"
+            ;;
+        constellation-azure)
+            data_disk="/data00"
+            source_ip="10.100.100.132"
+            ;;
+    esac
+    # Attempt to detect attached data disk automatically.
+    # This is the current standard configuration on AWS.
+    if [[ ! -e "$data_disk" ]]
+    then
+        [[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
+    fi
+    if [[ -e "$data_disk" ]]
+    then
+        _koopa_info "Data disk detected at '${data_disk}'."
+    else
+        compact=1
+    fi
 fi
 
 _koopa_info "Checking available local disk space."
@@ -61,42 +93,7 @@ gb_free="$(_koopa_disk_gb_free)"
 
 if [[ "$compact" -eq 1 ]]
 then
-    _koopa_note "Installing in compact mode."
-fi
-
-config="${KOOPA_CONFIG:-}"
-data_disk=
-source_ip=
-rsync=0
-
-case "$config" in
-    constellation-aws)
-        data_disk="/mnt/data01"
-        source_ip="10.201.20.32"
-        ;;
-    constellation-azure)
-        data_disk="/data00"
-        source_ip="10.100.100.132"
-        ;;
-esac
-
-_koopa_update_etc_profile_d
-_koopa_install_dotfiles
-_koopa_mkdir "$make_prefix"
-
-# Attempt to attached data disk automatically.
-# This is the current standard configuration on AWS.
-if [[ -z "$data_disk" ]]
-then
-    [[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
-fi
-
-if [[ -e "$data_disk" ]]
-then
-    _koopa_info "Data disk detected at '${data_disk}'."
-else
-    # Always assume compact mode if there is no data disk attached.
-    compact=1
+    _koopa_note "Configuring VM in compact mode."
 fi
 
 # Prepare app prefix on external disk for write access.
@@ -121,6 +118,10 @@ else
     _koopa_mkdir "$app_prefix"
 fi
 
+_koopa_update_etc_profile_d
+_koopa_install_dotfiles
+_koopa_mkdir "$make_prefix"
+
 _koopa_h2 "Installing base system."
 
 if _koopa_is_arch
@@ -134,6 +135,10 @@ then
     else
         install-debian-base
     fi
+elif _koopa_is_rhel
+then
+    # Run this check before Fedora.
+    install-rhel-base
 elif _koopa_is_fedora
 then
     install-fedora-base
@@ -143,8 +148,6 @@ then
 else
     _koopa_stop "Unsupported Linux distro."
 fi
-
-_koopa_is_rhel && install-rhel-base
 
 # Maybe include: tclsh
 _koopa_assert_is_installed \
@@ -210,10 +213,10 @@ then
     then
         _koopa_h2 "Updating bioinfo user dotfiles."
         sudo -u bioinfo -H "$SHELL" -c "\
-            rm -fv ~/.bash_logout; \
-            rm -fv ~/.bash_profile; \
-            rm -fv ~/.bashrc; \
-            rm -fv ~/.condarc; \
+            rm -fv ~/.bash_logout && \
+            rm -fv ~/.bash_profile && \
+            rm -fv ~/.bashrc && \
+            rm -fv ~/.condarc && \
             /usr/local/koopa/bin/link-dotfile --force \
                 app/emacs/minimal/emacs.el emacs \
         "
@@ -244,8 +247,7 @@ then
     fi
 fi
 
-# LLVM.
-# Always run if available, as this works well for R and Python packages.
+# LLVM. Always run if available, as this works well for R and Python packages.
 _koopa_run_if_installed install-llvm
 
 # Always run this because it must configure alternatives for '/bin/ on Debian
@@ -286,7 +288,7 @@ then
 
     # Environment managers.
     install-conda                                                       # 0.493G
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
         _koopa_run_if_installed install-docker
         install-perlbrew                                                # 0.003G
@@ -303,7 +305,7 @@ then
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
     install-perl                                                        # 0.081G
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
@@ -312,7 +314,7 @@ then
     fi
 
     # Libraries.
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]] || [[ "$docker" -eq 1 ]]
     then
         install-geos
         install-sqlite                                                  # 0.026G
@@ -332,7 +334,7 @@ then
     install-shellcheck                                                  # 0.008G
     install-shunit2
     install-tmux                                                        # 0.001G
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
         install-autojump                                                # 0.000G
         # FZF requires Go.
@@ -347,7 +349,7 @@ then
     [[ "$docker" -eq 0 ]] && install-emacs
 
     # Bioinformatics tools.
-    if [[ "$compact" -eq 0 ]]
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
         install-aspera-connect                                          # 0.090G
         conda-create-bioinfo-envs --all
@@ -376,16 +378,20 @@ fi
 # R, Python, Rust packages.
 if [[ "$rsync" -eq 0 ]]
 then
-    if [[ "$compact" -eq 0 ]]
+    install-python-packages
+    if [[ "$compact" -eq 0 ]] || [[ "$docker" -eq 1 ]]
     then
         install-r-rgeos
         install-r-sf
     fi
-    install-r-packages
-    install-python-packages
+    if [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]
+    then
+        install-r-packages
+    fi
     [[ "$compact" -eq 0 ]] && install-rust-packages
 fi
 
+# Generate an SSH key automatically, when we are outside of Docker.
 [[ "$docker" -eq 0 ]] && generate-ssh-key
 
 _koopa_set_permissions --recursive "$make_prefix"
@@ -400,7 +406,7 @@ _koopa_fix_pyenv_permissions
 _koopa_fix_rbenv_permissions
 _koopa_fix_zsh_permissions
 
-if [[ "$compact" -eq 1 ]]
+if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
 then
     _koopa_h2 "Removing caches, logs, and temporary files."
     sudo rm -frv \
