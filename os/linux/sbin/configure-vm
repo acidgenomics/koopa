@@ -271,7 +271,9 @@ then
 
     # Environment managers.
     install-conda                                                       # 0.493G
-    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]] && \
+        [[ "$docker" -eq 0 ]] && \
+        [[ -e "$data_disk" ]]
     then
         _koopa_run_if_installed install-docker
         install-perlbrew                                                # 0.003G
