@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-03-03.
+## Updated 2020-03-08.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -275,12 +275,15 @@ if (.isInstalled("readr")) {
     ## Check for active conda.
     ## Can cause compilation issues due to GCC version mismatch.
 
-    if (Sys.which("conda") != "") {
+    if (
+        !isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV"))) &&
+        !isTRUE(nzchar(Sys.which("conda")))
+    ) {
         if (isTRUE(interactive())) {
             message(sprintf(
                 fmt = paste(
                     "conda '%s' environment detected.",
-                    "Don't install packages from source with conda active!",
+                    "Don't install packages from source with conda active.",
                     "",
                     sep = "\n"
                 ),
