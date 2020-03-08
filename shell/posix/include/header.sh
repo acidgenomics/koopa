@@ -21,6 +21,15 @@ source "${KOOPA_POSIX_INC}/functions.sh"
 
 unset -v KOOPA_POSIX_INC KOOPA_POSIX_SOURCE
 
+# Ensure koopa prefix is exported, if necessary.
+
+if [ -z "${KOOPA_PREFIX:-}" ]
+then
+    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
+        >/dev/null 2>&1 && pwd -P)"
+    export KOOPA_PREFIX
+fi
+
 # Disable user-defined aliases.
 # Primarily intended to reset cp, mv, rf for use inside scripts.
 unalias -a

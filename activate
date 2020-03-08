@@ -45,10 +45,10 @@ details:
 
 examples:
     # Default mode
-    . KOOPA_PREFIX/activate
+    . /usr/local/koopa/activate
 
     # Minimal mode
-    minimal=1 . KOOPA_PREFIX/activate
+    minimal=1 . /usr/local/koopa/activate
 
 note:
     POSIX shell script.
@@ -184,7 +184,12 @@ fi
 [ -n "$(typeset -f _koopa_prefix)" ] && return 0
 
 # Alternatively, can attempt to compare SHLVL value.
-[ -n "${KOOPA_PREFIX:-}" ] && KOOPA_SUBSHELL=1 || KOOPA_SUBSHELL=0
+if [ -n "${KOOPA_PREFIX:-}" ]
+then
+    KOOPA_SUBSHELL=1
+else
+    KOOPA_SUBSHELL=0
+fi
 
 export KOOPA_SHELL
 export KOOPA_SUBSHELL
