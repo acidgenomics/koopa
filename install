@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1090,SC1091
-set -Eeux -o pipefail
+set -Eeu -o pipefail
 
 
 
@@ -127,7 +127,7 @@ source "${script_dir}/shell/bash/include/header.sh"
 # Check that temporary activation was successful.
 if [[ -z "${KOOPA_PREFIX:-}" ]]
 then
-    >&2 printf "ERROR: Installer failed to set temporary 'KOOPA_PREFIX'."
+    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
     exit 1
 fi
 
@@ -254,16 +254,17 @@ set -u
 # Check that forced re-activation was successful.
 if [[ -z "${KOOPA_PREFIX:-}" ]]
 then
-    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'."
+    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
     exit 1
 fi
 
-# FIXME
+# Check that activation puts koopa into PATH, as expected.
 if ! _koopa_is_installed koopa
 then
-    echo "$PATH"
-    echo "$KOOPA_PREFIX"  # FIXME
-    _koopa_stop "Installer failed to set PATH correctly"
+    >&2 printf "ERROR: Installer failed to set 'PATH' correctly.\n"
+    >&2 printf '%s: %s\n' 'KOOPA_PREFIX' "$KOOPA_PREFIX"
+    >&2 printf '%s: %s\n' 'PATH' "$PATH"
+    exit 1
 fi
 
 
