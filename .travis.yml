@@ -1,5 +1,8 @@
 language: shell
 
+services:
+  - docker
+
 branches:
   only:
     - master
@@ -7,7 +10,7 @@ branches:
 jobs:
   include:
     - stage: test
-      name: "linux"
+      name: "linux: activate"
       os: linux
       addons:
         apt:
@@ -21,7 +24,10 @@ jobs:
         - zsh  -c 'set -x; test=1 . ./activate'
         - bash -c './tests/travis.sh'
     - stage: test
-      name: "macos"
+      name: "linux: install"
+      script: ./tests/docker/install.sh
+    - stage: test
+      name: "macos: activate"
       os: osx
       addons:
         homebrew:
