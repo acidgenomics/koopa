@@ -14,9 +14,9 @@ _koopa_boolean_nounset() {  # {{{1
     local bool
     if _koopa_is_setopt_nounset
     then
-        bool="1"
+        bool='1'
     else
-        bool="0"
+        bool='0'
     fi
     _koopa_print "$bool"
 }
@@ -92,7 +92,7 @@ _koopa_has_sudo() {  # {{{1
     _koopa_has_passwordless_sudo && return 0
     # This step is slow for Active Directory domain user accounts on Ubuntu.
     _koopa_assert_is_installed grep groups
-    groups | grep -Eq "\b(admin|root|sudo|wheel)\b"
+    groups | grep -Eq '\b(admin|root|sudo|wheel)\b'
 }
 
 _koopa_is_alias() {  # {{{1
@@ -112,10 +112,10 @@ _koopa_is_alias() {  # {{{1
     shell="$(_koopa_shell)"
     case "$shell" in
         bash)
-            pattern="is aliased to"
+            pattern='is aliased to'
             ;;
         zsh)
-            pattern="is an alias for"
+            pattern='is an alias for'
             ;;
     esac
     _koopa_is_matching_fixed "$str" "$pattern"
@@ -126,7 +126,7 @@ _koopa_is_alpine() {  # {{{1
     # Is the operating system Alpine Linux?
     # @note Updated 2020-02-27.
     # """
-    [ "$(_koopa_os_id)" = "alpine" ]
+    [ "$(_koopa_os_id)" = 'alpine' ]
 }
 
 _koopa_is_amzn() {  # {{{1
@@ -134,7 +134,7 @@ _koopa_is_amzn() {  # {{{1
     # Is the operating system Amazon Linux?
     # @note Updated 2020-01-21.
     # """
-    [ "$(_koopa_os_id)" = "amzn" ]
+    [ "$(_koopa_os_id)" = 'amzn' ]
 }
 
 _koopa_is_arch() {  # {{{1
@@ -142,7 +142,7 @@ _koopa_is_arch() {  # {{{1
     # Is the operating system Arch Linux?
     # @note Updated 2020-02-27.
     # """
-    [ "$(_koopa_os_id)" = "arch" ]
+    [ "$(_koopa_os_id)" = 'arch' ]
 }
 
 _koopa_is_aws() {  # {{{1
@@ -150,7 +150,7 @@ _koopa_is_aws() {  # {{{1
     # Is the current session running on AWS?
     # @note Updated 2019-11-25.
     # """
-    [ "$(_koopa_host_id)" = "aws" ]
+    [ "$(_koopa_host_id)" = 'aws' ]
 }
 
 _koopa_is_azure() {  # {{{1
@@ -158,7 +158,7 @@ _koopa_is_azure() {  # {{{1
     # Is the current session running on Microsoft Azure?
     # @note Updated 2019-11-25.
     # """
-    [ "$(_koopa_host_id)" = "azure" ]
+    [ "$(_koopa_host_id)" = 'azure' ]
 }
 
 _koopa_is_cellar() {  # {{{1
@@ -173,15 +173,29 @@ _koopa_is_cellar() {  # {{{1
     # Check koopa cellar.
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
-    _koopa_is_matching_regex "$cmd" "^${cellar_prefix}" && return 0
+    if _koopa_is_matching_regex "$cmd" "^${cellar_prefix}"
+    then
+        return 0
+    fi
     # Check Homebrew cellar.
     if _koopa_is_installed brew
     then
         local homebrew_cellar_prefix
         homebrew_cellar_prefix="$(_koopa_homebrew_cellar_prefix)"
-        _koopa_is_matching_regex "$cmd" "^${homebrew_cellar_prefix}" && return 0
+        if _koopa_is_matching_regex "$cmd" "^${homebrew_cellar_prefix}"
+        then
+            return 0
+        fi
     fi
     return 1
+}
+
+_koopa_is_centos() {  # {{{1
+    # """
+    # Is the operating system CentOS?
+    # @note Updated 2020-03-07.
+    # """
+    [ "$(_koopa_os_id)" = 'centos' ]
 }
 
 _koopa_is_conda_active() {  # {{{1
@@ -209,11 +223,12 @@ _koopa_is_current_version() {  # {{{1
 _koopa_is_debian() {  # {{{1
     # """
     # Is the operating system Debian?
-    # @note Updated 2019-10-25.
+    # @note Updated 2020-03-07.
     # """
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "debian" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "debian"
+    [ -f '/etc/os-release' ] || return 1
+    grep 'id=' '/etc/os-release' | grep -q 'debian' && return 0
+    grep 'id_like=' '/etc/os-release' | grep -q 'debian' && return 0
+    return 1
 }
 
 _koopa_is_defined_in_user_profile() {  # {{{1
@@ -224,7 +239,7 @@ _koopa_is_defined_in_user_profile() {  # {{{1
     local file
     file="$(_koopa_find_user_profile)"
     [ -r "$file" ] || return 1
-    grep -q "koopa" "$file"
+    grep -q 'koopa' "$file"
 }
 
 _koopa_is_docker() {  # {{{1
@@ -235,7 +250,7 @@ _koopa_is_docker() {  # {{{1
     # https://stackoverflow.com/questions/23513045
     # """
     local file
-    file="/proc/1/cgroup"
+    file='/proc/1/cgroup'
     [ -f "$file" ] || return 1
     grep -q ':/docker/' "$file"
 }
@@ -253,29 +268,26 @@ _koopa_is_export() {  # {{{1
 _koopa_is_fedora() {  # {{{1
     # """
     # Is the operating system Fedora?
-    # @note Updated 2019-10-25.
+    # @note Updated 2020-03-07.
     # """
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "fedora" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "fedora"
+    [ -f '/etc/os-release' ] || return 1
+    grep 'ID=' '/etc/os-release' | grep -q 'fedora' && return 0
+    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'fedora' && return 0
+    return 1
 }
 
 _koopa_is_file_system_case_sensitive() {  # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2019-10-21.
+    # @note Updated 2020-03-07.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
-    touch ".tmp.checkcase" ".tmp.checkCase"
-    count="$(find . -maxdepth 1 -iname ".tmp.checkcase" | wc -l)"
-    _koopa_quiet_rm .tmp.check* 
-    if [ "$count" -eq 2 ]
-    then
-        return 0
-    else
-        return 1
-    fi
+    touch '.tmp.checkcase' '.tmp.checkCase'
+    count="$(find . -maxdepth 1 -iname '.tmp.checkcase' | wc -l)"
+    _koopa_quiet_rm '.tmp.check'*
+    [ "$count" -eq 2 ] && return 0
+    return 1
 }
 
 _koopa_is_function() {  # {{{1
@@ -321,7 +333,7 @@ _koopa_is_git() {  # {{{1
 _koopa_is_git2() {  # {{{1
     # """
     # Is the working directory a git repository?
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-03-07.
     #
     # Slower and more thorough check.
     #
@@ -329,35 +341,25 @@ _koopa_is_git2() {  # {{{1
     # - https://stackoverflow.com/questions/2180270
     # """
     _koopa_assert_is_installed git
-    if git rev-parse --git-dir > /dev/null 2>&1
-    then
-        return 0
-    else
-        return 1
-    fi
+    git rev-parse --git-dir > /dev/null 2>&1 && return 0
+    return 1
 }
 
 _koopa_is_git_clean() {  # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-03-07.
     #
     # See also:
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
-    _koopa_is_git "." || return 1
+    _koopa_is_git '.' || return 1
     _koopa_assert_is_installed git
     # Are there unstaged changes?
-    if ! git diff-index --quiet HEAD --
-    then
-        return 1
-    fi
+    git diff-index --quiet HEAD -- || return 1
     # In need of a pull or push?
-    if [ "$(git rev-parse HEAD)" != "$(git rev-parse '@{u}')" ]
-    then
-        return 1
-    fi
+    [ "$(git rev-parse HEAD)" == "$(git rev-parse '@{u}')" ] || return 1
     return 0
 }
 
@@ -366,7 +368,7 @@ _koopa_is_github_ssh_enabled() {  # {{{1
     # Is SSH key enabled for GitHub access?
     # @note Updated 2020-02-11.
     # """
-    _koopa_is_ssh_enabled "git@github.com" "successfully authenticated"
+    _koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }
 
 _koopa_is_gitlab_ssh_enabled() {  # {{{1
@@ -374,7 +376,7 @@ _koopa_is_gitlab_ssh_enabled() {  # {{{1
     # Is SSH key enabled for GitLab access?
     # @note Updated 2020-02-11.
     # """
-    _koopa_is_ssh_enabled "git@gitlab.com" "Welcome to GitLab"
+    _koopa_is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
 _koopa_is_installed() {  # {{{1
@@ -390,7 +392,7 @@ _koopa_is_interactive() {  # {{{1
     # Is the current shell interactive?
     # @note Updated 2019-06-21.
     # """
-    _koopa_print "$-" | grep -q "i"
+    _koopa_print "$-" | grep -q 'i'
 }
 
 _koopa_is_kali() {  # {{{1
@@ -398,7 +400,7 @@ _koopa_is_kali() {  # {{{1
     # Is the current platform Kali Linux?
     # @note Updated 2020-02-27.
     # """
-    _koopa_is_matching_fixed "$(_koopa_os_string)" "kali"
+    _koopa_is_matching_fixed "$(_koopa_os_string)" 'kali'
 }
 
 _koopa_is_linux() {  # {{{1
@@ -406,7 +408,7 @@ _koopa_is_linux() {  # {{{1
     # Is the current operating system Linux?
     # @note Updated 2020-02-05.
     # """
-    [ "$(uname -s)" = "Linux" ]
+    [ "$(uname -s)" = 'Linux' ]
 }
 
 _koopa_is_local_install() {  # {{{1
@@ -424,7 +426,7 @@ _koopa_is_login() {  # {{{1
     # Is the current shell a login shell?
     # @note Updated 2019-08-14.
     # """
-    _koopa_print "$0" | grep -Eq "^-"
+    _koopa_print "$0" | grep -Eq '^-'
 }
 
 _koopa_is_login_bash() {  # {{{1
@@ -432,7 +434,7 @@ _koopa_is_login_bash() {  # {{{1
     # Is the current shell a login bash shell?
     # @note Updated 2019-06-21.
     # """
-    [ "$0" = "-bash" ]
+    [ "$0" = '-bash' ]
 }
 
 _koopa_is_login_zsh() {  # {{{1
@@ -440,7 +442,7 @@ _koopa_is_login_zsh() {  # {{{1
     # Is the current shell a login zsh shell?
     # @note Updated 2019-06-21.
     # """
-    [ "$0" = "-zsh" ]
+    [ "$0" = '-zsh' ]
 }
 
 _koopa_is_macos() {  # {{{1
@@ -448,7 +450,7 @@ _koopa_is_macos() {  # {{{1
     # Is the operating system macOS (Darwin)?
     # @note Updated 2020-01-13.
     # """
-    [ "$(uname -s)" = "Darwin" ]
+    [ "$(uname -s)" = 'Darwin' ]
 }
 
 _koopa_is_matching_fixed() {  # {{{1
@@ -480,22 +482,18 @@ _koopa_is_opensuse() {  # {{{1
     # Is the operating system openSUSE?
     # @note Updated 2020-02-27.
     # """
-    [ "$(_koopa_os_id)" = "opensuse" ]
+    [ "$(_koopa_os_id)" = 'opensuse' ]
 }
 
 _koopa_is_powerful() {  # {{{1
     # """
     # Is the current machine powerful?
-    # @note Updated 2019-11-22.
+    # @note Updated 2020-03-07.
     # """
     local cores
     cores="$(_koopa_cpu_count)"
-    if [ "$cores" -ge 7 ]
-    then
-        return 0
-    else
-        return 1
-    fi
+    [ "$cores" -ge 7 ] && return 0
+    return 1
 }
 
 _koopa_is_python_package_installed() {  # {{{1
@@ -549,33 +547,33 @@ _koopa_is_rhel() {  # {{{1
     # @note Updated 2019-12-09.
     # """
     _koopa_is_fedora || return 1
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "rhel" && return 0
-    grep "ID_LIKE=" /etc/os-release | grep -q "rhel" && return 0
+    [ -f '/etc/os-release' ] || return 1
+    grep 'ID=' '/etc/os-release' | grep -q 'rhel' && return 0
+    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'rhel' && return 0
     return 1
 }
 
 _koopa_is_rhel_7() {  # {{{1
     # """
     # Is the operating system RHEL 7?
-    # @note Updated 2020-02-28.
+    # @note Updated 2020-03-07.
     # """
     _koopa_is_amzn && return 0
     _koopa_is_rhel || return 1
-    [ -f /etc/os-release ] || return 1
-    grep -q 'VERSION_ID="7' /etc/os-release || return 1
-    return 0
+    [ -f '/etc/os-release' ] || return 1
+    grep -q 'VERSION_ID="7' '/etc/os-release' && return 0
+    return 1
 }
 
 _koopa_is_rhel_8() {  # {{{1
     # """
     # Is the operating system RHEL 8?
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-03-07.
     # """
     _koopa_is_rhel || return 1
-    [ -f /etc/os-release ] || return 1
-    grep -q 'VERSION_ID="8' /etc/os-release || return 1
-    return 0
+    [ -f '/etc/os-release' ] || return 1
+    grep -q 'VERSION_ID="8' '/etc/os-release' && return 1
+    return 1
 }
 
 _koopa_is_remote() {  # {{{1
@@ -634,7 +632,7 @@ _koopa_is_set() {  # {{{1
             value="${(P)var}"
             ;;
         *)
-            _koopa_stop "Unsupported shell."
+            _koopa_stop 'Unsupported shell.'
             ;;
     esac
     [ -n "$value" ] || return 1
@@ -676,7 +674,7 @@ _koopa_is_setopt_nounset() {  # {{{1
             setopt | grep -q 'nounset'
             ;;
         *)
-            _koopa_stop "Unknown error."
+            _koopa_stop 'Unknown error.'
             ;;
     esac
 }
@@ -733,11 +731,12 @@ _koopa_is_tty() {  # {{{1
 _koopa_is_ubuntu() {  # {{{1
     # """
     # Is the operating system Ubuntu?
-    # @note Updated 2020-01-14.
+    # @note Updated 2020-03-07.
     # """
-    [ -f /etc/os-release ] || return 1
-    grep "ID=" /etc/os-release | grep -q "ubuntu" ||
-        grep "ID_LIKE=" /etc/os-release | grep -q "ubuntu"
+    [ -f '/etc/os-release' ] || return 1
+    grep 'ID=' '/etc/os-release' | grep -q 'ubuntu' && return 0
+    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'ubuntu' && return 0
+    return 1
 }
 
 _koopa_is_venv_active() {  # {{{1
