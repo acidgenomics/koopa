@@ -109,6 +109,42 @@ export SAVEHIST
 [ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(_koopa_cpu_count)"
 export CPU_COUNT
 
+
+
+# Package configuration  {{{1
+# ==============================================================================
+
+# These are defined primarily for R environment.
+# In particular these make building tricky pages from source, such as rgdal,
+# sf and others a lot easier.
+
+# This is necessary for rgdal, sf packages to install clean.
+if [ -z "${PKG_CONFIG_PATH:-}" ]
+then
+    PKG_CONFIG_PATH="\
+/usr/local/lib64/pkgconfig:\
+/usr/local/lib/pkgconfig:\
+/usr/lib64/pkgconfig:\
+/usr/lib/pkgconfig"
+    export PKG_CONFIG_PATH
+fi
+
+if [ -z "${PROJ_LIB:-}" ]
+then
+    if [ -e '/usr/local/share/proj' ]
+    then
+        PROJ_LIB='/usr/local/share/proj'
+        export PROJ_LIB
+    elif [ -e '/usr/share/proj' ]
+    then
+        PROJ_LIB='/usr/share/proj'
+        export PROJ_LIB
+    fi
+fi
+
+
+
+
 # Activation functions  {{{1
 # ==============================================================================
 
