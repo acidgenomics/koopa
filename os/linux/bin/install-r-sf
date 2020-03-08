@@ -6,6 +6,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _koopa_exit_if_r_package_installed sf
+
 _koopa_assert_is_not_file \
     /usr/bin/gdal-config \
     /usr/bin/geos-config \
