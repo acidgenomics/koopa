@@ -128,7 +128,12 @@ then
     install-arch-base
 elif _koopa_is_debian
 then
-    install-debian-base
+    if [[ "$compact" -eq 1 ]]
+    then
+        install-debian-base --compact
+    else
+        install-debian-base
+    fi
 elif _koopa_is_fedora
 then
     install-fedora-base
