@@ -295,8 +295,9 @@ quote=01:warning=01;35"
 _koopa_activate_go() {  # {{{1
     # """
     # Activate Go.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-08.
     # """
+    _koopa_is_installed go || return 0
     [ -n "${GOPATH:-}" ] && return 0
     GOPATH="$(_koopa_go_gopath)"
     export GOPATH
