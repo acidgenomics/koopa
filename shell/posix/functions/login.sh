@@ -17,25 +17,6 @@ _koopa_disk_check() {  # {{{1
     return 0
 }
 
-_koopa_disk_pct_used() {  # {{{1
-    # """
-    # Check disk usage on main drive.
-    # @note Updated 2020-02-13.
-    # """
-    local disk
-    disk="${1:-"/"}"
-    local x
-    x="$( \
-        df "$disk" \
-            | head -n 2 \
-            | sed -n '2p' \
-            | grep -Eo "([.0-9]+%)" \
-            | head -n 1 \
-            | sed 's/%$//' \
-    )"
-    _koopa_print "$x"
-}
-
 _koopa_tmux_sessions() {  # {{{1
     # """
     # Show active tmux sessions.

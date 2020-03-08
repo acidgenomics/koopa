@@ -47,6 +47,25 @@ else
     docker=0
 fi
 
+compact=0
+
+if [[ "$docker" -eq 0 ]]
+then
+    _koopa_info "Checking available local disk space."
+
+    df -h '/'
+
+    gb_total="$(_koopa_disk_gb_total)"
+    [ "$gb_total" -lt 10 ] && compact=1
+    gb_free="$(_koopa_disk_gb_free)"
+    [ "$gb_free" -lt 10 ] && compact=1
+
+    if [[ "$compact" -eq 1 ]]
+    then
+        _koopa_note "Low disk space detected. Installing in compact mode."
+    fi
+fi
+
 config="${KOOPA_CONFIG:-}"
 data_disk=
 source_ip=
@@ -213,7 +232,7 @@ then
 fi
 
 # LLVM.
-_koopa_run_if_installed install-llvm
+[[ "$compact" -eq 0 ]] && _koopa_run_if_installed install-llvm
 
 # Always run this because it must configure java alternatives.
 install-openjdk                                                         # 0.316G
@@ -269,7 +288,9 @@ then
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
     install-perl                                                        # 0.081G
-    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]] && \
+        [[ "$docker" -eq 0 ]] && \
+        [[ -e "$data_disk" ]]
     then
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
@@ -277,17 +298,20 @@ then
         install-rust                                                    # 0.724G
     fi
 
-    # Libraries.
-    install-geos
-    install-sqlite                                                      # 0.026G
-    # Install PROJ after SQLite.
-    install-proj                                                        # 0.132G
-    # Install GDAL after Python and PROJ.
-    install-gdal                                                        # 0.611G
-    # Install HDF5 after GDAL.
-    install-hdf5                                                        # 0.022G
-    install-gsl                                                         # 0.043G
-    install-udunits
+    if [[ "$compact" -eq 0 ]]
+    then
+        # Libraries.
+        install-geos
+        install-sqlite                                                  # 0.026G
+        # Install PROJ after SQLite.
+        install-proj                                                    # 0.132G
+        # Install GDAL after Python and PROJ.
+        install-gdal                                                    # 0.611G
+        # Install HDF5 after GDAL.
+        install-hdf5                                                    # 0.022G
+        install-gsl                                                     # 0.043G
+        install-udunits
+    fi
 
     # Shell tools.
     install-htop                                                        # 0.001G
@@ -295,7 +319,9 @@ then
     install-shellcheck                                                  # 0.008G
     install-shunit2
     install-tmux                                                        # 0.001G
-    if [[ "$docker" -eq 0 ]] && [[ -e "$data_disk" ]]
+    if [[ "$compact" -eq 0 ]] && \
+        [[ "$docker" -eq 0 ]] && \
+        [[ -e "$data_disk" ]]
     then
         install-autojump                                                # 0.000G
         # FZF requires Go.
