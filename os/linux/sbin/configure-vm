@@ -135,6 +135,9 @@ then
     else
         install-debian-base
     fi
+elif _koopa_is_centos
+then
+    install-centos-base
 elif _koopa_is_rhel
 then
     # Run this check before Fedora.

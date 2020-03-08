@@ -5,22 +5,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Is LLVM 8+ available yet?
-#
-# Missing:
-# - 'llvm7*'
-# - file-devel
-# - fish
-# - gdal
-# - gdal-devel
-# - leptonica-devel
-# - neovim
-# - pandoc
-# - pandoc-citeproc
-# - poppler-cpp-devel
-# """
-
 all=0
 dev=0
 extra=0
@@ -60,7 +44,7 @@ then
     extra=1
 fi
 
-_koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) 8 base system."
+_koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) base system."
 
 # default  {{{1
 # ==============================================================================
