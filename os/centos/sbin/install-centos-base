@@ -10,4 +10,5 @@ _koopa_h1 "Installing CentOS base system."
 install-rhel-base
 
 # GDAL is currently failing to install from source.
-sudo dnf -y install gdal-devel
+# Note that gdal-devel isn't yet available on EPEL 8.
+# > sudo dnf -y install gdal-devel
