@@ -276,11 +276,11 @@ if (.isInstalled("readr")) {
     ## Can cause compilation issues due to GCC version mismatch.
 
     if (
-        !isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV"))) &&
-        !isTRUE(nzchar(Sys.which("conda")))
+        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV"))) &&
+        isTRUE(nzchar(Sys.which("conda")))
     ) {
         if (isTRUE(interactive())) {
-            message(sprintf(
+            warning(sprintf(
                 fmt = paste(
                     "conda '%s' environment detected.",
                     "Don't install packages from source with conda active.",
