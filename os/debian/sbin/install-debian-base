@@ -213,6 +213,7 @@ then
             libgdal-dev
             libgeos-dev
             libproj-dev
+            proj-bin
         )
     fi
     pkgs+=(
