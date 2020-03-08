@@ -258,8 +258,13 @@ then
     exit 1
 fi
 
-_koopa_assert_is_installed koopa
-echo "$KOOPA_PREFIX"  # FIXME
+# FIXME
+if ! _koopa_is_installed koopa
+then
+    echo "$PATH"
+    echo "$KOOPA_PREFIX"  # FIXME
+    _koopa_stop "Installer failed to set PATH correctly"
+fi
 
 
 
