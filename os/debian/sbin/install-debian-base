@@ -207,7 +207,7 @@ pkgs=(
 if [[ "$dev" -eq 1 ]]
 then
     _koopa_h2 "Installing developer packages."
-    if [[ "$bioconductor" -eq 1 ]]
+    if [[ "$bioconductor" -eq 1 ]] || [[ "$compact" -eq 1 ]]
     then
         pkgs+=(
             libgdal-dev
