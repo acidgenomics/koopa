@@ -359,7 +359,7 @@ _koopa_is_git_clean() {  # {{{1
     # Are there unstaged changes?
     git diff-index --quiet HEAD -- || return 1
     # In need of a pull or push?
-    [ "$(git rev-parse HEAD)" == "$(git rev-parse '@{u}')" ] || return 1
+    [ "$(git rev-parse HEAD)" = "$(git rev-parse '@{u}')" ] || return 1
     return 0
 }
 
