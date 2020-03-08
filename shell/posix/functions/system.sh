@@ -15,18 +15,18 @@ _koopa_admin_group() {  # {{{1
     local group
     if _koopa_is_root
     then
-        group="root"
+        group='root'
     elif _koopa_is_debian
     then
-        group="sudo"
+        group='sudo'
     elif _koopa_is_fedora
     then
-        group="wheel"
+        group='wheel'
     elif _koopa_is_macos
     then
-        group="admin"
+        group='admin'
     else
-        _koopa_stop "Failed to detect admin group."
+        _koopa_stop 'Failed to detect admin group.'
     fi
     _koopa_print "$group"
     return 0
