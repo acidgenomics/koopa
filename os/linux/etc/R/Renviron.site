@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-03-03.
+## Updated 2020-03-11.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -39,6 +39,12 @@ TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
 
 ## Miscellaneous  {{{1
 ## =============================================================================
+
+## For PDFs, default to US letter (8.5" x 11") instead of A4.
+## This is the current default for Debian image but not when you build R from
+## source using the cellar script.
+R_PAPERSIZE="letter"
+R_PAPERSIZE_USER="${R_PAPERSIZE}"
 
 ## R can sometimes error due to time zone, unless this is set.
 ## This is particularly important to set on rocker Debian images.
