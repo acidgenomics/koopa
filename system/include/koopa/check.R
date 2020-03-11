@@ -421,8 +421,8 @@ if (
     checkVersion(
         name = "Amazon Web Services (AWS) CLI",
         whichName = "aws",
-        current = currentMinorVersion("aws-cli"),
-        expected = expectedMinorVersion("aws-cli")
+        current = currentVersion("aws-cli"),
+        expected = expectedVersion("aws-cli")
     )
     checkVersion(
         name = "Microsoft Azure CLI",

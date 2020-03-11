@@ -7,7 +7,7 @@
 # koopa  {{{1
 # ==============================================================================
 
-koopa-date="2020-03-07"
+koopa-date="2020-03-11"
 koopa-version="0.7.0a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -132,17 +132,17 @@ gdal="3.0.2"
 genrich="0.6"
 
 # https://github.com/libgeos/geos/releases
-geos="3.8.0"
+geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.25.0"
+git="2.25.1"
 
 # https://golang.org/dl/
 go="1.14"
 
 # https://cloud.google.com/sdk/install
-google-cloud-sdk="283.0.0"
+google-cloud-sdk="284.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.4"
@@ -151,10 +151,10 @@ grep="3.4"
 gsl="2.6"
 
 # https://www.hdfgroup.org/downloads/hdf5
-hdf5="1.10.6"
+hdf5="1.12.0"
 
 # https://brew.sh/
-homebrew="2.2.9"
+homebrew="2.2.10"
 
 # https://hisham.hm/htop/
 # https://github.com/hishamhm/htop/releases
@@ -194,7 +194,7 @@ make="4.3"
 ncurses="6.2"
 
 # https://github.com/dylanaraps/neofetch/releases
-neofetch="6.1.0"
+neofetch="7.0.0"
 
 # https://github.com/neovim/neovim/releases
 neovim="0.4.3"
