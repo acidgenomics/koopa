@@ -140,7 +140,7 @@ _koopa_r_version() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2020-03-04.
+    # @note Updated 2020-03-11.
     # """
     _koopa_is_installed R || return 1
 
@@ -151,18 +151,18 @@ _koopa_update_r_config() {  # {{{1
     then
         _koopa_set_permissions --recursive "$r_home"
     else
-        if [[ -d /usr/lib/R ]]
+        if [[ -d '/usr/lib/R' ]]
         then
-            sudo chown -Rh root:root /usr/lib/R
-            sudo chmod -R g-w /usr/lib/R
+            sudo chown -Rh 'root:root' '/usr/lib/R'
+            sudo chmod -R 'g-w' '/usr/lib/R'
         fi
 
         if [[ -d /usr/share/R ]]
         then
-            sudo chown -Rh root:root /usr/share/R
-            sudo chmod -R g-w /usr/share/R
+            sudo chown -Rh 'root:root' '/usr/share/R'
+            sudo chmod -R 'g-w' '/usr/share/R'
             # Need to ensure group write so package index gets updated.
-            _koopa_set_permissions /usr/share/R/doc/html/packages.html
+            _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
         fi
 
         # Ensure system package library is writable.
@@ -171,6 +171,16 @@ _koopa_update_r_config() {  # {{{1
 
     _koopa_link_r_etc
     _koopa_link_r_site_library
+
+    # Update cellar links now that 'etc' has changed from directory to symlink.
+    if _koopa_is_cellar R &&
+        [[ -d '/usr/local/lib64/R/etc' ]] &&
+        [[ ! -L '/usr/local/lib64/R/etc' ]]
+    then
+        _koopa_rm '/usr/local/lib64/R/etc'
+        _koopa_link_cellar R
+    fi
+
     _koopa_r_javareconf
 
     return 0
