@@ -178,7 +178,7 @@ _koopa_update_r_config() {  # {{{1
         [[ ! -L '/usr/local/lib64/R/etc' ]]
     then
         _koopa_rm '/usr/local/lib64/R/etc'
-        _koopa_link_cellar R
+        _koopa_link_cellar r
     fi
 
     _koopa_r_javareconf
