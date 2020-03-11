@@ -66,9 +66,9 @@ _koopa_link_r_site_library() {  # {{{1
 
     # Debian R defaults to '/usr/local/lib/R/site-library' even though R_HOME
     # is '/usr/lib/R'. Ensure we link here also.
-    if [[ -d "/usr/local/lib/R" ]]
+    if [ -d '/usr/local/lib/R' ]
     then
-        _koopa_ln "$lib_source" "/usr/local/lib/R/site-library"
+        _koopa_ln "$lib_source" '/usr/local/lib/R/site-library'
     fi
 
     return 0
@@ -157,7 +157,6 @@ _koopa_update_r_config() {  # {{{1
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
             _koopa_rm "$etc_prefix"
-            _koopa_link_cellar r
         fi
     else
         if [[ -d '/usr/lib/R' ]]
@@ -178,6 +177,12 @@ _koopa_update_r_config() {  # {{{1
 
     _koopa_link_r_etc
     _koopa_link_r_site_library
+
+    if _koopa_is_cellar R
+    then
+        _koopa_link_cellar r
+    fi
+
     _koopa_r_javareconf
 
     return 0
