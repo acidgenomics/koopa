@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-02-28.
+## Updated 2020-03-11.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -385,14 +385,6 @@ checkVersion(
     expected = expectedVersion("conda"),
     required = FALSE
 )
-if (!isTRUE(docker)) {
-    checkVersion(
-        name = "Perl : Perlbrew",
-        whichName = "perlbrew",
-        current = currentVersion("perlbrew"),
-        expected = expectedVersion("perlbrew")
-    )
-}
 checkVersion(
     name = "Python : pip",
     whichName = "pip3",
@@ -406,18 +398,6 @@ checkVersion(
     expected = expectedVersion("pipx")
 )
 if (!isTRUE(docker)) {
-    checkVersion(
-        name = "Python : pyenv",
-        whichName = "pyenv",
-        current = currentVersion("pyenv"),
-        expected = expectedVersion("pyenv")
-    )
-    checkVersion(
-        name = "Ruby : rbenv",
-        whichName = "rbenv",
-        current = currentVersion("rbenv"),
-        expected = expectedVersion("rbenv")
-    )
     checkVersion(
         name = "Rust : cargo",
         whichName = "cargo",
