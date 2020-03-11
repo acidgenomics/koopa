@@ -294,10 +294,12 @@ then
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
         _koopa_run_if_installed install-docker
-        install-perlbrew                                                # 0.003G
-        install-pyenv                                                   # 0.009G
-        install-rbenv                                                   # 0.006G
         install-lmod                                                    # 0.002G
+        # These work better for single user and aren't necessary on most VMs,
+        # where we really only want latest version, so now disabled by default.
+        # > install-perlbrew                                            # 0.003G
+        # > install-pyenv                                               # 0.009G
+        # > install-rbenv                                               # 0.006G
     fi
 
     # Password management.
