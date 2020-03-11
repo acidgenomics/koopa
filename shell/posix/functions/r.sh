@@ -25,7 +25,7 @@ _koopa_link_r_etc() {  # {{{1
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     [ -d "$r_etc_source" ] || return 1
 
-    _koopa_ln "$r_etc_source" "${r_home}/etc/"
+    _koopa_ln "$r_etc_source" "${r_home}/etc"
 
     if _koopa_is_linux && [ -d '/etc/R' ]
     then
