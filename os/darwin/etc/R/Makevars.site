@@ -13,7 +13,8 @@
 # - https://github.com/rmacoslib/r-macos-rtools/blob/master/scripts/postinstall
 # - https://stackoverflow.com/questions/22452826/
 #
-# Test installation:
+# Test configuration:
+# > tools::makevars_site()
 # > install.packages("Rcpp", type = "source")
 # > install.packages("RcppArmadillo", type = "source")
 #
@@ -28,16 +29,20 @@
 # """
 
 CC=/usr/local/clang7/bin/clang
-CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
+
+CXX=/usr/local/clang7/bin/clang++
 CXX11=/usr/local/clang7/bin/clang++
 CXX14=/usr/local/clang7/bin/clang++
 CXX17=/usr/local/clang7/bin/clang++
 CXX1X=/usr/local/clang7/bin/clang++
 CXX98=/usr/local/clang7/bin/clang++
-CXX=/usr/local/clang7/bin/clang++
+
+CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
 CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
+
 LDFLAGS=-L/usr/local/clang7/lib
+
 SHLIB_CXX14LDFLAGS+=-Wl,-rpath,\${R_HOME}/lib \${R_HOME}/lib/libc++abi.1.dylib
 SHLIB_CXXLDFLAGS+=-Wl,-rpath,\${R_HOME}/lib \${R_HOME}/lib/libc++abi.1.dylib
