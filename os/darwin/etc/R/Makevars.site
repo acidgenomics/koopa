@@ -5,6 +5,8 @@
 # Necessary for building packages from source.
 #
 # See also:
+# - https://cran.r-project.org/doc/manuals/r-release/
+#       R-admin.html#Customizing-package-compilation
 # - https://thecoatlessprofessor.com/programming/cpp/
 #       r-compiler-tools-for-rcpp-on-macos/
 # - https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-FAQ.pdf
