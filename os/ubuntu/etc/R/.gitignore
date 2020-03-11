@@ -1,3 +1,4 @@
 *.bak
 *.dpkg-new
+*.orig
 *.ucf
