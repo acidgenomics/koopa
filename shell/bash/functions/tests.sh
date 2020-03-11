@@ -11,9 +11,7 @@ _koopa_test_find_files() {  # {{{1
         -mindepth 1 \
         -type f \
         -not -name "$(basename "$0")" \
-        -not -name "Makeconf" \
         -not -name "*.md" \
-        -not -name "*.site" \
         -not -name ".pylintrc" \
         -not -path "${koopa_prefix}/.git/*" \
         -not -path "${koopa_prefix}/cellar/*" \
@@ -21,6 +19,7 @@ _koopa_test_find_files() {  # {{{1
         -not -path "${koopa_prefix}/dotfiles/*" \
         -not -path "${koopa_prefix}/opt/*" \
         -not -path "${koopa_prefix}/tests/*" \
+        -not -path "*/etc/R/*" \
         -print \
     | sort
     return 0
