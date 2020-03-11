@@ -4,7 +4,7 @@
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-03-03.
+    # @note Updated 2020-03-11.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -14,10 +14,6 @@ _koopa_link_r_etc() {  # {{{1
     local r_home
     r_home="$(_koopa_r_home)"
     [ -d "$r_home" ] || return 1
-
-    local r_etc_target
-    r_etc_target="${r_home}/etc"
-    [ -d "$r_etc_target" ] || return 1
 
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
@@ -29,20 +25,11 @@ _koopa_link_r_etc() {  # {{{1
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     [ -d "$r_etc_source" ] || return 1
 
-    if _koopa_is_debian && ! _koopa_is_cellar R
-    then
-        [ -d /etc/R ] || return 1
-        _koopa_ln "${r_etc_source}/Renviron.site" "/etc/R/Renviron.site"
-        _koopa_ln "${r_etc_source}/Rprofile.site" "/etc/R/Rprofile.site"
-    fi
+    _koopa_ln "$r_etc_source" "${r_home}/etc/"
 
-    _koopa_ln "${r_etc_source}/Renviron.site" "${r_etc_target}/Renviron.site"
-    _koopa_ln "${r_etc_source}/Rprofile.site" "${r_etc_target}/Rprofile.site"
-
-    # Link Makeconf, if defined.
-    if [[ -f "${r_etc_source}/Makeconf" ]]
+    if _koopa_is_linux && [ -d '/etc/R' ]
     then
-        _koopa_ln "${r_etc_source}/Makeconf" "${r_etc_target}/Makeconf"
+        _koopa_ln "$r_etc_source" '/etc/R'
     fi
 
     return 0
