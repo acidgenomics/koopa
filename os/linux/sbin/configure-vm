@@ -402,9 +402,16 @@ _koopa_set_permissions --recursive "$app_prefix"
 _koopa_remove_broken_symlinks "$app_prefix"
 _koopa_remove_empty_dirs "$app_prefix"
 
-_koopa_fix_pyenv_permissions
-_koopa_fix_rbenv_permissions
 _koopa_fix_zsh_permissions
+
+# Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
+_koopa_rm \
+    "${app_prefix}/perl" \
+    "${app_prefix}/python/pyenv" \
+    "${app_prefix}/perl"
+# Otherwise, ensure permissions are correct:
+# > _koopa_fix_pyenv_permissions
+# > _koopa_fix_rbenv_permissions
 
 if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
 then
