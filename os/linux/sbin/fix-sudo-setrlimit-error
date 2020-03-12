@@ -18,6 +18,13 @@ source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
 target_file="/etc/sudo.conf"
-_koopa_exit_if_exists "$target_file"
+
+# Ensure we always overwrite for Docker images.
+# Note that Fedora base image contains this file by default.
+if ! _koopa_is_docker
+then
+    _koopa_exit_if_exists "$target_file"
+fi
+
 source_file="$(_koopa_prefix)/os/linux/etc/sudo.conf"
 sudo cp -v "$source_file" "$target_file"

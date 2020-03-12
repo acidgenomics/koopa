@@ -4,7 +4,7 @@
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-03-03.
+    # @note Updated 2020-03-11.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -14,10 +14,6 @@ _koopa_link_r_etc() {  # {{{1
     local r_home
     r_home="$(_koopa_r_home)"
     [ -d "$r_home" ] || return 1
-
-    local r_etc_target
-    r_etc_target="${r_home}/etc"
-    [ -d "$r_etc_target" ] || return 1
 
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
@@ -29,20 +25,11 @@ _koopa_link_r_etc() {  # {{{1
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
     [ -d "$r_etc_source" ] || return 1
 
-    if _koopa_is_debian && ! _koopa_is_cellar R
-    then
-        [ -d /etc/R ] || return 1
-        _koopa_ln "${r_etc_source}/Renviron.site" "/etc/R/Renviron.site"
-        _koopa_ln "${r_etc_source}/Rprofile.site" "/etc/R/Rprofile.site"
-    fi
+    _koopa_ln "$r_etc_source" "${r_home}/etc"
 
-    _koopa_ln "${r_etc_source}/Renviron.site" "${r_etc_target}/Renviron.site"
-    _koopa_ln "${r_etc_source}/Rprofile.site" "${r_etc_target}/Rprofile.site"
-
-    # Link Makeconf, if defined.
-    if [[ -f "${r_etc_source}/Makeconf" ]]
+    if _koopa_is_linux && [ -d '/etc/R' ]
     then
-        _koopa_ln "${r_etc_source}/Makeconf" "${r_etc_target}/Makeconf"
+        _koopa_ln "$r_etc_source" '/etc/R'
     fi
 
     return 0
@@ -79,9 +66,9 @@ _koopa_link_r_site_library() {  # {{{1
 
     # Debian R defaults to '/usr/local/lib/R/site-library' even though R_HOME
     # is '/usr/lib/R'. Ensure we link here also.
-    if [[ -d "/usr/local/lib/R" ]]
+    if [ -d '/usr/local/lib/R' ]
     then
-        _koopa_ln "$lib_source" "/usr/local/lib/R/site-library"
+        _koopa_ln "$lib_source" '/usr/local/lib/R/site-library'
     fi
 
     return 0
@@ -153,7 +140,7 @@ _koopa_r_version() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2020-03-04.
+    # @note Updated 2020-03-11.
     # """
     _koopa_is_installed R || return 1
 
@@ -163,27 +150,39 @@ _koopa_update_r_config() {  # {{{1
     if _koopa_is_cellar R
     then
         _koopa_set_permissions --recursive "$r_home"
+        local make_prefix
+        make_prefix="$(_koopa_make_prefix)"
+        local etc_prefix
+        etc_prefix="${make_prefix}/lib64/R/etc"
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        then
+            _koopa_rm "$etc_prefix"
+        fi
     else
-        if [[ -d /usr/lib/R ]]
+        if [[ -d '/usr/lib/R' ]]
         then
-            sudo chown -Rh root:root /usr/lib/R
-            sudo chmod -R g-w /usr/lib/R
+            sudo chown -Rh 'root:root' '/usr/lib/R'
+            sudo chmod -R 'g-w' '/usr/lib/R'
         fi
-
-        if [[ -d /usr/share/R ]]
+        if [[ -d '/usr/share/R' ]]
         then
-            sudo chown -Rh root:root /usr/share/R
-            sudo chmod -R g-w /usr/share/R
+            sudo chown -Rh 'root:root' '/usr/share/R'
+            sudo chmod -R 'g-w' '/usr/share/R'
             # Need to ensure group write so package index gets updated.
-            _koopa_set_permissions /usr/share/R/doc/html/packages.html
+            _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
         fi
-
         # Ensure system package library is writable.
         _koopa_set_permissions --recursive "${r_home}/library"
     fi
 
     _koopa_link_r_etc
     _koopa_link_r_site_library
+
+    if _koopa_is_cellar R
+    then
+        _koopa_link_cellar r
+    fi
+
     _koopa_r_javareconf
 
     return 0
