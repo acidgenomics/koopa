@@ -32,7 +32,6 @@ anaconda3="2019.10"
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
 aspera-connect="3.9.9"
-macos-app-aspera-connect="3.9.9"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.69"
@@ -368,6 +367,7 @@ ensembl-perl="5.26.3"
 # > koopa get-macos-app-version "XXX"
 
 macos-app-alacritty="0.4.1"
+macos-app-aspera-connect="3.9.9"
 macos-app-bbedit="13.0.6"
 macos-app-bibdesk="1.7.4"
 macos-app-docker="2.2.0.3"
