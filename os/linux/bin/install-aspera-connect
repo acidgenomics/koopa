@@ -5,6 +5,26 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# """
+# Aspera Connect:
+# https://downloads.asperasoft.com/en/downloads/8?list
+# - Linux
+#   https://download.asperasoft.com/download/sw/connect/3.9.9/
+#       ibm-aspera-connect-3.9.9.177872-linux-g2.12-64.tar.gz
+# - macOS
+#   https://download.asperasoft.com/download/sw/connect/3.9.9/
+#       IBMAsperaConnectInstaller-3.9.9.177872.dmg
+#
+# Aspera CLI:
+# https://downloads.asperasoft.com/en/downloads/62
+# - macOS
+#   https://download.asperasoft.com/download/sw/cli/3.9.6/
+#       ibm-aspera-cli-3.9.6.1467.159c5b1-mac-10.11-64-release.sh
+# - Linux
+#   https://download.asperasoft.com/download/sw/cli/3.9.6/
+#       ibm-aspera-cli-3.9.6.1467.159c5b1-linux-64-release.sh
+# """
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
