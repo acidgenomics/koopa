@@ -55,7 +55,9 @@ _koopa_h2 "Installing default packages."
 sudo dnf -y install dnf-plugins-core util-linux-user
 sudo dnf config-manager --set-enabled PowerTools
 enable-epel
-install-fedora-base "$@"
+
+# Install Fedora base.
+"${script_dir}/../../fedora/sbin/install-base" "$@"
 
 # developer  {{{1
 # ==============================================================================
