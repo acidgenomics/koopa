@@ -593,6 +593,12 @@ if (!isTRUE(docker)) {
 if (isTRUE(linux)) {
     h2("Linux specific")
     checkVersion(
+        name = "Aspera Connect",
+        whichName = "ascp",
+        current = currentVersion("aspera-connect"),
+        expected = expectedVersion("aspera-connect")
+    )
+    checkVersion(
         name = "GnuPG",
         whichName = "gpg",
         current = currentVersion("gnupg"),
