@@ -9,7 +9,7 @@ source "${script_dir}/../include/header.sh"
 
 name="ruby"
 version="$(_koopa_variable "$name")"
-# Ensure '2.6.5p' becomes '2.6.5', for example.
+# Ensure '2.6.5p' becomes '2.6.5' here, for example.
 version="$(_koopa_sanitize_version "$version")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
@@ -21,7 +21,7 @@ _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 
 jobs="$(_koopa_cpu_count)"
-minor_version="$(_koopa_minor_version "$version")"
+minor_version="$(_koopa_major_minor_version "$version")"
 tmp_dir="$(_koopa_tmp_dir)"
 
 (

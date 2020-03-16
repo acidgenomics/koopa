@@ -222,10 +222,10 @@ _koopa_macos_version() {  # {{{1
 
 _koopa_major_version() {  # {{{1
     # """
-    # Get the major program version.
-    # @note Updated 2020-01-12.
+    # Program 'MAJOR' version.
+    # @note Updated 2020-03-16.
     #
-    # This function captures 'MAJOR', removing 'MINOR.PATCH', etc.
+    # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
     local version
     version="${1:?}"
@@ -233,16 +233,25 @@ _koopa_major_version() {  # {{{1
     return 0
 }
 
-_koopa_minor_version() {  # {{{1
+_koopa_major_minor_version() {  # {{{1
     # """
-    # Get the major program version.
-    # @note Updated 2020-01-12.
-    #
-    # This function captures 'MAJOR.MINOR'.
+    # Program 'MAJOR.MINOR' version.
+    # @note Updated 2020-03-16.
     # """
     local version
     version="${1:?}"
     _koopa_print "$version" | cut -d '.' -f 1-2
+    return 0
+}
+
+_koopa_major_minor_patch_version() {  # {{{1
+    # """
+    # Program 'MAJOR.MINOR.PATCH' version.
+    # @note Updated 2020-03-16.
+    # """
+    local version
+    version="${1:?}"
+    _koopa_print "$version" | cut -d '.' -f 1-3
     return 0
 }
 
@@ -289,19 +298,6 @@ _koopa_parallel_version() {  # {{{1
             | cut -d ' ' -f 3 \
     )"
     _koopa_print "$x"
-    return 0
-}
-
-_koopa_patch_version() {  # {{{1
-    # """
-    # Get the patch version of a program.
-    # @note Updated 2020-03-16.
-    #
-    # This function captures 'MAJOR.MINOR.PATCH'.
-    # """
-    local version
-    version="${1:?}"
-    _koopa_print "$version" | cut -d '.' -f 1-3
     return 0
 }
 

@@ -27,7 +27,7 @@ source "${script_dir}/../include/header.sh"
 
 version_full="$(_koopa_variable "aspera-connect")"
 # Standardize version as MAJOR.MINOR.PATCH only.
-version="$(_koopa_patch_version "$version_full")"
+version="$(_koopa_major_minor_patch_version "$version_full")"
 aspera_dir="$(_koopa_aspera_prefix)"
 prefix="${aspera_dir}/${version}"
 _koopa_exit_if_dir "$prefix"
