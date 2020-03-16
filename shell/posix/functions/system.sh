@@ -364,6 +364,29 @@ _koopa_extract() {  # {{{1
    return 0
 }
 
+_koopa_fix_sudo_setrlimit_error() {  # {{{1
+    # """
+    # Fix for bug in recent version of sudo, that can happen on Docker:
+    # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
+    #
+    # @seealso
+    # - https://ask.fedoraproject.org/t/
+    #       sudo-setrlimit-rlimit-core-operation-not-permitted/4223
+    # - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
+    # """
+    local target_file
+    target_file='/etc/sudo.conf'
+    # Ensure we always overwrite for Docker images.
+    # Note that Fedora base image contains this file by default.
+    if ! _koopa_is_docker
+    then
+        _koopa_exit_if_exists "$target_file"
+    fi
+    local source_file
+    source_file="$(_koopa_prefix)/os/linux/etc/sudo.conf"
+    sudo cp -v "$source_file" "$target_file"
+    return 0
+}
 
 _koopa_github_url() {  # {{{1
     # """
