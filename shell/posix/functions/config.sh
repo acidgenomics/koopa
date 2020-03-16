@@ -386,8 +386,12 @@ _koopa_install_pip() {  # {{{1
 _koopa_java_update_alternatives() {
     # """
     # Update Java alternatives.
-    # @note Updated 2020-02-28.
+    # @note Updated 2020-03-16.
+    #
+    # This step is intentionally skipped for non-admin installs, when calling
+    # from 'install-openjdk' script.
     # """
+    _koopa_is_shared_install || return 0
     _koopa_is_installed update-alternatives || return 0
     local prefix
     prefix="${1:?}"
