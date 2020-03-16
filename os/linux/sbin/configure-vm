@@ -15,6 +15,8 @@ export KOOPA_FORCE=1
 export PYTHONDONTWRITEBYTECODE=true
 
 _koopa_enable_passwordless_sudo
+
+# FIXME Convert to a function here, so I don't resource functions.
 fix-sudo-setrlimit-error
 
 # Remove default configuration files.
@@ -124,32 +126,13 @@ _koopa_mkdir "$make_prefix"
 
 _koopa_h2 "Installing base system."
 
-if _koopa_is_arch
+_koopa_assert_is_installed install-base
+
+if [[ "$compact" -eq 1 ]] && _koopa_is_debian
 then
-    install-arch-base
-elif _koopa_is_debian
-then
-    if [[ "$compact" -eq 1 ]]
-    then
-        install-debian-base --compact
-    else
-        install-debian-base
-    fi
-elif _koopa_is_centos
-then
-    install-centos-base
-elif _koopa_is_rhel
-then
-    # Run this check before Fedora.
-    install-rhel-base
-elif _koopa_is_fedora
-then
-    install-fedora-base
-elif _koopa_is_opensuse
-then
-    install-opensuse-base
+    install-base --compact
 else
-    _koopa_stop "Unsupported Linux distro."
+    install-base
 fi
 
 # Maybe include: tclsh

@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-03-11.
+## Updated 2020-03-16.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -466,6 +466,12 @@ if (!isTRUE(docker)) {
         whichName = "ag",
         current = currentVersion("the-silver-searcher"),
         expected = expectedVersion("the-silver-searcher")
+    )
+    checkVersion(
+        name = "dust",
+        whichName = "dust",
+        current = currentVersion("dust"),
+        expected = expectedVersion("dust")
     )
     checkVersion(
         name = "exa",

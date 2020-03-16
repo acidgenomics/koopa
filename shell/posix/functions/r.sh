@@ -4,7 +4,7 @@
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-03-11.
+    # @note Updated 2020-03-13.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -140,7 +140,7 @@ _koopa_r_version() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2020-03-11.
+    # @note Updated 2020-03-13.
     # """
     _koopa_is_installed R || return 1
 
@@ -181,6 +181,13 @@ _koopa_update_r_config() {  # {{{1
     if _koopa_is_cellar R
     then
         _koopa_link_cellar r
+    fi
+
+    # Install CRAN tools to build from source are installed on macOS.
+    if _koopa_is_macos
+    then
+        install-r-cran-clang
+        install-r-cran-gfortran
     fi
 
     _koopa_r_javareconf

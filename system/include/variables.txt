@@ -7,7 +7,7 @@
 # koopa  {{{1
 # ==============================================================================
 
-koopa-date="2020-03-11"
+koopa-date="2020-03-16"
 koopa-version="0.7.0a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -31,7 +31,8 @@ anaconda3="2019.10"
 # https://www.ibm.com/products/aspera
 # https://downloads.asperasoft.com/connect2/
 # https://downloads.asperasoft.com/en/downloads/8?list
-aspera="3.9.7"
+aspera-connect="3.9.9"
+macos-app-aspera-connect="3.9.9"
 
 # https://ftp.gnu.org/gnu/autoconf/
 autoconf="2.69"
@@ -70,7 +71,7 @@ binutils="2.34"
 broot="0.13.2"
 
 # https://crates.io/
-cargo="1.41.0"
+cargo="1.42.0"
 
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
@@ -94,10 +95,13 @@ conda="4.8.2"
 coreutils="8.32"
 
 # https://docs.docker.com/install/
-docker="19.03.7"
+docker="19.03.8"
 
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.3"
+
+# https://github.com/bootandy/dust
+dust="0.5.1"
 
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
@@ -109,7 +113,7 @@ exa="0.9.0"
 fd="7.4.0"
 
 # https://github.com/junegunn/fzf
-fzf="0.20.0"
+fzf="0.21.0"
 
 # https://www.gnu.org/software/findutils/
 findutils="4.7.0"
@@ -254,7 +258,7 @@ r="3.6.3"
 rbenv="1.1.2"
 
 # https://github.com/BurntSushi/ripgrep/releases
-ripgrep="11.0.2"
+ripgrep="12.0.0"
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
@@ -273,7 +277,7 @@ rstudio-server-pro="1.2.5019-6"
 ruby="2.6.5p"
 
 # https://www.rust-lang.org/
-rust="1.41.1"
+rust="1.42.0"
 
 # https://rustup.rs/
 rustup="1.21.1"
@@ -364,13 +368,12 @@ ensembl-perl="5.26.3"
 # > koopa get-macos-app-version "XXX"
 
 macos-app-alacritty="0.4.1"
-macos-app-aspera-connect="3.9.8"
-macos-app-bbedit="13.0.4"
+macos-app-bbedit="13.0.6"
 macos-app-bibdesk="1.7.4"
 macos-app-docker="2.2.0.3"
 macos-app-iterm="3.3.9"
 macos-app-libreoffice="6.4.1002"
-macos-app-microsoft-excel="16.34"
+macos-app-microsoft-excel="16.35"
 macos-app-numbers="6.2.1"
 macos-app-rstudio="1.2.5033"
 macos-app-tunnelblick="3.8.1"

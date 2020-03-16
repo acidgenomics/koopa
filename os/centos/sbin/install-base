@@ -7,7 +7,8 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_h1 "Installing CentOS base system."
 
-install-rhel-base
+# Install RHEL (and Fedora) base.
+"${script_dir}/../../rhel/sbin/install-base" "$@"
 
 # GDAL is currently failing to install from source.
 # Note that gdal-devel isn't yet available on EPEL 8.
