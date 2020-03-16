@@ -59,6 +59,7 @@ rm -fr "$tmp_dir"
 
 _koopa_set_permissions --recursive "$jdk_dir"
 
+# This step will skip for non-shared install.
 _koopa_java_update_alternatives "$prefix"
 
 _koopa_install_success "$name_fancy"

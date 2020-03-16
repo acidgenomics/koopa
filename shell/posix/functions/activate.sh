@@ -4,10 +4,10 @@
 _koopa_activate_aspera() {  # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-16.
     # """
     local prefix
-    prefix="$(_koopa_aspera_prefix)"
+    prefix="$(_koopa_aspera_prefix)/latest"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
     return 0
