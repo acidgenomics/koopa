@@ -940,7 +940,7 @@ _koopa_os_string() {  # {{{1
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
         id="macos"
         version="$(_koopa_get_version "$id")"
-        version="$(_koopa_minor_version "$version")"
+        version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
         if [ -r /etc/os-release ]

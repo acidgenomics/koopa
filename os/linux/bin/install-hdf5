@@ -18,7 +18,7 @@ _koopa_assert_has_no_envs
 _koopa_assert_is_installed gfortran
 
 jobs="$(_koopa_cpu_count)"
-minor_version="$(_koopa_minor_version "$version")"
+minor_version="$(_koopa_major_minor_version "$version")"
 tmp_dir="$(_koopa_tmp_dir)"
 
 (

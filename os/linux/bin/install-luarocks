@@ -18,7 +18,7 @@ _koopa_assert_has_no_envs
 _koopa_assert_is_installed lua
 
 lua_version="$(_koopa_get_version lua)"
-lua_version="$(_koopa_minor_version "$lua_version")"
+lua_version="$(_koopa_major_minor_version "$lua_version")"
 tmp_dir="$(_koopa_tmp_dir)"
 
 (
