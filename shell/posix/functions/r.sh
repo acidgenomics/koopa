@@ -50,7 +50,7 @@ _koopa_link_r_site_library() {  # {{{1
     version="$(_koopa_r_version)"
 
     local minor_version
-    minor_version="$(_koopa_minor_version "$version")"
+    minor_version="$(_koopa_major_minor_version "$version")"
 
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
