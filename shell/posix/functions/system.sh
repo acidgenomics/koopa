@@ -366,7 +366,10 @@ _koopa_extract() {  # {{{1
 
 _koopa_fix_sudo_setrlimit_error() {  # {{{1
     # """
-    # Fix for bug in recent version of sudo, that can happen on Docker:
+    # Fix bug in recent version of sudo.
+    # @note Updated 2020-03-16.
+    #
+    # This is popping up on Docker builds:
     # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
     #
     # @seealso
@@ -380,7 +383,7 @@ _koopa_fix_sudo_setrlimit_error() {  # {{{1
     # Note that Fedora base image contains this file by default.
     if ! _koopa_is_docker
     then
-        _koopa_exit_if_exists "$target_file"
+        [ -e "$target_file" ] && return 0
     fi
     local source_file
     source_file="$(_koopa_prefix)/os/linux/etc/sudo.conf"
