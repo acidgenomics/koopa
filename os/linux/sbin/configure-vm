@@ -15,9 +15,7 @@ export KOOPA_FORCE=1
 export PYTHONDONTWRITEBYTECODE=true
 
 _koopa_enable_passwordless_sudo
-
-# FIXME Convert to a function here, so I don't resource functions.
-fix-sudo-setrlimit-error
+_koopa_fix_sudo_setrlimit_error
 
 # Remove default configuration files.
 sudo rm -frv /etc/skel /root
