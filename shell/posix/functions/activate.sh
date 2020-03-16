@@ -256,15 +256,15 @@ _koopa_activate_ensembl_perl_api() {  # {{{1
 _koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-03-16.
     #
     # See also:
     # https://github.com/junegunn/fzf
     # """
-    _koopa_is_installed fzf || return 0
-    local dir
-    dir="/usr/local/opt/fzf"
-    [ -d "$dir" ] || return 0
+    local prefix
+    prefix="$(_koopa_fzf_prefix)/latest"
+    [ -d "$prefix" ] || return 0
+    _koopa_activate_prefix "$prefix"
     local shell
     shell="$(_koopa_shell)"
     local nounset
@@ -272,10 +272,10 @@ _koopa_activate_fzf() {  # {{{1
     [ "$nounset" -eq 1 ] && set +u
     # Auto-completion.
     # shellcheck source=/dev/null
-    . "${dir}/shell/completion.${shell}"
+    . "${prefix}/shell/completion.${shell}"
     # Key bindings.
     # shellcheck source=/dev/null
-    . "${dir}/shell/key-bindings.${shell}"
+    . "${prefix}/shell/key-bindings.${shell}"
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
