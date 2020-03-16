@@ -189,6 +189,15 @@ _koopa_ensembl_perl_api_prefix() {  # {{{1
     return 0
 }
 
+_koopa_fzf_prefix() {  # {{{1
+    # """
+    # fzf prefix.
+    # @note Updated 2020-03-16.
+    # """
+    _koopa_print "$(_koopa_app_prefix)/fzf"
+    return 0
+}
+
 _koopa_go_gopath() {  # {{{1
     # """
     # Go GOPATH, for building from source.
