@@ -31,7 +31,7 @@ then
         # https://github.com/Canop/broot
         broot
         # https://github.com/bootandy/dust
-        dust
+        du-dust
         # https://github.com/ogham/exa
         exa
         # https://github.com/sharkdp/fd

@@ -100,6 +100,9 @@ docker="19.03.8"
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.3"
 
+# https://github.com/bootandy/dust
+dust="0.5.1"
+
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
 
@@ -110,7 +113,7 @@ exa="0.9.0"
 fd="7.4.0"
 
 # https://github.com/junegunn/fzf
-fzf="0.20.0"
+fzf="0.21.0"
 
 # https://www.gnu.org/software/findutils/
 findutils="4.7.0"
@@ -255,7 +258,7 @@ r="3.6.3"
 rbenv="1.1.2"
 
 # https://github.com/BurntSushi/ripgrep/releases
-ripgrep="11.0.2"
+ripgrep="12.0.0"
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
