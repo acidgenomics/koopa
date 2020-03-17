@@ -16,28 +16,28 @@
 ## Restrict path, so we don't load any binaries from conda or python virtualenv.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-## TeX
+## TeX.
 PATH="${PATH}:/Library/TeX/texbin"
 
-## X11
+## X11.
 PATH="${PATH}:/opt/X11/bin"
 
-## Homebrew coreutils
+## Homebrew coreutils.
 PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
 
-## Homebrew Python
+## Homebrew Python.
 ## > PATH="/usr/local/opt/python/libexec/bin:${PATH}"
 
-## clang (for CRAN R)
+## clang (for CRAN R).
 ## R 3.5: clang 6
 ## R 3.6: clang 7
 ## R 3.7: clang 8
 PATH="/usr/local/clang7/bin:${PATH}"
 
-## gfortran 6.1 (for CRAN R)
+## gfortran 6.1 (for CRAN R).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
-## pandoc (RStudio)
+## pandoc (RStudio).
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 
@@ -53,31 +53,14 @@ R_LIBS_USER="~/Library/R/%v/library"
 ## Package configuration  {{{1
 ## =============================================================================
 
-## LAPACK
+## LAPACK.
 PKG_CONFIG_PATH="/usr/local/opt/lapack/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-## OpenBLAS
+## OpenBLAS.
 PKG_CONFIG_PATH="/usr/local/opt/openblas/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
-## imagemagick
+## imagemagick.
 PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
-
-
-
-## XML configuration  {{{1
-## =============================================================================
-
-## libxml2
-XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
-
-
-
-## GitHub remote installs  {{{1
-## =============================================================================
-
-## Always upgrade GitHub R packages, without prompting.
-## See `remotes::update_packages()` for details.
-R_REMOTES_UPGRADE="always"
 
 
 
@@ -97,6 +80,19 @@ TZ="America/New_York"
 ## Package-specific  {{{1
 ## =============================================================================
 
+## libxml2  {{{2
+## -----------------------------------------------------------------------------
+
+XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
+
+## remotes  {{{2
+## -----------------------------------------------------------------------------
+
+## GitHub remote installs.
+## Always upgrade GitHub R packages, without prompting.
+## See `remotes::update_packages()` for details.
+R_REMOTES_UPGRADE="always"
+
 ## reticulate  {{{2
 ## -----------------------------------------------------------------------------
 
@@ -112,7 +108,7 @@ TZ="America/New_York"
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
 WORKON_HOME="/usr/local/koopa/opt/python/virtualenvs"
 
-## units  {{{2
+## units / udunits  {{{2
 ## -----------------------------------------------------------------------------
 
 ## The units package requires udunits to be installed.
