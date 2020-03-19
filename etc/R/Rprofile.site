@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-03-08.
+## Updated 2020-03-19.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -307,6 +307,20 @@ if (.isInstalled("readr")) {
 
     if (!isTRUE(conda)) {
         if (Sys.info()[["sysname"]] == "Darwin") {
+            ## Check that Xcode command line tools (CLT) are installed.
+            if (!isTRUE(dir.exists(file.path(
+                "/",
+                "Library",
+                "Developer",
+                "CommandLineTools",
+                "SDKs",
+                "MacOSX.sdk"
+            )))) {
+                stop(
+                    "Failed to detect Xcode CLT.\n",
+                    "Run `xcode-select --install` to install."
+                )
+            }
             ## Use recommended CRAN compiler settings.
             if (r_ver_short == "3.5") {
                 clang_ver <- "6"
@@ -347,7 +361,7 @@ if (.isInstalled("readr")) {
             ## >     )
             ## > ))
             ## > rm(usr_local_bin)
-        } 
+        }
     }
 
     ## Library path  {{{2
