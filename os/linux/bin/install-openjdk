@@ -10,8 +10,8 @@ source "${script_dir}/../include/header.sh"
 # We need to ensure alternatives code runs (see below).
 #
 # See also:
+# - https://jdk.java.net/14/
 # - https://openjdk.java.net/
-# - https://jdk.java.net/13/
 # """
 
 name="openjdk"
@@ -29,7 +29,6 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
-    file="${name}-${version}_linux-x64_bin.tar.gz"
     case "$version" in
         13)
             unique="5b8a42f3905b406298b72d750b6919f6/33"
@@ -40,9 +39,13 @@ tmp_dir="$(_koopa_tmp_dir)"
         13.0.2)
             unique="d4173c853231432d94f001e99d882ca7/8"
             ;;
+        14)
+            unique="076bab302c7b4508975440c56f6cc26a/36"
+            ;;
         *)
             _koopa_stop "Unsupported version: '${version}'."
     esac
+    file="${name}-${version}_linux-x64_bin.tar.gz"
     url="https://download.java.net/java/GA/jdk${version}/\
 ${unique}/GPL/${file}"
     _koopa_download "$url"
