@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-03-16.
+## Updated 2020-03-19.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -341,7 +341,7 @@ if (!isTRUE(docker)) {
     )
 }
 checkVersion(
-    name = "Java",
+    name = "Java : OpenJDK",
     whichName = "java",
     current = currentVersion("java"),
     expected = expectedVersion("java")
@@ -630,28 +630,16 @@ if (isTRUE(linux)) {
     }
 } else if (isTRUE(macos)) {
     h2("macOS specific")
-    checkVersion(
-        name = "Homebrew",
-        whichName = "brew",
-        current = currentVersion("homebrew"),
-        expected = expectedVersion("homebrew")
-    )
-    ## Apple LLVM version.
-    checkVersion(
-        name = "Clang",
-        whichName = "clang",
-        current = currentVersion("clang"),
-        expected = expectedVersion("clang")
-    )
-    ## Apple LLVM version.
-    checkVersion(
-        name = "GCC",
-        whichName = "gcc",
-        current = currentVersion("gcc"),
-        expected = expectedVersion("clang")
+    installed(
+        which = c(
+            "brew",
+            "clang",
+            "gcc"
+        )
     )
     checkMacOSAppVersion(c(
         ## "Numbers",
+        ## "Xcode",
         "Alacritty",
         "Aspera Connect",
         "BBEdit",
@@ -662,7 +650,6 @@ if (isTRUE(linux)) {
         "RStudio",
         "Tunnelblick",
         "Visual Studio Code",
-        "Xcode",
         "iTerm"
     ))
     checkHomebrewCaskVersion("gpg-suite")
