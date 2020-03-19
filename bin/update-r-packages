@@ -20,6 +20,7 @@ remove(
         "brio",
         "freerange",
         "nvimcom",
+        "pfgsea",
         "profdpm",
         "robust",
         "transformer"
