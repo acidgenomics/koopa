@@ -50,6 +50,7 @@ _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 casks=(
     1password
+    adobe-acrobat-reader
     adoptopenjdk  # igv
     alacritty
     alfred
