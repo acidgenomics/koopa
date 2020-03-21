@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-03-19.
+## Updated 2020-03-21.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -316,7 +316,7 @@ if (.isInstalled("readr")) {
                 "SDKs",
                 "MacOSX.sdk"
             )))) {
-                stop(
+                warning(
                     "Failed to detect Xcode CLT.\n",
                     "Run `xcode-select --install` to install."
                 )
@@ -342,7 +342,7 @@ if (.isInstalled("readr")) {
                                  )
                 )
             )) {
-                stop(
+                warning(
                     "Install clang and gfortran from CRAN ",
                     "Development Tools and Libraries.\n",
                     "https://cran.r-project.org/bin/macosx/tools/"
@@ -377,7 +377,7 @@ if (.isInstalled("readr")) {
             ## User library.
             !any(grepl(pattern = r_ver_short, x = libs))
         ) {
-            stop(sprintf(
+            warning(sprintf(
                 "Failed to detect R %s library in '.libPaths()':\n%s",
                 r_ver_short,
                 paste(libs, collapse = "\n")

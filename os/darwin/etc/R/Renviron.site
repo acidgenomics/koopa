@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-03-19.
+## Updated 2020-03-21.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -13,32 +13,26 @@
 ## System path  {{{1
 ## =============================================================================
 
-## Restrict path, so we don't load any binaries from conda or python virtualenv.
-PATH="/usr/local/bin:/usr/bin:/bin"
-
-## TeX.
-PATH="${PATH}:/Library/TeX/texbin"
-
-## X11.
-PATH="${PATH}:/opt/X11/bin"
-
-## Homebrew coreutils.
-PATH="/usr/local/opt/coreutils/libexec/gnubin:${PATH}"
-
-## Homebrew Python.
-## > PATH="/usr/local/opt/python/libexec/bin:${PATH}"
-
-## clang (for CRAN R).
-## R 3.5: clang 6
-## R 3.6: clang 7
-## R 3.7: clang 8
-PATH="/usr/local/clang7/bin:${PATH}"
-
-## gfortran 6.1 (for CRAN R).
-PATH="/usr/local/gfortran/bin:${PATH}"
-
-## pandoc (RStudio).
+## Use RStudio bundled version of pandoc, for improved R Markdown stability.
 PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
+
+## CRAN developer tools  {{{2
+## -----------------------------------------------------------------------------
+
+## Refer to CRAN website for details:
+## https://cran.r-project.org/bin/macosx/tools/
+
+## Clang 8, for R 3.7+.
+## > PATH="/usr/local/clang7/bin:${PATH}"
+
+## Clang 7, for R 3.6.
+## > PATH="/usr/local/clang7/bin:${PATH}"
+
+## Clang 6, for R 3.5.
+## > PATH="/usr/local/clang6/bin:${PATH}"
+
+## gfortran 6.1 (for R 3.5+).
+## > PATH="/usr/local/gfortran/bin:${PATH}"
 
 
 
