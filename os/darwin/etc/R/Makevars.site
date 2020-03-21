@@ -1,88 +1,12 @@
 # """
 # R for macOS Makevars configuration.
 # Updated 2020-03-19.
-#
-# These compilation flags are necessary for building packages from source.
-# Using recommended CRAN settings for R 3.6.
-#
-# Important! If you start seeing errors like this:
-#
-#     fatal error: 'string.h' file not found
-#
-# You must reinstall both the Xcode CLT and the macOS SDK headers.
-# Currently, this is supported on Mojave, but poorly on Catalina.
-#
-# Seeing this with sass package install:
-#
-#     /usr/local/clang7/include/c++/v1/string.h:61:15:
-#         fatal error: 'string.h' file not found
-#
-# Running 'macOS_SDK_headers_for_macOS_10.14.pkg' fixes on Mojave but there's
-# no current workaround that I'm aware of on Catalina.
-#
-#
-# See also:
-# - https://cran.r-project.org/bin/macosx/tools/
-# - https://cran.r-project.org/doc/manuals/r-release/
-#       R-admin.html#Customizing-package-compilation
-# - https://thecoatlessprofessor.com/programming/cpp/
-#       r-compiler-tools-for-rcpp-on-macos/
-# - https://github.com/rmacoslib/r-macos-rtools/blob/master/scripts/postinstall
-# - https://cran.r-project.org/web/packages/Rcpp/vignettes/Rcpp-FAQ.pdf
-# - https://stackoverflow.com/questions/22452826/
-#
-#
-# C++ headers fix:
-# Install Xcode command line tools (CLT).
-# Note that installation of full Xcode isn't required.
-#
-# > xcode-select --help
-# > sudo xcode-select --reset
-# > sudo rm -fr /Library/Developer/CommandLineTools
-# > sudo xcode-select --install
-# > xcode-select --print-path
-# # /Library/Developer/CommandLineTools
-#
-# Software update may be required.
-# > softwareupdate --help
-# > sudo softwareupdate --clear-catalog
-# > sudo softwareupdate --list
-# > sudo softwareupdate --install --all --restart
-#
-# > sudo xcode-select --install
-# > sudo xcodebuild -license accept
-#
-# For Mojave, also run this:
-# > sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
-#
-#
-# R test configuration:
-# > tools::makevars_site()
-# > install.packages("Rcpp", type = "source")
-# > install.packages("RcppArmadillo", type = "source")
-# > install.packages("RcppAnnoy", type = "source")
-# > install.packages("sass", type = "source")
 # """
-
-
-
-# CRAN compiler tools: clang 7 / gfortran 6.1                               {{{1
-# ==============================================================================
-
-# Legacy settings:
-# > CC=/usr/local/clang7/bin/clang
-# > CXX=/usr/local/clang7/bin/clang++
-# > CXX11=/usr/local/clang7/bin/clang++
-# > CXX14=/usr/local/clang7/bin/clang++
-# > CXX17=/usr/local/clang7/bin/clang++
-# > CXX1X=/usr/local/clang7/bin/clang++
-# > CXX98=/usr/local/clang7/bin/clang++
-# > LDFLAGS=-L/usr/local/clang7/lib
 
 CCFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 CFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
-CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 CPPFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk -I/usr/local/include
+CXXFLAGS=-isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 SHLIB_CXX14LDFLAGS+=-Wl,-rpath,\${R_HOME}/lib \${R_HOME}/lib/libc++abi.1.dylib
 SHLIB_CXXLDFLAGS+=-Wl,-rpath,\${R_HOME}/lib \${R_HOME}/lib/libc++abi.1.dylib

@@ -465,8 +465,11 @@ if (.isInstalled("readr")) {
         options("future.globals.maxSize" = 4000 * 1024^2)
     }
 
-    ## Minimal session info  {{{2
+    ## Session info  {{{2
     ## -------------------------------------------------------------------------
+
+    ## FIXME Need to make Clang check conditional for macOS.
+    ## FIXME Parse Makevars and inform on macOS.
 
     if (isTRUE(interactive())) {
         path_string <- paste0("  %.", getOption("width") - 2L, "s")
