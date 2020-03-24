@@ -398,6 +398,17 @@ _koopa_stat_access_octal() {  # {{{1
     return 0
 }
 
+_koopa_stat_dereference() {  # {{{1
+    # """
+    # Dereference input files.
+    # @note Updated 2020-03-24.
+    #
+    # Return quoted file with dereference if symbolic link.
+    # """
+    stat --printf='%N\n' "$@"
+    return 0
+}
+
 _koopa_stat_group() {  # {{{1
     # """
     # Get the current group of a file or directory.
