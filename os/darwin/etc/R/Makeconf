@@ -57,13 +57,13 @@ FLIBS =  -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin15/6.1.0 -L/usr/local/
 FPICFLAGS = -fPIC
 FOUNDATION_CPPFLAGS = 
 FOUNDATION_LIBS = -framework Foundation
-JAR = /Library/Java/JavaVirtualMachines/adoptopenjdk-13.0.2.jdk/Contents/Home/bin/jar
-JAVA = /Library/Java/JavaVirtualMachines/adoptopenjdk-13.0.2.jdk/Contents/Home/bin/java
-JAVAC = /Library/Java/JavaVirtualMachines/adoptopenjdk-13.0.2.jdk/Contents/Home/bin/javac
-JAVAH = /Library/Java/JavaVirtualMachines/adoptopenjdk-13.0.2.jdk/Contents/Home/bin/javah
+JAR = /Library/Java/JavaVirtualMachines/openjdk-14.jdk/Contents/Home/bin/jar
+JAVA = /Library/Java/JavaVirtualMachines/openjdk-14.jdk/Contents/Home/bin/java
+JAVAC = /Library/Java/JavaVirtualMachines/openjdk-14.jdk/Contents/Home/bin/javac
+JAVAH = /Library/Java/JavaVirtualMachines/openjdk-14.jdk/Contents/Home/bin/javah
 ## JAVA_HOME might be used in the next three.  
 ## They are for packages 'JavaGD' and 'rJava'
-JAVA_HOME = /Library/Java/JavaVirtualMachines/adoptopenjdk-13.0.2.jdk/Contents/Home
+JAVA_HOME = /Library/Java/JavaVirtualMachines/openjdk-14.jdk/Contents/Home
 JAVA_CPPFLAGS = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/darwin
 JAVA_LIBS = -L$(JAVA_HOME)/lib/server -ljvm
 JAVA_LD_LIBRARY_PATH = $(JAVA_HOME)/lib/server

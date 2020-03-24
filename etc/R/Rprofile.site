@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-03-19.
+## Updated 2020-03-21.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -256,6 +256,19 @@ if (.isInstalled("readr")) {
 ## > help(topic = "Startup", package = "base")
 
 .First <- function() {
+    ## Platform  {{{2
+    ## -------------------------------------------------------------------------
+
+    ## Linux and macOS (Darwin) are currently supported.
+
+    platform <- Sys.info()[["sysname"]]
+    linux <- identical(platform, "Linux")
+    macos <- identical(platform, "Darwin")
+    rm(platform)
+
+    ## R version strings  {{{2
+    ## -------------------------------------------------------------------------
+
     ## Get the full R version, including patch (e.g. 3.6.1).
     r_ver_full <- numeric_version(paste(
         R.version[["major"]],
@@ -306,7 +319,7 @@ if (.isInstalled("readr")) {
     ## https://cran.r-project.org/bin/macosx/tools/
 
     if (!isTRUE(conda)) {
-        if (Sys.info()[["sysname"]] == "Darwin") {
+        if (isTRUE(macos)) {
             ## Check that Xcode command line tools (CLT) are installed.
             if (!isTRUE(dir.exists(file.path(
                 "/",
@@ -316,7 +329,7 @@ if (.isInstalled("readr")) {
                 "SDKs",
                 "MacOSX.sdk"
             )))) {
-                stop(
+                warning(
                     "Failed to detect Xcode CLT.\n",
                     "Run `xcode-select --install` to install."
                 )
@@ -342,25 +355,28 @@ if (.isInstalled("readr")) {
                                  )
                 )
             )) {
-                stop(
-                    "Install clang and gfortran from CRAN ",
-                    "Development Tools and Libraries.\n",
+                warning(
+                    "Failed to detect CRAN clang and gfortran.\n",
+                    "Install development tools and libraries from:\n",
                     "https://cran.r-project.org/bin/macosx/tools/"
                 )
             }
             rm(clang_bin_dir, clang_ver)
-        } else if (Sys.info()[["sysname"]] == "Linux") {
-            ## Build GCC from source, to control version across platforms.
-            ## > usr_local_bin <- file.path("", "usr", "local", "bin")
-            ## > stopifnot(identical(
-            ## >     x = Sys.which(c("gcc", "g++", "gfortran")),
-            ## >     y = c(
-            ## >         "gcc"      = file.path(usr_local_bin, "gcc"),
-            ## >         "g++"      = file.path(usr_local_bin, "g++"),
-            ## >         "gfortran" = file.path(usr_local_bin, "gfortran")
-            ## >     )
-            ## > ))
-            ## > rm(usr_local_bin)
+            stopifnot(all(nzchar(
+                Sys.which(c(
+                    "clang",
+                    "clang++",
+                    "gfortran"
+                ))
+            )))
+        } else if (isTRUE(linux)) {
+            stopifnot(all(nzchar(
+                Sys.which(c(
+                    "g++",
+                    "gcc",
+                    "gfortran"
+                ))
+            )))
         }
     }
 
@@ -377,7 +393,7 @@ if (.isInstalled("readr")) {
             ## User library.
             !any(grepl(pattern = r_ver_short, x = libs))
         ) {
-            stop(sprintf(
+            warning(sprintf(
                 "Failed to detect R %s library in '.libPaths()':\n%s",
                 r_ver_short,
                 paste(libs, collapse = "\n")
@@ -465,32 +481,60 @@ if (.isInstalled("readr")) {
         options("future.globals.maxSize" = 4000 * 1024^2)
     }
 
-    ## Minimal session info  {{{2
+    ## Session info  {{{2
     ## -------------------------------------------------------------------------
 
     if (isTRUE(interactive())) {
         path_string <- paste0("  %.", getOption("width") - 2L, "s")
-        cat(sprintf(
+        msg <- sprintf(
             fmt = paste(
                 "",
                 "R %s",
                 "",
                 "R Home:", path_string,
+                sep = "\n"
+            ),
+            r_ver_full,
+            normalizePath(R.home(), mustWork = TRUE)
+        )
+        if (isTRUE(macos)) {
+            msg <- sprintf(
+                fmt = paste(
+                    msg,
+                    "Clang:", path_string,
+                    sep = "\n"
+                ),
+                Sys.which("clang")
+            )
+        } else if (isTRUE(linux)) {
+            msg <- sprintf(
+                fmt = paste(
+                    msg,
+                    "GCC:", path_string,
+                    sep = "\n"
+                ),
+                Sys.which("gcc")
+            )
+        }
+        msg <- sprintf(
+            fmt = paste(
+                msg,
+                "GNU Fortran:", path_string,
                 "Package Library:", path_string,
                 "Working Directory:", path_string,
                 "",
                 "",
                 sep = "\n"
             ),
-            r_ver_full,
-            normalizePath(R.home(), mustWork = TRUE),
+            Sys.which("gfortran"),
             normalizePath(.libPaths()[[1L]], mustWork = TRUE),
             normalizePath(getwd(), mustWork = TRUE)
-        ))
-        rm(path_string)
+        )
+        cat(msg)
+        rm(msg, path_string)
     }
 
-    rm(conda, r_ver_full, r_ver_short)
+    rm(conda, linux, macos, r_ver_full, r_ver_short)
 }
 
 
