@@ -130,7 +130,7 @@ fi
 _koopa_success "koopa update was successful."
 _koopa_restart
 
-# > if [[ "$system" -eq 1 ]]
-# > then
-# >     koopa check
-# > fi
+if [[ "$system" -eq 1 ]]
+then
+    koopa check
+fi
