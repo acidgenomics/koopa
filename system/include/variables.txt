@@ -148,7 +148,7 @@ git="2.25.2"
 go="1.14"
 
 # https://cloud.google.com/sdk/install
-google-cloud-sdk="285.0.1"
+google-cloud-sdk="286.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.4"
