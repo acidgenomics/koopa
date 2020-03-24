@@ -239,7 +239,7 @@ _koopa_dotfiles_source_repo() {  # {{{1
 _koopa_download() {  # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-23.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
@@ -275,7 +275,7 @@ _koopa_download() {  # {{{1
         --location \
         --output "$file" \
         --progress-bar \
-        --retry 1 \
+        --retry 5 \
         --show-error \
         "$url"
     return 0

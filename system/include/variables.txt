@@ -18,7 +18,10 @@ koopa-url="https://koopa.acidgenomics.com/"
 # Globals  {{{1
 # ==============================================================================
 
-gnu-mirror="https://ftpmirror.gnu.org"
+# GNU FTP server mirror
+# https://www.gnu.org/prep/ftp.en.html
+# > gnu-mirror="https://ftpmirror.gnu.org"
+gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 
 
 
