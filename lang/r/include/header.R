@@ -1,12 +1,12 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-02-28.
+## @note Updated 2020-03-24.
 ## """
 
 options(
     ## "verbose" = TRUE,
+    ## "warn" = 2L,
     "error" = quote(quit(status = 1L)),
-    "warn" = 2L,
     "warning" = quote(quit(status = 1L))
 )
 
