@@ -10,7 +10,7 @@
 _koopa_bcbio_nextgen_current_version() {  # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-03-26.
     #
     # Alternate approach:
     # > current="$(_koopa_github_latest_release "bcbio/bcbio-nextgen")"
@@ -18,7 +18,7 @@ _koopa_bcbio_nextgen_current_version() {  # {{{1
     _koopa_assert_is_installed curl
     local url
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
-/master/requirements-conda.txt"
+/master/requirements.txt"
     local x
     x="$( \
         curl --silent "$url" \
