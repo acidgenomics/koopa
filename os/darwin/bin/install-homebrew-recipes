@@ -173,6 +173,7 @@ brews=(
     bfg
     binutils
     ccache
+    checkbashisms
     circleci
     cmake
     convmv
