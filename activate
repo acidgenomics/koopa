@@ -70,47 +70,70 @@ unset -f usage
 # Pre-flight checks  {{{1
 # ==============================================================================
 
+# Interactive  {{{2
+# ------------------------------------------------------------------------------
+
+if printf '%s\n' "$-" | grep -q 'i'
+then
+    KOOPA_INTERACTIVE=1
+else
+    KOOPA_INTERACTIVE=0
+fi
+
+# Operating system  {{{2
+# ------------------------------------------------------------------------------
+
+# Bash sets the shell variable OSTYPE (e.g. linux-gnu).
+# However, this doesn't work consistently with zsh, so use uname instead.
+
+case "$(uname -s)" in
+    Darwin)
+        ;;
+    Linux)
+        ;;
+    *)
+        >&2 printf "ERROR: Unsupported operating system.\n"
+        return 0
+esac
+
+# Shell  {{{2
+# ------------------------------------------------------------------------------
+
+# Note that we always want to reset here, in case different subshell is called.
+#
+# See also:
+# - https://stackoverflow.com/questions/3327013
+
 if [ -n "${BASH_VERSION:-}" ]
 then
     KOOPA_SHELL="bash"
-    # shellcheck disable=SC2039
-    # SC2039: In POSIX sh, array references are undefined.
-    KOOPA_SOURCE="${BASH_SOURCE[0]}"
 elif [ -n "${ZSH_VERSION:-}" ]
 then
     KOOPA_SHELL="zsh"
-    # Zsh currently requires presence of '~/.zshrc' file for clean activation
-    # on some systems.
-    #
-    # Note that sourcing in '/etc/profile' doesn't return script path in '$0',
-    # which is commonly recommended online in place of '$BASH_SOURCE'. '$0' in
-    # this case instead returns '_src_etc_profile'.
-    #
-    # This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
-    #
-    # See also:
-    # https://stackoverflow.com/a/23259585/3911732
-    case "$0" in
-        _src_etc_profile*)
-            # Early return when inside '/etc/profile.d/zzz-koopa.sh' script.
-            return 0
-            ;;
-        *)
-            export KOOPA_ZSHRC=1
-            ;;
-    esac
-    KOOPA_SOURCE="${(%):-%N}"
+elif [ -d '/proc' ]
+then
+    # Standard approach on Linux.
+    KOOPA_SHELL="$(basename "$(readlink /proc/$$/exe)")"
 else
-    >&2 cat << EOF
-WARNING: koopa failed to activate in the current shell.
+    KOOPA_SHELL=
+fi
 
-Supported POSIX shells: bash, zsh.
+case "$KOOPA_SHELL" in
+    bash|dash|zsh)
+        ;;
+    *)
+        # Inform user about activate failure only when interactive.
+        if [ "$KOOPA_INTERACTIVE" -eq 1 ]
+        then
+            >&2 cat << EOF
+ERROR: Failed to activate koopa in the current shell.
 
-      -: '${-}'
-      0: '${0}'
-  SHELL: '${SHELL}'
+Supported POSIX shells: bash, dash, zsh.
 
-Usage of '/bin/sh' as the default shell is discouraged.
+  KOOPA_SHELL : '${KOOPA_SHELL}'
+        SHELL : '${SHELL}'
+            - : '${-}'
+            0 : '${0}'
 
 Consider switching to bash:
 > chsh -s /bin/bash '${USER}'
@@ -118,9 +141,38 @@ Consider switching to bash:
 or zsh:
 > chsh -s /bin/zsh '${USER}'
 EOF
-    # Don't return with error code, as this can cause shell lockout.
-    return 0
+        fi
+        return 0
+        ;;
+esac
+
+# Zsh currently requires presence of '~/.zshrc' for clean activation.
+#
+# Note that sourcing in '/etc/profile' doesn't return script path in
+# '$0', which is commonly recommended online in place of '$BASH_SOURCE'.
+# '$0' in this case instead returns '_src_etc_profile'.
+#
+# This approach covers both '_src_etc_profile' and '_src_etc_profile_d'.
+#
+# See also:
+# - https://stackoverflow.com/a/23259585/3911732
+if [ "$KOOPA_SHELL" = "zsh" ]
+then
+    case "$0" in
+        _src_etc_profile*)
+            # Early return when sourced from '/etc/profile.d/zzz-koopa.sh'.
+            return 0
+            ;;
+        *)
+            export KOOPA_ZSHRC=1
+            ;;
+    esac
 fi
+
+
+
+# Argument parsing  {{{1
+# ==============================================================================
 
 # Force mode  {{{2
 # ------------------------------------------------------------------------------
@@ -140,10 +192,8 @@ then
             KOOPA_FORCE=0
             ;;
     esac
+    unset -v force
 fi
-
-unset -v force
-export KOOPA_FORCE
 
 # Skip activation  {{{2
 # ------------------------------------------------------------------------------
@@ -153,7 +203,10 @@ then
     # Skip activation for root user.
     # > [ "$(id -u)" -eq 0 ] && return 0
 
-    # Ensure 'USER' global is always defined.
+    # Skip activation inside non-interactive shells.
+    [ "$KOOPA_INTERACTIVE" -eq 0 ] && return 0
+
+    # Ensure 'USER' global is defined, for user-specific checks below.
     [ -z "${USER:-}" ] && USER="$(whoami)" && export USER
 
     # Always skip on accounts containing "admin" in the name.
@@ -173,22 +226,24 @@ then
     # which will otherwise activate from both '/etc/profile.d/zzz-koopa.sh'
     # and '~/.bashrc' (if defined).
     #
-    # Note that 'typeset' is not defined in all shells (e.g. '/bin/sh').
-    #
-    # shellcheck disable=SC2034
-    [ -n "$(typeset -f _koopa_prefix)" ] && return 0
+    # See also:
+    # - https://unix.stackexchange.com/questions/332005
+    if type '_koopa_prefix' 2>/dev/null | grep -q 'function'
+    then
+        return 0
+    fi
 fi
 
-# Alternatively, can attempt to compare SHLVL value.
-if [ -n "${KOOPA_PREFIX:-}" ]
+# Subshell  {{{2
+# ------------------------------------------------------------------------------
+
+# Alternatively, can compare SHLVL value.
+if [ -z "${KOOPA_SUBSHELL:-}" ]
 then
-    KOOPA_SUBSHELL=1
-else
     KOOPA_SUBSHELL=0
+else
+    KOOPA_SUBSHELL=1
 fi
-
-export KOOPA_SHELL
-export KOOPA_SUBSHELL
 
 # Extra mode  {{{2
 # ------------------------------------------------------------------------------
@@ -206,10 +261,8 @@ then
             KOOPA_EXTRA=1
             ;;
     esac
+    unset -v extra
 fi
-
-unset -v extra
-export KOOPA_EXTRA
 
 if [ -n "${KOOPA_USERS_NO_EXTRA:-}" ]
 then
@@ -235,10 +288,8 @@ then
             KOOPA_MINIMAL=0
             ;;
     esac
+    unset -v minimal
 fi
-
-unset -v minimal
-export KOOPA_MINIMAL
 
 if [ -n "${KOOPA_USERS_MINIMAL:-}" ]
 then
@@ -269,10 +320,8 @@ then
             KOOPA_TEST=0
             ;;
     esac
+    unset -v test
 fi
-
-unset -v test
-export KOOPA_TEST
 
 if [ "$KOOPA_TEST" -eq 1 ]
 then
@@ -291,28 +340,40 @@ then
     KOOPA_MINIMAL=0
 fi
 
-unset -v extra minimal
+# Export global variables  {{{2
+# ------------------------------------------------------------------------------
+
+export KOOPA_EXTRA
+export KOOPA_FORCE
+export KOOPA_MINIMAL
+export KOOPA_SHELL
+export KOOPA_SUBSHELL
+export KOOPA_TEST
 
 
 
-# Locate home and source functions  {{{1
+# Locate installation prefix  {{{1
 # ==============================================================================
 
-if [ "$KOOPA_TEST" -eq 1 ]
-then
-    if [ "$(uname -s)" = "Darwin" ]
-    then
-        KOOPA_DURATION_START="$(gdate -u +%s%3N)"
-    else
-        KOOPA_DURATION_START="$(date -u +%s%3N)"
-    fi
-fi
-
-if [ ! -f "$KOOPA_SOURCE" ]
-then
-    >&2 printf '%s\n' 'ERROR: Failed to detect activation script path.'
-    return 1
-fi
+case "$KOOPA_SHELL" in
+    bash)
+        # shellcheck disable=SC2039
+        KOOPA_ACTIVATE_SCRIPT="${BASH_SOURCE[0]}"
+        ;;
+    zsh)
+        KOOPA_ACTIVATE_SCRIPT="${(%):-%N}"
+        ;;
+    *)
+        # POSIX doesn't support file path resolution of sourced dot scripts.
+        if [ "$KOOPA_INTERACTIVE" -eq 1 ] && [ ! -d "${KOOPA_PREFIX:?}" ]
+        then
+            >&2 printf "ERROR: Failed to locate koopa activation script.\n"
+            >&2 printf "Required 'KOOPA_PREFIX' variable is unset.\n"
+            return 0
+        fi
+        KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX}/activate"
+        ;;
+esac
 
 if ! command -v realpath >/dev/null
 then
@@ -328,11 +389,26 @@ fi
 
 # Note that running realpath on the file instead of the directory will properly
 # resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
-KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_SOURCE")")"
+KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_ACTIVATE_SCRIPT")")"
 export KOOPA_PREFIX
 
-# Load POSIX functions.
-. "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+
+
+# Source functions  {{{1
+# ==============================================================================
+
+if [ "$KOOPA_TEST" -eq 1 ]
+then
+    if [ "$(uname -s)" = "Darwin" ]
+    then
+        KOOPA_DURATION_START="$(gdate -u +%s%3N)"
+    else
+        KOOPA_DURATION_START="$(date -u +%s%3N)"
+    fi
+fi
+
+# Load shared POSIX functions.
+. "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
 # Get location of activation scripts.
 KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
@@ -465,5 +541,5 @@ fi
 
 unset -v \
     KOOPA_ACTIVATE_DIR \
-    KOOPA_INTERACTIVE \
-    KOOPA_SOURCE
+    KOOPA_ACTIVATE_SCRIPT \
+    KOOPA_INTERACTIVE
