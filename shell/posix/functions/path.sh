@@ -211,40 +211,39 @@ _koopa_list_path_priority_unique() {  # {{{1
 _koopa_remove_from_fpath() {  # {{{1
     # """
     # Remove directory from FPATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-27.
     # """
     local dir
     dir="${1:?}"
-    export FPATH="${FPATH//:$dir/}"
+    FPATH="$(_koopa_print "$FPATH" | sed "s|:${dir}||g")"
+    export FPATH
     return 0
 }
 
 _koopa_remove_from_manpath() {  # {{{1
     # """
     # Remove directory from MANPATH.
-    # @note Updated 2019-10-14.
+    # @note Updated 2020-03-27.
     # """
     local dir
     dir="${1:?}"
-    export MANPATH="${MANPATH//:$dir/}"
+    MANPATH="$(_koopa_print "$MANPATH" | sed "s|:${dir}||g")"
+    export MANPATH
     return 0
 }
 
 _koopa_remove_from_path() {  # {{{1
     # """
     # Remove directory from PATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-27.
     #
-    # Look into an improved POSIX method here.
-    # This works for bash and ksh.
-    # Note that this won't work on the first item in PATH.
-    #
-    # Alternate approach using sed:
-    # > _koopa_print "$PATH" | sed "s|:${dir}||g"
+    # Alternative non-POSIX approach that works on Bash and Zsh:
+    # > PATH="${PATH//:$dir/}"
     # """
     local dir
     dir="${1:?}"
-    export PATH="${PATH//:$dir/}"
+    PATH="$(_koopa_print "$PATH" | sed "s|:${dir}||g")"
+    export PATH
     return 0
 }
 
