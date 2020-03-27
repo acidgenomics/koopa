@@ -493,79 +493,6 @@ _koopa_header() {  # {{{1
     return 0
 }
 
-_koopa_help() {  # {{{1
-    # """
-    # Show usage via '--help' flag.
-    # @note Updated 2020-01-21.
-    #
-    # Note that using 'path' as a local variable here will mess up Zsh.
-    #
-    # Now always calls 'man' to display nicely formatted manual page.
-    #
-    # Bash alternate approach:
-    # > file="${BASH_SOURCE[${#BASH_SOURCE[@]} - 1]}"
-    #
-    # Zsh parameter notes:
-    # - '$0': The name used to invoke the current shell, or as set by the -c
-    #   command line option upon invocation. If the FUNCTION_ARGZERO option is
-    #   set, $0 is set upon entry to a shell function to the name of the
-    #   function, and upon entry to a sourced script to the name of the script,
-    #   and reset to its previous value when the function or script returns.
-    # - 'FUNCTION_ARGZERO': When executing a shell function or sourcing a
-    #   script, set $0 temporarily to the name of the function/script. Note that
-    #   toggling FUNCTION_ARGZERO from on to off (or off to on) does not change
-    #   the current value of $0. Only the state upon entry to the function or
-    #   script has an effect. Compare POSIX_ARGZERO.
-    # - 'POSIX_ARGZERO': This option may be used to temporarily disable
-    #   FUNCTION_ARGZERO and thereby restore the value of $0 to the name used to
-    #   invoke the shell (or as set by the -c command line option). For
-    #   compatibility with previous versions of the shell, emulations use
-    #   NO_FUNCTION_ARGZERO instead of POSIX_ARGZERO, which may result in
-    #   unexpected scoping of $0 if the emulation mode is changed inside a
-    #   function or script. To avoid this, explicitly enable POSIX_ARGZERO in
-    #   the emulate command:
-    #
-    #   emulate sh -o POSIX_ARGZERO
-    #
-    #   Note that NO_POSIX_ARGZERO has no effect unless FUNCTION_ARGZERO was
-    #   already enabled upon entry to the function or script. 
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/192319
-    # - http://zsh.sourceforge.net/Doc/Release/Parameters.html
-    # - https://stackoverflow.com/questions/35677745
-    # """
-    case "${1:-}" in
-        --help|-h)
-            _koopa_assert_is_installed man
-            local file name shell
-            shell="$(_koopa_shell)"
-            case "$shell" in
-                bash)
-                    file="$0"
-                    ;;
-                zsh)
-                    # This approach is supported in zsh 5.7.1, but will error
-                    # in older zsh versions, such as on Travis CI. This is the
-                    # same as the value of $0 when the POSIX_ARGZERO option is
-                    # set, but is always available. 
-                    # > file="${ZSH_ARGZERO:?}"
-                    emulate sh -o POSIX_ARGZERO
-                    file="$0"
-                    ;;
-                *)
-                    _koopa_stop "Unsupported shell: '${shell}'."
-                    exit 1
-                    ;;
-            esac
-            name="${file##*/}"
-            man "$name"
-            exit 0
-            ;;
-    esac
-    return 0
-}
-
 _koopa_host_id() {  # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
@@ -609,27 +536,6 @@ _koopa_host_id() {  # {{{1
             ;;
     esac
     _koopa_print "$id"
-    return 0
-}
-
-_koopa_info_box() {  # {{{1
-    # """
-    # Info box.
-    # @note Updated 2019-10-14.
-    #
-    # Using unicode box drawings here.
-    # Note that we're truncating lines inside the box to 68 characters.
-    # """
-    local array
-    array=("$@")
-    local barpad
-    barpad="$(printf "━%.0s" {1..70})"
-    printf "  %s%s%s  \n" "┏" "$barpad" "┓"
-    for i in "${array[@]}"
-    do
-        printf "  ┃ %-68s ┃  \n" "${i::68}"
-    done
-    printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
     return 0
 }
 
@@ -707,32 +613,6 @@ _koopa_link_cellar() {  # {{{1
         cp -frs "$cellar_prefix/"* "$make_prefix/".
     fi
 
-    return 0
-}
-
-_koopa_list_internal_functions() {  # {{{1
-    # """
-    # List all functions defined by koopa.
-    # @note Updated 2020-02-19.
-    # """
-    local x
-    case "$(_koopa_shell)" in
-        bash)
-            x="$( \
-                declare -F \
-                | sed "s/^declare -f //g" \
-            )"
-            ;;
-        zsh)
-            # shellcheck disable=SC2086,SC2154
-            x="$(print -l ${(ok)functions})"
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    x="$(_koopa_print "$x" | grep -E "^_koopa_")"
-    _koopa_print "$x"
     return 0
 }
 
@@ -1108,7 +988,7 @@ _koopa_set_sticky_group() {  # {{{1
 _koopa_shell() {  # {{{1
     # """
     # Note that this isn't necessarily the default shell ('$SHELL').
-    # @note Updated 2019-06-27.
+    # @note Updated 2020-03-27.
     # """
     local shell
     if [ -n "${BASH_VERSION:-}" ]
@@ -1120,16 +1000,12 @@ _koopa_shell() {  # {{{1
     elif [ -n "${ZSH_VERSION:-}" ]
     then
         shell="zsh"
+    elif [ -d '/proc' ]
+    then
+        # This step supports other POSIX shells, such as dash.
+        shell="$(basename "$(readlink /proc/$$/exe)")"
     else
-        >&2 cat << EOF
-Error: Failed to detect supported shell.
-Supported: bash, ksh, zsh.
-
-  SHELL: ${SHELL}
-      0: ${0}
-      -: ${-}
-EOF
-        return 1
+        _koopa_stop "Failed to detect shell."
     fi
     _koopa_print "$shell"
     return 0
@@ -1191,32 +1067,6 @@ _koopa_tmp_log_file() {  # {{{1
     _koopa_tmp_file
     return 0
 }
-
-# > _koopa_unset_internal_functions() {  # {{{1
-# >     # """
-# >     # Unset all of koopa's internal functions.
-# >     # @note Updated 2020-02-19.
-# >     #
-# >     # Potentially useful as a final clean-up step for activation.
-# >     # Note that this will nuke functions currently required for interactive
-# >     # prompt, so don't do this yet.
-# >     # """
-# >     local funs
-# >     # Convert the '\n' delimited list into an array.
-# >     case "$(_koopa_shell)" in
-# >         bash)
-# >             mapfile -t funs < <(_koopa_list_internal_functions)
-# >             ;;
-# >         zsh)
-# >             funs=("${(@f)$(_koopa_list_internal_functions)}")
-# >             ;;
-# >         *)
-# >             return 1
-# >             ;;
-# >     esac
-# >     unset -f "${funs[@]}"
-# >     return 0
-# > }
 
 _koopa_url() {  # {{{1
     # """
