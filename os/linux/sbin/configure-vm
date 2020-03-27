@@ -397,12 +397,12 @@ _koopa_rm \
 if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
 then
     _koopa_h2 "Removing caches, logs, and temporary files."
+    # Don't clear '/var/log/' here, as this can mess with 'sshd'.
     sudo rm -frv \
         /root/.cache \
         /tmp/* \
         /var/backups/* \
-        /var/cache/* \
-        /var/log/*
+        /var/cache/*
     if _koopa_is_debian
     then
         sudo rm -fr /var/lib/apt/lists/*
