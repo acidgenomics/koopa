@@ -2,7 +2,7 @@
 
 # """
 # Bash shared header script.
-# @note Updated 2020-02-14.
+# @note Updated 2020-03-27.
 # """
 
 # > set --help
@@ -63,13 +63,17 @@ fi
 KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
     >/dev/null 2>&1 && pwd -P)"
 
-# Source POSIX header.
+# Source POSIX header (which includes functions).
 # shellcheck source=/dev/null
 source "${KOOPA_BASH_INC}/../../posix/include/header.sh"
 
 # Source Bash functions.
-# shellcheck source=/dev/null
-source "${KOOPA_BASH_INC}/functions.sh"
+# Use shell globbing instead of 'find', which doesn't support source.
+for file in "${KOOPA_BASH_INC}/../functions/"*".sh"
+do
+    # shellcheck source=/dev/null
+    [[ -f "$file" ]] && source "$file"
+done
 
 unset -v KOOPA_BASH_INC
 
