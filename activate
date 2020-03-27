@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-03-06.
+    Updated 2020-03-27.
 EOF
 }
 
@@ -102,7 +102,7 @@ then
     KOOPA_SOURCE="${(%):-%N}"
 else
     >&2 cat << EOF
-ERROR: koopa failed to activate in the current shell.
+WARNING: koopa failed to activate in the current shell.
 
 Supported POSIX shells: bash, zsh.
 
@@ -118,7 +118,8 @@ Consider switching to bash:
 or zsh:
 > chsh -s /bin/zsh '${USER}'
 EOF
-    return 1
+    # Don't return with error code, as this can cause shell lockout.
+    return 0
 fi
 
 # Force mode  {{{2
