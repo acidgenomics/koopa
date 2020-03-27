@@ -60,22 +60,22 @@ then
     fi
 fi
 
-KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+# Ensure koopa prefix is exported, if necessary.
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
     >/dev/null 2>&1 && pwd -P)"
+export KOOPA_PREFIX
 
 # Source POSIX header (which includes functions).
 # shellcheck source=/dev/null
-source "${KOOPA_BASH_INC}/../../posix/include/header.sh"
+source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
 # Source Bash functions.
 # Use shell globbing instead of 'find', which doesn't support source.
-for file in "${KOOPA_BASH_INC}/../functions/"*".sh"
+for file in "${KOOPA_PREFIX}/shell/bash/functions/"*".sh"
 do
     # shellcheck source=/dev/null
     [[ -f "$file" ]] && source "$file"
 done
-
-unset -v KOOPA_BASH_INC
 
 _koopa_help "$@"
 
