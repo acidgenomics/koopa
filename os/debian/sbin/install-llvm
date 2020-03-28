@@ -16,10 +16,34 @@ source "${script_dir}/../include/header.sh"
 # Note that default llvm recipe currently installs version 6.
 # """
 
-if [[ -n "${LLVM_CONFIG:-}" ]]
+reinstall=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --reinstall)
+            reinstall=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+if [[ "$reinstall" -eq 1 ]]
 then
-    _koopa_note "llvm-config detected: '${LLVM_CONFIG}'."
-    exit 0
+    uninstall-llvm
 fi
 
 name="llvm"
@@ -27,6 +51,21 @@ version="$(_koopa_variable "$name")"
 major_version="$(_koopa_major_version "$version")"
 
 name_fancy="LLVM ${major_version}"
+
+# Check if LLVM installation is current, or whether we need to update.
+if [[ -n "${LLVM_CONFIG:-}" ]]
+then
+    current_version="$(_koopa_get_version "$name")"
+    current_major_version="$(_koopa_major_version "$current_version")"
+    if [[ "$current_major_version" == "$major_version" ]]
+    then
+        _koopa_note "${name_fancy} is installed."
+        exit 0
+    else
+        _koopa_dl "llvm-config" "$LLVM_CONFIG"
+        uninstall-llvm
+    fi
+fi
 
 _koopa_install_start "$name_fancy"
 
