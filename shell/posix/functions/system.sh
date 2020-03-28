@@ -994,6 +994,9 @@ _koopa_shell() {  # {{{1
     #
     # Alternatively, can check for existence of BASH_VERSION, ZSH_VERSION
     # variables, which may be slightly more performant.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/3327013
     # """
     local shell
     if [ -d '/proc' ]
@@ -1003,7 +1006,9 @@ _koopa_shell() {  # {{{1
     else
         # This approach works on macOS.
         # The sed step converts '-zsh' to 'zsh', for example.
-        shell="$(ps -p "$$" -o 'comm=' | sed 's/^-//')"
+        # The basename step handles the case when ps returns full path.
+        # This can happen inside of editors, such as vim.
+        shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
     _koopa_print "$shell"
     return 0

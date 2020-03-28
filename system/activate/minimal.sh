@@ -32,8 +32,8 @@ export HOSTNAME
 export OSTYPE
 
 # SHELL
+# Some POSIX shells, such as Dash, don't export this by default.
 # Note that this doesn't currently get set by RStudio terminal.
-# Dash shell doesn't export this by default.
 SHELL="$(_koopa_which_realpath "$KOOPA_SHELL")"
 export SHELL
 
