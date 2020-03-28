@@ -10,13 +10,14 @@ _koopa_git_submodule_init() {
     _koopa_assert_is_git "$PWD"
     _koopa_assert_is_nonzero_file ".gitmodules"
     _koopa_assert_is_installed git
-    local array string target target_key url url_key
+    local array lines string target target_key url url_key
     git submodule init
-    mapfile -t array < <( \
+    lines="$( \
         git config \
             -f ".gitmodules" \
             --get-regexp '^submodule\..*\.path$' \
-    )
+    )"
+    mapfile -t array <<< "$lines"
     if ! _koopa_is_array_non_empty "${array[@]}"
     then
         _koopa_stop "Failed to detect submodules in '${PWD}'."
