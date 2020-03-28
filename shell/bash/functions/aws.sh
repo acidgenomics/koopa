@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2039
 
 # Better programmatic access:
 # > aws s3api list-buckets --output json
