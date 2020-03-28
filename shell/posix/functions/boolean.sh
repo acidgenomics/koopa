@@ -292,7 +292,7 @@ _koopa_is_file_system_case_sensitive() {  # {{{1
 _koopa_is_function() {  # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-03-28.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -312,7 +312,9 @@ _koopa_is_function() {  # {{{1
     # """
     local fun
     fun="${1:?}"
-    _koopa_is_matching_fixed "$(type "$fun")" 'function'
+    local str
+    str="$(type "$fun" 2>/dev/null)"
+    _koopa_is_matching_fixed "$str" 'function'
 }
 
 _koopa_is_git() {  # {{{1
