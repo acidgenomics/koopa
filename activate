@@ -389,7 +389,7 @@ export KOOPA_PREFIX
 
 
 
-# Source functions  {{{1
+# Start activation  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -402,8 +402,15 @@ then
     fi
 fi
 
-# Load shared POSIX functions.
-. "${KOOPA_PREFIX}/shell/posix/include/header.sh"
+# Load shell header file, which will source required functions.
+if [ -f "${KOOPA_PREFIX}/shell/${KOOPA_SHELL}/include/header.sh" ]
+then
+    header="${KOOPA_PREFIX}/shell/${KOOPA_SHELL}/include/header.sh"
+else
+    header="${KOOPA_PREFIX}/shell/posix/include/header.sh"
+fi
+activate=1 . "$header"
+unset -v header
 
 # Get location of activation scripts.
 KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
