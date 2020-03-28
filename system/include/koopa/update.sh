@@ -29,6 +29,11 @@ do
     esac
 done
 
+if [[ "$system" -eq 1 ]]
+then
+    set -x
+fi
+
 _koopa_h1 "Updating koopa at '${koopa_prefix}'."
 
 # Note that stable releases are not git, and can't be updated.
