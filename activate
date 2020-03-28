@@ -325,7 +325,7 @@ then
     set -o errexit
     set -o nounset
     set -o xtrace
-    if [ -n "${BASH_VERSION:-}" ]
+    if [ "$KOOPA_SHELL" = "bash" ]
     then
         set -o errtrace
         set -o pipefail
