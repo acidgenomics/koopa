@@ -3,10 +3,10 @@
 _koopa_add_local_bins_to_path() {  # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
-    # @note Updated 2019-10-22.
+    # @note Updated 2020-03-28.
     #
     # This will recurse through the local library and find 'bin/' subdirs.
-    # Note: read '-a' flag doesn't work on macOS. zsh related?
+    # Note: read '-a' flag doesn't work on macOS.
     # """
     local dir
     local dirs
