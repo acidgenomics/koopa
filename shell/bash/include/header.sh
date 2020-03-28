@@ -87,3 +87,7 @@ then
         _koopa_assert_has_sudo
     fi
 fi
+
+# Disable user-defined aliases.
+# Primarily intended to reset cp, mv, rf for use inside scripts.
+unalias -a

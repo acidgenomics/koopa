@@ -14,7 +14,3 @@ do
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
 done
-
-# Disable user-defined aliases.
-# Primarily intended to reset cp, mv, rf for use inside scripts.
-unalias -a
