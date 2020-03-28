@@ -2,20 +2,12 @@
 
 # """
 # Bash shared header script.
-# @note Updated 2020-03-27.
+# @note Updated 2020-03-28.
 # """
 
-# > set --help
-# > shopt
-
-# > set -o noglob       # -f
-# > set -o xtrace       # -x
-set -o errexit          # -e
-set -o errtrace         # -E
-set -o nounset          # -u
-set -o pipefail
-
-checks=1
+[[ -z "${activate:-}" ]] && activate=0
+[[ -z "${checks:-}" ]] && checks=1
+[[ -z "${shopts:-}" ]] && shopts=1
 
 if [[ "$#" -gt 0 ]]
 then
@@ -23,8 +15,16 @@ then
     while (("$#"))
     do
         case "$1" in
+            --activate)
+                activate=1
+                shift 1
+                ;;
             --no-header-checks)
                 checks=0
+                shift 1
+                ;;
+            --no-set-opts)
+                shopts=0
                 shift 1
                 ;;
             *)
@@ -37,6 +37,28 @@ then
     then
         set -- "${pos[@]}"
     fi
+fi
+
+if [[ "$activate" -eq 1 ]]
+then
+    checks=0
+    shopts=0
+fi
+
+# Customize optional shell behavior.
+# These are not recommended to be set during koopa activation.
+#
+# See also:
+# > set --help
+# > shopt
+if [[ "$shopts" -eq 1 ]]
+then
+    # > set -o noglob       # -f
+    # > set -o xtrace       # -x
+    set -o errexit          # -e
+    set -o errtrace         # -E
+    set -o nounset          # -u
+    set -o pipefail
 fi
 
 # Requiring Bash >= 4 for exported scripts.
@@ -61,17 +83,26 @@ then
 fi
 
 # Ensure koopa prefix is exported, if necessary.
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-    >/dev/null 2>&1 && pwd -P)"
-export KOOPA_PREFIX
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
+        >/dev/null 2>&1 && pwd -P)"
+    export KOOPA_PREFIX
+fi
 
 # Source POSIX header (which includes functions).
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
 # Source Bash functions.
-# Use shell globbing instead of 'find', which doesn't support source.
 for file in "${KOOPA_PREFIX}/shell/bash/functions/"*".sh"
+do
+    # shellcheck source=/dev/null
+    [[ -f "$file" ]] && source "$file"
+done
+
+# Source Bash and Zsh shared functions.
+for file in "${KOOPA_PREFIX}/shell/bash-and-zsh/functions/"*".sh"
 do
     # shellcheck source=/dev/null
     [[ -f "$file" ]] && source "$file"
@@ -79,9 +110,9 @@ done
 
 _koopa_help "$@"
 
+# Require sudo permission to run 'sbin/' scripts.
 if [[ "$checks" -eq 1 ]]
 then
-    # Require sudo permission to run 'sbin/' scripts.
     if printf '%s\n' "$0" | grep -q "/sbin/"
     then
         _koopa_assert_has_sudo
@@ -90,4 +121,7 @@ fi
 
 # Disable user-defined aliases.
 # Primarily intended to reset cp, mv, rf for use inside scripts.
-unalias -a
+if [[ "$activate" -eq 0 ]]
+then
+    unalias -a
+fi
