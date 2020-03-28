@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name_fancy="LLVM"
+
+_koopa_uninstall_start "$name_fancy"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+unset -v LLVM_CONFIG
+
+sudo apt-get --yes remove '^clang-[0-9]+.*' '^llvm-[0-9]+.*'
+sudo apt-get --yes autoremove
+
+sudo rm -f /etc/apt/sources.list.d/llvm.list
+
+_koopa_uninstall_success "$name_fancy"
