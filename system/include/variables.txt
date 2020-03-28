@@ -176,9 +176,8 @@ java="14"
 libtool="2.4.6"
 
 # LLVM
-# Note that version 7 is currently required for umap-learn > numba > llvmlite.
-# llvm="7"
-llvm="9.0.1"
+# https://releases.llvm.org/
+llvm="10.0.0"
 
 # https://lmod.readthedocs.io/
 # https://lmod.readthedocs.io/en/latest/030_installing.html

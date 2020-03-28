@@ -52,16 +52,19 @@ https://packages.cloud.google.com/apt cloud-sdk main"
 _koopa_apt_add_llvm_repo() {  # {{{1
     # """
     # Add LLVM apt repo.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-03-28.
     # """
     local file
     file="/etc/apt/sources.list.d/llvm.list"
     [ -f "$file" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
+    local version
+    version="$(_koopa_variable "llvm")"
+    version="$(_koopa_major_version "$version")"
     local string
     string="deb http://apt.llvm.org/${os_codename}/ \
-llvm-toolchain-${os_codename}-9 main"
+llvm-toolchain-${os_codename}-${version} main"
     _koopa_sudo_write_string "$string" "$file"
 }
 
