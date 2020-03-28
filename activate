@@ -99,19 +99,17 @@ esac
 # Shell  {{{2
 # ------------------------------------------------------------------------------
 
-# Note that we always want to reset here, in case different subshell is called.
-#
-# See also:
-# - https://stackoverflow.com/questions/3327013
+# Refer to '_koopa_shell' function for additional details.
 
 if [ -d '/proc' ]
 then
-    # Standard approach on Linux.
-    KOOPA_SHELL="$(basename "$(readlink /proc/$$/exe)")"
+    shell="$(basename "$(readlink /proc/$$/exe)")"
 else
-    # This approach works on macOS.
-    KOOPA_SHELL="$(ps -p "$$" -o 'comm=' | sed 's/^-//g')"
+    shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
 fi
+
+KOOPA_SHELL="$shell"
+unset -v shell
 
 case "$KOOPA_SHELL" in
     bash|dash|zsh)
