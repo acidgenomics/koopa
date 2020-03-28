@@ -457,10 +457,10 @@ _koopa_is_macos() {  # {{{1
 _koopa_is_matching_fixed() {  # {{{1
     # """
     # Does the input match a fixed string?
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-28.
     # """
     local string
-    string="${1:?}"
+    string="${1:-}"
     local pattern
     pattern="${2:?}"
     _koopa_print "$string" | grep -Fq "$pattern"
@@ -469,10 +469,10 @@ _koopa_is_matching_fixed() {  # {{{1
 _koopa_is_matching_regex() {  # {{{1
     # """
     # Does the input match a regular expression?
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-03-28.
     # """
     local string
-    string="${1:?}"
+    string="${1:-}"
     local pattern
     pattern="${2:?}"
     _koopa_print "$string" | grep -Eq "$pattern"
