@@ -173,11 +173,13 @@ brews=(
     bfg
     binutils
     ccache
+    checkbashisms
     circleci
     cmake
     convmv
     coreutils
     curl
+    dash
     exiftool
     ffmpeg
     findutils

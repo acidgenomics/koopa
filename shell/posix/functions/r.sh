@@ -140,7 +140,7 @@ _koopa_r_version() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2020-03-13.
+    # @note Updated 2020-03-28.
     # """
     _koopa_is_installed R || return 1
 
@@ -154,17 +154,17 @@ _koopa_update_r_config() {  # {{{1
         make_prefix="$(_koopa_make_prefix)"
         local etc_prefix
         etc_prefix="${make_prefix}/lib64/R/etc"
-        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
+        if [ -d "$etc_prefix" ] && [ ! -L "$etc_prefix" ]
         then
             _koopa_rm "$etc_prefix"
         fi
     else
-        if [[ -d '/usr/lib/R' ]]
+        if [ -d '/usr/lib/R' ]
         then
             sudo chown -Rh 'root:root' '/usr/lib/R'
             sudo chmod -R 'g-w' '/usr/lib/R'
         fi
-        if [[ -d '/usr/share/R' ]]
+        if [ -d '/usr/share/R' ]
         then
             sudo chown -Rh 'root:root' '/usr/share/R'
             sudo chmod -R 'g-w' '/usr/share/R'
