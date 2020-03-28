@@ -101,7 +101,13 @@ esac
 
 # Refer to '_koopa_shell' function for additional details.
 
-if [ -d '/proc' ]
+if [ -n "${BASH_VERSION:-}" ]
+then
+    shell='bash'
+elif [ -n "${ZSH_VERSION:-}" ]
+then
+    shell='zsh'
+elif [ -d '/proc' ]
 then
     shell="$(basename "$(readlink /proc/$$/exe)")"
 else
