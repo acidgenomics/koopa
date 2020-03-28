@@ -364,6 +364,38 @@ _koopa_extract() {  # {{{1
    return 0
 }
 
+_koopa_find_local_bin_dirs() {  # {{{1
+    # """
+    # Find local bin directories.
+    # @note Updated 2020-03-28.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/23356779
+    # - https://stackoverflow.com/questions/7442417
+    # """
+    local prefix
+    prefix="$(_koopa_make_prefix)"
+    local x
+    x="$( \
+        find "$prefix" \
+            -mindepth 2 \
+            -maxdepth 3 \
+            -type d \
+            -name "bin" \
+            -not -path "*/Caskroom/*" \
+            -not -path "*/Cellar/*" \
+            -not -path "*/Homebrew/*" \
+            -not -path "*/anaconda3/*" \
+            -not -path "*/bcbio/*" \
+            -not -path "*/conda/*" \
+            -not -path "*/lib/*" \
+            -not -path "*/miniconda3/*" \
+            -not -path "*/opt/*" \
+            -print | sort \
+    )"
+    _koopa_print "$x"
+}
+
 _koopa_fix_sudo_setrlimit_error() {  # {{{1
     # """
     # Fix bug in recent version of sudo.
@@ -1013,6 +1045,33 @@ _koopa_shell() {  # {{{1
     fi
     _koopa_print "$shell"
     return 0
+}
+
+_koopa_test_find_files() {  # {{{1
+    # """
+    # Find relevant files for unit tests.
+    # @note Updated 2020-03-28.
+    # """
+    local prefix
+    prefix="$(_koopa_prefix)"
+    local x
+    x="$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -not -name "$(basename "$0")" \
+            -not -name "*.md" \
+            -not -name ".pylintrc" \
+            -not -path "${prefix}/.git/*" \
+            -not -path "${prefix}/cellar/*" \
+            -not -path "${prefix}/coverage/*" \
+            -not -path "${prefix}/dotfiles/*" \
+            -not -path "${prefix}/opt/*" \
+            -not -path "${prefix}/tests/*" \
+            -not -path "*/etc/R/*" \
+            -print | sort \
+    )"
+    _koopa_print "$x"
 }
 
 _koopa_test_true_color() {  # {{{1

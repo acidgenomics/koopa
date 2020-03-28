@@ -32,7 +32,7 @@ _koopa_list_internal_functions() {  # {{{1
 _koopa_unset_internal_functions() {  # {{{1
     # """
     # Unset all of koopa's internal functions.
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-03-28.
     #
     # Currently only supported in Bash and Zsh.
     #
@@ -44,7 +44,7 @@ _koopa_unset_internal_functions() {  # {{{1
     case "$(_koopa_shell)" in
         bash)
             # shellcheck disable=SC2119
-            mapfile -t funs < <(_koopa_list_internal_functions)
+            mapfile -t funs <<< "$(_koopa_list_internal_functions)"
             ;;
         zsh)
             # shellcheck disable=SC2119

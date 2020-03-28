@@ -55,7 +55,7 @@ _koopa_set_permissions() {  # {{{1
 
     # chmod flags.
     local chmod_flags
-    mapfile -t chmod_flags < <(_koopa_chmod_flags)
+    mapfile -t chmod_flags <<< "$(_koopa_chmod_flags)"
     if [[ "$recursive" -eq 1 ]]
     then
         # Note that '-R' instead of '--recursive' has better cross-platform

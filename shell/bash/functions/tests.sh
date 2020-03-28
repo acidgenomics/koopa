@@ -1,34 +1,9 @@
 #!/usr/bin/env bash
 
-_koopa_test_find_files() {  # {{{1
-    # """
-    # Find relevant files for unit tests.
-    # @note Updated 2020-03-05.
-    # """
-    local koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
-    find "$koopa_prefix" \
-        -mindepth 1 \
-        -type f \
-        -not -name "$(basename "$0")" \
-        -not -name "*.md" \
-        -not -name ".pylintrc" \
-        -not -path "${koopa_prefix}/.git/*" \
-        -not -path "${koopa_prefix}/cellar/*" \
-        -not -path "${koopa_prefix}/coverage/*" \
-        -not -path "${koopa_prefix}/dotfiles/*" \
-        -not -path "${koopa_prefix}/opt/*" \
-        -not -path "${koopa_prefix}/tests/*" \
-        -not -path "*/etc/R/*" \
-        -print \
-    | sort
-    return 0
-}
-
 _koopa_test_find_files_by_ext() {  # {{{1
     # """
     # Find relevant test files by extension.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-28.
     # """
     local ext
     ext="${1:-?}"
@@ -37,7 +12,7 @@ _koopa_test_find_files_by_ext() {  # {{{1
     pattern="\.${ext}$"
 
     local files
-    mapfile -t files < <(_koopa_test_find_files)
+    mapfile -t files <<< "$(_koopa_test_find_files)"
 
     local x
     x="$( \
@@ -45,19 +20,18 @@ _koopa_test_find_files_by_ext() {  # {{{1
         | grep -Ei "$pattern" \
     )"
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_test_find_files_by_shebang() {  # {{{1
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-03-28.
     # """
     local pattern
     pattern="${1:?}"
 
     local files
-    mapfile -t files < <(_koopa_test_find_files)
+    mapfile -t files <<< "$(_koopa_test_find_files)"
 
     local shebang_files
     shebang_files=()
@@ -80,7 +54,11 @@ _koopa_test_find_files_by_shebang() {  # {{{1
     return 0
 }
 
-_koopa_test_find_failures() {
+_koopa_test_find_failures() {  # {{{1
+    # """
+    # Find test failures.
+    # @note Updated 2020-30-28.
+    # """
     local name
     name="$(_koopa_basename_sans_ext "$0")"
 
@@ -88,7 +66,7 @@ _koopa_test_find_failures() {
     pattern="${1:?}"
 
     local files
-    mapfile -t files < <(_koopa_test_find_files)
+    mapfile -t files <<< "$(_koopa_test_find_files)"
 
     local failures
     failures=()
@@ -115,5 +93,4 @@ _koopa_test_find_failures() {
     fi
 
     _koopa_status_ok "${name} [${#files[@]}]"
-    return 0
 }
