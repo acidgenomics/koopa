@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-03-27.
+    Updated 2020-03-28.
 EOF
 }
 
@@ -104,18 +104,13 @@ esac
 # See also:
 # - https://stackoverflow.com/questions/3327013
 
-if [ -n "${BASH_VERSION:-}" ]
-then
-    KOOPA_SHELL="bash"
-elif [ -n "${ZSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="zsh"
-elif [ -d '/proc' ]
+if [ -d '/proc' ]
 then
     # Standard approach on Linux.
     KOOPA_SHELL="$(basename "$(readlink /proc/$$/exe)")"
 else
-    KOOPA_SHELL=
+    # This approach works on macOS.
+    KOOPA_SHELL="$(ps -p "$$" -o 'comm=' | sed 's/^-//g')"
 fi
 
 case "$KOOPA_SHELL" in
@@ -330,7 +325,7 @@ then
     set -o errexit
     set -o nounset
     set -o xtrace
-    if [ -n "${BASH_VERSION:-}" ]
+    if [ "$KOOPA_SHELL" = "bash" ]
     then
         set -o errtrace
         set -o pipefail
@@ -394,7 +389,7 @@ export KOOPA_PREFIX
 
 
 
-# Source functions  {{{1
+# Start activation  {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -407,8 +402,15 @@ then
     fi
 fi
 
-# Load shared POSIX functions.
-. "${KOOPA_PREFIX}/shell/posix/include/header.sh"
+# Load shell header file, which will source required functions.
+if [ -f "${KOOPA_PREFIX}/shell/${KOOPA_SHELL}/include/header.sh" ]
+then
+    header="${KOOPA_PREFIX}/shell/${KOOPA_SHELL}/include/header.sh"
+else
+    header="${KOOPA_PREFIX}/shell/posix/include/header.sh"
+fi
+activate=1 . "$header"
+unset -v header
 
 # Get location of activation scripts.
 KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
@@ -517,14 +519,7 @@ then
     fi
 
     _koopa_h2 "Shell options"
-    case "$KOOPA_SHELL" in
-        bash)
-            shopt
-            ;;
-        zsh)
-            setopt
-            ;;
-    esac
+    set +o
 
     _koopa_h2 "Shell variables"
     _koopa_dl "-" "$-"

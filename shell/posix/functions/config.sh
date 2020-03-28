@@ -215,7 +215,7 @@ _koopa_fix_zsh_permissions() {  # {{{1
     make_prefix="$(_koopa_make_prefix)"
 
     # Note that this step hardens against empty directory removal.
-    [[ -d "${make_prefix}/share/zsh/site-functions" ]] || return 0
+    [ -d "${make_prefix}/share/zsh/site-functions" ] || return 0
 
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"

@@ -1,5 +1,4 @@
-#!/bin/sh
-# shellcheck disable=SC2039
+#!/usr/bin/env bash
 
 _koopa_prompt() {  # {{{1
     # """
@@ -51,6 +50,10 @@ _koopa_prompt() {  # {{{1
             newline=$'\n'
             prompt='%%'
             wd='%~'
+            ;;
+        *)
+            _koopa_warning "Unsupported shell."
+            return 0
             ;;
     esac
     # Enable colorful prompt.

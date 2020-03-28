@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # """
-# Bash shared header script.
+# Zsh shared header script.
 # @note Updated 2020-03-28.
 # """
 
@@ -12,7 +12,7 @@
 if [[ "$#" -gt 0 ]]
 then
     pos=()
-    while (("$#"))
+    for i in "$@"
     do
         case "$1" in
             --activate)
@@ -49,35 +49,22 @@ fi
 # These are not recommended to be set during koopa activation.
 #
 # See also:
-# > set --help
-# > shopt
+# > setopt
+# - https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
 if [[ "$shopts" -eq 1 ]]
 then
-    # > set -o noglob       # -f
-    # > set -o xtrace       # -x
-    set -o errexit          # -e
-    set -o errtrace         # -E
-    set -o nounset          # -u
-    set -o pipefail
+    setopt errexit
+    setopt nounset
+    setopt pipefail
 fi
 
-# Requiring Bash >= 4 for exported scripts.
-# macOS ships with an ancient version of Bash, due to licensing.
-# If we're performing a clean install and loading up Homebrew, this step will
-# fail unless we skip checks.
+# Requiring Zsh >= 5 for exported scripts.
 if [[ "$checks" -eq 1 ]]
 then
-    major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
-    if [[ ! "$major_version" -ge 4 ]]
+    major_version="$(printf '%s\n' "${ZSH_VERSION}" | cut -d '.' -f 1)"
+    if [[ ! "$major_version" -ge 5 ]]
     then
-        >&2 printf '%s\n' 'ERROR: Bash >= 4 is required.'
-        exit 1
-    fi
-    # Check that user's Bash has mapfile builtin defined.
-    # We use this a lot to handle arrays.
-    if [[ $(type -t mapfile) != "builtin" ]]
-    then
-        >&2 printf '%s\n' 'ERROR: Bash is missing mapfile.'
+        >&2 printf '%s\n' 'Zsh >= 5 is required.'
         exit 1
     fi
 fi
@@ -85,7 +72,7 @@ fi
 # Ensure koopa prefix is exported, if necessary.
 if [[ -z "${KOOPA_PREFIX:-}" ]]
 then
-    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
+    KOOPA_PREFIX="$(cd "$(dirname "${(%):-%N}")/../../.." \
         >/dev/null 2>&1 && pwd -P)"
     export KOOPA_PREFIX
 fi
@@ -94,12 +81,12 @@ fi
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
-# Source Bash functions.
-for file in "${KOOPA_PREFIX}/shell/bash/functions/"*".sh"
-do
-    # shellcheck source=/dev/null
-    [[ -f "$file" ]] && source "$file"
-done
+# Source Zsh functions.
+# > for file in "${KOOPA_PREFIX}/shell/zsh/functions/"*".sh"
+# > do
+# >     # shellcheck source=/dev/null
+# >     [[ -f "$file" ]] && source "$file"
+# > done
 
 # Source Bash and Zsh shared functions.
 for file in "${KOOPA_PREFIX}/shell/bash-and-zsh/functions/"*".sh"
