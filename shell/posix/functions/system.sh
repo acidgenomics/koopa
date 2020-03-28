@@ -987,25 +987,23 @@ _koopa_set_sticky_group() {  # {{{1
 
 _koopa_shell() {  # {{{1
     # """
-    # Note that this isn't necessarily the default shell ('$SHELL').
-    # @note Updated 2020-03-27.
+    # Current shell.
+    # @note Updated 2020-03-28.
+    #
+    # Note that this isn't necessarily the default shell ('SHELL').
+    #
+    # Alternatively, can check for existence of BASH_VERSION, ZSH_VERSION
+    # variables, which may be slightly more performant.
     # """
     local shell
-    if [ -n "${BASH_VERSION:-}" ]
+    if [ -d '/proc' ]
     then
-        shell="bash"
-    elif [ -n "${KSH_VERSION:-}" ]
-    then
-        shell="ksh"
-    elif [ -n "${ZSH_VERSION:-}" ]
-    then
-        shell="zsh"
-    elif [ -d '/proc' ]
-    then
-        # This step supports other POSIX shells, such as dash.
+        # Standard approach on Linux.
         shell="$(basename "$(readlink /proc/$$/exe)")"
     else
-        _koopa_stop "Failed to detect shell."
+        # This approach works on macOS.
+        # The sed step converts '-zsh' to 'zsh', for example.
+        shell="$(ps -p "$$" -o 'comm=' | sed 's/^-//')"
     fi
     _koopa_print "$shell"
     return 0
