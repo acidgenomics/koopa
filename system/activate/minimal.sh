@@ -5,21 +5,6 @@
 # Pre-flight checks  {{{1
 # ==============================================================================
 
-# Operating system  {{{2
-# ------------------------------------------------------------------------------
-
-# Bash sets the shell variable OSTYPE (e.g. linux-gnu).
-# However, this doesn't work consistently with zsh, so use uname instead.
-
-case "$(uname -s)" in
-    Darwin)
-        ;;
-    Linux)
-        ;;
-    *)
-        _koopa_stop "Unsupported operating system."
-esac
-
 # Bad settings  {{{2
 # ------------------------------------------------------------------------------
 
@@ -48,6 +33,7 @@ export OSTYPE
 
 # SHELL
 # Note that this doesn't currently get set by RStudio terminal.
+# Dash shell doesn't export this by default.
 SHELL="$(_koopa_which_realpath "$KOOPA_SHELL")"
 export SHELL
 
