@@ -990,16 +990,17 @@ _koopa_shell() {  # {{{1
     # Current shell.
     # @note Updated 2020-03-28.
     #
-    # Note that this isn't necessarily the default shell ('SHELL').
-    #
-    # Alternatively, can check for existence of BASH_VERSION, ZSH_VERSION
-    # variables, which may be slightly more performant.
-    #
     # @seealso
     # - https://stackoverflow.com/questions/3327013
     # """
     local shell
-    if [ -d '/proc' ]
+    if [ -n "${BASH_VERSION:-}" ]
+    then
+        shell='bash'
+    elif [ -n "${ZSH_VERSION:-}" ]
+    then
+        shell='zsh'
+    elif [ -d '/proc' ]
     then
         # Standard approach on Linux.
         shell="$(basename "$(readlink /proc/$$/exe)")"
