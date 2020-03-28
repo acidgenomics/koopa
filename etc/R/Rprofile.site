@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-03-21.
+## Updated 2020-03-26.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -116,8 +116,8 @@ attach(.env)
 
 local({
     repos <- getOption("repos")
-    ## Can use "https://cloud.r-project.org" here instead.
-    repos["CRAN"] <- "https://cran.rstudio.com"
+    ## > repos["CRAN"] <- "https://cran.rstudio.com"
+    repos["CRAN"] <- "https://cloud.r-project.org"
     options("repos" = repos)
 })
 

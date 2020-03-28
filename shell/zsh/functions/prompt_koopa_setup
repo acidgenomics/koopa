@@ -1,11 +1,12 @@
 #!/usr/bin/env zsh
 
+# """
 # Koopa ZSH prompt.
 # @note Updated 2020-02-19.
-
+#
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
-
+#
 # Prompt:
 # - %* : time
 # - %F : color dict
@@ -15,6 +16,7 @@
 # - %n : user name
 # - %~ : current path
 # - %(?..) : prompt conditional - %(condition.true.false)
+# """
 
 _koopa_prompt_setup() {
     PROMPT="$(_koopa_prompt)"
