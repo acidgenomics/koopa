@@ -179,6 +179,7 @@ brews=(
     convmv
     coreutils
     curl
+    dash
     exiftool
     ffmpeg
     findutils
