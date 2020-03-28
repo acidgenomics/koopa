@@ -6,9 +6,6 @@
 # Modified, lighter version of Pure, by Sindre Sorhus.
 # https://github.com/sindresorhus/pure
 
-# Debugging:
-# > typeset _koopa_prompt_state
-
 # Prompt:
 # - %* : time
 # - %F : color dict
