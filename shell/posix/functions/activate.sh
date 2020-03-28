@@ -418,7 +418,7 @@ _koopa_activate_homebrew_gnu_utils() {
 _koopa_activate_homebrew_google_cloud_sdk() {
     # """
     # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-03-28.
     # """
     local prefix
     prefix="${HOMEBREW_PREFIX:?}"
@@ -426,10 +426,18 @@ _koopa_activate_homebrew_google_cloud_sdk() {
     [ -d "$prefix" ] || return 0
     local shell
     shell="$(_koopa_shell)"
-    # shellcheck source=/dev/null
-    . "${prefix}/path.${shell}.inc"
-    # shellcheck source=/dev/null
-    . "${prefix}/completion.${shell}.inc"
+    if [ -f "${prefix}/path.${shell}.inc" ]
+    then
+        # shellcheck source=/dev/null
+        . "${prefix}/path.${shell}.inc"
+    fi
+    if [ -f "${prefix}/completion.${shell}.inc" ]
+    then
+        # shellcheck source=/dev/null
+        . "${prefix}/completion.${shell}.inc"
+
+    fi
+    return 0
 }
 
 _koopa_activate_homebrew_python() {
@@ -537,13 +545,13 @@ _koopa_activate_local_etc_profile() {  # {{{1
     # Source 'profile.d' scripts in '/usr/local/etc'.
     # @note Updated 2020-03-27.
     #
-    # Currently only supported for Bash and Zsh.
+    # Currently only supported for Bash.
     #
-    # Can run into issues with autojump due to missing 'BASH' variable on Dash
-    # otherwise.
+    # Can run into issues with autojump due to missing 'BASH' variable on Zsh
+    # and Dash shells otherwise.
     # """
     case "$(_koopa_shell)" in
-        bash|zsh)
+        bash)
             ;;
         *)
             return 0
