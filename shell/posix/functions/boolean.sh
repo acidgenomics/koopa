@@ -203,7 +203,7 @@ _koopa_is_conda_active() {  # {{{1
 _koopa_is_current_version() {  # {{{1
     # """
     # Is the installed program current?
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-03-28.
     # """
     local app
     app="${1:?}"
@@ -211,7 +211,7 @@ _koopa_is_current_version() {  # {{{1
     expected="$(_koopa_variable "$app")"
     local actual
     actual="$(_koopa_get_version "$app")"
-    [ "$actual" == "$expected" ]
+    [ "$actual" = "$expected" ]
 }
 
 _koopa_is_debian() {  # {{{1
