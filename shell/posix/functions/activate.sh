@@ -16,7 +16,10 @@ _koopa_activate_aspera() {  # {{{1
 _koopa_activate_autojump() {  # {{{1
     # """
     # Activate autojump.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-03-27.
+    #
+    # Currently supports Bash and Zsh.
+    # Skip activation on other POSIX shells, such as Dash.
     #
     # Purge install with 'j --purge'.
     # Location: ~/.local/share/autojump/autojump.txt
@@ -28,6 +31,13 @@ _koopa_activate_autojump() {  # {{{1
     # See also:
     # - https://github.com/wting/autojump
     # """
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
     local prefix
     prefix="$(_koopa_autojump_prefix)"
     [ -d "$prefix" ] || return 0
@@ -256,7 +266,9 @@ _koopa_activate_ensembl_perl_api() {  # {{{1
 _koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-03-16.
+    # @note Updated 2020-03-27.
+    #
+    # Currently Bash and Zsh are supported.
     #
     # See also:
     # https://github.com/junegunn/fzf
@@ -270,12 +282,21 @@ _koopa_activate_fzf() {  # {{{1
     local nounset
     nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
+    local script
     # Auto-completion.
-    # shellcheck source=/dev/null
-    . "${prefix}/shell/completion.${shell}"
+    script="${prefix}/shell/completion.${shell}"
+    if [ -f "$script" ]
+    then
+        # shellcheck source=/dev/null
+        . "$script"
+    fi
     # Key bindings.
-    # shellcheck source=/dev/null
-    . "${prefix}/shell/key-bindings.${shell}"
+    script="${prefix}/shell/key-bindings.${shell}"
+    if [ -f "$script" ]
+    then
+        # shellcheck source=/dev/null
+        . "$script"
+    fi
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
@@ -309,9 +330,6 @@ _koopa_activate_homebrew() {  # {{{1
     # """
     # Activate Homebrew.
     # @note Updated 2020-02-14.
-    #
-    # @seealso
-    # _koopa_activate_local_etc_profile
     # """
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
@@ -517,7 +535,20 @@ _koopa_activate_llvm() {  # {{{1
 _koopa_activate_local_etc_profile() {  # {{{1
     # """
     # Source 'profile.d' scripts in '/usr/local/etc'.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-03-27.
+    #
+    # Currently only supported for Bash and Zsh.
+    #
+    # Can run into issues with autojump due to missing 'BASH' variable on Dash
+    # otherwise.
+    # """
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
     local prefix
     prefix="$(_koopa_make_prefix)/etc/profile.d"
     [ -d /usr/local/etc/profile.d ] || return 0
@@ -838,7 +869,9 @@ _koopa_activate_venv() {  # {{{1
     #
     # This needs to be run last, otherwise PATH can get messed upon
     # deactivation, due to venv's current poor approach via '_OLD_VIRTUAL_PATH'.
+    #
     # Refer to 'declare -f deactivate' for function source code.
+    #
     # Note that 'deactivate' is still messing up autojump path.
     # """
     [ -n "${VIRTUAL_ENV:-}" ] && return 0

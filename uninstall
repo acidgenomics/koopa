@@ -3,7 +3,7 @@ set -Eeu -o pipefail
 
 KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-. "${KOOPA_PREFIX}/shell/posix/include/functions.sh"
+. "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 # Remove shared activation script.
 if _koopa_is_shared_install

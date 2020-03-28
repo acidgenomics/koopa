@@ -2,7 +2,7 @@
 
 # """
 # Bash shared header script.
-# @note Updated 2020-02-14.
+# @note Updated 2020-03-27.
 # """
 
 # > set --help
@@ -60,18 +60,22 @@ then
     fi
 fi
 
-KOOPA_BASH_INC="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+# Ensure koopa prefix is exported, if necessary.
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." \
     >/dev/null 2>&1 && pwd -P)"
+export KOOPA_PREFIX
 
-# Source POSIX header.
+# Source POSIX header (which includes functions).
 # shellcheck source=/dev/null
-source "${KOOPA_BASH_INC}/../../posix/include/header.sh"
+source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 
 # Source Bash functions.
-# shellcheck source=/dev/null
-source "${KOOPA_BASH_INC}/functions.sh"
-
-unset -v KOOPA_BASH_INC
+# Use shell globbing instead of 'find', which doesn't support source.
+for file in "${KOOPA_PREFIX}/shell/bash/functions/"*".sh"
+do
+    # shellcheck source=/dev/null
+    [[ -f "$file" ]] && source "$file"
+done
 
 _koopa_help "$@"
 

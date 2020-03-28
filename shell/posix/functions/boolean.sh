@@ -4,7 +4,7 @@
 _koopa_boolean_nounset() {  # {{{1
     # """
     # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-03-27.
     #
     # Intended for [ "$x" -eq 1 ] (true) checks.
     #
@@ -12,7 +12,7 @@ _koopa_boolean_nounset() {  # {{{1
     # true and 1 is false.
     # """
     local bool
-    if _koopa_is_setopt_nounset
+    if _koopa_is_set_nounset
     then
         bool='1'
     else
@@ -98,7 +98,10 @@ _koopa_has_sudo() {  # {{{1
 _koopa_is_alias() {  # {{{1
     # """
     # Is the specified argument an alias?
-    # @note Updated 2020-02-06.
+    # @note Updated 2020-03-27.
+    #
+    # Intended primarily to determine if we need to unalias.
+    # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
     #
     # @example
     # _koopa_is_alias R
@@ -108,17 +111,8 @@ _koopa_is_alias() {  # {{{1
     _koopa_is_installed "$cmd" || return 1
     local str
     str="$(type "$cmd")"
-    local shell
-    shell="$(_koopa_shell)"
-    case "$shell" in
-        bash)
-            pattern='is aliased to'
-            ;;
-        zsh)
-            pattern='is an alias for'
-            ;;
-    esac
-    _koopa_is_matching_fixed "$str" "$pattern"
+    _koopa_is_matching_fixed "$str" ' tracked alias ' && return 1
+    _koopa_is_matching_regex "$str" '\balias(ed)?\b'
 }
 
 _koopa_is_alpine() {  # {{{1
@@ -258,11 +252,16 @@ _koopa_is_docker() {  # {{{1
 _koopa_is_export() {  # {{{1
     # """
     # Is a variable exported in the current shell session?
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-03-27.
+    #
+    # Use 'export -p' (POSIX) instead of 'declare -x' (Bashism).
+    #
+    # See also:
+    # - https://unix.stackexchange.com/questions/390831
     # """
     local arg
     arg="${1:?}"
-    declare -x | grep -Eq "\b${arg}\b="
+    export -p | grep -Eq "\b${arg}\b="
 }
 
 _koopa_is_fedora() {  # {{{1
@@ -293,19 +292,19 @@ _koopa_is_file_system_case_sensitive() {  # {{{1
 _koopa_is_function() {  # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-03-27.
+    #
+    # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
+    # Checking against 'type' works consistently across POSIX shells.
     #
     # Works in bash, ksh, zsh:
-    # > typeset -f foo
+    # > typeset -f "$fun"
     #
     # Works in bash, zsh:
-    # > declare -f foo
+    # > declare -f "$fun"
     #
-    # Works in bash:
+    # Works in bash (note use of '-t' flag):
     # > [ "$(type -t "$fun")" == "function" ]
-    #
-    # Works in zsh:
-    # > _koopa_is_matching_fixed "$(type "$fun")" "is a shell function"
     #
     # @seealso
     # - https://stackoverflow.com/questions/11478673/
@@ -313,7 +312,7 @@ _koopa_is_function() {  # {{{1
     # """
     local fun
     fun="${1:?}"
-    [ -n "$(typeset -f "$fun")" ]
+    _koopa_is_matching_fixed "$(type "$fun")" 'function'
 }
 
 _koopa_is_git() {  # {{{1
@@ -592,58 +591,10 @@ _koopa_is_root() {  # {{{1
     [ "$(id -u)" -eq 0 ]
 }
 
-_koopa_is_shared_install() {  # {{{1
-    # """
-    # Is koopa installed for all users (shared)?
-    # @note Updated 2019-06-25.
-    # """
-    ! _koopa_is_local_install
-}
-
-_koopa_is_set() {  # {{{1
-    # """
-    # Is the variable set and non-empty?
-    # @note Updated 2020-03-04.
-    #
-    # Passthrough of empty strings is bad practice in shell scripting.
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/3601515
-    # - https://unix.stackexchange.com/questions/504082
-    # - https://www.gnu.org/software/bash/manual/html_node/
-    #       Shell-Parameter-Expansion.html
-    # """
-    local var
-    var="${1:?}"
-
-    # Check if variable is defined.
-    local x
-    x="$(declare -p "$var" 2>/dev/null || true)"
-    [ -n "$x" ] || return 1
-
-    # Check if variable contains non-empty value.
-    local value
-    case "$(_koopa_shell)" in
-        bash)
-            value="${!var}"
-            ;;
-        zsh)
-            # shellcheck disable=SC2154
-            value="${(P)var}"
-            ;;
-        *)
-            _koopa_stop 'Unsupported shell.'
-            ;;
-    esac
-    [ -n "$value" ] || return 1
-
-    return 0
-}
-
-_koopa_is_setopt_nounset() {  # {{{1
+_koopa_is_set_nounset() {  # {{{1
     # """
     # Is shell running in 'nounset' variable mode?
-    # @note Updated 2020-01-24.
+    # @note Updated 2020-03-27.
     #
     # Many activation scripts, including Perlbrew and others have unset
     # variables that can cause the shell session to exit.
@@ -663,20 +614,15 @@ _koopa_is_setopt_nounset() {  # {{{1
     # setopt
     # Enabled: 'nounset'.
     # """
-    local shell
-    shell="$(_koopa_shell)"
-    case "$shell" in
-        bash)
-            # > shopt -op nounset | grep -q 'set -o nounset'
-            shopt -oq nounset
-            ;;
-        zsh)
-            setopt | grep -q 'nounset'
-            ;;
-        *)
-            _koopa_stop 'Unknown error.'
-            ;;
-    esac
+    set +o | grep -q 'set -o nounset'
+}
+
+_koopa_is_shared_install() {  # {{{1
+    # """
+    # Is koopa installed for all users (shared)?
+    # @note Updated 2019-06-25.
+    # """
+    ! _koopa_is_local_install
 }
 
 _koopa_is_ssh_enabled() {  # {{{1
