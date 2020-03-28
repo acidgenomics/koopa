@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-03-27.
+    Updated 2020-03-28.
 EOF
 }
 
@@ -104,18 +104,13 @@ esac
 # See also:
 # - https://stackoverflow.com/questions/3327013
 
-if [ -n "${BASH_VERSION:-}" ]
-then
-    KOOPA_SHELL="bash"
-elif [ -n "${ZSH_VERSION:-}" ]
-then
-    KOOPA_SHELL="zsh"
-elif [ -d '/proc' ]
+if [ -d '/proc' ]
 then
     # Standard approach on Linux.
     KOOPA_SHELL="$(basename "$(readlink /proc/$$/exe)")"
 else
-    KOOPA_SHELL=
+    # This approach works on macOS.
+    KOOPA_SHELL="$(ps -p "$$" -o 'comm=' | sed 's/^-//g')"
 fi
 
 case "$KOOPA_SHELL" in
@@ -517,14 +512,7 @@ then
     fi
 
     _koopa_h2 "Shell options"
-    case "$KOOPA_SHELL" in
-        bash)
-            shopt
-            ;;
-        zsh)
-            setopt
-            ;;
-    esac
+    set +o
 
     _koopa_h2 "Shell variables"
     _koopa_dl "-" "$-"
