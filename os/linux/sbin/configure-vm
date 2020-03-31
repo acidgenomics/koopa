@@ -337,8 +337,8 @@ then
     # Bioinformatics tools.
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
+        # > conda-create-bioinfo-envs --all
         install-aspera-connect                                          # 0.090G
-        conda-create-bioinfo-envs --all
         install-bcbio-nextgen
     fi
 fi
