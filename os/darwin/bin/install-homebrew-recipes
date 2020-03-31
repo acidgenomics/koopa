@@ -90,7 +90,7 @@ casks=(
     omnidisksweeper
     onyx
     osxfuse
-    photosweeper-x
+    # photosweeper-x
     powershell
     pycharm-ce
     r
