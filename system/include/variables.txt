@@ -50,7 +50,7 @@ autojump="22.5.3"
 aws-cli="2.0.5"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.3.0"
+azure-cli="2.3.1"
 
 # https://www.gnu.org/software/bash/
 # Note that minor version represents patches.
