@@ -149,6 +149,7 @@ then
         if _koopa_print "$apt_installed" | grep -Eq "^${pkg}/"
         # > if _koopa_is_matching_regex "$apt_installed" "^${pkg}/"
         then
+            echo "$pkg"
             remove_pkgs+=("$pkg")
         fi
     done
