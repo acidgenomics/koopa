@@ -266,9 +266,12 @@ then
     [[ "$compact" -eq 0 ]] && install-fish                              # 0.082G
 
     # General tools.
-    install-git                                                         # 0.177G
-    install-lua                                                         # 0.001G
-    install-luarocks                                                    # 0.002G
+    if [[ "$compact" -eq 0 ]]
+    then
+        install-git                                                     # 0.177G
+        install-lua                                                     # 0.001G
+        install-luarocks                                                # 0.002G
+    fi
 
     # Environment managers.
     install-conda                                                       # 0.493G
@@ -290,9 +293,9 @@ then
     # Languages.
     install-r                                                           # 0.182G
     install-python                                                      # 0.195G
-    install-perl                                                        # 0.081G
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
+        install-perl                                                    # 0.081G
         install-go                                                      # 0.338G
         install-julia                                                   # 0.339G
         install-ruby                                                    # 0.178G
@@ -332,7 +335,10 @@ then
     install-vim
     install-neovim                                                      # 0.029G
     # Emacs currently doesn't build easily on Docker.
-    [[ "$docker" -eq 0 ]] && install-emacs
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+    then
+        install-emacs
+    fi
 
     # Bioinformatics tools.
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]

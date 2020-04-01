@@ -27,5 +27,5 @@ remove(
     )
 )
 
-stopifnot(hasGitHubPAT())
+# > stopifnot(hasGitHubPAT())
 bb8::updatePackages()
