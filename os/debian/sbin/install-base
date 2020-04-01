@@ -121,6 +121,7 @@ fi
 
 if [[ "$remove" -eq 1 ]]
 then
+    echo "HELLO WORLD"
     _koopa_h2 "Removing legacy packages."
     # Alternatively:
     # > apt_installed="$(dpkg --get-selections | grep -v deinstall)"
@@ -145,16 +146,20 @@ then
     remove_pkgs=()
     for pkg in "${legacy_pkgs[@]}"
     do
+        echo "$pkg"
         if _koopa_is_matching_regex "$apt_installed" "^${pkg}/"
         then
             remove_pkgs+=("$pkg")
         fi
     done
+    echo "${remove_pkgs[@]}"
     if _koopa_is_array_non_empty
     then
         sudo apt-get --yes remove "${remove_pkgs[@]}"
     fi
 fi
+
+exit 0
 
 # Default  {{{1
 # ==============================================================================
