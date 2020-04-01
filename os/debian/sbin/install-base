@@ -128,18 +128,20 @@ then
     # - https://askubuntu.com/questions/17823
     apt_installed="$(sudo apt list --installed 2> /dev/null)"
     legacy_pkgs=(
-        containerd              # docker-legacy
-        docker                  # docker-legacy
-        docker-engine           # docker-legacy
-        docker.io               # docker-legacy
-        runc                    # docker-legacy
         cargo                   # use 'install-rust'
+        containerd              # docker legacy
+        docker                  # docker legacy
+        docker-engine           # docker legacy
+        docker.io               # docker legacy
         emacs                   # use 'install-emacs'
         emacs25                 # gets installed by zsh
         fish                    # use 'install-fish'
         libgdal-dev             # use 'install-gdal'
         libgeos-dev             # use 'install-geos'
         libproj-dev             # use 'install-proj'
+        proj-bin                # use 'install-proj'
+        proj-data               # use 'install-proj'
+        runc                    # docker legacy
         zsh                     # use 'install-zsh'
         zsh-common
     )
