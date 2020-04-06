@@ -6,9 +6,42 @@
 # >     --output json \
 # >     --bucket tests.acidgenomics.com
 
+_koopa_aws_cp_regex() {  # {{{1
+    # """
+    # Copy a local file or S3 object to another location locally or in S3 using
+    # regular expression pattern matching.
+    #
+    # @note Updated 2020-04-02.
+    #
+    # @seealso
+    # > aws s3 cp help
+    # """
+    _koopa_is_installed aws || return 1
+
+    local pattern
+    pattern="${1:?}"
+
+    local source_prefix
+    source_prefix="${2:?}"
+
+    local target_prefix
+    target_prefix="${3:?}"
+
+    aws s3 cp \
+        --exclude="*" \
+        --follow-symlinks \
+        --include="$pattern" \
+        --recursive \
+        "$source_prefix" \
+        "$target_prefix"
+
+    return 0
+}
+
 _koopa_aws_s3_find() {  # {{{1
     # """
-    # Find files in AWS S3 bucket.
+    # Find files in an AWS S3 bucket.
+    #
     # @note Updated 2020-02-11.
     #
     # @seealso
@@ -86,7 +119,8 @@ _koopa_aws_s3_find() {  # {{{1
 
 _koopa_aws_s3_ls() {  # {{{1
     # """
-    # List AWS S3 bucket.
+    # List an AWS S3 bucket.
+    #
     # @note Updated 2020-02-11.
     #
     # @seealso aws s3 ls help
@@ -185,7 +219,11 @@ _koopa_aws_s3_ls() {  # {{{1
     then
         local bucket_prefix
         bucket_prefix="$(_koopa_print "$prefix" | grep -Eo '^s3://[^/]+')"
-        files="$(_koopa_print "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
+        files="$( \
+            _koopa_print "$x" \
+            | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+            || true \
+        )"
         [[ -n "$files" ]] || return 0
         files="$( \
             _koopa_print "$files" \
@@ -215,7 +253,11 @@ _koopa_aws_s3_ls() {  # {{{1
     # Files.
     if [[ "$files" -eq 1 ]]
     then
-        files="$(_koopa_print "$x" | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' || true)"
+        files="$( \
+            _koopa_print "$x" \
+            | grep -E '^[0-9]{4}-[0-9]{2}-[0-9]{2}' \
+            || true \
+        )"
         if [[ -n "$files" ]]
         then
             files="$( \
@@ -233,7 +275,8 @@ _koopa_aws_s3_ls() {  # {{{1
 
 _koopa_aws_s3_mv_to_parent() {  # {{{1
     # """
-    # Move objects in S3 directory to parent directory.
+    # Move objects in an S3 bucket to parent directory.
+    #
     # @note Updated 2020-02-12.
     #
     # Empty directory will be removed automatically, since S3 uses object
@@ -261,12 +304,14 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
 
 _koopa_aws_s3_sync() {  # {{{1
     # """
-    # Sync S3 bucket, but ignore some files automatically.
-    # @note Updated 2020-02-13.
+    # Sync an S3 bucket, but ignore some files automatically.
+    #
+    # @note Updated 2020-04-02.
     #
     # This is primarily intended to ignore Git '.git/' and R project files.
     # """
     aws s3 sync \
+        --exclude='^.*/.+\.Rproj/.*$' \
         --exclude='^.*/\..+$' \
         --exclude='^.*/tmp/.*$' \
         "$@"
