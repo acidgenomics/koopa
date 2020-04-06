@@ -7,7 +7,7 @@
 # koopa  {{{1
 # ==============================================================================
 
-koopa-date="2020-04-01"
+koopa-date="2020-04-06"
 koopa-version="0.7.0a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -287,7 +287,7 @@ rustup="1.21.1"
 screen="4.8.0"
 
 # https://github.com/koalaman/shellcheck/releases
-shellcheck="0.7.0"
+shellcheck="0.7.1"
 
 # https://www.rstudio.com/products/shiny/download-server/
 shiny-server="1.5.13.944"
