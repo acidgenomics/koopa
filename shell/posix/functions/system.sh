@@ -974,7 +974,7 @@ _koopa_rm() {  # {{{1
 _koopa_rsync_flags() {  # {{{1
     # """
     # rsync flags.
-    # @note Updated 2019-10-28.
+    # @note Updated 2020-04-06.
     #
     #     --delete-before         receiver deletes before xfer, not during
     #     --iconv=CONVERT_SPEC    request charset conversion of filenames
@@ -1002,7 +1002,7 @@ _koopa_rsync_flags() {  # {{{1
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
-    _koopa_print "--archive --delete-before --human-readable --progress"
+    _koopa_print "--archive --delete --human-readable --progress"
     return 0
 }
 
