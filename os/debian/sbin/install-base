@@ -122,28 +122,41 @@ fi
 if [[ "$remove" -eq 1 ]]
 then
     _koopa_h2 "Removing legacy packages."
+    # Alternative approach:
+    # > apt_installed="$(dpkg --get-selections | grep -v deinstall)"
+    # See also:
+    # - https://askubuntu.com/questions/17823
     apt_installed="$(sudo apt list --installed 2> /dev/null)"
     legacy_pkgs=(
-        containerd              # docker-legacy
-        docker                  # docker-legacy
-        docker-engine           # docker-legacy
-        docker.io               # docker-legacy
-        runc                    # docker-legacy
         cargo                   # use 'install-rust'
+        containerd              # docker legacy
+        docker                  # docker legacy
+        docker-engine           # docker legacy
+        docker.io               # docker legacy
         emacs                   # use 'install-emacs'
         emacs25                 # gets installed by zsh
         fish                    # use 'install-fish'
         libgdal-dev             # use 'install-gdal'
         libgeos-dev             # use 'install-geos'
         libproj-dev             # use 'install-proj'
+        proj-bin                # use 'install-proj'
+        proj-data               # use 'install-proj'
+        runc                    # docker legacy
         zsh                     # use 'install-zsh'
         zsh-common
     )
+    remove_pkgs=()
     for pkg in "${legacy_pkgs[@]}"
     do
-        _koopa_print "$apt_installed" | grep -Eq "^${pkg}/" || continue
-        sudo apt-get --yes remove "${pkg[@]}"
+        if _koopa_is_matching_regex "$apt_installed" "^${pkg}/"
+        then
+            remove_pkgs+=("$pkg")
+        fi
     done
+    if _koopa_is_array_non_empty "${remove_pkgs[@]}"
+    then
+        sudo apt-get --yes remove "${remove_pkgs[@]}"
+    fi
 fi
 
 # Default  {{{1
