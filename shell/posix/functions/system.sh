@@ -1002,7 +1002,7 @@ _koopa_rsync_flags() {  # {{{1
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
-    _koopa_print "--archive --delete --human-readable --progress"
+    _koopa_print "--archive --delete-before --human-readable --progress"
     return 0
 }
 
