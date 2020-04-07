@@ -64,8 +64,6 @@ tmp_dir="$(_koopa_tmp_dir)"
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
     _koopa_download "$url"
-    # v1.1.9 install is currently hanging on conda environment solve for tools,
-    # independent of '--datatarget' flags used below.
     python3 "$file" \
         "$install_dir" \
         --tooldir="$tools_dir" \
@@ -75,10 +73,6 @@ tmp_dir="$(_koopa_tmp_dir)"
         --nodata \
         --isolate
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-# > _koopa_h1 "Fixing MACS2/numpy issue."
-# > _koopa_note "https://github.com/bcbio/bcbio-nextgen/issues/2853"
-# > "${tools_dir}/bin/bcbio_conda" install -y --name python2 numpy
 
 # Clean up conda packages.
 # > conda_exe="${install_dir}/anaconda/bin/conda"
