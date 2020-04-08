@@ -18,13 +18,17 @@ if (!exists(x = ".checks", inherits = FALSE)) {
     }
 }
 
-## Check required packages.
+## Check and attach required packages.
 if (isTRUE(.checks)) {
     stopifnot(
         packageVersion("base") >= "3.6",
         packageVersion("acidbase") >= "0.1.6",
         packageVersion("goalie") >= "0.4.2"
     )
+    suppressPackageStartupMessages({
+        library(acidbase)
+        library(goalie)
+    })
 }
 
 .includeDir <- normalizePath(dirname(sys.frame(1L)[["ofile"]]))
