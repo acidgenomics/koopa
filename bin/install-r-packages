@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+## Disable R header checks, which inspect package versions.
+.checks <- FALSE
+
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
