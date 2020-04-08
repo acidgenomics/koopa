@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-03-24.
+## @note Updated 2020-04-08.
 ## """
 
 options(
@@ -8,6 +8,13 @@ options(
     ## "warn" = 2L,
     "error" = quote(quit(status = 1L)),
     "warning" = quote(quit(status = 1L))
+)
+
+## Check required packages.
+stopifnot(
+    packageVersion("base") >= "3.6",
+    packageVersion("acidbase") >= "0.1.6",
+    packageVersion("goalie") >= "0.4.2"
 )
 
 .includeDir <- normalizePath(dirname(sys.frame(1L)[["ofile"]]))
@@ -20,11 +27,6 @@ options(
 ))
 
 invisible(lapply(X = .files, FUN = source))
-
-# Skip this check on Travis CI, which has an ancient version of R via apt.
-if (!isTRUE(nzchar(Sys.getenv("TRAVIS")))) {
-    stopifnot(packageVersion("base") >= "3.6")
-}
 
 # Set number of cores for parallelization, if necessary.
 if (
