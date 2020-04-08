@@ -10,12 +10,22 @@ options(
     "warning" = quote(quit(status = 1L))
 )
 
+if (!exists(x = ".checks", inherits = FALSE)) {
+    if (Sys.getenv("KOOPA_NO_HEADER_CHECKS") == 1L) {
+        .checks <- FALSE
+    } else {
+        .checks <- TRUE
+    }
+}
+
 ## Check required packages.
-stopifnot(
-    packageVersion("base") >= "3.6",
-    packageVersion("acidbase") >= "0.1.6",
-    packageVersion("goalie") >= "0.4.2"
-)
+if (isTRUE(.checks)) {
+    stopifnot(
+        packageVersion("base") >= "3.6",
+        packageVersion("acidbase") >= "0.1.6",
+        packageVersion("goalie") >= "0.4.2"
+    )
+}
 
 .includeDir <- normalizePath(dirname(sys.frame(1L)[["ofile"]]))
 .functionsDir <- file.path(dirname(.includeDir), "functions")
