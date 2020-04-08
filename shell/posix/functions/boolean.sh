@@ -349,7 +349,7 @@ _koopa_is_git2() {  # {{{1
 _koopa_is_git_clean() {  # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-04-08.
     #
     # See also:
     # - https://stackoverflow.com/questions/3878624
@@ -358,9 +358,12 @@ _koopa_is_git_clean() {  # {{{1
     _koopa_is_git '.' || return 1
     _koopa_assert_is_installed git
     # Are there unstaged changes?
-    git diff-index --quiet HEAD -- || return 1
+    git diff-index --quiet HEAD -- 2>/dev/null || return 1
     # In need of a pull or push?
-    [ "$(git rev-parse HEAD)" = "$(git rev-parse '@{u}')" ] || return 1
+    if [ "$(git rev-parse HEAD 2>/dev/null)" != "$(git rev-parse '@{u}')" ]
+    then
+        return 1
+    fi
     return 0
 }
 
