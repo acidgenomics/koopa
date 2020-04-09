@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-04-08.
+## @note Updated 2020-04-09.
 ## """
 
 options(
@@ -23,11 +23,15 @@ if (isTRUE(.checks)) {
     stopifnot(
         packageVersion("base") >= "3.6",
         packageVersion("acidbase") >= "0.1.6",
-        packageVersion("goalie") >= "0.4.2"
+        packageVersion("goalie") >= "0.4.2",
+        packageVersion("syntactic") >= "0.3.9",
+        packageVersion("bb8") >= "0.2.7"
     )
     suppressPackageStartupMessages({
         library(acidbase)
         library(goalie)
+        library(syntactic)
+        library(bb8)
     })
 }
 
