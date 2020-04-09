@@ -2,7 +2,7 @@
 #'
 #' Display help via `man` when `--help` or `-h` flag is detected.
 #'
-#' @note Updated 2020-02-01.
+#' @note Updated 2020-04-09.
 #' @noRd
 #'
 #' @return System command when `--help` is set, or invisible `NULL`.
@@ -15,6 +15,7 @@ koopaHelp <- function() {
     file <- args[file]
     file <- sub(pattern = "^--file=", replacement = "", x = file)
     name <- basename(file)
-    shell(command = "man", args = name)
+    stopifnot(requireNamespace("acidbase", quietly = TRUE))
+    acidbase::shell(command = "man", args = name)
     quit()
 }
