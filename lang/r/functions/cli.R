@@ -1,5 +1,6 @@
 #' Header 1
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-04-09.
+#' @noRd
 h1 <- function(x) {
     if (isTRUE(hasCli())) {
         stopifnot(requireNamespace("cli", quietly = TRUE))
@@ -12,7 +13,8 @@ h1 <- function(x) {
 
 
 #' Header 2
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-04-09.
+#' @noRd
 h2 <- function(x) {
     if (isTRUE(hasCli())) {
         stopifnot(requireNamespace("cli", quietly = TRUE))
@@ -26,7 +28,8 @@ h2 <- function(x) {
 
 
 #' Return status labels, with optional color support
-#' @note Updated 2020-02-07.
+#' @note Updated 2020-04-09.
+#' @noRd
 status <- function() {
     x <- list(
         fail = "FAIL",
