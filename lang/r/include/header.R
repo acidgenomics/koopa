@@ -20,8 +20,6 @@ options(
 ## Source shared function scripts  {{{1
 ## =============================================================================
 
-## Note that we're sourcing functions into `.koopa` environment.
-
 local({
     includeDir <- normalizePath(dirname(sys.frame(1L)[["ofile"]]))
     prefix <- normalizePath(file.path(includeDir, "..", "..", ".."))
@@ -35,11 +33,13 @@ local({
         pattern = "*.R",
         full.names = TRUE
     ))
-    ## > invisible(lapply(X = scripts, FUN = source, local = .koopa))
+    ## Assign the functions into `.koopa` environment.
+    invisible(lapply(X = scripts, FUN = source, local = .koopa))
     assign(x = "scripts", value = scripts, envir = .koopa)
 })
 
-invisible(lapply(X = .koopa[["scripts"]], FUN = source, local = FALSE))
+## Here's how to source functions into active environment.
+## > invisible(lapply(X = .koopa[["scripts"]], FUN = source, local = FALSE))
 
 
 
@@ -86,7 +86,7 @@ local({
 ## Help mode  {{{1
 ## =============================================================================
 
-koopaHelp()
+.koopa[["koopaHelp"]]()
 
 
 
