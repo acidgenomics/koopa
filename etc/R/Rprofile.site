@@ -536,36 +536,42 @@ local({
                 .rprofile[["rVersionFull"]],
                 normalizePath(R.home(), mustWork = TRUE)
             )
-            if (isTRUE(.rprofile[["macos"]])) {
-                msg <- sprintf(
-                    fmt = paste(
-                        msg,
-                        "Clang:", pathString,
-                        sep = "\n"
-                    ),
-                    Sys.which("clang")
-                )
-            } else if (isTRUE(.rprofile[["linux"]])) {
-                msg <- sprintf(
-                    fmt = paste(
-                        msg,
-                        "GCC:", pathString,
-                        sep = "\n"
-                    ),
-                    Sys.which("gcc")
-                )
-            }
+            ## > if (isTRUE(.rprofile[["macos"]])) {
+            ## >     msg <- sprintf(
+            ## >         fmt = paste(
+            ## >             msg,
+            ## >             "Clang:", pathString,
+            ## >             sep = "\n"
+            ## >         ),
+            ## >         Sys.which("clang")
+            ## >     )
+            ## > } else if (isTRUE(.rprofile[["linux"]])) {
+            ## >     msg <- sprintf(
+            ## >         fmt = paste(
+            ## >             msg,
+            ## >             "GCC:", pathString,
+            ## >             sep = "\n"
+            ## >         ),
+            ## >         Sys.which("gcc")
+            ## >     )
+            ## > }
+            ## > msg <- sprintf(
+            ## >     fmt = paste(
+            ## >         msg,
+            ## >         "GNU Fortran:", pathString,
+            ## >         sep = "\n"
+            ## >     ),
+            ## >     Sys.which("gfortran")
+            ## > )
             msg <- sprintf(
                 fmt = paste(
                     msg,
-                    "GNU Fortran:", pathString,
                     "Package Library:", pathString,
                     "Working Directory:", pathString,
                     "",
                     "",
                     sep = "\n"
                 ),
-                Sys.which("gfortran"),
                 normalizePath(.libPaths()[[1L]], mustWork = TRUE),
                 normalizePath(getwd(), mustWork = TRUE)
             )
