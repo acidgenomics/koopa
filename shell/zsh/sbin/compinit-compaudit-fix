@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-set -Eeu -o pipefail
 
 script_dir="$(cd "$(dirname "${(%):-%N}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
