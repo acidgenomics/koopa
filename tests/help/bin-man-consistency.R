@@ -16,7 +16,14 @@ koopaPrefix <- normalizePath(file.path(dirname(file), "..", ".."))
 
 stopifnot(requireNamespace("utils", quietly = TRUE))
 
-## Locate the relevant bin directories.
+## Exclude these directories from search.
+exclude <- file.path(koopaPrefix, "(opt|system)", "")
+
+
+
+## Bin-to-man mapping  {{{1
+## =============================================================================
+
 bins <- sort(list.files(
     path = koopaPrefix,
     pattern = "^[s]?bin$",
@@ -24,10 +31,15 @@ bins <- sort(list.files(
     recursive = TRUE,
     include.dirs = TRUE
 ))
-bins <- bins[!grepl(
-    pattern = file.path(koopaPrefix, "(opt|system)", ""),
-    x = bins
-)]
+bins <- bins[!grepl(pattern = exclude, x = bins)]
+
+message(sprintf(
+    fmt = "Detected %d 'bin/sbin' directories.",
+    length(bins)
+))
+
+## Scripts  {{{2
+## -----------------------------------------------------------------------------
 
 ## List the files for each bin directory.
 scripts <- sort(unlist(lapply(
@@ -38,25 +50,75 @@ scripts <- sort(unlist(lapply(
     include.dirs = FALSE
 )))
 
+message(sprintf(
+    fmt = "Detected %d scripts.",
+    length(scripts)
+))
+
+## Man files  {{{2
+## -----------------------------------------------------------------------------
+
+message("Checking that all scripts have corresponding man files.")
+
 ## Map to corresponding man files.
-manpages <- gsub(
+manfiles <- gsub(
     pattern = file.path("", "[s]?bin", ""),
     replacement = file.path("", "man", "man1", ""),
     x = scripts
 )
-stopifnot(!any(duplicated(manpages)))
-manpages <- paste0(manpages, ".1")
-ok <- file.exists(manpages)
+stopifnot(!any(duplicated(manfiles)))
+manfiles <- paste0(manfiles, ".1")
+ok <- file.exists(manfiles)
 if (!all(ok)) {
     stop(paste(
         c(
             "Missing man pages:",
             utils::capture.output(
-                cat(manpages[!ok], sep = "\n")
+                cat(manfiles[!ok], sep = "\n")
             )
         ),
         collapse = "\n"
     ))
 }
 
-## Check for orphan man pages referring to deleted scripts.
+
+
+## Orphaned man-to-bin files  {{{1
+## =============================================================================
+
+message("Checking for orphaned man files.")
+
+mans <- sort(list.files(
+    path = koopaPrefix,
+    pattern = "^man1$",
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = TRUE
+))
+mans <- mans[!grepl(pattern = exclude, x = mans)]
+
+message(sprintf(
+    fmt = "Detected %d 'man1' directories.",
+    length(mans)
+))
+
+manfiles2 <- sort(unlist(lapply(
+    X = mans,
+    FUN = list.files,
+    full.names = TRUE,
+    recursive = FALSE,
+    include.dirs = FALSE
+)))
+
+orphans <- setdiff(manfiles2, manfiles)
+if (length(orphans) > 0L) {
+    stop(paste(
+        c(
+            "Orphaned man pages:",
+            utils::capture.output(
+                cat(orphans, sep = "\n")
+            )
+        ),
+        collapse = "\n"
+    ))
+}
