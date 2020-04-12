@@ -1,8 +1,5 @@
 #!/usr/bin/env Rscript
 
-## Disable R header checks, which inspect package versions.
-.checks <- FALSE
-
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
@@ -10,19 +7,19 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+attach(.koopa)
+
+stopifnot(requireNamespace("acidbase", quietly = TRUE))
+
 ## These dependencies are required to install sf, etc.
 stopifnot(
     isTRUE(nzchar(Sys.which("gdal-config"))),
     isTRUE(nzchar(Sys.which("geos-config")))
 )
 
+args <- acidbase::parseArgs(positional = FALSE, validFlags = "all")
+
 all <- FALSE
-
-args <- parseArgs(
-    positional = FALSE,
-    validFlags = "all"
-)
-
 if ("--all" %in% args) {
     all <- TRUE
 }
@@ -38,6 +35,10 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
     utils::install.packages("BiocManager")
 }
 
+suppressPackageStartupMessages({
+    library(BiocManager)
+})
+
 h1("Install R packages")
 
 h2("Tricky packages")
@@ -52,22 +53,6 @@ install(
         "rgdal"
     )
 )
-
-## Fix for BiocNeighbors.
-## https://github.com/LTLA/BiocNeighbors/issues/10
-## > install.packages(
-## >     pkgs = paste(
-## >         "https://cran.r-project.org",
-## >         "src",
-## >         "contrib",
-## >         "Archive",
-## >         "RcppAnnoy",
-## >         "RcppAnnoy_0.0.14.tar.gz",
-## >         sep = "/"
-## >     ),
-## >     repos = NULL,
-## >     type = "source"
-## > )
 
 h2("CRAN")
 install(

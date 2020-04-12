@@ -71,6 +71,7 @@ then
     if [[ ! "$major_version" -ge 4 ]]
     then
         >&2 printf '%s\n' 'ERROR: Bash >= 4 is required.'
+        >&2 printf 'BASH_VERSION: %s\n' "$BASH_VERSION"
         exit 1
     fi
     # Check that user's Bash has mapfile builtin defined.
