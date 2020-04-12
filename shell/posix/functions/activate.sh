@@ -16,7 +16,7 @@ _koopa_activate_aspera() {  # {{{1
 _koopa_activate_autojump() {  # {{{1
     # """
     # Activate autojump.
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-12.
     #
     # Currently supports Bash and Zsh.
     # Skip activation on other POSIX shells, such as Dash.
