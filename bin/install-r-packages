@@ -1,14 +1,13 @@
 #!/usr/bin/env Rscript
 
-## Disable R header checks, which inspect package versions.
-.checks <- FALSE
-
 args <- commandArgs(trailingOnly = FALSE)
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
 file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+stopifnot(requireNamespace("acidbase", quietly = TRUE))
 
 ## These dependencies are required to install sf, etc.
 stopifnot(
@@ -18,10 +17,7 @@ stopifnot(
 
 all <- FALSE
 
-args <- parseArgs(
-    positional = FALSE,
-    validFlags = "all"
-)
+args <- acidbase::parseArgs(positional = FALSE, validFlags = "all")
 
 if ("--all" %in% args) {
     all <- TRUE
