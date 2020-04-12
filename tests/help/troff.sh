@@ -2,14 +2,10 @@
 
 # """
 # Check that all scripts support '--help' flag.
-# Updated 2020-02-01.
+# Updated 2020-04-12.
 # """
 
-# FIXME This check needs to look for man files for all scripts.
-# Error if they do not match exactly.
-# This may be easier to code in Python instead.
-
-KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." \
+KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
     >/dev/null 2>&1 && pwd -P)"
 export KOOPA_PREFIX
 # shellcheck source=/dev/null
