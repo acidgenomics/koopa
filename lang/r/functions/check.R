@@ -69,6 +69,10 @@ checkVersion <- function(
     eval = c("==", ">="),
     required = TRUE
 ) {
+    stopifnot(
+        requireNamespace("goalie", quietly = TRUE),
+        requireNamespace("acidbase", quietly = TRUE)
+    )
     if (missing(whichName)) {
         whichName <- name
     }
@@ -76,14 +80,13 @@ checkVersion <- function(
         current <- NA_character_
     }
     stopifnot(
-        requireNamespace("goalie", quietly = TRUE),
         goalie::isString(name),
         goalie::isString(whichName) ||
             is.na(whichName),
-        is(current, "package_version") ||
+        is(current, "numeric_version") ||
             goalie::isString(current) ||
             is.na(current),
-        is(expected, "package_version") ||
+        is(expected, "numeric_version") ||
             goalie::isString(expected) ||
             is.na(expected),
         goalie::isFlag(required)
@@ -116,11 +119,11 @@ checkVersion <- function(
     ## Sanitize the version for non-identical (e.g. GTE) comparisons.
     if (!identical(eval, "==")) {
         if (grepl("\\.", current)) {
-            current <- sanitizeVersion(current)
+            current <- acidbase::sanitizeVersion(current)
             current <- package_version(current)
         }
         if (grepl("\\.", expected)) {
-            expected <- sanitizeVersion(expected)
+            expected <- acidbase::sanitizeVersion(expected)
             expected <- package_version(expected)
         }
     }
