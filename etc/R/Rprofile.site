@@ -146,8 +146,8 @@ local({
 
 local({
     if (
-        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV"))) &&
-        isTRUE(nzchar(Sys.which("conda")))
+        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))
+        ## > isTRUE(nzchar(Sys.which("conda")))
     ) {
         conda <- TRUE
     } else {
