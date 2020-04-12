@@ -100,7 +100,11 @@ installGitHub <- function(
                 identical(length(pkgdir), 1L),
                 isTRUE(dir.exists(pkgdir))
             )
-            utils::install.packages(pkgs = pkgdir, repos = NULL, type = "source")
+            utils::install.packages(
+                pkgs = pkgdir,
+                repos = NULL,
+                type = "source"
+            )
             ## Clean up temporary files.
             file.remove(tarfile)
             unlink(exdir, recursive = TRUE)
