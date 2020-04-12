@@ -6,7 +6,7 @@
 stopifnot(packageVersion("base") >= "3.6")
 
 options(
-    "verbose" = TRUE,
+    ## "verbose" = TRUE,
     ## "warn" = 2L,
     "error" = quote(quit(status = 1L)),
     "warning" = quote(quit(status = 1L))
