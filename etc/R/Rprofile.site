@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-03-26.
+## Updated 2020-04-12.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -73,180 +73,103 @@
 ## Pre-flight  {{{1
 ## =============================================================================
 
-## Keeping these commands out of `.First()`, otherwise the user `.Rprofile`
-## won't pick up the return values correctly.
+## Run these configuration options outside of `.First()` call, so user-specific
+## `~/.Rprofile` file will pick them up.
 
+## Mike's user-specific Rprofile file checks for value.
 options("rprofile.site" = TRUE)
 
+## Hidden environment  {{{2
+## -----------------------------------------------------------------------------
 
+.rprofile <- new.env()
 
-## Hidden environment  {{{1
-## =============================================================================
-
-## Create hidden environment to stash values.
-.env <- new.env()
+## Seed value  {{{3
+## -----------------------------------------------------------------------------
 
 ## Set seed for reproducibility. Using Fibonacci sequence.
-assign(x = "seed", value = 1123581321L, envir = .env)
-stopifnot(is.integer(.env[["seed"]]))
-set.seed(.env[["seed"]])
+assign(x = "seed", value = 1123581321L, envir = .rprofile)
+set.seed(.rprofile[["seed"]])
+
+## Functions  {{{3
+## -----------------------------------------------------------------------------
 
 ## Check if a package is installed.
 assign(
-    x = ".isInstalled",
+    x = "isInstalled",
     value = function(pkg) {
+        stopifnot(requireNamespace("utils", quietly = TRUE))
         pkg %in% rownames(utils::installed.packages())
     },
-    envir = .env
+    envir = .rprofile
 )
 
-attach(.env)
+## Platform  {{{3
+## -----------------------------------------------------------------------------
 
-
-
-## Package installation  {{{1
-## =============================================================================
-
-## We set the cloud mirror, which is 'network-close' to everybody, as default.
-## Consider using a versioned MRAN snapshot for increased reproducibility.
-
-## Alternatively, this lets you install Bioconductor packages using
-## `install.packages()`, but this causes a slight R session load delay.
-## > options(repos = BiocManager::repositories())
-
-local({
-    repos <- getOption("repos")
-    ## > repos["CRAN"] <- "https://cran.rstudio.com"
-    repos["CRAN"] <- "https://cloud.r-project.org"
-    options("repos" = repos)
-})
-
-## Always install from source on Linux.
-## Allow binary install on macOS.
+## Linux and macOS (Darwin) are currently supported.
 local({
     os <- R.Version()[["os"]]
-    if (isTRUE(grepl(pattern = "linux", x = os))) {
-        options("pkgType" = "source")
-    } else if (isTRUE(grepl(pattern = "darwin", x = os))) {
-        options("pkgType" = "both")
-    }
+    sysname <- Sys.info()[["sysname"]]
+    linux <- identical(sysname, "Linux")
+    macos <- identical(sysname, "Darwin")
+    assign(x = "linux", value = linux, envir = .rprofile)
+    assign(x = "macos", value = macos, envir = .rprofile)
+    assign(x = "os", value = os, envir = .rprofile)
 })
 
-## Set custom compiler options.
-## > options(
-## >     "configure.args" = NULL,
-## >     "configure.vars" = NULL
-## > )
+## R version strings  {{{3
+## -----------------------------------------------------------------------------
 
-## Binary package mode. Doesn't work on Linux.
-## > options(
-## >     "install.packages.check.source" = "no",
-## >     "install.packages.compile.from.source" = "binary",
-## >     "pkgType" = "binary"
-## > )
+## Get the full R version, including patch (e.g. 3.6.1).
+local({
+    rVersionFull <- numeric_version(paste(
+        R.version[["major"]],
+        R.version[["minor"]],
+        sep = "."
+    ))
+    assign(x = "rVersionFull", value = rVersionFull, envir = .rprofile)
+})
 
+## Get the short R version without patch (e.g. 3.6).
+local({
+    rVersionShort <- numeric_version(paste(
+        R.version[["major"]],
+        substr(x = R.version[["minor"]], start = 1, stop = 1),
+        sep = "."
+    ))
+    assign(x = "rVersionShort", value = rVersionShort, envir = .rprofile)
+})
 
+## Conda  {{{3
+## -----------------------------------------------------------------------------
 
-## Console and interface  {{{1
-## =============================================================================
+local({
+    if (
+        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV"))) &&
+        isTRUE(nzchar(Sys.which("conda")))
+    ) {
+        conda <- TRUE
+    } else {
+        conda <- FALSE
+    }
+    assign(x = "conda", value = conda, envir = .rprofile)
+})
 
-options(
-    "browserNLdisabled" = TRUE,
-    ## Remove "+" line prefix in output, making code easier to copy.
-    "continue" = " ",
-    "max.print" = 1000L,
-    "menu.graphics" = FALSE,
-    "prompt" = "> ",
-    "show.signif.stars" = FALSE,
-    "verbose" = FALSE,
-    "width" = 80L
-)
+## RStudio {{{3
+## -----------------------------------------------------------------------------
 
-## Turn on auto-completion of installed package names.
-if (isTRUE(interactive())) {
-    utils::rc.settings(ipck = TRUE)
-}
+local({
+    if (isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))) {
+        rstudio <- TRUE
+    } else {
+        rstudio <- FALSE
+    }
+    assign(x = "rstudio", value = rstudio, envir = .rprofile)
+})
 
-
-
-## Debugging  {{{1
-## =============================================================================
-
-## Improve the warnings and include backtrace of call stack.
-options(
-    "deparse.max.lines" = 3L,
-    "showErrorCalls" = TRUE,
-    "showWarnCalls" = TRUE,
-    ## Timeouts default to 60 seconds, which is too long.
-    "timeout" = 5L,
-    "warn" = 1L,
-    ## Set to maximum supported length.
-    "warning.length" = 8170L
-)
-
-## Note that edgeR and pheatmap currently fail these checks.
-options(
-    "warnPartialMatchAttr" = TRUE,
-    "warnPartialMatchDollar" = TRUE
-)
-
-## Improve stack traces for error messages.
-##
-## Use either:
-## - `rlang::entrace()` (recommended)
-## - `utils::recover()`
-##
-## See also:
-## - https://twitter.com/krlmlr/status/1086995664591044608
-## - https://gist.github.com/krlmlr/33ec72d196b1542b9c4f9497d981de49
-##
-## Verbose error debugging is currently crashing RStudio 1.2 unless
-## `rstudio.errors.suppressed` is defined.
-##
-## Related issues:
-## - https://github.com/rstudio/rstudio/issues/4723
-## - https://github.com/rstudio/rstudio/pull/4726
-
-if (.isInstalled("rlang")) {
-    options(
-        "error" = quote(rlang::entrace()),
-        "rlang_backtrace_on_error" = "full",
-        "rstudio.errors.suppressed" = FALSE
-    )
-}
-
-## Quiet down about registered S3 method collisons.
-## See also:
-## - https://svn.r-project.org/R/trunk/src/library/base/R/namespace.R
-## - https://github.com/wch/r-source/blob/master/src/library/base/R/namespace.R
-Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
-
-
-
-## Package-specific options  {{{1
-## =============================================================================
-
-if (.isInstalled("crayon")) {
-    options(
-        "crayon.enabled" = TRUE,
-        "crayon.colors" = 256L
-    )
-}
-
-if (.isInstalled("httr")) {
-    ## Enable OAuth token generation using httr on a remote R server.
-    ## This is used by googlesheets, for example.
-    options(
-        "httr_oob_default" = TRUE
-    )
-}
-
-if (.isInstalled("readr")) {
-    options(
-        "readr.num_columns" = 0L,
-        "readr.show_progress" = FALSE
-    )
-}
+## No longer attaching hidden environment into search path.
+## > attach(.rprofile)
 
 
 
@@ -256,43 +179,16 @@ if (.isInstalled("readr")) {
 ## > help(topic = "Startup", package = "base")
 
 .First <- function() {
-    ## Platform  {{{2
+    isInstalled <- .rprofile[["isInstalled"]]
+
+    ## Compiler settings  {{{2
     ## -------------------------------------------------------------------------
 
-    ## Linux and macOS (Darwin) are currently supported.
+    ## Warn on active conda environment.
+    ## Conda can cause compilation issues due to GCC version mismatch.
 
-    platform <- Sys.info()[["sysname"]]
-    linux <- identical(platform, "Linux")
-    macos <- identical(platform, "Darwin")
-    rm(platform)
-
-    ## R version strings  {{{2
-    ## -------------------------------------------------------------------------
-
-    ## Get the full R version, including patch (e.g. 3.6.1).
-    r_ver_full <- numeric_version(paste(
-        R.version[["major"]],
-        R.version[["minor"]],
-        sep = "."
-    ))
-    ## Get the short R version without patch (e.g. 3.6).
-    r_ver_short <- numeric_version(paste(
-        R.version[["major"]],
-        substr(x = R.version[["minor"]], start = 1, stop = 1),
-        sep = "."
-    ))
-
-    ## Conda  {{{2
-    ## -------------------------------------------------------------------------
-
-    ## Check for active conda.
-    ## Can cause compilation issues due to GCC version mismatch.
-
-    if (
-        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV"))) &&
-        isTRUE(nzchar(Sys.which("conda")))
-    ) {
-        if (isTRUE(interactive())) {
+    local({
+        if (isTRUE(interactive()) && isTRUE(.rprofile[["conda"]])) {
             warning(sprintf(
                 fmt = paste(
                     "conda '%s' environment detected.",
@@ -303,143 +199,186 @@ if (.isInstalled("readr")) {
                 Sys.getenv("CONDA_DEFAULT_ENV")
             ))
         }
-        conda <- TRUE
-    } else {
-        conda <- FALSE
-    }
-
-    ## Compiler  {{{2
-    ## -------------------------------------------------------------------------
+    })
 
     ## Check that the compiler is expected GCC version on Linux or expected
     ## Clang version on macOS.
     ##
     ## Do not compile packages from source on macOS using Apple LLVM Clang/GCC.
+    ##
     ## Instead, install specific Clang and GNU Fortran binaries:
     ## https://cran.r-project.org/bin/macosx/tools/
 
-    if (!isTRUE(conda)) {
-        if (isTRUE(macos)) {
-            ## Check that Xcode command line tools (CLT) are installed.
-            if (!isTRUE(dir.exists(file.path(
-                "/",
-                "Library",
-                "Developer",
-                "CommandLineTools",
-                "SDKs",
-                "MacOSX.sdk"
-            )))) {
-                warning(
-                    "Failed to detect Xcode CLT.\n",
-                    "Run `xcode-select --install` to install."
+    local({
+        if (!isTRUE(.rprofile[["conda"]])) {
+            if (isTRUE(.rprofile[["macos"]])) {
+                ## Check that Xcode command line tools (CLT) are installed.
+                if (!isTRUE(dir.exists(file.path(
+                    "/",
+                    "Library",
+                    "Developer",
+                    "CommandLineTools",
+                    "SDKs",
+                    "MacOSX.sdk"
+                )))) {
+                    warning(
+                        "Failed to detect Xcode CLT.\n",
+                        "Run `xcode-select --install` to install."
+                    )
+                }
+                ## Use recommended CRAN compiler settings.
+                if (.rprofile[["rVersionShort"]] == "3.5") {
+                    clangVersion <- "6"
+                } else if (.rprofile[["rVersionShort"]] == "3.6") {
+                    clangVersion <- "7"
+                }
+                clangBinDir <- file.path(
+                    "", "usr", "local",
+                    paste0("clang", clangVersion), "bin"
                 )
-            }
-            ## Use recommended CRAN compiler settings.
-            if (r_ver_short == "3.5") {
-                clang_ver <- "6"
-            } else if (r_ver_short == "3.6") {
-                clang_ver <- "7"
-            }
-            clang_bin_dir <- file.path(
-                "", "usr", "local",
-                paste0("clang", clang_ver), "bin"
-            )
-            if (!identical(
-                x = Sys.which(c("clang", "clang++", "gfortran")),
-                y = c(
-                    "clang"    = file.path(clang_bin_dir, "clang"),
-                    "clang++"  = file.path(clang_bin_dir, "clang++"),
-                    "gfortran" = file.path(
-                                     "", "usr", "local",
-                                     "gfortran", "bin", "gfortran"
-                                 )
+                if (!identical(
+                    x = Sys.which(c("clang", "clang++", "gfortran")),
+                    y = c(
+                        "clang"    = file.path(clangBinDir, "clang"),
+                        "clang++"  = file.path(clangBinDir, "clang++"),
+                        "gfortran" = file.path(
+                            "", "usr", "local",
+                            "gfortran", "bin", "gfortran"
+                        )
+                    )
+                )) {
+                    warning(
+                        "Failed to detect CRAN clang and gfortran.\n",
+                        "Install development tools and libraries from:\n",
+                        "https://cran.r-project.org/bin/macosx/tools/"
+                    )
+                }
+                stopifnot(all(nzchar(
+                    Sys.which(c(
+                        "clang",
+                        "clang++",
+                        "gfortran"
+                    ))
+                )))
+                assign(
+                    x = "clangBinDir",
+                    value = clangBinDir,
+                    envir = .rprofile
                 )
-            )) {
-                warning(
-                    "Failed to detect CRAN clang and gfortran.\n",
-                    "Install development tools and libraries from:\n",
-                    "https://cran.r-project.org/bin/macosx/tools/"
+                assign(
+                    x = "clangVersion",
+                    value = clangVersion,
+                    envir = .rprofile
                 )
+            } else if (isTRUE(.rprofile[["linux"]])) {
+                stopifnot(all(nzchar(
+                    Sys.which(c(
+                        "g++",
+                        "gcc",
+                        "gfortran"
+                    ))
+                )))
             }
-            rm(clang_bin_dir, clang_ver)
-            stopifnot(all(nzchar(
-                Sys.which(c(
-                    "clang",
-                    "clang++",
-                    "gfortran"
-                ))
-            )))
-        } else if (isTRUE(linux)) {
-            stopifnot(all(nzchar(
-                Sys.which(c(
-                    "g++",
-                    "gcc",
-                    "gfortran"
-                ))
-            )))
         }
-    }
+    })
 
     ## Library path  {{{2
     ## -------------------------------------------------------------------------
 
     ## Check that library matches R version.
-
-    if (!isTRUE(conda)) {
-        libs <- .libPaths()
-        if (
-            ## Site library.
-            !any(grepl(pattern = "site-library", x = libs)) &&
-            ## User library.
-            !any(grepl(pattern = r_ver_short, x = libs))
-        ) {
-            warning(sprintf(
-                "Failed to detect R %s library in '.libPaths()':\n%s",
-                r_ver_short,
-                paste(libs, collapse = "\n")
-            ))
+    local({
+        if (!isTRUE(.rprofile[["conda"]])) {
+            libs <- .libPaths()
+            if (
+                ## Site library.
+                !any(grepl(pattern = "site-library", x = libs)) &&
+                ## User library.
+                !any(grepl(pattern = .rprofile[["rVersionShort"]], x = libs))
+            ) {
+                warning(sprintf(
+                    "Failed to detect R %s library in '.libPaths()':\n%s",
+                    .rprofile[["rVersionShort"]],
+                    paste(libs, collapse = "\n")
+                ))
+            }
+            assign(x = "libs", value = libs, envir = .rprofile)
         }
-        rm(libs)
-    }
+    })
 
     ## RStudio  {{{2
     ## -------------------------------------------------------------------------
 
-    ## Check if session is running inside RStudio.
-    if (isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))) {
-        rstudio <- TRUE
-    } else {
-        rstudio <- FALSE
-    }
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
-    if (isTRUE(rstudio)) {
+    if (isTRUE(.rprofile[["rstudio"]])) {
         Sys.umask("0002")
     }
     ## Inform user that session is running inside of RStudio.
     ## > if (isTRUE(rstudio) && isTRUE(interactive())) {
     ## >     message("RStudio detected.")
     ## > }
-    rm(rstudio)
 
     ## Secrets  {{{2
     ## -------------------------------------------------------------------------
 
     ## Load per-user secrets that we don't want to save in a shared Renviron.
-    secrets_file <- file.path("~", ".Rsecrets")
-    if (file.exists(secrets_file)) {
-        source(secrets_file)
-        if (isTRUE(interactive())) {
-            message(sprintf("Loaded '%s' file.", secrets_file))
+    local({
+        secretsFile <- file.path("~", ".Rsecrets")
+        if (file.exists(secretsFile)) {
+            source(secretsFile)
+            if (isTRUE(interactive())) {
+                message(sprintf("Loaded '%s' file.", secretsFile))
+            }
+            secretsFile <- normalizePath(secretsFile)
+            assign(x = "secretsFile", value = secretsFile, envir = .rprofile)
         }
+    })
+
+    ## Package installation  {{{2
+    ## -------------------------------------------------------------------------
+
+    ## We set the cloud mirror, which is 'network-close' to everybody, as
+    ## default. Consider using a versioned MRAN snapshot for increased
+    ## reproducibility.
+    ##
+    ## Alternatively, this lets you install Bioconductor packages using
+    ## `install.packages()`, but this causes a slight R session load delay.
+    ## > options(repos = BiocManager::repositories())
+
+    local({
+        repos <- getOption("repos")
+        ## > repos["CRAN"] <- "https://cran.rstudio.com"
+        repos["CRAN"] <- "https://cloud.r-project.org"
+        options("repos" = repos)
+    })
+
+    ## Always install from source on Linux.
+    ## Allow binary install on macOS.
+    if (isTRUE(.rprofile[["linux"]])) {
+        options("pkgType" = "source")
+    } else if (isTRUE(.rprofile[["macos"]])) {
+        options("pkgType" = "both")
     }
+
+    ## Set custom compiler options.
+    ## > options(
+    ## >     "configure.args" = NULL,
+    ## >     "configure.vars" = NULL
+    ## > )
+
+    ## Binary package mode. Doesn't work on Linux.
+    ## > options(
+    ## >     "install.packages.check.source" = "no",
+    ## >     "install.packages.compile.from.source" = "binary",
+    ## >     "pkgType" = "binary"
+    ## > )
 
     ## Default packages  {{{2
     ## -------------------------------------------------------------------------
 
     ## Attach BiocManager automatically.
     ## > if (interactive()) {
-    ## >     if (.isInstalled("BiocManager")) {
+    ## >     if (isInstalled("BiocManager")) {
     ## >         options(
     ## >             defaultPackages = c(
     ## >                 getOption("defaultPackages"),
@@ -449,26 +388,125 @@ if (.isInstalled("readr")) {
     ## >     }
     ## > }
 
+    ## Console and interface  {{{2
+    ## -------------------------------------------------------------------------
+
+    options(
+        "browserNLdisabled" = TRUE,
+        ## Remove "+" line prefix in output, making code easier to copy.
+        "continue" = " ",
+        "max.print" = 1000L,
+        "menu.graphics" = FALSE,
+        "prompt" = "> ",
+        "show.signif.stars" = FALSE,
+        "verbose" = FALSE,
+        "width" = 80L
+    )
+
+    ## Turn on auto-completion of installed package names.
+    if (isTRUE(interactive())) {
+        utils::rc.settings(ipck = TRUE)
+    }
+
+    ## Debugging  {{{2
+    ## -------------------------------------------------------------------------
+
+    ## Improve the warnings and include backtrace of call stack.
+    options(
+        "deparse.max.lines" = 3L,
+        "showErrorCalls" = TRUE,
+        "showWarnCalls" = TRUE,
+        ## Timeouts default to 60 seconds, which is too long.
+        "timeout" = 5L,
+        "warn" = 1L,
+        ## Set to maximum supported length.
+        "warning.length" = 8170L
+    )
+
+    ## Note that edgeR and pheatmap currently fail these checks.
+    options(
+        "warnPartialMatchAttr" = TRUE,
+        "warnPartialMatchDollar" = TRUE
+    )
+
+    ## Improve stack traces for error messages.
+    ##
+    ## Use either:
+    ## - `rlang::entrace()` (recommended)
+    ## - `utils::recover()`
+    ##
+    ## See also:
+    ## - https://twitter.com/krlmlr/status/1086995664591044608
+    ## - https://gist.github.com/krlmlr/33ec72d196b1542b9c4f9497d981de49
+    ##
+    ## Verbose error debugging is currently crashing RStudio 1.2 unless
+    ## `rstudio.errors.suppressed` is defined.
+    ##
+    ## Related issues:
+    ## - https://github.com/rstudio/rstudio/issues/4723
+    ## - https://github.com/rstudio/rstudio/pull/4726
+
+    if (isInstalled("rlang")) {
+        options(
+            "error" = quote(rlang::entrace()),
+            "rlang_backtrace_on_error" = "full",
+            "rstudio.errors.suppressed" = FALSE
+        )
+    }
+
+    ## Quiet down about registered S3 method collisons.
+    ## See also:
+    ## - https://svn.r-project.org/R/trunk/src/library/base/R/namespace.R
+    ## - https://github.com/wch/r-source/blob/master/src/library/base/R/
+    ##       namespace.R
+    Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
+
+    ## Package-specific options  {{{2
+    ## -------------------------------------------------------------------------
+
+    if (isInstalled("crayon")) {
+        options(
+            "crayon.enabled" = TRUE,
+            "crayon.colors" = 256L
+        )
+    }
+
+    if (isInstalled("httr")) {
+        ## Enable OAuth token generation using httr on a remote R server.
+        ## This is used by googlesheets, for example.
+        options(
+            "httr_oob_default" = TRUE
+        )
+    }
+
+    if (isInstalled("readr")) {
+        options(
+            "readr.num_columns" = 0L,
+            "readr.show_progress" = FALSE
+        )
+    }
+
     ## Parallelization  {{{2
     ## -------------------------------------------------------------------------
 
-    if (.isInstalled("parallel")) {
-        ## Improve the default multi-core settings.
-        ## `BiocParallel::MulticoreParam()` should inherit this setting.
-        cores <- Sys.getenv("CPU_COUNT")
-        if (!isTRUE(nzchar(cores))) {
-            cores <- max(1L, parallel::detectCores() - 1L)
-        }
-        cores <- as.integer(cores)
-        ## `install.packages()` looks for "Ncpus" global.
-        options(
-            "Ncpus" = cores,
-            "mc.cores" = cores
-        )
-        rm(cores)
+    if (isInstalled("parallel")) {
+        local({
+            ## Improve the default multi-core settings.
+            ## `BiocParallel::MulticoreParam()` should inherit this setting.
+            cores <- Sys.getenv("CPU_COUNT")
+            if (!isTRUE(nzchar(cores))) {
+                cores <- max(1L, parallel::detectCores() - 1L)
+            }
+            cores <- as.integer(cores)
+            ## `install.packages()` looks for "Ncpus" global.
+            options(
+                "Ncpus" = cores,
+                "mc.cores" = cores
+            )
+        })
     }
 
-    if (.isInstalled("future")) {
+    if (isInstalled("future")) {
         ## If we have a large dataset, then we might need to adjust the limit
         ## for allowable object sizes within R.
         ##
@@ -485,56 +523,57 @@ if (.isInstalled("readr")) {
     ## -------------------------------------------------------------------------
 
     if (isTRUE(interactive())) {
-        path_string <- paste0("  %.", getOption("width") - 2L, "s")
-        msg <- sprintf(
-            fmt = paste(
-                "",
-                "R %s",
-                "",
-                "R Home:", path_string,
-                sep = "\n"
-            ),
-            r_ver_full,
-            normalizePath(R.home(), mustWork = TRUE)
-        )
-        if (isTRUE(macos)) {
+        local({
+            pathString <- paste0("  %.", getOption("width") - 2L, "s")
+            msg <- sprintf(
+                fmt = paste(
+                    "",
+                    "R %s",
+                    "",
+                    "R Home:", pathString,
+                    sep = "\n"
+                ),
+                .rprofile[["rVersionFull"]],
+                normalizePath(R.home(), mustWork = TRUE)
+            )
+            if (isTRUE(.rprofile[["macos"]])) {
+                msg <- sprintf(
+                    fmt = paste(
+                        msg,
+                        "Clang:", pathString,
+                        sep = "\n"
+                    ),
+                    Sys.which("clang")
+                )
+            } else if (isTRUE(.rprofile[["linux"]])) {
+                msg <- sprintf(
+                    fmt = paste(
+                        msg,
+                        "GCC:", pathString,
+                        sep = "\n"
+                    ),
+                    Sys.which("gcc")
+                )
+            }
             msg <- sprintf(
                 fmt = paste(
                     msg,
-                    "Clang:", path_string,
+                    "GNU Fortran:", pathString,
+                    "Package Library:", pathString,
+                    "Working Directory:", pathString,
+                    "",
+                    "",
                     sep = "\n"
                 ),
-                Sys.which("clang")
+                Sys.which("gfortran"),
+                normalizePath(.libPaths()[[1L]], mustWork = TRUE),
+                normalizePath(getwd(), mustWork = TRUE)
             )
-        } else if (isTRUE(linux)) {
-            msg <- sprintf(
-                fmt = paste(
-                    msg,
-                    "GCC:", path_string,
-                    sep = "\n"
-                ),
-                Sys.which("gcc")
-            )
-        }
-        msg <- sprintf(
-            fmt = paste(
-                msg,
-                "GNU Fortran:", path_string,
-                "Package Library:", path_string,
-                "Working Directory:", path_string,
-                "",
-                "",
-                sep = "\n"
-            ),
-            Sys.which("gfortran"),
-            normalizePath(.libPaths()[[1L]], mustWork = TRUE),
-            normalizePath(getwd(), mustWork = TRUE)
-        )
-        cat(msg)
-        rm(msg, path_string)
+            cat(msg)
+        })
     }
 
-    rm(conda, linux, macos, r_ver_full, r_ver_short)
+    rm(isInstalled)
 }
 
 
