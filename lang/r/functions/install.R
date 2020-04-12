@@ -55,7 +55,7 @@ installGitHub <- function(
                     }
                 })
                 ## Extract the tarball URL from the JSON output using base R.
-                x <- strsplit(x = json, split = ",", fixed = TRUE)[[1L]]
+                x <- unlist(strsplit(x = json, split = ",", fixed = TRUE))
                 x <- grep(pattern = "tarball_url", x = x, value = TRUE)
                 x <- strsplit(x = x, split = "\"", fixed = TRUE)[[1L]][[4L]]
                 url <- x
