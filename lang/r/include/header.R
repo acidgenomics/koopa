@@ -1,7 +1,9 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-04-08.
+## @note Updated 2020-04-12.
 ## """
+
+stopifnot(packageVersion("base") >= "3.6")
 
 options(
     ## "verbose" = TRUE,
@@ -10,55 +12,93 @@ options(
     "warning" = quote(quit(status = 1L))
 )
 
-if (!exists(x = ".checks", inherits = FALSE)) {
-    if (Sys.getenv("KOOPA_NO_HEADER_CHECKS") == 1L) {
-        .checks <- FALSE
-    } else {
-        .checks <- TRUE
-    }
-}
+## Create an invisible koopa environment.
+.koopa <- new.env()
 
-## Check and attach required packages.
-if (isTRUE(.checks)) {
-    stopifnot(
-        packageVersion("base") >= "3.6",
-        packageVersion("acidbase") >= "0.1.6",
-        packageVersion("goalie") >= "0.4.2"
+
+
+## Source shared function scripts  {{{1
+## =============================================================================
+
+local({
+    includeDir <- normalizePath(dirname(sys.frame(1L)[["ofile"]]))
+    prefix <- normalizePath(file.path(includeDir, "..", "..", ".."))
+    assign(x = "prefix", value = prefix, envir = .koopa)
+    koopa <- file.path(prefix, "bin", "koopa")
+    stopifnot(isTRUE(file.exists(koopa)))
+    assign(x = "koopa", value = koopa, envir = .koopa)
+    functionsDir <- file.path(dirname(includeDir), "functions")
+    scripts <- sort(list.files(
+        path = functionsDir,
+        pattern = "*.R",
+        full.names = TRUE
+    ))
+    ## Assign the functions into `.koopa` environment.
+    invisible(lapply(X = scripts, FUN = source, local = .koopa))
+    assign(x = "scripts", value = scripts, envir = .koopa)
+})
+
+## Here's how to source functions into active environment.
+## > invisible(lapply(X = .koopa[["scripts"]], FUN = source, local = FALSE))
+
+
+
+## Check package dependencies  {{{1
+## =============================================================================
+
+## Check that required R package dependencies are installed.
+local({
+    installGitHub <- .koopa[["installGitHub"]]
+    isPackageVersion <- .koopa[["isPackageVersion"]]
+    dependencies <- c(
+        "acidgenomics/acidbase" = "0.1.7",
+        "acidgenomics/goalie" = "0.4.2",
+        "acidgenomics/syntactic" = "0.3.9",
+        "acidgenomics/bb8" = "0.2.7"
     )
-    suppressPackageStartupMessages({
-        library(acidbase)
-        library(goalie)
-    })
-}
+    if (!all(isPackageVersion(dependencies))) {
+        repos <- names(dependencies)
+        installGitHub(
+            repo = repos,
+            release = "latest",
+            reinstall = TRUE
+        )
+    }
+    stopifnot(all(isPackageVersion(dependencies)))
+    packages <- basename(names(dependencies))
+    ## Attach package libraries:
+    ## > invisible(lapply(
+    ## >     X = packages,
+    ## >     FUN = library,
+    ## >     character.only = TRUE
+    ## > ))
+    ## Or simply require namespace:
+    ## > invisible(lapply(
+    ## >     X = packages,
+    ## >     FUN = requireNamespace,
+    ## >     quietly = TRUE
+    ## > ))
+    assign(x = "dependencies", value = dependencies, envir = .koopa)
+})
 
-.includeDir <- normalizePath(dirname(sys.frame(1L)[["ofile"]]))
-.functionsDir <- file.path(dirname(.includeDir), "functions")
 
-.files <- sort(list.files(
-    path = .functionsDir,
-    pattern = "*.R",
-    full.names = TRUE
-))
 
-invisible(lapply(X = .files, FUN = source))
+## Help mode  {{{1
+## =============================================================================
 
-# Set number of cores for parallelization, if necessary.
+.koopa[["koopaHelp"]]()
+
+
+
+## Parallelization  {{{1
+## =============================================================================
+
+## Set number of cores for parallelization, if necessary.
+## Necessary when running in `Rscript --vanilla` mode.
+## Otherwise this will be handled automatically by `Rprofile.site` file.
 if (
     !isTRUE(nzchar(getOption("mc.cores"))) &&
     isTRUE("parallel" %in% rownames(installed.packages()))
 ) {
     options("mc.cores" = parallel::detectCores())
 }
-
-koopaHelp()
-
-koopaPrefix <- normalizePath(file.path(.includeDir, "..", "..", ".."))
-koopa <- file.path(koopaPrefix, "bin", "koopa")
-stopifnot(file.exists(koopa))
-
-.variablesFile <- file.path(
-    koopaPrefix,
-    "system",
-    "include",
-    "variables.txt"
-)

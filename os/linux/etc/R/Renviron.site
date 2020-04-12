@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-03-11.
+## Updated 2020-04-12.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -17,7 +17,7 @@
 ## =============================================================================
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
-## > PATH="/usr/local/bin:/usr/bin:/bin"
+PATH="/usr/local/bin:/usr/bin:/bin"
 
 
 

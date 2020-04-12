@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-03-19.
+## Updated 2020-04-12.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -12,9 +12,17 @@
 ## # Try: gem pristine commonmarker --version 0.17.13
 ## """
 
-koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
-stopifnot(isTRUE(nzchar(koopaPrefix)))
-source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+stopifnot(isTRUE(nzchar(Sys.getenv("KOOPA_PREFIX"))))
+source(
+    file.path(Sys.getenv("KOOPA_PREFIX"), "lang", "r", "include", "header.R")
+)
+
+attach(.koopa)
+
+suppressPackageStartupMessages({
+    library(acidbase)
+    library(goalie)
+})
 
 h1("Checking koopa installation")
 
@@ -636,6 +644,12 @@ if (isTRUE(linux)) {
             "clang",
             "gcc"
         )
+    )
+    checkVersion(
+        name = "TeX Live",
+        whichName = "tex",
+        current = currentVersion("tex"),
+        expected = expectedVersion("tex")
     )
     checkMacOSAppVersion(c(
         ## "Numbers",

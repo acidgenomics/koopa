@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
@@ -12,6 +11,6 @@ _koopa_assert_has_no_envs
 _koopa_h1 "Updating rbenv."
 
 (
-    cd "$(rbenv root)"
+    cd "$(rbenv root)" || exit 1
     git pull
 )

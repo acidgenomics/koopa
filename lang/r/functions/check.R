@@ -1,7 +1,9 @@
 #' Check failure
-#' @note Updated 2020-02-27.
 #'
 #' Set a system environment variable that we can detect in `koopa check`.
+#'
+#' @note Updated 2020-02-27.
+#' @noRd
 checkFail <- function() {
     Sys.setenv("KOOPA_CHECK_FAIL" = 1L)
 }
@@ -9,7 +11,9 @@ checkFail <- function() {
 
 
 #' Check Homebrew Cask version
+#'
 #' @note Updated 2020-02-12.
+#' @noRd
 #'
 #' @examples
 #' currentHomebrewCaskVersion("gpg-suite")
@@ -31,7 +35,9 @@ checkHomebrewCaskVersion <- function(name) {
 
 
 #' Check macOS app version
-#' @note Updated 2020-02-12.
+#'
+#' @note Updated 2020-04-09.
+#' @noRd
 #'
 #' @examples
 #' currentMacOSAppVersion(c("BBEdit", "iTerm"))
@@ -53,7 +59,8 @@ checkMacOSAppVersion <- function(name) {
 
 
 #' Check version
-#' @note Updated 2020-02-27.
+#' @note Updated 2020-04-09.
+#' @noRd
 checkVersion <- function(
     name,
     whichName,
@@ -62,6 +69,10 @@ checkVersion <- function(
     eval = c("==", ">="),
     required = TRUE
 ) {
+    stopifnot(
+        requireNamespace("goalie", quietly = TRUE),
+        requireNamespace("acidbase", quietly = TRUE)
+    )
     if (missing(whichName)) {
         whichName <- name
     }
@@ -69,15 +80,16 @@ checkVersion <- function(
         current <- NA_character_
     }
     stopifnot(
-        isString(name),
-        isString(whichName) || is.na(whichName),
-        is(current, "package_version") ||
-            isString(current) ||
+        goalie::isString(name),
+        goalie::isString(whichName) ||
+            is.na(whichName),
+        is(current, "numeric_version") ||
+            goalie::isString(current) ||
             is.na(current),
-        is(expected, "package_version") ||
-            isString(expected) ||
+        is(expected, "numeric_version") ||
+            goalie::isString(expected) ||
             is.na(expected),
-        isFlag(required)
+        goalie::isFlag(required)
     )
     eval <- match.arg(eval)
     statusList <- status()
@@ -107,11 +119,11 @@ checkVersion <- function(
     ## Sanitize the version for non-identical (e.g. GTE) comparisons.
     if (!identical(eval, "==")) {
         if (grepl("\\.", current)) {
-            current <- sanitizeVersion(current)
+            current <- acidbase::sanitizeVersion(current)
             current <- package_version(current)
         }
         if (grepl("\\.", expected)) {
-            expected <- sanitizeVersion(expected)
+            expected <- acidbase::sanitizeVersion(expected)
             expected <- package_version(expected)
         }
     }
@@ -151,16 +163,18 @@ checkVersion <- function(
 
 
 #' Program installation status
-#' @note Updated 2020-02-27.
+#' @note Updated 2020-04-09.
+#' @noRd
 installed <- function(
     which,
     required = TRUE,
     path = TRUE
 ) {
     stopifnot(
-        is.character(which) && !any(is.na(which)),
-        isFlag(required),
-        isFlag(path)
+        requireNamespace("goalie", quietly = TRUE),
+        goalie::isCharacter(which),
+        goalie::isFlag(required),
+        goalie::isFlag(path)
     )
     statusList <- status()
     invisible(vapply(
