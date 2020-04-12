@@ -12,6 +12,6 @@ _koopa_assert_has_no_envs
 _koopa_h1 "Updating pyenv."
 
 (
-    cd "$(pyenv root)"
+    cd "$(pyenv root)" || exit 1
     git pull
 )

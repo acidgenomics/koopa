@@ -11,6 +11,6 @@ _koopa_assert_has_no_envs
 _koopa_h1 "Updating rbenv."
 
 (
-    cd "$(rbenv root)"
+    cd "$(rbenv root)" || exit 1
     git pull
 )
