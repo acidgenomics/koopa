@@ -17,14 +17,14 @@ source(
     file.path(Sys.getenv("KOOPA_PREFIX"), "lang", "r", "include", "header.R")
 )
 
+attach(.koopa)
+
 suppressPackageStartupMessages({
     library(acidbase)
     library(goalie)
 })
 
 h1("Checking koopa installation")
-
-koopa <- .koopa[["koopa"]]
 
 macos <- isMacOS()
 linux <- !macos
@@ -644,6 +644,12 @@ if (isTRUE(linux)) {
             "clang",
             "gcc"
         )
+    )
+    checkVersion(
+        name = "TeX Live",
+        whichName = "tex",
+        current = currentVersion("tex"),
+        expected = expectedVersion("tex")
     )
     checkMacOSAppVersion(c(
         ## "Numbers",
