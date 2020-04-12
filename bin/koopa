@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
 
 if [[ -z "${KOOPA_PREFIX:-}" ]]
 then
