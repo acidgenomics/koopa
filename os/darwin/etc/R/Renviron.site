@@ -13,12 +13,8 @@
 ## System path  {{{1
 ## =============================================================================
 
-## Ensure '/usr/local' masks '/usr'.
-PATH="/usr/local/sbin:${PATH}"
-PATH="/usr/local/bin:${PATH}"
-
-## Use RStudio bundled version of pandoc, for improved R Markdown stability.
-PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
+## Restrict path, so we don't mask compiler binaries with conda or venv.
+PATH="/usr/local/bin:/usr/bin:/bin"
 
 ## CRAN developer tools  {{{2
 ## -----------------------------------------------------------------------------
@@ -37,6 +33,12 @@ PATH="/usr/local/clang7/bin:${PATH}"
 
 ## gfortran 6.1 (for R 3.5+).
 PATH="/usr/local/gfortran/bin:${PATH}"
+
+## Pandoc  {{{2
+## -----------------------------------------------------------------------------
+
+## Use RStudio bundled version of pandoc, for improved R Markdown stability.
+PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 
 
