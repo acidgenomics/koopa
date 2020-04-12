@@ -1,7 +1,3 @@
-## FIXME Need to switch to period prefixed variants to avoid namespace masking.
-
-
-
 #' Can we use cli methods?
 #' @note Updated 2020-04-09.
 #' @noRd
