@@ -2,7 +2,7 @@
 
 # """
 # Constellation Pharma Azure VM shared shell configuration.
-# Updated 2020-01-15 by Michael Steinbaugh.
+# Updated 2020-04-12 by Michael Steinbaugh.
 # """
 
 
@@ -23,8 +23,7 @@
 
 export KOOPA_APP_PREFIX="/n/app"
 export KOOPA_CONFIG="constellation-azure"
-export KOOPA_USERS_NO_EXTRA="bioinfo barbara.bryant"
-export KOOPA_USERS_SKIP="phil.drapeau"
+export KOOPA_USERS_NO_EXTRA="bioinfo"
 
 
 
