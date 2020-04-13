@@ -240,8 +240,7 @@ then
         libfftw3-dev
         libfreetype6-dev
         # The R nlme package requires this.
-        # Installs libgfortran and libgcc1-dgb.
-        libgfortran5-dbg
+        libgfortran5
         libgif-dev
         libgl1-mesa-dev
         libglu1-mesa-dev
@@ -262,7 +261,7 @@ then
         libmodule-build-perl
         libmpc-dev
         libmpfr-dev
-        libncurses-dev  # libncurses5-dev
+        libncurses-dev
         libnetcdf-dev
         libopenbabel-dev
         libopenblas-base
@@ -279,8 +278,6 @@ then
         libsasl2-dev
         libssh2-1-dev
         libssl-dev
-        # CMake may error with this installed.
-        # libstdc++.so.6: version 'GLIBCXX_3.4.26' not found
         libstdc++6
         libtiff5-dev
         libudunits2-dev
@@ -289,7 +286,7 @@ then
         libxml2-dev
         libxpm-dev
         libxt-dev
-        libz-dev  # zlib1g-dev
+        libz-dev
         sqlite3
         tcl-dev
         tk-dev
