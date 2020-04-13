@@ -843,6 +843,23 @@ _koopa_check_user() {  # {{{1
     return 0
 }
 
+_koopa_exit_if_current_version() {  # {{{1
+    # """
+    # Assert that programs are installed and current.
+    # @note Updated 2020-04-13.
+    # """
+    [ "$#" -ne 0 ] || return 1
+    for arg
+    do
+        if _koopa_is_current_version "$arg"
+        then
+            _koopa_note "'${arg}' is current version."
+            exit 0
+        fi
+    done
+    return 0
+}
+
 _koopa_exit_if_dir() {  # {{{1
     # """
     # Exit with note if directory exists.
