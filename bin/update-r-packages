@@ -12,7 +12,7 @@ if (!requireNamespace("bb8", quietly = TRUE)) {
     quit()
 }
 
-remove(
+bb8::uninstall(
     pkgs = c(
         "Matrix.utils",
         "SDMTools",
