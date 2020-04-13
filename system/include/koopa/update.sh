@@ -84,8 +84,10 @@ then
     if _koopa_is_macos
     then
         update-homebrew
+        # Homebrew doesn't currently update Google Cloud SDK correctly.
+        update-google-cloud-sdk
         update-microsoft-office
-        update-macos
+        # > update-macos
     elif _koopa_is_installed configure-vm
     then
         configure-vm
