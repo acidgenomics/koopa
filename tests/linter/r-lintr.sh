@@ -2,7 +2,7 @@
 
 # """
 # Run lintr on all R scripts.
-# Updated 2020-02-16.
+# Updated 2020-04-13.
 # """
 
 # shellcheck source=/dev/null
@@ -25,6 +25,10 @@ mapfile -t rscript_files < <(_koopa_test_find_files_by_shebang "$grep_pattern")
 merge=("${r_files[@]}" "${rscript_files[@]}")
 files="$(printf "%q\n" "${merge[@]}" | sort -u)"
 mapfile -t files <<< "$files"
+
+# Include 'Rprofile.site' file.
+files+=("${KOOPA_PREFIX}/etc/R/Rprofile.site")
+
 # > _koopa_info "Checking ${#files[@]} files."
 
 # Loop across the files and run lintr.
