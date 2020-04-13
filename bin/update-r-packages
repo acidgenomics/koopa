@@ -12,20 +12,22 @@ if (!requireNamespace("bb8", quietly = TRUE)) {
     quit()
 }
 
-remove(
-    pkgs = c(
-        "Matrix.utils",
-        "SDMTools",
-        "bioverbs",
-        "brio",
-        "freerange",
-        "nvimcom",
-        "pfgsea",
-        "profdpm",
-        "robust",
-        "transformer"
+suppressMessages({
+    bb8::uninstall(
+        pkgs = c(
+            "Matrix.utils",
+            "SDMTools",
+            "bioverbs",
+            "brio",
+            "freerange",
+            "nvimcom",
+            "pfgsea",
+            "profdpm",
+            "robust",
+            "transformer"
+        )
     )
-)
+})
 
 # > stopifnot(hasGitHubPAT())
 bb8::updatePackages()
