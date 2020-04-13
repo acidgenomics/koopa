@@ -4,14 +4,89 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_h1 "Configuring virtual machine."
-
 _koopa_assert_has_no_envs
 
+# Argument parsing  {{{1
+# ==============================================================================
+
+# Allow custom configuration via global variable.
+# e.g. 'constellation-aws'.
+config="${KOOPA_CONFIG:-}"
+
+# Default placeholders for custom config.
+data_disk=
+source_ip=
+
+# Bioconductor mode skips installation of GNU utils and other dependencies that
+# can take a long time to build from source.
+bioconductor=0
+# Compact mode applies to a persistent VM with a small '/' mount.
+# This is not always the case for Docker images.
+compact=0
+# Docker mode skips installation of some packages (e.g. Emacs) that fail to
+# install inside a container.
+docker=0
+# rsync mode can be enabled for fast package sync when 'source_ip' is set below.
+rsync=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --bioconductor)
+            bioconductor=1
+            shift 1
+            ;;
+        --compact)
+            compact=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+_koopa_assert_has_no_args "$@"
+
+# Set the docker flag automatically when applicable.
+_koopa_is_docker && docker=1
+
+# e.g. '/usr/local/koopa'.
+koopa_prefix="$(_koopa_prefix)"
+# e.g. '/usr/local'.
+make_prefix="$(_koopa_make_prefix)"
+# e.g. '/usr/local/opt'.
+# For data disk, linked to '/mnt/data01/n/opt' (see below).
+app_prefix="$(_koopa_app_prefix)"
+
+# Start configuration  {{{1
+# ==============================================================================
+
+_koopa_h1 "Configuring virtual machine."
+
+if [[ "$docker" -eq 1 ]]
+then
+    _koopa_info "Configuring for Docker image."
+fi
+
+# Enable useful global variables that make configuration easier.
 # > export GPG_TTY=/dev/null
 export FORCE_UNSAFE_CONFIGURE=1
 export KOOPA_FORCE=1
 export PYTHONDONTWRITEBYTECODE=true
+
+# Root user and sudo fixes  {{{1
+# ==============================================================================
 
 _koopa_enable_passwordless_sudo
 _koopa_fix_sudo_setrlimit_error
@@ -32,29 +107,8 @@ then
     set -u
 fi
 
-# e.g. '/usr/local/koopa'.
-koopa_prefix="$(_koopa_prefix)"
-# e.g. '/usr/local'.
-make_prefix="$(_koopa_make_prefix)"
-# e.g. '/usr/local/opt'.
-# For data disk, linked to '/mnt/data01/n/opt' (see below).
-app_prefix="$(_koopa_app_prefix)"
-
-# Note that compact applies to a persistent VM with a small '/' mount.
-# This is not always the case for Docker images.
-compact=0
-
-docker=0
-_koopa_is_docker && docker=1
-if [[ "$docker" -eq 1 ]]
-then
-    _koopa_info "Configuring for Docker image."
-fi
-
-config="${KOOPA_CONFIG:-}"
-data_disk=
-source_ip=
-rsync=0
+# Local disk configuration  {{{1
+# ==============================================================================
 
 # Set up data disk and rsync configuration for persistent VM.
 if [[ "$docker" -eq 0 ]]
@@ -78,8 +132,6 @@ then
     if [[ -e "$data_disk" ]]
     then
         _koopa_info "Data disk detected at '${data_disk}'."
-    else
-        compact=1
     fi
 fi
 
@@ -117,15 +169,22 @@ else
     _koopa_mkdir "$app_prefix"
 fi
 
+# Base system  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing base system."
+
 _koopa_update_etc_profile_d
 _koopa_install_dotfiles
 _koopa_mkdir "$make_prefix"
 
-_koopa_h2 "Installing base system."
-
 _koopa_assert_is_installed install-base
 
-if [[ "$compact" -eq 1 ]] && _koopa_is_debian
+# This install script differs depending on the Linux distro.
+if [[ "$bioconductor" -eq 1 ]]
+then
+    install-base --bioconductor
+elif [[ "$compact" -eq 1 ]] && _koopa_is_debian
 then
     install-base --compact
 else
@@ -153,9 +212,12 @@ _koopa_assert_is_file \
     /usr/bin/gcc \
     /usr/bin/g++
 
+# Custom config  {{{1
+# ==============================================================================
+
 if [[ "$config" == "constellation-aws" ]]
 then
-    # Constellation AWS  {{{1
+    # Constellation AWS  {{{2
     # --------------------------------------------------------------------------
     # Set up '/etc/profile.d'.
     _koopa_h2 "Updating '/etc/profile.d'."
@@ -171,7 +233,7 @@ then
     fi
 elif [[ "$config" == "constellation-azure" ]]
 then
-    # Constellation Azure  {{{1
+    # Constellation Azure  {{{2
     # --------------------------------------------------------------------------
     # Don't attempt to patch system env to support '-S' flag.
     # Should no longer be an issue on VMs, as of 2020.
@@ -215,6 +277,9 @@ docker,var}
     fi
 fi
 
+# rsync mode detection  {{{1
+# ==============================================================================
+
 if [[ -n "$source_ip" ]]
 then
     host_ip="$(_koopa_local_ip_address)"
@@ -230,13 +295,17 @@ then
     fi
 fi
 
-# LLVM. Always run if available, as this works well for R and Python packages.
+# Install additional packages  {{{1
+# ==============================================================================
+
+# Always run if available, as this works well for R and Python packages.
 _koopa_run_if_installed install-llvm
 
 # Always run this because it must configure alternatives for '/bin/ on Debian
 # systems or distros that support 'update-alternatives'.
 install-openjdk                                                         # 0.316G
 
+# These packages can be synced across machines easily using rsync.
 if [[ "$rsync" -eq 0 ]]
 then
     # Core.
@@ -262,7 +331,10 @@ then
     # Shells.
     install-bash                                                        # 0.014G
     install-zsh                                                         # 0.011G
-    [[ "$compact" -eq 0 ]] && install-fish                              # 0.082G
+    if [[ "$compact" -eq 0 ]]
+    then
+        install-fish
+    fi
 
     # General tools.
     if [[ "$compact" -eq 0 ]]
@@ -324,15 +396,16 @@ then
     install-tmux                                                        # 0.001G
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
-        install-autojump                                                # 0.000G
+        # Autojump is currently a bit buggy with Bash in nounset mode.
+        install-autojump
         # FZF requires Go.
-        install-fzf                                                     # 0.003G
-        install-the-silver-searcher                                     # 0.000G
+        install-fzf
+        install-the-silver-searcher
     fi
 
     # Text editors.
     install-vim
-    install-neovim                                                      # 0.029G
+    install-neovim
     # Emacs currently doesn't build easily on Docker.
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
@@ -342,7 +415,7 @@ then
     # Bioinformatics tools.
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
-        install-aspera-connect                                          # 0.090G
+        install-aspera-connect
         # > install-bcbio-nextgen
         # > conda-create-bioinfo-envs --all
     fi
