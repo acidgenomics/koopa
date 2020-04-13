@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-02-29.
+## Updated 2020-04-12.
 ## """
 
 args <- commandArgs(trailingOnly = FALSE)
@@ -11,6 +11,8 @@ file <- args[whichFile]
 file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+stopifnot(requireNamespace("acidbase", quietly = TRUE))
 
 ## This will return only the positional arguments.
 posArgs <- commandArgs(trailingOnly = TRUE)
@@ -38,7 +40,7 @@ status <- mapply(
     tag = tags,
     MoreArgs = list(image = image),
     FUN = function(image, tag) {
-        shell(
+        acidbase::shell(
             command = file.path(
                 koopaPrefix,
                 "bin",
