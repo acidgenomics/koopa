@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-04-12.
+## Updated 2020-04-13.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -659,6 +659,7 @@ if (isTRUE(linux)) {
         "BBEdit",
         "BibDesk",
         "Docker",
+        "Firefox",
         "LibreOffice",
         "Microsoft Excel",
         "RStudio",
