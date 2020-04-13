@@ -59,14 +59,15 @@ local({
     )
     if (!all(isPackageVersion(dependencies))) {
         message("Updating koopa dependencies.")
+        stopifnot(requireNamespace("utils", quietly = TRUE))
         repos <- names(dependencies)
-        if (
-            isTRUE(nzchar(Sys.getenv("GITHUB_PAT"))) &&
-            requireNamespace("bb8", quietly = TRUE)
-        ) {
-            bb8::install(repos, reinstall = TRUE)
+        if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
+            if (!requireNamespace("remotes", quietly = TRUE)) {
+                utils::install.packages("remotes")
+            }
+            Sys.setenv("R_REMOTES_UPGRADE" = "always")
+            remotes::install_github(repos)
         } else {
-            stopifnot(requireNamespace("utils", quietly = TRUE))
             utils::install.packages("stringi")
             installGitHub(repos, reinstall = TRUE)
         }
