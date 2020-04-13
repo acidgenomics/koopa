@@ -67,7 +67,7 @@ if (file.exists(latestFile) && !dir.exists(latestFile)) {
         "Tagging %s '%s' as '%s'.",
         image, sourceTag, destTag
     ))
-    shell(
+    acidbase::shell(
         command = file.path(
             koopaPrefix,
             "bin",
