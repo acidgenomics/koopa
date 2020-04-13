@@ -49,11 +49,11 @@ h1("Install R packages")
 h2("Tricky packages")
 install(
     pkgs = c(
+        "rJava",
         "Rcpp",
         "RcppAnnoy",
         "RcppArmadillo",
         "XML",
-        "rJava",
         "sf",
         "rgdal"
     )
