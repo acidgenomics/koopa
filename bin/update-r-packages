@@ -7,10 +7,7 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-if (!requireNamespace("bb8", quietly = TRUE)) {
-    message("bb8 package is required but not installed. Skipping.")
-    quit()
-}
+stopifnot(requireNamespace("bb8", quietly = TRUE))
 
 suppressMessages({
     bb8::uninstall(
@@ -29,5 +26,4 @@ suppressMessages({
     )
 })
 
-# > stopifnot(hasGitHubPAT())
 bb8::updatePackages()
