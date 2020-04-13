@@ -100,9 +100,7 @@ install(
         "viridis",
         "vroom",
         "xmlparsedata"
-    ),
-    update = TRUE,
-    ask = FALSE
+    )
 )
 
 ## https://www.bioconductor.org/packages/release/BiocViews.html#___Software
@@ -136,9 +134,7 @@ install(
         "ensembldb",
         "rtracklayer",
         "zlibbioc"
-    ),
-    update = TRUE,
-    ask = FALSE
+    )
 )
 
 if (!isTRUE(all)) {
@@ -189,9 +185,7 @@ install(
         "snakecase",
         "snow",
         "uwot"
-    ),
-    update = TRUE,
-    ask = FALSE
+    )
 )
 
 h2("Bioconductor")
@@ -278,9 +272,7 @@ install(
         "tximeta",
         "tximport",
         "vsn"
-    ),
-    update = TRUE,
-    ask = FALSE
+    )
 )
 
 ## GitHub packages.
