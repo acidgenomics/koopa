@@ -11,6 +11,7 @@ attach(.koopa)
 
 stopifnot(
     requireNamespace("acidbase", quietly = TRUE),
+    requireNamespace("goalie", quietly = TRUE),
     requireNamespace("bb8", quietly = TRUE)
 )
 
@@ -29,7 +30,7 @@ if ("--all" %in% args) {
 
 ## Check for GitHub PAT, if necessary.
 if (isTRUE(all)) {
-    stopifnot(hasGitHubPAT())
+    stopifnot(goalie::hasGitHubPAT())
 }
 
 ## Ensure BiocManager is installed.
