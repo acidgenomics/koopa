@@ -59,6 +59,11 @@ local({
     )
     if (!all(isPackageVersion(dependencies))) {
         message("Updating koopa dependencies.")
+        local({
+            repos <- getOption("repos")
+            repos["CRAN"] <- "https://cloud.r-project.org"
+            options("repos" = repos)
+        })
         stopifnot(requireNamespace("utils", quietly = TRUE))
         repos <- names(dependencies)
         if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
