@@ -7,6 +7,9 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
+## Treat all warnings as errors.
+options("warn" = 2L)
+
 attach(.koopa)
 
 stopifnot(

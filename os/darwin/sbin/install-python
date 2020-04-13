@@ -4,10 +4,39 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+reinstall=0
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --reinstall)
+            reinstall=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
 name_fancy="Python"
 name="python"
 version="$(_koopa_variable "$name")"
 framework_dir="/Library/Frameworks/Python.framework"
+
+if [[ "$reinstall" -eq 1 ]]
+then
+    _koopa_rm "$framework_dir"
+fi
 
 _koopa_exit_if_dir "$framework_dir"
 
