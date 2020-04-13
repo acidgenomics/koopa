@@ -52,6 +52,7 @@ local({
     isPackageVersion <- .koopa[["isPackageVersion"]]
     dependencies <- c(
         "acidgenomics/acidbase" = "0.1.7",
+        "acidgenomics/acidgenerics" = "0.3.4",
         "acidgenomics/goalie" = "0.4.4",
         "acidgenomics/syntactic" = "0.3.9",
         "acidgenomics/bb8" = "0.2.10"
@@ -65,6 +66,8 @@ local({
         ) {
             bb8::install(repos, reinstall = TRUE)
         } else {
+            stopifnot(requireNamespace("utils", quietly = TRUE))
+            utils::install.packages("stringi")
             installGitHub(repos, reinstall = TRUE)
         }
     }
@@ -102,7 +105,7 @@ local({
 ## Otherwise this will be handled automatically by `Rprofile.site` file.
 if (
     !isTRUE(nzchar(getOption("mc.cores"))) &&
-    isTRUE("parallel" %in% rownames(installed.packages()))
+    isTRUE(requireNamespace("parallel", quietly = TRUE))
 ) {
     options("mc.cores" = parallel::detectCores())
 }
