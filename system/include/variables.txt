@@ -58,8 +58,7 @@ bash="5.0.16"
 
 # https://bcbio-nextgen.readthedocs.io/
 # https://github.com/bcbio/bcbio-nextgen/releases
-# Note that stable version currently still has alpha "a" tag in release.
-bcbio-nextgen="1.2.0"
+bcbio-nextgen="1.2.3"
 
 # https://support.illumina.com/sequencing/sequencing_software/
 #     bcl2fastq-conversion-software.html
