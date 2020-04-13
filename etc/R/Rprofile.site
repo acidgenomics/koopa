@@ -113,7 +113,7 @@ local({
 local({
     rVersionShort <- numeric_version(paste(
         R.version[["major"]],
-        substr(x = R.version[["minor"]], start = 1, stop = 1),
+        substr(x = R.version[["minor"]], start = 1L, stop = 1L),
         sep = "."
     ))
     assign(x = "rVersionShort", value = rVersionShort, envir = .rprofile)
@@ -156,7 +156,7 @@ local({
 
 ## > help(topic = "Startup", package = "base")
 
-.First <- function() {
+.First <- function() {  # nolint
     isInstalled <- .rprofile[["isInstalled"]]
 
     ## Compiler settings  {{{2
@@ -325,7 +325,7 @@ local({
 
     local({
         repos <- getOption("repos")
-        ## Alternate: "https://cran.rstudio.com"
+        ## RStudio alternate: https://cran.rstudio.com
         repos[["CRAN"]] <- "https://cloud.r-project.org"
         options("repos" = repos)
     })
@@ -410,8 +410,8 @@ local({
     ## Improve stack traces for error messages.
     ##
     ## Use either:
-    ## - `rlang::entrace()` (recommended)
-    ## - `utils::recover()`
+    ## - `rlang::entrace` (recommended)
+    ## - `utils::recover`
     ##
     ## See also:
     ## - https://twitter.com/krlmlr/status/1086995664591044608
@@ -494,7 +494,7 @@ local({
         ##     06_SC_SCT_and_integration.html
         ##
         ## Increase default limit to 4 GB.
-        options("future.globals.maxSize" = 4000 * 1024^2)
+        options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
     }
 
     ## Session info  {{{2
@@ -565,7 +565,7 @@ local({
 ## Initialization at end of an R session  {{{1
 ## =============================================================================
 
-.Last <- function() {
+.Last <- function() {  # nolint
     if (interactive()) {
         message(sprintf("Goodbye at %s.", date()))
     }
