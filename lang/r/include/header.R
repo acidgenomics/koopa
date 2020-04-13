@@ -6,9 +6,13 @@
 stopifnot(packageVersion("base") >= "3.6")
 
 options(
-    ## "verbose" = TRUE,
-    ## "warn" = 2L,
+    ## Exit on any errors.
     "error" = quote(quit(status = 1L)),
+    ## Print out each command.
+    ## > "verbose" = TRUE,
+    ## Treat all warnings as errors.
+    ## > "warn" = 2L,
+    ## Exit on any warnings.
     "warning" = quote(quit(status = 1L))
 )
 
