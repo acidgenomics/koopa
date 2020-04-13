@@ -267,6 +267,7 @@ then
         libopenblas-base
         libopenblas-dev
         libopenmpi-dev
+        libpcre2-dev
         libperl-dev
         libpng-dev
         libpoppler-cpp-dev
