@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-04-12.
+## @note Updated 2020-04-13.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -61,7 +61,7 @@ local({
         message("Updating koopa dependencies.")
         local({
             repos <- getOption("repos")
-            repos["CRAN"] <- "https://cloud.r-project.org"
+            repos[["CRAN"]] <- "https://cloud.r-project.org"
             options("repos" = repos)
         })
         stopifnot(requireNamespace("utils", quietly = TRUE))
