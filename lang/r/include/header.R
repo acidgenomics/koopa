@@ -57,6 +57,7 @@ local({
         "acidgenomics/bb8" = "0.2.10"
     )
     if (!all(isPackageVersion(dependencies))) {
+        message("Updating koopa dependencies.")
         repos <- names(dependencies)
         installGitHub(
             repo = repos,
