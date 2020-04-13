@@ -9,7 +9,10 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 attach(.koopa)
 
-stopifnot(requireNamespace("acidbase", quietly = TRUE))
+stopifnot(
+    requireNamespace("acidbase", quietly = TRUE),
+    requireNamespace("bb8", quietly = TRUE)
+)
 
 ## These dependencies are required to install sf, etc.
 stopifnot(
@@ -29,15 +32,13 @@ if (isTRUE(all)) {
     stopifnot(hasGitHubPAT())
 }
 
-## Install BiocManager first, if necessary.
+## Ensure BiocManager is installed.
 if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
     stopifnot(requireNamespace("utils"), quietly = TRUE)
     utils::install.packages("BiocManager")
 }
 
-suppressPackageStartupMessages({
-    library(BiocManager)
-})
+install <- bb8::install
 
 h1("Install R packages")
 
