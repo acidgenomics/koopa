@@ -6,9 +6,13 @@
 stopifnot(packageVersion("base") >= "3.6")
 
 options(
-    ## "verbose" = TRUE,
-    ## "warn" = 2L,
+    ## Exit on any errors.
     "error" = quote(quit(status = 1L)),
+    ## Print out each command.
+    ## > "verbose" = TRUE,
+    ## Treat all warnings as errors.
+    ## > "warn" = 2L,
+    ## Exit on any warnings.
     "warning" = quote(quit(status = 1L))
 )
 
@@ -55,16 +59,25 @@ local({
         "acidgenomics/acidgenerics" = "0.3.4",
         "acidgenomics/goalie" = "0.4.4",
         "acidgenomics/syntactic" = "0.3.9",
-        "acidgenomics/bb8" = "0.2.10"
+        "acidgenomics/bb8" = "0.2.12"
     )
     if (!all(isPackageVersion(dependencies))) {
         message("Updating koopa dependencies.")
+        stopifnot(requireNamespace("utils", quietly = TRUE))
         local({
             repos <- getOption("repos")
             repos[["CRAN"]] <- "https://cloud.r-project.org"
             options("repos" = repos)
         })
-        stopifnot(requireNamespace("utils", quietly = TRUE))
+        ## Note that stringi is a dependency for syntactic.
+        invisible(lapply(
+            X = c("BiocManager", "remotes", "stringi"),
+            FUN = function(pkg) {
+                if (!requireNamespace(pkg, quietly = TRUE)) {
+                    utils::install.packages(pkg)
+                }
+            }
+        ))
         repos <- names(dependencies)
         if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
             if (!requireNamespace("remotes", quietly = TRUE)) {
@@ -73,7 +86,6 @@ local({
             Sys.setenv("R_REMOTES_UPGRADE" = "always")
             remotes::install_github(repos)
         } else {
-            utils::install.packages("stringi")
             installGitHub(repos, reinstall = TRUE)
         }
     }
