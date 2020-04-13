@@ -46,28 +46,6 @@
 ##   https://csgillespie.github.io/efficientR/set-up.html
 ## - Debian example config file by Dirk Eddelbuettel.
 
-## From the default Debian configuration:
-
-## Example `.Rprofile` file:
-## > options(width = 65L, digits = 5L)
-## > options(show.signif.stars = FALSE)
-## > setHook(
-## >     packageEvent("grDevices", "onLoad"),
-## >     function(...) grDevices::ps.options(horizontal = FALSE)
-## > )
-## > set.seed(1234L)
-## > .First <- function() cat("\n   Welcome to R!\n\n")
-## > .Last <- function()  cat("\n   Goodbye!\n\n")
-
-## Example `Rprofile.site` file:
-## > local({
-## >     ## Add MASS to the default packages, set a CRAN mirror.
-## >     old <- getOption("defaultPackages")
-## >     r <- getOption("repos")
-## >     r["CRAN"] <- "http://my.local.cran"
-## >     options(defaultPackages = c(old, "MASS"), repos = r)
-## > })
-
 
 
 ## Pre-flight  {{{1
@@ -347,8 +325,8 @@ local({
 
     local({
         repos <- getOption("repos")
-        ## > repos["CRAN"] <- "https://cran.rstudio.com"
-        repos["CRAN"] <- "https://cloud.r-project.org"
+        ## Alternate: "https://cran.rstudio.com"
+        repos[["CRAN"]] <- "https://cloud.r-project.org"
         options("repos" = repos)
     })
 
