@@ -73,16 +73,13 @@ local({
         invisible(lapply(
             X = c("BiocManager", "remotes", "stringi"),
             FUN = function(pkg) {
-                if (!requireNamespace(pkg, quietly = TRUE)) {
+                if (!isTRUE(pkg %in% rownames(utils::installed.packages()))) {
                     utils::install.packages(pkg)
                 }
             }
         ))
         repos <- names(dependencies)
         if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
-            if (!requireNamespace("remotes", quietly = TRUE)) {
-                utils::install.packages("remotes")
-            }
             Sys.setenv("R_REMOTES_UPGRADE" = "always")
             remotes::install_github(repos)
         } else {
