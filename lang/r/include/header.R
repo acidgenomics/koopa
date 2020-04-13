@@ -59,11 +59,14 @@ local({
     if (!all(isPackageVersion(dependencies))) {
         message("Updating koopa dependencies.")
         repos <- names(dependencies)
-        installGitHub(
-            repo = repos,
-            release = "latest",
-            reinstall = TRUE
-        )
+        if (
+            isTRUE(nzchar(Sys.getenv("GITHUB_PAT"))) &&
+            requireNamespace("bb8", quietly = TRUE)
+        ) {
+            bb8::install(repos, reinstall = TRUE)
+        } else {
+            installGitHub(repos, reinstall = TRUE)
+        }
     }
     stopifnot(all(isPackageVersion(dependencies)))
     packages <- basename(names(dependencies))
