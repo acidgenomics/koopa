@@ -84,6 +84,8 @@ then
     if _koopa_is_macos
     then
         update-homebrew
+        update-microsoft-office
+        update-macos
     elif _koopa_is_installed configure-vm
     then
         configure-vm
