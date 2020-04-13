@@ -52,9 +52,9 @@ local({
     isPackageVersion <- .koopa[["isPackageVersion"]]
     dependencies <- c(
         "acidgenomics/acidbase" = "0.1.7",
-        "acidgenomics/goalie" = "0.4.2",
+        "acidgenomics/goalie" = "0.4.4",
         "acidgenomics/syntactic" = "0.3.9",
-        "acidgenomics/bb8" = "0.2.7"
+        "acidgenomics/bb8" = "0.2.10"
     )
     if (!all(isPackageVersion(dependencies))) {
         repos <- names(dependencies)
