@@ -11,8 +11,6 @@ then
     mas upgrade
 fi
 
-print
-
 _koopa_h1 "Updating macOS via 'softwareupdate'."
 _koopa_note "Restart may be required."
 
