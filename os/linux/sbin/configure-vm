@@ -396,12 +396,6 @@ _koopa_update_lmod_config
 # Linux distros.
 install-python
 
-if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
-then
-    install-python-packages
-    venv-create-r-reticulate
-fi
-
 # R  {{{2
 # ------------------------------------------------------------------------------
 
@@ -420,12 +414,6 @@ fi
 
 # Ensure consistent R configuration across platforms.
 _koopa_update_r_config
-
-if [[ "$rsync" -eq 0 ]] &&
-    { [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]; }
-then
-    install-r-packages
-fi
 
 # Secondary  {{{2
 # ------------------------------------------------------------------------------
@@ -486,8 +474,33 @@ then
     install-emacs
 fi
 
-# Rust packages  {{{1
+# Language-specific packages  {{{1
 # ==============================================================================
+
+# Install these after all languages and libraries have been installed.
+
+sudo ldconfig
+
+# Python  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
+then
+    install-python-packages
+    venv-create-r-reticulate
+fi
+
+# R  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$rsync" -eq 0 ]] &&
+    { [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]; }
+then
+    install-r-packages
+fi
+
+# Rust  {{{2
+# ------------------------------------------------------------------------------
 
 # These must be built from source and are frequently updated.
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
@@ -574,7 +587,5 @@ then
         sudo rm -fr /var/lib/apt/lists/*
     fi
 fi
-
-sudo ldconfig
 
 _koopa_success "Configuration completed successfully."
