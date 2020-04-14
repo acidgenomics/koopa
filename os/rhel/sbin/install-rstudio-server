@@ -43,7 +43,13 @@ done
 set -- "${pos[@]}"
 
 name="rstudio-server"
-name_fancy="RStudio Server"
+version="$(_koopa_variable "$name")"
+name_fancy="RStudio Server ${version}"
+
+if ! _koopa_is_current_version "$name"
+then
+    reinstall=1
+fi
 
 if [[ "$reinstall" -eq 0 ]]
 then
@@ -54,8 +60,6 @@ _koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R
-
-version="$(_koopa_variable "$name")"
 
 if _koopa_is_rhel_8
 then
