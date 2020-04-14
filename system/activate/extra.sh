@@ -161,29 +161,37 @@ _koopa_activate_fzf
 # Note that this doesn't work well on Alpine.
 # > alias less='less --ignore-case --raw-control-chars'
 
-make_prefix="$(_koopa_make_prefix)"
+KOOPA_MAKE_PREFIX="$(_koopa_make_prefix)"
 
-if _koopa_is_matching_fixed "$(_koopa_which_realpath cp)" "$make_prefix"
+if _koopa_is_matching_fixed \
+    "$(_koopa_which_realpath cp)" \
+    "$KOOPA_MAKE_PREFIX"
 then
     alias cp='cp --archive --interactive --verbose'
 fi
 
-if _koopa_is_matching_fixed "$(_koopa_which_realpath mkdir)" "$make_prefix"
+if _koopa_is_matching_fixed \
+    "$(_koopa_which_realpath mkdir)" \
+    "$KOOPA_MAKE_PREFIX"
 then
     alias mkdir='mkdir --parents --verbose'
 fi
 
-if _koopa_is_matching_fixed "$(_koopa_which_realpath mv)" "$make_prefix"
+if _koopa_is_matching_fixed \
+    "$(_koopa_which_realpath mv)" \
+    "$KOOPA_MAKE_PREFIX"
 then
     alias mv="mv --interactive --verbose"
 fi
 
-if _koopa_is_matching_fixed "$(_koopa_which_realpath rm)" "$make_prefix"
+if _koopa_is_matching_fixed \
+    "$(_koopa_which_realpath rm)" \
+    "$KOOPA_MAKE_PREFIX"
 then
     alias rm='rm --dir --interactive="once" --preserve-root --verbose'
 fi
 
-unset -v make_prefix
+unset -v KOOPA_MAKE_PREFIX
 
 # Shortcuts  {{{2
 # ------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 # """
 # ZSH shell options.
-# Updated 2020-02-14.
+# Updated 2020-04-13.
 #
 # Debug with:
 # - bindkey
@@ -31,7 +31,7 @@ esac
 # Fix the delete key.
 bindkey "\e[3~" delete-char
 
-setopt_array=(
+SETOPT_ARRAY=(
     # auto_menu                 # completion
     # auto_name_dirs            # dirs
     # complete_aliases          # completion
@@ -53,13 +53,13 @@ setopt_array=(
     pushd_minus                 # dirs
     share_history               # history
 )
-setopt "${setopt_array[@]}"
+setopt "${SETOPT_ARRAY[@]}"
 
-unsetopt_array=(
+UNSETOPT_ARRAY=(
     bang_hist
     flow_control
 )
-unsetopt "${unsetopt_array[@]}"
+unsetopt "${UNSETOPT_ARRAY[@]}"
 
-unset -v setopt_array unsetopt_array
+unset -v SETOPT_ARRAY UNSETOPT_ARRAY
 
