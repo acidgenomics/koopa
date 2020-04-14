@@ -33,14 +33,18 @@ done
 set -- "${pos[@]}"
 
 name="shiny-server"
+version="$(_koopa_variable "$name")"
+name_fancy="Shiny Server ${version}"
+
+if ! _koopa_is_current_version "$name"
+then
+    reinstall=1
+fi
 
 if [[ "$reinstall" -eq 0 ]]
 then
     _koopa_exit_if_installed "$name"
 fi
-
-version="$(_koopa_variable "$name")"
-name_fancy="Shiny Server ${version}"
 
 _koopa_install_start "$name_fancy"
 
