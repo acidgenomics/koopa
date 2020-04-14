@@ -308,10 +308,8 @@ _koopa_run_if_installed install-llvm
 # OpenJDK  {{{1
 # ==============================================================================
 
-if [[ "$bioconductor" -eq 0 ]]
-then
-    install-openjdk
-fi
+# Install the latest release, which can vary widely across Linux distros.
+install-openjdk
 
 # GNU core  {{{1
 # ==============================================================================
