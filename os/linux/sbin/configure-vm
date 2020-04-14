@@ -9,8 +9,7 @@ _koopa_assert_has_no_envs
 # Skip building on CentOS inside Docker for the time being.
 if _koopa_is_centos && _koopa_is_docker
 then
-    _koopa_note "CentOS inside Docker not supported due to GDAL issues."
-    exit 0
+    _koopa_stop "CentOS inside Docker not supported due to GDAL issues."
 fi
 
 # Argument parsing  {{{1
