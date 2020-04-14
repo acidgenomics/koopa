@@ -38,7 +38,7 @@ _koopa_link_r_etc() {  # {{{1
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-03-03.
+    # @note Updated 2020-04-13.
     # """
     _koopa_is_installed R || return 1
 
@@ -46,17 +46,19 @@ _koopa_link_r_site_library() {  # {{{1
     r_home="$(_koopa_r_home)"
     [ -d "$r_home" ] || return 1
 
-    local version
-    version="$(_koopa_r_version)"
-
-    local minor_version
-    minor_version="$(_koopa_major_minor_version "$version")"
-
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
 
+    local version
+    version="$(_koopa_r_version)"
+
+    if [ "$version" != 'devel' ]
+    then
+        version="$(_koopa_major_minor_version "$version")"
+    fi
+
     local lib_source
-    lib_source="${app_prefix}/r/${minor_version}/site-library"
+    lib_source="${app_prefix}/r/${version}/site-library"
 
     local lib_target
     lib_target="${r_home}/site-library"
@@ -131,10 +133,17 @@ _koopa_r_system_library_prefix() {  # {{{1
 _koopa_r_version() {  # {{{1
     # """
     # R version.
-    # @note Updated 2020-03-01.
+    # @note Updated 2020-04-13.
     # """
-    _koopa_get_version R
-    return 0
+    local x
+    x="$(R --version | head -n 1)"
+    if _koopa_is_matching_fixed "$x" 'R Under development (unstable)'
+    then
+        x='devel'
+    else
+        x="$(_koopa_extract_version "$x")"
+    fi
+    _koopa_print "$x"
 }
 
 _koopa_update_r_config() {  # {{{1
