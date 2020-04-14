@@ -21,7 +21,7 @@ _koopa_add_conda_env_to_path() {  # {{{1
 _koopa_add_to_fpath_end() {  # {{{1
     # """
     # Add directory to end of FPATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-14.
     #
     # Currently only useful for ZSH activation.
     # """
@@ -29,14 +29,15 @@ _koopa_add_to_fpath_end() {  # {{{1
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
     _koopa_print "${FPATH:-}" | grep -q "$dir" && return 0
-    export FPATH="${FPATH:-}:${dir}"
+    FPATH="${FPATH:-}:${dir}"
+    export FPATH
     return 0
 }
 
 _koopa_add_to_fpath_start() {  # {{{1
     # """
     # Add directory to start of FPATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-14.
     #
     # Currently only useful for ZSH activation.
     # """
@@ -44,59 +45,64 @@ _koopa_add_to_fpath_start() {  # {{{1
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
     _koopa_print "${FPATH:-}" | grep -q "$dir" && return 0
-    export FPATH="${dir}:${FPATH:-}"
+    FPATH="${dir}:${FPATH:-}"
+    export FPATH
     return 0
 }
 
 _koopa_add_to_manpath_end() {  # {{{1
     # """
     # Add directory to end of MANPATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-14.
     # """
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
     _koopa_print "${MANPATH:-}" | grep -q "$dir" && return 0
-    export MANPATH="${MANPATH:-}:${dir}"
+    MANPATH="${MANPATH:-}:${dir}"
+    export MANPATH
     return 0
 }
 
 _koopa_add_to_manpath_start() {  # {{{1
     # """
     # Add directory to start of MANPATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-14.
     # """
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
     _koopa_print "${MANPATH:-}" | grep -q "$dir" && return 0
-    export MANPATH="${dir}:${MANPATH:-}"
+    MANPATH="${dir}:${MANPATH:-}"
+    export MANPATH
     return 0
 }
 
 _koopa_add_to_path_end() {  # {{{1
     # """
     # Add directory to end of PATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-14.
     # """
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
     _koopa_print "${PATH:-}" | grep -q "$dir" && return 0
-    export PATH="${PATH:-}:${dir}"
+    PATH="${PATH:-}:${dir}"
+    export PATH
     return 0
 }
 
 _koopa_add_to_path_start() {  # {{{1
     # """
     # Add directory to start of PATH.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-14.
     # """
     local dir
     dir="${1:?}"
     [ ! -d "$dir" ] && return 0
     _koopa_print "${PATH:-}" | grep -q "$dir" && return 0
-    export PATH="${dir}:${PATH:-}"
+    PATH="${dir}:${PATH:-}"
+    export PATH
     return 0
 }
 
@@ -211,11 +217,11 @@ _koopa_list_path_priority_unique() {  # {{{1
 _koopa_remove_from_fpath() {  # {{{1
     # """
     # Remove directory from FPATH.
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-14.
     # """
     local dir
     dir="${1:?}"
-    FPATH="$(_koopa_print "$FPATH" | sed "s|:${dir}||g")"
+    FPATH="$(_koopa_print "${FPATH:-}" | sed "s|:${dir}||g")"
     export FPATH
     return 0
 }
@@ -223,11 +229,11 @@ _koopa_remove_from_fpath() {  # {{{1
 _koopa_remove_from_manpath() {  # {{{1
     # """
     # Remove directory from MANPATH.
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-14.
     # """
     local dir
     dir="${1:?}"
-    MANPATH="$(_koopa_print "$MANPATH" | sed "s|:${dir}||g")"
+    MANPATH="$(_koopa_print "${MANPATH:-}" | sed "s|:${dir}||g")"
     export MANPATH
     return 0
 }
@@ -235,14 +241,14 @@ _koopa_remove_from_manpath() {  # {{{1
 _koopa_remove_from_path() {  # {{{1
     # """
     # Remove directory from PATH.
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-14.
     #
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
     local dir
     dir="${1:?}"
-    PATH="$(_koopa_print "$PATH" | sed "s|:${dir}||g")"
+    PATH="$(_koopa_print "${PATH:-}" | sed "s|:${dir}||g")"
     export PATH
     return 0
 }
