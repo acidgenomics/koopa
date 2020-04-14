@@ -9,7 +9,6 @@ source "${script_dir}/../include/header.sh"
 # """
 
 reinstall=0
-
 pos=()
 while (("$#"))
 do
@@ -35,8 +34,10 @@ set -- "${pos[@]}"
 
 name="shiny-server"
 
-# > _koopa_exit_if_docker
-[[ "$reinstall" -eq 0 ]] && _koopa_exit_if_installed "$name"
+if [[ "$reinstall" -eq 0 ]]
+then
+    _koopa_exit_if_installed "$name"
+fi
 
 version="$(_koopa_variable "$name")"
 name_fancy="Shiny Server ${version}"
