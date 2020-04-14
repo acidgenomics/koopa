@@ -8,17 +8,45 @@ source "${script_dir}/../include/header.sh"
 # https://rstudio.com/products/rstudio/download-commercial/
 # """
 
-_koopa_exit_if_installed rstudio-server
+reinstall=0
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --reinstall)
+            reinstall=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+name="rstudio-server-pro"
+name_fancy="RStudio Server Pro"
+
+if [[ "$reinstall" -eq 0 ]]
+then
+    _koopa_exit_if_installed rstudio-server
+fi
+
+_koopa_install_start "$name_fancy"
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R
 
-name="rstudio-server-pro"
 tmp_dir="$(_koopa_tmp_dir)"
 version="$(_koopa_variable "$name")"
-
-name_fancy="RStudio Server Pro"
-
-_koopa_install_start "$name_fancy"
 
 if _koopa_is_rhel_8
 then

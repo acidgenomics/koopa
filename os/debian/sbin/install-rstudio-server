@@ -22,9 +22,40 @@ source "${script_dir}/../include/header.sh"
 # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
 # """
 
-name="rstudio-server"
+reinstall=0
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --reinstall)
+            reinstall=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
 
-_koopa_exit_if_installed "$name"
+name="rstudio-server"
+name_fancy="RStudio Server"
+
+if [[ "$reinstall" -eq 0 ]]
+then
+    _koopa_exit_if_installed "$name"
+fi
+
+_koopa_install_start "$name_fancy"
+
 _koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed R gdebi
 
@@ -44,10 +75,6 @@ if [[ "$os_codename" != "bionic" ]]
 then
     _koopa_stop "Unsupported OS version: '${os_codename}'."
 fi
-
-name_fancy="RStudio Server"
-
-_koopa_install_start "$name_fancy"
 
 tmp_dir="$(_koopa_tmp_dir)"
 
