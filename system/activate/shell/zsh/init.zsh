@@ -2,7 +2,7 @@
 
 # """
 # Initialize Zsh.
-# Updated 2020-01-16.
+# Updated 2020-04-13.
 #
 # Note on path (and also fpath) arrays in Zsh:
 # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -16,14 +16,14 @@
 # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
 # """
 
-koopa_fpath="${KOOPA_PREFIX}/shell/zsh/functions"
-if [[ ! -d "$koopa_fpath" ]]
+KOOPA_FPATH="${KOOPA_PREFIX}/shell/zsh/functions"
+if [[ ! -d "$KOOPA_FPATH" ]]
 then
-    _koopa_warning "FPATH directory is missing: '${koopa_fpath}'."
+    _koopa_warning "FPATH directory is missing: '${KOOPA_FPATH}'."
     return 1
 fi
-_koopa_force_add_to_fpath_start "$koopa_fpath"
-unset -v koopa_fpath
+_koopa_force_add_to_fpath_start "$KOOPA_FPATH"
+unset -v KOOPA_FPATH
 
 # Enable colors in terminal.
 autoload -Uz colors && colors
