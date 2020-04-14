@@ -203,10 +203,11 @@ _koopa_is_conda_active() {  # {{{1
 _koopa_is_current_version() {  # {{{1
     # """
     # Is the installed program current?
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-04-14.
     # """
     local app
     app="${1:?}"
+    _koopa_is_installed "$app" || return 1
     local expected
     expected="$(_koopa_variable "$app")"
     local actual
