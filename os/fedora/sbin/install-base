@@ -101,8 +101,9 @@ then
         llvm-devel
         mariadb-devel
         mpfr-devel
+        openjpeg2-devel  # GDAL
         openssl-devel
-        pcre-devel
+        pcre-devel  # rJava
         postgresql-devel
         readline-devel
         unixODBC-devel
