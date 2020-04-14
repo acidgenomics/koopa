@@ -492,7 +492,11 @@ fi
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
 then
     install-aspera-connect
-    install-bcbio-nextgen
+    if [[ "$rsync" -eq 0 ]]
+    then
+        conda-create-bioinfo-envs --all
+        # > install-bcbio-nextgen
+    fi
 fi
 
 # Cloud APIs  {{{1
