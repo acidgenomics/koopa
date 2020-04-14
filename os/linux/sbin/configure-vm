@@ -308,43 +308,50 @@ _koopa_run_if_installed install-llvm
 # OpenJDK  {{{1
 # ==============================================================================
 
-# Always run this because it must configure alternatives for '/bin/ on Debian
-# systems or distros that support 'update-alternatives'.
-install-openjdk
+if [[ "$bioconductor" -eq 0 ]]
+then
+    install-openjdk
+fi
 
 # GNU core  {{{1
 # ==============================================================================
 
-install-cmake
-install-make
-install-autoconf
-install-automake
-install-libtool
-# Install texinfo before binutils, which requires makeinfo.
-install-texinfo
-install-binutils
-install-coreutils
-install-findutils
-install-patch
-install-ncurses
-install-gnupg
-install-grep
-install-gawk
-install-parallel
-# Skipping GCC, as we can run into problems with CMake and Rcpp.
-# > install-gcc  # cellar only
+if [[ "$bioconductor" -eq 0 ]]
+then
+    install-cmake
+    install-make
+    install-autoconf
+    install-automake
+    install-libtool
+    # Install texinfo before binutils, which requires makeinfo.
+    install-texinfo
+    install-binutils
+    install-coreutils
+    install-findutils
+    install-patch
+    install-ncurses
+    install-gnupg
+    install-grep
+    install-gawk
+    install-parallel
+    # Skipping GCC, as we can run into problems with CMake and Rcpp.
+    # > install-gcc  # cellar only
+fi
 
 # Shells  {{{1
 # ==============================================================================
 
-install-bash
-install-zsh
-install-fish
+if [[ "$bioconductor" -eq 0 ]]
+then
+    install-bash
+    install-zsh
+    install-fish
+fi
 
 # General tools  {{{1
 # ==============================================================================
 
-if [[ "$compact" -eq 0 ]]
+if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
 then
     install-git
     install-lua
@@ -437,7 +444,7 @@ fi
 # Libraries  {{{1
 # ==============================================================================
 
-if [[ "$compact" -eq 0 ]]
+if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
 then
     install-geos
     install-sqlite
@@ -485,7 +492,7 @@ fi
 # ==============================================================================
 
 # These must be built from source and are frequently updated.
-if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
 then
     install-rust-packages
 fi
