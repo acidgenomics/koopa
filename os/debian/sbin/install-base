@@ -266,8 +266,9 @@ then
         libopenbabel-dev
         libopenblas-base
         libopenblas-dev
+        libopenjp2-7-dev  # GDAL
         libopenmpi-dev
-        libpcre2-dev
+        libpcre2-dev  # rJava
         libperl-dev
         libpng-dev
         libpoppler-cpp-dev
