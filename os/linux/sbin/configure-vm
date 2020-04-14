@@ -26,7 +26,7 @@ compact=0
 # Docker mode skips installation of some packages (e.g. Emacs) that fail to
 # install inside a container.
 docker=0
-# rsync mode can be enabled for fast package sync when 'source_ip' is set below.
+# rsync mode, which depends on 'source_ip' being defined.
 rsync=0
 
 pos=()
@@ -212,6 +212,8 @@ _koopa_assert_is_file \
     /usr/bin/gcc \
     /usr/bin/g++
 
+sudo ldconfig
+
 # Custom config  {{{1
 # ==============================================================================
 
@@ -277,7 +279,7 @@ docker,var}
     fi
 fi
 
-# rsync mode detection  {{{1
+# rsync mode  {{{1
 # ==============================================================================
 
 if [[ -n "$source_ip" ]]
@@ -286,7 +288,6 @@ then
     if [[ "$source_ip" == "$host_ip" ]]
     then
         _koopa_note "Skipping rsync because '${host_ip}' is source machine."
-        rsync=0
     else
         rsync=1
         rsync-vm --source-ip="$source_ip"
@@ -295,182 +296,256 @@ then
     fi
 fi
 
-# Install additional packages  {{{1
+# LLVM  {{{1
 # ==============================================================================
 
-# Always run if available, as this works well for R and Python packages.
+# On Debian/Ubuntu, this will install the latest stable release.
 _koopa_run_if_installed install-llvm
+
+# OpenJDK  {{{1
+# ==============================================================================
 
 # Always run this because it must configure alternatives for '/bin/ on Debian
 # systems or distros that support 'update-alternatives'.
-install-openjdk                                                         # 0.316G
+install-openjdk
 
-# These packages can be synced across machines easily using rsync.
-if [[ "$rsync" -eq 0 ]]
-then
-    # Core.
-    install-cmake
-    install-make
-    install-autoconf
-    install-automake
-    install-libtool
-    # Skipping this, as we can run into problems with CMake and Rcpp.
-    # > install-gcc  # cellar only
-    # Install texinfo before binutils, which requires makeinfo.
-    install-texinfo
-    install-binutils
-    install-coreutils                                                   # 0.038G
-    install-findutils                                                   # 0.005G
-    install-patch
-    install-ncurses
-    install-gnupg                                                       # 0.038G
-    install-grep
-    install-gawk
-    install-parallel
+# GNU core  {{{1
+# ==============================================================================
 
-    # Shells.
-    install-bash                                                        # 0.014G
-    install-zsh                                                         # 0.011G
-    if [[ "$compact" -eq 0 ]]
-    then
-        install-fish
-    fi
+install-cmake
+install-make
+install-autoconf
+install-automake
+install-libtool
+# Install texinfo before binutils, which requires makeinfo.
+install-texinfo
+install-binutils
+install-coreutils
+install-findutils
+install-patch
+install-ncurses
+install-gnupg
+install-grep
+install-gawk
+install-parallel
+# Skipping GCC, as we can run into problems with CMake and Rcpp.
+# > install-gcc  # cellar only
 
-    # General tools.
-    if [[ "$compact" -eq 0 ]]
-    then
-        install-git                                                     # 0.177G
-        install-lua                                                     # 0.001G
-        install-luarocks                                                # 0.002G
-    fi
+# Shells  {{{1
+# ==============================================================================
 
-    # Environment managers.
-    install-conda                                                       # 0.493G
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-    then
-        _koopa_run_if_installed install-docker
-        install-lmod                                                    # 0.002G
-        # These work better for single user and aren't necessary on most VMs,
-        # where we really only want latest version, so now disabled by default.
-        # > install-perlbrew                                            # 0.003G
-        # > install-pyenv                                               # 0.009G
-        # > install-rbenv                                               # 0.006G
-    fi
+install-bash
+install-zsh
+install-fish
 
-    # Password management.
-    install-pass
-    [[ "$docker" -eq 0 ]] && install-docker-credential-pass
+# General tools  {{{1
+# ==============================================================================
 
-    # Languages.
-    install-r                                                           # 0.182G
-    install-python                                                      # 0.195G
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-    then
-        install-perl                                                    # 0.081G
-        install-go                                                      # 0.338G
-        install-julia                                                   # 0.339G
-        install-ruby                                                    # 0.178G
-        install-rust                                                    # 0.724G
-    fi
-
-    # Libraries.
-    if [[ "$compact" -eq 0 ]] || [[ "$docker" -eq 1 ]]
-    then
-        install-geos
-        install-sqlite                                                  # 0.026G
-        # Install PROJ after SQLite.
-        install-proj                                                    # 0.132G
-        # Install GDAL after Python and PROJ.
-        install-gdal                                                    # 0.611G
-        # Install HDF5 after GDAL.
-        install-hdf5                                                    # 0.022G
-        install-gsl                                                     # 0.043G
-        install-udunits
-    fi
-
-    # Shell tools.
-    install-htop                                                        # 0.001G
-    install-neofetch                                                    # 0.003G
-    install-shellcheck                                                  # 0.008G
-    install-shunit2
-    install-tmux                                                        # 0.001G
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-    then
-        # Autojump is currently a bit buggy with Bash in nounset mode.
-        install-autojump
-        # FZF requires Go.
-        install-fzf
-        install-the-silver-searcher
-    fi
-
-    # Text editors.
-    install-vim
-    install-neovim
-    # Emacs currently doesn't build easily on Docker.
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-    then
-        install-emacs
-    fi
-
-    # Bioinformatics tools.
-    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-    then
-        install-aspera-connect
-        # > install-bcbio-nextgen
-        # > conda-create-bioinfo-envs --all
-    fi
-fi
-
-sudo ldconfig -v
-_koopa_update_r_config
-_koopa_update_lmod_config
-
-# RStudio packages.
-_koopa_run_if_installed install-rstudio-server
-[[ "$compact" -eq 0 ]] && _koopa_run_if_installed install-shiny-server
-
-# Cloud APIs.
-# Note that Azure CLI requires Python 3, so install at the end.
-_koopa_run_if_installed install-aws-cli
 if [[ "$compact" -eq 0 ]]
 then
-    _koopa_run_if_installed \
-        install-azure-cli \
-        install-google-cloud-sdk
+    install-git
+    install-lua
+    install-luarocks
+    install-pass
 fi
 
-# R, Python, Rust packages.
+# Containers and environments  {{{1
+# ==============================================================================
+
+# Docker  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    _koopa_run_if_installed install-docker
+    install-docker-credential-pass
+fi
+
+# Conda  {{{2
+# ------------------------------------------------------------------------------
+
+install-conda
+
+# Lmod  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    install-lmod
+fi
+
+# This will skip if Lmod isn't installed.
+# Can be necessary for updating config on persistent VMs.
+_koopa_update_lmod_config
+
+# Languages  {{{1
+# ==============================================================================
+
+# Python  {{{2
+# ------------------------------------------------------------------------------
+
+# This will consistently install the latest version from source across all
+# Linux distros.
+install-python
+
 if [[ "$rsync" -eq 0 ]]
 then
     install-python-packages
-    if [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]
-    then
-        install-r-packages
-    fi
-    [[ "$compact" -eq 0 ]] && install-rust-packages
 fi
 
+# R  {{{2
+# ------------------------------------------------------------------------------
+
+# Note that this will use apt package on Debian/Ubuntu and otherwise install
+# from source on other Linux distros.
+if [[ "$bioconductor" -eq 0 ]]
+then
+    install-r
+    if [[ "$compact" -eq 0 ]]
+    then
+        _koopa_run_if_installed \
+            install-rstudio-server \
+            install-shiny-server
+    fi
+fi
+
+# Ensure consistent R configuration across platforms.
+_koopa_update_r_config
+
+if [[ "$rsync" -eq 0 ]] &&
+    { [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]; }
+then
+    install-r-packages
+fi
+
+# Secondary  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    install-perl
+    install-go
+    install-julia
+    install-ruby
+    install-rust
+fi
+
+# Libraries  {{{1
+# ==============================================================================
+
+if [[ "$compact" -eq 0 ]]
+then
+    install-geos
+    install-sqlite
+    # Install PROJ after SQLite.
+    install-proj
+    # Install GDAL after Python and PROJ.
+    install-gdal
+    # Install HDF5 after GDAL.
+    install-hdf5
+    install-gsl
+    install-udunits
+fi
+
+# Shell tools  {{{1
+# ==============================================================================
+
+install-htop
+install-neofetch
+install-shellcheck
+install-shunit2
+install-tmux
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    # Autojump is currently a bit buggy with Bash in nounset mode.
+    install-autojump
+    # FZF requires Go.
+    install-fzf
+    install-the-silver-searcher
+fi
+
+# Text editors  {{{1
+# ==============================================================================
+
+install-vim
+install-neovim
+
+# Emacs currently doesn't build easily on Docker.
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    install-emacs
+fi
+
+# Rust packages  {{{1
+# ==============================================================================
+
+# These must be built from source and are frequently updated.
+if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
+then
+    install-rust-packages
+fi
+
+# Bioinformatics tools  {{{1
+# ==============================================================================
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    install-aspera-connect
+    install-bcbio-nextgen
+fi
+
+# Cloud APIs  {{{1
+# ==============================================================================
+
+# Note that Azure CLI requires Python 3, so install after.
+_koopa_run_if_installed \
+    install-aws-cli \
+    install-azure-cli \
+    install-google-cloud-sdk
+
+# Generate SSH key  {{{1
+# ==============================================================================
+
 # Generate an SSH key automatically, when we are outside of Docker.
-[[ "$docker" -eq 0 ]] && generate-ssh-key
+if [[ "$docker" -eq 0 ]]
+then
+    generate-ssh-key
+fi
 
-_koopa_set_permissions --recursive "$make_prefix"
-_koopa_remove_broken_symlinks "$make_prefix"
-_koopa_remove_empty_dirs "$make_prefix"
+# Clean up  {{{1
+# ==============================================================================
 
-_koopa_set_permissions --recursive "$app_prefix"
-_koopa_remove_broken_symlinks "$app_prefix"
-_koopa_remove_empty_dirs "$app_prefix"
-
-_koopa_fix_zsh_permissions
+# Remove legacy packages  {{{2
+# ------------------------------------------------------------------------------
 
 # Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
 _koopa_rm \
     "${app_prefix}/perl" \
     "${app_prefix}/python/pyenv" \
     "${app_prefix}/perl"
+
 # Otherwise, ensure permissions are correct:
 # > _koopa_fix_pyenv_permissions
 # > _koopa_fix_rbenv_permissions
+
+# Fix permissions  {{{2
+# ------------------------------------------------------------------------------
+
+_koopa_set_permissions --recursive "$make_prefix"
+_koopa_set_permissions --recursive "$app_prefix"
+_koopa_fix_zsh_permissions
+
+# Remove symlinks and dirs  {{{2
+# ------------------------------------------------------------------------------
+
+_koopa_remove_broken_symlinks "$make_prefix"
+_koopa_remove_broken_symlinks "$app_prefix"
+_koopa_remove_empty_dirs "$make_prefix"
+_koopa_remove_empty_dirs "$app_prefix"
+
+# Remove temporary files  {{{2
+# ------------------------------------------------------------------------------
 
 if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
 then
@@ -486,5 +561,7 @@ then
         sudo rm -fr /var/lib/apt/lists/*
     fi
 fi
+
+sudo ldconfig
 
 _koopa_success "Configuration completed successfully."
