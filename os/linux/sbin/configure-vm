@@ -61,14 +61,6 @@ _koopa_assert_has_no_args "$@"
 # Set the docker flag automatically when applicable.
 _koopa_is_docker && docker=1
 
-# e.g. '/usr/local/koopa'.
-koopa_prefix="$(_koopa_prefix)"
-# e.g. '/usr/local'.
-make_prefix="$(_koopa_make_prefix)"
-# e.g. '/usr/local/opt'.
-# For data disk, linked to '/mnt/data01/n/opt' (see below).
-app_prefix="$(_koopa_app_prefix)"
-
 # Start configuration  {{{1
 # ==============================================================================
 
@@ -106,6 +98,17 @@ then
     source "${KOOPA_PREFIX}/activate"
     set -u
 fi
+
+# Koopa paths  {{{1
+# ==============================================================================
+
+# e.g. '/usr/local/koopa'.
+koopa_prefix="$(_koopa_prefix)"
+# e.g. '/usr/local'.
+make_prefix="$(_koopa_make_prefix)"
+# e.g. '/usr/local/opt'.
+# For data disk, linked to '/mnt/data01/n/opt' (see below).
+app_prefix="$(_koopa_app_prefix)"
 
 # Local disk configuration  {{{1
 # ==============================================================================
