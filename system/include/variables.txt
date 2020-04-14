@@ -131,7 +131,7 @@ gcc="9.3.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.0.2"
+gdal="3.0.4"
 
 # https://github.com/jsh58/Genrich/releases
 genrich="0.6"
