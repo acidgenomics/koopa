@@ -388,9 +388,10 @@ _koopa_update_lmod_config
 # Linux distros.
 install-python
 
-if [[ "$rsync" -eq 0 ]]
+if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
 then
     install-python-packages
+    venv-create-r-reticulate
 fi
 
 # R  {{{2
