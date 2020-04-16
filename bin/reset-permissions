@@ -5,8 +5,8 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-user="$(id -u)"
-group="$(id -g)"
+user="$(_koopa_current_user)"
+group="$(_koopa_current_group)"
 
 dir="${1:-"."}"
 
