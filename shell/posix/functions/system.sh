@@ -87,14 +87,14 @@ _koopa_chmod() {  # {{{1
 _koopa_chmod_flags() {
     # """
     # Default recommended flags for chmod.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-04-16.
     # """
     local flags
     if _koopa_is_shared_install
     then
-        flags="u+rw,g+rw"
+        flags='u+rw,g+rw'
     else
-        flags="u+rw,g+r,g-w"
+        flags='u+rw,g+r,g-w'
     fi
     _koopa_print "$flags"
     return 0
@@ -183,6 +183,42 @@ _koopa_cpu_count() {  # {{{1
         n=$((n - 1))
     fi
     _koopa_print "$n"
+    return 0
+}
+
+_koopa_current_group() {  # {{{1
+    # """
+    # Current (default) group.
+    # @note Updated 2020-04-16.
+    # """
+    id -gn
+    return 0
+}
+
+_koopa_current_group_id() {  # {{{1
+    # """
+    # Current (default) group ID.
+    # @note Updated 2020-04-16.
+    # """
+    id -g
+    return 0
+}
+
+_koopa_current_user() {  # {{{1
+    # """
+    # Current user.
+    # @note Updated 2020-04-16.
+    # """
+    id -un
+    return 0
+}
+
+_koopa_current_user_id() {  # {{{1
+    # """
+    # Current user ID.
+    # @note Updated 2020-04-16.
+    # """
+    id -u
     return 0
 }
 
@@ -426,16 +462,25 @@ _koopa_fix_sudo_setrlimit_error() {  # {{{1
 _koopa_github_url() {  # {{{1
     # """
     # Koopa GitHub URL.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-04-16.
     # """
-    _koopa_variable "koopa-github-url"
+    _koopa_variable 'koopa-github-url'
+    return 0
+}
+
+_koopa_gnu_mirror() {  # {{{1
+    # """
+    # Get GNU FTP mirror URL.
+    # @note Updated 2020-04-16.
+    # """
+    _koopa_variable 'gnu-mirror'
     return 0
 }
 
 _koopa_group() {  # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-04-16.
     #
     # Returns current user for local install.
     # Dynamically returns the admin group for shared install.
@@ -447,18 +492,9 @@ _koopa_group() {  # {{{1
     then
         group="$(_koopa_admin_group)"
     else
-        group="$(id -gn)"
+        group="$(_koopa_current_group)"
     fi
     _koopa_print "$group"
-    return 0
-}
-
-_koopa_gnu_mirror() {  # {{{1
-    # """
-    # Get GNU FTP mirror URL.
-    # @note Updated 2020-02-11.
-    # """
-    _koopa_variable "gnu-mirror"
     return 0
 }
 
@@ -741,7 +777,7 @@ _koopa_mkdir() {  # {{{1
 _koopa_mktemp() {  # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-04-16.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -761,8 +797,13 @@ _koopa_mktemp() {  # {{{1
     # - https://gist.github.com/earthgecko/3089509
     # """
     _koopa_assert_is_installed mktemp
+
+    local user_id
+    user_id="$(_koopa_current_user_id)"
+    local date_id
+    date_id="$(date "+%Y%m%d%H%M%S")"
     local template
-    template="koopa-$(id -u)-$(date "+%Y%m%d%H%M%S")-XXXXXXXXXX"
+    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
     mktemp "$@" -t "$template"
     return 0
 }
@@ -1134,23 +1175,23 @@ _koopa_tmp_log_file() {  # {{{1
 _koopa_url() {  # {{{1
     # """
     # Koopa URL.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-04-16.
     # """
-    _koopa_variable "koopa-url"
+    _koopa_variable 'koopa-url'
     return 0
 }
 
 _koopa_user() {  # {{{1
     # """
     # Set the default user.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-04-16.
     # """
     local user
     if _koopa_is_shared_install
     then
-        user="root"
+        user='root'
     else
-        user="${USER:?}"
+        user="$(_koopa_current_user)"
     fi
     _koopa_print "$user"
     return 0
@@ -1183,7 +1224,7 @@ _koopa_variable() {  # {{{1
 _koopa_view_latest_tmp_log_file() {  # {{{1
     # """
     # View the latest temporary log file.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-04-16.
     # """
     local dir
     dir="${TMPDIR:-/tmp}"
@@ -1193,7 +1234,7 @@ _koopa_view_latest_tmp_log_file() {  # {{{1
             -mindepth 1 \
             -maxdepth 1 \
             -type f \
-            -name "koopa-$(id -u)-*" \
+            -name "koopa-$(_koopa_current_user_id)-*" \
             | sort \
             | tail -n 1 \
     )"

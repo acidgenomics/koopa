@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-03-28.
+    Updated 2020-04-16.
 EOF
 }
 
@@ -69,6 +69,9 @@ unset -f usage
 
 # Pre-flight checks  {{{1
 # ==============================================================================
+
+# Ensure 'USER' global is defined, for user-specific checks below.
+[ -z "${USER:-}" ] && USER="$(id -un)" && export USER
 
 # Interactive  {{{2
 # ------------------------------------------------------------------------------
@@ -130,7 +133,7 @@ ERROR: Failed to activate koopa in the current shell.
 Supported POSIX shells: bash, dash, zsh.
 
   KOOPA_SHELL : '${KOOPA_SHELL}'
-        SHELL : '${SHELL}'
+        SHELL : '${SHELL:-}'
             - : '${-}'
             0 : '${0}'
 
@@ -204,9 +207,6 @@ then
 
     # Skip activation inside non-interactive shells.
     [ "$KOOPA_INTERACTIVE" -eq 0 ] && return 0
-
-    # Ensure 'USER' global is defined, for user-specific checks below.
-    [ -z "${USER:-}" ] && USER="$(whoami)" && export USER
 
     # Always skip on accounts containing "admin" in the name.
     printf '%s\n' "$USER" \

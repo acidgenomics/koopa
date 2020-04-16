@@ -905,7 +905,7 @@ _koopa_activate_venv() {  # {{{1
 _koopa_activate_xdg() {  # {{{1
     # """
     # Activate XDG base directory specification
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-04-16.
     #
     # XDG_RUNTIME_DIR:
     # - Can only exist for the duration of the user's login.
@@ -937,7 +937,7 @@ _koopa_activate_xdg() {  # {{{1
     fi
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
-        XDG_RUNTIME_DIR="/run/user/$(id -u)"
+        XDG_RUNTIME_DIR="/run/user/$(_koopa_current_user_id)"
         if _koopa_is_macos
         then
             XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"

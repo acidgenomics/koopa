@@ -22,6 +22,9 @@ fi
 # This variables are used by some koopa scripts, so ensure they're always
 # consistently exported across platforms.
 
+# GROUP
+[ -z "${GROUP:-}" ] && GROUP="$(id -gn)"
+
 # HOSTNAME
 [ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)"
 export HOSTNAME
@@ -47,7 +50,8 @@ export TMPDIR
 export TODAY
 
 # USER
-[ -z "${USER:-}" ] && USER="$(whoami)"
+# Alternatively, can use 'whoami' here.
+[ -z "${USER:-}" ] && USER="$(id -un)"
 export USER
 
 # History  {{{2
