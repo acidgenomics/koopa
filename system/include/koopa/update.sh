@@ -14,8 +14,8 @@ user=0
 verbose=0
 
 # Detect if rsync configuration is enabled. Note that we're allowing the user to
-# override automatic detection below with '--no-rsync' or '--rsync' flags.
-if [[ ! -f "${config_prefix}/rsync" ]]
+# override automatic detection with '--no-rsync' flag.
+if _koopa_has_rsync_config
 then
     rsync=1
 else
@@ -27,10 +27,6 @@ do
     case "$1" in
         --no-rsync)
             rsync=0
-            shift 1
-            ;;
-        --rsync)
-            rsync=1
             shift 1
             ;;
         --system)
