@@ -19,8 +19,12 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
-    file="shellcheck-v${version}.linux.x86_64.tar.xz"
-    url="https://storage.googleapis.com/shellcheck/${file}"
+    file="${name}-v${version}.linux.x86_64.tar.xz"
+    # Previous URL, until 2020-03-13:
+    # > url="https://storage.googleapis.com/${name}/${file}"
+    # See https://github.com/koalaman/shellcheck/issues/1871 for details.
+    url="https://github.com/koalaman/${name}/releases/download/\
+v${version}/${file}"
     _koopa_download "$url"
     _koopa_extract "$file"
     mkdir -pv "${prefix}/bin"
