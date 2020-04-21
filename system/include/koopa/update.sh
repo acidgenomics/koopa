@@ -13,9 +13,26 @@ system=0
 user=0
 verbose=0
 
+# Detect if rsync configuration is enabled. Note that we're allowing the user to
+# override automatic detection below with '--no-rsync' or '--rsync' flags.
+if [[ ! -f "${config_prefix}/rsync" ]]
+then
+    rsync=1
+else
+    rsync=0
+fi
+
 while (("$#"))
 do
     case "$1" in
+        --no-rsync)
+            rsync=0
+            shift 1
+            ;;
+        --rsync)
+            rsync=1
+            shift 1
+            ;;
         --system)
             system=1
             shift 1
@@ -37,6 +54,13 @@ done
 if [[ "$verbose" -eq 1 ]]
 then
     set -x
+fi
+
+# Allow passthrough of specific arguments to 'configure-vm' script.
+configure_flags=()
+if [[ "$rsync" -eq 0 ]]
+then
+    configure_flags+=("--no-rsync")
 fi
 
 _koopa_h1 "Updating koopa at '${koopa_prefix}'."
@@ -90,10 +114,10 @@ then
         # > update-macos
     elif _koopa_is_installed configure-vm
     then
-        configure-vm
+        configure-vm "${configure_flags[@]}"
     fi
 
-    if [[ ! -f "${config_prefix}/rsync" ]]
+    if [[ "$rsync" -eq 1 ]]
     then
         update-r-packages
         update-conda
