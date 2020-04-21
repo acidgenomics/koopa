@@ -6,6 +6,9 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_args "$@"
 
+# Argument parsing  {{{1
+# ==============================================================================
+
 while (("$#"))
 do
     case "$1" in
@@ -26,6 +29,17 @@ done
 if [[ -z "${source_ip:-}" ]]
 then
     _koopa_missing_arg
+fi
+
+# Source check  {{{1
+# ==============================================================================
+
+# Ensure that source and local (host) IP addresses are not identical. If they
+# are, early exit without error, as this script is called inside 'configure-vm'.
+host_ip="$(_koopa_local_ip_address)"
+if [[ "$source_ip" == "$host_ip" ]]
+then
+    _koopa_exit "Skipping rsync because '${host_ip}' is source machine."
 fi
 
 # app prefix  {{{1
