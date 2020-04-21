@@ -201,12 +201,21 @@ _koopa_coffee_time() {  # {{{1
     _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
 }
 
-_koopa_dl() {
+_koopa_dl() {  # {{{1
     # """
-    # Koopa definition list.
+    # Definition list.
     # @note Updated 2020-03-05.
     # """
     __koopa_msg "${1:?}: ${2:?}"
+}
+
+_koopa_exit() {  # {{{1
+    # """
+    # Exit showing note, without error.
+    # @note Updated 2020-04-21.
+    # """
+    _koopa_note "${1:?}"
+    exit 0
 }
 
 _koopa_h1() {  # {{{1
