@@ -11,7 +11,6 @@ _koopa_exit_if_current_version "google-cloud-sdk"
 
 _koopa_h1 "Updating Google Cloud SDK."
 
-
 if _koopa_is_macos
 then
     brew cask reinstall google-cloud-sdk
