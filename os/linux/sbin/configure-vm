@@ -6,34 +6,46 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_envs
 
-# Skip building on CentOS inside Docker for the time being.
-# > if _koopa_is_centos && _koopa_is_docker
-# > then
-# >     _koopa_stop "CentOS inside Docker not supported due to GDAL issues."
-# > fi
-
 # Argument parsing  {{{1
 # ==============================================================================
+
+data_disk=
+source_ip=
+rsync=
 
 # Allow custom configuration via global variable.
 # e.g. 'constellation-aws'.
 config="${KOOPA_CONFIG:-}"
 
-# Default placeholders for custom config.
-data_disk=
-source_ip=
+# Detect if running inside Docker container. Note that Docker mode skips
+# installation of some packages (e.g. Emacs) that fail to install.
+if _koopa_is_docker
+then
+    docker=1
+else
+    docker=0
+fi
 
 # Bioconductor mode skips installation of GNU utils and other dependencies that
 # can take a long time to build from source.
 bioconductor=0
+
 # Compact mode applies to a persistent VM with a small '/' mount.
 # This is not always the case for Docker images.
 compact=0
-# Docker mode skips installation of some packages (e.g. Emacs) that fail to
-# install inside a container.
-docker=0
-# rsync mode, which depends on 'source_ip' being defined.
-rsync=0
+
+# Allow automatic configuration for some supported cloud platforms.
+case "$config" in
+    constellation-aws)
+        data_disk="/mnt/data01"
+        source_ip="10.201.20.32"
+        ;;
+    # Safe to decomission this configuration in 2021.
+    constellation-azure)
+        data_disk="/data00"
+        source_ip="10.100.100.132"
+        ;;
+esac
 
 pos=()
 while (("$#"))
@@ -45,6 +57,18 @@ do
             ;;
         --compact)
             compact=1
+            shift 1
+            ;;
+        --data-disk)
+            data_disk="$1"
+            shift 1
+            ;;
+        --source-ip)
+            source_ip="$1"
+            shift 1
+            ;;
+        --no-rsync)
+            rsync=0
             shift 1
             ;;
         --)
@@ -64,8 +88,17 @@ set -- "${pos[@]}"
 
 _koopa_assert_has_no_args "$@"
 
-# Set the docker flag automatically when applicable.
-_koopa_is_docker && docker=1
+# rsync configuration detection.
+# Note that we're allowing user to bypass with '--no-rsync' flag above.
+if [[ -z "${rsync:-}" ]]
+then
+    if [[ -n "$source_ip" ]]
+    then
+        rsync=1
+    else
+        rsync=0
+    fi
+fi
 
 # Start configuration  {{{1
 # ==============================================================================
@@ -89,20 +122,27 @@ export PYTHONDONTWRITEBYTECODE=true
 _koopa_enable_passwordless_sudo
 _koopa_fix_sudo_setrlimit_error
 
-# Remove default configuration files.
-sudo rm -frv /etc/skel /root
-sudo mkdir -pv /root
-sudo chmod 0700 /root
+# Remove default user-specific skeleton configuration files. This in particular
+# helps keep shell configuration consistent, especialy for Ubuntu.
+sudo rm -frv /etc/skel
 # > sudo mkdir -pv /etc/skel
 # > sudo chmod 0755 /etc/skel
 
-# Reactivate koopa for root user, since we removed local config files above.
-# shellcheck disable=SC1090,SC2153
-if [[ "$(id -u)" -eq 0 ]]
+# Remove default root user configuration for Docker images. This in particular
+# is helpful for removing dotfiles that can alter the shell environment.
+if [[ "$docker" -eq 1 ]]
 then
-    set +u
-    source "${KOOPA_PREFIX}/activate"
-    set -u
+    sudo rm -frv /root
+    sudo mkdir -pv /root
+    sudo chmod 0700 /root
+    # Reactivate koopa for root user, since we removed local config files above.
+    # shellcheck disable=SC1090,SC2153
+    if [[ "$(id -u)" -eq 0 ]]
+    then
+        set +u
+        source "${KOOPA_PREFIX}/activate"
+        set -u
+    fi
 fi
 
 # Koopa paths  {{{1
@@ -119,20 +159,10 @@ app_prefix="$(_koopa_app_prefix)"
 # Local disk configuration  {{{1
 # ==============================================================================
 
-# Set up data disk and rsync configuration for persistent VM.
+# Set up data disk and rsync configuration for persistent VM. Attempting to
+# detect an attached data disk here automatically.
 if [[ "$docker" -eq 0 ]]
 then
-    case "$config" in
-        constellation-aws)
-            data_disk="/mnt/data01"
-            source_ip="10.201.20.32"
-            ;;
-        constellation-azure)
-            data_disk="/data00"
-            source_ip="10.100.100.132"
-            ;;
-    esac
-    # Attempt to detect attached data disk automatically.
     # This is the current standard configuration on AWS.
     if [[ ! -e "$data_disk" ]]
     then
@@ -188,6 +218,8 @@ _koopa_install_dotfiles
 _koopa_mkdir "$make_prefix"
 
 _koopa_assert_is_installed install-base
+
+# FIXME Use install_base_flags?
 
 # This install script differs depending on the Linux distro.
 if [[ "$bioconductor" -eq 1 ]]
@@ -291,18 +323,11 @@ fi
 # rsync mode  {{{1
 # ==============================================================================
 
-if [[ -n "$source_ip" ]]
+if [[ "$rsync" -eq 1 ]]
 then
-    host_ip="$(_koopa_local_ip_address)"
-    if [[ "$source_ip" == "$host_ip" ]]
-    then
-        _koopa_note "Skipping rsync because '${host_ip}' is source machine."
-    else
-        rsync=1
-        rsync-vm --source-ip="$source_ip"
-        # We're detecting the presence of this file in 'koopa update' call.
-        touch "$(_koopa_config_prefix)/rsync"
-    fi
+    rsync-vm --source-ip="$source_ip"
+    # We're detecting this file in '_koopa_has_rsync_config' function.
+    touch "$(_koopa_config_prefix)/rsync"
 fi
 
 # LLVM  {{{1
