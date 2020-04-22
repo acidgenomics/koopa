@@ -306,11 +306,16 @@ _koopa_aws_s3_sync() {  # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
     #
-    # @note Updated 2020-04-02.
+    # @note Updated 2020-04-22.
     #
-    # This is primarily intended to ignore Git '.git/' and R project files.
+    # Currently ignores:
+    # - Dotfiles, prefixed with '.'
+    # - Temporary files.
+    # - *.Rproj directories
+    # - *.swp files (from vim)
     # """
     aws s3 sync \
+        --exclude='^.*/.+\.(swp|tmp)$' \
         --exclude='^.*/.+\.Rproj/.*$' \
         --exclude='^.*/\..+$' \
         --exclude='^.*/tmp/.*$' \
