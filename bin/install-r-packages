@@ -158,7 +158,9 @@ install(
         "WGCNA",
         "ashr",
         "bookdown",
+        "cgdsr",  # cBioPortal
         "dbplyr",
+        "dendextend",
         "dendsort",
         "dynamicTreeCut",
         "fastICA",
