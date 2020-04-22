@@ -308,16 +308,30 @@ _koopa_aws_s3_sync() {  # {{{1
     #
     # @note Updated 2020-04-22.
     #
+    # AWS CLI unfortunately does not currently support regular expressions, at
+    # least as of v2.0.8.
+    #
+    # Pattern matching reference:
+    # - https://docs.aws.amazon.com/cli/latest/reference/s3/
+    #       #use-of-exclude-and-include-filters
+    # - https://github.com/aws/aws-cli/issues/476
+    # - https://stackoverflow.com/questions/36215713/
+    #
+    # Nuclear dotfile option: --exclude=".*"
+    # Otherwise, can manually ignore '.git', '.gitignore', etc.
+    #
     # Currently ignores:
-    # - Dotfiles, prefixed with '.'
+    # - Invisible dot files, prefixed with '.'.
     # - Temporary files.
-    # - *.Rproj directories
-    # - *.swp files (from vim)
+    # - *.Rproj directories.
+    # - *.swp files (from vim).
     # """
     aws s3 sync \
-        --exclude='^.*/.+\.(swp|tmp)$' \
-        --exclude='^.*/.+\.Rproj/.*$' \
-        --exclude='^.*/\..+$' \
-        --exclude='^.*/tmp/.*$' \
+        --exclude="*.Rproj/*" \
+        --exclude="*.swp" \
+        --exclude="*.tmp" \
+        --exclude=".*" \
+        --exclude=".Rproj.user/*" \
+        --exclude=".git/*" \
         "$@"
 }
