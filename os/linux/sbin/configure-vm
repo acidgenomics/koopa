@@ -219,18 +219,15 @@ _koopa_mkdir "$make_prefix"
 
 _koopa_assert_is_installed install-base
 
-# FIXME Use install_base_flags?
-
-# This install script differs depending on the Linux distro.
+install_base_flags=()
 if [[ "$bioconductor" -eq 1 ]]
 then
-    install-base --bioconductor
+    install_base_flags+=("--bioconductor")
 elif [[ "$compact" -eq 1 ]] && _koopa_is_debian
 then
-    install-base --compact
-else
-    install-base
+    install_base_flags+=("--compact")
 fi
+install-base "${install_base_flags[@]}"
 
 # Maybe include: tclsh
 _koopa_assert_is_installed \
