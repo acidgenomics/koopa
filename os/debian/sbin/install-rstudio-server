@@ -67,19 +67,22 @@ _koopa_assert_is_installed R gdebi
 
 os_codename="$(_koopa_os_codename)"
 
-if ! _koopa_is_ubuntu
-then
-    case "$os_codename" in
-        buster)
-            os_codename="bionic"
-            ;;
-    esac
-fi
-
-if [[ "$os_codename" != "bionic" ]]
-then
-    _koopa_stop "Unsupported OS version: '${os_codename}'."
-fi
+case "$os_codename" in
+    # Debian 10
+    buster)
+        os_codename="bionic"
+        ;;
+    # Ubuntu 20.04 LTS
+    focal)
+        os_codename="bionic"
+        ;;
+    # Ubuntu 18.04 LTS
+    bionic)
+        ;;
+    *)
+        _koopa_stop "Unsupported OS version: '${os_codename}'."
+        ;;
+esac
 
 tmp_dir="$(_koopa_tmp_dir)"
 
