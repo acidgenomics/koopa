@@ -41,6 +41,9 @@ tmp_dir="$(_koopa_tmp_dir)"
         14)
             unique="076bab302c7b4508975440c56f6cc26a/36"
             ;;
+        14.0.1)
+            unique="664493ef4a6946b186ff29eb326336a2/7"
+            ;;
         *)
             _koopa_stop "Unsupported version: '${version}'."
     esac
