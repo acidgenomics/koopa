@@ -4,13 +4,19 @@
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-04-23.
     # """
     local file
     file="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$file" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
+    # Remap 20.04 LTS to 18.04 LTS.
+    case "$os_codename" in
+        focal)
+            os_codename="bionic"
+            ;;
+    esac
     local string
     string="deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
 ${os_codename} main"
@@ -20,7 +26,7 @@ ${os_codename} main"
 _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-04-23.
     # """
     local file
     file="/etc/apt/sources.list.d/docker.list"
@@ -29,6 +35,12 @@ _koopa_apt_add_docker_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
+    # Remap 20.04 LTS to 18.04 LTS.
+    case "$os_codename" in
+        focal)
+            os_codename="bionic"
+            ;;
+    esac
     local string
     string="deb [arch=amd64] https://download.docker.com/linux/${os_id} \
 ${os_codename} stable"
@@ -71,7 +83,7 @@ llvm-toolchain-${os_codename}-${version} main"
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-04-23.
     # """
     local file
     file="/etc/apt/sources.list.d/r.list"
@@ -80,6 +92,12 @@ _koopa_apt_add_r_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
+    # Remap 20.04 LTS to 18.04 LTS.
+    case "$os_codename" in
+        focal)
+            os_codename="bionic"
+            ;;
+    esac
     local string
     string="deb https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-cran35/"
