@@ -72,7 +72,7 @@ binutils="2.34"
 broot="0.13.2"
 
 # https://crates.io/
-cargo="1.42.0"
+cargo="1.43.0"
 
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
@@ -276,7 +276,7 @@ rstudio-server-pro="1.2.5042-1"
 ruby="2.6.5p"
 
 # https://www.rust-lang.org/
-rust="1.42.0"
+rust="1.43.0"
 
 # https://rustup.rs/
 rustup="1.21.1"
