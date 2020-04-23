@@ -25,8 +25,8 @@ _koopa_dl 'Arguments' "$*"
 env
 date
 
-_koopa_assert_is_set 'BATCH_FILE_URL'
-_koopa_assert_is_installed 'aws' 'curl' 'unzip'
+_koopa_assert_is_installed aws curl unzip
+_koopa_assert_is_set BATCH_FILE_URL
 
 url="${BATCH_FILE_URL:?}"
 file="$(_koopa_tmp_file)"
