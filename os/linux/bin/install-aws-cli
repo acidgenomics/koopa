@@ -40,6 +40,7 @@ tmp_dir="$(_koopa_tmp_dir)"
         -b "$tmp_bin_dir" \
         > /dev/null
     _koopa_cd "${tmp_install_dir}/v2"
+    # Note that directory structure currently returns differently for Alpine.
     version="$( \
         find . \
             -mindepth 1 \
@@ -47,6 +48,10 @@ tmp_dir="$(_koopa_tmp_dir)"
             -type d \
             -name "2.*" \
     )"
+    if [[ -z "$version" ]]
+    then
+        _koopa_stop "Failed to detect version of AWS CLI."
+    fi
     version="$(basename "$version")"
     prefix="$(_koopa_cellar_prefix)/${name}/${version}"
     _koopa_exit_if_dir "$prefix"
