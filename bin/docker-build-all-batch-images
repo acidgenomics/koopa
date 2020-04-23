@@ -38,4 +38,4 @@ batch_dirs="$( \
 batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
 mapfile -t images <<< "$(_koopa_print "$batch_dirs")"
 
-docker-build-all-images "${flags}" "${images}"
+docker-build-all-images "${flags[@]}" "${images[@]}"
