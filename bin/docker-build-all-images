@@ -8,6 +8,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 extra=0
 force=0
 
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -19,72 +20,89 @@ do
             force=1
             shift 1
             ;;
-        *)
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
             _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
             ;;
     esac
 done
+set -- "${pos[@]}"
 
-_koopa_h1 "Building Docker images."
+# Define images array.
+# If empty, define default images.
+if [ "$#" -eq 0 ]
+then
+    images=()
+
+    # Minimal bioinformatics images.
+    images+=(
+        acidgenomics/miniconda3
+        acidgenomics/biocontainers
+    )
+
+    # Recommended Linux images.
+    images+=(
+        acidgenomics/debian
+        acidgenomics/ubuntu
+        acidgenomics/fedora
+        acidgenomics/centos
+    )
+
+    # R images.
+    images+=(
+        acidgenomics/bioconductor
+        acidgenomics/basejump
+        acidgenomics/bcbiornaseq
+        acidgenomics/bcbiosinglecell
+        acidgenomics/rnaseq
+        acidgenomics/singlecell
+    )
+
+    # Extra Linux images.
+    images+=(
+        acidgenomics/alpine
+        acidgenomics/amzn
+        acidgenomics/arch
+        acidgenomics/kali
+        acidgenomics/opensuse
+    )
+
+    # AWS batch images.
+    prefix="${HOME}/.config/koopa/docker"
+    batch_dirs="$( \
+        find "$prefix" \
+            -name "aws-batch*" \
+            -type d \
+            | sort \
+    )"
+    batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
+    mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
+    images=("${images[@]}" "${batch_arr[@]}")
+
+    # Large bioinformatics images.
+    # These don't need to be updated frequently and can be built manually instead.
+    if [[ "$extra" -eq 1 ]]
+    then
+        images+=(
+            acidgenomics/bcbio-nextgen
+            acidgenomics/rnaeditingindexer
+            acidgenomics/maestro
+        )
+fi
+else
+    images=("$@")
+fi
+
+_koopa_h1 "Building ${#images[@]} Docker images."
 
 docker login
-images=()
-
-# Minimal bioinformatics images.
-images+=(
-    acidgenomics/miniconda3
-    acidgenomics/biocontainers
-)
-
-# Recommended Linux images.
-images+=(
-    acidgenomics/debian
-    acidgenomics/ubuntu
-    acidgenomics/fedora
-    acidgenomics/centos
-)
-
-# R images.
-images+=(
-    acidgenomics/bioconductor
-    acidgenomics/basejump
-    acidgenomics/bcbiornaseq
-    acidgenomics/bcbiosinglecell
-    acidgenomics/rnaseq
-    acidgenomics/singlecell
-)
-
-# Extra Linux images.
-images+=(
-    acidgenomics/alpine
-    acidgenomics/amzn
-    acidgenomics/arch
-    acidgenomics/kali
-    acidgenomics/opensuse
-)
-
-# AWS batch images.
-prefix="${HOME}/.config/koopa/docker"
-batch_dirs="$( \
-    find "$prefix" \
-        -name "aws-batch*" \
-        -type d \
-        | sort \
-)"
-batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
-mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
-images=("${images[@]}" "${batch_arr[@]}")
-
-# Large bioinformatics images.
-# These don't need to be updated frequently and can be built manually instead.
-if [[ "$extra" -eq 1 ]]
-then
-    images+=(
-        acidgenomics/bcbio-nextgen
-        acidgenomics/rnaeditingindexer
-        acidgenomics/maestro
-    )
-fi
 
 for image in "${images[@]}"
 do
