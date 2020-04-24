@@ -40,10 +40,12 @@ _koopa_add_to_user_profile() {  # {{{1
 _koopa_add_user_to_etc_passwd() {  # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
-    # @note Updated 2020-02-28.
+    # @note Updated 2020-04-24.
     #
     # Necessary for running 'chsh' with a Kerberos / Active Directory domain
     # account, on AWS or Azure for example.
+    #
+    # Note that this function will enable use of RStudio for domain users.
     # """
     _koopa_assert_is_linux
     local passwd_file
