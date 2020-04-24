@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-04-13.
+## Updated 2020-04-24.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -329,15 +329,11 @@ checkVersion(
     current = currentVersion("python"),
     expected = expectedVersion("python")
 )
-if (isCellar("R")) {
-    checkVersion(
-        name = "R",
-        current = currentVersion("r"),
-        expected = expectedVersion("r")
-    )
-} else {
-    installed("R")
-}
+checkVersion(
+    name = "R",
+    current = currentVersion("r"),
+    expected = expectedVersion("r")
+)
 
 h2("Secondary languages")
 if (!isTRUE(docker)) {
