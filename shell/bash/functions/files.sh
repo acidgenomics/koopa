@@ -5,11 +5,16 @@ _koopa_remove_broken_symlinks() {  # {{{1
     # Remove broken symlinks.
     # @note Updated 2020-04-25.
     # """
-    local files
+    local file files
     mapfile -t files <<< "$(_koopa_find_broken_symlinks "$@")"
     _koopa_is_array_non_empty "${files[@]}" || return 0
     _koopa_note "Removing ${#files[@]} broken symlinks."
-    _koopa_rm "${files[@]}"
+    # Don't pass single call to rm, as argument list can be too long.
+    for file in "${files[@]}"
+    do
+        [[ -z "$file" ]] && continue
+        _koopa_rm -v "$file"
+    done
     return 0
 }
 
@@ -22,6 +27,11 @@ _koopa_remove_empty_dirs() {  # {{{1
     mapfile -t dirs <<< "$(_koopa_find_empty_dirs "$@")"
     _koopa_is_array_non_empty "${dirs[@]}" || return 0
     _koopa_note "Removing ${#dirs[@]} empty directories."
-    _koopa_rm "${dirs[@]}"
+    # Don't pass single call to rm, as argument list can be too long.
+    for dir in "${dirs[@]}"
+    do
+        [[ -z "$dir" ]] && continue
+        _koopa_rm -v "$dir"
+    done
     return 0
 }
