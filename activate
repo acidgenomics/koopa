@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-04-16.
+    Updated 2020-04-25.
 EOF
 }
 
@@ -209,8 +209,9 @@ then
     [ "$KOOPA_INTERACTIVE" -eq 0 ] && return 0
 
     # Always skip on accounts containing "admin" in the name.
+    # Previous "\b(admin)\b" pattern only matched 'admin-*' but not 'admin_*'.
     printf '%s\n' "$USER" \
-        | grep -Eq "\b(admin|shiny)\b" && return 0
+        | grep -Eq "^admin" && return 0
 
     # Allow optional skip for specific users.
     if [ -n "${KOOPA_USERS_SKIP:-}" ]
