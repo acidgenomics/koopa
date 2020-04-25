@@ -431,6 +431,8 @@ install-python
 # from source on other Linux distros.
 if [[ "$bioconductor" -eq 0 ]]
 then
+    # Alternatively, for Debian/Ubuntu, consider using 'install-r-cran' to
+    # install the official CRAN binary package by default instead.
     install-r
     if [[ "$compact" -eq 0 ]]
     then

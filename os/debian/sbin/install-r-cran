@@ -5,14 +5,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 # """
-# Install latest version of R.
+# Install latest version of R from CRAN.
 # - https://cran.r-project.org/bin/linux/debian/
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
 _koopa_exit_if_installed R
 
-_koopa_h1 "Installing R."
+_koopa_h1 "Installing R CRAN binary package."
 
 _koopa_apt_import_r_key
 _koopa_apt_add_r_repo
