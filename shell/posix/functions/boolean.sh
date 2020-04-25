@@ -518,7 +518,7 @@ _koopa_is_powerful() {  # {{{1
 _koopa_is_python_package_installed() {  # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-04-25.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -533,18 +533,20 @@ _koopa_is_python_package_installed() {  # {{{1
     # """
     local pkg
     pkg="${1:?}"
-    local python
-    python="${2:-python3}"
-    _koopa_is_installed "$python" || return 1
+    local python_exe
+    python_exe="${2:-python3}"
+    _koopa_is_installed "$python_exe" || return 1
     local prefix
-    prefix="$(_koopa_python_site_packages_prefix "$python")"
+    prefix="$(_koopa_python_site_packages_prefix "$python_exe")"
     [ -d "${prefix}/${pkg}" ]
 }
 
 _koopa_is_r_package_installed() {  # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-04-25.
+    #
+    # Note that this will only return true for user-installed packages.
     #
     # Fast mode: checking the 'site-library' directory.
     #
@@ -554,9 +556,11 @@ _koopa_is_r_package_installed() {  # {{{1
     # """
     local pkg
     pkg="${1:?}"
-    _koopa_is_installed R || return 1
+    local rscript_exe
+    rscript_exe="${2:-Rscript}"
+    _koopa_is_installed "$rscript_exe" || return 1
     local prefix
-    prefix="$(_koopa_r_library_prefix)"
+    prefix="$(_koopa_r_library_prefix "$rscript_exe")"
     [ -d "${prefix}/${pkg}" ]
 }
 
