@@ -165,30 +165,43 @@ _koopa_is_azure() {  # {{{1
 
 _koopa_is_cellar() {  # {{{1
     # """
-    # Is a specific command cellarized?
-    # @note Updated 2020-02-10.
+    # Is a specific command or file cellarized?
+    # @note Updated 2020-04-25.
     # """
-    local cmd
-    cmd="${1:?}"
-    _koopa_is_installed "$cmd" || return 1
-    cmd="$(_koopa_which_realpath "$cmd")"
+    local str
+    str="${1:?}"
+
+    if _koopa_is_installed "$str"
+    then
+        # Assume default usage is a command (e.g. R).
+        str="$(_koopa_which_realpath "$str")"
+    elif [ -e "$str" ]
+    then
+        # Otherwise assume it's a file path on disk.
+        str="$(realpath "$str")"
+    else
+        return 1
+    fi
+
     # Check koopa cellar.
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
-    if _koopa_is_matching_regex "$cmd" "^${cellar_prefix}"
+    if _koopa_is_matching_regex "$str" "^${cellar_prefix}"
     then
         return 0
     fi
+
     # Check Homebrew cellar.
     if _koopa_is_installed brew
     then
         local homebrew_cellar_prefix
         homebrew_cellar_prefix="$(_koopa_homebrew_cellar_prefix)"
-        if _koopa_is_matching_regex "$cmd" "^${homebrew_cellar_prefix}"
+        if _koopa_is_matching_regex "$str" "^${homebrew_cellar_prefix}"
         then
             return 0
         fi
     fi
+
     return 1
 }
 
