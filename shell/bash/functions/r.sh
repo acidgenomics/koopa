@@ -284,13 +284,6 @@ _koopa_update_r_config() {  # {{{1
     _koopa_link_r_site_library "$r_home"
     _koopa_r_javareconf --r-exe="$r_exe"
 
-    # Install CRAN tools required to build from source on macOS.
-    if _koopa_is_macos
-    then
-        install-r-cran-clang
-        install-r-cran-gfortran
-    fi
-
     return 0
 }
 
