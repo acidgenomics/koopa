@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-04-12.
+## Updated 2020-04-26.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -205,15 +205,23 @@ local({
                     )
                 }
                 ## Use recommended CRAN compiler settings.
-                if (.rprofile[["rVersionShort"]] == "3.5") {
-                    clangVersion <- "6"
-                } else if (.rprofile[["rVersionShort"]] == "3.6") {
-                    clangVersion <- "7"
-                }
-                clangBinDir <- file.path(
-                    "", "usr", "local",
-                    paste0("clang", clangVersion), "bin"
+                clangVersion <- switch(
+                    EXPR = as.character(.rprofile[["rVersionShort"]]),
+                    "3.5" = "6",    # CRAN
+                    "3.6" = "7",    # CRAN
+                    "4.0" = "11"    # Xcode
                 )
+                clangVersion <- numeric_version(clangVersion)
+                if (isTRUE(clangVersion >= 11L)) {
+                    ## R >= 4
+                    clangBinDir <- file.path("", "usr", "bin")
+                } else {
+                    ## R < 4
+                    clangBinDir <- file.path(
+                        "", "usr", "local",
+                        paste0("clang", clangVersion), "bin"
+                    )
+                }
                 if (!identical(
                     x = Sys.which(c("clang", "clang++", "gfortran")),
                     y = c(
@@ -225,12 +233,18 @@ local({
                         )
                     )
                 )) {
-                    warning(
-                        "Failed to detect CRAN clang and gfortran.\n",
-                        "Install development tools and libraries from:\n",
-                        "https://cran.r-project.org/bin/macosx/tools/"
-                    )
+                    warning(paste(
+                        "Failed to detect CRAN clang and gfortran.",
+                        "Install development tools and libraries from:",
+                        "  - http://mac.r-project.org/tools/",
+                        "  - https://cran.r-project.org/bin/macosx/tools/",
+                        sep = "\n"
+                    ))
                 }
+
+
+
+
                 stopifnot(all(nzchar(
                     Sys.which(c(
                         "clang",
