@@ -199,7 +199,7 @@ local({
                     "SDKs",
                     "MacOSX.sdk"
                 )))) {
-                    warning(
+                    stop(
                         "Failed to detect Xcode CLT.\n",
                         "Run `xcode-select --install` to install."
                     )
@@ -277,6 +277,25 @@ local({
     ## Library path  {{{2
     ## -------------------------------------------------------------------------
 
+    ## Check that versioned library is defined and exists on disk.
+    local({
+        if (isTRUE(.rprofile[["macos"]])) {
+            ## macOS (user library).
+            libVar <- "R_LIBS_USER"
+        } else {
+            ## Linux (shared site library).
+            libVar <- "R_LIBS_SITE"
+        }
+        lib <- Sys.getenv(libVar)
+        if (!isTRUE(dir.exists(lib))) {
+            stop(paste0(
+                "R package library ",
+                "(", libVar, ") ",
+                "does not exist: '", lib, "'."
+            ))
+        }
+    })
+
     ## Check that library matches R version.
     local({
         if (!isTRUE(.rprofile[["conda"]])) {
@@ -287,7 +306,7 @@ local({
                 ## User library.
                 !any(grepl(pattern = .rprofile[["rVersionShort"]], x = libs))
             ) {
-                warning(sprintf(
+                stop(sprintf(
                     "Failed to detect R %s library in '.libPaths()':\n%s",
                     .rprofile[["rVersionShort"]],
                     paste(libs, collapse = "\n")
