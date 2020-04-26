@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-04-12.
+## Updated 2020-04-26.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -20,18 +20,21 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 ## -----------------------------------------------------------------------------
 
 ## Refer to CRAN website for details:
-## https://cran.r-project.org/bin/macosx/tools/
+## - http://mac.r-project.org/tools/
+## - https://cran.r-project.org/bin/macosx/tools/
+
+## Note that CRAN is now using Xcode clang for R 4.0+.
 
 ## Clang 8, for R 3.7+.
 ## > PATH="/usr/local/clang8/bin:${PATH}"
 
 ## Clang 7, for R 3.6.
-PATH="/usr/local/clang7/bin:${PATH}"
+## > PATH="/usr/local/clang7/bin:${PATH}"
 
 ## Clang 6, for R 3.5.
 ## > PATH="/usr/local/clang6/bin:${PATH}"
 
-## gfortran 6.1 (for R 3.5+).
+## gfortran 8.2 (for R 4.0+).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
 ## Pandoc  {{{2
