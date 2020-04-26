@@ -4,7 +4,12 @@
 ###
 ### Record R system environment variables.
 
-R_PLATFORM=${R_PLATFORM-'x86_64-apple-darwin15.6.0'}
+## As from R 4.0.0 the C code reading this follows the POSIX rules
+## for parameter substitution in shells, section 2.6.2 of
+## https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18
+## In earlier versions ${FOO-bar} was interpreted the same as ${FOO:-bar}
+
+R_PLATFORM=${R_PLATFORM-'x86_64-apple-darwin17.0'}
 ## Default printer paper size: first record if user set R_PAPERSIZE
 R_PAPERSIZE_USER=${R_PAPERSIZE}
 R_PAPERSIZE=${R_PAPERSIZE-'a4'}
@@ -43,8 +48,8 @@ R_SYSTEM_ABI='osx,gcc,gxx,gfortran,gfortran'
 R_STRIP_SHARED_LIB=${R_STRIP_SHARED_LIB-'strip -x'}
 R_STRIP_STATIC_LIB=${R_STRIP_STATIC_LIB-'strip -S'}
 
-#R_LIBS_USER=${R_LIBS_USER-'~/R/x86_64-apple-darwin15.6.0-library/3.6'}
-R_LIBS_USER=${R_LIBS_USER-'~/Library/R/3.6/library'}
+#R_LIBS_USER=${R_LIBS_USER-'~/R/x86_64-apple-darwin17.0-library/4.0'}
+R_LIBS_USER=${R_LIBS_USER-'~/Library/R/4.0/library'}
 
 ### Local Variables: ***
 ### mode: sh ***
