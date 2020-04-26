@@ -207,9 +207,9 @@ local({
                 ## Use recommended CRAN compiler settings.
                 clangVersion <- switch(
                     EXPR = as.character(.rprofile[["rVersionShort"]]),
-                    "3.5" = "6",    # CRAN
-                    "3.6" = "7",    # CRAN
-                    "4.0" = "11"    # Xcode
+                    "3.5" = "6",  # CRAN
+                    "3.6" = "7",  # CRAN
+                    "4.0" = "11"  # Xcode
                 )
                 clangVersion <- numeric_version(clangVersion)
                 if (isTRUE(clangVersion >= 11L)) {
@@ -233,10 +233,23 @@ local({
                         )
                     )
                 if (!identical(current, expected)) {
-                    print(current)
-                    print(expected)
-                    warning(paste(
+                    stop(paste(
                         "Failed to detect CRAN clang and gfortran.",
+                        "",
+                        "Current:",
+                        paste(
+                            utils::capture.output(print(current)),
+                            collapse = "\n"
+                        ),
+                        "",
+                        "Expected:",
+                        paste(
+                            utils::capture.output(print(expected)),
+                            collapse = "\n"
+                        ),
+                        "",
+                        "Symlink of 'etc' may be required in R_HOME.",
+                        "",
                         "Install development tools and libraries from:",
                         "  - http://mac.r-project.org/tools/",
                         "  - https://cran.r-project.org/bin/macosx/tools/",
