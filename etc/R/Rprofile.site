@@ -222,9 +222,9 @@ local({
                         paste0("clang", clangVersion), "bin"
                     )
                 }
-                if (!identical(
-                    x = Sys.which(c("clang", "clang++", "gfortran")),
-                    y = c(
+                which <- c("clang", "clang++", "gfortran")
+                current <- Sys.which(which)
+                expected <- c(
                         "clang"    = file.path(clangBinDir, "clang"),
                         "clang++"  = file.path(clangBinDir, "clang++"),
                         "gfortran" = file.path(
@@ -232,7 +232,9 @@ local({
                             "gfortran", "bin", "gfortran"
                         )
                     )
-                )) {
+                if (!identical(current, expected)) {
+                    print(current)
+                    print(expected)
                     warning(paste(
                         "Failed to detect CRAN clang and gfortran.",
                         "Install development tools and libraries from:",
@@ -241,17 +243,6 @@ local({
                         sep = "\n"
                     ))
                 }
-
-
-
-
-                stopifnot(all(nzchar(
-                    Sys.which(c(
-                        "clang",
-                        "clang++",
-                        "gfortran"
-                    ))
-                )))
                 assign(
                     x = "clangBinDir",
                     value = clangBinDir,
@@ -263,14 +254,10 @@ local({
                     envir = .rprofile
                 )
             } else if (isTRUE(.rprofile[["linux"]])) {
-                stopifnot(all(nzchar(
-                    Sys.which(c(
-                        "g++",
-                        "gcc",
-                        "gfortran"
-                    ))
-                )))
+                which <- c("g++", "gcc", "gfortran")
+                current <- Sys.which(which)
             }
+            stopifnot(all(nzchar(current)))
         }
     })
 
