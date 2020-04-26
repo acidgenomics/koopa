@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Source: https://github.com/fxcoudert/gfortran-for-macOS
+# """
+
+name="gfortran"
+version="8.2"
+prefix="/usr/local/${name}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} to '${prefix}'."
+
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    stem="${name}-${version}-Mojave"
+    file="${stem}.dmg"
+    url="https://mac.r-project.org/tools/${file}"
+    _koopa_download "$url"
+    hdiutil mount "$file"
+    pkg="/Volumes/${stem}/${stem}/gfortran.pkg"
+    # FIXME Not sure this step is working...
+    sudo installer -pkg "$pkg" -target /
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_install_success "$name"
+_koopa_restart
