@@ -20,7 +20,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 config() {
     # Local configuration.
-    config_dir="${XDG_CONFIG_HOME}/tldr"
+    config_dir="$(_koopa_config_prefix)/tldr"
     index_file="${config_dir}/index.json"
     platform="$(get_platform)"
 
