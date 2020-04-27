@@ -39,20 +39,6 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_no_args() {  # {{{1
-    # """
-    # Assert that the user has not passed any arguments to a script.
-    # @note Updated 2019-10-23.
-    # """
-    if [ "$#" -ne 0 ]
-    then
-        _koopa_stop "\
-Invalid argument: '${1}'.
-Run with '--help' flag for usage details."
-    fi
-    return 0
-}
-
 _koopa_assert_has_file_ext() {  # {{{1
     # """
     # Assert that input contains a file extension.
@@ -66,6 +52,80 @@ _koopa_assert_has_file_ext() {  # {{{1
             _koopa_stop "No file extension: '${arg}'."
         fi
     done
+    return 0
+}
+
+_koopa_assert_has_gnu_binutils() {  #{{{1
+    # """
+    # Assert that GNU binutils is installed.
+    # @note Updated 2020-04-27.
+    # """
+    if ! _koopa_has_gnu_binutils
+    then
+        _koopa_stop "GNU binutils is not installed."
+    fi
+    return 0
+}
+
+_koopa_assert_has_gnu_coreutils() {  #{{{1
+    # """
+    # Assert that GNU coreutils is installed.
+    # @note Updated 2020-04-27.
+    # """
+    if ! _koopa_has_gnu_coreutils
+    then
+        _koopa_stop "GNU coreutils is not installed."
+    fi
+    return 0
+}
+
+_koopa_assert_has_gnu_findutils() {  #{{{1
+    # """
+    # Assert that GNU findutils is installed.
+    # @note Updated 2020-04-27.
+    # """
+    if ! _koopa_has_gnu_findutils
+    then
+        _koopa_stop "GNU findutils is not installed."
+    fi
+    return 0
+}
+
+_koopa_assert_has_gnu_sed() {  #{{{1
+    # """
+    # Assert that GNU sed is installed.
+    # @note Updated 2020-04-27.
+    # """
+    if ! _koopa_has_gnu_sed
+    then
+        _koopa_stop "GNU sed is not installed."
+    fi
+    return 0
+}
+
+_koopa_assert_has_gnu_tar() {  #{{{1
+    # """
+    # Assert that GNU tar is installed.
+    # @note Updated 2020-04-27.
+    # """
+    if ! _koopa_has_gnu_tar
+    then
+        _koopa_stop "GNU tar is not installed."
+    fi
+    return 0
+}
+
+_koopa_assert_has_no_args() {  # {{{1
+    # """
+    # Assert that the user has not passed any arguments to a script.
+    # @note Updated 2019-10-23.
+    # """
+    if [ "$#" -ne 0 ]
+    then
+        _koopa_stop "\
+Invalid argument: '${1}'.
+Run with '--help' flag for usage details."
+    fi
     return 0
 }
 

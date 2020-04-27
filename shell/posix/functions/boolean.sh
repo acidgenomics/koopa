@@ -1,6 +1,21 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+__koopa_has_gnu() {  # {{{1
+    # """
+    # Is a GNU program installed?
+    # @note Updated 2020-04-27.
+    # """
+    local cmd
+    cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
+    local str
+    str="$("$cmd" --version 2>&1 || true)"
+    _koopa_is_matching_fixed "$str" "GNU"
+}
+
+
+
 _koopa_boolean_nounset() {  # {{{1
     # """
     # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
@@ -43,6 +58,46 @@ _koopa_has_file_ext() {  # {{{1
     local file
     file="${1:?}"
     _koopa_print "$file" | grep -q "\."
+}
+
+_koopa_has_gnu_binutils() {  # {{{1
+    # """
+    # Is GNU binutils installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu ld
+}
+
+_koopa_has_gnu_coreutils() {  # {{{1
+    # """
+    # Is GNU coreutils installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu env
+}
+
+_koopa_has_gnu_findutils() {  # {{{1
+    # """
+    # Is GNU findutils installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu find
+}
+
+_koopa_has_gnu_sed() {  # {{{1
+    # """
+    # Is GNU tar installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu sed
+}
+
+_koopa_has_gnu_tar() {  # {{{1
+    # """
+    # Is GNU tar installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu tar
 }
 
 _koopa_has_no_environments() {  # {{{1

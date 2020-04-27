@@ -347,7 +347,7 @@ _koopa_activate_homebrew() {  # {{{1
 _koopa_activate_homebrew_gnu_utils() {
     # """
     # Activate Homebrew GNU utils.
-    # @note Updated 2020-03-03.
+    # @note Updated 2020-04-27.
     #
     # Linked using 'g' prefix by default.
     #
@@ -357,6 +357,11 @@ _koopa_activate_homebrew_gnu_utils() {
     # - brew info binutils
     # - brew info coreutils
     # - brew info findutils
+    # - brew info gnu-sed
+    # - brew info gnu-tar
+    # - brew info gnu-time
+    # - brew info gnu-units
+    # - brew info gnu-which
     # - brew info grep
     # - brew info libtool
     # - brew info make
@@ -413,12 +418,44 @@ _koopa_activate_homebrew_gnu_utils() {
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     fi
 
+    # tar
+    prefix="${homebrew_prefix}/opt/gnu-tar/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+
     # texinfo
     prefix="${homebrew_prefix}/opt/texinfo"
     if [ -d "$prefix" ]
     then
         _koopa_force_add_to_path_start "${prefix}/bin"
     fi
+    
+    # time
+    # > prefix="${homebrew_prefix}/opt/gnu-time/libexec"
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     _koopa_force_add_to_path_start "${prefix}/gnubin"
+    # >     _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    # > fi
+    
+    # units
+    prefix="${homebrew_prefix}/opt/gnu-units/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+    
+    # which
+    # > prefix="${homebrew_prefix}/opt/gnu-which/libexec"
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     _koopa_force_add_to_path_start "${prefix}/gnubin"
+    # >     _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    # > fi
 
     return 0
 }
