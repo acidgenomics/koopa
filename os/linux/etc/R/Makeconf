@@ -4,13 +4,13 @@
 #
 # R was configured using the following call
 # (not including env. vars and site configuration)
-# configure  '--enable-BLAS-shlib' '--enable-R-profiling' '--enable-R-shlib' '--enable-memory-profiling' '--prefix=/usr/local/cellar/r/3.6.3' '--with-blas' '--with-cairo' '--with-jpeglib' '--with-lapack' '--with-readline' '--with-tcltk' '--with-x=no' 'PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig'
+# configure  '--enable-R-profiling' '--enable-R-shlib' '--enable-memory-profiling' '--prefix=/usr/local/cellar/r/4.0.0' '--with-blas' '--with-cairo' '--with-jpeglib' '--with-lapack' '--with-readline' '--with-tcltk' '--with-x=no' 'PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib64/pkgconfig:/usr/lib/pkgconfig'
 
 ## This fails if it contains spaces, or if it is quoted
 include $(R_SHARE_DIR)/make/vars.mk
 
 AR = ar
-BLAS_LIBS = -L"$(R_HOME)/lib$(R_ARCH)" -lRblas
+BLAS_LIBS = -lopenblas
 C_VISIBILITY = -fvisibility=hidden
 CC = gcc
 CFLAGS = -g -O2 $(LTO)
@@ -18,13 +18,10 @@ CPICFLAGS = -fpic
 CPPFLAGS = -I/usr/local/include
 CXX = g++ -std=gnu++11
 ## Not used by anything in R, in particular not for the .cc.d rule
+## but used via R CMD config by several packages
 CXXCPP = $(CXX) -E
 CXXFLAGS = -g -O2 $(LTO)
 CXXPICFLAGS = -fpic
-CXX98 = g++
-CXX98FLAGS = -g -O2 $(LTO)
-CXX98PICFLAGS = -fpic
-CXX98STD = -std=gnu++98
 CXX11 = g++
 CXX11FLAGS = -g -O2 $(LTO)
 CXX11PICFLAGS = -fpic
@@ -37,6 +34,10 @@ CXX17 = g++
 CXX17FLAGS = -g -O2 $(LTO)
 CXX17PICFLAGS = -fpic
 CXX17STD = -std=gnu++17
+CXX20 = g++
+CXX20FLAGS = -g -O2 $(LTO)
+CXX20PICFLAGS = -fpic
+CXX20STD = -std=gnu++2a
 CXX_VISIBILITY = -fvisibility=hidden
 DYLIB_EXT = .so
 DYLIB_LD = $(CC)
@@ -60,24 +61,24 @@ FOUNDATION_LIBS =
 JAR = /usr/local/opt/java/openjdk/latest/bin/jar
 JAVA = /usr/local/opt/java/openjdk/latest/bin/java
 JAVAC = /usr/local/opt/java/openjdk/latest/bin/javac
-JAVAH = /usr/local/opt/java/openjdk/latest/bin/javah
+JAVAH = 
 ## JAVA_HOME might be used in the next three.  
 ## They are for packages 'JavaGD' and 'rJava'
-JAVA_HOME = /usr/local/opt/java/openjdk/latest
+JAVA_HOME = /mnt/data01/n/opt/java/openjdk/14.0.1
 JAVA_CPPFLAGS = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 JAVA_LIBS = -L$(JAVA_HOME)/lib/server -ljvm
 JAVA_LD_LIBRARY_PATH = $(JAVA_HOME)/lib/server
-LAPACK_LIBS = -L"$(R_HOME)/lib$(R_ARCH)" -lRlapack
-LDFLAGS = -L/usr/local/lib64
+LAPACK_LIBS = 
+LDFLAGS = -L/usr/local/lib
 ## we only need this is if it is external, as otherwise link to R
 LIBINTL= 
 LIBM = -lm
 LIBR0 = -L"$(R_HOME)/lib$(R_ARCH)"
 LIBR1 = -lR
 LIBR = -L"$(R_HOME)/lib$(R_ARCH)" -lR
-LIBS =  -lpcre -llzma -lbz2 -lz -lrt -ldl -lm
+LIBS =  -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n
 ## needed by R CMD config
-LIBnn = lib64
+LIBnn = lib
 LIBTOOL = $(SHELL) "$(R_HOME)/bin/libtool"
 LTO = 
 ## needed to build applications linking to static libR
@@ -92,20 +93,20 @@ OBJCXX =
 R_ARCH = 
 RANLIB = ranlib
 SAFE_FFLAGS = -g -O2 -msse2 -mfpmath=sse
-SED = /usr/bin/sed
-SHELL = /bin/sh
+SED = /bin/sed
+SHELL = /bin/bash
 SHLIB_CFLAGS = 
 SHLIB_CXXFLAGS = 
 SHLIB_CXXLD = $(CXX)
 SHLIB_CXXLDFLAGS = -shared
-SHLIB_CXX98LD = $(CXX98) $(CXX98STD)
-SHLIB_CXX98LDFLAGS = -shared
 SHLIB_CXX11LD = $(CXX11) $(CXX11STD)
 SHLIB_CXX11LDFLAGS = -shared
 SHLIB_CXX14LD = $(CXX14) $(CXX14STD)
 SHLIB_CXX14LDFLAGS = -shared
 SHLIB_CXX17LD = $(CXX17) $(CXX17STD)
 SHLIB_CXX17LDFLAGS = -shared
+SHLIB_CXX20LD = $(CXX20) $(CXX20STD)
+SHLIB_CXX20LDFLAGS = -shared
 SHLIB_EXT = .so
 SHLIB_FFLAGS = 
 SHLIB_LD = $(CC)
@@ -119,19 +120,13 @@ SHLIB_OPENMP_CXXFLAGS = -fopenmp
 SHLIB_OPENMP_FFLAGS = -fopenmp
 STRIP_STATIC_LIB = strip --strip-debug
 STRIP_SHARED_LIB = strip --strip-unneeded
-TCLTK_CPPFLAGS = 
-TCLTK_LIBS = 
-YACC = byacc
+TCLTK_CPPFLAGS = -I/usr/include/tcl8.6 -I/usr/include/tcl8.6 
+TCLTK_LIBS = -L/usr/lib/x86_64-linux-gnu -ltcl8.6 -L/usr/lib/x86_64-linux-gnu -ltk8.6 -lX11 -lXss -lXext
+YACC = bison -y
 
-## Legacy settings:  no longer used by R as of 3.6.0
-## Setting FC often sets F77 (on Solaris make even if set)
-## so must follow FC in this file.
-F77 = gfortran
-FCPICFLAGS = -fpic
-F77_VISIBILITY = -fvisibility=hidden
+## Legacy settings: these might be used in a src/Makefile
 SHLIB_FCLD = $(FC)
 SHLIB_FCLDFLAGS = -shared
-SHLIB_OPENMP_FCFLAGS = -fopenmp
 
 
 ## for linking to libR.a
@@ -147,10 +142,14 @@ R_XTRA_CXXFLAGS =
 ## used for gfortran in R > 3.6.0
 R_XTRA_FFLAGS = -fno-optimize-sibling-calls
 
+## CXX98 is no longer supported, but packages may use it.
+SHLIB_CXX98LD = @SHLIB_CXX98LD@
+SHLIB_CXX98LDFLAGS = @SHLIB_CXX98LDFLAGS@
+
 ## SHLIB_CFLAGS SHLIB_CXXFLAGS SHLIB_FFLAGS are apparently currently unused
 ## SHLIB_CXXFLAGS is undocumented, there is no SHLIB_FCFLAGS
 ALL_CFLAGS =  $(PKG_CFLAGS) $(CPICFLAGS) $(SHLIB_CFLAGS) $(CFLAGS)
-ALL_CPPFLAGS =  -I"$(R_INCLUDE_DIR)" -DNDEBUG $(PKG_CPPFLAGS) $(CLINK_CPPFLAGS) $(CPPFLAGS)
+ALL_CPPFLAGS =  -I"$(R_INCLUDE_DIR)" -DNDEBUG $(PKG_CPPFLAGS) $(CLINK_CPPFLAGS) $(CPPFLAGS) 
 ALL_CXXFLAGS =  $(PKG_CXXFLAGS) $(CXXPICFLAGS) $(SHLIB_CXXFLAGS) $(CXXFLAGS)
 ALL_OBJCFLAGS = $(PKG_OBJCFLAGS) $(CPICFLAGS) $(SHLIB_CFLAGS) $(OBJCFLAGS)
 ALL_OBJCXXFLAGS = $(PKG_OBJCXXFLAGS) $(CXXPICFLAGS) $(SHLIB_CXXFLAGS) $(OBJCXXFLAGS)
