@@ -188,6 +188,7 @@ brews=(
     gdal
     git
     git-lfs
+    gnu-sed
     go
     gpatch
     grep
