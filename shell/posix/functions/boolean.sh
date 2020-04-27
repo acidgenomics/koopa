@@ -650,10 +650,16 @@ _koopa_is_recent() {
     #
     # @note Updated 2020-04-27.
     #
-    # Alternatively, can we use 'stat' to compare the modification time instead?
+    # Current approach uses GNU find to filter based on modification date.
+    #
+    # Alternatively, can we use 'stat' to compare the modification time to Unix
+    # epoch in seconds or with GNU date.
+    #
+    # @seealso
+    # - https://stackoverflow.com/a/32019461
     #
     # @examples
-    # _koopa_is_recent ~
+    # _koopa_is_recent ~/hello-world.txt
     # """
     local file
     file="${1:?}"
@@ -662,8 +668,8 @@ _koopa_is_recent() {
     local exists
     exists="$( \
         find "$file" \
-            -mindepth 1 \
-            -maxdepth 1 \
+            -mindepth 0 \
+            -maxdepth 0 \
             -mtime "-${days}" \
         2>/dev/null \
     )"
