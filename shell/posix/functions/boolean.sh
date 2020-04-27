@@ -644,6 +644,32 @@ _koopa_is_r_package_installed() {  # {{{1
     [ -d "${prefix}/${pkg}" ]
 }
 
+_koopa_is_recent() {
+    # """
+    # If the file exists and is more recent than 2 weeks old.
+    #
+    # @note Updated 2020-04-27.
+    #
+    # Alternatively, can we use 'stat' to compare the modification time instead?
+    #
+    # @examples
+    # _koopa_is_recent ~
+    # """
+    local file
+    file="${1:?}"
+    local days
+    days=14
+    local exists
+    exists="$( \
+        find "$file" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -mtime "-${days}" \
+        2>/dev/null \
+    )"
+    [ -n "$exists" ]
+}
+
 _koopa_is_rhel() {  # {{{1
     # """
     # Is the operating system RHEL?
