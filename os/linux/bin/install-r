@@ -7,6 +7,11 @@ source "${script_dir}/../include/header.sh"
 # """
 # Refer to the 'Installation + Administration' manual.
 #
+# See also:
+# - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
+# - https://support.rstudio.com/hc/en-us/articles/
+#       218004217-Building-R-from-source
+#
 # Using TeX Live 2013, we'll see this warning:
 #
 #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
