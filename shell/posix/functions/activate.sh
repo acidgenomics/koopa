@@ -406,7 +406,7 @@ _koopa_activate_homebrew_gnu_utils() {
     fi
 
     # sed
-    prefix="${homebrew_prefix}/opt/sed/libexec"
+    prefix="${homebrew_prefix}/opt/gnu-sed/libexec"
     if [ -d "$prefix" ]
     then
         _koopa_force_add_to_path_start "${prefix}/gnubin"
