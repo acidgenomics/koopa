@@ -21,10 +21,22 @@ _koopa_boolean_nounset() {  # {{{1
     _koopa_print "$bool"
 }
 
+_koopa_grepl() {  # {{{1
+    # """
+    # Evaluate whether a string contains a desired value.
+    # @note Updated 2020-04-27.
+    #
+    # POSIX-compliant function that mimics grepl functionality.
+    #
+    # @seealso grepl in R.
+    # """
+    test "${1#*$2}" != "$1"
+}
+
 _koopa_has_file_ext() {  # {{{1
     # """
     # Does the input contain a file extension?
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-27.
     #
     # Simply looks for a "." and returns true/false.
     # """
