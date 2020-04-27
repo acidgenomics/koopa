@@ -284,6 +284,9 @@ rustup="1.21.1"
 # https://www.gnu.org/software/screen/
 screen="4.8.0"
 
+# https://www.gnu.org/software/sed/
+sed="4.8"
+
 # https://github.com/koalaman/shellcheck/releases
 shellcheck="0.7.1"
 
