@@ -64,25 +64,27 @@ auto_update_index() {
     return 0
 }
 
-# FIXME Rework this.
-# FIXME On macOS this is tar --help instead of tar --version no?
-# FIXME Allow the user to recache here.
-# FIXME This attempts to set the tar flags for macOS/Linux.
 cache_tldr() {
     # """
     # Cache a local copy of the tldr-pages repo.
     #
     # @note Updated 2020-04-27.
     # """
-    _koopa_grepl \
-        "$(tar --version | head -n 1)" bsdtar \
-        || taropt='--wildcards --overwrite'
-    curl -sfL https://github.com/tldr-pages/tldr/tarball/master \
-        | tar xzf - \
-            --strip-components=2 \
-            -C "$configdir" \
-            "${taropt-}" \
-            '*/pages/'
+    local tmp_dir
+    tmp_dir="$(_koopa_tmp_dir)"
+    (
+        _koopa_cd_tmp_dir "$tmp_dir"
+        local url
+        url="https://github.com/tldr-pages/tldr/tarball/master"
+        local file
+        file="master.tar.gz"
+        _koopa_download "$url" "$file"
+        _koopa_extract "$file"
+        rsync -a \
+            "tldr-pages-tldr-"*"/pages/" \
+            "${configdir}/"
+    )
+    rm -fr "$tmp_dir"
     update_index
     return 0
 }
