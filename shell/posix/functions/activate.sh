@@ -405,6 +405,14 @@ _koopa_activate_homebrew_gnu_utils() {
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     fi
 
+    # sed
+    prefix="${homebrew_prefix}/opt/sed/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+
     # texinfo
     prefix="${homebrew_prefix}/opt/texinfo"
     if [ -d "$prefix" ]
