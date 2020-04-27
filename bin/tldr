@@ -10,14 +10,25 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 # http://github.com/raylee/tldr
 # """
 
-# FIXME Don't use echo here.
-
-_koopa_assert_is_installed curl tput
-
 
 
 # Functions  {{{1
 # ==============================================================================
+
+# Configuration  {{{2
+# ------------------------------------------------------------------------------
+
+config() {
+    # Local configuration.
+    config_dir="${XDG_CONFIG_HOME}/tldr"
+    index_file="${config_dir}/index.json"
+    platform="$(get_platform)"
+
+    # tldr URLs.
+    base_url="https://raw.githubusercontent.com/tldr-pages/tldr/master/pages"
+    index_json_url="https://raw.githubusercontent.com/tldr-pages/\
+tldr-pages.github.io/master/assets/index.json"
+}
 
 # Variables  {{{2
 # ------------------------------------------------------------------------------
@@ -61,8 +72,12 @@ auto_update_index() {
     #
     # @note Updated 2020-04-27.
     # """
-    # FIXME DEAL WITH GLOBAL HERE.
-    _koopa_is_recent "$index" || update_index
+    # FIXME THIS RECENT CHECK DOESN'T WORK.
+    if ! _koopa_is_recent "$index_file"
+    then
+        echo "FIXME"
+        update_index
+    fi
     return 0
 }
 
@@ -84,21 +99,10 @@ cache_tldr() {
         _koopa_extract "$file"
         rsync -a \
             "tldr-pages-tldr-"*"/pages/" \
-            "${configdir}/"
+            "${config_dir}/"
     )
     rm -fr "$tmp_dir"
     update_index
-    return 0
-}
-
-fetch_tldr() {
-    # """
-    # Fetch and individual tldr page.
-    #
-    # @note Updated 2020-04-27.
-    # """
-    curl -sf "https://raw.githubusercontent.com/tldr-pages/tldr/master/\
-pages/{${platform},common}/${1}.md"
     return 0
 }
 
@@ -109,150 +113,140 @@ get_tldr() {
     #
     # @note Updated 2020-04-27.
     # """
-    p="$(path_for_cmd "$1")"
-    cached="${configdir}/${p}"
-    _koopa_is_recent "$cached" || {
-        mkdir -p "$(dirname "$cached")"
-        curl -sf -o "$cached" "$base_url/$p"
-    }
-    # if the curl failed for some reason, keep cat from whinging
-    cat "$cached" 2>/dev/null
+    
+    # Get the relative path to subdirectory location.
+    # Note that we're re-using this in GitHub URL call below.
+    local p
+    p="$(get_tldr_path "${1:?}")"
+    
+    # File path for local cache file.
+    local cache_file
+    cache_file="${config_dir}/${p}"
+    
+    # Download missing file from GitHub, if not cached.
+    if ! _koopa_is_recent "$cache_file"
+    then
+        echo "FIXME AGAIN"
+        mkdir -p "$(dirname "$cache_file")"
+        local source_url
+        source_url="${base_url}/${p}"
+        _koopa_download "$source_url" "$cache_file"
+    fi
+    
+    cat "$cache_file"
+    
+    return 0
 }
 
-# FIXME Need to ensure we're handling the globals here.
+get_tldr_path() {
+    # """
+    # Get the platform key from 'index.json' and return preferred subpath.
+    # to tldrpage.
+    #
+    # @note Updated 2020-04-27.
+    # """
+
+    local cmd
+    cmd="${1:?}"
+    
+    # Parse the JSON file.
+    local desc
+    desc="$( \
+        tr '{' '\n' < "$index_file" \
+        | grep "\"name\":\"${cmd}\"" \
+    )"
+
+    # Use the platform-specific version of the tldr first.
+    local subdir
+    if _koopa_grepl "$desc" "$platform"
+    then
+        subdir="$platform"
+    elif _koopa_grepl "$desc" "common"
+    then
+        subdir="common"
+    else
+        _koopa_stop "Failed to locate documentation for '${cmd}'."
+    fi
+    
+    _koopa_print "${subdir}/${cmd}.md"
+}
+
 update_index() {
     # """
     # Update tldr index.
     #
     # @note Updated 2020-04-27.
     # """
-    curl -sf -o "$index" "$index_url"
-    local res
-    res="$?"
-    if [[ "$res" -eq 22 ]]
-    then
-        _koopa_stop "Could not download index from '${index_url}'."
-    fi
+    _koopa_download "$index_json_url" "$index_file"
     return 0
 }
 
-# Visual styles  {{{2
+# Runners  {{{2
 # ------------------------------------------------------------------------------
 
-code() {
+display_tldr() {
     # """
-    # Code block.
+    # Display tldr page.
     #
     # @note Updated 2020-04-27.
-    #
-    # Take everything between two backticks, capture it, and surround it with
-    # styling.
     # """
-    _koopa_print "$*" \
-        | sed "s/\`\([^\`]*\)\`/  ${scode}\1${reset}/g"
-}
+    local page
+    page="${1:?}"
 
-# FIXME Switch to using _koopa_h1 or something instead?
-heading() {
-    printf '%s\n' "${sheader}${*#??}$reset"
-}
+    # Reformat style tags, making text italic.
+    # This step is faster to across all lines in a single call.
+    local italic_start italic_end
+    italic_start="$(printf "\033[3m")"
+    italic_end="$(printf "\033[23m")"
+    page="$( \
+        _koopa_print "${page}" \
+            | sed "s/{{/${italic_start}/g;s/}}/${italic_end}/g" \
+    )"
 
-list_item() {
-    _koopa_print "${sdescription}$*$reset"
-}
+    code() {
+        _koopa_print_default_bold "$( \
+            _koopa_print "${1:?}" \
+                | sed "s/\`\([^\`]*\)\`/  \1/g" \
+        )"
+    }
 
-quotation() {
-    _koopa_print "${squote}${*#??}$reset"
-}
+    heading() {
+        _koopa_print_red_bold "${*#??}"
+    }
 
-style_params() {
-    printf '%s' "$*" \
-        | sed "s/{{/${sparam}/g;s/}}/${eparam}/g"
-}
+    list_item() {
+        _koopa_print "${1:-}"
+    }
 
-text() {
-    _koopa_print "$*"
-}
+    quotation() {
+        _koopa_print "${*#??}"
+    }
 
+    text() {
+        _koopa_print "${1:-}"
+    }
 
+    # Read lines into array.
+    mapfile -t lines < <(_koopa_print "$page")
 
-
-
-
-
-
-
-# FIXME NEED TO CLEAN THIS ONE UP.
-# Extract the platform key from index.json, return preferred subpath to tldrpage
-path_for_cmd() {
-    override="${configdir}/local/${1}.md"
-    if [[ -f "$override" ]]
-    then
-        echo "local/${1}.md"
-        return 0
-    fi
-
-    # results in, eg, "name":"netstat","platform":["linux","osx"]},
-    desc=$(tr '{' '\n' < $index | grep "\"name\":\"$1\"")
-    [ -z "$desc" ] && echo "-- not found --" && return
-
-    # use the platform specific version of the tldr first
-    if _koopa_grepl "$desc" "$platform"
-    then
-        echo "$platform/$1.md"
-    elif _koopa_grepl "$desc" "common"
-    then
-        echo "common/$1.md"
-    else
-        # take the first one so we can show something, but warn the user
-        p=$(echo "$desc" | cut -d '"' -f 8)
-        >&2 printf "${red}tldr page $1 not found in $platform or common, using page from platform $p instead$reset\n"
-        echo "$p/$1.md"
-    fi
-
-    return 0
-}
-
-# Runners  {{{1
-# ------------------------------------------------------------------------------
-
-# FIXME This parser isn't currently working.
-
-# An idiot-level recognition of tldr's markdown. Needs improvement, or
-# subcontracting out to a markdown -> ANSI formatting command
-display_tldr() {
-    last_token=''
-    page="$1"
-    page=$(style_params "$page")
-
-    # Read one line at a time, don't strip whitespace ('IFS='), and process
-    # last line even if it doesn't have a newline at the end.
-    printf %s "$page" | while IFS= read -r line || [ -n "$line" ]; do
-        # omit empty lines after list items
-        # FIXME IMPROVE THE NAME / STANDARDIZE THIS FUNCTION
-        trimmed=$(_koopa_trim_ws "$line")
-        [ -z "$trimmed" ] && [ "$last_token" = "list_item" ] && continue
-
+    # Process line-by-line.
+    for line in "${lines[@]}"
+    do
         case "$line" in
             \#*)
                 heading "$line"
-                last_token="heading"
                 ;;
             \>*)
                 quotation "$line"
-                last_token="quotation"
                 ;;
             -*)
                 list_item "$line"
-                last_token="list_item"
                 ;;
             \`*)
                 code "$line"
-                last_token="code"
                 ;;
             *)
                 text "$line"
-                last_token="text"
                 ;;
         esac
     done
@@ -270,7 +264,7 @@ list_pages() {
     do
         pages+=("$REPLY")
     done < <( \
-        find "$configdir" \
+        find "$config_dir" \
             -mindepth 1 \
             -type f \
             -iname "*.md" \
@@ -286,30 +280,25 @@ list_pages() {
 # Argument parsing  {{{1
 # ==============================================================================
 
-# FIXME Switch to other approach used in bash scripts.
-while [ $# -gt 0 ]
+while [[ "$#" -gt 0 ]]
 do
     case "$1" in
-        -l|--list)
-            list_pages
+        -c|-u|--cache|--update)
+            cache_tldr
             exit 0
             ;;
-        -n)
-            TLDR_CACHE=no
-            ;;
-        -u|-c|--cache|--update)
-            cache_tldr
+        -l|--list)
+            list_pages
             exit 0
             ;;
         *)
             # There are pages with hypens in them, such as 'git-tag'.
             # This converts 'tldr git tag' to the hyphenated version.
-            hyphenated=$(printf %s "$*" | tr ' ' '-')
-            page=${hyphenated:-''}
+            page="$(printf '%s' "$*" | tr ' ' '-')"
             break
             ;;
     esac
-    shift
+    shift 1
 done
 
 
@@ -317,72 +306,7 @@ done
 # Configuration  {{{1
 # ==============================================================================
 
-# FIXME MOVE THIS BACK TO CONFIG FUNCTION AND DECLARE HERE.
-
-# Local configuration.
-configdir="${XDG_CONFIG_HOME}/tldr"
-index="${configdir}/index.json"
-
-# tldr URLs.
-base_url="https://raw.githubusercontent.com/tldr-pages/tldr/master/pages"
-index_url="https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/index.json"
-
-platform="$(get_platform)"
-
-# Colors  {{{2
-# ------------------------------------------------------------------------------
-
-# FIXME REWORK THIS, TOO MESSY AND COMPLICATED.
-# FIXME Can we simplify and not use tput here?
-
-# Contents via http://mywiki.wooledge.org/BashFAQ/037.
-reset="$(    tput sgr0   || tput me      )"  # Reset cursor
-bold="$(     tput bold   || tput md      )"  # Start bold
-underline="$(tput smul   || tput us      )"  # Start underline
-
-default="$(  tput op                     )"
-back="$(     printf '\b' )"
-
-case "$TERM" in
-    *-m) ;;
-    *)
-        black="$(    tput setaf 0 || tput AF 0    )"
-        red="$(      tput setaf 1 || tput AF 1    )"
-        green="$(    tput setaf 2 || tput AF 2    )"
-        yellow="$(   tput setaf 3 || tput AF 3    )"
-        blue="$(     tput setaf 4 || tput AF 4    )"
-        magenta="$(  tput setaf 5 || tput AF 5    )"
-        cyan="$(     tput setaf 6 || tput AF 6    )"
-        white="$(    tput setaf 7 || tput AF 7    )"
-
-        onblue="$(   tput setab 4 || tput AB 4    )"
-        ongrey="$(   tput setab 7 || tput AB 7    )"
-        ;;
-esac
-
-# Italics  {{{2
-# ------------------------------------------------------------------------------
-
-# macOS termcap doesn't have italics. This adds support for iTerm2 and is
-# harmless on Terminal.app.
-if [[ "$platform" == "osx" ]]
-then
-    italic="$(printf "\033[3m")"                        # Start italic
-    eitalic="$(printf "\033[23m")"                      # End italic
-else
-    italic="$(   tput sitm   || tput ZH      )"         # Start italic
-    eitalic="$(  tput ritm   || tput ZH      )"         # End italic
-fi
-
-# FIXME Simplify this. Consolidate with koopa color approach.
-# FIXME JUST PASS THE VARIABLE IN DIRECTLY HERE.
-# Custom styling if set in environment variables.
-sheader="$red"
-squote="$underline"
-sdescription="$reset"
-scode="$bold"
-sparam="$italic"
-eparam="$eitalic"
+config
 
 
 
@@ -390,13 +314,17 @@ eparam="$eitalic"
 # ==============================================================================
 
 # Check if config folder exists, otherwise create it.
-if [[ ! -d "$configdir" ]]
+if [[ ! -d "$config_dir" ]]
 then
-    mkdir -p "$configdir"
+    mkdir -p "$config_dir"
     cache_tldr
 fi
 
-[[ ! -f "$index" ]] && update_index
+if [[ ! -f "$index_file" ]]
+then
+    echo "FIXME"
+    update_index
+fi
 auto_update_index
 
 
@@ -404,14 +332,7 @@ auto_update_index
 # Display tldr page  {{{1
 # ==============================================================================
 
-# If the environment variable 'TLDR_CACHE=no', then fetch the page directly from
-# GitHub; otherwise, use the cache.
-if [[ "${TLDR_CACHE-unset}" == "no" ]]
-then
-    tldr="$(fetch_tldr "$page")"
-else
-    tldr="$(get_tldr "$page")"
-fi
+tldr="$(get_tldr "$page")"
 
 if [[ -z "$tldr" ]]
 then
