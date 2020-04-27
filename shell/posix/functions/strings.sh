@@ -127,19 +127,11 @@ _koopa_sub() {  # {{{1
     return 0
 }
 
-_koopa_trim_trailing_ws() {
-    # """
-    # Remove trailing whitespace.
-    # @note Updated 2020-02-26.
-    # """
-    sed -i 's/[ \t]*$//' "$@"
-    return 0
-}
-
 _koopa_trim_ws() {  # {{{1
     # """
     # Trim leading and trailing white-space from string.
-    # @note Updated 2020-01-12.
+    #
+    # @note Updated 2020-04-27.
     #
     # This is an alternative to sed, awk, perl and other tools. The function
     # works by finding all leading and trailing white-space and removing it from
@@ -152,6 +144,5 @@ _koopa_trim_ws() {  # {{{1
     string="${1:?}"
     string="${string#${string%%[![:space:]]*}}"
     string="${string%${string##*[![:space:]]}}"
-    printf '%s\n' "$string"
-    return 0
+    _koopa_print "$string"
 }
