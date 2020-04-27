@@ -137,12 +137,17 @@ _koopa_trim_ws() {  # {{{1
     # works by finding all leading and trailing white-space and removing it from
     # the start and end of the string.
     #
+    # We're allowing empty string input in this function.
+    #
     # @examples
     # _koopa_trim_ws "    Hello,  World    "
     # """
     local string
-    string="${1:?}"
-    string="${string#${string%%[![:space:]]*}}"
-    string="${string%${string##*[![:space:]]}}"
+    string="${1:-}"
+    if [ -n "$string" ]
+    then
+        string="${string#${string%%[![:space:]]*}}"
+        string="${string%${string##*[![:space:]]}}"
+    fi
     _koopa_print "$string"
 }
