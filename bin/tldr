@@ -72,10 +72,8 @@ auto_update_index() {
     #
     # @note Updated 2020-04-27.
     # """
-    # FIXME THIS RECENT CHECK DOESN'T WORK.
     if ! _koopa_is_recent "$index_file"
     then
-        echo "FIXME"
         update_index
     fi
     return 0
@@ -211,7 +209,7 @@ display_tldr() {
     }
 
     heading() {
-        _koopa_print_red_bold "${*#??}"
+        _koopa_h1 "${*#??}"
     }
 
     list_item() {
@@ -322,7 +320,6 @@ fi
 
 if [[ ! -f "$index_file" ]]
 then
-    echo "FIXME"
     update_index
 fi
 auto_update_index
