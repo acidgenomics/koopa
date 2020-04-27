@@ -6,7 +6,7 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 # """
-# Modified version of tldr client by Ray Lee
+# Modified version of tldr client by Ray Lee.
 # http://github.com/raylee/tldr
 # """
 
@@ -58,9 +58,11 @@ get_platform() {
 auto_update_index() {
     # """
     # Auto-update index.
+    #
     # @note Updated 2020-04-27.
     # """
-    recent "$index" || update_index
+    # FIXME DEAL WITH GLOBAL HERE.
+    _koopa_is_recent "$index" || update_index
     return 0
 }
 
@@ -108,8 +110,8 @@ get_tldr() {
     # @note Updated 2020-04-27.
     # """
     p="$(path_for_cmd "$1")"
-    cached="$configdir/$p"
-    recent "$cached" || {
+    cached="${configdir}/${p}"
+    _koopa_is_recent "$cached" || {
         mkdir -p "$(dirname "$cached")"
         curl -sf -o "$cached" "$base_url/$p"
     }
@@ -117,14 +119,15 @@ get_tldr() {
     cat "$cached" 2>/dev/null
 }
 
-# If the file exists and is more recent than '$cache_days' old.
-recent() {
-    exists="$(find "$1" -mtime "-${cache_days}" 2>/dev/null)"
-    [[ -n "$exists" ]] && [[ -z "$force_update" ]]
-}
-
+# FIXME Need to ensure we're handling the globals here.
 update_index() {
+    # """
+    # Update tldr index.
+    #
+    # @note Updated 2020-04-27.
+    # """
     curl -sf -o "$index" "$index_url"
+    local res
     res="$?"
     if [[ "$res" -eq 22 ]]
     then
@@ -314,8 +317,23 @@ done
 # Configuration  {{{1
 # ==============================================================================
 
+# FIXME MOVE THIS BACK TO CONFIG FUNCTION AND DECLARE HERE.
+
+# Local configuration.
+configdir="${XDG_CONFIG_HOME}/tldr"
+index="${configdir}/index.json"
+
+# tldr URLs.
+base_url="https://raw.githubusercontent.com/tldr-pages/tldr/master/pages"
+index_url="https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/index.json"
+
+platform="$(get_platform)"
+
 # Colors  {{{2
 # ------------------------------------------------------------------------------
+
+# FIXME REWORK THIS, TOO MESSY AND COMPLICATED.
+# FIXME Can we simplify and not use tput here?
 
 # Contents via http://mywiki.wooledge.org/BashFAQ/037.
 reset="$(    tput sgr0   || tput me      )"  # Reset cursor
@@ -347,7 +365,7 @@ esac
 
 # macOS termcap doesn't have italics. This adds support for iTerm2 and is
 # harmless on Terminal.app.
-if [[ "$(get_platform)" == "osx" ]]
+if [[ "$platform" == "osx" ]]
 then
     italic="$(printf "\033[3m")"                        # Start italic
     eitalic="$(printf "\033[23m")"                      # End italic
@@ -356,6 +374,7 @@ else
     eitalic="$(  tput ritm   || tput ZH      )"         # End italic
 fi
 
+# FIXME Simplify this. Consolidate with koopa color approach.
 # FIXME JUST PASS THE VARIABLE IN DIRECTLY HERE.
 # Custom styling if set in environment variables.
 sheader="$red"
@@ -365,24 +384,10 @@ scode="$bold"
 sparam="$italic"
 eparam="$eitalic"
 
-# Local configuration.
-configdir="${XDG_CONFIG_HOME}/tldr"
-index="${configdir}/index.json"
-
-# tldr URLs.
-base_url="https://raw.githubusercontent.com/tldr-pages/tldr/master/pages"
-index_url="https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/index.json"
-
-platform="$(get_platform)"
-
 
 
 # Cache / index  {{{1
 # ==============================================================================
-
-# Note that these are currently hard-coded.
-cache_days=14
-force_update=''
 
 # Check if config folder exists, otherwise create it.
 if [[ ! -d "$configdir" ]]
