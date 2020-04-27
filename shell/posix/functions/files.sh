@@ -1,10 +1,30 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_basename() {  # {{{1
+    # """
+    # Extract the file basename.
+    # @note Updated 2020-04-27.
+    #
+    # Parameterized, supporting multiple basename extractions.
+    # """
+    if _koopa_is_installed basename
+    then
+        _koopa_print "$(basename -a "$@")"
+    else
+        local arg
+        for arg in "$@"
+        do
+            _koopa_print "${arg##*/}"
+        done
+    fi
+    return 0
+}
+
 _koopa_basename_sans_ext() {  # {{{1
     # """
     # Extract the file basename without extension.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-27.
     #
     # Examples:
     # _koopa_basename_sans_ext "dir/hello-world.txt"
@@ -15,24 +35,23 @@ _koopa_basename_sans_ext() {  # {{{1
     #
     # See also: _koopa_file_ext
     # """
-    local file
-    file="${1:?}"
-    local bn
-    bn="$(basename "$file")"
-    if ! _koopa_has_file_ext "$file"
-    then
-        _koopa_print "$bn"
-        return 0
-    fi
-    bn="${bn%.*}"
-    _koopa_print "$bn"
+    local file str
+    for file in "$@"
+    do
+        str="$(_koopa_basename "$file")"
+        if _koopa_has_file_ext "$str"
+        then
+            str="${str%.*}"
+        fi
+        _koopa_print "$str"
+    done
     return 0
 }
 
 _koopa_basename_sans_ext2() {  # {{{1
     # """
     # Extract the file basename prior to any dots in file name.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-27.
     #
     # Examples:
     # _koopa_basename_sans_ext2 "dir/hello-world.tar.gz"
@@ -40,16 +59,16 @@ _koopa_basename_sans_ext2() {  # {{{1
     #
     # See also: _koopa_file_ext2
     # """
-    local file
-    file="${1:?}"
-    local bn
-    bn="$(basename "$file")"
-    if ! _koopa_has_file_ext "$file"
-    then
-        _koopa_print "$bn"
-        return 0
-    fi
-    _koopa_print "$bn" | cut -d '.' -f 1
+    local file str
+    for file in "$@"
+    do
+        str="$(_koopa_basename "$file")"
+        if _koopa_has_file_ext "$str"
+        then
+            str="$(_koopa_print "$str" | cut -d '.' -f 1)"
+        fi
+        _koopa_print "$str"
+    done
     return 0
 }
 
@@ -76,7 +95,7 @@ _koopa_ensure_newline_at_end_of_file() {  # {{{1
 _koopa_file_ext() {  # {{{1
     # """
     # Extract the file extension from input.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-27.
     #
     # Examples:
     # _koopa_file_ext "hello-world.txt"
@@ -87,17 +106,24 @@ _koopa_file_ext() {  # {{{1
     #
     # See also: _koopa_basename_sans_ext
     # """
-    local file
-    file="${1:?}"
-    _koopa_has_file_ext "$file" || return 0
-    printf "%s\n" "${file##*.}"
+    local file x
+    for file in "$@"
+    do
+        if _koopa_has_file_ext "$file"
+        then
+            x="${file##*.}"
+        else
+            x=''
+        fi
+        _koopa_print "$x"
+    done
     return 0
 }
 
 _koopa_file_ext2() {  # {{{1
     # """
     # Extract the file extension after any dots in the file name.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-27.
     #
     # This assumes file names are not in dotted case.
     #
@@ -107,17 +133,30 @@ _koopa_file_ext2() {  # {{{1
     #
     # See also: _koopa_basename_sans_ext2
     # """
-    local file
-    file="${1:?}"
-    _koopa_has_file_ext "$file" || return 0
-    _koopa_print "$file" | cut -d '.' -f 2-
+    local file x
+    for file in "$@"
+    do
+        if _koopa_has_file_ext "$file"
+        then
+            x="$(_koopa_print "$file" | cut -d '.' -f 2-)"
+        else
+            x=''
+        fi
+        _koopa_print "$x"
+    done
     return 0
 }
 
 _koopa_find_and_replace_in_files() {  # {{{1
     # """
     # Find and replace inside files.
-    # @note Updated 2020-02-26.
+    # @note Updated 2020-04-27.
+    #
+    # Parameterized, supporting multiple files.
+    #
+    # This step requires GNU sed and won't work with BSD sed currently installed
+    # by default on macOS.
+    # https://stackoverflow.com/questions/4247068/
     # """
     local from
     from="${1:?}"
@@ -125,13 +164,18 @@ _koopa_find_and_replace_in_files() {  # {{{1
     to="${2:?}"
     shift 2
 
-    # Check for unescaped slashes.
-    if _koopa_print "$from" | grep -q "/" && _koopa_print "$from" | grep -Fqv "\\"
+    # Check for unescaped slashes in pattern matching.
+    # shellcheck disable=SC1003
+    if _koopa_print "$from" \
+        | grep -q '/' && _koopa_print "$from" \
+        | grep -Fqv '\'
     then
-        _koopa_stop "Unescaped '/' detected: '${from}'."
-    elif _koopa_print "$to" | grep -q "/" && _koopa_print "$to" | grep -Fqv "\\"
+        _koopa_stop "Unescaped slash detected: '${from}'."
+    elif _koopa_print "$to" \
+        | grep -q '/' && _koopa_print "$to" \
+        | grep -Fqv '\'
     then
-        _koopa_stop "Unescaped '/' detected: '${to}'."
+        _koopa_stop "Unescaped slash detected: '${to}'."
     fi
 
     local file
@@ -377,6 +421,38 @@ _koopa_line_count() {  # {{{1
     )"
 
     _koopa_print "$x"
+    return 0
+}
+
+_koopa_realpath() {  # {{{1
+    # """
+    # Real path to file/directory on disk.
+    # @note Updated 2020-04-27.
+    #
+    # Note that 'readlink -f' doesn't work on macOS.
+    #
+    # See also:
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/
+    #       run_tests.sh
+    # """
+    if _koopa_is_installed realpath
+    then
+        _koopa_print "$(realpath "$@")"
+    else
+        if _koopa_is_macos
+        then
+            local arg
+            for arg in "$@"
+            do
+                _koopa_print "$( \
+                    perl -MCwd -e 'print Cwd::abs_path shift' "$arg" \
+                )"
+            done
+        else
+            # Note that this will work on macOS if GNU coreutils are installed.
+            _koopa_print "$(readlink -f "$@")"
+        fi
+    fi
     return 0
 }
 
