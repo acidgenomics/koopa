@@ -124,7 +124,6 @@ get_tldr() {
     # Download missing file from GitHub, if not cached.
     if ! _koopa_is_recent "$cache_file"
     then
-        echo "FIXME AGAIN"
         mkdir -p "$(dirname "$cache_file")"
         local source_url
         source_url="${base_url}/${p}"
