@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-04-26.
+## Updated 2020-04-27.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -123,10 +123,7 @@ local({
 ## -----------------------------------------------------------------------------
 
 local({
-    if (
-        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))
-        ## > isTRUE(nzchar(Sys.which("conda")))
-    ) {
+    if (isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))) {
         conda <- TRUE
     } else {
         conda <- FALSE
@@ -213,10 +210,8 @@ local({
                 )
                 clangVersion <- numeric_version(clangVersion)
                 if (isTRUE(clangVersion >= 11L)) {
-                    ## R >= 4
                     clangBinDir <- file.path("", "usr", "bin")
                 } else {
-                    ## R < 4
                     clangBinDir <- file.path(
                         "", "usr", "local",
                         paste0("clang", clangVersion), "bin"
