@@ -116,7 +116,6 @@ _koopa_r_javareconf() {  # {{{1
     # > .jinit()
     # """
     local java_home r_exe
-
     r_exe="R"
 
     while (("$#"))
