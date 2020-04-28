@@ -4,7 +4,7 @@
 #
 # R was configured using the following call
 # (not including env. vars and site configuration)
-# configure  '--prefix=/usr' '--with-cairo' '--with-jpeglib' '--with-readline' '--with-tcltk' '--with-system-bzlib' '--with-system-pcre' '--with-system-zlib' '--mandir=/usr/share/man' '--infodir=/usr/share/info' '--datadir=/usr/share/R/share' '--includedir=/usr/share/R/include' '--with-blas' '--with-lapack' '--enable-R-profiling' '--enable-R-shlib' '--enable-memory-profiling' '--without-recommended-packages' '--build' 'x86_64-linux-gnu' 'build_alias=x86_64-linux-gnu' 'R_PRINTCMD=/usr/bin/lpr' 'R_PAPERSIZE=letter' 'TAR=/bin/tar' 'R_BROWSER=xdg-open' 'LIBnn=lib' 'JAVA_HOME=/usr/lib/jvm/default-java' 'R_SHELL=/bin/bash' 'CC=gcc -std=gnu99' 'CFLAGS=-g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g' 'LDFLAGS=-Wl,-Bsymbolic-functions -Wl,-z,relro' 'CPPFLAGS=' 'FC=gfortran' 'FCFLAGS=-g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong' 'CXX=g++' 'CXXFLAGS=-g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g'
+# configure  '--prefix=/usr' '--with-cairo' '--with-jpeglib' '--with-readline' '--with-tcltk' '--with-system-bzlib' '--with-system-pcre' '--with-system-zlib' '--mandir=/usr/share/man' '--infodir=/usr/share/info' '--datadir=/usr/share/R/share' '--includedir=/usr/share/R/include' '--with-blas' '--with-lapack' '--enable-R-profiling' '--enable-R-shlib' '--enable-memory-profiling' '--without-recommended-packages' '--build' 'x86_64-linux-gnu' 'build_alias=x86_64-linux-gnu' 'R_PRINTCMD=/usr/bin/lpr' 'R_PAPERSIZE=letter' 'TAR=/bin/tar' 'R_BROWSER=xdg-open' 'LIBnn=lib' 'JAVA_HOME=/usr/lib/jvm/default-java' 'R_SHELL=/bin/bash' 'CC=gcc -std=gnu99' 'CFLAGS=-g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g' 'LDFLAGS=-Wl,-Bsymbolic-functions -Wl,-z,relro' 'CPPFLAGS=' 'FC=gfortran' 'FCFLAGS=-g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong' 'CXX=g++' 'CXXFLAGS=-g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g'
 
 ## This fails if it contains spaces, or if it is quoted
 include $(R_SHARE_DIR)/make/vars.mk
@@ -13,31 +13,30 @@ AR = ar
 BLAS_LIBS = -lblas
 C_VISIBILITY = -fvisibility=hidden
 CC = gcc -std=gnu99
-CFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
+CFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
 CPICFLAGS = -fpic
 CPPFLAGS = 
 CXX = g++ -std=gnu++11
 ## Not used by anything in R, in particular not for the .cc.d rule
-## but used via R CMD config by several packages
 CXXCPP = $(CXX) -E
-CXXFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
+CXXFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
 CXXPICFLAGS = -fpic
+CXX98 = g++
+CXX98FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
+CXX98PICFLAGS = -fpic
+CXX98STD = -std=gnu++98
 CXX11 = g++
-CXX11FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
+CXX11FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
 CXX11PICFLAGS = -fpic
 CXX11STD = -std=gnu++11
 CXX14 = g++
-CXX14FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
+CXX14FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
 CXX14PICFLAGS = -fpic
 CXX14STD = -std=gnu++14
 CXX17 = g++
-CXX17FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
+CXX17FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
 CXX17PICFLAGS = -fpic
 CXX17STD = -std=gnu++17
-CXX20 = g++
-CXX20FLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g $(LTO)
-CXX20PICFLAGS = -fpic
-CXX20STD = -std=gnu++2a
 CXX_VISIBILITY = -fvisibility=hidden
 DYLIB_EXT = .so
 DYLIB_LD = $(CC)
@@ -50,10 +49,10 @@ ECHO_T =
 F_VISIBILITY = -fvisibility=hidden
 ## FC is the compiler used for all Fortran as from R 3.6.0
 FC = gfortran
-FCFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong $(LTO)
+FCFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong $(LTO)
 ## additional libs needed when linking with $(FC), e.g. on some Oracle compilers
 FCLIBS_XTRA = 
-FFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong $(LTO)
+FFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong $(LTO)
 FLIBS =  -lgfortran -lm -lquadmath
 FPICFLAGS = -fpic
 FOUNDATION_CPPFLAGS = 
@@ -76,7 +75,7 @@ LIBM = -lm
 LIBR0 = -L"$(R_HOME)/lib$(R_ARCH)"
 LIBR1 = -lR
 LIBR = -L"$(R_HOME)/lib$(R_ARCH)" -lR
-LIBS =  -lpcre2-8 -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n
+LIBS =  -lpcre2-8 -lpcre -llzma -lbz2 -lz -lrt -ldl -lm -licuuc -licui18n
 ## needed by R CMD config
 LIBnn = lib
 LIBTOOL = $(SHELL) "$(R_HOME)/bin/libtool"
@@ -92,21 +91,21 @@ OBJC_LIBS =
 OBJCXX = 
 R_ARCH = 
 RANLIB = ranlib
-SAFE_FFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-Do_dS_/r-base-4.0.0=. -fstack-protector-strong -msse2 -mfpmath=sse
+SAFE_FFLAGS = -g -O2 -fdebug-prefix-map=/build/r-base-V28x5H/r-base-3.6.3=. -fstack-protector-strong -msse2 -mfpmath=sse
 SED = /bin/sed
 SHELL = /bin/bash
 SHLIB_CFLAGS = 
 SHLIB_CXXFLAGS = 
 SHLIB_CXXLD = $(CXX)
 SHLIB_CXXLDFLAGS = -shared
+SHLIB_CXX98LD = $(CXX98) $(CXX98STD)
+SHLIB_CXX98LDFLAGS = -shared
 SHLIB_CXX11LD = $(CXX11) $(CXX11STD)
 SHLIB_CXX11LDFLAGS = -shared
 SHLIB_CXX14LD = $(CXX14) $(CXX14STD)
 SHLIB_CXX14LDFLAGS = -shared
 SHLIB_CXX17LD = $(CXX17) $(CXX17STD)
 SHLIB_CXX17LDFLAGS = -shared
-SHLIB_CXX20LD = $(CXX20) $(CXX20STD)
-SHLIB_CXX20LDFLAGS = -shared
 SHLIB_EXT = .so
 SHLIB_FFLAGS = 
 SHLIB_LD = $(CC)
@@ -124,9 +123,15 @@ TCLTK_CPPFLAGS = -I/usr/include/tcl8.6 -I/usr/include/tcl8.6
 TCLTK_LIBS = -L/usr/lib/x86_64-linux-gnu -ltcl8.6 -L/usr/lib/x86_64-linux-gnu -ltk8.6 -lX11 -lXss -lXext
 YACC = bison -y
 
-## Legacy settings: these might be used in a src/Makefile
+## Legacy settings:  no longer used by R as of 3.6.0
+## Setting FC often sets F77 (on Solaris make even if set)
+## so must follow FC in this file.
+F77 = gfortran
+FCPICFLAGS = -fpic
+F77_VISIBILITY = -fvisibility=hidden
 SHLIB_FCLD = $(FC)
 SHLIB_FCLDFLAGS = -shared
+SHLIB_OPENMP_FCFLAGS = -fopenmp
 
 
 ## for linking to libR.a
@@ -142,14 +147,10 @@ R_XTRA_CXXFLAGS =
 ## used for gfortran in R > 3.6.0
 R_XTRA_FFLAGS = -fno-optimize-sibling-calls
 
-## CXX98 is no longer supported, but packages may use it.
-SHLIB_CXX98LD = @SHLIB_CXX98LD@
-SHLIB_CXX98LDFLAGS = @SHLIB_CXX98LDFLAGS@
-
 ## SHLIB_CFLAGS SHLIB_CXXFLAGS SHLIB_FFLAGS are apparently currently unused
 ## SHLIB_CXXFLAGS is undocumented, there is no SHLIB_FCFLAGS
 ALL_CFLAGS =  $(PKG_CFLAGS) $(CPICFLAGS) $(SHLIB_CFLAGS) $(CFLAGS)
-ALL_CPPFLAGS =  -I"$(R_INCLUDE_DIR)" -DNDEBUG $(PKG_CPPFLAGS) $(CLINK_CPPFLAGS) $(CPPFLAGS) 
+ALL_CPPFLAGS =  -I"$(R_INCLUDE_DIR)" -DNDEBUG $(PKG_CPPFLAGS) $(CLINK_CPPFLAGS) $(CPPFLAGS)
 ALL_CXXFLAGS =  $(PKG_CXXFLAGS) $(CXXPICFLAGS) $(SHLIB_CXXFLAGS) $(CXXFLAGS)
 ALL_OBJCFLAGS = $(PKG_OBJCFLAGS) $(CPICFLAGS) $(SHLIB_CFLAGS) $(OBJCFLAGS)
 ALL_OBJCXXFLAGS = $(PKG_OBJCXXFLAGS) $(CXXPICFLAGS) $(SHLIB_CXXFLAGS) $(OBJCXXFLAGS)
