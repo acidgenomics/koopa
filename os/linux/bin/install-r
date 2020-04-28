@@ -7,20 +7,43 @@ source "${script_dir}/../include/header.sh"
 # """
 # Refer to the 'Installation + Administration' manual.
 #
+# See also:
+# - https://cran.r-project.org/doc/manuals/r-release/R-admin.html
+# - https://support.rstudio.com/hc/en-us/articles/
+#       218004217-Building-R-from-source
+#
 # Using TeX Live 2013, we'll see this warning:
 #
 #     configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF
 #     vignettes and package manuals will not be rendered optimally
-#"""
+# """
 
-if _koopa_is_alpine || _koopa_is_arch || _koopa_is_debian
-then
-    _koopa_note "Use system R package instead. Skipping."
-    exit 0
-fi
+link_cellar=1
+
+while (("$#"))
+do
+    case "$1" in
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
 
 name="r"
-version="$(_koopa_variable "$name")"
+if [[ -n "${version:-}" ]]
+then
+    link_cellar=0
+else
+    version="$(_koopa_variable "$name")"
+fi
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 
 _koopa_exit_if_dir "$prefix"
@@ -30,7 +53,6 @@ _koopa_h1 "Installing R ${version} at '${prefix}'."
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
 _koopa_activate_openjdk
-# > _koopa_assert_is_installed java javac tex
 
 jobs="$(_koopa_cpu_count)"
 major_version="$(_koopa_major_version "$version")"
@@ -48,19 +70,27 @@ tmp_dir="$(_koopa_tmp_dir)"
     # Fix for reg-tests-1d.R error, due to unset TZ variable.
     # https://stackoverflow.com/questions/46413691
     export TZ="America/New_York"
-    ./configure \
-        --enable-BLAS-shlib \
-        --enable-R-profiling \
-        --enable-R-shlib \
-        --enable-memory-profiling \
-        --prefix="$prefix" \
-        --with-blas \
-        --with-cairo \
-        --with-jpeglib \
-        --with-lapack \
-        --with-readline \
-        --with-tcltk \
-        --with-x="no"
+    flags=(
+        "--enable-R-profiling"
+        "--enable-R-shlib"
+        "--enable-memory-profiling"
+        "--prefix=${prefix}"
+        "--with-blas"
+        "--with-cairo"
+        "--with-jpeglib"
+        "--with-lapack"
+        "--with-readline"
+        "--with-tcltk"
+        "--with-x=no"
+    )
+    # Need to modify BLAS configuration handling specificallly on Debian.
+    if ! _koopa_is_debian
+    then
+        flags+=(
+            "--enable-BLAS-shlib"
+        )
+    fi
+    ./configure "${flags[@]}"
     make --jobs="$jobs"
     # > make check
     make install
@@ -68,12 +98,13 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-# We need to run this first to pick up R_HOME correctly.
-_koopa_link_cellar "$name" "$version"
+# Update R configuration.
+r_exe="${prefix}/bin/R"
+_koopa_update_r_config "$r_exe"
 
-_koopa_update_r_config
-
-# Run again to ensure R site config files propagate correctly.
-_koopa_link_cellar "$name" "$version"
+if [[ "$link_cellar" -eq 1 ]]
+then
+    _koopa_link_cellar "$name" "$version"
+fi
 
 _koopa_install_success "$name"

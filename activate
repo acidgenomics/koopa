@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-04-25.
+    Updated 2020-04-28.
 EOF
 }
 
@@ -71,7 +71,11 @@ unset -f usage
 # ==============================================================================
 
 # Ensure 'USER' global is defined, for user-specific checks below.
-[ -z "${USER:-}" ] && USER="$(id -un)" && export USER
+if [ -z "${USER:-}" ]
+then
+    USER="$(id -un)"
+fi
+export USER
 
 # Interactive  {{{2
 # ------------------------------------------------------------------------------

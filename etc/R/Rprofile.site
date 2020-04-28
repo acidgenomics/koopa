@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-04-12.
+## Updated 2020-04-28.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -53,9 +53,6 @@
 
 ## Run these configuration options outside of `.First()` call, so user-specific
 ## `~/.Rprofile` file will pick them up.
-
-## Mike's user-specific Rprofile file checks for value.
-options("rprofile.site" = TRUE)
 
 ## Hidden environment  {{{2
 ## -----------------------------------------------------------------------------
@@ -123,10 +120,7 @@ local({
 ## -----------------------------------------------------------------------------
 
 local({
-    if (
-        isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))
-        ## > isTRUE(nzchar(Sys.which("conda")))
-    ) {
+    if (isTRUE(nzchar(Sys.getenv("CONDA_DEFAULT_ENV")))) {
         conda <- TRUE
     } else {
         conda <- FALSE
@@ -199,24 +193,30 @@ local({
                     "SDKs",
                     "MacOSX.sdk"
                 )))) {
-                    warning(
+                    stop(
                         "Failed to detect Xcode CLT.\n",
                         "Run `xcode-select --install` to install."
                     )
                 }
                 ## Use recommended CRAN compiler settings.
-                if (.rprofile[["rVersionShort"]] == "3.5") {
-                    clangVersion <- "6"
-                } else if (.rprofile[["rVersionShort"]] == "3.6") {
-                    clangVersion <- "7"
-                }
-                clangBinDir <- file.path(
-                    "", "usr", "local",
-                    paste0("clang", clangVersion), "bin"
+                clangVersion <- switch(
+                    EXPR = as.character(.rprofile[["rVersionShort"]]),
+                    "3.5" = "6",  # CRAN
+                    "3.6" = "7",  # CRAN
+                    "4.0" = "11"  # Xcode
                 )
-                if (!identical(
-                    x = Sys.which(c("clang", "clang++", "gfortran")),
-                    y = c(
+                clangVersion <- numeric_version(clangVersion)
+                if (isTRUE(clangVersion >= 11L)) {
+                    clangBinDir <- file.path("", "usr", "bin")
+                } else {
+                    clangBinDir <- file.path(
+                        "", "usr", "local",
+                        paste0("clang", clangVersion), "bin"
+                    )
+                }
+                which <- c("clang", "clang++", "gfortran")
+                current <- Sys.which(which)
+                expected <- c(
                         "clang"    = file.path(clangBinDir, "clang"),
                         "clang++"  = file.path(clangBinDir, "clang++"),
                         "gfortran" = file.path(
@@ -224,20 +224,30 @@ local({
                             "gfortran", "bin", "gfortran"
                         )
                     )
-                )) {
-                    warning(
-                        "Failed to detect CRAN clang and gfortran.\n",
-                        "Install development tools and libraries from:\n",
-                        "https://cran.r-project.org/bin/macosx/tools/"
-                    )
-                }
-                stopifnot(all(nzchar(
-                    Sys.which(c(
-                        "clang",
-                        "clang++",
-                        "gfortran"
+                if (!identical(current, expected)) {
+                    stop(paste(
+                        "Failed to detect CRAN clang and gfortran.",
+                        "",
+                        "Current:",
+                        paste(
+                            utils::capture.output(print(current)),
+                            collapse = "\n"
+                        ),
+                        "",
+                        "Expected:",
+                        paste(
+                            utils::capture.output(print(expected)),
+                            collapse = "\n"
+                        ),
+                        "",
+                        "Symlink of 'etc' may be required in R_HOME.",
+                        "",
+                        "Install development tools and libraries from:",
+                        "  - http://mac.r-project.org/tools/",
+                        "  - https://cran.r-project.org/bin/macosx/tools/",
+                        sep = "\n"
                     ))
-                )))
+                }
                 assign(
                     x = "clangBinDir",
                     value = clangBinDir,
@@ -249,19 +259,34 @@ local({
                     envir = .rprofile
                 )
             } else if (isTRUE(.rprofile[["linux"]])) {
-                stopifnot(all(nzchar(
-                    Sys.which(c(
-                        "g++",
-                        "gcc",
-                        "gfortran"
-                    ))
-                )))
+                which <- c("g++", "gcc", "gfortran")
+                current <- Sys.which(which)
             }
+            stopifnot(all(nzchar(current)))
         }
     })
 
     ## Library path  {{{2
     ## -------------------------------------------------------------------------
+
+    ## Check that versioned library is defined and exists on disk.
+    local({
+        if (isTRUE(.rprofile[["macos"]])) {
+            ## macOS (user library).
+            libVar <- "R_LIBS_USER"
+        } else {
+            ## Linux (shared site library).
+            libVar <- "R_LIBS_SITE"
+        }
+        lib <- Sys.getenv(libVar)
+        if (!isTRUE(dir.exists(lib))) {
+            stop(paste0(
+                "R package library ",
+                "(", libVar, ") ",
+                "does not exist: '", lib, "'."
+            ))
+        }
+    })
 
     ## Check that library matches R version.
     local({
@@ -273,7 +298,7 @@ local({
                 ## User library.
                 !any(grepl(pattern = .rprofile[["rVersionShort"]], x = libs))
             ) {
-                warning(sprintf(
+                stop(sprintf(
                     "Failed to detect R %s library in '.libPaths()':\n%s",
                     .rprofile[["rVersionShort"]],
                     paste(libs, collapse = "\n")

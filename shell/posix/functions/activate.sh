@@ -266,23 +266,31 @@ _koopa_activate_ensembl_perl_api() {  # {{{1
 _koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-03-27.
+    #
+    # @note Updated 2020-04-28.
     #
     # Currently Bash and Zsh are supported.
     #
-    # See also:
-    # https://github.com/junegunn/fzf
+    # Shell lockout has been observed on Ubuntu unless we disable 'set -e'.
+    #
+    # @seealso
+    # - https://github.com/junegunn/fzf
     # """
-    local prefix
+    local nounset prefix script shell
+
     prefix="$(_koopa_fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
-    local shell
-    shell="$(_koopa_shell)"
-    local nounset
+
     nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    local script
+    shell="$(_koopa_shell)"
+
+    if [ "$nounset" -eq 1 ]
+    then
+        set +e
+        set +u
+    fi
+
     # Auto-completion.
     script="${prefix}/shell/completion.${shell}"
     if [ -f "$script" ]
@@ -290,6 +298,7 @@ _koopa_activate_fzf() {  # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
+
     # Key bindings.
     script="${prefix}/shell/key-bindings.${shell}"
     if [ -f "$script" ]
@@ -297,7 +306,13 @@ _koopa_activate_fzf() {  # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
-    [ "$nounset" -eq 1 ] && set -u
+
+    if [ "$nounset" -eq 1 ]
+    then
+        set -e
+        set -u
+    fi
+
     return 0
 }
 
@@ -347,7 +362,7 @@ _koopa_activate_homebrew() {  # {{{1
 _koopa_activate_homebrew_gnu_utils() {
     # """
     # Activate Homebrew GNU utils.
-    # @note Updated 2020-03-03.
+    # @note Updated 2020-04-27.
     #
     # Linked using 'g' prefix by default.
     #
@@ -357,6 +372,11 @@ _koopa_activate_homebrew_gnu_utils() {
     # - brew info binutils
     # - brew info coreutils
     # - brew info findutils
+    # - brew info gnu-sed
+    # - brew info gnu-tar
+    # - brew info gnu-time
+    # - brew info gnu-units
+    # - brew info gnu-which
     # - brew info grep
     # - brew info libtool
     # - brew info make
@@ -405,12 +425,52 @@ _koopa_activate_homebrew_gnu_utils() {
         _koopa_force_add_to_manpath_start "${prefix}/gnuman"
     fi
 
+    # sed
+    prefix="${homebrew_prefix}/opt/gnu-sed/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+
+    # tar
+    prefix="${homebrew_prefix}/opt/gnu-tar/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+
     # texinfo
     prefix="${homebrew_prefix}/opt/texinfo"
     if [ -d "$prefix" ]
     then
         _koopa_force_add_to_path_start "${prefix}/bin"
     fi
+    
+    # time
+    # > prefix="${homebrew_prefix}/opt/gnu-time/libexec"
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     _koopa_force_add_to_path_start "${prefix}/gnubin"
+    # >     _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    # > fi
+    
+    # units
+    prefix="${homebrew_prefix}/opt/gnu-units/libexec"
+    if [ -d "$prefix" ]
+    then
+        _koopa_force_add_to_path_start "${prefix}/gnubin"
+        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    fi
+    
+    # which
+    # > prefix="${homebrew_prefix}/opt/gnu-which/libexec"
+    # > if [ -d "$prefix" ]
+    # > then
+    # >     _koopa_force_add_to_path_start "${prefix}/gnubin"
+    # >     _koopa_force_add_to_manpath_start "${prefix}/gnuman"
+    # > fi
 
     return 0
 }

@@ -188,6 +188,11 @@ brews=(
     gdal
     git
     git-lfs
+    gnu-sed
+    gnu-tar
+    gnu-time
+    gnu-units
+    gnu-which
     go
     gpatch
     grep
