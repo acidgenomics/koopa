@@ -1,4 +1,4 @@
-: ${JAVA_HOME=/n/opt/java/openjdk/14.0.1}
+: ${JAVA_HOME=/usr/local/opt/java/openjdk/latest}
 : ${R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/lib/server}
 if test -n "/usr/local/lib:/usr/lib/x86_64-linux-gnu"; then
 : ${R_LD_LIBRARY_PATH=${R_HOME}/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu}
