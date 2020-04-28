@@ -2,6 +2,6 @@
 
 # koopa shell
 # https://koopa.acidgenomics.com/
-KOOPA_PREFIX="/usr/local/koopa"
+# > export KOOPA_TEST=1
 # shellcheck source=/dev/null
-. "${KOOPA_PREFIX}/activate"
+. "/usr/local/koopa/activate"
