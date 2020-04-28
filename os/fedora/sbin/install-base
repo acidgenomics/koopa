@@ -78,14 +78,14 @@ then
     sudo dnf -y groupinstall "Development Tools"
     pkgs+=(
         bzip2-devel
-        # Required to build udunits.
-        expat-devel
+        expat-devel  # udunits
         gmp-devel
         gnutls-devel
         gsl-devel
         libcurl-devel
         libevent-devel
         libffi-devel
+        libicu-devel  # rJava
         libseccomp-devel
         libtiff-devel
         libuuid-devel
