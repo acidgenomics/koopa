@@ -431,9 +431,15 @@ install-python
 # from source on other Linux distros.
 if [[ "$bioconductor" -eq 0 ]]
 then
-    # Alternatively, for Debian/Ubuntu, consider using 'install-r-cran' to
-    # install the official CRAN binary package by default instead.
+    # Install R CRAN binary.
+    # Note that this version may lag behind for some platforms.
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+    then
+        _koopa_run_if_installed install-r-cran
+    fi
+    # Install latest version of R from source.
     install-r
+    # Install RStudio Server and Shiny Server.
     if [[ "$compact" -eq 0 ]]
     then
         _koopa_run_if_installed \
