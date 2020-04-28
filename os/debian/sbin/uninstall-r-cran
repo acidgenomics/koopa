@@ -13,7 +13,6 @@ _koopa_assert_has_no_envs
 
 sudo rm -frv \
     /etc/R \
-    /etc/apt/sources.list.d/r.list \
     /usr/lib/R/etc
 
 sudo apt-get update
