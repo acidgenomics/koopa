@@ -4,13 +4,22 @@
 _koopa_r_home() {  # {{{1
     # """
     # R home prefix.
-    # @note Updated 2020-04-25.
+    #
+    # @note Updated 2020-04-28.
+    #
+    # We're suppressing errors here that can pop up if 'etc' isn't linked yet
+    # after a clean install. Can warn about ldpaths missing.
     # """
     local rscript_exe
     rscript_exe="${1:-Rscript}"
     _koopa_is_installed "$rscript_exe" || return 1
     local home
-    home="$("$rscript_exe" --vanilla -e 'cat(Sys.getenv("R_HOME"))')"
+    home="$( \
+        "$rscript_exe" \
+            --vanilla \
+            -e 'cat(Sys.getenv("R_HOME"))' \
+        2>/dev/null \
+    )"
     [ -d "$home" ] || return 1
     _koopa_print "$home"
     return 0

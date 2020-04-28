@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name_fancy="R CRAN binary"
+
+_koopa_uninstall_start "$name_fancy"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+sudo rm -frv \
+    /etc/R \
+    /etc/apt/sources.list.d/r.list \
+    /usr/lib/R/etc
+
+sudo apt-get update
+sudo apt-get -y remove 'r-*'
+sudo apt-get -y autoremove
+
+_koopa_uninstall_success "$name_fancy"
