@@ -1,4 +1,4 @@
-: ${JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_241.jdk/Contents/Home/jre}
+: ${JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-14.0.1.jdk/Contents/Home}
 : ${R_JAVA_LD_LIBRARY_PATH=${JAVA_HOME}/lib/server}
 if test -n ""; then
 : ${R_LD_LIBRARY_PATH=${R_HOME}/lib:}
