@@ -34,5 +34,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
             r-base \
             r-base-dev
 
-# FIXME
-# _koopa_update_r_config "$r_exe"
+_koopa_update_r_config "$r_exe"
