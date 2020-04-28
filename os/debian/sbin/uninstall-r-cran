@@ -16,7 +16,7 @@ sudo rm -frv \
     /usr/lib/R/etc
 
 sudo apt-get update
-sudo apt-get -y remove 'r-*'
+sudo apt-get -y remove --purge 'r-*'
 sudo apt-get -y autoremove
 
 _koopa_uninstall_success "$name_fancy"
