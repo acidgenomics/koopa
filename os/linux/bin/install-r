@@ -98,10 +98,9 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-# FIXME Need to rethink this approach.
-# FIXME Need to allow passthrough of R path here.
-# FIXME Pass a cellar flag here instead.
-_koopa_update_r_config "$prefix"
+# Update R configuration.
+r_exe="${prefix}/bin/R"
+_koopa_update_r_config "$r_exe"
 
 if [[ "$link_cellar" -eq 1 ]]
 then
