@@ -24,14 +24,22 @@ sudo rm -frv \
 _koopa_apt_import_r_key
 _koopa_apt_add_r_repo
 
+# Debian 10 (buster) / R 4.0.0 error:
+# r-base : Depends: r-recommended (= 4.0.0-1~bustercran.0) but it is not going
+# to be installed.
+#
+# Temporary fix: just use 'r-base-dev' instead.
+pkgs=(
+    # r-base
+    r-base-dev
+)
+
 sudo apt-get update
 sudo DEBIAN_FRONTEND=noninteractive \
     apt-get \
         --no-install-recommends \
         --quiet \
         --yes \
-        install \
-            r-base \
-            r-base-dev
+        install "${pkgs[@]}"
 
 _koopa_update_r_config "$r_exe"
