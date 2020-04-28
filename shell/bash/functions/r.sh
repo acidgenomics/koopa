@@ -178,105 +178,67 @@ _koopa_r_javareconf() {  # {{{1
     return 0
 }
 
-
-
-
-# FIXME Can harden and move to bash instead.
-# FIXME Need to rethink the R_HOME support approach here.
-# FIXME USE PREFIX HERE INSTEAD OF R_HOME.
-# FIXME Need to allow user to disable cellar support here.
 _koopa_update_r_config() {  # {{{1
     # """
+    # Update R configuration.
+    #
+    # @note Updated 2020-04-27.
+    #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
-    # @note Updated 2020-04-25.
     # """
+    _koopa_h1 "Updating R configuration."
 
-
-    # FIXME Allow the user to pass link-cellar flag here.
-    # FIXME Use 'no-link-cellar' to disable?
-
-
-    local prefix r_exe r_home
-
-    prefix="${1:-}"
-    if [[ -n "$prefix" ]]
+    # Locate R command.
+    local r_exe
+    r_exe="${1:-}"
+    if [[ -z "$r_exe" ]]
     then
-        echo "FIXME"
-    else
-        r_exe="$(_koopa_which R)"
+        r_exe="$(_koopa_which_realpath R)"
     fi
 
-    # FIXME
-    prefix="/usr/local"
+    # Locate Rscript command.
+    local rscript_exe
+    rscript_exe="${r_exe}script"
 
-    local r_exe
-    r_exe="${prefix}/bin/R"
-    _koopa_is_installed "$r_exe" || return 0
-
-
-    # FIXME Set R_HOME?
-
-
-
-
+    _koopa_assert_is_installed "$r_exe" "$rscript_exe"
 
     local r_home
+    r_home="$(_koopa_r_home "$rscript_exe")"
 
-    # This represents the make prefix (e.g. '/usr/local').
-    # For CRAN binary package, this should be '/usr'.
-    local prefix
-    prefix="${1:-}"
-    if [ -n "${prefix}" ]
+    _koopa_dl "R home" "$r_home"
+    _koopa_dl "R path" "$r_exe"
+    _koopa_dl "Rscript path" "$rscript_exe"
+
+    if _koopa_is_cellar "$r_exe"
     then
-        # Double check for R < 4.0 that this isn't lib64.
-        r_home="${prefix}/lib/R"
-    else
-        _koopa_is_installed R || return 1
-        r_home="$(_koopa_r_home)"
-    fi
-
-
-    # Check that R home exists as expected.
-    [ -d "$r_home" ] || return 1
-    [ -x "${r_home}/bin/R" ] || return 1
-
-
-    # FIXME Need to rethink this approach...
-    # FIXME Pass r_exe below...
-
-
-
-    if _koopa_is_cellar R
-    then
+        # Ensure that everyone in R home is writable.
         _koopa_set_permissions --recursive "$r_home"
+
+        # Ensure that (Debian) system 'etc' directories are removed.
         local make_prefix
         make_prefix="$(_koopa_make_prefix)"
+
         local etc_prefix
         etc_prefix="${make_prefix}/lib/R/etc"
-        if [ -d "$etc_prefix" ] && [ ! -L "$etc_prefix" ]
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
             _koopa_rm "$etc_prefix"
         fi
+
         etc_prefix="${make_prefix}/lib64/R/etc"
-        if [ -d "$etc_prefix" ] && [ ! -L "$etc_prefix" ]
+        if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
             _koopa_rm "$etc_prefix"
         fi
     else
-        if [ -d '/usr/lib/R' ]
-        then
-            sudo chown -Rh 'root:root' '/usr/lib/R'
-            sudo chmod -R 'g-w' '/usr/lib/R'
-        fi
-        if [ -d '/usr/share/R' ]
-        then
-            sudo chown -Rh 'root:root' '/usr/share/R'
-            sudo chmod -R 'g-w' '/usr/share/R'
-            # Need to ensure group write so package index gets updated.
-            _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
-        fi
         # Ensure system package library is writable.
         _koopa_set_permissions --recursive "${r_home}/library"
+
+        # Need to ensure group write so package index gets updated.
+        if [[ -d '/usr/share/R' ]]
+        then
+            _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
+        fi
     fi
 
     _koopa_link_r_etc "$r_home"
