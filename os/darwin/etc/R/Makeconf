@@ -58,14 +58,14 @@ FLIBS =  -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/
 FPICFLAGS = -fPIC
 FOUNDATION_CPPFLAGS = 
 FOUNDATION_LIBS = -framework Foundation
-JAR = /usr/bin/jar
-JAVA = /usr/bin/java
-JAVAC = /usr/bin/javac
-JAVAH = /usr/bin/javah
+JAR = /Library/Java/JavaVirtualMachines/adoptopenjdk-14.0.1.jdk/Contents/Home/bin/jar
+JAVA = /Library/Java/JavaVirtualMachines/adoptopenjdk-14.0.1.jdk/Contents/Home/bin/java
+JAVAC = /Library/Java/JavaVirtualMachines/adoptopenjdk-14.0.1.jdk/Contents/Home/bin/javac
+JAVAH = /Library/Java/JavaVirtualMachines/adoptopenjdk-14.0.1.jdk/Contents/Home/bin/javah
 ## JAVA_HOME might be used in the next three.  
 ## They are for packages 'JavaGD' and 'rJava'
-JAVA_HOME = /Library/Java/JavaVirtualMachines/jdk1.8.0_241.jdk/Contents/Home/jre
-JAVA_CPPFLAGS = -I$(JAVA_HOME)/../include -I$(JAVA_HOME)/../include/darwin
+JAVA_HOME = /Library/Java/JavaVirtualMachines/adoptopenjdk-14.0.1.jdk/Contents/Home
+JAVA_CPPFLAGS = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/darwin
 JAVA_LIBS = -L$(JAVA_HOME)/lib/server -ljvm
 JAVA_LD_LIBRARY_PATH = $(JAVA_HOME)/lib/server
 LAPACK_LIBS = -L"$(R_HOME)/lib$(R_ARCH)" -lRlapack
