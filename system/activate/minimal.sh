@@ -22,36 +22,72 @@ fi
 # This variables are used by some koopa scripts, so ensure they're always
 # consistently exported across platforms.
 
-# GROUP
-[ -z "${GROUP:-}" ] && GROUP="$(id -gn)"
+# GROUP  {{{2
+# ------------------------------------------------------------------------------
 
-# HOSTNAME
-[ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)"
+if [ -z "${GROUP:-}" ]
+then
+    GROUP="$(id -gn)"
+fi
+export GROUP
+
+# HOSTNAME  {{{2
+# ------------------------------------------------------------------------------
+
+if [ -z "${HOSTNAME:-}" ]
+then
+    HOSTNAME="$(uname -n)"
+fi
 export HOSTNAME
 
-# OSTYPE
+# OSTYPE  {{{2
+# ------------------------------------------------------------------------------
+
 # Automatically set by bash and zsh.
-[ -z "${OSTYPE:-}" ] && OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
+if [ -z "${OSTYPE:-}" ]
+then
+    OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
+fi
 export OSTYPE
 
-# SHELL
+# SHELL  {{{2
+# ------------------------------------------------------------------------------
+
 # Some POSIX shells, such as Dash, don't export this by default.
 # Note that this doesn't currently get set by RStudio terminal.
-SHELL="$(_koopa_which_realpath "$KOOPA_SHELL")"
+if [ -z "${SHELL:-}" ]
+then
+    SHELL="$(_koopa_which "$KOOPA_SHELL")"
+fi
 export SHELL
 
-# TMPDIR
-[ -z "${TMPDIR:-}" ] && TMPDIR="/tmp"
+# TMPDIR  {{{2
+# ------------------------------------------------------------------------------
+
+if [ -z "${TMPDIR:-}" ]
+then
+    TMPDIR="/tmp"
+fi
 export TMPDIR
 
-# TODAY
+# TODAY  {{{2
+# ------------------------------------------------------------------------------
+
 # Current date. Alternatively, can use '%F' shorthand.
-[ -z "${TODAY:-}" ] && TODAY="$(date +%Y-%m-%d)"
+if [ -z "${TODAY:-}" ]
+then
+    TODAY="$(date +%Y-%m-%d)"
+fi
 export TODAY
 
-# USER
+# USER  {{{2
+# ------------------------------------------------------------------------------
+
 # Alternatively, can use 'whoami' here.
-[ -z "${USER:-}" ] && USER="$(id -un)"
+if [ -z "${USER:-}" ]
+then
+    USER="$(id -un)"
+fi
 export USER
 
 # History  {{{2
@@ -62,16 +98,27 @@ export USER
 
 # Standardize the history file name across shells.
 # Note that snake case is commonly used here across platforms.
-[ -z "${HISTFILE:-}" ] && HISTFILE="${HOME}/.$(_koopa_shell)_history"
+if [ -z "${HISTFILE:-}" ]
+then
+    HISTFILE="${HOME}/.$(_koopa_shell)_history"
+fi
 export HISTFILE
+
+# Create the history file, if necessary.
 [ ! -f "$HISTFILE" ] && touch "$HISTFILE"
 
 # Don't keep duplicate lines in the history.
 # Alternatively, set "ignoreboth" to also ignore lines starting with space.
-[ -z "${HISTCONTROL:-}" ] && HISTCONTROL="ignoredups"
+if [ -z "${HISTCONTROL:-}" ]
+then
+    HISTCONTROL="ignoredups"
+fi
 export HISTCONTROL
 
-[ -z "${HISTIGNORE:-}" ] && HISTIGNORE="&:ls:[bf]g:exit"
+if [ -z "${HISTIGNORE:-}" ]
+then
+    HISTIGNORE="&:ls:[bf]g:exit"
+fi
 export HISTIGNORE
 
 # Set the default history size.
@@ -90,13 +137,19 @@ fi
 export HISTTIMEFORMAT
 
 # Ensure that HISTSIZE and SAVEHIST values match.
-[ "${HISTSIZE:-}" != "${SAVEHIST:-}" ] && SAVEHIST="$HISTSIZE"
+if [ "${HISTSIZE:-}" != "${SAVEHIST:-}" ]
+then
+    SAVEHIST="$HISTSIZE"
+fi
 export SAVEHIST
 
 # CPU count  {{{2
 # ------------------------------------------------------------------------------
 
-[ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(_koopa_cpu_count)"
+if [ -z "${CPU_COUNT:-}" ]
+then
+    CPU_COUNT="$(_koopa_cpu_count)"
+fi
 export CPU_COUNT
 
 
@@ -121,13 +174,13 @@ fi
 
 if [ -z "${PROJ_LIB:-}" ]
 then
-    if [ -e '/usr/local/share/proj' ]
+    if [ -e "/usr/local/share/proj" ]
     then
-        PROJ_LIB='/usr/local/share/proj'
+        PROJ_LIB="/usr/local/share/proj"
         export PROJ_LIB
-    elif [ -e '/usr/share/proj' ]
+    elif [ -e "/usr/share/proj" ]
     then
-        PROJ_LIB='/usr/share/proj'
+        PROJ_LIB="/usr/share/proj"
         export PROJ_LIB
     fi
 fi
