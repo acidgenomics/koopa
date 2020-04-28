@@ -10,7 +10,8 @@ source "${script_dir}/../include/header.sh"
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
-_koopa_exit_if_installed R
+r_exe="/usr/bin/R"
+_koopa_exit_if_installed "$r_exe"
 
 _koopa_h1 "Installing R CRAN binary package."
 
@@ -27,4 +28,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
             r-base \
             r-base-dev
 
-_koopa_update_r_config
+_koopa_update_r_config "$r_exe"
