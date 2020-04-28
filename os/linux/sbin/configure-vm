@@ -360,6 +360,7 @@ then
     install-grep
     install-gawk
     install-parallel
+    install-sed
     # Skipping GCC, as we can run into problems with CMake and Rcpp.
     # > install-gcc  # cellar only
 fi
@@ -431,7 +432,16 @@ install-python
 # from source on other Linux distros.
 if [[ "$bioconductor" -eq 0 ]]
 then
-    install-r
+    if _koopa_is_installed install-r-cran-binary
+    then
+        # Install R CRAN binary.
+        # Note that this version may lag behind for some platforms.
+        install-r-cran-binary
+    else
+        # Install latest version of R from source.
+        install-r
+    fi
+    # Install RStudio Server and Shiny Server.
     if [[ "$compact" -eq 0 ]]
     then
         _koopa_run_if_installed \

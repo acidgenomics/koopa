@@ -113,7 +113,7 @@ then
         configure-vm "${configure_flags[@]}"
     fi
 
-    if [[ "$rsync" -eq 1 ]]
+    if [[ "$rsync" -eq 0 ]]
     then
         update-r-packages
         update-conda

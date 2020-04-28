@@ -4,7 +4,11 @@
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
-    # @note Updated 2020-04-23.
+    #
+    # @note Updated 2020-04-28.
+    #
+    # Ubutu 20 (Focal Fossa) isn't supported yet:
+    # https://packages.microsoft.com/repos/azure-cli/dists/
     # """
     local file
     file="/etc/apt/sources.list.d/azure-cli.list"
@@ -26,7 +30,11 @@ ${os_codename} main"
 _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
-    # @note Updated 2020-04-23.
+    #
+    # @note Updated 2020-04-28.
+    #
+    # Ubuntu 20 (Focal Fossa) not yet supported:
+    # https://download.docker.com/linux/
     # """
     local file
     file="/etc/apt/sources.list.d/docker.list"
@@ -83,7 +91,7 @@ llvm-toolchain-${os_codename}-${version} main"
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-04-23.
+    # @note Updated 2020-04-28.
     # """
     local file
     file="/etc/apt/sources.list.d/r.list"
@@ -92,15 +100,16 @@ _koopa_apt_add_r_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    # Remap 20.04 LTS to 18.04 LTS.
-    case "$os_codename" in
-        focal)
-            os_codename="bionic"
-            ;;
-    esac
+    local r_version
+    # e.g. 4.0.0
+    r_version="$(_koopa_variable r)"
+    # e.g. 4.0
+    r_version="$(_koopa_major_minor_version "$r_version")"
+    # e.g. 40
+    r_version="$(_koopa_gsub "$r_version" "\.")"
     local string
     string="deb https://cloud.r-project.org/bin/linux/${os_id} \
-${os_codename}-cran35/"
+${os_codename}-cran${r_version}/"
     _koopa_sudo_write_string "$string" "$file"
 }
 
