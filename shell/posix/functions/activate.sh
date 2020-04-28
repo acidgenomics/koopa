@@ -266,23 +266,31 @@ _koopa_activate_ensembl_perl_api() {  # {{{1
 _koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
-    # @note Updated 2020-03-27.
+    #
+    # @note Updated 2020-04-28.
     #
     # Currently Bash and Zsh are supported.
     #
-    # See also:
-    # https://github.com/junegunn/fzf
+    # Shell lockout has been observed on Ubuntu unless we disable 'set -e'.
+    #
+    # @seealso
+    # - https://github.com/junegunn/fzf
     # """
-    local prefix
+    local nounset prefix script shell
+
     prefix="$(_koopa_fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
-    local shell
-    shell="$(_koopa_shell)"
-    local nounset
+
     nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +u
-    local script
+    shell="$(_koopa_shell)"
+
+    if [ "$nounset" -eq 1 ]
+    then
+        set +e
+        set +u
+    fi
+
     # Auto-completion.
     script="${prefix}/shell/completion.${shell}"
     if [ -f "$script" ]
@@ -290,6 +298,7 @@ _koopa_activate_fzf() {  # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
+
     # Key bindings.
     script="${prefix}/shell/key-bindings.${shell}"
     if [ -f "$script" ]
@@ -297,7 +306,13 @@ _koopa_activate_fzf() {  # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
-    [ "$nounset" -eq 1 ] && set -u
+
+    if [ "$nounset" -eq 1 ]
+    then
+        set -e
+        set -u
+    fi
+
     return 0
 }
 
