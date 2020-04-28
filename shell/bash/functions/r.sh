@@ -17,7 +17,7 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-04-25.
+    # @note Updated 2020-04-28.
     #
     # Applies to 'Renviron.site' and 'Rprofile.site' files.
     # Note that on macOS, we don't want to copy the 'Makevars' file here.
@@ -25,6 +25,16 @@ _koopa_link_r_etc() {  # {{{1
     local r_home
     r_home="${1:-$(_koopa_r_home)}"
     [[ -d "$r_home" ]] || return 1
+
+    local r_exe
+    r_exe="${r_home}/bin/R"
+
+    local version
+    version="$(_koopa_r_version "$r_exe")"
+    if [[ "$version" != 'devel' ]]
+    then
+        version="$(_koopa_major_minor_version "$version")"
+    fi
 
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
@@ -37,7 +47,7 @@ _koopa_link_r_etc() {  # {{{1
     else
         os_id="$(_koopa_os_id)"
     fi
-    r_etc_source="${koopa_prefix}/os/${os_id}/etc/R"
+    r_etc_source="${koopa_prefix}/os/${os_id}/etc/R/${version}"
     [[ -d "$r_etc_source" ]] || return 1
     _koopa_ln "$r_etc_source" "${r_home}/etc"
 
@@ -59,7 +69,7 @@ _koopa_link_r_etc() {  # {{{1
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-04-26.
+    # @note Updated 2020-04-28.
     # """
     local r_home
     r_home="${1:-$(_koopa_r_home)}"
@@ -71,14 +81,13 @@ _koopa_link_r_site_library() {  # {{{1
 
     local version
     version="$(_koopa_r_version "$r_exe")"
-
-    local app_prefix
-    app_prefix="$(_koopa_app_prefix)"
-
     if [[ "$version" != 'devel' ]]
     then
         version="$(_koopa_major_minor_version "$version")"
     fi
+
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
 
     local lib_source
     lib_source="${app_prefix}/r/${version}/site-library"
@@ -242,12 +251,7 @@ _koopa_update_r_config() {  # {{{1
         fi
     fi
 
-    # FIXME Consider reverting this change.
-    if _koopa_is_cellar "$r_exe"
-    then
-        _koopa_link_r_etc "$r_home"
-    fi
-
+    _koopa_link_r_etc "$r_home"
     _koopa_link_r_site_library "$r_home"
     _koopa_r_javareconf --r-exe="$r_exe"
 

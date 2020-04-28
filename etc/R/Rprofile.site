@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-04-27.
+## Updated 2020-04-28.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -53,9 +53,6 @@
 
 ## Run these configuration options outside of `.First()` call, so user-specific
 ## `~/.Rprofile` file will pick them up.
-
-## Mike's user-specific Rprofile file checks for value.
-options("rprofile.site" = TRUE)
 
 ## Hidden environment  {{{2
 ## -----------------------------------------------------------------------------
