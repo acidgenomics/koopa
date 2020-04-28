@@ -15,6 +15,12 @@ _koopa_exit_if_installed "$r_exe"
 
 _koopa_h1 "Installing R CRAN binary package."
 
+# This ensures we're starting fresh with the correct apt repo.
+sudo rm -frv \
+    /etc/R \
+    /etc/apt/sources.list.d/r.list \
+    /usr/lib/R/etc
+
 _koopa_apt_import_r_key
 _koopa_apt_add_r_repo
 
