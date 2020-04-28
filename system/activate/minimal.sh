@@ -134,7 +134,6 @@ fi
 
 
 
-
 # Activation functions  {{{1
 # ==============================================================================
 
@@ -143,7 +142,8 @@ _koopa_update_xdg_config
 _koopa_activate_standard_paths
 _koopa_activate_koopa_paths
 _koopa_activate_homebrew
-_koopa_activate_local_etc_profile
+# This function can cause shell lockout on Ubuntu 20.
+# > _koopa_activate_local_etc_profile
 _koopa_activate_dircolors
 _koopa_activate_gcc_colors
 _koopa_activate_dotfiles
