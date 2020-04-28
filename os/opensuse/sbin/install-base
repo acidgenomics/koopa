@@ -40,7 +40,7 @@ packages=(
     mpfr-devel
     ncurses-devel
     openssl-devel
-    pcre-devel
+    pcre2-devel
     readline-devel
     sudo
     tar
