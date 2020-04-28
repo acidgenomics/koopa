@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Install latest version of R from CRAN.
+# - https://cran.r-project.org/bin/linux/debian/
+# - https://cran.r-project.org/bin/linux/ubuntu/README.html
+# """
+
+r_exe="/usr/bin/R"
+_koopa_exit_if_installed "$r_exe"
+
+_koopa_h1 "Installing R CRAN binary package."
+
+# This ensures we're starting fresh with the correct apt repo.
+sudo rm -frv \
+    /etc/R \
+    /etc/apt/sources.list.d/r.list \
+    /usr/lib/R/etc
+
+_koopa_apt_import_r_key
+_koopa_apt_add_r_repo
+
+# Debian 10 (buster) / R 4.0.0 error:
+# r-base : Depends: r-recommended (= 4.0.0-1~bustercran.0) but it is not going
+# to be installed.
+#
+# Temporary fix: just use 'r-base-dev' instead.
+pkgs=(
+    # r-base
+    r-base-dev
+)
+
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get \
+        --no-install-recommends \
+        --quiet \
+        --yes \
+        install "${pkgs[@]}"
+
+_koopa_update_r_config "$r_exe"

@@ -145,6 +145,7 @@ fi
 
 _koopa_activate_autojump
 _koopa_activate_broot
+# This has been observed to cause shell lockout.
 _koopa_activate_fzf
 
 

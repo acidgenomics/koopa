@@ -13,7 +13,8 @@ _koopa_remove_broken_symlinks() {  # {{{1
     for file in "${files[@]}"
     do
         [[ -z "$file" ]] && continue
-        _koopa_rm -v "$file"
+        _koopa_info "Removing '${file}'."
+        _koopa_rm "$file"
     done
     return 0
 }
@@ -31,7 +32,8 @@ _koopa_remove_empty_dirs() {  # {{{1
     for dir in "${dirs[@]}"
     do
         [[ -z "$dir" ]] && continue
-        _koopa_rm -v "$dir"
+        _koopa_info "Removing '${dir}'."
+        _koopa_rm "$dir"
     done
     return 0
 }

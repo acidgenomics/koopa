@@ -1,6 +1,21 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+__koopa_has_gnu() {  # {{{1
+    # """
+    # Is a GNU program installed?
+    # @note Updated 2020-04-27.
+    # """
+    local cmd
+    cmd="${1:?}"
+    _koopa_is_installed "$cmd" || return 1
+    local str
+    str="$("$cmd" --version 2>&1 || true)"
+    _koopa_is_matching_fixed "$str" "GNU"
+}
+
+
+
 _koopa_boolean_nounset() {  # {{{1
     # """
     # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
@@ -21,16 +36,68 @@ _koopa_boolean_nounset() {  # {{{1
     _koopa_print "$bool"
 }
 
+_koopa_grepl() {  # {{{1
+    # """
+    # Evaluate whether a string contains a desired value.
+    # @note Updated 2020-04-27.
+    #
+    # POSIX-compliant function that mimics grepl functionality.
+    #
+    # @seealso grepl in R.
+    # """
+    test "${1#*$2}" != "$1"
+}
+
 _koopa_has_file_ext() {  # {{{1
     # """
     # Does the input contain a file extension?
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-04-27.
     #
     # Simply looks for a "." and returns true/false.
     # """
     local file
     file="${1:?}"
     _koopa_print "$file" | grep -q "\."
+}
+
+_koopa_has_gnu_binutils() {  # {{{1
+    # """
+    # Is GNU binutils installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu ld
+}
+
+_koopa_has_gnu_coreutils() {  # {{{1
+    # """
+    # Is GNU coreutils installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu env
+}
+
+_koopa_has_gnu_findutils() {  # {{{1
+    # """
+    # Is GNU findutils installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu find
+}
+
+_koopa_has_gnu_sed() {  # {{{1
+    # """
+    # Is GNU tar installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu sed
+}
+
+_koopa_has_gnu_tar() {  # {{{1
+    # """
+    # Is GNU tar installed?
+    # @note Updated 2020-04-27.
+    # """
+    __koopa_has_gnu tar
 }
 
 _koopa_has_no_environments() {  # {{{1
@@ -165,30 +232,43 @@ _koopa_is_azure() {  # {{{1
 
 _koopa_is_cellar() {  # {{{1
     # """
-    # Is a specific command cellarized?
-    # @note Updated 2020-02-10.
+    # Is a specific command or file cellarized?
+    # @note Updated 2020-04-25.
     # """
-    local cmd
-    cmd="${1:?}"
-    _koopa_is_installed "$cmd" || return 1
-    cmd="$(_koopa_which_realpath "$cmd")"
+    local str
+    str="${1:?}"
+
+    if _koopa_is_installed "$str"
+    then
+        # Assume default usage is a command (e.g. R).
+        str="$(_koopa_which_realpath "$str")"
+    elif [ -e "$str" ]
+    then
+        # Otherwise assume it's a file path on disk.
+        str="$(realpath "$str")"
+    else
+        return 1
+    fi
+
     # Check koopa cellar.
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
-    if _koopa_is_matching_regex "$cmd" "^${cellar_prefix}"
+    if _koopa_is_matching_regex "$str" "^${cellar_prefix}"
     then
         return 0
     fi
+
     # Check Homebrew cellar.
     if _koopa_is_installed brew
     then
         local homebrew_cellar_prefix
         homebrew_cellar_prefix="$(_koopa_homebrew_cellar_prefix)"
-        if _koopa_is_matching_regex "$cmd" "^${homebrew_cellar_prefix}"
+        if _koopa_is_matching_regex "$str" "^${homebrew_cellar_prefix}"
         then
             return 0
         fi
     fi
+
     return 1
 }
 
@@ -518,7 +598,7 @@ _koopa_is_powerful() {  # {{{1
 _koopa_is_python_package_installed() {  # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-04-25.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -533,18 +613,20 @@ _koopa_is_python_package_installed() {  # {{{1
     # """
     local pkg
     pkg="${1:?}"
-    local python
-    python="${2:-python3}"
-    _koopa_is_installed "$python" || return 1
+    local python_exe
+    python_exe="${2:-python3}"
+    _koopa_is_installed "$python_exe" || return 1
     local prefix
-    prefix="$(_koopa_python_site_packages_prefix "$python")"
+    prefix="$(_koopa_python_site_packages_prefix "$python_exe")"
     [ -d "${prefix}/${pkg}" ]
 }
 
 _koopa_is_r_package_installed() {  # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-02-10.
+    # @note Updated 2020-04-25.
+    #
+    # Note that this will only return true for user-installed packages.
     #
     # Fast mode: checking the 'site-library' directory.
     #
@@ -554,10 +636,44 @@ _koopa_is_r_package_installed() {  # {{{1
     # """
     local pkg
     pkg="${1:?}"
-    _koopa_is_installed R || return 1
+    local rscript_exe
+    rscript_exe="${2:-Rscript}"
+    _koopa_is_installed "$rscript_exe" || return 1
     local prefix
-    prefix="$(_koopa_r_library_prefix)"
+    prefix="$(_koopa_r_library_prefix "$rscript_exe")"
     [ -d "${prefix}/${pkg}" ]
+}
+
+_koopa_is_recent() {
+    # """
+    # If the file exists and is more recent than 2 weeks old.
+    #
+    # @note Updated 2020-04-27.
+    #
+    # Current approach uses GNU find to filter based on modification date.
+    #
+    # Alternatively, can we use 'stat' to compare the modification time to Unix
+    # epoch in seconds or with GNU date.
+    #
+    # @seealso
+    # - https://stackoverflow.com/a/32019461
+    #
+    # @examples
+    # _koopa_is_recent ~/hello-world.txt
+    # """
+    local file
+    file="${1:?}"
+    local days
+    days=14
+    local exists
+    exists="$( \
+        find "$file" \
+            -mindepth 0 \
+            -maxdepth 0 \
+            -mtime "-${days}" \
+        2>/dev/null \
+    )"
+    [ -n "$exists" ]
 }
 
 _koopa_is_rhel() {  # {{{1

@@ -280,6 +280,12 @@ checkVersion(
     expected = expectedVersion("patch")
 )
 checkVersion(
+    name = "GNU sed",
+    whichName = "sed",
+    current = currentVersion("sed"),
+    expected = expectedVersion("sed")
+)
+checkVersion(
     name = "GNU texinfo",
     whichName = "makeinfo",
     current = currentVersion("texinfo"),

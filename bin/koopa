@@ -131,7 +131,8 @@ case "$1" in
         exit 0
         ;;
     update-r-config)
-        _koopa_update_r_config
+        shift 1
+        _koopa_update_r_config "$@"
         exit 0
         ;;
     variable)
