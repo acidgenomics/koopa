@@ -13,7 +13,6 @@ _koopa_array_to_r_vector() {  # {{{1
     printf "c(%s)\n" "$x"
 }
 
-# FIXME Need to make this versioned.
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
