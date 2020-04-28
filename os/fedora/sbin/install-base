@@ -4,14 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# CentOS 8 conflict:
-# Problem: problem with installed package coreutils-single-8.30-6.el8.x86_64
-#   - package coreutils-8.30-6.el8.x86_64 conflicts with coreutils-single
-#     provided by coreutils-single-8.30-6.el8.x86_64
-#   - conflicting requests
-# """
-
 dev=1
 extra=1
 upgrade=1
@@ -103,7 +95,7 @@ then
         mpfr-devel
         openjpeg2-devel  # GDAL
         openssl-devel
-        pcre-devel  # rJava
+        pcre2-devel  # rJava
         postgresql-devel
         readline-devel
         unixODBC-devel
