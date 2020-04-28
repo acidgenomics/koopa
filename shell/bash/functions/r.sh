@@ -13,6 +13,7 @@ _koopa_array_to_r_vector() {  # {{{1
     printf "c(%s)\n" "$x"
 }
 
+# FIXME Need to make this versioned.
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
@@ -241,7 +242,12 @@ _koopa_update_r_config() {  # {{{1
         fi
     fi
 
-    _koopa_link_r_etc "$r_home"
+    # FIXME Consider reverting this change.
+    if _koopa_is_cellar "$r_exe"
+    then
+        _koopa_link_r_etc "$r_home"
+    fi
+
     _koopa_link_r_site_library "$r_home"
     _koopa_r_javareconf --r-exe="$r_exe"
 

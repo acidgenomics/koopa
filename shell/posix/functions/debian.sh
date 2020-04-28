@@ -107,10 +107,6 @@ _koopa_apt_add_r_repo() {  # {{{1
     r_version="$(_koopa_major_minor_version "$r_version")"
     # e.g. 40
     r_version="$(_koopa_gsub "$r_version" "\.")"
-
-    # Temporary fix, until stable 4.0.0 release
-    r_version="35"
-
     local string
     string="deb https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-cran${r_version}/"
