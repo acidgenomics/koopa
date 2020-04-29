@@ -65,10 +65,16 @@ set -- "${pos[@]}"
 
 _koopa_assert_has_no_args "$@"
 
+# Start configuration  {{{1
+# ==============================================================================
+
+_koopa_h1 "Configuring virtual machine."
+
 # Detect if running inside Docker container. Note that Docker mode skips
 # installation of some packages (e.g. Emacs) that fail to install.
 if _koopa_is_docker
 then
+    _koopa_info "Configuring for Docker image."
     docker=1
 else
     docker=0
@@ -77,19 +83,10 @@ fi
 # rsync configuration detection.
 if [[ -n "$source_ip" ]]
 then
+    _koopa_info "Syncing configuration from '${source_ip}'."
     rsync=1
 else
     rsync=0
-fi
-
-# Start configuration  {{{1
-# ==============================================================================
-
-_koopa_h1 "Configuring virtual machine."
-
-if [[ "$docker" -eq 1 ]]
-then
-    _koopa_info "Configuring for Docker image."
 fi
 
 # Enable useful global variables that make configuration easier.
