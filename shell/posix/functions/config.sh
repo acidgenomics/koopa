@@ -103,7 +103,7 @@ _koopa_data_disk_check() {  # {{{1
     app_prefix="$(_koopa_app_prefix)"
     if [ -L "$app_prefix" ] && [ ! -e "$app_prefix" ]
     then
-        _koopa_warning "App prefix link error: '${data_disk_link_prefix}'."
+        _koopa_warning "App prefix link error: '${app_prefix}'."
     fi
 
     return 0
