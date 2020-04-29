@@ -42,6 +42,13 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
     utils::install.packages("BiocManager")
 }
 
+## Enable versioned Bioconductor install.
+biocVersion <- Sys.getenv("BIOC_VERSION")
+if (isTRUE(nzchar(biocVersion))) {
+    message(sprintf("Installing Bioconductor %s.", biocVersion))
+    BiocManager::install(version = biocVersion)
+}
+
 install <- bb8::install
 
 h1("Install R packages")
