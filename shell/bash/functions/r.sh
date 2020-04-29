@@ -16,21 +16,29 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-04-28.
+    # @note Updated 2020-04-29.
     #
-    # Applies to 'Renviron.site' and 'Rprofile.site' files.
-    # Note that on macOS, we don't want to copy the 'Makevars' file here.
+    # Currently links:
+    # - Renviron.site
+    # - Rprofile.site
+    # - repositories
+    #
+    # Don't copy Makevars file across machines.
     # """
     local r_home
     r_home="${1:-$(_koopa_r_home)}"
-    [[ -d "$r_home" ]] || return 1
+    if [[ ! -d "$r_home" ]]
+    then
+        _koopa_warning "Failed to locate R home."
+        return 1
+    fi
 
     local r_exe
     r_exe="${r_home}/bin/R"
 
     local version
     version="$(_koopa_r_version "$r_exe")"
-    if [[ "$version" != 'devel' ]]
+    if [[ "$version" != "devel" ]]
     then
         version="$(_koopa_major_minor_version "$version")"
     fi
@@ -47,20 +55,26 @@ _koopa_link_r_etc() {  # {{{1
         os_id="$(_koopa_os_id)"
     fi
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R/${version}"
-    [[ -d "$r_etc_source" ]] || return 1
-    _koopa_ln "$r_etc_source" "${r_home}/etc"
-
-    # Handle edge cases for Linux binary installs.
-    if _koopa_is_linux
+    if [[ ! -d "$r_etc_source" ]]
     then
-        local sys_r_etc
-        sys_r_etc="/etc/R"
-        # Ensure binary installs such as Debian are also linked in '/etc'.
-        if ! _koopa_is_cellar "$r_home" && [[ -d "$sys_r_etc" ]]
-        then
-            _koopa_ln "$r_etc_source" "$sys_r_etc"
-        fi
+        _koopa_warning "Missing R etc source: '${r_etc_source}'."
+        return 1
     fi
+
+    local r_etc_target
+    if _koopa_is_linux && \
+        ! _koopa_is_cellar "$r_exe" && \
+        [[ -d "/etc/R" ]]
+    then
+        # This currently applies to Debian/Ubuntu CRAN binary installs.
+        r_etc_target="/etc/R"
+    else
+        r_etc_target="${r_home}/etc"
+    fi
+
+    _koopa_ln \
+            "${r_etc_source}/"{Renviron.site,Rprofile.site,repositories} \
+            "${r_etc_target}/."
 
     return 0
 }
