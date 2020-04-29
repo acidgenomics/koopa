@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-04-28.
+    Updated 2020-04-29.
 EOF
 }
 
@@ -486,6 +486,7 @@ then
     then
         _koopa_today_bucket
         _koopa_disk_check
+        _koopa_data_disk_check
         _koopa_tmux_sessions
     fi
 fi
