@@ -84,22 +84,26 @@ fi
 
 _koopa_set_permissions --recursive "$koopa_prefix"
 
-(
-    cd "$koopa_prefix" || exit 1
-    _koopa_git_pull
-) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
-
-# Ensure dotfiles are current.
-if [[ "$fast" -eq 0 ]]
+if [[ "$rsync" -eq 0 ]]
 then
+    # Update koopa.
     (
-        cd "${koopa_prefix}/dotfiles" || exit 1
-        _koopa_git_reset
+        cd "$koopa_prefix" || exit 1
         _koopa_git_pull
     ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
-fi
 
-_koopa_set_permissions --recursive "$koopa_prefix"
+    # Ensure dotfiles are current.
+    if [[ "$fast" -eq 0 ]]
+    then
+        (
+            cd "${koopa_prefix}/dotfiles" || exit 1
+            _koopa_git_reset
+            _koopa_git_pull
+        ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
+    fi
+
+    _koopa_set_permissions --recursive "$koopa_prefix"
+fi
 
 _koopa_update_xdg_config
 
