@@ -619,25 +619,45 @@ _koopa_update_lmod_config() {  # {{{1
 _koopa_update_xdg_config() {  # {{{1
     # """
     # Update XDG configuration.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-04-29.
     #
     # Path: '~/.config/koopa'.
     # """
+
     # Allowing this, for Docker images.
     # > _koopa_is_root && return 0
+
+    # Harden against linked data disk failure and early return with warning.
+    if [ ! -e "${HOME:-}" ]
+    then
+        _koopa_warning "HOME does not exist: '${HOME:-}'."
+        return 0
+    fi
+
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
+
     local config_prefix
     config_prefix="$(_koopa_config_prefix)"
+
     local os_id
     os_id="$(_koopa_os_id)"
+
     mkdir -p "$config_prefix"
-    _koopa_relink "${koopa_prefix}" "${config_prefix}/home"
-    _koopa_relink "${koopa_prefix}/activate" "${config_prefix}/activate"
-    _koopa_relink "${koopa_prefix}/dotfiles" "${config_prefix}/dotfiles"
-    if [ -d "${koopa_prefix}/os/${os_id}" ]
-    then
-        _koopa_relink "${koopa_prefix}/os/${os_id}/etc/R" "${config_prefix}/R"
-    fi
+
+    # Generate standard symlinks.
+    _koopa_relink \
+        "${koopa_prefix}" \
+        "${config_prefix}/home"
+    _koopa_relink \
+        "${koopa_prefix}/activate" \
+        "${config_prefix}/activate"
+    _koopa_relink \
+        "${koopa_prefix}/dotfiles" \
+        "${config_prefix}/dotfiles"
+
+    # Remove legacy config files.
+    rm -fr "${config_prefix}/R"
+
     return 0
 }
