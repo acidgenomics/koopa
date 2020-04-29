@@ -26,14 +26,6 @@ _koopa_install_start "$name_fancy"
 
 _koopa_apt_import_azure_cli_key
 _koopa_apt_add_azure_cli_repo
-
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-missing \
-        --no-install-recommends \
-        --quiet \
-        --yes \
-        install azure-cli
+_koopa_apt_install azure-cli
 
 _koopa_install_success "$name_fancy"

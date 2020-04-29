@@ -4,12 +4,14 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+name_fancy="Git LFS"
+
+_koopa_install_start "$name_fancy"
+
 # Set up using automated script.
 url="https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh"
 curl -s "$url" | sudo bash
-
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get --no-install-recommends --yes install \
-        git git-lfs
-
+_koopa_apt_install git git-lfs
 git lfs install
+
+_koopa_install_success "$name_fancy"
