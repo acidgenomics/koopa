@@ -93,6 +93,7 @@ then
         llvm-devel
         mariadb-devel
         mpfr-devel
+        openblas-devel
         openjpeg2-devel  # GDAL
         openssl-devel
         pcre2-devel  # rJava
