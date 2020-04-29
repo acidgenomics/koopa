@@ -504,12 +504,12 @@ fi
 # ==============================================================================
 
 install-vim
-install-neovim
 
-# Emacs currently doesn't build easily on Docker.
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
 then
+    # Emacs currently doesn't build easily on Docker.
     install-emacs
+    install-neovim
 fi
 
 # Language-specific packages  {{{1
