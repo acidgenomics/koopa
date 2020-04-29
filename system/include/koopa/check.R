@@ -691,12 +691,12 @@ if (
         current = currentVersion("shiny-server"),
         expected = expectedVersion("shiny-server")
     )
-    checkVersion(
-        name = "bcbio-nextgen",
-        whichName = "bcbio_nextgen.py",
-        current = currentVersion("bcbio-nextgen"),
-        expected = expectedVersion("bcbio-nextgen")
-    )
+    ## > checkVersion(
+    ## >     name = "bcbio-nextgen",
+    ## >     whichName = "bcbio_nextgen.py",
+    ## >     current = currentVersion("bcbio-nextgen"),
+    ## >     expected = expectedVersion("bcbio-nextgen")
+    ## > )
     ## > installed("bcbio_vm.py", required = FALSE)
     ## > checkVersion(
     ## >     name = "bcl2fastq",
