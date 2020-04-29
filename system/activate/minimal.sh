@@ -105,7 +105,11 @@ fi
 export HISTFILE
 
 # Create the history file, if necessary.
-[ ! -f "$HISTFILE" ] && touch "$HISTFILE"
+# Note that the HOME check here hardens against symlinked data disk failure.
+if [ ! -f "$HISTFILE" ] && [ -e "${HOME:-}" ]
+then
+    touch "$HISTFILE"
+fi
 
 # Don't keep duplicate lines in the history.
 # Alternatively, set "ignoreboth" to also ignore lines starting with space.
