@@ -57,13 +57,13 @@ FLIBS =  -lgfortran -lm -lquadmath
 FPICFLAGS = -fpic
 FOUNDATION_CPPFLAGS = 
 FOUNDATION_LIBS = 
-JAR = /usr/lib/jvm/default-java/bin/jar
-JAVA = /usr/lib/jvm/default-java/bin/java
-JAVAC = /usr/lib/jvm/default-java/bin/javac
-JAVAH = 
+JAR = /usr/local/opt/java/openjdk/latest/bin/jar
+JAVA = /usr/local/opt/java/openjdk/latest/bin/java
+JAVAC = /usr/local/opt/java/openjdk/latest/bin/javac
+JAVAH = /usr/local/opt/java/openjdk/latest/bin/javah
 ## JAVA_HOME might be used in the next three.  
 ## They are for packages 'JavaGD' and 'rJava'
-JAVA_HOME = /usr/lib/jvm/default-java
+JAVA_HOME = /usr/local/opt/java/openjdk/latest
 JAVA_CPPFLAGS = -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 JAVA_LIBS = -L$(JAVA_HOME)/lib/server -ljvm
 JAVA_LD_LIBRARY_PATH = $(JAVA_HOME)/lib/server
