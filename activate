@@ -449,7 +449,8 @@ then
     _koopa_activate_rust
     _koopa_activate_rbenv
     _koopa_activate_pyenv
-    _koopa_activate_bcbio
+    # Avoid issues with R, python in path.
+    # > _koopa_activate_bcbio
     _koopa_activate_conda
     _koopa_activate_venv
 fi
