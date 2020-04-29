@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source_ip=
+
 # e.g. /usr/local/koopa
 koopa_prefix="$(_koopa_prefix)"
 # e.g. ~/.config/koopa
@@ -9,6 +11,7 @@ app_prefix="$(_koopa_app_prefix)"
 # e.g. /usr/local
 make_prefix="$(_koopa_make_prefix)"
 
+fast=0
 system=0
 user=0
 verbose=0
@@ -16,6 +19,10 @@ verbose=0
 while (("$#"))
 do
     case "$1" in
+        --fast)
+            fast=1
+            shift 1
+            ;;
         --source-ip=*)
             source_ip="${1#*=}"
             shift 1
@@ -47,10 +54,17 @@ then
     set -x
 fi
 
+if [[ "$fast" -eq 1 ]]
+then
+    system=0
+    user=0
+fi
+
 # rsync configuration detection.
 if [[ -n "$source_ip" ]]
 then
     rsync=1
+    system=1
 else
     rsync=0
 fi
@@ -73,10 +87,17 @@ _koopa_set_permissions --recursive "$koopa_prefix"
 (
     cd "$koopa_prefix" || exit 1
     _koopa_git_pull
-    cd "${koopa_prefix}/dotfiles" || exit 1
-    _koopa_git_reset
-    _koopa_git_pull
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
+
+# Ensure dotfiles are current.
+if [[ "$fast" -eq 0 ]]
+then
+    (
+        cd "${koopa_prefix}/dotfiles" || exit 1
+        _koopa_git_reset
+        _koopa_git_pull
+    ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
+fi
 
 _koopa_set_permissions --recursive "$koopa_prefix"
 
