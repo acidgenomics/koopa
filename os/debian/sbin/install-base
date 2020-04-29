@@ -78,8 +78,6 @@ _koopa_install_start "$name_fancy"
 
 _koopa_assert_is_installed sed sudo
 
-export DEBIAN_FRONTEND="noninteractive"
-
 # Nuke caches before installing packages.
 sudo rm -fr \
     /var/cache/apt/* \
@@ -88,7 +86,10 @@ sudo dpkg --clear-avail
 
 # Debian symlinks '/usr/local/man' to '/usr/local/share/man' by default, which
 # is non-standard and can cause cellar link script to break.
-[[ -L /usr/local/man ]] && sudo rm -v /usr/local/man
+if [[ -L /usr/local/man ]]
+then
+    sudo rm -v /usr/local/man
+fi
 
 # Requiring universe repo to be enabled on Ubuntu.
 enabled_repos="$(_koopa_apt_enabled_repos)"
@@ -104,15 +105,8 @@ fi
 
 if [[ "$upgrade" -eq 1 ]]
 then
-    _koopa_h2 "Upgrading install via 'apt-get dist-upgrade'."
-    sudo apt-get update
-    sudo DEBIAN_FRONTEND=noninteractive \
-        apt-get \
-            --fix-missing \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            dist-upgrade
+    _koopa_h2 "Upgrading install via 'dist-upgrade'."
+    __koopa_apt_get dist-upgrade
 fi
 
 # Remove packages  {{{1
@@ -338,16 +332,7 @@ then
     fi
 fi
 
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-broken \
-        --fix-missing \
-        --no-install-recommends \
-        --quiet \
-        --yes \
-        install "${pkgs[@]}"
-
+_koopa_apt_install "${pkgs[@]}"
 _koopa_apt_configure_sources
 _koopa_apt_import_keys
 

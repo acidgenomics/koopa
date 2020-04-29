@@ -10,10 +10,13 @@ source "${script_dir}/../include/header.sh"
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
+## FIXME ADD VERSION SUPPORT.
+
 r_exe="/usr/bin/R"
 _koopa_exit_if_installed "$r_exe"
 
-_koopa_h1 "Installing R CRAN binary package."
+name_fancy="R CRAN binary package"
+_koopa_install_start "Installing R CRAN binary package."
 
 # This ensures we're starting fresh with the correct apt repo.
 sudo rm -frv \
@@ -24,22 +27,13 @@ sudo rm -frv \
 _koopa_apt_import_r_key
 _koopa_apt_add_r_repo
 
-# Debian 10 (buster) / R 4.0.0 error:
-# r-base : Depends: r-recommended (= 4.0.0-1~bustercran.0) but it is not going
-# to be installed.
-#
-# Temporary fix: just use 'r-base-dev' instead.
+# This is lighter than using 'r-base'.
 pkgs=(
-    # r-base
+    r-base-core
     r-base-dev
 )
 
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --no-install-recommends \
-        --quiet \
-        --yes \
-        install "${pkgs[@]}"
-
+_koopa_apt_install "${pkgs[@]}"
 _koopa_update_r_config "$r_exe"
+
+_koopa_install_success "$name_fancy"

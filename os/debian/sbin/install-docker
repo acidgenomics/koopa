@@ -27,16 +27,12 @@ _koopa_apt_import_docker_key
 _koopa_apt_add_docker_repo
 
 # Ready to install Docker.
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --no-install-recommends \
-        --quiet \
-        --yes \
-        install \
-            containerd.io \
-            docker-ce \
-            docker-ce-cli
+pkgs=(
+    containerd.io
+    docker-ce
+    docker-ce-cli
+)
+_koopa_apt_install "${pkgs[@]}"
 
 # Ensure current user is added to Docker group.
 _koopa_add_user_to_group "docker"

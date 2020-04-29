@@ -74,17 +74,12 @@ _koopa_assert_has_no_envs
 _koopa_apt_import_llvm_key
 _koopa_apt_add_llvm_repo
 
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get \
-        --fix-missing \
-        --no-install-recommends \
-        --quiet \
-        --yes \
-        install \
-            "clang-${major_version}" \
-            "clangd-${major_version}" \
-            "lld-${major_version}" \
-            "lldb-${major_version}"
+pkgs=(
+    "clang-${major_version}"
+    "clangd-${major_version}"
+    "lld-${major_version}"
+    "lldb-${major_version}"
+)
+_koopa_apt_install "${pkgs[@]}"
 
 _koopa_install_success "$name_fancy"
