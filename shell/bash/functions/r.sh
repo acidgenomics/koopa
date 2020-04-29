@@ -72,9 +72,13 @@ _koopa_link_r_etc() {  # {{{1
         r_etc_target="${r_home}/etc"
     fi
 
-    _koopa_ln \
-            "${r_etc_source}/"{Renviron.site,Rprofile.site,repositories} \
-            "${r_etc_target}/."
+    local files
+    files=(Renviron.site Rprofile.site repositories)
+    local file
+    for file in "${files[@]}"
+    do
+        _koopa_ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
+    done
 
     return 0
 }
