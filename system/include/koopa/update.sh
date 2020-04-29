@@ -129,7 +129,7 @@ then
     then
         # Allow passthrough of specific arguments to 'configure-vm' script.
         configure_flags=()
-        if [[ "$rsync" -eq 0 ]]
+        if [[ "$rsync" -eq 1 ]]
         then
             configure_flags+=(
                 "--source-ip=${source_ip}"
