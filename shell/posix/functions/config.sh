@@ -84,6 +84,31 @@ _koopa_add_user_to_group() {  # {{{1
     sudo gpasswd --add "$user" "$group"
 }
 
+_koopa_data_disk_check() {  # {{{1
+    # """
+    # Check data disk configuration.
+    # @note Updated 2020-04-29.
+    # """
+
+    # e.g. '/n'.
+    local data_disk_link_prefix
+    data_disk_link_prefix="$(_koopa_data_disk_link_prefix)"
+    if [ -L "$data_disk_link_prefix" ] && [ ! -e "$data_disk_link_prefix" ]
+    then
+        _koopa_warning "Data disk link error: '${data_disk_link_prefix}'."
+    fi
+
+    # e.g. '/usr/local/opt'.
+    local app_prefix
+    app_prefix="$(_koopa_app_prefix)"
+    if [ -L "$app_prefix" ] && [ ! -e "$app_prefix" ]
+    then
+        _koopa_warning "App prefix link error: '${data_disk_link_prefix}'."
+    fi
+
+    return 0
+}
+
 _koopa_delete_dotfile() {  # {{{1
     # """
     # Delete a dot file.
