@@ -11,20 +11,6 @@ _koopa_assert_has_no_envs
 
 data_disk=
 source_ip=
-rsync=
-
-# Allow custom configuration via global variable.
-# e.g. 'constellation-aws'.
-config="${KOOPA_CONFIG:-}"
-
-# Detect if running inside Docker container. Note that Docker mode skips
-# installation of some packages (e.g. Emacs) that fail to install.
-if _koopa_is_docker
-then
-    docker=1
-else
-    docker=0
-fi
 
 # Bioconductor mode skips installation of GNU utils and other dependencies that
 # can take a long time to build from source.
@@ -33,19 +19,6 @@ bioconductor=0
 # Compact mode applies to a persistent VM with a small '/' mount.
 # This is not always the case for Docker images.
 compact=0
-
-# Allow automatic configuration for some supported cloud platforms.
-case "$config" in
-    constellation-aws)
-        data_disk="/mnt/data01"
-        source_ip="10.201.20.32"
-        ;;
-    # Safe to decomission this configuration in 2021.
-    constellation-azure)
-        data_disk="/data00"
-        source_ip="10.100.100.132"
-        ;;
-esac
 
 pos=()
 while (("$#"))
@@ -59,17 +32,21 @@ do
             compact=1
             shift 1
             ;;
+        --data-disk=*)
+            data_disk="${1#*=}"
+            shift 1
+            ;;
         --data-disk)
-            data_disk="$1"
+            data_disk="$2"
+            shift 2
+            ;;
+        --source-ip=*)
+            source_ip="${1#*=}"
             shift 1
             ;;
         --source-ip)
-            source_ip="$1"
-            shift 1
-            ;;
-        --no-rsync)
-            rsync=0
-            shift 1
+            source_ip="$2"
+            shift 2
             ;;
         --)
             shift 1
@@ -88,16 +65,21 @@ set -- "${pos[@]}"
 
 _koopa_assert_has_no_args "$@"
 
-# rsync configuration detection.
-# Note that we're allowing user to bypass with '--no-rsync' flag above.
-if [[ -z "${rsync:-}" ]]
+# Detect if running inside Docker container. Note that Docker mode skips
+# installation of some packages (e.g. Emacs) that fail to install.
+if _koopa_is_docker
 then
-    if [[ -n "$source_ip" ]]
-    then
-        rsync=1
-    else
-        rsync=0
-    fi
+    docker=1
+else
+    docker=0
+fi
+
+# rsync configuration detection.
+if [[ -n "$source_ip" ]]
+then
+    rsync=1
+else
+    rsync=0
 fi
 
 # Start configuration  {{{1
@@ -148,12 +130,11 @@ fi
 # Koopa paths  {{{1
 # ==============================================================================
 
-# e.g. '/usr/local/koopa'.
-koopa_prefix="$(_koopa_prefix)"
 # e.g. '/usr/local'.
 make_prefix="$(_koopa_make_prefix)"
-# e.g. '/usr/local/opt'.
+
 # For data disk, linked to '/mnt/data01/n/opt' (see below).
+# e.g. '/usr/local/opt'.
 app_prefix="$(_koopa_app_prefix)"
 
 # Local disk configuration  {{{1
@@ -252,79 +233,12 @@ _koopa_assert_is_file \
 
 sudo ldconfig
 
-# Custom config  {{{1
-# ==============================================================================
-
-if [[ "$config" == "constellation-aws" ]]
-then
-    # Constellation AWS  {{{2
-    # --------------------------------------------------------------------------
-    # Set up '/etc/profile.d'.
-    _koopa_h2 "Updating '/etc/profile.d'."
-    sudo ln -fnsv \
-        "${koopa_prefix}/host/aws/etc/profile.d/constellation.sh" \
-        "/etc/profile.d/."
-    # Using '/n/opt' instead of '/n/app'.
-    _koopa_rm /n/app
-    # Install RStudio Server Pro, if applicable.
-    if _koopa_is_matching_fixed "$HOSTNAME" awslabapp32
-    then
-        install-rstudio-server-pro
-    fi
-elif [[ "$config" == "constellation-azure" ]]
-then
-    # Constellation Azure  {{{2
-    # --------------------------------------------------------------------------
-    # Don't attempt to patch system env to support '-S' flag.
-    # Should no longer be an issue on VMs, as of 2020.
-    if [[ -e "/bin/env.bak" ]]
-    then
-        sudo rm -v "/bin/env"
-        sudo mv -v "/bin/env.bak" "/bin/env"
-    fi
-    sudo rm -frv "/opt/jdk"
-    # Set up '/etc/profile.d'.
-    _koopa_h2 "Updating '/etc/profile.d'."
-    sudo ln -fnsv \
-        "${koopa_prefix}/host/azure/etc/profile.d/constellation.sh" \
-        "/etc/profile.d/."
-    # Set up '/etc/cron.d'.
-    _koopa_h2 "Updating '/etc/cron.d'."
-    sudo cp -fv \
-        "${koopa_prefix}/host/azure/etc/cron.d/constellation" \
-        "/etc/cron.d/constellation"
-    # Ensure that shared bioinfo user has correct dotfiles.
-    if [[ -d "${koopa_prefix}/dotfiles" ]]
-    then
-        _koopa_h2 "Updating bioinfo user dotfiles."
-        sudo -u bioinfo -H "$SHELL" -c "\
-            rm -fv ~/.bash_logout && \
-            rm -fv ~/.bash_profile && \
-            rm -fv ~/.bashrc && \
-            rm -fv ~/.condarc && \
-            /usr/local/koopa/bin/link-dotfile --force \
-                app/emacs/minimal/emacs.el emacs \
-        "
-    fi
-    # Ensure data disk has consistency directory structure.
-    _koopa_h2 "Updating '${data_disk}' structure."
-    sudo rm -frv "${data_disk}/"{R,bcbio,cellranger,cellranger-atac,conda,\
-docker,var}
-    # Install RStudio Server Pro, if applicable.
-    if _koopa_is_matching_fixed "$HOSTNAME" azlabapp32
-    then
-        install-rstudio-server-pro
-    fi
-fi
-
 # rsync mode  {{{1
 # ==============================================================================
 
 if [[ "$rsync" -eq 1 ]]
 then
     rsync-vm --source-ip="$source_ip"
-    # We're detecting this file in '_koopa_has_rsync_config' function.
-    touch "$(_koopa_config_prefix)/rsync"
 fi
 
 # LLVM  {{{1
