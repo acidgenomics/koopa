@@ -682,7 +682,9 @@ _koopa_update_xdg_config() {  # {{{1
         "${config_prefix}/dotfiles"
 
     # Remove legacy config files.
-    rm -fr "${config_prefix}/R"
+    rm -fr \
+        "${config_prefix}/R" \
+        "${config_prefix}/rsync"
 
     return 0
 }
