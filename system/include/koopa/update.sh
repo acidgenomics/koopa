@@ -13,21 +13,16 @@ system=0
 user=0
 verbose=0
 
-# Detect if rsync configuration is enabled. Note that we're allowing the user to
-# override automatic detection with '--no-rsync' flag.
-if _koopa_has_rsync_config
-then
-    rsync=1
-else
-    rsync=0
-fi
-
 while (("$#"))
 do
     case "$1" in
-        --no-rsync)
-            rsync=0
+        --source-ip=*)
+            source_ip="${1#*=}"
             shift 1
+            ;;
+        --source-ip)
+            source_ip="$2"
+            shift 2
             ;;
         --system)
             system=1
@@ -52,11 +47,12 @@ then
     set -x
 fi
 
-# Allow passthrough of specific arguments to 'configure-vm' script.
-configure_flags=()
-if [[ "$rsync" -eq 0 ]]
+# rsync configuration detection.
+if [[ -n "$source_ip" ]]
 then
-    configure_flags+=("--no-rsync")
+    rsync=1
+else
+    rsync=0
 fi
 
 _koopa_h1 "Updating koopa at '${koopa_prefix}'."
@@ -91,9 +87,9 @@ then
     _koopa_h1 "Updating system configuration."
     _koopa_assert_has_sudo
 
-    _koopa_dl "app prefix" "${app_prefix}"
-    _koopa_dl "config prefix" "${config_prefix}"
-    _koopa_dl "make prefix" "${make_prefix}"
+    _koopa_dl "App prefix" "${app_prefix}"
+    _koopa_dl "Config prefix" "${config_prefix}"
+    _koopa_dl "Make prefix" "${make_prefix}"
 
     if _koopa_is_linux
     then
@@ -110,6 +106,14 @@ then
         # > update-macos
     elif _koopa_is_installed configure-vm
     then
+        # Allow passthrough of specific arguments to 'configure-vm' script.
+        configure_flags=()
+        if [[ "$rsync" -eq 0 ]]
+        then
+            configure_flags+=(
+                "--source-ip=${source_ip}"
+            )
+        fi
         configure-vm "${configure_flags[@]}"
     fi
 

@@ -123,14 +123,6 @@ _koopa_has_passwordless_sudo() {  # {{{1
     return 1
 }
 
-_koopa_has_rsync_config() {  # {{{1
-    # """
-    # Detect rsync configuration.
-    # @note Updated 2020-04-21.
-    # """
-    [ -f "$(_koopa_config_prefix)/rsync" ]
-}
-
 _koopa_has_sudo() {  # {{{1
     # """
     # Check that current user has administrator (sudo) permission.
