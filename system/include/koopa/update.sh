@@ -72,7 +72,7 @@ fi
 _koopa_h1 "Updating koopa at '${koopa_prefix}'."
 
 # Note that stable releases are not git, and can't be updated.
-if ! _koopa_is_git "$koopa_prefix"
+if ! _koopa_is_git_toplevel "$koopa_prefix"
 then
     version="$(_koopa_version)"
     url="$(_koopa_url)"
