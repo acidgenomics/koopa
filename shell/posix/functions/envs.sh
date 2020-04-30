@@ -59,11 +59,16 @@ _koopa_conda_env_prefix() {  # {{{1
 _koopa_deactivate_conda() {  # {{{1
     # """
     # Deactivate Conda environment.
-    # @note Updated 2019-10-25.
+    # @note Updated 2020-04-30.
     # """
     if [ -n "${CONDA_DEFAULT_ENV:-}" ]
     then
+        # Avoid exit on unbound PS1 in conda script.
+        local nounset
+        nounset="$(_koopa_boolean_nounset)"
+        [ "$nounset" -eq 1 ] && set +u
         conda deactivate
+        [ "$nounset" -eq 1 ] && set -u
     fi
     return 0
 }
