@@ -141,7 +141,7 @@ then
     remove_pkgs=()
     for pkg in "${legacy_pkgs[@]}"
     do
-        if _koopa_is_matching_regex "$apt_installed" "^${pkg}/"
+        if _koopa_str_match_regex "$apt_installed" "^${pkg}/"
         then
             remove_pkgs+=("$pkg")
         fi
