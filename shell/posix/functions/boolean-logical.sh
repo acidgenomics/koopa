@@ -254,7 +254,7 @@ _koopa_is_cellar() {  # {{{1
     then
         local homebrew_cellar_prefix
         homebrew_cellar_prefix="$(_koopa_homebrew_cellar_prefix)"
-        if _koopa_is_matching_regex "$str" "^${homebrew_cellar_prefix}"
+        if _koopa_str_match_regex "$str" "^${homebrew_cellar_prefix}"
         then
             return 0
         fi
@@ -534,7 +534,7 @@ _koopa_is_python_package_installed() {  # {{{1
     # Alternate, slow mode:
     # > local freeze
     # > freeze="$("$python" -m pip freeze)"
-    # > _koopa_is_matching_regex "$freeze" "^${pkg}=="
+    # > _koopa_str_match_regex "$freeze" "^${pkg}=="
     #
     # See also:
     # - https://stackoverflow.com/questions/1051254

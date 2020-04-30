@@ -204,7 +204,7 @@ _koopa_aws_s3_ls() {  # {{{1
     prefix="${prefix}/"
 
     # Automatically add 's3://' if missing.
-    if ! _koopa_is_matching_regex "$prefix" "^s3://"
+    if ! _koopa_str_match_regex "$prefix" "^s3://"
     then
         prefix="s3://${prefix}"
     fi
