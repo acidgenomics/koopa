@@ -76,7 +76,8 @@ _koopa_str_match() {  # {{{1
     if [ "$#" -eq 2 ]
     then
         # Standard input.
-        string="${1:?}"
+        # Note that we're allowing empty string input here.
+        string="${1:-}"
         pattern="${2:?}"
     elif [ "$#" -eq 1 ]
     then
@@ -112,7 +113,8 @@ _koopa_str_match_regex() {  # {{{1
     if [ "$#" -eq 2 ]
     then
         # Standard input.
-        string="${1:?}"
+        # Note that we're allowing empty string input here.
+        string="${1:-}"
         pattern="${2:?}"
     elif [ "$#" -eq 1 ]
     then
