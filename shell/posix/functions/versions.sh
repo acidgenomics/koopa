@@ -513,7 +513,7 @@ _koopa_vim_version() {  # {{{1
             | cut -d ' ' -f 5 \
     )"
     local version
-    if _koopa_is_matching_fixed "$x" "Included patches:"
+    if _koopa_str_match "$x" "Included patches:"
     then
         local patch
         patch="$( \

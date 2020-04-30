@@ -740,7 +740,7 @@ _koopa_assert_is_matching_fixed() {  # {{{1
     string="${1:?}"
     local pattern
     pattern="${2:?}"
-    if ! _koopa_is_matching_fixed "$string" "$pattern"
+    if ! _koopa_str_match "$string" "$pattern"
     then
         _koopa_stop "'${string}' doesn't match fixed pattern '${pattern}'."
     fi
