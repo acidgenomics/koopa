@@ -85,7 +85,7 @@ cellranger="3.1.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.17.1"
+cmake="3.17.2"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -118,7 +118,7 @@ findutils="4.7.0"
 
 # https://fishshell.com/
 # https://github.com/fish-shell/fish-shell/releases
-fish="3.1.1"
+fish="3.1.2"
 
 # https://github.com/junegunn/fzf
 fzf="0.21.1"
@@ -316,7 +316,7 @@ texinfo="6.7"
 the-silver-searcher="2.2.0"
 
 # https://github.com/tmux/tmux/releases
-tmux="3.1"
+tmux="3.1a"
 
 # https://www.unidata.ucar.edu/downloads/udunits/
 # This is necessary for some single-cell R packages.
