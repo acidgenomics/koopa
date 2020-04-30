@@ -1,8 +1,10 @@
 #!/usr/bin/env Rscript
 
+## FIXME VERSION CHECKS ARE NOW FAILING.
+
 ## """
 ## Check installed program versions.
-## Updated 2020-04-24.
+## Updated 2020-04-30.
 ##
 ## Need to set this to run inside R without '--vanilla' flag (for testing).
 ## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
@@ -389,13 +391,11 @@ if (!isTRUE(docker)) {
 
 ## Version managers ============================================================
 h2("Version managers")
-## This isn't returning true currently for Bioconductor builds.
 checkVersion(
     name = "Conda",
     whichName = "conda",
     current = currentVersion("conda"),
-    expected = expectedVersion("conda"),
-    required = FALSE
+    expected = expectedVersion("conda")
 )
 checkVersion(
     name = "Python : pip",
