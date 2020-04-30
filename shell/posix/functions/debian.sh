@@ -130,7 +130,9 @@ _koopa_apt_add_r_repo() {  # {{{1
     file="/etc/apt/sources.list.d/r.list"
     if [ -f "$file" ]
     then
-        if _koopa_file_match "$file" "$version"
+        # Early return if version matches and Debian source is enabled.
+        if _koopa_file_match "$file" "$version" && \
+            _koopa_file_match "$file" "deb-src"
         then
             return 0
         else
