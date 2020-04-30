@@ -140,6 +140,7 @@ installed(
         "stdbuf",
         "stty",
         "sum",
+        "svn",
         "sync",
         "tac",
         "tail",
