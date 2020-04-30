@@ -10,13 +10,33 @@ source "${script_dir}/../include/header.sh"
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
-## FIXME ADD VERSION SUPPORT.
-
 r_exe="/usr/bin/R"
 _koopa_exit_if_installed "$r_exe"
 
-name_fancy="R CRAN binary package"
-_koopa_install_start "Installing R CRAN binary package."
+while (("$#"))
+do
+    case "$1" in
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+if [[ -z "${version:-}" ]]
+then
+    version="$(_koopa_variable r)"
+fi
+
+name_fancy="R CRAN ${version} binary package"
+_koopa_install_start "$name_fancy"
 
 # This ensures we're starting fresh with the correct apt repo.
 sudo rm -frv \
@@ -25,7 +45,7 @@ sudo rm -frv \
     /usr/lib/R/etc
 
 _koopa_apt_import_r_key
-_koopa_apt_add_r_repo
+_koopa_apt_add_r_repo "$version"
 
 # This is lighter than using 'r-base'.
 pkgs=(
