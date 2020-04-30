@@ -106,31 +106,43 @@ _koopa_apt_add_llvm_repo() {  # {{{1
     local string
     string="deb http://apt.llvm.org/${os_codename}/ \
 llvm-toolchain-${os_codename}-${version} main"
+
     _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-04-28.
+    # @note Updated 2020-04-29.
     # """
+    local version
+    version="$(_koopa_variable "r")"
+    case "$version" in
+        3.6*)
+            version="3.5"
+            ;;
+    esac
+    version="$(_koopa_major_minor_version "$version")"
+    version="$(_koopa_gsub "$version" "\.")"
+    version="cran${version}"
     local file
     file="/etc/apt/sources.list.d/r.list"
-    [ -f "$file" ] && return 0
+    if [ -f "$file" ]
+    then
+        if _koopa_file_match "$file" "$version"
+        then
+            return 0
+        else
+            sudo rm -frv "$file"
+        fi
+    fi
     local os_id
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    local r_version
-    # e.g. 4.0.0
-    r_version="$(_koopa_variable r)"
-    # e.g. 4.0
-    r_version="$(_koopa_major_minor_version "$r_version")"
-    # e.g. 40
-    r_version="$(_koopa_gsub "$r_version" "\.")"
     local string
     string="deb https://cloud.r-project.org/bin/linux/${os_id} \
-${os_codename}-cran${r_version}/"
+${os_codename}-${version}/"
     _koopa_sudo_write_string "$string" "$file"
 }
 

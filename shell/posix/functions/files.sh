@@ -167,13 +167,13 @@ _koopa_find_and_replace_in_files() {  # {{{1
     # Check for unescaped slashes in pattern matching.
     # shellcheck disable=SC1003
     if _koopa_print "$from" \
-        | grep -q '/' && _koopa_print "$from" \
-        | grep -Fqv '\'
+        | grep -q "/" && _koopa_print "$from" \
+        | grep -Fqv "\\"
     then
         _koopa_stop "Unescaped slash detected: '${from}'."
     elif _koopa_print "$to" \
-        | grep -q '/' && _koopa_print "$to" \
-        | grep -Fqv '\'
+        | grep -q "/" && _koopa_print "$to" \
+        | grep -Fqv "\\"
     then
         _koopa_stop "Unescaped slash detected: '${to}'."
     fi
@@ -214,7 +214,6 @@ _koopa_find_broken_symlinks() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_find_dotfiles() {  # {{{1
@@ -248,7 +247,6 @@ _koopa_find_dotfiles() {  # {{{1
 
     _koopa_print "\n%s:\n\n" "$header"
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_find_empty_dirs() {  # {{{1
@@ -275,7 +273,6 @@ _koopa_find_empty_dirs() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_find_large_dirs() {  # {{{1
@@ -300,7 +297,6 @@ _koopa_find_large_dirs() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_find_large_files() {  # {{{1
@@ -337,7 +333,6 @@ _koopa_find_large_files() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_find_non_cellar_make_files() {  # {{{1
@@ -367,7 +362,6 @@ _koopa_find_non_cellar_make_files() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_find_text() {  # {{{1
@@ -400,7 +394,6 @@ _koopa_find_text() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_line_count() {  # {{{1
@@ -421,7 +414,6 @@ _koopa_line_count() {  # {{{1
     )"
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_realpath() {  # {{{1
@@ -529,7 +521,6 @@ _koopa_stat_modified() {
     fi
 
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_stat_user() {  # {{{1

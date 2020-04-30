@@ -4,60 +4,59 @@
 __koopa_has_gnu() {  # {{{1
     # """
     # Is a GNU program installed?
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-04-29.
     # """
     local cmd
     cmd="${1:?}"
     _koopa_is_installed "$cmd" || return 1
     local str
     str="$("$cmd" --version 2>&1 || true)"
-    _koopa_is_matching_fixed "$str" "GNU"
+    _koopa_str_match "$str" "GNU"
 }
 
-
-
-_koopa_boolean_nounset() {  # {{{1
+__koopa_is_os_release() {  # {{{1
     # """
-    # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
-    # @note Updated 2020-03-27.
-    #
-    # Intended for [ "$x" -eq 1 ] (true) checks.
-    #
-    # This approach is the opposite of POSIX shell status codes, where 0 is
-    # true and 1 is false.
+    # Is a specific OS release?
+    # @note Updated 2020-04-29.
     # """
-    local bool
-    if _koopa_is_set_nounset
+    local id
+    id="${1:?}"
+
+    local version
+    version="${2:-}"
+
+    local file
+    file="/etc/os-release"
+    [ -f "$file" ] || return 1
+
+    # Check identifier.
+    grep "ID=" "$file" | grep -q "$id" && return 0
+    grep "ID_LIKE=" "$file" | grep -q "$id" && return 0
+
+    # Check version.
+    if [ -n "$version" ]
     then
-        bool='1'
-    else
-        bool='0'
+        grep -q "VERSION_ID=\"${version}" "$file" && return 0
     fi
-    _koopa_print "$bool"
+
+    return 1
 }
 
-_koopa_grepl() {  # {{{1
-    # """
-    # Evaluate whether a string contains a desired value.
-    # @note Updated 2020-04-27.
-    #
-    # POSIX-compliant function that mimics grepl functionality.
-    #
-    # @seealso grepl in R.
-    # """
-    test "${1#*$2}" != "$1"
-}
+
 
 _koopa_has_file_ext() {  # {{{1
     # """
     # Does the input contain a file extension?
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-04-29.
     #
     # Simply looks for a "." and returns true/false.
+    #
+    # @examples
+    # _koopa_has_file_ext "hello.txt"
     # """
     local file
     file="${1:?}"
-    _koopa_print "$file" | grep -q "\."
+    _koopa_print "$file" | _koopa_str_match "."
 }
 
 _koopa_has_gnu_binutils() {  # {{{1
@@ -159,13 +158,13 @@ _koopa_has_sudo() {  # {{{1
     _koopa_has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    _koopa_is_matching_regex "$(groups)" '\b(admin|root|sudo|wheel)\b'
+    _koopa_str_match_regex "$(groups)" '\b(admin|root|sudo|wheel)\b'
 }
 
 _koopa_is_alias() {  # {{{1
     # """
     # Is the specified argument an alias?
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-29.
     #
     # Intended primarily to determine if we need to unalias.
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
@@ -178,8 +177,8 @@ _koopa_is_alias() {  # {{{1
     _koopa_is_installed "$cmd" || return 1
     local str
     str="$(type "$cmd")"
-    _koopa_is_matching_fixed "$str" ' tracked alias ' && return 1
-    _koopa_is_matching_regex "$str" '\balias(ed)?\b'
+    _koopa_str_match "$str" ' tracked alias ' && return 1
+    _koopa_str_match_regex "$str" '\balias(ed)?\b'
 }
 
 _koopa_is_alpine() {  # {{{1
@@ -245,7 +244,7 @@ _koopa_is_cellar() {  # {{{1
     # Check koopa cellar.
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
-    if _koopa_is_matching_regex "$str" "^${cellar_prefix}"
+    if _koopa_str_match_regex "$str" "^${cellar_prefix}"
     then
         return 0
     fi
@@ -297,62 +296,55 @@ _koopa_is_current_version() {  # {{{1
 _koopa_is_debian() {  # {{{1
     # """
     # Is the operating system Debian?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-04-29.
     # """
-    [ -f '/etc/os-release' ] || return 1
-    grep 'ID=' '/etc/os-release' | grep -q 'debian' && return 0
-    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'debian' && return 0
-    return 1
+    __koopa_is_os_release debian
 }
 
 _koopa_is_defined_in_user_profile() {  # {{{1
     # """
     # Is koopa defined in current user's shell profile configuration file?
-    # @note Updated 2020-02-15
+    # @note Updated 2020-04-29.
     # """
     local file
     file="$(_koopa_find_user_profile)"
-    [ -r "$file" ] || return 1
-    grep -q 'koopa' "$file"
+    _koopa_file_match "$file" "koopa"
 }
 
 _koopa_is_docker() {  # {{{1
     # """
     # Is the current shell running inside Docker?
-    # @note Updated 2020-01-22.
+    # @note Updated 2020-04-29.
     #
     # https://stackoverflow.com/questions/23513045
     # """
-    local file
-    file='/proc/1/cgroup'
-    [ -f "$file" ] || return 1
-    grep -q ':/docker/' "$file"
+    _koopa_file_match "/proc/1/cgroup" ":/docker/"
 }
 
 _koopa_is_export() {  # {{{1
     # """
     # Is a variable exported in the current shell session?
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-29.
     #
     # Use 'export -p' (POSIX) instead of 'declare -x' (Bashism).
     #
     # See also:
     # - https://unix.stackexchange.com/questions/390831
+    #
+    # @examples
+    # _koopa_is_export "KOOPA_SHELL"
     # """
     local arg
     arg="${1:?}"
-    export -p | grep -Eq "\b${arg}\b="
+    _koopa_str_match_regex "$(export -p)" "\b${arg}\b="
 }
 
 _koopa_is_fedora() {  # {{{1
     # """
     # Is the operating system Fedora?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-04-29.
     # """
-    [ -f '/etc/os-release' ] || return 1
-    grep 'ID=' '/etc/os-release' | grep -q 'fedora' && return 0
-    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'fedora' && return 0
-    return 1
+    __koopa_is_os_release fedora
 }
 
 _koopa_is_file_system_case_sensitive() {  # {{{1
@@ -372,7 +364,7 @@ _koopa_is_file_system_case_sensitive() {  # {{{1
 _koopa_is_function() {  # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-04-29.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -394,34 +386,19 @@ _koopa_is_function() {  # {{{1
     fun="${1:?}"
     local str
     str="$(type "$fun" 2>/dev/null)"
-    _koopa_is_matching_fixed "$str" 'function'
+    _koopa_str_match "$str" "function"
 }
 
-_koopa_is_git() {  # {{{1
-    # """
-    # Is directory a git repository?
-    # @note Updated 2020-02-11.
-    #
-    # Fast check that we can use for command prompt.
-    #
-    # Be aware that '.git' is not always a directory.
-    # """
-    local dir
-    dir="${1:-.}"
-    [ -e "${dir}/.git" ]
-}
-
-_koopa_is_git2() {  # {{{1
+_koopa_is_git() {  # {{{1i
     # """
     # Is the working directory a git repository?
-    # @note Updated 2020-03-07.
-    #
-    # Slower and more thorough check.
+    # @note Updated 2020-04-29.
     #
     # See also:
     # - https://stackoverflow.com/questions/2180270
     # """
-    _koopa_assert_is_installed git
+    _koopa_is_git_toplevel && return 0
+    _koopa_is_installed git || return 1
     git rev-parse --git-dir > /dev/null 2>&1 && return 0
     return 1
 }
@@ -429,14 +406,13 @@ _koopa_is_git2() {  # {{{1
 _koopa_is_git_clean() {  # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-04-08.
+    # @note Updated 2020-04-29.
     #
     # See also:
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
-    _koopa_is_git '.' || return 1
-    _koopa_assert_is_installed git
+    _koopa_is_git || return 1
     # Are there unstaged changes?
     git diff-index --quiet HEAD -- 2>/dev/null || return 1
     # In need of a pull or push?
@@ -446,6 +422,24 @@ _koopa_is_git_clean() {  # {{{1
     fi
     return 0
 }
+
+_koopa_is_git_toplevel() {  # {{{1
+    # """
+    # Is directory a git repository?
+    # @note Updated 2020-02-11.
+    #
+    # Fast check that we can use for command prompt.
+    #
+    # Be aware that '.git' is not always a directory.
+    #
+    # @seealso
+    # git rev-parse --show-toplevel
+    # """
+    local dir
+    dir="${1:-.}"
+    [ -e "${dir}/.git" ]
+}
+
 
 _koopa_is_github_ssh_enabled() {  # {{{1
     # """
@@ -474,17 +468,17 @@ _koopa_is_installed() {  # {{{1
 _koopa_is_interactive() {  # {{{1
     # """
     # Is the current shell interactive?
-    # @note Updated 2019-06-21.
+    # @note Updated 2020-04-29.
     # """
-    _koopa_print "$-" | grep -q 'i'
+    _koopa_str_match "$-" "i"
 }
 
 _koopa_is_kali() {  # {{{1
     # """
     # Is the current platform Kali Linux?
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-04-29.
     # """
-    _koopa_is_matching_fixed "$(_koopa_os_string)" 'kali'
+    _koopa_str_match "$(_koopa_os_string)" "kali"
 }
 
 _koopa_is_linux() {  # {{{1
@@ -498,35 +492,9 @@ _koopa_is_linux() {  # {{{1
 _koopa_is_local_install() {  # {{{1
     # """
     # Is koopa installed only for the current user?
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-04-29.
     # """
-    local prefix
-    prefix="$(_koopa_prefix)"
-    _koopa_print "$prefix" | grep -Eq "^${HOME}"
-}
-
-_koopa_is_login() {  # {{{1
-    # """
-    # Is the current shell a login shell?
-    # @note Updated 2019-08-14.
-    # """
-    _koopa_print "$0" | grep -Eq '^-'
-}
-
-_koopa_is_login_bash() {  # {{{1
-    # """
-    # Is the current shell a login bash shell?
-    # @note Updated 2019-06-21.
-    # """
-    [ "$0" = '-bash' ]
-}
-
-_koopa_is_login_zsh() {  # {{{1
-    # """
-    # Is the current shell a login zsh shell?
-    # @note Updated 2019-06-21.
-    # """
-    [ "$0" = '-zsh' ]
+    _koopa_str_match_regex "$(_koopa_prefix)" "^${HOME}"
 }
 
 _koopa_is_macos() {  # {{{1
@@ -535,37 +503,6 @@ _koopa_is_macos() {  # {{{1
     # @note Updated 2020-01-13.
     # """
     [ "$(uname -s)" = 'Darwin' ]
-}
-
-_koopa_is_matching_fixed() {  # {{{1
-    # """
-    # Does the input match a fixed string?
-    # @note Updated 2020-04-01.
-    #
-    # Usage of '-q' flag can cause an exit trap in 'set -e' mode.
-    # Redirecting output to '/dev/null' works more reliably.
-    #
-    # @seealso
-    # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
-    # - https://unix.stackexchange.com/questions/233987
-    # """
-    local string
-    string="${1:-}"
-    local pattern
-    pattern="${2:?}"
-    _koopa_print "$string" | grep -F "$pattern" > /dev/null
-}
-
-_koopa_is_matching_regex() {  # {{{1
-    # """
-    # Does the input match a regular expression?
-    # @note Updated 2020-04-01.
-    # """
-    local string
-    string="${1:-}"
-    local pattern
-    pattern="${2:?}"
-    _koopa_print "$string" | grep -E "$pattern" > /dev/null
 }
 
 _koopa_is_opensuse() {  # {{{1
@@ -671,36 +608,26 @@ _koopa_is_recent() {
 _koopa_is_rhel() {  # {{{1
     # """
     # Is the operating system RHEL?
-    # @note Updated 2019-12-09.
+    # @note Updated 2020-04-29.
     # """
-    _koopa_is_fedora || return 1
-    [ -f '/etc/os-release' ] || return 1
-    grep 'ID=' '/etc/os-release' | grep -q 'rhel' && return 0
-    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'rhel' && return 0
-    return 1
+    __koopa_is_os_release rhel
 }
 
 _koopa_is_rhel_7() {  # {{{1
     # """
     # Is the operating system RHEL 7?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-04-29.
     # """
     _koopa_is_amzn && return 0
-    _koopa_is_rhel || return 1
-    [ -f '/etc/os-release' ] || return 1
-    grep -q 'VERSION_ID="7' '/etc/os-release' && return 0
-    return 1
+    __koopa_is_os_release rhel 7
 }
 
 _koopa_is_rhel_8() {  # {{{1
     # """
     # Is the operating system RHEL 8?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-04-29.
     # """
-    _koopa_is_rhel || return 1
-    [ -f '/etc/os-release' ] || return 1
-    grep -q 'VERSION_ID="8' '/etc/os-release' && return 0
-    return 1
+    __koopa_is_os_release rhel 8
 }
 
 _koopa_is_remote() {  # {{{1
@@ -722,7 +649,7 @@ _koopa_is_root() {  # {{{1
 _koopa_is_set_nounset() {  # {{{1
     # """
     # Is shell running in 'nounset' variable mode?
-    # @note Updated 2020-03-27.
+    # @note Updated 2020-04-29.
     #
     # Many activation scripts, including Perlbrew and others have unset
     # variables that can cause the shell session to exit.
@@ -742,7 +669,7 @@ _koopa_is_set_nounset() {  # {{{1
     # setopt
     # Enabled: 'nounset'.
     # """
-    set +o | grep -q 'set -o nounset'
+    _koopa_str_match "$(set +o)" "set -o nounset"
 }
 
 _koopa_is_shared_install() {  # {{{1
@@ -756,7 +683,7 @@ _koopa_is_shared_install() {  # {{{1
 _koopa_is_ssh_enabled() {  # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-04-29.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
@@ -774,7 +701,7 @@ _koopa_is_ssh_enabled() {  # {{{1
             "$url" 2>&1 \
     )"
     [ -n "$x" ] || return 1
-    _koopa_is_matching_fixed "$x" "$pattern"
+    _koopa_str_match "$x" "$pattern"
 }
 
 _koopa_is_subshell() {  # {{{1
@@ -805,12 +732,25 @@ _koopa_is_tty() {  # {{{1
 _koopa_is_ubuntu() {  # {{{1
     # """
     # Is the operating system Ubuntu?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-04-29.
     # """
-    [ -f '/etc/os-release' ] || return 1
-    grep 'ID=' '/etc/os-release' | grep -q 'ubuntu' && return 0
-    grep 'ID_LIKE=' '/etc/os-release' | grep -q 'ubuntu' && return 0
-    return 1
+    __koopa_is_os_release ubuntu
+}
+
+_koopa_is_ubuntu_18() {  # {{{1
+    # """
+    # Is the operating system Ubuntu 18 LTS?
+    # @note Updated 2020-04-29.
+    # """
+    __koopa_is_os_release ubuntu 18.04
+}
+
+_koopa_is_ubuntu_20() {  # {{{1
+    # """
+    # Is the operating system Ubuntu 20 LTS?
+    # @note Updated 2020-04-29.
+    # """
+    __koopa_is_os_release ubuntu 20.04
 }
 
 _koopa_is_venv_active() {  # {{{1
