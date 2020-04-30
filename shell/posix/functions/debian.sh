@@ -151,6 +151,7 @@ _koopa_apt_add_r_repo() {  # {{{1
 ${os_codename}-${version}/"
 
     # Note that we're enabling source repo, for R-devel.
+    # FIXME THIS IS ERRORING OUT IN DOCKER.
     local string
     read -r -d '' string << EOF
 deb ${repo}
