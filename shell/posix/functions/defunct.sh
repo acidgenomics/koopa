@@ -42,6 +42,21 @@ _koopa_is_darwin() {  # {{{1
     # @note Updated 2020-01-14.
     # """
     _koopa_defunct "_koopa_is_macos"
+
+}
+
+_koopa_is_matching_fixed() {  #{{{1
+    # """
+    # @note Updated 2020-04-29.
+    # """
+    _koopa_str_match "$@"
+}
+
+_koopa_is_matching_regex() {  #{{{1
+    # """
+    # @note Updated 2020-04-29.
+    # """
+    _koopa_str_match_regex "$@"
 }
 
 _koopa_prefix_mkdir() {  # {{{1

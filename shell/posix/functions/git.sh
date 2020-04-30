@@ -4,7 +4,7 @@
 _koopa_git_branch() {  # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2020-04-08.
+    # @note Updated 2020-04-29.
     #
     # Handles detached HEAD state.
     #
