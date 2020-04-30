@@ -292,6 +292,7 @@ then
     install-grep
     install-gawk
     install-parallel
+    install-rsync
     install-sed
     # Skipping GCC, as we can run into problems with CMake and Rcpp.
     # > install-gcc  # cellar only

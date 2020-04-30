@@ -299,6 +299,12 @@ checkVersion(
     current = currentVersion("cmake"),
     expected = expectedVersion("cmake")
 )
+checkVersion(
+    name = "rsync",
+    whichName = "rsync",
+    current = currentVersion("rsync"),
+    expected = expectedVersion("rsync")
+)
 
 ## Editors =====================================================================
 h2("Editors")
