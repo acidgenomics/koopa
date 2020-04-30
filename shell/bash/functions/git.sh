@@ -3,11 +3,11 @@
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-04-30.
     # """
     _koopa_h2 "Initializing submodules in '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
-    _koopa_assert_is_git "$PWD"
+    _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_nonzero_file ".gitmodules"
     _koopa_assert_is_installed git
     local array lines string target target_key url url_key
@@ -40,7 +40,7 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-04-30.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -50,7 +50,7 @@ _koopa_git_pull() {
     # """
     _koopa_h2 "Pulling git repo at '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
-    _koopa_assert_is_git "$PWD"
+    _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_installed git
     git fetch --all
     git pull origin master
@@ -71,7 +71,7 @@ _koopa_git_pull() {
 _koopa_git_reset() {  # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-04-30.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -90,7 +90,7 @@ _koopa_git_reset() {  # {{{1
     # """
     _koopa_h2 "Resetting git repo at '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
-    _koopa_assert_is_git "$PWD"
+    _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_installed git
     git clean -dffx
     if [[ -s ".gitmodules" ]]
