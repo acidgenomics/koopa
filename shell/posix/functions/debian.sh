@@ -125,6 +125,7 @@ _koopa_apt_add_r_repo() {  # {{{1
     version="$(_koopa_major_minor_version "$version")"
     version="$(_koopa_gsub "$version" "\.")"
     version="cran${version}"
+
     local file
     file="/etc/apt/sources.list.d/r.list"
     if [ -f "$file" ]
@@ -136,13 +137,24 @@ _koopa_apt_add_r_repo() {  # {{{1
             sudo rm -frv "$file"
         fi
     fi
+
     local os_id
     os_id="$(_koopa_os_id)"
+
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    local string
-    string="deb https://cloud.r-project.org/bin/linux/${os_id} \
+
+    local repo
+    repo="https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-${version}/"
+
+    # Note that we're enabling source repo, for R-devel.
+    local string
+    read -d '' string << EOF
+deb ${repo}
+deb-src ${repo}
+EOF
+
     _koopa_sudo_write_string "$string" "$file"
 }
 
