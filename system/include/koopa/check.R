@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-## FIXME VERSION CHECKS ARE NOW FAILING.
-
 ## """
 ## Check installed program versions.
 ## Updated 2020-04-30.

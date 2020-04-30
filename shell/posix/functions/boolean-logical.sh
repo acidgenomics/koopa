@@ -364,7 +364,7 @@ _koopa_is_file_system_case_sensitive() {  # {{{1
 _koopa_is_function() {  # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-04-30.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -384,8 +384,12 @@ _koopa_is_function() {  # {{{1
     # """
     local fun
     fun="${1:?}"
+
     local str
     str="$(type "$fun" 2>/dev/null)"
+    # Harden against empty string return.
+    [ -z "$str" ] && str="no"
+
     _koopa_str_match "$str" "function"
 }
 
