@@ -4,6 +4,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+# FIXME
+set -x
+
 # """
 # Check package source repo:
 # https://packages.ubuntu.com/
@@ -332,7 +335,12 @@ then
     fi
 fi
 
+echo "FIXME"
+
 _koopa_apt_install "${pkgs[@]}"
+
+echo "FIXME"
+
 _koopa_apt_configure_sources
 _koopa_apt_import_keys
 
