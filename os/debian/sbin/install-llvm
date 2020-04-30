@@ -4,11 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# FIXME
-set -x 
-
-# FIXME _koopa_llvm_version issue.
-
 # """
 # LLVM (clang)
 # https://apt.llvm.org/
