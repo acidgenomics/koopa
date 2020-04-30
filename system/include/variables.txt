@@ -50,7 +50,7 @@ autojump="22.5.3"
 aws-cli="2.0.10"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.5.0"
+azure-cli="2.5.1"
 
 # https://www.gnu.org/software/bash/
 # Note that minor version represents patches.
@@ -277,6 +277,9 @@ rust="1.43.0"
 
 # https://rustup.rs/
 rustup="1.21.1"
+
+# https://download.samba.org/pub/rsync/src/
+rsync="3.1.3"
 
 # https://www.gnu.org/software/screen/
 screen="4.8.0"
