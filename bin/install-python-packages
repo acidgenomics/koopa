@@ -29,8 +29,10 @@ pkgs=(
 
 _koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
 
-python3 -m pip install \
-    --no-warn-script-location \
-    "${pkgs[@]}"
+# Ensure pip is current.
+_koopa_pip_install --upgrade pip
+
+# Now ready to install packages.
+_koopa_pip_install "${pkgs[@]}"
 
 _koopa_is_cellar python3 && _koopa_link_cellar python
