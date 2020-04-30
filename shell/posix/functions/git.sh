@@ -13,7 +13,6 @@ _koopa_git_branch() {  # {{{1
     # > git rev-parse --abbrev-ref HEAD
     #
     # See also:
-    # - _koopa_assert_is_git
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
