@@ -367,10 +367,10 @@ then
     install-r-devel
 elif _koopa_is_installed install-r-cran-binary
 then
-    install-r-cran-binary "$r_version"
+    install-r-cran-binary --version="$r_version"
 else
     # Install latest version of R from source.
-    install-r "$r_version"
+    install-r --version="$r_version"
 fi
 
 # Install RStudio Server and Shiny Server.

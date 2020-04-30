@@ -45,6 +45,8 @@ _koopa_exit_if_dir "$prefix"
 
 _koopa_install_start "$name_fancy"
 
+_koopa_assert_is_installed rsync svn
+
 link_cellar=1
 if _koopa_is_installed R
 then
@@ -53,12 +55,6 @@ fi
 
 _koopa_apt_import_r_key
 _koopa_apt_add_r_repo
-
-# Install subversion, if necessary.
-if ! _koopa_is_installed svn
-then
-    _koopa_apt_install subversion
-fi
 
 # Ensure all build dependencies are installed.
 __koopa_apt_get build-dep r-base

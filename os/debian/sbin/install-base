@@ -195,7 +195,9 @@ pkgs=(
     pkg-config
     # This is needed for RStudio Server to install.
     psmisc
+    rsync
     software-properties-common
+    subversion
     sudo
     texinfo  # makeinfo
     tmux
