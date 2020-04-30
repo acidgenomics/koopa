@@ -7,7 +7,7 @@
 _koopa_file_match() {  # {{{1
     # """
     # Is a string defined in a file?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-04-30.
     #
     # @examples
     # _koopa_file_match FILE PATTERN
@@ -24,7 +24,7 @@ _koopa_file_match() {  # {{{1
         # Piped input using stdin.
         pattern="${1:?}"
         shift 1
-        read file
+        read -r file
     else
         return 1
     fi
@@ -35,7 +35,7 @@ _koopa_file_match() {  # {{{1
 _koopa_file_match_regex() {  # {{{1
     # """
     # Is a string defined in a file?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-04-30.
     # """
     local file pattern
     if [ "$#" -eq 2 ]
@@ -48,7 +48,7 @@ _koopa_file_match_regex() {  # {{{1
         # Piped input using stdin.
         pattern="${1:?}"
         shift 1
-        read file
+        read -r file
     else
         return 1
     fi
@@ -59,7 +59,7 @@ _koopa_file_match_regex() {  # {{{1
 _koopa_str_match() {  # {{{1
     # """
     # Does the input match a fixed string?
-    # @note Updated 2020-04-01.
+    # @note Updated 2020-04-30.
     #
     # Usage of '-q' flag can cause an exit trap in 'set -e' mode.
     # Redirecting output to '/dev/null' works more reliably.
@@ -84,7 +84,7 @@ _koopa_str_match() {  # {{{1
         pattern="${1:?}"
         shift 1
         # Handle string with line breaks '\n'.
-        read -d '' string
+        read -r -d '' string
     else
         return 1
     fi
@@ -106,7 +106,7 @@ _koopa_str_match2() {  # {{{1
 _koopa_str_match_regex() {  # {{{1
     # """
     # Does the input match a regular expression?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-04-30.
     # """
     local string pattern
     if [ "$#" -eq 2 ]
@@ -120,7 +120,7 @@ _koopa_str_match_regex() {  # {{{1
         pattern="${1:?}"
         shift 1
         # Handle string with line breaks '\n'.
-        read -d '' string
+        read -r -d '' string
     else
         return 1
     fi

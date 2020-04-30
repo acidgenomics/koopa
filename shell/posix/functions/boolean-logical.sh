@@ -397,7 +397,7 @@ _koopa_is_git() {  # {{{1i
     # See also:
     # - https://stackoverflow.com/questions/2180270
     # """
-    _koopa_is_git_toplevel && return 0
+    _koopa_is_git_toplevel "." && return 0
     _koopa_is_installed git || return 1
     git rev-parse --git-dir > /dev/null 2>&1 && return 0
     return 1
