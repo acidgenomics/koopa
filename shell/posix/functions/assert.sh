@@ -352,16 +352,16 @@ _koopa_assert_is_function() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_git() {  # {{{1
+_koopa_assert_is_git_toplevel() {  # {{{1
     # """
     # Assert that current directory is a git repo.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-04-29.
     # """
     [ "$#" -ne 0 ] || return 1
     for arg
     do
         arg="$(realpath "$arg")"
-        if ! _koopa_is_git "$arg"
+        if ! _koopa_is_git_toplevel "$arg"
         then
             _koopa_stop "Not a git repo: '$arg'."
         fi
