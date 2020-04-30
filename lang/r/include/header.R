@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-04-13.
+## @note Updated 2020-04-30.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
