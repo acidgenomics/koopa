@@ -20,6 +20,9 @@ bioconductor=0
 # This is not always the case for Docker images.
 compact=0
 
+# Install R-devel (for testing).
+r_devel=0
+
 pos=()
 while (("$#"))
 do
@@ -39,6 +42,10 @@ do
         --data-disk)
             data_disk="$2"
             shift 2
+            ;;
+        --r-devel)
+            r_devel=1
+            shift 1
             ;;
         --source-ip=*)
             source_ip="${1#*=}"
@@ -341,24 +348,22 @@ install-python
 
 # Note that this will use apt package on Debian/Ubuntu and otherwise install
 # from source on other Linux distros.
-if [[ "$bioconductor" -eq 0 ]]
+if [[ "$r_devel" -eq 1 ]]
 then
-    if _koopa_is_installed install-r-cran-binary
-    then
-        # Install R CRAN binary.
-        # Note that this version may lag behind for some platforms.
-        install-r-cran-binary
-    else
-        # Install latest version of R from source.
-        install-r
-    fi
-    # Install RStudio Server and Shiny Server.
-    if [[ "$compact" -eq 0 ]]
-    then
-        _koopa_run_if_installed \
-            install-rstudio-server \
-            install-shiny-server
-    fi
+    install-r-devel
+elif _koopa_is_installed install-r-cran-binary
+then
+    install-r-cran-binary
+else
+    # Install latest version of R from source.
+    install-r
+fi
+
+# Install RStudio Server and Shiny Server.
+_koopa_run_if_installed install-rstudio-server
+if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
+then
+    _koopa_run_if_installed install-shiny-server
 fi
 
 # Ensure consistent R configuration across platforms.
