@@ -86,7 +86,7 @@ then
     installed="$(perlbrew list)"
     for perl in "${perls[@]}"
     do
-        _koopa_is_matching_fixed "$installed" "$perl" && continue
+        _koopa_str_match "$installed" "$perl" && continue
         _koopa_h2 "Installing '${perl}'."
         _koopa_coffee_time
         perlbrew install "$perl"
