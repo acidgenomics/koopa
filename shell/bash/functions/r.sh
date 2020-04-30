@@ -16,12 +16,7 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-04-29.
-    #
-    # Currently links:
-    # - Renviron.site
-    # - Rprofile.site
-    # - repositories
+    # @note Updated 2020-04-30.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -73,10 +68,16 @@ _koopa_link_r_etc() {  # {{{1
     fi
 
     local files
-    files=(Renviron.site Rprofile.site repositories)
+    files=(
+        Makevars.site  # macOS
+        Renviron.site
+        Rprofile.site
+        repositories
+    )
     local file
     for file in "${files[@]}"
     do
+        [ -f "${r_etc_source}/${file}" ] || continue
         _koopa_ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
     done
 
