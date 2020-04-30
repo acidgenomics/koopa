@@ -155,10 +155,10 @@ get_tldr_path() {
 
     # Use the platform-specific version of the tldr first.
     local subdir
-    if _koopa_grepl "$desc" "$platform"
+    if _koopa_str_match "$desc" "$platform"
     then
         subdir="$platform"
-    elif _koopa_grepl "$desc" "common"
+    elif _koopa_str_match "$desc" "common"
     then
         subdir="common"
     else
