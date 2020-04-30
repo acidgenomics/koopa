@@ -110,13 +110,18 @@ llvm-toolchain-${os_codename}-${version} main"
     _koopa_sudo_write_string "$string" "$file"
 }
 
+# shellcheck disable=SC2120
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
     # @note Updated 2020-04-30.
     # """
     local version
-    version="$(_koopa_variable "r")"
+    version="${1:-}"
+    if [ -z "$version" ]
+    then
+        version="$(_koopa_variable "r")"
+    fi
     case "$version" in
         3.6*)
             version="3.5"
@@ -199,6 +204,7 @@ EOF
     _koopa_apt_add_docker_repo
     _koopa_apt_add_google_cloud_sdk_repo
     _koopa_apt_add_llvm_repo
+    # shellcheck disable=SC2119
     _koopa_apt_add_r_repo
 
     return 0
