@@ -756,7 +756,7 @@ _koopa_assert_is_matching_regex() {  # {{{1
     string="${1:?}"
     local pattern
     pattern="${2:?}"
-    if ! _koopa_is_matching_regex "$string" "$pattern"
+    if ! _koopa_str_match_regex "$string" "$pattern"
     then
         _koopa_stop "'${string}' doesn't match regex pattern '${pattern}'."
     fi

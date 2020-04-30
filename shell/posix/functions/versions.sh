@@ -450,7 +450,7 @@ _koopa_sanitize_version() {  # {{{1
     x="${1:?}"
     local pattern
     pattern="[.0-9]+"
-    _koopa_is_matching_regex "$x" "$pattern" || return 1
+    _koopa_str_match_regex "$x" "$pattern" || return 1
     x="$(_koopa_print "$x" | grep -Eo "$pattern")"
     _koopa_print "$x"
     return 0
