@@ -250,14 +250,14 @@ _koopa_fix_zsh_permissions() {  # {{{1
     local zsh_exe
     zsh_exe="$(_koopa_which_realpath zsh)"
 
-    if _koopa_is_matching_regex "$zsh_exe" "^${make_prefix}"
+    if _koopa_str_match_regex "$zsh_exe" "^${make_prefix}"
     then
         _koopa_chmod -v g-w \
             "${make_prefix}/share/zsh" \
             "${make_prefix}/share/zsh/site-functions"
     fi
 
-    if _koopa_is_matching_regex "$zsh_exe" "^${cellar_prefix}"
+    if _koopa_str_match_regex "$zsh_exe" "^${cellar_prefix}"
     then
         _koopa_chmod -v g-w \
             "${cellar_prefix}/zsh/"*"/share/zsh" \
