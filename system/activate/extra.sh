@@ -164,28 +164,28 @@ _koopa_activate_fzf
 
 KOOPA_MAKE_PREFIX="$(_koopa_make_prefix)"
 
-if _koopa_is_matching_fixed \
+if _koopa_str_match \
     "$(_koopa_which_realpath cp)" \
     "$KOOPA_MAKE_PREFIX"
 then
     alias cp='cp --archive --interactive --verbose'
 fi
 
-if _koopa_is_matching_fixed \
+if _koopa_str_match \
     "$(_koopa_which_realpath mkdir)" \
     "$KOOPA_MAKE_PREFIX"
 then
     alias mkdir='mkdir --parents --verbose'
 fi
 
-if _koopa_is_matching_fixed \
+if _koopa_str_match \
     "$(_koopa_which_realpath mv)" \
     "$KOOPA_MAKE_PREFIX"
 then
     alias mv="mv --interactive --verbose"
 fi
 
-if _koopa_is_matching_fixed \
+if _koopa_str_match \
     "$(_koopa_which_realpath rm)" \
     "$KOOPA_MAKE_PREFIX"
 then

@@ -59,7 +59,7 @@ _koopa_prompt() {  # {{{1
     # Enable colorful prompt.
     # Note that vim can set TERM as 'xterm' instead of 'xterm-256color' inside
     # of tmux, so disable this check:
-    # > if _koopa_is_matching_fixed "${TERM:-}" "256color"
+    # > if _koopa_str_match "${TERM:-}" "256color"
     local conda_color git_color prompt_color user_color venv_color wd_color
     case "$shell" in
         bash)

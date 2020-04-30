@@ -83,7 +83,7 @@ _koopa_r_version() {  # {{{1
     r_exe="${1:-R}"
     local x
     x="$("$r_exe" --version | head -n 1)"
-    if _koopa_is_matching_fixed "$x" 'R Under development (unstable)'
+    if _koopa_str_match "$x" 'R Under development (unstable)'
     then
         x='devel'
     else

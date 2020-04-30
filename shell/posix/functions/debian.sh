@@ -386,7 +386,7 @@ _koopa_apt_is_key_imported() {  # {{{1
     key="${1:?}"
     local x
     x="$(apt-key list 2>&1 || true)"
-    _koopa_is_matching_fixed "$x" "$key"
+    _koopa_str_match "$x" "$key"
 }
 
 _koopa_apt_remove() {  # {{{1
