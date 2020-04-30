@@ -121,6 +121,7 @@ installed(
         "realpath",
         "rm",
         "rmdir",
+        "rsync",
         "runcon",
         "sed",
         "seq",
