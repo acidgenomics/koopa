@@ -37,7 +37,7 @@ source "${script_dir}/../include/header.sh"
 # """
 
 name="r"
-name_fancy "R-devel"
+name_fancy="R-devel"
 version="devel"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 

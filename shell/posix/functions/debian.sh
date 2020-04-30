@@ -113,7 +113,7 @@ llvm-toolchain-${os_codename}-${version} main"
 _koopa_apt_add_r_repo() {  # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-04-30.
     # """
     local version
     version="$(_koopa_variable "r")"
@@ -152,7 +152,7 @@ ${os_codename}-${version}/"
 
     # Note that we're enabling source repo, for R-devel.
     local string
-    read -d '' string << EOF
+    read -r -d '' string << EOF
 deb ${repo}
 deb-src ${repo}
 EOF
