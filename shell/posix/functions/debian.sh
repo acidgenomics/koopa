@@ -150,10 +150,10 @@ _koopa_apt_add_r_repo() {  # {{{1
     repo="https://cloud.r-project.org/bin/linux/${os_id} \
 ${os_codename}-${version}/"
 
-    # Note that we're enabling source repo, for R-devel.
-    # FIXME THIS IS ERRORING OUT IN DOCKER.
+    # Note that 'read' will return status 1 here.
+    # https://unix.stackexchange.com/questions/80045/
     local string
-    read -r -d '' string << EOF
+    read -r -d '' string << EOF || true
 deb ${repo}
 deb-src ${repo}
 EOF
