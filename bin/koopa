@@ -15,10 +15,6 @@ include_dir="${KOOPA_PREFIX}/system/include/koopa"
 
 case "$1" in
     # Unix standard (general) --------------------------------------------------
-    --help|-h)
-        usage
-        exit 0
-        ;;
     --version|-V|version)
         _koopa_version
         exit 0
