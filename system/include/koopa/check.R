@@ -2,10 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-04-30.
-##
-## Need to set this to run inside R without '--vanilla' flag (for testing).
-## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
+## Updated 2020-05-01.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
@@ -540,22 +537,22 @@ installed("shunit2")
 ## Heavy dependencies ==========================================================
 if (!isTRUE(docker)) {
     h2("Heavy dependencies")
-    if (isTRUE(linux)) {
-        checkVersion(
-            name = "PROJ",
-            whichName = "proj",
-            current = currentVersion("proj"),
-            expected = expectedVersion("proj")
+    checkVersion(
+        name = "PROJ",
+        whichName = "proj",
+        current = currentVersion("proj"),
+        expected = expectedVersion("proj")
+    )
+    checkVersion(
+        name = "GDAL",
+        whichName = "gdalinfo",
+        current = currentVersion("gdal"),
+        expected = ifelse(
+            test = isTRUE(macos),
+            yes = "2.4.4",
+            no = expectedVersion("gdal")
         )
-        checkVersion(
-            name = "GDAL",
-            whichName = "gdalinfo",
-            current = currentVersion("gdal"),
-            expected = expectedVersion("gdal")
-        )
-    } else {
-        installed(c("proj", "gdalinfo"))
-    }
+    )
     checkVersion(
         name = "GEOS",
         whichName = "geos-config",
@@ -589,12 +586,7 @@ if (!isTRUE(docker)) {
         name = "SQLite",
         whichName = "sqlite3",
         current = currentVersion("sqlite"),
-        expected = switch(
-            EXPR = os,
-            `macos-10.14` = "3.24.0",
-            `macos-10.15` = "3.28.0",
-            expectedVersion("sqlite")
-        )
+        expected = expectedVersion("sqlite")
     )
     installed(
         which = c(
