@@ -4,13 +4,9 @@
 _koopa_activate_aspera() {  # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # @note Updated 2020-03-16.
+    # @note Updated 2020-05-01.
     # """
-    local prefix
-    prefix="$(_koopa_aspera_prefix)/latest"
-    [ -d "$prefix" ] || return 0
-    _koopa_activate_prefix "$prefix"
-    return 0
+    _koopa_activate_prefix "$(_koopa_aspera_prefix)/latest"
 }
 
 _koopa_activate_autojump() {  # {{{1
@@ -235,11 +231,9 @@ _koopa_activate_dotfiles() {  # {{{1
 _koopa_activate_emacs() {  # {{{1
     # """
     # Activate Emacs.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-05-01.
     # """
-    _koopa_is_installed emacs || return 0
-    _koopa_add_to_path_start "${HOME}/.emacs.d/bin"
-    return 0
+    _koopa_activate_prefix "${HOME}/.emacs.d"
 }
 
 _koopa_activate_ensembl_perl_api() {  # {{{1
@@ -344,25 +338,41 @@ _koopa_activate_go() {  # {{{1
 _koopa_activate_homebrew() {  # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-05-01.
     # """
     _koopa_is_installed brew || return 0
+
     HOMEBREW_PREFIX="$(brew --prefix)"
     export HOMEBREW_PREFIX
+
     HOMEBREW_REPOSITORY="$(brew --repo)"
     export HOMEBREW_REPOSITORY
+
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
-    _koopa_activate_homebrew_gnu_utils
+
+    # > _koopa_activate_homebrew_gnu_prefix "binutils"
+    _koopa_activate_homebrew_gnu_prefix "coreutils"
+    _koopa_activate_homebrew_gnu_prefix "findutils"
+    _koopa_activate_homebrew_gnu_prefix "grep"
+    _koopa_activate_homebrew_gnu_prefix "make"
+    _koopa_activate_homebrew_gnu_prefix "gnu-sed"
+    _koopa_activate_homebrew_gnu_prefix "gnu-tar"
+    # > _koopa_activate_homebrew_gnu_prefix "gnu-time"
+    _koopa_activate_homebrew_gnu_prefix "gnu-units"
+    # > _koopa_activate_homebrew_gnu_prefix "gnu-which"
+    _koopa_activate_homebrew_prefix "texinfo"
+    _koopa_activate_homebrew_prefix "sqlite"
     # > _koopa_activate_homebrew_python
     _koopa_activate_homebrew_google_cloud_sdk
+
     return 0
 }
 
-_koopa_activate_homebrew_gnu_utils() {
+_koopa_activate_homebrew_gnu_prefix() {  # {{{1
     # """
-    # Activate Homebrew GNU utils.
-    # @note Updated 2020-04-27.
+    # Activate a cellar-only Homebrew GNU program.
+    # @note Updated 2020-05-01.
     #
     # Linked using 'g' prefix by default.
     #
@@ -380,108 +390,22 @@ _koopa_activate_homebrew_gnu_utils() {
     # - brew info grep
     # - brew info libtool
     # - brew info make
-    # - brew info texinfo
     # """
-    local homebrew_prefix
-    homebrew_prefix="$(_koopa_homebrew_prefix)"
     local prefix
-
-    # binutils
-    # > prefix="${homebrew_prefix}/opt/binutils"
-    # > if [ -d "$prefix" ]
-    # > then
-    # >     _koopa_force_add_to_path_start "${prefix}/bin"
-    # > fi
-
-    # coreutils
-    prefix="${homebrew_prefix}/opt/coreutils/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-
-    # findutils
-    prefix="${homebrew_prefix}/opt/findutils/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-
-    # grep
-    prefix="${homebrew_prefix}/opt/grep/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-
-    # make
-    prefix="${homebrew_prefix}/opt/make/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-
-    # sed
-    prefix="${homebrew_prefix}/opt/gnu-sed/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-
-    # tar
-    prefix="${homebrew_prefix}/opt/gnu-tar/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-
-    # texinfo
-    prefix="${homebrew_prefix}/opt/texinfo"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/bin"
-    fi
-    
-    # time
-    # > prefix="${homebrew_prefix}/opt/gnu-time/libexec"
-    # > if [ -d "$prefix" ]
-    # > then
-    # >     _koopa_force_add_to_path_start "${prefix}/gnubin"
-    # >     _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    # > fi
-    
-    # units
-    prefix="${homebrew_prefix}/opt/gnu-units/libexec"
-    if [ -d "$prefix" ]
-    then
-        _koopa_force_add_to_path_start "${prefix}/gnubin"
-        _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    fi
-    
-    # which
-    # > prefix="${homebrew_prefix}/opt/gnu-which/libexec"
-    # > if [ -d "$prefix" ]
-    # > then
-    # >     _koopa_force_add_to_path_start "${prefix}/gnubin"
-    # >     _koopa_force_add_to_manpath_start "${prefix}/gnuman"
-    # > fi
-
+    prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
+    [ -d "$prefix" ] || return 0
+    _koopa_force_add_to_path_start "${prefix}/gnubin"
+    _koopa_force_add_to_manpath_start "${prefix}/share/gnuman"
     return 0
 }
 
 _koopa_activate_homebrew_google_cloud_sdk() {
     # """
     # Activate Homebrew Google Cloud SDK.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-05-01.
     # """
     local prefix
-    prefix="${HOMEBREW_PREFIX:?}"
+    prefix="$(_koopa_homebrew_prefix)"
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     [ -d "$prefix" ] || return 0
     local shell
@@ -500,10 +424,18 @@ _koopa_activate_homebrew_google_cloud_sdk() {
     return 0
 }
 
+_koopa_activate_homebrew_prefix() {  # {{{1
+    # """
+    # Activate a cellar-only Homebrew program.
+    # @note Updated 2020-05-01.
+    # """
+    _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"
+}
+
 _koopa_activate_homebrew_python() {
     # """
     # Activate Homebrew Python.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-05-01.
     #
     # Use official installer in '/Library/Frameworks' instead.
     #
@@ -518,9 +450,7 @@ _koopa_activate_homebrew_python() {
     # - brew info python
     # """
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    _koopa_add_to_path_start "/usr/local/opt/python/libexec/bin"
-    _koopa_add_to_manpath_start "/usr/local/opt/python/share/man"
-    return 0
+    _koopa_activate_homebrew_prefix "python"
 }
 
 _koopa_activate_koopa_paths() {  # {{{1
@@ -734,10 +664,11 @@ _koopa_activate_pipx() {  # {{{1
 _koopa_activate_prefix() {  # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-05-01.
     # """
     local prefix
     prefix="${1:?}"
+    [ -d "$prefix" ] || return 0
     _koopa_add_to_path_start "${prefix}/sbin"
     _koopa_add_to_path_start "${prefix}/bin"
     _koopa_add_to_manpath_start "${prefix}/man"
