@@ -47,9 +47,8 @@ sudo rm -frv \
 _koopa_apt_import_r_key
 _koopa_apt_add_r_repo "$version"
 
-# This is lighter than using 'r-base'.
 pkgs=(
-    r-base-core
+    r-base
     r-base-dev
 )
 
