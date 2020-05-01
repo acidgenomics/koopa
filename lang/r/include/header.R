@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-04-30.
+## @note Updated 2020-05-01.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -11,7 +11,7 @@ options(
     ## Print out each command.
     ## > "verbose" = TRUE,
     ## Treat all warnings as errors.
-    ## > "warn" = 2L,
+    "warn" = 2L,
     ## Exit on any warnings.
     "warning" = quote(quit(status = 1L))
 )
