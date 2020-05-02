@@ -351,13 +351,6 @@ _koopa_update_lmod_config
 # Languages  {{{1
 # ==============================================================================
 
-# Python  {{{2
-# ------------------------------------------------------------------------------
-
-# This will consistently install the latest version from source across all
-# Linux distros.
-install-python
-
 # R  {{{2
 # ------------------------------------------------------------------------------
 
@@ -383,6 +376,13 @@ fi
 
 # Ensure consistent R configuration across platforms.
 _koopa_update_r_config
+
+# Python  {{{2
+# ------------------------------------------------------------------------------
+
+# This will consistently install the latest version from source across all
+# Linux distros.
+install-python
 
 # Secondary  {{{2
 # ------------------------------------------------------------------------------
