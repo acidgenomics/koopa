@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-04-28.
+## Updated 2020-05-02.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -269,37 +269,16 @@ local({
     ## Library path  {{{2
     ## -------------------------------------------------------------------------
 
-    ## Check that versioned library is defined and exists on disk.
-    local({
-        if (isTRUE(.rprofile[["macos"]])) {
-            ## macOS (user library).
-            libVar <- "R_LIBS_USER"
-        } else {
-            ## Linux (shared site library).
-            libVar <- "R_LIBS_SITE"
-        }
-        lib <- Sys.getenv(libVar)
-        if (!isTRUE(dir.exists(lib))) {
-            stop(paste0(
-                "R package library ",
-                "(", libVar, ") ",
-                "does not exist: '", lib, "'."
-            ))
-        }
-    })
-
     ## Check that library matches R version.
     local({
         if (!isTRUE(.rprofile[["conda"]])) {
             libs <- .libPaths()
-            if (
-                ## Site library.
-                !any(grepl(pattern = "site-library", x = libs)) &&
-                ## User library.
-                !any(grepl(pattern = .rprofile[["rVersionShort"]], x = libs))
-            ) {
+            if (!isTRUE(grepl(
+                pattern = .rprofile[["rVersionShort"]],
+                x = libs[[1L]]
+            ))) {
                 stop(sprintf(
-                    "Failed to detect R %s library in '.libPaths()':\n%s",
+                    "R %s library configuration error:\n%s",
                     .rprofile[["rVersionShort"]],
                     paste(libs, collapse = "\n")
                 ))

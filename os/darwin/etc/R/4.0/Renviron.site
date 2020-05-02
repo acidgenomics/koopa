@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for macOS.
-## Updated 2020-04-26.
+## Updated 2020-05-02.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
