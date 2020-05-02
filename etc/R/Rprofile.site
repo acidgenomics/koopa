@@ -107,12 +107,17 @@ local({
 })
 
 ## Get the short R version without patch (e.g. 3.6).
+## Use "devel" instead for development release.
 local({
-    rVersionShort <- numeric_version(paste(
-        R.version[["major"]],
-        substr(x = R.version[["minor"]], start = 1L, stop = 1L),
-        sep = "."
-    ))
+    if (identical(R.version[["status"]], "Under development (unstable)")) {
+        rVersionShort <- "devel"
+    } else {
+        rVersionShort <- numeric_version(paste(
+            R.version[["major"]],
+            substr(x = R.version[["minor"]], start = 1L, stop = 1L),
+            sep = "."
+        ))
+    }
     assign(x = "rVersionShort", value = rVersionShort, envir = .rprofile)
 })
 
