@@ -10,6 +10,47 @@ source "${script_dir}/../include/header.sh"
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
 # """
 
+# R 4.0.0 binary is currently broken on Debian.
+#
+# r-base-core and r-base-dev install successfully.
+# However, this won't install Matrix package into system library, which leads
+# to issues with devtools/testthat picking up the package correctly for
+# R CMD check.
+#
+# % apt install r-base
+# Reading package lists... Done
+# Building dependency tree
+# Reading state information... Done
+# Some packages could not be installed. This may mean that you have
+# requested an impossible situation or if you are using the unstable
+# distribution that some required packages have not yet been created
+# or been moved out of Incoming.
+# The following information may help to resolve the situation:
+#
+# The following packages have unmet dependencies:
+#  r-base : Depends: r-recommended (= 4.0.0-1~bustercran.0) but it is not going
+#  to be installed
+# E: Unable to correct problems, you have held broken packages.
+#
+# % apt install r-recommended
+# The following packages have unmet dependencies:
+#  r-recommended : Depends: r-cran-spatial but it is not going to be installed
+#                  Depends: r-cran-codetools but it is not going to be installed
+#
+# % apt install r-cran-spatial
+# The following packages have unmet dependencies:
+#  r-cran-spatial : Depends: r-api-3.5
+#
+# % apt install r-cran-codetools
+# The following packages have unmet dependencies:
+#  r-cran-codetools : Depends: r-api-3.5
+#
+# % apt install r-api-3.5
+# Package r-api-3.5 is a virtual package provided by:
+#   r-base-core 3.5.2-1 [Not candidate version]
+#
+# E: Package 'r-api-3.5' has no installation candidate
+
 r_exe="/usr/bin/R"
 _koopa_exit_if_installed "$r_exe"
 

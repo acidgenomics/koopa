@@ -319,35 +319,6 @@ then
     install-pass
 fi
 
-# Containers and environments  {{{1
-# ==============================================================================
-
-# Docker  {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    _koopa_run_if_installed install-docker
-    install-docker-credential-pass
-fi
-
-# Conda  {{{2
-# ------------------------------------------------------------------------------
-
-install-conda
-
-# Lmod  {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    install-lmod
-fi
-
-# This will skip if Lmod isn't installed.
-# Can be necessary for updating config on persistent VMs.
-_koopa_update_lmod_config
-
 # Languages  {{{1
 # ==============================================================================
 
@@ -356,10 +327,15 @@ _koopa_update_lmod_config
 
 # Note that this will use apt package on Debian/Ubuntu and otherwise install
 # from source on other Linux distros.
+
+# We're applying a temporary fix here to avoid installation of broken R 4.0.0
+# CRAN binary on Debian due to r-base-recommended.
+
 if [[ "$r_version" == "devel" ]]
 then
     install-r-devel
-elif _koopa_is_installed install-r-cran-binary
+elif _koopa_is_installed install-r-cran-binary && \
+    ! { _koopa_is_debian && [[ "$r_version" == "4.0.0" ]]; }
 then
     install-r-cran-binary --version="$r_version"
 else
@@ -395,6 +371,35 @@ then
     install-ruby
     install-rust
 fi
+
+# Containers and environments  {{{1
+# ==============================================================================
+
+# Docker  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    _koopa_run_if_installed install-docker
+    install-docker-credential-pass
+fi
+
+# Conda  {{{2
+# ------------------------------------------------------------------------------
+
+install-conda
+
+# Lmod  {{{2
+# ------------------------------------------------------------------------------
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    install-lmod
+fi
+
+# This will skip if Lmod isn't installed.
+# Can be necessary for updating config on persistent VMs.
+_koopa_update_lmod_config
 
 # Libraries  {{{1
 # ==============================================================================
