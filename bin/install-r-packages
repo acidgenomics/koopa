@@ -43,7 +43,7 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
 biocVersion <- Sys.getenv("BIOC_VERSION")
 if (isTRUE(nzchar(biocVersion))) {
     message(sprintf("Installing Bioconductor %s.", biocVersion))
-    BiocManager::install(version = biocVersion)
+    BiocManager::install(version = biocVersion, ask = FALSE)
 }
 
 install <- bb8::install
