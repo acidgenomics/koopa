@@ -86,6 +86,8 @@ then
     set -x
 fi
 
+r_version="$(_koopa_variable "r")"
+
 # Start configuration  {{{1
 # ==============================================================================
 
