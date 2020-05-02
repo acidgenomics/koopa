@@ -396,6 +396,8 @@ _koopa_apt_install() {  # {{{1
     # @note Updated 2020-05-02.
     # """
     sudo apt-get --fix-broken --yes install
+    sudo apt-get --yes clean
+    sudo apt-get --yes autoremove
     __koopa_apt_get install "$@"
 }
 
@@ -416,7 +418,6 @@ _koopa_apt_remove() {  # {{{1
     # Remove Debian apt package.
     # @note Updated 2020-04-29.
     # """
-    # > sudo apt-get update
     sudo apt-get --yes remove --purge "$@"
     sudo apt-get --yes clean
     sudo apt-get --yes autoremove
