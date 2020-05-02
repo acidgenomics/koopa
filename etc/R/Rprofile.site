@@ -515,12 +515,12 @@ local({
             msg <- sprintf(
                 fmt = paste(
                     "",
-                    "R %s",
+                    "%s",
                     "",
                     "R Home:", pathString,
                     sep = "\n"
                 ),
-                .rprofile[["rVersionFull"]],
+                R.version[["version.string"]],
                 normalizePath(R.home(), mustWork = TRUE)
             )
             ## > if (isTRUE(.rprofile[["macos"]])) {
