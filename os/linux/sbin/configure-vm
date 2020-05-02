@@ -10,7 +10,6 @@ _koopa_assert_has_no_envs
 # ==============================================================================
 
 data_disk=
-r_version=
 source_ip=
 
 # Bioconductor mode skips installation of GNU utils and other dependencies that
@@ -20,6 +19,8 @@ bioconductor=0
 # Compact mode applies to a persistent VM with a small '/' mount.
 # This is not always the case for Docker images.
 compact=0
+
+r_version="$(_koopa_variable "r")"
 
 # Enable more verbose output.
 verbose=0
@@ -85,8 +86,6 @@ if [[ "$verbose" -eq 1 ]]
 then
     set -x
 fi
-
-r_version="$(_koopa_variable "r")"
 
 # Start configuration  {{{1
 # ==============================================================================
