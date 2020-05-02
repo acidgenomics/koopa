@@ -393,8 +393,9 @@ _koopa_apt_import_r_key() {  # {{{1
 _koopa_apt_install() {  # {{{1
     # """
     # Install Debian apt package.
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-05-02.
     # """
+    sudo apt-get --fix-broken --yes install
     __koopa_apt_get install "$@"
 }
 
