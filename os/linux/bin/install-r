@@ -19,10 +19,15 @@ source "${script_dir}/../include/header.sh"
 # """
 
 link_cellar=1
+version=
 
 while (("$#"))
 do
     case "$1" in
+        --cellar-only)
+            link_cellar=0
+            shift 1
+            ;;
         --version=*)
             version="${1#*=}"
             shift 1
@@ -38,10 +43,8 @@ do
 done
 
 name="r"
-if [[ -n "${version:-}" ]]
+if [[ -z "$version" ]]
 then
-    link_cellar=0
-else
     version="$(_koopa_variable "$name")"
 fi
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
