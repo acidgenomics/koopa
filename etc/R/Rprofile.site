@@ -273,10 +273,10 @@ local({
     local({
         if (!isTRUE(.rprofile[["conda"]])) {
             libs <- .libPaths()
-            if (!isTRUE(grepl(
+            if (!isTRUE(any(grepl(
                 pattern = .rprofile[["rVersionShort"]],
-                x = libs[[1L]]
-            ))) {
+                x = libs
+            )))) {
                 stop(sprintf(
                     "R %s library configuration error:\n%s",
                     .rprofile[["rVersionShort"]],
