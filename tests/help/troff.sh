@@ -62,8 +62,8 @@ do
     do
         _koopa_info "$file"
         head -n 1 "$file" \
-            | grep -Eq "^\.TH " \
-            || _koopa_stop "Invalid man file: '${file}'"
+            | _koopa_str_match_regex "^\.TH " \
+            || _koopa_stop "Invalid man file: '${file}'."
     done
 done
 

@@ -69,10 +69,13 @@ _koopa_help() {  # {{{1
             prefix="$(dirname "$(dirname "$file")")"
             local man_file
             man_file="${prefix}/man/man1/${script_name}.1"
-            _koopa_assert_is_file "$man_file"
-            if [[ ! -s "$man_file" ]]
+            if [[ -s "$man_file" ]]
             then
-                _koopa_stop "No help documentation for '${script_name}'."
+                head -n 1 "$file" \
+                    | _koopa_str_match_regex "^\.TH " \
+                    || _koopa_stop "No documentation for '${script_name}'."
+            else
+                _koopa_stop "No documentation for '${script_name}'."
             fi
             man "$man_file"
             exit 0
