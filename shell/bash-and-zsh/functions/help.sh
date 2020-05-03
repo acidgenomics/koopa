@@ -3,7 +3,7 @@
 _koopa_help() {  # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2020-01-21.
+    # @note Updated 2020-05-03.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -60,13 +60,21 @@ _koopa_help() {  # {{{1
                     file="$0"
                     ;;
                 *)
-                    _koopa_warning "Unsupported shell."
-                    exit 1
+                    _koopa_stop "Unsupported shell."
                     ;;
             esac
-            local name
-            name="${file##*/}"
-            man "$name"
+            local script_name
+            script_name="$(basename "$file")"
+            local prefix
+            prefix="$(dirname "$(dirname "$file")")"
+            local man_file
+            man_file="${prefix}/man/man1/${script_name}.1"
+            _koopa_assert_is_file "$man_file"
+            if [[ ! -s "$man_file" ]]
+            then
+                _koopa_stop "No help documentation for '${script_name}'."
+            fi
+            man "$man_file"
             exit 0
             ;;
     esac
