@@ -71,9 +71,9 @@ _koopa_help() {  # {{{1
             man_file="${prefix}/man/man1/${script_name}.1"
             if [[ -s "$man_file" ]]
             then
-                head -n 1 "$file" \
+                head -n 1 "$man_file" \
                     | _koopa_str_match_regex "^\.TH " \
-                    || _koopa_stop "No documentation for '${script_name}'."
+                    || _koopa_stop "Invalid documentation at '${man_file}'."
             else
                 _koopa_stop "No documentation for '${script_name}'."
             fi
