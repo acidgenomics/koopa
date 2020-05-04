@@ -146,7 +146,7 @@ _koopa_kallisto_quant() {  # {{{1
 _koopa_salmon_index() {  # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2020-05-03.
+    # @note Updated 2020-05-04.
     # """
     _koopa_assert_is_installed salmon
 
@@ -178,8 +178,9 @@ _koopa_salmon_index() {  # {{{1
 
     _koopa_h2 "Generating salmon index at '${index_dir}'."
 
-    local index_dir
-    index_dir="$(dirname "$index_file")"
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
 
     local log_file
     log_file="$(dirname "$index_dir")/kallisto-index.log"
