@@ -35,8 +35,13 @@ _koopa_kallisto_index() {  # {{{1
 
     _koopa_h2 "Generating kallisto index at '${index_file}'."
 
+    local index_dir
+    index_dir="$(dirname "$index_file")"
+
     local log_file
-    log_file="$(dirname "$index_file")/kallisto-index.log"
+    log_file="${index_dir}/kallisto-index.log"
+
+    mkdir -pv "$index_dir"
 
     kallisto index \
         -i "$index_file" \
@@ -173,8 +178,13 @@ _koopa_salmon_index() {  # {{{1
 
     _koopa_h2 "Generating salmon index at '${index_dir}'."
 
+    local index_dir
+    index_dir="$(dirname "$index_file")"
+
     local log_file
     log_file="$(dirname "$index_dir")/kallisto-index.log"
+
+    mkdir -pv "$index_dir"
 
     salmon index \
             -k 31 \
