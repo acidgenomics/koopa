@@ -200,7 +200,7 @@ _koopa_salmon_index() {  # {{{1
 _koopa_salmon_quant() {  # {{{1
     # """
     # Run salmon quant.
-    # @note Updated 2020-02-05.
+    # @note Updated 2020-05-04.
     # """
     _koopa_assert_is_installed salmon
 
@@ -237,7 +237,7 @@ _koopa_salmon_quant() {  # {{{1
         esac
     done
 
-    _koopa_assert_is_set fastq_r1 fastq_r2 index_file output_dir r1_tail r2_tail
+    _koopa_assert_is_set fastq_r1 fastq_r2 index_dir output_dir r1_tail r2_tail
     _koopa_assert_is_file "$fastq_r1" "$fastq_r2"
 
     local fastq_r1_bn
