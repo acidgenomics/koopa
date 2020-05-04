@@ -183,7 +183,7 @@ _koopa_salmon_index() {  # {{{1
     _koopa_dl "Threads" "$threads"
 
     local log_file
-    log_file="$(dirname "$index_dir")/kallisto-index.log"
+    log_file="$(dirname "$index_dir")/salmon-index.log"
 
     mkdir -pv "$index_dir"
 
