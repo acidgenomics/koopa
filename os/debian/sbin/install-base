@@ -207,6 +207,7 @@ pkgs=(
     vim
     wget
     xz-utils
+    zip
 )
 
 # Developer  {{{1
