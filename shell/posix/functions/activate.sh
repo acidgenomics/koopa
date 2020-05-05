@@ -261,7 +261,7 @@ _koopa_activate_fzf() {  # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
     #
-    # @note Updated 2020-04-28.
+    # @note Updated 2020-05-05.
     #
     # Currently Bash and Zsh are supported.
     #
@@ -271,20 +271,17 @@ _koopa_activate_fzf() {  # {{{1
     # - https://github.com/junegunn/fzf
     # """
     local nounset prefix script shell
-
     prefix="$(_koopa_fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
     _koopa_activate_prefix "$prefix"
-
     nounset="$(_koopa_boolean_nounset)"
     shell="$(_koopa_shell)"
-
+    # Relax hardened shell temporarily, if necessary.
     if [ "$nounset" -eq 1 ]
     then
         set +e
         set +u
     fi
-
     # Auto-completion.
     script="${prefix}/shell/completion.${shell}"
     if [ -f "$script" ]
@@ -292,7 +289,6 @@ _koopa_activate_fzf() {  # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
-
     # Key bindings.
     script="${prefix}/shell/key-bindings.${shell}"
     if [ -f "$script" ]
@@ -300,13 +296,12 @@ _koopa_activate_fzf() {  # {{{1
         # shellcheck source=/dev/null
         . "$script"
     fi
-
+    # Reset hardened shell, if necessary.
     if [ "$nounset" -eq 1 ]
     then
         set -e
         set -u
     fi
-
     return 0
 }
 
@@ -363,6 +358,7 @@ _koopa_activate_homebrew() {  # {{{1
     # > _koopa_activate_homebrew_gnu_prefix "gnu-which"
     _koopa_activate_homebrew_prefix "texinfo"
     _koopa_activate_homebrew_prefix "sqlite"
+    _koopa_activate_homebrew_libexec_prefix "man-db"
     # > _koopa_activate_homebrew_python
     _koopa_activate_homebrew_google_cloud_sdk
 
@@ -422,6 +418,15 @@ _koopa_activate_homebrew_google_cloud_sdk() {
 
     fi
     return 0
+}
+
+_koopa_activate_homebrew_libexec_prefix() {  # {{{1
+    # """
+    # Activate a cellar-only Homebrew program.
+    # @note Updated 2020-05-05.
+    # """
+    _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
+
 }
 
 _koopa_activate_homebrew_prefix() {  # {{{1

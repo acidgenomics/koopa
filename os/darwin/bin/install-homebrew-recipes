@@ -196,6 +196,7 @@ brews=(
     go
     gpatch
     grep
+    groff
     gsl
     hdf5
     htop
@@ -219,6 +220,7 @@ brews=(
     lua
     luarocks
     make
+    man-db
     mariadb-connector-c
     mas
     neofetch
