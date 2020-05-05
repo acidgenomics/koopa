@@ -231,6 +231,10 @@ perlbrew="0.88"
 # https://metacpan.org/release/File-Rename
 perl-file-rename="1.10"
 
+# https://www.php.net/downloads
+# https://github.com/php/php-src/releases
+php="7.4.5"
+
 # https://github.com/broadinstitute/picard
 picard="2.21.1"
 
