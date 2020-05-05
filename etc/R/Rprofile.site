@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-05-02.
+## Updated 2020-05-05.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -313,9 +313,9 @@ local({
         secretsFile <- file.path("~", ".Rsecrets")
         if (file.exists(secretsFile)) {
             source(secretsFile)
-            if (isTRUE(interactive())) {
-                message(sprintf("Loaded '%s' file.", secretsFile))
-            }
+            ## > if (isTRUE(interactive())) {
+            ## >     message(sprintf("Loaded '%s' file.", secretsFile))
+            ## > }
             secretsFile <- normalizePath(secretsFile)
             assign(x = "secretsFile", value = secretsFile, envir = .rprofile)
         }
