@@ -3,7 +3,7 @@
 _koopa_kallisto_index() {  # {{{1
     # """
     # Generate kallisto index.
-    # @note Updated 2020-02-05.
+    # @note Updated 2020-05-03.
     # """
     _koopa_assert_is_installed kallisto
 
@@ -35,8 +35,13 @@ _koopa_kallisto_index() {  # {{{1
 
     _koopa_h2 "Generating kallisto index at '${index_file}'."
 
+    local index_dir
+    index_dir="$(dirname "$index_file")"
+
     local log_file
-    log_file="$(basename "$index_file")/kallisto-index.log"
+    log_file="${index_dir}/kallisto-index.log"
+
+    mkdir -pv "$index_dir"
 
     kallisto index \
         -i "$index_file" \
@@ -141,7 +146,7 @@ _koopa_kallisto_quant() {  # {{{1
 _koopa_salmon_index() {  # {{{1
     # """
     # Generate salmon index.
-    # @note Updated 2020-02-05.
+    # @note Updated 2020-05-04.
     # """
     _koopa_assert_is_installed salmon
 
@@ -173,8 +178,14 @@ _koopa_salmon_index() {  # {{{1
 
     _koopa_h2 "Generating salmon index at '${index_dir}'."
 
+    local threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
+
     local log_file
-    log_file="$(basename "$index_dir")/kallisto-index.log"
+    log_file="$(dirname "$index_dir")/salmon-index.log"
+
+    mkdir -pv "$index_dir"
 
     salmon index \
             -k 31 \
@@ -189,7 +200,7 @@ _koopa_salmon_index() {  # {{{1
 _koopa_salmon_quant() {  # {{{1
     # """
     # Run salmon quant.
-    # @note Updated 2020-02-05.
+    # @note Updated 2020-05-04.
     # """
     _koopa_assert_is_installed salmon
 
@@ -226,7 +237,7 @@ _koopa_salmon_quant() {  # {{{1
         esac
     done
 
-    _koopa_assert_is_set fastq_r1 fastq_r2 index_file output_dir r1_tail r2_tail
+    _koopa_assert_is_set fastq_r1 fastq_r2 index_dir output_dir r1_tail r2_tail
     _koopa_assert_is_file "$fastq_r1" "$fastq_r2"
 
     local fastq_r1_bn
