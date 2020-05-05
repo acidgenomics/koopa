@@ -64,6 +64,10 @@ case "$1" in
         _koopa_app_prefix
         exit 0
         ;;
+    cellar-prefix)
+        _koopa_cellar_prefix
+        exit 0
+        ;;
     config-prefix)
         _koopa_config_prefix
         exit 0
