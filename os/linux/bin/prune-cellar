@@ -1,0 +1,73 @@
+#!/usr/bin/env Rscript
+
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+stopifnot(
+    requireNamespace("acidbase", quietly = TRUE),
+    requireNamespace("goalie", quietly = TRUE)
+)
+koopa <- .koopa[["koopa"]]
+
+prefix <- acidbase::shell(
+    command = koopa,
+    args = "cellar-prefix",
+    stdout = TRUE
+)
+
+apps <- sort(list.dirs(
+    path = prefix,
+    full.names = TRUE,
+    recursive = FALSE
+))
+
+versions <- lapply(
+    X = apps,
+    FUN = function(app) {
+        x <- list.dirs(
+            path = app,
+            full.names = FALSE,
+            recursive = FALSE
+        )
+        if (all(grepl(pattern = "^[.0-9]+$", x = x))) {
+            x <- numeric_version(x)
+        }
+        x <- sort(x)
+        x
+    }
+)
+names(versions) <- basename(apps)
+
+latest <- lapply(X = versions, FUN = tail, n = 1L)
+## > print(latest)
+
+prune <- mapply(
+    FUN = setdiff,
+    x = versions,
+    y = latest,
+    SIMPLIFY = FALSE,
+    USE.NAMES = TRUE
+)
+prune <- Filter(f = goalie::hasLength, x = prune)
+## > print(prune)
+
+## Add an early return here.
+
+prunePaths <- sort(unlist(mapply(
+    app = names(prune),
+    versions = prune,
+    MoreArgs = list(prefix = prefix),
+    FUN = function(app, versions, prefix) {
+        file.path(prefix, app, versions)
+    },
+    SIMPLIFY = FALSE,
+    USE.NAMES = FALSE
+)))
+
+## > print(prunePaths)
+
+unlink(prunePaths, recursive = TRUE)
