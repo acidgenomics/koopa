@@ -96,6 +96,7 @@ casks=(
     rstudio
     scrivener
     skype
+    skype-for-business
     spillo
     sublime-text
     superduper
@@ -109,6 +110,7 @@ casks=(
     vlc
     wine-stable
     xld
+    zoomus
     # External taps.
     homebrew/cask-versions/deadbeef-devel
 )
