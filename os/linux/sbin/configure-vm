@@ -178,8 +178,8 @@ _koopa_info "Checking available local disk space."
 df -h '/'
 gb_total="$(_koopa_disk_gb_total)"
 [ "$gb_total" -lt 10 ] && compact=1
-gb_free="$(_koopa_disk_gb_free)"
-[ "$gb_free" -lt 10 ] && compact=1
+# > gb_free="$(_koopa_disk_gb_free)"
+# > [ "$gb_free" -lt 10 ] && compact=1
 
 if [[ "$compact" -eq 1 ]]
 then
