@@ -336,7 +336,9 @@ if [[ "$r_version" == "devel" ]]
 then
     install-r-devel
 elif _koopa_is_installed install-r-cran-binary && \
-    ! { _koopa_is_debian && [[ "$r_version" == "4.0.0" ]]; }
+    ! { _koopa_is_debian && ! _koopa_is_ubuntu && \
+        [[ "$r_version" == "4.0.0" ]]; \
+    }
 then
     install-r-cran-binary --version="$r_version"
 else
