@@ -59,7 +59,7 @@ _koopa_file_match_regex() {  # {{{1
 _koopa_str_match() {  # {{{1
     # """
     # Does the input match a fixed string?
-    # @note Updated 2020-04-30.
+    # @note Updated 2020-05-05.
     #
     # Usage of '-q' flag can cause an exit trap in 'set -e' mode.
     # Redirecting output to '/dev/null' works more reliably.
@@ -89,7 +89,7 @@ _koopa_str_match() {  # {{{1
     else
         return 1
     fi
-    _koopa_print "$string" | grep -Fq "$pattern" > /dev/null
+    echo "$string" | grep -Fq "$pattern" > /dev/null
 }
 
 _koopa_str_match2() {  # {{{1
@@ -107,7 +107,7 @@ _koopa_str_match2() {  # {{{1
 _koopa_str_match_regex() {  # {{{1
     # """
     # Does the input match a regular expression?
-    # @note Updated 2020-04-30.
+    # @note Updated 2020-05-05.
     # """
     local string pattern
     if [ "$#" -eq 2 ]
@@ -126,5 +126,5 @@ _koopa_str_match_regex() {  # {{{1
     else
         return 1
     fi
-    _koopa_print "$string" | grep -Eq "$pattern" > /dev/null
+    echo "$string" | grep -Eq "$pattern" > /dev/null
 }
