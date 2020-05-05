@@ -44,7 +44,7 @@ _koopa_mkdir "$prefix"
 _koopa_rm "${HOME}/.perlbrew"
 
 (
-    curl -L https://install.perlbrew.pl | bash
+    curl -sSL https://install.perlbrew.pl | bash
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
 _koopa_set_permissions --recursive "$prefix"
