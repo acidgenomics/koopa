@@ -20,7 +20,6 @@ _koopa_app_prefix() {  # {{{1
         prefix="$(_koopa_local_app_prefix)"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_aspera_prefix() {  # {{{1
@@ -36,7 +35,6 @@ _koopa_aspera_prefix() {  # {{{1
         prefix="${HOME:?}/.aspera/connect"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_autojump_prefix() {  # {{{1
@@ -61,7 +59,6 @@ _koopa_autojump_prefix() {  # {{{1
         prefix="${HOME:?}/.autojump"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_bcbio_prefix() {  # {{{1
@@ -82,7 +79,6 @@ _koopa_bcbio_prefix() {  # {{{1
         prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_cellar_prefix() {  # {{{1
@@ -103,7 +99,6 @@ _koopa_cellar_prefix() {  # {{{1
         prefix="$(_koopa_make_prefix)/cellar"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_conda_prefix() {  # {{{1
@@ -119,7 +114,6 @@ _koopa_conda_prefix() {  # {{{1
         prefix="$(_koopa_app_prefix)/conda"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_config_prefix() {  # {{{1
@@ -128,7 +122,6 @@ _koopa_config_prefix() {  # {{{1
     # @note Updated 2020-01-13.
     # """
     _koopa_print "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
-    return 0
 }
 
 _koopa_data_disk_link_prefix() {  # {{{1
@@ -138,7 +131,6 @@ _koopa_data_disk_link_prefix() {  # {{{1
     # """
     _koopa_is_linux || return 1
     _koopa_print "/n"
-    return 0
 }
 
 _koopa_docker_prefix() {  # {{{1
@@ -147,7 +139,6 @@ _koopa_docker_prefix() {  # {{{1
     # @note Updated 2020-02-15.
     # """
     _koopa_print "$(_koopa_config_prefix)/docker"
-    return 0
 }
 
 _koopa_docker_private_prefix() {  # {{{1
@@ -156,18 +147,14 @@ _koopa_docker_private_prefix() {  # {{{1
     # @note Updated 2020-03-05.
     # """
     _koopa_print "$(_koopa_config_prefix)/docker-private"
-    return 0
 }
 
 _koopa_dotfiles_prefix() {  # {{{1
     # """
     # Koopa system dotfiles prefix.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-05-05.
     # """
-    local prefix
-    prefix="$(_koopa_prefix)/dotfiles"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_prefix)/dotfiles"
 }
 
 _koopa_dotfiles_private_prefix() {  # {{{1
@@ -176,17 +163,13 @@ _koopa_dotfiles_private_prefix() {  # {{{1
     # @note Updated 2020-02-15.
     # """
     _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
-    return 0
 }
 
 _koopa_ensembl_perl_api_prefix() {  # {{{1
     # """
     # Ensembl Perl API prefix.
     # @note Updated 2019-11-15.
-    local prefix
-    prefix="$(_koopa_app_prefix)/ensembl"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_app_prefix)/ensembl"
 }
 
 _koopa_fzf_prefix() {  # {{{1
@@ -195,7 +178,6 @@ _koopa_fzf_prefix() {  # {{{1
     # @note Updated 2020-03-16.
     # """
     _koopa_print "$(_koopa_app_prefix)/fzf"
-    return 0
 }
 
 _koopa_go_gopath() {  # {{{1
@@ -220,7 +202,6 @@ _koopa_go_gopath() {  # {{{1
         prefix="$(_koopa_app_prefix)/go/gopath"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_homebrew_cellar_prefix() {  # {{{1
@@ -229,7 +210,6 @@ _koopa_homebrew_cellar_prefix() {  # {{{1
     x="$(_koopa_homebrew_prefix)/Cellar"
     [ -d "$x" ] || return 1
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_homebrew_prefix() {  # {{{1
@@ -242,7 +222,6 @@ _koopa_homebrew_prefix() {  # {{{1
     x="${HOMEBREW_PREFIX:?}"
     [ -d "$x" ] || return 1
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_java_home() {  # {{{1
@@ -272,7 +251,6 @@ _koopa_java_home() {  # {{{1
         home="$(dirname "$(dirname "${java_exe}")")"
     fi
     _koopa_print "$home"
-    return 0
 }
 
 _koopa_local_app_prefix() {  # {{{1
@@ -283,7 +261,6 @@ _koopa_local_app_prefix() {  # {{{1
     # This is the default app path when koopa is installed per user.
     # """
     _koopa_print "${XDG_DATA_HOME:?}"
-    return 0
 }
 
 _koopa_make_prefix() {  # {{{1
@@ -302,18 +279,14 @@ _koopa_make_prefix() {  # {{{1
         prefix="$(dirname "${XDG_DATA_HOME:?}")"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_msigdb_prefix() {  # {{{1
     # """
     # MSigDB prefix.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-05-05.
     # """
-    local prefix
-    prefix="$(_koopa_refdata_prefix)/msigdb"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_refdata_prefix)/msigdb"
 }
 
 _koopa_openjdk_prefix() {  # {{{1
@@ -322,7 +295,6 @@ _koopa_openjdk_prefix() {  # {{{1
     # @note Updated 2020-02-27.
     # """
     _koopa_print "$(_koopa_app_prefix)/java/openjdk"
-    return 0
 }
 
 _koopa_perlbrew_prefix() {  # {{{1
@@ -338,7 +310,6 @@ _koopa_perlbrew_prefix() {  # {{{1
         prefix="$(_koopa_app_prefix)/perl/perlbrew"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_prefix() {  # {{{1
@@ -347,20 +318,16 @@ _koopa_prefix() {  # {{{1
     # @note Updated 2020-01-12.
     # """
     _koopa_print "${KOOPA_PREFIX:?}"
-    return 0
 }
 
 _koopa_pyenv_prefix() {  # {{{1
     # """
     # Python pyenv prefix.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-05-05.
     #
     # See also approach used for rbenv.
     # """
-    local prefix
-    prefix="$(_koopa_app_prefix)/python/pyenv"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_app_prefix)/python/pyenv"
 }
 
 _koopa_python_site_packages_prefix() {
@@ -369,38 +336,31 @@ _koopa_python_site_packages_prefix() {
     # @note Updated 2020-02-10.
     # """
     local python
-    python="${1:-python3}"
+    python="${1:-"python3"}"
     _koopa_assert_is_installed "$python"
     local x
     x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
     _koopa_print "$x"
-    return 0
 }
 
 _koopa_rbenv_prefix() {  # {{{1
     # """
     # Ruby rbenv prefix.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-05-05.
     #
     # See also:
     # - RBENV_ROOT
     # - https://gist.github.com/saegey/5499096
     # """
-    local prefix
-    prefix="$(_koopa_app_prefix)/ruby/rbenv"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_app_prefix)/ruby/rbenv"
 }
 
 _koopa_refdata_prefix() {  # {{{1
     # """
     # Reference data prefix.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-05-05.
     # """
-    local prefix
-    prefix="$(_koopa_data_disk_link_prefix)/refdata"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_data_disk_link_prefix)/refdata"
 }
 
 _koopa_rust_cargo_prefix() {  # {{{1
@@ -421,7 +381,6 @@ _koopa_rust_cargo_prefix() {  # {{{1
         prefix="${HOME:?}/.cargo"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_rust_rustup_prefix() {  # {{{1
@@ -437,7 +396,6 @@ _koopa_rust_rustup_prefix() {  # {{{1
         prefix="${HOME:?}/.rustup"
     fi
     _koopa_print "$prefix"
-    return 0
 }
 
 _koopa_scripts_private_prefix() {  # {{{1
@@ -446,16 +404,12 @@ _koopa_scripts_private_prefix() {  # {{{1
     # @note Updated 2020-02-15.
     # """
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
-    return 0
 }
 
 _koopa_venv_prefix() {  # {{{1
     # """
     # Python venv prefix.
-    # @note Updated 2020-01-12.
+    # @note Updated 2020-05-05.
     # """
-    local prefix
-    prefix="$(_koopa_app_prefix)/python/virtualenvs"
-    _koopa_print "$prefix"
-    return 0
+    _koopa_print "$(_koopa_app_prefix)/python/virtualenvs"
 }
