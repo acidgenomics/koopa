@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-05-01.
+## @note Updated 2020-05-05.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -54,15 +54,22 @@ local({
 local({
     installGitHub <- .koopa[["installGitHub"]]
     isPackageVersion <- .koopa[["isPackageVersion"]]
+    ## GitHub dependencies.
     dependencies <- c(
-        "acidgenomics/acidbase" = "0.1.7",
+        "acidgenomics/acidbase" = "0.1.8",
         "acidgenomics/acidgenerics" = "0.3.4",
         "acidgenomics/goalie" = "0.4.4",
         "acidgenomics/syntactic" = "0.3.9",
         "acidgenomics/bb8" = "0.2.12"
     )
-    if (!all(isPackageVersion(dependencies))) {
-        message("Updating koopa dependencies.")
+    ## Update dependencies, if necessary.
+    ok <- isPackageVersion(dependencies)
+    repos <- names(dependencies)[!ok]
+    if (length(repos) > 0L) {
+        message(sprintf(
+            "Updating koopa dependencies: %s",
+            toString(basename(repos))
+        ))
         stopifnot(requireNamespace("utils", quietly = TRUE))
         local({
             repos <- getOption("repos")
@@ -71,14 +78,17 @@ local({
         })
         ## Note that stringi is a dependency for syntactic.
         invisible(lapply(
-            X = c("BiocManager", "remotes", "stringi"),
+            X = c(
+                "BiocManager",
+                "remotes",
+                "stringi"
+            ),
             FUN = function(pkg) {
                 if (!isTRUE(pkg %in% rownames(utils::installed.packages()))) {
                     utils::install.packages(pkg)
                 }
             }
         ))
-        repos <- names(dependencies)
         if (isTRUE(nzchar(Sys.getenv("GITHUB_PAT")))) {
             Sys.setenv("R_REMOTES_UPGRADE" = "always")
             remotes::install_github(repos)
