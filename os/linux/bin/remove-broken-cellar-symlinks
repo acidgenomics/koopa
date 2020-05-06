@@ -5,4 +5,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
-remove-broken-symlinks "$(_koopa_make_prefix)"
+_koopa_remove_broken_symlinks "$(_koopa_make_prefix)"
