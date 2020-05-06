@@ -84,14 +84,14 @@ _koopa_bcbio_prefix() {  # {{{1
 _koopa_cellar_prefix() {  # {{{1
     # """
     # Cellar prefix.
-    # @note Updated 2020-05-05.
+    # @note Updated 2020-05-06.
     #
     # Currently only supported for Linux.
     # Use Homebrew on macOS instead.
     #
     # Ensure this points to a local mount (e.g. '/usr/local').
     # """
-    _koopa_is_linux || return 1
+    _koopa_is_linux || return 0
     local prefix
     if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
     then
