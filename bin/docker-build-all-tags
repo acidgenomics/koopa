@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-04-12.
+## Updated 2020-05-05.
 ## """
 
 args <- commandArgs(trailingOnly = FALSE)
@@ -16,63 +16,73 @@ stopifnot(requireNamespace("acidbase", quietly = TRUE))
 
 ## This will return only the positional arguments.
 posArgs <- commandArgs(trailingOnly = TRUE)
+stopifnot(all(nzchar(posArgs)))
+images <- posArgs
 
 dockerDir <- file.path("~", ".config", "koopa", "docker")
 stopifnot(isTRUE(dir.exists(dockerDir)))
-
-## Specify the image name as a positional argument.
-image <- posArgs[[1L]]
-imageDir <- file.path(dockerDir, image)
-stopifnot(
-    is.character(image),
-    dir.exists(imageDir)
-)
-tags <- sort(list.dirs(path = imageDir, full.names = FALSE, recursive = FALSE))
-stopifnot(length(tags) > 0L)
 
 ## Enable parallelization if possible.
 ## > if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
 ## >     mapply <- BiocParallel::bpmapply
 ## > }
 
-## Build the versioned images, defined by `Dockerfile` in the subdirectories.
-status <- mapply(
-    tag = tags,
-    MoreArgs = list(image = image),
-    FUN = function(image, tag) {
-        acidbase::shell(
-            command = file.path(
-                koopaPrefix,
-                "bin",
-                "docker-build"
-            ),
-            args = c(
-                paste0("--tag=", tag),
-                image
-            )
+invisible(lapply(
+    X = images,
+    FUN = function(image) {
+        imageDir <- file.path(dockerDir, image)
+        stopifnot(
+            is.character(image),
+            dir.exists(imageDir)
         )
-    },
-    USE.NAMES = FALSE,
-    SIMPLIFY = TRUE
-)
-stopifnot(all(status == 0L))
+        tags <- sort(list.dirs(
+            path = imageDir,
+            full.names = FALSE,
+            recursive = FALSE
+        ))
+        stopifnot(length(tags) > 0L)
 
-## Update "latest" tag, if necessary.
-latestFile <- file.path(imageDir, "latest")
-if (file.exists(latestFile) && !dir.exists(latestFile)) {
-    sourceTag <- readLines(latestFile)
-    stopifnot(identical(length(sourceTag), 1L))
-    destTag <- "latest"
-    print(sprintf(
-        "Tagging %s '%s' as '%s'.",
-        image, sourceTag, destTag
-    ))
-    acidbase::shell(
-        command = file.path(
-            koopaPrefix,
-            "bin",
-            "docker-tag"
-        ),
-        args = c(image, sourceTag, destTag)
-    )
-}
+        ## Build the versioned images, defined by `Dockerfile` in the
+        ## subdirectories.
+        status <- mapply(
+            tag = tags,
+            MoreArgs = list(image = image),
+            FUN = function(image, tag) {
+                acidbase::shell(
+                    command = file.path(
+                        koopaPrefix,
+                        "bin",
+                        "docker-build"
+                    ),
+                    args = c(
+                        paste0("--tag=", tag),
+                        image
+                    )
+                )
+            },
+            USE.NAMES = FALSE,
+            SIMPLIFY = TRUE
+        )
+        stopifnot(all(status == 0L))
+
+        ## Update "latest" tag, if necessary.
+        latestFile <- file.path(imageDir, "latest")
+        if (file.exists(latestFile) && !dir.exists(latestFile)) {
+            sourceTag <- readLines(latestFile)
+            stopifnot(identical(length(sourceTag), 1L))
+            destTag <- "latest"
+            print(sprintf(
+                "Tagging %s '%s' as '%s'.",
+                image, sourceTag, destTag
+            ))
+            acidbase::shell(
+                command = file.path(
+                    koopaPrefix,
+                    "bin",
+                    "docker-tag"
+                ),
+                args = c(image, sourceTag, destTag)
+            )
+        }
+    }
+))
