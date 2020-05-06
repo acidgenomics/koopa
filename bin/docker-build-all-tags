@@ -17,7 +17,6 @@ stopifnot(requireNamespace("acidbase", quietly = TRUE))
 ## This will return only the positional arguments.
 posArgs <- commandArgs(trailingOnly = TRUE)
 stopifnot(all(nzchar(posArgs)))
-images <- posArgs
 
 dockerDir <- file.path("~", ".config", "koopa", "docker")
 stopifnot(isTRUE(dir.exists(dockerDir)))
@@ -26,6 +25,15 @@ stopifnot(isTRUE(dir.exists(dockerDir)))
 ## > if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
 ## >     mapply <- BiocParallel::bpmapply
 ## > }
+
+images <- posArgs
+if (!any(grepl(pattern = "/", x = images))) {
+    images <- file.path("acidgenomics", images)
+}
+message(sprintf(
+    "Building all tags: %s",
+    toString(images)
+))
 
 invisible(lapply(
     X = images,
