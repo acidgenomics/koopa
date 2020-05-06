@@ -18,13 +18,11 @@ prefix <- acidbase::shell(
     args = "cellar-prefix",
     stdout = TRUE
 )
-
 apps <- sort(list.dirs(
     path = prefix,
     full.names = TRUE,
     recursive = FALSE
 ))
-
 versions <- lapply(
     X = apps,
     FUN = function(app) {
@@ -41,10 +39,7 @@ versions <- lapply(
     }
 )
 names(versions) <- basename(apps)
-
 latest <- lapply(X = versions, FUN = tail, n = 1L)
-## > print(latest)
-
 prune <- mapply(
     FUN = setdiff,
     x = versions,
@@ -53,10 +48,6 @@ prune <- mapply(
     USE.NAMES = TRUE
 )
 prune <- Filter(f = goalie::hasLength, x = prune)
-## > print(prune)
-
-## Add an early return here.
-
 prunePaths <- sort(unlist(mapply(
     app = names(prune),
     versions = prune,
@@ -67,7 +58,14 @@ prunePaths <- sort(unlist(mapply(
     SIMPLIFY = FALSE,
     USE.NAMES = FALSE
 )))
-
-## > print(prunePaths)
-
 unlink(prunePaths, recursive = TRUE)
+acidbase::shell(
+    command = file.path(
+        koopaPrefix,
+        "os",
+        "linux",
+        "bin",
+        "remove-broken-cellar-symlinks"
+    ),
+    args = ""
+)
