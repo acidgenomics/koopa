@@ -22,9 +22,6 @@ compact=0
 
 r_version="$(_koopa_variable "r")"
 
-# Enable more verbose output.
-verbose=0
-
 pos=()
 while (("$#"))
 do
@@ -61,10 +58,6 @@ do
             source_ip="$2"
             shift 2
             ;;
-        --verbose)
-            verbose=1
-            shift 1
-            ;;
         --)
             shift 1
             break
@@ -81,11 +74,6 @@ done
 set -- "${pos[@]}"
 
 _koopa_assert_has_no_args "$@"
-
-if [[ "$verbose" -eq 1 ]]
-then
-    set -x
-fi
 
 # Start configuration  {{{1
 # ==============================================================================
