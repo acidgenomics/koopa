@@ -44,6 +44,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 
 # 'foobar2000' cask was removed due to url protection.
 # 'macvim' cask overwrites 'vim' binary, so install manually instead.
+# 'skype-for-business' is potentially useful but starts up at login.
 
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
@@ -96,7 +97,6 @@ casks=(
     rstudio
     scrivener
     skype
-    skype-for-business
     spillo
     sublime-text
     superduper
