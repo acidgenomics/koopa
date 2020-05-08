@@ -145,6 +145,10 @@ case "$1" in
         exit 0
         ;;
     # Deprecated args / error catching -----------------------------------------
+    help)
+        _koopa_defunct "koopa --help"
+        exit 0
+        ;;
     home)
         _koopa_defunct "koopa prefix"
         ;;

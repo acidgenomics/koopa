@@ -3,7 +3,7 @@
 _koopa_help() {  # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2020-05-03.
+    # @note Updated 2020-05-08.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -35,51 +35,64 @@ _koopa_help() {  # {{{1
     #   emulate sh -o POSIX_ARGZERO
     #
     #   Note that NO_POSIX_ARGZERO has no effect unless FUNCTION_ARGZERO was
-    #   already enabled upon entry to the function or script. 
+    #   already enabled upon entry to the function or script.
+    #
+    #   This approach is supported in zsh 5.7.1, but will error in older zsh
+    #   versions, such as on Travis CI. This is the same as the value of $0 when
+    #   the POSIX_ARGZERO option is set, but is always available. 
+    #   > file="${ZSH_ARGZERO:?}"
     #
     # See also:
     # - https://stackoverflow.com/questions/192319
     # - http://zsh.sourceforge.net/Doc/Release/Parameters.html
     # - https://stackoverflow.com/questions/35677745
     # """
-    case "${1:-}" in
-        --help|-h)
-            _koopa_assert_is_installed man
-            local file
-            case "$(_koopa_shell)" in
-                bash)
-                    file="$0"
-                    ;;
-                zsh)
-                    # This approach is supported in zsh 5.7.1, but will error
-                    # in older zsh versions, such as on Travis CI. This is the
-                    # same as the value of $0 when the POSIX_ARGZERO option is
-                    # set, but is always available. 
-                    # > file="${ZSH_ARGZERO:?}"
-                    emulate sh -o POSIX_ARGZERO
-                    file="$0"
-                    ;;
-                *)
-                    _koopa_stop "Unsupported shell."
-                    ;;
-            esac
-            local script_name
-            script_name="$(basename "$file")"
-            local prefix
-            prefix="$(dirname "$(dirname "$file")")"
-            local man_file
-            man_file="${prefix}/man/man1/${script_name}.1"
-            if [[ -s "$man_file" ]]
-            then
-                head -n 1 "$man_file" \
-                    | _koopa_str_match_regex "^\.TH " \
-                    || _koopa_stop "Invalid documentation at '${man_file}'."
-            else
-                _koopa_stop "No documentation for '${script_name}'."
-            fi
-            man "$man_file"
-            exit 0
-            ;;
-    esac
+    [[ "$#" -eq 0 ]] && return 0
+    local first_arg
+    first_arg="$1"
+    local last_arg
+    # Is this a Bashism? Need to double check on Zsh.
+    # https://unix.stackexchange.com/questions/411001
+    last_arg="${!#}"
+    local args
+    args=("$first_arg" "$last_arg")
+    local arg
+    for arg in "${args[@]}"
+    do
+        case "$arg" in
+            --help|-h)
+                _koopa_assert_is_installed man
+                local file
+                case "$(_koopa_shell)" in
+                    bash)
+                        file="$0"
+                        ;;
+                    zsh)
+                        emulate sh -o POSIX_ARGZERO
+                        file="$0"
+                        ;;
+                    *)
+                        _koopa_stop "Unsupported shell."
+                        ;;
+                esac
+                local script_name
+                script_name="$(basename "$file")"
+                local prefix
+                prefix="$(dirname "$(dirname "$file")")"
+                local man_file
+                man_file="${prefix}/man/man1/${script_name}.1"
+                if [[ -s "$man_file" ]]
+                then
+                    head -n 1 "$man_file" \
+                        | _koopa_str_match_regex "^\.TH " \
+                        || _koopa_stop "Invalid documentation at '${man_file}'."
+                else
+                    _koopa_stop "No documentation for '${script_name}'."
+                fi
+                man "$man_file"
+                exit 0
+                ;;
+        esac
+    done
     return 0
 }
