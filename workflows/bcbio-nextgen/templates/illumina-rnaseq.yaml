@@ -1,0 +1,76 @@
+## Template for RNA-seq using Illumina prepared samples.
+## Updated 2019-07-26.
+---
+details:
+  - analysis: RNA-seq
+    genome_build: hg38
+    algorithm:
+      ## Recommending HISAT2 instead of STAR for GRCh38/hg38.
+      ## STAR still has issues with ALT contigs.
+      ## https://github.com/alexdobin/STAR/issues/39
+      ## Recommending STAR instead of HISAT2 for GRCh37/hg19.
+      ## Note that bcbio only supports a single aligner per run.
+      aligner: hisat2
+
+      ## Recommend using salmon/kallisto over HISAT2/STAR for counts.
+      ## Refer to the bcbioRNASeq R package documentation for more information.
+      ## Salmon is currently run by default.
+      ## Note that this setting will run both salmon and kallisto.
+      expression_caller: [salmon, kallisto]
+
+      ## Stranded library configuration.
+      ## This setting depends on your library preparation method.
+      ##
+      ## Supported: "unstranded", "firststrand", "secondstrand".
+      ## Unstranded is the current default.
+      ##
+      ## TruSeq Stranded mRNA is commonly used.
+      ## For that kit, use "firstrand" (fr-firststrand).
+      ##
+      ## HISAT2: `fr-firststrand` corresponds to `--rna-strandedness RF`.
+      ##
+      ## Unsure about the library preparation?
+      ## Run the pipeline on a single sample and check the BAM.
+      ##
+      ## See also:
+      ## - https://ccb.jhu.edu/software/hisat2/manual.shtml
+      ## - https://salmon.readthedocs.io/en/latest/library_type.html
+      ## - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/ngsalign/hisat2.py
+      ## - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/salmon.py
+      ## - https://www.biostars.org/p/262027/
+      ## - https://www.biostars.org/p/297399/
+      ## - https://support.illumina.com/sequencing/sequencing_kits/truseq-stranded-mrna-workflow.html
+      ## - http://seqanswers.com/forums/showthread.php?t=29542
+      ## - https://www.illumina.com/documents/products/technotes/RNASeqAnalysisTopHat.pdf
+      strandedness: unstranded
+      
+      ## Quality format used in the FASTQ files. This is set to "standard" by
+      ## default. If you are unsure and your samples were sequenced any time
+      ## past 2009 or so, use "standard".
+      quality_format: standard
+
+      ## Adapter trimming is no longer recommended, and is disabled by default.
+      trim_reads: False
+
+      ## Uncomment these if adapter trimming needs to be performed.
+      ## > trim_reads: read_through
+      ## > adapters: [truseq, polya]
+
+      ## Uncomment if you want to provide a custom transcriptome FASTA file.
+      ## > transcriptome_fasta: transcriptome.fa
+
+      ## Uncomment if you want to provide a custom transcriptome GTF file.
+      ## > transcriptome_gtf: transcriptome.gtf
+
+      ## Uncomment if you want to want to provide a FASTA file of spike-ins.
+      ## > spikein_fasta: spikeins.fa
+
+      ## Automatically save a bcbioRNASeq S4 object for R.
+      ## > tools_on: [bcbiornaseq]
+      ## > bcbiornaseq:
+      ## >   organism: homo sapiens
+      ## >   interesting_groups: [treatment, genotype]
+
+## Where to upload (save) the final output.
+upload:
+  dir: ../final

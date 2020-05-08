@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+dir="${1:-"."}"
+dir="$(realpath "$dir")"
+
+_koopa_h1 "Checking git status recursively at '${dir}'."
+
+# Using '-L' flag here in case git dir is a symlink.
+while IFS= read -r -d '' repo
+do
+    repo="$(dirname "$repo")"
+    _koopa_h2 "$(basename "$repo")"
+    (
+        cd "$repo" || exit 1
+        pwd
+        git status
+    )
+done < <( \
+    find -L "$dir" \
+        -mindepth 1 \
+        -maxdepth 2 \
+        -name ".git" \
+        -print0 \
+)

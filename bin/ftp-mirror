@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_has_args "$@"
+_koopa_assert_is_installed "wget"
+
+dir=""
+
+while (("$#"))
+do
+    case "$1" in
+        --dir=*)
+            dir="${1#*=}"
+            shift 1
+            ;;
+        --dir)
+            dir="$2"
+            shift 2
+            ;;
+        --host=*)
+            host="${1#*=}"
+            shift 1
+            ;;
+        --host)
+            host="$2"
+            shift 2
+            ;;
+        --user=*)
+            user="${1#*=}"
+            shift 1
+            ;;
+        --user)
+            user="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+if [[ -z "${host:-}" ]] ||
+    [[ -z "${user:-}" ]]
+then
+    _koopa_missing_arg
+fi
+
+if [[ -n "$dir" ]]
+then
+    dir="${host}/${dir}"
+else
+    dir="${host}"
+fi
+
+wget --ask-password --mirror "ftp://${user}@${dir}/"*

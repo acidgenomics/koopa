@@ -1,0 +1,157 @@
+#!/usr/bin/env bash
+
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+        >/dev/null 2>&1 && pwd -P)"
+    # shellcheck source=/dev/null
+    force=1 minimal=1 . "${KOOPA_PREFIX}/activate"
+fi
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+_koopa_assert_has_args "$@"
+
+include_dir="${KOOPA_PREFIX}/system/include/koopa"
+
+case "$1" in
+    # Unix standard (general) --------------------------------------------------
+    --version|-V|version)
+        _koopa_version
+        exit 0
+        ;;
+    # System configuration -----------------------------------------------------
+    check)
+        # shellcheck disable=SC1090
+        source "${include_dir}/check.sh"
+        exit 0
+        ;;
+    info)
+        # shellcheck disable=SC1090
+        source "${include_dir}/info.sh"
+        exit 0
+        ;;
+    install-dotfiles)
+        _koopa_git_clone_dotfiles
+        _koopa_install_dotfiles
+        exit 0
+        ;;
+    list)
+        # shellcheck disable=SC1090
+        source "${include_dir}/list.sh"
+        exit 0
+        ;;
+    list-internal-functions)
+        _koopa_list_internal_functions
+        exit 0
+        ;;
+    set-permissions)
+        shift 1
+        _koopa_set_permissions "$@"
+        exit 0
+        ;;
+    uninstall)
+        "${KOOPA_PREFIX}/uninstall"
+        exit 0
+        ;;
+    update)
+        shift 1
+        # shellcheck disable=SC1090
+        source "${include_dir}/update.sh" "$@"
+        exit 0
+        ;;
+    # Character string return --------------------------------------------------
+    app-prefix)
+        _koopa_app_prefix
+        exit 0
+        ;;
+    cellar-prefix)
+        _koopa_cellar_prefix
+        exit 0
+        ;;
+    config-prefix)
+        _koopa_config_prefix
+        exit 0
+        ;;
+    get-homebrew-cask-version)
+        shift 1
+        _koopa_get_homebrew_cask_version "$@"
+        exit 0
+        ;;
+    get-macos-app-version)
+        shift 1
+        _koopa_get_macos_app_version "$@"
+        exit 0
+        ;;
+    get-version)
+        shift 1
+        _koopa_get_version "$@"
+        exit 0
+        ;;
+    header)
+        shift 1
+        _koopa_header "$@"
+        exit 0
+        ;;
+    host-id)
+        _koopa_host_id
+        exit 0
+        ;;
+    local-app-prefix)
+        _koopa_local_app_prefix
+        exit 0
+        ;;
+    make-prefix)
+        _koopa_make_prefix
+        exit 0
+        ;;
+    os-string)
+        _koopa_os_string
+        exit 0
+        ;;
+    prefix)
+        _koopa_prefix
+        exit 0
+        ;;
+    r-home)
+        _koopa_r_home
+        exit 0
+        ;;
+    which-realpath)
+        shift 1
+        _koopa_which_realpath "$@"
+        exit 0
+        ;;
+    # Developer tools ----------------------------------------------------------
+    install-mike)
+        _koopa_install_mike
+        exit 0
+        ;;
+    log)
+        _koopa_view_latest_tmp_log_file
+        exit 0
+        ;;
+    update-r-config)
+        shift 1
+        _koopa_update_r_config "$@"
+        exit 0
+        ;;
+    variable)
+        shift 1
+        _koopa_variable "$@"
+        exit 0
+        ;;
+    variables)
+        vim "${KOOPA_PREFIX}/system/include/variables.txt"
+        exit 0
+        ;;
+    # Deprecated args / error catching -----------------------------------------
+    home)
+        _koopa_defunct "koopa prefix"
+        ;;
+    upgrade)
+        _koopa_defunct "koopa update"
+        ;;
+    *)
+        _koopa_invalid_arg "$1"
+        ;;
+esac

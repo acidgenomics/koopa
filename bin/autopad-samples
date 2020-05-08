@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_has_args "$@"
+
+prefix="sample"
+padwidth=2
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --padwidth=*)
+            padwidth="${1#*=}"
+            shift 1
+            ;;
+        --padwidth)
+            padwidth="$2"
+            shift 2
+            ;;
+        --prefix=*)
+            prefix="${1#*=}"
+            shift 1
+            ;;
+        --prefix)
+            prefix="$2"
+            shift 2
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+files=("$@")
+
+for file in "${files[@]}"
+do
+    if [[ "$file" =~ ^([0-9]+)(.*)$ ]]
+    then
+        oldname="${BASH_REMATCH[0]}"
+        num=${BASH_REMATCH[1]}
+        # Now pad the number prefix.
+        num=$(printf "%.${padwidth}d" "$num")
+        stem=${BASH_REMATCH[2]}
+        # Combine with prefix to create desired file name.
+        newname="${prefix}_${num}${stem}"
+        mv -nv "$oldname" "$newname"
+    else
+        _koopa_h1 "Skipping '${file}'."
+    fi
+done

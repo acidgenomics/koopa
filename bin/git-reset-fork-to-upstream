@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+dir="${1:-"."}"
+
+(
+    cd "$dir" || exit 1
+    git checkout master
+    git fetch upstream
+    # This will delete all your local changes to master.
+    git reset --hard upstream/master
+    # Take care, this will delete all your changes on your forked master.
+    git push origin master --force
+)

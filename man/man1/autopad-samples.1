@@ -1,0 +1,43 @@
+.TH AUTOPAD-SAMPLES 1 2019-11-09 Bash
+.SH NAME
+autopad-samples \-
+Autopad sample file names that begin with a number
+.SH SYNOPSIS
+.B autopad-samples
+[\fB\-\-prefix\fP=\fI"sample"\fP]
+[\fB\-\-padwidth\fP=\fI2\fP]
+.I file ...
+.SH OPTIONS
+.TP
+.B \-\-prefix
+Prefix name.
+.TP
+.B \-\-padwidth
+Zero padding width.
+Manually adjust this when working with >= 100 samples.
+.SH DESCRIPTION
+Intended for quick sanitization of FASTQ files from a sequencing vendor that begin with numbers and aren't zero padded.
+.PP
+Autopadding file names with leading zeros helps avoided unexpected downstream sorting issues due to differences in how shell environments and programming languages handle natural sorting.
+.PP
+Here we are also renaming with a character string prefix by default, to avoid valid name issues in R. See 'make.names()' for details.
+.SH EXAMPLE
+.nf
+.B autopad-samples *.fastq.gz
+Input:
+## 1-dmso-A-R1.fastq.qz
+## 1-dmso-A-R2.fastq.gz
+## 2-dmso-B-R1.fastq.gz
+## 2-dmso-B-R2.fastq.gz
+## ...
+## 10-compound-A-R1.fastq.gz
+## 10-compound-A-R2.fastq.gz
+Output:
+## sample-01-dmso-A-R1.fastq.qz
+## sample-01-dmso-A-R2.fastq.gz
+## sample-02-dmso-B-R1.fastq.gz
+## sample-02-dmso-B-R2.fastq.gz
+## ...
+## sample-10-compound-A-R1.fastq.gz
+## sample-10-compound-A-R2.fastq.gz
+.fi

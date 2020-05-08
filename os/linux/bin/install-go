@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+reinstall=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --reinstall)
+            reinstall=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+name="go"
+version="$(_koopa_variable "$name")"
+
+app_prefix="$(_koopa_app_prefix)/${name}/${version}"
+cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+if [[ "$reinstall" -eq 1 ]]
+then
+    _koopa_rm "$app_prefix" "$cellar_prefix"
+fi
+
+_koopa_exit_if_dir "$app_prefix" "$cellar_prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${cellar_prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+_koopa_mkdir "$app_prefix"
+_koopa_mkdir "$cellar_prefix"
+
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="go${version}.linux-amd64.tar.gz"
+    url="https://dl.google.com/go/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cp -rv go/* "${app_prefix}/."
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_set_permissions --recursive "$app_prefix"
+
+_koopa_h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
+cp -frsv \
+    "${app_prefix}/bin" \
+    "${cellar_prefix}/."
+
+_koopa_link_cellar "$name" "$version"
+
+# Need to create directory expected by GOROOT environment variable.
+# If this doesn't exist, Go will currently error.
+goroot="/usr/local/go"
+_koopa_h2 "Linking GOROOT directory at '${goroot}'."
+ln -fnsv "$app_prefix" "$goroot"
+
+# > go env GOROOT
+
+_koopa_install_success "$name"

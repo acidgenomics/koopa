@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+prefix="$(_koopa_conda_prefix)"
+_koopa_assert_is_dir "$prefix"
+
+_koopa_exit_if_current_version conda
+_koopa_assert_has_no_args "$@"
+
+_koopa_h1 "Updating Conda at '${prefix}'."
+
+(
+    conda="${prefix}/condabin/conda"
+    # > conda="${prefix}/bin/conda"
+    "$conda" update --yes --name=base --channel=defaults conda
+    "$conda" update --yes --name=base --channel=defaults --all
+    # > "$conda" clean --yes --tarballs
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_remove_broken_symlinks "$prefix"
+_koopa_set_permissions --recursive "$prefix"

@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# openSUSE uses zypper package manager by default.
+# zypper cheat sheet:
+# https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
+# """
+
+sudo zypper refresh
+sudo zypper --non-interactive update
+
+packages=(
+    # R-base
+    # R-base-devel
+    # texlive
+    autoconf
+    bzip2
+    cmake
+    curl
+    gcc
+    gcc-c++
+    gcc-fortran
+    gettext-devel
+    git
+    gmp-devel
+    gzip
+    libbz2-devel
+    libcurl-devel
+    libevent-devel
+    libffi-devel
+    libxml2-devel
+    lzma-devel
+    make
+    man
+    mpc-devel
+    mpfr-devel
+    ncurses-devel
+    openssl-devel
+    pcre2-devel
+    readline-devel
+    sudo
+    tar
+    texinfo  # note that this will install texlive
+    tree
+    unzip
+    wget
+    which
+    xz
+    zlib-devel
+)
+sudo zypper --non-interactive install "${packages[@]}"

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_has_no_args "$@"
+
+_koopa_h1 "Installing TeX packages recommended for RStudio."
+
+sudo tlmgr update --self
+
+packages=(
+    collection-fontsrecommended  # priority
+    collection-latexrecommended  # priority
+    bera  # beramono
+    biblatex
+    caption
+    changepage
+    csvsimple
+    enumitem
+    etoolbox
+    fancyhdr
+    footmisc
+    framed
+    geometry
+    hyperref
+    inconsolata
+    logreq
+    marginfix
+    mathtools
+    natbib
+    nowidow
+    parnotes
+    parskip
+    placeins
+    preprint  # authblk
+    sectsty
+    soul
+    titlesec
+    titling
+    units
+    wasysym
+    xstring
+)
+
+for package in "${packages[@]}"
+do
+    sudo tlmgr install "$package"
+done

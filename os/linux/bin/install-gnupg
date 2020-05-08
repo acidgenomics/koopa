@@ -1,0 +1,244 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name="gnupg"
+version="$(_koopa_variable gpg)"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+name_fancy="GnuPG"
+
+_koopa_install_start "$name_fancy" "$prefix"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+gcrypt_url="https://gnupg.org/ftp/gcrypt"
+jobs="$(_koopa_cpu_count)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+# Download GnuPG release signing keys.
+if _koopa_is_installed gpg-agent
+then
+    gpg --list-keys
+    gpg --keyserver hkp://keyserver.ubuntu.com:80 \
+        --recv-keys 249B39D24F25E3B6 \
+                    04376F3EE0856959 \
+                    2071B08A33BD3F06 \
+                    8A861B1C7EFD60D9
+fi
+
+# libgpg-error  {{{1
+# ==============================================================================
+
+pkg="libgpg-error"
+ver="$(_koopa_variable "$pkg")"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# libgcrypt  {{{1
+# ==============================================================================
+
+pkg="libgcrypt"
+ver="$(_koopa_variable "$pkg")"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# libassuan  {{{1
+# ==============================================================================
+
+pkg="libassuan"
+ver="$(_koopa_variable "$pkg")"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# libksba  {{{1
+# ==============================================================================
+
+pkg="libksba"
+ver="$(_koopa_variable "$pkg")"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# npth  {{{1
+# ==============================================================================
+
+pkg="npth"
+ver="$(_koopa_variable "$pkg")"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# pinentry  {{{1
+# ==============================================================================
+
+pkg="pinentry"
+ver="$(_koopa_variable "$pkg")"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    flags=("--prefix=${prefix}")
+    if _koopa_is_opensuse
+    then
+        # Build with ncurses is currently failing on openSUSE, due to
+        # hard-coded link to /usr/include/ncursesw that isn't easy to resolve:
+        #
+        # In file included from /usr/include/ncursesw/curses.h:60:0,
+        # from pinentry-curses.c:25:
+        #     /usr/include/ncursesw/curses.h:1457:21:
+        #     error: field '_nc_ttytype' declared as a function
+        #
+        # Falling back to using 'pinentry-tty' instead in this case.
+        flags+=(
+            "--disable-fallback-curses"
+            "--disable-pinentry-curses"
+            "--enable-pinentry-tty"
+        )
+    else
+        flags+=("--enable-pinentry-curses")
+    fi
+    ./configure "${flags[@]}"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# gnupg  {{{1
+# ==============================================================================
+
+pkg="gnupg"
+ver="$(_koopa_variable gpg)"
+
+_koopa_h2 "Installing ${pkg} ${ver}."
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2.sig"
+    _koopa_download "${gcrypt_url}/${pkg}/${pkg}-${ver}.tar.bz2"
+    if _koopa_is_installed gpg-agent
+    then
+        gpg --verify "${pkg}-${ver}.tar.bz2.sig"
+    fi
+    _koopa_extract "${pkg}-${ver}.tar.bz2"
+    cd "${pkg}-${ver}" || exit 1
+    ./configure --prefix="$prefix"
+    make --jobs="$jobs"
+    # > make check
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# Final steps  {{{1
+# ==============================================================================
+
+rm -rf "$tmp_dir"
+
+# Without the line below, gpg2 might fail to create / import secret keys.
+# > rm -rf ~/.gnugp
+
+if _koopa_is_installed gpg-agent
+then
+    gpgconf --kill gpg-agent
+fi
+
+_koopa_install_success "$name_fancy"

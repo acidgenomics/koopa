@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Available releases:
+# > perlbrew available
+# """
+
+all=0
+
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+name_fancy="Perlbrew"
+prefix="$(_koopa_perlbrew_prefix)"
+_koopa_exit_if_dir "$prefix"
+
+_koopa_install_start "$name_fancy" "$prefix"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+_koopa_assert_is_not_installed perlbrew
+
+export PERLBREW_ROOT="$prefix"
+
+# Perlbrew  {{{1
+# ==============================================================================
+
+_koopa_mkdir "$prefix"
+_koopa_rm "${HOME}/.perlbrew"
+
+(
+    curl -sSL https://install.perlbrew.pl | bash
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_set_permissions --recursive "$prefix"
+_koopa_activate_perlbrew
+
+# Add system Perl  {{{1
+# ==============================================================================
+
+if [[ -x "/usr/local/bin/perl" ]]
+then
+    bin_dir="/usr/local/bin"
+elif [[ -x "/usr/bin/perl" ]]
+then
+    bin_dir="/usr/bin"
+else
+    bin_dir=
+fi
+
+if [[ -d "$bin_dir" ]]
+then
+    _koopa_h2 "Linking system Perl in perlbrew."
+    (
+        cd "${PERLBREW_ROOT}/perls" || exit 1
+        rm -frv system
+        mkdir -pv system
+        ln -fnsv "$bin_dir" "system/bin"
+    )
+fi
+
+# Install latest Perl  {{{1
+# ==============================================================================
+
+if [[ "$all" -eq 1 ]]
+then
+    perls=(
+        "perl-$(_koopa_variable ensembl-perl)"
+        "perl-$(_koopa_variable perl)"
+    )
+    installed="$(perlbrew list)"
+    for perl in "${perls[@]}"
+    do
+        _koopa_str_match "$installed" "$perl" && continue
+        _koopa_h2 "Installing '${perl}'."
+        _koopa_coffee_time
+        perlbrew install "$perl"
+        _koopa_install_success "$perl"
+    done
+fi
+
+_koopa_install_success "$name_fancy"
+_koopa_restart
