@@ -8,10 +8,10 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 prefix="$(_koopa_conda_prefix)"
 _koopa_assert_is_dir "$prefix"
 
-_koopa_h1 "Updating Conda at '${prefix}'."
-
+_koopa_exit_if_current_version conda
 _koopa_assert_has_no_args "$@"
-_koopa_exit_if_not_installed conda
+
+_koopa_h1 "Updating Conda at '${prefix}'."
 
 (
     conda="${prefix}/condabin/conda"
