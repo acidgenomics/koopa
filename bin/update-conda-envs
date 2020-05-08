@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed conda
+
+conda_prefix="$(_koopa_conda_prefix)"
+conda_exe="${conda_prefix}/condabin/conda"
+# > conda_exe="${conda_prefix}/bin/conda"
+
+_koopa_h1 "Updating environments at '${conda_prefix}'."
+
+_koopa_h2 "Updating conda installation."
+update-conda > /dev/null
+
+while IFS= read -r -d '' env_prefix
+do
+    _koopa_h2 "Updating '${env_prefix}'."
+    "$conda_exe" update -y --prefix="$env_prefix" --all
+done < <( \
+    find "${conda_prefix}/envs" \
+        -mindepth 1 \
+        -maxdepth 1 \
+        -type d \
+        -print0 \
+        | sort -z \
+)
+
+# > "$conda_exe" clean --yes --tarballs
+_koopa_set_permissions --recursive "$conda_prefix"

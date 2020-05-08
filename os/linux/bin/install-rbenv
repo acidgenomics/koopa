@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name="rbenv"
+prefix="$(_koopa_app_prefix)/ruby/${name}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_install_start "$name" "$prefix"
+
+_koopa_assert_has_no_args "$@"
+_koopa_mkdir "$prefix"
+
+# rbenv  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing 'rbenv'."
+
+(
+    git clone \
+        https://github.com/sstephenson/rbenv.git \
+        "$prefix"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_activate_rbenv
+
+# ruby-build  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing 'ruby-build'."
+
+(
+    mkdir -pv "${prefix}/plugins"
+    git clone \
+        https://github.com/sstephenson/ruby-build.git \
+        "${prefix}/plugins/ruby-build"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_set_permissions --recursive "$prefix"
+
+_koopa_install_success "$name"
+_koopa_restart

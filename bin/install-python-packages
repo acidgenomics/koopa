@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_has_no_envs
+_koopa_assert_is_installed python3
+
+_koopa_h1 "Installing Python packages."
+_koopa_dl "Site library" "$(_koopa_python_site_packages_prefix)"
+
+_koopa_install_pip
+
+# These are used internally by koopa.
+pkgs=(
+    black
+    flake8
+    logbook
+    pipx
+    pyflakes
+    pylint
+    pytest
+    setuptools
+    six
+    wheel
+)
+
+_koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
+
+# Ensure pip is current.
+_koopa_pip_install --upgrade pip
+
+# Now ready to install packages.
+_koopa_pip_install "${pkgs[@]}"
+
+_koopa_is_cellar python3 && _koopa_link_cellar python

@@ -1,0 +1,23 @@
+# Conda configuration.
+# Updated 2019-11-04.
+
+# See also:
+# - https://bioconda.github.io/#set-up-channels
+# - https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/
+#       admin-multi-user-install.html
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+allow_other_channels: false
+
+# Change default environment directory path.
+# > envs_dirs:
+# >   - /n/app/conda/envs
+
+# Don't change the command prompt (PS1) upon activation.
+# > conda config --set changeps1 no
+changeps1: false
+

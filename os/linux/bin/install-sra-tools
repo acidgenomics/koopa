@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# ncbi-vdb will fail to install unless we extract the tarballs to the same
+# top level directory without version numbers.
+# ## required ngs-sdk package not found.
+# https://github.com/ncbi/sra-tools/issues/48
+#
+# > sudo ldconfig -v
+# > export LD_LIBRARY_PATH=/usr/local/lib64
+# """
+
+name="sra-tools"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+_koopa_assert_is_installed jar
+
+jobs="$(_koopa_cpu_count)"
+ngs_libdir="$(_koopa_make_prefix)/lib64"
+tmp_dir="$(_koopa_tmp_dir)"
+build_prefix="${tmp_dir}/ncbi-outdir"
+
+# Ensure current jar binary is in path, otherwise install will fail.
+java_home="$(_koopa_java_home)"
+
+_koopa_add_to_path_start "${java_home}/bin"
+
+export NGS_LIBDIR="$ngs_libdir"
+export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
+
+rm -fr "$tmp_dir"
+mkdir -p "$tmp_dir"
+
+# ngs  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing 'ngs'."
+
+(
+    cd "$tmp_dir" || exit 1
+    file="ngs.tar.gz"
+    url="https://github.com/ncbi/ngs/archive/${version}.tar.gz"
+    _koopa_download "$url" "$file"
+    _koopa_extract "$file"
+    mv "ngs-${version}" "ngs"
+    cd "ngs" || exit 1
+    ./configure \
+        --build-prefix="$build_prefix" \
+        --prefix="$prefix"
+    # Make each of the sub-projects.
+    make -C ngs-sdk
+    make -C ngs-java
+    make -C ngs-python
+    # Install each of the sub-projects.
+    make -C ngs-sdk install
+    make -C ngs-java install
+    make -C ngs-python install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# ncbi-vdb  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing 'ncbi-vdb'."
+
+(
+    cd "$tmp_dir" || exit 1
+    file="ncbi-vdb.tar.gz"
+    url="https://github.com/ncbi/ncbi-vdb/archive/${version}.tar.gz"
+    _koopa_download "$url" "$file"
+    _koopa_extract "$file"
+    mv "ncbi-vdb-${version}" "ncbi-vdb"
+    cd "ncbi-vdb" || exit 1
+    ./configure \
+        --build-prefix="$build_prefix" \
+        --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+# sra-tools  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing 'sra-tools'."
+
+(
+    cd "$tmp_dir" || exit 1
+    file="sra-tools.tar.gz"
+    url="https://github.com/ncbi/sra-tools/archive/${version}.tar.gz"
+    _koopa_download "$url" "$file"
+    _koopa_extract "$file"
+    mv "sra-tools-${version}" "sra-tools"
+    cd "sra-tools" || exit 1
+    ./configure \
+        --build-prefix="$build_prefix" \
+        --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_link_cellar "$name" "$version"
+
+rm -fr "$tmp_dir"
+
+_koopa_install_success "$name"

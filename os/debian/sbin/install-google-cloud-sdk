@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://cloud.google.com/sdk/docs/downloads-apt-get
+#
+# Required packages:
+# - apt-transport-https
+# - ca-certificates
+# - curl
+# """
+
+_koopa_exit_if_installed gcloud
+
+name_fancy="Google Cloud SDK"
+
+_koopa_install_start "$name_fancy"
+
+_koopa_apt_import_google_cloud_key
+_koopa_apt_add_google_cloud_sdk_repo
+_koopa_apt_install google-cloud-sdk
+
+_koopa_install_success "$name_fancy"

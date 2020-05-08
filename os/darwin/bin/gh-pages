@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+dir="${1:-"."}"
+_koopa_assert_is_dir "$dir"
+
+(
+    cd "$dir" || exit 1
+    bundle update
+    bundle exec jekyll serve
+)

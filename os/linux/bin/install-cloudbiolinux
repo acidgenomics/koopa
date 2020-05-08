@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+dir="${1:-cloudbiolinux}"
+_koopa_exit_if_dir "$dir"
+
+# Using our forked repo, to control for unexpected upstream changes.
+(
+    git clone "https://github.com/acidgenomics/cloudbiolinux.git" "$dir"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"

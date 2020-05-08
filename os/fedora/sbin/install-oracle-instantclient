@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# https://www.oracle.com/database/technologies/instant-client/
+#     linux-x86-64-downloads.html
+
+_koopa_assert_has_no_args "$@"
+
+name_fancy="Oracle Instant Client"
+name="oracle-instantclient"
+version="$(_koopa_variable "$name")"
+minor_version="$(_koopa_major_minor_version "$version")"
+tmp_dir="$(_koopa_tmp_dir)"
+
+_koopa_install_start "$name_fancy"
+
+_koopa_note "Removing previous version, if applicable."
+sudo dnf -y remove 'oracle-instantclient*'
+sudo rm -v /etc/ld.so.conf.d/oracle-instantclient.conf
+
+url_prefix="https://download.oracle.com/otn_software/linux/instantclient/195000"
+stems=(basic devel sqlplus jdbc odbc)
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    for stem in "${stems[@]}"
+    do
+        file="oracle-instantclient${minor_version}-${stem}-${version}.x86_64.rpm"
+        _koopa_download "${url_prefix}/${file}"
+        sudo rpm -i "$file"
+    done
+)
+
+_koopa_install_success "$name_fancy"

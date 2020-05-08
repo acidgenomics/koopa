@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# RStudio Server on Fedora / RHEL / CentOS.
+# https://rstudio.com/products/rstudio/download-server/redhat-centos/
+#
+# System config:
+# /etc/rstudio
+#
+# Verify install:
+# > sudo rstudio-server stop
+# > sudo rstudio-server verify-installation
+# > sudo rstudio-server start
+# > sudo rstudio-server status
+# """
+
+reinstall=0
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --reinstall)
+            reinstall=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+set -- "${pos[@]}"
+
+name="rstudio-server"
+version="$(_koopa_variable "$name")"
+name_fancy="RStudio Server ${version}"
+
+if ! _koopa_is_current_version "$name"
+then
+    reinstall=1
+fi
+
+if [[ "$reinstall" -eq 0 ]]
+then
+    _koopa_exit_if_installed "$name"
+fi
+
+_koopa_install_start "$name_fancy"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed R
+
+if _koopa_is_rhel_8
+then
+    os_id="fedora28"
+else
+    _koopa_stop "Unsupported RHEL/CentOS version."
+fi
+
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    rm -fr "$tmp_dir"
+    mkdir -p "$tmp_dir"
+    cd "$tmp_dir" || exit 1
+    file="${name}-rhel-${version}-x86_64.rpm"
+    url="https://download2.rstudio.org/server/${os_id}/x86_64/${file}"
+    _koopa_download "$url"
+    sudo yum -y install "$file"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_install_success "$name_fancy"

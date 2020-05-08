@@ -1,0 +1,18 @@
+.TH DOWNLOAD-GITHUB-LATEST 1 2019-11-10 Bash
+.SH NAME
+download-github-latest \-
+Download latest GitHub release tarball
+.SH SYNOPSIS
+.B download-github-latest
+.I user/repo
+.SH OPTIONS
+.TP
+.B user/repo
+Repository name, prefixed with the user or organization name.
+Example: 'acidgenomics/koopa'.
+.SH DESCRIPTION
+Downloads latest release into current working directory. Looks for 'tarball_url' line in JSON. Note that this does not clone the code currently available on 'master' branch.
+.SH EXAMPLE
+.nf
+.B download-github-latest "acidgenomics/koopa"
+.fi

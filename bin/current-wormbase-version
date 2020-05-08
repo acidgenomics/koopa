@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+_koopa_assert_has_no_args "$@"
+
+url="ftp://ftp.wormbase.org/pub/wormbase/releases/current-production-release/"
+version="$( \
+    curl --list-only --silent "$url" | \
+    grep -Eo "letter.WS[0-9]+" | \
+    cut -d '.' -f 2 \
+)"
+_koopa_print "$version"

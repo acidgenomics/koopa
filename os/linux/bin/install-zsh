@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Need to configure Zsh to support system-wide config files in '/etc/zsh'.
+# Note that RHEL 7 locates these to '/etc' by default instead.
+#
+# We're linking these in the cellar instead, at '/usr/local/etc/zsh'.
+# There are some system config files for Zsh in Debian that don't play nice
+# with autocomplete otherwise.
+#
+# See also:
+# - https://github.com/Homebrew/legacy-homebrew/issues/25719
+# - https://github.com/TACC/Lmod/issues/434
+# """
+
+name="zsh"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+etc_dir="${prefix}/etc/zsh"
+jobs="$(_koopa_cpu_count)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    url_stem="https://sourceforge.net/projects/zsh/files/zsh"
+    file="zsh-${version}.tar.xz"
+    _koopa_download "${url_stem}/${version}/${file}/download" "$file"
+    _koopa_extract "$file"
+    cd "zsh-${version}" || exit 1
+    # Fix required for Ubuntu Docker image:
+    # configure: error: no controlling tty
+    # Try running configure with --with-tcsetpgrp or --without-tcsetpgrp
+    ./configure \
+        --prefix="$prefix" \
+        --enable-etcdir="$etc_dir" \
+        --without-tcsetpgrp
+    make --jobs="$jobs"
+    # > make check
+    # > make test
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+if _koopa_is_debian
+then
+    _koopa_h1 "Linking shared config scripts into '${etc_dir}'."
+    mkdir -pv "$etc_dir"
+    ln -fnsv \
+        "$(_koopa_prefix)/os/$(_koopa_os_id)/etc/zsh/"* \
+        "${etc_dir}/."
+fi
+
+_koopa_link_cellar "$name" "$version"
+_koopa_fix_zsh_permissions
+_koopa_enable_shell "$name"
+
+_koopa_install_success "$name"
+_koopa_note "Reload the shell to complete activation."

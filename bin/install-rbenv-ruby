@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# > rbenv install -l
+#
+# Ensure installation uses system OpenSSL.
+# > export RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr
+# """
+
+_koopa_assert_is_installed rbenv
+
+version="$(_koopa_variable ruby)"
+# Ensure '2.6.5p' becomes '2.6.5', for example.
+version="$(_koopa_sanitize_version "$version")"
+
+# Ensure ruby-build is current.
+ruby_build_dir="/usr/local/rbenv/plugins/ruby-build"
+if [[ -d "$ruby_build_dir" ]]
+then
+    _koopa_note "Updating ruby-build plugin: '${ruby_build_dir}."
+    (
+        cd "$ruby_build_dir" || exit 1
+        git pull --quiet
+    )
+fi
+
+rbenv install "$version"
+rbenv global "$version"
+
+# > rbenv versions

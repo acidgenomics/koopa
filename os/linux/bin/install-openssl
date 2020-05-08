@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name="openssl"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+jobs="$(_koopa_cpu_count)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    _koopa_download "https://www.openssl.org/source/openssl-${version}.tar.gz"
+    _koopa_extract "openssl-${version}.tar.gz"
+    cd "openssl-${version}" || exit 1
+    if _koopa_is_macos
+    then
+        ./Configure \
+            darwin64-x86_64-cc \
+            --prefix="$prefix" \
+            --openssldir="$prefix"
+    else
+        ./config \
+            --prefix="$prefix" \
+            --openssldir="$prefix" \
+            shared
+    fi
+    make --jobs="$jobs"
+    # > make test
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_install_success "$name"
+_koopa_note "${name} is installed as cellar only."

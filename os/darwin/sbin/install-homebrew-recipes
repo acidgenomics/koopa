@@ -1,0 +1,293 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh" --no-header-checks
+
+# """
+# XQuartz:
+# Install XQuartz 2.7.9 manually instead of using 'xquartz' cask.
+#
+# Little Snitch:
+# 'little-snitch' cask currently requires manual follow-up installation:
+# /usr/local/Caskroom/little-snitch/*/LittleSnitch-*.dmg
+#
+# LLVM:
+# LLVM takes up 4 GB of disk space but is required for some Python packages.
+# In particular, if we want to install umap-learn, this is now required.
+#
+# PROJ/GDAL:
+# Consider using 'osgeo-gdal' instead of regular 'gdal' brew. This one gets
+# updated more regularly. However, I've found that the newer version can cause
+# some R packages to fail to build from source.
+#
+# Rust:
+# Just use the 'install-rust' script instead of Homebrew 'rustup-init'.
+# I hit some permissions issues with the 'rustup' cellar symlink installed at
+# '/usr/local/bin/rustup' that doesn't occur when running the official script.
+# And be sure not to install 'rust' alongside 'rustup-init'.
+# """
+
+name_fancy="Homebrew recipes"
+
+_koopa_install_start "$name_fancy"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_installed brew
+
+log_file="$(_koopa_tmp_log_file)"
+
+export HOMEBREW_FORCE_BOTTLE=1
+
+# Casks  {{{1
+# ==============================================================================
+
+# 'foobar2000' cask was removed due to url protection.
+# 'macvim' cask overwrites 'vim' binary, so install manually instead.
+# 'skype-for-business' is potentially useful but starts up at login.
+
+_koopa_h2 "Installing casks."
+installed_casks="$(brew cask list)"
+casks=(
+    1password
+    adobe-acrobat-reader
+    adoptopenjdk  # igv
+    alacritty
+    alfred
+    aspera-connect
+    authy
+    basictex
+    bbedit
+    bibdesk
+    calibre
+    carbon-copy-cloner
+    coconutbattery
+    coda
+    darktable
+    deluge
+    docker
+    emacs
+    fiji
+    firefox
+    github
+    google-chrome
+    google-cloud-sdk
+    google-drive-file-stream
+    gpg-suite
+    hazel
+    igv
+    iterm2
+    java
+    julia
+    keka
+    kid3
+    kitty
+    libreoffice
+    little-snitch
+    makemkv
+    museeks
+    netnewswire
+    omnidisksweeper
+    onyx
+    osxfuse
+    photosweeper-x
+    powershell
+    pycharm-ce
+    r
+    rstudio
+    scrivener
+    skype
+    spillo
+    sublime-text
+    superduper
+    textmate
+    tiny-player
+    tor-browser
+    tower
+    transmit
+    tunnelblick
+    visual-studio-code
+    vlc
+    wine-stable
+    xld
+    zoomus
+    # External taps.
+    homebrew/cask-versions/deadbeef-devel
+)
+
+(
+    for cask in "${casks[@]}"
+    do
+        if _koopa_print "$installed_casks" | grep -Eq "^${cask}$"
+        then
+            _koopa_note "'${cask}' is already installed."
+            continue
+        fi
+        brew cask install --force --no-quarantine "$cask"
+    done
+) 2>&1 | tee -a "$log_file"
+
+# Brews  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing brews."
+
+# Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.
+# This is needed currently to install R sf package from source.
+brew remove --force \
+    osgeo-gdal \
+    osgeo-hdf4 \
+    osgeo-libgeotiff \
+    osgeo-libkml \
+    osgeo-libspatialite \
+    osgeo-netcdf \
+    osgeo-postgresql \
+    osgeo-proj
+
+# Use rustup / cargo to manage these Rust packages instead:
+brew remove --force \
+    broot \
+    exa \
+    fd \
+    ripgrep \
+    xsv
+
+installed_brews="$(brew list)"
+brews=(
+    # Priority
+    bash
+    fish
+    ksh
+    tcsh
+    zsh
+    openblas
+    tcl-tk
+    flac
+    lame
+    # Alphabetical
+    autoconf
+    autojump
+    automake
+    awscli
+    azure-cli
+    bash-completion
+    bfg
+    binutils
+    ccache
+    checkbashisms
+    circleci
+    cmake
+    convmv
+    coreutils
+    curl
+    dash
+    exiftool
+    ffmpeg
+    findutils
+    fzf
+    gawk
+    gcc
+    gdal
+    git
+    git-lfs
+    gnu-sed
+    gnu-tar
+    gnu-time
+    gnu-units
+    gnu-which
+    go
+    gpatch
+    grep
+    groff
+    gsl
+    hdf5
+    htop
+    httpd  # php
+    hub
+    igraph
+    imagemagick
+    ksh
+    leiningen
+    lesspipe
+    libav
+    libgit2
+    libiconv
+    libomp
+    libressl
+    librsvg
+    libssh2
+    libtool
+    libxml2
+    libxslt
+    llvm
+    lua
+    luarocks
+    make
+    man-db
+    mariadb-connector-c
+    mas
+    neofetch
+    neovim
+    node
+    open-mpi
+    openblas
+    pandoc
+    pandoc-citeproc
+    pandoc-crossref
+    parallel
+    pass
+    php
+    pkg-config
+    podofo
+    proj
+    protobuf
+    pyenv
+    python
+    rbenv
+    rename
+    ruby
+    rsync
+    ruby-build
+    screen
+    shellcheck
+    shellharden
+    shunit2
+    sox
+    sqlite
+    sshfs
+    tesseract
+    texinfo
+    the_silver_searcher  # ag
+    tmux
+    trash
+    tree
+    udunits
+    v8
+    vim
+    wget
+    youtube-dl
+    zlib
+    # External taps.
+    mongodb/brew/mongodb-community
+    vitorgalvao/tiny-scripts/cask-repair
+)
+
+(
+    for brew in "${brews[@]}"
+    do
+        name="$(basename "$brew")"
+        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+        then
+            _koopa_note "'${name}' is already installed."
+            continue
+        fi
+        brew install "$brew"
+    done
+) 2>&1 | tee -a "$log_file"
+
+brew unlink python
+
+# > brew link gdal
+# > brew link proj
+
+_koopa_install_success "$name_fancy"

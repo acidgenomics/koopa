@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+_koopa_assert_has_no_args "$@"
+
+prefix="$(_koopa_cellar_prefix)"
+
+(
+    cd "$prefix" || exit 1
+    ls -1 -- *
+)

@@ -1,0 +1,22 @@
+.TH FIND-AND-REPLACE 1 2019-12-02 Bash
+.SH NAME
+find-and-replace \-
+Global find and replace in files using sed.
+.SH SYNOPSIS
+.B find-and-replace
+.I pattern
+.I replacement
+.SH OPTIONS
+.TP
+.B pattern
+Pattern string (i.e. regular expression) passed to sed.
+.B replacement
+Replacement string.
+.SH DESCRIPTION
+Intended to be used interactively. Searches inside of files in current working directory non-recursively (i.e. with a max depth of 1).
+.PP
+sed syntax: 's/pattern/replacement/g'
+.SH EXAMPLE
+.nf
+.B find-and-replace foo bar
+.fi

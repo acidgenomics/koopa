@@ -1,0 +1,39 @@
+os: linux
+language: shell
+
+branches:
+  only:
+    - master
+
+jobs:
+  include:
+    - stage: test
+      name: "docker: install: debian"
+      services: docker
+      script: image="acidgenomics/debian" ./tests/docker/install.sh
+    - stage: test
+      name: "docker: install: fedora"
+      services: docker
+      script: image="acidgenomics/fedora" ./tests/docker/install.sh
+    - stage: test
+      name: "linux: activate"
+      addons:
+        apt:
+          packages:
+            - r-base
+            - shellcheck
+            - shunit2
+            - zsh
+      script:
+        - bash -c 'set -x; test=1 . ./activate'
+        - dash -c 'set -x; test=1 . ./activate'
+        - zsh  -c 'set -x; test=1 . ./activate'
+        - bash -c './tests/travis.sh'
+  fast_finish: true
+
+notifications:
+  email:
+    recipients:
+      - mike@steinbaugh.com
+    on_success: change
+    on_failure: change

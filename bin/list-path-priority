@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+all="$(_koopa_list_path_priority "$@")"
+mapfile -t all_arr < <(_koopa_print "$all")
+
+unique="$(_koopa_print "$all" | awk '!a[$0]++')"
+mapfile -t unique_arr < <(_koopa_print "$unique")
+
+n_all="${#all_arr[@]}"
+n_unique="${#unique_arr[@]}"
+n_dupes="$((n_all-n_unique))"
+
+if [[ "$n_dupes" -gt 0 ]]
+then
+    _koopa_note "${n_dupes} duplicate(s) detected."
+fi
+
+_koopa_print "$all"

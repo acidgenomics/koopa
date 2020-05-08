@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Aspera Connect:
+# https://downloads.asperasoft.com/en/downloads/8?list
+# - Linux
+#   https://download.asperasoft.com/download/sw/connect/3.9.9/
+#       ibm-aspera-connect-3.9.9.177872-linux-g2.12-64.tar.gz
+# - macOS
+#   https://download.asperasoft.com/download/sw/connect/3.9.9/
+#       IBMAsperaConnectInstaller-3.9.9.177872.dmg
+#
+# Aspera CLI:
+# https://downloads.asperasoft.com/en/downloads/62
+# - macOS
+#   https://download.asperasoft.com/download/sw/cli/3.9.6/
+#       ibm-aspera-cli-3.9.6.1467.159c5b1-mac-10.11-64-release.sh
+# - Linux
+#   https://download.asperasoft.com/download/sw/cli/3.9.6/
+#       ibm-aspera-cli-3.9.6.1467.159c5b1-linux-64-release.sh
+# """
+
+version_full="$(_koopa_variable "aspera-connect")"
+# Standardize version as MAJOR.MINOR.PATCH only.
+version="$(_koopa_major_minor_patch_version "$version_full")"
+aspera_dir="$(_koopa_aspera_prefix)"
+prefix="${aspera_dir}/${version}"
+_koopa_exit_if_dir "$prefix"
+
+name_fancy="Aspera Connect"
+
+_koopa_install_start "$name_fancy" "$prefix"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+_koopa_mkdir "$aspera_dir"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="ibm-aspera-connect-${version_full}-linux-g2.12-64.tar.gz"
+    url="https://download.asperasoft.com/download/sw/connect/${version}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    script="${file//.tar.gz/.sh}"
+    "./${script}"
+    # Target is currently hard-coded in IBM Aspera install script.
+    aspera_user="${HOME}/.aspera"
+    script_target="${aspera_user}/connect"
+    _koopa_assert_is_dir "$script_target"
+    # Fix annoying sticky bit on log directory.
+    chmod 2775 "${script_target}/var/log"
+    # Move and enable for all users on Linux.
+    if [[ "$prefix" != "$script_target" ]]
+    then
+        _koopa_mkdir "$prefix"
+        cp -rv "${script_target}"/* "${prefix}/."
+        rm -frv "$script_target"
+        rm -frv "$aspera_user"
+    fi
+    _koopa_assert_is_file "${prefix}/bin/ascp"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+(
+    _koopa_cd "$aspera_dir"
+    _koopa_ln "$version" "latest"
+)
+
+_koopa_set_permissions --recursive "$aspera_dir"
+
+_koopa_install_success "$name_fancy"

@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name="luarocks"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+_koopa_assert_is_installed lua
+
+lua_version="$(_koopa_get_version lua)"
+lua_version="$(_koopa_major_minor_version "$lua_version")"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="${name}-${version}.tar.gz"
+    url="https://luarocks.org/releases/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cd "${name}-${version}" || exit 1
+    ./configure \
+        --prefix="$prefix" \
+        --lua-version="$lua_version" \
+        --versioned-rocks-dir
+    make build
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_link_cellar "$name" "$version"
+
+# > build_prefix="$(_koopa_make_prefix)
+# > export LUAROCKS_PREFIX="$build_prefix"
+
+# Install Lmod dependencies.
+luarocks install luaposix
+luarocks install luafilesystem
+
+_koopa_link_cellar "$name" "$version"
+
+# > lua -e 'print(package.path)'
+
+_koopa_install_success "$name"

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+dir="${1:-.}"
+_koopa_assert_is_dir "$dir"
+dir="$(realpath "$dir")"
+
+# Pipe GNU find into array.
+bam_files=()
+while IFS= read -r -d $'\0'
+do
+    bam_files+=("$REPLY")
+done < <( \
+    find "$dir" \
+        -maxdepth 3 \
+        -mindepth 1 \
+        -type f \
+        -iname "*.bam" \
+        -not -iname "*.filtered.*" \
+        -not -iname "*.sorted.*" \
+        -print0 \
+    | sort -z \
+)
+
+# Error if file array is empty.
+if [[ "${#bam_files[@]}" -eq 0 ]]
+then
+    _koopa_stop "No BAM files detected in '${dir}'."
+fi
+
+_koopa_h1 "Sorting BAM files in '${dir}'."
+
+_koopa_activate_conda_env sambamba
+_koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
+
+for bam_file in "${bam_files[@]}"
+do
+    _koopa_bam_sort "$bam_file"
+done

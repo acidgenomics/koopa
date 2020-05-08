@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# > _koopa_assert_has_args "$@"
+_koopa_assert_is_installed docker
+
+# https://github.com/a2iEditing/RNAEditingIndexer/blob/master/Docs/
+#     Docker.README.md
+
+# This file is missing and currently causes issues on Docker:
+# /bin/AEI/RNAEditingIndexer/Resources/Genomes/HomoSapiens/ucscHg38Genome.fa.fai
+#
+# ucscHg38Genome.fa source information.
+# https://github.com/a2iEditing/RNAEditingIndexer/blob/master/make/initResources.sh
+#
+# HG38_FTP_URL="http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/"
+# HG38_FTP_GENOME_URL="http://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/"
+#
+# https://github.com/a2iEditing/RNAEditingIndexer/search?q=index+file&unscoped_q=index+file
+# Genome must be indexed by BEDGenomeIndexer
+
+# Note that '--verbose' flag includes more output in summary CSV.
+
+bam_dir="bam"
+bam_suffix=".Aligned.sortedByCoord.out.bam"
+output_dir="rnaedit"
+genome="hg38"
+
+example=0
+
+while (("$#"))
+do
+    case "$1" in
+        --bam-dir=*)
+            bam_dir="${1#*=}"
+            shift 1
+            ;;
+        --bam-dir)
+            bam_dir="$2"
+            shift 2
+            ;;
+        --example)
+            example=1
+            shift 1
+            ;;
+        --genome=*)
+            genome="${1#*=}"
+            shift 1
+            ;;
+        --genome)
+            genome="$2"
+            shift 2
+            ;;
+        --output-dir=*)
+            output_dir="${1#*=}"
+            shift 1
+            ;;
+        --output-dir)
+            output_dir="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+# Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
+# RNAEditingIndex can fail on relative paths.
+bam_dir="$(_koopa_which_realpath "$bam_dir")"
+output_dir="$(_koopa_which_realpath "$output_dir")"
+
+rm -frv "$output_dir"
+mkdir -pv "$output_dir"
+
+mnt_bam_dir="/mnt/bam"
+mnt_output_dir="/mnt/output"
+
+# Minimal example:
+if [[ "$example" -eq 1 ]]
+then
+    bam_dir="/bin/AEI/RNAEditingIndexer/TestResources/BAMs"
+    bam_suffix="_sampled_with_0.1.Aligned.sortedByCoord.out.bam.AluChr1Only.bam"
+fi
+
+# Note that genome indexing to generate 'ucscHg38Genome.fa.fai' is currently
+# failing due to root permission requirement.
+# Otherwise, set permissions as current user for better output.
+# > -u "$(id -u "${USER}"):$(id -g "${USER}")" \
+
+# --paired_end
+# --stranded
+
+docker run \
+    -v "${bam_dir}:${mnt_bam_dir}:ro" \
+    -v "${output_dir}:${mnt_output_dir}:rw" \
+    acidgenomics/rnaeditingindexer \
+    RNAEditingIndex \
+        --genome "$genome" \
+        --keep_cmpileup \
+        --verbose \
+        -d "$mnt_bam_dir" \
+        -f "$bam_suffix" \
+        -l "${mnt_output_dir}/logs" \
+        -o "${mnt_output_dir}/cmpileups" \
+        -os "${mnt_output_dir}/summary"

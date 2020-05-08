@@ -1,0 +1,36 @@
+.TH SNAKE-CASE 1 2019-11-09 Bash
+.SH NAME
+snake-case \-
+Convert input into snake case
+.SH SYNOPSIS
+.B snake-case
+[\fB\-\-rename\fP]
+[\fB\-\-prefix\fP]
+.I string|file ...
+.SH OPTIONS
+.TP
+.B \-\-rename
+Rename input files. Assumes we're renaming files in current working directory, but also supports explicit and/or mixed file paths. Doesn't work recursively.
+.TP
+.B \-\-prefix
+Include "x" prefix for names that are syntactically invalid in R. Note that this includes input beginning with a number. Disabled by default.
+.SH DESCRIPTION
+Runs in string mode by default. File rename mode can be enabled by setting '--rename' flag.
+.SH SEE ALSO
+.IP
+\(bu 'syntactic::snakeCase()' in R.
+.IP
+\(bu https://syntactic.acidgenomics.com/
+.SH EXAMPLE
+.nf
+.B snake-case "hello world" "foo bar" "geneID"
+## hello_world foo_bar gene_id
+.PP
+.B snake-case --rename "foo-bar.fastq.gz"
+## ./foo_bar.fastq.gz
+.PP
+.B snake-case --rename --prefix 1-control-A.fastq.gz
+## ./x1_control_a.fastq.gz
+.fi
+.SH NOTE
+Bash script that calls Rscript internally. Requires the syntactic package to be installed.

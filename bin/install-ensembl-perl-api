@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+name_fancy="Ensembl Perl API"
+prefix="$(_koopa_app_prefix)/ensembl"
+_koopa_exit_if_dir "$prefix"
+
+_koopa_install_start "$name_fancy" "prefix"
+
+_koopa_assert_has_no_args "$@"
+
+(
+    _koopa_mkdir "$prefix"
+    cd "$prefix" || exit 1
+    # Install BioPerl.
+    git clone -b release-1-6-924 --depth 1 \
+        "https://github.com/bioperl/bioperl-live.git"
+    git clone "https://github.com/Ensembl/ensembl-git-tools.git"
+    git clone "https://github.com/Ensembl/ensembl.git"
+    git clone "https://github.com/Ensembl/ensembl-variation.git"
+    git clone "https://github.com/Ensembl/ensembl-funcgen.git"
+    git clone "https://github.com/Ensembl/ensembl-compara.git"
+    git clone "https://github.com/Ensembl/ensembl-io.git"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_set_permissions --recursive "$prefix"
+
+_koopa_install_success "$name_fancy"
+_koopa_restart

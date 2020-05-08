@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Potentially useful flags:
+# > apk add --no-cache --virtual .build-dependencies
+# """
+
+name_fancy="Alpine base system"
+
+_koopa_install_start "$name_fancy"
+
+sudo apk update
+sudo apk upgrade
+
+packages=(
+    # .build-dependencies
+    # R-dev
+    # R-doc
+    # fish
+    # pandoc
+    # pandoc-citeproc
+    # texlive
+    # zsh
+    R
+    autoconf
+    bash
+    bash-completion
+    build-base
+    ca-certificates
+    curl
+    dpkg
+    gettext
+    git
+    libevent-dev
+    libffi-dev
+    libxml2-dev
+    mdocml
+    openssl
+    shadow
+    sudo
+    tcl
+    tree
+    wget
+)
+sudo apk add --no-cache --virtual "${packages[@]}"
+
+_koopa_install_success "$name_fancy"

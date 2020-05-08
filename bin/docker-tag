@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Add Docker tag.
+# Updated 2020-02-18.
+# """
+
+_koopa_assert_has_args "$@"
+
+image="${1:?}"
+source_tag="${2:?}"
+dest_tag="${3:-latest}"
+server="docker.io"
+
+_koopa_assert_is_installed docker
+
+if [[ "$source_tag" == "$dest_tag" ]]
+then
+    _koopa_print "Source tag identical to destination ('${source_tag}')."
+    exit 0
+fi
+
+_koopa_h1 "Tagging '${image}' image tag '${source_tag}' as '${dest_tag}'."
+
+docker login "$server"
+docker pull "${server}/${image}:${source_tag}"
+docker tag "${image}:${source_tag}" "${image}:${dest_tag}"
+docker push "${server}/${image}:${dest_tag}"

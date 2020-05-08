@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# This script will error if the system doesn't have 'python' installed.
+# I recommend symlinking python3 to python in '/usr/local/bin'.
+#
+# Run script with '--help' flag for options.
+# Note that custom paths are incompatible with '--system' option.
+#
+# Arch example:
+# > ./install.py \
+# >     --destdir "${pkgdir}" \
+# >     --prefix 'usr/' \
+# >     --zshshare 'usr/share/zsh/site-functions'
+#
+# '--system' defaults:
+# - /usr/local
+# - _j copied into /usr/share/zsh/site-functions (for zsh)
+# - Entry created in /etc/profile.d
+#
+# See also:
+# https://github.com/wting/autojump/issues/338
+#
+# Install into the temporary and then copy into cellar, after modification.
+# Can uninstall with uninstall.py script.
+# """
+
+name="autojump"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_is_current_version python
+_koopa_assert_is_not_installed autojump
+_koopa_assert_is_not_dir "${HOME}/.autojump"
+
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="release-v${version}.tar.gz"
+    url="https://github.com/wting/autojump/archive/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cd "autojump-release-v${version}" || exit 1
+    ./install.py \
+        --destdir "$prefix" \
+        --prefix="" \
+        --zshshare "share/zsh/site-functions"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_link_cellar "$name" "$version"
+
+_koopa_install_success "$name"
+_koopa_note "Reload the shell to complete activation."

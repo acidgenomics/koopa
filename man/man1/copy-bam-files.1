@@ -1,0 +1,42 @@
+.TH CREATE-DMG 1 2019-11-09 Bash
+.SH NAME
+copy-bam-files \-
+Copy BAM and BAI index sidecar files from a source directory to a target directory
+.SH SYNOPSIS
+.B copy-bam-files
+.I source_dir
+.I target_dir
+.SH OPTIONS
+.TP
+.B source_dir
+Source directory path, containing BAM files.
+.TP
+.B target_dir
+Target directory path.
+.SH DESCRIPTION
+Supports transfers on file systems with non-standard permissions, including
+Azure Files and Windows CIFS/SMB shares.
+.PP
+We're allowing symlinks in the search path (via 'find -L' internally).
+.PP
+Note that we're ignoring some bcbio output cruft here.
+Skip transfer of BAM files in the 'work/' directory, and don't copy any
+of the transcriptome BAMs automatically.
+.PP
+Ignore list:
+.IP
+\(bu 'work/'
+.IP
+\(bu '*-transcriptome.bam'
+.PP
+rsync works more reliably for resuming interrupted transfers. Currently
+using this to transfer to Azure Files.
+.PP
+Alternate method:
+.RS
+.B cp -iruv source target
+.RE
+.SH EXAMPLE
+.nf
+.B copy-bam-files "bam/" "/data00/bam/"
+.fi

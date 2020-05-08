@@ -1,0 +1,75 @@
+.TH KOOPA 1 2019-12-02 Bash
+.SH NAME
+koopa \-
+Shell bootloader for bioinformatics
+.SH OPTIONS
+.SH Unix standard (general)
+.TP
+.B \-\-help, \-h
+Show this help message and exit.
+.TP
+.B \-\-version, \-V
+Version information.
+.SS System configuration
+.TP
+.B check
+Run system dependency version checks.
+.TP
+.B develop
+Switch koopa installation to developer mode.
+.TP
+.B info
+Show system information.
+.TP
+.B list
+List programs accessible in 'PATH'.
+.TP
+.B update
+Update koopa installation to latest version.
+Run with '\fB--system\fP' flag to also update the system configuration.
+.SS Character string return
+.TP
+.B app-prefix
+Application installation prefix.
+Refers to applications that don't need to be build using \fBmake\fP, and can be installed on an external disk, for space-constrained virtual machines.
+Defaults to '/n/opt/' (with external disk) or '/usr/local/opt' (without external disk) on most machines.
+.TP
+.B config-prefix
+User-specific local configuration prefix.
+Defined inside 'XDG_CONFIG_HOME' at 'koopa', following recommended XDG configuration.
+.TP
+.B header
+Shell script header file path.
+Can be passed to \fBsource\fP inside external shell scripts.
+Useful for experimental scripts that are not currently saved inside koopa.
+.TP
+.B host-id
+General platform identifier string.
+Intended for identification of cloud platforms, such as 'aws' (Amazon Web Services), 'azure' (Microsoft Azure), or 'gcp' (Google Cloud Platform).
+.TP
+.B local-app-prefix
+Local application prefix.
+Defaults to 'XDG_DATA_HOME' on most machines.
+.TP
+.B make-prefix
+Prefix for cellarized \fBmake\fP scripts.
+Defaults to '/usr/local/' on most machines.
+.TP
+.B os-string
+Operating system identifier string.
+Returns OS name and version, separated by a hyphen.
+Example: 'ubuntu-18' for Ubuntu 18 LTS or 'rhel-8' for RHEL 8.
+.TP
+.B prefix
+Return the koopa installation path prefix.
+Also stored as 'KOOPA_PREFIX' environment variable.
+.TP
+.B r-home
+R installation prefix (R_HOME).
+.TP
+.B variable
+Internal koopa configuration variable.
+Recommended for use in Python and R scripts only.
+.SH COPYRIGHT
+This software is provided under an MIT License.
+See 'LICENSE' file for details.

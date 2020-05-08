@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Use autoconf instead of amalgamation.
+#
+# The '--enable-static' flag is required, otherwise you'll hit a version
+# mismatch error.
+#
+# Example:
+# > sqlite3 --version
+# SQLite header and source version mismatch
+# 2019-10-10 20:19:45 <hash>
+# 2013-05-20 00:56:22 <hash>
+#
+# https://askubuntu.com/questions/443379
+# """
+
+name="sqlite"
+version="$(_koopa_variable "$name")"  # e.g. 3.30.1
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+
+file_version="$(_koopa_variable "${name}-file-version")"  # e.g. 3300100
+jobs="$(_koopa_cpu_count)"
+tmp_dir="$(_koopa_tmp_dir)"
+year="$(_koopa_variable "${name}-year")"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="sqlite-autoconf-${file_version}.tar.gz"
+    url="https://www.sqlite.org/${year}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cd "sqlite-autoconf-${file_version}" || exit 1
+    # Potential flags:
+    # --disable-dynamic-extensions
+    # --disable-shared
+    ./configure \
+        --enable-static \
+        --prefix="$prefix"
+    make --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+_koopa_link_cellar "$name" "$version"
+
+_koopa_install_success "$name"
+_koopa_note "Reinstall PROJ and GDAL."
