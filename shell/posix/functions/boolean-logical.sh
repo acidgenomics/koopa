@@ -224,7 +224,9 @@ _koopa_is_azure() {  # {{{1
 _koopa_is_cellar() {  # {{{1
     # """
     # Is a specific command or file cellarized?
-    # @note Updated 2020-04-25.
+    # @note Updated 2020-05-08.
+    #
+    # Currently only supported for Linux.
     # """
     local str
     str="${1:?}"
@@ -244,17 +246,9 @@ _koopa_is_cellar() {  # {{{1
     # Check koopa cellar.
     local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
-    if _koopa_str_match_regex "$str" "^${cellar_prefix}"
+    if [ -d "$cellar_prefix" ]
     then
-        return 0
-    fi
-
-    # Check Homebrew cellar.
-    if _koopa_is_installed brew
-    then
-        local homebrew_cellar_prefix
-        homebrew_cellar_prefix="$(_koopa_homebrew_cellar_prefix)"
-        if _koopa_str_match_regex "$str" "^${homebrew_cellar_prefix}"
+        if _koopa_str_match_regex "$str" "^${cellar_prefix}"
         then
             return 0
         fi
