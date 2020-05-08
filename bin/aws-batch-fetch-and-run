@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# """
+# Fetch and run a script.
+#
+# S3 bucket paths and remote URLs are supported.
+#
+# See also:
+# - https://github.com/FredHutch/url-fetch-and-run
+# - https://github.com/awslabs/aws-batch-helpers
+# """
+
+_koopa_assert_is_installed aws curl unzip
+_koopa_assert_is_set BATCH_FILE_URL
+
+_koopa_h1 "Fetch and run"
+
+_koopa_dl "Job ID" "$AWS_BATCH_JOB_ID"
+_koopa_dl "Job queue" "$AWS_BATCH_JQ_NAME"
+_koopa_dl "Compute environment" "$AWS_BATCH_CE_NAME"
+_koopa_dl "Arguments" "$*"
+
+env
+date
+
+url="$BATCH_FILE_URL"
+file="$(_koopa_tmp_file)"
+
+case "$url" in
+    ftp|http*)
+        _koopa_download "$url" "$file"
+        ;;
+    s3*)
+        aws s3 cp "$url" "$file"
+        ;;
+    *)
+        _koopa_stop "Unsupported URL: '${url}'."
+        ;;
+esac
+
+chmod u+x "$file"
+exec "$file" "${@}"

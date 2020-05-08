@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_assert_has_no_args "$@"
+
+sudo find "/tmp" -mindepth 1 -maxdepth 1 -ctime +30 -exec rm -frv {} \;
+
+# Clean up alternate tmp directory (e.g. SSD), if necessary.
+if [[ "${TMPDIR:-}" != "/tmp" ]]
+then
+    sudo find "$TMPDIR" -mindepth 1 -maxdepth 1 -ctime +30 -exec rm -frv {} \;
+fi

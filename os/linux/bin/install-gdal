@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+cellar_only=0
+version="${1:-}"
+
+name="gdal"
+if [[ -n "$version" ]]
+then
+    cellar_only=1
+else
+    version="$(_koopa_variable "$name")"
+fi
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+_koopa_coffee_time
+
+_koopa_assert_has_no_envs
+_koopa_assert_is_not_file /usr/bin/gdal-config
+_koopa_assert_is_installed proj python3
+
+jobs="$(_koopa_cpu_count)"
+make_prefix="$(_koopa_make_prefix)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="${name}-${version}.tar.gz"
+    url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cd "${name}-${version}" || exit 1
+    # Use 'configure --help' for build options.
+    #
+    # If you don't need python support you can suppress it at configure using
+    # '--without-python'.
+    #
+    # Use OpenJPEG instead of Jasper.
+    # This is particularly important for CentOS builds.
+    # - https://github.com/OSGeo/gdal/issues/2402
+    # - https://github.com/OSGeo/gdal/issues/1708
+    ./configure \
+        --prefix="$prefix" \
+        --with-openjpeg \
+        --with-proj="$make_prefix" \
+        --with-python="python3" \
+        --with-sqlite3="$make_prefix" \
+        --without-jasper \
+        CFLAGS="-I${make_prefix}/include" \
+        CPPFLAGS="-I${make_prefix}/include" \
+        LDFLAGS="-L${make_prefix}/lib"
+    # Enable more verbose debug mode, which is helpful for Fedora / CentOS.
+    make -d --jobs="$jobs"
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+if [[ "$cellar_only" -eq 0 ]]
+then
+    _koopa_link_cellar "$name" "$version"
+fi
+
+_koopa_install_success "$name"

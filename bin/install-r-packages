@@ -1,0 +1,308 @@
+#!/usr/bin/env Rscript
+
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(dirname(dirname(file)))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+attach(.koopa)
+
+stopifnot(
+    requireNamespace("acidbase", quietly = TRUE),
+    requireNamespace("goalie", quietly = TRUE),
+    requireNamespace("bb8", quietly = TRUE)
+)
+
+## These dependencies are required to install sf, etc.
+stopifnot(
+    isTRUE(nzchar(Sys.which("gdal-config"))),
+    isTRUE(nzchar(Sys.which("geos-config")))
+)
+
+args <- acidbase::parseArgs(positional = FALSE, validFlags = "all")
+
+all <- FALSE
+if ("--all" %in% args) {
+    all <- TRUE
+}
+
+## Check for GitHub PAT, if necessary.
+if (isTRUE(all)) {
+    stopifnot(goalie::hasGitHubPAT())
+}
+
+## Ensure BiocManager is installed.
+if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
+    stopifnot(requireNamespace("utils"), quietly = TRUE)
+    utils::install.packages("BiocManager")
+}
+
+## Enable versioned Bioconductor install.
+biocVersion <- Sys.getenv("BIOC_VERSION")
+if (isTRUE(nzchar(biocVersion))) {
+    message(sprintf("Installing Bioconductor %s.", biocVersion))
+    BiocManager::install(version = biocVersion, ask = FALSE)
+}
+
+install <- bb8::install
+
+h1("Install R packages")
+
+h2("Tricky packages")
+install(
+    pkgs = c(
+        "rJava",
+        "Rcpp",
+        "RcppAnnoy",
+        "RcppArmadillo",
+        "XML",
+        "sf",
+        "rgdal"
+    )
+)
+
+h2("CRAN")
+install(
+    pkgs = c(
+        "DT",
+        "Matrix",
+        "R.utils",
+        "Rcpp",
+        "RcppArmadillo",
+        "backports",
+        "caTools",
+        "cli",
+        "covr",
+        "cowplot",
+        "curl",
+        "data.table",
+        "desc",
+        "devtools",
+        "ggrepel",
+        "git2r",
+        "httr",
+        "knitr",
+        "lintr",
+        "magrittr",
+        "matrixStats",
+        "parallel",
+        "patrick",
+        "pbapply",
+        "pkgdown",
+        "rcmdcheck",
+        "remotes",
+        "reprex",
+        "reticulate",
+        "rlang",
+        "rmarkdown",
+        "roxygen2",
+        "sessioninfo",
+        "shiny",
+        "shinydashboard",
+        "stringi",
+        "testthat",
+        "tidyverse",
+        "usethis",
+        "viridis",
+        "vroom",
+        "xmlparsedata"
+    )
+)
+
+## https://www.bioconductor.org/packages/release/BiocViews.html#___Software
+h2("Bioconductor")
+install(
+    pkgs = c(
+        "AnnotationDbi",
+        "AnnotationHub",
+        "Biobase",
+        "BiocCheck",
+        "BiocFileCache",
+        "BiocGenerics",
+        "BiocNeighbors",
+        "BiocParallel",
+        "BiocSingular",
+        "BiocStyle",
+        "BiocVersion",
+        "Biostrings",
+        "DelayedArray",
+        "DelayedMatrixStats",
+        "GenomeInfoDb",
+        "GenomeInfoDbData",
+        "GenomicAlignments",
+        "GenomicFeatures",
+        "GenomicRanges",
+        "IRanges",
+        "S4Vectors",
+        "SingleCellExperiment",
+        "SummarizedExperiment",
+        "XVector",
+        "ensembldb",
+        "rtracklayer",
+        "zlibbioc"
+    )
+)
+
+if (!isTRUE(all)) {
+    quit()
+}
+
+h1("Install additional R packages ({.arg --all} mode)")
+
+h2("CRAN")
+install(
+    pkgs = c(
+        "NMF",
+        "R.oo",
+        "R6",
+        "Seurat",
+        "UpSetR",
+        "WGCNA",
+        "ashr",
+        "bookdown",
+        "cgdsr",  # cBioPortal
+        "dbplyr",
+        "dendextend",
+        "dendsort",
+        "dynamicTreeCut",
+        "fastICA",
+        "fastcluster",
+        "fastmatch",
+        "fdrtool",
+        "fs",
+        "future",
+        "ggdendro",
+        "ggrepel",
+        "ggridges",
+        "ggupset",
+        "hexbin",
+        "janitor",
+        "jsonlite",
+        "memoise",
+        "openxlsx",
+        "packrat",
+        "pheatmap",
+        "pillar",
+        "plyr",
+        "pryr",
+        "rdrop2",
+        "readxl",
+        "reshape2",
+        "rio",
+        "slam",
+        "snakecase",
+        "snow",
+        "uwot"
+    )
+)
+
+h2("Bioconductor")
+install(
+    pkgs = c(
+        "AnnotationFilter",
+        "BSgenome.Hsapiens.NCBI.GRCh38",
+        "BSgenome.Hsapiens.UCSC.hg19",
+        "BSgenome.Hsapiens.UCSC.hg38",
+        "BSgenome.Mmusculus.UCSC.mm10",
+        "ChIPpeakAnno",
+        "ComplexHeatmap",
+        "ConsensusClusterPlus",
+        "DESeq2",
+        "DEXSeq",
+        "DNAcopy",
+        "DOSE",
+        "DiffBind",
+        "DropletUtils",
+        "EDASeq",
+        "EnhancedVolcano",
+        "EnsDb.Hsapiens.v75",
+        "EnsDb.Hsapiens.v86",
+        "ExperimentHub",
+        "GEOquery",
+        "GOSemSim",
+        "GSEABase",
+        "GSVA",
+        "Gviz",
+        "HDF5Array",
+        "HSMMSingleCell",
+        "IHW",
+        "KEGG.db",
+        "KEGGREST",
+        "KEGGgraph",
+        "MAST",
+        "MultiAssayExperiment",
+        "ReactomePA",
+        "Rhdf5lib",
+        "Rhtslib",
+        "Rsamtools",
+        "Rsubread",
+        "SC3",
+        "ShortRead",
+        "STRINGdb",
+        "TCGAbiolinks",
+        "TxDb.Hsapiens.UCSC.hg19.knownGene",
+        "TxDb.Hsapiens.UCSC.hg38.knownGene",
+        "TxDb.Mmusculus.UCSC.mm10.knownGene",
+        "VariantAnnotation",
+        "apeglm",
+        "ballgown",
+        "batchelor",
+        "beachmat",
+        "biomaRt",
+        "biovizBase",
+        "clusterProfiler",
+        "csaw",
+        "destiny",
+        "edgeR",
+        "enrichplot",
+        "fgsea",
+        "fishpond",
+        "gage",
+        "genefilter",
+        "geneplotter",
+        "ggbio",
+        "ggtree",
+        "goseq",
+        "limma",
+        "multtest",
+        "org.Hs.eg.db",
+        "org.Mm.eg.db",
+        "pathview",
+        "pcaMethods",
+        "reactome.db",
+        "rhdf5",
+        "scater",
+        "scone",
+        "scran",
+        "sctransform",
+        "slalom",
+        "splatter",
+        "tximeta",
+        "tximport",
+        "vsn"
+    )
+)
+
+## GitHub packages.
+h2("GitHub")
+install(
+    pkgs = c(
+        "acidgenomics/bb8",                 # base
+        "acidgenomics/acidroxygen",         # base
+        "acidgenomics/acidtest",            # base
+        "acidgenomics/basejump",            # base
+        "acidgenomics/acidplots",           # base
+        "acidgenomics/EggNOG",              # database
+        "acidgenomics/PANTHER",             # database
+        "acidgenomics/WormBase",            # database
+        "acidgenomics/DESeqAnalysis",       # rna-seq
+        "acidgenomics/pfgsea",              # rna-seq
+        "acidgenomics/Chromium",            # single-cell
+        "acidgenomics/pointillism",         # single-cell
+        "hbc/bcbioRNASeq",                  # rna-seq
+        "hbc/bcbioSingleCell"               # single-cell
+        ## > "cole-trapnell-lab/monocle3"   # single-cell
+    )
+)

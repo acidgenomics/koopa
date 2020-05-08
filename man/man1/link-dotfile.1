@@ -1,0 +1,45 @@
+.TH LINK-DOTFILE 1 2019-12-12 Bash
+.SH NAME
+link-dotfile \-
+Symlink a dot file
+.SH SYNOPSIS
+.B link-dotfile
+[\fB\-\-config\fP]
+[\fB\-\-force\fP]
+[\fB\-\-private\fP]
+[\fB\-\-quiet\fP]
+relative_path
+[symlink_name]
+.SH OPTIONS
+.TP
+.B \-\-config
+Symlink into XDG config directory instead of user home at 'HOME'.
+This path is defined by 'XDG_CONFIG_HOME' and defaults to '~/.config/'.
+.TP
+.B \-\-force
+Force overwrite.
+Applies to symlinks only.
+.TP
+.B \-\-private
+Link a private dot file.
+Checks in 'scripts-private/' directory in koopa config.
+Defaults to '~/.config/koopa/scripts-private/'.
+.TP
+.B \-\-quiet
+Quiet mode.
+Don't print link creation to stdout.
+.TP
+.B relative_path
+Relative file path in dotfiles repo.
+.TP
+.B symlink_name
+Name of target symlink (without '.' prefix).
+If unset, uses basename from relative_path argument.
+.SH DESCRIPTION
+The relative file path in dotfiles repo can be used as input.
+The target file should be specified without a leading period.
+By default, this script is designed to work with the 'mjsteinbaugh/dotfiles' repository available on GitHub.
+.SH EXAMPLES
+.B link-dotfile zshrc
+.PP
+.B link-dotfile --config doom

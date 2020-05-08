@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Install latest version of R-devel from CRAN.
+#
+# @seealso
+# - https://cran.r-project.org/bin/linux/debian/
+#
+# The following NEW packages will be installed:
+# - bison
+# - ca-certificates-java
+# - default-jdk
+# - default-jdk-headless
+# - default-jre
+# - default-jre-headless
+# - java-common
+# - libasound2
+# - libasound2-data
+# - libbison-dev
+# - libpcsclite1
+# - mpack
+# - openjdk-11-jdk
+# - openjdk-11-jdk-headless
+# - openjdk-11-jre
+# - openjdk-11-jre-headless
+# - preview-latex-style
+# - texlive-extra-utils
+# - texlive-fonts-extra
+# - texlive-latex-extra
+# - texlive-pictures
+# - texlive-plain-generic
+# - xvfb
+# """
+
+name="r"
+name_fancy="R-devel"
+version="devel"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+
+_koopa_exit_if_dir "$prefix"
+
+_koopa_install_start "$name_fancy"
+
+_koopa_assert_is_installed rsync svn
+
+link_cellar=1
+if _koopa_is_installed R
+then
+    link_cellar=0
+fi
+
+_koopa_apt_import_r_key
+_koopa_apt_add_r_repo
+
+# Ensure all build dependencies are installed.
+__koopa_apt_get build-dep r-base
+
+# Set the R source code repo URL.
+repos="https://svn.r-project.org/R"
+
+jobs="$(_koopa_cpu_count)"
+tmp_dir="$(_koopa_tmp_dir)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    rtop="${PWD}/svn/r"
+    # Create necessary build directories.
+    mkdir -pv "${rtop}/r-devel/build"
+    # Check out the latest revision of R-devel.
+    cd "$rtop" || exit 1
+    svn co "${repos}/trunk" "r-devel/source"
+    # Ensure that repo is up-to-date.
+    # > cd "${rtop}/r-devel/source" || exit 1
+    # > svn up
+    # Get the sources of the recommended packages.
+    cd "${rtop}/r-devel/source/tools" || exit 1
+    ./rsync-recommended
+    # Ready to build from source.
+    cd "${rtop}/r-devel/build" || exit 1
+    # Use the same flags as 'install-r' script.
+    flags=(
+        "--enable-R-profiling"
+        "--enable-R-shlib"
+        "--enable-memory-profiling"
+        "--prefix=${prefix}"
+        "--with-blas"
+        "--with-cairo"
+        "--with-jpeglib"
+        "--with-lapack"
+        "--with-readline"
+        "--with-tcltk"
+        "--with-x=no"
+    )
+    # We build in the separate directory created above,
+    # in order not to pollute the source code.
+    ../source/configure "${flags[@]}"
+    make --jobs="$jobs"
+    make check
+    make pdf
+    make info
+    # Cannot create directory ‘/lib/R’: Permission denied
+    make install
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+rm -fr "$tmp_dir"
+
+# Update R configuration.
+r_exe="${prefix}/bin/R"
+_koopa_update_r_config "$r_exe"
+
+if [[ "$link_cellar" -eq 1 ]]
+then
+    _koopa_link_cellar "$name" "$version"
+fi
+
+_koopa_install_success "$name_fancy"

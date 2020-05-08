@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+name="lmod"
+version="$(_koopa_variable "$name")"
+prefix="$(_koopa_app_prefix)/${name}"
+
+_koopa_exit_if_dir "$prefix"
+
+name_fancy="Lmod ${version}"
+
+_koopa_install_start "$name_fancy" "$prefix"
+
+_koopa_assert_has_no_args "$@"
+_koopa_assert_has_no_envs
+_koopa_assert_is_installed lua luarocks
+
+apps_dir="${prefix}/apps"
+data_dir="${prefix}/moduleData"
+tmp_dir="$(_koopa_tmp_dir)"
+
+eval "$(luarocks path)"
+
+(
+    _koopa_cd_tmp_dir "$tmp_dir"
+    file="${version}.tar.gz"
+    url="https://github.com/TACC/Lmod/archive/${file}"
+    _koopa_download "$url"
+    _koopa_extract "$file"
+    cd "Lmod-${version}" || exit 1
+    ./configure \
+        --prefix="$apps_dir" \
+        --with-spiderCacheDir="${data_dir}/cacheDir" \
+        --with-updateSystemFn="${data_dir}/system.txt"
+    sudo make install
+    rm -fr "$tmp_dir"
+) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_update_lmod_config
+
+_koopa_install_success "$name_fancy"

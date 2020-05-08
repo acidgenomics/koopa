@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# Note that CRAN recommended clang7 compiler doesn't currently work.
+#
+# CC="/usr/local/clang7/bin/clang"
+#
+# > brew info gcc
+# > brew info libxml2
+# """
+
+_koopa_assert_is_installed Rscript
+
+Rscript -e "\
+    install.packages(
+        pkgs = \"XML\",
+        type = \"source\",
+        configure.vars = c(
+            \"CC=/usr/local/opt/gcc/bin/gcc-9\",
+            \"XML_CONFIG=/usr/local/opt/libxml2/bin/xml2-config\"
+        )
+    )"

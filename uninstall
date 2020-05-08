@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+. "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+# Remove shared activation script.
+if _koopa_is_shared_install
+then
+    rm -fv "/etc/profile.d/zzz-koopa.sh"
+fi
+
+_koopa_uninstall_dotfiles
+_koopa_uninstall_dotfiles_private
+
+rm -frv "$(_koopa_config_prefix)"
+rm -frv "$KOOPA_PREFIX"
+
+printf "Uninstallation of koopa was successful.\n"
+printf "Restart the shell.\n"

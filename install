@@ -1,0 +1,401 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090,SC1091
+set -Eeu -o pipefail
+
+
+
+# Usage  {{{1
+# ==============================================================================
+
+usage() {
+cat << EOF
+usage: install [--help|-h] [--non-interactive] [--test]
+
+Install koopa.
+
+optional arguments:
+    --help, -h
+        Show this help message and exit.
+    --non-interactive
+        Don't prompt about configuration variables.
+    --test
+        Enable verbose test mode.
+        Used for Travis CI checks and building Docker images.
+
+note:
+    Bash script.
+    Updated 2020-03-07.
+EOF
+}
+
+
+
+# Argument parsing  {{{1
+# ==============================================================================
+
+dotfiles=1
+interactive=1
+koopa_prefix=
+passwordless=0
+profile=1
+shared=0
+test=0
+
+while (("$#"))
+do
+    case "$1" in
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        --dotfiles)
+            dotfiles=1
+            shift 1
+            ;;
+        --interactive)
+            interactive=1
+            shift 1
+            ;;
+        --no-dotfiles)
+            dotfiles=0
+            shift 1
+            ;;
+        --no-passwordless-sudo)
+            passwordless=0
+            shift 1
+            ;;
+        --no-profile)
+            profile=0
+            shift 1
+            ;;
+        --no-test)
+            test=0
+            shift 1
+            ;;
+        --non-interactive)
+            interactive=0
+            shift 1
+            ;;
+        --passwordless-sudo)
+            passwordless=1
+            shift 1
+            ;;
+        --profile)
+            profile=1
+            shift 1
+            ;;
+        --prefix=*)
+            koopa_prefix="${1#*=}"
+            shift 1
+            ;;
+        --prefix)
+            koopa_prefix="$2"
+            shift 2
+            ;;
+        --test)
+            test=1
+            shift 1
+            ;;
+        --) 
+            shift 1
+            break
+            ;;
+        --*|-*)
+            >&2 printf "ERROR: Invalid arg: '%s'\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+
+
+# Pre-flight  {{{1
+# ==============================================================================
+
+# Before we proceed, ensure that koopa isn't already installed.
+if [[ -n "${KOOPA_PREFIX:-}" ]]
+then
+    >&2 printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX"
+    exit 1
+fi
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" \
+    >/dev/null 2>&1 && pwd -P)"
+
+source "${script_dir}/shell/bash/include/header.sh"
+
+# Check that temporary activation was successful.
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
+    exit 1
+fi
+
+# Ensure existing user configuration gets removed.
+rm -fr "$(_koopa_config_prefix)"
+
+if [[ "$interactive" -eq 1 ]]
+then
+    no="$(_koopa_print_red "no")"
+    no_default="$(_koopa_print_red_bold "NO")"
+    yes="$(_koopa_print_green "yes")"
+    yes_default="$(_koopa_print_green_bold "YES")"
+fi
+
+
+
+# Prefix  {{{1
+# ==============================================================================
+
+if [[ -z "$koopa_prefix" ]]
+then
+    # Prompt whether to install for all users.
+    if _koopa_has_sudo
+    then
+        shared=1
+        if [[ "$interactive" -eq 1 ]]
+        then
+            prompt="Install for all users? [${yes_default}/${no}]: "
+            # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
+            read \
+                -e \
+                -i "yes" \
+                -p "$prompt" \
+                -r \
+                choice
+            _koopa_print
+            case "$choice" in
+                Y|YES|y|yes)
+                    shared=1
+                    ;;
+                N|NO|n|no)
+                    shared=0
+                    ;;
+                *)
+                    _koopa_invalid_arg "$1"
+                    ;;
+            esac
+        fi
+    else
+        shared=0
+    fi
+    # Set the default install prefix.
+    if [[ "$shared" -eq 1 ]]
+    then
+        prefix="/usr/local"
+    else
+        XDG_DATA_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}"
+        prefix="${XDG_DATA_HOME}"
+    fi
+    koopa_prefix="${prefix}/koopa"
+fi
+
+# Prompt the user where they want to install.
+if [[ "$interactive" -eq 1 ]]
+then
+    prompt="Install prefix: "
+    read \
+        -e \
+        -i "${koopa_prefix}" \
+        -p "$prompt" \
+        -r \
+        koopa_prefix
+    _koopa_print
+fi
+
+# Catch if the user is attempting to install into a shared space.
+if [[ "$shared" -eq 0 ]] && \
+    _koopa_print "$koopa_prefix" | grep -Eqv "^${HOME}"
+then
+    shared=1
+fi
+
+
+
+# Install (copy repo)  {{{1
+# ==============================================================================
+
+_koopa_h1 "Installing koopa at '${koopa_prefix}'."
+
+_koopa_assert_is_non_existing "$koopa_prefix"
+
+# Note that we can use 'cp -T' on Linux to avoid subdirectory creation, but
+# this doesn't work on macOS because the coreutils are ancient. So instead,
+# we're removing the directory right before creation.
+if [[ "$shared" -eq 1 ]]
+then
+    _koopa_info "Shared installation detected."
+    _koopa_note "sudo permissions are required."
+    _koopa_assert_has_sudo
+    sudo mkdir -p "$koopa_prefix"
+    sudo rm -fr "$koopa_prefix"
+    sudo cp -af "$script_dir" "$koopa_prefix"
+    admin_group="$(_koopa_admin_group)"
+    sudo chgrp "$admin_group" "$koopa_prefix"
+    sudo chmod g+ws "$koopa_prefix"
+else
+    mkdir -p "$koopa_prefix"
+    rm -fr "$koopa_prefix"
+    cp -af "$script_dir" "$koopa_prefix"
+fi
+
+unset -v script_dir
+
+
+
+# Activate  {{{1
+# ==============================================================================
+
+_koopa_h2 "Activating koopa."
+set +u
+force=1 test="$test" source "${koopa_prefix}/activate"
+set -u
+
+# Check that forced re-activation was successful.
+if [[ -z "${KOOPA_PREFIX:-}" ]]
+then
+    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
+    exit 1
+fi
+
+# Check that activation puts koopa into PATH, as expected.
+if ! _koopa_is_installed koopa
+then
+    >&2 printf "ERROR: Installer failed to set 'PATH' correctly.\n"
+    >&2 printf '%s: %s\n' 'KOOPA_PREFIX' "$KOOPA_PREFIX"
+    >&2 printf '%s: %s\n' 'PATH' "$PATH"
+    exit 1
+fi
+
+
+
+# Passwordless sudo  {{{1
+# ==============================================================================
+
+# Prompt if the user wants to enable passwordless sudo.
+if _koopa_is_linux && \
+    [[ "$interactive" -eq 1 ]] && \
+    [[ "$shared" -eq 1 ]]
+then
+    prompt="Enable passwordless sudo? [${yes}/${no_default}]: "
+    read \
+        -e \
+        -i "no" \
+        -p "$prompt" \
+        -r \
+        choice
+    _koopa_print
+    case "$choice" in
+        Y|YES|y|yes)
+            passwordless=1
+            ;;
+        N|NO|n|no)
+            passwordless=0
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+fi
+
+[[ "$passwordless" -eq 1 ]] && _koopa_enable_passwordless_sudo
+
+
+
+# Dot files  {{{1
+# ==============================================================================
+
+# Prompt the user if we want to link dot files.
+if [[ "$interactive" -eq 1 ]]
+then
+    # Check if a user profile exists, and warn.
+    file="$(_koopa_find_user_profile)"
+    if [[ -e "$file" ]]
+    then
+        _koopa_note "User profile exists: '${file}'."
+        _koopa_note "This will be overwritten if dot files are linked."
+    fi
+    prompt="Link dot files? [${yes_default}/${no}]: "
+    read \
+        -e \
+        -i "yes" \
+        -p "$prompt" \
+        -r \
+        choice
+    _koopa_print
+    case "$choice" in
+        Y|YES|y|yes)
+            dotfiles=1
+            ;;
+        N|NO|n|no)
+            dotfiles=0
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+fi
+
+if [[ "$dotfiles" -eq 1 ]]
+then
+    _koopa_git_clone_dotfiles
+    _koopa_install_dotfiles
+fi
+
+
+
+# User profile  {{{1
+# ==============================================================================
+
+if ! _koopa_is_defined_in_user_profile
+then
+    if [[ "$interactive" -eq 1 ]]
+    then
+        file="$(_koopa_find_user_profile)"
+        _koopa_note "Koopa activation code needs to be added to '${file}'."
+        prompt="Modify '${file}'? [${yes_default}/${no}]: "
+        read \
+            -e \
+            -i "yes" \
+            -p "$prompt" \
+            -r \
+            choice
+        _koopa_print
+        case "$choice" in
+            Y|YES|y|yes)
+                profile=1
+                ;;
+            N|NO|n|no)
+                profile=0
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+        if [[ "$profile" -eq 0 ]]
+        then
+            url="https://koopa.acidgenomics.com/"
+            _koopa_note "Skipping profile modification."
+            _koopa_note "Refer to '${url}' for manual instructions."
+        fi
+    else
+        profile=1
+    fi
+fi
+
+[[ "$profile" -eq 1 ]] && _koopa_add_to_user_profile
+
+
+
+# Final steps and return  {{{1
+# ==============================================================================
+
+# Some config files, such as '.lintr' and '.pylintrc' will be missing unless
+# we clone the dotfiles repo (see above).
+_koopa_remove_broken_symlinks "$koopa_prefix"
+
+_koopa_update_etc_profile_d
+_koopa_fix_zsh_permissions
+
+_koopa_install_success "koopa" "$koopa_prefix"
+_koopa_restart

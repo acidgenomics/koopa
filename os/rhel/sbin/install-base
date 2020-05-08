@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+all=0
+dev=0
+extra=0
+
+while (("$#"))
+do
+    case "$1" in
+        --all)
+            all=1
+            shift 1
+            ;;
+        --build-dep)
+            # Passthrough to 'install-fedora-base'.
+            shift 1
+            ;;
+        --dev)
+            dev=1
+            shift 1
+            ;;
+        --dist-upgrade)
+            # Passthrough to 'install-fedora-base'.
+            shift 1
+            ;;
+        --extra)
+            extra=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+if [[ "$all" -eq 1 ]]
+then
+    dev=1
+    extra=1
+fi
+
+_koopa_h1 "Installing Red Hat Enterprise Linux (RHEL) base system."
+
+# default  {{{1
+# ==============================================================================
+
+_koopa_h2 "Installing default packages."
+
+# 'dnf-plugins-core' installs 'config-manager'.
+sudo dnf -y install dnf-plugins-core util-linux-user
+sudo dnf config-manager --set-enabled PowerTools
+enable-epel
+
+# Install Fedora base.
+"${script_dir}/../../fedora/sbin/install-base" "$@"
+
+# developer  {{{1
+# ==============================================================================
+
+if [[ "$dev" -eq 1 ]]
+then
+    _koopa_h2 "Installing developer libraries."
+    pkgs=(
+        libgit2
+        libssh2
+    )
+    sudo dnf -y install "${pkgs[@]}"
+fi
+
+# extra  {{{1
+# ==============================================================================
+
+if [[ "$extra" -eq 1 ]]
+then
+    _koopa_h2 "Installing extra recommended packages."
+    sudo dnf -y install python3
+fi
