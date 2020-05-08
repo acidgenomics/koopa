@@ -4,7 +4,7 @@
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-05-08.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -23,6 +23,8 @@ _koopa_link_cellar() {  # {{{1
     # @examples
     # _koopa_link_cellar emacs 26.3
     # """
+    _koopa_assert_is_linux
+
     local name
     name="${1:?}"
 
@@ -34,7 +36,9 @@ _koopa_link_cellar() {  # {{{1
     _koopa_assert_is_dir "$make_prefix"
 
     local cellar_prefix
-    cellar_prefix="$(_koopa_cellar_prefix)/${name}"
+    cellar_prefix="$(_koopa_cellar_prefix)"
+    _koopa_assert_is_dir "$cellar_prefix"
+    cellar_prefix="${cellar_prefix}/${name}"
     _koopa_assert_is_dir "$cellar_prefix"
 
     # Detect the version automatically, if not specified.
