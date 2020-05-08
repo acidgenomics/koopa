@@ -14,7 +14,6 @@ make_prefix="$(_koopa_make_prefix)"
 fast=0
 system=0
 user=0
-verbose=0
 
 while (("$#"))
 do
@@ -39,20 +38,11 @@ do
             user=1
             shift 1
             ;;
-        --verbose)
-            verbose=1
-            shift 1
-            ;;
         *)
             _koopa_invalid_arg "$1"
             ;;
     esac
 done
-
-if [[ "$verbose" -eq 1 ]]
-then
-    set -x
-fi
 
 if [[ "$fast" -eq 1 ]]
 then

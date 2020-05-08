@@ -5,9 +5,23 @@ koopa_prefix="$(_koopa_prefix)"
 
 array=(
     "koopa $(_koopa_version) ($(_koopa_date))"
-    "Commit: $(_koopa_commit)"
     "URL: $(_koopa_url)"
     "GitHub URL: $(_koopa_github_url)"
+)
+
+if _koopa_is_git_toplevel "$koopa_prefix"
+then
+    origin="$( \
+        cd "$koopa_prefix" || exit 1; \
+        git config --get remote.origin.url \
+    )"
+    array+=(
+        "Git Remote: ${origin}"
+        "Commit: $(_koopa_commit)"
+    )
+fi
+
+array+=(
     ""
     "Configuration"
     "-------------"

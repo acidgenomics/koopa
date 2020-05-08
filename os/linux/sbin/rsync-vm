@@ -9,6 +9,7 @@ _koopa_assert_has_args "$@"
 # Argument parsing  {{{1
 # ==============================================================================
 
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -20,11 +21,20 @@ do
             source_ip="$2"
             shift 2
             ;;
-        *)
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
             _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
             ;;
     esac
 done
+set -- "${pos[@]}"
 
 if [[ -z "${source_ip:-}" ]]
 then
@@ -42,8 +52,24 @@ then
     _koopa_exit "Skipping rsync because '${host_ip}' is source machine."
 fi
 
-# app prefix  {{{1
+# Custom paths  {{{1
 # ==============================================================================
+
+if [[ "$#" -gt 0 ]]
+then
+    for prefix in "$@"
+    do
+        _koopa_rsync_vm \
+            --prefix="$prefix" \
+            --source-ip="$source_ip"
+    done
+fi
+
+# Default paths  {{{1
+# ==============================================================================
+
+# app prefix  {{{2
+# ------------------------------------------------------------------------------
 
 # Need to sync this before make prefix step, otherwise some symlinks won't
 # resolve as expected, and chmod will error.
@@ -57,7 +83,7 @@ then
     if ! _koopa_is_powerful
     then
         app_flags+=(
-            # "--exclude=bcbio"
+            "--exclude=bcbio"
             "--exclude=cellranger"
             "--exclude=cellranger-atac"
             "--exclude=omicsoft"
@@ -71,16 +97,22 @@ else
     _koopa_note "Skipping '${app_prefix}'."
 fi
 
-# make prefix  {{{1
-# ==============================================================================
+# make prefix  {{{2
+# ------------------------------------------------------------------------------
 
 make_prefix="$(_koopa_make_prefix)"
-_koopa_rsync_vm \
-    --prefix="$make_prefix" \
-    --source-ip="$source_ip"
 
-# refdata prefix {{{1
-# ==============================================================================
+if [[ -d "$make_prefix" ]]
+then
+    _koopa_rsync_vm \
+        --prefix="$make_prefix" \
+        --source-ip="$source_ip"
+else
+    _koopa_note "Skipping '${make_prefix}'."
+fi
+
+# refdata prefix {{{2
+# ------------------------------------------------------------------------------
 
 refdata_prefix="$(_koopa_refdata_prefix)"
 
@@ -104,3 +136,5 @@ then
 else
     _koopa_note "Skipping '${refdata_prefix}'."
 fi
+
+_koopa_success "rsync from ${source_ip} was successful."

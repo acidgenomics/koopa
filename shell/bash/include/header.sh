@@ -2,7 +2,7 @@
 
 # """
 # Bash shared header script.
-# @note Updated 2020-03-28.
+# @note Updated 2020-05-07.
 # """
 
 [[ -z "${activate:-}" ]] && activate=0
@@ -25,6 +25,10 @@ then
                 ;;
             --no-set-opts)
                 shopts=0
+                shift 1
+                ;;
+            --verbose)
+                set -o xtrace  # -x
                 shift 1
                 ;;
             *)
@@ -53,11 +57,10 @@ fi
 # > shopt
 if [[ "$shopts" -eq 1 ]]
 then
-    # > set -o noglob       # -f
-    # > set -o xtrace       # -x
-    set -o errexit          # -e
-    set -o errtrace         # -E
-    set -o nounset          # -u
+    # > set -o noglob   # -f
+    set -o errexit      # -e
+    set -o errtrace     # -E
+    set -o nounset      # -u
     set -o pipefail
 fi
 
