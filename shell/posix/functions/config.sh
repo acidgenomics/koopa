@@ -564,20 +564,27 @@ _koopa_uninstall_dotfiles_private() {  # {{{1
 _koopa_update_etc_profile_d() {  # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-05-09.
     # """
-    _koopa_is_shared_install || return 0
     _koopa_is_linux || return 0
-    local symlink
-    symlink="/etc/profile.d/zzz-koopa.sh"
-    # Early return if link already exists.
-    [ -L "$symlink" ] && return 0
-    _koopa_h2 "Adding '${symlink}'."
-    sudo rm -fv "/etc/profile.d/koopa.sh"
-    sudo ln -fnsv \
-        "$(_koopa_prefix)/os/linux/etc/profile.d/zzz-koopa.sh" \
-        "$symlink"
-    return 0
+    _koopa_is_shared_install || return 0
+    local file
+    file="/etc/profile.d/zzz-koopa.sh"
+    # Early return if file exists and is not a symlink.
+    # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
+    [ -f "$file" ] && [ ! -L "$file" ] && return 0
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local string
+    read -r -d '' string << EOF || true
+#!/bin/sh
+
+# koopa shell
+# https://koopa.acidgenomics.com/
+# shellcheck source=/dev/null
+. "${koopa_prefix}/activate"
+EOF
+    _koopa_sudo_write_string "$string" "$file"
 }
 
 _koopa_update_ldconfig() {  # {{{1
