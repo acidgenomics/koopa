@@ -1,31 +1,5 @@
 #!/usr/bin/env bash
 
-## FIXME Break out find cellar function.
-## FIXME Create _koopa_unlink_cellar function.
-## FIXME Move this to Bash.
-
-
-_koopa_find_cellar_symlinks() {  # {{{1
-    # """
-    # Find cellar symlinks.
-    # @note Updated 2020-05-08.
-    # """
-    local name
-    name="${1:?}"
-
-    local make_prefix
-    make_prefix="$(_koopa_make_prefix)"
-    _koopa_assert_is_dir "$make_prefix"
-
-    local cellar_prefix
-    cellar_prefix="$(_koopa_cellar_prefix)"
-    _koopa_assert_is_dir "$cellar_prefix"
-
-    # FIXME THIS DOESN"T WORK YET...DUPE?
-
-    return 0
-}
-
 _koopa_find_cellar_version_dir() {  # {{{1
     # """
     # Find cellar installation directory.
@@ -33,32 +7,28 @@ _koopa_find_cellar_version_dir() {  # {{{1
     # """
     local name
     name="${1:?}"
-
-    local version
-    version="${2:?}"
-
-    local cellar_prefix
-    cellar_prefix="$(_koopa_cellar_prefix)"
-    _koopa_assert_is_dir "$cellar_prefix"
-
     local prefix
-    prefix="$( \
-        find "$cellar_prefix" \
+    prefix="$(_koopa_cellar_prefix)"
+    _koopa_assert_is_dir "$prefix"
+    prefix="${prefix}/${name}"
+    _koopa_assert_is_dir "$prefix"
+    local x
+    x="$( \
+        find "$prefix" \
             -mindepth 1 \
             -maxdepth 1 \
             -type d \
         | sort \
         | tail -n 1 \
     )"
-    _koopa_assert_is_dir "$prefix"
-
-    _koopa_print "$prefix"
+    _koopa_assert_is_dir "$x"
+    _koopa_print "$x"
 }
 
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-05-08.
+    # @note Updated 2020-05-09.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -78,6 +48,33 @@ _koopa_link_cellar() {  # {{{1
     # _koopa_link_cellar emacs 26.3
     # """
     _koopa_assert_is_linux
+
+    local verbose
+    verbose=0
+
+    local pos
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --verbose)
+                verbose=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    set -- "${pos[@]}"
 
     local name
     name="${1:?}"
@@ -110,12 +107,19 @@ _koopa_link_cellar() {  # {{{1
     _koopa_remove_broken_symlinks "$cellar_prefix"
     _koopa_remove_broken_symlinks "$make_prefix"
 
+    local flags
+    flags=("-frs")
+    if [[ "$verbose" -eq 1 ]]
+    then
+        flags+=("-v")
+    fi
+
     if _koopa_is_shared_install
     then
-        sudo cp -frs "${cellar_prefix}/"* "${make_prefix}/".
+        sudo cp "${flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
         _koopa_update_ldconfig
     else
-        cp -frs "${cellar_prefix}/"* "${make_prefix}/".
+        cp "${flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
     fi
 
     return 0
