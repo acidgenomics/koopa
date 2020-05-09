@@ -5,4 +5,7 @@
 # Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
 # """
 
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
 emacs --no-init-file --no-window-system
