@@ -191,6 +191,7 @@ install(
         "readxl",
         "reshape2",
         "rio",
+        "shinycssloaders",
         "slam",
         "snakecase",
         "snow",
@@ -304,5 +305,6 @@ install(
         "hbc/bcbioRNASeq",                  # rna-seq
         "hbc/bcbioSingleCell"               # single-cell
         ## > "cole-trapnell-lab/monocle3"   # single-cell
+        ## > "js229/Vennerable"             # graphics
     )
 )
