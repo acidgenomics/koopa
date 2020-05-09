@@ -49,33 +49,6 @@ _koopa_link_cellar() {  # {{{1
     # """
     _koopa_assert_is_linux
 
-    local verbose
-    verbose=0
-
-    local pos
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            --verbose)
-                verbose=1
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                _koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    set -- "${pos[@]}"
-
     local name
     name="${1:?}"
 
@@ -107,19 +80,16 @@ _koopa_link_cellar() {  # {{{1
     _koopa_remove_broken_symlinks "$cellar_prefix"
     _koopa_remove_broken_symlinks "$make_prefix"
 
-    local flags
-    flags=("-frs")
-    if [[ "$verbose" -eq 1 ]]
-    then
-        flags+=("-v")
-    fi
+    local cp_flags
+    # Can increase verbosity with '-v' here.
+    cp_flags=("-f" "-r" "-s")
 
     if _koopa_is_shared_install
     then
-        sudo cp "${flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
+        sudo cp "${cp_flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
         _koopa_update_ldconfig
     else
-        cp "${flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
+        cp "${cp_flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
     fi
 
     return 0
