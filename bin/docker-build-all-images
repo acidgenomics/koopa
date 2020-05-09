@@ -39,13 +39,8 @@ set -- "${pos[@]}"
 # If empty, define default images.
 if [[ "$#" -eq 0 ]]
 then
+    prefix="${HOME}/.config/koopa/docker"
     images=()
-
-    # Minimal bioinformatics images.
-    images+=(
-        acidgenomics/miniconda3
-        acidgenomics/biocontainers
-    )
 
     # Recommended Linux images.
     images+=(
@@ -53,6 +48,21 @@ then
         acidgenomics/ubuntu
         acidgenomics/fedora
         acidgenomics/centos
+    )
+
+    # Extra Linux images.
+    images+=(
+        acidgenomics/alpine
+        acidgenomics/amzn
+        acidgenomics/arch
+        acidgenomics/kali
+        acidgenomics/opensuse
+    )
+
+    # Minimal bioinformatics images.
+    images+=(
+        acidgenomics/miniconda3
+        acidgenomics/biocontainers
     )
 
     # R images.
@@ -65,17 +75,19 @@ then
         acidgenomics/r-singlecell
     )
 
-    # Extra Linux images.
-    images+=(
-        acidgenomics/alpine
-        acidgenomics/amzn
-        acidgenomics/arch
-        acidgenomics/kali
-        acidgenomics/opensuse
-    )
+    # Nextflow images.
+    nextflow_dirs="$( \
+        find "$prefix" \
+            -name "nextflow-*" \
+            -type d \
+            | sort \
+    )"
+    nextflow_dirs="$(_koopa_sub "$nextflow_dirs" "${prefix}/" '')"
+    mapfile -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
+    images=("${images[@]}" "${nextflow_arr[@]}")
 
     # AWS batch images.
-    prefix="${HOME}/.config/koopa/docker"
+    # Ensure we build these after the other images.
     batch_dirs="$( \
         find "$prefix" \
             -name "aws-batch*" \
@@ -87,7 +99,7 @@ then
     images=("${images[@]}" "${batch_arr[@]}")
 
     # Large bioinformatics images.
-    # These don't need to be updated frequently and can be built manually instead.
+    # These don't need to be updated frequently and can be built manually.
     if [[ "$extra" -eq 1 ]]
     then
         images+=(
