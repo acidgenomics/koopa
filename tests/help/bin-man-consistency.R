@@ -10,7 +10,7 @@ options(
     "warning" = quote(quit(status = 1L))
 )
 
-args <- commandArgs(trailingOnly = FALSE)
+args <- commandArgs()
 whichFile <- grep(pattern = "--file", x = args)
 file <- args[whichFile]
 file <- sub(pattern = "^--file=", replacement = "", x = file)
