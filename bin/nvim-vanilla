@@ -4,4 +4,7 @@
 # Default mode that doesn't load user config.
 # """
 
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
 nvim -u NONE
