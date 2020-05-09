@@ -4,4 +4,7 @@
 # Run with 24-bit true color support.
 # """
 
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
+
 TERM=xterm-24bit emacs --no-window-system

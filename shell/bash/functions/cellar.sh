@@ -1,10 +1,34 @@
-#!/bin/sh
-# shellcheck disable=SC2039
+#!/usr/bin/env bash
+
+_koopa_find_cellar_version_dir() {  # {{{1
+    # """
+    # Find cellar installation directory.
+    # @note Updated 2020-05-08.
+    # """
+    local name
+    name="${1:?}"
+    local prefix
+    prefix="$(_koopa_cellar_prefix)"
+    _koopa_assert_is_dir "$prefix"
+    prefix="${prefix}/${name}"
+    _koopa_assert_is_dir "$prefix"
+    local x
+    x="$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type d \
+        | sort \
+        | tail -n 1 \
+    )"
+    _koopa_assert_is_dir "$x"
+    _koopa_print "$x"
+}
 
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-05-08.
+    # @note Updated 2020-05-09.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -28,6 +52,7 @@ _koopa_link_cellar() {  # {{{1
     local name
     name="${1:?}"
 
+    # Version is optional and will be detected automatically if necessary.
     local version
     version="${2:-}"
 
@@ -42,41 +67,29 @@ _koopa_link_cellar() {  # {{{1
     _koopa_assert_is_dir "$cellar_prefix"
 
     # Detect the version automatically, if not specified.
-    if [ -n "$version" ]
+    if [[ -n "$version" ]]
     then
         cellar_prefix="${cellar_prefix}/${version}"
     else
-        cellar_prefix="$( \
-            find "$cellar_prefix" \
-                -mindepth 1 \
-                -maxdepth 1 \
-                -type d \
-            | sort \
-            | tail -n 1 \
-        )"
+        cellar_prefix="$(_koopa_find_cellar_version_dir "$name" "$version")"
     fi
     _koopa_assert_is_dir "$cellar_prefix"
 
     _koopa_h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions --recursive "$cellar_prefix"
     _koopa_remove_broken_symlinks "$cellar_prefix"
-
-    # Early return cellar-only if Homebrew is installed.
-    if _koopa_is_installed brew
-    then
-        _koopa_note "Homebrew installation detected."
-        _koopa_note "Skipping linkage into '${make_prefix}'."
-        return 0
-    fi
-
     _koopa_remove_broken_symlinks "$make_prefix"
+
+    local cp_flags
+    # Can increase verbosity with '-v' here.
+    cp_flags=("-f" "-r" "-s")
 
     if _koopa_is_shared_install
     then
-        sudo cp -frs "$cellar_prefix/"* "$make_prefix/".
+        sudo cp "${cp_flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
         _koopa_update_ldconfig
     else
-        cp -frs "$cellar_prefix/"* "$make_prefix/".
+        cp "${cp_flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
     fi
 
     return 0

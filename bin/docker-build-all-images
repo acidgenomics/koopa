@@ -37,7 +37,7 @@ set -- "${pos[@]}"
 
 # Define images array.
 # If empty, define default images.
-if [ "$#" -eq 0 ]
+if [[ "$#" -eq 0 ]]
 then
     images=()
 
