@@ -58,11 +58,11 @@ then
     # R images.
     images+=(
         acidgenomics/bioconductor
-        acidgenomics/basejump
-        acidgenomics/bcbiornaseq
-        acidgenomics/bcbiosinglecell
-        acidgenomics/rnaseq
-        acidgenomics/singlecell
+        acidgenomics/r-basejump
+        acidgenomics/r-bcbiornaseq
+        acidgenomics/r-bcbiosinglecell
+        acidgenomics/r-rnaseq
+        acidgenomics/r-singlecell
     )
 
     # Extra Linux images.
