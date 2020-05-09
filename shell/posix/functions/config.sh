@@ -573,6 +573,7 @@ _koopa_update_etc_profile_d() {  # {{{1
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
     [ -f "$file" ] && [ ! -L "$file" ] && return 0
+    sudo rm -fv "$file"
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
     local string
