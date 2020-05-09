@@ -1,0 +1,54 @@
+#!/usr/bin/env Rscript
+
+args <- commandArgs(trailingOnly = FALSE)
+whichFile <- grep(pattern = "--file", x = args)
+file <- args[whichFile]
+file <- sub(pattern = "^--file=", replacement = "", x = file)
+koopaPrefix <- normalizePath(file.path(dirname(file), "..", "..", ".."))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
+
+stopifnot(requireNamespace("acidbase", quietly = TRUE))
+koopa <- .koopa[["koopa"]]
+
+## FIXME GET NAME AS FIRST POSITIONAL ARGUMENT
+## ERROR IF ITS EMPTY
+## FIXME `positionalArgs` should error if empty.
+## FIXME SWITCH TO GOALIE ASSERT
+## FIXME USE isCharacter here instead.
+## FIXME DONT USE nzchar for check...returns true.
+
+posArgs <- acidbase::positionalArgs()
+app <- posArgs[[1L]]
+cellarPrefix <- acidbase::shell(
+    command = koopa,
+    args = "cellar-prefix",
+    stdout = TRUE
+)
+makePrefix <- acidbase::shell(
+    command = koopa,
+    args = "make-prefix",
+    stdout = TRUE
+)
+
+## List all files in make prefix (e.g. '/usr/local').
+files <- list.files(
+    path = makePrefix,
+    all.files = TRUE,
+    full.names = TRUE,
+    recursive = TRUE,
+    include.dirs = FALSE,
+    no.. = TRUE
+)
+## This step can be CPU intensive and safe to skip.
+files <- sort(files)
+## Resolve the file paths, to match cellar symlinks.
+realpaths <- acidbase::realpath(files)
+## Get the symlinks that resolve to the desired app.
+hits <- grepl(
+    pattern = file.path(cellarPrefix, app),
+    x = realpaths
+)
+message(sprintf("%d cellar symlinks detected.", sum(hits)))
+## Ready to remove the maching symlinks.
+trash <- files[hits]
+file.remove(trash)
