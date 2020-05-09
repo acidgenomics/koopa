@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# """
+# Default mode that doesn't load user config.
+# """
+
+vim -i NONE -u NONE -U NONE

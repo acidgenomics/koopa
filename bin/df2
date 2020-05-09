@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+df --portability --print-type --si | sort
