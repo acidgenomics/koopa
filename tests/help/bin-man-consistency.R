@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
+## """
 ## Check that all scripts in `bin` and `sbin` directories have corresponding
 ## documentation in `man/man1`.
+## """
 
 options(
     "error" = quote(quit(status = 1L)),
@@ -17,7 +19,7 @@ koopaPrefix <- normalizePath(file.path(dirname(file), "..", ".."))
 stopifnot(requireNamespace("utils", quietly = TRUE))
 
 ## Exclude these directories from search.
-exclude <- file.path(koopaPrefix, "(opt|system)", "")
+exclude <- file.path(koopaPrefix, "(dotfiles|opt|system)", "")
 
 
 
@@ -72,9 +74,12 @@ ok <- file.exists(manfiles)
 if (!all(ok)) {
     stop(paste(
         c(
-            "Missing man pages:",
+            "Missing man pages detected. Resolve with:",
             utils::capture.output(
-                cat(manfiles[!ok], sep = "\n")
+                cat(
+                    paste("touch", manfiles[!ok]),
+                    sep = "\n"
+                )
             )
         ),
         collapse = "\n"
@@ -114,9 +119,12 @@ orphans <- setdiff(manfiles2, manfiles)
 if (length(orphans) > 0L) {
     stop(paste(
         c(
-            "Orphaned man pages:",
+            "Orphaned man pages detected. Resolve with:",
             utils::capture.output(
-                cat(orphans, sep = "\n")
+                cat(
+                    paste("rm", orphans),
+                    sep = "\n"
+                )
             )
         ),
         collapse = "\n"
