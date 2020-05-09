@@ -217,18 +217,16 @@ fi
 alias l.='l -d .*'
 alias l1='ls -1'
 
+# List head or tail.
+alias lh='l | head'
+alias lt='l | tail'
+
+# Clear then list.
+alias cls='clear; l'
+
 # Browse up and down.
 alias u='clear; cd ../; pwd; l'
 alias d='clear; cd -; l'
-
-alias cls='clear; ls'
-alias df2='df --portability --print-type --si | sort'
-alias lhead='l | head'
-alias ltail='l | tail'
-alias reload='exec "$SHELL" -l'
-alias sha256='shasum -a 256'
-alias tardown='tar -xzvf'
-alias tarup='tar -czvf'
 
 # Navigate up parent directories without 'cd'.
 # These are also supported by autojump.
@@ -238,12 +236,12 @@ alias tarup='tar -czvf'
 # > alias .....='cd ../../../../'
 # > alias ......='cd ../../../../../'
 
-# Non-standard programs  {{{2
+# Improve program defaults  {{{2
 # ------------------------------------------------------------------------------
 
 if _koopa_is_installed R
 then
-    alias R='R --no-restore --no-save --quiet'
+    alias R="R --no-restore --no-save --quiet"
 fi
 
 if _koopa_is_installed black
@@ -252,45 +250,7 @@ then
     alias black="black --line-length=79"
 fi
 
-if _koopa_is_installed docker
-then
-    alias docker-prune='docker system prune --all --force'
-fi
-
 if _koopa_is_installed emacs
 then
-    alias emacs='emacs --no-window-system'
-
-    # Use terminal (console) mode by default instead of window system.
-    # Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
-    alias emacs-default='emacs --no-init-file --no-window-system'
-
-    # Run with 24-bit true color support.
-    alias emacs24='TERM=xterm-24bit emacs --no-window-system'
-fi
-
-if _koopa_is_installed gpg
-then
-    alias gpg-prompt='printf '' | gpg -s'
-    alias gpg-reload='gpg-connect-agent reloadagent /bye'
-    alias gpg-restart='gpgconf --kill gpg-agent'
-fi
-
-if _koopa_is_installed nvim
-then
-    # Default mode that doesn't load user config.
-    alias nvim-default='nvim -u NONE'
-fi
-
-if _koopa_is_installed shiny-server
-then
-    alias shiny-restart="sudo systemctl restart shiny-server"
-    alias shiny-start="sudo systemctl start shiny-server"
-    alias shiny-status="sudo systemctl status shiny-server"
-fi
-
-if _koopa_is_installed vim
-then
-    # Default mode that doesn't load user config.
-    alias vim-default='vim -i NONE -u NONE -U NONE'
+    alias emacs="emacs --no-window-system"
 fi
