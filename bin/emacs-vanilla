@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# """
+# Use terminal (console) mode by default instead of window system.
+# Allow fast, default mode that skips '.emacs', '.emacs.d', etc.
+# """
+
+emacs --no-init-file --no-window-system
