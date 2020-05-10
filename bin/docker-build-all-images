@@ -55,7 +55,6 @@ then
         acidgenomics/alpine
         acidgenomics/amzn
         acidgenomics/arch
-        acidgenomics/kali
         acidgenomics/opensuse
     )
 
