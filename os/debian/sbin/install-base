@@ -27,6 +27,10 @@ source "${script_dir}/../include/header.sh"
 #   libcurl4-nss-dev 7.58.0-2ubuntu3.8
 #   libcurl4-gnutls-dev 7.58.0-2ubuntu3.8
 # You should explicitly select one to install.
+#
+#
+# Configure time zone:
+# > sudo dpkg-reconfigure tzdata
 # """
 
 bioconductor=0
