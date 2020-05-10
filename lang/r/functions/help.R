@@ -8,7 +8,7 @@
 #' @return System command when `--help` is set, or invisible `NULL`.
 koopaHelp <- function() {
     stopifnot(requireNamespace("acidbase", quietly = TRUE))
-    args <- commandArgs(trailingOnly = FALSE)
+    args <- commandArgs()
     if (!isTRUE(any(c("--help", "-h") %in% args))) {
         return(invisible())
     }
