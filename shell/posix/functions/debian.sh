@@ -1,27 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-__koopa_apt_get() {  # {{{1
-    # """
-    # Non-interactive variant of apt-get, with saner defaults.
-    # @note Updated 2020-04-29.
-    #
-    # Currently intended for:
-    # - dist-upgrade
-    # - install
-    # """
-    sudo apt-get update
-    sudo DEBIAN_FRONTEND="noninteractive" \
-        apt-get \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            "$@"
-    return 0
-}
-
-
-
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -263,6 +242,25 @@ _koopa_apt_enabled_repos() {  # {{{1
     _koopa_print "$x"
 }
 
+_koopa_apt_get() {  # {{{1
+    # """
+    # Non-interactive variant of apt-get, with saner defaults.
+    # @note Updated 2020-05-12.
+    #
+    # Currently intended for:
+    # - dist-upgrade
+    # - install
+    # """
+    sudo apt-get update
+    sudo DEBIAN_FRONTEND="noninteractive" \
+        apt-get \
+            --no-install-recommends \
+            --quiet \
+            --yes \
+            "$@"
+    return 0
+}
+
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # """
     # Import the Microsoft Azure CLI public key.
@@ -393,9 +391,9 @@ _koopa_apt_import_r_key() {  # {{{1
 _koopa_apt_install() {  # {{{1
     # """
     # Install Debian apt package.
-    # @note Updated 2020-05-02.
+    # @note Updated 2020-05-12.
     # """
-    __koopa_apt_get install "$@"
+    _koopa_apt_get install "$@"
 }
 
 _koopa_apt_is_key_imported() {  # {{{1

@@ -571,6 +571,14 @@ _koopa_is_r_package_installed() {  # {{{1
     [ -d "${prefix}/${pkg}" ]
 }
 
+_koopa_is_raspbian() {  # {{{1
+    # """
+    # Is the operating system Raspbian?
+    # @note Updated 2020-05-12.
+    # """
+    __koopa_is_os_release raspbian
+}
+
 _koopa_is_recent() {
     # """
     # If the file exists and is more recent than 2 weeks old.

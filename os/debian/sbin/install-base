@@ -110,7 +110,7 @@ fi
 if [[ "$upgrade" -eq 1 ]]
 then
     _koopa_h2 "Upgrading install via 'dist-upgrade'."
-    __koopa_apt_get dist-upgrade
+    _koopa_apt_get dist-upgrade
 fi
 
 # Remove packages  {{{1
