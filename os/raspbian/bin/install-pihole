@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://pi-hole.net
+# https://github.com/pi-hole/pi-hole/#one-step-automated-install
+# """
+
+curl -sSL https://install.pi-hole.net | bash
