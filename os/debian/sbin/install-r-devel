@@ -57,7 +57,7 @@ _koopa_apt_import_r_key
 _koopa_apt_add_r_repo
 
 # Ensure all build dependencies are installed.
-__koopa_apt_get build-dep r-base
+_koopa_apt_get build-dep r-base
 
 # Set the R source code repo URL.
 repos="https://svn.r-project.org/R"
