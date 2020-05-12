@@ -308,5 +308,6 @@ install(
         "hbc/bcbioSingleCell"               # single-cell
         ## > "cole-trapnell-lab/monocle3"   # single-cell
         ## > "js229/Vennerable"             # graphics
+        ## > "jonocarroll/DFplyr"
     )
 )
