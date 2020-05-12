@@ -161,6 +161,7 @@ install(
         "UpSetR",
         "WGCNA",
         "ashr",
+        "available",
         "bookdown",
         "cgdsr",  # cBioPortal
         "dbplyr",
@@ -187,6 +188,7 @@ install(
         "pillar",
         "plyr",
         "pryr",
+        "pzfx",
         "rdrop2",
         "readxl",
         "reshape2",
