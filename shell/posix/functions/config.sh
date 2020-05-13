@@ -225,7 +225,7 @@ _koopa_fix_rbenv_permissions() {  # {{{1
 _koopa_fix_zsh_permissions() {  # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
-    # @note Updated 2020-05-06.
+    # @note Updated 2020-05-13.
     # """
     _koopa_h2 "Fixing Zsh permissions to pass 'compaudit' checks."
 
@@ -238,12 +238,13 @@ _koopa_fix_zsh_permissions() {  # {{{1
 
     _koopa_is_installed zsh || return 0
 
+    local zsh_exe
+    zsh_exe="$(_koopa_which_realpath zsh)"
+
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
     if [ -d "${make_prefix}/share/zsh/site-functions" ]
     then
-        local zsh_exe
-        zsh_exe="$(_koopa_which_realpath zsh)"
         if _koopa_str_match_regex "$zsh_exe" "^${make_prefix}"
         then
             _koopa_chmod -v g-w \
