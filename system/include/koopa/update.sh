@@ -72,6 +72,9 @@ then
     exit 1
 fi
 
+# REMOVE THIS
+exit 0
+
 _koopa_set_permissions --recursive "$koopa_prefix"
 
 if [[ "$rsync" -eq 0 ]]
@@ -81,9 +84,6 @@ then
         cd "$koopa_prefix" || exit 1
         _koopa_git_pull
     ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
-
-    # REMOVE THIS
-    exit 0
 
     # Reload all functions, which may have been updated.
     # shellcheck source=/dev/null
