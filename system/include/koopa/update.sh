@@ -72,9 +72,6 @@ then
     exit 1
 fi
 
-# REMOVE THIS
-exit 0
-
 _koopa_set_permissions --recursive "$koopa_prefix"
 
 if [[ "$rsync" -eq 0 ]]
