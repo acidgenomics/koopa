@@ -18,16 +18,6 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 _koopa_assert_is_installed aws curl unzip
 _koopa_assert_is_set BATCH_FILE_URL
 
-_koopa_h1 "Fetch and run"
-
-_koopa_dl "Job ID" "$AWS_BATCH_JOB_ID"
-_koopa_dl "Job queue" "$AWS_BATCH_JQ_NAME"
-_koopa_dl "Compute environment" "$AWS_BATCH_CE_NAME"
-_koopa_dl "Arguments" "$*"
-
-env
-date
-
 url="$BATCH_FILE_URL"
 file="$(_koopa_tmp_file)"
 
