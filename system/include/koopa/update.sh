@@ -82,6 +82,9 @@ then
         _koopa_git_pull
     ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
 
+    # REMOVE THIS
+    exit 0
+
     # Reload all functions, which may have been updated.
     # shellcheck source=/dev/null
     source "$(koopa bash header)"
