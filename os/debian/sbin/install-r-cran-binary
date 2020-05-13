@@ -96,4 +96,7 @@ pkgs=(
 _koopa_apt_install "${pkgs[@]}"
 _koopa_update_r_config "$r_exe"
 
+# Ensure we don't have a duplicate site library.
+sudo rm -frv /usr/local/lib/R
+
 _koopa_install_success "$name_fancy"
