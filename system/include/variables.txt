@@ -253,7 +253,7 @@ proj="7.0.1"
 pyenv="1.2.16"
 
 # https://www.python.org/downloads/
-python="3.8.2"
+python="3.8.3"
 
 # https://www.r-project.org/
 # https://cloud.r-project.org/src/base/R-3/
