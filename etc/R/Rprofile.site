@@ -1,6 +1,6 @@
 ## """
 ## Shared R profile configuration.
-## Updated 2020-05-05.
+## Updated 2020-05-14.
 ##
 ## See `help(Startup)` for documentation on `~/.Rprofile` and `Rprofile.site`.
 ## """
@@ -166,7 +166,7 @@ local({
 
     local({
         if (isTRUE(interactive()) && isTRUE(.rprofile[["conda"]])) {
-            warning(sprintf(
+            message(sprintf(
                 fmt = paste(
                     "conda '%s' environment detected.",
                     "Don't install packages from source with conda active.",
