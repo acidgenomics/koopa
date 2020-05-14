@@ -170,7 +170,6 @@ local({
                 fmt = paste(
                     "conda '%s' environment detected.",
                     "Don't install packages from source with conda active.",
-                    "",
                     sep = "\n"
                 ),
                 Sys.getenv("CONDA_DEFAULT_ENV")
