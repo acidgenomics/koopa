@@ -134,8 +134,9 @@ then
 
     if [[ "$rsync" -eq 0 ]]
     then
+        # This can cause some recipes to break.
+        # > update-conda
         update-r-packages
-        update-conda
         update-python-packages
         update-rust
         update-rust-packages
