@@ -179,6 +179,7 @@ install(
         "ggridges",
         "ggupset",
         "hexbin",
+        "htmlwidgets",
         "janitor",
         "jsonlite",
         "memoise",
