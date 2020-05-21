@@ -478,7 +478,7 @@ fi
 
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
 then
-    install-aspera-connect
+    # > install-aspera-connect
     if [[ "$rsync" -eq 0 ]]
     then
         conda-create-bioinfo-envs --all
