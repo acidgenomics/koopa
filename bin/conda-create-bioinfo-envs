@@ -210,9 +210,9 @@ then
     # > _koopa_conda_create_env r-bcbiosinglecell                       # 0.438G
     # > _koopa_conda_create_env r-seurat                                # 0.154G
     _koopa_conda_create_env kallisto
-    _koopa_conda_create_env r-monocle3                                  # 0.874G
+    # > _koopa_conda_create_env r-monocle3                              # 0.874G
     _koopa_conda_create_env salmon
-    _koopa_conda_create_env stream                                      # 0.998G
+    # > _koopa_conda_create_env stream                                  # 0.998G
 fi
 
 if [[ "$methylation" -eq 1 ]]
