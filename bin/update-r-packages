@@ -12,11 +12,13 @@ stopifnot(requireNamespace("bb8", quietly = TRUE))
 suppressMessages({
     bb8::uninstall(
         pkgs = c(
-            "Matrix.utils",
+            ## "Matrix.utils",
             "SDMTools",
             "bioverbs",
             "brio",
             "freerange",
+            "lsei",
+            "npsurv",
             "nvimcom",
             "pfgsea",
             "profdpm",
