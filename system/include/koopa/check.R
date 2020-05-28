@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-05-01.
+## Updated 2020-05-28.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
@@ -541,17 +541,24 @@ if (!isTRUE(docker)) {
         name = "PROJ",
         whichName = "proj",
         current = currentVersion("proj"),
-        expected = expectedVersion("proj")
+        ## > expected = expectedVersion("proj")
+        expected = ifelse(
+            test = isTRUE(macos),
+            yes = "6.3.2",
+            no = expectedVersion("gdal")
+        )
+
     )
     checkVersion(
         name = "GDAL",
         whichName = "gdalinfo",
         current = currentVersion("gdal"),
-        expected = ifelse(
-            test = isTRUE(macos),
-            yes = "2.4.4",
-            no = expectedVersion("gdal")
-        )
+        expected = expectedVersion("gdal")
+        ## > expected = ifelse(
+        ## >     test = isTRUE(macos),
+        ## >     yes = "2.4.4",
+        ## >     no = expectedVersion("gdal")
+        ## > )
     )
     checkVersion(
         name = "GEOS",
