@@ -7,7 +7,7 @@
 # koopa  {{{1
 # ==============================================================================
 
-koopa-date="2020-05-25"
+koopa-date="2020-05-28"
 koopa-version="0.7.1a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -47,7 +47,7 @@ autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 # https://github.com/aws/aws-cli/releases
-aws-cli="2.0.16"
+aws-cli="2.0.17"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.6.0"
@@ -132,7 +132,7 @@ gcc="9.3.0"
 
 # https://gdal.org/
 # https://gdal.org/download.html#current-releases
-gdal="3.0.4"
+gdal="3.1.0"
 
 # https://github.com/libgeos/geos/releases
 geos="3.8.1"
