@@ -48,6 +48,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
+
 casks=(
     1password
     adobe-acrobat-reader
@@ -118,7 +119,8 @@ casks=(
 (
     for cask in "${casks[@]}"
     do
-        if _koopa_print "$installed_casks" | grep -Eq "^${cask}$"
+        name="$(basename "$cask")"
+        if _koopa_print "$installed_casks" | grep -Eq "^${name}$"
         then
             _koopa_note "'${cask}' is already installed."
             continue
@@ -139,6 +141,10 @@ casks=(
 
 _koopa_h2 "Installing brews."
 installed_brews="$(brew list)"
+
+# Linked brews (default)  {{{2
+# ------------------------------------------------------------------------------
+
 brews=(
     # Priority.
     bash
@@ -250,45 +256,74 @@ brews=(
     wget
     youtube-dl
     zlib
-    # External taps.
-    mongodb/brew/mongodb-community
-    vitorgalvao/tiny-scripts/cask-repair
-    # Cellar only (unlink).
-    python
-    gdal
-    proj
 )
-
-# Cellar (keg)-only brews  {{{2
-# ------------------------------------------------------------------------------
-
-## FIXME MAKE THIS A FUNCTION.
-## FIXME THIS ALLOWS US TO SKIP MORE EASILY.
 
 (
     for brew in "${brews[@]}"
     do
-        name="$(basename "$brew")"
-        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+        if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
         then
-            _koopa_note "'${name}' is already installed."
+            _koopa_note "'${brew}' is already installed."
             continue
         fi
         brew install "$brew"
     done
 ) 2>&1 | tee -a "$log_file"
 
-brew unlink python
+# Cellar (keg)-only brews  {{{2
+# ------------------------------------------------------------------------------
 
-brew unlink gdal
-brew unlink libgeotiff
-brew unlink libspatialite
-brew unlink netcdf
-brew unlink proj
+keg_only_brews=(
+    gdal
+    libgeotiff
+    libspatialite
+    netcdf
+    proj
+    python
+)
+
+(
+    for brew in "${keg_only_brews[@]}"
+    do
+        if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
+        then
+            _koopa_note "'${brew}' is already installed."
+        else
+            brew install "$brew"
+        fi
+        brew unlink "$brew" > /dev/null
+    done
+) 2>&1 | tee -a "$log_file"
+
+# Externally tapped brews  {{{2
+# ------------------------------------------------------------------------------
 
 # Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.
 # This is needed currently to install R rgdal, sf packages from source.
-brew link osgeo-proj
-brew link osgeo-gdal
+
+# > brew tap mongodb/brew
+# > brew tap osgeo/osgeo4mac
+# > brew tap vitorgalvao/tiny-scripts
+
+external_brews=(
+    mongodb/brew/mongodb-community
+    osgeo/osgeo4mac/osgeo-gdal
+    osgeo/osgeo4mac/osgeo-proj
+    vitorgalvao/tiny-scripts/cask-repair
+)
+
+(
+    for brew in "${external_brews[@]}"
+    do
+        name="$(basename "$brew")"
+        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+        then
+            _koopa_note "'${brew}' is already installed."
+        else
+            brew install "$brew"
+        fi
+        brew link "$brew" &> /dev/null
+    done
+) 2>&1 | tee -a "$log_file"
 
 _koopa_install_success "$name_fancy"
