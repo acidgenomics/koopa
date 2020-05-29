@@ -119,7 +119,8 @@ casks=(
 (
     for cask in "${casks[@]}"
     do
-        if _koopa_print "$installed_casks" | grep -Eq "^${cask}$"
+        name="$(basename "$cask")"
+        if _koopa_print "$installed_casks" | grep -Eq "^${name}$"
         then
             _koopa_note "'${cask}' is already installed."
             continue
