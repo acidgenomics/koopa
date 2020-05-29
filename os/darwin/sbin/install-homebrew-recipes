@@ -291,7 +291,7 @@ keg_only_brews=(
         else
             brew install "$brew"
         fi
-        brew unlink "$brew"
+        brew unlink "$brew" > /dev/null
     done
 ) 2>&1 | tee -a "$log_file"
 
@@ -322,7 +322,7 @@ external_brews=(
         else
             brew install "$brew"
         fi
-        brew link "$brew"
+        brew link "$brew" &> /dev/null
     done
 ) 2>&1 | tee -a "$log_file"
 
