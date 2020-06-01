@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://wiki.winehq.org/Debian
+# """
+
+_koopa_exit_if_installed wine
+
+name_fancy="Wine"
+
+_koopa_install_start "$name_fancy"
+
+_koopa_apt_import_wine_key
+_koopa_apt_add_wine_repo
+
+sudo apt install --install-recommends winehq-stable
+
+_koopa_install_success "$name_fancy"
