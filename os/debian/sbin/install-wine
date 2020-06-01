@@ -17,6 +17,9 @@ _koopa_install_start "$name_fancy"
 _koopa_apt_import_wine_key
 _koopa_apt_add_wine_repo
 
-sudo apt install --install-recommends winehq-stable
+sudo apt-get update
+sudo apt-get --yes install \
+    --install-recommends \
+    winehq-stable
 
 _koopa_install_success "$name_fancy"
