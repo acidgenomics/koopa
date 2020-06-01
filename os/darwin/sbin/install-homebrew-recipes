@@ -110,6 +110,7 @@ casks=(
     visual-studio-code
     vlc
     wine-stable
+    xquartz
     xld
     zoomus
     # External taps.
