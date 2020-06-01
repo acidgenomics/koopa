@@ -7,7 +7,7 @@
 # koopa  {{{1
 # ==============================================================================
 
-koopa-date="2020-05-28"
+koopa-date="2020-06-01"
 koopa-version="0.7.1a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -69,7 +69,7 @@ binutils="2.34"
 
 # https://dystroy.org/broot
 # https://github.com/Canop/broot
-broot="0.13.2"
+broot="0.14"
 
 # https://crates.io/
 # https://github.com/rust-lang/cargo
@@ -86,7 +86,7 @@ cellranger="3.1.0"
 clang="11.0.0"
 
 # https://cmake.org/download/
-cmake="3.17.2"
+cmake="3.17.3"
 
 # https://docs.conda.io/
 # https://conda.io/projects/continuumio-conda/en/latest/release-notes.html
@@ -243,7 +243,7 @@ picard="2.21.1"
 pip="20.1.1"
 
 # https://pypi.org/project/pipx/
-pipx="0.15.3.1"
+pipx="0.15.4.0"
 
 # https://proj.org/
 # Note that 7.0.0 release has compilation issues with R sf, rgdal.
@@ -263,7 +263,7 @@ r="4.0.0"
 rbenv="1.1.2"
 
 # https://github.com/BurntSushi/ripgrep/releases
-ripgrep="12.1.0"
+ripgrep="12.1.1"
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
@@ -307,8 +307,8 @@ shunit2="2.1.7"
 singularity="3.5.0"
 
 # https://www.sqlite.org/download.html
-sqlite="3.31.1"
-sqlite-file-version="3310100"
+sqlite="3.32.1"
+sqlite-file-version="3320100"
 sqlite-year="2020"
 
 # https://www.latex-project.org/get/
