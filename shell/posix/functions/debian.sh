@@ -5,22 +5,13 @@ _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
     #
-    # @note Updated 2020-04-28.
-    #
-    # Ubutu 20 (Focal Fossa) isn't supported yet:
-    # https://packages.microsoft.com/repos/azure-cli/dists/
+    # @note Updated 2020-06-01.
     # """
     local file
     file="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$file" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    # Remap 20.04 LTS to 18.04 LTS.
-    case "$os_codename" in
-        focal)
-            os_codename="bionic"
-            ;;
-    esac
     local string
     string="deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
 ${os_codename} main"
@@ -31,7 +22,7 @@ _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
     #
-    # @note Updated 2020-04-28.
+    # @note Updated 2020-06-01.
     #
     # Ubuntu 20 (Focal Fossa) not yet supported:
     # https://download.docker.com/linux/
