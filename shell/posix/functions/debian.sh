@@ -140,15 +140,26 @@ _koopa_apt_add_wine_repo() {  # {{{1
     # """
     # Add WineHQ repo.
     #
+    # - Debian:
+    #   https://wiki.winehq.org/Debian
+    # - Ubuntu:
+    #   https://wiki.winehq.org/Ubuntu
+    #
     # @note Updated 2020-06-01.
     # """
     local file
     file="/etc/apt/sources.list.d/wine.list"
     [ -f "$file" ] && return 0
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+
     local os_codename
     os_codename="$(_koopa_os_codename)"
+
     local string
-    string="deb https://dl.winehq.org/wine-builds/debian/ ${os_codename} main"
+    string="deb https://dl.winehq.org/wine-builds/${os_id}/ ${os_codename} main"
+
     _koopa_sudo_write_string "$string" "$file"
 }
 
@@ -334,7 +345,19 @@ _koopa_apt_import_llvm_key() {  # {{{1
 _koopa_apt_import_wine_key() {  # {{{1
     # """
     # Import the WineHQ key.
+    #
     # @note Updated 2020-06-01.
+    #
+    # - Debian:
+    #   https://wiki.winehq.org/Debian
+    # - Ubuntu:
+    #   https://wiki.winehq.org/Ubuntu
+    #
+    # > wget -O - https://dl.winehq.org/wine-builds/winehq.key \
+    # >     | sudo apt-key add -
+    #
+    # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
+    # > sudo apt-key add winehq.key
     # """
     # FIXME Add skip step here.
     _koopa_h2 "Importing Wine public key."
@@ -342,8 +365,6 @@ _koopa_apt_import_wine_key() {  # {{{1
     curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" \
         | sudo apt-key add - \
         > /dev/null 2>&1
-    # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
-    # > sudo apt-key add winehq.key
     return 0
 }
 
