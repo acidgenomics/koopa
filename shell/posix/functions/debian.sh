@@ -43,10 +43,10 @@ _koopa_apt_add_docker_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    # Remap 20.04 LTS to 18.04 LTS.
+    # Remap 20.04 LTS to 19.10.
     case "$os_codename" in
         focal)
-            os_codename="bionic"
+            os_codename="eoan"
             ;;
     esac
     local string
