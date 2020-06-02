@@ -330,8 +330,9 @@ _koopa_apt_import_google_cloud_key() {  # {{{1
 _koopa_apt_import_llvm_key() {  # {{{1
     # """
     # Import the LLVM public key.
-    # @note Updated 2020-03-04.
+    # @note Updated 2020-06-02.
     # """
+    local key
     key="6084 F3CF 814B 57C1 CF12  EFD5 15CF 4D18 AF4F 7421"
     _koopa_apt_is_key_imported "$key" && return 0
     _koopa_h2 "Importing LLVM public key."
@@ -346,7 +347,9 @@ _koopa_apt_import_wine_key() {  # {{{1
     # """
     # Import the WineHQ key.
     #
-    # @note Updated 2020-06-01.
+    # @note Updated 2020-06-02.
+    #
+    # Email: <wine-devel@winehq.org>
     #
     # - Debian:
     #   https://wiki.winehq.org/Debian
@@ -359,7 +362,8 @@ _koopa_apt_import_wine_key() {  # {{{1
     # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
     # > sudo apt-key add winehq.key
     # """
-    # FIXME Add skip step here.
+    key="D43F 6401 4536 9C51 D786  DDEA 76F1 A20F F987 672F"
+    _koopa_apt_is_key_imported "$key" && return 0
     _koopa_h2 "Importing Wine public key."
     _koopa_assert_is_installed curl
     curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" \
