@@ -14,12 +14,24 @@ name_fancy="Wine"
 
 _koopa_install_start "$name_fancy"
 
+# Import WineHQ key and repo, required to install latest version.
 _koopa_apt_import_wine_key
 _koopa_apt_add_wine_repo
 
-sudo apt-get update
-sudo apt-get --yes install \
-    --install-recommends \
-    winehq-stable
+# Enable 32-bit packages.
+sudo dpkg --add-architecture i386
+
+# Old stable version: Use wine, wine32 here.
+_koopa_apt_get install \
+    winbind \
+    x11-apps \
+    xauth \
+    xvfb
+
+# Install latest stable version of Wine.
+sudo DEBIAN_FRONTEND=noninteractive \
+    apt-get --yes install \
+        --install-recommends \
+        winehq-stable
 
 _koopa_install_success "$name_fancy"
