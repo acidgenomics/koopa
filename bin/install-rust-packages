@@ -27,17 +27,14 @@ _koopa_install_start "$name_fancy" "$prefix"
 if [[ $# -eq 0 ]]
 then
     crates=(
-        # https://github.com/Canop/broot
+        bat
         broot
-        # https://github.com/bootandy/dust
         du-dust
-        # https://github.com/ogham/exa
         exa
-        # https://github.com/sharkdp/fd
         fd-find
-        # https://github.com/BurntSushi/ripgrep
+        hyperfine
         ripgrep
-        # https://github.com/BurntSushi/xsv
+        tokei
         xsv
     )
 else
