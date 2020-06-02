@@ -16,7 +16,6 @@ source "${script_dir}/../include/header.sh"
 # > sudo apt-get install -f
 #
 # See also:
-# - https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/
 # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
 # - https://forum.winehq.org/viewtopic.php?t=31261
 # - https://askubuntu.com/questions/1145473/how-do-i-install-libfaudio0
@@ -32,20 +31,12 @@ name_fancy="Wine"
 
 _koopa_install_start "$name_fancy"
 
-# Import WineHQ key and repo, required to install latest version.
-_koopa_apt_import_wine_key
 _koopa_apt_add_wine_repo
+# This is required to install missing libaudio0 dependency.
+_koopa_apt_add_wine_obs_repo
 
 # Enable 32-bit packages.
 sudo dpkg --add-architecture i386
-
-# Wine on Debian 10+ now requires libaudio0 as a dependency.
-file="libfaudio0_20.01-0~buster_i386.deb"
-url="https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/i386/${file}"
-_koopa_download "$url"
-# Note that you can use full path or './file.deb' here.
-sudo DEBIAN_FRONTEND=noninteractive apt --yes install "./${file}"
-rm "$file"
 
 # Old stable version: Use wine, wine32 here.
 _koopa_apt_get install \
