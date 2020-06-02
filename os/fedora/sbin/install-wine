@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+# """
+# https://wiki.winehq.org/Fedora
+# """
+
+_koopa_exit_if_installed wine
+
+name_fancy="Wine"
+
+_koopa_install_start "$name_fancy"
+
+version="$( \
+    grep 'VERSION_ID=' /etc/os-release \
+        | cut -d '=' -f 2 \
+)"
+repo_url="https://dl.winehq.org/wine-builds/fedora/${version}/winehq.repo"
+
+dnf -y update
+dnf -y install dnf-plugins-core
+dnf config-manager --add-repo "$repo_url"
+dnf -y install \
+    winehq-stable \
+    xorg-x11-apps \
+    xorg-x11-server-Xvfb \
+    xorg-x11-xauth
+
+_koopa_install_success "$name_fancy"
