@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -Eeu -o pipefail
+
+# Allow access from localhost.
+# > xhost + "$HOSTNAME"
+xhost + 127.0.0.1
+
+image="acidgenomics/wine-mp3tag"
+workdir="/mnt/work"
+
+docker run \
+    --privileged \
+    -e DISPLAY=host.docker.internal:0 \
+    --interactive \
+    --tty \
+    --volume="${PWD}:${workdir}" \
+    --workdir="${workdir}" \
+    "$image"
