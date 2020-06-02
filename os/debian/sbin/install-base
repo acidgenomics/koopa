@@ -341,7 +341,6 @@ fi
 
 _koopa_apt_install "${pkgs[@]}"
 _koopa_apt_configure_sources
-_koopa_apt_import_keys
 
 # Clean up  {{{1
 # ==============================================================================
