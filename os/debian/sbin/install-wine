@@ -6,6 +6,11 @@ source "${script_dir}/../include/header.sh"
 
 # """
 # https://wiki.winehq.org/Debian
+#
+# See also:
+# - https://github.com/baztian/docker-wine/blob/master/Dockerfile
+# - https://gist.github.com/cschiewek/246a244ba23da8b9f0e7b11a68bf3285
+# - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
 # """
 
 _koopa_exit_if_installed wine
