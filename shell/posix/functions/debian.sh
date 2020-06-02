@@ -5,22 +5,13 @@ _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
     #
-    # @note Updated 2020-04-28.
-    #
-    # Ubutu 20 (Focal Fossa) isn't supported yet:
-    # https://packages.microsoft.com/repos/azure-cli/dists/
+    # @note Updated 2020-06-01.
     # """
     local file
     file="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$file" ] && return 0
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    # Remap 20.04 LTS to 18.04 LTS.
-    case "$os_codename" in
-        focal)
-            os_codename="bionic"
-            ;;
-    esac
     local string
     string="deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ \
 ${os_codename} main"
@@ -31,7 +22,7 @@ _koopa_apt_add_docker_repo() {  # {{{1
     # """
     # Add Docker apt repo.
     #
-    # @note Updated 2020-04-28.
+    # @note Updated 2020-06-01.
     #
     # Ubuntu 20 (Focal Fossa) not yet supported:
     # https://download.docker.com/linux/
@@ -43,10 +34,10 @@ _koopa_apt_add_docker_repo() {  # {{{1
     os_id="$(_koopa_os_id)"
     local os_codename
     os_codename="$(_koopa_os_codename)"
-    # Remap 20.04 LTS to 18.04 LTS.
+    # Remap 20.04 LTS to 19.10.
     case "$os_codename" in
         focal)
-            os_codename="bionic"
+            os_codename="eoan"
             ;;
     esac
     local string
@@ -141,6 +132,33 @@ ${os_codename}-${version}/"
 deb ${repo}
 deb-src ${repo}
 EOF
+
+    _koopa_sudo_write_string "$string" "$file"
+}
+
+_koopa_apt_add_wine_repo() {  # {{{1
+    # """
+    # Add WineHQ repo.
+    #
+    # - Debian:
+    #   https://wiki.winehq.org/Debian
+    # - Ubuntu:
+    #   https://wiki.winehq.org/Ubuntu
+    #
+    # @note Updated 2020-06-01.
+    # """
+    local file
+    file="/etc/apt/sources.list.d/wine.list"
+    [ -f "$file" ] && return 0
+
+    local os_id
+    os_id="$(_koopa_os_id)"
+
+    local os_codename
+    os_codename="$(_koopa_os_codename)"
+
+    local string
+    string="deb https://dl.winehq.org/wine-builds/${os_id}/ ${os_codename} main"
 
     _koopa_sudo_write_string "$string" "$file"
 }
@@ -264,14 +282,15 @@ _koopa_apt_get() {  # {{{1
 _koopa_apt_import_azure_cli_key() {                                        #{{{1
     # """
     # Import the Microsoft Azure CLI public key.
-    # @note Updated 2020-03-04.
+    # @note Updated 2020-06-01.
     # """
     [ -e "/etc/apt/trusted.gpg.d/microsoft.asc.gpg" ] && return 0
-    _koopa_assert_is_installed curl gpg
     _koopa_h2 "Importing Microsoft public key."
-    curl -sL https://packages.microsoft.com/keys/microsoft.asc \
+    _koopa_assert_is_installed curl gpg
+    curl -sL "https://packages.microsoft.com/keys/microsoft.asc" \
         | gpg --dearmor \
-        | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc.gpg > /dev/null
+        | sudo tee "/etc/apt/trusted.gpg.d/microsoft.asc.gpg" \
+        > /dev/null 2>&1
     return 0
 }
 
@@ -283,8 +302,8 @@ _koopa_apt_import_docker_key() {  # {{{1
     local key
     key="9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88"
     _koopa_apt_is_key_imported "$key" && return 0
-    _koopa_assert_is_installed curl
     _koopa_h2 "Importing Docker public key."
+    _koopa_assert_is_installed curl
     # Expecting "debian" or "ubuntu" here.
     local os_id
     os_id="$(_koopa_os_id)"
@@ -300,23 +319,54 @@ _koopa_apt_import_google_cloud_key() {  # {{{1
     # @note Updated 2020-03-04.
     # """
     [ -e "/usr/share/keyrings/cloud.google.gpg" ] && return 0
-    _koopa_assert_is_installed curl
     _koopa_h2 "Importing Google Cloud SDK public key."
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
-        | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+    _koopa_assert_is_installed curl
+    curl "https://packages.cloud.google.com/apt/doc/apt-key.gpg" \
+        | sudo apt-key --keyring "/usr/share/keyrings/cloud.google.gpg" add - \
+        > /dev/null 2>&1
     return 0
 }
 
 _koopa_apt_import_llvm_key() {  # {{{1
     # """
     # Import the LLVM public key.
-    # @note Updated 2020-03-04.
+    # @note Updated 2020-06-02.
     # """
+    local key
     key="6084 F3CF 814B 57C1 CF12  EFD5 15CF 4D18 AF4F 7421"
     _koopa_apt_is_key_imported "$key" && return 0
-    _koopa_assert_is_installed curl
     _koopa_h2 "Importing LLVM public key."
+    _koopa_assert_is_installed curl
     curl -fsSL "https://apt.llvm.org/llvm-snapshot.gpg.key" \
+        | sudo apt-key add - \
+        > /dev/null 2>&1
+    return 0
+}
+
+_koopa_apt_import_wine_key() {  # {{{1
+    # """
+    # Import the WineHQ key.
+    #
+    # @note Updated 2020-06-02.
+    #
+    # Email: <wine-devel@winehq.org>
+    #
+    # - Debian:
+    #   https://wiki.winehq.org/Debian
+    # - Ubuntu:
+    #   https://wiki.winehq.org/Ubuntu
+    #
+    # > wget -O - https://dl.winehq.org/wine-builds/winehq.key \
+    # >     | sudo apt-key add -
+    #
+    # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
+    # > sudo apt-key add winehq.key
+    # """
+    key="D43F 6401 4536 9C51 D786  DDEA 76F1 A20F F987 672F"
+    _koopa_apt_is_key_imported "$key" && return 0
+    _koopa_h2 "Importing Wine public key."
+    _koopa_assert_is_installed curl
+    curl -fsSL "https://dl.winehq.org/wine-builds/winehq.key" \
         | sudo apt-key add - \
         > /dev/null 2>&1
     return 0
