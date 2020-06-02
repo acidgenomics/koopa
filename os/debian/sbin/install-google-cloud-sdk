@@ -19,7 +19,6 @@ name_fancy="Google Cloud SDK"
 
 _koopa_install_start "$name_fancy"
 
-_koopa_apt_import_google_cloud_key
 _koopa_apt_add_google_cloud_sdk_repo
 _koopa_apt_install google-cloud-sdk
 
