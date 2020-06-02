@@ -10,7 +10,13 @@ source "${script_dir}/../include/header.sh"
 # aptitude will return more informative error messages on held package errors,
 # such as with missing libaudio0 dependency.
 #
+# dpkg alternative for .deb file installation:
+# https://unix.stackexchange.com/questions/159094/
+# > sudo dpkg -i /path/to/deb/file
+# > sudo apt-get install -f
+#
 # See also:
+# - https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/
 # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
 # - https://forum.winehq.org/viewtopic.php?t=31261
 # - https://askubuntu.com/questions/1145473/how-do-i-install-libfaudio0
@@ -37,8 +43,8 @@ sudo dpkg --add-architecture i386
 file="libfaudio0_20.01-0~buster_i386.deb"
 url="https://download.opensuse.org/repositories/Emulators:/Wine:/Debian/Debian_10/i386/${file}"
 _koopa_download "$url"
-sudo DEBIAN_FRONTEND=noninteractive \
-    apt-get --yes install "$file"
+# Note that you can use full path or './file.deb' here.
+sudo DEBIAN_FRONTEND=noninteractive apt --yes install "./${file}"
 rm "$file"
 
 # Old stable version: Use wine, wine32 here.
