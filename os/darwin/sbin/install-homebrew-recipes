@@ -48,6 +48,7 @@ export HOMEBREW_FORCE_BOTTLE=1
 
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
+
 casks=(
     1password
     adobe-acrobat-reader
@@ -109,6 +110,7 @@ casks=(
     visual-studio-code
     vlc
     wine-stable
+    xquartz
     xld
     zoomus
     # External taps.
@@ -118,7 +120,8 @@ casks=(
 (
     for cask in "${casks[@]}"
     do
-        if _koopa_print "$installed_casks" | grep -Eq "^${cask}$"
+        name="$(basename "$cask")"
+        if _koopa_print "$installed_casks" | grep -Eq "^${name}$"
         then
             _koopa_note "'${cask}' is already installed."
             continue
@@ -130,31 +133,21 @@ casks=(
 # Brews  {{{1
 # ==============================================================================
 
-_koopa_h2 "Installing brews."
-
-# Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.
-# This is needed currently to install R sf package from source.
-brew remove --force \
-    osgeo-gdal \
-    osgeo-hdf4 \
-    osgeo-libgeotiff \
-    osgeo-libkml \
-    osgeo-libspatialite \
-    osgeo-netcdf \
-    osgeo-postgresql \
-    osgeo-proj
-
 # Use rustup / cargo to manage these Rust packages instead:
-brew remove --force \
-    broot \
-    exa \
-    fd \
-    ripgrep \
-    xsv
+# - broot
+# - exa
+# - fd
+# - ripgrep
+# - xsv
 
+_koopa_h2 "Installing brews."
 installed_brews="$(brew list)"
+
+# Linked brews (default)  {{{2
+# ------------------------------------------------------------------------------
+
 brews=(
-    # Priority
+    # Priority.
     bash
     fish
     ksh
@@ -164,7 +157,7 @@ brews=(
     tcl-tk
     flac
     lame
-    # Alphabetical
+    # Alphabetical.
     autoconf
     autojump
     automake
@@ -187,7 +180,6 @@ brews=(
     fzf
     gawk
     gcc
-    gdal
     git
     git-lfs
     gnu-sed
@@ -239,10 +231,8 @@ brews=(
     php
     pkg-config
     podofo
-    proj
     protobuf
     pyenv
-    python
     rbenv
     rename
     ruby
@@ -267,27 +257,74 @@ brews=(
     wget
     youtube-dl
     zlib
-    # External taps.
-    mongodb/brew/mongodb-community
-    vitorgalvao/tiny-scripts/cask-repair
 )
 
 (
     for brew in "${brews[@]}"
     do
-        name="$(basename "$brew")"
-        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+        if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
         then
-            _koopa_note "'${name}' is already installed."
+            _koopa_note "'${brew}' is already installed."
             continue
         fi
         brew install "$brew"
     done
 ) 2>&1 | tee -a "$log_file"
 
-brew unlink python
+# Cellar (keg)-only brews  {{{2
+# ------------------------------------------------------------------------------
 
-# > brew link gdal
-# > brew link proj
+keg_only_brews=(
+    gdal
+    libgeotiff
+    libspatialite
+    netcdf
+    proj
+    python
+)
+
+(
+    for brew in "${keg_only_brews[@]}"
+    do
+        if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
+        then
+            _koopa_note "'${brew}' is already installed."
+        else
+            brew install "$brew"
+        fi
+        brew unlink "$brew" > /dev/null
+    done
+) 2>&1 | tee -a "$log_file"
+
+# Externally tapped brews  {{{2
+# ------------------------------------------------------------------------------
+
+# Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.
+# This is needed currently to install R rgdal, sf packages from source.
+
+# > brew tap mongodb/brew
+# > brew tap osgeo/osgeo4mac
+# > brew tap vitorgalvao/tiny-scripts
+
+external_brews=(
+    mongodb/brew/mongodb-community
+    osgeo/osgeo4mac/osgeo-gdal
+    osgeo/osgeo4mac/osgeo-proj
+    vitorgalvao/tiny-scripts/cask-repair
+)
+
+(
+    for brew in "${external_brews[@]}"
+    do
+        name="$(basename "$brew")"
+        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+        then
+            _koopa_note "'${brew}' is already installed."
+        else
+            brew install "$brew"
+        fi
+        brew link "$brew" &> /dev/null
+    done
+) 2>&1 | tee -a "$log_file"
 
 _koopa_install_success "$name_fancy"
