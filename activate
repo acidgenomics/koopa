@@ -508,20 +508,16 @@ then
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/prompt.zsh"
     fi
 
-    _koopa_activate_autojump
-    _koopa_activate_broot
-    # This has been observed to cause shell lockout.
-    _koopa_activate_fzf
-
     if _koopa_is_macos
     then
-        # FIXME REWORK THIS.
-        . "${KOOPA_ACTIVATE_DIR}/os/darwin/init.sh"
+        _koopa_activate_macos_extras
     fi
 
+    _koopa_activate_autojump
+    _koopa_activate_broot
+    _koopa_activate_fzf
     _koopa_activate_secrets
     _koopa_activate_ssh_key
-
     _koopa_activate_coreutils_aliases
     _koopa_activate_black_alias
     _koopa_activate_emacs_alias
