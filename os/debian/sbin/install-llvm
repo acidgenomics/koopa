@@ -38,7 +38,10 @@ do
             ;;
     esac
 done
-set -- "${pos[@]}"
+if [[ "${#pos[@]}" -gt 0 ]]
+then
+    set -- "${pos[@]}"
+fi
 
 if [[ "$reinstall" -eq 1 ]]
 then
