@@ -35,9 +35,7 @@ def find_bash():
     ]:
         if bash and os.path.exists(bash):
             return bash
-    raise IOError(
-        "Could not find bash in any standard location."
-    )
+    raise IOError("Could not find bash in any standard location.")
 
 
 def find_cmd(cmd):

@@ -12,6 +12,15 @@ import sys
 from koopa.shell import shell
 
 
+def koopa_prefix():
+    """
+    Koopa prefix (home).
+    Updated 2020-06-03.
+    """
+    out = os.path.realpath(os.path.join(__file__, "..", ".."))
+    return out
+
+
 def arg_string(*args):
     """
     Concatenate args into a string suitable for use in shell commands.
