@@ -425,5 +425,10 @@ _koopa_remove_broken_symlinks "$koopa_prefix"
 _koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
 
+if [[ "$bash_ok" -ne 1 ]]
+then
+    _koopa_note "Bash ${bash_version}" is very old and must be upgraded."
+fi
+
 _koopa_install_success "koopa" "$koopa_prefix"
 _koopa_restart
