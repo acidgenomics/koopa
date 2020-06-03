@@ -42,7 +42,7 @@ export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
 rm -fr "$tmp_dir"
 mkdir -p "$tmp_dir"
 
-# ngs  {{{1
+# ngs {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'ngs'."
@@ -70,7 +70,7 @@ _koopa_h2 "Installing 'ngs'."
 
 _koopa_link_cellar "$name" "$version"
 
-# ncbi-vdb  {{{1
+# ncbi-vdb {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'ncbi-vdb'."
@@ -92,7 +92,7 @@ _koopa_h2 "Installing 'ncbi-vdb'."
 
 _koopa_link_cellar "$name" "$version"
 
-# sra-tools  {{{1
+# sra-tools {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'sra-tools'."

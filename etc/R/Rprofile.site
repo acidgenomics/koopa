@@ -7,7 +7,7 @@
 
 
 
-## Notes  {{{1
+## Notes {{{1
 ## =============================================================================
 
 ## Tested on Linux and macOS.
@@ -33,7 +33,7 @@
 
 
 
-## Examples  {{{1
+## Examples {{{1
 ## =============================================================================
 
 ## - Stephen Turner's profile
@@ -48,25 +48,25 @@
 
 
 
-## Pre-flight  {{{1
+## Pre-flight {{{1
 ## =============================================================================
 
 ## Run these configuration options outside of `.First()` call, so user-specific
 ## `~/.Rprofile` file will pick them up.
 
-## Hidden environment  {{{2
+## Hidden environment {{{2
 ## -----------------------------------------------------------------------------
 
 .rprofile <- new.env()
 
-## Seed value  {{{3
+## Seed value {{{3
 ## -----------------------------------------------------------------------------
 
 ## Set seed for reproducibility. Using Fibonacci sequence.
 assign(x = "seed", value = 1123581321L, envir = .rprofile)
 set.seed(.rprofile[["seed"]])
 
-## Functions  {{{3
+## Functions {{{3
 ## -----------------------------------------------------------------------------
 
 ## Check if a package is installed.
@@ -79,7 +79,7 @@ assign(
     envir = .rprofile
 )
 
-## Platform  {{{3
+## Platform {{{3
 ## -----------------------------------------------------------------------------
 
 ## Linux and macOS (Darwin) are currently supported.
@@ -93,7 +93,7 @@ local({
     assign(x = "os", value = os, envir = .rprofile)
 })
 
-## R version strings  {{{3
+## R version strings {{{3
 ## -----------------------------------------------------------------------------
 
 ## Get the full R version, including patch (e.g. 3.6.1).
@@ -121,7 +121,7 @@ local({
     assign(x = "rVersionShort", value = rVersionShort, envir = .rprofile)
 })
 
-## Conda  {{{3
+## Conda {{{3
 ## -----------------------------------------------------------------------------
 
 local({
@@ -150,7 +150,7 @@ local({
 
 
 
-## Initialization at start of an R session  {{{1
+## Initialization at start of an R session {{{1
 ## =============================================================================
 
 ## > help(topic = "Startup", package = "base")
@@ -158,7 +158,7 @@ local({
 .First <- function() {  # nolint
     isInstalled <- .rprofile[["isInstalled"]]
 
-    ## Compiler settings  {{{2
+    ## Compiler settings {{{2
     ## -------------------------------------------------------------------------
 
     ## Warn on active conda environment.
@@ -270,7 +270,7 @@ local({
         }
     })
 
-    ## Library path  {{{2
+    ## Library path {{{2
     ## -------------------------------------------------------------------------
 
     ## Check that library matches R version.
@@ -291,7 +291,7 @@ local({
         }
     })
 
-    ## RStudio  {{{2
+    ## RStudio {{{2
     ## -------------------------------------------------------------------------
 
     ## Fix file permissions. RStudio doesn't pick up the system umask.
@@ -304,7 +304,7 @@ local({
     ## >     message("RStudio detected.")
     ## > }
 
-    ## Secrets  {{{2
+    ## Secrets {{{2
     ## -------------------------------------------------------------------------
 
     ## Load per-user secrets that we don't want to save in a shared Renviron.
@@ -320,7 +320,7 @@ local({
         }
     })
 
-    ## Package installation  {{{2
+    ## Package installation {{{2
     ## -------------------------------------------------------------------------
 
     ## We set the cloud mirror, which is 'network-close' to everybody, as
@@ -359,7 +359,7 @@ local({
     ## >     "pkgType" = "binary"
     ## > )
 
-    ## Default packages  {{{2
+    ## Default packages {{{2
     ## -------------------------------------------------------------------------
 
     ## Attach BiocManager automatically.
@@ -374,7 +374,7 @@ local({
     ## >     }
     ## > }
 
-    ## Console and interface  {{{2
+    ## Console and interface {{{2
     ## -------------------------------------------------------------------------
 
     options(
@@ -394,7 +394,7 @@ local({
         utils::rc.settings(ipck = TRUE)
     }
 
-    ## Debugging  {{{2
+    ## Debugging {{{2
     ## -------------------------------------------------------------------------
 
     ## Improve the warnings and include backtrace of call stack.
@@ -447,7 +447,7 @@ local({
     ##       namespace.R
     Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
 
-    ## Package-specific options  {{{2
+    ## Package-specific options {{{2
     ## -------------------------------------------------------------------------
 
     if (isInstalled("crayon")) {
@@ -472,7 +472,7 @@ local({
         )
     }
 
-    ## Parallelization  {{{2
+    ## Parallelization {{{2
     ## -------------------------------------------------------------------------
 
     if (isInstalled("parallel")) {
@@ -505,7 +505,7 @@ local({
         options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
     }
 
-    ## Session info  {{{2
+    ## Session info {{{2
     ## -------------------------------------------------------------------------
 
     if (isTRUE(interactive())) {
@@ -570,7 +570,7 @@ local({
 
 
 
-## Initialization at end of an R session  {{{1
+## Initialization at end of an R session {{{1
 ## =============================================================================
 
 .Last <- function() {  # nolint

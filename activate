@@ -3,7 +3,7 @@
 
 
 
-# Usage  {{{1
+# Usage {{{1
 # ==============================================================================
 
 usage() {
@@ -67,7 +67,7 @@ unset -f usage
 
 
 
-# Pre-flight checks  {{{1
+# Pre-flight checks {{{1
 # ==============================================================================
 
 # Ensure 'USER' global is defined, for user-specific checks below.
@@ -77,7 +77,7 @@ then
 fi
 export USER
 
-# Interactive  {{{2
+# Interactive {{{2
 # ------------------------------------------------------------------------------
 
 if printf '%s\n' "$-" | grep -q 'i'
@@ -87,7 +87,7 @@ else
     KOOPA_INTERACTIVE=0
 fi
 
-# Operating system  {{{2
+# Operating system {{{2
 # ------------------------------------------------------------------------------
 
 # Bash sets the shell variable OSTYPE (e.g. linux-gnu).
@@ -103,7 +103,7 @@ case "$(uname -s)" in
         return 0
 esac
 
-# Shell  {{{2
+# Shell {{{2
 # ------------------------------------------------------------------------------
 
 # Refer to '_koopa_shell' function for additional details.
@@ -177,10 +177,10 @@ fi
 
 
 
-# Argument parsing  {{{1
+# Argument parsing {{{1
 # ==============================================================================
 
-# Force mode  {{{2
+# Force mode {{{2
 # ------------------------------------------------------------------------------
 
 # This is currently used by the koopa installer.
@@ -201,7 +201,7 @@ then
     unset -v force
 fi
 
-# Skip activation  {{{2
+# Skip activation {{{2
 # ------------------------------------------------------------------------------
 
 if [ "$KOOPA_FORCE" -ne 1 ]
@@ -238,7 +238,7 @@ then
     fi
 fi
 
-# Subshell  {{{2
+# Subshell {{{2
 # ------------------------------------------------------------------------------
 
 # Alternatively, can compare SHLVL value.
@@ -249,7 +249,7 @@ else
     KOOPA_SUBSHELL=1
 fi
 
-# Extra mode  {{{2
+# Extra mode {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_EXTRA:-}" ]
@@ -276,7 +276,7 @@ then
     fi
 fi
 
-# Minimal mode  {{{2
+# Minimal mode {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_MINIMAL:-}" ]
@@ -308,7 +308,7 @@ then
     KOOPA_EXTRA=0
 fi
 
-# Test mode  {{{2
+# Test mode {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_TEST:-}" ]
@@ -344,7 +344,7 @@ then
     KOOPA_MINIMAL=0
 fi
 
-# Export global variables  {{{2
+# Export global variables {{{2
 # ------------------------------------------------------------------------------
 
 export KOOPA_EXTRA
@@ -356,7 +356,7 @@ export KOOPA_TEST
 
 
 
-# Locate installation prefix  {{{1
+# Locate installation prefix {{{1
 # ==============================================================================
 
 case "$KOOPA_SHELL" in
@@ -398,7 +398,7 @@ export KOOPA_PREFIX
 
 
 
-# Start activation  {{{1
+# Start activation {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -426,14 +426,14 @@ KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 
 
 
-# Minimal configuration  {{{1
+# Minimal configuration {{{1
 # ==============================================================================
 
 . "${KOOPA_ACTIVATE_DIR}/minimal.sh"
 
 
 
-# Program configuration  {{{1
+# Program configuration {{{1
 # ==============================================================================
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
@@ -457,7 +457,7 @@ fi
 
 
 
-# Extra shell configuration  {{{1
+# Extra shell configuration {{{1
 # ==============================================================================
 
 if [ "$KOOPA_EXTRA" -eq 1 ]
@@ -494,7 +494,7 @@ fi
 
 
 
-# Post-flight  {{{1
+# Post-flight {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]

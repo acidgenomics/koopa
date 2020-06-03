@@ -23,7 +23,7 @@ exclude <- file.path(koopaPrefix, "(dotfiles|opt|system)", "")
 
 
 
-## Bin-to-man mapping  {{{1
+## Bin-to-man mapping {{{1
 ## =============================================================================
 
 bins <- sort(list.files(
@@ -40,7 +40,7 @@ message(sprintf(
     length(bins)
 ))
 
-## Scripts  {{{2
+## Scripts {{{2
 ## -----------------------------------------------------------------------------
 
 ## List the files for each bin directory.
@@ -57,7 +57,7 @@ message(sprintf(
     length(scripts)
 ))
 
-## Man files  {{{2
+## Man files {{{2
 ## -----------------------------------------------------------------------------
 
 message("Checking that all scripts have corresponding man files.")
@@ -88,7 +88,7 @@ if (!all(ok)) {
 
 
 
-## Orphaned man-to-bin files  {{{1
+## Orphaned man-to-bin files {{{1
 ## =============================================================================
 
 message("Checking for orphaned man files.")

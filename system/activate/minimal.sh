@@ -2,10 +2,10 @@
 
 
 
-# Pre-flight checks  {{{1
+# Pre-flight checks {{{1
 # ==============================================================================
 
-# Bad settings  {{{2
+# Bad settings {{{2
 # ------------------------------------------------------------------------------
 
 # Note that we're skipping this checks inside RStudio shell.
@@ -16,13 +16,13 @@ fi
 
 
 
-# Standard globals  {{{1
+# Standard globals {{{1
 # ==============================================================================
 
 # This variables are used by some koopa scripts, so ensure they're always
 # consistently exported across platforms.
 
-# GROUP  {{{2
+# GROUP {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${GROUP:-}" ]
@@ -31,7 +31,7 @@ then
 fi
 export GROUP
 
-# HOSTNAME  {{{2
+# HOSTNAME {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${HOSTNAME:-}" ]
@@ -40,7 +40,7 @@ then
 fi
 export HOSTNAME
 
-# OSTYPE  {{{2
+# OSTYPE {{{2
 # ------------------------------------------------------------------------------
 
 # Automatically set by bash and zsh.
@@ -50,7 +50,7 @@ then
 fi
 export OSTYPE
 
-# SHELL  {{{2
+# SHELL {{{2
 # ------------------------------------------------------------------------------
 
 # Some POSIX shells, such as Dash, don't export this by default.
@@ -61,7 +61,7 @@ then
 fi
 export SHELL
 
-# TMPDIR  {{{2
+# TMPDIR {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${TMPDIR:-}" ]
@@ -70,7 +70,7 @@ then
 fi
 export TMPDIR
 
-# TODAY  {{{2
+# TODAY {{{2
 # ------------------------------------------------------------------------------
 
 # Current date. Alternatively, can use '%F' shorthand.
@@ -80,7 +80,7 @@ then
 fi
 export TODAY
 
-# USER  {{{2
+# USER {{{2
 # ------------------------------------------------------------------------------
 
 # Alternatively, can use 'whoami' here.
@@ -90,7 +90,7 @@ then
 fi
 export USER
 
-# History  {{{2
+# History {{{2
 # ------------------------------------------------------------------------------
 
 # See bash(1) for more options.
@@ -147,7 +147,7 @@ then
 fi
 export SAVEHIST
 
-# CPU count  {{{2
+# CPU count {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${CPU_COUNT:-}" ]
@@ -158,7 +158,7 @@ export CPU_COUNT
 
 
 
-# Package configuration  {{{1
+# Package configuration {{{1
 # ==============================================================================
 
 # These are defined primarily for R environment.
@@ -191,7 +191,7 @@ fi
 
 
 
-# Activation functions  {{{1
+# Activation functions {{{1
 # ==============================================================================
 
 _koopa_activate_xdg
