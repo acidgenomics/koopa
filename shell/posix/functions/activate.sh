@@ -75,6 +75,19 @@ _koopa_activate_bcbio() {  # {{{1
     return 0
 }
 
+_koopa_activate_black_alias() {  # {{{1
+    # """
+    # Activate black alias.
+    # @note Updated 2020-06-03.
+    # """
+    if _koopa_is_installed black
+    then
+        # Note that 79 characters conforms to PEP8 (see flake8 for details).
+        alias black="black --line-length=79"
+    fi
+    return 0
+}
+
 _koopa_activate_broot() {  # {{{1
     # """
     # Activate broot directory tree utility.
@@ -187,6 +200,43 @@ _koopa_activate_conda_env() {  # {{{1
     return 0
 }
 
+_koopa_activate_coreutils_aliases() {  # {{{1
+    # """
+    # Activate hardened interactive aliases for coreutils.
+    # @note Updated 2020-06-03.
+    #
+    # Note that macOS ships with a very old version of GNU coreutils.
+    # Update these using Homebrew.
+    # """
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
+    if _koopa_str_match \
+        "$(_koopa_which_realpath cp)" \
+        "$make_prefix"
+    then
+        alias cp='cp --archive --interactive --verbose'
+    fi
+    if _koopa_str_match \
+        "$(_koopa_which_realpath mkdir)" \
+        "$make_prefix"
+    then
+        alias mkdir='mkdir --parents --verbose'
+    fi
+    if _koopa_str_match \
+        "$(_koopa_which_realpath mv)" \
+        "$make_prefix"
+    then
+        alias mv="mv --interactive --verbose"
+    fi
+    if _koopa_str_match \
+        "$(_koopa_which_realpath rm)" \
+        "$make_prefix"
+    then
+        alias rm='rm --dir --interactive="once" --preserve-root --verbose'
+    fi
+    return 0
+}
+
 _koopa_activate_dircolors() {  # {{{1
     # """
     # Activate directory colors.
@@ -234,6 +284,18 @@ _koopa_activate_emacs() {  # {{{1
     # @note Updated 2020-05-01.
     # """
     _koopa_activate_prefix "${HOME}/.emacs.d"
+}
+
+_koopa_activate_emacs_alias() {  # {{{1
+    # """
+    # Activate Emacs alias.
+    # @note Updated 2020-06-03.
+    # """
+    if _koopa_is_installed emacs
+    then
+        alias emacs="emacs --no-window-system"
+    fi
+    return 0
 }
 
 _koopa_activate_ensembl_perl_api() {  # {{{1
@@ -789,6 +851,18 @@ _koopa_activate_rust() {  # {{{1
     return 0
 }
 
+_koopa_activate_r_alias() {  # {{{1
+    # """
+    # Activate R alias.
+    # @note Updated 2020-06-03.
+    # """
+    if _koopa_is_installed R
+    then
+        alias R="R --no-restore --no-save --quiet"
+    fi
+    return 0
+}
+
 _koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
@@ -801,6 +875,54 @@ _koopa_activate_secrets() {  # {{{1
     . "$file"
     return 0
 }
+
+_koopa_activate_shortcut_aliases() {  # {{{1
+    # """
+    # Activate shortcut aliases.
+    # @note Updated 2020-06-03.
+    # """
+    alias c='clear'
+    alias e='exit'
+    alias h='history'
+    alias k='cd "${KOOPA_PREFIX:?}"'
+    alias ku='koopa update'
+
+    # List files.
+    if _koopa_is_installed exa
+    then
+        alias l='exa -F'
+        alias la='exa -Fal --group'
+        alias ll='exa -Fl --group'
+    else
+        alias l='ls -F'
+        alias la='ls -Fahl'
+        alias ll='ls -BFhl'
+    fi
+    alias l.='l -d .*'
+    alias l1='ls -1'
+
+    # List head or tail.
+    alias lh='l | head'
+    alias lt='l | tail'
+
+    # Clear then list.
+    alias cls='clear; l'
+
+    # Browse up and down.
+    alias u='clear; cd ../; pwd; l'
+    alias d='clear; cd -; l'
+
+    # Navigate up parent directories without 'cd'.
+    # These are also supported by autojump.
+    # > alias ..='cd ..'
+    # > alias ...='cd ../../'
+    # > alias ....='cd ../../../'
+    # > alias .....='cd ../../../../'
+    # > alias ......='cd ../../../../../'
+
+    return 0
+}
+
 
 _koopa_activate_ssh_key() {  # {{{1
     # """
@@ -962,6 +1084,57 @@ _koopa_export_cpu_count() {  # {{{1
     return 0
 }
 
+_koopa_export_editor() {  # {{{1
+    # """
+    # Export EDITOR.
+    # @note Updated 2020-06-03.
+    # """
+    # Set text editor, if unset.
+    # Recommending vim by default.
+    if [ -z "${EDITOR:-}" ]
+    then
+        export EDITOR="vim"
+    fi
+    # Ensure VISUAL matches EDITOR.
+    if [ -n "${EDITOR:-}" ]
+    then
+        export VISUAL="$EDITOR"
+    fi
+    return 0
+}
+
+_koopa_export_git() {  # {{{1
+    # """
+    # Export git configuration.
+    # @note Updated 2020-06-03.
+    #
+    # @seealso
+    # https://git-scm.com/docs/merge-options
+    # """
+    if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
+    then
+        export GIT_MERGE_AUTOEDIT="no"
+    fi
+    return 0
+}
+
+_koopa_export_gnupg() {  # {{{1
+    # """
+    # Export GnuPG settings.
+    # @note Updated 2020-06-03.
+    #
+    # Enable passphrase prompting in terminal.
+    # Useful for getting Docker credential store to work.
+    # https://github.com/docker/docker-credential-helpers/issues/118
+    # """
+    if [ -z "${GPG_TTY:-}" ] && _koopa_is_tty
+    then
+        GPG_TTY="$(tty || true)"
+        export GPG_TTY
+    fi
+    return 0
+}
+
 _koopa_export_group() {  # {{{1
     # """
     # Export GROUP.
@@ -1043,6 +1216,29 @@ _koopa_export_hostname() {  # {{{1
     return 0
 }
 
+_koopa_export_lesspipe() {  # {{{
+    # """
+    # Export lesspipe settings.
+    # @note Updated 2020-06-03.
+    #
+    # Preconfigured on some Linux systems at '/etc/profile.d/less.sh'.
+    #
+    # On some older Linux distros:
+    # > eval $(/usr/bin/lesspipe)
+    #
+    # See also:
+    # - https://github.com/wofr06/lesspipe
+    # """
+    if [ -n "${LESSOPEN:-}" ] &&
+        _koopa_is_installed "lesspipe.sh"
+    then
+        lesspipe_exe="$(_koopa_which_realpath "lesspipe.sh")"
+        export LESSOPEN="|${lesspipe_exe} %s"
+        export LESS_ADVANCED_PREPROCESSOR=1
+    fi
+    return 0
+}
+
 _koopa_export_ostype() {  # {{{1
     # """
     # Export OSTYPE.
@@ -1055,6 +1251,18 @@ _koopa_export_ostype() {  # {{{1
         OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
     fi
     export OSTYPE
+    return 0
+}
+
+_koopa_export_pager() {  # {{{1
+    # """
+    # Export PAGER.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${PAGER:-}" ]
+    then
+        export PAGER="less"
+    fi
     return 0
 }
 
@@ -1093,6 +1301,32 @@ _koopa_export_proj_lib() {  # {{{1
             PROJ_LIB="/usr/share/proj"
             export PROJ_LIB
         fi
+    fi
+    return 0
+}
+
+_koopa_export_python() {  # {{{1
+    # """
+    # Export Python settings.
+    # @note Updated 2020-06-03.
+    # """
+    # Don't allow Python to change the prompt string by default.
+    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
+    then
+        export VIRTUAL_ENV_DISABLE_PROMPT=1
+    fi
+    return 0
+}
+
+_koopa_export_rsync() {  # {{{1
+    # """
+    # Export rsync flags.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${RSYNC_FLAGS:-}" ]
+    then
+        RSYNC_FLAGS="$(_koopa_rsync_flags)"
+        export RSYNC_FLAGS
     fi
     return 0
 }
