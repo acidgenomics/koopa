@@ -2,17 +2,6 @@
 
 
 
-# Notes {{{1
-# ==============================================================================
-
-# Run 'alias' in terminal to list current definitions.
-#
-# See also:
-# - https://github.com/MikeMcQuaid/dotfiles
-# - https://github.com/stephenturner/oneliners
-
-
-
 # umask {{{1
 # ==============================================================================
 

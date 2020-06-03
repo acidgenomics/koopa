@@ -948,3 +948,210 @@ _koopa_activate_xdg() {  # {{{1
     export XDG_RUNTIME_DIR
     return 0
 }
+
+_koopa_export_cpu_count() {  # {{{1
+    # """
+    # Export CPU_COUNT.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${CPU_COUNT:-}" ]
+    then
+        CPU_COUNT="$(_koopa_cpu_count)"
+    fi
+    export CPU_COUNT
+    return 0
+}
+
+_koopa_export_group() {  # {{{1
+    # """
+    # Export GROUP.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${GROUP:-}" ]
+    then
+        GROUP="$(id -gn)"
+    fi
+    export GROUP
+    return 0
+}
+
+_koopa_export_history() {  # {{{1
+    # """
+    # Export history.
+    # @note Updated 2020-06-03.
+    #
+    # See bash(1) for more options.
+    # For setting history length, see HISTSIZE and HISTFILESIZE.
+    # """
+    # Standardize the history file name across shells.
+    # Note that snake case is commonly used here across platforms.
+    if [ -z "${HISTFILE:-}" ]
+    then
+        HISTFILE="${HOME}/.$(_koopa_shell)_history"
+    fi
+    export HISTFILE
+    # Create the history file, if necessary.
+    # Note that the HOME check here hardens against symlinked data disk failure.
+    if [ ! -f "$HISTFILE" ] && [ -e "${HOME:-}" ]
+    then
+        touch "$HISTFILE"
+    fi
+    # Don't keep duplicate lines in the history.
+    # Alternatively, set "ignoreboth" to also ignore lines starting with space.
+    if [ -z "${HISTCONTROL:-}" ]
+    then
+        HISTCONTROL="ignoredups"
+    fi
+    export HISTCONTROL
+    if [ -z "${HISTIGNORE:-}" ]
+    then
+        HISTIGNORE="&:ls:[bf]g:exit"
+    fi
+    export HISTIGNORE
+    # Set the default history size.
+    if [ -z "${HISTSIZE:-}" ] || [ "${HISTSIZE:-}" -eq 0 ]
+    then
+        HISTSIZE=1000
+    fi
+    export HISTSIZE
+    # Add the date/time to 'history' command output.
+    # Note that on macOS Bash will fail if 'set -e' is set.
+    if [ -z "${HISTTIMEFORMAT:-}" ]
+    then
+        HISTTIMEFORMAT="%Y%m%d %T  "
+    fi
+    export HISTTIMEFORMAT
+    # Ensure that HISTSIZE and SAVEHIST values match.
+    if [ "${HISTSIZE:-}" != "${SAVEHIST:-}" ]
+    then
+        SAVEHIST="$HISTSIZE"
+    fi
+    export SAVEHIST
+    return 0
+}
+
+_koopa_export_hostname() {  # {{{1
+    # """
+    # Export HOSTNAME.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${HOSTNAME:-}" ]
+    then
+        HOSTNAME="$(uname -n)"
+    fi
+    export HOSTNAME
+    return 0
+}
+
+_koopa_export_ostype() {  # {{{1
+    # """
+    # Export OSTYPE.
+    # @note Updated 2020-06-03.
+    #
+    # Automatically set by bash and zsh.
+    # """
+    if [ -z "${OSTYPE:-}" ]
+    then
+        OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
+    fi
+    export OSTYPE
+    return 0
+}
+
+_koopa_export_pkg_config_path() {  # {{{1
+    # """
+    # These are defined primarily for R environment. In particular these make
+    # building tricky pages from source, such as rgdal, sf and others  easier.
+    #
+    # This is necessary for rgdal, sf packages to install clean.
+    # """
+    if [ -z "${PKG_CONFIG_PATH:-}" ]
+    then
+        PKG_CONFIG_PATH="\
+    /usr/local/lib64/pkgconfig:\
+    /usr/local/lib/pkgconfig:\
+    /usr/lib64/pkgconfig:\
+    /usr/lib/pkgconfig"
+        export PKG_CONFIG_PATH
+    fi
+    return 0
+}
+
+_koopa_export_proj_lib() {  # {{{1
+    # """
+    # Export PROJ_LIB
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${PROJ_LIB:-}" ]
+    then
+        if [ -e "/usr/local/share/proj" ]
+        then
+            PROJ_LIB="/usr/local/share/proj"
+            export PROJ_LIB
+        elif [ -e "/usr/share/proj" ]
+        then
+            PROJ_LIB="/usr/share/proj"
+            export PROJ_LIB
+        fi
+    fi
+    return 0
+}
+
+_koopa_export_shell() {  # {{{1
+    # """
+    # Export SHELL.
+    # @note Updated 2020-06-03.
+    #
+    # Some POSIX shells, such as Dash, don't export this by default.
+    # Note that this doesn't currently get set by RStudio terminal.
+    # """
+    if [ -z "${SHELL:-}" ]
+    then
+        SHELL="$(_koopa_which "$KOOPA_SHELL")"
+    fi
+    export SHELL
+    return 0
+}
+
+_koopa_export_tmpdir() {  # {{{1
+    # """
+    # Export TMPDIR.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${TMPDIR:-}" ]
+    then
+        TMPDIR="/tmp"
+    fi
+    export TMPDIR
+    return 0
+}
+
+_koopa_export_today() {  # {{{1
+    # """
+    # Export TODAY.
+    # @note Updated 2020-06-03.
+    #
+    # Current date. Alternatively, can use '%F' shorthand.
+    # """
+    if [ -z "${TODAY:-}" ]
+    then
+        TODAY="$(date +%Y-%m-%d)"
+    fi
+    export TODAY
+    return 0
+}
+
+_koopa_export_user() {  # {{{1
+    # """
+    # Export USER.
+    # @note Updated 2020-06-03.
+    #
+    # Alternatively, can use 'whoami' here.
+    # """
+    if [ -z "${USER:-}" ]
+    then
+        USER="$(id -un)"
+    fi
+    export USER
+    return 0
+}
