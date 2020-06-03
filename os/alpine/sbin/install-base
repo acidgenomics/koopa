@@ -9,35 +9,12 @@ source "${script_dir}/../include/header.sh"
 # > apk add --no-cache --virtual .build-dependencies
 # """
 
-minimal=0
-
-while (("$#"))
-do
-    case "$1" in
-        --minimal)
-            minimal=1
-            shift 1
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-done
-
 name_fancy="Alpine base system"
 
 _koopa_install_start "$name_fancy"
 
-_koopa_fix_sudo_setrlimit_error
-
 sudo apk update
 sudo apk upgrade
-
-if [[ "$minimal" -eq 1 ]]
-then
-    _koopa_install_success "$name_fancy"
-    exit 0
-fi
 
 packages=(
     # .build-dependencies
