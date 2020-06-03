@@ -10,6 +10,10 @@ source "${script_dir}/../include/header.sh"
 # https://en.opensuse.org/images/1/17/Zypper-cheat-sheet-1.pdf
 # """
 
+name_fancy="openSUSE base system"
+
+_koopa_install_start "$name_fancy"
+
 sudo zypper refresh
 sudo zypper --non-interactive update
 
@@ -53,3 +57,5 @@ packages=(
     zlib-devel
 )
 sudo zypper --non-interactive install "${packages[@]}"
+
+_koopa_install_success "$name_fancy"

@@ -33,13 +33,13 @@ source "${script_dir}/../include/header.sh"
 # > sudo dpkg-reconfigure tzdata
 # """
 
-bioconductor=0
-compact=0
-
 dev=1
 extra=1
 remove=1
 upgrade=1
+
+bioconductor=0
+compact=0
 
 pos=()
 while (("$#"))
