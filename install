@@ -156,7 +156,7 @@ fi
 # interactive read input flags accordingly.
 bash_version="$(_koopa_get_version bash)"
 bash_major_version="$(_koopa_major_version "$bash_version")"
-if [[ "$bash_major_version" -le 4 ]]
+if [[ "$bash_major_version" -ge 4 ]]
 then
     bash_ok=1
 else
