@@ -6,7 +6,7 @@ Ensembl genome utilities.
 import os
 
 from koopa.genome import _genome_version
-from koopa.sys import download, paste_url
+from koopa.system import download, paste_url
 
 
 def download_ensembl_genome(
