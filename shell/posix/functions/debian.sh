@@ -1,14 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# FIXME Move these out to install scripts instead.
-# FIXME _koopa_apt_add_azure_cli_repo
-# FIXME _koopa_apt_add_docker_repo
-# FIXME _koopa_apt_add_google_cloud_sdk_repo
-# FIXME _koopa_apt_add_llvm_repo
-# shellcheck disable=SC2119
-# FIXME _koopa_apt_add_r_repo
-
 _koopa_apt_add_azure_cli_repo() {  # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
@@ -500,6 +492,9 @@ _koopa_apt_key_add() {  #{{{1
     # """
     # Add an apt key.
     # @note Updated 2020-06-02.
+    #
+    # Using '-k/--insecure' flag here to handle some servers
+    # (e.g. download.opensuse.org) that will fail otherwise.
     # """
     local name url key
     name="${1:?}"
@@ -510,7 +505,7 @@ _koopa_apt_key_add() {  #{{{1
         _koopa_apt_is_key_imported "$key" && return 0
     fi
     _koopa_h3 "Adding ${name} key."
-    curl -fsSL "$url" \
+    curl -fksSL "$url" \
         | sudo apt-key add - \
         > /dev/null 2>&1
     return 0
