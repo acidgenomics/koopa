@@ -2,7 +2,7 @@
 
 # """
 # Zsh shared header script.
-# @note Updated 2020-03-28.
+# @note Updated 2020-06-03.
 # """
 
 [[ -z "${activate:-}" ]] && activate=0
