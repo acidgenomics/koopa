@@ -40,7 +40,10 @@ do
             ;;
     esac
 done
-set -- "${pos[@]}"
+if [[ "${#pos[@]}" -gt 0 ]]
+then
+    set -- "${pos[@]}"
+fi
 
 image="$1"
 workdir="$(_koopa_strip_trailing_slash "$workdir")"
