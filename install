@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1090,SC1091
+# shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
 
@@ -152,6 +152,17 @@ then
     yes_default="$(_koopa_print_green_bold "YES")"
 fi
 
+# Check if Bash version is ancient (e.g. macOS clean install), so we can adjust
+# interactive read input flags accordingly.
+bash_version="$(_koopa_get_version bash)"
+bash_major_version="$(_koopa_major_version "$bash_version")"
+if [[ "$bash_major_version" -le 4 ]]
+then
+    bash_ok=1
+else
+    bash_ok=0
+fi
+
 
 
 # Prefix {{{1
@@ -165,14 +176,17 @@ then
         shared=1
         if [[ "$interactive" -eq 1 ]]
         then
+            # Note that ancient versions of Bash (e.g. < 4; macOS) don't support
+            # the '-i' flag, so we're handling that case here.
             # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
             prompt="Install for all users? [${yes_default}/${no}]: "
-            read \
-                -e \
-                -i "yes" \
-                -p "$prompt" \
-                -r \
-                choice
+            flags=(-r -p "$prompt")
+            if [[ "$bash_ok" -eq 1 ]]
+            then
+                flags+=(-e -i "yes")
+            fi
+            read "${flags[@]}" choice
+            choice="${choice:-yes}"
             _koopa_print
             case "$choice" in
                 Y|YES|y|yes)
@@ -203,13 +217,13 @@ fi
 # Prompt the user where they want to install.
 if [[ "$interactive" -eq 1 ]]
 then
-    prompt="Install prefix: "
-    read \
-        -e \
-        -i "${koopa_prefix}" \
-        -p "$prompt" \
-        -r \
-        koopa_prefix
+    prompt="Install prefix [${koopa_prefix}]: "
+    flags=(-r -p "$prompt")
+    if [[ "$bash_ok" -eq 1 ]]
+    then
+        flags+=(-e -i "${koopa_prefix}")
+    fi
+    read "${flags[@]}" koopa_prefix
     _koopa_print
 fi
 
@@ -288,12 +302,13 @@ if _koopa_is_linux && \
     [[ "$shared" -eq 1 ]]
 then
     prompt="Enable passwordless sudo? [${yes}/${no_default}]: "
-    read \
-        -e \
-        -i "no" \
-        -p "$prompt" \
-        -r \
-        choice
+    flags=(-r -p "$prompt")
+    if [[ "$bash_ok" -eq 1 ]]
+    then
+        flags+=(-e -i "no")
+    fi
+    read "${flags[@]}" choice
+    choice="${choice:-no}"
     _koopa_print
     case "$choice" in
         Y|YES|y|yes)
@@ -326,12 +341,13 @@ then
         _koopa_note "This will be overwritten if dot files are linked."
     fi
     prompt="Link dot files? [${yes_default}/${no}]: "
-    read \
-        -e \
-        -i "yes" \
-        -p "$prompt" \
-        -r \
-        choice
+    flags=(-r -p "$prompt")
+    if [[ "$bash_ok" -eq 1 ]]
+    then
+        flags+=(-e -i "yes")
+    fi
+    read "${flags[@]}" choice
+    choice="${choice:-yes}"
     _koopa_print
     case "$choice" in
         Y|YES|y|yes)
@@ -364,12 +380,13 @@ then
         file="$(_koopa_find_user_profile)"
         _koopa_note "Koopa activation code needs to be added to '${file}'."
         prompt="Modify '${file}'? [${yes_default}/${no}]: "
-        read \
-            -e \
-            -i "yes" \
-            -p "$prompt" \
-            -r \
-            choice
+        flags=(-r -p "$prompt")
+        if [[ "$bash_ok" -eq 1 ]]
+        then
+            flags+=(-e -i "yes")
+        fi
+        read "${flags[@]}" choice
+        choice="${choice:-yes}"
         _koopa_print
         case "$choice" in
             Y|YES|y|yes)
