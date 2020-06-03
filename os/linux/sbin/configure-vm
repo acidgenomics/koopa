@@ -20,6 +20,9 @@ bioconductor=0
 # This is not always the case for Docker images.
 compact=0
 
+# Minimal config used for lightweight Docker images.
+minimal=0
+
 r_version="$(_koopa_variable "r")"
 
 pos=()
@@ -41,6 +44,10 @@ do
         --data-disk)
             data_disk="$2"
             shift 2
+            ;;
+        --minimal)
+            minimal=1
+            shift 1
             ;;
         --r-version=*)
             r_version="${1#*=}"
@@ -132,6 +139,12 @@ then
         source "${KOOPA_PREFIX}/activate"
         set -u
     fi
+fi
+
+if [[ "$minimal" -eq 1 ]]
+then
+    _koopa_success "Configuration completed successfully."
+    exit 0
 fi
 
 # Koopa paths  {{{1
