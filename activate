@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-05-01.
+    Updated 2020-06-03.
 EOF
 }
 
@@ -429,7 +429,31 @@ KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 # Minimal configuration {{{1
 # ==============================================================================
 
+# Bad settings {{{2
+# ------------------------------------------------------------------------------
+
+# Note that we're skipping this checks inside RStudio shell.
+if [ -z "${RSTUDIO:-}" ]
+then
+    _koopa_warn_if_export JAVA_HOME LD_LIBRARY_PATH PYTHONHOME R_HOME
+fi
+
 . "${KOOPA_ACTIVATE_DIR}/minimal.sh"
+
+_koopa_activate_xdg
+# FIXME Consolidate this with '_koopa_activate_xdg'? Redundant?
+_koopa_update_xdg_config
+_koopa_activate_standard_paths
+_koopa_activate_koopa_paths
+_koopa_activate_homebrew
+_koopa_activate_dircolors
+_koopa_activate_gcc_colors
+_koopa_activate_dotfiles
+_koopa_activate_emacs
+_koopa_activate_go
+_koopa_activate_openjdk
+_koopa_activate_pipx
+_koopa_activate_ruby
 
 
 
