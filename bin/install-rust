@@ -28,7 +28,10 @@ do
             ;;
     esac
 done
-set -- "${pos[@]}"
+if [[ "${#pos[@]}" -gt 0 ]]
+then
+    set -- "${pos[@]}"
+fi
 
 CARGO_HOME="$(_koopa_rust_cargo_prefix)"
 RUSTUP_HOME="$(_koopa_rust_rustup_prefix)"

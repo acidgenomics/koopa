@@ -49,7 +49,10 @@ _koopa_set_permissions() {  # {{{1
                 ;;
         esac
     done
-    set -- "${pos[@]}"
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+    fi
 
     [ "$#" -ne 0 ] || return 1
 
