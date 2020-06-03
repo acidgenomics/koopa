@@ -498,14 +498,10 @@ if [ "$KOOPA_EXTRA" -eq 1 ]
 then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        _koopa_activate_bash
+        _koopa_activate_bash_extras
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        # FIXME REWORK THIS.
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/init.zsh"
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/options.zsh"
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/plugins.zsh"
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/prompt.zsh"
+        _koopa_activate_zsh_extras
     fi
 
     if _koopa_is_macos
