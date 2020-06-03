@@ -20,5 +20,5 @@ do
     [ -f "$file" ] && . "$file"
 done
 
-# FIXME NEED TO PUT SCRIPTS IN PATH.
-# FIXME CHECK IF KOOPA IS ALREADY IN PATH AND SKIP OTHERWISE.
+# Ensure koopa scripts are in path.
+_koopa_activate_koopa_paths
