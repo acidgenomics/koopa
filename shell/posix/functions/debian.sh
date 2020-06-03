@@ -265,12 +265,13 @@ _koopa_apt_add_wine_repo() {  # {{{1
     # - Ubuntu:
     #   https://wiki.winehq.org/Ubuntu
     #
-    # @note Updated 2020-06-02.
+    # @note Updated 2020-06-03.
     # """
     local file
     file="/etc/apt/sources.list.d/wine.list"
     [ -f "$file" ] && return 0
     _koopa_h2 "Adding Wine repo at '${file}'."
+    _koopa_apt_add_wine_key
     local os_id
     os_id="$(_koopa_os_id)"
     local os_codename
