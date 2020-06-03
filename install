@@ -33,8 +33,15 @@ EOF
 # Argument parsing  {{{1
 # ==============================================================================
 
+# Check if script is interactive, following recommendations from 'man bash'.
+if [[ "$-" == *i* ]]
+then
+    interactive=1
+else
+    interactive=0
+fi
+
 dotfiles=1
-interactive=1
 koopa_prefix=
 passwordless=0
 profile=1
@@ -157,8 +164,6 @@ then
         then
             # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
             prompt="Install for all users? [${yes_default}/${no}]: "
-            exec </dev/tty >/dev/tty
-            nl "$INPUT"
             read \
                 -e \
                 -i "yes" \
@@ -196,8 +201,6 @@ fi
 if [[ "$interactive" -eq 1 ]]
 then
     prompt="Install prefix: "
-    exec </dev/tty >/dev/tty
-    nl "$INPUT"
     read \
         -e \
         -i "${koopa_prefix}" \
@@ -282,8 +285,6 @@ if _koopa_is_linux && \
     [[ "$shared" -eq 1 ]]
 then
     prompt="Enable passwordless sudo? [${yes}/${no_default}]: "
-    exec </dev/tty >/dev/tty
-    nl "$INPUT"
     read \
         -e \
         -i "no" \
@@ -322,8 +323,6 @@ then
         _koopa_note "This will be overwritten if dot files are linked."
     fi
     prompt="Link dot files? [${yes_default}/${no}]: "
-    exec </dev/tty >/dev/tty
-    nl "$INPUT"
     read \
         -e \
         -i "yes" \
@@ -362,8 +361,6 @@ then
         file="$(_koopa_find_user_profile)"
         _koopa_note "Koopa activation code needs to be added to '${file}'."
         prompt="Modify '${file}'? [${yes_default}/${no}]: "
-        exec </dev/tty >/dev/tty
-        nl "$INPUT"
         read \
             -e \
             -i "yes" \
