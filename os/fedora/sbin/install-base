@@ -16,7 +16,7 @@ name_fancy="Fedora base system"
 
 _koopa_install_start "$name_fancy"
 
-# Upgrade  {{{1
+# Upgrade {{{1
 # ==============================================================================
 
 if [[ "$upgrade" -eq 1 ]]
@@ -25,7 +25,7 @@ then
     sudo dnf -y update
 fi
 
-# Default  {{{1
+# Default {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
@@ -71,7 +71,7 @@ then
     pkgs+=(texinfo)
 fi
 
-# Developer  {{{1
+# Developer {{{1
 # ==============================================================================
 
 if [[ "$dev" -eq 1 ]]
@@ -116,7 +116,7 @@ then
     )
 fi
 
-# Extra  {{{1
+# Extra {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
