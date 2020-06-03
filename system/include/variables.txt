@@ -47,7 +47,7 @@ autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 # https://github.com/aws/aws-cli/releases
-aws-cli="2.0.17"
+aws-cli="2.0.18"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.7.0"
@@ -139,7 +139,7 @@ geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.26.2"
+git="2.27.0"
 
 # https://golang.org/dl/
 go="1.14"
@@ -375,7 +375,7 @@ ensembl-perl="5.26.3"
 
 # > koopa get-macos-app-version "XXX"
 
-macos-app-alacritty="0.4.2"
+macos-app-alacritty="0.4.3"
 macos-app-aspera-connect="3.9.9"
 macos-app-bbedit="13.0.6"
 macos-app-bibdesk="1.7.4"
