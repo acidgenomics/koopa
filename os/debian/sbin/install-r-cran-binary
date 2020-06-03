@@ -8,8 +8,8 @@ source "${script_dir}/../include/header.sh"
 # Install latest version of R from CRAN.
 # - https://cran.r-project.org/bin/linux/debian/
 # - https://cran.r-project.org/bin/linux/ubuntu/README.html
-# """
-
+#
+#
 # R 4.0.0 binary is currently broken on Debian.
 #
 # r-base-core and r-base-dev install successfully.
@@ -85,7 +85,6 @@ sudo rm -frv \
     /etc/apt/sources.list.d/r.list \
     /usr/lib/R/etc
 
-_koopa_apt_import_r_key
 _koopa_apt_add_r_repo "$version"
 
 pkgs=(
