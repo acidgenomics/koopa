@@ -372,8 +372,8 @@ if (!isTRUE(docker)) {
 checkVersion(
     name = "Perl",
     whichName = "perl",
-    current = currentMinorVersion("perl"),
-    expected = expectedMinorVersion("perl")
+    current = currentVersion("perl"),
+    expected = expectedVersion("perl")
 )
 if (!isTRUE(docker)) {
     checkVersion(
