@@ -289,27 +289,29 @@ _koopa_apt_add_wine_obs_key() {  # {{{1
     # """
     local name
     name="Wine OBS"
-    local base_url
-    base_url="https://download.opensuse.org/repositories/\
-Emulators:/Wine:/Debian"
     local os_string
     os_string="$(_koopa_os_string)"
     local key url
+    # Signed by <Emulators@build.opensuse.org>.
+    key="31CFB0B65659B5D40DEEC98DDFA175A75104960E"
+    local subdir
     case "$os_string" in
         debian-10)
-            # FIXME Need to update.
-            key="FIXME"
-            url="${base_url}/Debian_10/Release.key"
+            subdir="Debian_10"
             ;;
         ubuntu-18)
-            # FIXME Need to update.
-            key="FIXME"
-            url="${base_url}/xUbuntu_18.04/Release.key"
+            url="xUbuntu_18.04"
+            ;;
+        ubuntu-20)
+            url="xUbuntu_20.04"
             ;;
         *)
             _koopa_stop "Unsupported OS: '${os_string}'."
             ;;
     esac
+    local url
+    url="https://download.opensuse.org/repositories/\
+Emulators:/Wine:/Debian/${subdir}/Release.key"
     _koopa_apt_key_add "$name" "$url" "$key"
 }
 
