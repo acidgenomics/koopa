@@ -197,7 +197,7 @@ _koopa_find_broken_symlinks() {  # {{{1
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
 
     local dir
     dir="${1:-"."}"
@@ -228,7 +228,7 @@ _koopa_find_dotfiles() {  # {{{1
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
 
     local type
     type="${1:?}"
@@ -258,7 +258,7 @@ _koopa_find_empty_dirs() {  # {{{1
     # Find empty directories.
     # @note Updated 2020-06-03.
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
 
     local dir
     dir="${1:-"."}"
@@ -317,7 +317,7 @@ _koopa_find_large_files() {  # {{{1
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
 
     local dir
     dir="${1:-"."}"
@@ -351,7 +351,7 @@ _koopa_find_non_cellar_make_files() {  # {{{1
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
 
     local prefix
     prefix="$(_koopa_make_prefix)"
@@ -384,7 +384,7 @@ _koopa_find_text() {  # {{{1
     # Examples:
     # _koopa_find_text "mytext" *.txt
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
 
     local pattern
     pattern="${1:?}"
