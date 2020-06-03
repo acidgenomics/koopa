@@ -27,7 +27,10 @@ do
             ;;
     esac
 done
-set -- "${pos[@]}"
+if [[ "${#pos[@]}" -gt 0 ]]
+then
+    set -- "${pos[@]}"
+fi
 
 name="go"
 version="$(_koopa_variable "$name")"

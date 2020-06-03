@@ -93,7 +93,10 @@ _koopa_aws_s3_find() {  # {{{1
                 ;;
         esac
     done
-    set -- "${pos[@]}"
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+    fi
 
     local x
     x="$(_koopa_aws_s3_ls --recursive "$@")"
@@ -174,7 +177,10 @@ _koopa_aws_s3_ls() {  # {{{1
                 ;;
         esac
     done
-    set -- "${pos[@]}"
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+    fi
 
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]

@@ -42,7 +42,10 @@ do
             ;;
     esac
 done
-set -- "${pos[@]}"
+if [[ "${#pos[@]}" -gt 0 ]]
+then
+    set -- "${pos[@]}"
+fi
 
 dir="${1:-.}"
 _koopa_assert_is_dir "$dir"
