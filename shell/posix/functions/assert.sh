@@ -865,8 +865,9 @@ _koopa_check_mount() {  # {{{1
     # """
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-06-03.
     # """
+    _koopa_assert_has_gnu_findutils
     local mnt
     mnt="${1:?}"
     if [ "$(find "$mnt" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
