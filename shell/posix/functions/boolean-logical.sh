@@ -348,7 +348,7 @@ _koopa_is_file_system_case_sensitive() {  # {{{1
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$(find . -maxdepth 1 -iname '.tmp.checkcase' | wc -l)"
     _koopa_quiet_rm '.tmp.check'*
@@ -597,7 +597,7 @@ _koopa_is_recent() {
     # @examples
     # _koopa_is_recent ~/hello-world.txt
     # """
-    _koopa_assert_has_gnu_findutils
+    _koopa_assert_is_installed find
     local file
     file="${1:?}"
     local days
