@@ -7,7 +7,7 @@
 # koopa  {{{1
 # ==============================================================================
 
-koopa-date="2020-06-02"
+koopa-date="2020-06-03"
 koopa-version="0.7.1a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
