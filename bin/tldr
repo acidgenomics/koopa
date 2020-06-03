@@ -12,10 +12,10 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 
 
-# Functions  {{{1
+# Functions {{{1
 # ==============================================================================
 
-# Configuration  {{{2
+# Configuration {{{2
 # ------------------------------------------------------------------------------
 
 config() {
@@ -30,7 +30,7 @@ config() {
 tldr-pages.github.io/master/assets/index.json"
 }
 
-# Variables  {{{2
+# Variables {{{2
 # ------------------------------------------------------------------------------
 
 get_platform() {
@@ -63,7 +63,7 @@ get_platform() {
     _koopa_print "$str"
 }
 
-# Caching and indexing  {{{2
+# Caching and indexing {{{2
 # ------------------------------------------------------------------------------
 
 auto_update_index() {
@@ -179,7 +179,7 @@ update_index() {
     return 0
 }
 
-# Runners  {{{2
+# Runners {{{2
 # ------------------------------------------------------------------------------
 
 display_tldr() {
@@ -275,7 +275,7 @@ list_pages() {
 
 
 
-# Argument parsing  {{{1
+# Argument parsing {{{1
 # ==============================================================================
 
 while [[ "$#" -gt 0 ]]
@@ -301,14 +301,14 @@ done
 
 
 
-# Configuration  {{{1
+# Configuration {{{1
 # ==============================================================================
 
 config
 
 
 
-# Cache / index  {{{1
+# Cache / index {{{1
 # ==============================================================================
 
 # Check if config folder exists, otherwise create it.
@@ -326,7 +326,7 @@ auto_update_index
 
 
 
-# Display tldr page  {{{1
+# Display tldr page {{{1
 # ==============================================================================
 
 tldr="$(get_tldr "$page")"

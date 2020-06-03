@@ -6,7 +6,7 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_no_envs
 
-# Argument parsing  {{{1
+# Argument parsing {{{1
 # ==============================================================================
 
 data_disk=
@@ -85,7 +85,7 @@ fi
 
 _koopa_assert_has_no_args "$@"
 
-# Start configuration  {{{1
+# Start configuration {{{1
 # ==============================================================================
 
 _koopa_h1 "Configuring virtual machine."
@@ -115,7 +115,7 @@ export FORCE_UNSAFE_CONFIGURE=1
 export KOOPA_FORCE=1
 export PYTHONDONTWRITEBYTECODE=true
 
-# Root user and sudo fixes  {{{1
+# Root user and sudo fixes {{{1
 # ==============================================================================
 
 _koopa_enable_passwordless_sudo
@@ -133,7 +133,7 @@ then
     exit 0
 fi
 
-# Koopa paths  {{{1
+# Koopa paths {{{1
 # ==============================================================================
 
 # e.g. '/usr/local'.
@@ -143,7 +143,7 @@ make_prefix="$(_koopa_make_prefix)"
 # e.g. '/usr/local/opt'.
 app_prefix="$(_koopa_app_prefix)"
 
-# Local disk configuration  {{{1
+# Local disk configuration {{{1
 # ==============================================================================
 
 # Set up data disk and rsync configuration for persistent VM. Attempting to
@@ -195,7 +195,7 @@ else
     _koopa_mkdir "$app_prefix"
 fi
 
-# Base system  {{{1
+# Base system {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing base system."
@@ -239,7 +239,7 @@ _koopa_assert_is_file \
 
 sudo ldconfig
 
-# rsync mode  {{{1
+# rsync mode {{{1
 # ==============================================================================
 
 if [[ "$rsync" -eq 1 ]]
@@ -247,19 +247,19 @@ then
     rsync-vm --source-ip="$source_ip"
 fi
 
-# LLVM  {{{1
+# LLVM {{{1
 # ==============================================================================
 
 # On Debian/Ubuntu, this will install the latest stable release.
 _koopa_run_if_installed install-llvm
 
-# OpenJDK  {{{1
+# OpenJDK {{{1
 # ==============================================================================
 
 # Install the latest release, which can vary widely across Linux distros.
 install-openjdk
 
-# GNU core  {{{1
+# GNU core {{{1
 # ==============================================================================
 
 if [[ "$bioconductor" -eq 0 ]]
@@ -286,7 +286,7 @@ then
     # > install-gcc  # cellar only
 fi
 
-# Shells  {{{1
+# Shells {{{1
 # ==============================================================================
 
 if [[ "$bioconductor" -eq 0 ]]
@@ -296,7 +296,7 @@ then
     install-fish
 fi
 
-# General tools  {{{1
+# General tools {{{1
 # ==============================================================================
 
 if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
@@ -307,10 +307,10 @@ then
     install-pass
 fi
 
-# Languages  {{{1
+# Languages {{{1
 # ==============================================================================
 
-# R  {{{2
+# R {{{2
 # ------------------------------------------------------------------------------
 
 # Note that this will use apt package on Debian/Ubuntu and otherwise install
@@ -343,14 +343,14 @@ fi
 # Ensure consistent R configuration across platforms.
 _koopa_update_r_config
 
-# Python  {{{2
+# Python {{{2
 # ------------------------------------------------------------------------------
 
 # This will consistently install the latest version from source across all
 # Linux distros.
 install-python
 
-# Secondary  {{{2
+# Secondary {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
@@ -362,10 +362,10 @@ then
     install-rust
 fi
 
-# Containers and environments  {{{1
+# Containers and environments {{{1
 # ==============================================================================
 
-# Docker  {{{2
+# Docker {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
@@ -374,12 +374,12 @@ then
     install-docker-credential-pass
 fi
 
-# Conda  {{{2
+# Conda {{{2
 # ------------------------------------------------------------------------------
 
 install-conda
 
-# Lmod  {{{2
+# Lmod {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
@@ -391,7 +391,7 @@ fi
 # Can be necessary for updating config on persistent VMs.
 _koopa_update_lmod_config
 
-# Libraries  {{{1
+# Libraries {{{1
 # ==============================================================================
 
 if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
@@ -408,7 +408,7 @@ then
     install-udunits
 fi
 
-# Shell tools  {{{1
+# Shell tools {{{1
 # ==============================================================================
 
 install-htop
@@ -426,7 +426,7 @@ then
     install-the-silver-searcher
 fi
 
-# Text editors  {{{1
+# Text editors {{{1
 # ==============================================================================
 
 install-vim
@@ -438,14 +438,14 @@ then
     install-neovim
 fi
 
-# Language-specific packages  {{{1
+# Language-specific packages {{{1
 # ==============================================================================
 
 # Install these after all languages and libraries have been installed.
 
 sudo ldconfig
 
-# Python  {{{2
+# Python {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
@@ -454,7 +454,7 @@ then
     venv-create-r-reticulate
 fi
 
-# R  {{{2
+# R {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$rsync" -eq 0 ]] &&
@@ -463,7 +463,7 @@ then
     install-r-packages
 fi
 
-# Rust  {{{2
+# Rust {{{2
 # ------------------------------------------------------------------------------
 
 # These must be built from source and are frequently updated.
@@ -472,7 +472,7 @@ then
     install-rust-packages
 fi
 
-# Bioinformatics tools  {{{1
+# Bioinformatics tools {{{1
 # ==============================================================================
 
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
@@ -485,7 +485,7 @@ then
     fi
 fi
 
-# Cloud APIs  {{{1
+# Cloud APIs {{{1
 # ==============================================================================
 
 # Note that Azure CLI requires Python 3, so install after.
@@ -494,7 +494,7 @@ _koopa_run_if_installed \
     install-azure-cli \
     install-google-cloud-sdk
 
-# Generate SSH key  {{{1
+# Generate SSH key {{{1
 # ==============================================================================
 
 # Generate an SSH key automatically, when we are outside of Docker.
@@ -503,10 +503,10 @@ then
     generate-ssh-key
 fi
 
-# Clean up  {{{1
+# Clean up {{{1
 # ==============================================================================
 
-# Remove legacy packages  {{{2
+# Remove legacy packages {{{2
 # ------------------------------------------------------------------------------
 
 # Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
@@ -519,14 +519,14 @@ _koopa_rm \
 # > _koopa_fix_pyenv_permissions
 # > _koopa_fix_rbenv_permissions
 
-# Fix permissions  {{{2
+# Fix permissions {{{2
 # ------------------------------------------------------------------------------
 
 _koopa_set_permissions --recursive "$make_prefix"
 _koopa_set_permissions --recursive "$app_prefix"
 _koopa_fix_zsh_permissions
 
-# Remove symlinks and dirs  {{{2
+# Remove symlinks and dirs {{{2
 # ------------------------------------------------------------------------------
 
 _koopa_remove_broken_symlinks "$make_prefix"
@@ -534,7 +534,7 @@ _koopa_remove_broken_symlinks "$app_prefix"
 _koopa_remove_empty_dirs "$make_prefix"
 _koopa_remove_empty_dirs "$app_prefix"
 
-# Remove temporary files  {{{2
+# Remove temporary files {{{2
 # ------------------------------------------------------------------------------
 
 if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]

@@ -37,7 +37,7 @@ _koopa_assert_is_not_installed perlbrew
 
 export PERLBREW_ROOT="$prefix"
 
-# Perlbrew  {{{1
+# Perlbrew {{{1
 # ==============================================================================
 
 _koopa_mkdir "$prefix"
@@ -50,7 +50,7 @@ _koopa_rm "${HOME}/.perlbrew"
 _koopa_set_permissions --recursive "$prefix"
 _koopa_activate_perlbrew
 
-# Add system Perl  {{{1
+# Add system Perl {{{1
 # ==============================================================================
 
 if [[ -x "/usr/local/bin/perl" ]]
@@ -74,7 +74,7 @@ then
     )
 fi
 
-# Install latest Perl  {{{1
+# Install latest Perl {{{1
 # ==============================================================================
 
 if [[ "$all" -eq 1 ]]

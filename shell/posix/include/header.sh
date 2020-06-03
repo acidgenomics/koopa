@@ -1,6 +1,11 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+# """
+# POSIX shared header script.
+# @note Updated 2020-06-03.
+# """
+
 if [ -z "${KOOPA_PREFIX:-}" ]
 then
     >&2 printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset."
@@ -14,3 +19,6 @@ do
     # shellcheck source=/dev/null
     [ -f "$file" ] && . "$file"
 done
+
+# Ensure koopa scripts are in path.
+_koopa_activate_koopa_paths

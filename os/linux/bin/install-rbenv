@@ -14,7 +14,7 @@ _koopa_install_start "$name" "$prefix"
 _koopa_assert_has_no_args "$@"
 _koopa_mkdir "$prefix"
 
-# rbenv  {{{1
+# rbenv {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'rbenv'."
@@ -27,7 +27,7 @@ _koopa_h2 "Installing 'rbenv'."
 
 _koopa_activate_rbenv
 
-# ruby-build  {{{1
+# ruby-build {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing 'ruby-build'."

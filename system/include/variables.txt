@@ -4,7 +4,7 @@
 
 
 
-# koopa  {{{1
+# koopa {{{1
 # ==============================================================================
 
 koopa-date="2020-06-03"
@@ -15,7 +15,7 @@ koopa-url="https://koopa.acidgenomics.com/"
 
 
 
-# Globals  {{{1
+# Globals {{{1
 # ==============================================================================
 
 # GNU FTP server mirror
@@ -25,7 +25,7 @@ gnu-mirror="https://mirrors.tripadvisor.com/gnu"
 
 
 
-# Program versions  {{{1
+# Program versions {{{1
 # ==============================================================================
 
 # https://repo.continuum.io/archive/
@@ -47,7 +47,7 @@ autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 # https://github.com/aws/aws-cli/releases
-aws-cli="2.0.17"
+aws-cli="2.0.18"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.7.0"
@@ -139,7 +139,7 @@ geos="3.8.1"
 
 # https://git-scm.com/
 # https://github.com/git/git/releases
-git="2.26.2"
+git="2.27.0"
 
 # https://golang.org/dl/
 go="1.14"
@@ -224,7 +224,7 @@ pass="1.7.3"
 patch="2.7.6"
 
 # https://www.perl.org/get.html
-perl="5.30.1"
+perl="5.30.3"
 
 # https://perlbrew.pl/
 perlbrew="0.88"
@@ -339,10 +339,10 @@ zsh="5.8"
 
 
 
-# Bundle versions  {{{1
+# Bundle versions {{{1
 # ==============================================================================
 
-# GnuPG  {{{2
+# GnuPG {{{2
 # https://gnupg.org/download/index.html
 # 2019-12-07
 gpg="2.2.19"
@@ -361,7 +361,7 @@ sra-tools="2.10.0"
 
 
 
-# Legacy pinnings  {{{1
+# Legacy pinnings {{{1
 # ==============================================================================
 
 # Latest version compatible with Ensembl Perl API.
@@ -370,14 +370,14 @@ ensembl-perl="5.26.3"
 
 
 
-# macOS app versions  {{{1
+# macOS app versions {{{1
 # ==============================================================================
 
 # > koopa get-macos-app-version "XXX"
 
-macos-app-alacritty="0.4.2"
+macos-app-alacritty="0.4.3"
 macos-app-aspera-connect="3.9.9"
-macos-app-bbedit="13.0.6"
+macos-app-bbedit="13.1"
 macos-app-bibdesk="1.7.4"
 macos-app-docker="2.3.0.3"
 macos-app-firefox="76.0.1"
@@ -392,7 +392,7 @@ macos-app-xcode="11.3.1"
 
 
 
-# Homebrew cask versions  {{{1
+# Homebrew cask versions {{{1
 # ==============================================================================
 
 # > koopa get-homebrew-cask-version "XXX"

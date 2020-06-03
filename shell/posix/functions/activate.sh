@@ -75,6 +75,19 @@ _koopa_activate_bcbio() {  # {{{1
     return 0
 }
 
+_koopa_activate_black_alias() {  # {{{1
+    # """
+    # Activate black alias.
+    # @note Updated 2020-06-03.
+    # """
+    if _koopa_is_installed black
+    then
+        # Note that 79 characters conforms to PEP8 (see flake8 for details).
+        alias black="black --line-length=79"
+    fi
+    return 0
+}
+
 _koopa_activate_broot() {  # {{{1
     # """
     # Activate broot directory tree utility.
@@ -187,6 +200,43 @@ _koopa_activate_conda_env() {  # {{{1
     return 0
 }
 
+_koopa_activate_coreutils_aliases() {  # {{{1
+    # """
+    # Activate hardened interactive aliases for coreutils.
+    # @note Updated 2020-06-03.
+    #
+    # Note that macOS ships with a very old version of GNU coreutils.
+    # Update these using Homebrew.
+    # """
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
+    if _koopa_str_match \
+        "$(_koopa_which_realpath cp)" \
+        "$make_prefix"
+    then
+        alias cp='cp --archive --interactive --verbose'
+    fi
+    if _koopa_str_match \
+        "$(_koopa_which_realpath mkdir)" \
+        "$make_prefix"
+    then
+        alias mkdir='mkdir --parents --verbose'
+    fi
+    if _koopa_str_match \
+        "$(_koopa_which_realpath mv)" \
+        "$make_prefix"
+    then
+        alias mv="mv --interactive --verbose"
+    fi
+    if _koopa_str_match \
+        "$(_koopa_which_realpath rm)" \
+        "$make_prefix"
+    then
+        alias rm='rm --dir --interactive="once" --preserve-root --verbose'
+    fi
+    return 0
+}
+
 _koopa_activate_dircolors() {  # {{{1
     # """
     # Activate directory colors.
@@ -234,6 +284,18 @@ _koopa_activate_emacs() {  # {{{1
     # @note Updated 2020-05-01.
     # """
     _koopa_activate_prefix "${HOME}/.emacs.d"
+}
+
+_koopa_activate_emacs_alias() {  # {{{1
+    # """
+    # Activate Emacs alias.
+    # @note Updated 2020-06-03.
+    # """
+    if _koopa_is_installed emacs
+    then
+        alias emacs="emacs --no-window-system"
+    fi
+    return 0
 }
 
 _koopa_activate_ensembl_perl_api() {  # {{{1
@@ -461,16 +523,21 @@ _koopa_activate_homebrew_python() {
 _koopa_activate_koopa_paths() {  # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-06-03.
     # """
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
+    _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
+    local host_id
+    host_id="$(_koopa_host_id)"
+    local os_id
+    os_id="$(_koopa_os_id)"
+    local shell
+    shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
-
-    local koopa_shell
-    koopa_shell="$(_koopa_shell)"
-    _koopa_activate_prefix "${koopa_prefix}/shell/${koopa_shell}"
-
+    _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"
     if _koopa_is_linux
     then
         _koopa_activate_prefix "${koopa_prefix}/os/linux"
@@ -486,23 +553,11 @@ _koopa_activate_koopa_paths() {  # {{{1
             _koopa_activate_prefix "${koopa_prefix}/os/rhel"
         fi
     fi
-
-    local os_id
-    os_id="$(_koopa_os_id)"
     _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
-
-    local host_id
-    host_id="$(_koopa_host_id)"
     _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
-
-    local config_prefix
-    config_prefix="$(_koopa_config_prefix)"
     _koopa_activate_prefix "${config_prefix}/docker"
     _koopa_activate_prefix "${config_prefix}/scripts-private"
-
-    # Defunct scripts.
     _koopa_add_to_path_end "${koopa_prefix}/system/defunct/bin"
-
     return 0
 }
 
@@ -564,6 +619,39 @@ _koopa_activate_local_etc_profile() {  # {{{1
             . "$script"
         fi
     done
+    return 0
+}
+
+_koopa_activate_macos_extras() {  # {{{1
+    # """
+    # Activate macOS-specific extra settings.
+    # @note Updated 2020-06-03.
+    # """
+    alias finder-hide="setfile -a V"
+    alias icloud-status="brctl log --wait --shorten"
+    alias locate="mdfind -name"
+    alias reload-mounts="sudo automount -vc"
+    alias rstudio="open -a rstudio"
+
+    # Improve terminal colors.
+    if [ -z "${CLICOLOR:-}" ]
+    then
+        export CLICOLOR=1
+    fi
+
+    # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
+    # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
+    if [ -z "${LSCOLORS:-}" ]
+    then
+        export LSCOLORS="Gxfxcxdxbxegedabagacad"
+    fi
+
+    # Set rsync flags for APFS.
+    if [ -z "${RSYNC_FLAGS_APFS:-}" ]
+    then
+        export RSYNC_FLAGS_APFS="${RSYNC_FLAGS:?} --iconv=utf-8,utf-8-mac"
+    fi
+
     return 0
 }
 
@@ -796,6 +884,18 @@ _koopa_activate_rust() {  # {{{1
     return 0
 }
 
+_koopa_activate_r_alias() {  # {{{1
+    # """
+    # Activate R alias.
+    # @note Updated 2020-06-03.
+    # """
+    if _koopa_is_installed R
+    then
+        alias R="R --no-restore --no-save --quiet"
+    fi
+    return 0
+}
+
 _koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
@@ -808,6 +908,55 @@ _koopa_activate_secrets() {  # {{{1
     . "$file"
     return 0
 }
+
+_koopa_activate_shortcut_aliases() {  # {{{1
+    # """
+    # Activate shortcut aliases.
+    # @note Updated 2020-06-03.
+    # """
+    alias c='clear'
+    alias e='exit'
+    alias h='history'
+    # shellcheck disable=SC2153
+    alias k='cd "${KOOPA_PREFIX:?}"'
+    alias ku='koopa update'
+
+    # List files.
+    if _koopa_is_installed exa
+    then
+        alias l='exa -F'
+        alias la='exa -Fal --group'
+        alias ll='exa -Fl --group'
+    else
+        alias l='ls -F'
+        alias la='ls -Fahl'
+        alias ll='ls -BFhl'
+    fi
+    alias l.='l -d .*'
+    alias l1='ls -1'
+
+    # List head or tail.
+    alias lh='l | head'
+    alias lt='l | tail'
+
+    # Clear then list.
+    alias cls='clear; l'
+
+    # Browse up and down.
+    alias u='clear; cd ../; pwd; l'
+    alias d='clear; cd -; l'
+
+    # Navigate up parent directories without 'cd'.
+    # These are also supported by autojump.
+    # > alias ..='cd ..'
+    # > alias ...='cd ../../'
+    # > alias ....='cd ../../../'
+    # > alias .....='cd ../../../../'
+    # > alias ......='cd ../../../../../'
+
+    return 0
+}
+
 
 _koopa_activate_ssh_key() {  # {{{1
     # """
@@ -953,5 +1102,324 @@ _koopa_activate_xdg() {  # {{{1
     export XDG_DATA_DIRS
     export XDG_DATA_HOME
     export XDG_RUNTIME_DIR
+    return 0
+}
+
+_koopa_export_cpu_count() {  # {{{1
+    # """
+    # Export CPU_COUNT.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${CPU_COUNT:-}" ]
+    then
+        CPU_COUNT="$(_koopa_cpu_count)"
+    fi
+    export CPU_COUNT
+    return 0
+}
+
+_koopa_export_editor() {  # {{{1
+    # """
+    # Export EDITOR.
+    # @note Updated 2020-06-03.
+    # """
+    # Set text editor, if unset.
+    # Recommending vim by default.
+    if [ -z "${EDITOR:-}" ]
+    then
+        export EDITOR="vim"
+    fi
+    # Ensure VISUAL matches EDITOR.
+    if [ -n "${EDITOR:-}" ]
+    then
+        export VISUAL="$EDITOR"
+    fi
+    return 0
+}
+
+_koopa_export_git() {  # {{{1
+    # """
+    # Export git configuration.
+    # @note Updated 2020-06-03.
+    #
+    # @seealso
+    # https://git-scm.com/docs/merge-options
+    # """
+    if [ -z "${GIT_MERGE_AUTOEDIT:-}" ]
+    then
+        export GIT_MERGE_AUTOEDIT="no"
+    fi
+    return 0
+}
+
+_koopa_export_gnupg() {  # {{{1
+    # """
+    # Export GnuPG settings.
+    # @note Updated 2020-06-03.
+    #
+    # Enable passphrase prompting in terminal.
+    # Useful for getting Docker credential store to work.
+    # https://github.com/docker/docker-credential-helpers/issues/118
+    # """
+    if [ -z "${GPG_TTY:-}" ] && _koopa_is_tty
+    then
+        GPG_TTY="$(tty || true)"
+        export GPG_TTY
+    fi
+    return 0
+}
+
+_koopa_export_group() {  # {{{1
+    # """
+    # Export GROUP.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${GROUP:-}" ]
+    then
+        GROUP="$(id -gn)"
+    fi
+    export GROUP
+    return 0
+}
+
+_koopa_export_history() {  # {{{1
+    # """
+    # Export history.
+    # @note Updated 2020-06-03.
+    #
+    # See bash(1) for more options.
+    # For setting history length, see HISTSIZE and HISTFILESIZE.
+    # """
+    # Standardize the history file name across shells.
+    # Note that snake case is commonly used here across platforms.
+    if [ -z "${HISTFILE:-}" ]
+    then
+        HISTFILE="${HOME}/.$(_koopa_shell)_history"
+    fi
+    export HISTFILE
+    # Create the history file, if necessary.
+    # Note that the HOME check here hardens against symlinked data disk failure.
+    if [ ! -f "$HISTFILE" ] && [ -e "${HOME:-}" ]
+    then
+        touch "$HISTFILE"
+    fi
+    # Don't keep duplicate lines in the history.
+    # Alternatively, set "ignoreboth" to also ignore lines starting with space.
+    if [ -z "${HISTCONTROL:-}" ]
+    then
+        HISTCONTROL="ignoredups"
+    fi
+    export HISTCONTROL
+    if [ -z "${HISTIGNORE:-}" ]
+    then
+        HISTIGNORE="&:ls:[bf]g:exit"
+    fi
+    export HISTIGNORE
+    # Set the default history size.
+    if [ -z "${HISTSIZE:-}" ] || [ "${HISTSIZE:-}" -eq 0 ]
+    then
+        HISTSIZE=1000
+    fi
+    export HISTSIZE
+    # Add the date/time to 'history' command output.
+    # Note that on macOS Bash will fail if 'set -e' is set.
+    if [ -z "${HISTTIMEFORMAT:-}" ]
+    then
+        HISTTIMEFORMAT="%Y%m%d %T  "
+    fi
+    export HISTTIMEFORMAT
+    # Ensure that HISTSIZE and SAVEHIST values match.
+    if [ "${HISTSIZE:-}" != "${SAVEHIST:-}" ]
+    then
+        SAVEHIST="$HISTSIZE"
+    fi
+    export SAVEHIST
+    return 0
+}
+
+_koopa_export_hostname() {  # {{{1
+    # """
+    # Export HOSTNAME.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${HOSTNAME:-}" ]
+    then
+        HOSTNAME="$(uname -n)"
+    fi
+    export HOSTNAME
+    return 0
+}
+
+_koopa_export_lesspipe() {  # {{{
+    # """
+    # Export lesspipe settings.
+    # @note Updated 2020-06-03.
+    #
+    # Preconfigured on some Linux systems at '/etc/profile.d/less.sh'.
+    #
+    # On some older Linux distros:
+    # > eval $(/usr/bin/lesspipe)
+    #
+    # See also:
+    # - https://github.com/wofr06/lesspipe
+    # """
+    if [ -n "${LESSOPEN:-}" ] &&
+        _koopa_is_installed "lesspipe.sh"
+    then
+        lesspipe_exe="$(_koopa_which_realpath "lesspipe.sh")"
+        export LESSOPEN="|${lesspipe_exe} %s"
+        export LESS_ADVANCED_PREPROCESSOR=1
+    fi
+    return 0
+}
+
+_koopa_export_ostype() {  # {{{1
+    # """
+    # Export OSTYPE.
+    # @note Updated 2020-06-03.
+    #
+    # Automatically set by bash and zsh.
+    # """
+    if [ -z "${OSTYPE:-}" ]
+    then
+        OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
+    fi
+    export OSTYPE
+    return 0
+}
+
+_koopa_export_pager() {  # {{{1
+    # """
+    # Export PAGER.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${PAGER:-}" ]
+    then
+        export PAGER="less"
+    fi
+    return 0
+}
+
+_koopa_export_pkg_config_path() {  # {{{1
+    # """
+    # These are defined primarily for R environment. In particular these make
+    # building tricky pages from source, such as rgdal, sf and others  easier.
+    #
+    # This is necessary for rgdal, sf packages to install clean.
+    # """
+    if [ -z "${PKG_CONFIG_PATH:-}" ]
+    then
+        PKG_CONFIG_PATH="\
+    /usr/local/lib64/pkgconfig:\
+    /usr/local/lib/pkgconfig:\
+    /usr/lib64/pkgconfig:\
+    /usr/lib/pkgconfig"
+        export PKG_CONFIG_PATH
+    fi
+    return 0
+}
+
+_koopa_export_proj_lib() {  # {{{1
+    # """
+    # Export PROJ_LIB
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${PROJ_LIB:-}" ]
+    then
+        if [ -e "/usr/local/share/proj" ]
+        then
+            PROJ_LIB="/usr/local/share/proj"
+            export PROJ_LIB
+        elif [ -e "/usr/share/proj" ]
+        then
+            PROJ_LIB="/usr/share/proj"
+            export PROJ_LIB
+        fi
+    fi
+    return 0
+}
+
+_koopa_export_python() {  # {{{1
+    # """
+    # Export Python settings.
+    # @note Updated 2020-06-03.
+    # """
+    # Don't allow Python to change the prompt string by default.
+    if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
+    then
+        export VIRTUAL_ENV_DISABLE_PROMPT=1
+    fi
+    return 0
+}
+
+_koopa_export_rsync() {  # {{{1
+    # """
+    # Export rsync flags.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${RSYNC_FLAGS:-}" ]
+    then
+        RSYNC_FLAGS="$(_koopa_rsync_flags)"
+        export RSYNC_FLAGS
+    fi
+    return 0
+}
+
+_koopa_export_shell() {  # {{{1
+    # """
+    # Export SHELL.
+    # @note Updated 2020-06-03.
+    #
+    # Some POSIX shells, such as Dash, don't export this by default.
+    # Note that this doesn't currently get set by RStudio terminal.
+    # """
+    if [ -z "${SHELL:-}" ]
+    then
+        SHELL="$(_koopa_which "$KOOPA_SHELL")"
+    fi
+    export SHELL
+    return 0
+}
+
+_koopa_export_tmpdir() {  # {{{1
+    # """
+    # Export TMPDIR.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${TMPDIR:-}" ]
+    then
+        TMPDIR="/tmp"
+    fi
+    export TMPDIR
+    return 0
+}
+
+_koopa_export_today() {  # {{{1
+    # """
+    # Export TODAY.
+    # @note Updated 2020-06-03.
+    #
+    # Current date. Alternatively, can use '%F' shorthand.
+    # """
+    if [ -z "${TODAY:-}" ]
+    then
+        TODAY="$(date +%Y-%m-%d)"
+    fi
+    export TODAY
+    return 0
+}
+
+_koopa_export_user() {  # {{{1
+    # """
+    # Export USER.
+    # @note Updated 2020-06-03.
+    #
+    # Alternatively, can use 'whoami' here.
+    # """
+    if [ -z "${USER:-}" ]
+    then
+        USER="$(id -un)"
+    fi
+    export USER
     return 0
 }

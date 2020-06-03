@@ -3,7 +3,7 @@
 
 
 
-# Usage  {{{1
+# Usage {{{1
 # ==============================================================================
 
 usage() {
@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-05-01.
+    Updated 2020-06-03.
 EOF
 }
 
@@ -67,7 +67,7 @@ unset -f usage
 
 
 
-# Pre-flight checks  {{{1
+# Pre-flight checks {{{1
 # ==============================================================================
 
 # Ensure 'USER' global is defined, for user-specific checks below.
@@ -77,7 +77,7 @@ then
 fi
 export USER
 
-# Interactive  {{{2
+# Interactive {{{2
 # ------------------------------------------------------------------------------
 
 if printf '%s\n' "$-" | grep -q 'i'
@@ -87,7 +87,7 @@ else
     KOOPA_INTERACTIVE=0
 fi
 
-# Operating system  {{{2
+# Operating system {{{2
 # ------------------------------------------------------------------------------
 
 # Bash sets the shell variable OSTYPE (e.g. linux-gnu).
@@ -103,7 +103,7 @@ case "$(uname -s)" in
         return 0
 esac
 
-# Shell  {{{2
+# Shell {{{2
 # ------------------------------------------------------------------------------
 
 # Refer to '_koopa_shell' function for additional details.
@@ -177,10 +177,10 @@ fi
 
 
 
-# Argument parsing  {{{1
+# Argument parsing {{{1
 # ==============================================================================
 
-# Force mode  {{{2
+# Force mode {{{2
 # ------------------------------------------------------------------------------
 
 # This is currently used by the koopa installer.
@@ -201,7 +201,7 @@ then
     unset -v force
 fi
 
-# Skip activation  {{{2
+# Skip activation {{{2
 # ------------------------------------------------------------------------------
 
 if [ "$KOOPA_FORCE" -ne 1 ]
@@ -238,7 +238,7 @@ then
     fi
 fi
 
-# Subshell  {{{2
+# Subshell {{{2
 # ------------------------------------------------------------------------------
 
 # Alternatively, can compare SHLVL value.
@@ -249,7 +249,7 @@ else
     KOOPA_SUBSHELL=1
 fi
 
-# Extra mode  {{{2
+# Extra mode {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_EXTRA:-}" ]
@@ -276,7 +276,7 @@ then
     fi
 fi
 
-# Minimal mode  {{{2
+# Minimal mode {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_MINIMAL:-}" ]
@@ -308,7 +308,7 @@ then
     KOOPA_EXTRA=0
 fi
 
-# Test mode  {{{2
+# Test mode {{{2
 # ------------------------------------------------------------------------------
 
 if [ -z "${KOOPA_TEST:-}" ]
@@ -344,7 +344,7 @@ then
     KOOPA_MINIMAL=0
 fi
 
-# Export global variables  {{{2
+# Export global variables {{{2
 # ------------------------------------------------------------------------------
 
 export KOOPA_EXTRA
@@ -356,7 +356,7 @@ export KOOPA_TEST
 
 
 
-# Locate installation prefix  {{{1
+# Locate installation prefix {{{1
 # ==============================================================================
 
 case "$KOOPA_SHELL" in
@@ -398,7 +398,7 @@ export KOOPA_PREFIX
 
 
 
-# Start activation  {{{1
+# Start activation {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -421,19 +421,53 @@ fi
 activate=1 . "$header"
 unset -v header
 
-# Get location of activation scripts.
-KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 
 
-
-# Minimal configuration  {{{1
+# Minimal configuration {{{1
 # ==============================================================================
 
-. "${KOOPA_ACTIVATE_DIR}/minimal.sh"
+# Note that we're skipping this check inside RStudio shell.
+if [ -z "${RSTUDIO:-}" ]
+then
+    _koopa_warn_if_export JAVA_HOME LD_LIBRARY_PATH PYTHONHOME R_HOME
+fi
+
+_koopa_export_cpu_count
+_koopa_export_editor
+_koopa_export_git
+_koopa_export_gnupg
+_koopa_export_group
+_koopa_export_history
+_koopa_export_hostname
+_koopa_export_lesspipe
+_koopa_export_ostype
+_koopa_export_pager
+_koopa_export_pkg_config_path
+_koopa_export_proj_lib
+_koopa_export_python
+_koopa_export_rsync
+_koopa_export_shell
+_koopa_export_tmpdir
+_koopa_export_today
+_koopa_export_user
+
+_koopa_activate_xdg
+_koopa_update_xdg_config
+_koopa_activate_standard_paths
+_koopa_activate_koopa_paths
+_koopa_activate_homebrew
+_koopa_activate_dircolors
+_koopa_activate_gcc_colors
+_koopa_activate_dotfiles
+_koopa_activate_emacs
+_koopa_activate_go
+_koopa_activate_openjdk
+_koopa_activate_pipx
+_koopa_activate_ruby
 
 
 
-# Program configuration  {{{1
+# Program configuration {{{1
 # ==============================================================================
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
@@ -457,31 +491,34 @@ fi
 
 
 
-# Extra shell configuration  {{{1
+# Extra shell configuration {{{1
 # ==============================================================================
 
 if [ "$KOOPA_EXTRA" -eq 1 ]
 then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        . "${KOOPA_ACTIVATE_DIR}/shell/bash/init.sh"
+        _koopa_activate_bash_extras
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/init.zsh"
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/options.zsh"
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/plugins.zsh"
-        . "${KOOPA_ACTIVATE_DIR}/shell/zsh/prompt.zsh"
+        _koopa_activate_zsh_extras
     fi
-
-    . "${KOOPA_ACTIVATE_DIR}/extra.sh"
 
     if _koopa_is_macos
     then
-        . "${KOOPA_ACTIVATE_DIR}/os/darwin/init.sh"
+        _koopa_activate_macos_extras
     fi
 
+    _koopa_activate_autojump
+    _koopa_activate_broot
+    _koopa_activate_fzf
     _koopa_activate_secrets
     _koopa_activate_ssh_key
+    _koopa_activate_coreutils_aliases
+    _koopa_activate_black_alias
+    _koopa_activate_emacs_alias
+    _koopa_activate_r_alias
+    _koopa_activate_shortcut_aliases
 
     if ! _koopa_is_subshell
     then
@@ -494,7 +531,7 @@ fi
 
 
 
-# Post-flight  {{{1
+# Post-flight {{{1
 # ==============================================================================
 
 if [ "$KOOPA_TEST" -eq 1 ]
@@ -546,6 +583,5 @@ then
 fi
 
 unset -v \
-    KOOPA_ACTIVATE_DIR \
     KOOPA_ACTIVATE_SCRIPT \
     KOOPA_INTERACTIVE
