@@ -6,6 +6,9 @@ source "${script_dir}/../include/header.sh"
 
 # """
 # https://wiki.winehq.org/Fedora
+#
+# Note that 'winehq-stable' is currently only available on Fedora 31.
+# Can use 'winehq-devel' on Fedora 32.
 # """
 
 _koopa_exit_if_installed wine

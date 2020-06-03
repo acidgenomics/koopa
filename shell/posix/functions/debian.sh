@@ -318,7 +318,7 @@ Emulators:/Wine:/Debian/${subdir}/Release.key"
 _koopa_apt_add_wine_obs_repo() {  # {{{1
     # """
     # Add Wine OBS openSUSE repo.
-    # @note Updated 2020-06-02.
+    # @note Updated 2020-06-03.
     #
     # Required to install libfaudio0 dependency for Wine on Debian 10+.
     #
@@ -332,7 +332,7 @@ _koopa_apt_add_wine_obs_repo() {  # {{{1
     _koopa_h2 "Adding Wine OBS repo at '${file}'."
     _koopa_apt_add_wine_obs_key
     local base_url
-    repo_url="https://download.opensuse.org/repositories/\
+    base_url="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
     local os_string
     os_string="$(_koopa_os_string)"
