@@ -39,7 +39,7 @@ log_file="$(_koopa_tmp_log_file)"
 
 export HOMEBREW_FORCE_BOTTLE=1
 
-# Casks  {{{1
+# Casks {{{1
 # ==============================================================================
 
 # 'foobar2000' cask was removed due to url protection.
@@ -130,7 +130,7 @@ casks=(
     done
 ) 2>&1 | tee -a "$log_file"
 
-# Brews  {{{1
+# Brews {{{1
 # ==============================================================================
 
 # Use rustup / cargo to manage these Rust packages instead:
@@ -143,7 +143,7 @@ casks=(
 _koopa_h2 "Installing brews."
 installed_brews="$(brew list)"
 
-# Linked brews (default)  {{{2
+# Linked brews (default) {{{2
 # ------------------------------------------------------------------------------
 
 brews=(
@@ -271,7 +271,7 @@ brews=(
     done
 ) 2>&1 | tee -a "$log_file"
 
-# Cellar (keg)-only brews  {{{2
+# Cellar (keg)-only brews {{{2
 # ------------------------------------------------------------------------------
 
 keg_only_brews=(
@@ -296,7 +296,7 @@ keg_only_brews=(
     done
 ) 2>&1 | tee -a "$log_file"
 
-# Externally tapped brews  {{{2
+# Externally tapped brews {{{2
 # ------------------------------------------------------------------------------
 
 # Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.

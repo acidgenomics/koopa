@@ -6,7 +6,7 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_assert_has_args "$@"
 
-# Argument parsing  {{{1
+# Argument parsing {{{1
 # ==============================================================================
 
 pos=()
@@ -44,7 +44,7 @@ then
     _koopa_missing_arg
 fi
 
-# Source check  {{{1
+# Source check {{{1
 # ==============================================================================
 
 # Ensure that source and local (host) IP addresses are not identical. If they
@@ -55,7 +55,7 @@ then
     _koopa_exit "Skipping rsync because '${host_ip}' is source machine."
 fi
 
-# Custom paths  {{{1
+# Custom paths {{{1
 # ==============================================================================
 
 if [[ "$#" -gt 0 ]]
@@ -69,10 +69,10 @@ then
     exit 0
 fi
 
-# Default paths  {{{1
+# Default paths {{{1
 # ==============================================================================
 
-# app prefix  {{{2
+# app prefix {{{2
 # ------------------------------------------------------------------------------
 
 # Need to sync this before make prefix step, otherwise some symlinks won't
@@ -101,7 +101,7 @@ else
     _koopa_note "Skipping '${app_prefix}'."
 fi
 
-# make prefix  {{{2
+# make prefix {{{2
 # ------------------------------------------------------------------------------
 
 make_prefix="$(_koopa_make_prefix)"

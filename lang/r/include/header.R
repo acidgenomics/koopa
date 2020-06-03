@@ -21,7 +21,7 @@ options(
 
 
 
-## Source shared function scripts  {{{1
+## Source shared function scripts {{{1
 ## =============================================================================
 
 local({
@@ -47,7 +47,7 @@ local({
 
 
 
-## Check package dependencies  {{{1
+## Check package dependencies {{{1
 ## =============================================================================
 
 ## Check that required R package dependencies are installed.
@@ -115,14 +115,14 @@ local({
 
 
 
-## Help mode  {{{1
+## Help mode {{{1
 ## =============================================================================
 
 .koopa[["koopaHelp"]]()
 
 
 
-## Parallelization  {{{1
+## Parallelization {{{1
 ## =============================================================================
 
 ## Set number of cores for parallelization, if necessary.

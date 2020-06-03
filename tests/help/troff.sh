@@ -13,7 +13,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 _koopa_h1 "Running manual file '--help' flag checks."
 
-# man dirs  {{{1
+# man dirs {{{1
 # ==============================================================================
 
 # Put all 'man/' dirs into an array and loop.
@@ -39,7 +39,7 @@ do
     _koopa_add_to_manpath_start "$dir"
 done
 
-# man file formatting  {{{1
+# man file formatting {{{1
 # ==============================================================================
 
 _koopa_h2 "Checking troff man file formatting."
@@ -69,7 +69,7 @@ done
 
 exit 0
 
-# '--help' flag support  {{{1
+# '--help' flag support {{{1
 # ==============================================================================
 
 _koopa_h2 "Running exported script '--help' flag checks."

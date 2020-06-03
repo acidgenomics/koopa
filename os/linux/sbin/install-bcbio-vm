@@ -17,7 +17,7 @@ _koopa_h1 "Installing '${name}' at '${prefix}'."
 bin_dir="${prefix}/anaconda/bin"
 tmp_dir="$(_koopa_tmp_dir)"
 
-# Docker  {{{1
+# Docker {{{1
 # ==============================================================================
 
 if ! groups | grep -q "docker"
@@ -28,7 +28,7 @@ then
     newgrp docker
 fi
 
-# conda  {{{1
+# conda {{{1
 # ==============================================================================
 
 (
@@ -41,7 +41,7 @@ fi
 
 rm -fr "$tmp_dir"
 
-# bcbio-vm  {{{1
+# bcbio-vm {{{1
 # ==============================================================================
 
 "${bin_dir}/conda" install --yes \

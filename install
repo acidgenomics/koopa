@@ -4,7 +4,7 @@ set -Eeu -o pipefail
 
 
 
-# Usage  {{{1
+# Usage {{{1
 # ==============================================================================
 
 usage() {
@@ -30,7 +30,7 @@ EOF
 
 
 
-# Argument parsing  {{{1
+# Argument parsing {{{1
 # ==============================================================================
 
 # Check if script is interactive, following recommendations from 'man bash'.
@@ -116,7 +116,7 @@ done
 
 
 
-# Pre-flight  {{{1
+# Pre-flight {{{1
 # ==============================================================================
 
 # Before we proceed, ensure that koopa isn't already installed.
@@ -151,7 +151,7 @@ fi
 
 
 
-# Prefix  {{{1
+# Prefix {{{1
 # ==============================================================================
 
 if [[ -z "$koopa_prefix" ]]
@@ -219,7 +219,7 @@ fi
 
 
 
-# Install (copy repo)  {{{1
+# Install (copy repo) {{{1
 # ==============================================================================
 
 _koopa_h1 "Installing koopa at '${koopa_prefix}'."
@@ -250,7 +250,7 @@ unset -v script_dir
 
 
 
-# Activate  {{{1
+# Activate {{{1
 # ==============================================================================
 
 _koopa_h2 "Activating koopa."
@@ -276,7 +276,7 @@ fi
 
 
 
-# Passwordless sudo  {{{1
+# Passwordless sudo {{{1
 # ==============================================================================
 
 # Prompt if the user wants to enable passwordless sudo.
@@ -309,7 +309,7 @@ fi
 
 
 
-# Dot files  {{{1
+# Dot files {{{1
 # ==============================================================================
 
 # Prompt the user if we want to link dot files.
@@ -351,7 +351,7 @@ fi
 
 
 
-# User profile  {{{1
+# User profile {{{1
 # ==============================================================================
 
 if ! _koopa_is_defined_in_user_profile
@@ -394,7 +394,7 @@ fi
 
 
 
-# Final steps and return  {{{1
+# Final steps and return {{{1
 # ==============================================================================
 
 # Some config files, such as '.lintr' and '.pylintrc' will be missing unless
