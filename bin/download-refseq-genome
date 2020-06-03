@@ -17,16 +17,16 @@ KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
-from koopa.argparse import dir_path  # noqa:E402
+from koopa.argparse import dir_path
 from koopa.genome.refseq import (
     download_refseq_genome,
     download_refseq_gff,
     download_refseq_gtf,
     download_refseq_transcriptome,
     refseq_version,
-)  # noqa:E402
-from koopa.syntactic import kebab_case  # noqa:E402
-from koopa.sys import download, paste_url  # noqa:E402
+)
+from koopa.syntactic import kebab_case
+from koopa.system import download, paste_url
 
 # pylint: enable=wrong-import-position
 

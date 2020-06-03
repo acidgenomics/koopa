@@ -17,8 +17,8 @@ KOOPA_PREFIX = os.path.realpath(os.path.join(__file__, "..", ".."))
 PYTHON_PREFIX = os.path.join(KOOPA_PREFIX, "lang", "python")
 sys.path.insert(0, PYTHON_PREFIX)
 
-from koopa.argparse import dir_path  # noqa:E402
-from koopa.genome import tx2gene_from_fasta  # noqa:E402
+from koopa.argparse import dir_path
+from koopa.genome import tx2gene_from_fasta
 from koopa.genome.flybase import (
     download_flybase_genome,
     download_flybase_gff,
@@ -26,12 +26,9 @@ from koopa.genome.flybase import (
     download_flybase_transcriptome,
     flybase_dmel_version,
     flybase_version,
-)  # noqa:E402
-from koopa.syntactic import kebab_case  # noqa:E402
-from koopa.sys import (
-    eprint,
-    paste_url,
-)  # noqa:E402
+)
+from koopa.syntactic import kebab_case
+from koopa.system import eprint, paste_url
 
 # pylint: enable=wrong-import-position
 
