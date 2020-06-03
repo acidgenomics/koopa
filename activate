@@ -421,9 +421,6 @@ fi
 activate=1 . "$header"
 unset -v header
 
-# Get location of activation scripts.
-KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
-
 
 
 # Minimal configuration {{{1
@@ -501,9 +498,10 @@ if [ "$KOOPA_EXTRA" -eq 1 ]
 then
     if [ "$KOOPA_SHELL" = "bash" ]
     then
-        . "${KOOPA_ACTIVATE_DIR}/shell/bash/init.sh"
+        _koopa_activate_bash
     elif [ "$KOOPA_SHELL" = "zsh" ]
     then
+        # FIXME REWORK THIS.
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/init.zsh"
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/options.zsh"
         . "${KOOPA_ACTIVATE_DIR}/shell/zsh/plugins.zsh"
@@ -517,6 +515,7 @@ then
 
     if _koopa_is_macos
     then
+        # FIXME REWORK THIS.
         . "${KOOPA_ACTIVATE_DIR}/os/darwin/init.sh"
     fi
 
@@ -592,6 +591,5 @@ then
 fi
 
 unset -v \
-    KOOPA_ACTIVATE_DIR \
     KOOPA_ACTIVATE_SCRIPT \
     KOOPA_INTERACTIVE
