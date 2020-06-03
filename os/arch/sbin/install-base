@@ -21,13 +21,42 @@ source "${script_dir}/../include/header.sh"
 # This is due to configuration in '/etc/profile'.
 # """
 
+minimal=0
+
+while (("$#"))
+do
+    case "$1" in
+        --minimal)
+            minimal=1
+            shift 1
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
 name_fancy="Arch base system"
 
 _koopa_install_start "$name_fancy"
 
-sudo pacman -Syyu --noconfirm
+_koopa_fix_sudo_setrlimit_error
 
+sudo pacman -Syyu --noconfirm
 sudo pacman-db-upgrade
+
+# Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
+# is non-standard and can cause cellar link script to break.
+if [[ -L /usr/local/share/man ]]
+then
+    sudo rm -v /usr/local/share/man
+fi
+
+if [[ "$minimal" -eq 1 ]]
+then
+    _koopa_install_success "$name_fancy"
+    exit 0
+fi
 
 packages=(
     # pandoc
@@ -52,12 +81,5 @@ packages=(
     wget
 )
 sudo pacman -S --noconfirm "${packages[@]}"
-
-# Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
-# is non-standard and can cause cellar link script to break.
-if [[ -L /usr/local/share/man ]]
-then
-    sudo rm -v /usr/local/share/man
-fi
 
 _koopa_install_success "$name_fancy"
