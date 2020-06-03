@@ -13,7 +13,7 @@
 
 
 
-## System path  {{{1
+## System path {{{1
 ## =============================================================================
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
@@ -21,7 +21,7 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 
 
 
-## Temporary files  {{{1
+## Temporary files {{{1
 ## =============================================================================
 
 ## RStudio doesn't inherit 'TMPDIR' from current shell session, so we need to
@@ -37,7 +37,7 @@ TMPDIR="${TMPDIR-/tmp/rstudio-tmp}"
 
 
 
-## Miscellaneous  {{{1
+## Miscellaneous {{{1
 ## =============================================================================
 
 ## Alternatively, can use '/usr/bin/pager' here instead.
@@ -60,7 +60,7 @@ TZ="America/New_York"
 
 
 
-## R check  {{{1
+## R check {{{1
 ## =============================================================================
 
 ## Environment variables that control the behavior of R / 'R CMD check'.
@@ -112,7 +112,7 @@ export _R_CHECK_S3_METHODS_NOT_REGISTERED_=true
 
 
 
-## GitHub remote installs  {{{1
+## GitHub remote installs {{{1
 ## =============================================================================
 
 ## Always upgrade GitHub R packages, without prompting.
@@ -121,7 +121,7 @@ R_REMOTES_UPGRADE="always"
 
 
 
-## Package library  {{{1
+## Package library {{{1
 ## =============================================================================
 
 ## General:
@@ -147,12 +147,12 @@ R_REMOTES_UPGRADE="always"
 ## - `.Library`
 ## - `.Library.site`
 
-## Site library  {{{2
+## Site library {{{2
 ## -----------------------------------------------------------------------------
 
 R_LIBS_SITE="${R_HOME}/site-library"
 
-## User library  {{{2
+## User library {{{2
 ## -----------------------------------------------------------------------------
 
 ## Linux default:
@@ -169,7 +169,7 @@ R_LIBS_SITE="${R_HOME}/site-library"
 ## Set this per-user via `%p` and `%v` for platform and version.
 ## > R_LIBS_USER="${R_LIBS_USER-'~/R/@R_PLATFORM@-library/@MAJ_MIN_VERSION@'}"
 
-## Default packages  {{{2
+## Default packages {{{2
 ## -----------------------------------------------------------------------------
 
 ## Example of setting `R_DEFAULT_PACKAGES` (from `R CMD check`).
@@ -179,10 +179,10 @@ R_LIBS_SITE="${R_HOME}/site-library"
 
 
 
-## Package-specific  {{{1
+## Package-specific {{{1
 ## =============================================================================
 
-## ROracle  {{{2
+## ROracle {{{2
 ## -----------------------------------------------------------------------------
 
 ## This requires installation of the Oracle Database Instant Client.
@@ -223,7 +223,7 @@ OCI_LIB="${ORACLE_HOME}/lib"
 TNS_ADMIN="${ORACLE_HOME}/network/admin"
 PATH="${PATH}:${ORACLE_HOME}/bin"
 
-## reticulate  {{{2
+## reticulate {{{2
 ## -----------------------------------------------------------------------------
 
 ## The reticulate package allows you to run Python code inside of R.

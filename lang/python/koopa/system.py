@@ -33,6 +33,16 @@ def assert_is_not_file(path):
         sys.exit(0)
 
 
+def assert_is_dir(path):
+    """
+    Does the input contain a file?
+    Updated 2020-06-03.
+    """
+    if not os.path.isdir(path):
+        print("Error: Not directory: '" + path + "'")
+        sys.exit(0)
+
+
 def assert_is_file(path):
     """
     Does the input contain a file?
@@ -81,6 +91,16 @@ def init_dir(name):
     Updated 2019-10-06.
     """
     os.makedirs(name=name, exist_ok=True)
+
+
+def koopa_prefix():
+    """
+    Koopa prefix (home).
+    Updated 2020-06-03.
+    """
+    path = os.path.realpath(os.path.join(__file__, "..", "..", "..", ".."))
+    assert_is_dir(path)
+    return path
 
 
 def paste_url(*args):

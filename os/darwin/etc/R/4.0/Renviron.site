@@ -10,13 +10,13 @@
 
 
 
-## System path  {{{1
+## System path {{{1
 ## =============================================================================
 
 ## Restrict path, so we don't mask compiler binaries with conda or venv.
 PATH="/usr/local/bin:/usr/bin:/bin"
 
-## CRAN developer tools  {{{2
+## CRAN developer tools {{{2
 ## -----------------------------------------------------------------------------
 
 ## Refer to CRAN website for details:
@@ -37,7 +37,7 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 ## gfortran 8.2 (for R 4.0+).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
-## Pandoc  {{{2
+## Pandoc {{{2
 ## -----------------------------------------------------------------------------
 
 ## Use RStudio bundled version of pandoc, for improved R Markdown stability.
@@ -45,7 +45,7 @@ PATH="/Applications/RStudio.app/Contents/MacOS/pandoc:${PATH}"
 
 
 
-## Package library path  {{{1
+## Package library path {{{1
 ## =============================================================================
 
 R_LIBS_SITE="${R_HOME}/site-library"
@@ -53,7 +53,7 @@ R_LIBS_USER="~/Library/R/%v/library"
 
 
 
-## Package configuration  {{{1
+## Package configuration {{{1
 ## =============================================================================
 
 ## LAPACK.
@@ -67,7 +67,7 @@ PKG_CONFIG_PATH="/usr/local/opt/imagemagick/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 
 
-## Miscellaneous useful defaults  {{{1
+## Miscellaneous useful defaults {{{1
 ## =============================================================================
 
 ## Increase this for large single-cell RNA-seq projects.
@@ -80,15 +80,15 @@ TZ="America/New_York"
 
 
 
-## Package-specific  {{{1
+## Package-specific {{{1
 ## =============================================================================
 
-## libxml2  {{{2
+## libxml2 {{{2
 ## -----------------------------------------------------------------------------
 
 XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
 
-## remotes  {{{2
+## remotes {{{2
 ## -----------------------------------------------------------------------------
 
 ## GitHub remote installs.
@@ -96,7 +96,7 @@ XML_CONFIG="/usr/local/opt/libxml2/bin/xml2-config"
 ## See `remotes::update_packages()` for details.
 R_REMOTES_UPGRADE="always"
 
-## reticulate  {{{2
+## reticulate {{{2
 ## -----------------------------------------------------------------------------
 
 ## Reticulate allows you to run Python code inside of R.
@@ -111,7 +111,7 @@ R_REMOTES_UPGRADE="always"
 ## https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
 WORKON_HOME="/usr/local/koopa/opt/python/virtualenvs"
 
-## units / udunits  {{{2
+## units / udunits {{{2
 ## -----------------------------------------------------------------------------
 
 ## The units package requires udunits to be installed.

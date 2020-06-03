@@ -6,7 +6,7 @@ RefSeq genome utilities.
 import os
 
 from koopa.genome import _genome_version
-from koopa.sys import download, paste_url
+from koopa.system import download, paste_url
 
 
 def download_refseq_genome(build, release_url, output_dir, decompress):

@@ -89,7 +89,7 @@ _koopa_dl "bowtie2" "$(_koopa_which_realpath bowtie2)"
 fastq_dir="$(realpath "$fastq_dir")"
 _koopa_dl "fastq dir" "$fastq_dir"
 
-# Sample array from FASTQ files  {{{1
+# Sample array from FASTQ files {{{1
 # ==============================================================================
 
 # Create a per-sample array from the R1 FASTQ files.
@@ -116,7 +116,7 @@ fi
 
 _koopa_info "${#fastq_r1_files[@]} samples detected."
 
-# Index  {{{1
+# Index {{{1
 # ==============================================================================
 
 # Generate the genome index on the fly, if necessary.
@@ -132,7 +132,7 @@ fi
 
 _koopa_dl "index" "$index_dir"
 
-# Alignment  {{{1
+# Alignment {{{1
 # ==============================================================================
 
 # Loop across the per-sample array and align.

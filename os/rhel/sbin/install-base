@@ -18,7 +18,7 @@ name_fancy="Red Hat Enterprise Linux (RHEL) base system"
 
 _koopa_install_start "$name_fancy"
 
-# default  {{{1
+# default {{{1
 # ==============================================================================
 
 _koopa_h2 "Installing default packages."
@@ -28,7 +28,7 @@ sudo dnf -y install dnf-plugins-core util-linux-user
 sudo dnf config-manager --set-enabled PowerTools
 enable-epel
 
-# developer  {{{1
+# developer {{{1
 # ==============================================================================
 
 if [[ "$dev" -eq 1 ]]
@@ -41,7 +41,7 @@ then
     sudo dnf -y install "${pkgs[@]}"
 fi
 
-# extra  {{{1
+# extra {{{1
 # ==============================================================================
 
 if [[ "$extra" -eq 1 ]]
