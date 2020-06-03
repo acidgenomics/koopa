@@ -223,7 +223,8 @@ then
     then
         flags+=(-e -i "${koopa_prefix}")
     fi
-    read "${flags[@]}" koopa_prefix
+    read "${flags[@]}" choice
+    koopa_prefix="${choice:-$koopa_prefix}"
     _koopa_print
 fi
 
