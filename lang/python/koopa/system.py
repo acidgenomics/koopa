@@ -12,15 +12,6 @@ import sys
 from koopa.shell import shell
 
 
-def koopa_prefix():
-    """
-    Koopa prefix (home).
-    Updated 2020-06-03.
-    """
-    out = os.path.realpath(os.path.join(__file__, "..", ".."))
-    return out
-
-
 def arg_string(*args):
     """
     Concatenate args into a string suitable for use in shell commands.
@@ -39,6 +30,16 @@ def assert_is_not_file(path):
     """
     if os.path.isfile(path):
         print("Error: File exists: '" + path + "'")
+        sys.exit(0)
+
+
+def assert_is_dir(path):
+    """
+    Does the input contain a file?
+    Updated 2020-06-03.
+    """
+    if not os.path.isdir(path):
+        print("Error: Not directory: '" + path + "'")
         sys.exit(0)
 
 
@@ -90,6 +91,16 @@ def init_dir(name):
     Updated 2019-10-06.
     """
     os.makedirs(name=name, exist_ok=True)
+
+
+def koopa_prefix():
+    """
+    Koopa prefix (home).
+    Updated 2020-06-03.
+    """
+    path = os.path.realpath(os.path.join(__file__, "..", "..", "..", ".."))
+    assert_is_dir(path)
+    return path
 
 
 def paste_url(*args):
