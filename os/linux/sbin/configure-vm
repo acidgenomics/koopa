@@ -124,23 +124,6 @@ sudo rm -frv /etc/skel
 # > sudo mkdir -pv /etc/skel
 # > sudo chmod 0755 /etc/skel
 
-# Remove default root user configuration for Docker images. This in particular
-# is helpful for removing dotfiles that can alter the shell environment.
-if [[ "$docker" -eq 1 ]]
-then
-    sudo rm -frv /root
-    sudo mkdir -pv /root
-    sudo chmod 0700 /root
-    # Reactivate koopa for root user, since we removed local config files above.
-    # shellcheck disable=SC1090,SC2153
-    if [[ "$(id -u)" -eq 0 ]]
-    then
-        set +u
-        source "${KOOPA_PREFIX}/activate"
-        set -u
-    fi
-fi
-
 if [[ "$minimal" -eq 1 ]]
 then
     _koopa_success "Configuration completed successfully."
