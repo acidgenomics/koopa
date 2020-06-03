@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-03-07.
+    Updated 2020-06-03.
 EOF
 }
 
@@ -155,8 +155,10 @@ then
         shared=1
         if [[ "$interactive" -eq 1 ]]
         then
-            prompt="Install for all users? [${yes_default}/${no}]: "
             # Alternatively, can use '-n 1' for single letter 'y/n' prompt.
+            prompt="Install for all users? [${yes_default}/${no}]: "
+            exec </dev/tty >/dev/tty
+            nl "$INPUT"
             read \
                 -e \
                 -i "yes" \
@@ -172,7 +174,7 @@ then
                     shared=0
                     ;;
                 *)
-                    _koopa_invalid_arg "$1"
+                    _koopa_stop "Invalid choice."
                     ;;
             esac
         fi
@@ -194,6 +196,8 @@ fi
 if [[ "$interactive" -eq 1 ]]
 then
     prompt="Install prefix: "
+    exec </dev/tty >/dev/tty
+    nl "$INPUT"
     read \
         -e \
         -i "${koopa_prefix}" \
@@ -278,6 +282,8 @@ if _koopa_is_linux && \
     [[ "$shared" -eq 1 ]]
 then
     prompt="Enable passwordless sudo? [${yes}/${no_default}]: "
+    exec </dev/tty >/dev/tty
+    nl "$INPUT"
     read \
         -e \
         -i "no" \
@@ -293,7 +299,7 @@ then
             passwordless=0
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _koopa_stop "Invalid choice."
             ;;
     esac
 fi
@@ -316,6 +322,8 @@ then
         _koopa_note "This will be overwritten if dot files are linked."
     fi
     prompt="Link dot files? [${yes_default}/${no}]: "
+    exec </dev/tty >/dev/tty
+    nl "$INPUT"
     read \
         -e \
         -i "yes" \
@@ -331,7 +339,7 @@ then
             dotfiles=0
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            _koopa_stop "Invalid choice."
             ;;
     esac
 fi
@@ -354,6 +362,8 @@ then
         file="$(_koopa_find_user_profile)"
         _koopa_note "Koopa activation code needs to be added to '${file}'."
         prompt="Modify '${file}'? [${yes_default}/${no}]: "
+        exec </dev/tty >/dev/tty
+        nl "$INPUT"
         read \
             -e \
             -i "yes" \
@@ -369,7 +379,7 @@ then
                 profile=0
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                _koopa_stop "Invalid choice."
                 ;;
         esac
         if [[ "$profile" -eq 0 ]]
