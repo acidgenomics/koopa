@@ -87,9 +87,9 @@ _koopa_add_user_to_group() {  # {{{1
 _koopa_data_disk_check() {  # {{{1
     # """
     # Check data disk configuration.
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-06-03.
     # """
-
+    _koopa_is_linux || return 0
     # e.g. '/n'.
     local data_disk_link_prefix
     data_disk_link_prefix="$(_koopa_data_disk_link_prefix)"
@@ -97,7 +97,6 @@ _koopa_data_disk_check() {  # {{{1
     then
         _koopa_warning "Data disk link error: '${data_disk_link_prefix}'."
     fi
-
     # e.g. '/usr/local/opt'.
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
@@ -105,7 +104,6 @@ _koopa_data_disk_check() {  # {{{1
     then
         _koopa_warning "App prefix link error: '${app_prefix}'."
     fi
-
     return 0
 }
 
