@@ -429,19 +429,25 @@ KOOPA_ACTIVATE_DIR="${KOOPA_PREFIX}/system/activate"
 # Minimal configuration {{{1
 # ==============================================================================
 
-# Bad settings {{{2
-# ------------------------------------------------------------------------------
-
-# Note that we're skipping this checks inside RStudio shell.
+# Note that we're skipping this check inside RStudio shell.
 if [ -z "${RSTUDIO:-}" ]
 then
     _koopa_warn_if_export JAVA_HOME LD_LIBRARY_PATH PYTHONHOME R_HOME
 fi
 
-. "${KOOPA_ACTIVATE_DIR}/minimal.sh"
+_koopa_export_group
+_koopa_export_hostname
+_koopa_export_ostype
+_koopa_export_shell
+_koopa_export_tmpdir
+_koopa_export_today
+_koopa_export_user
+_koopa_export_history
+_koopa_export_cpu_count
+_koopa_export_pkg_config_path
+_koopa_export_proj_lib
 
 _koopa_activate_xdg
-# FIXME Consolidate this with '_koopa_activate_xdg'? Redundant?
 _koopa_update_xdg_config
 _koopa_activate_standard_paths
 _koopa_activate_koopa_paths
