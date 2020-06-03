@@ -1,44 +1,33 @@
 #!/bin/sh
 
+_koopa_export_group() {  # {{{1
+    # """
+    # Export GROUP.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${GROUP:-}" ]
+    then
+        GROUP="$(id -gn)"
+    fi
+    export GROUP
+    return 0
+}
 
+_koopa_export_hostname() {  # {{{1
+    # """
+    # Export HOSTNAME.
+    # @note Updated 2020-06-03.
+    # """
+    if [ -z "${HOSTNAME:-}" ]
+    then
+        HOSTNAME="$(uname -n)"
+    fi
+    export HOSTNAME
+    return 0
+}
 
-# Pre-flight checks {{{1
-# ==============================================================================
-
-# Bad settings {{{2
-# ------------------------------------------------------------------------------
-
-# Note that we're skipping this checks inside RStudio shell.
-if [ -z "${RSTUDIO:-}" ]
-then
-    _koopa_warn_if_export JAVA_HOME LD_LIBRARY_PATH PYTHONHOME R_HOME
-fi
-
-
-
-# Standard globals {{{1
-# ==============================================================================
-
-# This variables are used by some koopa scripts, so ensure they're always
-# consistently exported across platforms.
-
-# GROUP {{{2
-# ------------------------------------------------------------------------------
-
-if [ -z "${GROUP:-}" ]
-then
-    GROUP="$(id -gn)"
-fi
-export GROUP
-
-# HOSTNAME {{{2
-# ------------------------------------------------------------------------------
-
-if [ -z "${HOSTNAME:-}" ]
-then
-    HOSTNAME="$(uname -n)"
-fi
-export HOSTNAME
+_koopa_export_group
+_koopa_export_hostname
 
 # OSTYPE {{{2
 # ------------------------------------------------------------------------------
@@ -188,24 +177,3 @@ then
         export PROJ_LIB
     fi
 fi
-
-
-
-# Activation functions {{{1
-# ==============================================================================
-
-_koopa_activate_xdg
-_koopa_update_xdg_config
-_koopa_activate_standard_paths
-_koopa_activate_koopa_paths
-_koopa_activate_homebrew
-# This function can cause shell lockout on Ubuntu 20.
-# > _koopa_activate_local_etc_profile
-_koopa_activate_dircolors
-_koopa_activate_gcc_colors
-_koopa_activate_dotfiles
-_koopa_activate_emacs
-_koopa_activate_go
-_koopa_activate_openjdk
-_koopa_activate_pipx
-_koopa_activate_ruby
