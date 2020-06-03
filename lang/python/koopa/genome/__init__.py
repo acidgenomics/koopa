@@ -7,17 +7,15 @@ import os
 import subprocess
 
 from koopa.shell import shell
-from koopa.system import arg_string
+from koopa.system import arg_string, koopa_prefix
 
 
-# FIXME This needs to use koopa path.
-# koopa_prefix/bin/XXX
 def _genome_version(name, *args):
     """
     Internal shared genome version fetcher.
-    Updated 2020-02-09.
+    Updated 2020-06-03.
     """
-    cmd = "current-" + name + "-version"
+    cmd = os.path.join(koopa_prefix(), "bin", "current-" + name + "-version")
     args = arg_string(*args)
     if args is not None:
         cmd = cmd + args
@@ -26,18 +24,16 @@ def _genome_version(name, *args):
     return out
 
 
-# FIXME This needs to use koopa path.
-# kopoa_prefix/bin/XXX
 def tx2gene_from_fasta(source_name, output_dir):
     """
     Generate tx2gene.csv mapping file from transcriptome FASTA.
-    Updated 2020-02-19.
+    Updated 2020-06-03.
 
     Note that this function is currently called by genome download scripts, and
     assumes that output_dir has a specific structure, containing a
     "transcriptome" subdirectory with the FASTA.
     """
-    cmd = "tx2gene-from-" + source_name + "-fasta"
+    cmd = os.path.join(koopa_prefix(), "bin", "tx2gene-from-" + source_name + "-fasta")
     transcriptome_dir = os.path.join(output_dir, "transcriptome")
     input_file = os.path.join(transcriptome_dir, "*.fa*.gz")
     output_file = os.path.join(transcriptome_dir, "tx2gene.csv")
