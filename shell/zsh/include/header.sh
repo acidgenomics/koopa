@@ -87,6 +87,13 @@ source "${KOOPA_PREFIX}/shell/posix/include/header.sh"
 # >     # shellcheck source=/dev/null
 # >     [[ -f "$file" ]] && source "$file"
 # > done
+#
+# Source Zsh functions.
+for file in "${KOOPA_PREFIX}/shell/zsh/functions/"*".sh"
+do
+    # shellcheck source=/dev/null
+    [[ -f "$file" ]] && source "$file"
+done
 
 # Source Bash and Zsh shared functions.
 for file in "${KOOPA_PREFIX}/shell/bash-and-zsh/functions/"*".sh"

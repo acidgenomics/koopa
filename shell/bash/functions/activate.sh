@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-_koopa_activate_bash() {  # {{{1
+_koopa_activate_bash_extras() {  # {{{1
     # """
-    # Activate Bash shell.
+    # Activate Bash shell extras.
     # @note Updated 2020-06-03.
     # """
     # Correct minor directory changing spelling mistakes.
