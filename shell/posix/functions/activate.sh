@@ -461,16 +461,21 @@ _koopa_activate_homebrew_python() {
 _koopa_activate_koopa_paths() {  # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-06-03.
     # """
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
+    _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
+    local config_prefix
+    config_prefix="$(_koopa_config_prefix)"
+    local host_id
+    host_id="$(_koopa_host_id)"
+    local os_id
+    os_id="$(_koopa_os_id)"
+    local shell
+    shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
-
-    local koopa_shell
-    koopa_shell="$(_koopa_shell)"
-    _koopa_activate_prefix "${koopa_prefix}/shell/${koopa_shell}"
-
+    _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"
     if _koopa_is_linux
     then
         _koopa_activate_prefix "${koopa_prefix}/os/linux"
@@ -486,23 +491,11 @@ _koopa_activate_koopa_paths() {  # {{{1
             _koopa_activate_prefix "${koopa_prefix}/os/rhel"
         fi
     fi
-
-    local os_id
-    os_id="$(_koopa_os_id)"
     _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
-
-    local host_id
-    host_id="$(_koopa_host_id)"
     _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
-
-    local config_prefix
-    config_prefix="$(_koopa_config_prefix)"
     _koopa_activate_prefix "${config_prefix}/docker"
     _koopa_activate_prefix "${config_prefix}/scripts-private"
-
-    # Defunct scripts.
     _koopa_add_to_path_end "${koopa_prefix}/system/defunct/bin"
-
     return 0
 }
 
