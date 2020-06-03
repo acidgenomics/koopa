@@ -33,7 +33,9 @@ def tx2gene_from_fasta(source_name, output_dir):
     assumes that output_dir has a specific structure, containing a
     "transcriptome" subdirectory with the FASTA.
     """
-    cmd = os.path.join(koopa_prefix(), "bin", "tx2gene-from-" + source_name + "-fasta")
+    cmd = os.path.join(
+        koopa_prefix(), "bin", "tx2gene-from-" + source_name + "-fasta"
+    )
     transcriptome_dir = os.path.join(output_dir, "transcriptome")
     input_file = os.path.join(transcriptome_dir, "*.fa*.gz")
     output_file = os.path.join(transcriptome_dir, "tx2gene.csv")
