@@ -34,12 +34,13 @@ EOF
 # ==============================================================================
 
 # Check if script is interactive, following recommendations from 'man bash'.
-if [[ "$-" == *i* ]]
-then
-    interactive=1
-else
-    interactive=0
-fi
+# > if [[ "$-" == *i* ]]
+# > then
+# >     interactive=1
+# > else
+# >     interactive=0
+# > fi
+interactive=1
 
 dotfiles=1
 koopa_prefix=
