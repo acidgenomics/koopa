@@ -224,7 +224,7 @@ pass="1.7.3"
 patch="2.7.6"
 
 # https://www.perl.org/get.html
-perl="5.30.1"
+perl="5.30.3"
 
 # https://perlbrew.pl/
 perlbrew="0.88"
@@ -377,7 +377,7 @@ ensembl-perl="5.26.3"
 
 macos-app-alacritty="0.4.3"
 macos-app-aspera-connect="3.9.9"
-macos-app-bbedit="13.0.6"
+macos-app-bbedit="13.1"
 macos-app-bibdesk="1.7.4"
 macos-app-docker="2.3.0.3"
 macos-app-firefox="76.0.1"
