@@ -192,11 +192,13 @@ _koopa_find_and_replace_in_files() {  # {{{1
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-03.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
+    _koopa_assert_has_gnu_findutils
+
     local dir
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
@@ -219,13 +221,15 @@ _koopa_find_broken_symlinks() {  # {{{1
 _koopa_find_dotfiles() {  # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-03.
     #
     # This is used internally by 'list-dotfiles' script.
     #
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
+    _koopa_assert_has_gnu_findutils
+
     local type
     type="${1:?}"
 
@@ -252,8 +256,10 @@ _koopa_find_dotfiles() {  # {{{1
 _koopa_find_empty_dirs() {  # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-03.
     # """
+    _koopa_assert_has_gnu_findutils
+
     local dir
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
@@ -302,7 +308,7 @@ _koopa_find_large_dirs() {  # {{{1
 _koopa_find_large_files() {  # {{{1
     # """
     # Find large files.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-03.
     #
     # Note that use of 'grep --null-data' requires GNU grep.
     #
@@ -311,6 +317,8 @@ _koopa_find_large_files() {  # {{{1
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
+    _koopa_assert_has_gnu_findutils
+
     local dir
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
@@ -338,11 +346,13 @@ _koopa_find_large_files() {  # {{{1
 _koopa_find_non_cellar_make_files() {  # {{{1
     # """
     # Find non-cellar make files.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-03.
     #
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
+    _koopa_assert_has_gnu_findutils
+
     local prefix
     prefix="$(_koopa_make_prefix)"
 
@@ -367,13 +377,15 @@ _koopa_find_non_cellar_make_files() {  # {{{1
 _koopa_find_text() {  # {{{1
     # """
     # Find text in any file.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-03.
     #
     # See also: https://github.com/stephenturner/oneliners
     #
     # Examples:
     # _koopa_find_text "mytext" *.txt
     # """
+    _koopa_assert_has_gnu_findutils
+
     local pattern
     pattern="${1:?}"
 
