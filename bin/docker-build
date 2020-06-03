@@ -7,7 +7,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
 # """
 # Build and push a docker image.
-# Updated 2020-02-18.
+# Updated 2020-06-02.
 #
 # Use '--no-cache' flag to disable build cache.
 #
@@ -24,6 +24,7 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 docker_dir="$(_koopa_docker_prefix)"
 _koopa_assert_is_dir "$docker_dir"
 
+push=1
 server="docker.io"
 tag="latest"
 
@@ -31,6 +32,10 @@ pos=()
 while (("$#"))
 do
     case "$1" in
+        --no-push)
+            push=0
+            shift 1
+            ;;
         --server=*)
             server="${1#*=}"
             shift 1
@@ -96,8 +101,11 @@ docker build \
 
 docker tag "$tagged_image_today" "$tagged_image"
 
-docker push "${server}/${tagged_image_today}"
-docker push "${server}/${tagged_image}"
+if [[ "$push" -eq 1 ]]
+then
+    docker push "${server}/${tagged_image_today}"
+    docker push "${server}/${tagged_image}"
+fi
 
 docker image ls \
     --filter reference="$tagged_image"

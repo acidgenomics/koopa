@@ -8,11 +8,13 @@ dev=1
 extra=1
 upgrade=1
 
+_koopa_assert_has_no_args "$@"
+
 _koopa_is_docker && extra=0
 
-_koopa_h1 "Installing Fedora base system."
+name_fancy="Fedora base system"
 
-_koopa_assert_is_installed sudo
+_koopa_install_start "$name_fancy"
 
 # Upgrade  {{{1
 # ==============================================================================
@@ -153,3 +155,5 @@ then
 fi
 
 sudo dnf -y install "${pkgs[@]}"
+
+_koopa_install_success "$name_fancy"

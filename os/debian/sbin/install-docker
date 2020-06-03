@@ -23,7 +23,6 @@ _koopa_install_start "$name_fancy"
 
 _koopa_assert_has_no_args "$@"
 
-_koopa_apt_import_docker_key
 _koopa_apt_add_docker_repo
 
 # Ready to install Docker.
