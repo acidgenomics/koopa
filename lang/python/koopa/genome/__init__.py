@@ -7,9 +7,11 @@ import os
 import subprocess
 
 from koopa.shell import shell
-from koopa.sys import arg_string
+from koopa.system import arg_string
 
 
+# FIXME This needs to use koopa path.
+# koopa_prefix/bin/XXX
 def _genome_version(name, *args):
     """
     Internal shared genome version fetcher.
@@ -24,6 +26,8 @@ def _genome_version(name, *args):
     return out
 
 
+# FIXME This needs to use koopa path.
+# kopoa_prefix/bin/XXX
 def tx2gene_from_fasta(source_name, output_dir):
     """
     Generate tx2gene.csv mapping file from transcriptome FASTA.

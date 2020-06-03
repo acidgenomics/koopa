@@ -7,7 +7,7 @@ import os
 
 from koopa.genome import _genome_version
 from koopa.shell import shell
-from koopa.sys import (
+from koopa.system import (
     decompress_but_keep_original,
     download,
     paste_url,
