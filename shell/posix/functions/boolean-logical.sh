@@ -344,10 +344,11 @@ _koopa_is_fedora() {  # {{{1
 _koopa_is_file_system_case_sensitive() {  # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-06-03.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
+    _koopa_assert_has_gnu_findutils
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$(find . -maxdepth 1 -iname '.tmp.checkcase' | wc -l)"
     _koopa_quiet_rm '.tmp.check'*
@@ -583,7 +584,7 @@ _koopa_is_recent() {
     # """
     # If the file exists and is more recent than 2 weeks old.
     #
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-06-03.
     #
     # Current approach uses GNU find to filter based on modification date.
     #
@@ -596,6 +597,7 @@ _koopa_is_recent() {
     # @examples
     # _koopa_is_recent ~/hello-world.txt
     # """
+    _koopa_assert_has_gnu_findutils
     local file
     file="${1:?}"
     local days
