@@ -276,12 +276,17 @@ set +u
 force=1 test="$test" source "${koopa_prefix}/activate"
 set -u
 
-# Check that forced re-activation was successful.
-if [[ -z "${KOOPA_PREFIX:-}" ]]
+# Check that prefix is set correctly.
+if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
 then
-    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
+    >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.\n"
+    >&2 printf "Expected: %s\n" "$koopa_prefix"
+    >&2 printf "Actual: %s\n" "$KOOPA_PREFIX"
+    >&2 printf "PWD: %s\n" "$PWD"
+    >&2 printf "BASH_SOURCE: %s\n" "${BASH_SOURCE[0]}"
     exit 1
 fi
+
 
 # Check that activation puts koopa into PATH, as expected.
 if ! _koopa_is_installed koopa
@@ -362,12 +367,6 @@ then
             ;;
     esac
 fi
-
-echo "$(_koopa_prefix)"
-echo "$(_koopa_config_prefix)"
-echo "$KOOPA_PREFIX"
-echo "FIXME"
-exit 0
 
 if [[ "$dotfiles" -eq 1 ]]
 then
