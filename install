@@ -45,7 +45,7 @@ interactive=1
 dotfiles=1
 koopa_prefix=
 passwordless=0
-profile=1
+profile=0
 shared=0
 test=0
 
@@ -373,8 +373,6 @@ then
     _koopa_install_dotfiles
 fi
 
-echo "FIXME OK 1"
-
 
 
 # User profile {{{1
@@ -384,8 +382,6 @@ if ! _koopa_is_defined_in_user_profile
 then
     if [[ "$interactive" -eq 1 ]]
     then
-        echo "FIXME NOOOO"
-    
         file="$(_koopa_find_user_profile)"
         _koopa_note "Koopa activation code needs to be added to '${file}'."
         prompt="Modify '${file}'? [${yes_default}/${no}]: "
@@ -415,7 +411,6 @@ then
             _koopa_note "Refer to '${url}' for manual instructions."
         fi
     else
-        echo "FIXME AHHHH"
         profile=1
     fi
 fi
@@ -427,9 +422,12 @@ fi
 # Final steps and return {{{1
 # ==============================================================================
 
-# Some config files, such as '.lintr' and '.pylintrc' will be missing unless
-# we clone the dotfiles repo (see above).
-_koopa_remove_broken_symlinks "$koopa_prefix"
+if [[ "$bash_ok" -eq 1 ]]
+then
+    # Some config files, such as '.lintr' and '.pylintrc' will be missing unless
+    # we clone the dotfiles repo (see above).
+    _koopa_remove_broken_symlinks "$koopa_prefix"
+fi
 
 _koopa_update_etc_profile_d
 _koopa_fix_zsh_permissions
