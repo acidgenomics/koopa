@@ -130,9 +130,8 @@ _koopa_delete_dotfile() {  # {{{1
 _koopa_enable_passwordless_sudo() {  # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-04.
     # """
-    _koopa_is_linux || return 1
     _koopa_is_root && return 0
     local group
     group="$(_koopa_group)"
