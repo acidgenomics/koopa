@@ -201,11 +201,6 @@ then
     unset -v force
 fi
 
-if [ "$KOOPA_FORCE" -eq 1 ]
-then
-    echo "FIXME OK"
-fi
-
 # Skip activation {{{2
 # ------------------------------------------------------------------------------
 
@@ -400,6 +395,11 @@ fi
 # resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
 KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_ACTIVATE_SCRIPT")")"
 export KOOPA_PREFIX
+
+echo "FIXME OK"
+echo "KOOPA_PREFIX: $KOOPA_PREFIX"
+echo "BASH_SOURCE: ${BASH_SOURCE[0]}"
+echo "koopa_prefix: $(_koopa_prefix)"
 
 
 
