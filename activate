@@ -401,16 +401,6 @@ export KOOPA_PREFIX
 # Start activation {{{1
 # ==============================================================================
 
-if [ "$KOOPA_TEST" -eq 1 ]
-then
-    if [ "$(uname -s)" = "Darwin" ]
-    then
-        KOOPA_DURATION_START="$(gdate -u +%s%3N)"
-    else
-        KOOPA_DURATION_START="$(date -u +%s%3N)"
-    fi
-fi
-
 # Load shell header file, which will source required functions.
 if [ -f "${KOOPA_PREFIX}/shell/${KOOPA_SHELL}/include/header.sh" ]
 then
@@ -420,6 +410,14 @@ else
 fi
 activate=1 . "$header"
 unset -v header
+
+if [ "$KOOPA_TEST" -eq 1 ]
+then
+    if _koopa_is_linux && _koopa_is_installed bc date
+    then
+        KOOPA_DURATION_START="$(date -u +%s%3N)"
+    fi
+fi
 
 
 
@@ -536,23 +534,18 @@ fi
 
 if [ "$KOOPA_TEST" -eq 1 ]
 then
-    if [ "$(uname -s)" = "Darwin" ]
+    if _koopa_is_linux && _koopa_is_installed bc date
     then
-        KOOPA_DURATION_STOP="$(gdate -u +%s%3N)"
-    else
         KOOPA_DURATION_STOP="$(date -u +%s%3N)"
-    fi
-    # Calculate the duration.
-    # Note that bc isn't installed on all Docker images, and can error out.
-    if _koopa_is_installed bc
-    then
+        # Calculate the duration.
+        # Note that bc isn't installed on all Docker images, and can error out.
         KOOPA_DURATION="$( \
             printf '%s\n' "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" \
                 | bc \
         )"
         export KOOPA_DURATION
+        unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
     fi
-    unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
 
     set +o errexit
     set +o nounset
