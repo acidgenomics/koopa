@@ -7,9 +7,8 @@
 # - http://robservatory.com/speed-up-your-mac-via-hidden-prefs/
 # - https://www.reddit.com/r/MacOS/comments/9xtg0y/
 #       switching_system_appearance_using_terminal/e9wemy8/
+# - https://johnkastler.net/2011/12/25/os-x-defaults/
 # """
-
-set -x
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
@@ -130,6 +129,114 @@ defaults write NSGlobalDomain NSWindowResizeTime .001
 # > launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
 
 
+# Dock, Dashboard, and hot corners {{{1
+# ==============================================================================
+
+# Enable highlight hover effect for the grid view of a stack (Dock).
+defaults write com.apple.dock mouse-over-hilite-stack -bool true
+
+# Set the icon size of Dock items to 36 pixels.
+defaults write com.apple.dock tilesize -int 36
+
+# Change minimize/maximize window effect.
+defaults write com.apple.dock mineffect -string "scale"
+
+# Minimize windows into their application's icon.
+defaults write com.apple.dock minimize-to-application -bool true
+
+# Enable spring loading for all Dock items.
+defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+
+# Show indicator lights for open applications in the Dock.
+defaults write com.apple.dock show-process-indicators -bool true
+
+# Don’t animate opening applications from the Dock.
+defaults write com.apple.dock launchanim -bool false
+
+# Speed up Mission Control animations.
+defaults write com.apple.dock expose-animation-duration -float 0.1
+
+# Don’t group windows by application in Mission Control.
+# (i.e. use the old Exposé behavior instead)
+defaults write com.apple.dock expose-group-by-app -bool false
+
+# Disable Dashboard.
+defaults write com.apple.dashboard mcx-disabled -bool true
+
+# Don’t show Dashboard as a Space.
+defaults write com.apple.dock dashboard-in-overlay -bool true
+
+# Don’t automatically rearrange Spaces based on most recent use.
+defaults write com.apple.dock mru-spaces -bool false
+
+# Remove the auto-hiding Dock delay.
+defaults write com.apple.dock autohide-delay -float 0
+# Remove the animation when hiding/showing the Dock.
+defaults write com.apple.dock autohide-time-modifier -float 0
+
+# Automatically hide and show the Dock.
+defaults write com.apple.dock autohide -bool true
+
+# Make Dock icons of hidden applications translucent.
+defaults write com.apple.dock showhidden -bool true
+
+# Don’t show recent applications in Dock.
+defaults write com.apple.dock show-recents -bool false
+
+# Wipe all (default) app icons from the Dock.
+# This is only really useful when setting up a new Mac, or if you don’t use
+# the Dock to launch apps.
+# > defaults write com.apple.dock persistent-apps -array
+
+# Show only open applications in the Dock.
+# > defaults write com.apple.dock static-only -bool true
+
+# Disable the Launchpad gesture (pinch with thumb and three fingers).
+# > defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
+
+# Reset Launchpad, but keep the desktop wallpaper intact.
+# > find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
+
+# Add iOS & Watch Simulator to Launchpad.
+# > sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
+# > sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
+
+# Add a spacer to the left side of the Dock (where the applications are).
+# > defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
+# Add a spacer to the right side of the Dock (where the Trash is).
+# > defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}'
+
+# Hot corners.
+# Possible values:
+#  0: no-op
+#  2: Mission Control
+#  3: Show application windows
+#  4: Desktop
+#  5: Start screen saver
+#  6: Disable screen saver
+#  7: Dashboard
+# 10: Put display to sleep
+# 11: Launchpad
+# 12: Notification Center
+# 13: Lock Screen
+
+# Top left screen corner: None
+defaults write com.apple.dock wvous-tl-corner -int 0
+defaults write com.apple.dock wvous-tl-modifier -int 0
+
+# Top right screen corner: Desktop
+defaults write com.apple.dock wvous-tr-corner -int 4
+defaults write com.apple.dock wvous-tr-modifier -int 0
+
+# Bottom left screen corner: Put display to sleep
+defaults write com.apple.dock wvous-bl-corner -int 10
+defaults write com.apple.dock wvous-bl-modifier -int 0
+
+# Bottom right screen corner: Mission Control
+defaults write com.apple.dock wvous-br-corner -int 2
+defaults write com.apple.dock wvous-br-modifier -int 0
+
+
 # Keyboard, mouse, trackpad, and other input {{{1
 # ==============================================================================
 
@@ -158,9 +265,22 @@ defaults write com.apple.universalaccess closeViewZoomFollowsFocus -bool true
 # Note that this will disable easy access to accent marks in the UI.
 defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
-# Set a blazingly fast keyboard repeat rate.
-defaults write NSGlobalDomain KeyRepeat -int 1
-defaults write NSGlobalDomain InitialKeyRepeat -int 10
+# Increase the speed of keyboard repeat rate.
+# This is very useful for keyboard-based navigation.
+#
+# Settings: System Preferences » Keyboard » Key Repeat/Delay Until Repeat
+#
+# Use the commands below to increase the key repeat rate on macOS beyond the
+# possible settings via the user interface. The changes aren't applied until you
+# restart your computer.
+#
+# Source: https://apple.stackexchange.com/a/83923
+# https://gist.github.com/hofmannsven/ff21749b0e6afc50da458bebbd9989c5
+#
+# Normal minimum here is 15 (225 ms).
+defaults write -g InitialKeyRepeat -int 10
+# Normal minimum here is 2 (30 ms). Use of 1 is crazy fast.
+defaults write -g KeyRepeat -int 2
 
 # Set text formats.
 defaults write NSGlobalDomain AppleLocale -string "en_US@currency=USD"
@@ -360,10 +480,11 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # Show item info to the right of the icons on the desktop.
 /usr/libexec/PlistBuddy -c "Set DesktopViewSettings:IconViewSettings:labelOnBottom false" ~/Library/Preferences/com.apple.finder.plist
 
-# Enable snap-to-grid for icons on the desktop and in other icon views.
-/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
-/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy grid" ~/Library/Preferences/com.apple.finder.plist
+# Sort icon views by name.
+# Alternatively, can use "grid" here for snap-to-grid.
+/usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:arrangeBy name" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:arrangeBy name" ~/Library/Preferences/com.apple.finder.plist
+/usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:arrangeBy name" ~/Library/Preferences/com.apple.finder.plist
 
 # Set grid spacing for icons on the desktop and in other icon views.
 /usr/libexec/PlistBuddy -c "Set :DesktopViewSettings:IconViewSettings:gridSpacing 100" ~/Library/Preferences/com.apple.finder.plist
@@ -399,107 +520,6 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
     General -bool true \
     OpenWith -bool true \
     Privileges -bool true
-
-
-# Dock, Dashboard, and hot corners {{{1
-# ==============================================================================
-
-# Enable highlight hover effect for the grid view of a stack (Dock).
-defaults write com.apple.dock mouse-over-hilite-stack -bool true
-
-# Set the icon size of Dock items to 36 pixels.
-defaults write com.apple.dock tilesize -int 36
-
-# Change minimize/maximize window effect.
-defaults write com.apple.dock mineffect -string "scale"
-
-# Minimize windows into their application's icon.
-defaults write com.apple.dock minimize-to-application -bool true
-
-# Enable spring loading for all Dock items.
-defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
-
-# Show indicator lights for open applications in the Dock.
-defaults write com.apple.dock show-process-indicators -bool true
-
-# Don’t animate opening applications from the Dock.
-defaults write com.apple.dock launchanim -bool false
-
-# Speed up Mission Control animations.
-defaults write com.apple.dock expose-animation-duration -float 0.1
-
-# Don’t group windows by application in Mission Control.
-# (i.e. use the old Exposé behavior instead)
-defaults write com.apple.dock expose-group-by-app -bool false
-
-# Disable Dashboard.
-defaults write com.apple.dashboard mcx-disabled -bool true
-
-# Don’t show Dashboard as a Space.
-defaults write com.apple.dock dashboard-in-overlay -bool true
-
-# Don’t automatically rearrange Spaces based on most recent use.
-defaults write com.apple.dock mru-spaces -bool false
-
-# Remove the auto-hiding Dock delay.
-defaults write com.apple.dock autohide-delay -float 0
-# Remove the animation when hiding/showing the Dock.
-defaults write com.apple.dock autohide-time-modifier -float 0
-
-# Automatically hide and show the Dock.
-defaults write com.apple.dock autohide -bool true
-
-# Make Dock icons of hidden applications translucent.
-defaults write com.apple.dock showhidden -bool true
-
-# Don’t show recent applications in Dock.
-defaults write com.apple.dock show-recents -bool false
-
-# Wipe all (default) app icons from the Dock.
-# This is only really useful when setting up a new Mac, or if you don’t use
-# the Dock to launch apps.
-# > defaults write com.apple.dock persistent-apps -array
-
-# Show only open applications in the Dock.
-# > defaults write com.apple.dock static-only -bool true
-
-# Disable the Launchpad gesture (pinch with thumb and three fingers).
-# > defaults write com.apple.dock showLaunchpadGestureEnabled -int 0
-
-# Reset Launchpad, but keep the desktop wallpaper intact.
-# > find "${HOME}/Library/Application Support/Dock" -name "*-*.db" -maxdepth 1 -delete
-
-# Add iOS & Watch Simulator to Launchpad.
-# > sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
-# > sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
-
-# Add a spacer to the left side of the Dock (where the applications are).
-# > defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
-# Add a spacer to the right side of the Dock (where the Trash is).
-# > defaults write com.apple.dock persistent-others -array-add '{tile-data={}; tile-type="spacer-tile";}'
-
-# Hot corners.
-# Possible values:
-#  0: no-op
-#  2: Mission Control
-#  3: Show application windows
-#  4: Desktop
-#  5: Start screen saver
-#  6: Disable screen saver
-#  7: Dashboard
-# 10: Put display to sleep
-# 11: Launchpad
-# 12: Notification Center
-# 13: Lock Screen
-# Top left screen corner → Mission Control
-defaults write com.apple.dock wvous-tl-corner -int 2
-defaults write com.apple.dock wvous-tl-modifier -int 0
-# Top right screen corner → Desktop
-defaults write com.apple.dock wvous-tr-corner -int 4
-defaults write com.apple.dock wvous-tr-modifier -int 0
-# Bottom left screen corner → Put display to sleep
-defaults write com.apple.dock wvous-bl-corner -int 10
-defaults write com.apple.dock wvous-bl-modifier -int 0
 
 
 # Mac App Store {{{1
