@@ -9,6 +9,8 @@
 #       switching_system_appearance_using_terminal/e9wemy8/
 # """
 
+set -x
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
@@ -855,7 +857,7 @@ for app in \
     "Tweetbot" \
     "cfprefsd"
 do
-    killall "${app}" &> /dev/null
+    killall "${app}" &>/dev/null || true
 done
 
 _koopa_success "macOS defaults were updated successfully."
