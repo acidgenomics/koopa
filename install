@@ -346,7 +346,7 @@ then
         _koopa_note "User profile exists: '${file}'."
         _koopa_note "This will be overwritten if dot files are linked."
     fi
-    prompt="Link dot files? [${yes_default}/${no}]: "
+    prompt="Install and link dot files? [${yes_default}/${no}]: "
     flags=(-r -p "$prompt")
     if [[ "$bash_ok" -eq 1 ]]
     then
