@@ -361,7 +361,6 @@ export KOOPA_TEST
 
 case "$KOOPA_SHELL" in
     bash)
-        echo "FIXME OKKKKK"
         # shellcheck disable=SC2039
         KOOPA_ACTIVATE_SCRIPT="${BASH_SOURCE[0]}"
         ;;
@@ -369,7 +368,6 @@ case "$KOOPA_SHELL" in
         KOOPA_ACTIVATE_SCRIPT="${(%):-%N}"
         ;;
     *)
-        echo "FIXME NOOOOOO"
         # POSIX doesn't support file path resolution of sourced dot scripts.
         if [ "$KOOPA_INTERACTIVE" -eq 1 ] && [ ! -d "${KOOPA_PREFIX:?}" ]
         then
@@ -395,13 +393,17 @@ fi
 
 # Note that running realpath on the file instead of the directory will properly
 # resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
-KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_ACTIVATE_SCRIPT")")"
+
+# FIXME THIS ISN'T WORKING ON MACOS CLEAN INSTALL.
+# > KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_ACTIVATE_SCRIPT")")"
+
+KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
 export KOOPA_PREFIX
 
 echo "FIXME OK"
+echo "KOOPA_PREFIX: $KOOPA_PREFIX"
 echo "KOOPA_ACTIVATE_SCRIPT: $KOOPA_ACTIVATE_SCRIPT"
 echo "KOOPA_SHELL: $KOOPA_SHELL"
-echo "KOOPA_PREFIX: $KOOPA_PREFIX"
 echo "BASH_SOURCE: ${BASH_SOURCE[0]}"
 
 
