@@ -379,9 +379,11 @@ case "$KOOPA_SHELL" in
         ;;
 esac
 
-if ! command -v realpath >/dev/null
+# Note that running realpath on the file instead of the directory will properly
+# resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
+if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
 then
-    realpath() {
+    _koopa_realpath() {
         if [ "$(uname -s)" = "Darwin" ]
         then
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
@@ -389,22 +391,11 @@ then
             readlink -f "$@"
         fi
     }
+    KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_ACTIVATE_SCRIPT")")"
+else
+    KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
 fi
-
-# Note that running realpath on the file instead of the directory will properly
-# resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
-
-# FIXME THIS ISN'T WORKING ON MACOS CLEAN INSTALL.
-# > KOOPA_PREFIX="$(dirname "$(realpath "$KOOPA_ACTIVATE_SCRIPT")")"
-
-KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
 export KOOPA_PREFIX
-
-echo "FIXME OK"
-echo "KOOPA_PREFIX: $KOOPA_PREFIX"
-echo "KOOPA_ACTIVATE_SCRIPT: $KOOPA_ACTIVATE_SCRIPT"
-echo "KOOPA_SHELL: $KOOPA_SHELL"
-echo "BASH_SOURCE: ${BASH_SOURCE[0]}"
 
 
 
