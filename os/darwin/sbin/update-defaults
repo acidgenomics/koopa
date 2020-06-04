@@ -312,6 +312,32 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 # Check current settings.
 # > pmset -g
 
+# Restore power management defaults.
+# > pmset -c 2 -b 1 -u 1; pmset -g
+
+# MacBook Pro 2015 defaults on Mojave:
+# System-wide power settings:
+# Currently in use:
+#  acwake               0
+#  autopoweroff         1
+#  autopoweroffdelay    28800
+#  disksleep            10
+#  displaysleep         2
+#  gpuswitch            2
+#  halfdim              1
+#  hibernatefile        /var/vm/sleepimage
+#  hibernatemode        3
+#  highstandbythreshold 50
+#  lidwake              1
+#  powernap             0
+#  proximitywake        0
+#  sleep                1 (sleep prevented by AddressBookSourceSync)
+#  standby              1
+#  standbydelayhigh     86400
+#  standbydelaylow      10800
+#  tcpkeepalive         1
+#  ttyskeepawake        1
+
 # System-wide power settings:
 # Currently in use:
 #  acwake               0
