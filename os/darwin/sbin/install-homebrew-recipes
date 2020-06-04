@@ -50,6 +50,9 @@ _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
 casks=(
+    # Priority
+    xquartz
+    # Alphabetical
     1password
     adobe-acrobat-reader
     adoptopenjdk  # igv
@@ -89,7 +92,7 @@ casks=(
     museeks
     netnewswire
     omnidisksweeper
-    onyx
+    # onyx
     osxfuse
     photosweeper-x
     powershell
@@ -110,7 +113,6 @@ casks=(
     visual-studio-code
     vlc
     wine-stable
-    xquartz
     xld
     zoomus
     # External taps.
