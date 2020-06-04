@@ -201,6 +201,11 @@ then
     unset -v force
 fi
 
+if [ "$KOOPA_FORCE" -eq 1 ]
+then
+    echo "FIXME OK"
+fi
+
 # Skip activation {{{2
 # ------------------------------------------------------------------------------
 
