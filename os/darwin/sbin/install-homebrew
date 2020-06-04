@@ -27,7 +27,7 @@ _koopa_install_start "$name_fancy"
 _koopa_assert_has_no_args "$@"
 
 _koopa_h2 "Installing Xcode command line tools (CLT)."
-xcode-select --install || true
+xcode-select --install &>/dev/null || true
 
 tmp_dir="$(_koopa_tmp_dir)"
 
