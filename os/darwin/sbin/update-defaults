@@ -306,7 +306,7 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 # > sudo systemsetup -settimezone "America/New_York" > /dev/null
 
 
-# Energy saving
+# Power management {{{1
 # ==============================================================================
 
 # Check current settings.
@@ -314,6 +314,29 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 
 # Restore power management defaults.
 # > pmset -c 2 -b 1 -u 1; pmset -g
+
+# MacBook Pro 2020 defaults on Catalina:
+# System-wide power settings:
+# Currently in use:
+#  acwake               0
+#  disksleep            10
+#  displaysleep         10
+#  gpuswitch            2
+#  halfdim              1
+#  hibernatefile        /var/vm/sleepimage
+#  hibernatemode        3
+#  highstandbythreshold 50
+#  lidwake              1
+#  networkoversleep     0
+#  powernap             1
+#  proximitywake        1
+#  sleep                1
+#  standby              1
+#  standbydelayhigh     86400
+#  standbydelaylow      10800
+#  tcpkeepalive         1
+#  ttyskeepawake        1
+#  womp                 1
 
 # MacBook Pro 2015 defaults on Mojave:
 # System-wide power settings:
