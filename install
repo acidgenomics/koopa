@@ -287,7 +287,6 @@ then
     exit 1
 fi
 
-
 # Check that activation puts koopa into PATH, as expected.
 if ! _koopa_is_installed koopa
 then
@@ -374,6 +373,8 @@ then
     _koopa_install_dotfiles
 fi
 
+echo "FIXME OK 1"
+
 
 
 # User profile {{{1
@@ -383,6 +384,8 @@ if ! _koopa_is_defined_in_user_profile
 then
     if [[ "$interactive" -eq 1 ]]
     then
+        echo "FIXME NOOOO"
+    
         file="$(_koopa_find_user_profile)"
         _koopa_note "Koopa activation code needs to be added to '${file}'."
         prompt="Modify '${file}'? [${yes_default}/${no}]: "
@@ -412,6 +415,7 @@ then
             _koopa_note "Refer to '${url}' for manual instructions."
         fi
     else
+        echo "FIXME AHHHH"
         profile=1
     fi
 fi
