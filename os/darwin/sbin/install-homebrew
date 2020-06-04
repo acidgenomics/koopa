@@ -43,4 +43,3 @@ tmp_dir="$(_koopa_tmp_dir)"
 rm -fr "$tmp_dir"
 
 _koopa_install_success "$name_fancy"
-_koopa_restart

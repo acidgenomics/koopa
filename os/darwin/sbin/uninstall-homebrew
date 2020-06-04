@@ -37,4 +37,3 @@ tmp_dir="$(_koopa_tmp_dir)"
 rm -fr "$tmp_dir"
 
 _koopa_uninstall_success "$name_fancy"
-_koopa_restart
