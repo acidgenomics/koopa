@@ -50,6 +50,13 @@ export HOMEBREW_FORCE_BOTTLE=1
 # - box-drive
 # - virtualbox
 
+# Casks that don't auto-update correctly:
+# - bibdesk
+# - firefox
+# - tunnelblick
+# - visual-studio-code
+# - iterm
+
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
