@@ -126,8 +126,6 @@ casks=(
     wine-stable
     xld
     zoomus
-    # External taps.
-    homebrew/cask-versions/deadbeef-devel
 )
 
 (
