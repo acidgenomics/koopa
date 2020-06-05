@@ -10,7 +10,7 @@ _koopa_h1 "Configuring macOS system."
 _koopa_enable_passwordless_sudo
 
 install-homebrew
-install-homebrew-packages
+install-homebrew-recipes
 install-python
 install-python-packages
 install-r-cran-gfortran
