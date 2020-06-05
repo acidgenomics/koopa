@@ -311,6 +311,9 @@ sqlite="3.32.1"
 sqlite-file-version="3320100"
 sqlite-year="2020"
 
+# https://subversion.apache.org
+subversion="1.14.0"
+
 # https://www.latex-project.org/get/
 tex="2020"
 
