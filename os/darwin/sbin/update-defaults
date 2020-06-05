@@ -354,11 +354,32 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 #  lidwake              1
 #  powernap             0
 #  proximitywake        0
-#  sleep                1 (sleep prevented by AddressBookSourceSync)
+#  sleep                1
 #  standby              1
 #  standbydelayhigh     86400
 #  standbydelaylow      10800
 #  tcpkeepalive         1
+#  ttyskeepawake        1
+
+# MacBook Pro 2013 defaults on Catalina:
+# System-wide power settings:
+# Currently in use:
+#  acwake               0
+#  autopoweroff         1
+#  autopoweroffdelay    28800
+#  disksleep            10
+#  displaysleep         2
+#  gpuswitch            2
+#  halfdim              1
+#  hibernatefile        /var/vm/sleepimage
+#  hibernatemode        3
+#  highstandbythreshold 50
+#  lidwake              1
+#  powernap             0
+#  sleep                1
+#  standby              1
+#  standbydelayhigh     86400
+#  standbydelaylow      10800
 #  ttyskeepawake        1
 
 # System-wide power settings:
