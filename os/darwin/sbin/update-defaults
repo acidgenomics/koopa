@@ -382,68 +382,8 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 #  standbydelaylow      10800
 #  ttyskeepawake        1
 
-# System-wide power settings:
-# Currently in use:
-#  acwake               0
-#  disksleep            10
-#  displaysleep         15
-#  gpuswitch            2
-#  halfdim              1
-#  hibernatefile        /var/vm/sleepimage
-#  hibernatemode        3
-#  highstandbythreshold 50
-#  lidwake              1
-#  networkoversleep     0
-#  powernap             1
-#  proximitywake        1
-#  sleep                0
-#  standby              1
-#  standbydelayhigh     86400
-#  standbydelaylow      10800
-#  tcpkeepalive         1
-#  ttyskeepawake        1
-#  womp                 1
-
-# These settings return a warning:
-# Warning: Idle sleep timings for "Battery Power" may not behave as expected.
-# - Display sleep should have a lower timeout than system sleep.
-
-# Enable lid wakeup.
-# > sudo pmset -a lidwake 1
-
-# Restart automatically on power loss.
-# > sudo pmset -a autorestart 1
-
-# Restart automatically if the computer freezes.
-# > sudo systemsetup -setrestartfreeze on
-
-# Disable machine sleep while charging.
-# > sudo pmset -c sleep 0
-
-# > sudo pmset -c displaysleep 15
-# > sudo pmset -b displaysleep 5
-
-# Set machine sleep to 5 minutes on battery.
-# > sudo pmset -b sleep 5
-
-# Set standby delay to 24 hours (default is 1 hour).
-# > sudo pmset -a standbydelay 86400
-
-# Never go into computer sleep mode.
-# > sudo systemsetup -setcomputersleep Off > /dev/null
-
-# Hibernation mode.
-# 0: Disable hibernation (speeds up entering sleep mode)
-# 3: Copy RAM to disk so the system state can still be restored in case of a
-#    power failure.
-# > sudo pmset -a hibernatemode 0
-
-# Remove the sleep image file to save disk space.
-# > sudo rm /private/var/vm/sleepimage
-# Create a zero-byte file instead…
-# > sudo touch /private/var/vm/sleepimage
-# …and make sure it can’t be rewritten
-# > sudo chflags uchg /private/var/vm/sleepimage
+# Sleep the display after 15 minutes when connected to power.
+sudo pmset -c displaysleep 15
 
 
 # Screen {{{1
