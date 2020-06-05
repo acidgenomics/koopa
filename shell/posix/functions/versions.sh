@@ -333,7 +333,7 @@ _koopa_perl_file_rename_version() {  # {{{1
 _koopa_return_version() {  # {{{1
     # """
     # Return version (via extraction).
-    # @note Updated 2020-03-16.
+    # @note Updated 2020-06-05.
     # """
     local cmd
     cmd="${1:?}"
@@ -397,6 +397,9 @@ _koopa_return_version() {  # {{{1
             ;;
         sqlite)
             cmd="sqlite3"
+            ;;
+        subversion)
+            cmd="svn"
             ;;
         texinfo)
             cmd="makeinfo"

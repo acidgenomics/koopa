@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-05-28.
+## Updated 2020-06-05.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
@@ -469,6 +469,12 @@ checkVersion(
     whichName = "neofetch",
     current = currentVersion("neofetch"),
     expected = expectedVersion("neofetch")
+)
+checkVersion(
+    name = "Subversion",
+    whichName = "svn",
+    current = currentVersion("subversion"),
+    expected = expectedVersion("subversion")
 )
 
 ## Shell tools =================================================================
