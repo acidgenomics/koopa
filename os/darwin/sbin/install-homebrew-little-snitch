@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+hdiutil attach /usr/local/Caskroom/little-snitch/4.5.2/LittleSnitch-4.5.2.dmg
+open "/Volumes/Little Snitch"*"/Little Snitch Installer.app"

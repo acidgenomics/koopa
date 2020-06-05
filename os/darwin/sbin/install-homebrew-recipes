@@ -46,6 +46,10 @@ export HOMEBREW_FORCE_BOTTLE=1
 # 'macvim' cask overwrites 'vim' binary, so install manually instead.
 # 'skype-for-business' is potentially useful but starts up at login.
 
+# Requires authentication in 'Security & Privacy':
+# - box-drive
+# - virtualbox
+
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
@@ -247,6 +251,7 @@ brews=(
     sox
     sqlite
     sshfs
+    subversion
     tesseract
     texinfo
     the_silver_searcher  # ag
