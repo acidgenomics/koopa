@@ -24,7 +24,8 @@ _koopa_h2 "Updating casks."
 # Refer to useful discussion regarding '--greedy' flag.
 # https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
 
-casks="$(brew cask outdated)"
+# Pipe this into in array.
+casks="$(brew cask outdated --greedy)"
 if [[ -n "$casks" ]]
 then
     brew cask outdated --greedy | xargs brew cask reinstall
