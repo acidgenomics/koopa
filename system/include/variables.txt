@@ -47,7 +47,7 @@ autojump="22.5.3"
 
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
 # https://github.com/aws/aws-cli/releases
-aws-cli="2.0.18"
+aws-cli="2.0.19"
 
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
 azure-cli="2.7.0"
