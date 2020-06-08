@@ -82,12 +82,12 @@ casks=(
     deluge
     docker
     emacs
-    fiji
+    # fiji  # latest
     firefox
     github
     google-chrome
-    google-cloud-sdk
-    google-drive-file-stream
+    google-cloud-sdk  # latest
+    google-drive-file-stream  # latest
     gpg-suite
     hazel
     igv
