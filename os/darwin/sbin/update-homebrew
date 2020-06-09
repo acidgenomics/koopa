@@ -21,10 +21,12 @@ brew upgrade --force-bottle
 
 _koopa_h2 "Updating casks."
 
+# Refer to useful discussion regarding '--greedy' flag.
+# https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
 casks="$(brew cask outdated)"
 if [[ -n "$casks" ]]
 then
-    brew cask outdated | xargs brew cask reinstall
+    brew cask outdated --greedy | xargs brew cask reinstall
 fi
 
 # Unversioned casks that don't auto-update correctly:
