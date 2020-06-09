@@ -57,13 +57,16 @@ _koopa_test_find_files_by_shebang() {  # {{{1
 _koopa_test_find_failures() {  # {{{1
     # """
     # Find test failures.
-    # @note Updated 2020-30-28.
+    # @note Updated 2020-06-09.
     # """
     local name
     name="$(_koopa_basename_sans_ext "$0")"
 
     local pattern
     pattern="${1:?}"
+
+    local ignore
+    ignore="${2:-}"
 
     local files
     mapfile -t files <<< "$(_koopa_test_find_files)"
@@ -74,6 +77,15 @@ _koopa_test_find_failures() {  # {{{1
     local file
     for file in "${files[@]}"
     do
+        if [[ -n "$ignore" ]]
+        then
+            grep -Fq \
+                --binary-files="without-match" \
+                pattern="# koopa nolint=\"${ignore}\"" \
+                "$file" \
+            && continue
+        fi
+
         local x
         x="$(
             grep -EHn \
