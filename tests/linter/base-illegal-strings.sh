@@ -26,4 +26,4 @@ illegal_strings=(
 
 grep_pattern="$(_koopa_paste0 '|' "${illegal_strings[@]}")"
 
-_koopa_test_find_failures "$grep_pattern"
+_koopa_test_find_failures "$grep_pattern" "illegal-strings"
