@@ -46,6 +46,17 @@ export HOMEBREW_FORCE_BOTTLE=1
 # 'macvim' cask overwrites 'vim' binary, so install manually instead.
 # 'skype-for-business' is potentially useful but starts up at login.
 
+# Requires authentication in 'Security & Privacy':
+# - box-drive
+# - virtualbox
+
+# Casks that don't auto-update correctly:
+# - bibdesk
+# - firefox
+# - tunnelblick
+# - visual-studio-code
+# - iterm
+
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
 
@@ -71,12 +82,12 @@ casks=(
     deluge
     docker
     emacs
-    fiji
+    # fiji  # latest
     firefox
     github
     google-chrome
-    google-cloud-sdk
-    google-drive-file-stream
+    google-cloud-sdk  # latest
+    google-drive-file-stream  # latest
     gpg-suite
     hazel
     igv
@@ -112,11 +123,9 @@ casks=(
     tunnelblick
     visual-studio-code
     vlc
-    wine-stable
+    # wine-stable
     xld
     zoomus
-    # External taps.
-    homebrew/cask-versions/deadbeef-devel
 )
 
 (
@@ -247,6 +256,7 @@ brews=(
     sox
     sqlite
     sshfs
+    subversion
     tesseract
     texinfo
     the_silver_searcher  # ag
