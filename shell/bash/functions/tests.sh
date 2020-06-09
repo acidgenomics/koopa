@@ -77,13 +77,16 @@ _koopa_test_find_failures() {  # {{{1
     local file
     for file in "${files[@]}"
     do
+        # Skip ignored files.
         if [[ -n "$ignore" ]]
         then
-            grep -Fq \
+            if grep -Eq \
                 --binary-files="without-match" \
-                pattern="# koopa nolint=\"${ignore}\"" \
-                "$file" \
-            && continue
+                "^# koopa nolint=\"${ignore}\"$" \
+                "$file"
+            then
+                continue
+            fi
         fi
 
         local x
