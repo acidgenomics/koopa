@@ -9,7 +9,10 @@ r_version="devel"
 macos_version="el-capitan"
 tmp_dir="$(_koopa_tmp_dir)"
 
-_koopa_h1 "Installing R-${r_version} for ${macos_version}."
+name_fancy="R-${r_version} for ${macos_version}."
+
+_koopa_install_start "$name_fancy"
+_koopa_note "Use of r-devel inside a Docker container is now preferred."
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
@@ -36,5 +39,5 @@ sudo mv "/Library/Frameworks/R.framework" \
 sudo ln -fnsv "/Library/Frameworks/R-${r_version}.framework" \
     "/Library/Frameworks/R.framework"
 
-_koopa_success "R-${r_version} installed correctly."
+_koopa_install_success "$name_fancy"
 _koopa_note "Ensure that 'R_LIBS_USER' in '~/.Renviron' is correct."
