@@ -16,8 +16,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
-_koopa_h1 "Updating macOS defaults."
+name_fancy="macOS defaults"
 
+_koopa_update_start "$name_fancy"
 
 # General UI/UX {{{1
 # ==============================================================================
@@ -129,7 +130,6 @@ defaults write NSGlobalDomain NSWindowResizeTime .001
 # Disable Notification Center and remove the menu bar icon.
 # > launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
 
-
 # Dock, Dashboard, and hot corners {{{1
 # ==============================================================================
 
@@ -237,7 +237,6 @@ defaults write com.apple.dock wvous-bl-modifier -int 0
 defaults write com.apple.dock wvous-br-corner -int 2
 defaults write com.apple.dock wvous-br-modifier -int 0
 
-
 # Keyboard, mouse, trackpad, and other input {{{1
 # ==============================================================================
 
@@ -306,7 +305,6 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 # Set the timezone; see 'sudo systemsetup -listtimezones' for other values.
 # > sudo systemsetup -settimezone "America/New_York" > /dev/null
 
-
 # Power management {{{1
 # ==============================================================================
 
@@ -318,7 +316,6 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 
 # Sleep the display after 15 minutes when connected to power.
 sudo pmset -c displaysleep 15
-
 
 # Screen {{{1
 # ==============================================================================
@@ -347,7 +344,6 @@ defaults write com.apple.screencapture location "$screenshots_dir"
 
 # Enable HiDPI display modes (requires restart).
 # > sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
-
 
 # Finder {{{1
 # ==============================================================================
@@ -465,7 +461,6 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
     OpenWith -bool true \
     Privileges -bool true
 
-
 # Mac App Store {{{1
 # ==============================================================================
 
@@ -496,7 +491,6 @@ defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
 # Check for software updates daily, not just once per week.
 # > defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
-
 # Activity Monitor {{{1
 # ==============================================================================
 
@@ -513,14 +507,12 @@ defaults write com.apple.ActivityMonitor ShowCategory -int 0
 defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
 defaults write com.apple.ActivityMonitor SortDirection -int 0
 
-
 # Disk Utility {{{1
 # ==============================================================================
 
 # Enable the debug menu in Disk Utility.
 defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
 defaults write com.apple.DiskUtility advanced-image-options -bool true
-
 
 # Spotlight {{{1
 # ==============================================================================
@@ -577,7 +569,6 @@ defaults write com.apple.DiskUtility advanced-image-options -bool true
 # Rebuild the index from scratch.
 # > sudo mdutil -E / > /dev/null
 
-
 # Time Machine {{{1
 # ==============================================================================
 
@@ -587,7 +578,6 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Disable local Time Machine backups.
 # Note that this doesn't seem to be working in Catalina.
 # > hash tmutil &> /dev/null && sudo tmutil disablelocal
-
 
 # Safari {{{1
 # ==============================================================================
@@ -680,7 +670,6 @@ defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 # > defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 # > defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 
-
 # Mail {{{1
 # ==============================================================================
 
@@ -696,7 +685,7 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 
 # Display emails in threaded mode, sorted by date (oldest at the top).
 defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "no"
 defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
 
 # Disable inline attachments (just show the icons).
@@ -704,7 +693,6 @@ defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 
 # Disable automatic spell checking.
 defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
-
 
 # Terminal {{{1
 # ==============================================================================
@@ -724,13 +712,11 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 # > defaults write com.apple.terminal FocusFollowsMouse -bool true
 # > defaults write org.x.X11 wm_ffm -bool true
 
-
 # iTerm {{{1
 # ==============================================================================
 
 # Don't display the annoying prompt when quitting iTerm.
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
 
 # iTunes {{{1
 # ==============================================================================
@@ -740,7 +726,6 @@ defaults write com.apple.itunes disablePodcasts -bool YES
 
 # Stop iTunes from responding to the keyboard media keys.
 # > launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
-
 
 # Messages {{{1
 # ==============================================================================
@@ -754,13 +739,11 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 # Disable continuous spell checking.
 defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "continuousSpellCheckingEnabled" -bool false
 
-
 # Photos {{{1
 # ==============================================================================
 
 # Prevent Photos from opening automatically when devices are plugged in.
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
-
 
 # TextEdit {{{1
 # ==============================================================================
@@ -771,7 +754,6 @@ defaults write com.apple.TextEdit RichText -int 0
 # Open and save files as UTF-8 in TextEdit.
 defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
-
 
 # Google Chrome and Google Chrome Canary {{{1
 # ==============================================================================
@@ -792,13 +774,11 @@ defaults write com.google.Chrome.canary DisablePrintPreview -bool true
 defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
 defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
 
-
 # GPGMail {{{1
 # ==============================================================================
 
 # Disable signing emails by default
 defaults write ~/Library/Preferences/org.gpgtools.gpgmail SignNewEmailsByDefault -bool false
-
 
 # Tweetbot {{{1
 # ==============================================================================
@@ -806,12 +786,12 @@ defaults write ~/Library/Preferences/org.gpgtools.gpgmail SignNewEmailsByDefault
 # Bypass the annoyingly slow t.co URL shortener
 defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
 
-
 # Final steps {{{1
 # ==============================================================================
 
 # Remove duplicates in the "Open With" menu (also see 'lscleanup' alias).
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
+    -kill -r -domain local -domain system -domain user
 
 # Kill affected apps.
 for app in \
@@ -826,5 +806,5 @@ do
     killall "${app}" &>/dev/null || true
 done
 
-_koopa_success "macOS defaults were updated successfully."
+_koopa_update_success "$name_fancy"
 _koopa_note "Some of these changes require a logout/restart to take effect."
