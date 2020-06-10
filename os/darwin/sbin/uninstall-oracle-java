@@ -9,7 +9,7 @@ _koopa_assert_has_no_args "$@"
 
 name_fancy="Oracle Java"
 
-_koopa_uninstall_start "Uninstalling ${name_fancy}."
+_koopa_uninstall_start "$name_fancy"
 
 rm -frv \
     "${HOME}/Library/Caches/com.oracle.java.Java-Updater" \
@@ -25,4 +25,4 @@ sudo rm -frv \
     "/Library/PreferencePanes/JavaControlPanel.prefPane" \
     "/Library/Preferences/com.oracle.java.Helper-Tool.plist"
 
-_koopa_uninstall_success "Uninstallation of ${name_fancy} was successful."
+_koopa_uninstall_success "$name_fancy"
