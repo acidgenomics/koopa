@@ -17,6 +17,6 @@ install-r-cran-gfortran
 install-r-packages
 install-conda
 install-rbenv-ruby
-update-defaults
+update-macos-defaults
 
 _koopa_success "Configuration was successful."
