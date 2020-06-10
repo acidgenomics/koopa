@@ -2,13 +2,28 @@
 # koopa nolint="line-width"
 
 # """
+# How to read current value:
+# defaults read com.apple.AppleMultitouchTrackpad
+#
+# By default sets value in ~/Library/Preferences/.GlobalPreferences.plist.
+#
+# The '-currentHost' flag sets value in:
+# ~/Library/Preferences/ByHost/.GlobalPreferences.<UUID>.plist
+#
+# Where your hardware UUID can be determined with:
+# > ioreg -c IOPlatformExpertDevice  -d 2 | awk -F'"' '/IOPlatformUUID/ { print $(NF-1) }'
+#
+#
 # See also:
+# - https://en.wikipedia.org/wiki/Defaults_(software)
+# - https://www.defaults-write.com/
 # - https://github.com/mathiasbynens/dotfiles/blob/master/.macos
 # - https://github.com/kevinSuttle/macOS-Defaults
 # - http://robservatory.com/speed-up-your-mac-via-hidden-prefs/
 # - https://www.reddit.com/r/MacOS/comments/9xtg0y/
 #       switching_system_appearance_using_terminal/e9wemy8/
 # - https://johnkastler.net/2011/12/25/os-x-defaults/
+# - https://medium.com/@notrab/friendly-os-x-defaults-d7f0cc39f2b3
 # """
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
@@ -109,10 +124,7 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable auto-correct.
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-# Speed up user interface animations.
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -int 0
-# # Increase window resize speed for Cocoa applications.
+# Increase window resize speed for Cocoa applications.
 defaults write NSGlobalDomain NSWindowResizeTime .001
 
 # Disable the sound effects on boot.
@@ -172,6 +184,7 @@ defaults write com.apple.dock mru-spaces -bool false
 
 # Remove the auto-hiding Dock delay.
 defaults write com.apple.dock autohide-delay -float 0
+
 # Remove the animation when hiding/showing the Dock.
 defaults write com.apple.dock autohide-time-modifier -float 0
 
@@ -225,37 +238,113 @@ defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock wvous-tl-corner -int 0
 defaults write com.apple.dock wvous-tl-modifier -int 0
 
-# Top right screen corner: Desktop
-defaults write com.apple.dock wvous-tr-corner -int 4
+# Top right screen corner: None
+defaults write com.apple.dock wvous-tr-corner -int 0
 defaults write com.apple.dock wvous-tr-modifier -int 0
 
 # Bottom left screen corner: Put display to sleep
 defaults write com.apple.dock wvous-bl-corner -int 10
 defaults write com.apple.dock wvous-bl-modifier -int 0
 
-# Bottom right screen corner: Mission Control
-defaults write com.apple.dock wvous-br-corner -int 2
+# Bottom right screen corner: None
+defaults write com.apple.dock wvous-br-corner -int 0
 defaults write com.apple.dock wvous-br-modifier -int 0
 
 # Keyboard, mouse, trackpad, and other input {{{1
 # ==============================================================================
 
-# Trackpad: enable tap to click for this user and for the login screen.
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+# Tracking speed {{{2
+# ------------------------------------------------------------------------------
+
+# Set the tracking speed.
+# The maximum tracking speed you can access from the System Preferences is 3.0.
+# Higher values indicate faster tracking.
+# https://www.defaults-write.com/change-your-mouse-tracking-speed-in-mac-os-x/
+defaults write -g com.apple.mouse.scaling 2.0
+defaults write -g com.apple.trackpad.scaling 2.0
+
+# Read the current tracking speed.
+# > defaults read -g com.apple.mouse.scaling
+# > defaults read -g com.apple.trackpad.scaling
+
+# Restore to default tracking speed.
+# > defaults delete -g com.apple.mouse.scaling
+# > defaults delete -g com.apple.trackpad.scaling
+
+# Multi-touch trackpad {{{2
+# ------------------------------------------------------------------------------
+
+# Read current settings.
+# > defaults read com.apple.AppleMultitouchTrackpad
+# > defaults read com.apple.driver.AppleBluetoothMultitouch.trackpad
+
+defaults write com.apple.AppleMultitouchTrackpad ActuateDetents -int 0  # 1
+defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0
+defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1  # 0
+defaults write com.apple.AppleMultitouchTrackpad DragLock -int 0
+defaults write com.apple.AppleMultitouchTrackpad Dragging -int 0
+defaults write com.apple.AppleMultitouchTrackpad FirstClickThreshold -int 0  # 1 (medium)
+defaults write com.apple.AppleMultitouchTrackpad ForceSuppressed -int 1  # 0
+defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 0  # 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadCornerSecondaryClick -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadHandResting -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadHorizScroll -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadMomentumScroll -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadPinch -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadRightClick -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadRotate -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadScroll -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 1  # 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0  # 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerTapGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture -int 0  # 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerDoubleTapGesture -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 3
+
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1  # 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2  # 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFiveFingerPinchGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerHorizSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerPinchGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerVertSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadHandResting -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadHorizScroll -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadMomentumScroll -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadPinch -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRotate -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadScroll -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 1  # 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerHorizSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerVertSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerDoubleTapGesture -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 3
+
+# Disable look up and data detectors.
+defaults -currentHost write -g com.apple.trackpad.threeFingerTapGesture -int 0
+
+# Enable secondary click.
+defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
+
+# Enable tap to click for this user and for the login screen.
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# Trackpad: map bottom right corner to right-click.
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
+# Map bottom right corner to right-click.
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
-defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 
-# Enable "natural" (Lion-style) scrolling.
+# Enable natural scroll direction.
 defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
 
-# Enable full keyboard access for all controls.
-# (e.g. enable Tab in modal dialogs)
+# Enable full keyboard access for all controls (e.g. Tab in modal dialogs).
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # Follow the keyboard focus while zoomed in.
@@ -278,8 +367,8 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 # https://gist.github.com/hofmannsven/ff21749b0e6afc50da458bebbd9989c5
 #
 # Normal minimum here is 15 (225 ms).
-defaults write -g InitialKeyRepeat -int 10
-# Normal minimum here is 2 (30 ms). Use of 1 is crazy fast.
+defaults write -g InitialKeyRepeat -int 15
+# Normal minimum here is 2 (30 ms). Use of 1 here is crazy fast.
 defaults write -g KeyRepeat -int 2
 
 # Set text formats.
