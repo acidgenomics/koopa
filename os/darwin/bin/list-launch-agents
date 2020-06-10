@@ -9,4 +9,5 @@ _koopa_h1 "Listing launch agents and daemons."
 ls \
     "${HOME}/Library/LaunchAgents" \
     "/Library/LaunchAgents" \
-    "/Library/LaunchDaemons"
+    "/Library/LaunchDaemons" \
+    "/Library/PrivilegedHelperTools"
