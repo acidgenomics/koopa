@@ -405,7 +405,7 @@ _koopa_is_git() {  # {{{1i
 _koopa_is_git_clean() {  # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-06-11.
     #
     # See also:
     # - https://stackoverflow.com/questions/3878624
@@ -415,10 +415,12 @@ _koopa_is_git_clean() {  # {{{1
     # Are there unstaged changes?
     git diff-index --quiet HEAD -- 2>/dev/null || return 1
     # In need of a pull or push?
-    if [ "$(git rev-parse HEAD 2>/dev/null)" != "$(git rev-parse '@{u}')" ]
-    then
-        return 1
-    fi
+    local rev_1
+    rev_1="$(git rev-parse HEAD 2>/dev/null)"
+    # Note that this step will return fatal warning on no upstream.
+    local rev_2
+    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
+    [ "$rev_1" != "$rev_2" ] && return 1
     return 0
 }
 
