@@ -24,7 +24,7 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-06-03.
+    Updated 2020-06-10.
 EOF
 }
 
@@ -189,10 +189,10 @@ then
             choice="${choice:-yes}"
             _koopa_print
             case "$choice" in
-                Y|YES|y|yes)
+                Y|YES|Yes|y|yes)
                     shared=1
                     ;;
-                N|NO|n|no)
+                N|NO|No|n|no)
                     shared=0
                     ;;
                 *)
@@ -316,10 +316,10 @@ then
     choice="${choice:-no}"
     _koopa_print
     case "$choice" in
-        Y|YES|y|yes)
+        Y|YES|Yes|y|yes)
             passwordless=1
             ;;
-        N|NO|n|no)
+        N|NO|No|n|no)
             passwordless=0
             ;;
         *)
@@ -355,10 +355,10 @@ then
     choice="${choice:-yes}"
     _koopa_print
     case "$choice" in
-        Y|YES|y|yes)
+        Y|YES|Yes|y|yes)
             dotfiles=1
             ;;
-        N|NO|n|no)
+        N|NO|No|n|no)
             dotfiles=0
             ;;
         *)
@@ -394,10 +394,10 @@ then
         choice="${choice:-yes}"
         _koopa_print
         case "$choice" in
-            Y|YES|y|yes)
+            Y|YES|Yes|y|yes)
                 profile=1
                 ;;
-            N|NO|n|no)
+            N|NO|No|n|no)
                 profile=0
                 ;;
             *)

@@ -2,13 +2,28 @@
 # koopa nolint="line-width"
 
 # """
+# How to read current value:
+# defaults read com.apple.AppleMultitouchTrackpad
+#
+# By default sets value in ~/Library/Preferences/.GlobalPreferences.plist.
+#
+# The '-currentHost' flag sets value in:
+# ~/Library/Preferences/ByHost/.GlobalPreferences.<UUID>.plist
+#
+# Where your hardware UUID can be determined with:
+# > ioreg -c IOPlatformExpertDevice  -d 2 | awk -F'"' '/IOPlatformUUID/ { print $(NF-1) }'
+#
+#
 # See also:
+# - https://en.wikipedia.org/wiki/Defaults_(software)
+# - https://www.defaults-write.com/
 # - https://github.com/mathiasbynens/dotfiles/blob/master/.macos
 # - https://github.com/kevinSuttle/macOS-Defaults
 # - http://robservatory.com/speed-up-your-mac-via-hidden-prefs/
 # - https://www.reddit.com/r/MacOS/comments/9xtg0y/
 #       switching_system_appearance_using_terminal/e9wemy8/
 # - https://johnkastler.net/2011/12/25/os-x-defaults/
+# - https://medium.com/@notrab/friendly-os-x-defaults-d7f0cc39f2b3
 # """
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
@@ -16,8 +31,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
 
-_koopa_h1 "Updating macOS defaults."
+name_fancy="macOS defaults"
 
+_koopa_update_start "$name_fancy"
 
 # General UI/UX {{{1
 # ==============================================================================
@@ -108,10 +124,7 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 # Disable auto-correct.
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
-# Speed up user interface animations.
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -int 0
-# # Increase window resize speed for Cocoa applications.
+# Increase window resize speed for Cocoa applications.
 defaults write NSGlobalDomain NSWindowResizeTime .001
 
 # Disable the sound effects on boot.
@@ -128,7 +141,6 @@ defaults write NSGlobalDomain NSWindowResizeTime .001
 
 # Disable Notification Center and remove the menu bar icon.
 # > launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
-
 
 # Dock, Dashboard, and hot corners {{{1
 # ==============================================================================
@@ -172,6 +184,7 @@ defaults write com.apple.dock mru-spaces -bool false
 
 # Remove the auto-hiding Dock delay.
 defaults write com.apple.dock autohide-delay -float 0
+
 # Remove the animation when hiding/showing the Dock.
 defaults write com.apple.dock autohide-time-modifier -float 0
 
@@ -225,38 +238,113 @@ defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock wvous-tl-corner -int 0
 defaults write com.apple.dock wvous-tl-modifier -int 0
 
-# Top right screen corner: Desktop
-defaults write com.apple.dock wvous-tr-corner -int 4
+# Top right screen corner: None
+defaults write com.apple.dock wvous-tr-corner -int 0
 defaults write com.apple.dock wvous-tr-modifier -int 0
 
 # Bottom left screen corner: Put display to sleep
 defaults write com.apple.dock wvous-bl-corner -int 10
 defaults write com.apple.dock wvous-bl-modifier -int 0
 
-# Bottom right screen corner: Mission Control
-defaults write com.apple.dock wvous-br-corner -int 2
+# Bottom right screen corner: None
+defaults write com.apple.dock wvous-br-corner -int 0
 defaults write com.apple.dock wvous-br-modifier -int 0
-
 
 # Keyboard, mouse, trackpad, and other input {{{1
 # ==============================================================================
 
-# Trackpad: enable tap to click for this user and for the login screen.
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+# Tracking speed {{{2
+# ------------------------------------------------------------------------------
+
+# Set the tracking speed.
+# The maximum tracking speed you can access from the System Preferences is 3.0.
+# Higher values indicate faster tracking.
+# https://www.defaults-write.com/change-your-mouse-tracking-speed-in-mac-os-x/
+defaults write -g com.apple.mouse.scaling 2.0
+defaults write -g com.apple.trackpad.scaling 2.0
+
+# Read the current tracking speed.
+# > defaults read -g com.apple.mouse.scaling
+# > defaults read -g com.apple.trackpad.scaling
+
+# Restore to default tracking speed.
+# > defaults delete -g com.apple.mouse.scaling
+# > defaults delete -g com.apple.trackpad.scaling
+
+# Multi-touch trackpad {{{2
+# ------------------------------------------------------------------------------
+
+# Read current settings.
+# > defaults read com.apple.AppleMultitouchTrackpad
+# > defaults read com.apple.driver.AppleBluetoothMultitouch.trackpad
+
+defaults write com.apple.AppleMultitouchTrackpad ActuateDetents -int 0  # 1
+defaults write com.apple.AppleMultitouchTrackpad ActuationStrength -int 0
+defaults write com.apple.AppleMultitouchTrackpad Clicking -int 1  # 0
+defaults write com.apple.AppleMultitouchTrackpad DragLock -int 0
+defaults write com.apple.AppleMultitouchTrackpad Dragging -int 0
+defaults write com.apple.AppleMultitouchTrackpad FirstClickThreshold -int 0  # 1 (medium)
+defaults write com.apple.AppleMultitouchTrackpad ForceSuppressed -int 1  # 0
+defaults write com.apple.AppleMultitouchTrackpad SecondClickThreshold -int 0  # 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadCornerSecondaryClick -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFiveFingerPinchGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerHorizSwipeGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerPinchGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadFourFingerVertSwipeGesture -int 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadHandResting -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadHorizScroll -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadMomentumScroll -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadPinch -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadRightClick -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadRotate -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadScroll -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -int 1  # 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerHorizSwipeGesture -int 0  # 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerTapGesture -int 0
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerVertSwipeGesture -int 0  # 2
+defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerDoubleTapGesture -int 1
+defaults write com.apple.AppleMultitouchTrackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 3
+
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -int 1  # 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad DragLock -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Dragging -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2  # 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFiveFingerPinchGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerHorizSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerPinchGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadFourFingerVertSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadHandResting -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadHorizScroll -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadMomentumScroll -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadPinch -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRotate -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadScroll -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerDrag -int 1  # 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerHorizSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerTapGesture -int 0
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadThreeFingerVertSwipeGesture -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerDoubleTapGesture -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadTwoFingerFromRightEdgeSwipeGesture -int 3
+
+# Disable look up and data detectors.
+defaults -currentHost write -g com.apple.trackpad.threeFingerTapGesture -int 0
+
+# Enable secondary click.
+defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
+
+# Enable tap to click for this user and for the login screen.
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-# Trackpad: map bottom right corner to right-click.
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
+# Map bottom right corner to right-click.
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
-defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 
-# Enable "natural" (Lion-style) scrolling.
+# Enable natural scroll direction.
 defaults write NSGlobalDomain com.apple.swipescrolldirection -bool true
 
-# Enable full keyboard access for all controls.
-# (e.g. enable Tab in modal dialogs)
+# Enable full keyboard access for all controls (e.g. Tab in modal dialogs).
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # Follow the keyboard focus while zoomed in.
@@ -279,8 +367,8 @@ defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 # https://gist.github.com/hofmannsven/ff21749b0e6afc50da458bebbd9989c5
 #
 # Normal minimum here is 15 (225 ms).
-defaults write -g InitialKeyRepeat -int 10
-# Normal minimum here is 2 (30 ms). Use of 1 is crazy fast.
+defaults write -g InitialKeyRepeat -int 15
+# Normal minimum here is 2 (30 ms). Use of 1 here is crazy fast.
 defaults write -g KeyRepeat -int 2
 
 # Set text formats.
@@ -306,7 +394,6 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 # Set the timezone; see 'sudo systemsetup -listtimezones' for other values.
 # > sudo systemsetup -settimezone "America/New_York" > /dev/null
 
-
 # Power management {{{1
 # ==============================================================================
 
@@ -318,7 +405,6 @@ defaults write NSGlobalDomain AppleMetricUnits -bool true
 
 # Sleep the display after 15 minutes when connected to power.
 sudo pmset -c displaysleep 15
-
 
 # Screen {{{1
 # ==============================================================================
@@ -347,7 +433,6 @@ defaults write com.apple.screencapture location "$screenshots_dir"
 
 # Enable HiDPI display modes (requires restart).
 # > sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
-
 
 # Finder {{{1
 # ==============================================================================
@@ -465,7 +550,6 @@ defaults write com.apple.finder FXInfoPanesExpanded -dict \
     OpenWith -bool true \
     Privileges -bool true
 
-
 # Mac App Store {{{1
 # ==============================================================================
 
@@ -496,7 +580,6 @@ defaults write com.apple.commerce AutoUpdateRestartRequired -bool true
 # Check for software updates daily, not just once per week.
 # > defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
 
-
 # Activity Monitor {{{1
 # ==============================================================================
 
@@ -513,14 +596,12 @@ defaults write com.apple.ActivityMonitor ShowCategory -int 0
 defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
 defaults write com.apple.ActivityMonitor SortDirection -int 0
 
-
 # Disk Utility {{{1
 # ==============================================================================
 
 # Enable the debug menu in Disk Utility.
 defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
 defaults write com.apple.DiskUtility advanced-image-options -bool true
-
 
 # Spotlight {{{1
 # ==============================================================================
@@ -577,7 +658,6 @@ defaults write com.apple.DiskUtility advanced-image-options -bool true
 # Rebuild the index from scratch.
 # > sudo mdutil -E / > /dev/null
 
-
 # Time Machine {{{1
 # ==============================================================================
 
@@ -587,7 +667,6 @@ defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
 # Disable local Time Machine backups.
 # Note that this doesn't seem to be working in Catalina.
 # > hash tmutil &> /dev/null && sudo tmutil disablelocal
-
 
 # Safari {{{1
 # ==============================================================================
@@ -680,7 +759,6 @@ defaults write com.apple.Safari InstallExtensionUpdatesAutomatically -bool true
 # > defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 # > defaults write com.apple.SafariTechnologyPreview com.apple.Safari.ContentPageGroupIdentifier.WebKit2AllowsInlineMediaPlayback -bool false
 
-
 # Mail {{{1
 # ==============================================================================
 
@@ -696,7 +774,7 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\U21a9"
 
 # Display emails in threaded mode, sorted by date (oldest at the top).
 defaults write com.apple.mail DraftsViewerAttributes -dict-add "DisplayInThreadedMode" -string "yes"
-defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "yes"
+defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortedDescending" -string "no"
 defaults write com.apple.mail DraftsViewerAttributes -dict-add "SortOrder" -string "received-date"
 
 # Disable inline attachments (just show the icons).
@@ -704,7 +782,6 @@ defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 
 # Disable automatic spell checking.
 defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
-
 
 # Terminal {{{1
 # ==============================================================================
@@ -724,13 +801,11 @@ defaults write com.apple.Terminal ShowLineMarks -int 0
 # > defaults write com.apple.terminal FocusFollowsMouse -bool true
 # > defaults write org.x.X11 wm_ffm -bool true
 
-
 # iTerm {{{1
 # ==============================================================================
 
 # Don't display the annoying prompt when quitting iTerm.
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
-
 
 # iTunes {{{1
 # ==============================================================================
@@ -740,7 +815,6 @@ defaults write com.apple.itunes disablePodcasts -bool YES
 
 # Stop iTunes from responding to the keyboard media keys.
 # > launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist 2> /dev/null
-
 
 # Messages {{{1
 # ==============================================================================
@@ -754,13 +828,11 @@ defaults write com.apple.messageshelper.MessageController SOInputLineSettings -d
 # Disable continuous spell checking.
 defaults write com.apple.messageshelper.MessageController SOInputLineSettings -dict-add "continuousSpellCheckingEnabled" -bool false
 
-
 # Photos {{{1
 # ==============================================================================
 
 # Prevent Photos from opening automatically when devices are plugged in.
 defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
-
 
 # TextEdit {{{1
 # ==============================================================================
@@ -771,7 +843,6 @@ defaults write com.apple.TextEdit RichText -int 0
 # Open and save files as UTF-8 in TextEdit.
 defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
-
 
 # Google Chrome and Google Chrome Canary {{{1
 # ==============================================================================
@@ -792,13 +863,11 @@ defaults write com.google.Chrome.canary DisablePrintPreview -bool true
 defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
 defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
 
-
 # GPGMail {{{1
 # ==============================================================================
 
 # Disable signing emails by default
 defaults write ~/Library/Preferences/org.gpgtools.gpgmail SignNewEmailsByDefault -bool false
-
 
 # Tweetbot {{{1
 # ==============================================================================
@@ -806,12 +875,12 @@ defaults write ~/Library/Preferences/org.gpgtools.gpgmail SignNewEmailsByDefault
 # Bypass the annoyingly slow t.co URL shortener
 defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
 
-
 # Final steps {{{1
 # ==============================================================================
 
 # Remove duplicates in the "Open With" menu (also see 'lscleanup' alias).
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
+    -kill -r -domain local -domain system -domain user
 
 # Kill affected apps.
 for app in \
@@ -826,5 +895,5 @@ do
     killall "${app}" &>/dev/null || true
 done
 
-_koopa_success "macOS defaults were updated successfully."
+_koopa_update_success "$name_fancy"
 _koopa_note "Some of these changes require a logout/restart to take effect."

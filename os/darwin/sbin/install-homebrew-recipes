@@ -105,6 +105,7 @@ casks=(
     omnidisksweeper
     # onyx
     osxfuse
+    pacifist
     photosweeper-x
     powershell
     pycharm-ce
