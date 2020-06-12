@@ -104,6 +104,7 @@ casks=(
     netnewswire
     omnidisksweeper
     # onyx
+    # oracle-jdk
     osxfuse
     pacifist
     photosweeper-x
