@@ -157,8 +157,8 @@ defaults write com.apple.dock mineffect -string "scale"
 # Minimize windows into their application's icon.
 defaults write com.apple.dock minimize-to-application -bool true
 
-# Enable spring loading for all Dock items.
-defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool true
+# Disable spring loading for all Dock items.
+defaults write com.apple.dock enable-spring-load-actions-on-all-items -bool false
 
 # Show indicator lights for open applications in the Dock.
 defaults write com.apple.dock show-process-indicators -bool true
@@ -481,8 +481,8 @@ defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 # Disable the warning when changing a file extension.
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
-# Enable spring loading for directories.
-defaults write NSGlobalDomain com.apple.springing.enabled -bool true
+# Disable spring loading for directories.
+defaults write NSGlobalDomain com.apple.springing.enabled -bool false
 
 # Remove the spring loading delay for directories.
 defaults write NSGlobalDomain com.apple.springing.delay -float 0
