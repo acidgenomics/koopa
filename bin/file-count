@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
+prefix="${1:?}"
+
+# > ls -1 "$prefix" | wc -l
+
+find "$prefix" \
+    -type f \
+    -printf '.' \
+    | wc -c
+
