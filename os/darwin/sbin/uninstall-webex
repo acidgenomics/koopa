@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+_koopa_assert_has_no_args "$@"
+
+# """
+# https://help.webex.com/en-us/WBX38280/
+#     How-Do-I-Uninstall-Webex-Software-on-a-Mac
+# """
+
+name_fancy="Webex"
+
+_koopa_uninstall_start "$name_fancy"
+
+# ~/.Webex
+# ~/Library/Application Support/Google/Chrome Canary/NativeMessagingHosts/com.webex.meeting.json
+# ~/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.webex.meeting.json
+# ~/Library/Application Support/Mozilla/NativeMessagingHosts/com.webex.meeting.json
+
+rm -frv \
+    "${HOME}/Library/Application Support/Cisco/WebEx Meetings" \
+    "${HOME}/Library/Application Support/WebEx Folder" \
+    "${HOME}/Library/Application Support/com.apple.sharedfilelist/\
+com.apple.LSSharedFileList.ApplicationRecentDocuments/"*.webex.*.sfl \
+    "${HOME}/Library/Caches/com.cisco.webex"* \
+    "${HOME}/Library/Caches/com.webex.meetingmanager" \
+    "${HOME}/Library/Cookies/com.webex.meetingmanager.binarycookies" \
+    "${HOME}/Library/Group Containers/group.com.cisco.webex.meetings" \
+    "${HOME}/Library/Internet Plug-Ins/Webex.plugin" \
+    "${HOME}/Library/Logs/WebexMeetings" \
+    "${HOME}/Library/Logs/webexmta" \
+    "${HOME}/Library/Preferences/"*.webex.*.plist \
+    "${HOME}/Library/Receipts/"*.webex.* \
+    "${HOME}/Library/Safari/LocalStorage/"*.webex.com* \
+    "${HOME}/Library/WebKit/com.webex.meetingmanager"
+
+sudo rm -frv "/Applications/Cisco Webex Meetings.app"
+
+_koopa_uninstall_success "$name_fancy"
