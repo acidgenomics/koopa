@@ -2,8 +2,22 @@
 
 if [[ -z "${KOOPA_PREFIX:-}" ]]
 then
-    KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    script_path="${BASH_SOURCE[0]}"
+    if [ -L "$script_path" ]
+    then
+        _koopa_realpath() {
+            if [ "$(uname -s)" = "Darwin" ]
+            then
+                perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+            else
+                readlink -f "$@"
+            fi
+        }
+        script_path="$(_koopa_realpath "$script_path")"
+    fi
+    KOOPA_PREFIX="$(cd "$(dirname "$script_path")/.." \
         >/dev/null 2>&1 && pwd -P)"
+    unset -v script_path
     # shellcheck source=/dev/null
     force=1 minimal=1 . "${KOOPA_PREFIX}/activate"
 fi
