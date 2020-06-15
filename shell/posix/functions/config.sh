@@ -32,9 +32,11 @@ _koopa_add_make_prefix_link() {  # {{{1
     _koopa_is_shared_install || return 0
     local make_prefix
     make_prefix="$(_koopa_make_prefix)"
+    [ -d "$make_prefix" ] || return 0
     local target_link
     target_link="${make_prefix}/bin/koopa"
     [ -L "$target_link" ] && return 0
+    _koopa_h1 "Adding 'koopa' link inside '${make_prefix}'."
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
     local source_link
