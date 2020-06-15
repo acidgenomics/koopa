@@ -106,6 +106,8 @@ then
     _koopa_dl "Config prefix" "${config_prefix}"
     _koopa_dl "Make prefix" "${make_prefix}"
 
+    _koopa_add_make_prefix_link
+
     if _koopa_is_linux
     then
         _koopa_update_etc_profile_d
