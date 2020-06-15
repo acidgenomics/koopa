@@ -21,6 +21,27 @@ _koopa_add_config_link() {  # {{{1
     return 0
 }
 
+_koopa_add_make_prefix_link() {  # {{{1
+    # """
+    # Ensure 'koopa' is linked inside make prefix.
+    # @note Updated 2020-06-15.
+    #
+    # This is particularly useful for external scripts that source koopa header.
+    # This approach works nicely inside a hardened R environment.
+    # """
+    _koopa_is_shared_install || return 0
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
+    local target_link
+    target_link="${make_prefix}/bin/koopa"
+    [ -L "$target_link" ] && return 0
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local source_link
+    source_link="${koopa_prefix}/bin/koopa"
+    _koopa_ln "$source_link" "$target_link"
+}
+
 _koopa_add_to_user_profile() {  # {{{1
     # """
     # Add koopa configuration to user profile.
