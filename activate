@@ -391,10 +391,9 @@ then
             readlink -f "$@"
         fi
     }
-    KOOPA_PREFIX="$(dirname "$(_koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")")"
-else
-    KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
+    KOOPA_ACTIVATE_SCRIPT="$(_koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
 fi
+KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
 export KOOPA_PREFIX
 
 
