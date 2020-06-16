@@ -9,6 +9,7 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 stopifnot(requireNamespace("bb8", quietly = TRUE))
 
+## Handle CRAN removals and GitHub deprecations automatically.
 suppressMessages({
     bb8::uninstall(
         pkgs = c(
@@ -22,6 +23,7 @@ suppressMessages({
             "nvimcom",
             "pfgsea",
             "profdpm",
+            "purrrogress",
             "robust",
             "transformer"
         )
