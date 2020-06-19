@@ -641,6 +641,9 @@ _koopa_activate_macos_extras() {  # {{{1
     alias chrome="open '/Applications/Google Chrome.app'"
     alias canary="open '/Applications/Google Chrome Canary.app'"
 
+    # PlistBuddy alias, because sometimes 'defaults' just doesn’t cut it.
+    alias plistbuddy="/usr/libexec/PlistBuddy"
+
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
