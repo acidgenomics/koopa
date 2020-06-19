@@ -11,6 +11,7 @@ app_prefix="$(_koopa_app_prefix)"
 # e.g. /usr/local
 make_prefix="$(_koopa_make_prefix)"
 
+core=1
 dotfiles=1
 fast=0
 system=0
@@ -45,24 +46,6 @@ do
     esac
 done
 
-if [[ "$fast" -eq 1 ]]
-then
-    dotfiles=0
-    system=0
-    user=0
-fi
-
-if [[ "$user" -eq 1 ]]
-then
-    dotfiles=0
-fi
-
-if [[ "$system" -eq 1 ]]
-then
-    dotfiles=1
-    user=1
-fi
-
 # rsync configuration detection.
 if [[ -n "$source_ip" ]]
 then
@@ -70,6 +53,22 @@ then
     system=1
 else
     rsync=0
+fi
+
+if [[ "$fast" -eq 1 ]]
+then
+    dotfiles=0
+fi
+
+if [[ "$user" -eq 1 ]] && [[ "$system" -eq 0 ]]
+then
+    core=0
+    dotfiles=0
+fi
+
+if [[ "$system" -eq 1 ]]
+then
+    user=1
 fi
 
 _koopa_h1 "Updating koopa at '${koopa_prefix}'."
@@ -90,10 +89,13 @@ _koopa_set_permissions --recursive "$koopa_prefix"
 if [[ "$rsync" -eq 0 ]]
 then
     # Update koopa.
-    (
-        cd "$koopa_prefix" || exit 1
-        _koopa_git_pull origin master
-    ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
+    if [[ "$core" -eq 1 ]]
+    then
+        (
+            cd "$koopa_prefix" || exit 1
+            _koopa_git_pull origin master
+        ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
+    fi
 
     # Ensure dotfiles are current.
     if [[ "$dotfiles" -eq 1 ]]
