@@ -45,7 +45,6 @@ _koopa_activate_bash_extras() {  # {{{1
     # Activate Bash extras.
     # @note Updated 2020-06-19.
     # """
-    _koopa_activate_bash_options
     _koopa_activate_bash_completion
     _koopa_activate_bash_readline
     _koopa_activate_bash_lesspipe
@@ -61,45 +60,6 @@ _koopa_activate_bash_lesspipe() {  # {{{1
     # Make less more friendly for non-text input files, see lesspipe(1).
     # """
     [[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
-    return 0
-}
-
-_koopa_activate_bash_options() {  # {{{1
-    # """
-    # Bash options.
-    # @note Updated 2020-06-19.
-    # """
-    # """
-    # Activate Bash shell extras.
-    # @note Updated 2020-06-18.
-    # """
-    # Easier navigation (e.g. '**/qux' will enter './foo/bar/baz/qux').
-    shopt -s autocd
-    # Correct minor directory changing spelling mistakes (i.e. for 'cd').
-    shopt -s cdspell
-    # Check the window size after each command and if necessary, update the
-    # values of LINES and COLUMNS.
-    shopt -s checkwinsize
-    # Save multiline commands.
-    shopt -s cmdhist
-    # Recursive globbing (e.g. 'echo **/*.txt'). If set, the pattern "**" used
-    # in a pathname expansion context will match all files and zero or more
-    # directories and subdirectories.
-    shopt -s globstar
-    # Append to the history file, don't overwrite it.
-    shopt -s histappend
-    # Case-insensitive globbing (used in pathname expansion).
-    shopt -s nocaseglob
-    # Map key bindings to default editor.
-    # Note that Bash currently uses Emacs by default.
-    case "${EDITOR:-}" in
-        emacs)
-            set -o emacs
-            ;;
-        vi|vim)
-            set -o vi
-            ;;
-    esac
     return 0
 }
 
