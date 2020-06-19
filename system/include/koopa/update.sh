@@ -157,6 +157,9 @@ if [[ "$user" -eq 1 ]]
 then
     _koopa_h1 "Updating user configuration."
 
+    # Remove broken symlinks.
+    _koopa_remove_broken_symlinks "${HOME}/.R"
+
     # Remove legacy directories from user config, if necessary.
     rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
 
@@ -174,7 +177,7 @@ then
         [ -d "$repo" ] || continue
         (
             _koopa_cd "$repo"
-            git pull
+            _koopa_git_pull
         )
     done
 
