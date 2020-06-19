@@ -296,6 +296,12 @@ checkVersion(
     expected = expectedVersion("cmake")
 )
 checkVersion(
+    name = "OpenSSH",
+    whichName = "ssh",
+    current = currentVersion("ssh"),
+    expected = expectedVersion("ssh")
+)
+checkVersion(
     name = "rsync",
     whichName = "rsync",
     current = currentVersion("rsync"),
@@ -746,6 +752,16 @@ installed(
         "flake8",
         "pylint",
         "pytest"
+    )
+)
+
+## Ruby gems ===================================================================
+h2("Ruby gems")
+installed(
+    which = c(
+        "gem",
+        "bundle",
+        "ronn"
     )
 )
 
