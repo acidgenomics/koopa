@@ -16,7 +16,7 @@ brew update
 
 _koopa_h2 "Updating brews."
 
-brew upgrade --force-bottle
+brew upgrade --force-bottle || true
 # > brew list | xargs brew reinstall --force-bottle --cleanup
 
 _koopa_h2 "Updating casks."
@@ -26,7 +26,9 @@ _koopa_h2 "Updating casks."
 casks="$(brew cask outdated)"
 if [[ -n "$casks" ]]
 then
-    brew cask outdated --greedy | xargs brew cask reinstall
+    brew cask outdated --greedy \
+        | xargs brew cask reinstall \
+        || true
 fi
 
 # Unversioned casks that don't auto-update correctly:
@@ -45,7 +47,7 @@ fi
 
 _koopa_h2 "Running cleanup."
 
-brew cleanup -s
+brew cleanup -s || true
 rm -frv "$(brew --cache)"
 
 _koopa_update_success "$name_fancy"
