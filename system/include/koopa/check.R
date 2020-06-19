@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-06-05.
+## Updated 2020-06-19.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
@@ -30,7 +30,6 @@ host <- shell(command = koopa, args = "host-id", stdout = TRUE)
 os <- shell(command = koopa, args = "os-string", stdout = TRUE)
 
 docker <- isDocker()
-extra <- if (Sys.getenv("KOOPA_EXTRA") == 1L) TRUE else FALSE
 
 ## Basic dependencies ==========================================================
 h2("Basic dependencies")
@@ -434,20 +433,20 @@ if (
     checkVersion(
         name = "Amazon Web Services (AWS) CLI",
         whichName = "aws",
-        current = currentVersion("aws-cli"),
-        expected = expectedVersion("aws-cli")
+        current = currentMinorVersion("aws-cli"),
+        expected = expectedMinorVersion("aws-cli")
     )
     checkVersion(
         name = "Microsoft Azure CLI",
         whichName = "az",
-        current = currentVersion("azure-cli"),
-        expected = expectedVersion("azure-cli")
+        current = currentMinorVersion("azure-cli"),
+        expected = expectedMinorVersion("azure-cli")
     )
     checkVersion(
         name = "Google Cloud SDK",
         whichName = "gcloud",
-        current = currentVersion("google-cloud-sdk"),
-        expected = expectedVersion("google-cloud-sdk")
+        current = currentMajorVersion("google-cloud-sdk"),
+        expected = expectedMajorVersion("google-cloud-sdk")
     )
 }
 
@@ -510,27 +509,25 @@ if (!isTRUE(docker)) {
         current = currentVersion("ripgrep"),
         expected = expectedVersion("ripgrep")
     )
-    if (isTRUE(extra)) {
-        checkVersion(
-            name = "autojump",
-            whichName = "autojump",
-            current = currentVersion("autojump"),
-            expected = expectedVersion("autojump")
-        )
-        ## This updates frequently, so be less strict about check.
-        checkVersion(
-            name = "broot",
-            whichName = "broot",
-            current = currentMinorVersion("broot"),
-            expected = expectedMinorVersion("broot")
-        )
-        checkVersion(
-            name = "fzf",
-            whichName = "fzf",
-            current = currentVersion("fzf"),
-            expected = expectedVersion("fzf")
-        )
-    }
+    checkVersion(
+        name = "autojump",
+        whichName = "autojump",
+        current = currentVersion("autojump"),
+        expected = expectedVersion("autojump")
+    )
+    ## This updates frequently, so be less strict about check.
+    checkVersion(
+        name = "broot",
+        whichName = "broot",
+        current = currentMinorVersion("broot"),
+        expected = expectedMinorVersion("broot")
+    )
+    checkVersion(
+        name = "fzf",
+        whichName = "fzf",
+        current = currentVersion("fzf"),
+        expected = expectedVersion("fzf")
+    )
 }
 checkVersion(
     name = "ShellCheck",
