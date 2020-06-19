@@ -27,7 +27,7 @@ done < <( \
 )
 
 # Error if file array is empty.
-if [[ "${#bam_files[@]}" -eq 0 ]]
+if ! _koopa_is_array_non_empty "${bam_files[@]}"
 then
     _koopa_stop "No BAM files detected in '${dir}'."
 fi
