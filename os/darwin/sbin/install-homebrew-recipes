@@ -233,6 +233,7 @@ brews=(
     mas
     neofetch
     neovim
+    nmap
     node
     open-mpi
     openblas
