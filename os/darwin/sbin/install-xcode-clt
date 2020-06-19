@@ -10,11 +10,13 @@ _koopa_assert_has_no_args "$@"
 # """
 
 name_fancy="Xcode CLT"
-_koopa_h1 "Reinstalling ${name_fancy}."
+_koopa_install_start "$name_fancy"
 
-prefix="$(xcode-select -p)"
-_koopa_assert_is_dir "$prefix"
-sudo rm -fr "$prefix"
+prefix="$(xcode-select -p 2>/dev/null)"
+if [[ -d "$prefix" ]]
+then
+    sudo rm -fr "$prefix"
+fi
 
 xcode-select --install
 sudo xcodebuild -license accept
