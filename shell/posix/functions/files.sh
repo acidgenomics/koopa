@@ -163,7 +163,6 @@ _koopa_find_and_replace_in_files() {  # {{{1
     local to
     to="${2:?}"
     shift 2
-
     # Check for unescaped slashes in pattern matching.
     # shellcheck disable=SC1003
     if _koopa_print "$from" \
@@ -177,7 +176,6 @@ _koopa_find_and_replace_in_files() {  # {{{1
     then
         _koopa_stop "Unescaped slash detected: '${to}'."
     fi
-
     local file
     for file in "$@"
     do
@@ -185,24 +183,22 @@ _koopa_find_and_replace_in_files() {  # {{{1
         _koopa_info "$file"
         sed -i "s/${from}/${to}/g" "$file"
     done
-
     return 0
 }
 
 _koopa_find_broken_symlinks() {  # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-06-03.
+    # @note Updated 2020-06-19.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
     _koopa_assert_is_installed find
-
     local dir
     dir="${1:-"."}"
+    [ -d "$dir" ] || return 0
     dir="$(realpath "$dir")"
-
     local x
     x="$( \
         find "$dir" \
@@ -214,7 +210,6 @@ _koopa_find_broken_symlinks() {  # {{{1
             | grep -v "Permission denied" \
             | sort \
     )"
-
     _koopa_print "$x"
 }
 
@@ -229,13 +224,10 @@ _koopa_find_dotfiles() {  # {{{1
     # 2. Header message (e.g. "Files")
     # """
     _koopa_assert_is_installed find
-
     local type
     type="${1:?}"
-
     local header
     header="${2:?}"
-
     local x
     x="$( \
         find "$HOME" \
@@ -248,7 +240,6 @@ _koopa_find_dotfiles() {  # {{{1
             | sort \
             | awk '{print "  ",$0}' \
     )"
-
     _koopa_print "\n%s:\n\n" "$header"
     _koopa_print "$x"
 }
