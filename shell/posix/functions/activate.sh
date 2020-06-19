@@ -912,14 +912,11 @@ _koopa_activate_secrets() {  # {{{1
 _koopa_activate_shortcut_aliases() {  # {{{1
     # """
     # Activate shortcut aliases.
-    # @note Updated 2020-06-03.
+    # @note Updated 2020-06-18.
     # """
     alias c='clear'
     alias e='exit'
     alias h='history'
-    # shellcheck disable=SC2153
-    alias k='cd "${KOOPA_PREFIX:?}"'
-    alias ku='koopa update'
 
     # List files.
     if _koopa_is_installed exa
@@ -953,6 +950,22 @@ _koopa_activate_shortcut_aliases() {  # {{{1
     # > alias ....='cd ../../../'
     # > alias .....='cd ../../../../'
     # > alias ......='cd ../../../../../'
+
+    # Navigation shortcuts.
+    alias ~='cd ~'
+    alias -- -='cd -'
+
+    if _koopa_is_macos
+    then
+        alias dl='cd ~/Downloads'
+    fi
+
+    # shellcheck disable=SC2153
+    alias dots='cd "${DOTFILES:?}"'
+
+    # shellcheck disable=SC2153
+    alias k='cd "${KOOPA_PREFIX:?}"'
+    alias ku='koopa update'
 
     return 0
 }
