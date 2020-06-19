@@ -50,6 +50,11 @@ then
     user=0
 fi
 
+if [[ "$system" -eq 1 ]]
+then
+    user=1
+fi
+
 # rsync configuration detection.
 if [[ -n "$source_ip" ]]
 then
