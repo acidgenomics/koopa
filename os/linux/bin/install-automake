@@ -4,13 +4,36 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="automake"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+link_cellar=1
+version=
 
+while (("$#"))
+do
+    case "$1" in
+        --cellar-only)
+            link_cellar=0
+            shift 1
+            ;;
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+name="automake"
+[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
+prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
+_koopa_install_start "$name" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -34,6 +57,6 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 _koopa_install_success "$name"

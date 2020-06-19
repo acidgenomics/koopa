@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
-source "$(koopa header bash)"
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
-df --portability --print-type --si | sort
+_koopa_assert_is_installed df
+
+df \
+    --portability \
+    --print-type \
+    --si \
+    "$@" \
+    | sort
