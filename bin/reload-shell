@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 source "$(koopa header bash)"
 
-exec "${SHELL:?}" -l
+exec "${SHELL:?}" -il
