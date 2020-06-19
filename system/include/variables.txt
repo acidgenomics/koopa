@@ -390,7 +390,7 @@ macos-app-microsoft-excel="16.37"
 macos-app-numbers="6.2.1"
 macos-app-rstudio="1.3.959"
 macos-app-tunnelblick="3.8.2"
-macos-app-visual-studio-code="1.46.0"
+macos-app-visual-studio-code="1.46.1"
 macos-app-xcode="11.3.1"
 
 
