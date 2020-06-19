@@ -428,6 +428,9 @@ _koopa_return_version() {  # {{{1
             rstudio-server)
                 flag="version"
                 ;;
+            ssh)
+                flag="-V"
+                ;;
             singularity)
                 flag="version"
                 ;;
