@@ -1,6 +1,19 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_activate_aliases() {  # {{{1
+    # """
+    # Activate (non-shell-specific) aliases.
+    # @note Updated 2020-06-19.
+    # """
+    local file
+    file="${HOME}/.aliases"
+    [ -f "$file" ] || return 0
+    # shellcheck source=/dev/null
+    . "$file"
+    return 0
+}
+
 _koopa_activate_aspera() {  # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
@@ -260,21 +273,6 @@ _koopa_activate_dircolors() {  # {{{1
     alias grep='grep --color=auto'
     alias ls='ls --color=auto'
     alias vdir='vdir --color=auto'
-    return 0
-}
-
-_koopa_activate_dotfiles() {  # {{{1
-    # """
-    # Activate dotfiles repo.
-    # @note Updated 2020-02-13.
-    # """
-    local dotfiles
-    dotfiles="$(_koopa_config_prefix)/dotfiles"
-    if [ ! -d "$dotfiles" ]
-    then
-        dotfiles="$(_koopa_dotfiles_prefix)"
-    fi
-    export DOTFILES="$dotfiles"
     return 0
 }
 
@@ -1155,6 +1153,18 @@ _koopa_export_cpu_count() {  # {{{1
         CPU_COUNT="$(_koopa_cpu_count)"
     fi
     export CPU_COUNT
+    return 0
+}
+
+_koopa_export_dotfiles() {  # {{{1
+    # """
+    # Activate dotfiles repo.
+    # @note Updated 2020-06-19.
+    # """
+    local dotfiles
+    dotfiles="$(_koopa_config_prefix)/dotfiles"
+    [ -d "$dotfiles" ] || return 0
+    export DOTFILES="$dotfiles"
     return 0
 }
 
