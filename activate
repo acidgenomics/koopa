@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-06-18.
+    Updated 2020-06-19.
 EOF
 }
 
@@ -421,7 +421,7 @@ fi
 
 
 
-# Minimal configuration {{{1
+# Standard configuration {{{1
 # ==============================================================================
 
 # Note that we're skipping this check inside RStudio shell.
@@ -431,6 +431,7 @@ then
 fi
 
 _koopa_export_cpu_count
+_koopa_export_dotfiles
 _koopa_export_editor
 _koopa_export_git
 _koopa_export_gnupg
@@ -453,15 +454,6 @@ _koopa_activate_xdg
 _koopa_update_xdg_config
 _koopa_activate_standard_paths
 _koopa_activate_koopa_paths
-_koopa_activate_homebrew
-_koopa_activate_dircolors
-_koopa_activate_gcc_colors
-_koopa_activate_dotfiles
-_koopa_activate_emacs
-_koopa_activate_go
-_koopa_activate_openjdk
-_koopa_activate_pipx
-_koopa_activate_ruby
 
 
 
@@ -470,10 +462,18 @@ _koopa_activate_ruby
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
-    if _koopa_is_macos
-    then
-        _koopa_activate_macos_python
-    fi
+    _koopa_activate_homebrew
+    _koopa_activate_dircolors
+    _koopa_activate_gcc_colors
+    _koopa_activate_emacs
+    _koopa_activate_go
+    _koopa_activate_openjdk
+    _koopa_activate_pipx
+    _koopa_activate_ruby
+    _koopa_activate_autojump
+    _koopa_activate_broot
+    _koopa_activate_fzf
+    _koopa_is_macos && _koopa_activate_macos_python
     _koopa_activate_llvm
     _koopa_activate_aspera
     _koopa_activate_ensembl_perl_api
@@ -485,6 +485,9 @@ then
     # > _koopa_activate_bcbio
     _koopa_activate_conda
     _koopa_activate_venv
+    _koopa_activate_aliases
+    _koopa_activate_secrets
+    _koopa_activate_ssh_key
 fi
 
 
@@ -494,31 +497,21 @@ fi
 
 if [ "$KOOPA_EXTRA" -eq 1 ]
 then
-    if [ "$KOOPA_SHELL" = "bash" ]
-    then
-        _koopa_activate_bash_extras
-    elif [ "$KOOPA_SHELL" = "zsh" ]
-    then
-        _koopa_activate_zsh_extras
-    fi
-
-    if _koopa_is_macos
-    then
-        _koopa_activate_macos_extras
-    fi
-
-    _koopa_activate_autojump
-    _koopa_activate_broot
-    _koopa_activate_fzf
-    _koopa_activate_secrets
-    _koopa_activate_ssh_key
+    case "$KOOPA_SHELL" in
+        bash)
+            _koopa_activate_bash_extras
+            ;;
+        zsh)
+            _koopa_activate_zsh_extras
+            ;;
+    esac
+    _koopa_is_macos && _koopa_activate_macos_extras
     _koopa_activate_coreutils_aliases
     _koopa_activate_black_alias
     _koopa_activate_emacs_alias
     _koopa_activate_r_alias
     _koopa_activate_shortcut_aliases
     _koopa_activate_standard_aliases
-
     if ! _koopa_is_subshell
     then
         _koopa_today_bucket
@@ -576,6 +569,4 @@ then
     fi
 fi
 
-unset -v \
-    KOOPA_ACTIVATE_SCRIPT \
-    KOOPA_INTERACTIVE
+unset -v KOOPA_ACTIVATE_SCRIPT KOOPA_INTERACTIVE
