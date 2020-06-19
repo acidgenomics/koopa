@@ -463,6 +463,7 @@ _koopa_activate_koopa_paths
 if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
     _koopa_activate_homebrew
+    _koopa_activate_coreutils
     _koopa_activate_dircolors
     _koopa_activate_gcc_colors
     _koopa_activate_emacs
@@ -506,12 +507,6 @@ then
             ;;
     esac
     _koopa_is_macos && _koopa_activate_macos_extras
-    _koopa_activate_coreutils_aliases
-    _koopa_activate_black_alias
-    _koopa_activate_emacs_alias
-    _koopa_activate_r_alias
-    _koopa_activate_shortcut_aliases
-    _koopa_activate_standard_aliases
     if ! _koopa_is_subshell
     then
         _koopa_today_bucket
