@@ -4,15 +4,37 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
+link_cellar=1
+version=
+
+while (("$#"))
+do
+    case "$1" in
+        --cellar-only)
+            link_cellar=0
+            shift 1
+            ;;
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
 name="gnupg"
 version="$(_koopa_variable gpg)"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
 _koopa_exit_if_dir "$prefix"
 
 name_fancy="GnuPG"
-
-_koopa_install_start "$name_fancy" "$prefix"
+_koopa_install_start "$name_fancy" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -55,7 +77,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # libgcrypt {{{1
 # ==============================================================================
@@ -80,7 +102,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # libassuan {{{1
 # ==============================================================================
@@ -105,7 +127,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # libksba {{{1
 # ==============================================================================
@@ -130,7 +152,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # npth {{{1
 # ==============================================================================
@@ -155,7 +177,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # pinentry {{{1
 # ==============================================================================
@@ -200,7 +222,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # gnupg {{{1
 # ==============================================================================
@@ -226,7 +248,7 @@ _koopa_h2 "Installing ${pkg} ${ver}."
     make install
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
 
-_koopa_link_cellar "$name" "$version"
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
 # Final steps {{{1
 # ==============================================================================
