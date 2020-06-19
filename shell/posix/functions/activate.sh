@@ -644,6 +644,10 @@ _koopa_activate_macos_extras() {  # {{{1
     # PlistBuddy alias, because sometimes 'defaults' just doesn’t cut it.
     alias plistbuddy="/usr/libexec/PlistBuddy"
 
+    # Volume control, because of http://xkcd.com/530/
+    alias stfu="osascript -e 'set volume output muted true'"
+    alias pump-it-up="osascript -e 'set volume output volume 100'"
+
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
