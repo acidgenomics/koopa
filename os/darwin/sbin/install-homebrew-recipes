@@ -5,6 +5,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh" --no-header-checks
 
 # """
+# Potentially useful binaries:
+# https://github.com/mathiasbynens/dotfiles/blob/main/brew.sh
+#
 # XQuartz:
 # Install XQuartz 2.7.9 manually instead of using 'xquartz' cask.
 #
@@ -86,6 +89,7 @@ casks=(
     firefox
     github
     google-chrome
+    google-chrome-canary
     google-cloud-sdk  # latest
     google-drive-file-stream  # latest
     gpg-suite
@@ -231,11 +235,14 @@ brews=(
     man-db
     mariadb-connector-c
     mas
+    moreutils
     neofetch
     neovim
+    nmap
     node
     open-mpi
     openblas
+    openssh
     pandoc
     pandoc-citeproc
     pandoc-crossref
