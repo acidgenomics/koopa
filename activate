@@ -52,7 +52,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-06-03.
+    Updated 2020-06-18.
 EOF
 }
 
@@ -517,6 +517,7 @@ then
     _koopa_activate_emacs_alias
     _koopa_activate_r_alias
     _koopa_activate_shortcut_aliases
+    _koopa_activate_standard_aliases
 
     if ! _koopa_is_subshell
     then
