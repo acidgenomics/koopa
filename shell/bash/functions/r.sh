@@ -210,12 +210,11 @@ _koopa_update_r_config() {  # {{{1
     # """
     # Update R configuration.
     #
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-06-19.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
     _koopa_h1 "Updating R configuration."
-
     # Locate R command.
     local r_exe
     r_exe="${1:-}"
@@ -223,36 +222,28 @@ _koopa_update_r_config() {  # {{{1
     then
         r_exe="$(_koopa_which_realpath R)"
     fi
-
     # Locate Rscript command.
     local rscript_exe
     rscript_exe="${r_exe}script"
-
     _koopa_assert_is_installed "$r_exe" "$rscript_exe"
-
     local r_home
     r_home="$(_koopa_r_home "$rscript_exe")"
-
     _koopa_dl "R home" "$r_home"
     _koopa_dl "R path" "$r_exe"
     _koopa_dl "Rscript path" "$rscript_exe"
-
     if _koopa_is_cellar "$r_exe"
     then
         # Ensure that everyone in R home is writable.
         _koopa_set_permissions --recursive "$r_home"
-
         # Ensure that (Debian) system 'etc' directories are removed.
         local make_prefix
         make_prefix="$(_koopa_make_prefix)"
-
         local etc_prefix
         etc_prefix="${make_prefix}/lib/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
             _koopa_rm "$etc_prefix"
         fi
-
         etc_prefix="${make_prefix}/lib64/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
@@ -261,35 +252,14 @@ _koopa_update_r_config() {  # {{{1
     else
         # Ensure system package library is writable.
         _koopa_set_permissions --recursive "${r_home}/library"
-
         # Need to ensure group write so package index gets updated.
         if [[ -d '/usr/share/R' ]]
         then
             _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
         fi
     fi
-
     _koopa_link_r_etc "$r_home"
     _koopa_link_r_site_library "$r_home"
     _koopa_r_javareconf --r-exe="$r_exe"
-
-    return 0
-}
-
-
-
-
-
-
-_koopa_update_r_config_macos() {  # {{{1
-    # """
-    # Update R config on macOS.
-    # @note Updated 2020-03-03.
-    #
-    # Need to include Makevars to build packages from source.
-    # """
-    _koopa_is_installed R || return 1
-    mkdir -pv "${HOME}/.R"
-    ln -fnsv "/usr/local/koopa/os/macos/etc/R/Makevars" "${HOME}/.R/."
     return 0
 }
