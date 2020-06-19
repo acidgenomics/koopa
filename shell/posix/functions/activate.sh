@@ -648,6 +648,10 @@ _koopa_activate_macos_extras() {  # {{{1
     alias stfu="osascript -e 'set volume output muted true'"
     alias pump-it-up="osascript -e 'set volume output volume 100'"
 
+# Lock the screen (when going AFK).
+    alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/\
+Resources/CGSession -suspend"
+
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
