@@ -33,7 +33,7 @@ prefix="${aspera_dir}/${version}"
 _koopa_exit_if_dir "$prefix"
 
 name_fancy="Aspera Connect"
-_koopa_install_start "$name_fancy" "$prefix"
+_koopa_install_start "$name_fancy" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
