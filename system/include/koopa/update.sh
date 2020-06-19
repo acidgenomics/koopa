@@ -11,6 +11,7 @@ app_prefix="$(_koopa_app_prefix)"
 # e.g. /usr/local
 make_prefix="$(_koopa_make_prefix)"
 
+dotfiles=1
 fast=0
 system=0
 user=0
@@ -46,12 +47,19 @@ done
 
 if [[ "$fast" -eq 1 ]]
 then
+    dotfiles=0
     system=0
     user=0
 fi
 
+if [[ "$user" -eq 1 ]]
+then
+    dotfiles=0
+fi
+
 if [[ "$system" -eq 1 ]]
 then
+    dotfiles=1
     user=1
 fi
 
@@ -88,7 +96,7 @@ then
     ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
 
     # Ensure dotfiles are current.
-    if [[ "$fast" -eq 0 ]]
+    if [[ "$dotfiles" -eq 1 ]]
     then
         (
             cd "${koopa_prefix}/dotfiles" || exit 1
