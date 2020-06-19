@@ -43,15 +43,12 @@ do
 done
 
 name="r"
-if [[ -z "$version" ]]
-then
-    version="$(_koopa_variable "$name")"
-fi
+[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
 _koopa_exit_if_dir "$prefix"
 
-_koopa_h1 "Installing R ${version} at '${prefix}'."
+name_fancy="R ${version}"
+_koopa_install_start "$name_fancy" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -107,9 +104,6 @@ rm -fr "$tmp_dir"
 r_exe="${prefix}/bin/R"
 _koopa_update_r_config "$r_exe"
 
-if [[ "$link_cellar" -eq 1 ]]
-then
-    _koopa_link_cellar "$name" "$version"
-fi
+[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
 
-_koopa_install_success "$name"
+_koopa_install_success "$name_fancy"
