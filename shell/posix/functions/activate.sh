@@ -626,12 +626,18 @@ _koopa_activate_macos_extras() {  # {{{1
     # """
     # Activate macOS-specific extra settings.
     # @note Updated 2020-06-03.
+    #
+    # Refer to mathiasbynens/dotfiles for useful aliases.
     # """
+    alias dl="cd ~/Downloads"
     alias finder-hide="setfile -a V"
     alias icloud-status="brctl log --wait --shorten"
     alias locate="mdfind -name"
     alias reload-mounts="sudo automount -vc"
     alias rstudio="open -a rstudio"
+
+    alias chrome="open '/Applications/Google Chrome.app'"
+    alias canary="open '/Applications/Google Chrome Canary.app'"
 
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
@@ -913,6 +919,8 @@ _koopa_activate_shortcut_aliases() {  # {{{1
     # """
     # Activate shortcut aliases.
     # @note Updated 2020-06-18.
+    #
+    # macOS-specific aliases should go in '_koopa_activate_macos_extras'.
     # """
     alias c='clear'
     alias e='exit'
@@ -955,11 +963,6 @@ _koopa_activate_shortcut_aliases() {  # {{{1
     alias ~='cd ~'
     alias -- -='cd -'
 
-    if _koopa_is_macos
-    then
-        alias dl='cd ~/Downloads'
-    fi
-
     # shellcheck disable=SC2153
     alias dots='cd "${DOTFILES:?}"'
 
@@ -969,7 +972,6 @@ _koopa_activate_shortcut_aliases() {  # {{{1
 
     return 0
 }
-
 
 _koopa_activate_ssh_key() {  # {{{1
     # """
@@ -992,6 +994,24 @@ _koopa_activate_ssh_key() {  # {{{1
     [ -r "$key" ] || return 0
     eval "$(ssh-agent -s)" > /dev/null 2>&1
     ssh-add "$key" > /dev/null 2>&1
+    return 0
+}
+
+_koopa_activate_standard_aliases() {  # {{{1
+    # """
+    # Standard aliases.
+    # @note Updated 2020-06-18.
+    # """
+
+    # Get today.
+    alias today="date '+%Y-%m-%d'"
+
+    # Get week number.
+    alias week="date +%V"
+
+    # Enable aliases to be sudo'ed.
+    # > alias sudo="sudo "
+
     return 0
 }
 

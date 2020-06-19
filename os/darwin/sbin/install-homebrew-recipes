@@ -86,6 +86,7 @@ casks=(
     firefox
     github
     google-chrome
+    google-chrome-canary
     google-cloud-sdk  # latest
     google-drive-file-stream  # latest
     gpg-suite
