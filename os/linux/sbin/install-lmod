@@ -4,15 +4,32 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="lmod"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_app_prefix)/${name}"
+version=
 
+while (("$#"))
+do
+    case "$1" in
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+name="lmod"
+[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
+prefix="$(_koopa_app_prefix)/${name}"
 _koopa_exit_if_dir "$prefix"
 
-name_fancy="Lmod ${version}"
-
-_koopa_install_start "$name_fancy" "$prefix"
+name_fancy="Lmod"
+_koopa_install_start "$name_fancy" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs

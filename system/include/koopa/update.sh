@@ -59,13 +59,11 @@ if [[ "$fast" -eq 1 ]]
 then
     dotfiles=0
 fi
-
 if [[ "$user" -eq 1 ]] && [[ "$system" -eq 0 ]]
 then
     core=0
     dotfiles=0
 fi
-
 if [[ "$system" -eq 1 ]]
 then
     user=1
@@ -96,7 +94,6 @@ then
             _koopa_git_pull origin master
         ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
     fi
-
     # Ensure dotfiles are current.
     if [[ "$dotfiles" -eq 1 ]]
     then
@@ -106,7 +103,6 @@ then
             _koopa_git_pull origin master
         ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
     fi
-
     _koopa_set_permissions --recursive "$koopa_prefix"
 fi
 
@@ -116,19 +112,15 @@ if [[ "$system" -eq 1 ]]
 then
     _koopa_h1 "Updating system configuration."
     _koopa_assert_has_sudo
-
     _koopa_dl "App prefix" "${app_prefix}"
     _koopa_dl "Config prefix" "${config_prefix}"
     _koopa_dl "Make prefix" "${make_prefix}"
-
     _koopa_add_make_prefix_link
-
     if _koopa_is_linux
     then
         _koopa_update_etc_profile_d
         _koopa_update_ldconfig
     fi
-
     if _koopa_is_macos
     then
         update-homebrew
@@ -148,7 +140,6 @@ then
         fi
         configure-vm "${configure_flags[@]}"
     fi
-
     if [[ "$rsync" -eq 0 ]]
     then
         # This can cause some recipes to break.
@@ -171,13 +162,8 @@ _koopa_fix_zsh_permissions
 if [[ "$user" -eq 1 ]]
 then
     _koopa_h1 "Updating user configuration."
-
-    # Remove broken symlinks.
-    _koopa_remove_broken_symlinks "${HOME}/.R"
-
     # Remove legacy directories from user config, if necessary.
     rm -frv "${config_prefix}/"{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
-
     # Update git repos.
     repos=(
         "${config_prefix}/docker"
@@ -195,7 +181,6 @@ then
             _koopa_git_pull
         )
     done
-
     _koopa_install_dotfiles
     _koopa_install_dotfiles_private
     _koopa_update_spacemacs
