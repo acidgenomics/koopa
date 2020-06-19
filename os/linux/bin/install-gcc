@@ -102,8 +102,8 @@ _koopa_exit_if_dir "$prefix"
 # >     fi
 # > fi
 
-name_fancy="${name} ${version}"
-_koopa_install_start "$name_fancy" "$prefix"
+name_fancy="GCC"
+_koopa_install_start "$name_fancy" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
