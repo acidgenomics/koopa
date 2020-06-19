@@ -40,7 +40,7 @@ _koopa_git_submodule_init() {
 _koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-04-30.
+    # @note Updated 2020-06-19.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -53,7 +53,7 @@ _koopa_git_pull() {
     _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_installed git
     git fetch --all
-    git pull origin master
+    git pull "$@"
     if [[ -s ".gitmodules" ]]
     then
         _koopa_git_submodule_init
