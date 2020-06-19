@@ -9,12 +9,31 @@ source "${script_dir}/../include/header.sh"
 # Note that this script will download files into '~/go'.
 # """
 
-name='fzf'
-version="$(_koopa_variable "$name")"
+version=
+
+while (("$#"))
+do
+    case "$1" in
+        --version=*)
+            version="${1#*=}"
+            shift 1
+            ;;
+        --version)
+            version="$2"
+            shift 2
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+done
+
+name="fzf"
+[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
 prefix="$(_koopa_fzf_prefix)/${version}"
 _koopa_exit_if_dir "$prefix"
 
-_koopa_install_start "$name" "$prefix"
+_koopa_install_start "$name" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
