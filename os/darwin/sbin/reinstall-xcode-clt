@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+_koopa_assert_has_no_args "$@"
+
+# """
+# https://apple.stackexchange.com/questions/93573/
+# """
+
+name_fancy="Xcode CLT"
+_koopa_h1 "Reinstalling ${name_fancy}."
+
+prefix="$(xcode-select -p)"
+_koopa_assert_is_dir "$prefix"
+sudo rm -fr "$prefix"
+
+xcode-select --install
+sudo xcodebuild -license accept
+sudo xcode-select -r
+xcode-select -p
+
+_koopa_install_success "$name_fancy"
