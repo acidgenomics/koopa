@@ -595,7 +595,6 @@ _koopa_activate_local_etc_profile() {  # {{{1
     return 0
 }
 
-# FIXME REWORK THIS.
 _koopa_activate_macos_extras() {  # {{{1
     # """
     # Activate macOS-specific extra settings.
@@ -606,20 +605,17 @@ _koopa_activate_macos_extras() {  # {{{1
     then
         export CLICOLOR=1
     fi
-
     # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
     # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
     if [ -z "${LSCOLORS:-}" ]
     then
         export LSCOLORS="Gxfxcxdxbxegedabagacad"
     fi
-
     # Set rsync flags for APFS.
     if [ -z "${RSYNC_FLAGS_APFS:-}" ]
     then
         export RSYNC_FLAGS_APFS="${RSYNC_FLAGS:?} --iconv=utf-8,utf-8-mac"
     fi
-
     return 0
 }
 
@@ -954,7 +950,7 @@ _koopa_activate_venv() {  # {{{1
 _koopa_activate_xdg() {  # {{{1
     # """
     # Activate XDG base directory specification
-    # @note Updated 2020-04-16.
+    # @note Updated 2020-06-19.
     #
     # XDG_RUNTIME_DIR:
     # - Can only exist for the duration of the user's login.
@@ -1006,6 +1002,23 @@ _koopa_activate_xdg() {  # {{{1
     export XDG_DATA_DIRS
     export XDG_DATA_HOME
     export XDG_RUNTIME_DIR
+    _koopa_update_xdg_config
+    return 0
+}
+
+_koopa_check_exports() {  # {{{1
+    # """
+    # Check exported environment variables.
+    # @note Updated 2020-06-19.
+    #
+    # Warn the user if they are setting unrecommended values.
+    # """
+    _koopa_is_rstudio && return 0
+    _koopa_warn_if_export \
+        JAVA_HOME \
+        LD_LIBRARY_PATH \
+        PYTHONHOME \
+        R_HOME
     return 0
 }
 
