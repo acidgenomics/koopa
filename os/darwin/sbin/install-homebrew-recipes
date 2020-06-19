@@ -235,7 +235,7 @@ brews=(
     man-db
     mariadb-connector-c
     mas
-    moreutils
+    # moreutils  # conflicts with parallel and ts
     neofetch
     neovim
     nmap
