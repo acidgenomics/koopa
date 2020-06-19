@@ -33,8 +33,7 @@ name="bash"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
 _koopa_exit_if_dir "$prefix"
 
-name_fancy="${name} ${version}"
-_koopa_install_start "$name_fancy" "$prefix"
+_koopa_install_start "$name" "$version" "$prefix"
 
 _koopa_assert_has_no_args "$@"
 _koopa_assert_has_no_envs
@@ -85,5 +84,5 @@ then
     _koopa_enable_shell "$name"
 fi
 
-_koopa_install_success "$name_fancy"
+_koopa_install_success "$name"
 _koopa_note "Reload the shell to complete activation."
