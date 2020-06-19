@@ -88,19 +88,6 @@ _koopa_activate_bcbio() {  # {{{1
     return 0
 }
 
-_koopa_activate_black_alias() {  # {{{1
-    # """
-    # Activate black alias.
-    # @note Updated 2020-06-03.
-    # """
-    if _koopa_is_installed black
-    then
-        # Note that 79 characters conforms to PEP8 (see flake8 for details).
-        alias black="black --line-length=79"
-    fi
-    return 0
-}
-
 _koopa_activate_broot() {  # {{{1
     # """
     # Activate broot directory tree utility.
@@ -213,10 +200,10 @@ _koopa_activate_conda_env() {  # {{{1
     return 0
 }
 
-_koopa_activate_coreutils_aliases() {  # {{{1
+_koopa_activate_coreutils() {  # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
-    # @note Updated 2020-06-15.
+    # @note Updated 2020-06-19.
     #
     # Note that macOS ships with a very old version of GNU coreutils.
     # Update these using Homebrew.
@@ -282,18 +269,6 @@ _koopa_activate_emacs() {  # {{{1
     # @note Updated 2020-05-01.
     # """
     _koopa_activate_prefix "${HOME}/.emacs.d"
-}
-
-_koopa_activate_emacs_alias() {  # {{{1
-    # """
-    # Activate Emacs alias.
-    # @note Updated 2020-06-03.
-    # """
-    if _koopa_is_installed emacs
-    then
-        alias emacs="emacs --no-window-system"
-    fi
-    return 0
 }
 
 _koopa_activate_ensembl_perl_api() {  # {{{1
@@ -620,36 +595,12 @@ _koopa_activate_local_etc_profile() {  # {{{1
     return 0
 }
 
+# FIXME REWORK THIS.
 _koopa_activate_macos_extras() {  # {{{1
     # """
     # Activate macOS-specific extra settings.
-    # @note Updated 2020-06-18.
-    #
-    # Refer to mathiasbynens/dotfiles for useful aliases.
+    # @note Updated 2020-06-19.
     # """
-    alias dl="cd ~/Downloads"
-    alias finder-hide="setfile -a V"
-    alias icloud-status="brctl log --wait --shorten"
-    alias locate="mdfind -name"
-    alias reload-mounts="sudo automount -vc"
-    alias rstudio="open -a rstudio"
-
-    alias firefox="open '/Applications/Firefox.app'"
-    alias safari="open '/Applications/Safari.app'"
-    alias chrome="open '/Applications/Google Chrome.app'"
-    alias canary="open '/Applications/Google Chrome Canary.app'"
-
-    # PlistBuddy alias, because sometimes 'defaults' just doesn’t cut it.
-    alias plistbuddy="/usr/libexec/PlistBuddy"
-
-    # Volume control, because of http://xkcd.com/530/
-    alias stfu="osascript -e 'set volume output muted true'"
-    alias pump-it-up="osascript -e 'set volume output volume 100'"
-
-# Lock the screen (when going AFK).
-    alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/\
-Resources/CGSession -suspend"
-
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
@@ -901,18 +852,6 @@ _koopa_activate_rust() {  # {{{1
     return 0
 }
 
-_koopa_activate_r_alias() {  # {{{1
-    # """
-    # Activate R alias.
-    # @note Updated 2020-06-03.
-    # """
-    if _koopa_is_installed R
-    then
-        alias R="R --no-restore --no-save --quiet"
-    fi
-    return 0
-}
-
 _koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
@@ -923,64 +862,6 @@ _koopa_activate_secrets() {  # {{{1
     [ -r "$file" ] || return 0
     # shellcheck source=/dev/null
     . "$file"
-    return 0
-}
-
-_koopa_activate_shortcut_aliases() {  # {{{1
-    # """
-    # Activate shortcut aliases.
-    # @note Updated 2020-06-18.
-    #
-    # macOS-specific aliases should go in '_koopa_activate_macos_extras'.
-    # """
-    alias c='clear'
-    alias e='exit'
-    alias h='history'
-
-    # List files.
-    if _koopa_is_installed exa
-    then
-        alias l='exa -F'
-        alias la='exa -Fal --group'
-        alias ll='exa -Fl --group'
-    else
-        alias l='ls -F'
-        alias la='ls -Fahl'
-        alias ll='ls -BFhl'
-    fi
-    alias l.='l -d .*'
-    alias l1='ls -1'
-
-    # List head or tail.
-    alias lh='l | head'
-    alias lt='l | tail'
-
-    # Clear then list.
-    alias cls='clear; l'
-
-    # Browse up and down.
-    alias u='clear; cd ../; pwd; l'
-    alias d='clear; cd -; l'
-
-    # Navigate up parent directories without 'cd'.
-    # These are also supported by autojump.
-    # > alias ..='cd ..'
-    # > alias ...='cd ../../'
-    # > alias ....='cd ../../../'
-    # > alias .....='cd ../../../../'
-    # > alias ......='cd ../../../../../'
-
-    # Navigation shortcuts.
-    alias ~='cd ~'
-    alias -- -='cd -'
-
-    # shellcheck disable=SC2153
-    alias dots='cd "${DOTFILES:?}"'
-
-    # shellcheck disable=SC2153
-    alias k='cd "${KOOPA_PREFIX:?}"'
-    alias ku='koopa update'
-
     return 0
 }
 
@@ -1008,18 +889,6 @@ _koopa_activate_ssh_key() {  # {{{1
     return 0
 }
 
-_koopa_activate_standard_aliases() {  # {{{1
-    # """
-    # Standard aliases.
-    # @note Updated 2020-06-18.
-    # """
-    alias today="date '+%Y-%m-%d'"
-    alias week="date '+%V'"
-    # Enable aliases to be sudo'ed.
-    # > alias sudo="sudo "
-    return 0
-}
-
 _koopa_activate_standard_paths() {  # {{{1
     # """
     # Activate standard paths.
@@ -1036,14 +905,11 @@ _koopa_activate_standard_paths() {  # {{{1
     _koopa_add_to_path_end '/usr/sbin'
     _koopa_add_to_path_end '/sbin'
     _koopa_add_to_manpath_end '/usr/share/man'
-
     _koopa_force_add_to_path_start '/usr/local/sbin'
     _koopa_force_add_to_path_start '/usr/local/bin'
     _koopa_force_add_to_manpath_start '/usr/local/share/man'
-
     _koopa_force_add_to_path_start "${HOME}/.local/bin"
     _koopa_force_add_to_manpath_start "${HOME}/.local/share/man"
-
     return 0
 }
 
