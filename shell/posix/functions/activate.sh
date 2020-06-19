@@ -625,7 +625,7 @@ _koopa_activate_local_etc_profile() {  # {{{1
 _koopa_activate_macos_extras() {  # {{{1
     # """
     # Activate macOS-specific extra settings.
-    # @note Updated 2020-06-03.
+    # @note Updated 2020-06-18.
     #
     # Refer to mathiasbynens/dotfiles for useful aliases.
     # """
@@ -636,6 +636,8 @@ _koopa_activate_macos_extras() {  # {{{1
     alias reload-mounts="sudo automount -vc"
     alias rstudio="open -a rstudio"
 
+    alias firefox="open '/Applications/Firefox.app'"
+    alias safari="open '/Applications/Safari.app'"
     alias chrome="open '/Applications/Google Chrome.app'"
     alias canary="open '/Applications/Google Chrome Canary.app'"
 
@@ -1002,16 +1004,10 @@ _koopa_activate_standard_aliases() {  # {{{1
     # Standard aliases.
     # @note Updated 2020-06-18.
     # """
-
-    # Get today.
     alias today="date '+%Y-%m-%d'"
-
-    # Get week number.
-    alias week="date +%V"
-
+    alias week="date '+%V'"
     # Enable aliases to be sudo'ed.
     # > alias sudo="sudo "
-
     return 0
 }
 
