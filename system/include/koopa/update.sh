@@ -79,7 +79,7 @@ then
     # Update koopa.
     (
         cd "$koopa_prefix" || exit 1
-        _koopa_git_pull
+        _koopa_git_pull origin master
     ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
 
     # Ensure dotfiles are current.
@@ -88,7 +88,7 @@ then
         (
             cd "${koopa_prefix}/dotfiles" || exit 1
             _koopa_git_reset
-            _koopa_git_pull
+            _koopa_git_pull origin master
         ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
     fi
 
