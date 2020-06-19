@@ -53,12 +53,31 @@ _koopa_activate_bash_extras() {  # {{{1
     PS1="$(_koopa_prompt)"
     export PS1
 
-    # Alias definitions.
-    # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-    if [[ -f ~/.bash_aliases ]]
+    # Add tab completion for many commands.
+    local etc_completion
+    etc_completion="/etc/bash_completion"
+    if _koopa_is_installed brew
+    then
+        local brew_prefix
+        brew_prefix="$(_koopa_homebrew_prefix)"
+        # Ensure existing Homebrew v1 completions continue to work.
+        export BASH_COMPLETION_COMPAT_DIR="${brew_prefix}/etc/bash_completion.d"
+        # shellcheck source=/dev/null
+        source "${brew_prefix}/etc/profile.d/bash_completion.sh"
+    elif [[ -f "$etc_completion" ]]
     then
         # shellcheck source=/dev/null
-        . ~/.bash_aliases
+        source "$etc_completion"
+    fi
+
+    # Alias definitions.
+    # See /usr/share/doc/bash-doc/examples in the bash-doc package.
+    local user_aliases
+    user_aliases="${HOME}/.bash_aliases"
+    if [[ -f "$user_aliases" ]]
+    then
+        # shellcheck source=/dev/null
+        source "$user_aliases"
     fi
 
     return 0
