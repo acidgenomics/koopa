@@ -3,9 +3,12 @@
 _koopa_activate_bash_extras() {  # {{{1
     # """
     # Activate Bash shell extras.
-    # @note Updated 2020-06-03.
+    # @note Updated 2020-06-18.
     # """
-    # Correct minor directory changing spelling mistakes.
+    # Easier navigation (e.g. '**/qux' will enter './foo/bar/baz/qux').
+    shopt -s autocd
+
+    # Correct minor directory changing spelling mistakes (i.e. for 'cd').
     shopt -s cdspell
 
     # Check the window size after each command and if necessary, update the
@@ -15,12 +18,16 @@ _koopa_activate_bash_extras() {  # {{{1
     # Save multiline commands.
     shopt -s cmdhist
 
-    # If set, the pattern "**" used in a pathname expansion context will match
-    # all files and zero or more directories and subdirectories.
-    # > shopt -s globstar
+    # Recursive globbing (e.g. 'echo **/*.txt'). If set, the pattern "**" used
+    # in a pathname expansion context will match all files and zero or more
+    # directories and subdirectories.
+    shopt -s globstar
 
     # Append to the history file, don't overwrite it.
     shopt -s histappend
+
+    # Case-insensitive globbing (used in pathname expansion).
+    shopt -s nocaseglob
 
     # Map key bindings to default editor.
     # Note that Bash currently uses Emacs by default.
