@@ -4,14 +4,13 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
-
 _koopa_assert_has_no_args "$@"
 
 name="ChromHMM"
 prefix="$(_koopa_app_prefix)/$(_koopa_lowercase "$name")"
 tmp_dir="$(_koopa_tmp_dir)"
 
-_koopa_h1 "Installing ${name} at '${prefix}'."
+_koopa_install_start "$name" "$prefix"
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
