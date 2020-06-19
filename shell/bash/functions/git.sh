@@ -49,7 +49,6 @@ _koopa_git_pull() {
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
     _koopa_h2 "Pulling git repo at '${PWD:?}'."
-    [[ "$#" -eq 0 ]] || return 1
     _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_installed git
     git fetch --all
@@ -65,6 +64,7 @@ _koopa_git_pull() {
         git submodule --quiet foreach --recursive \
             git pull origin master
     fi
+    _koopa_success "Pull was successful."
     return 0
 }
 
