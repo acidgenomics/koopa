@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-_koopa_cd_tmp_dir "$tmp_dir"
 file="${name}-${version}.tar.xz"
 url="${gnu_mirror}/${name}/${file}"
 _koopa_download "$url"
