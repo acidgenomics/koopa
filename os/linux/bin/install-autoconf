@@ -5,6 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 link_cellar=1
+reinstall=0
 version=
 
 while (("$#"))
@@ -12,6 +13,10 @@ do
     case "$1" in
         --cellar-only)
             link_cellar=0
+            shift 1
+            ;;
+        --reinstall)
+            reinstall=1
             shift 1
             ;;
         --version=*)
@@ -31,6 +36,7 @@ done
 name="autoconf"
 [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
 prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+[[ "$reinstall" -eq 1 ]] && _koopa_rm "$prefix"
 _koopa_exit_if_dir "$prefix"
 
 _koopa_install_start "$name" "$version" "$prefix"
