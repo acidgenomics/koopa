@@ -301,7 +301,7 @@ then
     install-git
     install-lua
     install-luarocks
-    install-pass
+    install-password-store
 fi
 
 # Languages {{{1
