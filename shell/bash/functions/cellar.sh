@@ -184,6 +184,10 @@ _koopa_link_cellar() {  # {{{1
     then
         IFS=',' read -r -a cellar_subdirs <<< "$include_dirs"
         cellar_subdirs=("${cellar_subdirs[@]/^/${cellar_prefix}}")
+        for i in "${!cellar_subdirs[@]}"
+        do
+            cellar_subdirs[$i]="${cellar_prefix}/${cellar_subdirs[$i]}"
+        done
     else
         while IFS= read -r -d $'\0'
         do
