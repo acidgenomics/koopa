@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-_koopa_find_cellar_version_dir() {  # {{{1
+_koopa_find_cellar_version() {  # {{{1
     # """
     # Find cellar installation directory.
-    # @note Updated 2020-05-08.
+    # @note Updated 2020-06-20.
     # """
     local name
     name="${1:?}"
@@ -22,6 +22,7 @@ _koopa_find_cellar_version_dir() {  # {{{1
         | tail -n 1 \
     )"
     _koopa_assert_is_dir "$x"
+    x="$(basename "$x")"
     _koopa_print "$x"
 }
 
@@ -30,6 +31,8 @@ _koopa_install_cellar() {  # {{{1
     # Install cellar program.
     # @note Updated 2020-06-20.
     # """
+    _koopa_assert_is_linux
+    _koopa_assert_has_no_envs
     local link_cellar name name_fancy prefix reinstall tmp_dir version
     link_cellar=1
     name_fancy=
@@ -76,7 +79,6 @@ _koopa_install_cellar() {  # {{{1
         esac
     done
     _koopa_assert_has_no_args "$@"
-    _koopa_assert_has_no_envs
     [[ -z "$name_fancy" ]] && name_fancy="$name"
     [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
     prefix="$(_koopa_cellar_prefix)/${name}/${version}"
@@ -100,10 +102,13 @@ _koopa_install_cellar() {  # {{{1
     return 0
 }
 
+# FIXME Need to add option to link specific dirs, e.g. for aws-cli.
+# dirs="bin,man"
+# FIXME How to split into array by delim?
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
-    # @note Updated 2020-05-09.
+    # @note Updated 2020-06-20.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -123,49 +128,94 @@ _koopa_link_cellar() {  # {{{1
     # _koopa_link_cellar emacs 26.3
     # """
     _koopa_assert_is_linux
-
-    local name
-    name="${1:?}"
-
-    # Version is optional and will be detected automatically if necessary.
-    local version
-    version="${2:-}"
-
-    local make_prefix
+    local cellar_prefix cellar_subdirs include_dirs make_prefix name version
+    version=
+    while (("$#"))
+    do
+        case "$1" in
+            --include-dirs=*)
+                include_dirs="${1#*=}"
+                shift 1
+                ;;
+            --include-dirs)
+                include_dirs="$2"
+                shift 2
+                ;;
+            --name=*)
+                name="${1#*=}"
+                shift 1
+                ;;
+            --name)
+                name="$2"
+                shift 2
+                ;;
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            --version)
+                version="$2"
+                shift 2
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    _koopa_assert_has_no_args "$@"
+    if [[ -n "$ignore_dirs" ]] && [[ -n "$include_dirs" ]]
+    then
+        _koopa_stop "Specify '--ignore-dirs' or '--include-dirs', not both."
+    fi
+    _koopa_assert_has_no_envs
     make_prefix="$(_koopa_make_prefix)"
     _koopa_assert_is_dir "$make_prefix"
-
-    local cellar_prefix
     cellar_prefix="$(_koopa_cellar_prefix)"
     _koopa_assert_is_dir "$cellar_prefix"
     cellar_prefix="${cellar_prefix}/${name}"
     _koopa_assert_is_dir "$cellar_prefix"
-
-    # Detect the version automatically, if not specified.
-    if [[ -n "$version" ]]
-    then
-        cellar_prefix="${cellar_prefix}/${version}"
-    else
-        cellar_prefix="$(_koopa_find_cellar_version_dir "$name" "$version")"
-    fi
+    [[ -z "$version" ]] && version="$(_koopa_find_cellar_version "$name")"
+    cellar_prefix="${cellar_prefix}/${version}"
     _koopa_assert_is_dir "$cellar_prefix"
-
     _koopa_h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
     _koopa_set_permissions --recursive "$cellar_prefix"
     _koopa_remove_broken_symlinks "$cellar_prefix"
     _koopa_remove_broken_symlinks "$make_prefix"
 
-    local cp_flags
-    # Can increase verbosity with '-v' here.
-    cp_flags=("-f" "-r" "-s")
+
+
+    # FIXME SELECT THE DIRS TO LINK.
+
+    cellar_subdirs=()
+    if [[ -n "$include_dirs" ]]
+    then
+        IFS=',' read -r -a cellar_subdirs <<< "$include_dirs"
+    else
+        cellar_subdirs=()
+        while IFS= read -r -d $'\0'
+        do
+            cellar_subdirs+=("$REPLY")
+        done < <( \
+            find "$cellar_prefix" \
+                -mindepth 1 \
+                -maxdepth 1 \
+                -type d \
+                -print0 \
+            | sort -z \
+            | xargs -0 -n1 basename \
+        )
+    fi
+
+    echo "$cellar_subdirs[@]}"
+    exit 0
+
+    cp -frs \
+        "${cellar_prefix}/"* \
+        "${make_prefix}/".
 
     if _koopa_is_shared_install
     then
-        sudo cp "${cp_flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
         _koopa_update_ldconfig
-    else
-        cp "${cp_flags[@]}" "${cellar_prefix}/"* "${make_prefix}/".
     fi
-
     return 0
 }
