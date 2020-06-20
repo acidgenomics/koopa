@@ -39,7 +39,10 @@ apps_dir="${prefix}/apps"
 data_dir="${prefix}/moduleData"
 tmp_dir="$(_koopa_tmp_dir)"
 
+# Install luarocks dependencies.
 eval "$(luarocks path)"
+luarocks install luaposix
+luarocks install luafilesystem
 
 (
     _koopa_cd_tmp_dir "$tmp_dir"
