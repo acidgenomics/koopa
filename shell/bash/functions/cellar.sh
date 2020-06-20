@@ -35,6 +35,7 @@ _koopa_install_cellar() {  # {{{1
     _koopa_assert_has_no_envs
     local gnu_mirror include_dirs jobs link_args link_cellar name name_fancy \
         prefix reinstall tmp_dir version
+    include_dirs=
     link_cellar=1
     name_fancy=
     reinstall=0
