@@ -36,6 +36,21 @@ _koopa_activate_zsh_compinit() {  # {{{1
     return 0
 }
 
+_koopa_activate_zsh_editor() {  # {{{1
+    # """
+    # Activate Zsh editor.
+    # @note Updated 2020-06-20.
+    case "${EDITOR:-}" in
+        emacs)
+            bindkey -e
+            ;;
+        vi|vim)
+            bindkey -v
+            ;;
+    esac
+    return 0
+}
+
 _koopa_activate_zsh_extras() {  # {{{1
     # """
     # Activate Zsh extras.
@@ -55,7 +70,7 @@ _koopa_activate_zsh_extras() {  # {{{1
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
     _koopa_activate_zsh_colors
-    _koopa_activate_zsh_options
+    _koopa_activate_zsh_editor
     _koopa_activate_zsh_plugins
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
@@ -80,95 +95,35 @@ _koopa_activate_zsh_fpath() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_options() {  # {{{1
-    # """
-    # Activate Zsh shell options.
-    # Updated 2020-06-03.
-    #
-    # Debug with:
-    # - bindkey
-    # - setopt
-    #
-    # See also:
-    # - http://zsh.sourceforge.net/Doc/Release/Completion-System.html
-    # - http://zsh.sourceforge.net/Doc/Release/Options.html
-    # - http://zsh.sourceforge.net/Doc/Release/Options.html#index-MARKDIRS
-    # - http://zsh.sourceforge.net/Doc/Release/Options.html#index-NOMARKDIRS
-    # - http://zsh.sourceforge.net/Guide/zshguide06.html
-    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/completion.zsh
-    # """
-    # Map key bindings to default editor.
-    # Note that Bash currently uses Emacs by default.
-    case "${EDITOR:-}" in
-        emacs)
-            bindkey -e
-            ;;
-        vi|vim)
-            bindkey -v
-            ;;
-    esac
-    # Fix the delete key.
-    bindkey "\e[3~" delete-char
-    local setopt_array
-    setopt_array=(
-        # auto_menu                 # completion
-        # auto_name_dirs            # dirs
-        # complete_aliases          # completion
-        # extended_glob             # glob
-        always_to_end               # completion
-        append_history              # history
-        auto_cd                     # dirs
-        auto_pushd                  # dirs
-        complete_in_word            # completion
-        extended_history            # history
-        hist_expire_dups_first      # history
-        hist_ignore_dups            # history
-        hist_ignore_space           # history
-        hist_verify                 # history
-        inc_append_history          # history
-        interactive_comments        # misc
-        long_list_jobs              # jobs
-        pushd_ignore_dups           # dirs
-        pushd_minus                 # dirs
-        share_history               # history
-    )
-    setopt "${setopt_array[@]}"
-    local unsetopt_array
-    unsetopt_array=(
-        bang_hist
-        flow_control
-    )
-    unsetopt "${unsetopt_array[@]}"
-    return 0
-}
-
 _koopa_activate_zsh_plugins() {  # {{{1
     # """
     # Activate Zsh plugins.
-    # Updated 2020-06-03.
+    # Updated 2020-06-20.
     #
     # Debug plugins via:
     # > zsh -df
+    # 
+    # Lines to array in Zsh:
+    # https://unix.stackexchange.com/questions/29724/
+    # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
-    local dotfiles_prefix
+    local dotfiles_prefix plugin plugins zsh_plugins_dir
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
-    local zsh_plugins_dir
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
-    if [[ -d "${zsh_plugins_dir}/zsh-autosuggestions" ]]
-    then
-        source "${zsh_plugins_dir}/zsh-autosuggestions/zsh-autosuggestions.zsh"
-        # Set the autosuggest text color.
-        # Define using xterm-256 color code.
-        #
-        # 'fg=240' also works well with Dracula theme.
-        #
-        # See also:
-        # - https://stackoverflow.com/questions/47310537
-        # - https://upload.wikimedia.org/wikipedia/
-        #       commons/1/15/Xterm_256color_chart.svg
-        export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=005"
-    fi
+    plugins=("${(@f)$( \
+        find "$zsh_plugins_dir" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type d \
+            -print0 \
+        | sort -z \
+        | xargs -0 -n1 basename \
+    )}")
+    for plugin in "${plugins[@]}"
+    do
+        source "${zsh_plugins_dir}/${plugin}/${plugin}.zsh"
+    done
     return 0
 }
 
