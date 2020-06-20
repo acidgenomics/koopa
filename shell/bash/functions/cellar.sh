@@ -179,18 +179,12 @@ _koopa_link_cellar() {  # {{{1
     _koopa_set_permissions --recursive "$cellar_prefix"
     _koopa_remove_broken_symlinks "$cellar_prefix"
     _koopa_remove_broken_symlinks "$make_prefix"
-
-
-
-    # FIXME SELECT THE DIRS TO LINK.
-
+    cellar_subdirs=()
     if [[ -n "$include_dirs" ]]
     then
         IFS=',' read -r -a cellar_subdirs <<< "$include_dirs"
+        cellar_subdirs=("${cellar_subdirs[@]/^/${cellar_prefix}}")
     else
-        echo "HELLO WORLD"
-        echo "$cellar_prefix"
-        cellar_subdirs=()
         while IFS= read -r -d $'\0'
         do
             cellar_subdirs+=("$REPLY")
@@ -200,21 +194,14 @@ _koopa_link_cellar() {  # {{{1
                 -maxdepth 1 \
                 -type d \
                 -print0 \
-            | sort -z
-            # | xargs -0 -n1 basename \
+            | sort -z \
         )
     fi
-
+    # FIXME
     echo "${cellar_subdirs[@]}"
-    exit 0
-
-    cp -frs \
-        "${cellar_prefix}/"* \
-        "${make_prefix}/".
-
-    if _koopa_is_shared_install
-    then
-        _koopa_update_ldconfig
-    fi
+    return 0
+    # FIXME
+    cp -frs "${cellar_subdirs[@]}" -t "${make_prefix}/"
+    _koopa_is_shared_install && _koopa_update_ldconfig
     return 0
 }
