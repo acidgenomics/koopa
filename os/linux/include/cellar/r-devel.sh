@@ -8,7 +8,7 @@ repos="https://svn.r-project.org/R"
 # Set the desired top-level directory structure.
 rtop="${PWD}/svn/r"
 # Create necessary build directories.
-mkdir -pv "${rtop}/r-devel/build"
+mkdir -p "${rtop}/r-devel/build"
 # Check out the latest revision of R-devel.
 cd "$rtop" || exit 1
 svn co "${repos}/trunk" "r-devel/source"
