@@ -170,23 +170,6 @@ _koopa_hdf5_version() {  # {{{1
     return 0
 }
 
-_koopa_java_version() {  # {{{1
-    # """
-    # Java (OpenJDK) version.
-    # @note Updated 2020-03-19.
-    # """
-    _koopa_is_installed java || return 1
-    local x
-    x="$( \
-        java --version \
-            | head -n 1 \
-            | cut -d ' ' -f 2 \
-    )"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
 _koopa_linux_version() {  # {{{1
     # """
     # Linux version.
@@ -268,6 +251,23 @@ _koopa_major_minor_patch_version() {  # {{{1
     local version
     version="${1:?}"
     _koopa_print "$version" | cut -d '.' -f 1-3
+    return 0
+}
+
+_koopa_openjdk_version() {  # {{{1
+    # """
+    # Java (OpenJDK) version.
+    # @note Updated 2020-06-20.
+    # """
+    _koopa_is_installed java || return 1
+    local x
+    x="$( \
+        java --version \
+            | head -n 1 \
+            | cut -d ' ' -f 2 \
+    )"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 

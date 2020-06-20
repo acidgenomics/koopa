@@ -363,8 +363,8 @@ if (!isTRUE(docker)) {
 checkVersion(
     name = "Java : OpenJDK",
     whichName = "java",
-    current = currentVersion("java"),
-    expected = expectedVersion("java")
+    current = currentVersion("openjdk"),
+    expected = expectedVersion("openjdk")
 )
 if (!isTRUE(docker)) {
     checkVersion(
