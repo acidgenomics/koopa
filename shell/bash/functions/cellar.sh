@@ -34,11 +34,12 @@ _koopa_install_cellar() {  # {{{1
     _koopa_assert_is_linux
     _koopa_assert_has_no_envs
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
-        name_fancy prefix reinstall tmp_dir version
+        name_fancy prefix reinstall script_name tmp_dir version
     include_dirs=
     link_cellar=1
     name_fancy=
     reinstall=0
+    script_name=
     version=
     while (("$#"))
     do
@@ -75,6 +76,14 @@ _koopa_install_cellar() {  # {{{1
                 reinstall=1
                 shift 1
                 ;;
+            --script-name=*)
+                script_name="${1#*=}"
+                shift 1
+                ;;
+            --script-name)
+                script_name="$2"
+                shift 2
+                ;;
             --version=*)
                 version="${1#*=}"
                 shift 1
@@ -90,6 +99,7 @@ _koopa_install_cellar() {  # {{{1
     done
     _koopa_assert_has_no_args "$@"
     [[ -z "$name_fancy" ]] && name_fancy="$name"
+    [[ -z "$script_name" ]] && script_name="$name"
     [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
     prefix="$(_koopa_cellar_prefix)/${name}/${version}"
     [[ "$reinstall" -eq 1 ]] && _koopa_rm "$prefix"
@@ -105,7 +115,7 @@ _koopa_install_cellar() {  # {{{1
         # shellcheck disable=SC2034
         make_prefix="$(_koopa_make_prefix)"
         # shellcheck source=/dev/null
-        source "$(_koopa_prefix)/os/linux/include/cellar/${name}.sh"
+        source "$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
     rm -fr "$tmp_dir"
     if [[ "$link_cellar" -eq 1 ]]

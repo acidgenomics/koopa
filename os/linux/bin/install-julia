@@ -4,39 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Install the generic binaries by default, when possible.
-# https://julialang.org/downloads/
-#
-# Build from source instructions:
-# - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
-# - https://github.com/JuliaLang/julia/blob/master/doc/build/linux.md
-# - https://docs.julialang.org/en/v1/devdocs/llvm/
-# - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md#llvm
-# - https://github.com/JuliaLang/julia/blob/master/Make.inc
-#
-# Source compile failure on Ubuntu 18 LTS.
-# The program is attempting to use system LLVM 6, even when we request not to.
-#
-# > julia --version
-# /usr/lib/x86_64-linux-gnu/libLLVM-6.0.so: version `JL_LLVM_6.0' not found
-# (required by /usr/local/cellar/julia/1.3.0/bin/../lib/libjulia.so.1)
-#
-# See also:
-# https://discourse.julialang.org/t/
-#     problem-building-julia-version-jl-llvm-6-0-not-found/11545
-# """
-
-name="julia"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_envs
-
 # Default to binary installation.
 install="binary"
 
@@ -53,53 +20,8 @@ do
     esac
 done
 
-minor_version="$(_koopa_major_minor_version "$version")"
-tmp_dir="$(_koopa_tmp_dir)"
-jobs="$(_koopa_cpu_count)"
-
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    # Binary
-    if [[ "$install" == "binary" ]]
-    then
-        file="julia-${version}-linux-x86_64.tar.gz"
-        url="https://julialang-s3.julialang.org/bin/linux/x64/${minor_version}/${file}"
-        _koopa_download "$url"
-        _koopa_extract "$file"
-        cd "julia-${version}" || exit 1
-        rm LICENSE.md
-        _koopa_mkdir "$prefix"
-        cp -rv . "$prefix"
-    elif [[ "$install" == "source" ]]
-    then
-        # If set, this will interfere with internal LLVM build required for
-        # Julia. See 'build.md' file for LLVM details.
-        unset LLVM_CONFIG
-        # > file="v${version}.tar.gz"
-        # > url="https://github.com/JuliaLang/julia/archive/${file}"
-        file="julia-${version}-full.tar.gz"
-        url="https://github.com/JuliaLang/julia/releases/download/v${version}/${file}"
-        _koopa_download "$url"
-        _koopa_extract "$file"
-        cd "julia-${version}" || exit 1
-        # Customize the 'Make.user' file.
-        # Need to ensure we configure internal LLVM build here.
-        cat > Make.user << EOL
-prefix=${prefix}
-# > LLVM_ASSERTIONS=1
-# > LLVM_DEBUG=Release
-# > USE_BINARYBUILDER=0
-USE_LLVM_SHLIB=0
-USE_SYSTEM_LLVM=0
-EOL
-        make --jobs="$jobs"
-        # > make test
-        make install
-    fi
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
+_koopa_install_cellar \
+    --name="julia" \
+    --name-fancy="Julia" \
+    --script-name="julia-${install}" \
+    "@"
