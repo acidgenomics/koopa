@@ -85,7 +85,7 @@ then
             | sort \
     )"
     nextflow_dirs="$(_koopa_sub "$nextflow_dirs" "${prefix}/" '')"
-    mapfile -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
+    readarray -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
     images=("${images[@]}" "${nextflow_arr[@]}")
 
     # AWS batch images.
@@ -97,7 +97,7 @@ then
             | sort \
     )"
     batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
-    mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
+    readarray -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
     images=("${images[@]}" "${batch_arr[@]}")
 
     # Large bioinformatics images.

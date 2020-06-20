@@ -83,7 +83,7 @@ app_prefix="$(_koopa_app_prefix)"
 if [[ -d "$app_prefix" ]]
 then
     # Skipping programs that are specific to powerful multi-core VMs.
-    mapfile -t app_flags <<< "$(_koopa_rsync_flags)"
+    readarray -t app_flags <<< "$(_koopa_rsync_flags)"
     if ! _koopa_is_powerful
     then
         app_flags+=(
@@ -123,7 +123,7 @@ refdata_prefix="$(_koopa_refdata_prefix)"
 if [[ -d "$refdata_prefix" ]]
 then
     # Skipping references that are specific to powerful multi-core VMs.
-    mapfile -t refdata_flags <<< "$(_koopa_rsync_flags)"
+    readarray -t refdata_flags <<< "$(_koopa_rsync_flags)"
     if ! _koopa_is_powerful
     then
         refdata_flags+=(

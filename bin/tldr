@@ -226,7 +226,7 @@ display_tldr() {
     }
 
     # Read lines into array.
-    mapfile -t lines < <(_koopa_print "$page")
+    readarray -t lines <<< "$(_koopa_print "$page")"
 
     # Process line-by-line.
     for line in "${lines[@]}"

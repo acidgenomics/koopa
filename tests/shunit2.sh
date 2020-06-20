@@ -170,7 +170,7 @@ suite() {
         done
     fi
 
-    mapfile -t tests < <( \
+    readarray -t tests < <( \
         declare -F \
             | cut -d ' ' -f 3 \
             | grep -E '^test_' \
