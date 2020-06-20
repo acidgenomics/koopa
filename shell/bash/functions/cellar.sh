@@ -201,7 +201,7 @@ _koopa_link_cellar() {  # {{{1
             | sort -z \
         )
     fi
-    cp -frs "${cellar_subdirs[@]}" -t "${make_prefix}/"
+    cp -frsv "${cellar_subdirs[@]}" -t "${make_prefix}/"
     _koopa_is_shared_install && _koopa_update_ldconfig
     return 0
 }
