@@ -7,6 +7,7 @@ source "${script_dir}/../include/header.sh"
 # Default to binary installation.
 install="binary"
 
+pos=()
 while (("$#"))
 do
     case "$1" in
@@ -15,9 +16,12 @@ do
             shift 1
             ;;
         *)
+            pos+=("$1")
+            shift 1
             ;;
     esac
 done
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 _koopa_install_cellar \
     --name="julia" \
