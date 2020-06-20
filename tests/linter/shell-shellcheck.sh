@@ -2,7 +2,7 @@
 
 # """
 # Run ShellCheck on all Bash and Zsh scripts.
-# Updated 2020-02-16.
+# Updated 2020-06-20.
 # """
 
 # shellcheck source=/dev/null
@@ -12,7 +12,7 @@ _koopa_exit_if_not_installed shellcheck
 
 # Find files by shebang.
 grep_pattern='^#!/.*\b(ba)?sh\b$'
-readarray -t files < <(_koopa_test_find_files_by_shebang "$grep_pattern")
+readarray -t files <<< "$(_koopa_test_find_files_by_shebang "$grep_pattern")"
 
 shellcheck -x "${files[@]}"
 
