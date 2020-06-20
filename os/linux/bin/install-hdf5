@@ -4,41 +4,21 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="hdf5"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+_koopa_install_cellar --name="hdf5" --name-fancy="HDF5" "$@"
 
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
 _koopa_assert_is_installed gfortran
-
-jobs="$(_koopa_cpu_count)"
 minor_version="$(_koopa_major_minor_version "$version")"
-tmp_dir="$(_koopa_tmp_dir)"
 
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    file="hdf5-${version}.tar.gz"
-    url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${minor_version}/\
+file="hdf5-${version}.tar.gz"
+url="https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-${minor_version}/\
 hdf5-${version}/src/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
-    cd "hdf5-${version}" || exit 1
-    ./configure \
-        --prefix="$prefix" \
-        --enable-cxx \
-        --enable-fortran
-    make --jobs="$jobs"
-    # > make check
-    make install
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
+_koopa_download "$url"
+_koopa_extract "$file"
+cd "hdf5-${version}" || exit 1
+./configure \
+    --prefix="$prefix" \
+    --enable-cxx \
+    --enable-fortran
+make --jobs="$jobs"
+# > make check
+make install
