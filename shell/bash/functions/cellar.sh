@@ -108,12 +108,12 @@ _koopa_install_cellar() {  # {{{1
     if [[ "$link_cellar" -eq 1 ]]
     then
         link_args=(
-            "--name='${name}'"
-            "--version='${version}'"
+            "--name=${name}"
+            "--version=${version}"
         )
         if [[ -n "$include_dirs" ]]
         then
-            link_args+=("--include-dirs='${include_dirs}'")
+            link_args+=("--include-dirs=${include_dirs}")
         fi
         _koopa_link_cellar "${link_args[@]}"
     fi

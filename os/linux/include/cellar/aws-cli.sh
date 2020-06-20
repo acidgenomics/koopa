@@ -18,8 +18,6 @@
 # > python3 setup.py install
 # """
 
-set -x
-
 file="awscli-exe-linux-x86_64.zip"
 url="https://awscli.amazonaws.com/${file}"
 _koopa_download "$url"
@@ -33,5 +31,3 @@ version2="$(find . -mindepth 1 -maxdepth 1 -type d -name "2.*")"
 [[ -z "$version2" ]] && _koopa_stop "Failed to detect version."
 version2="$(basename "$version2")"
 _koopa_cp "$version2" "$prefix"
-
-echo "OK THERE"
