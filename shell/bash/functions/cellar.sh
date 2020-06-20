@@ -233,17 +233,14 @@ _koopa_link_cellar() {  # {{{1
             cellar_subdirs[$i]="${cellar_prefix}/${cellar_subdirs[$i]}"
         done
     else
-        while IFS= read -r -d $'\0'
-        do
-            cellar_subdirs+=("$REPLY")
-        done < <( \
+        readarray -t cellar_subdirs <<< "$( \
             find "$cellar_prefix" \
                 -mindepth 1 \
                 -maxdepth 1 \
                 -type d \
-                -print0 \
-            | sort -z \
-        )
+                -print \
+            | sort \
+        )"
     fi
     cp_flags=("-frs")
     [[ "$verbose" -eq 1 ]] && cp_flags+=("-v")
