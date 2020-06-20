@@ -310,7 +310,7 @@ shunit2="2.1.7"
 singularity="3.5.0"
 
 # https://www.sqlite.org/download.html
-sqlite="3.32.1"
+sqlite="3.32.3"
 
 # OpenSSH
 # https://www.openssh.com/
