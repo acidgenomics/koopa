@@ -102,10 +102,6 @@ _koopa_install_cellar() {  # {{{1
     return 0
 }
 
-# FIXME Need to add option to link specific dirs, e.g. for aws-cli.
-# dirs="bin,man"
-# FIXME How to split into array by delim?
-# FIXME ALLOW NAME TO BE POSITIONAL ARGUMENT.
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
@@ -129,8 +125,10 @@ _koopa_link_cellar() {  # {{{1
     # _koopa_link_cellar emacs 26.3
     # """
     _koopa_assert_is_linux
-    local cellar_prefix cellar_subdirs include_dirs make_prefix name version
+    local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
+        pos verbose version
     include_dirs=
+    verbose=0
     version=
     pos=()
     while (("$#"))
@@ -151,6 +149,10 @@ _koopa_link_cellar() {  # {{{1
             --name)
                 name="$2"
                 shift 2
+                ;;
+            --verbose)
+                verbose=1
+                shift 1
                 ;;
             --version=*)
                 version="${1#*=}"
@@ -211,7 +213,9 @@ _koopa_link_cellar() {  # {{{1
             | sort -z \
         )
     fi
-    cp -frsv "${cellar_subdirs[@]}" -t "${make_prefix}/"
+    cp_flags=("-frs")
+    [[ "$verbose" -eq 1 ]] && cp_flags+=("-v")
+    cp "${cp_flags[@]}" "${cellar_subdirs[@]}" -t "${make_prefix}/"
     _koopa_is_shared_install && _koopa_update_ldconfig
     return 0
 }
