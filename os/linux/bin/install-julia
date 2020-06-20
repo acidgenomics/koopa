@@ -4,19 +4,18 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# Default to binary installation.
-install="binary"
+install_type="source"
 
 pos=()
 while (("$#"))
 do
     case "$1" in
         --binary)
-            install="binary"
+            install_type="binary"
             shift 1
             ;;
         --source)
-            install="source"
+            install_type="source"
             shift 1
             ;;
         *)
@@ -30,5 +29,5 @@ done
 _koopa_install_cellar \
     --name="julia" \
     --name-fancy="Julia" \
-    --script-name="julia-${install}" \
+    --script-name="julia-${install_type}" \
     "$@"
