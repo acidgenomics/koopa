@@ -7,7 +7,12 @@ source "${script_dir}/../include/header.sh"
 dir="${1:-cloudbiolinux}"
 _koopa_exit_if_dir "$dir"
 
+name_fancy="CloudBioLinux"
+_koopa_install_start "$name_fancy"
+
 # Using our forked repo, to control for unexpected upstream changes.
 (
     git clone "https://github.com/acidgenomics/cloudbiolinux.git" "$dir"
 ) 2>&1 | tee "$(_koopa_tmp_log_file)"
+
+_koopa_install_success "$name_fancy"

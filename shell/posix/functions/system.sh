@@ -623,7 +623,7 @@ _koopa_ln() {  # {{{1
 _koopa_local_ip_address() {  # {{{1
     # """
     # Local IP address.
-    # @note Updated 2020-02-23.
+    # @note Updated 2020-06-18.
     #
     # Some systems (e.g. macOS) will return multiple IP address matches for
     # Ethernet and WiFi. Here we're simplying returning the first match, which
@@ -637,14 +637,17 @@ _koopa_local_ip_address() {  # {{{1
             | grep "inet " \
             | grep "broadcast" \
             | awk '{print $2}' \
+            | tail -n 1
         )"
     else
         x="$( \
             hostname -I \
             | awk '{print $1}' \
+            | head -n 1
         )"
     fi
-    _koopa_print "$x" | head -n 1
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
     return 0
 }
 
@@ -851,7 +854,7 @@ _koopa_os_string() {  # {{{1
 _koopa_public_ip_address() {  # {{{1
     # """
     # Public (remote) IP address.
-    # @note Updated 2020-02-23.
+    # @note Updated 2020-06-18.
     #
     # @seealso
     # https://www.cyberciti.biz/faq/
@@ -860,6 +863,13 @@ _koopa_public_ip_address() {  # {{{1
     _koopa_is_installed dig || return 1
     local x
     x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    # Fallback in case dig approach doesn't work.
+    if [ -z "$x" ]
+    then
+        _koopa_is_installed curl || return 1
+        x="$(curl -s ipecho.net/plain)"
+    fi
+    [ -n "$x" ] || return 1
     _koopa_print "$x"
     return 0
 }
