@@ -42,32 +42,25 @@ do
             ;;
     esac
 done
-if [[ "${#pos[@]}" -gt 0 ]]
-then
-    set -- "${pos[@]}"
-fi
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 dir="${1:-.}"
 _koopa_assert_is_dir "$dir"
 dir="$(realpath "$dir")"
 
 # Pipe GNU find into array.
-sam_files=()
-while IFS= read -r -d $'\0'
-do
-    sam_files+=("$REPLY")
-done < <( \
+readarray -t sam_files <<< "$( \
     find "$dir" \
         -maxdepth 3 \
         -mindepth 1 \
         -type f \
         -iname "*.sam" \
-        -print0 \
-    | sort -z \
-)
+        -print \
+    | sort \
+)"
 
 # Error if file array is empty.
-if [[ "${#sam_files[@]}" -eq 0 ]]
+if ! _koopa_is_array_non_empty "${sam_files[@]}"
 then
     _koopa_stop "No SAM files detected in '${dir}'."
 fi
