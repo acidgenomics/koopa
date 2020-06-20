@@ -8,5 +8,6 @@ _koopa_install_cellar \
     --name="aws-cli" \
     --name-fancy="AWS CLI" \
     --version="latest" \
+    --include-dirs="bin" \
     "$@"
 
