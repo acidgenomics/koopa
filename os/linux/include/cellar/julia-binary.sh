@@ -32,4 +32,4 @@ _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
 rm LICENSE.md
 _koopa_mkdir "$prefix"
-cp -rv . "$prefix"
+cp -r . "$prefix"
