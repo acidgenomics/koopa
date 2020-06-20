@@ -132,6 +132,7 @@ _koopa_link_cellar() {  # {{{1
     local cellar_prefix cellar_subdirs include_dirs make_prefix name version
     include_dirs=
     version=
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -159,12 +160,21 @@ _koopa_link_cellar() {  # {{{1
                 version="$2"
                 shift 2
                 ;;
-            *)
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
                 _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    _koopa_assert_has_no_args "$@"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    [[ -n "${1:-}" ]] && name="$1"
     _koopa_assert_has_no_envs
     make_prefix="$(_koopa_make_prefix)"
     _koopa_assert_is_dir "$make_prefix"
