@@ -25,6 +25,71 @@ _koopa_find_cellar_version_dir() {  # {{{1
     _koopa_print "$x"
 }
 
+_koopa_install_cellar() {  # {{{1
+    # """
+    # Install cellar program.
+    # @note Updated 2020-06-20.
+    # """
+    local link_cellar name prefix reinstall tmp_dir version
+    link_cellar=1
+    reinstall=0
+    version=
+    while (("$#"))
+    do
+        case "$1" in
+            --cellar-only)
+                link_cellar=0
+                shift 1
+                ;;
+            --name=*)
+                name="${1#*=}"
+                shift 1
+                ;;
+            --name)
+                name="$2"
+                shift 2
+                ;;
+            --reinstall)
+                reinstall=1
+                shift 1
+                ;;
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            --version)
+                version="$2"
+                shift 2
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    _koopa_assert_has_no_args "$@"
+    _koopa_assert_has_no_envs
+    [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
+    prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+    [[ "$reinstall" -eq 1 ]] && _koopa_rm "$prefix"
+    _koopa_exit_if_dir "$prefix"
+    _koopa_install_start "$name" "$version" "$prefix"
+    tmp_dir="$(_koopa_tmp_dir)"
+    (
+        local gnu_mirror jobs
+        # shellcheck disable=SC2034
+        gnu_mirror="$(_koopa_gnu_mirror)"
+        # shellcheck disable=SC2034
+        jobs="$(_koopa_cpu_count)"
+        _koopa_cd_tmp_dir "$tmp_dir"
+        # shellcheck source=/dev/null
+        source "$(_koopa_prefix)/os/linux/include/cellar/${name}.sh"
+    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
+    rm -fr "$tmp_dir"
+    [[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
+    _koopa_install_success "$name"
+    return 0
+}
+
 _koopa_link_cellar() {  # {{{1
     # """
     # Symlink cellar into build directory.
