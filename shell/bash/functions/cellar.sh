@@ -201,10 +201,6 @@ _koopa_link_cellar() {  # {{{1
             | sort -z \
         )
     fi
-    # FIXME
-    echo "${cellar_subdirs[@]}"
-    return 0
-    # FIXME
     cp -frs "${cellar_subdirs[@]}" -t "${make_prefix}/"
     _koopa_is_shared_install && _koopa_update_ldconfig
     return 0
