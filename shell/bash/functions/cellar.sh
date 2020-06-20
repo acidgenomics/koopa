@@ -130,6 +130,7 @@ _koopa_link_cellar() {  # {{{1
     # """
     _koopa_assert_is_linux
     local cellar_prefix cellar_subdirs include_dirs make_prefix name version
+    include_dirs=
     version=
     while (("$#"))
     do
