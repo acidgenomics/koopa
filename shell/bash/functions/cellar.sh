@@ -200,8 +200,8 @@ _koopa_link_cellar() {  # {{{1
                 -maxdepth 1 \
                 -type d \
                 -print0 \
-            | sort -z \
-            | xargs -0 -n1 basename \
+            | sort -z
+            # | xargs -0 -n1 basename \
         )
     fi
 
