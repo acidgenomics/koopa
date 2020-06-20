@@ -30,8 +30,9 @@ _koopa_install_cellar() {  # {{{1
     # Install cellar program.
     # @note Updated 2020-06-20.
     # """
-    local link_cellar name prefix reinstall tmp_dir version
+    local link_cellar name name_fancy prefix reinstall tmp_dir version
     link_cellar=1
+    name_fancy=
     reinstall=0
     version=
     while (("$#"))
@@ -47,6 +48,14 @@ _koopa_install_cellar() {  # {{{1
                 ;;
             --name)
                 name="$2"
+                shift 2
+                ;;
+            --name-fancy=*)
+                name_fancy="${1#*=}"
+                shift 1
+                ;;
+            --name-fancy)
+                name_fancy="$2"
                 shift 2
                 ;;
             --reinstall)
@@ -68,11 +77,12 @@ _koopa_install_cellar() {  # {{{1
     done
     _koopa_assert_has_no_args "$@"
     _koopa_assert_has_no_envs
+    [[ -z "$name_fancy" ]] && name_fancy="$name"
     [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
     prefix="$(_koopa_cellar_prefix)/${name}/${version}"
     [[ "$reinstall" -eq 1 ]] && _koopa_rm "$prefix"
     _koopa_exit_if_dir "$prefix"
-    _koopa_install_start "$name" "$version" "$prefix"
+    _koopa_install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(_koopa_tmp_dir)"
     (
         local gnu_mirror jobs
@@ -86,7 +96,7 @@ _koopa_install_cellar() {  # {{{1
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
     rm -fr "$tmp_dir"
     [[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
-    _koopa_install_success "$name"
+    _koopa_install_success "$name_fancy"
     return 0
 }
 
