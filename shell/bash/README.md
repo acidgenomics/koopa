@@ -17,10 +17,12 @@ Array sorting:
 - https://stackoverflow.com/questions/7442417
 - https://stackoverflow.com/a/7442583/3911732
 
-GNU find into array:
+`mapfile` is the Bash `readarray`.
+
+Reading lines into array examples:
 
 ```bash
-readarray -t man_dirs <<< "$( \
+mapfile -t man_dirs <<< "$( \
     find "$KOOPA_PREFIX" \
         -mindepth 1 \
         -type d \
@@ -31,6 +33,12 @@ readarray -t man_dirs <<< "$( \
         -print \
     | sort \
 )"
+```
+
+or
+
+```bash
+readarray -t filelist < <(ls -A)
 ```
 
 or
