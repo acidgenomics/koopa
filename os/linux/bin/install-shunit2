@@ -4,34 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# https://github.com/fish-shell/fish-shell/#building
-
-name="shunit2"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_args "$@"
-_koopa_mkdir "${prefix}/bin"
-tmp_dir="$(_koopa_tmp_dir)"
-
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    file="v${version}.tar.gz"
-    url="https://github.com/kward/shunit2/archive/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
-    cd "shunit2-${version}" || exit 1
-    _koopa_set_permissions --recursive "$prefix"
-    cp --archive shunit2 "${prefix}/bin/."
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
-_koopa_note "Reload the shell to complete activation."
+_koopa_install_cellar --name="shunit2" --name-fancy="shUnit2" "$@"
