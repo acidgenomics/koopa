@@ -15,8 +15,8 @@
 # > python3 setup.py install
 # """
 
-file="awscli-exe-linux-x86_64.zip"
-url="https://awscli.amazonaws.com/${file}"
+file="${version}.tar.gz"
+url="https://github.com/aws/aws-cli/archive/${file}"
 _koopa_download "$url"
 _koopa_extract "$file"
 tmp_install_dir="tmp_install"
