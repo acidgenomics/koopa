@@ -94,19 +94,15 @@ _koopa_dl "fastq dir" "$fastq_dir"
 
 # Create a per-sample array from the R1 FASTQ files.
 # Pipe GNU find into array.
-fastq_r1_files=()
-while IFS= read -r -d $'\0'
-do
-    fastq_r1_files+=("$REPLY")
-done < <( \
+readarray -t fastq_r1_files <<< "$( \
     find "$fastq_dir" \
         -maxdepth 1 \
         -mindepth 1 \
         -type f \
         -name "*${r1_tail}" \
-        -print0 \
-    | sort -z \
-)
+        -print \
+    | sort \
+)"
 
 # Error on FASTQ match failure.
 if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
