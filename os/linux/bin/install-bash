@@ -5,4 +5,3 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 source "${script_dir}/../include/header.sh"
 
 _koopa_install_cellar --name="bash" --name-fancy="Bash" "$@"
-_koopa_enable_shell bash
