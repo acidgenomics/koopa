@@ -28,7 +28,6 @@
 
 _koopa_assert_is_file /usr/bin/gcc /usr/bin/g++
 
-_koopa_cd_tmp_dir "$tmp_dir"
 file="cmake-${version}.tar.gz"
 url="https://github.com/Kitware/CMake/releases/download/v${version}/${file}"
 _koopa_download "$url"
