@@ -57,6 +57,19 @@ done < <( \
 )
 ```
 
+# Re-sort an array
+
+```bash
+readarray -t array <<< "$(printf '%s\0' "${array[@]}" | sort -z | xargs -0n1)"
+```
+
+or
+
+```bash
+IFS=$'\n' array=($(sort <<<"${array[*]}"))
+unset IFS
+```
+
 See also:
 - How to use `BASH_REMATCH`.
   https://unix.stackexchange.com/questions/349686
