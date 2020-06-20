@@ -166,9 +166,6 @@ htop="2.2.0"
 # https://github.com/JuliaLang/julia/releases
 julia="1.4.2"
 
-# https://www.oracle.com/technetwork/java/javase/downloads/index.html
-java="14.0.1"
-
 # https://ftp.gnu.org/gnu/libtool/
 libtool="2.4.6"
 
@@ -203,6 +200,9 @@ neovim="0.4.3"
 
 # https://github.com/nextflow-io/nextflow/releases
 nextflow="20.04.1"
+
+# https://www.oracle.com/technetwork/java/javase/downloads/index.html
+openjdk="14.0.1"
 
 # https://www.openssl.org/source/
 openssl="1.1.1d"
