@@ -218,7 +218,7 @@ pandoc="2.7.3"
 parallel="20200522"
 
 # https://www.passwordstore.org/
-pass="1.7.3"
+password-store="1.7.3"
 
 # ftp://ftp.gnu.org/gnu/patch
 patch="2.7.6"
