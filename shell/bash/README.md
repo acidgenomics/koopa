@@ -65,7 +65,7 @@ readarray -t array <<< "$(printf '%s\0' "${array[@]}" | sort -z | xargs -0n1)"
 
 or
 
-``bash
+```bash
 IFS=$'\n' array=($(sort <<<"${array[*]}"))
 unset IFS
 ```
