@@ -629,9 +629,9 @@ if (isTRUE(linux)) {
         expected = expectedVersion("gnupg")
     )
     checkVersion(
-        name = "pass",
-        current = currentVersion("pass"),
-        expected = expectedVersion("pass")
+        name = "Password store (pass)",
+        current = currentVersion("password-store"),
+        expected = expectedVersion("password-store")
     )
     if (!isTRUE(docker)) {
         checkVersion(
