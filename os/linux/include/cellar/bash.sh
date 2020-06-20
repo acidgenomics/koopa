@@ -31,3 +31,5 @@ patches="$(_koopa_print "$version" | cut -d '.' -f 3)"
 make --jobs="$jobs"
 # > make test
 make install
+
+_koopa_enable_shell bash
