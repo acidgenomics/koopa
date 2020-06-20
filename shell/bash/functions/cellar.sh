@@ -33,8 +33,8 @@ _koopa_install_cellar() {  # {{{1
     # """
     _koopa_assert_is_linux
     _koopa_assert_has_no_envs
-    local gnu_mirror include_dirs jobs link_args link_cellar name name_fancy \
-        prefix reinstall tmp_dir version
+    local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
+        name_fancy prefix reinstall tmp_dir version
     include_dirs=
     link_cellar=1
     name_fancy=
@@ -97,11 +97,13 @@ _koopa_install_cellar() {  # {{{1
     _koopa_install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(_koopa_tmp_dir)"
     (
+        _koopa_cd_tmp_dir "$tmp_dir"
         # shellcheck disable=SC2034
         gnu_mirror="$(_koopa_gnu_mirror)"
         # shellcheck disable=SC2034
         jobs="$(_koopa_cpu_count)"
-        _koopa_cd_tmp_dir "$tmp_dir"
+        # shellcheck disable=SC2034
+        make_prefix="$(_koopa_make_prefix)"
         # shellcheck source=/dev/null
         source "$(_koopa_prefix)/os/linux/include/cellar/${name}.sh"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
