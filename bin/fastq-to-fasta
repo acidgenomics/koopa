@@ -50,19 +50,15 @@ source_dir="$(_koopa_strip_trailing_slash "$source_dir")"
 target_dir="$(_koopa_strip_trailing_slash "$target_dir")"
 
 # Pipe GNU find into array.
-array=()
-while IFS= read -r -d $'\0'
-do
-    array+=("$REPLY")
-done < <( \
+readarray -t array <<< "$( \
     find "$source_dir" \
         -maxdepth 1 \
         -mindepth 1 \
         -type f \
         -iname "*.fastq" \
-        -print0 \
-    | sort -z \
-)
+        -print \
+    | sort \
+)"
 
 # Error if file array is empty.
 if [[ "${#array[@]}" -eq 0 ]]
