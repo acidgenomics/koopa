@@ -33,7 +33,8 @@ _koopa_install_cellar() {  # {{{1
     # """
     _koopa_assert_is_linux
     _koopa_assert_has_no_envs
-    local link_cellar name name_fancy prefix reinstall tmp_dir version
+    local gnu_mirror include_dirs jobs link_args link_cellar name name_fancy \
+        prefix reinstall tmp_dir version
     link_cellar=1
     name_fancy=
     reinstall=0
@@ -44,6 +45,14 @@ _koopa_install_cellar() {  # {{{1
             --cellar-only)
                 link_cellar=0
                 shift 1
+                ;;
+            --include-dirs=*)
+                include_dirs="${1#*=}"
+                shift 1
+                ;;
+            --include-dirs)
+                include_dirs="$2"
+                shift 2
                 ;;
             --name=*)
                 name="${1#*=}"
@@ -87,7 +96,6 @@ _koopa_install_cellar() {  # {{{1
     _koopa_install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(_koopa_tmp_dir)"
     (
-        local gnu_mirror jobs
         # shellcheck disable=SC2034
         gnu_mirror="$(_koopa_gnu_mirror)"
         # shellcheck disable=SC2034
@@ -97,7 +105,18 @@ _koopa_install_cellar() {  # {{{1
         source "$(_koopa_prefix)/os/linux/include/cellar/${name}.sh"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
     rm -fr "$tmp_dir"
-    [[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
+    if [[ "$link_cellar" -eq 1 ]]
+    then
+        link_args=(
+            "--name='${name}'"
+            "--version='${version}'"
+        )
+        if [[ -n "$include_dirs" ]]
+        then
+            link_args+=("--include-dirs='${include_dirs}'")
+        fi
+        _koopa_link_cellar "${link_args[@]}"
+    fi
     _koopa_install_success "$name_fancy"
     return 0
 }
