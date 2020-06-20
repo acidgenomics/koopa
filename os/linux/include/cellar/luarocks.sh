@@ -19,8 +19,7 @@ make build
 make install
 
 _koopa_h2 "Installing Lmod dependencies."
-# > build_prefix="$(_koopa_make_prefix)
-# > export LUAROCKS_PREFIX="$build_prefix"
+export LUAROCKS_PREFIX="$prefix"
 luarocks_exe="${prefix}/bin/luarocks"
 "$luarocks_exe" install luaposix
 "$luarocks_exe" install luafilesystem
