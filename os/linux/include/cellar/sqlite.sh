@@ -17,7 +17,7 @@
 # """
 
 case "$version" in
-    "3.32.1")
+    "3.32.3")
         year="2020"
         ;;
     *)
@@ -25,7 +25,11 @@ case "$version" in
         ;;
 esac
 
-file_version="${version//./}00"
+# e.g. 3.32.3 to 3320300.
+file_version="$( \
+    _koopa_print "$version" \
+    | sed -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
+)"
 file="${name}-autoconf-${file_version}.tar.gz"
 url="https://www.sqlite.org/${year}/${file}"
 _koopa_download "$url"
