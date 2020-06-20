@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+set -x
+pwd
+
+echo "$gnu_mirror"
+echo "$jobs"
+echo "$name"
+echo "$prefix"
+echo "$version"
+
 file="${name}-${version}.tar.xz"
 url="${gnu_mirror}/${name}/${file}"
 _koopa_download "$url"
