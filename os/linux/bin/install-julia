@@ -15,7 +15,6 @@ do
             shift 1
             ;;
         *)
-            shift 1
             ;;
     esac
 done
