@@ -11,6 +11,10 @@ pos=()
 while (("$#"))
 do
     case "$1" in
+        --binary)
+            install="binary"
+            shift 1
+            ;;
         --source)
             install="source"
             shift 1
