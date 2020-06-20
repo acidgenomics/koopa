@@ -38,4 +38,9 @@ source "${script_dir}/../include/header.sh"
 
 _koopa_apt_add_r_repo
 _koopa_apt_get build-dep r-base
-_koopa_install_cellar --name="r-devel" "$@"
+_koopa_install_cellar \
+    --name="r" \
+    --name-fancy="R" \
+    --version="devel" \
+    --script-name="r-devel" \
+    "$@"
