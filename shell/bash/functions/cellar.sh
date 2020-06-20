@@ -118,6 +118,7 @@ _koopa_install_cellar() {  # {{{1
         source "$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
     rm -fr "$tmp_dir"
+    _koopa_set_permissions --recursive "$prefix"
     if [[ "$link_cellar" -eq 1 ]]
     then
         link_args=(
