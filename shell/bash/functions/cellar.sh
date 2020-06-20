@@ -205,7 +205,7 @@ _koopa_link_cellar() {  # {{{1
         )
     fi
 
-    echo "$cellar_subdirs[@]}"
+    echo "${cellar_subdirs[@]}"
     exit 0
 
     cp -frs \
