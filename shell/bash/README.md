@@ -60,7 +60,14 @@ done < <( \
 # Re-sort an array
 
 ```bash
-readarray -t array2 <<< "$(printf '%s\0' "${array1[@]}" | sort -z | xargs -0n1)"
+readarray -t array <<< "$(printf '%s\0' "${array[@]}" | sort -z | xargs -0n1)"
+```
+
+or
+
+``bash
+IFS=$'\n' array=($(sort <<<"${array[*]}"))
+unset IFS
 ```
 
 See also:
