@@ -254,22 +254,18 @@ display_tldr() {
 list_pages() {
     # """
     # List locally cached tldr pages.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-06-20.
     # """
     _koopa_h1 "Listing known tldr pages."
     local pages
-    pages=()
-    while IFS= read -r -d $'\0'
-    do
-        pages+=("$REPLY")
-    done < <( \
+    readarray -t pages <<< "$( \
         find "$config_dir" \
             -mindepth 1 \
             -type f \
             -iname "*.md" \
-            -print0 \
-        | sort -uz
-    )
+            -print \
+        | sort -u \
+    )"
     _koopa_basename_sans_ext "${pages[@]}"
     return 0
 }

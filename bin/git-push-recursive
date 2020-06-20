@@ -17,7 +17,7 @@ readarray -t repos <<< "$( \
         -print \
 )"
 
-if ! _koopa_is_array_non_empty
+if ! _koopa_is_array_non_empty "${repos[@]}"
 then
     _koopa_note "Failed to detect any git repos."
     exit 0
