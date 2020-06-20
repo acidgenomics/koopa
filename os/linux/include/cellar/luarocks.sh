@@ -17,9 +17,3 @@ cd "${name}-${version}" || exit 1
     --versioned-rocks-dir
 make build
 make install
-
-_koopa_h2 "Installing Lmod dependencies."
-# > export LUAROCKS_PREFIX="$prefix"
-luarocks_exe="${prefix}/bin/luarocks"
-"$luarocks_exe" install luaposix
-"$luarocks_exe" install luafilesystem
