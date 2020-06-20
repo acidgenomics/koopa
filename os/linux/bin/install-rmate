@@ -4,33 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="rmate"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-
-tmp_dir="$(_koopa_tmp_dir)"
-
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    file="v${version}.tar.gz"
-    url="https://github.com/aurora/rmate/archive/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
-    cd "rmate-${version}" || exit 1
-    chmod a+x rmate
-    mkdir -p "${prefix}/bin"
-    cp rmate "${prefix}/bin"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
+_koopa_install_cellar --name="rmate" "$@"
