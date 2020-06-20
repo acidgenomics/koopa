@@ -1,6 +1,19 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+_koopa_activate_aliases() {  # {{{1
+    # """
+    # Activate (non-shell-specific) aliases.
+    # @note Updated 2020-06-19.
+    # """
+    local file
+    file="${HOME}/.aliases"
+    [ -f "$file" ] || return 0
+    # shellcheck source=/dev/null
+    . "$file"
+    return 0
+}
+
 _koopa_activate_aspera() {  # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
@@ -72,19 +85,6 @@ _koopa_activate_bcbio() {  # {{{1
     [ -d "$prefix" ] || return 0
     _koopa_force_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
-    return 0
-}
-
-_koopa_activate_black_alias() {  # {{{1
-    # """
-    # Activate black alias.
-    # @note Updated 2020-06-03.
-    # """
-    if _koopa_is_installed black
-    then
-        # Note that 79 characters conforms to PEP8 (see flake8 for details).
-        alias black="black --line-length=79"
-    fi
     return 0
 }
 
@@ -200,10 +200,10 @@ _koopa_activate_conda_env() {  # {{{1
     return 0
 }
 
-_koopa_activate_coreutils_aliases() {  # {{{1
+_koopa_activate_coreutils() {  # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
-    # @note Updated 2020-06-15.
+    # @note Updated 2020-06-19.
     #
     # Note that macOS ships with a very old version of GNU coreutils.
     # Update these using Homebrew.
@@ -263,39 +263,12 @@ _koopa_activate_dircolors() {  # {{{1
     return 0
 }
 
-_koopa_activate_dotfiles() {  # {{{1
-    # """
-    # Activate dotfiles repo.
-    # @note Updated 2020-02-13.
-    # """
-    local dotfiles
-    dotfiles="$(_koopa_config_prefix)/dotfiles"
-    if [ ! -d "$dotfiles" ]
-    then
-        dotfiles="$(_koopa_dotfiles_prefix)"
-    fi
-    export DOTFILES="$dotfiles"
-    return 0
-}
-
 _koopa_activate_emacs() {  # {{{1
     # """
     # Activate Emacs.
     # @note Updated 2020-05-01.
     # """
     _koopa_activate_prefix "${HOME}/.emacs.d"
-}
-
-_koopa_activate_emacs_alias() {  # {{{1
-    # """
-    # Activate Emacs alias.
-    # @note Updated 2020-06-03.
-    # """
-    if _koopa_is_installed emacs
-    then
-        alias emacs="emacs --no-window-system"
-    fi
-    return 0
 }
 
 _koopa_activate_ensembl_perl_api() {  # {{{1
@@ -625,33 +598,24 @@ _koopa_activate_local_etc_profile() {  # {{{1
 _koopa_activate_macos_extras() {  # {{{1
     # """
     # Activate macOS-specific extra settings.
-    # @note Updated 2020-06-03.
+    # @note Updated 2020-06-19.
     # """
-    alias finder-hide="setfile -a V"
-    alias icloud-status="brctl log --wait --shorten"
-    alias locate="mdfind -name"
-    alias reload-mounts="sudo automount -vc"
-    alias rstudio="open -a rstudio"
-
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
         export CLICOLOR=1
     fi
-
     # Refer to 'man ls' for 'LSCOLORS' section on color designators. #Note that
     # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
     if [ -z "${LSCOLORS:-}" ]
     then
         export LSCOLORS="Gxfxcxdxbxegedabagacad"
     fi
-
     # Set rsync flags for APFS.
     if [ -z "${RSYNC_FLAGS_APFS:-}" ]
     then
         export RSYNC_FLAGS_APFS="${RSYNC_FLAGS:?} --iconv=utf-8,utf-8-mac"
     fi
-
     return 0
 }
 
@@ -884,18 +848,6 @@ _koopa_activate_rust() {  # {{{1
     return 0
 }
 
-_koopa_activate_r_alias() {  # {{{1
-    # """
-    # Activate R alias.
-    # @note Updated 2020-06-03.
-    # """
-    if _koopa_is_installed R
-    then
-        alias R="R --no-restore --no-save --quiet"
-    fi
-    return 0
-}
-
 _koopa_activate_secrets() {  # {{{1
     # """
     # Source secrets file.
@@ -908,55 +860,6 @@ _koopa_activate_secrets() {  # {{{1
     . "$file"
     return 0
 }
-
-_koopa_activate_shortcut_aliases() {  # {{{1
-    # """
-    # Activate shortcut aliases.
-    # @note Updated 2020-06-03.
-    # """
-    alias c='clear'
-    alias e='exit'
-    alias h='history'
-    # shellcheck disable=SC2153
-    alias k='cd "${KOOPA_PREFIX:?}"'
-    alias ku='koopa update'
-
-    # List files.
-    if _koopa_is_installed exa
-    then
-        alias l='exa -F'
-        alias la='exa -Fal --group'
-        alias ll='exa -Fl --group'
-    else
-        alias l='ls -F'
-        alias la='ls -Fahl'
-        alias ll='ls -BFhl'
-    fi
-    alias l.='l -d .*'
-    alias l1='ls -1'
-
-    # List head or tail.
-    alias lh='l | head'
-    alias lt='l | tail'
-
-    # Clear then list.
-    alias cls='clear; l'
-
-    # Browse up and down.
-    alias u='clear; cd ../; pwd; l'
-    alias d='clear; cd -; l'
-
-    # Navigate up parent directories without 'cd'.
-    # These are also supported by autojump.
-    # > alias ..='cd ..'
-    # > alias ...='cd ../../'
-    # > alias ....='cd ../../../'
-    # > alias .....='cd ../../../../'
-    # > alias ......='cd ../../../../../'
-
-    return 0
-}
-
 
 _koopa_activate_ssh_key() {  # {{{1
     # """
@@ -998,14 +901,11 @@ _koopa_activate_standard_paths() {  # {{{1
     _koopa_add_to_path_end '/usr/sbin'
     _koopa_add_to_path_end '/sbin'
     _koopa_add_to_manpath_end '/usr/share/man'
-
     _koopa_force_add_to_path_start '/usr/local/sbin'
     _koopa_force_add_to_path_start '/usr/local/bin'
     _koopa_force_add_to_manpath_start '/usr/local/share/man'
-
     _koopa_force_add_to_path_start "${HOME}/.local/bin"
     _koopa_force_add_to_manpath_start "${HOME}/.local/share/man"
-
     return 0
 }
 
@@ -1050,7 +950,7 @@ _koopa_activate_venv() {  # {{{1
 _koopa_activate_xdg() {  # {{{1
     # """
     # Activate XDG base directory specification
-    # @note Updated 2020-04-16.
+    # @note Updated 2020-06-19.
     #
     # XDG_RUNTIME_DIR:
     # - Can only exist for the duration of the user's login.
@@ -1102,6 +1002,23 @@ _koopa_activate_xdg() {  # {{{1
     export XDG_DATA_DIRS
     export XDG_DATA_HOME
     export XDG_RUNTIME_DIR
+    _koopa_update_xdg_config
+    return 0
+}
+
+_koopa_check_exports() {  # {{{1
+    # """
+    # Check exported environment variables.
+    # @note Updated 2020-06-19.
+    #
+    # Warn the user if they are setting unrecommended values.
+    # """
+    _koopa_is_rstudio && return 0
+    _koopa_warn_if_export \
+        JAVA_HOME \
+        LD_LIBRARY_PATH \
+        PYTHONHOME \
+        R_HOME
     return 0
 }
 
@@ -1115,6 +1032,18 @@ _koopa_export_cpu_count() {  # {{{1
         CPU_COUNT="$(_koopa_cpu_count)"
     fi
     export CPU_COUNT
+    return 0
+}
+
+_koopa_export_dotfiles() {  # {{{1
+    # """
+    # Activate dotfiles repo.
+    # @note Updated 2020-06-19.
+    # """
+    local dotfiles
+    dotfiles="$(_koopa_config_prefix)/dotfiles"
+    [ -d "$dotfiles" ] || return 0
+    export DOTFILES="$dotfiles"
     return 0
 }
 

@@ -4,7 +4,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
-
 _koopa_assert_has_args "$@"
 
 prefix="sample"
@@ -47,8 +46,11 @@ if [[ "${#pos[@]}" -gt 0 ]]
 then
     set -- "${pos[@]}"
 fi
-
 files=("$@")
+if ! _koopa_is_array_non_empty "${files[@]}"
+then
+    _koopa_stop "No files."
+fi
 
 for file in "${files[@]}"
 do
@@ -63,6 +65,6 @@ do
         newname="${prefix}_${num}${stem}"
         mv -nv "$oldname" "$newname"
     else
-        _koopa_h1 "Skipping '${file}'."
+        _koopa_note "Skipping '${file}'."
     fi
 done

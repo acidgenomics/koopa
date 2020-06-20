@@ -413,9 +413,11 @@ sudo pmset -c displaysleep 15
 defaults write com.apple.screensaver askForPassword -int 1
 defaults write com.apple.screensaver askForPasswordDelay -int 0
 
-# Enable subpixel font rendering on non-Apple LCDs.
-# Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
-defaults write NSGlobalDomain AppleFontSmoothing -int 1
+# Disable subpixel font rendering.
+# - https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
+# - https://apple.stackexchange.com/questions/337870/
+# > defaults write -g CGFontRenderingFontSmoothingDisabled -bool YES
+defaults write NSGlobalDomain AppleFontSmoothing -int 0
 
 # Set the default screenshot name prefix.
 defaults write com.apple.screencapture name Screenshot
