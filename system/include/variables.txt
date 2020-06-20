@@ -311,8 +311,6 @@ singularity="3.5.0"
 
 # https://www.sqlite.org/download.html
 sqlite="3.32.1"
-sqlite-file-version="3320100"
-sqlite-year="2020"
 
 # OpenSSH
 # https://www.openssh.com/
