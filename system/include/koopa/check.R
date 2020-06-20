@@ -626,7 +626,7 @@ if (isTRUE(linux)) {
         name = "GnuPG",
         whichName = "gpg",
         current = currentVersion("gnupg"),
-        expected = expectedVersion("gpg")
+        expected = expectedVersion("gnupg")
     )
     checkVersion(
         name = "pass",
