@@ -11,4 +11,3 @@ _koopa_download "$url"
 _koopa_extract "$file"
 mkdir -pv "${prefix}/bin"
 cp "${name}-v${version}/${name}" "${prefix}/bin"
-
