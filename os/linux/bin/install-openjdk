@@ -4,17 +4,23 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_cellar --name="openjdk" --name-fancy="OpenJDK" "$@"
+# """
+# Don't early return if directory exists here.
+# We need to ensure alternatives code runs (see below).
+#
+# See also:
+# - https://jdk.java.net/14/
+# - https://openjdk.java.net/
+# """
 
 name="openjdk"
-version="$(_koopa_variable "java")"
+version="$(_koopa_variable "$name")"
 jdk_dir="$(_koopa_openjdk_prefix)"
 prefix="${jdk_dir}/${version}"
 _koopa_exit_if_exists "$prefix"
 
-name_fancy="OpenJDK ${version}"
-
-_koopa_install_start "$name_fancy" "$prefix"
+name_fancy="OpenJDK"
+_koopa_install_start "$name_fancy" "$version" "$prefix"
 
 _koopa_mkdir "$jdk_dir"
 tmp_dir="$(_koopa_tmp_dir)"
