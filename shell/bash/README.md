@@ -17,6 +17,22 @@ Array sorting:
 - https://stackoverflow.com/questions/7442417
 - https://stackoverflow.com/a/7442583/3911732
 
+GNU find into array:
+
+```
+array=()
+while IFS= read -r -d $'\0'
+do
+    array+=("$REPLY")
+done < <( \
+    find "$HOME" \
+        -mindepth 1 \
+        -type d \
+        -print0 \
+    | sort -z \
+)
+```
+
 See also:
 - How to use `BASH_REMATCH`.
   https://unix.stackexchange.com/questions/349686
