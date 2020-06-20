@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+_koopa_assert_is_installed svn
+
 # Set the R source code repo URL.
 repos="https://svn.r-project.org/R"
 # Set the desired top-level directory structure.
