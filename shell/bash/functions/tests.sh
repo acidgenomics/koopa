@@ -3,7 +3,7 @@
 _koopa_test_find_files_by_ext() {  # {{{1
     # """
     # Find relevant test files by extension.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-06-20.
     # """
     local ext
     ext="${1:-?}"
@@ -12,7 +12,7 @@ _koopa_test_find_files_by_ext() {  # {{{1
     pattern="\.${ext}$"
 
     local files
-    mapfile -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(_koopa_test_find_files)"
 
     local x
     x="$( \
@@ -25,13 +25,13 @@ _koopa_test_find_files_by_ext() {  # {{{1
 _koopa_test_find_files_by_shebang() {  # {{{1
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-06-20.
     # """
     local pattern
     pattern="${1:?}"
 
     local files
-    mapfile -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(_koopa_test_find_files)"
 
     local shebang_files
     shebang_files=()
@@ -57,7 +57,7 @@ _koopa_test_find_files_by_shebang() {  # {{{1
 _koopa_test_find_failures() {  # {{{1
     # """
     # Find test failures.
-    # @note Updated 2020-06-09.
+    # @note Updated 2020-06-20.
     # """
     local name
     name="$(_koopa_basename_sans_ext "$0")"
@@ -69,7 +69,7 @@ _koopa_test_find_failures() {  # {{{1
     ignore="${2:-}"
 
     local files
-    mapfile -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(_koopa_test_find_files)"
 
     local failures
     failures=()

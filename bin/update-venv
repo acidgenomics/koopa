@@ -18,7 +18,7 @@ _koopa_h1 "Updating Python venv."
 python -m pip install --upgrade pip
 
 lines="$(python -m pip list --outdated --format=freeze)"
-mapfile -t array <<< "$lines"
+readarray -t array <<< "$lines"
 _koopa_is_array_non_empty "${array[@]}" || exit 0
 _koopa_h1 "${#array[@]} outdated packages detected."
 

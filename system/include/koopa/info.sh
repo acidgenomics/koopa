@@ -42,7 +42,7 @@ array+=("")
 if _koopa_is_installed neofetch
 then
     # Using process substitution here.
-    mapfile -t nf < <(neofetch --stdout)
+    readarray -t nf <<< "$(neofetch --stdout)"
     array+=(
         "System information (neofetch)"
         "-----------------------------"

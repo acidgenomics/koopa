@@ -295,7 +295,7 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     x="$(aws-s3-ls "$prefix")"
     [[ -n "$x" ]] || return 0
     local files
-    mapfile -t files <<< "$x"
+    readarray -t files <<< "$x"
     for file in "${files[@]}"
     do
         local bn dn1 dn2 target

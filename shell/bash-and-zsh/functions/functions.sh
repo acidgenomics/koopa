@@ -44,7 +44,7 @@ _koopa_unset_internal_functions() {  # {{{1
     case "$(_koopa_shell)" in
         bash)
             # shellcheck disable=SC2119
-            mapfile -t funs <<< "$(_koopa_list_internal_functions)"
+            readarray -t funs <<< "$(_koopa_list_internal_functions)"
             ;;
         zsh)
             # shellcheck disable=SC2119

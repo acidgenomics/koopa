@@ -77,11 +77,11 @@ then
         >&2 printf 'BASH_VERSION: %s\n' "$BASH_VERSION"
         exit 1
     fi
-    # Check that user's Bash has mapfile builtin defined.
+    # Check that user's Bash has readarray (mapfile) builtin defined.
     # We use this a lot to handle arrays.
-    if [[ $(type -t mapfile) != "builtin" ]]
+    if [[ $(type -t readarray) != "builtin" ]]
     then
-        >&2 printf '%s\n' 'ERROR: Bash is missing mapfile.'
+        >&2 printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).'
         exit 1
     fi
 fi

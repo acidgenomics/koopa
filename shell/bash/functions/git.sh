@@ -3,7 +3,7 @@
 _koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2020-04-30.
+    # @note Updated 2020-06-20.
     # """
     _koopa_h2 "Initializing submodules in '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
@@ -17,7 +17,7 @@ _koopa_git_submodule_init() {
             -f ".gitmodules" \
             --get-regexp '^submodule\..*\.path$' \
     )"
-    mapfile -t array <<< "$lines"
+    readarray -t array <<< "$lines"
     if ! _koopa_is_array_non_empty "${array[@]}"
     then
         _koopa_stop "Failed to detect submodules in '${PWD}'."

@@ -17,12 +17,12 @@ Array sorting:
 - https://stackoverflow.com/questions/7442417
 - https://stackoverflow.com/a/7442583/3911732
 
-`mapfile` is the Bash `readarray`.
+## Reading lines into an array
 
-Reading lines into array examples:
+`readarray` / `mapfile` (they're equivalent) was introduced in Bash 4.
 
 ```bash
-mapfile -t man_dirs <<< "$( \
+readarray -t man_dirs <<< "$( \
     find "$KOOPA_PREFIX" \
         -mindepth 1 \
         -type d \

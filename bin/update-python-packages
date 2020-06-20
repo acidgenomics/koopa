@@ -32,7 +32,7 @@ fi
 
 prefix="$(_koopa_python_site_packages_prefix)"
 
-mapfile -t pkgs < <(_koopa_print "$x" | cut -d '=' -f 1)
+readarray -t pkgs <<< "$(_koopa_print "$x" | cut -d '=' -f 1)"
 _koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
 _koopa_dl "Prefix" "$prefix"
 
