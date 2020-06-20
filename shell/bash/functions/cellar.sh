@@ -184,11 +184,12 @@ _koopa_link_cellar() {  # {{{1
 
     # FIXME SELECT THE DIRS TO LINK.
 
-    cellar_subdirs=()
     if [[ -n "$include_dirs" ]]
     then
         IFS=',' read -r -a cellar_subdirs <<< "$include_dirs"
     else
+        echo "HELLO WORLD"
+        echo "$cellar_prefix"
         cellar_subdirs=()
         while IFS= read -r -d $'\0'
         do
