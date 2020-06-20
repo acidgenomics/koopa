@@ -85,7 +85,7 @@ _koopa_h1 "Building '${tagged_image}' Docker image."
 docker login "$server"
 
 # Force remove any existing local tagged images.
-mapfile -t image_ids < <( \
+readarray -t image_ids < <( \
     docker image ls \
         --filter reference="$tagged_image" \
         --quiet \
