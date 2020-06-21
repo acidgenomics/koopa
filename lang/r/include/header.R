@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-06-15.
+## @note Updated 2020-06-21.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -81,7 +81,8 @@ local({
             X = c(
                 "BiocManager",
                 "remotes",
-                "stringi"
+                "stringi",
+                "stringr"
             ),
             FUN = function(pkg) {
                 if (!isTRUE(pkg %in% rownames(utils::installed.packages()))) {
