@@ -33,8 +33,10 @@ _koopa_install_cellar() {  # {{{1
     # """
     _koopa_assert_is_linux
     _koopa_assert_has_no_envs
-    local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
-        name_fancy prefix reinstall script_name tmp_dir version
+    local args gnu_mirror include_dirs jobs link_args link_cellar make_prefix \
+        name name_fancy prefix reinstall script_name script_path tmp_dir version
+    # Save a copy of the arguments, so we can pass through in a loop.
+    args=("$@")
     include_dirs=
     link_cellar=1
     name_fancy=
@@ -114,8 +116,9 @@ _koopa_install_cellar() {  # {{{1
         jobs="$(_koopa_cpu_count)"
         # shellcheck disable=SC2034
         make_prefix="$(_koopa_make_prefix)"
+        script_path="$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
         # shellcheck source=/dev/null
-        source "$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
+        source "$script_path" "${args[@]}"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
     rm -fr "$tmp_dir"
     _koopa_set_permissions --recursive "$prefix"
