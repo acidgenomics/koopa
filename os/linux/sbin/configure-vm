@@ -358,9 +358,10 @@ install-python
 # Secondary {{{2
 # ------------------------------------------------------------------------------
 
+install-perl
+
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
 then
-    install-perl
     install-go
     install-julia
     install-ruby
