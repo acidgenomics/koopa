@@ -131,12 +131,10 @@ then
     elif _koopa_is_installed configure-vm
     then
         # Allow passthrough of specific arguments to 'configure-vm' script.
-        configure_flags=()
+        configure_flags=("--no-check")
         if [[ "$rsync" -eq 1 ]]
         then
-            configure_flags+=(
-                "--source-ip=${source_ip}"
-            )
+            configure_flags+=("--source-ip=${source_ip}")
         fi
         configure-vm "${configure_flags[@]}"
     fi
