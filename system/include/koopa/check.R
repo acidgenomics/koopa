@@ -492,41 +492,10 @@ if (!isTRUE(docker)) {
         expected = expectedVersion("the-silver-searcher")
     )
     checkVersion(
-        name = "dust",
-        whichName = "dust",
-        current = currentVersion("dust"),
-        expected = expectedVersion("dust")
-    )
-    checkVersion(
-        name = "exa",
-        whichName = "exa",
-        current = currentVersion("exa"),
-        expected = expectedVersion("exa")
-    )
-    checkVersion(
-        name = "fd",
-        whichName = "fd",
-        current = currentVersion("fd"),
-        expected = expectedVersion("fd")
-    )
-    checkVersion(
-        name = "ripgrep",
-        whichName = "rg",
-        current = currentVersion("ripgrep"),
-        expected = expectedVersion("ripgrep")
-    )
-    checkVersion(
         name = "autojump",
         whichName = "autojump",
         current = currentVersion("autojump"),
         expected = expectedVersion("autojump")
-    )
-    ## This updates frequently, so be less strict about check.
-    checkVersion(
-        name = "broot",
-        whichName = "broot",
-        current = currentMinorVersion("broot"),
-        expected = expectedMinorVersion("broot")
     )
     checkVersion(
         name = "fzf",
@@ -752,6 +721,18 @@ installed(
         "flake8",
         "pylint",
         "pytest"
+    )
+)
+
+## Rust cargo crates ===========================================================
+h2("Rust cargo crates")
+installed(
+    which = c(
+        "broot",
+        "dust",
+        "exa",
+        "fd",
+        "rg"
     )
 )
 
