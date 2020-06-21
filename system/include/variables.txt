@@ -88,6 +88,9 @@ conda="4.8.3"
 # https://www.gnu.org/software/coreutils/
 coreutils="8.32"
 
+# https://curl.haxx.se/
+curl="7.70.0"
+
 # https://docs.docker.com/install/
 docker="19.03.8"
 
@@ -328,6 +331,9 @@ udunits="2.2.26"
 # https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
 # For cellar scripts, let's pin to the stable release instead.
 vim="8.2.0"
+
+# https://www.gnu.org/software/wget/
+wget="1.20.3"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8"

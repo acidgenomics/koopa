@@ -290,10 +290,22 @@ checkVersion(
     expected = expectedVersion("texinfo")
 )
 checkVersion(
+    name = "GNU Wget",
+    whichName = "wget",
+    current = currentVersion("wget"),
+    expected = expectedVersion("wget")
+)
+checkVersion(
     name = "CMake",
     whichName = "cmake",
     current = currentVersion("cmake"),
     expected = expectedVersion("cmake")
+)
+checkVersion(
+    name = "cURL",
+    whichName = "curl",
+    current = currentVersion("curl"),
+    expected = expectedVersion("curl")
 )
 checkVersion(
     name = "OpenSSH",
