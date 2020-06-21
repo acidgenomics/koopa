@@ -442,23 +442,12 @@ if (
     !identical(os, "opensuse-leap-15")
 ) {
     h2("Cloud APIs")
-    checkVersion(
-        name = "Amazon Web Services (AWS) CLI",
-        whichName = "aws",
-        current = currentMinorVersion("aws-cli"),
-        expected = expectedMinorVersion("aws-cli")
-    )
-    checkVersion(
-        name = "Microsoft Azure CLI",
-        whichName = "az",
-        current = currentMinorVersion("azure-cli"),
-        expected = expectedMinorVersion("azure-cli")
-    )
-    checkVersion(
-        name = "Google Cloud SDK",
-        whichName = "gcloud",
-        current = currentMajorVersion("google-cloud-sdk"),
-        expected = expectedMajorVersion("google-cloud-sdk")
+    installed(
+        which = c(
+            "aws",
+            "az",
+            "gcloud"
+        )
     )
 }
 
