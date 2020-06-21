@@ -178,21 +178,24 @@ _koopa_enable_passwordless_sudo() {  # {{{1
 _koopa_enable_shell() {  # {{{1
     # """
     # Enable shell.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-06-21.
     # """
-    local cmd
-    cmd="${1:?}"
-    cmd="$(_koopa_which "$cmd")"
+    _koopa_has_sudo || return 0
+    local cmd_name
+    cmd_name="${1:?}"
+    local cmd_path
+    cmd_path="$(_koopa_make_prefix)/bin/${cmd_name}"
     local etc_file
     etc_file="/etc/shells"
-    _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
-    if ! grep -q "$cmd" "$etc_file"
+    [ -f "$etc_file" ] || return 0
+    _koopa_h2 "Updating '${etc_file}' to include '${cmd_path}'."
+    if ! grep -q "$cmd_path" "$etc_file"
     then
-        sudo sh -c "printf '%s\n' '${cmd}' >> '${etc_file}'"
+        sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
     else
-        _koopa_success "'${cmd}' already defined in '${etc_file}'."
+        _koopa_success "'${cmd_path}' already defined in '${etc_file}'."
     fi
-    _koopa_note "Run 'chsh -s ${cmd} ${USER}' to change default shell."
+    _koopa_note "Run 'chsh -s ${cmd_path} ${USER}' to change default shell."
     return 0
 }
 
