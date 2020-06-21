@@ -18,7 +18,7 @@ _koopa_add_to_path_start "${java_home}/bin"
 
 ngs_libdir="$(_koopa_make_prefix)/lib64"
 export NGS_LIBDIR="$ngs_libdir"
-export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH="${NGS_LIBDIR}:${LD_LIBRARY_PATH:-}"
 
 build_prefix="${tmp_dir}/ncbi-outdir"
 
