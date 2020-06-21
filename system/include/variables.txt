@@ -67,10 +67,6 @@ bcl2fastq="2.20.0.422"
 # https://ftp.gnu.org/gnu/binutils/
 binutils="2.34"
 
-# https://crates.io/
-# https://github.com/rust-lang/cargo
-cargo="1.44.1"
-
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
 #     pipelines/latest/installation

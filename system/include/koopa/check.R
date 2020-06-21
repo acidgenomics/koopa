@@ -417,12 +417,6 @@ checkVersion(
 )
 if (!isTRUE(docker)) {
     checkVersion(
-        name = "Rust : cargo",
-        whichName = "cargo",
-        current = currentVersion("cargo"),
-        expected = expectedVersion("cargo")
-    )
-    checkVersion(
         name = "Rust : rustup",
         whichName = "rustup",
         current = currentVersion("rustup"),
@@ -725,26 +719,31 @@ installed(
 )
 
 ## Rust cargo crates ===========================================================
-h2("Rust cargo crates")
-installed(
-    which = c(
-        "broot",
-        "dust",
-        "exa",
-        "fd",
-        "rg"
+if (!isTRUE(docker)) {
+    h2("Rust cargo crates")
+    installed(
+        which = c(
+            "broot",
+            "cargo",
+            "dust",
+            "exa",
+            "fd",
+            "rg"
+        )
     )
-)
+}
 
 ## Ruby gems ===================================================================
-h2("Ruby gems")
-installed(
-    which = c(
-        "gem",
-        "bundle",
-        "ronn"
+if (!isTRUE(docker)) {
+    h2("Ruby gems")
+    installed(
+        which = c(
+            "gem",
+            "bundle",
+            "ronn"
+        )
     )
-)
+}
 
 if (Sys.getenv("KOOPA_CHECK_FAIL") == 1L) {
     stop("System failed checks.")
