@@ -371,16 +371,13 @@ _koopa_activate_homebrew() {  # {{{1
     # @note Updated 2020-06-21.
     # """
     _koopa_is_installed brew || return 0
-
     HOMEBREW_PREFIX="$(brew --prefix)"
-    export HOMEBREW_PREFIX
-
     HOMEBREW_REPOSITORY="$(brew --repo)"
-    export HOMEBREW_REPOSITORY
-
+    export HOMEBREW_FORCE_BREWED_CURL=1
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
-
+    export HOMEBREW_PREFIX
+    export HOMEBREW_REPOSITORY
     # > _koopa_activate_homebrew_gnu_prefix "binutils"
     _koopa_activate_homebrew_gnu_prefix "coreutils"
     _koopa_activate_homebrew_gnu_prefix "findutils"
@@ -397,7 +394,6 @@ _koopa_activate_homebrew() {  # {{{1
     _koopa_activate_homebrew_libexec_prefix "man-db"
     # > _koopa_activate_homebrew_python
     _koopa_activate_homebrew_google_cloud_sdk
-
     return 0
 }
 
