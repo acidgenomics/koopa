@@ -107,18 +107,22 @@ _koopa_install_cellar() {  # {{{1
     [[ -z "$script_name" ]] && script_name="$name"
     [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
     prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-    [[ "$reinstall" -eq 1 ]] && _koopa_rm "$prefix"
+    # shellcheck disable=SC2034
+    make_prefix="$(_koopa_make_prefix)"
+    if [[ "$reinstall" -eq 1 ]]
+    then
+        _koopa_rm "$prefix"
+        _koopa_remove_broken_symlinks "$make_prefix"
+    fi
     _koopa_exit_if_dir "$prefix"
     _koopa_install_start "$name_fancy" "$version" "$prefix"
     tmp_dir="$(_koopa_tmp_dir)"
     (
-        _koopa_cd_tmp_dir "$tmp_dir"
         # shellcheck disable=SC2034
         gnu_mirror="$(_koopa_gnu_mirror)"
         # shellcheck disable=SC2034
         jobs="$(_koopa_cpu_count)"
-        # shellcheck disable=SC2034
-        make_prefix="$(_koopa_make_prefix)"
+        _koopa_cd_tmp_dir "$tmp_dir"
         script_path="$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
         # shellcheck source=/dev/null
         source "$script_path" "${pass_args[@]}"
