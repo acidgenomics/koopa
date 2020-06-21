@@ -34,37 +34,30 @@ gcrypt_url="https://gnupg.org/ftp/gcrypt"
 _koopa_install_cellar \
     --name="libgpg-error" \
     --version="$libgpg_error_version" \
-    --script-name="gnupg-gcrypt" \
-    "$@"
+    --script-name="gnupg-gcrypt"
 _koopa_install_cellar \
     --name="libgcrypt" \
     --version="$libgcrypt_version" \
-    --script-name="gnupg-gcrypt" \
-    "$@"
+    --script-name="gnupg-gcrypt"
 _koopa_install_cellar \
     --name="libassuan" \
     --version="$libassuan_version" \
-    --script-name="gnupg-gcrypt" \
-    "$@"
+    --script-name="gnupg-gcrypt"
 _koopa_install_cellar \
     --name="libksba" \
     --version="$libksba_version" \
-    --script-name="gnupg-gcrypt" \
-    "$@"
+    --script-name="gnupg-gcrypt"
 _koopa_install_cellar \
     --name="npth" \
     --version="$npth_version" \
-    --script-name="gnupg-gcrypt" \
-    "$@"
+    --script-name="gnupg-gcrypt"
 _koopa_install_cellar \
     --name="pinentry" \
     --version="$pinentry_version" \
-    --script-name="gnupg-pintentry" \
-    "$@"
+    --script-name="gnupg-pintentry"
 
 # Now ready to install GnuPG.
 _koopa_install_cellar \
     --name="gnupg" \
     --version="$version" \
-    --script-name="gnupg-gcrypt" \
-    "$@"
+    --script-name="gnupg-gcrypt"
