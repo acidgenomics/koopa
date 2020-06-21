@@ -14,6 +14,8 @@
 # - https://github.com/TACC/Lmod/issues/434
 # """
 
+_koopa_assert_is_installed xz
+
 etc_dir="${prefix}/etc/${name}"
 url_stem="https://sourceforge.net/projects/${name}/files/${name}"
 file="${name}-${version}.tar.xz"
