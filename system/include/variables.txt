@@ -7,7 +7,7 @@
 # koopa {{{1
 # ==============================================================================
 
-koopa-date="2020-06-19"
+koopa-date="2020-06-20"
 koopa-version="0.7.1a"
 
 koopa-github-url="https://github.com/acidgenomics/koopa/"
@@ -108,6 +108,10 @@ dust="0.5.1"
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
 
+# Latest version compatible with Ensembl Perl API.
+# https://useast.ensembl.org/info/docs/api/api_installation.html
+ensembl-perl="5.26.3"
+
 # https://github.com/ogham/exa/releases
 exa="0.9.0"
 
@@ -140,6 +144,9 @@ geos="3.8.1"
 # https://git-scm.com/
 # https://github.com/git/git/releases
 git="2.27.0"
+
+# https://gnupg.org/download/index.html
+gnupg="2.2.19"
 
 # https://golang.org/dl/
 go="1.14"
@@ -312,6 +319,12 @@ singularity="3.5.0"
 # https://www.sqlite.org/download.html
 sqlite="3.32.3"
 
+# SRA toolkit
+# https://github.com/ncbi/ngs/releases
+# https://github.com/ncbi/ncbi-vdb/releases
+# https://github.com/ncbi/sra-tools/releases
+sra-tools="2.10.0"
+
 # OpenSSH
 # https://www.openssh.com/
 ssh="8.3p"
@@ -344,37 +357,6 @@ vim="8.2.0"
 
 # http://zsh.sourceforge.net/Arc/source.html
 zsh="5.8"
-
-
-
-# Bundle versions {{{1
-# ==============================================================================
-
-# GnuPG {{{2
-# https://gnupg.org/download/index.html
-# 2019-12-07
-gnupg="2.2.19"
-libgpg-error="1.37"
-libgcrypt="1.8.5"
-libksba="1.3.5"
-libassuan="2.5.3"
-npth="1.6"
-pinentry="1.1.0"
-
-# SRA toolkit
-# https://github.com/ncbi/ngs/releases
-# https://github.com/ncbi/ncbi-vdb/releases
-# https://github.com/ncbi/sra-tools/releases
-sra-tools="2.10.0"
-
-
-
-# Legacy pinnings {{{1
-# ==============================================================================
-
-# Latest version compatible with Ensembl Perl API.
-# https://useast.ensembl.org/info/docs/api/api_installation.html
-ensembl-perl="5.26.3"
 
 
 
