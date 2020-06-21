@@ -45,13 +45,6 @@ automake="1.16.2"
 # https://github.com/wting/autojump/releases
 autojump="22.5.3"
 
-# https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
-# https://github.com/aws/aws-cli/releases
-aws-cli="2.0.24"
-
-# https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
-azure-cli="2.7.0"
-
 # https://www.gnu.org/software/bash/
 # Note that minor version represents patches.
 bash="5.0.17"
@@ -136,9 +129,6 @@ gnupg="2.2.19"
 
 # https://golang.org/dl/
 go="1.14"
-
-# https://cloud.google.com/sdk/install
-google-cloud-sdk="297.0.0"
 
 # https://www.gnu.org/software/grep/
 grep="3.4"
