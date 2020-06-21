@@ -645,17 +645,17 @@ _koopa_update_ldconfig() {  # {{{1
 _koopa_update_lmod_config() {  # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-06-21.
     #
     # Need to check for this case:
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
     # No suchfile or directory
     # """
     _koopa_is_linux || return 0
-    _koopa_h2 "Updating Lmod init configuration."
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
     [ -d "$init_dir" ] || return 0
+    _koopa_h2 "Updating Lmod init configuration."
     local etc_dir
     etc_dir="/etc/profile.d"
     sudo mkdir -pv "$etc_dir"
