@@ -12,6 +12,9 @@ _koopa_assert_has_no_envs
 data_disk=
 source_ip=
 
+# Perform version checks at end of install.
+check=1
+
 # Bioconductor mode skips installation of GNU utils and other dependencies that
 # can take a long time to build from source.
 bioconductor=0
@@ -47,6 +50,10 @@ do
             ;;
         --minimal)
             minimal=1
+            shift 1
+            ;;
+        --no-check)
+            check=0
             shift 1
             ;;
         --r-version=*)
@@ -95,6 +102,14 @@ then
     docker=1
 else
     docker=0
+fi
+
+# Disable version checks.
+if [[ "$bioconductor" -eq 1 ]] || \
+    [[ "$compact" -eq 1 ]] || \
+    [[ "$minimal" -eq 1 ]]
+then
+    check=0
 fi
 
 # rsync configuration detection.
@@ -541,5 +556,7 @@ then
         sudo rm -fr /var/lib/apt/lists/*
     fi
 fi
+
+[[ "$check" -eq 1 ]] && koopa check
 
 _koopa_success "Configuration completed successfully."
