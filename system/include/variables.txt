@@ -319,12 +319,6 @@ singularity="3.5.0"
 # https://www.sqlite.org/download.html
 sqlite="3.32.3"
 
-# SRA toolkit
-# https://github.com/ncbi/ngs/releases
-# https://github.com/ncbi/ncbi-vdb/releases
-# https://github.com/ncbi/sra-tools/releases
-sra-tools="2.10.5"
-
 # OpenSSH
 # https://www.openssh.com/
 ssh="8.3p"
