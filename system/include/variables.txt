@@ -69,7 +69,7 @@ binutils="2.34"
 
 # https://crates.io/
 # https://github.com/rust-lang/cargo
-cargo="1.43.0"
+cargo="1.44.1"
 
 # 10X Genomics Cell Ranger
 # https://support.10xgenomics.com/single-cell-gene-expression/software/
