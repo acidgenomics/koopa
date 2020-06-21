@@ -64,7 +64,11 @@ case "$1" in
         exit 0
         ;;
     test)
-        "${KOOPA_PREFIX}/tests/ci.sh"
+        (
+            # Need to cd here, otherwise pylintrc won't load correctly.
+            cd "$KOOPA_PREFIX" || exit 1
+            ./tests/ci.sh
+        )
         exit 0
         ;;
     uninstall)
