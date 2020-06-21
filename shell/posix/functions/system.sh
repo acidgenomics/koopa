@@ -326,7 +326,7 @@ _koopa_expr() {  # {{{1
 _koopa_extract() {  # {{{1
     # """
     # Extract compressed files automatically.
-    # @note Updated 2020-02-13.
+    # @note Updated 2020-06-21.
     #
     # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
     #
@@ -335,10 +335,8 @@ _koopa_extract() {  # {{{1
     # """
     local file
     file="${1:?}"
-    if [ ! -f "$file" ]
-    then
-        _koopa_stop "Invalid file: '${file}'."
-    fi
+    _koopa_assert_is_file "$file"
+    file="$(_koopa_realpath "$file")"
     _koopa_h2 "Extracting '${file}'."
     case "$file" in
         *.tar.bz2)
