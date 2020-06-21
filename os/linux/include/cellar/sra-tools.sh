@@ -44,8 +44,6 @@ build_prefix="${tmp_dir}/ncbi-outdir"
     make -C ngs-python install
 )
 
-[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
-
 (
     _koopa_h2 "Installing 'ncbi-vdb'."
     cd "$tmp_dir" || exit 1
@@ -62,8 +60,6 @@ build_prefix="${tmp_dir}/ncbi-outdir"
     make install
 )
 
-[[ "$link_cellar" -eq 1 ]] && _koopa_link_cellar "$name" "$version"
-
 (
     _koopa_h2 "Installing 'sra-tools'."
     cd "$tmp_dir" || exit 1
@@ -79,3 +75,9 @@ build_prefix="${tmp_dir}/ncbi-outdir"
     make --jobs="$jobs"
     make install
 )
+
+# FIXME Build is failing.
+# make[3]: Leaving directory '/tmp/koopa-0-20200621011444-rxQKq6eUps/ncbi-outdir/ncbi-vdb/linux/gcc/x86_64/rel/obj/libs/ngs'
+# make[2]: Leaving directory '/tmp/koopa-0-20200621011444-rxQKq6eUps/ncbi-vdb/libs/ngs'
+# make[1]: Leaving directory '/tmp/koopa-0-20200621011444-rxQKq6eUps/ncbi-vdb/libs'
+# make: *** [Makefile:47: libs] Error 2
