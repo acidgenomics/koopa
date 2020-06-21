@@ -63,6 +63,10 @@ case "$1" in
         _koopa_set_permissions "$@"
         exit 0
         ;;
+    test)
+        "${KOOPA_PREFIX}/tests/ci.sh"
+        exit 0
+        ;;
     uninstall)
         "${KOOPA_PREFIX}/uninstall"
         exit 0
