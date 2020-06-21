@@ -44,7 +44,8 @@ _koopa_install_cellar \
 _koopa_install_cellar \
     --name="libassuan" \
     --version="$libassuan_version" \
-    --script-name="gnupg-gcrypt"
+    --script-name="gnupg-gcrypt" \
+    "$@"
 _koopa_install_cellar \
     --name="libksba" \
     --version="$libksba_version" \
