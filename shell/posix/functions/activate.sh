@@ -373,11 +373,14 @@ _koopa_activate_homebrew() {  # {{{1
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
     HOMEBREW_REPOSITORY="$(brew --repo)"
-    export HOMEBREW_FORCE_BREWED_CURL=1
     export HOMEBREW_INSTALL_CLEANUP=1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_PREFIX
     export HOMEBREW_REPOSITORY
+    if [ -x "${HOMEBREW_PREFIX}/opt/curl/bin/curl" ]
+    then
+        export HOMEBREW_FORCE_BREWED_CURL=1
+    fi
     # > _koopa_activate_homebrew_gnu_prefix "binutils"
     _koopa_activate_homebrew_gnu_prefix "coreutils"
     _koopa_activate_homebrew_gnu_prefix "findutils"
