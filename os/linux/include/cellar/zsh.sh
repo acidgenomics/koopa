@@ -9,6 +9,10 @@
 # There are some system config files for Zsh in Debian that don't play nice
 # with autocomplete otherwise.
 #
+# SourceForge mirror:
+# > url="https://downloads.sourceforge.net/project/\
+# > ${name}/${name}/${version}/${file}"
+#
 # See also:
 # - https://github.com/Homebrew/legacy-homebrew/issues/25719
 # - https://github.com/TACC/Lmod/issues/434
@@ -18,8 +22,7 @@ _koopa_assert_is_installed xz
 
 etc_dir="${prefix}/etc/${name}"
 file="${name}-${version}.tar.xz"
-url="https://downloads.sourceforge.net/project/\
-${name}/${name}/${version}/${file}"
+url="https://www.zsh.org/pub/${file}"
 _koopa_download "$url"
 _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
