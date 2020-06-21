@@ -33,6 +33,7 @@ _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \
-    --with-lz4="internal"
+    --with-lz4="internal" \
+    --with-utf8proc="internal"
 make --jobs="$jobs"
 make install
