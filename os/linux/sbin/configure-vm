@@ -313,20 +313,13 @@ fi
 # Note that this will use apt package on Debian/Ubuntu and otherwise install
 # from source on other Linux distros.
 
-# We're applying a temporary fix here to avoid installation of broken R 4.0.0
-# CRAN binary on Debian due to r-base-recommended.
-
 if [[ "$r_version" == "devel" ]]
 then
     install-r-devel
-elif _koopa_is_installed install-r-cran-binary && \
-    ! { _koopa_is_debian && ! _koopa_is_ubuntu && \
-        [[ "$r_version" == "4.0.0" ]]; \
-    }
+elif _koopa_is_installed install-r-cran-binary
 then
     install-r-cran-binary --version="$r_version"
 else
-    # Install latest version of R from source.
     install-r --version="$r_version"
 fi
 
