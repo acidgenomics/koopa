@@ -20,6 +20,9 @@
 # - https://github.com/TACC/Lmod/issues/434
 # """
 
+# FIXME
+set -x
+
 _koopa_assert_is_installed xz
 
 etc_dir="${prefix}/etc/${name}"
@@ -46,7 +49,7 @@ then
     mkdir -pv "$etc_dir"
     ln -fnsv \
         "$(_koopa_prefix)/os/$(_koopa_os_id)/etc/zsh/"* \
-        "${etc_dir}/."
+        -t "${etc_dir}/"
 fi
 
 _koopa_enable_shell "$name"
