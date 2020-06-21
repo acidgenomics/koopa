@@ -313,7 +313,11 @@ fi
 
 if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
 then
+    install-curl
+    install-wget
     install-git
+    install-subversion
+    install-openssh
     install-lua
     install-luarocks
     install-password-store
