@@ -581,23 +581,23 @@ if (!isTRUE(docker)) {
 if (isTRUE(linux)) {
     h2("Linux specific")
     checkVersion(
-        name = "Aspera Connect",
-        whichName = "ascp",
-        current = currentVersion("aspera-connect"),
-        expected = expectedVersion("aspera-connect")
-    )
-    checkVersion(
         name = "GnuPG",
         whichName = "gpg",
         current = currentVersion("gnupg"),
         expected = expectedVersion("gnupg")
     )
-    checkVersion(
-        name = "Password store (pass)",
-        current = currentVersion("password-store"),
-        expected = expectedVersion("password-store")
-    )
     if (!isTRUE(docker)) {
+        checkVersion(
+            name = "Aspera Connect",
+            whichName = "ascp",
+            current = currentVersion("aspera-connect"),
+            expected = expectedVersion("aspera-connect")
+        )
+        checkVersion(
+            name = "Password store (pass)",
+            current = currentVersion("password-store"),
+            expected = expectedVersion("password-store")
+        )
         checkVersion(
             name = "RStudio Server",
             whichName = "rstudio-server",
