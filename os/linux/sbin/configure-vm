@@ -316,7 +316,6 @@ then
     install-curl
     install-wget
     install-git
-    install-subversion
     install-openssh
     install-lua
     install-luarocks
@@ -416,6 +415,12 @@ then
     install-hdf5
     install-gsl
     install-udunits
+fi
+
+if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
+then
+    # Subversion requires SQLite.
+    install-subversion
 fi
 
 # Shell tools {{{1
