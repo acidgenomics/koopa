@@ -4,47 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-name="vim"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-_koopa_assert_is_installed python3
-
-jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)"
-
-# Using this to set Python 3 flags automatically below.
-make_prefix="$(_koopa_make_prefix)"
-python3_exe="${make_prefix}/bin/python3"
-_koopa_assert_is_file "$python3_exe"
-python3_config_exe="${python3_exe}-config"
-_koopa_assert_is_file "$python3_config_exe"
-python3_config_dir="$("$python3_config_exe" --configdir)"
-
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    _koopa_download "https://github.com/vim/vim/archive/v${version}.tar.gz"
-    _koopa_extract "v${version}.tar.gz"
-    cd "vim-${version}" || exit 1
-    ./configure \
-        --prefix="$prefix" \
-        --enable-python3interp="yes" \
-        --with-python3-command="${python3_exe}" \
-        --with-python3-config-dir="${python3_config_dir}" \
-        LDFLAGS="-Wl,--rpath=${make_prefix}/lib"
-    make --jobs="$jobs"
-    # > make test
-    make install
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
+_koopa_install_cellar --name="vim" --name-fancy="Vim" "$@"
