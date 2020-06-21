@@ -4,26 +4,6 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# Download GnuPG release signing keys.
-if _koopa_is_installed gpg-agent
-then
-    gpg --list-keys
-    gpg --keyserver hkp://keyserver.ubuntu.com:80 \
-        --recv-keys 249B39D24F25E3B6 \
-                    04376F3EE0856959 \
-                    2071B08A33BD3F06 \
-                    8A861B1C7EFD60D9
-fi
-
-# shellcheck disable=SC2034
-gcrypt_url="https://gnupg.org/ftp/gcrypt"
-
-_koopa_install_cellar --name="libgpg-error" "$@"
-_koopa_install_cellar --name="libgcrypt" "$@"
-_koopa_install_cellar --name="libassuan" "$@"
-_koopa_install_cellar --name="libksba" "$@"
-_koopa_install_cellar --name="npth" "$@"
-_koopa_install_cellar --name="pinentry" "$@"
 _koopa_install_cellar --name="gnupg" --name-fancy="GnuPG" "$@"
 
 if _koopa_is_installed gpg-agent
