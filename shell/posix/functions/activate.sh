@@ -368,7 +368,7 @@ _koopa_activate_go() {  # {{{1
 _koopa_activate_homebrew() {  # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-05-01.
+    # @note Updated 2020-06-21.
     # """
     _koopa_is_installed brew || return 0
 
@@ -393,6 +393,7 @@ _koopa_activate_homebrew() {  # {{{1
     # > _koopa_activate_homebrew_gnu_prefix "gnu-which"
     _koopa_activate_homebrew_prefix "texinfo"
     _koopa_activate_homebrew_prefix "sqlite"
+    _koopa_activate_homebrew_prefix "curl"
     _koopa_activate_homebrew_libexec_prefix "man-db"
     # > _koopa_activate_homebrew_python
     _koopa_activate_homebrew_google_cloud_sdk
@@ -461,7 +462,6 @@ _koopa_activate_homebrew_libexec_prefix() {  # {{{1
     # @note Updated 2020-05-05.
     # """
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
-
 }
 
 _koopa_activate_homebrew_prefix() {  # {{{1
