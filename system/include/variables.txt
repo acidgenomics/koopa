@@ -67,10 +67,6 @@ bcl2fastq="2.20.0.422"
 # https://ftp.gnu.org/gnu/binutils/
 binutils="2.34"
 
-# https://dystroy.org/broot
-# https://github.com/Canop/broot
-broot="0.15"
-
 # https://crates.io/
 # https://github.com/rust-lang/cargo
 cargo="1.43.0"
@@ -102,21 +98,12 @@ docker="19.03.8"
 # https://github.com/docker/docker-credential-helpers/releases
 docker-credential-pass="0.6.3"
 
-# https://github.com/bootandy/dust
-dust="0.5.1"
-
 # https://www.gnu.org/software/emacs/
 emacs="26.3"
 
 # Latest version compatible with Ensembl Perl API.
 # https://useast.ensembl.org/info/docs/api/api_installation.html
 ensembl-perl="5.26.3"
-
-# https://github.com/ogham/exa/releases
-exa="0.9.0"
-
-# https://github.com/sharkdp/fd
-fd="8.1.1"
 
 # https://www.gnu.org/software/findutils/
 findutils="4.7.0"
@@ -268,9 +255,6 @@ r="4.0.1"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
-
-# https://github.com/BurntSushi/ripgrep/releases
-ripgrep="12.1.1"
 
 # https://github.com/aurora/rmate/releases
 rmate="1.0.2"
