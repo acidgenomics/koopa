@@ -288,8 +288,8 @@ fi
 
 if [[ "$bioconductor" -eq 0 ]]
 then
-    install-bash
     install-zsh
+    install-bash
     install-fish
 fi
 
