@@ -58,7 +58,7 @@ _koopa_install_cellar \
 _koopa_install_cellar \
     --name="pinentry" \
     --version="$pinentry_version" \
-    --script-name="gnupg-pintentry" \
+    --script-name="gnupg-pinentry" \
     "$@"
 
 # Now ready to install GnuPG.
