@@ -266,7 +266,7 @@ _koopa_dotfiles_source_repo() {  # {{{1
 _koopa_download() {  # {{{1
     # """
     # Download a file.
-    # @note Updated 2020-03-23.
+    # @note Updated 2020-06-20.
     #
     # Potentially useful curl flags:
     # * --connect-timeout <seconds>
@@ -295,6 +295,7 @@ _koopa_download() {  # {{{1
         bn="$(basename "$url")"
         file="${wd}/${bn}"
     fi
+    file="$(_koopa_realpath "$file")"
     _koopa_info "Downloading '${url}' to '${file}'."
     curl \
         --create-dirs \
