@@ -323,7 +323,7 @@ sqlite="3.32.3"
 # https://github.com/ncbi/ngs/releases
 # https://github.com/ncbi/ncbi-vdb/releases
 # https://github.com/ncbi/sra-tools/releases
-sra-tools="2.10.0"
+sra-tools="2.10.7"
 
 # OpenSSH
 # https://www.openssh.com/
