@@ -9,6 +9,10 @@
 # There are some system config files for Zsh in Debian that don't play nice
 # with autocomplete otherwise.
 #
+# Fix required for Ubuntu Docker image:
+# configure: error: no controlling tty
+# Try running configure with '--with-tcsetpgrp' or '--without-tcsetpgrp'.
+#
 # Mirrors:
 # - url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
 # - url="https://www.zsh.org/pub/${file}" (slow)
@@ -20,20 +24,12 @@
 # - https://github.com/TACC/Lmod/issues/434
 # """
 
-# FIXME
-set -x
-
-_koopa_assert_is_installed xz
-
 etc_dir="${prefix}/etc/${name}"
 file="${name}-${version}.tar.xz"
 url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
 _koopa_download "$url"
 _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
-# Fix required for Ubuntu Docker image:
-# configure: error: no controlling tty
-# Try running configure with '--with-tcsetpgrp' or '--without-tcsetpgrp'.
 ./configure \
     --prefix="$prefix" \
     --enable-etcdir="$etc_dir" \
