@@ -17,9 +17,10 @@
 _koopa_assert_is_installed xz
 
 etc_dir="${prefix}/etc/${name}"
-url_stem="https://sourceforge.net/projects/${name}/files/${name}"
 file="${name}-${version}.tar.xz"
-_koopa_download "${url_stem}/${version}/${file}/download" "$file"
+url="https://downloads.sourceforge.net/project/\
+${name}/${name}/${version}/${file}"
+_koopa_download "$url"
 _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
 # Fix required for Ubuntu Docker image:
