@@ -3,12 +3,19 @@ set -Eeu -o pipefail
 
 # """
 # Continuous integration (CI) tests.
-# Updated 2020-02-04.
+# @note Updated 2020-06-21.
+#
+# Need to navigate to koopa prefix to load '.pylintrc' file correctly.
 # """
 
-tests_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
     >/dev/null 2>&1 && pwd -P)"
 
-"${tests_dir}/linter.sh"
-# > "${tests_dir}/help.sh"
-"${tests_dir}/shunit2.sh"
+(
+    cd "$KOOPA_PREFIX" || exit 1
+    tests_dir="${KOOPA_PREFIX}/tests"
+    "${tests_dir}/linter.sh"
+    # Re-enable this check when documentation is complete.
+    # > "${tests_dir}/help.sh"
+    "${tests_dir}/shunit2.sh"
+)
