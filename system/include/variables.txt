@@ -187,6 +187,9 @@ nextflow="20.04.1"
 # https://www.oracle.com/technetwork/java/javase/downloads/index.html
 openjdk="14.0.1"
 
+# https://www.openssh.com/portable.html
+openssh="8.3p1"
+
 # https://www.openssl.org/source/
 openssl="1.1.1d"
 
