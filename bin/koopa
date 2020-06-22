@@ -61,9 +61,11 @@ case "$1" in
     pull)
         (
             cd "$KOOPA_PREFIX" || exit 1
-            _koopa_set_permissions --recursive "${KOOPA_PREFIX}/shell/zsh"
+            _koopa_set_permissions \
+                --recursive "${KOOPA_PREFIX}/shell/zsh" \
+                &>/dev/null
             git pull
-            _koopa_fix_zsh_permissions
+            _koopa_fix_zsh_permissions &>/dev/null
         )
         ;;
     set-permissions)
