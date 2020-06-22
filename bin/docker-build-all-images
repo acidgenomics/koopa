@@ -33,10 +33,7 @@ do
             ;;
     esac
 done
-if [[ "${#pos[@]}" -gt 0 ]]
-then
-    set -- "${pos[@]}"
-fi
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 # Define images array.
 # If empty, define default images.
@@ -85,7 +82,7 @@ then
             | sort \
     )"
     nextflow_dirs="$(_koopa_sub "$nextflow_dirs" "${prefix}/" '')"
-    mapfile -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
+    readarray -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
     images=("${images[@]}" "${nextflow_arr[@]}")
 
     # AWS batch images.
@@ -97,7 +94,7 @@ then
             | sort \
     )"
     batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
-    mapfile -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
+    readarray -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
     images=("${images[@]}" "${batch_arr[@]}")
 
     # Large bioinformatics images.

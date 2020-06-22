@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
+    >/dev/null 2>&1 && pwd -P)"
+# shellcheck source=/dev/null
+source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+
 # """
 # Default mode that doesn't load user config.
+# Updated 2020-06-19.
 # """
 
-# shellcheck source=/dev/null
-source "$(koopa header bash)"
+_koopa_assert_is_installed nvim
 
-nvim -u NONE
+nvim -u NONE "$@"

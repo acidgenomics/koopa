@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-06-05.
+## Updated 2020-06-19.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
@@ -30,7 +30,6 @@ host <- shell(command = koopa, args = "host-id", stdout = TRUE)
 os <- shell(command = koopa, args = "os-string", stdout = TRUE)
 
 docker <- isDocker()
-extra <- if (Sys.getenv("KOOPA_EXTRA") == 1L) TRUE else FALSE
 
 ## Basic dependencies ==========================================================
 h2("Basic dependencies")
@@ -291,10 +290,28 @@ checkVersion(
     expected = expectedVersion("texinfo")
 )
 checkVersion(
+    name = "GNU Wget",
+    whichName = "wget",
+    current = currentVersion("wget"),
+    expected = expectedVersion("wget")
+)
+checkVersion(
     name = "CMake",
     whichName = "cmake",
     current = currentVersion("cmake"),
     expected = expectedVersion("cmake")
+)
+checkVersion(
+    name = "cURL",
+    whichName = "curl",
+    current = currentVersion("curl"),
+    expected = expectedVersion("curl")
+)
+checkVersion(
+    name = "OpenSSH",
+    whichName = "ssh",
+    current = currentVersion("ssh"),
+    expected = expectedVersion("ssh")
 )
 checkVersion(
     name = "rsync",
@@ -358,8 +375,8 @@ if (!isTRUE(docker)) {
 checkVersion(
     name = "Java : OpenJDK",
     whichName = "java",
-    current = currentVersion("java"),
-    expected = expectedVersion("java")
+    current = currentVersion("openjdk"),
+    expected = expectedVersion("openjdk")
 )
 if (!isTRUE(docker)) {
     checkVersion(
@@ -412,12 +429,6 @@ checkVersion(
 )
 if (!isTRUE(docker)) {
     checkVersion(
-        name = "Rust : cargo",
-        whichName = "cargo",
-        current = currentVersion("cargo"),
-        expected = expectedVersion("cargo")
-    )
-    checkVersion(
         name = "Rust : rustup",
         whichName = "rustup",
         current = currentVersion("rustup"),
@@ -431,23 +442,12 @@ if (
     !identical(os, "opensuse-leap-15")
 ) {
     h2("Cloud APIs")
-    checkVersion(
-        name = "Amazon Web Services (AWS) CLI",
-        whichName = "aws",
-        current = currentVersion("aws-cli"),
-        expected = expectedVersion("aws-cli")
-    )
-    checkVersion(
-        name = "Microsoft Azure CLI",
-        whichName = "az",
-        current = currentVersion("azure-cli"),
-        expected = expectedVersion("azure-cli")
-    )
-    checkVersion(
-        name = "Google Cloud SDK",
-        whichName = "gcloud",
-        current = currentVersion("google-cloud-sdk"),
-        expected = expectedVersion("google-cloud-sdk")
+    installed(
+        which = c(
+            "aws",
+            "az",
+            "gcloud"
+        )
     )
 }
 
@@ -487,50 +487,17 @@ if (!isTRUE(docker)) {
         expected = expectedVersion("the-silver-searcher")
     )
     checkVersion(
-        name = "dust",
-        whichName = "dust",
-        current = currentVersion("dust"),
-        expected = expectedVersion("dust")
+        name = "autojump",
+        whichName = "autojump",
+        current = currentVersion("autojump"),
+        expected = expectedVersion("autojump")
     )
     checkVersion(
-        name = "exa",
-        whichName = "exa",
-        current = currentVersion("exa"),
-        expected = expectedVersion("exa")
+        name = "fzf",
+        whichName = "fzf",
+        current = currentVersion("fzf"),
+        expected = expectedVersion("fzf")
     )
-    checkVersion(
-        name = "fd",
-        whichName = "fd",
-        current = currentVersion("fd"),
-        expected = expectedVersion("fd")
-    )
-    checkVersion(
-        name = "ripgrep",
-        whichName = "rg",
-        current = currentVersion("ripgrep"),
-        expected = expectedVersion("ripgrep")
-    )
-    if (isTRUE(extra)) {
-        checkVersion(
-            name = "autojump",
-            whichName = "autojump",
-            current = currentVersion("autojump"),
-            expected = expectedVersion("autojump")
-        )
-        ## This updates frequently, so be less strict about check.
-        checkVersion(
-            name = "broot",
-            whichName = "broot",
-            current = currentMinorVersion("broot"),
-            expected = expectedMinorVersion("broot")
-        )
-        checkVersion(
-            name = "fzf",
-            whichName = "fzf",
-            current = currentVersion("fzf"),
-            expected = expectedVersion("fzf")
-        )
-    }
 }
 checkVersion(
     name = "ShellCheck",
@@ -614,23 +581,23 @@ if (!isTRUE(docker)) {
 if (isTRUE(linux)) {
     h2("Linux specific")
     checkVersion(
-        name = "Aspera Connect",
-        whichName = "ascp",
-        current = currentVersion("aspera-connect"),
-        expected = expectedVersion("aspera-connect")
-    )
-    checkVersion(
         name = "GnuPG",
         whichName = "gpg",
         current = currentVersion("gnupg"),
-        expected = expectedVersion("gpg")
-    )
-    checkVersion(
-        name = "pass",
-        current = currentVersion("pass"),
-        expected = expectedVersion("pass")
+        expected = expectedVersion("gnupg")
     )
     if (!isTRUE(docker)) {
+        checkVersion(
+            name = "Aspera Connect",
+            whichName = "ascp",
+            current = currentVersion("aspera-connect"),
+            expected = expectedVersion("aspera-connect")
+        )
+        checkVersion(
+            name = "Password store (pass)",
+            current = currentVersion("password-store"),
+            expected = expectedVersion("password-store")
+        )
         checkVersion(
             name = "RStudio Server",
             whichName = "rstudio-server",
@@ -751,6 +718,33 @@ installed(
         "pytest"
     )
 )
+
+## Rust cargo crates ===========================================================
+if (!isTRUE(docker)) {
+    h2("Rust cargo crates")
+    installed(
+        which = c(
+            "broot",
+            "cargo",
+            "dust",
+            "exa",
+            "fd",
+            "rg"
+        )
+    )
+}
+
+## Ruby gems ===================================================================
+if (!isTRUE(docker)) {
+    h2("Ruby gems")
+    installed(
+        which = c(
+            "gem",
+            "bundle",
+            "ronn"
+        )
+    )
+}
 
 if (Sys.getenv("KOOPA_CHECK_FAIL") == 1L) {
     stop("System failed checks.")

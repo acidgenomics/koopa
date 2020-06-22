@@ -21,6 +21,29 @@ _koopa_add_config_link() {  # {{{1
     return 0
 }
 
+_koopa_add_make_prefix_link() {  # {{{1
+    # """
+    # Ensure 'koopa' is linked inside make prefix.
+    # @note Updated 2020-06-15.
+    #
+    # This is particularly useful for external scripts that source koopa header.
+    # This approach works nicely inside a hardened R environment.
+    # """
+    _koopa_is_shared_install || return 0
+    local make_prefix
+    make_prefix="$(_koopa_make_prefix)"
+    [ -d "$make_prefix" ] || return 0
+    local target_link
+    target_link="${make_prefix}/bin/koopa"
+    [ -L "$target_link" ] && return 0
+    _koopa_h1 "Adding 'koopa' link inside '${make_prefix}'."
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    local source_link
+    source_link="${koopa_prefix}/bin/koopa"
+    _koopa_ln "$source_link" "$target_link"
+}
+
 _koopa_add_to_user_profile() {  # {{{1
     # """
     # Add koopa configuration to user profile.
@@ -155,21 +178,24 @@ _koopa_enable_passwordless_sudo() {  # {{{1
 _koopa_enable_shell() {  # {{{1
     # """
     # Enable shell.
-    # @note Updated 2020-02-14.
+    # @note Updated 2020-06-21.
     # """
-    local cmd
-    cmd="${1:?}"
-    cmd="$(_koopa_which "$cmd")"
+    _koopa_has_sudo || return 0
+    local cmd_name
+    cmd_name="${1:?}"
+    local cmd_path
+    cmd_path="$(_koopa_make_prefix)/bin/${cmd_name}"
     local etc_file
     etc_file="/etc/shells"
-    _koopa_h2 "Updating '${etc_file}' to include '${cmd}'."
-    if ! grep -q "$cmd" "$etc_file"
+    [ -f "$etc_file" ] || return 0
+    _koopa_h2 "Updating '${etc_file}' to include '${cmd_path}'."
+    if ! grep -q "$cmd_path" "$etc_file"
     then
-        sudo sh -c "printf '%s\n' '${cmd}' >> '${etc_file}'"
+        sudo sh -c "printf '%s\n' '${cmd_path}' >> '${etc_file}'"
     else
-        _koopa_success "'${cmd}' already defined in '${etc_file}'."
+        _koopa_success "'${cmd_path}' already defined in '${etc_file}'."
     fi
-    _koopa_note "Run 'chsh -s ${cmd} ${USER}' to change default shell."
+    _koopa_note "Run 'chsh -s ${cmd_path} ${USER}' to change default shell."
     return 0
 }
 
@@ -619,17 +645,17 @@ _koopa_update_ldconfig() {  # {{{1
 _koopa_update_lmod_config() {  # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2020-02-07.
+    # @note Updated 2020-06-21.
     #
     # Need to check for this case:
     # ln: failed to create symbolic link '/etc/fish/conf.d/z00_lmod.fish':
     # No suchfile or directory
     # """
     _koopa_is_linux || return 0
-    _koopa_h2 "Updating Lmod init configuration."
     local init_dir
     init_dir="$(_koopa_app_prefix)/lmod/apps/lmod/lmod/init"
     [ -d "$init_dir" ] || return 0
+    _koopa_h2 "Updating Lmod init configuration."
     local etc_dir
     etc_dir="/etc/profile.d"
     sudo mkdir -pv "$etc_dir"

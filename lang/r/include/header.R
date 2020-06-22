@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-05-09.
+## @note Updated 2020-06-21.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -57,10 +57,10 @@ local({
     ## GitHub dependencies.
     dependencies <- c(
         "acidgenomics/acidbase" = "0.1.9",
-        "acidgenomics/acidgenerics" = "0.3.4",
+        "acidgenomics/acidgenerics" = "0.3.6",
         "acidgenomics/goalie" = "0.4.4",
-        "acidgenomics/syntactic" = "0.3.9",
-        "acidgenomics/bb8" = "0.2.12"
+        "acidgenomics/syntactic" = "0.3.10",
+        "acidgenomics/bb8" = "0.2.14"
     )
     ## Update dependencies, if necessary.
     ok <- isPackageVersion(dependencies)
@@ -81,7 +81,8 @@ local({
             X = c(
                 "BiocManager",
                 "remotes",
-                "stringi"
+                "stringi",
+                "stringr"
             ),
             FUN = function(pkg) {
                 if (!isTRUE(pkg %in% rownames(utils::installed.packages()))) {

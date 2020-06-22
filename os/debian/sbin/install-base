@@ -66,10 +66,7 @@ do
             ;;
     esac
 done
-if [[ "${#pos[@]}" -gt 0 ]]
-then
-    set -- "${pos[@]}"
-fi
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 _koopa_assert_has_no_args "$@"
 
@@ -235,6 +232,8 @@ then
     pkgs+=(
         libacl1-dev
         libapparmor-dev
+        libapr1-dev  # subversion
+        libaprutil1-dev  # subversion
         libbz2-dev
         libc-dev
         libcairo2-dev
@@ -243,8 +242,7 @@ then
         libffi-dev
         libfftw3-dev
         libfreetype6-dev
-        # The R nlme package requires this.
-        libgfortran5
+        libgfortran5  # R nlme
         libgif-dev
         libgl1-mesa-dev
         libglu1-mesa-dev

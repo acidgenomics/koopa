@@ -33,15 +33,15 @@ json="$( \
 
 # Convert JSON to lines.
 # shellcheck disable=SC2001
-mapfile -t images < <( \
+readarray -t images <<< "$( \
     _koopa_print "$json" \
         | tr ',' '\n' \
         | sed 's/^\[//' \
         | sed 's/\]$//' \
         | sed 's/^\"//g' \
         | sed 's/\"$//g' \
-        | sort
-)
+        | sort \
+)"
 
 if ! _koopa_is_array_non_empty "${images[@]}"
 then

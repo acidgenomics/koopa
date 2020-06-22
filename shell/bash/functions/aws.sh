@@ -93,10 +93,7 @@ _koopa_aws_s3_find() {  # {{{1
                 ;;
         esac
     done
-    if [[ "${#pos[@]}" -gt 0 ]]
-    then
-        set -- "${pos[@]}"
-    fi
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
     local x
     x="$(_koopa_aws_s3_ls --recursive "$@")"
@@ -177,10 +174,7 @@ _koopa_aws_s3_ls() {  # {{{1
                 ;;
         esac
     done
-    if [[ "${#pos[@]}" -gt 0 ]]
-    then
-        set -- "${pos[@]}"
-    fi
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
@@ -295,7 +289,7 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     x="$(aws-s3-ls "$prefix")"
     [[ -n "$x" ]] || return 0
     local files
-    mapfile -t files <<< "$x"
+    readarray -t files <<< "$x"
     for file in "${files[@]}"
     do
         local bn dn1 dn2 target

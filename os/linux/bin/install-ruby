@@ -4,43 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# https://www.ruby-lang.org/en/downloads/
-
-name="ruby"
-version="$(_koopa_variable "$name")"
-# Ensure '2.6.5p' becomes '2.6.5' here, for example.
-version="$(_koopa_sanitize_version "$version")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-
-jobs="$(_koopa_cpu_count)"
-minor_version="$(_koopa_major_minor_version "$version")"
-tmp_dir="$(_koopa_tmp_dir)"
-
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    file="ruby-${version}.tar.gz"
-    url="https://cache.ruby-lang.org/pub/ruby/${minor_version}/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
-    cd "ruby-${version}" || exit 1
-    # This will fail on Ubuntu 18 otherwise.
-    # https://github.com/rbenv/ruby-build/issues/156
-    # https://github.com/rbenv/ruby-build/issues/729
-    export RUBY_CONFIGURE_OPTS=--disable-install-doc
-    ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
+_koopa_install_cellar --name="ruby" --name-fancy="Ruby"
