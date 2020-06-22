@@ -8,10 +8,23 @@ source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 dir="${1:-"."}"
 dir="$(realpath "$dir")"
 
-_koopa_h1 "Checking git status recursively at '${dir}'."
-
 # Using '-L' flag here in case git dir is a symlink.
-while IFS= read -r -d '' repo
+readarray -t repos <<< "$( \
+    find -L "$dir" \
+        -mindepth 1 \
+        -maxdepth 2 \
+        -name ".git" \
+        -print \
+)"
+
+if ! _koopa_is_array_non_empty "${repos[@]}"
+then
+    _koopa_stop "Failed to detect any git repos."
+fi
+
+_koopa_h1 "Checking status of ${#repos[@]} git repos recursively at '${dir}'."
+
+for repo in "${repos[@]}"
 do
     repo="$(dirname "$repo")"
     _koopa_h2 "$(basename "$repo")"
@@ -20,10 +33,4 @@ do
         pwd
         git status
     )
-done < <( \
-    find -L "$dir" \
-        -mindepth 1 \
-        -maxdepth 2 \
-        -name ".git" \
-        -print0 \
-)
+done

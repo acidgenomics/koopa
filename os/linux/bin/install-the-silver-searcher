@@ -4,46 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Note that Ag has been renamed to The Silver Searcher.
-#
-# GPG signed releases:
-# https://geoff.greer.fm/ag/
-# """
-
-name="the-silver-searcher"
-version="$(_koopa_variable "$name")"
-prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing ${name} ${version} at '${prefix}'."
-
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-
-jobs="$(_koopa_cpu_count)"
-tmp_dir="$(_koopa_tmp_dir)"
-
-(
-    _koopa_cd_tmp_dir "$tmp_dir"
-    # GitHub release.
-    # > file="${version}.tar.gz"
-    # > url="https://github.com/ggreer/the_silver_searcher/archive/${file}"
-    # GPG signed release.
-    file="the_silver_searcher-2.2.0.tar.gz"
-    url="https://geoff.greer.fm/ag/releases/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
-    cd "the_silver_searcher-${version}" || exit 1
-    ./configure --prefix="$prefix"
-    make --jobs="$jobs"
-    make install
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-_koopa_link_cellar "$name" "$version"
-
-_koopa_install_success "$name"
-_koopa_note "Reload the shell to complete activation."
+_koopa_install_cellar --name="the-silver-searcher" "$@"

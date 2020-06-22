@@ -13,18 +13,19 @@ _koopa_exit_if_r_package_not_installed lintr
 
 # Find scripts by file extension.
 ext="R"
-mapfile -t r_files < <(_koopa_test_find_files_by_ext "$ext")
+readarray -t r_files <<< "$(_koopa_test_find_files_by_ext "$ext")"
 # > _koopa_info "${#r_files[@]} R files matched by extension."
 
 # Find scripts by shebang.
 grep_pattern='^#!/.*\bRscript\b$'
-mapfile -t rscript_files < <(_koopa_test_find_files_by_shebang "$grep_pattern")
+readarray -t rscript_files <<< \
+    "$(_koopa_test_find_files_by_shebang "$grep_pattern")"
 # > _koopa_info "${#rscript_files[@]} Rscript files matched by shebang."
 
 # Merge the arrays.
 merge=("${r_files[@]}" "${rscript_files[@]}")
 files="$(printf "%q\n" "${merge[@]}" | sort -u)"
-mapfile -t files <<< "$files"
+readarray -t files <<< "$files"
 
 # Include 'Rprofile.site' file.
 files+=("${KOOPA_PREFIX}/etc/R/Rprofile.site")

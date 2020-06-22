@@ -257,14 +257,27 @@ _koopa_info() {  # {{{1
 _koopa_install_start() {  # {{{1
     # """
     # Inform the user about start of installation.
-    # @note Updated 2020-02-20.
+    # @note Updated 2020-06-19.
     # """
-    local name
+    local msg name version prefix
     name="${1:?}"
-    local prefix
-    prefix="${2:-}"
-    local msg
-    if [ -n "$prefix" ]
+    version=
+    prefix=
+    if [ "$#" -eq 2 ]
+    then
+        prefix="${2:?}"
+    elif [ "$#" -eq 3 ]
+    then
+        version="${2:?}"
+        prefix="${3:?}"
+    elif [ "$#" -ge 4 ]
+    then
+        _koopa_stop "Invalid number of arguments."
+    fi
+    if [ -n "$prefix" ] && [ -n "$version" ]
+    then
+        msg="Installing ${name} ${version} at '${prefix}'."
+    elif [ -n "$prefix" ]
     then
         msg="Installing ${name} at '${prefix}'."
     else

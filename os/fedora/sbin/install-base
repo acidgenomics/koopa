@@ -79,6 +79,8 @@ then
     _koopa_h2 "Installing developer libraries."
     sudo dnf -y groupinstall "Development Tools"
     pkgs+=(
+        apr-devel  # subversion
+        apr-util-devel  # subversion
         bzip2-devel
         expat-devel  # udunits
         gmp-devel

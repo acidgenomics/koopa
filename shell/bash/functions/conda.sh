@@ -43,10 +43,7 @@ _koopa_conda_create_env() {
                 ;;
         esac
     done
-    if [[ "${#pos[@]}" -gt 0 ]]
-    then
-        set -- "${pos[@]}"
-    fi
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
     local name
     name="$1"

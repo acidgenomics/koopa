@@ -23,26 +23,15 @@ else
     )"
 fi
 
-# > _koopa_h1 "Finding symlinks for '${cellar_prefix}' in '${build_prefix}'."
-
 # Pipe GNU find into array.
-links=()
-while IFS= read -r -d $'\0'
-do
-    links+=("$REPLY")
-done < <( \
+readarray -t links <<< "$( \
     find -L "$build_prefix" \
         -type f \
         -path "${cellar_prefix}/*" \
         ! -path "${build_prefix}/koopa" \
         -print0 \
     | sort -z \
-)
-
-# Sort the array.
-# > IFS=$'\n' links=($(sort <<<"${links[*]}"))
-# > unset IFS
-readarray -t links < <(printf '%s\0' "${links[@]}" | sort -z | xargs -0n1)
+)"
 
 # Replace the cellar prefix with our build prefix.
 for file in "${links[@]}"

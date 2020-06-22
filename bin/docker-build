@@ -65,10 +65,7 @@ do
             ;;
     esac
 done
-if [[ "${#pos[@]}" -gt 0 ]]
-then
-    set -- "${pos[@]}"
-fi
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 # e.g. acidgenomics/debian
 image="${1:?}"
@@ -85,11 +82,11 @@ _koopa_h1 "Building '${tagged_image}' Docker image."
 docker login "$server"
 
 # Force remove any existing local tagged images.
-mapfile -t image_ids < <( \
+readarray -t image_ids <<< "$( \
     docker image ls \
         --filter reference="$tagged_image" \
         --quiet \
-)
+)"
 if _koopa_is_array_non_empty "${image_ids[@]}"
 then
     docker image rm --force "${image_ids[@]}"

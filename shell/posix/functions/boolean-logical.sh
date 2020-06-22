@@ -656,6 +656,14 @@ _koopa_is_root() {  # {{{1
     [ "$(_koopa_current_user_id)" -eq 0 ]
 }
 
+_koopa_is_rstudio() {  # {{{1
+    # """
+    # Is the terminal running inside RStudio?
+    # @note Updated 2020-06-19.
+    # """
+    [ -n "${RSTUDIO:-}" ]
+}
+
 _koopa_is_set_nounset() {  # {{{1
     # """
     # Is shell running in 'nounset' variable mode?
