@@ -12,6 +12,9 @@ _koopa_assert_has_no_envs
 data_disk=
 source_ip=
 
+# Perform version checks at end of install.
+check=1
+
 # Bioconductor mode skips installation of GNU utils and other dependencies that
 # can take a long time to build from source.
 bioconductor=0
@@ -49,6 +52,10 @@ do
             minimal=1
             shift 1
             ;;
+        --no-check)
+            check=0
+            shift 1
+            ;;
         --r-version=*)
             r_version="${1#*=}"
             shift 1
@@ -78,10 +85,7 @@ do
             ;;
     esac
 done
-if [[ "${#pos[@]}" -gt 0 ]]
-then
-    set -- "${pos[@]}"
-fi
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
 _koopa_assert_has_no_args "$@"
 
@@ -98,6 +102,14 @@ then
     docker=1
 else
     docker=0
+fi
+
+# Disable version checks.
+if [[ "$bioconductor" -eq 1 ]] || \
+    [[ "$compact" -eq 1 ]] || \
+    [[ "$minimal" -eq 1 ]]
+then
+    check=0
 fi
 
 # rsync configuration detection.
@@ -291,8 +303,8 @@ fi
 
 if [[ "$bioconductor" -eq 0 ]]
 then
-    install-bash
     install-zsh
+    install-bash
     install-fish
 fi
 
@@ -301,10 +313,13 @@ fi
 
 if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
 then
+    install-curl
+    install-wget
     install-git
+    install-openssh
     install-lua
     install-luarocks
-    install-pass
+    install-password-store
 fi
 
 # Languages {{{1
@@ -316,20 +331,13 @@ fi
 # Note that this will use apt package on Debian/Ubuntu and otherwise install
 # from source on other Linux distros.
 
-# We're applying a temporary fix here to avoid installation of broken R 4.0.0
-# CRAN binary on Debian due to r-base-recommended.
-
 if [[ "$r_version" == "devel" ]]
 then
     install-r-devel
-elif _koopa_is_installed install-r-cran-binary && \
-    ! { _koopa_is_debian && ! _koopa_is_ubuntu && \
-        [[ "$r_version" == "4.0.0" ]]; \
-    }
+elif _koopa_is_installed install-r-cran-binary
 then
     install-r-cran-binary --version="$r_version"
 else
-    # Install latest version of R from source.
     install-r --version="$r_version"
 fi
 
@@ -353,9 +361,10 @@ install-python
 # Secondary {{{2
 # ------------------------------------------------------------------------------
 
+install-perl
+
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
 then
-    install-perl
     install-go
     install-julia
     install-ruby
@@ -406,6 +415,12 @@ then
     install-hdf5
     install-gsl
     install-udunits
+fi
+
+if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
+then
+    # Subversion requires SQLite.
+    install-subversion
 fi
 
 # Shell tools {{{1
@@ -551,5 +566,7 @@ then
         sudo rm -fr /var/lib/apt/lists/*
     fi
 fi
+
+[[ "$check" -eq 1 ]] && koopa check
 
 _koopa_success "Configuration completed successfully."
