@@ -58,6 +58,14 @@ case "$1" in
         _koopa_list_internal_functions
         exit 0
         ;;
+    pull)
+        (
+            cd "$KOOPA_PREFIX" || exit 1
+            _koopa_set_permissions --recursive "${KOOPA_PREFIX}/shell/zsh"
+            git pull
+            _koopa_fix_zsh_permissions
+        )
+        ;;
     set-permissions)
         shift 1
         _koopa_set_permissions "$@"
