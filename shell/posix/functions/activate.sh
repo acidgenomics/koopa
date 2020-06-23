@@ -499,6 +499,10 @@ _koopa_activate_homebrew_ruby_gems() {  # {{{1
     # """
     # Activate Homebrew Ruby gems.
     # @note Updated 2020-06-23.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
+    # - https://stackoverflow.com/questions/12287882/
     # """
     _koopa_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
     return 0
