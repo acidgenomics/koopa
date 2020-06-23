@@ -447,6 +447,18 @@ _koopa_return_version() {  # {{{1
     return 0
 }
 
+_koopa_ruby_api_version() {  # {{{1
+    # """
+    # Ruby API version.
+    # @note Updated 2020-06-23.
+    #
+    # Used by Homebrew Ruby for default gem installation path.
+    # See 'brew info ruby' for details.
+    _koopa_is_installed ruby || return 0
+    ruby -e "print Gem.ruby_api_version"
+    return 0
+}
+
 _koopa_sanitize_version() {  # {{{1
     # """
     # Sanitize version.
