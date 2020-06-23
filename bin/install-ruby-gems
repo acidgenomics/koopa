@@ -15,40 +15,31 @@ source "${script_dir}/../shell/bash/include/header.sh"
 # """
 
 _koopa_assert_has_no_envs
-_koopa_activate_rust
-_koopa_exit_if_not_installed cargo rustc rustup
+_koopa_exit_if_not_installed gem rbenv
 
-name_fancy="Rust cargo crates"
-prefix="$CARGO_HOME"
+name_fancy="Ruby gems"
+gem_exe="$(rbenv which gem)"
 
-_koopa_install_start "$name_fancy" "$prefix"
+_koopa_install_start "$name_fancy"
+_koopa_dl "gem" "$gem_exe"
 
 if [[ "$#" -eq 0 ]]
 then
-    crates=(
-        bat
-        broot
-        du-dust
-        exa
-        fd-find
-        hyperfine
-        ripgrep
-        tokei
-        xsv
+    gems=(
+        bashcov
+        ronn
     )
 else
-    crates=("$@")
+    gems=("$@")
 fi
 
-_koopa_dl "Crates" "$(_koopa_to_string "${crates[@]}")"
+_koopa_dl "Gems" "$(_koopa_to_string "${gems[@]}")"
 
-_koopa_set_permissions  --recursive --user "$prefix"
-
-for crate in "${crates[@]}"
+for gem in "${gems[@]}"
 do
-    cargo install "$crate"
+    gem install "$gem"
 done
 
-_koopa_set_permissions --recursive "$prefix"
+rbenv rehash
 
 _koopa_install_success "$name_fancy"
