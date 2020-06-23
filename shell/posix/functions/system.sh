@@ -1015,14 +1015,25 @@ _koopa_system_git_pull() {  # {{{1
     # """
     # Pull koopa git repo.
     # @note Updated 2020-06-23.
+    #
     # Intended for use with 'koopa pull'.
+    #
+    # This handles updates to Zsh functions that are changed to group
+    # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
     (
         local prefix
         prefix="$(_koopa_prefix)"
         cd "$prefix" || exit 1
         _koopa_set_permissions --recursive "${prefix}/shell/zsh" >/dev/null 2>&1
+        local branch
+        branch="$(_koopa_git_branch)"
         _koopa_git_pull
+        # Ensure other branches, such as develop, are rebased.
+        if [ "$branch" != "master" ]
+        then
+            _koopa_git_pull origin master
+        fi
         _koopa_fix_zsh_permissions &>/dev/null
     )
     return 0
