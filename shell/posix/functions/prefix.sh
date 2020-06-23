@@ -228,6 +228,21 @@ _koopa_homebrew_prefix() {  # {{{1
     _koopa_print "$x"
 }
 
+_koopa_homebrew_ruby_gems_prefix() {  # {{{1
+    # """
+    # Homebrew Ruby gems prefix.
+    # @note Updated 2020-06-23.
+    # """
+    _koopa_is_installed ruby || return 0
+    local homebrew_prefix
+    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    local api_version
+    api_version="$(_koopa_ruby_api_version)"
+    local prefix
+    prefix="${homebrew_prefix}/lib/ruby/gems/${api_version}/bin"
+    _koopa_print "$prefix"
+}
+
 _koopa_java_home() {  # {{{1
     # """
     # Java home.
