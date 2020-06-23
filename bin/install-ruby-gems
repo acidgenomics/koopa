@@ -4,27 +4,19 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# """
-# Cargo documentation:
-# https://doc.rust-lang.org/cargo/
-#
-# install-update now supported:
-# - https://stackoverflow.com/questions/34484361
-# - https://github.com/rust-lang/cargo/pull/6798
-# - https://github.com/rust-lang/cargo/pull/7560
-# """
-
 _koopa_assert_has_no_envs
-_koopa_exit_if_not_installed gem rbenv
+_koopa_exit_if_not_installed gem
 
 name_fancy="Ruby gems"
-gem_exe="$(rbenv which gem)"
 
 _koopa_install_start "$name_fancy"
-_koopa_dl "gem" "$gem_exe"
+
+# > gemdir="$(gem environment gemdir)"
+# > _koopa_dl "gemdir" "$gemdir"
 
 if [[ "$#" -eq 0 ]]
 then
+    # > gem pristine --all --only-executables
     gems=(
         bashcov
         ronn
@@ -39,7 +31,5 @@ for gem in "${gems[@]}"
 do
     gem install "$gem"
 done
-
-rbenv rehash
 
 _koopa_install_success "$name_fancy"
