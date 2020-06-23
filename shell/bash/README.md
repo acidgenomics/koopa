@@ -23,13 +23,10 @@ Array sorting:
 
 ```bash
 readarray -t man_dirs <<< "$( \
-    find "$KOOPA_PREFIX" \
+    find "$HOME" \
         -mindepth 1 \
+        -maxdepth 1 \
         -type d \
-        -name "man" \
-        -not -path "${KOOPA_PREFIX}/.git/*" \
-        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
-        -not -path "${KOOPA_PREFIX}/shunit2-*" \
         -print \
     | sort \
 )"
