@@ -36,7 +36,7 @@ _koopa_cd() {  # {{{1
     # Change directory quietly.
     # @note Updated 2019-10-29.
     # """
-    cd "$@" > /dev/null || return 1
+    cd "$@" >/dev/null || return 1
     return 0
 }
 
@@ -928,9 +928,9 @@ _koopa_rm() {  # {{{1
     # """
     if _koopa_is_shared_install
     then
-        sudo rm -fr "$@" > /dev/null 2>&1
+        sudo rm -fr "$@" >/dev/null 2>&1
     else
-        rm -fr "$@" > /dev/null 2>&1
+        rm -fr "$@" >/dev/null 2>&1
     fi
     return 0
 }
