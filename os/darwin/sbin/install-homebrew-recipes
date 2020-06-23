@@ -253,8 +253,8 @@ brews=(
     pkg-config
     podofo
     protobuf
-    pyenv
-    rbenv
+    # pyenv
+    # rbenv (or use rvm?)
     rename
     ruby
     rsync
