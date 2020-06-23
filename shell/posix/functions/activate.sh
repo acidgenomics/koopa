@@ -879,8 +879,8 @@ _koopa_activate_ssh_key() {  # {{{1
     local key
     key="${SSH_KEY:-"${HOME}/.ssh/id_rsa"}"
     [ -r "$key" ] || return 0
-    eval "$(ssh-agent -s)" > /dev/null 2>&1
-    ssh-add "$key" > /dev/null 2>&1
+    eval "$(ssh-agent -s)" >/dev/null 2>&1
+    ssh-add "$key" >/dev/null 2>&1
     return 0
 }
 
