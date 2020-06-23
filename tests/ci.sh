@@ -17,4 +17,6 @@ KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd -P)"
     # Re-enable this check when documentation is complete.
     # > "${tests_dir}/help.sh"
     "${tests_dir}/shunit2.sh"
+    # This is buggy on macOS with Homebrew.
+    # > "${tests_dir}/bashcov.sh"
 )
