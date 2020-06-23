@@ -15,8 +15,9 @@ then
         }
         script_path="$(_koopa_realpath "$script_path")"
     fi
-    KOOPA_PREFIX="$(cd "$(dirname "$script_path")/.." \
-        >/dev/null 2>&1 && pwd -P)"
+    KOOPA_PREFIX="$( \
+        cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd -P \
+    )"
     unset -v script_path
     # shellcheck source=/dev/null
     force=1 minimal=1 . "${KOOPA_PREFIX}/activate"

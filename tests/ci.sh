@@ -8,8 +8,7 @@ set -Eeu -o pipefail
 # Need to navigate to koopa prefix to load '.pylintrc' file correctly.
 # """
 
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd -P)"
 
 (
     cd "$KOOPA_PREFIX" || exit 1
