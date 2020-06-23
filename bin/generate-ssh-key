@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
 
