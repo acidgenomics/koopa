@@ -16,7 +16,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 
 rm -fr "${koopa_prefix}/coverage"
+
+# --bash-path="/usr/local/bin/bash"
 bashcov \
-    --bash-path="/usr/local/bin/bash" \
     --root="$koopa_prefix" \
     "${script_dir}/shunit2.sh"
