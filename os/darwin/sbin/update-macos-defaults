@@ -26,7 +26,7 @@
 # - https://medium.com/@notrab/friendly-os-x-defaults-d7f0cc39f2b3
 # """
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
