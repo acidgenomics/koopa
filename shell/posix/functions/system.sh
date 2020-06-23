@@ -1011,6 +1011,23 @@ _koopa_shell() {  # {{{1
     return 0
 }
 
+_koopa_system_git_pull() {  # {{{1
+    # """
+    # Pull koopa git repo.
+    # @note Updated 2020-06-23.
+    # Intended for use with 'koopa pull'.
+    # """
+    (
+        local prefix
+        prefix="$(_koopa_prefix)"
+        cd "$prefix" || exit 1
+        _koopa_set_permissions --recursive "${prefix}/shell/zsh" >/dev/null 2>&1
+        _koopa_git_pull
+        _koopa_fix_zsh_permissions &>/dev/null
+    )
+    return 0
+}
+
 _koopa_test_find_files() {  # {{{1
     # """
     # Find relevant files for unit tests.
