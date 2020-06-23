@@ -91,7 +91,7 @@ then
     then
         (
             cd "$koopa_prefix" || exit 1
-            _koopa_git_pull origin master
+            _koopa_system_git_pull
         ) 2>&1 | tee -a "$(_koopa_tmp_log_file)"
     fi
     # Ensure dotfiles are current.
