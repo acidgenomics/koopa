@@ -495,6 +495,15 @@ _koopa_activate_homebrew_python() {
     _koopa_activate_homebrew_prefix "python"
 }
 
+_koopa_activate_homebrew_ruby_gems() {  # {{{1
+    # """
+    # Activate Homebrew Ruby gems.
+    # @note Updated 2020-06-23.
+    # """
+    _koopa_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
+    return 0
+}
+
 _koopa_activate_koopa_paths() {  # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
@@ -533,21 +542,6 @@ _koopa_activate_koopa_paths() {  # {{{1
     _koopa_activate_prefix "${config_prefix}/docker"
     _koopa_activate_prefix "${config_prefix}/scripts-private"
     _koopa_add_to_path_end "${koopa_prefix}/system/defunct/bin"
-    return 0
-}
-
-_koopa_activate_homebrew_ruby_gems() {  # {{{1
-    # """
-    # Activate Homebrew Ruby gems.
-    # @note Updated 2020-06-23.
-    # """
-    local homebrew_prefix
-    homebrew_prefix="$(_koopa_homebrew_prefix)"
-    local api_version
-    api_version="$(_koopa_ruby_api_version)"
-    local prefix
-    prefix="${homebrew_prefix}/lib/ruby/gems/${api_version}/bin"
-    _koopa_add_to_path_start "$prefix"
     return 0
 }
 
