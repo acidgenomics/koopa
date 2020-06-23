@@ -12,14 +12,11 @@
 # https://github.com/infertux/bashcov
 # """
 
-script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
-    >/dev/null 2>&1 && pwd -P)"
-KOOPA_PREFIX="$(cd "${script_dir}/.." >/dev/null 2>&1 && pwd -P)"
-export KOOPA_PREFIX
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 
-rm -fr "${KOOPA_PREFIX}/coverage"
-
+rm -fr "${koopa_prefix}/coverage"
 bashcov \
     --bash-path="/usr/local/bin/bash" \
-    --root="$KOOPA_PREFIX" \
+    --root="$koopa_prefix" \
     "${script_dir}/shunit2.sh"
