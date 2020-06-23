@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+script_path="${BASH_SOURCE[0]}"
+if [ -L "$script_path" ]
+then
+    _koopa_realpath() {
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
+    script_path="$(_koopa_realpath "$script_path")"
+fi
+script_dir="$(cd "$(dirname "$script_path")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${script_dir}/../shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
