@@ -24,7 +24,11 @@ printPrograms <- function(path) {
         all.files = FALSE,
         full.names = TRUE
     )
+    # Ignore directories.
     keep <- !file.info(files)[["isdir"]]
+    files <- files[keep]
+    # Ignore exported scripts in `opt`.
+    keep <- !grepl(file.path(koopaHome, "opt"), files)
     files <- files[keep]
     if (length(files) == 0L) {
         return()
