@@ -11,11 +11,45 @@ _koopa_assert_has_args "$@"
 
 _koopa_assert_is_installed rsync
 
-# --filter=':- .gitignore'
-rsync \
-    --archive \
-    --human-readable \
-    --progress \
-    --exclude="/.git" \
-    --filter="dir-merge,- .gitignore" \
-    "$@"
+global=0
+
+pos=()
+while (("$#"))
+do
+    case "$1" in
+        --global)
+            global=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        --*|-*)
+            _koopa_invalid_arg "$1"
+            ;;
+        *)
+            pos+=("$1")
+            shift 1
+            ;;
+    esac
+done
+[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+
+flags=(
+    "--archive"
+    "--exclude=/.git"
+    "--filter=dir-merge,- .gitignore"
+    "--human-readable"
+    "--progress"
+    # "--filter=:- .gitignore"
+)
+
+if [[ "$global" -eq 1 ]]
+then
+    ignore_global="${HOME}/.gitignore"
+    _koopa_assert_is_file "$ignore_global"
+    flags+=("--filter=dir-merge,- $ignore_global")
+fi
+
+rsync "${flags[@]}" "$@"
