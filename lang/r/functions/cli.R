@@ -1,5 +1,5 @@
 #' Header 1
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-06-24.
 #' @noRd
 h1 <- function(x) {
     if (isTRUE(hasCli())) {
@@ -8,12 +8,13 @@ h1 <- function(x) {
     } else {
         message(paste0("\n", x, "\n"))
     }
+    invisible(x)
 }
 
 
 
 #' Header 2
-#' @note Updated 2020-04-09.
+#' @note Updated 2020-06-24.
 #' @noRd
 h2 <- function(x) {
     if (isTRUE(hasCli())) {
@@ -23,6 +24,7 @@ h2 <- function(x) {
     } else {
         message(paste0("\n", x, ":"))
     }
+    invisible(x)
 }
 
 
@@ -43,4 +45,21 @@ status <- function() {
         x[["ok"]] <- crayon::green(x[["ok"]])
     }
     x
+}
+
+
+
+#' Unordered list
+#' @note Updated 2020-06-24.
+#' @noRd
+ul <- function(x) {
+    if (isTRUE(hasCli())) {
+        stopifnot(requireNamespace("cli", quietly = TRUE))
+        cli::cli_div(theme = list(body = list("margin-left" = 2L)))
+        cli::cli_ul(items = x)
+        cli::cli_end()
+    } else {
+        cat(paste0("  - ", x), sep = "\n")
+    }
+    invisible(x)
 }
