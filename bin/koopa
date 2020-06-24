@@ -19,192 +19,54 @@ script_dir="$(cd "$(dirname "$script_path")" &>/dev/null && pwd -P)"
 checks=0 source "${script_dir}/../shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 
-koopa_prefix="$(_koopa_prefix)"
-include_dir="${koopa_prefix}/system/include/koopa"
-
+# Update corresponding Bash completion file, if necessary.
 case "$1" in
-    # Standard flags {{{1
+    # Auto-completion {{{1
     # ==========================================================================
-    # Note that '--help|-h' flags are supported by Bash header script.
-    --version|-V|version)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_version
-        exit 0
-        ;;
-    # System configuration {{{1
-    # ==========================================================================
-    check|check-system)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_assert_is_installed Rscript
-        export KOOPA_FORCE=1
-        koopa_prefix="$(_koopa_prefix)"
-        set +u
-        # shellcheck disable=SC1090
-        source "${koopa_prefix}/activate"
-        set -u
-        Rscript --vanilla "${include_dir}/check-system.R"
-        _koopa_disk_check
-        exit 0
-        ;;
-    header)
-        shift 1
-        _koopa_header "$@"
-        exit 0
+    --version|-V)
+        f="version"
         ;;
     info)
-        shift 1
-        # shellcheck disable=SC1090
-        source "${include_dir}/info.sh" "$@"
-        exit 0
+        f="system_info"
         ;;
-    list)
-        _koopa_assert_is_installed Rscript
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        Rscript --vanilla "${include_dir}/list.R"
-        exit 0
+    check-system | \
+    header | \
+    install-dotfiles | \
+    list | \
+    prefix | \
+    test | \
+    uninstall | \
+    update | \
+    version)
+        f="$1"
         ;;
-    list-internal|list-internal-functions)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_list_internal_functions
-        exit 0
+    # Supported, but hidden from user {{{1
+    # ==========================================================================
+    check)
+        f="check_system"
+        ;;
+    log)
+        f="view_latest_tmp_log_file"
         ;;
     pull)
-        shift 1
-        _koopa_system_git_pull "$@"
-        exit 0
+        f="system_git_pull"
         ;;
-    set-permissions)
-        shift 1
-        _koopa_set_permissions "$@"
-        exit 0
-        ;;
-    test)
-        shift 1
-        "${koopa_prefix}/tests/ci.sh" "$@"
-        exit 0
-        ;;
-    uninstall)
-        shift 1
-        "${koopa_prefix}/uninstall" "$@"
-        exit 0
-        ;;
-    update)
-        shift 1
-        # shellcheck disable=SC1090
-        source "${include_dir}/update.sh" "$@"
-        exit 0
-        ;;
-    # Installers {{{1
-    # ==========================================================================
-    install-dotfiles)
-        shift 1
-        _koopa_git_clone_dotfiles "$@"
-        _koopa_install_dotfiles "$@"
-        exit 0
-        ;;
-    install-mike)
-        shift 1
-        _koopa_install_mike "$@"
-        exit 0
-        ;;
-    # Strings {{{1
-    # ==========================================================================
-    app-prefix)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_app_prefix
-        exit 0
-        ;;
-    cellar-prefix)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_cellar_prefix
-        exit 0
-        ;;
-    config-prefix)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_config_prefix
-        exit 0
-        ;;
-    get-homebrew-cask-version)
-        shift 1
-        _koopa_get_homebrew_cask_version "$@"
-        exit 0
-        ;;
-    get-macos-app-version)
-        shift 1
-        _koopa_get_macos_app_version "$@"
-        exit 0
-        ;;
-    get-version)
-        shift 1
-        _koopa_get_version "$@"
-        exit 0
-        ;;
-    host-id)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_host_id
-        exit 0
-        ;;
-    local-app-prefix)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_local_app_prefix
-        exit 0
-        ;;
-    make-prefix)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_make_prefix
-        exit 0
-        ;;
-    os-string)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_os_string
-        exit 0
-        ;;
-    prefix)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_prefix
-        exit 0
-        ;;
-    r-home)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_r_home
-        exit 0
-        ;;
+    app-prefix | \
+    cellar-prefix | \
+    config-prefix | \
+    get-homebrew-cask-version | \
+    get-macos-app-version | \
+    get-version | \
+    host-id | \
+    install-mike | \
+    list-internal-functions | \
+    make-prefix | \
+    os-string | \
+    set-permissions | \
+    variable | \
+    variables | \
     which-realpath)
-        shift 1
-        _koopa_which_realpath "$@"
-        exit 0
-        ;;
-    # Developer tools {{{1
-    # ==========================================================================
-    log)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        _koopa_view_latest_tmp_log_file
-        exit 0
-        ;;
-    variable)
-        shift 1
-        _koopa_variable "$@"
-        exit 0
-        ;;
-    variables)
-        shift 1
-        _koopa_assert_has_no_args "$@"
-        vim "${koopa_prefix}/system/include/variables.txt"
-        exit 0
+        f="$1"
         ;;
     # Deprecated args / error catching {{{1
     # ==========================================================================
@@ -217,6 +79,9 @@ case "$1" in
     update-r-config)
         _koopa_defunct "update-r-config (without 'koopa' prefix)"
         ;;
+    r-home)
+        _koopa_defunct "koopa which-realpath R"
+        ;;
     upgrade)
         _koopa_defunct "koopa update"
         ;;
@@ -224,3 +89,8 @@ case "$1" in
         _koopa_invalid_arg "$1"
         ;;
 esac
+
+fun="_koopa_${f//-/_}"
+_koopa_assert_is_function "$fun"
+shift 1
+"$fun" "$@"
