@@ -38,10 +38,12 @@ done
 
 flags=(
     "--archive"
-    "--exclude=/.git"
+    "--exclude=.*"
     "--filter=dir-merge,- .gitignore"
     "--human-readable"
     "--progress"
+    # "--exclude=.*/"
+    # "--exclude=/.git"
     # "--filter=:- .gitignore"
 )
 
