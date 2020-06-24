@@ -15,6 +15,15 @@ _koopa_activate_zsh_aliases() {  # {{{1
     return 0
 }
 
+_koopa_activate_zsh_bashcompinit() { # {{{1
+    # """
+    # Activate Bash completions for Zsh.
+    # @note Updated 2020-06-24.
+    # """
+    autoload -Uz bashcompinit && bashcompinit 2>/dev/null
+    return 0
+}
+
 _koopa_activate_zsh_colors() {  # {{{1
     # """
     # Enable colors in terminal.
@@ -54,7 +63,7 @@ _koopa_activate_zsh_editor() {  # {{{1
 _koopa_activate_zsh_extras() {  # {{{1
     # """
     # Activate Zsh extras.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-24.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -69,6 +78,7 @@ _koopa_activate_zsh_extras() {  # {{{1
     # """
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
+    _koopa_activate_zsh_bashcompinit
     _koopa_activate_zsh_colors
     _koopa_activate_zsh_editor
     _koopa_activate_zsh_plugins
