@@ -2,14 +2,13 @@
 
 # """
 # Check that all scripts support '--help' flag.
-# Updated 2020-06-20.
+# Updated 2020-06-24.
 # """
 
-KOOPA_PREFIX="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/../.." \
-    >/dev/null 2>&1 && pwd -P)"
-export KOOPA_PREFIX
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+source "${koopa_prefix}/shell/bash/include/header.sh"
 
 _koopa_h1 "Running manual file '--help' flag checks."
 
@@ -19,13 +18,13 @@ _koopa_h1 "Running manual file '--help' flag checks."
 # Put all 'man/' dirs into an array and loop.
 # Pipe GNU find into array.
 readarray -t man_dirs <<< "$( \
-    find "$KOOPA_PREFIX" \
+    find "$koopa_prefix" \
         -mindepth 1 \
         -type d \
         -name "man" \
-        -not -path "${KOOPA_PREFIX}/.git/*" \
-        -not -path "${KOOPA_PREFIX}/dotfiles/*" \
-        -not -path "${KOOPA_PREFIX}/shunit2-*" \
+        -not -path "${koopa_prefix}/.git/*" \
+        -not -path "${koopa_prefix}/dotfiles/*" \
+        -not -path "${koopa_prefix}/shunit2-*" \
         -print \
     | sort \
 )"
@@ -66,13 +65,13 @@ _koopa_h2 "Running exported script '--help' flag checks."
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 readarray -t bin_dirs <<< "$( \
-    find "$KOOPA_PREFIX" \
+    find "$koopa_prefix" \
         -mindepth 1 \
         -type d \
         \( -name "bin" -o -name "sbin" \) \
         -not -path "*/cellar/*" \
         -not -path "*/dotfiles/*" \
-        -not -path "${KOOPA_PREFIX}/shunit2-*" \
+        -not -path "${koopa_prefix}/shunit2-*" \
         -print \
     | sort \
 )"
