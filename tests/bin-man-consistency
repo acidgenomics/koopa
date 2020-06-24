@@ -22,6 +22,7 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 exclude <- file.path(koopaPrefix, "(dotfiles|opt|system)", "")
 
 h1("Checking bin/man consistency")
+status <- 0L
 
 ## Bin-to-man mapping {{{1
 ## =============================================================================
@@ -79,6 +80,7 @@ if (!all(ok)) {
         lapply(X = dirname(missing), FUN = initDir)
         file.create(missing)
     })
+    status <- 1L
 }
 
 ## Orphaned man-to-bin files {{{1
@@ -113,4 +115,7 @@ if (hasLength(orphans)) {
         length(orphans)
     ))
     invisible(file.remove(orphans))
+    status <- 1L
 }
+
+quit(status = status)
