@@ -243,10 +243,18 @@ _koopa_homebrew_ruby_gems_prefix() {  # {{{1
     _koopa_print "$prefix"
 }
 
-_koopa_java_home() {  # {{{1
+_koopa_include_prefix() { # {{{1
     # """
-    # Java home.
-    # @note Updated 2020-03-05.
+    # Koopa system includes prefix.
+    # @note Updated 2020-06-24.
+    # """
+    _koopa_print "$(_koopa_prefix)/system/include"
+}
+
+_koopa_java_prefix() {  # {{{1
+    # """
+    # Java prefix.
+    # @note Updated 2020-06-24.
     #
     # See also:
     # - https://www.mkyong.com/java/
@@ -260,16 +268,16 @@ _koopa_java_home() {  # {{{1
         _koopa_print "$JAVA_HOME"
         return 0
     fi
-    local home
+    local prefix
     if _koopa_is_macos
     then
-        home="$(/usr/libexec/java_home)"
+        prefix="$(/usr/libexec/java_home)"
     else
         local java_exe
         java_exe="$(_koopa_which "java")"
-        home="$(dirname "$(dirname "${java_exe}")")"
+        prefix="$(dirname "$(dirname "${java_exe}")")"
     fi
-    _koopa_print "$home"
+    _koopa_print "$prefix"
 }
 
 _koopa_local_app_prefix() {  # {{{1
@@ -402,6 +410,59 @@ _koopa_rust_cargo_prefix() {  # {{{1
     _koopa_print "$prefix"
 }
 
+_koopa_r_prefix() {  # {{{1
+    # """
+    # R prefix.
+    # @note Updated 2020-06-24.
+    #
+    # We're suppressing errors here that can pop up if 'etc' isn't linked yet
+    # after a clean install. Can warn about ldpaths missing.
+    # """
+    local rscript_exe
+    rscript_exe="${1:-Rscript}"
+    _koopa_is_installed "$rscript_exe" || return 1
+    local prefix
+    prefix="$( \
+        "$rscript_exe" \
+            --vanilla \
+            -e 'cat(Sys.getenv("R_HOME"))' \
+        2>/dev/null \
+    )"
+    [ -d "$prefix" ] || return 1
+    _koopa_print "$prefix"
+    return 0
+}
+
+_koopa_r_library_prefix() {  # {{{1
+    # """
+    # R default library prefix.
+    # @note Updated 2020-04-25.
+    # """
+    local rscript_exe
+    rscript_exe="${1:-Rscript}"
+    _koopa_is_installed "$rscript_exe" || return 1
+    local prefix
+    prefix="$("$rscript_exe" -e 'cat(.libPaths()[[1L]])')"
+    [ -d "$prefix" ] || return 1
+    _koopa_print "$prefix"
+    return 0
+}
+
+_koopa_r_system_library_prefix() {  # {{{1
+    # """
+    # R system library prefix.
+    # @note Updated 2020-04-25.
+    # """
+    local rscript_exe
+    rscript_exe="${1:-Rscript}"
+    _koopa_is_installed "$rscript_exe" || return 1
+    local prefix
+    prefix="$("$rscript_exe" --vanilla -e 'cat(tail(.libPaths(), n = 1L))')"
+    [ -d "$prefix" ] || return 1
+    _koopa_print "$prefix"
+    return 0
+}
+
 _koopa_rust_rustup_prefix() {  # {{{1
     # """
     # Rust rustup install prefix.
@@ -423,6 +484,14 @@ _koopa_scripts_private_prefix() {  # {{{1
     # @note Updated 2020-02-15.
     # """
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
+}
+
+_koopa_tests_prefix() { # {{{1
+    # """
+    # Unit tests prefix.
+    # @note Updated 2020-06-24.
+    # """
+    _koopa_print "$(_koopa_prefix)/tests"
 }
 
 _koopa_venv_prefix() {  # {{{1
