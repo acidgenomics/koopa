@@ -3,7 +3,7 @@
 set -Eeu -o pipefail
 
 # """
-# Install koopa inside Docker.
+# Install and test koopa inside Docker.
 # Updated 2020-03-07.
 # """
 

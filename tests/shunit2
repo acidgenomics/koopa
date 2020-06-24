@@ -123,12 +123,10 @@
 # https://github.com/kward/shunit2/issues/52#issuecomment-358536886
 # """
 
-script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
-    >/dev/null 2>&1 && pwd -P)"
-KOOPA_PREFIX="$(cd "${script_dir}/.." >/dev/null 2>&1 && pwd -P)"
-export KOOPA_PREFIX
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+source "${koopa_prefix}/shell/bash/include/header.sh"
 
 _koopa_exit_if_not_installed shunit2
 
@@ -152,7 +150,7 @@ _koopa_h1 "Running unit tests with shUnit2."
 # Don't exit on errors, which are handled by shunit2.
 set +o errexit
 
-shunit2_dir="${script_dir}/shunit2"
+shunit2_dir="${script_dir}/shunit2.d"
 
 suite() {
     for file in "${shunit2_dir}/"*".sh"
@@ -160,7 +158,6 @@ suite() {
         # shellcheck disable=SC1090
         . "$file"
     done
-
     if [[ "$extra" -eq 1 ]]
     then
         for file in "${shunit2_dir}/extra/"*".sh"
@@ -169,14 +166,12 @@ suite() {
             . "$file"
         done
     fi
-
     readarray -t tests <<< "$( \
         declare -F \
             | cut -d ' ' -f 3 \
             | grep -E '^test_' \
             | sort \
     )"
-
     for test in "${tests[@]}"
     do
         suite_addTest "$test"

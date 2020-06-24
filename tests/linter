@@ -5,21 +5,19 @@
 # Updated 2020-02-01.
 # """
 
-script_dir="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" \
-    >/dev/null 2>&1 && pwd -P)"
-KOOPA_PREFIX="$(cd "${script_dir}/.." >/dev/null 2>&1 && pwd -P)"
-export KOOPA_PREFIX
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+koopa_prefix="$(cd "${script_dir}/.." &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+source "${koopa_prefix}/shell/bash/include/header.sh"
 
 _koopa_h1 "Running linter checks."
 
 # Check that linter config files are linked correctly.
 # This step can error if dotfiles submodule hasn't cloned.
-_koopa_git_clone_dotfiles > /dev/null
-_koopa_assert_is_symlink "${KOOPA_PREFIX}/."{lintr,pylintrc}
+_koopa_git_clone_dotfiles >/dev/null
+_koopa_assert_is_symlink "${koopa_prefix}/."{lintr,pylintrc}
 
-linter_dir="${script_dir}/linter"
+linter_dir="${script_dir}/linter.d"
 for file in "${linter_dir}/"*".sh"
 do
     # shellcheck source=/dev/null
