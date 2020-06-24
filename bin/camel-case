@@ -6,17 +6,13 @@ file <- args[whichFile]
 file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
-
-stopifnot(
-    requireNamespace("acidbase", quietly = TRUE),
-    requireNamespace("syntactic", quietly = TRUE)
-)
+library(syntactic)
 
 prefix <- FALSE
 recursive <- FALSE
 strict <- FALSE
 
-args <- acidbase::parseArgs(
+args <- parseArgs(
     positional = TRUE,
     validFlags = c("prefix", "recursive", "strict")
 )
@@ -31,8 +27,8 @@ if ("--strict" %in% args) {
     strict <- TRUE
 }
 
-syntactic::camelCase(
-    object = acidbase::positionalArgs(),
+camelCase(
+    object = positionalArgs(),
     rename = TRUE,
     recursive = recursive,
     strict = strict,
