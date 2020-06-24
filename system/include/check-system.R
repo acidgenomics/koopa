@@ -2,24 +2,16 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-06-19.
+## Updated 2020-06-24.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
 ## # Try: gem pristine commonmarker --version 0.17.13
 ## """
 
-stopifnot(isTRUE(nzchar(Sys.getenv("KOOPA_PREFIX"))))
-source(
-    file.path(Sys.getenv("KOOPA_PREFIX"), "lang", "r", "include", "header.R")
-)
-
-attach(.koopa)
-
-suppressPackageStartupMessages({
-    library(acidbase)
-    library(goalie)
-})
+koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
+stopifnot(nzchar(koopaPrefix))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
 h1("Checking koopa installation")
 
@@ -565,8 +557,8 @@ if (!isTRUE(docker)) {
     checkVersion(
         name = "SQLite",
         whichName = "sqlite3",
-        current = currentVersion("sqlite"),
-        expected = expectedVersion("sqlite")
+        current = currentMinorVersion("sqlite"),
+        expected = expectedMinorVersion("sqlite")
     )
     installed(
         which = c(
