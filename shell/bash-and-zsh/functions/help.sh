@@ -3,7 +3,7 @@
 _koopa_help() {  # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2020-05-08.
+    # @note Updated 2020-06-24.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -75,6 +75,7 @@ _koopa_help() {  # {{{1
                         _koopa_stop "Unsupported shell."
                         ;;
                 esac
+                file="$(realpath "$file")"
                 local script_name
                 script_name="$(basename "$file")"
                 local prefix
