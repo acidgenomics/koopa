@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-06-21.
+## @note Updated 2020-06-24.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -18,8 +18,6 @@ options(
 
 ## Create an invisible koopa environment.
 .koopa <- new.env()
-
-
 
 ## Source shared function scripts {{{1
 ## =============================================================================
@@ -44,8 +42,6 @@ local({
 
 ## Here's how to source functions into active environment.
 ## > invisible(lapply(X = .koopa[["scripts"]], FUN = source, local = FALSE))
-
-
 
 ## Check package dependencies {{{1
 ## =============================================================================
@@ -114,14 +110,10 @@ local({
     assign(x = "dependencies", value = dependencies, envir = .koopa)
 })
 
-
-
 ## Help mode {{{1
 ## =============================================================================
 
 .koopa[["koopaHelp"]]()
-
-
 
 ## Parallelization {{{1
 ## =============================================================================
@@ -135,3 +127,13 @@ if (
 ) {
     options("mc.cores" = parallel::detectCores())
 }
+
+## Dependencies {{{1
+## =============================================================================
+
+suppressPackageStartupMessages({
+    library(acidbase)
+    library(goalie)
+})
+
+attach(.koopa)
