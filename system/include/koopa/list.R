@@ -2,44 +2,31 @@
 
 ## """
 ## List user-accessible programs exported in PATH.
-## Updated 2020-02-28.
+## Updated 2020-06-24.
 ## """
 
-message("koopa programs exported in PATH.")
+koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
+stopifnot(nzchar(koopaPrefix))
+source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-## Note that these won't pick up in isolated RStudio configuration.
-## > Sys.setenv("KOOPA_PREFIX" = "/usr/local/koopa")
-koopaHome <- Sys.getenv("KOOPA_PREFIX")
 path <- Sys.getenv("PATH")
-stopifnot(
-    nzchar(koopaHome),
-    any(grepl("koopa", path))
-)
+assert(any(grepl("koopa", path)))
+
+h1("koopa programs exported in PATH")
 
 printPrograms <- function(path) {
-    if (!dir.exists(path)) return(invisible())
-    path <- normalizePath(path, mustWork = TRUE)
-    files <- list.files(
-        path = path,
-        all.files = FALSE,
-        full.names = TRUE
-    )
+    if (!isDir(path)) return(invisible())
+    path <- realpath(path)
+    files <- sort(list.files(path = path, all.files = FALSE, full.names = TRUE))
     # Ignore directories.
     keep <- !file.info(files)[["isdir"]]
     files <- files[keep]
     # Ignore exported scripts in `opt`.
-    keep <- !grepl(file.path(koopaHome, "opt"), files)
+    keep <- !grepl(file.path(koopaPrefix, "opt"), files)
     files <- files[keep]
-    if (length(files) == 0L) {
-        return()
-    }
-    cat(
-        "",
-        paste0(path, ":"),
-        "",
-        paste0("    ", basename(files)),
-        sep = "\n"
-    )
+    if (!hasLength(files)) return()
+    h2(path)
+    ul(basename(files))
 }
 
 ## Split PATH string into a character vector.
