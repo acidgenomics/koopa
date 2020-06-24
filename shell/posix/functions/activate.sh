@@ -123,6 +123,23 @@ _koopa_activate_broot() {  # {{{1
     return 0
 }
 
+_koopa_activate_completion() { # {{{1
+    # """
+    # Activate completion (with TAB key).
+    # @note Updated 2020-06-24.
+    # """
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    # shellcheck source=/dev/null
+    . "$(_koopa_prefix)/etc/completion/"*
+    return 0
+}
+
 _koopa_activate_conda() {  # {{{1
     # """
     # Activate conda.

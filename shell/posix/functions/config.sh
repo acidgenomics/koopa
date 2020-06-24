@@ -353,14 +353,13 @@ _koopa_git_clone_scripts_private() {
 _koopa_install_dotfiles() {  # {{{1
     # """
     # Install dot files.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-06-24.
     # """
     local prefix
     prefix="$(_koopa_dotfiles_prefix)"
     if [ ! -d "$prefix" ]
     then
-        _koopa_note "No dotfiles at '${prefix}'."
-        return 0
+        _koopa_git_clone_dotfiles
     fi
     local script
     script="${prefix}/install"
