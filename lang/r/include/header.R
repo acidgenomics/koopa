@@ -132,6 +132,7 @@ if (
 ## =============================================================================
 
 suppressPackageStartupMessages({
+    library(utils)
     library(acidbase)
     library(goalie)
 })
