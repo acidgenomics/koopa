@@ -75,8 +75,10 @@ if (!all(ok)) {
         "%d missing man pages detected. Resolving.",
         length(missing)
     ))
-    lapply(X = dirname(missing), FUN = initDir)
-    file.create(missing)
+    invisible({
+        lapply(X = dirname(missing), FUN = initDir)
+        file.create(missing)
+    })
 }
 
 ## Orphaned man-to-bin files {{{1
@@ -110,5 +112,5 @@ if (hasLength(orphans)) {
         "%d orphaned man pages detected. Resolving.",
         length(orphans)
     ))
-    file.remove(orphans)
+    invisible(file.remove(orphans))
 }
