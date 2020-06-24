@@ -23,38 +23,49 @@ koopa_prefix="$(_koopa_prefix)"
 include_dir="${koopa_prefix}/system/include/koopa"
 
 case "$1" in
-    # Unix standard (general) --------------------------------------------------
+    # Standard flags {{{1
+    # ==========================================================================
+    # Note that '--help|-h' flags are supported by Bash header script.
     --version|-V|version)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_version
         exit 0
         ;;
-    # System configuration -----------------------------------------------------
-    check)
+    # System configuration {{{1
+    # ==========================================================================
+    check|check-system)
+        shift 1
         # shellcheck disable=SC1090
-        source "${include_dir}/check.sh"
+        source "${include_dir}/check-system.sh" "$@"
+        exit 0
+        ;;
+    header)
+        shift 1
+        _koopa_header "$@"
         exit 0
         ;;
     info)
+        shift 1
         # shellcheck disable=SC1090
-        source "${include_dir}/info.sh"
-        exit 0
-        ;;
-    install-dotfiles)
-        _koopa_git_clone_dotfiles
-        _koopa_install_dotfiles
+        source "${include_dir}/info.sh" "$@"
         exit 0
         ;;
     list)
+        shift 1
         # shellcheck disable=SC1090
-        source "${include_dir}/list.sh"
+        source "${include_dir}/list.sh" "$@"
         exit 0
         ;;
-    list-internal-functions)
+    list-internal|list-internal-functions)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_list_internal_functions
         exit 0
         ;;
     pull)
-        _koopa_system_git_pull
+        shift 1
+        _koopa_system_git_pull "$@"
         exit 0
         ;;
     set-permissions)
@@ -63,11 +74,13 @@ case "$1" in
         exit 0
         ;;
     test)
-        "${koopa_prefix}/tests/ci.sh"
+        shift 1
+        "${koopa_prefix}/tests/ci.sh" "$@"
         exit 0
         ;;
     uninstall)
-        "${koopa_prefix}/uninstall"
+        shift 1
+        "${koopa_prefix}/uninstall" "$@"
         exit 0
         ;;
     update)
@@ -76,16 +89,36 @@ case "$1" in
         source "${include_dir}/update.sh" "$@"
         exit 0
         ;;
-    # Character string return --------------------------------------------------
+    # Installers {{{1
+    # ==========================================================================
+    install-dotfiles)
+        shift 1
+        _koopa_git_clone_dotfiles "$@"
+        _koopa_install_dotfiles "$@"
+        exit 0
+        ;;
+    install-mike)
+        shift 1
+        _koopa_install_mike "$@"
+        exit 0
+        ;;
+    # Strings {{{1
+    # ==========================================================================
     app-prefix)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_app_prefix
         exit 0
         ;;
     cellar-prefix)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_cellar_prefix
         exit 0
         ;;
     config-prefix)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_config_prefix
         exit 0
         ;;
@@ -104,32 +137,39 @@ case "$1" in
         _koopa_get_version "$@"
         exit 0
         ;;
-    header)
-        shift 1
-        _koopa_header "$@"
-        exit 0
-        ;;
     host-id)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_host_id
         exit 0
         ;;
     local-app-prefix)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_local_app_prefix
         exit 0
         ;;
     make-prefix)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_make_prefix
         exit 0
         ;;
     os-string)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_os_string
         exit 0
         ;;
     prefix)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_prefix
         exit 0
         ;;
     r-home)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         _koopa_r_home
         exit 0
         ;;
@@ -138,18 +178,12 @@ case "$1" in
         _koopa_which_realpath "$@"
         exit 0
         ;;
-    # Developer tools ----------------------------------------------------------
-    install-mike)
-        _koopa_install_mike
-        exit 0
-        ;;
+    # Developer tools {{{1
+    # ==========================================================================
     log)
-        _koopa_view_latest_tmp_log_file
-        exit 0
-        ;;
-    update-r-config)
         shift 1
-        _koopa_update_r_config "$@"
+        _koopa_assert_has_no_args "$@"
+        _koopa_view_latest_tmp_log_file
         exit 0
         ;;
     variable)
@@ -158,16 +192,21 @@ case "$1" in
         exit 0
         ;;
     variables)
+        shift 1
+        _koopa_assert_has_no_args "$@"
         vim "${koopa_prefix}/system/include/variables.txt"
         exit 0
         ;;
-    # Deprecated args / error catching -----------------------------------------
+    # Deprecated args / error catching {{{1
+    # ==========================================================================
     help)
         _koopa_defunct "koopa --help"
-        exit 0
         ;;
     home)
         _koopa_defunct "koopa prefix"
+        ;;
+    update-r-config)
+        _koopa_defunct "update-r-config (without 'koopa' prefix)"
         ;;
     upgrade)
         _koopa_defunct "koopa update"
