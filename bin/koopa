@@ -36,8 +36,16 @@ case "$1" in
     # ==========================================================================
     check|check-system)
         shift 1
+        _koopa_assert_has_no_args "$@"
+        _koopa_assert_is_installed Rscript
+        export KOOPA_FORCE=1
+        koopa_prefix="$(_koopa_prefix)"
+        set +u
         # shellcheck disable=SC1090
-        source "${include_dir}/check-system.sh" "$@"
+        source "${koopa_prefix}/activate"
+        set -u
+        Rscript --vanilla "${include_dir}/check-system.R"
+        _koopa_disk_check
         exit 0
         ;;
     header)
@@ -52,9 +60,10 @@ case "$1" in
         exit 0
         ;;
     list)
+        _koopa_assert_is_installed Rscript
         shift 1
-        # shellcheck disable=SC1090
-        source "${include_dir}/list.sh" "$@"
+        _koopa_assert_has_no_args "$@"
+        Rscript --vanilla "${include_dir}/list.R"
         exit 0
         ;;
     list-internal|list-internal-functions)
