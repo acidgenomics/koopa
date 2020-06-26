@@ -68,6 +68,14 @@ done
 
 # e.g. acidgenomics/debian
 image="${1:?}"
+
+# Handle tag support, if necessary.
+if _koopa_str_match "$image" ":"
+then
+    tag="$(_koopa_print "$image" | cut -d ':' -f 2)"
+    image="$(_koopa_print "$image" | cut -d ':' -f 1)"
+fi
+
 source_image="${docker_dir}/${image}/${tag}"
 _koopa_assert_is_dir "$source_image"
 # e.g. acidgenomics/debian:latest
