@@ -17,7 +17,7 @@ _koopa_aws_cp_regex() {  # {{{1
     # - aws s3 cp help
     # """
     local pattern source_prefix target_prefix
-    _koopa_is_installed aws || return 1
+    _koopa_assert_is_installed aws
     pattern="${1:?}"
     source_prefix="${2:?}"
     target_prefix="${3:?}"
@@ -47,7 +47,7 @@ _koopa_aws_s3_find() {  # {{{1
     #     s3://cpi-bioinfo01/igv/
     # """
     local exclude include pos x
-    _koopa_is_installed aws || return 1
+    _koopa_assert_is_installed aws
     exclude=
     include=
     pos=()
@@ -117,7 +117,7 @@ _koopa_aws_s3_ls() {  # {{{1
     # aws-s3-ls --type=f s3://cpi-bioinfo01/datasets/
     # """
     local bucket_prefix dirs files flags pos prefix recursive type x
-    _koopa_is_installed aws || return 1
+    _koopa_assert_is_installed aws
     flags=()
     recursive=0
     type=
@@ -248,7 +248,7 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     # storage.
     # """
     local bn dn1 dn2 file files prefix target x
-    _koopa_is_installed aws || return 1
+    _koopa_assert_is_installed aws
     prefix="${1:?}"
     x="$(aws-s3-ls "$prefix")"
     [[ -n "$x" ]] || return 0
@@ -289,6 +289,7 @@ _koopa_aws_s3_sync() {  # {{{1
     # - *.Rproj directories.
     # - *.swp files (from vim).
     # """
+    _koopa_assert_is_installed aws
     aws s3 sync \
         --exclude="*.Rproj/*" \
         --exclude="*.swp" \
