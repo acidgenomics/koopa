@@ -84,7 +84,7 @@ fi
 
 source_image="${docker_dir}/${image}/${tag}"
 _koopa_assert_is_dir "$source_image"
-if [[ -L "$source_image"]]
+if [[ -L "$source_image" ]]
 then
     _koopa_stop "Symlink at '${source_image}'. Use directory instead."
 fi
