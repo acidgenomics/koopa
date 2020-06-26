@@ -48,7 +48,7 @@ local({
 
 ## Check that required R package dependencies are installed.
 local({
-    installGitHub <- .koopa[["installGitHub"]]
+    installGitHub <- .koopa[[".installGitHub"]]
     isPackageVersion <- .koopa[["isPackageVersion"]]
     ## GitHub dependencies.
     dependencies <- c(
