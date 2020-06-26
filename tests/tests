@@ -13,9 +13,8 @@ tests_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 (
     cd "$tests_dir" || exit 1
     ./bin-man-consistency
-    ./roff
+    # > ./roff
     ./linter
     ./shunit2
-    # This is buggy on macOS with Homebrew.
     # > ./bashcov
 )
