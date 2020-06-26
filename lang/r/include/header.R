@@ -76,6 +76,8 @@ local({
         invisible(lapply(
             X = c(
                 "BiocManager",
+                "cli",
+                "crayon",
                 "remotes",
                 "stringi",
                 "stringr"
