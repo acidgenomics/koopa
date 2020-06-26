@@ -398,7 +398,7 @@ _koopa_is_git() {  # {{{1i
     # """
     _koopa_is_git_toplevel "." && return 0
     _koopa_is_installed git || return 1
-    git rev-parse --git-dir > /dev/null 2>&1 && return 0
+    git rev-parse --git-dir >/dev/null 2>&1 && return 0
     return 1
 }
 
@@ -744,7 +744,7 @@ _koopa_is_tty() {  # {{{1
     # @note Updated 2020-02-15.
     # """
     _koopa_is_installed tty || return 1
-    tty > /dev/null 2>&1
+    tty >/dev/null 2>&1
 }
 
 _koopa_is_ubuntu() {  # {{{1

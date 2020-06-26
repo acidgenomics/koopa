@@ -13,7 +13,6 @@
 # Where your hardware UUID can be determined with:
 # > ioreg -c IOPlatformExpertDevice  -d 2 | awk -F'"' '/IOPlatformUUID/ { print $(NF-1) }'
 #
-#
 # See also:
 # - https://en.wikipedia.org/wiki/Defaults_(software)
 # - https://www.defaults-write.com/
@@ -24,9 +23,10 @@
 #       switching_system_appearance_using_terminal/e9wemy8/
 # - https://johnkastler.net/2011/12/25/os-x-defaults/
 # - https://medium.com/@notrab/friendly-os-x-defaults-d7f0cc39f2b3
+# - https://apple.stackexchange.com/questions/14001/
 # """
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 _koopa_assert_has_no_args "$@"
@@ -37,6 +37,13 @@ _koopa_update_start "$name_fancy"
 
 # General UI/UX {{{1
 # ==============================================================================
+
+# Reduce motion.
+defaults write com.apple.universalaccess reduceMotion -bool true
+
+# Reduce transparency.
+# > defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
+defaults write com.apple.universalaccess reduceTransparency -bool true
 
 # Enable Dark mode by default.
 # To disable, delete entry with 'defaults delete'.

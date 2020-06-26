@@ -546,6 +546,6 @@ _koopa_sudo_write_string() {  # {{{1
     string="${1:?}"
     local file
     file="${2:?}"
-    _koopa_print "$string" | sudo tee "$file" > /dev/null
+    _koopa_print "$string" | sudo tee "$file" >/dev/null
     return 0
 }

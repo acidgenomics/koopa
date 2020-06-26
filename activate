@@ -47,7 +47,7 @@ examples:
 
 note:
     POSIX shell script.
-    Updated 2020-06-19.
+    Updated 2020-06-24.
 EOF
 }
 
@@ -459,6 +459,7 @@ then
             ;;
     esac
     _koopa_is_macos && _koopa_activate_macos_extras
+    _koopa_activate_completion
     _koopa_activate_aliases
     _koopa_activate_secrets
     _koopa_activate_ssh_key

@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-checks=0 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+checks=0 source "${script_dir}/../shell/bash/include/header.sh"
 
-# This script is called inside 'configure-vm', so relax check here.
-# > _koopa_assert_is_installed ssh-keygen
+# This script is called inside 'configure-vm', so don't use assert here.
 _koopa_exit_if_not_installed ssh-keygen
 
 comment="${USER}@${HOSTNAME}"

@@ -16,20 +16,20 @@ _koopa_array_to_r_vector() {  # {{{1
 _koopa_link_r_etc() {  # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-04-30.
+    # @note Updated 2020-06-24.
     #
     # Don't copy Makevars file across machines.
     # """
-    local r_home
-    r_home="${1:-$(_koopa_r_home)}"
-    if [[ ! -d "$r_home" ]]
+    local r_prefix
+    r_prefix="${1:-$(_koopa_r_prefix)}"
+    if [[ ! -d "$r_prefix" ]]
     then
-        _koopa_warning "Failed to locate R home."
+        _koopa_warning "Failed to locate R prefix."
         return 1
     fi
 
     local r_exe
-    r_exe="${r_home}/bin/R"
+    r_exe="${r_prefix}/bin/R"
 
     local version
     version="$(_koopa_r_version "$r_exe")"
@@ -43,7 +43,7 @@ _koopa_link_r_etc() {  # {{{1
 
     # Locate the source etc directory in koopa.
     local os_id r_etc_source
-    if _koopa_is_linux && _koopa_is_cellar "$r_home"
+    if _koopa_is_linux && _koopa_is_cellar "$r_prefix"
     then
         os_id="linux"
     else
@@ -64,7 +64,7 @@ _koopa_link_r_etc() {  # {{{1
         # This currently applies to Debian/Ubuntu CRAN binary installs.
         r_etc_target="/etc/R"
     else
-        r_etc_target="${r_home}/etc"
+        r_etc_target="${r_prefix}/etc"
     fi
 
     local files
@@ -87,14 +87,14 @@ _koopa_link_r_etc() {  # {{{1
 _koopa_link_r_site_library() {  # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-04-28.
+    # @note Updated 2020-06-24.
     # """
-    local r_home
-    r_home="${1:-$(_koopa_r_home)}"
-    [[ -d "$r_home" ]] || return 1
+    local r_prefix
+    r_prefix="${1:-$(_koopa_r_prefix)}"
+    [[ -d "$r_prefix" ]] || return 1
 
     local r_exe
-    r_exe="${r_home}/bin/R"
+    r_exe="${r_prefix}/bin/R"
     [[ -x "$r_exe" ]] || return 1
 
     local version
@@ -111,7 +111,7 @@ _koopa_link_r_site_library() {  # {{{1
     lib_source="${app_prefix}/r/${version}/site-library"
 
     local lib_target
-    lib_target="${r_home}/site-library"
+    lib_target="${r_prefix}/site-library"
 
     _koopa_mkdir "$lib_source"
     _koopa_ln "$lib_source" "$lib_target"
@@ -178,7 +178,7 @@ _koopa_r_javareconf() {  # {{{1
     if [[ -z "${java_home:-}" ]]
     then
         _koopa_activate_openjdk
-        java_home="$(_koopa_java_home)"
+        java_home="$(_koopa_java_prefix)"
         _koopa_is_installed java || return 0
     fi
     [[ -d "$java_home" ]] || return 1
@@ -209,8 +209,7 @@ _koopa_r_javareconf() {  # {{{1
 _koopa_update_r_config() {  # {{{1
     # """
     # Update R configuration.
-    #
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-24.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -226,15 +225,15 @@ _koopa_update_r_config() {  # {{{1
     local rscript_exe
     rscript_exe="${r_exe}script"
     _koopa_assert_is_installed "$r_exe" "$rscript_exe"
-    local r_home
-    r_home="$(_koopa_r_home "$rscript_exe")"
-    _koopa_dl "R home" "$r_home"
+    local r_prefix
+    r_prefix="$(_koopa_r_prefix "$rscript_exe")"
+    _koopa_dl "R home" "$r_prefix"
     _koopa_dl "R path" "$r_exe"
     _koopa_dl "Rscript path" "$rscript_exe"
     if _koopa_is_cellar "$r_exe"
     then
         # Ensure that everyone in R home is writable.
-        _koopa_set_permissions --recursive "$r_home"
+        _koopa_set_permissions --recursive "$r_prefix"
         # Ensure that (Debian) system 'etc' directories are removed.
         local make_prefix
         make_prefix="$(_koopa_make_prefix)"
@@ -251,15 +250,15 @@ _koopa_update_r_config() {  # {{{1
         fi
     else
         # Ensure system package library is writable.
-        _koopa_set_permissions --recursive "${r_home}/library"
+        _koopa_set_permissions --recursive "${r_prefix}/library"
         # Need to ensure group write so package index gets updated.
         if [[ -d '/usr/share/R' ]]
         then
             _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
         fi
     fi
-    _koopa_link_r_etc "$r_home"
-    _koopa_link_r_site_library "$r_home"
+    _koopa_link_r_etc "$r_prefix"
+    _koopa_link_r_site_library "$r_prefix"
     _koopa_r_javareconf --r-exe="$r_exe"
     return 0
 }

@@ -1,174 +1,86 @@
 #!/usr/bin/env bash
+set -Eeu -o pipefail
 
-if [[ -z "${KOOPA_PREFIX:-}" ]]
+script_path="${BASH_SOURCE[0]}"
+if [ -L "$script_path" ]
 then
-    script_path="${BASH_SOURCE[0]}"
-    if [ -L "$script_path" ]
-    then
-        _koopa_realpath() {
-            if [ "$(uname -s)" = "Darwin" ]
-            then
-                perl -MCwd -e 'print Cwd::abs_path shift' "$1"
-            else
-                readlink -f "$@"
-            fi
-        }
-        script_path="$(_koopa_realpath "$script_path")"
-    fi
-    KOOPA_PREFIX="$(cd "$(dirname "$script_path")/.." \
-        >/dev/null 2>&1 && pwd -P)"
-    unset -v script_path
-    # shellcheck source=/dev/null
-    force=1 minimal=1 . "${KOOPA_PREFIX}/activate"
+    _koopa_realpath() {
+        if [ "$(uname -s)" = "Darwin" ]
+        then
+            perl -MCwd -e 'print Cwd::abs_path shift' "$1"
+        else
+            readlink -f "$@"
+        fi
+    }
+    script_path="$(_koopa_realpath "$script_path")"
 fi
+script_dir="$(cd "$(dirname "$script_path")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-checks=0 source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+checks=0 source "${script_dir}/../shell/bash/include/header.sh"
 _koopa_assert_has_args "$@"
 
-include_dir="${KOOPA_PREFIX}/system/include/koopa"
-
+# Update corresponding Bash completion file, if necessary.
 case "$1" in
-    # Unix standard (general) --------------------------------------------------
-    --version|-V|version)
-        _koopa_version
-        exit 0
-        ;;
-    # System configuration -----------------------------------------------------
-    check)
-        # shellcheck disable=SC1090
-        source "${include_dir}/check.sh"
-        exit 0
+    # Auto-completion {{{1
+    # ==========================================================================
+    --version|-V)
+        f="version"
         ;;
     info)
-        # shellcheck disable=SC1090
-        source "${include_dir}/info.sh"
-        exit 0
+        f="system_info"
         ;;
-    install-dotfiles)
-        _koopa_git_clone_dotfiles
-        _koopa_install_dotfiles
-        exit 0
+    check-system | \
+    header | \
+    install-dotfiles | \
+    list | \
+    prefix | \
+    test | \
+    uninstall | \
+    update | \
+    version)
+        f="$1"
         ;;
-    list)
-        # shellcheck disable=SC1090
-        source "${include_dir}/list.sh"
-        exit 0
-        ;;
-    list-internal-functions)
-        _koopa_list_internal_functions
-        exit 0
-        ;;
-    set-permissions)
-        shift 1
-        _koopa_set_permissions "$@"
-        exit 0
-        ;;
-    test)
-        "${KOOPA_PREFIX}/tests/ci.sh"
-        exit 0
-        ;;
-    uninstall)
-        "${KOOPA_PREFIX}/uninstall"
-        exit 0
-        ;;
-    update)
-        shift 1
-        # shellcheck disable=SC1090
-        source "${include_dir}/update.sh" "$@"
-        exit 0
-        ;;
-    # Character string return --------------------------------------------------
-    app-prefix)
-        _koopa_app_prefix
-        exit 0
-        ;;
-    cellar-prefix)
-        _koopa_cellar_prefix
-        exit 0
-        ;;
-    config-prefix)
-        _koopa_config_prefix
-        exit 0
-        ;;
-    get-homebrew-cask-version)
-        shift 1
-        _koopa_get_homebrew_cask_version "$@"
-        exit 0
-        ;;
-    get-macos-app-version)
-        shift 1
-        _koopa_get_macos_app_version "$@"
-        exit 0
-        ;;
-    get-version)
-        shift 1
-        _koopa_get_version "$@"
-        exit 0
-        ;;
-    header)
-        shift 1
-        _koopa_header "$@"
-        exit 0
-        ;;
-    host-id)
-        _koopa_host_id
-        exit 0
-        ;;
-    local-app-prefix)
-        _koopa_local_app_prefix
-        exit 0
-        ;;
-    make-prefix)
-        _koopa_make_prefix
-        exit 0
-        ;;
-    os-string)
-        _koopa_os_string
-        exit 0
-        ;;
-    prefix)
-        _koopa_prefix
-        exit 0
-        ;;
-    r-home)
-        _koopa_r_home
-        exit 0
-        ;;
-    which-realpath)
-        shift 1
-        _koopa_which_realpath "$@"
-        exit 0
-        ;;
-    # Developer tools ----------------------------------------------------------
-    install-mike)
-        _koopa_install_mike
-        exit 0
+    # Supported, but hidden from user {{{1
+    # ==========================================================================
+    check)
+        f="check_system"
         ;;
     log)
-        _koopa_view_latest_tmp_log_file
-        exit 0
+        f="view_latest_tmp_log_file"
         ;;
-    update-r-config)
-        shift 1
-        _koopa_update_r_config "$@"
-        exit 0
+    pull)
+        f="system_git_pull"
         ;;
-    variable)
-        shift 1
-        _koopa_variable "$@"
-        exit 0
+    app-prefix | \
+    cellar-prefix | \
+    config-prefix | \
+    get-homebrew-cask-version | \
+    get-macos-app-version | \
+    get-version | \
+    host-id | \
+    install-mike | \
+    list-internal-functions | \
+    make-prefix | \
+    os-string | \
+    set-permissions | \
+    variable | \
+    variables | \
+    which-realpath)
+        f="$1"
         ;;
-    variables)
-        vim "${KOOPA_PREFIX}/system/include/variables.txt"
-        exit 0
-        ;;
-    # Deprecated args / error catching -----------------------------------------
+    # Deprecated args / error catching {{{1
+    # ==========================================================================
     help)
         _koopa_defunct "koopa --help"
-        exit 0
         ;;
     home)
         _koopa_defunct "koopa prefix"
+        ;;
+    update-r-config)
+        _koopa_defunct "update-r-config (without 'koopa' prefix)"
+        ;;
+    r-home)
+        _koopa_defunct "koopa which-realpath R"
         ;;
     upgrade)
         _koopa_defunct "koopa update"
@@ -177,3 +89,8 @@ case "$1" in
         _koopa_invalid_arg "$1"
         ;;
 esac
+
+fun="_koopa_${f//-/_}"
+_koopa_assert_is_function "$fun"
+shift 1
+"$fun" "$@"
