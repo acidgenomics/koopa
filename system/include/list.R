@@ -12,8 +12,6 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 path <- Sys.getenv("PATH")
 assert(any(grepl("koopa", path)))
 
-h1("koopa programs exported in PATH")
-
 printPrograms <- function(path) {
     if (!isDir(path)) return(invisible())
     path <- realpath(path)
@@ -25,7 +23,7 @@ printPrograms <- function(path) {
     keep <- !grepl(file.path(koopaPrefix, "opt"), files)
     files <- files[keep]
     if (!hasLength(files)) return()
-    h2(path)
+    h1(path)
     ul(basename(files))
 }
 
