@@ -46,8 +46,10 @@ invisible(lapply(
                 recursive = FALSE
             ))
         }
-        ## Build "latest" tag automatically at the end.
-        tags <- setdiff(tags, "latest")
+        if (length(tags) > 1L)) {
+            ## Build "latest" tag automatically at the end.
+            tags <- setdiff(tags, "latest")
+        }
         assert(hasLength(tags))
         ## Build the versioned images, defined by `Dockerfile` in the
         ## subdirectories.
