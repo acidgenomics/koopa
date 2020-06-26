@@ -16,6 +16,10 @@ jobs:
       services: docker
       script: image="arch" ./tests/docker
     - stage: test
+      name: "biocontainers"
+      services: docker
+      script: image="biocontainers" ./tests/docker
+    - stage: test
       name: "centos"
       services: docker
       script: image="centos" ./tests/docker
