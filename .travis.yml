@@ -8,22 +8,6 @@ branches:
 jobs:
   include:
     - stage: test
-      name: "debian"
-      services: docker
-      script: image="debian" ./tests/docker
-    - stage: test
-      name: "ubuntu"
-      services: docker
-      script: image="ubuntu" ./tests/docker
-    - stage: test
-      name: "fedora"
-      services: docker
-      script: image="fedora" ./tests/docker
-    - stage: test
-      name: "centos"
-      services: docker
-      script: image="centos" ./tests/docker
-    - stage: test
       name: "alpine"
       services: docker
       script: image="alpine" ./tests/docker
@@ -31,6 +15,30 @@ jobs:
       name: "arch"
       services: docker
       script: image="arch" ./tests/docker
+    - stage: test
+      name: "biocontainers"
+      services: docker
+      script: image="biocontainers" ./tests/docker
+    - stage: test
+      name: "centos"
+      services: docker
+      script: image="centos" ./tests/docker
+    - stage: test
+      name: "debian"
+      services: docker
+      script: image="debian" ./tests/docker
+    - stage: test
+      name: "fedora"
+      services: docker
+      script: image="fedora" ./tests/docker
+    - stage: test
+      name: "opensuse"
+      services: docker
+      script: image="opensuse" ./tests/docker
+    - stage: test
+      name: "ubuntu"
+      services: docker
+      script: image="ubuntu" ./tests/docker
   fast_finish: true
 
 notifications:

@@ -50,4 +50,6 @@ _koopa_h2 "Running cleanup."
 brew cleanup -s || true
 rm -frv "$(brew --cache)"
 
+_koopa_update_r_config
+
 _koopa_update_success "$name_fancy"
