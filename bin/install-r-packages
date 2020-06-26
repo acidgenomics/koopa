@@ -301,7 +301,7 @@ install(
         "acidgenomics/PANTHER",                     # Annotation
         "acidgenomics/WormBase",                    # Annotation
         "acidgenomics/DESeqAnalysis",               # RNASeq
-        "acidgenomics/pfgsea",                      # RNASeq
+        "acidgenomics/acidgsea",                    # RNASeq
         "acidgenomics/Chromium",                    # SingleCell
         "acidgenomics/pointillism",                 # SingleCell
         "hbc/bcbioRNASeq",                          # RNASeq
