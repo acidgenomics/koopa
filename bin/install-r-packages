@@ -7,30 +7,19 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-attach(.koopa)
-
-stopifnot(
-    requireNamespace("acidbase", quietly = TRUE),
-    requireNamespace("goalie", quietly = TRUE),
-    requireNamespace("bb8", quietly = TRUE)
-)
-
-## These dependencies are required to install sf, etc.
-stopifnot(
-    isTRUE(nzchar(Sys.which("gdal-config"))),
-    isTRUE(nzchar(Sys.which("geos-config")))
-)
-
-args <- acidbase::parseArgs(positional = FALSE, validFlags = "all")
-
+library(bb8)
+args <- parseArgs(positional = FALSE, validFlags = "all")
 all <- FALSE
 if ("--all" %in% args) {
     all <- TRUE
 }
 
+## These dependencies are required to install sf, etc.
+assert(allAreSystemCommands(c("gdal-config", "geos-config")))
+
 ## Check for GitHub PAT, if necessary.
 if (isTRUE(all)) {
-    stopifnot(goalie::hasGitHubPAT())
+    assert(hasGitHubPAT())
 }
 
 ## Ensure BiocManager is installed.
@@ -41,12 +30,10 @@ if (!isTRUE(requireNamespace("BiocManager", quietly = TRUE))) {
 
 ## Enable versioned Bioconductor install.
 biocVersion <- Sys.getenv("BIOC_VERSION")
-if (isTRUE(nzchar(biocVersion))) {
+if (isString(biocVersion)) {
     message(sprintf("Installing Bioconductor %s.", biocVersion))
     BiocManager::install(version = biocVersion, ask = FALSE)
 }
-
-install <- bb8::install
 
 h1("Install R packages")
 
