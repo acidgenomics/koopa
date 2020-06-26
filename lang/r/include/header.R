@@ -54,7 +54,7 @@ local({
     dependencies <- c(
         "acidgenomics/acidbase" = "0.1.9",
         "acidgenomics/acidgenerics" = "0.3.6",
-        "acidgenomics/goalie" = "0.4.4",
+        "acidgenomics/goalie" = "0.4.5",
         "acidgenomics/syntactic" = "0.3.10",
         "acidgenomics/bb8" = "0.2.14"
     )

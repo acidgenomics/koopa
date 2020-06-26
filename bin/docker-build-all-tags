@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-05-05.
+## Updated 2020-06-26.
 ## """
 
 args <- commandArgs()
@@ -12,79 +12,84 @@ file <- sub(pattern = "^--file=", replacement = "", x = file)
 koopaPrefix <- normalizePath(dirname(dirname(file)))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-stopifnot(requireNamespace("acidbase", quietly = TRUE))
-
 dockerDir <- file.path("~", ".config", "koopa", "docker")
-stopifnot(isTRUE(dir.exists(dockerDir)))
+assert(isTRUE(dir.exists(dockerDir)))
 
 ## Enable parallelization if possible.
 ## > if (isTRUE(requireNamespace("BiocParallel", quietly = TRUE))) {
 ## >     mapply <- BiocParallel::bpmapply
 ## > }
 
-images <- acidbase::positionalArgs()
+images <- positionalArgs()
 if (!any(grepl(pattern = "/", x = images))) {
     images <- file.path("acidgenomics", images)
 }
-message(sprintf(
-    "Building all tags: %s",
-    toString(images)
-))
+message(sprintf("Building all tags: %s", toString(images)))
 
 invisible(lapply(
     X = images,
     FUN = function(image) {
         imageDir <- file.path(dockerDir, image)
-        stopifnot(
+        assert(
             is.character(image),
             dir.exists(imageDir)
         )
-        tags <- sort(list.dirs(
-            path = imageDir,
-            full.names = FALSE,
-            recursive = FALSE
-        ))
-        stopifnot(length(tags) > 0L)
-
+        ## Build tags in desired order, using "build.txt" file.
+        buildFile <- file.path(imageDir, "build.txt")
+        if (file.exists(buildFile)) {
+            tags <- readLines(buildFile)
+        } else {
+            ## Or build alphabetically (default).
+            tags <- sort(list.dirs(
+                path = imageDir,
+                full.names = FALSE,
+                recursive = FALSE
+            ))
+        }
+        ## Build "latest" tag automatically at the end.
+        tags <- setdiff(tags, "latest")
+        assert(hasLength(tags))
         ## Build the versioned images, defined by `Dockerfile` in the
         ## subdirectories.
         status <- mapply(
             tag = tags,
             MoreArgs = list(image = image),
             FUN = function(image, tag) {
-                acidbase::shell(
-                    command = file.path(
-                        koopaPrefix,
-                        "bin",
-                        "docker-build"
-                    ),
-                    args = c(
-                        paste0("--tag=", tag),
-                        image
+                path <- file.path(imageDir, tag)
+                if (isSymlink(path)) {
+                    sourceTag <- basename(realpath(path))
+                    destTag <- tag
+                    shell(
+                        command = file.path(koopaPrefix, "bin", "docker-tag"),
+                        args = c(image, sourceTag, destTag)
                     )
-                )
+                } else {
+                    shell(
+                        command = file.path(koopaPrefix, "bin", "docker-build"),
+                        args = c(paste0("--tag=", tag), image)
+                    )
+                }
             },
             USE.NAMES = FALSE,
             SIMPLIFY = TRUE
         )
-        stopifnot(all(status == 0L))
-
+        assert(all(status == 0L))
         ## Update "latest" tag, if necessary.
         latestFile <- file.path(imageDir, "latest")
         if (file.exists(latestFile) && !dir.exists(latestFile)) {
-            sourceTag <- readLines(latestFile)
-            stopifnot(identical(length(sourceTag), 1L))
+            if (isSymlink(latestFile)) {
+                sourceTag <- basename(realpath(latestFile))
+            } else {
+                sourceTag <- readLines(latestFile)
+            }
+            assert(isString(sourceTag))
             destTag <- "latest"
             print(sprintf(
                 "Tagging %s '%s' as '%s'.",
                 image, sourceTag, destTag
             ))
-            acidbase::shell(
-                command = file.path(
-                    koopaPrefix,
-                    "bin",
-                    "docker-tag"
-                ),
+            shell(
+                command = file.path(koopaPrefix, "bin", "docker-tag"),
                 args = c(image, sourceTag, destTag)
             )
         }

@@ -69,6 +69,12 @@ done
 # e.g. acidgenomics/debian
 image="${1:?}"
 
+# Assume acidgenomics recipe by default.
+if ! _koopa_str_match "$image" "/"
+then
+    image="acidgenomics/${image}"
+fi
+
 # Handle tag support, if necessary.
 if _koopa_str_match "$image" ":"
 then
@@ -78,6 +84,11 @@ fi
 
 source_image="${docker_dir}/${image}/${tag}"
 _koopa_assert_is_dir "$source_image"
+if [[ -L "$source_image" ]]
+then
+    _koopa_stop "Symlink at '${source_image}'. Use directory instead."
+fi
+
 # e.g. acidgenomics/debian:latest
 tagged_image="${image}:${tag}"
 today=$(date "+%Y%m%d")

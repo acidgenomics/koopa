@@ -23,6 +23,14 @@ jobs:
       name: "centos"
       services: docker
       script: image="centos" ./tests/docker
+    - stage: test
+      name: "alpine"
+      services: docker
+      script: image="alpine" ./tests/docker
+    - stage: test
+      name: "arch"
+      services: docker
+      script: image="arch" ./tests/docker
   fast_finish: true
 
 notifications:
