@@ -46,7 +46,7 @@ invisible(lapply(
                 recursive = FALSE
             ))
         }
-        if (length(tags) > 1L)) {
+        if (length(tags) > 1L) {
             ## Build "latest" tag automatically at the end.
             tags <- setdiff(tags, "latest")
         }
