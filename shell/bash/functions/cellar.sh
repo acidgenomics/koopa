@@ -125,7 +125,7 @@ _koopa_install_cellar() {  # {{{1
         _koopa_cd_tmp_dir "$tmp_dir"
         script_path="$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
         # shellcheck source=/dev/null
-        source "$script_path" "${pass_args[@]}"
+        source "$script_path" "${pass_args[@]:-}"
     ) 2>&1 | tee "$(_koopa_tmp_log_file)"
     rm -fr "$tmp_dir"
     _koopa_set_permissions --recursive "$prefix"
