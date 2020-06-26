@@ -217,6 +217,7 @@ brews=(
     hub
     igraph
     imagemagick
+    jq
     ksh
     leiningen
     lesspipe
