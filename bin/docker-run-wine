@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-set -Eeu -o pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../shell/bash/include/header.sh"
+_koopa_assert_has_no_args "$@"
 
 # Allow access from localhost.
 # > xhost + "$HOSTNAME"

@@ -37,6 +37,11 @@ PATH="/usr/local/bin:/usr/bin:/bin"
 ## gfortran 8.2 (for R 4.0+).
 PATH="/usr/local/gfortran/bin:${PATH}"
 
+## Python {{{2
+## -----------------------------------------------------------------------------
+
+PATH="/Library/Frameworks/Python.framework/Versions/3.8/bin:${PATH}"
+
 ## Pandoc {{{2
 ## -----------------------------------------------------------------------------
 
