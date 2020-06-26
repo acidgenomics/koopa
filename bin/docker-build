@@ -69,6 +69,12 @@ done
 # e.g. acidgenomics/debian
 image="${1:?}"
 
+# Assume acidgenomics recipe by default.
+if ! _koopa_str_match "$image" "/"
+then
+    image="acidgenomics/${image}"
+fi
+
 # Handle tag support, if necessary.
 if _koopa_str_match "$image" ":"
 then
