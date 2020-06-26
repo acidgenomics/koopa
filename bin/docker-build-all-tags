@@ -38,8 +38,6 @@ invisible(lapply(
         buildFile <- file.path(imageDir, "build.txt")
         if (file.exists(buildFile)) {
             tags <- readLines(buildFile)
-            ## Build "latest" tag automatically at the end.
-            assert(areDisjointSets(tags, "latest"))
         } else {
             ## Or build alphabetically (default).
             tags <- sort(list.dirs(
@@ -48,6 +46,8 @@ invisible(lapply(
                 recursive = FALSE
             ))
         }
+        ## Build "latest" tag automatically at the end.
+        tags <- setdiff(tags, "latest")
         assert(hasLength(tags))
         ## Build the versioned images, defined by `Dockerfile` in the
         ## subdirectories.
