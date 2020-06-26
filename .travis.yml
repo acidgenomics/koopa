@@ -10,11 +10,11 @@ jobs:
     - stage: test
       name: "debian"
       services: docker
-      script: image="acidgenomics/debian:minimal" ./tests/docker
+      script: image="acidgenomics/debian" ./tests/docker
     - stage: test
       name: "fedora"
       services: docker
-      script: image="acidgenomics/fedora:minimal" ./tests/docker
+      script: image="acidgenomics/fedora" ./tests/docker
   fast_finish: true
 
 notifications:
