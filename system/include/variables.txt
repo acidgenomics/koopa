@@ -242,8 +242,8 @@ pyenv="1.2.16"
 python="3.8.3"
 
 # https://www.r-project.org/
-# https://cloud.r-project.org/src/base/R-3/
-r="4.0.1"
+# https://cloud.r-project.org/src/base/R-4/
+r="4.0.2"
 
 # https://github.com/rbenv/rbenv/releases
 rbenv="1.1.2"
