@@ -13,7 +13,7 @@ koopaPrefix <- Sys.getenv("KOOPA_PREFIX")
 stopifnot(nzchar(koopaPrefix))
 source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 
-h1("Checking koopa installation")
+h1("Checking koopa installation.")
 
 macos <- isMacOS()
 linux <- !macos
