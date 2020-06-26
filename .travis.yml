@@ -12,9 +12,17 @@ jobs:
       services: docker
       script: image="debian" ./tests/docker
     - stage: test
+      name: "ubuntu"
+      services: docker
+      script: image="ubuntu" ./tests/docker
+    - stage: test
       name: "fedora"
       services: docker
       script: image="fedora" ./tests/docker
+    - stage: test
+      name: "centos"
+      services: docker
+      script: image="centos" ./tests/docker
   fast_finish: true
 
 notifications:
