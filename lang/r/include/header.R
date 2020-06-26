@@ -1,6 +1,6 @@
 ## """
 ## Shared Rscript header.
-## @note Updated 2020-06-24.
+## @note Updated 2020-06-26.
 ## """
 
 stopifnot(packageVersion("base") >= "3.6")
@@ -134,7 +134,6 @@ if (
 ## =============================================================================
 
 suppressPackageStartupMessages({
-    library(utils)
     library(acidbase)
     library(goalie)
 })
