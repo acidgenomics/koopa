@@ -82,7 +82,7 @@ conda="4.8.3"
 coreutils="8.32"
 
 # https://curl.haxx.se/
-curl="7.70.0"
+curl="7.71.0"
 
 # https://docs.docker.com/install/
 docker="19.03.8"
@@ -201,7 +201,7 @@ oracle-instantclient="19.5.0.0.0-1"
 pandoc="2.7.3"
 
 # https://www.gnu.org/software/parallel/
-parallel="20200522"
+parallel="20200622"
 
 # https://www.passwordstore.org/
 password-store="1.7.3"
@@ -210,7 +210,7 @@ password-store="1.7.3"
 patch="2.7.6"
 
 # https://www.perl.org/get.html
-perl="5.30.3"
+perl="5.32.0"
 
 # https://perlbrew.pl/
 perlbrew="0.88"
@@ -269,7 +269,7 @@ rust="1.44.1"
 rustup="1.21.1"
 
 # https://download.samba.org/pub/rsync/src/
-rsync="3.1.3"
+rsync="3.2.1"
 
 # http://rtomayko.github.io/ronn/
 ronn="0.7.3"
