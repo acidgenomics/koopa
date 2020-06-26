@@ -1071,9 +1071,9 @@ _koopa_system_git_pull() {  # {{{1
 _koopa_test() { # {{{1
     # """
     # Run koopa unit tests.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-26.
     # """
-    "$(_koopa_tests_prefix)/tests.sh" "$@"
+    "$(_koopa_tests_prefix)/tests" "$@"
     return 0
 }
 
