@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-KOOPA_PREFIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." \
-    >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${KOOPA_PREFIX}/shell/bash/include/header.sh"
+source "${script_dir}/../shell/bash/include/header.sh"
 
 # """
 # Build and push a docker image.
@@ -69,6 +68,14 @@ done
 
 # e.g. acidgenomics/debian
 image="${1:?}"
+
+# Handle tag support, if necessary.
+if _koopa_str_match "$image" ":"
+then
+    tag="$(_koopa_print "$image" | cut -d ':' -f 2)"
+    image="$(_koopa_print "$image" | cut -d ':' -f 1)"
+fi
+
 source_image="${docker_dir}/${image}/${tag}"
 _koopa_assert_is_dir "$source_image"
 # e.g. acidgenomics/debian:latest

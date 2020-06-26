@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd -P)"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
-source "${script_dir}/../include/header.sh" --no-header-checks
+checks=0 source "${script_dir}/../include/header.sh"
 
 # """
 # Potentially useful binaries:
@@ -116,6 +116,7 @@ casks=(
     pycharm-ce
     r
     rstudio
+    safari-technology-preview
     scrivener
     skype
     spillo
@@ -253,8 +254,8 @@ brews=(
     pkg-config
     podofo
     protobuf
-    pyenv
-    rbenv
+    # pyenv
+    # rbenv (or use rvm?)
     rename
     ruby
     rsync

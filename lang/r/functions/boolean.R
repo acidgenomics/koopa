@@ -31,20 +31,9 @@ isCellar <- function(x) {
 
 
 
-#' Is the package installed?
-#' @note Updated 2020-04-12.
-#' @noRd
-isInstalled <- function(x) {
-    stopifnot(requireNamespace("utils", quietly = TRUE))
-    # Note that GitHub packages are "owner/repo", so use basename.
-    basename(x) %in% rownames(utils::installed.packages())
-}
-
-
-
 #' Is the package installed and at least the specific version?
 #'
-#' @note Updated 2020-04-12.
+#' @note Updated 2020-06-24.
 #' @noRd
 #'
 #' @param x `character`.
@@ -74,7 +63,7 @@ isPackageVersion <- function(x, op = ">=") {
         version = versions,
         MoreArgs = list(op = op),
         FUN = function(package, version, op) {
-            ok <- isInstalled(package)
+            ok <- .isInstalled(package)
             if (!isTRUE(ok)) return(ok)
             current <- packageVersion(package)
             expected <- version
@@ -86,4 +75,15 @@ isPackageVersion <- function(x, op = ">=") {
         USE.NAMES = TRUE
     )
     out
+}
+
+
+
+#' Is the package installed?
+#' @note Updated 2020-06-24.
+#' @noRd
+.isInstalled <- function(x) {
+    stopifnot(requireNamespace("utils", quietly = TRUE))
+    # Note that GitHub packages are "owner/repo", so use basename.
+    basename(x) %in% rownames(utils::installed.packages())
 }

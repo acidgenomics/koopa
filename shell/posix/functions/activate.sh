@@ -123,6 +123,23 @@ _koopa_activate_broot() {  # {{{1
     return 0
 }
 
+_koopa_activate_completion() { # {{{1
+    # """
+    # Activate completion (with TAB key).
+    # @note Updated 2020-06-24.
+    # """
+    case "$(_koopa_shell)" in
+        bash|zsh)
+            ;;
+        *)
+            return 0
+            ;;
+    esac
+    # shellcheck source=/dev/null
+    . "$(_koopa_prefix)/etc/completion/"*
+    return 0
+}
+
 _koopa_activate_conda() {  # {{{1
     # """
     # Activate conda.
@@ -368,7 +385,7 @@ _koopa_activate_go() {  # {{{1
 _koopa_activate_homebrew() {  # {{{1
     # """
     # Activate Homebrew.
-    # @note Updated 2020-06-21.
+    # @note Updated 2020-06-23.
     # """
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
@@ -377,26 +394,29 @@ _koopa_activate_homebrew() {  # {{{1
     export HOMEBREW_NO_ANALYTICS=1
     export HOMEBREW_PREFIX
     export HOMEBREW_REPOSITORY
+    # Stopgap fix for TLS SSL issues with some Homebrew casks.
     if [ -x "${HOMEBREW_PREFIX}/opt/curl/bin/curl" ]
     then
         export HOMEBREW_FORCE_BREWED_CURL=1
     fi
     # > _koopa_activate_homebrew_gnu_prefix "binutils"
+    # > _koopa_activate_homebrew_gnu_prefix "gnu-time"
+    # > _koopa_activate_homebrew_gnu_prefix "gnu-which"
     _koopa_activate_homebrew_gnu_prefix "coreutils"
     _koopa_activate_homebrew_gnu_prefix "findutils"
-    _koopa_activate_homebrew_gnu_prefix "grep"
-    _koopa_activate_homebrew_gnu_prefix "make"
     _koopa_activate_homebrew_gnu_prefix "gnu-sed"
     _koopa_activate_homebrew_gnu_prefix "gnu-tar"
-    # > _koopa_activate_homebrew_gnu_prefix "gnu-time"
     _koopa_activate_homebrew_gnu_prefix "gnu-units"
-    # > _koopa_activate_homebrew_gnu_prefix "gnu-which"
-    _koopa_activate_homebrew_prefix "texinfo"
-    _koopa_activate_homebrew_prefix "sqlite"
+    _koopa_activate_homebrew_gnu_prefix "grep"
+    _koopa_activate_homebrew_gnu_prefix "make"
     _koopa_activate_homebrew_prefix "curl"
+    _koopa_activate_homebrew_prefix "ruby"
+    _koopa_activate_homebrew_prefix "sqlite"
+    _koopa_activate_homebrew_prefix "texinfo"
     _koopa_activate_homebrew_libexec_prefix "man-db"
     # > _koopa_activate_homebrew_python
     _koopa_activate_homebrew_google_cloud_sdk
+    _koopa_activate_homebrew_ruby_gems
     return 0
 }
 
@@ -490,6 +510,19 @@ _koopa_activate_homebrew_python() {
     # """
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     _koopa_activate_homebrew_prefix "python"
+}
+
+_koopa_activate_homebrew_ruby_gems() {  # {{{1
+    # """
+    # Activate Homebrew Ruby gems.
+    # @note Updated 2020-06-23.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
+    # - https://stackoverflow.com/questions/12287882/
+    # """
+    _koopa_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
+    return 0
 }
 
 _koopa_activate_koopa_paths() {  # {{{1
@@ -879,8 +912,8 @@ _koopa_activate_ssh_key() {  # {{{1
     local key
     key="${SSH_KEY:-"${HOME}/.ssh/id_rsa"}"
     [ -r "$key" ] || return 0
-    eval "$(ssh-agent -s)" > /dev/null 2>&1
-    ssh-add "$key" > /dev/null 2>&1
+    eval "$(ssh-agent -s)" >/dev/null 2>&1
+    ssh-add "$key" >/dev/null 2>&1
     return 0
 }
 

@@ -29,7 +29,7 @@ _koopa_file_match() {  # {{{1
         return 1
     fi
     [ -f "$file" ] || return 1
-    grep -Fq "$pattern" "$file" > /dev/null
+    grep -Fq "$pattern" "$file" >/dev/null
 }
 
 _koopa_file_match_regex() {  # {{{1
@@ -53,7 +53,7 @@ _koopa_file_match_regex() {  # {{{1
         return 1
     fi
     [ -f "$file" ] || return 1
-    grep -Eq "$pattern" "$file" > /dev/null
+    grep -Eq "$pattern" "$file" >/dev/null
 }
 
 _koopa_str_match() {  # {{{1
@@ -89,7 +89,7 @@ _koopa_str_match() {  # {{{1
     else
         return 1
     fi
-    echo "$string" | grep -Fq "$pattern" > /dev/null
+    echo "$string" | grep -Fq "$pattern" >/dev/null
 }
 
 _koopa_str_match2() {  # {{{1
@@ -126,5 +126,5 @@ _koopa_str_match_regex() {  # {{{1
     else
         return 1
     fi
-    echo "$string" | grep -Eq "$pattern" > /dev/null
+    echo "$string" | grep -Eq "$pattern" >/dev/null
 }

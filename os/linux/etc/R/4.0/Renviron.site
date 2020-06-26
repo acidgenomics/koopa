@@ -1,6 +1,6 @@
 ## """
 ## Shared R environment configuration for Linux.
-## Updated 2020-04-12.
+## Updated 2020-06-25.
 ##
 ## See also:
 ## - `help(Startup)` for documentation on `~/.Renviron` and `Renviron.site`.
@@ -106,9 +106,9 @@ _R_CHECK_TESTS_NLINES_=0
 ## > export _R_CHECK_TIMINGS_="0"
 ## > export _R_CLASS_MATRIX_ARRAY_=true
 ## > export _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_=true
-export _R_CHECK_EXECUTABLES_=false
-export _R_CHECK_EXECUTABLES_EXCLUSIONS_=false
-export _R_CHECK_S3_METHODS_NOT_REGISTERED_=true
+export _R_CHECK_EXECUTABLES_="false"
+export _R_CHECK_EXECUTABLES_EXCLUSIONS_="false"
+export _R_CHECK_S3_METHODS_NOT_REGISTERED_="true"
 
 
 
@@ -118,6 +118,18 @@ export _R_CHECK_S3_METHODS_NOT_REGISTERED_=true
 ## Always upgrade GitHub R packages, without prompting.
 ## See `remotes::update_packages()` for details.
 R_REMOTES_UPGRADE="always"
+
+## Standalone mode. remotes will use the curl, git2r and pkgbuild packages if
+## they are installed to provide faster implementations for some aspects of the
+## install process. However if you are using remotes to install or update these
+## packages (or their reverse dependencies) using them during installation may
+## fail (particularly on Windows).
+##
+## If you set the environment variable R_REMOTES_STANDALONE="true" (e.g. in R
+## Sys.setenv(R_REMOTES_STANDALONE="true")) you can force remotes to operate in
+## standalone mode and use only its internal R implementations. This will allow
+## successful installation of these packages.
+R_REMOTES_STANDALONE="true"
 
 
 
@@ -217,8 +229,9 @@ R_LIBS_SITE="${R_HOME}/site-library"
 ##
 ## Updated 2019-12-09.
 
-ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/19.5/client64}"
-OCI_INC="${OCI_INC-/usr/include/oracle/19.5/client64}"
+OCI_VERSION="19.6"
+ORACLE_HOME="${ORACLE_HOME-/usr/lib/oracle/${OCI_VERSION}/client64}"
+OCI_INC="${OCI_INC-/usr/include/oracle/${OCI_VERSION}/client64}"
 OCI_LIB="${ORACLE_HOME}/lib"
 TNS_ADMIN="${ORACLE_HOME}/network/admin"
 PATH="${PATH}:${ORACLE_HOME}/bin"

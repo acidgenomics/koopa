@@ -11,22 +11,16 @@ _koopa_aws_cp_regex() {  # {{{1
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2020-04-02.
+    # @note Updated 2020-06-26.
     #
     # @seealso
-    # > aws s3 cp help
+    # - aws s3 cp help
     # """
-    _koopa_is_installed aws || return 1
-
-    local pattern
+    local pattern source_prefix target_prefix
+    _koopa_assert_is_installed aws
     pattern="${1:?}"
-
-    local source_prefix
     source_prefix="${2:?}"
-
-    local target_prefix
     target_prefix="${3:?}"
-
     aws s3 cp \
         --exclude="*" \
         --follow-symlinks \
@@ -34,7 +28,6 @@ _koopa_aws_cp_regex() {  # {{{1
         --recursive \
         "$source_prefix" \
         "$target_prefix"
-
     return 0
 }
 
@@ -42,10 +35,10 @@ _koopa_aws_s3_find() {  # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2020-02-11.
+    # @note Updated 2020-06-26.
     #
     # @seealso
-    # https://docs.aws.amazon.com/cli/latest/reference/s3/
+    # - https://docs.aws.amazon.com/cli/latest/reference/s3/
     #
     # @examples
     # aws-s3-find \
@@ -53,13 +46,10 @@ _koopa_aws_s3_find() {  # {{{1
     #     --exclude="antisense" \
     #     s3://cpi-bioinfo01/igv/
     # """
-    _koopa_is_installed aws || return 1
-
-    local exclude include
+    local exclude include pos x
+    _koopa_assert_is_installed aws
     exclude=
     include=
-
-    local pos
     pos=()
     while (("$#"))
     do
@@ -94,25 +84,20 @@ _koopa_aws_s3_find() {  # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-    local x
     x="$(_koopa_aws_s3_ls --recursive "$@")"
     [[ -n "$x" ]] || return 1
-
     # Exclude pattern.
     if [[ -n "${exclude:-}" ]]
     then
         x="$(_koopa_print "$x" | grep -Ev "$exclude")"
         [[ -n "$x" ]] || return 1
     fi
-
     # Include pattern.
     if [[ -n "${include:-}" ]]
     then
         x="$(_koopa_print "$x" | grep -E "$include")"
         [[ -n "$x" ]] || return 1
     fi
-
     _koopa_print "$x"
     return 0
 }
@@ -120,30 +105,22 @@ _koopa_aws_s3_find() {  # {{{1
 _koopa_aws_s3_ls() {  # {{{1
     # """
     # List an AWS S3 bucket.
+    # @note Updated 2020-06-26.
     #
-    # @note Updated 2020-02-11.
-    #
-    # @seealso aws s3 ls help
+    # @seealso
+    # - aws s3 ls help
     #
     # @examples
     # _koopa_aws_s3_ls s3://cpi-bioinfo01/
     # _koopa_aws_s3_ls cpi-bioinfo01/
-    # 
     # # Directories only:
     # aws-s3-ls --type=f s3://cpi-bioinfo01/datasets/
     # """
-    _koopa_is_installed aws || return 1
-
-    local flags
+    local bucket_prefix dirs files flags pos prefix recursive type x
+    _koopa_assert_is_installed aws
     flags=()
-
-    local recursive
     recursive=0
-
-    local type
     type=
-
-    local pos
     pos=()
     while (("$#"))
     do
@@ -175,14 +152,11 @@ _koopa_aws_s3_ls() {  # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
     # Don't allow '--type' argument when '--recursive' flag is set.
     if [[ "$recursive" -eq 1 ]] && [[ -n "$type" ]]
     then
         _koopa_stop "'--type' argument isn't supported for '--recursive' mode."
     fi
-
-    local dirs files
     case "${type:-}" in
         d)
             dirs=1
@@ -197,27 +171,20 @@ _koopa_aws_s3_ls() {  # {{{1
             files=1
             ;;
     esac
-
-    local prefix
     prefix="${1:?}"
     prefix="$(_koopa_strip_trailing_slash "$prefix")"
     prefix="${prefix}/"
-
     # Automatically add 's3://' if missing.
     if ! _koopa_str_match_regex "$prefix" "^s3://"
     then
         prefix="s3://${prefix}"
     fi
-
-    local x
     x="$(aws s3 ls "${flags[@]}" "$prefix")"
-
     # Recursive mode.
     # Note that in '--recursive' mode, 'aws s3 ls' returns the full path after
     # the bucket name.
     if [[ "$recursive" -eq 1 ]]
     then
-        local bucket_prefix
         bucket_prefix="$(_koopa_print "$prefix" | grep -Eo '^s3://[^/]+')"
         files="$( \
             _koopa_print "$x" \
@@ -234,7 +201,6 @@ _koopa_aws_s3_ls() {  # {{{1
         _koopa_print "$files"
         return 0
     fi
-
     # Directories.
     if [[ "$dirs" -eq 1 ]]
     then
@@ -249,7 +215,6 @@ _koopa_aws_s3_ls() {  # {{{1
             _koopa_print "$dirs"
         fi
     fi
-
     # Files.
     if [[ "$files" -eq 1 ]]
     then
@@ -269,7 +234,6 @@ _koopa_aws_s3_ls() {  # {{{1
             _koopa_print "$files"
         fi
     fi
-
     return 0
 }
 
@@ -277,22 +241,20 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     # """
     # Move objects in an S3 bucket to parent directory.
     #
-    # @note Updated 2020-02-12.
+    # @note Updated 2020-06-26.
     #
+    # @details
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    _koopa_is_installed aws || return 1
-    local prefix
+    local bn dn1 dn2 file files prefix target x
+    _koopa_assert_is_installed aws
     prefix="${1:?}"
-    local x
     x="$(aws-s3-ls "$prefix")"
     [[ -n "$x" ]] || return 0
-    local files
     readarray -t files <<< "$x"
     for file in "${files[@]}"
     do
-        local bn dn1 dn2 target
         bn="$(basename "$file")"
         dn1="$(dirname "$file")"
         dn2="$(dirname "$dn1")"
@@ -306,8 +268,9 @@ _koopa_aws_s3_sync() {  # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
     #
-    # @note Updated 2020-04-22.
+    # @note Updated 2020-06-26.
     #
+    # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
     # least as of v2.0.8.
     #
@@ -326,12 +289,15 @@ _koopa_aws_s3_sync() {  # {{{1
     # - *.Rproj directories.
     # - *.swp files (from vim).
     # """
+    _koopa_assert_is_installed aws
     aws s3 sync \
         --exclude="*.Rproj/*" \
         --exclude="*.swp" \
         --exclude="*.tmp" \
         --exclude=".*" \
+        --exclude=".DS_Store" \
         --exclude=".Rproj.user/*" \
+        --exclude="._*" \
         --exclude=".git/*" \
         "$@"
 }

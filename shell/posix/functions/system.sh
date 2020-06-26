@@ -36,7 +36,7 @@ _koopa_cd() {  # {{{1
     # Change directory quietly.
     # @note Updated 2019-10-29.
     # """
-    cd "$@" > /dev/null || return 1
+    cd "$@" >/dev/null || return 1
     return 0
 }
 
@@ -52,6 +52,24 @@ _koopa_cd_tmp_dir() {  # {{{1
     rm -fr "$dir"
     mkdir -p "$dir"
     _koopa_cd "$dir"
+}
+
+_koopa_check_system() { # {{{1
+    # """
+    # Check system.
+    # @note Updated 2020-06-24.
+    # """
+    _koopa_assert_is_installed Rscript
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    export KOOPA_FORCE=1
+    set +u
+    # shellcheck disable=SC1090
+    source "${koopa_prefix}/activate"
+    set -u
+    Rscript --vanilla "$(_koopa_include_prefix)/check-system.R"
+    _koopa_disk_check
+    return 0
 }
 
 _koopa_chgrp() {  # {{{1
@@ -597,6 +615,17 @@ _koopa_host_id() {  # {{{1
     return 0
 }
 
+_koopa_list() { # {{{1
+    # """
+    # List exported koopa scripts.
+    # @note Updated 2020-06-24.
+    # """
+    _koopa_assert_has_no_args "$@"
+    _koopa_assert_is_installed Rscript
+    Rscript --vanilla "$(_koopa_include_prefix)/list.R"
+    return 0
+}
+
 _koopa_ln() {  # {{{1
     # """
     # Create symlink quietly.
@@ -928,9 +957,9 @@ _koopa_rm() {  # {{{1
     # """
     if _koopa_is_shared_install
     then
-        sudo rm -fr "$@" > /dev/null 2>&1
+        sudo rm -fr "$@" >/dev/null 2>&1
     else
-        rm -fr "$@" > /dev/null 2>&1
+        rm -fr "$@" >/dev/null 2>&1
     fi
     return 0
 }
@@ -1008,6 +1037,43 @@ _koopa_shell() {  # {{{1
         shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
     _koopa_print "$shell"
+    return 0
+}
+
+_koopa_system_git_pull() {  # {{{1
+    # """
+    # Pull koopa git repo.
+    # @note Updated 2020-06-23.
+    #
+    # Intended for use with 'koopa pull'.
+    #
+    # This handles updates to Zsh functions that are changed to group
+    # non-writable permissions, so Zsh passes 'compaudit' checks.
+    # """
+    (
+        local prefix
+        prefix="$(_koopa_prefix)"
+        cd "$prefix" || exit 1
+        _koopa_set_permissions --recursive "${prefix}/shell/zsh" >/dev/null 2>&1
+        local branch
+        branch="$(_koopa_git_branch)"
+        _koopa_git_pull
+        # Ensure other branches, such as develop, are rebased.
+        if [ "$branch" != "master" ]
+        then
+            _koopa_git_pull origin master
+        fi
+        _koopa_fix_zsh_permissions &>/dev/null
+    )
+    return 0
+}
+
+_koopa_test() { # {{{1
+    # """
+    # Run koopa unit tests.
+    # @note Updated 2020-06-26.
+    # """
+    "$(_koopa_tests_prefix)/tests" "$@"
     return 0
 }
 
@@ -1127,6 +1193,15 @@ _koopa_umask() {  # {{{1
     return 0
 }
 
+_koopa_uninstall() { # {{{1
+    # """
+    # Uninstall koopa.
+    # @note Updated 2020-06-24.
+    # """
+    "$(_koopa_prefix)/uninstall" "$@"
+    return 0
+}
+
 _koopa_url() {  # {{{1
     # """
     # Koopa URL.
@@ -1155,10 +1230,12 @@ _koopa_user() {  # {{{1
 _koopa_variable() {  # {{{1
     # """
     # Get version stored internally in versions.txt file.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-06-24.
     # """
+    _koopa_assert_has_args "$@"
     local file
-    file="$(_koopa_prefix)/system/include/variables.txt"
+    file="$(_koopa_include_prefix)/variables.txt"
+    _koopa_assert_is_file "$file"
     local key
     key="${1:?}"
     local value
@@ -1176,11 +1253,23 @@ _koopa_variable() {  # {{{1
     return 0
 }
 
+_koopa_variables() { # {{{1
+    # """
+    # Edit koopa variables.
+    # @note Updated 2020-06-24.
+    # """
+    _koopa_assert_has_no_args "$@"
+    _koopa_assert_is_installed vim
+    vim "$(_koopa_include_prefix)/variables.txt"
+    return 0
+}
+
 _koopa_view_latest_tmp_log_file() {  # {{{1
     # """
     # View the latest temporary log file.
-    # @note Updated 2020-04-16.
+    # @note Updated 2020-06-24.
     # """
+    _koopa_assert_has_no_args "$@"
     local dir
     dir="${TMPDIR:-/tmp}"
     local log_file

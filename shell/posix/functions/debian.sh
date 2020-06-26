@@ -78,7 +78,7 @@ _koopa_apt_add_google_cloud_key() {  # {{{1
     _koopa_h3 "Adding Google Cloud keyring at '${file}'."
     curl -fsSL "$url" \
         | sudo apt-key --keyring "$file" add - \
-        > /dev/null 2>&1
+        >/dev/null 2>&1
     return 0
 }
 
@@ -147,7 +147,7 @@ _koopa_apt_add_microsoft_key() {  #{{{1
     curl -fsSL "$url" \
         | gpg --dearmor \
         | sudo tee "$file" \
-        > /dev/null 2>&1
+        >/dev/null 2>&1
     return 0
 }
 
@@ -172,7 +172,7 @@ _koopa_apt_add_r_key() {  # {{{1
     sudo apt-key adv \
         --keyserver "$keyserver" \
         --recv-key "$key" \
-        > /dev/null 2>&1
+        >/dev/null 2>&1
     return 0
 }
 
@@ -376,13 +376,13 @@ _koopa_apt_configure_sources() {  # {{{1
 
     if _koopa_is_ubuntu
     then
-        sudo tee "$sources_list" > /dev/null << EOF
+        sudo tee "$sources_list" >/dev/null << EOF
 deb http://archive.ubuntu.com/ubuntu/ ${os_codename} main restricted universe
 deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates main restricted universe
 deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security main restricted universe
 EOF
     else
-        sudo tee "$sources_list" > /dev/null << EOF
+        sudo tee "$sources_list" >/dev/null << EOF
 deb http://deb.debian.org/debian ${os_codename} main
 deb http://deb.debian.org/debian ${os_codename}-updates main
 deb http://security.debian.org/debian-security ${os_codename}/updates main
@@ -510,7 +510,7 @@ _koopa_apt_key_add() {  #{{{1
     _koopa_h3 "Adding ${name} key."
     curl -fksSL "$url" \
         | sudo apt-key add - \
-        > /dev/null 2>&1
+        >/dev/null 2>&1
     return 0
 }
 

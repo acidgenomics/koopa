@@ -447,6 +447,55 @@ _koopa_return_version() {  # {{{1
     return 0
 }
 
+_koopa_ruby_api_version() {  # {{{1
+    # """
+    # Ruby API version.
+    # @note Updated 2020-06-23.
+    #
+    # Used by Homebrew Ruby for default gem installation path.
+    # See 'brew info ruby' for details.
+    _koopa_is_installed ruby || return 0
+    ruby -e "print Gem.ruby_api_version"
+    return 0
+}
+
+_koopa_r_package_version() {  # {{{1
+    # """
+    # R package version.
+    # @note Updated 2020-04-25.
+    # """
+    local pkg
+    pkg="${1:?}"
+    local rscript_exe
+    rscript_exe="${2:-Rscript}"
+    _koopa_is_installed "$rscript_exe" || return 1
+    _koopa_is_r_package_installed "$pkg" "$rscript_exe" || return 1
+    local x
+    x="$("$rscript_exe" \
+        -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")" \
+    )"
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_r_version() {  # {{{1
+    # """
+    # R version.
+    # @note Updated 2020-04-25.
+    # """
+    local r_exe
+    r_exe="${1:-R}"
+    local x
+    x="$("$r_exe" --version | head -n 1)"
+    if _koopa_str_match "$x" 'R Under development (unstable)'
+    then
+        x='devel'
+    else
+        x="$(_koopa_extract_version "$x")"
+    fi
+    _koopa_print "$x"
+}
+
 _koopa_sanitize_version() {  # {{{1
     # """
     # Sanitize version.
