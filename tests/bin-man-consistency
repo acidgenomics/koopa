@@ -21,7 +21,7 @@ source(file.path(koopaPrefix, "lang", "r", "include", "header.R"))
 ## Exclude these directories from search.
 exclude <- file.path(koopaPrefix, "(dotfiles|opt|system)", "")
 
-h1("Checking bin/man consistency")
+h1("Checking bin/man consistency.")
 status <- 0L
 
 ## Bin-to-man mapping {{{1
