@@ -311,3 +311,5 @@ install(
         ## > "jonocarroll/DFplyr"                   # DataRepresentation
     )
 )
+
+message("Installation of R packages was successful.")
