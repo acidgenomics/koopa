@@ -45,6 +45,9 @@ defaults write com.apple.universalaccess reduceMotion -bool true
 # > defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 defaults write com.apple.universalaccess reduceTransparency -bool true
 
+# Differentiate without color.
+defaults write com.apple.universalaccess differentiateWithoutColor -bool true
+
 # Enable Dark mode by default.
 # To disable, delete entry with 'defaults delete'.
 defaults write -globalDomain "AppleInterfaceStyle" -string "Dark"

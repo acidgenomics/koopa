@@ -4,7 +4,7 @@
 #'
 #' @note Updated 2020-04-09.
 #' @noRd
-installGitHub <- function(
+.installGitHub <- function(
     repo,
     release = "latest",
     reinstall = FALSE

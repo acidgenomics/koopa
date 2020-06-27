@@ -278,14 +278,7 @@ _koopa_update() { # {{{1
             _koopa_update_etc_profile_d
             _koopa_update_ldconfig
         fi
-        if _koopa_is_macos
-        then
-            update-homebrew
-            # Homebrew doesn't currently update Google Cloud SDK correctly.
-            update-google-cloud-sdk
-            update-microsoft-office
-            # > update-macos
-        elif _koopa_is_installed configure-vm
+        if _koopa_is_installed configure-vm
         then
             # Allow passthrough of specific arguments to 'configure-vm' script.
             configure_flags=("--no-check")
@@ -306,8 +299,15 @@ _koopa_update() { # {{{1
             update-perlbrew
             if _koopa_is_linux
             then
+                update-google-cloud-sdk
                 update-pyenv
                 update-rbenv
+            elif _koopa_is_macos
+            then
+                update-homebrew
+                update-microsoft-office
+                # > update-macos
+                # > update-macos-defaults
             fi
         fi
         _koopa_fix_zsh_permissions
