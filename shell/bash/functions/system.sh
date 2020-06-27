@@ -307,6 +307,7 @@ _koopa_update() { # {{{1
                 update-homebrew
                 update-microsoft-office
                 # > update-macos
+                # > update-macos-defaults
             fi
         fi
         _koopa_fix_zsh_permissions
