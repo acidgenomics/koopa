@@ -2,7 +2,7 @@
 
 ## """
 ## Check installed program versions.
-## Updated 2020-06-24.
+## Updated 2020-06-27.
 ##
 ## If you see this error, reinstall ruby, rbenv, and emacs:
 ## # Ignoring commonmarker-0.17.13 because its extensions are not built.
@@ -629,7 +629,6 @@ if (isTRUE(linux)) {
         "Alacritty",
         "Aspera Connect",
         "BBEdit",
-        "BibDesk",
         "Docker",
         "Firefox",
         "LibreOffice",
