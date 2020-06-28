@@ -44,6 +44,10 @@ _koopa_install_cellar() {  # {{{1
     version=
     # Define passthrough args array, for looping.
     pass_args=()
+
+    # FIXME
+    echo "$@"
+
     while (("$#"))
     do
         case "$1" in
