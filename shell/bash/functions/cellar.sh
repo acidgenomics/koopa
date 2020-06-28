@@ -44,10 +44,6 @@ _koopa_install_cellar() {  # {{{1
     version=
     # Define passthrough args array, for looping.
     pass_args=()
-
-    # FIXME
-    echo "$@"
-
     while (("$#"))
     do
         case "$1" in
@@ -101,9 +97,11 @@ _koopa_install_cellar() {  # {{{1
                 version="$2"
                 shift 2
                 ;;
+            )
+                shift 1
+                ;;
             *)
-                echo "FIXME ${1}"
-                _koopa_invalid_arg "${1:?}"
+                _koopa_invalid_arg "$1"
                 ;;
         esac
     done
