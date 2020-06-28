@@ -95,6 +95,7 @@ then
         libuuid-devel
         libxml2-devel
         llvm-devel
+        lz4-devel  # rsync
         mariadb-devel
         mpfr-devel
         openblas-devel
@@ -104,7 +105,9 @@ then
         postgresql-devel
         readline-devel
         unixODBC-devel
+        xxhash-devel  # rsync
         xz-devel
+        zstd-devel  # rsync
     )
 fi
 
