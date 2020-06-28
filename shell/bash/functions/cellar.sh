@@ -29,7 +29,7 @@ _koopa_find_cellar_version() {  # {{{1
 _koopa_install_cellar() {  # {{{1
     # """
     # Install cellar program.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-06-28.
     # """
     _koopa_assert_is_linux
     _koopa_assert_has_no_envs
@@ -96,6 +96,9 @@ _koopa_install_cellar() {  # {{{1
             --version)
                 version="$2"
                 shift 2
+                ;;
+            "")
+                shift 1
                 ;;
             *)
                 _koopa_invalid_arg "$1"
