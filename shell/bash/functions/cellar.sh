@@ -98,6 +98,7 @@ _koopa_install_cellar() {  # {{{1
                 shift 2
                 ;;
             *)
+                echo "FIXME ${1}"
                 _koopa_invalid_arg "${1:?}"
                 ;;
         esac
