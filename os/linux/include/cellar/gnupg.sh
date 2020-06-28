@@ -1,13 +1,23 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+# https://gnupg.org/download/index.html
 case "$version" in
+    2.2.20)
+        # 2020-03-20
+        libgpg_error_version="1.38"
+        libgcrypt_version="1.8.5"
+        libksba_version="1.4.0"
+        libassuan_version="2.5.3"
+        npth_version="1.6"
+        pinentry_version="1.1.0"
+        ;;
     2.2.19)
         # 2019-12-07
         libgpg_error_version="1.37"
         libgcrypt_version="1.8.5"
-        libassuan_version="2.5.3"
         libksba_version="1.3.5"
+        libassuan_version="2.5.3"
         npth_version="1.6"
         pinentry_version="1.1.0"
         ;;
