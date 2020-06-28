@@ -6,8 +6,9 @@ url="https://download.samba.org/pub/${name}/src/${file}"
 _koopa_download "$url"
 _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
+# --without-included-zlib
 ./configure \
-    --prefix="$prefix" \
-    --without-included-zlib
+    --disable-zstd \
+    --prefix="$prefix"
 make --jobs="$jobs"
 make install
