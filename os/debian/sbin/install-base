@@ -257,6 +257,7 @@ then
         libharfbuzz-dev
         libhdf5-dev
         liblapack-dev
+        liblz4-dev  # rsync
         liblzma-dev
         libmagick++-dev
         libmariadb-dev
@@ -292,6 +293,7 @@ then
         libxt-dev
         libxxhash-dev  # rsync
         libz-dev
+        libzstd-dev  # rsync
         sqlite3
         tcl-dev
         tk-dev
