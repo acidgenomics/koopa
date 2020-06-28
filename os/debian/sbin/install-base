@@ -290,6 +290,7 @@ then
         libxml2-dev
         libxpm-dev
         libxt-dev
+        libxxhash-dev  # rsync
         libz-dev
         sqlite3
         tcl-dev
