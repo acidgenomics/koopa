@@ -97,7 +97,7 @@ _koopa_install_cellar() {  # {{{1
                 version="$2"
                 shift 2
                 ;;
-            )
+            "")
                 shift 1
                 ;;
             *)
