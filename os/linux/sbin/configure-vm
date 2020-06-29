@@ -506,11 +506,15 @@ fi
 # Cloud APIs {{{1
 # ==============================================================================
 
-# Note that Azure CLI requires Python 3, so install after.
-_koopa_run_if_installed \
-    install-aws-cli \
-    install-azure-cli \
-    install-google-cloud-sdk
+_koopa_run_if_installed install-aws-cli
+
+if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+then
+    # Note that Azure CLI requires Python 3, so install after.
+    _koopa_run_if_installed \
+        install-azure-cli \
+        install-google-cloud-sdk
+fi
 
 # Generate SSH key {{{1
 # ==============================================================================
