@@ -226,7 +226,7 @@ elif [[ "$compact" -eq 1 ]] && _koopa_is_debian
 then
     install_base_flags+=("--compact")
 fi
-install-base "${install_base_flags[@]}"
+install-base "${install_base_flags[@]:-}"
 
 # Maybe include: tclsh
 _koopa_assert_is_installed \
