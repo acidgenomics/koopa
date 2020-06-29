@@ -11,12 +11,13 @@ _koopa_aws_cp_regex() {  # {{{1
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2020-06-26.
+    # @note Updated 2020-06-29.
     #
     # @seealso
     # - aws s3 cp help
     # """
     local pattern source_prefix target_prefix
+    _koopa_assert_has_args "$@"
     _koopa_assert_is_installed aws
     pattern="${1:?}"
     source_prefix="${2:?}"
@@ -35,7 +36,7 @@ _koopa_aws_s3_find() {  # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2020-06-26.
+    # @note Updated 2020-06-29.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/reference/s3/
@@ -44,9 +45,10 @@ _koopa_aws_s3_find() {  # {{{1
     # aws-s3-find \
     #     --include="*.bw$" \
     #     --exclude="antisense" \
-    #     s3://cpi-bioinfo01/igv/
+    #     s3://bioinfo/igv/
     # """
     local exclude include pos x
+    _koopa_assert_has_args "$@"
     _koopa_assert_is_installed aws
     exclude=
     include=
@@ -105,7 +107,7 @@ _koopa_aws_s3_find() {  # {{{1
 _koopa_aws_s3_ls() {  # {{{1
     # """
     # List an AWS S3 bucket.
-    # @note Updated 2020-06-26.
+    # @note Updated 2020-06-29.
     #
     # @seealso
     # - aws s3 ls help
@@ -118,6 +120,11 @@ _koopa_aws_s3_ls() {  # {{{1
     # """
     local bucket_prefix dirs files flags pos prefix recursive type x
     _koopa_assert_is_installed aws
+    if [[ "$#" -eq 0 ]]
+    then
+        aws s3 ls
+        exit 0
+    fi
     flags=()
     recursive=0
     type=
@@ -241,13 +248,14 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     # """
     # Move objects in an S3 bucket to parent directory.
     #
-    # @note Updated 2020-06-26.
+    # @note Updated 2020-06-29.
     #
     # @details
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
     local bn dn1 dn2 file files prefix target x
+    _koopa_assert_has_args "$@"
     _koopa_assert_is_installed aws
     prefix="${1:?}"
     x="$(aws-s3-ls "$prefix")"
