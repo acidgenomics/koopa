@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+# """
+# This currently fails with compile with GCC 10:
+# multiple definition of `CRT_colors'; CheckItem.o:/t
+# https://github.com/hishamhm/htop/issues/986
+# """
+
 _koopa_assert_is_installed python
 
 file="${name}-${version}.tar.gz"
