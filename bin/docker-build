@@ -19,6 +19,8 @@ source "${script_dir}/../shell/bash/include/header.sh"
 # - https://docs.docker.com/engine/reference/builder/#arg
 # """
 
+_koopa_assert_is_installed docker
+
 # e.g. ~/.config/koopa/docker
 docker_dir="$(_koopa_docker_prefix)"
 _koopa_assert_is_dir "$docker_dir"
