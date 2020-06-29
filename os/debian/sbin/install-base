@@ -291,7 +291,7 @@ then
         libxml2-dev
         libxpm-dev
         libxt-dev
-        libxxhash-dev  # rsync
+        libxxhash-dev  # rsync, not available on Ubuntu 18 LTS
         libz-dev
         libzstd-dev  # rsync
         sqlite3
