@@ -920,7 +920,7 @@ _koopa_activate_ssh_key() {  # {{{1
 _koopa_activate_standard_paths() {  # {{{1
     # """
     # Activate standard paths.
-    # @note Updated 2020-04-12.
+    # @note Updated 2020-06-29.
     #
     # Note that here we're making sure local binaries are included.
     # Inspect '/etc/profile' if system PATH appears misconfigured.
@@ -928,14 +928,14 @@ _koopa_activate_standard_paths() {  # {{{1
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
-    _koopa_add_to_path_end '/usr/bin'
-    _koopa_add_to_path_end '/bin'
-    _koopa_add_to_path_end '/usr/sbin'
-    _koopa_add_to_path_end '/sbin'
-    _koopa_add_to_manpath_end '/usr/share/man'
-    _koopa_force_add_to_path_start '/usr/local/sbin'
-    _koopa_force_add_to_path_start '/usr/local/bin'
-    _koopa_force_add_to_manpath_start '/usr/local/share/man'
+    _koopa_force_add_to_path_end "/usr/bin"
+    _koopa_force_add_to_path_end "/bin"
+    _koopa_force_add_to_path_end "/usr/sbin"
+    _koopa_force_add_to_path_end "/sbin"
+    _koopa_force_add_to_manpath_end "/usr/share/man"
+    _koopa_force_add_to_path_start "/usr/local/sbin"
+    _koopa_force_add_to_path_start "/usr/local/bin"
+    _koopa_force_add_to_manpath_start "/usr/local/share/man"
     _koopa_force_add_to_path_start "${HOME}/.local/bin"
     _koopa_force_add_to_manpath_start "${HOME}/.local/share/man"
     return 0

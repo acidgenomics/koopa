@@ -92,7 +92,7 @@ _koopa_str_match() {  # {{{1
     echo "$string" | grep -Fq "$pattern" >/dev/null
 }
 
-_koopa_str_match2() {  # {{{1
+_koopa_str_match_posix() {  # {{{1
     # """
     # Evaluate whether a string contains a desired value.
     # @note Updated 2020-04-29.
