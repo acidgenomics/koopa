@@ -569,7 +569,6 @@ _koopa_header() {  # {{{1
     return 0
 }
 
-# FIXME NOW THIS ISNT WORKING ON MACOS
 _koopa_host_id() {  # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.

@@ -2,8 +2,6 @@
 # shellcheck disable=SC1090,SC1091,SC2162
 set -Eeu -o pipefail
 
-
-
 # Usage {{{1
 # ==============================================================================
 
@@ -24,11 +22,9 @@ optional arguments:
 
 note:
     Bash script.
-    Updated 2020-06-15.
+    Updated 2020-06-29.
 EOF
 }
-
-
 
 # Argument parsing {{{1
 # ==============================================================================
@@ -45,7 +41,7 @@ interactive=1
 dotfiles=1
 koopa_prefix=
 passwordless=0
-profile=0
+profile=1
 shared=0
 test=0
 
@@ -115,8 +111,6 @@ do
     esac
 done
 
-
-
 # Pre-flight {{{1
 # ==============================================================================
 
@@ -161,8 +155,6 @@ then
 else
     bash_ok=0
 fi
-
-
 
 # Prefix {{{1
 # ==============================================================================
@@ -234,8 +226,6 @@ then
     shared=1
 fi
 
-
-
 # Install (copy repo) {{{1
 # ==============================================================================
 
@@ -266,8 +256,6 @@ fi
 
 unset -v script_dir
 
-
-
 # Activate {{{1
 # ==============================================================================
 
@@ -295,8 +283,6 @@ then
     >&2 printf '%s: %s\n' 'PATH' "$PATH"
     exit 1
 fi
-
-
 
 # Passwordless sudo {{{1
 # ==============================================================================
@@ -329,8 +315,6 @@ then
 fi
 
 [[ "$passwordless" -eq 1 ]] && _koopa_enable_passwordless_sudo
-
-
 
 # Dot files {{{1
 # ==============================================================================
@@ -373,16 +357,14 @@ then
     _koopa_install_dotfiles
 fi
 
-
-
 # User profile {{{1
 # ==============================================================================
 
-if ! _koopa_is_defined_in_user_profile
+profile_file="$(_koopa_find_user_profile)"
+if ! _koopa_is_defined_in_user_profile && [[ ! -L "$profile_file" ]]
 then
     if [[ "$interactive" -eq 1 ]]
     then
-        file="$(_koopa_find_user_profile)"
         _koopa_note "Koopa activation code needs to be added to '${file}'."
         prompt="Modify '${file}'? [${yes_default}/${no}]: "
         flags=(-r -p "$prompt")
@@ -404,20 +386,9 @@ then
                 _koopa_stop "Invalid choice."
                 ;;
         esac
-        if [[ "$profile" -eq 0 ]]
-        then
-            url="https://koopa.acidgenomics.com/"
-            _koopa_note "Skipping profile modification."
-            _koopa_note "Refer to '${url}' for manual instructions."
-        fi
-    else
-        profile=1
     fi
+    [[ "$profile" -eq 1 ]] && _koopa_add_to_user_profile
 fi
-
-[[ "$profile" -eq 1 ]] && _koopa_add_to_user_profile
-
-
 
 # Final steps and return {{{1
 # ==============================================================================
