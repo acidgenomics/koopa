@@ -28,7 +28,7 @@ _koopa_add_to_fpath_end() {  # {{{1
     local dir
     dir="${1:?}"
     [ -d "$dir" ] || return 0
-    _koopa_str_match_posix "${FPATH:-}" "$dir" && return 0
+    _koopa_str_match_posix "${FPATH:-}" ":${dir}" && return 0
     FPATH="${FPATH:-}:${dir}"
     export FPATH
     return 0
@@ -44,7 +44,7 @@ _koopa_add_to_fpath_start() {  # {{{1
     local dir
     dir="${1:?}"
     [ -d "$dir" ] || return 0
-    _koopa_str_match_posix "${FPATH:-}" "$dir" && return 0
+    _koopa_str_match_posix "${FPATH:-}" "${dir}:" && return 0
     FPATH="${dir}:${FPATH:-}"
     export FPATH
     return 0
@@ -58,7 +58,7 @@ _koopa_add_to_manpath_end() {  # {{{1
     local dir
     dir="${1:?}"
     [ -d "$dir" ] || return 0
-    _koopa_str_match_posix "${MANPATH:-}" "$dir" && return 0
+    _koopa_str_match_posix "${MANPATH:-}" ":${dir}" && return 0
     MANPATH="${MANPATH:-}:${dir}"
     export MANPATH
     return 0
@@ -72,7 +72,7 @@ _koopa_add_to_manpath_start() {  # {{{1
     local dir
     dir="${1:?}"
     [ -d "$dir" ] || return 0
-    _koopa_str_match_posix "${MANPATH:-}" "$dir" && return 0
+    _koopa_str_match_posix "${MANPATH:-}" "${dir}:" && return 0
     MANPATH="${dir}:${MANPATH:-}"
     export MANPATH
     return 0
@@ -86,7 +86,7 @@ _koopa_add_to_path_end() {  # {{{1
     local dir
     dir="${1:?}"
     [ -d "$dir" ] || return 0
-    _koopa_str_match_posix "${PATH:-}" "$dir" && return 0
+    _koopa_str_match_posix "${PATH:-}" ":${dir}" && return 0
     PATH="${PATH:-}:${dir}"
     export PATH
     return 0
@@ -100,7 +100,7 @@ _koopa_add_to_path_start() {  # {{{1
     local dir
     dir="${1:?}"
     [ -d "$dir" ] || return 0
-    _koopa_str_match_posix "${PATH:-}" "$dir" && return 0
+    _koopa_str_match_posix "${PATH:-}" "${dir}:" && return 0
     PATH="${dir}:${PATH:-}"
     export PATH
     return 0
