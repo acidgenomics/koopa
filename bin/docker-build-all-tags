@@ -2,7 +2,7 @@
 
 ## """
 ## Build all tags for a specific image.
-## Updated 2020-06-26.
+## Updated 2020-06-29.
 ## """
 
 args <- commandArgs()
@@ -78,10 +78,10 @@ invisible(lapply(
         assert(all(status == 0L))
         ## Update "latest" tag, if necessary.
         latestFile <- file.path(imageDir, "latest")
-        if (file.exists(latestFile) && !dir.exists(latestFile)) {
-            if (isSymlink(latestFile)) {
+        if (isAFile(latestFile) || isASymlink(latestFile)) {
+            if (isASymlink(latestFile)) {
                 sourceTag <- basename(realpath(latestFile))
-            } else {
+            } else if (isAFile(latestFile)) {
                 sourceTag <- readLines(latestFile)
             }
             assert(isString(sourceTag))
