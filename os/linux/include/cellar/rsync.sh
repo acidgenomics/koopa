@@ -6,9 +6,15 @@ url="https://download.samba.org/pub/${name}/src/${file}"
 _koopa_download "$url"
 _koopa_extract "$file"
 cd "${name}-${version}" || exit 1
-# --without-included-zlib
-./configure \
-    --disable-zstd \
-    --prefix="$prefix"
+flags=(
+    "--disable-zstd"
+    "--prefix=${prefix}"
+    # "--without-included-zlib"
+)
+if _koopa_is_rhel
+then
+    flags+=("--disable-xxhash")
+fi
+./configure "${flags[@]}"
 make --jobs="$jobs"
 make install
