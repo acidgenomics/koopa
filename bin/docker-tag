@@ -10,13 +10,18 @@ source "${script_dir}/../shell/bash/include/header.sh"
 # """
 
 _koopa_assert_has_args "$@"
+_koopa_assert_is_installed docker
 
 image="${1:?}"
 source_tag="${2:?}"
 dest_tag="${3:-latest}"
 server="docker.io"
 
-_koopa_assert_is_installed docker
+# Assume acidgenomics recipe by default.
+if ! _koopa_str_match "$image" "/"
+then
+    image="acidgenomics/${image}"
+fi
 
 if [[ "$source_tag" == "$dest_tag" ]]
 then
