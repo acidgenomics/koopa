@@ -451,11 +451,13 @@ checkVersion(
     current = currentVersion("git"),
     expected = expectedVersion("git")
 )
-checkVersion(
-    name = "htop",
-    current = currentVersion("htop"),
-    expected = expectedVersion("htop")
-)
+if (!isTRUE(docker)) {
+    checkVersion(
+        name = "htop",
+        current = currentVersion("htop"),
+        expected = expectedVersion("htop")
+    )
+}
 checkVersion(
     name = "Neofetch",
     whichName = "neofetch",

@@ -426,7 +426,6 @@ fi
 # Shell tools {{{1
 # ==============================================================================
 
-install-htop
 install-neofetch
 install-shellcheck
 install-shunit2
@@ -434,6 +433,10 @@ install-tmux
 
 if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
 then
+    # This currently fails to compile with GCC 10, but the project seems to be
+    # abandoned on GitHub, so skip on Docker for the moment.
+    # https://github.com/hishamhm/htop/pull/981
+    install-htop
     # Autojump is currently a bit buggy with Bash in nounset mode.
     install-autojump
     # FZF requires Go.
