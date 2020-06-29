@@ -434,13 +434,10 @@ if (
     !identical(os, "opensuse-leap-15")
 ) {
     h2("Cloud APIs")
-    installed(
-        which = c(
-            "aws",
-            "az",
-            "gcloud"
-        )
-    )
+    installed("aws"),
+    if (!isTRUE(docker)) {
+        installed(c("az", "gcloud"))
+    }
 }
 
 ## Tools =======================================================================
