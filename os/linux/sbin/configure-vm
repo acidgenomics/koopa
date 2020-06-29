@@ -72,6 +72,9 @@ do
             source_ip="$2"
             shift 2
             ;;
+        "")
+            shift 1
+            ;;
         --)
             shift 1
             break
