@@ -99,26 +99,25 @@ then
         lz4-devel  # rsync
         mariadb-devel
         mpfr-devel
-        openblas-devel
-        openjpeg2-devel  # GDAL
         openssl-devel
         pcre2-devel  # rJava
         postgresql-devel
         readline-devel
         unixODBC-devel
-        xxhash-devel  # rsync
         xz-devel
     )
-fi
-
-if ! _koopa_is_rhel
-then
-    pkgs+=(
-        bison-devel
-        flex-devel
-        libmpc-devel
-        # udunits2-devel  # use 'install-udunits'.
-    )
+    if ! _koopa_is_rhel
+    then
+        pkgs+=(
+            # udunits2-devel  # use 'install-udunits'.
+            bison-devel
+            flex-devel
+            libmpc-devel
+            openblas-devel
+            openjpeg2-devel  # GDAL
+            xxhash-devel  # rsync
+        )
+    fi
 fi
 
 # Extra {{{1
