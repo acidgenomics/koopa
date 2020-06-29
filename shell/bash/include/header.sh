@@ -2,11 +2,14 @@
 
 # """
 # Bash shared header script.
-# @note Updated 2020-06-03.
+# @note Updated 2020-06-29.
 # """
+
+[[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
 
 [[ -z "${activate:-}" ]] && activate=0
 [[ -z "${checks:-}" ]] && checks=1
+[[ -z "${verbose:-}" ]] && verbose=0
 [[ -z "${shopts:-}" ]] && shopts=1
 
 if [[ "$#" -gt 0 ]]
@@ -28,7 +31,7 @@ then
                 shift 1
                 ;;
             --verbose)
-                set -o xtrace  # -x
+                verbose=1
                 shift 1
                 ;;
             *)
@@ -54,6 +57,7 @@ fi
 # > shopt
 if [[ "$shopts" -eq 1 ]]
 then
+    [[ "$verbose" -eq 1 ]] && set -o xtrace  # -x
     # > set -o noglob   # -f
     set -o errexit      # -e
     set -o errtrace     # -E
