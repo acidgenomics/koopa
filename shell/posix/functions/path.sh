@@ -21,14 +21,14 @@ _koopa_add_conda_env_to_path() {  # {{{1
 _koopa_add_to_fpath_end() {  # {{{1
     # """
     # Add directory to end of FPATH.
-    # @note Updated 2020-04-14.
+    # @note Updated 2020-06-29.
     #
     # Currently only useful for ZSH activation.
     # """
     local dir
     dir="${1:?}"
-    [ ! -d "$dir" ] && return 0
-    _koopa_print "${FPATH:-}" | grep -q "$dir" && return 0
+    [ -d "$dir" ] || return 0
+    _koopa_str_match_posix "${FPATH:-}" ":${dir}" && return 0
     FPATH="${FPATH:-}:${dir}"
     export FPATH
     return 0
@@ -37,14 +37,14 @@ _koopa_add_to_fpath_end() {  # {{{1
 _koopa_add_to_fpath_start() {  # {{{1
     # """
     # Add directory to start of FPATH.
-    # @note Updated 2020-04-14.
+    # @note Updated 2020-06-29.
     #
     # Currently only useful for ZSH activation.
     # """
     local dir
     dir="${1:?}"
-    [ ! -d "$dir" ] && return 0
-    _koopa_print "${FPATH:-}" | grep -q "$dir" && return 0
+    [ -d "$dir" ] || return 0
+    _koopa_str_match_posix "${FPATH:-}" "${dir}:" && return 0
     FPATH="${dir}:${FPATH:-}"
     export FPATH
     return 0
@@ -53,12 +53,12 @@ _koopa_add_to_fpath_start() {  # {{{1
 _koopa_add_to_manpath_end() {  # {{{1
     # """
     # Add directory to end of MANPATH.
-    # @note Updated 2020-04-14.
+    # @note Updated 2020-06-29.
     # """
     local dir
     dir="${1:?}"
-    [ ! -d "$dir" ] && return 0
-    _koopa_print "${MANPATH:-}" | grep -q "$dir" && return 0
+    [ -d "$dir" ] || return 0
+    _koopa_str_match_posix "${MANPATH:-}" ":${dir}" && return 0
     MANPATH="${MANPATH:-}:${dir}"
     export MANPATH
     return 0
@@ -67,12 +67,12 @@ _koopa_add_to_manpath_end() {  # {{{1
 _koopa_add_to_manpath_start() {  # {{{1
     # """
     # Add directory to start of MANPATH.
-    # @note Updated 2020-04-14.
+    # @note Updated 2020-06-29.
     # """
     local dir
     dir="${1:?}"
-    [ ! -d "$dir" ] && return 0
-    _koopa_print "${MANPATH:-}" | grep -q "$dir" && return 0
+    [ -d "$dir" ] || return 0
+    _koopa_str_match_posix "${MANPATH:-}" "${dir}:" && return 0
     MANPATH="${dir}:${MANPATH:-}"
     export MANPATH
     return 0
@@ -81,12 +81,12 @@ _koopa_add_to_manpath_start() {  # {{{1
 _koopa_add_to_path_end() {  # {{{1
     # """
     # Add directory to end of PATH.
-    # @note Updated 2020-04-14.
+    # @note Updated 2020-06-29.
     # """
     local dir
     dir="${1:?}"
-    [ ! -d "$dir" ] && return 0
-    _koopa_print "${PATH:-}" | grep -q "$dir" && return 0
+    [ -d "$dir" ] || return 0
+    _koopa_str_match_posix "${PATH:-}" ":${dir}" && return 0
     PATH="${PATH:-}:${dir}"
     export PATH
     return 0
@@ -95,12 +95,12 @@ _koopa_add_to_path_end() {  # {{{1
 _koopa_add_to_path_start() {  # {{{1
     # """
     # Add directory to start of PATH.
-    # @note Updated 2020-04-14.
+    # @note Updated 2020-06-29.
     # """
     local dir
     dir="${1:?}"
-    [ ! -d "$dir" ] && return 0
-    _koopa_print "${PATH:-}" | grep -q "$dir" && return 0
+    [ -d "$dir" ] || return 0
+    _koopa_str_match_posix "${PATH:-}" "${dir}:" && return 0
     PATH="${dir}:${PATH:-}"
     export PATH
     return 0
