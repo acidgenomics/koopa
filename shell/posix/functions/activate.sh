@@ -474,11 +474,10 @@ _koopa_activate_homebrew_google_cloud_sdk() {
     # @note Updated 2020-06-30.
     # """
     [ "$#" -eq 0 ] || return 1
-    local prefix
+    local prefix shell
     prefix="$(_koopa_homebrew_prefix)"
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     [ -d "$prefix" ] || return 0
-    local shell
     shell="$(_koopa_shell)"
     if [ -f "${prefix}/path.${shell}.inc" ]
     then
@@ -557,16 +556,12 @@ _koopa_activate_koopa_paths() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -eq 0 ] || return 1
-    local koopa_prefix
+    local config_prefix host_id koopa_prefix os_id shell
     koopa_prefix="$(_koopa_prefix)"
     _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
-    local config_prefix
     config_prefix="$(_koopa_config_prefix)"
-    local host_id
     host_id="$(_koopa_host_id)"
-    local os_id
     os_id="$(_koopa_os_id)"
-    local shell
     shell="$(_koopa_shell)"
     _koopa_activate_prefix "$koopa_prefix"
     _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"

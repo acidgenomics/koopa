@@ -205,9 +205,8 @@ _koopa_find_user_profile() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -eq 0 ] || return 1
-    local shell
+    local file shell
     shell="$(_koopa_shell)"
-    local file
     case "$shell" in
         bash)
             file="${HOME}/.bashrc"
