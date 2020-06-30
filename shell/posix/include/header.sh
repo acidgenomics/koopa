@@ -3,22 +3,30 @@
 
 # """
 # POSIX shared header script.
-# @note Updated 2020-06-03.
+# @note Updated 2020-06-30.
 # """
 
-if [ -z "${KOOPA_PREFIX:-}" ]
-then
-    >&2 printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset."
-    exit 1
-fi
+_koopa_posix_header() { # {{{1
+    # """
+    # POSIX shell header.
+    # @note Updated 2020-06-30.
+    # """
+    local file
+    if [ -z "${KOOPA_PREFIX:-}" ]
+    then
+        >&2 printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset."
+        exit 1
+    fi
+    # Source POSIX functions.
+    # Use shell globbing instead of 'find', which doesn't support source.
+    for file in "${KOOPA_PREFIX}/shell/posix/functions/"*".sh"
+    do
+        # shellcheck source=/dev/null
+        [ -f "$file" ] && . "$file"
+    done
+    # Ensure koopa scripts are in path.
+    _koopa_activate_koopa_paths
+    return 0
+}
 
-# Source POSIX functions.
-# Use shell globbing instead of 'find', which doesn't support source.
-for file in "${KOOPA_PREFIX}/shell/posix/functions/"*".sh"
-do
-    # shellcheck source=/dev/null
-    [ -f "$file" ] && . "$file"
-done
-
-# Ensure koopa scripts are in path.
-_koopa_activate_koopa_paths
+_koopa_posix_header
