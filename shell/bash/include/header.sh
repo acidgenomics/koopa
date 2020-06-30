@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
 
-# """
-# Bash shared header script.
-# @note Updated 2020-06-29.
-# """
-
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
     # @note Updated 2020-06-30.
+    #
+    # Don't set local variables here, it will mess up activation.
     # """
-    local activate checks file major_version pos verbose shopts
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
     [[ -z "${activate:-}" ]] && activate=0
     [[ -z "${checks:-}" ]] && checks=1
@@ -124,6 +120,7 @@ _koopa_bash_header() { # {{{1
     then
         unalias -a
     fi
+    local activate checks file major_version pos verbose shopts
     return 0
 }
 
