@@ -3,7 +3,7 @@
 _koopa_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     #
     # @param --recursive
     #   Change permissions recursively.
@@ -94,7 +94,7 @@ _koopa_set_permissions() { # {{{1
     esac
     chown_flags+=("${who}:${group}")
     # Loop across input and set permissions.
-    for arg
+    for arg in "$@"
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
