@@ -41,4 +41,3 @@ _koopa_is_set() { # {{{1
     done
     return 0
 }
-
