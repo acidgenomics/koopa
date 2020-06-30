@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_activate_aliases() {  # {{{1
+_koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
     # @note Updated 2020-06-19.
@@ -14,7 +14,7 @@ _koopa_activate_aliases() {  # {{{1
     return 0
 }
 
-_koopa_activate_aspera() {  # {{{1
+_koopa_activate_aspera() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
     # @note Updated 2020-05-01.
@@ -22,7 +22,7 @@ _koopa_activate_aspera() {  # {{{1
     _koopa_activate_prefix "$(_koopa_aspera_prefix)/latest"
 }
 
-_koopa_activate_autojump() {  # {{{1
+_koopa_activate_autojump() { # {{{1
     # """
     # Activate autojump.
     # @note Updated 2020-04-12.
@@ -67,7 +67,7 @@ _koopa_activate_autojump() {  # {{{1
     return 0
 }
 
-_koopa_activate_bcbio() {  # {{{1
+_koopa_activate_bcbio() { # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
     # @note Updated 2019-11-15.
@@ -88,7 +88,7 @@ _koopa_activate_bcbio() {  # {{{1
     return 0
 }
 
-_koopa_activate_broot() {  # {{{1
+_koopa_activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
     # @note Updated 2020-01-24.
@@ -140,7 +140,7 @@ _koopa_activate_completion() { # {{{1
     return 0
 }
 
-_koopa_activate_conda() {  # {{{1
+_koopa_activate_conda() { # {{{1
     # """
     # Activate conda.
     # @note Updated 2020-01-24.
@@ -175,7 +175,7 @@ _koopa_activate_conda() {  # {{{1
     return 0
 }
 
-_koopa_activate_conda_env() {  # {{{1
+_koopa_activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
     # @note Updated 2020-03-06.
@@ -217,7 +217,7 @@ _koopa_activate_conda_env() {  # {{{1
     return 0
 }
 
-_koopa_activate_coreutils() {  # {{{1
+_koopa_activate_coreutils() { # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
     # @note Updated 2020-06-19.
@@ -254,7 +254,7 @@ _koopa_activate_coreutils() {  # {{{1
     return 0
 }
 
-_koopa_activate_dircolors() {  # {{{1
+_koopa_activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
     # @note Updated 2020-02-14.
@@ -280,7 +280,7 @@ _koopa_activate_dircolors() {  # {{{1
     return 0
 }
 
-_koopa_activate_emacs() {  # {{{1
+_koopa_activate_emacs() { # {{{1
     # """
     # Activate Emacs.
     # @note Updated 2020-05-01.
@@ -288,7 +288,7 @@ _koopa_activate_emacs() {  # {{{1
     _koopa_activate_prefix "${HOME}/.emacs.d"
 }
 
-_koopa_activate_ensembl_perl_api() {  # {{{1
+_koopa_activate_ensembl_perl_api() { # {{{1
     # """
     # Activate Ensembl Perl API.
     # @note Updated 2019-11-14.
@@ -309,7 +309,7 @@ _koopa_activate_ensembl_perl_api() {  # {{{1
     return 0
 }
 
-_koopa_activate_fzf() {  # {{{1
+_koopa_activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
     #
@@ -357,7 +357,7 @@ _koopa_activate_fzf() {  # {{{1
     return 0
 }
 
-_koopa_activate_gcc_colors() {  # {{{1
+_koopa_activate_gcc_colors() { # {{{1
     # """
     # Activate GCC colors.
     # @note Updated 2020-02-20.
@@ -369,7 +369,7 @@ quote=01:warning=01;35"
     return 0
 }
 
-_koopa_activate_go() {  # {{{1
+_koopa_activate_go() { # {{{1
     # """
     # Activate Go.
     # @note Updated 2020-03-08.
@@ -382,7 +382,7 @@ _koopa_activate_go() {  # {{{1
     return 0
 }
 
-_koopa_activate_homebrew() {  # {{{1
+_koopa_activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
     # @note Updated 2020-06-23.
@@ -420,7 +420,7 @@ _koopa_activate_homebrew() {  # {{{1
     return 0
 }
 
-_koopa_activate_homebrew_gnu_prefix() {  # {{{1
+_koopa_activate_homebrew_gnu_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew GNU program.
     # @note Updated 2020-05-01.
@@ -475,7 +475,7 @@ _koopa_activate_homebrew_google_cloud_sdk() {
     return 0
 }
 
-_koopa_activate_homebrew_libexec_prefix() {  # {{{1
+_koopa_activate_homebrew_libexec_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew program.
     # @note Updated 2020-05-05.
@@ -483,7 +483,7 @@ _koopa_activate_homebrew_libexec_prefix() {  # {{{1
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
 }
 
-_koopa_activate_homebrew_prefix() {  # {{{1
+_koopa_activate_homebrew_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew program.
     # @note Updated 2020-05-01.
@@ -512,7 +512,7 @@ _koopa_activate_homebrew_python() {
     _koopa_activate_homebrew_prefix "python"
 }
 
-_koopa_activate_homebrew_ruby_gems() {  # {{{1
+_koopa_activate_homebrew_ruby_gems() { # {{{1
     # """
     # Activate Homebrew Ruby gems.
     # @note Updated 2020-06-23.
@@ -525,7 +525,7 @@ _koopa_activate_homebrew_ruby_gems() {  # {{{1
     return 0
 }
 
-_koopa_activate_koopa_paths() {  # {{{1
+_koopa_activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
     # @note Updated 2020-06-03.
@@ -566,7 +566,7 @@ _koopa_activate_koopa_paths() {  # {{{1
     return 0
 }
 
-_koopa_activate_llvm() {  # {{{1
+_koopa_activate_llvm() { # {{{1
     # """
     # Activate LLVM config.
     # @note Updated 2020-01-22.
@@ -595,7 +595,7 @@ _koopa_activate_llvm() {  # {{{1
     return 0
 }
 
-_koopa_activate_local_etc_profile() {  # {{{1
+_koopa_activate_local_etc_profile() { # {{{1
     # """
     # Source 'profile.d' scripts in '/usr/local/etc'.
     # @note Updated 2020-03-27.
@@ -627,7 +627,7 @@ _koopa_activate_local_etc_profile() {  # {{{1
     return 0
 }
 
-_koopa_activate_macos_extras() {  # {{{1
+_koopa_activate_macos_extras() { # {{{1
     # """
     # Activate macOS-specific extra settings.
     # @note Updated 2020-06-19.
@@ -667,7 +667,7 @@ Versions/${minor_version}/bin"
     return 0
 }
 
-_koopa_activate_openjdk() {  # {{{1
+_koopa_activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
     # @note Updated 2020-02-27.
@@ -684,7 +684,7 @@ _koopa_activate_openjdk() {  # {{{1
     return 0
 }
 
-_koopa_activate_perlbrew() {  # {{{1
+_koopa_activate_perlbrew() { # {{{1
     # """
     # Activate Perlbrew.
     # @note Updated 2020-01-24.
@@ -714,7 +714,7 @@ _koopa_activate_perlbrew() {  # {{{1
     return 0
 }
 
-_koopa_activate_pipx() {  # {{{1
+_koopa_activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
     # @note Updated 2020-01-12.
@@ -750,7 +750,7 @@ _koopa_activate_pipx() {  # {{{1
     return 0
 }
 
-_koopa_activate_prefix() {  # {{{1
+_koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
     # @note Updated 2020-05-01.
@@ -765,7 +765,7 @@ _koopa_activate_prefix() {  # {{{1
     return 0
 }
 
-_koopa_activate_pyenv() {  # {{{1
+_koopa_activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
     # @note Updated 2020-01-24.
@@ -790,7 +790,7 @@ _koopa_activate_pyenv() {  # {{{1
     return 0
 }
 
-_koopa_activate_rbenv() {  # {{{1
+_koopa_activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
     # @note Updated 2019-11-15.
@@ -824,7 +824,7 @@ _koopa_activate_rbenv() {  # {{{1
     return 0
 }
 
-_koopa_activate_ruby() {  # {{{1
+_koopa_activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
     # @note Updated 2020-02-13.
@@ -840,7 +840,7 @@ _koopa_activate_ruby() {  # {{{1
     return 0
 }
 
-_koopa_activate_rust() {  # {{{1
+_koopa_activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
     # @note Updated 2020-01-24.
@@ -880,7 +880,7 @@ _koopa_activate_rust() {  # {{{1
     return 0
 }
 
-_koopa_activate_secrets() {  # {{{1
+_koopa_activate_secrets() { # {{{1
     # """
     # Source secrets file.
     # @note Updated 2020-02-23.
@@ -893,7 +893,7 @@ _koopa_activate_secrets() {  # {{{1
     return 0
 }
 
-_koopa_activate_ssh_key() {  # {{{1
+_koopa_activate_ssh_key() { # {{{1
     # """
     # Import an SSH key automatically, using 'SSH_KEY' global variable.
     # @note Updated 2019-10-29.
@@ -917,7 +917,7 @@ _koopa_activate_ssh_key() {  # {{{1
     return 0
 }
 
-_koopa_activate_standard_paths() {  # {{{1
+_koopa_activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
     # @note Updated 2020-06-29.
@@ -941,7 +941,7 @@ _koopa_activate_standard_paths() {  # {{{1
     return 0
 }
 
-_koopa_activate_venv() {  # {{{1
+_koopa_activate_venv() { # {{{1
     # """
     # Activate Python default virtual environment.
     # @note Updated 2020-01-24.
@@ -979,7 +979,7 @@ _koopa_activate_venv() {  # {{{1
     return 0
 }
 
-_koopa_activate_xdg() {  # {{{1
+_koopa_activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification
     # @note Updated 2020-06-19.
@@ -1038,7 +1038,7 @@ _koopa_activate_xdg() {  # {{{1
     return 0
 }
 
-_koopa_check_exports() {  # {{{1
+_koopa_check_exports() { # {{{1
     # """
     # Check exported environment variables.
     # @note Updated 2020-06-19.
@@ -1054,7 +1054,7 @@ _koopa_check_exports() {  # {{{1
     return 0
 }
 
-_koopa_export_cpu_count() {  # {{{1
+_koopa_export_cpu_count() { # {{{1
     # """
     # Export CPU_COUNT.
     # @note Updated 2020-06-03.
@@ -1067,7 +1067,7 @@ _koopa_export_cpu_count() {  # {{{1
     return 0
 }
 
-_koopa_export_dotfiles() {  # {{{1
+_koopa_export_dotfiles() { # {{{1
     # """
     # Activate dotfiles repo.
     # @note Updated 2020-06-19.
@@ -1079,7 +1079,7 @@ _koopa_export_dotfiles() {  # {{{1
     return 0
 }
 
-_koopa_export_editor() {  # {{{1
+_koopa_export_editor() { # {{{1
     # """
     # Export EDITOR.
     # @note Updated 2020-06-03.
@@ -1098,7 +1098,7 @@ _koopa_export_editor() {  # {{{1
     return 0
 }
 
-_koopa_export_git() {  # {{{1
+_koopa_export_git() { # {{{1
     # """
     # Export git configuration.
     # @note Updated 2020-06-03.
@@ -1113,7 +1113,7 @@ _koopa_export_git() {  # {{{1
     return 0
 }
 
-_koopa_export_gnupg() {  # {{{1
+_koopa_export_gnupg() { # {{{1
     # """
     # Export GnuPG settings.
     # @note Updated 2020-06-03.
@@ -1130,7 +1130,7 @@ _koopa_export_gnupg() {  # {{{1
     return 0
 }
 
-_koopa_export_group() {  # {{{1
+_koopa_export_group() { # {{{1
     # """
     # Export GROUP.
     # @note Updated 2020-06-03.
@@ -1143,7 +1143,7 @@ _koopa_export_group() {  # {{{1
     return 0
 }
 
-_koopa_export_history() {  # {{{1
+_koopa_export_history() { # {{{1
     # """
     # Export history.
     # @note Updated 2020-06-03.
@@ -1198,7 +1198,7 @@ _koopa_export_history() {  # {{{1
     return 0
 }
 
-_koopa_export_hostname() {  # {{{1
+_koopa_export_hostname() { # {{{1
     # """
     # Export HOSTNAME.
     # @note Updated 2020-06-03.
@@ -1211,7 +1211,7 @@ _koopa_export_hostname() {  # {{{1
     return 0
 }
 
-_koopa_export_lesspipe() {  # {{{
+_koopa_export_lesspipe() { # {{{
     # """
     # Export lesspipe settings.
     # @note Updated 2020-06-03.
@@ -1234,7 +1234,7 @@ _koopa_export_lesspipe() {  # {{{
     return 0
 }
 
-_koopa_export_ostype() {  # {{{1
+_koopa_export_ostype() { # {{{1
     # """
     # Export OSTYPE.
     # @note Updated 2020-06-03.
@@ -1249,7 +1249,7 @@ _koopa_export_ostype() {  # {{{1
     return 0
 }
 
-_koopa_export_pager() {  # {{{1
+_koopa_export_pager() { # {{{1
     # """
     # Export PAGER.
     # @note Updated 2020-06-03.
@@ -1261,7 +1261,7 @@ _koopa_export_pager() {  # {{{1
     return 0
 }
 
-_koopa_export_pkg_config_path() {  # {{{1
+_koopa_export_pkg_config_path() { # {{{1
     # """
     # These are defined primarily for R environment. In particular these make
     # building tricky pages from source, such as rgdal, sf and others  easier.
@@ -1280,7 +1280,7 @@ _koopa_export_pkg_config_path() {  # {{{1
     return 0
 }
 
-_koopa_export_proj_lib() {  # {{{1
+_koopa_export_proj_lib() { # {{{1
     # """
     # Export PROJ_LIB
     # @note Updated 2020-06-03.
@@ -1300,7 +1300,7 @@ _koopa_export_proj_lib() {  # {{{1
     return 0
 }
 
-_koopa_export_python() {  # {{{1
+_koopa_export_python() { # {{{1
     # """
     # Export Python settings.
     # @note Updated 2020-06-03.
@@ -1313,7 +1313,7 @@ _koopa_export_python() {  # {{{1
     return 0
 }
 
-_koopa_export_rsync() {  # {{{1
+_koopa_export_rsync() { # {{{1
     # """
     # Export rsync flags.
     # @note Updated 2020-06-03.
@@ -1326,7 +1326,7 @@ _koopa_export_rsync() {  # {{{1
     return 0
 }
 
-_koopa_export_shell() {  # {{{1
+_koopa_export_shell() { # {{{1
     # """
     # Export SHELL.
     # @note Updated 2020-06-03.
@@ -1342,7 +1342,7 @@ _koopa_export_shell() {  # {{{1
     return 0
 }
 
-_koopa_export_tmpdir() {  # {{{1
+_koopa_export_tmpdir() { # {{{1
     # """
     # Export TMPDIR.
     # @note Updated 2020-06-03.
@@ -1355,7 +1355,7 @@ _koopa_export_tmpdir() {  # {{{1
     return 0
 }
 
-_koopa_export_today() {  # {{{1
+_koopa_export_today() { # {{{1
     # """
     # Export TODAY.
     # @note Updated 2020-06-03.
@@ -1370,7 +1370,7 @@ _koopa_export_today() {  # {{{1
     return 0
 }
 
-_koopa_export_user() {  # {{{1
+_koopa_export_user() { # {{{1
     # """
     # Export USER.
     # @note Updated 2020-06-03.

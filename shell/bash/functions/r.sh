@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_array_to_r_vector() {  # {{{1
+_koopa_array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
     # @note Updated 2020-06-29.
@@ -17,7 +17,7 @@ _koopa_array_to_r_vector() {  # {{{1
     return 0
 }
 
-_koopa_link_r_etc() {  # {{{1
+_koopa_link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
     # @note Updated 2020-06-24.
@@ -81,7 +81,7 @@ _koopa_link_r_etc() {  # {{{1
     return 0
 }
 
-_koopa_link_r_site_library() {  # {{{1
+_koopa_link_r_site_library() { # {{{1
     # """
     # Link R site library.
     # @note Updated 2020-06-24.
@@ -109,7 +109,7 @@ _koopa_link_r_site_library() {  # {{{1
     return 0
 }
 
-_koopa_r_javareconf() {  # {{{1
+_koopa_r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
     # @note Updated 2020-04-25.
@@ -189,7 +189,7 @@ _koopa_r_javareconf() {  # {{{1
     return 0
 }
 
-_koopa_update_r_config() {  # {{{1
+_koopa_update_r_config() { # {{{1
     # """
     # Update R configuration.
     # @note Updated 2020-06-24.

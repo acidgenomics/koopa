@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_boolean_nounset() {  # {{{1
+_koopa_boolean_nounset() { # {{{1
     # """
     # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
     # @note Updated 2020-03-27.

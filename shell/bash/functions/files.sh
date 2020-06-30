@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_remove_broken_symlinks() {  # {{{1
+_koopa_remove_broken_symlinks() { # {{{1
     # """
     # Remove broken symlinks.
     # @note Updated 2020-06-29.
@@ -20,7 +20,7 @@ _koopa_remove_broken_symlinks() {  # {{{1
     return 0
 }
 
-_koopa_remove_empty_dirs() {  # {{{1
+_koopa_remove_empty_dirs() { # {{{1
     # """
     # Remove empty directories.
     # @note Updated 2020-06-29.

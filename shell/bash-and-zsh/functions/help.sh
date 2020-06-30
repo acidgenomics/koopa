@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_help() {  # {{{1
+_koopa_help() { # {{{1
     # """
     # Show usage via '--help' flag.
     # @note Updated 2020-06-30.

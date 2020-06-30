@@ -6,7 +6,7 @@
 # >     --output json \
 # >     --bucket tests.acidgenomics.com
 
-_koopa_aws_cp_regex() {  # {{{1
+_koopa_aws_cp_regex() { # {{{1
     # """
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
@@ -32,7 +32,7 @@ _koopa_aws_cp_regex() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_find() {  # {{{1
+_koopa_aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
@@ -104,7 +104,7 @@ _koopa_aws_s3_find() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_ls() {  # {{{1
+_koopa_aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
     # @note Updated 2020-06-29.
@@ -244,7 +244,7 @@ _koopa_aws_s3_ls() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_mv_to_parent() {  # {{{1
+_koopa_aws_s3_mv_to_parent() { # {{{1
     # """
     # Move objects in an S3 bucket to parent directory.
     #
@@ -272,7 +272,7 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_sync() {  # {{{1
+_koopa_aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
     #

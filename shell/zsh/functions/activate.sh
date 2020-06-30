@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-_koopa_activate_zsh_aliases() {  # {{{1
+_koopa_activate_zsh_aliases() { # {{{1
     # """
     # Activate Zsh aliases.
     # @note Updated 2020-06-30.
@@ -26,7 +26,7 @@ _koopa_activate_zsh_bashcompinit() { # {{{1
     return 0
 }
 
-_koopa_activate_zsh_colors() {  # {{{1
+_koopa_activate_zsh_colors() { # {{{1
     # """
     # Enable colors in terminal.
     # @note Updated 2020-06-30.
@@ -36,7 +36,7 @@ _koopa_activate_zsh_colors() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_compinit() {  # {{{1
+_koopa_activate_zsh_compinit() { # {{{1
     # """
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-06-30.
@@ -49,7 +49,7 @@ _koopa_activate_zsh_compinit() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_editor() {  # {{{1
+_koopa_activate_zsh_editor() { # {{{1
     # """
     # Activate Zsh editor.
     # @note Updated 2020-06-30.
@@ -66,7 +66,7 @@ _koopa_activate_zsh_editor() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_extras() {  # {{{1
+_koopa_activate_zsh_extras() { # {{{1
     # """
     # Activate Zsh extras.
     # @note Updated 2020-06-30.
@@ -94,7 +94,7 @@ _koopa_activate_zsh_extras() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_fpath() {  # {{{1
+_koopa_activate_zsh_fpath() { # {{{1
     # """
     # Activate Zsh FPATH.
     # @note Updated 2020-06-30.
@@ -112,7 +112,7 @@ _koopa_activate_zsh_fpath() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_plugins() {  # {{{1
+_koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
     # Updated 2020-06-30.
@@ -145,7 +145,7 @@ _koopa_activate_zsh_plugins() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_prompt() {  # {{{1
+_koopa_activate_zsh_prompt() { # {{{1
     # """
     # Activate Zsh prompt.
     # Updated 2020-06-30.

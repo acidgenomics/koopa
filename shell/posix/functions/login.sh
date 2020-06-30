@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_disk_check() {  # {{{1
+_koopa_disk_check() { # {{{1
     # """
     # Check that disk has enough free space.
     # @note Updated 2019-10-27.
@@ -17,7 +17,7 @@ _koopa_disk_check() {  # {{{1
     return 0
 }
 
-_koopa_tmux_sessions() {  # {{{1
+_koopa_tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
     # @note Updated 2020-02-26.
@@ -32,7 +32,7 @@ _koopa_tmux_sessions() {  # {{{1
     return 0
 }
 
-_koopa_today_bucket() {  # {{{1
+_koopa_today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
     # @note Updated 2020-02-24.

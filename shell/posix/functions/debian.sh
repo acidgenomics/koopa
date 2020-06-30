@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_apt_add_azure_cli_repo() {  # {{{1
+_koopa_apt_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI apt repo.
     # @note Updated 2020-06-02.
@@ -20,7 +20,7 @@ _koopa_apt_add_azure_cli_repo() {  # {{{1
     _koopa_sudo_write_string "$string" "$file"
 }
 
-_koopa_apt_add_docker_key() {  # {{{1
+_koopa_apt_add_docker_key() { # {{{1
     # """
     # Add the Docker key.
     # @note Updated 2020-06-02.
@@ -34,7 +34,7 @@ _koopa_apt_add_docker_key() {  # {{{1
     _koopa_apt_key_add "$name" "$url" "$key"
 }
 
-_koopa_apt_add_docker_repo() {  # {{{1
+_koopa_apt_add_docker_repo() { # {{{1
     # """
     # Add Docker apt repo.
     #
@@ -65,7 +65,7 @@ _koopa_apt_add_docker_repo() {  # {{{1
     _koopa_sudo_write_string "$string" "$file"
 }
 
-_koopa_apt_add_google_cloud_key() {  # {{{1
+_koopa_apt_add_google_cloud_key() { # {{{1
     # """
     # Add the Google Cloud key.
     # @note Updated 2020-06-02.
@@ -82,7 +82,7 @@ _koopa_apt_add_google_cloud_key() {  # {{{1
     return 0
 }
 
-_koopa_apt_add_google_cloud_sdk_repo() {  # {{{1
+_koopa_apt_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK apt repo.
     # @note Updated 2020-03-06.
@@ -98,7 +98,7 @@ https://packages.cloud.google.com/apt cloud-sdk main"
     _koopa_sudo_write_string "$string" "$file"
 }
 
-_koopa_apt_add_llvm_key() {  # {{{1
+_koopa_apt_add_llvm_key() { # {{{1
     # """
     # Add the LLVM key.
     # @note Updated 2020-06-02.
@@ -112,7 +112,7 @@ _koopa_apt_add_llvm_key() {  # {{{1
     _koopa_apt_key_add "$name" "$url" "$key"
 }
 
-_koopa_apt_add_llvm_repo() {  # {{{1
+_koopa_apt_add_llvm_repo() { # {{{1
     # """
     # Add LLVM apt repo.
     # @note Updated 2020-06-02.
@@ -151,7 +151,7 @@ _koopa_apt_add_microsoft_key() {  #{{{1
     return 0
 }
 
-_koopa_apt_add_r_key() {  # {{{1
+_koopa_apt_add_r_key() { # {{{1
     # """
     # Add the R key.
     # @note Updated 2020-06-02.
@@ -177,7 +177,7 @@ _koopa_apt_add_r_key() {  # {{{1
 }
 
 # shellcheck disable=SC2120
-_koopa_apt_add_r_repo() {  # {{{1
+_koopa_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
     # @note Updated 2020-06-02.
@@ -228,7 +228,7 @@ EOF
     _koopa_sudo_write_string "$string" "$file"
 }
 
-_koopa_apt_add_wine_key() {  # {{{1
+_koopa_apt_add_wine_key() { # {{{1
     # """
     # Add the WineHQ key.
     #
@@ -256,7 +256,7 @@ _koopa_apt_add_wine_key() {  # {{{1
     _koopa_apt_key_add "$name" "$url" "$key"
 }
 
-_koopa_apt_add_wine_repo() {  # {{{1
+_koopa_apt_add_wine_repo() { # {{{1
     # """
     # Add WineHQ repo.
     #
@@ -283,7 +283,7 @@ _koopa_apt_add_wine_repo() {  # {{{1
     _koopa_sudo_write_string "$string" "$file"
 }
 
-_koopa_apt_add_wine_obs_key() {  # {{{1
+_koopa_apt_add_wine_obs_key() { # {{{1
     # """
     # Add the Wine OBS openSUSE key.
     # @note Updated 2020-06-02.
@@ -316,7 +316,7 @@ Emulators:/Wine:/Debian/${subdir}/Release.key"
     _koopa_apt_key_add "$name" "$url" "$key"
 }
 
-_koopa_apt_add_wine_obs_repo() {  # {{{1
+_koopa_apt_add_wine_obs_repo() { # {{{1
     # """
     # Add Wine OBS openSUSE repo.
     # @note Updated 2020-06-03.
@@ -355,7 +355,7 @@ Emulators:/Wine:/Debian"
     return 0
 }
 
-_koopa_apt_configure_sources() {  # {{{1
+_koopa_apt_configure_sources() { # {{{1
     # """
     # Configure apt sources.
     # @note Updated 2020-06-02.
@@ -392,7 +392,7 @@ EOF
     return 0
 }
 
-_koopa_apt_disable_deb_src() {  # {{{1
+_koopa_apt_disable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
     # @note Updated 2020-02-05.
@@ -411,7 +411,7 @@ _koopa_apt_disable_deb_src() {  # {{{1
     return 0
 }
 
-_koopa_apt_enable_deb_src() {  # {{{1
+_koopa_apt_enable_deb_src() { # {{{1
     # """
     # Enable 'deb-src' source packages.
     # @note Updated 2020-02-05.
@@ -430,7 +430,7 @@ _koopa_apt_enable_deb_src() {  # {{{1
     return 0
 }
 
-_koopa_apt_enabled_repos() {  # {{{1
+_koopa_apt_enabled_repos() { # {{{1
     # """
     # Get a list of enabled default apt repos.
     # @note Updated 2020-02-24.
@@ -445,7 +445,7 @@ _koopa_apt_enabled_repos() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_apt_get() {  # {{{1
+_koopa_apt_get() { # {{{1
     # """
     # Non-interactive variant of apt-get, with saner defaults.
     # @note Updated 2020-05-12.
@@ -464,7 +464,7 @@ _koopa_apt_get() {  # {{{1
     return 0
 }
 
-_koopa_apt_install() {  # {{{1
+_koopa_apt_install() { # {{{1
     # """
     # Install Debian apt package.
     # @note Updated 2020-05-12.
@@ -472,7 +472,7 @@ _koopa_apt_install() {  # {{{1
     _koopa_apt_get install "$@"
 }
 
-_koopa_apt_is_key_imported() {  # {{{1
+_koopa_apt_is_key_imported() { # {{{1
     # """
     # Is a GPG key imported for apt?
     # @note Updated 2020-06-02.
@@ -514,7 +514,7 @@ _koopa_apt_key_add() {  #{{{1
     return 0
 }
 
-_koopa_apt_remove() {  # {{{1
+_koopa_apt_remove() { # {{{1
     # """
     # Remove Debian apt package.
     # @note Updated 2020-04-29.
@@ -525,7 +525,7 @@ _koopa_apt_remove() {  # {{{1
     return 0
 }
 
-_koopa_apt_space_used_by() {  # {{{1
+_koopa_apt_space_used_by() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
     # @note Updated 2020-01-31.
@@ -535,7 +535,7 @@ _koopa_apt_space_used_by() {  # {{{1
     return 0
 }
 
-_koopa_apt_space_used_by_grep() {  # {{{1
+_koopa_apt_space_used_by_grep() { # {{{1
     # """
     # Check installed apt package size, with dependencies.
     # @note Updated 2020-02-16.
@@ -552,7 +552,7 @@ _koopa_apt_space_used_by_grep() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_apt_space_used_by_no_deps() {  # {{{1
+_koopa_apt_space_used_by_no_deps() { # {{{1
     # """
     # Check install apt package size, without dependencies.
     # @note Updated 2020-01-31.

@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_link_emacs() {  # {{{1
+_koopa_link_emacs() { # {{{1
     # """
     # Link Emacs.
     # @note Updated 2020-06-29.
@@ -52,7 +52,7 @@ _koopa_link_emacs() {  # {{{1
     return 0
 }
 
-_koopa_is_spacemacs_installed() {  # {{{1
+_koopa_is_spacemacs_installed() { # {{{1
     # """
     # Is Spacemacs installed?
     # @note Updated 2020-06-29.
@@ -68,7 +68,7 @@ _koopa_is_spacemacs_installed() {  # {{{1
     return 0
 }
 
-_koopa_update_spacemacs() {  # {{{1
+_koopa_update_spacemacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
     # @note Updated 2020-06-29.

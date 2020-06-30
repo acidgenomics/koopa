@@ -7,7 +7,7 @@
 # MAJOR.MINOR.PATCH
 # """
 
-_koopa_bcbio_nextgen_current_version() {  # {{{1
+_koopa_bcbio_nextgen_current_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
     # @note Updated 2020-06-29.
@@ -43,7 +43,7 @@ _koopa_bioc_current_version() { # {{{1
     return 0
 }
 
-_koopa_extract_version() {  # {{{1
+_koopa_extract_version() { # {{{1
     # """
     # Extract version number.
     # @note Updated 2020-06-29.
@@ -61,7 +61,7 @@ _koopa_extract_version() {  # {{{1
     return 0
 }
 
-_koopa_gcc_version() {  # {{{1
+_koopa_gcc_version() { # {{{1
     # """
     # GCC version.
     # @note Updated 2020-06-29.
@@ -81,7 +81,7 @@ _koopa_gcc_version() {  # {{{1
     return 0
 }
 
-_koopa_get_homebrew_cask_version() {  # {{{1
+_koopa_get_homebrew_cask_version() { # {{{1
     # """
     # Get Homebrew Cask version.
     # @note Updated 2020-06-29.
@@ -99,7 +99,7 @@ _koopa_get_homebrew_cask_version() {  # {{{1
     return 0
 }
 
-_koopa_get_macos_app_version() {  # {{{1
+_koopa_get_macos_app_version() { # {{{1
     # """
     # Extract the version of a macOS application.
     # @note Updated 2020-06-29.
@@ -124,7 +124,7 @@ _koopa_get_macos_app_version() {  # {{{1
     return 0
 }
 
-_koopa_get_version() {  # {{{1
+_koopa_get_version() { # {{{1
     # """
     # Get the version of an installed program.
     # @note Updated 2020-06-29.
@@ -144,7 +144,7 @@ _koopa_get_version() {  # {{{1
     return 0
 }
 
-_koopa_github_latest_release() {  # {{{1
+_koopa_github_latest_release() { # {{{1
     # """
     # Get the latest release version from GitHub.
     # @note Updated 2020-02-15.
@@ -171,7 +171,7 @@ _koopa_github_latest_release() {  # {{{1
     return 0
 }
 
-_koopa_hdf5_version() {  # {{{1
+_koopa_hdf5_version() { # {{{1
     # """
     # HDF5 version.
     # @note Updated 2020-06-29.
@@ -191,7 +191,7 @@ _koopa_hdf5_version() {  # {{{1
     return 0
 }
 
-_koopa_linux_version() {  # {{{1
+_koopa_linux_version() { # {{{1
     # """
     # Linux version.
     # @note Updated 2020-06-29.
@@ -205,7 +205,7 @@ _koopa_linux_version() {  # {{{1
     return 0
 }
 
-_koopa_llvm_version() {  # {{{1
+_koopa_llvm_version() { # {{{1
     # """
     # LLVM version.
     # @note Updated 2020-06-29.
@@ -222,7 +222,7 @@ _koopa_llvm_version() {  # {{{1
     return 0
 }
 
-_koopa_lmod_version() {  # {{{1
+_koopa_lmod_version() { # {{{1
     # """
     # Lmod version.
     # @note Updated 2020-06-29.
@@ -240,7 +240,7 @@ _koopa_lmod_version() {  # {{{1
     return 0
 }
 
-_koopa_macos_version() {  # {{{1
+_koopa_macos_version() { # {{{1
     # """
     # macOS version.
     # @note Updated 2020-06-29.
@@ -254,7 +254,7 @@ _koopa_macos_version() {  # {{{1
     return 0
 }
 
-_koopa_major_version() {  # {{{1
+_koopa_major_version() { # {{{1
     # """
     # Program 'MAJOR' version.
     # @note Updated 2020-06-29.
@@ -270,7 +270,7 @@ _koopa_major_version() {  # {{{1
     return 0
 }
 
-_koopa_major_minor_version() {  # {{{1
+_koopa_major_minor_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR' version.
     # @note Updated 2020-06-29.
@@ -284,7 +284,7 @@ _koopa_major_minor_version() {  # {{{1
     return 0
 }
 
-_koopa_major_minor_patch_version() {  # {{{1
+_koopa_major_minor_patch_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR.PATCH' version.
     # @note Updated 2020-03-16.
@@ -298,7 +298,7 @@ _koopa_major_minor_patch_version() {  # {{{1
     return 0
 }
 
-_koopa_openjdk_version() {  # {{{1
+_koopa_openjdk_version() { # {{{1
     # """
     # Java (OpenJDK) version.
     # @note Updated 2020-06-29.
@@ -316,7 +316,7 @@ _koopa_openjdk_version() {  # {{{1
     return 0
 }
 
-_koopa_oracle_instantclient_version() {  # {{{1
+_koopa_oracle_instantclient_version() { # {{{1
     # """
     # Oracle InstantClient version.
     # @note Updated 2020-06-29.
@@ -331,7 +331,7 @@ _koopa_oracle_instantclient_version() {  # {{{1
     return 0
 }
 
-_koopa_os_version() {  # {{{1
+_koopa_os_version() { # {{{1
     # """
     # Operating system version.
     # @note Updated 2020-06-29.
@@ -351,7 +351,7 @@ _koopa_os_version() {  # {{{1
     return 0
 }
 
-_koopa_parallel_version() {  # {{{1
+_koopa_parallel_version() { # {{{1
     # """
     # GNU parallel version.
     # @note Updated 2020-06-29.
@@ -369,7 +369,7 @@ _koopa_parallel_version() {  # {{{1
     return 0
 }
 
-_koopa_perl_file_rename_version() {  # {{{1
+_koopa_perl_file_rename_version() { # {{{1
     # """
     # Perl File::Rename version.
     # @note Updated 2020-06-29.
@@ -383,7 +383,7 @@ _koopa_perl_file_rename_version() {  # {{{1
     return 0
 }
 
-_koopa_return_version() {  # {{{1
+_koopa_return_version() { # {{{1
     # """
     # Return version (via extraction).
     # @note Updated 2020-06-29.
@@ -502,7 +502,7 @@ _koopa_return_version() {  # {{{1
     return 0
 }
 
-_koopa_ruby_api_version() {  # {{{1
+_koopa_ruby_api_version() { # {{{1
     # """
     # Ruby API version.
     # @note Updated 2020-06-29.
@@ -519,7 +519,7 @@ _koopa_ruby_api_version() {  # {{{1
     return 0
 }
 
-_koopa_r_package_version() {  # {{{1
+_koopa_r_package_version() { # {{{1
     # """
     # R package version.
     # @note Updated 2020-06-29.
@@ -538,7 +538,7 @@ _koopa_r_package_version() {  # {{{1
     return 0
 }
 
-_koopa_r_version() {  # {{{1
+_koopa_r_version() { # {{{1
     # """
     # R version.
     # @note Updated 2020-06-29.
@@ -555,7 +555,7 @@ _koopa_r_version() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_sanitize_version() {  # {{{1
+_koopa_sanitize_version() { # {{{1
     # """
     # Sanitize version.
     # @note Updated 2020-06-29.
@@ -570,7 +570,7 @@ _koopa_sanitize_version() {  # {{{1
     return 0
 }
 
-_koopa_tex_version() {  # {{{1
+_koopa_tex_version() { # {{{1
     # """
     # TeX version.
     # @note Updated 2020-06-29.
@@ -595,7 +595,7 @@ _koopa_tex_version() {  # {{{1
     return 0
 }
 
-_koopa_version() {  # {{{1
+_koopa_version() { # {{{1
     # """
     # Koopa version.
     # @note Updated 2020-06-29.
@@ -605,7 +605,7 @@ _koopa_version() {  # {{{1
     return 0
 }
 
-_koopa_version_pattern() {  # {{{1
+_koopa_version_pattern() { # {{{1
     # """
     # Version pattern.
     # @note Updated 2020-06-29.
@@ -615,7 +615,7 @@ _koopa_version_pattern() {  # {{{1
     return 0
 }
 
-_koopa_vim_version() {  # {{{1
+_koopa_vim_version() { # {{{1
     # """
     # Vim version.
     # @note Updated 2020-06-29.

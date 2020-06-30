@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_git_branch() {  # {{{1
+_koopa_git_branch() { # {{{1
     # """
     # Current git branch name.
     # @note Updated 2020-04-29.
@@ -22,7 +22,7 @@ _koopa_git_branch() {  # {{{1
     _koopa_print "$branch"
 }
 
-_koopa_git_clone() {  # {{{1
+_koopa_git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
     # @note Updated 2020-02-15.
@@ -40,7 +40,7 @@ _koopa_git_clone() {  # {{{1
     return 0
 }
 
-_koopa_git_last_commit_local() {  # {{{1
+_koopa_git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
     # @note Updated 2020-04-08.
@@ -55,7 +55,7 @@ _koopa_git_last_commit_local() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_git_last_commit_remote() {  # {{{1
+_koopa_git_last_commit_remote() { # {{{1
     # """
     # Last git commit of remote repository.
     # @note Updated 2020-04-08.
@@ -67,4 +67,42 @@ _koopa_git_last_commit_remote() {  # {{{1
     local x
     x="$(git ls-remote "$url" HEAD 2>/dev/null)"
     _koopa_print "$x"
+}
+
+_koopa_git_rm_submodule() { # {{{1
+    # """
+    # Remove a git submodule.
+    # @note Updated 2020-06-30.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/1260748/
+    # - https://gist.github.com/myusuf3/7f645819ded92bda6677
+    # """
+    _koopa_is_installed git || return 1
+    local prefix
+    prefix="${1:-"."}"
+    # Remove the submodule entry from '.git/config'.
+    git submodule deinit -f "$prefix"
+    # Remove the submodule directory from the superproject's '.git/modules'
+    # directory.
+    rm -fr ".git/modules/${prefix}"
+    # Remove the entry in '.gitmodules' and remove the submodule directory
+    # located at 'path/to/submodule'.
+    git rm -f "$prefix"
+    # Update gitmodules file and commit.
+    git add .gitmodules
+    git commit -m "Removed submodule '${prefix}'."
+    return 0
+}
+
+_koopa_git_rm_untracked() { # {{{1
+    # """
+    # Remove untracked files from git repo.
+    # @note Updated 2020-06-30.
+    # """
+    _koopa_is_installed git || return 1
+    local dir
+    dir="${1:-"."}"
+    git clean -dfx "$dir"
+    return 0
 }

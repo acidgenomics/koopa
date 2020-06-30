@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-__koopa_ansi_escape() {  # {{{1
+__koopa_ansi_escape() { # {{{1
     local escape
     case "${1:?}" in
         nocolor)
@@ -70,7 +70,7 @@ __koopa_ansi_escape() {  # {{{1
     return 0
 }
 
-__koopa_emoji() {  # {{{1
+__koopa_emoji() { # {{{1
     # """
     # Koopa turtle emoji.
     # @note Updated 2020-03-05.
@@ -78,7 +78,7 @@ __koopa_emoji() {  # {{{1
     _koopa_print '🐢'
 }
 
-__koopa_h() {  # {{{1
+__koopa_h() { # {{{1
     # """
     # Koopa header.
     # @note Updated 2020-03-05.
@@ -142,7 +142,7 @@ __koopa_msg() {
     _koopa_print "$x"
 }
 
-__koopa_print_ansi() {  # {{{1
+__koopa_print_ansi() { # {{{1
     # """
     # Print a colored line in console.
     # @note Updated 2020-03-05.
@@ -177,7 +177,7 @@ __koopa_print_ansi() {  # {{{1
     return 0
 }
 
-__koopa_status() {  # {{{1
+__koopa_status() { # {{{1
     # """
     # Koopa status.
     # @note Updated 2020-03-05.
@@ -193,7 +193,7 @@ __koopa_status() {  # {{{1
 
 
 
-_koopa_coffee_time() {  # {{{1
+_koopa_coffee_time() { # {{{1
     # """
     # Coffee time.
     # @note Updated 2020-03-05.
@@ -201,7 +201,7 @@ _koopa_coffee_time() {  # {{{1
     _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
 }
 
-_koopa_dl() {  # {{{1
+_koopa_dl() { # {{{1
     # """
     # Definition list.
     # @note Updated 2020-03-05.
@@ -209,7 +209,7 @@ _koopa_dl() {  # {{{1
     __koopa_msg "${1:?}: ${2:?}"
 }
 
-_koopa_exit() {  # {{{1
+_koopa_exit() { # {{{1
     # """
     # Exit showing note, without error.
     # @note Updated 2020-04-21.
@@ -218,35 +218,35 @@ _koopa_exit() {  # {{{1
     exit 0
 }
 
-_koopa_h1() {  # {{{1
+_koopa_h1() { # {{{1
     __koopa_h 1 "$@"
 }
 
-_koopa_h2() {  # {{{1
+_koopa_h2() { # {{{1
     __koopa_h 2 "$@"
 }
 
-_koopa_h3() {  # {{{1
+_koopa_h3() { # {{{1
     __koopa_h 3 "$@"
 }
 
-_koopa_h4() {  # {{{1
+_koopa_h4() { # {{{1
     __koopa_h 4 "$@"
 }
 
-_koopa_h5() {  # {{{1
+_koopa_h5() { # {{{1
     __koopa_h 5 "$@"
 }
 
-_koopa_h6() {  # {{{1
+_koopa_h6() { # {{{1
     __koopa_h 6 "$@"
 }
 
-_koopa_h7() {  # {{{1
+_koopa_h7() { # {{{1
     __koopa_h 7 "$@"
 }
 
-_koopa_info() {  # {{{1
+_koopa_info() { # {{{1
     # """
     # General info.
     # @note Updated 2020-03-05.
@@ -254,7 +254,7 @@ _koopa_info() {  # {{{1
     __koopa_msg "${1:-}" '--'
 }
 
-_koopa_install_start() {  # {{{1
+_koopa_install_start() { # {{{1
     # """
     # Inform the user about start of installation.
     # @note Updated 2020-06-19.
@@ -286,7 +286,7 @@ _koopa_install_start() {  # {{{1
     _koopa_h1 "$msg"
 }
 
-_koopa_install_success() {  # {{{1
+_koopa_install_success() { # {{{1
     # """
     # Installation success message.
     # @note Updated 2020-03-05.
@@ -294,7 +294,7 @@ _koopa_install_success() {  # {{{1
     _koopa_success "Installation of ${1:?} was successful."
 }
 
-_koopa_invalid_arg() {  # {{{1
+_koopa_invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
     # @note Updated 2020-03-05.
@@ -302,7 +302,7 @@ _koopa_invalid_arg() {  # {{{1
     _koopa_stop "Invalid argument: '${1:?}'."
 }
 
-_koopa_missing_arg() {  # {{{1
+_koopa_missing_arg() { # {{{1
     # """
     # Error on a missing argument.
     # @note Updated 2020-03-05.
@@ -310,7 +310,7 @@ _koopa_missing_arg() {  # {{{1
     _koopa_stop 'Missing required argument.'
 }
 
-_koopa_note() {  # {{{1
+_koopa_note() { # {{{1
     # """
     # General note.
     # @note Updated 2020-03-05.
@@ -318,7 +318,7 @@ _koopa_note() {  # {{{1
     __koopa_msg "${1:?}" '**' 'yellow'
 }
 
-_koopa_print() {  # {{{1
+_koopa_print() { # {{{1
     # """
     # Print a string.
     # @note Updated 2020-03-05.
@@ -333,79 +333,79 @@ _koopa_print() {  # {{{1
     return 0
 }
 
-_koopa_print_black() {  # {{{1
+_koopa_print_black() { # {{{1
     __koopa_print_ansi 'black' "${1:?}"
 }
 
-_koopa_print_black_bold() {  # {{{1
+_koopa_print_black_bold() { # {{{1
     __koopa_print_ansi 'black-bold' "${1:?}"
 }
 
-_koopa_print_blue() {  # {{{1
+_koopa_print_blue() { # {{{1
     __koopa_print_ansi 'blue' "${1:?}"
 }
 
-_koopa_print_blue_bold() {  # {{{1
+_koopa_print_blue_bold() { # {{{1
     __koopa_print_ansi 'blue-bold' "${1:?}"
 }
 
-_koopa_print_cyan() {  # {{{1
+_koopa_print_cyan() { # {{{1
     __koopa_print_ansi 'cyan' "${1:?}"
 }
 
-_koopa_print_cyan_bold() {  # {{{1
+_koopa_print_cyan_bold() { # {{{1
     __koopa_print_ansi 'cyan-bold' "${1:?}"
 }
 
-_koopa_print_default() {  # {{{1
+_koopa_print_default() { # {{{1
     __koopa_print_ansi 'default' "${1:?}"
 }
 
-_koopa_print_default_bold() {  # {{{1
+_koopa_print_default_bold() { # {{{1
     __koopa_print_ansi 'default-bold' "${1:?}"
 }
 
-_koopa_print_green() {  # {{{1
+_koopa_print_green() { # {{{1
     __koopa_print_ansi 'green' "${1:?}"
 }
 
-_koopa_print_green_bold() {  # {{{1
+_koopa_print_green_bold() { # {{{1
     __koopa_print_ansi 'green-bold' "${1:?}"
 }
 
-_koopa_print_magenta() {  # {{{1
+_koopa_print_magenta() { # {{{1
     __koopa_print_ansi 'magenta' "${1:?}"
 }
 
-_koopa_print_magenta_bold() {  # {{{1
+_koopa_print_magenta_bold() { # {{{1
     __koopa_print_ansi 'magenta-bold' "${1:?}"
 }
 
-_koopa_print_red() {  # {{{1
+_koopa_print_red() { # {{{1
     __koopa_print_ansi 'red' "${1:?}"
 }
 
-_koopa_print_red_bold() {  # {{{1
+_koopa_print_red_bold() { # {{{1
     __koopa_print_ansi 'red-bold' "${1:?}"
 }
 
-_koopa_print_yellow() {  # {{{1
+_koopa_print_yellow() { # {{{1
     __koopa_print_ansi 'yellow' "${1:?}"
 }
 
-_koopa_print_yellow_bold() {  # {{{1
+_koopa_print_yellow_bold() { # {{{1
     __koopa_print_ansi 'yellow-bold' "${1:?}"
 }
 
-_koopa_print_white() {  # {{{1
+_koopa_print_white() { # {{{1
     __koopa_print_ansi 'white' "${1:?}"
 }
 
-_koopa_print_white_bold() {  # {{{1
+_koopa_print_white_bold() { # {{{1
     __koopa_print_ansi 'white-bold' "${1:?}"
 }
 
-_koopa_restart() {  # {{{1
+_koopa_restart() { # {{{1
     # """
     # Inform the user that they should restart shell.
     # @note Updated 2020-02-20.
@@ -413,19 +413,19 @@ _koopa_restart() {  # {{{1
     _koopa_note 'Restart the shell.'
 }
 
-_koopa_status_fail() {  # {{{1
+_koopa_status_fail() { # {{{1
     >&2 __koopa_status "${1:?}" 'FAIL' 'red'
 }
 
-_koopa_status_note() {  # {{{1
+_koopa_status_note() { # {{{1
     __koopa_status "${1:?}" 'NOTE' 'yellow'
 }
 
-_koopa_status_ok() {  # {{{1
+_koopa_status_ok() { # {{{1
     __koopa_status "${1:?}" 'OK' 'green'
 }
 
-_koopa_stop() {  # {{{1
+_koopa_stop() { # {{{1
     # """
     # Stop with an error message, and exit.
     # @note Updated 2020-03-05.
@@ -434,7 +434,7 @@ _koopa_stop() {  # {{{1
     exit 1
 }
 
-_koopa_success() {  # {{{1
+_koopa_success() { # {{{1
     # """
     # Success message.
     # @note Updated 2020-03-05.
@@ -442,7 +442,7 @@ _koopa_success() {  # {{{1
     __koopa_msg "${1:?}" 'OK' 'green-bold' 'green'
 }
 
-_koopa_uninstall_start() {  # {{{1
+_koopa_uninstall_start() { # {{{1
     # """
     # Inform the user about start of uninstall.
     # @note Updated 2020-03-05.
@@ -461,7 +461,7 @@ _koopa_uninstall_start() {  # {{{1
     _koopa_h1 "$msg"
 }
 
-_koopa_uninstall_success() {  # {{{1
+_koopa_uninstall_success() { # {{{1
     # """
     # Uninstall success message.
     # @note Updated 2020-03-05.
@@ -469,7 +469,7 @@ _koopa_uninstall_success() {  # {{{1
     _koopa_success "Uninstallation of ${1:?} was successful."
 }
 
-_koopa_update_start() {  # {{{1
+_koopa_update_start() { # {{{1
     # """
     # Inform the user about start of update.
     # @note Updated 2020-03-05.
@@ -488,7 +488,7 @@ _koopa_update_start() {  # {{{1
     _koopa_h1 "$msg"
 }
 
-_koopa_update_success() {  # {{{1
+_koopa_update_success() { # {{{1
     # """
     # Update success message.
     # @note Updated 2020-03-05.
@@ -496,7 +496,7 @@ _koopa_update_success() {  # {{{1
     _koopa_success "Update of ${1:?} was successful."
 }
 
-_koopa_warning() {  # {{{1
+_koopa_warning() { # {{{1
     # """
     # Warning message.
     # @note Updated 2020-03-05.

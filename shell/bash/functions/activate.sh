@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_activate_bash_aliases() {  # {{{1
+_koopa_activate_bash_aliases() { # {{{1
     # """
     # Alias definitions.
     # @note Updated 2020-06-19.
@@ -17,7 +17,7 @@ _koopa_activate_bash_aliases() {  # {{{1
     return 0
 }
 
-_koopa_activate_bash_completion() {  # {{{1
+_koopa_activate_bash_completion() { # {{{1
     # """
     # Activate Bash completion.
     # @note Updated 2020-06-19.
@@ -42,7 +42,7 @@ _koopa_activate_bash_completion() {  # {{{1
     return 0
 }
 
-_koopa_activate_bash_extras() {  # {{{1
+_koopa_activate_bash_extras() { # {{{1
     # """
     # Activate Bash extras.
     # @note Updated 2020-06-19.
@@ -56,7 +56,7 @@ _koopa_activate_bash_extras() {  # {{{1
     return 0
 }
 
-_koopa_activate_bash_lesspipe() {  # {{{1
+_koopa_activate_bash_lesspipe() { # {{{1
     # """
     # Activate lesspipe for Bash.
     # @note Updated 2020-06-19.
@@ -67,7 +67,7 @@ _koopa_activate_bash_lesspipe() {  # {{{1
     return 0
 }
 
-_koopa_activate_bash_prompt() {  # {{{1
+_koopa_activate_bash_prompt() { # {{{1
     # """
     # Activate Bash prompt.
     # @note Updated 2020-06-19.
@@ -78,7 +78,7 @@ _koopa_activate_bash_prompt() {  # {{{1
     return 0
 }
 
-_koopa_activate_bash_readline() {  # {{{1
+_koopa_activate_bash_readline() { # {{{1
     # """
     # Readline input options.
     # @note Updated 2020-06-19.

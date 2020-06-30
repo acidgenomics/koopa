@@ -4,7 +4,7 @@
 # Details pipe support for reading stdin:
 # https://stackoverflow.com/a/58452863/3911732
 
-_koopa_file_match() {  # {{{1
+_koopa_file_match() { # {{{1
     # """
     # Is a string defined in a file?
     # @note Updated 2020-04-30.
@@ -32,7 +32,7 @@ _koopa_file_match() {  # {{{1
     grep -Fq "$pattern" "$file" >/dev/null
 }
 
-_koopa_file_match_regex() {  # {{{1
+_koopa_file_match_regex() { # {{{1
     # """
     # Is a string defined in a file?
     # @note Updated 2020-04-30.
@@ -56,7 +56,7 @@ _koopa_file_match_regex() {  # {{{1
     grep -Eq "$pattern" "$file" >/dev/null
 }
 
-_koopa_str_match() {  # {{{1
+_koopa_str_match() { # {{{1
     # """
     # Does the input match a fixed string?
     # @note Updated 2020-05-05.
@@ -92,7 +92,7 @@ _koopa_str_match() {  # {{{1
     echo "$string" | grep -Fq "$pattern" >/dev/null
 }
 
-_koopa_str_match_posix() {  # {{{1
+_koopa_str_match_posix() { # {{{1
     # """
     # Evaluate whether a string contains a desired value.
     # @note Updated 2020-04-29.
@@ -104,7 +104,7 @@ _koopa_str_match_posix() {  # {{{1
     test "${1#*$2}" != "$1"
 }
 
-_koopa_str_match_regex() {  # {{{1
+_koopa_str_match_regex() { # {{{1
     # """
     # Does the input match a regular expression?
     # @note Updated 2020-05-05.

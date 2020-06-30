@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_assert_are_identical() {  # {{{1
+_koopa_assert_are_identical() { # {{{1
     # """
     # Assert that two strings are identical.
     # @note Updated 2020-02-04.
@@ -13,7 +13,7 @@ _koopa_assert_are_identical() {  # {{{1
     return 0
 }
 
-_koopa_assert_are_not_identical() {  # {{{1
+_koopa_assert_are_not_identical() { # {{{1
     # """
     # Assert that two strings are not identical.
     # @note Updated 2020-02-04.
@@ -25,7 +25,7 @@ _koopa_assert_are_not_identical() {  # {{{1
     return 0
 }
 
-_koopa_assert_has_args() {  # {{{1
+_koopa_assert_has_args() { # {{{1
     # """
     # Assert that the user has passed required arguments to a script.
     # @note Updated 2019-10-23.
@@ -39,7 +39,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_file_ext() {  # {{{1
+_koopa_assert_has_file_ext() { # {{{1
     # """
     # Assert that input contains a file extension.
     # @note Updated 2020-02-16.
@@ -115,7 +115,7 @@ _koopa_assert_has_gnu_tar() {  #{{{1
     return 0
 }
 
-_koopa_assert_has_no_args() {  # {{{1
+_koopa_assert_has_no_args() { # {{{1
     # """
     # Assert that the user has not passed any arguments to a script.
     # @note Updated 2019-10-23.
@@ -129,7 +129,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_no_envs() {  # {{{1
+_koopa_assert_has_no_envs() { # {{{1
     # """
     # Assert that conda and Python virtual environments aren't active.
     # @note Updated 2020-01-16.
@@ -149,7 +149,7 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
     return 0
 }
 
-_koopa_assert_has_sudo() {  # {{{1
+_koopa_assert_has_sudo() { # {{{1
     # """
     # Assert that current user has sudo (admin) permissions.
     # @note Updated 2019-10-23.
@@ -161,7 +161,7 @@ _koopa_assert_has_sudo() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_alpine() {  # {{{1
+_koopa_assert_is_alpine() { # {{{1
     # """
     # Assert that platform is Alpine.
     # @note Updated 2020-02-27.
@@ -173,7 +173,7 @@ _koopa_assert_is_alpine() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_arch() {  # {{{1
+_koopa_assert_is_arch() { # {{{1
     # """
     # Assert that platform is Arch.
     # @note Updated 2020-02-27.
@@ -185,7 +185,7 @@ _koopa_assert_is_arch() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_cellar() {  # {{{1
+_koopa_assert_is_cellar() { # {{{1
     # """
     # Assert that input is a cellarized program.
     # @note Updated 2020-02-16.
@@ -201,7 +201,7 @@ _koopa_assert_is_cellar() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_conda_active() {  # {{{1
+_koopa_assert_is_conda_active() { # {{{1
     # """
     # Assert that a Conda environment is active.
     # @note Updated 2019-10-23.
@@ -213,7 +213,7 @@ _koopa_assert_is_conda_active() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_current_version() {  # {{{1
+_koopa_assert_is_current_version() { # {{{1
     # """
     # Assert that programs are installed and current.
     # @note Updated 2020-02-16.
@@ -231,7 +231,7 @@ _koopa_assert_is_current_version() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_debian() {  # {{{1
+_koopa_assert_is_debian() { # {{{1
     # """
     # Assert that platform is Debian.
     # @note Updated 2019-10-25.
@@ -243,7 +243,7 @@ _koopa_assert_is_debian() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_dir() {  # {{{1
+_koopa_assert_is_dir() { # {{{1
     # """
     # Assert that input is a directory.
     # @note Updated 2020-02-16.
@@ -259,7 +259,7 @@ _koopa_assert_is_dir() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_executable() {  # {{{1
+_koopa_assert_is_executable() { # {{{1
     # """
     # Assert that input is executable.
     # @note Updated 2020-02-16.
@@ -275,7 +275,7 @@ _koopa_assert_is_executable() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_existing() {  # {{{1
+_koopa_assert_is_existing() { # {{{1
     # """
     # Assert that input exists on disk.
     # @note Updated 2020-02-16.
@@ -293,7 +293,7 @@ _koopa_assert_is_existing() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_fedora() {  # {{{1
+_koopa_assert_is_fedora() { # {{{1
     # """
     # Assert that platform is Fedora.
     # @note Updated 2019-10-25.
@@ -305,7 +305,7 @@ _koopa_assert_is_fedora() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_file() {  # {{{1
+_koopa_assert_is_file() { # {{{1
     # """
     # Assert that input is a file.
     # @note Updated 2020-02-16.
@@ -321,7 +321,7 @@ _koopa_assert_is_file() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_file_type() {  # {{{1
+_koopa_assert_is_file_type() { # {{{1
     # """
     # Assert that input matches a specified file type.
     # @note Updated 2020-01-12.
@@ -336,7 +336,7 @@ _koopa_assert_is_file_type() {  # {{{1
     _koopa_assert_is_matching_regex "$file" "\.${ext}\$"
 }
 
-_koopa_assert_is_function() {  # {{{1
+_koopa_assert_is_function() { # {{{1
     # """
     # Assert that variable is a function.
     # @note Updated 2020-02-16.
@@ -352,7 +352,7 @@ _koopa_assert_is_function() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_git_toplevel() {  # {{{1
+_koopa_assert_is_git_toplevel() { # {{{1
     # """
     # Assert that current directory is a git repo.
     # @note Updated 2020-04-29.
@@ -369,7 +369,7 @@ _koopa_assert_is_git_toplevel() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_github_ssh_enabled() {  # {{{1
+_koopa_assert_is_github_ssh_enabled() { # {{{1
     # """
     # Assert that current user has SSH key access to GitHub.
     # @note Updated 2020-02-11.
@@ -381,7 +381,7 @@ _koopa_assert_is_github_ssh_enabled() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_gitlab_ssh_enabled() {  # {{{1
+_koopa_assert_is_gitlab_ssh_enabled() { # {{{1
     # """
     # Assert that current user has SSH key access to GitLab.
     # @note Updated 2020-02-11.
@@ -393,7 +393,7 @@ _koopa_assert_is_gitlab_ssh_enabled() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_installed() {  # {{{1
+_koopa_assert_is_installed() { # {{{1
     # """
     # Assert that programs are installed.
     # @note Updated 2020-02-16.
@@ -409,7 +409,7 @@ _koopa_assert_is_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_kali() {  # {{{1
+_koopa_assert_is_kali() { # {{{1
     # """
     # Assert that platform is Kali Linux.
     # @note Updated 2020-02-27.
@@ -421,7 +421,7 @@ _koopa_assert_is_kali() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_linux() {  # {{{1
+_koopa_assert_is_linux() { # {{{1
     # """
     # Assert that platform is Linux.
     # @note Updated 2019-10-23.
@@ -433,7 +433,7 @@ _koopa_assert_is_linux() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_macos() {  # {{{1
+_koopa_assert_is_macos() { # {{{1
     # """
     # Assert that platform is macOS (Darwin).
     # @note Updated 2020-01-13.
@@ -445,7 +445,7 @@ _koopa_assert_is_macos() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_non_existing() {  # {{{1
+_koopa_assert_is_non_existing() { # {{{1
     # """
     # Assert that input does not exist on disk.
     # @note Updated 2020-02-16.
@@ -461,7 +461,7 @@ _koopa_assert_is_non_existing() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_nonzero_file() {  # {{{1
+_koopa_assert_is_nonzero_file() { # {{{1
     # """
     # Assert that input is a non-zero file.
     # @note Updated 2020-03-06.
@@ -477,7 +477,7 @@ _koopa_assert_is_nonzero_file() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_dir() {  # {{{1
+_koopa_assert_is_not_dir() { # {{{1
     # """
     # Assert that input is not a directory.
     # @note Updated 2020-02-16.
@@ -493,7 +493,7 @@ _koopa_assert_is_not_dir() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_file() {  # {{{1
+_koopa_assert_is_not_file() { # {{{1
     # """
     # Assert that input is not a file.
     # @note Updated 2020-02-16.
@@ -509,7 +509,7 @@ _koopa_assert_is_not_file() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_installed() {  # {{{1
+_koopa_assert_is_not_installed() { # {{{1
     # """
     # Assert that programs are not installed.
     # @note Updated 2020-02-16.
@@ -525,7 +525,7 @@ _koopa_assert_is_not_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_opensuse() {  # {{{1
+_koopa_assert_is_opensuse() { # {{{1
     # """
     # Assert that platform is openSUSE.
     # @note Updated 2020-02-27.
@@ -537,7 +537,7 @@ _koopa_assert_is_opensuse() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_rhel() {  # {{{1
+_koopa_assert_is_rhel() { # {{{1
     # """
     # Assert that platform is RHEL.
     # @note Updated 2020-01-14.
@@ -549,7 +549,7 @@ _koopa_assert_is_rhel() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_rhel_7() {  # {{{1
+_koopa_assert_is_rhel_7() { # {{{1
     # """
     # Assert that platform is RHEL 7.
     # @note Updated 2020-01-14.
@@ -561,7 +561,7 @@ _koopa_assert_is_rhel_7() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_rhel_8() {  # {{{1
+_koopa_assert_is_rhel_8() { # {{{1
     # """
     # Assert that platform is RHEL 8.
     # @note Updated 2020-01-14.
@@ -573,7 +573,7 @@ _koopa_assert_is_rhel_8() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_root() {  # {{{1
+_koopa_assert_is_not_root() { # {{{1
     # """
     # Assert that current user is not root.
     # @note Updated 2019-12-17.
@@ -585,7 +585,7 @@ _koopa_assert_is_not_root() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_symlink() {  # {{{1
+_koopa_assert_is_not_symlink() { # {{{1
     # """
     # Assert that input is not a symbolic link.
     # @note Updated 2020-02-16.
@@ -601,7 +601,7 @@ _koopa_assert_is_not_symlink() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_python_package_installed() {  # {{{1
+_koopa_assert_is_python_package_installed() { # {{{1
     # """
     # Assert that specific Python packages are installed.
     # @note Updated 2020-02-16.
@@ -617,7 +617,7 @@ _koopa_assert_is_python_package_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_r_package_installed() {  # {{{1
+_koopa_assert_is_r_package_installed() { # {{{1
     # """
     # Assert that specific R packages are installed.
     # @note Updated 2020-02-16.
@@ -633,7 +633,7 @@ _koopa_assert_is_r_package_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_readable() {  # {{{1
+_koopa_assert_is_readable() { # {{{1
     # """
     # Assert that input is readable.
     # @note Updated 2020-02-16.
@@ -649,7 +649,7 @@ _koopa_assert_is_readable() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_root() {  # {{{1
+_koopa_assert_is_root() { # {{{1
     # """
     # Assert that the current user is root.
     # @note Updated 2019-12-17.
@@ -686,7 +686,7 @@ _koopa_assert_is_set() {
     return 0
 }
 
-_koopa_assert_is_symlink() {  # {{{1
+_koopa_assert_is_symlink() { # {{{1
     # """
     # Assert that input is a symbolic link.
     # @note Updated 2020-02-16.
@@ -702,7 +702,7 @@ _koopa_assert_is_symlink() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_venv_active() {  # {{{1
+_koopa_assert_is_venv_active() { # {{{1
     # """
     # Assert that a Python virtual environment is active.
     # @note Updated 2019-10-23.
@@ -715,7 +715,7 @@ _koopa_assert_is_venv_active() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_writable() {  # {{{1
+_koopa_assert_is_writable() { # {{{1
     # """
     # Assert that input is writable.
     # @note Updated 2020-02-16.
@@ -731,7 +731,7 @@ _koopa_assert_is_writable() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_matching_fixed() {  # {{{1
+_koopa_assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
     # @note Updated 2020-01-12.
@@ -747,7 +747,7 @@ _koopa_assert_is_matching_fixed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_matching_regex() {  # {{{1
+_koopa_assert_is_matching_regex() { # {{{1
     # """
     # Assert that input matches a regular expression pattern.
     # @note Updated 2020-01-12.
@@ -763,7 +763,7 @@ _koopa_assert_is_matching_regex() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_ubuntu() {  # {{{1
+_koopa_assert_is_ubuntu() { # {{{1
     # """
     # Assert that platform is Ubuntu.
     # @note Updated 2020-01-14.
@@ -775,7 +775,7 @@ _koopa_assert_is_ubuntu() {  # {{{1
     return 0
 }
 
-_koopa_check_azure() {  # {{{1
+_koopa_check_azure() { # {{{1
     # """
     # Check Azure VM integrity.
     # @note Updated 2019-10-31.
@@ -791,7 +791,7 @@ _koopa_check_azure() {  # {{{1
     return 0
 }
 
-_koopa_check_access_human() {  # {{{1
+_koopa_check_access_human() { # {{{1
     # """
     # Check if file or directory has expected human readable access.
     # @note Updated 2020-01-12.
@@ -814,7 +814,7 @@ _koopa_check_access_human() {  # {{{1
     return 0
 }
 
-_koopa_check_access_octal() {  # {{{1
+_koopa_check_access_octal() { # {{{1
     # """
     # Check if file or directory has expected octal access.
     # @note Updated 2020-01-12.
@@ -837,7 +837,7 @@ _koopa_check_access_octal() {  # {{{1
     return 0
 }
 
-_koopa_check_group() {  # {{{1
+_koopa_check_group() { # {{{1
     # """
     # Check if file or directory has an expected group.
     # @note Updated 2020-01-12.
@@ -861,7 +861,7 @@ _koopa_check_group() {  # {{{1
     return 0
 }
 
-_koopa_check_mount() {  # {{{1
+_koopa_check_mount() { # {{{1
     # """
     # Check if a drive is mounted.
     # Usage of find is recommended over ls here.
@@ -878,7 +878,7 @@ _koopa_check_mount() {  # {{{1
     return 0
 }
 
-_koopa_check_user() {  # {{{1
+_koopa_check_user() { # {{{1
     # """
     # Check if file or directory is owned by an expected user.
     # @note Updated 2020-01-13.
@@ -904,7 +904,7 @@ _koopa_check_user() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_current_version() {  # {{{1
+_koopa_exit_if_current_version() { # {{{1
     # """
     # Assert that programs are installed and current.
     # @note Updated 2020-04-21.
@@ -920,7 +920,7 @@ _koopa_exit_if_current_version() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_dir() {  # {{{1
+_koopa_exit_if_dir() { # {{{1
     # """
     # Exit with note if directory exists.
     # @note Updated 2020-04-21.
@@ -936,7 +936,7 @@ _koopa_exit_if_dir() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_docker() {  # {{{1
+_koopa_exit_if_docker() { # {{{1
     # """
     # Exit with note if running inside Docker.
     # @note Updated 2020-04-21.
@@ -948,7 +948,7 @@ _koopa_exit_if_docker() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_exists() {  # {{{1
+_koopa_exit_if_exists() { # {{{1
     # """
     # Exit with note if any file type exists.
     # @note Updated 2020-04-21.
@@ -964,7 +964,7 @@ _koopa_exit_if_exists() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_installed() {  # {{{1
+_koopa_exit_if_installed() { # {{{1
     # """
     # Exit with note if an app is installed.
     # @note Updated 2020-04-21.
@@ -982,7 +982,7 @@ _koopa_exit_if_installed() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_not_installed() {  # {{{1
+_koopa_exit_if_not_installed() { # {{{1
     # """
     # Exit with note if an app is not installed.
     # @note Updated 2020-04-21.
@@ -998,7 +998,7 @@ _koopa_exit_if_not_installed() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_python_package_not_installed() {  # {{{1
+_koopa_exit_if_python_package_not_installed() { # {{{1
     # """
     # Exit with note if a Python package is not installed.
     # @note Updated 2020-04-21.
@@ -1014,7 +1014,7 @@ _koopa_exit_if_python_package_not_installed() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_r_package_installed() {  # {{{1
+_koopa_exit_if_r_package_installed() { # {{{1
     # """
     # Exit with note if a R package is installed.
     # @note Updated 2020-04-21.
@@ -1030,7 +1030,7 @@ _koopa_exit_if_r_package_installed() {  # {{{1
     return 0
 }
 
-_koopa_exit_if_r_package_not_installed() {  # {{{1
+_koopa_exit_if_r_package_not_installed() { # {{{1
     # """
     # Exit with note if a R package is not installed.
     # @note Updated 2020-04-21.
@@ -1046,7 +1046,7 @@ _koopa_exit_if_r_package_not_installed() {  # {{{1
     return 0
 }
 
-_koopa_run_if_installed() {  # {{{1
+_koopa_run_if_installed() { # {{{1
     # """
     # Run program(s) if installed.
     # @note Updated 2020-02-06.
@@ -1066,7 +1066,7 @@ _koopa_run_if_installed() {  # {{{1
     return 0
 }
 
-_koopa_warn_if_export() {  # {{{1
+_koopa_warn_if_export() { # {{{1
     # """
     # Warn if variable is exported in current shell session.
     # @note Updated 2020-02-20.
