@@ -166,4 +166,3 @@ _koopa_activate_zsh_prompt() { # {{{1
     [[ "${KOOPA_TEST:-}" -eq 1 ]] && set -u
     return 0
 }
-
