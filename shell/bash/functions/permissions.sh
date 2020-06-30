@@ -103,4 +103,3 @@ _koopa_set_permissions() { # {{{1
     done
     return 0
 }
-

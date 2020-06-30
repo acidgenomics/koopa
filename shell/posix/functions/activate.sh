@@ -4,8 +4,9 @@
 _koopa_activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     local file
     file="${HOME}/.aliases"
     [ -f "$file" ] || return 0
@@ -17,9 +18,10 @@ _koopa_activate_aliases() { # {{{1
 _koopa_activate_aspera() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
-    # @note Updated 2020-05-01.
+    # @note Updated 2020-06-30.
     # """
     _koopa_activate_prefix "$(_koopa_aspera_prefix)/latest"
+    return 0
 }
 
 _koopa_activate_autojump() { # {{{1

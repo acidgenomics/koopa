@@ -34,8 +34,9 @@ _koopa_paste0() { # {{{1
 _koopa_to_string() { # {{{1
     # """
     # Paste arguments to a comma separated string.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     # """
     [[ "$#" -gt 0 ]] || return 1
     _koopa_paste0 ", " "$@"
+    return 0
 }
