@@ -44,7 +44,7 @@ _koopa_assert_has_file_ext() { # {{{1
     # Assert that input contains a file extension.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
+    [ "$#" -gt 0 ] || return 1
     for arg in "$@"
     do
         if ! _koopa_has_file_ext "$arg"
@@ -120,7 +120,7 @@ _koopa_assert_has_no_args() { # {{{1
     # Assert that the user has not passed any arguments to a script.
     # @note Updated 2019-10-23.
     # """
-    if [ "$#" -ne 0 ]
+    if [ "$#" -gt 0 ]
     then
         _koopa_stop "\
 Invalid argument: '${1}'.
@@ -190,7 +190,7 @@ _koopa_assert_is_cellar() { # {{{1
     # Assert that input is a cellarized program.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
+    [ "$#" -gt 0 ] || return 1
     for arg in "$@"
     do
         if ! _koopa_is_cellar "$arg"
@@ -218,8 +218,8 @@ _koopa_assert_is_current_version() { # {{{1
     # Assert that programs are installed and current.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
         then
@@ -248,8 +248,8 @@ _koopa_assert_is_dir() { # {{{1
     # Assert that input is a directory.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -d "$arg" ]
         then
@@ -264,8 +264,8 @@ _koopa_assert_is_executable() { # {{{1
     # Assert that input is executable.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -x "$arg" ]
         then
@@ -282,8 +282,8 @@ _koopa_assert_is_existing() { # {{{1
     #
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -e "$arg" ]
         then
@@ -310,8 +310,8 @@ _koopa_assert_is_file() { # {{{1
     # Assert that input is a file.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -f "$arg" ]
         then
@@ -341,8 +341,8 @@ _koopa_assert_is_function() { # {{{1
     # Assert that variable is a function.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_function "$arg"
         then
@@ -357,8 +357,8 @@ _koopa_assert_is_git_toplevel() { # {{{1
     # Assert that current directory is a git repo.
     # @note Updated 2020-04-29.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         arg="$(realpath "$arg")"
         if ! _koopa_is_git_toplevel "$arg"
@@ -398,8 +398,8 @@ _koopa_assert_is_installed() { # {{{1
     # Assert that programs are installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
         then
@@ -450,8 +450,8 @@ _koopa_assert_is_non_existing() { # {{{1
     # Assert that input does not exist on disk.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -e "$arg" ]
         then
@@ -466,8 +466,8 @@ _koopa_assert_is_nonzero_file() { # {{{1
     # Assert that input is a non-zero file.
     # @note Updated 2020-03-06.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -s "$arg" ]
         then
@@ -482,8 +482,8 @@ _koopa_assert_is_not_dir() { # {{{1
     # Assert that input is not a directory.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -d "$arg" ]
         then
@@ -498,8 +498,8 @@ _koopa_assert_is_not_file() { # {{{1
     # Assert that input is not a file.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -f "$arg" ]
         then
@@ -514,8 +514,8 @@ _koopa_assert_is_not_installed() { # {{{1
     # Assert that programs are not installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if _koopa_is_installed "$arg"
         then
@@ -590,8 +590,8 @@ _koopa_assert_is_not_symlink() { # {{{1
     # Assert that input is not a symbolic link.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -L "$arg" ]
         then
@@ -606,8 +606,8 @@ _koopa_assert_is_python_package_installed() { # {{{1
     # Assert that specific Python packages are installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_python_package_installed "${arg}"
         then
@@ -622,8 +622,8 @@ _koopa_assert_is_r_package_installed() { # {{{1
     # Assert that specific R packages are installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_r_package_installed "${arg}"
         then
@@ -638,8 +638,8 @@ _koopa_assert_is_readable() { # {{{1
     # Assert that input is readable.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -r "$arg" ]
         then
@@ -675,8 +675,8 @@ _koopa_assert_is_set() {
     # Example:
     # _koopa_assert_is_set PATH MANPATH xxx
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_set "$arg"
         then
@@ -691,8 +691,8 @@ _koopa_assert_is_symlink() { # {{{1
     # Assert that input is a symbolic link.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -L "$arg" ]
         then
@@ -720,8 +720,8 @@ _koopa_assert_is_writable() { # {{{1
     # Assert that input is writable.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -r "$arg" ]
         then
