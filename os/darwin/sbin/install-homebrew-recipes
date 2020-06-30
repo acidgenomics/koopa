@@ -65,6 +65,10 @@ casks=(
     xquartz
     # Alphabetical {{{2
     # --------------------------------------------------------------------------
+    # fiji  # latest
+    # onyx
+    # oracle-jdk
+    # wine-stable
     1password
     adobe-acrobat-reader
     adoptopenjdk  # igv
@@ -83,7 +87,6 @@ casks=(
     deluge
     docker
     emacs
-    # fiji  # latest
     firefox
     github
     google-chrome
@@ -105,8 +108,6 @@ casks=(
     museeks
     netnewswire
     omnidisksweeper
-    # onyx
-    # oracle-jdk
     osxfuse
     pacifist
     photosweeper-x
@@ -129,7 +130,6 @@ casks=(
     tunnelblick
     visual-studio-code
     vlc
-    # wine-stable
     xld
     zoomus
 )
