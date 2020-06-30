@@ -3,14 +3,18 @@
 _koopa_array_to_r_vector() {  # {{{1
     # """
     # Convert a bash array to an R vector string.
-    # @note Updated 2019-09-25.
+    # @note Updated 2020-06-29.
     #
     # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     local x
     x="$(printf '"%s", ' "$@")"
     x="$(_koopa_strip_right "$x" ", ")"
-    printf "c(%s)\n" "$x"
+    x="$(printf "c(%s)\n" "$x")"
+    [[ -n "$x" ]] || return 1
+    _koopa_print "$x"
+    return 0
 }
 
 _koopa_link_r_etc() {  # {{{1
@@ -27,20 +31,16 @@ _koopa_link_r_etc() {  # {{{1
         _koopa_warning "Failed to locate R prefix."
         return 1
     fi
-
     local r_exe
     r_exe="${r_prefix}/bin/R"
-
     local version
     version="$(_koopa_r_version "$r_exe")"
     if [[ "$version" != "devel" ]]
     then
         version="$(_koopa_major_minor_version "$version")"
     fi
-
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
-
     # Locate the source etc directory in koopa.
     local os_id r_etc_source
     if _koopa_is_linux && _koopa_is_cellar "$r_prefix"
@@ -55,7 +55,6 @@ _koopa_link_r_etc() {  # {{{1
         _koopa_warning "Missing R etc source: '${r_etc_source}'."
         return 1
     fi
-
     local r_etc_target
     if _koopa_is_linux && \
         ! _koopa_is_cellar "$r_exe" && \
@@ -66,7 +65,6 @@ _koopa_link_r_etc() {  # {{{1
     else
         r_etc_target="${r_prefix}/etc"
     fi
-
     local files
     files=(
         Makevars.site  # macOS
@@ -80,7 +78,6 @@ _koopa_link_r_etc() {  # {{{1
         [ -f "${r_etc_source}/${file}" ] || continue
         _koopa_ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
     done
-
     return 0
 }
 
@@ -92,30 +89,23 @@ _koopa_link_r_site_library() {  # {{{1
     local r_prefix
     r_prefix="${1:-$(_koopa_r_prefix)}"
     [[ -d "$r_prefix" ]] || return 1
-
     local r_exe
     r_exe="${r_prefix}/bin/R"
     [[ -x "$r_exe" ]] || return 1
-
     local version
     version="$(_koopa_r_version "$r_exe")"
     if [[ "$version" != 'devel' ]]
     then
         version="$(_koopa_major_minor_version "$version")"
     fi
-
     local app_prefix
     app_prefix="$(_koopa_app_prefix)"
-
     local lib_source
     lib_source="${app_prefix}/r/${version}/site-library"
-
     local lib_target
     lib_target="${r_prefix}/site-library"
-
     _koopa_mkdir "$lib_source"
     _koopa_ln "$lib_source" "$lib_target"
-
     return 0
 }
 
@@ -145,7 +135,6 @@ _koopa_r_javareconf() {  # {{{1
     # """
     local java_home r_exe
     r_exe="R"
-
     while (("$#"))
     do
         case "$1" in
@@ -170,10 +159,8 @@ _koopa_r_javareconf() {  # {{{1
                 ;;
         esac
     done
-
     _koopa_is_installed "$r_exe" || return 0
     r_exe="$(_koopa_which "$r_exe")"
-
     # Detect Java home automatically, if necessary.
     if [[ -z "${java_home:-}" ]]
     then
@@ -182,11 +169,9 @@ _koopa_r_javareconf() {  # {{{1
         _koopa_is_installed java || return 0
     fi
     [[ -d "$java_home" ]] || return 1
-
     _koopa_h2 "Updating R Java configuration."
     _koopa_dl "R" "$r_exe"
     _koopa_dl "Java home" "$java_home"
-
     local java_flags
     java_flags=(
         "JAVA_HOME=${java_home}"
@@ -195,14 +180,12 @@ _koopa_r_javareconf() {  # {{{1
         "JAVAH=${java_home}/bin/javah"
         "JAR=${java_home}/bin/jar"
     )
-
     if _koopa_is_cellar "$r_exe"
     then
         "$r_exe" --vanilla CMD javareconf "${java_flags[@]}"
     else
         sudo "$r_exe" --vanilla CMD javareconf "${java_flags[@]}"
     fi
-
     return 0
 }
 

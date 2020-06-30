@@ -3,8 +3,9 @@
 _koopa_remove_broken_symlinks() {  # {{{1
     # """
     # Remove broken symlinks.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-06-29.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     local file files
     readarray -t files <<< "$(_koopa_find_broken_symlinks "$@")"
     _koopa_is_array_non_empty "${files[@]}" || return 0
@@ -22,8 +23,9 @@ _koopa_remove_broken_symlinks() {  # {{{1
 _koopa_remove_empty_dirs() {  # {{{1
     # """
     # Remove empty directories.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-06-29.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     local dirs
     readarray -t dirs <<< "$(_koopa_find_empty_dirs "$@")"
     _koopa_is_array_non_empty "${dirs[@]}" || return 0
