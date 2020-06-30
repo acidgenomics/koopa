@@ -441,7 +441,6 @@ _koopa_is_git_toplevel() {  # {{{1
     [ -e "${dir}/.git" ]
 }
 
-
 _koopa_is_github_ssh_enabled() {  # {{{1
     # """
     # Is SSH key enabled for GitHub access?
@@ -461,9 +460,13 @@ _koopa_is_gitlab_ssh_enabled() {  # {{{1
 _koopa_is_installed() {  # {{{1
     # """
     # Is the requested program name installed?
-    # @note Updated 2019-10-02.
+    # @note Updated 2020-06-30.
     # """
-    command -v "$1" >/dev/null
+    for cmd
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
+    return 0
 }
 
 _koopa_is_interactive() {  # {{{1
