@@ -25,6 +25,7 @@ _koopa_assert_is_installed docker
 docker_dir="$(_koopa_docker_prefix)"
 _koopa_assert_is_dir "$docker_dir"
 
+delete=0
 push=1
 server="docker.io"
 tag="latest"
@@ -33,8 +34,20 @@ pos=()
 while (("$#"))
 do
     case "$1" in
+        --delete)
+            delete=1
+            shift 1
+            ;;
+        --no-delete)
+            delete=0
+            shift 1
+            ;;
         --no-push)
             push=0
+            shift 1
+            ;;
+        --push)
+            push=1
             shift 1
             ;;
         --server=*)
@@ -86,14 +99,21 @@ fi
 
 source_image="${docker_dir}/${image}/${tag}"
 _koopa_assert_is_dir "$source_image"
+
+today="$(date "+%Y%m%d")"
+
 if [[ -L "$source_image" ]]
 then
-    _koopa_stop "Symlink at '${source_image}'. Use directory instead."
+    symlink_tag="$(basename "$source_image")"
+    symlink_tagged_image="${image}:${symlink_tag}"
+    symlink_tagged_image_today="${symlink_tagged_image}-${today}"
+    # Now resolve the symlink to real path.
+    source_image="$(_koopa_realpath "$source_image")"
+    tag="$(basename "$source_image")"
 fi
 
 # e.g. acidgenomics/debian:latest
 tagged_image="${image}:${tag}"
-today=$(date "+%Y%m%d")
 # e.g. acidgenomics/debian:latest-20200101
 tagged_image_today="${tagged_image}-${today}"
 
@@ -102,14 +122,17 @@ _koopa_h1 "Building '${tagged_image}' Docker image."
 docker login "$server"
 
 # Force remove any existing local tagged images.
-readarray -t image_ids <<< "$( \
-    docker image ls \
-        --filter reference="$tagged_image" \
-        --quiet \
-)"
-if _koopa_is_array_non_empty "${image_ids[@]}"
+if [[ "$delete" -eq 1 ]]
 then
-    docker image rm --force "${image_ids[@]}"
+    readarray -t image_ids <<< "$( \
+        docker image ls \
+            --filter reference="$tagged_image" \
+            --quiet \
+    )"
+    if _koopa_is_array_non_empty "${image_ids[@]}"
+    then
+        docker image rm --force "${image_ids[@]}"
+    fi
 fi
 
 # Build a local copy of the image.
@@ -120,11 +143,20 @@ docker build \
     "$source_image"
 
 docker tag "$tagged_image_today" "$tagged_image"
+if [[ -n "${symlink_tag:-}" ]]
+then
+    docker tag "$symlink_tagged_image_today" "$symlink_tagged_image"
+fi
 
 if [[ "$push" -eq 1 ]]
 then
     docker push "${server}/${tagged_image_today}"
     docker push "${server}/${tagged_image}"
+    if [[ -n "${symlink_tag:-}" ]]
+    then
+        docker push "${server}/${symlink_tagged_image_today}"
+        docker push "${server}/${symlink_tagged_image}"
+    fi
 fi
 
 docker image ls \
