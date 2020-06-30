@@ -130,3 +130,5 @@ if [[ "$activate" -eq 0 ]]
 then
     unalias -a
 fi
+
+unset -v activate checks verbose shopts
