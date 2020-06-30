@@ -276,7 +276,7 @@ _koopa_aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
     #
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -309,4 +309,5 @@ _koopa_aws_s3_sync() { # {{{1
         --exclude="._*" \
         --exclude=".git/*" \
         "$@"
+    return 0
 }

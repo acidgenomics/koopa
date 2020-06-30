@@ -90,4 +90,3 @@ _koopa_conda_remove_env() { # {{{1
     done
     return 0
 }
-
