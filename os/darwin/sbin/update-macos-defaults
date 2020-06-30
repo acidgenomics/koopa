@@ -78,10 +78,10 @@ defaults write -globalDomain "AppleInterfaceStyle" -string "Dark"
 # | Blue     |    1 | NA | NA                                    |
 # | Graphite |    6 | -1 | "0.847059 0.847059 0.862745 Graphite" |
 #
-# Here we're setting accent and highlight color to Graphite by default.
-defaults write -globalDomain "AppleAquaColorVariant" -int 6
-defaults write -globalDomain "AccentColor" -int -1
-defaults write -globalDomain "AppleHighlightColor" -string "0.847059 0.847059 0.862745 Graphite"
+# Here we're setting accent and highlight color to Orange by default.
+defaults write -globalDomain "AppleAquaColorVariant" -int 1
+defaults write -globalDomain "AccentColor" -int 1
+defaults write -globalDomain "AppleHighlightColor" -string "1.000000 0.874510 0.701961 Orange"
 
 # Set sidebar icon size to medium.
 defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
