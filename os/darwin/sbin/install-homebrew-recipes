@@ -292,7 +292,7 @@ do
         continue
     fi
     brew install "$brew"
-    brew link "$brew" &>/dev/null
+    brew link "$brew" &>/dev/null || true
 done
 
 # Cellar (keg)-only brews {{{2
@@ -309,7 +309,7 @@ do
     else
         brew install "$brew"
     fi
-    brew unlink "$brew" >/dev/null
+    brew unlink "$brew" >/dev/null || true
 done
 
 # Externally tapped brews {{{2
@@ -320,7 +320,7 @@ done
 
 brew tap mongodb/brew
 brew tap vitorgalvao/tiny-scripts
-brew untap osgeo/osgeo4mac 2>/dev/null
+brew untap osgeo/osgeo4mac 2>/dev/null || true
 external_brews=(
     # osgeo/osgeo4mac/osgeo-gdal
     # osgeo/osgeo4mac/osgeo-proj
@@ -336,7 +336,7 @@ do
     else
         brew install "$brew"
     fi
-    brew link "$brew" &>/dev/null
+    brew link "$brew" &>/dev/null || true
 done
 
 _koopa_install_success "$name_fancy"
