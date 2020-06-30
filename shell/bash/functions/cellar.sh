@@ -3,8 +3,9 @@
 _koopa_find_cellar_version() {  # {{{1
     # """
     # Find cellar installation directory.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-06-29.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     local name
     name="${1:?}"
     local prefix
@@ -29,8 +30,9 @@ _koopa_find_cellar_version() {  # {{{1
 _koopa_install_cellar() {  # {{{1
     # """
     # Install cellar program.
-    # @note Updated 2020-06-28.
+    # @note Updated 2020-06-29.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     _koopa_assert_is_linux
     _koopa_assert_has_no_envs
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
@@ -105,7 +107,7 @@ _koopa_install_cellar() {  # {{{1
                 ;;
         esac
     done
-    _koopa_assert_has_no_args "$@"
+    [[ "$#" -eq 0 ]] || return 1
     [[ -z "$name_fancy" ]] && name_fancy="$name"
     [[ -z "$script_name" ]] && script_name="$name"
     [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
