@@ -169,6 +169,15 @@ _koopa_dotfiles_private_prefix() {  # {{{1
     _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
 }
 
+_koopa_emacs_prefix() {  # {{{1
+    # """
+    # Default Emacs prefix.
+    # @note Updated 2020-06-29.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_print "${HOME}/.emacs.d"
+}
+
 _koopa_ensembl_perl_api_prefix() {  # {{{1
     # """
     # Ensembl Perl API prefix.

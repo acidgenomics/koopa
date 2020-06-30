@@ -505,13 +505,12 @@ if (!isTRUE(docker)) {
         name = "PROJ",
         whichName = "proj",
         current = currentVersion("proj"),
-        ## > expected = expectedVersion("proj")
-        expected = ifelse(
-            test = isTRUE(macos),
-            yes = "6.3.2",
-            no = expectedVersion("gdal")
-        )
-
+        expected = expectedVersion("proj")
+        ## > expected = ifelse(
+        ## >     test = isTRUE(macos),
+        ## >     yes = "6.3.2",
+        ## >     no = expectedVersion("proj")
+        ## > )
     )
     checkVersion(
         name = "GDAL",

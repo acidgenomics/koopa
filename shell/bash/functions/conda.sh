@@ -1,19 +1,15 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
-_koopa_conda_create_env() {
+_koopa_conda_create_env() { # {{{1
     # """
     # Create a conda environment.
-    # @note Updated 2020-03-05.
+    # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_args "$@"
-
-    local force
+    [[ "$#" -gt 0 ]] || return 1
+    local flags force env_name name pos prefix version
     force=0
-    local version
     version=
-
-    local pos
     pos=()
     while (("$#"))
     do
@@ -44,53 +40,54 @@ _koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-    local name
-    name="$1"
-
-    local env_name
+    name="${1:?}"
     if [[ -n "${version:-}" ]]
     then
         env_name="${name}@${version}"
     else
         env_name="$name"
     fi
-
-    local prefix
     prefix="$(_koopa_conda_prefix)/envs/${env_name}"
-
     if [[ "$force" -eq 1 ]]
     then
         conda remove --name "$env_name" --all
     fi
-
     if [[ -d "$prefix" ]]
     then
         _koopa_note "'${env_name}' is installed."
         return 0
     fi
-
     _koopa_info "Creating '${env_name}' conda environment."
-
     _koopa_activate_conda
     _koopa_assert_is_installed conda
-
-    local flags
     flags=(
         "--name=${env_name}"
         "--quiet"
         "--yes"
     )
-
     if [[ -n "${version:-}" ]]
     then
         flags+=("${name}=${version}")
     else
         flags+=("$name")
     fi
-
     conda create "${flags[@]}"
-
     _koopa_set_permissions --recursive "$prefix"
     return 0
 }
+
+_koopa_conda_remove_env() { # {{{1
+    # """
+    # Remove conda environment.
+    # @note Updated 2020-06-29.
+    # """
+    [[ "$#" -gt 0 ]] || return 1
+    _koopa_activate_conda
+    _koopa_assert_is_installed conda
+    for arg
+    do
+        conda remove --yes --name="$arg" --all
+    done
+    return 0
+}
+
