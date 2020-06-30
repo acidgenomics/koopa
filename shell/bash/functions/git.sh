@@ -5,8 +5,8 @@ _koopa_git_submodule_init() {
     # Initialize git submodules.
     # @note Updated 2020-06-20.
     # """
-    _koopa_h2 "Initializing submodules in '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
+    _koopa_h2 "Initializing submodules in '${PWD:?}'."
     _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_nonzero_file ".gitmodules"
     _koopa_assert_is_installed git
@@ -88,8 +88,8 @@ _koopa_git_reset() {  # {{{1
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
-    _koopa_h2 "Resetting git repo at '${PWD:?}'."
     [[ "$#" -eq 0 ]] || return 1
+    _koopa_h2 "Resetting git repo at '${PWD:?}'."
     _koopa_assert_is_git_toplevel "$PWD"
     _koopa_assert_is_installed git
     git clean -dffx

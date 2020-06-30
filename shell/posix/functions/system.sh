@@ -618,9 +618,9 @@ _koopa_host_id() {  # {{{1
 _koopa_list() { # {{{1
     # """
     # List exported koopa scripts.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_no_args "$@"
+    [ "$#" -eq 0 ] || return 1
     _koopa_assert_is_installed Rscript
     Rscript --vanilla "$(_koopa_include_prefix)/list.R"
     return 0
@@ -1230,16 +1230,15 @@ _koopa_user() {  # {{{1
 _koopa_variable() {  # {{{1
     # """
     # Get version stored internally in versions.txt file.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-29.
+    #
+    # This approach handles inline comments.
     # """
-    _koopa_assert_has_args "$@"
-    local file
+    [ "$#" -gt 0 ] || return 1
+    local file key value
+    key="${1:?}"
     file="$(_koopa_include_prefix)/variables.txt"
     _koopa_assert_is_file "$file"
-    local key
-    key="${1:?}"
-    local value
-    # Note that this approach handles inline comments.
     value="$( \
         grep -Eo "^${key}=\"[^\"]+\"" "$file" \
         || _koopa_stop "'${key}' not defined in '${file}'." \
@@ -1247,8 +1246,9 @@ _koopa_variable() {  # {{{1
     value="$( \
         _koopa_print "$value" \
             | head -n 1 \
-            | cut -d "\"" -f 2
+            | cut -d "\"" -f 2 \
     )"
+    [ -n "$value" ] || return 1
     _koopa_print "$value"
     return 0
 }
@@ -1258,7 +1258,7 @@ _koopa_variables() { # {{{1
     # Edit koopa variables.
     # @note Updated 2020-06-24.
     # """
-    _koopa_assert_has_no_args "$@"
+    [ "$#" -eq 0 ] || return 1
     _koopa_assert_is_installed vim
     vim "$(_koopa_include_prefix)/variables.txt"
     return 0
@@ -1269,10 +1269,9 @@ _koopa_view_latest_tmp_log_file() {  # {{{1
     # View the latest temporary log file.
     # @note Updated 2020-06-24.
     # """
-    _koopa_assert_has_no_args "$@"
-    local dir
+    [ "$#" -eq 0 ] || return 1
+    local dir log_file
     dir="${TMPDIR:-/tmp}"
-    local log_file
     log_file="$( \
         find "$dir" \
             -mindepth 1 \

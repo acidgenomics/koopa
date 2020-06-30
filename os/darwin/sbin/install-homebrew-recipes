@@ -3,8 +3,11 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${script_dir}/../include/header.sh"
+_koopa_assert_has_no_args "$@"
 
 # """
+# Check taps with `brew tap`.
+#
 # Potentially useful binaries:
 # https://github.com/mathiasbynens/dotfiles/blob/main/brew.sh
 #
@@ -32,14 +35,8 @@ checks=0 source "${script_dir}/../include/header.sh"
 # """
 
 name_fancy="Homebrew recipes"
-
 _koopa_install_start "$name_fancy"
-
-_koopa_assert_has_no_args "$@"
 _koopa_assert_is_installed brew
-
-log_file="$(_koopa_tmp_log_file)"
-
 export HOMEBREW_FORCE_BOTTLE=1
 
 # Casks {{{1
@@ -62,11 +59,16 @@ export HOMEBREW_FORCE_BOTTLE=1
 
 _koopa_h2 "Installing casks."
 installed_casks="$(brew cask list)"
-
 casks=(
-    # Priority
+    # Priority {{{2
+    # --------------------------------------------------------------------------
     xquartz
-    # Alphabetical
+    # Alphabetical {{{2
+    # --------------------------------------------------------------------------
+    # fiji  # latest
+    # onyx
+    # oracle-jdk
+    # wine-stable
     1password
     adobe-acrobat-reader
     adoptopenjdk  # igv
@@ -85,7 +87,6 @@ casks=(
     deluge
     docker
     emacs
-    # fiji  # latest
     firefox
     github
     google-chrome
@@ -107,8 +108,6 @@ casks=(
     museeks
     netnewswire
     omnidisksweeper
-    # onyx
-    # oracle-jdk
     osxfuse
     pacifist
     photosweeper-x
@@ -131,23 +130,19 @@ casks=(
     tunnelblick
     visual-studio-code
     vlc
-    # wine-stable
     xld
     zoomus
 )
-
-(
-    for cask in "${casks[@]}"
-    do
-        name="$(basename "$cask")"
-        if _koopa_print "$installed_casks" | grep -Eq "^${name}$"
-        then
-            _koopa_note "'${cask}' is already installed."
-            continue
-        fi
-        brew cask install --force --no-quarantine "$cask"
-    done
-) 2>&1 | tee -a "$log_file"
+for cask in "${casks[@]}"
+do
+    name="$(basename "$cask")"
+    if _koopa_print "$installed_casks" | grep -Eq "^${name}$"
+    then
+        _koopa_note "'${cask}' is already installed."
+        continue
+    fi
+    brew cask install --force --no-quarantine "$cask"
+done
 
 # Brews {{{1
 # ==============================================================================
@@ -166,7 +161,8 @@ installed_brews="$(brew list)"
 # ------------------------------------------------------------------------------
 
 brews=(
-    # Priority.
+    # Priority {{{3
+    # --------------------------------------------------------------------------
     bash
     fish
     ksh
@@ -176,7 +172,11 @@ brews=(
     tcl-tk
     flac
     lame
-    # Alphabetical.
+    # Alphabetical {{{3
+    # --------------------------------------------------------------------------
+    # moreutils  # conflicts with parallel and ts
+    # pyenv
+    # rbenv (or use rvm?)
     autoconf
     autojump
     automake
@@ -199,6 +199,7 @@ brews=(
     fzf
     gawk
     gcc
+    gdal
     git
     git-lfs
     gnu-sed
@@ -222,11 +223,13 @@ brews=(
     leiningen
     lesspipe
     libav
+    libgeotiff  # gdal/proj
     libgit2
     libiconv
     libomp
     libressl
     librsvg
+    libspatialite  # gdal/proj
     libssh2
     libtool
     libxml2
@@ -238,9 +241,9 @@ brews=(
     man-db
     mariadb-connector-c
     mas
-    # moreutils  # conflicts with parallel and ts
     neofetch
     neovim
+    netcdf  # gdal/proj
     nmap
     node
     open-mpi
@@ -254,13 +257,12 @@ brews=(
     php
     pkg-config
     podofo
+    proj
     protobuf
-    # pyenv
-    # rbenv (or use rvm?)
     rename
-    ruby
     rsync
-    ruby-build
+    ruby
+    # ruby-build
     screen
     shellcheck
     shellharden
@@ -282,43 +284,33 @@ brews=(
     youtube-dl
     zlib
 )
-
-(
-    for brew in "${brews[@]}"
-    do
-        if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
-        then
-            _koopa_note "'${brew}' is already installed."
-            continue
-        fi
-        brew install "$brew"
-    done
-) 2>&1 | tee -a "$log_file"
+for brew in "${brews[@]}"
+do
+    if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
+    then
+        _koopa_note "'${brew}' is already installed."
+        continue
+    fi
+    brew install "$brew"
+    brew link "$brew" &>/dev/null || true
+done
 
 # Cellar (keg)-only brews {{{2
 # ------------------------------------------------------------------------------
 
 keg_only_brews=(
-    gdal
-    libgeotiff
-    libspatialite
-    netcdf
-    proj
     python
 )
-
-(
-    for brew in "${keg_only_brews[@]}"
-    do
-        if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
-        then
-            _koopa_note "'${brew}' is already installed."
-        else
-            brew install "$brew"
-        fi
-        brew unlink "$brew" > /dev/null
-    done
-) 2>&1 | tee -a "$log_file"
+for brew in "${keg_only_brews[@]}"
+do
+    if _koopa_print "$installed_brews" | grep -Eq "^${brew}$"
+    then
+        _koopa_note "'${brew}' is already installed."
+    else
+        brew install "$brew"
+    fi
+    brew unlink "$brew" >/dev/null || true
+done
 
 # Externally tapped brews {{{2
 # ------------------------------------------------------------------------------
@@ -326,29 +318,25 @@ keg_only_brews=(
 # Brews from 'osgeo/osgeo4mac' tap are newer but can break R compilation.
 # This is needed currently to install R rgdal, sf packages from source.
 
-# > brew tap mongodb/brew
-# > brew tap osgeo/osgeo4mac
-# > brew tap vitorgalvao/tiny-scripts
-
+brew tap mongodb/brew
+brew tap vitorgalvao/tiny-scripts
+brew untap osgeo/osgeo4mac 2>/dev/null || true
 external_brews=(
+    # osgeo/osgeo4mac/osgeo-gdal
+    # osgeo/osgeo4mac/osgeo-proj
     mongodb/brew/mongodb-community
-    osgeo/osgeo4mac/osgeo-gdal
-    osgeo/osgeo4mac/osgeo-proj
     vitorgalvao/tiny-scripts/cask-repair
 )
-
-(
-    for brew in "${external_brews[@]}"
-    do
-        name="$(basename "$brew")"
-        if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
-        then
-            _koopa_note "'${brew}' is already installed."
-        else
-            brew install "$brew"
-        fi
-        brew link "$brew" &> /dev/null
-    done
-) 2>&1 | tee -a "$log_file"
+for brew in "${external_brews[@]}"
+do
+    name="$(basename "$brew")"
+    if _koopa_print "$installed_brews" | grep -Eq "^${name}$"
+    then
+        _koopa_note "'${brew}' is already installed."
+    else
+        brew install "$brew"
+    fi
+    brew link "$brew" &>/dev/null || true
+done
 
 _koopa_install_success "$name_fancy"
