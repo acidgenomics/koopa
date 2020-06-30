@@ -3,13 +3,13 @@
 _koopa_add_local_bins_to_path() {  # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-06-29.
     #
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read '-a' flag doesn't work on macOS.
     # """
-    local dir
-    local dirs
+    [[ "$#" -eq 0 ]] || return 1
+    local dir dirs
     _koopa_add_to_path_start "$(_koopa_make_prefix)/bin"
     IFS=$'\n' read -r -d '' dirs <<< "$(_koopa_find_local_bin_dirs)"
     unset IFS
@@ -23,11 +23,12 @@ _koopa_add_local_bins_to_path() {  # {{{1
 _koopa_info_box() {  # {{{1
     # """
     # Info box.
-    # @note Updated 2019-10-14.
+    # @note Updated 2020-06-29.
     #
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     local array
     array=("$@")
     local barpad
@@ -44,26 +45,29 @@ _koopa_info_box() {  # {{{1
 _koopa_script_name() {  # {{{1
     # """
     # Get the calling script name.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-29.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
-    local file
+    [[ "$#" -eq 0 ]] || return 1
+    local file x
     file="$( \
         caller \
         | head -n 1 \
         | cut -d ' ' -f 2 \
     )"
-    basename "$file"
+    x="$(_koopa_basename "$file")"
+    [[ -n "$x" ]] || return 0
+    _koopa_print "$x"
     return 0
 }
 
 _koopa_system_info() { # {{{
     # """
     # System information.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_no_args "$@"
+    [[ "$#" -eq 0 ]] || return 1
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
     local array
@@ -149,12 +153,12 @@ _koopa_system_info() { # {{{
 _koopa_update() { # {{{1
     # """
     # Update koopa installation.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-29.
     # """
-    local koopa_prefix
-    # e.g. /usr/local/koopa
+    local app_prefix config_prefix configure_flags core dotfiles \
+        dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
+        system user
     koopa_prefix="$(_koopa_prefix)"
-
     # Note that stable releases are not git, and can't be updated.
     if ! _koopa_is_git_toplevel "$koopa_prefix"
     then
@@ -165,30 +169,15 @@ _koopa_update() { # {{{1
         _koopa_note "Then run the default install command at '${url}'."
         exit 1
     fi
-
-    local config_prefix
-    # e.g. ~/.config/koopa
     config_prefix="$(_koopa_config_prefix)"
-    local app_prefix
-    # e.g. /usr/local/opt
     app_prefix="$(_koopa_app_prefix)"
-    local make_prefix
-    # e.g. /usr/local
     make_prefix="$(_koopa_make_prefix)"
-
-    local core
     core=1
-    local dotfiles
     dotfiles=1
-    local fast
     fast=0
-    local source_ip
     source_ip=
-    local system
     system=0
-    local user
     user=0
-
     while (("$#"))
     do
         case "$1" in
@@ -217,7 +206,6 @@ _koopa_update() { # {{{1
                 ;;
         esac
     done
-
     if [[ -n "$source_ip" ]]
     then
         rsync=1
@@ -238,10 +226,8 @@ _koopa_update() { # {{{1
     then
         user=1
     fi
-
     _koopa_h1 "Updating koopa at '${koopa_prefix}'."
     _koopa_set_permissions --recursive "$koopa_prefix"
-
     if [[ "$rsync" -eq 0 ]]
     then
         # Update koopa.
@@ -253,7 +239,6 @@ _koopa_update() { # {{{1
         if [[ "$dotfiles" -eq 1 ]]
         then
             (
-                local dotfiles_prefix
                 dotfiles_prefix="$(_koopa_dotfiles_prefix)"
                 cd "$dotfiles_prefix" || exit 1
                 _koopa_git_reset
@@ -262,9 +247,7 @@ _koopa_update() { # {{{1
         fi
         _koopa_set_permissions --recursive "$koopa_prefix"
     fi
-
     _koopa_update_xdg_config
-
     if [[ "$system" -eq 1 ]]
     then
         _koopa_h2 "Updating system configuration."
@@ -312,7 +295,6 @@ _koopa_update() { # {{{1
         fi
         _koopa_fix_zsh_permissions
     fi
-
     if [[ "$user" -eq 1 ]]
     then
         _koopa_h2 "Updating user configuration."
@@ -340,10 +322,8 @@ _koopa_update() { # {{{1
         _koopa_install_dotfiles_private
         _koopa_update_spacemacs
     fi
-
     _koopa_success "koopa update was successful."
     _koopa_restart
     [[ "$system" -eq 1 ]] && koopa check-system
-
     return 0
 }
