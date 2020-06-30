@@ -416,23 +416,19 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_FORCE_BREWED_CURL=1
     fi
-    # > _koopa_activate_homebrew_gnu_prefix "binutils"
-    # > _koopa_activate_homebrew_gnu_prefix "gnu-time"
-    # > _koopa_activate_homebrew_gnu_prefix "gnu-which"
-    _koopa_activate_homebrew_gnu_prefix "coreutils"
-    _koopa_activate_homebrew_gnu_prefix "findutils"
-    _koopa_activate_homebrew_gnu_prefix "gnu-sed"
-    _koopa_activate_homebrew_gnu_prefix "gnu-tar"
-    _koopa_activate_homebrew_gnu_prefix "gnu-units"
-    _koopa_activate_homebrew_gnu_prefix "grep"
-    _koopa_activate_homebrew_gnu_prefix "make"
-    _koopa_activate_homebrew_prefix "curl"
-    _koopa_activate_homebrew_prefix "ruby"
-    _koopa_activate_homebrew_prefix "sqlite"
-    _koopa_activate_homebrew_prefix "texinfo"
-    _koopa_activate_homebrew_libexec_prefix "man-db"
-    # > _koopa_activate_homebrew_python
+    _koopa_activate_homebrew_gnu_prefix coreutils
+    _koopa_activate_homebrew_gnu_prefix findutils
+    _koopa_activate_homebrew_gnu_prefix gnu-sed
+    _koopa_activate_homebrew_gnu_prefix gnu-tar
+    _koopa_activate_homebrew_gnu_prefix gnu-units
+    _koopa_activate_homebrew_gnu_prefix grep
+    _koopa_activate_homebrew_gnu_prefix make
     _koopa_activate_homebrew_google_cloud_sdk
+    _koopa_activate_homebrew_libexec_prefix man-db
+    _koopa_activate_homebrew_prefix curl
+    _koopa_activate_homebrew_prefix ruby
+    _koopa_activate_homebrew_prefix sqlite
+    _koopa_activate_homebrew_prefix texinfo
     _koopa_activate_homebrew_ruby_gems
     return 0
 }
@@ -459,7 +455,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # - brew info libtool
     # - brew info make
     # """
-    [ "$#" -eq 0 ] || return 1
+    [ "$#" -gt 0 ] || return 1
     local prefix
     prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
     [ -d "$prefix" ] || return 0
