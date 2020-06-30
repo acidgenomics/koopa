@@ -45,7 +45,7 @@ _koopa_assert_has_file_ext() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -ne 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if ! _koopa_has_file_ext "$arg"
         then
@@ -191,7 +191,7 @@ _koopa_assert_is_cellar() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -ne 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if ! _koopa_is_cellar "$arg"
         then

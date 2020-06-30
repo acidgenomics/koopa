@@ -342,7 +342,7 @@ _koopa_is_export() { # {{{1
     [ "$#" -gt 0 ] || return 1
     local arg exports
     exports="$(export -p)"
-    for arg
+    for arg in "$@"
     do
         _koopa_str_match_regex "$exports" "\b${arg}\b=" || return 1
     done

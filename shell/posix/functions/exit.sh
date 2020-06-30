@@ -7,7 +7,7 @@ _koopa_exit_if_current_version() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if _koopa_is_current_version "$arg"
         then
@@ -23,7 +23,7 @@ _koopa_exit_if_dir() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if [ -d "$arg" ]
         then
@@ -52,7 +52,7 @@ _koopa_exit_if_exists() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if [ -e "$arg" ]
         then
@@ -68,7 +68,7 @@ _koopa_exit_if_installed() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if _koopa_is_installed "$arg"
         then
@@ -86,7 +86,7 @@ _koopa_exit_if_not_installed() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
         then
@@ -102,7 +102,7 @@ _koopa_exit_if_python_package_not_installed() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if ! _koopa_is_python_package_installed "$arg"
         then
@@ -118,7 +118,7 @@ _koopa_exit_if_r_package_installed() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if _koopa_is_r_package_installed "$arg"
         then
@@ -134,7 +134,7 @@ _koopa_exit_if_r_package_not_installed() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -gt 0 ] || return 1
-    for arg
+    for arg in "$@"
     do
         if ! _koopa_is_r_package_installed "$arg"
         then

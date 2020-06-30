@@ -79,12 +79,12 @@ _koopa_conda_create_env() { # {{{1
 _koopa_conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     # """
     [[ "$#" -gt 0 ]] || return 1
     _koopa_activate_conda
     _koopa_assert_is_installed conda
-    for arg
+    for arg in "$@"
     do
         conda remove --yes --name="$arg" --all
     done
