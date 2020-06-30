@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_is_set() {  # {{{1
+_koopa_is_set() { # {{{1
     # """
     # Is the variable set and non-empty?
     # @note Updated 2020-06-30.

@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_yum_add_azure_cli_repo() {  # {{{1
+_koopa_yum_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI yum repo.
     # @note Updated 2020-03-06.
@@ -20,7 +20,7 @@ EOF
     return 0
 }
 
-_koopa_yum_add_google_cloud_sdk_repo() {  # {{{1
+_koopa_yum_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK yum repo.
     # @note Updated 2020-02-28.
@@ -63,7 +63,7 @@ EOF
     return 0
 }
 
-_koopa_yum_import_azure_cli_key() {  # {{{1
+_koopa_yum_import_azure_cli_key() { # {{{1
     # """
     # Import the Microsoft Azure CLI public key.
     # @note Updated 2020-02-24.

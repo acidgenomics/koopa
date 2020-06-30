@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_test_find_files_by_ext() {  # {{{1
+_koopa_test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
     # @note Updated 2020-06-29.
@@ -19,7 +19,7 @@ _koopa_test_find_files_by_ext() {  # {{{1
     return 0
 }
 
-_koopa_test_find_files_by_shebang() {  # {{{1
+_koopa_test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
     # @note Updated 2020-06-29.
@@ -44,7 +44,7 @@ _koopa_test_find_files_by_shebang() {  # {{{1
     return 0
 }
 
-_koopa_test_find_failures() {  # {{{1
+_koopa_test_find_failures() { # {{{1
     # """
     # Find test failures.
     # @note Updated 2020-06-29.

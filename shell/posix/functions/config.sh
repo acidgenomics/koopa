@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_add_config_link() {  # {{{1
+_koopa_add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
     # @note Updated 2020-01-12.
@@ -21,30 +21,28 @@ _koopa_add_config_link() {  # {{{1
     return 0
 }
 
-_koopa_add_make_prefix_link() {  # {{{1
+_koopa_add_make_prefix_link() { # {{{1
     # """
     # Ensure 'koopa' is linked inside make prefix.
-    # @note Updated 2020-06-15.
+    # @note Updated 2020-06-30.
     #
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
     # """
     _koopa_is_shared_install || return 0
-    local make_prefix
+    local koopa_prefix make_prefix source_link target_link
+    koopa_prefix="${1:-"$(_koopa_prefix)"}"
     make_prefix="$(_koopa_make_prefix)"
     [ -d "$make_prefix" ] || return 0
-    local target_link
     target_link="${make_prefix}/bin/koopa"
     [ -L "$target_link" ] && return 0
     _koopa_h1 "Adding 'koopa' link inside '${make_prefix}'."
-    local koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
-    local source_link
     source_link="${koopa_prefix}/bin/koopa"
     _koopa_ln "$source_link" "$target_link"
+    return 0
 }
 
-_koopa_add_to_user_profile() {  # {{{1
+_koopa_add_to_user_profile() { # {{{1
     # """
     # Add koopa configuration to user profile.
     # @note Updated 2020-02-15.
@@ -60,7 +58,7 @@ _koopa_add_to_user_profile() {  # {{{1
     return 0
 }
 
-_koopa_add_user_to_etc_passwd() {  # {{{1
+_koopa_add_user_to_etc_passwd() { # {{{1
     # """
     # Any any type of user, including domain user to passwd file.
     # @note Updated 2020-04-24.
@@ -88,7 +86,7 @@ _koopa_add_user_to_etc_passwd() {  # {{{1
     return 0
 }
 
-_koopa_add_user_to_group() {  # {{{1
+_koopa_add_user_to_group() { # {{{1
     # """
     # Add user to group.
     # @note Updated 2020-02-11.
@@ -107,7 +105,7 @@ _koopa_add_user_to_group() {  # {{{1
     sudo gpasswd --add "$user" "$group"
 }
 
-_koopa_data_disk_check() {  # {{{1
+_koopa_data_disk_check() { # {{{1
     # """
     # Check data disk configuration.
     # @note Updated 2020-06-03.
@@ -130,7 +128,7 @@ _koopa_data_disk_check() {  # {{{1
     return 0
 }
 
-_koopa_delete_dotfile() {  # {{{1
+_koopa_delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
     # @note Updated 2020-01-21.
@@ -150,7 +148,7 @@ _koopa_delete_dotfile() {  # {{{1
     return 0
 }
 
-_koopa_enable_passwordless_sudo() {  # {{{1
+_koopa_enable_passwordless_sudo() { # {{{1
     # """
     # Enable passwordless sudo access for all admin users.
     # @note Updated 2020-06-04.
@@ -175,7 +173,7 @@ _koopa_enable_passwordless_sudo() {  # {{{1
     return 0
 }
 
-_koopa_enable_shell() {  # {{{1
+_koopa_enable_shell() { # {{{1
     # """
     # Enable shell.
     # @note Updated 2020-06-21.
@@ -199,7 +197,7 @@ _koopa_enable_shell() {  # {{{1
     return 0
 }
 
-_koopa_find_user_profile() {  # {{{1
+_koopa_find_user_profile() { # {{{1
     # """
     # Find current user's shell profile configuration file.
     # @note Updated 2020-02-15.
@@ -219,7 +217,7 @@ _koopa_find_user_profile() {  # {{{1
     return 0
 }
 
-_koopa_fix_pyenv_permissions() {  # {{{1
+_koopa_fix_pyenv_permissions() { # {{{1
     # """
     # Ensure Python pyenv shims have correct permissions.
     # @note Updated 2020-02-11.
@@ -232,7 +230,7 @@ _koopa_fix_pyenv_permissions() {  # {{{1
     return 0
 }
 
-_koopa_fix_rbenv_permissions() {  # {{{1
+_koopa_fix_rbenv_permissions() { # {{{1
     # """
     # Ensure Ruby rbenv shims have correct permissions.
     # @note Updated 2020-02-11.
@@ -245,7 +243,7 @@ _koopa_fix_rbenv_permissions() {  # {{{1
     return 0
 }
 
-_koopa_fix_zsh_permissions() {  # {{{1
+_koopa_fix_zsh_permissions() { # {{{1
     # """
     # Fix ZSH permissions, to ensure compaudit checks pass.
     # @note Updated 2020-05-13.
@@ -303,7 +301,7 @@ _koopa_git_clone_docker() {
     return 0
 }
 
-_koopa_git_clone_docker_private() {  # {{{1
+_koopa_git_clone_docker_private() { # {{{1
     # """
     # Clone docker-private repo.
     # @note Updated 2020-03-05.
@@ -315,7 +313,7 @@ _koopa_git_clone_docker_private() {  # {{{1
     return 0
 }
 
-_koopa_git_clone_dotfiles() {  # {{{1
+_koopa_git_clone_dotfiles() { # {{{1
     # """
     # Clone dotfiles repo.
     # @note Updated 2020-02-19.
@@ -326,7 +324,7 @@ _koopa_git_clone_dotfiles() {  # {{{1
     return 0
 }
 
-_koopa_git_clone_dotfiles_private() {  # {{{1
+_koopa_git_clone_dotfiles_private() { # {{{1
     # """
     # Clone dotfiles-private repo.
     # @note Updated 2020-02-19.
@@ -350,7 +348,7 @@ _koopa_git_clone_scripts_private() {
     return 0
 }
 
-_koopa_install_dotfiles() {  # {{{1
+_koopa_install_dotfiles() { # {{{1
     # """
     # Install dot files.
     # @note Updated 2020-06-24.
@@ -368,7 +366,7 @@ _koopa_install_dotfiles() {  # {{{1
     return 0
 }
 
-_koopa_install_dotfiles_private() {  # {{{1
+_koopa_install_dotfiles_private() { # {{{1
     # """
     # Install private dot files.
     # @note Updated 2020-02-19.
@@ -388,7 +386,7 @@ _koopa_install_dotfiles_private() {  # {{{1
     return 0
 }
 
-_koopa_install_mike() {  # {{{1
+_koopa_install_mike() { # {{{1
     # """
     # Install additional Mike-specific config files.
     # @note Updated 2020-03-05.
@@ -405,7 +403,7 @@ _koopa_install_mike() {  # {{{1
     return 0
 }
 
-_koopa_install_pip() {  # {{{1
+_koopa_install_pip() { # {{{1
     # """
     # Install pip for Python.
     # @note Updated 2020-02-10.
@@ -481,7 +479,7 @@ _koopa_java_update_alternatives() {
     return 0
 }
 
-_koopa_link_docker() {  # {{{1
+_koopa_link_docker() { # {{{1
     # """
     # Link Docker library onto data disk for VM.
     # @note Updated 2020-02-27.
@@ -530,7 +528,7 @@ _koopa_link_docker() {  # {{{1
     return 0
 }
 
-_koopa_remove_user_from_group() {  # {{{1
+_koopa_remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
     # @note Updated 2020-02-11.
@@ -546,7 +544,7 @@ _koopa_remove_user_from_group() {  # {{{1
     sudo gpasswd --delete "$user" "$group"
 }
 
-_koopa_uninstall_dotfiles() {  # {{{1
+_koopa_uninstall_dotfiles() { # {{{1
     # """
     # Uninstall dot files.
     # @note Updated 2020-02-19.
@@ -565,7 +563,7 @@ _koopa_uninstall_dotfiles() {  # {{{1
     return 0
 }
 
-_koopa_uninstall_dotfiles_private() {  # {{{1
+_koopa_uninstall_dotfiles_private() { # {{{1
     # """
     # Uninstall private dot files.
     # @note Updated 2020-02-19.
@@ -584,7 +582,7 @@ _koopa_uninstall_dotfiles_private() {  # {{{1
     return 0
 }
 
-_koopa_update_etc_profile_d() {  # {{{1
+_koopa_update_etc_profile_d() { # {{{1
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
     # @note Updated 2020-05-09.
@@ -611,7 +609,7 @@ EOF
     _koopa_sudo_write_string "$string" "$file"
 }
 
-_koopa_update_ldconfig() {  # {{{1
+_koopa_update_ldconfig() { # {{{1
     # """
     # Update dynamic linker (LD) configuration.
     # @note Updated 2020-01-23.
@@ -641,7 +639,7 @@ _koopa_update_ldconfig() {  # {{{1
     return 0
 }
 
-_koopa_update_lmod_config() {  # {{{1
+_koopa_update_lmod_config() { # {{{1
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
     # @note Updated 2020-06-21.
@@ -672,7 +670,7 @@ _koopa_update_lmod_config() {  # {{{1
     return 0
 }
 
-_koopa_update_xdg_config() {  # {{{1
+_koopa_update_xdg_config() { # {{{1
     # """
     # Update XDG configuration.
     # @note Updated 2020-04-29.

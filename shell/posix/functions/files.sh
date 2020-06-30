@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_basename() {  # {{{1
+_koopa_basename() { # {{{1
     # """
     # Extract the file basename.
     # @note Updated 2020-04-27.
@@ -21,7 +21,7 @@ _koopa_basename() {  # {{{1
     return 0
 }
 
-_koopa_basename_sans_ext() {  # {{{1
+_koopa_basename_sans_ext() { # {{{1
     # """
     # Extract the file basename without extension.
     # @note Updated 2020-04-27.
@@ -48,7 +48,7 @@ _koopa_basename_sans_ext() {  # {{{1
     return 0
 }
 
-_koopa_basename_sans_ext2() {  # {{{1
+_koopa_basename_sans_ext2() { # {{{1
     # """
     # Extract the file basename prior to any dots in file name.
     # @note Updated 2020-04-27.
@@ -72,7 +72,7 @@ _koopa_basename_sans_ext2() {  # {{{1
     return 0
 }
 
-_koopa_ensure_newline_at_end_of_file() {  # {{{1
+_koopa_ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
     # @note Updated 2020-01-12.
@@ -92,7 +92,7 @@ _koopa_ensure_newline_at_end_of_file() {  # {{{1
     return 0
 }
 
-_koopa_file_ext() {  # {{{1
+_koopa_file_ext() { # {{{1
     # """
     # Extract the file extension from input.
     # @note Updated 2020-04-27.
@@ -120,7 +120,7 @@ _koopa_file_ext() {  # {{{1
     return 0
 }
 
-_koopa_file_ext2() {  # {{{1
+_koopa_file_ext2() { # {{{1
     # """
     # Extract the file extension after any dots in the file name.
     # @note Updated 2020-04-27.
@@ -147,7 +147,7 @@ _koopa_file_ext2() {  # {{{1
     return 0
 }
 
-_koopa_find_and_replace_in_files() {  # {{{1
+_koopa_find_and_replace_in_files() { # {{{1
     # """
     # Find and replace inside files.
     # @note Updated 2020-04-27.
@@ -186,7 +186,7 @@ _koopa_find_and_replace_in_files() {  # {{{1
     return 0
 }
 
-_koopa_find_broken_symlinks() {  # {{{1
+_koopa_find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
     # @note Updated 2020-06-19.
@@ -213,7 +213,7 @@ _koopa_find_broken_symlinks() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_find_dotfiles() {  # {{{1
+_koopa_find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
     # @note Updated 2020-06-03.
@@ -244,7 +244,7 @@ _koopa_find_dotfiles() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_find_empty_dirs() {  # {{{1
+_koopa_find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
     # @note Updated 2020-06-03.
@@ -272,7 +272,7 @@ _koopa_find_empty_dirs() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_find_large_dirs() {  # {{{1
+_koopa_find_large_dirs() { # {{{1
     # """
     # Find large directories.
     # @note Updated 2020-03-06.
@@ -296,7 +296,7 @@ _koopa_find_large_dirs() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_find_large_files() {  # {{{1
+_koopa_find_large_files() { # {{{1
     # """
     # Find large files.
     # @note Updated 2020-06-03.
@@ -334,7 +334,7 @@ _koopa_find_large_files() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_find_non_cellar_make_files() {  # {{{1
+_koopa_find_non_cellar_make_files() { # {{{1
     # """
     # Find non-cellar make files.
     # @note Updated 2020-06-03.
@@ -365,7 +365,7 @@ _koopa_find_non_cellar_make_files() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_find_text() {  # {{{1
+_koopa_find_text() { # {{{1
     # """
     # Find text in any file.
     # @note Updated 2020-06-03.
@@ -399,7 +399,7 @@ _koopa_find_text() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_line_count() {  # {{{1
+_koopa_line_count() { # {{{1
     # """
     # Return the number of lines in a file.
     # @note Updated 2020-03-06.
@@ -419,7 +419,7 @@ _koopa_line_count() {  # {{{1
     _koopa_print "$x"
 }
 
-_koopa_realpath() {  # {{{1
+_koopa_realpath() { # {{{1
     # """
     # Real path to file/directory on disk.
     # @note Updated 2020-04-27.
@@ -451,7 +451,7 @@ _koopa_realpath() {  # {{{1
     return 0
 }
 
-_koopa_stat_access_human() {  # {{{1
+_koopa_stat_access_human() { # {{{1
     # """
     # Get the current access permissions in human readable form.
     # @note Updated 2020-01-12.
@@ -460,7 +460,7 @@ _koopa_stat_access_human() {  # {{{1
     return 0
 }
 
-_koopa_stat_access_octal() {  # {{{1
+_koopa_stat_access_octal() { # {{{1
     # """
     # Get the current access permissions in octal form.
     # @note Updated 2020-01-12.
@@ -469,7 +469,7 @@ _koopa_stat_access_octal() {  # {{{1
     return 0
 }
 
-_koopa_stat_dereference() {  # {{{1
+_koopa_stat_dereference() { # {{{1
     # """
     # Dereference input files.
     # @note Updated 2020-03-24.
@@ -480,7 +480,7 @@ _koopa_stat_dereference() {  # {{{1
     return 0
 }
 
-_koopa_stat_group() {  # {{{1
+_koopa_stat_group() { # {{{1
     # """
     # Get the current group of a file or directory.
     # @note Updated 2020-01-12.
@@ -526,7 +526,7 @@ _koopa_stat_modified() {
     _koopa_print "$x"
 }
 
-_koopa_stat_user() {  # {{{1
+_koopa_stat_user() { # {{{1
     # """
     # Get the current user (owner) of a file or directory.
     # @note Updated 2020-01-12.
@@ -535,7 +535,7 @@ _koopa_stat_user() {  # {{{1
     return 0
 }
 
-_koopa_sudo_write_string() {  # {{{1
+_koopa_sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
     # @note Updated 2020-03-06.

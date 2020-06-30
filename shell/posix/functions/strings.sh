@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_gsub() {  # {{{1
+_koopa_gsub() { # {{{1
     # """
     # Global substitution.
     # @note Updated 2020-03-06.
@@ -18,7 +18,7 @@ _koopa_gsub() {  # {{{1
     return 0
 }
 
-_koopa_lowercase() {  # {{{1
+_koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
     # @note Updated 2020-03-06.
@@ -35,7 +35,7 @@ _koopa_lowercase() {  # {{{1
     return 0
 }
 
-_koopa_snake_case() {  # {{{1
+_koopa_snake_case() { # {{{1
     # """
     # Simple snake case function.
     # @note Updated 2020-02-20.
@@ -55,7 +55,7 @@ _koopa_snake_case() {  # {{{1
     return 0
 }
 
-_koopa_strip_left() {  # {{{1
+_koopa_strip_left() { # {{{1
     # """
     # Strip pattern from left side (start) of string.
     # @note Updated 2019-09-22.
@@ -73,7 +73,7 @@ _koopa_strip_left() {  # {{{1
     return 0
 }
 
-_koopa_strip_right() {  # {{{1
+_koopa_strip_right() { # {{{1
     # """
     # Strip pattern from right side (end) of string.
     # @note Updated 2020-01-12.
@@ -91,7 +91,7 @@ _koopa_strip_right() {  # {{{1
     return 0
 }
 
-_koopa_strip_trailing_slash() {  # {{{1
+_koopa_strip_trailing_slash() { # {{{1
     # """
     # Strip trailing slash in file path string.
     # @note Updated 2020-02-20.
@@ -108,7 +108,7 @@ _koopa_strip_trailing_slash() {  # {{{1
     return 0
 }
 
-_koopa_sub() {  # {{{1
+_koopa_sub() { # {{{1
     # """
     # Substitution.
     # @note Updated 2020-03-06.
@@ -127,7 +127,7 @@ _koopa_sub() {  # {{{1
     return 0
 }
 
-_koopa_trim_ws() {  # {{{1
+_koopa_trim_ws() { # {{{1
     # """
     # Trim leading and trailing white-space from string.
     #

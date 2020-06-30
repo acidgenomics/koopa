@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_set_permissions() {  # {{{1
+_koopa_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
     # @note Updated 2020-06-29.

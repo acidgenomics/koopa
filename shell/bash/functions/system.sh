@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_add_local_bins_to_path() {  # {{{1
+_koopa_add_local_bins_to_path() { # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
     # @note Updated 2020-06-29.
@@ -20,7 +20,7 @@ _koopa_add_local_bins_to_path() {  # {{{1
     return 0
 }
 
-_koopa_info_box() {  # {{{1
+_koopa_info_box() { # {{{1
     # """
     # Info box.
     # @note Updated 2020-06-29.
@@ -42,7 +42,7 @@ _koopa_info_box() {  # {{{1
     return 0
 }
 
-_koopa_script_name() {  # {{{1
+_koopa_script_name() { # {{{1
     # """
     # Get the calling script name.
     # @note Updated 2020-06-29.
