@@ -3,7 +3,7 @@
 _koopa_help() {  # {{{1
     # """
     # Show usage via '--help' flag.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-30.
     #
     # Note that using 'path' as a local variable here will mess up Zsh.
     #
@@ -48,15 +48,10 @@ _koopa_help() {  # {{{1
     # - https://stackoverflow.com/questions/35677745
     # """
     [[ "$#" -eq 0 ]] && return 0
-    local first_arg
-    first_arg="$1"
-    local last_arg
-    # Is this a Bashism? Need to double check on Zsh.
-    # https://unix.stackexchange.com/questions/411001
+    local arg args first_arg last_arg man_file prefix script_name
+    first_arg="${1:?}"
     last_arg="${!#}"
-    local args
     args=("$first_arg" "$last_arg")
-    local arg
     for arg in "${args[@]}"
     do
         case "$arg" in
@@ -76,11 +71,8 @@ _koopa_help() {  # {{{1
                         ;;
                 esac
                 file="$(realpath "$file")"
-                local script_name
                 script_name="$(basename "$file")"
-                local prefix
                 prefix="$(dirname "$(dirname "$file")")"
-                local man_file
                 man_file="${prefix}/man/man1/${script_name}.1"
                 if [[ -s "$man_file" ]]
                 then

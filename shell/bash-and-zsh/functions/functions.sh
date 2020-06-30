@@ -3,10 +3,11 @@
 _koopa_list_internal_functions() {  # {{{1
     # """
     # List all functions defined by koopa.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-06-30.
     #
     # Currently only supported in Bash and Zsh.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     local x
     case "$(_koopa_shell)" in
         bash)
@@ -32,7 +33,7 @@ _koopa_list_internal_functions() {  # {{{1
 _koopa_unset_internal_functions() {  # {{{1
     # """
     # Unset all of koopa's internal functions.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-06-30.
     #
     # Currently only supported in Bash and Zsh.
     #
@@ -40,6 +41,7 @@ _koopa_unset_internal_functions() {  # {{{1
     # Note that this will nuke functions currently required for interactive
     # prompt, so don't do this yet.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     local funs
     case "$(_koopa_shell)" in
         bash)
