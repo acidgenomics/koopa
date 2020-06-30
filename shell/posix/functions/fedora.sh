@@ -4,8 +4,9 @@
 _koopa_yum_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI yum repo.
-    # @note Updated 2020-03-06.
+    # @note Updated 2020-06-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     local file
     file="/etc/yum.repos.d/azure-cli.repo"
     [ -f "$file" ] && return 0
@@ -23,7 +24,7 @@ EOF
 _koopa_yum_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK yum repo.
-    # @note Updated 2020-02-28.
+    # @note Updated 2020-06-30.
     #
     # Spacing is important in the 'gpgkey' section.
     #
@@ -34,10 +35,10 @@ _koopa_yum_add_google_cloud_sdk_repo() { # {{{1
     # - https://github.com/kubernetes/kubernetes/issues/60134
     # - https://github.com/GoogleCloudPlatform/google-fluentd/issues/136
     # """
-    local file
+    [ "$#" -eq 0 ] || return 1
+    local file gpgcheck
     file="/etc/yum.repos.d/google-cloud-sdk.repo"
     [ -f "$file" ] && return 0
-    local gpgcheck
     # Fix attempt for build error on CentOS 8 due to
     # 141 error code.
     gpgcheck=0
@@ -59,15 +60,15 @@ repo_gpgcheck=${repo_gpgcheck}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 EOF
-
     return 0
 }
 
 _koopa_yum_import_azure_cli_key() { # {{{1
     # """
     # Import the Microsoft Azure CLI public key.
-    # @note Updated 2020-02-24.
+    # @note Updated 2020-06-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     sudo rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
     return 0
 }
