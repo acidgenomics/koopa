@@ -999,6 +999,26 @@ _koopa_rsync_flags() { # {{{1
     return 0
 }
 
+_koopa_run_if_installed() { # {{{1
+    # """
+    # Run program(s) if installed.
+    # @note Updated 2020-02-06.
+    # """
+    [ "$#" -ne 0 ] || return 1
+    for arg
+    do
+        if ! _koopa_is_installed "$arg"
+        then
+            _koopa_note "Skipping '${arg}'."
+            continue
+        fi
+        local exe
+        exe="$(_koopa_which_realpath "$arg")"
+        "$exe"
+    done
+    return 0
+}
+
 _koopa_set_sticky_group() { # {{{1
     # """
     # Set sticky group bit for target prefix(es).
@@ -1285,5 +1305,24 @@ _koopa_view_latest_tmp_log_file() { # {{{1
     _koopa_h1 "Viewing '${log_file}'."
     # Note that this will skip to the end automatically.
     less +G "$log_file"
+    return 0
+}
+
+_koopa_warn_if_export() { # {{{1
+    # """
+    # Warn if variable is exported in current shell session.
+    # @note Updated 2020-02-20.
+    #
+    # Useful for checking against unwanted compiler settings.
+    # In particular, useful to check for 'LD_LIBRARY_PATH'.
+    # """
+    [ "$#" -ne 0 ] || return 1
+    for arg in "$@"
+    do
+        if _koopa_is_export "$arg"
+        then
+            _koopa_warning "'${arg}' is exported."
+        fi
+    done
     return 0
 }
