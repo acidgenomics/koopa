@@ -65,12 +65,11 @@ _koopa_script_name() { # {{{1
 _koopa_system_info() { # {{{
     # """
     # System information.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     # """
     [[ "$#" -eq 0 ]] || return 1
-    local koopa_prefix
+    local array koopa_prefix nf origin shell shell_name shell_version
     koopa_prefix="$(_koopa_prefix)"
-    local array
     array=(
         "koopa $(_koopa_version) ($(_koopa_date))"
         "URL: $(_koopa_url)"
@@ -78,7 +77,6 @@ _koopa_system_info() { # {{{
     )
     if _koopa_is_git_toplevel "$koopa_prefix"
     then
-        local origin
         origin="$( \
             cd "$koopa_prefix" || exit 1; \
             git config --get remote.origin.url \
@@ -105,7 +103,6 @@ _koopa_system_info() { # {{{
     # Show neofetch info, if installed.
     if _koopa_is_installed neofetch
     then
-        local nf
         readarray -t nf <<< "$(neofetch --stdout)"
         array+=(
             "System information (neofetch)"
@@ -130,11 +127,8 @@ _koopa_system_info() { # {{{
                 os="$(uname --all)"
             fi
         fi
-        local shell_name
         shell_name="$KOOPA_SHELL"
-        local shell_version
         shell_version="$(_koopa_get_version "${shell_name}")"
-        local shell
         shell="${shell_name} ${shell_version}"
         array+=(
             "System information"
