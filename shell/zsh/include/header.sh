@@ -108,3 +108,5 @@ _koopa_zsh_header() { # {{{1
     fi
     return 0
 }
+
+_koopa_zsh_header "$@"
