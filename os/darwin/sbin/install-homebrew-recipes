@@ -262,7 +262,7 @@ brews=(
     rename
     rsync
     ruby
-    ruby-build
+    # ruby-build
     screen
     shellcheck
     shellharden
