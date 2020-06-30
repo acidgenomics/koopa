@@ -101,7 +101,7 @@ then
     if [[ "$extra" -eq 1 ]]
     then
         images+=(
-            acidgenomics/bcbio-nextgen
+            acidgenomics/bcbio
             acidgenomics/rnaeditingindexer
             acidgenomics/maestro
         )

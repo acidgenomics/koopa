@@ -7,10 +7,10 @@
 # MAJOR.MINOR.PATCH
 # """
 
-_koopa_bcbio_nextgen_current_version() { # {{{1
+_koopa_current_bcbio_version() { # {{{1
     # """
     # Get the latest bcbio-nextgen stable release version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     #
     # This approach checks for latest stable release available via bioconda.
     # """
@@ -29,7 +29,7 @@ _koopa_bcbio_nextgen_current_version() { # {{{1
     return 0
 }
 
-_koopa_bioc_current_version() { # {{{1
+_koopa_current_bioc_version() { # {{{1
     # """
     # Current Bioconductor version.
     # @note Updated 2020-06-29.
