@@ -4,14 +4,13 @@ _koopa_bash_header() { # {{{1
     # """
     # Bash header.
     # @note Updated 2020-06-30.
-    #
-    # Don't set local variables here, it will mess up activation.
     # """
-    [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
-    [[ -z "${activate:-}" ]] && activate=0
-    [[ -z "${checks:-}" ]] && checks=1
-    [[ -z "${shopts:-}" ]] && shopts=1
-    [[ -z "${verbose:-}" ]] && verbose=0
+    local file major_version pos
+    [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
+    [[ -z "${activate:-}" ]] && local activate=0
+    [[ -z "${checks:-}" ]] && local checks=1
+    [[ -z "${shopts:-}" ]] && local shopts=1
+    [[ -z "${verbose:-}" ]] && local verbose=0
     if [[ "$#" -gt 0 ]]
     then
         pos=()
@@ -120,7 +119,7 @@ _koopa_bash_header() { # {{{1
     then
         unalias -a
     fi
-    local activate checks file major_version pos verbose shopts
+    unset -v activate checks shopts verbose
     return 0
 }
 
