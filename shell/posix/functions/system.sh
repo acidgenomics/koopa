@@ -1038,14 +1038,15 @@ _koopa_shell() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/3327013
     # """
+    [ "$#" -eq 0 ] || return 1
     local shell
     if [ -n "${BASH_VERSION:-}" ]
     then
-        shell='bash'
+        shell="bash"
     elif [ -n "${ZSH_VERSION:-}" ]
     then
-        shell='zsh'
-    elif [ -d '/proc' ]
+        shell="zsh"
+    elif [ -d "/proc" ]
     then
         # Standard approach on Linux.
         shell="$(basename "$(readlink /proc/$$/exe)")"
