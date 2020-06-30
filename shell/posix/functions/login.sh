@@ -66,6 +66,6 @@ _koopa_today_bucket() { # {{{1
         return 0
     fi
     mkdir -p "${bucket_dir}/${today_bucket}"
-    ln -fnsv "${bucket_dir}/${today_bucket}" "$today_link"
+    ln -fns "${bucket_dir}/${today_bucket}" "$today_link"
     return 0
 }
