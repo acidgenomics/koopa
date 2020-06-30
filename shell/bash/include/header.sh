@@ -127,4 +127,4 @@ _koopa_bash_header() { # {{{1
     return 0
 }
 
-_koopa_bash_header
+_koopa_bash_header "$@"
