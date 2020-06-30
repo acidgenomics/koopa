@@ -3,7 +3,7 @@
 _koopa_set_permissions() {  # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-06-29.
     #
     # @param --recursive
     #   Change permissions recursively.
@@ -11,15 +11,13 @@ _koopa_set_permissions() {  # {{{1
     #   Change ownership to current user, rather than koopa default, which is
     #   root for shared installs.
     # """
+    [[ "$#" -gt 0 ]] || return 1
     local recursive
     recursive=0
-
     local user
     user=0
-
     local verbose
     verbose=0
-
     pos=()
     while (("$#"))
     do
@@ -50,9 +48,7 @@ _koopa_set_permissions() {  # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
     [ "$#" -ne 0 ] || return 1
-
     # chmod flags.
     local chmod_flags
     readarray -t chmod_flags <<< "$(_koopa_chmod_flags)"
@@ -68,7 +64,6 @@ _koopa_set_permissions() {  # {{{1
         # support on macOS and BusyBox.
         chmod_flags+=("-v")
     fi
-
     # chown flags.
     local chown_flags
     # Note that '-h' instead of '--no-dereference' has better cross-platform
@@ -98,7 +93,6 @@ _koopa_set_permissions() {  # {{{1
             ;;
     esac
     chown_flags+=("${who}:${group}")
-
     # Loop across input and set permissions.
     for arg
     do
@@ -107,7 +101,6 @@ _koopa_set_permissions() {  # {{{1
         _koopa_chmod "${chmod_flags[@]}" "$arg"
         _koopa_chown "${chown_flags[@]}" "$arg"
     done
-
     return 0
 }
 
