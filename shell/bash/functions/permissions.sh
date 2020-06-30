@@ -48,7 +48,7 @@ _koopa_set_permissions() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [ "$#" -ne 0 ] || return 1
+    [ "$#" -gt 0 ] || return 1
     # chmod flags.
     local chmod_flags
     readarray -t chmod_flags <<< "$(_koopa_chmod_flags)"
