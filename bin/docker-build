@@ -145,6 +145,7 @@ docker build \
 docker tag "$tagged_image_today" "$tagged_image"
 if [[ -n "${symlink_tag:-}" ]]
 then
+    docker tag "$tagged_image_today" "$symlink_tagged_image_today"
     docker tag "$symlink_tagged_image_today" "$symlink_tagged_image"
 fi
 
