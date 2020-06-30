@@ -4,8 +4,9 @@ _koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
     # @note Updated 2020-06-30.
+    #
+    # Don't set local variables here, it will mess up activation.
     # """
-    local activate file checks major_version pos shopts
     [[ -n "${KOOPA_VERBOSE:-}" ]] && verbose=1
     [[ -z "${activate:-}" ]] && activate=0
     [[ -z "${checks:-}" ]] && checks=1
@@ -106,6 +107,7 @@ _koopa_zsh_header() { # {{{1
     then
         unalias -a
     fi
+    unset -v activate file checks major_version pos shopts
     return 0
 }
 
