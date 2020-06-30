@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_bam_filter() {  # {{{1
+_koopa_bam_filter() { # {{{1
     # """
     # Perform filtering on a BAM file.
     # @note Updated 2020-06-29.
@@ -63,7 +63,7 @@ _koopa_bam_filter() {  # {{{1
     return 0
 }
 
-_koopa_bam_filter_duplicates() {  # {{{1
+_koopa_bam_filter_duplicates() { # {{{1
     # """
     # Remove duplicates from a duplicate marked BAM file.
     # @note Updated 2020-06-29.
@@ -77,7 +77,7 @@ _koopa_bam_filter_duplicates() {  # {{{1
     return 0
 }
 
-_koopa_bam_filter_multimappers() {  # {{{1
+_koopa_bam_filter_multimappers() { # {{{1
     # """
     # Filter multi-mapped reads from BAM file.
     # @note Updated 2020-06-29.
@@ -91,7 +91,7 @@ _koopa_bam_filter_multimappers() {  # {{{1
     return 0
 }
 
-_koopa_bam_filter_unmapped() {  # {{{1
+_koopa_bam_filter_unmapped() { # {{{1
     # """
     # Filter unmapped reads from BAM file.
     # @note Updated 2020-06-29.
@@ -101,7 +101,7 @@ _koopa_bam_filter_unmapped() {  # {{{1
     return 0
 }
 
-_koopa_bam_index() {  # {{{1
+_koopa_bam_index() { # {{{1
     # """
     # Index BAM file.
     # @note Updated 2020-02-05.
@@ -122,7 +122,7 @@ _koopa_bam_index() {  # {{{1
     return 0
 }
 
-_koopa_bam_sort() {  # {{{1
+_koopa_bam_sort() { # {{{1
     # """
     # Sort BAM file by genomic coordinates.
     # @note Updated 2020-02-05.
@@ -164,7 +164,7 @@ _koopa_bam_sort() {  # {{{1
     return 0
 }
 
-_koopa_bowtie2() {  # {{{1
+_koopa_bowtie2() { # {{{1
     # """
     # Run bowtie2 on paired-end FASTQ files.
     # @note Updated 2020-06-29.
@@ -249,7 +249,7 @@ _koopa_bowtie2() {  # {{{1
     return 0
 }
 
-_koopa_bowtie2_index() {  # {{{1
+_koopa_bowtie2_index() { # {{{1
     # """
     # Generate bowtie2 index.
     # @note Updated 2020-02-05.
@@ -295,7 +295,7 @@ _koopa_bowtie2_index() {  # {{{1
     return 0
 }
 
-_koopa_sam_to_bam() {  # {{{1
+_koopa_sam_to_bam() { # {{{1
     # """
     # Convert SAM file to BAM.
     # @note Updated 2020-06-29.

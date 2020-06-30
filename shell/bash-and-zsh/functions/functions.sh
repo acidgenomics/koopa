@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_list_internal_functions() {  # {{{1
+_koopa_list_internal_functions() { # {{{1
     # """
     # List all functions defined by koopa.
     # @note Updated 2020-06-30.
@@ -30,7 +30,7 @@ _koopa_list_internal_functions() {  # {{{1
     return 0
 }
 
-_koopa_unset_internal_functions() {  # {{{1
+_koopa_unset_internal_functions() { # {{{1
     # """
     # Unset all of koopa's internal functions.
     # @note Updated 2020-06-30.
