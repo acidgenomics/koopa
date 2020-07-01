@@ -306,7 +306,7 @@ _koopa_java_prefix() { # {{{1
     # - https://stackoverflow.com/questions/22290554
     # """
     [ "$#" -eq 0 ] || return 1
-    local java_exe prefix
+    local prefix
     if [ -n "${JAVA_HOME:-}" ]
     then
         # Allow user to override default.
