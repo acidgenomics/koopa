@@ -153,45 +153,6 @@ _koopa_file_ext2() { # {{{1
     return 0
 }
 
-_koopa_find_and_replace_in_files() { # {{{1
-    # """
-    # Find and replace inside files.
-    # @note Updated 2020-06-30.
-    #
-    # Parameterized, supporting multiple files.
-    #
-    # This step requires GNU sed and won't work with BSD sed currently installed
-    # by default on macOS.
-    # https://stackoverflow.com/questions/4247068/
-    # """
-    [ "$#" -eq 2 ] || return 1
-    local file from to
-    from="${1:?}"
-    to="${2:?}"
-    shift 2
-    # FIXME REWORK THIS USING _KOOPA_STR_MATCH
-    # Check for unescaped slashes in pattern matching.
-    # shellcheck disable=SC1003
-    if _koopa_print "$from" \
-        | grep -q "/" && _koopa_print "$from" \
-        | grep -Fqv "\\"
-    then
-        _koopa_stop "Unescaped slash detected: '${from}'."
-    elif _koopa_print "$to" \
-        | grep -q "/" && _koopa_print "$to" \
-        | grep -Fqv "\\"
-    then
-        _koopa_stop "Unescaped slash detected: '${to}'."
-    fi
-    for file in "$@"
-    do
-        [ -f "$file" ] || return 1
-        _koopa_info "$file"
-        sed -i "s/${from}/${to}/g" "$file"
-    done
-    return 0
-}
-
 _koopa_find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.

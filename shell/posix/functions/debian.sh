@@ -177,7 +177,7 @@ _koopa_apt_add_r_key() { # {{{1
 _koopa_apt_add_r_repo() { # {{{1
     # """
     # Add R apt repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     # """
     [ "$#" -eq 0 ] || return 1
     local file os_codename os_id repo string version
@@ -192,7 +192,8 @@ _koopa_apt_add_r_repo() { # {{{1
             ;;
     esac
     version="$(_koopa_major_minor_version "$version")"
-    version="$(_koopa_gsub "$version" "\.")"
+    # Need to strip the periods here.
+    version="$(_koopa_gsub "\." "" "$version")"
     version="cran${version}"
     file="/etc/apt/sources.list.d/r.list"
     if [ -f "$file" ]

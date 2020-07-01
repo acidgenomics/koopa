@@ -3,14 +3,16 @@
 _koopa_array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-01.
     #
-    # Example: ("aaa" "bbb") array to 'c("aaa", "bbb")'.
+    # @examples
+    # _koopa_array_to_r_vector "aaa" "bbb"
+    # ## c("aaa", "bbb")
     # """
     [[ "$#" -gt 0 ]] || return 1
     local x
     x="$(printf '"%s", ' "$@")"
-    x="$(_koopa_strip_right "$x" ", ")"
+    x="$(_koopa_strip_right ", " "$x")"
     x="$(printf "c(%s)\n" "$x")"
     [[ -n "$x" ]] || return 1
     _koopa_print "$x"

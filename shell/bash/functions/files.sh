@@ -1,33 +1,36 @@
 #!/usr/bin/env bash
 
-## FIXME USE RIPGREP IF INSTALLED.
-## FIXME ALLOW FLAGS HERE, FASTER
-## FIXME WARN IF RIPGREP ISNT INSTALLED
-_koopa_find_text() { # {{{1
+_koopa_find_and_replace_in_files() { # {{{1
     # """
-    # Find text in any file.
+    # Find and replace inside files.
     # @note Updated 2020-07-01.
     #
-    # See also: https://github.com/stephenturner/oneliners
+    # Parameterized, supporting multiple files.
     #
-    # Examples:
-    # _koopa_find_text "mytext" *.txt
+    # This step requires GNU sed and won't work with BSD sed currently installed
+    # by default on macOS.
+    # https://stackoverflow.com/questions/4247068/
     # """
-    [ "$#" -ge 2 ] && [ "$#" -le 3 ] || return 1
-    _koopa_is_installed find grep || return 1
-    local dir name_glob pattern x
-    pattern="${1:?}"
-    name_glob="${2:?}"
-    dir="${3:-"."}"
-    dir="$(realpath "$dir")"
-    x="$( \
-        find "$dir" \
-            -mindepth 1 \
-            -type f \
-            -name "$name_glob" \
-            -exec grep -il "$pattern" {} \;; \
-    )"
-    _koopa_print "$x"
+    [ "$#" -ge 3 ] || return 1
+    local file from to
+    from="${1:?}"
+    to="${2:?}"
+    shift 2
+    _koopa_h1 "Replacing '${from}' with '${to}' in ${#} files."
+    if { \
+        _koopa_str_match "${from}" '/' && ! _koopa_str_match "${from}" '\/'; \
+    } || { \
+        _koopa_str_match "${to}" '/' && ! _koopa_str_match "${to}" '\/'; \
+    }
+    then
+        _koopa_stop "Unescaped slash detected."
+    fi
+    for file in "$@"
+    do
+        [ -f "$file" ] || return 1
+        _koopa_info "$file"
+        sed -i "s/${from}/${to}/g" "$file"
+    done
     return 0
 }
 
