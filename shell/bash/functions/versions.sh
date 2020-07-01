@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_check_version() {  # {{{1
+_koopa_check_version() { # {{{1
     # """
     # Check that program is installed and passes minimum version.
     # @note Updated 2020-06-29.

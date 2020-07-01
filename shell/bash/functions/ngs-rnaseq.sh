@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_kallisto_index() {  # {{{1
+_koopa_kallisto_index() { # {{{1
     # """
     # Generate kallisto index.
     # @note Updated 2020-06-29.
@@ -43,7 +43,7 @@ _koopa_kallisto_index() {  # {{{1
     return 0
 }
 
-_koopa_kallisto_quant() {  # {{{1
+_koopa_kallisto_quant() { # {{{1
     # """
     # Run kallisto quant.
     # @note Updated 2020-06-29.
@@ -121,7 +121,7 @@ _koopa_kallisto_quant() {  # {{{1
     return 0
 }
 
-_koopa_salmon_index() {  # {{{1
+_koopa_salmon_index() { # {{{1
     # """
     # Generate salmon index.
     # @note Updated 2020-06-29.
@@ -167,7 +167,7 @@ _koopa_salmon_index() {  # {{{1
     return 0
 }
 
-_koopa_salmon_quant() {  # {{{1
+_koopa_salmon_quant() { # {{{1
     # """
     # Run salmon quant.
     # @note Updated 2020-05-04.

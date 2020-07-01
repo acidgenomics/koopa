@@ -1,17 +1,16 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_disk_gb_free() {  # {{{1
+_koopa_disk_gb_free() { # {{{1
     # """
     # Available free disk space in GB.
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-06-30.
     #
     # Alternatively, can use '-BG' for 1G-blocks.
     # This is what gets returned by 'df -h'.
     # """
-    local disk
+    local disk x
     disk="${1:-"/"}"
-    local x
     x="$( \
         df --block-size='G' "$disk" \
             | head -n 2 \
@@ -22,16 +21,16 @@ _koopa_disk_gb_free() {  # {{{1
             | sed 's/G$//' \
     )"
     _koopa_print "$x"
+    return 0
 }
 
-_koopa_disk_gb_total() {  # {{{1
+_koopa_disk_gb_total() { # {{{1
     # """
     # Total disk space size in GB.
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-06-30.
     # """
-    local disk
+    local disk x
     disk="${1:-"/"}"
-    local x
     x="$( \
         df --block-size='G' "$disk" \
             | head -n 2 \
@@ -41,16 +40,16 @@ _koopa_disk_gb_total() {  # {{{1
             | sed 's/G$//' \
     )"
     _koopa_print "$x"
+    return 0
 }
 
-_koopa_disk_gb_used() {  # {{{1
+_koopa_disk_gb_used() { # {{{1
     # """
     # Used disk space in GB.
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-06-30.
     # """
-    local disk
+    local disk x
     disk="${1:-"/"}"
-    local x
     x="$( \
         df --block-size='G' "$disk" \
             | head -n 2 \
@@ -61,28 +60,29 @@ _koopa_disk_gb_used() {  # {{{1
             | sed 's/G$//' \
     )"
     _koopa_print "$x"
+    return 0
 }
 
-_koopa_disk_pct_free() {  # {{{1
+_koopa_disk_pct_free() { # {{{1
     # """
     # Free disk space percentage (on main drive).
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-06-30.
     # """
-    local pct_used
-    pct_used="$(_koopa_disk_pct_used "$@")"
-    local pct_free
+    local disk pct_free pct_used
+    disk="${1:-"/"}"
+    pct_used="$(_koopa_disk_pct_used "$disk")"
     pct_free="$((100 - pct_used))"
     _koopa_print "$pct_free"
+    return 0
 }
 
-_koopa_disk_pct_used() {  # {{{1
+_koopa_disk_pct_used() { # {{{1
     # """
     # Disk usage percentage (on main drive).
-    # @note Updated 2020-03-07.
+    # @note Updated 2020-06-30.
     # """
-    local disk
+    local disk x
     disk="${1:-"/"}"
-    local x
     x="$( \
         df "$disk" \
             | head -n 2 \
@@ -92,4 +92,5 @@ _koopa_disk_pct_used() {  # {{{1
             | sed 's/%$//' \
     )"
     _koopa_print "$x"
+    return 0
 }

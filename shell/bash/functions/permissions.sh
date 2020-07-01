@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-_koopa_set_permissions() {  # {{{1
+_koopa_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     #
     # @param --recursive
     #   Change permissions recursively.
@@ -48,7 +48,7 @@ _koopa_set_permissions() {  # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [ "$#" -ne 0 ] || return 1
+    [ "$#" -gt 0 ] || return 1
     # chmod flags.
     local chmod_flags
     readarray -t chmod_flags <<< "$(_koopa_chmod_flags)"
@@ -94,7 +94,7 @@ _koopa_set_permissions() {  # {{{1
     esac
     chown_flags+=("${who}:${group}")
     # Loop across input and set permissions.
-    for arg
+    for arg in "$@"
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
@@ -103,4 +103,3 @@ _koopa_set_permissions() {  # {{{1
     done
     return 0
 }
-
