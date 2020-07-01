@@ -1,5 +1,36 @@
 #!/usr/bin/env bash
 
+## FIXME USE RIPGREP IF INSTALLED.
+## FIXME ALLOW FLAGS HERE, FASTER
+## FIXME WARN IF RIPGREP ISNT INSTALLED
+_koopa_find_text() { # {{{1
+    # """
+    # Find text in any file.
+    # @note Updated 2020-07-01.
+    #
+    # See also: https://github.com/stephenturner/oneliners
+    #
+    # Examples:
+    # _koopa_find_text "mytext" *.txt
+    # """
+    [ "$#" -ge 2 ] && [ "$#" -le 3 ] || return 1
+    _koopa_is_installed find grep || return 1
+    local dir name_glob pattern x
+    pattern="${1:?}"
+    name_glob="${2:?}"
+    dir="${3:-"."}"
+    dir="$(realpath "$dir")"
+    x="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -type f \
+            -name "$name_glob" \
+            -exec grep -il "$pattern" {} \;; \
+    )"
+    _koopa_print "$x"
+    return 0
+}
+
 _koopa_remove_broken_symlinks() { # {{{1
     # """
     # Remove broken symlinks.
