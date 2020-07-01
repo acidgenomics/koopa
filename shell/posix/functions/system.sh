@@ -770,7 +770,7 @@ _koopa_mkdir() { # {{{1
 _koopa_mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2020-04-16.
+    # @note Updated 2020-07-01.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -789,7 +789,6 @@ _koopa_mktemp() { # {{{1
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    [ "$#" -gt 0 ] || return 1
     _koopa_is_installed mktemp || return 1
     local date_id template user_id
     user_id="$(_koopa_current_user_id)"
