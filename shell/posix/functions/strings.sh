@@ -1,21 +1,28 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# FIXME REORDER SO CAN WE PARAMETERIZE?
 _koopa_gsub() { # {{{1
     # """
     # Global substitution.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     #
     # Instead of using '|' in sed here, we can also escape '/'.
+    #
+    # @examples
+    # _koopa_gsub "a" "" "aabb" "aacc"
+    # ## bb
+    # ## cc
     # """
-    [ "$#" -ge 2 ] && [ "$#" -le 3 ] || return 1
+    [ "$#" -ge 3 ] || return 1
     _koopa_is_installed sed || return 1
     local pattern replacement string
-    string="${1:?}"
-    pattern="${2:?}"
-    replacement="${3:-}"
-    _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|g"
+    pattern="${1:?}"
+    replacement="${2:-}"
+    shift 2
+    for string in "$@"
+    do
+        _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|g"
+    done
     return 0
 }
 
@@ -45,7 +52,8 @@ _koopa_snake_case() { # {{{1
     # Simple snake case function.
     # @note Updated 2020-07-01.
     #
-    # @seealso Exported 'snake-case' that uses R syntactic internally.
+    # @seealso
+    # - Exported 'snake-case' that uses R syntactic internally.
     #
     # @examples
     # _koopa_snake_case "hello world"
@@ -55,16 +63,10 @@ _koopa_snake_case() { # {{{1
     # ## bcbio_nextgen_py
     # """
     [ "$#" -gt 0 ] || return 1
-    local string
-    string="${1:?}"
-    for string in "$@"
-    do
-        _koopa_gsub "$string" "[^A-Za-z0-9_]" "_"
-    done
+    _koopa_gsub "[^A-Za-z0-9_]" "_" "$@"
     return 0
 }
 
-# FIXME REORDER SO CAN WE PARAMETERIZE?
 _koopa_strip_left() { # {{{1
     # """
     # Strip pattern from left side (start) of string.
@@ -73,17 +75,21 @@ _koopa_strip_left() { # {{{1
     # @usage _koopa_strip_left "string" "pattern"
     #
     # @examples
-    # _koopa_strip_left "The Quick Brown Fox" "The "
+    # _koopa_strip_left "The " "The Quick Brown Fox" "The White Lady"
+    # ## Quick Brown Fox
+    # ## White Lady
     # """
-    [ "$#" -eq 2 ] || return 1
+    [ "$#" -ge 2 ] || return 1
     local pattern string
-    string="${1:?}"
-    pattern="${2:?}"
-    printf '%s\n' "${string##$pattern}"
+    pattern="${1:?}"
+    shift 1
+    for string in "$@"
+    do
+        printf "%s\n" "${string##$pattern}"
+    done
     return 0
 }
 
-# FIXME REORDER SO CAN WE PARAMETERIZE?
 _koopa_strip_right() { # {{{1
     # """
     # Strip pattern from right side (end) of string.
@@ -92,12 +98,18 @@ _koopa_strip_right() { # {{{1
     # @usage _koopa_strip_right "string" "pattern"
     #
     # @examples
-    # _koopa_strip_right "The Quick Brown Fox" " Fox"
+    # _koopa_strip_right " Fox" "The Quick Brown Fox" "Michael J. Fox"
+    # ## The Quick Brown
+    # ## Michael J.
     # """
+    [ "$#" -ge 2 ] || return 1
     local pattern string
-    string="${1:?}"
-    pattern="${2:?}"
-    printf '%s\n' "${string%%$pattern}"
+    pattern="${1:?}"
+    shift 1
+    for string in "$@"
+    do
+        printf '%s\n' "${string%%$pattern}"
+    done
     return 0
 }
 
@@ -111,17 +123,14 @@ _koopa_strip_trailing_slash() { # {{{1
     #
     # @examples
     # _koopa_strip_trailing_slash "./dir1/" "./dir2/"
+    # ## ./dir1
+    # ## ./dir2
     # """
     [ "$#" -gt 0 ] || return 1
-    local string
-    for string in "$@"
-    do
-        _koopa_strip_right "$string" '/'
-    done
+    _koopa_strip_right "/" "$@"
     return 0
 }
 
-# FIXME REORDER SO CAN WE PARAMETERIZE?
 _koopa_sub() { # {{{1
     # """
     # Substitution.
@@ -130,13 +139,21 @@ _koopa_sub() { # {{{1
     # Instead of using '|' in sed here, we can also escape '/'.
     #
     # @seealso _koopa_gsub (for global matching).
+    # @examples
+    # _koopa_sub "a" "" "aaa" "aaa"
+    # ## aa
+    # ## aa
     # """
+    [ "$#" -ge 3 ] || return 1
     _koopa_is_installed sed || return 1
     local pattern replacement string
-    string="${1:?}"
-    pattern="${2:?}"
-    replacement="${3:-}"
-    _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|"
+    pattern="${1:?}"
+    replacement="${2:-}"
+    shift 2
+    for string in "$@"
+    do
+        _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|"
+    done
     return 0
 }
 
