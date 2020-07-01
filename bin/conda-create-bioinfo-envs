@@ -164,13 +164,16 @@ _koopa_conda_create_bioinfo_envs() {
     then
         _koopa_h2 "Variation"
         _koopa_conda_create_env peddy                  # dna-seq        # 1.200G
-        _koopa_conda_create_env arriba                 # rna-seq        # 0.987G
         _koopa_conda_create_env ericscript             # rna-seq        # 0.728G
         _koopa_conda_create_env oncofuse               # rna-seq        # 0.507G
         _koopa_conda_create_env pizzly                 # rna-seq        # 0.293G
         _koopa_conda_create_env squid                  # rna-seq        # 0.041G
         _koopa_conda_create_env star-fusion            # rna-seq        # 1.600G
         _koopa_conda_create_env vardict                # rna-seq        # 0.396G
+        if _koopa_is_linux
+        then
+            _koopa_conda_create_env arriba             # rna-seq        # 0.987G
+        fi
     fi
     if [[ "$rnaseq" -eq 1 ]]
     then
