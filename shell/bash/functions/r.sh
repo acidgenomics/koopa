@@ -22,10 +22,11 @@ _koopa_array_to_r_vector() { # {{{1
 _koopa_link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-07-01.
     #
     # Don't copy Makevars file across machines.
     # """
+    [[ "$#" -le 1 ]] || return 1
     local r_prefix
     r_prefix="${1:-$(_koopa_r_prefix)}"
     if [[ ! -d "$r_prefix" ]]
@@ -77,7 +78,7 @@ _koopa_link_r_etc() { # {{{1
     local file
     for file in "${files[@]}"
     do
-        [ -f "${r_etc_source}/${file}" ] || continue
+        [[ -f "${r_etc_source}/${file}" ]] || continue
         _koopa_ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
     done
     return 0
@@ -86,8 +87,9 @@ _koopa_link_r_etc() { # {{{1
 _koopa_link_r_site_library() { # {{{1
     # """
     # Link R site library.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-07-01.
     # """
+    [[ "$#" -le 1 ]] || return 1
     local r_prefix
     r_prefix="${1:-$(_koopa_r_prefix)}"
     [[ -d "$r_prefix" ]] || return 1
@@ -96,7 +98,7 @@ _koopa_link_r_site_library() { # {{{1
     [[ -x "$r_exe" ]] || return 1
     local version
     version="$(_koopa_r_version "$r_exe")"
-    if [[ "$version" != 'devel' ]]
+    if [[ "$version" != "devel" ]]
     then
         version="$(_koopa_major_minor_version "$version")"
     fi
@@ -194,10 +196,11 @@ _koopa_r_javareconf() { # {{{1
 _koopa_update_r_config() { # {{{1
     # """
     # Update R configuration.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-07-01.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
+    [[ "$#" -le 1 ]] || return 1
     _koopa_h1 "Updating R configuration."
     # Locate R command.
     local r_exe
