@@ -1,9 +1,40 @@
 #!/usr/bin/env zsh
 
+if [[ "$#" -gt 0 ]]
+then
+    pos=()
+    for i in "$@"
+    do
+        case "$1" in
+            --activate)
+                activate=1
+                shift 1
+                ;;
+            --no-header-checks)
+                checks=0
+                shift 1
+                ;;
+            --no-set-opts)
+                shopts=0
+                shift 1
+                ;;
+            --verbose)
+                verbose=1
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+fi
+
 _koopa_zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     # """
     local file major_version pos
     [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
@@ -11,36 +42,6 @@ _koopa_zsh_header() { # {{{1
     [[ -z "${checks:-}" ]] && local checks=1
     [[ -z "${shopts:-}" ]] && local shopts=1
     [[ -z "${verbose:-}" ]] && local verbose=0
-    if [[ "$#" -gt 0 ]]
-    then
-        pos=()
-        for i in "$@"
-        do
-            case "$1" in
-                --activate)
-                    activate=1
-                    shift 1
-                    ;;
-                --no-header-checks)
-                    checks=0
-                    shift 1
-                    ;;
-                --no-set-opts)
-                    shopts=0
-                    shift 1
-                    ;;
-                --verbose)
-                    verbose=1
-                    shift 1
-                    ;;
-                *)
-                    pos+=("$1")
-                    shift 1
-                    ;;
-            esac
-        done
-        [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    fi
     if [[ "$activate" -eq 1 ]]
     then
         checks=0
