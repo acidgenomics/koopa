@@ -4,228 +4,218 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_is_installed conda
+_koopa_conda_create_bioinfo_envs() {
+    _koopa_assert_is_installed conda
+    local all aligners chipseq data_mining file_formats methylation \
+        quality_control rnaseq singlecell trimming variation workflows
+    all=0
+    aligners=0
+    chipseq=0
+    data_mining=0
+    file_formats=0
+    methylation=0
+    quality_control=0
+    rnaseq=0
+    singlecell=0
+    trimming=0
+    variation=0
+    workflows=0
+    # Set recommended defaults, if necessary.
+    if [[ "$#" -eq 0 ]]
+    then
+        chipseq=1
+        data_mining=1
+        file_formats=1
+        quality_control=1
+        rnaseq=1
+    fi
+    while (("$#"))
+    do
+        case "$1" in
+            --all)
+                all=1
+                shift 1
+                ;;
+            --aligners)
+                aligners=1
+                shift 1
+                ;;
+            --chipseq|--chip-seq)
+                chipseq=1
+                shift 1
+                ;;
+            --data-mining)
+                data_mining=1
+                shift 1
+                ;;
+            --file-formats)
+                file_formats=1
+                shift 1
+                ;;
+            --methylation)
+                methylation=1
+                shift 1
+                ;;
+            --qc|quality-control)
+                quality_control=1
+                shift 1
+                ;;
+            --rnaseq|--rna-seq)
+                rnaseq=1
+                shift 1
+                ;;
+            --singlecell|--single-cell|--scrnaseq)
+                singlecell=1
+                shift 1
+                ;;
+            --trimming)
+                trimming=1
+                shift 1
+                ;;
+            --variation)
+                variation=1
+                shift 1
+                ;;
+            --workflows)
+                workflows=1
+                shift 1
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "$all" -eq 1 ]]
+    then
+        aligners=1
+        chipseq=1
+        data_mining=1
+        file_formats=1
+        methylation=1
+        quality_control=1
+        rnaseq=1
+        singlecell=1
+        trimming=1
+        variation=1
+        workflows=1
+    fi
+    _koopa_h1 "Installing conda environments for bioinformatics."
+    if [[ "$file_formats" -eq 1 ]]
+    then
+        _koopa_h2 "File formats"
+        _koopa_conda_create_env bamtools                                # 0.043G
+        _koopa_conda_create_env bcftools
+        _koopa_conda_create_env bedtools                                # 0.082G
+        _koopa_conda_create_env bioawk                                  # 0.027G
+        _koopa_conda_create_env gffutils                                # 0.222G
+        _koopa_conda_create_env htslib                                  # 0.082G
+        _koopa_conda_create_env sambamba
+        _koopa_conda_create_env samblaster                              # 0.039G
+        _koopa_conda_create_env samtools                                # 0.083G
+        _koopa_conda_create_env seqtk                                   # 0.027G
+        if _koopa_is_linux
+        then
+            _koopa_conda_create_env biobambam                           # 0.065G
+        fi
+    fi
+    if [[ "$data_mining" -eq 1 ]]
+    then
+        _koopa_h2 "Data mining"
+        _koopa_conda_create_env entrez-direct                           # 0.154G
+        _koopa_conda_create_env sra-tools                               # 0.315G
+    fi
+    if [[ "$workflows" -eq 1 ]]
+    then
+        _koopa_h2 "Workflows"
+        _koopa_conda_create_env cromwell                                # 0.724G
+        _koopa_conda_create_env fgbio                                   # 0.628G
+        _koopa_conda_create_env gatk4                                   # 0.658G
+        _koopa_conda_create_env jupyterlab                              # 0.410G
+        _koopa_conda_create_env nextflow                                # 0.518G
+        _koopa_conda_create_env snakemake                               # 0.788G
+    fi
+    if [[ "$quality_control" -eq 1 ]]
+    then
+        _koopa_h2 "Quality control"
+        _koopa_conda_create_env fastqc                                  # 0.513G
+        _koopa_conda_create_env kraken                                  # 0.170G
+        _koopa_conda_create_env multiqc                                 # 1.100G
+        _koopa_conda_create_env picard                                  # 0.923G
+        _koopa_conda_create_env qualimap                                # 1.200G
+    fi
+    if [[ "$trimming" -eq 1 ]]
+    then
+        _koopa_h2 "Trimming"
+        _koopa_conda_create_env atropos                                 # 0.152G
+        _koopa_conda_create_env trimmomatic                             # 0.095G
+    fi
+    if [[ "$aligners" -eq 1 ]]
+    then
+        _koopa_h2 "Aligners"
+        _koopa_conda_create_env bowtie2                                 # 0.319G
+        _koopa_conda_create_env bwa                                     # 0.105G
+        _koopa_conda_create_env hisat2                                  # 0.260G
+        _koopa_conda_create_env minimap2                                # 0.045G
+        _koopa_conda_create_env novoalign                               # 0.092G
+        _koopa_conda_create_env rsem                                    # 0.744G
+        _koopa_conda_create_env star                                    # 0.009G
+    fi
+    if [[ "$variation" -eq 1 ]]
+    then
+        _koopa_h2 "Variation"
+        _koopa_conda_create_env peddy                  # dna-seq        # 1.200G
+        _koopa_conda_create_env arriba                 # rna-seq        # 0.987G
+        _koopa_conda_create_env ericscript             # rna-seq        # 0.728G
+        _koopa_conda_create_env oncofuse               # rna-seq        # 0.507G
+        _koopa_conda_create_env pizzly                 # rna-seq        # 0.293G
+        _koopa_conda_create_env squid                  # rna-seq        # 0.041G
+        _koopa_conda_create_env star-fusion            # rna-seq        # 1.600G
+        _koopa_conda_create_env vardict                # rna-seq        # 0.396G
+    fi
+    if [[ "$rnaseq" -eq 1 ]]
+    then
+        _koopa_h2 "RNA-seq"
+        # > _koopa_conda_create_env r-bcbiornaseq                       # 2.200G
+        # > _koopa_conda_create_env r-deseqanalysis                     # 0.437G
+        _koopa_conda_create_env kallisto                                # 0.054G
+        _koopa_conda_create_env rapmap                                  # 0.088G
+        _koopa_conda_create_env salmon                                  # 0.192G
+        _koopa_conda_create_env star                                    # 0.009G
+    fi
+    if [[ "$chipseq" -eq 1 ]]
+    then
+        _koopa_h2 "ChIP-seq"
+        _koopa_conda_create_env bowtie2                                 # 0.319G
+        _koopa_conda_create_env chromhmm                                # 0.428G
+        _koopa_conda_create_env deeptools                               # 1.200G
+        _koopa_conda_create_env genrich                                 # 0.000G
+        _koopa_conda_create_env homer                                   # 0.263G
+        _koopa_conda_create_env macs2                                   # 0.748G
+        _koopa_conda_create_env sicer2                                  # 0.748G
+    fi
+    if [[ "$singlecell" -eq 1 ]]
+    then
+        _koopa_h2 "Single-cell RNA-seq"
+        # > _koopa_conda_create_env r-bcbiosinglecell                   # 0.438G
+        # > _koopa_conda_create_env r-monocle3                          # 0.874G
+        # > _koopa_conda_create_env r-seurat                            # 0.154G
+        # > _koopa_conda_create_env stream                              # 0.998G
+        _koopa_conda_create_env kallisto
+        _koopa_conda_create_env salmon
+    fi
+    if [[ "$methylation" -eq 1 ]]
+    then
+        _koopa_h2 "Methylation"
+        _koopa_conda_create_env bismark                                 # 0.406G
+    fi
+    if [[ "$all" -eq 1 ]]
+    then
+        _koopa_h2 "Other tools"
+        _koopa_conda_create_env igvtools                                # 0.477G
+    fi
+    _koopa_set_permissions --recursive "$(_koopa_conda_prefix)"
+    conda env list
+    return 0
+}
 
-all=0
-
-aligners=0
-chipseq=0
-data_mining=0
-file_formats=0
-methylation=0
-quality_control=0
-rnaseq=0
-singlecell=0
-trimming=0
-variation=0
-workflows=0
-
-# Set recommended defaults, if necessary.
-if [[ "$#" -eq 0 ]]
-then
-    chipseq=1
-    data_mining=1
-    file_formats=1
-    quality_control=1
-    rnaseq=1
-fi
-
-while (("$#"))
-do
-    case "$1" in
-        --all)
-            all=1
-            shift 1
-            ;;
-        --aligners)
-            aligners=1
-            shift 1
-            ;;
-        --chipseq|--chip-seq)
-            chipseq=1
-            shift 1
-            ;;
-        --data-mining)
-            data_mining=1
-            shift 1
-            ;;
-        --file-formats)
-            file_formats=1
-            shift 1
-            ;;
-        --methylation)
-            methylation=1
-            shift 1
-            ;;
-        --qc|quality-control)
-            quality_control=1
-            shift 1
-            ;;
-        --rnaseq|--rna-seq)
-            rnaseq=1
-            shift 1
-            ;;
-        --singlecell|--single-cell|--scrnaseq)
-            singlecell=1
-            shift 1
-            ;;
-        --trimming)
-            trimming=1
-            shift 1
-            ;;
-        --variation)
-            variation=1
-            shift 1
-            ;;
-        --workflows)
-            workflows=1
-            shift 1
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-done
-
-if [[ "$all" -eq 1 ]]
-then
-    aligners=1
-    chipseq=1
-    data_mining=1
-    file_formats=1
-    methylation=1
-    quality_control=1
-    rnaseq=1
-    singlecell=1
-    trimming=1
-    variation=1
-    workflows=1
-fi
-
-_koopa_h1 "Installing conda environments for bioinformatics."
-
-if [[ "$file_formats" -eq 1 ]]
-then
-    _koopa_h2 "File formats"
-    _koopa_conda_create_env bamtools                                    # 0.043G
-    _koopa_conda_create_env bcftools
-    _koopa_conda_create_env bedtools                                    # 0.082G
-    _koopa_conda_create_env bioawk                                      # 0.027G
-    _koopa_conda_create_env biobambam                                   # 0.065G
-    _koopa_conda_create_env gffutils                                    # 0.222G
-    _koopa_conda_create_env htslib                                      # 0.082G
-    _koopa_conda_create_env sambamba
-    _koopa_conda_create_env samblaster                                  # 0.039G
-    _koopa_conda_create_env samtools                                    # 0.083G
-    _koopa_conda_create_env seqtk                                       # 0.027G
-fi
-
-if [[ "$data_mining" -eq 1 ]]
-then
-    _koopa_h2 "Data mining"
-    _koopa_conda_create_env entrez-direct                               # 0.154G
-    _koopa_conda_create_env sra-tools                                   # 0.315G
-fi
-
-if [[ "$workflows" -eq 1 ]]
-then
-    _koopa_h2 "Workflows"
-    _koopa_conda_create_env cromwell                                    # 0.724G
-    _koopa_conda_create_env fgbio                                       # 0.628G
-    _koopa_conda_create_env gatk4                                       # 0.658G
-    _koopa_conda_create_env jupyterlab                                  # 0.410G
-    _koopa_conda_create_env nextflow                                    # 0.518G
-    _koopa_conda_create_env snakemake                                   # 0.788G
-fi
-
-if [[ "$quality_control" -eq 1 ]]
-then
-    _koopa_h2 "Quality control"
-    _koopa_conda_create_env fastqc                                      # 0.513G
-    _koopa_conda_create_env kraken                                      # 0.170G
-    _koopa_conda_create_env multiqc                                     # 1.100G
-    _koopa_conda_create_env picard                                      # 0.923G
-    _koopa_conda_create_env qualimap                                    # 1.200G
-fi
-
-if [[ "$trimming" -eq 1 ]]
-then
-    _koopa_h2 "Trimming"
-    _koopa_conda_create_env atropos                                     # 0.152G
-    _koopa_conda_create_env trimmomatic                                 # 0.095G
-fi
-
-if [[ "$aligners" -eq 1 ]]
-then
-    _koopa_h2 "Aligners"
-    _koopa_conda_create_env bowtie2                                     # 0.319G
-    _koopa_conda_create_env bwa                                         # 0.105G
-    _koopa_conda_create_env hisat2                                      # 0.260G
-    _koopa_conda_create_env minimap2                                    # 0.045G
-    _koopa_conda_create_env novoalign                                   # 0.092G
-    _koopa_conda_create_env rsem                                        # 0.744G
-    _koopa_conda_create_env star                                        # 0.009G
-fi
-
-if [[ "$variation" -eq 1 ]]
-then
-    _koopa_h2 "Variation"
-    _koopa_conda_create_env peddy                  # dna-seq            # 1.200G
-    _koopa_conda_create_env arriba                 # rna-seq            # 0.987G
-    _koopa_conda_create_env ericscript             # rna-seq            # 0.728G
-    _koopa_conda_create_env oncofuse               # rna-seq            # 0.507G
-    _koopa_conda_create_env pizzly                 # rna-seq            # 0.293G
-    _koopa_conda_create_env squid                  # rna-seq            # 0.041G
-    _koopa_conda_create_env star-fusion            # rna-seq            # 1.600G
-    _koopa_conda_create_env vardict                # rna-seq            # 0.396G
-fi
-
-if [[ "$rnaseq" -eq 1 ]]
-then
-    _koopa_h2 "RNA-seq"
-    # > _koopa_conda_create_env r-bcbiornaseq                           # 2.200G
-    # > _koopa_conda_create_env r-deseqanalysis                         # 0.437G
-    _koopa_conda_create_env kallisto                                    # 0.054G
-    _koopa_conda_create_env rapmap                                      # 0.088G
-    _koopa_conda_create_env salmon                                      # 0.192G
-    _koopa_conda_create_env star                                        # 0.009G
-fi
-
-if [[ "$chipseq" -eq 1 ]]
-then
-    _koopa_h2 "ChIP-seq"
-    _koopa_conda_create_env bowtie2                                     # 0.319G
-    _koopa_conda_create_env chromhmm                                    # 0.428G
-    _koopa_conda_create_env deeptools                                   # 1.200G
-    _koopa_conda_create_env genrich                                     # 0.000G
-    _koopa_conda_create_env homer                                       # 0.263G
-    _koopa_conda_create_env macs2                                       # 0.748G
-    _koopa_conda_create_env sicer2                                      # 0.748G
-fi
-
-if [[ "$singlecell" -eq 1 ]]
-then
-    _koopa_h2 "Single-cell RNA-seq"
-    # > _koopa_conda_create_env r-bcbiosinglecell                       # 0.438G
-    # > _koopa_conda_create_env r-seurat                                # 0.154G
-    _koopa_conda_create_env kallisto
-    # > _koopa_conda_create_env r-monocle3                              # 0.874G
-    _koopa_conda_create_env salmon
-    # > _koopa_conda_create_env stream                                  # 0.998G
-fi
-
-if [[ "$methylation" -eq 1 ]]
-then
-    _koopa_h2 "Methylation"
-    _koopa_conda_create_env bismark                                     # 0.406G
-fi
-
-if [[ "$all" -eq 1 ]]
-then
-    _koopa_h2 "Other tools"
-    _koopa_conda_create_env igvtools                                    # 0.477G
-fi
-
-_koopa_set_permissions --recursive "$(_koopa_conda_prefix)"
-
-conda env list
+_koopa_conda_create_bioinfo_envs "$@"
