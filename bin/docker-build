@@ -4,163 +4,151 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# """
-# Build and push a docker image.
-# Updated 2020-06-02.
-#
-# Use '--no-cache' flag to disable build cache.
-#
-# Examples:
-# docker-build-image bioconductor release
-# docker-build fedora
-#
-# See also:
-# - docker build --help
-# - https://docs.docker.com/engine/reference/builder/#arg
-# """
-
-_koopa_assert_is_installed docker
-
-# e.g. ~/.config/koopa/docker
-docker_dir="$(_koopa_docker_prefix)"
-_koopa_assert_is_dir "$docker_dir"
-
-delete=0
-push=1
-server="docker.io"
-tag="latest"
-
-pos=()
-while (("$#"))
-do
-    case "$1" in
-        --delete)
-            delete=1
-            shift 1
-            ;;
-        --no-delete)
-            delete=0
-            shift 1
-            ;;
-        --no-push)
-            push=0
-            shift 1
-            ;;
-        --push)
-            push=1
-            shift 1
-            ;;
-        --server=*)
-            server="${1#*=}"
-            shift 1
-            ;;
-        --server)
-            server="$2"
-            shift 2
-            ;;
-        --tag=*)
-            tag="${1#*=}"
-            shift 1
-            ;;
-        --tag)
-            tag="$2"
-            shift 2
-            ;;
-        --)
-            shift 1
-            break
-            ;;
-        --*|-*)
-            _koopa_invalid_arg "$1"
-            ;;
-        *)
-            pos+=("$1")
-            shift 1
-            ;;
-    esac
-done
-[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-# e.g. acidgenomics/debian
-image="${1:?}"
-
-# Assume acidgenomics recipe by default.
-if ! _koopa_str_match "$image" "/"
-then
-    image="acidgenomics/${image}"
-fi
-
-# Handle tag support, if necessary.
-if _koopa_str_match "$image" ":"
-then
-    tag="$(_koopa_print "$image" | cut -d ':' -f 2)"
-    image="$(_koopa_print "$image" | cut -d ':' -f 1)"
-fi
-
-source_image="${docker_dir}/${image}/${tag}"
-_koopa_assert_is_dir "$source_image"
-
-today="$(date "+%Y%m%d")"
-
-if [[ -L "$source_image" ]]
-then
-    symlink_tag="$(basename "$source_image")"
-    symlink_tagged_image="${image}:${symlink_tag}"
-    symlink_tagged_image_today="${symlink_tagged_image}-${today}"
-    # Now resolve the symlink to real path.
-    source_image="$(_koopa_realpath "$source_image")"
-    tag="$(basename "$source_image")"
-fi
-
-# e.g. acidgenomics/debian:latest
-tagged_image="${image}:${tag}"
-# e.g. acidgenomics/debian:latest-20200101
-tagged_image_today="${tagged_image}-${today}"
-
-_koopa_h1 "Building '${tagged_image}' Docker image."
-
-docker login "$server"
-
-# Force remove any existing local tagged images.
-if [[ "$delete" -eq 1 ]]
-then
-    readarray -t image_ids <<< "$( \
-        docker image ls \
-            --filter reference="$tagged_image" \
-            --quiet \
-    )"
-    if _koopa_is_array_non_empty "${image_ids[@]}"
+_koopa_docker_build() { # {{{1
+    # """
+    # Build and push a docker image.
+    # Updated 2020-06-02.
+    #
+    # Use '--no-cache' flag to disable build cache.
+    #
+    # Examples:
+    # docker-build-image bioconductor release
+    # docker-build fedora
+    #
+    # See also:
+    # - docker build --help
+    # - https://docs.docker.com/engine/reference/builder/#arg
+    # """
+    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_is_installed docker
+    local delete docker_dir image image_ids pos push server source_image \
+        symlink_tag symlink_tagged_image symlink_tagged_image_today tag \
+        tagged_image tagged_image_today today
+    docker_dir="$(_koopa_docker_prefix)"
+    _koopa_assert_is_dir "$docker_dir"
+    delete=0
+    push=1
+    server="docker.io"
+    tag="latest"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --delete)
+                delete=1
+                shift 1
+                ;;
+            --no-delete)
+                delete=0
+                shift 1
+                ;;
+            --no-push)
+                push=0
+                shift 1
+                ;;
+            --push)
+                push=1
+                shift 1
+                ;;
+            --server=*)
+                server="${1#*=}"
+                shift 1
+                ;;
+            --server)
+                server="$2"
+                shift 2
+                ;;
+            --tag=*)
+                tag="${1#*=}"
+                shift 1
+                ;;
+            --tag)
+                tag="$2"
+                shift 2
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    # e.g. acidgenomics/debian
+    image="${1:?}"
+    # Assume acidgenomics recipe by default.
+    if ! _koopa_str_match "$image" "/"
     then
-        docker image rm --force "${image_ids[@]}"
+        image="acidgenomics/${image}"
     fi
-fi
-
-# Build a local copy of the image.
-docker build \
-    --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}" \
-    --no-cache \
-    --tag="$tagged_image_today" \
-    "$source_image"
-
-docker tag "$tagged_image_today" "$tagged_image"
-if [[ -n "${symlink_tag:-}" ]]
-then
-    docker tag "$tagged_image_today" "$symlink_tagged_image_today"
-    docker tag "$symlink_tagged_image_today" "$symlink_tagged_image"
-fi
-
-if [[ "$push" -eq 1 ]]
-then
-    docker push "${server}/${tagged_image_today}"
-    docker push "${server}/${tagged_image}"
+    # Handle tag support, if necessary.
+    if _koopa_str_match "$image" ":"
+    then
+        tag="$(_koopa_print "$image" | cut -d ':' -f 2)"
+        image="$(_koopa_print "$image" | cut -d ':' -f 1)"
+    fi
+    source_image="${docker_dir}/${image}/${tag}"
+    _koopa_assert_is_dir "$source_image"
+    today="$(date "+%Y%m%d")"
+    if [[ -L "$source_image" ]]
+    then
+        symlink_tag="$(basename "$source_image")"
+        symlink_tagged_image="${image}:${symlink_tag}"
+        symlink_tagged_image_today="${symlink_tagged_image}-${today}"
+        # Now resolve the symlink to real path.
+        source_image="$(_koopa_realpath "$source_image")"
+        tag="$(basename "$source_image")"
+    fi
+    # e.g. acidgenomics/debian:latest
+    tagged_image="${image}:${tag}"
+    # e.g. acidgenomics/debian:latest-20200101
+    tagged_image_today="${tagged_image}-${today}"
+    _koopa_h1 "Building '${tagged_image}' Docker image."
+    docker login "$server"
+    # Force remove any existing local tagged images.
+    if [[ "$delete" -eq 1 ]]
+    then
+        readarray -t image_ids <<< "$( \
+            docker image ls \
+                --filter reference="$tagged_image" \
+                --quiet \
+        )"
+        if _koopa_is_array_non_empty "${image_ids[@]}"
+        then
+            docker image rm --force "${image_ids[@]}"
+        fi
+    fi
+    # Build a local copy of the image.
+    docker build \
+        --build-arg "GITHUB_PAT=${DOCKER_GITHUB_PAT:?}" \
+        --no-cache \
+        --tag="$tagged_image_today" \
+        "$source_image"
+    docker tag "$tagged_image_today" "$tagged_image"
     if [[ -n "${symlink_tag:-}" ]]
     then
-        docker push "${server}/${symlink_tagged_image_today}"
-        docker push "${server}/${symlink_tagged_image}"
+        docker tag "$tagged_image_today" "$symlink_tagged_image_today"
+        docker tag "$symlink_tagged_image_today" "$symlink_tagged_image"
     fi
-fi
+    if [[ "$push" -eq 1 ]]
+    then
+        docker push "${server}/${tagged_image_today}"
+        docker push "${server}/${tagged_image}"
+        if [[ -n "${symlink_tag:-}" ]]
+        then
+            docker push "${server}/${symlink_tagged_image_today}"
+            docker push "${server}/${symlink_tagged_image}"
+        fi
+    fi
+    docker image ls --filter reference="$tagged_image"
+    _koopa_success "Build of '${tagged_image}' was successful."
+    return 0
+}
 
-docker image ls \
-    --filter reference="$tagged_image"
-
-_koopa_success "Build of '${tagged_image}' was successful."
+_koopa_docker_build "$@"

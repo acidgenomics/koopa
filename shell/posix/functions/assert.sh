@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_assert_are_identical() {  # {{{1
+_koopa_assert_are_identical() { # {{{1
     # """
     # Assert that two strings are identical.
     # @note Updated 2020-02-04.
@@ -13,7 +13,7 @@ _koopa_assert_are_identical() {  # {{{1
     return 0
 }
 
-_koopa_assert_are_not_identical() {  # {{{1
+_koopa_assert_are_not_identical() { # {{{1
     # """
     # Assert that two strings are not identical.
     # @note Updated 2020-02-04.
@@ -25,7 +25,7 @@ _koopa_assert_are_not_identical() {  # {{{1
     return 0
 }
 
-_koopa_assert_has_args() {  # {{{1
+_koopa_assert_has_args() { # {{{1
     # """
     # Assert that the user has passed required arguments to a script.
     # @note Updated 2019-10-23.
@@ -39,13 +39,13 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_file_ext() {  # {{{1
+_koopa_assert_has_file_ext() { # {{{1
     # """
     # Assert that input contains a file extension.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_has_file_ext "$arg"
         then
@@ -115,12 +115,12 @@ _koopa_assert_has_gnu_tar() {  #{{{1
     return 0
 }
 
-_koopa_assert_has_no_args() {  # {{{1
+_koopa_assert_has_no_args() { # {{{1
     # """
     # Assert that the user has not passed any arguments to a script.
     # @note Updated 2019-10-23.
     # """
-    if [ "$#" -ne 0 ]
+    if [ "$#" -gt 0 ]
     then
         _koopa_stop "\
 Invalid argument: '${1}'.
@@ -129,7 +129,7 @@ Run with '--help' flag for usage details."
     return 0
 }
 
-_koopa_assert_has_no_envs() {  # {{{1
+_koopa_assert_has_no_envs() { # {{{1
     # """
     # Assert that conda and Python virtual environments aren't active.
     # @note Updated 2020-01-16.
@@ -149,7 +149,7 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
     return 0
 }
 
-_koopa_assert_has_sudo() {  # {{{1
+_koopa_assert_has_sudo() { # {{{1
     # """
     # Assert that current user has sudo (admin) permissions.
     # @note Updated 2019-10-23.
@@ -161,7 +161,7 @@ _koopa_assert_has_sudo() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_alpine() {  # {{{1
+_koopa_assert_is_alpine() { # {{{1
     # """
     # Assert that platform is Alpine.
     # @note Updated 2020-02-27.
@@ -173,7 +173,7 @@ _koopa_assert_is_alpine() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_arch() {  # {{{1
+_koopa_assert_is_arch() { # {{{1
     # """
     # Assert that platform is Arch.
     # @note Updated 2020-02-27.
@@ -185,13 +185,13 @@ _koopa_assert_is_arch() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_cellar() {  # {{{1
+_koopa_assert_is_cellar() { # {{{1
     # """
     # Assert that input is a cellarized program.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_cellar "$arg"
         then
@@ -201,7 +201,7 @@ _koopa_assert_is_cellar() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_conda_active() {  # {{{1
+_koopa_assert_is_conda_active() { # {{{1
     # """
     # Assert that a Conda environment is active.
     # @note Updated 2019-10-23.
@@ -213,13 +213,13 @@ _koopa_assert_is_conda_active() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_current_version() {  # {{{1
+_koopa_assert_is_current_version() { # {{{1
     # """
     # Assert that programs are installed and current.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
         then
@@ -231,7 +231,7 @@ _koopa_assert_is_current_version() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_debian() {  # {{{1
+_koopa_assert_is_debian() { # {{{1
     # """
     # Assert that platform is Debian.
     # @note Updated 2019-10-25.
@@ -243,13 +243,13 @@ _koopa_assert_is_debian() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_dir() {  # {{{1
+_koopa_assert_is_dir() { # {{{1
     # """
     # Assert that input is a directory.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -d "$arg" ]
         then
@@ -259,13 +259,13 @@ _koopa_assert_is_dir() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_executable() {  # {{{1
+_koopa_assert_is_executable() { # {{{1
     # """
     # Assert that input is executable.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -x "$arg" ]
         then
@@ -275,15 +275,15 @@ _koopa_assert_is_executable() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_existing() {  # {{{1
+_koopa_assert_is_existing() { # {{{1
     # """
     # Assert that input exists on disk.
     # @note Updated 2020-02-16.
     #
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -e "$arg" ]
         then
@@ -293,7 +293,7 @@ _koopa_assert_is_existing() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_fedora() {  # {{{1
+_koopa_assert_is_fedora() { # {{{1
     # """
     # Assert that platform is Fedora.
     # @note Updated 2019-10-25.
@@ -305,13 +305,13 @@ _koopa_assert_is_fedora() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_file() {  # {{{1
+_koopa_assert_is_file() { # {{{1
     # """
     # Assert that input is a file.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -f "$arg" ]
         then
@@ -321,7 +321,7 @@ _koopa_assert_is_file() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_file_type() {  # {{{1
+_koopa_assert_is_file_type() { # {{{1
     # """
     # Assert that input matches a specified file type.
     # @note Updated 2020-01-12.
@@ -336,13 +336,13 @@ _koopa_assert_is_file_type() {  # {{{1
     _koopa_assert_is_matching_regex "$file" "\.${ext}\$"
 }
 
-_koopa_assert_is_function() {  # {{{1
+_koopa_assert_is_function() { # {{{1
     # """
     # Assert that variable is a function.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_function "$arg"
         then
@@ -352,13 +352,13 @@ _koopa_assert_is_function() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_git_toplevel() {  # {{{1
+_koopa_assert_is_git_toplevel() { # {{{1
     # """
     # Assert that current directory is a git repo.
     # @note Updated 2020-04-29.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         arg="$(realpath "$arg")"
         if ! _koopa_is_git_toplevel "$arg"
@@ -369,7 +369,7 @@ _koopa_assert_is_git_toplevel() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_github_ssh_enabled() {  # {{{1
+_koopa_assert_is_github_ssh_enabled() { # {{{1
     # """
     # Assert that current user has SSH key access to GitHub.
     # @note Updated 2020-02-11.
@@ -381,7 +381,7 @@ _koopa_assert_is_github_ssh_enabled() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_gitlab_ssh_enabled() {  # {{{1
+_koopa_assert_is_gitlab_ssh_enabled() { # {{{1
     # """
     # Assert that current user has SSH key access to GitLab.
     # @note Updated 2020-02-11.
@@ -393,13 +393,13 @@ _koopa_assert_is_gitlab_ssh_enabled() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_installed() {  # {{{1
+_koopa_assert_is_installed() { # {{{1
     # """
     # Assert that programs are installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
         then
@@ -409,7 +409,7 @@ _koopa_assert_is_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_kali() {  # {{{1
+_koopa_assert_is_kali() { # {{{1
     # """
     # Assert that platform is Kali Linux.
     # @note Updated 2020-02-27.
@@ -421,7 +421,7 @@ _koopa_assert_is_kali() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_linux() {  # {{{1
+_koopa_assert_is_linux() { # {{{1
     # """
     # Assert that platform is Linux.
     # @note Updated 2019-10-23.
@@ -433,7 +433,7 @@ _koopa_assert_is_linux() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_macos() {  # {{{1
+_koopa_assert_is_macos() { # {{{1
     # """
     # Assert that platform is macOS (Darwin).
     # @note Updated 2020-01-13.
@@ -445,13 +445,13 @@ _koopa_assert_is_macos() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_non_existing() {  # {{{1
+_koopa_assert_is_non_existing() { # {{{1
     # """
     # Assert that input does not exist on disk.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -e "$arg" ]
         then
@@ -461,13 +461,13 @@ _koopa_assert_is_non_existing() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_nonzero_file() {  # {{{1
+_koopa_assert_is_nonzero_file() { # {{{1
     # """
     # Assert that input is a non-zero file.
     # @note Updated 2020-03-06.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -s "$arg" ]
         then
@@ -477,13 +477,13 @@ _koopa_assert_is_nonzero_file() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_dir() {  # {{{1
+_koopa_assert_is_not_dir() { # {{{1
     # """
     # Assert that input is not a directory.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -d "$arg" ]
         then
@@ -493,13 +493,13 @@ _koopa_assert_is_not_dir() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_file() {  # {{{1
+_koopa_assert_is_not_file() { # {{{1
     # """
     # Assert that input is not a file.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -f "$arg" ]
         then
@@ -509,13 +509,13 @@ _koopa_assert_is_not_file() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_installed() {  # {{{1
+_koopa_assert_is_not_installed() { # {{{1
     # """
     # Assert that programs are not installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if _koopa_is_installed "$arg"
         then
@@ -525,7 +525,7 @@ _koopa_assert_is_not_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_opensuse() {  # {{{1
+_koopa_assert_is_opensuse() { # {{{1
     # """
     # Assert that platform is openSUSE.
     # @note Updated 2020-02-27.
@@ -537,7 +537,7 @@ _koopa_assert_is_opensuse() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_rhel() {  # {{{1
+_koopa_assert_is_rhel() { # {{{1
     # """
     # Assert that platform is RHEL.
     # @note Updated 2020-01-14.
@@ -549,7 +549,7 @@ _koopa_assert_is_rhel() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_rhel_7() {  # {{{1
+_koopa_assert_is_rhel_7() { # {{{1
     # """
     # Assert that platform is RHEL 7.
     # @note Updated 2020-01-14.
@@ -561,7 +561,7 @@ _koopa_assert_is_rhel_7() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_rhel_8() {  # {{{1
+_koopa_assert_is_rhel_8() { # {{{1
     # """
     # Assert that platform is RHEL 8.
     # @note Updated 2020-01-14.
@@ -573,7 +573,7 @@ _koopa_assert_is_rhel_8() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_root() {  # {{{1
+_koopa_assert_is_not_root() { # {{{1
     # """
     # Assert that current user is not root.
     # @note Updated 2019-12-17.
@@ -585,13 +585,13 @@ _koopa_assert_is_not_root() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_not_symlink() {  # {{{1
+_koopa_assert_is_not_symlink() { # {{{1
     # """
     # Assert that input is not a symbolic link.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ -L "$arg" ]
         then
@@ -601,13 +601,13 @@ _koopa_assert_is_not_symlink() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_python_package_installed() {  # {{{1
+_koopa_assert_is_python_package_installed() { # {{{1
     # """
     # Assert that specific Python packages are installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_python_package_installed "${arg}"
         then
@@ -617,13 +617,13 @@ _koopa_assert_is_python_package_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_r_package_installed() {  # {{{1
+_koopa_assert_is_r_package_installed() { # {{{1
     # """
     # Assert that specific R packages are installed.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_r_package_installed "${arg}"
         then
@@ -633,13 +633,13 @@ _koopa_assert_is_r_package_installed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_readable() {  # {{{1
+_koopa_assert_is_readable() { # {{{1
     # """
     # Assert that input is readable.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -r "$arg" ]
         then
@@ -649,7 +649,7 @@ _koopa_assert_is_readable() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_root() {  # {{{1
+_koopa_assert_is_root() { # {{{1
     # """
     # Assert that the current user is root.
     # @note Updated 2019-12-17.
@@ -675,8 +675,8 @@ _koopa_assert_is_set() {
     # Example:
     # _koopa_assert_is_set PATH MANPATH xxx
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if ! _koopa_is_set "$arg"
         then
@@ -686,13 +686,13 @@ _koopa_assert_is_set() {
     return 0
 }
 
-_koopa_assert_is_symlink() {  # {{{1
+_koopa_assert_is_symlink() { # {{{1
     # """
     # Assert that input is a symbolic link.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -L "$arg" ]
         then
@@ -702,7 +702,7 @@ _koopa_assert_is_symlink() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_venv_active() {  # {{{1
+_koopa_assert_is_venv_active() { # {{{1
     # """
     # Assert that a Python virtual environment is active.
     # @note Updated 2019-10-23.
@@ -715,13 +715,13 @@ _koopa_assert_is_venv_active() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_writable() {  # {{{1
+_koopa_assert_is_writable() { # {{{1
     # """
     # Assert that input is writable.
     # @note Updated 2020-02-16.
     # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
+    [ "$#" -gt 0 ] || return 1
+    for arg in "$@"
     do
         if [ ! -r "$arg" ]
         then
@@ -731,7 +731,7 @@ _koopa_assert_is_writable() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_matching_fixed() {  # {{{1
+_koopa_assert_is_matching_fixed() { # {{{1
     # """
     # Assert that input matches a fixed pattern.
     # @note Updated 2020-01-12.
@@ -747,7 +747,7 @@ _koopa_assert_is_matching_fixed() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_matching_regex() {  # {{{1
+_koopa_assert_is_matching_regex() { # {{{1
     # """
     # Assert that input matches a regular expression pattern.
     # @note Updated 2020-01-12.
@@ -763,7 +763,7 @@ _koopa_assert_is_matching_regex() {  # {{{1
     return 0
 }
 
-_koopa_assert_is_ubuntu() {  # {{{1
+_koopa_assert_is_ubuntu() { # {{{1
     # """
     # Assert that platform is Ubuntu.
     # @note Updated 2020-01-14.
@@ -772,315 +772,5 @@ _koopa_assert_is_ubuntu() {  # {{{1
     then
         _koopa_stop "Ubuntu is required."
     fi
-    return 0
-}
-
-_koopa_check_azure() {  # {{{1
-    # """
-    # Check Azure VM integrity.
-    # @note Updated 2019-10-31.
-    # """
-    _koopa_is_azure || return 0
-    if [ -e "/mnt/resource" ]
-    then
-        _koopa_check_user "/mnt/resource" "root"
-        _koopa_check_group "/mnt/resource" "root"
-        _koopa_check_access_octal "/mnt/resource" "1777"
-    fi
-    _koopa_check_mount "/mnt/rdrive"
-    return 0
-}
-
-_koopa_check_access_human() {  # {{{1
-    # """
-    # Check if file or directory has expected human readable access.
-    # @note Updated 2020-01-12.
-    # """
-    local file
-    file="${1:?}"
-    local code
-    code="${2:?}"
-    if [ ! -e "$file" ]
-    then
-        _koopa_warning "'${file}' does not exist."
-        return 1
-    fi
-    local access
-    access="$(_koopa_stat_access_human "$file")"
-    if [ "$access" != "$code" ]
-    then
-        _koopa_warning "'${file}' current access '${access}' is not '${code}'."
-    fi
-    return 0
-}
-
-_koopa_check_access_octal() {  # {{{1
-    # """
-    # Check if file or directory has expected octal access.
-    # @note Updated 2020-01-12.
-    # """
-    local file
-    file="${1:?}"
-    local code
-    code="${2:?}"
-    if [ ! -e "$file" ]
-    then
-        _koopa_warning "'${file}' does not exist."
-        return 1
-    fi
-    local access
-    access="$(_koopa_stat_access_octal "$file")"
-    if [ "$access" != "$code" ]
-    then
-        _koopa_warning "'${file}' current access '${access}' is not '${code}'."
-    fi
-    return 0
-}
-
-_koopa_check_group() {  # {{{1
-    # """
-    # Check if file or directory has an expected group.
-    # @note Updated 2020-01-12.
-    # """
-    local file
-    file="${1:?}"
-    local code
-    code="${2:?}"
-    if [ ! -e "$file" ]
-    then
-        _koopa_warning "'${file}' does not exist."
-        return 1
-    fi
-    local group
-    group="$(_koopa_stat_group "$file")"
-    if [ "$group" != "$code" ]
-    then
-        _koopa_warning "'${file}' current group '${group}' is not '${code}'."
-        return 1
-    fi
-    return 0
-}
-
-_koopa_check_mount() {  # {{{1
-    # """
-    # Check if a drive is mounted.
-    # Usage of find is recommended over ls here.
-    # @note Updated 2020-06-03.
-    # """
-    _koopa_assert_is_installed find
-    local mnt
-    mnt="${1:?}"
-    if [ "$(find "$mnt" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]
-    then
-        _koopa_warning "'${mnt}' is unmounted."
-        return 1
-    fi
-    return 0
-}
-
-_koopa_check_user() {  # {{{1
-    # """
-    # Check if file or directory is owned by an expected user.
-    # @note Updated 2020-01-13.
-    # """
-    local file
-    file="${1:?}"
-    if [ ! -e "$file" ]
-    then
-        _koopa_warning "'${file}' does not exist on disk."
-        return 1
-    fi
-    file="$(realpath "$file")"
-    local expected_user
-    expected_user="${2:?}"
-    local current_user
-    current_user="$(_koopa_stat_user "$file")"
-    if [ "$current_user" != "$expected_user" ]
-    then
-        _koopa_warning "'${file}' user '${current_user}' is not \
-'${expected_user}'."
-        return 1
-    fi
-    return 0
-}
-
-_koopa_exit_if_current_version() {  # {{{1
-    # """
-    # Assert that programs are installed and current.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if _koopa_is_current_version "$arg"
-        then
-            _koopa_exit "'${arg}' is current version."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_dir() {  # {{{1
-    # """
-    # Exit with note if directory exists.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if [ -d "$arg" ]
-        then
-            _koopa_exit "Directory exists: '${arg}'."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_docker() {  # {{{1
-    # """
-    # Exit with note if running inside Docker.
-    # @note Updated 2020-04-21.
-    # """
-    if _koopa_is_docker
-    then
-        _koopa_exit "Not supported when running inside Docker."
-    fi
-    return 0
-}
-
-_koopa_exit_if_exists() {  # {{{1
-    # """
-    # Exit with note if any file type exists.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if [ -e "$arg" ]
-        then
-            _koopa_exit "Exists: '${arg}'."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_installed() {  # {{{1
-    # """
-    # Exit with note if an app is installed.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if _koopa_is_installed "$arg"
-        then
-            local where
-            where="$(_koopa_which_realpath "$arg")"
-            _koopa_exit "'${arg}' is installed at '${where}'."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_not_installed() {  # {{{1
-    # """
-    # Exit with note if an app is not installed.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if ! _koopa_is_installed "$arg"
-        then
-            _koopa_exit "'${arg}' is not installed."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_python_package_not_installed() {  # {{{1
-    # """
-    # Exit with note if a Python package is not installed.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if ! _koopa_is_python_package_installed "$arg"
-        then
-            _koopa_exit "'${arg}' Python package is not installed."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_r_package_installed() {  # {{{1
-    # """
-    # Exit with note if a R package is installed.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if _koopa_is_r_package_installed "$arg"
-        then
-            _koopa_exit "'${arg}' R package is installed."
-        fi
-    done
-    return 0
-}
-
-_koopa_exit_if_r_package_not_installed() {  # {{{1
-    # """
-    # Exit with note if a R package is not installed.
-    # @note Updated 2020-04-21.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if ! _koopa_is_r_package_installed "$arg"
-        then
-            _koopa_exit "'${arg}' R package is not installed."
-        fi
-    done
-    return 0
-}
-
-_koopa_run_if_installed() {  # {{{1
-    # """
-    # Run program(s) if installed.
-    # @note Updated 2020-02-06.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg
-    do
-        if ! _koopa_is_installed "$arg"
-        then
-            _koopa_note "Skipping '${arg}'."
-            continue
-        fi
-        local exe
-        exe="$(_koopa_which_realpath "$arg")"
-        "$exe"
-    done
-    return 0
-}
-
-_koopa_warn_if_export() {  # {{{1
-    # """
-    # Warn if variable is exported in current shell session.
-    # @note Updated 2020-02-20.
-    #
-    # Useful for checking against unwanted compiler settings.
-    # In particular, useful to check for 'LD_LIBRARY_PATH'.
-    # """
-    [ "$#" -ne 0 ] || return 1
-    for arg in "$@"
-    do
-        if _koopa_is_export "$arg"
-        then
-            _koopa_warning "'${arg}' is exported."
-        fi
-    done
     return 0
 }

@@ -1,10 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_link_emacs() {  # {{{1
+_koopa_link_emacs() { # {{{1
     # """
     # Link Emacs.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     #
     # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
@@ -52,7 +52,7 @@ _koopa_link_emacs() {  # {{{1
     return 0
 }
 
-_koopa_is_spacemacs_installed() {  # {{{1
+_koopa_is_spacemacs_installed() { # {{{1
     # """
     # Is Spacemacs installed?
     # @note Updated 2020-06-29.
@@ -68,7 +68,7 @@ _koopa_is_spacemacs_installed() {  # {{{1
     return 0
 }
 
-_koopa_update_spacemacs() {  # {{{1
+_koopa_update_spacemacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
     # @note Updated 2020-06-29.
@@ -76,12 +76,12 @@ _koopa_update_spacemacs() {  # {{{1
     # Potentially useful: 'emacs --no-window-system'
     # """
     [ "$#" -eq 0 ] || return 1
+    local prefix
     if ! _koopa_is_spacemacs_installed
     then
         _koopa_note "Spacemacs is not installed."
         return 0
     fi
-    local prefix
     prefix="$(_koopa_emacs_prefix)"
     (
         _koopa_cd "$prefix"

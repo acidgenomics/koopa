@@ -4,10 +4,22 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
-_koopa_assert_is_installed "vim"
+_koopa_entab() { # {{{1
+    # """
+    # Entab files.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_is_installed vim
+    local file
+    for file in "$@"
+    do
+        vim \
+            -c "set noexpandtab tabstop=4 shiftwidth=4" \
+            -c :%retab! \
+            -c :wq -E -s "$file"
+    done
+    return 0
+}
 
-vim \
-    -c "set noexpandtab tabstop=4 shiftwidth=4" \
-    -c :%retab! \
-    -c :wq -E -s "$1"
+_koopa_entab "$@"

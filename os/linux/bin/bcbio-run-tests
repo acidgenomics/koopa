@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
+# shellcheck source=/dev/null
+source "${script_dir}/../include/header.sh"
+
+_koopa_bcbio_run_tests() { # {{{1
+    # """
+    # Run bcbio unit tests.
+    # @note Updated 2020-06-30.
+    # """
+    local bcbio_prefix bin_dir git_dir tests_dir version
+    bcbio_prefix="$(_koopa_bcbio_prefix)"
+    version="development"
+    while (("$#"))
+    do
+        case "$1" in
+            --bcbio-prefix=*)
+                bcbio_prefix="${1#*=}"
+                shift 1
+                ;;
+            --bcbio-prefix)
+                bcbio_prefix="$2"
+                shift 2
+                ;;
+            --version=*)
+                version="${1#*=}"
+                shift 1
+                ;;
+            --version)
+                version="$2"
+                shift 2
+                ;;
+            *)
+                _koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    _koopa_assert_is_dir "$bcbio_prefix"
+    bin_dir="${bcbio_prefix}/${version}/tools/bin"
+    _koopa_assert_is_dir "$bin_dir"
+    git_dir="${bcbio_prefix}/git"
+    _koopa_assert_is_dir "$git_dir"
+    tests_dir="${git_dir}/tests"
+    _koopa_assert_is_dir "$tests_dir"
+    (
+        export PATH="${bin_dir}:${PATH}"
+        cd "$tests_dir" || exit 1
+        rm -frv test_automated_output
+        ./run_tests.sh fastrnaseq
+        ./run_tests.sh star
+        ./run_tests.sh hisat2
+        ./run_tests.sh rnaseq
+        ./run_tests.sh stranded
+        ./run_tests.sh chipseq
+        ./run_tests.sh scrnaseq
+        rm -frv test_automated_output
+    )
+    _koopa_success "All unit tests passed."
+    return 0
+}
+
+_koopa_bcbio_run_tests "$@"
