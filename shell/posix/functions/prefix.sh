@@ -485,7 +485,7 @@ _koopa_r_prefix() { # {{{1
     # We're suppressing errors here that can pop up if 'etc' isn't linked yet
     # after a clean install. Can warn about ldpaths missing.
     # """
-    [ "$#" -eq 0 ] || return 1
+    [ "$#" -le 1 ] || return 1
     local rscript_exe
     rscript_exe="${1:-Rscript}"
     _koopa_is_installed "$rscript_exe" || return 1
