@@ -4,11 +4,22 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
+_koopa_delete_named_subdirs() { # {{{1
+    # """
+    # Delete named subdirectories.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -eq 2 ]] || return 1
+    _koopa_assert_is_installed find
+    local dir subdir_name
+    dir="${1:?}"
+    subdir_name="${2:?}"
+    find "$dir" \
+        -type d \
+        -name "$subdir_name" \
+        -print0 \
+        | xargs -0 -I {} rm -frv {}
+    return 0
+}
 
-dir="$1"
-subdir_name="$2"
-
-find "$dir" -type d -name "$subdir_name" -print0 \
-    | xargs -0 -I {} \
-    rm -rf {}
+_koopa_delete_named_subdirs "$@"
