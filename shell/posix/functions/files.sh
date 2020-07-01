@@ -78,7 +78,7 @@ _koopa_basename_sans_ext2() { # {{{1
 _koopa_ensure_newline_at_end_of_file() { # {{{1
     # """
     # Ensure output CSV contains trailing line break.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     #
     # Otherwise 'readr::read_csv()' will skip the last line in R.
     # https://unix.stackexchange.com/questions/31947
@@ -89,7 +89,7 @@ _koopa_ensure_newline_at_end_of_file() { # {{{1
     # ed -s file <<< w
     # sed -i -e '$a\' file
     # """
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -eq 1 ] || return 1
     local file
     file="${1:?}"
     [ -n "$(tail -c1 "$file")" ] && printf '\n' >>"$file"
@@ -164,7 +164,7 @@ _koopa_find_and_replace_in_files() { # {{{1
     # by default on macOS.
     # https://stackoverflow.com/questions/4247068/
     # """
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -eq 2 ] || return 1
     local file from to
     from="${1:?}"
     to="${2:?}"
@@ -195,11 +195,12 @@ _koopa_find_and_replace_in_files() { # {{{1
 _koopa_find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
+    [ "$#" -le 1 ] || return 1
     _koopa_is_installed find grep || return 1
     local dir
     dir="${1:-"."}"
@@ -223,20 +224,18 @@ _koopa_find_broken_symlinks() { # {{{1
 _koopa_find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     #
     # This is used internally by 'list-dotfiles' script.
     #
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -eq 2 ] || return 1
     _koopa_is_installed awk find || return 1
-    local type
+    local header type x
     type="${1:?}"
-    local header
     header="${2:?}"
-    local x
     x="$( \
         find "$HOME" \
             -mindepth 1 \
@@ -256,8 +255,9 @@ _koopa_find_dotfiles() { # {{{1
 _koopa_find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     # """
+    [ "$#" -le 1 ] || return 1
     _koopa_is_installed find grep || return 1
     local dir x
     dir="${1:-"."}"
@@ -281,8 +281,9 @@ _koopa_find_empty_dirs() { # {{{1
 _koopa_find_large_dirs() { # {{{1
     # """
     # Find large directories.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     # """
+    [ "$#" -le 1 ] || return 1
     _koopa_is_installed du || return 1
     local dir x
     dir="${1:-"."}"
@@ -304,7 +305,7 @@ _koopa_find_large_dirs() { # {{{1
 _koopa_find_large_files() { # {{{1
     # """
     # Find large files.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     #
     # Note that use of 'grep --null-data' requires GNU grep.
     #
@@ -313,6 +314,7 @@ _koopa_find_large_files() { # {{{1
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
+    [ "$#" -le 1 ] || return 1
     _koopa_is_installed find grep || return 1
     local dir x
     dir="${1:-"."}"
@@ -360,34 +362,6 @@ _koopa_find_non_cellar_make_files() { # {{{1
             -not -path "${prefix}/share/emacs/site-lisp/*" \
             -not -path "${prefix}/share/zsh/site-functions/*" \
             | sort \
-    )"
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_find_text() { # {{{1
-    # """
-    # Find text in any file.
-    # @note Updated 2020-06-30.
-    #
-    # See also: https://github.com/stephenturner/oneliners
-    #
-    # Examples:
-    # _koopa_find_text "mytext" *.txt
-    # """
-    [ "$#" -gt 0 ] || return 1
-    _koopa_is_installed find || return 1
-    local dir file_name pattern x
-    pattern="${1:?}"
-    file_name="${2:?}"
-    dir="${3:-"."}"
-    dir="$(realpath "$dir")"
-    x="$( \
-        find "$dir" \
-            -mindepth 1 \
-            -type f \
-            -name "$file_name" \
-            -exec grep -il "$pattern" {} \;; \
     )"
     _koopa_print "$x"
     return 0
@@ -511,7 +485,7 @@ _koopa_stat_modified() {
     #
     # _koopa_stat_modified 'file.pdf' '%Y-%m-%d'
     # """
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -eq 2 ] || return 1
     local file format x
     file="${1:?}"
     format="${2:?}"
@@ -546,11 +520,11 @@ _koopa_stat_user() { # {{{1
 _koopa_sudo_write_string() { # {{{1
     # """
     # Write a string to disk using root user.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     #
     # Alternatively, 'tee -a' can be used to append file.
     # """
-    [ "$#" -gt 0 ] || return 1
+    [ "$#" -eq 2 ] || return 1
     local file string
     string="${1:?}"
     file="${2:?}"
