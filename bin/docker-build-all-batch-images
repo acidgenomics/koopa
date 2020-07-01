@@ -34,7 +34,7 @@ batch_dirs="$( \
         -type d \
         | sort \
 )"
-batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
+batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
 readarray -t images <<< "$(_koopa_print "$batch_dirs")"
 
 docker-build-all-images "${flags[@]}" "${images[@]}"

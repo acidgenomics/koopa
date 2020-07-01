@@ -80,7 +80,7 @@ then
             -type d \
             | sort \
     )"
-    nextflow_dirs="$(_koopa_sub "$nextflow_dirs" "${prefix}/" '')"
+    nextflow_dirs="$(_koopa_sub "${prefix}/" "" "$nextflow_dirs")"
     readarray -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
     images=("${images[@]}" "${nextflow_arr[@]}")
 
@@ -92,7 +92,7 @@ then
             -type d \
             | sort \
     )"
-    batch_dirs="$(_koopa_sub "$batch_dirs" "${prefix}/" '')"
+    batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
     readarray -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
     images=("${images[@]}" "${batch_arr[@]}")
 
