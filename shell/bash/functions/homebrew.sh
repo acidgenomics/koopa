@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+_koopa_brew_cask_outdated() { # {{{
+    # """
+    # List outdated Homebrew casks.
+    # @note Updated 2020-07-01.
+    #
+    # Need help with capturing output:
+    # - https://stackoverflow.com/questions/58344963/
+    # - https://unix.stackexchange.com/questions/253101/
+    #
+    # @seealso
+    # - brew leaves
+    # - brew deps --installed --tree
+    # - brew list --versions
+    # - brew info
+    # """
+    [[ "$#" -eq 0 ]] || return 1
+    _koopa_is_installed brew || return 1
+    local tmp_file x
+    tmp_file="$(_koopa_tmp_file)"
+    script -q "$tmp_file" brew cask outdated --greedy >/dev/null
+    x="$(grep -v "(latest)" "$tmp_file" | cut -d " " -f 1)"
+    [[ -n "$x" ]] || return 1
+    _koopa_print "$x"
+    return 0
+}
