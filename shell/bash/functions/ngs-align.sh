@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-_koopa_bam_filter() { # {{{1
+__koopa_bam_filter() { # {{{1
     # """
     # Perform filtering on a BAM file.
-    # @note Updated 2020-06-29.
-    #
-    # See also:
+    # @note Updated 2020-07-01.
+    # @seealso
     # - https://lomereiter.github.io/sambamba/docs/sambamba-view.html
     # - https://github.com/lomereiter/sambamba/wiki/
     #       %5Bsambamba-view%5D-Filter-expression-syntax
@@ -63,75 +62,52 @@ _koopa_bam_filter() { # {{{1
     return 0
 }
 
-_koopa_bam_filter_duplicates() { # {{{1
+__koopa_bam_filter_duplicates() { # {{{1
     # """
     # Remove duplicates from a duplicate marked BAM file.
-    # @note Updated 2020-06-29.
-    #
-    # See also:
-    # https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #     bam/__init__.py
+    # @note Updated 2020-07-01.
+    # @seealso
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #       bam/__init__.py
     # """
     [[ "$#" -gt 0 ]] || return 1
-    _koopa_bam_filter --filter="not duplicate" "$@"
+    __koopa_bam_filter --filter="not duplicate" "$@"
     return 0
 }
 
-_koopa_bam_filter_multimappers() { # {{{1
+__koopa_bam_filter_multimappers() { # {{{1
     # """
-    # Filter multi-mapped reads from BAM file.
-    # @note Updated 2020-06-29.
-    #
-    # See also:
-    # https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #     chipseq/__init__.py
+    # Filter multi-mapped reads from a BAM file.
+    # @note Updated 2020-07-01.
+    # @seealso
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #       chipseq/__init__.py
     # """
     [[ "$#" -gt 0 ]] || return 1
-    _koopa_bam_filter --filter="[XS] == null" "$@"
+    __koopa_bam_filter --filter="[XS] == null" "$@"
     return 0
 }
 
-_koopa_bam_filter_unmapped() { # {{{1
+__koopa_bam_filter_unmapped() { # {{{1
     # """
-    # Filter unmapped reads from BAM file.
-    # @note Updated 2020-06-29.
+    # Filter unmapped reads from a BAM file.
+    # @note Updated 2020-07-01.
     # """
     [[ "$#" -gt 0 ]] || return 1
-    _koopa_bam_filter --filter="not unmapped" "$@"
+    __koopa_bam_filter --filter="not unmapped" "$@"
     return 0
 }
 
-_koopa_bam_index() { # {{{1
+__koopa_bam_sort() { # {{{1
     # """
-    # Index BAM file.
-    # @note Updated 2020-02-05.
-    # """
-    [[ "$#" -gt 0 ]] || return 1
-    _koopa_assert_is_installed samtools
-    local bam_file
-    bam_file="${1:?}"
-    _koopa_h2 "Indexing '${bam_file}'."
-    _koopa_assert_is_file "$bam_file"
-    local threads
-    threads="$(_koopa_cpu_count)"
-    _koopa_dl "Threads" "$threads"
-    sambamba index \
-        --nthreads="$threads" \
-        --show-progress \
-        "$bam_file"
-    return 0
-}
-
-_koopa_bam_sort() { # {{{1
-    # """
-    # Sort BAM file by genomic coordinates.
-    # @note Updated 2020-02-05.
+    # Sort a BAM file by genomic coordinates.
+    # @note Updated 2020-07-01.
     #
     # Sorts by genomic coordinates by default.
     # Use '-n' flag to sort by read name instead.
     #
-    # See also:
-    # https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
+    # @seealso
+    # - https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
     # """
     [[ "$#" -gt 0 ]] || return 1
     _koopa_assert_is_installed sambamba
@@ -161,6 +137,137 @@ _koopa_bam_sort() { # {{{1
         --out="$sorted_bam" \
         --show-progress \
         "$unsorted_bam"
+    return 0
+}
+
+_koopa_bam_filter() { # {{{1
+    # """
+    # Apply multi-step filtering to BAM files.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -le 1 ]] || return 1
+    local bam_file bam_files dir final_output_bam final_output_tail input_bam \
+        input_tail output_bam output_tail
+    dir="${1:-.}"
+    _koopa_assert_is_dir "$dir"
+    dir="$(realpath "$dir")"
+    # Pipe GNU find into array.
+    readarray -t bam_files <<< "$( \
+        find "$dir" \
+            -maxdepth 3 \
+            -mindepth 1 \
+            -type f \
+            -iname "*.sorted.bam" \
+            -print \
+        | sort \
+    )"
+    # Error if file array is empty.
+    if ! _koopa_is_array_non_empty "${bam_files[@]}"
+    then
+        _koopa_stop "No BAM files detected in '${dir}'."
+    fi
+    _koopa_h1 "Filtering BAM files in '${dir}'."
+    _koopa_activate_conda_env sambamba
+    _koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
+    # Performing filtering in multiple steps here.
+    for bam_file in "${bam_files[@]}"
+    do
+        final_output_tail="filtered"
+        final_output_bam="${bam_file%.bam}.${final_output_tail}.bam"
+        if [[ -f "$final_output_bam" ]]
+        then
+            _koopa_note "Skipping '$(basename "$final_output_bam")'."
+            continue
+        fi
+        # Filter duplicate reads.
+        input_bam="$bam_file"
+        output_tail="filtered-1-no-duplicates"
+        output_bam="${input_bam%.bam}.${output_tail}.bam"
+        __koopa_bam_filter_duplicates \
+            --input-bam="$input_bam" \
+            --output-bam="$output_bam"
+        # Filter unmapped reads.
+        input_tail="$output_tail"
+        input_bam="$output_bam"
+        output_tail="filtered-2-no-unmapped"
+        output_bam="${input_bam/${input_tail}/${output_tail}}"
+        __koopa_bam_filter_unmapped \
+            --input-bam="$input_bam" \
+            --output-bam="$output_bam"
+        # Filter multimapping reads.
+        # Note that this step can overfilter some samples with with large global
+        # changes in chromatin state.
+        input_tail="$output_tail"
+        input_bam="$output_bam"
+        output_tail="filtered-3-no-multimappers"
+        output_bam="${input_bam/${input_tail}/${output_tail}}"
+        __koopa_bam_filter_multimappers \
+            --input-bam="$input_bam" \
+            --output-bam="$output_bam"
+        # Copy the final result.
+        cp -v "$output_bam" "$final_output_bam"
+        # Index the final filtered BAM file.
+        _koopa_bam_index "$final_output_bam"
+    done
+    return 0
+}
+
+_koopa_bam_index() { # {{{1
+    # """
+    # Index BAM file.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_is_installed samtools
+    local bam_file threads
+    threads="$(_koopa_cpu_count)"
+    _koopa_dl "Threads" "$threads"
+    for bam_file in "$@"
+    do
+        _koopa_info "Indexing '${bam_file}'."
+        _koopa_assert_is_file "$bam_file"
+        sambamba index \
+            --nthreads="$threads" \
+            --show-progress \
+            "$bam_file"
+    done
+    return 0
+}
+
+_koopa_bam_sort() { # {{{1
+    # """
+    # Sort BAM files.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -le 1 ]] || return 1
+    local bam_file bam_files dir
+    dir="${1:-.}"
+    _koopa_assert_is_dir "$dir"
+    dir="$(realpath "$dir")"
+    # Pipe GNU find into array.
+    readarray -t bam_files <<< "$( \
+        find "$dir" \
+            -maxdepth 3 \
+            -mindepth 1 \
+            -type f \
+            -iname "*.bam" \
+            -not -iname "*.filtered.*" \
+            -not -iname "*.sorted.*" \
+            -print \
+        | sort \
+    )"
+    # Error if file array is empty.
+    if ! _koopa_is_array_non_empty "${bam_files[@]}"
+    then
+        _koopa_stop "No BAM files detected in '${dir}'."
+    fi
+    _koopa_h1 "Sorting BAM files in '${dir}'."
+    _koopa_activate_conda_env sambamba
+    _koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
+    for bam_file in "${bam_files[@]}"
+    do
+        __koopa_bam_sort "$bam_file"
+    done
     return 0
 }
 
