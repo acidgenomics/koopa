@@ -34,7 +34,7 @@ fi
 _koopa_bash_header() { # {{{1
     # """
     # Bash header.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-01.
     # """
     local file major_version pos
     [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
