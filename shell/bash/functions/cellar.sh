@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-_koopa_find_cellar_version() {  # {{{1
+_koopa_find_cellar_version() { # {{{1
     # """
     # Find cellar installation directory.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     # """
     [[ "$#" -gt 0 ]] || return 1
     local name
@@ -25,9 +25,10 @@ _koopa_find_cellar_version() {  # {{{1
     _koopa_assert_is_dir "$x"
     x="$(basename "$x")"
     _koopa_print "$x"
+    return 0
 }
 
-_koopa_install_cellar() {  # {{{1
+_koopa_install_cellar() { # {{{1
     # """
     # Install cellar program.
     # @note Updated 2020-06-29.
@@ -150,7 +151,7 @@ _koopa_install_cellar() {  # {{{1
     return 0
 }
 
-_koopa_link_cellar() {  # {{{1
+_koopa_link_cellar() { # {{{1
     # """
     # Symlink cellar into build directory.
     # @note Updated 2020-06-20.

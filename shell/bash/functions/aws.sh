@@ -6,7 +6,81 @@
 # >     --output json \
 # >     --bucket tests.acidgenomics.com
 
-_koopa_aws_cp_regex() {  # {{{1
+_koopa_aws_batch_fetch_and_run() {
+    # """
+    # Fetch and run a script on AWS Batch.
+    # @note Updated 2020-07-01.
+    #
+    # S3 bucket paths and remote URLs are supported.
+    #
+    # @seealso
+    # - https://github.com/FredHutch/url-fetch-and-run
+    # - https://github.com/awslabs/aws-batch-helpers
+    # """
+    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_is_set BATCH_FILE_URL
+    _koopa_assert_is_installed aws curl unzip
+    local file url
+    url="$BATCH_FILE_URL"
+    file="$(_koopa_tmp_file)"
+    case "$url" in
+        ftp|http*)
+            _koopa_download "$url" "$file"
+            ;;
+        s3*)
+            aws s3 cp "$url" "$file"
+            ;;
+        *)
+            _koopa_stop "Unsupported URL: '${url}'."
+            ;;
+    esac
+    chmod u+x "$file"
+    "$file"
+    return 0
+}
+
+_koopa_aws_batch_list_jobs() {
+    # """
+    # List AWS Batch jobs.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_is_installed aws
+    _koopa_assert_is_set \
+        AWS_BATCH_ACCOUNT_ID \
+        AWS_BATCH_QUEUE \
+        AWS_BATCH_REGION
+    local job_queue job_queue_array status status_array
+    _koopa_h1 "Checking AWS Batch job status."
+    job_queue_array=(
+        "arn"
+        "aws"
+        "batch"
+        "${AWS_BATCH_REGION:?}"
+        "${AWS_BATCH_ACCOUNT_ID:?}"
+        "job-queue/${AWS_BATCH_QUEUE:?}"
+    )
+    job_queue="$(_koopa_paste0 ":" "${job_queue_array[@]}")"
+    status_array=(
+        "SUBMITTED"
+        "PENDING"
+        "RUNNABLE"
+        "STARTING"
+        "RUNNING"
+        "SUCCEEDED"
+        "FAILED"
+    )
+    for status in "${status_array[@]}"
+    do
+        _koopa_h2 "$status"
+        aws batch list-jobs \
+            --job-queue "$job_queue" \
+            --job-status "$status"
+    done
+    return 0
+}
+
+_koopa_aws_cp_regex() { # {{{1
     # """
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
@@ -32,7 +106,7 @@ _koopa_aws_cp_regex() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_find() {  # {{{1
+_koopa_aws_s3_find() { # {{{1
     # """
     # Find files in an AWS S3 bucket.
     #
@@ -104,7 +178,7 @@ _koopa_aws_s3_find() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_ls() {  # {{{1
+_koopa_aws_s3_ls() { # {{{1
     # """
     # List an AWS S3 bucket.
     # @note Updated 2020-06-29.
@@ -244,7 +318,7 @@ _koopa_aws_s3_ls() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_mv_to_parent() {  # {{{1
+_koopa_aws_s3_mv_to_parent() { # {{{1
     # """
     # Move objects in an S3 bucket to parent directory.
     #
@@ -272,11 +346,11 @@ _koopa_aws_s3_mv_to_parent() {  # {{{1
     return 0
 }
 
-_koopa_aws_s3_sync() {  # {{{1
+_koopa_aws_s3_sync() { # {{{1
     # """
     # Sync an S3 bucket, but ignore some files automatically.
     #
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-06-30.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -309,4 +383,5 @@ _koopa_aws_s3_sync() {  # {{{1
         --exclude="._*" \
         --exclude=".git/*" \
         "$@"
+    return 0
 }

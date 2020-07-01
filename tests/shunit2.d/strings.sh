@@ -2,7 +2,7 @@
 
 test_gsub() {
     assertEquals \
-        "$(_koopa_gsub "aaa-aaa-bbb-bbb" "bbb" "ccc")" \
+        "$(_koopa_gsub "bbb" "ccc" "aaa-aaa-bbb-bbb")" \
         "aaa-aaa-ccc-ccc"
 }
 
@@ -14,13 +14,13 @@ test_snake_case() {
 
 test_strip_left() {
     assertEquals \
-        "$(_koopa_strip_left "The Quick Brown Fox" "The ")" \
+        "$(_koopa_strip_left "The " "The Quick Brown Fox")" \
         "Quick Brown Fox"
 }
 
 test_strip_right() {
     assertEquals \
-        "$(_koopa_strip_right "The Quick Brown Fox" " Fox")" \
+        "$(_koopa_strip_right " Fox" "The Quick Brown Fox")" \
         "The Quick Brown"
 }
 
@@ -32,7 +32,7 @@ _test_strip_trailing_slash() {
 
 test_sub() {
     assertEquals \
-        "$(_koopa_sub "aaa-aaa-bbb-bbb" "bbb" "ccc")" \
+        "$(_koopa_sub "bbb" "ccc" "aaa-aaa-bbb-bbb")" \
         "aaa-aaa-ccc-bbb"
 }
 

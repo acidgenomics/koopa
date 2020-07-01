@@ -3,14 +3,14 @@
 
 if ! _koopa_is_installed basename
 then
-    basename() {  # {{{1
+    basename() { # {{{1
         _koopa_basename "$@"
     }
 fi
 
 if ! _koopa_is_installed realpath
 then
-    realpath() {  # {{{1
+    realpath() { # {{{1
         _koopa_realpath "$@"
     }
 fi

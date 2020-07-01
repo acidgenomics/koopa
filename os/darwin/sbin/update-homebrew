@@ -4,52 +4,5 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_args "$@"
 _koopa_exit_if_not_installed brew
-
-name_fancy="Homebrew"
-
-_koopa_update_start "$name_fancy"
-
-brew analytics off
-brew update
-
-_koopa_h2 "Updating brews."
-
-brew upgrade --force-bottle || true
-# > brew list | xargs brew reinstall --force-bottle --cleanup
-
-_koopa_h2 "Updating casks."
-
-# Refer to useful discussion regarding '--greedy' flag.
-# https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
-casks="$(brew cask outdated)"
-if [[ -n "$casks" ]]
-then
-    brew cask outdated --greedy \
-        | xargs brew cask reinstall \
-        || true
-fi
-
-# Unversioned casks that don't auto-update correctly:
-# - google-cloud-sdk
-#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/
-#       google-cloud-sdk.rb
-#
-# Keep an eye on:
-# - bbedit
-#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/bbedit.rb
-# - gpg-suite
-#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/gpg-suite.rb
-#   https://gpgtools.org/
-# - vlc
-#   https://github.com/Homebrew/homebrew-cask/blob/master/Casks/vlc.rb
-
-_koopa_h2 "Running cleanup."
-
-brew cleanup -s || true
-rm -frv "$(brew --cache)"
-
-_koopa_update_r_config
-
-_koopa_update_success "$name_fancy"
+_koopa_brew_update "$@"

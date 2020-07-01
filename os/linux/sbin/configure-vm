@@ -502,7 +502,7 @@ then
     if [[ "$rsync" -eq 0 ]]
     then
         conda-create-bioinfo-envs --all
-        # > install-bcbio-nextgen
+        # > install-bcbio
     fi
 fi
 

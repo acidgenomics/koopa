@@ -68,7 +68,7 @@ _koopa_git_pull() {
     return 0
 }
 
-_koopa_git_reset() {  # {{{1
+_koopa_git_reset() { # {{{1
     # """
     # Clean and reset a git repo and its submodules.
     # @note Updated 2020-04-30.

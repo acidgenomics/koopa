@@ -247,7 +247,7 @@ then
     admin_group="$(_koopa_admin_group)"
     sudo chgrp "$admin_group" "$koopa_prefix"
     sudo chmod g+ws "$koopa_prefix"
-    _koopa_add_make_prefix_link
+    _koopa_add_make_prefix_link "$koopa_prefix"
 else
     mkdir -p "$koopa_prefix"
     rm -fr "$koopa_prefix"

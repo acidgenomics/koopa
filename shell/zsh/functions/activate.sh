@@ -1,10 +1,11 @@
 #!/usr/bin/env zsh
 
-_koopa_activate_zsh_aliases() {  # {{{1
+_koopa_activate_zsh_aliases() { # {{{1
     # """
     # Activate Zsh aliases.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-30.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     local user_aliases
     user_aliases="${HOME}/.zsh_aliases"
     if [[ -f "$user_aliases" ]]
@@ -18,37 +19,42 @@ _koopa_activate_zsh_aliases() {  # {{{1
 _koopa_activate_zsh_bashcompinit() { # {{{1
     # """
     # Activate Bash completions for Zsh.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-30.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz bashcompinit && bashcompinit 2>/dev/null
     return 0
 }
 
-_koopa_activate_zsh_colors() {  # {{{1
+_koopa_activate_zsh_colors() { # {{{1
     # """
     # Enable colors in terminal.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-30.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz colors && colors 2>/dev/null
     return 0
 }
 
-_koopa_activate_zsh_compinit() {  # {{{1
+_koopa_activate_zsh_compinit() { # {{{1
     # """
     # Activate Zsh compinit (completion system).
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-30.
     # #
     # Suppressing warning for KOOPA_TEST mode:
     # compinit:141: parse error: condition expected: $1
     # """
+    [[ "$#" -eq 0 ]] || return 1
     autoload -Uz compinit && compinit 2>/dev/null
     return 0
 }
 
-_koopa_activate_zsh_editor() {  # {{{1
+_koopa_activate_zsh_editor() { # {{{1
     # """
     # Activate Zsh editor.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-06-30.
+    # """
+    [[ "$#" -eq 0 ]] || return 1
     case "${EDITOR:-}" in
         emacs)
             bindkey -e
@@ -60,10 +66,10 @@ _koopa_activate_zsh_editor() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_extras() {  # {{{1
+_koopa_activate_zsh_extras() { # {{{1
     # """
     # Activate Zsh extras.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-06-30.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -76,6 +82,7 @@ _koopa_activate_zsh_extras() {  # {{{1
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
+    [[ "$#" -eq 0 ]] || return 1
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
     _koopa_activate_zsh_bashcompinit
@@ -87,14 +94,14 @@ _koopa_activate_zsh_extras() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_fpath() {  # {{{1
+_koopa_activate_zsh_fpath() { # {{{1
     # """
     # Activate Zsh FPATH.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-06-30.
     # """
-    local koopa_prefix
+    [[ "$#" -eq 0 ]] || return 1
+    local koopa_fpath koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
-    local koopa_fpath
     koopa_fpath="${koopa_prefix}/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
@@ -105,10 +112,10 @@ _koopa_activate_zsh_fpath() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_plugins() {  # {{{1
+_koopa_activate_zsh_plugins() { # {{{1
     # """
     # Activate Zsh plugins.
-    # Updated 2020-06-20.
+    # Updated 2020-06-30.
     #
     # Debug plugins via:
     # > zsh -df
@@ -117,6 +124,7 @@ _koopa_activate_zsh_plugins() {  # {{{1
     # https://unix.stackexchange.com/questions/29724/
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     local dotfiles_prefix plugin plugins zsh_plugins_dir
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
     zsh_plugins_dir="${dotfiles_prefix}/shell/zsh/plugins"
@@ -137,10 +145,10 @@ _koopa_activate_zsh_plugins() {  # {{{1
     return 0
 }
 
-_koopa_activate_zsh_prompt() {  # {{{1
+_koopa_activate_zsh_prompt() { # {{{1
     # """
     # Activate Zsh prompt.
-    # Updated 2020-06-03.
+    # Updated 2020-06-30.
     #
     # See also:
     # - https://github.com/sindresorhus/pure
@@ -149,6 +157,7 @@ _koopa_activate_zsh_prompt() {  # {{{1
     # This won't work if an oh-my-zsh theme is enabled.
     # This step must be sourced after oh-my-zsh.
     # """
+    [[ "$#" -eq 0 ]] || return 1
     [[ "${KOOPA_TEST:-}" -eq 1 ]] && set +u
     setopt promptsubst
     autoload -U promptinit
@@ -157,4 +166,3 @@ _koopa_activate_zsh_prompt() {  # {{{1
     [[ "${KOOPA_TEST:-}" -eq 1 ]] && set -u
     return 0
 }
-

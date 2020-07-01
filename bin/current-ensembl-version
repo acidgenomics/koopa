@@ -4,12 +4,21 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_is_installed "curl"
+_koopa_current_ensembl_version() { # {{{1
+    # """
+    # Current Ensembl version.
+    # @note Updated 2020-07-01.
+    # """
+    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_is_installed curl
+    local version
+    version="$( \
+        curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
+        | sed -n 3p \
+        | cut -d ' ' -f 3 \
+    )"
+    _koopa_print "$version"
+    return 0
+}
 
-version="$( \
-    curl --silent "ftp://ftp.ensembl.org/pub/current_README" \
-    | sed -n 3p \
-    | cut -d ' ' -f 3 \
-)"
-_koopa_print "$version"
+_koopa_current_ensembl_version "$@"
