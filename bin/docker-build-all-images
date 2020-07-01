@@ -4,149 +4,145 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-extra=0
-force=0
-
-pos=()
-while (("$#"))
-do
-    case "$1" in
-        --extra)
-            extra=1
-            shift 1
-            ;;
-        --force)
-            force=1
-            shift 1
-            ;;
-        --)
-            shift 1
-            break
-            ;;
-        --*|-*)
-            _koopa_invalid_arg "$1"
-            ;;
-        *)
-            pos+=("$1")
-            shift 1
-            ;;
-    esac
-done
-[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-# Define images array.
-# If empty, define default images.
-if [[ "$#" -eq 0 ]]
-then
-    prefix="${HOME}/.config/koopa/docker"
-    images=()
-
-    # Recommended Linux images.
-    images+=(
-        acidgenomics/debian
-        acidgenomics/ubuntu
-        acidgenomics/fedora
-        acidgenomics/centos
-    )
-
-    # Extra Linux images.
-    images+=(
-        acidgenomics/alpine
-        acidgenomics/amzn
-        acidgenomics/arch
-        acidgenomics/opensuse
-    )
-
-    # Minimal bioinformatics images.
-    images+=(
-        acidgenomics/miniconda3
-        acidgenomics/biocontainers
-    )
-
-    # R images.
-    images+=(
-        acidgenomics/bioconductor
-        acidgenomics/r-basejump
-        acidgenomics/r-bcbiornaseq
-        acidgenomics/r-bcbiosinglecell
-        acidgenomics/r-rnaseq
-        acidgenomics/r-singlecell
-    )
-
-    # Nextflow images.
-    nextflow_dirs="$( \
-        find "$prefix" \
-            -name "nextflow-*" \
-            -type d \
-            | sort \
-    )"
-    nextflow_dirs="$(_koopa_sub "${prefix}/" "" "$nextflow_dirs")"
-    readarray -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
-    images=("${images[@]}" "${nextflow_arr[@]}")
-
-    # AWS batch images.
-    # Ensure we build these after the other images.
-    batch_dirs="$( \
-        find "$prefix" \
-            -name "aws-batch*" \
-            -type d \
-            | sort \
-    )"
-    batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
-    readarray -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
-    images=("${images[@]}" "${batch_arr[@]}")
-
-    # Large bioinformatics images.
-    # These don't need to be updated frequently and can be built manually.
-    if [[ "$extra" -eq 1 ]]
+_koopa_docker_build_all_images() { # {{{1
+    # """
+    # Build all Docker images.
+    # @note Updated 2020-07-01.
+    # """
+    _koopa_assert_is_installed docker
+    local batch_arr batch_dirs extra force image images json nextflow_arr \
+        nextflow_dirs prefix pos timestamp today utc_timestamp
+    extra=0
+    force=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --extra)
+                extra=1
+                shift 1
+                ;;
+            --force)
+                force=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    # Define images array.
+    # If empty, define default images.
+    if [[ "$#" -eq 0 ]]
     then
+        prefix="$(_koopa_docker_prefix)"
+        images=()
+        # Recommended Linux images.
         images+=(
-            acidgenomics/bcbio
-            acidgenomics/rnaeditingindexer
-            acidgenomics/maestro
+            acidgenomics/debian
+            acidgenomics/ubuntu
+            acidgenomics/fedora
+            acidgenomics/centos
         )
-fi
-else
-    images=("$@")
-fi
-
-_koopa_h1 "Building ${#images[@]} Docker images."
-
-docker login
-
-for image in "${images[@]}"
-do
-    docker system prune --all --force
-
-    # Skip image if pushed already today.
-    if [[ "$force" -ne 1 ]]
-    then
-        docker pull "$image"
-        json="$( \
-            docker inspect \
-            --format='{{json .Created}}' \
-            "$image" \
+        # Extra Linux images.
+        images+=(
+            acidgenomics/alpine
+            acidgenomics/amzn
+            acidgenomics/arch
+            acidgenomics/opensuse
+        )
+        # Minimal bioinformatics images.
+        images+=(
+            acidgenomics/miniconda3
+            acidgenomics/biocontainers
+        )
+        # R images.
+        images+=(
+            acidgenomics/bioconductor
+            acidgenomics/r-basejump
+            acidgenomics/r-bcbiornaseq
+            acidgenomics/r-bcbiosinglecell
+            acidgenomics/r-rnaseq
+            acidgenomics/r-singlecell
+        )
+        # Nextflow images.
+        nextflow_dirs="$( \
+            find "$prefix" \
+                -name "nextflow-*" \
+                -type d \
+                | sort \
         )"
-        # Note that we need to convert UTC to local time.
-        utc_timestamp="$( \
-            _koopa_print "$json" \
-                | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-                | sed 's/T/ /' \
-                | sed 's/$/ UTC/'
+        nextflow_dirs="$(_koopa_sub "${prefix}/" "" "$nextflow_dirs")"
+        readarray -t nextflow_arr <<< "$(_koopa_print "$nextflow_dirs")"
+        images=("${images[@]}" "${nextflow_arr[@]}")
+        # AWS batch images.
+        # Ensure we build these after the other images.
+        batch_dirs="$( \
+            find "$prefix" \
+                -name "aws-batch*" \
+                -type d \
+                | sort \
         )"
-        timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
-        today=$(date '+%Y-%m-%d')
-        if [[ "$timestamp" == "$today" ]]
+        batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
+        readarray -t batch_arr <<< "$(_koopa_print "$batch_dirs")"
+        images=("${images[@]}" "${batch_arr[@]}")
+        # Large bioinformatics images.
+        # These don't need to be updated frequently and can be built manually.
+        if [[ "$extra" -eq 1 ]]
         then
-            _koopa_note "'${image}' image already pushed today."
-            continue
-        fi
+            images+=(
+                acidgenomics/bcbio
+                acidgenomics/rnaeditingindexer
+                acidgenomics/maestro
+            )
     fi
+    else
+        images=("$@")
+    fi
+    _koopa_h1 "Building ${#images[@]} Docker images."
+    docker login
+    for image in "${images[@]}"
+    do
+        docker system prune --all --force
+        # Skip image if pushed already today.
+        if [[ "$force" -ne 1 ]]
+        then
+            docker pull "$image"
+            json="$( \
+                docker inspect \
+                --format='{{json .Created}}' \
+                "$image" \
+            )"
+            # Note that we need to convert UTC to local time.
+            utc_timestamp="$( \
+                _koopa_print "$json" \
+                    | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
+                    | sed 's/T/ /' \
+                    | sed 's/$/ UTC/'
+            )"
+            timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
+            today=$(date '+%Y-%m-%d')
+            if [[ "$timestamp" == "$today" ]]
+            then
+                _koopa_note "'${image}' image already pushed today."
+                continue
+            fi
+        fi
+        # Build outdated images automatically.
+        docker-build-all-tags "$image"
+    done
+    docker system prune --all --force
+    _koopa_success "All Docker images built successfully."
+    return 0
+}
 
-    # Build outdated images automatically.
-    docker-build-all-tags "$image"
-done
-
-docker system prune --all --force
-
-_koopa_success "All Docker images built successfully."
+_koopa_build_all_images "$@"
