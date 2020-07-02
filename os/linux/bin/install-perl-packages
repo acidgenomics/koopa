@@ -17,7 +17,7 @@ _koopa_install_perl_packages() {
     if ! _koopa_is_installed cpanm
     then
         _koopa_h2 "Installing CPAN Minus."
-        cpan -i "App::cpanminus"
+        cpan -i "App::cpanminus" >/dev/null
     fi
     if [[ "$#" -gt 0 ]]
     then
@@ -31,7 +31,7 @@ _koopa_install_perl_packages() {
     for module in "${modules[@]}"
     do
         _koopa_h2 "Installing '${module}' module."
-        cpanm "$module"
+        cpanm "$module" >/dev/null
     done
     _koopa_install_success "$name_fancy"
     return 0
