@@ -53,6 +53,9 @@ do
             compact=1
             shift 1
             ;;
+        "")
+            shift 1
+            ;;
         --)
             shift 1
             break
