@@ -55,7 +55,6 @@ _koopa_read() { # {{{1
     # @note Updated 2020-07-02.
     # """
     [[ "$#" -eq 2 ]] || return 1
-    _koopa_is_interactive || return 1
     local choice default flags prompt
     default="${2:?}"
     prompt="${1:?} [${default}]: "
@@ -80,7 +79,6 @@ _koopa_read_yn() { # {{{1
     # adjust interactive read input flags accordingly.
     # """
     [[ "$#" -eq 2 ]] || return 1
-    _koopa_is_interactive || return 1
     local bash_major_version bash_ok bash_version choice default flags x
     bash_version="$(_koopa_get_version bash)"
     bash_major_version="$(_koopa_major_version "$bash_version")"
