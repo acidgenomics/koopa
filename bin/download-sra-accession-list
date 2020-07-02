@@ -11,6 +11,8 @@ _koopa_download_sra_accession_list() {
     # """
     [[ "$#" -le 2 ]] || return 1
     _koopa_activate_conda_env entrez-direct
+    _koopa_assert_is_installed esearch efetch
+    local file id
     id="${1:?}"
     file="${2:-"SraAccList.txt"}"
     _koopa_h1 "Downloading SRA '${id}' to '${file}'."
