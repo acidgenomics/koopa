@@ -16,7 +16,7 @@ _koopa_install_perl_packages() {
     export PERL_MM_USE_DEFAULT=1
     if ! _koopa_is_installed cpanm
     then
-        _koopa_h2 "Installing CPAN Minus."
+        _koopa_info "CPAN Minus"
         cpan -i "App::cpanminus" &>/dev/null
     fi
     if [[ "$#" -gt 0 ]]
@@ -30,7 +30,7 @@ _koopa_install_perl_packages() {
     fi
     for module in "${modules[@]}"
     do
-        _koopa_h2 "Installing '${module}' module."
+        _koopa_info "${module}"
         cpanm "$module" &>/dev/null
     done
     _koopa_install_success "$name_fancy"
