@@ -283,6 +283,7 @@ _koopa_install_debian_base() { # {{{1
             sqlite3
             tcl-dev
             tk-dev
+            zlib1g-dev
         )
     fi
 
