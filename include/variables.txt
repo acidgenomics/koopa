@@ -225,6 +225,10 @@ pip="20.1.1"
 # https://pypi.org/project/pipx/
 pipx="0.15.4.0"
 
+# Note that Fedora now masks this with pkgconf.
+# https://pkg-config.freedesktop.org/releases/
+pkg-config="0.29.2"
+
 # https://proj.org/
 proj="7.1.0"
 
