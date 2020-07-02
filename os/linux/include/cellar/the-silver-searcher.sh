@@ -26,6 +26,7 @@
 # https://github.com/ggreer/the_silver_searcher/issues/341
 # """
 
+_koopa_assert_is_installed pcre-config
 # Temporarily installing from master branch, which has bug fixes that aren't
 # yet available in tagged release, especially for GCC 10.
 version="master"
