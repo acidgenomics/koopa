@@ -60,8 +60,7 @@ _koopa_install() { # {{{1
     # Install koopa.
     # @note Updated 2020-07-02.
     # """
-    local bash_major_version bash_version dotfiles interactive koopa_prefix \
-        passwordless profile shared test
+    local dotfiles interactive koopa_prefix passwordless profile shared test
     while (("$#"))
     do
         case "$1" in
@@ -273,7 +272,7 @@ _koopa_install() { # {{{1
     [[ "$passwordless" -eq 1 ]] && _koopa_enable_passwordless_sudo
 
     # Dot files {{{1
-    # ==============================================================================
+    # ==========================================================================
 
     # Prompt the user if we want to link dot files.
     if [[ "$interactive" -eq 1 ]]
@@ -310,26 +309,14 @@ _koopa_install() { # {{{1
     # Final steps and return {{{1
     # ==========================================================================
 
-    bash_version="$(_koopa_get_version bash)"
-    bash_major_version="$(_koopa_major_version "$bash_version")"
-    if [[ "$bash_major_version" -ge 4 ]]
+    if _koopa_is_bash_ok
     then
-        bash_ok=1
-    else
-        bash_ok=0
-    fi
-    if [[ "$bash_ok" -eq 1 ]]
-    then
-        # Some config files, such as '.lintr' and '.pylintrc' will be missing
-        # unless we clone the dotfiles repo (see above).
         _koopa_remove_broken_symlinks "$koopa_prefix"
+    else
+        _koopa_note "Bash is very old and must be upgraded."
     fi
     _koopa_update_etc_profile_d
     _koopa_fix_zsh_permissions
-    if [[ "$bash_ok" -eq 0 ]]
-    then
-        _koopa_note "Bash ${bash_version} is very old and must be upgraded."
-    fi
     _koopa_install_success "koopa"
     _koopa_restart
     return 0

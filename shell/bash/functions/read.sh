@@ -59,7 +59,7 @@ _koopa_read() { # {{{1
     default="${2:?}"
     prompt="${1:?} [${default}]: "
     flags=(-r -p "$prompt")
-    if [[ "$bash_ok" -eq 1 ]]
+    if ! _koopa_is_bash_ok
     then
         flags+=(-e -i "${koopa_prefix}")
     fi
@@ -79,19 +79,11 @@ _koopa_read_yn() { # {{{1
     # adjust interactive read input flags accordingly.
     # """
     [[ "$#" -eq 2 ]] || return 1
-    local bash_major_version bash_ok bash_version choice default flags x
-    bash_version="$(_koopa_get_version bash)"
-    bash_major_version="$(_koopa_major_version "$bash_version")"
-    if [[ "$bash_major_version" -ge 4 ]]
-    then
-        bash_ok=1
-    else
-        bash_ok=0
-    fi
+    local choice default flags x
     prompt="$(__koopa_read_prompt_yn "$@")"
     default="$(__koopa_int_to_yn "${2:?}")"
     flags=(-r -p "$prompt")
-    if [[ "$bash_ok" -eq 1 ]]
+    if _koopa_is_bash_ok
     then
         flags+=(-e -i "$default")
     fi
