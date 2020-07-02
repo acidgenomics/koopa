@@ -298,33 +298,15 @@ _koopa_docker_build_all_images() { # {{{1
     docker login
     for image in "${images[@]}"
     do
+        # Force remove all images, if desired.
         if [[ "$prune" -eq 1 ]]
         then
-            docker system prune --all --force
+            _koopa_docker_prune
         fi
         # Skip image if pushed already today.
         if [[ "$force" -ne 1 ]]
         then
-            docker pull "$image"
-            json="$( \
-                docker inspect \
-                --format='{{json .Created}}' \
-                "$image" \
-            )"
-            # Note that we need to convert UTC to local time.
-            utc_timestamp="$( \
-                _koopa_print "$json" \
-                    | grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}' \
-                    | sed 's/T/ /' \
-                    | sed 's/$/ UTC/'
-            )"
-            timestamp="$(date -d "$utc_timestamp" '+%Y-%m-%d')"
-            today=$(date '+%Y-%m-%d')
-            if [[ "$timestamp" == "$today" ]]
-            then
-                _koopa_note "'${image}' image already pushed today."
-                continue
-            fi
+            _koopa_is_docker_build_today "$image" && continue
         fi
         # Build outdated images automatically.
         docker-build-all-tags "$image"
@@ -523,3 +505,32 @@ _koopa_docker_tag() { # {{{1
     return 0
 }
 
+_koopa_is_docker_build_today() { # {{{1
+    # """
+    # Check if a Docker image has been built today.
+    # @note Updated 2020-07-02.
+    # """
+    [[ "$#" -gt 0 ]] || return 1
+    _koopa_is_installed docker || return 1
+    local image json timestamp today utc_timestamp
+    today="$(date "+%Y-%m-%d")"
+    for image in "$@"
+    do
+        docker pull "$image" >/dev/null
+        json="$( \
+            docker inspect \
+            --format="{{json .Created}}" \
+            "$image" \
+        )"
+        # Note that we need to convert UTC to local time.
+        utc_timestamp="$( \
+            _koopa_print "$json" \
+                | grep -Eo "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" \
+                | sed "s/T/ /" \
+                | sed "s/\$/ UTC/"
+        )"
+        timestamp="$(date -d "$utc_timestamp" "+%Y-%m-%d")"
+        [[ "$timestamp" != "$today" ]] && return 1
+    done
+    return 0
+}
