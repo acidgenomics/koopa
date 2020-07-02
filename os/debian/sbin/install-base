@@ -161,6 +161,7 @@ _koopa_install_debian_base() { # {{{1
         cmake
         coreutils
         curl
+        diffutils
         dirmngr
         findutils
         fortran77-compiler
