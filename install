@@ -62,12 +62,6 @@ _koopa_install() { # {{{1
     # """
     local bash_major_version bash_version dotfiles interactive koopa_prefix \
         passwordless profile shared test
-    if [[ "$-" == *i* ]]
-    then
-        interactive=1
-    else
-        interactive=0
-    fi
     while (("$#"))
     do
         case "$1" in
@@ -164,10 +158,11 @@ _koopa_install() { # {{{1
     # Ensure existing user configuration gets removed.
     rm -fr "$(_koopa_config_prefix)"
 
-    # Non-interactive arguments {{{2
+    # Default arguments {{{2
     # --------------------------------------------------------------------------
 
     [[ -z "${dotfiles:-}" ]] && dotfiles=1
+    [[ -z "${interactive:-}" ]] && interactive=1
     [[ -z "${koopa_prefix:-}" ]] && koopa_prefix=
     [[ -z "${passwordless:-}" ]] && passwordless=0
     [[ -z "${profile:-}" ]] && profile=1
