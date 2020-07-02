@@ -4,42 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_docker_build_all_batch_images() { # {{{1
-    # """
-    # Build all AWS Batch Docker images.
-    # @note Updated 2020-07-01.
-    # """
-    _koopa_assert_is_installed docker
-    local batch_dirs flags force images prefix
-    force=0
-    while (("$#"))
-    do
-        case "$1" in
-            --force)
-                force=1
-                shift 1
-                ;;
-            *)
-                _koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    flags=()
-    if [[ "$force" -eq 1 ]]
-    then
-        flags+=("--force")
-    fi
-    prefix="$(_koopa_docker_prefix)"
-    batch_dirs="$( \
-        find "${prefix}/acidgenomics" \
-            -name "aws-batch*" \
-            -type d \
-        | sort \
-    )"
-    batch_dirs="$(_koopa_sub "${prefix}/" "" "$batch_dirs")"
-    readarray -t images <<< "$(_koopa_print "$batch_dirs")"
-    docker-build-all-images "${flags[@]}" "${images[@]}"
-    return 0
-}
-
 _docker_build_all_batch_images "$@"
