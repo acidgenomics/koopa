@@ -33,6 +33,7 @@ _koopa_install_fedora_base() { # {{{1
     _koopa_h2 "Installing default packages."
     pkgs=(
         autoconf
+        automake
         bash
         byacc
         bzip2
@@ -55,6 +56,7 @@ _koopa_install_fedora_base() { # {{{1
         man-db
         ncurses
         openssl
+        pkgconfig  # note this is now pkgconf
         qpdf
         readline
         squashfs-tools
@@ -110,6 +112,7 @@ _koopa_install_fedora_base() { # {{{1
             readline-devel
             unixODBC-devel
             xz-devel
+            zlib-devel
         )
         if ! _koopa_is_rhel
         then
