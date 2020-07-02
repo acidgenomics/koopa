@@ -38,8 +38,10 @@ _koopa_install_fedora_base() { # {{{1
         bzip2
         cmake
         convmv
+        coreutils
         cryptsetup
         curl
+        diffutils
         findutils
         gcc
         gcc-c++
@@ -84,6 +86,7 @@ _koopa_install_fedora_base() { # {{{1
             apr-util-devel  # subversion
             bzip2-devel
             expat-devel  # udunits
+            glib2-devel  # ag
             gmp-devel
             gnutls-devel
             gsl-devel
