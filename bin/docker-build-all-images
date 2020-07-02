@@ -11,9 +11,10 @@ _koopa_docker_build_all_images() { # {{{1
     # """
     _koopa_assert_is_installed docker
     local batch_arr batch_dirs extra force image images json nextflow_arr \
-        nextflow_dirs prefix pos timestamp today utc_timestamp
+        nextflow_dirs prefix prune pos timestamp today utc_timestamp
     extra=0
     force=0
+    prune=0
     pos=()
     while (("$#"))
     do
@@ -24,6 +25,10 @@ _koopa_docker_build_all_images() { # {{{1
                 ;;
             --force)
                 force=1
+                shift 1
+                ;;
+            --prune)
+                prune=1
                 shift 1
                 ;;
             --)
@@ -112,7 +117,10 @@ _koopa_docker_build_all_images() { # {{{1
     docker login
     for image in "${images[@]}"
     do
-        docker system prune --all --force
+        if [[ "$prune" -eq 1 ]]
+        then
+            docker system prune --all --force
+        fi
         # Skip image if pushed already today.
         if [[ "$force" -ne 1 ]]
         then
