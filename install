@@ -214,8 +214,9 @@ _koopa_install() { # {{{1
     fi
 
     # Install (copy repo from tmp dir) {{{1
-    # ==============================================================================
+    # ==========================================================================
 
+    # Alternatively, can consider using rsync here instead of cp.
     _koopa_h1 "Installing koopa at '${koopa_prefix}'."
     _koopa_assert_is_non_existing "$koopa_prefix"
     if [[ "$shared" -eq 1 ]]
@@ -298,7 +299,7 @@ _koopa_install() { # {{{1
     fi
 
     # User profile {{{1
-    # ==============================================================================
+    # ==========================================================================
 
     profile_file="$(_koopa_find_user_profile)"
     if ! _koopa_is_defined_in_user_profile && [[ ! -L "$profile_file" ]]
@@ -334,7 +335,7 @@ _koopa_install() { # {{{1
     then
         _koopa_note "Bash ${bash_version} is very old and must be upgraded."
     fi
-    _koopa_install_success "koopa" "$koopa_prefix"
+    _koopa_install_success "koopa"
     _koopa_restart
     return 0
 }
