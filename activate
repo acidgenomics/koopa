@@ -397,7 +397,6 @@ _koopa_export_hostname
 _koopa_export_lesspipe
 _koopa_export_ostype
 _koopa_export_pager
-_koopa_export_pkg_config_path
 _koopa_export_proj_lib
 _koopa_export_python
 _koopa_export_rsync
@@ -409,6 +408,7 @@ _koopa_export_user
 _koopa_activate_xdg
 _koopa_activate_standard_paths
 _koopa_activate_koopa_paths
+_koopa_activate_pkg_config
 
 
 
