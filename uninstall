@@ -4,19 +4,25 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 . "${script_dir}/shell/bash/include/header.sh"
 
-koopa_prefix="$(_koopa_prefix)"
+_koopa_uninstall() {
+    # """
+    # Uninstall koopa.
+    # @note Updated 2020-07-02.
+    # """
+    local koopa_prefix
+    koopa_prefix="$(_koopa_prefix)"
+    # Remove shared activation script.
+    if _koopa_is_shared_install
+    then
+        rm -fv "/etc/profile.d/zzz-koopa.sh"
+    fi
+    _koopa_uninstall_dotfiles
+    _koopa_uninstall_dotfiles_private
+    rm -frv "$(_koopa_config_prefix)"
+    rm -frv "$koopa_prefix"
+    printf "Uninstallation of koopa was successful.\n"
+    printf "Restart the shell.\n"
+    return 0
+}
 
-# Remove shared activation script.
-if _koopa_is_shared_install
-then
-    rm -fv "/etc/profile.d/zzz-koopa.sh"
-fi
-
-_koopa_uninstall_dotfiles
-_koopa_uninstall_dotfiles_private
-
-rm -frv "$(_koopa_config_prefix)"
-rm -frv "$koopa_prefix"
-
-printf "Uninstallation of koopa was successful.\n"
-printf "Restart the shell.\n"
+_koopa_uninstall "$@"
