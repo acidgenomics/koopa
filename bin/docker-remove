@@ -4,18 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# """
-# Remove docker images by pattern.
-# Updated 2020-06-29.
-# """
-
-_koopa_assert_has_args "$@"
-_koopa_assert_is_installed docker
-
-pattern="${1:?}"
-
-docker images \
-    | grep "$pattern" \
-    | awk '{print $1 ":" $2}' \
-    | xargs docker rmi
-
+_koopa_docker_remove "$@"
