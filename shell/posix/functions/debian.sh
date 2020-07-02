@@ -179,7 +179,7 @@ _koopa_apt_add_r_repo() { # {{{1
     # Add R apt repo.
     # @note Updated 2020-07-01.
     # """
-    [ "$#" -eq 0 ] || return 1
+    [ "$#" -le 1 ] || return 1
     local file os_codename os_id repo string version
     version="${1:-}"
     if [ -z "$version" ]
