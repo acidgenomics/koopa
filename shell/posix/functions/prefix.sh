@@ -320,7 +320,6 @@ _koopa_java_prefix() { # {{{1
         # This works on Linux installs, including Docker images.
         prefix="$(_koopa_openjdk_prefix)/latest"
     fi
-    [ -d "$prefix" ] || return 1
     _koopa_print "$prefix"
     return 0
 }
