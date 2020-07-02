@@ -4,160 +4,167 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-dev=1
-extra=1
-upgrade=1
+_koopa_install_fedora_base() { # {{{1
+    # """
+    # Install Fedora base system.
+    # @note Updated 2020-07-02.
+    # """
+    _koopa_assert_is_installed dnf sudo
+    local dev extra name_fancy pkgs upgrade
+    dev=1
+    extra=1
+    upgrade=1
+    _koopa_is_docker && extra=0
+    name_fancy="Fedora base system"
+    _koopa_install_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
+    # Upgrade {{{1
+    # ==========================================================================
 
-_koopa_is_docker && extra=0
+    if [[ "$upgrade" -eq 1 ]]
+    then
+        _koopa_h2 "Upgrading install via 'dnf update'."
+        sudo dnf -y update
+    fi
 
-name_fancy="Fedora base system"
+    # Default {{{1
+    # ==========================================================================
 
-_koopa_install_start "$name_fancy"
-
-# Upgrade {{{1
-# ==============================================================================
-
-if [[ "$upgrade" -eq 1 ]]
-then
-    _koopa_h2 "Upgrading install via 'dnf update'."
-    sudo dnf -y update
-fi
-
-# Default {{{1
-# ==============================================================================
-
-_koopa_h2 "Installing default packages."
-pkgs=(
-    autoconf
-    bash
-    byacc
-    bzip2
-    cmake
-    convmv
-    cryptsetup
-    curl
-    findutils
-    gcc
-    gcc-c++
-    gcc-gfortran
-    git
-    gnupg2
-    gnutls
-    libtool
-    lua
-    make
-    man-db
-    ncurses
-    openssl
-    qpdf
-    readline
-    squashfs-tools
-    systemd
-    tmux
-    tree
-    util-linux
-    vim
-    wget
-    xmlto
-    xz
-    yum-utils
-    zip
-)
-
-if ! _koopa_is_rhel
-then
-    pkgs+=(texinfo)
-fi
-
-# Developer {{{1
-# ==============================================================================
-
-if [[ "$dev" -eq 1 ]]
-then
-    _koopa_h2 "Installing developer libraries."
-    sudo dnf -y groupinstall "Development Tools"
-    pkgs+=(
-        apr-devel  # subversion
-        apr-util-devel  # subversion
-        bzip2-devel
-        expat-devel  # udunits
-        gmp-devel
-        gnutls-devel
-        gsl-devel
-        libcurl-devel
-        libevent-devel
-        libffi-devel
-        libicu-devel  # rJava
-        libseccomp-devel
-        libtiff-devel
-        libuuid-devel
-        libxml2-devel
-        libzstd-devel  # rsync
-        llvm-devel
-        lz4-devel  # rsync
-        mariadb-devel
-        mpfr-devel
-        openssl-devel
-        pcre2-devel  # rJava
-        postgresql-devel
-        readline-devel
-        unixODBC-devel
-        xz-devel
+    _koopa_h2 "Installing default packages."
+    pkgs=(
+        autoconf
+        bash
+        byacc
+        bzip2
+        cmake
+        convmv
+        cryptsetup
+        curl
+        findutils
+        gcc
+        gcc-c++
+        gcc-gfortran
+        git
+        gnupg2
+        gnutls
+        libtool
+        lua
+        make
+        man-db
+        ncurses
+        openssl
+        qpdf
+        readline
+        squashfs-tools
+        systemd
+        tmux
+        tree
+        util-linux
+        vim
+        wget
+        xmlto
+        xz
+        yum-utils
+        zip
     )
     if ! _koopa_is_rhel
     then
+        pkgs+=(texinfo)
+    fi
+
+    # Developer {{{1
+    # ==========================================================================
+
+    if [[ "$dev" -eq 1 ]]
+    then
+        _koopa_h2 "Installing developer libraries."
+        sudo dnf -y groupinstall "Development Tools"
         pkgs+=(
-            # udunits2-devel  # use 'install-udunits'.
-            bison-devel
-            flex-devel
-            libmpc-devel
-            openblas-devel
-            openjpeg2-devel  # GDAL
-            xxhash-devel  # rsync
+            apr-devel  # subversion
+            apr-util-devel  # subversion
+            bzip2-devel
+            expat-devel  # udunits
+            gmp-devel
+            gnutls-devel
+            gsl-devel
+            libcurl-devel
+            libevent-devel
+            libffi-devel
+            libicu-devel  # rJava
+            libseccomp-devel
+            libtiff-devel
+            libuuid-devel
+            libxml2-devel
+            libzstd-devel  # rsync
+            llvm-devel
+            lz4-devel  # rsync
+            mariadb-devel
+            mpfr-devel
+            openssl-devel
+            pcre2-devel  # rJava
+            postgresql-devel
+            readline-devel
+            unixODBC-devel
+            xz-devel
+        )
+        if ! _koopa_is_rhel
+        then
+            pkgs+=(
+                # udunits2-devel  # use 'install-udunits'.
+                bison-devel
+                flex-devel
+                libmpc-devel
+                openblas-devel
+                openjpeg2-devel  # GDAL
+                xxhash-devel  # rsync
+            )
+        fi
+    fi
+
+    # Extra {{{1
+    # ==========================================================================
+
+    if [[ "$extra" -eq 1 ]]
+    then
+        _koopa_h2 "Installing extra recommended packages."
+        pkgs+=(
+            # emacs
+            # golang
+            # zsh
+            llvm
+            texlive
+            texlive-bera
+            texlive-caption
+            texlive-changepage
+            texlive-collection-fontsrecommended
+            texlive-collection-latexrecommended
+            texlive-enumitem
+            texlive-etoolbox
+            texlive-fancyhdr
+            texlive-footmisc
+            texlive-framed
+            texlive-geometry
+            texlive-hyperref
+            texlive-latex-fonts
+            texlive-natbib
+            texlive-parskip
+            texlive-pdftex
+            texlive-placeins
+            texlive-preprint
+            texlive-sectsty
+            texlive-soul
+            texlive-titlesec
+            texlive-titling
+            texlive-xstring
         )
     fi
-fi
 
-# Extra {{{1
-# ==============================================================================
+    # Install packages {{{1
+    # ==========================================================================
 
-if [[ "$extra" -eq 1 ]]
-then
-    _koopa_h2 "Installing extra recommended packages."
-    pkgs+=(
-        # emacs
-        # golang
-        # zsh
-        llvm
-        texlive
-        texlive-bera
-        texlive-caption
-        texlive-changepage
-        texlive-collection-fontsrecommended
-        texlive-collection-latexrecommended
-        texlive-enumitem
-        texlive-etoolbox
-        texlive-fancyhdr
-        texlive-footmisc
-        texlive-framed
-        texlive-geometry
-        texlive-hyperref
-        texlive-latex-fonts
-        texlive-natbib
-        texlive-parskip
-        texlive-pdftex
-        texlive-placeins
-        texlive-preprint
-        texlive-sectsty
-        texlive-soul
-        texlive-titlesec
-        texlive-titling
-        texlive-xstring
-    )
-fi
+    sudo dnf -y install "${pkgs[@]}"
+    _koopa_install_success "$name_fancy"
+    return 0
+}
 
-sudo dnf -y install "${pkgs[@]}"
-
-_koopa_install_success "$name_fancy"
+_koopa_install_fedora_base "$@"

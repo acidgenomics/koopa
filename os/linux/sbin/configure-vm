@@ -4,19 +4,16 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# FIXME CONSOLIDATE BIOCONDUCTOR AND COMPACT MODES...TOO CONFUSING.
-
 _koopa_configure_vm() { # {{{1
     # """
     # Configure virtual machine.
     # @note Updated 2020-07-02.
     # """
     _koopa_assert_has_no_envs
-    local bioconductor check compact data_disk minimal pos r_version source_ip
-
-    # Argument parsing {{{1
-    # ==========================================================================
-
+    local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
+        data_disk data_disk_link data_disk_real docker gb_total \
+        install_base_flags make_prefix \
+        minimal pos r_version rsync source_ip
     # Assume we're not building inside Docker by default.
     docker=0
     # Minimal config used for lightweight Docker images. This mode skips all
