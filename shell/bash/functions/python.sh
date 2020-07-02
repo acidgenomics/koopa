@@ -13,7 +13,7 @@ _koopa_venv_create() {
     prefix="$(_koopa_venv_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
     shift 1
-    _koopa_h1 "Installing Python '${name}' virtual environment at '${prefix}'."
+    _koopa_info "Installing Python '${name}' virtual environment at '${prefix}'."
     _koopa_mkdir "$prefix"
     python3 -m venv "$prefix"
     py_exe="${prefix}/bin/python3"
