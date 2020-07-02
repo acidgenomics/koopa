@@ -81,7 +81,6 @@ readarray -t bin_dirs <<< "$( \
         \( -name "bin" -o -name "sbin" \) \
         -not -path "${koopa_prefix}/opt/*" \
         -not -path "${koopa_prefix}/shunit2-*" \
-        -not -path "${koopa_prefix}/system/*" \
         -not -path "*/cellar/*" \
         -not -path "*/dotfiles/*" \
         -print \
