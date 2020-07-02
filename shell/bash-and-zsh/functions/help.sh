@@ -48,7 +48,7 @@ _koopa_help() { # {{{1
     # - https://stackoverflow.com/questions/35677745
     # """
     [[ "$#" -eq 0 ]] && return 0
-    [[ "${1:-}" -eq "" ]] && return 0
+    [[ "${1:-}" == "" ]] && return 0
     local arg args first_arg last_arg man_file prefix script_name
     first_arg="${1:?}"
     last_arg="${!#}"
