@@ -3,28 +3,35 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_args "$@"
 
-_koopa_assert_is_installed wget
+_koopa_wget_recursive() {
+    # """
+    # Download files with wget recursively.
+    # @note Updated 2020-07-02.
+    #
+    # Note that we need to escape the wildcards in the password.
+    # For direct input, can just use single quotes to escape.
+    # See also: https://unix.stackexchange.com/questions/379181
+    # """
+    [[ "$#" -eq 3 ]] || return 1
+    _koopa_assert_is_installed wget
+    local log_file password timestamp url user
+    url="${1:?}"
+    user="${2:?}"
+    password="${3:?}"
+    password="${password@Q}"
+    timestamp="$(date "+%Y%m%d-%H%M%S")"
+    log_file="wget-${timestamp}.log"
+    wget \
+        --continue \
+        --debug \
+        --no-parent \
+        --output-file="$log_file" \
+        --password="$password" \
+        --recursive \
+        --user="$user" \
+        "$url"/*
+    return 0
+}
 
-timestamp="$(date "+%Y%m%d-%H%M%S")"
-log_file="wget-${timestamp}.log"
-
-url="$1"
-user="$2"
-
-# Note that we need to escape the wildcards in the password.
-# For direct input, can just use single quotes to escape.
-# See also: https://unix.stackexchange.com/questions/379181
-password="$3"
-password="${password@Q}"
-
-wget \
-    --user="$user" \
-    --password="$password" \
-    --recursive \
-    --no-parent \
-    --continue \
-    --debug \
-    --output-file="$log_file" \
-    "$url"/*
+_koopa_wget_recursive "$@"

@@ -229,6 +229,21 @@ _koopa_is_azure() { # {{{1
     [ "$(_koopa_host_id)" = 'azure' ]
 }
 
+_koopa_is_bash_ok() { # {{{1
+    # """
+    # Is the current version of Bash OK (or super old)?
+    # @note Updated 2020-07-02.
+    # 
+    # Older versions (< 4; e.g. shipping version on macOS) have issues with
+    # 'read' that we have to handle with special care here.
+    # """
+    _koopa_is_installed bash || return 1
+    local major_version version
+    version="$(_koopa_get_version "bash")"
+    major_version="$(_koopa_major_version "$version")"
+    [ "$major_version" -ge 4 ]
+}
+
 _koopa_is_cellar() { # {{{1
     # """
     # Is a specific command or file cellarized?

@@ -4,23 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-name="${1:?}"
-prefix="$(_koopa_venv_prefix)/${name}"
-_koopa_exit_if_dir "$prefix"
-
-_koopa_h1 "Installing Python '${name}' virtual environment at '${prefix}'."
-
-_koopa_assert_has_no_envs
-_koopa_assert_is_current_version python
-_koopa_assert_is_installed python3
-
-_koopa_mkdir "$prefix"
-
-python3 -m venv "$prefix"
-py_exe="${prefix}/bin/python3"
-
-"$py_exe" -m pip install --upgrade pip setuptools wheel
-"$py_exe" -m pip install "$name"
-"$py_exe" -m pip list
-
-_koopa_set_permissions --recursive "$prefix"
+_koopa_venv_create "$@"

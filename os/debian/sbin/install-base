@@ -256,6 +256,7 @@ _koopa_install_debian_base() { # {{{1
             libopenblas-dev
             libopenjp2-7-dev  # GDAL
             libopenmpi-dev
+            libpcre-dev  # ag
             libpcre2-dev  # rJava
             libperl-dev
             libpng-dev
