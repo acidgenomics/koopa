@@ -13,8 +13,6 @@ __koopa_id() { # {{{1
     return 0
 }
 
-
-
 _koopa_admin_group() { # {{{1
     # """
     # Return the administrator group.
@@ -79,7 +77,7 @@ _koopa_check_system() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_installed Rscript || return 1
+    _koopa_assert_is_installed Rscript
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
     export KOOPA_FORCE=1
@@ -670,7 +668,7 @@ _koopa_list() { # {{{1
     # @note Updated 2020-06-30.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_is_installed Rscript || return 1
+    _koopa_assert_is_installed Rscript
     Rscript --vanilla "$(_koopa_include_prefix)/list.R"
     return 0
 }
