@@ -580,7 +580,6 @@ _koopa_activate_koopa_paths() { # {{{1
     _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
     _koopa_activate_prefix "${config_prefix}/docker"
     _koopa_activate_prefix "${config_prefix}/scripts-private"
-    _koopa_add_to_path_end "${koopa_prefix}/system/defunct/bin"
     return 0
 }
 
