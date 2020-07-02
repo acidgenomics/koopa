@@ -145,4 +145,4 @@ _koopa_docker_build_all_images() { # {{{1
     return 0
 }
 
-_koopa_build_all_images "$@"
+_koopa_docker_build_all_images "$@"
