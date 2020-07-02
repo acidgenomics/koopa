@@ -116,14 +116,13 @@ expectedMinorVersion <- function(x) {
 
 
 #' Expected version
-#' @note Updated 2020-04-12.
+#' @note Updated 2020-07-02.
 #' @noRd
 expectedVersion <- function(x) {
     stopifnot(requireNamespace("syntactic", quietly = TRUE))
     x <- syntactic::kebabCase(x)
     variablesFile <- file.path(
         .koopa[["prefix"]],
-        "system",
         "include",
         "variables.txt"
     )
