@@ -236,7 +236,6 @@ _koopa_configure_vm() { # {{{1
     install-openjdk
     if [[ "$compact" -eq 0 ]]
     then
-        install-pkg-config
         install-cmake
         install-make
         install-autoconf
@@ -247,6 +246,7 @@ _koopa_configure_vm() { # {{{1
         install-coreutils
         install-findutils
         install-patch
+        install-pkg-config
         install-ncurses
         install-gnupg
         install-grep
