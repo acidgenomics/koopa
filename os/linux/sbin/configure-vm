@@ -4,579 +4,403 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_envs
+# FIXME CONSOLIDATE BIOCONDUCTOR AND COMPACT MODES...TOO CONFUSING.
 
-# Argument parsing {{{1
-# ==============================================================================
+_koopa_configure_vm() { # {{{1
+    # """
+    # Configure virtual machine.
+    # @note Updated 2020-07-02.
+    # """
+    _koopa_assert_has_no_envs
+    local bioconductor check compact data_disk minimal pos r_version source_ip
 
-data_disk=
-source_ip=
+    # Argument parsing {{{1
+    # ==========================================================================
 
-# Perform version checks at end of install.
-check=1
-
-# Bioconductor mode skips installation of GNU utils and other dependencies that
-# can take a long time to build from source.
-bioconductor=0
-
-# Compact mode applies to a persistent VM with a small '/' mount.
-# This is not always the case for Docker images.
-compact=0
-
-# Minimal config used for lightweight Docker images.
-minimal=0
-
-r_version="$(_koopa_variable "r")"
-
-pos=()
-while (("$#"))
-do
-    case "$1" in
-        --bioconductor)
-            bioconductor=1
-            shift 1
-            ;;
-        --compact)
-            compact=1
-            shift 1
-            ;;
-        --data-disk=*)
-            data_disk="${1#*=}"
-            shift 1
-            ;;
-        --data-disk)
-            data_disk="$2"
-            shift 2
-            ;;
-        --minimal)
-            minimal=1
-            shift 1
-            ;;
-        --no-check)
-            check=0
-            shift 1
-            ;;
-        --r-version=*)
-            r_version="${1#*=}"
-            shift 1
-            ;;
-        --r-version)
-            r_version="$2"
-            shift 2
-            ;;
-        --source-ip=*)
-            source_ip="${1#*=}"
-            shift 1
-            ;;
-        --source-ip)
-            source_ip="$2"
-            shift 2
-            ;;
-        "")
-            shift 1
-            ;;
-        --)
-            shift 1
-            break
-            ;;
-        --*|-*)
-            _koopa_invalid_arg "$1"
-            ;;
-        *)
-            pos+=("$1")
-            shift 1
-            ;;
-    esac
-done
-[[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-
-_koopa_assert_has_no_args "$@"
-
-# Start configuration {{{1
-# ==============================================================================
-
-_koopa_h1 "Configuring virtual machine."
-
-# Detect if running inside Docker container. Note that Docker mode skips
-# installation of some packages (e.g. Emacs) that fail to install.
-if _koopa_is_docker
-then
-    _koopa_info "Configuring for Docker image."
-    docker=1
-else
+    # Assume we're not building inside Docker by default.
     docker=0
-fi
-
-# Disable version checks.
-if [[ "$bioconductor" -eq 1 ]] || \
-    [[ "$compact" -eq 1 ]] || \
-    [[ "$minimal" -eq 1 ]]
-then
-    check=0
-fi
-
-# rsync configuration detection.
-if [[ -n "$source_ip" ]]
-then
-    _koopa_info "Syncing configuration from '${source_ip}'."
-    rsync=1
-else
+    # Minimal config used for lightweight Docker images. This mode skips all
+    # program installation.
+    minimal=0
+    # Compact mode skips installation of GNU utils and other dependencies that
+    # can take a long time to build from source.
+    compact=0
+    # Bioconductor mode, for continuous integration (CI) checks.
+    bioconductor=0
+    # Perform version checks at end of install.
+    check=1
+    # Used for app configuration.
+    data_disk=
+    # Skip rsync mode by default.
     rsync=0
-fi
-
-# Enable useful global variables that make configuration easier.
-# > export GPG_TTY=/dev/null
-export FORCE_UNSAFE_CONFIGURE=1
-export KOOPA_FORCE=1
-export PYTHONDONTWRITEBYTECODE=true
-
-# Root user and sudo fixes {{{1
-# ==============================================================================
-
-_koopa_enable_passwordless_sudo
-_koopa_fix_sudo_setrlimit_error
-
-# Remove default user-specific skeleton configuration files. This in particular
-# helps keep shell configuration consistent, especialy for Ubuntu.
-sudo rm -frv /etc/skel
-# > sudo mkdir -pv /etc/skel
-# > sudo chmod 0755 /etc/skel
-
-if [[ "$minimal" -eq 1 ]]
-then
-    _koopa_success "Configuration completed successfully."
-    exit 0
-fi
-
-# Koopa paths {{{1
-# ==============================================================================
-
-# e.g. '/usr/local'.
-make_prefix="$(_koopa_make_prefix)"
-
-# For data disk, linked to '/mnt/data01/n/opt' (see below).
-# e.g. '/usr/local/opt'.
-app_prefix="$(_koopa_app_prefix)"
-
-# Local disk configuration {{{1
-# ==============================================================================
-
-# Set up data disk and rsync configuration for persistent VM. Attempting to
-# detect an attached data disk here automatically.
-if [[ "$docker" -eq 0 ]]
-then
-    # This is the current standard configuration on AWS.
-    if [[ ! -e "$data_disk" ]]
+    # Used for rsync mode.
+    source_ip=
+    # Set the desired R version automatically.
+    r_version="$(_koopa_variable "r")"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --bioconductor)
+                bioconductor=1
+                shift 1
+                ;;
+            --compact)
+                compact=1
+                shift 1
+                ;;
+            --data-disk=*)
+                data_disk="${1#*=}"
+                shift 1
+                ;;
+            --data-disk)
+                data_disk="$2"
+                shift 2
+                ;;
+            --minimal)
+                minimal=1
+                shift 1
+                ;;
+            --no-check)
+                check=0
+                shift 1
+                ;;
+            --r-version=*)
+                r_version="${1#*=}"
+                shift 1
+                ;;
+            --r-version)
+                r_version="$2"
+                shift 2
+                ;;
+            --source-ip=*)
+                source_ip="${1#*=}"
+                shift 1
+                ;;
+            --source-ip)
+                source_ip="$2"
+                shift 2
+                ;;
+            "")
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    _koopa_assert_has_no_args "$@"
+    _koopa_is_docker && docker=1
+    [[ "$bioconductor" -eq 1 ]] && compact=1
+    [[ -n "$source_ip" ]] && rsync=1
+    if [[ "$compact" -eq 1 ]] || [[ "$minimal" -eq 1 ]]
     then
-        [[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
+        check=0
     fi
-    if [[ -e "$data_disk" ]]
+
+    # Initial configuration {{{1
+    # ==========================================================================
+
+    _koopa_h1 "Configuring virtual machine."
+    # Enable useful global variables that make configuration easier.
+    # > export GPG_TTY=/dev/null
+    export FORCE_UNSAFE_CONFIGURE=1
+    export KOOPA_FORCE=1
+    export PYTHONDONTWRITEBYTECODE=true
+
+    # Root user and sudo fixes {{{2
+    # --------------------------------------------------------------------------
+
+    _koopa_enable_passwordless_sudo
+    _koopa_fix_sudo_setrlimit_error
+
+    # Remove skeleton files {{{2
+    # --------------------------------------------------------------------------
+
+    # Remove default user-specific skeleton configuration files. This in
+    # particular helps keep shell configuration consistent, especialy for
+    # Ubuntu, which sets a lot of config in bashrc.
+    sudo rm -frv /etc/skel
+    # > sudo mkdir -pv /etc/skel
+    # > sudo chmod 0755 /etc/skel
+
+    # Early return in minimal mode {{{2
+    # --------------------------------------------------------------------------
+
+    if [[ "$minimal" -eq 1 ]]
     then
-        _koopa_info "Data disk detected at '${data_disk}'."
+        _koopa_success "Configuration completed successfully."
+        exit 0
     fi
-fi
 
-_koopa_info "Checking available local disk space."
-df -h '/'
-gb_total="$(_koopa_disk_gb_total)"
-[ "$gb_total" -lt 10 ] && compact=1
-# > gb_free="$(_koopa_disk_gb_free)"
-# > [ "$gb_free" -lt 10 ] && compact=1
+    # Koopa paths {{{2
+    # --------------------------------------------------------------------------
 
-if [[ "$compact" -eq 1 ]]
-then
-    _koopa_note "Configuring VM in compact mode."
-fi
+    # e.g. '/usr/local'.
+    make_prefix="$(_koopa_make_prefix)"
+    # For data disk, linked to '/mnt/data01/n/opt' (see below).
+    # e.g. '/usr/local/opt'.
+    app_prefix="$(_koopa_app_prefix)"
 
-# Prepare app prefix on external disk for write access.
-# e.g. '/n'.
-data_disk_link="$(_koopa_data_disk_link_prefix)"
-if [[ -e "$data_disk" ]] && \
-    { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
-then
-    _koopa_h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
-    _koopa_rm "$data_disk_link" "$app_prefix"
-    # e.g. '/mnt/data01/n'.
-    data_disk_real="${data_disk}${data_disk_link}"
-    _koopa_ln "$data_disk_real" "$data_disk_link"
-    # e.g. 'opt'.
-    app_prefix_bn="$(basename "$app_prefix")"
-    # e.g. '/mnt/data01/n/opt'
-    app_prefix_real="${data_disk_real}/${app_prefix_bn}"
-    _koopa_mkdir "$app_prefix_real"
-    # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
-    _koopa_ln "$app_prefix_real" "$app_prefix"
-else
-    _koopa_mkdir "$app_prefix"
-fi
+    # Local disk configuration {{{1
+    # ==========================================================================
 
-# Base system {{{1
-# ==============================================================================
+    if [[ "$docker" -eq 0 ]]
+    then
+        _koopa_info "Checking available local disk space."
+        df -h "/"
+        gb_total="$(_koopa_disk_gb_total)"
+        [ "$gb_total" -lt 16 ] && compact=1
+        # > gb_free="$(_koopa_disk_gb_free)"
+        # > [ "$gb_free" -lt 10 ] && compact=1
+        # Attempt to detect an attached disk automatically.
+        if [[ ! -e "$data_disk" ]]
+        then
+            # Our current standard configuration on AWS EC2 VMs.
+            [[ -e "/mnt/data01" ]] && data_disk="/mnt/data01"
+        fi
+        if [[ -e "$data_disk" ]]
+        then
+            _koopa_info "Data disk detected at '${data_disk}'."
+        fi
+    fi
+    # Prepare app prefix on external disk for write access (e.g. '/n').
+    data_disk_link="$(_koopa_data_disk_link_prefix)"
+    if [[ -e "$data_disk" ]] && \
+        { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
+    then
+        _koopa_h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
+        _koopa_rm "$data_disk_link" "$app_prefix"
+        # e.g. '/mnt/data01/n'.
+        data_disk_real="${data_disk}${data_disk_link}"
+        _koopa_ln "$data_disk_real" "$data_disk_link"
+        # e.g. 'opt'.
+        app_prefix_bn="$(basename "$app_prefix")"
+        # e.g. '/mnt/data01/n/opt'
+        app_prefix_real="${data_disk_real}/${app_prefix_bn}"
+        _koopa_mkdir "$app_prefix_real"
+        # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
+        _koopa_ln "$app_prefix_real" "$app_prefix"
+    else
+        _koopa_mkdir "$app_prefix"
+    fi
 
-_koopa_h2 "Installing base system."
+    # Base system {{{1
+    # ==========================================================================
 
-_koopa_update_etc_profile_d
-_koopa_install_dotfiles
-_koopa_mkdir "$make_prefix"
+    _koopa_h2 "Installing base system."
+    _koopa_update_etc_profile_d
+    _koopa_install_dotfiles
+    _koopa_mkdir "$make_prefix"
+    _koopa_assert_is_installed install-base
+    install_base_flags=()
+    [[ "$compact" -eq 1 ]] && install_base_flags+=("--compact")
+    install-base "${install_base_flags[@]:-}"
+    # Maybe include: tclsh
+    _koopa_assert_is_installed \
+        autoconf \
+        bc \
+        bzip2 \
+        g++ \
+        gcc \
+        gfortran \
+        gzip \
+        make \
+        man \
+        msgfmt \
+        tar \
+        unzip \
+        xml2-config \
+        xz
+    _koopa_assert_is_file \
+        /usr/bin/gcc \
+        /usr/bin/g++
+    sudo ldconfig
 
-_koopa_assert_is_installed install-base
+    # rsync mode {{{1
+    # ==========================================================================
 
-install_base_flags=()
-if [[ "$bioconductor" -eq 1 ]]
-then
-    install_base_flags+=("--bioconductor")
-elif [[ "$compact" -eq 1 ]] && _koopa_is_debian
-then
-    install_base_flags+=("--compact")
-fi
-install-base "${install_base_flags[@]:-}"
+    [[ "$rsync" -eq 1 ]] && rsync-vm --source-ip="$source_ip"
 
-# Maybe include: tclsh
-_koopa_assert_is_installed \
-    autoconf \
-    bc \
-    bzip2 \
-    g++ \
-    gcc \
-    gfortran \
-    gzip \
-    make \
-    man \
-    msgfmt \
-    tar \
-    unzip \
-    xml2-config \
-    xz
+    # Programs {{{1
+    # ==========================================================================
 
-_koopa_assert_is_file \
-    /usr/bin/gcc \
-    /usr/bin/g++
+    _koopa_run_if_installed install-llvm
+    install-conda
+    install-openjdk
+    if [[ "$compact" -eq 0 ]]
+    then
+        install-cmake
+        install-make
+        install-autoconf
+        install-automake
+        install-libtool
+        install-texinfo
+        install-binutils
+        install-coreutils
+        install-findutils
+        install-patch
+        install-ncurses
+        install-gnupg
+        install-grep
+        install-gawk
+        install-parallel
+        install-rsync
+        install-sed
+        install-zsh
+        install-bash
+        install-fish
+        install-curl
+        install-wget
+        install-git
+        install-openssh
+        install-python
+        install-perl
+        install-geos
+        install-sqlite
+        install-proj
+        install-gdal
+        install-hdf5
+        install-gsl
+        install-udunits
+        install-subversion
+        install-go
+        install-ruby
+        install-rust
+        install-password-store
+        install-neofetch
+        install-fzf
+        install-the-silver-searcher
+    fi
+    install-tmux
+    install-vim
+    install-shellcheck
+    install-shunit2
+    _koopa_run_if_installed install-aws-cli
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
+    then
+        _koopa_run_if_installed \
+            install-azure-cli \
+            install-docker \
+            install-google-cloud-sdk
+        install-docker-credential-pass
+        install-neovim
+        install-emacs
+        install-julia
+        install-lua
+        install-luarocks
+        install-lmod
+        install-htop
+        install-autojump
+        install-gcc --cellar-only
+    fi
+    if [[ "$r_version" == "devel" ]]
+    then
+        install-r-devel
+    elif _koopa_is_installed install-r-cran-binary
+    then
+        install-r-cran-binary --version="$r_version"
+    else
+        install-r --version="$r_version"
+    fi
+    _koopa_run_if_installed install-rstudio-server install-shiny-server
+    _koopa_update_r_config
+    _koopa_update_lmod_config
 
-sudo ldconfig
+    # Language-specific packages {{{1
+    # ==========================================================================
 
-# rsync mode {{{1
-# ==============================================================================
-
-if [[ "$rsync" -eq 1 ]]
-then
-    rsync-vm --source-ip="$source_ip"
-fi
-
-# LLVM {{{1
-# ==============================================================================
-
-# On Debian/Ubuntu, this will install the latest stable release.
-_koopa_run_if_installed install-llvm
-
-# OpenJDK {{{1
-# ==============================================================================
-
-# Install the latest release, which can vary widely across Linux distros.
-install-openjdk
-
-# GNU core {{{1
-# ==============================================================================
-
-if [[ "$bioconductor" -eq 0 ]]
-then
-    install-cmake
-    install-make
-    install-autoconf
-    install-automake
-    install-libtool
-    # Install texinfo before binutils, which requires makeinfo.
-    install-texinfo
-    install-binutils
-    install-coreutils
-    install-findutils
-    install-patch
-    install-ncurses
-    install-gnupg
-    install-grep
-    install-gawk
-    install-parallel
-    install-rsync
-    install-sed
-    # Skipping GCC, as we can run into problems with CMake and Rcpp.
-    # > install-gcc  # cellar only
-fi
-
-# Shells {{{1
-# ==============================================================================
-
-if [[ "$bioconductor" -eq 0 ]]
-then
-    install-zsh
-    install-bash
-    install-fish
-fi
-
-# General tools {{{1
-# ==============================================================================
-
-if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
-then
-    install-curl
-    install-wget
-    install-git
-    install-openssh
-    install-lua
-    install-luarocks
-    install-password-store
-fi
-
-# Languages {{{1
-# ==============================================================================
-
-# R {{{2
-# ------------------------------------------------------------------------------
-
-# Note that this will use apt package on Debian/Ubuntu and otherwise install
-# from source on other Linux distros.
-
-if [[ "$r_version" == "devel" ]]
-then
-    install-r-devel
-elif _koopa_is_installed install-r-cran-binary
-then
-    install-r-cran-binary --version="$r_version"
-else
-    install-r --version="$r_version"
-fi
-
-# Install RStudio Server and Shiny Server.
-_koopa_run_if_installed install-rstudio-server
-if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
-then
-    _koopa_run_if_installed install-shiny-server
-fi
-
-# Ensure consistent R configuration across platforms.
-_koopa_update_r_config
-
-# Python {{{2
-# ------------------------------------------------------------------------------
-
-# This will consistently install the latest version from source across all
-# Linux distros.
-install-python
-
-# Secondary {{{2
-# ------------------------------------------------------------------------------
-
-install-perl
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    install-go
-    install-julia
-    install-ruby
-    install-rust
-fi
-
-# Containers and environments {{{1
-# ==============================================================================
-
-# Docker {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    _koopa_run_if_installed install-docker
-    install-docker-credential-pass
-fi
-
-# Conda {{{2
-# ------------------------------------------------------------------------------
-
-install-conda
-
-# Lmod {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    install-lmod
-fi
-
-# This will skip if Lmod isn't installed.
-# Can be necessary for updating config on persistent VMs.
-_koopa_update_lmod_config
-
-# Libraries {{{1
-# ==============================================================================
-
-if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
-then
-    install-geos
-    install-sqlite
-    # Install PROJ after SQLite.
-    install-proj
-    # Install GDAL after Python and PROJ.
-    install-gdal
-    # Install HDF5 after GDAL.
-    install-hdf5
-    install-gsl
-    install-udunits
-fi
-
-if [[ "$bioconductor" -eq 0 ]] && [[ "$compact" -eq 0 ]]
-then
-    # Subversion requires SQLite.
-    install-subversion
-fi
-
-# Shell tools {{{1
-# ==============================================================================
-
-install-neofetch
-install-shellcheck
-install-shunit2
-install-tmux
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    # This currently fails to compile with GCC 10, but the project seems to be
-    # abandoned on GitHub, so skip on Docker for the moment.
-    # https://github.com/hishamhm/htop/pull/981
-    install-htop
-    # Autojump is currently a bit buggy with Bash in nounset mode.
-    install-autojump
-    # FZF requires Go.
-    install-fzf
-    install-the-silver-searcher
-fi
-
-# Text editors {{{1
-# ==============================================================================
-
-install-vim
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    # Emacs currently doesn't build easily on Docker.
-    install-emacs
-    install-neovim
-fi
-
-# Language-specific packages {{{1
-# ==============================================================================
-
-# Install these after all languages and libraries have been installed.
-
-sudo ldconfig
-
-# Python {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$compact" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
-then
-    install-python-packages
-    venv-create-r-reticulate
-fi
-
-# R {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$rsync" -eq 0 ]] &&
-    { [[ -e "$data_disk" ]] || [[ "$docker" -eq 1 ]]; }
-then
-    install-r-packages
-fi
-
-# Rust {{{2
-# ------------------------------------------------------------------------------
-
-# These must be built from source and are frequently updated.
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
-then
-    install-rust-packages
-fi
-
-# Bioinformatics tools {{{1
-# ==============================================================================
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    # > install-aspera-connect
+    sudo ldconfig
     if [[ "$rsync" -eq 0 ]]
     then
-        conda-create-bioinfo-envs --all
-        # > install-bcbio
+        install-python-packages
+        venv-create-r-reticulate
+        install-r-packages
+        if [[ "$compact" -eq 0 ]]
+        then
+            install-ruby-gems
+            install-rust-packages
+        fi
     fi
-fi
 
-# Cloud APIs {{{1
-# ==============================================================================
+    # Bioinformatics tools {{{1
+    # ==========================================================================
 
-_koopa_run_if_installed install-aws-cli
-
-if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
-then
-    # Note that Azure CLI requires Python 3, so install after.
-    _koopa_run_if_installed \
-        install-azure-cli \
-        install-google-cloud-sdk
-fi
-
-# Generate SSH key {{{1
-# ==============================================================================
-
-# Generate an SSH key automatically, when we are outside of Docker.
-if [[ "$docker" -eq 0 ]]
-then
-    generate-ssh-key
-fi
-
-# Clean up {{{1
-# ==============================================================================
-
-# Remove legacy packages {{{2
-# ------------------------------------------------------------------------------
-
-# Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
-_koopa_rm \
-    "${app_prefix}/perl" \
-    "${app_prefix}/python/pyenv" \
-    "${app_prefix}/perl"
-
-# Otherwise, ensure permissions are correct:
-# > _koopa_fix_pyenv_permissions
-# > _koopa_fix_rbenv_permissions
-
-# Fix permissions {{{2
-# ------------------------------------------------------------------------------
-
-_koopa_set_permissions --recursive "$make_prefix"
-_koopa_set_permissions --recursive "$app_prefix"
-_koopa_fix_zsh_permissions
-
-# Remove symlinks and dirs {{{2
-# ------------------------------------------------------------------------------
-
-_koopa_remove_broken_symlinks "$make_prefix"
-_koopa_remove_broken_symlinks "$app_prefix"
-_koopa_remove_empty_dirs "$make_prefix"
-_koopa_remove_empty_dirs "$app_prefix"
-
-# Remove temporary files {{{2
-# ------------------------------------------------------------------------------
-
-if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
-then
-    _koopa_h2 "Removing caches, logs, and temporary files."
-    # Don't clear '/var/log/' here, as this can mess with 'sshd'.
-    sudo rm -frv \
-        /root/.cache \
-        /tmp/* \
-        /var/backups/* \
-        /var/cache/*
-    if _koopa_is_debian
+    if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]] && [[ "$rsync" -eq 0 ]]
     then
-        sudo rm -fr /var/lib/apt/lists/*
+        # > install-aspera-connect
+        # > install-bcbio
+        conda-create-bioinfo-envs
     fi
-fi
 
-[[ "$check" -eq 1 ]] && koopa check
+    # Final steps and clean up {{{1
+    # ==========================================================================
 
-_koopa_success "Configuration completed successfully."
+    # Generate SSH key {{{2
+    # --------------------------------------------------------------------------
+
+    [[ "$docker" -eq 0 ]] && generate-ssh-key
+
+    # Remove legacy packages {{{2
+    # --------------------------------------------------------------------------
+
+    # Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
+    _koopa_rm \
+        "${app_prefix}/perl" \
+        "${app_prefix}/python/pyenv" \
+        "${app_prefix}/perl"
+    # Otherwise, ensure permissions are correct:
+    # > _koopa_fix_pyenv_permissions
+    # > _koopa_fix_rbenv_permissions
+
+    # Fix permissions {{{2
+    # --------------------------------------------------------------------------
+
+    _koopa_set_permissions --recursive "$make_prefix"
+    _koopa_set_permissions --recursive "$app_prefix"
+    _koopa_fix_zsh_permissions
+
+    # Remove symlinks and dirs {{{2
+    # --------------------------------------------------------------------------
+
+    _koopa_remove_broken_symlinks "$make_prefix"
+    _koopa_remove_broken_symlinks "$app_prefix"
+    _koopa_remove_empty_dirs "$make_prefix"
+    _koopa_remove_empty_dirs "$app_prefix"
+
+    # Remove temporary files {{{2
+    # --------------------------------------------------------------------------
+
+    if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
+    then
+        _koopa_h2 "Removing caches, logs, and temporary files."
+        # Don't clear '/var/log/' here, as this can mess with 'sshd'.
+        sudo rm -frv \
+            /root/.cache \
+            /tmp/* \
+            /var/backups/* \
+            /var/cache/*
+        if _koopa_is_debian
+        then
+            sudo rm -fr /var/lib/apt/lists/*
+        fi
+    fi
+
+    # Run system check and return {{{1
+    # --------------------------------------------------------------------------
+
+    [[ "$check" -eq 1 ]] && koopa check
+    _koopa_success "Configuration completed successfully."
+    return 0
+}
+
+_koopa_configure_vm "$@"
