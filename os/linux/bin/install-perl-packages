@@ -19,10 +19,15 @@ _koopa_install_perl_packages() {
         _koopa_h2 "Installing CPAN Minus."
         cpan -i "App::cpanminus"
     fi
-    modules=(
-        "App::Ack"
-        "File::Rename"
-    )
+    if [[ "$#" -gt 0 ]]
+    then
+        modules=("$@")
+    else
+        modules=(
+            "App::Ack"
+            "File::Rename"
+        )
+    fi
     for module in "${modules[@]}"
     do
         _koopa_h2 "Installing '${module}' module."
