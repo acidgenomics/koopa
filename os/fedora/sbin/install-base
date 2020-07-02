@@ -101,6 +101,7 @@ _koopa_install_fedora_base() { # {{{1
             mariadb-devel
             mpfr-devel
             openssl-devel
+            pcre-devel  # ag
             pcre2-devel  # rJava
             postgresql-devel
             readline-devel
