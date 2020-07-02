@@ -288,10 +288,13 @@ _koopa_homebrew_ruby_gems_prefix() { # {{{1
 _koopa_include_prefix() { # {{{1
     # """
     # Koopa system includes prefix.
-    # @note Updated 2020-06-24.
+    # @note Updated 2020-07-02.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_print "$(_koopa_prefix)/system/include"
+    local prefix
+    prefix="$(_koopa_prefix)/include"
+    [ -d "$prefix" ] || return 1
+    _koopa_print "$prefix"
     return 0
 }
 
