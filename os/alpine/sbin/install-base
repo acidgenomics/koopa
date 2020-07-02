@@ -4,48 +4,53 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Potentially useful flags:
-# > apk add --no-cache --virtual .build-dependencies
-# """
+_koopa_install_alpine_base() { # {{{1
+    # """
+    # Install Alpine Linux base system.
+    # @note Updated 2020-07-02.
+    #
+    # Potentially useful flags:
+    # > apk add --no-cache --virtual .build-dependencies
+    # """
+    _koopa_assert_is_installed apk sudo
+    local name_fancy packages
+    name_fancy="Alpine base system"
+    _koopa_install_start "$name_fancy"
+    sudo apk update
+    sudo apk upgrade
+    packages=(
+        # .build-dependencies
+        # R-dev
+        # R-doc
+        # fish
+        # pandoc
+        # pandoc-citeproc
+        # texlive
+        # zsh
+        R
+        autoconf
+        bash
+        bash-completion
+        build-base
+        ca-certificates
+        curl
+        dpkg
+        gettext
+        git
+        libevent-dev
+        libffi-dev
+        libxml2-dev
+        mdocml
+        openssl
+        shadow
+        sudo
+        tcl
+        tree
+        wget
+    )
+    sudo apk add --no-cache --virtual "${packages[@]}"
+    _koopa_install_success "$name_fancy"
+    return 0
+}
 
-name_fancy="Alpine base system"
-
-_koopa_install_start "$name_fancy"
-
-sudo apk update
-sudo apk upgrade
-
-packages=(
-    # .build-dependencies
-    # R-dev
-    # R-doc
-    # fish
-    # pandoc
-    # pandoc-citeproc
-    # texlive
-    # zsh
-    R
-    autoconf
-    bash
-    bash-completion
-    build-base
-    ca-certificates
-    curl
-    dpkg
-    gettext
-    git
-    libevent-dev
-    libffi-dev
-    libxml2-dev
-    mdocml
-    openssl
-    shadow
-    sudo
-    tcl
-    tree
-    wget
-)
-sudo apk add --no-cache --virtual "${packages[@]}"
-
-_koopa_install_success "$name_fancy"
+_koopa_install_alpine_base "$@"
