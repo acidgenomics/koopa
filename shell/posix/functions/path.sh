@@ -131,6 +131,42 @@ _koopa_add_to_path_start() { # {{{1
     return 0
 }
 
+_koopa_add_to_pkg_config_end() { # {{{1
+    # """
+    # Add directory to end of PKG_CONFIG_PATH.
+    # @note Updated 2020-07-02.
+    # """
+    [ "$#" -gt 0 ] || return 1
+    local dir
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        _koopa_str_match_posix "$PKG_CONFIG_PATH" ":${dir}" && continue
+        PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:${dir}"
+    done
+    export PKG_CONFIG_PATH
+    return 0
+}
+
+_koopa_add_to_pkg_config_start() { # {{{1
+    # """
+    # Add directory to start of PKG_CONFIG_PATH.
+    # @note Updated 2020-07-02.
+    # """
+    [ "$#" -gt 0 ] || return 1
+    local dir
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        _koopa_str_match_posix "$PKG_CONFIG_PATH" "${dir}:" && continue
+        PKG_CONFIG_PATH="${dir}:${PKG_CONFIG_PATH}"
+    done
+    export PKG_CONFIG_PATH
+    return 0
+}
+
 _koopa_force_add_to_fpath_end() { # {{{1
     # """
     # Force add to FPATH end.

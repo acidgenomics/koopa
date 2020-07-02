@@ -576,10 +576,11 @@ _koopa_activate_koopa_paths() { # {{{1
             _koopa_activate_prefix "${koopa_prefix}/os/rhel"
         fi
     fi
-    _koopa_activate_prefix "${koopa_prefix}/os/${os_id}"
-    _koopa_activate_prefix "${koopa_prefix}/host/${host_id}"
-    _koopa_activate_prefix "${config_prefix}/docker"
-    _koopa_activate_prefix "${config_prefix}/scripts-private"
+    _koopa_activate_prefix \
+        "${koopa_prefix}/os/${os_id}" \
+        "${koopa_prefix}/host/${host_id}" \
+        "${config_prefix}/docker" \
+        "${config_prefix}/scripts-private"
     return 0
 }
 
@@ -766,19 +767,44 @@ _koopa_activate_pipx() { # {{{1
     return 0
 }
 
+_koopa_activate_pkg_config() { # {{{1
+    # """
+    # Configure PKG_CONFIG_PATH.
+    # @note Updated 2020-07-02.
+    #
+    # These are defined primarily for R environment. In particular these make
+    # building tricky pages from source, such as rgdal, sf and others  easier.
+    #
+    # This is necessary for rgdal, sf packages to install clean.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    _koopa_add_to_pkg_config_start \
+        /usr/lib/pkgconfig \
+        /usr/lib64/pkgconfig \
+        /usr/local/share/pkgconfig \
+        /usr/lib/x86_64-linux-gnu/pkgconfig \
+        /usr/local/lib/pkgconfig \
+        /usr/local/lib64/pkgconfig
+    return 0
+}
+
 _koopa_activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-02.
     # """
     [ "$#" -gt 0 ] || return 1
     local prefix
-    prefix="${1:?}"
-    [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/sbin"
-    _koopa_add_to_path_start "${prefix}/bin"
-    _koopa_add_to_manpath_start "${prefix}/man"
-    _koopa_add_to_manpath_start "${prefix}/share/man"
+    for prefix in "$@"
+    do
+        [ -d "$prefix" ] || continue
+        _koopa_add_to_path_start \
+            "${prefix}/sbin" \
+            "${prefix}/bin"
+        _koopa_add_to_manpath_start \
+            "${prefix}/man" \
+            "${prefix}/share/man"
+    done
     return 0
 }
 
@@ -956,16 +982,19 @@ _koopa_activate_standard_paths() { # {{{1
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_force_add_to_path_end "/usr/bin"
-    _koopa_force_add_to_path_end "/bin"
-    _koopa_force_add_to_path_end "/usr/sbin"
-    _koopa_force_add_to_path_end "/sbin"
+    _koopa_force_add_to_path_end \
+        "/usr/bin" \
+        "/bin" \
+        "/usr/sbin" \
+        "/sbin"
+    _koopa_force_add_to_path_start \
+        "/usr/local/sbin" \
+        "/usr/local/bin" \
+        "${HOME}/.local/bin"
     _koopa_force_add_to_manpath_end "/usr/share/man"
-    _koopa_force_add_to_path_start "/usr/local/sbin"
-    _koopa_force_add_to_path_start "/usr/local/bin"
-    _koopa_force_add_to_manpath_start "/usr/local/share/man"
-    _koopa_force_add_to_path_start "${HOME}/.local/bin"
-    _koopa_force_add_to_manpath_start "${HOME}/.local/share/man"
+    _koopa_force_add_to_manpath_start \
+        "/usr/local/share/man" \
+        "${HOME}/.local/share/man"
     return 0
 }
 
@@ -1276,29 +1305,6 @@ _koopa_export_pager() { # {{{1
     [ "$#" -eq 0 ] || return 1
     [ -z "${PAGER:-}" ] && PAGER="less"
     export PAGER
-    return 0
-}
-
-_koopa_export_pkg_config_path() { # {{{1
-    # """
-    # Export PKG_CONFIG_PATH.
-    # @note Updated 2020-06-30.
-    #
-    # These are defined primarily for R environment. In particular these make
-    # building tricky pages from source, such as rgdal, sf and others  easier.
-    #
-    # This is necessary for rgdal, sf packages to install clean.
-    # """
-    [ "$#" -eq 0 ] || return 1
-    if [ -z "${PKG_CONFIG_PATH:-}" ]
-    then
-        PKG_CONFIG_PATH="\
-/usr/local/lib64/pkgconfig:\
-/usr/local/lib/pkgconfig:\
-/usr/lib64/pkgconfig:\
-/usr/lib/pkgconfig"
-    fi
-    export PKG_CONFIG_PATH
     return 0
 }
 
