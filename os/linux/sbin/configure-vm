@@ -322,6 +322,7 @@ _koopa_configure_vm() { # {{{1
     then
         install-python-packages
         venv-create-r-reticulate
+        install-perl-packages
         install-r-packages
         if [[ "$compact" -eq 0 ]]
         then
