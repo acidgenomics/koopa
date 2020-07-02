@@ -177,6 +177,7 @@ brews=(
     # moreutils  # conflicts with parallel and ts
     # pyenv
     # rbenv (or use rvm?)
+    ack
     autoconf
     autojump
     automake
