@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$@"
+_koopa_assert_has_args "$#"
 
 fasta_file="$1"
 _koopa_assert_is_file "$fasta_file"

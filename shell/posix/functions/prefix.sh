@@ -369,6 +369,15 @@ _koopa_msigdb_prefix() { # {{{1
     return 0
 }
 
+_koopa_monorepo_prefix() { # {{{1
+    # """
+    # Git monorepo prefix.
+    # @note Updated 2020-07-03.
+    # """
+    _koopa_print "${HOME:?}/monorepo"
+    return 0
+}
+
 _koopa_openjdk_prefix() { # {{{1
     # """
     # OpenJDK prefix.

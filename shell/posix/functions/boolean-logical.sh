@@ -99,6 +99,14 @@ _koopa_has_gnu_tar() { # {{{1
     __koopa_has_gnu tar
 }
 
+_koopa_has_monorepo() { # {{{1
+    # """
+    # Does the current user have a monorepo?
+    # @note Updated 2020-07-03.
+    # """
+    [ -d "$(_koopa_monorepo_prefix)" ]
+}
+
 _koopa_has_no_environments() { # {{{1
     # """
     # Detect activation of virtual environments.
