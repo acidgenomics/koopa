@@ -35,7 +35,9 @@ _koopa_assert_has_args() { # {{{1
     # """
     if [ "$#" -ne 1 ]
     then
-        _koopa_stop "'_koopa_assert_has_args' requires 1 arg."
+        _koopa_stop \
+            "'_koopa_assert_has_args' requires 1 arg." \
+            "Pass '\$#' not '\$@' to this function."
     fi
     if [ "${1:?}" -eq 0 ]
     then
@@ -191,17 +193,21 @@ _koopa_assert_has_monorepo() { # {{{1
     return 0
 }
 
-# FIXME REWORK THIS
-# FIXME ALLOW USER TO PASS IN "$#"?
 _koopa_assert_has_no_args() { # {{{1
     # """
     # Assert that the user has not passed any arguments to a script.
-    # @note Updated 2019-10-23.
+    # @note Updated 2020-07-03.
     # """
-    if [ "$#" -gt 0 ]
+    if [ "$#" -ne 1 ]
     then
         _koopa_stop \
-            "Invalid argument: '${1:?}'." \
+            "'_koopa_assert_has_args' requires 1 arg." \
+            "Pass '\$#' not '\$@' to this function."
+    fi
+    if [ "${1:?}" -ne 0 ]
+    then
+        _koopa_stop \
+            "Arguments are not allowed." \
             "Run with '--help' flag for usage details."
     fi
     return 0
