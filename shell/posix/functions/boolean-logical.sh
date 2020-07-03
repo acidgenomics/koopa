@@ -36,8 +36,6 @@ __koopa_is_os_release() { # {{{1
     return 1
 }
 
-
-
 _koopa_has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
@@ -444,20 +442,19 @@ _koopa_is_git() { # {{{1i
 _koopa_is_git_clean() { # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-06-11.
+    # @note Updated 2020-07-03.
     # @seealso
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_is_git || return 1
+    local rev_1 rev_2
     # Are there unstaged changes?
     git diff-index --quiet HEAD -- 2>/dev/null || return 1
     # In need of a pull or push?
-    local rev_1
     rev_1="$(git rev-parse HEAD 2>/dev/null)"
     # Note that this step will return fatal warning on no upstream.
-    local rev_2
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
     [ "$rev_1" != "$rev_2" ] && return 1
     return 0
@@ -501,10 +498,11 @@ _koopa_is_gitlab_ssh_enabled() { # {{{1
 _koopa_is_installed() { # {{{1
     # """
     # Is the requested program name installed?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     # """
     [ "$#" -gt 0 ] || return 1
-    for cmd
+    local cmd
+    for cmd in "$@"
     do
         command -v "$cmd" >/dev/null || return 1
     done
@@ -514,10 +512,13 @@ _koopa_is_installed() { # {{{1
 _koopa_is_interactive() { # {{{1
     # """
     # Is the current shell interactive?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
+    # Consider checking for tmux or subshell here.
     # """
     [ "$#" -eq 0 ] || return 1
-    _koopa_str_match "$-" "i"
+    _koopa_str_match "$-" "i" && return 0
+    _koopa_is_tty && return 0
+    return 1
 }
 
 _koopa_is_kali() { # {{{1
@@ -609,7 +610,7 @@ _koopa_is_r_package_installed() { # {{{1
     # Is the requested R package installed?
     # @note Updated 2020-04-25.
     #
-    # Note that this will only return true for user-installed packages.
+    # This will only return true for user-installed packages.
     #
     # Fast mode: checking the 'site-library' directory.
     #
@@ -618,12 +619,10 @@ _koopa_is_r_package_installed() { # {{{1
     # >     | grep -q "TRUE"
     # """
     [ "$#" -gt 0 ] || return 1
-    local pkg
+    local pkg prefix rscript_exe
     pkg="${1:?}"
-    local rscript_exe
     rscript_exe="${2:-Rscript}"
     _koopa_is_installed "$rscript_exe" || return 1
-    local prefix
     prefix="$(_koopa_r_library_prefix "$rscript_exe")"
     [ -d "${prefix}/${pkg}" ]
 }
@@ -654,21 +653,23 @@ _koopa_is_recent() {
     # @examples
     # _koopa_is_recent ~/hello-world.txt
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed find
-    local file
-    file="${1:?}"
-    local days
+    local days exists file
     days=14
-    local exists
-    exists="$( \
-        find "$file" \
-            -mindepth 0 \
-            -maxdepth 0 \
-            -mtime "-${days}" \
-        2>/dev/null \
-    )"
-    [ -n "$exists" ]
+    for file in "$@"
+    do
+        [ -e "$file" ] || return 1
+        exists="$( \
+            find "$file" \
+                -mindepth 0 \
+                -maxdepth 0 \
+                -mtime "-${days}" \
+            2>/dev/null \
+        )"
+        [ -n "$exists" ] || return 1
+    done
+    return 0
 }
 
 _koopa_is_rhel() { # {{{1
@@ -765,19 +766,17 @@ _koopa_is_shared_install() { # {{{1
 _koopa_is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-07-03.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
     #       testing-your-ssh-connection
     # """
     [ "$#" -gt 0 ] || return 1
-    local url
+    local pattern url x
     url="${1:?}"
-    local pattern
     pattern="${2:?}"
     _koopa_is_installed ssh || return 1
-    local x
     x="$( \
         ssh -T \
             -o StrictHostKeyChecking=no \
