@@ -17,7 +17,7 @@ _koopa_aws_batch_fetch_and_run() {
     # - https://github.com/FredHutch/url-fetch-and-run
     # - https://github.com/awslabs/aws-batch-helpers
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_assert_is_set BATCH_FILE_URL
     _koopa_assert_is_installed aws curl unzip
     local file url
@@ -44,7 +44,7 @@ _koopa_aws_batch_list_jobs() {
     # List AWS Batch jobs.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_assert_is_installed aws
     _koopa_assert_is_set \
         AWS_BATCH_ACCOUNT_ID \
@@ -90,7 +90,7 @@ _koopa_aws_cp_regex() { # {{{1
     # @seealso
     # - aws s3 cp help
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed aws
     local pattern source_prefix target_prefix
     pattern="${1:?}"
@@ -121,7 +121,7 @@ _koopa_aws_s3_find() { # {{{1
     #     --exclude="antisense" \
     #     s3://bioinfo/igv/
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed aws
     local exclude include pos x
     exclude=
@@ -328,7 +328,7 @@ _koopa_aws_s3_mv_to_parent() { # {{{1
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed aws
     local bn dn1 dn2 file files prefix target x
     prefix="${1:?}"
@@ -371,7 +371,7 @@ _koopa_aws_s3_sync() { # {{{1
     # - *.Rproj directories.
     # - *.swp files (from vim).
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed aws
     aws s3 sync \
         --exclude="*.Rproj/*" \

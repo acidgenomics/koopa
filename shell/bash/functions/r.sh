@@ -9,7 +9,7 @@ _koopa_array_to_r_vector() { # {{{1
     # _koopa_array_to_r_vector "aaa" "bbb"
     # ## c("aaa", "bbb")
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$(printf '"%s", ' "$@")"
     x="$(_koopa_strip_right ", " "$x")"
@@ -26,7 +26,7 @@ _koopa_link_r_etc() { # {{{1
     #
     # Don't copy Makevars file across machines.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     local r_prefix
     r_prefix="${1:-$(_koopa_r_prefix)}"
     if [[ ! -d "$r_prefix" ]]
@@ -89,7 +89,7 @@ _koopa_link_r_site_library() { # {{{1
     # Link R site library.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     local r_prefix
     r_prefix="${1:-$(_koopa_r_prefix)}"
     [[ -d "$r_prefix" ]] || return 1
@@ -200,7 +200,7 @@ _koopa_update_r_config() { # {{{1
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_h1 "Updating R configuration."
     # Locate R command.
     local r_exe

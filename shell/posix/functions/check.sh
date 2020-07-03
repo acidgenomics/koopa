@@ -6,7 +6,7 @@ _koopa_check_azure() { # {{{1
     # Check Azure VM integrity.
     # @note Updated 2019-10-31.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_azure || return 0
     if [ -e "/mnt/resource" ]
     then
@@ -23,7 +23,7 @@ _koopa_check_access_human() { # {{{1
     # Check if file or directory has expected human readable access.
     # @note Updated 2020-01-12.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file
     file="${1:?}"
     local code
@@ -47,7 +47,7 @@ _koopa_check_access_octal() { # {{{1
     # Check if file or directory has expected octal access.
     # @note Updated 2020-01-12.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file
     file="${1:?}"
     local code
@@ -71,7 +71,7 @@ _koopa_check_group() { # {{{1
     # Check if file or directory has an expected group.
     # @note Updated 2020-01-12.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file
     file="${1:?}"
     local code
@@ -97,7 +97,7 @@ _koopa_check_mount() { # {{{1
     # Usage of find is recommended over ls here.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_is_installed find || return 1
     local mnt
     mnt="${1:?}"
@@ -114,7 +114,7 @@ _koopa_check_user() { # {{{1
     # Check if file or directory is owned by an expected user.
     # @note Updated 2020-01-13.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file
     file="${1:?}"
     if [ ! -e "$file" ]

@@ -9,7 +9,7 @@ _koopa_current_wormbase_version() { # {{{1
     # Current WormBase version.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local url version
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"

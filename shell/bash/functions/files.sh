@@ -11,7 +11,7 @@ _koopa_find_and_replace_in_files() { # {{{1
     # by default on macOS.
     # https://stackoverflow.com/questions/4247068/
     # """
-    [ "$#" -ge 3 ] || return 1
+    _koopa_assert_has_args_ge "$#" 3
     local file from to
     from="${1:?}"
     to="${2:?}"
@@ -39,7 +39,7 @@ _koopa_remove_broken_symlinks() { # {{{1
     # Remove broken symlinks.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local file files
     readarray -t files <<< "$(_koopa_find_broken_symlinks "$@")"
     _koopa_is_array_non_empty "${files[@]}" || return 0
@@ -59,7 +59,7 @@ _koopa_remove_empty_dirs() { # {{{1
     # Remove empty directories.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local dirs
     readarray -t dirs <<< "$(_koopa_find_empty_dirs "$@")"
     _koopa_is_array_non_empty "${dirs[@]}" || return 0

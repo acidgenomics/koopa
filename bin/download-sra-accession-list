@@ -9,7 +9,7 @@ _koopa_download_sra_accession_list() {
     # Download SRA accession list.
     # @note Updated 2020-07-02.
     # """
-    [[ "$#" -le 2 ]] || return 1
+    _koopa_assert_has_args_le "$#" 2
     _koopa_activate_conda_env entrez-direct
     _koopa_assert_is_installed esearch efetch
     local file id

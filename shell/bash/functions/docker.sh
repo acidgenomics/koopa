@@ -15,7 +15,7 @@ _koopa_docker_build() { # {{{1
     # - docker build --help
     # - https://docs.docker.com/engine/reference/builder/#arg
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed docker
     local delete docker_dir image image_ids pos push server source_image \
         symlink_tag symlink_tagged_image symlink_tagged_image_today tag \
@@ -98,7 +98,7 @@ _koopa_docker_build() { # {{{1
         symlink_tagged_image="${image}:${symlink_tag}"
         symlink_tagged_image_today="${symlink_tagged_image}-${today}"
         # Now resolve the symlink to real path.
-        source_image="$(_koopa_realpath "$source_image")"
+        source_image="$(realpath "$source_image")"
         tag="$(basename "$source_image")"
     fi
     # e.g. acidgenomics/debian:latest
@@ -321,7 +321,7 @@ _koopa_docker_prune() { # {{{1
     # Docker prune.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed docker
     docker system prune --all --force
     return 0
@@ -340,7 +340,7 @@ _koopa_docker_push() { # {{{1
     # @examples
     # docker-push acidgenomics/debian:latest
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed docker
     local image images json pattern server
     server="docker.io"
@@ -379,7 +379,7 @@ _koopa_docker_remove() { # {{{1
     # Remove docker images by pattern.
     # Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed docker
     local pattern
     for pattern in "$@"
@@ -397,7 +397,7 @@ _koopa_docker_run() { # {{{1
     # Run Docker image.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed docker
     local bash flags image pos workdir
     bash=0
@@ -480,7 +480,7 @@ _koopa_docker_tag() { # {{{1
     # Add Docker tag.
     # Updated 2020-02-18.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed docker
     local dest_tag image server source_tag
     image="${1:?}"
@@ -510,7 +510,7 @@ _koopa_is_docker_build_today() { # {{{1
     # Check if a Docker image has been built today.
     # @note Updated 2020-07-02.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_is_installed docker || return 1
     local image json timestamp today utc_timestamp
     today="$(date "+%Y-%m-%d")"

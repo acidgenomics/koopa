@@ -11,7 +11,7 @@ __koopa_bam_filter() { # {{{1
     # - https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
     #       sessionV/lessons/03_align_and_filtering.html
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed sambamba
     while (("$#"))
     do
@@ -70,7 +70,7 @@ __koopa_bam_filter_duplicates() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #       bam/__init__.py
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     __koopa_bam_filter --filter="not duplicate" "$@"
     return 0
 }
@@ -83,7 +83,7 @@ __koopa_bam_filter_multimappers() { # {{{1
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #       chipseq/__init__.py
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     __koopa_bam_filter --filter="[XS] == null" "$@"
     return 0
 }
@@ -93,7 +93,7 @@ __koopa_bam_filter_unmapped() { # {{{1
     # Filter unmapped reads from a BAM file.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     __koopa_bam_filter --filter="not unmapped" "$@"
     return 0
 }
@@ -109,7 +109,7 @@ __koopa_bam_sort() { # {{{1
     # @seealso
     # - https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed sambamba
     local unsorted_bam
     unsorted_bam="${1:?}"
@@ -145,7 +145,7 @@ _koopa_bam_filter() { # {{{1
     # Apply multi-step filtering to BAM files.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     local bam_file bam_files dir final_output_bam final_output_tail input_bam \
         input_tail output_bam output_tail
     dir="${1:-.}"
@@ -217,7 +217,7 @@ _koopa_bam_index() { # {{{1
     # Index BAM file.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed samtools
     local bam_file threads
     threads="$(_koopa_cpu_count)"
@@ -239,7 +239,7 @@ _koopa_bam_sort() { # {{{1
     # Sort BAM files.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     local bam_file bam_files dir
     dir="${1:-.}"
     _koopa_assert_is_dir "$dir"
@@ -276,7 +276,7 @@ _koopa_bowtie2() { # {{{1
     # Run bowtie2 on paired-end FASTQ files.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed bowtie2
     while (("$#"))
     do
@@ -361,7 +361,7 @@ _koopa_bowtie2_index() { # {{{1
     # Generate bowtie2 index.
     # @note Updated 2020-02-05.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed bowtie2-build
     while (("$#"))
     do
@@ -407,7 +407,7 @@ _koopa_sam_to_bam() { # {{{1
     # Convert SAM file to BAM.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed samtools
     while (("$#"))
     do

@@ -13,7 +13,7 @@ _koopa_gsub() { # {{{1
     # ## bb
     # ## cc
     # """
-    [ "$#" -ge 3 ] || return 1
+    _koopa_assert_has_args_ge "$#" 3
     _koopa_is_installed sed || return 1
     local pattern replacement string
     pattern="${1:?}"
@@ -37,7 +37,7 @@ _koopa_lowercase() { # {{{1
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_is_installed tr || return 1
     local string
     for string in "$@"
@@ -62,7 +62,7 @@ _koopa_snake_case() { # {{{1
     # _koopa_snake_case "bcbio-nextgen.py"
     # ## bcbio_nextgen_py
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_gsub "[^A-Za-z0-9_]" "_" "$@"
     return 0
 }
@@ -79,7 +79,7 @@ _koopa_strip_left() { # {{{1
     # ## Quick Brown Fox
     # ## White Lady
     # """
-    [ "$#" -ge 2 ] || return 1
+    _koopa_assert_has_args_ge "$#" 2
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -102,7 +102,7 @@ _koopa_strip_right() { # {{{1
     # ## The Quick Brown
     # ## Michael J.
     # """
-    [ "$#" -ge 2 ] || return 1
+    _koopa_assert_has_args_ge "$#" 2
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -126,7 +126,7 @@ _koopa_strip_trailing_slash() { # {{{1
     # ## ./dir1
     # ## ./dir2
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_strip_right "/" "$@"
     return 0
 }
@@ -144,7 +144,7 @@ _koopa_sub() { # {{{1
     # ## aa
     # ## aa
     # """
-    [ "$#" -ge 3 ] || return 1
+    _koopa_assert_has_args_ge "$#" 3
     _koopa_is_installed sed || return 1
     local pattern replacement string
     pattern="${1:?}"
@@ -171,7 +171,7 @@ _koopa_trim_ws() { # {{{1
     # @examples
     # _koopa_trim_ws "  hello world  " " foo bar "
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local string
     for string in "$@"
     do

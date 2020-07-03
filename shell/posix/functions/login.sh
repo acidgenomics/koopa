@@ -21,7 +21,7 @@ _koopa_tmux_sessions() { # {{{1
     # Show active tmux sessions.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed tmux || return 0
     _koopa_is_tmux && return 0
     local x
@@ -51,7 +51,7 @@ _koopa_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local bucket_dir
     bucket_dir="${KOOPA_BUCKET:-"${HOME:?}/bucket"}"
     # Early return if there's no bucket directory on the system.

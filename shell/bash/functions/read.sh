@@ -5,7 +5,7 @@ __koopa_int_to_yn() { # {{{1
     # Convert integer to yes/no choice.
     # @note Updated 2020-07-02.
     # """
-    [[ "$#" -eq 1 ]] || return 1
+    _koopa_assert_has_args_eq "$#" 1
     local x
     case "${1:?}" in
         0)
@@ -27,7 +27,7 @@ __koopa_read_prompt_yn() { # {{{1
     # Show colorful yes/no default choices in prompt.
     # @note Updated 2020-07-02.
     # """
-    [[ "$#" -eq 2 ]] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     local no no_default prompt yes yes_default yn
     no="$(_koopa_print_red "no")"
     no_default="$(_koopa_print_red_bold "NO")"
@@ -54,7 +54,7 @@ _koopa_read() { # {{{1
     # Read a string from the user.
     # @note Updated 2020-07-02.
     # """
-    [[ "$#" -eq 2 ]] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     local choice default flags prompt
     default="${2:?}"
     prompt="${1:?} [${default}]: "
@@ -78,7 +78,7 @@ _koopa_read_yn() { # {{{1
     # Checks if Bash version is ancient (e.g. macOS clean install), so we can
     # adjust interactive read input flags accordingly.
     # """
-    [[ "$#" -eq 2 ]] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     local choice default flags x
     prompt="$(__koopa_read_prompt_yn "$@")"
     default="$(__koopa_int_to_yn "${2:?}")"

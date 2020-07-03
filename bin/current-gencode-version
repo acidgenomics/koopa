@@ -9,7 +9,7 @@ _koopa_current_gencode_version() { # {{{1
     # Current GENCODE version.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_assert_is_installed curl
     local base_url organism pattern short_name url x
     organism="${1:-"Homo sapiens"}"

@@ -6,7 +6,7 @@ _koopa_add_conda_env_to_path() { # {{{1
     # Add conda environment(s) to PATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_is_installed conda || return 1
     [ -z "${CONDA_PREFIX:-}" ] || return 1
     local bin_dir name
@@ -28,7 +28,7 @@ _koopa_add_to_fpath_end() { # {{{1
     # Add directory to end of FPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -46,7 +46,7 @@ _koopa_add_to_fpath_start() { # {{{1
     # Add directory to start of FPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -64,7 +64,7 @@ _koopa_add_to_manpath_end() { # {{{1
     # Add directory to end of MANPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     MANPATH="${MANPATH:-}"
     for dir in "$@"
@@ -82,7 +82,7 @@ _koopa_add_to_manpath_start() { # {{{1
     # Add directory to start of MANPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     MANPATH="${MANPATH:-}"
     for dir in "$@"
@@ -100,7 +100,7 @@ _koopa_add_to_path_end() { # {{{1
     # Add directory to end of PATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     PATH="${PATH:-}"
     for dir in "$@"
@@ -118,7 +118,7 @@ _koopa_add_to_path_start() { # {{{1
     # Add directory to start of PATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     PATH="${PATH:-}"
     for dir in "$@"
@@ -136,7 +136,7 @@ _koopa_add_to_pkg_config_end() { # {{{1
     # Add directory to end of PKG_CONFIG_PATH.
     # @note Updated 2020-07-02.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for dir in "$@"
@@ -154,7 +154,7 @@ _koopa_add_to_pkg_config_start() { # {{{1
     # Add directory to start of PKG_CONFIG_PATH.
     # @note Updated 2020-07-02.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for dir in "$@"
@@ -172,7 +172,7 @@ _koopa_force_add_to_fpath_end() { # {{{1
     # Force add to FPATH end.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     for dir in "$@"
     do
@@ -188,7 +188,7 @@ _koopa_force_add_to_fpath_start() { # {{{1
     # Force add to FPATH start.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     for dir in "$@"
     do
@@ -204,7 +204,7 @@ _koopa_force_add_to_manpath_end() { # {{{1
     # Force add to MANPATH end.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     for dir in "$@"
     do
@@ -220,7 +220,7 @@ _koopa_force_add_to_manpath_start() { # {{{1
     # Force add to MANPATH start.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     for dir in "$@"
     do
@@ -236,7 +236,7 @@ _koopa_force_add_to_path_end() { # {{{1
     # Force add to end of PATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     for dir in "$@"
     do
@@ -252,7 +252,7 @@ _koopa_force_add_to_path_start() { # {{{1
     # Force add to start of PATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     for dir in "$@"
     do
@@ -283,7 +283,7 @@ _koopa_list_path_priority() { # {{{1
     # - https://www.unix.com/shell-programming-and-scripting/
     #       77199-splitting-string-awk.html
     # """
-    [ "$#" -le 1 ] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_is_installed awk || return 1
     local str
     str="${1:-$PATH}"
@@ -319,7 +319,7 @@ _koopa_remove_from_fpath() { # {{{1
     # Remove directory from FPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -335,7 +335,7 @@ _koopa_remove_from_manpath() { # {{{1
     # Remove directory from MANPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     FPATH="${FPATH:-}"
     for dir in "$@"
@@ -354,7 +354,7 @@ _koopa_remove_from_path() { # {{{1
     # Alternative non-POSIX approach that works on Bash and Zsh:
     # > PATH="${PATH//:$dir/}"
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local dir
     PATH="${PATH:-}"
     for dir in "$@"
@@ -377,7 +377,7 @@ _koopa_which() { # {{{1
     # _koopa_which bash
     # ## /usr/local/bin/bash
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed "$@"
     local cmd
     for cmd in "$@"
@@ -408,7 +408,7 @@ _koopa_which_realpath() { # {{{1
     # ## /usr/local/Cellar/bash/5.0.17/bin/bash
     # ## /usr/local/Cellar/vim/8.2.1050/bin/vim
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local cmd
     for cmd in "$@"
     do

@@ -8,7 +8,7 @@ _koopa_add_local_bins_to_path() { # {{{1
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read '-a' flag doesn't work on macOS.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local dir dirs
     _koopa_add_to_path_start "$(_koopa_make_prefix)/bin"
     IFS=$'\n' read -r -d '' dirs <<< "$(_koopa_find_local_bin_dirs)"
@@ -28,7 +28,7 @@ _koopa_info_box() { # {{{1
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local array
     array=("$@")
     local barpad
@@ -49,7 +49,7 @@ _koopa_script_name() { # {{{1
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local file x
     file="$( \
         caller \
@@ -67,7 +67,7 @@ _koopa_system_info() { # {{{
     # System information.
     # @note Updated 2020-06-30.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
     koopa_prefix="$(_koopa_prefix)"
     array=(

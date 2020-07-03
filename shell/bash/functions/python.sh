@@ -33,9 +33,9 @@ _koopa_venv_create() {
 _koopa_venv_create_base() {
     # """
     # Create base Python virtual environment.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-03.
     # """
-    [[ "$#" -eq 0 ]] || return 0
+    _koopa_assert_has_no_args "$#"
     _koopa_venv_create "base"
     return 0
 }
@@ -66,7 +66,7 @@ _koopa_venv_create_r_reticulate() {
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local name packages
     name="r-reticulate"
     packages=(

@@ -9,7 +9,7 @@ _koopa_delete_named_subdirs() { # {{{1
     # Delete named subdirectories.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 2 ]] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     _koopa_assert_is_installed find
     local dir subdir_name
     dir="${1:?}"

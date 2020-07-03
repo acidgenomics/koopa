@@ -13,7 +13,7 @@ _koopa_file_match() { # {{{1
     # _koopa_file_match FILE PATTERN
     # echo FILE | _koopa_file_match PATTERN
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file pattern
     if [ "$#" -eq 2 ]
     then
@@ -38,7 +38,7 @@ _koopa_file_match_regex() { # {{{1
     # Is a string defined in a file?
     # @note Updated 2020-04-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file pattern
     if [ "$#" -eq 2 ]
     then
@@ -74,7 +74,7 @@ _koopa_str_match() { # {{{1
     # _koopa_str_match STRING PATTERN
     # echo STRING | _koopa_str_match PATTERN
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local string pattern
     if [ "$#" -eq 2 ]
     then
@@ -104,7 +104,7 @@ _koopa_str_match_posix() { # {{{1
     #
     # @seealso grepl in R.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     test "${1#*$2}" != "$1"
 }
 
@@ -113,7 +113,7 @@ _koopa_str_match_regex() { # {{{1
     # Does the input match a regular expression?
     # @note Updated 2020-05-05.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local string pattern
     if [ "$#" -eq 2 ]
     then

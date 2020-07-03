@@ -5,7 +5,7 @@ _koopa_kallisto_index() { # {{{1
     # Generate kallisto index.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed kallisto
     while (("$#"))
     do
@@ -48,7 +48,7 @@ _koopa_kallisto_quant() { # {{{1
     # Run kallisto quant.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed kallisto
     while (("$#"))
     do
@@ -126,7 +126,7 @@ _koopa_salmon_index() { # {{{1
     # Generate salmon index.
     # @note Updated 2020-06-29.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed salmon
     while (("$#"))
     do
@@ -172,7 +172,7 @@ _koopa_salmon_quant() { # {{{1
     # Run salmon quant.
     # @note Updated 2020-05-04.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed salmon
     while (("$#"))
     do

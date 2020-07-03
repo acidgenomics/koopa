@@ -8,7 +8,7 @@ _koopa_basename() { # {{{1
     #
     # Parameterized, supporting multiple basename extractions.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     if _koopa_is_installed basename
     then
         _koopa_print "$(basename -a "$@")"
@@ -36,7 +36,7 @@ _koopa_basename_sans_ext() { # {{{1
     #
     # See also: _koopa_file_ext
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file str
     for file in "$@"
     do
@@ -61,7 +61,7 @@ _koopa_basename_sans_ext2() { # {{{1
     #
     # See also: _koopa_file_ext2
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file str
     for file in "$@"
     do
@@ -89,7 +89,7 @@ _koopa_ensure_newline_at_end_of_file() { # {{{1
     # ed -s file <<< w
     # sed -i -e '$a\' file
     # """
-    [ "$#" -eq 1 ] || return 1
+    _koopa_assert_has_args_eq "$#" 1
     local file
     file="${1:?}"
     [ -n "$(tail -c1 "$file")" ] && printf '\n' >>"$file"
@@ -110,7 +110,7 @@ _koopa_file_ext() { # {{{1
     #
     # See also: _koopa_basename_sans_ext
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file x
     for file in "$@"
     do
@@ -138,7 +138,7 @@ _koopa_file_ext2() { # {{{1
     #
     # See also: _koopa_basename_sans_ext2
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file x
     for file in "$@"
     do
@@ -161,7 +161,7 @@ _koopa_find_broken_symlinks() { # {{{1
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
-    [ "$#" -le 1 ] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_is_installed find grep || return 1
     local dir
     dir="${1:-"."}"
@@ -192,7 +192,7 @@ _koopa_find_dotfiles() { # {{{1
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. "Files")
     # """
-    [ "$#" -eq 2 ] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     _koopa_is_installed awk find || return 1
     local header type x
     type="${1:?}"
@@ -218,7 +218,7 @@ _koopa_find_empty_dirs() { # {{{1
     # Find empty directories.
     # @note Updated 2020-07-01.
     # """
-    [ "$#" -le 1 ] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_is_installed find grep || return 1
     local dir x
     dir="${1:-"."}"
@@ -244,7 +244,7 @@ _koopa_find_large_dirs() { # {{{1
     # Find large directories.
     # @note Updated 2020-07-01.
     # """
-    [ "$#" -le 1 ] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_is_installed du || return 1
     local dir x
     dir="${1:-"."}"
@@ -275,7 +275,7 @@ _koopa_find_large_files() { # {{{1
     # @seealso
     # https://unix.stackexchange.com/questions/140367/
     # """
-    [ "$#" -le 1 ] || return 1
+    _koopa_assert_has_args_le "$#" 1
     _koopa_is_installed find grep || return 1
     local dir x
     dir="${1:-"."}"
@@ -307,7 +307,7 @@ _koopa_find_non_cellar_make_files() { # {{{1
     # Standard directories: bin, etc, include, lib, lib64, libexec, man, sbin,
     # share, src.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_assert_is_installed find || return 1
     local prefix x
     prefix="$(_koopa_make_prefix)"
@@ -335,7 +335,7 @@ _koopa_line_count() { # {{{1
     #
     # Example: _koopa_line_count tx2gene.csv
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local file x
     for file in "$@"
     do
@@ -359,7 +359,7 @@ _koopa_realpath() { # {{{1
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local arg x
     if _koopa_is_installed realpath
     then
@@ -387,7 +387,7 @@ _koopa_stat_access_human() { # {{{1
     # Get the current access permissions in human readable form.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$(stat -c '%A' "$@")"
     _koopa_print "$x"
@@ -399,7 +399,7 @@ _koopa_stat_access_octal() { # {{{1
     # Get the current access permissions in octal form.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$(stat -c '%a' "$@")"
     _koopa_print "$x"
@@ -413,7 +413,7 @@ _koopa_stat_dereference() { # {{{1
     #
     # Return quoted file with dereference if symbolic link.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$(stat --printf='%N\n' "$@")"
     _koopa_print "$x"
@@ -425,7 +425,7 @@ _koopa_stat_group() { # {{{1
     # Get the current group of a file or directory.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$(stat -c '%G' "$@")"
     _koopa_print "$x"
@@ -446,7 +446,7 @@ _koopa_stat_modified() {
     #
     # _koopa_stat_modified 'file.pdf' '%Y-%m-%d'
     # """
-    [ "$#" -eq 2 ] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     local file format x
     file="${1:?}"
     format="${2:?}"
@@ -471,7 +471,7 @@ _koopa_stat_user() { # {{{1
     # Get the current user (owner) of a file or directory.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$(stat -c '%U' "$@")"
     _koopa_print "$x"
@@ -485,7 +485,7 @@ _koopa_sudo_write_string() { # {{{1
     #
     # Alternatively, 'tee -a' can be used to append file.
     # """
-    [ "$#" -eq 2 ] || return 1
+    _koopa_assert_has_args_eq "$#" 2
     local file string
     string="${1:?}"
     file="${2:?}"

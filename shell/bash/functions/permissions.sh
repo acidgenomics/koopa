@@ -11,7 +11,7 @@ _koopa_set_permissions() { # {{{1
     #   Change ownership to current user, rather than koopa default, which is
     #   root for shared installs.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local recursive
     recursive=0
     local user
@@ -48,7 +48,7 @@ _koopa_set_permissions() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     # chmod flags.
     local chmod_flags
     readarray -t chmod_flags <<< "$(_koopa_chmod_flags)"

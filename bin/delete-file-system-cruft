@@ -9,7 +9,7 @@ _koopa_delete_file_system_cruft() { # {{{1
     # Delete file system cruft.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -le 1 ]] || return 1
+    _koopa_assert_has_args_le "$#" 1
     dir="${1:-"."}"
     find "$dir" \
         -type f \

@@ -9,7 +9,7 @@ _koopa_current_ensembl_version() { # {{{1
     # Current Ensembl version.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_assert_is_installed curl
     local version
     version="$( \

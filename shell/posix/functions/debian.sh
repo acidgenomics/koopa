@@ -6,7 +6,7 @@ _koopa_apt_add_azure_cli_repo() { # {{{1
     # Add Microsoft Azure CLI apt repo.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file os_codename string url
     file="/etc/apt/sources.list.d/azure-cli.list"
     [ -f "$file" ] && return 0
@@ -24,7 +24,7 @@ _koopa_apt_add_docker_key() { # {{{1
     # Add the Docker key.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local key name url
     name="Docker"
     url="https://download.docker.com/linux/$(_koopa_os_id)/gpg"
@@ -41,7 +41,7 @@ _koopa_apt_add_docker_repo() { # {{{1
     # Ubuntu 20 (Focal Fossa) not yet supported:
     # https://download.docker.com/linux/
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file os_codename os_id string url
     file="/etc/apt/sources.list.d/docker.list"
     [ -f "$file" ] && return 0
@@ -66,7 +66,7 @@ _koopa_apt_add_google_cloud_key() { # {{{1
     # Add the Google Cloud key.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file url
     url="https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     file="/usr/share/keyrings/cloud.google.gpg"
@@ -83,7 +83,7 @@ _koopa_apt_add_google_cloud_sdk_repo() { # {{{1
     # Add Google Cloud SDK apt repo.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file string
     file="/etc/apt/sources.list.d/google-cloud-sdk.list"
     [ -f "$file" ] && return 0
@@ -100,7 +100,7 @@ _koopa_apt_add_llvm_key() { # {{{1
     # Add the LLVM key.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local key name url
     name="LLVM"
     url="https://apt.llvm.org/llvm-snapshot.gpg.key"
@@ -114,7 +114,7 @@ _koopa_apt_add_llvm_repo() { # {{{1
     # Add LLVM apt repo.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file os_codename string version
     file="/etc/apt/sources.list.d/llvm.list"
     [ -f "$file" ] && return 0
@@ -134,7 +134,7 @@ _koopa_apt_add_microsoft_key() {  #{{{1
     # Add the Microsoft Azure CLI key.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file url
     url="https://packages.microsoft.com/keys/microsoft.asc"
     file="/etc/apt/trusted.gpg.d/microsoft.asc.gpg"
@@ -152,7 +152,7 @@ _koopa_apt_add_r_key() { # {{{1
     # Add the R key.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local key keyserver
     if _koopa_is_ubuntu
     then
@@ -179,7 +179,7 @@ _koopa_apt_add_r_repo() { # {{{1
     # Add R apt repo.
     # @note Updated 2020-07-01.
     # """
-    [ "$#" -le 1 ] || return 1
+    _koopa_assert_has_args_le "$#" 1
     local file os_codename os_id repo string version
     version="${1:-}"
     if [ -z "$version" ]
@@ -241,7 +241,7 @@ _koopa_apt_add_wine_key() { # {{{1
     # > wget -nc https://dl.winehq.org/wine-builds/winehq.key
     # > sudo apt-key add winehq.key
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local key name url
     name="Wine"
     url="https://dl.winehq.org/wine-builds/winehq.key"
@@ -260,7 +260,7 @@ _koopa_apt_add_wine_repo() { # {{{1
     # - Ubuntu:
     #   https://wiki.winehq.org/Ubuntu
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file os_codename os_id string url
     file="/etc/apt/sources.list.d/wine.list"
     [ -f "$file" ] && return 0
@@ -279,7 +279,7 @@ _koopa_apt_add_wine_obs_key() { # {{{1
     # Add the Wine OBS openSUSE key.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local key name os_string subdir url
     name="Wine OBS"
     os_string="$(_koopa_os_string)"
@@ -316,7 +316,7 @@ _koopa_apt_add_wine_obs_repo() { # {{{1
     # - https://wiki.winehq.org/Debian
     # - https://forum.winehq.org/viewtopic.php?f=8&t=32192
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local base_url file os_string repo_url string
     file="/etc/apt/sources.list.d/wine-obs.list"
     [ -f "$file" ] && return 0
@@ -348,7 +348,7 @@ _koopa_apt_configure_sources() { # {{{1
     #
     # Previously, we used a symlink approach here until 2020-02-24.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local os_codename sources_list sources_list_d
     sources_list="/etc/apt/sources.list"
     [ -L "$sources_list" ] && _koopa_rm "$sources_list"
@@ -416,7 +416,7 @@ _koopa_apt_enabled_repos() { # {{{1
     # Get a list of enabled default apt repos.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local os_codename x
     os_codename="$(_koopa_os_codename)"
     x="$( \
@@ -435,7 +435,7 @@ _koopa_apt_get() { # {{{1
     # - dist-upgrade
     # - install
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     sudo apt-get update
     sudo DEBIAN_FRONTEND="noninteractive" \
         apt-get \
@@ -451,7 +451,7 @@ _koopa_apt_install() { # {{{1
     # Install Debian apt package.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_apt_get install "$@"
 }
 
@@ -460,7 +460,7 @@ _koopa_apt_is_key_imported() { # {{{1
     # Is a GPG key imported for apt?
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local key
     key="${1:?}"
     key="$( \
@@ -483,7 +483,7 @@ _koopa_apt_key_add() {  #{{{1
     # Using '-k/--insecure' flag here to handle some servers
     # (e.g. download.opensuse.org) that will fail otherwise.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local name url key
     name="${1:?}"
     url="${2:?}"
@@ -504,7 +504,7 @@ _koopa_apt_remove() { # {{{1
     # Remove Debian apt package.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     sudo apt-get --yes remove --purge "$@"
     sudo apt-get --yes clean
     sudo apt-get --yes autoremove
@@ -516,7 +516,7 @@ _koopa_apt_space_used_by() { # {{{1
     # Check installed apt package size, with dependencies.
     # @note Updated 2020-06-30.
     #
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     # Alternate approach that doesn't attempt to grep match.
     sudo apt-get --assume-no autoremove "$@"
     return 0
@@ -530,7 +530,7 @@ _koopa_apt_space_used_by_grep() { # {{{1
     # See also:
     # https://askubuntu.com/questions/490945
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="$( \
         sudo apt-get --assume-no autoremove "$@" \
@@ -546,7 +546,7 @@ _koopa_apt_space_used_by_no_deps() { # {{{1
     # Check install apt package size, without dependencies.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     sudo apt show "$@" | grep 'Size'
     return 0
 }
