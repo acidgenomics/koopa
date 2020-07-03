@@ -511,7 +511,7 @@ _koopa_is_docker_build_today() { # {{{1
     # @note Updated 2020-07-02.
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed docker || return 1
+    _koopa_assert_is_installed docker
     local image json timestamp today utc_timestamp
     today="$(date "+%Y-%m-%d")"
     for image in "$@"

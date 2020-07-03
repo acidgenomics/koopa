@@ -69,9 +69,9 @@ _koopa_autojump_prefix() { # {{{1
 _koopa_bcbio_prefix() { # {{{1
     # """
     # bcbio-nextgen prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     _koopa_assert_has_no_args "$#"
-    _koopa_is_linux || return 1
+    _koopa_assert_is_linux
     local host_id prefix
     host_id="$(_koopa_host_id)"
     if [ "$host_id" = "harvard-o2" ]
@@ -90,7 +90,7 @@ _koopa_bcbio_prefix() { # {{{1
 _koopa_cellar_prefix() { # {{{1
     # """
     # Cellar prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # Currently only supported for Linux.
     # Use Homebrew on macOS instead.
@@ -98,7 +98,7 @@ _koopa_cellar_prefix() { # {{{1
     # Ensure this points to a local mount (e.g. '/usr/local').
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_linux || return 1
+    _koopa_assert_is_linux
     local prefix
     if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
     then
@@ -144,10 +144,10 @@ _koopa_config_prefix() { # {{{1
 _koopa_data_disk_link_prefix() { # {{{1
     # """
     # Data disk symlink prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_linux || return 1
+    _koopa_assert_is_linux
     _koopa_print "/n"
     return 0
 }
@@ -491,16 +491,15 @@ _koopa_rust_cargo_prefix() { # {{{1
 _koopa_r_prefix() { # {{{1
     # """
     # R prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # We're suppressing errors here that can pop up if 'etc' isn't linked yet
     # after a clean install. Can warn about ldpaths missing.
     # """
     _koopa_assert_has_args_le "$#" 1
-    local rscript_exe
+    local prefix rscript_exe
     rscript_exe="${1:-Rscript}"
-    _koopa_is_installed "$rscript_exe" || return 1
-    local prefix
+    _koopa_assert_is_installed "$rscript_exe"
     prefix="$( \
         "$rscript_exe" \
             --vanilla \
@@ -515,13 +514,12 @@ _koopa_r_prefix() { # {{{1
 _koopa_r_library_prefix() { # {{{1
     # """
     # R default library prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_args_le "$#" 1
-    local rscript_exe
+    local prefix rscript_exe
     rscript_exe="${1:-Rscript}"
-    _koopa_is_installed "$rscript_exe" || return 1
-    local prefix
+    _koopa_assert_is_installed "$rscript_exe"
     prefix="$( \
         "$rscript_exe" \
             -e 'cat(normalizePath(.libPaths()[[1L]]))' \
@@ -534,12 +532,12 @@ _koopa_r_library_prefix() { # {{{1
 _koopa_r_system_library_prefix() { # {{{1
     # """
     # R system library prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_args_le "$#" 1
     local rscript_exe
     rscript_exe="${1:-Rscript}"
-    _koopa_is_installed "$rscript_exe" || return 1
+    _koopa_assert_is_installed "$rscript_exe"
     local prefix
     prefix="$( \
         "$rscript_exe" \

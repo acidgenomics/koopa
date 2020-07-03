@@ -634,7 +634,7 @@ _koopa_host_id() { # {{{1
     then
         id="$(cat /etc/hostname)"
     else
-        _koopa_is_installed hostname || return 1
+        _koopa_assert_is_installed hostname
         id="$(hostname -f)"
     fi
     case "$id" in
@@ -787,7 +787,7 @@ _koopa_mktemp() { # {{{1
     # - https://stackoverflow.com/a/10983009/3911732
     # - https://gist.github.com/earthgecko/3089509
     # """
-    _koopa_is_installed mktemp || return 1
+    _koopa_assert_is_installed mktemp
     local date_id template user_id
     user_id="$(_koopa_current_user_id)"
     date_id="$(date "+%Y%m%d%H%M%S")"
@@ -829,8 +829,8 @@ _koopa_os_codename() { # {{{1
     # >     | tr -d '"'
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_debian || return 1
-    _koopa_is_installed lsb_release || return 1
+    _koopa_assert_is_debian
+    _koopa_assert_is_installed lsb_release
     local os_codename
     if _koopa_is_kali
     then
@@ -944,13 +944,13 @@ _koopa_public_ip_address() { # {{{1
     #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed dig || return 1
+    _koopa_assert_is_installed dig
     local x
     x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
     # Fallback in case dig approach doesn't work.
     if [ -z "$x" ]
     then
-        _koopa_is_installed curl || return 1
+        _koopa_assert_is_installed curl
         x="$(curl -s ipecho.net/plain)"
     fi
     [ -n "$x" ] || return 1
@@ -967,7 +967,7 @@ _koopa_python_remove_pycache() { # {{{1
     # installation across multiple VMs.
     # """
     _koopa_assert_has_args_le "$#" 1
-    _koopa_is_installed find || return 1
+    _koopa_assert_is_installed find
     local prefix python
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -1360,7 +1360,7 @@ _koopa_view_latest_tmp_log_file() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed find || return 1
+    _koopa_assert_is_installed find
     local dir log_file
     dir="${TMPDIR:-/tmp}"
     log_file="$( \
