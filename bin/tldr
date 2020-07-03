@@ -94,7 +94,7 @@ _koopa_tldr_display() {
                     ;;
             esac
         done
-    ) | _koopa_less
+    ) | _koopa_pager
     return 0
 }
 

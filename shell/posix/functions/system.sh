@@ -918,6 +918,18 @@ _koopa_os_string() { # {{{1
     return 0
 }
 
+_koopa_pager() {
+    # """
+    # Run less with support for colors (escape characters).
+    # @note Updated 2020-07-03.
+    # """
+    local pager
+    pager="${PAGER:-less}"
+    _koopa_assert_is_installed "$pager"
+    "$pager" -R "$@"
+    return 0
+}
+
 _koopa_public_ip_address() { # {{{1
     # """
     # Public (remote) IP address.
