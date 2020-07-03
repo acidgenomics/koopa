@@ -335,7 +335,7 @@ _koopa_git_clone_docker_private() { # {{{1
     # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_github_ssh_enabled || return 1
+    _koopa_assert_is_github_ssh_enabled
     _koopa_git_clone \
         "git@github.com:acidgenomics/docker-private.git" \
         "$(_koopa_docker_private_prefix)"
@@ -359,10 +359,10 @@ _koopa_git_clone_dotfiles() { # {{{1
 _koopa_git_clone_dotfiles_private() { # {{{1
     # """
     # Clone dotfiles-private repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_github_ssh_enabled || return 1
+    _koopa_assert_is_github_ssh_enabled
     _koopa_git_clone \
         "git@github.com:mjsteinbaugh/dotfiles-private.git" \
         "$(_koopa_dotfiles_private_prefix)"
@@ -373,10 +373,10 @@ _koopa_git_clone_dotfiles_private() { # {{{1
 _koopa_git_clone_scripts_private() {
     # """
     # Clone private scripts.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_github_ssh_enabled || return 1
+    _koopa_assert_is_github_ssh_enabled
     _koopa_git_clone \
         "git@github.com:mjsteinbaugh/scripts-private.git" \
         "$(_koopa_scripts_private_prefix)"
@@ -560,13 +560,13 @@ _koopa_link_docker() { # {{{1
 _koopa_remove_user_from_group() { # {{{1
     # """
     # Remove user from group.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     #
     # @examples
     # _koopa_remove_user_from_group "docker"
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed gpasswd sudo || return 1
+    _koopa_assert_is_installed gpasswd sudo
     local group user
     group="${1:?}"
     user="${2:-${USER}}"
@@ -647,7 +647,7 @@ _koopa_update_ldconfig() { # {{{1
     _koopa_assert_has_no_args "$#"
     _koopa_is_linux || return 0
     [ -d /etc/ld.so.conf.d ] || return 0
-    _koopa_is_installed ldconfig || return 1
+    _koopa_assert_is_installed ldconfig
     local conf_source dest_file os_id prefix source_file
     os_id="$(_koopa_os_id)"
     prefix="$(_koopa_prefix)"

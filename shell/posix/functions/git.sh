@@ -4,7 +4,7 @@
 _koopa_git_branch() { # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     #
     # Handles detached HEAD state.
     #
@@ -17,7 +17,7 @@ _koopa_git_branch() { # {{{1
     #       git-completion.bash?id=HEAD
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_git || return 1
+    _koopa_assert_is_git
     local branch
     branch="$(git symbolic-ref --short -q HEAD 2>/dev/null)"
     _koopa_print "$branch"
@@ -83,7 +83,7 @@ _koopa_git_rm_submodule() { # {{{1
     # - https://stackoverflow.com/questions/1260748/
     # - https://gist.github.com/myusuf3/7f645819ded92bda6677
     # """
-    _koopa_is_installed git || return 1
+    _koopa_assert_is_installed git
     local prefix
     prefix="${1:-"."}"
     # Remove the submodule entry from '.git/config'.
@@ -105,7 +105,7 @@ _koopa_git_rm_untracked() { # {{{1
     # Remove untracked files from git repo.
     # @note Updated 2020-06-30.
     # """
-    _koopa_is_installed git || return 1
+    _koopa_assert_is_installed git
     local dir
     dir="${1:-"."}"
     git clean -dfx "$dir"

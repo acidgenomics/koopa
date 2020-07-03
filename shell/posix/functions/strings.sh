@@ -14,7 +14,7 @@ _koopa_gsub() { # {{{1
     # ## cc
     # """
     _koopa_assert_has_args_ge "$#" 3
-    _koopa_is_installed sed || return 1
+    _koopa_assert_is_installed sed
     local pattern replacement string
     pattern="${1:?}"
     replacement="${2:-}"
@@ -38,7 +38,7 @@ _koopa_lowercase() { # {{{1
     # https://stackoverflow.com/questions/2264428
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed tr || return 1
+    _koopa_assert_is_installed tr
     local string
     for string in "$@"
     do
@@ -145,7 +145,7 @@ _koopa_sub() { # {{{1
     # ## aa
     # """
     _koopa_assert_has_args_ge "$#" 3
-    _koopa_is_installed sed || return 1
+    _koopa_assert_is_installed sed
     local pattern replacement string
     pattern="${1:?}"
     replacement="${2:-}"

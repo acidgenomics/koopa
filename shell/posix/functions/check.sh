@@ -98,7 +98,7 @@ _koopa_check_mount() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed find || return 1
+    _koopa_assert_is_installed find
     local mnt
     mnt="${1:?}"
     if [ "$(find "$mnt" -mindepth 1 -maxdepth 1 | wc -l)" -eq 0 ]

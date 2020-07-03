@@ -4,7 +4,7 @@
 __koopa_has_gnu() { # {{{1
     # """
     # Is a GNU program installed?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_args "$#"
     local cmd str
@@ -119,7 +119,7 @@ _koopa_has_no_environments() { # {{{1
 _koopa_has_passwordless_sudo() { # {{{1
     # """
     # Check if sudo is active or doesn't require a password.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     #
     # See also:
     # https://askubuntu.com/questions/357220
@@ -238,11 +238,12 @@ _koopa_is_azure() { # {{{1
 _koopa_is_bash_ok() { # {{{1
     # """
     # Is the current version of Bash OK (or super old)?
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-03.
     # 
     # Older versions (< 4; e.g. shipping version on macOS) have issues with
     # 'read' that we have to handle with special care here.
     # """
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed bash || return 1
     local major_version version
     version="$(_koopa_get_version "bash")"
@@ -433,8 +434,8 @@ _koopa_is_git() { # {{{1i
     # - https://stackoverflow.com/questions/2180270
     # """
     _koopa_assert_has_no_args "$#"
+    _koopa_assert_is_installed git
     _koopa_is_git_toplevel "." && return 0
-    _koopa_is_installed git || return 1
     git rev-parse --git-dir >/dev/null 2>&1 && return 0
     return 1
 }
@@ -807,7 +808,7 @@ _koopa_is_tmux() { # {{{1
 _koopa_is_tty() { # {{{1
     # """
     # Is current shell a teletypewriter?
-    # @note Updated 2020-02-15.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
     _koopa_is_installed tty || return 1

@@ -206,7 +206,7 @@ _koopa_activate_conda_env() { # {{{1
     # - https://stackoverflow.com/questions/34534513
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed conda || return 1
+    _koopa_assert_is_installed conda
     local name
     name="${1:?}"
     local prefix
@@ -649,10 +649,10 @@ _koopa_activate_macos_extras() { # {{{1
 _koopa_activate_macos_python() {
     # """
     # Activate macOS Python install.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_macos || return 1
+    _koopa_assert_is_macos
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     local version
     version="$(_koopa_variable "python")"

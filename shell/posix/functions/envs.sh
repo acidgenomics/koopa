@@ -25,7 +25,7 @@ _koopa_conda_env_list() { # {{{1
     # @note Updated 2019-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed conda || return 1
+    _koopa_assert_is_installed conda
     local x
     x="$(conda env list --json)"
     _koopa_print "$x"
@@ -43,7 +43,7 @@ _koopa_conda_env_prefix() { # {{{1
     # Example: _koopa_conda_env_prefix "deeptools"
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed conda || return 1
+    _koopa_assert_is_installed conda
     local env_dir env_list env_name x
     env_name="${1:?}"
     [ -n "$env_name" ] || return 1

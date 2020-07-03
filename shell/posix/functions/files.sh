@@ -156,13 +156,13 @@ _koopa_file_ext2() { # {{{1
 _koopa_find_broken_symlinks() { # {{{1
     # """
     # Find broken symlinks.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # Note that 'grep -v' is more compatible with macOS and BusyBox than use of
     # 'grep --invert-match'.
     # """
     _koopa_assert_has_args_le "$#" 1
-    _koopa_is_installed find grep || return 1
+    _koopa_assert_is_installed find grep
     local dir
     dir="${1:-"."}"
     [ -d "$dir" ] || return 0
@@ -185,7 +185,7 @@ _koopa_find_broken_symlinks() { # {{{1
 _koopa_find_dotfiles() { # {{{1
     # """
     # Find dotfiles by type.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # This is used internally by 'list-dotfiles' script.
     #
@@ -193,7 +193,7 @@ _koopa_find_dotfiles() { # {{{1
     # 2. Header message (e.g. "Files")
     # """
     _koopa_assert_has_args_eq "$#" 2
-    _koopa_is_installed awk find || return 1
+    _koopa_assert_is_installed awk find
     local header type x
     type="${1:?}"
     header="${2:?}"
@@ -216,10 +216,10 @@ _koopa_find_dotfiles() { # {{{1
 _koopa_find_empty_dirs() { # {{{1
     # """
     # Find empty directories.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_args_le "$#" 1
-    _koopa_is_installed find grep || return 1
+    _koopa_assert_is_installed find grep
     local dir x
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
@@ -245,7 +245,7 @@ _koopa_find_large_dirs() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args_le "$#" 1
-    _koopa_is_installed du || return 1
+    _koopa_assert_is_installed du
     local dir x
     dir="${1:-"."}"
     dir="$(realpath "$dir")"
@@ -266,7 +266,7 @@ _koopa_find_large_dirs() { # {{{1
 _koopa_find_large_files() { # {{{1
     # """
     # Find large files.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # Note that use of 'grep --null-data' requires GNU grep.
     #
@@ -276,7 +276,7 @@ _koopa_find_large_files() { # {{{1
     # https://unix.stackexchange.com/questions/140367/
     # """
     _koopa_assert_has_args_le "$#" 1
-    _koopa_is_installed find grep || return 1
+    _koopa_assert_is_installed find grep
     local dir x
     dir="${1:-"."}"
     dir="$(realpath "$dir")"

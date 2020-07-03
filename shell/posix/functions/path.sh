@@ -7,7 +7,7 @@ _koopa_add_conda_env_to_path() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_installed conda || return 1
+    _koopa_assert_is_installed conda
     [ -z "${CONDA_PREFIX:-}" ] || return 1
     local bin_dir name
     for name in "$@"
@@ -284,7 +284,7 @@ _koopa_list_path_priority() { # {{{1
     #       77199-splitting-string-awk.html
     # """
     _koopa_assert_has_args_le "$#" 1
-    _koopa_is_installed awk || return 1
+    _koopa_assert_is_installed awk
     local str
     str="${1:-$PATH}"
     x="$( \
@@ -299,9 +299,9 @@ _koopa_list_path_priority() { # {{{1
 _koopa_list_path_priority_unique() { # {{{1
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     # """
-    _koopa_is_installed awk tac || return 1
+    _koopa_assert_is_installed awk tac
     local x
     x="$( \
         _koopa_list_path_priority "$@" \

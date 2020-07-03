@@ -67,7 +67,7 @@ _koopa_gcc_version() { # {{{1
     # @note Updated 2020-06-29.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed gcc || return 1
+    _koopa_assert_is_installed gcc
     local x
     if _koopa_is_macos
     then
@@ -102,10 +102,10 @@ _koopa_get_homebrew_cask_version() { # {{{1
 _koopa_get_macos_app_version() { # {{{1
     # """
     # Extract the version of a macOS application.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_args "$#"
-    _koopa_is_macos || return 1
+    _koopa_assert_is_macos
     local app plist x
     app="${1:?}"
     plist="/Applications/${app}.app/Contents/Info.plist"
@@ -179,7 +179,7 @@ _koopa_hdf5_version() { # {{{1
     # Debian: 'dpkg -s libhdf5-dev'
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed h5cc || return 1
+    _koopa_assert_is_installed h5cc
     local x
     x="$( \
         h5cc -showconfig \
@@ -194,10 +194,10 @@ _koopa_hdf5_version() { # {{{1
 _koopa_linux_version() { # {{{1
     # """
     # Linux version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_linux || return 1
+    _koopa_assert_is_linux
     local x
     x="$(uname -r)"
     [ -n "$x" ] || return 1
@@ -243,10 +243,10 @@ _koopa_lmod_version() { # {{{1
 _koopa_macos_version() { # {{{1
     # """
     # macOS version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_macos || return 1
+    _koopa_assert_is_macos
     local x
     x="$(sw_vers -productVersion)"
     [ -n "$x" ] || return 1
@@ -304,7 +304,7 @@ _koopa_openjdk_version() { # {{{1
     # @note Updated 2020-06-29.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed java || return 1
+    _koopa_assert_is_installed java
     local x
     x="$( \
         java --version \
@@ -322,7 +322,7 @@ _koopa_oracle_instantclient_version() { # {{{1
     # @note Updated 2020-06-29.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed sqlplus || return 1
+    _koopa_assert_is_installed sqlplus
     local x
     x="$(sqlplus -v | grep -E "^Version")"
     x="$(_koopa_extract_version "$x")"
@@ -357,7 +357,7 @@ _koopa_parallel_version() { # {{{1
     # @note Updated 2020-06-29.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed parallel || return 1
+    _koopa_assert_is_installed parallel
     local x
     x="$( \
         parallel --version \
@@ -372,10 +372,10 @@ _koopa_parallel_version() { # {{{1
 _koopa_perl_file_rename_version() { # {{{1
     # """
     # Perl File::Rename version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed perl rename || return 1
+    _koopa_assert_is_installed perl rename
     local x
     x="$(rename --version 2>/dev/null | head -n 1)"
     _koopa_str_match "$x" "File::Rename" || return 1
@@ -495,7 +495,7 @@ _koopa_return_version() { # {{{1
                 ;;
         esac
     fi
-    _koopa_is_installed "$cmd" || return 1
+    _koopa_assert_is_installed "$cmd"
     x="$("$cmd" "$flag" 2>&1 || true)"
     [ -n "$x" ] || return 1
     _koopa_extract_version "$x"
@@ -511,7 +511,7 @@ _koopa_ruby_api_version() { # {{{1
     # See 'brew info ruby' for details.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed ruby || return 1
+    _koopa_assert_is_installed ruby
     local x
     x="$(ruby -e "print Gem.ruby_api_version")"
     [ -n "$x" ] || return 1
@@ -522,14 +522,14 @@ _koopa_ruby_api_version() { # {{{1
 _koopa_r_package_version() { # {{{1
     # """
     # R package version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_args "$#"
     local pkg rscript_exe x
     pkg="${1:?}"
     rscript_exe="${2:-Rscript}"
-    _koopa_is_installed "$rscript_exe" || return 1
-    _koopa_is_r_package_installed "$pkg" "$rscript_exe" || return 1
+    _koopa_assert_is_installed "$rscript_exe"
+    _koopa_assert_is_r_package_installed "$pkg" "$rscript_exe"
     x="$("$rscript_exe" \
         -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")" \
     )"
@@ -580,7 +580,7 @@ _koopa_tex_version() { # {{{1
     # TeX 3.14159265 (TeX Live 2017/Debian)
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed tex || return 1
+    _koopa_assert_is_installed tex
     local x
     x="$( \
         tex --version \
@@ -621,7 +621,7 @@ _koopa_vim_version() { # {{{1
     # @note Updated 2020-06-29.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed vim || return 1
+    _koopa_assert_is_installed vim
     local major patch version x
     x="$(vim --version 2>/dev/null)"
     major="$( \
