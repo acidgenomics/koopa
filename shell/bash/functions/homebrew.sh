@@ -3,7 +3,7 @@
 _koopa_brew_cask_outdated() { # {{{
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-03.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -16,7 +16,7 @@ _koopa_brew_cask_outdated() { # {{{
     # - brew info
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed brew || return 1
+    _koopa_assert_is_installed brew
     local tmp_file x
     tmp_file="$(_koopa_tmp_file)"
     script -q "$tmp_file" brew cask outdated --greedy >/dev/null
@@ -59,7 +59,7 @@ _koopa_brew_update() { # {{{1
     # https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed brew || return 1
+    _koopa_assert_is_installed brew
     local casks name_fancy
     name_fancy="Homebrew"
     _koopa_update_start "$name_fancy"

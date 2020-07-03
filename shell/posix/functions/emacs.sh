@@ -58,7 +58,7 @@ _koopa_is_spacemacs_installed() { # {{{1
     # @note Updated 2020-06-29.
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_is_installed emacs || return 1
+    _koopa_assert_is_installed emacs
     local init_file prefix
     prefix="$(_koopa_emacs_prefix)"
     # Check for 'Spacemacs' inside 'init.el' file.
