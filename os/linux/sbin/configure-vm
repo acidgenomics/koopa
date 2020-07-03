@@ -7,7 +7,7 @@ source "${script_dir}/../include/header.sh"
 _koopa_configure_vm() { # {{{1
     # """
     # Configure virtual machine.
-    # @note Updated 2020-07-02.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_envs
     local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
@@ -326,7 +326,7 @@ _koopa_configure_vm() { # {{{1
         install-r-packages
         if [[ "$compact" -eq 0 ]]
         then
-            install-ruby-gems
+            install-ruby-packages
             install-rust-packages
         fi
     fi
