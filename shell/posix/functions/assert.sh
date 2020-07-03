@@ -4,8 +4,9 @@
 _koopa_assert_are_identical() { # {{{1
     # """
     # Assert that two strings are identical.
-    # @note Updated 2020-02-04.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 2 ] || return 1
     if [ "${1:?}" != "${2:?}" ]
     then
         _koopa_stop "'${1}' is not identical to '${2}'."
@@ -16,8 +17,9 @@ _koopa_assert_are_identical() { # {{{1
 _koopa_assert_are_not_identical() { # {{{1
     # """
     # Assert that two strings are not identical.
-    # @note Updated 2020-02-04.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 2 ] || return 1
     if [ "${1:?}" = "${2:?}" ]
     then
         _koopa_stop "'${1}' is identical to '${2}'."
@@ -27,14 +29,69 @@ _koopa_assert_are_not_identical() { # {{{1
 
 _koopa_assert_has_args() { # {{{1
     # """
-    # Assert that the user has passed required arguments to a script.
-    # @note Updated 2019-10-23.
+    # Assert that non-zero arguments have been passed.
+    # @note Updated 2020-07-03.
+    # Does not check for empty strings.
     # """
-    if [ "$#" -eq 0 ]
+    if [ "$#" -ne 1 ]
     then
-        _koopa_stop "\
-Required arguments missing.
-Run with '--help' flag for usage details."
+        _koopa_stop "'_koopa_assert_has_args' requires 1 arg."
+    fi
+    if [ "${1:?}" -eq 0 ]
+    then
+        _koopa_stop \
+            "Required arguments missing." \
+            "Run with '--help' flag for usage details."
+    fi
+    return 0
+}
+
+_koopa_assert_has_args_eq() { # {{{1
+    # """
+    # Assert that an expected number of arguments have been passed.
+    # @note Updated 2020-07-03.
+    # """
+    if [ "$#" -ne 2 ]
+    then
+        _koopa_stop "'_koopa_assert_has_args_eq' requires 2 args."
+    fi
+    if [ "${1:?}" -ne "${2:?}" ]
+    then
+        _koopa_stop "Invalid number of arguments."
+    fi
+    return 0
+}
+
+_koopa_assert_has_args_ge() { # {{{1
+    # """
+    # Assert that greater-than-or-equal-to an expected number of arguments have
+    # been passed.
+    # @note Updated 2020-07-03.
+    # """
+    if [ "$#" -ne 2 ]
+    then
+        _koopa_stop "'_koopa_assert_has_args_ge' requires 2 args."
+    fi
+    if [ ! "${1:?}" -ge "${2:?}" ]
+    then
+        _koopa_stop "Invalid number of arguments."
+    fi
+    return 0
+}
+
+_koopa_assert_has_args_le() { # {{{1
+    # """
+    # Assert that less-than-or-equal-to an expected number of arguments have
+    # been passed.
+    # @note Updated 2020-07-03.
+    # """
+    if [ "$#" -ne 2 ]
+    then
+        _koopa_stop "'_koopa_assert_has_args_le' requires 2 args."
+    fi
+    if [ ! "${1:?}" -le "${2:?}" ]
+    then
+        _koopa_stop "Invalid number of arguments."
     fi
     return 0
 }
@@ -45,6 +102,7 @@ _koopa_assert_has_file_ext() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_has_file_ext "$arg"
@@ -58,8 +116,9 @@ _koopa_assert_has_file_ext() { # {{{1
 _koopa_assert_has_gnu_binutils() {  #{{{1
     # """
     # Assert that GNU binutils is installed.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_gnu_binutils
     then
         _koopa_stop "GNU binutils is not installed."
@@ -70,8 +129,9 @@ _koopa_assert_has_gnu_binutils() {  #{{{1
 _koopa_assert_has_gnu_coreutils() {  #{{{1
     # """
     # Assert that GNU coreutils is installed.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_gnu_coreutils
     then
         _koopa_stop "GNU coreutils is not installed."
@@ -82,8 +142,9 @@ _koopa_assert_has_gnu_coreutils() {  #{{{1
 _koopa_assert_has_gnu_findutils() {  #{{{1
     # """
     # Assert that GNU findutils is installed.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_gnu_findutils
     then
         _koopa_stop "GNU findutils is not installed."
@@ -94,8 +155,9 @@ _koopa_assert_has_gnu_findutils() {  #{{{1
 _koopa_assert_has_gnu_sed() {  #{{{1
     # """
     # Assert that GNU sed is installed.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_gnu_sed
     then
         _koopa_stop "GNU sed is not installed."
@@ -106,8 +168,9 @@ _koopa_assert_has_gnu_sed() {  #{{{1
 _koopa_assert_has_gnu_tar() {  #{{{1
     # """
     # Assert that GNU tar is installed.
-    # @note Updated 2020-04-27.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_gnu_tar
     then
         _koopa_stop "GNU tar is not installed."
@@ -115,6 +178,21 @@ _koopa_assert_has_gnu_tar() {  #{{{1
     return 0
 }
 
+_koopa_assert_has_monorepo() { # {{{1
+    # """
+    # Assert that the user has a git monorepo.
+    # @note Updated 2020-07-03.
+    # """
+    [ "$#" -eq 0 ] || return 1
+    if ! _koopa_has_monorepo
+    then
+        _koopa_stop "No monorepo at '$(_koopa_monorepo_prefix)'."
+    fi
+    return 0
+}
+
+# FIXME REWORK THIS
+# FIXME ALLOW USER TO PASS IN "$#"?
 _koopa_assert_has_no_args() { # {{{1
     # """
     # Assert that the user has not passed any arguments to a script.
@@ -122,9 +200,9 @@ _koopa_assert_has_no_args() { # {{{1
     # """
     if [ "$#" -gt 0 ]
     then
-        _koopa_stop "\
-Invalid argument: '${1}'.
-Run with '--help' flag for usage details."
+        _koopa_stop \
+            "Invalid argument: '${1:?}'." \
+            "Run with '--help' flag for usage details."
     fi
     return 0
 }
@@ -132,8 +210,9 @@ Run with '--help' flag for usage details."
 _koopa_assert_has_no_envs() { # {{{1
     # """
     # Assert that conda and Python virtual environments aren't active.
-    # @note Updated 2020-01-16.
+    # @note Updated 2020-07-01.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_no_environments
     then
         _koopa_stop "\
@@ -152,8 +231,9 @@ Deactivate venv prior to conda, otherwise conda python may be left in PATH."
 _koopa_assert_has_sudo() { # {{{1
     # """
     # Assert that current user has sudo (admin) permissions.
-    # @note Updated 2019-10-23.
+    # @note Updated 2020-07-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_has_sudo
     then
         _koopa_stop "sudo is required."
@@ -164,8 +244,9 @@ _koopa_assert_has_sudo() { # {{{1
 _koopa_assert_is_alpine() { # {{{1
     # """
     # Assert that platform is Alpine.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-07-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_alpine
     then
         _koopa_stop "Alpine is required."
@@ -176,8 +257,9 @@ _koopa_assert_is_alpine() { # {{{1
 _koopa_assert_is_arch() { # {{{1
     # """
     # Assert that platform is Arch.
-    # @note Updated 2020-02-27.
+    # @note Updated 2020-07-30.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_arch
     then
         _koopa_stop "Arch is required."
@@ -191,6 +273,7 @@ _koopa_assert_is_cellar() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_cellar "$arg"
@@ -204,8 +287,9 @@ _koopa_assert_is_cellar() { # {{{1
 _koopa_assert_is_conda_active() { # {{{1
     # """
     # Assert that a Conda environment is active.
-    # @note Updated 2019-10-23.
+    # @note Updated 2020-07-03.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_conda_active
     then
         _koopa_stop "No active Conda environment detected."
@@ -219,6 +303,7 @@ _koopa_assert_is_current_version() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
@@ -236,6 +321,7 @@ _koopa_assert_is_debian() { # {{{1
     # Assert that platform is Debian.
     # @note Updated 2019-10-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_debian
     then
         _koopa_stop "Debian is required."
@@ -249,6 +335,7 @@ _koopa_assert_is_dir() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -d "$arg" ]
@@ -265,6 +352,7 @@ _koopa_assert_is_executable() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -x "$arg" ]
@@ -283,6 +371,7 @@ _koopa_assert_is_existing() { # {{{1
     # Note that '-e' flag returns true for file, dir, or symlink.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -e "$arg" ]
@@ -298,6 +387,7 @@ _koopa_assert_is_fedora() { # {{{1
     # Assert that platform is Fedora.
     # @note Updated 2019-10-25.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_fedora
     then
         _koopa_stop "Fedora is required."
@@ -311,6 +401,7 @@ _koopa_assert_is_file() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -f "$arg" ]
@@ -326,11 +417,12 @@ _koopa_assert_is_file_type() { # {{{1
     # Assert that input matches a specified file type.
     # @note Updated 2020-01-12.
     #
-    # Example: _koopa_assert_is_file_type "$x" "csv"
+    # @examples
+    # _koopa_assert_is_file_type "$x" "csv"
     # """
-    local file
+    [ "$#" -eq 2 ] || return 1
+    local ext file
     file="${1:?}"
-    local ext
     ext="${2:?}"
     _koopa_assert_is_file "$file"
     _koopa_assert_is_matching_regex "$file" "\.${ext}\$"
@@ -342,6 +434,7 @@ _koopa_assert_is_function() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_function "$arg"
@@ -358,6 +451,7 @@ _koopa_assert_is_git_toplevel() { # {{{1
     # @note Updated 2020-04-29.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         arg="$(realpath "$arg")"
@@ -399,6 +493,7 @@ _koopa_assert_is_installed() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
@@ -414,6 +509,7 @@ _koopa_assert_is_kali() { # {{{1
     # Assert that platform is Kali Linux.
     # @note Updated 2020-02-27.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_kali
     then
         _koopa_stop "Kali is required."
@@ -426,6 +522,7 @@ _koopa_assert_is_linux() { # {{{1
     # Assert that platform is Linux.
     # @note Updated 2019-10-23.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_linux
     then
         _koopa_stop "Linux is required."
@@ -438,6 +535,7 @@ _koopa_assert_is_macos() { # {{{1
     # Assert that platform is macOS (Darwin).
     # @note Updated 2020-01-13.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_macos
     then
         _koopa_stop "macOS is required."
@@ -451,6 +549,7 @@ _koopa_assert_is_non_existing() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ -e "$arg" ]
@@ -467,6 +566,7 @@ _koopa_assert_is_nonzero_file() { # {{{1
     # @note Updated 2020-03-06.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -s "$arg" ]
@@ -483,6 +583,7 @@ _koopa_assert_is_not_dir() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ -d "$arg" ]
@@ -499,6 +600,7 @@ _koopa_assert_is_not_file() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ -f "$arg" ]
@@ -515,6 +617,7 @@ _koopa_assert_is_not_installed() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if _koopa_is_installed "$arg"
@@ -530,6 +633,7 @@ _koopa_assert_is_opensuse() { # {{{1
     # Assert that platform is openSUSE.
     # @note Updated 2020-02-27.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_opensuse
     then
         _koopa_stop "openSUSE is required."
@@ -542,6 +646,7 @@ _koopa_assert_is_rhel() { # {{{1
     # Assert that platform is RHEL.
     # @note Updated 2020-01-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_rhel
     then
         _koopa_stop "RHEL is required."
@@ -554,6 +659,7 @@ _koopa_assert_is_rhel_7() { # {{{1
     # Assert that platform is RHEL 7.
     # @note Updated 2020-01-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_rhel_7
     then
         _koopa_stop "RHEL 7 is required."
@@ -566,6 +672,7 @@ _koopa_assert_is_rhel_8() { # {{{1
     # Assert that platform is RHEL 8.
     # @note Updated 2020-01-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_rhel_8
     then
         _koopa_stop "RHEL 8 is required."
@@ -578,6 +685,7 @@ _koopa_assert_is_not_root() { # {{{1
     # Assert that current user is not root.
     # @note Updated 2019-12-17.
     # """
+    [ "$#" -eq 0 ] || return 1
     if _koopa_is_root
     then
         _koopa_stop "root user detected."
@@ -591,6 +699,7 @@ _koopa_assert_is_not_symlink() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ -L "$arg" ]
@@ -607,6 +716,7 @@ _koopa_assert_is_python_package_installed() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_python_package_installed "${arg}"
@@ -623,6 +733,7 @@ _koopa_assert_is_r_package_installed() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_r_package_installed "${arg}"
@@ -639,6 +750,7 @@ _koopa_assert_is_readable() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -r "$arg" ]
@@ -654,6 +766,7 @@ _koopa_assert_is_root() { # {{{1
     # Assert that the current user is root.
     # @note Updated 2019-12-17.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_root
     then
         _koopa_stop "root user is required."
@@ -676,6 +789,7 @@ _koopa_assert_is_set() {
     # _koopa_assert_is_set PATH MANPATH xxx
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if ! _koopa_is_set "$arg"
@@ -692,6 +806,7 @@ _koopa_assert_is_symlink() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -L "$arg" ]
@@ -707,6 +822,7 @@ _koopa_assert_is_venv_active() { # {{{1
     # Assert that a Python virtual environment is active.
     # @note Updated 2019-10-23.
     # """
+    [ "$#" -eq 0 ] || return 1
     _koopa_assert_is_installed pip
     if ! _koopa_is_venv_active
     then
@@ -721,6 +837,7 @@ _koopa_assert_is_writable() { # {{{1
     # @note Updated 2020-02-16.
     # """
     [ "$#" -gt 0 ] || return 1
+    local arg
     for arg in "$@"
     do
         if [ ! -r "$arg" ]
@@ -736,9 +853,9 @@ _koopa_assert_is_matching_fixed() { # {{{1
     # Assert that input matches a fixed pattern.
     # @note Updated 2020-01-12.
     # """
-    local string
+    [ "$#" -eq 2 ] || return 1
+    local pattern string
     string="${1:?}"
-    local pattern
     pattern="${2:?}"
     if ! _koopa_str_match "$string" "$pattern"
     then
@@ -752,9 +869,9 @@ _koopa_assert_is_matching_regex() { # {{{1
     # Assert that input matches a regular expression pattern.
     # @note Updated 2020-01-12.
     # """
-    local string
+    [ "$#" -eq 2 ] || return 1
+    local pattern string
     string="${1:?}"
-    local pattern
     pattern="${2:?}"
     if ! _koopa_str_match_regex "$string" "$pattern"
     then
@@ -768,6 +885,7 @@ _koopa_assert_is_ubuntu() { # {{{1
     # Assert that platform is Ubuntu.
     # @note Updated 2020-01-14.
     # """
+    [ "$#" -eq 0 ] || return 1
     if ! _koopa_is_ubuntu
     then
         _koopa_stop "Ubuntu is required."

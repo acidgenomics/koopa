@@ -285,6 +285,25 @@ _koopa_fix_zsh_permissions() { # {{{1
     return 0
 }
 
+# FIXME COME BACK TO THIS ONCE WE IMPROVE ARG ASSERTS...
+# _koopa_add_config_link
+# _koopa_add_monorepo_config_link
+
+_koopa_add_monorepo_config_link() { # {{{1
+    # """
+    # Add koopa configuration link from user's git monorepo.
+    # @note Updated 2020-07-03.
+    # """
+    [ "$#" -gt 0 ] || return 1
+    _koopa_has_monorepo || return 1
+    return 0
+}
+
+
+
+
+
+# FIXME RENAME THESE...ADD XXX CONFIG
 _koopa_git_clone_docker() { # {{{1
     # """
     # Clone docker repo.
