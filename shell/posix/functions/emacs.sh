@@ -8,7 +8,7 @@ _koopa_link_emacs() { # {{{1
     #
     # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local custom_prefix default_prefix name
     name="${1:?}"
     default_prefix="$(_koopa_emacs_prefix)"
@@ -57,7 +57,7 @@ _koopa_is_spacemacs_installed() { # {{{1
     # Is Spacemacs installed?
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed emacs || return 1
     local init_file prefix
     prefix="$(_koopa_emacs_prefix)"
@@ -75,7 +75,7 @@ _koopa_update_spacemacs() { # {{{1
     #
     # Potentially useful: 'emacs --no-window-system'
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local prefix
     if ! _koopa_is_spacemacs_installed
     then

@@ -7,7 +7,7 @@ _koopa_list_internal_functions() { # {{{1
     #
     # Currently only supported in Bash and Zsh.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local x
     case "$(_koopa_shell)" in
         bash)
@@ -41,7 +41,7 @@ _koopa_unset_internal_functions() { # {{{1
     # Note that this will nuke functions currently required for interactive
     # prompt, so don't do this yet.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local funs
     case "$(_koopa_shell)" in
         bash)

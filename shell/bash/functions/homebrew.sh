@@ -15,7 +15,7 @@ _koopa_brew_cask_outdated() { # {{{
     # - brew list --versions
     # - brew info
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed brew || return 1
     local tmp_file x
     tmp_file="$(_koopa_tmp_file)"
@@ -31,7 +31,7 @@ _koopa_brew_outdated() { # {{{
     # Listed outdated Homebrew brews and casks, in a single call.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_h1 "Checking for outdated Homebrew formula."
     brew update &>/dev/null
     _koopa_h2 "Brews"
@@ -58,7 +58,7 @@ _koopa_brew_update() { # {{{1
     # Refer to useful discussion regarding '--greedy' flag.
     # https://discourse.brew.sh/t/brew-cask-outdated-greedy/3391
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed brew || return 1
     local casks name_fancy
     name_fancy="Homebrew"

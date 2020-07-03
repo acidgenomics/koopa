@@ -23,7 +23,7 @@ _koopa_prompt() { # {{{1
     #       howto-linux-unix-bash-shell-setup-prompt.html
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local conda conda_color git git_color hostname newline prompt prompt_color \
         shell user user_color venv venv_color wd wd_color
     shell="$(_koopa_shell)"
@@ -105,7 +105,7 @@ _koopa_prompt_conda() { # {{{1
     # Get conda environment name for prompt string.
     # @note Updated 2020-06-30.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local env
     env="$(_koopa_conda_env)"
     [[ -n "$env" ]] || return 0
@@ -120,7 +120,7 @@ _koopa_prompt_disk_used() { # {{{1
     #
     # This can slow down the shell, so not included in prompt by default.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local pct used
     used="$(_koopa_disk_pct_used)"
     case "$(_koopa_shell)" in
@@ -142,7 +142,7 @@ _koopa_prompt_git() { # {{{1
     #
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_git || return 0
     local git_branch git_status
     git_branch="$(_koopa_git_branch)"
@@ -163,7 +163,7 @@ _koopa_prompt_venv() { # {{{1
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local env
     env="$(_koopa_venv)"
     [[ -n "$env" ]] || return 0

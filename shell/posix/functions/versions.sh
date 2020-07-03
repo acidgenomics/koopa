@@ -14,7 +14,7 @@ _koopa_current_bcbio_version() { # {{{1
     #
     # This approach checks for latest stable release available via bioconda.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_assert_is_installed curl
     local url x
     url="https://raw.githubusercontent.com/bcbio/bcbio-nextgen\
@@ -34,7 +34,7 @@ _koopa_current_bioc_version() { # {{{1
     # Current Bioconductor version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_assert_is_installed curl
     local x
     x="$(curl --silent "https://bioconductor.org/bioc-version")"
@@ -48,7 +48,7 @@ _koopa_extract_version() { # {{{1
     # Extract version number.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local x
     x="${1:?}"
     x="$( \
@@ -66,7 +66,7 @@ _koopa_gcc_version() { # {{{1
     # GCC version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed gcc || return 1
     local x
     if _koopa_is_macos
@@ -89,7 +89,7 @@ _koopa_get_homebrew_cask_version() { # {{{1
     # @examples _koopa_get_homebrew_cask_version gpg-suite
     # # 2019.2
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local cask x
     cask="${1:?}"
     x="$(brew cask info "$cask")"
@@ -104,7 +104,7 @@ _koopa_get_macos_app_version() { # {{{1
     # Extract the version of a macOS application.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_is_macos || return 1
     local app plist x
     app="${1:?}"
@@ -129,7 +129,7 @@ _koopa_get_version() { # {{{1
     # Get the version of an installed program.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local cmd fun x
     cmd="${1:?}"
     fun="_koopa_$(_koopa_snake_case "$cmd")_version"
@@ -154,7 +154,7 @@ _koopa_github_latest_release() { # {{{1
     # # Expected failure:
     # _koopa_github_latest_release "acidgenomics/acidgenomics.github.io"
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed curl
     local json repo url x
     repo="${1:?}"
@@ -178,7 +178,7 @@ _koopa_hdf5_version() { # {{{1
     #
     # Debian: 'dpkg -s libhdf5-dev'
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed h5cc || return 1
     local x
     x="$( \
@@ -196,7 +196,7 @@ _koopa_linux_version() { # {{{1
     # Linux version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_linux || return 1
     local x
     x="$(uname -r)"
@@ -212,7 +212,7 @@ _koopa_llvm_version() { # {{{1
     #
     # Note that 'llvm-config' is versioned on most systems.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local x
     x="${LLVM_CONFIG:-}"
     [ -n "$x" ] || return 1
@@ -232,7 +232,7 @@ _koopa_lmod_version() { # {{{1
     # >     | grep -Eo "Version [.0-9]+" \
     # >     | cut -d ' ' -f 2
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local x
     x="${LMOD_VERSION:-}"
     [ -n "$x" ] || return 1
@@ -245,7 +245,7 @@ _koopa_macos_version() { # {{{1
     # macOS version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_macos || return 1
     local x
     x="$(sw_vers -productVersion)"
@@ -261,7 +261,7 @@ _koopa_major_version() { # {{{1
     #
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local version x
     version="${1:?}"
     x="$(_koopa_print "$version" | cut -d '.' -f 1)"
@@ -275,7 +275,7 @@ _koopa_major_minor_version() { # {{{1
     # Program 'MAJOR.MINOR' version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local version x
     version="${1:?}"
     x="$(_koopa_print "$version" | cut -d '.' -f 1-2)"
@@ -289,7 +289,7 @@ _koopa_major_minor_patch_version() { # {{{1
     # Program 'MAJOR.MINOR.PATCH' version.
     # @note Updated 2020-03-16.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local version x
     version="${1:?}"
     x="$("$version" | cut -d '.' -f 1-3)"
@@ -303,7 +303,7 @@ _koopa_openjdk_version() { # {{{1
     # Java (OpenJDK) version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed java || return 1
     local x
     x="$( \
@@ -321,7 +321,7 @@ _koopa_oracle_instantclient_version() { # {{{1
     # Oracle InstantClient version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed sqlplus || return 1
     local x
     x="$(sqlplus -v | grep -E "^Version")"
@@ -338,7 +338,7 @@ _koopa_os_version() { # {{{1
     #
     # 'uname' returns Darwin kernel version for macOS.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local x
     if _koopa_is_macos
     then
@@ -356,7 +356,7 @@ _koopa_parallel_version() { # {{{1
     # GNU parallel version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed parallel || return 1
     local x
     x="$( \
@@ -374,7 +374,7 @@ _koopa_perl_file_rename_version() { # {{{1
     # Perl File::Rename version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed perl rename || return 1
     local x
     x="$(rename --version 2>/dev/null | head -n 1)"
@@ -388,7 +388,7 @@ _koopa_return_version() { # {{{1
     # Return version (via extraction).
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local cmd flag x
     cmd="${1:?}"
     flag="${2:-}"
@@ -510,7 +510,7 @@ _koopa_ruby_api_version() { # {{{1
     # Used by Homebrew Ruby for default gem installation path.
     # See 'brew info ruby' for details.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed ruby || return 1
     local x
     x="$(ruby -e "print Gem.ruby_api_version")"
@@ -524,7 +524,7 @@ _koopa_r_package_version() { # {{{1
     # R package version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local pkg rscript_exe x
     pkg="${1:?}"
     rscript_exe="${2:-Rscript}"
@@ -560,7 +560,7 @@ _koopa_sanitize_version() { # {{{1
     # Sanitize version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local pattern x
     x="${1:?}"
     pattern="[.0-9]+"
@@ -579,7 +579,7 @@ _koopa_tex_version() { # {{{1
     # Here's what it looks like on Debian/Ubuntu:
     # TeX 3.14159265 (TeX Live 2017/Debian)
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed tex || return 1
     local x
     x="$( \
@@ -600,7 +600,7 @@ _koopa_version() { # {{{1
     # Koopa version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_variable "koopa-version"
     return 0
 }
@@ -610,7 +610,7 @@ _koopa_version_pattern() { # {{{1
     # Version pattern.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_print '[0-9]+\.[0-9]+(\.[0-9]+)?(\.[0-9]+)?([a-z])?'
     return 0
 }
@@ -620,7 +620,7 @@ _koopa_vim_version() { # {{{1
     # Vim version.
     # @note Updated 2020-06-29.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed vim || return 1
     local major patch version x
     x="$(vim --version 2>/dev/null)"

@@ -9,7 +9,7 @@ _koopa_detab() { # {{{1
     # Detab files.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_assert_is_installed vim
     local file
     for file in "$@"

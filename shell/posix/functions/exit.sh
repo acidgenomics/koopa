@@ -6,7 +6,7 @@ _koopa_exit_if_current_version() { # {{{1
     # Assert that programs are installed and current.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if _koopa_is_current_version "$arg"
@@ -22,7 +22,7 @@ _koopa_exit_if_dir() { # {{{1
     # Exit with note if directory exists.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [ -d "$arg" ]
@@ -38,7 +38,7 @@ _koopa_exit_if_docker() { # {{{1
     # Exit with note if running inside Docker.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if _koopa_is_docker
     then
         _koopa_exit "Not supported when running inside Docker."
@@ -51,7 +51,7 @@ _koopa_exit_if_exists() { # {{{1
     # Exit with note if any file type exists.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if [ -e "$arg" ]
@@ -67,7 +67,7 @@ _koopa_exit_if_installed() { # {{{1
     # Exit with note if an app is installed.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if _koopa_is_installed "$arg"
@@ -85,7 +85,7 @@ _koopa_exit_if_not_installed() { # {{{1
     # Exit with note if an app is not installed.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if ! _koopa_is_installed "$arg"
@@ -101,7 +101,7 @@ _koopa_exit_if_python_package_not_installed() { # {{{1
     # Exit with note if a Python package is not installed.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if ! _koopa_is_python_package_installed "$arg"
@@ -117,7 +117,7 @@ _koopa_exit_if_r_package_installed() { # {{{1
     # Exit with note if a R package is installed.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if _koopa_is_r_package_installed "$arg"
@@ -133,7 +133,7 @@ _koopa_exit_if_r_package_not_installed() { # {{{1
     # Exit with note if a R package is not installed.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     for arg in "$@"
     do
         if ! _koopa_is_r_package_installed "$arg"
