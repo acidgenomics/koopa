@@ -300,12 +300,12 @@ _koopa_git_clone_docker() { # {{{1
 _koopa_git_clone_docker_private() { # {{{1
     # """
     # Clone docker-private repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_is_github_ssh_enabled || return 1
     _koopa_git_clone \
-        "git@github.com:mjsteinbaugh/docker-private.git" \
+        "git@github.com:acidgenomics/docker-private.git" \
         "$(_koopa_docker_private_prefix)"
     return 0
 }
@@ -317,7 +317,7 @@ _koopa_git_clone_dotfiles() { # {{{1
     # """
     [ "$#" -eq 0 ] || return 1
     _koopa_git_clone \
-        "https://github.com/mjsteinbaugh/dotfiles.git" \
+        "https://github.com/acidgenomics/dotfiles.git" \
         "$(_koopa_dotfiles_prefix)"
     return 0
 }
@@ -344,7 +344,7 @@ _koopa_git_clone_scripts_private() {
     _koopa_is_github_ssh_enabled || return 1
     _koopa_git_clone \
         "git@github.com:mjsteinbaugh/scripts-private.git" \
-        "$(_koopa_scripts_private_prefix)"  
+        "$(_koopa_scripts_private_prefix)"
     return 0
 }
 

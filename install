@@ -38,8 +38,7 @@ optional arguments:
 
 non-interactive configuration arguments:
     --dotfiles (default); --no-dotfiles
-        Clone and install dotfiles from
-        https://github.com/mjsteinbaugh/dotfiles?
+        Install dot files from https://github.com/acidgenomics/dotfiles?
     --passwordless-sudo; --no-passwordless-sudo (default)
         Enable passwordless sudo. Can be a potential security risk.
     --profile (default); --no-profile
