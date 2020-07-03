@@ -229,38 +229,20 @@ _koopa_activate_conda_env() { # {{{1
 _koopa_activate_coreutils() { # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-03.
     #
-    # Note that macOS ships with a very old version of GNU coreutils.
-    # Update these using Homebrew.
+    # These aliases get "unaliased" inside of koopa scripts, and they should
+    # only apply to interactive use at the command prompt.
+    #
+    # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """
     [ "$#" -eq 0 ] || return 1
-    local make_prefix
-    make_prefix="$(_koopa_make_prefix)"
-    if _koopa_str_match \
-        "$(_koopa_which_realpath cp)" \
-        "$make_prefix"
-    then
-        alias cp="cp --archive --interactive"
-    fi
-    if _koopa_str_match \
-        "$(_koopa_which_realpath mkdir)" \
-        "$make_prefix"
-    then
-        alias mkdir="mkdir --parents"
-    fi
-    if _koopa_str_match \
-        "$(_koopa_which_realpath mv)" \
-        "$make_prefix"
-    then
-        alias mv="mv --interactive"
-    fi
-    if _koopa_str_match \
-        "$(_koopa_which_realpath rm)" \
-        "$make_prefix"
-    then
-        alias rm="rm --dir --interactive=once --preserve-root"
-    fi
+    _koopa_has_gnu_coreutils || return 0
+    alias cp="cp --archive --interactive" # -ai
+    alias ln="ln --interactive --no-dereference --symbolic" # -ins
+    alias mkdir="mkdir --parents" # -p
+    alias mv="mv --interactive" # -i
+    alias rm="rm --dir --interactive=once --preserve-root" # -I
     return 0
 }
 
