@@ -6,7 +6,7 @@ _koopa_activate_aliases() { # {{{1
     # Activate (non-shell-specific) aliases.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local file
     file="${HOME}/.aliases"
     [ -f "$file" ] || return 0
@@ -20,7 +20,7 @@ _koopa_activate_aspera() { # {{{1
     # Include Aspera Connect binaries in PATH, if defined.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_activate_prefix "$(_koopa_aspera_prefix)/latest"
     return 0
 }
@@ -43,7 +43,7 @@ _koopa_activate_autojump() { # {{{1
     # See also:
     # - https://github.com/wting/autojump
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -82,7 +82,7 @@ _koopa_activate_bcbio() { # {{{1
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_linux || return 0
     _koopa_is_installed bcbio_nextgen.py && return 0
     local prefix
@@ -108,7 +108,7 @@ _koopa_activate_broot() { # {{{1
     #
     # https://github.com/Canop/broot
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local config_dir
     if _koopa_is_macos
     then
@@ -134,7 +134,7 @@ _koopa_activate_completion() { # {{{1
     # Activate completion (with TAB key).
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     case "$(_koopa_shell)" in
         bash|zsh)
             ;;
@@ -156,7 +156,7 @@ _koopa_activate_conda() { # {{{1
     # Instead source the 'activate' script.
     # This must be reloaded inside of subshells to work correctly.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
@@ -205,7 +205,7 @@ _koopa_activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_is_installed conda || return 1
     local name
     name="${1:?}"
@@ -236,7 +236,7 @@ _koopa_activate_coreutils() { # {{{1
     #
     # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_has_gnu_coreutils || return 0
     alias cp="cp --archive --interactive" # -ai
     alias ln="ln --interactive --no-dereference --symbolic" # -ins
@@ -251,7 +251,7 @@ _koopa_activate_dircolors() { # {{{1
     # Activate directory colors.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed dircolors || return 0
     local dotfiles_prefix
     dotfiles_prefix="$(_koopa_dotfiles_prefix)"
@@ -278,7 +278,7 @@ _koopa_activate_emacs() { # {{{1
     # Activate Emacs.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_activate_prefix "${HOME}/.emacs.d"
     return 0
 }
@@ -291,7 +291,7 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local prefix
     prefix="$(_koopa_ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
@@ -317,7 +317,7 @@ _koopa_activate_fzf() { # {{{1
     # @seealso
     # - https://github.com/junegunn/fzf
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local nounset prefix script shell
     prefix="$(_koopa_fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
@@ -358,7 +358,7 @@ _koopa_activate_gcc_colors() { # {{{1
     # Activate GCC colors.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     # Colored GCC warnings and errors.
     [ -n "${GCC_COLORS:-}" ] && return 0
     export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
@@ -371,7 +371,7 @@ _koopa_activate_go() { # {{{1
     # Activate Go.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed go || return 0
     [ -n "${GOPATH:-}" ] && return 0
     GOPATH="$(_koopa_go_gopath)"
@@ -385,7 +385,7 @@ _koopa_activate_homebrew() { # {{{1
     # Activate Homebrew.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
     HOMEBREW_REPOSITORY="$(brew --repo)"
@@ -437,7 +437,7 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # - brew info libtool
     # - brew info make
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local prefix
     prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
     [ -d "$prefix" ] || return 0
@@ -451,7 +451,7 @@ _koopa_activate_homebrew_google_cloud_sdk() {
     # Activate Homebrew Google Cloud SDK.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local prefix shell
     prefix="$(_koopa_homebrew_prefix)"
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
@@ -476,7 +476,7 @@ _koopa_activate_homebrew_libexec_prefix() { # {{{1
     # Activate a cellar-only Homebrew program.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
     return 0
 }
@@ -486,7 +486,7 @@ _koopa_activate_homebrew_prefix() { # {{{1
     # Activate a cellar-only Homebrew program.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"
     return 0
 }
@@ -508,7 +508,7 @@ _koopa_activate_homebrew_python() {
     # - https://docs.brew.sh/Homebrew-and-Python
     # - brew info python
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     _koopa_activate_homebrew_prefix "python"
     return 0
@@ -523,7 +523,7 @@ _koopa_activate_homebrew_ruby_gems() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # - https://stackoverflow.com/questions/12287882/
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
     return 0
 }
@@ -533,7 +533,7 @@ _koopa_activate_koopa_paths() { # {{{1
     # Automatically configure koopa PATH and MANPATH.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local config_prefix host_id koopa_prefix os_id shell
     koopa_prefix="$(_koopa_prefix)"
     _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
@@ -571,7 +571,7 @@ _koopa_activate_llvm() { # {{{1
     # Activate LLVM config.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -x "${LLVM_CONFIG:-}" ] && return 0
     local config
     if _koopa_is_macos
@@ -598,7 +598,7 @@ _koopa_activate_local_etc_profile() { # {{{1
     # Can run into issues with autojump due to missing 'BASH' variable on Zsh
     # and Dash shells otherwise.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     case "$(_koopa_shell)" in
         bash)
             ;;
@@ -626,7 +626,7 @@ _koopa_activate_macos_extras() { # {{{1
     # Activate macOS-specific extra settings.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
@@ -651,7 +651,7 @@ _koopa_activate_macos_python() {
     # Activate macOS Python install.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_macos || return 1
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     local version
@@ -672,7 +672,7 @@ _koopa_activate_openjdk() { # {{{1
     #
     # We're using a symlink approach here to manage versions.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_linux || return 0
     local prefix
     prefix="$(_koopa_openjdk_prefix)/latest"
@@ -692,7 +692,7 @@ _koopa_activate_perlbrew() { # {{{1
     # See also:
     # - https://perlbrew.pl
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
     ! _koopa_is_installed perlbrew || return 0
     _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
@@ -727,7 +727,7 @@ _koopa_activate_pipx() { # {{{1
     # PIPX_BIN_DIR: The default app location is '~/.local/bin' and can be
     # overridden by setting the environment variable 'PIPX_BIN_DIR'.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed pipx || return 0
     [ -n "${PIPX_HOME:-}" ] && return 0
     [ -n "${PIPX_BIN_DIR:-}" ] && return 0
@@ -759,7 +759,7 @@ _koopa_activate_pkg_config() { # {{{1
     #
     # This is necessary for rgdal, sf packages to install clean.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_add_to_pkg_config_start \
         /usr/lib/pkgconfig \
         /usr/lib64/pkgconfig \
@@ -775,7 +775,7 @@ _koopa_activate_prefix() { # {{{1
     # Automatically configure PATH and MANPATH for a specified prefix.
     # @note Updated 2020-07-02.
     # """
-    [ "$#" -gt 0 ] || return 1
+    _koopa_assert_has_args "$#"
     local prefix
     for prefix in "$@"
     do
@@ -797,7 +797,7 @@ _koopa_activate_pyenv() { # {{{1
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_installed pyenv && return 0
     [ -n "${PYENV_ROOT:-}" ] && return 0
     local prefix
@@ -828,7 +828,7 @@ _koopa_activate_rbenv() { # {{{1
     # > _koopa_add_to_path_start "$(rbenv root)/shims"
     # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if _koopa_is_installed rbenv
     then
         eval "$(rbenv init -)"
@@ -856,7 +856,7 @@ _koopa_activate_ruby() { # {{{1
     # Activate Ruby gems.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -n "${GEM_HOME:-}" ] && return 0
     local gem_home
     gem_home="${HOME}/.gem"
@@ -878,7 +878,7 @@ _koopa_activate_rust() { # {{{1
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local cargo_prefix
     cargo_prefix="$(_koopa_rust_cargo_prefix)"
     [ -d "$cargo_prefix" ] || return 0
@@ -963,7 +963,7 @@ _koopa_activate_standard_paths() { # {{{1
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_force_add_to_path_end \
         "/usr/bin" \
         "/bin" \
@@ -1036,7 +1036,7 @@ _koopa_activate_xdg() { # {{{1
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
         XDG_CACHE_HOME="${HOME}/.cache"
@@ -1082,7 +1082,7 @@ _koopa_check_exports() { # {{{1
     #
     # Warn the user if they are setting unrecommended values.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     _koopa_is_rstudio && return 0
     _koopa_warn_if_export \
         "JAVA_HOME" \
@@ -1097,7 +1097,7 @@ _koopa_export_cpu_count() { # {{{1
     # Export CPU_COUNT.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(_koopa_cpu_count)"
     export CPU_COUNT
     return 0
@@ -1108,7 +1108,7 @@ _koopa_export_dotfiles() { # {{{1
     # Activate dotfiles repo.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     local dotfiles
     dotfiles="$(_koopa_config_prefix)/dotfiles"
     [ -d "$dotfiles" ] || return 0
@@ -1121,7 +1121,7 @@ _koopa_export_editor() { # {{{1
     # Export EDITOR.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${EDITOR:-}" ] && EDITOR="vim"
     VISUAL="$EDITOR"
     export EDITOR
@@ -1137,7 +1137,7 @@ _koopa_export_git() { # {{{1
     # @seealso
     # https://git-scm.com/docs/merge-options
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${GIT_MERGE_AUTOEDIT:-}" ] && GIT_MERGE_AUTOEDIT="no"
     export GIT_MERGE_AUTOEDIT
     return 0
@@ -1152,7 +1152,7 @@ _koopa_export_gnupg() { # {{{1
     # Useful for getting Docker credential store to work.
     # https://github.com/docker/docker-credential-helpers/issues/118
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if [ -z "${GPG_TTY:-}" ] && _koopa_is_tty
     then
         GPG_TTY="$(tty || true)"
@@ -1166,7 +1166,7 @@ _koopa_export_group() { # {{{1
     # Export GROUP.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${GROUP:-}" ] && GROUP="$(id -gn)"
     export GROUP
     return 0
@@ -1180,7 +1180,7 @@ _koopa_export_history() { # {{{1
     # See bash(1) for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
@@ -1233,7 +1233,7 @@ _koopa_export_hostname() { # {{{1
     # Export HOSTNAME.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)"
     export HOSTNAME
     return 0
@@ -1252,7 +1252,7 @@ _koopa_export_lesspipe() { # {{{
     # See also:
     # - https://github.com/wofr06/lesspipe
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if [ -n "${LESSOPEN:-}" ] &&
         _koopa_is_installed "lesspipe.sh"
     then
@@ -1270,7 +1270,7 @@ _koopa_export_ostype() { # {{{1
     #
     # Automatically set by bash and zsh.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if [ -z "${OSTYPE:-}" ]
     then
         OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
@@ -1284,7 +1284,7 @@ _koopa_export_pager() { # {{{1
     # Export PAGER.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${PAGER:-}" ] && PAGER="less"
     export PAGER
     return 0
@@ -1295,7 +1295,7 @@ _koopa_export_proj_lib() { # {{{1
     # Export PROJ_LIB
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     if [ -z "${PROJ_LIB:-}" ]
     then
         if [ -e "/usr/local/share/proj" ]
@@ -1316,7 +1316,7 @@ _koopa_export_python() { # {{{1
     # Export Python settings.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     # Don't allow Python to change the prompt string by default.
     [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] && VIRTUAL_ENV_DISABLE_PROMPT=1
     export VIRTUAL_ENV_DISABLE_PROMPT
@@ -1328,7 +1328,7 @@ _koopa_export_rsync() { # {{{1
     # Export rsync flags.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${RSYNC_FLAGS:-}" ] && RSYNC_FLAGS="$(_koopa_rsync_flags)"
     export RSYNC_FLAGS
     return 0
@@ -1342,7 +1342,7 @@ _koopa_export_shell() { # {{{1
     # Some POSIX shells, such as Dash, don't export this by default.
     # Note that this doesn't currently get set by RStudio terminal.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${SHELL:-}" ] && SHELL="$(_koopa_which "$(_koopa_shell)")"
     export SHELL
     return 0
@@ -1353,7 +1353,7 @@ _koopa_export_tmpdir() { # {{{1
     # Export TMPDIR.
     # @note Updated 2020-06-30.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${TMPDIR:-}" ] && TMPDIR="/tmp"
     export TMPDIR
     return 0
@@ -1366,7 +1366,7 @@ _koopa_export_today() { # {{{1
     #
     # Current date. Alternatively, can use '%F' shorthand.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${TODAY:-}" ] && TODAY="$(date +%Y-%m-%d)"
     export TODAY
     return 0
@@ -1379,7 +1379,7 @@ _koopa_export_user() { # {{{1
     #
     # Alternatively, can use 'whoami' here.
     # """
-    [ "$#" -eq 0 ] || return 1
+    _koopa_assert_has_no_args "$#"
     [ -z "${USER:-}" ] && USER="$(id -un)"
     export USER
     return 0

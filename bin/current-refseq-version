@@ -9,7 +9,7 @@ _koopa_current_refseq_version() { # {{{1
     # Current RefSeq version.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -eq 0 ]] || return 1
+    _koopa_assert_has_no_args "$#"
     local url version
     url="ftp://ftp.ncbi.nlm.nih.gov/refseq/release/RELEASE_NUMBER"
     version="$(curl --silent "$url")"

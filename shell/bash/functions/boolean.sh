@@ -8,7 +8,7 @@ _koopa_is_array_non_empty() { # {{{1
     # Particularly useful for checking against readarray return, which currently
     # returns a length of 1 for empty input, due to newlines line break.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local arr
     arr=("$@")
     [[ "${#arr[@]}" -eq 0 ]] && return 1

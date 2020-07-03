@@ -9,7 +9,7 @@ _koopa_autopad_samples() {
     # Autopad samples.
     # @note Updated 2020-07-01.
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local files newname num padwidth oldname pos prefix stem
     prefix="sample"
     padwidth=2

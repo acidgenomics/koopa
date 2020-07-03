@@ -16,7 +16,7 @@ _koopa_is_set() { # {{{1
     # - https://www.gnu.org/software/bash/manual/html_node/
     #       Shell-Parameter-Expansion.html
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local value var x
     for var
     do

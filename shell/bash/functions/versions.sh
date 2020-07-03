@@ -8,7 +8,7 @@ _koopa_check_version() { # {{{1
     # How to break a loop with an error code:
     # https://stackoverflow.com/questions/14059342/
     # """
-    [[ "$#" -gt 0 ]] || return 1
+    _koopa_assert_has_args "$#"
     local current expected status
     IFS='.' read -r -a current <<< "${1:?}"
     IFS='.' read -r -a expected <<< "${2:?}"
