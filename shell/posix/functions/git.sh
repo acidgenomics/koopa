@@ -17,7 +17,7 @@ _koopa_git_branch() { # {{{1
     #       git-completion.bash?id=HEAD
     # """
     _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_git
+    _koopa_is_git || return 1
     local branch
     branch="$(git symbolic-ref --short -q HEAD 2>/dev/null)"
     _koopa_print "$branch"
