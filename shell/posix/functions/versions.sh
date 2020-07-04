@@ -257,44 +257,50 @@ koopa::macos_version() { # {{{1
 koopa::major_version() { # {{{1
     # """
     # Program 'MAJOR' version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-04.
     #
     # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
     # """
     koopa::assert_has_args "$#"
     local version x
-    version="${1:?}"
-    x="$(koopa::print "$version" | cut -d '.' -f 1)"
-    [ -n "$x" ] || return 1
-    koopa::print "$x"
+    for version in "$@"
+    do
+        x="$(koopa::print "$version" | cut -d '.' -f 1)"
+        [ -n "$x" ] || return 1
+        koopa::print "$x"
+    done
     return 0
 }
 
 koopa::major_minor_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR' version.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args "$#"
     local version x
-    version="${1:?}"
-    x="$(koopa::print "$version" | cut -d '.' -f 1-2)"
-    [ -n "$x" ] || return 1
-    koopa::print "$x"
+    for version in "$@"
+    do
+        x="$(koopa::print "$version" | cut -d '.' -f 1-2)"
+        [ -n "$x" ] || return 1
+        koopa::print "$x"
+    done
     return 0
 }
 
 koopa::major_minor_patch_version() { # {{{1
     # """
     # Program 'MAJOR.MINOR.PATCH' version.
-    # @note Updated 2020-03-16.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args "$#"
     local version x
-    version="${1:?}"
-    x="$("$version" | cut -d '.' -f 1-3)"
-    [ -n "$x" ] || return 1
-    koopa::print "$x"
+    for version in "$@"
+    do
+        x="$(koopa::print "$version" | cut -d '.' -f 1-3)"
+        [ -n "$x" ] || return 1
+        koopa::print "$x"
+    done
     return 0
 }
 
