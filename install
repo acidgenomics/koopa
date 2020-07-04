@@ -128,7 +128,7 @@ _koopa_install() { # {{{1
                 break
                 ;;
             --*|-*)
-                >&2 printf "ERROR: Invalid arg: '%s'\n" "$1"
+                printf "ERROR: Invalid arg: '%s'\n" "$1" >&2
                 exit 1
                 ;;
         esac
@@ -140,7 +140,7 @@ _koopa_install() { # {{{1
     # Before we proceed, ensure that koopa isn't already installed.
     if [[ -n "${KOOPA_PREFIX:-}" ]]
     then
-        >&2 printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX"
+        printf "ERROR: koopa is installed: '%s'.\n" "$KOOPA_PREFIX" >&2
         exit 1
     fi
     script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
@@ -150,7 +150,7 @@ _koopa_install() { # {{{1
     # Check that temporary activation was successful.
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
-        >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n"
+        printf "ERROR: Installer failed to set 'KOOPA_PREFIX'.\n" >&2
         exit 1
     fi
     # Ensure existing user configuration gets removed.
@@ -240,19 +240,23 @@ _koopa_install() { # {{{1
     # Check that prefix is set correctly.
     if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
     then
-        >&2 printf "ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.\n"
-        >&2 printf "Expected: %s\n" "$koopa_prefix"
-        >&2 printf "Actual: %s\n" "$KOOPA_PREFIX"
-        >&2 printf "PWD: %s\n" "$PWD"
-        >&2 printf "BASH_SOURCE: %s\n" "${BASH_SOURCE[0]}"
+        >&2 cat << EOF
+ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.
+Expected: '$koopa_prefix'
+Actual: '$KOOPA_PREFIX'
+PWD: '$PWD'
+BASH_SOURCE: '${BASH_SOURCE[0]}'
+EOF
         exit 1
     fi
     # Check that activation puts koopa into PATH, as expected.
     if ! _koopa_is_installed koopa
     then
-        >&2 printf "ERROR: Installer failed to set 'PATH' correctly.\n"
-        >&2 printf '%s: %s\n' 'KOOPA_PREFIX' "$KOOPA_PREFIX"
-        >&2 printf '%s: %s\n' 'PATH' "$PATH"
+        >&2 cat << EOF
+ERROR: Installer failed to set 'PATH' correctly.
+KOOPA_PREFIX: '$KOOPA_PREFIX'
+PATH: '$PATH'
+        EOF
         exit 1
     fi
 

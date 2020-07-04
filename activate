@@ -94,7 +94,7 @@ case "$(uname -s)" in
     Linux)
         ;;
     *)
-        >&2 printf "ERROR: Unsupported operating system.\n"
+        printf "ERROR: Unsupported operating system.\n" >&2
         return 0
 esac
 
@@ -332,8 +332,8 @@ case "$KOOPA_SHELL" in
         # POSIX doesn't support file path resolution of sourced dot scripts.
         if [ "$KOOPA_INTERACTIVE" -eq 1 ] && [ ! -d "${KOOPA_PREFIX:?}" ]
         then
-            >&2 printf "ERROR: Failed to locate koopa activation script.\n"
-            >&2 printf "Required 'KOOPA_PREFIX' variable is unset.\n"
+            printf "ERROR: Failed to locate koopa activation script.\n" >&2
+            printf "Required 'KOOPA_PREFIX' variable is unset.\n" >&2
             return 0
         fi
         KOOPA_ACTIVATE_SCRIPT="${KOOPA_PREFIX}/activate"
