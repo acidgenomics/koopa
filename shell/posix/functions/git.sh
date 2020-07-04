@@ -4,7 +4,9 @@
 koopa::git_branch() { # {{{1
     # """
     # Current git branch name.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
+    #
+    # This is used in prompt, so be careful with assert checks.
     #
     # Handles detached HEAD state.
     #
@@ -12,7 +14,7 @@ koopa::git_branch() { # {{{1
     # > git name-rev --name-only HEAD
     # > git rev-parse --abbrev-ref HEAD
     #
-    # See also:
+    # @seealso
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
@@ -54,8 +56,8 @@ koopa::git_last_commit_local() { # {{{1
     # > git log --format="%H" -n 1
     # """
     koopa::assert_has_no_args "$#"
-    koopa::is_git || return 1
-    koopa::is_installed git || return 1
+    koopa::assert_is_git_toplevel
+    koopa::assert_is_installed git
     local x
     x="$(git rev-parse HEAD 2>/dev/null || true)"
     [ -n "$x" ] || return 1

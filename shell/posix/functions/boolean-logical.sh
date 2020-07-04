@@ -443,13 +443,17 @@ koopa::is_git() { # {{{1i
 koopa::is_git_clean() { # {{{1
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
+    #
+    # This is used in prompt, so be careful with assert checks.
+    #
     # @seealso
     # - https://stackoverflow.com/questions/3878624
     # - https://stackoverflow.com/questions/3258243
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
+    koopa::is_installed git || return 1
     local rev_1 rev_2
     # Are there unstaged changes?
     git diff-index --quiet HEAD -- 2>/dev/null || return 1
