@@ -30,7 +30,7 @@ koopa::git_branch() { # {{{1
 koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args "$#"
     koopa::assert_is_installed git
@@ -39,8 +39,16 @@ koopa::git_clone() { # {{{1
     target="${2:?}"
     if [ -d "$target" ]
     then
-        koopa::note "Cloned: '${target}'."
+        koopa::note "Already cloned: '${target}'."
         return 0
+    fi
+    # Check if user has sufficient permissions.
+    if koopa::str_match "$repo" 'git@github.com'
+    then
+        koopa::assert_is_github_ssh_enabled
+    elif koopa::str_match "$repo" 'git@gitlab.com'
+    then
+        koopa::assert_is_gitlab_ssh_enabled
     fi
     git clone --quiet --recursive "$repo" "$target"
     return 0
