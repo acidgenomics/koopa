@@ -528,10 +528,10 @@ koopa::activate_homebrew_ruby_gems() { # {{{1
     return 0
 }
 
-koopa::activatekoopa::paths() { # {{{1
+koopa::activate_koopa_paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
     local config_prefix host_id koopa_prefix os_id shell

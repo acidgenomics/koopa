@@ -1,8 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC1090,SC1091,SC2039
 
-
-
 # Usage {{{1
 # ==============================================================================
 
@@ -59,8 +57,6 @@ case "${1:-}" in
 esac
 
 unset -f usage
-
-
 
 # Pre-flight checks {{{1
 # ==============================================================================
@@ -169,8 +165,6 @@ then
             ;;
     esac
 fi
-
-
 
 # Argument parsing {{{1
 # ==============================================================================
@@ -315,8 +309,6 @@ export KOOPA_SHELL
 export KOOPA_SUBSHELL
 export KOOPA_TEST
 
-
-
 # Locate installation prefix {{{1
 # ==============================================================================
 
@@ -357,8 +349,6 @@ fi
 KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
 export KOOPA_PREFIX
 
-
-
 # Start activation {{{1
 # ==============================================================================
 
@@ -379,8 +369,6 @@ then
         KOOPA_DURATION_START="$(date -u +%s%3N)"
     fi
 fi
-
-
 
 # Standard configuration {{{1
 # ==============================================================================
@@ -405,10 +393,8 @@ koopa::export_user
 
 koopa::activate_xdg
 koopa::activate_standard_paths
-koopa::activatekoopa::paths
+koopa::activate_koopa_paths
 koopa::activate_pkg_config
-
-
 
 # Program configuration {{{1
 # ==============================================================================
@@ -441,8 +427,6 @@ then
     koopa::activate_fzf
 fi
 
-
-
 # Extra shell configuration {{{1
 # ==============================================================================
 
@@ -470,8 +454,6 @@ then
     fi
 fi
 
-
-
 # Post-flight {{{1
 # ==============================================================================
 
@@ -483,8 +465,7 @@ then
         # Calculate the duration.
         # Note that bc isn't installed on all Docker images, and can error out.
         KOOPA_DURATION="$( \
-            printf '%s\n' "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" \
-                | bc \
+            koopa::print "${KOOPA_DURATION_STOP}-${KOOPA_DURATION_START}" | bc \
         )"
         export KOOPA_DURATION
         unset -v KOOPA_DURATION_START KOOPA_DURATION_STOP
