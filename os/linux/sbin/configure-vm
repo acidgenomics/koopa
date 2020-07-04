@@ -176,7 +176,7 @@ koopa::configure_vm() { # {{{1
         { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
     then
         koopa::h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
-        koopa::rm "$data_disk_link" "$app_prefix"
+        koopa::system_rm "$data_disk_link" "$app_prefix"
         # e.g. '/mnt/data01/n'.
         data_disk_real="${data_disk}${data_disk_link}"
         koopa::system_ln "$data_disk_real" "$data_disk_link"
@@ -353,7 +353,7 @@ koopa::configure_vm() { # {{{1
     # --------------------------------------------------------------------------
 
     # Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
-    koopa::rm \
+    koopa::system_rm \
         "${app_prefix}/perl" \
         "${app_prefix}/python/pyenv" \
         "${app_prefix}/perl"

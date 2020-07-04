@@ -117,7 +117,7 @@ koopa::install_cellar() { # {{{1
     make_prefix="$(koopa::make_prefix)"
     if [[ "$reinstall" -eq 1 ]]
     then
-        koopa::rm "$prefix"
+        koopa::system_rm "$prefix"
         koopa::remove_broken_symlinks "$make_prefix"
     fi
     koopa::exit_if_dir "$prefix"

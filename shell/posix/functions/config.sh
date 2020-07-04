@@ -248,7 +248,7 @@ koopa::fix_pyenv_permissions() { # {{{1
     pyenv_prefix="$(koopa::pyenv_prefix)"
     [ -d "${pyenv_prefix}/shims" ] || return 0
     koopa::h2 "Fixing Python pyenv shim permissions."
-    koopa::chmod -v 0777 "${pyenv_prefix}/shims"
+    koopa::system_chmod -v 0777 "${pyenv_prefix}/shims"
     return 0
 }
 
@@ -262,7 +262,7 @@ koopa::fix_rbenv_permissions() { # {{{1
     rbenv_prefix="$(koopa::rbenv_prefix)"
     [ -d "${rbenv_prefix}/shims" ] || return 0
     koopa::h2 "Fixing Ruby rbenv shim permissions."
-    koopa::chmod -v 0777 "${rbenv_prefix}/shims"
+    koopa::system_chmod -v 0777 "${rbenv_prefix}/shims"
     return 0
 }
 
@@ -275,7 +275,7 @@ koopa::fix_zsh_permissions() { # {{{1
     local cellar_prefix koopa_prefix make_prefix zsh_exe
     koopa::h2 "Fixing Zsh permissions to pass 'compaudit' checks."
     koopa_prefix="$(koopa::prefix)"
-    koopa::chmod -v g-w \
+    koopa::system_chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
     koopa::is_installed zsh || return 0
@@ -285,7 +285,7 @@ koopa::fix_zsh_permissions() { # {{{1
     then
         if koopa::str_match_regex "$zsh_exe" "^${make_prefix}"
         then
-            koopa::chmod -v g-w \
+            koopa::system_chmod -v g-w \
                 "${make_prefix}/share/zsh" \
                 "${make_prefix}/share/zsh/site-functions"
         fi
@@ -295,7 +295,7 @@ koopa::fix_zsh_permissions() { # {{{1
     then
         if koopa::str_match_regex "$zsh_exe" "^${cellar_prefix}"
         then
-            koopa::chmod -v g-w \
+            koopa::system_chmod -v g-w \
                 "${cellar_prefix}/zsh/"*"/share/zsh" \
                 "${cellar_prefix}/zsh/"*"/share/zsh/"* \
                 "${cellar_prefix}/zsh/"*"/share/zsh/"*"/functions"
