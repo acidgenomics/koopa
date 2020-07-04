@@ -1,15 +1,10 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-# """
-# POSIX shared header script.
-# @note Updated 2020-07-03.
-# """
-
 koopa::posix_header() { # {{{1
     # """
     # POSIX shell header.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     local file
     if [ -z "${KOOPA_PREFIX:-}" ]
@@ -25,7 +20,7 @@ koopa::posix_header() { # {{{1
         [ -f "$file" ] && . "$file"
     done
     # Ensure koopa scripts are in path.
-    koopa::activatekoopa::paths
+    koopa::activate_koopa_paths
     return 0
 }
 
