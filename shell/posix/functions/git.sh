@@ -18,6 +18,7 @@ koopa::git_branch() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
+    koopa::is_installed git || return 1
     local branch
     branch="$(git symbolic-ref --short -q HEAD 2>/dev/null)"
     koopa::print "$branch"
@@ -30,6 +31,7 @@ koopa::git_clone() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_args "$#"
+    koopa::assert_is_installed git
     local repo target
     repo="${1:?}"
     target="${2:?}"
@@ -45,7 +47,7 @@ koopa::git_clone() { # {{{1
 koopa::git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
-    # @note Updated 2020-04-08.
+    # @note Updated 2020-07-04.
     #
     # Alternate:
     # Can use '%h' for abbreviated commit ID.
@@ -53,6 +55,7 @@ koopa::git_last_commit_local() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
+    koopa::is_installed git || return 1
     local x
     x="$(git rev-parse HEAD 2>/dev/null || true)"
     [ -n "$x" ] || return 1
@@ -67,11 +70,28 @@ koopa::git_last_commit_remote() { # {{{1
     # Instead of 'HEAD', can use 'refs/heads/master'
     # """
     koopa::assert_has_args "$#"
+    koopa::is_git || return 1
+    koopa::is_installed git || return 1
     local url x
     url="${1:?}"
     x="$(git ls-remote "$url" HEAD 2>/dev/null || true)"
     [ -n "$x" ] || return 1
     koopa::print "$x"
+}
+
+koopa::git_remote_url() { # {{{1
+    # """
+    # Return the git remote url for origin.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::is_git || return 1
+    koopa::is_installed git || return 1
+    git remote -v \
+        | grep origin \
+        | head -n 1 \
+        | awk '{ print $2 }'
+    return 0
 }
 
 koopa::git_rm_submodule() { # {{{1
@@ -83,6 +103,8 @@ koopa::git_rm_submodule() { # {{{1
     # - https://stackoverflow.com/questions/1260748/
     # - https://gist.github.com/myusuf3/7f645819ded92bda6677
     # """
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_git_toplevel
     koopa::assert_is_installed git
     local prefix
     prefix="${1:-"."}"
@@ -105,6 +127,8 @@ koopa::git_rm_untracked() { # {{{1
     # Remove untracked files from git repo.
     # @note Updated 2020-06-30.
     # """
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_git_toplevel
     koopa::assert_is_installed git
     local dir
     dir="${1:-"."}"
