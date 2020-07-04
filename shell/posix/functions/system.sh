@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-__koopa_id() { # {{{1
+koopa::_id() { # {{{1
     # """
     # Return ID string.
     # @note Updated 2020-06-30.
@@ -229,7 +229,7 @@ _koopa_current_group() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_id -gn
+    koopa::_id -gn
     return 0
 }
 
@@ -239,7 +239,7 @@ _koopa_current_group_id() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_id -g
+    koopa::_id -g
     return 0
 }
 
@@ -249,7 +249,7 @@ _koopa_current_user() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_id -un
+    koopa::_id -un
     return 0
 }
 
@@ -259,7 +259,7 @@ _koopa_current_user_id() { # {{{1
     # @note Updated 2020-04-16.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_id -u
+    koopa::_id -u
     return 0
 }
 

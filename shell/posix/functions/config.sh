@@ -310,7 +310,7 @@ _koopa_fix_zsh_permissions() { # {{{1
 
 # FIXME MAKE AN INTERNAL FUNCTION THAT HANDLES
 
-__koopa_add_git_repo_to_config() { # {{{1
+koopa::_add_git_repo_to_config() { # {{{1
     # """
     # Clone a git repo or symlink from monorepo.
     # @note Updated 2020-07-03.
