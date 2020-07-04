@@ -218,7 +218,7 @@ koopa::assert_has_no_args() { # {{{1
     if [ "$#" -ne 1 ]
     then
         koopa::stop \
-            "'koopa::assert_has_args' requires 1 arg." \
+            "'koopa::assert_has_no_args' requires 1 arg." \
             "Pass '\$#' not '\$@' to this function."
     fi
     if [ "${1:?}" -ne 0 ]
