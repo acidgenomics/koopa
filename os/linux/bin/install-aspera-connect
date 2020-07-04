@@ -59,9 +59,9 @@ tmp_dir="$(koopa::tmp_dir)"
     if [[ "$prefix" != "$script_target" ]]
     then
         koopa::mkdir "$prefix"
+        # FIXME RETHINK THIS.
         cp -rv "${script_target}"/* "${prefix}/."
-        rm -frv "$script_target"
-        rm -frv "$aspera_user"
+        koopa::rm "$script_target" "$aspera_user"
     fi
     koopa::assert_is_file "${prefix}/bin/ascp"
 ) 2>&1 | tee "$(koopa::tmp_log_file)"
@@ -73,7 +73,6 @@ rm -fr "$tmp_dir"
     koopa::system_ln "$version" "latest"
 )
 
-# FIXME RENAME THIS WITH SYSTEM PREFIX.
 koopa::system_set_permissions --recursive "$aspera_dir"
 
 koopa::install_success "$name_fancy"

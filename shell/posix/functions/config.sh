@@ -1,6 +1,28 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
+koopa::_git_clone_to_config() { # {{{1
+    # """
+    # Clone a git repo or symlink from monorepo.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args_eq "$#" 1
+    local config_prefix name url
+    config_prefix="$(koopa::config_prefix)"
+    for url in "$@"
+    do
+        name="$(basename "$url")"
+        name="$(koopa::sub '\.git$' '' "$name")"
+        if koopa::has_monorepo
+        then
+            koopa::add_monorepo_config_link "$name"
+        else
+            koopa::git_clone "$url" "${config_prefix}/${name}"
+        fi
+    done
+    return 0
+}
+
 koopa::add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
@@ -45,7 +67,7 @@ koopa::add_make_prefix_link() { # {{{1
 koopa::add_monorepo_config_link() { # {{{1
     # """
     # Add koopa configuration link from user's git monorepo.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args "$#"
     koopa::assert_has_monorepo
@@ -53,7 +75,7 @@ koopa::add_monorepo_config_link() { # {{{1
     monorepo_prefix="$(koopa::monorepo_prefix)"
     for subdir in "$@"
     do
-        koopa::add_config_prefix "${monorepo_prefix}/${subdir}"
+        koopa::add_config_link "${monorepo_prefix}/${subdir}"
     done
     return 0
 }
@@ -304,105 +326,67 @@ koopa::fix_zsh_permissions() { # {{{1
     return 0
 }
 
-
-
-
-
-# FIXME MAKE AN INTERNAL FUNCTION THAT HANDLES
-
-koopa::add_git_repo_to_config() { # {{{1
-    # """
-    # Clone a git repo or symlink from monorepo.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    if koopa::has_monorepo
-    then
-        echo "FIXME"
-    fi
-    return 0
-}
-
-
-
-# FIXME RENAME THESE...ADD XXX CONFIG
 koopa::git_clone_docker() { # {{{1
     # """
     # Clone docker repo.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    if koopa::has_monorepo
-    then
-        # FIXME
-        koopa::add_monorepo_config_link
-    fi
-    koopa::git_clone \
-        "https://github.com/acidgenomics/docker.git" \
-        "$(koopa::docker_prefix)"
+    koopa::_git_clone_to_config \
+        'git@github.com:acidgenomics/docker.git'
     return 0
 }
 
-# FIXME
 koopa::git_clone_docker_private() { # {{{1
     # """
     # Clone docker-private repo.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_github_ssh_enabled
-    koopa::git_clone \
-        "git@github.com:acidgenomics/docker-private.git" \
-        "$(koopa::docker_private_prefix)"
+    koopa::_git_clone_to_config \
+        'git@github.com:acidgenomics/docker-private.git'
     return 0
 }
 
-# FIXME
 koopa::git_clone_dotfiles() { # {{{1
     # """
     # Clone dotfiles repo.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
     koopa::git_clone \
-        "https://github.com/acidgenomics/dotfiles.git" \
+        'https://github.com/acidgenomics/dotfiles.git' \
         "$(koopa::dotfiles_prefix)"
     return 0
 }
 
-# FIXME
 koopa::git_clone_dotfiles_private() { # {{{1
     # """
     # Clone dotfiles-private repo.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_github_ssh_enabled
-    koopa::git_clone \
-        "git@github.com:mjsteinbaugh/dotfiles-private.git" \
-        "$(koopa::dotfiles_private_prefix)"
+    koopa::_git_clone_to_config \
+        'git@github.com:mjsteinbaugh/dotfiles-private.git'
     return 0
 }
 
-# FIXME
 koopa::git_clone_scripts_private() {
     # """
     # Clone private scripts.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_github_ssh_enabled
-    koopa::git_clone \
-        "git@github.com:mjsteinbaugh/scripts-private.git" \
-        "$(koopa::scripts_private_prefix)"
+    koopa::_git_clone_to_config \
+        'git@github.com:mjsteinbaugh/scripts-private.git'
     return 0
 }
 
-# FIXME
 koopa::install_dotfiles() { # {{{1
     # """
     # Install dot files.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
     local prefix script
@@ -417,20 +401,17 @@ koopa::install_dotfiles() { # {{{1
     return 0
 }
 
-# FIXME
 koopa::install_dotfiles_private() { # {{{1
     # """
     # Install private dot files.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    # > koopa::git_clone_dotfiles_private
     local prefix script
     prefix="$(koopa::dotfiles_private_prefix)"
     if [ ! -d "$prefix" ]
     then
-        koopa::note "No private dotfiles at '${prefix}'."
-        return 0
+        koopa::git_clone_dotfiles_private
     fi
     script="${prefix}/install"
     koopa::assert_is_file "$script"
@@ -438,7 +419,6 @@ koopa::install_dotfiles_private() { # {{{1
     return 0
 }
 
-# FIXME
 koopa::install_mike() { # {{{1
     # """
     # Install additional Mike-specific config files.
@@ -744,7 +724,7 @@ koopa::update_xdg_config() { # {{{1
         "${koopa_prefix}/dotfiles" \
         "${config_prefix}/dotfiles"
     # Remove legacy config files.
-    rm -fr \
+    koopa::rm \
         "${config_prefix}/R" \
         "${config_prefix}/rsync"
     return 0
