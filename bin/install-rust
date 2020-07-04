@@ -59,7 +59,7 @@ koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
     curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
 ) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-koopa::set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
+koopa::system_set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
 
 koopa::install_success "$name_fancy"
 koopa::restart

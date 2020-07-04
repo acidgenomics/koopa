@@ -25,6 +25,6 @@ koopa::install_start "$name_fancy" "prefix"
     git clone "https://github.com/Ensembl/ensembl-io.git"
 ) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-koopa::set_permissions --recursive "$prefix"
+koopa::system_set_permissions --recursive "$prefix"
 koopa::install_success "$name_fancy"
 koopa::restart

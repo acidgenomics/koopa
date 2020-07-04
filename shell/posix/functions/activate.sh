@@ -1051,7 +1051,7 @@ koopa::activate_xdg() { # {{{1
     fi
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
-        XDG_RUNTIME_DIR="/run/user/$(koopa::current_user_id)"
+        XDG_RUNTIME_DIR="/run/user/$(koopa::user_id)"
         if koopa::is_macos
         then
             XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
@@ -1106,13 +1106,13 @@ koopa::export_cpu_count() { # {{{1
 koopa::export_dotfiles() { # {{{1
     # """
     # Activate dotfiles repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    local dotfiles
-    dotfiles="$(koopa::config_prefix)/dotfiles"
-    [ -d "$dotfiles" ] || return 0
-    export DOTFILES="$dotfiles"
+    local prefix
+    prefix="$(koopa::dotfiles_prefix)"
+    [ -d "$prefix" ] || return 0
+    export DOTFILES="$prefix"
     return 0
 }
 
@@ -1122,7 +1122,7 @@ koopa::export_editor() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    [ -z "${EDITOR:-}" ] && EDITOR="vim"
+    [ -z "${EDITOR:-}" ] && EDITOR='vim'
     VISUAL="$EDITOR"
     export EDITOR
     export VISUAL
@@ -1138,7 +1138,7 @@ koopa::export_git() { # {{{1
     # https://git-scm.com/docs/merge-options
     # """
     koopa::assert_has_no_args "$#"
-    [ -z "${GIT_MERGE_AUTOEDIT:-}" ] && GIT_MERGE_AUTOEDIT="no"
+    [ -z "${GIT_MERGE_AUTOEDIT:-}" ] && GIT_MERGE_AUTOEDIT='no'
     export GIT_MERGE_AUTOEDIT
     return 0
 }
@@ -1158,17 +1158,6 @@ koopa::export_gnupg() { # {{{1
         GPG_TTY="$(tty || true)"
         export GPG_TTY
     fi
-    return 0
-}
-
-koopa::export_group() { # {{{1
-    # """
-    # Export GROUP.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -z "${GROUP:-}" ] && GROUP="$(id -gn)"
-    export GROUP
     return 0
 }
 
@@ -1231,10 +1220,10 @@ koopa::export_history() { # {{{1
 koopa::export_hostname() { # {{{1
     # """
     # Export HOSTNAME.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    [ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)"
+    [ -z "${HOSTNAME:-}" ] && HOSTNAME="$(koopa::hostname)"
     export HOSTNAME
     return 0
 }

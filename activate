@@ -391,7 +391,6 @@ koopa::export_dotfiles
 koopa::export_editor
 koopa::export_git
 koopa::export_gnupg
-koopa::export_group
 koopa::export_history
 koopa::export_hostname
 koopa::export_lesspipe

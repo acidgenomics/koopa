@@ -61,7 +61,7 @@ tmp_dir="$(koopa::tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-koopa::set_permissions --recursive "$app_prefix"
+koopa::system_set_permissions --recursive "$app_prefix"
 
 koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
 cp -frsv "${app_prefix}/bin" "${cellar_prefix}/."

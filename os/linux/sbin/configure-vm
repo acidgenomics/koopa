@@ -179,14 +179,14 @@ koopa::configure_vm() { # {{{1
         koopa::rm "$data_disk_link" "$app_prefix"
         # e.g. '/mnt/data01/n'.
         data_disk_real="${data_disk}${data_disk_link}"
-        koopa::ln "$data_disk_real" "$data_disk_link"
+        koopa::system_ln "$data_disk_real" "$data_disk_link"
         # e.g. 'opt'.
         app_prefix_bn="$(basename "$app_prefix")"
         # e.g. '/mnt/data01/n/opt'
         app_prefix_real="${data_disk_real}/${app_prefix_bn}"
         koopa::mkdir "$app_prefix_real"
         # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
-        koopa::ln "$app_prefix_real" "$app_prefix"
+        koopa::system_ln "$app_prefix_real" "$app_prefix"
     else
         koopa::mkdir "$app_prefix"
     fi
@@ -364,8 +364,8 @@ koopa::configure_vm() { # {{{1
     # Fix permissions {{{2
     # --------------------------------------------------------------------------
 
-    koopa::set_permissions --recursive "$make_prefix"
-    koopa::set_permissions --recursive "$app_prefix"
+    koopa::system_set_permissions --recursive "$make_prefix"
+    koopa::system_set_permissions --recursive "$app_prefix"
     koopa::fix_zsh_permissions
 
     # Remove symlinks and dirs {{{2

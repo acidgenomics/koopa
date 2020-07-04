@@ -38,4 +38,4 @@ koopa::h1 "Updating Conda at '${prefix}'."
 ) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 koopa::remove_broken_symlinks "$prefix"
-koopa::set_permissions --recursive "$prefix"
+koopa::system_set_permissions --recursive "$prefix"

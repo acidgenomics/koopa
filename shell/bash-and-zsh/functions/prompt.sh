@@ -3,7 +3,7 @@
 koopa::prompt() { # {{{1
     # """
     # Prompt string.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Note that Unicode characters don't work well with some Windows fonts.
     #
@@ -27,9 +27,8 @@ koopa::prompt() { # {{{1
     local conda conda_color git git_color hostname newline prompt prompt_color \
         shell user user_color venv venv_color wd wd_color
     shell="$(koopa::shell)"
-    hostname="${HOSTNAME:?}"
-    hostname="${hostname//.*/}"
-    user="${USER:?}"
+    hostname="$(koopa::hostname)"
+    user="$(koopa::user)"
     user="${user}@${hostname}"
     # Note that subshell exec need to be escaped here, so they are evaluated
     # dynamically when the prompt is refreshed.

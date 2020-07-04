@@ -83,7 +83,7 @@ ln -fnsv "$(koopa::prefix)/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
 koopa::remove_broken_symlinks "$prefix"
-koopa::set_permissions --recursive "$prefix"
+koopa::system_set_permissions --recursive "$prefix"
 
 set +u
 koopa::activate_conda
