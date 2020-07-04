@@ -215,10 +215,10 @@ _koopa_apt_add_r_repo() { # {{{1
 ${os_codename}-${version}/"
     # Note that 'read' will return status 1 here.
     # https://unix.stackexchange.com/questions/80045/
-    read -r -d '' string << EOF || true
+    read -r -d '' string << END || true
 deb ${repo}
 deb-src ${repo}
-EOF
+END
     _koopa_sudo_write_string "$string" "$file"
     return 0
 }
@@ -358,17 +358,17 @@ _koopa_apt_configure_sources() { # {{{1
     os_codename="$(_koopa_os_codename)"
     if _koopa_is_ubuntu
     then
-        sudo tee "$sources_list" >/dev/null << EOF
+        sudo tee "$sources_list" >/dev/null << END
 deb http://archive.ubuntu.com/ubuntu/ ${os_codename} main restricted universe
 deb http://archive.ubuntu.com/ubuntu/ ${os_codename}-updates main restricted universe
 deb http://security.ubuntu.com/ubuntu/ ${os_codename}-security main restricted universe
-EOF
+END
     else
-        sudo tee "$sources_list" >/dev/null << EOF
+        sudo tee "$sources_list" >/dev/null << END
 deb http://deb.debian.org/debian ${os_codename} main
 deb http://deb.debian.org/debian ${os_codename}-updates main
 deb http://security.debian.org/debian-security ${os_codename}/updates main
-EOF
+END
     fi
     return 0
 }

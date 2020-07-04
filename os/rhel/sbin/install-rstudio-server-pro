@@ -72,11 +72,11 @@ rm -fr "$tmp_dir"
 
 _koopa_install_success "$name"
 
-cat << EOF
+cat << END
 Activate product license key (if necessary):
 > sudo rstudio-server license-manager activate <product-key>
 
 If you want to move your license of RStudio Server to another system you should
 first deactivate it on the old system with the command:
 > sudo rstudio-server license-manager deactivate
-EOF
+END
