@@ -60,7 +60,7 @@ ${version}/${file}"
         # Move and enable for all users on Linux.
         if [[ "$prefix" != "$script_target" ]]
         then
-            koopa::cp -t "$prefix" "$script_target"
+            koopa::cp "$script_target" "$prefix"
             koopa::rm "$script_target" "$aspera_user"
         fi
         koopa::assert_is_file "${prefix}/bin/ascp"
