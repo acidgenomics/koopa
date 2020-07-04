@@ -59,8 +59,7 @@ tmp_dir="$(koopa::tmp_dir)"
     if [[ "$prefix" != "$script_target" ]]
     then
         koopa::mkdir "$prefix"
-        # FIXME RETHINK THIS.
-        cp -rv "${script_target}"/* "${prefix}/."
+        koopa::cp "${script_target}" -t "${prefix}"
         koopa::rm "$script_target" "$aspera_user"
     fi
     koopa::assert_is_file "${prefix}/bin/ascp"
