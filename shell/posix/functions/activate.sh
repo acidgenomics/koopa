@@ -1103,19 +1103,6 @@ koopa::export_cpu_count() { # {{{1
     return 0
 }
 
-koopa::export_dotfiles() { # {{{1
-    # """
-    # Activate dotfiles repo.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    local prefix
-    prefix="$(koopa::dotfiles_prefix)"
-    [ -d "$prefix" ] || return 0
-    export DOTFILES="$prefix"
-    return 0
-}
-
 koopa::export_editor() { # {{{1
     # """
     # Export EDITOR.
