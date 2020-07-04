@@ -692,7 +692,7 @@ koopa::mktemp() { # {{{1
     # """
     koopa::assert_is_installed mktemp
     local date_id template user_id
-    user_id="$(koopa::current_user_id)"
+    user_id="$(koopa::user_id)"
     date_id="$(koopa::datetime)"
     template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
     mktemp "$@" -t "$template"
@@ -1423,7 +1423,7 @@ koopa::view_latest_tmp_log_file() { # {{{1
             -mindepth 1 \
             -maxdepth 1 \
             -type f \
-            -name "koopa-$(koopa::current_user_id)-*" \
+            -name "koopa-$(koopa::user_id)-*" \
             | sort \
             | tail -n 1 \
     )"
