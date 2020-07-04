@@ -641,14 +641,14 @@ _koopa_update_etc_profile_d() { # {{{1
     local koopa_prefix
     koopa_prefix="$(_koopa_prefix)"
     local string
-    read -r -d '' string << EOF || true
+    read -r -d '' string << END || true
 #!/bin/sh
 
 # koopa shell
 # https://koopa.acidgenomics.com/
 # shellcheck source=/dev/null
 . "${koopa_prefix}/activate"
-EOF
+END
     _koopa_sudo_write_string "$string" "$file"
 }
 

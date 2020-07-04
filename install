@@ -17,7 +17,7 @@ set -Eeu -o pipefail
 # """
 
 usage() { # {{{1
-cat << EOF
+cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
@@ -51,7 +51,7 @@ non-interactive configuration arguments:
     --shared (default); --no-shared
         Install for all users, if current user has administrator (sudo)
         permissions. Otherwise, install for current user only.
-EOF
+END
 }
 
 _koopa_install() { # {{{1
@@ -240,23 +240,23 @@ _koopa_install() { # {{{1
     # Check that prefix is set correctly.
     if [[ "${koopa_prefix:?}" != "${KOOPA_PREFIX:?}" ]]
     then
-        >&2 cat << EOF
+        >&2 cat << END
 ERROR: Installer failed to set 'KOOPA_PREFIX' correctly.
 Expected: '$koopa_prefix'
 Actual: '$KOOPA_PREFIX'
 PWD: '$PWD'
 BASH_SOURCE: '${BASH_SOURCE[0]}'
-EOF
+END
         exit 1
     fi
     # Check that activation puts koopa into PATH, as expected.
     if ! _koopa_is_installed koopa
     then
-        >&2 cat << EOF
+        >&2 cat << END
 ERROR: Installer failed to set 'PATH' correctly.
 KOOPA_PREFIX: '$KOOPA_PREFIX'
 PATH: '$PATH'
-        EOF
+        END
         exit 1
     fi
 

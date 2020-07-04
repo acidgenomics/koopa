@@ -10,14 +10,14 @@ _koopa_yum_add_azure_cli_repo() { # {{{1
     local file
     file="/etc/yum.repos.d/azure-cli.repo"
     [ -f "$file" ] && return 0
-    sudo tee "$file" >/dev/null << EOF
+    sudo tee "$file" >/dev/null << END
 [azure-cli]
 name=Azure CLI
 baseurl=https://packages.microsoft.com/yumrepos/azure-cli
 enabled=1
 gpgcheck=1
 gpgkey=https://packages.microsoft.com/keys/microsoft.asc
-EOF
+END
     return 0
 }
 
@@ -50,7 +50,7 @@ _koopa_yum_add_google_cloud_sdk_repo() { # {{{1
     # > else
     # >     repo_gpgcheck=1
     # > fi
-    sudo tee "$file" >/dev/null << EOF
+    sudo tee "$file" >/dev/null << END
 [google-cloud-sdk]
 name=Google Cloud SDK
 baseurl=https://packages.cloud.google.com/yum/repos/cloud-sdk-el7-x86_64
@@ -59,7 +59,7 @@ gpgcheck=${gpgcheck}
 repo_gpgcheck=${repo_gpgcheck}
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOF
+END
     return 0
 }
 

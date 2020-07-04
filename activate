@@ -7,7 +7,7 @@
 # ==============================================================================
 
 usage() {
-    cat << EOF
+    cat << END
 usage: activate [--help|-h]
 
 Activate koopa.
@@ -48,7 +48,7 @@ examples:
 note:
     POSIX shell script.
     Updated 2020-06-24.
-EOF
+END
 }
 
 case "${1:-}" in
@@ -126,7 +126,7 @@ case "$KOOPA_SHELL" in
         # Inform user about activate failure only when interactive.
         if [ "$KOOPA_INTERACTIVE" -eq 1 ]
         then
-            >&2 cat << EOF
+            >&2 cat << END
 ERROR: Failed to activate koopa in the current shell.
 
 Supported POSIX shells: bash, dash, zsh.
@@ -141,7 +141,7 @@ Consider switching to bash:
 
 or zsh:
 > chsh -s /bin/zsh '${USER}'
-EOF
+END
         fi
         return 0
         ;;

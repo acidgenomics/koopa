@@ -64,14 +64,14 @@ name_fancy="bcbio-nextgen"
 
 _koopa_h1 "Patching ${name_fancy} installation."
 
-cat << EOF
+cat << END
 git_dir:
   ${git_dir}
 bcbio_python:
   ${bcbio_python}
 install_dir:
   ${install_dir}
-EOF
+END
 
 _koopa_h2 "Removing Python cache and compiled pyc files in Git repo."
 
