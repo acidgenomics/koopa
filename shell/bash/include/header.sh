@@ -71,15 +71,15 @@ _koopa_bash_header() { # {{{1
         major_version="$(printf '%s\n' "${BASH_VERSION}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 4 ]]
         then
-            >&2 printf '%s\n' 'ERROR: Bash >= 4 is required.'
-            >&2 printf 'BASH_VERSION: %s\n' "$BASH_VERSION"
+            printf "%s\n" "ERROR: Bash >= 4 is required." >&2
+            printf "%s: %s\n" "BASH_VERSION" "$BASH_VERSION" >&2
             exit 1
         fi
         # Check that user's Bash has readarray (mapfile) builtin defined.
         # We use this a lot to handle arrays.
         if [[ $(type -t readarray) != "builtin" ]]
         then
-            >&2 printf '%s\n' 'ERROR: Bash is missing readarray (mapfile).'
+            printf "%s\n" "ERROR: Bash is missing readarray (mapfile)." >&2
             exit 1
         fi
     fi

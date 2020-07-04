@@ -66,7 +66,7 @@ _koopa_zsh_header() { # {{{1
         major_version="$(printf '%s\n' "${ZSH_VERSION}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 5 ]]
         then
-            >&2 printf '%s\n' 'Zsh >= 5 is required.'
+            printf "%s\n" "Zsh >= 5 is required." >&2
             exit 1
         fi
     fi

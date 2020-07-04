@@ -308,10 +308,19 @@ _koopa_fix_zsh_permissions() { # {{{1
 
 
 
-# FIXME COME BACK TO THIS ONCE WE IMPROVE ARG ASSERTS...
-# _koopa_add_config_link
-# _koopa_add_monorepo_config_link
+# FIXME MAKE AN INTERNAL FUNCTION THAT HANDLES
 
+__koopa_add_git_repo_to_config() { # {{{1
+    # """
+    # Clone a git repo or symlink from monorepo.
+    # @note Updated 2020-07-03.
+    # """
+    _koopa_assert_has_args_eq "$#" 1
+    if _koopa_has_monorepo
+    then
+    fi
+    return 0
+}
 
 
 
@@ -319,9 +328,13 @@ _koopa_fix_zsh_permissions() { # {{{1
 _koopa_git_clone_docker() { # {{{1
     # """
     # Clone docker repo.
-    # @note Updated 2020-02-19.
+    # @note Updated 2020-07-03.
     # """
     _koopa_assert_has_no_args "$#"
+    if _koopa_has_monorepo
+    then
+        _koopa_add_monorepo_config_link
+    fi
     _koopa_git_clone \
         "https://github.com/acidgenomics/docker.git" \
         "$(_koopa_docker_prefix)"
