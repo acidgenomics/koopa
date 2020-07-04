@@ -52,7 +52,7 @@ else
     # Note that this step automatically links into koopa config for users.
     if [[ ! -d "$dot_dir" ]]
     then
-        dot_repo="$(koopa::dotfiles_source_repo)"
+        dot_repo="$(koopa::dotfiles_prefix)"
         rm -frv "$dot_dir"
         ln -fnsv "$dot_repo" "$dot_dir"
     fi

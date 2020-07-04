@@ -41,7 +41,7 @@ name="openjdk"
 [[ -z "$version" ]] && version="$(koopa::variable "$name")"
 jdk_dir="$(koopa::openjdk_prefix)"
 prefix="${jdk_dir}/${version}"
-[[ "$reinstall" -eq 1 ]] && koopa::rm "$prefix"
+[[ "$reinstall" -eq 1 ]] && koopa::system_rm "$prefix"
 koopa::exit_if_dir "$prefix"
 
 name_fancy="OpenJDK"

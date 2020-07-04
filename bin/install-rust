@@ -34,7 +34,7 @@ RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
 
 if [[ "$reinstall" -eq 1 ]]
 then
-    koopa::rm "$CARGO_HOME" "$RUSTUP_HOME"
+    koopa::system_rm "$CARGO_HOME" "$RUSTUP_HOME"
 fi
 
 koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"

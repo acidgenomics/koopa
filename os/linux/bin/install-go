@@ -37,7 +37,7 @@ name="go"
 [[ -z "$version" ]] && version="$(koopa::variable "$name")"
 app_prefix="$(koopa::app_prefix)/${name}/${version}"
 cellar_prefix="$(koopa::cellar_prefix)/${name}/${version}"
-[[ "$reinstall" -eq 1 ]] && koopa::rm "$app_prefix" "$cellar_prefix"
+[[ "$reinstall" -eq 1 ]] && koopa::system_rm "$app_prefix" "$cellar_prefix"
 koopa::exit_if_dir "$app_prefix" "$cellar_prefix"
 
 koopa::install_start "$name" "$version" "$cellar_prefix"
