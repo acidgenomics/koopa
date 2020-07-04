@@ -273,6 +273,18 @@ koopa::date() { # {{{1
     return 0
 }
 
+koopa::datetime() { # {{{
+    # """
+    # Datetime string.
+    # @note Updated 2020-07-04.
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed date
+    local x
+    x="$(date "+%Y%m%d-%H%M%S")"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::dotfiles_config_link() { # {{{1
     # """
     # Dotfiles directory.
@@ -768,7 +780,7 @@ koopa::mkdir() { # {{{1
 koopa::mktemp() { # {{{1
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-04.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -790,7 +802,7 @@ koopa::mktemp() { # {{{1
     koopa::assert_is_installed mktemp
     local date_id template user_id
     user_id="$(koopa::current_user_id)"
-    date_id="$(date "+%Y%m%d%H%M%S")"
+    date_id="$(koopa::datetime)"
     template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
     mktemp "$@" -t "$template"
     return 0
