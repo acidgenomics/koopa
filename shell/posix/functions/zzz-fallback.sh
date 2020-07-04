@@ -3,14 +3,28 @@
 
 if ! koopa::is_installed basename
 then
-    basename() { # {{{1
+    basename() {
         koopa::basename "$@"
+    }
+fi
+
+if ! koopa::is_installed echo
+then
+    echo() {
+        koopa::print "$@"
+    }
+fi
+
+if ! koopa::is_installed print
+then
+    print() {
+        koopa::print "$@"
     }
 fi
 
 if ! koopa::is_installed realpath
 then
-    realpath() { # {{{1
+    realpath() {
         koopa::realpath "$@"
     }
 fi
