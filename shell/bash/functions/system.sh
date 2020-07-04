@@ -235,6 +235,9 @@ koopa::update() { # {{{1
             (
                 dotfiles_prefix="$(koopa::dotfiles_prefix)"
                 cd "$dotfiles_prefix" || exit 1
+                # Preivously, this repo was at 'mjsteinbaugh/dotfiles'.
+                koopa::git_set_remote_url \
+                    'https://github.com/acidgenomics/dotfiles.git'
                 koopa::git_reset
                 koopa::git_pull origin master
             )
