@@ -43,13 +43,13 @@ tmp_dir="$(koopa::tmp_dir)/${name}"
     url="${server}/install/cellranger/${file}"
     koopa::download "$url"
     koopa::extract "$file"
-    koopa::mv "${name}-${version}" "$prefix"
+    koopa::system_mv "${name}-${version}" "$prefix"
 )
 
 rm -fr "$tmp_dir"
 
 # Link main 'cellranger' binary into make prefix (e.g. '/usr/local').
 make_prefix="$(koopa::make_prefix)"
-koopa::ln "${prefix}/cellranger" "${make_prefix}/bin/cellranger"
+koopa::system_ln "${prefix}/cellranger" "${make_prefix}/bin/cellranger"
 
 koopa::install_success "$name_fancy"

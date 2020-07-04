@@ -71,10 +71,10 @@ rm -fr "$tmp_dir"
 
 (
     koopa::cd "$prefix_parent"
-    koopa::ln "$version" "latest"
+    koopa::system_ln "$version" "latest"
 )
 
-koopa::set_permissions --recursive "$prefix_parent"
+koopa::system_set_permissions --recursive "$prefix_parent"
 
 koopa::install_success "$name"
 koopa::note "Reload the shell to complete activation."

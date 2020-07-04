@@ -83,10 +83,10 @@ rm -fr "$tmp_dir"
 
 (
     koopa::cd "$jdk_dir"
-    koopa::ln "$version" "latest"
+    koopa::system_ln "$version" "latest"
 )
 
-koopa::set_permissions --recursive "$jdk_dir"
+koopa::system_set_permissions --recursive "$jdk_dir"
 
 # This step will skip for non-shared install.
 koopa::java_update_alternatives "$prefix"

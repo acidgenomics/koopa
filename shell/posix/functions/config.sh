@@ -38,7 +38,7 @@ koopa::add_make_prefix_link() { # {{{1
     [ -L "$target_link" ] && return 0
     koopa::info "Adding 'koopa' link inside '${make_prefix}'."
     source_link="${koopa_prefix}/bin/koopa"
-    koopa::ln "$source_link" "$target_link"
+    koopa::system_ln "$source_link" "$target_link"
     return 0
 }
 
@@ -177,7 +177,7 @@ koopa::enable_passwordless_sudo() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::is_root && return 0
     local group
-    group="$(koopa::group)"
+    group="$(koopa::admin_group)"
     local sudo_file
     sudo_file="/etc/sudoers.d/sudo"
     sudo touch "$sudo_file"

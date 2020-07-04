@@ -62,6 +62,36 @@ koopa::script_name() { # {{{1
     return 0
 }
 
+koopa::system_git_pull() { # {{{1
+    # """
+    # Pull koopa git repo.
+    # @note Updated 2020-07-04.
+    #
+    # Intended for use with 'koopa pull'.
+    #
+    # This handles updates to Zsh functions that are changed to group
+    # non-writable permissions, so Zsh passes 'compaudit' checks.
+    # """
+    koopa::assert_has_no_args "$#"
+    local branch prefix
+    (
+        prefix="$(koopa::prefix)"
+        cd "$prefix" || exit 1
+        koopa::system_set_permissions \
+            --recursive "${prefix}/shell/zsh" \
+            >/dev/null 2>&1
+        branch="$(koopa::git_branch)"
+        koopa::git_pull
+        # Ensure other branches, such as develop, are rebased.
+        if [[ "$branch" != "master" ]]
+        then
+            koopa::git_pull origin master
+        fi
+        koopa::fix_zsh_permissions &>/dev/null
+    )
+    return 0
+}
+
 koopa::system_info() { # {{{
     # """
     # System information.
@@ -144,6 +174,110 @@ koopa::system_info() { # {{{
     return 0
 }
 
+koopa::system_set_permissions() { # {{{1
+    # """
+    # Set permissions on target prefix(es).
+    # @note Updated 2020-06-30.
+    #
+    # @param --recursive
+    #   Change permissions recursively.
+    # @param --user
+    #   Change ownership to current user, rather than koopa default, which is
+    #   root for shared installs.
+    # """
+    koopa::assert_has_args "$#"
+    local recursive
+    recursive=0
+    local user
+    user=0
+    local verbose
+    verbose=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --recursive)
+                recursive=1
+                shift 1
+                ;;
+            --user)
+                user=1
+                shift 1
+                ;;
+            --verbose)
+                verbose=1
+                shift 1
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    # chmod flags.
+    local chmod_flags
+    readarray -t chmod_flags <<< "$(koopa::chmod_flags)"
+    if [[ "$recursive" -eq 1 ]]
+    then
+        # Note that '-R' instead of '--recursive' has better cross-platform
+        # support on macOS and BusyBox.
+        chmod_flags+=("-R")
+    fi
+    if [[ "$verbose" -eq 1 ]]
+    then
+        # Note that '-v' instead of '--verbose' has better cross-platform
+        # support on macOS and BusyBox.
+        chmod_flags+=("-v")
+    fi
+    # chown flags.
+    local chown_flags
+    # Note that '-h' instead of '--no-dereference' has better cross-platform
+    # support on macOS and BusyBox.
+    chown_flags=("-h")
+    if [[ "$recursive" -eq 1 ]]
+    then
+        # Note that '-R' instead of '--recursive' has better cross-platform
+        # support on macOS and BusyBox.
+        chown_flags+=("-R")
+    fi
+    if [[ "$verbose" -eq 1 ]]
+    then
+        # Note that '-v' instead of '--verbose' has better cross-platform
+        # support on macOS and BusyBox.
+        chown_flags+=("-v")
+    fi
+    local group
+    group="$(koopa::install_group)"
+    local who
+    case "$user" in
+        0)
+            who="$(koopa::user)"
+            ;;
+        1)
+            who="${USER:?}" \
+            ;;
+    esac
+    chown_flags+=("${who}:${group}")
+    # Loop across input and set permissions.
+    for arg in "$@"
+    do
+        # Ensure we resolve symlinks here.
+        arg="$(realpath "$arg")"
+        koopa::chmod "${chmod_flags[@]}" "$arg"
+        koopa::chown "${chown_flags[@]}" "$arg"
+    done
+    return 0
+}
+
 koopa::update() { # {{{1
     # """
     # Update koopa installation.
@@ -221,7 +355,7 @@ koopa::update() { # {{{1
         user=1
     fi
     koopa::h1 "Updating koopa at '${koopa_prefix}'."
-    koopa::set_permissions --recursive "$koopa_prefix"
+    koopa::system_set_permissions --recursive "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then
         # Update koopa.
@@ -242,7 +376,7 @@ koopa::update() { # {{{1
                 koopa::git_pull origin master
             )
         fi
-        koopa::set_permissions --recursive "$koopa_prefix"
+        koopa::system_set_permissions --recursive "$koopa_prefix"
     fi
     koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]

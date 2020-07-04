@@ -42,13 +42,13 @@ fi
 
 koopa::dl "Crates" "$(koopa::to_string "${crates[@]}")"
 
-koopa::set_permissions  --recursive --user "$prefix"
+koopa::system_set_permissions  --recursive --user "$prefix"
 
 for crate in "${crates[@]}"
 do
     cargo install "$crate"
 done
 
-koopa::set_permissions --recursive "$prefix"
+koopa::system_set_permissions --recursive "$prefix"
 
 koopa::install_success "$name_fancy"

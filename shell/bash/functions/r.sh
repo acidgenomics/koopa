@@ -79,7 +79,7 @@ koopa::link_r_etc() { # {{{1
     for file in "${files[@]}"
     do
         [[ -f "${r_etc_source}/${file}" ]] || continue
-        koopa::ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
+        koopa::system_ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
     done
     return 0
 }
@@ -109,7 +109,7 @@ koopa::link_r_site_library() { # {{{1
     local lib_target
     lib_target="${r_prefix}/site-library"
     koopa::mkdir "$lib_source"
-    koopa::ln "$lib_source" "$lib_target"
+    koopa::system_ln "$lib_source" "$lib_target"
     return 0
 }
 
@@ -221,7 +221,7 @@ koopa::update_r_config() { # {{{1
     if koopa::is_cellar "$r_exe"
     then
         # Ensure that everyone in R home is writable.
-        koopa::set_permissions --recursive "$r_prefix"
+        koopa::system_set_permissions --recursive "$r_prefix"
         # Ensure that (Debian) system 'etc' directories are removed.
         local make_prefix
         make_prefix="$(koopa::make_prefix)"
@@ -238,11 +238,11 @@ koopa::update_r_config() { # {{{1
         fi
     else
         # Ensure system package library is writable.
-        koopa::set_permissions --recursive "${r_prefix}/library"
+        koopa::system_set_permissions --recursive "${r_prefix}/library"
         # Need to ensure group write so package index gets updated.
         if [[ -d '/usr/share/R' ]]
         then
-            koopa::set_permissions '/usr/share/R/doc/html/packages.html'
+            koopa::system_set_permissions '/usr/share/R/doc/html/packages.html'
         fi
     fi
     koopa::link_r_etc "$r_prefix"

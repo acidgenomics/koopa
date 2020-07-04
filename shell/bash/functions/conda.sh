@@ -72,7 +72,7 @@ koopa::conda_create_env() { # {{{1
         flags+=("$name")
     fi
     conda create "${flags[@]}"
-    koopa::set_permissions --recursive "$prefix"
+    koopa::system_set_permissions --recursive "$prefix"
     return 0
 }
 

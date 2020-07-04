@@ -70,9 +70,10 @@ rm -fr "$tmp_dir"
 
 (
     koopa::cd "$aspera_dir"
-    koopa::ln "$version" "latest"
+    koopa::system_ln "$version" "latest"
 )
 
-koopa::set_permissions --recursive "$aspera_dir"
+# FIXME RENAME THIS WITH SYSTEM PREFIX.
+koopa::system_set_permissions --recursive "$aspera_dir"
 
 koopa::install_success "$name_fancy"

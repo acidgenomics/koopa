@@ -50,7 +50,7 @@ koopa::rsync_vm() {
     koopa::dl "Flags" "$flags"
     koopa::mkdir "$prefix"
     koopa::remove_broken_symlinks "$prefix"
-    koopa::set_permissions --recursive --user "$prefix"
+    koopa::system_set_permissions --recursive --user "$prefix"
     # Note that this step won't work unless we leave 'flags' unquoted here.
     # shellcheck disable=SC2086
     rsync $flags \
@@ -58,6 +58,6 @@ koopa::rsync_vm() {
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"
     koopa::remove_broken_symlinks "$prefix"
-    koopa::set_permissions --recursive "$prefix"
+    koopa::system_set_permissions --recursive "$prefix"
     return 0
 }
