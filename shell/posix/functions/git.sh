@@ -137,3 +137,17 @@ koopa::git_rm_untracked() { # {{{1
     git clean -dfx "$dir"
     return 0
 }
+
+koopa::git_set_remote_url() {
+    # """
+    # Set (or change) the remote URL of a git repo.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args_eq "$#" 1
+    koopa::is_git || return 1
+    koopa::assert_is_installed git
+    local url
+    url="${1:?}"
+    git remote set-url origin "$url"
+    return 0
+}
