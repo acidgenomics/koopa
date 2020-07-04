@@ -985,18 +985,6 @@ koopa::run_if_installed() { # {{{1
     return 0
 }
 
-koopa::set_sticky_group() { # {{{1
-    # """
-    # Set sticky group bit for target prefix(es).
-    # @note Updated 2020-01-24.
-    #
-    # This never works recursively.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::system_chmod g+s "$@"
-    return 0
-}
-
 koopa::shell() { # {{{1
     # """
     # Current shell.
@@ -1090,6 +1078,7 @@ koopa::system_chown() { # {{{1
     return 0
 }
 
+# FIXME BROKEN
 koopa::system_cp() { # {{{1
     # """
     # Koopa copy.
@@ -1097,7 +1086,7 @@ koopa::system_cp() { # {{{1
     # """
     if koopa::is_shared_install
     then
-        sudo "$(koopa::cp "$@")"
+        sudo -E "$(koopa::cp "$@")"
     else
         koopa::cp "$@"
     fi
@@ -1126,6 +1115,7 @@ koopa::system_group() { # {{{1
     return 0
 }
 
+# FIXME BROKEN
 koopa::system_ln() { # {{{1
     # """
     # Create a symlink quietly.
@@ -1133,13 +1123,14 @@ koopa::system_ln() { # {{{1
     # """
     if koopa::is_shared_install
     then
-        sudo "$(koopa::ln "$@")"
+        sudo -E "$(koopa::ln "$@")"
     else
         koopa::ln "$@"
     fi
     return 0
 }
 
+# FIXME BROKEN
 koopa::system_mkdir() { # {{{1
     # """
     # mkdir with dynamic sudo handling.
@@ -1148,7 +1139,7 @@ koopa::system_mkdir() { # {{{1
     koopa::assert_has_args "$#"
     if koopa::is_shared_install
     then
-        sudo "$(koopa::mkdir "$@")"
+        sudo -E "$(koopa::mkdir "$@")"
     else
         koopa::mkdir "$@"
     fi
@@ -1157,6 +1148,7 @@ koopa::system_mkdir() { # {{{1
     return 0
 }
 
+# FIXME BROKEN
 koopa::system_mv() { # {{{1
     # """
     # Move a file or directory.
@@ -1164,13 +1156,14 @@ koopa::system_mv() { # {{{1
     # """
     if koopa::is_shared_install
     then
-        sudo "$(koopa::mv "$@")"
+        sudo -E "$(koopa::mv "$@")"
     else
         koopa::mv "$@"
     fi
     return 0
 }
 
+# FIXME BROKEN
 koopa::system_rm() { # {{{1
     # """
     # Remove files/directories quietly.
@@ -1179,7 +1172,7 @@ koopa::system_rm() { # {{{1
     koopa::assert_has_args "$#"
     if koopa::is_shared_install
     then
-        sudo "$(koopa::rm "$@")"
+        sudo -E "$(koopa::rm "$@")"
     else
         koopa::rm "$@"
     fi
