@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-_koopa_venv_create() {
+koopa::venv_create() {
     # """
     # Create Python virtual environment.
     # @note Updated 2020-07-02.
     # """
-    _koopa_assert_has_no_envs
-    _koopa_assert_is_installed python3
-    _koopa_assert_is_current_version python
+    koopa::assert_has_no_envs
+    koopa::assert_is_installed python3
+    koopa::assert_is_current_version python
     local name prefix py_exe
     name="${1:?}"
-    prefix="$(_koopa_venv_prefix)/${name}"
+    prefix="$(koopa::venv_prefix)/${name}"
     [[ -d "$prefix" ]] && return 0
     shift 1
-    _koopa_info "Installing Python '${name}' virtual environment at '${prefix}'."
-    _koopa_mkdir "$prefix"
+    koopa::info "Installing Python '${name}' virtual environment at '${prefix}'."
+    koopa::mkdir "$prefix"
     python3 -m venv "$prefix"
     py_exe="${prefix}/bin/python3"
     "$py_exe" -m pip install --upgrade pip setuptools wheel
@@ -25,22 +25,22 @@ _koopa_venv_create() {
     then
         "$py_exe" -m pip install "$name"
     fi
-    _koopa_set_permissions --recursive "$prefix"
+    koopa::set_permissions --recursive "$prefix"
     "$py_exe" -m pip list
     return 0
 }
 
-_koopa_venv_create_base() {
+koopa::venv_create_base() {
     # """
     # Create base Python virtual environment.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_venv_create "base"
+    koopa::assert_has_no_args "$#"
+    koopa::venv_create "base"
     return 0
 }
 
-_koopa_venv_create_r_reticulate() {
+koopa::venv_create_r_reticulate() {
     # """
     # Create Python reticulate environment for R.
     # @note Updated 2020-07-02.
@@ -66,7 +66,7 @@ _koopa_venv_create_r_reticulate() {
     # - https://github.com/scikit-learn/scikit-learn/issues/13371
     # - https://scikit-learn.org/dev/developers/advanced_installation.html
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local name packages
     name="r-reticulate"
     packages=(
@@ -83,7 +83,7 @@ _koopa_venv_create_r_reticulate() {
         umap-learn
         wheel
     )
-    if _koopa_is_macos
+    if koopa::is_macos
     then
         export CC="/usr/bin/clang"
         export CXX="/usr/bin/clang++"
@@ -95,10 +95,10 @@ _koopa_venv_create_r_reticulate() {
     fi
     if [[ -n "${LLVM_CONFIG:-}" ]]
     then
-        _koopa_info "LLVM_CONFIG: '${LLVM_CONFIG}'."
+        koopa::info "LLVM_CONFIG: '${LLVM_CONFIG}'."
     else
-        _koopa_note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
+        koopa::note "Export 'LLVM_CONFIG' to locate LLVM llvm-config binary."
     fi
-    _koopa_venv_create "$name" "${packages[@]}"
+    koopa::venv_create "$name" "${packages[@]}"
     return 0
 }

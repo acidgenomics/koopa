@@ -13,13 +13,13 @@ source "${script_dir}/../include/header.sh"
 # - curl
 # """
 
-_koopa_exit_if_installed gcloud
+koopa::exit_if_installed gcloud
 
 name_fancy="Google Cloud SDK"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_apt_add_google_cloud_sdk_repo
-_koopa_apt_install google-cloud-sdk
+koopa::apt_add_google_cloud_sdk_repo
+koopa::apt_install google-cloud-sdk
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

@@ -15,13 +15,13 @@
 #     vignettes and package manuals will not be rendered optimally
 # """
 
-_koopa_activate_openjdk
+koopa::activate_openjdk
 
-major_version="$(_koopa_major_version "$version")"
+major_version="$(koopa::major_version "$version")"
 file="R-${version}.tar.gz"
 url="https://cloud.r-project.org/src/base/R-${major_version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "R-${version}" || exit 1
 # R will warn if R_HOME environment variable is set.
 unset -v R_HOME
@@ -42,7 +42,7 @@ flags=(
     "--with-x=no"
 )
 # Need to modify BLAS configuration handling specificallly on Debian.
-if ! _koopa_is_debian
+if ! koopa::is_debian
 then
     flags+=(
         "--enable-BLAS-shlib"
@@ -59,5 +59,5 @@ if [[ "$link_cellar" -eq 1 ]]
 then
     # Update R configuration.
     r_exe="${prefix}/bin/R"
-    _koopa_update_r_config "$r_exe"
+    koopa::update_r_config "$r_exe"
 fi

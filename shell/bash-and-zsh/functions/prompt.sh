@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_prompt() { # {{{1
+koopa::prompt() { # {{{1
     # """
     # Prompt string.
     # @note Updated 2020-06-30.
@@ -23,19 +23,19 @@ _koopa_prompt() { # {{{1
     #       howto-linux-unix-bash-shell-setup-prompt.html
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local conda conda_color git git_color hostname newline prompt prompt_color \
         shell user user_color venv venv_color wd wd_color
-    shell="$(_koopa_shell)"
+    shell="$(koopa::shell)"
     hostname="${HOSTNAME:?}"
     hostname="${hostname//.*/}"
     user="${USER:?}"
     user="${user}@${hostname}"
     # Note that subshell exec need to be escaped here, so they are evaluated
     # dynamically when the prompt is refreshed.
-    conda="\$(_koopa_prompt_conda)"
-    git="\$(_koopa_prompt_git)"
-    venv="\$(_koopa_prompt_venv)"
+    conda="\$(koopa::prompt_conda)"
+    git="\$(koopa::prompt_git)"
+    venv="\$(koopa::prompt_venv)"
     case "$shell" in
         bash)
             newline='\n'
@@ -48,14 +48,14 @@ _koopa_prompt() { # {{{1
             wd='%~'
             ;;
         *)
-            _koopa_warning "Unsupported shell."
+            koopa::warning "Unsupported shell."
             return 0
             ;;
     esac
     # Enable colorful prompt.
     # Note that vim can set TERM as 'xterm' instead of 'xterm-256color' inside
     # of tmux, so disable this check:
-    # > if _koopa_str_match "${TERM:-}" "256color"
+    # > if koopa::str_match "${TERM:-}" "256color"
     case "$shell" in
         bash)
             conda_color="33"
@@ -100,30 +100,30 @@ _koopa_prompt() { # {{{1
     return 0
 }
 
-_koopa_prompt_conda() { # {{{1
+koopa::prompt_conda() { # {{{1
     # """
     # Get conda environment name for prompt string.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local env
-    env="$(_koopa_conda_env)"
+    env="$(koopa::conda_env)"
     [[ -n "$env" ]] || return 0
-    _koopa_print " conda:${env}"
+    koopa::print " conda:${env}"
     return 0
 }
 
-_koopa_prompt_disk_used() { # {{{1
+koopa::prompt_disk_used() { # {{{1
     # """
     # Get current disk usage on primary drive.
     # @note Updated 2020-06-30.
     #
     # This can slow down the shell, so not included in prompt by default.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local pct used
-    used="$(_koopa_disk_pct_used)"
-    case "$(_koopa_shell)" in
+    used="$(koopa::disk_pct_used)"
+    case "$(koopa::shell)" in
         zsh)
             pct="%%"
             ;;
@@ -131,42 +131,42 @@ _koopa_prompt_disk_used() { # {{{1
             pct="%"
             ;;
     esac
-    _koopa_print " disk:${used}${pct}"
+    koopa::print " disk:${used}${pct}"
     return 0
 }
 
-_koopa_prompt_git() { # {{{1
+koopa::prompt_git() { # {{{1
     # """
     # Return the current git branch, if applicable.
     # @note Updated 2020-01-12.
     #
     # Also indicate status with "*" if dirty (i.e. has unstaged changes).
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_git || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_git || return 0
     local git_branch git_status
-    git_branch="$(_koopa_git_branch)"
-    if _koopa_is_git_clean
+    git_branch="$(koopa::git_branch)"
+    if koopa::is_git_clean
     then
         git_status=""
     else
         git_status="*"
     fi
-    _koopa_print " ${git_branch}${git_status}"
+    koopa::print " ${git_branch}${git_status}"
     return 0
 }
 
-_koopa_prompt_venv() { # {{{1
+koopa::prompt_venv() { # {{{1
     # """
     # Get Python virtual environment name for prompt string.
     # @note Updated 2020-06-30.
     #
     # See also: https://stackoverflow.com/questions/10406926
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local env
-    env="$(_koopa_venv)"
+    env="$(koopa::venv)"
     [[ -n "$env" ]] || return 0
-    _koopa_print " venv:${env}"
+    koopa::print " venv:${env}"
     return 0
 }

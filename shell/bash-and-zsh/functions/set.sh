@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_is_set() { # {{{1
+koopa::is_set() { # {{{1
     # """
     # Is the variable set and non-empty?
     # @note Updated 2020-06-30.
@@ -16,7 +16,7 @@ _koopa_is_set() { # {{{1
     # - https://www.gnu.org/software/bash/manual/html_node/
     #       Shell-Parameter-Expansion.html
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local value var x
     for var
     do
@@ -24,7 +24,7 @@ _koopa_is_set() { # {{{1
         x="$(declare -p "$var" 2>/dev/null || true)"
         [[ -n "$x" ]] || return 1
         # Check if variable contains non-empty value.
-        case "$(_koopa_shell)" in
+        case "$(koopa::shell)" in
             bash)
                 value="${!var}"
                 ;;
@@ -33,7 +33,7 @@ _koopa_is_set() { # {{{1
                 value="${(P)var}"
                 ;;
             *)
-                _koopa_warning "Unsupported shell."
+                koopa::warning "Unsupported shell."
                 return 1
                 ;;
         esac

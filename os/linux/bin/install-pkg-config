@@ -4,4 +4,4 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_cellar --name="pkg-config" "$@"
+koopa::install_cellar --name="pkg-config" "$@"

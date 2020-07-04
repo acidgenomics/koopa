@@ -4,8 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_args "$#"
-_koopa_assert_is_installed bcbio_nextgen.py
+koopa::assert_has_args "$#"
+koopa::assert_is_installed bcbio_nextgen.py
 
 while (("$#"))
 do
@@ -43,7 +43,7 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
@@ -52,7 +52,7 @@ if [[ -z "${organism:-}" ]] ||
     [[ -z "${build:-}" ]] ||
     [[ -z "${release:-}" ]]
 then
-    _koopa_missing_arg
+    koopa::missing_arg
 fi
 
 [[ -z "${indexes:-}" ]] && indexes="bowtie2 seq star"
@@ -61,9 +61,9 @@ fi
 indexes=("$indexes")
 
 # Check for valid organism input.
-if ! _koopa_print "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
+if ! koopa::print "$organism" | grep -Eq "^([A-Z][a-z]+)(\s|_)([a-z]+)$"
 then
-    _koopa_stop "Invalid organism: '${organism}'."
+    koopa::stop "Invalid organism: '${organism}'."
 fi
 
 # Sanitize spaces into underscores.
@@ -73,28 +73,28 @@ organism="${organism// /_}"
 source="Ensembl"
 bcbio_genome_name="${build}-${source}-${release}"
 
-_koopa_install_start "$bcbio_genome_name"
+koopa::install_start "$bcbio_genome_name"
 
 # e.g. "Hsapiens".
 bcbio_species_dir="$( \
-    _koopa_print "$organism" \
+    koopa::print "$organism" \
         | sed -r "s/^([A-Z]).+_([a-z]+)$/\1\2/g" \
 )"
 
-tmp_dir="$(_koopa_tmp_dir)"
-cores="$(_koopa_cpu_count)"
+tmp_dir="$(koopa::tmp_dir)"
+cores="$(koopa::cpu_count)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
     ensembl-fasta --organism "$organism" --build "$build" --type "dna"
     gtf="${organism}.${build}.dna.primary_assembly.fa"
-    [[ ! -f "$fasta" ]] && _koopa_stop "FASTA failure."
+    [[ ! -f "$fasta" ]] && koopa::stop "FASTA failure."
     fasta="$(realpath "$fasta")"
     # e.g. Homo_sapiens.GRCh38.96.gtf
     ensembl-gtf --organism "$organism" --build "$build" --release "$release"
     gtf="${organism}.${build}.${release}.gtf"
-    [[ ! -f "$gtf" ]] && _koopa_stop "GTF failure."
+    [[ ! -f "$gtf" ]] && koopa::stop "GTF failure."
     gtf="$(realpath "$gtf")"
     bcbio_setup_genome.py \
         --name "$bcbio_species_dir" \
@@ -103,8 +103,8 @@ cores="$(_koopa_cpu_count)"
         --fasta "$fasta" \
         --gtf "$gtf" \
         --indexes "${indexes[@]}"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_install_success "$bcbio_genome_name"
+koopa::install_success "$bcbio_genome_name"

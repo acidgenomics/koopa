@@ -18,28 +18,28 @@ source "${script_dir}/../include/header.sh" --no-header-checks
 # >     | tar xz --strip 1 -C homebrew
 # """
 
-_koopa_exit_if_installed brew
+koopa::exit_if_installed brew
 
 name_fancy="Homebrew"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
-_koopa_h2 "Installing Xcode command line tools (CLT)."
+koopa::h2 "Installing Xcode command line tools (CLT)."
 xcode-select --install &>/dev/null || true
 
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     file="install.sh"
     url="https://raw.githubusercontent.com/Homebrew/install/master/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     chmod +x "$file"
     "./${file}"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

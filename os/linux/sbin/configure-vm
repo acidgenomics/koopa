@@ -4,12 +4,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_configure_vm() { # {{{1
+koopa::configure_vm() { # {{{1
     # """
     # Configure virtual machine.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_no_envs
+    koopa::assert_has_no_envs
     local app_prefix app_prefix_bn app_prefix_real bioconductor check compact \
         data_disk data_disk_link data_disk_real docker gb_total \
         install_base_flags make_prefix \
@@ -33,7 +33,7 @@ _koopa_configure_vm() { # {{{1
     # Used for rsync mode.
     source_ip=
     # Set the desired R version automatically.
-    r_version="$(_koopa_variable "r")"
+    r_version="$(koopa::variable "r")"
     pos=()
     while (("$#"))
     do
@@ -86,7 +86,7 @@ _koopa_configure_vm() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -95,8 +95,8 @@ _koopa_configure_vm() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_no_args "$@"
-    _koopa_is_docker && docker=1
+    koopa::assert_has_no_args "$@"
+    koopa::is_docker && docker=1
     [[ "$bioconductor" -eq 1 ]] && compact=1
     [[ -n "$source_ip" ]] && rsync=1
     if [[ "$compact" -eq 1 ]] || [[ "$minimal" -eq 1 ]]
@@ -107,7 +107,7 @@ _koopa_configure_vm() { # {{{1
     # Initial configuration {{{1
     # ==========================================================================
 
-    _koopa_h1 "Configuring virtual machine."
+    koopa::h1 "Configuring virtual machine."
     # Enable useful global variables that make configuration easier.
     # > export GPG_TTY=/dev/null
     export FORCE_UNSAFE_CONFIGURE=1
@@ -117,8 +117,8 @@ _koopa_configure_vm() { # {{{1
     # Root user and sudo fixes {{{2
     # --------------------------------------------------------------------------
 
-    _koopa_enable_passwordless_sudo
-    _koopa_fix_sudo_setrlimit_error
+    koopa::enable_passwordless_sudo
+    koopa::fix_sudo_setrlimit_error
 
     # Remove skeleton files {{{2
     # --------------------------------------------------------------------------
@@ -135,7 +135,7 @@ _koopa_configure_vm() { # {{{1
 
     if [[ "$minimal" -eq 1 ]]
     then
-        _koopa_success "Configuration completed successfully."
+        koopa::success "Configuration completed successfully."
         exit 0
     fi
 
@@ -143,21 +143,21 @@ _koopa_configure_vm() { # {{{1
     # --------------------------------------------------------------------------
 
     # e.g. '/usr/local'.
-    make_prefix="$(_koopa_make_prefix)"
+    make_prefix="$(koopa::make_prefix)"
     # For data disk, linked to '/mnt/data01/n/opt' (see below).
     # e.g. '/usr/local/opt'.
-    app_prefix="$(_koopa_app_prefix)"
+    app_prefix="$(koopa::app_prefix)"
 
     # Local disk configuration {{{1
     # ==========================================================================
 
     if [[ "$docker" -eq 0 ]]
     then
-        _koopa_info "Checking available local disk space."
+        koopa::info "Checking available local disk space."
         df -h "/"
-        gb_total="$(_koopa_disk_gb_total)"
+        gb_total="$(koopa::disk_gb_total)"
         [ "$gb_total" -lt 16 ] && compact=1
-        # > gb_free="$(_koopa_disk_gb_free)"
+        # > gb_free="$(koopa::disk_gb_free)"
         # > [ "$gb_free" -lt 10 ] && compact=1
         # Attempt to detect an attached disk automatically.
         if [[ ! -e "$data_disk" ]]
@@ -167,43 +167,43 @@ _koopa_configure_vm() { # {{{1
         fi
         if [[ -e "$data_disk" ]]
         then
-            _koopa_info "Data disk detected at '${data_disk}'."
+            koopa::info "Data disk detected at '${data_disk}'."
         fi
     fi
     # Prepare app prefix on external disk for write access (e.g. '/n').
-    data_disk_link="$(_koopa_data_disk_link_prefix)"
+    data_disk_link="$(koopa::data_disk_link_prefix)"
     if [[ -e "$data_disk" ]] && \
         { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
     then
-        _koopa_h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
-        _koopa_rm "$data_disk_link" "$app_prefix"
+        koopa::h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
+        koopa::rm "$data_disk_link" "$app_prefix"
         # e.g. '/mnt/data01/n'.
         data_disk_real="${data_disk}${data_disk_link}"
-        _koopa_ln "$data_disk_real" "$data_disk_link"
+        koopa::ln "$data_disk_real" "$data_disk_link"
         # e.g. 'opt'.
         app_prefix_bn="$(basename "$app_prefix")"
         # e.g. '/mnt/data01/n/opt'
         app_prefix_real="${data_disk_real}/${app_prefix_bn}"
-        _koopa_mkdir "$app_prefix_real"
+        koopa::mkdir "$app_prefix_real"
         # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
-        _koopa_ln "$app_prefix_real" "$app_prefix"
+        koopa::ln "$app_prefix_real" "$app_prefix"
     else
-        _koopa_mkdir "$app_prefix"
+        koopa::mkdir "$app_prefix"
     fi
 
     # Base system {{{1
     # ==========================================================================
 
-    _koopa_h2 "Installing base system."
-    _koopa_update_etc_profile_d
-    _koopa_install_dotfiles
-    _koopa_mkdir "$make_prefix"
-    _koopa_assert_is_installed install-base
+    koopa::h2 "Installing base system."
+    koopa::update_etc_profile_d
+    koopa::install_dotfiles
+    koopa::mkdir "$make_prefix"
+    koopa::assert_is_installed install-base
     install_base_flags=()
     [[ "$compact" -eq 1 ]] && install_base_flags+=("--compact")
     install-base "${install_base_flags[@]:-}"
     # Maybe include: tclsh
-    _koopa_assert_is_installed \
+    koopa::assert_is_installed \
         autoconf \
         bc \
         bzip2 \
@@ -218,7 +218,7 @@ _koopa_configure_vm() { # {{{1
         unzip \
         xml2-config \
         xz
-    _koopa_assert_is_file \
+    koopa::assert_is_file \
         /usr/bin/gcc \
         /usr/bin/g++
     sudo ldconfig
@@ -231,7 +231,7 @@ _koopa_configure_vm() { # {{{1
     # Programs {{{1
     # ==========================================================================
 
-    _koopa_run_if_installed install-llvm
+    koopa::run_if_installed install-llvm
     install-conda
     install-openjdk
     if [[ "$compact" -eq 0 ]]
@@ -283,10 +283,10 @@ _koopa_configure_vm() { # {{{1
     install-vim
     install-shellcheck
     install-shunit2
-    _koopa_run_if_installed install-aws-cli
+    koopa::run_if_installed install-aws-cli
     if [[ "$compact" -eq 0 ]] && [[ "$docker" -eq 0 ]]
     then
-        _koopa_run_if_installed \
+        koopa::run_if_installed \
             install-azure-cli \
             install-docker \
             install-google-cloud-sdk
@@ -304,15 +304,15 @@ _koopa_configure_vm() { # {{{1
     if [[ "$r_version" == "devel" ]]
     then
         install-r-devel
-    elif _koopa_is_installed install-r-cran-binary
+    elif koopa::is_installed install-r-cran-binary
     then
         install-r-cran-binary --version="$r_version"
     else
         install-r --version="$r_version"
     fi
-    _koopa_run_if_installed install-rstudio-server install-shiny-server
-    _koopa_update_r_config
-    _koopa_update_lmod_config
+    koopa::run_if_installed install-rstudio-server install-shiny-server
+    koopa::update_r_config
+    koopa::update_lmod_config
 
     # Language-specific packages {{{1
     # ==========================================================================
@@ -353,42 +353,42 @@ _koopa_configure_vm() { # {{{1
     # --------------------------------------------------------------------------
 
     # Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
-    _koopa_rm \
+    koopa::rm \
         "${app_prefix}/perl" \
         "${app_prefix}/python/pyenv" \
         "${app_prefix}/perl"
     # Otherwise, ensure permissions are correct:
-    # > _koopa_fix_pyenv_permissions
-    # > _koopa_fix_rbenv_permissions
+    # > koopa::fix_pyenv_permissions
+    # > koopa::fix_rbenv_permissions
 
     # Fix permissions {{{2
     # --------------------------------------------------------------------------
 
-    _koopa_set_permissions --recursive "$make_prefix"
-    _koopa_set_permissions --recursive "$app_prefix"
-    _koopa_fix_zsh_permissions
+    koopa::set_permissions --recursive "$make_prefix"
+    koopa::set_permissions --recursive "$app_prefix"
+    koopa::fix_zsh_permissions
 
     # Remove symlinks and dirs {{{2
     # --------------------------------------------------------------------------
 
-    _koopa_remove_broken_symlinks "$make_prefix"
-    _koopa_remove_broken_symlinks "$app_prefix"
-    _koopa_remove_empty_dirs "$make_prefix"
-    _koopa_remove_empty_dirs "$app_prefix"
+    koopa::remove_broken_symlinks "$make_prefix"
+    koopa::remove_broken_symlinks "$app_prefix"
+    koopa::remove_empty_dirs "$make_prefix"
+    koopa::remove_empty_dirs "$app_prefix"
 
     # Remove temporary files {{{2
     # --------------------------------------------------------------------------
 
     if [[ "$compact" -eq 1 ]] || [[ "$docker" -eq 1 ]]
     then
-        _koopa_h2 "Removing caches, logs, and temporary files."
+        koopa::h2 "Removing caches, logs, and temporary files."
         # Don't clear '/var/log/' here, as this can mess with 'sshd'.
         sudo rm -frv \
             /root/.cache \
             /tmp/* \
             /var/backups/* \
             /var/cache/*
-        if _koopa_is_debian
+        if koopa::is_debian
         then
             sudo rm -fr /var/lib/apt/lists/*
         fi
@@ -398,8 +398,8 @@ _koopa_configure_vm() { # {{{1
     # --------------------------------------------------------------------------
 
     [[ "$check" -eq 1 ]] && koopa check
-    _koopa_success "Configuration completed successfully."
+    koopa::success "Configuration completed successfully."
     return 0
 }
 
-_koopa_configure_vm "$@"
+koopa::configure_vm "$@"

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_rsync_vm() {
+koopa::rsync_vm() {
     # """
     # rsync a desired prefix across virtual machines.
     # @note Updated 2020-02-18.
@@ -12,9 +12,9 @@ _koopa_rsync_vm() {
     # '/usr/local', which may have an updated copy of rsync installed.
     local rsync
     rsync="/usr/bin/rsync"
-    _koopa_assert_is_installed "$rsync"
+    koopa::assert_is_installed "$rsync"
     local flags
-    flags="$(_koopa_rsync_flags)"
+    flags="$(koopa::rsync_flags)"
     while (("$#"))
     do
         case "$1" in
@@ -31,33 +31,33 @@ _koopa_rsync_vm() {
                 shift 1
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    _koopa_assert_is_set flags prefix source_ip
+    koopa::assert_is_set flags prefix source_ip
     local host_ip
-    host_ip="$(_koopa_local_ip_address)"
+    host_ip="$(koopa::local_ip_address)"
     local user
     user="${USER:?}"
     # Check for accidental sync from source machine.
     if [ "$source_ip" == "$host_ip" ]
     then
-        _koopa_note "On source machine: '${source_ip}'."
+        koopa::note "On source machine: '${source_ip}'."
         return 0
     fi
-    _koopa_h1 "Syncing '${prefix}' from '${source_ip}'."
-    _koopa_dl "Flags" "$flags"
-    _koopa_mkdir "$prefix"
-    _koopa_remove_broken_symlinks "$prefix"
-    _koopa_set_permissions --recursive --user "$prefix"
+    koopa::h1 "Syncing '${prefix}' from '${source_ip}'."
+    koopa::dl "Flags" "$flags"
+    koopa::mkdir "$prefix"
+    koopa::remove_broken_symlinks "$prefix"
+    koopa::set_permissions --recursive --user "$prefix"
     # Note that this step won't work unless we leave 'flags' unquoted here.
     # shellcheck disable=SC2086
     rsync $flags \
         --rsync-path="sudo ${rsync}" \
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"
-    _koopa_remove_broken_symlinks "$prefix"
-    _koopa_set_permissions --recursive "$prefix"
+    koopa::remove_broken_symlinks "$prefix"
+    koopa::set_permissions --recursive "$prefix"
     return 0
 }

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-_koopa_assert_is_not_file /usr/bin/proj
-_koopa_assert_is_installed sqlite3
+koopa::assert_is_not_file /usr/bin/proj
+koopa::assert_is_installed sqlite3
 
 # pkg-config doesn't detect sqlite3 library correctly.
 # https://github.com/OSGeo/PROJ/issues/1529
@@ -24,8 +24,8 @@ export SQLITE3_LIBS="-L${make_prefix}/lib -lsqlite3"
 
 file="${name}-${version}.tar.gz"
 url="https://github.com/OSGeo/PROJ/releases/download/${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \

@@ -31,7 +31,7 @@ then
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 fi
 
-_koopa_bash_header() { # {{{1
+koopa::bash_header() { # {{{1
     # """
     # Bash header.
     # @note Updated 2020-07-01.
@@ -105,13 +105,13 @@ _koopa_bash_header() { # {{{1
         # shellcheck source=/dev/null
         [[ -f "$file" ]] && source "$file"
     done
-    _koopa_help "$@"
+    koopa::help "$@"
     # Require sudo permission to run 'sbin/' scripts.
     if [[ "$checks" -eq 1 ]]
     then
-        if _koopa_str_match "$0" "/sbin"
+        if koopa::str_match "$0" "/sbin"
         then
-            _koopa_assert_has_sudo
+            koopa::assert_has_sudo
         fi
     fi
     # Disable user-defined aliases.
@@ -124,4 +124,4 @@ _koopa_bash_header() { # {{{1
     return 0
 }
 
-_koopa_bash_header "$@"
+koopa::bash_header "$@"

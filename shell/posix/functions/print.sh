@@ -6,7 +6,7 @@ koopa::_ansi_escape() { # {{{1
     # ANSI escape codes.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_args_eq "$#" 1
+    koopa::assert_has_args_eq "$#" 1
     local escape
     case "${1:?}" in
         nocolor)
@@ -67,7 +67,7 @@ koopa::_ansi_escape() { # {{{1
             escape="1;97"
             ;;
         *)
-            _koopa_print "WARNING: Unsupported color: '${1}'." >&2
+            koopa::print "WARNING: Unsupported color: '${1}'." >&2
             escape="0"
             ;;
     esac
@@ -80,7 +80,7 @@ koopa::_emoji() { # {{{1
     # Koopa turtle emoji.
     # @note Updated 2020-06-30.
     # """
-    _koopa_print "🐢"
+    koopa::print "🐢"
 }
 
 koopa::_h() { # {{{1
@@ -88,13 +88,13 @@ koopa::_h() { # {{{1
     # Koopa header.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_args_ge "$#" 2
+    koopa::assert_has_args_ge "$#" 2
     local level prefix string
     level="${1:?}"
     shift 1
     case "$level" in
         1)
-            _koopa_print
+            koopa::print
             prefix="=>"
             ;;
         2)
@@ -116,7 +116,7 @@ koopa::_h() { # {{{1
             prefix="=======>"
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
     koopa::_msg "magenta" "default" "$prefix" "$@"
@@ -128,7 +128,7 @@ koopa::_msg() {
     # Koopa standard message.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local c1 c2 emoji nc prefix string x
     emoji="$(koopa::_emoji)"
     c1="$(koopa::_ansi_escape "${1:?}")"
@@ -139,7 +139,7 @@ koopa::_msg() {
     for string in "$@"
     do
         x="${emoji} ${c1}${prefix}${nc} ${c2}${string}${nc}"
-        _koopa_print "$x"
+        koopa::print "$x"
     done
     return 0
 }
@@ -169,7 +169,7 @@ koopa::_print_ansi() { # {{{1
     # - https://stackoverflow.com/questions/15736223
     # - https://bixense.com/clicolors/
     # """
-    _koopa_assert_has_args_ge "$#" 2
+    koopa::assert_has_args_ge "$#" 2
     local color nocolor string
     color="$(koopa::_ansi_escape "${1:?}")"
     nocolor="$(koopa::_ansi_escape "nocolor")"
@@ -186,7 +186,7 @@ koopa::_status() { # {{{1
     # Koopa status.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_ge "$#" 3
+    koopa::assert_has_args_ge "$#" 3
     local color nocolor label string x
     label="$(printf "%10s\n" "${1:?}")"
     color="$(koopa::_ansi_escape "${2:?}")"
@@ -195,100 +195,100 @@ koopa::_status() { # {{{1
     for string in "$@"
     do
         x="${color}${label}${nocolor} | ${string}"
-        _koopa_print "$x"
+        koopa::print "$x"
     done
     return 0
 }
 
 
 
-_koopa_coffee_time() { # {{{1
+koopa::coffee_time() { # {{{1
     # """
     # Coffee time.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_note 'This step takes a while. Time for a coffee break! ☕☕'
+    koopa::assert_has_no_args "$#"
+    koopa::note 'This step takes a while. Time for a coffee break! ☕☕'
     return 0
 }
 
-_koopa_dl() { # {{{1
+koopa::dl() { # {{{1
     # """
     # Definition list.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_eq "$#" 2
+    koopa::assert_has_args_eq "$#" 2
     koopa::_msg "default-bold" "default" "${1:?}:" "${2:?}"
 }
 
-_koopa_exit() { # {{{1
+koopa::exit() { # {{{1
     # """
     # Exit showing note, without error.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_eq "$#" 1
-    _koopa_note "${1:?}"
+    koopa::assert_has_args_eq "$#" 1
+    koopa::note "${1:?}"
     exit 0
 }
 
-_koopa_h1() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h1() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 1 "$@"
     return 0
 }
 
-_koopa_h2() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h2() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 2 "$@"
     return 0
 }
 
-_koopa_h3() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h3() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 3 "$@"
     return 0
 }
 
-_koopa_h4() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h4() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 4 "$@"
     return 0
 }
 
-_koopa_h5() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h5() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 5 "$@"
     return 0
 }
 
-_koopa_h6() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h6() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 6 "$@"
     return 0
 }
 
-_koopa_h7() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::h7() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_h 7 "$@"
     return 0
 }
 
-_koopa_info() { # {{{1
+koopa::info() { # {{{1
     # """
     # General info.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     koopa::_msg "default" "default" "--" "$@"
     return 0
 }
 
-_koopa_install_start() { # {{{1
+koopa::install_start() { # {{{1
     # """
     # Inform the user about start of installation.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local msg name version prefix
     name="${1:?}"
     version=
@@ -302,7 +302,7 @@ _koopa_install_start() { # {{{1
         prefix="${3:?}"
     elif [ "$#" -ge 4 ]
     then
-        _koopa_stop "Invalid number of arguments."
+        koopa::stop "Invalid number of arguments."
     fi
     if [ -n "$prefix" ] && [ -n "$version" ]
     then
@@ -313,49 +313,49 @@ _koopa_install_start() { # {{{1
     else
         msg="Installing ${name}."
     fi
-    _koopa_h1 "$msg"
+    koopa::h1 "$msg"
     return 0
 }
 
-_koopa_install_success() { # {{{1
+koopa::install_success() { # {{{1
     # """
     # Installation success message.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_eq "$#" 1
-    _koopa_success "Installation of ${1:?} was successful."
+    koopa::assert_has_args_eq "$#" 1
+    koopa::success "Installation of ${1:?} was successful."
     return 0
 }
 
-_koopa_invalid_arg() { # {{{1
+koopa::invalid_arg() { # {{{1
     # """
     # Error on invalid argument.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_eq "$#" 1
-    _koopa_stop "Invalid argument: '${1:?}'."
+    koopa::assert_has_args_eq "$#" 1
+    koopa::stop "Invalid argument: '${1:?}'."
 }
 
-_koopa_missing_arg() { # {{{1
+koopa::missing_arg() { # {{{1
     # """
     # Error on a missing argument.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_stop "Missing required argument."
+    koopa::assert_has_no_args "$#"
+    koopa::stop "Missing required argument."
 }
 
-_koopa_note() { # {{{1
+koopa::note() { # {{{1
     # """
     # General note.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     koopa::_msg "yellow" "default" "**" "$@"
     return 0
 }
 
-_koopa_print() { # {{{1
+koopa::print() { # {{{1
     # """
     # Print a string.
     # @note Updated 2020-07-03.
@@ -379,163 +379,163 @@ _koopa_print() { # {{{1
     return 0
 }
 
-_koopa_print_black() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_black() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "black" "$@"
     return 0
 }
 
-_koopa_print_black_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_black_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "black-bold" "$@"
     return 0
 }
 
-_koopa_print_blue() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_blue() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "blue" "$@"
     return 0
 }
 
-_koopa_print_blue_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_blue_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "blue-bold" "$@"
     return 0
 }
 
-_koopa_print_cyan() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_cyan() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "cyan" "$@"
     return 0
 }
 
-_koopa_print_cyan_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_cyan_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "cyan-bold" "$@"
     return 0
 }
 
-_koopa_print_default() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_default() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "default" "$@"
     return 0
 }
 
-_koopa_print_default_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_default_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "default-bold" "$@"
     return 0
 }
 
-_koopa_print_green() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_green() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "green" "$@"
     return 0
 }
 
-_koopa_print_green_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_green_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "green-bold" "$@"
     return 0
 }
 
-_koopa_print_magenta() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_magenta() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "magenta" "$@"
     return 0
 }
 
-_koopa_print_magenta_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_magenta_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "magenta-bold" "$@"
     return 0
 }
 
-_koopa_print_red() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_red() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "red" "$@"
     return 0
 }
 
-_koopa_print_red_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_red_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "red-bold" "$@"
     return 0
 }
 
-_koopa_print_yellow() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_yellow() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "yellow" "$@"
     return 0
 }
 
-_koopa_print_yellow_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_yellow_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "yellow-bold" "$@"
     return 0
 }
 
-_koopa_print_white() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_white() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "white" "$@"
     return 0
 }
 
-_koopa_print_white_bold() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::print_white_bold() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_print_ansi "white-bold" "$@"
     return 0
 }
 
-_koopa_restart() { # {{{1
+koopa::restart() { # {{{1
     # """
     # Inform the user that they should restart shell.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_note "Restart the shell."
+    koopa::assert_has_no_args "$#"
+    koopa::note "Restart the shell."
     return 0
 }
 
-_koopa_status_fail() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::status_fail() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_status "FAIL" "red" "$@" >&2
     return 0
 }
 
-_koopa_status_note() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::status_note() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_status "NOTE" "yellow" "$@"
     return 0
 }
 
-_koopa_status_ok() { # {{{1
-    _koopa_assert_has_args "$#"
+koopa::status_ok() { # {{{1
+    koopa::assert_has_args "$#"
     koopa::_status "OK" "green" "$@"
     return 0
 }
 
-_koopa_stop() { # {{{1
+koopa::stop() { # {{{1
     # """
     # Stop with an error message, and exit.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     koopa::_msg "red-bold" "red" "Error:" "$@" >&2
     exit 1
 }
 
-_koopa_success() { # {{{1
+koopa::success() { # {{{1
     # """
     # Success message.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     koopa::_msg "green-bold" "green" "OK" "$@"
     return 0
 }
 
-_koopa_uninstall_start() { # {{{1
+koopa::uninstall_start() { # {{{1
     # """
     # Inform the user about start of uninstall.
     # @note Updated 2020-03-05.
@@ -551,26 +551,26 @@ _koopa_uninstall_start() { # {{{1
     else
         msg="Uninstalling ${name}."
     fi
-    _koopa_h1 "$msg"
+    koopa::h1 "$msg"
     return 0
 }
 
-_koopa_uninstall_success() { # {{{1
+koopa::uninstall_success() { # {{{1
     # """
     # Uninstall success message.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_eq "$#" 1
-    _koopa_success "Uninstallation of ${1:?} was successful."
+    koopa::assert_has_args_eq "$#" 1
+    koopa::success "Uninstallation of ${1:?} was successful."
     return 0
 }
 
-_koopa_update_start() { # {{{1
+koopa::update_start() { # {{{1
     # """
     # Inform the user about start of update.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local name msg prefix
     name="${1:?}"
     prefix="${2:-}"
@@ -580,26 +580,26 @@ _koopa_update_start() { # {{{1
     else
         msg="Updating ${name}."
     fi
-    _koopa_h1 "$msg"
+    koopa::h1 "$msg"
     return 0
 }
 
-_koopa_update_success() { # {{{1
+koopa::update_success() { # {{{1
     # """
     # Update success message.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_eq "$#" 1
-    _koopa_success "Update of ${1:?} was successful."
+    koopa::assert_has_args_eq "$#" 1
+    koopa::success "Update of ${1:?} was successful."
     return 0
 }
 
-_koopa_warning() { # {{{1
+koopa::warning() { # {{{1
     # """
     # Warning message.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     koopa::_msg "magenta-bold" "magenta" "Warning:" "$@" >&2
     return 0
 }

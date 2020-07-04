@@ -16,17 +16,17 @@ readarray -t repos <<< "$( \
         -print \
 )"
 
-if ! _koopa_is_array_non_empty "${repos[@]}"
+if ! koopa::is_array_non_empty "${repos[@]}"
 then
-    _koopa_stop "Failed to detect any git repos."
+    koopa::stop "Failed to detect any git repos."
 fi
 
-_koopa_h1 "Pushing ${#repos[@]} git repos recursively at '${dir}'."
+koopa::h1 "Pushing ${#repos[@]} git repos recursively at '${dir}'."
 
 for repo in "${repos[@]}"
 do
     repo="$(dirname "$repo")"
-    _koopa_h2 "$(basename "$repo")"
+    koopa::h2 "$(basename "$repo")"
     (
         cd "$repo" || exit 1
         pwd

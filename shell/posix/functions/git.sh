@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_git_branch() { # {{{1
+koopa::git_branch() { # {{{1
     # """
     # Current git branch name.
     # @note Updated 2020-07-03.
@@ -16,33 +16,33 @@ _koopa_git_branch() { # {{{1
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_git || return 1
+    koopa::assert_has_no_args "$#"
+    koopa::is_git || return 1
     local branch
     branch="$(git symbolic-ref --short -q HEAD 2>/dev/null)"
-    _koopa_print "$branch"
+    koopa::print "$branch"
     return 0
 }
 
-_koopa_git_clone() { # {{{1
+koopa::git_clone() { # {{{1
     # """
     # Quietly clone a git repository.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local repo target
     repo="${1:?}"
     target="${2:?}"
     if [ -d "$target" ]
     then
-        _koopa_note "Cloned: '${target}'."
+        koopa::note "Cloned: '${target}'."
         return 0
     fi
     git clone --quiet --recursive "$repo" "$target"
     return 0
 }
 
-_koopa_git_last_commit_local() { # {{{1
+koopa::git_last_commit_local() { # {{{1
     # """
     # Last git commit of local repository.
     # @note Updated 2020-04-08.
@@ -51,30 +51,30 @@ _koopa_git_last_commit_local() { # {{{1
     # Can use '%h' for abbreviated commit ID.
     # > git log --format="%H" -n 1
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_git || return 1
+    koopa::assert_has_no_args "$#"
+    koopa::is_git || return 1
     local x
     x="$(git rev-parse HEAD 2>/dev/null || true)"
     [ -n "$x" ] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
 }
 
-_koopa_git_last_commit_remote() { # {{{1
+koopa::git_last_commit_remote() { # {{{1
     # """
     # Last git commit of remote repository.
     # @note Updated 2020-06-30.
     #
     # Instead of 'HEAD', can use 'refs/heads/master'
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local url x
     url="${1:?}"
     x="$(git ls-remote "$url" HEAD 2>/dev/null || true)"
     [ -n "$x" ] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
 }
 
-_koopa_git_rm_submodule() { # {{{1
+koopa::git_rm_submodule() { # {{{1
     # """
     # Remove a git submodule.
     # @note Updated 2020-06-30.
@@ -83,7 +83,7 @@ _koopa_git_rm_submodule() { # {{{1
     # - https://stackoverflow.com/questions/1260748/
     # - https://gist.github.com/myusuf3/7f645819ded92bda6677
     # """
-    _koopa_assert_is_installed git
+    koopa::assert_is_installed git
     local prefix
     prefix="${1:-"."}"
     # Remove the submodule entry from '.git/config'.
@@ -100,12 +100,12 @@ _koopa_git_rm_submodule() { # {{{1
     return 0
 }
 
-_koopa_git_rm_untracked() { # {{{1
+koopa::git_rm_untracked() { # {{{1
     # """
     # Remove untracked files from git repo.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_is_installed git
+    koopa::assert_is_installed git
     local dir
     dir="${1:-"."}"
     git clean -dfx "$dir"

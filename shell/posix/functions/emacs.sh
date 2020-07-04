@@ -1,22 +1,22 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_link_emacs() { # {{{1
+koopa::link_emacs() { # {{{1
     # """
     # Link Emacs.
     # @note Updated 2020-06-30.
     #
     # Currently supports Doom, Spacemacs, and minimal ESS config.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local custom_prefix default_prefix name
     name="${1:?}"
-    default_prefix="$(_koopa_emacs_prefix)"
+    default_prefix="$(koopa::emacs_prefix)"
     custom_prefix="${default_prefix}-${name}"
-    _koopa_assert_is_dir "$custom_prefix"
+    koopa::assert_is_dir "$custom_prefix"
     if [ -d "$default_prefix" ] && [ ! -L "$default_prefix" ]
     then
-        _koopa_stop "Emacs directory detected at '${default_prefix}'."
+        koopa::stop "Emacs directory detected at '${default_prefix}'."
     fi
     if [ "$name" != "minimal" ]
     then
@@ -45,22 +45,22 @@ _koopa_link_emacs() { # {{{1
                 "spacemacs"
             ;;
         *)
-            _koopa_stop "Invalid Emacs config name."
+            koopa::stop "Invalid Emacs config name."
             ;;
     esac
     ln -fnsv "$custom_prefix" "$default_prefix"
     return 0
 }
 
-_koopa_is_spacemacs_installed() { # {{{1
+koopa::is_spacemacs_installed() { # {{{1
     # """
     # Is Spacemacs installed?
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_installed emacs
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed emacs
     local init_file prefix
-    prefix="$(_koopa_emacs_prefix)"
+    prefix="$(koopa::emacs_prefix)"
     # Check for 'Spacemacs' inside 'init.el' file.
     init_file="${prefix}/init.el"
     [ -s "$init_file" ] || return 1
@@ -68,23 +68,23 @@ _koopa_is_spacemacs_installed() { # {{{1
     return 0
 }
 
-_koopa_update_spacemacs() { # {{{1
+koopa::update_spacemacs() { # {{{1
     # """
     # Update spacemacs non-interatively.
     # @note Updated 2020-06-29.
     #
     # Potentially useful: 'emacs --no-window-system'
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
-    if ! _koopa_is_spacemacs_installed
+    if ! koopa::is_spacemacs_installed
     then
-        _koopa_note "Spacemacs is not installed."
+        koopa::note "Spacemacs is not installed."
         return 0
     fi
-    prefix="$(_koopa_emacs_prefix)"
+    prefix="$(koopa::emacs_prefix)"
     (
-        _koopa_cd "$prefix"
+        koopa::cd "$prefix"
         git pull
     )
     emacs \

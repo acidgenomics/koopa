@@ -4,23 +4,23 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
-if ! _koopa_is_venv_active
+if ! koopa::is_venv_active
 then
-    _koopa_note "No active Python venv detected."
+    koopa::note "No active Python venv detected."
     exit 0
 fi
 
-_koopa_h1 "Updating Python venv."
+koopa::h1 "Updating Python venv."
 
 python -m pip install --upgrade pip
 
 lines="$(python -m pip list --outdated --format=freeze)"
 readarray -t array <<< "$lines"
-_koopa_is_array_non_empty "${array[@]}" || exit 0
-_koopa_h1 "${#array[@]} outdated packages detected."
+koopa::is_array_non_empty "${array[@]}" || exit 0
+koopa::h1 "${#array[@]} outdated packages detected."
 
-_koopa_print "$lines" \
+koopa::print "$lines" \
     | cut -d '=' -f 1 \
     | xargs -n1 python -m pip install --upgrade

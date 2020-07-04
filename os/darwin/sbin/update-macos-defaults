@@ -29,11 +29,11 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
 name_fancy="macOS defaults"
 
-_koopa_update_start "$name_fancy"
+koopa::update_start "$name_fancy"
 
 # General UI/UX {{{1
 # ==============================================================================
@@ -907,5 +907,5 @@ do
     killall "${app}" &>/dev/null || true
 done
 
-_koopa_update_success "$name_fancy"
-_koopa_note "Some of these changes require a logout/restart to take effect."
+koopa::update_success "$name_fancy"
+koopa::note "Some of these changes require a logout/restart to take effect."

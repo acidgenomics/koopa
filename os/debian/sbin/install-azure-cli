@@ -3,7 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
 # """
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-apt
@@ -19,13 +19,13 @@ _koopa_assert_has_no_args "$@"
 # > curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 # """
 
-_koopa_exit_if_installed az
+koopa::exit_if_installed az
 
 name_fancy="Azure CLI"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_apt_add_azure_cli_repo
-_koopa_apt_install azure-cli
+koopa::apt_add_azure_cli_repo
+koopa::apt_install azure-cli
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

@@ -3,11 +3,11 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
 name_fancy="Adobe Creative Cloud preferences"
 
-_koopa_uninstall_start "$name_fancy"
+koopa::uninstall_start "$name_fancy"
 
 rm -frv \
     "${HOME}/Documents/Adobe" \
@@ -29,4 +29,4 @@ sudo rm -frv \
     "/Library/ScriptingAdditions/Adobe Unit Types.osax" \
     "/Users/Shared/Adobe"
 
-_koopa_uninstall_success "$name_fancy"
+koopa::uninstall_success "$name_fancy"

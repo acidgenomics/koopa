@@ -4,9 +4,9 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
-_koopa_h1 "Installing TeX packages recommended for RStudio."
+koopa::h1 "Installing TeX packages recommended for RStudio."
 
 sudo tlmgr update --self
 

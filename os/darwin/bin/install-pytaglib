@@ -3,9 +3,9 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_args "$#"
+koopa::assert_has_args "$#"
 
-_koopa_assert_is_installed brew pip
+koopa::assert_is_installed brew pip
 
 brew install taglib &>/dev/null
 

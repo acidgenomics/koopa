@@ -4,8 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_exit_if_installed conda
-_koopa_assert_has_no_envs
+koopa::exit_if_installed conda
+koopa::assert_has_no_envs
 
 anaconda=0
 
@@ -17,7 +17,7 @@ do
             shift 1
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
@@ -25,23 +25,23 @@ done
 if [[ "$anaconda" -eq 1 ]]
 then
     name="anaconda3"
-    version="$(_koopa_variable "$name")"
+    version="$(koopa::variable "$name")"
 else
     name="miniconda3"
 fi
 
-prefix="$(_koopa_conda_prefix)"
-_koopa_exit_if_dir "$prefix"
+prefix="$(koopa::conda_prefix)"
+koopa::exit_if_dir "$prefix"
 
 name_fancy="Conda"
 
-_koopa_install_start "$name_fancy" "$prefix"
+koopa::install_start "$name_fancy" "$prefix"
 
-_koopa_mkdir "$prefix"
-tmp_dir="$(_koopa_tmp_dir)"
+koopa::mkdir "$prefix"
+tmp_dir="$(koopa::tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     case "$name" in
         anaconda3)
             case "${OSTYPE:?}" in
@@ -52,7 +52,7 @@ tmp_dir="$(_koopa_tmp_dir)"
                     script="Anaconda3-${version}-Linux-x86_64.sh"
                     ;;
                 *)
-                    _koopa_stop "'${OSTYPE}' is not supported."
+                    koopa::stop "'${OSTYPE}' is not supported."
                     ;;
             esac
             url="https://repo.anaconda.com/archive/${script}"
@@ -67,26 +67,26 @@ tmp_dir="$(_koopa_tmp_dir)"
                     script="Miniconda3-latest-Linux-x86_64.sh"
                     ;;
                 *)
-                    _koopa_stop "'${OSTYPE}' is not supported."
+                    koopa::stop "'${OSTYPE}' is not supported."
                     ;;
             esac
             url="https://repo.continuum.io/miniconda/${script}"
             ;;
     esac
-    _koopa_download "$url"
+    koopa::download "$url"
     bash "$script" -bf -p "$prefix"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-ln -fnsv "$(_koopa_prefix)/os/linux/etc/conda/condarc" \
+ln -fnsv "$(koopa::prefix)/os/linux/etc/conda/condarc" \
     "${prefix}/.condarc"
 
-_koopa_remove_broken_symlinks "$prefix"
-_koopa_set_permissions --recursive "$prefix"
+koopa::remove_broken_symlinks "$prefix"
+koopa::set_permissions --recursive "$prefix"
 
 set +u
-_koopa_activate_conda
+koopa::activate_conda
 set -u
 
 if [[ "$name" == "miniconda3" ]]
@@ -94,5 +94,5 @@ then
     update-conda
 fi
 
-_koopa_install_success "$name_fancy"
-_koopa_restart
+koopa::install_success "$name_fancy"
+koopa::restart
