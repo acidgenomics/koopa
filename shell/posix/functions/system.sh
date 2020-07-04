@@ -1,206 +1,6 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-
-
-# FIXME RENAME
-koopa::system_chgrp() { # {{{1
-    # """
-    # chgrp with dynamic sudo handling.
-    # @note Updated 2020-02-16.
-    # """
-    koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        sudo chgrp "$@"
-    else
-        chgrp "$@"
-    fi
-    return 0
-}
-
-# FIXME
-koopa::system_chmod() { # {{{1
-    # """
-    # chmod with dynamic sudo handling.
-    # @note Updated 2020-02-16.
-    # """
-    koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        sudo chmod "$@"
-    else
-        chmod "$@"
-    fi
-    return 0
-}
-
-# FIXME
-koopa::system_chmod_flags() {
-    # """
-    # Default recommended flags for chmod.
-    # @note Updated 2020-04-16.
-    # """
-    koopa::assert_has_no_args "$#"
-    local flags
-    if koopa::is_shared_install
-    then
-        flags='u+rw,g+rw'
-    else
-        flags='u+rw,g+r,g-w'
-    fi
-    koopa::print "$flags"
-    return 0
-}
-
-# FIXME
-koopa::system_chown() { # {{{1
-    # """
-    # chown with dynamic sudo handling.
-    # @note Updated 2020-02-16.
-    # """
-    koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        sudo chown "$@"
-    else
-        chown "$@"
-    fi
-    return 0
-}
-
-# FIXME
-koopa::system_cp() { # {{{1
-    # """
-    # Koopa copy.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args "$#"
-    local source_file target_file
-    source_file="${1:?}"
-    koopa::assert_is_existing "$source_file"
-    target_file="${2:?}"
-    koopa::mkdir "$(dirname "$target_file")"
-    if koopa::is_shared_install
-    then
-        sudo cp -af "$source_file" "$target_file"
-    else
-        cp -af "$source_file" "$target_file"
-    fi
-    return 0
-}
-
-
-
-# FIXME RENAME
-koopa::system_ln() { # {{{1
-    # """
-    # Create symlink quietly.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    local source_file target_file
-    source_file="${1:?}"
-    target_file="${2:?}"
-    koopa::rm "$target_file"
-    if koopa::is_shared_install
-    then
-        sudo ln -fnsv "$source_file" "$target_file"
-    else
-        ln -fnsv "$source_file" "$target_file"
-    fi
-    return 0
-}
-
-# FIXME
-koopa::system_mkdir() { # {{{1
-    # """
-    # mkdir with dynamic sudo handling.
-    # @note Updated 2020-02-16.
-    # """
-    koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        sudo mkdir -p "$@"
-    else
-        mkdir -p "$@"
-    fi
-    koopa::chmod "$(koopa::chmod_flags)" "$@"
-    koopa::chgrp "$(koopa::group)" "$@"
-    return 0
-}
-
-# FIXME
-koopa::system_mv() { # {{{1
-    # """
-    # Koopa move.
-    # @note Updated 2020-06-30.
-    #
-    # This function works on 1 file or directory at a time.
-    # It ensures that the target parent directory exists automatically.
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    local source_file target_file target_parent
-    source_file="${1:?}"
-    target_file="${2:?}"
-    target_parent="$(dirname "$target_file")"
-    koopa::mkdir "$target_parent"
-    if koopa::is_shared_install
-    then
-        sudo mv -Tf --strip-trailing-slashes "$@"
-    else
-        mv -Tf --strip-trailing-slashes "$@"
-    fi
-    return 0
-}
-
-# FIXME RENAME
-koopa::system_group() { # {{{1
-    # """
-    # Return the appropriate group to use with koopa installation.
-    # @note Updated 2020-07-04.
-    #
-    # Returns current user for local install.
-    # Dynamically returns the admin group for shared install.
-    #
-    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
-    # """
-    koopa::assert_has_no_args "$#"
-    local group
-    if koopa::is_shared_install
-    then
-        group="$(koopa::admin_group)"
-    else
-        group="$(koopa::current_group)"
-    fi
-    koopa::print "$group"
-    return 0
-}
-
-# FIXME RENAME
-koopa::system_user() { # {{{1
-    # """
-    # Set the koopa installation system user.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    local user
-    if koopa::is_shared_install
-    then
-        user='root'
-    else
-        user="$(koopa::user)"
-    fi
-    koopa::print "$user"
-    return 0
-}
-
-
-
-
-
-
-
 koopa::_id() { # {{{1
     # """
     # Return ID string.
@@ -305,6 +105,23 @@ koopa::commit() { # {{{1
     return 0
 }
 
+koopa::cp() { # {{{1
+    # """
+    # Hardened version of coreutils copy.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_is_installed cp
+    local source_file target_file
+    source_file="${1:?}"
+    koopa::assert_is_existing "$source_file"
+    target_file="${2:?}"
+    [ -e "$target_file" ] && koopa::rm "$target_file"
+    koopa::mkdir "$(dirname "$target_file")"
+    cp -af "$source_file" "$target_file"
+    return 0
+}
+
 koopa::cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
@@ -383,27 +200,6 @@ koopa::dotfiles_private_config_link() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::print "$(koopa::dotfiles_config_link)-private"
-    return 0
-}
-
-koopa::dotfiles_source_repo() { # {{{1
-    # """
-    # Dotfiles source repository.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    local dotfiles
-    if [ -d "${DOTFILES:-}" ]
-    then
-        koopa::print "$DOTFILES"
-        return 0
-    fi
-    dotfiles="$(koopa::prefix)/dotfiles"
-    if [ ! -d "$dotfiles" ]
-    then
-        koopa::stop "Dotfiles not installed at '${dotfiles}'."
-    fi
-    koopa::print "$dotfiles"
     return 0
 }
 
@@ -775,6 +571,21 @@ koopa::list() { # {{{1
     return 0
 }
 
+koopa::ln() { # {{{1
+    # """
+    # Create a symlink quietly.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_is_installed ln
+    local source_file target_file
+    source_file="${1:?}"
+    target_file="${2:?}"
+    koopa::rm "$target_file"
+    ln -fns "$source_file" "$target_file"
+    return 0
+}
+
 koopa::local_ip_address() { # {{{1
     # """
     # Local IP address.
@@ -859,6 +670,38 @@ koopa::mktemp() { # {{{1
     date_id="$(koopa::datetime)"
     template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
     mktemp "$@" -t "$template"
+    return 0
+}
+
+koopa::mkdir() { # {{{1
+    # """
+    # Create directories with parents automatically.
+    # @note Updated 2020-07-04.
+    koopa::assert_has_args "$#"
+    mkdir -pv "$@"
+    return 0
+}
+
+koopa::mv() { # {{{1
+    # """
+    # Move a file or directory.
+    # @note Updated 2020-07-04.
+    #
+    # This function works on 1 file or directory at a time.
+    # It ensures that the target parent directory exists automatically.
+    #
+    # Useful GNU cp flags, for reference (non-POSIX):
+    # - -T: no-target-directory
+    # - --strip-trailing-slashes
+    # """
+    koopa::assert_has_args_eq "$#" 2
+    local source_file target_file
+    source_file="$(koopa::strip_trailing_slash "${1:?}")"
+    koopa::assert_is_existing "$source_file"
+    target_file="$(koopa::strip_trailing_slash "${2:?}")"
+    [ -e "$target_file" ] && koopa::rm "$target_file"
+    koopa::mkdir "$(dirname "$target_file")"
+    mv -f "$source_file" "$target_file"
     return 0
 }
 
@@ -1052,16 +895,11 @@ koopa::relink() { # {{{1
 
 koopa::rm() { # {{{1
     # """
-    # Remove files/directories without dealing with permissions.
+    # Remove files/directories quietly.
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        sudo rm -fr "$@" >/dev/null 2>&1
-    else
-        rm -fr "$@" >/dev/null 2>&1
-    fi
+    rm -fr "$@" >/dev/null 2>&1
     return 0
 }
 
@@ -1129,7 +967,7 @@ koopa::set_sticky_group() { # {{{1
     # This never works recursively.
     # """
     koopa::assert_has_args "$#"
-    koopa::chmod g+s "$@"
+    koopa::system_chmod g+s "$@"
     return 0
 }
 
@@ -1161,6 +999,181 @@ koopa::shell() { # {{{1
         shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
     koopa::print "$shell"
+    return 0
+}
+
+koopa::system_chgrp() { # {{{1
+    # """
+    # chgrp with dynamic sudo handling.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        sudo chgrp "$@"
+    else
+        chgrp "$@"
+    fi
+    return 0
+}
+
+koopa::system_chmod() { # {{{1
+    # """
+    # chmod with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        sudo chmod "$@"
+    else
+        chmod "$@"
+    fi
+    return 0
+}
+
+koopa::system_chmod_flags() {
+    # """
+    # Default recommended flags for chmod.
+    # @note Updated 2020-04-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    local flags
+    if koopa::is_shared_install
+    then
+        flags='u+rw,g+rw'
+    else
+        flags='u+rw,g+r,g-w'
+    fi
+    koopa::print "$flags"
+    return 0
+}
+
+koopa::system_chown() { # {{{1
+    # """
+    # chown with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        sudo chown "$@"
+    else
+        chown "$@"
+    fi
+    return 0
+}
+
+koopa::system_cp() { # {{{1
+    # """
+    # Koopa copy.
+    # @note Updated 2020-06-30.
+    # """
+    if koopa::is_shared_install
+    then
+        sudo "$(koopa::cp "$@")"
+    else
+        koopa::cp "$@"
+    fi
+    return 0
+}
+
+koopa::system_group() { # {{{1
+    # """
+    # Return the appropriate group to use with koopa installation.
+    # @note Updated 2020-07-04.
+    #
+    # Returns current user for local install.
+    # Dynamically returns the admin group for shared install.
+    #
+    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
+    # """
+    koopa::assert_has_no_args "$#"
+    local group
+    if koopa::is_shared_install
+    then
+        group="$(koopa::admin_group)"
+    else
+        group="$(koopa::group)"
+    fi
+    koopa::print "$group"
+    return 0
+}
+
+koopa::system_ln() { # {{{1
+    # """
+    # Create a symlink quietly.
+    # @note Updated 2020-07-04.
+    # """
+    if koopa::is_shared_install
+    then
+        sudo "$(koopa::ln "$@")"
+    else
+        koopa::ln "$@"
+    fi
+    return 0
+}
+
+koopa::system_mkdir() { # {{{1
+    # """
+    # mkdir with dynamic sudo handling.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        sudo "$(koopa::mkdir "$@")"
+    else
+        koopa::mkdir "$@"
+    fi
+    koopa::system_chmod "$(koopa::system_chmod_flags)" "$@"
+    koopa::system_chgrp "$(koopa::system_group)" "$@"
+    return 0
+}
+
+koopa::system_mv() { # {{{1
+    # """
+    # Move a file or directory.
+    # @note Updated 2020-07-04.
+    # """
+    if koopa::is_shared_install
+    then
+        sudo "$(koopa::mv "$@")"
+    else
+        koopa::mv "$@"
+    fi
+    return 0
+}
+
+koopa::system_rm() { # {{{1
+    # """
+    # Remove files/directories quietly.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        sudo "$(koopa::rm "$@")"
+    else
+        koopa::rm "$@"
+    fi
+    return 0
+}
+
+koopa::system_user() { # {{{1
+    # """
+    # Set the koopa installation system user.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_no_args "$#"
+    local user
+    if koopa::is_shared_install
+    then
+        user='root'
+    else
+        user="$(koopa::user)"
+    fi
+    koopa::print "$user"
     return 0
 }
 

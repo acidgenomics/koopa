@@ -177,7 +177,7 @@ koopa::system_info() { # {{{
 koopa::system_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # @param --recursive
     #   Change permissions recursively.
@@ -225,7 +225,7 @@ koopa::system_set_permissions() { # {{{1
     koopa::assert_has_args "$#"
     # chmod flags.
     local chmod_flags
-    readarray -t chmod_flags <<< "$(koopa::chmod_flags)"
+    readarray -t chmod_flags <<< "$(koopa::system_chmod_flags)"
     if [[ "$recursive" -eq 1 ]]
     then
         # Note that '-R' instead of '--recursive' has better cross-platform
@@ -256,14 +256,14 @@ koopa::system_set_permissions() { # {{{1
         chown_flags+=("-v")
     fi
     local group
-    group="$(koopa::install_group)"
+    group="$(koopa::system_group)"
     local who
     case "$user" in
         0)
-            who="$(koopa::user)"
+            who="$(koopa::system_user)"
             ;;
         1)
-            who="${USER:?}" \
+            who="$(koopa::user)" \
             ;;
     esac
     chown_flags+=("${who}:${group}")
@@ -272,8 +272,8 @@ koopa::system_set_permissions() { # {{{1
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
-        koopa::chmod "${chmod_flags[@]}" "$arg"
-        koopa::chown "${chown_flags[@]}" "$arg"
+        koopa::system_chmod "${chmod_flags[@]}" "$arg"
+        koopa::system_chown "${chown_flags[@]}" "$arg"
     done
     return 0
 }

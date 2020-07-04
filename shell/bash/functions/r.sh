@@ -229,12 +229,12 @@ koopa::update_r_config() { # {{{1
         etc_prefix="${make_prefix}/lib/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
-            koopa::rm "$etc_prefix"
+            koopa::system_rm "$etc_prefix"
         fi
         etc_prefix="${make_prefix}/lib64/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
-            koopa::rm "$etc_prefix"
+            koopa::system_rm "$etc_prefix"
         fi
     else
         # Ensure system package library is writable.
