@@ -1,38 +1,38 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_disk_check() { # {{{1
+koopa::disk_check() { # {{{1
     # """
     # Check that disk has enough free space.
     # @note Updated 2020-06-30.
     # """
     local limit used
-    used="$(_koopa_disk_pct_used "$@")"
+    used="$(koopa::disk_pct_used "$@")"
     limit="90"
     if [ "$used" -gt "$limit" ]
     then
-        _koopa_warning "Disk usage is ${used}%."
+        koopa::warning "Disk usage is ${used}%."
     fi
     return 0
 }
 
-_koopa_tmux_sessions() { # {{{1
+koopa::tmux_sessions() { # {{{1
     # """
     # Show active tmux sessions.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed tmux || return 0
-    _koopa_is_tmux && return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed tmux || return 0
+    koopa::is_tmux && return 0
     local x
     x="$(tmux ls 2>/dev/null || true)"
     [ -n "$x" ] || return 0
-    x="$(_koopa_print "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
-    _koopa_dl "tmux sessions" "$x"
+    x="$(koopa::print "$x" | cut -d ':' -f 1 | tr '\n' ' ')"
+    koopa::dl "tmux sessions" "$x"
     return 0
 }
 
-_koopa_today_bucket() { # {{{1
+koopa::today_bucket() { # {{{1
     # """
     # Create a dated file today bucket.
     # @note Updated 2020-06-30.
@@ -51,7 +51,7 @@ _koopa_today_bucket() { # {{{1
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local bucket_dir
     bucket_dir="${KOOPA_BUCKET:-"${HOME:?}/bucket"}"
     # Early return if there's no bucket directory on the system.
@@ -61,7 +61,7 @@ _koopa_today_bucket() { # {{{1
     local today_link
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
-    if _koopa_str_match "$(readlink "$today_link")" "$today_bucket"
+    if koopa::str_match "$(readlink "$today_link")" "$today_bucket"
     then
         return 0
     fi

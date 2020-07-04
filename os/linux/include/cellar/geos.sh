@@ -19,14 +19,14 @@
 # > make check
 # """
 
-_koopa_assert_is_not_file /usr/bin/geos-config
+koopa::assert_is_not_file /usr/bin/geos-config
 
 file="${version}.tar.gz"
 url="https://github.com/libgeos/${name}/archive/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 mkdir build
-_koopa_cd build
+koopa::cd build
 cmake "../${name}-${version}" \
     -DCMAKE_INSTALL_PREFIX="$prefix"
     # -DGEOS_ENABLE_TESTS=OFF

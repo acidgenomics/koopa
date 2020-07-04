@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-_koopa_list_internal_functions() { # {{{1
+koopa::list_internal_functions() { # {{{1
     # """
     # List all functions defined by koopa.
     # @note Updated 2020-06-30.
     #
     # Currently only supported in Bash and Zsh.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local x
-    case "$(_koopa_shell)" in
+    case "$(koopa::shell)" in
         bash)
             x="$( \
                 declare -F \
@@ -21,16 +21,16 @@ _koopa_list_internal_functions() { # {{{1
             x="$(print -l ${(ok)functions})"
             ;;
         *)
-            _koopa_warning 'Unsupported shell.'
+            koopa::warning 'Unsupported shell.'
             return 1
             ;;
     esac
-    x="$(_koopa_print "$x" | grep -E "^_koopa_")"
-    _koopa_print "$x"
+    x="$(koopa::print "$x" | grep -E "^koopa::")"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_unset_internal_functions() { # {{{1
+koopa::unset_internal_functions() { # {{{1
     # """
     # Unset all of koopa's internal functions.
     # @note Updated 2020-06-30.
@@ -41,19 +41,19 @@ _koopa_unset_internal_functions() { # {{{1
     # Note that this will nuke functions currently required for interactive
     # prompt, so don't do this yet.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local funs
-    case "$(_koopa_shell)" in
+    case "$(koopa::shell)" in
         bash)
             # shellcheck disable=SC2119
-            readarray -t funs <<< "$(_koopa_list_internal_functions)"
+            readarray -t funs <<< "$(koopa::list_internal_functions)"
             ;;
         zsh)
             # shellcheck disable=SC2119
-            funs=("${(@f)$(_koopa_list_internal_functions)}")
+            funs=("${(@f)$(koopa::list_internal_functions)}")
             ;;
         *)
-            _koopa_warning 'Unsupported shell.'
+            koopa::warning 'Unsupported shell.'
             return 1
             ;;
     esac

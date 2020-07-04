@@ -19,7 +19,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -29,37 +29,37 @@ do
 done
 [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
-CARGO_HOME="$(_koopa_rust_cargo_prefix)"
-RUSTUP_HOME="$(_koopa_rust_rustup_prefix)"
+CARGO_HOME="$(koopa::rust_cargo_prefix)"
+RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
 
 if [[ "$reinstall" -eq 1 ]]
 then
-    _koopa_rm "$CARGO_HOME" "$RUSTUP_HOME"
+    koopa::rm "$CARGO_HOME" "$RUSTUP_HOME"
 fi
 
-_koopa_exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
+koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
 
 name_fancy="Rust"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-_koopa_assert_is_not_installed rustup-init
+koopa::assert_has_no_args "$@"
+koopa::assert_has_no_envs
+koopa::assert_is_not_installed rustup-init
 
 export CARGO_HOME
 export RUSTUP_HOME
 
-_koopa_dl "CARGO_HOME" "$CARGO_HOME"
-_koopa_dl "RUSTUP_HOME" "$RUSTUP_HOME"
+koopa::dl "CARGO_HOME" "$CARGO_HOME"
+koopa::dl "RUSTUP_HOME" "$RUSTUP_HOME"
 
-_koopa_mkdir "$CARGO_HOME" "$RUSTUP_HOME"
+koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
 
 (
     curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-_koopa_set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
+koopa::set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
 
-_koopa_install_success "$name_fancy"
-_koopa_restart
+koopa::install_success "$name_fancy"
+koopa::restart

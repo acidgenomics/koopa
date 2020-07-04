@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_help() { # {{{1
+koopa::help() { # {{{1
     # """
     # Show usage via '--help' flag.
     # @note Updated 2020-07-01.
@@ -57,9 +57,9 @@ _koopa_help() { # {{{1
     do
         case "$arg" in
             --help|-h)
-                _koopa_assert_is_installed man
+                koopa::assert_is_installed man
                 local file
-                case "$(_koopa_shell)" in
+                case "$(koopa::shell)" in
                     bash)
                         file="$0"
                         ;;
@@ -68,7 +68,7 @@ _koopa_help() { # {{{1
                         file="$0"
                         ;;
                     *)
-                        _koopa_stop "Unsupported shell."
+                        koopa::stop "Unsupported shell."
                         ;;
                 esac
                 file="$(realpath "$file")"
@@ -78,10 +78,10 @@ _koopa_help() { # {{{1
                 if [[ -s "$man_file" ]]
                 then
                     head -n 1 "$man_file" \
-                        | _koopa_str_match_regex "^\.TH " \
-                        || _koopa_stop "Invalid documentation at '${man_file}'."
+                        | koopa::str_match_regex "^\.TH " \
+                        || koopa::stop "Invalid documentation at '${man_file}'."
                 else
-                    _koopa_stop "No documentation for '${script_name}'."
+                    koopa::stop "No documentation for '${script_name}'."
                 fi
                 man "$man_file"
                 exit 0

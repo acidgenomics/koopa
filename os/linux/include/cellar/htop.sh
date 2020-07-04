@@ -7,12 +7,12 @@
 # https://github.com/hishamhm/htop/issues/986
 # """
 
-_koopa_assert_is_installed python
+koopa::assert_is_installed python
 
 file="${name}-${version}.tar.gz"
 url="https://hisham.hm/${name}/releases/${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./configure \
     --disable-unicode \

@@ -3,8 +3,8 @@
 
 file="gsl-${version}.tar.gz"
 url="http://mirror.keystealth.org/gnu/gsl/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "gsl-${version}" || exit 1
 ./configure --prefix="$prefix"
 make --jobs="$jobs"

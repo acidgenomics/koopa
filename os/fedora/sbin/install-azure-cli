@@ -3,7 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
 # """
 # https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-yum
@@ -11,28 +11,28 @@ _koopa_assert_has_no_args "$@"
 # so get the corresponding RHEL 7 RPM file from packages.microsoft.com instead.
 # """
 
-_koopa_exit_if_installed az
+koopa::exit_if_installed az
 
 name="azure-cli"
 name_fancy="Azure CLI"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_assert_is_installed python3
-_koopa_yum_import_azure_cli_key
-_koopa_yum_add_azure_cli_repo
+koopa::assert_is_installed python3
+koopa::yum_import_azure_cli_key
+koopa::yum_add_azure_cli_repo
 
-if _koopa_is_rhel_7
+if koopa::is_rhel_7
 then
     # Install on RHEL 7.6 or other systems without Python 3.
-    version="$(_koopa_variable "$name")"
+    version="$(koopa::variable "$name")"
     file="${name}-${version}-1.el7.x86_64.rpm"
     url="https://packages.microsoft.com/yumrepos/${name}/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     sudo rpm -ivh --nodeps "$file"
     rm "$file"
 else
     sudo dnf -y install azure-cli
 fi
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

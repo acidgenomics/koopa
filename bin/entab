@@ -4,13 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_entab() { # {{{1
+koopa::entab() { # {{{1
     # """
     # Entab files.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args "$#"
-    _koopa_assert_is_installed vim
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed vim
     local file
     for file in "$@"
     do
@@ -22,4 +22,4 @@ _koopa_entab() { # {{{1
     return 0
 }
 
-_koopa_entab "$@"
+koopa::entab "$@"

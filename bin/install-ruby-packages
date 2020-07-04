@@ -4,15 +4,15 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_no_envs
-_koopa_exit_if_not_installed gem
+koopa::assert_has_no_envs
+koopa::exit_if_not_installed gem
 
 name_fancy="Ruby gems"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 # > gemdir="$(gem environment gemdir)"
-# > _koopa_dl "gemdir" "$gemdir"
+# > koopa::dl "gemdir" "$gemdir"
 
 if [[ "$#" -eq 0 ]]
 then
@@ -25,11 +25,11 @@ else
     gems=("$@")
 fi
 
-_koopa_dl "Gems" "$(_koopa_to_string "${gems[@]}")"
+koopa::dl "Gems" "$(koopa::to_string "${gems[@]}")"
 
 for gem in "${gems[@]}"
 do
     gem install "$gem"
 done
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

@@ -18,26 +18,26 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 name="lmod"
-[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
-prefix="$(_koopa_app_prefix)/${name}"
-_koopa_exit_if_dir "$prefix"
+[[ -z "$version" ]] && version="$(koopa::variable "$name")"
+prefix="$(koopa::app_prefix)/${name}"
+koopa::exit_if_dir "$prefix"
 
 name_fancy="Lmod"
-_koopa_install_start "$name_fancy" "$version" "$prefix"
+koopa::install_start "$name_fancy" "$version" "$prefix"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
-_koopa_assert_is_installed lua luarocks
+koopa::assert_has_no_args "$@"
+koopa::assert_has_no_envs
+koopa::assert_is_installed lua luarocks
 
 apps_dir="${prefix}/apps"
 data_dir="${prefix}/moduleData"
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 # Install luarocks dependencies.
 eval "$(luarocks path)"
@@ -45,11 +45,11 @@ luarocks install luaposix
 luarocks install luafilesystem
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     file="${version}.tar.gz"
     url="https://github.com/TACC/Lmod/archive/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
+    koopa::download "$url"
+    koopa::extract "$file"
     cd "Lmod-${version}" || exit 1
     ./configure \
         --prefix="$apps_dir" \
@@ -57,8 +57,8 @@ luarocks install luafilesystem
         --with-updateSystemFn="${data_dir}/system.txt"
     sudo make install
     rm -fr "$tmp_dir"
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-_koopa_update_lmod_config
+koopa::update_lmod_config
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

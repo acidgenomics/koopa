@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_debian_base() { # {{{1
+koopa::install_debian_base() { # {{{1
     # """
     # Install Debian base system.
     # @note Updated 2020-07-02.
@@ -24,7 +24,7 @@ _koopa_install_debian_base() { # {{{1
     # Configure time zone:
     # > sudo dpkg-reconfigure tzdata
     # """
-    _koopa_assert_is_installed apt apt-get sed sudo
+    koopa::assert_is_installed apt apt-get sed sudo
     local apt_installed compact dev enabled_repos extra legacy_pkgs name_fancy \
         pkg pkgs remove remove_pkgs upgrade
     # This is intended for compact mode configuration in 'configure-vm' script,
@@ -55,7 +55,7 @@ _koopa_install_debian_base() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -64,12 +64,12 @@ _koopa_install_debian_base() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_no_args "$@"
-    _koopa_is_docker && extra=0
+    koopa::assert_has_no_args "$@"
+    koopa::is_docker && extra=0
     # Use system libraries for GDAL, etc. for these VM configs.
     [[ "$compact" -eq 1 ]] && remove=0
     name_fancy="Debian base system"
-    _koopa_install_start "$name_fancy"
+    koopa::install_start "$name_fancy"
     # Nuke caches before installing packages.
     sudo rm -fr \
         /var/cache/apt/* \
@@ -82,11 +82,11 @@ _koopa_install_debian_base() { # {{{1
         sudo rm -v /usr/local/man
     fi
     # Requiring universe repo to be enabled on Ubuntu.
-    enabled_repos="$(_koopa_apt_enabled_repos)"
-    if _koopa_is_ubuntu && \
-        ! _koopa_str_match "$enabled_repos" "universe"
+    enabled_repos="$(koopa::apt_enabled_repos)"
+    if koopa::is_ubuntu && \
+        ! koopa::str_match "$enabled_repos" "universe"
     then
-        _koopa_stop \
+        koopa::stop \
             "The Ubuntu 'universe' repo is disabled." \
             "Check '/etc/apt/sources.list'."
     fi
@@ -96,8 +96,8 @@ _koopa_install_debian_base() { # {{{1
 
     if [[ "$upgrade" -eq 1 ]]
     then
-        _koopa_h2 "Upgrading install via 'dist-upgrade'."
-        _koopa_apt_get dist-upgrade
+        koopa::h2 "Upgrading install via 'dist-upgrade'."
+        koopa::apt_get dist-upgrade
     fi
 
     # Remove packages {{{1
@@ -105,7 +105,7 @@ _koopa_install_debian_base() { # {{{1
 
     if [[ "$remove" -eq 1 ]]
     then
-        _koopa_h2 "Removing legacy packages."
+        koopa::h2 "Removing legacy packages."
         # Alternative approach:
         # > apt_installed="$(dpkg --get-selections | grep -v deinstall)"
         # See also:
@@ -132,12 +132,12 @@ _koopa_install_debian_base() { # {{{1
         remove_pkgs=()
         for pkg in "${legacy_pkgs[@]}"
         do
-            if _koopa_str_match_regex "$apt_installed" "^${pkg}/"
+            if koopa::str_match_regex "$apt_installed" "^${pkg}/"
             then
                 remove_pkgs+=("$pkg")
             fi
         done
-        if _koopa_is_array_non_empty "${remove_pkgs[@]}"
+        if koopa::is_array_non_empty "${remove_pkgs[@]}"
         then
             sudo apt-get --yes remove "${remove_pkgs[@]}"
         fi
@@ -146,7 +146,7 @@ _koopa_install_debian_base() { # {{{1
     # Default {{{1
     # ==========================================================================
 
-    _koopa_h2 "Installing default packages."
+    koopa::h2 "Installing default packages."
     pkgs=(
         apt-listchanges
         apt-transport-https
@@ -205,7 +205,7 @@ _koopa_install_debian_base() { # {{{1
 
     if [[ "$dev" -eq 1 ]]
     then
-        _koopa_h2 "Installing developer packages."
+        koopa::h2 "Installing developer packages."
         if [[ "$compact" -eq 1 ]]
         then
             pkgs+=(
@@ -294,7 +294,7 @@ _koopa_install_debian_base() { # {{{1
 
     if [[ "$extra" -eq 1 ]]
     then
-        _koopa_h2 "Installing extra recommended packages."
+        koopa::h2 "Installing extra recommended packages."
         pkgs+=(
             # default-jdk
             alien
@@ -322,9 +322,9 @@ _koopa_install_debian_base() { # {{{1
             xfonts-75dpi
             xorg
         )
-        if _koopa_is_ubuntu
+        if koopa::is_ubuntu
         then
-            _koopa_info "Installing Ubuntu-specific packages."
+            koopa::info "Installing Ubuntu-specific packages."
             pkgs+=(
                 firefox
             )
@@ -334,12 +334,12 @@ _koopa_install_debian_base() { # {{{1
     # Install packages {{{1
     # ==========================================================================
 
-    _koopa_apt_install "${pkgs[@]}"
-    _koopa_apt_configure_sources
+    koopa::apt_install "${pkgs[@]}"
+    koopa::apt_configure_sources
     sudo apt-get --yes clean
     sudo apt-get --yes autoremove
-    _koopa_install_success "$name_fancy"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
-_koopa_install_debian_base "$@"
+koopa::install_debian_base "$@"

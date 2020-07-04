@@ -6,7 +6,7 @@
 # @note Updated 2020-07-03.
 # """
 
-_koopa_posix_header() { # {{{1
+koopa::posix_header() { # {{{1
     # """
     # POSIX shell header.
     # @note Updated 2020-06-30.
@@ -25,8 +25,8 @@ _koopa_posix_header() { # {{{1
         [ -f "$file" ] && . "$file"
     done
     # Ensure koopa scripts are in path.
-    _koopa_activate_koopa_paths
+    koopa::activatekoopa::paths
     return 0
 }
 
-_koopa_posix_header
+koopa::posix_header

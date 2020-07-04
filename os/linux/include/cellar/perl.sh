@@ -33,11 +33,11 @@
 # the current session.
 # """
 
-_koopa_coffee_time
+koopa::coffee_time
 file="${name}-${version}.tar.gz"
 url="https://www.cpan.org/src/5.0/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./Configure -des -Dprefix="$prefix"
 make --jobs="$jobs"

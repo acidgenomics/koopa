@@ -4,19 +4,19 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_perl_packages() {
+koopa::install_perl_packages() {
     # """
     # Install Perl packages.
     # @note Updated 2020-07-02.
     # """
-    _koopa_assert_is_installed cpan perl
+    koopa::assert_is_installed cpan perl
     local module modules name_fancy
     name_fancy="Perl packages"
-    _koopa_install_start "$name_fancy"
+    koopa::install_start "$name_fancy"
     export PERL_MM_USE_DEFAULT=1
-    if ! _koopa_is_installed cpanm
+    if ! koopa::is_installed cpanm
     then
-        _koopa_info "CPAN Minus"
+        koopa::info "CPAN Minus"
         cpan -i "App::cpanminus" &>/dev/null
     fi
     if [[ "$#" -gt 0 ]]
@@ -30,11 +30,11 @@ _koopa_install_perl_packages() {
     fi
     for module in "${modules[@]}"
     do
-        _koopa_info "${module}"
+        koopa::info "${module}"
         cpanm "$module" &>/dev/null
     done
-    _koopa_install_success "$name_fancy"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
-_koopa_install_perl_packages "$@"
+koopa::install_perl_packages "$@"

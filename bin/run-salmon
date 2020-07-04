@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$#"
+koopa::assert_has_args "$#"
 
 fastq_dir="fastq"
 output_dir="salmon"
@@ -63,32 +63,32 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
 then
-    _koopa_stop "Specify 'fasta-file' or 'index-dir'."
+    koopa::stop "Specify 'fasta-file' or 'index-dir'."
 elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
 then
-    _koopa_stop "Specify 'fasta-file' or 'index-dir', but not both."
+    koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
 elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
 then
-    _koopa_missing_arg
+    koopa::missing_arg
 fi
 
-fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
-output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
+fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
+output_dir="$(koopa::strip_trailing_slash "$output_dir")"
 
-_koopa_h1 "Running salmon."
+koopa::h1 "Running salmon."
 
-_koopa_activate_conda_env salmon
-_koopa_dl "salmon" "$(_koopa_which_realpath salmon)"
+koopa::activate_conda_env salmon
+koopa::dl "salmon" "$(koopa::which_realpath salmon)"
 
 fastq_dir="$(realpath "$fastq_dir")"
-_koopa_dl "fastq dir" "$fastq_dir"
+koopa::dl "fastq dir" "$fastq_dir"
 
 # Sample array from FASTQ files {{{1
 # ==============================================================================
@@ -108,10 +108,10 @@ readarray -t fastq_r1_files <<< "$( \
 # Error on FASTQ match failure.
 if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
 then
-    _koopa_stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
+    koopa::stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
 fi
 
-_koopa_info "${#fastq_r1_files[@]} samples detected."
+koopa::info "${#fastq_r1_files[@]} samples detected."
 mkdir -pv "$output_dir"
 
 # Index {{{1
@@ -123,12 +123,12 @@ then
     index_dir="$(realpath "$index_dir")"
 else
     index_dir="${output_dir}/salmon.idx"
-    _koopa_salmon_index \
+    koopa::salmon_index \
         --fasta-file="$fasta_file" \
         --index-dir="$index_dir"
 fi
 
-_koopa_dl "index" "$index_dir"
+koopa::dl "index" "$index_dir"
 
 # Quantify {{{1
 # ==============================================================================
@@ -137,7 +137,7 @@ _koopa_dl "index" "$index_dir"
 for fastq_r1 in "${fastq_r1_files[@]}"
 do
     fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
-    _koopa_salmon_quant \
+    koopa::salmon_quant \
         --fastq-r1="$fastq_r1" \
         --fastq-r2="$fastq_r2" \
         --index-dir="$index_dir" \

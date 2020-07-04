@@ -12,9 +12,9 @@ source "${script_dir}/../shell/bash/include/header.sh"
 # - https://www.reddit.com/r/perl/comments/duddcn/perl_5301_released/
 # """
 
-_koopa_assert_is_installed perlbrew
+koopa::assert_is_installed perlbrew
 
-version="$(_koopa_variable perl)"
+version="$(koopa::variable perl)"
 
 perl_name="perl-${version}"
 # Alternatively, can use '--force' here.

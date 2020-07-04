@@ -41,8 +41,8 @@
 
 file="Python-${version}.tar.xz"
 url="https://www.python.org/ftp/python/${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "Python-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \
@@ -54,11 +54,11 @@ make --jobs="$jobs"
 make install
 
 # Remove '__pycache__' directories, which can cause rsync issues.
-# > _koopa_python_remove_pycache "$prefix"
+# > koopa::python_remove_pycache "$prefix"
 
 # Symlink 'python3' to 'python'.
 if [[ ! -f "${prefix}/bin/python" ]]
 then
-    _koopa_h2 "Symlinking 'python3' to 'python'."
+    koopa::h2 "Symlinking 'python3' to 'python'."
     ln -fnsv "${prefix}/bin/python3" "${prefix}/bin/python"
 fi

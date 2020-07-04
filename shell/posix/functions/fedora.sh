@@ -1,12 +1,12 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_yum_add_azure_cli_repo() { # {{{1
+koopa::yum_add_azure_cli_repo() { # {{{1
     # """
     # Add Microsoft Azure CLI yum repo.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local file
     file="/etc/yum.repos.d/azure-cli.repo"
     [ -f "$file" ] && return 0
@@ -21,7 +21,7 @@ END
     return 0
 }
 
-_koopa_yum_add_google_cloud_sdk_repo() { # {{{1
+koopa::yum_add_google_cloud_sdk_repo() { # {{{1
     # """
     # Add Google Cloud SDK yum repo.
     # @note Updated 2020-06-30.
@@ -35,7 +35,7 @@ _koopa_yum_add_google_cloud_sdk_repo() { # {{{1
     # - https://github.com/kubernetes/kubernetes/issues/60134
     # - https://github.com/GoogleCloudPlatform/google-fluentd/issues/136
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local file gpgcheck
     file="/etc/yum.repos.d/google-cloud-sdk.repo"
     [ -f "$file" ] && return 0
@@ -44,7 +44,7 @@ _koopa_yum_add_google_cloud_sdk_repo() { # {{{1
     gpgcheck=0
     repo_gpgcheck=0
     # > local repo_gpgcheck
-    # > if _koopa_is_amzn
+    # > if koopa::is_amzn
     # > then
     # >     repo_gpgcheck=0
     # > else
@@ -63,12 +63,12 @@ END
     return 0
 }
 
-_koopa_yum_import_azure_cli_key() { # {{{1
+koopa::yum_import_azure_cli_key() { # {{{1
     # """
     # Import the Microsoft Azure CLI public key.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     sudo rpm --import "https://packages.microsoft.com/keys/microsoft.asc"
     return 0
 }

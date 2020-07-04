@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_add_local_bins_to_path() { # {{{1
+koopa::add_local_bins_to_path() { # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
     # @note Updated 2020-06-29.
@@ -8,19 +8,19 @@ _koopa_add_local_bins_to_path() { # {{{1
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read '-a' flag doesn't work on macOS.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local dir dirs
-    _koopa_add_to_path_start "$(_koopa_make_prefix)/bin"
-    IFS=$'\n' read -r -d '' dirs <<< "$(_koopa_find_local_bin_dirs)"
+    koopa::add_to_path_start "$(koopa::make_prefix)/bin"
+    IFS=$'\n' read -r -d '' dirs <<< "$(koopa::find_local_bin_dirs)"
     unset IFS
     for dir in "${dirs[@]}"
     do
-        _koopa_add_to_path_start "$dir"
+        koopa::add_to_path_start "$dir"
     done
     return 0
 }
 
-_koopa_info_box() { # {{{1
+koopa::info_box() { # {{{1
     # """
     # Info box.
     # @note Updated 2020-06-29.
@@ -28,7 +28,7 @@ _koopa_info_box() { # {{{1
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local array
     array=("$@")
     local barpad
@@ -42,40 +42,40 @@ _koopa_info_box() { # {{{1
     return 0
 }
 
-_koopa_script_name() { # {{{1
+koopa::script_name() { # {{{1
     # """
     # Get the calling script name.
     # @note Updated 2020-06-29.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local file x
     file="$( \
         caller \
         | head -n 1 \
         | cut -d ' ' -f 2 \
     )"
-    x="$(_koopa_basename "$file")"
+    x="$(koopa::basename "$file")"
     [[ -n "$x" ]] || return 0
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_system_info() { # {{{
+koopa::system_info() { # {{{
     # """
     # System information.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(koopa::prefix)"
     array=(
-        "koopa $(_koopa_version) ($(_koopa_date))"
-        "URL: $(_koopa_url)"
-        "GitHub URL: $(_koopa_github_url)"
+        "koopa $(koopa::version) ($(koopa::date))"
+        "URL: $(koopa::url)"
+        "GitHub URL: $(koopa::github_url)"
     )
-    if _koopa_is_git_toplevel "$koopa_prefix"
+    if koopa::is_git_toplevel "$koopa_prefix"
     then
         origin="$( \
             cd "$koopa_prefix" || exit 1; \
@@ -83,7 +83,7 @@ _koopa_system_info() { # {{{
         )"
         array+=(
             "Git Remote: ${origin}"
-            "Commit: $(_koopa_commit)"
+            "Commit: $(koopa::commit)"
         )
     fi
     array+=(
@@ -91,17 +91,17 @@ _koopa_system_info() { # {{{
         "Configuration"
         "-------------"
         "Koopa Prefix: ${koopa_prefix}"
-        "Config Prefix: $(_koopa_config_prefix)"
-        "App Prefix: $(_koopa_app_prefix)"
-        "Make Prefix: $(_koopa_make_prefix)"
+        "Config Prefix: $(koopa::config_prefix)"
+        "App Prefix: $(koopa::app_prefix)"
+        "Make Prefix: $(koopa::make_prefix)"
     )
-    if _koopa_is_linux
+    if koopa::is_linux
     then
-        array+=("Cellar Prefix: $(_koopa_cellar_prefix)")
+        array+=("Cellar Prefix: $(koopa::cellar_prefix)")
     fi
     array+=("")
     # Show neofetch info, if installed.
-    if _koopa_is_installed neofetch
+    if koopa::is_installed neofetch
     then
         readarray -t nf <<< "$(neofetch --stdout)"
         array+=(
@@ -111,7 +111,7 @@ _koopa_system_info() { # {{{
         )
     else
         local os
-        if _koopa_is_macos
+        if koopa::is_macos
         then
             os="$( \
                 printf "%s %s (%s)\n" \
@@ -120,7 +120,7 @@ _koopa_system_info() { # {{{
                     "$(sw_vers -buildVersion)" \
             )"
         else
-            if _koopa_is_installed python
+            if koopa::is_installed python
             then
                 os="$(python -mplatform)"
             else
@@ -128,7 +128,7 @@ _koopa_system_info() { # {{{
             fi
         fi
         shell_name="$KOOPA_SHELL"
-        shell_version="$(_koopa_get_version "${shell_name}")"
+        shell_version="$(koopa::get_version "${shell_name}")"
         shell="${shell_name} ${shell_version}"
         array+=(
             "System information"
@@ -139,12 +139,12 @@ _koopa_system_info() { # {{{
         )
     fi
     array+=("Run 'koopa check' to verify installation.")
-    cat "$(_koopa_include_prefix)/ascii-turtle.txt"
-    _koopa_info_box "${array[@]}"
+    cat "$(koopa::include_prefix)/ascii-turtle.txt"
+    koopa::info_box "${array[@]}"
     return 0
 }
 
-_koopa_update() { # {{{1
+koopa::update() { # {{{1
     # """
     # Update koopa installation.
     # @note Updated 2020-06-29.
@@ -152,20 +152,20 @@ _koopa_update() { # {{{1
     local app_prefix config_prefix configure_flags core dotfiles \
         dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
         system user
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(koopa::prefix)"
     # Note that stable releases are not git, and can't be updated.
-    if ! _koopa_is_git_toplevel "$koopa_prefix"
+    if ! koopa::is_git_toplevel "$koopa_prefix"
     then
-        version="$(_koopa_version)"
-        url="$(_koopa_url)"
-        _koopa_note "Stable release of koopa ${version} detected."
-        _koopa_note "To update, first run the 'uninstall' script."
-        _koopa_note "Then run the default install command at '${url}'."
+        version="$(koopa::version)"
+        url="$(koopa::url)"
+        koopa::note "Stable release of koopa ${version} detected."
+        koopa::note "To update, first run the 'uninstall' script."
+        koopa::note "Then run the default install command at '${url}'."
         exit 1
     fi
-    config_prefix="$(_koopa_config_prefix)"
-    app_prefix="$(_koopa_app_prefix)"
-    make_prefix="$(_koopa_make_prefix)"
+    config_prefix="$(koopa::config_prefix)"
+    app_prefix="$(koopa::app_prefix)"
+    make_prefix="$(koopa::make_prefix)"
     core=1
     dotfiles=1
     fast=0
@@ -196,7 +196,7 @@ _koopa_update() { # {{{1
                 shift 1
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
@@ -220,42 +220,42 @@ _koopa_update() { # {{{1
     then
         user=1
     fi
-    _koopa_h1 "Updating koopa at '${koopa_prefix}'."
-    _koopa_set_permissions --recursive "$koopa_prefix"
+    koopa::h1 "Updating koopa at '${koopa_prefix}'."
+    koopa::set_permissions --recursive "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then
         # Update koopa.
         if [[ "$core" -eq 1 ]]
         then
-            _koopa_system_git_pull
+            koopa::system_git_pull
         fi
         # Ensure dotfiles are current.
         if [[ "$dotfiles" -eq 1 ]]
         then
             (
-                dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+                dotfiles_prefix="$(koopa::dotfiles_prefix)"
                 cd "$dotfiles_prefix" || exit 1
-                _koopa_git_reset
-                _koopa_git_pull origin master
+                koopa::git_reset
+                koopa::git_pull origin master
             )
         fi
-        _koopa_set_permissions --recursive "$koopa_prefix"
+        koopa::set_permissions --recursive "$koopa_prefix"
     fi
-    _koopa_update_xdg_config
+    koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]
     then
-        _koopa_h2 "Updating system configuration."
-        _koopa_assert_has_sudo
-        _koopa_dl "App prefix" "${app_prefix}"
-        _koopa_dl "Config prefix" "${config_prefix}"
-        _koopa_dl "Make prefix" "${make_prefix}"
-        _koopa_add_make_prefix_link
-        if _koopa_is_linux
+        koopa::h2 "Updating system configuration."
+        koopa::assert_has_sudo
+        koopa::dl "App prefix" "${app_prefix}"
+        koopa::dl "Config prefix" "${config_prefix}"
+        koopa::dl "Make prefix" "${make_prefix}"
+        koopa::add_make_prefix_link
+        if koopa::is_linux
         then
-            _koopa_update_etc_profile_d
-            _koopa_update_ldconfig
+            koopa::update_etc_profile_d
+            koopa::update_ldconfig
         fi
-        if _koopa_is_installed configure-vm
+        if koopa::is_installed configure-vm
         then
             # Allow passthrough of specific arguments to 'configure-vm' script.
             configure_flags=("--no-check")
@@ -274,12 +274,12 @@ _koopa_update() { # {{{1
             update-rust
             update-rust-packages
             update-perlbrew
-            if _koopa_is_linux
+            if koopa::is_linux
             then
                 update-google-cloud-sdk
                 update-pyenv
                 update-rbenv
-            elif _koopa_is_macos
+            elif koopa::is_macos
             then
                 update-homebrew
                 update-microsoft-office
@@ -287,11 +287,11 @@ _koopa_update() { # {{{1
                 # > update-macos-defaults
             fi
         fi
-        _koopa_fix_zsh_permissions
+        koopa::fix_zsh_permissions
     fi
     if [[ "$user" -eq 1 ]]
     then
-        _koopa_h2 "Updating user configuration."
+        koopa::h2 "Updating user configuration."
         # Remove legacy directories from user config, if necessary.
         rm -frv "${config_prefix}/"\
 {Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
@@ -308,16 +308,16 @@ _koopa_update() { # {{{1
         do
             [ -d "$repo" ] || continue
             (
-                _koopa_cd "$repo"
-                _koopa_git_pull
+                koopa::cd "$repo"
+                koopa::git_pull
             )
         done
-        _koopa_install_dotfiles
-        _koopa_install_dotfiles_private
-        _koopa_update_spacemacs
+        koopa::install_dotfiles
+        koopa::install_dotfiles_private
+        koopa::update_spacemacs
     fi
-    _koopa_success "koopa update was successful."
-    _koopa_restart
+    koopa::success "koopa update was successful."
+    koopa::restart
     [[ "$system" -eq 1 ]] && koopa check-system
     return 0
 }

@@ -1,33 +1,33 @@
 #!/usr/bin/env bash
 
-_koopa_test_find_files_by_ext() { # {{{1
+koopa::test_find_files_by_ext() { # {{{1
     # """
     # Find relevant test files by extension.
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local ext files pattern x
     ext="${1:?}"
     pattern="\.${ext}$"
-    readarray -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(koopa::test_find_files)"
     x="$( \
         printf '%s\n' "${files[@]}" \
         | grep -Ei "$pattern" \
     )"
     [[ -n "$x" ]] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_test_find_files_by_shebang() { # {{{1
+koopa::test_find_files_by_shebang() { # {{{1
     # """
     # Find relevant test files by shebang.
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local file files pattern shebang_files x
     pattern="${1:?}"
-    readarray -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(koopa::test_find_files)"
     shebang_files=()
     for file in "${files[@]}"
     do
@@ -44,18 +44,18 @@ _koopa_test_find_files_by_shebang() { # {{{1
     return 0
 }
 
-_koopa_test_find_failures() { # {{{1
+koopa::test_find_failures() { # {{{1
     # """
     # Find test failures.
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local failures file files ignore name pattern x
-    name="$(_koopa_basename_sans_ext "$0")"
+    name="$(koopa::basename_sans_ext "$0")"
     pattern="${1:?}"
     ignore="${2:-}"
     failures=()
-    readarray -t files <<< "$(_koopa_test_find_files)"
+    readarray -t files <<< "$(koopa::test_find_files)"
     for file in "${files[@]}"
     do
         # Skip ignored files.
@@ -80,10 +80,10 @@ _koopa_test_find_failures() { # {{{1
     done
     if [[ "${#failures[@]}" -gt 0 ]]
     then
-        _koopa_status_fail "${name} [${#failures[@]}]"
+        koopa::status_fail "${name} [${#failures[@]}]"
         printf '%s\n' "${failures[@]}"
         return 1
     fi
-    _koopa_status_ok "${name} [${#files[@]}]"
+    koopa::status_ok "${name} [${#files[@]}]"
     return 0
 }

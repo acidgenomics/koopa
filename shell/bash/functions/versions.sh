@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_check_version() { # {{{1
+koopa::check_version() { # {{{1
     # """
     # Check that program is installed and passes minimum version.
     # @note Updated 2020-06-29.
@@ -8,7 +8,7 @@ _koopa_check_version() { # {{{1
     # How to break a loop with an error code:
     # https://stackoverflow.com/questions/14059342/
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local current expected status
     IFS='.' read -r -a current <<< "${1:?}"
     IFS='.' read -r -a expected <<< "${2:?}"

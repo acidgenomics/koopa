@@ -4,5 +4,5 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_exit_if_not_installed brew
-_koopa_brew_update "$@"
+koopa::exit_if_not_installed brew
+koopa::brew_update "$@"

@@ -11,11 +11,11 @@ source "${script_dir}/../include/header.sh"
 # Can use 'winehq-devel' on Fedora 32.
 # """
 
-_koopa_exit_if_installed wine
+koopa::exit_if_installed wine
 
 name_fancy="Wine"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 version="$( \
     grep 'VERSION_ID=' /etc/os-release \
@@ -32,4 +32,4 @@ dnf -y install \
     xorg-x11-server-Xvfb \
     xorg-x11-xauth
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

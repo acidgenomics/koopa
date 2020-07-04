@@ -4,7 +4,7 @@
 # Note that these are defined primarily to catch errors in private scripts that
 # are defined outside of the koopa package.
 
-_koopa_defunct() { # {{{1
+koopa::defunct() { # {{{1
     # """
     # Make a function defunct.
     # @note Updated 2020-02-18.
@@ -17,86 +17,86 @@ _koopa_defunct() { # {{{1
     then
         msg="${msg} Use '${new}' instead."
     fi
-    _koopa_stop "${msg}"
+    koopa::stop "${msg}"
 }
 
 
 
-_koopa_assert_is_darwin() { # {{{1
+koopa::assert_is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
     # """
-    _koopa_defunct "_koopa_assert_is_macos"
+    koopa::defunct "koopa::assert_is_macos"
 
 }
 
-_koopa_conda_default_envs_prefix() { # {{{1
+koopa::conda_default_envs_prefix() { # {{{1
     # """
     # @note Updated 2020-02-19.
     # """
-    _koopa_defunct "_koopa_conda_prefix"
+    koopa::defunct "koopa::conda_prefix"
 }
 
-_koopa_is_darwin() { # {{{1
+koopa::is_darwin() { # {{{1
     # """
     # @note Updated 2020-01-14.
     # """
-    _koopa_defunct "_koopa_is_macos"
+    koopa::defunct "koopa::is_macos"
 
 }
 
-_koopa_is_matching_fixed() {  #{{{1
+koopa::is_matching_fixed() {  #{{{1
     # """
     # @note Updated 2020-04-29.
     # """
-    _koopa_defunct "_koopa_str_match"
+    koopa::defunct "koopa::str_match"
 }
 
-_koopa_is_matching_regex() {  #{{{1
+koopa::is_matching_regex() {  #{{{1
     # """
     # @note Updated 2020-04-29.
     # """
-    _koopa_defunct "_koopa_str_match_regex"
+    koopa::defunct "koopa::str_match_regex"
 }
 
-_koopa_prefix_mkdir() { # {{{1
+koopa::prefix_mkdir() { # {{{1
     # """
     # @note Updated 2020-02-19.
     # """
-    _koopa_defunct "_koopa_mkdir"
+    koopa::defunct "koopa::mkdir"
 }
 
-_koopa_quiet_cd() { # {{{1
+koopa::quiet_cd() { # {{{1
     # """
     # @note Updated 2020-02-16.
     # """
-    _koopa_defunct "_koopa_cd"
+    koopa::defunct "koopa::cd"
 }
 
-_koopa_quiet_expr() { # {{{1
+koopa::quiet_expr() { # {{{1
     # """
     # @note Updated 2020-02-16.
     # """
-    _koopa_defunct "_koopa_expr"
+    koopa::defunct "koopa::expr"
 }
 
-_koopa_quiet_rm() { # {{{1
+koopa::quiet_rm() { # {{{1
     # """
     # @note Updated 2020-02-16.
     # """
-    _koopa_defunct "_koopa_rm"
+    koopa::defunct "koopa::rm"
 }
 
-_koopa_update_profile() { # {{{1
+koopa::update_profile() { # {{{1
     # """
     # @note Updated 2020-02-15.
     # """
-    _koopa_defunct "_koopa_update_etc_profile_d"
+    koopa::defunct "koopa::update_etc_profile_d"
 }
 
-_koopa_update_shells() { # {{{1
+koopa::update_shells() { # {{{1
     # """
     # @note Updated 2020-02-11.
     # """
-    _koopa_defunct "_koopa_enable_shell"
+    koopa::defunct "koopa::enable_shell"
 }

@@ -27,8 +27,8 @@
 etc_dir="${prefix}/etc/${name}"
 file="${name}-${version}.tar.xz"
 url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \
@@ -39,13 +39,13 @@ make --jobs="$jobs"
 # > make test
 make install
 
-if _koopa_is_debian
+if koopa::is_debian
 then
-    _koopa_h1 "Linking shared config scripts into '${etc_dir}'."
+    koopa::h1 "Linking shared config scripts into '${etc_dir}'."
     mkdir -pv "$etc_dir"
     ln -fnsv \
-        "$(_koopa_prefix)/os/$(_koopa_os_id)/etc/zsh/"* \
+        "$(koopa::prefix)/os/$(koopa::os_id)/etc/zsh/"* \
         -t "${etc_dir}/"
 fi
 
-_koopa_enable_shell "$name"
+koopa::enable_shell "$name"

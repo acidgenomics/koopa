@@ -28,53 +28,53 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 name="go"
-[[ -z "$version" ]] && version="$(_koopa_variable "$name")"
-app_prefix="$(_koopa_app_prefix)/${name}/${version}"
-cellar_prefix="$(_koopa_cellar_prefix)/${name}/${version}"
-[[ "$reinstall" -eq 1 ]] && _koopa_rm "$app_prefix" "$cellar_prefix"
-_koopa_exit_if_dir "$app_prefix" "$cellar_prefix"
+[[ -z "$version" ]] && version="$(koopa::variable "$name")"
+app_prefix="$(koopa::app_prefix)/${name}/${version}"
+cellar_prefix="$(koopa::cellar_prefix)/${name}/${version}"
+[[ "$reinstall" -eq 1 ]] && koopa::rm "$app_prefix" "$cellar_prefix"
+koopa::exit_if_dir "$app_prefix" "$cellar_prefix"
 
-_koopa_install_start "$name" "$version" "$cellar_prefix"
+koopa::install_start "$name" "$version" "$cellar_prefix"
 
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
+koopa::assert_has_no_args "$@"
+koopa::assert_has_no_envs
 
-_koopa_mkdir "$app_prefix"
-_koopa_mkdir "$cellar_prefix"
+koopa::mkdir "$app_prefix"
+koopa::mkdir "$cellar_prefix"
 
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     file="go${version}.linux-amd64.tar.gz"
     url="https://dl.google.com/go/${file}"
-    _koopa_download "$url"
-    _koopa_extract "$file"
+    koopa::download "$url"
+    koopa::extract "$file"
     cp -rv go/* "${app_prefix}/."
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_set_permissions --recursive "$app_prefix"
+koopa::set_permissions --recursive "$app_prefix"
 
-_koopa_h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
+koopa::h2 "Linking from '${app_prefix}' into '${cellar_prefix}'."
 cp -frsv "${app_prefix}/bin" "${cellar_prefix}/."
 
 if [[ "$link_cellar" -eq 1 ]]
 then
-    _koopa_link_cellar "$name" "$version"
+    koopa::link_cellar "$name" "$version"
     # Need to create directory expected by GOROOT environment variable.
     # If this doesn't exist, Go will currently error.
     goroot="/usr/local/go"
-    _koopa_h2 "Linking GOROOT directory at '${goroot}'."
+    koopa::h2 "Linking GOROOT directory at '${goroot}'."
     ln -fnsv "$app_prefix" "$goroot"
     # > go env GOROOT
 fi
 
-_koopa_install_success "$name"
+koopa::install_success "$name"

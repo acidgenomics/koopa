@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 ## shellcheck disable=SC2016
 
-if ! _koopa_is_installed python3
+if ! koopa::is_installed python3
 then
-    _koopa_note "'python3' is not installed. Skipping checks."
+    koopa::note "'python3' is not installed. Skipping checks."
     return 0
 fi
 

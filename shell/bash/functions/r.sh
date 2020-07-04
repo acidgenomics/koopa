@@ -1,66 +1,66 @@
 #!/usr/bin/env bash
 
-_koopa_array_to_r_vector() { # {{{1
+koopa::array_to_r_vector() { # {{{1
     # """
     # Convert a bash array to an R vector string.
     # @note Updated 2020-07-01.
     #
     # @examples
-    # _koopa_array_to_r_vector "aaa" "bbb"
+    # koopa::array_to_r_vector "aaa" "bbb"
     # ## c("aaa", "bbb")
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local x
     x="$(printf '"%s", ' "$@")"
-    x="$(_koopa_strip_right ", " "$x")"
+    x="$(koopa::strip_right ", " "$x")"
     x="$(printf "c(%s)\n" "$x")"
     [[ -n "$x" ]] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_link_r_etc() { # {{{1
+koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
     # @note Updated 2020-07-01.
     #
     # Don't copy Makevars file across machines.
     # """
-    _koopa_assert_has_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     local r_prefix
-    r_prefix="${1:-$(_koopa_r_prefix)}"
+    r_prefix="${1:-$(koopa::r_prefix)}"
     if [[ ! -d "$r_prefix" ]]
     then
-        _koopa_warning "Failed to locate R prefix."
+        koopa::warning "Failed to locate R prefix."
         return 1
     fi
     local r_exe
     r_exe="${r_prefix}/bin/R"
     local version
-    version="$(_koopa_r_version "$r_exe")"
+    version="$(koopa::r_version "$r_exe")"
     if [[ "$version" != "devel" ]]
     then
-        version="$(_koopa_major_minor_version "$version")"
+        version="$(koopa::major_minor_version "$version")"
     fi
     local koopa_prefix
-    koopa_prefix="$(_koopa_prefix)"
+    koopa_prefix="$(koopa::prefix)"
     # Locate the source etc directory in koopa.
     local os_id r_etc_source
-    if _koopa_is_linux && _koopa_is_cellar "$r_prefix"
+    if koopa::is_linux && koopa::is_cellar "$r_prefix"
     then
         os_id="linux"
     else
-        os_id="$(_koopa_os_id)"
+        os_id="$(koopa::os_id)"
     fi
     r_etc_source="${koopa_prefix}/os/${os_id}/etc/R/${version}"
     if [[ ! -d "$r_etc_source" ]]
     then
-        _koopa_warning "Missing R etc source: '${r_etc_source}'."
+        koopa::warning "Missing R etc source: '${r_etc_source}'."
         return 1
     fi
     local r_etc_target
-    if _koopa_is_linux && \
-        ! _koopa_is_cellar "$r_exe" && \
+    if koopa::is_linux && \
+        ! koopa::is_cellar "$r_exe" && \
         [[ -d "/etc/R" ]]
     then
         # This currently applies to Debian/Ubuntu CRAN binary installs.
@@ -79,41 +79,41 @@ _koopa_link_r_etc() { # {{{1
     for file in "${files[@]}"
     do
         [[ -f "${r_etc_source}/${file}" ]] || continue
-        _koopa_ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
+        koopa::ln "${r_etc_source}/${file}" "${r_etc_target}/${file}"
     done
     return 0
 }
 
-_koopa_link_r_site_library() { # {{{1
+koopa::link_r_site_library() { # {{{1
     # """
     # Link R site library.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     local r_prefix
-    r_prefix="${1:-$(_koopa_r_prefix)}"
+    r_prefix="${1:-$(koopa::r_prefix)}"
     [[ -d "$r_prefix" ]] || return 1
     local r_exe
     r_exe="${r_prefix}/bin/R"
     [[ -x "$r_exe" ]] || return 1
     local version
-    version="$(_koopa_r_version "$r_exe")"
+    version="$(koopa::r_version "$r_exe")"
     if [[ "$version" != "devel" ]]
     then
-        version="$(_koopa_major_minor_version "$version")"
+        version="$(koopa::major_minor_version "$version")"
     fi
     local app_prefix
-    app_prefix="$(_koopa_app_prefix)"
+    app_prefix="$(koopa::app_prefix)"
     local lib_source
     lib_source="${app_prefix}/r/${version}/site-library"
     local lib_target
     lib_target="${r_prefix}/site-library"
-    _koopa_mkdir "$lib_source"
-    _koopa_ln "$lib_source" "$lib_target"
+    koopa::mkdir "$lib_source"
+    koopa::ln "$lib_source" "$lib_target"
     return 0
 }
 
-_koopa_r_javareconf() { # {{{1
+koopa::r_javareconf() { # {{{1
     # """
     # Update R Java configuration.
     # @note Updated 2020-04-25.
@@ -159,23 +159,23 @@ _koopa_r_javareconf() { # {{{1
                 shift 2
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    _koopa_is_installed "$r_exe" || return 0
-    r_exe="$(_koopa_which "$r_exe")"
+    koopa::is_installed "$r_exe" || return 0
+    r_exe="$(koopa::which "$r_exe")"
     # Detect Java home automatically, if necessary.
     if [[ -z "${java_home:-}" ]]
     then
-        _koopa_activate_openjdk
-        java_home="$(_koopa_java_prefix)"
-        _koopa_is_installed java || return 0
+        koopa::activate_openjdk
+        java_home="$(koopa::java_prefix)"
+        koopa::is_installed java || return 0
     fi
     [[ -d "$java_home" ]] || return 1
-    _koopa_h2 "Updating R Java configuration."
-    _koopa_dl "R" "$r_exe"
-    _koopa_dl "Java home" "$java_home"
+    koopa::h2 "Updating R Java configuration."
+    koopa::dl "R" "$r_exe"
+    koopa::dl "Java home" "$java_home"
     local java_flags
     java_flags=(
         "JAVA_HOME=${java_home}"
@@ -184,7 +184,7 @@ _koopa_r_javareconf() { # {{{1
         "JAVAH=${java_home}/bin/javah"
         "JAR=${java_home}/bin/jar"
     )
-    if _koopa_is_cellar "$r_exe"
+    if koopa::is_cellar "$r_exe"
     then
         "$r_exe" --vanilla CMD javareconf "${java_flags[@]}"
     else
@@ -193,60 +193,60 @@ _koopa_r_javareconf() { # {{{1
     return 0
 }
 
-_koopa_update_r_config() { # {{{1
+koopa::update_r_config() { # {{{1
     # """
     # Update R configuration.
     # @note Updated 2020-07-01.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
-    _koopa_assert_has_args_le "$#" 1
-    _koopa_h1 "Updating R configuration."
+    koopa::assert_has_args_le "$#" 1
+    koopa::h1 "Updating R configuration."
     # Locate R command.
     local r_exe
     r_exe="${1:-}"
     if [[ -z "$r_exe" ]]
     then
-        r_exe="$(_koopa_which_realpath R)"
+        r_exe="$(koopa::which_realpath R)"
     fi
     # Locate Rscript command.
     local rscript_exe
     rscript_exe="${r_exe}script"
-    _koopa_assert_is_installed "$r_exe" "$rscript_exe"
+    koopa::assert_is_installed "$r_exe" "$rscript_exe"
     local r_prefix
-    r_prefix="$(_koopa_r_prefix "$rscript_exe")"
-    _koopa_dl "R home" "$r_prefix"
-    _koopa_dl "R path" "$r_exe"
-    _koopa_dl "Rscript path" "$rscript_exe"
-    if _koopa_is_cellar "$r_exe"
+    r_prefix="$(koopa::r_prefix "$rscript_exe")"
+    koopa::dl "R home" "$r_prefix"
+    koopa::dl "R path" "$r_exe"
+    koopa::dl "Rscript path" "$rscript_exe"
+    if koopa::is_cellar "$r_exe"
     then
         # Ensure that everyone in R home is writable.
-        _koopa_set_permissions --recursive "$r_prefix"
+        koopa::set_permissions --recursive "$r_prefix"
         # Ensure that (Debian) system 'etc' directories are removed.
         local make_prefix
-        make_prefix="$(_koopa_make_prefix)"
+        make_prefix="$(koopa::make_prefix)"
         local etc_prefix
         etc_prefix="${make_prefix}/lib/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
-            _koopa_rm "$etc_prefix"
+            koopa::rm "$etc_prefix"
         fi
         etc_prefix="${make_prefix}/lib64/R/etc"
         if [[ -d "$etc_prefix" ]] && [[ ! -L "$etc_prefix" ]]
         then
-            _koopa_rm "$etc_prefix"
+            koopa::rm "$etc_prefix"
         fi
     else
         # Ensure system package library is writable.
-        _koopa_set_permissions --recursive "${r_prefix}/library"
+        koopa::set_permissions --recursive "${r_prefix}/library"
         # Need to ensure group write so package index gets updated.
         if [[ -d '/usr/share/R' ]]
         then
-            _koopa_set_permissions '/usr/share/R/doc/html/packages.html'
+            koopa::set_permissions '/usr/share/R/doc/html/packages.html'
         fi
     fi
-    _koopa_link_r_etc "$r_prefix"
-    _koopa_link_r_site_library "$r_prefix"
-    _koopa_r_javareconf --r-exe="$r_exe"
+    koopa::link_r_etc "$r_prefix"
+    koopa::link_r_site_library "$r_prefix"
+    koopa::r_javareconf --r-exe="$r_exe"
     return 0
 }

@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_install_arch_base() {
+koopa::install_arch_base() {
     # """
     # Install Arch Linux base system.
     # @note Updated 2020-07-02.
@@ -24,10 +24,10 @@ _koopa_install_arch_base() {
     # Note that Arch is currently overwriting PS1 for root.
     # This is due to configuration in '/etc/profile'.
     # """
-    _koopa_assert_is_installed pacman sudo
+    koopa::assert_is_installed pacman sudo
     local name_fancy packages
     name_fancy="Arch base system"
-    _koopa_install_start "$name_fancy"
+    koopa::install_start "$name_fancy"
     # Arch symlinks '/usr/local/share/man' to '/usr/local/man' by default, which
     # is non-standard and can cause cellar link script to break.
     if [[ -L /usr/local/share/man ]]
@@ -59,8 +59,8 @@ _koopa_install_arch_base() {
         wget
     )
     sudo pacman -S --noconfirm "${packages[@]}"
-    _koopa_install_success "$name_fancy"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
-_koopa_install_arch_base "$@"
+koopa::install_arch_base "$@"

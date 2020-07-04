@@ -8,9 +8,9 @@ autoload -Uz compaudit
 
 if [ -z "$(compaudit 2>/dev/null)" ]
 then
-    _koopa_success "Zsh compinit is configured correctly."
+    koopa::success "Zsh compinit is configured correctly."
     exit 0
 fi
 
-_koopa_h1 "Fixing Zsh compinit configuration with compaudit."
+koopa::h1 "Fixing Zsh compinit configuration with compaudit."
 compaudit 2>/dev/null | xargs sudo chmod g-w

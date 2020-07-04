@@ -12,34 +12,34 @@ source "${script_dir}/../shell/bash/include/header.sh"
 # - https://stackoverflow.com/questions/2720014
 # """
 
-_koopa_exit_if_not_installed pip3 python3
-_koopa_assert_has_no_args "$@"
-_koopa_assert_has_no_envs
+koopa::exit_if_not_installed pip3 python3
+koopa::assert_has_no_args "$@"
+koopa::assert_has_no_envs
 
 name_fancy="Python packages"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 x="$(python3 -m pip list --outdated --format=freeze)"
-x="$(_koopa_print "$x" | grep -v '^\-e')"
+x="$(koopa::print "$x" | grep -v '^\-e')"
 
 if [[ -z "$x" ]]
 then
-    _koopa_success "All Python packages are current."
+    koopa::success "All Python packages are current."
     exit 0
 fi
 
-prefix="$(_koopa_python_site_packages_prefix)"
+prefix="$(koopa::python_site_packages_prefix)"
 
-readarray -t pkgs <<< "$(_koopa_print "$x" | cut -d '=' -f 1)"
-_koopa_dl "Packages" "$(_koopa_to_string "${pkgs[@]}")"
-_koopa_dl "Prefix" "$prefix"
+readarray -t pkgs <<< "$(koopa::print "$x" | cut -d '=' -f 1)"
+koopa::dl "Packages" "$(koopa::to_string "${pkgs[@]}")"
+koopa::dl "Prefix" "$prefix"
 
 python3 -m pip install \
     --no-warn-script-location \
     --upgrade \
     "${pkgs[@]}"
 
-_koopa_is_cellar python3 && _koopa_link_cellar python
+koopa::is_cellar python3 && koopa::link_cellar python
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

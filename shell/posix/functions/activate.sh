@@ -1,12 +1,12 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_activate_aliases() { # {{{1
+koopa::activate_aliases() { # {{{1
     # """
     # Activate (non-shell-specific) aliases.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local file
     file="${HOME}/.aliases"
     [ -f "$file" ] || return 0
@@ -15,17 +15,17 @@ _koopa_activate_aliases() { # {{{1
     return 0
 }
 
-_koopa_activate_aspera() { # {{{1
+koopa::activate_aspera() { # {{{1
     # """
     # Include Aspera Connect binaries in PATH, if defined.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_activate_prefix "$(_koopa_aspera_prefix)/latest"
+    koopa::assert_has_no_args "$#"
+    koopa::activate_prefix "$(koopa::aspera_prefix)/latest"
     return 0
 }
 
-_koopa_activate_autojump() { # {{{1
+koopa::activate_autojump() { # {{{1
     # """
     # Activate autojump.
     # @note Updated 2020-06-30.
@@ -43,8 +43,8 @@ _koopa_activate_autojump() { # {{{1
     # See also:
     # - https://github.com/wting/autojump
     # """
-    _koopa_assert_has_no_args "$#"
-    case "$(_koopa_shell)" in
+    koopa::assert_has_no_args "$#"
+    case "$(koopa::shell)" in
         bash|zsh)
             ;;
         *)
@@ -52,18 +52,18 @@ _koopa_activate_autojump() { # {{{1
             ;;
     esac
     local prefix
-    prefix="$(_koopa_autojump_prefix)"
+    prefix="$(koopa::autojump_prefix)"
     [ -d "$prefix" ] || return 0
     if [ -z "${PROMPT_COMMAND:-}" ]
     then
         export PROMPT_COMMAND="history -a"
     fi
-    _koopa_activate_prefix "$prefix"
+    koopa::activate_prefix "$prefix"
     local script
     script="${prefix}/etc/profile.d/autojump.sh"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -71,7 +71,7 @@ _koopa_activate_autojump() { # {{{1
     return 0
 }
 
-_koopa_activate_bcbio() { # {{{1
+koopa::activate_bcbio() { # {{{1
     # """
     # Include bcbio toolkit binaries in PATH, if defined.
     # @note Updated 2020-06-30.
@@ -82,18 +82,18 @@ _koopa_activate_bcbio() { # {{{1
     # This is particularly important to avoid unexpected compilation issues
     # due to compilers in conda masking the system versions.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_linux || return 0
-    _koopa_is_installed bcbio_nextgen.py && return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_linux || return 0
+    koopa::is_installed bcbio_nextgen.py && return 0
     local prefix
-    prefix="$(_koopa_bcbio_prefix)"
+    prefix="$(koopa::bcbio_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_end "${prefix}/bin"
+    koopa::force_add_to_path_end "${prefix}/bin"
     unset -v PYTHONHOME PYTHONPATH
     return 0
 }
 
-_koopa_activate_broot() { # {{{1
+koopa::activate_broot() { # {{{1
     # """
     # Activate broot directory tree utility.
     # @note Updated 2020-06-30.
@@ -108,9 +108,9 @@ _koopa_activate_broot() { # {{{1
     #
     # https://github.com/Canop/broot
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local config_dir
-    if _koopa_is_macos
+    if koopa::is_macos
     then
         config_dir="${HOME}/Library/Preferences/org.dystroy.broot"
     else
@@ -121,7 +121,7 @@ _koopa_activate_broot() { # {{{1
     br_script="${config_dir}/launcher/bash/br"
     [ -f "$br_script" ] || return 0
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$br_script"
@@ -129,13 +129,13 @@ _koopa_activate_broot() { # {{{1
     return 0
 }
 
-_koopa_activate_completion() { # {{{1
+koopa::activate_completion() { # {{{1
     # """
     # Activate completion (with TAB key).
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    case "$(_koopa_shell)" in
+    koopa::assert_has_no_args "$#"
+    case "$(koopa::shell)" in
         bash|zsh)
             ;;
         *)
@@ -143,11 +143,11 @@ _koopa_activate_completion() { # {{{1
             ;;
     esac
     # shellcheck source=/dev/null
-    . "$(_koopa_prefix)/etc/completion/"*
+    . "$(koopa::prefix)/etc/completion/"*
     return 0
 }
 
-_koopa_activate_conda() { # {{{1
+koopa::activate_conda() { # {{{1
     # """
     # Activate conda.
     # @note Updated 2020-06-30.
@@ -156,12 +156,12 @@ _koopa_activate_conda() { # {{{1
     # Instead source the 'activate' script.
     # This must be reloaded inside of subshells to work correctly.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     prefix="${1:-}"
     if [ -z "$prefix" ]
     then
-        prefix="$(_koopa_app_prefix)/conda"
+        prefix="$(koopa::app_prefix)/conda"
     fi
     [ -d "$prefix" ] || return 0
     local name
@@ -169,7 +169,7 @@ _koopa_activate_conda() { # {{{1
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -183,7 +183,7 @@ _koopa_activate_conda() { # {{{1
     return 0
 }
 
-_koopa_activate_conda_env() { # {{{1
+koopa::activate_conda_env() { # {{{1
     # """
     # Activate a conda environment.
     # @note Updated 2020-06-30.
@@ -205,16 +205,16 @@ _koopa_activate_conda_env() { # {{{1
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    _koopa_assert_has_args "$#"
-    _koopa_assert_is_installed conda
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed conda
     local name
     name="${1:?}"
     local prefix
-    prefix="$(_koopa_conda_prefix)"
-    # > _koopa_h1 "Activating '${name}' conda environment."
-    # > _koopa_dl "Prefix" "$prefix"
+    prefix="$(koopa::conda_prefix)"
+    # > koopa::h1 "Activating '${name}' conda environment."
+    # > koopa::dl "Prefix" "$prefix"
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     if ! type conda | grep -q conda.sh
     then
@@ -226,7 +226,7 @@ _koopa_activate_conda_env() { # {{{1
     return 0
 }
 
-_koopa_activate_coreutils() { # {{{1
+koopa::activate_coreutils() { # {{{1
     # """
     # Activate hardened interactive aliases for coreutils.
     # @note Updated 2020-07-03.
@@ -236,8 +236,8 @@ _koopa_activate_coreutils() { # {{{1
     #
     # macOS ships with a very old version of GNU coreutils. Use Homebrew.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_has_gnu_coreutils || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::has_gnu_coreutils || return 0
     alias cp="cp --archive --interactive" # -ai
     alias ln="ln --interactive --no-dereference --symbolic" # -ins
     alias mkdir="mkdir --parents" # -p
@@ -246,15 +246,15 @@ _koopa_activate_coreutils() { # {{{1
     return 0
 }
 
-_koopa_activate_dircolors() { # {{{1
+koopa::activate_dircolors() { # {{{1
     # """
     # Activate directory colors.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed dircolors || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed dircolors || return 0
     local dotfiles_prefix
-    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+    dotfiles_prefix="$(koopa::dotfiles_prefix)"
     # This will set the 'LD_COLORS' environment variable.
     dircolors_file="${dotfiles_prefix}/app/coreutils/dircolors"
     if [ -f "$dircolors_file" ]
@@ -273,17 +273,17 @@ _koopa_activate_dircolors() { # {{{1
     return 0
 }
 
-_koopa_activate_emacs() { # {{{1
+koopa::activate_emacs() { # {{{1
     # """
     # Activate Emacs.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_activate_prefix "${HOME}/.emacs.d"
+    koopa::assert_has_no_args "$#"
+    koopa::activate_prefix "${HOME}/.emacs.d"
     return 0
 }
 
-_koopa_activate_ensembl_perl_api() { # {{{1
+koopa::activate_ensembl_perl_api() { # {{{1
     # """
     # Activate Ensembl Perl API.
     # @note Updated 2020-06-30.
@@ -291,11 +291,11 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     # Note that this currently requires Perl 5.26.
     # > perlbrew switch perl-5.26
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
-    prefix="$(_koopa_ensembl_perl_api_prefix)"
+    prefix="$(koopa::ensembl_perl_api_prefix)"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/ensembl-git-tools/bin"
+    koopa::add_to_path_start "${prefix}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB}:${prefix}/bioperl-1.6.924"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl/modules"
     PERL5LIB="${PERL5LIB}:${prefix}/ensembl-compara/modules"
@@ -305,7 +305,7 @@ _koopa_activate_ensembl_perl_api() { # {{{1
     return 0
 }
 
-_koopa_activate_fzf() { # {{{1
+koopa::activate_fzf() { # {{{1
     # """
     # Activate fzf, command-line fuzzy finder.
     # @note Updated 2020-05-05.
@@ -317,13 +317,13 @@ _koopa_activate_fzf() { # {{{1
     # @seealso
     # - https://github.com/junegunn/fzf
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local nounset prefix script shell
-    prefix="$(_koopa_fzf_prefix)/latest"
+    prefix="$(koopa::fzf_prefix)/latest"
     [ -d "$prefix" ] || return 0
-    _koopa_activate_prefix "$prefix"
-    nounset="$(_koopa_boolean_nounset)"
-    shell="$(_koopa_shell)"
+    koopa::activate_prefix "$prefix"
+    nounset="$(koopa::boolean_nounset)"
+    shell="$(koopa::shell)"
     # Relax hardened shell temporarily, if necessary.
     if [ "$nounset" -eq 1 ]
     then
@@ -353,12 +353,12 @@ _koopa_activate_fzf() { # {{{1
     return 0
 }
 
-_koopa_activate_gcc_colors() { # {{{1
+koopa::activate_gcc_colors() { # {{{1
     # """
     # Activate GCC colors.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     # Colored GCC warnings and errors.
     [ -n "${GCC_COLORS:-}" ] && return 0
     export GCC_COLORS="caret=01;32:error=01;31:locus=01:note=01;36:\
@@ -366,27 +366,27 @@ quote=01:warning=01;35"
     return 0
 }
 
-_koopa_activate_go() { # {{{1
+koopa::activate_go() { # {{{1
     # """
     # Activate Go.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed go || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed go || return 0
     [ -n "${GOPATH:-}" ] && return 0
-    GOPATH="$(_koopa_go_gopath)"
+    GOPATH="$(koopa::go_gopath)"
     export GOPATH
-    [ ! -d "$GOPATH" ] && _koopa_mkdir "$GOPATH"
+    [ ! -d "$GOPATH" ] && koopa::mkdir "$GOPATH"
     return 0
 }
 
-_koopa_activate_homebrew() { # {{{1
+koopa::activate_homebrew() { # {{{1
     # """
     # Activate Homebrew.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed brew || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed brew || return 0
     HOMEBREW_PREFIX="$(brew --prefix)"
     HOMEBREW_REPOSITORY="$(brew --repo)"
     export HOMEBREW_INSTALL_CLEANUP=1
@@ -398,24 +398,24 @@ _koopa_activate_homebrew() { # {{{1
     then
         export HOMEBREW_FORCE_BREWED_CURL=1
     fi
-    _koopa_activate_homebrew_gnu_prefix coreutils
-    _koopa_activate_homebrew_gnu_prefix findutils
-    _koopa_activate_homebrew_gnu_prefix gnu-sed
-    _koopa_activate_homebrew_gnu_prefix gnu-tar
-    _koopa_activate_homebrew_gnu_prefix gnu-units
-    _koopa_activate_homebrew_gnu_prefix grep
-    _koopa_activate_homebrew_gnu_prefix make
-    _koopa_activate_homebrew_google_cloud_sdk
-    _koopa_activate_homebrew_libexec_prefix man-db
-    _koopa_activate_homebrew_prefix curl
-    _koopa_activate_homebrew_prefix ruby
-    _koopa_activate_homebrew_prefix sqlite
-    _koopa_activate_homebrew_prefix texinfo
-    _koopa_activate_homebrew_ruby_gems
+    koopa::activate_homebrew_gnu_prefix coreutils
+    koopa::activate_homebrew_gnu_prefix findutils
+    koopa::activate_homebrew_gnu_prefix gnu-sed
+    koopa::activate_homebrew_gnu_prefix gnu-tar
+    koopa::activate_homebrew_gnu_prefix gnu-units
+    koopa::activate_homebrew_gnu_prefix grep
+    koopa::activate_homebrew_gnu_prefix make
+    koopa::activate_homebrew_google_cloud_sdk
+    koopa::activate_homebrew_libexec_prefix man-db
+    koopa::activate_homebrew_prefix curl
+    koopa::activate_homebrew_prefix ruby
+    koopa::activate_homebrew_prefix sqlite
+    koopa::activate_homebrew_prefix texinfo
+    koopa::activate_homebrew_ruby_gems
     return 0
 }
 
-_koopa_activate_homebrew_gnu_prefix() { # {{{1
+koopa::activate_homebrew_gnu_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew GNU program.
     # @note Updated 2020-06-30.
@@ -437,26 +437,26 @@ _koopa_activate_homebrew_gnu_prefix() { # {{{1
     # - brew info libtool
     # - brew info make
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local prefix
-    prefix="$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
+    prefix="$(koopa::homebrew_prefix)/opt/${1:?}/libexec"
     [ -d "$prefix" ] || return 0
-    _koopa_force_add_to_path_start "${prefix}/gnubin"
-    _koopa_force_add_to_manpath_start "${prefix}/share/gnuman"
+    koopa::force_add_to_path_start "${prefix}/gnubin"
+    koopa::force_add_to_manpath_start "${prefix}/share/gnuman"
     return 0
 }
 
-_koopa_activate_homebrew_google_cloud_sdk() {
+koopa::activate_homebrew_google_cloud_sdk() {
     # """
     # Activate Homebrew Google Cloud SDK.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix shell
-    prefix="$(_koopa_homebrew_prefix)"
+    prefix="$(koopa::homebrew_prefix)"
     prefix="${prefix}/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     [ -d "$prefix" ] || return 0
-    shell="$(_koopa_shell)"
+    shell="$(koopa::shell)"
     if [ -f "${prefix}/path.${shell}.inc" ]
     then
         # shellcheck source=/dev/null
@@ -471,27 +471,27 @@ _koopa_activate_homebrew_google_cloud_sdk() {
     return 0
 }
 
-_koopa_activate_homebrew_libexec_prefix() { # {{{1
+koopa::activate_homebrew_libexec_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew program.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_args "$#"
-    _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}/libexec"
+    koopa::assert_has_args "$#"
+    koopa::activate_prefix "$(koopa::homebrew_prefix)/opt/${1:?}/libexec"
     return 0
 }
 
-_koopa_activate_homebrew_prefix() { # {{{1
+koopa::activate_homebrew_prefix() { # {{{1
     # """
     # Activate a cellar-only Homebrew program.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_args "$#"
-    _koopa_activate_prefix "$(_koopa_homebrew_prefix)/opt/${1:?}"
+    koopa::assert_has_args "$#"
+    koopa::activate_prefix "$(koopa::homebrew_prefix)/opt/${1:?}"
     return 0
 }
 
-_koopa_activate_homebrew_python() {
+koopa::activate_homebrew_python() {
     # """
     # Activate Homebrew Python.
     # @note Updated 2020-06-30.
@@ -508,13 +508,13 @@ _koopa_activate_homebrew_python() {
     # - https://docs.brew.sh/Homebrew-and-Python
     # - brew info python
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
-    _koopa_activate_homebrew_prefix "python"
+    koopa::activate_homebrew_prefix "python"
     return 0
 }
 
-_koopa_activate_homebrew_ruby_gems() { # {{{1
+koopa::activate_homebrew_ruby_gems() { # {{{1
     # """
     # Activate Homebrew Ruby gems.
     # @note Updated 2020-06-30.
@@ -523,42 +523,42 @@ _koopa_activate_homebrew_ruby_gems() { # {{{1
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # - https://stackoverflow.com/questions/12287882/
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_add_to_path_start "$(_koopa_homebrew_ruby_gems_prefix)"
+    koopa::assert_has_no_args "$#"
+    koopa::add_to_path_start "$(koopa::homebrew_ruby_gems_prefix)"
     return 0
 }
 
-_koopa_activate_koopa_paths() { # {{{1
+koopa::activatekoopa::paths() { # {{{1
     # """
     # Automatically configure koopa PATH and MANPATH.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local config_prefix host_id koopa_prefix os_id shell
-    koopa_prefix="$(_koopa_prefix)"
-    _koopa_str_match "${PATH:-}" "$koopa_prefix" && return 0
-    config_prefix="$(_koopa_config_prefix)"
-    host_id="$(_koopa_host_id)"
-    os_id="$(_koopa_os_id)"
-    shell="$(_koopa_shell)"
-    _koopa_activate_prefix "$koopa_prefix"
-    _koopa_activate_prefix "${koopa_prefix}/shell/${shell}"
-    if _koopa_is_linux
+    koopa_prefix="$(koopa::prefix)"
+    koopa::str_match "${PATH:-}" "$koopa_prefix" && return 0
+    config_prefix="$(koopa::config_prefix)"
+    host_id="$(koopa::host_id)"
+    os_id="$(koopa::os_id)"
+    shell="$(koopa::shell)"
+    koopa::activate_prefix "$koopa_prefix"
+    koopa::activate_prefix "${koopa_prefix}/shell/${shell}"
+    if koopa::is_linux
     then
-        _koopa_activate_prefix "${koopa_prefix}/os/linux"
-        if _koopa_is_debian
+        koopa::activate_prefix "${koopa_prefix}/os/linux"
+        if koopa::is_debian
         then
-            _koopa_activate_prefix "${koopa_prefix}/os/debian"
-        elif _koopa_is_fedora
+            koopa::activate_prefix "${koopa_prefix}/os/debian"
+        elif koopa::is_fedora
         then
-            _koopa_activate_prefix "${koopa_prefix}/os/fedora"
+            koopa::activate_prefix "${koopa_prefix}/os/fedora"
         fi
-        if _koopa_is_rhel
+        if koopa::is_rhel
         then
-            _koopa_activate_prefix "${koopa_prefix}/os/rhel"
+            koopa::activate_prefix "${koopa_prefix}/os/rhel"
         fi
     fi
-    _koopa_activate_prefix \
+    koopa::activate_prefix \
         "${koopa_prefix}/os/${os_id}" \
         "${koopa_prefix}/host/${host_id}" \
         "${config_prefix}/docker" \
@@ -566,21 +566,21 @@ _koopa_activate_koopa_paths() { # {{{1
     return 0
 }
 
-_koopa_activate_llvm() { # {{{1
+koopa::activate_llvm() { # {{{1
     # """
     # Activate LLVM config.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -x "${LLVM_CONFIG:-}" ] && return 0
     local config
-    if _koopa_is_macos
+    if koopa::is_macos
     then
         config="/usr/local/opt/llvm/bin/llvm-config"
     else
         # Note that findutils isn't installed on Linux distros by default
         # (e.g. Docker fedora image), and will error here otherwise.
-        _koopa_is_installed find || return 0
+        koopa::is_installed find || return 0
         # Attempt to find the latest version automatically.
         config="$(find /usr/bin -name "llvm-config-*" | sort | tail -n 1)"
     fi
@@ -588,7 +588,7 @@ _koopa_activate_llvm() { # {{{1
     return 0
 }
 
-_koopa_activate_local_etc_profile() { # {{{1
+koopa::activate_local_etc_profile() { # {{{1
     # """
     # Source 'profile.d' scripts in '/usr/local/etc'.
     # @note Updated 2020-06-30.
@@ -598,8 +598,8 @@ _koopa_activate_local_etc_profile() { # {{{1
     # Can run into issues with autojump due to missing 'BASH' variable on Zsh
     # and Dash shells otherwise.
     # """
-    _koopa_assert_has_no_args "$#"
-    case "$(_koopa_shell)" in
+    koopa::assert_has_no_args "$#"
+    case "$(koopa::shell)" in
         bash)
             ;;
         *)
@@ -607,7 +607,7 @@ _koopa_activate_local_etc_profile() { # {{{1
             ;;
     esac
     local prefix
-    prefix="$(_koopa_make_prefix)/etc/profile.d"
+    prefix="$(koopa::make_prefix)/etc/profile.d"
     [ -d /usr/local/etc/profile.d ] || return 0
     local script
     for script in /usr/local/etc/profile.d/*.sh
@@ -621,12 +621,12 @@ _koopa_activate_local_etc_profile() { # {{{1
     return 0
 }
 
-_koopa_activate_macos_extras() { # {{{1
+koopa::activate_macos_extras() { # {{{1
     # """
     # Activate macOS-specific extra settings.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     # Improve terminal colors.
     if [ -z "${CLICOLOR:-}" ]
     then
@@ -646,24 +646,24 @@ _koopa_activate_macos_extras() { # {{{1
     return 0
 }
 
-_koopa_activate_macos_python() {
+koopa::activate_macos_python() {
     # """
     # Activate macOS Python install.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_macos
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_macos
     [ -z "${VIRTUAL_ENV:-}" ] || return 0
     local version
-    version="$(_koopa_variable "python")"
+    version="$(koopa::variable "python")"
     local minor_version
-    minor_version="$(_koopa_major_minor_version "$version")"
-    _koopa_add_to_path_start "/Library/Frameworks/Python.framework/\
+    minor_version="$(koopa::major_minor_version "$version")"
+    koopa::add_to_path_start "/Library/Frameworks/Python.framework/\
 Versions/${minor_version}/bin"
     return 0
 }
 
-_koopa_activate_openjdk() { # {{{1
+koopa::activate_openjdk() { # {{{1
     # """
     # Activate OpenJDK.
     # @note Updated 2020-06-30.
@@ -672,16 +672,16 @@ _koopa_activate_openjdk() { # {{{1
     #
     # We're using a symlink approach here to manage versions.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_linux || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_linux || return 0
     local prefix
-    prefix="$(_koopa_openjdk_prefix)/latest"
+    prefix="$(koopa::openjdk_prefix)/latest"
     [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_start "${prefix}/bin"
+    koopa::add_to_path_start "${prefix}/bin"
     return 0
 }
 
-_koopa_activate_perlbrew() { # {{{1
+koopa::activate_perlbrew() { # {{{1
     # """
     # Activate Perlbrew.
     # @note Updated 2020-06-30.
@@ -692,18 +692,18 @@ _koopa_activate_perlbrew() { # {{{1
     # See also:
     # - https://perlbrew.pl
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -n "${PERLBREW_ROOT:-}" ] && return 0
-    ! _koopa_is_installed perlbrew || return 0
-    _koopa_shell | grep -Eq "^(bash|zsh)$" || return 0
+    ! koopa::is_installed perlbrew || return 0
+    koopa::shell | grep -Eq "^(bash|zsh)$" || return 0
     local prefix
-    prefix="$(_koopa_perlbrew_prefix)"
+    prefix="$(koopa::perlbrew_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/etc/bashrc"
     [ -r "$script" ] || return 0
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # Note that this is also compatible with zsh.
     # shellcheck source=/dev/null
@@ -712,7 +712,7 @@ _koopa_activate_perlbrew() { # {{{1
     return 0
 }
 
-_koopa_activate_pipx() { # {{{1
+koopa::activate_pipx() { # {{{1
     # """
     # Activate pipx for Python.
     # @note Updated 2020-06-30.
@@ -727,12 +727,12 @@ _koopa_activate_pipx() { # {{{1
     # PIPX_BIN_DIR: The default app location is '~/.local/bin' and can be
     # overridden by setting the environment variable 'PIPX_BIN_DIR'.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed pipx || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed pipx || return 0
     [ -n "${PIPX_HOME:-}" ] && return 0
     [ -n "${PIPX_BIN_DIR:-}" ] && return 0
     local shared_prefix
-    shared_prefix="$(_koopa_app_prefix)/python/pipx"
+    shared_prefix="$(koopa::app_prefix)/python/pipx"
     if [ -d "$shared_prefix" ]
     then
         # Shared user installation.
@@ -745,11 +745,11 @@ _koopa_activate_pipx() { # {{{1
     fi
     export PIPX_HOME
     export PIPX_BIN_DIR
-    _koopa_add_to_path_start "$PIPX_BIN_DIR"
+    koopa::add_to_path_start "$PIPX_BIN_DIR"
     return 0
 }
 
-_koopa_activate_pkg_config() { # {{{1
+koopa::activate_pkg_config() { # {{{1
     # """
     # Configure PKG_CONFIG_PATH.
     # @note Updated 2020-07-02.
@@ -759,8 +759,8 @@ _koopa_activate_pkg_config() { # {{{1
     #
     # This is necessary for rgdal, sf packages to install clean.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_add_to_pkg_config_start \
+    koopa::assert_has_no_args "$#"
+    koopa::add_to_pkg_config_start \
         /usr/lib/pkgconfig \
         /usr/lib64/pkgconfig \
         /usr/local/share/pkgconfig \
@@ -770,53 +770,53 @@ _koopa_activate_pkg_config() { # {{{1
     return 0
 }
 
-_koopa_activate_prefix() { # {{{1
+koopa::activate_prefix() { # {{{1
     # """
     # Automatically configure PATH and MANPATH for a specified prefix.
     # @note Updated 2020-07-02.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local prefix
     for prefix in "$@"
     do
         [ -d "$prefix" ] || continue
-        _koopa_add_to_path_start \
+        koopa::add_to_path_start \
             "${prefix}/sbin" \
             "${prefix}/bin"
-        _koopa_add_to_manpath_start \
+        koopa::add_to_manpath_start \
             "${prefix}/man" \
             "${prefix}/share/man"
     done
     return 0
 }
 
-_koopa_activate_pyenv() { # {{{1
+koopa::activate_pyenv() { # {{{1
     # """
     # Activate Python version manager (pyenv).
     # @note Updated 2020-06-30.
     #
     # Note that pyenv forks rbenv, so activation is very similar.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed pyenv && return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed pyenv && return 0
     [ -n "${PYENV_ROOT:-}" ] && return 0
     local prefix
-    prefix="$(_koopa_pyenv_prefix)"
+    prefix="$(koopa::pyenv_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/bin/pyenv"
     [ -r "$script" ] || return 0
     export PYENV_ROOT="$prefix"
-    _koopa_activate_prefix "$prefix"
+    koopa::activate_prefix "$prefix"
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
-_koopa_activate_rbenv() { # {{{1
+koopa::activate_rbenv() { # {{{1
     # """
     # Activate Ruby version manager (rbenv).
     # @note Updated 2020-06-30.
@@ -825,50 +825,50 @@ _koopa_activate_rbenv() { # {{{1
     # - https://github.com/rbenv/rbenv
     #
     # Alternate approaches:
-    # > _koopa_add_to_path_start "$(rbenv root)/shims"
-    # > _koopa_add_to_path_start "${HOME}/.rbenv/shims"
+    # > koopa::add_to_path_start "$(rbenv root)/shims"
+    # > koopa::add_to_path_start "${HOME}/.rbenv/shims"
     # """
-    _koopa_assert_has_no_args "$#"
-    if _koopa_is_installed rbenv
+    koopa::assert_has_no_args "$#"
+    if koopa::is_installed rbenv
     then
         eval "$(rbenv init -)"
         return 0
     fi
     [ -n "${RBENV_ROOT:-}" ] && return 0
     local prefix
-    prefix="$(_koopa_rbenv_prefix)"
+    prefix="$(koopa::rbenv_prefix)"
     [ -d "$prefix" ] || return 0
     local script
     script="${prefix}/bin/rbenv"
     [ -r "$script" ] || return 0
     export RBENV_ROOT="$prefix"
-    _koopa_activate_prefix "$prefix"
+    koopa::activate_prefix "$prefix"
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -u
     return 0
 }
 
-_koopa_activate_ruby() { # {{{1
+koopa::activate_ruby() { # {{{1
     # """
     # Activate Ruby gems.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -n "${GEM_HOME:-}" ] && return 0
     local gem_home
     gem_home="${HOME}/.gem"
     if [ -d "$gem_home" ]
     then
-        _koopa_add_to_path_start "$gem_home"
+        koopa::add_to_path_start "$gem_home"
         export GEM_HOME="$gem_home"
     fi
     return 0
 }
 
-_koopa_activate_rust() { # {{{1
+koopa::activate_rust() { # {{{1
     # """
     # Activate Rust programming language.
     # @note Updated 2020-06-30.
@@ -878,12 +878,12 @@ _koopa_activate_rust() { # {{{1
     #
     # Alternatively, can just add '${cargo_home}/bin' to PATH.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local cargo_prefix
-    cargo_prefix="$(_koopa_rust_cargo_prefix)"
+    cargo_prefix="$(koopa::rust_cargo_prefix)"
     [ -d "$cargo_prefix" ] || return 0
     local shared_rust_prefix
-    shared_rust_prefix="$(_koopa_app_prefix)/rust"
+    shared_rust_prefix="$(koopa::app_prefix)/rust"
     local shared_cargo_prefix
     shared_cargo_prefix="${shared_rust_prefix}/cargo"
     if [ "$cargo_prefix" = "$shared_cargo_prefix" ]
@@ -892,7 +892,7 @@ _koopa_activate_rust() { # {{{1
         shared_rustup_prefix="${shared_rust_prefix}/rustup"
         if [ ! -d "$shared_rustup_prefix" ]
         then
-            _koopa_warning "Rustup not installed at '${shared_rustup_prefix}'."
+            koopa::warning "Rustup not installed at '${shared_rustup_prefix}'."
         fi
         export RUSTUP_HOME="$shared_rustup_prefix"
     fi
@@ -901,7 +901,7 @@ _koopa_activate_rust() { # {{{1
     [ -r "$script" ] || return 0
     export CARGO_HOME="$cargo_prefix"
     local nounset
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -909,7 +909,7 @@ _koopa_activate_rust() { # {{{1
     return 0
 }
 
-_koopa_activate_secrets() { # {{{1
+koopa::activate_secrets() { # {{{1
     # """
     # Source secrets file.
     # @note Updated 2020-02-23.
@@ -922,7 +922,7 @@ _koopa_activate_secrets() { # {{{1
     return 0
 }
 
-_koopa_activate_ssh_key() { # {{{1
+koopa::activate_ssh_key() { # {{{1
     # """
     # Import an SSH key automatically.
     # @note Updated 2020-06-30.
@@ -936,8 +936,8 @@ _koopa_activate_ssh_key() { # {{{1
     # List currently loaded keys:
     # > ssh-add -L
     # """
-    _koopa_is_linux || return 0
-    _koopa_is_interactive || return 0
+    koopa::is_linux || return 0
+    koopa::is_interactive || return 0
     local key
     key="${1:-}"
     if [ -z "$key" ] && [ -n "${SSH_KEY:-}" ]
@@ -952,7 +952,7 @@ _koopa_activate_ssh_key() { # {{{1
     return 0
 }
 
-_koopa_activate_standard_paths() { # {{{1
+koopa::activate_standard_paths() { # {{{1
     # """
     # Activate standard paths.
     # @note Updated 2020-06-30.
@@ -963,24 +963,24 @@ _koopa_activate_standard_paths() { # {{{1
     # @seealso
     # - https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_force_add_to_path_end \
+    koopa::assert_has_no_args "$#"
+    koopa::force_add_to_path_end \
         "/usr/bin" \
         "/bin" \
         "/usr/sbin" \
         "/sbin"
-    _koopa_force_add_to_path_start \
+    koopa::force_add_to_path_start \
         "/usr/local/sbin" \
         "/usr/local/bin" \
         "${HOME}/.local/bin"
-    _koopa_force_add_to_manpath_end "/usr/share/man"
-    _koopa_force_add_to_manpath_start \
+    koopa::force_add_to_manpath_end "/usr/share/man"
+    koopa::force_add_to_manpath_start \
         "/usr/local/share/man" \
         "${HOME}/.local/share/man"
     return 0
 }
 
-_koopa_activate_venv() { # {{{1
+koopa::activate_venv() { # {{{1
     # """
     # Activate Python default virtual environment.
     # @note Updated 2020-06-30.
@@ -1001,13 +1001,13 @@ _koopa_activate_venv() { # {{{1
     # Note that 'deactivate' is still messing up autojump path.
     # """
     [ -n "${VIRTUAL_ENV:-}" ] && return 0
-    _koopa_str_match_regex "$(_koopa_shell)" "^(bash|zsh)$" || return 0
+    koopa::str_match_regex "$(koopa::shell)" "^(bash|zsh)$" || return 0
     local name nounset prefix script
     name="${1:-base}"
-    prefix="$(_koopa_venv_prefix)"
+    prefix="$(koopa::venv_prefix)"
     script="${prefix}/${name}/bin/activate"
     [ -r "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
+    nounset="$(koopa::boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +u
     # shellcheck source=/dev/null
     . "$script"
@@ -1015,7 +1015,7 @@ _koopa_activate_venv() { # {{{1
     return 0
 }
 
-_koopa_activate_xdg() { # {{{1
+koopa::activate_xdg() { # {{{1
     # """
     # Activate XDG base directory specification
     # @note Updated 2020-06-30.
@@ -1036,7 +1036,7 @@ _koopa_activate_xdg() { # {{{1
     # - https://developer.gnome.org/basedir-spec/
     # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
         XDG_CACHE_HOME="${HOME}/.cache"
@@ -1051,8 +1051,8 @@ _koopa_activate_xdg() { # {{{1
     fi
     if [ -z "${XDG_RUNTIME_DIR:-}" ]
     then
-        XDG_RUNTIME_DIR="/run/user/$(_koopa_current_user_id)"
-        if _koopa_is_macos
+        XDG_RUNTIME_DIR="/run/user/$(koopa::current_user_id)"
+        if koopa::is_macos
         then
             XDG_RUNTIME_DIR="/tmp${XDG_RUNTIME_DIR}"
         fi
@@ -1071,20 +1071,20 @@ _koopa_activate_xdg() { # {{{1
     export XDG_DATA_DIRS
     export XDG_DATA_HOME
     export XDG_RUNTIME_DIR
-    _koopa_update_xdg_config
+    koopa::update_xdg_config
     return 0
 }
 
-_koopa_check_exports() { # {{{1
+koopa::check_exports() { # {{{1
     # """
     # Check exported environment variables.
     # @note Updated 2020-06-30.
     #
     # Warn the user if they are setting unrecommended values.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_rstudio && return 0
-    _koopa_warn_if_export \
+    koopa::assert_has_no_args "$#"
+    koopa::is_rstudio && return 0
+    koopa::warn_if_export \
         "JAVA_HOME" \
         "LD_LIBRARY_PATH" \
         "PYTHONHOME" \
@@ -1092,36 +1092,36 @@ _koopa_check_exports() { # {{{1
     return 0
 }
 
-_koopa_export_cpu_count() { # {{{1
+koopa::export_cpu_count() { # {{{1
     # """
     # Export CPU_COUNT.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    [ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(_koopa_cpu_count)"
+    koopa::assert_has_no_args "$#"
+    [ -z "${CPU_COUNT:-}" ] && CPU_COUNT="$(koopa::cpu_count)"
     export CPU_COUNT
     return 0
 }
 
-_koopa_export_dotfiles() { # {{{1
+koopa::export_dotfiles() { # {{{1
     # """
     # Activate dotfiles repo.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local dotfiles
-    dotfiles="$(_koopa_config_prefix)/dotfiles"
+    dotfiles="$(koopa::config_prefix)/dotfiles"
     [ -d "$dotfiles" ] || return 0
     export DOTFILES="$dotfiles"
     return 0
 }
 
-_koopa_export_editor() { # {{{1
+koopa::export_editor() { # {{{1
     # """
     # Export EDITOR.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${EDITOR:-}" ] && EDITOR="vim"
     VISUAL="$EDITOR"
     export EDITOR
@@ -1129,7 +1129,7 @@ _koopa_export_editor() { # {{{1
     return 0
 }
 
-_koopa_export_git() { # {{{1
+koopa::export_git() { # {{{1
     # """
     # Export git configuration.
     # @note Updated 2020-06-30.
@@ -1137,13 +1137,13 @@ _koopa_export_git() { # {{{1
     # @seealso
     # https://git-scm.com/docs/merge-options
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${GIT_MERGE_AUTOEDIT:-}" ] && GIT_MERGE_AUTOEDIT="no"
     export GIT_MERGE_AUTOEDIT
     return 0
 }
 
-_koopa_export_gnupg() { # {{{1
+koopa::export_gnupg() { # {{{1
     # """
     # Export GnuPG settings.
     # @note Updated 2020-06-30.
@@ -1152,8 +1152,8 @@ _koopa_export_gnupg() { # {{{1
     # Useful for getting Docker credential store to work.
     # https://github.com/docker/docker-credential-helpers/issues/118
     # """
-    _koopa_assert_has_no_args "$#"
-    if [ -z "${GPG_TTY:-}" ] && _koopa_is_tty
+    koopa::assert_has_no_args "$#"
+    if [ -z "${GPG_TTY:-}" ] && koopa::is_tty
     then
         GPG_TTY="$(tty || true)"
         export GPG_TTY
@@ -1161,18 +1161,18 @@ _koopa_export_gnupg() { # {{{1
     return 0
 }
 
-_koopa_export_group() { # {{{1
+koopa::export_group() { # {{{1
     # """
     # Export GROUP.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${GROUP:-}" ] && GROUP="$(id -gn)"
     export GROUP
     return 0
 }
 
-_koopa_export_history() { # {{{1
+koopa::export_history() { # {{{1
     # """
     # Export history.
     # @note Updated 2020-06-30.
@@ -1180,12 +1180,12 @@ _koopa_export_history() { # {{{1
     # See bash(1) for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME}/.$(_koopa_shell)_history"
+        HISTFILE="${HOME}/.$(koopa::shell)_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
@@ -1228,18 +1228,18 @@ _koopa_export_history() { # {{{1
     return 0
 }
 
-_koopa_export_hostname() { # {{{1
+koopa::export_hostname() { # {{{1
     # """
     # Export HOSTNAME.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${HOSTNAME:-}" ] && HOSTNAME="$(uname -n)"
     export HOSTNAME
     return 0
 }
 
-_koopa_export_lesspipe() { # {{{
+koopa::export_lesspipe() { # {{{
     # """
     # Export lesspipe settings.
     # @note Updated 2020-06-30.
@@ -1252,25 +1252,25 @@ _koopa_export_lesspipe() { # {{{
     # See also:
     # - https://github.com/wofr06/lesspipe
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     if [ -n "${LESSOPEN:-}" ] &&
-        _koopa_is_installed "lesspipe.sh"
+        koopa::is_installed "lesspipe.sh"
     then
-        lesspipe_exe="$(_koopa_which_realpath "lesspipe.sh")"
+        lesspipe_exe="$(koopa::which_realpath "lesspipe.sh")"
         export LESSOPEN="|${lesspipe_exe} %s"
         export LESS_ADVANCED_PREPROCESSOR=1
     fi
     return 0
 }
 
-_koopa_export_ostype() { # {{{1
+koopa::export_ostype() { # {{{1
     # """
     # Export OSTYPE.
     # @note Updated 2020-06-30.
     #
     # Automatically set by bash and zsh.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     if [ -z "${OSTYPE:-}" ]
     then
         OSTYPE="$(uname -s | tr '[:upper:]' '[:lower:]')"
@@ -1279,23 +1279,23 @@ _koopa_export_ostype() { # {{{1
     return 0
 }
 
-_koopa_export_pager() { # {{{1
+koopa::export_pager() { # {{{1
     # """
     # Export PAGER.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${PAGER:-}" ] && PAGER="less"
     export PAGER
     return 0
 }
 
-_koopa_export_proj_lib() { # {{{1
+koopa::export_proj_lib() { # {{{1
     # """
     # Export PROJ_LIB
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     if [ -z "${PROJ_LIB:-}" ]
     then
         if [ -e "/usr/local/share/proj" ]
@@ -1311,30 +1311,30 @@ _koopa_export_proj_lib() { # {{{1
     return 0
 }
 
-_koopa_export_python() { # {{{1
+koopa::export_python() { # {{{1
     # """
     # Export Python settings.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     # Don't allow Python to change the prompt string by default.
     [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] && VIRTUAL_ENV_DISABLE_PROMPT=1
     export VIRTUAL_ENV_DISABLE_PROMPT
     return 0
 }
 
-_koopa_export_rsync() { # {{{1
+koopa::export_rsync() { # {{{1
     # """
     # Export rsync flags.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
-    [ -z "${RSYNC_FLAGS:-}" ] && RSYNC_FLAGS="$(_koopa_rsync_flags)"
+    koopa::assert_has_no_args "$#"
+    [ -z "${RSYNC_FLAGS:-}" ] && RSYNC_FLAGS="$(koopa::rsync_flags)"
     export RSYNC_FLAGS
     return 0
 }
 
-_koopa_export_shell() { # {{{1
+koopa::export_shell() { # {{{1
     # """
     # Export SHELL.
     # @note Updated 2020-06-30.
@@ -1342,44 +1342,44 @@ _koopa_export_shell() { # {{{1
     # Some POSIX shells, such as Dash, don't export this by default.
     # Note that this doesn't currently get set by RStudio terminal.
     # """
-    _koopa_assert_has_no_args "$#"
-    [ -z "${SHELL:-}" ] && SHELL="$(_koopa_which "$(_koopa_shell)")"
+    koopa::assert_has_no_args "$#"
+    [ -z "${SHELL:-}" ] && SHELL="$(koopa::which "$(koopa::shell)")"
     export SHELL
     return 0
 }
 
-_koopa_export_tmpdir() { # {{{1
+koopa::export_tmpdir() { # {{{1
     # """
     # Export TMPDIR.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${TMPDIR:-}" ] && TMPDIR="/tmp"
     export TMPDIR
     return 0
 }
 
-_koopa_export_today() { # {{{1
+koopa::export_today() { # {{{1
     # """
     # Export TODAY.
     # @note Updated 2020-06-30.
     #
     # Current date. Alternatively, can use '%F' shorthand.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${TODAY:-}" ] && TODAY="$(date +%Y-%m-%d)"
     export TODAY
     return 0
 }
 
-_koopa_export_user() { # {{{1
+koopa::export_user() { # {{{1
     # """
     # Export USER.
     # @note Updated 2020-06-30.
     #
     # Alternatively, can use 'whoami' here.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [ -z "${USER:-}" ] && USER="$(id -un)"
     export USER
     return 0

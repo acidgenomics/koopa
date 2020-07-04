@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 source "${script_dir}/../shell/bash/include/header.sh"
 
 dir="${1:-"."}"
-dir="$(_koopa_strip_trailing_slash "$dir")"
+dir="$(koopa::strip_trailing_slash "$dir")"
 
 for file in "${dir}/"*".fq"
 do

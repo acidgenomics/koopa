@@ -18,7 +18,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -30,29 +30,29 @@ done
 
 name_fancy="Python"
 name="python"
-version="$(_koopa_variable "$name")"
+version="$(koopa::variable "$name")"
 framework_dir="/Library/Frameworks/Python.framework"
 
-if ! _koopa_is_current_version "$name" || [[ "$reinstall" -eq 1 ]]
+if ! koopa::is_current_version "$name" || [[ "$reinstall" -eq 1 ]]
 then
-    _koopa_rm "$framework_dir"
+    koopa::rm "$framework_dir"
 fi
 
-_koopa_exit_if_dir "$framework_dir"
+koopa::exit_if_dir "$framework_dir"
 
-_koopa_install_start "$name_fancy" "$framework_dir"
+koopa::install_start "$name_fancy" "$framework_dir"
 
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     file="python-${version}-macosx10.9.pkg"
     url="https://www.python.org/ftp/python/${version}/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     sudo installer -pkg "$file" -target /
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 rm -fr "$tmp_dir"
 
-_koopa_install_success "$name_fancy"
-_koopa_restart
+koopa::install_success "$name_fancy"
+koopa::restart

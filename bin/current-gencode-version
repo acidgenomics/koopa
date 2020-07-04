@@ -4,13 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_current_gencode_version() { # {{{1
+koopa::current_gencode_version() { # {{{1
     # """
     # Current GENCODE version.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_le "$#" 1
-    _koopa_assert_is_installed curl
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed curl
     local base_url organism pattern short_name url x
     organism="${1:-"Homo sapiens"}"
     case "$organism" in
@@ -23,7 +23,7 @@ _koopa_current_gencode_version() { # {{{1
             pattern="Release M[0-9]+"
             ;;
         *)
-            _koopa_stop "Unsupported organism: '${organism}'."
+            koopa::stop "Unsupported organism: '${organism}'."
             ;;
     esac
     base_url="https://www.gencodegenes.org"
@@ -35,8 +35,8 @@ _koopa_current_gencode_version() { # {{{1
         | cut -d ' ' -f 2 \
     )"
     [[ -n "$x" ]] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_current_gencode_version "$@"
+koopa::current_gencode_version "$@"

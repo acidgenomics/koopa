@@ -5,7 +5,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 checks=0 source "${script_dir}/../shell/bash/include/header.sh"
 
 # This script is called inside 'configure-vm', so don't use assert here.
-_koopa_exit_if_not_installed ssh-keygen
+koopa::exit_if_not_installed ssh-keygen
 
 comment="${USER}@${HOSTNAME}"
 key_name="id_rsa"
@@ -30,13 +30,13 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 file="${HOME}/.ssh/${key_name}"
-_koopa_exit_if_exists "$file"
+koopa::exit_if_exists "$file"
 
 ssh-keygen \
     -C "$comment" \
@@ -46,4 +46,4 @@ ssh-keygen \
     -q \
     -t rsa
 
-_koopa_success "Generated SSH key at '${file}'."
+koopa::success "Generated SSH key at '${file}'."

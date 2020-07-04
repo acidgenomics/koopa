@@ -3,9 +3,9 @@
 
 file="v${version}.tar.gz"
 url="https://github.com/kward/${name}/archive/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
-_koopa_mkdir "${prefix}/bin"
-_koopa_set_permissions --recursive "$prefix"
+koopa::mkdir "${prefix}/bin"
+koopa::set_permissions --recursive "$prefix"
 cp -a "$name" -t "${prefix}/bin/"

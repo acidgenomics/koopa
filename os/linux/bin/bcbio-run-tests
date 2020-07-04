@@ -4,13 +4,13 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_bcbio_run_tests() { # {{{1
+koopa::bcbio_run_tests() { # {{{1
     # """
     # Run bcbio unit tests.
     # @note Updated 2020-06-30.
     # """
     local bcbio_prefix bin_dir git_dir tests_dir version
-    bcbio_prefix="$(_koopa_bcbio_prefix)"
+    bcbio_prefix="$(koopa::bcbio_prefix)"
     version="development"
     while (("$#"))
     do
@@ -32,17 +32,17 @@ _koopa_bcbio_run_tests() { # {{{1
                 shift 2
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    _koopa_assert_is_dir "$bcbio_prefix"
+    koopa::assert_is_dir "$bcbio_prefix"
     bin_dir="${bcbio_prefix}/${version}/tools/bin"
-    _koopa_assert_is_dir "$bin_dir"
+    koopa::assert_is_dir "$bin_dir"
     git_dir="${bcbio_prefix}/git"
-    _koopa_assert_is_dir "$git_dir"
+    koopa::assert_is_dir "$git_dir"
     tests_dir="${git_dir}/tests"
-    _koopa_assert_is_dir "$tests_dir"
+    koopa::assert_is_dir "$tests_dir"
     (
         export PATH="${bin_dir}:${PATH}"
         cd "$tests_dir" || exit 1
@@ -56,8 +56,8 @@ _koopa_bcbio_run_tests() { # {{{1
         ./run_tests.sh scrnaseq
         rm -frv test_automated_output
     )
-    _koopa_success "All unit tests passed."
+    koopa::success "All unit tests passed."
     return 0
 }
 
-_koopa_bcbio_run_tests "$@"
+koopa::bcbio_run_tests "$@"

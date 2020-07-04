@@ -3,8 +3,8 @@
 
 file="v${version}.tar.gz"
 url="https://github.com/aurora/${name}/archive/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 chmod a+x rmate
 mkdir -p "${prefix}/bin"

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039
 
-_koopa_conda_create_env() { # {{{1
+koopa::conda_create_env() { # {{{1
     # """
     # Create a conda environment.
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local flags force env_name name pos prefix version
     force=0
     version=
@@ -31,7 +31,7 @@ _koopa_conda_create_env() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -47,19 +47,19 @@ _koopa_conda_create_env() { # {{{1
     else
         env_name="$name"
     fi
-    prefix="$(_koopa_conda_prefix)/envs/${env_name}"
+    prefix="$(koopa::conda_prefix)/envs/${env_name}"
     if [[ "$force" -eq 1 ]]
     then
         conda remove --name "$env_name" --all
     fi
     if [[ -d "$prefix" ]]
     then
-        _koopa_note "'${env_name}' is installed."
+        koopa::note "'${env_name}' is installed."
         return 0
     fi
-    _koopa_info "Creating '${env_name}' conda environment."
-    _koopa_activate_conda
-    _koopa_assert_is_installed conda
+    koopa::info "Creating '${env_name}' conda environment."
+    koopa::activate_conda
+    koopa::assert_is_installed conda
     flags=(
         "--name=${env_name}"
         "--quiet"
@@ -72,18 +72,18 @@ _koopa_conda_create_env() { # {{{1
         flags+=("$name")
     fi
     conda create "${flags[@]}"
-    _koopa_set_permissions --recursive "$prefix"
+    koopa::set_permissions --recursive "$prefix"
     return 0
 }
 
-_koopa_conda_remove_env() { # {{{1
+koopa::conda_remove_env() { # {{{1
     # """
     # Remove conda environment.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_args "$#"
-    _koopa_activate_conda
-    _koopa_assert_is_installed conda
+    koopa::assert_has_args "$#"
+    koopa::activate_conda
+    koopa::assert_is_installed conda
     for arg in "$@"
     do
         conda remove --yes --name="$arg" --all

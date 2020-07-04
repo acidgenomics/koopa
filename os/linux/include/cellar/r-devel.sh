@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
-_koopa_assert_is_installed svn
+koopa::assert_is_installed svn
 
 # Set the R source code repo URL.
 repos="https://svn.r-project.org/R"
@@ -47,5 +47,5 @@ if [[ "$link_cellar" -eq 1 ]]
 then
     # Update R configuration.
     r_exe="${prefix}/bin/R"
-    _koopa_update_r_config "$r_exe"
+    koopa::update_r_config "$r_exe"
 fi
