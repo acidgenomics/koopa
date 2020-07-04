@@ -67,7 +67,7 @@ __koopa_ansi_escape() { # {{{1
             escape="1;97"
             ;;
         *)
-            >&2 _koopa_print "WARNING: Unsupported color: '${1}'."
+            _koopa_print "WARNING: Unsupported color: '${1}'." >&2
             escape="0"
             ;;
     esac
@@ -499,7 +499,7 @@ _koopa_restart() { # {{{1
 
 _koopa_status_fail() { # {{{1
     _koopa_assert_has_args "$#"
-    >&2 __koopa_status "FAIL" "red" "$@"
+    __koopa_status "FAIL" "red" "$@" >&2
     return 0
 }
 
@@ -521,7 +521,7 @@ _koopa_stop() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    >&2 __koopa_msg "red-bold" "red" "Error:" "$@"
+    __koopa_msg "red-bold" "red" "Error:" "$@" >&2
     exit 1
 }
 
@@ -600,6 +600,6 @@ _koopa_warning() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    >&2 __koopa_msg "yellow-bold" "yellow" "Warning:" "$@"
+    __koopa_msg "magenta-bold" "magenta" "Warning:" "$@" >&2
     return 0
 }
