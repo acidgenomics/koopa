@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_set_permissions() { # {{{1
+koopa::set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
     # @note Updated 2020-06-30.
@@ -11,7 +11,7 @@ _koopa_set_permissions() { # {{{1
     #   Change ownership to current user, rather than koopa default, which is
     #   root for shared installs.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local recursive
     recursive=0
     local user
@@ -39,7 +39,7 @@ _koopa_set_permissions() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -48,10 +48,10 @@ _koopa_set_permissions() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     # chmod flags.
     local chmod_flags
-    readarray -t chmod_flags <<< "$(_koopa_chmod_flags)"
+    readarray -t chmod_flags <<< "$(koopa::chmod_flags)"
     if [[ "$recursive" -eq 1 ]]
     then
         # Note that '-R' instead of '--recursive' has better cross-platform
@@ -82,11 +82,11 @@ _koopa_set_permissions() { # {{{1
         chown_flags+=("-v")
     fi
     local group
-    group="$(_koopa_group)"
+    group="$(koopa::group)"
     local who
     case "$user" in
         0)
-            who="$(_koopa_user)"
+            who="$(koopa::user)"
             ;;
         1)
             who="${USER:?}" \
@@ -98,8 +98,8 @@ _koopa_set_permissions() { # {{{1
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
-        _koopa_chmod "${chmod_flags[@]}" "$arg"
-        _koopa_chown "${chown_flags[@]}" "$arg"
+        koopa::chmod "${chmod_flags[@]}" "$arg"
+        koopa::chown "${chown_flags[@]}" "$arg"
     done
     return 0
 }

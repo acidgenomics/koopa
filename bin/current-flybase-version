@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_current_flybase_version() { # {{{1
+koopa::current_flybase_version() { # {{{1
     # """
     # Current FlyBase version.
     # @note Updated 2020-07-01.
@@ -20,7 +20,7 @@ _koopa_current_flybase_version() { # {{{1
                 shift 1
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
@@ -41,8 +41,8 @@ _koopa_current_flybase_version() { # {{{1
         )"
     fi
     [[ -n "$x" ]] || return 1
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_current_flybase_version "$@"
+koopa::current_flybase_version "$@"

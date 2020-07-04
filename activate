@@ -101,7 +101,7 @@ esac
 # Shell {{{2
 # ------------------------------------------------------------------------------
 
-# Refer to '_koopa_shell' function for additional details.
+# Refer to 'koopa::shell' function for additional details.
 
 if [ -n "${BASH_VERSION:-}" ]
 then
@@ -227,7 +227,7 @@ then
     #
     # See also:
     # - https://unix.stackexchange.com/questions/332005
-    if type '_koopa_prefix' 2>/dev/null | grep -q 'function'
+    if type 'koopa::prefix' 2>/dev/null | grep -q 'function'
     then
         return 0
     fi
@@ -344,7 +344,7 @@ esac
 # resolve '~/.config/koopa/activate' in Mike's default '~/.shrc' config file.
 if [ -L "$KOOPA_ACTIVATE_SCRIPT" ]
 then
-    _koopa_realpath() {
+    koopa::realpath() {
         if [ "$(uname -s)" = "Darwin" ]
         then
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
@@ -352,7 +352,7 @@ then
             readlink -f "$@"
         fi
     }
-    KOOPA_ACTIVATE_SCRIPT="$(_koopa_realpath "$KOOPA_ACTIVATE_SCRIPT")"
+    KOOPA_ACTIVATE_SCRIPT="$(koopa::realpath "$KOOPA_ACTIVATE_SCRIPT")"
 fi
 KOOPA_PREFIX="$(dirname "$KOOPA_ACTIVATE_SCRIPT")"
 export KOOPA_PREFIX
@@ -374,7 +374,7 @@ unset -v header
 
 if [ "$KOOPA_TEST" -eq 1 ]
 then
-    if _koopa_is_linux && _koopa_is_installed bc date
+    if koopa::is_linux && koopa::is_installed bc date
     then
         KOOPA_DURATION_START="$(date -u +%s%3N)"
     fi
@@ -385,30 +385,30 @@ fi
 # Standard configuration {{{1
 # ==============================================================================
 
-_koopa_check_exports
-_koopa_export_cpu_count
-_koopa_export_dotfiles
-_koopa_export_editor
-_koopa_export_git
-_koopa_export_gnupg
-_koopa_export_group
-_koopa_export_history
-_koopa_export_hostname
-_koopa_export_lesspipe
-_koopa_export_ostype
-_koopa_export_pager
-_koopa_export_proj_lib
-_koopa_export_python
-_koopa_export_rsync
-_koopa_export_shell
-_koopa_export_tmpdir
-_koopa_export_today
-_koopa_export_user
+koopa::check_exports
+koopa::export_cpu_count
+koopa::export_dotfiles
+koopa::export_editor
+koopa::export_git
+koopa::export_gnupg
+koopa::export_group
+koopa::export_history
+koopa::export_hostname
+koopa::export_lesspipe
+koopa::export_ostype
+koopa::export_pager
+koopa::export_proj_lib
+koopa::export_python
+koopa::export_rsync
+koopa::export_shell
+koopa::export_tmpdir
+koopa::export_today
+koopa::export_user
 
-_koopa_activate_xdg
-_koopa_activate_standard_paths
-_koopa_activate_koopa_paths
-_koopa_activate_pkg_config
+koopa::activate_xdg
+koopa::activate_standard_paths
+koopa::activatekoopa::paths
+koopa::activate_pkg_config
 
 
 
@@ -417,30 +417,30 @@ _koopa_activate_pkg_config
 
 if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
-    _koopa_activate_homebrew
-    _koopa_activate_coreutils
-    _koopa_activate_dircolors
-    _koopa_activate_gcc_colors
-    _koopa_activate_emacs
-    _koopa_activate_go
-    _koopa_activate_openjdk
-    _koopa_activate_pipx
-    _koopa_activate_ruby
-    _koopa_is_macos && _koopa_activate_macos_python
-    _koopa_activate_llvm
-    _koopa_activate_aspera
-    _koopa_activate_ensembl_perl_api
-    _koopa_activate_perlbrew
-    _koopa_activate_rust
-    _koopa_activate_rbenv
-    _koopa_activate_pyenv
+    koopa::activate_homebrew
+    koopa::activate_coreutils
+    koopa::activate_dircolors
+    koopa::activate_gcc_colors
+    koopa::activate_emacs
+    koopa::activate_go
+    koopa::activate_openjdk
+    koopa::activate_pipx
+    koopa::activate_ruby
+    koopa::is_macos && koopa::activate_macos_python
+    koopa::activate_llvm
+    koopa::activate_aspera
+    koopa::activate_ensembl_perl_api
+    koopa::activate_perlbrew
+    koopa::activate_rust
+    koopa::activate_rbenv
+    koopa::activate_pyenv
     # Avoid issues with R, python in path.
-    # > _koopa_activate_bcbio
-    _koopa_activate_conda
-    _koopa_activate_venv
-    _koopa_activate_autojump
-    _koopa_activate_broot
-    _koopa_activate_fzf
+    # > koopa::activate_bcbio
+    koopa::activate_conda
+    koopa::activate_venv
+    koopa::activate_autojump
+    koopa::activate_broot
+    koopa::activate_fzf
 fi
 
 
@@ -452,23 +452,23 @@ if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
     case "$KOOPA_SHELL" in
         bash)
-            _koopa_activate_bash_extras
+            koopa::activate_bash_extras
             ;;
         zsh)
-            _koopa_activate_zsh_extras
+            koopa::activate_zsh_extras
             ;;
     esac
-    _koopa_is_macos && _koopa_activate_macos_extras
-    _koopa_activate_completion
-    _koopa_activate_aliases
-    _koopa_activate_secrets
-    _koopa_activate_ssh_key
-    if ! _koopa_is_subshell
+    koopa::is_macos && koopa::activate_macos_extras
+    koopa::activate_completion
+    koopa::activate_aliases
+    koopa::activate_secrets
+    koopa::activate_ssh_key
+    if ! koopa::is_subshell
     then
-        _koopa_today_bucket
-        _koopa_disk_check
-        _koopa_data_disk_check
-        _koopa_tmux_sessions
+        koopa::today_bucket
+        koopa::disk_check
+        koopa::data_disk_check
+        koopa::tmux_sessions
     fi
 fi
 
@@ -479,7 +479,7 @@ fi
 
 if [ "$KOOPA_TEST" -eq 1 ]
 then
-    if _koopa_is_linux && _koopa_is_installed bc date
+    if koopa::is_linux && koopa::is_installed bc date
     then
         KOOPA_DURATION_STOP="$(date -u +%s%3N)"
         # Calculate the duration.
@@ -501,17 +501,17 @@ then
         set +o pipefail
         set +o posix
     fi
-    _koopa_h2 "Shell options"
+    koopa::h2 "Shell options"
     set +o
-    _koopa_h2 "Shell variables"
-    _koopa_dl "-" "$-"
-    _koopa_dl "0" "$0"
-    _koopa_dl "SHELL" "$SHELL"
+    koopa::h2 "Shell variables"
+    koopa::dl "-" "$-"
+    koopa::dl "0" "$0"
+    koopa::dl "SHELL" "$SHELL"
     if [ -n "${KOOPA_DURATION:-}" ]
     then
-        _koopa_success "Activation was successful (${KOOPA_DURATION} ms)."
+        koopa::success "Activation was successful (${KOOPA_DURATION} ms)."
     else
-        _koopa_success "Activation was successful."
+        koopa::success "Activation was successful."
     fi
 fi
 

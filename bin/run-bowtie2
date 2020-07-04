@@ -61,32 +61,32 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 if [[ -z "${fasta_file:-}" ]] && [[ -z "${index_dir:-}" ]]
 then
-    _koopa_stop "Specify 'fasta-file' or 'index-dir'."
+    koopa::stop "Specify 'fasta-file' or 'index-dir'."
 elif [[ -n "${fasta_file:-}" ]] && [[ -n "${index_dir:-}" ]]
 then
-    _koopa_stop "Specify 'fasta-file' or 'index-dir', but not both."
+    koopa::stop "Specify 'fasta-file' or 'index-dir', but not both."
 elif [[ -z "${fastq_dir:-}" ]] || [[ -z "${output_dir:-}" ]]
 then
-    _koopa_missing_arg
+    koopa::missing_arg
 fi
 
-fastq_dir="$(_koopa_strip_trailing_slash "$fastq_dir")"
-output_dir="$(_koopa_strip_trailing_slash "$output_dir")"
+fastq_dir="$(koopa::strip_trailing_slash "$fastq_dir")"
+output_dir="$(koopa::strip_trailing_slash "$output_dir")"
 
-_koopa_h1 "Running bowtie2."
+koopa::h1 "Running bowtie2."
 
-_koopa_activate_conda_env bowtie2
-_koopa_dl "bowtie2" "$(_koopa_which_realpath bowtie2)"
+koopa::activate_conda_env bowtie2
+koopa::dl "bowtie2" "$(koopa::which_realpath bowtie2)"
 
 fastq_dir="$(realpath "$fastq_dir")"
-_koopa_dl "fastq dir" "$fastq_dir"
+koopa::dl "fastq dir" "$fastq_dir"
 
 # Sample array from FASTQ files {{{1
 # ==============================================================================
@@ -106,10 +106,10 @@ readarray -t fastq_r1_files <<< "$( \
 # Error on FASTQ match failure.
 if [[ "${#fastq_r1_files[@]}" -eq 0 ]]
 then
-    _koopa_stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
+    koopa::stop "Failed to match FASTQs in '${fastq_dir}' with '${r1_tail}'."
 fi
 
-_koopa_info "${#fastq_r1_files[@]} samples detected."
+koopa::info "${#fastq_r1_files[@]} samples detected."
 
 # Index {{{1
 # ==============================================================================
@@ -120,12 +120,12 @@ then
     index_dir="$(realpath "$index_dir")"
 else
     index_dir="${output_dir}/bowtie2.idx"
-    _koopa_bowtie2_index \
+    koopa::bowtie2_index \
         --fasta-file="$fasta_file" \
         --index-dir="$index_dir"
 fi
 
-_koopa_dl "index" "$index_dir"
+koopa::dl "index" "$index_dir"
 
 # Alignment {{{1
 # ==============================================================================
@@ -135,7 +135,7 @@ for fastq_r1 in "${fastq_r1_files[@]}"
 do
     fastq_r2="${fastq_r1/${r1_tail}/${r2_tail}}"
     index_prefix="${index_dir}/bowtie2"
-    _koopa_bowtie2 \
+    koopa::bowtie2 \
         --fastq-r1="$fastq_r1" \
         --fastq-r2="$fastq_r2" \
         --index-prefix="$index_prefix" \

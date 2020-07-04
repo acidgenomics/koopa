@@ -26,7 +26,7 @@ do
 done
 [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
 
-_koopa_install_cellar \
+koopa::install_cellar \
     --name="julia" \
     --name-fancy="Julia" \
     --script-name="julia-${install_type}" \

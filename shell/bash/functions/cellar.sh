@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-_koopa_find_cellar_version() { # {{{1
+koopa::find_cellar_version() { # {{{1
     # """
     # Find cellar installation directory.
     # @note Updated 2020-06-30.
     # """
-    _koopa_assert_has_args "$#"
+    koopa::assert_has_args "$#"
     local name
     name="${1:?}"
     local prefix
-    prefix="$(_koopa_cellar_prefix)"
-    _koopa_assert_is_dir "$prefix"
+    prefix="$(koopa::cellar_prefix)"
+    koopa::assert_is_dir "$prefix"
     prefix="${prefix}/${name}"
-    _koopa_assert_is_dir "$prefix"
+    koopa::assert_is_dir "$prefix"
     local x
     x="$( \
         find "$prefix" \
@@ -22,20 +22,20 @@ _koopa_find_cellar_version() { # {{{1
         | sort \
         | tail -n 1 \
     )"
-    _koopa_assert_is_dir "$x"
+    koopa::assert_is_dir "$x"
     x="$(basename "$x")"
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_install_cellar() { # {{{1
+koopa::install_cellar() { # {{{1
     # """
     # Install cellar program.
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_args "$#"
-    _koopa_assert_is_linux
-    _koopa_assert_has_no_envs
+    koopa::assert_has_args "$#"
+    koopa::assert_is_linux
+    koopa::assert_has_no_envs
     local gnu_mirror include_dirs jobs link_args link_cellar make_prefix name \
         name_fancy pass_args prefix reinstall script_name script_path tmp_dir \
         version
@@ -104,37 +104,37 @@ _koopa_install_cellar() { # {{{1
                 shift 1
                 ;;
             *)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
         esac
     done
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     [[ -z "$name_fancy" ]] && name_fancy="$name"
     [[ -z "$script_name" ]] && script_name="$name"
-    [[ -z "$version" ]] && version="$(_koopa_variable "$name")"
-    prefix="$(_koopa_cellar_prefix)/${name}/${version}"
+    [[ -z "$version" ]] && version="$(koopa::variable "$name")"
+    prefix="$(koopa::cellar_prefix)/${name}/${version}"
     # shellcheck disable=SC2034
-    make_prefix="$(_koopa_make_prefix)"
+    make_prefix="$(koopa::make_prefix)"
     if [[ "$reinstall" -eq 1 ]]
     then
-        _koopa_rm "$prefix"
-        _koopa_remove_broken_symlinks "$make_prefix"
+        koopa::rm "$prefix"
+        koopa::remove_broken_symlinks "$make_prefix"
     fi
-    _koopa_exit_if_dir "$prefix"
-    _koopa_install_start "$name_fancy" "$version" "$prefix"
-    tmp_dir="$(_koopa_tmp_dir)"
+    koopa::exit_if_dir "$prefix"
+    koopa::install_start "$name_fancy" "$version" "$prefix"
+    tmp_dir="$(koopa::tmp_dir)"
     (
         # shellcheck disable=SC2034
-        gnu_mirror="$(_koopa_gnu_mirror)"
+        gnu_mirror="$(koopa::gnu_mirror)"
         # shellcheck disable=SC2034
-        jobs="$(_koopa_cpu_count)"
-        _koopa_cd_tmp_dir "$tmp_dir"
-        script_path="$(_koopa_prefix)/os/linux/include/cellar/${script_name}.sh"
+        jobs="$(koopa::cpu_count)"
+        koopa::cd_tmp_dir "$tmp_dir"
+        script_path="$(koopa::prefix)/os/linux/include/cellar/${script_name}.sh"
         # shellcheck source=/dev/null
         source "$script_path" "${pass_args[@]:-}"
-    ) 2>&1 | tee "$(_koopa_tmp_log_file)"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
     rm -fr "$tmp_dir"
-    _koopa_set_permissions --recursive "$prefix"
+    koopa::set_permissions --recursive "$prefix"
     if [[ "$link_cellar" -eq 1 ]]
     then
         link_args=(
@@ -145,13 +145,13 @@ _koopa_install_cellar() { # {{{1
         then
             link_args+=("--include-dirs=${include_dirs}")
         fi
-        _koopa_link_cellar "${link_args[@]}"
+        koopa::link_cellar "${link_args[@]}"
     fi
-    _koopa_install_success "$name_fancy"
+    koopa::install_success "$name_fancy"
     return 0
 }
 
-_koopa_link_cellar() { # {{{1
+koopa::link_cellar() { # {{{1
     # """
     # Symlink cellar into build directory.
     # @note Updated 2020-06-20.
@@ -159,7 +159,7 @@ _koopa_link_cellar() { # {{{1
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
     #
-    # This can be reset easily with '_koopa_set_permissions'.
+    # This can be reset easily with 'koopa::set_permissions'.
     #
     # Note that Debian symlinks 'man' to 'share/man', which is non-standard.
     # This is currently corrected in 'install-debian-base', but top-level
@@ -171,9 +171,9 @@ _koopa_link_cellar() { # {{{1
     # * -s, --symbolic-link
     #
     # @examples
-    # _koopa_link_cellar emacs 26.3
+    # koopa::link_cellar emacs 26.3
     # """
-    _koopa_assert_is_linux
+    koopa::assert_is_linux
     local cellar_prefix cellar_subdirs cp_flags include_dirs make_prefix name \
         pos verbose version
     include_dirs=
@@ -216,7 +216,7 @@ _koopa_link_cellar() { # {{{1
                 break
                 ;;
             --*|-*)
-                _koopa_invalid_arg "$1"
+                koopa::invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -226,20 +226,20 @@ _koopa_link_cellar() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -n "${1:-}" ]] && name="$1"
-    _koopa_assert_has_no_envs
-    make_prefix="$(_koopa_make_prefix)"
-    _koopa_assert_is_dir "$make_prefix"
-    cellar_prefix="$(_koopa_cellar_prefix)"
-    _koopa_assert_is_dir "$cellar_prefix"
+    koopa::assert_has_no_envs
+    make_prefix="$(koopa::make_prefix)"
+    koopa::assert_is_dir "$make_prefix"
+    cellar_prefix="$(koopa::cellar_prefix)"
+    koopa::assert_is_dir "$cellar_prefix"
     cellar_prefix="${cellar_prefix}/${name}"
-    _koopa_assert_is_dir "$cellar_prefix"
-    [[ -z "$version" ]] && version="$(_koopa_find_cellar_version "$name")"
+    koopa::assert_is_dir "$cellar_prefix"
+    [[ -z "$version" ]] && version="$(koopa::find_cellar_version "$name")"
     cellar_prefix="${cellar_prefix}/${version}"
-    _koopa_assert_is_dir "$cellar_prefix"
-    _koopa_h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
-    _koopa_set_permissions --recursive "$cellar_prefix"
-    _koopa_remove_broken_symlinks "$cellar_prefix"
-    _koopa_remove_broken_symlinks "$make_prefix"
+    koopa::assert_is_dir "$cellar_prefix"
+    koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
+    koopa::set_permissions --recursive "$cellar_prefix"
+    koopa::remove_broken_symlinks "$cellar_prefix"
+    koopa::remove_broken_symlinks "$make_prefix"
     cellar_subdirs=()
     if [[ -n "$include_dirs" ]]
     then
@@ -262,6 +262,6 @@ _koopa_link_cellar() { # {{{1
     cp_flags=("-frs")
     [[ "$verbose" -eq 1 ]] && cp_flags+=("-v")
     cp "${cp_flags[@]}" "${cellar_subdirs[@]}" -t "${make_prefix}/"
-    _koopa_is_shared_install && _koopa_update_ldconfig
+    koopa::is_shared_install && koopa::update_ldconfig
     return 0
 }

@@ -3,7 +3,7 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 checks=0 source "${script_dir}/../shell/bash/include/header.sh"
-_koopa_assert_has_args "$#"
+koopa::assert_has_args "$#"
 
 config=0
 force=0
@@ -30,7 +30,7 @@ do
             break
             ;;
         --*|-*)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
         *)
             pos+=("$1")
@@ -45,23 +45,23 @@ symlink_name="${2:-}"
 
 if [[ "$private" -eq 1 ]]
 then
-    dot_dir="$(_koopa_dotfiles_private_config_link)"
+    dot_dir="$(koopa::dotfiles_private_config_link)"
 else
     # e.g. ~/.config/koopa/dotfiles
-    dot_dir="$(_koopa_dotfiles_config_link)"
+    dot_dir="$(koopa::dotfiles_config_link)"
     # Note that this step automatically links into koopa config for users.
     if [[ ! -d "$dot_dir" ]]
     then
-        dot_repo="$(_koopa_dotfiles_source_repo)"
+        dot_repo="$(koopa::dotfiles_source_repo)"
         rm -frv "$dot_dir"
         ln -fnsv "$dot_repo" "$dot_dir"
     fi
 fi
 
-_koopa_assert_is_dir "$dot_dir"
+koopa::assert_is_dir "$dot_dir"
 
 source_path="${dot_dir}/${source_name}"
-_koopa_assert_is_existing "$source_path"
+koopa::assert_is_existing "$source_path"
 
 # Define optional target symlink name.
 if [[ -z "$symlink_name" ]]
@@ -90,11 +90,11 @@ then
     rm -frv "$symlink_path"
 elif [[ -e "$symlink_path" ]]
 then
-    _koopa_stop "Existing dotfile: '${symlink_path}'."
+    koopa::stop "Existing dotfile: '${symlink_path}'."
     exit 1
 fi
 
-_koopa_info "Symlinking '$(basename "$symlink_path")'."
+koopa::info "Symlinking '$(basename "$symlink_path")'."
 
 # Note that 'ln -fnsv' fails to create subdirectories automatically.
 symlink_dn="$(dirname "$symlink_path")"

@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_assert_has_args "$#"
+koopa::assert_has_args "$#"
 
 grep_array=(
     '^([0-9]{4})'
@@ -34,6 +34,6 @@ do
         mkdir --parents --verbose "$subdir"
         mv --no-clobber --verbose "$file" "$subdir"
     else
-        _koopa_stop "'${file}' does not contain date."
+        koopa::stop "'${file}' does not contain date."
     fi
 done

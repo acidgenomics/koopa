@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
 # https://wiki.debian.org/UnattendedUpgrades
 # https://blog.confirm.ch/unattended-upgrades-in-debian/
@@ -17,7 +17,7 @@ _koopa_assert_has_no_args "$@"
 # /var/log/dpkg.log
 # /var/log/unattended-upgrades/
 
-_koopa_apt_install apt-listchanges unattended-upgrades
+koopa::apt_install apt-listchanges unattended-upgrades
 
 # The file '/etc/apt/apt.conf.d/20auto-upgrades' can be created manually or by
 # running the following command as root:

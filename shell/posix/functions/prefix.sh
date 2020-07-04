@@ -1,54 +1,54 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-_koopa_app_prefix() { # {{{1
+koopa::app_prefix() { # {{{1
     # """
     # Custom application install prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     if [ -n "${KOOPA_APP_PREFIX:-}" ]
     then
         prefix="$KOOPA_APP_PREFIX"
-    elif _koopa_is_shared_install && _koopa_is_installed brew
+    elif koopa::is_shared_install && koopa::is_installed brew
     then
-        prefix="$(_koopa_prefix)/opt"
-    elif _koopa_is_shared_install
+        prefix="$(koopa::prefix)/opt"
+    elif koopa::is_shared_install
     then
-        prefix="$(_koopa_make_prefix)/opt"
+        prefix="$(koopa::make_prefix)/opt"
     else
-        prefix="$(_koopa_local_app_prefix)"
+        prefix="$(koopa::local_app_prefix)"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_aspera_prefix() { # {{{1
+koopa::aspera_prefix() { # {{{1
     # """
     # Aspera Connect prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
-    if _koopa_is_shared_install
+    if koopa::is_shared_install
     then
-        prefix="$(_koopa_app_prefix)/aspera-connect"
+        prefix="$(koopa::app_prefix)/aspera-connect"
     else
         prefix="${HOME:?}/.aspera/connect"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_autojump_prefix() { # {{{1
+koopa::autojump_prefix() { # {{{1
     # """
     # autojump prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local make_prefix prefix
-    make_prefix="$(_koopa_make_prefix)"
+    make_prefix="$(koopa::make_prefix)"
     # Shared installation (Linux).
     if [ -x "${make_prefix}/bin/autojump" ]
     then
@@ -62,18 +62,18 @@ _koopa_autojump_prefix() { # {{{1
         # Local user installation (macOS).
         prefix="${HOME:?}/.autojump"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_bcbio_prefix() { # {{{1
+koopa::bcbio_prefix() { # {{{1
     # """
     # bcbio-nextgen prefix.
     # @note Updated 2020-07-03.
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_linux
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_linux
     local host_id prefix
-    host_id="$(_koopa_host_id)"
+    host_id="$(koopa::host_id)"
     if [ "$host_id" = "harvard-o2" ]
     then
         prefix="/n/app/bcbio/tools"
@@ -81,13 +81,13 @@ _koopa_bcbio_prefix() { # {{{1
     then
         prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
     else
-        prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
+        prefix="$(koopa::app_prefix)/bcbio/stable/tools"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_cellar_prefix() { # {{{1
+koopa::cellar_prefix() { # {{{1
     # """
     # Cellar prefix.
     # @note Updated 2020-07-03.
@@ -97,131 +97,131 @@ _koopa_cellar_prefix() { # {{{1
     #
     # Ensure this points to a local mount (e.g. '/usr/local').
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_linux
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_linux
     local prefix
     if [ -n "${KOOPA_CELLAR_PREFIX:-}" ]
     then
         prefix="$KOOPA_CELLAR_PREFIX"
-    elif _koopa_is_shared_install && _koopa_is_installed brew
+    elif koopa::is_shared_install && koopa::is_installed brew
     then
-        prefix="$(_koopa_prefix)/cellar"
+        prefix="$(koopa::prefix)/cellar"
     else
-        prefix="$(_koopa_make_prefix)/cellar"
+        prefix="$(koopa::make_prefix)/cellar"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_conda_prefix() { # {{{1
+koopa::conda_prefix() { # {{{1
     # """
     # Conda prefix.
     # @note Updated 2020-07-01.
     # @seealso conda info --base
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     if [ -n "${CONDA_EXE:-}" ]
     then
         prefix="$(cd "$(dirname "$CONDA_EXE")/.." &>/dev/null && pwd -P)"
     else
-        prefix="$(_koopa_app_prefix)/conda"
+        prefix="$(koopa::app_prefix)/conda"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_config_prefix() { # {{{1
+koopa::config_prefix() { # {{{1
     # """
     # Local koopa config directory.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
+    koopa::assert_has_no_args "$#"
+    koopa::print "${XDG_CONFIG_HOME:-"${HOME:?}/.config"}/koopa"
     return 0
 }
 
-_koopa_data_disk_link_prefix() { # {{{1
+koopa::data_disk_link_prefix() { # {{{1
     # """
     # Data disk symlink prefix.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_linux
-    _koopa_print "/n"
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_linux
+    koopa::print "/n"
     return 0
 }
 
-_koopa_docker_prefix() { # {{{1
+koopa::docker_prefix() { # {{{1
     # """
     # Docker prefix.
     # @note Updated 2020-02-15.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_config_prefix)/docker"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::config_prefix)/docker"
     return 0
 }
 
-_koopa_docker_private_prefix() { # {{{1
+koopa::docker_private_prefix() { # {{{1
     # """
     # Private Docker prefix.
     # @note Updated 2020-03-05.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_config_prefix)/docker-private"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::config_prefix)/docker-private"
     return 0
 }
 
-_koopa_dotfiles_prefix() { # {{{1
+koopa::dotfiles_prefix() { # {{{1
     # """
     # Koopa system dotfiles prefix.
     # @note Updated 2020-05-05.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_prefix)/dotfiles"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::prefix)/dotfiles"
     return 0
 }
 
-_koopa_dotfiles_private_prefix() { # {{{1
+koopa::dotfiles_private_prefix() { # {{{1
     # """
     # Private user dotfiles prefix.
     # @note Updated 2020-02-15.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::config_prefix)/dotfiles-private"
     return 0
 }
 
-_koopa_emacs_prefix() { # {{{1
+koopa::emacs_prefix() { # {{{1
     # """
     # Default Emacs prefix.
     # @note Updated 2020-06-29.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "${HOME}/.emacs.d"
+    koopa::assert_has_no_args "$#"
+    koopa::print "${HOME}/.emacs.d"
     return 0
 }
 
-_koopa_ensembl_perl_api_prefix() { # {{{1
+koopa::ensembl_perl_api_prefix() { # {{{1
     # """
     # Ensembl Perl API prefix.
     # @note Updated 2019-11-15.
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_app_prefix)/ensembl"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::app_prefix)/ensembl"
     return 0
 }
 
-_koopa_fzf_prefix() { # {{{1
+koopa::fzf_prefix() { # {{{1
     # """
     # fzf prefix.
     # @note Updated 2020-03-16.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_app_prefix)/fzf"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::app_prefix)/fzf"
     return 0
 }
 
-_koopa_go_gopath() { # {{{1
+koopa::go_gopath() { # {{{1
     # """
     # Go GOPATH, for building from source.
     # @note Updated 2020-07-01.
@@ -234,71 +234,71 @@ _koopa_go_gopath() { # {{{1
     # - go env GOROOT
     # - https://golang.org/wiki/SettingGOPATH to set a custom GOPATH
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     if [ -n "${GOPATH:-}" ]
     then
         prefix="$GOPATH"
     else
-        prefix="$(_koopa_app_prefix)/go/gopath"
+        prefix="$(koopa::app_prefix)/go/gopath"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_homebrew_cellar_prefix() { # {{{1
+koopa::homebrew_cellar_prefix() { # {{{1
     # """
     # Homebrew cellar prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_homebrew_prefix)/Cellar"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::homebrew_prefix)/Cellar"
     return 0
 }
 
-_koopa_homebrew_prefix() { # {{{1
+koopa::homebrew_prefix() { # {{{1
     # """
     # Homebrew prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     prefix="${HOMEBREW_PREFIX:-/usr/local}"
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_homebrew_ruby_gems_prefix() { # {{{1
+koopa::homebrew_ruby_gems_prefix() { # {{{1
     # """
     # Homebrew Ruby gems prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_is_installed ruby || return 0
+    koopa::assert_has_no_args "$#"
+    koopa::is_installed ruby || return 0
     local homebrew_prefix
-    homebrew_prefix="$(_koopa_homebrew_prefix)"
+    homebrew_prefix="$(koopa::homebrew_prefix)"
     local api_version
-    api_version="$(_koopa_ruby_api_version)"
+    api_version="$(koopa::ruby_api_version)"
     local prefix
     prefix="${homebrew_prefix}/lib/ruby/gems/${api_version}/bin"
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_include_prefix() { # {{{1
+koopa::include_prefix() { # {{{1
     # """
     # Koopa system includes prefix.
     # @note Updated 2020-07-02.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
-    prefix="$(_koopa_prefix)/include"
+    prefix="$(koopa::prefix)/include"
     [ -d "$prefix" ] || return 1
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_java_prefix() { # {{{1
+koopa::java_prefix() { # {{{1
     # """
     # Java prefix.
     # @note Updated 2020-07-01.
@@ -308,7 +308,7 @@ _koopa_java_prefix() { # {{{1
     #       how-to-set-java_home-environment-variable-on-mac-os-x/
     # - https://stackoverflow.com/questions/22290554
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     if [ -n "${JAVA_HOME:-}" ]
     then
@@ -321,128 +321,128 @@ _koopa_java_prefix() { # {{{1
     else
         # Otherwise assume latest OpenJDK.
         # This works on Linux installs, including Docker images.
-        prefix="$(_koopa_openjdk_prefix)/latest"
+        prefix="$(koopa::openjdk_prefix)/latest"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_local_app_prefix() { # {{{1
+koopa::local_app_prefix() { # {{{1
     # """
     # Local user application install prefix.
     # @note Updated 2020-07-01.
     #
     # This is the default app path when koopa is installed per user.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "${XDG_DATA_HOME:?}"
+    koopa::assert_has_no_args "$#"
+    koopa::print "${XDG_DATA_HOME:?}"
     return 0
 }
 
-_koopa_make_prefix() { # {{{1
+koopa::make_prefix() { # {{{1
     # """
     # Return the installation prefix to use.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
     then
         prefix="$KOOPA_MAKE_PREFIX"
-    elif _koopa_is_shared_install
+    elif koopa::is_shared_install
     then
         prefix="/usr/local"
     else
         prefix="$(dirname "${XDG_DATA_HOME:?}")"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_msigdb_prefix() { # {{{1
+koopa::msigdb_prefix() { # {{{1
     # """
     # MSigDB prefix.
     # @note Updated 2020-05-05.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_refdata_prefix)/msigdb"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::refdata_prefix)/msigdb"
     return 0
 }
 
-_koopa_monorepo_prefix() { # {{{1
+koopa::monorepo_prefix() { # {{{1
     # """
     # Git monorepo prefix.
     # @note Updated 2020-07-03.
     # """
-    _koopa_print "${HOME:?}/monorepo"
+    koopa::print "${HOME:?}/monorepo"
     return 0
 }
 
-_koopa_openjdk_prefix() { # {{{1
+koopa::openjdk_prefix() { # {{{1
     # """
     # OpenJDK prefix.
     # @note Updated 2020-02-27.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_app_prefix)/java/openjdk"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::app_prefix)/java/openjdk"
     return 0
 }
 
-_koopa_perlbrew_prefix() { # {{{1
+koopa::perlbrew_prefix() { # {{{1
     # """
     # Perlbrew prefix.
     # @note Updated 2020-01-12.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
     if [ -n "${PERLBREW_ROOT:-}" ]
     then
         prefix="$PERLBREW_ROOT"
     else
-        prefix="$(_koopa_app_prefix)/perl/perlbrew"
+        prefix="$(koopa::app_prefix)/perl/perlbrew"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_prefix() { # {{{1
+koopa::prefix() { # {{{1
     # """
     # Koopa prefix (home).
     # @note Updated 2020-01-12.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "${KOOPA_PREFIX:?}"
+    koopa::assert_has_no_args "$#"
+    koopa::print "${KOOPA_PREFIX:?}"
     return 0
 }
 
-_koopa_pyenv_prefix() { # {{{1
+koopa::pyenv_prefix() { # {{{1
     # """
     # Python pyenv prefix.
     # @note Updated 2020-05-05.
     #
     # See also approach used for rbenv.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_app_prefix)/python/pyenv"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::app_prefix)/python/pyenv"
     return 0
 }
 
-_koopa_python_site_packages_prefix() {
+koopa::python_site_packages_prefix() {
     # """
     # Python site packages library location.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     local python
     python="${1:-"python3"}"
-    _koopa_assert_is_installed "$python"
+    koopa::assert_is_installed "$python"
     local x
     x="$("$python" -c "import site; print(site.getsitepackages()[0])")"
-    _koopa_print "$x"
+    koopa::print "$x"
     return 0
 }
 
-_koopa_rbenv_prefix() { # {{{1
+koopa::rbenv_prefix() { # {{{1
     # """
     # Ruby rbenv prefix.
     # @note Updated 2020-05-05.
@@ -451,22 +451,22 @@ _koopa_rbenv_prefix() { # {{{1
     # - RBENV_ROOT
     # - https://gist.github.com/saegey/5499096
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_app_prefix)/ruby/rbenv"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::app_prefix)/ruby/rbenv"
     return 0
 }
 
-_koopa_refdata_prefix() { # {{{1
+koopa::refdata_prefix() { # {{{1
     # """
     # Reference data prefix.
     # @note Updated 2020-05-05.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_data_disk_link_prefix)/refdata"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::data_disk_link_prefix)/refdata"
     return 0
 }
 
-_koopa_rust_cargo_prefix() { # {{{1
+koopa::rust_cargo_prefix() { # {{{1
     # """
     # Rust cargo install prefix.
     # @note Updated 2020-01-12.
@@ -476,19 +476,19 @@ _koopa_rust_cargo_prefix() { # {{{1
     # - CARGO_HOME
     # - RUSTUP_HOME
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
-    if _koopa_is_shared_install
+    if koopa::is_shared_install
     then
-        prefix="$(_koopa_app_prefix)/rust/cargo"
+        prefix="$(koopa::app_prefix)/rust/cargo"
     else
         prefix="${HOME:?}/.cargo"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_r_prefix() { # {{{1
+koopa::r_prefix() { # {{{1
     # """
     # R prefix.
     # @note Updated 2020-07-03.
@@ -496,10 +496,10 @@ _koopa_r_prefix() { # {{{1
     # We're suppressing errors here that can pop up if 'etc' isn't linked yet
     # after a clean install. Can warn about ldpaths missing.
     # """
-    _koopa_assert_has_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     local prefix rscript_exe
     rscript_exe="${1:-Rscript}"
-    _koopa_assert_is_installed "$rscript_exe"
+    koopa::assert_is_installed "$rscript_exe"
     prefix="$( \
         "$rscript_exe" \
             --vanilla \
@@ -507,37 +507,37 @@ _koopa_r_prefix() { # {{{1
         2>/dev/null \
     )"
     [ -d "$prefix" ] || return 1
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_r_library_prefix() { # {{{1
+koopa::r_library_prefix() { # {{{1
     # """
     # R default library prefix.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     local prefix rscript_exe
     rscript_exe="${1:-Rscript}"
-    _koopa_assert_is_installed "$rscript_exe"
+    koopa::assert_is_installed "$rscript_exe"
     prefix="$( \
         "$rscript_exe" \
             -e 'cat(normalizePath(.libPaths()[[1L]]))' \
     )"
     [ -d "$prefix" ] || return 1
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_r_system_library_prefix() { # {{{1
+koopa::r_system_library_prefix() { # {{{1
     # """
     # R system library prefix.
     # @note Updated 2020-07-03.
     # """
-    _koopa_assert_has_args_le "$#" 1
+    koopa::assert_has_args_le "$#" 1
     local rscript_exe
     rscript_exe="${1:-Rscript}"
-    _koopa_assert_is_installed "$rscript_exe"
+    koopa::assert_is_installed "$rscript_exe"
     local prefix
     prefix="$( \
         "$rscript_exe" \
@@ -545,53 +545,53 @@ _koopa_r_system_library_prefix() { # {{{1
             -e 'cat(normalizePath(tail(.libPaths(), n = 1L)))' \
     )"
     [ -d "$prefix" ] || return 1
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_rust_rustup_prefix() { # {{{1
+koopa::rust_rustup_prefix() { # {{{1
     # """
     # Rust rustup install prefix.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_has_no_args "$#"
+    koopa::assert_has_no_args "$#"
     local prefix
-    if _koopa_is_shared_install
+    if koopa::is_shared_install
     then
-        prefix="$(_koopa_app_prefix)/rust/rustup"
+        prefix="$(koopa::app_prefix)/rust/rustup"
     else
         prefix="${HOME:?}/.rustup"
     fi
-    _koopa_print "$prefix"
+    koopa::print "$prefix"
     return 0
 }
 
-_koopa_scripts_private_prefix() { # {{{1
+koopa::scripts_private_prefix() { # {{{1
     # """
     # Private scripts prefix.
     # @note Updated 2020-02-15.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_config_prefix)/scripts-private"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::config_prefix)/scripts-private"
     return 0
 }
 
-_koopa_tests_prefix() { # {{{1
+koopa::tests_prefix() { # {{{1
     # """
     # Unit tests prefix.
     # @note Updated 2020-06-24.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_prefix)/tests"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::prefix)/tests"
     return 0
 }
 
-_koopa_venv_prefix() { # {{{1
+koopa::venv_prefix() { # {{{1
     # """
     # Python venv prefix.
     # @note Updated 2020-05-05.
     # """
-    _koopa_assert_has_no_args "$#"
-    _koopa_print "$(_koopa_app_prefix)/python/virtualenvs"
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::app_prefix)/python/virtualenvs"
     return 0
 }

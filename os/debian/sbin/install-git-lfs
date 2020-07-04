@@ -6,12 +6,12 @@ source "${script_dir}/../include/header.sh"
 
 name_fancy="Git LFS"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 # Set up using automated script.
 url="https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh"
 curl -s "$url" | sudo bash
-_koopa_apt_install git git-lfs
+koopa::apt_install git git-lfs
 git lfs install
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

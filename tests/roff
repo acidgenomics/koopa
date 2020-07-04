@@ -12,7 +12,7 @@ source "${koopa_prefix}/shell/bash/include/header.sh"
 
 status=0
 
-_koopa_h1 "Running manual file '--help' flag checks."
+koopa::h1 "Running manual file '--help' flag checks."
 
 # man dirs {{{1
 # ==============================================================================
@@ -34,17 +34,17 @@ readarray -t man_dirs <<< "$( \
 
 for dir in "${man_dirs[@]}"
 do
-    _koopa_add_to_manpath_start "$dir"
+    koopa::add_to_manpath_start "$dir"
 done
 
 # man file formatting {{{1
 # ==============================================================================
 
-_koopa_h2 "Checking troff man file formatting."
+koopa::h2 "Checking troff man file formatting."
 
 for dir in "${man_dirs[@]}"
 do
-    _koopa_h3 "$dir"
+    koopa::h3 "$dir"
     readarray -t files <<< "$( \
         find "$dir" \
             -mindepth 2 \
@@ -53,16 +53,16 @@ do
             -print \
         | sort \
     )"
-    if ! _koopa_is_array_non_empty "${files[@]}"
+    if ! koopa::is_array_non_empty "${files[@]}"
     then
-        _koopa_stop "No files: '${dir}'."
+        koopa::stop "No files: '${dir}'."
     fi
     for file in "${files[@]}"
     do
-        # > _koopa_info "$file"
-        if ! _koopa_str_match_regex "$(head -n 1 "$file")" "^\.TH "
+        # > koopa::info "$file"
+        if ! koopa::str_match_regex "$(head -n 1 "$file")" "^\.TH "
         then
-            _koopa_note "ERROR: '${file}'."
+            koopa::note "ERROR: '${file}'."
             status=1
         fi
     done
@@ -71,7 +71,7 @@ done
 # '--help' flag support {{{1
 # ==============================================================================
 
-_koopa_h2 "Running exported script '--help' flag checks."
+koopa::h2 "Running exported script '--help' flag checks."
 
 # Put all 'bin/' and/or 'sbin/' dirs into an array and loop.
 readarray -t bin_dirs <<< "$( \
@@ -89,7 +89,7 @@ readarray -t bin_dirs <<< "$( \
 
 for dir in "${bin_dirs[@]}"
 do
-    _koopa_h3 "$dir"
+    koopa::h3 "$dir"
     readarray -t files <<< "$( \
         find "$dir" \
             -mindepth 1 \
@@ -100,10 +100,10 @@ do
     )"
     for file in "${files[@]}"
     do
-        # > _koopa_info "$file"
+        # > koopa::info "$file"
         if ! "$file" --help &>/dev/null
         then
-            _koopa_note "ERROR: '${file}'."
+            koopa::note "ERROR: '${file}'."
             status=1
         fi
     done

@@ -25,21 +25,21 @@ source "${script_dir}/../include/header.sh"
 # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
 # """
 
-_koopa_exit_if_installed wine
+koopa::exit_if_installed wine
 
 name_fancy="Wine"
 
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
-_koopa_apt_add_wine_repo
+koopa::apt_add_wine_repo
 # This is required to install missing libaudio0 dependency.
-_koopa_apt_add_wine_obs_repo
+koopa::apt_add_wine_obs_repo
 
 # Enable 32-bit packages.
 sudo dpkg --add-architecture i386
 
 # Old stable version: Use wine, wine32 here.
-_koopa_apt_get install \
+koopa::apt_get install \
     winbind \
     x11-apps \
     xauth \
@@ -51,4 +51,4 @@ sudo DEBIAN_FRONTEND=noninteractive \
         --install-recommends \
         winehq-stable
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

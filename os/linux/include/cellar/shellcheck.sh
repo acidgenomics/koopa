@@ -7,7 +7,7 @@ file="${name}-v${version}.linux.x86_64.tar.xz"
 # See https://github.com/koalaman/shellcheck/issues/1871 for details.
 url="https://github.com/koalaman/${name}/releases/download/\
 v${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 mkdir -pv "${prefix}/bin"
 cp "${name}-v${version}/${name}" "${prefix}/bin"

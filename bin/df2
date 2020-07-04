@@ -4,12 +4,12 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-_koopa_df() { # {{{1
+koopa::df() { # {{{1
     # """
     # Human friendlier version of df.
     # @note Updated 2020-07-01.
     # """
-    _koopa_assert_is_installed df
+    koopa::assert_is_installed df
     df \
         --portability \
         --print-type \
@@ -19,4 +19,4 @@ _koopa_df() { # {{{1
     return 0
 }
 
-_koopa_df "$@"
+koopa::df "$@"

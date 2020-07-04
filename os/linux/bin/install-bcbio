@@ -6,7 +6,7 @@ source "${script_dir}/../include/header.sh"
 
 name="bcbio"
 version="stable"
-app_prefix="$(_koopa_app_prefix)/${name}"
+app_prefix="$(koopa::app_prefix)/${name}"
 
 while (("$#"))
 do
@@ -28,41 +28,41 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
-app_prefix="$(_koopa_strip_trailing_slash "$app_prefix")"
+app_prefix="$(koopa::strip_trailing_slash "$app_prefix")"
 
 if [[ "$version" == "stable" ]]
 then
-    current_version="$(_koopa_current_bcbio_version)"
+    current_version="$(koopa::current_bcbio_version)"
     prefix="${app_prefix}/${current_version}"
 else
     prefix="${app_prefix}/${version}"
 fi
 
-_koopa_exit_if_dir "$prefix"
+koopa::exit_if_dir "$prefix"
 
 name_fancy="bcbio-nextgen"
 
-_koopa_install_start "$name_fancy" "$prefix"
-_koopa_coffee_time
+koopa::install_start "$name_fancy" "$prefix"
+koopa::coffee_time
 
-_koopa_assert_has_no_envs
+koopa::assert_has_no_envs
 
-_koopa_mkdir "$prefix"
+koopa::mkdir "$prefix"
 
 install_dir="${prefix}/install"
 tools_dir="${prefix}/tools"
-tmp_dir="$(_koopa_tmp_dir)"
+tmp_dir="$(koopa::tmp_dir)"
 
 (
-    _koopa_cd_tmp_dir "$tmp_dir"
+    koopa::cd_tmp_dir "$tmp_dir"
     file="bcbio_nextgen_install.py"
     url="https://raw.github.com/bcbio/bcbio-nextgen/master/scripts/${file}"
-    _koopa_download "$url"
+    koopa::download "$url"
     python3 "$file" \
         "$install_dir" \
         --tooldir="$tools_dir" \
@@ -71,7 +71,7 @@ tmp_dir="$(_koopa_tmp_dir)"
         --datatarget="variation" \
         --nodata \
         --isolate
-) 2>&1 | tee "$(_koopa_tmp_log_file)"
+) 2>&1 | tee "$(koopa::tmp_log_file)"
 
 # Clean up conda packages.
 # > conda_exe="${install_dir}/anaconda/bin/conda"
@@ -80,9 +80,9 @@ tmp_dir="$(_koopa_tmp_dir)"
 
 if [[ "$version" == "stable" ]]
 then
-    _koopa_ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
+    koopa::ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
 fi
 
-_koopa_set_permissions --recursive "$app_prefix"
+koopa::set_permissions --recursive "$app_prefix"
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

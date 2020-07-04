@@ -4,8 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-# > _koopa_assert_has_args "$#"
-_koopa_assert_is_installed docker
+# > koopa::assert_has_args "$#"
+koopa::assert_is_installed docker
 
 # https://github.com/a2iEditing/RNAEditingIndexer/blob/master/Docs/
 #     Docker.README.md
@@ -63,15 +63,15 @@ do
             shift 2
             ;;
         *)
-            _koopa_invalid_arg "$1"
+            koopa::invalid_arg "$1"
             ;;
     esac
 done
 
 # Ensure 'bam_dir' and 'output_dir' are absolute paths, otherwise
 # RNAEditingIndex can fail on relative paths.
-bam_dir="$(_koopa_which_realpath "$bam_dir")"
-output_dir="$(_koopa_which_realpath "$output_dir")"
+bam_dir="$(koopa::which_realpath "$bam_dir")"
+output_dir="$(koopa::which_realpath "$output_dir")"
 
 rm -frv "$output_dir"
 mkdir -pv "$output_dir"

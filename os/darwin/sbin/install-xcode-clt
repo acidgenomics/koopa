@@ -3,14 +3,14 @@
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
-_koopa_assert_has_no_args "$@"
+koopa::assert_has_no_args "$@"
 
 # """
 # https://apple.stackexchange.com/questions/93573/
 # """
 
 name_fancy="Xcode CLT"
-_koopa_install_start "$name_fancy"
+koopa::install_start "$name_fancy"
 
 prefix="$(xcode-select -p 2>/dev/null)"
 if [[ -d "$prefix" ]]
@@ -23,4 +23,4 @@ sudo xcodebuild -license accept
 sudo xcode-select -r
 xcode-select -p
 
-_koopa_install_success "$name_fancy"
+koopa::install_success "$name_fancy"

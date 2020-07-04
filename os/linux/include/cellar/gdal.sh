@@ -13,14 +13,14 @@
 # - https://github.com/OSGeo/gdal/issues/1708
 # """
 
-_koopa_assert_is_not_file /usr/bin/gdal-config
-_koopa_assert_is_installed proj python3
-_koopa_coffee_time
+koopa::assert_is_not_file /usr/bin/gdal-config
+koopa::assert_is_installed proj python3
+koopa::coffee_time
 
 file="${name}-${version}.tar.gz"
 url="https://github.com/OSGeo/${name}/releases/download/v${version}/${file}"
-_koopa_download "$url"
-_koopa_extract "$file"
+koopa::download "$url"
+koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 ./configure \
     --prefix="$prefix" \
