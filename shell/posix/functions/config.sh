@@ -26,7 +26,7 @@ koopa::_git_clone_to_config() { # {{{1
 koopa::add_config_link() { # {{{1
     # """
     # Add a symlink into the koopa configuration directory.
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args_le "$#" 2
     local config_prefix dest_file dest_name source_file
@@ -37,8 +37,8 @@ koopa::add_config_link() { # {{{1
     [ -z "$dest_name" ] && dest_name="$(basename "$source_file")"
     config_prefix="$(koopa::config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
-    rm -f "$dest_file"
-    ln -fnsv "$source_file" "$dest_file"
+    koopa::rm "$dest_file"
+    koopa::ln "$source_file" "$dest_file"
     return 0
 }
 
