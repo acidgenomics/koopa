@@ -310,7 +310,7 @@ koopa::fix_zsh_permissions() { # {{{1
 
 # FIXME MAKE AN INTERNAL FUNCTION THAT HANDLES
 
-koopa::_add_git_repo_to_config() { # {{{1
+koopa::add_git_repo_to_config() { # {{{1
     # """
     # Clone a git repo or symlink from monorepo.
     # @note Updated 2020-07-03.
@@ -318,6 +318,7 @@ koopa::_add_git_repo_to_config() { # {{{1
     koopa::assert_has_args_eq "$#" 1
     if koopa::has_monorepo
     then
+        echo "FIXME"
     fi
     return 0
 }
@@ -333,6 +334,7 @@ koopa::git_clone_docker() { # {{{1
     koopa::assert_has_no_args "$#"
     if koopa::has_monorepo
     then
+        # FIXME
         koopa::add_monorepo_config_link
     fi
     koopa::git_clone \
