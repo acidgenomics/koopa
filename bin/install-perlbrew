@@ -23,7 +23,7 @@ do
             ;;
     esac
 done
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 prefix="$(koopa::perlbrew_prefix)"
 koopa::exit_if_dir "$prefix"

@@ -7,7 +7,7 @@ source "${script_dir}/../include/header.sh"
 # https://www.oracle.com/database/technologies/instant-client/
 #     linux-x86-64-downloads.html
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 name_fancy="Oracle Instant Client"
 name="oracle-instantclient"

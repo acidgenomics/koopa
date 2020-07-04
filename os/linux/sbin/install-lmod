@@ -31,7 +31,7 @@ koopa::exit_if_dir "$prefix"
 name_fancy="Lmod"
 koopa::install_start "$name_fancy" "$version" "$prefix"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 koopa::assert_has_no_envs
 koopa::assert_is_installed lua luarocks
 

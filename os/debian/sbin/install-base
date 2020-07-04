@@ -64,7 +64,7 @@ koopa::install_debian_base() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$@"
+    koopa::assert_has_no_args "$#"
     koopa::is_docker && extra=0
     # Use system libraries for GDAL, etc. for these VM configs.
     [[ "$compact" -eq 1 ]] && remove=0
