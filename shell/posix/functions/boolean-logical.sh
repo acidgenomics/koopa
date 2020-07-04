@@ -160,7 +160,7 @@ koopa::has_sudo() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     # Always return true for root user.
-    [ "$(koopa::current_user_id)" -eq 0 ] && return 0
+    [ "$(koopa::user_id)" -eq 0 ] && return 0
     # Return false if 'sudo' program is not installed.
     koopa::is_installed sudo || return 1
     # Early return true if user has passwordless sudo enabled.
@@ -720,7 +720,7 @@ koopa::is_root() { # {{{1
     # @note Updated 2020-04-16.
     # """
     koopa::assert_has_no_args "$#"
-    [ "$(koopa::current_user_id)" -eq 0 ]
+    [ "$(koopa::user_id)" -eq 0 ]
 }
 
 koopa::is_rstudio() { # {{{1

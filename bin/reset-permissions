@@ -4,8 +4,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-user="$(koopa::current_user)"
-group="$(koopa::current_group)"
+user="$(koopa::user)"
+group="$(koopa::group)"
 
 dir="${1:-"."}"
 
