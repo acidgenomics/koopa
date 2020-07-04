@@ -43,7 +43,9 @@ koopa::install_aspera_connect() {
     (
         koopa::cd_tmp_dir "$tmp_dir"
         file="ibm-${name}-${version_full}-linux-g2.12-64.tar.gz"
-        url="https://download.asperasoft.com/download/sw/connect/\
+        # Note that this step can fail on servers requiring TLS 1.2+, as the
+        # IBM Aspera server is currently using TLS 1.1.
+        url="http://download.asperasoft.com/download/sw/connect/\
 ${version}/${file}"
         koopa::download "$url"
         koopa::extract "$file"
