@@ -48,7 +48,7 @@ fi
 
 koopa::install_start "$name_fancy"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 koopa::assert_is_installed R gdebi
 
 tmp_dir="$(koopa::tmp_dir)"
