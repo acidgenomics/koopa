@@ -42,7 +42,7 @@ koopa::exit_if_dir "$app_prefix" "$cellar_prefix"
 
 koopa::install_start "$name" "$version" "$cellar_prefix"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 koopa::assert_has_no_envs
 
 koopa::mkdir "$app_prefix"

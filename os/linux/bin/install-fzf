@@ -35,7 +35,7 @@ koopa::exit_if_dir "$prefix"
 
 koopa::install_start "$name" "$version" "$prefix"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 koopa::assert_has_no_envs
 koopa::activate_go
 koopa::assert_is_installed go

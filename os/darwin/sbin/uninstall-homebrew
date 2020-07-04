@@ -14,7 +14,7 @@ name_fancy="Homebrew"
 
 koopa::uninstall_start "$name_fancy"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 # Note that macOS Catalina now uses Zsh instead of Bash by default.
 koopa::h2 "Changing default shell to system Zsh."

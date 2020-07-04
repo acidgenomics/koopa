@@ -4,7 +4,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../shell/bash/include/header.sh"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 koopa::assert_is_installed conda
 
 conda_prefix="$(koopa::conda_prefix)"

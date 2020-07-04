@@ -21,7 +21,7 @@ name_fancy="Docker"
 
 koopa::install_start "$name_fancy"
 
-koopa::assert_has_no_args "$@"
+koopa::assert_has_no_args "$#"
 
 koopa::apt_add_docker_repo
 

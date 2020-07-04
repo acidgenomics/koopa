@@ -4,74 +4,73 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)"
 # shellcheck source=/dev/null
 source "${script_dir}/../include/header.sh"
 
-# """
-# Aspera Connect:
-# https://downloads.asperasoft.com/en/downloads/8?list
-# - Linux
-#   https://download.asperasoft.com/download/sw/connect/3.9.9/
-#       ibm-aspera-connect-3.9.9.177872-linux-g2.12-64.tar.gz
-# - macOS
-#   https://download.asperasoft.com/download/sw/connect/3.9.9/
-#       IBMAsperaConnectInstaller-3.9.9.177872.dmg
-#
-# Aspera CLI:
-# https://downloads.asperasoft.com/en/downloads/62
-# - macOS
-#   https://download.asperasoft.com/download/sw/cli/3.9.6/
-#       ibm-aspera-cli-3.9.6.1467.159c5b1-mac-10.11-64-release.sh
-# - Linux
-#   https://download.asperasoft.com/download/sw/cli/3.9.6/
-#       ibm-aspera-cli-3.9.6.1467.159c5b1-linux-64-release.sh
-# """
+koopa::install_aspera_connect() {
+    # """
+    # Install Aspera Connect.
+    # @note Updated 2020-07-04.
+    #
+    # Aspera Connect:
+    # https://downloads.asperasoft.com/en/downloads/8?list
+    # - Linux
+    #   https://download.asperasoft.com/download/sw/connect/3.9.9/
+    #       ibm-aspera-connect-3.9.9.177872-linux-g2.12-64.tar.gz
+    # - macOS
+    #   https://download.asperasoft.com/download/sw/connect/3.9.9/
+    #       IBMAsperaConnectInstaller-3.9.9.177872.dmg
+    #
+    # Aspera CLI:
+    # https://downloads.asperasoft.com/en/downloads/62
+    # - macOS
+    #   https://download.asperasoft.com/download/sw/cli/3.9.6/
+    #       ibm-aspera-cli-3.9.6.1467.159c5b1-mac-10.11-64-release.sh
+    # - Linux
+    #   https://download.asperasoft.com/download/sw/cli/3.9.6/
+    #       ibm-aspera-cli-3.9.6.1467.159c5b1-linux-64-release.sh
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_has_no_envs
+    name='aspera-connect'
+    version_full="$(koopa::variable "$name")"
+    # Standardize version as MAJOR.MINOR.PATCH only.
+    version="$(koopa::major_minor_patch_version "$version_full")"
+    aspera_dir="$(koopa::aspera_prefix)"
+    prefix="${aspera_dir}/${version}"
+    koopa::exit_if_dir "$prefix"
+    name_fancy='Aspera Connect'
+    koopa::install_start "$name_fancy" "$version" "$prefix"
+    koopa::mkdir "$aspera_dir"
+    tmp_dir="$(koopa::tmp_dir)"
+    (
+        koopa::cd_tmp_dir "$tmp_dir"
+        file="ibm-${name}-${version_full}-linux-g2.12-64.tar.gz"
+        url="https://download.asperasoft.com/download/sw/connect/\
+${version}/${file}"
+        koopa::download "$url"
+        koopa::extract "$file"
+        script="${file//.tar.gz/.sh}"
+        "./${script}"
+        # Target is currently hard-coded in IBM Aspera install script.
+        aspera_user="${HOME}/.aspera"
+        script_target="${aspera_user}/connect"
+        koopa::assert_is_dir "$script_target"
+        # Fix annoying sticky bit on log directory.
+        chmod 2775 "${script_target}/var/log"
+        # Move and enable for all users on Linux.
+        if [[ "$prefix" != "$script_target" ]]
+        then
+            koopa::cp "${script_target}" -t "${prefix}"
+            koopa::rm "$script_target" "$aspera_user"
+        fi
+        koopa::assert_is_file "${prefix}/bin/ascp"
+    ) 2>&1 | tee "$(koopa::tmp_log_file)"
+    rm -fr "$tmp_dir"
+    (
+        koopa::cd "$aspera_dir"
+        koopa::system_ln "$version" "latest"
+    )
+    koopa::system_set_permissions --recursive "$aspera_dir"
+    koopa::install_success "$name_fancy"
+    return 0
+}
 
-name="aspera-connect"
-version_full="$(koopa::variable "$name")"
-# Standardize version as MAJOR.MINOR.PATCH only.
-version="$(koopa::major_minor_patch_version "$version_full")"
-aspera_dir="$(koopa::aspera_prefix)"
-prefix="${aspera_dir}/${version}"
-koopa::exit_if_dir "$prefix"
-
-name_fancy="Aspera Connect"
-koopa::install_start "$name_fancy" "$version" "$prefix"
-
-koopa::assert_has_no_args "$@"
-koopa::assert_has_no_envs
-
-koopa::mkdir "$aspera_dir"
-tmp_dir="$(koopa::tmp_dir)"
-
-(
-    koopa::cd_tmp_dir "$tmp_dir"
-    file="ibm-${name}-${version_full}-linux-g2.12-64.tar.gz"
-    url="https://download.asperasoft.com/download/sw/connect/${version}/${file}"
-    koopa::download "$url"
-    koopa::extract "$file"
-    script="${file//.tar.gz/.sh}"
-    "./${script}"
-    # Target is currently hard-coded in IBM Aspera install script.
-    aspera_user="${HOME}/.aspera"
-    script_target="${aspera_user}/connect"
-    koopa::assert_is_dir "$script_target"
-    # Fix annoying sticky bit on log directory.
-    chmod 2775 "${script_target}/var/log"
-    # Move and enable for all users on Linux.
-    if [[ "$prefix" != "$script_target" ]]
-    then
-        koopa::mkdir "$prefix"
-        koopa::cp "${script_target}" -t "${prefix}"
-        koopa::rm "$script_target" "$aspera_user"
-    fi
-    koopa::assert_is_file "${prefix}/bin/ascp"
-) 2>&1 | tee "$(koopa::tmp_log_file)"
-
-rm -fr "$tmp_dir"
-
-(
-    koopa::cd "$aspera_dir"
-    koopa::system_ln "$version" "latest"
-)
-
-koopa::system_set_permissions --recursive "$aspera_dir"
-
-koopa::install_success "$name_fancy"
+koopa::install_aspera_connect "$@"

@@ -95,7 +95,7 @@ koopa::configure_vm() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa::assert_has_no_args "$@"
+    koopa::assert_has_no_args "$#"
     koopa::is_docker && docker=1
     [[ "$bioconductor" -eq 1 ]] && compact=1
     [[ -n "$source_ip" ]] && rsync=1
