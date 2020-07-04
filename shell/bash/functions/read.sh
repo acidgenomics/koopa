@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_int_to_yn() { # {{{1
+koopa::_int_to_yn() { # {{{1
     # """
     # Convert integer to yes/no choice.
     # @note Updated 2020-07-02.
@@ -22,7 +22,7 @@ __koopa_int_to_yn() { # {{{1
     return 0
 }
 
-__koopa_read_prompt_yn() { # {{{1
+koopa::_read_prompt_yn() { # {{{1
     # """
     # Show colorful yes/no default choices in prompt.
     # @note Updated 2020-07-02.
@@ -80,8 +80,8 @@ _koopa_read_yn() { # {{{1
     # """
     _koopa_assert_has_args_eq "$#" 2
     local choice default flags x
-    prompt="$(__koopa_read_prompt_yn "$@")"
-    default="$(__koopa_int_to_yn "${2:?}")"
+    prompt="$(koopa::_read_prompt_yn "$@")"
+    default="$(koopa::_int_to_yn "${2:?}")"
     flags=(-r -p "$prompt")
     if _koopa_is_bash_ok
     then

@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-__koopa_ansi_escape() { # {{{1
+koopa::_ansi_escape() { # {{{1
     # """
     # ANSI escape codes.
     # @note Updated 2020-06-30.
@@ -75,7 +75,7 @@ __koopa_ansi_escape() { # {{{1
     return 0
 }
 
-__koopa_emoji() { # {{{1
+koopa::_emoji() { # {{{1
     # """
     # Koopa turtle emoji.
     # @note Updated 2020-06-30.
@@ -83,7 +83,7 @@ __koopa_emoji() { # {{{1
     _koopa_print "🐢"
 }
 
-__koopa_h() { # {{{1
+koopa::_h() { # {{{1
     # """
     # Koopa header.
     # @note Updated 2020-07-03.
@@ -119,21 +119,21 @@ __koopa_h() { # {{{1
             _koopa_invalid_arg "$1"
             ;;
     esac
-    __koopa_msg "magenta" "default" "$prefix" "$@"
+    koopa::_msg "magenta" "default" "$prefix" "$@"
     return 0
 }
 
-__koopa_msg() {
+koopa::_msg() {
     # """
     # Koopa standard message.
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
     local c1 c2 emoji nc prefix string x
-    emoji="$(__koopa_emoji)"
-    c1="$(__koopa_ansi_escape "${1:?}")"
-    c2="$(__koopa_ansi_escape "${2:?}")"
-    nc="$(__koopa_ansi_escape "nocolor")"
+    emoji="$(koopa::_emoji)"
+    c1="$(koopa::_ansi_escape "${1:?}")"
+    c2="$(koopa::_ansi_escape "${2:?}")"
+    nc="$(koopa::_ansi_escape "nocolor")"
     prefix="${3:?}"
     shift 3
     for string in "$@"
@@ -144,7 +144,7 @@ __koopa_msg() {
     return 0
 }
 
-__koopa_print_ansi() { # {{{1
+koopa::_print_ansi() { # {{{1
     # """
     # Print a colored line in console.
     # @note Updated 2020-07-30.
@@ -171,8 +171,8 @@ __koopa_print_ansi() { # {{{1
     # """
     _koopa_assert_has_args_ge "$#" 2
     local color nocolor string
-    color="$(__koopa_ansi_escape "${1:?}")"
-    nocolor="$(__koopa_ansi_escape "nocolor")"
+    color="$(koopa::_ansi_escape "${1:?}")"
+    nocolor="$(koopa::_ansi_escape "nocolor")"
     shift 1
     for string in "$@"
     do
@@ -181,7 +181,7 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
-__koopa_status() { # {{{1
+koopa::_status() { # {{{1
     # """
     # Koopa status.
     # @note Updated 2020-07-01.
@@ -189,8 +189,8 @@ __koopa_status() { # {{{1
     _koopa_assert_has_args_ge "$#" 3
     local color nocolor label string x
     label="$(printf "%10s\n" "${1:?}")"
-    color="$(__koopa_ansi_escape "${2:?}")"
-    nocolor="$(__koopa_ansi_escape "nocolor")"
+    color="$(koopa::_ansi_escape "${2:?}")"
+    nocolor="$(koopa::_ansi_escape "nocolor")"
     shift 2
     for string in "$@"
     do
@@ -218,7 +218,7 @@ _koopa_dl() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args_eq "$#" 2
-    __koopa_msg "default-bold" "default" "${1:?}:" "${2:?}"
+    koopa::_msg "default-bold" "default" "${1:?}:" "${2:?}"
 }
 
 _koopa_exit() { # {{{1
@@ -233,43 +233,43 @@ _koopa_exit() { # {{{1
 
 _koopa_h1() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 1 "$@"
+    koopa::_h 1 "$@"
     return 0
 }
 
 _koopa_h2() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 2 "$@"
+    koopa::_h 2 "$@"
     return 0
 }
 
 _koopa_h3() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 3 "$@"
+    koopa::_h 3 "$@"
     return 0
 }
 
 _koopa_h4() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 4 "$@"
+    koopa::_h 4 "$@"
     return 0
 }
 
 _koopa_h5() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 5 "$@"
+    koopa::_h 5 "$@"
     return 0
 }
 
 _koopa_h6() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 6 "$@"
+    koopa::_h 6 "$@"
     return 0
 }
 
 _koopa_h7() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_h 7 "$@"
+    koopa::_h 7 "$@"
     return 0
 }
 
@@ -279,7 +279,7 @@ _koopa_info() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    __koopa_msg "default" "default" "--" "$@"
+    koopa::_msg "default" "default" "--" "$@"
     return 0
 }
 
@@ -351,7 +351,7 @@ _koopa_note() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    __koopa_msg "yellow" "default" "**" "$@"
+    koopa::_msg "yellow" "default" "**" "$@"
     return 0
 }
 
@@ -381,109 +381,109 @@ _koopa_print() { # {{{1
 
 _koopa_print_black() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "black" "$@"
+    koopa::_print_ansi "black" "$@"
     return 0
 }
 
 _koopa_print_black_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "black-bold" "$@"
+    koopa::_print_ansi "black-bold" "$@"
     return 0
 }
 
 _koopa_print_blue() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "blue" "$@"
+    koopa::_print_ansi "blue" "$@"
     return 0
 }
 
 _koopa_print_blue_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "blue-bold" "$@"
+    koopa::_print_ansi "blue-bold" "$@"
     return 0
 }
 
 _koopa_print_cyan() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "cyan" "$@"
+    koopa::_print_ansi "cyan" "$@"
     return 0
 }
 
 _koopa_print_cyan_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "cyan-bold" "$@"
+    koopa::_print_ansi "cyan-bold" "$@"
     return 0
 }
 
 _koopa_print_default() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "default" "$@"
+    koopa::_print_ansi "default" "$@"
     return 0
 }
 
 _koopa_print_default_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "default-bold" "$@"
+    koopa::_print_ansi "default-bold" "$@"
     return 0
 }
 
 _koopa_print_green() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "green" "$@"
+    koopa::_print_ansi "green" "$@"
     return 0
 }
 
 _koopa_print_green_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "green-bold" "$@"
+    koopa::_print_ansi "green-bold" "$@"
     return 0
 }
 
 _koopa_print_magenta() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "magenta" "$@"
+    koopa::_print_ansi "magenta" "$@"
     return 0
 }
 
 _koopa_print_magenta_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "magenta-bold" "$@"
+    koopa::_print_ansi "magenta-bold" "$@"
     return 0
 }
 
 _koopa_print_red() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "red" "$@"
+    koopa::_print_ansi "red" "$@"
     return 0
 }
 
 _koopa_print_red_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "red-bold" "$@"
+    koopa::_print_ansi "red-bold" "$@"
     return 0
 }
 
 _koopa_print_yellow() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "yellow" "$@"
+    koopa::_print_ansi "yellow" "$@"
     return 0
 }
 
 _koopa_print_yellow_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "yellow-bold" "$@"
+    koopa::_print_ansi "yellow-bold" "$@"
     return 0
 }
 
 _koopa_print_white() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "white" "$@"
+    koopa::_print_ansi "white" "$@"
     return 0
 }
 
 _koopa_print_white_bold() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_print_ansi "white-bold" "$@"
+    koopa::_print_ansi "white-bold" "$@"
     return 0
 }
 
@@ -499,19 +499,19 @@ _koopa_restart() { # {{{1
 
 _koopa_status_fail() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_status "FAIL" "red" "$@" >&2
+    koopa::_status "FAIL" "red" "$@" >&2
     return 0
 }
 
 _koopa_status_note() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_status "NOTE" "yellow" "$@"
+    koopa::_status "NOTE" "yellow" "$@"
     return 0
 }
 
 _koopa_status_ok() { # {{{1
     _koopa_assert_has_args "$#"
-    __koopa_status "OK" "green" "$@"
+    koopa::_status "OK" "green" "$@"
     return 0
 }
 
@@ -521,7 +521,7 @@ _koopa_stop() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    __koopa_msg "red-bold" "red" "Error:" "$@" >&2
+    koopa::_msg "red-bold" "red" "Error:" "$@" >&2
     exit 1
 }
 
@@ -531,7 +531,7 @@ _koopa_success() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    __koopa_msg "green-bold" "green" "OK" "$@"
+    koopa::_msg "green-bold" "green" "OK" "$@"
     return 0
 }
 
@@ -600,6 +600,6 @@ _koopa_warning() { # {{{1
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    __koopa_msg "magenta-bold" "magenta" "Warning:" "$@" >&2
+    koopa::_msg "magenta-bold" "magenta" "Warning:" "$@" >&2
     return 0
 }

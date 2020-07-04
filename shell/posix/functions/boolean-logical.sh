@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-__koopa_has_gnu() { # {{{1
+koopa::_has_gnu() { # {{{1
     # """
     # Is a GNU program installed?
     # @note Updated 2020-07-03.
@@ -14,7 +14,7 @@ __koopa_has_gnu() { # {{{1
     _koopa_str_match "$str" "GNU"
 }
 
-__koopa_is_os_release() { # {{{1
+koopa::_is_os_release() { # {{{1
     # """
     # Is a specific OS release?
     # @note Updated 2020-06-30.
@@ -58,7 +58,7 @@ _koopa_has_gnu_binutils() { # {{{1
     # @note Updated 2020-04-27.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_has_gnu ld
+    koopa::_has_gnu ld
 }
 
 _koopa_has_gnu_coreutils() { # {{{1
@@ -67,7 +67,7 @@ _koopa_has_gnu_coreutils() { # {{{1
     # @note Updated 2020-04-27.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_has_gnu env
+    koopa::_has_gnu env
 }
 
 _koopa_has_gnu_findutils() { # {{{1
@@ -76,7 +76,7 @@ _koopa_has_gnu_findutils() { # {{{1
     # @note Updated 2020-04-27.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_has_gnu find
+    koopa::_has_gnu find
 }
 
 _koopa_has_gnu_sed() { # {{{1
@@ -85,7 +85,7 @@ _koopa_has_gnu_sed() { # {{{1
     # @note Updated 2020-04-27.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_has_gnu sed
+    koopa::_has_gnu sed
 }
 
 _koopa_has_gnu_tar() { # {{{1
@@ -94,7 +94,7 @@ _koopa_has_gnu_tar() { # {{{1
     # @note Updated 2020-04-27.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_has_gnu tar
+    koopa::_has_gnu tar
 }
 
 _koopa_has_monorepo() { # {{{1
@@ -323,7 +323,7 @@ _koopa_is_debian() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release debian
+    koopa::_is_os_release debian
 }
 
 _koopa_is_defined_in_user_profile() { # {{{1
@@ -377,7 +377,7 @@ _koopa_is_fedora() { # {{{1
     # @note Updated 2020-06-30.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release fedora
+    koopa::_is_os_release fedora
 }
 
 _koopa_is_file_system_case_sensitive() { # {{{1
@@ -634,7 +634,7 @@ _koopa_is_raspbian() { # {{{1
     # @note Updated 2020-05-12.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release raspbian
+    koopa::_is_os_release raspbian
 }
 
 _koopa_is_recent() {
@@ -679,7 +679,7 @@ _koopa_is_rhel() { # {{{1
     # @note Updated 2020-04-29.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release rhel
+    koopa::_is_os_release rhel
 }
 
 _koopa_is_rhel_7() { # {{{1
@@ -689,7 +689,7 @@ _koopa_is_rhel_7() { # {{{1
     # """
     _koopa_assert_has_no_args "$#"
     _koopa_is_amzn && return 0
-    __koopa_is_os_release rhel 7
+    koopa::_is_os_release rhel 7
 }
 
 _koopa_is_rhel_8() { # {{{1
@@ -698,7 +698,7 @@ _koopa_is_rhel_8() { # {{{1
     # @note Updated 2020-04-29.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release rhel 8
+    koopa::_is_os_release rhel 8
 }
 
 _koopa_is_remote() { # {{{1
@@ -821,7 +821,7 @@ _koopa_is_ubuntu() { # {{{1
     # @note Updated 2020-04-29.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release ubuntu
+    koopa::_is_os_release ubuntu
 }
 
 _koopa_is_ubuntu_18() { # {{{1
@@ -830,7 +830,7 @@ _koopa_is_ubuntu_18() { # {{{1
     # @note Updated 2020-04-29.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release ubuntu 18.04
+    koopa::_is_os_release ubuntu 18.04
 }
 
 _koopa_is_ubuntu_20() { # {{{1
@@ -839,7 +839,7 @@ _koopa_is_ubuntu_20() { # {{{1
     # @note Updated 2020-04-29.
     # """
     _koopa_assert_has_no_args "$#"
-    __koopa_is_os_release ubuntu 20.04
+    koopa::_is_os_release ubuntu 20.04
 }
 
 _koopa_is_venv_active() { # {{{1

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_bam_filter() { # {{{1
+koopa::_bam_filter() { # {{{1
     # """
     # Perform filtering on a BAM file.
     # @note Updated 2020-07-01.
@@ -62,7 +62,7 @@ __koopa_bam_filter() { # {{{1
     return 0
 }
 
-__koopa_bam_filter_duplicates() { # {{{1
+koopa::_bam_filter_duplicates() { # {{{1
     # """
     # Remove duplicates from a duplicate marked BAM file.
     # @note Updated 2020-07-01.
@@ -71,11 +71,11 @@ __koopa_bam_filter_duplicates() { # {{{1
     #       bam/__init__.py
     # """
     _koopa_assert_has_args "$#"
-    __koopa_bam_filter --filter="not duplicate" "$@"
+    koopa::_bam_filter --filter="not duplicate" "$@"
     return 0
 }
 
-__koopa_bam_filter_multimappers() { # {{{1
+koopa::_bam_filter_multimappers() { # {{{1
     # """
     # Filter multi-mapped reads from a BAM file.
     # @note Updated 2020-07-01.
@@ -84,21 +84,21 @@ __koopa_bam_filter_multimappers() { # {{{1
     #       chipseq/__init__.py
     # """
     _koopa_assert_has_args "$#"
-    __koopa_bam_filter --filter="[XS] == null" "$@"
+    koopa::_bam_filter --filter="[XS] == null" "$@"
     return 0
 }
 
-__koopa_bam_filter_unmapped() { # {{{1
+koopa::_bam_filter_unmapped() { # {{{1
     # """
     # Filter unmapped reads from a BAM file.
     # @note Updated 2020-07-01.
     # """
     _koopa_assert_has_args "$#"
-    __koopa_bam_filter --filter="not unmapped" "$@"
+    koopa::_bam_filter --filter="not unmapped" "$@"
     return 0
 }
 
-__koopa_bam_sort() { # {{{1
+koopa::_bam_sort() { # {{{1
     # """
     # Sort a BAM file by genomic coordinates.
     # @note Updated 2020-07-01.
@@ -183,7 +183,7 @@ _koopa_bam_filter() { # {{{1
         input_bam="$bam_file"
         output_tail="filtered-1-no-duplicates"
         output_bam="${input_bam%.bam}.${output_tail}.bam"
-        __koopa_bam_filter_duplicates \
+        koopa::_bam_filter_duplicates \
             --input-bam="$input_bam" \
             --output-bam="$output_bam"
         # Filter unmapped reads.
@@ -191,7 +191,7 @@ _koopa_bam_filter() { # {{{1
         input_bam="$output_bam"
         output_tail="filtered-2-no-unmapped"
         output_bam="${input_bam/${input_tail}/${output_tail}}"
-        __koopa_bam_filter_unmapped \
+        koopa::_bam_filter_unmapped \
             --input-bam="$input_bam" \
             --output-bam="$output_bam"
         # Filter multimapping reads.
@@ -201,7 +201,7 @@ _koopa_bam_filter() { # {{{1
         input_bam="$output_bam"
         output_tail="filtered-3-no-multimappers"
         output_bam="${input_bam/${input_tail}/${output_tail}}"
-        __koopa_bam_filter_multimappers \
+        koopa::_bam_filter_multimappers \
             --input-bam="$input_bam" \
             --output-bam="$output_bam"
         # Copy the final result.
@@ -266,7 +266,7 @@ _koopa_bam_sort() { # {{{1
     _koopa_info "sambamba: '$(_koopa_which_realpath sambamba)'."
     for bam_file in "${bam_files[@]}"
     do
-        __koopa_bam_sort "$bam_file"
+        koopa::_bam_sort "$bam_file"
     done
     return 0
 }
