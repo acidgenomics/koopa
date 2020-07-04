@@ -109,16 +109,42 @@ koopa::cp() { # {{{1
     # """
     # Hardened version of coreutils copy.
     # @note Updated 2020-07-04.
+    #
+    # getopts info:
+    # - http://mywiki.wooledge.org/BashFAQ/035#getopts
+    # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    koopa::assert_has_args_eq "$#" 2
+    koopa::assert_has_args "$#"
     koopa::assert_is_installed cp
-    local source_file target_file
-    source_file="${1:?}"
-    koopa::assert_is_existing "$source_file"
-    target_file="${2:?}"
-    [ -e "$target_file" ] && koopa::rm "$target_file"
-    koopa::mkdir "$(dirname "$target_file")"
-    cp -af "$source_file" "$target_file"
+    local OPTIND target_dir
+    target_dir=
+    OPTIND=1
+    while getopts 't:' opt
+    do
+        case "$opt" in
+            t)
+                target_dir="$OPTARG"
+                ;;
+            \?)
+                koopa::stop "Invalid option: -${OPTARG}"
+            ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
+    if [ -n "$target_dir" ]
+    then
+        koopa::assert_is_existing "$@"
+        koopa::mkdir "$target_dir"
+        cp -af -t "$target_dir" "$@"
+    else
+        koopa::assert_has_args_eq "$#" 2
+        source_file="${1:?}"
+        koopa::assert_is_existing "$source_file"
+        target_file="${2:?}"
+        [ -e "$target_file" ] && koopa::rm "$target_file"
+        koopa::mkdir "$(dirname "$target_file")"
+        cp -af "$source_file" "$target_file"
+    fi
     return 0
 }
 
