@@ -694,7 +694,7 @@ koopa::is_rstudio() { # {{{1
     [ -n "${RSTUDIO:-}" ]
 }
 
-koopa::is_set_nounset() { # {{{1
+_koopa_is_set_nounset() { # {{{1
     # """
     # Is shell running in 'nounset' variable mode?
     # @note Updated 2020-04-29.
@@ -717,8 +717,7 @@ koopa::is_set_nounset() { # {{{1
     # setopt
     # Enabled: 'nounset'.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::str_match "$(set +o)" 'set -o nounset'
+    _koopa_str_match "$(set +o)" 'set -o nounset'
 }
 
 koopa::is_shared_install() { # {{{1
