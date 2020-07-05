@@ -49,21 +49,6 @@ koopa::cpu_count() { # {{{1
     return 0
 }
 
-koopa::expr() { # {{{1
-    # """
-    # Quiet regular expression matching that is POSIX compliant.
-    # @note Updated 2020-06-30.
-    #
-    # Avoid using '[[ =~ ]]' in sh config files.
-    # 'expr' is faster than using 'case'.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/21115121
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    expr "${1:?}" : "${2:?}" 1>/dev/null
-}
-
 koopa::group() { # {{{1
     # """
     # Current user's default group.
@@ -143,57 +128,6 @@ koopa::host_id() { # {{{1
             ;;
     esac
     koopa::print "$id"
-    return 0
-}
-
-# FIXME SAVE TO MOVE? USED IN TODAY ACTIVATE SCRIPT?
-# FIXME ADD SUPPORT FOR -S SUDO FLAG
-koopa::ln() { # {{{1
-    # """
-    # Create a symlink quietly.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    koopa::assert_is_installed ln
-    local source_file target_file
-    source_file="${1:?}"
-    target_file="${2:?}"
-    koopa::rm "$target_file"
-    ln -fns "$source_file" "$target_file"
-    return 0
-}
-
-# FIXME ADD SUPPORT FOR -S SUDO FLAG
-koopa::mkdir() { # {{{1
-    # """
-    # Create directories with parents automatically.
-    # @note Updated 2020-07-04.
-    koopa::assert_has_args "$#"
-    mkdir -pv "$@"
-    return 0
-}
-
-# FIXME ADD SUPPORT FOR -S SUDO FLAG
-koopa::mv() { # {{{1
-    # """
-    # Move a file or directory.
-    # @note Updated 2020-07-04.
-    #
-    # This function works on 1 file or directory at a time.
-    # It ensures that the target parent directory exists automatically.
-    #
-    # Useful GNU cp flags, for reference (non-POSIX):
-    # - -T: no-target-directory
-    # - --strip-trailing-slashes
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    local source_file target_file
-    source_file="$(koopa::strip_trailing_slash "${1:?}")"
-    koopa::assert_is_existing "$source_file"
-    target_file="$(koopa::strip_trailing_slash "${2:?}")"
-    [ -e "$target_file" ] && koopa::rm "$target_file"
-    koopa::mkdir "$(dirname "$target_file")"
-    mv -f "$source_file" "$target_file"
     return 0
 }
 
@@ -296,33 +230,6 @@ koopa::os_string() { # {{{1
     return 0
 }
 
-koopa::relink() { # {{{1
-    # """
-    # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    local dest_file source_file
-    source_file="${1:?}"
-    dest_file="${2:?}"
-    # Keep this check relaxed, in case dotfiles haven't been cloned.
-    [ -e "$source_file" ] || return 0
-    [ -L "$dest_file" ] && return 0
-    koopa::rm "$dest_file"
-    ln -fns "$source_file" "$dest_file"
-    return 0
-}
-
-koopa::rm() { # {{{1
-    # """
-    # Remove files/directories quietly.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args "$#"
-    rm -fr "$@" >/dev/null 2>&1
-    return 0
-}
-
 koopa::shell() { # {{{1
     # """
     # Current shell.
@@ -351,39 +258,6 @@ koopa::shell() { # {{{1
         shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
     koopa::print "$shell"
-    return 0
-}
-
-koopa::umask() { # {{{1
-    # """
-    # Set default file permissions.
-    # @note Updated 2020-06-03.
-    #
-    # - 'umask': Files and directories.
-    # - 'fmask': Only files.
-    # - 'dmask': Only directories.
-    #
-    # Use 'umask -S' to return 'u,g,o' values.
-    #
-    # - 0022: u=rwx,g=rx,o=rx
-    #         User can write, others can read. Usually default.
-    # - 0002: u=rwx,g=rwx,o=rx
-    #         User and group can write, others can read.
-    #         Recommended setting in a shared coding environment.
-    # - 0077: u=rwx,g=,o=
-    #         User alone can read/write. More secure.
-    #
-    # Access control lists (ACLs) are sometimes preferable to umask.
-    #
-    # Here's how to use ACLs with setfacl.
-    # > setfacl -d -m group:name:rwx /dir
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/13268796
-    # - https://askubuntu.com/questions/44534
-    # """
-    koopa::assert_has_no_args "$#"
-    umask 0002
     return 0
 }
 
