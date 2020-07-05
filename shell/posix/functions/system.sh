@@ -90,21 +90,6 @@ koopa::check_system() { # {{{1
     return 0
 }
 
-koopa::commit() { # {{{1
-    # """
-    # Get the koopa commit ID.
-    # @note Updated 2020-02-26.
-    # """
-    koopa::assert_has_no_args "$#"
-    local x
-    x="$( \
-        koopa::cd "$koopa_prefix"; \
-        koopa::git_last_commit_local \
-    )"
-    koopa::print "$x"
-    return 0
-}
-
 koopa::cp() { # {{{1
     # """
     # Hardened version of coreutils copy.
