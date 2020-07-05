@@ -4,30 +4,30 @@
 koopa::_has_gnu() { # {{{1
     # """
     # Is a GNU program installed?
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
+    koopa::assert_has_args_eq "$#" 1
     local cmd str
     cmd="${1:?}"
     koopa::is_installed "$cmd" || return 1
     str="$("$cmd" --version 2>&1 || true)"
-    koopa::str_match "$str" "GNU"
+    koopa::str_match "$str" 'GNU'
 }
 
 koopa::_is_os_release() { # {{{1
     # """
     # Is a specific OS release?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args "$#"
+    koopa::assert_has_args_le "$#" 2
     local file id version
     id="${1:?}"
     version="${2:-}"
-    file="/etc/os-release"
+    file='/etc/os-release'
     [ -f "$file" ] || return 1
     # Check identifier.
-    grep "ID=" "$file" | grep -q "$id" && return 0
-    grep "ID_LIKE=" "$file" | grep -q "$id" && return 0
+    grep 'ID=' "$file" | grep -q "$id" && return 0
+    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
     # Check version.
     if [ -n "$version" ]
     then
@@ -39,7 +39,7 @@ koopa::_is_os_release() { # {{{1
 koopa::has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Simply looks for a "." and returns true/false.
     #
@@ -48,8 +48,11 @@ koopa::has_file_ext() { # {{{1
     # """
     koopa::assert_has_args "$#"
     local file
-    file="${1:?}"
-    koopa::str_match "$(koopa::print "$file")" "."
+    for file in "$@"
+    do
+        koopa::str_match "$(koopa::print "$file")" '.' || return 1
+    done
+    return 0
 }
 
 koopa::has_gnu_binutils() { # {{{1
@@ -173,7 +176,7 @@ koopa::has_sudo() { # {{{1
 koopa::is_alias() { # {{{1
     # """
     # Is the specified argument an alias?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Intended primarily to determine if we need to unalias.
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
@@ -183,11 +186,14 @@ koopa::is_alias() { # {{{1
     # """
     koopa::assert_has_args "$#"
     local cmd str
-    cmd="${1:?}"
-    koopa::is_installed "$cmd" || return 1
-    str="$(type "$cmd")"
-    koopa::str_match "$str" ' tracked alias ' && return 1
-    koopa::str_match_regex "$str" '\balias(ed)?\b'
+    for cmd in "$@"
+    do
+        koopa::is_installed "$cmd" || return 1
+        str="$(type "$cmd")"
+        koopa::str_match "$str" ' tracked alias ' && return 1
+        koopa::str_match_regex "$str" '\balias(ed)?\b' || return 1
+    done
+    return 0
 }
 
 koopa::is_alpine() { # {{{1
@@ -254,34 +260,28 @@ koopa::is_bash_ok() { # {{{1
 koopa::is_cellar() { # {{{1
     # """
     # Is a specific command or file cellarized?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Currently only supported for Linux.
     # """
     koopa::assert_has_args "$#"
     local cellar_prefix str
-    str="${1:?}"
-    if koopa::is_installed "$str"
-    then
-        # Assume default usage is a command (e.g. R).
-        str="$(koopa::which_realpath "$str")"
-    elif [ -e "$str" ]
-    then
-        # Otherwise assume it's a file path on disk.
-        str="$(realpath "$str")"
-    else
-        return 1
-    fi
-    # Check koopa cellar.
     cellar_prefix="$(koopa::cellar_prefix)"
-    if [ -d "$cellar_prefix" ]
-    then
-        if koopa::str_match_regex "$str" "^${cellar_prefix}"
+    [ -d "$cellar_prefix" ] || return 1
+    for str in "$@"
+    do
+        if koopa::is_installed "$str"
         then
-            return 0
+            str="$(koopa::which_realpath "$str")"
+        elif [ -e "$str" ]
+        then
+            str="$(realpath "$str")"
+        else
+            return 1
         fi
-    fi
-    return 1
+        koopa::str_match_regex "$str" "^${cellar_prefix}" || return 1
+    done
+    return 0
 }
 
 koopa::is_centos() { # {{{1
@@ -305,16 +305,17 @@ koopa::is_conda_active() { # {{{1
 koopa::is_current_version() { # {{{1
     # """
     # Is the program version current?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args "$#"
-    local app
-    app="${1:?}"
-    local expected_version
-    expected_version="$(koopa::variable "$app")"
-    local actual_version
-    actual_version="$(koopa::get_version "$app")"
-    [ "$actual_version" = "$expected_version" ]
+    local actual_version app expected_version
+    for app in "$@"
+    do
+        expected_version="$(koopa::variable "$app")"
+        actual_version="$(koopa::get_version "$app")"
+        [ "$actual_version" = "$expected_version" ] || return 1
+    done
+    return 0
 }
 
 koopa::is_debian() { # {{{1
@@ -329,23 +330,23 @@ koopa::is_debian() { # {{{1
 koopa::is_defined_in_user_profile() { # {{{1
     # """
     # Is koopa defined in current user's shell profile configuration file?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
     local file
     file="$(koopa::find_user_profile)"
-    koopa::file_match "$file" "koopa"
+    koopa::file_match "$file" 'koopa'
 }
 
 koopa::is_docker() { # {{{1
     # """
     # Is the current shell running inside Docker?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-07-04.
     #
     # https://stackoverflow.com/questions/23513045
     # """
     koopa::assert_has_no_args "$#"
-    koopa::file_match "/proc/1/cgroup" ":/docker/"
+    koopa::file_match '/proc/1/cgroup' ':/docker/'
 }
 
 koopa::is_export() { # {{{1
@@ -383,7 +384,7 @@ koopa::is_fedora() { # {{{1
 koopa::is_file_system_case_sensitive() { # {{{1
     # """
     # Is the file system case sensitive?
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Linux is case sensitive by default, whereas macOS and Windows are not.
     # """
@@ -392,14 +393,13 @@ koopa::is_file_system_case_sensitive() { # {{{1
     touch '.tmp.checkcase' '.tmp.checkCase'
     count="$(find . -maxdepth 1 -iname '.tmp.checkcase' | wc -l)"
     koopa::quiet_rm '.tmp.check'*
-    [ "$count" -eq 2 ] && return 0
-    return 1
+    [ "$count" -eq 2 ]
 }
 
 koopa::is_function() { # {{{1
     # """
     # Check if variable is a function.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Note that 'declare' and 'typeset' are bashisms, and not POSIX.
     # Checking against 'type' works consistently across POSIX shells.
@@ -419,25 +419,28 @@ koopa::is_function() { # {{{1
     # """
     koopa::assert_has_args "$#"
     local fun str
-    fun="${1:?}"
-    str="$(type "$fun" 2>/dev/null)"
-    # Harden against empty string return.
-    [ -z "$str" ] && str="no"
-    koopa::str_match "$str" "function"
+    for fun in "$@"
+    do
+        str="$(type "$fun" 2>/dev/null)"
+        # Harden against empty string return.
+        [ -z "$str" ] && str='no'
+        koopa::str_match "$str" 'function' || return 1
+    done
+    return 0
 }
 
 koopa::is_git() { # {{{1i
     # """
     # Is the working directory a git repository?
-    # @note Updated 2020-04-29.
+    # @note Updated 2020-07-04.
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed git
-    koopa::is_git_toplevel "." && return 0
-    git rev-parse --git-dir >/dev/null 2>&1 && return 0
-    return 1
+    koopa::is_git_toplevel '.' && return 0
+    koopa::is_installed git || return 1
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    return 0
 }
 
 koopa::is_git_clean() { # {{{1
@@ -461,21 +464,13 @@ koopa::is_git_clean() { # {{{1
     rev_1="$(git rev-parse HEAD 2>/dev/null)"
     # Note that this step will return fatal warning on no upstream.
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
-    [ "$rev_1" != "$rev_2" ] && return 1
-    return 0
+    [ "$rev_1" != "$rev_2" ]
 }
 
 koopa::is_git_toplevel() { # {{{1
     # """
-    # Is directory a git repository?
-    # @note Updated 2020-02-11.
-    #
-    # Fast check that we can use for command prompt.
-    #
-    # Be aware that '.git' is not always a directory.
-    #
-    # @seealso
-    # git rev-parse --show-toplevel
+    # Is the working directory the top level of a git repository?
+    # @note Updated 2020-07-04.
     # """
     local dir
     dir="${1:-.}"
@@ -521,7 +516,7 @@ koopa::is_interactive() { # {{{1
     # Consider checking for tmux or subshell here.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::str_match "$-" "i" && return 0
+    koopa::str_match "$-" 'i' && return 0
     koopa::is_tty && return 0
     return 1
 }
@@ -532,7 +527,7 @@ koopa::is_kali() { # {{{1
     # @note Updated 2020-06-30.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::str_match "$(koopa::os_string)" "kali"
+    koopa::str_match "$(koopa::os_string)" 'kali'
 }
 
 koopa::is_linux() { # {{{1
@@ -581,55 +576,6 @@ koopa::is_powerful() { # {{{1
     cores="$(koopa::cpu_count)"
     [ "$cores" -ge 7 ] && return 0
     return 1
-}
-
-koopa::is_python_package_installed() { # {{{1
-    # """
-    # Check if Python package is installed.
-    # @note Updated 2020-04-25.
-    #
-    # Fast mode: checking the 'site-packages' directory.
-    #
-    # Alternate, slow mode:
-    # > local freeze
-    # > freeze="$("$python" -m pip freeze)"
-    # > koopa::str_match_regex "$freeze" "^${pkg}=="
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/1051254
-    # - https://askubuntu.com/questions/588390
-    # """
-    koopa::assert_has_args "$#"
-    local pkg
-    pkg="${1:?}"
-    local python_exe
-    python_exe="${2:-python3}"
-    koopa::is_installed "$python_exe" || return 1
-    local prefix
-    prefix="$(koopa::python_site_packages_prefix "$python_exe")"
-    [ -d "${prefix}/${pkg}" ]
-}
-
-koopa::is_r_package_installed() { # {{{1
-    # """
-    # Is the requested R package installed?
-    # @note Updated 2020-04-25.
-    #
-    # This will only return true for user-installed packages.
-    #
-    # Fast mode: checking the 'site-library' directory.
-    #
-    # Alternate, slow mode:
-    # > Rscript -e "\"$1\" %in% rownames(utils::installed.packages())" \
-    # >     | grep -q "TRUE"
-    # """
-    koopa::assert_has_args "$#"
-    local pkg prefix rscript_exe
-    pkg="${1:?}"
-    rscript_exe="${2:-Rscript}"
-    koopa::is_installed "$rscript_exe" || return 1
-    prefix="$(koopa::r_library_prefix "$rscript_exe")"
-    [ -d "${prefix}/${pkg}" ]
 }
 
 koopa::is_raspbian() { # {{{1
@@ -756,7 +702,7 @@ koopa::is_set_nounset() { # {{{1
     # Enabled: 'nounset'.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::str_match "$(set +o)" "set -o nounset"
+    koopa::str_match "$(set +o)" 'set -o nounset'
 }
 
 koopa::is_shared_install() { # {{{1
@@ -771,13 +717,13 @@ koopa::is_shared_install() { # {{{1
 koopa::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-04.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
     #       testing-your-ssh-connection
     # """
-    koopa::assert_has_args "$#"
+    koopa::assert_has_args_eq "$#" 2
     local pattern url x
     url="${1:?}"
     pattern="${2:?}"
