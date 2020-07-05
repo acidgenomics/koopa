@@ -33,7 +33,7 @@ koopa::add_config_link() { # {{{1
     koopa::assert_is_existing "$source_file"
     source_file="$(realpath "$source_file")"
     dest_name="${2:-}"
-    [ -z "$dest_name" ] && dest_name="$(basename "$source_file")"
+    [[ -z "$dest_name" ]] && dest_name="$(basename "$source_file")"
     config_prefix="$(koopa::config_prefix)"
     dest_file="${config_prefix}/${dest_name}"
     koopa::rm "$dest_file"
@@ -54,9 +54,9 @@ koopa::add_make_prefix_link() { # {{{1
     local koopa_prefix make_prefix source_link target_link
     koopa_prefix="${1:-"$(koopa::prefix)"}"
     make_prefix="$(koopa::make_prefix)"
-    [ -d "$make_prefix" ] || return 0
+    [[ -d "$make_prefix" ]] || return 0
     target_link="${make_prefix}/bin/koopa"
-    [ -L "$target_link" ] && return 0
+    [[ -L "$target_link" ]] && return 0
     koopa::info "Adding 'koopa' link inside '${make_prefix}'."
     source_link="${koopa_prefix}/bin/koopa"
     koopa::sys_ln "$source_link" "$target_link"
@@ -226,7 +226,7 @@ koopa::enable_shell() { # {{{1
     cmd_name="${1:?}"
     cmd_path="$(koopa::make_prefix)/bin/${cmd_name}"
     etc_file='/etc/shells'
-    [ -f "$etc_file" ] || return 0
+    [[ -f "$etc_file" ]] || return 0
     koopa::info "Updating '${etc_file}' to include '${cmd_path}'."
     if ! grep -q "$cmd_path" "$etc_file"
     then
@@ -301,7 +301,7 @@ koopa::fix_zsh_permissions() { # {{{1
     koopa::is_installed zsh || return 0
     zsh_exe="$(koopa::which_realpath zsh)"
     make_prefix="$(koopa::make_prefix)"
-    if [ -d "${make_prefix}/share/zsh/site-functions" ]
+    if [[ -d "${make_prefix}/share/zsh/site-functions" ]
     then
         if koopa::str_match_regex "$zsh_exe" "^${make_prefix}"
         then

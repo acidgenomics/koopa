@@ -6,7 +6,7 @@ koopa::assert_are_identical() { # {{{1
     # @note Updated 2020-07-03.
     # """
     koopa::assert_has_args_eq "$#" 2
-    if [ "${1:?}" != "${2:?}" ]
+    if [[ "${1:?}" != "${2:?}" ]]
     then
         koopa::stop "'${1}' is not identical to '${2}'."
     fi
@@ -19,7 +19,7 @@ koopa::assert_are_not_identical() { # {{{1
     # @note Updated 2020-07-03.
     # """
     koopa::assert_has_args_eq "$#" 2
-    if [ "${1:?}" = "${2:?}" ]
+    if [[ "${1:?}" = "${2:?}" ]]
     then
         koopa::stop "'${1}' is identical to '${2}'."
     fi
@@ -32,13 +32,13 @@ koopa::assert_has_args() { # {{{1
     # @note Updated 2020-07-03.
     # Does not check for empty strings.
     # """
-    if [ "$#" -ne 1 ]
+    if [[ "$#" -ne 1 ]]
     then
         koopa::stop \
             "'koopa::assert_has_args' requires 1 arg." \
             "Pass '\$#' not '\$@' to this function."
     fi
-    if [ "${1:?}" -eq 0 ]
+    if [[ "${1:?}" -eq 0 ]]
     then
         koopa::stop \
             "Required arguments missing." \
@@ -52,11 +52,11 @@ koopa::assert_has_args_eq() { # {{{1
     # Assert that an expected number of arguments have been passed.
     # @note Updated 2020-07-03.
     # """
-    if [ "$#" -ne 2 ]
+    if [[ "$#" -ne 2 ]]
     then
         koopa::stop "'koopa::assert_has_args_eq' requires 2 args."
     fi
-    if [ "${1:?}" -ne "${2:?}" ]
+    if [[ "${1:?}" -ne "${2:?}" ]]
     then
         koopa::stop "Invalid number of arguments."
     fi
@@ -69,11 +69,11 @@ koopa::assert_has_args_ge() { # {{{1
     # been passed.
     # @note Updated 2020-07-03.
     # """
-    if [ "$#" -ne 2 ]
+    if [[ "$#" -ne 2 ]]
     then
         koopa::stop "'koopa::assert_has_args_ge' requires 2 args."
     fi
-    if [ ! "${1:?}" -ge "${2:?}" ]
+    if [[ ! "${1:?}" -ge "${2:?}" ]]
     then
         koopa::stop "Invalid number of arguments."
     fi
@@ -86,11 +86,11 @@ koopa::assert_has_args_ge() { # {{{1
     # been passed.
     # @note Updated 2020-07-03.
     # """
-    if [ "$#" -ne 2 ]
+    if [[ "$#" -ne 2 ]]
     then
         koopa::stop "'koopa::assert_has_args_ge' requires 2 args."
     fi
-    if [ ! "${1:?}" -ge "${2:?}" ]
+    if [[ ! "${1:?}" -ge "${2:?}" ]]
     then
         koopa::stop "Invalid number of arguments."
     fi
@@ -103,11 +103,11 @@ koopa::assert_has_args_le() { # {{{1
     # been passed.
     # @note Updated 2020-07-03.
     # """
-    if [ "$#" -ne 2 ]
+    if [[ "$#" -ne 2 ]]
     then
         koopa::stop "'koopa::assert_has_args_le' requires 2 args."
     fi
-    if [ ! "${1:?}" -le "${2:?}" ]
+    if [[ ! "${1:?}" -le "${2:?}" ]]
     then
         koopa::stop "Invalid number of arguments."
     fi
@@ -214,13 +214,13 @@ koopa::assert_has_no_args() { # {{{1
     # Assert that the user has not passed any arguments to a script.
     # @note Updated 2020-07-03.
     # """
-    if [ "$#" -ne 1 ]
+    if [[ "$#" -ne 1 ]]
     then
         koopa::stop \
             "'koopa::assert_has_no_args' requires 1 arg." \
             "Pass '\$#' not '\$@' to this function."
     fi
-    if [ "${1:?}" -ne 0 ]
+    if [[ "${1:?}" -ne 0 ]]
     then
         koopa::stop \
             "Arguments are not allowed." \
@@ -372,7 +372,7 @@ koopa::assert_is_dir() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -d "$arg" ]
+        if [[ ! -d "$arg" ]]
         then
             koopa::stop "Not directory: '${arg}'."
         fi
@@ -389,7 +389,7 @@ koopa::assert_is_executable() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -x "$arg" ]
+        if [[ ! -x "$arg" ]]
         then
             koopa::stop "Not executable: '${arg}'."
         fi
@@ -408,7 +408,7 @@ koopa::assert_is_existing() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -e "$arg" ]
+        if [[ ! -e "$arg" ]]
         then
             koopa::stop "Does not exist: '${arg}'."
         fi
@@ -438,7 +438,7 @@ koopa::assert_is_file() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -f "$arg" ]
+        if [[ ! -f "$arg" ]]
         then
             koopa::stop "Not file: '${arg}'."
         fi
@@ -581,7 +581,7 @@ koopa::assert_is_non_existing() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ -e "$arg" ]
+        if [[ -e "$arg" ]]
         then
             koopa::stop "Exists: '${arg}'."
         fi
@@ -598,7 +598,7 @@ koopa::assert_is_nonzero_file() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -s "$arg" ]
+        if [[ ! -s "$arg" ]]
         then
             koopa::stop "Not non-zero file: '${arg}'."
         fi
@@ -615,7 +615,7 @@ koopa::assert_is_not_dir() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ -d "$arg" ]
+        if [[ -d "$arg" ]]
         then
             koopa::stop "Directory exists: '${arg}'."
         fi
@@ -632,7 +632,7 @@ koopa::assert_is_not_file() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ -f "$arg" ]
+        if [[ -f "$arg" ]]
         then
             koopa::stop "File exists: '${1}'."
         fi
@@ -731,7 +731,7 @@ koopa::assert_is_not_symlink() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ -L "$arg" ]
+        if [[ -L "$arg" ]]
         then
             koopa::stop "Symlink exists: '${arg}'."
         fi
@@ -782,7 +782,7 @@ koopa::assert_is_readable() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -r "$arg" ]
+        if [[ ! -r "$arg" ]]
         then
             koopa::stop "Not readable: '${arg}'."
         fi
@@ -838,7 +838,7 @@ koopa::assert_is_symlink() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -L "$arg" ]
+        if [[ ! -L "$arg" ]]
         then
             koopa::stop "Not symlink: '${arg}'."
         fi
@@ -869,7 +869,7 @@ koopa::assert_is_writable() { # {{{1
     local arg
     for arg in "$@"
     do
-        if [ ! -r "$arg" ]
+        if [[ ! -r "$arg" ]]
         then
             koopa::stop "Not writable: '${arg}'."
         fi

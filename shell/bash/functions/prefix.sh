@@ -19,7 +19,7 @@ koopa::r_prefix() { # {{{1
             -e 'cat(normalizePath(Sys.getenv("R_HOME")))' \
         2>/dev/null \
     )"
-    [ -d "$prefix" ] || return 1
+    [[ -d "$prefix" ]] || return 1
     koopa::print "$prefix"
     return 0
 }
