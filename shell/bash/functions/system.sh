@@ -23,7 +23,7 @@ koopa::add_local_bins_to_path() { # {{{1
 koopa::info_box() { # {{{1
     # """
     # Info box.
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-04.
     #
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
@@ -109,11 +109,15 @@ koopa::system_info() { # {{{
     then
         origin="$( \
             cd "$koopa_prefix" || exit 1; \
-            git config --get remote.origin.url \
+            koopa::git_remote_url
+        )"
+        commit="$( \
+            cd "$koopa_prefix" || exit 1; \
+            koopa::git_last_commit_local
         )"
         array+=(
             "Git Remote: ${origin}"
-            "Commit: $(koopa::commit)"
+            "Commit: ${commit}"
         )
     fi
     array+=(
