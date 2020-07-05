@@ -36,6 +36,22 @@ koopa::_is_os_release() { # {{{1
     return 1
 }
 
+koopa::expr() { # {{{1
+    # """
+    # Quiet regular expression matching that is POSIX compliant.
+    # @note Updated 2020-06-30.
+    #
+    # Avoid using '[[ =~ ]]' in sh config files.
+    # 'expr' is faster than using 'case'.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/21115121
+    # """
+    koopa::assert_has_args_eq "$#" 2
+    expr "${1:?}" : "${2:?}" 1>/dev/null
+}
+
+
 koopa::has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
