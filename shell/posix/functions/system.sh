@@ -969,7 +969,7 @@ koopa::shell() { # {{{1
     return 0
 }
 
-koopa::system_chgrp() { # {{{1
+koopa::sys_chgrp() { # {{{1
     # """
     # chgrp with dynamic sudo handling.
     # @note Updated 2020-07-04.
@@ -984,7 +984,7 @@ koopa::system_chgrp() { # {{{1
     return 0
 }
 
-koopa::system_chmod() { # {{{1
+koopa::sys_chmod() { # {{{1
     # """
     # chmod with dynamic sudo handling.
     # @note Updated 2020-02-16.
@@ -999,7 +999,7 @@ koopa::system_chmod() { # {{{1
     return 0
 }
 
-koopa::system_chmod_flags() {
+koopa::sys_chmod_flags() {
     # """
     # Default recommended flags for chmod.
     # @note Updated 2020-04-16.
@@ -1016,7 +1016,7 @@ koopa::system_chmod_flags() {
     return 0
 }
 
-koopa::system_chown() { # {{{1
+koopa::sys_chown() { # {{{1
     # """
     # chown with dynamic sudo handling.
     # @note Updated 2020-02-16.
@@ -1032,7 +1032,7 @@ koopa::system_chown() { # {{{1
 }
 
 # FIXME BROKEN
-koopa::system_cp() { # {{{1
+koopa::sys_cp() { # {{{1
     # """
     # Koopa copy.
     # @note Updated 2020-06-30.
@@ -1046,7 +1046,7 @@ koopa::system_cp() { # {{{1
     return 0
 }
 
-koopa::system_group() { # {{{1
+koopa::sys_group() { # {{{1
     # """
     # Return the appropriate group to use with koopa installation.
     # @note Updated 2020-07-04.
@@ -1069,7 +1069,7 @@ koopa::system_group() { # {{{1
 }
 
 # FIXME BROKEN
-koopa::system_ln() { # {{{1
+koopa::sys_ln() { # {{{1
     # """
     # Create a symlink quietly.
     # @note Updated 2020-07-04.
@@ -1084,7 +1084,7 @@ koopa::system_ln() { # {{{1
 }
 
 # FIXME BROKEN
-koopa::system_mkdir() { # {{{1
+koopa::sys_mkdir() { # {{{1
     # """
     # mkdir with dynamic sudo handling.
     # @note Updated 2020-07-04.
@@ -1096,13 +1096,13 @@ koopa::system_mkdir() { # {{{1
     else
         koopa::mkdir "$@"
     fi
-    koopa::system_chmod "$(koopa::system_chmod_flags)" "$@"
-    koopa::system_chgrp "$(koopa::system_group)" "$@"
+    koopa::sys_chmod "$(koopa::sys_chmod_flags)" "$@"
+    koopa::sys_chgrp "$(koopa::sys_group)" "$@"
     return 0
 }
 
 # FIXME BROKEN
-koopa::system_mv() { # {{{1
+koopa::sys_mv() { # {{{1
     # """
     # Move a file or directory.
     # @note Updated 2020-07-04.
@@ -1117,7 +1117,7 @@ koopa::system_mv() { # {{{1
 }
 
 # FIXME BROKEN
-koopa::system_rm() { # {{{1
+koopa::sys_rm() { # {{{1
     # """
     # Remove files/directories quietly.
     # @note Updated 2020-06-30.
@@ -1132,7 +1132,7 @@ koopa::system_rm() { # {{{1
     return 0
 }
 
-koopa::system_user() { # {{{1
+koopa::sys_user() { # {{{1
     # """
     # Set the koopa installation system user.
     # @note Updated 2020-07-04.

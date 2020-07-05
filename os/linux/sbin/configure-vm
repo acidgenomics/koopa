@@ -176,17 +176,17 @@ koopa::configure_vm() { # {{{1
         { [[ ! -L "$data_disk_link" ]] || [[ ! -L "$app_prefix" ]]; }
     then
         koopa::h2 "Symlinking '${data_disk_link}' on '${data_disk}'."
-        koopa::system_rm "$data_disk_link" "$app_prefix"
+        koopa::sys_rm "$data_disk_link" "$app_prefix"
         # e.g. '/mnt/data01/n'.
         data_disk_real="${data_disk}${data_disk_link}"
-        koopa::system_ln "$data_disk_real" "$data_disk_link"
+        koopa::sys_ln "$data_disk_real" "$data_disk_link"
         # e.g. 'opt'.
         app_prefix_bn="$(basename "$app_prefix")"
         # e.g. '/mnt/data01/n/opt'
         app_prefix_real="${data_disk_real}/${app_prefix_bn}"
         koopa::mkdir "$app_prefix_real"
         # e.g. '/mnt/data01/n/opt' to '/usr/local/opt'.
-        koopa::system_ln "$app_prefix_real" "$app_prefix"
+        koopa::sys_ln "$app_prefix_real" "$app_prefix"
     else
         koopa::mkdir "$app_prefix"
     fi
@@ -353,7 +353,7 @@ koopa::configure_vm() { # {{{1
     # --------------------------------------------------------------------------
 
     # Ensure that perlbrew, pyenv, and rbenv are no longer installed by default.
-    koopa::system_rm \
+    koopa::sys_rm \
         "${app_prefix}/perl" \
         "${app_prefix}/python/pyenv" \
         "${app_prefix}/perl"
@@ -364,8 +364,8 @@ koopa::configure_vm() { # {{{1
     # Fix permissions {{{2
     # --------------------------------------------------------------------------
 
-    koopa::system_set_permissions --recursive "$make_prefix"
-    koopa::system_set_permissions --recursive "$app_prefix"
+    koopa::sys_set_permissions --recursive "$make_prefix"
+    koopa::sys_set_permissions --recursive "$app_prefix"
     koopa::fix_zsh_permissions
 
     # Remove symlinks and dirs {{{2

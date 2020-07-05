@@ -525,6 +525,10 @@ koopa::ruby_api_version() { # {{{1
     return 0
 }
 
+# FIXME PARAMETERIZE.
+# FIXME USE R HERE INSTEAD OF RSCRIPT.
+# FIXME DONT USE RSCRIPT IN FUNCTIONS...
+# FIXME SAFE TO MOVE TO BASH, IF NECESSARY.
 koopa::r_package_version() { # {{{1
     # """
     # R package version.
