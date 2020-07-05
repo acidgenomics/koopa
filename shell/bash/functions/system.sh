@@ -998,6 +998,16 @@ koopa::uninstall() { # {{{1
     return 0
 }
 
+koopa::url() { # {{{1
+    # """
+    # Koopa URL.
+    # @note Updated 2020-04-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable 'koopa-url'
+    return 0
+}
+
 koopa::variable() { # {{{1
     # """
     # Get version stored internally in versions.txt file.
