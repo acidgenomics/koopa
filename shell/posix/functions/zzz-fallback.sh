@@ -1,29 +1,22 @@
 #!/bin/sh
 
-if ! koopa::is_installed basename
+if ! _koopa_is_installed basename
 then
     basename() {
-        koopa::basename "$@"
+        _koopa_basename "$@"
     }
 fi
 
-if ! koopa::is_installed echo
+if ! _koopa_is_installed echo
 then
     echo() {
-        koopa::print "$@"
+        _koopa_print "$@"
     }
 fi
 
-if ! koopa::is_installed print
-then
-    print() {
-        koopa::print "$@"
-    }
-fi
-
-if ! koopa::is_installed realpath
+if ! _koopa_is_installed realpath
 then
     realpath() {
-        koopa::realpath "$@"
+        _koopa_realpath "$@"
     }
 fi
