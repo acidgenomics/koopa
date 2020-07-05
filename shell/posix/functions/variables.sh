@@ -63,24 +63,19 @@ _koopa_group_id() { # {{{1
     return 0
 }
 
-koopa::hostname() { # {{{1
+_koopa_hostname() { # {{{1
     # """
     # Host name.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed uname
-    local x
-    x="$(uname -n)"
-    x="${x//.*/}"
-    koopa::print "$x"
+    koopa::print "$(uname -n)"
     return 0
 }
 
-koopa::host_id() { # {{{1
+_koopa_host_id() { # {{{1
     # """
     # Simple host ID string to load up host-specific scripts.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     #
     # Currently intended to support AWS, Azure, and Harvard clusters.
     #
@@ -92,40 +87,41 @@ koopa::host_id() { # {{{1
     #
     # Alternatively, can use 'hostname -d' for reverse lookups.
     # """
+    # shellcheck disable=SC2039
     local id
-    if [ -r /etc/hostname ]
+    if [ -r '/etc/hostname' ]
     then
-        id="$(cat /etc/hostname)"
+        id="$(cat '/etc/hostname')"
     else
-        koopa::assert_is_installed hostname
+        _koopa_is_installed hostname || return 1
         id="$(hostname -f)"
     fi
     case "$id" in
         # VMs {{{2
         # ----------------------------------------------------------------------
         *.ec2.internal)
-            id="aws"
+            id='aws'
             ;;
         awslab*)
-            id="aws"
+            id='aws'
             ;;
         azlab*)
-            id="azure"
+            id='azure'
             ;;
         # HPCs {{{2
         # ----------------------------------------------------------------------
         *.o2.rc.hms.harvard.edu)
-            id="harvard-o2"
+            id='harvard-o2'
             ;;
         *.rc.fas.harvard.edu)
-            id="harvard-odyssey"
+            id='harvard-odyssey'
             ;;
     esac
-    koopa::print "$id"
+    _koopa_print "$id"
     return 0
 }
 
-koopa::os_codename() { # {{{1
+_koopa_os_codename() { # {{{1
     # """
     # Operating system code name.
     # @note Updated 2020-06-30.
@@ -134,40 +130,40 @@ koopa::os_codename() { # {{{1
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
     # >     | tr -d '"'
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_debian
-    koopa::assert_is_installed lsb_release
+    _koopa_is_debian || return 1
+    _koopa_is_installed lsb_release || return 1
+    # shellcheck disable=SC2039
     local os_codename
-    if koopa::is_kali
+    if _koopa_is_kali
     then
         os_codename='buster'
     else
         os_codename="$(lsb_release -cs)"
     fi
-    koopa::print "$os_codename"
+    _koopa_print "$os_codename"
     return 0
 }
 
-koopa::os_id() { # {{{1
+_koopa_os_id() { # {{{1
     # """
     # Operating system ID.
     # @note Updated 2020-06-30.
     #
     # Just return the OS platform ID (e.g. "debian").
     # """
-    koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2039
     local os_id
-    if koopa::is_kali
+    if _koopa_is_kali
     then
         os_id='debian'
     else
-        os_id="$(koopa::os_string | cut -d '-' -f 1)"
+        os_id="$(_koopa_os_string | cut -d '-' -f 1)"
     fi
-    koopa::print "$os_id"
+    _koopa_print "$os_id"
     return 0
 }
 
-koopa::os_string() { # {{{1
+_koopa_os_string() { # {{{1
     # """
     # Operating system string.
     # @note Updated 2020-06-30.
@@ -179,30 +175,33 @@ koopa::os_string() { # {{{1
     #
     # Alternatively, use hostnamectl.
     # https://linuxize.com/post/how-to-check-linux-version/
-    koopa::assert_has_no_args "$#"
-    local id string version
-    if koopa::is_macos
+    # """
+    # shellcheck disable=SC2039
+    local id release_file string version
+    _koopa_is_installed awk || return 1
+    if _koopa_is_macos
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
         id='macos'
-        version="$(koopa::get_version "$id")"
-        version="$(koopa::major_minor_version "$version")"
-    elif koopa::is_linux
+        version="$(_koopa_get_version "$id")"
+        version="$(_koopa_major_minor_version "$version")"
+    elif _koopa_is_linux
     then
-        if [ -r /etc/os-release ]
+        release_file='/etc/os-release'
+        if [ -r "$release_file" ]
         then
             id="$( \
-                awk -F= '$1=="ID" { print $2 ;}' /etc/os-release \
+                awk -F= '$1=="ID" { print $2 ;}' "$release_file" \
                 | tr -d '"' \
             )"
             # Include the major release version.
             version="$( \
-                awk -F= '$1=="VERSION_ID" { print $2 ;}' /etc/os-release \
+                awk -F= '$1=="VERSION_ID" { print $2 ;}' "$release_file" \
                 | tr -d '"'
             )"
             if [ -n "$version" ]
             then
-                version="$(koopa::major_version "$version")"
+                version="$(_koopa_major_version "$version")"
             else
                 # This is the case for Arch Linux.
                 version='rolling'
@@ -213,18 +212,18 @@ koopa::os_string() { # {{{1
     fi
     if [ -z "$id" ]
     then
-        koopa::stop 'Failed to detect OS ID.'
+        _koopa_stop 'Failed to detect OS ID.'
     fi
     string="$id"
     if [ -n "${version:-}" ]
     then
         string="${string}-${version}"
     fi
-    koopa::print "$string"
+    _koopa_print "$string"
     return 0
 }
 
-koopa::shell() { # {{{1
+_koopa_shell() { # {{{1
     # """
     # Current shell.
     # @note Updated 2020-07-05.
@@ -232,7 +231,7 @@ koopa::shell() { # {{{1
     # @seealso
     # - https://stackoverflow.com/questions/3327013
     # """
-    koopa::assert_has_no_args "$#"
+    # shellcheck disable=SC2039
     local shell
     if [ -n "${BASH_VERSION:-}" ]
     then
@@ -243,45 +242,35 @@ koopa::shell() { # {{{1
     elif [ -d '/proc' ]
     then
         # Standard approach on Linux.
+        _koopa_is_installed basename readlink || return 1
         shell="$(basename "$(readlink /proc/$$/exe)")"
     else
         # This approach works on macOS.
         # The sed step converts '-zsh' to 'zsh', for example.
         # The basename step handles the case when ps returns full path.
         # This can happen inside of editors, such as vim.
+        _koopa_is_installed basename ps sed || return 1
         shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
-    koopa::print "$shell"
+    _koopa_print "$shell"
     return 0
 }
 
-koopa::url() { # {{{1
-    # """
-    # Koopa URL.
-    # @note Updated 2020-04-16.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable 'koopa-url'
-    return 0
-}
-
-koopa::user() { # {{{1
+_koopa_user() { # {{{1
     # """
     # Current user name.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::_id -un
+    __koopa_id -un
     return 0
 }
 
-koopa::user_id() { # {{{1
+_koopa_user_id() { # {{{1
     # """
     # Current user ID.
     # @note Updated 2020-04-16.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::_id -u
+    __koopa_id -u
     return 0
 }
 
