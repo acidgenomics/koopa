@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa::gsub() { # {{{1
+_koopa_gsub() { # {{{1
     # """
     # Global substitution.
     # @note Updated 2020-07-01.
@@ -12,23 +12,42 @@ koopa::gsub() { # {{{1
     # ## bb
     # ## cc
     # """
-    koopa::assert_has_args_ge "$#" 3
-    koopa::assert_is_installed sed
+    # shellcheck disable=SC2039
     local pattern replacement string
+    _koopa_is_installed sed || return 1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
     for string in "$@"
     do
-        koopa::print "$string" | sed -E "s|${pattern}|${replacement}|g"
+        _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|g"
     done
     return 0
 }
 
-koopa::lowercase() { # {{{1
+_koopa_kebab_case() { # {{{1
+    # """
+    # Simple snake case function.
+    # @note Updated 2020-07-05.
+    #
+    # @seealso
+    # - Exported 'kebab-case' that uses R syntactic internally.
+    #
+    # @examples
+    # _koopa_kebab_case "hello world"
+    # ## hello-world
+    #
+    # _koopa_kebab_case "bcbio-nextgen.py"
+    # ## bcbio-nextgen-py
+    # """
+    _koopa_gsub '[^-A-Za-z0-9]' '-' "$@"
+    return 0
+}
+
+_koopa_lowercase() { # {{{1
     # """
     # Transform string to lowercase.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     #
     # awk alternative:
     # koopa::print "$string" | awk '{print tolower($0)}'
@@ -36,17 +55,17 @@ koopa::lowercase() { # {{{1
     # @seealso
     # https://stackoverflow.com/questions/2264428
     # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed tr
+    # shellcheck disable=SC2039
     local string
+    _koopa_is_installed tr || return 1
     for string in "$@"
     do
-        koopa::print "$string" | tr "[:upper:]" "[:lower:]"
+        _koopa_print "$string" | tr '[:upper:]' '[:lower:]'
     done
     return 0
 }
 
-koopa::snake_case() { # {{{1
+_koopa_snake_case() { # {{{1
     # """
     # Simple snake case function.
     # @note Updated 2020-07-01.
@@ -55,18 +74,17 @@ koopa::snake_case() { # {{{1
     # - Exported 'snake-case' that uses R syntactic internally.
     #
     # @examples
-    # koopa::snake_case "hello world"
+    # _koopa_snake_case "hello world"
     # ## hello_world
     #
-    # koopa::snake_case "bcbio-nextgen.py"
+    # _koopa_snake_case "bcbio-nextgen.py"
     # ## bcbio_nextgen_py
     # """
-    koopa::assert_has_args "$#"
-    koopa::gsub "[^A-Za-z0-9_]" "_" "$@"
+    _koopa_gsub '[^A-Za-z0-9_]' '_' "$@"
     return 0
 }
 
-koopa::strip_left() { # {{{1
+_koopa_strip_left() { # {{{1
     # """
     # Strip pattern from left side (start) of string.
     # @note Updated 2020-07-01.
@@ -78,18 +96,18 @@ koopa::strip_left() { # {{{1
     # ## Quick Brown Fox
     # ## White Lady
     # """
-    koopa::assert_has_args_ge "$#" 2
+    # shellcheck disable=SC2039
     local pattern string
     pattern="${1:?}"
     shift 1
     for string in "$@"
     do
-        printf "%s\n" "${string##$pattern}"
+        printf '%s\n' "${string##$pattern}"
     done
     return 0
 }
 
-koopa::strip_right() { # {{{1
+_koopa_strip_right() { # {{{1
     # """
     # Strip pattern from right side (end) of string.
     # @note Updated 2020-07-01.
@@ -97,11 +115,11 @@ koopa::strip_right() { # {{{1
     # @usage koopa::strip_right "string" "pattern"
     #
     # @examples
-    # koopa::strip_right " Fox" "The Quick Brown Fox" "Michael J. Fox"
+    # _koopa_strip_right " Fox" "The Quick Brown Fox" "Michael J. Fox"
     # ## The Quick Brown
     # ## Michael J.
     # """
-    koopa::assert_has_args_ge "$#" 2
+    # shellcheck disable=SC2039
     local pattern string
     pattern="${1:?}"
     shift 1
@@ -112,7 +130,7 @@ koopa::strip_right() { # {{{1
     return 0
 }
 
-koopa::strip_trailing_slash() { # {{{1
+_koopa_strip_trailing_slash() { # {{{1
     # """
     # Strip trailing slash in file path string.
     # @note Updated 2020-07-01.
@@ -121,16 +139,15 @@ koopa::strip_trailing_slash() { # {{{1
     # > sed 's/\/$//' <<< "$1"
     #
     # @examples
-    # koopa::strip_trailing_slash "./dir1/" "./dir2/"
+    # _koopa_strip_trailing_slash "./dir1/" "./dir2/"
     # ## ./dir1
     # ## ./dir2
     # """
-    koopa::assert_has_args "$#"
-    koopa::strip_right "/" "$@"
+    _koopa_strip_right '/' "$@"
     return 0
 }
 
-koopa::sub() { # {{{1
+_koopa_sub() { # {{{1
     # """
     # Substitution.
     # @note Updated 2020-07-01.
@@ -139,24 +156,24 @@ koopa::sub() { # {{{1
     #
     # @seealso koopa::gsub (for global matching).
     # @examples
-    # koopa::sub "a" "" "aaa" "aaa"
+    # _koopa_sub "a" "" "aaa" "aaa"
     # ## aa
     # ## aa
     # """
-    koopa::assert_has_args_ge "$#" 3
-    koopa::assert_is_installed sed
+    # shellcheck disable=SC2039
     local pattern replacement string
+    _koopa_is_installed sed || return 1
     pattern="${1:?}"
     replacement="${2:-}"
     shift 2
     for string in "$@"
     do
-        koopa::print "$string" | sed -E "s|${pattern}|${replacement}|"
+        _koopa_print "$string" | sed -E "s|${pattern}|${replacement}|"
     done
     return 0
 }
 
-koopa::trim_ws() { # {{{1
+_koopa_trim_ws() { # {{{1
     # """
     # Trim leading and trailing white-space from string.
     # @note Updated 2020-07-01.
@@ -170,13 +187,13 @@ koopa::trim_ws() { # {{{1
     # @examples
     # koopa::trim_ws "  hello world  " " foo bar "
     # """
-    koopa::assert_has_args "$#"
+    # shellcheck disable=SC2039
     local string
     for string in "$@"
     do
         string="${string#${string%%[![:space:]]*}}"
         string="${string%${string##*[![:space:]]}}"
-        koopa::print "$string"
+        _koopa_print "$string"
     done
     return 0
 }
