@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::activate_aliases() { # {{{1
     # """
@@ -1070,23 +1069,6 @@ koopa::activate_xdg() { # {{{1
     return 0
 }
 
-koopa::check_exports() { # {{{1
-    # """
-    # Check exported environment variables.
-    # @note Updated 2020-06-30.
-    #
-    # Warn the user if they are setting unrecommended values.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_rstudio && return 0
-    koopa::warn_if_export \
-        "JAVA_HOME" \
-        "LD_LIBRARY_PATH" \
-        "PYTHONHOME" \
-        "R_HOME"
-    return 0
-}
-
 koopa::export_cpu_count() { # {{{1
     # """
     # Export CPU_COUNT.
@@ -1342,24 +1324,5 @@ koopa::export_user() { # {{{1
     koopa::assert_has_no_args "$#"
     [ -z "${USER:-}" ] && USER="$(id -un)"
     export USER
-    return 0
-}
-
-koopa::warn_if_export() { # {{{1
-    # """
-    # Warn if variable is exported in current shell session.
-    # @note Updated 2020-02-20.
-    #
-    # Useful for checking against unwanted compiler settings.
-    # In particular, useful to check for 'LD_LIBRARY_PATH'.
-    # """
-    koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if koopa::is_export "$arg"
-        then
-            koopa::warning "'${arg}' is exported."
-        fi
-    done
     return 0
 }

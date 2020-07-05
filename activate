@@ -373,7 +373,6 @@ fi
 # Standard configuration {{{1
 # ==============================================================================
 
-koopa::check_exports
 koopa::export_cpu_count
 koopa::export_editor
 koopa::export_git
