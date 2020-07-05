@@ -64,7 +64,7 @@ koopa::git_last_commit_local() { # {{{1
     # > git log --format="%H" -n 1
     # """
     koopa::assert_has_no_args "$#"
-    koopa::assert_is_git_toplevel
+    koopa::assert_is_git
     koopa::assert_is_installed git
     local x
     x="$(git rev-parse HEAD 2>/dev/null || true)"
@@ -97,52 +97,50 @@ koopa::git_remote_url() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::is_git || return 1
     koopa::is_installed git || return 1
-    git remote -v \
-        | grep origin \
-        | head -n 1 \
-        | awk '{ print $2 }'
+    x="$(git config --get 'remote.origin.url')"
+    koopa::print "$x"
     return 0
 }
 
 koopa::git_rm_submodule() { # {{{1
     # """
     # Remove a git submodule.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # @seealso
     # - https://stackoverflow.com/questions/1260748/
     # - https://gist.github.com/myusuf3/7f645819ded92bda6677
     # """
-    koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_git_toplevel
+    koopa::assert_has_args "$#"
+    koopa::assert_is_git
     koopa::assert_is_installed git
-    local prefix
-    prefix="${1:-"."}"
-    # Remove the submodule entry from '.git/config'.
-    git submodule deinit -f "$prefix"
-    # Remove the submodule directory from the superproject's '.git/modules'
-    # directory.
-    rm -fr ".git/modules/${prefix}"
-    # Remove the entry in '.gitmodules' and remove the submodule directory
-    # located at 'path/to/submodule'.
-    git rm -f "$prefix"
-    # Update gitmodules file and commit.
-    git add .gitmodules
-    git commit -m "Removed submodule '${prefix}'."
+    local module
+    for module in "$@"
+    do
+        # Remove the submodule entry from '.git/config'.
+        git submodule deinit -f "$module"
+        # Remove the submodule directory from the superproject's '.git/modules'
+        # directory.
+        rm -fr ".git/modules/${module}"
+        # Remove the entry in '.gitmodules' and remove the submodule directory
+        # located at 'path/to/submodule'.
+        git rm -f "$module"
+        # Update gitmodules file and commit.
+        git add '.gitmodules'
+        git commit -m "Removed submodule '${module}'."
+    done
     return 0
 }
 
 koopa::git_rm_untracked() { # {{{1
     # """
     # Remove untracked files from git repo.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     # """
-    koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_git_toplevel
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_git
     koopa::assert_is_installed git
-    local dir
-    dir="${1:-"."}"
-    git clean -dfx "$dir"
+    git clean -dfx
     return 0
 }
 
@@ -152,7 +150,7 @@ koopa::git_set_remote_url() {
     # @note Updated 2020-07-04.
     # """
     koopa::assert_has_args_eq "$#" 1
-    koopa::is_git || return 1
+    koopa::assert_is_git
     koopa::assert_is_installed git
     local url
     url="${1:?}"
