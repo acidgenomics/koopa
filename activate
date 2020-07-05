@@ -385,7 +385,6 @@ koopa::export_ostype
 koopa::export_pager
 koopa::export_proj_lib
 koopa::export_python
-koopa::export_rsync
 koopa::export_shell
 koopa::export_tmpdir
 koopa::export_today
