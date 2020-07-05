@@ -83,6 +83,10 @@ koopa::bash_header() { # {{{1
             exit 1
         fi
         koopa::check_exports
+        # FIXME RENAME
+        koopa::disk_check
+        # FIXME RENAME
+        koopa::data_disk_check
     fi
     # Ensure koopa prefix is exported, if necessary.
     if [[ -z "${KOOPA_PREFIX:-}" ]]

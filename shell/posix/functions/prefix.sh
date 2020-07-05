@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::app_prefix() { # {{{1
     # """

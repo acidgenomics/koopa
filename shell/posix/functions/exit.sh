@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::exit_if_current_version() { # {{{1
     # """

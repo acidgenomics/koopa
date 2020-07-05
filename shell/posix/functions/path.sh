@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::add_conda_env_to_path() { # {{{1
     # """
