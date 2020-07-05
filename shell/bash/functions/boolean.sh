@@ -19,7 +19,7 @@ koopa::is_array_non_empty() { # {{{1
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
-    # @note Updated 2020-04-25.
+    # @note Updated 2020-07-05.
     #
     # Fast mode: checking the 'site-packages' directory.
     #
@@ -63,7 +63,6 @@ koopa::is_python_package_installed() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     koopa::is_installed "$python" || return 1
-    local prefix
     prefix="$(koopa::python_site_packages_prefix "$python")"
     for pkg in "$@"
     do
@@ -78,7 +77,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-05.
     #
     # This will only return true for user-installed packages.
     #
@@ -117,8 +116,9 @@ koopa::is_r_package_installed() { # {{{1
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
     koopa::is_installed "$r" || return 1
-    # FIXME NEED TO PASS R HERE INSTEAD.
+    # FIXME THIS DOESNT WORK PASSING R...
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
     do
