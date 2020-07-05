@@ -180,7 +180,7 @@ koopa::apt_add_r_repo() { # {{{1
     koopa::assert_has_args_le "$#" 1
     local file os_codename os_id repo string version
     version="${1:-}"
-    if [ -z "$version" ]
+    if [[ -z "$version" ]]
     then
         version="$(koopa::variable 'r')"
     fi

@@ -165,7 +165,7 @@ koopa::update() { # {{{1
         )
         for repo in "${repos[@]}"
         do
-            [ -d "$repo" ] || continue
+            [[ -d "$repo" ]] || continue
             (
                 koopa::cd "$repo"
                 koopa::git_pull
