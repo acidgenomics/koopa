@@ -1065,7 +1065,6 @@ koopa::activate_xdg() { # {{{1
     export XDG_DATA_DIRS
     export XDG_DATA_HOME
     export XDG_RUNTIME_DIR
-    koopa::update_xdg_config
     return 0
 }
 

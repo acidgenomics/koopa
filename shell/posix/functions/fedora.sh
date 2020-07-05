@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::yum_add_azure_cli_repo() { # {{{1
     # """
