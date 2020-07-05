@@ -1,33 +1,30 @@
 #!/bin/sh
 
-koopa::_id() { # {{{1
+__koopa_id() { # {{{1
     # """
     # Return ID string.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args "$#"
-    local x
-    x="$(id "$@")"
-    koopa::print "$x"
+    _koopa_print "$(id "$@")"
     return 0
 }
 
-koopa::cpu_count() { # {{{1
+_koopa_cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
     # @note Updated 2020-07-05.
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
-    koopa::assert_has_no_args "$#"
+    # shellcheck disable=2039
     local n
-    if koopa::is_installed nproc
+    if _koopa_is_installed nproc
     then
         n="$(nproc)"
-    elif koopa::is_macos
+    elif _koopa_is_macos
     then
         n="$(sysctl -n hw.ncpu)"
-    elif koopa::is_linux
+    elif _koopa_is_linux
     then
         n="$(getconf _NPROCESSORS_ONLN)"
     else
@@ -44,27 +41,25 @@ koopa::cpu_count() { # {{{1
         # For 5-16 cores, use 'n-1'.
         n=$((n - 1))
     fi
-    koopa::print "$n"
+    _koopa_print "$n"
     return 0
 }
 
-koopa::group() { # {{{1
+_koopa_group() { # {{{1
     # """
     # Current user's default group.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::_id -gn
+    __koopa_id -gn
     return 0
 }
 
-koopa::group_id() { # {{{1
+_koopa_group_id() { # {{{1
     # """
     # Current user's default group ID.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::_id -g
+    __koopa_id -g
     return 0
 }
 
@@ -287,32 +282,6 @@ koopa::user_id() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::_id -u
-    return 0
-}
-
-koopa::variable() { # {{{1
-    # """
-    # Get version stored internally in versions.txt file.
-    # @note Updated 2020-06-30.
-    #
-    # This approach handles inline comments.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    local file key value
-    key="${1:?}"
-    file="$(koopa::include_prefix)/variables.txt"
-    koopa::assert_is_file "$file"
-    value="$( \
-        grep -Eo "^${key}=\"[^\"]+\"" "$file" \
-        || koopa::stop "'${key}' not defined in '${file}'." \
-    )"
-    value="$( \
-        koopa::print "$value" \
-            | head -n 1 \
-            | cut -d "\"" -f 2 \
-    )"
-    [ -n "$value" ] || return 1
-    koopa::print "$value"
     return 0
 }
 
