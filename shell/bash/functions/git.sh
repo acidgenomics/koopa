@@ -3,18 +3,18 @@
 koopa::git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2020-06-20.
+    # @note Updated 2020-07-04.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::h2 "Initializing submodules in '${PWD:?}'."
-    koopa::assert_is_git_toplevel "$PWD"
-    koopa::assert_is_nonzero_file ".gitmodules"
+    koopa::info "Initializing submodules in '${PWD:?}'."
+    koopa::assert_is_git
+    koopa::assert_is_nonzero_file '.gitmodules'
     koopa::assert_is_installed git
     local array lines string target target_key url url_key
     git submodule init
     lines="$( \
         git config \
-            -f ".gitmodules" \
+            -f '.gitmodules' \
             --get-regexp '^submodule\..*\.path$' \
     )"
     readarray -t array <<< "$lines"
@@ -27,7 +27,7 @@ koopa::git_submodule_init() {
         target_key="$(koopa::print "$string" | cut -d ' ' -f 1)"
         target="$(koopa::print "$string" | cut -d ' ' -f 2)"
         url_key="${target_key//\.path/.url}"
-        url="$(git config -f ".gitmodules" --get "$url_key")"
+        url="$(git config -f '.gitmodules' --get "$url_key")"
         koopa::dl "$target" "$url"
         if [[ ! -d "$target" ]]
         then
@@ -40,7 +40,7 @@ koopa::git_submodule_init() {
 koopa::git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-07-04.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -48,12 +48,12 @@ koopa::git_pull() {
     # @seealso
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
-    koopa::h2 "Pulling git repo at '${PWD:?}'."
-    koopa::assert_is_git_toplevel "$PWD"
+    koopa::info "Pulling git repo at '${PWD:?}'."
+    koopa::assert_is_git
     koopa::assert_is_installed git
     git fetch --all
     git pull "$@"
-    if [[ -s ".gitmodules" ]]
+    if [[ -s '.gitmodules' ]]
     then
         koopa::git_submodule_init
         git submodule --quiet update --init --recursive
@@ -64,14 +64,14 @@ koopa::git_pull() {
         git submodule --quiet foreach --recursive \
             git pull origin master
     fi
-    koopa::success "Pull was successful."
+    koopa::success 'Pull was successful.'
     return 0
 }
 
 koopa::git_reset() { # {{{1
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2020-04-30.
+    # @note Updated 2020-07-04.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -89,11 +89,11 @@ koopa::git_reset() { # {{{1
     # https://gist.github.com/nicktoumpelis/11214362
     # """
     koopa::assert_has_no_args "$#"
-    koopa::h2 "Resetting git repo at '${PWD:?}'."
-    koopa::assert_is_git_toplevel "$PWD"
+    koopa::info "Resetting git repo at '${PWD:?}'."
+    koopa::assert_is_git
     koopa::assert_is_installed git
     git clean -dffx
-    if [[ -s ".gitmodules" ]]
+    if [[ -s '.gitmodules' ]]
     then
         koopa::git_submodule_init
         git submodule --quiet foreach --recursive git clean -dffx
