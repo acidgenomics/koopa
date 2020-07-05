@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+koopa::_id() { # {{{1
+    # """
+    # Return ID string.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_args "$#"
+    local x
+    x="$(id "$@")"
+    koopa::print "$x"
+    return 0
+}
+
 koopa::add_local_bins_to_path() { # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
@@ -49,6 +61,41 @@ koopa::admin_group() { # {{{1
         koopa::stop 'Failed to detect admin group.'
     fi
     koopa::print "$group"
+    return 0
+}
+
+koopa::cd_tmp_dir() { # {{{1
+    # """
+    # Prepare and navigate (cd) to temporary directory.
+    # @note Updated 2020-06-30.
+    #
+    # Used primarily for cellar build scripts.
+    # """
+    koopa::assert_has_args_le "$#" 1
+    local dir
+    dir="${1:-$(koopa::tmp_dir)}"
+    rm -fr "$dir"
+    mkdir -p "$dir"
+    koopa::cd "$dir"
+    return 0
+}
+
+koopa::check_system() { # {{{1
+    # """
+    # Check system.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed Rscript
+    local koopa_prefix
+    koopa_prefix="$(koopa::prefix)"
+    export KOOPA_FORCE=1
+    set +u
+    # shellcheck disable=SC1090
+    source "${koopa_prefix}/activate"
+    set -u
+    Rscript --vanilla "$(koopa::include_prefix)/check-system.R"
+    koopa::disk_check
     return 0
 }
 
@@ -314,183 +361,214 @@ koopa::sys_set_permissions() { # {{{1
     return 0
 }
 
-koopa::update() { # {{{1
+# FIXME THIS SHOULD HANDLE KOOPA GROUP AUTOMATICALLY.
+koopa::sys_chgrp() { # {{{1
     # """
-    # Update koopa installation.
-    # @note Updated 2020-06-29.
+    # chgrp with dynamic sudo handling.
+    # @note Updated 2020-07-05.
     # """
-    local app_prefix config_prefix configure_flags core dotfiles \
-        dotfiles_prefix fast koopa_prefix make_prefix repos repo source_ip \
-        system user
-    koopa_prefix="$(koopa::prefix)"
-    # Note that stable releases are not git, and can't be updated.
-    if ! koopa::is_git_toplevel "$koopa_prefix"
+    koopa::assert_has_args "$#"
+    local exe group
+    group="$(koopa::sys_group)"
+    if koopa::is_shared_install
     then
-        version="$(koopa::version)"
-        url="$(koopa::url)"
-        koopa::note "Stable release of koopa ${version} detected."
-        koopa::note "To update, first run the 'uninstall' script."
-        koopa::note "Then run the default install command at '${url}'."
-        exit 1
-    fi
-    config_prefix="$(koopa::config_prefix)"
-    app_prefix="$(koopa::app_prefix)"
-    make_prefix="$(koopa::make_prefix)"
-    core=1
-    dotfiles=1
-    fast=0
-    source_ip=
-    system=0
-    user=0
-    while (("$#"))
-    do
-        case "$1" in
-            --fast)
-                fast=1
-                shift 1
-                ;;
-            --source-ip=*)
-                source_ip="${1#*=}"
-                shift 1
-                ;;
-            --source-ip)
-                source_ip="$2"
-                shift 2
-                ;;
-            --system)
-                system=1
-                shift 1
-                ;;
-            --user)
-                user=1
-                shift 1
-                ;;
-            *)
-                koopa::invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ -n "$source_ip" ]]
-    then
-        rsync=1
-        system=1
+        exe=('sudo' 'chgrp')
     else
-        rsync=0
+        exe=('chgrp')
     fi
-    if [[ "$fast" -eq 1 ]]
+    koopa::assert_has_args "$#"
+    "${exe[@]}" "$group" "$@"
+    return 0
+}
+
+koopa::sys_chmod() { # {{{1
+    # """
+    # chmod with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
     then
-        dotfiles=0
+        sudo chmod "$@"
+    else
+        chmod "$@"
     fi
-    if [[ "$user" -eq 1 ]] && [[ "$system" -eq 0 ]]
+    return 0
+}
+
+koopa::sys_chmod_flags() {
+    # """
+    # Default recommended flags for chmod.
+    # @note Updated 2020-04-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    local flags
+    if koopa::is_shared_install
     then
-        core=0
-        dotfiles=0
+        flags='u+rw,g+rw'
+    else
+        flags='u+rw,g+r,g-w'
     fi
-    if [[ "$system" -eq 1 ]]
+    koopa::print "$flags"
+    return 0
+}
+
+koopa::sys_chown() { # {{{1
+    # """
+    # chown with dynamic sudo handling.
+    # @note Updated 2020-02-16.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
     then
-        user=1
+        sudo chown "$@"
+    else
+        chown "$@"
     fi
-    koopa::h1 "Updating koopa at '${koopa_prefix}'."
-    koopa::sys_set_permissions --recursive "$koopa_prefix"
-    if [[ "$rsync" -eq 0 ]]
+    return 0
+}
+
+# FIXME BROKEN
+koopa::sys_cp() { # {{{1
+    # """
+    # Koopa copy.
+    # @note Updated 2020-06-30.
+    # """
+    if koopa::is_shared_install
     then
-        # Update koopa.
-        if [[ "$core" -eq 1 ]]
-        then
-            koopa::sys_git_pull
-        fi
-        # Ensure dotfiles are current.
-        if [[ "$dotfiles" -eq 1 ]]
-        then
-            (
-                dotfiles_prefix="$(koopa::dotfiles_prefix)"
-                cd "$dotfiles_prefix" || exit 1
-                # Preivously, this repo was at 'mjsteinbaugh/dotfiles'.
-                koopa::git_set_remote_url \
-                    'https://github.com/acidgenomics/dotfiles.git'
-                koopa::git_reset
-                koopa::git_pull origin master
-            )
-        fi
-        koopa::sys_set_permissions --recursive "$koopa_prefix"
+        sudo -E "$(koopa::cp "$@")"
+    else
+        koopa::cp "$@"
     fi
-    koopa::update_xdg_config
-    if [[ "$system" -eq 1 ]]
+    return 0
+}
+
+koopa::sys_group() { # {{{1
+    # """
+    # Return the appropriate group to use with koopa installation.
+    # @note Updated 2020-07-04.
+    #
+    # Returns current user for local install.
+    # Dynamically returns the admin group for shared install.
+    #
+    # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
+    # """
+    koopa::assert_has_no_args "$#"
+    local group
+    if koopa::is_shared_install
     then
-        koopa::h2 "Updating system configuration."
-        koopa::assert_has_sudo
-        koopa::dl "App prefix" "${app_prefix}"
-        koopa::dl "Config prefix" "${config_prefix}"
-        koopa::dl "Make prefix" "${make_prefix}"
-        koopa::add_make_prefix_link
-        if koopa::is_linux
-        then
-            koopa::update_etc_profile_d
-            koopa::update_ldconfig
-        fi
-        if koopa::is_installed configure-vm
-        then
-            # Allow passthrough of specific arguments to 'configure-vm' script.
-            configure_flags=("--no-check")
-            if [[ "$rsync" -eq 1 ]]
-            then
-                configure_flags+=("--source-ip=${source_ip}")
-            fi
-            configure-vm "${configure_flags[@]}"
-        fi
-        if [[ "$rsync" -eq 0 ]]
-        then
-            # This can cause some recipes to break.
-            # > update-conda
-            update-r-packages
-            update-python-packages
-            update-rust
-            update-rust-packages
-            update-perlbrew
-            if koopa::is_linux
-            then
-                update-google-cloud-sdk
-                update-pyenv
-                update-rbenv
-            elif koopa::is_macos
-            then
-                update-homebrew
-                update-microsoft-office
-                # > update-macos
-                # > update-macos-defaults
-            fi
-        fi
-        koopa::fix_zsh_permissions
+        group="$(koopa::admin_group)"
+    else
+        group="$(koopa::group)"
     fi
-    if [[ "$user" -eq 1 ]]
+    koopa::print "$group"
+    return 0
+}
+
+# FIXME BROKEN
+koopa::sys_ln() { # {{{1
+    # """
+    # Create a symlink quietly.
+    # @note Updated 2020-07-04.
+    # """
+    if koopa::is_shared_install
     then
-        koopa::h2 "Updating user configuration."
-        # Remove legacy directories from user config, if necessary.
-        rm -frv "${config_prefix}/"\
-{Rcheck,autojump,oh-my-zsh,pyenv,rbenv,spacemacs}
-        # Update git repos.
-        repos=(
-            "${config_prefix}/docker"
-            "${config_prefix}/docker-private"
-            "${config_prefix}/dotfiles-private"
-            "${config_prefix}/scripts-private"
-            "${XDG_DATA_HOME}/Rcheck"
-            "${HOME}/.emacs.d-doom"
-        )
-        for repo in "${repos[@]}"
-        do
-            [ -d "$repo" ] || continue
-            (
-                koopa::cd "$repo"
-                koopa::git_pull
-            )
-        done
-        koopa::install_dotfiles
-        koopa::install_dotfiles_private
-        koopa::update_spacemacs
+        sudo -E "$(koopa::ln "$@")"
+    else
+        koopa::ln "$@"
     fi
-    koopa::success "koopa update was successful."
-    koopa::restart
-    [[ "$system" -eq 1 ]] && koopa check-system
+    return 0
+}
+
+# FIXME BROKEN
+koopa::sys_mkdir() { # {{{1
+    # """
+    # mkdir with dynamic sudo handling.
+    # @note Updated 2020-07-05.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        # FIXME RETHINK THIS.
+        sudo -E "$(koopa::mkdir "$@")"
+    else
+        koopa::mkdir "$@"
+    fi
+    # FIXME SIMPLIFY
+    koopa::sys_chmod "$(koopa::sys_chmod_flags)" "$@"
+    koopa::sys_chgrp "$@"
+    return 0
+}
+
+# FIXME BROKEN
+koopa::sys_mv() { # {{{1
+    # """
+    # Move a file or directory.
+    # @note Updated 2020-07-04.
+    # """
+    if koopa::is_shared_install
+    then
+        sudo -E "$(koopa::mv "$@")"
+    else
+        koopa::mv "$@"
+    fi
+    return 0
+}
+
+# FIXME BROKEN
+koopa::sys_rm() { # {{{1
+    # """
+    # Remove files/directories quietly.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_args "$#"
+    if koopa::is_shared_install
+    then
+        sudo -E "$(koopa::rm "$@")"
+    else
+        koopa::rm "$@"
+    fi
+    return 0
+}
+
+koopa::sys_user() { # {{{1
+    # """
+    # Set the koopa installation system user.
+    # @note Updated 2020-07-04.
+    # """
+    koopa::assert_has_no_args "$#"
+    local user
+    if koopa::is_shared_install
+    then
+        user='root'
+    else
+        user="$(koopa::user)"
+    fi
+    koopa::print "$user"
+    return 0
+}
+
+koopa::view_latest_tmp_log_file() { # {{{1
+    # """
+    # View the latest temporary log file.
+    # @note Updated 2020-07-05.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed find
+    local dir log_file
+    dir="${TMPDIR:-/tmp}"
+    log_file="$( \
+        find "$dir" \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -type f \
+            -name "koopa-$(koopa::user_id)-*" \
+            | sort \
+            | tail -n 1 \
+    )"
+    [[ -f "$log_file" ]] || return 1
+    koopa::info "Viewing '${log_file}'."
+    # Note that this will skip to the end automatically.
+    koopa::pager +G "$log_file"
     return 0
 }
