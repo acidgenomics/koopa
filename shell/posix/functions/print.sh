@@ -81,6 +81,46 @@ __koopa_emoji() { # {{{1
     _koopa_print '🐢'
 }
 
+__koopa_h() { # {{{1
+    # """
+    # Koopa header.
+    # @note Updated 2020-07-03.
+    # """
+    # shellcheck disable=SC2039
+    local level prefix
+    level="${1:?}"
+    shift 1
+    case "$level" in
+        1)
+            _koopa_print ''
+            prefix='='
+            ;;
+        2)
+            prefix='=='
+            ;;
+        3)
+            prefix='==='
+            ;;
+        4)
+            prefix='===='
+            ;;
+        5)
+            prefix='====='
+            ;;
+        6)
+            prefix='======'
+            ;;
+        7)
+            prefix='======='
+            ;;
+        *)
+            _koopa_invalid_arg "$1"
+            ;;
+    esac
+    __koopa_msg 'magenta' 'default' "${prefix}>" "$@"
+    return 0
+}
+
 __koopa_msg() {
     # """
     # Koopa standard message.
@@ -155,6 +195,49 @@ __koopa_status() { # {{{1
         x="${color}${label}${nocolor} | ${string}"
         _koopa_print "$x"
     done
+    return 0
+}
+
+_koopa_dl() { # {{{1
+    # """
+    # Definition list.
+    # @note Updated 2020-07-01.
+    # """
+    __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:?}"
+}
+
+_koopa_h1() { # {{{1
+    __koopa_h 1 "$@"
+    return 0
+}
+
+_koopa_h2() { # {{{1
+    __koopa_h 2 "$@"
+    return 0
+}
+
+_koopa_h3() { # {{{1
+    __koopa_h 3 "$@"
+    return 0
+}
+
+_koopa_h4() { # {{{1
+    __koopa_h 4 "$@"
+    return 0
+}
+
+_koopa_h5() { # {{{1
+    __koopa_h 5 "$@"
+    return 0
+}
+
+_koopa_h6() { # {{{1
+    __koopa_h 6 "$@"
+    return 0
+}
+
+_koopa_h7() { # {{{1
+    __koopa_h 7 "$@"
     return 0
 }
 

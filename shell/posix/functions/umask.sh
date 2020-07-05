@@ -1,7 +1,6 @@
 #!/bin/sh
 
-# FIXME RENAME
-koopa::umask() { # {{{1
+_koopa_umask() { # {{{1
     # """
     # Set default file permissions.
     # @note Updated 2020-06-03.
@@ -29,7 +28,6 @@ koopa::umask() { # {{{1
     # - https://stackoverflow.com/questions/13268796
     # - https://askubuntu.com/questions/44534
     # """
-    koopa::assert_has_no_args "$#"
     umask 0002
     return 0
 }
