@@ -476,18 +476,3 @@ koopa::stat_user() { # {{{1
     koopa::print "$x"
     return 0
 }
-
-koopa::sudo_write_string() { # {{{1
-    # """
-    # Write a string to disk using root user.
-    # @note Updated 2020-07-01.
-    #
-    # Alternatively, 'tee -a' can be used to append file.
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    local file string
-    string="${1:?}"
-    file="${2:?}"
-    koopa::print "$string" | sudo tee "$file" >/dev/null
-    return 0
-}
