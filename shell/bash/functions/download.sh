@@ -24,7 +24,7 @@ koopa::download() { # {{{1
     local bn file url wd
     url="${1:?}"
     file="${2:-}"
-    if [ -z "$file" ]
+    if [[ -z "$file" ]]
     then
         wd="$(pwd)"
         bn="$(basename "$url")"

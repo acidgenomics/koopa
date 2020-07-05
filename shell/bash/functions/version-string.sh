@@ -78,7 +78,7 @@ koopa::github_latest_release() { # {{{1
             | cut -d '"' -f 4 \
             | sed 's/^v//' \
     )"
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }
@@ -127,9 +127,9 @@ koopa::llvm_version() { # {{{1
     koopa::assert_has_no_args "$#"
     local x
     x="${LLVM_CONFIG:-}"
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     x="$(koopa::return_version "$LLVM_CONFIG")"
-    [ -n "$x" ] || return 1
+    [[ -n "$x" ]] || return 1
     koopa::print "$x"
     return 0
 }

@@ -122,7 +122,7 @@ koopa::is_r_package_installed() { # {{{1
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
     do
-        [ -d "${prefix}/${pkg}" ] || return 1
+        [[ -d "${prefix}/${pkg}" ]] || return 1
     done
     return 0
 }

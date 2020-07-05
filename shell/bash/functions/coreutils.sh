@@ -45,7 +45,7 @@ koopa::mv() { # {{{1
     source_file="$(koopa::strip_trailing_slash "${1:?}")"
     koopa::assert_is_existing "$source_file"
     target_file="$(koopa::strip_trailing_slash "${2:?}")"
-    [ -e "$target_file" ] && koopa::rm "$target_file"
+    [[ -e "$target_file" ]] && koopa::rm "$target_file"
     koopa::mkdir "$(dirname "$target_file")"
     mv -f "$source_file" "$target_file"
     return 0
@@ -62,8 +62,8 @@ koopa::relink() { # {{{1
     source_file="${1:?}"
     dest_file="${2:?}"
     # Keep this check relaxed, in case dotfiles haven't been cloned.
-    [ -e "$source_file" ] || return 0
-    [ -L "$dest_file" ] && return 0
+    [[ -e "$source_file" ]] || return 0
+    [[ -L "$dest_file" ]] && return 0
     koopa::rm "$dest_file"
     ln -fns "$source_file" "$dest_file"
     return 0

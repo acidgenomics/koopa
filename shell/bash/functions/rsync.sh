@@ -88,7 +88,7 @@ koopa::rsync_vm() { # {{{1
     local user
     user="${USER:?}"
     # Check for accidental sync from source machine.
-    if [ "$source_ip" == "$host_ip" ]
+    if [[ "$source_ip" == "$host_ip" ]]
     then
         koopa::note "On source machine: '${source_ip}'."
         return 0
