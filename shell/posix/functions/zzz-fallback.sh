@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 if ! koopa::is_installed basename
 then

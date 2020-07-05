@@ -1,11 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
-
-# """
-# Semantic versioning
-# https://semver.org/
-# MAJOR.MINOR.PATCH
-# """
 
 koopa::current_bcbio_version() { # {{{1
     # """

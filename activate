@@ -389,6 +389,7 @@ koopa::export_tmpdir
 koopa::export_today
 koopa::export_user
 
+# FIXME RETHINK THIS.
 koopa::activate_xdg
 koopa::activate_standard_paths
 koopa::activate_koopa_paths
@@ -445,9 +446,8 @@ then
     koopa::activate_ssh_key
     if ! koopa::is_subshell
     then
+        # FIXME RETHINK THIS.
         koopa::today_bucket
-        koopa::disk_check
-        koopa::data_disk_check
         koopa::tmux_sessions
     fi
 fi

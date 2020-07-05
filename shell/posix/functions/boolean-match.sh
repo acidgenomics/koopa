@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 # Details pipe support for reading stdin:
 # https://stackoverflow.com/a/58452863/3911732

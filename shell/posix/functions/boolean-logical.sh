@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::_has_gnu() { # {{{1
     # """

@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 # Note that these are defined primarily to catch errors in private scripts that
 # are defined outside of the koopa package.

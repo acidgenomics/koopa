@@ -1,5 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC2039
 
 koopa::assert_are_identical() { # {{{1
     # """
