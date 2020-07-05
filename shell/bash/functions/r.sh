@@ -194,7 +194,7 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
-# FIXME DOUBLE CHECK THIS WORKS.
+# FIXME DOUBLE CHECK THIS ONCE KOOPA_SYS FUNCTIONS GET UPDATED.
 koopa::update_r_config() { # {{{1
     # """
     # Update R configuration.
@@ -207,7 +207,7 @@ koopa::update_r_config() { # {{{1
     r="${1:-R}"
     r="$(koopa::which_realpath "$r")"
     koopa::assert_is_installed "$r"
-    r_prefix="$(koopa::r_prefix "$r_prefix")"
+    r_prefix="$(koopa::r_prefix "$r")"
     koopa::h1 'Updating R configuration.'
     koopa::dl 'R home' "$r_prefix"
     koopa::dl 'R path' "$r"
