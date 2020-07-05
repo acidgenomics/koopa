@@ -464,7 +464,7 @@ koopa::is_git_clean() { # {{{1
     rev_1="$(git rev-parse HEAD 2>/dev/null)"
     # Note that this step will return fatal warning on no upstream.
     rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
-    [ "$rev_1" != "$rev_2" ]
+    [ "$rev_1" == "$rev_2" ]
 }
 
 koopa::is_git_toplevel() { # {{{1
