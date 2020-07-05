@@ -78,6 +78,26 @@ koopa::cd_tmp_dir() { # {{{1
     return 0
 }
 
+koopa::check_exports() { # {{{1
+    # """
+    # Check exported environment variables.
+    # @note Updated 2020-07-05.
+    #
+    # Warn the user if they are setting unrecommended values.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::is_rstudio && return 0
+    local vars
+    vars=(
+        'JAVA_HOME'
+        'LD_LIBRARY_PATH'
+        'PYTHONHOME'
+        'R_HOME'
+    )
+    koopa::warn_if_export "${vars[@]}"
+    return 0
+}
+
 koopa::check_system() { # {{{1
     # """
     # Check system.
@@ -1007,5 +1027,24 @@ koopa::view_latest_tmp_log_file() { # {{{1
     koopa::info "Viewing '${log_file}'."
     # Note that this will skip to the end automatically.
     koopa::pager +G "$log_file"
+    return 0
+}
+
+koopa::warn_if_export() { # {{{1
+    # """
+    # Warn if variable is exported in current shell session.
+    # @note Updated 2020-02-20.
+    #
+    # Useful for checking against unwanted compiler settings.
+    # In particular, useful to check for 'LD_LIBRARY_PATH'.
+    # """
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if koopa::is_export "$arg"
+        then
+            koopa::warning "'${arg}' is exported."
+        fi
+    done
     return 0
 }
