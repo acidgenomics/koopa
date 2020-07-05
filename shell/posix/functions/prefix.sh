@@ -53,10 +53,10 @@ _koopa_autojump_prefix() { # {{{1
     then
         # This is the current target of cellar script.
         prefix="$make_prefix"
-    elif [ -x "/usr/bin/autojump" ]
+    elif [ -x '/usr/bin/autojump' ]
     then
         # Also support installation via package manager.
-        prefix="/usr"
+        prefix='/usr'
     else
         # Local user installation (macOS).
         prefix="${HOME:?}/.autojump"
@@ -73,12 +73,12 @@ _koopa_bcbio_prefix() { # {{{1
     local host_id prefix
     _koopa_is_linux || return 1
     host_id="$(_koopa_host_id)"
-    if [ "$host_id" = "harvard-o2" ]
+    if [ "$host_id" = 'harvard-o2' ]
     then
-        prefix="/n/app/bcbio/tools"
-    elif [ "$host_id" = "harvard-odyssey" ]
+        prefix='/n/app/bcbio/tools'
+    elif [ "$host_id" = 'harvard-odyssey' ]
     then
-        prefix="/n/regal/hsph_bioinfo/bcbio_nextgen"
+        prefix='/n/regal/hsph_bioinfo/bcbio_nextgen'
     else
         prefix="$(_koopa_app_prefix)/bcbio/stable/tools"
     fi
