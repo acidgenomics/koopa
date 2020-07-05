@@ -101,7 +101,7 @@ koopa::check_exports() { # {{{1
 koopa::check_system() { # {{{1
     # """
     # Check system.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     # """
     koopa::assert_has_no_args "$#"
     koopa::assert_is_installed Rscript
@@ -113,7 +113,11 @@ koopa::check_system() { # {{{1
     source "${koopa_prefix}/activate"
     set -u
     Rscript --vanilla "$(koopa::include_prefix)/check-system.R"
+    koopa::check_exports
+    # FIXME RENAME
     koopa::disk_check
+    # FIXME RENAME
+    koopa::data_disk_check
     return 0
 }
 
@@ -991,6 +995,32 @@ koopa::uninstall() { # {{{1
     # @note Updated 2020-06-24.
     # """
     "$(koopa::prefix)/uninstall" "$@"
+    return 0
+}
+
+koopa::variable() { # {{{1
+    # """
+    # Get version stored internally in versions.txt file.
+    # @note Updated 2020-07-05.
+    #
+    # This approach handles inline comments.
+    # """
+    koopa::assert_has_args_eq "$#" 1
+    local file key value
+    key="${1:?}"
+    file="$(koopa::include_prefix)/variables.txt"
+    koopa::assert_is_file "$file"
+    value="$( \
+        grep -Eo "^${key}=\"[^\"]+\"" "$file" \
+        || koopa::stop "'${key}' not defined in '${file}'." \
+    )"
+    value="$( \
+        koopa::print "$value" \
+            | head -n 1 \
+            | cut -d "\"" -f 2 \
+    )"
+    [[ -n "$value" ]] || return 1
+    koopa::print "$value"
     return 0
 }
 
