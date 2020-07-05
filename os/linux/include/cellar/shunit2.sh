@@ -7,5 +7,5 @@ koopa::download "$url"
 koopa::extract "$file"
 cd "${name}-${version}" || exit 1
 koopa::mkdir "${prefix}/bin"
-koopa::system_set_permissions --recursive "$prefix"
+koopa::sys_set_permissions --recursive "$prefix"
 cp -a "$name" -t "${prefix}/bin/"

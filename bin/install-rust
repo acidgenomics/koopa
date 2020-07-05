@@ -34,7 +34,7 @@ RUSTUP_HOME="$(koopa::rust_rustup_prefix)"
 
 if [[ "$reinstall" -eq 1 ]]
 then
-    koopa::system_rm "$CARGO_HOME" "$RUSTUP_HOME"
+    koopa::sys_rm "$CARGO_HOME" "$RUSTUP_HOME"
 fi
 
 koopa::exit_if_dir "$CARGO_HOME" "$RUSTUP_HOME"
@@ -59,7 +59,7 @@ koopa::mkdir "$CARGO_HOME" "$RUSTUP_HOME"
     curl -sSf https://sh.rustup.rs | sh -s -- -v -y --no-modify-path
 ) 2>&1 | tee "$(koopa::tmp_log_file)"
 
-koopa::system_set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
+koopa::sys_set_permissions  --recursive "$CARGO_HOME" "$RUSTUP_HOME"
 
 koopa::install_success "$name_fancy"
 koopa::restart

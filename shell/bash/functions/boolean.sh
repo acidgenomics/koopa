@@ -16,7 +16,6 @@ koopa::is_array_non_empty() { # {{{1
     return 0
 }
 
-# FIXME NEED TO SUPPORT FLAG.
 koopa::is_python_package_installed() { # {{{1
     # """
     # Check if Python package is installed.
@@ -34,21 +33,52 @@ koopa::is_python_package_installed() { # {{{1
     # - https://askubuntu.com/questions/588390
     # """
     koopa::assert_has_args "$#"
-    local pkg
-    pkg="${1:?}"
-    local python_exe
-    python_exe="${2:-python3}"
-    koopa::is_installed "$python_exe" || return 1
+    local pkg pos prefix python
+    python='python3'
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --python=*)
+                python="${1#*=}"
+                shift 1
+                ;;
+            --python)
+                python="$2"
+                shift 2
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::assert_has_args "$#"
+    koopa::is_installed "$python" || return 1
     local prefix
-    prefix="$(koopa::python_site_packages_prefix "$python_exe")"
-    [ -d "${prefix}/${pkg}" ]
+    prefix="$(koopa::python_site_packages_prefix "$python")"
+    for pkg in "$@"
+    do
+        if [[ ! -d "${prefix}/${pkg}" ]] && [[ ! -f "${prefix}/${pkg}.py" ]]
+        then
+            return 1
+        fi
+    done
+    return 0
 }
 
-# FIXME NEED TO SUPPORT FLAG.
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-04-25.
+    # @note Updated 2020-07-04.
     #
     # This will only return true for user-installed packages.
     #
@@ -59,11 +89,41 @@ koopa::is_r_package_installed() { # {{{1
     # >     | grep -q "TRUE"
     # """
     koopa::assert_has_args "$#"
-    local pkg prefix rscript_exe
-    pkg="${1:?}"
-    rscript_exe="${2:-Rscript}"
-    koopa::is_installed "$rscript_exe" || return 1
-    prefix="$(koopa::r_library_prefix "$rscript_exe")"
-    [ -d "${prefix}/${pkg}" ]
+    local pkg pos r
+    r='R'
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            --r=*)
+                r="${1#*=}"
+                shift 1
+                ;;
+            --r)
+                r="$2"
+                shift 2
+                ;;
+            --)
+                shift 1
+                break
+                ;;
+            --*|-*)
+                koopa::invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa::is_installed "$r" || return 1
+    # FIXME NEED TO PASS R HERE INSTEAD.
+    prefix="$(koopa::r_library_prefix "$r")"
+    for pkg in "$@"
+    do
+        [ -d "${prefix}/${pkg}" ] || return 1
+    done
+    return 0
 }
 

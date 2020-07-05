@@ -21,6 +21,6 @@ koopa::install_start "$name" "$prefix"
 
 rm -fr "$tmp_dir"
 
-koopa::system_set_permissions --recursive "$prefix"
+koopa::sys_set_permissions --recursive "$prefix"
 
 koopa::install_success "$name"

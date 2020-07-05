@@ -35,7 +35,7 @@ framework_dir="/Library/Frameworks/Python.framework"
 
 if ! koopa::is_current_version "$name" || [[ "$reinstall" -eq 1 ]]
 then
-    koopa::system_rm "$framework_dir"
+    koopa::sys_rm "$framework_dir"
 fi
 
 koopa::exit_if_dir "$framework_dir"

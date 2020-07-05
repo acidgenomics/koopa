@@ -80,9 +80,9 @@ tmp_dir="$(koopa::tmp_dir)"
 
 if [[ "$version" == "stable" ]]
 then
-    koopa::system_ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
+    koopa::sys_ln "${app_prefix}/${current_version}" "${app_prefix}/stable"
 fi
 
-koopa::system_set_permissions --recursive "$app_prefix"
+koopa::sys_set_permissions --recursive "$app_prefix"
 
 koopa::install_success "$name_fancy"

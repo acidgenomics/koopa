@@ -52,7 +52,6 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
-
 koopa::info_box() { # {{{1
     # """
     # Info box.
@@ -95,7 +94,7 @@ koopa::script_name() { # {{{1
     return 0
 }
 
-koopa::system_git_pull() { # {{{1
+koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
     # @note Updated 2020-07-04.
@@ -110,7 +109,7 @@ koopa::system_git_pull() { # {{{1
     (
         prefix="$(koopa::prefix)"
         cd "$prefix" || exit 1
-        koopa::system_set_permissions \
+        koopa::sys_set_permissions \
             --recursive "${prefix}/shell/zsh" \
             >/dev/null 2>&1
         branch="$(koopa::git_branch)"
@@ -125,7 +124,7 @@ koopa::system_git_pull() { # {{{1
     return 0
 }
 
-koopa::system_info() { # {{{
+koopa::sys_info() { # {{{
     # """
     # System information.
     # @note Updated 2020-06-30.
@@ -211,7 +210,7 @@ koopa::system_info() { # {{{
     return 0
 }
 
-koopa::system_set_permissions() { # {{{1
+koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
     # @note Updated 2020-07-04.
@@ -262,7 +261,7 @@ koopa::system_set_permissions() { # {{{1
     koopa::assert_has_args "$#"
     # chmod flags.
     local chmod_flags
-    readarray -t chmod_flags <<< "$(koopa::system_chmod_flags)"
+    readarray -t chmod_flags <<< "$(koopa::sys_chmod_flags)"
     if [[ "$recursive" -eq 1 ]]
     then
         # Note that '-R' instead of '--recursive' has better cross-platform
@@ -293,11 +292,11 @@ koopa::system_set_permissions() { # {{{1
         chown_flags+=("-v")
     fi
     local group
-    group="$(koopa::system_group)"
+    group="$(koopa::sys_group)"
     local who
     case "$user" in
         0)
-            who="$(koopa::system_user)"
+            who="$(koopa::sys_user)"
             ;;
         1)
             who="$(koopa::user)" \
@@ -309,8 +308,8 @@ koopa::system_set_permissions() { # {{{1
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
-        koopa::system_chmod "${chmod_flags[@]}" "$arg"
-        koopa::system_chown "${chown_flags[@]}" "$arg"
+        koopa::sys_chmod "${chmod_flags[@]}" "$arg"
+        koopa::sys_chown "${chown_flags[@]}" "$arg"
     done
     return 0
 }
@@ -392,13 +391,13 @@ koopa::update() { # {{{1
         user=1
     fi
     koopa::h1 "Updating koopa at '${koopa_prefix}'."
-    koopa::system_set_permissions --recursive "$koopa_prefix"
+    koopa::sys_set_permissions --recursive "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then
         # Update koopa.
         if [[ "$core" -eq 1 ]]
         then
-            koopa::system_git_pull
+            koopa::sys_git_pull
         fi
         # Ensure dotfiles are current.
         if [[ "$dotfiles" -eq 1 ]]
@@ -413,7 +412,7 @@ koopa::update() { # {{{1
                 koopa::git_pull origin master
             )
         fi
-        koopa::system_set_permissions --recursive "$koopa_prefix"
+        koopa::sys_set_permissions --recursive "$koopa_prefix"
     fi
     koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]

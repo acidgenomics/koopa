@@ -59,7 +59,7 @@ koopa::add_make_prefix_link() { # {{{1
     [ -L "$target_link" ] && return 0
     koopa::info "Adding 'koopa' link inside '${make_prefix}'."
     source_link="${koopa_prefix}/bin/koopa"
-    koopa::system_ln "$source_link" "$target_link"
+    koopa::sys_ln "$source_link" "$target_link"
     return 0
 }
 

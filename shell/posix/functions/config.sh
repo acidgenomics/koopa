@@ -127,7 +127,7 @@ koopa::fix_pyenv_permissions() { # {{{1
     pyenv_prefix="$(koopa::pyenv_prefix)"
     [ -d "${pyenv_prefix}/shims" ] || return 0
     koopa::h2 "Fixing Python pyenv shim permissions."
-    koopa::system_chmod -v 0777 "${pyenv_prefix}/shims"
+    koopa::sys_chmod -v 0777 "${pyenv_prefix}/shims"
     return 0
 }
 
@@ -141,7 +141,7 @@ koopa::fix_rbenv_permissions() { # {{{1
     rbenv_prefix="$(koopa::rbenv_prefix)"
     [ -d "${rbenv_prefix}/shims" ] || return 0
     koopa::h2 "Fixing Ruby rbenv shim permissions."
-    koopa::system_chmod -v 0777 "${rbenv_prefix}/shims"
+    koopa::sys_chmod -v 0777 "${rbenv_prefix}/shims"
     return 0
 }
 
@@ -154,7 +154,7 @@ koopa::fix_zsh_permissions() { # {{{1
     local cellar_prefix koopa_prefix make_prefix zsh_exe
     koopa::h2 "Fixing Zsh permissions to pass 'compaudit' checks."
     koopa_prefix="$(koopa::prefix)"
-    koopa::system_chmod -v g-w \
+    koopa::sys_chmod -v g-w \
         "${koopa_prefix}/shell/zsh" \
         "${koopa_prefix}/shell/zsh/functions"
     koopa::is_installed zsh || return 0
@@ -164,7 +164,7 @@ koopa::fix_zsh_permissions() { # {{{1
     then
         if koopa::str_match_regex "$zsh_exe" "^${make_prefix}"
         then
-            koopa::system_chmod -v g-w \
+            koopa::sys_chmod -v g-w \
                 "${make_prefix}/share/zsh" \
                 "${make_prefix}/share/zsh/site-functions"
         fi
@@ -174,7 +174,7 @@ koopa::fix_zsh_permissions() { # {{{1
     then
         if koopa::str_match_regex "$zsh_exe" "^${cellar_prefix}"
         then
-            koopa::system_chmod -v g-w \
+            koopa::sys_chmod -v g-w \
                 "${cellar_prefix}/zsh/"*"/share/zsh" \
                 "${cellar_prefix}/zsh/"*"/share/zsh/"* \
                 "${cellar_prefix}/zsh/"*"/share/zsh/"*"/functions"
@@ -291,33 +291,6 @@ koopa::install_mike() { # {{{1
     koopa::git_clone_scripts_private
     koopa::install_dotfiles
     koopa::install_dotfiles_private
-    return 0
-}
-
-koopa::install_pip() { # {{{1
-    # """
-    # Install pip for Python.
-    # @note Updated 2020-02-10.
-    # """
-    local file python
-    python="${1:-python3}"
-    if ! koopa::is_installed "$python"
-    then
-        koopa::warning "Python ('${python}') is not installed."
-        return 1
-    fi
-    if koopa::is_python_package_installed "pip" "$python"
-    then
-        koopa::note "pip is already installed."
-        return 0
-    fi
-    koopa::h2 "Installing pip for Python '${python}'."
-    file="get-pip.py"
-    koopa::download "https://bootstrap.pypa.io/${file}"
-    "$python" "$file" --no-warn-script-location
-    rm "$file"
-    koopa::install_success "pip"
-    koopa::restart
     return 0
 }
 
