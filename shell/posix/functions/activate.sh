@@ -624,7 +624,7 @@ koopa::activate_local_etc_profile() { # {{{1
 koopa::activate_macos_extras() { # {{{1
     # """
     # Activate macOS-specific extra settings.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     # """
     koopa::assert_has_no_args "$#"
     # Improve terminal colors.
@@ -636,12 +636,7 @@ koopa::activate_macos_extras() { # {{{1
     # this doesn't get inherited by GNU coreutils, which uses 'LS_COLORS'.
     if [ -z "${LSCOLORS:-}" ]
     then
-        export LSCOLORS="Gxfxcxdxbxegedabagacad"
-    fi
-    # Set rsync flags for APFS.
-    if [ -z "${RSYNC_FLAGS_APFS:-}" ]
-    then
-        export RSYNC_FLAGS_APFS="${RSYNC_FLAGS:?} --iconv=utf-8,utf-8-mac"
+        export LSCOLORS='Gxfxcxdxbxegedabagacad'
     fi
     return 0
 }
@@ -1296,17 +1291,6 @@ koopa::export_python() { # {{{1
     # Don't allow Python to change the prompt string by default.
     [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ] && VIRTUAL_ENV_DISABLE_PROMPT=1
     export VIRTUAL_ENV_DISABLE_PROMPT
-    return 0
-}
-
-koopa::export_rsync() { # {{{1
-    # """
-    # Export rsync flags.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -z "${RSYNC_FLAGS:-}" ] && RSYNC_FLAGS="$(koopa::rsync_flags)"
-    export RSYNC_FLAGS
     return 0
 }
 

@@ -16,6 +16,38 @@ koopa::pip_install() { # {{{1
     return 0
 }
 
+koopa::python_remove_pycache() { # {{{1
+    # """
+    # Remove Python '__pycache__/' from site packages.
+    # @note Updated 2020-06-30.
+    #
+    # These directories can create permission issues when attempting to rsync
+    # installation across multiple VMs.
+    # """
+    koopa::assert_has_args_le "$#" 1
+    koopa::assert_is_installed find
+    local prefix python
+    prefix="${1:-}"
+    if [[ -z "$prefix" ]]
+    then
+        # e.g. /usr/local/cellar/python/3.8.1
+        python="$(koopa::which_realpath "python3")"
+        prefix="$(realpath "$(dirname "$python")/..")"
+    fi
+    koopa::info "Removing pycache in '${prefix}'."
+    # > find "$prefix" \
+    # >     -type d \
+    # >     -name "__pycache__" \
+    # >     -print0 \
+    # >     -exec rm -frv "{}" \;
+    find "$prefix" \
+        -type d \
+        -name "__pycache__" \
+        -print0 \
+        | xargs -0 -I {} rm -frv "{}"
+    return 0
+}
+
 koopa::venv_create() {
     # """
     # Create Python virtual environment.

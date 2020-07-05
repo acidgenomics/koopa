@@ -405,6 +405,50 @@ koopa::pager() {
     return 0
 }
 
+koopa::public_ip_address() { # {{{1
+    # """
+    # Public (remote) IP address.
+    # @note Updated 2020-07-05.
+    #
+    # @seealso
+    # https://www.cyberciti.biz/faq/
+    #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed curl dig
+    local x
+    x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
+    # Fallback in case dig approach doesn't work.
+    if [[ -z "$x" ]]
+    then
+        koopa::assert_is_installed curl
+        x="$(curl -s ipecho.net/plain)"
+    fi
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
+koopa::run_if_installed() { # {{{1
+    # """
+    # Run program(s) if installed.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa::is_installed "$arg"
+        then
+            koopa::note "Skipping '${arg}'."
+            continue
+        fi
+        local exe
+        exe="$(koopa::which_realpath "$arg")"
+        "$exe"
+    done
+    return 0
+}
+
 koopa::script_name() { # {{{1
     # """
     # Get the calling script name.
@@ -458,7 +502,7 @@ koopa::sys_git_pull() { # {{{1
 koopa::sys_info() { # {{{
     # """
     # System information.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     # """
     koopa::assert_has_no_args "$#"
     local array koopa_prefix nf origin shell shell_name shell_version
@@ -484,9 +528,9 @@ koopa::sys_info() { # {{{
         )
     fi
     array+=(
-        ""
-        "Configuration"
-        "-------------"
+        ''
+        'Configuration'
+        '-------------'
         "Koopa Prefix: ${koopa_prefix}"
         "Config Prefix: $(koopa::config_prefix)"
         "App Prefix: $(koopa::app_prefix)"
@@ -502,8 +546,8 @@ koopa::sys_info() { # {{{
     then
         readarray -t nf <<< "$(neofetch --stdout)"
         array+=(
-            "System information (neofetch)"
-            "-----------------------------"
+            'System information (neofetch)'
+            '-----------------------------'
             "${nf[@]:2}"
         )
     else
@@ -511,7 +555,7 @@ koopa::sys_info() { # {{{
         if koopa::is_macos
         then
             os="$( \
-                printf "%s %s (%s)\n" \
+                printf '%s %s (%s)\n' \
                     "$(sw_vers -productName)" \
                     "$(sw_vers -productVersion)" \
                     "$(sw_vers -buildVersion)" \
@@ -528,14 +572,14 @@ koopa::sys_info() { # {{{
         shell_version="$(koopa::get_version "${shell_name}")"
         shell="${shell_name} ${shell_version}"
         array+=(
-            "System information"
-            "------------------"
+            'System information'
+            '------------------'
             "OS: ${os}"
             "Shell: ${shell}"
             ""
         )
     fi
-    array+=("Run 'koopa check' to verify installation.")
+    array+=('Run "koopa check" to verify installation.')
     cat "$(koopa::include_prefix)/ascii-turtle.txt"
     koopa::info_box "${array[@]}"
     return 0
@@ -544,7 +588,7 @@ koopa::sys_info() { # {{{
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-05.
     #
     # @param --recursive
     #   Change permissions recursively.
@@ -553,11 +597,9 @@ koopa::sys_set_permissions() { # {{{1
     #   root for shared installs.
     # """
     koopa::assert_has_args "$#"
-    local recursive
+    local arg chmod_flags chown_flags group pos recursive user verbose who
     recursive=0
-    local user
     user=0
-    local verbose
     verbose=0
     pos=()
     while (("$#"))
@@ -590,41 +632,35 @@ koopa::sys_set_permissions() { # {{{1
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
-    # chmod flags.
-    local chmod_flags
     readarray -t chmod_flags <<< "$(koopa::sys_chmod_flags)"
     if [[ "$recursive" -eq 1 ]]
     then
         # Note that '-R' instead of '--recursive' has better cross-platform
         # support on macOS and BusyBox.
-        chmod_flags+=("-R")
+        chmod_flags+=('-R')
     fi
     if [[ "$verbose" -eq 1 ]]
     then
         # Note that '-v' instead of '--verbose' has better cross-platform
         # support on macOS and BusyBox.
-        chmod_flags+=("-v")
+        chmod_flags+=('-v')
     fi
-    # chown flags.
-    local chown_flags
     # Note that '-h' instead of '--no-dereference' has better cross-platform
     # support on macOS and BusyBox.
-    chown_flags=("-h")
+    chown_flags=('-h')
     if [[ "$recursive" -eq 1 ]]
     then
         # Note that '-R' instead of '--recursive' has better cross-platform
         # support on macOS and BusyBox.
-        chown_flags+=("-R")
+        chown_flags+=('-R')
     fi
     if [[ "$verbose" -eq 1 ]]
     then
         # Note that '-v' instead of '--verbose' has better cross-platform
         # support on macOS and BusyBox.
-        chown_flags+=("-v")
+        chown_flags+=('-v')
     fi
-    local group
     group="$(koopa::sys_group)"
-    local who
     case "$user" in
         0)
             who="$(koopa::sys_user)"
@@ -841,6 +877,58 @@ koopa::test() { # {{{1
     return 0
 }
 
+koopa::test_find_files() { # {{{1
+    # """
+    # Find relevant files for unit tests.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    local prefix x
+    prefix="$(koopa::prefix)"
+    x="$( \
+        find "$prefix" \
+            -mindepth 1 \
+            -type f \
+            -not -name "$(basename "$0")" \
+            -not -name '*.md' \
+            -not -name '.pylintrc' \
+            -not -path "${prefix}/.git/*" \
+            -not -path "${prefix}/cellar/*" \
+            -not -path "${prefix}/coverage/*" \
+            -not -path "${prefix}/dotfiles/*" \
+            -not -path "${prefix}/opt/*" \
+            -not -path "${prefix}/tests/*" \
+            -not -path '*/etc/R/*' \
+            -print | sort \
+    )"
+    koopa::print "$x"
+}
+
+koopa::test_true_color() { # {{{1
+    # """
+    # Test 24-bit true color support.
+    # @note Updated 2020-02-15.
+    #
+    # @seealso
+    # https://jdhao.github.io/2018/10/19/tmux_nvim_true_color/
+    # """
+    koopa::assert_has_no_args "$#"
+    awk 'BEGIN{
+        s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
+        for (colnum = 0; colnum<77; colnum++) {
+            r = 255-(colnum*255/76);
+            g = (colnum*510/76);
+            b = (colnum*255/76);
+            if (g>255) g = 510-g;
+            printf "\033[48;2;%d;%d;%dm", r,g,b;
+            printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+            printf "%s\033[0m", substr(s,colnum+1,1);
+        }
+        printf "\n";
+    }'
+    return 0
+}
+
 koopa::tmp_dir() { # {{{1
     # """
     # Create temporary directory.
@@ -874,6 +962,15 @@ koopa::tmp_log_file() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::tmp_file
+    return 0
+}
+
+koopa::uninstall() { # {{{1
+    # """
+    # Uninstall koopa.
+    # @note Updated 2020-06-24.
+    # """
+    "$(koopa::prefix)/uninstall" "$@"
     return 0
 }
 
