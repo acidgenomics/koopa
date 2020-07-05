@@ -147,6 +147,7 @@ koopa::host_id() { # {{{1
 }
 
 # FIXME SAVE TO MOVE? USED IN TODAY ACTIVATE SCRIPT?
+# FIXME ADD SUPPORT FOR -S SUDO FLAG
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly.
@@ -162,6 +163,7 @@ koopa::ln() { # {{{1
     return 0
 }
 
+# FIXME ADD SUPPORT FOR -S SUDO FLAG
 koopa::mkdir() { # {{{1
     # """
     # Create directories with parents automatically.
@@ -171,6 +173,7 @@ koopa::mkdir() { # {{{1
     return 0
 }
 
+# FIXME ADD SUPPORT FOR -S SUDO FLAG
 koopa::mv() { # {{{1
     # """
     # Move a file or directory.
@@ -293,62 +296,6 @@ koopa::os_string() { # {{{1
     return 0
 }
 
-koopa::public_ip_address() { # {{{1
-    # """
-    # Public (remote) IP address.
-    # @note Updated 2020-06-18.
-    #
-    # @seealso
-    # https://www.cyberciti.biz/faq/
-    #     how-to-find-my-public-ip-address-from-command-line-on-a-linux/
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed dig
-    local x
-    x="$(dig +short myip.opendns.com @resolver1.opendns.com)"
-    # Fallback in case dig approach doesn't work.
-    if [ -z "$x" ]
-    then
-        koopa::assert_is_installed curl
-        x="$(curl -s ipecho.net/plain)"
-    fi
-    [ -n "$x" ] || return 1
-    koopa::print "$x"
-    return 0
-}
-
-koopa::python_remove_pycache() { # {{{1
-    # """
-    # Remove Python '__pycache__/' from site packages.
-    # @note Updated 2020-06-30.
-    #
-    # These directories can create permission issues when attempting to rsync
-    # installation across multiple VMs.
-    # """
-    koopa::assert_has_args_le "$#" 1
-    koopa::assert_is_installed find
-    local prefix python
-    prefix="${1:-}"
-    if [ -z "$prefix" ]
-    then
-        # e.g. /usr/local/cellar/python/3.8.1
-        python="$(koopa::which_realpath "python3")"
-        prefix="$(realpath "$(dirname "$python")/..")"
-    fi
-    koopa::info "Removing pycache in '${prefix}'."
-    # > find "$prefix" \
-    # >     -type d \
-    # >     -name "__pycache__" \
-    # >     -print0 \
-    # >     -exec rm -frv "{}" \;
-    find "$prefix" \
-        -type d \
-        -name "__pycache__" \
-        -print0 \
-        | xargs -0 -I {} rm -frv "{}"
-    return 0
-}
-
 koopa::relink() { # {{{1
     # """
     # Re-create a symbolic link dynamically, if broken.
@@ -373,26 +320,6 @@ koopa::rm() { # {{{1
     # """
     koopa::assert_has_args "$#"
     rm -fr "$@" >/dev/null 2>&1
-    return 0
-}
-
-koopa::run_if_installed() { # {{{1
-    # """
-    # Run program(s) if installed.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args "$#"
-    for arg in "$@"
-    do
-        if ! koopa::is_installed "$arg"
-        then
-            koopa::note "Skipping '${arg}'."
-            continue
-        fi
-        local exe
-        exe="$(koopa::which_realpath "$arg")"
-        "$exe"
-    done
     return 0
 }
 
@@ -424,58 +351,6 @@ koopa::shell() { # {{{1
         shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
     koopa::print "$shell"
-    return 0
-}
-
-koopa::test_find_files() { # {{{1
-    # """
-    # Find relevant files for unit tests.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    local prefix x
-    prefix="$(koopa::prefix)"
-    x="$( \
-        find "$prefix" \
-            -mindepth 1 \
-            -type f \
-            -not -name "$(basename "$0")" \
-            -not -name "*.md" \
-            -not -name ".pylintrc" \
-            -not -path "${prefix}/.git/*" \
-            -not -path "${prefix}/cellar/*" \
-            -not -path "${prefix}/coverage/*" \
-            -not -path "${prefix}/dotfiles/*" \
-            -not -path "${prefix}/opt/*" \
-            -not -path "${prefix}/tests/*" \
-            -not -path "*/etc/R/*" \
-            -print | sort \
-    )"
-    koopa::print "$x"
-}
-
-koopa::test_true_color() { # {{{1
-    # """
-    # Test 24-bit true color support.
-    # @note Updated 2020-02-15.
-    #
-    # @seealso
-    # https://jdhao.github.io/2018/10/19/tmux_nvim_true_color/
-    # """
-    koopa::assert_has_no_args "$#"
-    awk 'BEGIN{
-        s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
-        for (colnum = 0; colnum<77; colnum++) {
-            r = 255-(colnum*255/76);
-            g = (colnum*510/76);
-            b = (colnum*255/76);
-            if (g>255) g = 510-g;
-            printf "\033[48;2;%d;%d;%dm", r,g,b;
-            printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
-            printf "%s\033[0m", substr(s,colnum+1,1);
-        }
-        printf "\n";
-    }'
     return 0
 }
 
@@ -512,22 +387,13 @@ koopa::umask() { # {{{1
     return 0
 }
 
-koopa::uninstall() { # {{{1
-    # """
-    # Uninstall koopa.
-    # @note Updated 2020-06-24.
-    # """
-    "$(koopa::prefix)/uninstall" "$@"
-    return 0
-}
-
 koopa::url() { # {{{1
     # """
     # Koopa URL.
     # @note Updated 2020-04-16.
     # """
     koopa::assert_has_no_args "$#"
-    koopa::variable "koopa-url"
+    koopa::variable 'koopa-url'
     return 0
 }
 
