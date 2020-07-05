@@ -1,64 +1,22 @@
 #!/bin/sh
 # shellcheck disable=SC2039
 
-koopa::cd() { # {{{1
+koopa::_id() { # {{{1
     # """
-    # Change directory quietly.
+    # Return ID string.
     # @note Updated 2020-06-30.
     # """
-    koopa::assert_has_args_eq "$#" 1
-    cd "${1:?}" >/dev/null || return 1
-    return 0
-}
-
-# FIXME MOVE TO BASH, USE ARRAY.
-koopa::cp() { # {{{1
-    # """
-    # Hardened version of coreutils copy.
-    # @note Updated 2020-07-04.
-    #
-    # getopts info:
-    # - http://mywiki.wooledge.org/BashFAQ/035#getopts
-    # - https://wiki.bash-hackers.org/howto/getopts_tutorial
-    # """
     koopa::assert_has_args "$#"
-    koopa::assert_is_installed cp
-    local OPTIND target_dir
-    target_dir=
-    OPTIND=1
-    while getopts 't:' opt
-    do
-        case "$opt" in
-            t)
-                target_dir="$OPTARG"
-                ;;
-            \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
-        esac
-    done
-    shift "$((OPTIND-1))"
-    if [ -n "$target_dir" ]
-    then
-        koopa::assert_is_existing "$@"
-        koopa::mkdir "$target_dir"
-        cp -af -t "$target_dir" "$@"
-    else
-        koopa::assert_has_args_eq "$#" 2
-        source_file="${1:?}"
-        koopa::assert_is_existing "$source_file"
-        target_file="${2:?}"
-        [ -e "$target_file" ] && koopa::rm "$target_file"
-        koopa::mkdir "$(dirname "$target_file")"
-        cp -af "$source_file" "$target_file"
-    fi
+    local x
+    x="$(id "$@")"
+    koopa::print "$x"
     return 0
 }
 
 koopa::cpu_count() { # {{{1
     # """
     # Return a usable number of CPU cores.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-05.
     #
     # Dynamically assigns 'n-1' or 'n-2' depending on the machine power.
     # """
@@ -91,95 +49,6 @@ koopa::cpu_count() { # {{{1
     return 0
 }
 
-koopa::date() { # {{{1
-    # """
-    # Koopa date.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable "koopa-date"
-    return 0
-}
-
-koopa::datetime() { # {{{
-    # """
-    # Datetime string.
-    # @note Updated 2020-07-04.
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed date
-    local x
-    x="$(date "+%Y%m%d-%H%M%S")"
-    koopa::print "$x"
-    return 0
-}
-
-koopa::dotfiles_config_link() { # {{{1
-    # """
-    # Dotfiles directory.
-    # @note Updated 2019-11-04.
-    #
-    # Note that we're not checking for existence here, which is handled inside
-    # 'link-dotfile' script automatically instead.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::print "$(koopa::config_prefix)/dotfiles"
-    return 0
-}
-
-koopa::dotfiles_private_config_link() { # {{{1
-    # """
-    # Private dotfiles directory.
-    # @note Updated 2019-11-04.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::print "$(koopa::dotfiles_config_link)-private"
-    return 0
-}
-
-koopa::download() { # {{{1
-    # """
-    # Download a file.
-    # @note Updated 2020-06-30.
-    #
-    # Potentially useful curl flags:
-    # * --connect-timeout <seconds>
-    # * --silent
-    # * --stderr
-    # * --verbose
-    #
-    # Note that '--fail-early' flag is useful, but not supported on old versions
-    # of curl (e.g. 7.29.0; RHEL 7).
-    #
-    # Alternatively, can use wget instead of curl:
-    # > wget -O file url
-    # > wget -q -O - url (piped to stdout)
-    # > wget -qO-
-    # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed curl
-    local bn file url wd
-    url="${1:?}"
-    file="${2:-}"
-    if [ -z "$file" ]
-    then
-        wd="$(pwd)"
-        bn="$(basename "$url")"
-        file="${wd}/${bn}"
-    fi
-    file="$(realpath "$file")"
-    koopa::info "Downloading '${url}' to '${file}'."
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --output "$file" \
-        --progress-bar \
-        --retry 5 \
-        --show-error \
-        "$url"
-    return 0
-}
-
 koopa::expr() { # {{{1
     # """
     # Quiet regular expression matching that is POSIX compliant.
@@ -193,160 +62,6 @@ koopa::expr() { # {{{1
     # """
     koopa::assert_has_args_eq "$#" 2
     expr "${1:?}" : "${2:?}" 1>/dev/null
-}
-
-koopa::extract() { # {{{1
-    # """
-    # Extract compressed files automatically.
-    # @note Updated 2020-06-30.
-    #
-    # As suggested by Mendel Cooper in "Advanced Bash Scripting Guide".
-    #
-    # See also:
-    # - https://github.com/stephenturner/oneliners
-    # """
-    koopa::assert_has_args "$#"
-    local file
-    for file in "$@"
-    do
-        koopa::assert_is_file "$file"
-        file="$(realpath "$file")"
-        koopa::info "Extracting '${file}'."
-        case "$file" in
-            *.tar.bz2)
-                tar -xj -f "$file"
-                ;;
-            *.tar.gz)
-                tar -xz -f "$file"
-                ;;
-            *.tar.xz)
-                tar -xJ -f "$file"
-                ;;
-            *.bz2)
-                koopa::assert_is_installed bunzip2
-                bunzip2 "$file"
-                ;;
-            *.gz)
-                gunzip "$file"
-                ;;
-            *.rar)
-                koopa::assert_is_installed unrar
-                unrar -x "$file"
-                ;;
-            *.tar)
-                tar -x -f "$file"
-                ;;
-            *.tbz2)
-                tar -xj -f "$file"
-                ;;
-            *.tgz)
-                tar -xz -f "$file"
-                ;;
-            *.xz)
-                koopa::assert_is_installed xz
-                xz --decompress "$file"
-                ;;
-            *.zip)
-                koopa::assert_is_installed unzip
-                unzip -qq "$file"
-                ;;
-            *.Z)
-                uncompress "$file"
-                ;;
-            *.7z)
-                koopa::assert_is_installed 7z
-                7z -x "$file"
-                ;;
-            *)
-                koopa::stop "Unsupported extension: '${file}'."
-                ;;
-        esac
-    done
-    return 0
-}
-
-koopa::find_local_bin_dirs() { # {{{1
-    # """
-    # Find local bin directories.
-    # @note Updated 2020-06-30.
-    #
-    # Should we exclude koopa from this search?
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/23356779
-    # - https://stackoverflow.com/questions/7442417
-    # """
-    koopa::assert_has_no_args "$#"
-    local prefix
-    prefix="$(koopa::make_prefix)"
-    local x
-    x="$( \
-        find "$prefix" \
-            -mindepth 2 \
-            -maxdepth 3 \
-            -type d \
-            -name "bin" \
-            -not -path "*/Caskroom/*" \
-            -not -path "*/Cellar/*" \
-            -not -path "*/Homebrew/*" \
-            -not -path "*/anaconda3/*" \
-            -not -path "*/bcbio/*" \
-            -not -path "*/conda/*" \
-            -not -path "*/lib/*" \
-            -not -path "*/miniconda3/*" \
-            -not -path "*/opt/*" \
-            -print | sort \
-    )"
-    koopa::print "$x"
-    return 0
-}
-
-koopa::fix_sudo_setrlimit_error() { # {{{1
-    # """
-    # Fix bug in recent version of sudo.
-    # @note Updated 2020-06-30.
-    #
-    # This is popping up on Docker builds:
-    # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
-    #
-    # @seealso
-    # - https://ask.fedoraproject.org/t/
-    #       sudo-setrlimit-rlimit-core-operation-not-permitted/4223
-    # - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
-    # """
-    koopa::assert_has_no_args "$#"
-    local target_file
-    target_file="/etc/sudo.conf"
-    # Ensure we always overwrite for Docker images.
-    # Note that Fedora base image contains this file by default.
-    if ! koopa::is_docker
-    then
-        [ -e "$target_file" ] && return 0
-    fi
-    local source_file
-    source_file="$(koopa::prefix)/os/linux/etc/sudo.conf"
-    sudo cp -v "$source_file" "$target_file"
-    return 0
-}
-
-koopa::github_url() { # {{{1
-    # """
-    # Koopa GitHub URL.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable "koopa-github-url"
-    return 0
-}
-
-koopa::gnu_mirror() { # {{{1
-    # """
-    # Get GNU FTP mirror URL.
-    # @note Updated 2020-04-16.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::variable "gnu-mirror"
-    return 0
 }
 
 koopa::group() { # {{{1
@@ -366,68 +81,6 @@ koopa::group_id() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::_id -g
-    return 0
-}
-
-koopa::header() { # {{{1
-    # """
-    # Source script header.
-    # @note Updated 2020-06-30.
-    #
-    # Useful for private scripts using koopa code outside of package.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    local file header_type koopa_prefix
-    header_type="${1:?}"
-    koopa_prefix="$(koopa::prefix)"
-    case "$header_type" in
-        # shell ----------------------------------------------------------------
-        bash)
-            file="${koopa_prefix}/shell/bash/include/header.sh"
-            ;;
-        zsh)
-            file="${koopa_prefix}/shell/zsh/include/header.sh"
-            ;;
-        # os -------------------------------------------------------------------
-        amzn)
-            file="${koopa_prefix}/os/amzn/include/header.sh"
-            ;;
-        centos)
-            file="${koopa_prefix}/os/centos/include/header.sh"
-            ;;
-        darwin)
-            file="${koopa_prefix}/os/darwin/include/header.sh"
-            ;;
-        debian)
-            file="${koopa_prefix}/os/debian/include/header.sh"
-            ;;
-        fedora)
-            file="${koopa_prefix}/os/fedora/include/header.sh"
-            ;;
-        linux)
-            file="${koopa_prefix}/os/linux/include/header.sh"
-            ;;
-        macos)
-            file="${koopa_prefix}/os/macos/include/header.sh"
-            ;;
-        rhel)
-            file="${koopa_prefix}/os/rhel/include/header.sh"
-            ;;
-        ubuntu)
-            file="${koopa_prefix}/os/ubuntu/include/header.sh"
-            ;;
-        # host -----------------------------------------------------------------
-        aws)
-            file="${koopa_prefix}/host/aws/include/header.sh"
-            ;;
-        azure)
-            file="${koopa_prefix}/host/azure/include/header.sh"
-            ;;
-        *)
-            koopa::invalid_arg "$1"
-            ;;
-    esac
-    koopa::print "$file"
     return 0
 }
 
@@ -493,17 +146,7 @@ koopa::host_id() { # {{{1
     return 0
 }
 
-koopa::list() { # {{{1
-    # """
-    # List exported koopa scripts.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed Rscript
-    Rscript --vanilla "$(koopa::include_prefix)/list.R"
-    return 0
-}
-
+# FIXME SAVE TO MOVE? USED IN TODAY ACTIVATE SCRIPT?
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly.
@@ -516,93 +159,6 @@ koopa::ln() { # {{{1
     target_file="${2:?}"
     koopa::rm "$target_file"
     ln -fns "$source_file" "$target_file"
-    return 0
-}
-
-koopa::local_ip_address() { # {{{1
-    # """
-    # Local IP address.
-    # @note Updated 2020-06-18.
-    #
-    # Some systems (e.g. macOS) will return multiple IP address matches for
-    # Ethernet and WiFi. Here we're simplying returning the first match, which
-    # corresponds to the default on macOS.
-    # """
-    koopa::assert_has_no_args "$#"
-    local x
-    if koopa::is_macos
-    then
-        x="$( \
-            ifconfig \
-            | grep "inet " \
-            | grep "broadcast" \
-            | awk '{print $2}' \
-            | tail -n 1
-        )"
-    else
-        x="$( \
-            hostname -I \
-            | awk '{print $1}' \
-            | head -n 1
-        )"
-    fi
-    [ -n "$x" ] || return 1
-    koopa::print "$x"
-    return 0
-}
-
-koopa::make_build_string() { # {{{1
-    # """
-    # OS build string for 'make' configuration.
-    # @note Updated 2020-03-04.
-    #
-    # Use this for 'configure --build' flag.
-    #
-    # - macOS: x86_64-darwin15.6.0
-    # - Linux: x86_64-linux-gnu
-    # """
-    koopa::assert_has_no_args "$#"
-    local mach os_type string
-    if koopa::is_macos
-    then
-        mach="$(uname -m)"
-        os_type="${OSTYPE:?}"
-        string="${mach}-${os_type}"
-    else
-        string="x86_64-linux-gnu"
-    fi
-    koopa::print "$string"
-    return 0
-}
-
-koopa::mktemp() { # {{{1
-    # """
-    # Wrapper function for system 'mktemp'.
-    # @note Updated 2020-07-04.
-    #
-    # Traditionally, many shell scripts take the name of the program with the
-    # pid as a suffix and use that as a temporary file name. This kind of
-    # naming scheme is predictable and the race condition it creates is easy for
-    # an attacker to win. A safer, though still inferior, approach is to make a
-    # temporary directory using the same naming scheme. While this does allow
-    # one to guarantee that a temporary file will not be subverted, it still
-    # allows a simple denial of service attack. For these reasons it is
-    # suggested that mktemp be used instead.
-    #
-    # Note that old version of mktemp (e.g. macOS) only supports '-t' instead of
-    # '--tmpdir' flag for prefix.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/4632028
-    # - https://stackoverflow.com/a/10983009/3911732
-    # - https://gist.github.com/earthgecko/3089509
-    # """
-    koopa::assert_is_installed mktemp
-    local date_id template user_id
-    user_id="$(koopa::user_id)"
-    date_id="$(koopa::datetime)"
-    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
-    mktemp "$@" -t "$template"
     return 0
 }
 
@@ -653,7 +209,7 @@ koopa::os_codename() { # {{{1
     local os_codename
     if koopa::is_kali
     then
-        os_codename="buster"
+        os_codename='buster'
     else
         os_codename="$(lsb_release -cs)"
     fi
@@ -672,7 +228,7 @@ koopa::os_id() { # {{{1
     local os_id
     if koopa::is_kali
     then
-        os_id="debian"
+        os_id='debian'
     else
         os_id="$(koopa::os_string | cut -d '-' -f 1)"
     fi
@@ -697,7 +253,7 @@ koopa::os_string() { # {{{1
     if koopa::is_macos
     then
         # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
-        id="macos"
+        id='macos'
         version="$(koopa::get_version "$id")"
         version="$(koopa::major_minor_version "$version")"
     elif koopa::is_linux
@@ -718,15 +274,15 @@ koopa::os_string() { # {{{1
                 version="$(koopa::major_version "$version")"
             else
                 # This is the case for Arch Linux.
-                version="rolling"
+                version='rolling'
             fi
         else
-            id="linux"
+            id='linux'
         fi
     fi
     if [ -z "$id" ]
     then
-        koopa::stop "Failed to detect OS ID."
+        koopa::stop 'Failed to detect OS ID.'
     fi
     string="$id"
     if [ -n "${version:-}" ]
@@ -734,22 +290,6 @@ koopa::os_string() { # {{{1
         string="${string}-${version}"
     fi
     koopa::print "$string"
-    return 0
-}
-
-koopa::pager() {
-    # """
-    # Run less with support for colors (escape characters).
-    # @note Updated 2020-07-03.
-    #
-    # Detail on handling escape sequences:
-    # https://major.io/2013/05/21/
-    #     handling-terminal-color-escape-sequences-in-less/
-    # """
-    local pager
-    pager="${PAGER:-less}"
-    koopa::assert_is_installed "$pager"
-    "$pager" -R "$@"
     return 0
 }
 
@@ -836,42 +376,6 @@ koopa::rm() { # {{{1
     return 0
 }
 
-koopa::rsync_flags() { # {{{1
-    # """
-    # rsync flags.
-    # @note Updated 2020-04-06.
-    #
-    #     --delete-before         receiver deletes before xfer, not during
-    #     --iconv=CONVERT_SPEC    request charset conversion of filenames
-    #     --numeric-ids           don't map uid/gid values by user/group name
-    #     --partial               keep partially transferred files
-    #     --progress              show progress during transfer
-    # -A, --acls                  preserve ACLs (implies -p)
-    # -H, --hard-links            preserve hard links
-    # -L, --copy-links            transform symlink into referent file/dir
-    # -O, --omit-dir-times        omit directories from --times
-    # -P                          same as --partial --progress
-    # -S, --sparse                handle sparse files efficiently
-    # -X, --xattrs                preserve extended attributes
-    # -a, --archive               archive mode; equals -rlptgoD (no -H,-A,-X)
-    # -g, --group                 preserve group
-    # -h, --human-readable        output numbers in a human-readable format
-    # -n, --dry-run               perform a trial run with no changes made
-    # -o, --owner                 preserve owner (super-user only)
-    # -r, --recursive             recurse into directories
-    # -x, --one-file-system       don't cross filesystem boundaries    
-    # -z, --compress              compress file data during the transfer
-    #
-    # Use '--rsync-path="sudo rsync"' to sync across machines with sudo.
-    #
-    # See also:
-    # - https://unix.stackexchange.com/questions/165423
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::print "--archive --delete-before --human-readable --progress"
-    return 0
-}
-
 koopa::run_if_installed() { # {{{1
     # """
     # Run program(s) if installed.
@@ -895,7 +399,7 @@ koopa::run_if_installed() { # {{{1
 koopa::shell() { # {{{1
     # """
     # Current shell.
-    # @note Updated 2020-03-28.
+    # @note Updated 2020-07-05.
     #
     # @seealso
     # - https://stackoverflow.com/questions/3327013
@@ -904,11 +408,11 @@ koopa::shell() { # {{{1
     local shell
     if [ -n "${BASH_VERSION:-}" ]
     then
-        shell="bash"
+        shell='bash'
     elif [ -n "${ZSH_VERSION:-}" ]
     then
-        shell="zsh"
-    elif [ -d "/proc" ]
+        shell='zsh'
+    elif [ -d '/proc' ]
     then
         # Standard approach on Linux.
         shell="$(basename "$(readlink /proc/$$/exe)")"
@@ -920,15 +424,6 @@ koopa::shell() { # {{{1
         shell="$(basename "$(ps -p "$$" -o 'comm=' | sed 's/^-//g')")"
     fi
     koopa::print "$shell"
-    return 0
-}
-
-koopa::test() { # {{{1
-    # """
-    # Run koopa unit tests.
-    # @note Updated 2020-06-26.
-    # """
-    "$(koopa::tests_prefix)/tests" "$@"
     return 0
 }
 
@@ -981,42 +476,6 @@ koopa::test_true_color() { # {{{1
         }
         printf "\n";
     }'
-    return 0
-}
-
-koopa::tmp_dir() { # {{{1
-    # """
-    # Create temporary directory.
-    # @note Updated 2020-02-06.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::mktemp -d
-    return 0
-}
-
-koopa::tmp_file() { # {{{1
-    # """
-    # Create temporary file.
-    # @note Updated 2020-02-06.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::mktemp
-    return 0
-}
-
-koopa::tmp_log_file() { # {{{1
-    # """
-    # Create temporary log file.
-    # @note Updated 2020-02-27.
-    #
-    # Used primarily for debugging cellar make install scripts.
-    #
-    # Note that mktemp on macOS and BusyBox doesn't support '--suffix' flag.
-    # Otherwise, we can use:
-    # > koopa::mktemp --suffix=".log"
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::tmp_file
     return 0
 }
 
@@ -1115,17 +574,6 @@ koopa::variable() { # {{{1
     )"
     [ -n "$value" ] || return 1
     koopa::print "$value"
-    return 0
-}
-
-koopa::variables() { # {{{1
-    # """
-    # Edit koopa variables.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::assert_is_installed vim
-    vim "$(koopa::include_prefix)/variables.txt"
     return 0
 }
 

@@ -1,17 +1,5 @@
 #!/usr/bin/env bash
 
-koopa::_id() { # {{{1
-    # """
-    # Return ID string.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args "$#"
-    local x
-    x="$(id "$@")"
-    koopa::print "$x"
-    return 0
-}
-
 koopa::add_local_bins_to_path() { # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
@@ -64,6 +52,16 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
+koopa::cd() { # {{{1
+    # """
+    # Change directory quietly.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_args_eq "$#" 1
+    cd "${1:?}" >/dev/null || return 1
+    return 0
+}
+
 koopa::cd_tmp_dir() { # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
@@ -99,6 +97,178 @@ koopa::check_system() { # {{{1
     return 0
 }
 
+# FIXME MOVE TO BASH, USE ARRAY.
+# FIXME ADD SUDO SUPPORT WITH -S FLAG.
+koopa::cp() { # {{{1
+    # """
+    # Hardened version of coreutils copy.
+    # @note Updated 2020-07-05.
+    #
+    # getopts info:
+    # - http://mywiki.wooledge.org/BashFAQ/035#getopts
+    # - https://wiki.bash-hackers.org/howto/getopts_tutorial
+    # """
+    koopa::assert_has_args "$#"
+    koopa::assert_is_installed cp
+    local OPTIND target_dir
+    target_dir=
+    OPTIND=1
+    while getopts 't:' opt
+    do
+        case "$opt" in
+            t)
+                target_dir="$OPTARG"
+                ;;
+            \?)
+                koopa::stop "Invalid option: -${OPTARG}"
+            ;;
+        esac
+    done
+    shift "$((OPTIND-1))"
+    if [[ -n "$target_dir" ]]
+    then
+        koopa::assert_is_existing "$@"
+        koopa::mkdir "$target_dir"
+        cp -af -t "$target_dir" "$@"
+    else
+        koopa::assert_has_args_eq "$#" 2
+        source_file="${1:?}"
+        koopa::assert_is_existing "$source_file"
+        target_file="${2:?}"
+        [[ -e "$target_file" ]] && koopa::rm "$target_file"
+        koopa::mkdir "$(dirname "$target_file")"
+        cp -af "$source_file" "$target_file"
+    fi
+    return 0
+}
+
+koopa::date() { # {{{1
+    # """
+    # Koopa date.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable "koopa-date"
+    return 0
+}
+
+koopa::datetime() { # {{{
+    # """
+    # Datetime string.
+    # @note Updated 2020-07-04.
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed date
+    local x
+    x="$(date "+%Y%m%d-%H%M%S")"
+    koopa::print "$x"
+    return 0
+}
+
+koopa::dotfiles_config_link() { # {{{1
+    # """
+    # Dotfiles directory.
+    # @note Updated 2019-11-04.
+    #
+    # Note that we're not checking for existence here, which is handled inside
+    # 'link-dotfile' script automatically instead.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::config_prefix)/dotfiles"
+    return 0
+}
+
+koopa::dotfiles_private_config_link() { # {{{1
+    # """
+    # Private dotfiles directory.
+    # @note Updated 2019-11-04.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::print "$(koopa::dotfiles_config_link)-private"
+    return 0
+}
+
+koopa::find_local_bin_dirs() { # {{{1
+    # """
+    # Find local bin directories.
+    # @note Updated 2020-07-05.
+    #
+    # Should we exclude koopa from this search?
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/23356779
+    # - https://stackoverflow.com/questions/7442417
+    # """
+    koopa::assert_has_no_args "$#"
+    local prefix x
+    prefix="$(koopa::make_prefix)"
+    x="$( \
+        find "$prefix" \
+            -mindepth 2 \
+            -maxdepth 3 \
+            -type d \
+            -name 'bin' \
+            -not -path '*/Caskroom/*' \
+            -not -path '*/Cellar/*' \
+            -not -path '*/Homebrew/*' \
+            -not -path '*/anaconda3/*' \
+            -not -path '*/bcbio/*' \
+            -not -path '*/conda/*' \
+            -not -path '*/lib/*' \
+            -not -path '*/miniconda3/*' \
+            -not -path '*/opt/*' \
+            -print | sort \
+    )"
+    koopa::print "$x"
+    return 0
+}
+
+koopa::fix_sudo_setrlimit_error() { # {{{1
+    # """
+    # Fix bug in recent version of sudo.
+    # @note Updated 2020-07-05.
+    #
+    # This is popping up on Docker builds:
+    # sudo: setrlimit(RLIMIT_CORE): Operation not permitted
+    #
+    # @seealso
+    # - https://ask.fedoraproject.org/t/
+    #       sudo-setrlimit-rlimit-core-operation-not-permitted/4223
+    # - https://bugzilla.redhat.com/show_bug.cgi?id=1773148
+    # """
+    koopa::assert_has_no_args "$#"
+    local source_file target_file
+    target_file='/etc/sudo.conf'
+    # Ensure we always overwrite for Docker images.
+    # Note that Fedora base image contains this file by default.
+    if ! koopa::is_docker
+    then
+        [[ -e "$target_file" ]] && return 0
+    fi
+    source_file="$(koopa::prefix)/os/linux/etc/sudo.conf"
+    sudo cp -v "$source_file" "$target_file"
+    return 0
+}
+
+koopa::github_url() { # {{{1
+    # """
+    # Koopa GitHub URL.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable "koopa-github-url"
+    return 0
+}
+
+koopa::gnu_mirror() { # {{{1
+    # """
+    # Get GNU FTP mirror URL.
+    # @note Updated 2020-04-16.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::variable "gnu-mirror"
+    return 0
+}
+
 koopa::info_box() { # {{{1
     # """
     # Info box.
@@ -118,6 +288,120 @@ koopa::info_box() { # {{{1
         printf "  ┃ %-68s ┃  \n" "${i::68}"
     done
     printf "  %s%s%s  \n\n" "┗" "$barpad" "┛"
+    return 0
+}
+
+koopa::list() { # {{{1
+    # """
+    # List exported koopa scripts.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed Rscript
+    Rscript --vanilla "$(koopa::include_prefix)/list.R"
+    return 0
+}
+
+koopa::local_ip_address() { # {{{1
+    # """
+    # Local IP address.
+    # @note Updated 2020-07-05.
+    #
+    # Some systems (e.g. macOS) will return multiple IP address matches for
+    # Ethernet and WiFi. Here we're simplying returning the first match, which
+    # corresponds to the default on macOS.
+    # """
+    koopa::assert_has_no_args "$#"
+    local x
+    if koopa::is_macos
+    then
+        x="$( \
+            ifconfig \
+            | grep 'inet ' \
+            | grep 'broadcast' \
+            | awk '{print $2}' \
+            | tail -n 1
+        )"
+    else
+        x="$( \
+            hostname -I \
+            | awk '{print $1}' \
+            | head -n 1
+        )"
+    fi
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
+    return 0
+}
+
+koopa::make_build_string() { # {{{1
+    # """
+    # OS build string for 'make' configuration.
+    # @note Updated 2020-07-05.
+    #
+    # Use this for 'configure --build' flag.
+    #
+    # - macOS: x86_64-darwin15.6.0
+    # - Linux: x86_64-linux-gnu
+    # """
+    koopa::assert_has_no_args "$#"
+    local mach os_type string
+    if koopa::is_macos
+    then
+        mach="$(uname -m)"
+        os_type="${OSTYPE:?}"
+        string="${mach}-${os_type}"
+    else
+        string='x86_64-linux-gnu'
+    fi
+    koopa::print "$string"
+    return 0
+}
+
+koopa::mktemp() { # {{{1
+    # """
+    # Wrapper function for system 'mktemp'.
+    # @note Updated 2020-07-04.
+    #
+    # Traditionally, many shell scripts take the name of the program with the
+    # pid as a suffix and use that as a temporary file name. This kind of
+    # naming scheme is predictable and the race condition it creates is easy for
+    # an attacker to win. A safer, though still inferior, approach is to make a
+    # temporary directory using the same naming scheme. While this does allow
+    # one to guarantee that a temporary file will not be subverted, it still
+    # allows a simple denial of service attack. For these reasons it is
+    # suggested that mktemp be used instead.
+    #
+    # Note that old version of mktemp (e.g. macOS) only supports '-t' instead of
+    # '--tmpdir' flag for prefix.
+    #
+    # See also:
+    # - https://stackoverflow.com/questions/4632028
+    # - https://stackoverflow.com/a/10983009/3911732
+    # - https://gist.github.com/earthgecko/3089509
+    # """
+    koopa::assert_is_installed mktemp
+    local date_id template user_id
+    user_id="$(koopa::user_id)"
+    date_id="$(koopa::datetime)"
+    template="koopa-${user_id}-${date_id}-XXXXXXXXXX"
+    mktemp "$@" -t "$template"
+    return 0
+}
+
+koopa::pager() {
+    # """
+    # Run less with support for colors (escape characters).
+    # @note Updated 2020-07-03.
+    #
+    # Detail on handling escape sequences:
+    # https://major.io/2013/05/21/
+    #     handling-terminal-color-escape-sequences-in-less/
+    # """
+    local pager
+    pager="${PAGER:-less}"
+    koopa::assert_is_installed "$pager"
+    "$pager" -R "$@"
     return 0
 }
 
@@ -545,6 +829,62 @@ koopa::sys_user() { # {{{1
         user="$(koopa::user)"
     fi
     koopa::print "$user"
+    return 0
+}
+
+koopa::test() { # {{{1
+    # """
+    # Run koopa unit tests.
+    # @note Updated 2020-06-26.
+    # """
+    "$(koopa::tests_prefix)/tests" "$@"
+    return 0
+}
+
+koopa::tmp_dir() { # {{{1
+    # """
+    # Create temporary directory.
+    # @note Updated 2020-02-06.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::mktemp -d
+    return 0
+}
+
+koopa::tmp_file() { # {{{1
+    # """
+    # Create temporary file.
+    # @note Updated 2020-02-06.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::mktemp
+    return 0
+}
+
+koopa::tmp_log_file() { # {{{1
+    # """
+    # Create temporary log file.
+    # @note Updated 2020-02-27.
+    #
+    # Used primarily for debugging cellar make install scripts.
+    #
+    # Note that mktemp on macOS and BusyBox doesn't support '--suffix' flag.
+    # Otherwise, we can use:
+    # > koopa::mktemp --suffix=".log"
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::tmp_file
+    return 0
+}
+
+koopa::variables() { # {{{1
+    # """
+    # Edit koopa variables.
+    # @note Updated 2020-06-30.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::assert_is_installed vim
+    vim "$(koopa::include_prefix)/variables.txt"
     return 0
 }
 
