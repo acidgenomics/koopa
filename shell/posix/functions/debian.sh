@@ -351,9 +351,9 @@ koopa::apt_configure_sources() { # {{{1
     koopa::assert_has_no_args "$#"
     local os_codename sources_list sources_list_d
     sources_list="/etc/apt/sources.list"
-    [ -L "$sources_list" ] && koopa::system_rm "$sources_list"
+    [ -L "$sources_list" ] && koopa::sys_rm "$sources_list"
     sources_list_d="/etc/apt/sources.list.d"
-    [ -L "$sources_list_d" ] && koopa::system_rm "$sources_list_d"
+    [ -L "$sources_list_d" ] && koopa::sys_rm "$sources_list_d"
     sudo mkdir -pv "$sources_list_d"
     os_codename="$(koopa::os_codename)"
     if koopa::is_ubuntu

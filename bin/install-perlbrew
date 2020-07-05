@@ -55,7 +55,7 @@ tmp_dir="$(koopa::tmp_dir)"
 
 rm -fr "$tmp_dir"
 
-koopa::system_set_permissions --recursive "$prefix"
+koopa::sys_set_permissions --recursive "$prefix"
 koopa::activate_perlbrew
 
 # Add system Perl {{{1
