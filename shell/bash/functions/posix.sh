@@ -8,6 +8,10 @@ koopa::_msg() {
     __koopa_msg "$@"
 }
 
+koopa::activate_openjdk() {
+    _koopa_activate_openjdk "$@"
+}
+
 koopa::activate_rust() {
     _koopa_activate_rust "$@"
 }
