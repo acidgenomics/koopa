@@ -92,34 +92,30 @@ koopa::get_version() { # {{{1
     return 0
 }
 
-# FIXME PARAMETERIZE.
-# FIXME USE R HERE INSTEAD OF RSCRIPT.
-# FIXME DONT USE RSCRIPT IN FUNCTIONS...
-# FIXME SAFE TO MOVE TO BASH, IF NECESSARY.
 koopa::r_package_version() { # {{{1
     # """
     # R package version.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-06.
     # """
+    local r rscript vec x
     koopa::assert_has_args "$#"
-    local pkg r rscript x
     r='R'
-
-    rscript"${r}script"
+    rscript="${r}script"
     koopa::assert_is_installed "$r" "$rscript"
-
-    # FIXME REWORK THIS: FLAG SUPPORT?.
-    koopa::assert_is_r_package_installed "$pkg" "$rscript"
-
-    for pkg in "$@"
-    do
-        x="$( \
-            "$rscript" \
-            -e "cat(as.character(packageVersion(\"${pkg}\")), \"\n\")" \
-        )"
-        [[ -n "$x" ]] || return 1
-        koopa::print "$x"
-    done
+    pkgs=("$@")
+    koopa::assert_is_r_package_installed "${pkgs[@]}"
+    vec="$(koopa::array_to_r_vector "${pkgs[@]}")"
+    x="$("$rscript" -e " \
+        cat(vapply( \
+            X = ${vec}, \
+            FUN = function(x) { \
+                as.character(packageVersion(x)) \
+            }, \
+            FUN.VALUE = character(1L) \
+        ), sep = '\n') \
+    ")"
+    [[ -n "$x" ]] || return 1
+    koopa::print "$x"
     return 0
 }
 
