@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+koopa::activate_rust() {
+    _koopa_activate_rust "$@"
+}
+
+koopa::activate_conda() {
+    _koopa_activate_conda "$@"
+}
+
 koopa::add_to_manpath_end() {
     _koopa_add_to_manpath_end "$@"
 }

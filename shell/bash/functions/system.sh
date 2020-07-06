@@ -437,7 +437,7 @@ koopa::sudo_write_string() { # {{{1
 koopa::sys_git_pull() { # {{{1
     # """
     # Pull koopa git repo.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-06.
     #
     # Intended for use with 'koopa pull'.
     #
@@ -449,9 +449,7 @@ koopa::sys_git_pull() { # {{{1
     (
         prefix="$(koopa::prefix)"
         cd "$prefix" || exit 1
-        koopa::sys_set_permissions \
-            --recursive "${prefix}/shell/zsh" \
-            >/dev/null 2>&1
+        koopa::sys_set_permissions -r "${prefix}/shell/zsh" &>/dev/null
         branch="$(koopa::git_branch)"
         koopa::git_pull
         # Ensure other branches, such as develop, are rebased.
@@ -558,14 +556,18 @@ koopa::sys_set_permissions() { # {{{1
     #   Change permissions recursively.
     # """
     koopa::assert_has_args "$#"
-    local OPTIND arg chmod chown recursive
+    local OPTIND arg chmod chown group recursive user who
     recursive=0
+    user=0
     OPTIND=1
-    while getopts 'r' opt
+    while getopts 'ru' opt
     do
         case "$opt" in
             r)
                 recursive=1
+                ;;
+            u)
+                user=1
                 ;;
             \?)
                 koopa::stop "Invalid option: -${OPTARG}"
@@ -574,13 +576,24 @@ koopa::sys_set_permissions() { # {{{1
     done
     shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
-    chmod=('koopa::sys_chmod')
+    chmod=('koopa::sys_chmod' '-h')
     chown=('koopa::sys_chown' '-h')
     if [[ "$recursive" -eq 1 ]]
     then
-        chmod_flags+=('-R')
-        chown_flags+=('-R')
+        chmod+=('-R')
+        chown+=('-R')
     fi
+    chmod+=("$(koopa::chmod_flags)")
+    case "$user" in
+        0)
+            who="$(koopa::sys_user)"
+            ;;
+        1)
+            who="${USER:?}"
+            ;;
+    esac
+    group="$(koopa::sys_group)"
+    chown+=("${who}:${group}")
     for arg in "$@"
     do
         # Ensure we resolve symlinks here.
@@ -614,16 +627,15 @@ koopa::sys_chmod() { # {{{1
     # chmod with dynamic sudo handling.
     # @note Updated 2020-07-06.
     # """
-    local chmod chmod_flags
+    local chmod
     koopa::assert_has_args "$#"
-    flags=("$(koopa::sys_chmod_flags)")
     if koopa::is_shared_install
     then
         chmod=('sudo' 'chmod')
     else
         chmod=('chmod')
     fi
-    "${chmod[@]}" "${chmod_flags[@]}" "$@"
+    "${chmod[@]}" "$@"
     return 0
 }
 
@@ -651,15 +663,13 @@ koopa::sys_chown() { # {{{1
     # """
     local chown group user
     koopa::assert_has_args "$#"
-    user="$(koopa::sys_user)"
-    group="$(koopa::sys_group)"
     if koopa::is_shared_install
     then
         chown=('sudo' 'chown')
     else
         chown=('chown')
     fi
-    "${chown[@]}" "${user}:${group}" "$@"
+    "${chown[@]}" "$@"
     return 0
 }
 

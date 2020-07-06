@@ -50,58 +50,68 @@ koopa::rsync_flags_macos() { # {{{1
 koopa::rsync_vm() { # {{{1
     # """
     # rsync a desired prefix across virtual machines.
-    # @note Updated 2020-02-18.
+    # @note Updated 2020-07-06.
     #
     # Potentially useful flags:
     # * --omit-dir-times
     # """
     # We're enforcing use of '/usr/bin/rsync' here in case we're syncing
     # '/usr/local', which may have an updated copy of rsync installed.
-    local rsync
-    rsync="/usr/bin/rsync"
+    local host_ip prefix rsync rsync_flags source_ip user
+    koopa::assert_has_args "$#"
+    rsync='/usr/bin/rsync'
     koopa::assert_is_installed "$rsync"
-    local flags
-    flags="$(koopa::rsync_flags)"
+    rsync_flags="$(koopa::rsync_flags)"
     while (("$#"))
     do
         case "$1" in
-            --flags=*)
-                local flags="${1#*=}"
+            --rsync-flags=*)
+                rsync_flags="${1#*=}"
                 shift 1
+                ;;
+            --rsync-flags)
+                rsync_flags="$2"
+                shift 2
                 ;;
             --prefix=*)
-                local prefix="${1#*=}"
+                prefix="${1#*=}"
                 shift 1
                 ;;
+            --prefix)
+                prefix="$2"
+                shift 2
+                ;;
             --source-ip=*)
-                local source_ip="${1#*=}"
+                source_ip="${1#*=}"
                 shift 1
+                ;;
+            --source-ip)
+                source_ip="$2"
+                shift 2
                 ;;
             *)
                 koopa::invalid_arg "$1"
                 ;;
         esac
     done
+    koopa::assert_has_no_args "$#"
     koopa::assert_is_set flags prefix source_ip
-    local host_ip
     host_ip="$(koopa::local_ip_address)"
-    local user
-    user="${USER:?}"
     # Check for accidental sync from source machine.
     if [[ "$source_ip" == "$host_ip" ]]
     then
         koopa::note "On source machine: '${source_ip}'."
         return 0
     fi
+    rsync_flags=("$rsync_flags")
+    rsync_flags+=("--rsync-path=sudo ${rsync}")
+    user="${USER:?}"
     koopa::h1 "Syncing '${prefix}' from '${source_ip}'."
-    koopa::dl "Flags" "$flags"
+    koopa::dl "Flags" "${rsync_flags[*]}"
     koopa::sys_mkdir "$prefix"
     koopa::remove_broken_symlinks "$prefix"
-    koopa::sys_set_permissions -r "$prefix"
-    # Note that this step won't work unless we leave 'flags' unquoted here.
-    # shellcheck disable=SC2086
-    rsync $flags \
-        --rsync-path="sudo ${rsync}" \
+    koopa::sys_set_permissions -ru "$prefix"
+    rsync "${rsync_flags[@]}" \
         "${user}@${source_ip}:${prefix}/" \
         "${prefix}/"
     koopa::remove_broken_symlinks "$prefix"
