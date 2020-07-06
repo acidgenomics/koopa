@@ -25,7 +25,7 @@ url_prefix="https://download.oracle.com/otn_software/linux/instantclient/195000"
 stems=(basic devel sqlplus jdbc odbc)
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     for stem in "${stems[@]}"
     do
         file="oracle-instantclient${minor_version}-${stem}-${version}.x86_64.rpm"

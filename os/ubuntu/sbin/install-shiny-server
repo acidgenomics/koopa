@@ -62,7 +62,7 @@ then
 fi
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="shiny-server-${version}-amd64.deb"
     # Support for Ubuntu 14.04 LTS+ with this fixed URL.
     url="https://download3.rstudio.org/ubuntu-14.04/x86_64/${file}"
