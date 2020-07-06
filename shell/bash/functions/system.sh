@@ -550,90 +550,43 @@ koopa::sys_info() { # {{{
     return 0
 }
 
-# FIXME SIMPLIFY?
-# FIXME USE SHORT FLAGS HERE?
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2020-07-05.
-    #
-    # @param --recursive
+    # @note Updated 2020-07-06.
+    # @param -r
     #   Change permissions recursively.
-    # @param --user
-    #   Change ownership to current user, rather than koopa default, which is
-    #   root for shared installs.
     # """
     koopa::assert_has_args "$#"
-    local arg chmod_flags chown_flags group pos recursive user verbose who
+    local OPTIND arg chmod chown recursive
     recursive=0
-    user=0
-    pos=()
-    while (("$#"))
+    OPTIND=1
+    while getopts 'r' opt
     do
-        case "$1" in
-            --recursive)
+        case "$opt" in
+            r)
                 recursive=1
-                shift 1
                 ;;
-            --user)
-                user=1
-                shift 1
-                ;;
-            --)
-                shift 1
-                break
-                ;;
-            --*|-*)
-                koopa::invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
+            \?)
+                koopa::stop "Invalid option: -${OPTARG}"
+            ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
-    readarray -t chmod_flags <<< "$(koopa::sys_chmod_flags)"
+    chmod=('koopa::sys_chmod')
+    chown=('koopa::sys_chown' '-h')
     if [[ "$recursive" -eq 1 ]]
     then
-        # Note that '-R' instead of '--recursive' has better cross-platform
-        # support on macOS and BusyBox.
         chmod_flags+=('-R')
-    fi
-    # Note that '-h' instead of '--no-dereference' has better cross-platform
-    # support on macOS and BusyBox.
-    chown_flags=('-h')
-    if [[ "$recursive" -eq 1 ]]
-    then
-        # Note that '-R' instead of '--recursive' has better cross-platform
-        # support on macOS and BusyBox.
         chown_flags+=('-R')
     fi
-    if [[ "$verbose" -eq 1 ]]
-    then
-        # Note that '-v' instead of '--verbose' has better cross-platform
-        # support on macOS and BusyBox.
-        chown_flags+=('-v')
-    fi
-    group="$(koopa::sys_group)"
-    case "$user" in
-        0)
-            who="$(koopa::sys_user)"
-            ;;
-        1)
-            who="$(koopa::user)" \
-            ;;
-    esac
-    chown_flags+=("${who}:${group}")
-    # Loop across input and set permissions.
     for arg in "$@"
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
-        # FIXME REWORK THIS.
-        koopa::sys_chmod "${chmod_flags[@]}" "$arg"
-        koopa::sys_chown "${chown_flags[@]}" "$arg"
+        "${chmod[@]}" "$arg"
+        "${chown[@]}" "$arg"
     done
     return 0
 }
@@ -643,16 +596,16 @@ koopa::sys_chgrp() { # {{{1
     # chgrp with dynamic sudo handling.
     # @note Updated 2020-07-06.
     # """
-    local exe group
+    local chgrp group
     koopa::assert_has_args "$#"
     group="$(koopa::sys_group)"
     if koopa::is_shared_install
     then
-        exe=('sudo' 'chgrp')
+        chgrp=('sudo' 'chgrp')
     else
-        exe=('chgrp')
+        chgrp=('chgrp')
     fi
-    "${exe[@]}" "$group" "$@"
+    "${chgrp[@]}" "$group" "$@"
     return 0
 }
 
@@ -661,16 +614,16 @@ koopa::sys_chmod() { # {{{1
     # chmod with dynamic sudo handling.
     # @note Updated 2020-07-06.
     # """
-    local exe flags
+    local chmod chmod_flags
     koopa::assert_has_args "$#"
     flags=("$(koopa::sys_chmod_flags)")
     if koopa::is_shared_install
     then
-        exe=('sudo' 'chmod')
+        chmod=('sudo' 'chmod')
     else
-        exe=('chmod')
+        chmod=('chmod')
     fi
-    "${exe[@]}" "${flags[@]}" "$@"
+    "${chmod[@]}" "${chmod_flags[@]}" "$@"
     return 0
 }
 
@@ -696,32 +649,30 @@ koopa::sys_chown() { # {{{1
     # chown with dynamic sudo handling.
     # @note Updated 2020-07-06.
     # """
-    local exe group user
+    local chown group user
     koopa::assert_has_args "$#"
     user="$(koopa::sys_user)"
     group="$(koopa::sys_group)"
     if koopa::is_shared_install
     then
-        exe=('sudo' 'chown')
+        chown=('sudo' 'chown')
     else
-        exe=('chown')
+        chown=('chown')
     fi
-    "${exe[@]}" "${user}:${group}" "$@"
+    "${chown[@]}" "${user}:${group}" "$@"
     return 0
 }
 
-# FIXME PASS FLAG TO CP
 koopa::sys_cp() { # {{{1
     # """
     # Koopa copy.
     # @note Updated 2020-06-30.
     # """
-    if koopa::is_shared_install
-    then
-        sudo -E "$(koopa::cp "$@")"
-    else
-        koopa::cp "$@"
-    fi
+    local cp
+    koopa::assert_has_args "$#"
+    cp=('koopa::cp')
+    koopa::is_shared_install && cp+=('-S')
+    "${cp[@]}" "$@"
     return 0
 }
 
@@ -735,8 +686,8 @@ koopa::sys_group() { # {{{1
     #
     # Admin group priority: admin (macOS), sudo (Debian), wheel (Fedora).
     # """
-    koopa::assert_has_no_args "$#"
     local group
+    koopa::assert_has_no_args "$#"
     if koopa::is_shared_install
     then
         group="$(koopa::admin_group)"
@@ -747,69 +698,56 @@ koopa::sys_group() { # {{{1
     return 0
 }
 
-# FIXME BROKEN
 koopa::sys_ln() { # {{{1
     # """
     # Create a symlink quietly.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-06.
     # """
-    if koopa::is_shared_install
-    then
-        sudo -E "$(koopa::ln "$@")"
-    else
-        koopa::ln "$@"
-    fi
+    local ln
+    koopa::assert_has_args "$#"
+    ln=('koopa::ln')
+    koopa::is_shared_install && ln+=('-S')
+    "${ln[@]}" "$@"
     return 0
 }
 
-# FIXME PASS -S FLAG
 koopa::sys_mkdir() { # {{{1
     # """
     # mkdir with dynamic sudo handling.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-06.
     # """
+    local mkdir
     koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        # FIXME RETHINK THIS.
-        sudo -E "$(koopa::mkdir "$@")"
-    else
-        koopa::mkdir "$@"
-    fi
-    # FIXME SIMPLIFY
-    koopa::sys_chmod "$(koopa::sys_chmod_flags)" "$@"
-    koopa::sys_chgrp "$@"
+    mkdir=('koopa::mkdir')
+    koopa::is_shared_install && mkdir+=('-S')
+    "${mkdir[@]}" "$@"
+    koopa::sys_set_permissions "$@"
     return 0
 }
 
-# FIXME PASS -S FLAG
 koopa::sys_mv() { # {{{1
     # """
     # Move a file or directory.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-06.
     # """
-    if koopa::is_shared_install
-    then
-        sudo -E "$(koopa::mv "$@")"
-    else
-        koopa::mv "$@"
-    fi
+    local mv
+    koopa::assert_has_args "$#"
+    mv=('koopa::mv')
+    koopa::is_shared_install && mv+=('-S')
+    "${mv[@]}" "$@"
     return 0
 }
 
-# FIXME PASS -S FLAG
 koopa::sys_rm() { # {{{1
     # """
     # Remove files/directories quietly.
     # @note Updated 2020-06-30.
     # """
+    local rm
     koopa::assert_has_args "$#"
-    if koopa::is_shared_install
-    then
-        sudo -E "$(koopa::rm "$@")"
-    else
-        koopa::rm "$@"
-    fi
+    rm=('koopa::rm')
+    koopa::is_shared_install && rm+=('-S')
+    "${rm[@]}" "$@"
     return 0
 }
 
