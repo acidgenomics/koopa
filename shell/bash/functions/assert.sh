@@ -754,7 +754,7 @@ koopa::assert_is_r_package_installed() { # {{{1
     do
         if ! koopa::is_r_package_installed "${arg}"
         then
-            koopa::stop "'${arg}' R package is not installed."
+            koopa::stop "R package '${arg}' is not installed."
         fi
     done
     return 0
