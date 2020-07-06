@@ -16,6 +16,10 @@ koopa::bcbio_prefix() {
     _koopa_bcbio_prefix "$@"
 }
 
+koopa::boolean_nounset() {
+    _koopa_boolean_nounset "$@"
+}
+
 koopa::cellar_prefix() {
     _koopa_cellar_prefix "$@"
 }
@@ -64,6 +68,14 @@ koopa::ensembl_perl_api_prefix() {
     _koopa_ensembl_perl_api_prefix "$@"
 }
 
+koopa::expr() {
+    _koopa_expr "$@"
+}
+
+koopa::force_add_to_fpath_start() {
+    _koopa_force_add_to_fpath_start "$@"
+}
+
 koopa::fzf_prefix() {
     _koopa_fzf_prefix "$@"
 }
@@ -82,6 +94,26 @@ koopa::group() {
 
 koopa::group_id() {
     _koopa_group_id "$@"
+}
+
+koopa::has_gnu_binutils() {
+    _koopa_has_gnu_binutils "$@"
+}
+
+koopa::has_gnu_coreutils() {
+    _koopa_has_gnu_coreutils "$@"
+}
+
+koopa::has_gnu_findutils() {
+    _koopa_has_gnu_findutils "$@"
+}
+
+koopa::has_gnu_sed() {
+    _koopa_has_gnu_sed "$@"
+}
+
+koopa::has_gnu_tar() {
+    _koopa_has_gnu_tar "$@"
 }
 
 koopa::h1() {
@@ -134,6 +166,142 @@ koopa::host_id() {
 
 koopa::include_prefix() {
     _koopa_include_prefix "$@"
+}
+
+koopa::is_alpine() {
+    _koopa_is_alpine "$@"
+}
+
+koopa::is_amzn() {
+    _koopa_is_amzn "$@"
+}
+
+koopa::is_arch() {
+    _koopa_is_arch "$@"
+}
+
+koopa::is_aws() {
+    _koopa_is_aws "$@"
+}
+
+koopa::is_azure() {
+    _koopa_is_azure "$@"
+}
+
+koopa::is_centos() {
+    _koopa_is_centos "$@"
+}
+
+koopa::is_conda_active() {
+    _koopa_is_conda_active "$@"
+}
+
+koopa::is_debian() {
+    _koopa_is_debian "$@"
+}
+
+koopa::is_fedora() {
+    _koopa_is_fedora "$@"
+}
+
+koopa::is_git() {
+    _koopa_is_git "$@"
+}
+
+koopa::is_git_clean() {
+    _koopa_is_git_clean "$@"
+}
+
+koopa::is_git_toplevel() {
+    _koopa_is_git_toplevel "$@"
+}
+
+koopa::is_installed() {
+    _koopa_is_installed "$@"
+}
+
+koopa::is_interactive() {
+    _koopa_is_installed "$@"
+}
+
+koopa::is_linux() {
+    _koopa_is_linux "$@"
+}
+
+koopa::is_local_install() {
+    _koopa_is_local_install "$@"
+}
+
+koopa::is_macos() {
+    _koopa_is_macos "$@"
+}
+
+koopa::is_opensuse() {
+    _koopa_is_opensuse "$@"
+}
+
+koopa::is_raspbian() {
+    _koopa_is_raspbian "$@"
+}
+
+koopa::is_remote() {
+    _koopa_is_remote "$@"
+}
+
+koopa::is_rhel() {
+    _koopa_is_rhel "$@"
+}
+
+koopa::is_rhel_7() {
+    _koopa_is_rhel_7 "$@"
+}
+
+koopa::is_rhel_8() {
+    _koopa_is_rhel_8 "$@"
+}
+
+koopa::is_root() {
+    _koopa_is_root "$@"
+}
+
+koopa::is_rstudio() {
+    _koopa_is_rstudio "$@"
+}
+
+koopa::is_set_nounset() {
+    _koopa_is_set_nounset "$@"
+}
+
+koopa::is_shared_install() {
+    _koopa_is_shared_install "$@"
+}
+
+koopa::is_subshell() {
+    _koopa_is_subshell "$@"
+}
+
+koopa::is_tmux() {
+    _koopa_is_tmux "$@"
+}
+
+koopa::is_tty() {
+    _koopa_is_tty "$@"
+}
+
+koopa::is_ubuntu() {
+    _koopa_is_ubuntu "$@"
+}
+
+koopa::is_ubuntu_18() {
+    _koopa_is_ubuntu_18 "$@"
+}
+
+koopa::is_ubuntu_20() {
+    _koopa_is_ubuntu_18 "$@"
+}
+
+koopa::is_venv_active() {
+    _koopa_is_ubuntu_18 "$@"
 }
 
 koopa::java_prefix() {

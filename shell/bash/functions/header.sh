@@ -58,6 +58,7 @@ koopa::header() { # {{{1
             koopa::invalid_arg "$1"
             ;;
     esac
+    koopa::assert_is_file "$file"
     koopa::print "$file"
     return 0
 }

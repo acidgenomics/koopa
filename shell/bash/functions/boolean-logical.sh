@@ -460,6 +460,36 @@ koopa::is_recent() {
     return 0
 }
 
+koopa::is_set() { # {{{1
+    # """
+    # Is the variable set and non-empty?
+    # @note Updated 2020-07-05.
+    #
+    # Passthrough of empty strings is bad practice in shell scripting.
+    #
+    # Note that usage of 'declare' here is a bashism.
+    # Can consider using 'type' instead for POSIX compliance.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/3601515
+    # - https://unix.stackexchange.com/questions/504082
+    # - https://www.gnu.org/software/bash/manual/html_node/
+    #       Shell-Parameter-Expansion.html
+    # """
+    local value var x
+    koopa::assert_has_args "$#"
+    for var
+    do
+        # Check if variable is defined.
+        x="$(declare -p "$var" 2>/dev/null || true)"
+        [[ -n "$x" ]] || return 1
+        # Check if variable contains non-empty value.
+        value="${!var}"
+        [[ -n "$value" ]] || return 1
+    done
+    return 0
+}
+
 koopa::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
