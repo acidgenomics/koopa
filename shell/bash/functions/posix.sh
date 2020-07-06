@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+koopa::_msg() {
+    __koopa_msg "$@"
+}
+
 koopa::activate_rust() {
     _koopa_activate_rust "$@"
 }
