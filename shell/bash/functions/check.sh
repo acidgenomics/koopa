@@ -63,6 +63,45 @@ koopa::check_access_octal() { # {{{1
     return 0
 }
 
+koopa::check_data_disk() { # {{{1
+    # """
+    # Check data disk configuration.
+    # @note Updated 2020-07-03.
+    # """
+    koopa::assert_has_no_args "$#"
+    koopa::is_linux || return 0
+    # e.g. '/n'.
+    local data_disk_link_prefix
+    data_disk_link_prefix="$(koopa::data_disk_link_prefix)"
+    if [[ -L "$data_disk_link_prefix" ]] && [[ ! -e "$data_disk_link_prefix" ]]
+    then
+        koopa::warning "Data disk link error: '${data_disk_link_prefix}'."
+    fi
+    # e.g. '/usr/local/opt'.
+    local app_prefix
+    app_prefix="$(koopa::app_prefix)"
+    if [[ -L "$app_prefix" ]] && [[ ! -e "$app_prefix" ]]
+    then
+        koopa::warning "App prefix link error: '${app_prefix}'."
+    fi
+    return 0
+}
+
+koopa::check_disk() { # {{{1
+    # """
+    # Check that disk has enough free space.
+    # @note Updated 2020-06-30.
+    # """
+    local limit used
+    used="$(koopa::disk_pct_used "$@")"
+    limit=90
+    if [ "$used" -gt "$limit" ]
+    then
+        koopa::warning "Disk usage is ${used}%."
+    fi
+    return 0
+}
+
 koopa::check_group() { # {{{1
     # """
     # Check if file or directory has an expected group.

@@ -73,7 +73,7 @@ koopa::activate_bash_prompt() { # {{{1
     # @note Updated 2020-06-19.
     # """
     koopa::assert_has_no_args "$#"
-    PS1="$(koopa::prompt)"
+    PS1="$(_koopa_prompt)"
     export PS1
     return 0
 }

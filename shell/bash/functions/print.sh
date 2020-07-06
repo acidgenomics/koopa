@@ -1,47 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME RENAME THIS.
-__koopa_h() { # {{{1
-    # """
-    # Koopa header.
-    # @note Updated 2020-07-03.
-    # """
-    # shellcheck disable=SC2039
-    local level prefix
-    level="${1:?}"
-    shift 1
-    case "$level" in
-        1)
-            _koopa_print ''
-            prefix='='
-            ;;
-        2)
-            prefix='=='
-            ;;
-        3)
-            prefix='==='
-            ;;
-        4)
-            prefix='===='
-            ;;
-        5)
-            prefix='====='
-            ;;
-        6)
-            prefix='======'
-            ;;
-        7)
-            prefix='======='
-            ;;
-        *)
-            _koopa_invalid_arg "$1"
-            ;;
-    esac
-    __koopa_msg 'magenta' 'default' "${prefix}>" "$@"
-    return 0
-}
-
-
 koopa::coffee_time() { # {{{1
     # """
     # Coffee time.
@@ -50,15 +8,6 @@ koopa::coffee_time() { # {{{1
     koopa::assert_has_no_args "$#"
     koopa::note 'This step takes a while. Time for a coffee break! ☕☕'
     return 0
-}
-
-koopa::dl() { # {{{1
-    # """
-    # Definition list.
-    # @note Updated 2020-07-01.
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:?}"
 }
 
 koopa::exit() { # {{{1
@@ -70,49 +19,6 @@ koopa::exit() { # {{{1
     koopa::note "${1:?}"
     exit 0
 }
-
-koopa::h1() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 1 "$@"
-    return 0
-}
-
-koopa::h2() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 2 "$@"
-    return 0
-}
-
-koopa::h3() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 3 "$@"
-    return 0
-}
-
-koopa::h4() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 4 "$@"
-    return 0
-}
-
-koopa::h5() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 5 "$@"
-    return 0
-}
-
-koopa::h6() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 6 "$@"
-    return 0
-}
-
-koopa::h7() { # {{{1
-    koopa::assert_has_args "$#"
-    koopa::_h 7 "$@"
-    return 0
-}
-
 
 koopa::install_start() { # {{{1
     # """
