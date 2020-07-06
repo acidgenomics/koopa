@@ -624,6 +624,10 @@ koopa::sub() {
     _koopa_sub "$@"
 }
 
+koopa::success() {
+    _koopa_success "$@"
+}
+
 koopa::tests_prefix() {
     _koopa_tests_prefix "$@"
 }
