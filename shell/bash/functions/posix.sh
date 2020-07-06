@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+koopa::add_to_manpath_end() {
+    _koopa_add_to_manpath_end "$@"
+}
+
+koopa::add_to_manpath_start() {
+    _koopa_add_to_manpath_start "$@"
+}
+
+koopa::add_to_path_end() {
+    _koopa_add_to_path_end "$@"
+}
+
+koopa::add_to_path_start() {
+    _koopa_add_to_path_start "$@"
+}
+
+koopa::add_to_pkgconfig_end() {
+    _koopa_add_to_pkgconfig_end "$@"
+}
+
+koopa::add_to_pkgconfig_start() {
+    _koopa_add_to_pkgconfig_start "$@"
+}
+
 koopa::app_prefix() {
     _koopa_app_prefix "$@"
 }
@@ -24,6 +48,10 @@ koopa::cellar_prefix() {
     _koopa_cellar_prefix "$@"
 }
 
+koopa::conda_env() {
+    _koopa_conda_env "$@"
+}
+
 koopa::conda_prefix() {
     _koopa_cellar_prefix "$@"
 }
@@ -38,6 +66,18 @@ koopa::cpu_count() {
 
 koopa::data_disk_link_prefix() {
     _koopa_data_disk_link_prefix "$@"
+}
+
+koopa::deactivate_conda() {
+    _koopa_deactivate_conda "$@"
+}
+
+koopa::deactivate_envs() {
+    _koopa_deactivate_envs "$@"
+}
+
+koopa::deactivate_venv() {
+    _koopa_deactivate_venv "$@"
 }
 
 koopa::dl() {
@@ -72,8 +112,20 @@ koopa::expr() {
     _koopa_expr "$@"
 }
 
-koopa::force_add_to_fpath_start() {
-    _koopa_force_add_to_fpath_start "$@"
+koopa::force_add_to_manpath_end() {
+    _koopa_force_add_to_manpath_end "$@"
+}
+
+koopa::force_add_to_manpath_start() {
+    _koopa_force_add_to_manpath_start "$@"
+}
+
+koopa::force_add_to_path_end() {
+    _koopa_force_add_to_path_end "$@"
+}
+
+koopa::force_add_to_path_start() {
+    _koopa_force_add_to_path_start "$@"
 }
 
 koopa::fzf_prefix() {
@@ -94,6 +146,10 @@ koopa::group() {
 
 koopa::group_id() {
     _koopa_group_id "$@"
+}
+
+koopa::gsub() {
+    _koopa_gsub "$@"
 }
 
 koopa::has_gnu_binutils() {
@@ -166,6 +222,14 @@ koopa::host_id() {
 
 koopa::include_prefix() {
     _koopa_include_prefix "$@"
+}
+
+koopa::info() {
+    _koopa_info "$@"
+}
+
+koopa::invalid_arg() {
+    _koopa_invalid_arg "$@"
 }
 
 koopa::is_alpine() {
@@ -248,6 +312,14 @@ koopa::is_remote() {
     _koopa_is_remote "$@"
 }
 
+koopa::remove_from_manpath() {
+    _koopa_remove_from_manpath "$@"
+}
+
+koopa::remove_from_path() {
+    _koopa_remove_from_path "$@"
+}
+
 koopa::is_rhel() {
     _koopa_is_rhel "$@"
 }
@@ -278,6 +350,14 @@ koopa::is_shared_install() {
 
 koopa::is_subshell() {
     _koopa_is_subshell "$@"
+}
+
+koopa::kebab_case() {
+    _koopa_kebab_case "$@"
+}
+
+koopa::lowercase() {
+    _koopa_lowercase "$@"
 }
 
 koopa::is_tmux() {
@@ -316,6 +396,10 @@ koopa::make_prefix() {
     _koopa_make_prefix "$@"
 }
 
+koopa::missing_arg() {
+    _koopa_missing_arg "$@"
+}
+
 koopa::msigdb_prefix() {
     _koopa_msigdb_prefix "$@"
 }
@@ -324,8 +408,24 @@ koopa::monorepo_prefix() {
     _koopa_monorepo_prefix "$@"
 }
 
+koopa::note() {
+    _koopa::note "$@"
+}
+
 koopa::openjdk_prefix() {
     _koopa_openjdk_prefix "$@"
+}
+
+koopa::os_codename() {
+    _koopa_os_codename "$@"
+}
+
+koopa::os_id() {
+    _koopa_os_id "$@"
+}
+
+koopa::os_string() {
+    _koopa_os_string "$@"
 }
 
 koopa::perlbrew_prefix() {
@@ -338,6 +438,78 @@ koopa::prefix() {
 
 koopa::print() {
     _koopa_print "$@"
+}
+
+koopa::print_black() {
+    _koopa_print_black "$@"
+}
+
+koopa::print_black_bold() {
+    _koopa_print_black_bold "$@"
+}
+
+koopa::print_blue() {
+    _koopa_print_blue "$@"
+}
+
+koopa::print_blue_bold() {
+    _koopa_print_blue_bold "$@"
+}
+
+koopa::print_cyan() {
+    _koopa_print_cyan "$@"
+}
+
+koopa::print_cyan_bold() {
+    _koopa_print_cyan_bold "$@"
+}
+
+koopa::print_default() {
+    _koopa_print_default "$@"
+}
+
+koopa::print_default_bold() {
+    _koopa_print_default_bold "$@"
+}
+
+koopa::print_green() {
+    _koopa_print_green "$@"
+}
+
+koopa::print_green_bold() {
+    _koopa_print_green_bold "$@"
+}
+
+koopa::print_magenta() {
+    _koopa_print_magenta "$@"
+}
+
+koopa::print_magenta_bold() {
+    _koopa_print_magenta_bold "$@"
+}
+
+koopa::print_red() {
+    _koopa_print_red "$@"
+}
+
+koopa::print_red_bold() {
+    _koopa_print_red_bold "$@"
+}
+
+koopa::print_yellow() {
+    _koopa_print_yellow "$@"
+}
+
+koopa::print_yellow_bold() {
+    _koopa_print_yellow_bold "$@"
+}
+
+koopa::print_white() {
+    _koopa_print_white "$@"
+}
+
+koopa::print_white_bold() {
+    _koopa_print_white_bold "$@"
 }
 
 koopa::pyenv_prefix() {
@@ -368,6 +540,18 @@ koopa::scripts_private_prefix() {
     _koopa_scripts_private_prefix "$@"
 }
 
+koopa::shell() {
+    _koopa_shell "$@"
+}
+
+koopa::snake_case() {
+    _koopa_snake_case "$@"
+}
+
+koopa::stop() {
+    _koopa_stop "$@"
+}
+
 koopa::str_match() {
     _koopa_str_match "$@"
 }
@@ -380,60 +564,50 @@ koopa::str_match_regex() {
     _koopa_str_match_regex "$@"
 }
 
+koopa::strip_left() {
+    _koopa_strip_left "$@"
+}
+
+koopa::strip_right() {
+    _koopa_strip_right "$@"
+}
+
+koopa::strip_trailing_slash() {
+    _koopa_strip_trailing_slash "$@"
+}
+
+koopa::sub() {
+    _koopa_sub "$@"
+}
+
 koopa::tests_prefix() {
     _koopa_tests_prefix "$@"
+}
+
+koopa::trim_ws() {
+    _koopa_trim_ws "$@"
+}
+
+koopa::user() {
+    _koopa_user "$@"
+}
+
+koopa::user_id() {
+    _koopa_user_id "$@"
+}
+
+koopa::variable() {
+    _koopa_variable "$@"
+}
+
+koopa::venv() {
+    _koopa_venv "$@"
 }
 
 koopa::venv_prefix() {
     _koopa_venv_prefix "$@"
 }
 
-
-
-
-# get_minor_version
-# get_version
-# gsub
-# info
-# invalid_arg
-# is_debiasn
-# is_installed
-# is_linux
-# kebab_case
-# lowercase
-# missing_arg
-# note
-# os_codename
-# os_id
-# os_string
-# print
-# print_black
-# print_black_bold
-# print_blue
-# print_blue_bold
-# print_cyan
-# print_cyan_bold
-# print_default
-# print_default_bold
-# print_green
-# print_green_bold
-# print_magenta
-# print_magenta_bold
-# print_red
-# print_red_bold
-# print_white
-# print_white_bold
-# print_yellow
-# print_yellow_bold
-# shell
-# snake_case
-# stop
-# stop
-# strip_left
-# strip_right
-# strip_trailing_slash
-# sub
-# trim_ws
-# user
-# user_id
-# warning
+koopa::warning() {
+    _koopa_warning "$@"
+}
