@@ -8,7 +8,7 @@ _koopa_gsub() { # {{{1
     # Instead of using '|' in sed here, we can also escape '/'.
     #
     # @examples
-    # koopa::gsub "a" "" "aabb" "aacc"
+    # _koopa_gsub a '' aabb aacc
     # ## bb
     # ## cc
     # """
@@ -50,7 +50,7 @@ _koopa_lowercase() { # {{{1
     # @note Updated 2020-07-05.
     #
     # awk alternative:
-    # koopa::print "$string" | awk '{print tolower($0)}'
+    # _koopa_print "$string" | awk '{print tolower($0)}'
     #
     # @seealso
     # https://stackoverflow.com/questions/2264428
@@ -89,10 +89,10 @@ _koopa_strip_left() { # {{{1
     # Strip pattern from left side (start) of string.
     # @note Updated 2020-07-01.
     #
-    # @usage koopa::strip_left "string" "pattern"
+    # @usage _koopa_strip_left STRING PATTERN
     #
     # @examples
-    # koopa::strip_left "The " "The Quick Brown Fox" "The White Lady"
+    # _koopa_strip_left 'The ' 'The Quick Brown Fox' 'The White Lady'
     # ## Quick Brown Fox
     # ## White Lady
     # """
@@ -112,10 +112,10 @@ _koopa_strip_right() { # {{{1
     # Strip pattern from right side (end) of string.
     # @note Updated 2020-07-01.
     #
-    # @usage koopa::strip_right "string" "pattern"
+    # @usage _koopa_strip_right STRING PATTERN
     #
     # @examples
-    # _koopa_strip_right " Fox" "The Quick Brown Fox" "Michael J. Fox"
+    # _koopa_strip_right ' Fox' 'The Quick Brown Fox' 'Michael J. Fox'
     # ## The Quick Brown
     # ## Michael J.
     # """
@@ -154,9 +154,9 @@ _koopa_sub() { # {{{1
     #
     # Instead of using '|' in sed here, we can also escape '/'.
     #
-    # @seealso koopa::gsub (for global matching).
+    # @seealso _koopa_gsub (for global matching).
     # @examples
-    # _koopa_sub "a" "" "aaa" "aaa"
+    # _koopa_sub a '' aaa aaa
     # ## aa
     # ## aa
     # """
@@ -185,7 +185,7 @@ _koopa_trim_ws() { # {{{1
     # We're allowing empty string input in this function.
     #
     # @examples
-    # koopa::trim_ws "  hello world  " " foo bar "
+    # _koopa_trim_ws '  hello world  ' ' foo bar '
     # """
     # shellcheck disable=SC2039
     local string
