@@ -380,6 +380,15 @@ _koopa_stop() { # {{{1
     exit 1
 }
 
+_koopa_success() { # {{{1
+    # """
+    # Success message.
+    # @note Updated 2020-07-01.
+    # """
+    __koopa_msg 'green-bold' 'green' 'OK' "$@"
+    return 0
+}
+
 _koopa_warning() { # {{{1
     # """
     # Warning message.
