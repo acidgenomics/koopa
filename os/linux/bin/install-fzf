@@ -50,7 +50,7 @@ tmp_dir="$(koopa::tmp_dir)"
 koopa::mkdir "$prefix"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="${version}.tar.gz"
     koopa::download "https://github.com/junegunn/fzf/archive/${file}"
     koopa::extract "$file"

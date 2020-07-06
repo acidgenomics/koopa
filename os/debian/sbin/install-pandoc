@@ -10,7 +10,7 @@ version="$(koopa::variable "$name")"
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="pandoc-${version}-1-amd64.deb"
     url="https://github.com/jgm/pandoc/releases/download/${version}/${file}"
     koopa::download "$url"

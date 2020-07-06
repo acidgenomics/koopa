@@ -3,16 +3,15 @@
 koopa::add_local_bins_to_path() { # {{{1
     # """
     # Add local build bins to PATH (e.g. '/usr/local').
-    # @note Updated 2020-06-29.
+    # @note Updated 2020-07-06.
     #
     # This will recurse through the local library and find 'bin/' subdirs.
     # Note: read '-a' flag doesn't work on macOS.
     # """
-    koopa::assert_has_no_args "$#"
     local dir dirs
+    koopa::assert_has_no_args "$#"
     koopa::add_to_path_start "$(koopa::make_prefix)/bin"
-    IFS=$'\n' read -r -d '' dirs <<< "$(koopa::find_local_bin_dirs)"
-    unset IFS
+    readarray -t dirs <<< "$(koopa::find_local_bin_dirs)"
     for dir in "${dirs[@]}"
     do
         koopa::add_to_path_start "$dir"
@@ -31,8 +30,8 @@ koopa::admin_group() { # {{{1
     # expected default per Linux distro. In the event that we're unsure,
     # the function will intentionally error.
     # """
-    koopa::assert_has_no_args "$#"
     local group
+    koopa::assert_has_no_args "$#"
     if koopa::is_root
     then
         group='root'
@@ -49,23 +48,6 @@ koopa::admin_group() { # {{{1
         koopa::stop 'Failed to detect admin group.'
     fi
     koopa::print "$group"
-    return 0
-}
-
-# FIXME DELETE THIS.
-koopa::cd_tmp_dir() { # {{{1
-    # """
-    # Prepare and navigate (cd) to temporary directory.
-    # @note Updated 2020-06-30.
-    #
-    # Used primarily for cellar build scripts.
-    # """
-    koopa::assert_has_args_le "$#" 1
-    local dir
-    dir="${1:-$(koopa::tmp_dir)}"
-    rm -fr "$dir"
-    mkdir -p "$dir"
-    koopa::cd "$dir"
     return 0
 }
 

@@ -61,7 +61,7 @@ else
 fi
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="rstudio-server-rhel-pro-${version}-x86_64.rpm"
     url="https://download2.rstudio.org/server/${os_id}/x86_64/${file}"
     koopa::download "$url"

@@ -41,7 +41,7 @@ koopa::install_aspera_connect() {
     koopa::mkdir "$aspera_dir"
     tmp_dir="$(koopa::tmp_dir)"
     (
-        koopa::cd_tmp_dir "$tmp_dir"
+        koopa::cd "$tmp_dir"
         file="ibm-${name}-${version_full}-linux-g2.12-64.tar.gz"
         # Note that this step can fail on servers requiring TLS 1.2+, as the
         # IBM Aspera server is currently using TLS 1.1.

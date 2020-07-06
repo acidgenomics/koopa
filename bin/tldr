@@ -111,7 +111,7 @@ koopa::tldr_download_cache() {
     mkdir -pv "$prefix"
     tmp_dir="$(koopa::tmp_dir)"
     (
-        koopa::cd_tmp_dir "$tmp_dir"
+        koopa::cd "$tmp_dir"
         url="https://github.com/tldr-pages/tldr/tarball/master"
         file="master.tar.gz"
         koopa::download "$url" "$file"
