@@ -263,11 +263,10 @@ _koopa_homebrew_prefix() { # {{{1
 _koopa_homebrew_ruby_gems_prefix() { # {{{1
     # """
     # Homebrew Ruby gems prefix.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-06.
     # """
     # shellcheck disable=SC2039
     local api_version homebrew_prefix prefix
-    # FIXME THIS MAY CAUSE EARLY RETURN...DOUBLE CHECK
     _koopa_is_installed ruby || return 1
     homebrew_prefix="$(_koopa_homebrew_prefix)"
     api_version="$(_koopa_ruby_api_version)"
