@@ -111,16 +111,6 @@ koopa::status_ok() { # {{{1
     return 0
 }
 
-koopa::success() { # {{{1
-    # """
-    # Success message.
-    # @note Updated 2020-07-01.
-    # """
-    koopa::assert_has_args "$#"
-    koopa::_msg "green-bold" "green" "OK" "$@"
-    return 0
-}
-
 koopa::uninstall_start() { # {{{1
     # """
     # Inform the user about start of uninstall.

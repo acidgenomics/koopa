@@ -20,24 +20,34 @@ koopa::activate_bash_aliases() { # {{{1
 koopa::activate_bash_completion() { # {{{1
     # """
     # Activate Bash completion.
-    # @note Updated 2020-06-19.
+    # @note Updated 2020-07-06.
     # Add tab completion for many commands.
     # """
+    local brew_prefix nounset script
     koopa::assert_has_no_args "$#"
-    local etc_completion
-    etc_completion="/etc/bash_completion"
     if koopa::is_installed brew
     then
-        local brew_prefix
         brew_prefix="$(koopa::homebrew_prefix)"
         # Ensure existing Homebrew v1 completions continue to work.
         export BASH_COMPLETION_COMPAT_DIR="${brew_prefix}/etc/bash_completion.d"
         # shellcheck source=/dev/null
-        source "${brew_prefix}/etc/profile.d/bash_completion.sh"
-    elif [[ -f "$etc_completion" ]]
+        script="${brew_prefix}/etc/profile.d/bash_completion.sh"
+    else
+        script='/etc/bash_completion'
+    fi
+    [[ -r "$script" ]] || return 0
+    nounset="$(koopa::boolean_nounset)"
+    if [[ "$nounset" -eq 1 ]]
     then
-        # shellcheck source=/dev/null
-        source "$etc_completion"
+        set +e
+        set +u
+    fi
+    # shellcheck source=/dev/null
+    source "$script"
+    if [[ "$nounset" -eq 1 ]]
+    then
+        set -e
+        set -u
     fi
     return 0
 }
