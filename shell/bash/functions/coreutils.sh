@@ -20,7 +20,6 @@ koopa::cp() { # {{{1
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
     local OPTIND cp cp_flags mkdir rm sudo target_dir
-    koopa::assert_has_args "$#"
     koopa::assert_is_installed cp
     sudo=0
     target_dir=
@@ -40,6 +39,7 @@ koopa::cp() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
+    koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
         cp=('sudo' 'cp')
@@ -72,7 +72,6 @@ koopa::ln() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND ln rm source_file target_file
-    koopa::assert_has_args_eq "$#" 2
     koopa::assert_is_installed ln
     OPTIND=1
     while getopts 'S' opt
@@ -87,6 +86,7 @@ koopa::ln() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
+    koopa::assert_has_args_eq "$#" 2
     if [[ "$sudo" -eq 1 ]]
     then
         ln=('sudo' 'ln')
@@ -107,7 +107,6 @@ koopa::mkdir() { # {{{1
     # Create directories with parents automatically.
     # @note Updated 2020-07-06.
     local OPTIND mkdir sudo
-    koopa::assert_has_args "$#"
     OPTIND=1
     while getopts 'S' opt
     do
@@ -121,6 +120,7 @@ koopa::mkdir() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
+    koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
         mkdir=('sudo' 'mkdir')
@@ -144,7 +144,6 @@ koopa::mv() { # {{{1
     # - --strip-trailing-slashes
     # """
     local OPTIND mkdir mv rm source_file sudo target_file
-    koopa::assert_has_args_eq "$#" 2
     OPTIND=1
     while getopts 'S' opt
     do
@@ -158,6 +157,7 @@ koopa::mv() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
+    koopa::assert_has_args_eq "$#" 2
     if [[ "$sudo" -eq 1 ]]
     then
         mkdir=('koopa::mkdir' '-S')
@@ -183,7 +183,6 @@ koopa::relink() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND dest_file ln rm source_file sudo
-    koopa::assert_has_args_eq "$#" 2
     OPTIND=1
     while getopts 'S' opt
     do
@@ -197,6 +196,7 @@ koopa::relink() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
+    koopa::assert_has_args_eq "$#" 2
     if [[ "$sudo" -eq 1 ]]
     then
         ln=('sudo' 'ln')
@@ -221,7 +221,6 @@ koopa::rm() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND rm sudo
-    koopa::assert_has_args "$#"
     OPTIND=1
     while getopts 'S' opt
     do
@@ -235,6 +234,7 @@ koopa::rm() { # {{{1
         esac
     done
     shift "$((OPTIND-1))"
+    koopa::assert_has_args "$#"
     if [[ "$sudo" -eq 1 ]]
     then
         rm=('sudo' 'rm')
