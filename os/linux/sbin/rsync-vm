@@ -91,8 +91,8 @@ then
         )
     fi
     koopa::rsync_vm \
-        --flags="${app_flags[*]}" \
         --prefix="$app_prefix" \
+        --rsync-flags="${app_flags[*]}" \
         --source-ip="$source_ip"
 else
     koopa::note "Skipping '${app_prefix}'."
@@ -131,8 +131,8 @@ then
         )
     fi
     koopa::rsync_vm \
-        --flags="${refdata_flags[*]}" \
         --prefix="$refdata_prefix" \
+        --rsync-flags="${refdata_flags[*]}" \
         --source-ip="$source_ip"
 else
     koopa::note "Skipping '${refdata_prefix}'."
