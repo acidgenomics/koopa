@@ -18,6 +18,6 @@ _koopa_boolean_nounset() { # {{{1
     else
         bool=0
     fi
-    koopa::print "$bool"
+    _koopa_print "$bool"
     return 0
 }
