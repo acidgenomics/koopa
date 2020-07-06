@@ -328,14 +328,6 @@ koopa::is_remote() {
     _koopa_is_remote "$@"
 }
 
-koopa::remove_from_manpath() {
-    _koopa_remove_from_manpath "$@"
-}
-
-koopa::remove_from_path() {
-    _koopa_remove_from_path "$@"
-}
-
 koopa::is_rhel() {
     _koopa_is_rhel "$@"
 }
@@ -406,6 +398,22 @@ koopa::java_prefix() {
 
 koopa::local_app_prefix() {
     _koopa_local_app_prefix "$@"
+}
+
+koopa::macos_version() {
+    _koopa_macos_version "$@"
+}
+
+koopa::major_version() {
+    _koopa_major_version "$@"
+}
+
+koopa::major_minor_version() {
+    _koopa_major_minor_version "$@"
+}
+
+koopa::major_minor_patch_version() {
+    _koopa_major_minor_patch_version "$@"
 }
 
 koopa::make_prefix() {
@@ -542,6 +550,18 @@ koopa::rbenv_prefix() {
 
 koopa::refdata_prefix() {
     _koopa_refdata_prefix "$@"
+}
+
+koopa::remove_from_manpath() {
+    _koopa_remove_from_manpath "$@"
+}
+
+koopa::remove_from_path() {
+    _koopa_remove_from_path "$@"
+}
+
+koopa::ruby_api_version() {
+    _koopa_ruby_api_version "$@"
 }
 
 koopa::rust_cargo_prefix() {
