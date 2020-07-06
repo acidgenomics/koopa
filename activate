@@ -431,10 +431,10 @@ if [ "$KOOPA_MINIMAL" -eq 0 ]
 then
     case "$KOOPA_SHELL" in
         bash)
-            _koopa_activate_bash_extras
+            koopa::activate_bash_extras
             ;;
         zsh)
-            _koopa_activate_zsh_extras
+            koopa::activate_zsh_extras
             ;;
     esac
     _koopa_is_macos && _koopa_activate_macos_extras
