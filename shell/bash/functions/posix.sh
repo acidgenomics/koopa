@@ -20,6 +20,10 @@ koopa::activate_conda() {
     _koopa_activate_conda "$@"
 }
 
+koopa::activate_conda_env() {
+    _koopa_activate_conda_env "$@"
+}
+
 koopa::add_to_manpath_end() {
     _koopa_add_to_manpath_end "$@"
 }
