@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+koopa::_status() { # {{{1
+    # """
+    # Koopa status.
+    # @note Updated 2020-07-01.
+    # """
+    # shellcheck disable=SC2039
+    local color nocolor label string x
+    label="$(printf '%10s\n' "${1:?}")"
+    color="$(__koopa_ansi_escape "${2:?}")"
+    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    shift 2
+    for string in "$@"
+    do
+        x="${color}${label}${nocolor} | ${string}"
+        _koopa_print "$x"
+    done
+    return 0
+}
+
 koopa::coffee_time() { # {{{1
     # """
     # Coffee time.
@@ -74,6 +93,7 @@ koopa::restart() { # {{{1
     return 0
 }
 
+# FIXME _status
 koopa::status_fail() { # {{{1
     koopa::assert_has_args "$#"
     koopa::_status "FAIL" "red" "$@" >&2
@@ -92,6 +112,7 @@ koopa::status_ok() { # {{{1
     return 0
 }
 
+# FIXME _msg
 koopa::success() { # {{{1
     # """
     # Success message.

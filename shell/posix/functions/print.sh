@@ -179,25 +179,6 @@ __koopa_print_ansi() { # {{{1
     return 0
 }
 
-__koopa_status() { # {{{1
-    # """
-    # Koopa status.
-    # @note Updated 2020-07-01.
-    # """
-    # shellcheck disable=SC2039
-    local color nocolor label string x
-    label="$(printf '%10s\n' "${1:?}")"
-    color="$(__koopa_ansi_escape "${2:?}")"
-    nocolor="$(__koopa_ansi_escape 'nocolor')"
-    shift 2
-    for string in "$@"
-    do
-        x="${color}${label}${nocolor} | ${string}"
-        _koopa_print "$x"
-    done
-    return 0
-}
-
 _koopa_dl() { # {{{1
     # """
     # Definition list.
