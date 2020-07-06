@@ -22,7 +22,7 @@ koopa::array_to_r_vector() { # {{{1
 koopa::link_r_etc() { # {{{1
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-06.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -52,7 +52,7 @@ koopa::link_r_etc() { # {{{1
         return 1
     fi
     if koopa::is_linux && \
-        ! koopa::is_cellar "$r_exe" && \
+        ! koopa::is_cellar "$r" && \
         [[ -d '/etc/R' ]]
     then
         # This applies to Debian/Ubuntu CRAN binary installs.
@@ -79,24 +79,18 @@ koopa::link_r_site_library() { # {{{1
     # Link R site library.
     # @note Updated 2020-07-04.
     # """
+    local app_prefix lib_source lib_target r r_prefix version
     koopa::assert_has_args_le "$#" 1
-    local r_prefix
-    r_prefix="${1:-$(koopa::r_prefix)}"
+    r="${1:-R}"
+    r_prefix="$(koopa::r_prefix "$r")"
     [[ -d "$r_prefix" ]] || return 1
-    local r_exe
-    r_exe="${r_prefix}/bin/R"
-    [[ -x "$r_exe" ]] || return 1
-    local version
-    version="$(koopa::r_version "$r_exe")"
+    version="$(koopa::r_version "$r")"
     if [[ "$version" != 'devel' ]]
     then
         version="$(koopa::major_minor_version "$version")"
     fi
-    local app_prefix
     app_prefix="$(koopa::app_prefix)"
-    local lib_source
     lib_source="${app_prefix}/r/${version}/site-library"
-    local lib_target
     lib_target="${r_prefix}/site-library"
     koopa::sys_mkdir "$lib_source"
     koopa::sys_ln "$lib_source" "$lib_target"
@@ -194,7 +188,6 @@ koopa::r_javareconf() { # {{{1
     return 0
 }
 
-# FIXME DOUBLE CHECK THIS ONCE KOOPA_SYS FUNCTIONS GET UPDATED.
 koopa::update_r_config() { # {{{1
     # """
     # Update R configuration.
@@ -241,5 +234,6 @@ koopa::update_r_config() { # {{{1
     koopa::link_r_etc "$r"
     koopa::link_r_site_library "$r"
     koopa::r_javareconf "$r"
+    koopa::success "Update of R configuration was successful."
     return 0
 }
