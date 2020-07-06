@@ -171,6 +171,7 @@ _koopa_os_string() { # {{{1
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
     then
+        id='macos'
         version="$(_koopa_macos_version)"
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
