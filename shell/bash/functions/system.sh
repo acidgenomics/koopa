@@ -556,7 +556,7 @@ koopa::sys_set_permissions() { # {{{1
     #   Change permissions recursively.
     # """
     koopa::assert_has_args "$#"
-    local OPTIND arg chmod chown group recursive user who
+    local OPTIND arg chmod chown group recursive user
     recursive=0
     user=0
     OPTIND=1
@@ -576,24 +576,24 @@ koopa::sys_set_permissions() { # {{{1
     done
     shift "$((OPTIND-1))"
     koopa::assert_has_args "$#"
-    chmod=('koopa::sys_chmod' '-h')
+    chmod=('koopa::sys_chmod')
     chown=('koopa::sys_chown' '-h')
     if [[ "$recursive" -eq 1 ]]
     then
         chmod+=('-R')
         chown+=('-R')
     fi
-    chmod+=("$(koopa::chmod_flags)")
+    chmod+=("$(koopa::sys_chmod_flags)")
     case "$user" in
         0)
-            who="$(koopa::sys_user)"
+            user="$(koopa::sys_user)"
             ;;
         1)
-            who="${USER:?}"
+            user="${USER:?}"
             ;;
     esac
     group="$(koopa::sys_group)"
-    chown+=("${who}:${group}")
+    chown+=("${user}:${group}")
     for arg in "$@"
     do
         # Ensure we resolve symlinks here.
