@@ -15,7 +15,7 @@ koopa::install_start "$name_fancy"
 koopa::note "Use of r-devel inside a Docker container is now preferred."
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="R-${r_version}-${macos_version}-sa-x86_64.tar.gz"
     url="https://mac.r-project.org/${macos_version}/R-${r_version}/${file}"
     koopa::download "$url"

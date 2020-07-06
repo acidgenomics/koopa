@@ -45,7 +45,7 @@ luarocks install luaposix
 luarocks install luafilesystem
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="${version}.tar.gz"
     url="https://github.com/TACC/Lmod/archive/${file}"
     koopa::download "$url"

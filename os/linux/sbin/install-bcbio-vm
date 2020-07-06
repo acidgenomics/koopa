@@ -32,7 +32,7 @@ fi
 # ==============================================================================
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="Miniconda3-latest-Linux-x86_64.sh"
     url="https://repo.continuum.io/miniconda/${file}"
     koopa::download "$url"

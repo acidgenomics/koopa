@@ -45,7 +45,7 @@ koopa::install_start "$name_fancy" "$framework_dir"
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="python-${version}-macosx10.9.pkg"
     url="https://www.python.org/ftp/python/${version}/${file}"
     koopa::download "$url"

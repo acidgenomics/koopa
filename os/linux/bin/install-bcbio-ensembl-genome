@@ -85,7 +85,7 @@ tmp_dir="$(koopa::tmp_dir)"
 cores="$(koopa::cpu_count)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     # e.g. Homo_sapiens.GRCh38.dna.primary_assembly.fa
     ensembl-fasta --organism "$organism" --build "$build" --type "dna"
     gtf="${organism}.${build}.dna.primary_assembly.fa"

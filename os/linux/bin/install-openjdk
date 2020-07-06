@@ -51,7 +51,7 @@ koopa::mkdir "$jdk_dir"
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     case "$version" in
         13)
             unique="5b8a42f3905b406298b72d750b6919f6/33"

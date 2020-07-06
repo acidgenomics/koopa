@@ -37,7 +37,7 @@ koopa::assert_has_no_envs
 tmp_dir="$(koopa::tmp_dir)/${name}"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="${name}-${version}.tar.gz"
     server="https://seq.cloud"
     url="${server}/install/cellranger/${file}"

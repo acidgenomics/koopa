@@ -16,7 +16,7 @@ koopa::h1 "Installing ${name} ${version} to '${prefix}'."
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="${name}-${version}.pkg"
     url="https://cran.r-project.org/bin/macosx/tools/${file}"
     koopa::download "$url"

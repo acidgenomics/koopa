@@ -128,7 +128,7 @@ koopa::install_cellar() { # {{{1
         gnu_mirror="$(koopa::gnu_mirror)"
         # shellcheck disable=SC2034
         jobs="$(koopa::cpu_count)"
-        koopa::cd_tmp_dir "$tmp_dir"
+        koopa::cd "$tmp_dir"
         script_path="$(koopa::prefix)/os/linux/include/cellar/${script_name}.sh"
         # shellcheck source=/dev/null
         source "$script_path" "${pass_args[@]:-}"

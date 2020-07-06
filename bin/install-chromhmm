@@ -12,7 +12,7 @@ tmp_dir="$(koopa::tmp_dir)"
 koopa::install_start "$name" "$prefix"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="${name}.zip"
     koopa::download "http://compbio.mit.edu/${name}/${file}"
     koopa::extract "$file"

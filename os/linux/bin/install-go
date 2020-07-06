@@ -51,7 +51,7 @@ koopa::mkdir "$cellar_prefix"
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="go${version}.linux-amd64.tar.gz"
     url="https://dl.google.com/go/${file}"
     koopa::download "$url"

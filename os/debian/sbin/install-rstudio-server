@@ -87,7 +87,7 @@ esac
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     file="rstudio-server-${version}-amd64.deb"
     url="https://download2.rstudio.org/server/bionic/amd64/${file}"
     koopa::download "$url"

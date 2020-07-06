@@ -41,7 +41,7 @@ koopa::mkdir "$prefix"
 tmp_dir="$(koopa::tmp_dir)"
 
 (
-    koopa::cd_tmp_dir "$tmp_dir"
+    koopa::cd "$tmp_dir"
     case "$name" in
         anaconda3)
             case "${OSTYPE:?}" in
