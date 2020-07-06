@@ -21,8 +21,9 @@ cat << END
 usage: install [--help|-h] [--non-interactive] [--test]
 
 Install koopa.
+Updated 2020-07-05.
 
-optional arguments:
+Optional arguments:
     --help, -h
         Show this help message and exit.
     --non-interactive
@@ -36,7 +37,7 @@ optional arguments:
         Enable verbose test mode.
         Used for Travis CI checks and building Docker images.
 
-non-interactive configuration arguments:
+Non-interactive configuration arguments:
     --dotfiles (default); --no-dotfiles
         Install dot files from https://github.com/acidgenomics/dotfiles?
     --passwordless-sudo; --no-passwordless-sudo (default)
@@ -256,7 +257,7 @@ END
 ERROR: Installer failed to set 'PATH' correctly.
 KOOPA_PREFIX: '$KOOPA_PREFIX'
 PATH: '$PATH'
-        END
+END
         exit 1
     fi
 
