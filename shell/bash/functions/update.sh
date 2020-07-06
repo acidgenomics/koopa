@@ -77,7 +77,7 @@ koopa::update() { # {{{1
         user=1
     fi
     koopa::h1 "Updating koopa at '${koopa_prefix}'."
-    koopa::sys_set_permissions --recursive "$koopa_prefix"
+    koopa::sys_set_permissions -r "$koopa_prefix"
     if [[ "$rsync" -eq 0 ]]
     then
         # Update koopa.
@@ -98,7 +98,7 @@ koopa::update() { # {{{1
                 koopa::git_pull origin master
             )
         fi
-        koopa::sys_set_permissions --recursive "$koopa_prefix"
+        koopa::sys_set_permissions -r "$koopa_prefix"
     fi
     koopa::update_xdg_config
     if [[ "$system" -eq 1 ]]

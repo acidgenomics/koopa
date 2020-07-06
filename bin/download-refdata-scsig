@@ -24,4 +24,4 @@ koopa::mkdir "$prefix"
     koopa::download "${base_url}/scsig.v${version}.metadata.txt"
 )
 
-koopa::sys_set_permissions --recursive "$prefix"
+koopa::sys_set_permissions -r "$prefix"
