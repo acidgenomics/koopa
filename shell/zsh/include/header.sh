@@ -34,7 +34,7 @@ fi
 koopa::zsh_header() { # {{{1
     # """
     # Zsh header.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-05.
     # """
     local file major_version pos
     [[ -n "${KOOPA_VERBOSE:-}" ]] && local verbose=1
@@ -49,10 +49,6 @@ koopa::zsh_header() { # {{{1
     fi
     # Customize optional shell behavior.
     # These are not recommended to be set during koopa activation.
-    #
-    # See also:
-    # > setopt
-    # - https://scriptingosx.com/2019/06/moving-to-zsh-part-3-shell-options/
     if [[ "$shopts" -eq 1 ]]
     then
         [[ "$verbose" -eq 1 ]] && setopt xtrace                             # -x
@@ -60,13 +56,13 @@ koopa::zsh_header() { # {{{1
         setopt nounset                                                      # -u
         setopt pipefail
     fi
-    # Requiring Zsh >= 5 for exported scripts.
+    # Requiring Zsh >= 5.
     if [[ "$checks" -eq 1 ]]
     then
         major_version="$(printf '%s\n' "${ZSH_VERSION}" | cut -d '.' -f 1)"
         if [[ ! "$major_version" -ge 5 ]]
         then
-            printf "%s\n" "Zsh >= 5 is required." >&2
+            printf '%s\n' 'Zsh >= 5 is required.' >&2
             exit 1
         fi
     fi
@@ -86,21 +82,6 @@ koopa::zsh_header() { # {{{1
         # shellcheck source=/dev/null
         [[ -f "$file" ]] && source "$file"
     done
-    # Source Bash and Zsh shared functions.
-    for file in "${KOOPA_PREFIX}/shell/bash-and-zsh/functions/"*".sh"
-    do
-        # shellcheck source=/dev/null
-        [[ -f "$file" ]] && source "$file"
-    done
-    koopa::help "$@"
-    # Require sudo permission to run 'sbin/' scripts.
-    if [[ "$checks" -eq 1 ]]
-    then
-        if koopa::str_match "$0" "/sbin"
-        then
-            koopa::assert_has_sudo
-        fi
-    fi
     # Disable user-defined aliases.
     # Primarily intended to reset cp, mv, rf for use inside scripts.
     if [[ "$activate" -eq 0 ]]
