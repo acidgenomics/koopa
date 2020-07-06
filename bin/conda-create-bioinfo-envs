@@ -216,7 +216,7 @@ koopa::conda_create_bioinfo_envs() {
         koopa::h2 "Other tools"
         koopa::conda_create_env igvtools                                # 0.477G
     fi
-    koopa::sys_set_permissions --recursive "$(koopa::conda_prefix)"
+    koopa::sys_set_permissions -r "$(koopa::conda_prefix)"
     conda env list
     return 0
 }

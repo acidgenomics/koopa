@@ -10,5 +10,5 @@ koopa::download "$url"
 koopa::extract "$file"
 chmod 0775 docker-credential-pass
 koopa::mkdir "${prefix}/bin"
-koopa::sys_set_permissions --recursive "$prefix"
+koopa::sys_set_permissions -r "$prefix"
 cp -v docker-credential-pass "${prefix}/bin/."

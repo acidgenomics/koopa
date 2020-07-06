@@ -364,8 +364,8 @@ koopa::configure_vm() { # {{{1
     # Fix permissions {{{2
     # --------------------------------------------------------------------------
 
-    koopa::sys_set_permissions --recursive "$make_prefix"
-    koopa::sys_set_permissions --recursive "$app_prefix"
+    koopa::sys_set_permissions -r "$make_prefix"
+    koopa::sys_set_permissions -r "$app_prefix"
     koopa::fix_zsh_permissions
 
     # Remove symlinks and dirs {{{2

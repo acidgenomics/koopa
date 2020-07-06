@@ -134,7 +134,7 @@ koopa::install_cellar() { # {{{1
         source "$script_path" "${pass_args[@]:-}"
     ) 2>&1 | tee "$(koopa::tmp_log_file)"
     rm -fr "$tmp_dir"
-    koopa::sys_set_permissions --recursive "$prefix"
+    koopa::sys_set_permissions -r "$prefix"
     if [[ "$link_cellar" -eq 1 ]]
     then
         link_args=(
@@ -237,7 +237,7 @@ koopa::link_cellar() { # {{{1
     cellar_prefix="${cellar_prefix}/${version}"
     koopa::assert_is_dir "$cellar_prefix"
     koopa::h2 "Linking '${cellar_prefix}' in '${make_prefix}'."
-    koopa::sys_set_permissions --recursive "$cellar_prefix"
+    koopa::sys_set_permissions -r "$cellar_prefix"
     koopa::remove_broken_symlinks "$cellar_prefix"
     koopa::remove_broken_symlinks "$make_prefix"
     cellar_subdirs=()
