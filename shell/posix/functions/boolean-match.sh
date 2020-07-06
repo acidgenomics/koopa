@@ -13,8 +13,8 @@ _koopa_str_match() { # {{{1
     # - https://unix.stackexchange.com/questions/233987
     #
     # @examples
-    # koopa::str_match STRING PATTERN
-    # echo STRING | koopa::str_match PATTERN
+    # _koopa_str_match STRING PATTERN
+    # echo STRING | koopa_str_match PATTERN
     # """
     # shellcheck disable=SC2039
     local string pattern
