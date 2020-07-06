@@ -374,7 +374,7 @@ koopa::is_python_package_installed() { # {{{1
 koopa::is_r_package_installed() { # {{{1
     # """
     # Is the requested R package installed?
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-06.
     #
     # This will only return true for user-installed packages.
     #
@@ -415,7 +415,6 @@ koopa::is_r_package_installed() { # {{{1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa::assert_has_args "$#"
     koopa::is_installed "$r" || return 1
-    # FIXME THIS DOESNT WORK PASSING R...
     prefix="$(koopa::r_library_prefix "$r")"
     for pkg in "$@"
     do

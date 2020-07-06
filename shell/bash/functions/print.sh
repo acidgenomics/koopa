@@ -93,7 +93,6 @@ koopa::restart() { # {{{1
     return 0
 }
 
-# FIXME _status
 koopa::status_fail() { # {{{1
     koopa::assert_has_args "$#"
     koopa::_status "FAIL" "red" "$@" >&2
@@ -112,7 +111,6 @@ koopa::status_ok() { # {{{1
     return 0
 }
 
-# FIXME _msg
 koopa::success() { # {{{1
     # """
     # Success message.
