@@ -75,8 +75,8 @@ koopa::get_version() { # {{{1
     # Get the version of an installed program.
     # @note Updated 2020-07-05.
     # """
-    koopa::assert_has_args "$#"
     local cmd fun x
+    koopa::assert_has_args "$#"
     for cmd in "$@"
     do
         fun="koopa::$(koopa::snake_case "$cmd")_version"
@@ -86,56 +86,6 @@ koopa::get_version() { # {{{1
         else
             x="$(koopa::return_version "$cmd")"
         fi
-        [[ -n "$x" ]] || return 1
-        koopa::print "$x"
-    done
-    return 0
-}
-
-koopa::major_version() { # {{{1
-    # """
-    # Program 'MAJOR' version.
-    # @note Updated 2020-07-04.
-    #
-    # This function captures 'MAJOR' only, removing 'MINOR.PATCH', etc.
-    # """
-    koopa::assert_has_args "$#"
-    local version x
-    for version in "$@"
-    do
-        x="$(koopa::print "$version" | cut -d '.' -f 1)"
-        [[ -n "$x" ]] || return 1
-        koopa::print "$x"
-    done
-    return 0
-}
-
-koopa::major_minor_version() { # {{{1
-    # """
-    # Program 'MAJOR.MINOR' version.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_args "$#"
-    local version x
-    for version in "$@"
-    do
-        x="$(koopa::print "$version" | cut -d '.' -f 1-2)"
-        [[ -n "$x" ]] || return 1
-        koopa::print "$x"
-    done
-    return 0
-}
-
-koopa::major_minor_patch_version() { # {{{1
-    # """
-    # Program 'MAJOR.MINOR.PATCH' version.
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_args "$#"
-    local version x
-    for version in "$@"
-    do
-        x="$(koopa::print "$version" | cut -d '.' -f 1-3)"
         [[ -n "$x" ]] || return 1
         koopa::print "$x"
     done
@@ -170,6 +120,125 @@ koopa::r_package_version() { # {{{1
         [[ -n "$x" ]] || return 1
         koopa::print "$x"
     done
+    return 0
+}
+
+koopa::return_version() { # {{{1
+    # """
+    # Return version (via extraction).
+    # @note Updated 2020-06-29.
+    # """
+    local cmd flag x
+    koopa::assert_has_args_le "$#" 2
+    cmd="${1:?}"
+    flag="${2:-}"
+    case "$cmd" in
+        aspera-connect)
+            cmd='ascp'
+            ;;
+        aws-cli)
+            cmd='aws'
+            ;;
+        azure-cli)
+            cmd='az'
+            ;;
+        bcbio-nextgen)
+            cmd='bcbio_nextgen.py'
+            ;;
+        binutils)
+            cmd='ld'
+            ;;
+        coreutils)
+            cmd='env'
+            ;;
+        findutils)
+            cmd='find'
+            ;;
+        gdal)
+            cmd='gdalinfo'
+            ;;
+        geos)
+            cmd='geos-config'
+            ;;
+        gnupg)
+            cmd='gpg'
+            ;;
+        google-cloud-sdk)
+            cmd='gcloud'
+            ;;
+        gsl)
+            cmd='gsl-config'
+            ;;
+        homebrew)
+            cmd='brew'
+            ;;
+        ncurses)
+            cmd='ncurses6-config'
+            ;;
+        neovim)
+            cmd='nvim'
+            ;;
+        pip)
+            cmd='pip3'
+            ;;
+        python)
+            cmd='python3'
+            ;;
+        ripgrep)
+            cmd='rg'
+            ;;
+        rust)
+            cmd='rustc'
+            ;;
+        sqlite)
+            cmd='sqlite3'
+            ;;
+        subversion)
+            cmd='svn'
+            ;;
+        texinfo)
+            cmd='makeinfo'
+            ;;
+        the-silver-searcher)
+            cmd='ag'
+            ;;
+    esac
+    if [[ -z "${flag:-}" ]]
+    then
+        case "$cmd" in
+            docker-credential-pass)
+                flag='version'
+                ;;
+            go)
+                flag='version'
+                ;;
+            lua)
+                flag='-v'
+                ;;
+            openssl)
+                flag='version'
+                ;;
+            rstudio-server)
+                flag='version'
+                ;;
+            ssh)
+                flag='-V'
+                ;;
+            singularity)
+                flag='version'
+                ;;
+            tmux)
+                flag='-V'
+                ;;
+            *)
+                flag='--version'
+                ;;
+        esac
+    fi
+    koopa::is_installed "$cmd" || return 1
+    x="$("$cmd" "$flag" 2>&1 || true)"
+    [[ -n "$x" ]] || return 1
+    koopa::extract_version "$x"
     return 0
 }
 

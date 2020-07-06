@@ -114,10 +114,8 @@ koopa::check_system() { # {{{1
     set -u
     Rscript --vanilla "$(koopa::include_prefix)/check-system.R"
     koopa::check_exports
-    # FIXME RENAME
-    koopa::disk_check
-    # FIXME RENAME
-    koopa::data_disk_check
+    koopa::check_disk
+    koopa::check_data_disk
     return 0
 }
 
@@ -490,6 +488,21 @@ koopa::script_name() { # {{{1
     x="$(koopa::basename "$file")"
     [[ -n "$x" ]] || return 0
     koopa::print "$x"
+    return 0
+}
+
+koopa::sudo_write_string() { # {{{1
+    # """
+    # Write a string to disk using root user.
+    # @note Updated 2020-07-01.
+    #
+    # Alternatively, 'tee -a' can be used to append file.
+    # """
+    koopa::assert_has_args_eq "$#" 2
+    local file string
+    string="${1:?}"
+    file="${2:?}"
+    koopa::print "$string" | sudo tee "$file" >/dev/null
     return 0
 }
 
@@ -1005,32 +1018,6 @@ koopa::url() { # {{{1
     # """
     koopa::assert_has_no_args "$#"
     koopa::variable 'koopa-url'
-    return 0
-}
-
-koopa::variable() { # {{{1
-    # """
-    # Get version stored internally in versions.txt file.
-    # @note Updated 2020-07-05.
-    #
-    # This approach handles inline comments.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    local file key value
-    key="${1:?}"
-    file="$(koopa::include_prefix)/variables.txt"
-    koopa::assert_is_file "$file"
-    value="$( \
-        grep -Eo "^${key}=\"[^\"]+\"" "$file" \
-        || koopa::stop "'${key}' not defined in '${file}'." \
-    )"
-    value="$( \
-        koopa::print "$value" \
-            | head -n 1 \
-            | cut -d "\"" -f 2 \
-    )"
-    [[ -n "$value" ]] || return 1
-    koopa::print "$value"
     return 0
 }
 

@@ -143,30 +143,6 @@ koopa::add_user_to_group() { # {{{1
     return 0
 }
 
-koopa::data_disk_check() { # {{{1
-    # """
-    # Check data disk configuration.
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_linux || return 0
-    # e.g. '/n'.
-    local data_disk_link_prefix
-    data_disk_link_prefix="$(koopa::data_disk_link_prefix)"
-    if [[ -L "$data_disk_link_prefix" ]] && [[ ! -e "$data_disk_link_prefix" ]]
-    then
-        koopa::warning "Data disk link error: '${data_disk_link_prefix}'."
-    fi
-    # e.g. '/usr/local/opt'.
-    local app_prefix
-    app_prefix="$(koopa::app_prefix)"
-    if [[ -L "$app_prefix" ]] && [[ ! -e "$app_prefix" ]]
-    then
-        koopa::warning "App prefix link error: '${app_prefix}'."
-    fi
-    return 0
-}
-
 koopa::delete_dotfile() { # {{{1
     # """
     # Delete a dot file.
@@ -301,7 +277,7 @@ koopa::fix_zsh_permissions() { # {{{1
     koopa::is_installed zsh || return 0
     zsh_exe="$(koopa::which_realpath zsh)"
     make_prefix="$(koopa::make_prefix)"
-    if [[ -d "${make_prefix}/share/zsh/site-functions" ]
+    if [[ -d "${make_prefix}/share/zsh/site-functions" ]]
     then
         if koopa::str_match_regex "$zsh_exe" "^${make_prefix}"
         then
