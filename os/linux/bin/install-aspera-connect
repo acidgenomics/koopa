@@ -70,7 +70,7 @@ ${version}/${file}"
         koopa::cd "$aspera_dir"
         koopa::sys_ln "$version" "latest"
     )
-    koopa::sys_set_permissions --recursive "$aspera_dir"
+    koopa::sys_set_permissions -r "$aspera_dir"
     koopa::install_success "$name_fancy"
     return 0
 }

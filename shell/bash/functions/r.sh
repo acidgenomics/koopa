@@ -214,7 +214,7 @@ koopa::update_r_config() { # {{{1
     if koopa::is_cellar "$r"
     then
         # Ensure that everyone in R home is writable.
-        koopa::sys_set_permissions --recursive "$r_prefix"
+        koopa::sys_set_permissions -r "$r_prefix"
         # Ensure that (Debian) system 'etc' directories are removed.
         local make_prefix
         make_prefix="$(koopa::make_prefix)"
@@ -231,7 +231,7 @@ koopa::update_r_config() { # {{{1
         fi
     else
         # Ensure system package library is writable.
-        koopa::sys_set_permissions --recursive "${r_prefix}/library"
+        koopa::sys_set_permissions -r "${r_prefix}/library"
         # Need to ensure group write so package index gets updated.
         if [[ -d '/usr/share/R' ]]
         then

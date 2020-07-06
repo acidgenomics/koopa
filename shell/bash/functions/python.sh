@@ -73,7 +73,7 @@ koopa::venv_create() {
     then
         "$py_exe" -m pip install "$name"
     fi
-    koopa::sys_set_permissions --recursive "$prefix"
+    koopa::sys_set_permissions -r "$prefix"
     "$py_exe" -m pip list
     return 0
 }
