@@ -347,7 +347,7 @@ _koopa_is_set_nounset() { # {{{1
     # setopt
     # Enabled: 'nounset'.
     # """
-    _koopa_str_match "$(set +o)" 'set -o nounset'
+    _koopa_str_match_posix "$(set +o)" 'set -o nounset'
 }
 
 _koopa_is_shared_install() { # {{{1
