@@ -88,6 +88,7 @@ koopa::ln() { # {{{1
     # """
     local OPTIND ln rm source_file target_file
     koopa::assert_is_installed ln
+    sudo=0
     OPTIND=1
     while getopts 'S' opt
     do
@@ -122,6 +123,7 @@ koopa::mkdir() { # {{{1
     # Create directories with parents automatically.
     # @note Updated 2020-07-06.
     local OPTIND mkdir sudo
+    sudo=0
     OPTIND=1
     while getopts 'S' opt
     do
@@ -159,6 +161,7 @@ koopa::mv() { # {{{1
     # - --strip-trailing-slashes
     # """
     local OPTIND mkdir mv rm source_file sudo target_file
+    sudo=0
     OPTIND=1
     while getopts 'S' opt
     do
@@ -198,6 +201,7 @@ koopa::relink() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND dest_file ln rm source_file sudo
+    sudo=0
     OPTIND=1
     while getopts 'S' opt
     do
@@ -236,6 +240,7 @@ koopa::rm() { # {{{1
     # @note Updated 2020-07-06.
     # """
     local OPTIND rm sudo
+    sudo=0
     OPTIND=1
     while getopts 'S' opt
     do
