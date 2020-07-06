@@ -66,6 +66,21 @@ koopa::cp() { # {{{1
     return 0
 }
 
+koopa::df() { # {{{1
+    # """
+    # Human friendlier version of df.
+    # @note Updated 2020-07-01.
+    # """
+    koopa::assert_is_installed df
+    df \
+        --portability \
+        --print-type \
+        --si \
+        "$@" \
+        | sort
+    return 0
+}
+
 koopa::ln() { # {{{1
     # """
     # Create a symlink quietly.
