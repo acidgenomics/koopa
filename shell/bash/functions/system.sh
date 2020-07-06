@@ -52,16 +52,7 @@ koopa::admin_group() { # {{{1
     return 0
 }
 
-koopa::cd() { # {{{1
-    # """
-    # Change directory quietly.
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    cd "${1:?}" >/dev/null || return 1
-    return 0
-}
-
+# FIXME DELETE THIS.
 koopa::cd_tmp_dir() { # {{{1
     # """
     # Prepare and navigate (cd) to temporary directory.
@@ -116,51 +107,6 @@ koopa::check_system() { # {{{1
     koopa::check_exports
     koopa::check_disk
     koopa::check_data_disk
-    return 0
-}
-
-# FIXME MOVE TO BASH, USE ARRAY.
-# FIXME ADD SUDO SUPPORT WITH -S FLAG.
-koopa::cp() { # {{{1
-    # """
-    # Hardened version of coreutils copy.
-    # @note Updated 2020-07-05.
-    #
-    # getopts info:
-    # - http://mywiki.wooledge.org/BashFAQ/035#getopts
-    # - https://wiki.bash-hackers.org/howto/getopts_tutorial
-    # """
-    koopa::assert_has_args "$#"
-    koopa::assert_is_installed cp
-    local OPTIND target_dir
-    target_dir=
-    OPTIND=1
-    while getopts 't:' opt
-    do
-        case "$opt" in
-            t)
-                target_dir="$OPTARG"
-                ;;
-            \?)
-                koopa::stop "Invalid option: -${OPTARG}"
-            ;;
-        esac
-    done
-    shift "$((OPTIND-1))"
-    if [[ -n "$target_dir" ]]
-    then
-        koopa::assert_is_existing "$@"
-        koopa::mkdir "$target_dir"
-        cp -af -t "$target_dir" "$@"
-    else
-        koopa::assert_has_args_eq "$#" 2
-        source_file="${1:?}"
-        koopa::assert_is_existing "$source_file"
-        target_file="${2:?}"
-        [[ -e "$target_file" ]] && koopa::rm "$target_file"
-        koopa::mkdir "$(dirname "$target_file")"
-        cp -af "$source_file" "$target_file"
-    fi
     return 0
 }
 
@@ -622,6 +568,8 @@ koopa::sys_info() { # {{{
     return 0
 }
 
+# FIXME SIMPLIFY?
+# FIXME USE SHORT FLAGS HERE?
 koopa::sys_set_permissions() { # {{{1
     # """
     # Set permissions on target prefix(es).
@@ -637,7 +585,6 @@ koopa::sys_set_permissions() { # {{{1
     local arg chmod_flags chown_flags group pos recursive user verbose who
     recursive=0
     user=0
-    verbose=0
     pos=()
     while (("$#"))
     do
@@ -648,10 +595,6 @@ koopa::sys_set_permissions() { # {{{1
                 ;;
             --user)
                 user=1
-                shift 1
-                ;;
-            --verbose)
-                verbose=1
                 shift 1
                 ;;
             --)
@@ -675,12 +618,6 @@ koopa::sys_set_permissions() { # {{{1
         # Note that '-R' instead of '--recursive' has better cross-platform
         # support on macOS and BusyBox.
         chmod_flags+=('-R')
-    fi
-    if [[ "$verbose" -eq 1 ]]
-    then
-        # Note that '-v' instead of '--verbose' has better cross-platform
-        # support on macOS and BusyBox.
-        chmod_flags+=('-v')
     fi
     # Note that '-h' instead of '--no-dereference' has better cross-platform
     # support on macOS and BusyBox.
@@ -712,20 +649,20 @@ koopa::sys_set_permissions() { # {{{1
     do
         # Ensure we resolve symlinks here.
         arg="$(realpath "$arg")"
+        # FIXME REWORK THIS.
         koopa::sys_chmod "${chmod_flags[@]}" "$arg"
         koopa::sys_chown "${chown_flags[@]}" "$arg"
     done
     return 0
 }
 
-# FIXME THIS SHOULD HANDLE KOOPA GROUP AUTOMATICALLY.
 koopa::sys_chgrp() { # {{{1
     # """
     # chgrp with dynamic sudo handling.
-    # @note Updated 2020-07-05.
+    # @note Updated 2020-07-06.
     # """
-    koopa::assert_has_args "$#"
     local exe group
+    koopa::assert_has_args "$#"
     group="$(koopa::sys_group)"
     if koopa::is_shared_install
     then
@@ -733,7 +670,6 @@ koopa::sys_chgrp() { # {{{1
     else
         exe=('chgrp')
     fi
-    koopa::assert_has_args "$#"
     "${exe[@]}" "$group" "$@"
     return 0
 }
@@ -741,15 +677,18 @@ koopa::sys_chgrp() { # {{{1
 koopa::sys_chmod() { # {{{1
     # """
     # chmod with dynamic sudo handling.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-07-06.
     # """
+    local exe flags
     koopa::assert_has_args "$#"
+    flags=("$(koopa::sys_chmod_flags)")
     if koopa::is_shared_install
     then
-        sudo chmod "$@"
+        exe=('sudo' 'chmod')
     else
-        chmod "$@"
+        exe=('chmod')
     fi
+    "${exe[@]}" "${flags[@]}" "$@"
     return 0
 }
 
@@ -758,8 +697,8 @@ koopa::sys_chmod_flags() {
     # Default recommended flags for chmod.
     # @note Updated 2020-04-16.
     # """
-    koopa::assert_has_no_args "$#"
     local flags
+    koopa::assert_has_no_args "$#"
     if koopa::is_shared_install
     then
         flags='u+rw,g+rw'
@@ -773,19 +712,23 @@ koopa::sys_chmod_flags() {
 koopa::sys_chown() { # {{{1
     # """
     # chown with dynamic sudo handling.
-    # @note Updated 2020-02-16.
+    # @note Updated 2020-07-06.
     # """
+    local exe group user
     koopa::assert_has_args "$#"
+    user="$(koopa::sys_user)"
+    group="$(koopa::sys_group)"
     if koopa::is_shared_install
     then
-        sudo chown "$@"
+        exe=('sudo' 'chown')
     else
-        chown "$@"
+        exe=('chown')
     fi
+    "${exe[@]}" "${user}:${group}" "$@"
     return 0
 }
 
-# FIXME BROKEN
+# FIXME PASS FLAG TO CP
 koopa::sys_cp() { # {{{1
     # """
     # Koopa copy.
@@ -837,7 +780,7 @@ koopa::sys_ln() { # {{{1
     return 0
 }
 
-# FIXME BROKEN
+# FIXME PASS -S FLAG
 koopa::sys_mkdir() { # {{{1
     # """
     # mkdir with dynamic sudo handling.
@@ -857,7 +800,7 @@ koopa::sys_mkdir() { # {{{1
     return 0
 }
 
-# FIXME BROKEN
+# FIXME PASS -S FLAG
 koopa::sys_mv() { # {{{1
     # """
     # Move a file or directory.
@@ -872,7 +815,7 @@ koopa::sys_mv() { # {{{1
     return 0
 }
 
-# FIXME BROKEN
+# FIXME PASS -S FLAG
 koopa::sys_rm() { # {{{1
     # """
     # Remove files/directories quietly.
@@ -891,10 +834,10 @@ koopa::sys_rm() { # {{{1
 koopa::sys_user() { # {{{1
     # """
     # Set the koopa installation system user.
-    # @note Updated 2020-07-04.
+    # @note Updated 2020-07-06.
     # """
-    koopa::assert_has_no_args "$#"
     local user
+    koopa::assert_has_no_args "$#"
     if koopa::is_shared_install
     then
         user='root'
