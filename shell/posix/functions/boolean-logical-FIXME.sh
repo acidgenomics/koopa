@@ -1,56 +1,5 @@
 #!/bin/sh
 
-koopa::_has_gnu() { # {{{1
-    # """
-    # Is a GNU program installed?
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_args_eq "$#" 1
-    local cmd str
-    cmd="${1:?}"
-    koopa::is_installed "$cmd" || return 1
-    str="$("$cmd" --version 2>&1 || true)"
-    koopa::str_match "$str" 'GNU'
-}
-
-koopa::_is_os_release() { # {{{1
-    # """
-    # Is a specific OS release?
-    # @note Updated 2020-07-04.
-    # """
-    koopa::assert_has_args_le "$#" 2
-    local file id version
-    id="${1:?}"
-    version="${2:-}"
-    file='/etc/os-release'
-    [ -f "$file" ] || return 1
-    # Check identifier.
-    grep 'ID=' "$file" | grep -q "$id" && return 0
-    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
-    # Check version.
-    if [ -n "$version" ]
-    then
-        grep -q "VERSION_ID=\"${version}" "$file" && return 0
-    fi
-    return 1
-}
-
-koopa::expr() { # {{{1
-    # """
-    # Quiet regular expression matching that is POSIX compliant.
-    # @note Updated 2020-06-30.
-    #
-    # Avoid using '[[ =~ ]]' in sh config files.
-    # 'expr' is faster than using 'case'.
-    #
-    # See also:
-    # - https://stackoverflow.com/questions/21115121
-    # """
-    koopa::assert_has_args_eq "$#" 2
-    expr "${1:?}" : "${2:?}" 1>/dev/null
-}
-
-
 koopa::has_file_ext() { # {{{1
     # """
     # Does the input contain a file extension?
@@ -68,51 +17,6 @@ koopa::has_file_ext() { # {{{1
         koopa::str_match "$(koopa::print "$file")" '.' || return 1
     done
     return 0
-}
-
-koopa::has_gnu_binutils() { # {{{1
-    # """
-    # Is GNU binutils installed?
-    # @note Updated 2020-04-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_has_gnu ld
-}
-
-koopa::has_gnu_coreutils() { # {{{1
-    # """
-    # Is GNU coreutils installed?
-    # @note Updated 2020-04-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_has_gnu env
-}
-
-koopa::has_gnu_findutils() { # {{{1
-    # """
-    # Is GNU findutils installed?
-    # @note Updated 2020-04-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_has_gnu find
-}
-
-koopa::has_gnu_sed() { # {{{1
-    # """
-    # Is GNU tar installed?
-    # @note Updated 2020-04-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_has_gnu sed
-}
-
-koopa::has_gnu_tar() { # {{{1
-    # """
-    # Is GNU tar installed?
-    # @note Updated 2020-04-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_has_gnu tar
 }
 
 koopa::has_monorepo() { # {{{1
@@ -211,65 +115,20 @@ koopa::is_alias() { # {{{1
     return 0
 }
 
-koopa::is_alpine() { # {{{1
-    # """
-    # Is the operating system Alpine Linux?
-    # @note Updated 2020-02-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::os_id)" = 'alpine' ]
-}
-
-koopa::is_amzn() { # {{{1
-    # """
-    # Is the operating system Amazon Linux?
-    # @note Updated 2020-01-21.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::os_id)" = 'amzn' ]
-}
-
-koopa::is_arch() { # {{{1
-    # """
-    # Is the operating system Arch Linux?
-    # @note Updated 2020-02-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::os_id)" = 'arch' ]
-}
-
-koopa::is_aws() { # {{{1
-    # """
-    # Is the current session running on AWS?
-    # @note Updated 2019-11-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::host_id)" = 'aws' ]
-}
-
-koopa::is_azure() { # {{{1
-    # """
-    # Is the current session running on Microsoft Azure?
-    # @note Updated 2019-11-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::host_id)" = 'azure' ]
-}
-
 koopa::is_bash_ok() { # {{{1
     # """
     # Is the current version of Bash OK (or super old)?
-    # @note Updated 2020-07-03.
+    # @note Updated 2020-07-05.
     # 
     # Older versions (< 4; e.g. shipping version on macOS) have issues with
     # 'read' that we have to handle with special care here.
     # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_installed bash || return 1
+    # shellcheck disable=SC2039
     local major_version version
-    version="$(koopa::get_version "bash")"
+    _koopa_is_installed bash || return 1
+    version="$(koopa::get_version 'bash')"
     major_version="$(koopa::major_version "$version")"
-    [ "$major_version" -ge 4 ]
+    [[ "$major_version" -ge 4 ]]
 }
 
 koopa::is_cellar() { # {{{1
@@ -299,24 +158,6 @@ koopa::is_cellar() { # {{{1
     return 0
 }
 
-koopa::is_centos() { # {{{1
-    # """
-    # Is the operating system CentOS?
-    # @note Updated 2020-03-07.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::os_id)" = 'centos' ]
-}
-
-koopa::is_conda_active() { # {{{1
-    # """
-    # Is there a Conda environment active?
-    # @note Updated 2019-10-20.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -n "${CONDA_DEFAULT_ENV:-}" ]
-}
-
 koopa::is_current_version() { # {{{1
     # """
     # Is the program version current?
@@ -331,15 +172,6 @@ koopa::is_current_version() { # {{{1
         [ "$actual_version" = "$expected_version" ] || return 1
     done
     return 0
-}
-
-koopa::is_debian() { # {{{1
-    # """
-    # Is the operating system Debian?
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release debian
 }
 
 koopa::is_defined_in_user_profile() { # {{{1
@@ -385,15 +217,6 @@ koopa::is_export() { # {{{1
         koopa::str_match_regex "$exports" "\b${arg}\b=" || return 1
     done
     return 0
-}
-
-koopa::is_fedora() { # {{{1
-    # """
-    # Is the operating system Fedora?
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release fedora
 }
 
 koopa::is_file_system_case_sensitive() { # {{{1
@@ -444,55 +267,6 @@ koopa::is_function() { # {{{1
     return 0
 }
 
-koopa::is_git() { # {{{1i
-    # """
-    # Is the working directory a git repository?
-    # @note Updated 2020-07-04.
-    # @seealso
-    # - https://stackoverflow.com/questions/2180270
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_git_toplevel '.' && return 0
-    koopa::is_installed git || return 1
-    git rev-parse --git-dir >/dev/null 2>&1 || return 1
-    return 0
-}
-
-koopa::is_git_clean() { # {{{1
-    # """
-    # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2020-07-04.
-    #
-    # This is used in prompt, so be careful with assert checks.
-    #
-    # @seealso
-    # - https://stackoverflow.com/questions/3878624
-    # - https://stackoverflow.com/questions/3258243
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_git || return 1
-    koopa::is_installed git || return 1
-    local rev_1 rev_2
-    # Are there unstaged changes?
-    git diff-index --quiet HEAD -- 2>/dev/null || return 1
-    # In need of a pull or push?
-    rev_1="$(git rev-parse HEAD 2>/dev/null)"
-    # Note that this step will return fatal warning on no upstream.
-    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
-    [ "$rev_1" != "$rev_2" ] && return 1
-    return 0
-}
-
-koopa::is_git_toplevel() { # {{{1
-    # """
-    # Is the working directory the top level of a git repository?
-    # @note Updated 2020-07-04.
-    # """
-    local dir
-    dir="${1:-.}"
-    [ -e "${dir}/.git" ]
-}
-
 koopa::is_github_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled for GitHub access?
@@ -511,77 +285,6 @@ koopa::is_gitlab_ssh_enabled() { # {{{1
     koopa::is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
-koopa::is_installed() { # {{{1
-    # """
-    # Is the requested program name installed?
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_args "$#"
-    local cmd
-    for cmd in "$@"
-    do
-        command -v "$cmd" >/dev/null || return 1
-    done
-    return 0
-}
-
-koopa::is_interactive() { # {{{1
-    # """
-    # Is the current shell interactive?
-    # @note Updated 2020-07-03.
-    # Consider checking for tmux or subshell here.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::str_match "$-" 'i' && return 0
-    koopa::is_tty && return 0
-    return 1
-}
-
-koopa::is_kali() { # {{{1
-    # """
-    # Is the current platform Kali Linux?
-    # @note Updated 2020-06-30.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::str_match "$(koopa::os_string)" 'kali'
-}
-
-koopa::is_linux() { # {{{1
-    # """
-    # Is the current operating system Linux?
-    # @note Updated 2020-02-05.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(uname -s)" = 'Linux' ]
-}
-
-koopa::is_local_install() { # {{{1
-    # """
-    # Is koopa installed only for the current user?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::str_match_regex "$(koopa::prefix)" "^${HOME}"
-}
-
-koopa::is_macos() { # {{{1
-    # """
-    # Is the operating system macOS (Darwin)?
-    # @note Updated 2020-01-13.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(uname -s)" = 'Darwin' ]
-}
-
-koopa::is_opensuse() { # {{{1
-    # """
-    # Is the operating system openSUSE?
-    # @note Updated 2020-02-27.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::os_id)" = 'opensuse' ]
-}
-
 koopa::is_powerful() { # {{{1
     # """
     # Is the current machine powerful?
@@ -592,15 +295,6 @@ koopa::is_powerful() { # {{{1
     cores="$(koopa::cpu_count)"
     [ "$cores" -ge 7 ] && return 0
     return 1
-}
-
-koopa::is_raspbian() { # {{{1
-    # """
-    # Is the operating system Raspbian?
-    # @note Updated 2020-05-12.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release raspbian
 }
 
 koopa::is_recent() {
@@ -639,96 +333,6 @@ koopa::is_recent() {
     return 0
 }
 
-koopa::is_rhel() { # {{{1
-    # """
-    # Is the operating system RHEL?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release rhel
-}
-
-koopa::is_rhel_7() { # {{{1
-    # """
-    # Is the operating system RHEL 7?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_amzn && return 0
-    koopa::_is_os_release rhel 7
-}
-
-koopa::is_rhel_8() { # {{{1
-    # """
-    # Is the operating system RHEL 8?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release rhel 8
-}
-
-koopa::is_remote() { # {{{1
-    # """
-    # Is the current shell session a remote connection over SSH?
-    # @note Updated 2019-06-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -n "${SSH_CONNECTION:-}" ]
-}
-
-koopa::is_root() { # {{{1
-    # """
-    # Is the current user root?
-    # @note Updated 2020-04-16.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "$(koopa::user_id)" -eq 0 ]
-}
-
-koopa::is_rstudio() { # {{{1
-    # """
-    # Is the terminal running inside RStudio?
-    # @note Updated 2020-06-19.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -n "${RSTUDIO:-}" ]
-}
-
-_koopa_is_set_nounset() { # {{{1
-    # """
-    # Is shell running in 'nounset' variable mode?
-    # @note Updated 2020-04-29.
-    #
-    # Many activation scripts, including Perlbrew and others have unset
-    # variables that can cause the shell session to exit.
-    #
-    # How to enable:
-    # > set -o nounset
-    # > set -u
-    #
-    # Bash:
-    # shopt -o (arg?)
-    # Enabled: 'nounset [...] on'.
-    #
-    # shopt -op (arg?)
-    # Enabled: 'set -o nounset'.
-    #
-    # Zsh:
-    # setopt
-    # Enabled: 'nounset'.
-    # """
-    _koopa_str_match "$(set +o)" 'set -o nounset'
-}
-
-koopa::is_shared_install() { # {{{1
-    # """
-    # Is koopa installed for all users (shared)?
-    # @note Updated 2019-06-25.
-    # """
-    koopa::assert_has_no_args "$#"
-    ! koopa::is_local_install
-}
-
 koopa::is_ssh_enabled() { # {{{1
     # """
     # Is SSH key enabled (e.g. for git)?
@@ -752,66 +356,3 @@ koopa::is_ssh_enabled() { # {{{1
     koopa::str_match "$x" "$pattern"
 }
 
-koopa::is_subshell() { # {{{1
-    # """
-    # Is koopa running inside a subshell?
-    # @note Updated 2020-02-26.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
-}
-
-koopa::is_tmux() { # {{{1
-    # """
-    # Is current session running inside tmux?
-    # @note Updated 2020-02-26.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -n "${TMUX:-}" ]
-}
-
-koopa::is_tty() { # {{{1
-    # """
-    # Is current shell a teletypewriter?
-    # @note Updated 2020-07-03.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::is_installed tty || return 1
-    tty >/dev/null 2>&1 || false
-}
-
-koopa::is_ubuntu() { # {{{1
-    # """
-    # Is the operating system Ubuntu?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release ubuntu
-}
-
-koopa::is_ubuntu_18() { # {{{1
-    # """
-    # Is the operating system Ubuntu 18 LTS?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release ubuntu 18.04
-}
-
-koopa::is_ubuntu_20() { # {{{1
-    # """
-    # Is the operating system Ubuntu 20 LTS?
-    # @note Updated 2020-04-29.
-    # """
-    koopa::assert_has_no_args "$#"
-    koopa::_is_os_release ubuntu 20.04
-}
-
-koopa::is_venv_active() { # {{{1
-    # """
-    # Is there a Python virtual environment active?
-    # @note Updated 2019-10-20.
-    # """
-    koopa::assert_has_no_args "$#"
-    [ -n "${VIRTUAL_ENV:-}" ]
-}

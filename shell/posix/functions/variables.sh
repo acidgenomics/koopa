@@ -68,7 +68,7 @@ _koopa_hostname() { # {{{1
     # Host name.
     # @note Updated 2020-07-05.
     # """
-    koopa::print "$(uname -n)"
+    _koopa_print "$(uname -n)"
     return 0
 }
 
@@ -130,16 +130,11 @@ _koopa_os_codename() { # {{{1
     # > awk -F= '$1=="VERSION_CODENAME" { print $2 ;}' /etc/os-release \
     # >     | tr -d '"'
     # """
-    _koopa_is_debian || return 1
-    _koopa_is_installed lsb_release || return 1
     # shellcheck disable=SC2039
     local os_codename
-    if _koopa_is_kali
-    then
-        os_codename='buster'
-    else
-        os_codename="$(lsb_release -cs)"
-    fi
+    _koopa_is_debian || return 1
+    _koopa_is_installed lsb_release || return 1
+    os_codename="$(lsb_release -cs)"
     _koopa_print "$os_codename"
     return 0
 }
@@ -153,12 +148,7 @@ _koopa_os_id() { # {{{1
     # """
     # shellcheck disable=SC2039
     local os_id
-    if _koopa_is_kali
-    then
-        os_id='debian'
-    else
-        os_id="$(_koopa_os_string | cut -d '-' -f 1)"
-    fi
+    os_id="$(_koopa_os_string | cut -d '-' -f 1)"
     _koopa_print "$os_id"
     return 0
 }
@@ -166,7 +156,7 @@ _koopa_os_id() { # {{{1
 _koopa_os_string() { # {{{1
     # """
     # Operating system string.
-    # @note Updated 2020-06-30.
+    # @note Updated 2020-07-04.
     #
     # Returns 'ID' and major 'VERSION_ID' separated by a '-'.
     #
@@ -181,9 +171,7 @@ _koopa_os_string() { # {{{1
     _koopa_is_installed awk || return 1
     if _koopa_is_macos
     then
-        # > id="$(uname -s | tr '[:upper:]' '[:lower:]')"
-        id='macos'
-        version="$(_koopa_get_version "$id")"
+        version="$(_koopa_macos_version)"
         version="$(_koopa_major_minor_version "$version")"
     elif _koopa_is_linux
     then
@@ -210,10 +198,7 @@ _koopa_os_string() { # {{{1
             id='linux'
         fi
     fi
-    if [ -z "$id" ]
-    then
-        _koopa_stop 'Failed to detect OS ID.'
-    fi
+    [ -z "$id" ] && return 1
     string="$id"
     if [ -n "${version:-}" ]
     then
@@ -274,3 +259,28 @@ _koopa_user_id() { # {{{1
     return 0
 }
 
+_koopa_variable() { # {{{1
+    # """
+    # Get version stored internally in versions.txt file.
+    # @note Updated 2020-07-05.
+    #
+    # This approach handles inline comments.
+    # """
+    # shellcheck disable=SC2039
+    local file key value
+    key="${1:?}"
+    file="$(_koopa_include_prefix)/variables.txt"
+    [ -f "$file" ] || return 1
+    value="$( \
+        grep -Eo "^${key}=\"[^\"]+\"" "$file" \
+        || _koopa_stop "'${key}' not defined in '${file}'." \
+    )"
+    value="$( \
+        _koopa_print "$value" \
+            | head -n 1 \
+            | cut -d "\"" -f 2 \
+    )"
+    [ -n "$value" ] || return 1
+    _koopa_print "$value"
+    return 0
+}
