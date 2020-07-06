@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+koopa::_ansi_escape() {
+    __koopa_ansi_escape "$@"
+}
+
 koopa::_msg() {
     __koopa_msg "$@"
 }

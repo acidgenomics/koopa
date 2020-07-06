@@ -3,18 +3,18 @@
 koopa::_status() { # {{{1
     # """
     # Koopa status.
-    # @note Updated 2020-07-01.
+    # @note Updated 2020-07-06.
     # """
-    # shellcheck disable=SC2039
     local color nocolor label string x
+    koopa::assert_has_args_eq "$#" 2
     label="$(printf '%10s\n' "${1:?}")"
-    color="$(__koopa_ansi_escape "${2:?}")"
-    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    color="$(koopa::_ansi_escape "${2:?}")"
+    nocolor="$(koopa::_ansi_escape 'nocolor')"
     shift 2
     for string in "$@"
     do
         x="${color}${label}${nocolor} | ${string}"
-        _koopa_print "$x"
+        koopa::print "$x"
     done
     return 0
 }
