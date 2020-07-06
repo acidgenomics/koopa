@@ -5,7 +5,7 @@ script_path="${BASH_SOURCE[0]}"
 if [ -L "$script_path" ]
 then
     koopa::realpath() {
-        if [ "$(uname -s)" = "Darwin" ]
+        if [ "$(uname -s)" = 'Darwin' ]
         then
             perl -MCwd -e 'print Cwd::abs_path shift' "$1"
         else
@@ -24,10 +24,10 @@ case "$1" in
     # Auto-completion {{{1
     # ==========================================================================
     --version|-V)
-        f="version"
+        f='version'
         ;;
     info)
-        f="system_info"
+        f='sys_info'
         ;;
     check-system | \
     header | \
@@ -43,13 +43,13 @@ case "$1" in
     # Supported, but hidden from user {{{1
     # ==========================================================================
     check)
-        f="check_system"
+        f='check_system'
         ;;
     log)
-        f="view_latest_tmp_log_file"
+        f='view_latest_tmp_log_file'
         ;;
     pull)
-        f="system_git_pull"
+        f='sys_git_pull'
         ;;
     app-prefix | \
     cellar-prefix | \
@@ -71,19 +71,19 @@ case "$1" in
     # Deprecated args / error catching {{{1
     # ==========================================================================
     help)
-        koopa::defunct "koopa --help"
+        koopa::defunct 'koopa --help'
         ;;
     home)
-        koopa::defunct "koopa prefix"
+        koopa::defunct 'koopa prefix'
         ;;
     update-r-config)
-        koopa::defunct "update-r-config (without 'koopa' prefix)"
+        koopa::defunct 'update-r-config (without "koopa" prefix)'
         ;;
     r-home)
-        koopa::defunct "koopa which-realpath R"
+        koopa::defunct 'koopa which-realpath R'
         ;;
     upgrade)
-        koopa::defunct "koopa update"
+        koopa::defunct 'koopa update'
         ;;
     *)
         koopa::invalid_arg "$1"
