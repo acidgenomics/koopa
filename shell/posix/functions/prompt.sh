@@ -31,6 +31,9 @@ _koopa_prompt() { # {{{1
         shell user user_color venv venv_color wd wd_color
     shell="$(_koopa_shell)"
     hostname="$(_koopa_hostname)"
+    # String replacement supported in Bash, Zsh.
+    # shellcheck disable=SC2039
+    hostname="${hostname//.local/}"
     user="$(_koopa_user)"
     user="${user}@${hostname}"
     conda="\$(_koopa_prompt_conda)"
