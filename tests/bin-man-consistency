@@ -3,7 +3,7 @@
 ## """
 ## Check that all scripts in `bin` and `sbin` directories have corresponding
 ## documentation in `man/man1`.
-## @note Updated 2020-06-24.
+## @note Updated 2020-07-07.
 ## """
 
 options(
@@ -36,11 +36,6 @@ bins <- sort(list.files(
 ))
 bins <- bins[!grepl(pattern = exclude, x = bins)]
 
-message(sprintf(
-    fmt = "Detected %d 'bin/sbin' directories.",
-    length(bins)
-))
-
 ## Scripts {{{2
 ## -----------------------------------------------------------------------------
 
@@ -52,11 +47,6 @@ scripts <- sort(unlist(lapply(
     recursive = FALSE,
     include.dirs = FALSE
 )))
-
-message(sprintf(
-    fmt = "Detected %d scripts.",
-    length(scripts)
-))
 
 ## Man files {{{2
 ## -----------------------------------------------------------------------------
@@ -94,12 +84,6 @@ mans <- sort(list.files(
     include.dirs = TRUE
 ))
 mans <- mans[!grepl(pattern = exclude, x = mans)]
-
-message(sprintf(
-    fmt = "Detected %d 'man1' directories.",
-    length(mans)
-))
-
 manfiles2 <- sort(unlist(lapply(
     X = mans,
     FUN = list.files,
@@ -107,7 +91,6 @@ manfiles2 <- sort(unlist(lapply(
     recursive = FALSE,
     include.dirs = FALSE
 )))
-
 orphans <- setdiff(manfiles2, manfiles)
 if (hasLength(orphans)) {
     message(sprintf(

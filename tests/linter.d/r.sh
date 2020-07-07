@@ -21,7 +21,7 @@ test() {
     files="$(printf '%q\n' "${merge[@]}" | sort -u)"
     readarray -t files <<< "$files"
     # Include 'Rprofile.site' file.
-    files+=("${KOOPA_PREFIX}/etc/R/Rprofile.site")
+    files+=("${KOOPA_PREFIX:?}/etc/R/Rprofile.site")
     test_lintr "${files[@]}"
     return 0
 }
@@ -31,6 +31,8 @@ test_lintr() {
     koopa::assert_has_args "$#"
     for file in "$@"
     do
+        # Handle empty string edge case.
+        [ -f "$file" ] || continue
         Rscript -e "lintr::lint(file = \"${file}\")"
     done
     koopa::status_ok "r-linter [${#}]"
