@@ -14,7 +14,7 @@ koopa::download_sra_accession_list() {
     koopa::activate_conda_env entrez-direct
     koopa::assert_is_installed esearch efetch
     id="${1:?}"
-    file="${2:-"SraAccList.txt"}"
+    file="${2:-SraAccList.txt}"
     koopa::h1 "Downloading SRA '${id}' to '${file}'."
     esearch -db sra -q "$id" \
         | efetch -format runinfo \

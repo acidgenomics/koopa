@@ -2,7 +2,7 @@
 
 # """
 # Find illegal strings.
-# Updated 2020-03-06.
+# @note Updated 2020-07-07.
 # """
 
 # shellcheck source=/dev/null
@@ -10,7 +10,9 @@ source "${KOOPA_PREFIX:?}/shell/bash/include/header.sh"
 
 # shellcheck disable=SC2016
 illegal_strings=(
+    ":-'"
     ' path='
+    ':-"'
     '; do'
     '; then'
     '<  <'

@@ -7,7 +7,7 @@ source "${script_dir}/../shell/bash/include/header.sh"
 user="$(koopa::user)"
 group="$(koopa::group)"
 
-dir="${1:-"."}"
+dir="${1:-.}"
 
 chown -R "${user}:${group}" "$dir"
 

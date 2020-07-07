@@ -52,7 +52,8 @@ koopa::add_make_prefix_link() { # {{{1
     local koopa_prefix make_prefix source_link target_link
     koopa::assert_has_args_le "$#" 1
     koopa::is_shared_install || return 0
-    koopa_prefix="${1:-"$(koopa::prefix)"}"
+    koopa_prefix="${1:-}"
+    [[ -z "$koopa_prefix" ]] && koopa_prefix="$(koopa::prefix)"
     make_prefix="$(koopa::make_prefix)"
     [[ -d "$make_prefix" ]] || return 0
     target_link="${make_prefix}/bin/koopa"

@@ -6,7 +6,7 @@ source "${script_dir}/../shell/bash/include/header.sh"
 
 koopa::assert_has_no_args "$#"
 
-version="1.0"
+version='1.0'
 prefix="$(koopa::refdata_prefix)/scsig/${version}"
 base_url="http://software.broadinstitute.org/gsea/msigdb/supplemental"
 

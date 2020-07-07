@@ -17,8 +17,8 @@ koopa::assert_has_args "$#"
 # >     awk -v FS="\t" '{print $1"\n"$2}' > \
 # >     "$fasta_file"
 
-source_dir="."
-target_dir="."
+source_dir='.'
+target_dir='.'
 
 while (("$#"))
 do
